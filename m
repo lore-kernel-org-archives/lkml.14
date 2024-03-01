@@ -1,170 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bee.tesarici.cz (unknown [77.93.223.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C9E46B3;
-	Fri,  1 Mar 2024 17:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497E0F9FF
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314409; cv=none; b=GW9ZuZj8ktvG0s6/LUkeKHADvn8/Y7/mPwLAVEC5XJZdVMeZQMmrtlNshmrRm5wpeElNNVSRKdHDZVkZmwbpFY7pFQi9QknhQEX467htk0p0gzG9IlraZurUHxBqRh3ABgLBzV/cvKN6d0XPxkaWZy1HOASMYsW2qfuG7a0cTyA=
+	t=1709314410; cv=none; b=QbvaG/9+8tCYCY8C1uFXTf45gBnFqXS7OTJRjfbKmgJZoIfTYdIwMTvFj1mb/DRLBUdi6HR9rHewhF+gjsAbO/DJuNxaGx/6DKevZeToEbqGvXv8SO0wlUVJUK+nBryY4akjO/Z0k1/p1iKqvERwVaPR1jKRyOsi1oxQ8pBvvsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314409; c=relaxed/simple;
-	bh=IYsBs/BhF0iz0VJZYgI9tkngj+zz1RnNDtdkOfgCrfU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lsgUVe844TUH0cxP9Z0EuIEeWsCW9uHL1K3F/nfM0jBXbS3rqXH9gvpwvLiRTLPQgzub94LzzTP6EqmgAhWSy1vi5L+nBm8qPzyOXq0zkRxvMLQMW9bVMAUnyknxCh8tBGGb4Aua/wqNsH+peHSZovvhp/ZSM/TnoEdQ2GDGSUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohI/dcuw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709314410; c=relaxed/simple;
+	bh=kqFNymNhulpq3C9J15L9aRCKq+ZlvGBWEINffETSl9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bEdGVXq5X6wTRdRfaRPRBAvFbzn7/JS0Kei+JCh/DAVNEL4SLX8jGlTV7L21miQs/IqgnZiTnHuekhzkvmh4Jrhaj1QzX1B8kHDTdwBfpl2Q866WZ6wAkzc7A477P2GbkYoLdfRsS+n7MfQAR3t0gW5On+5Z46eKY6z3VCBim8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=q8/zY7Ut; arc=none smtp.client-ip=77.93.223.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohI/dcuw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 29683C433F1;
-	Fri,  1 Mar 2024 17:33:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709314409;
-	bh=IYsBs/BhF0iz0VJZYgI9tkngj+zz1RnNDtdkOfgCrfU=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=ohI/dcuwZZ8j8UU5LDwFfoF/l4sfTNfbRCxGn7UllwL66Rc8ZJtrL6bo8W/19jDfH
-	 jBRh2AufqQjOAqYdkOzXQfxvERgNTD/xn4/V9jJOSl/RS+rBIKmf71lq2WhBC13UBK
-	 r9UmnijYyGhfZ1V+2kK7ZOkYLumV0oUZYcTxhQWR1VpVNBtTMJ36ZX0QwJyttkbJHk
-	 rPjczjYzmX9h9XC07rEyqzaHjEjMosZ1IYhh8N7mMDy6WyHm6SVIJ2pe4pLvKhQgLH
-	 pnXqN3oLIsMUk/8blYwAbAfUZ/eaVYjNkVS75oLjmwe9i/OO/s166VVLK7j1ys76L6
-	 3UvFDUYeqatyQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1460AC5475B;
-	Fri,  1 Mar 2024 17:33:29 +0000 (UTC)
-From:
- Mathys-Gasnier via B4 Relay <devnull+mathys35.gasnier.gmail.com@kernel.org>
-Date: Fri, 01 Mar 2024 18:33:23 +0100
-Subject: [PATCH v5] rust: locks: Add `get_mut` method to `Lock`
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="q8/zY7Ut"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id C6EDC1C163E;
+	Fri,  1 Mar 2024 18:33:25 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1709314406; bh=y5F9nq6Ty0/dF9UJva7lXz28jL0DsAwabnPmvR0UHIE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q8/zY7UtxCWkrAUnWSom6lRc1oWwIcjPkd1EABwXDjtLeNLlAm/gioZB9DVWI32Q4
+	 cqFsBTSoCbjJ5rAO7SE2TdjtDKLcJwFX7LQMFzMRm7/1ya2TeqZT11eqJcByM5werx
+	 sipjchVa0oxNkwVdcEgIrHJ3dAa5ndy0VSYqptc4a+C6IbL6ZEDO7ZyL+IzGDACu5L
+	 R2MafJFrtLRiCWSHezTBXeh8DNklH+cT6GrRYL5r+bL/HO5/C6lE7L0PliCOzE1wtk
+	 dAuI5QfzE2I4F+kTmEf2TZX8iGr4QYKBJ5SXpdN75JJ0t6JQv1uC3HxGUknYq3vP+e
+	 BPjRubOeuEDpg==
+Date: Fri, 1 Mar 2024 18:33:24 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Christoph Hellwig <hch@lst.de>, Michael Kelley <mhklinux@outlook.com>,
+ Will Deacon <will@kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Petr Tesarik
+ <petr.tesarik1@huawei-partners.com>, "kernel-team@android.com"
+ <kernel-team@android.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Dexuan Cui
+ <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>
+Subject: Re: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
+ allocations >= PAGE_SIZE
+Message-ID: <20240301183324.11e76df2@meshulam.tesarici.cz>
+In-Reply-To: <4fbcdd49-cd93-4af8-83e2-f1cef0ea2eeb@arm.com>
+References: <20240228133930.15400-1-will@kernel.org>
+	<20240228133930.15400-7-will@kernel.org>
+	<SN6PR02MB4157A62353559DA8DB8BC4ADD45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<SN6PR02MB41577D09E97B1D9645369D58D45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<20240229133346.GA7177@lst.de>
+	<SN6PR02MB4157314F142D05E279B7991ED45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<20240229154756.GA10137@lst.de>
+	<20240301163927.18358ee2@meshulam.tesarici.cz>
+	<4fbcdd49-cd93-4af8-83e2-f1cef0ea2eeb@arm.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240301-rust-locks-get-mut-v5-1-c5131dbbd3c4@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAGIR4mUC/23NQQ6CMBCF4auYrq3pTItFV97DuCjTARsFTItEY
- 7i7VTfEsPxfMt+8ROIYOIn96iUijyGFvstRrFeCzq5rWAafW6BCowBKGe9pkNeeLkk2PMj2Pkg
- yqCyCAm+dyIe3yHV4fNHjKfc5pKGPz++PET7rj0O1W+JGkCCJdQE1ac/GHprWheuG+lZ8uBFnB
- OAigZkoiLw2hJVV1T+hZwQuEzoTXpduW5vKs/b/hJkT20XCZAKNq+rCWmVdOSemaXoDEqxKv30
- BAAA=
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Wedson Almeida Filho <wedsonaf@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@samsung.com>, 
- Alice Ryhl <aliceryhl@google.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
- Mathys-Gasnier <mathys35.gasnier@gmail.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709314408; l=3361;
- i=mathys35.gasnier@gmail.com; s=20240118; h=from:subject:message-id;
- bh=YgqZEuEg7qPEU8LNGXge52fKNIIVVzwOHPlT4tjNiao=;
- b=L+sGaDcR7Vjd5mjM+tfqElKX2By5PtqYuLSS2MnvAbyQwx6h3pfgD5m/D0VbWzmKEhmdgVaU8
- gTFLD+1PsWVCUM/0nezEu0MMtJPvv60XtMhOs7USiOCY7eJd7RPfLpx
-X-Developer-Key: i=mathys35.gasnier@gmail.com; a=ed25519;
- pk=C5tqKAA3Ua7li5s3a+q2aDelT2j98/yjGg2nEVGArXE=
-X-Endpoint-Received:
- by B4 Relay for mathys35.gasnier@gmail.com/20240118 with auth_id=129
-X-Original-From: Mathys-Gasnier <mathys35.gasnier@gmail.com>
-Reply-To: <mathys35.gasnier@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Mathys-Gasnier <mathys35.gasnier@gmail.com>
+On Fri, 1 Mar 2024 16:38:33 +0000
+Robin Murphy <robin.murphy@arm.com> wrote:
 
-Having a mutable reference guarantees that no other threads have
-access to the lock, so we can take advantage of that to grant callers
-access to the protected data without the cost of acquiring and
-releasing the locks. Since the lifetime of the data is tied to the
-mutable reference, the borrow checker guarantees that the usage is safe.
+> On 2024-03-01 3:39 pm, Petr Tesa=C5=99=C3=ADk wrote:
+> > On Thu, 29 Feb 2024 16:47:56 +0100
+> > Christoph Hellwig <hch@lst.de> wrote:
+> >  =20
+> >> On Thu, Feb 29, 2024 at 03:44:11PM +0000, Michael Kelley wrote: =20
+> >>> Any thoughts on how that historical behavior should apply if
+> >>> the DMA min_align_mask is non-zero, or the alloc_align_mask
+> >>> parameter to swiotbl_tbl_map_single() is non-zero? As currently
+> >>> used, alloc_align_mask is page aligned if the IOMMU granule is =20
+> >>>> =3D PAGE_SIZE. But a non-zero min_align_mask could mandate =20
+> >>> returning a buffer that is not page aligned. Perhaps do the
+> >>> historical behavior only if alloc_align_mask and min_align_mask
+> >>> are both zero? =20
+> >>
+> >> I think the driver setting min_align_mask is a clear indicator
+> >> that the driver requested a specific alignment and the defaults
+> >> don't apply.  For swiotbl_tbl_map_single as used by dma-iommu
+> >> I'd have to tak a closer look at how it is used. =20
+> >=20
+> > I'm not sure it helps in this discussion, but let me dive into a bit
+> > of ancient history to understand how we ended up here.
+> >=20
+> > IIRC this behaviour was originally motivated by limitations of PC AT
+> > hardware. Intel 8237 is a 16-bit DMA controller. To make it somehow
+> > usable with addresses up to 16MB (yeah, the infamous DMA zone), IBM
+> > added a page register, but it was on a separate chip and it did not
+> > increment when the 8237 address rolled over back to zero. Effectively,
+> > the page register selected a 64K-aligned window of 64K buffers.
+> > Consequently, DMA buffers could not cross a 64K physical boundary.
+> >=20
+> > Thanks to how the buddy allocator works, the 64K-boundary constraint
+> > was satisfied by allocation size, and drivers took advantage of it when
+> > allocating device buffers. IMO software bounce buffers simply followed
+> > the same logic that worked for buffers allocated by the buddy allocator.
+> >=20
+> > OTOH min_align_mask was motivated by NVME which prescribes the value of
+> > a certain number of low bits in the DMA address (for simplicity assumed
+> > to be identical with the same bits in the physical address).
+> >=20
+> > The only pre-existing user of alloc_align_mask is x86 IOMMU code, and
+> > IIUC it is used to guarantee that unaligned transactions do not share
+> > the IOMMU granule with another device. This whole thing is weird,
+> > because swiotlb_tbl_map_single() is called like this:
+> >=20
+> >                  aligned_size =3D iova_align(iovad, size);
+> >                  phys =3D swiotlb_tbl_map_single(dev, phys, size, align=
+ed_size,
+> >                                                iova_mask(iovad), dir, a=
+ttrs);
+> >=20
+> > Here:
+> >=20
+> > * alloc_size =3D iova_align(iovad, size)
+> > * alloc_align_mask =3D iova_mask(iovad)
+> >=20
+> > Now, iova_align() rounds up its argument to a multiple of iova granule
+> > and iova_mask() is simply "granule - 1". This works, because granule
+> > size must be a power of 2, and I assume it must also be >=3D PAGE_SIZE.=
+ =20
+>=20
+> Not quite, the granule must *not* be larger than PAGE_SIZE (but can be=20
+> smaller).
 
-Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Mathys-Gasnier <mathys35.gasnier@gmail.com>
----
-Changes in v5:
-- Adding example
-- Link to v4: https://lore.kernel.org/r/20240226-rust-locks-get-mut-v4-1-24abf57707a8@gmail.com
+OK... I must rethink what is achieved with the alignment then.
 
-Changes in v4:
-- Improved documentation
-- Link to v3: https://lore.kernel.org/r/20240222-rust-locks-get-mut-v3-1-d38a6f4bde3d@gmail.com
+> > In that case, the alloc_align_mask argument is not even needed if you
+> > adjust the code to match documentation---the resulting buffer will be
+> > aligned to a granule boundary by virtue of having a size that is a
+> > multiple of the granule size. =20
+>=20
+> I think we've conflated two different notions of "allocation" here. The=20
+> page-alignment which Christoph quoted applies for dma_alloc_coherent(),=20
+> which nowadays *should* only be relevant to SWIOTLB code in the=20
+> swiotlb_alloc() path for stealing coherent pages out of restricted DMA=20
+> pools. Historically there was never any official alignment requirement=20
+> for the DMA addresses returned by dma_map_{page,sg}(), until=20
+> min_align_mask was introduced.
+>=20
+> > To sum it up:
+> >=20
+> > 1. min_align_mask is by far the most important constraint. Devices will
+> >     simply stop working if it is not met.
+> > 2. Alignment to the smallest PAGE_SIZE order which is greater than or
+> >     equal to the requested size has been documented, and some drivers
+> >     may rely on it. =20
+>=20
+> Strictly it stopped being necessary since fafadcd16595 when the=20
+> historical swiotlb_alloc() was removed, but 602d9858f07c implies that=20
+> indeed the assumption of it for streaming mappings had already set in.=20
+> Of course NVMe is now using min_align_mask, but I'm not sure if it's=20
+> worth taking the risk to find out who else should also be.
+>=20
+> > 3. alloc_align_mask is a misguided fix for a bug in the above. =20
+>=20
+> No, alloc_align_mask is about describing the explicit requirement rather=
+=20
+> than relying on any implicit behaviour, and thus being able to do the=20
+> optimal thing for, say, a 9KB mapping given a 4KB IOVA granule and 64KB=20
+> PAGE_SIZE.
 
-Changes in v3:
-- Changing the function to take a `Pin<&mut self>` instead of a `&mut self`
-- Removed reviewed-by's since big changes were made. Please take another
-  look.
-- Link to v2: https://lore.kernel.org/r/20240212-rust-locks-get-mut-v2-1-5ccd34c2b70b@gmail.com
+It's getting confusing. Can we stay with the IOMMU use case for a
+moment? Since you don't use IO_TLB_SIZE or IO_TLB_SHIFT, I assume the
+code should work with any SWIOTLB slot size.
 
-Changes in v2:
-- Improved doc comment. 
-- Link to v1: https://lore.kernel.org/r/20240209-rust-locks-get-mut-v1-1-ce351fc3de47@gmail.com
----
- rust/kernel/sync/lock.rs | 38 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+For granule sizes up to SWIOTLB slot size, you always get a buffer that
+is not shared with any other granule.
 
-diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-index f12a684bc957..345ca7be9d9f 100644
---- a/rust/kernel/sync/lock.rs
-+++ b/rust/kernel/sync/lock.rs
-@@ -7,7 +7,11 @@
- 
- use super::LockClassKey;
- use crate::{bindings, init::PinInit, pin_init, str::CStr, types::Opaque, types::ScopeGuard};
--use core::{cell::UnsafeCell, marker::PhantomData, marker::PhantomPinned};
-+use core::{
-+    cell::UnsafeCell,
-+    marker::{PhantomData, PhantomPinned},
-+    pin::Pin,
-+};
- use macros::pin_data;
- 
- pub mod mutex;
-@@ -121,6 +125,38 @@ pub fn lock(&self) -> Guard<'_, T, B> {
-         // SAFETY: The lock was just acquired.
-         unsafe { Guard::new(self, state) }
-     }
-+
-+    /// Gets the data contained in the lock.
-+    ///
-+    /// Having a mutable reference to the lock guarantees that no other threads have access to the
-+    /// lock. And because `data` is not structurally pinned, it is safe to get a mutable reference
-+    /// to the lock content.
-+    ///
-+    /// # Example
-+    ///
-+    /// Using `get_mut` with a mutex.
-+    ///
-+    /// ```
-+    /// use kernel::sync::Mutex;
-+    ///
-+    /// struct Example {
-+    ///     a: u32,
-+    ///     b: u32,
-+    /// }
-+    ///
-+    /// fn example(m: Pin<&mut Mutex<Example>>) {
-+    ///     // Calling from Mutex to avoid conflict with Pin::get_mut().
-+    ///     let mut data = Mutex::get_mut(m);
-+    ///     data.a += 10;
-+    ///     data.b += 20;
-+    /// }
-+    /// ```
-+    pub fn get_mut(self: Pin<&mut Self>) -> &mut T {
-+        // SAFETY: The lock will only be used to get a reference to the data, therefore self won't
-+        // get moved.
-+        let lock = unsafe { self.get_unchecked_mut() };
-+        lock.data.get_mut()
-+    }
- }
- 
- /// A lock guard.
+For granule sizes between SWIOTLB slot size and page size, you want to
+get as many slots as needed to cover the whole granule. Indeed, that
+would not be achieved with size alone.
 
----
-base-commit: 711cbfc717650532624ca9f56fbaf191bed56e67
-change-id: 20240118-rust-locks-get-mut-c42072101d7a
+What if we change the size-based alignment constraint to:
 
-Best regards,
--- 
-Mathys-Gasnier <mathys35.gasnier@gmail.com>
+   Aligned to the smallest IO_TLB_SIZE order which is greater than or
+   equal to the requested size.
+
+AFAICS this is stricter, i.e. it covers the already documented
+PAGE_SIZE alignment, but it would also cover IOMMU needs.
+
+I have the feeling that the slot search has too many parameters. This
+alloc_align_mask has only one in-tree user, so it's a logical candidate
+for reduction.
+
+Petr T
+
+>=20
+> Thanks,
+> Robin.
+>=20
+> >=20
+> > Correct me if anything of the above is wrong.
+> >=20
+> > HTH
+> > Petr T =20
+>=20
 
