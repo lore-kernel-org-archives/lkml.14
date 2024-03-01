@@ -1,79 +1,105 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3672EB0E;
-	Fri,  1 Mar 2024 10:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44CE6A8B2;
+	Fri,  1 Mar 2024 10:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709288225; cv=none; b=K3L6aqGnk+sHYUMY01hakWaaWMCjdZCU9ZC0PpLAmSrJkMSt3w4v2mGaX4kkYTCQv4DiwlKIJror4zrL98VgT89ESr6008BdNZrOMLcQLsSHNLlXBaO7171Do8cDWnd6UOOq0NeiA4+FZs5hda6oBCVwBoXxuAdrykNRFz7z5Xo=
+	t=1709288450; cv=none; b=E+ZF9hn+escPVv4flC2D1ey/OlxB5U4WxN8c4/jsOSjLCyG2CisOswIUfw/YtyLBPxrWjTCZ8So5dG2GHzxhhO0pbanddAZBwML8vFoWQbrrSvCKAf0J+kzDDtOeLFdpN63JR4W7MoUtOddDK+1wn1SMRO44YqqxSl8gmFIodls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709288225; c=relaxed/simple;
-	bh=qwVIxiufJj1mr1cm23cxINBd1eTGOKopYIHThjoyex4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iaG5YaBDQYDKdDoOQnyozHQDFvyljgi4X7nOO2IpGHaO8H0+a0BlYw/pv5ZWITphUrLIWSTYj8l+Ot7rATLSDL3jWz1ehQn8oLpvR63O0CF/zSfa5BO7+8RVEJueyQcSBxIwye+edDqVTLTvx2U4oBesR9790cpiPmJKLCu7tcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rfzwh-0002zb-00; Fri, 01 Mar 2024 11:16:51 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id D28FDC0267; Fri,  1 Mar 2024 10:39:47 +0100 (CET)
-Date: Fri, 1 Mar 2024 10:39:47 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 00/14] Add support for the Mobileye EyeQ5 SoC
-Message-ID: <ZeGiYyiQQ7pwpECE@alpha.franken.de>
-References: <20240216174227.409400-1-gregory.clement@bootlin.com>
- <ZdSst3fM3EOQGH03@alpha.franken.de>
- <CZGOPF51JA1R.2YN65K6WUH9N4@bootlin.com>
+	s=arc-20240116; t=1709288450; c=relaxed/simple;
+	bh=XnJJ/DuVyMNtN8i32SvT66PU+gRXPYlBC+UZSbXhbd8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=g8QMmfTmeZGwv6/kBj7UZa5EBXvvvAkyaSz7vLMgzUUBBkkNmNdPxg70Kny/wl7lHy0gqCH4IuU/LhXa4geSb9aTHF/8b+RLHvUOn4eOgLB9e8xma9YwwGDXhl/EaduGhq5GgWXso5gqd1sMhQWo6CC7kvNyEGRKPTv3XSGHEiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=gQL08X9N; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="gQL08X9N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1709288428; x=1709893228; i=markus.elfring@web.de;
+	bh=XnJJ/DuVyMNtN8i32SvT66PU+gRXPYlBC+UZSbXhbd8=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=gQL08X9NVZrlig7gp98I8sAQQ+ORwftbgdpTa1m8Uptvcy8tht4oBE7lY/vsfF3l
+	 AyPwgJwKIQchKpfjLjokAaobUq6c5651QfcvPPLS+6IEDxW9F+Jnn1T6fVAGerb3o
+	 IMniBYazjqp5lBQynA/Upo+/jMgY8ahE8EwirFFoIzbKBNr0fPho6TPqfati8Zo2V
+	 BuRfmX/FVPCqzR3qwMyofANOPRZFb039RGSB4RrR28R4t8/EUC4kwERp+wS2yB1ya
+	 Wcxt88zWTJ13moiQrP9vnzCpXxkgTd8WC5cajxncjK1eyOOhIwrmsSuRRbWtNU7Pt
+	 y6ut0OkOGzBZrA0VmA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MWzD3-1rLy0T11Qn-00XR2t; Fri, 01
+ Mar 2024 11:20:28 +0100
+Message-ID: <0f98e7de-4351-481f-86be-e573805c82f6@web.de>
+Date: Fri, 1 Mar 2024 11:20:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CZGOPF51JA1R.2YN65K6WUH9N4@bootlin.com>
+User-Agent: Mozilla Thunderbird
+To: linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Eugen Hristev <eugen.hristev@collabora.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] media: microchip-csi2dc: Move a fwnode_handle_put() call into
+ an if branch in csi2dc_of_parse()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3zOeZeLgrJuL3S2I4zME9Gi1I6z1I7OFnDgqu8b0tQcvJuw/wfq
+ KywAjCJ/m3Z2Uk3RmerBE6XUwv8gt+hgHvajIa4YPSTe7eaLDrk4D7VsWyTgPXKe/8BD4xs
+ lIReWa03QBnUHUwmNxkmO8nBscbmkm/Ok2v17CdcqwyLBdXJKzg4lXGwGq/Xu0xP63ofgLx
+ eJVYeOTDAg6Occ8M0iCBA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:JrS5DAV2alI=;swQcZg+CJenRsuPdDlrFOqKYLWe
+ IQwCC05aq9G3hpsqYg1nFlYiiWJdc327P0ltpu7CVeNMyBYP6wMEuqlyjot/z48qKJ7MRzw1W
+ BjWo+4GGfwv59c7HlehR09jT0L5vmqv9dmIQVYIO5CjJa4zSOehu4c0FimLE9jAUFfPsbmJ1d
+ SmfyTR8Ugpz57jm8hz9RXnN2/u8Xw3B4VCQIjREyP2RF8Xoi9NVLH8Mtp67jiUZNdt4NRV6jS
+ sKLhsbXT+2e/oRsfsgf6R6d/47CjOY0oRmzKBXr+57t+XLYTlkTOq6Bdc3BFuhivPXN+sdHTA
+ CmYnZn2vePUlSjAkWlnoJZhEEGb/RoV1JUPUfc5dPrYFYpNY1Y0KzCyHaSmYLC+uavyciMIDk
+ vib/7NLq16AtuhPEGXgRZmNdpRbKl5xLaIuIFeSx/v7Wzm3jBnU1tXt/J4hrkhvo0WJYDl179
+ LVvPh5jSSlxqfkNO383iVI9+7ivNvoewsf8/muQnrVxx99jMr7+oKiPoHmPSIWUY8RM0oR1WJ
+ MUVNlxxnQVFcu/KWEv63IXdhZsuqmeANAdmvJd20R7ORTcQNVpryYA0a+MHOncLaNemdJBEAH
+ VzpK8ZoIjVaWrWvuMfJjZDv6gYzmmfUxM7nfb0+PV1t1XXd9yHslBfVHQs+DJuTz3iLzV+D8c
+ 2QNpPR/HDxfH9Aeb7h3n4t/s4UKejBSohBENS23CeP37ONMYmUCwi6fofhFZxY6ovkBJzUojq
+ 13wgf6mxRHlYX7YdY1n8zdFSOj7Mgi42eM3BLNJxJEvYipT7EWqQrxCoINlBTkAE8Q+s5zicj
+ VflXJolFyYv2rjf7xVTMs+TvO6KOTUTpzSDc655JLUHf8=
 
-On Wed, Feb 28, 2024 at 12:44:09PM +0100, Théo Lebrun wrote:
-> Hello Thomas,
-> 
-> On Tue Feb 20, 2024 at 2:44 PM CET, Thomas Bogendoerfer wrote:
-> > On Fri, Feb 16, 2024 at 06:42:09PM +0100, Gregory CLEMENT wrote:
-> > > Hello,
-> > > 
-> > > The EyeQ5 SoC from Mobileye is based on the MIPS I6500 architecture
-> > > and features multiple controllers such as the classic UART, I2C, SPI,
-> > > as well as CAN-FD, PCIe, Octal/Quad SPI Flash interface, Gigabit
-> > > Ethernet, MIPI CSI-2, and eMMC 5.1. It also includes a Hardware
-> > > Security Module, Functional Safety Hardware, and MJPEG encoder.
-> 
-> [...]
-> 
-> > series applied to mips-next.
-> >
-> > I've fixed generic|ingenic|realtek builds by adding select MACH_GENERIC_CORE
-> > in arch/mips/Kconfig.
-> 
-> Would it be possible to provide an immutable branch containing the two
-> series? I've got quite a few series that depend on them as they target
-> EyeQ5 devicetrees and defconfig.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 1 Mar 2024 11:11:44 +0100
 
-that's IMHO too late, as I've merged it already to mips-next. mips-linux
-itself is immutable, but contains other mips related stuff.
+Move a fwnode_handle_put() call into an if branch of this function
+so that the control flow looks a bit safer directly.
 
-Thomas.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/media/platform/microchip/microchip-csi2dc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+diff --git a/drivers/media/platform/microchip/microchip-csi2dc.c b/drivers=
+/media/platform/microchip/microchip-csi2dc.c
+index fee73260bb1e..ed800a3bb268 100644
+=2D-- a/drivers/media/platform/microchip/microchip-csi2dc.c
++++ b/drivers/media/platform/microchip/microchip-csi2dc.c
+@@ -595,12 +595,11 @@ static int csi2dc_of_parse(struct csi2dc_device *csi=
+2dc,
+
+ 	output_fwnode =3D fwnode_graph_get_next_endpoint
+ 				(of_fwnode_handle(of_node), input_fwnode);
+-
+-	if (output_fwnode)
++	if (output_fwnode) {
+ 		ret =3D v4l2_fwnode_endpoint_parse(output_fwnode,
+ 						 &output_endpoint);
+-
+-	fwnode_handle_put(output_fwnode);
++		fwnode_handle_put(output_fwnode);
++	}
+
+ 	if (!output_fwnode || ret) {
+ 		dev_info(csi2dc->dev,
+=2D-
+2.44.0
+
