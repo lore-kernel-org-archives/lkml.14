@@ -1,167 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822B467E8D
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 06:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2141969940;
+	Fri,  1 Mar 2024 06:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709275969; cv=none; b=OY4VB+RoYKvsCdPaWhWyTDh/B9dlz/BHD0rtauE+NIvpcnAKFrxQGHs5eN9ZiM2acRf95ODNDo8S2YqJac9Fzn2wZoCu25O8rnKJ9GtGx+h4C/Zc3qXH5Ut/pAEcXAorlnHGU+g0Cv5iWS0862v84RJzwoaBbM8fMkscyN9ehAQ=
+	t=1709275994; cv=none; b=b07vbfX1y+BTYRhL/BKH7Ttz9ZF+sFua1ulwxxSzlImBnF/Ix/4IWp/IH2zCCUKeXquwqpKtN2oiMyrMfboUx7brimEE8Ho+KsMvwpOq8Zr1tvcO34jnoFVqBPyR08FpHh54y1O6LN0vc2IbjgdexDghAeFXxKnlPJ43Pgw31yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709275969; c=relaxed/simple;
-	bh=EwMO3/EgEVBjGx7Oi/1TMd1aSd3iDTtp5SMubZS0FK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qMEBUv9hU7hcnnXRjoroozBlBxiIiOds9Y++hDHAxlsBUDHlgx7EBsJqIllZsqKU8eTchJP9cnYTe3dGL1wdoLSvuTE60bnZ7KXSCaBIm/xkRL+cdfY4iUmsac+lyDyOMpKKeXc9luLqi97hLyPPG9pPulYwpVVCDqKa/BmwbEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TpxgFeRR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709275994; c=relaxed/simple;
+	bh=yJ3qnuzsiD+vY7/3h2hLhh57k/nxh0MKDiLyXnJblD4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TtN9AaJgdiD7doexNEm7UahIIxOfm+p/CoFoVfOSsiQFVl8PRcn8SA7t3CVAgCupgJbRkEqxOpkCkwVDZJ2cuXZTeD6ziKdUTBbwzoiVS3bx42AV6M9Fj3+JKPd3LHdAWXGyVZecJf6l6t8kWgC2172AwlV+DDlQhRC3Zh7odu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J9S+uVoJ; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TpxgFeRR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709275966;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1hAv7LCsa3iLqGJhJsJviM4n+BZxClj9lSP/nAIPeEE=;
-	b=TpxgFeRROhm2wlLg6Zl15ci8559vraus+YUL3T8KqPMOdgUX0VpfdEi0RF1WE+gx5f+Hst
-	uXv1KW9AuwLE/io6SwGhDDgRVVbyeR74SlrWMUjojhnof0m8jm9BcDCM7YMdg5fTm9J9vA
-	Yz9y80CCmDE7AnpW1M3J9JvHlRAIJdc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-223-k9AfNMFUM463nT0FJ3bfzg-1; Fri, 01 Mar 2024 01:52:44 -0500
-X-MC-Unique: k9AfNMFUM463nT0FJ3bfzg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B95183FC6C;
-	Fri,  1 Mar 2024 06:52:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.6])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D4C21BDB1;
-	Fri,  1 Mar 2024 06:52:42 +0000 (UTC)
-Date: Fri, 1 Mar 2024 14:52:34 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "yang.zhang" <gaoshanliukou@163.com>, akpm@linux-foundation.org
-Cc: ebiederm@xmission.com, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, "yang.zhang" <yang.zhang@hexintek.com>
-Subject: Re: [PATCH V3] kexec: copy only happens before uchunk goes to zero
-Message-ID: <ZeF7Muc8WyuQ1bPR@MiWiFi-R3L-srv>
-References: <20240222092119.5602-1-gaoshanliukou@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9S+uVoJ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dca3951ad9so16464195ad.3;
+        Thu, 29 Feb 2024 22:53:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709275991; x=1709880791; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=wXiG6D5m4V4RhFeANN6ytUCYOxlqAHIxI03T8MEdzXo=;
+        b=J9S+uVoJsX8hXydEC/sV3k2A4dJUhhcbBvaivT+khvwY8sJs5/8uyMrT8lcpQ3pNnD
+         r0f/0aGuh1c76sPIBm5oNw+ooFaSso1z+TyH1oIwfXQ3MT9/ZkpjnakT8vYSHVmtknEq
+         u62CX30cUz8EPd7+S/2QiyTxJHHaQtunKUvZep8K3DWFDCLALJB73f2PPON5yFnGtjm+
+         cvABlz/82jlD1ubp2eZ170jLdDKGDpwMFsZJAKauOv3UM+YxQaDq9SWtpyJO7fCuwW/1
+         Gz4NNscRDg7XYmgiWV8OsFVnI0jqR/T6gfadIFU0Z0FBkEZ358uYjO+JlhD65pKjZvFp
+         phgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709275991; x=1709880791;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wXiG6D5m4V4RhFeANN6ytUCYOxlqAHIxI03T8MEdzXo=;
+        b=LhP6bB1EZK7rmTO3SqcrRt/JVTIQK8ELLujuV69btzF2TAmkNu1ImWB045i6xmFcxh
+         AdpU7JgN9QNTknRsttRvj+g2VkdTqYaE5BvIwdNoJrGScHMJuiQbit1WQ8dw4m8et7D7
+         pnM2ckj9n+77WHB2j85uYxWODG2pQ5z+PTq0qO4b36bAoJsjQfxGGLEx8CCxEF+76Lm2
+         fjoCMryK88C1AQZwiv9Pg1TIcX/9UuUlftpl8fedQWrwCXSRWbT7bWDbyt4oxYCFOAl2
+         IFOsHU16tbKvoT+kB+gNkJQk/yYf97pASg1CkDa901W8Z+GGW+rbAMlqEe+Fnt2rPPBX
+         d1Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVg2hiienzkdJX936+HEgWRkcZm8M4A/PNmIRBshX2zb0GzWHzAoYUv51uqyG79Oy/d3TVkk8Tgq5TgSjI+IF9ZLCYsV9tawfmF7S94ZpMiBsdYlSsLN56rOvLga1+idfpPCdbiL3e0k0EvpoHjSROsofBV8bSJyEvpQhm9GcrvnfXY8RGcXCEFFMAIUIC2zrlHXj1dxrhl42qSVAvGC2thzB8pHZeR52pr+mBoICFvor0uGIvoZ7y/WKxaQ==
+X-Gm-Message-State: AOJu0Yygb9CcfAoc2H2LiF89R0mzouiX2SeE99m5qbfK/dcv/zbMbUR8
+	oydoE88x7ki0MTLY7ZKTqGv+F85KA6azWnxX2Yk3jqhANMVuwKgx
+X-Google-Smtp-Source: AGHT+IFpbSIiHEKTPKogLyHISu8ut/C5tr3wmgIj/iizT3dRu4HAqzDP5jIYhOI77adwEhkLqkAdmA==
+X-Received: by 2002:a17:902:a384:b0:1d9:167b:8e6c with SMTP id x4-20020a170902a38400b001d9167b8e6cmr668758pla.46.1709275991299;
+        Thu, 29 Feb 2024 22:53:11 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u2-20020a17090341c200b001dcb560d7f0sm2646773ple.11.2024.02.29.22.53.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Feb 2024 22:53:10 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <d78fd3ca-ed0b-40e5-8f8f-21db152a7402@roeck-us.net>
+Date: Thu, 29 Feb 2024 22:53:07 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222092119.5602-1-gaoshanliukou@163.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/11] dt-bindings: hwmon: lm75: use common hwmon
+ schema
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, Jean Delvare
+ <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
+ <20240229-mbly-i2c-v2-2-b32ed18c098c@bootlin.com>
+ <6749c8df-c545-4aca-bc18-4dfe9c9f15b0@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <6749c8df-c545-4aca-bc18-4dfe9c9f15b0@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-CC Andrew
+On 2/29/24 22:37, Krzysztof Kozlowski wrote:
+> On 29/02/2024 19:10, Théo Lebrun wrote:
+>> Reference common hwmon schema which has the generic "label" property,
+>> parsed by Linux hwmon subsystem.
+>>
+> 
+> Please do not mix independent patchsets. You create unneeded
+> dependencies blocking this patch. This patch depends on hwmon work, so
+> it cannot go through different tree.
+> 
+> If you insist to combine independent patches, then at least clearly
+> express merging strategy or dependency in patch changelog --- .
+> 
 
-On 02/22/24 at 05:21pm, yang.zhang wrote:
-> From: "yang.zhang" <yang.zhang@hexintek.com>
+For my part I have to say that I don't know what to do with it.
+Rob's robot reported errors, so I won't apply it, and I don't
+feel comfortable giving it an ack either because of those errors.
+
+Guenter
+
 > 
-> When loading segments, ubytes is <= mbytes. When ubytes is exhausted,
-> there could be remaining mbytes. Then in the while loop, the buf pointer
-> advancing with mchunk will causing meaningless reading even though it
-> doesn't harm.
+>> To: Jean Delvare <jdelvare@suse.com>
+>> To: Guenter Roeck <linux@roeck-us.net>
+>> Cc: linux-hwmon@vger.kernel.org
+>> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+>> ---
 > 
-> So let's change to make sure that all of the copying and the rest only
-> happens before uchunk goes to zero.
 > 
-> Acked-by: Baoquan He <bhe@redhat.com>
-> Signed-off-by: yang.zhang <yang.zhang@hexintek.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> ---
-> V2 -> V3:
-> - Add more detailed description in the commit message
-> v1 -> v2:
-> - Only copy before uchunk goes to zero
-> 
-> V1: https://lore.kernel.org/lkml/20240130101802.23850-1-gaoshanliukou@163.com/
-> ---
->  kernel/kexec_core.c | 44 ++++++++++++++++++++++++--------------------
->  1 file changed, 24 insertions(+), 20 deletions(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index d08fc7b5db97..2fc3d0e3715a 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -800,22 +800,24 @@ static int kimage_load_normal_segment(struct kimage *image,
->  				PAGE_SIZE - (maddr & ~PAGE_MASK));
->  		uchunk = min(ubytes, mchunk);
->  
-> -		/* For file based kexec, source pages are in kernel memory */
-> -		if (image->file_mode)
-> -			memcpy(ptr, kbuf, uchunk);
-> -		else
-> -			result = copy_from_user(ptr, buf, uchunk);
-> +		if (uchunk) {
-> +			/* For file based kexec, source pages are in kernel memory */
-> +			if (image->file_mode)
-> +				memcpy(ptr, kbuf, uchunk);
-> +			else
-> +				result = copy_from_user(ptr, buf, uchunk);
-> +			ubytes -= uchunk;
-> +			if (image->file_mode)
-> +				kbuf += uchunk;
-> +			else
-> +				buf += uchunk;
-> +		}
->  		kunmap_local(ptr);
->  		if (result) {
->  			result = -EFAULT;
->  			goto out;
->  		}
-> -		ubytes -= uchunk;
->  		maddr  += mchunk;
-> -		if (image->file_mode)
-> -			kbuf += mchunk;
-> -		else
-> -			buf += mchunk;
->  		mbytes -= mchunk;
->  
->  		cond_resched();
-> @@ -866,11 +868,18 @@ static int kimage_load_crash_segment(struct kimage *image,
->  			memset(ptr + uchunk, 0, mchunk - uchunk);
->  		}
->  
-> -		/* For file based kexec, source pages are in kernel memory */
-> -		if (image->file_mode)
-> -			memcpy(ptr, kbuf, uchunk);
-> -		else
-> -			result = copy_from_user(ptr, buf, uchunk);
-> +		if (uchunk) {
-> +			/* For file based kexec, source pages are in kernel memory */
-> +			if (image->file_mode)
-> +				memcpy(ptr, kbuf, uchunk);
-> +			else
-> +				result = copy_from_user(ptr, buf, uchunk);
-> +			ubytes -= uchunk;
-> +			if (image->file_mode)
-> +				kbuf += uchunk;
-> +			else
-> +				buf += uchunk;
-> +		}
->  		kexec_flush_icache_page(page);
->  		kunmap_local(ptr);
->  		arch_kexec_pre_free_pages(page_address(page), 1);
-> @@ -878,12 +887,7 @@ static int kimage_load_crash_segment(struct kimage *image,
->  			result = -EFAULT;
->  			goto out;
->  		}
-> -		ubytes -= uchunk;
->  		maddr  += mchunk;
-> -		if (image->file_mode)
-> -			kbuf += mchunk;
-> -		else
-> -			buf += mchunk;
->  		mbytes -= mchunk;
->  
->  		cond_resched();
-> -- 
-> 2.25.1
+> Best regards,
+> Krzysztof
 > 
 
