@@ -1,124 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274A36A352
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F816A354;
+	Fri,  1 Mar 2024 09:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709285695; cv=none; b=W9pW2uK3ZWV/zI9HvwQEbARJAicH9CnFWc1AraJ9i8hD/22BJwn92i/QZKlL2Z+aip5T/QdQdedIpP5Pw0dlJe/nn/EP13fOir+MPruSroVNlsMEYM3L7mWOR+nUVwT3o2X5yFd1+EtPPoAkwot3o1g2IXQtGcgO98xRD2dRexQ=
+	t=1709285751; cv=none; b=BuS8B0cG0d77O0EOBDtcaNqFoaZ1hdjHnVEObLHEFnuQESxVS72/e8QihArcDQ92ILADlIj5qxdKn1Rxdzi0VCy+YA1f6wVwydqx7xhlIXQxg/IVDyvHcI9sFCEWz9URiaNCFKxfdJNVdJWTyKbWqGoTVdAqOHX+1Fgn7W+tUIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709285695; c=relaxed/simple;
-	bh=xUzguapjnO/ASwX7eqgiIKisU9asefIceRf+xZr60sc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tLZhPpd4uuE6VIRzbo3HjnjJuff8YNVJUgbsL8HYubDRriYl+VRNaN8RdaIvHLXnenqCq/knaF00F7Iw1ESmd9ONirNz5KnZLaxWyAkIivZOFL4eEKO3C32kaRa7P/+DAKZZ5WpsFNbUoxounE53JAmk71KLUlmdZE+jlXts6zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XC5IuHIw; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XC5IuHIw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709285693;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xUzguapjnO/ASwX7eqgiIKisU9asefIceRf+xZr60sc=;
-	b=XC5IuHIwSPakAnJ/LjWT2THwmR1CY+gSlgeJnoMh+cp8XKb7a8F6Xk1ZxbfNLnrjlku2o5
-	AyIzA9taU2tvVxF8CpkT9uLCIA0vVbS1LmqWGr8x3Ard2Qq2CQZjVk2lHGLxXsZVpFWfVk
-	/U/PXvSRA5767KoqjsRCgmSNu8TGRsY=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-382-WgHk05VXMXOqtxCZNO0ysA-1; Fri, 01 Mar 2024 04:34:51 -0500
-X-MC-Unique: WgHk05VXMXOqtxCZNO0ysA-1
-Received: by mail-yb1-f198.google.com with SMTP id 3f1490d57ef6-dcdb00ff6e0so612826276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 01:34:51 -0800 (PST)
+	s=arc-20240116; t=1709285751; c=relaxed/simple;
+	bh=8bNhQxbcCbIomd4dt6eew7xOLqapH0ekcPWsALbORUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HCyJesxh9n05Ov6rKtkRTa9Yq8T6jGR/jAOfYOcKiIXDlHF2BIx42W9ORpqDtSynPCspYqlDVfyhFEj/hnI9MxkM71GfBpbEd1ovNpWXpLpioe9jdOm2srgQXFF0HVWUkAS0wqBeTRJvtjLEoUux3lGjYTku21Z00EOcFEPKU1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-412bfacd146so8595005e9.0;
+        Fri, 01 Mar 2024 01:35:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709285386; x=1709890186;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xUzguapjnO/ASwX7eqgiIKisU9asefIceRf+xZr60sc=;
-        b=qFsKNfJMTrD0GSDlkOgad/QmfypZc3AKBGK7+ranfAEAzeQGgnPjTwpJcIRONScGgf
-         0ZQim5ZQdUaUfVJ1z7qBPFpAI60Id95QUAkOJlDcjvmZZ2W5RfNav3rnXV6UUFjYz3u1
-         opNy4F+3oob41Ed4EjJtWt6rxe9kfTi98lumdZoISs7xQNGIss5XOrEmHcHoca6VkSlP
-         Wg1JMJCAX6Ps+4ZG9cmPp8FfE6X7iicmPHxFe2Sgf6kUqwqX3SyRXXC6OdFdlG/oR5SJ
-         7WMnDN+0ji/gztEqFBcNTfNTw33pnVFPg3potYTuSECBKUbHxSp9rgKwVjkoAM6L5o7T
-         CuTg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1GOx3cF08sC2ohaOeE9GGqis3sO0bChbNhSlDER7LmP7qfyE8J7lSh8pFs6yiQj4lsONaNV2PllcMmIXDFsnVzCPwZSN/5y88XSBe
-X-Gm-Message-State: AOJu0YyvBeUzw1u5Rl3vjcnOWOfR7FjCbCUFcBTAfYEJq8wKj9Ljz5CS
-	Ibci6xbwv89inGGaYczeYWer1QYzeS3uD6eMXWEYXFWjbDWTNyU2jIp9bm/bRr5EgqkBu31JrPx
-	OoAF4+bhIDymjdnp5wH/xEQNmVHIsR3dD1JzwgIJpn9rUuJB/lYkG8JFdZHLk7A==
-X-Received: by 2002:a25:820a:0:b0:dcc:8617:d6da with SMTP id q10-20020a25820a000000b00dcc8617d6damr764219ybk.4.1709285386075;
-        Fri, 01 Mar 2024 01:29:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF2RdbWeJU69WfSLJ6KahAECor/gofhdJ9ItLhUg99VOwuO3lZOaOjqitHJwv+Y3BImlFdLbQ==
-X-Received: by 2002:a25:820a:0:b0:dcc:8617:d6da with SMTP id q10-20020a25820a000000b00dcc8617d6damr764203ybk.4.1709285385721;
-        Fri, 01 Mar 2024 01:29:45 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id c3-20020ac87dc3000000b0042dac47e9b4sm1549107qte.5.2024.03.01.01.29.43
+        d=1e100.net; s=20230601; t=1709285748; x=1709890548;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1gjhUQtfjcW3P/Ik/3eAaSYAXs9I9SaEMNpWMrhksnk=;
+        b=V3wlWE9A9SjUqw0U9Dy/QqJm1wzspZv+ebCUApw2ayNwUmvlP/YEkQbfcHXdngSMai
+         nnxfkOvkghXCW5jdq59Yd5Urv7wCMVbdsOt2SLaya8NDVdjNXVSa7xV7Pzfo/STVV4vI
+         ONgweYrd0ggtsCe9JOkX8XWDEHmn11tfhlgUIhTBzfHeuNlRx/KdzL1GNpTFVIO4k/T0
+         9T5yCCNlSEPbwNZqZziyHclu/CgLB6I1rNEj5KoLJAa8rRZ/z892KM2ZvhHWcv9al+X9
+         MoEblBnW2fgezQ88tIBRq8z7gc0zckhDJUqLi5LuuDXi2pj6ah4FyLveOULL4Y2sK3UG
+         fklg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxPjUkIo49xcvq2/2gYPzMFmG8NE1s5ReW+7EVc/IRDicjYaVxnHKFjqu9RvgA7DPR23SAkdd8NHVD+VrbuIDmY9BkJ8DXFJOaXj+DaKC88oYw/wsM+vrgpH47PKP1WKbwoLN3BmL6gwj/h+QYGy2jZm0TB0MXUODWibJdJUAo
+X-Gm-Message-State: AOJu0Yw2ejJZf3VYwmNTGlCXInLsX8aAuQTIyFoODWKXn3X9VA/osxM7
+	a4AjzlScfiXUnSX6xtCqdpHaRPqqzqG3NA8LQS83YnBV8/eGUQvGydQCtXIn
+X-Google-Smtp-Source: AGHT+IHJDI/TzDartf8NY/ZhFuVhtyIPZkGhPS1hZ/O9GtvpENuTyWbmh0D26/bAjBhR+zHpTBrJoA==
+X-Received: by 2002:a05:600c:154f:b0:412:bca4:6a00 with SMTP id f15-20020a05600c154f00b00412bca46a00mr1546337wmg.18.1709285747492;
+        Fri, 01 Mar 2024 01:35:47 -0800 (PST)
+Received: from gmail.com (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 1-20020a05600c024100b0040fddaf9ff4sm7830123wmj.40.2024.03.01.01.35.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 01:29:45 -0800 (PST)
-Message-ID: <7158e09386f0345d2e87ea5433dabf38db027971.camel@redhat.com>
-Subject: Re: [PATCH v3 00/10] Make PCI's devres API more consistent
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>, Sam
- Ravnborg <sam@ravnborg.org>, dakr@redhat.com, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org
-Date: Fri, 01 Mar 2024 10:29:42 +0100
-In-Reply-To: <20240229205715.GA362688@bhelgaas>
-References: <20240229205715.GA362688@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Fri, 01 Mar 2024 01:35:47 -0800 (PST)
+Date: Fri, 1 Mar 2024 01:35:44 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Matthew Wood <thepacketgeek@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: netconsole: Add continuation line
+ prefix to userdata messages
+Message-ID: <ZeGhcN/C7h1KWcTO@gmail.com>
+References: <20240229183602.321747-1-thepacketgeek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229183602.321747-1-thepacketgeek@gmail.com>
 
-On Thu, 2024-02-29 at 14:57 -0600, Bjorn Helgaas wrote:
-> On Thu, Feb 29, 2024 at 09:31:20AM +0100, Philipp Stanner wrote:
-> > @Bjorn:
-> > Hey Bjorn, are we good with this series? Any more wishes or
-> > suggestions?
->=20
-> Sorry, haven't had a chance to go through it yet.=C2=A0=20
->=20
-> FWIW, I just tried to apply these on top of pci/devres, but it failed
-> here:
->=20
-> =C2=A0 Applying: PCI: Add new set of devres functions
-> =C2=A0 Applying: PCI: Deprecate iomap-table functions
-> =C2=A0 Applying: PCI: Warn users about complicated devres nature
-> =C2=A0 Applying: PCI: Make devres region requests consistent
-> =C2=A0 Applying: PCI: Move dev-enabled status bit to struct pci_dev
-> =C2=A0 error: patch failed: drivers/pci/pci.h:811
-> =C2=A0 error: drivers/pci/pci.h: patch does not apply
-> =C2=A0 Patch failed at 0005 PCI: Move dev-enabled status bit to struct
-> pci_dev
->=20
-> Haven't investigated, so maybe it's some trivial easily fixed thing.
+On Thu, Feb 29, 2024 at 10:36:01AM -0800, Matthew Wood wrote:
+> Add a space (' ') prefix to every userdata line to match docs for
+> dev-kmsg. To account for this extra character in each userdata entry,
+> reduce userdata entry names (directory name) from 54 characters to 53.
+> 
+> According to the dev-kmsg docs, a space is used for subsequent lines to
+> mark them as continuation lines.
+> 
+> > A line starting with ' ', is a continuation line, adding
+> > key/value pairs to the log message, which provide the machine
+> > readable context of the message, for reliable processing in
+> > userspace.
+> 
+> Testing for this patch::
+> 
+>  cd /sys/kernel/config/netconsole && mkdir cmdline0
+>  cd cmdline0
+>  mkdir userdata/test && echo "hello" > userdata/test/value
+>  mkdir userdata/test2 && echo "hello2" > userdata/test2/value
+>  echo "message" > /dev/kmsg
+> 
+> Outputs::
+> 
+>  6.8.0-rc5-virtme,12,493,231373579,-;message
+>   test=hello
+>   test2=hello2
+> 
+> And I confirmed all testing works as expected from the original patchset
+> 
+> v1 -> v2:
+> - Calculate 53 byte user data name from: entry length - formatting chars - value length
+> - Update docs to reflect 53 byte limit for user data name (director)
 
-For me, based on Linus's master, this applies with the previous series.
+I think the changelog needs to come after the --- below, but I will
+defer that to the maintainers.
 
-It seems to me that this issue only exists on linux-next, the reason
-being that git searches for struct pci_devres in line 811, but on
-linux-next, because of previous additions, the struct moved to line
-827, and poor git can't find it anymore.
+> Fixes: df03f830d099 ("net: netconsole: cache userdata formatted string in netconsole_target")
+> Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
+> ---
+>  Documentation/networking/netconsole.rst | 8 ++++----
+>  drivers/net/netconsole.c                | 8 +++++---
+>  2 files changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/networking/netconsole.rst b/Documentation/networking/netconsole.rst
+> index b28c525e5d1e..d55c2a22ec7a 100644
+> --- a/Documentation/networking/netconsole.rst
+> +++ b/Documentation/networking/netconsole.rst
+> @@ -180,7 +180,7 @@ Custom user data can be appended to the end of messages with netconsole
+>  dynamic configuration enabled. User data entries can be modified without
+>  changing the "enabled" attribute of a target.
+>  
+> -Directories (keys) under `userdata` are limited to 54 character length, and
+> +Directories (keys) under `userdata` are limited to 53 character length, and
+>  data in `userdata/<key>/value` are limited to 200 bytes::
+>  
+>   cd /sys/kernel/config/netconsole && mkdir cmdline0
+> @@ -197,8 +197,8 @@ Messages will now include this additional user data::
+>  Sends::
+>  
+>   12,607,22085407756,-;This is a message
+> - foo=bar
+> - qux=baz
+> +  foo=bar
+> +  qux=baz
+>  
+>  Preview the userdata that will be appended with::
+>  
+> @@ -218,7 +218,7 @@ The `qux` key is omitted since it has no value::
+>  
+>   echo "This is a message" > /dev/kmsg
+>   12,607,22085407756,-;This is a message
+> - foo=bar
+> +  foo=bar
+>  
+>  Delete `userdata` entries with `rmdir`::
+>  
+> diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+> index 0de108a1c0c8..46e447ea41b8 100644
+> --- a/drivers/net/netconsole.c
+> +++ b/drivers/net/netconsole.c
+> @@ -43,9 +43,11 @@ MODULE_DESCRIPTION("Console driver for network interfaces");
+>  MODULE_LICENSE("GPL");
+>  
+>  #define MAX_PARAM_LENGTH	256
+> -#define MAX_USERDATA_NAME_LENGTH	54
+> -#define MAX_USERDATA_VALUE_LENGTH	200
+>  #define MAX_USERDATA_ENTRY_LENGTH	256
+> +#define MAX_USERDATA_VALUE_LENGTH	200
+> +#define MAX_USERDATA_NAME_LENGTH	MAX_USERDATA_ENTRY_LENGTH - \
+> +					MAX_USERDATA_VALUE_LENGTH - \
+> +					3 /* ' ' '=' '\n' characters */
 
-I could fix that and provide a v4.
+This is not beautiful even for my standards. I think something like the
+code below makes more sense, even if checkpatch is not happy.
 
-
-P.
-
-
->=20
-> Bjorn
->=20
-
+/* The number three below comes from ' ' + '=' + '\n' characters */
+#define MAX_USERDATA_NAME_LENGTH 	MAX_USERDATA_ENTRY_LENGTH - MAX_USERDATA_VALUE_LENGTH - 3 
