@@ -1,102 +1,240 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAF63987D;
-	Fri,  1 Mar 2024 14:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B3C22324;
+	Fri,  1 Mar 2024 14:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709304604; cv=none; b=iVc/ytKW9p5rTr2wXrEsRBhF5C1KtmWXXHUTvWmPJ/V3IzUxoxYMnym/zNaFFX4TB/bHO4IoMHX2P8T5lHC9j7+fmjhBmDuQJd4ggn1gzanYSrvuQ2XKiq15a2MnklBTFRH0XS68twIyDKkzNT6xzlxIm9ZktzfKsGZ4djrYNhE=
+	t=1709304750; cv=none; b=inhq03h6LCL45ITNHiBjVNVu+ff5eRxRgbbaYPKqokNQKgQkUaBLznkNAbnEYB4VrYDBWuUmTaERbavpUeDLHOYg5n2Wqd1tree0n6Bu+7FpJgMgl6Zu034jtJRshMh5CLTo469t1NT/G3nVJdAdqRkT2WuWUuis17iPNhlEvVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709304604; c=relaxed/simple;
-	bh=PDHQCj4dKUL8VGBu7R8FZ4rplBEM7DCMytyrNrWGZ6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hLRvMxKTviw1P/+9mz9E8Bb197crJhihjS53rW1ry+etNeWzIb51quy7bcyfVau2rrkzQlDFih1nM8heNo9WfeXxx5t7S6cKUkiFr6Tj96OwwO5AWGEJHpjSQzgqcOSChU7wk+grGCyj9Chotpr9G3vfh22LaFravvcZBw2g17E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=tUADbGwv; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1709304750; c=relaxed/simple;
+	bh=rOEy1lKjPOcxZsqS0RdrBMGzspzvco5V3px+hW77xkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=blsdxUFqysgtUiDXHfVIxfzKQcOWrDoUFoUzl3Sph9YHxp5tozjPCsgm9LEZIByht2yCD3FDJUpdRu7Xsn3BZ5YoqMwSDeNvSbNitpTMytFaBCvw/WOshRaC2XaEJLS1fRefMKWNYzhmQMF2iNi7Mof2IhixFVWxpPnBTe92Pr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cw6zp7TN; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tUADbGwv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=yYU2P/XionBukymtyfAivEvDMyJYX93BV07iZlCfOYE=; b=tUADbGwvT+bsqxHHRHjijlFIck
-	/MxOPOG46qCY9h2+BenQw2uzIhrLdYBDgLxjbu8yWYH7flCOABA55iFsEg9N7dxj1gxDw59UDU9r8
-	tpqrWyKZV+yEY4ka3CG07cwSmMkGzDPsTgzkpHKtgWR+Y8lFiTbSGPB0p7OpjA9uwLcjTIUElDlks
-	ja7yEhTbbw+CbXM14OppCextPo810gFu2NaEQ4z/wCi/q2sXlu6fcoA+6HJjhcx78eVS5akivlXgA
-	zxJ8PntBaP2UA2YMn5sWKulvyHNYylCYIl7lcOiwUkvMT+PrbAOxz2jt8n+ke4U0TaQWDMmgriaer
-	3WJOsdqA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49086)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rg4Cj-0001iq-1A;
-	Fri, 01 Mar 2024 14:49:41 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rg4Cc-0001p9-1m; Fri, 01 Mar 2024 14:49:34 +0000
-Date: Fri, 1 Mar 2024 14:49:33 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: arinc.unal@arinc9.com
-Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
-	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v3 1/9] net: dsa: mt7530: remove
- .mac_port_config for MT7988 and make it optional
-Message-ID: <ZeHq/ZoVqMD9BojD@shell.armlinux.org.uk>
-References: <20240301-for-netnext-mt7530-improvements-3-v3-0-449f4f166454@arinc9.com>
- <20240301-for-netnext-mt7530-improvements-3-v3-1-449f4f166454@arinc9.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cw6zp7TN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709304749; x=1740840749;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rOEy1lKjPOcxZsqS0RdrBMGzspzvco5V3px+hW77xkg=;
+  b=cw6zp7TNdT9FaCwagcWAtLpKgGN2a35tLsU3m7CcXZggDx4jGxgpKlss
+   8BCj75kRqDL5BBz/q1SJrogT2n5lgMGco0QJJ9LKy5wzQkiwaj/nWaHmH
+   f142jyJnUlMfSDjodGfGkRTheLKstCpUqhxL5DmvsVIOMPY+EHlfYdt+o
+   6y7ICZOujLI5EWny9f0vGhOsbqaKdt6SoJtXMxUr5X+vRvfUuL5qSno1u
+   UH15MDKUO4bP3NGwkxkxTnD4FLiJnd8Np8Ud10CdIxZWvKnp6b1Yh4nSc
+   oyX7EMmpByBEnjg2U1uqZSVNBOt02BctWVSOsqaFHf7cwDZUPLkzfagmy
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="7613776"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="7613776"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 06:52:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="8640001"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 06:52:29 -0800
+Received: from [10.209.156.90] (kliang2-mobl1.ccr.corp.intel.com [10.209.156.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 240AB580DA4;
+	Fri,  1 Mar 2024 06:52:25 -0800 (PST)
+Message-ID: <e1e04f03-5d99-466d-a2d1-ce7fb15e8b8e@linux.intel.com>
+Date: Fri, 1 Mar 2024 09:52:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 04/20] perf jevents: Add tsx metric group for Intel
+ models
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>
+Cc: Perry Taylor <perry.taylor@intel.com>,
+ Samantha Alt <samantha.alt@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang
+ <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ John Garry <john.g.garry@oracle.com>, Jing Zhang
+ <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+References: <20240229001806.4158429-1-irogers@google.com>
+ <20240229001806.4158429-5-irogers@google.com>
+ <7aa2d2a2-b8f9-478f-9699-7b717d38a8ab@linux.intel.com>
+ <CAP-5=fWSidi1zjwn8Zr93dAQvRBtngKrkVwDxorTMmVSVc9FWg@mail.gmail.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fWSidi1zjwn8Zr93dAQvRBtngKrkVwDxorTMmVSVc9FWg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240301-for-netnext-mt7530-improvements-3-v3-1-449f4f166454@arinc9.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Fri, Mar 01, 2024 at 12:42:57PM +0200, Arınç ÜNAL via B4 Relay wrote:
-> From: Arınç ÜNAL <arinc.unal@arinc9.com>
-> 
-> For the switch on the MT7988 SoC, the mac_port_config member for ID_MT7988
-> in mt753x_table is not needed as the interfaces of all MACs are already
-> handled on mt7988_mac_port_get_caps().
-> 
-> Therefore, remove the mac_port_config member from ID_MT7988 in
-> mt753x_table. Before calling priv->info->mac_port_config(), if there's no
-> mac_port_config member in mt753x_table, exit mt753x_mac_config()
-> successfully.
-> 
-> Remove calling priv->info->mac_port_config() from the sanity check as the
-> sanity check requires a pointer to a mac_port_config function to be
-> non-NULL. This will fail for MT7988 as mac_port_config won't be a member of
-> its info table.
-> 
-> Co-developed-by: Daniel Golle <daniel@makrotopia.org>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Thanks!
+On 2024-02-29 8:01 p.m., Ian Rogers wrote:
+> On Thu, Feb 29, 2024 at 1:15 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2024-02-28 7:17 p.m., Ian Rogers wrote:
+>>> Allow duplicated metric to be dropped from json files.
+>>>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>>  tools/perf/pmu-events/intel_metrics.py | 51 ++++++++++++++++++++++++++
+>>>  1 file changed, 51 insertions(+)
+>>>
+>>> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+>>> index 20c25d142f24..1096accea2aa 100755
+>>> --- a/tools/perf/pmu-events/intel_metrics.py
+>>> +++ b/tools/perf/pmu-events/intel_metrics.py
+>>> @@ -7,6 +7,7 @@ import argparse
+>>>  import json
+>>>  import math
+>>>  import os
+>>> +from typing import Optional
+>>>
+>>>  parser = argparse.ArgumentParser(description="Intel perf json generator")
+>>>  parser.add_argument("-metricgroups", help="Generate metricgroups data", action='store_true')
+>>> @@ -77,10 +78,60 @@ def Smi() -> MetricGroup:
+>>>      ])
+>>>
+>>>
+>>> +def Tsx() -> Optional[MetricGroup]:
+>>> +    if args.model not in [
+>>> +        'alderlake',
+>>> +        'cascadelakex',
+>>> +        'icelake',
+>>> +        'icelakex',
+>>> +        'rocketlake',
+>>> +        'sapphirerapids',
+>>> +        'skylake',
+>>> +        'skylakex',
+>>> +        'tigerlake',> +    ]:
+>>
+>> Can we get ride of the model list? Otherwise, we have to keep updating
+>> the list.
+> 
+> Do we expect the list to update? :-) 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Yes, at least for the meteorlake and graniterapids. They should be the
+same as alderlake and sapphirerapids. I'm not sure about the future
+platforms.
+
+Maybe we can have a if args.model in list here to include all the
+non-hybrid models which doesn't support TSX. I think the list should not
+be changed shortly.
+
+> The issue is the events are in
+> sysfs and not the json. If we added the tsx events to json then this
+> list wouldn't be necessary, but it also would mean the events would be
+> present in "perf list" even when TSX is disabled.
+
+I think there may an alternative way, to check the RTM events, e.g.,
+RTM_RETIRED.START event. We only need to generate the metrics for the
+platform which supports the RTM_RETIRED.START event.
+
+
+> 
+>>> +        return None
+>>> +> +    pmu = "cpu_core" if args.model == "alderlake" else "cpu"
+>>
+>> Is it possible to change the check to the existence of the "cpu" PMU
+>> here? has_pmu("cpu") ? "cpu" : "cpu_core"
+> 
+> The "Unit" on "cpu" events in json always just blank. On hybrid it is
+> either "cpu_core" or "cpu_atom", so I can make this something like:
+> 
+> pmu = "cpu_core" if metrics.HasPmu("cpu_core") else "cpu"
+> 
+> which would be a build time test.
+
+Yes, I think using the "Unit" is good enough.
+
+> 
+> 
+>>> +    cycles = Event('cycles')
+>>> +    cycles_in_tx = Event(f'{pmu}/cycles\-t/')
+>>> +    transaction_start = Event(f'{pmu}/tx\-start/')
+>>> +    cycles_in_tx_cp = Event(f'{pmu}/cycles\-ct/')
+>>> +    metrics = [
+>>> +        Metric('tsx_transactional_cycles',
+>>> +                      'Percentage of cycles within a transaction region.',
+>>> +                      Select(cycles_in_tx / cycles, has_event(cycles_in_tx), 0),
+>>> +                      '100%'),
+>>> +        Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted transactions.',
+>>> +                      Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / cycles,
+>>> +                                    has_event(cycles_in_tx),
+>>> +                                    0),
+>>> +                      '100%'),
+>>> +        Metric('tsx_cycles_per_transaction',
+>>> +                      'Number of cycles within a transaction divided by the number of transactions.',
+>>> +                      Select(cycles_in_tx / transaction_start,
+>>> +                                    has_event(cycles_in_tx),
+>>> +                                    0),
+>>> +                      "cycles / transaction"),
+>>> +    ]
+>>> +    if args.model != 'sapphirerapids':
+>>
+>> Add the "tsx_cycles_per_elision" metric only if
+>> has_event(f'{pmu}/el\-start/')?
+> 
+> It's a sysfs event, so this wouldn't work :-(
+
+The below is the definition of el-start in the kernel.
+EVENT_ATTR_STR(el-start,	el_start,	"event=0xc8,umask=0x1");
+
+The corresponding event in the event list should be HLE_RETIRED.START
+      "EventCode": "0xC8",
+      "UMask": "0x01",
+      "EventName": "HLE_RETIRED.START",
+
+I think we may check the HLE_RETIRED.START instead. If the
+HLE_RETIRED.START doesn't exist, I don't see a reason why the
+tsx_cycles_per_elision should be supported.
+
+Again, in the virtualization world, it's possible that the
+HLE_RETIRED.START exists in the event list but el_start isn't available
+in the sysfs. I think it has to be specially handle in the test as well.
+
+Thanks,
+Kan
+
+> 
+> Thanks,
+> Ian
+> 
+>> Thanks,
+>> Kan
+>>
+>>> +        elision_start = Event(f'{pmu}/el\-start/')
+>>> +        metrics += [
+>>> +            Metric('tsx_cycles_per_elision',
+>>> +                          'Number of cycles within a transaction divided by the number of elisions.',
+>>> +                          Select(cycles_in_tx / elision_start,
+>>> +                                        has_event(elision_start),
+>>> +                                        0),
+>>> +                          "cycles / elision"),
+>>> +        ]
+>>> +    return MetricGroup('transaction', metrics)
+>>> +
+>>> +
+>>>  all_metrics = MetricGroup("", [
+>>>      Idle(),
+>>>      Rapl(),
+>>>      Smi(),
+>>> +    Tsx(),
+>>>  ])
+>>>
+>>>  if args.metricgroups:
+> 
