@@ -1,206 +1,208 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059F33C47C
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A533C6AB;
+	Fri,  1 Mar 2024 16:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709311495; cv=none; b=VPo52RP2bbBkI5KSbCRKGfaPy8v6IsNpcWO396Z1+9t9GwKl3YPF+Q2JVU+vjz3zS3tgPxO+SzvTUpRA/UO/MqTQMi/63vcv7dQggopmEjbtuGUPSdVoj+jF4nss7EHkTGbzCxAON//pBQqfl2AZ7w7wQFa98uvLdchUo5r70aU=
+	t=1709311498; cv=none; b=jnxHloGLxVVW1yufFbYq7XhiofYah7DobjG1/ST2Vh49aSTBf6caa72Egx2s/7fobEyYuA8Euef9MKTofxa40wY29VOX6AooFdvIHpYiRACzYA7NzL86AXu30jC1wjR1mCMUsWpBzqY90Wk+QmTy+E4n/FbNVz+0oK1+sN4nAfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709311495; c=relaxed/simple;
-	bh=eW/jBE9xiI7mzT0S7JbXnNi/2VZkkXPS3pieWKtDhWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fERnI5QANPCIQnSungH6j/CM6tv6AjowVxTJ+0A+VZNuZAOAUiUiDJPjsEhyc/vykgkdi6F9wi3pbx3N7mNb+L8lwDTY1tdeGRa1A19eT18No/eQWJAem4CzcGih7kF1L3UhPZgiQxug6K9fstNRQtWYT1xe5cHRqyyLQrmPXuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=SkGQcwHQ; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1709311498; c=relaxed/simple;
+	bh=BY0+lJrnKbexBUzETPtFYZ+OJuge9ZodiUfVOjc2hK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JNpmBsdIldQP6TrDGtY+HVWfCGW7e7ZbHLBRFn3bfSuWdWIgUdNDVuEt70gOqyMx0bF/5C1v8lg0OylWNFQWgDxpPVsmBjkdSRNdUwdwSaCV6ChNvee8/XgMmXQl4TqMt9nnAKNFQhTsz6D0qC/Oq018jwjzzvnjGw+F/7vY+Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=fNWUnrtg; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SkGQcwHQ"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5132bd70e7dso576777e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 08:44:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709311490; x=1709916290; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0fSMW0qhtBaxw1Ne7+Ji9afXRUSlXWtRAYNnO9M03wA=;
-        b=SkGQcwHQSQw2jvhMg1rtMW0GIpv5/fDSioHSxRxKHmEONt9ynYhKeVKBmc371UcJzf
-         3GIb/2VaJP2k9RMeL3qW794AB2QoLsRW7OjOvkTogEzx2Boz+8KDLq58QlmcTBvUZT41
-         M7W/ZMVIKvSEAZpsZncsJu7bcT3L/KtgJOxwVgTbKWKL420AJTU+9IG2k/nRDc2fF1BX
-         RCMa64JFTQn/URDR2NpGeru0Q76fWHZuc3Sy31a9K8wXZdMmN8RnB4TNDGwVAfUsh0IE
-         ZW6RFvUri4mlYP4ZCi0SfRNVNAemLXspnU1kIJAgeTK6mO5M0Kp2Goq4kKpDEfw1lAy/
-         137w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709311490; x=1709916290;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0fSMW0qhtBaxw1Ne7+Ji9afXRUSlXWtRAYNnO9M03wA=;
-        b=b+EYTPtS9JBWTh5OufpV5rc0LQwnG2DHZod+695FtGMvxeWs+kDWVSMpPUVN26VtVy
-         WLXWPR5szqjRQDWBwViwq4i+XV3Pv9YbrPt8UOe88dhEluIWhPI5KqtLFW4/L4lx+ViT
-         rW1ijr4piaf430p4ivCZlEzMRl3Xlsv6iRqxL84dVXjb5+DtbA3V9HcAYhYC38na+Nhp
-         XAhHpjIXjbjl+YqIX5HrrnLBbJFTt3XDIYSMV9vXG/m3jt7/+qSN8kNK5sZ7mqqZ9ZdQ
-         LVp2Ps5Ncvgik8MSi5cHuFfQnKTNED/82Tj4LBTgxN2lz0G+0H5kn/019duzVxWQu0Ox
-         zLoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXOBtS4jiQJngzXAscMvaaHA90uj2huG6cJzUJRSq/TJgGhIWsyFnBgDiC+6ylVqF1wdwM1idivlbo8betU0vHEEgj4tUw6eiylVm6
-X-Gm-Message-State: AOJu0YzMc5VQiQ+jOQX/6E1geebobPnEE7j2jdieIgEOzi8qSyqF/+ay
-	E5tQOB/wJ2nlh/KxUe3FKf5ggza0Kl4yiWMSywXI/S3alsRlAmPA2S4lXzmWecg=
-X-Google-Smtp-Source: AGHT+IH+VZ/Ok1lQGCinD/i871+cRsq/HKRFrVNNHntki84EwJcMBwhp9FeP1K8gbRR0fmgRMfL0cA==
-X-Received: by 2002:a05:6512:39c5:b0:513:258f:5ef3 with SMTP id k5-20020a05651239c500b00513258f5ef3mr2453949lfu.1.1709311489974;
-        Fri, 01 Mar 2024 08:44:49 -0800 (PST)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:1cac:c075:fa3d:e5e9])
-        by smtp.gmail.com with ESMTPSA id t1-20020a5d5341000000b0033e11acf84asm4456462wrv.15.2024.03.01.08.44.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 08:44:49 -0800 (PST)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Robin Ehn <rehn@rivosinc.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	"Stefan O'Rear" <sorear@fastmail.com>,
-	Jessica Clarke <jrtc27@jrtc27.com>
-Subject: [PATCH] riscv: hwprobe: export highest virtual userspace address
-Date: Fri,  1 Mar 2024 17:44:06 +0100
-Message-ID: <20240301164407.475957-1-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="fNWUnrtg"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4TmYpr21J9z9t8W;
+	Fri,  1 Mar 2024 17:44:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1709311492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O82T73AIK6qGhlYorGzOupTzei7wEk6+FPA8o3URJUE=;
+	b=fNWUnrtgSvHwlKswQCDBdMZ99aHEG9IE0hNSW5jexFvvQkpzgpzjuETR588Aq25oYo7zKm
+	8/eeN0UkSi/gyP8pjyFHWVKgnqR3ti1wvcPmdX3uCpNLcdx7pAw4DTQ/lkD/MWS4JI7jCc
+	lWQn7nG2EGhY3dAQjA0kSFrC6IVJyl6Kx/V1NZAN5ZMSUU8rpTjjNQ68eAgTbbYXLDlU+D
+	nunEh6RLwLQd9tGcIVuB9KmtTSEiCFBkw/cg0DX8LZECOWq5I6YzTySOTqCL7PStVsWUB/
+	V3TcSHJAm7jDZ6M3hPNRYHqx5COZfIg5tVkt5O731DxQR8wWHdF2+4rgwYKw7A==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Cc: djwong@kernel.org,
+	mcgrof@kernel.org,
+	linux-mm@kvack.org,
+	hare@suse.de,
+	david@fromorbit.com,
+	akpm@linux-foundation.org,
+	gost.dev@samsung.com,
+	linux-kernel@vger.kernel.org,
+	chandan.babu@oracle.com,
+	willy@infradead.org
+Subject: [PATCH v2 01/13] mm: Support order-1 folios in the page cache
+Date: Fri,  1 Mar 2024 17:44:32 +0100
+Message-ID: <20240301164444.3799288-2-kernel@pankajraghav.com>
+In-Reply-To: <20240301164444.3799288-1-kernel@pankajraghav.com>
+References: <20240301164444.3799288-1-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4TmYpr21J9z9t8W
 
-Some userspace applications (OpenJDK for instance) uses the free MSBs
-in pointers to insert additional information for their own logic and
-need to get this information from somewhere. Currently they rely on
-parsing /proc/cpuinfo "mmu=svxx" string to obtain the current value of
-virtual address usable bits [1]. Since this reflect the raw supported
-MMU mode, it might differ from the logical one used internally which is
-why arch_get_mmap_end() is used. Exporting the highest mmapable address
-through hwprobe will allow a more stable interface to be used. For that
-purpose, add a new hwprobe key named
-RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS which will export the highest
-userspace virtual address.
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Link: https://github.com/openjdk/jdk/blob/master/src/hotspot/os_cpu/linux_riscv/vm_version_linux_riscv.cpp#L171 [1]
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
+Folios of order 1 have no space to store the deferred list.  This is
+not a problem for the page cache as file-backed folios are never
+placed on the deferred list.  All we need to do is prevent the core
+MM from touching the deferred list for order 1 folios and remove the
+code which prevented us from allocating order 1 folios.
 
+Link: https://lore.kernel.org/linux-mm/90344ea7-4eec-47ee-5996-0c22f42d6a6a@google.com/
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
+ include/linux/huge_mm.h |  7 +++++--
+ mm/filemap.c            |  2 --
+ mm/huge_memory.c        | 23 ++++++++++++++++++-----
+ mm/internal.h           |  4 +---
+ mm/readahead.c          |  3 ---
+ 5 files changed, 24 insertions(+), 15 deletions(-)
 
-v3:
- - Note: I did not added Stefan Reviewed-by since I did more
-   modifications than just a simple respin.
- - Handle CONFIG_MMU=n as well and rename the key to
-   RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS
- - Add a user_max_virt_addr() macro to handle !MMU config
- - Link to v2: https://lore.kernel.org/lkml/20240220110950.871307-1-cleger@rivosinc.com/
-
-v2:
- - Note: tried sysconf to export it but this is not backed by syscall
-   and thus does not allow exporting such information easily.
- - Use arch_get_mmap_end() instead of VA_BITS since it reflects the
-   maximum logical address used by the riscv port
- - Change hwprobe key name from RISCV_HWPROBE_KEY_VA_BITS to
-   RISCV_HWPROBE_KEY_MAX_ADDRESS
- - Link to v1: https://lore.kernel.org/lkml/20240201140319.360088-1-cleger@rivosinc.com/
----
- Documentation/arch/riscv/hwprobe.rst  | 3 +++
- arch/riscv/include/asm/hwprobe.h      | 2 +-
- arch/riscv/include/asm/processor.h    | 8 +++++++-
- arch/riscv/include/uapi/asm/hwprobe.h | 1 +
- arch/riscv/kernel/sys_hwprobe.c       | 4 ++++
- 5 files changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
-index b2bcc9eed9aa..875d3122bd66 100644
---- a/Documentation/arch/riscv/hwprobe.rst
-+++ b/Documentation/arch/riscv/hwprobe.rst
-@@ -210,3 +210,6 @@ The following keys are defined:
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 5adb86af35fc..916a2a539517 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -263,7 +263,7 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+ 		unsigned long len, unsigned long pgoff, unsigned long flags);
  
- * :c:macro:`RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE`: An unsigned int which
-   represents the size of the Zicboz block in bytes.
-+
-+* :c:macro:`RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS`: An unsigned long which
-+  represent the highest userspace virtual address usable.
-diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
-index 630507dff5ea..150a9877b0af 100644
---- a/arch/riscv/include/asm/hwprobe.h
-+++ b/arch/riscv/include/asm/hwprobe.h
-@@ -8,7 +8,7 @@
+-void folio_prep_large_rmappable(struct folio *folio);
++struct folio *folio_prep_large_rmappable(struct folio *folio);
+ bool can_split_folio(struct folio *folio, int *pextra_pins);
+ int split_huge_page_to_list(struct page *page, struct list_head *list);
+ static inline int split_huge_page(struct page *page)
+@@ -410,7 +410,10 @@ static inline unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+ 	return 0;
+ }
  
- #include <uapi/asm/hwprobe.h>
+-static inline void folio_prep_large_rmappable(struct folio *folio) {}
++static inline struct folio *folio_prep_large_rmappable(struct folio *folio)
++{
++	return folio;
++}
  
--#define RISCV_HWPROBE_MAX_KEY 6
-+#define RISCV_HWPROBE_MAX_KEY 7
+ #define transparent_hugepage_flags 0UL
  
- static inline bool riscv_hwprobe_key_is_valid(__s64 key)
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 750e779c23db..2b00442b9d19 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -1912,8 +1912,6 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+ 			gfp_t alloc_gfp = gfp;
+ 
+ 			err = -ENOMEM;
+-			if (order == 1)
+-				order = 0;
+ 			if (order > 0)
+ 				alloc_gfp |= __GFP_NORETRY | __GFP_NOWARN;
+ 			folio = filemap_alloc_folio(alloc_gfp, order);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 94c958f7ebb5..81fd1ba57088 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -788,11 +788,15 @@ struct deferred_split *get_deferred_split_queue(struct folio *folio)
+ }
+ #endif
+ 
+-void folio_prep_large_rmappable(struct folio *folio)
++struct folio *folio_prep_large_rmappable(struct folio *folio)
  {
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index a8509cc31ab2..341863d4d989 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -14,7 +14,7 @@
- 
- #include <asm/ptrace.h>
- 
--#ifdef CONFIG_64BIT
-+#if defined(CONFIG_64BIT) && defined(CONFIG_MMU)
- #define DEFAULT_MAP_WINDOW	(UL(1) << (MMAP_VA_BITS - 1))
- #define STACK_TOP_MAX		TASK_SIZE
- 
-@@ -58,6 +58,12 @@
- 
- #define STACK_TOP		DEFAULT_MAP_WINDOW
- 
-+#ifdef CONFIG_MMU
-+#define user_max_virt_addr() arch_get_mmap_end(ULONG_MAX, 0, 0)
-+#else
-+#define	user_max_virt_addr() 0
-+#endif /* CONFIG_MMU */
+-	VM_BUG_ON_FOLIO(folio_order(folio) < 2, folio);
+-	INIT_LIST_HEAD(&folio->_deferred_list);
++	if (!folio || !folio_test_large(folio))
++		return folio;
++	if (folio_order(folio) > 1)
++		INIT_LIST_HEAD(&folio->_deferred_list);
+ 	folio_set_large_rmappable(folio);
 +
- /*
-  * This decides where the kernel will search for a free chunk of vm
-  * space during mmap's.
-diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
-index 9f2a8e3ff204..3630e3f30354 100644
---- a/arch/riscv/include/uapi/asm/hwprobe.h
-+++ b/arch/riscv/include/uapi/asm/hwprobe.h
-@@ -67,6 +67,7 @@ struct riscv_hwprobe {
- #define		RISCV_HWPROBE_MISALIGNED_UNSUPPORTED	(4 << 0)
- #define		RISCV_HWPROBE_MISALIGNED_MASK		(7 << 0)
- #define RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE	6
-+#define RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS	7
- /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
++	return folio;
+ }
  
- /* Flags */
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index a7c56b41efd2..560ea41a716d 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -8,6 +8,7 @@
- #include <asm/cacheflush.h>
- #include <asm/cpufeature.h>
- #include <asm/hwprobe.h>
-+#include <asm/processor.h>
- #include <asm/sbi.h>
- #include <asm/switch_to.h>
- #include <asm/uaccess.h>
-@@ -202,6 +203,9 @@ static void hwprobe_one_pair(struct riscv_hwprobe *pair,
- 		if (hwprobe_ext0_has(cpus, RISCV_HWPROBE_EXT_ZICBOZ))
- 			pair->value = riscv_cboz_block_size;
- 		break;
-+	case RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS:
-+		pair->value = user_max_virt_addr();
-+		break;
+ static inline bool is_transparent_hugepage(struct folio *folio)
+@@ -3082,7 +3086,8 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 	/* Prevent deferred_split_scan() touching ->_refcount */
+ 	spin_lock(&ds_queue->split_queue_lock);
+ 	if (folio_ref_freeze(folio, 1 + extra_pins)) {
+-		if (!list_empty(&folio->_deferred_list)) {
++		if (folio_order(folio) > 1 &&
++		    !list_empty(&folio->_deferred_list)) {
+ 			ds_queue->split_queue_len--;
+ 			list_del(&folio->_deferred_list);
+ 		}
+@@ -3133,6 +3138,9 @@ void folio_undo_large_rmappable(struct folio *folio)
+ 	struct deferred_split *ds_queue;
+ 	unsigned long flags;
+ 
++	if (folio_order(folio) <= 1)
++		return;
++
+ 	/*
+ 	 * At this point, there is no one trying to add the folio to
+ 	 * deferred_list. If folio is not in deferred_list, it's safe
+@@ -3158,7 +3166,12 @@ void deferred_split_folio(struct folio *folio)
+ #endif
+ 	unsigned long flags;
+ 
+-	VM_BUG_ON_FOLIO(folio_order(folio) < 2, folio);
++	/*
++	 * Order 1 folios have no space for a deferred list, but we also
++	 * won't waste much memory by not adding them to the deferred list.
++	 */
++	if (folio_order(folio) <= 1)
++		return;
  
  	/*
- 	 * For forward compatibility, unknown keys don't fail the whole
+ 	 * The try_to_unmap() in page reclaim path might reach here too,
+diff --git a/mm/internal.h b/mm/internal.h
+index f309a010d50f..5174b5b0c344 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -419,9 +419,7 @@ static inline struct folio *page_rmappable_folio(struct page *page)
+ {
+ 	struct folio *folio = (struct folio *)page;
+ 
+-	if (folio && folio_order(folio) > 1)
+-		folio_prep_large_rmappable(folio);
+-	return folio;
++	return folio_prep_large_rmappable(folio);
+ }
+ 
+ static inline void prep_compound_head(struct page *page, unsigned int order)
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 2648ec4f0494..369c70e2be42 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -516,9 +516,6 @@ void page_cache_ra_order(struct readahead_control *ractl,
+ 		/* Don't allocate pages past EOF */
+ 		while (index + (1UL << order) - 1 > limit)
+ 			order--;
+-		/* THP machinery does not support order-1 */
+-		if (order == 1)
+-			order = 0;
+ 		err = ra_alloc_folio(ractl, index, mark, order, gfp);
+ 		if (err)
+ 			break;
 -- 
 2.43.0
 
