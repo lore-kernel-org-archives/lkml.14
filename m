@@ -1,179 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bee.tesarici.cz (unknown [77.93.223.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472013A1B8;
-	Fri,  1 Mar 2024 18:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2602575F
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709318461; cv=none; b=K8mz0Oi3O1J86hdtT0evJ6kq8Yda+UMJkAs/ZUg4jrnnjk2hqc1e0RX6RkQCHElLCNuy2rzAT7h/ydz0/ZzNBkSlsnNR4mqmcSNmoSLaEjwyoDfQIv+uEd0w3hlk3D25EZ+Yr8Uq+512w0kLB7Mxv6T7a2gkBLgwiHSUXA/Pqps=
+	t=1709318538; cv=none; b=DW8kAYeMgJO+zUmvzkSCgoMhYn5A5bRI0q989Oi2s7VeaU4ENszmhkAUuu52oFtx2PDXJpd7lukdd9L1PDRgMILiWzdwyp68B524BBbyTaSuQuMqU0gPg/T0H8FgT2cquzpxtQDZl8Ghdubtx3F51Jo9gh8Hk7PWwd7lIRPuego=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709318461; c=relaxed/simple;
-	bh=Ikr2dasxWHE+lNItweXLpqVfoJa5a0SH5QW2mOtObok=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jh9XS/DYOMrEhFsbR5flfTktrim36iJJbDuQDrn7K1WlFJ7lzf5xjVt/YbNufEf1nATc4RBMlMXBMl+RmMVm1hy/NQoMpoopriqG8tyNW3LxjaxgrqzRX6Or7YQdPe7yfJzgEi30HXvX7Yz9TPJD47+4X26EqFELaF7/k956WKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2Q7QuqW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709318538; c=relaxed/simple;
+	bh=w+8tzDUNxC+0c2kk3d9ykcorijNJa53GYpsyK5+JaZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HBILSm8RhskJs+Ftv5hbyR1lPccbzazQ0IZZCoHbYgUzLkndTGDLhqO4l7WEFyZ0lBUnkzQRgM4+3nF2doPmahM7LfIk/akZ6DdoMFUiz7KU5lEUkVmfyOU3IDRjVFPgrTuCMNzu4XAM3agXBqPZg6Ux8x818lARpWjxJ/Gke10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=Bmhi2mkZ; arc=none smtp.client-ip=77.93.223.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2Q7QuqW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4AF6C433C7;
-	Fri,  1 Mar 2024 18:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709318460;
-	bh=Ikr2dasxWHE+lNItweXLpqVfoJa5a0SH5QW2mOtObok=;
-	h=Date:From:To:Cc:Subject:From;
-	b=r2Q7QuqWR02YX4BwJB96aQVS8C1pgLZiSKZF52iPU96KkxawAS/eKf60dMe8iqlpp
-	 lP9HwlYIXAV7fWehnNcLTi9cfxjGuCNxXRtBQg7Sj00O74QryCsKDTyo3Cemna8cn8
-	 7VDDvZuAV5pSUH7h3AUAW9UwrxnwS5uQ98PScqKFmqDUddsW6c4BE77RE1a01qlUO9
-	 dh801ZgPnZFzcZqmn+GTGogZvPty6zapDZ2h9FtkLPKyWreeZBVdiN73HQSxxEwprO
-	 nUz6817YY4RHzPLDdoDn5JLxVzOp7JePcQ/c95z1MhJrmpY5/2s8YclcCD4iPJ3kTu
-	 HTHaFQbnIGYhA==
-Date: Fri, 1 Mar 2024 12:40:57 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH][next] net/smc: Avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <ZeIhOT44ON5rjPiP@neat>
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="Bmhi2mkZ"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 52C991C37C8;
+	Fri,  1 Mar 2024 19:42:13 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1709318533; bh=0BzVbEMUW+HOHqX604KISbar5ltvn6EhM64KI0u9ocU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Bmhi2mkZ3so7nx3ERP2V7oB11mo9VdPjZVkhxOBotjJZP6CxSTk+Az+/ZH8rRDjUP
+	 NGyu1a3lBsp2D3ADnmZrO31NQtF/tjXYTY1qN7qRur6ZZKqdxWHXmjBwQeJEqH/Qj5
+	 Uc0lftk9fJR+LV3q1ZSReYPjTosYktuTyvI0cWVaQCuje7HjOXjt191XIMvyKYBFLV
+	 LvXiyexLut5Oylz+NII5OEnRH1ICf0kX+tdEX5JVJ2xP0M/oykO9qzepMx7rvCTCSJ
+	 dy5CmsHXKa4acTWPoBJ0yGqUcBSvcn5hqg99x6tYlZrHGL12uYJCTVM0QrgoRFx5oH
+	 WvemhV6V89Jiw==
+Date: Fri, 1 Mar 2024 19:42:12 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Christoph Hellwig <hch@lst.de>, Michael Kelley <mhklinux@outlook.com>,
+ Will Deacon <will@kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Petr Tesarik
+ <petr.tesarik1@huawei-partners.com>, "kernel-team@android.com"
+ <kernel-team@android.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Dexuan Cui
+ <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>
+Subject: Re: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
+ allocations >= PAGE_SIZE
+Message-ID: <20240301194212.3c64c9b2@meshulam.tesarici.cz>
+In-Reply-To: <8869c8b2-29c3-41e4-8f8a-5bcf9c0d22bb@arm.com>
+References: <20240228133930.15400-1-will@kernel.org>
+	<20240228133930.15400-7-will@kernel.org>
+	<SN6PR02MB4157A62353559DA8DB8BC4ADD45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<SN6PR02MB41577D09E97B1D9645369D58D45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<20240229133346.GA7177@lst.de>
+	<SN6PR02MB4157314F142D05E279B7991ED45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<20240229154756.GA10137@lst.de>
+	<20240301163927.18358ee2@meshulam.tesarici.cz>
+	<20240301180853.5ac20b27@meshulam.tesarici.cz>
+	<8869c8b2-29c3-41e4-8f8a-5bcf9c0d22bb@arm.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally.
+On Fri, 1 Mar 2024 17:54:06 +0000
+Robin Murphy <robin.murphy@arm.com> wrote:
 
-There are currently a couple of objects in `struct smc_clc_msg_proposal_area`
-that contain a couple of flexible structures:
+> On 2024-03-01 5:08 pm, Petr Tesa=C5=99=C3=ADk wrote:
+> > On Fri, 1 Mar 2024 16:39:27 +0100
+> > Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> wrote:
+> >  =20
+> >> On Thu, 29 Feb 2024 16:47:56 +0100
+> >> Christoph Hellwig <hch@lst.de> wrote:
+> >> =20
+> >>> On Thu, Feb 29, 2024 at 03:44:11PM +0000, Michael Kelley wrote: =20
+> >>>> Any thoughts on how that historical behavior should apply if
+> >>>> the DMA min_align_mask is non-zero, or the alloc_align_mask
+> >>>> parameter to swiotbl_tbl_map_single() is non-zero? As currently
+> >>>> used, alloc_align_mask is page aligned if the IOMMU granule is =20
+> >>>>> =3D PAGE_SIZE. But a non-zero min_align_mask could mandate =20
+> >>>> returning a buffer that is not page aligned. Perhaps do the
+> >>>> historical behavior only if alloc_align_mask and min_align_mask
+> >>>> are both zero? =20
+> >>>
+> >>> I think the driver setting min_align_mask is a clear indicator
+> >>> that the driver requested a specific alignment and the defaults
+> >>> don't apply.  For swiotbl_tbl_map_single as used by dma-iommu
+> >>> I'd have to tak a closer look at how it is used. =20
+> >>
+> >> I'm not sure it helps in this discussion, but let me dive into a bit
+> >> of ancient history to understand how we ended up here.
+> >>
+> >> IIRC this behaviour was originally motivated by limitations of PC AT
+> >> hardware. Intel 8237 is a 16-bit DMA controller. To make it somehow
+> >> usable with addresses up to 16MB (yeah, the infamous DMA zone), IBM
+> >> added a page register, but it was on a separate chip and it did not
+> >> increment when the 8237 address rolled over back to zero. Effectively,
+> >> the page register selected a 64K-aligned window of 64K buffers.
+> >> Consequently, DMA buffers could not cross a 64K physical boundary.
+> >>
+> >> Thanks to how the buddy allocator works, the 64K-boundary constraint
+> >> was satisfied by allocation size, and drivers took advantage of it when
+> >> allocating device buffers. IMO software bounce buffers simply followed
+> >> the same logic that worked for buffers allocated by the buddy allocato=
+r.
+> >>
+> >> OTOH min_align_mask was motivated by NVME which prescribes the value of
+> >> a certain number of low bits in the DMA address (for simplicity assumed
+> >> to be identical with the same bits in the physical address).
+> >>
+> >> The only pre-existing user of alloc_align_mask is x86 IOMMU code, and
+> >> IIUC it is used to guarantee that unaligned transactions do not share
+> >> the IOMMU granule with another device. This whole thing is weird,
+> >> because swiotlb_tbl_map_single() is called like this:
+> >>
+> >>                  aligned_size =3D iova_align(iovad, size);
+> >>                  phys =3D swiotlb_tbl_map_single(dev, phys, size, alig=
+ned_size,
+> >>                                                iova_mask(iovad), dir, =
+attrs);
+> >>
+> >> Here:
+> >>
+> >> * alloc_size =3D iova_align(iovad, size)
+> >> * alloc_align_mask =3D iova_mask(iovad)
+> >>
+> >> Now, iova_align() rounds up its argument to a multiple of iova granule
+> >> and iova_mask() is simply "granule - 1". This works, because granule
+> >> size must be a power of 2, and I assume it must also be >=3D PAGE_SIZE.
+> >>
+> >> In that case, the alloc_align_mask argument is not even needed if you
+> >> adjust the code to match documentation---the resulting buffer will be
+> >> aligned to a granule boundary by virtue of having a size that is a
+> >> multiple of the granule size.
+> >>
+> >> To sum it up:
+> >>
+> >> 1. min_align_mask is by far the most important constraint. Devices will
+> >>     simply stop working if it is not met.
+> >> 2. Alignment to the smallest PAGE_SIZE order which is greater than or
+> >>     equal to the requested size has been documented, and some drivers
+> >>     may rely on it.
+> >> 3. alloc_align_mask is a misguided fix for a bug in the above.
+> >>
+> >> Correct me if anything of the above is wrong. =20
+> >=20
+> > I thought about it some more, and I believe I know what should happen
+> > if the first two constraints appear to be mutually exclusive.
+> >=20
+> > First, the alignment based on size does not guarantee that the resulting
+> > physical address is aligned. In fact, the lowest IO_TLB_SHIFT bits must
+> > be always identical to the original buffer address.
+> >=20
+> > Let's take an example request like this:
+> >=20
+> >     TLB_SIZE       =3D 0x00000800
+> >     min_align_mask =3D 0x0000ffff
+> >     orig_addr      =3D 0x....1234
+> >     alloc_size     =3D 0x00002800
+> >=20
+> > Minimum alignment mask requires to keep the 1234 at the end. Allocation
+> > size requires a buffer that is aligned to 16K. Of course, there is no
+> > 16K-aligned slot with slot_address & 0x7ff =3D=3D 0x200, but if IO_TLB_=
+SHIFT
+> > was 14, it would be slot_address & 0x3fff =3D=3D 0 (low IO_TLB_SHIFT are
+> > masked off). Since the SWIOTLB API does not guarantee any specific
+> > value of IO_TLB_SHIFT, callers cannot rely on it. That means 0x1234 is a
+> > perfectly valid bounce buffer address for this example.
+> >=20
+> > The caller may rightfully expect that the 16K granule containing the
+> > bounce buffer is not shared with any other user. For the above case I
+> > suggest to increase the allocation size to 0x4000 already in
+> > swiotlb_tbl_map_single() and treat 0x1234 as the offset from the slot
+> > address. =20
+>=20
+> That doesn't make sense - a caller asks to map some range of kernel=20
+> addresses and they get back a corresponding range of DMA addresses; they=
+=20
+> cannot make any reasonable assumptions about DMA addresses *outside*=20
+> that range. In the example above, the caller has explicitly chosen not=20
+> to map the range xxx0000-xxx1234; if they expect the device to actually=20
+> access bytes in the DMA range yyy0000-yyy1234, then they should have=20
+> mapped the whole range starting from xxx0000 and it is their own error.
 
-struct smc_clc_msg_proposal_area {
-	...
-	struct smc_clc_v2_extension             pclc_v2_ext;
-	...
-	struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
-	...
-};
+I agree that the range was not requested. But it is not wrong if
+SWIOTLB overallocates. In fact, it usually does overallocate because it
+works with slot granularity.
 
-So, in order to avoid ending up with a couple of flexible-array members
-in the middle of a struct, we use the `struct_group_tagged()` helper to
-separate the flexible array from the rest of the members in the flexible
-structure:
+> SWIOTLB does not and cannot provide any memory protection itself, so=20
+> there is no functional benefit to automatically over-allocating, all it=20
+> will do is waste slots. iommu-dma *can* provide memory protection=20
+> between individual mappings via additional layers that SWIOTLB doesn't=20
+> know about, so in that case it's iommu-dma's responsibility to=20
+> explicitly manage whatever over-allocation is necessary at the SWIOTLB=20
+> level to match the IOMMU level.
 
-struct smc_clc_smcd_v2_extension {
-        struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
-                            u8 system_eid[SMC_MAX_EID_LEN];
-                            u8 reserved[16];
-        );
-        struct smc_clc_smcd_gid_chid gidchid[];
-};
+I'm trying to understand what the caller expects to get if they request
+both buffer alignment (either given implicitly through mapping size or
+explicitly with an alloc_align_mask) with a min_align_mask and non-zero
+low bits covered by the buffer alignment.
 
-With the change described above, we now declare objects of the type of
-the tagged struct without embedding flexible arrays in the middle of
-another struct:
+In other words, if iommu_dma_map_page() gets into this situation:
 
-struct smc_clc_msg_proposal_area {
-        ...
-        struct smc_clc_v2_extension_hdr		pclc_v2_ext;
-        ...
-        struct smc_clc_smcd_v2_extension_hdr	pclc_smcd_v2_ext;
-        ...
-};
+* granule size is 4k
+* device specifies 64k min_align_mask
+* bit 11 of the original buffer address is non-zero
 
-We also use `container_of()` when we need to retrieve a pointer to the
-flexible structures.
+Then you ask for a pair of slots where the first slot has bit 11 =3D=3D 0
+(required by alignment to granule size) and also has bit 11 =3D=3D 1
+(required to preserve the lowest 16 bits of the original address).
 
-So, with these changes, fix the following warnings:
+Sure, you can fail such a mapping, but is it what the caller expects?
 
-In file included from net/smc/af_smc.c:42:
-net/smc/smc_clc.h:186:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-  186 |         struct smc_clc_v2_extension             pclc_v2_ext;
-      |                                                 ^~~~~~~~~~~
-net/smc/smc_clc.h:188:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-  188 |         struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
-      |                                                 ^~~~~~~~~~~~~~~~
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- net/smc/smc_clc.c |  5 +++--
- net/smc/smc_clc.h | 24 ++++++++++++++----------
- 2 files changed, 17 insertions(+), 12 deletions(-)
-
-diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
-index e55026c7529c..3094cfa1c458 100644
---- a/net/smc/smc_clc.c
-+++ b/net/smc/smc_clc.c
-@@ -853,8 +853,9 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
- 	pclc_smcd = &pclc->pclc_smcd;
- 	pclc_prfx = &pclc->pclc_prfx;
- 	ipv6_prfx = pclc->pclc_prfx_ipv6;
--	v2_ext = &pclc->pclc_v2_ext;
--	smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
-+	v2_ext = container_of(&pclc->pclc_v2_ext, struct smc_clc_v2_extension, _hdr);
-+	smcd_v2_ext = container_of(&pclc->pclc_smcd_v2_ext,
-+				   struct smc_clc_smcd_v2_extension, hdr);
- 	gidchids = pclc->pclc_gidchids;
- 	trl = &pclc->pclc_trl;
- 
-diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
-index 7cc7070b9772..5b91a1947078 100644
---- a/net/smc/smc_clc.h
-+++ b/net/smc/smc_clc.h
-@@ -134,12 +134,14 @@ struct smc_clc_smcd_gid_chid {
- 			 */
- 
- struct smc_clc_v2_extension {
--	struct smc_clnt_opts_area_hdr hdr;
--	u8 roce[16];		/* RoCEv2 GID */
--	u8 max_conns;
--	u8 max_links;
--	__be16 feature_mask;
--	u8 reserved[12];
-+	struct_group_tagged(smc_clc_v2_extension_hdr, _hdr,
-+		struct smc_clnt_opts_area_hdr hdr;
-+		u8 roce[16];		/* RoCEv2 GID */
-+		u8 max_conns;
-+		u8 max_links;
-+		__be16 feature_mask;
-+		u8 reserved[12];
-+	);
- 	u8 user_eids[][SMC_MAX_EID_LEN];
- };
- 
-@@ -159,8 +161,10 @@ struct smc_clc_msg_smcd {	/* SMC-D GID information */
- };
- 
- struct smc_clc_smcd_v2_extension {
--	u8 system_eid[SMC_MAX_EID_LEN];
--	u8 reserved[16];
-+	struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
-+		u8 system_eid[SMC_MAX_EID_LEN];
-+		u8 reserved[16];
-+	);
- 	struct smc_clc_smcd_gid_chid gidchid[];
- };
- 
-@@ -183,9 +187,9 @@ struct smc_clc_msg_proposal_area {
- 	struct smc_clc_msg_smcd			pclc_smcd;
- 	struct smc_clc_msg_proposal_prefix	pclc_prfx;
- 	struct smc_clc_ipv6_prefix	pclc_prfx_ipv6[SMC_CLC_MAX_V6_PREFIX];
--	struct smc_clc_v2_extension		pclc_v2_ext;
-+	struct smc_clc_v2_extension_hdr		pclc_v2_ext;
- 	u8			user_eids[SMC_CLC_MAX_UEID][SMC_MAX_EID_LEN];
--	struct smc_clc_smcd_v2_extension	pclc_smcd_v2_ext;
-+	struct smc_clc_smcd_v2_extension_hdr	pclc_smcd_v2_ext;
- 	struct smc_clc_smcd_gid_chid
- 				pclc_gidchids[SMCD_CLC_MAX_V2_GID_ENTRIES];
- 	struct smc_clc_msg_trail		pclc_trl;
--- 
-2.34.1
-
+Thanks
+Petr T
