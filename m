@@ -1,116 +1,55 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586C73C6BF;
-	Fri,  1 Mar 2024 13:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB75D5F84C
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 13:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709298327; cv=none; b=MjuJjN+0xuWQtVlKajp4GAkFVP/UH9rqe0bM+pFC61OUi0eCwzu9kt/bufe3XT8ev+nVZshNjTU+VSRE3pvDdbMERjcaVq0UWfGmmtpR/+Pkqb8BoRfSYN8ldKGj8yk/EUhtV/PA6dIYW6HWucJby4S29RNM24+BPhkw0Y/3atY=
+	t=1709298335; cv=none; b=sCG2BVlOwMY0i9B/sMrZqG9OW3se/4GQqZYrO48zjpJmXR9Va/NDTF5OpKycA3TSL/dmaG2bVlFnZGYyiHF5qb7L7EtVu98sjkSviRA2U2Qe7GsJKo5nTd28PonDG+bdQxB98Beld8DKIKmus/CUXYIijS/SzTRfG/gGOtU4NRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709298327; c=relaxed/simple;
-	bh=0bVCzrJS9x+1yZMoEFxLm9bnbbJleSpuIb0C3VF53qQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S0knYbSeUwoDkR4v8AsBqnOmiZbWixycnemnunMexYd4dfo9WBmXR2DaNg3eCO6v/yHpUfGji0n9T5KBInV/Flqqf5e2HfL6E7ArMs0SZ14inSA6hYsoYNxVamDtndYeOiuUi9lKXn/Fdfv5bitk/jREYdJbCyGydJZhaxrPZyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6098bf69909so68857b3.1;
-        Fri, 01 Mar 2024 05:05:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709298324; x=1709903124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oQI2EbWiD61r+f+mvhd3WkVdayuolmx0uiT5UHC3aVk=;
-        b=OW0LAvkK8gFJ6A3yRPRHxkaFFcAV22erxlSeyKVKtWtkv6wirTvPIOAtZQKzunfY1K
-         flmTqR83JSz1b+yZULgYS4744fTs9kO+94fCsD1m5onn9Sj7snIP1x4PJjAsLjTDoFAp
-         2FS2E5nWaVDbKD/0neZNn9l/sRpQGnorZzvxGT+s7acY4jkf+nskGxpUVXRTd/Y4F5X6
-         xRIaUg9H2g0OW3aKwrhrmNdndwAh6+FE0nHlX3URHlBlIFckCy7qQzSdcR9kTOL4t3mW
-         +3hbA5+Q0HghSIMC+iwPnTnsoqMJ/sD6IuCuLxtXW/4jEI7K+oMpeS6oqQq1AQ8x20JM
-         DzfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZO1Q26ivPGgTGyQeYsVBAIr2/4OYUDlarXwUI4OuraRB47Plp7BSuSNranMx+vaT8wIRZswSneaW8yRcxqE+N8YjMPalfn0fOyw9YaRbCFFp9jSjyvLKwW4oN4j8Vl/f8zqVov24qzWRp5X4Zus/rbmEpvlJ+mtfdPfuNABWUCSaloJMl3v7AVjE=
-X-Gm-Message-State: AOJu0Yw/hF1XcLjt/fJ3HAvUVQL65PhsMZe6zQENSJQoBHmkSq3NsBEt
-	BDTst6n06dpecjar/D1NfB/7DUciPu+u8ZsK8Z4x4JU9bl4qZZBDhVMZxEkCrVQ=
-X-Google-Smtp-Source: AGHT+IG+Lq9JYtWOeBMPrYoQz7PR0vpZ9fQTaDnPvsBie0GaRSqwNucZkabNJehPhiPyv923Zgaoug==
-X-Received: by 2002:a81:8414:0:b0:609:892e:b944 with SMTP id u20-20020a818414000000b00609892eb944mr429804ywf.4.1709298323984;
-        Fri, 01 Mar 2024 05:05:23 -0800 (PST)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id o1-20020a81ef01000000b00607ad76d855sm909733ywm.67.2024.03.01.05.05.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Mar 2024 05:05:23 -0800 (PST)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so1624817276.1;
-        Fri, 01 Mar 2024 05:05:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWhOKClxVr6fkz1Y8KyAOaBWsSDPcPcZhqdLLAXj2qw2G5a7YcRAOfCcf2lk4ny/MMBeDMIHXgAx7ukbVGFNtdk4TBUV4Aa6WbXe1KGjdPOP+9tdcDoQptEv/h02QK2k4t675Pp+wvpsKO6K8ULuYJKC3mIuzVBrz1RfvhoXHy24P3tPtbHQKqveNQ=
-X-Received: by 2002:a05:6902:2310:b0:dc6:daa4:e808 with SMTP id
- do16-20020a056902231000b00dc6daa4e808mr4576821ybb.12.1709298322979; Fri, 01
- Mar 2024 05:05:22 -0800 (PST)
+	s=arc-20240116; t=1709298335; c=relaxed/simple;
+	bh=h87fasa27cwtoBBQjvXIjHlGyU3m9Dzkdm2Y9DRzkWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZgetzLLr8hsci70xkmd66iN/DXJZURg+XXQvPJWmio6cxaF7cKPRxLt12yCB0AygNMY0NpZfx5pV69kSNfQrlH0VQ2CcLrHJzbhqR792qrxLSiBrZNv9Hnj3DAWgOcQ/9+MHi1vdEH4QfEG0XyMDKpsBfyKk7s65Y59e2Mfl07M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=PwyaIrZM; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="PwyaIrZM"
+Received: from 8bytes.org (p4ffe0c3c.dip0.t-ipconnect.de [79.254.12.60])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 9CD761C3319;
+	Fri,  1 Mar 2024 14:05:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1709298332;
+	bh=h87fasa27cwtoBBQjvXIjHlGyU3m9Dzkdm2Y9DRzkWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PwyaIrZMvEDiRkn1w3RRVKwKcLH7gVN9YmfA+1JNlxPxgpZTZUY1YPqVIgS74FANV
+	 Hy7wtBA/WK8VBIjymPcAYzMRwU9v7zzF63jZqA/uAkinrHN0orLvI6y1HQWZojtZ86
+	 6g+pBykzn9Kz+t4+kOwJDYSYCtFTj5KXAW2n8TblH1c+ta5UFJndIdiw1sNHhBJUYQ
+	 lDsKyOITVAsQ6VPBT2Dknges2eIg2twE9ec/u9zJar/4oxMoYitY9lOxuMg7xKtE5B
+	 CAMm1fiPUxobr/x4R05ne8ZC+YMxtplxxmxYDOTK1xBgRPdQhL9k6eY+PYOTrFrZS7
+	 JVHEp5kAE2l3Q==
+Date: Fri, 1 Mar 2024 14:05:31 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: Will Deacon <will@kernel.org>
+Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, robin.murphy@arm.com,
+	kernel-team@android.com
+Subject: Re: [GIT PULL] iommu/arm-smmu: Updates for 6.9
+Message-ID: <ZeHSm1vSj7sfDeNB@8bytes.org>
+References: <20240229181533.GA16854@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8b4203dc-bc0a-4c00-8862-e2d0ed6e346b@web.de>
-In-Reply-To: <8b4203dc-bc0a-4c00-8862-e2d0ed6e346b@web.de>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 1 Mar 2024 14:05:10 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWwegdks3eEviEsBJE3AvUVKbZqHduYdhuwz=8xTMDs5g@mail.gmail.com>
-Message-ID: <CAMuHMdWwegdks3eEviEsBJE3AvUVKbZqHduYdhuwz=8xTMDs5g@mail.gmail.com>
-Subject: Re: [PATCH] media: rcar-csi2: Use common error handling code in rcsi2_parse_dt()
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229181533.GA16854@willie-the-truck>
 
-Hi Markus,
+On Thu, Feb 29, 2024 at 06:15:33PM +0000, Will Deacon wrote:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git tags/arm-smmu-updates
 
-On Fri, Mar 1, 2024 at 1:10=E2=80=AFPM Markus Elfring <Markus.Elfring@web.d=
-e> wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 1 Mar 2024 13:02:18 +0100
->
-> Add a label so that a bit of exception handling can be better reused
-> in an if branch of this function implementation.
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-
-Thanks for your patch!
-
-> --- a/drivers/media/platform/renesas/rcar-csi2.c
-> +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> @@ -1388,12 +1388,13 @@ static int rcsi2_parse_dt(struct rcar_csi2 *priv)
->         ret =3D v4l2_fwnode_endpoint_parse(ep, &v4l2_ep);
->         if (ret) {
->                 dev_err(priv->dev, "Could not parse v4l2 endpoint\n");
-> -               fwnode_handle_put(ep);
-> -               return -EINVAL;
-> +               ret =3D -EINVAL;
-> +               goto put_fwnode_ep;
->         }
->
->         ret =3D rcsi2_parse_v4l2(priv, &v4l2_ep);
->         if (ret) {
-> +put_fwnode_ep:
->                 fwnode_handle_put(ep);
->                 return ret;
->         }
-
-Please do not use goto to jump to random positions buried deep inside
-a function,as this makes the code harder to read.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Pulled, thanks Will.
