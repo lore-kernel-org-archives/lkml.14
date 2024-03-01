@@ -1,162 +1,167 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00E3A37705;
-	Fri,  1 Mar 2024 02:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACE13A8DE;
+	Fri,  1 Mar 2024 02:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709259642; cv=none; b=nDLfkwx22NU1bkWuGrDHJE3vx3j/ImxHBIDt3AQgh7c33QMcZsGUQZ98cap2OWTC6e/kYR2kSjvvxX2S/DnUlnzxMO4iAedNDZXsYkAzLmklhNWsIidUqVO9jPUDakbkGnyapwUDdCtkkHE8d9hxFF20FhDiMwgwRZ2rcQLIlc8=
+	t=1709259666; cv=none; b=WaPrmfJMZbqgoCNayRFbDtghB6+VFWAeEYI3Mt5wQT2RMSQblRLrn8EjbX3G7qrjZm9/l/mI+ie76Ey12vYuOEOL91FqdFNfvNi+znvWUjg3eIRUg/AXZRlsw8Z+UbNvglmJN4WHAOCgLKhzab+I2Me8IDW+CjS6XQDagbAUivc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709259642; c=relaxed/simple;
-	bh=TLnRq8HiU1POsQUZmMNxjoiSReV6/pX4N053Dacpxg4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HUTntDSwBehK1RcibR+tINu/I05pxODpxXOH30/f3Op0RLrhpdXt/mBjR07qfkm/nBB4eNAJ7r/1pnBXVAmCQBNJwlUNVIc2yc+GmBsf6QeIquokZjX7azJ3/FJJdAZ0ySRhT3cwv1hDnfMbFLgcyjVty06VEkKTCySgeU+hC3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I5tqTcN/; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I5tqTcN/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=vntvjbo5LKelHNLhuZc1kd/hRhea0DDqk8MBG/GQ51s=;
-	b=I5tqTcN/6ue5jKtUPRT2aP6bpCc0askXC/8TamOgTO7VjuyOmRp4ucxx1mzS5F
-	ObK+Od2t0k3U4NIjOaOR5ukXJqkfDJektBR3D59rtP9zzLEOWGx3A8Pt5wle/9Ms
-	u3jA0VDbNfnjJOQSmPCRDaQ9z2S8vuS+7JBRGK0uMWxBs=
-Received: from tian-ThinkPad-X390.. (unknown [111.48.58.12])
-	by gzga-smtp-mta-g2-0 (Coremail) with SMTP id _____wDXX_g1O+Fl5445BQ--.250S2;
-	Fri, 01 Mar 2024 10:19:35 +0800 (CST)
-From: Yaxiong Tian <13327272236@163.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	keescook@chromium.org,
-	tianyaxiong@kylinos.cn,
-	xiongxin@kylinos.cn,
-	rppt@kernel.org
-Cc: tony.luck@intel.com,
-	gpiccoli@igalia.com,
-	songshuaishuai@tinylab.org,
-	wangkefeng.wang@huawei.com,
-	akpm@linux-foundation.org,
-	ardb@kernel.org,
-	david@redhat.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] arm64: hibernate: Fix level3 translation fault in swsusp_save()
-Date: Fri,  1 Mar 2024 10:19:24 +0800
-Message-Id: <20240301021924.33210-1-13327272236@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZeBRfxQ8WTEVzpfL@kernel.org>
-References: <ZeBRfxQ8WTEVzpfL@kernel.org>
+	s=arc-20240116; t=1709259666; c=relaxed/simple;
+	bh=lDcV+UIK2UmQdtVQx2J9DB22Eek2v9YcVzkNvM9HlEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qv88LqYx2esdpqgBxqCn7gYky2mMQgaS2taMDFzTZM7U6+AHfmTnxScgwkyRPLRp/SwFGpuiat8Tw54FdrC0kv1OU8mXn5dMBuhDR4GR5AJ5f825h/Pr7gU3F5lqhp9o+iMtySXDMy/xwO8tUgkAH13DymbpbD0VZNfTmFnR8U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 262C51FB;
+	Thu, 29 Feb 2024 18:21:34 -0800 (PST)
+Received: from [10.162.42.8] (a077893.blr.arm.com [10.162.42.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5CB43F762;
+	Thu, 29 Feb 2024 18:20:50 -0800 (PST)
+Message-ID: <2adf726f-5a94-4e4f-85de-db30e1586584@arm.com>
+Date: Fri, 1 Mar 2024 07:50:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Content-Language: en-US
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+ Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+ Rob Herring <robh@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-6-anshuman.khandual@arm.com>
+ <8634tb2jwp.wl-maz@kernel.org>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <8634tb2jwp.wl-maz@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXX_g1O+Fl5445BQ--.250S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtFy8uFWrWr48XF43Cr1kAFb_yoW7CFyrpF
-	WUGr1kGr4xCF1jyr4UAFy5uw1kWw4qvanxJr1UJwn7AF1UCw15Xr45Kry7tFyDtw4fJFs7
-	trWDKw40yF1DGaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jtYFAUUUUU=
-X-CM-SenderInfo: jprtjjaxsxjjitw6il2tof0z/1tbiYRuUJWV4HUtyXgAAss
+Content-Transfer-Encoding: 7bit
 
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-On ARM64 machines using UEFI, if can_set_direct_map() return false by
-setting some CONFIGS in kernel build or grub,such as
-NO CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT、NO CONFIG_KFENCE
-NO CONFIG_RODATA_FULL_DEFAULT_ENABLED.Also with setting rodata=off、
-debug_pagealloc=off in grub and NO CONFIG_KFENCE.
-swsusp_save() will fail due to can't finding the map table under the 
-nomap memory.such as:
 
-[   48.532162] Unable to handle kernel paging request at virtual address ffffff8000000000
-[   48.532162] Mem abort info:
-[   48.532162]   ESR = 0x0000000096000007
-[   48.532162]   EC = 0x25: DABT (current EL), IL = 32 bits
-[   48.532162]   SET = 0, FnV = 0
-[   48.532162]   EA = 0, S1PTW = 0
-[   48.532162]   FSC = 0x07: level 3 translation fault
-[   48.532162] Data abort info:
-[   48.532162]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
-[   48.532162]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[   48.532162]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[   48.532162] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000eeb0b000
-[   48.532162] [ffffff8000000000] pgd=180000217fff9803, p4d=180000217fff9803, pud=180000217fff9803, pmd=180000217fff8803, pte=0000000000000000
-[   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
-[   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
-[   48.532162] Modules linked in: xt_multiport ipt_REJECT nf_reject_ipv4 xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter rfkill at803x snd_hda_codec_hdmi snd_hda_intel snd_intel_dspcfg dwmac_generic stmmac_platform snd_hda_codec stmmac joydev pcs_xpcs snd_hda_core phylink ppdev lp parport ramoops reed_solomon ip_tables x_tables nls_iso8859_1 vfat multipath linear amdgpu amdxcp drm_exec gpu_sched drm_buddy hid_generic usbhid hid radeon video drm_suballoc_helper drm_ttm_helper ttm i2c_algo_bit drm_display_helper cec drm_kms_helper drm
-[   48.532162] CPU: 0 PID: 3663 Comm: systemd-sleep Not tainted 6.6.2+ #76
-[   48.532162] Source Version: 4e22ed63a0a48e7a7cff9b98b7806d8d4add7dc0
-[   48.532162] Hardware name: Greatwall GW-XXXXXX-XXX/GW-XXXXXX-XXX, BIOS KunLun BIOS V4.0 01/19/2021
-[   48.532162] pstate: 600003c5 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   48.532162] pc : swsusp_save+0x280/0x538
-[   48.532162] lr : swsusp_save+0x280/0x538
-[   48.532162] sp : ffffffa034a3fa40
-[   48.532162] x29: ffffffa034a3fa40 x28: ffffff8000001000 x27: 0000000000000000
-[   48.532162] x26: ffffff8001400000 x25: ffffffc08113e248 x24: 0000000000000000
-[   48.532162] x23: 0000000000080000 x22: ffffffc08113e280 x21: 00000000000c69f2
-[   48.532162] x20: ffffff8000000000 x19: ffffffc081ae2500 x18: 0000000000000000
-[   48.532162] x17: 6666662074736420 x16: 3030303030303030 x15: 3038666666666666
-[   48.532162] x14: 0000000000000b69 x13: ffffff9f89088530 x12: 00000000ffffffea
-[   48.532162] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffffffc08193f0d0
-[   48.532162] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
-[   48.532162] x5 : ffffffa0fff09dc8 x4 : 0000000000000000 x3 : 0000000000000027
-[   48.532162] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 000000000000004e
-[   48.532162] Call trace:
-[   48.532162]  swsusp_save+0x280/0x538
-[   48.532162]  swsusp_arch_suspend+0x148/0x190
-[   48.532162]  hibernation_snapshot+0x240/0x39c
-[   48.532162]  hibernate+0xc4/0x378
-[   48.532162]  state_store+0xf0/0x10c
-[   48.532162]  kobj_attr_store+0x14/0x24
+On 3/1/24 00:10, Marc Zyngier wrote:
+> On Thu, 25 Jan 2024 09:41:16 +0000,
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>>
+>> Disable the BRBE before we enter the guest, saving the status and enable it
+>> back once we get out of the guest. This avoids capturing branch records in
+>> the guest kernel or userspace, which would be confusing the host samples.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Oliver Upton <oliver.upton@linux.dev>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: kvmarm@lists.linux.dev
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> CC: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> Changes in V16:
+>>
+>> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
+>> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
+>>   element, and dropped the previous dependency on Jame's coresight series
+>>
+>>  arch/arm64/include/asm/kvm_host.h  |  5 ++++-
+>>  arch/arm64/kvm/debug.c             |  5 +++++
+>>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
+>>  3 files changed, 42 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index 21c57b812569..bce8792092af 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
+>>  	u8 cflags;
+>>  
+>>  	/* Input flags to the hypervisor code, potentially cleared after use */
+>> -	u8 iflags;
+>> +	u16 iflags;
+>>  
+>>  	/* State flags for kernel bookkeeping, unused by the hypervisor code */
+>>  	u8 sflags;
+>> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
+>>  		u64 pmscr_el1;
+>>  		/* Self-hosted trace */
+>>  		u64 trfcr_el1;
+>> +		u64 brbcr_el1;
+>>  	} host_debug_state;
+>>  
+>>  	/* VGIC state */
+>> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
+>>  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
+>>  /* vcpu running in HYP context */
+>>  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
+>> +/* Save BRBE context if active  */
+>> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(8))
+>>  
+>>  /* SVE enabled for host EL0 */
+>>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+>> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+>> index 8725291cb00a..99f85d8acbf3 100644
+>> --- a/arch/arm64/kvm/debug.c
+>> +++ b/arch/arm64/kvm/debug.c
+>> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>>  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
+>>  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>>  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>> +
+>> +	/* Check if we have BRBE implemented and available at the host */
+>> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
+>> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>>  }
+>>  
+>>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>>  {
+>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>>  }
+>> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> index 4558c02eb352..79bcf0fb1326 100644
+>> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
+>>  	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
+>>  }
+>>  
+>> +static void __debug_save_brbe(u64 *brbcr_el1)
+>> +{
+>> +	*brbcr_el1 = 0;
+>> +
+>> +	/* Check if the BRBE is enabled */
+>> +	if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+>> +		return;
+>> +
+>> +	/*
+>> +	 * Prohibit branch record generation while we are in guest.
+>> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
+>> +	 * modify the filtering set by the host.
+>> +	 */
+>> +	*brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
+>> +	write_sysreg_s(0, SYS_BRBCR_EL1);
+> 
+> As for TRFCR and PMSCR, this is broken on hVHE.
+> 
+> Please see [1]
+> 
+> 	M.
+> 
+> [1] https://lore.kernel.org/r/20240229145417.3606279-1-maz@kernel.org
+> 
 
-This issue can be reproduced in QEMU using UEFI when booting with 
-rodata=off、debug_pagealloc=off in grub and NO CONFIG_KFENCE.
-
-This is because in swsusp_save()->copy_data_pages()->page_is_saveable(),
-kernel_page_present() presumes that a page is present when can_set_direct_map()
-returns false even for NOMAP ranges.So NOMAP pages will saved in after,and then
-cause level3 translation fault in this pages.
-
-Since the NOMAP regions are now marked as PageReserved(), pfn walkers
-and the rest of core mm will treat them as unusable memory. So this
-regions should not saved in hibernation.
-
-This problem may cause by changes to pfn_valid() logic in commit
-a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()").
-
-So to fix it, we add !pfn_is_map_memory() check in arm64::pfn_is_nosave(). It
-make such regisons don't save in hibernation.
-
-Fixes: a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()")
-
-Suggested-by: Mike Rapoport <rppt@kernel.org>
-Co-developed-by: xiongxin <xiongxin@kylinos.cn>
-Signed-off-by: xiongxin <xiongxin@kylinos.cn>
-Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
-
----
-v1->v2: move !pfn_is_map_memory() check from page_is_saveable()
-to arm64::pfn_is_nosave(),add opt commit messages.
----
- arch/arm64/kernel/hibernate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 02870beb271e..d90005de1d26 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -94,7 +94,7 @@ int pfn_is_nosave(unsigned long pfn)
- 	unsigned long nosave_end_pfn = sym_to_pfn(&__nosave_end - 1);
- 
- 	return ((pfn >= nosave_begin_pfn) && (pfn <= nosave_end_pfn)) ||
--		crash_is_nosave(pfn);
-+		crash_is_nosave(pfn) || !pfn_is_map_memory(pfn);
- }
- 
- void notrace save_processor_state(void)
--- 
-2.34.1
-
+Ahh I see, so the unified accessors read_sysreg_el1()/write_sysreg_el1()
+need to be used here - which will choose between BRBCR_EL1 & BRBCR_EL12
+as required. Will do the changes, thanks for pointing out.
