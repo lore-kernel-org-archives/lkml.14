@@ -1,77 +1,45 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183E26A32A;
-	Fri,  1 Mar 2024 08:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5710969E11
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 08:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709282449; cv=none; b=bA4k1Fa9kolQ+F/8rfpnFNa2uLcenyL7lrgow3MqmGCqpnfM31pDSXjZ/c7J+htmu2hmsKYMrJ2xuMo2dYdnvxQsWDKghkP4yW6SX3lgQzIqInUINohfmCLiEqisiCKSy4r6BQvsP7O20C0EvlALbl2u0MTeEmI3XB6e68qyLTQ=
+	t=1709282489; cv=none; b=PzQ7LGG2FOHYMZVS+jWSd8s5GTVGtMq0MGyVCpeiISQIOSQrrsP9VXLNXRqIVQurkx75MUrcOTNVbAqS64HrcXH3gHLC9ccPvi0CEXaoZ3QMDy/Co2qGRwVQ+0drsXsxVkxocAhRUZQWXfJ11f6ifMufe6wqu4NOnPOt679xIok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709282449; c=relaxed/simple;
-	bh=5krobUKFPQVFM6DCDoevYZXMR+ogvs911v6NfUuohVg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ouDxkK349EinYevjDza1jHiA/zNiJBgVsdkRXQ4171GxTHdhZt+z17xIm5O6+glrBuwcgpp3+5d96f7jlE8ZstlzhrG3RHkIHvIppLvii+jIcZzqpvwd9o+Zndf7x7VJ3gaOSF2tMEV/4skqgEyIerCaahHS0d6qA045WBMAbdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=UZS52V5G; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=VF4EUw2d reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1709282489; c=relaxed/simple;
+	bh=ZU05d8rgL+KouMacXKQ7YsJZM3JuNUeEZVl84wyTLE0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k5fhMW1Q6YN5O/LkwPL+HuBt/bAzx4NIrgPfDLFN6wcdvyg1BfcmfomMIPDfiVOKeEUk2CSagcY9ZXc+jS0NaLdDVVWGvmppu13LestTOzU3jnVY/oIaE15Hymj1PF6u8MMD8vujGi//LzGoPzBxWEwtIQIeqoi+ZBELTBNGWxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=IgxvAT/b; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="UZS52V5G";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="VF4EUw2d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1709282446; x=1740818446;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=roDEc9/Haw8V4ko75VQ2V+i9NSA1sqHboyikroeqvpU=;
-  b=UZS52V5Ga+2XK8KXSrOXZ8LTHGYX9t0/gM0JqrE27IKrjzMghuXD8Dnm
-   Ocp6pLtOA4SLIrpDuomu7pwT05P7kC4KQK13joceA7E0mDiyxjroLsdPv
-   NEyrY6GDDpvy7e9iApyE10pAuWVlgTc8PhwqYRGUzMI9gZzlsffdxC+vi
-   QkptpGGORoGIauTP3imtEexKDKgYGbybVgeU9Ci0LBakW1258SoWXjDg5
-   hZA9QXY8eNrqOPmn1+/fBnvBuzmSTbafhFE+919SVvKT1KgkDteh6SWrY
-   pQtrmQgJ8XErFR3IKzsT24kCc7+b3NtTqu0oi//UzDaAajqRKEoOss9wz
-   A==;
-X-IronPort-AV: E=Sophos;i="6.06,195,1705359600"; 
-   d="scan'208";a="35680482"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 01 Mar 2024 09:40:42 +0100
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2AB55172297;
-	Fri,  1 Mar 2024 09:40:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1709282437; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=roDEc9/Haw8V4ko75VQ2V+i9NSA1sqHboyikroeqvpU=;
-	b=VF4EUw2dWOvr9Az8Mz6MvLM1QNZJPS4oX42yBYbsCY+DuNqooHtriFos2IqGagQkAb9es8
-	Y5Daiq4Qrz7y4znauxYqGWeZ+oqHKPXx4h3CIVPI0FQ2j8LCQdoxQcJWIKyoQAZZ7cHmge
-	DZnFYBxnjv1YsJAwzxRZNgTJBhD0O96GzUSHtVerUQnI5bMMIM7MF5gluzToL8yYK1IfJM
-	AAYcf/QWDysRtdy9hbfZfvx7012YR7H2S/X3X1T+5hc19pVGp3jhH0kVLz7HYsqBq+SnFW
-	SXxAMGje8zBpKAqGGJ1YUtOUQp2slkWaccKUV9kcI7HmeXMK7YjSJepxAV8f4w==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Sebastian Reichel <sre@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alain Volmat <alain.volmat@foss.st.com>,
-	Ricardo Ribalda <ribalda@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Michael Riesch <michael.riesch@wolfvision.net>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/2] media: dt-bindings: i2c: use absolute path to other schema
-Date: Fri,  1 Mar 2024 09:40:08 +0100
-Message-Id: <20240301084009.3030753-2-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240301084009.3030753-1-alexander.stein@ew.tq-group.com>
-References: <20240301084009.3030753-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IgxvAT/b"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4218elje3370386
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Fri, 1 Mar 2024 00:40:51 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4218elje3370386
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024021201; t=1709282452;
+	bh=XHDUSdp3fzgtKbz1MB2i6kRiFtguTPR1L2wgsX/y370=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IgxvAT/b5pPtrkD2o+Qs/LXL4q5C7xWmeYT0I0Nsswgzi6K6V9wDP80kZ/ett1+/6
+	 +c+7DO2i9jYYDi9XGNQSNs3Hm927ZUR5Sf25qCQaMdFJbJFjokI12uTTYQjxX0zL8F
+	 XFf9TuC+fsoEppfz2iSCyrnlc3CLGsfzmqHL3smI5W1EnNadAlpUHuKVYyblQQss2s
+	 y0rFAZTyJdE0y8qC7fbKiKIE6VyZp7202CS4p1rkn4luH/VlHEfsIL3VgzUeLByNRY
+	 wpSinfHmpQ2TNp3RfbklxovH3aRMMrPwVe8B/VcXrw09CQu5LVmrczq7UDMnzlaKhK
+	 OIPCFXhK7wfjQ==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        brgerst@gmail.com
+Subject: [PATCH v1 1/1] x86/fred: Fix init_task thread stack pointer initialization
+Date: Fri,  1 Mar 2024 00:40:46 -0800
+Message-ID: <20240301084046.3370376-1-xin@zytor.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,73 +47,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Absolute path to other DT schema is preferred over relative one.
+As TOP_OF_KERNEL_STACK_PADDING is defined as 0 on x86_64, no one noticed
+it's missing in the calculation of the .sp field in INIT_THREAD until it
+is defined to 16 with CONFIG_X86_FRED=y.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Subtract TOP_OF_KERNEL_STACK_PADDING from the .sp field of INIT_THREAD.
+
+Fixes: 65c9cc9e2c14 ("x86/fred: Reserve space for the FRED stack frame")
+Fixes: 3adee777ad0d ("x86/smpboot: Remove initial_stack on 64-bit")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202402262159.183c2a37-lkp@intel.com
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 ---
-Changes in v3:
-* Squashed patches 2-5 from v2 into a single one
+ arch/x86/include/asm/processor.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/media/i2c/galaxycore,gc0308.yaml        | 2 +-
- .../devicetree/bindings/media/i2c/galaxycore,gc2145.yaml        | 2 +-
- Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml    | 2 +-
- Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml    | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 26620d7642a9..17fe81998ce4 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -664,8 +664,10 @@ static __always_inline void prefetchw(const void *x)
+ #else
+ extern unsigned long __end_init_task[];
+ 
+-#define INIT_THREAD {							    \
+-	.sp	= (unsigned long)&__end_init_task - sizeof(struct pt_regs), \
++#define INIT_THREAD {							\
++	.sp	= (unsigned long)&__end_init_task -			\
++		  TOP_OF_KERNEL_STACK_PADDING -				\
++		  sizeof(struct pt_regs),				\
+ }
+ 
+ extern unsigned long KSTK_ESP(struct task_struct *task);
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/galaxycore,gc0308.yaml b/Documentation/devicetree/bindings/media/i2c/galaxycore,gc0308.yaml
-index f81e7daed67b6..2bf1a81feaf47 100644
---- a/Documentation/devicetree/bindings/media/i2c/galaxycore,gc0308.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/galaxycore,gc0308.yaml
-@@ -15,7 +15,7 @@ description: |
-   They include an ISP capable of auto exposure and auto white balance.
- 
- allOf:
--  - $ref: ../video-interface-devices.yaml#
-+  - $ref: /schemas/media/video-interface-devices.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/media/i2c/galaxycore,gc2145.yaml b/Documentation/devicetree/bindings/media/i2c/galaxycore,gc2145.yaml
-index 1726ecca4c77e..9eac588de0bc2 100644
---- a/Documentation/devicetree/bindings/media/i2c/galaxycore,gc2145.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/galaxycore,gc2145.yaml
-@@ -19,7 +19,7 @@ description:
-   either through a parallel interface or through MIPI CSI-2.
- 
- allOf:
--  - $ref: ../video-interface-devices.yaml#
-+  - $ref: /schemas/media/video-interface-devices.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-index 60903da84e1f3..0162eec8ca993 100644
---- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-@@ -16,7 +16,7 @@ description: |
-   maximum throughput of 1.2Gbps/lane.
- 
- allOf:
--  - $ref: ../video-interface-devices.yaml#
-+  - $ref: /schemas/media/video-interface-devices.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml
-index 9a00dab2e8a3f..34962c5c70065 100644
---- a/Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml
-@@ -18,7 +18,7 @@ description: |-
-   available via CSI-2 serial data output (two or four lanes).
- 
- allOf:
--  - $ref: ../video-interface-devices.yaml#
-+  - $ref: /schemas/media/video-interface-devices.yaml#
- 
- properties:
-   compatible:
+base-commit: e13841907b8fda0ae0ce1ec03684665f578416a8
 -- 
-2.34.1
+2.44.0
 
