@@ -1,172 +1,147 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192F41E88A;
-	Fri,  1 Mar 2024 18:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6027024B23
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709319020; cv=none; b=MS3/xHvgcReGHgz7j9/LOztMh8rQPr111+H832U+rO9mieUxjqRM2BJzbGbX66UUuhDMXLkUzNx6l0PZui7FoxkVOxVpvKFB+KzDnQQpUwRPsQBWwCn7Qn8NWOxww4+P+uSA9qAR1e7zjDOHWxpeLw75DIYovZS0gIfdYOUXZ8U=
+	t=1709319230; cv=none; b=NSJuDpyUAxgyAyXR5ar98hEA1NsbJfieI/C9KOEjKjKPy7fz2fMa5xhe8YPmbyAfwVKxnM5CGiJejuSBfZapi3De01ODuP2PC9Min17URPncUfnGpgxqsv24OwGZH/Yae5JVnGSyrKf6LMZV5mdjthDHaXNL2waVcca52I1JvJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709319020; c=relaxed/simple;
-	bh=xQB4TikMejf8HYKCd2nqTboBbc2W/l5k/UsuZ1nnvBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IxNjRNKNUkfaTxg9kd2cOnM5nFsW9/ZExjlxkmQWosS/RAhSZ2kk5e6+A8EnBBcnHqXKvX5EMQLivbsGeDQ45TAIjFAqfkuqtTwAlA4X4RewEHTiejdf0I8lkW0Q1IDSrS0xBSwDgvoZEammTuBR0wkycTGSGc69ooi6mMqa8MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dFLQ0zl/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709319230; c=relaxed/simple;
+	bh=+xh/f4G1lcC7OOYBLDSVnmlxyJIX8rUdOfve7xEoQZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpVAo5w2i2OZyOSoweJQ9Nsw7N+PG3Y9Pb47oxgUNyXtsbWKxbFEQJqoltQvVniBBCn6/xPA70jPjFu8mLMy3IVRdOESCVZxGzDZsPKjQyhTvDLYLeI1cnO+5v4ZEnilFBVDiL1MEmGip4NsDEWHEi6Pgdw2fjFZ4XQFnkL5eNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gn7rELY1; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dFLQ0zl/"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 421GuNc1008586;
-	Fri, 1 Mar 2024 18:50:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=lk1W+lVN+n6/SoaQkVD5BF3cUTG8UJWo7u5+NF+HJwQ=; b=dF
-	LQ0zl/DzGyDy70kkvdA+gNF9yKY4689P8EYCKzK081w53ZnNJk0eTUhs8f3M3jSL
-	xB77Ic5n9ABMgDEuUaE5JwVbaF9iChp5MTlUndYXhQ52snuqi6mbUqaD+CZm2grt
-	ph19Nhl8V9XZ+JfsXjS0K1gM6CThK/E/POQsur6c7p25BtFxH0eoZlV9BCZBvUFz
-	wtAkrXg18xHZ4DNYbEM31utKtsaLTdobYM/a6vSOs6qvCQ35x1RnSCrtv5DcWcdo
-	pCCPDgNRhQO3be8vsUGzCUWqkT3XKCNnnkGCMFtnCLMm3lgr7y7SxUNfUyzPWq6b
-	9/oz130Bmy9q/s3FiPdQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wk7cg9xkx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 18:50:01 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 421Io00L014051
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 1 Mar 2024 18:50:00 GMT
-Received: from [10.110.82.174] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 1 Mar
- 2024 10:49:57 -0800
-Message-ID: <6a3e3071-f8cd-66b4-99a0-427f7e11177a@quicinc.com>
-Date: Fri, 1 Mar 2024 10:49:57 -0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gn7rELY1"
+Date: Fri, 1 Mar 2024 10:53:30 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1709319226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IWBU7wfenw5GY8snfrhpUtl/VpqnsNlazcQskb2ijoE=;
+	b=gn7rELY1u3fct2iRcbLSiaFrreySSkXP5ifRGFhjrkx+a6/PEGsm66m4/fEeeq1Sngh7QT
+	xWzEkkTe12Sb7X25cK2QB2o8B5n+ye/j01hRxqXPVJqzXs7JRk52awHqGmMGKP2DkTyqgI
+	fw7Z2bVSVnnZdJa7ObS6mxnFMPy11Rk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, Kees Cook <kees@kernel.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 4/4] UNFINISHED mm, fs: use kmem_cache_charge() in
+ path_openat()
+Message-ID: <ZeIkKrS7HK6ENwbw@P9FQF9L96D.corp.robot.car>
+References: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
+ <20240301-slab-memcg-v1-4-359328a46596@suse.cz>
+ <CAHk-=whgFtbTxCAg2CWQtDj7n6CEyzvdV1wcCj2qpMfpw0=m1A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v7 11/12] firmware: qcom: scm: clarify the comment in
- qcom_scm_pas_init_image()
-To: Bjorn Andersson <andersson@kernel.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>
-CC: Andy Gross <agross@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Elliot Berman <quic_eberman@quicinc.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        Guru Das Srinagesh
-	<quic_gurus@quicinc.com>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        "Maximilian
- Luz" <luzmaximilian@gmail.com>,
-        Alex Elder <elder@linaro.org>,
-        "Srini
- Kandagatla" <srinivas.kandagatla@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <kernel@quicinc.com>,
-        "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>,
-        Deepti Jaggi
-	<quic_djaggi@quicinc.com>
-References: <20240205182810.58382-1-brgl@bgdev.pl>
- <20240205182810.58382-12-brgl@bgdev.pl>
- <ihz4jczbhn3gdcs6nkgnzpyv3577ebd73qbkynw6jz7ciy4fu3@kxqu7olrrely>
-Content-Language: en-US
-From: Prasad Sodagudi <quic_psodagud@quicinc.com>
-In-Reply-To: <ihz4jczbhn3gdcs6nkgnzpyv3577ebd73qbkynw6jz7ciy4fu3@kxqu7olrrely>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zJU114Lht-Ax-EGW8-ctMDqs437U1DQF
-X-Proofpoint-GUID: zJU114Lht-Ax-EGW8-ctMDqs437U1DQF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-01_20,2024-03-01_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- bulkscore=0 priorityscore=1501 spamscore=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 phishscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403010153
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whgFtbTxCAg2CWQtDj7n6CEyzvdV1wcCj2qpMfpw0=m1A@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
+On Fri, Mar 01, 2024 at 09:51:18AM -0800, Linus Torvalds wrote:
+> On Fri, 1 Mar 2024 at 09:07, Vlastimil Babka <vbabka@suse.cz> wrote:
+> >
+> > This is just an example of using the kmem_cache_charge() API.  I think
+> > it's placed in a place that's applicable for Linus's example [1]
+> > although he mentions do_dentry_open() - I have followed from strace()
+> > showing openat(2) to path_openat() doing the alloc_empty_file().
+> 
+> Thanks. This is not the right patch,  but yes, patches 1-3 look very nice to me.
+> 
+> > The idea is that filp_cachep stops being SLAB_ACCOUNT. Allocations that
+> > want to be accounted immediately can use GFP_KERNEL_ACCOUNT. I did that
+> > in alloc_empty_file_noaccount() (despite the contradictory name but the
+> > noaccount refers to something else, right?) as IIUC it's about
+> > kernel-internal opens.
+> 
+> Yeah, the "noaccount" function is about not accounting it towards nr_files.
+> 
+> That said, I don't think it necessarily needs to do the memory
+> accounting either - it's literally for cases where we're never going
+> to install the file descriptor in any user space.
+> 
+> Your change to use GFP_KERNEL_ACCOUNT isn't exactly wrong, but I don't
+> think it's really the right thing either, because
+> 
+> > Why is this unfinished:
+> >
+> > - there are other callers of alloc_empty_file() which I didn't adjust so
+> >   they simply became memcg-unaccounted. I haven't investigated for which
+> >   ones it would make also sense to separate the allocation and accounting.
+> >   Maybe alloc_empty_file() would need to get a parameter to control
+> >   this.
+> 
+> Right. I think the natural and logical way to deal with this is to
+> just say "we account when we add the file to the fdtable".
+> 
+> IOW, just have fd_install() do it. That's the really natural point,
+> and also makes it very logical why alloc_empty_file_noaccount()
+> wouldn't need to do the GFP_KERNEL_ACCOUNT.
+> 
+> > - I don't know how to properly unwind the accounting failure case. It
+> >   seems like a new case because when we succeed the open, there's no
+> >   further error path at least in path_openat().
+> 
+> Yeah, let me think about this part. Becasue fd_install() is the right
+> point, but that too does not really allow for error handling.
+> 
+> Yes, we could close things and fail it, but it really is much too late
+> at this point.
+> 
+> What I *think* I'd want for this case is
+> 
+>  (a) allow the accounting to go over by a bit
+> 
+>  (b) make sure there's a cheap way to ask (before) about "did we go
+> over the limit"
+> 
+> IOW, the accounting never needed to be byte-accurate to begin with,
+> and making it fail (cheaply and early) on the next file allocation is
+> fine.
+> 
+> Just make it really cheap. Can we do that?
+> 
+> For example, maybe don't bother with the whole "bytes and pages"
+> stuff. Just a simple "are we more than one page over?" kind of
+> question. Without the 'stock_lock' mess for sub-page bytes etc
+> 
+> How would that look? Would it result in something that can be done
+> cheaply without locking and atomics and without excessive pointer
+> indirection through many levels of memcg data structures?
 
-On 2/17/2024 7:50 PM, Bjorn Andersson wrote:
-> On Mon, Feb 05, 2024 at 07:28:09PM +0100, Bartosz Golaszewski wrote:
->> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>
->> The "memory protection" mechanism mentioned in the comment is the SHM
->> Bridge. This is also the reason why we do not convert this call to using
->> the TZ memory allocator.
->>
-> No, this mechanism predates shmbridge.
-Yes. PIL calls are there for very long time and shm bridge concept is 
-introduced later.
->
->> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->> Tested-by: Andrew Halaney <ahalaney@redhat.com> # sc8280xp-lenovo-thinkpad-x13s
->> Tested-by: Deepti Jaggi <quic_djaggi@quicinc.com> #sa8775p-ride
->> Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
->> ---
->>   drivers/firmware/qcom/qcom_scm.c | 10 +++++++---
->>   1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
->> index 839773270a21..7ba5cff6e4e7 100644
->> --- a/drivers/firmware/qcom/qcom_scm.c
->> +++ b/drivers/firmware/qcom/qcom_scm.c
->> @@ -563,9 +563,13 @@ int qcom_scm_pas_init_image(u32 peripheral, const void *metadata, size_t size,
->>   	struct qcom_scm_res res;
->>   
->>   	/*
->> -	 * During the scm call memory protection will be enabled for the meta
->> -	 * data blob, so make sure it's physically contiguous, 4K aligned and
->> -	 * non-cachable to avoid XPU violations.
-> What this is saying is that the memory will be made unaccessible to
-> Linux, so it needs to be contiguous and aligned.
+I think it's possible and I'm currently looking into batching charge,
+objcg refcnt management and vmstats using per-task caching. It should
+speed up things for the majority of allocations.
+For allocations from an irq context and targeted allocations
+(where the target memcg != memcg of the current task) we'd probably need to
+keep the old scheme. I hope to post some patches relatively soon.
 
-Based on my understanding,  this buffer has to be  physically 
-contiguous, 4K aligned and non-cachable to avoid XPU violations.
+I tried to optimize the current implementation but failed to get any
+significant gains. It seems that the overhead is very evenly spread across
+objcg pointer access, charge management, objcg refcnt management and vmstats.
 
-We should keep this comment
-
->
->> +	 * During the SCM call the hypervisor will make the buffer containing
->> +	 * the program data into an SHM Bridge.
-> Are you saying that the hypervisor will convert this memory to a
-> shmbridge, and then pass it to TrustZone?
-Yes.  Specifically for PIL calls hyp is creating shm bridge for 
-buffers/regions on behalf of Linux/NS-EL1.
->
->> This is why we exceptionally
->> +	 * must not use the TrustZone memory allocator here as - depending on
->> +	 * Kconfig - it may already use the SHM Bridge mechanism internally.
->> +	 *
-> "it may already"? You describe above that we shouldn't pass shmbridge
-> memory, and the other case never deals with shmbridges. So, I think you
-> can omit this part.
->
->> +	 * If we pass a buffer that is already part of an SHM Bridge to this
->> +	 * call, it will fail.
-> Could this be because the consumer of this buffer operates in EL2, and
-> not TZ?
-These buffers are consumed by TZ only and not by EL2.  hyp creating the 
-required bridges for pil buffers.
->
-> Regards,
-> Bjorn
->
->>   	 */
->>   	mdata_buf = dma_alloc_coherent(__scm->dev, size, &mdata_phys,
->>   				       GFP_KERNEL);
->> -- 
->> 2.40.1
->>
+Thanks!
