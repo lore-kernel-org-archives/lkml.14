@@ -1,150 +1,99 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C5970CBF
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFE16EB6B
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709307006; cv=none; b=o36pSX1BDWCKeC9SE+rZTK38JxLWA2YDmKdZH+Oen4VrjUbGyu8k99fbUD/C41/QjNKvLuhIIu6ZCdUmBhH2XUnhKCE2txQ2/WoRW2hY9fW+Z8V2u06DISHgtiw5MuC3T3nscJPMcZFXf8fNseuWazumQUNE4171bhmVFY7xfvc=
+	t=1709307115; cv=none; b=S0jZ742AR1P8hri5118fhAxAa0JNrQ3AxUy6lXDMNdKZppnuQ5xJiyTmiU/d8IAR/qAOGMbZisk7KjRBy0fZoqKKlb2iW2AxAIl0bha0utPQ+sBw3HO7Q2kXF3iAQqKYu3NYImqVkrIv0PfjMJxBKsTXDXz/dqcdhd0olC8jKqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709307006; c=relaxed/simple;
-	bh=I1uWE9DpsoosndzzuWpPPfCptv98Id+uzZjAljEvYQc=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=GqKAa0wHWCkYPzRYtsgaRE/PlinPUWJnDNrccu36ITVrrhp5VRKJONwbq7G+DflRE6OGXtUHRFMH6rnIO4UlbcjGqWa7p38kgaqpetL9EYsd3/AlnCXqVAdcZptpI9oUtTi2GKBKW9QsbxBeLMHfWyeZp3Io0iBk2gMJnPICSEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yRATUcaU; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1709307115; c=relaxed/simple;
+	bh=c6VADMQicUPiPOIu9kP0v1RFWmn/JeAemp3LKilZuoE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uQxLl7+J7KkqBezEuTII52oBgygYCOD74ji/GRzcqq0IvUebIhgct6XIA6E2jyaxQXMGxVSXjAI+K3vOVnYnCHD/PLlqJ40/LZPKDY83ziLSPlgBhGdhYfgkYL5NylQLyrqO/uoruaP+w+WWEDBxOTlV39IZ9PE3Dpypj/Xn4L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y3fnAsZM; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yRATUcaU"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d2ab9c5e83so23126791fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 07:30:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3fnAsZM"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d29111272eso28722091fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 07:31:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709307002; x=1709911802; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=BRJMyL12Hfga3nBS66W3o9I5fxawyXMCNLNUrn0/Hvw=;
-        b=yRATUcaU3E7Vae6O96rI1awojOkW9Po71t5JK+f60PDI2iVyrzCZak7HJWSwCevLnX
-         NCvPNnlLw1z5yxzqYcfjxlnRLOwjRLTBdU5TK0R0BIuoV2ymSgH709Xkx7vRBmQGI2ju
-         dcBg73jbwe2vOjZMw+ppIgTLpGanEs7QUJhJnWH0ckGtYVidQiuERrSfOvMRur3GaVPR
-         cNQ/KrzqAjUozozcTQvrEmgSpCN+KVv3RnHbymR82O/bPRD3nMCs9W//Dmz8c1eXBP3P
-         XtcSovqjnrERJMALaPG1nG5s68mI+WhO3LwWU48GNhSQa8sjsP/VWVdGkPFXmPFKTqKu
-         AMGg==
+        d=gmail.com; s=20230601; t=1709307111; x=1709911911; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uQkIsiqJa3PbCfK5y5rQ5fldLZTBWAFO6axVFhfQfUk=;
+        b=Y3fnAsZMCX9sIO5obvOgaI1kwY+est16hgK0/9Y/Tj/5TVtw5E3XRykURwWfoUwSHf
+         brV+SE9Am2UCedtJWodaQTBI1v7T+8xd0hdqj5WJX5RrDwU7E9BX7HPjbmO1nsyrP8m0
+         BO4AG3zgTFBSi/MpGLMtUEJlcKG0TA7QYPrmaEAvBjnIb0Vy1oAcSx52/+TSFu3iE76k
+         /sR8uNqtryU0TNeXFR4thVSzDJtDErf4agWvma7rkcyjweCSUfYTSo/Yzt9tarYcHYPW
+         VvbqOTw0laKmKoP14Ar5I9pxQ3EkKhx6nd/S+PYQ3SP8Xy6HQus7Ejy7i+Z3DwOZoIrL
+         w80Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709307002; x=1709911802;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BRJMyL12Hfga3nBS66W3o9I5fxawyXMCNLNUrn0/Hvw=;
-        b=MkoYGAGZeI2mhzf13dLJb9IVzHVvo2YjrjqHBdSR+yLiCvcAlzp30fHsJGrbxLatKR
-         aC+1NRhC668DnwLloHqGGASih6/P6+QpFbZ5AkwEw16zRjORF80NIxlQR7Chzh4q/2Dy
-         wV6bKwkB6UTBJAXf9UsmnXif7us3bF4W7qorWYeQ2KcganDB8MML6jldCv710AOEsqea
-         To7u5UOCzI+2cK+u4CXjCBALNZbDqsh3UdPgWHYGJbadMJtXKpCvfUHscmcG/nFcnR+J
-         wYsaUWV6xaNReq0hmN+KWU5Z06ae57Pu0rrGJNPkKHZzoMJCoi+r5YkWkfXBzhDKtYYA
-         YEBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnmkw/gfc5WFcN/83eP2yG6iEsxiMlK5EHchxA3RW0SksrMbf+pyu8+/nU6OlXR8fylVC9Rk9TNsqsmSRRR49Bw0IioRRJlpfKHVQe
-X-Gm-Message-State: AOJu0YypfyDr3tVtFpNCC2amj6lLKa5n18RQK15J2JDKT1Rt2lhVgSLf
-	yEKaWFA1wRUsADU+9sACzMKoH0JCn4fT2PwXqDgJHtcayUO45ljuowstrqgBFYU=
-X-Google-Smtp-Source: AGHT+IFtbsethllwdu9/U10rpGbV0itlW8rLnEVMWQkX3g7hsPRaSzXqc3jmdeQd4Le6Db0GX6+1Dg==
-X-Received: by 2002:a2e:7d01:0:b0:2d2:b651:b0c3 with SMTP id y1-20020a2e7d01000000b002d2b651b0c3mr1563443ljc.49.1709307002212;
-        Fri, 01 Mar 2024 07:30:02 -0800 (PST)
-Received: from localhost ([2a01:e0a:3c5:5fb1:efbe:c807:bcd8:19bf])
-        by smtp.gmail.com with ESMTPSA id n18-20020adffe12000000b0033d67791dc0sm4797347wrr.43.2024.03.01.07.30.01
+        d=1e100.net; s=20230601; t=1709307111; x=1709911911;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uQkIsiqJa3PbCfK5y5rQ5fldLZTBWAFO6axVFhfQfUk=;
+        b=KLBKYP+xhk8NT1gz/Zi6Wxw9OfvhagIzkSPRgJrZo5DXAoT0QnYEoz202QEzqHBr4t
+         E/s3X/wwR7kxyaGEqfCRZrxI3aPb0+Bq0jvlkVT78xwVZflOXzXdYkfJz0b2wS+7Y009
+         M4mCTcMot23jRXpt+8q6YXYXghrGJcxpJUNfWswCRzTmtZWzaz5ZqgUR+1TPRxWjiso/
+         9FY0OkCfL3UTCofWGmSvMSASUsQYIoR8ZXFa28qCTSBKfCX6xqMABH1pkOqjy3RHiPo4
+         o/cIt3x4+42vsvMyrTR5a2vqiXuim399/BXHnbqicPk9mYgrCqqMg0M/kFVCfdzZ2rFB
+         biPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWn8R/EjlGnauAlodqSRDb97gDKgi9dF+c2G/yq4329ZlcjAUngBcZthQnZ/59aj7MtmTrTfM7MhBXsgNjZxkmBP7DBvZdugYvAr5UK
+X-Gm-Message-State: AOJu0YyvCiJv2hYhhpoLBVJ1oF6iASs0yQ1L4BJJFPeAZWACuBRpAvL4
+	hdUxaX3Zv6hNAgWODlahAEilNKBqisF0ARzmlA5tZzho5MMmRZfOap7AdDMDxjEtaA==
+X-Google-Smtp-Source: AGHT+IFowqv91ocPiEeEPwajlKa4L03f8UHTtqN7Eo4sKzpVD721ZPHRO+ng/AQ0QUYZzwtnFNGy+Q==
+X-Received: by 2002:ac2:5186:0:b0:512:d88a:3a8f with SMTP id u6-20020ac25186000000b00512d88a3a8fmr1450384lfi.25.1709307110610;
+        Fri, 01 Mar 2024 07:31:50 -0800 (PST)
+Received: from ubuntu2004.cynet.local (vpn1382.cynet.com. [84.110.53.106])
+        by smtp.gmail.com with ESMTPSA id u10-20020a05600c210a00b00410df4bf22esm8739925wml.38.2024.03.01.07.31.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 07:30:01 -0800 (PST)
-References: <20240301132936.621238-1-avromanov@salutedevices.com>
- <20240301132936.621238-4-avromanov@salutedevices.com>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Alexey Romanov <avromanov@salutedevices.com>
-Cc: neil.armstrong@linaro.org, clabbe@baylibre.com,
- herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, vadim.fedorenko@linux.dev,
- linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kernel@salutedevices.com
-Subject: Re: [PATCH v5 03/21] drivers: crypto: meson: make CLK controller
- optional
-Date: Fri, 01 Mar 2024 16:21:20 +0100
-In-reply-to: <20240301132936.621238-4-avromanov@salutedevices.com>
-Message-ID: <1jwmqmrmva.fsf@starbuckisacylon.baylibre.com>
+        Fri, 01 Mar 2024 07:31:50 -0800 (PST)
+From: Ariel Silver <arielsilver77@gmail.com>
+To: gregkh@linuxfoundation.org,
+	philipp.g.hortmann@gmail.com,
+	yogi.kernel@gmail.com,
+	dan.carpenter@linaro.org,
+	straube.linux@gmail.com,
+	garyrookard@fastmail.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Ariel Silver <arielsilver77@gmail.com>
+Subject: [PATCH] Staging: rtl8192e: Declare variable with static
+Date: Fri,  1 Mar 2024 17:31:28 +0200
+Message-Id: <20240301153128.13974-1-arielsilver77@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
+Fixed sparse warning:
+"'dm_rx_path_sel_table' was not declared. Should it be static?"
+As dm_rx_path_sel_table is used only in rtl_dm.c it should be static.
 
-On Fri 01 Mar 2024 at 16:29, Alexey Romanov <avromanov@salutedevices.com> wrote:
+Signed-off-by: Ariel Silver <arielsilver77@gmail.com>
+---
+ drivers/staging/rtl8192e/rtl8192e/rtl_dm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Amlogic crypto IP doesn't take a clock input on some
-> SoCs: AXG / A1 / S4 / G12. So make it optional.
->
-
-I commented this patch on v2 and the comment keep on being un-addressed.
-
-The SoC either:
-* has a clock that is required for the IP to work
-* Or does not
-
-It is not something you are free to provide or not.
-
-For the record, I find very hard believe that some SoC would have clock,
-and other would not, for the same HW.
-
-Isn't it more likely that the clock just happens to be left enabled by
-the bootloader on some SoC and it conviently allows to ignore it ?
-
-> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
-> ---
->  drivers/crypto/amlogic/amlogic-gxl-core.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-> index e9e733ed98e0..a3a69a59f476 100644
-> --- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-> +++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-> @@ -269,16 +269,11 @@ static int meson_crypto_probe(struct platform_device *pdev)
->  		dev_err(&pdev->dev, "Cannot request MMIO err=%d\n", err);
->  		return err;
->  	}
-> -	mc->busclk = devm_clk_get(&pdev->dev, "blkmv");
-> +
-> +	mc->busclk = devm_clk_get_optional_enabled(&pdev->dev, "blkmv");
->  	if (IS_ERR(mc->busclk)) {
->  		err = PTR_ERR(mc->busclk);
-> -		dev_err(&pdev->dev, "Cannot get core clock err=%d\n", err);
-> -		return err;
-> -	}
-> -
-> -	err = clk_prepare_enable(mc->busclk);
-> -	if (err != 0) {
-> -		dev_err(&pdev->dev, "Cannot prepare_enable busclk\n");
-> +		dev_err(&pdev->dev, "Cannot get and enable core clock err=%d\n", err);
->  		return err;
->  	}
->  
-> @@ -306,7 +301,6 @@ static int meson_crypto_probe(struct platform_device *pdev)
->  	meson_unregister_algs(mc);
->  error_flow:
->  	meson_free_chanlist(mc, mc->flow_cnt - 1);
-> -	clk_disable_unprepare(mc->busclk);
->  	return err;
->  }
->  
-> @@ -321,8 +315,6 @@ static void meson_crypto_remove(struct platform_device *pdev)
->  	meson_unregister_algs(mc);
->  
->  	meson_free_chanlist(mc, mc->flow_cnt - 1);
-> -
-> -	clk_disable_unprepare(mc->busclk);
->  }
->  
->  static const struct meson_pdata meson_gxl_pdata = {
-
-
+diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
+index 92143c50c149..850ee6ae1f02 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
+@@ -144,7 +144,7 @@ const u8 dm_cck_tx_bb_gain_ch14[CCK_TX_BB_GAIN_TABLE_LEN][8] = {
+ /*------------------------Define global variable-----------------------------*/
+ struct dig_t dm_digtable;
+ 
+-struct drx_path_sel dm_rx_path_sel_table;
++static struct drx_path_sel dm_rx_path_sel_table;
+ /*------------------------Define global variable-----------------------------*/
+ 
+ 
 -- 
-Jerome
+2.25.1
+
