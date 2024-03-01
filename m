@@ -1,101 +1,137 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219FB69311
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 07:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3BD69944
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 07:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709276683; cv=none; b=ItnuFGDNWnBwum5TQsInVdEMpnT56PDftFxv9dnlDUiHbr0FA1rVg8TyYOpUDZS7k4s+QJ9/BjPTW3vs+jCoNEPYbnWdo5KjCjUVfBAV9n7NNC7v1Wrd8+ebvDlxBegsVZ1+ym2ZsCa+OC4MLOwLc+9fNO6WlhlHqdEUDwkiTos=
+	t=1709276721; cv=none; b=o89HM7oYk0/v6GOai5OyNeM+ceISnVYMi6+6UYVyesA/18Fgy0of3fL/5hAHLlJimP4ftzl7MV6jbTTROkY9gjgJhHpYh3eQxCtBvTb3ct3mXJPYMAy5tdx9vMtQKiXM4HLRNZngIiaIGXLU45QVZQ+GPagPyp+laUqUDiC79/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709276683; c=relaxed/simple;
-	bh=o9pz1fk2aOp4FTnpNEe6vcQsleQQatyQgwaGbA6imWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j3XOahn9mmcrLTFJNVIYg1Gop4DmpjCkCkehpAILwKQI8/nUMvH1ydxcfRSqZStjtyYVwY1DzZN/MuqSp7bVVgEUOtB12YGTXE7RGciQAQJYvnQK1LIr5/FxJP2w1EwWcFV6ICvld/0zpTNaLip5nE26ysOCcJXCrLPK4T7AlhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=0Ak2i4vO; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
+	s=arc-20240116; t=1709276721; c=relaxed/simple;
+	bh=qqJZRKu3127B3POCknwtTqzC0Dy+O9Rd38Eo05Wt27Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZXoEHBwrE7UDKQcFFmKzz6iGGAUyLSUsscGBm+BhJyOtV28maDEkYcqUBg8x8W83qwXqlKILuqrHTrYrkIRtMNK3gRaJKqqNPIx0DhK6/p/eLNERgA9p2sXTjSHByXKxLzwOpe5/7d1CJOWEcnf9/jwQ3klNlFYg2QYX0KTrQ8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=brkwjGfq; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="0Ak2i4vO"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dcad814986so15772945ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:04:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1709276681; x=1709881481; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6I9y5UTmAvN64WBQDc3/nGiscexf4NuEbldIfBdk9l8=;
-        b=0Ak2i4vOzdAv0MP8yo+m3lZ7xbl3HfICbqJKOeS9d9HIBLn+UphKWhJ5gCaMHGBUEu
-         QSE9i7OOcyu9dYkl9oxjSAxOlRirf7CZM4sTDmCah1/aIz8tNh4kRAS5YnAP1N3lfKPz
-         mckq/T64wArfSq61QNUPOh+EK56Em/vn+2UhvOZJdqSCB6wRBP4Zkgdk633I9iuTs109
-         x5omRlk/ZrsXK+ZDjDectUijBwwmqXbFpp0BCrZEjhYt8ylxu84vW/ucHqQ/KC1Rld4t
-         F0euM8eZM+xYN8vzpY+pvktScKJ3eDiEbqN9h3UKXbncxGHxVeIUqyLOwUaTQ+Cq/L8/
-         SNkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709276681; x=1709881481;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6I9y5UTmAvN64WBQDc3/nGiscexf4NuEbldIfBdk9l8=;
-        b=OQXhodPT7ae+QqMLWUlfkGt/uvFPXUQa3cXKUJt6ntulmVjNIyfSvyC/fjHhmiA7iT
-         fjBJ3H6LQpu13K/4dAK7S16QdQOpq8vxCEUNADJ/QRSFja/rAWZFsR6qvna9ytMeqjKX
-         5GA6XmyhupSxIi+HfAoLHjC8aKr5hV3Eyba3eGEQJfZKM8mTy3p8p73dO6+3c2R54t1M
-         mBv0pXiQxUIMsuu1SYjZ1/g0Q6xWBATBWslh0qlwsqzWlrs/VFHHZ8b6UbnI6JuW5nAU
-         ksnnnXKIeq1M/TICrMxRerayTEZwH7f7KwyCy5rn2dLWc8plJ/jCOO8Vqt6qimJJWArC
-         KziQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ1Pgy5bkTNrsR2p0V4NLrp4fsUSDY6xBtuFb6ADt2GH5fN/t9FTyCV33bxAkeNncOAKwSUA3qAZN6K2nbOi37VxC4PTLwZ3A9by4R
-X-Gm-Message-State: AOJu0Yw/pAGr/jRcdR6fLrCqOlnFUMXlji5TfPunQqQ5KKrTxqAVsWKk
-	jP7+4tm6STE+Mi2mZ/dvqkqN32VMfdjuovqxRneY/kKHWm31V4bWQ5tQLQI7bxs=
-X-Google-Smtp-Source: AGHT+IG1evhX78/me7PET0oAJgA3nxqOzq5iUYRGdsuy0iEq8MCjfjuExh8MPjsu4Icqji+9or42Vw==
-X-Received: by 2002:a17:902:c947:b0:1dc:3e49:677d with SMTP id i7-20020a170902c94700b001dc3e49677dmr1048143pla.26.1709276681293;
-        Thu, 29 Feb 2024 23:04:41 -0800 (PST)
-Received: from localhost.localdomain ([8.210.91.195])
-        by smtp.googlemail.com with ESMTPSA id e5-20020a170902784500b001dcdf24e32csm1999601pln.111.2024.02.29.23.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 23:04:41 -0800 (PST)
-From: Lei Chen <lei.chen@smartx.com>
-To: Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-	Chandrakanth patil <chandrakanth.patil@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Lei Chen <lei.chen@smartx.com>,
-	megaraidlinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: megaraid_sas: make module parameter scmd_timeout writable
-Date: Fri,  1 Mar 2024 02:04:21 -0500
-Message-ID: <20240301070422.1739020-1-lei.chen@smartx.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="brkwjGfq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709276719; x=1740812719;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qqJZRKu3127B3POCknwtTqzC0Dy+O9Rd38Eo05Wt27Q=;
+  b=brkwjGfqWhSg/T/YKyLDCmaY7FHI8Os4MzlOJGT38WJfqxOizCtOYk2g
+   N9AUsvsnDySlUhYRBrNlDAJij7F0qJppHQSWcOOga8qUZfOKBLMYLaJlD
+   Obo1GHJRP6Xuejx4GvKFjrTRr6un6tAvGQ3HVQu6qahIqZkzLenEnzShb
+   Y84kdoBY9IM5JlWZRmPMvHZbIeAsSnoai2tcW1a3geB3kErtVMbzXjpGM
+   m8LnJ0a+oJ47pbLAf+Ic2CSs8NL+KlO7RCSKVBlEuiVlbxFrGqA8TW7d8
+   49ZRB/IVh4SVUtm05cqiLLpGSiuiiDDmpH99T1exDIMV8as68U8pYI9jz
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="29226584"
+X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
+   d="scan'208";a="29226584"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 23:05:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
+   d="scan'208";a="12649246"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 23:05:15 -0800
+Message-ID: <b43dfb1a-41d7-49cf-8f47-02ec6e46dc1c@linux.intel.com>
+Date: Fri, 1 Mar 2024 15:05:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu/vt-d: improve ITE fault handling if device was
+ released
+To: baolu.lu@linux.intel.com, bhelgaas@google.com, robin.murphy@arm.com,
+ jgg@ziepe.ca
+Cc: kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org,
+ lukas@wunner.de, yi.l.liu@intel.com, dan.carpenter@linaro.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240229040724.3393042-1-haifeng.zhao@linux.intel.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <20240229040724.3393042-1-haifeng.zhao@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When an scmd times out, block layer calls megasas_reset_timer to
-make further decisions. scmd_timeout indicates when an scmd is really
-timed-out. If we want to make this process more fast, we can decrease
-this value. This patch allows users to change this value in run-time.
 
-Signed-off-by: Lei Chen <lei.chen@smartx.com>
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2/29/2024 12:07 PM, Ethan Zhao wrote:
+> Break the loop to blindly retry the timeout ATS invalidation request
+> after ITE fault hit if device was released or isn't present anymore.
+>
+> This is part of the followup of prior proposed patchset
+>
+> https://do-db2.lkml.org/lkml/2024/2/22/350
+>
+> Fixes: 6ba6c3a4cacf ("VT-d: add device IOTLB invalidation support")
+> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+> ---
+>   drivers/iommu/intel/dmar.c | 25 +++++++++++++++++++++++++
+>   1 file changed, 25 insertions(+)
+>
+> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+> index d14797aabb7a..d01d68205557 100644
+> --- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -1273,6 +1273,9 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>   {
+>   	u32 fault;
+>   	int head, tail;
+> +	u64 iqe_err, ite_sid;
+> +	struct device *dev = NULL;
+> +	struct pci_dev *pdev = NULL;
+>   	struct q_inval *qi = iommu->qi;
+>   	int shift = qi_shift(iommu);
+>   
+> @@ -1317,6 +1320,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>   		tail = readl(iommu->reg + DMAR_IQT_REG);
+>   		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
+>   
+> +		/*
+> +		 * SID field is valid only when the ITE field is Set in FSTS_REG
+> +		 * see Intel VT-d spec r4.1, section 11.4.9.9
+> +		 */
+> +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
+> +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
+> +
+>   		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+>   		pr_info("Invalidation Time-out Error (ITE) cleared\n");
+>   
+> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>   			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+>   		} while (head != tail);
+>   
+> +		/*
+> +		 * If got ITE, we need to check if the sid of ITE is one of the
+> +		 * current valid ATS invalidation target devices, if no, or the
+> +		 * target device isn't presnet, don't try this request anymore.
+> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
+> +		 */
+> +		if (ite_sid) {
+> +			dev = device_rbtree_find(iommu, ite_sid);
+> +			if (!dev || !dev_is_pci(dev))
+> +				return -ETIMEDOUT;
+> +			pdev = to_pci_dev(dev);
+> +			if (!pci_device_is_present(pdev) &&
+> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
+> +				return -ETIMEDOUT;
+> +		}
+>   		if (qi->desc_status[wait_index] == QI_ABORT)
+>   			return -EAGAIN;
+>   	}
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 3d4f13da1ae8..2a165e5dc7a3 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -91,7 +91,7 @@ module_param(dual_qdepth_disable, int, 0444);
- MODULE_PARM_DESC(dual_qdepth_disable, "Disable dual queue depth feature. Default: 0");
- 
- static unsigned int scmd_timeout = MEGASAS_DEFAULT_CMD_TIMEOUT;
--module_param(scmd_timeout, int, 0444);
-+module_param(scmd_timeout, int, 0644);
- MODULE_PARM_DESC(scmd_timeout, "scsi command timeout (10-90s), default 90s. See megasas_reset_timer.");
- 
- int perf_mode = -1;
--- 
-2.43.0
+Given maintainer is going to pick up patchset
+https://lore.kernel.org/lkml/2d1788da-521c-4531-a159-81d2fb801d6c@linux.intel.com/T/
+and this one is mutually exclusive with it, suspend.
+
+
+Thanks,
+Ethan
 
