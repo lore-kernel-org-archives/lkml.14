@@ -1,177 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BD22FB6
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 01:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4972B9B9
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 01:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709254929; cv=none; b=fVterg6h7fNc3+HF2uRag/g8go1xfhkQ+FnoCpO9voUcSz/yh5/DkFa+FkNqq6Kn4LDAIebnwUNoNpUeOnhsluhBom5gkqDyPHLahE7KGjqQUdbXBswSaaMZPSafPRxFr5m+X6NFq5KAShi/YWoKoMSC/PVUgDs7toQVgLHi470=
+	t=1709254936; cv=none; b=M+t6ZcFHjAg/6XsUKVcTPT6SPMBMRZK4SsZhfqaN1O4RW5NBOrx6Na3lyPK0i1N88Tgr2v35JDOaLAVpgz4O9jJuRpXzUaTHSEJIVlRv3IWcQALVVFFuV4vRTi71kZRMB3MmqJaU/1TDv+Ynf2ZBKWgaCshcutuWSqetRrXH/oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709254929; c=relaxed/simple;
-	bh=rCjcOu/4hm1LXhiywe6K84Rd4gAOaOfOyVzhv2ma4ak=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=N9uJPoh5agU9EM+g7z7OyNM5FYUxy1N2yxrTZaXxgYPXmM00rn/u+gcmqDX0jzJAU/7FJ4FLrhKx9ssgxeOVUIoUq894ochaehiAXkneKEM3q4zmhnNbMr4bmmMAZ6/LUsCOr/lScX9rvbgHrUjawqq7FAWv0NHEOUEWcva57fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JFyZzQWb; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709254936; c=relaxed/simple;
+	bh=avbb1uT+lCjqlR3Vtb4dKd8TAjjBeVnovcFFYaHg+Kw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ca6UJTNi6kB++8AjdSvrXJlN1c0pBgGIrRa/5lEX9QmrOAn+ULq9PgkUmx+Lhl3YMeHEhfVE1LkcZ1oFeq0ymj4DiJ9cw9IaOwbKI39Qdgw3S9fx7Vk/aQ3vT4ULhXkcdgeJWHl1y12gDfDpdZ6yYYS22zE3D4x03VUHl0qMXq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BHsQa3yS; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JFyZzQWb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709254927; x=1740790927;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=rCjcOu/4hm1LXhiywe6K84Rd4gAOaOfOyVzhv2ma4ak=;
-  b=JFyZzQWb1CbYZ6oJBK+wdYa73aUYryPhe4gvSsyBD8DeHtbd/HUIM0jq
-   YuGqozqzW5/9Lpiv+Q4HbnsOap9LCDamzAGMSRivP1gpOGrPOsG573BNm
-   c4Za/CRzKovhsYoI59Nk6h5f2RaTCfKuAMwT/u1+TKzQpjoKHGJ5eiSoY
-   m5qblSmSKY7dnHKYFEubLBL5pWMEkXIg+l3hVuMO+T/yz/dEmKFiR2otu
-   S4BYcDTHfuH2s1USl72KsXxvgo7xB1+SttpCEVoePb0QB9rHah8gQc6te
-   sWcVHfRltNXJh3n9iNR0SNOzCWL76yCGTV7xpDEvy7Kv3vBayCqUV6KUU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="14340383"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="14340383"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 17:02:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="7941869"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 29 Feb 2024 17:02:01 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rfrH7-000DPX-0Z;
-	Fri, 01 Mar 2024 01:01:35 +0000
-Date: Fri, 1 Mar 2024 08:57:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Florian Westphal <fw@strlen.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>
-Subject: net/netfilter/nf_bpf_link.c:186:33: warning: bitwise operation
- between different enumeration types ('enum bpf_reg_type' and 'enum
- bpf_type_flag')
-Message-ID: <202403010842.hhJY5TFK-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BHsQa3yS"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42ec9eb9aefso19321cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:02:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709254933; x=1709859733; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SGi+DBKLmbpkuw51xKZeEFOZatSTb67qGD3fLAFzMHI=;
+        b=BHsQa3ySKVupdcmCfEllblcdn5na7vKShmpnZ6j41xZWlwM7REbTOlPzuKZv6AlxIK
+         x3801S8uXkoJ/a6DKYhTCG4+NMnyR+2dqUul6we4oRJ341Qjm8b29kQ9b1Ol8UYo0/Z2
+         b7vej3T4Hs3X+zKxVJ/GViLG6A2JbB3dx1X6kNwdNrrgeAOCGN25FKuReTNJSyN14NuO
+         bw6pe/D8eeqCMsLomyxu/BHcU9rCS2WiB+rRvskzyiHCfBy5SadVe3sRJxoP0xTL9ZTz
+         yjQGXBKj5NZzREFeXisEUtE+ObbGcvW9+qEOy+VmZISSm14JHBlm/UijpC5nzSw20B5s
+         Pp3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709254933; x=1709859733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SGi+DBKLmbpkuw51xKZeEFOZatSTb67qGD3fLAFzMHI=;
+        b=l2ASQ4cg4KrDOW98SyJ++3nl+HYT9mLvbDMMtIh8KdS+QgAE+MkH1FG7HkijOvE/jV
+         s/oGDGtHkkSpMPWRnB2ae/3BbHnSB2GkCuawMPNPbh68HAa0CG0vaapQxW24Gvr9+YxT
+         cNsQk4o3M/R4kS6HNgv7y6LUk4LUXQXYRFlzOKVxLoJWIVdgw6Ct1OZ6vWp1I5sdM0Jy
+         mWApHvJrEzwn1WlJSRxGa+2mXPrl2UH6VsQVN8arVcvMgMkRQQfSzsF8bCLNi4mWfD4N
+         zceEaGfXqPV8GvgRfbNIcttLzxNgXUcf9awIdb7O2dkYmYS/TtPtZo0V9MSRbTfuWvRY
+         kdrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqSNbpJKisXAIPhU6SS13igxOOe4K3ej+AgnJDLbPF45sFy6roA9wlfAUuJD3rVU5WBzHWj4LopbPKJpND+S2zXLLvLh/sgSIbWgqS
+X-Gm-Message-State: AOJu0YxjsVUZ+Gg68aBHT1jxtbRwbedbcEAOqTS/If+k3xGsV0aIw68K
+	IQYd0cemYGAheXloKLLGrpMAr+wjzKBfIQzMGh/D5N/im367Ke2z0NbhTbhR5MeSftlqBufEqYf
+	za95/djJoEbcRJxGkZ0gv+CeT8lu0N/rtG3Lo
+X-Google-Smtp-Source: AGHT+IGRK89OBpbXk7bzbVc4mw4dYz52ilhFfZmJAOg4fNKvO87Hz3ISEC3H2Po9mvjiBxmijdH1rJzihju5eaeea5g=
+X-Received: by 2002:a05:622a:188c:b0:42e:4f31:c488 with SMTP id
+ v12-20020a05622a188c00b0042e4f31c488mr100939qtc.20.1709254933185; Thu, 29 Feb
+ 2024 17:02:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240229001806.4158429-1-irogers@google.com> <20240229001806.4158429-2-irogers@google.com>
+ <28bc7ea0-ff3e-48a5-a8b3-20cc52728a5f@linux.intel.com>
+In-Reply-To: <28bc7ea0-ff3e-48a5-a8b3-20cc52728a5f@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 29 Feb 2024 17:02:02 -0800
+Message-ID: <CAP-5=fVQD91HjfhJ+iX_nhMUJX91ZgJ_havGg=Ya+dMZ67C4yQ@mail.gmail.com>
+Subject: Re: [PATCH v1 01/20] perf jevents: Add RAPL metrics for all Intel models
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   87adedeba51a822533649b143232418b9e26d08b
-commit: fd9c663b9ad67dedfc9a3fd3429ddd3e83782b4d bpf: minimal support for programs hooked into netfilter framework
-date:   10 months ago
-config: riscv-defconfig (https://download.01.org/0day-ci/archive/20240301/202403010842.hhJY5TFK-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project edd4aee4dd9b5b98b2576a6f783e4086173d902a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240301/202403010842.hhJY5TFK-lkp@intel.com/reproduce)
+On Thu, Feb 29, 2024 at 12:59=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
+>
+>
+>
+> On 2024-02-28 7:17 p.m., Ian Rogers wrote:
+> > Add a 'cpu_power' metric group that computes the power consumption
+> > from RAPL events if they are present.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/pmu-events/intel_metrics.py | 45 ++++++++++++++++++++++++--
+> >  1 file changed, 42 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-ev=
+ents/intel_metrics.py
+> > index 4fbb31c9eccd..5827f555005f 100755
+> > --- a/tools/perf/pmu-events/intel_metrics.py
+> > +++ b/tools/perf/pmu-events/intel_metrics.py
+> > @@ -1,9 +1,10 @@
+> >  #!/usr/bin/env python3
+> >  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> > -from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescription=
+s, LoadEvents,
+> > -                    MetricGroup)
+> > +from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonE=
+ncodeMetricGroupDescriptions,
+> > +                    LoadEvents, Metric, MetricGroup, Select)
+> >  import argparse
+> >  import json
+> > +import math
+> >  import os
+> >
+> >  parser =3D argparse.ArgumentParser(description=3D"Intel perf json gene=
+rator")
+> > @@ -14,7 +15,45 @@ args =3D parser.parse_args()
+> >  directory =3D f"{os.path.dirname(os.path.realpath(__file__))}/arch/x86=
+/{args.model}/"
+> >  LoadEvents(directory)
+> >
+> > -all_metrics =3D MetricGroup("",[])
+> > +interval_sec =3D Event("duration_time")
+> > +
+> > +def Rapl() -> MetricGroup:
+> > +  """Processor socket power consumption estimate.
+> > +
+> > +  Use events from the running average power limit (RAPL) driver.
+> > +  """
+> > +  # Watts =3D joules/second
+> > +  pkg =3D Event("power/energy\-pkg/")
+> > +  cond_pkg =3D Select(pkg, has_event(pkg), math.nan)
+> > +  cores =3D Event("power/energy\-cores/")
+> > +  cond_cores =3D Select(cores, has_event(cores), math.nan)
+> > +  ram =3D Event("power/energy\-ram/")
+> > +  cond_ram =3D Select(ram, has_event(ram), math.nan)
+> > +  gpu =3D Event("power/energy\-gpu/")
+> > +  cond_gpu =3D Select(gpu, has_event(gpu), math.nan)
+> > +  psys =3D Event("power/energy\-psys/")
+> > +  cond_psys =3D Select(psys, has_event(psys), math.nan)
+> > +  scale =3D 2.3283064365386962890625e-10
+> > +  metrics =3D [
+> > +      Metric("cpu_power_pkg", "",
+> > +             d_ratio(cond_pkg * scale, interval_sec), "Watts"),
+> > +      Metric("cpu_power_cores", "",
+> > +             d_ratio(cond_cores * scale, interval_sec), "Watts"),
+> > +      Metric("cpu_power_ram", "",
+> > +             d_ratio(cond_ram * scale, interval_sec), "Watts"),
+> > +      Metric("cpu_power_gpu", "",
+> > +             d_ratio(cond_gpu * scale, interval_sec), "Watts"),
+> > +      Metric("cpu_power_psys", "",
+> > +             d_ratio(cond_psys * scale, interval_sec), "Watts"),
+> > +  ]
+> > +
+> > +  return MetricGroup("cpu_power", metrics,
+> > +                     description=3D"Processor socket power consumption=
+ estimates")
+>
+> As far as I know, the RAPL counters are to monitor energy consumption
+> across different domains. The scope may not always be a socket. I think
+> the description may brings confusions.
+> Maybe we just call it "RAPL power consumption estimates", or "Running
+> Average Power Limit (RAPL) power consumption estimates".
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403010842.hhJY5TFK-lkp@intel.com/
+Ack. Will fix in v2.
 
-All warnings (new ones prefixed by >>):
+Thanks,
+Ian
 
-   In file included from net/netfilter/nf_bpf_link.c:2:
-   In file included from include/linux/bpf.h:21:
-   In file included from include/linux/kallsyms.h:13:
-   In file included from include/linux/mm.h:1970:
-   include/linux/vmstat.h:516:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     516 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from net/netfilter/nf_bpf_link.c:2:
-   include/linux/bpf.h:706:48: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     706 |         ARG_PTR_TO_MAP_VALUE_OR_NULL    = PTR_MAYBE_NULL | ARG_PTR_TO_MAP_VALUE,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:707:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     707 |         ARG_PTR_TO_MEM_OR_NULL          = PTR_MAYBE_NULL | ARG_PTR_TO_MEM,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:708:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     708 |         ARG_PTR_TO_CTX_OR_NULL          = PTR_MAYBE_NULL | ARG_PTR_TO_CTX,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:709:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     709 |         ARG_PTR_TO_SOCKET_OR_NULL       = PTR_MAYBE_NULL | ARG_PTR_TO_SOCKET,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:710:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     710 |         ARG_PTR_TO_STACK_OR_NULL        = PTR_MAYBE_NULL | ARG_PTR_TO_STACK,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:711:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     711 |         ARG_PTR_TO_BTF_ID_OR_NULL       = PTR_MAYBE_NULL | ARG_PTR_TO_BTF_ID,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:715:38: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     715 |         ARG_PTR_TO_UNINIT_MEM           = MEM_UNINIT | ARG_PTR_TO_MEM,
-         |                                           ~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:717:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     717 |         ARG_PTR_TO_FIXED_SIZE_MEM       = MEM_FIXED_SIZE | ARG_PTR_TO_MEM,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:740:48: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     740 |         RET_PTR_TO_MAP_VALUE_OR_NULL    = PTR_MAYBE_NULL | RET_PTR_TO_MAP_VALUE,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:741:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     741 |         RET_PTR_TO_SOCKET_OR_NULL       = PTR_MAYBE_NULL | RET_PTR_TO_SOCKET,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:742:47: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     742 |         RET_PTR_TO_TCP_SOCK_OR_NULL     = PTR_MAYBE_NULL | RET_PTR_TO_TCP_SOCK,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:743:50: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     743 |         RET_PTR_TO_SOCK_COMMON_OR_NULL  = PTR_MAYBE_NULL | RET_PTR_TO_SOCK_COMMON,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:745:49: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     745 |         RET_PTR_TO_DYNPTR_MEM_OR_NULL   = PTR_MAYBE_NULL | RET_PTR_TO_MEM,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:746:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     746 |         RET_PTR_TO_BTF_ID_OR_NULL       = PTR_MAYBE_NULL | RET_PTR_TO_BTF_ID,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:747:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     747 |         RET_PTR_TO_BTF_ID_TRUSTED       = PTR_TRUSTED    | RET_PTR_TO_BTF_ID,
-         |                                           ~~~~~~~~~~~    ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:858:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     858 |         PTR_TO_MAP_VALUE_OR_NULL        = PTR_MAYBE_NULL | PTR_TO_MAP_VALUE,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:859:42: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     859 |         PTR_TO_SOCKET_OR_NULL           = PTR_MAYBE_NULL | PTR_TO_SOCKET,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~
-   include/linux/bpf.h:860:46: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     860 |         PTR_TO_SOCK_COMMON_OR_NULL      = PTR_MAYBE_NULL | PTR_TO_SOCK_COMMON,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:861:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     861 |         PTR_TO_TCP_SOCK_OR_NULL         = PTR_MAYBE_NULL | PTR_TO_TCP_SOCK,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~
-   include/linux/bpf.h:862:42: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     862 |         PTR_TO_BTF_ID_OR_NULL           = PTR_MAYBE_NULL | PTR_TO_BTF_ID,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~
->> net/netfilter/nf_bpf_link.c:186:33: warning: bitwise operation between different enumeration types ('enum bpf_reg_type' and 'enum bpf_type_flag') [-Wenum-enum-conversion]
-     186 |         info->reg_type = PTR_TO_BTF_ID | PTR_TRUSTED;
-         |                          ~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
-   22 warnings generated.
-
-
-vim +186 net/netfilter/nf_bpf_link.c
-
-   170	
-   171	static bool nf_ptr_to_btf_id(struct bpf_insn_access_aux *info, const char *name)
-   172	{
-   173		struct btf *btf;
-   174		s32 type_id;
-   175	
-   176		btf = bpf_get_btf_vmlinux();
-   177		if (IS_ERR_OR_NULL(btf))
-   178			return false;
-   179	
-   180		type_id = btf_find_by_name_kind(btf, name, BTF_KIND_STRUCT);
-   181		if (WARN_ON_ONCE(type_id < 0))
-   182			return false;
-   183	
-   184		info->btf = btf;
-   185		info->btf_id = type_id;
- > 186		info->reg_type = PTR_TO_BTF_ID | PTR_TRUSTED;
-   187		return true;
-   188	}
-   189	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Thanks,
+> Kan
+> > +
+> > +
+> > +all_metrics =3D MetricGroup("", [
+> > +    Rapl(),
+> > +])
+> >
+> >  if args.metricgroups:
+> >    print(JsonEncodeMetricGroupDescriptions(all_metrics))
