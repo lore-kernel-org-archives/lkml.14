@@ -1,87 +1,113 @@
-Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D4F524A5;
-	Fri,  1 Mar 2024 05:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FAE2AEEE;
+	Fri,  1 Mar 2024 05:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709271762; cv=none; b=Ya4XPfVSL8w+nt/7dvQ+H/vQIpZzbdxyYmVst2qd1yrRg1r1a7GUrkUaCnAnEQ/w+TyQD0NNwY10BVxjUhQCS5jqbM/yX8zGWV/uId9qIbzPqlr3hjZJfpc4vr7FOncqEB0GDOXRa4Q5lndDnSxhUsEhz3ti1rMyUnWy6yAIva0=
+	t=1709271868; cv=none; b=M2f8ZEz/z52inu26tQSslaeacck7aC30LyCL6lmPrcqRON8X/c3BFQfAX+UGdIhFC0ltNCIwfAcuFVlUr90wTpthySin2nqKzZzE7GfC70D7/lCxq4+MWo4AJ586KWBwpxd1W9eaUsI2OPtPVpNaTsrtMdkqRk9etBnHd9jYkWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709271762; c=relaxed/simple;
-	bh=V55SRGUOrAG+ysoALTc6f/0/cboBmLuqRrBCtb77ei8=;
-	h=Message-ID:From:Content-Type:Mime-Version:Subject:Date:Cc:To; b=a+zOVSxbotqo9KM2qJHUSj5W1Dshhe5AKUxXWhKxiQjf290uHGxbgubXGi3usIF39oj14uxfT4Rj0gP0f6DS683MSuDcgxPWEkUspRyzM62ErouQh8E41m0dqY4bW6vqfeQLoeHcaf2t5y6BTNkGKNk/Mvbpn+L1lSmGG7a6elc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=wDx/MYGV; arc=none smtp.client-ip=203.205.221.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709271868; c=relaxed/simple;
+	bh=x0RYsqPoQe7Py7qVG6iE+FyNJ5qnSlT7pe837V0tbtg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rCr3crl0o7B4rKCmAc5VB6l8oMl/zrxej7OkgmxFOFwZjOeHyXNkYiwHJz1RIaandCb8LWUZWz4DoIVDKiE2YiuGYEOtJUcHYljSQubRmGd9uoXKUO+n/fsaZQ4c/cHlkO07PXG5LP0iA/yeSerPBmFDun00z9Cnu978yvKECgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iYMwGkDD; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="wDx/MYGV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709271450; bh=qZXT0P42bHzo0PmK5eOZmbcv9JddLo3kkS/Aj42v6Ng=;
-	h=From:Subject:Date:Cc:To;
-	b=wDx/MYGVIjo9Ut9LpNZ2csvlbctH9MgMPKQKjq62XhIT2d75AxJj0dPX3Spt2D6nO
-	 7S3utlEv3rl0zWIWvwkjHsMQ6XuGIn4AQvVcqHM4/4TndwmER3FqN+96cFCXWU1ep/
-	 sr5cys98vcXpi7b3mAMya6DRq2wsRHfmz8Uu9Lpc=
-Received: from smtpclient.apple ([218.94.142.74])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id 95C29000; Fri, 01 Mar 2024 13:37:28 +0800
-X-QQ-mid: xmsmtpt1709271448t77ai8bwg
-Message-ID: <tencent_3F31ADAB6142D8948E5BD02B854ED2A77106@qq.com>
-X-QQ-XMAILINFO: NwOS7QznqjGThWe5KOAADO7w6ppx5kSvb5GFYiKExrv+90H4CdxCHzO14Nezmu
-	 fEdXL9Vp+ba8vkHos46h1O84dpTmzydLPyCC5K/8GuX6ke6h3ZVY52aNnkz7uoltBsJF58Xxjh3t
-	 p4i9wGNASn7i4lrVx5vaW3bq90K0KSKzjE5pgjihZWvBvnaJkEhbMZK7C4dqo/NA8o9K6f0EzLeI
-	 UnOC8P5YpHOXXIS4nillSU/TQVmFPaIWYmV3IaQsXYOT1/7AhiQQC+/6P2vyBAtPVcEVCf6p6ftH
-	 fy2RnNO26ZMONSiK3aICSr0JzL5J9dxYW+K2o+kMAA0vWueCenyxB1KJppzk6pnE8tRv+oLq1Kc6
-	 YzaFGUf/DY+vi5gnvSyRKmT1D5X8m/GVLqysdnoKCoBRVzXF/K0nnmC9PLihK9CFIi7ggxH7qQHA
-	 8JhZnTJV6GUP3kpp4Hd3UJ18BVaRq8in1Z3Je8BxMsnVSJ5XeP/WhMhQ0dbRA8rLkV7coHlNEvCM
-	 hVj8TBshdzO3vJKfsycgOONRaPKLjzBb3vc4v3sIYUOR0unOg9lnI+tJU1kN+Sc6yjfCaX+iTd3M
-	 xTOuV6/2VsFbA0MRH/l8KoZJpAsfwmbSIBQ+0ZX+CatYrbXYdNgVAKqCb28QRZsZ8H7iS9e3Npg4
-	 YfycQtCiZ4fJTsdaR1C9CSNPigJ1BY++qG84630E45udQ2i++n0VSIIDUHdO4zAG7gumCCUUZCc7
-	 kdugCsu5uG4SGPVjuQ9WsCHf3BfOUb66FydeglzW+wtNVfRYmXpaGBPU7rznhluVzplp5IoST8ar
-	 gT10K4bTmf+oD6TmKHWaw4XSZxKuz0TWQLAE3bocINKe8jn0zGrSdmdNo1e2FEOLWV2Kb2xY9HSY
-	 ASR3yNGwTwMHSwFDet1AHGH0X+Q/iPFCP1SEqaMn7pOkhPC5UTROnFmykQ1qpf/Z0qeZny73uv8z
-	 S1OVDVQ4tYhZ+YBV/reKbqP0bFkBtspFrglSi6a7bMhNossz6lqfMyBwmVSQ2F6CJqgJndtz+lxs
-	 vYcFCZ4w==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: linke <lilinke99@qq.com>
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iYMwGkDD"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4215hxqf081979;
+	Thu, 29 Feb 2024 23:43:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1709271839;
+	bh=Ax8wDou/i0Ij3YdyTyGYeuq8MJb/3HgD1UFnkReb0vA=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=iYMwGkDDnBLEOok5A1DLYm8QBUlSlEI69ZCXBqPYkERZyxZJGEqCLXeThETm0acrm
+	 pWQtSiYS0VTngf5sydy6PdTYzK4jb4+8GGv+8tb77nyqSxqj2FraN+P6icjPK+u7yS
+	 kEecdkAYGy5xqWSYwXlgBC06lsmMKrnuE2gsH0iY=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4215hxWV065949
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 29 Feb 2024 23:43:59 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 29
+ Feb 2024 23:43:59 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 29 Feb 2024 23:43:59 -0600
+Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4215hwno059467;
+	Thu, 29 Feb 2024 23:43:58 -0600
+Date: Fri, 1 Mar 2024 11:13:57 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Maulik Shah <quic_mkshah@quicinc.com>
+CC: Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, <andersson@kernel.org>,
+        <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Sudeep Holla <Sudeep.Holla@arm.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-pm@vger.kernel.org>, <quic_lsrao@quicinc.com>,
+        <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] PM: suspend: Set mem_sleep_current during kernel
+ command line setup
+Message-ID: <20240301054357.hgbvbcywbxclebus@dhruva>
+References: <20240229-suspend_ops_late_init-v2-1-34852c61a5fa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.100.2.1.4\))
-Subject: Re: [PATCH] ring-buffer: use READ_ONCE() to read
- cpu_buffer->commit_page in concurrent environment
-X-OQ-MSGID: <53443CFB-3969-40B4-91B6-35DEBDD0559E@qq.com>
-Date: Fri, 1 Mar 2024 13:37:18 +0800
-Cc: lilinke99@qq.com,
- linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org
-To: rostedt@goodmis.org
-X-Mailer: Apple Mail (2.3774.100.2.1.4)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240229-suspend_ops_late_init-v2-1-34852c61a5fa@quicinc.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-> So basically you are worried about read-tearing?
+Hi,
+
+On Feb 29, 2024 at 12:14:59 +0530, Maulik Shah wrote:
+> psci_init_system_suspend() invokes suspend_set_ops() very early during
+> bootup even before kernel command line for mem_sleep_default is setup.
+> This leads to kernel command line mem_sleep_default=s2idle not working
+> as mem_sleep_current gets changed to deep via suspend_set_ops() and never
+> changes back to s2idle.
 > 
-> That wasn't mentioned in the change log.
+> Set mem_sleep_current along with mem_sleep_default during kernel command
+> line setup as default suspend mode.
+> 
+> Fixes: faf7ec4a92c0 ("drivers: firmware: psci: add system suspend support")
+> CC: stable@vger.kernel.org # 5.4+
+> Signed-off-by: Maulik Shah <quic_mkshah@quicinc.com>
+> ---
+> Changes in v2:
+> - Set mem_sleep_current during mem_sleep_default kernel command line setup
+> - Update commit message accordingly
+> - Retain Fixes: tag
+> - Link to v1: https://lore.kernel.org/r/20240219-suspend_ops_late_init-v1-1-6330ca9597fa@quicinc.com
+> ---
+>  kernel/power/suspend.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> index 742eb26618cc..e3ae93bbcb9b 100644
+> --- a/kernel/power/suspend.c
+> +++ b/kernel/power/suspend.c
+> @@ -192,6 +192,7 @@ static int __init mem_sleep_default_setup(char *str)
+>  		if (mem_sleep_labels[state] &&
+>  		    !strcmp(str, mem_sleep_labels[state])) {
+>  			mem_sleep_default = state;
+> +			mem_sleep_current = state;
 
-Yes. Sorry for making this confused, I am not very familiar with this and
-still learning.
+I could've missed this patch. Please CC people who are involved in
+the previous discussions :)
 
-> Funny part is, if the above timestamp read did a tear, then this would
-> definitely not match, and would return the correct value. That is, the
-> buffer is not empty because the only way for this to get corrupted is if
-> something is in the process of writing to it.
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 
-I agree with you here.
-
-	commit = rb_page_commit(commit_page);
-
-But if commit_page above is the result of a torn read, the commit field
-read by rb_page_commit() may not represent a valid value. 
-
-In this case, READ_ONCE() is only needed for the commit_page.
-
+-- 
+Best regards,
+Dhruva Gole <d-gole@ti.com>
