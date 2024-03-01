@@ -1,97 +1,131 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C9E70CD5
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7B97173D;
+	Fri,  1 Mar 2024 15:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709308538; cv=none; b=TtdgseMXoXELpwqQTzUUwLh4RQRo8qziPN40dAGJBwhT1z4MeJ7/MXk+iBZJ3kNIoGwso93xuiW4MTnptjtqLN9WQZJJcW9Xae/Mt2sJwc2mLY4rQ8whhtvlj+FmMleBbn1s7YTqGThMUhuqXjJuvMT+Sb4/v7FSEykqTbCxW8Q=
+	t=1709308541; cv=none; b=so/MYAkpK+UuXqBsVWkCzMrxR8KtLHJoCnZDFba/65qUrw25rpxxjp1/Bzq7k3HMGywbJBTi12GVkfI3/7W/ul8DXMTQWvu4rKEYbCh/yGJQJxvvA6wanD0+gAfoWEBGk5cSoZY69AI11Ju+HbMALpY2vpAuQA8Sq/eprz8ko2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709308538; c=relaxed/simple;
-	bh=n9kFjYjRE3qCNfcjmWpT8lMq1zW42Y+rPlcJGtESq30=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VL9HITt2gpjE3lT5ssuGYUuKxdPyu2D8iCrWGvpY9o0aIdtNuij7TqGGroxvnVYx5poBU5zAkMR0M0PECssx89RmamCTRZz+233SGAEpveEuNYIQ8sObt+Qsouk3jKsnNVMD1WTS1ouVuvsEGTYvRrJbkJmd9wV+WNCKTBEvNCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=EjPUC1JR; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1709308541; c=relaxed/simple;
+	bh=+x3DnyLQr0FGuE3K5s58Ij+vb1+Fn/o9c7ysNtVLivo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kDGmZmc1KaZqNwwP5+sS6V7rdl7edVzwmVi7t2bBGmJ/Jdbl8QMahtSVuLF4XglDUFdiK/enVa4QkzadlQh7akDZSeo2jVFq4wTIsqlTVO3cuuUEjCZuY47pvmZuLwLdCqRpq0/9abPIdVRr6zMOIxNZFHhjR0Al3rVSQuxacOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOg7D5lQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="EjPUC1JR"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7bf3283c18dso37156339f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 07:55:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1709308535; x=1709913335; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cuy/wgcCH07hny5bXY1Sk1fYdO558cghg+HCRH9bbn8=;
-        b=EjPUC1JR7aBHxsdHTNgUQmnE+WUsZT9EEk6jUTzJ0mnuX+Ej6MzA8pusTqaeKHnQVm
-         E0nHEYADLujhM+fViHSCp2I2gMawPi++NWWeEE4+xC7FpdLX3bePZUw1+iJCKp81SMjX
-         iRGhX2zOlCPk2WX8JQz+Paq0FpjffN1ikuKTRkHqxwrsVyD6foWxcL85ajcoQFE95QJb
-         ZxGb15H7VRbz2RYCH/WUIz9q9KGDpbW1ooEz/TP5lPjl13rdfmim4I3uLQzY7oS6Lp2E
-         NwaE86V/1+5yYCxq9KcofHvsg2q1ukFBC1BTAnKCYQsReBfjWUeCdcfAqOmFQGEdS6tM
-         uoKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709308535; x=1709913335;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cuy/wgcCH07hny5bXY1Sk1fYdO558cghg+HCRH9bbn8=;
-        b=dmD7GpIwlhf3O6PXwOYv9jWtTZz0UVRrRhl9W6BEPywnnDooy2jjVz+AAmRi0eD/zw
-         lHI5tYTa4G2ZnqgmQYw53pKSvYqFDjOmF10UB1fOXYqRQ91SRzJBYrthYcQ3gi/aW2pL
-         uHZIvioyWk3NP88DxiL/ejFKBOtnrd14if/I/L67cjcCqYcpCMClxrpQa61RXnmQwuto
-         /EZu6vpJFWBsmy2R8z5jpeG+hNQR+AVmN54XTpGH/NvJjzkPJT19G4yt9OVP/DKYR4iD
-         KWUp0aGruDlNXkmWQN3381GwElubOJ25haE+lVez8GgnwTdFXOfUhr2raXfZ/vTiAmAS
-         kBxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUm7foEJiA6WlthT4E2ctkn3SLVHCk2Z+aRbtS2NprqO43GVzfNpYddqI7GmjLvW/C+hDuGqpYKQIBmaFzhu3q4Te9mhrUIZGe3K/Vl
-X-Gm-Message-State: AOJu0YxSF2irvJOgGJugoAS1p7XU+Esx5bYWEtpSjEwLtugaxrWPhhaB
-	iq+EEOtN2orhHeql0ZCUSX16Xp9yE7g//eDFLy7ODERdGcrGclmgfQ95AJlJ/P4=
-X-Google-Smtp-Source: AGHT+IHUrApy+wOyvA8sED9sBQ8CJ/sYmaferYuZ3MvQVEiKHQQKdFnsIlVgvFZXeuJn78QW/IWMAg==
-X-Received: by 2002:a6b:730c:0:b0:7c8:2c94:90b5 with SMTP id e12-20020a6b730c000000b007c82c9490b5mr357367ioh.0.1709308535226;
-        Fri, 01 Mar 2024 07:55:35 -0800 (PST)
-Received: from [127.0.0.1] ([99.196.129.26])
-        by smtp.gmail.com with ESMTPSA id b4-20020a02c984000000b004745e754b73sm894609jap.176.2024.03.01.07.55.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 07:55:34 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Dylan Yudaken <dylany@fb.com>, Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Pavel Begunkov <asml.silence@gmail.com>, Dylan Yudaken <dylany@fb.com>, 
- io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <7f5d7887-f76e-4e68-98c2-894bfedbf292@moroto.mountain>
-References: <7f5d7887-f76e-4e68-98c2-894bfedbf292@moroto.mountain>
-Subject: Re: [PATCH 0/2] io_uring/net: fix bug in io_recvmsg_mshot_prep()
-Message-Id: <170930852923.1084422.13136941777087584791.b4-ty@kernel.dk>
-Date: Fri, 01 Mar 2024 08:55:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOg7D5lQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D874C433F1;
+	Fri,  1 Mar 2024 15:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709308541;
+	bh=+x3DnyLQr0FGuE3K5s58Ij+vb1+Fn/o9c7ysNtVLivo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HOg7D5lQtK68Db2OuM3YK/C3ykhtKtUFLUe33QAxfMi1eCPf0ZJw4UE+cF9GhsYr/
+	 CSR0U0jJoxSPapzKr5jm5RAQovcbfQZRvY6Rh2d3hvrJjgQ3fTIdPdHLZ4MuazGt5O
+	 IBnx8PrAJWFWoE0NJVDFXHQk3A4n5uRbJmQK+qTWKYhv0UU4r8mvv4AWMZIt10f43i
+	 SGF+JXtpYRj80aJikeWMN2VX0mTnZQ2A7qCJHb11YXKjNFCcr4hG+legnrY4bUVp/p
+	 KWDw30kWpWfFnXdUZHgu1oCstpMnwtSYbXmwo6EfB0VtZTmY/3E35WCjxbtT4BAwdu
+	 yrXRgD0J1Y0CQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rg5Em-000000001l7-2rSd;
+	Fri, 01 Mar 2024 16:55:53 +0100
+Date: Fri, 1 Mar 2024 16:55:52 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
+	quic_jackp@quicinc.com
+Subject: Re: [PATCH v15 9/9] usb: dwc3: qcom: Add multiport suspend/resume
+ support for wrapper
+Message-ID: <ZeH6iHdOie0_UYwZ@hovoldconsulting.com>
+References: <20240216005756.762712-1-quic_kriskura@quicinc.com>
+ <20240216005756.762712-10-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240216005756.762712-10-quic_kriskura@quicinc.com>
 
+On Fri, Feb 16, 2024 at 06:27:56AM +0530, Krishna Kurapati wrote:
+> Power event IRQ stat registers are present for each port
+> connected to controller. Add support for modifying all power event
+> irq stat registers present in wrapper.
 
-On Fri, 01 Mar 2024 18:28:40 +0300, Dan Carpenter wrote:
-> The casting is problematic and could introduce an integer underflow
-> issue.
+Could you please say about what the power-event irqs are used for here
+in the commit message as I asked you before?
+ 
+> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+> Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+> ---
+>  drivers/usb/dwc3/dwc3-qcom.c | 30 +++++++++++++++++++++++-------
+>  1 file changed, 23 insertions(+), 7 deletions(-)
 > 
-> Dan Carpenter (2):
->   io_uring/net: fix overflow check in io_recvmsg_mshot_prep()
->   io_uring/net: remove unnecesary check
-> 
-> [...]
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 572dc3fdae12..e789745a9468 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -37,7 +37,11 @@
+>  #define PIPE3_PHYSTATUS_SW			BIT(3)
+>  #define PIPE_UTMI_CLK_DIS			BIT(8)
+>  
+> -#define PWR_EVNT_IRQ_STAT_REG			0x58
+> +#define PWR_EVNT_IRQ1_STAT_REG			0x58
+> +#define PWR_EVNT_IRQ2_STAT_REG			0x1dc
+> +#define PWR_EVNT_IRQ3_STAT_REG			0x228
+> +#define PWR_EVNT_IRQ4_STAT_REG			0x238
 
-Applied, thanks!
+Again, not sure it makes any defines too keep these defines when you
+only access them through the array.
 
-[1/2] io_uring/net: fix overflow check in io_recvmsg_mshot_prep()
-      commit: a69d208854948bc8334a01bc17f13a06a5a977d2
-[2/2] io_uring/net: remove unnecessary check
-      commit: 789748af32c4a6f50db401d46e6a89ab28a6e3ac
+> +
+>  #define PWR_EVNT_LPM_IN_L2_MASK			BIT(4)
+>  #define PWR_EVNT_LPM_OUT_L2_MASK		BIT(5)
+>  
+> @@ -109,6 +113,13 @@ struct dwc3_qcom {
+>  	u8			num_ports;
+>  };
+>  
+> +static const u32 pwr_evnt_irq_stat_reg_offset[DWC3_MAX_PORTS] = {
 
-Best regards,
--- 
-Jens Axboe
+Seems "_offset" is redundant here, 'pwr_evnt_irq_stat_reg' should be
+enough.
 
+> +	PWR_EVNT_IRQ1_STAT_REG,
+> +	PWR_EVNT_IRQ2_STAT_REG,
+> +	PWR_EVNT_IRQ3_STAT_REG,
+> +	PWR_EVNT_IRQ4_STAT_REG,
+> +};
+> +
+>  static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
+>  {
+>  	u32 reg;
+> @@ -444,9 +455,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom, bool wakeup)
+>  	if (qcom->is_suspended)
+>  		return 0;
+>  
+> -	val = readl(qcom->qscratch_base + PWR_EVNT_IRQ_STAT_REG);
+> -	if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
+> -		dev_err(qcom->dev, "HS-PHY not in L2\n");
+> +	for (i = 0; i < qcom->num_ports; i++) {
+> +		val = readl(qcom->qscratch_base + pwr_evnt_irq_stat_reg_offset[i]);
+> +		if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
+> +			dev_err(qcom->dev, "Port-%d HS-PHY not in L2\n", i + 1);
 
+Please use lower case "port-%d" for consistency.
 
+Johan
