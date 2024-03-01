@@ -1,97 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B4C16FF2A;
-	Fri,  1 Mar 2024 20:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC897E1
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 20:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709325766; cv=none; b=cLHrMAsmZUGdUDqB229oeZ1W9g33xsV3k+D5eCd0toc2PP/7hknmLlQcR1qdWoNWo1ZrPCQtHG9s9zbbK6ONnWds1xWYMfJVxqaiSaHEKDbQI7RpGIRsiNUnvRj8IzyThpKf164x5iKNIBcQdJVeC9f/ep/8L+ydqkBnV4/zbNE=
+	t=1709325811; cv=none; b=nwp/ZMhzM60kLVP3GXUNFl3u+JzoRCa07nJH5XXHCNRWxYk14jEeMA070ZTmCDwxHuirra6YeLScMORQBKqzraa/zfCJ45wEYIeAZnPmnvb4xebIjqTc3mI2BMyv0cK0u73ECkjyX5Ld7MgF1DsKjtfXrx1aHR50Fovbgsp1ruQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709325766; c=relaxed/simple;
-	bh=73uTaA7d9xcbo8r4tapptpkNEAf8G2KEmjwaiwApfsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uvBPER14lpadq2IOKGnKiYO32kBMkq90NY+D50+E6RLSQzhiElbyQEFjC37ZM+0Uf3FwYfdU1ZKWHI8o2sDMz+B/3ZIkoHp8+EfN1c6LhoFkYELU3zQcmYOA+CHoSpYGPm704rknRdnjtFADe00icKBlelPadlOqOMfHCjR+e3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JanC+Tna; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JanC+Tna"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C19C433F1;
-	Fri,  1 Mar 2024 20:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709325765;
-	bh=73uTaA7d9xcbo8r4tapptpkNEAf8G2KEmjwaiwApfsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JanC+TnaakLG12kECCD3MmA8tdR4b9z77LSK1XXJKokE5aR4fG5xvf3pvpZTZ2TbW
-	 dG9zZ61DShqUUMwRcvb8vdvWCjkOjgyqOhCPBGZJJaAMcewtTEiDYGs/GheEmHQy5u
-	 QLDvjiqkxCPFRa/D3vsdqL9UAfEXDnwzLvRmOuspK26WLrQW/kYFNIOL4sJAd0v688
-	 cTBCE0prLNZXXPKHY/GlnjqrYIifbQegMlSptNZfAiHT663h5dzCNkDc6eWaJhdeZl
-	 4E4yREyPc9WhOO1eeCVt9IND4QpDZyWnCd+YQN1F8JXYKO7liSw189d9M5WHcAqNkV
-	 86a2b4XH+xPPw==
-Date: Fri, 1 Mar 2024 20:42:39 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, andi.shyti@kernel.org,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, linux-spi@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, andre.draszik@linaro.org,
-	peter.griffin@linaro.org, willmcvicker@google.com,
-	kernel-team@android.com
-Subject: Re: [PATCH] spi: dt-bindings: samsung: make dma properties not
- required
-Message-ID: <cb426fb0-2f27-4c9b-89f5-7139354ea425@sirena.org.uk>
-References: <20240301115546.2266676-1-tudor.ambarus@linaro.org>
- <CAPLW+4=6oYcs0NPXo4ffLiCvtNQ-tY1s_isaxTX8dcPkV56xMw@mail.gmail.com>
+	s=arc-20240116; t=1709325811; c=relaxed/simple;
+	bh=jBducU6AissFsRYWwrJSlsUVKj30198x189rdgDINZY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nAjZK6YjkuAE8QTmXn4Ph8ki/4iHhmQbY30H6L+YAw4lDA5S6qheXTQ/nuSH4l+mfRpbnCTcvvQUrIJ5mcsAir1MPO+wjJlPX1oFuLXHMS4VrRYeph+BXa0ZcYU1R16pB5nYgS+1iy2sFYsaby4t78JA4XQUMczJI6oWb36PeuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:db22:6af9:7d18:6ee8])
+	by albert.telenet-ops.be with bizsmtp
+	id tYjM2B0021TWuYv06YjMa6; Fri, 01 Mar 2024 21:43:21 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rg9io-0024bO-2H;
+	Fri, 01 Mar 2024 21:43:20 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rg9iy-00D2xT-Q1;
+	Fri, 01 Mar 2024 21:43:20 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-sh@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC] locking/spinlocks: Make __raw_* lock ops static
+Date: Fri,  1 Mar 2024 21:43:19 +0100
+Message-Id: <c395b02613572131568bc1fd1bc456d20d1a5426.1709325647.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MemfwNmSGq/zcA3d"
-Content-Disposition: inline
-In-Reply-To: <CAPLW+4=6oYcs0NPXo4ffLiCvtNQ-tY1s_isaxTX8dcPkV56xMw@mail.gmail.com>
-X-Cookie: Schizophrenia beats being alone.
+Content-Transfer-Encoding: 8bit
 
+sh/sdk7786_defconfig (CONFIG_GENERIC_LOCKBREAK=y and
+CONFIG_DEBUG_LOCK_ALLOC=n):
 
---MemfwNmSGq/zcA3d
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_spin_lock' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_spin_lock_irqsave' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_spin_lock_irq' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_spin_lock_bh' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_read_lock' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_read_lock_irqsave' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_read_lock_irq' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_read_lock_bh' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_write_lock' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_write_lock_irqsave' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_write_lock_irq' [-Wmissing-prototypes]
+kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_write_lock_bh' [-Wmissing-prototypes]
 
-On Fri, Mar 01, 2024 at 01:28:35PM -0600, Sam Protsenko wrote:
-> On Fri, Mar 1, 2024 at 5:55=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linar=
-o.org> wrote:
+Fix this by making the __raw_* lock ops static.
 
-> > Since the addition of the driver in 2009, the driver selects between DMA
-> > and polling mode depending on the transfer length - DMA mode for
-> > transfers bigger than the FIFO depth, polling mode otherwise. All
-> > versions of the IP support polling mode, make the dma properties not
-> > required.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Compile-tested only.
 
-> AFAIU, the device tree has nothing to do with drivers, it's about
-> hardware description. Does making DMA properties not required here
-> mean that there are some HW out there which doesn't integrate DMA in
-> SPI blocks? Even if this change is ok (I'm not sure), the
-> argumentation doesn't look sound to me.
+Is SH really the only SMP platform where CONFIG_GENERIC_LOCKBREAK=y?
+---
+ kernel/locking/spinlock.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I do remember there being some SoC which shipped a SPI controller in
-that configuration for some reason.  Possibly one of the OEM ones rather
-than one in a Samsung SoC?
+diff --git a/kernel/locking/spinlock.c b/kernel/locking/spinlock.c
+index 8475a0794f8c5ad2..7009b568e6255d64 100644
+--- a/kernel/locking/spinlock.c
++++ b/kernel/locking/spinlock.c
+@@ -65,7 +65,7 @@ EXPORT_PER_CPU_SYMBOL(__mmiowb_state);
+  * towards that other CPU that it should break the lock ASAP.
+  */
+ #define BUILD_LOCK_OPS(op, locktype)					\
+-void __lockfunc __raw_##op##_lock(locktype##_t *lock)			\
++static void __lockfunc __raw_##op##_lock(locktype##_t *lock)		\
+ {									\
+ 	for (;;) {							\
+ 		preempt_disable();					\
+@@ -77,7 +77,7 @@ void __lockfunc __raw_##op##_lock(locktype##_t *lock)			\
+ 	}								\
+ }									\
+ 									\
+-unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock)	\
++static unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock) \
+ {									\
+ 	unsigned long flags;						\
+ 									\
+@@ -95,12 +95,12 @@ unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock)	\
+ 	return flags;							\
+ }									\
+ 									\
+-void __lockfunc __raw_##op##_lock_irq(locktype##_t *lock)		\
++static void __lockfunc __raw_##op##_lock_irq(locktype##_t *lock)	\
+ {									\
+ 	_raw_##op##_lock_irqsave(lock);					\
+ }									\
+ 									\
+-void __lockfunc __raw_##op##_lock_bh(locktype##_t *lock)		\
++static void __lockfunc __raw_##op##_lock_bh(locktype##_t *lock)		\
+ {									\
+ 	unsigned long flags;						\
+ 									\
+-- 
+2.34.1
 
---MemfwNmSGq/zcA3d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXiPb4ACgkQJNaLcl1U
-h9Ap3gf/eN7JFZQiBhvsOUiRAENty3XADwJD6Dy7jlfgRduqmhzKOdfa7IlHM/wl
-FNIUAWf+T27AgQJjSXEXbkmON0RkeJVpWCbZoXJV9Rr2z3Xhns2wasphCMBDmtdE
-oMVIohHuCe61P/svZ4zJ7//pdXxFGVvMe44Dwz1uJvbtu1SiUv2GQQ5CV5U4fUhy
-Tav2FbYNzSZoy/zqsve97SBxVm6Fme8BCiTMnPvyrSbuA+UJ7/s2A243HgCM1VHA
-bFpNa5zVoSbiHkI4d+s6Fo/RlOV2fpwgXTW/s4BhHYjhkgTb+Qvd/jGN1ZmPC++F
-NLsnijQPfxAvIWgh4QAwhvhm2NkQTA==
-=aEUe
------END PGP SIGNATURE-----
-
---MemfwNmSGq/zcA3d--
