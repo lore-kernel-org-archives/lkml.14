@@ -1,141 +1,101 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726243B795
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 20:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7380316FF2A
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 20:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709324969; cv=none; b=itdZTTAMGVaNsHBM7PdRNW+9RGKihyrtoH6nNnwef/EfC8TsY9bCnQNs4YLWIx6wpcGV82RKN4FVGEE5sl1c4wZ5qCE4wG8W1mIh1VoR7Hk9w693YfEkmC7KBOII30dp9tWE/ycFf7qtS/nz1zRUlRenYp1BvAY3mwovMMmosXU=
+	t=1709325034; cv=none; b=QgX1tiS6fU6MKzqkKSvlGM5nBM0oDG30jpn45hh9hZ1p8kqBk1S4uKY7q9KgrdbaaIEDmYjkZ3frPbQjmzjt0xg+jOki69Fwtm+mM34wLAxNYeYBV/GdcUALvg2goxpFHAZwSpOv7GxwLavYNBjaFClqwo0IkklLkb/PUDcAyFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709324969; c=relaxed/simple;
-	bh=lY1M7XvAe4z3xW/aHER3sstij01V5RYloi+hF3mLnqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kkXYJXxa07MM4RIs4QyOSBftNE+USOZeP970mGp24Y2DVIea/5C/x1xdzUPE3rlsNfw0lh4Xp65CG6Hu9pT1S3TIMvIzL5dJ4jkzP/UihKT56cPAZrFg8pAFRIBp4iEAh6suYn684OX+LH+Eii5EACAKW9DysQ7L4g2pGZ8A0ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NFYP+4Nn; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709325034; c=relaxed/simple;
+	bh=t7pqRF9fRBz2eiE5gjDIRduy9WZfkjtR+VuQSDyGcR4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K7grqdh/DRk7wpYn/DyUSM3+e84lg6f0NON7uk4ac6BVW3fYkAtcz9dVDpxWdcKnHSSvzoavXwImO38oyDiSvAN5iURUDiexyiOdkHve8lWAhziZkmKGV8Do7GrZmMO80VUwX1c3q4HXIQN6OiLLHbE5+J4CDStP+wosGxwr84k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FPc3Av9j; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NFYP+4Nn"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6da4a923b1bso2270087b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 12:29:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709324968; x=1709929768; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uX4LCOmXabkT2zWb6MvvpjJWPlAoaia9rOgotZGNs1M=;
-        b=NFYP+4NnEYJQK+DP/+lVnanpr4cx+7mAW26Bv4vf5SJyZdEUW/aN00XLEKnkUBcmXS
-         MUbD8Xsr+5pHhMw0dEpFsNNvn1d0jF9wT1/i7Oj6utornQnGfsoIFSRD/EwyfuHsfNd2
-         YrLm+3uQNJmnnBa9kfwjcXTYSgARExJRuGAuI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709324968; x=1709929768;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uX4LCOmXabkT2zWb6MvvpjJWPlAoaia9rOgotZGNs1M=;
-        b=H0Qm+aVuh5ySOuJp84NxHkLHlsXAgchYiViEXoxpq/7NlcK9Cx674qkgoQu0nDMyut
-         agAXApuZCr/2Emynyl5R0i1TSdQJYxvLZRbn/NHPp65RVVFqqLqNFhuw9OraG5tmqp5L
-         5XS0pYDEIIyclbGKQYcaYYjFUn5s5x+8Tp1iaeNfFKIIq4dclEX7IRdGhe6sOugcW1Xl
-         TOY89Up3yLP47OzxtDgnqyr6XqxKsess0ywz7IvSz+zm3Dldi2NtVt9jE2kb1/7ybdkt
-         fLVT8A0zf/mEGUdxA5z93/5Xo1Nq/M/tMSEHu7iPnMfKd2iMjTOt7KgME/dq+dUrAkml
-         MWkA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfIcDGztN3LAKuYdVIeaFN8nZGSK4W7d0k7m24cn/HuXtFOT4EQ/LfW6h08A86fYjqr1jdfna3MGmuLlaZn9oqlYTfm0gRoy/Vg0Vq
-X-Gm-Message-State: AOJu0Yz3aKIMSdZTO2tghhkQnNgT6EqEKNzrOVhoKhjZ3mgptEKTlzjJ
-	y1aM6KGRSUpY8tn2mnBz1VIWeV06QvvaXZlmfrFBT6q/S84kJDESXYd613SsrQ==
-X-Google-Smtp-Source: AGHT+IGC7DoYc1DKeYyd+Zj6CpoEtnPTOkULM9u+8uslMr+Qkuc2usm+ZIcd5hSRFzYUXEXYgYBZ9g==
-X-Received: by 2002:a05:6a00:23c8:b0:6e4:eee0:57ad with SMTP id g8-20020a056a0023c800b006e4eee057admr3218997pfc.20.1709324967820;
-        Fri, 01 Mar 2024 12:29:27 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b76-20020a63344f000000b005dc4829d0e1sm3433867pga.85.2024.03.01.12.29.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 12:29:27 -0800 (PST)
-Date: Fri, 1 Mar 2024 12:29:26 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] string: Convert helpers selftest to KUnit
-Message-ID: <202403011227.6C63925@keescook>
-References: <20240301002416.it.092-kees@kernel.org>
- <20240301002650.1544829-2-keescook@chromium.org>
- <CAHp75Vf+zzVyVZ=fcXgdCMsp1MZdHmJ1aBTKFE4jHai2pWi27g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FPc3Av9j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709325031;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=p4HV6m6g6G800ZFnvQF0dUMRRFs2reQboirIXeVEjws=;
+	b=FPc3Av9j5oJdP3o7ep7UdMPJMXRRGGJXFPjsqAfxqNY5t7eJEHdn9OYyI0OZ4asI76Nk2p
+	+IsxhCUilNZwzrg1zq/YkMG2P7KKojeQ2I+kzPltycqQHAFyFl47H2P0IxTIzqt0jL4MOI
+	ObWEfOvhvFYrI7CJM43VcwVsUBm5pC0=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-6Y1hDfuoONGk5m_HhEMYUQ-1; Fri,
+ 01 Mar 2024 15:30:28 -0500
+X-MC-Unique: 6Y1hDfuoONGk5m_HhEMYUQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 320F0380406D;
+	Fri,  1 Mar 2024 20:30:27 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.8.150])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EC07A39D6D;
+	Fri,  1 Mar 2024 20:30:25 +0000 (UTC)
+From: Joel Savitz <jsavitz@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Joel Savitz <jsavitz@redhat.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Benjamin Gray <bgray@linux.ibm.com>,
+	Paul Mackerras <paulus@ozlabs.org>,
+	linuxppc-dev@lists.ozlabs.org,
+	Gonzalo Siero <gsierohu@redhat.com>
+Subject: [PATCH] powerpc: align memory_limit to 16MB in early_parse_mem
+Date: Fri,  1 Mar 2024 15:30:23 -0500
+Message-ID: <20240301203023.2197451-1-jsavitz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vf+zzVyVZ=fcXgdCMsp1MZdHmJ1aBTKFE4jHai2pWi27g@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Fri, Mar 01, 2024 at 01:20:41PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 1, 2024 at 2:26 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Convert test-string_helpers.c to KUnit so it can be easily run with
-> > everything else.
-> 
-> ...
-> 
-> > -#include <linux/array_size.h>
-> >  #include <linux/init.h>
-> > +#include <kunit/test.h>
-> 
-> I know the order is broken here, but don't make it worse, please. And
-> stick with one schema where to put kunit/test.h always before
-> everything else and somewhere else (like always after linux/*).
+On 64-bit powerpc, usage of a non-16MB-aligned value for the mem= kernel
+cmdline parameter results in a system hang at boot.
 
-Fixed.
+For example, using 'mem=4198400K' will always reproduce this issue.
 
-> 
-> > +#include <linux/array_size.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/module.h>
-> 
-> ...
-> 
-> > +static void test_string_check_buf(struct kunit *test,
-> > +                                 const char *name, unsigned int flags,
-> > +                                 char *in, size_t p,
-> > +                                 char *out_real, size_t q_real,
-> > +                                 char *out_test, size_t q_test)
-> >  {
-> > -       if (q_real == q_test && !memcmp(out_test, out_real, q_test))
-> > -               return true;
-> > +       int result;
-> > +
-> > +       KUNIT_EXPECT_EQ(test, q_real, q_test);
-> 
-> This needs a message.
-> 
-> > +       result = memcmp(out_test, out_real, q_test);
-> 
-> > +       KUNIT_EXPECT_EQ(test, 0, result);
-> 
-> Why do we need this assertion? We have a dump below to show what's wrong.
+This patch fixes the problem by aligning any argument to mem= to 16MB
+corresponding with the large page size on powerpc.
 
-I've improved this all around with ...STREQ and ...MEMEQ calls, and
-added _MSG versions where needed to retain the prior reported test
-context.
+Fixes: 2babf5c2ec2f ("[PATCH] powerpc: Unify mem= handling")
+Co-developed-by: Gonzalo Siero <gsierohu@redhat.com>
+Signed-off-by: Gonzalo Siero <gsierohu@redhat.com>
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+---
+ arch/powerpc/kernel/prom.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> ...
-> 
-> > +#define test_string_get_size_one(size, blk_size, exp_result10, exp_result2)      \
-> > +       do {                                                                     \
-> > +               BUILD_BUG_ON(sizeof(exp_result10) >= string_get_size_maxbuf);    \
-> > +               BUILD_BUG_ON(sizeof(exp_result2) >= string_get_size_maxbuf);     \
-> 
-> No analogous assertions in KUnit?
-
-It's designed for runtime testing. This is fine as-is for compile-time
-asserts.
-
-Thanks for the reviews!
-
--Kees
-
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index 0b5878c3125b..8cd3e2445d8a 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -82,8 +82,12 @@ static int __init early_parse_mem(char *p)
+ {
+ 	if (!p)
+ 		return 1;
+-
++#ifdef CONFIG_PPC64
++	/* Align to 16 MB == size of ppc64 large page */
++	memory_limit = ALIGN(memparse(p, &p), 0x1000000);
++#else
+ 	memory_limit = PAGE_ALIGN(memparse(p, &p));
++#endif
+ 	DBG("memory limit = 0x%llx\n", memory_limit);
+ 
+ 	return 0;
 -- 
-Kees Cook
+2.43.0
+
