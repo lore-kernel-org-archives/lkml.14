@@ -1,101 +1,137 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFEC6EB59
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEAD56CBFF
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709293042; cv=none; b=W+dgCdl+ZqAPQalG9idAIkqw2bjUyZn/lw/hm5lGwAx8PSf5jTyCgmGTRzhIIME8pBplYWKyXAYD+gzrcfqJuEbZ0BJX9z030KlKy0npFIFE5jtk96jHpwFXSk+b9dYIYxV7Uwj0mlnHVDBtBC7jmu1jP5eO/1dH+Xp5G9xdzlo=
+	t=1709293092; cv=none; b=DffNSCMk1Zowst5rem5XYuKiA3lJ7lsg1hMX4uD58sp01i/g7GyZU/YRojCum8NOGTnQKGu6RpkYqUAH4+QdRVWeeoCeuAimawZ03zv+Z7YjktWvGZTHc5MllU+EbaJL5CtAehB83yrFG4Nck8Et5EBkpVA+T0sqnQHHJADQsRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709293042; c=relaxed/simple;
-	bh=Xs4ZVJB6wLE9HE7TW3IWqGWp1lPpqviFYf5aMywwQbo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b6gg5ZoenfrA1lOrK4Rk8dnznN1aVVNf7pM0o4oMBJfL6EGgszkdWjl+W13mZHphSNkJK0dUq6Q1M6gQEjAUVKbIreHLyd/WwGsqvcnG1RXPk9IvzGjRh47WB5HBNUdJQXbljEGnjfQt7Gop7sB4T4S+H4j0G5QbLDKgfo87vls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rg1C9-0007q4-67; Fri, 01 Mar 2024 12:36:53 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rg1C7-003lng-Dp; Fri, 01 Mar 2024 12:36:51 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rg1C7-0005Sl-19;
-	Fri, 01 Mar 2024 12:36:51 +0100
-Message-ID: <8fc7999c37f0dab7ab5d1166bba0192ab6e102d6.camel@pengutronix.de>
-Subject: Re: [PATCH v8 04/10] reset: eyeq5: add platform driver
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: =?ISO-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>, Gregory
- CLEMENT <gregory.clement@bootlin.com>, Michael Turquette
- <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Linus Walleij
- <linus.walleij@linaro.org>,  =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?=
- <rafal@milecki.pl>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-  linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-  linux-gpio@vger.kernel.org
-Date: Fri, 01 Mar 2024 12:36:51 +0100
-In-Reply-To: <ZeCkkoNMioo-VOC6@smile.fi.intel.com>
-References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
-	 <20240227-mbly-clk-v8-4-c57fbda7664a@bootlin.com>
-	 <Zd4bbCsY54XEnvJM@smile.fi.intel.com>
-	 <CZGVIWR4H4DE.3M5H3H99X0QPT@bootlin.com>
-	 <ZeBo4N204gLO0eUd@smile.fi.intel.com>
-	 <CZHK1ZCSROM5.X4WYN7SAZJTH@bootlin.com>
-	 <ZeCLS17PhKPuGvkm@smile.fi.intel.com>
-	 <959414f110463d5de87c84a986c7894a03afcf4e.camel@pengutronix.de>
-	 <ZeCkkoNMioo-VOC6@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1709293092; c=relaxed/simple;
+	bh=8Mh+7Gx+pfddFjQR6dxgS5KxLswGiv4WqL4pay4eE4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rs8xpywG7Nugaejjgkdn6qs89/mltoHhxbxWAGGcQcpKuqpw3ptV6yzBLheI55SPAge0vS8U3o77Za9MkmNO4SHBDdnoBI3jCAeGSlFucgpf6VDtvTFaPbRnluroxl0Tb5lB8Ghu/XV6S63fKW/ADgINQcparTX3STAj3GCHhz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DD371FB;
+	Fri,  1 Mar 2024 03:38:47 -0800 (PST)
+Received: from [10.57.68.58] (unknown [10.57.68.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E30923F6C4;
+	Fri,  1 Mar 2024 03:38:06 -0800 (PST)
+Message-ID: <63b9dc1c-7bf6-4de7-8d23-cf54e3408207@arm.com>
+Date: Fri, 1 Mar 2024 11:38:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/9] Merge arm64/riscv hugetlbfs contpte support
+Content-Language: en-GB
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mm@kvack.org
+References: <20240301091455.246686-1-alexghiti@rivosinc.com>
+ <b99f47f9-18d0-4619-aae7-19274197b85e@arm.com>
+ <CAHVXubiH64beFuB_GHSq5BKCus=O_+bqYTCwWQ+=2Q-F=T=ctQ@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAHVXubiH64beFuB_GHSq5BKCus=O_+bqYTCwWQ+=2Q-F=T=ctQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Do, 2024-02-29 at 17:36 +0200, Andy Shevchenko wrote:
-> On Thu, Feb 29, 2024 at 04:28:42PM +0100, Philipp Zabel wrote:
-> > On Do, 2024-02-29 at 15:48 +0200, Andy Shevchenko wrote:
-> > > [...] And then I elaborated that entire reset framework should
-> > > rather move towards fwnode.
-> >=20
-> > For context, there have been initial patches for this, that turned out
-> > not to be necessary later on:
-> >=20
-> > https://lore.kernel.org/lkml/20220324141237.297207-1-clement.leger@boot=
-lin.com/
-> >=20
-> > At this point, there still is no real use case for non-DT reset
-> > controls on the horizon.
->=20
-> I can argue on that if we have something like reset-gpio (and we have a s=
-uch).
+On 01/03/2024 11:29, Alexandre Ghiti wrote:
+> Hi Ryan,
+> 
+> On Fri, Mar 1, 2024 at 11:45 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> Hi Alexandre,
+>>
+>> I confess I haven't looked at the patches yet, but this cover letter raises a
+>> few quesions for me. I'll aim to look at the actual patches in due course.
+>>
+>> On 01/03/2024 09:14, Alexandre Ghiti wrote:
+>>> This patchset intends to merge the contiguous ptes hugetlbfs implementation
+>>> of arm64 and riscv.
+>>>
+>>> Both arm64 and riscv support the use of contiguous ptes to map pages that
+>>> are larger than the default page table size, respectively called contpte
+>>> and svnapot.
+>>>
+>>> The riscv implementation differs from the arm64's in that the LSBs of the
+>>> pfn of a svnapot pte are used to store the size of the mapping, allowing
+>>> for future sizes to be added (for now only 64KB is supported). That's an
+>>> issue for the core mm code which expects to find the *real* pfn a pte points
+>>> to. Patch 1 fixes that by always returning svnapot ptes with the real pfn
+>>> and restores the size of the mapping when it is written to a page table.
+>>
+>> Yes that makes sense to me. The intention for mTHP (!hugetlb) is to fully
+>> encapsulate PTEs beind set_ptes(), ptep_get() and friends, so what's actually
+>> written to the pgtable is arch-specific and well abstracted.
+>>
+>>>
+>>> The following patches are just merges of the 2 different implementations
+>>> that currently exist in arm64 and riscv which are very similar. It paves
+>>> the way to the reuse of the recent contpte THP work by Ryan [1] to avoid
+>>> reimplementing the same in riscv.
+>>
+>> You seem to be talking about both hugetlb (which uses the "huge" pte helpers)
+>> and contpte for THP (i.e. mTHP, which uses the regular pte helpers). They are
+>> pretty separate in my mind, so not sure why you would be modifying them both in
+>> the same series?
+> 
+> I don't, this patchset only deals with hugetlb, I just meant that this
+> series was just the beginning as I'm working on moving the contpte for
+> THP support in the generic code for riscv to use.
 
-I've just sent out the pull request containing this, thank you for the
-reminder.
+Ahh got it! Thanks for the explanation.
 
-> With this in place the ACPI can also provide descriptions for that.
-
-Yes, an ACPI based device with shared GPIO resets (it is bound to
-happen at some point...) would provide a reason to support ACPI GPIOs
-in the reset framework.
-
-regards
-Philipp
+> 
+> Sorry my wording was ambiguous :)
+> 
+> Thanks,
+> 
+> Alex
+> 
+>>
+>> Thanks,
+>> Ryan
+>>
+>>>
+>>> This patchset was tested by running the libhugetlbfs testsuite with 64KB
+>>> and 2MB pages on both architectures (on a 4KB base page size arm64 kernel).
+>>>
+>>> [1] https://lore.kernel.org/linux-arm-kernel/20240215103205.2607016-1-ryan.roberts@arm.com/
+>>>
+>>> Alexandre Ghiti (9):
+>>>   riscv: Restore the pfn in a NAPOT pte when manipulated by core mm code
+>>>   riscv: Safely remove huge_pte_offset() when manipulating NAPOT ptes
+>>>   mm: Use common huge_ptep_get() function for riscv/arm64
+>>>   mm: Use common set_huge_pte_at() function for riscv/arm64
+>>>   mm: Use common huge_pte_clear() function for riscv/arm64
+>>>   mm: Use common huge_ptep_get_and_clear() function for riscv/arm64
+>>>   mm: Use common huge_ptep_set_access_flags() function for riscv/arm64
+>>>   mm: Use common huge_ptep_set_wrprotect() function for riscv/arm64
+>>>   mm: Use common huge_ptep_clear_flush() function for riscv/arm64
+>>>
+>>>  arch/arm64/Kconfig                  |   1 +
+>>>  arch/arm64/include/asm/pgtable.h    |  59 +++++-
+>>>  arch/arm64/mm/hugetlbpage.c         | 291 +---------------------------
+>>>  arch/riscv/Kconfig                  |   1 +
+>>>  arch/riscv/include/asm/hugetlb.h    |   2 +-
+>>>  arch/riscv/include/asm/pgtable-64.h |  11 ++
+>>>  arch/riscv/include/asm/pgtable.h    | 120 +++++++++++-
+>>>  arch/riscv/mm/hugetlbpage.c         | 227 ----------------------
+>>>  mm/Kconfig                          |   3 +
+>>>  mm/Makefile                         |   1 +
+>>>  mm/contpte.c                        | 268 +++++++++++++++++++++++++
+>>>  11 files changed, 456 insertions(+), 528 deletions(-)
+>>>  create mode 100644 mm/contpte.c
+>>>
+>>
 
