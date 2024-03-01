@@ -1,154 +1,109 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82346A8DC;
-	Fri,  1 Mar 2024 09:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615256A352
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709286967; cv=none; b=SZ4DUZgQKc7ZiG8sTqQjwgjyJGKaqD3R465B1aaL73/AnxuRVAHDxau2py4UrOlnswDYOFuqZFif+Q7b/ovQ84bScKMV+O3tRRnlrElLqH6hTW27+FRDR2UGH3WqxKKQTDnFcVNVQ9rzaD9PPbuiogNpDozjqyliAxrIru3Qw2w=
+	t=1709286989; cv=none; b=h9UhKOyUd5WosDwguMOmJBcRAaVhSMAzlnEjEamKo2Pz2Jw+M+QleTws5h1Xt3z+LYXQ9PVbh2HA3fSwkeg9SQMy4hhJHRce5qPhiBB8/8//GmpCWg6SnPyd3p1dbitFylRmS6iuORT/GOkXwSI5UHivx1spMODQJTqZ1oSF0+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709286967; c=relaxed/simple;
-	bh=68k66iiwRdL8e8XIa//t2nz73CKwh3gM563bwOXQDhE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pml1dbCO4asvj+lCw3GTJ8DRod+RzM2KIh6r2e2bC5YTx4MRItp+tu7laRW9+FIKCFpxXK5AQFb+l2ScR/TRJvzmMazlF+OvuFD3cllgWXx7aj5sC5wg1mps1z64u8g7A6VtbjnB0j8LLdTgQJuo3JocXbJ3NgLC6lgButAyyRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xrGghXaB; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709286989; c=relaxed/simple;
+	bh=18S77KXqW9B4dMKuNYPGTI7+MDToDmytBAg7uEmV2FU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k+BBlZd9TFAkE8c5LwCUZCQMlW1oOH3n0tVPSJ96MXq+/O69yvSqDGTWrn/YYTWQ20eYTp6aw1j2H2ita778Zk3QwbSggoiNRXChkQraaI28YGp/rwQHnWH4VZr/ADx992SokW1MNGvLS84KQoW4m+6lE4WdLhfnVef5MpRaqgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=esHeHjXV; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xrGghXaB"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4219tPbo107280;
-	Fri, 1 Mar 2024 03:55:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709286925;
-	bh=vDfr0yp6C7xDyyNdToZD3gwq3T9ELQ+xwGdPREZ00cI=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=xrGghXaBtr4kZR8rMV6MgYmVuHmN8laIPpUPrIMjve/sWCx81rBH5N+YejowBj9jm
-	 DKbiwOaExltjW7e/GsZb9g7IyAcZTlBGGCRekCYzmnr99kmNibTC0mEMaKbCP5f5to
-	 BXd62pdCoIX0i4N8uUR0WAcNwR8cnBRG9KOjIkoM=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4219tPHt027170
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 1 Mar 2024 03:55:25 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 1
- Mar 2024 03:55:25 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 1 Mar 2024 03:55:25 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4219tOE6119278;
-	Fri, 1 Mar 2024 03:55:25 -0600
-Date: Fri, 1 Mar 2024 15:25:24 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <linux-pci@vger.kernel.org>,
-        <ryder.lee@mediatek.com>, <jianjun.wang@mediatek.com>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <p.zabel@pengutronix.de>,
-        <matthias.bgg@gmail.com>, <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <kernel@collabora.com>, <wenst@chromium.org>,
-        <nfraprado@collabora.com>
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Assert MAC reset only if PHY
- reset also present
-Message-ID: <9920b298-4627-4323-b367-13ee94a83869@ti.com>
-References: <20240229092449.580971-1-angelogioacchino.delregno@collabora.com>
- <a55428b8-27b3-42f7-8154-ccc7dde469df@ti.com>
- <2b2effdd-0b9d-40fd-a88d-ab364f2b0668@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="esHeHjXV"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d2305589a2so24249191fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 01:56:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709286985; x=1709891785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VkH3dZexrgeoLVbHTxNag0IKuqLj3ZDSeXVaWdmYMB4=;
+        b=esHeHjXVLkxuYULK8vcdvXvxv2F7/hzg5RBmX1JLSxBVcAmA2Cl1OPbmI4CHuHPtyr
+         lPAA7z6ovWbw9ny8umQidO3VKizxq5pL9GfcJDPZr2NcATOThAEI0V1GZ1N+9sToom65
+         SdFR0bKoVVnNKxxBS/k0csn7MNnrn0eRkJsEUApNAL/bivCxpM0bn6lSeCZWUt8SsZG4
+         142ST2RwUzbh0HKcmKJA7pEiKfEJaUXwJWDPmmMei0bwoVxf/CsXvzgEn39x4tZA5tuJ
+         jeyLXgIX+RNlftDkQe+PzLR+8qkWLQSydMcpibOnrtv9fENuFxsMgV3z566tCTePPavL
+         rk1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709286985; x=1709891785;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VkH3dZexrgeoLVbHTxNag0IKuqLj3ZDSeXVaWdmYMB4=;
+        b=TA1M3WlD9UFrO+qDDjN2gFX0yo/yv/42us/1v9AC/x6InmpSJQHYXY5rTcq8QYQJ4M
+         u2nFEEOd7iNYPpnVf4E5orpfUK4r86OnG5Tb/p1MwTXtbn7oyItHIE5W6+obPAdZrh02
+         qz3kYnbK9P/dIMwziPdtP6xwoUIBuv5JI0+ZIUqe3I9k+XRIhAx2WyouQi0vydPxu3ro
+         z4kxeHiViyB79pBBjXK5PU85at1iLNVI7ENTrXKNVLpkeJuftAKF1yNeOd+8xRJipwQb
+         HvDdI1uOWzZaj0RBvV2V9ZrXZy35mHtgUx9N6VCgkCoF0YhQWjl23Z9pneKfpw7YfcZN
+         cxXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVS+SoHBuoLk0sQO+uu9R1muduGW1OrvPcCW5jKtmDVs2ElomW+WjwbmY9QCzypryA0oLSlC9C57sljXh9NXcPRKGhLMU/4dUnxwTy1
+X-Gm-Message-State: AOJu0YzrxQ0m61X6dFWmRubgAFZnIyniSlN+k8CLu00F14fkzJaldv/q
+	ZGKCkvU2qJqpf/zzVrIJwPBsSLcT25Vhvi1FG7fFxprf+3Uj9fd0UInUE2LQvoLRJwd977Av2AH
+	t
+X-Google-Smtp-Source: AGHT+IF5nLUsEK/GcU+i4clsC9SpRItPO0y27bMdAQSTFmJjQXi6Pjl+T6nj+mStxcIQL7zVO61Bzw==
+X-Received: by 2002:a2e:808d:0:b0:2d2:a8b3:a20e with SMTP id i13-20020a2e808d000000b002d2a8b3a20emr765752ljg.53.1709286985354;
+        Fri, 01 Mar 2024 01:56:25 -0800 (PST)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id b22-20020a2e9896000000b002d2607e6d29sm530333ljj.70.2024.03.01.01.56.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 01:56:24 -0800 (PST)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: Linus <torvalds@linux-foundation.org>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [GIT PULL] pmdomain fixes for v6.8-rc7
+Date: Fri,  1 Mar 2024 10:56:23 +0100
+Message-Id: <20240301095623.3659989-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2b2effdd-0b9d-40fd-a88d-ab364f2b0668@collabora.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 01, 2024 at 10:06:33AM +0100, AngeloGioacchino Del Regno wrote:
-> Il 01/03/24 07:42, Siddharth Vadapalli ha scritto:
-> > On Thu, Feb 29, 2024 at 10:24:49AM +0100, AngeloGioacchino Del Regno wrote:
-> > > Some SoCs have two PCI-Express controllers: in the case of MT8195,
-> > > one of them is using a dedicated PHY, but the other uses a combo PHY
-> > > that is shared with USB and in that case the PHY cannot be reset
-> > > from the PCIe driver, or USB functionality will be unable to resume.
-> > > 
-> > > Resetting the PCIe MAC without also resetting the PHY will result in
-> > > a full system lockup at PCIe resume time and the only option to
-> > > resume operation is to hard reboot the system (with a PMIC cut-off).
-> > > 
-> > > To resolve this issue, check if we've got both a PHY and a MAC reset
-> > > and, if not, never assert resets at PM suspend time: in that case,
-> > > the link is still getting powered down as both the clocks and the
-> > > power domains will go down anyway.
-> > > 
-> > > Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
-> > > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> > > ---
-> > > 
-> > > Changes in v2:
-> > >   - Rebased over next-20240229
-> > > 
-> > >   drivers/pci/controller/pcie-mediatek-gen3.c | 25 ++++++++++++++-------
-> > >   1 file changed, 17 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > index 975b3024fb08..99b5d7a49be1 100644
-> > > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > @@ -874,17 +874,26 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
-> > >   	return err;
-> > >   }
-> > > -static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
-> > > +static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie, bool is_suspend)
-> > >   {
-> > > +	bool suspend_reset_supported = pcie->mac_reset && pcie->phy_reset;
-> > > +
-> > >   	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
-> > >   	pm_runtime_put_sync(pcie->dev);
-> > >   	pm_runtime_disable(pcie->dev);
-> > > -	reset_control_assert(pcie->mac_reset);
-> > > +
-> > > +	/*
-> > > +	 * Assert MAC reset only if we also got a PHY reset, otherwise
-> > > +	 * the system will lockup at PM resume time.
-> > > +	 */
-> > > +	if (is_suspend && suspend_reset_supported)
-> > > +		reset_control_assert(pcie->mac_reset);
-> > >   	phy_power_off(pcie->phy);
-> > >   	phy_exit(pcie->phy);
-> > 
-> > Wouldn't this power off the shared PHY? Or will the PHY driver make this
-> > NO-OP if the PHY is shared, in which case the above two statements could
-> > be combined with the other statements in the:
-> > if (is_suspend && suspend_reset_supported)
-> > condition to get a single block of code that also combines the
-> > reset_control_assert(pcie->phy_reset)
-> > present below.
-> > 
-> 
-> No, that'd be fine:
-> 
-> static int mtk_phy_power_off(struct phy *phy)
-> {
-> 	struct mtk_phy_instance *instance = phy_get_drvdata(phy);
-> 	struct mtk_tphy *tphy = dev_get_drvdata(phy->dev.parent);
-> 
-> 	if (instance->type == PHY_TYPE_USB2)
-> 		u2_phy_instance_power_off(tphy, instance);
-> 	else if (instance->type == PHY_TYPE_PCIE)
-> 		pcie_phy_instance_power_off(tphy, instance);
-> 
-> 	return 0;
-> }
-> 
-> ...it's two different PHY instances that we're dealing with, here :-)
+Hi Linus,
 
-I didn't realize that it is handled separately. Thank you for clarifying!
+Here's a PR with a couple of pmdomain fixes intended for v6.8-rc7. Details about
+the highlights are as usual found in the signed tag.
 
-Regards,
-Siddharth.
+Please pull this in!
+
+Kind regards
+Ulf Hansson
+
+
+The following changes since commit 841c35169323cd833294798e58b9bf63fa4fa1de:
+
+  Linux 6.8-rc4 (2024-02-11 12:18:13 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm.git tags/pmdomain-v6.8-rc4
+
+for you to fetch changes up to 2a93c6cbd5a703d44c414a3c3945a87ce11430ba:
+
+  pmdomain: qcom: rpmhpd: Fix enabled_corner aggregation (2024-02-28 16:31:45 +0100)
+
+----------------------------------------------------------------
+Providers:
+ - qcom: Fix enabled_corner aggregation for rpmhpd
+ - arm: Fix NULL dereference on scmi_perf_domain removal
+
+----------------------------------------------------------------
+Bjorn Andersson (1):
+      pmdomain: qcom: rpmhpd: Fix enabled_corner aggregation
+
+Cristian Marussi (1):
+      pmdomain: arm: Fix NULL dereference on scmi_perf_domain removal
+
+ drivers/pmdomain/arm/scmi_perf_domain.c | 3 +++
+ drivers/pmdomain/qcom/rpmhpd.c          | 7 +++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
