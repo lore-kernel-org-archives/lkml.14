@@ -1,288 +1,155 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B88522C;
-	Fri,  1 Mar 2024 17:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825612568;
+	Fri,  1 Mar 2024 17:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709312776; cv=none; b=toUcFVyrQ/AAO8mPT5nAJpnsk8XKJf2ZriI1ztqFNp7HRnclqowmc0tY0kOJuKcAjL583HryMRjuWkDH0qoH4xN4v0L6BvHQDdOn30naMeMWpsRmKm4qVC9tUF0W/1ByYGyxgQM+VNLehiwsxAI/6rdqIMKo8LG+FyzSKRNrBw8=
+	t=1709312835; cv=none; b=b4/kvy6Xlh1kitVddBiw76qSuVMadggiFdeC7djlHEAaMbXur2mSv05UnUaDyHmvgUqt660tm38UFD6n5n/5inHJ6H3IJND69h7qxXCjXv4WTcnWyBYGwRktXcct402m1LB5zxEKOJif8gdykmD9QDsKIIVGBsVODyy++GR6rd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709312776; c=relaxed/simple;
-	bh=id7HKy1iRPkh/X8oX93ETVq/oQ55UfgJENLJylkOgs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hWCOshICfWGC+Kfx2C9itvgE1RcRuz1Dm1llR+/CWOAwPKAfSazOAhlKkHLg1zwvwT/DBkGisjOi3Nb36JYtLCxaD2PcDqxjaYp83sq0SeOvN3OOaI3gyMQ9BsYcgjhyVXGPJblMOUfSRL8awFgnelMshH+ikHzCuLB05yhgCDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iJJfoCi0; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iJJfoCi0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709312773;
-	bh=id7HKy1iRPkh/X8oX93ETVq/oQ55UfgJENLJylkOgs4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iJJfoCi0FiBs6A3R8jLo/TErc9BGBVY+4htdWwuMkfseSX9ckWC9f7H125N4I6oEF
-	 3tx2WH6D5VoHc+BsQO0P1C1D69Ax2bep6tnllteR4zwhzczsYm2yRnJ4SyAb1WDwKj
-	 vrsHhhYHfgow9POYKQUwcYhHHjWos1e0pBq2TzCCV/Qa2FP52yrR998qzgzPse1IBo
-	 LVTw4THUvTv6LQ9HPQQWiv8nN18gE6GA+m2DyodND5OHks9qRTUXfOHHsHPFVDU0Xr
-	 f7LOtrvgWeQtqBmsiZJ17JHoDvSLEW62emYWUTvq+CuFQwXrvLEHUSsLGS0twM62Rb
-	 EKNj1V6/6uuZw==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	s=arc-20240116; t=1709312835; c=relaxed/simple;
+	bh=zHTjE2s9eU4e8ejE9RWwR3BzqKotd3aHXC+td0OJ2X8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=c2v8nSbcaEzcMqlR/wb3cfwLq4oBIrwDGtUmEnSqHY/dZ7gH3MJkFxn8I1iWOQ9N0lMFFxPhje4Pcg6FXvWId/uqnSuBIl47YBmtGIwlNBa5Uhf3+uDAvP2O8TrtMWlCCoqE1Bmi4RDzj4EYDFpznfxk29NVJbr77XDrij2l/bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: sebastianfricke)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C9B8837813F2;
-	Fri,  1 Mar 2024 17:06:12 +0000 (UTC)
-Date: Fri, 1 Mar 2024 18:06:11 +0100
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: mchehab@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, hverkuil-cisco@xs4all.nl,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.gaignard@collabora.com,
-	laurent.pinchart@ideasonboard.com, praneeth@ti.com, nm@ti.com,
-	vigneshr@ti.com, a-bhatia1@ti.com, j-luthra@ti.com, b-brnich@ti.com,
-	detheridge@ti.com, p-mantena@ti.com, vijayp@ti.com,
-	andrzej.p@collabora.com, nicolas@ndufresne.ca, afd@ti.com,
-	milkfafa@gmail.com
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: Add Imagination E5010 JPEG
- Encoder
-Message-ID: <20240301170611.tknj7ncwvgqjwkx5@basti-XPS-13-9310>
-References: <20240228141140.3530612-1-devarsht@ti.com>
- <20240228141140.3530612-2-devarsht@ti.com>
- <20240229102623.ihwhbba4qwzvxzzq@basti-XPS-13-9310>
- <7a83fe91-5afa-6aee-a8a4-44f6e3d713c2@ti.com>
- <20240229133046.64h2f4n27emvdhnq@basti-XPS-13-9310>
- <eff7080b-42e9-19ae-6022-bfbcc337b4a0@ti.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E827E33D2B;
+	Fri,  1 Mar 2024 17:07:10 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C31ED13A59;
+	Fri,  1 Mar 2024 17:07:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AAZcLz4L4mUcGQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 01 Mar 2024 17:07:10 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Fri, 01 Mar 2024 18:07:10 +0100
+Subject: [PATCH RFC 3/4] mm, slab: introduce kmem_cache_charge()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eff7080b-42e9-19ae-6022-bfbcc337b4a0@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240301-slab-memcg-v1-3-359328a46596@suse.cz>
+References: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
+In-Reply-To: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
+To: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, Kees Cook <kees@kernel.org>, 
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Roman Gushchin <roman.gushchin@linux.dev>, 
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+ Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
+ Muchun Song <muchun.song@linux.dev>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ Vlastimil Babka <vbabka@suse.cz>
+X-Mailer: b4 0.13.0
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 TAGGED_RCPT(0.00)[];
+	 REPLY(-4.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: E827E33D2B
+X-Spam-Level: 
+X-Spam-Score: -4.00
+X-Spam-Flag: NO
 
-Hey Devarsh,
+As suggested by Linus, introduce a slab API function to memcg-charge a
+an object that was previously allocated without __GFP_ACCOUNT and from a
+cache that's not SLAB_ACCOUNT. This may be useful when it's likely the
+object is to be freed soon, and thus the charging/uncharging overhead
+can be avoided.
 
-On 01.03.2024 22:02, Devarsh Thakkar wrote:
->Hi Sebastian,
->
->On 29/02/24 19:00, Sebastian Fricke wrote:
->> Hey Devarsh,
->>
->> On 29.02.2024 16:50, Devarsh Thakkar wrote:
->>> Hi Sebastian,
->>>
->>> Thanks for the review.
->>>
->>> On 29/02/24 15:56, Sebastian Fricke wrote:
->>>> Hey Devarsh,
->>>>
->>>> On 28.02.2024 19:41, Devarsh Thakkar wrote:
->>>>> Add dt-bindings for Imagination E5010 JPEG Encoder [1] which is implemented
->>>>> as stateful V4L2 M2M driver.
->>>>>
->>>>> The device supports baseline encoding with two different quantization
->>>>> tables and compression ratio as demanded.
->>>>>
->>>>> Minimum resolution supported is 64x64 and Maximum resolution supported is
->>>>> 8192x8192.
->>>>>
->>>>> [1]:  AM62A TRM (Section 7.6 is for JPEG Encoder)
->>>>> Link: https://www.ti.com/lit/pdf/spruj16
->>>>>
->>>>> Co-developed-by: David Huang <d-huang@ti.com>
->>>>> Signed-off-by: David Huang <d-huang@ti.com>
->>>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>
->>>> hmmm when did Rob give his reviewed by on this patch? (As this is not a
->>>> DT binding I find that odd)
->>>
->>> [PATCH v6 1/3] media: dt-bindings: Add Imagination E5010 JPEG Encoder : This
->>> is indeed the dt-binding patch. Also As shared in version history it is at V4
->>> where Rob Herring added a Reviewed-By as seen here [0]
->>>
->>>> And where is the Reviewed by tag from Benjamin that he provided on V5?
->>>>
->>>
->>> As captured in patch version history here [1] I thought to remove the
->>> Reviewed-By since the Reviewed-By tag was on V5 and with V6 the driver got
->>> updated with some changes to handle reported sparse warnings and so I have
->>> asked Benjamin to check the range-diff and help with a quick review again if
->>> possible.
->>>
->>> Kindly let me know if I missed something or anything needs to be done from
->>> my end.
->>
->> Yes thanks I was a bit too swift to write here, sorry for the noise.
->> We'll have a look.
->>
->
->Sorry for the back and forth, but on the hindsight and re-looking at the
->kernel patch guidelines [0] they suggest that Reviewed-By tag should only be
->removed if substantial changes were made in further revisions.
->
->So looks to me in-fact it was a mistake on my part to remove the Reviewed-by
->considering the change made in the following patch series was not a
->substantial one as seen in the range-diff [1].
->
->Considering this, just wanted to check with you if it's possible for you to
->consider the Reviewed-by tag :
->`Reviewed-by: Benjamin Gaignard <benjamin.gaignard@collabora.com`
->if it helps consolidate things faster to get this series in given we are close
->to final RC's ?
+In case kmem_cache_charge() is called on an already-charged object, it's
+a no-op.
 
-Yup I think we can keep it as the changes are very minor. Otherwise the
-series is pretty much good to go, I'll prepare the PR asap.
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/all/CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com/
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ include/linux/slab.h | 10 ++++++++++
+ mm/slub.c            | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-Greetings,
-Sebastian
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index b5f5ee8308d0..0c3acb2fa3e6 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -491,6 +491,16 @@ void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags) __assume_slab_ali
+ void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
+ 			   gfp_t gfpflags) __assume_slab_alignment __malloc;
+ void kmem_cache_free(struct kmem_cache *s, void *objp);
++#ifdef CONFIG_MEMCG_KMEM
++int kmem_cache_charge(struct kmem_cache *s, gfp_t flags, void *objp);
++#else
++static inline int
++kmem_cache_charge(struct kmem_cache *s, gfp_t flags, void *objp)
++{
++	return 0;
++}
++#endif
++
+ 
+ /*
+  * Bulk allocation and freeing operations. These are accelerated in an
+diff --git a/mm/slub.c b/mm/slub.c
+index 64da169d672a..72b61b379ba1 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4241,6 +4241,35 @@ void kmem_cache_free(struct kmem_cache *s, void *x)
+ }
+ EXPORT_SYMBOL(kmem_cache_free);
+ 
++#ifdef CONFIG_MEMCG_KMEM
++int kmem_cache_charge(struct kmem_cache *s, gfp_t flags, void *x)
++{
++	struct obj_cgroup ** objcg;
++	struct slab *slab;
++
++	s = cache_from_obj(s, x);
++	if (!s)
++		return -EINVAL;
++
++	if (likely(!memcg_kmem_online()))
++		return 0;
++
++	/* was it already accounted? */
++	slab = virt_to_slab(x);
++	if ((objcg = slab_objcgs(slab))) {
++		unsigned int off = obj_to_index(s, slab, x);
++
++		if (objcg[off])
++			return 0;
++	}
++
++	if (!memcg_slab_post_alloc_hook(s, NULL, flags, 1, &x))
++		return -ENOMEM;
++
++	return 0;
++}
++#endif
++
+ static void free_large_kmalloc(struct folio *folio, void *object)
+ {
+ 	unsigned int order = folio_order(folio);
 
->
->[0]:
->https://docs.kernel.org/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes:~:text=changed%20substantially
->
->[1]: https://gist.github.com/devarsht/c89180ac2b0d2814614f2b59d0705c19
->
->Regards
->Devarsh
->
->>
->> Greetings,
->> Sebastian
->>
->>>
->>> [0] :
->>> https://lore.kernel.org/all/170716378412.295212.11603162949482063011.robh@kernel.org/
->>> [1] : https://lore.kernel.org/all/20240228141140.3530612-4-devarsht@ti.com/
->>>
->>>
->>> Regards
->>> Devarsh
->>>>> ---
->>>>> V2: No change
->>>>> V3:
->>>>> - Add vendor specific compatible
->>>>> - Update reg names
->>>>> - Update clocks to 1
->>>>> - Fix dts example with proper naming
->>>>> V4:
->>>>> - Use ti-specific compatible ti,am62a-jpeg-enc as secondary one
->>>>> - Update commit message and title
->>>>> - Remove clock-names as only single clock
->>>>> V5:
->>>>> - Add Reviewed-By tag
->>>>> V6:
->>>>> - No change
->>>>>
->>>>> .../bindings/media/img,e5010-jpeg-enc.yaml    | 75 +++++++++++++++++++
->>>>> MAINTAINERS                                   |  5 ++
->>>>> 2 files changed, 80 insertions(+)
->>>>> create mode 100644
->>>>> Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
->>>>> b/Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..085020cb9e61
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
->>>>> @@ -0,0 +1,75 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://devicetree.org/schemas/media/img,e5010-jpeg-enc.yaml#
->>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>> +
->>>>> +title: Imagination E5010 JPEG Encoder
->>>>> +
->>>>> +maintainers:
->>>>> +  - Devarsh Thakkar <devarsht@ti.com>
->>>>> +
->>>>> +description: |
->>>>> +  The E5010 is a JPEG encoder from Imagination Technologies implemented on
->>>>> +  TI's AM62A SoC. It is capable of real time encoding of YUV420 and YUV422
->>>>> +  inputs to JPEG and M-JPEG. It supports baseline JPEG Encoding up to
->>>>> +  8Kx8K resolution.
->>>>> +
->>>>> +properties:
->>>>> +  compatible:
->>>>> +    oneOf:
->>>>> +      - items:
->>>>> +          - const: ti,am62a-jpeg-enc
->>>>> +          - const: img,e5010-jpeg-enc
->>>>> +      - const: img,e5010-jpeg-enc
->>>>> +
->>>>> +  reg:
->>>>> +    items:
->>>>> +      - description: The E5010 core register region
->>>>> +      - description: The E5010 mmu register region
->>>>> +
->>>>> +  reg-names:
->>>>> +    items:
->>>>> +      - const: core
->>>>> +      - const: mmu
->>>>> +
->>>>> +  power-domains:
->>>>> +    maxItems: 1
->>>>> +
->>>>> +  resets:
->>>>> +    maxItems: 1
->>>>> +
->>>>> +  clocks:
->>>>> +    maxItems: 1
->>>>> +
->>>>> +  interrupts:
->>>>> +    maxItems: 1
->>>>> +
->>>>> +required:
->>>>> +  - compatible
->>>>> +  - reg
->>>>> +  - reg-names
->>>>> +  - interrupts
->>>>> +  - clocks
->>>>> +
->>>>> +additionalProperties: false
->>>>> +
->>>>> +examples:
->>>>> +  - |
->>>>> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
->>>>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>>> +    #include <dt-bindings/interrupt-controller/irq.h>
->>>>> +
->>>>> +    soc {
->>>>> +      #address-cells = <2>;
->>>>> +      #size-cells = <2>;
->>>>> +      jpeg-encoder@fd20000 {
->>>>> +          compatible = "img,e5010-jpeg-enc";
->>>>> +          reg = <0x00 0xfd20000 0x00 0x100>,
->>>>> +                <0x00 0xfd20200 0x00 0x200>;
->>>>> +          reg-names = "core", "mmu";
->>>>> +          clocks = <&k3_clks 201 0>;
->>>>> +          power-domains = <&k3_pds 201 TI_SCI_PD_EXCLUSIVE>;
->>>>> +          interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +      };
->>>>> +    };
->>>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>>> index e1475ca38ff2..6b34ee8d92b5 100644
->>>>> --- a/MAINTAINERS
->>>>> +++ b/MAINTAINERS
->>>>> @@ -10572,6 +10572,11 @@ S:    Maintained
->>>>> F:    Documentation/devicetree/bindings/auxdisplay/img,ascii-lcd.yaml
->>>>> F:    drivers/auxdisplay/img-ascii-lcd.c
->>>>>
->>>>> +IMGTEC JPEG ENCODER DRIVER
->>>>> +M:    Devarsh Thakkar <devarsht@ti.com>
->>>>> +S:    Supported
->>>>> +F:    Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
->>>>> +
->>>>> IMGTEC IR DECODER DRIVER
->>>>> S:    Orphan
->>>>> F:    drivers/media/rc/img-ir/
->>>>> -- 
->>>>> 2.39.1
->>>>>
+-- 
+2.44.0
+
