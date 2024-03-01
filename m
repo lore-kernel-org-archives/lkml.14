@@ -1,156 +1,198 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83466A329;
-	Fri,  1 Mar 2024 09:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FEE6A322;
+	Fri,  1 Mar 2024 09:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709283998; cv=none; b=FsjnqxoDtW6xVIDH4U3N1bykjT3c9XQuEKmhNwOZteXV3n4/k944+ANTtRnzHBB8fpetG/HLySJzpouYNf69xcZAP1hUHEvgJlOm0N1JGHNFjJkpavCST7D9QY433Apf+QipSe3VPYqal2L/xwJ8rG5JclSyjynbfKl4ZagWVV0=
+	t=1709284037; cv=none; b=LgQ+TOnBLSMKMUEMXjrjjenb84TNV6xJPS4d7CRgMLHWzKiq3sXy0c0Qsknzi8UBeQuRXY6b7Gss7lmpzc/AYLKkzXb956Zb5BnuLENZAwkG82NAQgicGMA7ZmjkgsREmHqPMVs+3JP8t4+NmicA6b7JiP0mIVgi+U41qT2HhuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709283998; c=relaxed/simple;
-	bh=t77D3hvYZjR15Q549ojSRDIMkv4v3gVrHr+1V9N+rL8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V+67/PvHV8FaBmUnvwIIxxvJ9Va3NQkkupKZezrCTThIJWrSxAtD+0X/B3WKppdrTnd3wrzLqzJs5U85qksT5HZHWYruro2/YigLgXwwLJ3+Sb4IKG0GiM0vaakIPiG3YKzjOogK4m4yPZ67a1zTFwmECY1zXAC1uUE6Kp+qxo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=uwBnz4EB; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uwBnz4EB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709283994;
-	bh=t77D3hvYZjR15Q549ojSRDIMkv4v3gVrHr+1V9N+rL8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uwBnz4EBydDQpkGmpplf+4b/eYMciswh5zSoUmYvkIdces6Ahwl1mXDgcCyxMsVDJ
-	 yGKRWPhhP8oURbxsVglpDWzv0xU4x+gIf/MPc+k+NzfQfqwomPsgvn5z1LY0mzqx2U
-	 LlUBgbXCutq2ej76v9MoDWGxfFaelHwoDoUZXsCUV79yIQstIhpSnE/P9KCxqAFW5z
-	 uuyP1nUn27QGiQAPK+8pxn7RXLQgxFy0oMzdJQ5J1XS032saweZIM9VwPwbet/aShX
-	 QyhagQzGQnlxWm5UElT1hpU7rP4Fy36pXbqH+uh8B6k7yxkD0TcLwoLWNum/Vvt26w
-	 5b9UA+X7Ib9dQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0454E37814A4;
-	Fri,  1 Mar 2024 09:06:33 +0000 (UTC)
-Message-ID: <2b2effdd-0b9d-40fd-a88d-ab364f2b0668@collabora.com>
-Date: Fri, 1 Mar 2024 10:06:33 +0100
+	s=arc-20240116; t=1709284037; c=relaxed/simple;
+	bh=NAuEsrT6qtWg92VqwK3j88HDwPjYYe79+GBW7Qujspc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=K6texwlaebhl3Uc2UvPTsqFh3FzmFx3BEydYpUlLFcu3VskvwCBQIQHF+U07rxBx861zPqm7aa0IbFYgchDwQJNvepBRkn4wawcRgKGILGfjj0g2iSMvjj7FpeIi7YDsUquw6GuS9xmJpeLe8KnVSg7l+RDmsYv9Nk8R4gR6Slo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TmMfd0MTlz4f3nbC;
+	Fri,  1 Mar 2024 17:07:05 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 6BB751A0172;
+	Fri,  1 Mar 2024 17:07:12 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP1 (Coremail) with SMTP id cCh0CgC31A2umuFl63FqFg--.2523S3;
+	Fri, 01 Mar 2024 17:07:03 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	naresh.kamboju@linaro.org,
+	daniel.diaz@linaro.org,
+	linux@roeck-us.net,
+	brauner@kernel.org
+Subject: [PATCH v2 1/2] ext4: alloc test super block from sget
+Date: Sat,  2 Mar 2024 02:03:41 +0800
+Message-Id: <20240301180342.6232-2-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20240301180342.6232-1-shikemeng@huaweicloud.com>
+References: <20240301180342.6232-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Assert MAC reset only if PHY reset
- also present
-Content-Language: en-US
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
- jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
- robh@kernel.org, bhelgaas@google.com, p.zabel@pengutronix.de,
- matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kernel@collabora.com, wenst@chromium.org, nfraprado@collabora.com
-References: <20240229092449.580971-1-angelogioacchino.delregno@collabora.com>
- <a55428b8-27b3-42f7-8154-ccc7dde469df@ti.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <a55428b8-27b3-42f7-8154-ccc7dde469df@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgC31A2umuFl63FqFg--.2523S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF1rGw1DCr18uw1fJF47Jwb_yoWrWr4fpa
+	43AFyFkr4UuF4q9an7JFykXF1S9a109ryDGrWI9w15Ja4Ygry8GFWvyF10vrW0qrWxGFZ3
+	ZF1UKrWUCr4UGa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
+	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUCVW8JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsWrWDUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Il 01/03/24 07:42, Siddharth Vadapalli ha scritto:
-> On Thu, Feb 29, 2024 at 10:24:49AM +0100, AngeloGioacchino Del Regno wrote:
->> Some SoCs have two PCI-Express controllers: in the case of MT8195,
->> one of them is using a dedicated PHY, but the other uses a combo PHY
->> that is shared with USB and in that case the PHY cannot be reset
->> from the PCIe driver, or USB functionality will be unable to resume.
->>
->> Resetting the PCIe MAC without also resetting the PHY will result in
->> a full system lockup at PCIe resume time and the only option to
->> resume operation is to hard reboot the system (with a PMIC cut-off).
->>
->> To resolve this issue, check if we've got both a PHY and a MAC reset
->> and, if not, never assert resets at PM suspend time: in that case,
->> the link is still getting powered down as both the clocks and the
->> power domains will go down anyway.
->>
->> Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> ---
->>
->> Changes in v2:
->>   - Rebased over next-20240229
->>
->>   drivers/pci/controller/pcie-mediatek-gen3.c | 25 ++++++++++++++-------
->>   1 file changed, 17 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
->> index 975b3024fb08..99b5d7a49be1 100644
->> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
->> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
->> @@ -874,17 +874,26 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
->>   	return err;
->>   }
->>   
->> -static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
->> +static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie, bool is_suspend)
->>   {
->> +	bool suspend_reset_supported = pcie->mac_reset && pcie->phy_reset;
->> +
->>   	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
->>   
->>   	pm_runtime_put_sync(pcie->dev);
->>   	pm_runtime_disable(pcie->dev);
->> -	reset_control_assert(pcie->mac_reset);
->> +
->> +	/*
->> +	 * Assert MAC reset only if we also got a PHY reset, otherwise
->> +	 * the system will lockup at PM resume time.
->> +	 */
->> +	if (is_suspend && suspend_reset_supported)
->> +		reset_control_assert(pcie->mac_reset);
->>   
->>   	phy_power_off(pcie->phy);
->>   	phy_exit(pcie->phy);
-> 
-> Wouldn't this power off the shared PHY? Or will the PHY driver make this
-> NO-OP if the PHY is shared, in which case the above two statements could
-> be combined with the other statements in the:
-> if (is_suspend && suspend_reset_supported)
-> condition to get a single block of code that also combines the
-> reset_control_assert(pcie->phy_reset)
-> present below.
-> 
+This fix the oops in ext4 unit test which is cuased by NULL sb.s_user_ns
+as following:
+<4>[ 14.344565] map_id_range_down (kernel/user_namespace.c:318)
+<4>[ 14.345378] make_kuid (kernel/user_namespace.c:415)
+<4>[ 14.345998] inode_init_always (include/linux/fs.h:1375 fs/inode.c:174)
+<4>[ 14.346696] alloc_inode (fs/inode.c:268)
+<4>[ 14.347353] new_inode_pseudo (fs/inode.c:1007)
+<4>[ 14.348016] new_inode (fs/inode.c:1033)
+<4>[ 14.348644] ext4_mb_init (fs/ext4/mballoc.c:3404 fs/ext4/mballoc.c:3719)
+<4>[ 14.349312] mbt_kunit_init (fs/ext4/mballoc-test.c:57
+fs/ext4/mballoc-test.c:314)
+<4>[ 14.349983] kunit_try_run_case (lib/kunit/test.c:388 lib/kunit/test.c:443)
+<4>[ 14.350696] kunit_generic_run_threadfn_adapter (lib/kunit/try-catch.c:30)
+<4>[ 14.351530] kthread (kernel/kthread.c:388)
+<4>[ 14.352168] ret_from_fork (arch/arm64/kernel/entry.S:861)
+<0>[ 14.353385] Code: 52808004 b8236ae7 72be5e44 b90004c4 (38e368a1)
 
-No, that'd be fine:
+Alloc test super block from sget to properly initialize test super block
+to fix the issue.
 
-static int mtk_phy_power_off(struct phy *phy)
-{
-	struct mtk_phy_instance *instance = phy_get_drvdata(phy);
-	struct mtk_tphy *tphy = dev_get_drvdata(phy->dev.parent);
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+---
+ fs/ext4/mballoc-test.c | 53 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 37 insertions(+), 16 deletions(-)
 
-	if (instance->type == PHY_TYPE_USB2)
-		u2_phy_instance_power_off(tphy, instance);
-	else if (instance->type == PHY_TYPE_PCIE)
-		pcie_phy_instance_power_off(tphy, instance);
-
-	return 0;
-}
-
-...it's two different PHY instances that we're dealing with, here :-)
-
-Cheers,
-Angelo
-
->> -	reset_control_assert(pcie->phy_reset);
->> +	if (is_suspend && suspend_reset_supported)
->> +		reset_control_assert(pcie->phy_reset);
->>   }
->>   
-> ...
-> 
-> Regards,
-> Siddharth.
-
+diff --git a/fs/ext4/mballoc-test.c b/fs/ext4/mballoc-test.c
+index 12d0b22cabe1..0821dc51b81d 100644
+--- a/fs/ext4/mballoc-test.c
++++ b/fs/ext4/mballoc-test.c
+@@ -21,16 +21,27 @@ struct mbt_ctx {
+ };
+ 
+ struct mbt_ext4_super_block {
+-	struct super_block sb;
++	struct ext4_super_block es;
++	struct ext4_sb_info sbi;
+ 	struct mbt_ctx mbt_ctx;
+ };
+ 
+-#define MBT_CTX(_sb) (&(container_of((_sb), struct mbt_ext4_super_block, sb)->mbt_ctx))
++#define MBT_SB(_sb) (container_of((_sb)->s_fs_info, struct mbt_ext4_super_block, sbi))
++#define MBT_CTX(_sb) (&MBT_SB(_sb)->mbt_ctx)
+ #define MBT_GRP_CTX(_sb, _group) (&MBT_CTX(_sb)->grp_ctx[_group])
+ 
+ static const struct super_operations mbt_sops = {
+ };
+ 
++static void mbt_kill_sb(struct super_block *sb)
++{
++}
++
++static struct file_system_type mbt_fs_type = {
++	.name			= "mballoc test",
++	.kill_sb		= mbt_kill_sb,
++};
++
+ static int mbt_mb_init(struct super_block *sb)
+ {
+ 	int ret;
+@@ -72,43 +83,53 @@ static void mbt_mb_release(struct super_block *sb)
+ 	kfree(sb->s_bdev);
+ }
+ 
++static int mbt_set(struct super_block *sb, void *data)
++{
++	return 0;
++}
++
+ static struct super_block *mbt_ext4_alloc_super_block(void)
+ {
+-	struct ext4_super_block *es = kzalloc(sizeof(*es), GFP_KERNEL);
+-	struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+-	struct mbt_ext4_super_block *fsb = kzalloc(sizeof(*fsb), GFP_KERNEL);
++	struct mbt_ext4_super_block *fsb;
++	struct super_block *sb;
++	struct ext4_sb_info *sbi;
+ 
+-	if (fsb == NULL || sbi == NULL || es == NULL)
++	fsb = kzalloc(sizeof(*fsb), GFP_KERNEL);
++	if (fsb == NULL)
++		return NULL;
++
++	sb = sget(&mbt_fs_type, NULL, mbt_set, 0, NULL);
++	if (IS_ERR(sb))
+ 		goto out;
+ 
++	sbi = &fsb->sbi;
++
+ 	sbi->s_blockgroup_lock =
+ 		kzalloc(sizeof(struct blockgroup_lock), GFP_KERNEL);
+ 	if (!sbi->s_blockgroup_lock)
+-		goto out;
++		goto out_deactivate;
+ 
+ 	bgl_lock_init(sbi->s_blockgroup_lock);
+ 
+-	sbi->s_es = es;
+-	fsb->sb.s_fs_info = sbi;
++	sbi->s_es = &fsb->es;
++	sb->s_fs_info = sbi;
+ 
+-	return &fsb->sb;
++	return sb;
+ 
++out_deactivate:
++	deactivate_locked_super(sb);
+ out:
+ 	kfree(fsb);
+-	kfree(sbi);
+-	kfree(es);
+ 	return NULL;
+ }
+ 
+ static void mbt_ext4_free_super_block(struct super_block *sb)
+ {
+-	struct mbt_ext4_super_block *fsb =
+-		container_of(sb, struct mbt_ext4_super_block, sb);
++	struct mbt_ext4_super_block *fsb = MBT_SB(sb);
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 
+ 	kfree(sbi->s_blockgroup_lock);
+-	kfree(sbi->s_es);
+-	kfree(sbi);
++	deactivate_locked_super(sb);
+ 	kfree(fsb);
+ }
+ 
+-- 
+2.30.0
 
