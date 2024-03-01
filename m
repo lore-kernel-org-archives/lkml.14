@@ -1,109 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE0A2E40E;
-	Fri,  1 Mar 2024 01:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAD208480;
+	Fri,  1 Mar 2024 01:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709257348; cv=none; b=bncxwX6T8SriFSuqiH8raxMAiAF7Eau79n8Wn3D0Dds5FuEbeT3ZFmog5/ZDCzeeW4YKBkskTs7k7CudttUQjZMei86hQnn/iAeVFYtaxwAL4gqI22EBEG2Csqo4ndLgz1X7n1/nFSAp0Hk2q75r970jelqr5XC6ge11cuF55Wg=
+	t=1709257713; cv=none; b=tJuE4G0L6k16owbFe9XPrE+/hR0+9Vo3dsmNDG9Mo/qSxvEdBAmFH1G4u6UTvL94R6bvLsR5ZZRexFRLuR4h2rSMXm6JpIGwxAR8J4yZVIvpOBupP/jHgKp3mv7NIE2s2sKqWfRxMTLV/rjpMfvyL2RTBdhfqY6H4OiIKt06Ch4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709257348; c=relaxed/simple;
-	bh=C6GrbXyKhQ/53cioiYQj+qavhzuh+NWCKiVcOEXlD5U=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=MFqA2YPpp2KfRdnF89RY630CA65MXPD3m8vXxI99cdzzgwedDuD+9GxPUVUsY8yM5mBYwDWQ5EYt5kk1F2rw9uzbKLEKwEYvrOjRtgMT20jffmuHgE5v6KrpSc/GvVSiecXGdEhbOuzaZAZN9Z9NfTX+E5Cojfua2Zi0hRfKR7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIm6aNNy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709257713; c=relaxed/simple;
+	bh=HGs2pX7FHJP2Y4FhixbXqLtBnijA94aNSBoCNN9F45c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XPUmzp9s7kxfowpJTKiMjgdV9YIfUrFAgwbpTamTOzwtUpolsm4XVRXwkydXGNWUu1soAfYnfIHYW/9HUF7FkWMyrfRl14CLV4L9EOEXrMbE+DbaHBXioqzNeaZjjLLwSa9dEYHEuWK3pknFpZgJ1xgxYnZHCHt2MbulGtuDXJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=DbS+CW3j; arc=none smtp.client-ip=117.135.210.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIm6aNNy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F8BC433F1;
-	Fri,  1 Mar 2024 01:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709257347;
-	bh=C6GrbXyKhQ/53cioiYQj+qavhzuh+NWCKiVcOEXlD5U=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=qIm6aNNyAeHcfji1JRmEEOg5KuHDf8RZrQHjguspUvQoaJOV11W7tE3dWgZvVgKZa
-	 SUSJHk+W/C5/DP3WKmagAKTrwN0s7DxPiy7Pu8e2H3YheCeogVpBE5AhoioT8QzrF4
-	 Fcm+NpPcUhIrEKochPofbqJpmHWWLVWGnotKXaHM6m5WwoEP79CZ2NObRL1ye+3NUb
-	 gvZhMc7hmaI8CrgzdGdhM/yTGKrjQC8YZ4dCYN8QpzJelz51IpwIjDWF6LCfnTHAWr
-	 kdJfmhH3GzeZcunSA37EldSUs+7ghuYiJu/h6HwKklN04wkzHWqVfqjYMBg7FWVp86
-	 o/VAjI+RGYURg==
-Message-ID: <97787cc46d663b08b2e571841fb1bd6b.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="DbS+CW3j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=UP35/
+	x1DvcN4UtxHZ4Qd/W3d6f5lVbqfBVaL96eFqTs=; b=DbS+CW3jjkILRBFXBm9Su
+	9HjDT+OjtJdY6whYjnt4PkoVpcbx1t8RwaoZoJ4brGzjVvrdWFW6jCFyM5zst4CL
+	8cp5yChYjonwZzYP44uK1Z8IAF76jo703eHUDxmQBUKOIsKzGPrrjNEXHi8NbTdV
+	v+dapzF+puWzZxTvBGOikc=
+Received: from localhost.localdomain (unknown [116.128.244.171])
+	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDn7+APMOFlZSfbBA--.18054S11;
+	Fri, 01 Mar 2024 09:32:42 +0800 (CST)
+From: Genjian <zhanggenjian@126.com>
+To: stable@vger.kernel.org
+Cc: axboe@kernel.dk,
+	stable@kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanggenjian123@gmail.com,
+	Martijn Coenen <maco@android.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Genjian Zhang <zhanggenjian@kylinos.cn>
+Subject: [PATCH 4.19.y 7/9] loop: Factor out configuring loop from status
+Date: Fri,  1 Mar 2024 09:30:26 +0800
+Message-Id: <20240301013028.2293831-8-zhanggenjian@126.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240301013028.2293831-1-zhanggenjian@126.com>
+References: <20240301013028.2293831-1-zhanggenjian@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <SEZPR06MB69598A991B4CCF633E764CE7965F2@SEZPR06MB6959.apcprd06.prod.outlook.com>
-References: <20240224-mux-v1-1-608cc704ef43@outlook.com> <0db752d31016823ccd3799925255a74a.sboyd@kernel.org> <SEZPR06MB69597E78EA08D5BDF66DBEBC965F2@SEZPR06MB6959.apcprd06.prod.outlook.com> <f8bcec654f618f8639a882bf70273618.sboyd@kernel.org> <SEZPR06MB69598A991B4CCF633E764CE7965F2@SEZPR06MB6959.apcprd06.prod.outlook.com>
-Subject: Re: [PATCH RESEND] clk: set initial best mux parent to current parent when determining rate
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Yang Xiwen <forbidden405@outlook.com>, Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Thu, 29 Feb 2024 17:42:25 -0800
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDn7+APMOFlZSfbBA--.18054S11
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCF4xZr43Jw1UJFWDWF43Awb_yoWrtF4rpF
+	sIgFyYyrWFqF1xWF45tw4kWFW5G3Wjk347Cry7J34jkr1jvr9Iq34akryjga97JryDua4Y
+	qa98tF1ruryjkFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UHCJQUUUUU=
+X-CM-SenderInfo: x2kd0wxjhqyxldq6ij2wof0z/1tbiHh6UfmV2z7wVYAAAs-
 
-Quoting Yang Xiwen (2024-02-28 18:33:11)
-> On 2/29/2024 10:25 AM, Stephen Boyd wrote:
-> >>>
-> >>> Is the problem that we're not using abs_diff()?
-> >>
-> >>
-> >> No, i think. It has nothing to do with the code here. It's because of
-> >> the initial best_parent/best_parent_rate.
-> >=20
-> > Alright.
+From: Martijn Coenen <maco@android.com>
 
-I will have to fix this as well in a different patch.
+[ Upstream commit 0c3796c244598122a5d59d56f30d19390096817f ]
 
-> >=20
-> >>
-> >>>
-> >>> ----8<----
-> >>> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> >>> index a3bc7fb90d0f..91023345595f 100644
-> >>> --- a/drivers/clk/clk.c
-> >>> +++ b/drivers/clk/clk.c
-> >>> @@ -542,7 +542,7 @@ static bool mux_is_better_rate(unsigned long rate=
-, unsigned long now,
-> >>>                          unsigned long best, unsigned long flags)
-> >>>  {
-> >>>       if (flags & CLK_MUX_ROUND_CLOSEST)
-> >>> -             return abs(now - rate) < abs(best - rate);
-> >>> +             return abs_diff(now, rate) < abs_diff(best, rate);
-> >>
-> >> Without this patch, the initial `best` rate would be always 0. This is
-> >> wrong for most cases, 0Hz might (usually) be unavailable. We should use
-> >> a valid rate(i.e. current rate) initially.
-> >=20
-> > Ok. But you set best to the parent rate. So why not use 'core->rate'
-> > directly as 'best'?
->=20
->=20
-> I can't remember exactly. I just add this piece of code and found it's
-> working. Is this field already filled prior to setting rate? Anyway,
-> your suggestion is very reasonable. Maybe dear clk maintainers can fix
-> it as i'm not familiar with clk core code.
+Factor out this code into a separate function, so it can be reused by
+other code more easily.
 
-Yes the 'struct clk_rate_request' is pre-filled with many details,
-including the rate of the clk and the current parent rate and parent hw
-pointer. I'm pretty sure you're trying to fix this fixme from clk_test.c
+Signed-off-by: Martijn Coenen <maco@android.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
+---
+ drivers/block/loop.c | 117 +++++++++++++++++++++++++------------------
+ 1 file changed, 67 insertions(+), 50 deletions(-)
 
-static const struct clk_ops clk_dummy_single_parent_ops =3D {
-	/*
-	 * FIXME: Even though we should probably be able to use
-	 * __clk_mux_determine_rate() here, if we use it and call
-	 * clk_round_rate() or clk_set_rate() with a rate lower than
-	 * what all the parents can provide, it will return -EINVAL.
-	 *
-	 * This is due to the fact that it has the undocumented
-	 * behaviour to always pick up the closest rate higher than the
-	 * requested rate. If we get something lower, it thus considers
-	 * that it's not acceptable and will return an error.
-	 *
-	 * It's somewhat inconsistent and creates a weird threshold
-	 * between rates above the parent rate which would be rounded to
-	 * what the parent can provide, but rates below will simply
-	 * return an error.
-	 */
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 7a0461a6160b..0fefd21f0c71 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1231,75 +1231,43 @@ static int loop_clr_fd(struct loop_device *lo)
+ 	return __loop_clr_fd(lo, false);
+ }
+ 
++/**
++ * loop_set_status_from_info - configure device from loop_info
++ * @lo: struct loop_device to configure
++ * @info: struct loop_info64 to configure the device with
++ *
++ * Configures the loop device parameters according to the passed
++ * in loop_info64 configuration.
++ */
+ static int
+-loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
++loop_set_status_from_info(struct loop_device *lo,
++			  const struct loop_info64 *info)
+ {
+ 	int err;
+ 	struct loop_func_table *xfer;
+ 	kuid_t uid = current_uid();
+-	struct block_device *bdev;
+-	bool partscan = false;
+-	bool size_changed = false;
+-
+-	err = mutex_lock_killable(&loop_ctl_mutex);
+-	if (err)
+-		return err;
+-	if (lo->lo_encrypt_key_size &&
+-	    !uid_eq(lo->lo_key_owner, uid) &&
+-	    !capable(CAP_SYS_ADMIN)) {
+-		err = -EPERM;
+-		goto out_unlock;
+-	}
+-	if (lo->lo_state != Lo_bound) {
+-		err = -ENXIO;
+-		goto out_unlock;
+-	}
+-	if ((unsigned int) info->lo_encrypt_key_size > LO_KEY_SIZE) {
+-		err = -EINVAL;
+-		goto out_unlock;
+-	}
+-
+-	if (lo->lo_offset != info->lo_offset ||
+-	    lo->lo_sizelimit != info->lo_sizelimit) {
+-		size_changed = true;
+-		sync_blockdev(lo->lo_device);
+-		invalidate_bdev(lo->lo_device);
+-	}
+ 
+-	/* I/O need to be drained during transfer transition */
+-	blk_mq_freeze_queue(lo->lo_queue);
+-
+-	if (size_changed && lo->lo_device->bd_inode->i_mapping->nrpages) {
+-		/* If any pages were dirtied after invalidate_bdev(), try again */
+-		err = -EAGAIN;
+-		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-			__func__, lo->lo_number, lo->lo_file_name,
+-			lo->lo_device->bd_inode->i_mapping->nrpages);
+-		goto out_unfreeze;
+-	}
++	if ((unsigned int) info->lo_encrypt_key_size > LO_KEY_SIZE)
++		return -EINVAL;
+ 
+ 	err = loop_release_xfer(lo);
+ 	if (err)
+-		goto out_unfreeze;
++		return err;
+ 
+ 	if (info->lo_encrypt_type) {
+ 		unsigned int type = info->lo_encrypt_type;
+ 
+-		if (type >= MAX_LO_CRYPT) {
+-			err = -EINVAL;
+-			goto out_unfreeze;
+-		}
++		if (type >= MAX_LO_CRYPT)
++			return -EINVAL;
+ 		xfer = xfer_funcs[type];
+-		if (xfer == NULL) {
+-			err = -EINVAL;
+-			goto out_unfreeze;
+-		}
++		if (xfer == NULL)
++			return -EINVAL;
+ 	} else
+ 		xfer = NULL;
+ 
+ 	err = loop_init_xfer(lo, xfer, info);
+ 	if (err)
+-		goto out_unfreeze;
++		return err;
+ 
+ 	lo->lo_offset = info->lo_offset;
+ 	lo->lo_sizelimit = info->lo_sizelimit;
+@@ -1326,6 +1294,55 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		lo->lo_key_owner = uid;
+ 	}
+ 
++	return 0;
++}
++
++static int
++loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
++{
++	int err;
++	struct block_device *bdev;
++	kuid_t uid = current_uid();
++	bool partscan = false;
++	bool size_changed = false;
++
++	err = mutex_lock_killable(&loop_ctl_mutex);
++	if (err)
++		return err;
++	if (lo->lo_encrypt_key_size &&
++	    !uid_eq(lo->lo_key_owner, uid) &&
++	    !capable(CAP_SYS_ADMIN)) {
++		err = -EPERM;
++		goto out_unlock;
++	}
++	if (lo->lo_state != Lo_bound) {
++		err = -ENXIO;
++		goto out_unlock;
++	}
++
++	if (lo->lo_offset != info->lo_offset ||
++	    lo->lo_sizelimit != info->lo_sizelimit) {
++		size_changed = true;
++		sync_blockdev(lo->lo_device);
++		invalidate_bdev(lo->lo_device);
++	}
++
++	/* I/O need to be drained during transfer transition */
++	blk_mq_freeze_queue(lo->lo_queue);
++
++	if (size_changed && lo->lo_device->bd_inode->i_mapping->nrpages) {
++		/* If any pages were dirtied after invalidate_bdev(), try again */
++		err = -EAGAIN;
++		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
++			__func__, lo->lo_number, lo->lo_file_name,
++			lo->lo_device->bd_inode->i_mapping->nrpages);
++		goto out_unfreeze;
++	}
++
++	err = loop_set_status_from_info(lo, info);
++	if (err)
++		goto out_unfreeze;
++
+ 	if (size_changed) {
+ 		loff_t new_size = get_size(lo->lo_offset, lo->lo_sizelimit,
+ 					   lo->lo_backing_file);
+-- 
+2.25.1
+
