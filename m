@@ -1,224 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C615B848E
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C9E46B3;
+	Fri,  1 Mar 2024 17:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314332; cv=none; b=Eedr8pKAOhGxeFeV/Q8yRnHAxV6DWsT0YkgqITigUAp7q9aOCBaWyNCOeaxFNthJCElQTRSdFrg+wsToQKK7GHheewtk5VEnilBuY+TRB8oysF6Y1NTWI82CF9vF0/1VKmnolq10Y8iGlRYXap+MZqiqnJ9NIKT5aGhBadHSv5U=
+	t=1709314409; cv=none; b=GW9ZuZj8ktvG0s6/LUkeKHADvn8/Y7/mPwLAVEC5XJZdVMeZQMmrtlNshmrRm5wpeElNNVSRKdHDZVkZmwbpFY7pFQi9QknhQEX467htk0p0gzG9IlraZurUHxBqRh3ABgLBzV/cvKN6d0XPxkaWZy1HOASMYsW2qfuG7a0cTyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314332; c=relaxed/simple;
-	bh=jBebuAM7MTN0IvFU0ynJehpaFTr/gem9EsTMn+pXQFI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=I/mHVw7QmOYQaIDfX9dWo7LXyDQqMF53NxICRAQGE0TJfXeG1uYLJxfmuRboRPWiv8ViZWi8MAUxD0it5ftXPjXXNM0Hv6xrBuLOJn+lp36qxXEwNOwwQoAhpq4+SBKkjb+fUhWgFoL/nTECeX4Bojx3FpnmgcUMAHsF8qe0AUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kX+vtYS5; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709314409; c=relaxed/simple;
+	bh=IYsBs/BhF0iz0VJZYgI9tkngj+zz1RnNDtdkOfgCrfU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lsgUVe844TUH0cxP9Z0EuIEeWsCW9uHL1K3F/nfM0jBXbS3rqXH9gvpwvLiRTLPQgzub94LzzTP6EqmgAhWSy1vi5L+nBm8qPzyOXq0zkRxvMLQMW9bVMAUnyknxCh8tBGGb4Aua/wqNsH+peHSZovvhp/ZSM/TnoEdQ2GDGSUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohI/dcuw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kX+vtYS5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709314329; x=1740850329;
-  h=date:from:to:cc:subject:message-id;
-  bh=jBebuAM7MTN0IvFU0ynJehpaFTr/gem9EsTMn+pXQFI=;
-  b=kX+vtYS5dkxJUkQOA+el6eWlm4SsprJUOlXs+oTcu3ylaqRwj6qYKsoh
-   ioT6q0GdpyWMaqsP5qCHDEwW4znKmIaTXxpjKoz57HtVtZBJkumLZOAZ3
-   IK09rUxAmi1XJNWEWflLXakZd0+8A95fntp1ExGarFd2bi6pMWt6PGyQp
-   3cWpFOpQjJJ54pPh32cRSh9ygobWIfZ676mj/dHlgSmuMOdOkcQW0P18I
-   Qv/OVakQVz75kIrtK27tw4330Y6hwpDii/BH9LpDtL2GIZB45UWZq7sKM
-   Ap0zs2h+gIdVcYO5jwgF5po4HGJNvI+5yWlTt61Tfk0Tuh2BnnIOwMbPg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="7681653"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="7681653"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:32:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="39106287"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 01 Mar 2024 09:32:08 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rg6jt-000E0b-2g;
-	Fri, 01 Mar 2024 17:32:05 +0000
-Date: Sat, 02 Mar 2024 01:30:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/WFAMNAE-next20240229] BUILD SUCCESS
- 94c8b1ae352725e95b0e1fa55b6fb5c4b36f0499
-Message-ID: <202403020145.zzwCKgOR-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohI/dcuw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 29683C433F1;
+	Fri,  1 Mar 2024 17:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709314409;
+	bh=IYsBs/BhF0iz0VJZYgI9tkngj+zz1RnNDtdkOfgCrfU=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=ohI/dcuwZZ8j8UU5LDwFfoF/l4sfTNfbRCxGn7UllwL66Rc8ZJtrL6bo8W/19jDfH
+	 jBRh2AufqQjOAqYdkOzXQfxvERgNTD/xn4/V9jJOSl/RS+rBIKmf71lq2WhBC13UBK
+	 r9UmnijYyGhfZ1V+2kK7ZOkYLumV0oUZYcTxhQWR1VpVNBtTMJ36ZX0QwJyttkbJHk
+	 rPjczjYzmX9h9XC07rEyqzaHjEjMosZ1IYhh8N7mMDy6WyHm6SVIJ2pe4pLvKhQgLH
+	 pnXqN3oLIsMUk/8blYwAbAfUZ/eaVYjNkVS75oLjmwe9i/OO/s166VVLK7j1ys76L6
+	 3UvFDUYeqatyQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1460AC5475B;
+	Fri,  1 Mar 2024 17:33:29 +0000 (UTC)
+From:
+ Mathys-Gasnier via B4 Relay <devnull+mathys35.gasnier.gmail.com@kernel.org>
+Date: Fri, 01 Mar 2024 18:33:23 +0100
+Subject: [PATCH v5] rust: locks: Add `get_mut` method to `Lock`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240301-rust-locks-get-mut-v5-1-c5131dbbd3c4@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAGIR4mUC/23NQQ6CMBCF4auYrq3pTItFV97DuCjTARsFTItEY
+ 7i7VTfEsPxfMt+8ROIYOIn96iUijyGFvstRrFeCzq5rWAafW6BCowBKGe9pkNeeLkk2PMj2Pkg
+ yqCyCAm+dyIe3yHV4fNHjKfc5pKGPz++PET7rj0O1W+JGkCCJdQE1ac/GHprWheuG+lZ8uBFnB
+ OAigZkoiLw2hJVV1T+hZwQuEzoTXpduW5vKs/b/hJkT20XCZAKNq+rCWmVdOSemaXoDEqxKv30
+ BAAA=
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Wedson Almeida Filho <wedsonaf@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@samsung.com>, 
+ Alice Ryhl <aliceryhl@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
+ Mathys-Gasnier <mathys35.gasnier@gmail.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709314408; l=3361;
+ i=mathys35.gasnier@gmail.com; s=20240118; h=from:subject:message-id;
+ bh=YgqZEuEg7qPEU8LNGXge52fKNIIVVzwOHPlT4tjNiao=;
+ b=L+sGaDcR7Vjd5mjM+tfqElKX2By5PtqYuLSS2MnvAbyQwx6h3pfgD5m/D0VbWzmKEhmdgVaU8
+ gTFLD+1PsWVCUM/0nezEu0MMtJPvv60XtMhOs7USiOCY7eJd7RPfLpx
+X-Developer-Key: i=mathys35.gasnier@gmail.com; a=ed25519;
+ pk=C5tqKAA3Ua7li5s3a+q2aDelT2j98/yjGg2nEVGArXE=
+X-Endpoint-Received:
+ by B4 Relay for mathys35.gasnier@gmail.com/20240118 with auth_id=129
+X-Original-From: Mathys-Gasnier <mathys35.gasnier@gmail.com>
+Reply-To: <mathys35.gasnier@gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/WFAMNAE-next20240229
-branch HEAD: 94c8b1ae352725e95b0e1fa55b6fb5c4b36f0499  RDMA/uverbs: Avoid -Wflex-array-member-not-at-end warning
+From: Mathys-Gasnier <mathys35.gasnier@gmail.com>
 
-elapsed time: 727m
+Having a mutable reference guarantees that no other threads have
+access to the lock, so we can take advantage of that to grant callers
+access to the protected data without the cost of acquiring and
+releasing the locks. Since the lifetime of the data is tied to the
+mutable reference, the borrow checker guarantees that the usage is safe.
 
-configs tested: 151
-configs skipped: 3
+Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Mathys-Gasnier <mathys35.gasnier@gmail.com>
+---
+Changes in v5:
+- Adding example
+- Link to v4: https://lore.kernel.org/r/20240226-rust-locks-get-mut-v4-1-24abf57707a8@gmail.com
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Changes in v4:
+- Improved documentation
+- Link to v3: https://lore.kernel.org/r/20240222-rust-locks-get-mut-v3-1-d38a6f4bde3d@gmail.com
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240301   gcc  
-arc                   randconfig-002-20240301   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240301   gcc  
-arm                   randconfig-002-20240301   clang
-arm                   randconfig-003-20240301   gcc  
-arm                   randconfig-004-20240301   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240301   gcc  
-arm64                 randconfig-002-20240301   clang
-arm64                 randconfig-003-20240301   gcc  
-arm64                 randconfig-004-20240301   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240301   gcc  
-csky                  randconfig-002-20240301   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240301   clang
-hexagon               randconfig-002-20240301   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240301   clang
-i386         buildonly-randconfig-002-20240301   clang
-i386         buildonly-randconfig-003-20240301   gcc  
-i386         buildonly-randconfig-004-20240301   clang
-i386         buildonly-randconfig-005-20240301   clang
-i386         buildonly-randconfig-006-20240301   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240301   clang
-i386                  randconfig-002-20240301   clang
-i386                  randconfig-003-20240301   clang
-i386                  randconfig-004-20240301   clang
-i386                  randconfig-005-20240301   gcc  
-i386                  randconfig-006-20240301   gcc  
-i386                  randconfig-011-20240301   gcc  
-i386                  randconfig-012-20240301   clang
-i386                  randconfig-013-20240301   clang
-i386                  randconfig-014-20240301   gcc  
-i386                  randconfig-015-20240301   gcc  
-i386                  randconfig-016-20240301   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240301   gcc  
-loongarch             randconfig-002-20240301   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240301   gcc  
-nios2                 randconfig-002-20240301   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240301   gcc  
-parisc                randconfig-002-20240301   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240301   gcc  
-powerpc               randconfig-002-20240301   gcc  
-powerpc               randconfig-003-20240301   clang
-powerpc64             randconfig-001-20240301   clang
-powerpc64             randconfig-002-20240301   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240301   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240301   clang
-x86_64       buildonly-randconfig-002-20240301   gcc  
-x86_64       buildonly-randconfig-003-20240301   clang
-x86_64       buildonly-randconfig-004-20240301   gcc  
-x86_64       buildonly-randconfig-005-20240301   clang
-x86_64       buildonly-randconfig-006-20240301   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240301   gcc  
-x86_64                randconfig-002-20240301   clang
-x86_64                randconfig-003-20240301   clang
-x86_64                randconfig-004-20240301   clang
-x86_64                randconfig-005-20240301   gcc  
-x86_64                randconfig-006-20240301   gcc  
-x86_64                randconfig-011-20240301   clang
-x86_64                randconfig-012-20240301   clang
-x86_64                randconfig-013-20240301   clang
-x86_64                randconfig-014-20240301   gcc  
-x86_64                randconfig-015-20240301   clang
-x86_64                randconfig-016-20240301   gcc  
-x86_64                randconfig-071-20240301   gcc  
-x86_64                randconfig-072-20240301   clang
-x86_64                randconfig-073-20240301   gcc  
-x86_64                randconfig-074-20240301   gcc  
-x86_64                randconfig-075-20240301   gcc  
-x86_64                randconfig-076-20240301   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
+Changes in v3:
+- Changing the function to take a `Pin<&mut self>` instead of a `&mut self`
+- Removed reviewed-by's since big changes were made. Please take another
+  look.
+- Link to v2: https://lore.kernel.org/r/20240212-rust-locks-get-mut-v2-1-5ccd34c2b70b@gmail.com
 
+Changes in v2:
+- Improved doc comment. 
+- Link to v1: https://lore.kernel.org/r/20240209-rust-locks-get-mut-v1-1-ce351fc3de47@gmail.com
+---
+ rust/kernel/sync/lock.rs | 38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
+
+diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+index f12a684bc957..345ca7be9d9f 100644
+--- a/rust/kernel/sync/lock.rs
++++ b/rust/kernel/sync/lock.rs
+@@ -7,7 +7,11 @@
+ 
+ use super::LockClassKey;
+ use crate::{bindings, init::PinInit, pin_init, str::CStr, types::Opaque, types::ScopeGuard};
+-use core::{cell::UnsafeCell, marker::PhantomData, marker::PhantomPinned};
++use core::{
++    cell::UnsafeCell,
++    marker::{PhantomData, PhantomPinned},
++    pin::Pin,
++};
+ use macros::pin_data;
+ 
+ pub mod mutex;
+@@ -121,6 +125,38 @@ pub fn lock(&self) -> Guard<'_, T, B> {
+         // SAFETY: The lock was just acquired.
+         unsafe { Guard::new(self, state) }
+     }
++
++    /// Gets the data contained in the lock.
++    ///
++    /// Having a mutable reference to the lock guarantees that no other threads have access to the
++    /// lock. And because `data` is not structurally pinned, it is safe to get a mutable reference
++    /// to the lock content.
++    ///
++    /// # Example
++    ///
++    /// Using `get_mut` with a mutex.
++    ///
++    /// ```
++    /// use kernel::sync::Mutex;
++    ///
++    /// struct Example {
++    ///     a: u32,
++    ///     b: u32,
++    /// }
++    ///
++    /// fn example(m: Pin<&mut Mutex<Example>>) {
++    ///     // Calling from Mutex to avoid conflict with Pin::get_mut().
++    ///     let mut data = Mutex::get_mut(m);
++    ///     data.a += 10;
++    ///     data.b += 20;
++    /// }
++    /// ```
++    pub fn get_mut(self: Pin<&mut Self>) -> &mut T {
++        // SAFETY: The lock will only be used to get a reference to the data, therefore self won't
++        // get moved.
++        let lock = unsafe { self.get_unchecked_mut() };
++        lock.data.get_mut()
++    }
+ }
+ 
+ /// A lock guard.
+
+---
+base-commit: 711cbfc717650532624ca9f56fbaf191bed56e67
+change-id: 20240118-rust-locks-get-mut-c42072101d7a
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Mathys-Gasnier <mathys35.gasnier@gmail.com>
+
