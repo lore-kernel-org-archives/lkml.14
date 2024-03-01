@@ -1,203 +1,484 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D1643AD8;
-	Fri,  1 Mar 2024 14:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709304001; cv=fail; b=SdZkeE6Jm68Tkijskv6KaizWqbYUZIG/lLpWgjEC7hew0t36ID/zohUJ4/mMBFolrU54bAONtIFKiZeFccZ5rlzpVwsF38Hnm8X6QeYQI7Kk9DhB4xpC+SGcWfMJ4pQmWbAgK6ZelYZgHMGahZUgdZGlLEA4mbFwYThiLY7UbpE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709304001; c=relaxed/simple;
-	bh=1wI/ZuIgWuldPl8BVCyreCquuC5I2HMyxkFNRZZXgdU=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=j1p7kryQcofiERKXH6UmrchgwuWgZdJAHns+1a+ZWuLbRfRsqVmPynANjb+KvCX7Ap8pPfa7jxlzeeXsKeu1wTe3FrfOaAgcIZPAnVKYOPWc3zmBgMPn+t+aZgymBvEIcY/7pKeIZYyFWgBgaAbKuqmABGsh9uJH+1hkreCheNs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=OBvXv7My; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=MRLEbWIo; arc=fail smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B6C23AD
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 14:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709304048; cv=none; b=XObfdSbpiPJeRV5IFc4XXjmumxMMU9UBC4g0WEMuiQEpIjN/kGa41S3igcScS4PdF+ZtgA53h3rlJqNwSmjTweIVfxUnG3Kg4yjZL2IZsZYO931HSnKXSJ07e2rgMjnfC1PfoGN1HZYPT5jTCaJIbFzAyDQkUbxD1ATrqHFywqI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709304048; c=relaxed/simple;
+	bh=WMSw5cE6yzpZ/oWRNSEpaFg92NKoKbCJGdB3z7DqFZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3n/AsTF8blIev4PMpJWFbWfyRexu0bwzVKHvYB4YLgT2oXDKKhSve3qRI1IULLnSgCxSxNiNUbIyJvOaGF87PcemQSt3/bgsQqjGC4qbz165+q1pXKLTFrpp3hwK6pqb+Dg7XIR0O70AH4pcOykgxkuWAZn9ye7D/9Z+NWagQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=CvsaHZ1P; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OBvXv7My";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="MRLEbWIo"
-X-UUID: 9064396cd7d911ee935d6952f98a51a9-20240301
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:Message-ID:Date:Subject:CC:To:From; bh=1wI/ZuIgWuldPl8BVCyreCquuC5I2HMyxkFNRZZXgdU=;
-	b=OBvXv7MyLKKkkHgb3rmCiCmCJtA0NHDf8vPALabz9g/gvF41R8MyTPb3zkiMg6Ygaa/6pVERe6DK+vtKRKkhDJV4HMNZaYp9lxOvRaiafONxHI7Ns+9Ba4OrcUAWBRFf+CC3U5DZOo8ijUW2Qto2LL7QcvqXl9iH+ooQXV08v8Q=;
-X-CID-CACHE: Type:Local,Time:202403012239+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:07c51b4c-53ca-4201-b812-33a3e4d6e776,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6f543d0,CLOUDID:7b678184-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 9064396cd7d911ee935d6952f98a51a9-20240301
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
-	(envelope-from <lena.wang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1953996615; Fri, 01 Mar 2024 22:39:52 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 1 Mar 2024 22:39:50 +0800
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 1 Mar 2024 22:39:50 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mZgMCDQtlS3bzNwvtP0VuP3FPNBXlYnsv7xSEEZ9oFPrrHqy7yvtkw4+eYvlSeWL7N3O9iK1etWiSjdddH9vSuE0HIMabJ3XScmRinSc09oMNZH07QfhEMIHtidd7LlX0l1z8jZGtM39W6fVegE17efNB6eJDBHuQm6X9nv29KXkVXupdEdsdl5rp+yprFDKa3sWZs1L/r5UIWC//5rJXAuVWOR57avRGtu47g97fLJAtO8eSk0+C9aKUNSYWDxV3NM7cvarbUvkSFbwHWVHcNodMiBRoKUFf18f3Kgnzuu1rqbw9AEubNmGZK4ugnkWeTIiGgwiDJHRnTj52NN03g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1wI/ZuIgWuldPl8BVCyreCquuC5I2HMyxkFNRZZXgdU=;
- b=adsONNBFu0D0iWTOvABQIc1TPODFEOtZp3y92Iq/4qomZpBOHfcxSj1Wl3pasYX4wFgsCCKJgym9Y3srKZkAmQ+OO/bouUSuq4PKk3CTT6cElHnMexnWbsvX3vow0qKMIHB0VFhiuuLJypLG02k2KOXdUK6ZQ6uj3mH/HrfaAbRc3kb9ond9MHI7Inmp4BiFY+xgmj1mnIPRoGDbXaJx6dWf6KlapWzgOC4XNR3CU1QJTimslMbjQpBwnIxQeho8xazHxga2vV/Sl9IMbdHe+uVR+TOO8qWYy11dDGIDm5JMsORncjdz+yYbDZM7UtC1ocoQafavEc/825QGeT2cVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="CvsaHZ1P"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3392b12dd21so1334496f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 06:40:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1wI/ZuIgWuldPl8BVCyreCquuC5I2HMyxkFNRZZXgdU=;
- b=MRLEbWIoh65ku5AiHHSgbfNuZ0N1muF+/kfyRkcu2KGs5e7QHtTmyFfrDo2LO84eH/2vOnWntDtcFNVxZN0QNOr/JbGLEg4S0tIV2V82iuyr7bN4OJEruY1vWKp6Ynyf8+fHSKfPbdTv546LDTavzWeeTMbJA8V7Zi0pRkB4PqA=
-Received: from SI2PR03MB6463.apcprd03.prod.outlook.com (2603:1096:4:1a3::9) by
- SEYPR03MB6904.apcprd03.prod.outlook.com (2603:1096:101:b1::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7316.41; Fri, 1 Mar 2024 14:39:46 +0000
-Received: from SI2PR03MB6463.apcprd03.prod.outlook.com
- ([fe80::c74b:551:1197:a8c9]) by SI2PR03MB6463.apcprd03.prod.outlook.com
- ([fe80::c74b:551:1197:a8c9%5]) with mapi id 15.20.7316.039; Fri, 1 Mar 2024
- 14:39:46 +0000
-From: =?utf-8?B?TGVuYSBXYW5nICjnjovlqJwp?= <Lena.Wang@mediatek.com>
-To: "kuba@kernel.org" <kuba@kernel.org>, "davem@davemloft.net"
-	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "jiri@resnulli.us"
-	<jiri@resnulli.us>, "dsahern@kernel.org" <dsahern@kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	=?utf-8?B?U2hpbWluZyBDaGVuZyAo5oiQ6K+X5piOKQ==?= <Shiming.Cheng@mediatek.com>
-Subject: [PATCH net v4] ipv6: fib6_rules: flush route cache when rule is
- changed
-Thread-Topic: [PATCH net v4] ipv6: fib6_rules: flush route cache when rule is
- changed
-Thread-Index: AQHaa+ZOlmtrqOmtQEu54Vg0yp9zeQ==
-Date: Fri, 1 Mar 2024 14:39:46 +0000
-Message-ID: <09f2ab1b7946339da5092e10aa216e07c579c60b.camel@mediatek.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SI2PR03MB6463:EE_|SEYPR03MB6904:EE_
-x-ms-office365-filtering-correlation-id: fcf5b3e3-176f-40bc-9702-08dc39fd70d3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: N4b+kuMGbZOc5+9+wvLlZ3M4xTOSY+pGiEq9euUOwzZjaUeUgpgA2jRUH5hjA7h6C9T7aDhX9jHIgm1xD6UD1i1zFnaW9VmqLbWwuxytOeHhG+IYZ5kbOZZBKV4PkIIe5pSGsxq6I6N1ey7IOGbQSuqjoOp+1C6/pY8SHTziMFERqEQaSsPkRAdBBv1H4Tx8ogs4FmdTXQYSHsOxKhrq0zcC/F+IrNiGBttcYR9zARhJTZqnNhqZN/ZyUW+GXVFK8ZKK6xmKPxgA0wBrINRruejmm+a6r4Vq5bQqaHAaH1vrj/LFwmIafhBuq1gAC8DwhlnplMMNur3nnmA+P9WFhMRO0DRUNOE9NZqnn1aiOsB5hG4K4Ji70j6aNvF097ZoI/ICBSf8tiETXtyGQHW4EVrYS8tPSzLcOK25NulwO3r++gsw7Zd5BpCe8f7bzyP1P5yinJt+GpEhby/rvC1GlVTuX84srI1x8Jp9WW0klZ2oiwGtjgNFdhKa8npHgwpbrfoTy9IqqeLsuV2Wuy4AKMSsCBRz25kpXYK9W4HeKI8w1JmWgWv7IR0S6fnRlDxLM27mkwG39Qsjz3izf35GhIe8HGx+a7n/ii2WkoPXdEUntnBrjf3TcxD/KrNSgkhdDQRz05213MsMemEOmkiS5r8LiG3Xykfe03CfWBZisrhkKz2bNoh9cBbQGBcAayluq5k+gH9YxcfvePVWRq7euxmjpSvox3SjpSYdv2sD/s8=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR03MB6463.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MkRKQjhHNmUzc2MwKzA0RHBqL1pNcVlvc2lCU2hJMURhUmdUazVraS9aMmZi?=
- =?utf-8?B?U1Q5MElQQjhLOXNPR2M3MHZyckZCSHIyRlp1V29aS2t5MmhBWkhPSGo1WE1H?=
- =?utf-8?B?Y0QvKy8rejhkaEZyUlJrTkxaeDJhL21uMFdOUDNCeCtDcXY2UmxFaXc3UG85?=
- =?utf-8?B?Uk05clg3eTFjZFA3T2M5dHg0NFRTVW9iT2NxeS9vdUltZTVMcFVwdlZjbmlt?=
- =?utf-8?B?NEJnRGloSXZMM29DUDJhaXVKTUdoSlR2VmlVZWRhWTlheThSeEx0WGE0bDBH?=
- =?utf-8?B?dExpUjlMTytFK2J0djk4Y0JzRzlseXYzUStUOTArY2RDNDNWZGxaUkZ2ZzU5?=
- =?utf-8?B?MVZRVTZOTnNRYllNRjFXd0w2WXNkYi9EajQ5Q2lVV2crSHdIUys3UFBwbXdX?=
- =?utf-8?B?NnlXRlk4bmdqY09oOUZoOVUxSjJNcmY4MksyUm02Vk5EZm9TMHBMd3Z2SnRI?=
- =?utf-8?B?NVV6Z3p2dEVwNk8rUXhQS3d5MjJFUnpEVDlyUWJwbC96UkczTTAwUkRDZDRx?=
- =?utf-8?B?Tk1xcHpyVFZibjEraGx5MXUrMDhpT0tYQWpaVDd6TGdLVTl4a2RQUElaakh1?=
- =?utf-8?B?Q0lRaDlCUnpJdTZhd1RMMGgyS1g1S3ByUFRlbTZZTlQyUzdOMDN3QkZZZndG?=
- =?utf-8?B?RytEcHpMVmJvcTBLZC80enZhNU1LTzdLL0M3NFdxUXRpSnJVZUFtL3JUYmpS?=
- =?utf-8?B?R3hhU2ZtSUFISTJmbmZMQ2ZwbXFWNHBLQnh4bzllOXBqUDZDV05HdzM2UUta?=
- =?utf-8?B?VWFNaXNiWk5qSUtjalBFK0NGRnYrVmZqOWhzNzBDQVVMcE1KQkxoQ21TRE9R?=
- =?utf-8?B?RlRpRnc5UUdBcVNZQXpJREgrZldlckpPMk93OTdWYXlLaGIyMjBEZW5OV0dO?=
- =?utf-8?B?dHN6UGU4K0xhWWI5a00ySzBmVURuREdZV2ZIMGlTMlVWdFljUDNrS05kenZy?=
- =?utf-8?B?blh3ZVpHRTZ0Q1VZVWhGWTdZZTZjVGZyeGduWmdKNEtURVNxNi9ad0hQNjBH?=
- =?utf-8?B?Q1hKK1VPeVVDK0h1QXdYOHgrSm5UdVB5TWpjODdzZkhKa2lJMngvQjc4bGpo?=
- =?utf-8?B?THU4Y0JGY0VZelBHOXhnRDZ5N2tZai9JRHZFTmFaTVdnSTNmZ2JWM1NQYWNq?=
- =?utf-8?B?UHd4eGxpREJqMmo2bFFONVFpM1NaWDNzWjFtd1BkZkFzUXozV2xzTWsyclpi?=
- =?utf-8?B?MkRoaXo5TDJFRGcxa0NwNkZFTGQrMDVJeWpFZFI0VFV3eEJuTSs4dFJkR2I5?=
- =?utf-8?B?czZkdHZVaTUwZkpBOXFLV1o1UndDTzVIMlZZRnpZQ0F3eFI4bTlaT2psSnVo?=
- =?utf-8?B?bFdKYWJ3V0YwTGorODdwOGdpMHd5Q0Yvai9WTEVxK3EyUGhlY2FPNGczSFpB?=
- =?utf-8?B?Sk5FWjEyVHZ2RGVHRXNTQ1NvcmVvQVBvQnduMUFuUitVZHFMQ2M4SzBic0gy?=
- =?utf-8?B?M2lta1VCNTNGWGpST2JyQWlmWGovYVlaSHVNTDNpWkp0K0FkZElqUzAyTlFs?=
- =?utf-8?B?Wjk2VVFjeVhSQVFwMis2bVJVaDhuSFdJM00xOVJoVXBwdlJMSit5dEF0REho?=
- =?utf-8?B?eEhveXFMdGlPcmpkRFBXdTB3Mm5nUlVZR0F1ckxkcXJNWHN3N2FLMGpEL2pl?=
- =?utf-8?B?S3BVUUdJYzJYZXIvQTVNKzdRYndyOGtPbXM5ODlXaTVhMzRsakROZEpqeG1M?=
- =?utf-8?B?clRrN1BSZnJBL3JlL2ZVeUhvRmpwb1NmOW5MUVlZTE5zRWNDNWFVenBudnBZ?=
- =?utf-8?B?bHRIeEx5VlNCUnVITStWV2JlSlFMSFRSS2FlQllUZjBZRlNORWV1S0JPdkh3?=
- =?utf-8?B?V2wraHlQSXBsNDZvYmtXZTN1N3EvNWZzZXZlaWhEOFZlQTFZSFFkRjdOTENF?=
- =?utf-8?B?VEFGaFlvZVhrb1B5UnNWZkYxQm9LY3JBTWt6NnUxanV2cEN2K2pZL0Fkcjdr?=
- =?utf-8?B?aExDTFBLRVM3MG4zSnZJVE1MVU15MGJqekd0TnRDRlJiNjkxNzVSTFJiV2hp?=
- =?utf-8?B?TlRqTXRWUVRoV01uRUQ5VFEzNk1ER3VHWkRLMWJ3K2V4cXpFYWZaVTdWZWlW?=
- =?utf-8?B?MmU5ZVd3OFRYLys0bngxbU1neWlvVlVja3VmSlY3RCtCTWhPR0pYUXUvVklZ?=
- =?utf-8?B?U1JaSGhURy9jVHo0RHJqNENjb2w4QzBaalV2L0xxSmFCdUJhamZqWmJYaDEv?=
- =?utf-8?B?TFE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CD6E3755464C6F469DA48DC129FAB3F5@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=ventanamicro.com; s=google; t=1709304044; x=1709908844; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/fH9e4Y+5VSjP/Y4cR8MCnV8KGx8N82MLsMiROFh7zo=;
+        b=CvsaHZ1PdE3b02RO7Ftl9n1EuxN+/jq1XS4KjJpeLJmPQVbVUI/2RGl0CbgAYvwzMN
+         +0HfgJ2jEQtkGSn9rhwxyVgQ2tNVYif44Kk77KWNorfvWcBwWGEq+cxCDd0JmPqOWRAG
+         9mPFFIheBxAAuOf2VmhoSe7GI8kRz6PyY1At3LkPoRYNJbs4sdqv1ndw2S8KWagzWmbi
+         fx6OeA0B+hR93mcGGoNb+Rx2mKHgRra4/vK9Ba3rCc55qVoZ4G/eRcaENC1Yv2weaeOC
+         brCINGBfqahpjot8IppGAmZ9NMS8B4er9+DMsohjREDMj1crSOGuUVgzZ0MdFWdqe6f9
+         J5Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709304044; x=1709908844;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/fH9e4Y+5VSjP/Y4cR8MCnV8KGx8N82MLsMiROFh7zo=;
+        b=T03h0z7Gcl71ynHBxeTBrxsiF4c/gaEH9OaNWp+Vw1ljdu5s4DSqVJc7xqUdjJRryM
+         xBJgLSgi61CsmhQcUl2mSl7YRAXOW1XtBo4VH2VmQtHtP9X9tmOsdvgFsDAqzLLheO+A
+         hqR7TEbwyb9mLcw1YL2uENfmLYaxUqP7omSiJrdnS9U3+wc1wV1TSTRJu+7hXZL5w8+o
+         7wqKfmoov1Bnrg8MaP8IrlzZ2pz8+S7qhNuZqG+YpCR5EqA2BorBDQUuVFeiw5W+CVLK
+         GP1Q9H/JIR4g/LfH58heltx+C6nDeT4abCNVK2vB2k7fABJoyb6upw4Cl71XAkkkPI5k
+         7Jrg==
+X-Gm-Message-State: AOJu0YxJJUeap/SeM52qE0MjZEn2waSsDFUZbo1elq3schVC4JWTzEEO
+	UvDr7yT54a6iSEYkzA4FwmLUrXJZjUBiaDaIPFLbFYeGfSjP/vi6QE7jo+/HIY0=
+X-Google-Smtp-Source: AGHT+IFYJjdmIlrg4fK3WoCRNzoK5W1dEpib8k88k8LxEH9B8Q+MpB4/nMVejEIsAdEv356F0HcTVw==
+X-Received: by 2002:a5d:550c:0:b0:33e:cc6:e6b5 with SMTP id b12-20020a5d550c000000b0033e0cc6e6b5mr1492380wrv.23.1709304044512;
+        Fri, 01 Mar 2024 06:40:44 -0800 (PST)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id co24-20020a0560000a1800b0033da4b06632sm4870668wrb.6.2024.03.01.06.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 06:40:44 -0800 (PST)
+Date: Fri, 1 Mar 2024 15:40:43 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>, 
+	Anup Patel <anup@brainfault.org>, Conor Dooley <conor.dooley@microchip.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Atish Patra <atishp@atishpatra.org>, Guo Ren <guoren@kernel.org>, Icenowy Zheng <uwu@icenowy.me>, 
+	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Shuah Khan <shuah@kernel.org>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 05/15] drivers/perf: riscv: Implement SBI PMU snapshot
+ function
+Message-ID: <20240301-9587f1bcaa6b25b1dcc7062e@orel>
+References: <20240229010130.1380926-1-atishp@rivosinc.com>
+ <20240229010130.1380926-6-atishp@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SI2PR03MB6463.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcf5b3e3-176f-40bc-9702-08dc39fd70d3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2024 14:39:46.2130
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Pb2Q3gIw/6uLuhAm4z09yOtG7C2vgM0fEM2lboblzqAvC67nyeBLk5BXbfsxjKrkeyJusgOPJ5SFvbBb4IL4AA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB6904
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--4.350300-8.000000
-X-TMASE-MatchedRID: 0WNpcueVtr5KgFU/G9flJJD6BbDN9+jOYQXxsZnRwoIXdhT0BAdFzset
-	ivb6XlQxK5BT0yfou/uGbUz6XveLzjRLrEWBxI92T7jCYv2QJPGBHKTJ+sfXGfgnJH5vm2+gxsr
-	6m7RljBGi+5bTokBGbwG2ORx9Eyap0H/zLeBgX2+Sa1tNw2nFhPhs+N+bSEhBdow/ybqqTpJsKk
-	k6TlZET7DVfJtjpo/VkZOl7WKIImrS77Co4bNJXbq9UFRTJ0kKxEHRux+uk8ifEzJ5hPndGabAl
-	nVWE5jintGRmrM/4XxQhfyspTgOBueQr5hu0jq2aaRt/SWgFUy4iKxJ3a9x9ir8zqbLIYsuynnS
-	/I7E9onn1Y0o3DUz8lZpsTgWmBmFE440GA1tXyvUoWT7XIVDwsFvg0QncNcfVlxr1FJij9s=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--4.350300-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	1DDF6867E5AF02883D6365977BDD687ABECDEC2D033356FA1B31C136D38D72532000:8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229010130.1380926-6-atishp@rivosinc.com>
 
-RnJvbTogU2hpbWluZyBDaGVuZyA8c2hpbWluZy5jaGVuZ0BtZWRpYXRlay5jb20+DQoNCldoZW4g
-cnVsZSBwb2xpY3kgaXMgY2hhbmdlZCwgaXB2NiBzb2NrZXQgY2FjaGUgaXMgbm90IHJlZnJlc2hl
-ZC4NClRoZSBzb2NrJ3Mgc2tiIHN0aWxsIHVzZXMgYSBvdXRkYXRlZCByb3V0ZSBjYWNoZSBhbmQg
-d2FzIHNlbnQgdG8NCmEgd3JvbmcgaW50ZXJmYWNlLg0KDQpUbyBhdm9pZCB0aGlzIGVycm9yIHdl
-IHNob3VsZCB1cGRhdGUgZmliIG5vZGUncyB2ZXJzaW9uIHdoZW4NCnJ1bGUgaXMgY2hhbmdlZC4g
-VGhlbiBza2IncyByb3V0ZSB3aWxsIGJlIHJlcm91dGUgY2hlY2tlZCBhcw0Kcm91dGUgY2FjaGUg
-dmVyc2lvbiBpcyBhbHJlYWR5IGRpZmZlcmVudCB3aXRoIGZpYiBub2RlIHZlcnNpb24uDQpUaGUg
-cm91dGUgY2FjaGUgaXMgcmVmcmVzaGVkIHRvIG1hdGNoIHRoZSBsYXRlc3QgcnVsZS4NCg0KRml4
-ZXM6IDEwMTM2N2MyZjhjNCAoIltJUFY2XTogUG9saWN5IFJvdXRpbmcgUnVsZXMiKQ0KU2lnbmVk
-LW9mZi1ieTogU2hpbWluZyBDaGVuZyA8c2hpbWluZy5jaGVuZ0BtZWRpYXRlay5jb20+DQpTaWdu
-ZWQtb2ZmLWJ5OiBMZW5hIFdhbmcgPGxlbmEud2FuZ0BtZWRpYXRlay5jb20+DQotLS0NCnY0OiAN
-CiAgLSBhZGQgIkZpeGVzOiIgdGFnLg0KICAtIHVwZGF0ZSBzdWJqZWN0IGFzIHJlcXVlc3RlZC4g
-DQp2MzogDQogIC0gdXBkYXRlIHBhdGNoIGRlc2NyaXB0aW9uIGFuZCBuYW1lIGZvcm1hdCBpbiBj
-b21taXQgbWVzc2FnZS4NCnYyOiANCiAgLSBtb2RpZnkgZmx1c2ggZnVuY3Rpb24gc2FtZSB3YXkg
-YXMgaXB2NCBmbHVzaCBjYWNoZS4NCiAgLSB1c2UgdGFicyB0byBhbGlnaCB3aXRoIGV4aXN0aW5n
-IGNvZGUuDQotLS0NCi0tLQ0KIG5ldC9pcHY2L2ZpYjZfcnVsZXMuYyB8IDYgKysrKysrDQogMSBm
-aWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvbmV0L2lwdjYvZmli
-Nl9ydWxlcy5jIGIvbmV0L2lwdjYvZmliNl9ydWxlcy5jDQppbmRleCA3NTIzYzRiYWVmMzUuLjUy
-YzA0ZjBhYzQ5OCAxMDA2NDQNCi0tLSBhL25ldC9pcHY2L2ZpYjZfcnVsZXMuYw0KKysrIGIvbmV0
-L2lwdjYvZmliNl9ydWxlcy5jDQpAQCAtNDQ5LDYgKzQ0OSwxMSBAQCBzdGF0aWMgc2l6ZV90IGZp
-YjZfcnVsZV9ubG1zZ19wYXlsb2FkKHN0cnVjdA0KZmliX3J1bGUgKnJ1bGUpDQogCSAgICAgICAr
-IG5sYV90b3RhbF9zaXplKDE2KTsgLyogc3JjICovDQogfQ0KIA0KK3N0YXRpYyB2b2lkIGZpYjZf
-cnVsZV9mbHVzaF9jYWNoZShzdHJ1Y3QgZmliX3J1bGVzX29wcyAqb3BzKQ0KK3sNCisJcnRfZ2Vu
-aWRfYnVtcF9pcHY2KG9wcy0+ZnJvX25ldCk7DQorfQ0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-ZmliX3J1bGVzX29wcyBfX25ldF9pbml0Y29uc3QNCmZpYjZfcnVsZXNfb3BzX3RlbXBsYXRlID0g
-ew0KIAkuZmFtaWx5CQkJPSBBRl9JTkVUNiwNCiAJLnJ1bGVfc2l6ZQkJPSBzaXplb2Yoc3RydWN0
-IGZpYjZfcnVsZSksDQpAQCAtNDYxLDYgKzQ2Niw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZmli
-X3J1bGVzX29wcyBfX25ldF9pbml0Y29uc3QNCmZpYjZfcnVsZXNfb3BzX3RlbXBsYXRlID0gew0K
-IAkuY29tcGFyZQkJPSBmaWI2X3J1bGVfY29tcGFyZSwNCiAJLmZpbGwJCQk9IGZpYjZfcnVsZV9m
-aWxsLA0KIAkubmxtc2dfcGF5bG9hZAkJPSBmaWI2X3J1bGVfbmxtc2dfcGF5bG9hZCwNCisJLmZs
-dXNoX2NhY2hlCQk9IGZpYjZfcnVsZV9mbHVzaF9jYWNoZSwNCiAJLm5sZ3JvdXAJCT0gUlROTEdS
-UF9JUFY2X1JVTEUsDQogCS5vd25lcgkJCT0gVEhJU19NT0RVTEUsDQogCS5mcm9fbmV0CQk9ICZp
-bml0X25ldCwNCi0tIA0KMi4xOC4wDQo=
+On Wed, Feb 28, 2024 at 05:01:20PM -0800, Atish Patra wrote:
+> SBI v2.0 SBI introduced PMU snapshot feature which adds the following
+> features.
+> 
+> 1. Read counter values directly from the shared memory instead of
+> csr read.
+> 2. Start multiple counters with initial values with one SBI call.
+> 
+> These functionalities optimizes the number of traps to the higher
+> privilege mode. If the kernel is in VS mode while the hypervisor
+> deploy trap & emulate method, this would minimize all the hpmcounter
+> CSR read traps. If the kernel is running in S-mode, the benefits
+> reduced to CSR latency vs DRAM/cache latency as there is no trap
+> involved while accessing the hpmcounter CSRs.
+> 
+> In both modes, it does saves the number of ecalls while starting
+> multiple counter together with an initial values. This is a likely
+> scenario if multiple counters overflow at the same time.
+> 
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  drivers/perf/riscv_pmu.c       |   1 +
+>  drivers/perf/riscv_pmu_sbi.c   | 209 +++++++++++++++++++++++++++++++--
+>  include/linux/perf/riscv_pmu.h |   6 +
+>  3 files changed, 204 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/perf/riscv_pmu.c b/drivers/perf/riscv_pmu.c
+> index 0dda70e1ef90..5b57acb770d3 100644
+> --- a/drivers/perf/riscv_pmu.c
+> +++ b/drivers/perf/riscv_pmu.c
+> @@ -412,6 +412,7 @@ struct riscv_pmu *riscv_pmu_alloc(void)
+>  		cpuc->n_events = 0;
+>  		for (i = 0; i < RISCV_MAX_COUNTERS; i++)
+>  			cpuc->events[i] = NULL;
+> +		cpuc->snapshot_addr = NULL;
+>  	}
+>  	pmu->pmu = (struct pmu) {
+>  		.event_init	= riscv_pmu_event_init,
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index ea0fdb589f0d..8de5721e8019 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -36,6 +36,9 @@ PMU_FORMAT_ATTR(event, "config:0-47");
+>  PMU_FORMAT_ATTR(firmware, "config:63");
+>  
+>  static bool sbi_v2_available;
+> +static DEFINE_STATIC_KEY_FALSE(sbi_pmu_snapshot_available);
+> +#define sbi_pmu_snapshot_available() \
+> +	static_branch_unlikely(&sbi_pmu_snapshot_available)
+>  
+>  static struct attribute *riscv_arch_formats_attr[] = {
+>  	&format_attr_event.attr,
+> @@ -485,14 +488,100 @@ static int pmu_sbi_event_map(struct perf_event *event, u64 *econfig)
+>  	return ret;
+>  }
+>  
+> +static void pmu_sbi_snapshot_free(struct riscv_pmu *pmu)
+> +{
+> +	int cpu;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		struct cpu_hw_events *cpu_hw_evt = per_cpu_ptr(pmu->hw_events, cpu);
+> +
+> +		if (!cpu_hw_evt->snapshot_addr)
+> +			continue;
+> +
+> +		free_page((unsigned long)cpu_hw_evt->snapshot_addr);
+> +		cpu_hw_evt->snapshot_addr = NULL;
+> +		cpu_hw_evt->snapshot_addr_phys = 0;
+> +	}
+> +}
+> +
+> +static int pmu_sbi_snapshot_alloc(struct riscv_pmu *pmu)
+> +{
+> +	int cpu;
+> +	struct page *snapshot_page;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		struct cpu_hw_events *cpu_hw_evt = per_cpu_ptr(pmu->hw_events, cpu);
+> +
+> +		if (cpu_hw_evt->snapshot_addr)
+> +			continue;
+> +
+> +		snapshot_page = alloc_page(GFP_ATOMIC | __GFP_ZERO);
+> +		if (!snapshot_page) {
+> +			pmu_sbi_snapshot_free(pmu);
+> +			return -ENOMEM;
+> +		}
+> +		cpu_hw_evt->snapshot_addr = page_to_virt(snapshot_page);
+> +		cpu_hw_evt->snapshot_addr_phys = page_to_phys(snapshot_page);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void pmu_sbi_snapshot_disable(void)
+> +{
+> +	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM, -1,
+> +		  -1, 0, 0, 0, 0);
+> +}
+> +
+> +static int pmu_sbi_snapshot_setup(struct riscv_pmu *pmu, int cpu)
+> +{
+> +	struct cpu_hw_events *cpu_hw_evt;
+> +	struct sbiret ret = {0};
+> +
+> +	cpu_hw_evt = per_cpu_ptr(pmu->hw_events, cpu);
+> +	if (!cpu_hw_evt->snapshot_addr_phys)
+> +		return -EINVAL;
+> +
+> +	if (cpu_hw_evt->snapshot_set_done)
+> +		return 0;
+> +
+> +	if (IS_ENABLED(CONFIG_32BIT))
+> +		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
+> +				cpu_hw_evt->snapshot_addr_phys,
+> +				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32, 0, 0, 0, 0);
+> +	else
+> +		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
+> +				cpu_hw_evt->snapshot_addr_phys, 0, 0, 0, 0, 0);
+> +
+> +	/* Free up the snapshot area memory and fall back to SBI PMU calls without snapshot */
+> +	if (ret.error) {
+> +		if (ret.error != SBI_ERR_NOT_SUPPORTED)
+> +			pr_warn("pmu snapshot setup failed with error %ld\n", ret.error);
+> +		return sbi_err_map_linux_errno(ret.error);
+> +	}
+> +
+> +	cpu_hw_evt->snapshot_set_done = true;
+> +
+> +	return 0;
+> +}
+> +
+>  static u64 pmu_sbi_ctr_read(struct perf_event *event)
+>  {
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	int idx = hwc->idx;
+>  	struct sbiret ret;
+>  	u64 val = 0;
+> +	struct riscv_pmu *pmu = to_riscv_pmu(event->pmu);
+> +	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
+> +	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
+>  	union sbi_pmu_ctr_info info = pmu_ctr_list[idx];
+>  
+> +	/* Read the value from the shared memory directly */
+> +	if (sbi_pmu_snapshot_available()) {
+> +		val = sdata->ctr_values[idx];
+> +		return val;
+> +	}
+> +
+>  	if (pmu_sbi_is_fw_event(event)) {
+>  		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_FW_READ,
+>  				hwc->idx, 0, 0, 0, 0, 0);
+> @@ -539,6 +628,7 @@ static void pmu_sbi_ctr_start(struct perf_event *event, u64 ival)
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	unsigned long flag = SBI_PMU_START_FLAG_SET_INIT_VALUE;
+>  
+> +	/* There is no benefit setting SNAPSHOT FLAG for a single counter */
+>  #if defined(CONFIG_32BIT)
+>  	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, hwc->idx,
+>  			1, flag, ival, ival >> 32, 0);
+> @@ -559,16 +649,36 @@ static void pmu_sbi_ctr_stop(struct perf_event *event, unsigned long flag)
+>  {
+>  	struct sbiret ret;
+>  	struct hw_perf_event *hwc = &event->hw;
+> +	struct riscv_pmu *pmu = to_riscv_pmu(event->pmu);
+> +	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
+> +	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
+>  
+>  	if ((hwc->flags & PERF_EVENT_FLAG_USER_ACCESS) &&
+>  	    (hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
+>  		pmu_sbi_reset_scounteren((void *)event);
+>  
+> +	if (sbi_pmu_snapshot_available())
+> +		flag |= SBI_PMU_STOP_FLAG_TAKE_SNAPSHOT;
+> +
+>  	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, hwc->idx, 1, flag, 0, 0, 0);
+> -	if (ret.error && (ret.error != SBI_ERR_ALREADY_STOPPED) &&
+> -		flag != SBI_PMU_STOP_FLAG_RESET)
+> +	if (!ret.error && sbi_pmu_snapshot_available()) {
+> +		/*
+> +		 * The counter snapshot is based on the index base specified by hwc->idx.
+> +		 * The actual counter value is updated in shared memory at index 0 when counter
+> +		 * mask is 0x01. To ensure accurate counter values, it's necessary to transfer
+> +		 * the counter value to shared memory. However, if hwc->idx is zero, the counter
+> +		 * value is already correctly updated in shared memory, requiring no further
+> +		 * adjustment.
+> +		 */
+> +		if (hwc->idx > 0) {
+> +			sdata->ctr_values[hwc->idx] = sdata->ctr_values[0];
+> +			sdata->ctr_values[0] = 0;
+> +		}
+> +	} else if (ret.error && (ret.error != SBI_ERR_ALREADY_STOPPED) &&
+> +		flag != SBI_PMU_STOP_FLAG_RESET) {
+>  		pr_err("Stopping counter idx %d failed with error %d\n",
+>  			hwc->idx, sbi_err_map_linux_errno(ret.error));
+> +	}
+>  }
+>  
+>  static int pmu_sbi_find_num_ctrs(void)
+> @@ -626,10 +736,14 @@ static inline void pmu_sbi_stop_all(struct riscv_pmu *pmu)
+>  static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
+>  {
+>  	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
+> +	unsigned long flag = 0;
+> +
+> +	if (sbi_pmu_snapshot_available())
+> +		flag = SBI_PMU_STOP_FLAG_TAKE_SNAPSHOT;
+>  
+>  	/* No need to check the error here as we can't do anything about the error */
+>  	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, 0,
+> -		  cpu_hw_evt->used_hw_ctrs[0], 0, 0, 0, 0);
+> +		  cpu_hw_evt->used_hw_ctrs[0], flag, 0, 0, 0);
+>  }
+>  
+>  /*
+> @@ -638,11 +752,10 @@ static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
+>   * while the overflowed counters need to be started with updated initialization
+>   * value.
+>   */
+> -static inline void pmu_sbi_start_overflow_mask(struct riscv_pmu *pmu,
+> -					       unsigned long ctr_ovf_mask)
+> +static noinline void pmu_sbi_start_ovf_ctrs_sbi(struct cpu_hw_events *cpu_hw_evt,
+> +						unsigned long ctr_ovf_mask)
+>  {
+>  	int idx = 0;
+> -	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
+>  	struct perf_event *event;
+>  	unsigned long flag = SBI_PMU_START_FLAG_SET_INIT_VALUE;
+>  	unsigned long ctr_start_mask = 0;
+> @@ -677,6 +790,49 @@ static inline void pmu_sbi_start_overflow_mask(struct riscv_pmu *pmu,
+>  	}
+>  }
+>  
+> +static noinline void pmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_evt,
+> +						     unsigned long ctr_ovf_mask)
+> +{
+> +	int idx = 0;
+> +	struct perf_event *event;
+> +	unsigned long flag = SBI_PMU_START_FLAG_INIT_FROM_SNAPSHOT;
+> +	u64 max_period, init_val = 0;
+> +	struct hw_perf_event *hwc;
+> +	unsigned long ctr_start_mask = 0;
+> +	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
+> +
+> +	for_each_set_bit(idx, cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS) {
+> +		if (ctr_ovf_mask & (1 << idx)) {
+
+nit: BIT(idx)
+
+> +			event = cpu_hw_evt->events[idx];
+> +			hwc = &event->hw;
+> +			max_period = riscv_pmu_ctr_get_width_mask(event);
+> +			init_val = local64_read(&hwc->prev_count) & max_period;
+> +			sdata->ctr_values[idx] = init_val;
+> +		}
+> +		/*
+> +		 * We donot need to update the non-overflow counters the previous
+
+do not
+
+> +		 * value should have been there already.
+> +		 */
+> +	}
+> +
+> +	ctr_start_mask = cpu_hw_evt->used_hw_ctrs[0];
+> +
+> +	/* Start all the counters in a single shot */
+> +	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, 0, ctr_start_mask,
+> +		  flag, 0, 0, 0);
+
+I think we should always loop over all words of used_hw_ctrs[] since it'll
+have more than one for riscv32. Hmm, it seems like there are several
+places where we don't expect riscv32's second word to be used...
+
+> +}
+> +
+> +static void pmu_sbi_start_overflow_mask(struct riscv_pmu *pmu,
+> +					unsigned long ctr_ovf_mask)
+> +{
+> +	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
+> +
+> +	if (sbi_pmu_snapshot_available())
+> +		pmu_sbi_start_ovf_ctrs_snapshot(cpu_hw_evt, ctr_ovf_mask);
+> +	else
+> +		pmu_sbi_start_ovf_ctrs_sbi(cpu_hw_evt, ctr_ovf_mask);
+> +}
+> +
+>  static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  {
+>  	struct perf_sample_data data;
+> @@ -690,6 +846,7 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  	unsigned long overflowed_ctrs = 0;
+>  	struct cpu_hw_events *cpu_hw_evt = dev;
+>  	u64 start_clock = sched_clock();
+> +	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
+>  
+>  	if (WARN_ON_ONCE(!cpu_hw_evt))
+>  		return IRQ_NONE;
+> @@ -711,8 +868,10 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  	pmu_sbi_stop_hw_ctrs(pmu);
+>  
+>  	/* Overflow status register should only be read after counter are stopped */
+> -	ALT_SBI_PMU_OVERFLOW(overflow);
+> -
+> +	if (sbi_pmu_snapshot_available())
+> +		overflow = sdata->ctr_overflow_mask;
+> +	else
+> +		ALT_SBI_PMU_OVERFLOW(overflow);
+>  	/*
+>  	 * Overflow interrupt pending bit should only be cleared after stopping
+>  	 * all the counters to avoid any race condition.
+> @@ -794,6 +953,9 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
+>  		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
+>  	}
+>  
+> +	if (sbi_pmu_snapshot_available())
+> +		return pmu_sbi_snapshot_setup(pmu, cpu);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -807,6 +969,9 @@ static int pmu_sbi_dying_cpu(unsigned int cpu, struct hlist_node *node)
+>  	/* Disable all counters access for user mode now */
+>  	csr_write(CSR_SCOUNTEREN, 0x0);
+>  
+> +	if (sbi_pmu_snapshot_available())
+> +		pmu_sbi_snapshot_disable();
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1076,10 +1241,6 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
+>  	pmu->event_unmapped = pmu_sbi_event_unmapped;
+>  	pmu->csr_index = pmu_sbi_csr_index;
+>  
+> -	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = riscv_pm_pmu_register(pmu);
+>  	if (ret)
+>  		goto out_unregister;
+> @@ -1088,8 +1249,32 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto out_unregister;
+>  
+> +	/* SBI PMU Snapsphot is only available in SBI v2.0 */
+> +	if (sbi_v2_available) {
+> +		ret = pmu_sbi_snapshot_alloc(pmu);
+> +		if (ret)
+> +			goto out_unregister;
+> +
+> +		ret = pmu_sbi_snapshot_setup(pmu, smp_processor_id());
+> +		if (!ret) {
+> +			pr_info("SBI PMU snapshot detected\n");
+> +			/*
+> +			 * We enable it once here for the boot cpu. If snapshot shmem setup
+> +			 * fails during cpu hotplug process, it will fail to start the cpu
+> +			 * as we can not handle hetergenous PMUs with different snapshot
+> +			 * capability.
+> +			 */
+> +			static_branch_enable(&sbi_pmu_snapshot_available);
+> +		}
+> +		/* Snapshot is an optional feature. Continue if not available */
+> +	}
+> +
+>  	register_sysctl("kernel", sbi_pmu_sysctl_table);
+>  
+> +	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
+> +	if (ret)
+> +		return ret;
+> +
+>  	return 0;
+>  
+>  out_unregister:
+> diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
+> index 43282e22ebe1..c3fa90970042 100644
+> --- a/include/linux/perf/riscv_pmu.h
+> +++ b/include/linux/perf/riscv_pmu.h
+> @@ -39,6 +39,12 @@ struct cpu_hw_events {
+>  	DECLARE_BITMAP(used_hw_ctrs, RISCV_MAX_COUNTERS);
+>  	/* currently enabled firmware counters */
+>  	DECLARE_BITMAP(used_fw_ctrs, RISCV_MAX_COUNTERS);
+> +	/* The virtual address of the shared memory where counter snapshot will be taken */
+> +	void *snapshot_addr;
+> +	/* The physical address of the shared memory where counter snapshot will be taken */
+> +	phys_addr_t snapshot_addr_phys;
+> +	/* Boolean flag to indicate setup is already done */
+> +	bool snapshot_set_done;
+
+Instead of the 'snapshot_set_done' boolean, we can just use
+snapshot_addr, which can't be NULL after setup.
+
+>  };
+>  
+>  struct riscv_pmu {
+> -- 
+> 2.34.1
+> 
+
+Thanks,
+drew
