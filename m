@@ -1,86 +1,94 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D985072907
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 13:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6938A6D1D8
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 13:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709300550; cv=none; b=dj2KiJfIwXn6vItch9h9RNM/n/dkXPJmAk3hRyg9rO0ytmS/UhShwkh0kA5fjsM43VSV6EdX8qwvkEJOM22KLBc1YDuQhbXSrj1uCEGWJA4ZDQ5TRYUl1qrl5VgHsWSnOLsRO22moHyHTFkdj96ASysse4bi3mGZmq9PL1tXQX8=
+	t=1709300620; cv=none; b=fo7l0Q52bYntQU+CTuL33+0g1XfHwAtTs5GNDFx2paAoWbuAlMJIMYSPe1/Qq5/No+8Bg1Vix+r5VWVeJWtK/I5e92FyQ2wB7wEeZBSzZimUOERJxagFs0vFYDDUef6h1f8F+lakx2XA2xeoWqP0Ait7L8RUazxyv4QFYHlLUb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709300550; c=relaxed/simple;
-	bh=uvKCAXMT8sNauk5+VTMaEUp0n/5PMKoLqFnsKI5EKpM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gsht2vjimFBedHbHOlxewh57oWsj1+r91OPyZqJ5clKLxwCBTEjJDeU9snmlhgzdVoSAhT9QBJkQEzl8uINmD08OpoqrL9iKdZmlGbghJ6b0cYwhOBkbw+zLJglN8jNdFLpIS2qEgfDPj+f6o6XquP8ouzhgWncCFGyCKI6+O6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Xa/y+QI5; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Xa/y+QI5"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a446478b04bso203320466b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 05:42:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1709300546; x=1709905346; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uvKCAXMT8sNauk5+VTMaEUp0n/5PMKoLqFnsKI5EKpM=;
-        b=Xa/y+QI5FgV+MlBdZq7FhfCRHkgJUwVA5XNu6hfTkLueDlioJdD5p5xQnpcdrbOdxS
-         LhXk6D5C2G1yKoGH+TgTKRiIz1/Dttso3gqX3a5xTjUrXF1/w/E5WDWcbEn+4MzabFbr
-         HT1q6hOMVkm0iOYmW7kFFH4JtSwohPDdX4M6M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709300546; x=1709905346;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uvKCAXMT8sNauk5+VTMaEUp0n/5PMKoLqFnsKI5EKpM=;
-        b=HW1bKRX2AXbhAmszOqFP5o1vfZb3CdpCAsLVBs5SXoUAWQ04+jOatvYlcyEBTR5+DI
-         3uVmqKRr77rVTsw3ZgSdpf6TnDn5Qi4ejtIZ5NixlFOt5CcEIQV0nnxf/x27g2x9uia7
-         nPV4G1JHpE6GE9lkc8em4lr23B5T3+aNfoNBEj9jbDaS76t5MgKD9PagFN3IKPkbP6rv
-         0qsYpLxshFDJnbk77Ext2Ym50GeVthFkbcJ97oiZZcDkHI4Rd5H64KBJbpq6dn3Eb2Vn
-         aNDqexoPC/0r4AFufunDDhvKPJpiyaO2JU4L1oODWBA2IsRkWWhDmYJBSdfP/naCgfWm
-         /tzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBC2jwBm31DEkYZnNVgIoxaB6tIdO6b7Hjazs6F0MMl2XLWBCYEgOg0pmi7qNEJyAYUiy4u4kcLRofhZgrmNvASyO9M1hnpS7+zKsj
-X-Gm-Message-State: AOJu0YxNyd4T7k6Vmko7lVmORzXtWcewafaCWADRgr4hPmUjYlZLOiXB
-	AuFDBt4r/rjKJ2kazlZ2nN+gex4ZfAwJD3SDyeEk7P/TOKRkyLJgEXIPremonPQ3hOXo/N80S+Z
-	68bzATL9ohYtE07PLmtcnsnWS4jd/k7/QOr/8Ow==
-X-Google-Smtp-Source: AGHT+IFKyHCJjugXaVuo0TxhU2eqFIxuWNNPqdDj2p82dGOLUVGFGenBabw1NVs94YGP7ZFDeiyjxuD5xd7aKXazFdw=
-X-Received: by 2002:a17:906:b347:b0:a43:f170:aa44 with SMTP id
- cd7-20020a170906b34700b00a43f170aa44mr1504212ejb.47.1709300546044; Fri, 01
- Mar 2024 05:42:26 -0800 (PST)
+	s=arc-20240116; t=1709300620; c=relaxed/simple;
+	bh=Ma1KpOvHWUcqpTf0DyGC6ylpZU3RI52UAcVgAc0a4FI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=jNDziUPvqPqKVe3wJh9ncGquLqhGNJUV3S6+jP+D8iaha8oRhP/tsEMdueN1UdKu9QesxJdYDJY7YUwXFPUSDny0BELt5ChYKv0UF+/XQhtPlJhiFWiI7e3/aXT1UoKXyvUBD+yfus5w5gS9Krh/TwkDdC/gBqR37mF11TCEOHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-17-bbzuvQ2FPi6D0WR-XddUGw-1; Fri, 01 Mar 2024 13:43:31 +0000
+X-MC-Unique: bbzuvQ2FPi6D0WR-XddUGw-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 1 Mar
+ 2024 13:43:23 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Fri, 1 Mar 2024 13:43:23 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: "'Uecker, Martin'" <Martin.Uecker@med.uni-goettingen.de>,
+	"keescook@chromium.org" <keescook@chromium.org>, "linux@rasmusvillemoes.dk"
+	<linux@rasmusvillemoes.dk>
+CC: "corbet@lwn.net" <corbet@lwn.net>, "miguel.ojeda.sandonis@gmail.com"
+	<miguel.ojeda.sandonis@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"ndesaulniers@google.com" <ndesaulniers@google.com>,
+	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+	"ojeda@kernel.org" <ojeda@kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>
+Subject: RE: [+externe Mail+] RE: [PATCH] compiler.h: Explain how
+ __is_constexpr() works
+Thread-Topic: [+externe Mail+] RE: [PATCH] compiler.h: Explain how
+ __is_constexpr() works
+Thread-Index: AQHaa5MvghvgXFQBskOAdfSAj6aDybEilNaggABK04CAAAHC0A==
+Date: Fri, 1 Mar 2024 13:43:23 +0000
+Message-ID: <9c4518eae05c4758afe08c6b90678e92@AcuMS.aculab.com>
+References: <20240301044428.work.411-kees@kernel.org>
+	 <af0eff12e6bc41039614add550406c11@AcuMS.aculab.com>
+ <22c9c4cc27b13b2fb6f3cd9fa6f827f56f30770b.camel@med.uni-goettingen.de>
+In-Reply-To: <22c9c4cc27b13b2fb6f3cd9fa6f827f56f30770b.camel@med.uni-goettingen.de>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228144126.2864064-1-houtao@huaweicloud.com> <20240228144126.2864064-2-houtao@huaweicloud.com>
-In-Reply-To: <20240228144126.2864064-2-houtao@huaweicloud.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Fri, 1 Mar 2024 14:42:14 +0100
-Message-ID: <CAJfpegtMhkKG-Hk5vQ5gi6bSqwb=eMG9_TzcW7b08AtXBmnQXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] fuse: limit the length of ITER_KVEC dio by max_pages
-To: Hou Tao <houtao@huaweicloud.com>
-Cc: linux-fsdevel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Bernd Schubert <bernd.schubert@fastmail.fm>, 
-	"Michael S . Tsirkin" <mst@redhat.com>, Matthew Wilcox <willy@infradead.org>, 
-	Benjamin Coddington <bcodding@redhat.com>, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux.dev, houtao1@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Wed, 28 Feb 2024 at 15:40, Hou Tao <houtao@huaweicloud.com> wrote:
+RnJvbTogVWVja2VyLCBNYXJ0aW4NCj4gU2VudDogMDEgTWFyY2ggMjAyNCAxMzoyMg0KPiANCj4g
+TXkgc3VnZ2VzdGlvbiB3b3VsZCBhbHNvIHRvIGxpbWl0IGV4cGxhbmF0aW9uLiBOb2JvZHkgc2hv
+dWxkDQo+IHdyaXRlIHN1Y2ggY29kZSBhbmQgaWYgeW91IG5lZWQgdG8sIHlvdSBjYW4gZmluZCBl
+eHBsYW5hdGlvbnMNCj4gYWxsIG92ZXIgdGhlIGludGVybmV0Lg0KPiANCj4gRmluYWxseSwgSSBz
+dGlsbCB0aGluayB0aGUgbW90aXZhdGlvbiBmb3IgdGhpcyBtYWNybyAocmVtb3ZpbmcNCj4gVkxB
+cykgaXMgbWlzZ3VpZGVkIGlmIHNlY3VyaXR5IGlzIHRoZSBnb2FsIGJlY2F1c2UgVkxBcyBwcm92
+aWRlDQo+IHByZWNpc2UgYm91bmRzIGFuZCBsYXJnZXIgd29yc3QtY2FzZSBmaXhlZC1zaXplIGFy
+cmF5cyBkbyBub3QuDQo+IA0KPiBJdCB3b3VsZCBiZSBiZXR0ZXIgdG8gdXNlIHRoZSBjb21waWxl
+ciBvcHRpb25zIHRoYXQgZGV0ZWN0DQo+IHBvc3NpYmx5IHVzZSBvZiBWTEFzIG9mIHVuYm91bmRl
+ZCBzaXplIGFuZCBpZiB0aGVyZSBhIHByb2JsZW1zDQo+IHdpdGggdGhpcywgaW1wcm92ZSB0aGlz
+IG9uIHRoZSBjb21waWxlciBzaWRlLg0KDQpJbiBrZXJuZWwgY29kZSAod2l0aCBsaW1pdGVkIHN0
+YWNrKSB0aGVyZSBoYXMgdG8gYmUgZW5vdWdoIHJvb20NCmZvciB0aGUgbGFyZ2VzdCBwb3NzaWJs
+ZSAnVkxBJyBzbyB5b3UgbWlnaHQgYXMgd2VsbCBhbGxvY2F0ZSBvbmUuDQoNCkFsbG93aW5nIFZM
+QSBhbHNvIG1ha2VzIGl0IHByZXR0eSBtdWNoIGltcG9zc2libGUgdG8gZG8gYW55DQpraW5kIG9m
+IHN0YXRpYyBzdGFjayB1c2UgYW5hbHlzaXMuDQpUaGUgZmluZSBJQlQgdGFncyBjYW4gYmUgdXNl
+ZCBpZGVudGlmeSB2YWxpZCBpbmRpcmVjdCBjYWxscw0Kd2hpY2ggcHJldHR5IG11Y2ggb25seSBs
+ZWF2ZXMgcmVjdXJzaW9uIHN0b3BwaW5nIGZ1bGwgc3RhdGljDQpzdGFjayBhbmFseXNpcyAtIGFu
+ZCB0aGF0IGNvdWxkIGJlIGJhbm5lZCBleGNlcHQgZm9yIGEgZmV3DQpsaW1pdGVkIGNhc2VzIHdo
+ZXJlIDEgbGV2ZWwgY291bGQgYmUgcGVybWl0dGQuDQoNCmlzX2NvbnN0ZXhwcigpIGhhcyBvdGhl
+ciB1c2VzIC0gdGhlcmUgYXJlIHBsYWNlcyB3aGVyZQ0KX19idWlsdGluX2NvbnN0YW50X3AoKSBp
+c24ndCBzdHJvbmcgZW5vdWdoLg0KUGFydGljdWxhcmx5IGlmIHlvdSBuZWVkIHRvIHVzZSBidWls
+dGluX2Nob29zZV9leHByKCkNCm9yIF9HZW5lcmljKCkgdG8gZ2V0IHNlbGVjdCBhIHR5cGUuDQoN
+CkZvciBpbnN0YW5jZSwgaWYgeW91IGNhbiBhIGNvbnN0YW50IHZhbHVlIGJldHdlZW4gMCBhbmQg
+TUFYSU5UDQppdCBpcyBzYWZlIHRvIGNhc3QgdG8vZnJvbSB1bnNpZ25lZCBpbiBvcmRlciBjaGFu
+Z2UgYW55DQppbXBsaWNpdCBpbnRlZ2VyIHByb21vdGlvbiBjYXN0IHRoYXQgbWF5IGJlIGdyaWVm
+IHNvbWUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1s
+ZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJh
+dGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-> So instead of limiting both the values of max_read and max_write in
-> kernel, capping the maximal length of kvec iter IO by using max_pages in
-> fuse_direct_io() just like it does for ubuf/iovec iter IO. Now the max
-> value for max_pages is 256, so on host with 4KB page size, the maximal
-> size passed to kmalloc() in copy_args_to_argbuf() is about 1MB+40B. The
-> allocation of 2MB of physically contiguous memory will still incur
-> significant stress on the memory subsystem, but the warning is fixed.
-> Additionally, the requirement for huge physically contiguous memory will
-> be removed in the following patch.
-
-So the issue will be fixed properly by following patches?
-
-In that case this patch could be omitted, right?
-
-Thanks,
-Miklos
