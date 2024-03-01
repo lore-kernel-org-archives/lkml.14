@@ -1,114 +1,159 @@
-Received: from regular1-05.263.net (regular1-05.263.net [211.150.70.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E45525610;
-	Fri,  1 Mar 2024 23:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.150.70.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E365EE9F
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 23:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709337461; cv=none; b=eQufeh2ba2nyJoRm7g4TgPqmQDTw408rcF8GhGYvk6WiI5fnMYSqNnUVhDgXyhaaIn1ZYWSkapdC43txs6+QWdFTUS92bYHs1FawPwa4knwsH2fybq4wQ3BICvWMp33UUHMMT2qENuz6GvPKlCJ2tYCzKZu7udbl5scbKdrXIgk=
+	t=1709337543; cv=none; b=QDwzxzVSpH783+pxdp59g9+CfpmlwOfRnDvlpK1ki2jw3YKKzFA/kvS7lMN0mUx8ECXtEU/fQh4DdmSHn+0KgWeng4YtHasDFTwipapEqBiJl/zwqyETA2YUF7ceCXbY8LsiTDukHWnC9oF5bYRyoYFmfIa/x0LUmckhv5JE4pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709337461; c=relaxed/simple;
-	bh=k2o/QV8UyXt9oT7L/NC/Nc82MzIZe4ycxiieEa2xQI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dbtFw8Y7JB1Ornw3GpbHtCsTNulmYVODT5qyexNmPcJahL/OFcaOE8tO86gJkqKuTPrPxBI6fVums09kFeuVORWYwiDmqhKkL/Z8qFC9a3VzxgJMKYYdkeFydRsFcCgGOaCG0uPv19Ql0mwj7RwrYDb0blHYqxr3sV3qDmMfspI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techyauld.com; spf=pass smtp.mailfrom=techyauld.com; arc=none smtp.client-ip=211.150.70.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techyauld.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=techyauld.com
-Received: from localhost (unknown [192.168.167.70])
-	by regular1-05.263.net (Postfix) with ESMTP id 0F04C155B;
-	Sat,  2 Mar 2024 07:57:29 +0800 (CST)
-X-MAIL-GRAY:0
-X-MAIL-DELIVERY:1
-X-ADDR-CHECKED4:1
-X-SKE-CHECKED:1
-X-ABS-CHECKED:1
-X-ANTISPAM-LEVEL:2
-Received: from localhost (unknown [118.193.106.122])
-	by smtp.263.net (postfix) whith ESMTP id P32683T140305418225408S1709337448143058_;
-	Sat, 02 Mar 2024 07:57:28 +0800 (CST)
-X-IP-DOMAINF:1
-X-RL-SENDER:yzheng@techyauld.com
-X-SENDER:yzheng@techyauld.com
-X-LOGIN-NAME:yzheng@techyauld.com
-X-FST-TO:rogerq@kernel.org
-X-RCPT-COUNT:7
-X-LOCAL-RCPT-COUNT:1
-X-MUTI-DOMAIN-COUNT:0
-X-SENDER-IP:118.193.106.122
-X-ATTACHMENT-NUM:0
-X-UNIQUE-TAG:<307a65f41081e22e4aab4ed94088de0f>
-X-System-Flag:0
-Date: Sat, 2 Mar 2024 07:57:27 +0800
-From: Brock Zheng <yzheng@techyauld.com>
-To: Roger Quadros <rogerq@kernel.org>
-Cc: Andreas Kemnade <andreas@kemnade.info>, 
-	Tony Lindgren <tony@atomide.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memory/omap-gpmc: fixup wrongly hierarchy of the
- sub-devices
-Message-ID: <laqqencookmgwesfaetd5xw5wfmjdffmjvyjitapfehmu7zy5y@k7gsdexf3jcv>
-References: <6fftq2zlkpaf7xptyff6ky63cinr76ziyvdbm5jhj2apubr5vf@l4gvbdax3l2e>
- <f45b3195-38a9-4c49-b873-01e5a0b275a3@kernel.org>
- <20240301133809.0d26865e@aktux>
- <f59c9450-2784-46fa-afc9-4f194055cb24@kernel.org>
+	s=arc-20240116; t=1709337543; c=relaxed/simple;
+	bh=ETU0ZgkCoYAe6Z7VTDx08sZijKjkIDe8qT9lyHO3Dps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mEPKTfRdga+7Z9G3LZOhA333QhTMjs3WyQjQaKXiYj3sH07RSYN9z65WSMRLfnZTLldRRqJA8qxiRaK1XjGz0+OblTT2OqrcGtq0ImwsQOVf83gHHhpXn1ZTFODy4r6C+55xPDUdIFC7iLhtcox9oU0B3+eXVFONlPm+H0NkFU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IbgGIMwN; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IbgGIMwN"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a444205f764so359604866b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 15:59:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709337540; x=1709942340; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YA1O7kLB3C42ZIvzHJ983LhvtPhH5S4z7eGI8/yXF6Y=;
+        b=IbgGIMwNcfgw0Lpo/e5WIMtirGrC9J1p/5aPwI3PheLI52g9v17NjgFtxDuYR5ot3H
+         W6QPhcbm0eAb13IGZ/bnDIaIN/sdWHJk7LtFGe0AZHkgRt5vUgBRX1lYXTh+CNS4rCPx
+         G+ZA2VKPNRzfRh6LIjPdnEfUYy9cfoLdHOSn0A1VRrrHIeSyeA0epWPHuVbdfLczDMY5
+         BfhWuqWVCpWCMdTXgzPN48GbVhq6TOmtptQNeSzmdl6VdFnFOzjiTU//pDf5NrG4O1va
+         XhVe4H53VTZgHYfGz40yDcwJHQfmM0Y1vZOZRijqH7tVMba45/KLvyC2JSzNVzx+M1SJ
+         E+yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709337540; x=1709942340;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YA1O7kLB3C42ZIvzHJ983LhvtPhH5S4z7eGI8/yXF6Y=;
+        b=xQKqE2HnLLZHSCr+GKKO24gcZvVWdLVq6rB3J2pO+SN3ozdcKx95cnNPntOWCvozxr
+         8DGcJjiOmlrV7WqqhEUCGPtLDcR+gqslYCGQk8yDeIdHMpK2NRcclEp022BlDAYhOTtD
+         RB16o8RGL/AAPOO/sTtFYxj8JdAAwmUR6ZetoU33ttcq6JwIGIFCrkIike4OX7IyAefs
+         2NvrVDUWF0T3jfwVyxK0Z0wmgkanXaUP8TclfAcTNj+cW1GytMW+9Ek2kWW/3BnYpDSG
+         FvbMNWbHRTqfr/dzn03lL+1AytPoiUcEKq15S7rgC2qBLa7mcyQONRKsCBFagmMGCLA6
+         LEuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVN/EfVdoV6Ie11e0rD+5EV+oOglKcbpi1GRBtj1guZJnDPkdsSXHrSxgPKW4Kql/zRw7S2V59HDzwA33N5RyI1HHX25le7s9FN4hQS
+X-Gm-Message-State: AOJu0YxB+4lxVKmCrEJUA0zFWbSarQ+kplC2ab5z3PoXCJVNKzM3eh8D
+	SDPsCvnB5Gyavtex38AB8QxPOoSW9TP1fyIBZlKDXihqefk0IeHHl1M4rY+oKQokEHJgLBExMzT
+	f6tA=
+X-Google-Smtp-Source: AGHT+IHwnfAnGr5O8kASzxqPfzRoY7ABHUTooFv/fIASs/MHqBMyWJpUwEDEXapcV/UhGZL43xXDXQ==
+X-Received: by 2002:a17:906:f194:b0:a3e:9231:fe7e with SMTP id gs20-20020a170906f19400b00a3e9231fe7emr2440937ejb.71.1709337539658;
+        Fri, 01 Mar 2024 15:58:59 -0800 (PST)
+Received: from [192.168.216.32] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id w23-20020a170906131700b00a432f3bc3a5sm2157029ejb.76.2024.03.01.15.58.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Mar 2024 15:58:59 -0800 (PST)
+Message-ID: <2f6a5c83-69a4-480b-a235-c0d51feac31e@linaro.org>
+Date: Sat, 2 Mar 2024 00:58:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f59c9450-2784-46fa-afc9-4f194055cb24@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sm8250-xiaomi-elish: add usb pd
+ negotiation support
+Content-Language: en-US
+To: Jianhua Lu <lujianhua000@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240227124529.12926-1-lujianhua000@gmail.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240227124529.12926-1-lujianhua000@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi, all
+On 27.02.2024 13:45, Jianhua Lu wrote:
+> Add usb pd negotiation, but charging is controlled by pm8150b pmic,
+> so it can only charge battery with 5W,
+> 
+> Signed-off-by: Jianhua Lu <lujianhua000@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-common.dtsi | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-common.dtsi b/arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-common.dtsi
+> index 6f54f50a70b0..ed103b90f4e6 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-common.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-common.dtsi
+> @@ -636,7 +636,8 @@ &pm8150b_typec {
+>  	connector {
+>  		compatible = "usb-c-connector";
+>  
+> -		power-role = "source";
+> +		op-sink-microwatt = <10000000>;
 
-Sorry for the wrong mail Content-Type. My Neomutt is not configured correctly.
-Updated info here:
+Is 10W really the minimum value for this tablet to function as a sink?
 
-On TI-AM335x，my FPGA under GPMC local-bus can not work on 6.x kernel.
+Is that what the downstream kernel sets?
 
-GPMC <--> FPGA  <--> sub-devices....
+> +		power-role = "dual";
+>  		data-role = "dual";
+>  		self-powered;
+>  
+> @@ -645,6 +646,12 @@ PDO_FIXED_DUAL_ROLE |
+>  					 PDO_FIXED_USB_COMM |
+>  					 PDO_FIXED_DATA_SWAP)>;
+>  
+> +		sink-pdos = <PDO_FIXED(5000, 3000,
+> +					 PDO_FIXED_DUAL_ROLE |
 
-I found that the platform sub-devices are in wrongly organized
-hierarchy.  The grandchildren are now under the GPMC device directly,
-not under it's father(FPGA).
+Please align the PDO_.. against the open brace
 
-Signed-off-by: Brock.Zheng <yzheng@techyauld.com>
----
- drivers/memory/omap-gpmc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> +					 PDO_FIXED_USB_COMM |
+> +					 PDO_FIXED_DATA_SWAP)
+> +					 PDO_VAR(5000, 12000, 5000)>;
 
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index 80d038884207..1f2568e43086 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -2175,6 +2175,7 @@ static int gpmc_probe_generic_child(struct platform_device *pdev,
-	int ret, cs;
-	u32 val;
-	struct gpmc_device *gpmc = platform_get_drvdata(pdev);
-+	struct platform_device *child_pdev = NULL;
- 
-	if (of_property_read_u32(child, "reg", &cs) < 0) {
-		dev_err(&pdev->dev, "%pOF has no 'reg' property\n",
-@@ -2330,11 +2331,12 @@ static int gpmc_probe_generic_child(struct platform_device *pdev,
- no_timings:
- 
-	/* create platform device, NULL on error or when disabled */
--	if (!of_platform_device_create(child, NULL, &pdev->dev))
-+	child_pdev = of_platform_device_create(child, NULL, &pdev->dev);
-+	if (!child_pdev)
-		goto err_child_fail;
- 
-	/* create children and other common bus children */
--	if (of_platform_default_populate(child, NULL, &pdev->dev))
-+	if (of_platform_default_populate(child, NULL, &child_pdev->dev))
-		goto err_child_fail;
- 
-	return 0;
--- 
-2.44.0
+60W max? This is not unheard of, but I'm just making sure you know..
 
+Konrad
 
