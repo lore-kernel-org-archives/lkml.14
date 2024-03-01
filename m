@@ -1,99 +1,112 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFE16EB6B
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5820C1C33;
+	Fri,  1 Mar 2024 15:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709307115; cv=none; b=S0jZ742AR1P8hri5118fhAxAa0JNrQ3AxUy6lXDMNdKZppnuQ5xJiyTmiU/d8IAR/qAOGMbZisk7KjRBy0fZoqKKlb2iW2AxAIl0bha0utPQ+sBw3HO7Q2kXF3iAQqKYu3NYImqVkrIv0PfjMJxBKsTXDXz/dqcdhd0olC8jKqc=
+	t=1709307337; cv=none; b=HYkW9tvIcbqFZFLiKrSZ0z3C1kA26cJPstC3FQKeLhVTLmJziB+JWugXjnNsUoebQ8Pn+D0vdYjCJZV0ffZixSTc6sKsPnbYAIVMGwQzgt7k+H6TM6zSkMhbrIuNwrFgbIjZfVCNK1ltvj4gzIpJ6YQ0e8vvswPkWUwa5PYk4NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709307115; c=relaxed/simple;
-	bh=c6VADMQicUPiPOIu9kP0v1RFWmn/JeAemp3LKilZuoE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uQxLl7+J7KkqBezEuTII52oBgygYCOD74ji/GRzcqq0IvUebIhgct6XIA6E2jyaxQXMGxVSXjAI+K3vOVnYnCHD/PLlqJ40/LZPKDY83ziLSPlgBhGdhYfgkYL5NylQLyrqO/uoruaP+w+WWEDBxOTlV39IZ9PE3Dpypj/Xn4L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y3fnAsZM; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709307337; c=relaxed/simple;
+	bh=M529ZWz6bYFuuGmZpJLVgAUP6VgulNwbi5i3qlbkET4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rX0V9E+/WFlwn3EBFGHWXMkqp5ESxYSW3FJhOGq/4bVNrMADBKSvPVO0hZ+w/oFKf30ZOFVyU1hkaof923DHe/S8VHKs9OrTVdrv87AP3/l2w6lN3RCaIm+310C7LzJpew2ba+QHR241EsYAWXyMP0mkxzBTJxKBry2iwQCUDEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=engGmUkK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3fnAsZM"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d29111272eso28722091fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 07:31:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709307111; x=1709911911; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uQkIsiqJa3PbCfK5y5rQ5fldLZTBWAFO6axVFhfQfUk=;
-        b=Y3fnAsZMCX9sIO5obvOgaI1kwY+est16hgK0/9Y/Tj/5TVtw5E3XRykURwWfoUwSHf
-         brV+SE9Am2UCedtJWodaQTBI1v7T+8xd0hdqj5WJX5RrDwU7E9BX7HPjbmO1nsyrP8m0
-         BO4AG3zgTFBSi/MpGLMtUEJlcKG0TA7QYPrmaEAvBjnIb0Vy1oAcSx52/+TSFu3iE76k
-         /sR8uNqtryU0TNeXFR4thVSzDJtDErf4agWvma7rkcyjweCSUfYTSo/Yzt9tarYcHYPW
-         VvbqOTw0laKmKoP14Ar5I9pxQ3EkKhx6nd/S+PYQ3SP8Xy6HQus7Ejy7i+Z3DwOZoIrL
-         w80Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709307111; x=1709911911;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uQkIsiqJa3PbCfK5y5rQ5fldLZTBWAFO6axVFhfQfUk=;
-        b=KLBKYP+xhk8NT1gz/Zi6Wxw9OfvhagIzkSPRgJrZo5DXAoT0QnYEoz202QEzqHBr4t
-         E/s3X/wwR7kxyaGEqfCRZrxI3aPb0+Bq0jvlkVT78xwVZflOXzXdYkfJz0b2wS+7Y009
-         M4mCTcMot23jRXpt+8q6YXYXghrGJcxpJUNfWswCRzTmtZWzaz5ZqgUR+1TPRxWjiso/
-         9FY0OkCfL3UTCofWGmSvMSASUsQYIoR8ZXFa28qCTSBKfCX6xqMABH1pkOqjy3RHiPo4
-         o/cIt3x4+42vsvMyrTR5a2vqiXuim399/BXHnbqicPk9mYgrCqqMg0M/kFVCfdzZ2rFB
-         biPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWn8R/EjlGnauAlodqSRDb97gDKgi9dF+c2G/yq4329ZlcjAUngBcZthQnZ/59aj7MtmTrTfM7MhBXsgNjZxkmBP7DBvZdugYvAr5UK
-X-Gm-Message-State: AOJu0YyvCiJv2hYhhpoLBVJ1oF6iASs0yQ1L4BJJFPeAZWACuBRpAvL4
-	hdUxaX3Zv6hNAgWODlahAEilNKBqisF0ARzmlA5tZzho5MMmRZfOap7AdDMDxjEtaA==
-X-Google-Smtp-Source: AGHT+IFowqv91ocPiEeEPwajlKa4L03f8UHTtqN7Eo4sKzpVD721ZPHRO+ng/AQ0QUYZzwtnFNGy+Q==
-X-Received: by 2002:ac2:5186:0:b0:512:d88a:3a8f with SMTP id u6-20020ac25186000000b00512d88a3a8fmr1450384lfi.25.1709307110610;
-        Fri, 01 Mar 2024 07:31:50 -0800 (PST)
-Received: from ubuntu2004.cynet.local (vpn1382.cynet.com. [84.110.53.106])
-        by smtp.gmail.com with ESMTPSA id u10-20020a05600c210a00b00410df4bf22esm8739925wml.38.2024.03.01.07.31.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 07:31:50 -0800 (PST)
-From: Ariel Silver <arielsilver77@gmail.com>
-To: gregkh@linuxfoundation.org,
-	philipp.g.hortmann@gmail.com,
-	yogi.kernel@gmail.com,
-	dan.carpenter@linaro.org,
-	straube.linux@gmail.com,
-	garyrookard@fastmail.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ariel Silver <arielsilver77@gmail.com>
-Subject: [PATCH] Staging: rtl8192e: Declare variable with static
-Date: Fri,  1 Mar 2024 17:31:28 +0200
-Message-Id: <20240301153128.13974-1-arielsilver77@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="engGmUkK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86BCEC433F1;
+	Fri,  1 Mar 2024 15:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709307336;
+	bh=M529ZWz6bYFuuGmZpJLVgAUP6VgulNwbi5i3qlbkET4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=engGmUkK3+QyCySd6cnHaoesNC4acJ3alTWL9hkST6hCVPUk6jx/wdlKLPnA4dMRT
+	 OqgQzVn2cxNbgjzrGxAzAM/G0Q2U5mSCnX3cGzzAVKPSaiMbwnp1at/ewtulAVi49k
+	 IOUSLAAoFtHhpXnpOFM32Zwv0bf6pVapLzd+1FoCRLxcWj/btjhW4rkXK++PVGaxDr
+	 QuhaFLQjLZyhXcaeREGlxgBfChASmuIy0TcoVAva9mfGQpPYYVWwaWR+QNYavWPNKJ
+	 7dm7RcciMFp14LYGpnir5lb59cHkkeJV2ctLTiy+VzUVkJoykR1TWNtyzE/IvoGg9H
+	 OTZ4wZV2OigtQ==
+Date: Fri, 1 Mar 2024 09:35:34 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v2 02/11] dt-bindings: hwmon: lm75: use common hwmon
+ schema
+Message-ID: <20240301153534.GA2144041-robh@kernel.org>
+References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
+ <20240229-mbly-i2c-v2-2-b32ed18c098c@bootlin.com>
+ <6749c8df-c545-4aca-bc18-4dfe9c9f15b0@linaro.org>
+ <d78fd3ca-ed0b-40e5-8f8f-21db152a7402@roeck-us.net>
+ <CZIBCBQ2IB0E.2N3HAVO0P2SHT@bootlin.com>
+ <f802a1e0-cedd-488a-a6fb-df793718d94b@linaro.org>
+ <CZICOX6DR0SA.O876YRG8P03C@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CZICOX6DR0SA.O876YRG8P03C@bootlin.com>
 
-Fixed sparse warning:
-"'dm_rx_path_sel_table' was not declared. Should it be static?"
-As dm_rx_path_sel_table is used only in rtl_dm.c it should be static.
+On Fri, Mar 01, 2024 at 11:44:37AM +0100, Théo Lebrun wrote:
+> Hello,
+> 
+> On Fri Mar 1, 2024 at 11:13 AM CET, Krzysztof Kozlowski wrote:
+> > On 01/03/2024 10:41, Théo Lebrun wrote:
+> > > Hello,
+> > > 
+> > > On Fri Mar 1, 2024 at 7:53 AM CET, Guenter Roeck wrote:
+> > >> On 2/29/24 22:37, Krzysztof Kozlowski wrote:
+> > >>> On 29/02/2024 19:10, Théo Lebrun wrote:
+> > >>>> Reference common hwmon schema which has the generic "label" property,
+> > >>>> parsed by Linux hwmon subsystem.
+> > >>>>
+> > >>>
+> > >>> Please do not mix independent patchsets. You create unneeded
+> > >>> dependencies blocking this patch. This patch depends on hwmon work, so
+> > >>> it cannot go through different tree.
+> > > 
+> > > I had to pick between this or dtbs_check failing on my DTS that uses a
+> > > label on temperature-sensor@48.
+> >
+> > I don't see how is that relevant. You can organize your branches as you
+> > wish, e.g. base one b4 branch on another and you will not have any warnings.
+> 
+> That is what I do, I however do not want mips-next to have errors when
+> running dtbs_check. Having dtbs_check return errors is not an issue?
 
-Signed-off-by: Ariel Silver <arielsilver77@gmail.com>
----
- drivers/staging/rtl8192e/rtl8192e/rtl_dm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's a good goal, but difficult to achieve as you can see. Given 
+dtbs_check in general has tons of warnings already, we currently don't 
+worry about more warnings in specific branches. We just look at mainline 
+and linux-next. And for that it's still so many, I'm just looking at 
+general trends. It runs daily here[1].
 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-index 92143c50c149..850ee6ae1f02 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-@@ -144,7 +144,7 @@ const u8 dm_cck_tx_bb_gain_ch14[CCK_TX_BB_GAIN_TABLE_LEN][8] = {
- /*------------------------Define global variable-----------------------------*/
- struct dig_t dm_digtable;
- 
--struct drx_path_sel dm_rx_path_sel_table;
-+static struct drx_path_sel dm_rx_path_sel_table;
- /*------------------------Define global variable-----------------------------*/
- 
- 
--- 
-2.25.1
+As we get more platforms trying to stay at zero warnings, then we'll 
+need to revisit this. I imagine that will mean all schemas have to go in 
+1 branch with acks from subsystem maintainers. That's the opposite of 
+what we do now. And then .dts branches will have to merge in the schema 
+branch as needed. There are some checks (make dt_compatible_check) to 
+for drivers vs. the schemas, so we'd have the same issue with 
+intermittent warnings. But the drivers should be more decoupled from the 
+schemas than the dts files.
 
+Rob
+
+[1] https://gitlab.com/robherring/linux-dt/-/jobs
