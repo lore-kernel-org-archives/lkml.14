@@ -1,126 +1,113 @@
-Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90111947E;
-	Fri,  1 Mar 2024 16:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC6C6AA2
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709311669; cv=none; b=e0YK5ISZKFaV4fmjcx39suf7fPdyrVs4xt1W9cPXxUAi7TP9MjE7hX5OtVVKK0LxTcc54J+gsBv0KtFvXlf0ylvePHyn++844j/0TqK6Jvy0S38G1JRat3fWtbhLlq4305FyS70wdwBwUpzIQZ8n57C3gSacu8TbX4Ro1M7K75k=
+	t=1709311754; cv=none; b=SK0zB7A5WeH8MTG4+NvLGb6y7TgvzJrljMwQrigGiPKA9m2HS71srbF8Hjw7z82XCvlZ2jbK860KWo6/dhUb/qTqFyW8kcn/XaRQcQ463uZyUfk+NKQq3OJRvJtmQfjgzf1aOb5YwVl6LtX3Qyei59gwG1VhzV102m0W/mJsjCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709311669; c=relaxed/simple;
-	bh=TwO38cA3UyCr2W+EpuHHLQjPXPcd10Pe64Cu4R4UPC0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pwSa8p/m9dkTnbqnYijT/Ak1bt2eeqAw46qZR0wZb+WsAWTTj1xgmY+dj1RaPutVmxPp9w0fnyUWXG0i/L0tFXg1VQJxZ00f9C/qfrGGQLWibJe9OyrrCy4gOx/SEisrGU3F7i3dMQKks0fzfW4TRnQxENCWqTB7tUPMJ842M2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz; dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b=i4f7gS//; arc=none smtp.client-ip=195.113.20.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="i4f7gS//"
-Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id 8239C284258;
-	Fri,  1 Mar 2024 17:47:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
-	s=gen1; t=1709311658;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O7DmL1iFyPuL+YAdM6p9eG7fp01uB00uvAhrDZTooCM=;
-	b=i4f7gS//gRybv9G91n4rfHD3U3QiMVHe+6kQ6HKg543tZlwYFWSeirBz1b8NB7+jZNC3fu
-	0cgiuBMh8OKMRcDzFqXxgij0z4/gESuUIQX74rEZ3UGjt2StU43OCyqvDc06G+bNm8lhZX
-	cOgXDxbXnoUy23vLudtQ1KKBxuNJIiE=
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: karelb)
-	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id 4CF374587C6;
-	Fri,  1 Mar 2024 17:47:38 +0100 (CET)
-From: Karel Balej <karelb@gimli.ms.mff.cuni.cz>
-To: Markuss Broks <markuss.broks@gmail.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	s=arc-20240116; t=1709311754; c=relaxed/simple;
+	bh=2U+NFf8VzBL7i5JecqNdGXv70qAxb5ESPa2lPEXW6Jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ge3jxHyP0jBsMnBsjUm6wBwr4iaNJVgF4mcnxjJZOYk6uynkg5MAUl6AzO54nv1/+vI/AI6C9dLShWRpgGxfH0430wHi6Cvn7GBtde2Pxjah7zQWzlffApxI65Z9EYNvniwKMa0CRLPjRVgORADbzBwFXgPeQvJSG4daj5tXBNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rg63j-0005DY-Vp; Fri, 01 Mar 2024 17:48:32 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rg63i-003ofQ-4h; Fri, 01 Mar 2024 17:48:30 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rg63i-00F8ob-06;
+	Fri, 01 Mar 2024 17:48:30 +0100
+Date: Fri, 1 Mar 2024 17:48:30 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Henrik Rydberg <rydberg@bitmath.org>,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-	~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org,
-	karelb@gimli.ms.mff.cuni.cz
-Subject: [RESEND PATCH v5 5/5] input/touchscreen: imagis: add support for IST3032C
-Date: Fri,  1 Mar 2024 17:41:04 +0100
-Message-ID: <20240301164659.13240-6-karelb@gimli.ms.mff.cuni.cz>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240301164659.13240-1-karelb@gimli.ms.mff.cuni.cz>
-References: <20240301164659.13240-1-karelb@gimli.ms.mff.cuni.cz>
+	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>
+Subject: Re: [PATCH net-next v5 10/17] net: pse-pd: Add support for PSE PIs
+Message-ID: <ZeIG3rsLJg2rgV58@pengutronix.de>
+References: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
+ <20240227-feature_poe-v5-10-28f0aa48246d@bootlin.com>
+ <ZeHlB8DLEqWxBRYH@pengutronix.de>
+ <20240301171005.43188d02@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240301171005.43188d02@kmaincent-XPS-13-7390>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Karel Balej <balejk@matfyz.cz>
+Hay Köry,
 
-IST3032C is a touchscreen chip used for instance in the
-samsung,coreprimevelte smartphone, with which this was tested. Add the
-chip specific information to the driver.
+On Fri, Mar 01, 2024 at 05:10:05PM +0100, Köry Maincent wrote:
+> Hello Oleskij,
+> 
+> Thanks you for the review.
 
-Reviewed-by: Markuss Broks <markuss.broks@gmail.com>
-Signed-off-by: Karel Balej <balejk@matfyz.cz>
----
+I'll try to review more at weekend.
 
-Notes:
-    v4:
-    * Change the WHOAMI definition position to preserve alphanumerical order
-      of the definitions.
-    * Add Markuss' Reviewed-by trailer.
+> > > +		/* Legacy OF description of PSE PIs */
+> > > +		pcdev->of_legacy = true;  
+> > 
+> > It is not "legacy" :) PoDL do not providing definition of PSE PI since there
+> > is only one pair. May be: single_pair, no_pse_pi or any other idea.
+> 
+> You right it is not needed for PoDL. Maybe no_pse_pi is better according to the
+> following thoughts.
+> 
+> Just wondering, how a pse controller that support PoE and PoDL simultaneously
+> would be exposed in the binding. In that case I suppose all the PIs (PoE and
+> PoDL) need to use the pse-pi subnode. Then the "alternative pinout" and
+> "polarity" parameter would not be requested for PoDL PIs.
 
- drivers/input/touchscreen/imagis.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+In case of hybrid device I would expect that we will have an 4 pair
+connector where only one pair will be used. In this case we will need to
+know what pair and polarity is supported or can be configured for PoDL.
+It will be full blown PSE PI node with PoDL specific extras.
 
-diff --git a/drivers/input/touchscreen/imagis.c b/drivers/input/touchscreen/imagis.c
-index 9af8a6332ae6..e1fafa561ee3 100644
---- a/drivers/input/touchscreen/imagis.c
-+++ b/drivers/input/touchscreen/imagis.c
-@@ -11,6 +11,8 @@
- #include <linux/property.h>
- #include <linux/regulator/consumer.h>
- 
-+#define IST3032C_WHOAMI			0x32c
-+
- #define IST3038B_REG_STATUS		0x20
- #define IST3038B_REG_CHIPID		0x30
- #define IST3038B_WHOAMI			0x30380b
-@@ -363,6 +365,13 @@ static int imagis_resume(struct device *dev)
- 
- static DEFINE_SIMPLE_DEV_PM_OPS(imagis_pm_ops, imagis_suspend, imagis_resume);
- 
-+static const struct imagis_properties imagis_3032c_data = {
-+	.interrupt_msg_cmd = IST3038C_REG_INTR_MESSAGE,
-+	.touch_coord_cmd = IST3038C_REG_TOUCH_COORD,
-+	.whoami_cmd = IST3038C_REG_CHIPID,
-+	.whoami_val = IST3032C_WHOAMI,
-+};
-+
- static const struct imagis_properties imagis_3038b_data = {
- 	.interrupt_msg_cmd = IST3038B_REG_STATUS,
- 	.touch_coord_cmd = IST3038B_REG_STATUS,
-@@ -380,6 +389,7 @@ static const struct imagis_properties imagis_3038c_data = {
- 
- #ifdef CONFIG_OF
- static const struct of_device_id imagis_of_match[] = {
-+	{ .compatible = "imagis,ist3032c", .data = &imagis_3032c_data },
- 	{ .compatible = "imagis,ist3038b", .data = &imagis_3038b_data },
- 	{ .compatible = "imagis,ist3038c", .data = &imagis_3038c_data },
- 	{ },
+Don't worry about it right now.
+
+Regards,
+Oleksij
 -- 
-2.44.0
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
