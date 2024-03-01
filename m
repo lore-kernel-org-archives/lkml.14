@@ -1,87 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F242031D
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 07:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5566200C3;
+	Fri,  1 Mar 2024 07:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709278397; cv=none; b=M59b9fD2q1YczQXx7Tn+ZL5vGpDJZPamDej4sM7Idy3FvUf5dFaFX6OpTA0DH4SyMRt8SD/i5q30+kb2GtLc+Hxf57VGfDX693HeT4VsvhYbHlDsDi15phkuVYkP7w4KASogS3EMTN/MBtq2W6WlPEf8nn+xAXJaV9mnlsTzBHI=
+	t=1709278675; cv=none; b=GLLaok+uYxraBYCIJ/cP+mwpUZcowBIAeuN56yMna4Wqh21b1P4xtG7CSMDhXw/sHRBKezCnm+EdBVloB25k9rkiPvr2jOQbv4P18waU0t7RmmUFTyYsa6iki9Odggd05EXt82ATSCA3zsSO4wsgFLnKlnG3DcCgEHueg8/eJnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709278397; c=relaxed/simple;
-	bh=TGr/BP1Gn8/hf8q8u7ex7+naL4H/IsFy7tgVN/sDdjQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MqORgmm7urZskNs4cebW4+UobFBpsFp8AbHxT1X6ZpRfJq7t0uA1IORg1fss94wBgESGF1LCHCHoUEYoLT7p2xPzragBl7T9DzH0O15Vfp9BAiQJfJsa0SXxQAa6Ko5uTMuS+sk0G0tmGk28pdFQin0KLYT/29cT2zq2jyrMiFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L96g6phn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709278675; c=relaxed/simple;
+	bh=S41V4Rg+5A+/H6j5q+KJKdnhp7A+2pV2Ka4RM2AmyGw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=a+powcHdFzhceJunp/K7Zq2sT3nhErgpGLCFB/Eyu+PZ2RcDnxUbGZ2MNrfusGlP8R5LCyX1bdWLk2opMvszYwR6B6SMjyp87xNWhwLXiaRKX4w0WVU1vN7XDado1wzrjyUAwQQJW6la1NAZK62rT7cyh/YuOVcwSNHl4JvK/Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCBYd8Im; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L96g6phn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709278395;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jpPZGV9V3hnUBn8i3CL2d4Yea6dbDC8URH30r2BRw8I=;
-	b=L96g6phneKAPkgQIYWimhtDs0pQuJOq7fZXvS0XmDDKR8FR9RZOYQ4TWk49fDhCDcm/ccJ
-	ngpcMW52uWuCGnim/Xzp6fsEQ8H9DUJA7vIMVAjGx4QAxAWM+D71gFaNtFJsJ7SVIm1d2Y
-	wnZ8Rl+tXxgkAO79Q9q9cgG4L6C4qSY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-633-ZhcNaUkXMtWY5njG5DSoPQ-1; Fri,
- 01 Mar 2024 02:33:10 -0500
-X-MC-Unique: ZhcNaUkXMtWY5njG5DSoPQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EA6D228116B8;
-	Fri,  1 Mar 2024 07:33:09 +0000 (UTC)
-Received: from localhost.redhat.com (unknown [10.22.17.153])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6D7B1492BE2;
-	Fri,  1 Mar 2024 07:33:09 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ben@decadent.org.uk,
-	shuah@kernel.org,
-	akpm@linux-foundation.org
-Subject: [PATCH] selftests/mm: Dont fail testsuite due to a lack of hugepages
-Date: Fri,  1 Mar 2024 00:33:00 -0700
-Message-ID: <20240301073300.287508-1-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCBYd8Im"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5AA0AC433F1;
+	Fri,  1 Mar 2024 07:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709278674;
+	bh=S41V4Rg+5A+/H6j5q+KJKdnhp7A+2pV2Ka4RM2AmyGw=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=DCBYd8ImUE5PBwPUzAzWb2ntH/DUQHhzZjZaKG/4aKp6UQ8gosU++rcy9oJmxSix+
+	 FHTBZ9+HOzDRJKGidozF5gPkqPcRO0auGm0d0cLFd8EmHlALgV/QPBS7SD7qfdMpuv
+	 ur0XlMMeE5cOKvQJz/Mc0NDhT+rZR0i2rOt9+FAAq1LVKBwcQApE+3crSfU9ozJcLm
+	 eo7mxwOAhdIggs8LPpVw+kRPruTbOv54y5HHb8AFaG6ULU1hwkM2ZYAhr7pvtqXKAU
+	 R9Nd/+yJMc7xm+L8ZWvCtJ0AjLYvUZyL8D9S/UdEnPw8SNRNE4vC4da2zLZoeg6I7R
+	 VQXUbz7DQpuHw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A698C5475B;
+	Fri,  1 Mar 2024 07:37:54 +0000 (UTC)
+From: Hui Liu via B4 Relay <devnull+quic_huliu.quicinc.com@kernel.org>
+Date: Fri, 01 Mar 2024 15:16:33 +0800
+Subject: [PATCH v3] arm64: dts: qcom: qcm6490-idp: enable PMIC Volume and
+ Power buttons
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240301-gpio-keys-v3-1-ca664de8775c@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIANGA4WUC/22M0Q6CIBhGX8VxHQ1+TKGr3qN1oYD6ryUGxXKOd
+ w+9sq3L8+07ZyHBerSBnIuFeBsxoBsziENB9NCMvaVoMhNgUDJgFe0ndPRu50C5kG1r5ImBkiT
+ /J287/Gyt6y3zgOHl/LylI1/Xf5XIKad1JUWtlGk6aS7PN2oc9VG7B1k7EXYuiL0L2eWqK2Urj
+ Kwr+HVTSl8XNyPY4AAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Hui Liu <quic_huliu@quicinc.com>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709278672; l=2630;
+ i=quic_huliu@quicinc.com; s=20230823; h=from:subject:message-id;
+ bh=Vp4G+fbSlkb2JMufpBHQUvIun8hxc98pkwDSckQhTpA=;
+ b=adwBBQ0ZZt/zCSk4WrpPjo2YcwF+PcjY3Mpz6Xj/DW0QpvmkQ1r+8O5jnrwjrLA1H1KJ/DfgV
+ ggFdU7Xh3HZAkx4pQygcYIG/Fl+nJXs77c5ibMkB4z/atJiSiWJz7SC
+X-Developer-Key: i=quic_huliu@quicinc.com; a=ed25519;
+ pk=1z+A50UnTuKe/FdQv2c0W3ajDsJOYddwIHo2iivhTTA=
+X-Endpoint-Received:
+ by B4 Relay for quic_huliu@quicinc.com/20230823 with auth_id=80
+X-Original-From: Hui Liu <quic_huliu@quicinc.com>
+Reply-To: <quic_huliu@quicinc.com>
 
-On systems that have large core counts and large page sizes, but limited
-memory, the userfaultfd test hugepage requirement is too large.
+From: Hui Liu <quic_huliu@quicinc.com>
 
-Exiting early due to missing one test's requirements is a rather aggressive
-strategy, and prevents a lot of other tests from running. Remove the
-early exit to prevent this.
+The Volume Down & Power buttons are controlled by the PMIC via
+the PON hardware, and the Volume Up is connected to a PMIC gpio.
 
-Fixes: ee00479d6702 ("selftests: vm: Try harder to allocate huge pages")
-Signed-off-by: Nico Pache <npache@redhat.com>
+Enable the necessary hardware and setup the GPIO state for the
+Volume Up gpio key.
+
+Signed-off-by: Hui Liu <quic_huliu@quicinc.com>
 ---
- tools/testing/selftests/mm/run_vmtests.sh | 1 -
- 1 file changed, 1 deletion(-)
+Changes in v3:
+- Update the commit more concise and explicit.
+- remove "power-source" property and update the numeric value to defined
+name for "qcom,drive-strength".
+- Link to v2: https://lore.kernel.org/r/20240223-gpio-keys-v2-1-19f48b3d8762@quicinc.com
 
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index 246d53a5d7f28..727ea22ba408e 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -173,7 +173,6 @@ if [ -n "$freepgs" ] && [ -n "$hpgsize_KB" ]; then
- 	if [ "$freepgs" -lt "$needpgs" ]; then
- 		printf "Not enough huge pages available (%d < %d)\n" \
- 		       "$freepgs" "$needpgs"
--		exit 1
- 	fi
- else
- 	echo "no hugetlbfs support in kernel?"
+Changes in v2:
+- Update the commit description.
+- Link to v1: https://lore.kernel.org/r/20240206-gpio-keys-v1-1-7683799daf8d@quicinc.com
+---
+ arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 43 ++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+index acf145d1d97c..cf8f6d48bfc2 100644
+--- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
++++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+@@ -9,7 +9,9 @@
+ #define PM7250B_SID 8
+ #define PM7250B_SID1 9
+ 
++#include <dt-bindings/input/linux-event-codes.h>
+ #include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+ #include "sc7280.dtsi"
+ #include "pm7250b.dtsi"
+@@ -39,6 +41,24 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		label = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&key_vol_up_default>;
++
++		key-volume-up {
++			label = "volume_up";
++			gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
++			linux,input-type = <1>;
++			linux,code = <KEY_VOLUMEUP>;
++			wakeup-source;
++			debounce-interval = <15>;
++			linux,can-disable;
++		};
++	};
++
+ 	reserved-memory {
+ 		xbl_mem: xbl@80700000 {
+ 			reg = <0x0 0x80700000 0x0 0x100000>;
+@@ -421,6 +441,16 @@ vreg_bob_3p296: bob {
+ 	};
+ };
+ 
++&pm7325_gpios {
++	key_vol_up_default: key-vol-up-state {
++		pins = "gpio6";
++		function = "normal";
++		input-enable;
++		bias-pull-up;
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
++	};
++};
++
+ &pm8350c_pwm {
+ 	status = "okay";
+ 
+@@ -448,6 +478,19 @@ led@3 {
+ 	};
+ };
+ 
++&pmk8350_pon {
++	status = "okay";
++};
++
++&pon_pwrkey {
++	status = "okay";
++};
++
++&pon_resin {
++	linux,code = <KEY_VOLUMEDOWN>;
++	status = "okay";
++};
++
+ &qupv3_id_0 {
+ 	status = "okay";
+ };
+
+---
+base-commit: 23e11d0318521e8693459b0e4d23aec614b3b68b
+change-id: 20240206-gpio-keys-138bbd850298
+
+Best regards,
 -- 
-2.43.0
+Hui Liu <quic_huliu@quicinc.com>
 
