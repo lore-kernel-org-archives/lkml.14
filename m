@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289806A8AD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532EE6BFA3;
 	Fri,  1 Mar 2024 10:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709289779; cv=none; b=UIKSnwajho+vTGKy81UgFN51TAX0Dx9h3YPuE5R70l/i/bCu0aaj0DxakLs7PYl/CiURJLV/E48yaQYSPUys8jd25WVDEprVQuFgpgaCRdhI9SCbGIjIOJi5XZwdcXtay5MlEhgVq065jBOOx5opJGjx/k0t0qIi4z4kQuxaF94=
+	t=1709289779; cv=none; b=ek6h404bPtUXgFp+pstPd6aKR9uvKH7YOl2mFwMYZoV+jAU+0O/HM/bY9/rJhjSHITcnda+4iWScOrRIbJOTLJVcSttbusgh0z8GcIYLAcXDdBcU7g5FY6ud/dvApXoze2z65VT3RzVALMuOvtXGBpuL3KOF5l3SOBI9blSvzT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709289779; c=relaxed/simple;
-	bh=SU+tK2MlpgkdVnVhaHn0UQcoIzpj8l2UDGxN8QSA/B4=;
+	bh=bdj2sXbKKEcSVYU72hwdKppcUWhM0GPYmoe4dwmAPtA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BvDFwfZkerm0PfgdizfhrjZWRq590xiPE2g/SZyiVoiv1WxTcsfvjKuVQCpChLvnoxfQMFitNJP2GGEjtpW9191h8x+vMMUK5tO2lyx8EV6RnNTu5danx9oymZ+pPGjkG0OAf0IGd2DHI2wBUsKnCwqgKixoHxkLDvAB7xN+Pp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpEW0BK0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GWhv8iQ0Y4J9dDNInQC+etWULp+5SwXaWbQOCnbBrY9WhfqS4XjZpz++OXWWxE5j1XREMylb0mK+3kQd2JnwIT+9cduHoVzrF0C/JOlOldps9iyRFgATMIQM12kMv7v9qD2IuTBx2ox+98Cd/hbsiCJ4zcmHdy7suPRmPI2Mknk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8pnK0O6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpEW0BK0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CF0FEC43390;
-	Fri,  1 Mar 2024 10:42:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8pnK0O6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19053C43142;
+	Fri,  1 Mar 2024 10:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709289778;
-	bh=SU+tK2MlpgkdVnVhaHn0UQcoIzpj8l2UDGxN8QSA/B4=;
+	s=k20201202; t=1709289779;
+	bh=bdj2sXbKKEcSVYU72hwdKppcUWhM0GPYmoe4dwmAPtA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=WpEW0BK0JGXMO1idR1AAt80adqw95t3pmM5o39e5bqpFB9gcAE5BGHO01sFPl+2Nr
-	 OQfyup1xMyM/nN/2xw6r+ddrQqMaMstJvGMv5vHaNyHF/w3gIBx5N5jTAlC/1s7f/O
-	 C1VfhxYlqq9xQH0rtOUuQ5EGherYq9515+u8EJ+Q9GPxtMIruS+AYIBX1AkXZcu6ea
-	 cl1rAXSMsPDim5WHkFK4cLK/W28CDb6ASNoHmFfERNq4eebR1huk1IOX2LAwSDtZPG
-	 dJiMgDRj2Tz/irDnawrM4vcDeXibEMAn5RrMvgwvRBRxFLl8ynxdT3idbmH2qeXWBw
-	 8ralK9Wn2QNbw==
+	b=I8pnK0O6SunHZxJiOSjoPzu6eLrP/erBBlrYjVIt9YA+hIs1pPWabn56SSzh5DK8Q
+	 W6yfvcM+9gWMXKH3rWOIXjrgPxzbcIS4LrnPdUZu9Y+Mt1Hfjq12APfcJAKIlz4RBk
+	 akfIgkZBR/6ZW0KotndncFGPKuSCKA6YcX2km6VPMVu0CgYrA+hFxKxv0JpgvYq6Io
+	 mwybjn1zxwhkAE1xw/hbpn87cmULjWhfqtxMEaBX3cJQhJmnneYUSASgMyOFqD0gJV
+	 ig2I7GdDEuN8npR8zGWBITMZhseJlbZdtGG7RJGsAnTMqo1/M5qA3N3n47o211KcPC
+	 t+/9UCEEgT15g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7037C54E55;
-	Fri,  1 Mar 2024 10:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C52C54E41;
+	Fri,  1 Mar 2024 10:42:59 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 01 Mar 2024 12:42:58 +0200
-Subject: [PATCH net-next v3 2/9] net: dsa: mt7530: set interrupt register
- only for MT7530
+Date: Fri, 01 Mar 2024 12:43:03 +0200
+Subject: [PATCH net-next v3 7/9] net: dsa: mt7530: put initialising PCS
+ devices code back to original order
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id:
- <20240301-for-netnext-mt7530-improvements-3-v3-2-449f4f166454@arinc9.com>
+ <20240301-for-netnext-mt7530-improvements-3-v3-7-449f4f166454@arinc9.com>
 References:
  <20240301-for-netnext-mt7530-improvements-3-v3-0-449f4f166454@arinc9.com>
 In-Reply-To:
@@ -63,11 +63,11 @@ Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709289776; l=921;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709289776; l=1570;
  i=arinc.unal@arinc9.com; s=arinc9-Xeront; h=from:subject:message-id;
- bh=JV5lkSoAmKAO6vEQKKvFpHOlOFc0GQ6XMI05UOpapU0=;
- b=sDN29cEjzp83tM7un6A21yIeFo9LYgnjVC4Xk7q+Zp0J0suaNg8FyIx/eXQTAZUBFsTqh/YNe
- O2TMg3uZy9UDrLLFlOEDdkBqwyN4G4HFBOIdLa+sYPrKWohmmjWu2VF
+ bh=/2CkKGukm0R4V69WhBvbbIMKcr0CwYye/LAy2VcbSV0=;
+ b=jhj5rpVeLTk6pp6nZ74IqJOF62xtP/gZRjxzV6gmsJ/mCB/nP34kSs028tQQ0/2WrX6tvkMGJ
+ ykUTxIRPKOhARn1bax3sYOsUZQsHfG6i6H4204OyFLMD8QH9wvCic4L
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=z49tLn29CyiL4uwBTrqH9HO1Wu3sZIuRp4DaLZvtP9M=
 X-Endpoint-Received:
@@ -77,29 +77,55 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Setting this register related to interrupts is only needed for the MT7530
-switch. Make an exclusive check to ensure this.
+The commit fae463084032 ("net: dsa: mt753x: fix pcs conversion regression")
+fixes regression caused by cpu_port_config manually calling phylink
+operations. cpu_port_config was deemed useless and was removed. Therefore,
+put initialising PCS devices code back to its original order.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Acked-by: Daniel Golle <daniel@makrotopia.org>
-Tested-by: Daniel Golle <daniel@makrotopia.org>
 ---
- drivers/net/dsa/mt7530.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/mt7530.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 94d4b2c87799..5cfd303b773f 100644
+index e353c03dd1db..5c8ad41ce8cd 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -2055,7 +2055,7 @@ mt7530_setup_irq(struct mt7530_priv *priv)
- 	}
+@@ -2812,17 +2812,9 @@ static int
+ mt753x_setup(struct dsa_switch *ds)
+ {
+ 	struct mt7530_priv *priv = ds->priv;
+-	int i, ret;
+-
+-	/* Initialise the PCS devices */
+-	for (i = 0; i < priv->ds->num_ports; i++) {
+-		priv->pcs[i].pcs.ops = priv->info->pcs_ops;
+-		priv->pcs[i].pcs.neg_mode = true;
+-		priv->pcs[i].priv = priv;
+-		priv->pcs[i].port = i;
+-	}
++	int ret = priv->info->sw_setup(ds);
++	int i;
  
- 	/* This register must be set for MT7530 to properly fire interrupts */
--	if (priv->id != ID_MT7531)
-+	if (priv->id == ID_MT7530 || priv->id == ID_MT7621)
- 		mt7530_set(priv, MT7530_TOP_SIG_CTRL, TOP_SIG_CTRL_NORMAL);
+-	ret = priv->info->sw_setup(ds);
+ 	if (ret)
+ 		return ret;
  
- 	ret = request_threaded_irq(priv->irq, NULL, mt7530_irq_thread_fn,
+@@ -2834,6 +2826,14 @@ mt753x_setup(struct dsa_switch *ds)
+ 	if (ret && priv->irq)
+ 		mt7530_free_irq_common(priv);
+ 
++	/* Initialise the PCS devices */
++	for (i = 0; i < priv->ds->num_ports; i++) {
++		priv->pcs[i].pcs.ops = priv->info->pcs_ops;
++		priv->pcs[i].pcs.neg_mode = true;
++		priv->pcs[i].priv = priv;
++		priv->pcs[i].port = i;
++	}
++
+ 	if (priv->create_sgmii) {
+ 		ret = priv->create_sgmii(priv);
+ 		if (ret && priv->irq)
 
 -- 
 2.40.1
