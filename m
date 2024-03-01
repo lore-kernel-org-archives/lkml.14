@@ -1,155 +1,161 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825612568;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5108259B;
 	Fri,  1 Mar 2024 17:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709312835; cv=none; b=b4/kvy6Xlh1kitVddBiw76qSuVMadggiFdeC7djlHEAaMbXur2mSv05UnUaDyHmvgUqt660tm38UFD6n5n/5inHJ6H3IJND69h7qxXCjXv4WTcnWyBYGwRktXcct402m1LB5zxEKOJif8gdykmD9QDsKIIVGBsVODyy++GR6rd0=
+	t=1709312833; cv=none; b=JBc4IYK37bA6OsxXJbVBKrEJC/KliTuqHcQQNm5N+v2tthntPHBGTs89SAeGwWpySc5GWviMFZxpcTcWvPLI2V23xU8dkMM/DkCOaonSqXyRGh/wErqvOw7XlnuVezy5d1XMp4f9nf3KkXEvScRj8Rj3H2wqLziYperLOiERKN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709312835; c=relaxed/simple;
-	bh=zHTjE2s9eU4e8ejE9RWwR3BzqKotd3aHXC+td0OJ2X8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c2v8nSbcaEzcMqlR/wb3cfwLq4oBIrwDGtUmEnSqHY/dZ7gH3MJkFxn8I1iWOQ9N0lMFFxPhje4Pcg6FXvWId/uqnSuBIl47YBmtGIwlNBa5Uhf3+uDAvP2O8TrtMWlCCoqE1Bmi4RDzj4EYDFpznfxk29NVJbr77XDrij2l/bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E827E33D2B;
-	Fri,  1 Mar 2024 17:07:10 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C31ED13A59;
-	Fri,  1 Mar 2024 17:07:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AAZcLz4L4mUcGQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 01 Mar 2024 17:07:10 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Fri, 01 Mar 2024 18:07:10 +0100
-Subject: [PATCH RFC 3/4] mm, slab: introduce kmem_cache_charge()
+	s=arc-20240116; t=1709312833; c=relaxed/simple;
+	bh=rykT00e9RnV6xM7py0pfTSN+OEy9OLvHdbWKnJFpStA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qEz9CZyyF1Ff9AvVGP4WxGe4vY16VK2Qw91bfCRWK5Fzt8GGVRhekqYee3EZj6zkVOYHQZ0q6GZJXs0/0jIwuetyjDrmzf+FbkuwUELzK2NGj/7E8vp8FrnXiss8mOJJmXvXYdtFw4JGdchWZq0h0KNmh2I6IwPpPzXuduc5hpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o79NRdtq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o79NRdtq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F3FC433C7;
+	Fri,  1 Mar 2024 17:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709312833;
+	bh=rykT00e9RnV6xM7py0pfTSN+OEy9OLvHdbWKnJFpStA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o79NRdtq9bnUSEFuF4Du6Ce8be3X47MSFGfJJNzs56mnVYLPYxQiBGiXr1huhMbNE
+	 kg2dvmcCHxih7O+06875vfQwdNGSxLpawql30wk4YhOc2xYqW5aaQ92GjGdSfr2qvZ
+	 dRO8zWESf++QVH+HN/32QC+23RiTm5t3dBYfNAd9xacDfrQMv2sz1xYEoSla4j80Cm
+	 M3SmxxeT8WTryqGBobvVx4jOUgu3JQc7Qoq6fPDxc2wi8g6D9rIxz0LHmKP9naKeeE
+	 Au+jvNRTKsDC+o49XFE6S4cROK3wkgZY18iw8mUdD/oUSAK1ZzyuoJUafeLo/25vJ6
+	 NgiP3JyZCul3Q==
+Date: Fri, 1 Mar 2024 17:07:07 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] ASoC: dt-bindings: fsl-sai: allow only one
+ dma-names
+Message-ID: <20240301-deluxe-tiptoeing-741af7d620b9@spud>
+References: <20240227-asrc_8qxp-v2-0-521bcc7eb1c0@nxp.com>
+ <20240227-asrc_8qxp-v2-3-521bcc7eb1c0@nxp.com>
+ <20240229-husband-penalty-8c1ab0f57f55@spud>
+ <20240229-rundown-isotope-954ba9ea4c57@spud>
+ <ZeDdMJlxBL4SGkws@lizhi-Precision-Tower-5810>
+ <20240301-crudeness-resale-3c0a1228850d@spud>
+ <ZeIGXEJ3l4tgjmxT@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240301-slab-memcg-v1-3-359328a46596@suse.cz>
-References: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
-In-Reply-To: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
-To: Linus Torvalds <torvalds@linux-foundation.org>, 
- Josh Poimboeuf <jpoimboe@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
- Chuck Lever <chuck.lever@oracle.com>, Kees Cook <kees@kernel.org>, 
- Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Roman Gushchin <roman.gushchin@linux.dev>, 
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
- Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
- Muchun Song <muchun.song@linux.dev>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- Vlastimil Babka <vbabka@suse.cz>
-X-Mailer: b4 0.13.0
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 TAGGED_RCPT(0.00)[];
-	 REPLY(-4.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: E827E33D2B
-X-Spam-Level: 
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6B1Z/Uo6ygJQ4MXY"
+Content-Disposition: inline
+In-Reply-To: <ZeIGXEJ3l4tgjmxT@lizhi-Precision-Tower-5810>
 
-As suggested by Linus, introduce a slab API function to memcg-charge a
-an object that was previously allocated without __GFP_ACCOUNT and from a
-cache that's not SLAB_ACCOUNT. This may be useful when it's likely the
-object is to be freed soon, and thus the charging/uncharging overhead
-can be avoided.
 
-In case kmem_cache_charge() is called on an already-charged object, it's
-a no-op.
+--6B1Z/Uo6ygJQ4MXY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/all/CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com/
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- include/linux/slab.h | 10 ++++++++++
- mm/slub.c            | 29 +++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
+On Fri, Mar 01, 2024 at 11:46:20AM -0500, Frank Li wrote:
+> On Fri, Mar 01, 2024 at 04:05:25PM +0000, Conor Dooley wrote:
+> > On Thu, Feb 29, 2024 at 02:38:24PM -0500, Frank Li wrote:
+> > > On Thu, Feb 29, 2024 at 06:57:29PM +0000, Conor Dooley wrote:
+> > > > On Thu, Feb 29, 2024 at 06:55:58PM +0000, Conor Dooley wrote:
+> > > > > On Tue, Feb 27, 2024 at 03:54:11PM -0500, Frank Li wrote:
+> > > > > > Some sai only connect one direction. So allow only "rx" or "tx"=
+ for
+> > > > > > dma-names.
+> > > > >=20
+> > > > > Which sai? Can you restrict this per compatible please, so that s=
+omeone
+> > > > > cannot add 2 dmas for ones where only the tx is supported.
+> > > > >=20
+> > > > > |  dmas:
+> > > > > |    minItems: 1
+> > > > > |    items:
+> > > > > |      - description: DMA controller phandle and request line for=
+ RX
+> > > > > |      - description: DMA controller phandle and request line for=
+ TX
+> > > > >=20
+> > > > > The binding already allows only one, but it documents that the fi=
+rst dma
+> > > > > is always the RX dma, and that doesn't change with this patch..
+> > > >=20
+> > > > I said "doesn't change" - but I don't think you can change this
+> > > > trivially, as something could rely on the first dma being the rx on=
+e.
+> > > > You'd have to check that there is nothing using these using indices
+> > > > rather than names before making any changes here.
+> > >=20
+> > > Linux driver and dts with tx only work well. Only issue is dtb_check =
+will
+> > > report error. I want to eliminate these DTB_CHECK warning.
+> >=20
+> > Linux is not the only user of these bindings, citing linux as your
+> > evidence here is only sufficient if no other users exist. Do they?
+>=20
+> But, 'dmas' should be common property for all these bindings? I don't thi=
+nk
+> they use 'descriptions:' property, which should guide dts writer to write
+> dts file. actually words 'DMA controller phandle and request line' just
+> nonsense words. let 'regs', it'd better descript at 'reg-names' instead
+> of 'regs' if reg-names exist. Only meansful words is "RX" and "TX", which
+> already show at "dma-names".
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index b5f5ee8308d0..0c3acb2fa3e6 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -491,6 +491,16 @@ void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags) __assume_slab_ali
- void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
- 			   gfp_t gfpflags) __assume_slab_alignment __malloc;
- void kmem_cache_free(struct kmem_cache *s, void *objp);
-+#ifdef CONFIG_MEMCG_KMEM
-+int kmem_cache_charge(struct kmem_cache *s, gfp_t flags, void *objp);
-+#else
-+static inline int
-+kmem_cache_charge(struct kmem_cache *s, gfp_t flags, void *objp)
-+{
-+	return 0;
-+}
-+#endif
-+
- 
- /*
-  * Bulk allocation and freeing operations. These are accelerated in an
-diff --git a/mm/slub.c b/mm/slub.c
-index 64da169d672a..72b61b379ba1 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4241,6 +4241,35 @@ void kmem_cache_free(struct kmem_cache *s, void *x)
- }
- EXPORT_SYMBOL(kmem_cache_free);
- 
-+#ifdef CONFIG_MEMCG_KMEM
-+int kmem_cache_charge(struct kmem_cache *s, gfp_t flags, void *x)
-+{
-+	struct obj_cgroup ** objcg;
-+	struct slab *slab;
-+
-+	s = cache_from_obj(s, x);
-+	if (!s)
-+		return -EINVAL;
-+
-+	if (likely(!memcg_kmem_online()))
-+		return 0;
-+
-+	/* was it already accounted? */
-+	slab = virt_to_slab(x);
-+	if ((objcg = slab_objcgs(slab))) {
-+		unsigned int off = obj_to_index(s, slab, x);
-+
-+		if (objcg[off])
-+			return 0;
-+	}
-+
-+	if (!memcg_slab_post_alloc_hook(s, NULL, flags, 1, &x))
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+#endif
-+
- static void free_large_kmalloc(struct folio *folio, void *object)
- {
- 	unsigned int order = folio_order(folio);
+None of this matters. If there's a documented order for these, which
+there is, software is not obligated to use the names and can rely on the
+order alone. You need to check that there are no other users which will
+be broken by your proposed change.
 
--- 
-2.44.0
+> > > And it also reasonable, only rx or tx for a special SAI.
+> > >=20
+> > > Can we remove 'description'? dmas should already descripted at common=
+ place
+> > > and 'RX' and 'TX' are listed at 'dma-names'
+> >=20
+> > Removing the description has the same problem. The existing binding has
+> > set a fixed order that you now want to make flexible.
+>=20
+> Actually original set minItems: is 1, which means allow 1 channel. but
+> set items to force two channel.=20
+>=20
+> Does it work
+>=20
+> oneOf:
+>   items:=20
+>   	- description: TX
+> 	- description: RX
+>   items:
+> 	- description: TX
+>   items:
+> 	- description: RX
+>=20
+> >=20
+> > Thanks,
+> > Conor.
+>=20
+>=20
 
+--6B1Z/Uo6ygJQ4MXY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeILOwAKCRB4tDGHoIJi
+0vPRAQD30nLmqvnQSjER93Ue59P+ueynbOrDKfMBE0R2y7D7TAD+NnAAqA7ycgcG
+24A0m2khdUZJAoZ7TGqfgOL5wSHiMww=
+=Mxzk
+-----END PGP SIGNATURE-----
+
+--6B1Z/Uo6ygJQ4MXY--
