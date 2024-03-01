@@ -1,99 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CEC7E1;
-	Fri,  1 Mar 2024 12:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC97A7E1;
+	Fri,  1 Mar 2024 12:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709297164; cv=none; b=O2gzd9A697cKZIwtcSM1rzOqUlCHw2gFqlGGSlw03sqcJze7a2O8sVqxUwNjQn4NaCDIVrcBQb3FhJBvBiwzkxE//Ofqx/mkM0agEzt7Cm9vGwBbPwxdUY9zNDoNKdXOyFu7uhOHW4NpSWdz71GkJ5s0XFjBWrhCK8JC+nDTpzg=
+	t=1709297171; cv=none; b=LthreOaA3RdyfiUpQvGI8ovoo43e3L61RSrDIEIndA1tTROrrrRqfnso33Oy8FL7l+ohesgNYSaxgvLh262w99JE0ouobWJibIb0Amae1qmCu8XxWxl+t2g6Ceud5SEKYvx8xvmw6vONOuLFx97Kq0Ab8UwZRsRJK/AaI/h7Kkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709297164; c=relaxed/simple;
-	bh=Zz0zVoGja3cXhFHWcB5UiPfkBIp0SM7xu2HWnAZ05Vk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p4KjexykC5RSs+7GPKgZSWefLgR2nfsalC5WUKaNW4nOMzmP02INlIDF4gH/VtE9xxjcDlN++VApEloS//cYshMnFDPYZya5Y7aEq5pNqWcgg0SFY6xc6fFvmziMq5HkpeNdajcddbp/KTx7IPu599v14xqIb/VNyXWnF9RfPP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RR5miFg1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709297171; c=relaxed/simple;
+	bh=mDOnIxNEWflmiuOfz/DFh9I5k8F0L7yGn2YjnEuogmQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Og0wV7WD08JfaVuTCL32RevF3GNFOkhIUYKT1ndlhvn/yJ+U/8pl21jIZKciYV6/1R5yE0unj4eoD/6g09DZ+1XXreeZdaMD1aPCfMd7PTkuiaGzFa6S++xMzO2x4yDWuyADpwYmpxon5877owlvoHnRXOtE21cocJMXBv59PwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqic8d6M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RR5miFg1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 169B9C433C7;
-	Fri,  1 Mar 2024 12:46:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqic8d6M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D4FCC433F1;
+	Fri,  1 Mar 2024 12:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709297164;
-	bh=Zz0zVoGja3cXhFHWcB5UiPfkBIp0SM7xu2HWnAZ05Vk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RR5miFg1MbKC8vvcwq6NzLC782LATfreZUIRbVKNW2lo+QvieyB2UVH6UD3RlJagO
-	 Wcj3ZTvr4/RVH7eHon1cljpL6j1N0qVpaODmJ4q8bgpwKjm7Oza0ws+RqjQnuL0Fks
-	 tSBW3Ii6eBrjxVqg5jh4KKsk6tjttvTIYvIovTLTeIe9Vhwsg6zvFGVYvicxMCkSil
-	 NDKNA6pWwI8NnUZhIcDcEGM/yz5RUdrHSWqgciGLZgm8cIvryUxkKvf9iMsq81YoHc
-	 nMZxaVmQ74iMSji0quwRNAlhO6CARUduWu4+Lnf2Z45lpGJ+fFT0suABp3KH9qXrpL
-	 nuQaLLZDKBgiQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rg2HH-0000000016H-1tzj;
-	Fri, 01 Mar 2024 13:46:15 +0100
-Date: Fri, 1 Mar 2024 13:46:15 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	s=k20201202; t=1709297171;
+	bh=mDOnIxNEWflmiuOfz/DFh9I5k8F0L7yGn2YjnEuogmQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pqic8d6MRcsg/m/Vh4QoY2+o6POUOPIrSoNTgCg3Cimf2JAwWTTatBn8PmypGPuwU
+	 xWgUYF37CScVOJrsaoZYYhiXmRPGYJMJRLx8R9ns3yLOD/sLZnmZjAKAmByTuX4hr7
+	 Klf3lAvY8kxHHALBeVFCSMaGl7+COYMHXQOjWwTEKj6Oa5+HVGmyO+Lvgj7w7yjoss
+	 wFcP7SLaAST86xUm0FFC6V4CaKl9Iy2IGIYA17MQJdVtpfkk9LbM3vMIlqsQc74HLz
+	 ObWa/I3mUWM07W4HMYJiqC8YGjQaA4yVZbnqQ6CvkC5HQ9Uf4ja+ztDBxLhe++kHXy
+	 dCFmT0UyGDDnA==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and
- GICv3 ITS enable
-Message-ID: <ZeHOF4p1LlNDiLcy@hovoldconsulting.com>
-References: <20240223152124.20042-1-johan+linaro@kernel.org>
- <20240228220843.GA309344@bhelgaas>
- <20240229100853.GA2999@thinkpad>
- <ZeBbrJhks46XByMD@hovoldconsulting.com>
- <20240229122416.GD2999@thinkpad>
- <ZeCCPRVvYCNfMYnd@hovoldconsulting.com>
- <20240229135407.GE2999@thinkpad>
- <ZeCktwcEFAfCEVkV@hovoldconsulting.com>
- <20240301122406.GA2401@thinkpad>
+Subject: [GIT PULL] vfs fixes
+Date: Fri,  1 Mar 2024 13:45:45 +0100
+Message-ID: <20240301-vfs-fixes-1ca0ae9e33be@brauner>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240301122406.GA2401@thinkpad>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1615; i=brauner@kernel.org; h=from:subject:message-id; bh=mDOnIxNEWflmiuOfz/DFh9I5k8F0L7yGn2YjnEuogmQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQ+PMeZpamaUbxr39s3LrnMK/hfHptSuurk/kff72mdO VvozzY3r6OUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAiPlsZGbb1XLJ5t+hM4RYB NtMbKTcC8p0Ocgs3Hnedm2LHsD+Z/QrD/wD30j6+7NRrP121tPcXrPi8+M8ZRfNpT44VN0ycuGh RIScA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 01, 2024 at 05:54:06PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Feb 29, 2024 at 04:37:27PM +0100, Johan Hovold wrote:
+Hey Linus,
 
-> > I'm all for digging further into this issue with the help of Qualcomm,
-> > but I don't think that should block this series as that would leave the
-> > link errors that we hit since 6.7 in place and effectively prevent us
-> > from enabling the ITS in 6.9.
-> 
-> Sounds fair. I will report back, perhaps with a fix based on what I get to know.
+/* Summary */
+This contains two small fixes:
 
-Sounds good, thanks.
+* Fix an endless loop during afs directory iteration caused by not skipping
+  silly-rename files correctly.
 
-> But I think it is better to disable L0s in the SoC dtsi itself. That's not only
-> because there are patches to essentially disable L0s in 2 of the available
-> platforms making use of this Soc, but also you are enabling GIC ITS in the SoC
-> dtsi and that may affect sa8540p which is making use of this dtsi.
+* Fix reporting of completion events for aio causing leaks in userspace.
+  This is based on the fix last week as it's now possible to recognize
+  aio events submitted through the old aio interface.
 
-I did not do so on purpose as I'm only disabling L0s on machines where
-I've confirmed the issue. And the assumption for now is that this is a
-machine-level issue.
+/* Testing */
+clang: Debian clang version 16.0.6 (19)
+gcc: (Debian 13.2.0-7) 13.2.0
 
-> The users of that SoC may have not noticed the errors as you did before, but
-> enabling GIC ITS will certainly make the issue visible to them (more likely).
+All patches are based on v6.8-rc6 and have been sitting in linux-next.
+No build failures or warnings were observed.
 
-Sure and that would be good to know as that would give us another data
-point which may help determine where the problem lies. Enabling the ITS
-will (hopefully) be done in 6.9 so we'll have a whole cycle to disable
-L0s where needed. I don't think this should be done before then.
+/* Conflicts */
+At the time of creating this PR no merge conflicts were reported from
+linux-next and no merge conflicts showed up doing a test-merge with
+current mainline.
 
-Johan
+The following changes since commit d206a76d7d2726f3b096037f2079ce0bd3ba329b:
+
+  Linux 6.8-rc6 (2024-02-25 15:46:06 -0800)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.8-rc7.fixes
+
+for you to fetch changes up to 54cbc058d86beca3515c994039b5c0f0a34f53dd:
+
+  fs/aio: Make io_cancel() generate completions again (2024-02-27 11:20:44 +0100)
+
+----------------------------------------------------------------
+vfs-6.8-rc7.fixes
+
+----------------------------------------------------------------
+Bart Van Assche (1):
+      fs/aio: Make io_cancel() generate completions again
+
+David Howells (1):
+      afs: Fix endless loop in directory parsing
+
+ fs/afs/dir.c |  4 +++-
+ fs/aio.c     | 27 +++++++++++----------------
+ 2 files changed, 14 insertions(+), 17 deletions(-)
