@@ -1,113 +1,112 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C20A22618
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F0F286AE;
+	Fri,  1 Mar 2024 17:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314243; cv=none; b=K/fGnGxVfcZCRhBIIUgfQk8/2ghiPQMeuKi2qV60fnTcfJkR1iqtI/vR5+nA8AvQwACSQdTIrUFXC+UNtA7wr5mAPahch4tYfxlqPGCXWWeESD7V1z7ryGfzjWOUXgXA0Gun4WahMN2+bTrcqnyUmQ/o0X62vjUsNTl8EpjFXS8=
+	t=1709314293; cv=none; b=nIToKGARLcmz6ZNnNdMJvk+vnZNFS53znDwoubhGwGbiX3m+obuQjqkS4FZgCdYOmls3FYZwEWcFSz2ZTZGgFmGgA/l9T//qctHi7W09LvF9VqXtYz9inmtU9MxbKVOASCdybyVW7UsM0g0rCUhs8lqVUIPcTibyqVRqdCPqK7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314243; c=relaxed/simple;
-	bh=ylK+D7JueGqF19SPnHZNe+5mxcvVGQNvmcj6EMAxZD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I6lNvRDxXtSmxYhoKebE+wyOejIb/6c4+8JS5Xk977UgvRJH1wybNaEk9gRnkSWDN8eA/9DkIAn5Qa2jvw0pFHTv7Yg7PmyD/UijjQPF1bDt1+7HEsG1+TmLZPAicdLyElxy44y1StkQarwwusC3OdzCV1mbzpng8t6SuJKWqGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=d6DDV6/E; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1709314293; c=relaxed/simple;
+	bh=WcVXXiR4nzAg12r56OyRHoYJrh+caVvMRz0vmAhETbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzXv2FKNI6RfXw/gjSFNkCMoKwuZgqgqEakMQdUJfahukl2xhqakwcL4D0tKJIK7d/acUtylHf6MG8Hhlp8TOWjAxxXxSQ3q+ic4D+R98mgKImfBXszF8iNFb5gXAfAk/WlOb/B1uDDDjv/7wES3QswNmg3/KkHFZCDFfBysS1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OksYRh2k; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="d6DDV6/E"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-565b434f90aso3717889a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 09:30:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1709314240; x=1709919040; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Im9Umr2T85hMOmj0bpnRxcaABawqPpPhu4ZR7NKNsVY=;
-        b=d6DDV6/Eiarm0bJq1DNTlh7R5wtoJ1ISKdiLl35Ys/jOwOfcieS/bmafgVOQVrkXeY
-         ESnDnJkis662XNZsXul5BOhCtq55yO9ZIiVPwAB2TuZVEYRZm/SIxvqDJA6V9M9iJQZl
-         9T+b9NmKN2s6RgXn4cDFSevOL2kfTYkO4/z+ceLX8eEzOlWcfDb9UICjw6K+kjB/i3Eh
-         E+tW80Zd9ALMirEfyGDsOdlREIDyG4cV484rrH/5CT64fkpaKiq4ZEsgLt2K84pI7WjT
-         GPOKDPvrhcN7rlmx7VPKSPm/UFdw4pEyJHc8EtNQeYnh+GiWdg8VU9bNhU8/zxZUWvSs
-         q7/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709314240; x=1709919040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Im9Umr2T85hMOmj0bpnRxcaABawqPpPhu4ZR7NKNsVY=;
-        b=tBdZWoVgbt2Xsb0DwQLxOvSVZ8P63wYm5UgK4mPjbHYdUWWuLo961qbTWZhCN1FApv
-         BBaxLDHIEtAC08xtK0XrnsRiMvNboveksFE203oBc+F0Xqc3fOpltTKSlvgfTlxyiQ34
-         KkzoHe9M1+Yp1PvycKFnk2o0X/kUevEphom//jNOajimc2UM6apLAsmJomqp0zQTrTqC
-         YA8KRFYCHsJcDPdY3XYjyVv6UVpx7KIP1RPKUX+QsyA/2BKltPU3GUNYDIzXZze1r8Ea
-         efg1dKKUtGH47VB3Rg+XWfMfJOqSvVPbvV0twvW89esgMG+17n0C7GPdbfJzq0I3gNv3
-         aoSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXg3CfLxDVQo7k4cNjmz7KasZ9oYznXORgEItWKfMIakTcgg0kj2xZSAgxAy23hTrhm51XMx0hgzrrTNQI2KUUGvmYxXxWBcsStVbPU
-X-Gm-Message-State: AOJu0Yzk/R0+sMbbXfDoJSZxKFQ4nUoJuItn74Jm0InYr2WEblCXeyzc
-	eHNGKHgndLjGFlT46zCDndwHc3MqoODzdP5MLxRZ21ae7677bQlik0nD7kXvuC/FO8iuZVhiwF3
-	JNzd9hPo2A9aCYgQkvWyQ/fyccg03u/8mjvK67Q==
-X-Google-Smtp-Source: AGHT+IGYLJyhVjmMRjbUCITVxHrHFq3SYd6tnAK4qRR5cHKptQ5mXdPAN6On8sZlA3S5Bv7Ldr+4yWiPY5SAqyrDMao=
-X-Received: by 2002:a05:6402:35cc:b0:566:f851:f53b with SMTP id
- z12-20020a05640235cc00b00566f851f53bmr334043edc.35.1709314240646; Fri, 01 Mar
- 2024 09:30:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OksYRh2k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709314292; x=1740850292;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=WcVXXiR4nzAg12r56OyRHoYJrh+caVvMRz0vmAhETbg=;
+  b=OksYRh2kTdISN6LT2dqvVlIvnFKji2C8lONSEaoVKoT9GlbX0AZ16vGH
+   Bg5UlhAGr/fgNqa+gBdkqz97clhUusXwc+Y8orGhbqxd08eUFP6D+01Hw
+   M3khJi3Xkjf8IZUBtyWlRfjajfY51E0b3Jx9TRNW8Nwq4xsEz8AlUJMkA
+   JbYkQxma7p5VmR8CCCKQa+t+gBH6aJuFpkYG9WtH/9L++a1N1O2P/f37H
+   tViZWJdnMfvp4JeRnHXuQciMMZmaK0QDu/dD2rO7uIE8d/DsVG8fqse3H
+   BpzRf+q1CnqnQZUdUcktEoGeNim0IWS1c48i//L4JZzwwL3m8vsGQk+Y6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="15273903"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="15273903"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:31:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="914021014"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="914021014"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:31:27 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rg6jE-0000000911k-3lII;
+	Fri, 01 Mar 2024 19:31:24 +0200
+Date: Fri, 1 Mar 2024 19:31:24 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] gpiolib: Fix the error path order in
+ gpiochip_add_data_with_key()
+Message-ID: <ZeIQ7KsOsGHUqdny@smile.fi.intel.com>
+References: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
+ <ZddLRAqxFr7v3Zqs@smile.fi.intel.com>
+ <CAMRc=Mdxtx-wh3HGu+SNrCwfSq0PEm3fG7hK_6wPAk2uzk8xpA@mail.gmail.com>
+ <ZddOKTP73ja6ejTc@smile.fi.intel.com>
+ <CAMRc=Mf_w_E4B7c_Uj1WV3zv9DbmJ22oFvJJwtd-+3oUDVcvXA@mail.gmail.com>
+ <ZeCw3pzHdrXw46of@smile.fi.intel.com>
+ <CAMRc=MdKFvAefKxLnovxnQt_tpiW+dCviWXKuHqg3vqHhEtPNA@mail.gmail.com>
+ <ZeDLLfQOrPLUzyGt@smile.fi.intel.com>
+ <CAMRc=McxWc-78q6FW61doDua60ZvCOfSXK7v7wmAm0rX7wDDgA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZeFPz4D121TgvCje@debian.debian> <CAO3-PboqKqjqrAScqzu6aB8d+fOq97_Wuz8b7d5uoMKT-+-WvQ@mail.gmail.com>
- <CANn89iLCv0f3vBYt8W+_ZDuNeOY1jDLDBfMbOj7Hzi8s0xQCZA@mail.gmail.com>
-In-Reply-To: <CANn89iLCv0f3vBYt8W+_ZDuNeOY1jDLDBfMbOj7Hzi8s0xQCZA@mail.gmail.com>
-From: Yan Zhai <yan@cloudflare.com>
-Date: Fri, 1 Mar 2024 11:30:29 -0600
-Message-ID: <CAO3-PboZwTiSmVxVFFfAm94o+LgK=rnm1vbJvMhzSGep+RYzaQ@mail.gmail.com>
-Subject: Re: [PATCH v2] net: raise RCU qs after each threaded NAPI poll
-To: Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Simon Horman <horms@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Coco Li <lixiaoyan@google.com>, Wei Wang <weiwan@google.com>, 
-	Alexander Duyck <alexanderduyck@fb.com>, Hannes Frederic Sowa <hannes@stressinduktion.org>, 
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org, bpf@vger.kernel.org, 
-	kernel-team@cloudflare.com, Joel Fernandes <joel@joelfernandes.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, mark.rutland@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McxWc-78q6FW61doDua60ZvCOfSXK7v7wmAm0rX7wDDgA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Eric,
+On Fri, Mar 01, 2024 at 08:41:09AM +0100, Bartosz Golaszewski wrote:
+> On Thu, Feb 29, 2024 at 7:21 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Feb 29, 2024 at 06:26:29PM +0100, Bartosz Golaszewski wrote:
+> > > On Thu, Feb 29, 2024 at 5:29 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > > > I'm sorry I really need more (morning) coffee, maybe you can simply update
+> > > > > > yourself or submit a correct fix?
+> > > > >
+> > > > > Ok, I'll apply this and send a fix on top of it.
+> > > >
+> > > > I don't see any progress with this. Do I need to do something?
+> > >
+> > > No, it just fell through the cracks. I applied this now and sent my
+> > > own fix on top.
+> 
+> I now realized that this commit doesn't really fix ba5c5effe02c
+> ("gpio: initialize descriptor SRCU structure before adding OF-based
+> chips"). It addresses an issue introduced as long ago as commit
+> 2f4133bb5f14 ("gpiolib: No need to call gpiochip_remove_pin_ranges()
+> twice").
 
-On Fri, Mar 1, 2024 at 2:30=E2=80=AFAM Eric Dumazet <edumazet@google.com> w=
-rote:
->
-> I could not see the reason for 1sec (HZ) delays.
->
-> Would calling rcu_softirq_qs() every ~10ms instead be a serious issue ?
->
-The trouble scenarios are often when we need to detach an ad-hoc BPF
-tracing program, or restart a monitoring service. It is fine as long
-as they do not block for 10+ seconds or even completely stall under
-heavy traffic. Raising a QS every few ms or HZ both work in such
-cases.
+Oh, that means it revealed the issue :-)
 
-> In anycase, if this all about rcu_tasks, I would prefer using a macro
-> defined in kernel/rcu/tasks.h
-> instead of having a hidden constant in a networking core function.
+> I will change the Fixes tag, queue it for fixes and send it to
+> Torvalds for rc7, then merge them back into for-next.
 
-Paul E. McKenney was suggesting either current form or
+Thank you!
 
-         local_bh_enable();
-         if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-                 rcu_softirq_qs_enable(local_bh_enable());
-         else
-                 local_bh_enable();
+-- 
+With Best Regards,
+Andy Shevchenko
 
-With an interval it might have to be
-"rcu_softirq_qs_enable(local_bh_enable(), &next_qs);" to avoid an
-unnecessary extern/static var. Will it make more sense to you?
 
-thanks
-
->
-> Thanks.
