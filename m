@@ -1,176 +1,205 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC456EF1F;
-	Fri,  1 Mar 2024 15:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B0C1F95F
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709308064; cv=none; b=qUbe0nE1n+sVpRrFgABydTMgtDUzpXJVqxjEeyTKtMrT7oSfH2yEXwUHFD0K8Mk5kzRMD0QxF4QbrLm6A6y1jEHGmUQJmTdsCUBZloiovxVRHXemT+ggQUMak4qZxTkmKfe1BM7PT9QEf/F/I572tE2SBS8vDVUxUzrGlIYNAmQ=
+	t=1709308198; cv=none; b=KaByxJybsC+36zUy3IcY6Is1fHkKpyA3TuFU9TVRlIFIL0hOG/BfI4rEkjvu3xHEWBrHsJPIAw/mj5D/i5OgRYzTvp7OPPNMyp60JeaWQ7G1HbrWzv5NgNOJxMuB24dIv0eXdgMWRZ6X2Pzp/bmsx3+ymKnMaJj/MHiNhrqqhuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709308064; c=relaxed/simple;
-	bh=/lpcu1cwKToP1YTl3Vb9NOZDrttRJdM4V2OIwh/bNeU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=keZvwJL6Q/t51SQg4uQwu+uibwAaFqnC3GZdC45RJ6OvdrgYZxxQiJdApzbgbq5pHkkQzhRnqpRTtsrnkO9ikknkdisNLPyhXwVG683nlgSlh88M3NZe4YCzdcKVTGe0aMEvGxAVHS3OFifcR9AOai+VKq2VsTGoPbW/tiWAwTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gnZwGnhu; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709308198; c=relaxed/simple;
+	bh=B32SD+v2fJY1qKDCGPDCH8R7sgMnBptIxaY0yF0bLMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsY830At50USrlfPK+3sFq1DbQMJYeNOKk6QrOyNdXhIk4H77sp+1s5Vn/T6o9e/ahZMFXIEntjtKij7cIY4rGbYQv5HPPzYasRWxneeptXIKkJmMlmj3Z0LZI9DotcSHSLE+h5mys++7QpH5WB5hX5v1PMJ89ygrgvWSWyRjSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EZod3tO4; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gnZwGnhu"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BDC736000D;
-	Fri,  1 Mar 2024 15:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709308055;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uE39Tdusc2iOYu8yciRGo5J13AkSfvwvY5k+yQjJTiM=;
-	b=gnZwGnhuFM4BkMTf3c2iQy2zn50vixMSBMJd1pZ/Uj585gJ7pwh7Rj/65XsyYXnpMcTQHD
-	urBkPI0KQ73Hber0gd+u09Ddbmb0+a+todMeqWvN4hzfA04RUhlZ5vHV/ajeY7MO7Ob52o
-	OgcyZbXgdDgVOuzBVzyjReeWYF0viu1xoCD9M7u6Z5H1gnweu9zhfCCCbC/WG1dGnJ66M+
-	uIV698Tbs/E0E2rlyjFlfqzzzA2O4hEg5xyY1bky16X2ad7VFBVXvNhaKiNor8AQaJDzpV
-	kWc6TZWTcHnksWEwM5rsFy45QORQxBFeYpwzqXBzjo/7E8Y9nW4yRMHIO0Gc5Q==
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EZod3tO4"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a4429c556efso377018366b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 07:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1709308194; x=1709912994; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VUzFdeN53i9tXm7MXEexoS0+mcu1uT+SkLKy7PDIFlc=;
+        b=EZod3tO4AhibPQ7p5z5JbIj+zA7STJOz/jBKKK1u/YnYLAQx37SJcDA32vgwVt0WU6
+         2GO3lpzHnE0uK3Q37rjdRiJHKmsvCTJCqWq/k+03qBZmxLZUjjk+YAa9cuUKQBlld7F7
+         ShEIsUkKKMnvG7a2TGQvmbZPIHWWHrrvcDYnO9y07y/vVkD07Xnll9ddCNIicCz1zJyJ
+         DuqVKXMvCSWqUKVHRIggEBbqiI9tBMR5W16w17C9xQpfWc7ulQpBkgqYUEux5TD8/AD4
+         /KxoDGP7nhJixoV4q/b7cDYwX4afTxMCWcgMj/+pru4qCnPqV8ndQMV279fkKtIwuOS7
+         +4hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709308194; x=1709912994;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VUzFdeN53i9tXm7MXEexoS0+mcu1uT+SkLKy7PDIFlc=;
+        b=EE0peiEeXGCblvmSCp2HUA9s8VH0frDD1Q7SDmJ8SLIhDjG6P6pvQz8I0HuYxrr1Md
+         NnOIBqGmU5r1Dzq06sXWgKCndVmwZansXgYJhe/yHnP5W7kJAdg72i3yGJkk89w8sgb4
+         Jz+lazf7gyFcvE4+DAELBBUKLRR+mBKFPV2EMOn+DkTx6/u5VsfrniYMFo8hdCQw6eZQ
+         ujTnseuzJRPycQnqYEBhd6V+XAUID1/4OvRJ95hN28mrAAkrsMsp4HBvQqMFMkTcindY
+         K+QS5NliXJituEvd7Xjf0LdlmwcE9BvG0RNGldqDKv4N60OJU/zE6FgStXMNXXXdn2bm
+         E+Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCXs+6BuQFjRgQ7RKjem+GGrlcbwKfakVqXyTLQ2NwlTGqwZ/RBe/RpVl45AdALX358J0yxvNcmv2XSWk7KlJM51t4XqMh6QYhvtHUga
+X-Gm-Message-State: AOJu0YwSQS7nCOOs928LaVhTGsts/gLGUk2Jy0Eze292I4Z/V8ZHVmKX
+	ZhVq/bXtPna0XaA29Cs+ASbd+7GDXKroAaTx2Jkf0SwMxsOwefGmS1a2JhrjvLg=
+X-Google-Smtp-Source: AGHT+IHDOHTD1ITVXnoJ61qj8yPgxmN6T4g2ue9+Fmw1/FPkJm86Sr71R9hYqb2Qw+Qpv5vJv+p9jw==
+X-Received: by 2002:a17:906:4148:b0:a44:f89:a04e with SMTP id l8-20020a170906414800b00a440f89a04emr1878722ejk.35.1709308194170;
+        Fri, 01 Mar 2024 07:49:54 -0800 (PST)
+Received: from alley ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id vw3-20020a170907a70300b00a42ee2af521sm1795253ejc.137.2024.03.01.07.49.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 07:49:53 -0800 (PST)
+Date: Fri, 1 Mar 2024 16:49:52 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: flush was: Re: [PATCH printk v2 22/26] printk: nbcon: Implement
+ emergency sections
+Message-ID: <ZeH5IAKyNbwL9wek@alley>
+References: <20240218185726.1994771-1-john.ogness@linutronix.de>
+ <20240218185726.1994771-23-john.ogness@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 01 Mar 2024 16:47:34 +0100
-Message-Id: <CZIJ4VQULK8C.QA1KAO3BTVR0@bootlin.com>
-Subject: Re: [PATCH v2 01/11] dt-bindings: i2c: nomadik: add
- mobileye,eyeq5-i2c bindings and example
-Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Andi Shyti"
- <andi.shyti@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-mips@vger.kernel.org>, "Gregory Clement"
- <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Rob Herring" <robh@kernel.org>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: aerc 0.15.2
-References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
- <20240229-mbly-i2c-v2-1-b32ed18c098c@bootlin.com>
- <20240301151146.GA2114576-robh@kernel.org>
-In-Reply-To: <20240301151146.GA2114576-robh@kernel.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240218185726.1994771-23-john.ogness@linutronix.de>
 
-Hello,
+On Sun 2024-02-18 20:03:22, John Ogness wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> In emergency situations (something has gone wrong but the
+> system continues to operate), usually important information
+> (such as a backtrace) is generated via printk(). Each
+> individual printk record has little meaning. It is the
+> collection of printk messages that is most often needed by
+> developers and users.
+> 
+> In order to help ensure that the collection of printk messages
+> in an emergency situation are all stored to the ringbuffer as
+> quickly as possible, disable console output for that CPU while
+> it is in the emergency situation. When exiting the emergency
+> situation, trigger the consoles to be flushed.
+> 
+> Add per-CPU emergency nesting tracking because an emergency
+> can arise while in an emergency situation.
+> 
+> Add functions to mark the beginning and end of emergency
+> sections where the urgent messages are generated.
+> 
+> Do not print if the current CPU is in an emergency state.
+> 
+> Trigger console flushing when exiting all emergency nesting.
+> 
+> Note that the emergency state is not system-wide. While one CPU
+> is in an emergency state, another CPU may continue to print
+> console messages.
+> 
+> --- a/kernel/printk/nbcon.c
+> +++ b/kernel/printk/nbcon.c
+> @@ -1105,6 +1134,58 @@ void nbcon_atomic_flush_unsafe(void)
+>  	__nbcon_atomic_flush_all(prb_next_reserve_seq(prb), true);
+>  }
+>  
+> +/**
+> + * nbcon_cpu_emergency_enter - Enter an emergency section where printk()
+> + *	messages for that CPU are only stored
+> + *
+> + * Upon exiting the emergency section, all stored messages are flushed.
+> + *
+> + * Context:	Any context. Disables preemption.
+> + *
+> + * When within an emergency section, no printing occurs on that CPU. This
+> + * is to allow all emergency messages to be dumped into the ringbuffer before
+> + * flushing the ringbuffer. The actual printing occurs when exiting the
+> + * outermost emergency section.
+> + */
+> +void nbcon_cpu_emergency_enter(void)
+> +{
+> +	unsigned int *cpu_emergency_nesting;
+> +
+> +	preempt_disable();
+> +
+> +	cpu_emergency_nesting = nbcon_get_cpu_emergency_nesting();
+> +	(*cpu_emergency_nesting)++;
+> +}
+> +
+> +/**
+> + * nbcon_cpu_emergency_exit - Exit an emergency section and flush the
+> + *	stored messages
+> + *
+> + * Flushing only occurs when exiting all nesting for the CPU.
+> + *
+> + * Context:	Any context. Enables preemption.
+> + */
+> +void nbcon_cpu_emergency_exit(void)
+> +{
+> +	unsigned int *cpu_emergency_nesting;
+> +	bool do_trigger_flush = false;
+> +
+> +	cpu_emergency_nesting = nbcon_get_cpu_emergency_nesting();
+> +
+> +	WARN_ON_ONCE(*cpu_emergency_nesting == 0);
+> +
+> +	if (*cpu_emergency_nesting == 1)
+> +		do_trigger_flush = true;
+> +
+> +	/* Undo the nesting count of nbcon_cpu_emergency_enter(). */
+> +	(*cpu_emergency_nesting)--;
+> +
+> +	preempt_enable();
+> +
+> +	if (do_trigger_flush)
+> +		printk_trigger_flush();
 
-On Fri Mar 1, 2024 at 4:11 PM CET, Rob Herring wrote:
-> On Thu, Feb 29, 2024 at 07:10:49PM +0100, Th=C3=A9o Lebrun wrote:
-> > Add EyeQ5 bindings to the existing Nomadik I2C dt-bindings. Add the
-> > EyeQ5-specific property behind a conditional. Add an example for this
-> > compatible.
-> >=20
-> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> > ---
-> >  .../devicetree/bindings/i2c/st,nomadik-i2c.yaml    | 48 ++++++++++++++=
-++++++--
-> >  1 file changed, 44 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml =
-b/Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml
-> > index 16024415a4a7..2d9d5b276762 100644
-> > --- a/Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml
-> > +++ b/Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml
-> > @@ -14,9 +14,6 @@ description: The Nomadik I2C host controller began it=
-s life in the ST
-> >  maintainers:
-> >    - Linus Walleij <linus.walleij@linaro.org>
-> > =20
-> > -allOf:
-> > -  - $ref: /schemas/i2c/i2c-controller.yaml#
-> > -
-> >  # Need a custom select here or 'arm,primecell' will match on lots of n=
-odes
-> >  select:
-> >    properties:
-> > @@ -24,6 +21,7 @@ select:
-> >        contains:
-> >          enum:
-> >            - st,nomadik-i2c
-> > +          - mobileye,eyeq5-i2c
-> >    required:
-> >      - compatible
-> > =20
-> > @@ -39,6 +37,10 @@ properties:
-> >            - const: stericsson,db8500-i2c
-> >            - const: st,nomadik-i2c
-> >            - const: arm,primecell
-> > +      # The variant found on Mobileye EyeQ5
->
-> Kind of obvious from the compatible string, but maybe you are keeping=20
-> the existing style...
+Just an idea. printk_trigger_flush() calls defer_console_output().
+It always moves the flushing into IRQ context.
 
-I indeed kept the existing style.
-Ping me if you want this removed!
+It might make sense to add a flush() function which would try
+to flush the messages directly from this context and
+queue the IRQ work only when it fails. Something like:
 
-> > +      - items:
-> > +          - const: mobileye,eyeq5-i2c
-> > +          - const: arm,primecell
-> > =20
-> >    reg:
-> >      maxItems: 1
-> > @@ -55,7 +57,7 @@ properties:
-> >        - items:
-> >            - const: mclk
-> >            - const: apb_pclk
-> > -      # Clock name in DB8500
-> > +      # Clock name in DB8500 or EyeQ5
-> >        - items:
-> >            - const: i2cclk
-> >            - const: apb_pclk
-> > @@ -70,6 +72,16 @@ properties:
-> >      minimum: 1
-> >      maximum: 400000
-> > =20
-> > +  mobileye,olb:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +    items:
-> > +      - items:
-> > +          - description: Phandle to OLB system controller node.
-> > +          - description: Platform-wide controller ID (integer starting=
- from zero).
->
-> Rather than a made up ID, just store the shift value you ultimately=20
-> need.
+void printk_emergency_flush()
+{
+	/* nbcon consoles could be flushed in any context. */
+	if (have_nbcon_console)
+		nbcon_flush_all();
 
-Issue with storing the shift value is that you also need to know what
-value to put in that field. It's an enum mapping the I2C speed which
-isn't found in DT.
+	if (have_legacy_console) {
+		if (console_trylock())
+			console_unlock();
+		else
+			defer_console_output();
+	}
+}
 
-> These properties are fragile because they break if anything that's not=20
-> defined in DT changes whether that's register offset, bit offset,=20
-> bitfield size or values. Or also if there are additional fields to=20
-> access.
+But wait, nbcon_flush_all() might have troubles to get the per-console
+lock because it would be called with NBCON_PRIO_NORMAL.
 
-My take is that it is better to have it all either in DT or in driver.
-Having a mix of both is a mess when debugging. If something breaks it
-is a driver bug; such bugs get fixed in driver code. That way DT
-doesn't know about it and doesn't have to be changed.
 
-Putting shifts in DT is an abstraction that ends up being unhelpful. You
-split hardware knowledge half in DT (register offset and/or mask), half
-in driver (value to put in the field). We'd rather have it all in
-driver code.
+Wait, wait, wait.
 
-Next hardware revision will be more complex with potentially fields
-split across registers. A shift value wouldn't cut it. A new
-compatible + made up ID allows accomodating for that. That way we have
-homogeneity across compatibles.
+defer_console_output() schedules wake_up_klogd_work_func(). It flushes
+only legacy consoles. It means that even emergency messages would
+need to wait for the printk kthread.
 
-Have a nice day,
+By other words, it seems that the emergency context does not have any
+effect for nbcon consoles.
 
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+It brings a question if any code would need to acquire the emergency
+context at all.
 
+I quess that this does not work as expected.
+
+Or do I miss anything, please?
+
+Best Regards,
+Petr
