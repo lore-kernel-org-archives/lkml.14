@@ -1,80 +1,38 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FBA46B7;
-	Fri,  1 Mar 2024 17:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825972571;
+	Fri,  1 Mar 2024 17:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709312834; cv=none; b=aSP5QSHl+bulrDBSro5CHLmmUSNwv0xOh2W7PCHX9bzVMw+iLY9BY8gk7cqQ7COLt84qFZlEVgcqME6gXzVsVb8xGCtTodcpd49dfWYZxSSlZ0QBB+354r8UWV09wXnoh3iLrxkdWqHlb10l7N1m0Vb4D6ijFhoqBMDkJvwgPB4=
+	t=1709312835; cv=none; b=YgHiBCCspc1Or7Cpfog9PuvfRaY3z/t/o063qu0I8Mox7P35ZS7M0ig9j4O8upDmAXsVVSQgOtUSy42G184Fwd+fr3ZQVOi3eGP4RBE7bG0c5jEE4dpGzuL8uVI0pqsZFSBfZc4Lzda42bHP8dRHAx0wObPSsgF/0yLwdO163pQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709312834; c=relaxed/simple;
-	bh=QnfkJAoInt5fUE+416z0sQ20bCXrkSWJKNSLICwxmGM=;
+	s=arc-20240116; t=1709312835; c=relaxed/simple;
+	bh=Ss/e4gGxC24daD3nyMEINkiPC9L7D1njVPpAZVM+9sg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p95dDAU7RfLK74kD+9IggMtkH5zglerivEdHaMv236iJh6+dGhFTqrcAIe6/PqFS0LKbAwSI4cdmhZo0bk2FzmAdWOSnyBoHTPLywNe/xHhx8npCU3++sYE3ZVCDxjp+7rOOwj1Dk06nZWlYPqojnfhENh7p1D4iaNMHfeZ2xbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hR4RI3M7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o05E46K6; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hR4RI3M7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o05E46K6; arc=none smtp.client-ip=195.135.223.131
+	 In-Reply-To:To:Cc; b=Q5muM0cTLIdxbHj2QWTOyU3PkSGhlaTw34/m7y/Ok/UQ4SrJrIZ6NTrNsuiCJwPbsF8kKZ8gFFhjR1/za8AdreoGilGsDWXQ3qgpgg/71/vv5xwcdKKupDnB5qsvGiXM2xj4QuEIvmBoSbevzqoTYvBYh8fDaiVF7u1zxCn0Zds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hR4RI3M7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o05E46K6";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hR4RI3M7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o05E46K6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 13FDA207B4;
-	Fri,  1 Mar 2024 17:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709312831; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3OiKnePSvssqSsATKZD6FgDSrsGbw6Gz9LH7uaXGsMo=;
-	b=hR4RI3M7QdmI77qwLuZOBimpV0p2ze0qGZw1B4hIMLU2F/D7t3Gu5VbTAR9gTJgDi6vCeY
-	CHs1xCbyeczWk9Hb3kbBfU7sfuhKG4jF0YdapV00Mtliv7GsO2UuM0v+bywHfHlN1udd4J
-	we+zKQVacDSXAT9F9S8KKuGQXrqXA18=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709312831;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3OiKnePSvssqSsATKZD6FgDSrsGbw6Gz9LH7uaXGsMo=;
-	b=o05E46K6EN+fy853AkUBuf6HrQD5ZThoOdIKf4tjmcYR9J8tcaU11fvMi6vu+GSL77uZkk
-	Y/9da7wAoHpaIGBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709312831; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3OiKnePSvssqSsATKZD6FgDSrsGbw6Gz9LH7uaXGsMo=;
-	b=hR4RI3M7QdmI77qwLuZOBimpV0p2ze0qGZw1B4hIMLU2F/D7t3Gu5VbTAR9gTJgDi6vCeY
-	CHs1xCbyeczWk9Hb3kbBfU7sfuhKG4jF0YdapV00Mtliv7GsO2UuM0v+bywHfHlN1udd4J
-	we+zKQVacDSXAT9F9S8KKuGQXrqXA18=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709312831;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3OiKnePSvssqSsATKZD6FgDSrsGbw6Gz9LH7uaXGsMo=;
-	b=o05E46K6EN+fy853AkUBuf6HrQD5ZThoOdIKf4tjmcYR9J8tcaU11fvMi6vu+GSL77uZkk
-	Y/9da7wAoHpaIGBA==
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B170733D2C;
+	Fri,  1 Mar 2024 17:07:10 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E618113AA3;
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7CD6813AA3;
 	Fri,  1 Mar 2024 17:07:10 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MKjgNz4L4mUcGQAAD6G6ig
+	id 6PIzHj4L4mUcGQAAD6G6ig
 	(envelope-from <vbabka@suse.cz>); Fri, 01 Mar 2024 17:07:10 +0000
 From: Vlastimil Babka <vbabka@suse.cz>
-Date: Fri, 01 Mar 2024 18:07:11 +0100
-Subject: [PATCH RFC 4/4] UNFINISHED mm, fs: use kmem_cache_charge() in
- path_openat()
+Date: Fri, 01 Mar 2024 18:07:08 +0100
+Subject: [PATCH RFC 1/4] mm, slab: move memcg charging to post-alloc hook
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240301-slab-memcg-v1-4-359328a46596@suse.cz>
+Message-Id: <20240301-slab-memcg-v1-1-359328a46596@suse.cz>
 References: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
 In-Reply-To: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
 To: Linus Torvalds <torvalds@linux-foundation.org>, 
@@ -102,136 +60,355 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
  Vlastimil Babka <vbabka@suse.cz>
 X-Mailer: b4 0.13.0
-Authentication-Results: smtp-out2.suse.de;
+Authentication-Results: smtp-out1.suse.de;
 	none
-X-Spam-Level: 
-X-Spam-Score: -6.80
-X-Spamd-Result: default: False [-6.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+X-Spamd-Result: default: False [-4.00 / 50.00];
 	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 R_RATELIMIT(0.00)[to_ip_from(RL8ogcagzi1y561i1mcnzpnkwh)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[24];
-	 FREEMAIL_TO(0.00)[linux-foundation.org,kernel.org,oracle.com,linux.com,google.com,lge.com,linux.dev,gmail.com,cmpxchg.org,zeniv.linux.org.uk,suse.cz];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
+	 REPLY(-4.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: B170733D2C
+X-Spam-Level: 
+X-Spam-Score: -4.00
 X-Spam-Flag: NO
 
-This is just an example of using the kmem_cache_charge() API.  I think
-it's placed in a place that's applicable for Linus's example [1]
-although he mentions do_dentry_open() - I have followed from strace()
-showing openat(2) to path_openat() doing the alloc_empty_file().
+The MEMCG_KMEM integration with slab currently relies on two hooks
+during allocation. memcg_slab_pre_alloc_hook() determines the objcg and
+charges it, and memcg_slab_post_alloc_hook() assigns the objcg pointer
+to the allocated object(s).
 
-The idea is that filp_cachep stops being SLAB_ACCOUNT. Allocations that
-want to be accounted immediately can use GFP_KERNEL_ACCOUNT. I did that
-in alloc_empty_file_noaccount() (despite the contradictory name but the
-noaccount refers to something else, right?) as IIUC it's about
-kernel-internal opens.
+As Linus pointed out, this is unnecessarily complex. Failing to charge
+due to memcg limits should be rare, so we can optimistically allocate
+the object(s) and do the charging together with assigning the objcg
+pointer in a single post_alloc hook. In the rare case the charging
+fails, we can free the object(s) back.
 
-alloc_empty_file() is now not doing the accounting, so I added
-kmem_account_file() that calls the new kmem_cache_charge() API.
+This simplifies the code (no need to pass around the objcg pointer) and
+potentially allows to separate charging from allocation in cases where
+it's common that the allocation would be immediately freed, and the
+memcg handling overhead could be saved.
 
-Why is this unfinished:
-
-- there are other callers of alloc_empty_file() which I didn't adjust so
-  they simply became memcg-unaccounted. I haven't investigated for which
-  ones it would make also sense to separate the allocation and accounting.
-  Maybe alloc_empty_file() would need to get a parameter to control
-  this.
-
-- I don't know how to properly unwind the accounting failure case. It
-  seems like a new case because when we succeed the open, there's no
-  further error path at least in path_openat().
-
-Basically it boils down I'm unfamiliar with VFS so this depends if this
-approach is deemed useful enough to finish it.
-
-[1] https://lore.kernel.org/all/CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com/
-
-Not-signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/all/CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com/
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- fs/file_table.c | 9 +++++++--
- fs/internal.h   | 1 +
- fs/namei.c      | 4 +++-
- 3 files changed, 11 insertions(+), 3 deletions(-)
+ mm/slub.c | 180 +++++++++++++++++++++++++++-----------------------------------
+ 1 file changed, 77 insertions(+), 103 deletions(-)
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index b991f90571b4..6401b6f175ae 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -223,6 +223,11 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
- 	return ERR_PTR(-ENFILE);
+diff --git a/mm/slub.c b/mm/slub.c
+index 2ef88bbf56a3..7022a1246bab 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1897,23 +1897,36 @@ static inline size_t obj_full_size(struct kmem_cache *s)
+ 	return s->size + sizeof(struct obj_cgroup *);
  }
  
-+int kmem_account_file(struct file *f)
-+{
-+	return kmem_cache_charge(filp_cachep, GFP_KERNEL_ACCOUNT, f);
-+}
+-/*
+- * Returns false if the allocation should fail.
+- */
+-static bool __memcg_slab_pre_alloc_hook(struct kmem_cache *s,
+-					struct list_lru *lru,
+-					struct obj_cgroup **objcgp,
+-					size_t objects, gfp_t flags)
++static bool __memcg_slab_post_alloc_hook(struct kmem_cache *s,
++					 struct list_lru *lru,
++					 gfp_t flags, size_t size,
++					 void **p)
+ {
++	struct obj_cgroup *objcg;
++	struct slab *slab;
++	unsigned long off;
++	size_t i;
 +
- /*
-  * Variant of alloc_empty_file() that doesn't check and modify nr_files.
-  *
-@@ -234,7 +239,7 @@ struct file *alloc_empty_file_noaccount(int flags, const struct cred *cred)
- 	struct file *f;
- 	int error;
+ 	/*
+ 	 * The obtained objcg pointer is safe to use within the current scope,
+ 	 * defined by current task or set_active_memcg() pair.
+ 	 * obj_cgroup_get() is used to get a permanent reference.
+ 	 */
+-	struct obj_cgroup *objcg = current_obj_cgroup();
++	objcg = current_obj_cgroup();
+ 	if (!objcg)
+ 		return true;
  
--	f = kmem_cache_zalloc(filp_cachep, GFP_KERNEL);
-+	f = kmem_cache_zalloc(filp_cachep, GFP_KERNEL_ACCOUNT);
- 	if (unlikely(!f))
- 		return ERR_PTR(-ENOMEM);
++	/*
++	 * slab_alloc_node() avoids the NULL check, so we might be called with a
++	 * single NULL object. kmem_cache_alloc_bulk() aborts if it can't fill
++	 * the whole requested size.
++	 * return success as there's nothing to free back
++	 */
++	if (unlikely(*p == NULL))
++		return true;
++
++	flags &= gfp_allowed_mask;
++
+ 	if (lru) {
+ 		int ret;
+ 		struct mem_cgroup *memcg;
+@@ -1926,71 +1939,51 @@ static bool __memcg_slab_pre_alloc_hook(struct kmem_cache *s,
+ 			return false;
+ 	}
  
-@@ -468,7 +473,7 @@ void __init files_init(void)
- {
- 	filp_cachep = kmem_cache_create("filp", sizeof(struct file), 0,
- 				SLAB_TYPESAFE_BY_RCU | SLAB_HWCACHE_ALIGN |
--				SLAB_PANIC | SLAB_ACCOUNT, NULL);
-+				SLAB_PANIC, NULL);
- 	percpu_counter_init(&nr_files, 0, GFP_KERNEL);
+-	if (obj_cgroup_charge(objcg, flags, objects * obj_full_size(s)))
++	if (obj_cgroup_charge(objcg, flags, size * obj_full_size(s)))
+ 		return false;
+ 
+-	*objcgp = objcg;
++	for (i = 0; i < size; i++) {
++		slab = virt_to_slab(p[i]);
++
++		if (!slab_objcgs(slab) &&
++		    memcg_alloc_slab_cgroups(slab, s, flags, false)) {
++			obj_cgroup_uncharge(objcg, obj_full_size(s));
++			continue;
++		}
++
++		off = obj_to_index(s, slab, p[i]);
++		obj_cgroup_get(objcg);
++		slab_objcgs(slab)[off] = objcg;
++		mod_objcg_state(objcg, slab_pgdat(slab),
++				cache_vmstat_idx(s), obj_full_size(s));
++	}
++
+ 	return true;
  }
  
-diff --git a/fs/internal.h b/fs/internal.h
-index b67406435fc0..06ada11b71d0 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -96,6 +96,7 @@ extern void chroot_fs_refs(const struct path *, const struct path *);
- struct file *alloc_empty_file(int flags, const struct cred *cred);
- struct file *alloc_empty_file_noaccount(int flags, const struct cred *cred);
- struct file *alloc_empty_backing_file(int flags, const struct cred *cred);
-+int kmem_account_file(struct file *file);
- 
- static inline void file_put_write_access(struct file *file)
+-/*
+- * Returns false if the allocation should fail.
+- */
++static void memcg_alloc_abort_single(struct kmem_cache *s, void *object);
++
+ static __fastpath_inline
+-bool memcg_slab_pre_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
+-			       struct obj_cgroup **objcgp, size_t objects,
+-			       gfp_t flags)
++bool memcg_slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
++				gfp_t flags, size_t size, void **p)
  {
-diff --git a/fs/namei.c b/fs/namei.c
-index 4e0de939fea1..fcf3f3fcd059 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3799,8 +3799,10 @@ static struct file *path_openat(struct nameidata *nd,
- 		terminate_walk(nd);
+-	if (!memcg_kmem_online())
++	if (likely(!memcg_kmem_online()))
+ 		return true;
+ 
+ 	if (likely(!(flags & __GFP_ACCOUNT) && !(s->flags & SLAB_ACCOUNT)))
+ 		return true;
+ 
+-	return likely(__memcg_slab_pre_alloc_hook(s, lru, objcgp, objects,
+-						  flags));
+-}
+-
+-static void __memcg_slab_post_alloc_hook(struct kmem_cache *s,
+-					 struct obj_cgroup *objcg,
+-					 gfp_t flags, size_t size,
+-					 void **p)
+-{
+-	struct slab *slab;
+-	unsigned long off;
+-	size_t i;
+-
+-	flags &= gfp_allowed_mask;
+-
+-	for (i = 0; i < size; i++) {
+-		if (likely(p[i])) {
+-			slab = virt_to_slab(p[i]);
+-
+-			if (!slab_objcgs(slab) &&
+-			    memcg_alloc_slab_cgroups(slab, s, flags, false)) {
+-				obj_cgroup_uncharge(objcg, obj_full_size(s));
+-				continue;
+-			}
++	if (likely(__memcg_slab_post_alloc_hook(s, lru, flags, size, p)))
++		return true;
+ 
+-			off = obj_to_index(s, slab, p[i]);
+-			obj_cgroup_get(objcg);
+-			slab_objcgs(slab)[off] = objcg;
+-			mod_objcg_state(objcg, slab_pgdat(slab),
+-					cache_vmstat_idx(s), obj_full_size(s));
+-		} else {
+-			obj_cgroup_uncharge(objcg, obj_full_size(s));
+-		}
++	if (likely(size == 1)) {
++		memcg_alloc_abort_single(s, p);
++		*p = NULL;
++	} else {
++		kmem_cache_free_bulk(s, size, p);
  	}
- 	if (likely(!error)) {
--		if (likely(file->f_mode & FMODE_OPENED))
-+		if (likely(file->f_mode & FMODE_OPENED)) {
-+			kmem_account_file(file);
- 			return file;
-+		}
- 		WARN_ON(1);
- 		error = -EINVAL;
+-}
+-
+-static __fastpath_inline
+-void memcg_slab_post_alloc_hook(struct kmem_cache *s, struct obj_cgroup *objcg,
+-				gfp_t flags, size_t size, void **p)
+-{
+-	if (likely(!memcg_kmem_online() || !objcg))
+-		return;
+ 
+-	return __memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
++	return false;
+ }
+ 
+ static void __memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
+@@ -2029,14 +2022,6 @@ void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
+ 
+ 	__memcg_slab_free_hook(s, slab, p, objects, objcgs);
+ }
+-
+-static inline
+-void memcg_slab_alloc_error_hook(struct kmem_cache *s, int objects,
+-			   struct obj_cgroup *objcg)
+-{
+-	if (objcg)
+-		obj_cgroup_uncharge(objcg, objects * obj_full_size(s));
+-}
+ #else /* CONFIG_MEMCG_KMEM */
+ static inline struct mem_cgroup *memcg_from_slab_obj(void *ptr)
+ {
+@@ -2047,31 +2032,18 @@ static inline void memcg_free_slab_cgroups(struct slab *slab)
+ {
+ }
+ 
+-static inline bool memcg_slab_pre_alloc_hook(struct kmem_cache *s,
+-					     struct list_lru *lru,
+-					     struct obj_cgroup **objcgp,
+-					     size_t objects, gfp_t flags)
+-{
+-	return true;
+-}
+-
+-static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
+-					      struct obj_cgroup *objcg,
++static inline bool memcg_slab_post_alloc_hook(struct kmem_cache *s,
++					      struct list_lru *lru,
+ 					      gfp_t flags, size_t size,
+ 					      void **p)
+ {
++	return true;
+ }
+ 
+ static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
+ 					void **p, int objects)
+ {
+ }
+-
+-static inline
+-void memcg_slab_alloc_error_hook(struct kmem_cache *s, int objects,
+-				 struct obj_cgroup *objcg)
+-{
+-}
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
+ /*
+@@ -3751,10 +3723,7 @@ noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+ ALLOW_ERROR_INJECTION(should_failslab, ERRNO);
+ 
+ static __fastpath_inline
+-struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
+-				       struct list_lru *lru,
+-				       struct obj_cgroup **objcgp,
+-				       size_t size, gfp_t flags)
++struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s, gfp_t flags)
+ {
+ 	flags &= gfp_allowed_mask;
+ 
+@@ -3763,14 +3732,11 @@ struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
+ 	if (unlikely(should_failslab(s, flags)))
+ 		return NULL;
+ 
+-	if (unlikely(!memcg_slab_pre_alloc_hook(s, lru, objcgp, size, flags)))
+-		return NULL;
+-
+ 	return s;
+ }
+ 
+ static __fastpath_inline
+-void slab_post_alloc_hook(struct kmem_cache *s,	struct obj_cgroup *objcg,
++bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
+ 			  gfp_t flags, size_t size, void **p, bool init,
+ 			  unsigned int orig_size)
+ {
+@@ -3819,7 +3785,7 @@ void slab_post_alloc_hook(struct kmem_cache *s,	struct obj_cgroup *objcg,
+ 		kmsan_slab_alloc(s, p[i], init_flags);
  	}
+ 
+-	memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
++	return memcg_slab_post_alloc_hook(s, lru, flags, size, p);
+ }
+ 
+ /*
+@@ -3836,10 +3802,9 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
+ 		gfp_t gfpflags, int node, unsigned long addr, size_t orig_size)
+ {
+ 	void *object;
+-	struct obj_cgroup *objcg = NULL;
+ 	bool init = false;
+ 
+-	s = slab_pre_alloc_hook(s, lru, &objcg, 1, gfpflags);
++	s = slab_pre_alloc_hook(s, gfpflags);
+ 	if (unlikely(!s))
+ 		return NULL;
+ 
+@@ -3856,8 +3821,10 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
+ 	/*
+ 	 * When init equals 'true', like for kzalloc() family, only
+ 	 * @orig_size bytes might be zeroed instead of s->object_size
++	 * In case this fails due to memcg_slab_post_alloc_hook(),
++	 * object is set to NULL
+ 	 */
+-	slab_post_alloc_hook(s, objcg, gfpflags, 1, &object, init, orig_size);
++	slab_post_alloc_hook(s, lru, gfpflags, 1, &object, init, orig_size);
+ 
+ 	return object;
+ }
+@@ -4300,6 +4267,16 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
+ 		do_slab_free(s, slab, object, object, 1, addr);
+ }
+ 
++#ifdef CONFIG_MEMCG_KMEM
++/* Do not inline the rare memcg charging failed path into the allocation path */
++static noinline
++void memcg_alloc_abort_single(struct kmem_cache *s, void *object)
++{
++	if (likely(slab_free_hook(s, object, slab_want_init_on_free(s))))
++		do_slab_free(s, virt_to_slab(object), object, object, 1, _RET_IP_);
++}
++#endif
++
+ static __fastpath_inline
+ void slab_free_bulk(struct kmem_cache *s, struct slab *slab, void *head,
+ 		    void *tail, void **p, int cnt, unsigned long addr)
+@@ -4635,29 +4612,26 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
+ 			  void **p)
+ {
+ 	int i;
+-	struct obj_cgroup *objcg = NULL;
+ 
+ 	if (!size)
+ 		return 0;
+ 
+-	/* memcg and kmem_cache debug support */
+-	s = slab_pre_alloc_hook(s, NULL, &objcg, size, flags);
++	s = slab_pre_alloc_hook(s, flags);
+ 	if (unlikely(!s))
+ 		return 0;
+ 
+ 	i = __kmem_cache_alloc_bulk(s, flags, size, p);
++	if (unlikely(i == 0))
++		return 0;
+ 
+ 	/*
+ 	 * memcg and kmem_cache debug support and memory initialization.
+ 	 * Done outside of the IRQ disabled fastpath loop.
+ 	 */
+-	if (likely(i != 0)) {
+-		slab_post_alloc_hook(s, objcg, flags, size, p,
+-			slab_want_init_on_alloc(flags, s), s->object_size);
+-	} else {
+-		memcg_slab_alloc_error_hook(s, size, objcg);
++	if (unlikely(!slab_post_alloc_hook(s, NULL, flags, size, p,
++		    slab_want_init_on_alloc(flags, s), s->object_size))) {
++		return 0;
+ 	}
+-
+ 	return i;
+ }
+ EXPORT_SYMBOL(kmem_cache_alloc_bulk);
 
 -- 
 2.44.0
