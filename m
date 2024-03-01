@@ -1,35 +1,33 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D83A6A8AD;
-	Fri,  1 Mar 2024 10:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9A96A8BB;
+	Fri,  1 Mar 2024 10:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709289559; cv=none; b=T0x/iYIc0hLqwcSuhevFCXVk1ePCCeT6gUFq2UIPrIQ+xo4bgkMqWBTIQmb0RHmw9m4KQY+bI9oytUiF8YJlwpRRN5C80D2aNHhhJU601+VuFmqGavo2jN/Ss+DCiL6Wsg56FeEXUHTNgqegbPnwDiAFfjMlR75SpH8ms/7na58=
+	t=1709289562; cv=none; b=VK+MFOsW2Ziy+v+jbUEeXp5HXnQdIC7aSpIvApJe17qGaGEhDrYGEhsiDd6Hvx21gK1l32AJAN53LOy3tq4nJP65oRfr0vKWOLA7ITGJT3PE0etxnZhPdA709zjuA60J6bSF0btnHDJNkPFEEd/drEqqTDufYfrSdvbe1ruF+6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709289559; c=relaxed/simple;
-	bh=FnzU97NGZETb0f4x7tm6W4WY3ZTRPT58hRG0RAB4hTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nnW1PnsQqXRCv1sY2ihetCJ79hRhsy3KDfNHzGnGNz188KXJLJJywi50q1g2f9hM0qaWpYeR/ozXHxUk9ixMKBzk/O1DPBEADBwBqX8gkOZcG9QGwbTdS8FrQMT0Ux3tife8mhdij381JfA57nP9t672h9SpOgleQAAEFm7HDRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PTCKm6W4; arc=none smtp.client-ip=217.70.183.200
+	s=arc-20240116; t=1709289562; c=relaxed/simple;
+	bh=QPg/h26ctDiEjOy4/uODxhaeiQTEE5tf2aqedWIaU3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UU+IiQbJLkmSezAE2gcASdwmwUUyQzVzQfd3sm6l9f+8RckQtzxx5D/8M4b2AzoiT5Abv8WYVDUPlhKDT2+d9gRRNH9Pjrm/3K9kaUsoLrgdZZrb9BTQ1JtUMxeUNicTt94Els8Qz4F881iaJAG4KY5EBLCZzCyC2c37+VQL16g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EKF8ADaE; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PTCKm6W4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 69BE92000B;
-	Fri,  1 Mar 2024 10:39:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EKF8ADaE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AF50AFF802;
+	Fri,  1 Mar 2024 10:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709289554;
+	t=1709289552;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CDmnqReFpMYRHKn4zXOLlP/VQyZkOX4IKcdcgZtFJfo=;
-	b=PTCKm6W4Umqmtd89m6B+es1wfZLjKrxriu/q4u4XcInbnLaKH2LngbbdjWtHaFS+2hBbSU
-	7jY0Q2D/7cZuSdlhdvTN08ar/kE8VPRr43PQFv+ZOO9+4c47VcRwUoxWNOcJJBmHgOgaeN
-	YZpJpfB2Z0PyJV70U1C9yF7xfk0k1J8eBLakuZY/pfHlE/YN2ItW2+Ej6YRvtRhTWtfs/m
-	TPtzUr0kWTuE6trm+wK/SJy3m7VX6pYzm6lEg7HDhk/HfQftHCjGspMG2vfo+Lkm8qPS5x
-	6aVVFHGH2wazpskLZnwmBfk9yYy8qthVY3Q6IAFXEzjUh52zQjU8HKmy7dkHnw==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YKEiVtaPCvaI11wI4SOmpa0aMH7IZX/eMbHt5I4oNlE=;
+	b=EKF8ADaEuw22Uc7j7+xbS62ttfxCDzDtoU/K1b0vsdoMydyOeiwUT16aUa7mUx2KW5++MJ
+	dYfgP53PqNVCKmq6CPRyvhL2NyBg9gVP26rnYLl2oy9UlicEulvtWIiPnSEJzpLIIBPyrr
+	mRLsuKCWPH/Qj6p+6HJIbIEcHsmoytk6sl7u53nbijsUR1ypmaBserD5Z2YcqjWkInMYPm
+	fEIYFjZwRsZfzed+LRCqtyJ7KpSNjMeqpC0u+zgKftPRn9zvGiTniHFZXYyqwNWLc8ZpHZ
+	bP5S0VaGmmLPl1JB1fyDRR0E5PpVnI6n2MLjwTB7UweVlhO8oQGUD+OVwh4YVQ==
 From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -46,14 +44,11 @@ Cc: catalin.popescu@leica-geosystems.com,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Gregory Clement <gregory.clement@bootlin.com>,
 	bsp-development.geo@leica-geosystems.com,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v9 2/3] dt-bindings: input: Add TouchNetix axiom touchscreen
-Date: Fri,  1 Mar 2024 11:39:07 +0100
-Message-ID: <20240301103909.167923-3-kamel.bouhara@bootlin.com>
+	Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH v9 0/3] Input: Add TouchNetix axiom touchscreen driver
+Date: Fri,  1 Mar 2024 11:39:05 +0100
+Message-ID: <20240301103909.167923-1-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240301103909.167923-1-kamel.bouhara@bootlin.com>
-References: <20240301103909.167923-1-kamel.bouhara@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,102 +58,25 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: kamel.bouhara@bootlin.com
 
-Add the TouchNetix axiom I2C touchscreen device tree bindings
-documentation.
+Add a new driver for the TouchNetix's axiom family of touchscreen
+controller. This driver only support i2c and can be later adapted for
+SPI and USB support.
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../input/touchscreen/touchnetix,ax54a.yaml   | 62 +++++++++++++++++++
- MAINTAINERS                                   |  6 ++
- 2 files changed, 68 insertions(+)
+Kamel Bouhara (3):
+  dt-bindings: vendor-prefixes: Add TouchNetix AS
+  dt-bindings: input: Add TouchNetix axiom touchscreen
+  Input: Add TouchNetix axiom i2c touchscreen driver
+
+ .../input/touchscreen/touchnetix,ax54a.yaml   |  62 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   7 +
+ drivers/input/touchscreen/Kconfig             |  12 +
+ drivers/input/touchscreen/Makefile            |   1 +
+ drivers/input/touchscreen/touchnetix_axiom.c  | 669 ++++++++++++++++++
+ 6 files changed, 753 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
+ create mode 100644 drivers/input/touchscreen/touchnetix_axiom.c
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
-new file mode 100644
-index 000000000000..66229a4d6f15
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/touchnetix,ax54a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TouchNetix Axiom series touchscreen controller
-+
-+maintainers:
-+  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-+
-+allOf:
-+  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-+  - $ref: /schemas/input/input.yaml#
-+
-+properties:
-+  compatible:
-+    const: touchnetix,ax54a
-+
-+  reg:
-+    const: 0x66
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  vdda-supply:
-+    description: Analog power supply regulator on VDDA pin
-+
-+  vddi-supply:
-+    description: I/O power supply regulator on VDDI pin
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdda-supply
-+  - vddi-supply
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      touchscreen@66 {
-+        compatible = "touchnetix,ax54a";
-+        reg = <0x66>;
-+        interrupt-parent = <&gpio2>;
-+        interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+        reset-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-+        vdda-supply = <&vdda_reg>;
-+        vddi-supply = <&vddi_reg>;
-+        poll-interval = <20>;
-+      };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c4828ab15f1a..4b3ed2f22b89 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22257,6 +22257,12 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/toshiba-wmi.c
- 
-+TOUCHNETIX AXIOM I2C TOUCHSCREEN DRIVER
-+M:	Kamel Bouhara <kamel.bouhara@bootlin.com>
-+L:	linux-input@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
-+
- TPM DEVICE DRIVER
- M:	Peter Huewe <peterhuewe@gmx.de>
- M:	Jarkko Sakkinen <jarkko@kernel.org>
--- 
+--
 2.25.1
 
