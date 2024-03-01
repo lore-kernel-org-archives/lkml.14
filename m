@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0086D6BB57;
-	Fri,  1 Mar 2024 10:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57D06F08A;
+	Fri,  1 Mar 2024 10:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709287391; cv=none; b=Y49F6BaoefBeT6xYZkP0Xd+GayN34FbCychnhsbXK41UZD5DP4ENoVOXbg10CGLMGmMHZdHROnng7mjQ1f2CrvPiQ655Y5kvMhGt0jGAMrDhE4/szpNZcRVSRHHbtbppSAKQ1wQjPOhqLnKiT6HZmLdNC7CfDc2I3s8F+MGVjt0=
+	t=1709287393; cv=none; b=lvSlCMHqbzH+/h7ANEZ9O67D+BJqqzSAPbTtdAxzdgUuWJO4LFB2e9x7v9pEAKHJwKXD614k/GjrrAVY6MQ1puwffcj6XpcKbXkPm2xmPPZMiRY+iCzuA01Sqep93msvyhtQHCS/qJ0SH033zab6jqpjju44eqVOKEavD05yuro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709287391; c=relaxed/simple;
-	bh=24WD8tgwVtddCKq7F8lxRkz6GTenNtBeLM7ja6eExBk=;
+	s=arc-20240116; t=1709287393; c=relaxed/simple;
+	bh=VziGCbwUbeAcm42yPFPU2H6z//+M0EMCvPLjzxVDX7g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YY+0S9T/zqkyX4BPOXKu8yXUa/kIS3f5M4mFVMaZAgcdXw/NumVGhKTx4N/NQY9vIgM9c2xeMfA6rDsSBgnx/zmgzY+SrfF3Sh6t/5Nq0QUsdh9xP5XEvLIbseuxMSx9e2GWJl7fB0Tn3buAfMZgDliTfsF64cAfDHS1hh5Sjbg=
+	 MIME-Version; b=Q2s16tsR1rxmZYnY40gEsOqXM2XBT9JXRtB5LDuXCSNPBD20jHeLaYCNl5Z3YqsrlNHsXVAuPl/5L4+0liBSv2eHTFq2WUYC2yfIPo3uL1pqz4Z8Q4ARdNmav1O9dksdF79D9ZGjheAS+HaAvzMSKXv0QUheP4fm+pEga2H1Y1o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TmNv54ZtPz4f3nbq;
-	Fri,  1 Mar 2024 18:02:57 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 08ED91A0838;
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TmNvF2BZGz4f3kkj;
 	Fri,  1 Mar 2024 18:03:05 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id B0BE91A0E60;
+	Fri,  1 Mar 2024 18:03:08 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBHTp+FlqmBuFg--.36874S7;
-	Fri, 01 Mar 2024 18:03:04 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBHTp+FlqmBuFg--.36874S13;
+	Fri, 01 Mar 2024 18:03:08 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: zkabelac@redhat.com,
 	xni@redhat.com,
@@ -40,9 +40,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH -next 3/9] md: export helper md_is_rdwr()
-Date: Fri,  1 Mar 2024 17:56:51 +0800
-Message-Id: <20240301095657.662111-4-yukuai1@huaweicloud.com>
+Subject: [PATCH -next 9/9] dm-raid: fix lockdep waring in "pers->hot_add_disk"
+Date: Fri,  1 Mar 2024 17:56:57 +0800
+Message-Id: <20240301095657.662111-10-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240301095657.662111-1-yukuai1@huaweicloud.com>
 References: <20240301095657.662111-1-yukuai1@huaweicloud.com>
@@ -53,83 +53,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBHTp+FlqmBuFg--.36874S7
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr47Kr4xtrykGw13uF4fGrg_yoW8XFWrpa
-	ySgFy3ArWjvF43X3yUJayDua45Z3WfKrWjkry3u395Xa43Xr4UCF1rGFWqgrWDWFyfAF1a
-	ga15JF18u3WvkwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUP014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbJ73DUU
-	UUU==
+X-CM-TRANSID:cCh0CgCXaBHTp+FlqmBuFg--.36874S13
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr45Jw1UZF45JF13GFW5GFg_yoW8Jw4Up3
+	ZrK343Kw4DJr4rZ3Wqvw1q9a45Jan8K34SyrZxG395ZFy2vrZI9wn5Ga1agFWDGFWSva98
+	AFW3J398W3Z5K3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
+	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
+	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
+	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
+	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
+	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQ
+	SdkUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-There are no functional changes for now, prepare to fix a deadlock for
-dm-raid456.
+The lockdep assert is added by commit a448af25becf ("md/raid10: remove
+rcu protection to access rdev from conf") in print_conf(). And I didn't
+notice that dm-raid is calling "pers->hot_add_disk" without holding
+'reconfig_mutex'.
+
+"pers->hot_add_disk" read and write many fields that is protected by
+'reconfig_mutex', and raid_resume() already grab the lock in other
+contex. Hence fix this problem by protecting "pers->host_add_disk"
+with the lock.
+
+Fixes: 9092c02d9435 ("DM RAID: Add ability to restore transiently failed devices on resume")
+Fixes: a448af25becf ("md/raid10: remove rcu protection to access rdev from conf")
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md.c | 12 ------------
- drivers/md/md.h | 12 ++++++++++++
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/md/dm-raid.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 5f6496cf43f5..2fe8b937998b 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -99,18 +99,6 @@ static void mddev_detach(struct mddev *mddev);
- static void export_rdev(struct md_rdev *rdev, struct mddev *mddev);
- static void md_wakeup_thread_directly(struct md_thread __rcu *thread);
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 64d381123ce3..97ad4a8582c4 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -4091,7 +4091,9 @@ static void raid_resume(struct dm_target *ti)
+ 		 * Take this opportunity to check whether any failed
+ 		 * devices are reachable again.
+ 		 */
++		mddev_lock_nointr(mddev);
+ 		attempt_restore_of_faulty_devices(rs);
++		mddev_unlock(mddev);
+ 	}
  
--enum md_ro_state {
--	MD_RDWR,
--	MD_RDONLY,
--	MD_AUTO_READ,
--	MD_MAX_STATE
--};
--
--static bool md_is_rdwr(struct mddev *mddev)
--{
--	return (mddev->ro == MD_RDWR);
--}
--
- /*
-  * Default number of read corrections we'll attempt on an rdev
-  * before ejecting it from the array. We divide the read error
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index a6d33f10b107..09368517cc6c 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -558,6 +558,18 @@ enum recovery_flags {
- 	MD_RESYNCING_REMOTE,	/* remote node is running resync thread */
- };
- 
-+enum md_ro_state {
-+	MD_RDWR,
-+	MD_RDONLY,
-+	MD_AUTO_READ,
-+	MD_MAX_STATE
-+};
-+
-+static inline bool md_is_rdwr(struct mddev *mddev)
-+{
-+	return (mddev->ro == MD_RDWR);
-+}
-+
- static inline int __must_check mddev_lock(struct mddev *mddev)
- {
- 	return mutex_lock_interruptible(&mddev->reconfig_mutex);
+ 	if (test_and_clear_bit(RT_FLAG_RS_SUSPENDED, &rs->runtime_flags)) {
 -- 
 2.39.2
 
