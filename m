@@ -1,107 +1,69 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C506A014;
-	Fri,  1 Mar 2024 09:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256B96A02B
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709283832; cv=none; b=qbyRyF/30GDh5XYMoG+eZq8Nywysxpf9Ewq5OZARR1CYboPkP+kc6YymEOO88ZwQnPK/wBp9cWIaRwsGFT0Pi4nlE4LpB6s37GtqhhbjvoREdm/bpjmKxu0FJZRmN0/3d/pI1SA8ZziB3ly04apiF1S8BHRFX88CD39g9VfOEg8=
+	t=1709283947; cv=none; b=tNYrHA8vgUlTa/s4o1IPSCnB5oiwjVYT3aSe9oLlq/Wt2TYhkF06vdXVOC310fwLb1ZyOaYvgGCG2Aiym01QuY5Ur+aKNTMPEO/JFd5Jf6c4CDUcQcdKvTFytI+7GjjfPEBiY9d+sh2pF0/NaKX2Cb0K+VK7XAVPsVa8ftdF9z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709283832; c=relaxed/simple;
-	bh=hkf4tHhd3AClvUxsa8LdGdo131B48+hG3jkXyZorL0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CzYwbMDRGvuNrdXpYXTmjLchfMkA3weFUF0FSJuBfY6GH3nkgDvaaEz57HDRJwex3xMQHxQ0lyFzHt9xmQ29rsd4IQw/NpTiVRhyz+/oouDHa38K9baT91lcsGSHf2CFxvP5O7k/IsTDa+b6e7CL8NezVPK/jXxpBKBeYF1GWgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BOr0fTGx; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709283947; c=relaxed/simple;
+	bh=U5iVKh2DqPJumH73ccnWqkHOyEiFbk8YFQuZs+yYvFo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DReKWHiOGD2yEom/cm6CxFDqzYOukSHisvaayetxOnktD/xPUG/Lk3URUvWDOT0njIreufX77QITzLtV6kVHPjHKN+CW1d0ylqL84/ouOSbA7XIBtcXf2Zc4rH/d2CVxFvjtVC0ksuFaYFRSivh2TYw3gPti7RKFodUWgI5G6a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=F9+qbv0+; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BOr0fTGx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709283829;
-	bh=hkf4tHhd3AClvUxsa8LdGdo131B48+hG3jkXyZorL0o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BOr0fTGxd8buRCpSPVkD7hu6KavyqqEhPT+mNOfdzEy1d0+snnGQPf+Tv/C1nPpA/
-	 efQNQ/RBTEqjxVoi22f/+U2sx9HEFVfKfqN/aaJy2JNwiZSoNSEan7dv2qxJeq7g4T
-	 T3v0G60DqpvGaNRee0haVGps28lrNC1QSV6/YW+v03iIy1bL4O8JllqEOfdskxvysF
-	 FMUTmc+PZdcbIQXbAAJ8P6WMxdJ86ABFc4AVz0clDEUO9QMRC28kUUpeNQPDSL0PwU
-	 TaVr3OfJt+Kfl2t6AqtP3589GiRQon6ApVy/AG6Zq+d+sZ/cPv5yiiT/7NDjZ5Gvwz
-	 d1Rb4OoDlH9dA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4F88637814A4;
-	Fri,  1 Mar 2024 09:03:48 +0000 (UTC)
-Message-ID: <ea7f25bf-2294-4ad4-bc18-226827d49ae8@collabora.com>
-Date: Fri, 1 Mar 2024 10:03:47 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="F9+qbv0+"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1709283936; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=Wnp0K/c2jn/Ld3sdKbW2JbmVvraHQoeDkcCCW9FRwWg=;
+	b=F9+qbv0+390vXtt1LfCLMcays+5wxYZO/xRKF+0iX6z3WX1Vvr5a7w8ALbPpFvLjhlRxWfAPG4kbYvfaUa4cMq5UkRVpfaUfJ118cwtTtgUElK8idji/ZoUzhKFd+SqBH9cXIQSqM0viHojdpvYtCQGFCY7xj047XSjUJwrQG+k=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W1awj9j_1709283935;
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W1awj9j_1709283935)
+          by smtp.aliyun-inc.com;
+          Fri, 01 Mar 2024 17:05:36 +0800
+From: Yang Li <yang.lee@linux.alibaba.com>
+To: thomas.hellstrom@linux.intel.com,
+	maarten.lankhorst@linux.intel.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH -next 1/2] drm/dp: Remove unneeded semicolon
+Date: Fri,  1 Mar 2024 17:05:34 +0800
+Message-Id: <20240301090535.87969-1-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: mediatek: vcodec: support 36bit physical address
-Content-Language: en-US
-To: Yunfei Dong <yunfei.dong@mediatek.com>,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Nathan Hebert <nhebert@chromium.org>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
- Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20240301020126.11539-1-yunfei.dong@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240301020126.11539-1-yunfei.dong@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 01/03/24 03:01, Yunfei Dong ha scritto:
-> The physical address is beyond 32bit for mt8188 platform, need
-> to change the type from unsigned int to unsigned long in case of
-> the high bit missing.
-> 
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> ---
->   .../mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c        | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c
-> index cf48d09b78d7..85df3e7c2983 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c
-> @@ -1074,7 +1074,7 @@ static int vdec_vp9_slice_setup_tile_buffer(struct vdec_vp9_slice_instance *inst
->   	unsigned int mi_row;
->   	unsigned int mi_col;
->   	unsigned int offset;
-> -	unsigned int pa;
-> +	unsigned long pa;
+This patch removes the unnecessary semicolons at the end of the
+for statements which cleans up the code and ensures consistency
+with the rest of the kernel coding style.
 
-If you used the right type from the beginning, you wouldn't have to fix that ;-)
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+---
+ drivers/gpu/drm/display/drm_dp_tunnel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Is there any reason why you didn't - and still don't use the `phys_addr_t` type
-for the `pa` member?
-
-Cheers,
-Angelo
-
->   	unsigned int size;
->   	struct vdec_vp9_slice_tiles *tiles;
->   	unsigned char *pos;
-> @@ -1109,7 +1109,7 @@ static int vdec_vp9_slice_setup_tile_buffer(struct vdec_vp9_slice_instance *inst
->   	pos = va + offset;
->   	end = va + bs->size;
->   	/* truncated */
-> -	pa = (unsigned int)bs->dma_addr + offset;
-> +	pa = (unsigned long)bs->dma_addr + offset;
->   	tb = instance->tile.va;
->   	for (i = 0; i < rows; i++) {
->   		for (j = 0; j < cols; j++) {
-
+diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
+index 120e0de674c1..479dd004f365 100644
+--- a/drivers/gpu/drm/display/drm_dp_tunnel.c
++++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
+@@ -1125,7 +1125,7 @@ static int allocate_tunnel_bw(struct drm_dp_tunnel *tunnel, int bw)
+ 		}
+ 
+ 		timeout = wait_woken(&wait, TASK_UNINTERRUPTIBLE, timeout);
+-	};
++	}
+ 
+ 	remove_wait_queue(&mgr->bw_req_queue, &wait);
+ 
+-- 
+2.20.1.7.g153144c
 
