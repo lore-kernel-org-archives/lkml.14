@@ -1,180 +1,196 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF425DF34;
-	Fri,  1 Mar 2024 22:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709331513; cv=none; b=Sj/+lOF3Bb/LZ6Lp9md7DM05XICJtc1ljmwTtxLLu1gAh4XAteCsQ6mXPFQJfFv03eb1BqHPo5JsccmWl0lotBGrm1WPMXf/KOA437X26LlnDQLHV8UK74dYGsg6egaagSbf9lYCKKBCnRICkt8rlEXw3a7wfBn3Ar8fqyhRf1s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709331513; c=relaxed/simple;
-	bh=uJkgC42m1qMww/b0wXn06Ev687zMv0/Cf6bbmF7HFew=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hl0eFHR/HHMuCG3Ng4Yk5fuuGL0oam++nEvtxLMXuGwOx+42mN5m0X3kscx6h0jqc0pkYfy0JxP+M8EAxVdKgmka2IIz5KT3YoCcZY9J5SmMtBFnWv8XInULxDQDCyBoDmC5RkdItCwKOotzVgysSoPMl+7U9nbf/JlbUQBRuIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IwFxwVWI; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F03338DCD;
+	Fri,  1 Mar 2024 22:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709331614; cv=fail; b=Cbx+yjwiv9LAvUosb6B3Xw8mmmWGl4XKJu3xRAm9EXLEhboZVmLXxCjMXx0h7YQ1FF8VRbAg5ZO+Fp/ek7cqoETGYtQRzZ6oH8zym9K9J7IrsxXFt6csrR26gpalapiy0niRI9JjK49xRSxF7+KoTBQsQiNggAEsguxDBg+3ZAQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709331614; c=relaxed/simple;
+	bh=TSijtdnwkfSLcFcCwDWsseL5iltYhozFQzZtTLqBSJY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CqDwWEh0bmk382TIzM8o3gcYPbrf4pLe+fMbyX7RTK680ErnqlQdIFtGF36G8+RtlsXfVx6QbovgGvGqtH5aLw/bFIa/jh6HHmWEyZwf6xhs22I55UDYsdVFYb7K8Uyiz+sf5mW7dv8Pkrkxgo+Xv8c/fXonWC9YUFeAXm3FD2I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cXIw+xsx; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwFxwVWI"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a44d084bfe1so12817866b.1;
-        Fri, 01 Mar 2024 14:18:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709331510; x=1709936310; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nPoUO3mVcNHxtl26Rvm1ySoc2LbVjIRYhcpdmG8Dp3g=;
-        b=IwFxwVWI05XDukOFkluBHNnlE+qgsBzLrisZ1q2XJM90as/nZiGtS2BUqGWdUVJS65
-         lZWJujNy9F0qe91+G09u0+mWgpSPXSNIORB9CqwnAwbUgk/MAaSSi4UK9cSbJtuXTZYi
-         XjvKzZOKRaZB0MUgHA9tKFryMZuNHlHw7yKp9xE2CEmJMa8kWJaguSM9Q1ZKcWPsDzC5
-         aKdGmXZfv6KyqRM5QYf9esFufmDAnR5fiOh2LLgGfJVN6ejsPMMMLVTdsT9G1L3QZ6eT
-         JtIAtb5XU+lwElAsWDTt8hQ5mEtzVkA+Y2QJIeNQSfVdmTspcVa3fY36KPb7pnEIg0Vi
-         arvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709331510; x=1709936310;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nPoUO3mVcNHxtl26Rvm1ySoc2LbVjIRYhcpdmG8Dp3g=;
-        b=MGg7Ll7JBcOxWhk+rbd+VunuOWQRhwsjWFIL0ZQ6YI0X4diRFkN6D5NIGhO1wEW8fQ
-         Q2653VaTtCwMa3NzRnWcS2wvLwpGFTp2ndryY8scS7qTz7rfzOVkilL7B1dbbSHQWIhd
-         L4mqwIASg0UnPgXV9HfkTuLkJKtCaDqwMBt9Z7or8okaSsjnMLnevGK2ScRxSfHPBfYu
-         Ppqap+DvcSElJFAxsbdFqyebOs0tpn1OMQMCUKGswMm51YcTfgtMGOXwvFotZu6o4CGx
-         47mMxOdjEjTX6266KgovUm/Dvu6O6bOzXgfsoTz5kKqS4s2vDn88wemlEkLnkAt22m+c
-         cW9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVbpemLEwCWOJx3izbIgJ29gq9iFrdp4/BRueplhDpWckG9BqoJN0aAGRKvI7xQKYoluMoNkY0S/rY14p9QtZIX9ijlbyL/R34y8g+c
-X-Gm-Message-State: AOJu0Yw5LiymbpLvNAFa8soOqpPYk3VtFfxuFStkmxhfjkyapyu94mqi
-	y+fAemd/eCCz17FDlLpleVjiDy6NG5B1cccQJCM3EfKOUKSuVL6xpMvxliBSmw4=
-X-Google-Smtp-Source: AGHT+IH2OJ2MhAj+02D7O0m7r+LXSnH3iMp/Oouu/4HQ8biRihfTg3Kso71GXSBExEDCx/wlqzKC6g==
-X-Received: by 2002:a17:906:6d4e:b0:a44:19a9:7ef3 with SMTP id a14-20020a1709066d4e00b00a4419a97ef3mr2642965ejt.23.1709331510035;
-        Fri, 01 Mar 2024 14:18:30 -0800 (PST)
-Received: from WBEC325.dom.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id g16-20020a17090613d000b00a3f480154a3sm2091122ejc.65.2024.03.01.14.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 14:18:29 -0800 (PST)
-From: Pawel Dembicki <paweldembicki@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Simon Horman <horms@kernel.org>,
-	Pawel Dembicki <paweldembicki@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com,
-	Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v6 16/16] net: dsa: vsc73xx: start treating the BR_LEARNING flag
-Date: Fri,  1 Mar 2024 23:16:38 +0100
-Message-Id: <20240301221641.159542-17-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240301221641.159542-1-paweldembicki@gmail.com>
-References: <20240301221641.159542-1-paweldembicki@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cXIw+xsx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709331613; x=1740867613;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=TSijtdnwkfSLcFcCwDWsseL5iltYhozFQzZtTLqBSJY=;
+  b=cXIw+xsxKxSoauCpdoFtZIMFcp0lexQtbs+C5IpxZwW+EOAoG7LNNHjV
+   Z7R0mWGNrJvtTylClLgLlk+cyLxetBiB6LE3u6VZpucrpC1OU94Tl7CNO
+   fzxJeROAOHbr+ToWxeouRfZmQL76qbdDxokM3xx1qlCHFUSW4qprdhXCj
+   HLnjKr95eux6xxDhR9tNt4QY7N5E/F6DC38i+QZ+54VKL0/jybKxgLDmZ
+   CCaOihnBUNRr/C5XLUpXUAEjhUY9vF/Gija20/UNW5KsVfveTFAwvb6p+
+   2ej2JI7jvg58cdTLdVnFpVyXXe5ZcfhT5W8qre0KrTxWefzMcXtbJICIz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="14596735"
+X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
+   d="scan'208";a="14596735"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 14:19:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
+   d="scan'208";a="39175952"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Mar 2024 14:19:58 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 1 Mar 2024 14:19:57 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 1 Mar 2024 14:19:57 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 1 Mar 2024 14:19:57 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QaaFrPD9hq0nEv7ARTWhnKkpe76ip9GPFcY74QKzmXGIZ7xkMoYhDuPM2dW+XwI7mTDWqWfParDxgmNcrYXR9ALoLANSDuWlI0AgX8gNxMNMxx1hlk8ZBoZR+8eGee6lSwwN+aZV/Gzg6qAtcxtry2m9C3KBFRxsTQvDwjpw4yK/vRtV2xaR4b7zocPjffNxFXNgFbU4IyUJP/xK58TLbOc4XVr12yCC8ofDwB7XZ5AVvuE4QTRooduufgvYBKVCaBN52KWX8z6Ymy9CSDCoQVq5CxGkhFaPoX1zqgYTOWbr7KohI2TvpnyodM67FdTf5AmfcGIrQXFUzkM9IKexyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JUI0HQ9KW8wzsrCN/ZMGECKwl6ZLfgHjgAk8MJGr2fM=;
+ b=WCQiPAV/u0rnQbecEd/3mvjLizfewY+g+/Grv+nnVWqbBxEh65iGiCXjxN7lpbZ4I9UHTNEMTudPqMzNWXUSK+H6zkt1CsQcEB8f2a1ruddBDARZ3z6u/xkGNOnRbZq52EXtM2AAX6i+pFwlGF/n2UUTaETrUWd3hfIwNqcrb+/ZoIfYSjCUnds1cggTzp9YDt9Swe2GU2SgvPWSp2IiOhXuKUBREqmQFQ+dxOxnAZPhiWhBEcbpKqJYBPTOXWnPrD860/NdPa0d3qrfMGANmbq6suosGZNAzpZnfGmwrJ+9Q70JjVTYUJuYc9FcMxLbjOz7F19uzCpfrrgREsfOZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SA1PR11MB7013.namprd11.prod.outlook.com (2603:10b6:806:2be::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.12; Fri, 1 Mar
+ 2024 22:19:55 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7339.024; Fri, 1 Mar 2024
+ 22:19:55 +0000
+Date: Fri, 1 Mar 2024 14:19:50 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, Shiju Jose <shiju.jose@huawei.com>
+CC: Dan Carpenter <dan.carpenter@linaro.org>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	"Vishal Verma" <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Tony Luck <tony.luck@intel.com>, "Borislav
+ Petkov" <bp@alien8.de>
+Subject: Re: [PATCH 4/4] ras/events: Trace CXL CPER events even without the
+ CXL stack loaded
+Message-ID: <65e25486de5ea_31513a29492@iweiny-mobl.notmuch>
+References: <20240228-cxl-cper3-v1-0-6aa3f1343c6c@intel.com>
+ <20240228-cxl-cper3-v1-4-6aa3f1343c6c@intel.com>
+ <65e24fda80e44_3651e29440@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <65e24fda80e44_3651e29440@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+X-ClientProxiedBy: BY5PR03CA0015.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::25) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA1PR11MB7013:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4032f2e1-c089-4cd5-4e94-08dc3a3db8dd
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4DkUL9hyL7uYZcjEfdQzCzsDTU7KpAziF+VCHLs8hou7pi6Fecuf2mbrFq3vVbOiss/m7rWk6cy9BJVzxTcYQuVslPkZuYxBhxTJyg2bAXuPxCXb4Jj9AvSPQNJYXGfIt3QsBoLwDdmMyjE1tHMjyBMhUdMRRWeXUFhKIdgwSyAPmQPwkexA14i8GfRUvGJPZzXcxgCvarUPLTJqJZIIy8aJR8yMsm4RSMBfv+U9szyszrls7fIa8iVpnb4TM0uI6SmGkK2Cafqai3CdMEZ4tAPT9mc1/NK010c7cHs7FGcbWcHQP1XagjRUhYBhbouPtmiw4jREdoAvh8osQi+PqgrYLfMpcHjZ8Cv2ON6+8dcfL3SEFLGn34gDUmoZdYzkQ7LKPHQaCAKaq6jNMpX1ftGllzm/5BBZltGalHorVc2M6DA5zBQ6PFy9L+yK1mg9doWk86Xce3uFaxftHoDsnGmwlOp9kPHxLgwo7dqCWVGx+0YS3jUFpTWnSKRVqEDMmrEBDZhJzOqVtKgig/6ZwgqsUEG5PUqD0akFXiAWV2GPBWsKdDSGSK742A3JbrEgDIJNHiWct0Gr2H8eZyEx2NFnUlryaaL+GrfDARLobyK4zMmqld/84tlOQlkEUqB2nHjTO90UQTGVPFGihk9FKg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?gbC0XlqxVjfXFSST6UqmSUYlrieMypIjO+lY9OxTqjEDc1i9kKVxoetdIhbF?=
+ =?us-ascii?Q?0aKu2wLpK2DYKVrApnTOLJBFpd+GE/JiLxy0xv8ekR+iKCJj0LRMoeDIznOu?=
+ =?us-ascii?Q?U9pPn2xHXcDs1yOl8Tf7uWxxTBmY3ZwdXMNCflEyYm/ym+fXZr10sPhD91sY?=
+ =?us-ascii?Q?kxud45Zju1bmJG4F0lWmncmkl/ecBRNoNlGE7WZVgr8E4+AuxHKYOcAzfyOj?=
+ =?us-ascii?Q?CsgnQCGYBHmWj0W4wcCNM/jw33ND5DZfNwdTiUhAL62DtY+uDEK0slHQn1TN?=
+ =?us-ascii?Q?RyaPm+6LHhUpR8W8jkLZ+INbpViw1+zkjDSMfqhgfpTQ2BSjRZkZW/4RFB3W?=
+ =?us-ascii?Q?l52R0Wp1fdNff/+f0LF4naSF3PEd7sFbdrnJVnVziRvUkmAFS9Vruqoc1Fy4?=
+ =?us-ascii?Q?MuxAJQdtNSgawP4/LuWCAuyroqqkHRrHVGYqe7dOMDSHmiCysx6FvOk4lp++?=
+ =?us-ascii?Q?tbfLkk2SfXAAbb1fVG9xT+aL3HKwZqokhODyTFNfDXiMEnbmyet6ppld1rIz?=
+ =?us-ascii?Q?OeodnA6E/B4EdipxLkDpKX3uJnibEya6WUnMmfC8+pgdl0GUeSovQE2Z59Fq?=
+ =?us-ascii?Q?vyn8wKonTe02JwjLozp9fIqUtDEedMGm4iIjpC9dq3g8uiC6G6gVWJZ19g/f?=
+ =?us-ascii?Q?z3a6flBSVxaO+Mzb7pAzNM9381+wySeKXT1uEOwIIFo9+9GLMpJPkh9lWGhu?=
+ =?us-ascii?Q?uWD5oAkBT6h+qVIaw6Gd+P4t0Xm3dsqrdsn4Y6qnj6SpTti2msSZy93dYgXf?=
+ =?us-ascii?Q?LlDRM8eQe5kTfPWmzr9Upj8SIfTQtN/lZIiyIQyCKisM+Lol3OgOUxVglvTo?=
+ =?us-ascii?Q?M/2jXbes438B6yGpcaasAb1JWrXVbNXBT4Cvy/LF5OJnW2Mhm4moCwjH9TIa?=
+ =?us-ascii?Q?/VCTIX6vkQhqTaU4XjprsvKOdzX08p7upRCAQx9RhF2pKTFyKCJRNZNsKiCt?=
+ =?us-ascii?Q?0owxJ8sMj+MQemUSSgETtKANrI74w6jzhLBYyD7jBkMIYelaKrsizJNN1C2r?=
+ =?us-ascii?Q?ePcQyeG+81LIaOjjEHb5Dlk3CNWYtgUGn5TN58lNZYLZ+ZEFF2pfJECwCtiL?=
+ =?us-ascii?Q?vCGxBuexPKx+2YA/E8mDY+r8aAVuj5aqrfACYWMsWzYQ5WuC1obn0uY69klT?=
+ =?us-ascii?Q?b3PtxqUGfNfdZu6mLwDtjn9pbZHSF1/8zpsBvCf6BssCf1N6AxpwVA3p+24F?=
+ =?us-ascii?Q?KI0MOdcb8WzOh5k8XrUXodzV2S49E+EXR7++y6MJccpopqegaENU4NGpdJz5?=
+ =?us-ascii?Q?7waIpuGOXY90+NwSssWBbv4wCMpzWTTUWe2/Xo5uY+IN4Kk1XUxABaa+hIGT?=
+ =?us-ascii?Q?Rz8ABZFNmZN8J21peXN+JOG9ly3yZTZRNiFrq5ppc6kDY1KGZp2KHz235HY8?=
+ =?us-ascii?Q?fhI0cHCIaimjJUpyOCmORUbHuvTUymPLiYx5VXyHxLttjcywv8WY6iryIHrx?=
+ =?us-ascii?Q?V5+nEwGjdLqNhf1c84rvATV+x31o/8L81b2r/GhDvsJEvD9O2SlrpLMyS+dd?=
+ =?us-ascii?Q?toSEOYq4kr7rOlpL031jeHsdH73EcSwHFj3ZGs6qUdKHqyezH0+sinFXk9tO?=
+ =?us-ascii?Q?uf8ghx0sZojo+ZJHa1QfmJ9LOv4a4MWO9Oqc7Dzi?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4032f2e1-c089-4cd5-4e94-08dc3a3db8dd
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2024 22:19:55.0309
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: y1HfUUn96adwSqyMqjkx8GVjUBcz2zl9JAbr17YVbUrg6kNc+ZL1gTXZ+kvw0lhrM6R7OFVnoEMUPXiDjS4C8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB7013
+X-OriginatorOrg: intel.com
 
-This patch implements .port_pre_bridge_flags() and .port_bridge_flags(),
-which are required for properly treating the BR_LEARNING flag. Also,
-.port_stp_state_set() is tweaked and now disables learning for standalone
-ports.
+Dan Williams wrote:
+> Ira Weiny wrote:
+> > 
+> > diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> > index f433f4eae888..9ac323cbf195 100644
+> > --- a/drivers/acpi/apei/ghes.c
+> > +++ b/drivers/acpi/apei/ghes.c
+> > @@ -729,7 +729,10 @@ static void cxl_cper_local_fn(struct work_struct *work)
+> >  
+> >  	while (kfifo_out_spinlocked(&cxl_cper_fifo, &wd, 1,
+> >  			&cxl_cper_read_lock)) {
+> > -		/* drop msg */
+> > +		struct cxl_cper_event_rec *rec = &wd.rec;
+> > +		union cxl_event *evt = &rec->event;
+> > +
+> > +		trace_cper_cxl_gen_event(rec, &evt->generic);
+> 
+> So it was confusing to read the empty stub function 2 patches back when this
+> change was coming, and basic reporting of CXL event does not need the
+> workqueue indirection. Note that EDAC triggers trace events directly in
+> the atomic notifier chain, so CXL could do the same.
+> 
+> >  static DECLARE_WORK(cxl_local_work, cxl_cper_local_fn);
+> > diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+> > index cbd3ddd7c33d..319faf552b65 100644
+> > --- a/include/ras/ras_event.h
+> > +++ b/include/ras/ras_event.h
+> 
+> This is more heavywieght than I was expecting and defeats the purpose of
+> centralizing advanced decode in the CXL driver itself.
 
-Disabling learning for standalone ports is required to avoid situations
-where one port sees traffic originating from another, which could cause
-invalid operations.
+Fair enough but it is not that heavy IMO.  It was mostly lifted from the
+CXL traces.
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
-v6:
-  - fix arranging local variables in reverse xmas tree order
-v5:
-  - introduce patch
+> 
+> I would expect this to be just the tracing equivalent of the
+> ignore_section logic in cper_estatus_print_section().
 
- drivers/net/dsa/vitesse-vsc73xx-core.c | 41 ++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 6 deletions(-)
+I think it is fair to give the user some information.  I'll redo this
+patch to be first and drop the extra work item.
 
-diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
-index e7dea48672d7..05dbeec8eb63 100644
---- a/drivers/net/dsa/vitesse-vsc73xx-core.c
-+++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
-@@ -1590,6 +1590,31 @@ static int vsc73xx_tag_8021q_vlan_del(struct dsa_switch *ds, int port, u16 vid)
- 	return vsc73xx_update_vlan_table(vsc, port, vid, false);
- }
- 
-+static int vsc73xx_port_pre_bridge_flags(struct dsa_switch *ds, int port,
-+					 struct switchdev_brport_flags flags,
-+					 struct netlink_ext_ack *extack)
-+{
-+	if (flags.mask & ~BR_LEARNING)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int vsc73xx_port_bridge_flags(struct dsa_switch *ds, int port,
-+				     struct switchdev_brport_flags flags,
-+				     struct netlink_ext_ack *extack)
-+{
-+	if (flags.mask & BR_LEARNING) {
-+		u32 val = flags.val & BR_LEARNING ? BIT(port) : 0;
-+		struct vsc73xx *vsc = ds->priv;
-+
-+		return vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+					   VSC73XX_LEARNMASK, BIT(port), val);
-+	}
-+
-+	return 0;
-+}
-+
- static int vsc73xx_port_bridge_join(struct dsa_switch *ds, int port,
- 				    struct dsa_bridge bridge,
- 				    bool *tx_fwd_offload,
-@@ -1706,19 +1731,21 @@ static void vsc73xx_refresh_fwd_map(struct dsa_switch *ds, int port, u8 state)
- static void vsc73xx_port_stp_state_set(struct dsa_switch *ds, int port,
- 				       u8 state)
- {
-+	struct dsa_port *dp = dsa_to_port(ds, port);
- 	struct vsc73xx *vsc = ds->priv;
--	u32 val;
-+	u32 val = 0;
-+
-+	if (state == BR_STATE_LEARNING || state == BR_STATE_FORWARDING)
-+		val = dp->learning ? BIT(port) : 0;
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+			    VSC73XX_LEARNMASK, BIT(port), val);
- 
- 	val = (state == BR_STATE_BLOCKING || state == BR_STATE_DISABLED) ?
- 	      0 : BIT(port);
- 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
- 			    VSC73XX_RECVMASK, BIT(port), val);
- 
--	val = (state == BR_STATE_LEARNING || state == BR_STATE_FORWARDING) ?
--	      BIT(port) : 0;
--	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
--			    VSC73XX_LEARNMASK, BIT(port), val);
--
- 	/* CPU Port should always forward packets when user ports are forwarding
- 	 * so let's configure it from other ports only.
- 	 */
-@@ -1740,6 +1767,8 @@ static const struct dsa_switch_ops vsc73xx_ds_ops = {
- 	.port_setup = vsc73xx_port_setup,
- 	.port_enable = vsc73xx_port_enable,
- 	.port_disable = vsc73xx_port_disable,
-+	.port_pre_bridge_flags = vsc73xx_port_pre_bridge_flags,
-+	.port_bridge_flags = vsc73xx_port_bridge_flags,
- 	.port_bridge_join = vsc73xx_port_bridge_join,
- 	.port_bridge_leave = vsc73xx_port_bridge_leave,
- 	.port_change_mtu = vsc73xx_change_mtu,
--- 
-2.34.1
-
+Ira
