@@ -1,346 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AE48480
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 01:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87F521FAB;
+	Fri,  1 Mar 2024 01:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709256653; cv=none; b=j5fQ+0Y1VDmFXIHZeZ8XGgOQhZJ+QyIjpn5gERCHmFWSLEGWqzPzQkYA2W3v6rxV9D+JAF8CAKHGHxe5HnzAfQ9G3nRz0s/S/ZDLFmYn3XzgDmWPWfd+eOmBgFevPnpYW+aif4u6KC9X8rwtxYBoJW4cGVN8NzlbZsmDPxBbqPo=
+	t=1709256762; cv=none; b=qe9wT1ca9sQMZeWm7rqw8Y+baAdIvLSc1vTnaN8ww5RrpxF4MCXxrZ/WSx+lwfDZicvTx8S6+IF+2Xx7Rq36OITPJEc/kCIyvatOFKCyO30HTqeIlM/3S80ilAL5k402h1Dpt47O6Iymo8xdKAPIosQ54KDVh0S6G83cvSHBQDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709256653; c=relaxed/simple;
-	bh=gf5wF9T7GEe5imjHi3htpLi6krmNuq7Tzmvza0zeVWE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zt4J4fdvUMQfM8TCbQf4E5u2hcPoQkNs+t40v32hW7o8NtjorLXmui8YodAL/kt4VdPn4NqOY+GW43bp6TB7PkTNusR0rU6jbUlM2scIekc33HubMpehXVYkYkvccoQw4AhmSUXSLf/MYuQ/O/bSmV6ZGPrbDS4Fy3Gaprt6aBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lC/3MbxZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709256762; c=relaxed/simple;
+	bh=GyRBvP61UMuuuBeLEcQrFy65aVcca1wzEIpd1Z2HEFs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=iCDXnAhxdBG4XqorT+Ryo7oeQ0pnvLC1LMohczq+daAWF+OMGl8p8NThD5RV6C5b/VqeY6v8iUEFA/5QnpQQaotppHH52hfolaIbV7l9FYXk2vxhNOkL8Ns70abhsYwh8mwUrYMzKI0S0yortvFHOcbI2zcn0bou+fVSqpr/VDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=hrvI8Dbu; arc=none smtp.client-ip=220.197.31.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lC/3MbxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B6E8C433F1;
-	Fri,  1 Mar 2024 01:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709256652;
-	bh=gf5wF9T7GEe5imjHi3htpLi6krmNuq7Tzmvza0zeVWE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lC/3MbxZ1MqAxheQI7MwpCH1sSROiil8V1D2XA5KPvEaky/kT5BBbMiepCqnJn5eC
-	 KE3oW5QGqsWSCpIrHQZ3zQWFtyxcqv+dgErk94THqu12dTRAIg1NPuLIiLEFareGPZ
-	 zvpkX+VBgU2ixngfU09eWkzJhztc8vRqxKW2xyXHpuFYJ6A4mowGtqQd+0JeHBOYxO
-	 pQxJ859Hw7Uohcl7EC/t4WW6Q04eKzfx6R8IPMmDSB7LuJw4R1arJIzwx5CiigNt47
-	 MRFyjjLDwCv62DzUviWPenTlkplEvlM+b1MKGsVLlyn1jR/55cO4kRpwr44iPmsiH5
-	 wFk20QZvaZnNQ==
-Message-ID: <2f93a1f0-520f-474e-a992-9737b69fede8@kernel.org>
-Date: Fri, 1 Mar 2024 09:30:48 +0800
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="hrvI8Dbu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=qf2m+LPOD0vmhyuQBBDWfZHEVymQ5ijq0f+jKDwcQDU=;
+	b=hrvI8DbuyCix2nbhCBYQpKKHsowsFFNOi2edmuZdk8jwaPvyt+wkU/1gtWNYkE
+	imqiOM2k/1XlZngN2nKCnbd5PhsGotutp/0xLS9fLVo/bwEGmWWlH/cukBms8Ybt
+	eobjnqRrugLUeIxioz5PsmnQQ6UlU7i1cR6pNinBIB+uE=
+Received: from localhost.localdomain (unknown [116.128.244.171])
+	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDn7+APMOFlZSfbBA--.18054S4;
+	Fri, 01 Mar 2024 09:32:24 +0800 (CST)
+From: Genjian <zhanggenjian@126.com>
+To: stable@vger.kernel.org
+Cc: axboe@kernel.dk,
+	stable@kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanggenjian123@gmail.com,
+	Genjian Zhang <zhanggenjian@kylinos.cn>
+Subject: [PATCH 4.19.y 0/9] Fix the UAF issue caused by the loop driver
+Date: Fri,  1 Mar 2024 09:30:19 +0800
+Message-Id: <20240301013028.2293831-1-zhanggenjian@126.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] f2fs: introduce SEGS_TO_BLKS/BLKS_TO_SEGS for cleanup
-Content-Language: en-US
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20240221092040.403629-1-chao@kernel.org>
- <Zd4gNUyZkxemSMIS@google.com>
- <229db22f-9e46-4132-88be-39b0336902c4@kernel.org>
- <ZeCyPanBuxblg9Dl@google.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <ZeCyPanBuxblg9Dl@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDn7+APMOFlZSfbBA--.18054S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtF1kKrW8WF18Gw47Zr1rCrg_yoW3GFyxpF
+	1SgrWfCw48GrykG3yUCr48tr13Ja1DA3WUtFZ3Cw13ZF1UWw1aqa4UJrW0gFy3Cry5AFy2
+	yF1rGr4rKr1DJw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U65l8UUUUU=
+X-CM-SenderInfo: x2kd0wxjhqyxldq6ij2wof0z/1tbi5gmUfmVLY1IyHwAAs3
 
-On 2024/3/1 0:35, Jaegeuk Kim wrote:
-> On 02/29, Chao Yu wrote:
->> On 2024/2/28 1:47, Jaegeuk Kim wrote:
->>> On 02/21, Chao Yu wrote:
->>>> Just cleanup, no functional change.
->>>>
->>>> Signed-off-by: Chao Yu <chao@kernel.org>
->>>> ---
->>>>    fs/f2fs/debug.c   |  7 +++----
->>>>    fs/f2fs/f2fs.h    | 14 ++++++++------
->>>>    fs/f2fs/gc.c      | 10 +++++-----
->>>>    fs/f2fs/gc.h      |  4 ++--
->>>>    fs/f2fs/segment.c | 12 ++++++------
->>>>    fs/f2fs/segment.h |  8 ++++----
->>>>    fs/f2fs/super.c   | 16 ++++++++--------
->>>>    fs/f2fs/sysfs.c   |  4 ++--
->>>>    8 files changed, 38 insertions(+), 37 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
->>>> index 6617195bd27e..12893477f2e4 100644
->>>> --- a/fs/f2fs/debug.c
->>>> +++ b/fs/f2fs/debug.c
->>>> @@ -134,7 +134,7 @@ static void update_general_status(struct f2fs_sb_info *sbi)
->>>>    	si->cur_ckpt_time = sbi->cprc_info.cur_time;
->>>>    	si->peak_ckpt_time = sbi->cprc_info.peak_time;
->>>>    	spin_unlock(&sbi->cprc_info.stat_lock);
->>>> -	si->total_count = (int)sbi->user_block_count / BLKS_PER_SEG(sbi);
->>>> +	si->total_count = BLKS_TO_SEGS(sbi, (int)sbi->user_block_count);
->>>>    	si->rsvd_segs = reserved_segments(sbi);
->>>>    	si->overp_segs = overprovision_segments(sbi);
->>>>    	si->valid_count = valid_user_blocks(sbi);
->>>> @@ -175,11 +175,10 @@ static void update_general_status(struct f2fs_sb_info *sbi)
->>>>    	si->alloc_nids = NM_I(sbi)->nid_cnt[PREALLOC_NID];
->>>>    	si->io_skip_bggc = sbi->io_skip_bggc;
->>>>    	si->other_skip_bggc = sbi->other_skip_bggc;
->>>> -	si->util_free = (int)(free_user_blocks(sbi) >> sbi->log_blocks_per_seg)
->>>> +	si->util_free = (int)(BLKS_TO_SEGS(sbi, free_user_blocks(sbi)))
->>>>    		* 100 / (int)(sbi->user_block_count >> sbi->log_blocks_per_seg)
->>>>    		/ 2;
->>>> -	si->util_valid = (int)(written_block_count(sbi) >>
->>>> -						sbi->log_blocks_per_seg)
->>>> +	si->util_valid = (int)(BLKS_TO_SEGS(sbi, written_block_count(sbi)))
->>>>    		* 100 / (int)(sbi->user_block_count >> sbi->log_blocks_per_seg)
->>>>    		/ 2;
->>>>    	si->util_invalid = 50 - si->util_free - si->util_valid;
->>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>> index dad2774ca72f..8a6fd4352a0e 100644
->>>> --- a/fs/f2fs/f2fs.h
->>>> +++ b/fs/f2fs/f2fs.h
->>>> @@ -1813,12 +1813,14 @@ struct f2fs_sb_info {
->>>>    };
->>>>    /* Definitions to access f2fs_sb_info */
->>>> -#define BLKS_PER_SEG(sbi)					\
->>>> -	((sbi)->blocks_per_seg)
->>>> -#define BLKS_PER_SEC(sbi)					\
->>>> -	((sbi)->segs_per_sec << (sbi)->log_blocks_per_seg)
->>>> -#define SEGS_PER_SEC(sbi)					\
->>>> -	((sbi)->segs_per_sec)
->>>> +#define SEGS_TO_BLKS(sbi, segs)					\
->>>> +		((segs) << (sbi)->log_blocks_per_seg)
->>>
->>>
->>> I also applied this.
->>>
->>>    /* Definitions to access f2fs_sb_info */
->>>    #define SEGS_TO_BLKS(sbi, segs)                                        \
->>> -               ((segs) << (sbi)->log_blocks_per_seg)
->>> +               (((long long)segs) << (sbi)->log_blocks_per_seg)
->>
->> Jaegeuk,
->>
->> This may cause compile failure reported as below, can we revert this?
->>
->> https://lore.kernel.org/linux-f2fs-devel/CAMuHMdXRuiV8PEe6azKYLp+z_Sa8CbL8849bzu59J1_XXtyk1g@mail.gmail.com/T/#t
-> 
-> Yeah, it seems so. I removed it in -dev.
+From: Genjian Zhang <zhanggenjian@kylinos.cn>
 
-Oh, I meant reverting (((long long)segs) << (sbi)->log_blocks_per_seg),
-this line can bring 64bits data into division statement, result in
-compile failure.
+Hello!
 
-Thanks,
+We found that 2035c770bfdb ("loop: Check for overflow while configuring loop") lost a unlock loop_ctl_mutex in loop_get_status(...).
+which caused syzbot to report a UAF issue. However, the upstream patch does not have this issue.
+So, we revert this patch and directly apply the unmodified upstream patch.
 
-> 
->>
->> Thanks,
->>
->>>    #define BLKS_TO_SEGS(sbi, blks)                                        \
->>>                   ((blks) >> (sbi)->log_blocks_per_seg)
->>>
->>>> +#define BLKS_TO_SEGS(sbi, blks)					\
->>>> +		((blks) >> (sbi)->log_blocks_per_seg)
->>>> +
->>>> +#define BLKS_PER_SEG(sbi)	((sbi)->blocks_per_seg)
->>>> +#define BLKS_PER_SEC(sbi)	(SEGS_TO_BLKS(sbi, (sbi)->segs_per_sec))
->>>> +#define SEGS_PER_SEC(sbi)	((sbi)->segs_per_sec)
->>>>    __printf(3, 4)
->>>>    void f2fs_printk(struct f2fs_sb_info *sbi, bool limit_rate, const char *fmt, ...);
->>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->>>> index 3ff126316d42..6d160d50e14e 100644
->>>> --- a/fs/f2fs/gc.c
->>>> +++ b/fs/f2fs/gc.c
->>>> @@ -301,7 +301,7 @@ static unsigned int get_max_cost(struct f2fs_sb_info *sbi,
->>>>    	/* LFS */
->>>>    	if (p->gc_mode == GC_GREEDY)
->>>> -		return 2 * BLKS_PER_SEG(sbi) * p->ofs_unit;
->>>> +		return SEGS_TO_BLKS(sbi, 2 * p->ofs_unit);
->>>>    	else if (p->gc_mode == GC_CB)
->>>>    		return UINT_MAX;
->>>>    	else if (p->gc_mode == GC_AT)
->>>> @@ -347,7 +347,7 @@ static unsigned int get_cb_cost(struct f2fs_sb_info *sbi, unsigned int segno)
->>>>    	mtime = div_u64(mtime, SEGS_PER_SEC(sbi));
->>>>    	vblocks = div_u64(vblocks, SEGS_PER_SEC(sbi));
->>>> -	u = (vblocks * 100) >> sbi->log_blocks_per_seg;
->>>> +	u = BLKS_TO_SEGS(sbi, vblocks * 100);
->>>>    	/* Handle if the system time has changed by the user */
->>>>    	if (mtime < sit_i->min_mtime)
->>>> @@ -2060,7 +2060,7 @@ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
->>>>    	raw_sb->segment_count = cpu_to_le32(segment_count + segs);
->>>>    	raw_sb->segment_count_main = cpu_to_le32(segment_count_main + segs);
->>>>    	raw_sb->block_count = cpu_to_le64(block_count +
->>>> -			(long long)(segs << sbi->log_blocks_per_seg));
->>>> +			(long long)SEGS_TO_BLKS(sbi, segs));
->>>>    	if (f2fs_is_multi_device(sbi)) {
->>>>    		int last_dev = sbi->s_ndevs - 1;
->>>>    		int dev_segs =
->>>> @@ -2076,7 +2076,7 @@ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
->>>>    static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
->>>>    {
->>>>    	int segs = secs * SEGS_PER_SEC(sbi);
->>>> -	long long blks = (long long)(segs << sbi->log_blocks_per_seg);
->>>> +	long long blks = (long long)SEGS_TO_BLKS(sbi, segs);
->>>>    	long long user_block_count =
->>>>    				le64_to_cpu(F2FS_CKPT(sbi)->user_block_count);
->>>> @@ -2118,7 +2118,7 @@ int f2fs_resize_fs(struct file *filp, __u64 block_count)
->>>>    		int last_dev = sbi->s_ndevs - 1;
->>>>    		__u64 last_segs = FDEV(last_dev).total_segments;
->>>> -		if (block_count + (last_segs << sbi->log_blocks_per_seg) <=
->>>> +		if (block_count + SEGS_TO_BLKS(sbi, last_segs) <=
->>>>    								old_block_count)
->>>>    			return -EINVAL;
->>>>    	}
->>>> diff --git a/fs/f2fs/gc.h b/fs/f2fs/gc.h
->>>> index e4a75aa4160f..6a2419ddc7c6 100644
->>>> --- a/fs/f2fs/gc.h
->>>> +++ b/fs/f2fs/gc.h
->>>> @@ -70,7 +70,7 @@ struct victim_entry {
->>>>    static inline block_t free_segs_blk_count(struct f2fs_sb_info *sbi)
->>>>    {
->>>> -	return free_segments(sbi) << sbi->log_blocks_per_seg;
->>>> +	return SEGS_TO_BLKS(sbi, free_segments(sbi));
->>>>    }
->>>>    static inline block_t free_user_blocks(struct f2fs_sb_info *sbi)
->>>> @@ -78,7 +78,7 @@ static inline block_t free_user_blocks(struct f2fs_sb_info *sbi)
->>>>    	block_t free_blks, ovp_blks;
->>>>    	free_blks = free_segs_blk_count(sbi);
->>>> -	ovp_blks = overprovision_segments(sbi) << sbi->log_blocks_per_seg;
->>>> +	ovp_blks = SEGS_TO_BLKS(sbi, overprovision_segments(sbi));
->>>>    	if (free_blks < ovp_blks)
->>>>    		return 0;
->>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->>>> index 56927b097e30..d0209ea77dd2 100644
->>>> --- a/fs/f2fs/segment.c
->>>> +++ b/fs/f2fs/segment.c
->>>> @@ -448,8 +448,8 @@ static inline bool excess_dirty_threshold(struct f2fs_sb_info *sbi)
->>>>    	unsigned int nodes = get_pages(sbi, F2FS_DIRTY_NODES);
->>>>    	unsigned int meta = get_pages(sbi, F2FS_DIRTY_META);
->>>>    	unsigned int imeta = get_pages(sbi, F2FS_DIRTY_IMETA);
->>>> -	unsigned int threshold = (factor * DEFAULT_DIRTY_THRESHOLD) <<
->>>> -				sbi->log_blocks_per_seg;
->>>> +	unsigned int threshold =
->>>> +		SEGS_TO_BLKS(sbi, (factor * DEFAULT_DIRTY_THRESHOLD));
->>>>    	unsigned int global_threshold = threshold * 3 / 2;
->>>>    	if (dents >= threshold || qdata >= threshold ||
->>>> @@ -870,7 +870,7 @@ block_t f2fs_get_unusable_blocks(struct f2fs_sb_info *sbi)
->>>>    {
->>>>    	int ovp_hole_segs =
->>>>    		(overprovision_segments(sbi) - reserved_segments(sbi));
->>>> -	block_t ovp_holes = ovp_hole_segs << sbi->log_blocks_per_seg;
->>>> +	block_t ovp_holes = SEGS_TO_BLKS(sbi, ovp_hole_segs);
->>>>    	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
->>>>    	block_t holes[2] = {0, 0};	/* DATA and NODE */
->>>>    	block_t unusable;
->>>> @@ -2178,7 +2178,7 @@ void f2fs_clear_prefree_segments(struct f2fs_sb_info *sbi,
->>>>    		if (!f2fs_sb_has_blkzoned(sbi) &&
->>>>    		    (!f2fs_lfs_mode(sbi) || !__is_large_section(sbi))) {
->>>>    			f2fs_issue_discard(sbi, START_BLOCK(sbi, start),
->>>> -				(end - start) << sbi->log_blocks_per_seg);
->>>> +				SEGS_TO_BLKS(sbi, end - start));
->>>>    			continue;
->>>>    		}
->>>>    next:
->>>> @@ -2289,7 +2289,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
->>>>    	atomic_set(&dcc->queued_discard, 0);
->>>>    	atomic_set(&dcc->discard_cmd_cnt, 0);
->>>>    	dcc->nr_discards = 0;
->>>> -	dcc->max_discards = MAIN_SEGS(sbi) << sbi->log_blocks_per_seg;
->>>> +	dcc->max_discards = SEGS_TO_BLKS(sbi, MAIN_SEGS(sbi));
->>>>    	dcc->max_discard_request = DEF_MAX_DISCARD_REQUEST;
->>>>    	dcc->min_discard_issue_time = DEF_MIN_DISCARD_ISSUE_TIME;
->>>>    	dcc->mid_discard_issue_time = DEF_MID_DISCARD_ISSUE_TIME;
->>>> @@ -4469,7 +4469,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
->>>>    #endif
->>>>    	sit_i->sit_base_addr = le32_to_cpu(raw_super->sit_blkaddr);
->>>> -	sit_i->sit_blocks = sit_segs << sbi->log_blocks_per_seg;
->>>> +	sit_i->sit_blocks = SEGS_TO_BLKS(sbi, sit_segs);
->>>>    	sit_i->written_valid_blocks = 0;
->>>>    	sit_i->bitmap_size = sit_bitmap_size;
->>>>    	sit_i->dirty_sentries = 0;
->>>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
->>>> index 9fe5ec619456..e72b02b67087 100644
->>>> --- a/fs/f2fs/segment.h
->>>> +++ b/fs/f2fs/segment.h
->>>> @@ -77,21 +77,21 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
->>>>    #define TOTAL_SEGS(sbi)							\
->>>>    	(SM_I(sbi) ? SM_I(sbi)->segment_count : 				\
->>>>    		le32_to_cpu(F2FS_RAW_SUPER(sbi)->segment_count))
->>>> -#define TOTAL_BLKS(sbi)	(TOTAL_SEGS(sbi) << (sbi)->log_blocks_per_seg)
->>>> +#define TOTAL_BLKS(sbi)	(SEGS_TO_BLKS(sbi, TOTAL_SEGS(sbi)))
->>>>    #define MAX_BLKADDR(sbi)	(SEG0_BLKADDR(sbi) + TOTAL_BLKS(sbi))
->>>>    #define SEGMENT_SIZE(sbi)	(1ULL << ((sbi)->log_blocksize +	\
->>>>    					(sbi)->log_blocks_per_seg))
->>>>    #define START_BLOCK(sbi, segno)	(SEG0_BLKADDR(sbi) +			\
->>>> -	 (GET_R2L_SEGNO(FREE_I(sbi), segno) << (sbi)->log_blocks_per_seg))
->>>> +	 (SEGS_TO_BLKS(sbi, GET_R2L_SEGNO(FREE_I(sbi), segno))))
->>>>    #define NEXT_FREE_BLKADDR(sbi, curseg)					\
->>>>    	(START_BLOCK(sbi, (curseg)->segno) + (curseg)->next_blkoff)
->>>>    #define GET_SEGOFF_FROM_SEG0(sbi, blk_addr)	((blk_addr) - SEG0_BLKADDR(sbi))
->>>>    #define GET_SEGNO_FROM_SEG0(sbi, blk_addr)				\
->>>> -	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) >> (sbi)->log_blocks_per_seg)
->>>> +	(BLKS_TO_SEGS(sbi, GET_SEGOFF_FROM_SEG0(sbi, blk_addr)))
->>>>    #define GET_BLKOFF_FROM_SEG0(sbi, blk_addr)				\
->>>>    	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) & (BLKS_PER_SEG(sbi) - 1))
->>>> @@ -891,7 +891,7 @@ static inline int nr_pages_to_skip(struct f2fs_sb_info *sbi, int type)
->>>>    	if (type == DATA)
->>>>    		return BLKS_PER_SEG(sbi);
->>>>    	else if (type == NODE)
->>>> -		return 8 * BLKS_PER_SEG(sbi);
->>>> +		return SEGS_TO_BLKS(sbi, 8);
->>>>    	else if (type == META)
->>>>    		return 8 * BIO_MAX_VECS;
->>>>    	else
->>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->>>> index 9976f2b0393c..bb056700b459 100644
->>>> --- a/fs/f2fs/super.c
->>>> +++ b/fs/f2fs/super.c
->>>> @@ -3763,9 +3763,9 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
->>>>    	sbi->segs_per_sec = le32_to_cpu(raw_super->segs_per_sec);
->>>>    	sbi->secs_per_zone = le32_to_cpu(raw_super->secs_per_zone);
->>>>    	sbi->total_sections = le32_to_cpu(raw_super->section_count);
->>>> -	sbi->total_node_count =
->>>> -		((le32_to_cpu(raw_super->segment_count_nat) / 2) *
->>>> -		NAT_ENTRY_PER_BLOCK) << sbi->log_blocks_per_seg;
->>>> +	sbi->total_node_count = SEGS_TO_BLKS(sbi,
->>>> +			((le32_to_cpu(raw_super->segment_count_nat) / 2) *
->>>> +			NAT_ENTRY_PER_BLOCK));
->>>>    	F2FS_ROOT_INO(sbi) = le32_to_cpu(raw_super->root_ino);
->>>>    	F2FS_NODE_INO(sbi) = le32_to_cpu(raw_super->node_ino);
->>>>    	F2FS_META_INO(sbi) = le32_to_cpu(raw_super->meta_ino);
->>>> @@ -4199,14 +4199,14 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
->>>>    			if (i == 0) {
->>>>    				FDEV(i).start_blk = 0;
->>>>    				FDEV(i).end_blk = FDEV(i).start_blk +
->>>> -				    (FDEV(i).total_segments <<
->>>> -				    sbi->log_blocks_per_seg) - 1 +
->>>> -				    le32_to_cpu(raw_super->segment0_blkaddr);
->>>> +					SEGS_TO_BLKS(sbi,
->>>> +					FDEV(i).total_segments) - 1 +
->>>> +					le32_to_cpu(raw_super->segment0_blkaddr);
->>>>    			} else {
->>>>    				FDEV(i).start_blk = FDEV(i - 1).end_blk + 1;
->>>>    				FDEV(i).end_blk = FDEV(i).start_blk +
->>>> -					(FDEV(i).total_segments <<
->>>> -					sbi->log_blocks_per_seg) - 1;
->>>> +						SEGS_TO_BLKS(sbi,
->>>> +						FDEV(i).total_segments) - 1;
->>>>    				FDEV(i).bdev_handle = bdev_open_by_path(
->>>>    					FDEV(i).path, mode, sbi->sb, NULL);
->>>>    			}
->>>> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
->>>> index 2689cc9c3bf8..ceac3bfc5e2c 100644
->>>> --- a/fs/f2fs/sysfs.c
->>>> +++ b/fs/f2fs/sysfs.c
->>>> @@ -493,8 +493,8 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
->>>>    		spin_lock(&sbi->stat_lock);
->>>>    		if (t > (unsigned long)(sbi->user_block_count -
->>>>    				F2FS_OPTION(sbi).root_reserved_blocks -
->>>> -				(SM_I(sbi)->additional_reserved_segments <<
->>>> -					sbi->log_blocks_per_seg))) {
->>>> +				SEGS_TO_BLKS(sbi,
->>>> +				SM_I(sbi)->additional_reserved_segments))) {
->>>>    			spin_unlock(&sbi->stat_lock);
->>>>    			return -EINVAL;
->>>>    		}
->>>> -- 
->>>> 2.40.1
+Risk use-after-free as reported by syzbot：
+
+[  174.437352] BUG: KASAN: use-after-free in __mutex_lock.isra.10+0xbc4/0xc30
+[  174.437772] Read of size 4 at addr ffff8880bac49ab8 by task syz-executor.0/13897
+[  174.438205]
+[  174.438306] CPU: 1 PID: 13897 Comm: syz-executor.0 Not tainted 4.19.306 #1
+[  174.438712] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1kylin1 04/01/2014
+[  174.439236] Call Trace:
+[  174.439392]  dump_stack+0x94/0xc7
+[  174.439596]  ? __mutex_lock.isra.10+0xbc4/0xc30
+[  174.439881]  print_address_description+0x60/0x229
+[  174.440165]  ? __mutex_lock.isra.10+0xbc4/0xc30
+[  174.440436]  kasan_report.cold.6+0x241/0x2fd
+[  174.440696]  __mutex_lock.isra.10+0xbc4/0xc30
+[  174.440959]  ? entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+[  174.441272]  ? mutex_trylock+0xa0/0xa0
+[  174.441500]  ? entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+[  174.441816]  ? kobject_get_unless_zero+0x129/0x1c0
+[  174.442106]  ? kset_unregister+0x30/0x30
+[  174.442351]  ? find_symbol_in_section+0x310/0x310
+[  174.442634]  ? __mutex_lock_slowpath+0x10/0x10
+[  174.442901]  mutex_lock_killable+0xb0/0xf0
+[  174.443149]  ? __mutex_lock_killable_slowpath+0x10/0x10
+[  174.443465]  ? __mutex_lock_slowpath+0x10/0x10
+[  174.443732]  ? _cond_resched+0x10/0x20
+[  174.443966]  ? kobject_get+0x54/0xa0
+[  174.444190]  lo_open+0x16/0xc0
+[  174.444382]  __blkdev_get+0x273/0x10f0
+[  174.444612]  ? lo_fallocate.isra.20+0x150/0x150
+[  174.444886]  ? bdev_disk_changed+0x190/0x190
+[  174.445146]  ? path_init+0x1030/0x1030
+[  174.445371]  ? do_syscall_64+0x9a/0x2d0
+[  174.445608]  ? deref_stack_reg+0xab/0xe0
+[  174.445852]  blkdev_get+0x97/0x880
+[  174.446061]  ? walk_component+0x297/0xdc0
+[  174.446303]  ? __blkdev_get+0x10f0/0x10f0
+[  174.446547]  ? __fsnotify_inode_delete+0x20/0x20
+[  174.446822]  blkdev_open+0x1bd/0x240
+[  174.447040]  do_dentry_open+0x448/0xf80
+[  174.447274]  ? blkdev_get_by_dev+0x60/0x60
+[  174.447522]  ? __x64_sys_fchdir+0x1a0/0x1a0
+[  174.447775]  ? inode_permission+0x86/0x320
+[  174.448022]  path_openat+0xa83/0x3ed0
+[  174.448248]  ? path_mountpoint+0xb50/0xb50
+[  174.448495]  ? kasan_kmalloc+0xbf/0xe0
+[  174.448723]  ? kmem_cache_alloc+0xbc/0x1b0
+[  174.448971]  ? getname_flags+0xc4/0x560
+[  174.449203]  ? do_sys_open+0x1ce/0x3f0
+[  174.449432]  ? do_syscall_64+0x9a/0x2d0
+[  174.449706]  ? entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+[  174.450022]  ? __d_alloc+0x2a/0xa50
+[  174.450232]  ? kasan_unpoison_shadow+0x30/0x40
+[  174.450510]  ? should_fail+0x117/0x6c0
+[  174.450737]  ? timespec64_trunc+0xc1/0x150
+[  174.450986]  ? inode_init_owner+0x2e0/0x2e0
+[  174.451237]  ? timespec64_trunc+0xc1/0x150
+[  174.451484]  ? inode_init_owner+0x2e0/0x2e0
+[  174.451736]  do_filp_open+0x197/0x270
+[  174.451959]  ? may_open_dev+0xd0/0xd0
+[  174.452182]  ? kasan_unpoison_shadow+0x30/0x40
+[  174.452448]  ? kasan_kmalloc+0xbf/0xe0
+[  174.452672]  ? __alloc_fd+0x1a3/0x4b0
+[  174.452895]  do_sys_open+0x2c7/0x3f0
+[  174.453114]  ? filp_open+0x60/0x60
+[  174.453320]  do_syscall_64+0x9a/0x2d0
+[  174.453541]  ? prepare_exit_to_usermode+0xf3/0x170
+[  174.453832]  entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+[  174.454136] RIP: 0033:0x41edee
+[  174.454321] Code: 25 00 00 41 00 3d 00 00 41 00 74 48 48 c7 c0 a4 af 0b 01 8b 00 85 c0 75 69 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a6 00 00 00 48 8b 4c 24 28 64 48 33 0c5
+[  174.455404] RSP: 002b:00007ffd2501fbd0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+[  174.455854] RAX: ffffffffffffffda RBX: 00007ffd2501fc90 RCX: 000000000041edee
+[  174.456273] RDX: 0000000000000002 RSI: 00007ffd2501fcd0 RDI: 00000000ffffff9c
+[  174.456698] RBP: 0000000000000003 R08: 0000000000000001 R09: 00007ffd2501f9a7
+[  174.457116] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
+[  174.457535] R13: 0000000000565e48 R14: 00007ffd2501fcd0 R15: 0000000000400510
+[  174.457955]
+[  174.458052] Allocated by task 945:
+[  174.458261]  kasan_kmalloc+0xbf/0xe0
+[  174.458478]  kmem_cache_alloc_node+0xb4/0x1d0
+[  174.458743]  copy_process.part.57+0x14b0/0x7010
+[  174.459017]  _do_fork+0x197/0x980
+[  174.459218]  kernel_thread+0x2f/0x40
+[  174.459438]  call_usermodehelper_exec_work+0xa8/0x240
+[  174.459742]  process_one_work+0x933/0x13b0
+[  174.459986]  worker_thread+0x8c/0x1000
+[  174.460212]  kthread+0x343/0x410
+[  174.460408]  ret_from_fork+0x35/0x40
+[  174.460621]
+[  174.460716] Freed by task 22902:
+[  174.460913]  __kasan_slab_free+0x125/0x170
+[  174.461159]  kmem_cache_free+0x6e/0x1b0
+[  174.461391]  __put_task_struct+0x1c4/0x440
+[  174.461636]  delayed_put_task_struct+0x135/0x170
+[  174.461915]  rcu_process_callbacks+0x578/0x15c0
+[  174.462184]  __do_softirq+0x175/0x60e
+[  174.462403]
+[  174.462501] The buggy address belongs to the object at ffff8880bac49a80
+[  174.462501]  which belongs to the cache task_struct of size 3264
+[  174.463235] The buggy address is located 56 bytes inside of
+[  174.463235]  3264-byte region [ffff8880bac49a80, ffff8880bac4a740)
+[  174.463923] The buggy address belongs to the page:
+[  174.464210] page:ffffea0002eb1200 count:1 mapcount:0 mapping:ffff888188ca0a00 index:0x0 compound_mapcount: 0
+[  174.464784] flags: 0x100000000008100(slab|head)
+[  174.465079] raw: 0100000000008100 ffffea0002eaa400 0000000400000004 ffff888188ca0a00
+[  174.465533] raw: 0000000000000000 0000000000090009 00000001ffffffff 0000000000000000
+[  174.465988] page dumped because: kasan: bad access detected
+[  174.466321]
+[  174.466322] Memory state around the buggy address:
+[  174.466325]  ffff8880bac49980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  174.466327]  ffff8880bac49a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  174.466329] >ffff8880bac49a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  174.466329]                                         ^
+[  174.466331]  ffff8880bac49b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  174.466333]  ffff8880bac49b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  174.466333] ==================================================================
+[  174.466338] Disabling lock debugging due to kernel taint
+
+Best regards
+Genjian
+
+Genjian Zhang (1):
+  Revert "loop: Check for overflow while configuring loop"
+
+Holger Hoffstätte (1):
+  loop: properly observe rotational flag of underlying device
+
+Martijn Coenen (5):
+  loop: Call loop_config_discard() only after new config is applied
+  loop: Remove sector_t truncation checks
+  loop: Factor out setting loop device size
+  loop: Refactor loop_set_status() size calculation
+  loop: Factor out configuring loop from status
+
+Siddh Raman Pant (1):
+  loop: Check for overflow while configuring loop
+
+Zhong Jinghua (1):
+  loop: loop_set_status_from_info() check before assignment
+
+ drivers/block/loop.c | 204 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 123 insertions(+), 81 deletions(-)
+
+-- 
+2.25.1
+
