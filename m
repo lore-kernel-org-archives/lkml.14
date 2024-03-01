@@ -1,56 +1,56 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFBD6BFC9
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6485C6CBF7
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709291401; cv=none; b=Sypj9bUhraZG1YGkft5fHIoTSXZelUYzb5JRPfiZX/dT5CaNQ/H0JIEJ7jennwXBTMHSpBM8jIVKvVEtGyEkeorvsBDkniw86umk5+OY/p3+v2JcCa+G6giSkOuuf7gQEURvxBpAb6AILmadrfyZGFNdoyN4nDxzi995Qoo6tFw=
+	t=1709291403; cv=none; b=EGIrWIjknGiN5PlaHZL1YThM80VD8eDRvfke2s+e1VIIknG3vEnDpyPSQ+PuOJLsTf2ipOQEAMoBuWPdkuDDsijp6WkDrYDDlzRnELzaVdI8enXxeF+TRNdWtssihGsoFtbNcLad28aE99h8j430ILlyQ8w9S1rHxFObCL4Qrzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709291401; c=relaxed/simple;
-	bh=NL0X0BOz7ZVywJyCc8r0y4XYQQ5/b+5FbeyYJW/2ZGY=;
+	s=arc-20240116; t=1709291403; c=relaxed/simple;
+	bh=25qFObja4ZHXiwqUDbfSYr1EcpHvXYlwGZ9JseGR6EI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CmiTcpc10ZG68EMACXkMYnre6mc6wOS0/Q+slAcPxFbsAGsxwbyLUS/vBtPo1pj4T8BS1tQqHYF5SpFH6Sp1TNc9SwUgiar+/ZXXFuPMqcY5O5xDmpIrWJLOkUPBJxGJj/UrGYLdnKW2xplYPKG+31dcVcFI/Yqq5d9iBXr9R/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TbFKmpd4; arc=none smtp.client-ip=209.85.128.51
+	 MIME-Version; b=eEWC1n3Qcwj72fRHZIUbNuSf183yQjgy46AnR7ItfmxhexNzS4fX0wU4tfcAEbxXSDta6f1Aub6vtXUpwo9v3eOPFPbeZdLNEf9/tiSZwCCvvIm4UdSqKTV3G9rBOynVnvif6i/ICKBRjwh/63BRGXvUjFBEsEmFgEkXP7dDFkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RgGBW+5g; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbFKmpd4"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412a9e9c776so18625105e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 03:09:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgGBW+5g"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-412b83cfb44so13122075e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 03:10:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709291397; x=1709896197; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1709291400; x=1709896200; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PRfa5V1eCtQKvE35o3iYx+TIdATo30V6vBwFI6v4hE8=;
-        b=TbFKmpd4+yaZTeo1bSuDisQWTqe7TJoUlSZeQ901Mc12vtk4b9UvMUypBBQZxOG28P
-         uQuKIKQOl1RvI3kHa9QDez1jo8HF1CX58MBRJJWIyLI41QACZKi+wWuKrPtY/kI3Puso
-         uofkgtS66ATQEZNkF4nlPcoq72O16E9aH/CH3Dms6L3fsE5IKkY6RnwCz9klYXUOB5JM
-         mSmYx5UrM0Sw/JMjywxMN8X0hTiHMNvSK2ffvuJrCVPboQgM9X6EmBeDgYf5BpebWlHQ
-         1epxAKhEOTH1vHaIMFctj2OCUIGpW5EhpYy/hItt4c9Xmw57xjVV/TcA5L13Y10NpB0w
-         nmKg==
+        bh=m8fTQ+F8wbIR0pBCZ90+DSUH9EydgL03eONGv2AQpFQ=;
+        b=RgGBW+5gtuYht/xRdLIpgr8Fajx4QQZ/HwNoCZRYO3tod0I8pYe9uIgCA0xo8LwwYw
+         IeLuY0Td3LK6slawfIvmioVLkgWifGhGVJ5Fhu3lq55+Iqxcyog7BrgvCjFYpdq89CRG
+         g3X1gE+wh6b7ZuD6YQF0v2LpoG65cgy3B6r+vrWslLL9N/jiew3MORceNCzzrxSh/kD6
+         UNZ51pNGu10CON7gKphmdWlJ8cjNmx5wuQusgY7jw8iayk54e8vemv1ydBLEzYZkDRGo
+         qdZRt8yXlUaf/5bj4O+GO4DHaUxF39dMh0LiITBlmfPw69PYt7E8/ItdOEX/069JGcTU
+         4LPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709291397; x=1709896197;
+        d=1e100.net; s=20230601; t=1709291400; x=1709896200;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=PRfa5V1eCtQKvE35o3iYx+TIdATo30V6vBwFI6v4hE8=;
-        b=mzpZBbkdeZTQXeMYvjMdffjlnhwEg+h5GRS3SduqVksHCzgul9WV0Me6gpdajR3uJc
-         HTFqjwF8a4JFmvPidLXRq6d6nBVO4BmpmErXvu/lA4uK2OmdPhxfVwL/qN5las+yEB2B
-         rBVDK5ImZKBFpEbFudk2m1ON/9fO/UyzUyJUemXGde5y300hUQiFybhVRqxINzwVdc7J
-         KPoVHznYafL8p7ieKXT7n+I8gAk9y90jUfAvonSHtf8pnNYI7xPPQZWDdYVu0MlmzHPQ
-         S3TgrlRI0iZ21vCbIlO6gh0h65L9P5gFyub6FXVlEdgxF+QgRkyXwh8LCDowlKbf6/91
-         V1yw==
-X-Gm-Message-State: AOJu0Yw1Jf1AeXsMFlfV75OcUu4xQmDMnRoWavBWKPczqNfT5v16sy7S
-	IfiTcdG+BBHkbR5zNBerz2qDd5o3SHSY55+ptlINOXXHl39Gliva0EPa9/1E8qM=
-X-Google-Smtp-Source: AGHT+IGiJ2USHyCH/RfQda37Ym4O9RsMrvKdzLVxNbbICBgCvKkfRS4AATBIZsdjCzTrO1XyHeiBRA==
-X-Received: by 2002:a05:600c:1c28:b0:412:b6a7:ecf1 with SMTP id j40-20020a05600c1c2800b00412b6a7ecf1mr1507519wms.0.1709291397207;
-        Fri, 01 Mar 2024 03:09:57 -0800 (PST)
+        bh=m8fTQ+F8wbIR0pBCZ90+DSUH9EydgL03eONGv2AQpFQ=;
+        b=IW/2m//5DKXi9+T2u6BPRFGQ9lDKy27mJcWDzJZ7wm01xJm/IzyyOQPGVvdU2PUblm
+         hWTfA+pTUl81uf443RMfxNPmKu/+l9z3iifTwRmqec3NVufjWvoD9ylTf8wQiChuy+LQ
+         f7yOFMISh+rS3VsHHkSaKbvT6V5416A8qok1YOmAcBHoeCI0+C0YoxrnPicl5TTw9Co/
+         YQfkwciwJZ8IFN8huGwYAqyxMk0oiZPWwQx6DlBrYgIiGt/B1GtJagUxLpHW+7qACbM5
+         sKQl3M7MLyBk+i/qfklmTT2QYpN1tmiXVUm1qWTHkyr+NOViP1c8/t0ZsYwVC4z+GkFz
+         wPqA==
+X-Gm-Message-State: AOJu0Ywo3V7wy0aRlMxytfSKe0amfevij/l8hTIzR7viiNkdYuxkbb23
+	8RLBkAnEWwOW/LLfj6Y0zlJvrOI4Pww8waDOaQ4ZOlzpFY2p8CtQ28rNsNw7nM4=
+X-Google-Smtp-Source: AGHT+IHNDisWXxf+gqRVuS6xPxgcP7j2PAo3PCTzuFEvXmvHeZRueUpjcjFQdDDMhIpB/EnOxBIKWw==
+X-Received: by 2002:a05:600c:4e11:b0:412:c855:b5b7 with SMTP id b17-20020a05600c4e1100b00412c855b5b7mr1103993wmq.21.1709291399512;
+        Fri, 01 Mar 2024 03:09:59 -0800 (PST)
 Received: from kepler.redhat.com (1F2EF13F.nat.pool.telekom.hu. [31.46.241.63])
-        by smtp.gmail.com with ESMTPSA id b20-20020a05600c4e1400b00412cad66f8fsm490264wmq.44.2024.03.01.03.09.56
+        by smtp.gmail.com with ESMTPSA id b20-20020a05600c4e1400b00412cad66f8fsm490264wmq.44.2024.03.01.03.09.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 03:09:56 -0800 (PST)
+        Fri, 01 Mar 2024 03:09:58 -0800 (PST)
 Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Valentin Schneider <vschneid@redhat.com>
-Subject: [PATCH 1/7] sched/balancing: Switch the 'DEFINE_SPINLOCK(balancing)' spinlock into an 'atomic_t sched_balance_running' flag
-Date: Fri,  1 Mar 2024 12:09:45 +0100
-Message-Id: <20240301110951.3707367-2-mingo@kernel.org>
+Subject: [PATCH 3/7] sched/balancing: Change comment formatting to not overlap Git conflict marker lines
+Date: Fri,  1 Mar 2024 12:09:47 +0100
+Message-Id: <20240301110951.3707367-4-mingo@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240301110951.3707367-1-mingo@kernel.org>
 References: <20240301110951.3707367-1-mingo@kernel.org>
@@ -73,30 +73,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The 'balancing' spinlock added in:
+So the scheduler has two such comment blocks, with '=' used as a double underline:
 
-  08c183f31bdb ("[PATCH] sched: add option to serialize load balancing")
+        /*
+         * VRUNTIME
+         * ========
+         *
 
-... is taken when the SD_SERIALIZE flag is set in a domain, but in reality it
-is a glorified global atomic flag serializing the load-balancing of
-those domains.
+'========' also happens to be a Git conflict marker, throwing off a simple
+search in an editor for this pattern.
 
-It doesn't have any explicit locking semantics per se: we just
-spin_trylock() it.
-
-Turn it into a ... global atomic flag. This makes it more
-clear what is going on here, and reduces overhead and code
-size a bit:
-
-  # kernel/sched/fair.o: [x86-64 defconfig]
-
-     text	   data	    bss	    dec	    hex	filename
-    60730	   2721	    104	  63555	   f843	fair.o.before
-    60718	   2721	    104	  63543	   f837	fair.o.after
-
-Also document the flag a bit.
-
-No change in functionality intended.
+Change them to '-------' type of underline instead - it looks just as good.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -105,53 +92,31 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 ---
- kernel/sched/fair.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 6a16129f9a5c..64ae3d8dc93b 100644
+index f11fc6dd39b1..934ace69eb30 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -11633,7 +11633,20 @@ static int active_load_balance_cpu_stop(void *data)
- 	return 0;
- }
+@@ -3679,7 +3679,7 @@ static void reweight_eevdf(struct cfs_rq *cfs_rq, struct sched_entity *se,
  
--static DEFINE_SPINLOCK(balancing);
-+/*
-+ * This flag serializes load-balancing passes over large domains
-+ * (such as SD_NUMA) - only once load-balancing instance may run
-+ * at a time, to reduce overhead on very large systems with lots
-+ * of CPUs and large NUMA distances.
-+ *
-+ * - Note that load-balancing passes triggered while another one
-+ *   is executing are skipped and not re-tried.
-+ *
-+ * - Also note that this does not serialize sched_balance_domains()
-+ *   execution, as non-SD_SERIALIZE domains will still be
-+ *   load-balanced in parallel.
-+ */
-+static atomic_t sched_balance_running = ATOMIC_INIT(0);
+ 	/*
+ 	 * VRUNTIME
+-	 * ========
++	 * --------
+ 	 *
+ 	 * COROLLARY #1: The virtual runtime of the entity needs to be
+ 	 * adjusted if re-weight at !0-lag point.
+@@ -3762,7 +3762,7 @@ static void reweight_eevdf(struct cfs_rq *cfs_rq, struct sched_entity *se,
  
- /*
-  * Scale the max load_balance interval with the number of CPUs in the system.
-@@ -11711,7 +11724,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
- 
- 		need_serialize = sd->flags & SD_SERIALIZE;
- 		if (need_serialize) {
--			if (!spin_trylock(&balancing))
-+			if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
- 				goto out;
- 		}
- 
-@@ -11729,7 +11742,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
- 			interval = get_sd_balance_interval(sd, busy);
- 		}
- 		if (need_serialize)
--			spin_unlock(&balancing);
-+			atomic_set_release(&sched_balance_running, 0);
- out:
- 		if (time_after(next_balance, sd->last_balance + interval)) {
- 			next_balance = sd->last_balance + interval;
+ 	/*
+ 	 * DEADLINE
+-	 * ========
++	 * --------
+ 	 *
+ 	 * When the weight changes, the virtual time slope changes and
+ 	 * we should adjust the relative virtual deadline accordingly.
 -- 
 2.40.1
 
