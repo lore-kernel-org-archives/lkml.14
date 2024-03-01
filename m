@@ -1,171 +1,87 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95FA6CDCD
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 14:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6197C70CD1;
+	Fri,  1 Mar 2024 14:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709304256; cv=none; b=DMMcsNs3MbKMc9R+XHQpeqV3kjWx/lrI7w6HuRyqdshbMcTz4jdjVYMplJ+RyVrTGx8VvsNy4kv7gIQ5RGKFompx30bvItuwm83LmQ5upBQe1bdVM3REoy0bxLm1sotPPlrH2PP5QRmFD94zbRp1S4GcqJAmMsRSiZGTV7HbsBc=
+	t=1709304261; cv=none; b=gQBnzS4V5GLZLkOFKKDHsW6wRwJYRbQFY0MdggwlQk4LQF4+qHqHc9/TspSrD8L1XJOOD/xvoM1B5oylIY5537m91JalAy4mAgnD0p1tRPebknUKntICAurQ18ew23OokrU1B8v8FG9/2DZLE2FZOEigcGc68U/tmH6RObN14vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709304256; c=relaxed/simple;
-	bh=wY5nOXRkKN0peBCkREMuuea9mGMlwW8qw+b8rHjiy6k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=loMSEdwmQkundqPXM/8AO4WCzgBzGEGFbsnuBoBvx5lw+IkquP7c7rQx1F0mThpV6uaxTDxEsimdjMnjS1ZVFZ7JpSbNk6yIZWUrQs9jYzU0keN2e28xhthLWtrQhcr/6NGLLEn5IjeGxGuQ9lamoU4nSn2IDDFFvFBqI4dkCjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=OQYGX5Il; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1709304261; c=relaxed/simple;
+	bh=8yuh0XAoNI9OAiTz2X7WtSEmZYmZer2dp7rFHu/FS3w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bv1j3mrbOSwh/ryVEcrNZ+dbNIxZnQ+Zuap89fv9Ksm856HSnxH9vsFbRJDTbloKWeQSEMwjMObumY2DHvsgxFBb4PRxhQYyRuHgs6DDrNNP6hlNNfq6khUfwFTFDNIQZ8HcfdR3Bt4fFV2pi+npC2Ae2M7vb2/naHGbUD/HX2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nureRkJd; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OQYGX5Il"
-X-UUID: 27cb65c8d7da11ee935d6952f98a51a9-20240301
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UnWw5ddbb7C1HlliPTLMIlPGGbzGQXRr3LGJEzaTQVo=;
-	b=OQYGX5Il+YkcrsWJ858vNfcBWXob3LUbKUkiNKTH/GC9t4sBfqa7cMTXBmQuJFjxiyZg+c74FOU7r71UsU4APFXacXWNjBuFY7z2KjGPzARdEmNOERu4wInTmN8hI7WpAUdBmb5E+gVqjD6TtJsoRBi1/ZbqyedPhWXh6Dt34FU=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:378c88c7-5864-42d9-8fb9-00c23510c9bc,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6f543d0,CLOUDID:276d8184-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 27cb65c8d7da11ee935d6952f98a51a9-20240301
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1149716174; Fri, 01 Mar 2024 22:44:06 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 1 Mar 2024 22:44:05 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 1 Mar 2024 22:44:05 +0800
-From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>, Chun-Kuang Hu
-	<chunkuang.hu@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-CC: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jason-ch Chen <jason-ch.chen@mediatek.com>, "Jason-JH . Lin"
-	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [RESEND, PATCH 3/5] soc: mediatek: mtk-cmdq: Add cmdq_pkt_poll_addr() function
-Date: Fri, 1 Mar 2024 22:44:01 +0800
-Message-ID: <20240301144403.2977-4-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240301144403.2977-1-jason-jh.lin@mediatek.com>
-References: <20240301144403.2977-1-jason-jh.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nureRkJd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709304257;
+	bh=8yuh0XAoNI9OAiTz2X7WtSEmZYmZer2dp7rFHu/FS3w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nureRkJdA9S0y+ABeJGshg3YZBc7bEV0qmW+Kz9rJ8kq4muqUuX6cY9oBiEq/0b3a
+	 7aXSh1cS216OxqcaIp3EbaOPFnIxvMNmbR4AJ4AecHnYVRp7f5I7PZa1jn8WZh0nPW
+	 zb2evCkXLsvyMC/R+qwofEUNNXLP2/cWoFiYO9LKpveFmU8kbP3+C9VTSDoqvY0lOM
+	 O+BrwEvycA1IBSk1jjvMfwG8iHZMLsnNkn4ilWNb/NF4W5UjCKu5jY3oCJ4Vrswt32
+	 mE32TA0AU1d4uo9N2tCJVYMy+PhUNvQ1+aIRpzaHrwbCeOmFdYmDuawWErirgMZB1J
+	 IeJnMvsNbRlGg==
+Received: from localhost.localdomain (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B62C537803EE;
+	Fri,  1 Mar 2024 14:44:14 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Justin Tee <justin.tee@broadcom.com>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	kernel-janitors@vger.kernel.org,
+	James Smart <jsmart2021@gmail.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: lpfc: correct size for cmdwqe/rspwqe for memset
+Date: Fri,  1 Mar 2024 19:44:33 +0500
+Message-Id: <20240301144434.2809483-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Transfer-Encoding: 8bit
 
-Add cmdq_pkt_poll_addr function to support CMDQ user making
-an instruction for polling a specific address of hardware rigster
-to check the value with or without mask.
+The cmdwqe and rspwqe are of type lpfc_wqe128. They should be memset
+with the same type.
 
-POLL is an old operation in GCE, so it does not support SPR and
-CMDQ_CODE_LOGIC. CMDQ users need to use GPR and CMDQ_CODE_MASK
-to move polling register address to GPR to make an instruction.
-This will be done in cmdq_pkt_poll_addr().
-
-Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+Fixes: 61910d6a5243 ("scsi: lpfc: SLI path split: Refactor CT paths")
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c | 38 ++++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  | 16 +++++++++++
- 2 files changed, 54 insertions(+)
+ drivers/scsi/lpfc/lpfc_bsg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 3a1e47ad8a41..2e9fc9bb1183 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -12,6 +12,7 @@
+diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
+index d80e6e81053b0..8caf54aa20391 100644
+--- a/drivers/scsi/lpfc/lpfc_bsg.c
++++ b/drivers/scsi/lpfc/lpfc_bsg.c
+@@ -3169,10 +3169,10 @@ lpfc_bsg_diag_loopback_run(struct bsg_job *job)
+ 	}
  
- #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
- #define CMDQ_POLL_ENABLE_MASK	BIT(0)
-+#define CMDQ_POLL_HIGH_ADDR_GPR	(14)
- #define CMDQ_EOC_IRQ_EN		BIT(0)
- #define CMDQ_REG_TYPE		1
- #define CMDQ_JUMP_RELATIVE	1
-@@ -406,6 +407,43 @@ int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
- }
- EXPORT_SYMBOL(cmdq_pkt_poll_mask);
+ 	cmdwqe = &cmdiocbq->wqe;
+-	memset(cmdwqe, 0, sizeof(union lpfc_wqe));
++	memset(cmdwqe, 0, sizeof(union lpfc_wqe128));
+ 	if (phba->sli_rev < LPFC_SLI_REV4) {
+ 		rspwqe = &rspiocbq->wqe;
+-		memset(rspwqe, 0, sizeof(union lpfc_wqe));
++		memset(rspwqe, 0, sizeof(union lpfc_wqe128));
+ 	}
  
-+int cmdq_pkt_poll_addr(struct cmdq_pkt *pkt, dma_addr_t addr, u32 value, u32 mask)
-+{
-+	struct cmdq_instruction inst = { {0} };
-+	int err;
-+	u8 use_mask = 0;
-+
-+	if (mask != U32_MAX) {
-+		inst.op = CMDQ_CODE_MASK;
-+		inst.mask = ~mask;
-+		err = cmdq_pkt_append_command(pkt, inst);
-+		if (err != 0)
-+			return err;
-+		use_mask = CMDQ_POLL_ENABLE_MASK;
-+	}
-+
-+	/*
-+	 * POLL is an old operation in GCE and it does not support SPR and CMDQ_CODE_LOGIC,
-+	 * so it can not use cmdq_pkt_assign to keep polling register address to SPR.
-+	 * It needs to use GPR and CMDQ_CODE_MASK to move polling register address to GPR.
-+	 */
-+	inst.op = CMDQ_CODE_MASK;
-+	inst.dst_t = CMDQ_REG_TYPE;
-+	inst.sop = CMDQ_POLL_HIGH_ADDR_GPR;
-+	inst.mask = addr;
-+	err = cmdq_pkt_append_command(pkt, inst);
-+	if (err < 0)
-+		return err;
-+
-+	inst.op = CMDQ_CODE_POLL;
-+	inst.dst_t = CMDQ_REG_TYPE;
-+	inst.sop = CMDQ_POLL_HIGH_ADDR_GPR;
-+	inst.offset = use_mask;
-+	inst.value = value;
-+	return cmdq_pkt_append_command(pkt, inst);
-+}
-+EXPORT_SYMBOL(cmdq_pkt_poll_addr);
-+
- int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value)
- {
- 	struct cmdq_instruction inst = {};
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index b6dbe2d8f16a..2fe9be240fbc 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -253,6 +253,22 @@ int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
- int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
- 		       u16 offset, u32 value, u32 mask);
- 
-+/**
-+ * cmdq_pkt_poll_addr() - Append polling command to the CMDQ packet, ask GCE to
-+ *			 execute an instruction that wait for a specified
-+ *			 address of hardware register to check for the value
-+ *			 w/ or w/o mask.
-+ *			 All GCE hardware threads will be blocked by this
-+ *			 instruction.
-+ * @pkt:	the CMDQ packet
-+ * @addr:	the hardware register address
-+ * @value:	the specified target register value
-+ * @mask:	the specified target register mask
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_poll_addr(struct cmdq_pkt *pkt, dma_addr_t addr, u32 value, u32 mask);
-+
- /**
-  * cmdq_pkt_assign() - Append logic assign command to the CMDQ packet, ask GCE
-  *		       to execute an instruction that set a constant value into
+ 	INIT_LIST_HEAD(&head);
 -- 
-2.18.0
+2.39.2
 
