@@ -1,120 +1,283 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D3E40BE4;
-	Fri,  1 Mar 2024 12:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7138A384;
+	Fri,  1 Mar 2024 12:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709297662; cv=none; b=gKQNM4fzlemsDZqxHGnIZDbGpd2btv2u3LGJ1siSrvyIdwpj3tGDuJVGRmrpVA9aSUPc3aQiF9Qr8WZTdYWnL6F0ZDD4JZm4vbZ0hgil2AL+LzHXJdK+vUxMXwIto4T83+AN/rQ+C1xDRzu3ieLRw/zIuKnhhPRRylmMOrRvdmo=
+	t=1709297782; cv=none; b=ZTBl/OHgbjQmEnGLwiodBUlXIIdfCjvCSxf1PtUnCd8p7wHBDENK9TCWyvFDjBTlfjT9A7s3/Q61j0X6yp/u/uzYS+QtteXWz07Av2eg7mXhoUYs+urQO6JfDJg7o2NKaVDnJ234e0SSmdzMRm0Fdklg7h3uSS0iZgY11QsKa2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709297662; c=relaxed/simple;
-	bh=t89dHoO9bnrvVzN2QBdLQzcy9IB8Yy8zK1DVwzYtJLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kTR9+GXbZjEElDJq7r0SwUuP/RwctYAFTzysvMFkxUNMUsYdW6mZlZ/G03VUNbBbq7vik6FusQDn57kZRSwp/m2EcFDnmu0gKKNctrHmhfFkcpEVFaipGwQlXIXJYiRNVSZNWrIrlxSaSP5VM6O88dqQ8PHV5hXUHgl7FORpnMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOegZl9p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709297782; c=relaxed/simple;
+	bh=WsS8mF/x31DhxHhlSqaR+Y5fzG0/7lWK0Ux8VWKoggE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=C3gXUlfFFiGqJsqAewt+lznkGsCtXfsvK/O1iWGZNBqRmGPy/Fb+UBruMTZEXdZ8dA76uniN4KGKcQQbdCqhc6Rzy5rb6R0M5/V1Ey3MBjME7g3cGOVIEV/VYe19OHpL1sIXPEbaA8T+8YMHNexArz4fjDuxlem6UubmHkq6OKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gYOU+NaL; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOegZl9p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C649FC433C7;
-	Fri,  1 Mar 2024 12:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709297661;
-	bh=t89dHoO9bnrvVzN2QBdLQzcy9IB8Yy8zK1DVwzYtJLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QOegZl9pozxzAbNhZv0jA1i+vi3ItTby1MFSlr85hLGQhHFfLDxrb01Ceft8ywLFL
-	 LZ3cQODIhl86m39/bVdMjbCEGtXEN/QMGOahwbFOylrsu1CQrG61u7Mp9u04yFsgOw
-	 W57pcEh7jkhTp99h8FyYr8ewF5aOeSMjxSVk28NEaFvIINTfHFRoVVsdhKWyvoqgmO
-	 co4E/QYluflcEX5cUQnbbEfUG7q0AkEwjGZrlg6hmhebo54BNR3f+fBHClu3SVGAL/
-	 t6dpupiMJRB0ZDmFBluzhc/umtXAqkNtVyElMzMTlFv7n3rkzHzHcEfhi1TB5X/T0+
-	 7toYd61I6SV/w==
-Date: Fri, 1 Mar 2024 13:54:13 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>
-Cc: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>, 
-	Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, 
-	James Morris <jmorris@namei.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, audit@vger.kernel.org, selinux@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
-Subject: Re: [PATCH v2 14/25] evm: add support for fscaps security hooks
-Message-ID: <20240301-zucht-umfeld-9a923a7d070a@brauner>
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
- <20240221-idmap-fscap-refactor-v2-14-3039364623bd@kernel.org>
- <15a69385b49c4f8626f082bc9b957132388414fb.camel@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gYOU+NaL"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 02CEA20B74C0; Fri,  1 Mar 2024 04:56:20 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 02CEA20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1709297780;
+	bh=+fycukGm4sgzp9r6OLPcfHk+mP0SxlL5O9Scws8TfrY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gYOU+NaLtDSP3z16XuiNI31t1vzv5XsWe0gnlPhAPOgkUF5LpWlXHHoBLICpbcHoP
+	 GWl43WOpaQJdj0aLHfZl8y1/5sMtaXJ5cWnFvdB+WN00FEF2SHoByLXHtTJ/bUlm5n
+	 cfSbsENOlVZoo3nHuOWD2qSGdlpNHkuonhrx7boE=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Olaf Hering <olaf@aepfle.de>,
+	Ani Sinha <anisinha@redhat.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination for keyfile format
+Date: Fri,  1 Mar 2024 04:56:18 -0800
+Message-Id: <1709297778-20420-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <15a69385b49c4f8626f082bc9b957132388414fb.camel@huaweicloud.com>
 
-On Fri, Mar 01, 2024 at 10:19:13AM +0100, Roberto Sassu wrote:
-> On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOcean) wrote:
-> > Support the new fscaps security hooks by converting the vfs_caps to raw
-> > xattr data and then handling them the same as other xattrs.
-> 
-> Hi Seth
-> 
-> I started looking at this patch set.
-> 
-> The first question I have is if you are also going to update libcap
-> (and also tar, I guess), since both deal with the raw xattr.
-> 
-> From IMA/EVM perspective (Mimi will add on that), I guess it is
-> important that files with a signature/HMAC continue to be accessible
-> after applying this patch set.
-> 
-> Looking at the code, it seems the case (if I understood correctly,
-> vfs_getxattr_alloc() is still allowed).
-> 
-> To be sure that everything works, it would be really nice if you could
-> also extend our test suite:
-> 
-> https://github.com/mimizohar/ima-evm-utils/blob/next-testing/tests/portable_signatures.test
-> 
-> and
-> 
-> https://github.com/mimizohar/ima-evm-utils/blob/next-testing/tests/evm_hmac.test
-> 
-> 
-> The first test we would need to extend is check_cp_preserve_xattrs,
-> which basically does a cp -a. We would need to set fscaps in the
-> origin, copy to the destination, and see if the latter is accessible.
-> 
-> I would also extend:
-> 
-> check_tar_extract_xattrs_different_owner
-> check_tar_extract_xattrs_same_owner
-> check_metadata_change
-> check_evm_revalidate
-> check_evm_portable_sig_ima_appraisal
-> check_evm_portable_sig_ima_measurement_list
-> 
-> It should not be too complicated. The purpose would be to exercise your
-> code below.
-> 
-> 
-> Regarding the second test, we would need to extend just check_evm_hmac.
-> 
-> 
-> Just realized, before extending the tests, it would be necessary to
-> modify also evmctl.c, to retrieve fscaps through the new interfaces,
-> and to let users provide custom fscaps the HMAC or portable signature
-> is calculated on.
+If the network configuration strings are passed as a combination of IPv and
+IPv6 addresses, the current KVP daemon doesnot handle it for the keyfile
+configuration format.
+With these changes, the keyfile config generation logic scans through the
+list twice to generate IPv4 and IPv6 sections for the configuration files
+to handle this support.
 
-While request for tests are obviously fine they should be added by the
-respective experts for IMA/EVM in this case. I don't think it's
-appropriate to expect Seth to do that especially because you seem to
-imply that you currently don't have any tests for fscaps at all. We're
-always happy to test things and if that'd be adding new IMA/EVM specific
-features than it would be something to discuss but really we're
-refactoring so the fact that you don't have tests we can run is not the
-fault of this patchset and IMA/EVM is just a small portion of it. 
+Built-on: Rhel9
+Tested-on: Rhel9(IPv4 only, IPv6 only, IPv4 and IPv6 combination)
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
+ tools/hv/hv_kvp_daemon.c | 152 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 112 insertions(+), 40 deletions(-)
+
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 318e2dad27e0..7e84e40b55fb 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -76,6 +76,11 @@ enum {
+ 	DNS
+ };
+ 
++enum {
++	IPV4 = 1,
++	IPV6
++};
++
+ static int in_hand_shake;
+ 
+ static char *os_name = "";
+@@ -1171,6 +1176,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
+ 	return 0;
+ }
+ 
++int ip_version_check(const char *input_addr)
++{
++	struct in6_addr addr;
++
++	if (inet_pton(AF_INET, input_addr, &addr))
++		return IPV4;
++	else if (inet_pton(AF_INET6, input_addr, &addr))
++		return IPV6;
++	else
++		return -EINVAL;
++}
++
+ /*
+  * Only IPv4 subnet strings needs to be converted to plen
+  * For IPv6 the subnet is already privided in plen format
+@@ -1197,14 +1214,56 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
+ 	return plen;
+ }
+ 
++static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
++				  int ip_sec)
++{
++	char addr[INET6_ADDRSTRLEN], *output_str;
++	int ip_offset = 0, error, ip_ver;
++	char *param_name;
++
++	output_str = malloc(strlen(ip_string));
++
++	if (!output_str)
++		return 1;
++
++	output_str[0] = '\0';
++
++	if (type == DNS)
++		param_name = "dns";
++	else
++		param_name = "gateway";
++
++	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
++				   (MAX_IP_ADDR_SIZE * 2))) {
++		ip_ver = ip_version_check(addr);
++
++		if ((ip_ver == IPV4 && ip_sec == IPV4) ||
++		    (ip_ver == IPV6 && ip_sec == IPV6)) {
++			strcat(output_str, addr);
++			strcat(output_str, ",");
++		} else {
++			continue;
++		}
++	}
++
++	if (strlen(output_str)) {
++		output_str[strlen(output_str) - 1] = '\0';
++		error = fprintf(f, "%s=%s\n", param_name, output_str);
++		if (error <  0)
++			return error;
++	}
++
++	return 0;
++}
++
+ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+-				int is_ipv6)
++				int ip_sec)
+ {
+ 	char addr[INET6_ADDRSTRLEN];
+ 	char subnet_addr[INET6_ADDRSTRLEN];
+ 	int error, i = 0;
+ 	int ip_offset = 0, subnet_offset = 0;
+-	int plen;
++	int plen, ip_ver;
+ 
+ 	memset(addr, 0, sizeof(addr));
+ 	memset(subnet_addr, 0, sizeof(subnet_addr));
+@@ -1216,10 +1275,13 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+ 						       subnet_addr,
+ 						       (MAX_IP_ADDR_SIZE *
+ 							2))) {
+-		if (!is_ipv6)
++		ip_ver = ip_version_check(addr);
++		if (ip_ver == IPV4 && ip_sec == IPV4)
+ 			plen = kvp_subnet_to_plen((char *)subnet_addr);
+-		else
++		else if (ip_ver == IPV6 && ip_sec == IPV6)
+ 			plen = atoi(subnet_addr);
++		else
++			continue;
+ 
+ 		if (plen < 0)
+ 			return plen;
+@@ -1242,8 +1304,8 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ 	char if_filename[PATH_MAX];
+ 	char nm_filename[PATH_MAX];
+ 	FILE *ifcfg_file, *nmfile;
++	int ip_sections_count;
+ 	char cmd[PATH_MAX];
+-	int is_ipv6 = 0;
+ 	char *mac_addr;
+ 	int str_len;
+ 
+@@ -1421,52 +1483,62 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ 	if (error)
+ 		goto setval_error;
+ 
+-	if (new_val->addr_family & ADDR_FAMILY_IPV6) {
+-		error = fprintf(nmfile, "\n[ipv6]\n");
+-		if (error < 0)
+-			goto setval_error;
+-		is_ipv6 = 1;
+-	} else {
+-		error = fprintf(nmfile, "\n[ipv4]\n");
+-		if (error < 0)
+-			goto setval_error;
+-	}
+-
+ 	/*
+-	 * Now we populate the keyfile format
++	 * The keyfile format expects the IPv6 and IPv4 configuration in
++	 * different sections. Therefore we iterate through the list twice,
++	 * once to populate the IPv4 section and the next time for IPv6
+ 	 */
++	ip_sections_count = 1;
++	do {
++		if (ip_sections_count == 1) {
++			error = fprintf(nmfile, "\n[ipv4]\n");
++			if (error < 0)
++				goto setval_error;
++		} else {
++			error = fprintf(nmfile, "\n[ipv6]\n");
++			if (error < 0)
++				goto setval_error;
++		}
+ 
+-	if (new_val->dhcp_enabled) {
+-		error = kvp_write_file(nmfile, "method", "", "auto");
+-		if (error < 0)
+-			goto setval_error;
+-	} else {
+-		error = kvp_write_file(nmfile, "method", "", "manual");
++		/*
++		 * Now we populate the keyfile format
++		 */
++
++		if (new_val->dhcp_enabled) {
++			error = kvp_write_file(nmfile, "method", "", "auto");
++			if (error < 0)
++				goto setval_error;
++		} else {
++			error = kvp_write_file(nmfile, "method", "", "manual");
++			if (error < 0)
++				goto setval_error;
++		}
++
++		/*
++		 * Write the configuration for ipaddress, netmask, gateway and
++		 * name services
++		 */
++		error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
++					     (char *)new_val->sub_net,
++					     ip_sections_count);
+ 		if (error < 0)
+ 			goto setval_error;
+-	}
+ 
+-	/*
+-	 * Write the configuration for ipaddress, netmask, gateway and
+-	 * name services
+-	 */
+-	error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
+-				     (char *)new_val->sub_net, is_ipv6);
+-	if (error < 0)
+-		goto setval_error;
+-
+-	/* we do not want ipv4 addresses in ipv6 section and vice versa */
+-	if (is_ipv6 != is_ipv4((char *)new_val->gate_way)) {
+-		error = fprintf(nmfile, "gateway=%s\n", (char *)new_val->gate_way);
++		error = process_dns_gateway_nm(nmfile,
++					       (char *)new_val->gate_way,
++					       GATEWAY, ip_sections_count);
+ 		if (error < 0)
+ 			goto setval_error;
+-	}
+ 
+-	if (is_ipv6 != is_ipv4((char *)new_val->dns_addr)) {
+-		error = fprintf(nmfile, "dns=%s\n", (char *)new_val->dns_addr);
++		error = process_dns_gateway_nm(nmfile,
++					       (char *)new_val->dns_addr, DNS,
++					       ip_sections_count);
+ 		if (error < 0)
+ 			goto setval_error;
+-	}
++
++		ip_sections_count++;
++	} while (ip_sections_count <= 2);
++
+ 	fclose(nmfile);
+ 	fclose(ifcfg_file);
+ 
+-- 
+2.34.1
+
