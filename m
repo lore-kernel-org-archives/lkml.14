@@ -1,82 +1,124 @@
-Received: from zju.edu.cn (spam.zju.edu.cn [61.164.42.155])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A68B369949;
-	Fri,  1 Mar 2024 07:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.164.42.155
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D7167E81;
+	Fri,  1 Mar 2024 07:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709277892; cv=none; b=WS3O4n12rfnTBUQeUAI+FACspCrzc80Nzs/JN/ui4GBmKQd77MQRKO5VKelXiqDfvWoMh3axFGpCxhtLzBCoQRPROyElHq0y2Kjr0JowEQskavxzpJ2qKxV+qEUSKSlsT3iMCQ+NFnHUxGZ+kbfSXPQLvxyDiO50ONut9sms+SA=
+	t=1709277974; cv=none; b=gSD4RWuIsgnPmDkakG4r9K79H7e2PtgDwYsrA9//0mSdJ2Q3igHV8ho/DL/4jPgwllBv0wVL4zGUoDMVWDf6sl7RZTfbr14kLvcEWM8zuBFfUaa6qth/B+wA+i+iSRSAB4Mv9eihk+YDcxa49NEmTM6S0LIJbJS0Donlwrl2N+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709277892; c=relaxed/simple;
-	bh=3tiuWlFSNFX6flPz1zUBIzEmuc0k31mmgh4aSeW1k3M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Hu6GrD3Di6yA55vLVb/0eMGeUMKqizU4giRSt/nFvK5GsdKfqCntifurgkhKTRtOXO8jvAxnBBqBjed2ujbbeI69Lb8/EKAQX8kSZYfwF8V5myKDDKzpteNDfC17kupBTUqsyeFNz6K7mjQHV52/zMzPR8LbZZXZfj/ZYJ9Z+Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=61.164.42.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from duoming$zju.edu.cn ( [106.117.76.127] ) by
- ajax-webmail-mail-app4 (Coremail) ; Fri, 1 Mar 2024 15:24:35 +0800
- (GMT+08:00)
-Date: Fri, 1 Mar 2024 15:24:35 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: duoming@zju.edu.cn
-To: "Michal Simek" <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org
-Subject: Re: [PATCH v3] clk: zynq: Prevent null pointer dereference caused
- by kmalloc failure
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT5 build
- 20231205(37e20f0e) Copyright (c) 2002-2024 www.mailtech.cn
- mispb-4df6dc2c-e274-4d1c-b502-72c5c3dfa9ce-zj.edu.cn
-In-Reply-To: <d9b6d49e-9485-4733-a2d6-615bcc8f6ef3@amd.com>
-References: <20240301070336.13700-1-duoming@zju.edu.cn>
- <d9b6d49e-9485-4733-a2d6-615bcc8f6ef3@amd.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1709277974; c=relaxed/simple;
+	bh=Rhs6jAAGLoJTszhcWzmU7in30IBcE5D1BcGRAqr55KA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XvzV0hYm5tSjCij1WOAsznclV8owONmEdoTnHLyBTHAvN/GXkNmw+QZCl1erLNgiHk1JJs8sByVkMByZifFctT5tYJsFODNqkfVp7K0BSBOUNTjSPmhKglEavV0PoUXMo+jZbv0U9fPqY6w8whBmAVMx7a2l92BfebBfCXJyZIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XQhHJVjl; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQhHJVjl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709277973; x=1740813973;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Rhs6jAAGLoJTszhcWzmU7in30IBcE5D1BcGRAqr55KA=;
+  b=XQhHJVjlXX4IyuWkOOSYf19RfTOleuIkoMedV0y4ti6amcpKR4FsJs65
+   NQtlPGruZCEbxEPWdcTqwJrDCGS6josW8DMDH4bjEqiwmDjVKQswYxBI/
+   wYhmPfa8GcwRkQgGNqWMqA/PVoaXTZV19w/0AmUbBrdM8pl7WtLpuN8Ym
+   0CAKVrPYKhZ796yqfVIjEgcfD+qPw1l4JRrCmyvzY7aVmutHMIu8DhTlO
+   QCmlsKTAtS+EfMFg3laO0LLlfjCoL+kfQCKQYFSOcYQeA2dBV2H/1ACTw
+   1nVxTG87jHdSi64U8a2PiuL5QfiqhDkUI8uuYGg6cS34UKGvl8xv8VIZe
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3657784"
+X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
+   d="scan'208";a="3657784"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 23:26:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
+   d="scan'208";a="12797487"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.125.243.127]) ([10.125.243.127])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 23:26:09 -0800
+Message-ID: <8a9104e6-6fa2-4aaa-88c2-491b1ee612b4@intel.com>
+Date: Fri, 1 Mar 2024 15:26:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <74fd8b9e.6331.18df8e68c36.Coremail.duoming@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:cS_KCgD3NIWzguFl08DBAQ--.36567W
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwQHAWXg0lMLLwACsj
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/21] KVM: x86/mmu: Add Suppress VE bit to EPT
+ shadow_mmio_mask/shadow_present_mask
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: seanjc@google.com, michael.roth@amd.com, isaku.yamahata@intel.com,
+ thomas.lendacky@amd.com
+References: <20240227232100.478238-1-pbonzini@redhat.com>
+ <20240227232100.478238-6-pbonzini@redhat.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20240227232100.478238-6-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gRnJpLCAxIE1hciAyMDI0IDA4OjA1OjE3ICswMTAwIE1pY2hhbCBTaW1layB3cm90ZToKPiA+
-IFRoZSBrbWFsbG9jKCkgaW4genlucV9jbGtfc2V0dXAoKSB3aWxsIHJldHVybiBudWxsIGlmIHRo
-ZQo+ID4gcGh5c2ljYWwgbWVtb3J5IGhhcyBydW4gb3V0LiBBcyBhIHJlc3VsdCwgaWYgd2UgdXNl
-IHNucHJpbnRmKCkKPiA+IHRvIHdyaXRlIGRhdGEgdG8gdGhlIG51bGwgYWRkcmVzcywgdGhlIG51
-bGwgcG9pbnRlciBkZXJlZmVyZW5jZQo+ID4gYnVnIHdpbGwgaGFwcGVuLgo+ID4gCj4gPiBUaGlz
-IHBhdGNoIHVzZXMgYSBzdGFjayB2YXJpYWJsZSB0byByZXBsYWNlIHRoZSBrbWFsbG9jKCkuCj4g
-PiAKPiA+IEZpeGVzOiAwZWU1MmIxNTdiOGUgKCJjbGs6IHp5bnE6IEFkZCBjbG9jayBjb250cm9s
-bGVyIGRyaXZlciIpCj4gPiBTaWduZWQtb2ZmLWJ5OiBEdW9taW5nIFpob3UgPGR1b21pbmdAemp1
-LmVkdS5jbj4KPiA+IC0tLQo+ID4gQ2hhbmdlcyBpbiB2MzoKPiA+ICAgIC0gUHV0IHN0YWNrIHZh
-cmlhYmxlIGluIHRoZSBoZWFkIG9mIHRoZSBmdW5jdGlvbiBhbmQgcmVtb3ZlIHZhcmlhYmxlIHRt
-cC4KPiA+IAo+ID4gICBkcml2ZXJzL2Nsay96eW5xL2Nsa2MuYyB8IDcgKystLS0tLQo+ID4gICAx
-IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+ID4gCj4gPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvenlucS9jbGtjLmMgYi9kcml2ZXJzL2Nsay96eW5xL2Ns
-a2MuYwo+ID4gaW5kZXggN2JkZWFmZjJiZmQuLjQ1NDc5NjUzYzNiIDEwMDY0NAo+ID4gLS0tIGEv
-ZHJpdmVycy9jbGsvenlucS9jbGtjLmMKPiA+ICsrKyBiL2RyaXZlcnMvY2xrL3p5bnEvY2xrYy5j
-Cj4gPiBAQCAtMjE1LDcgKzIxNSw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCB6eW5xX2Nsa19zZXR1
-cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQo+ID4gICAJaW50IGk7Cj4gPiAgIAl1MzIgdG1wOwo+
-ID4gICAJaW50IHJldDsKPiA+IC0JY2hhciAqY2xrX25hbWU7Cj4gPiArCWNoYXIgY2xrX25hbWVb
-MTZdOwo+ID4gICAJdW5zaWduZWQgaW50IGZjbGtfZW5hYmxlID0gMDsKPiA+ICAgCWNvbnN0IGNo
-YXIgKmNsa19vdXRwdXRfbmFtZVtjbGtfbWF4XTsKPiA+ICAgCWNvbnN0IGNoYXIgKmNwdV9wYXJl
-bnRzWzRdOwo+ID4gQEAgLTQyNiwxMiArNDI2LDEwIEBAIHN0YXRpYyB2b2lkIF9faW5pdCB6eW5x
-X2Nsa19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQo+ID4gICAJCQkiZ2VtMV9lbWlvX211
-eCIsIENMS19TRVRfUkFURV9QQVJFTlQsCj4gPiAgIAkJCVNMQ1JfR0VNMV9DTEtfQ1RSTCwgMCwg
-MCwgJmdlbTFjbGtfbG9jayk7Cj4gPiAgIAo+ID4gLQl0bXAgPSBzdHJsZW4oIm1pb19jbGtfMDB4
-Iik7Cj4gPiAtCWNsa19uYW1lID0ga21hbGxvYyh0bXAsIEdGUF9LRVJORUwpOwo+ID4gICAJZm9y
-IChpID0gMDsgaSA8IE5VTV9NSU9fUElOUzsgaSsrKSB7Cj4gPiAgIAkJaW50IGlkeDsKPiA+ICAg
-Cj4gPiAtCQlzbnByaW50ZihjbGtfbmFtZSwgdG1wLCAibWlvX2Nsa18lMi4yZCIsIGkpOwo+ID4g
-KwkJc25wcmludGYoY2xrX25hbWUsIDE2LCAibWlvX2Nsa18lMi4yZCIsIGkpOwo+IAo+IEkgd291
-bGQgcHJlZmVyIHRvIHVzZSBtYWNyby9kZWZpbmUgaWYgdGhhdCB2YWx1ZXMgaGFzIHRvIG1hdGNo
-IGFuZCBoYXZlIGNvbm5lY3Rpb24uCgpUaGUgb3JpZ2luIGNvZGUgImNsa19uYW1lID0ga21hbGxv
-Yyh0bXAsIEdGUF9LRVJORUwpIiBhbGxvY2F0ZXMgMTYgYnl0ZXMsIHNvIEkgc2V0CnRoZSBzaXpl
-IG9mIHN0YWNrIHZhcmlhYmxlIGNsa19uYW1lIHRvIDE2IGJ5dGVzLiAKCkRvIHlvdSB0aGluayBp
-ZiB3ZSB1c2UgIiNkZWZpbmUgQ0xLX05BTUVfTEVOIDE2IiBpcyBiZXR0ZXI/CgpCZXN0IHJlZ2Fy
-ZHMsCkR1b21pbmcgWmhvdQ==
+On 2/28/2024 7:20 AM, Paolo Bonzini wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+> 
+> To make use of the same value of shadow_mmio_mask and shadow_present_mask
+> for TDX and VMX, add Suppress-VE bit to shadow_mmio_mask and
+> shadow_present_mask so that they can be common for both VMX and TDX.
+> 
+> TDX will require shadow_mmio_mask and shadow_present_mask to include
+> VMX_SUPPRESS_VE for shared GPA so that EPT violation is triggered for
+> shared GPA.  For VMX, VMX_SUPPRESS_VE doesn't matter for MMIO because the
+> spte value is defined so as to cause EPT misconfig.
+> 
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> Message-Id: <97cc616b3563cd8277be91aaeb3e14bce23c3649.1705965635.git.isaku.yamahata@intel.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+
+> ---
+>   arch/x86/include/asm/vmx.h | 1 +
+>   arch/x86/kvm/mmu/spte.c    | 6 ++++--
+>   2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+> index 0e73616b82f3..76ed39541a52 100644
+> --- a/arch/x86/include/asm/vmx.h
+> +++ b/arch/x86/include/asm/vmx.h
+> @@ -513,6 +513,7 @@ enum vmcs_field {
+>   #define VMX_EPT_IPAT_BIT    			(1ull << 6)
+>   #define VMX_EPT_ACCESS_BIT			(1ull << 8)
+>   #define VMX_EPT_DIRTY_BIT			(1ull << 9)
+> +#define VMX_EPT_SUPPRESS_VE_BIT			(1ull << 63)
+>   #define VMX_EPT_RWX_MASK                        (VMX_EPT_READABLE_MASK |       \
+>   						 VMX_EPT_WRITABLE_MASK |       \
+>   						 VMX_EPT_EXECUTABLE_MASK)
+> diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+> index 4a599130e9c9..02a466de2991 100644
+> --- a/arch/x86/kvm/mmu/spte.c
+> +++ b/arch/x86/kvm/mmu/spte.c
+> @@ -429,7 +429,9 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
+>   	shadow_dirty_mask	= has_ad_bits ? VMX_EPT_DIRTY_BIT : 0ull;
+>   	shadow_nx_mask		= 0ull;
+>   	shadow_x_mask		= VMX_EPT_EXECUTABLE_MASK;
+> -	shadow_present_mask	= has_exec_only ? 0ull : VMX_EPT_READABLE_MASK;
+> +	/* VMX_EPT_SUPPRESS_VE_BIT is needed for W or X violation. */
+> +	shadow_present_mask	=
+> +		(has_exec_only ? 0ull : VMX_EPT_READABLE_MASK) | VMX_EPT_SUPPRESS_VE_BIT;
+>   	/*
+>   	 * EPT overrides the host MTRRs, and so KVM must program the desired
+>   	 * memtype directly into the SPTEs.  Note, this mask is just the mask
+> @@ -446,7 +448,7 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
+>   	 * of an EPT paging-structure entry is 110b (write/execute).
+>   	 */
+>   	kvm_mmu_set_mmio_spte_mask(VMX_EPT_MISCONFIG_WX_VALUE,
+> -				   VMX_EPT_RWX_MASK, 0);
+> +				   VMX_EPT_RWX_MASK | VMX_EPT_SUPPRESS_VE_BIT, 0);
+>   }
+>   EXPORT_SYMBOL_GPL(kvm_mmu_set_ept_masks);
+>   
+
