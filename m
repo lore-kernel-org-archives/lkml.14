@@ -1,113 +1,166 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E6669E04;
-	Fri,  1 Mar 2024 08:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D0B6A03C
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 08:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709282699; cv=none; b=nz8R+vaPPIcNNuHU4xuHwBEeGJ6a1zB6rAAhgwrKglYL9DukrI3O/uETtHRtgVGveR7Ea82hXt1WtSRHrIEhr8yL85K8vYK1oWqemk02EM+mqdXzLbP0jb5UZ1t8jrgrCzIgqG/Y7yZFI9Hj0THiBnN5yVfW5XV48eSEBxo+Ghk=
+	t=1709282701; cv=none; b=TO/DZi8vhgz7FLQVgbwTT9HXoZ/6fyimsJBbNmeYjAGmYXRKFtajPo9MK6NDRANr9B59ZgxjtFXLaB2NGAmp+bC2F9lKxhuYS0wliZJwajH3vB3VS3j0gYSg+8YHfZAKYfhaCZzlsJ5u42l54QOgpIkNUu8BfuquyTf1ENNSK/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709282699; c=relaxed/simple;
-	bh=MSl3qouA9Em17NHJkvcD9Pim1E7a+VZjVpD0WGutwrE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=ncTeqBtzLQBnygjFngA7zMEJh6mgHntAz/fWRmgMJCTorVQ6P5yGL0vY9aiu1cmljSuatNaRqrwU+9HnOp4NdfVHtCjj4rjMTFftuLDAmmYf5Sptegm4ZQVzbarEw0EioG2Jm1DHjo122r1l40stJ7OYbdyU1s30beDsJ4Ef8sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from ubuntu.localdomain (unknown [106.117.76.127])
-	by mail-app2 (Coremail) with SMTP id by_KCgDnKqp2leFlV9txAg--.2261S2;
-	Fri, 01 Mar 2024 16:44:46 +0800 (CST)
-From: Duoming Zhou <duoming@zju.edu.cn>
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	michal.simek@amd.com,
-	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH v4] clk: zynq: Prevent null pointer dereference caused by kmalloc failure
-Date: Fri,  1 Mar 2024 16:44:37 +0800
-Message-Id: <20240301084437.16084-1-duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:by_KCgDnKqp2leFlV9txAg--.2261S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7urW7Jr43Aw4ktF1ftF13Arb_yoW8uF13pF
-	WxG3s0yF4jgF4qgan2kF18ZFyS9a12gay7Kw15tws2vFn8JayUJr45CF95ZF18XrW8uaya
-	vF1q9r18u3WUAF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-	6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
-	6r1DMxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JUa38nUUUUU=
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwIHAWXg0lML4wAZsy
+	s=arc-20240116; t=1709282701; c=relaxed/simple;
+	bh=7pjLmiG/8nf/MrZ8Ii/tmp+a66yW3du+qbUwi/OOCQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=c7xpXkZNNHS+FYERD6Nj5ZAd1NF5DqHjYUOyZb+b6YqmS/vYT9LB9SxTx5WvtoTQdiOGiri40SRCiJTRBlmvOQnDTJO8Qg1uAZ7QmIQNhBd7fVo9CVndUHFX+HmbieI/zdDRrSS8zkjpj5nktAXJL+aQ6c3Kn1pOcgCPRP3SVE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PFqgevnn; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PFqgevnn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709282698; x=1740818698;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=7pjLmiG/8nf/MrZ8Ii/tmp+a66yW3du+qbUwi/OOCQA=;
+  b=PFqgevnnZTVTrLQJwRQE7uay9jNbZQqAcCuejB4qEK4aNAuwJJ2D8X2V
+   I4FHG7VrRFT8bjjsNfJe9J22AoLYaA88XtAvFLtP2uc3sAnzQZSlkN10U
+   BF7pNGBKCwhCzWFlNjvluwIoVF7R/0+I3ClIuiHBJkipTtUA6YLhSbpyv
+   tb0+JG1ZQFPfHOOgD97wyDl3v85AxtbfvIKNYAG7k1rG1FGLRv+5VAyPC
+   WVtwdEj141/cBL1w3jH3HKdVhnjSGs1TUvoMAWsE0MiDpcQALTxosdY5u
+   iETXCZ/s+jtF3KG9DtEwE+5VSwCYdWkKbKdCSQy+40Qa7Ipx7Oq70Qp3o
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="6759787"
+X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
+   d="scan'208";a="6759787"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 00:44:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
+   d="scan'208";a="12731806"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 01 Mar 2024 00:44:56 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rfyVh-000Dg1-28;
+	Fri, 01 Mar 2024 08:44:53 +0000
+Date: Fri, 1 Mar 2024 16:44:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@nvidia.com>
+Subject: include/linux/rcupdate.h:439:9: error: dereferencing pointer to
+ incomplete type 'struct dpll_pin'
+Message-ID: <202403011658.jcZIoLY9-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The kmalloc() in zynq_clk_setup() will return null if the
-physical memory has run out. As a result, if we use snprintf()
-to write data to the null address, the null pointer dereference
-bug will happen.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   87adedeba51a822533649b143232418b9e26d08b
+commit: 0d60d8df6f493bb46bf5db40d39dd60a1bafdd4e dpll: rely on rcu for netdev_dpll_pin()
+date:   3 days ago
+config: i386-randconfig-141-20240228 (https://download.01.org/0day-ci/archive/20240301/202403011658.jcZIoLY9-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240301/202403011658.jcZIoLY9-lkp@intel.com/reproduce)
 
-This patch uses a stack variable to replace the kmalloc().
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403011658.jcZIoLY9-lkp@intel.com/
 
-Fixes: 0ee52b157b8e ("clk: zynq: Add clock controller driver")
-Suggested-by: Michal Simek <michal.simek@amd.com>
-Suggested-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
- drivers/clk/zynq/clkc.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+All errors (new ones prefixed by >>):
 
-diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
-index 7bdeaff2bfd..c28d3dacf0f 100644
---- a/drivers/clk/zynq/clkc.c
-+++ b/drivers/clk/zynq/clkc.c
-@@ -42,6 +42,7 @@ static void __iomem *zynq_clkc_base;
- #define SLCR_SWDT_CLK_SEL		(zynq_clkc_base + 0x204)
- 
- #define NUM_MIO_PINS	54
-+#define CLK_NAME_LEN	16
- 
- #define DBG_CLK_CTRL_CLKACT_TRC		BIT(0)
- #define DBG_CLK_CTRL_CPU_1XCLKACT	BIT(1)
-@@ -215,7 +216,7 @@ static void __init zynq_clk_setup(struct device_node *np)
- 	int i;
- 	u32 tmp;
- 	int ret;
--	char *clk_name;
-+	char clk_name[CLK_NAME_LEN];
- 	unsigned int fclk_enable = 0;
- 	const char *clk_output_name[clk_max];
- 	const char *cpu_parents[4];
-@@ -426,12 +427,10 @@ static void __init zynq_clk_setup(struct device_node *np)
- 			"gem1_emio_mux", CLK_SET_RATE_PARENT,
- 			SLCR_GEM1_CLK_CTRL, 0, 0, &gem1clk_lock);
- 
--	tmp = strlen("mio_clk_00x");
--	clk_name = kmalloc(tmp, GFP_KERNEL);
- 	for (i = 0; i < NUM_MIO_PINS; i++) {
- 		int idx;
- 
--		snprintf(clk_name, tmp, "mio_clk_%2.2d", i);
-+		snprintf(clk_name, CLK_NAME_LEN, "mio_clk_%2.2d", i);
- 		idx = of_property_match_string(np, "clock-names", clk_name);
- 		if (idx >= 0)
- 			can_mio_mux_parents[i] = of_clk_get_parent_name(np,
-@@ -439,7 +438,6 @@ static void __init zynq_clk_setup(struct device_node *np)
- 		else
- 			can_mio_mux_parents[i] = dummy_nm;
- 	}
--	kfree(clk_name);
- 	clk_register_mux(NULL, "can_mux", periph_parents, 4,
- 			CLK_SET_RATE_NO_REPARENT, SLCR_CAN_CLK_CTRL, 4, 2, 0,
- 			&canclk_lock);
+   In file included from include/linux/radix-tree.h:18:0,
+                    from include/linux/idr.h:15,
+                    from include/linux/kernfs.h:12,
+                    from include/linux/sysfs.h:16,
+                    from include/linux/kobject.h:20,
+                    from include/linux/energy_model.h:7,
+                    from include/linux/device.h:16,
+                    from drivers/dpll/dpll_core.c:11:
+   include/linux/dpll.h: In function 'netdev_dpll_pin':
+>> include/linux/rcupdate.h:439:9: error: dereferencing pointer to incomplete type 'struct dpll_pin'
+     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+            ^
+   include/linux/rcupdate.h:587:2: note: in expansion of macro '__rcu_dereference_check'
+     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
+     ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/rtnetlink.h:70:2: note: in expansion of macro 'rcu_dereference_check'
+     rcu_dereference_check(p, lockdep_rtnl_is_held())
+     ^~~~~~~~~~~~~~~~~~~~~
+   include/linux/dpll.h:175:9: note: in expansion of macro 'rcu_dereference_rtnl'
+     return rcu_dereference_rtnl(dev->dpll_pin);
+            ^~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/rbtree.h:24:0,
+                    from include/linux/mm_types.h:11,
+                    from include/linux/mmzone.h:22,
+                    from include/linux/gfp.h:7,
+                    from include/linux/umh.h:4,
+                    from include/linux/kmod.h:9,
+                    from include/linux/module.h:17,
+                    from net/core/rtnetlink.c:17:
+   include/linux/dpll.h: In function 'netdev_dpll_pin':
+>> include/linux/rcupdate.h:439:9: error: dereferencing pointer to incomplete type 'struct dpll_pin'
+     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+            ^
+   include/linux/rcupdate.h:587:2: note: in expansion of macro '__rcu_dereference_check'
+     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
+     ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/rtnetlink.h:70:2: note: in expansion of macro 'rcu_dereference_check'
+     rcu_dereference_check(p, lockdep_rtnl_is_held())
+     ^~~~~~~~~~~~~~~~~~~~~
+   include/linux/dpll.h:175:9: note: in expansion of macro 'rcu_dereference_rtnl'
+     return rcu_dereference_rtnl(dev->dpll_pin);
+            ^~~~~~~~~~~~~~~~~~~~
+   In file included from net/core/rtnetlink.c:60:0:
+   include/linux/dpll.h:179:1: warning: control reaches end of non-void function [-Wreturn-type]
+    }
+    ^
+
+
+vim +439 include/linux/rcupdate.h
+
+76c8eaafe4f061 Paul E. McKenney        2021-04-21  429  
+24ba53017e188e Chun-Hung Tseng         2021-09-15  430  #define __rcu_access_pointer(p, local, space) \
+ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  431  ({ \
+24ba53017e188e Chun-Hung Tseng         2021-09-15  432  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+423a86a610cad1 Joel Fernandes (Google  2018-12-12  433) 	rcu_check_sparse(p, space); \
+24ba53017e188e Chun-Hung Tseng         2021-09-15  434  	((typeof(*p) __force __kernel *)(local)); \
+ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  435  })
+24ba53017e188e Chun-Hung Tseng         2021-09-15  436  #define __rcu_dereference_check(p, local, c, space) \
+ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  437  ({ \
+ac59853c06993a Pranith Kumar           2014-11-13  438  	/* Dependency order vs. p above. */ \
+24ba53017e188e Chun-Hung Tseng         2021-09-15 @439  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+f78f5b90c4ffa5 Paul E. McKenney        2015-06-18  440  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_check() usage"); \
+423a86a610cad1 Joel Fernandes (Google  2018-12-12  441) 	rcu_check_sparse(p, space); \
+24ba53017e188e Chun-Hung Tseng         2021-09-15  442  	((typeof(*p) __force __kernel *)(local)); \
+ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  443  })
+24ba53017e188e Chun-Hung Tseng         2021-09-15  444  #define __rcu_dereference_protected(p, local, c, space) \
+ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  445  ({ \
+f78f5b90c4ffa5 Paul E. McKenney        2015-06-18  446  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_protected() usage"); \
+423a86a610cad1 Joel Fernandes (Google  2018-12-12  447) 	rcu_check_sparse(p, space); \
+ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  448  	((typeof(*p) __force __kernel *)(p)); \
+ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  449  })
+24ba53017e188e Chun-Hung Tseng         2021-09-15  450  #define __rcu_dereference_raw(p, local) \
+995f1405610bd8 Paul E. McKenney        2016-07-01  451  ({ \
+995f1405610bd8 Paul E. McKenney        2016-07-01  452  	/* Dependency order vs. p above. */ \
+24ba53017e188e Chun-Hung Tseng         2021-09-15  453  	typeof(p) local = READ_ONCE(p); \
+24ba53017e188e Chun-Hung Tseng         2021-09-15  454  	((typeof(*p) __force __kernel *)(local)); \
+995f1405610bd8 Paul E. McKenney        2016-07-01  455  })
+24ba53017e188e Chun-Hung Tseng         2021-09-15  456  #define rcu_dereference_raw(p) __rcu_dereference_raw(p, __UNIQUE_ID(rcu))
+ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  457  
+
+:::::: The code at line 439 was first introduced by commit
+:::::: 24ba53017e188e031f9cb8b290286fad52d2af00 rcu: Replace ________p1 and _________p1 with __UNIQUE_ID(rcu)
+
+:::::: TO: Chun-Hung Tseng <henrybear327@gmail.com>
+:::::: CC: Paul E. McKenney <paulmck@kernel.org>
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
