@@ -1,113 +1,143 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606503C464
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 20:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 325C63C067
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 20:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709324321; cv=none; b=QR2jfiTWLPI55W5uMYUGKXJgr46Mhw857jr84St2l5Nr2+aKGtxmdECHblWXfQdSFfIT1Zg/jZNkTRg3B3ay+87/K+ejuzo4IToa+1dkiBrmawgjpofwlO2eudJ9f4G0zfjlttKAIiM45bmG4ki0OTcI9UWVKqCwUWb+nxNyJu0=
+	t=1709324394; cv=none; b=q3+B0prnO+Y87Cn8qJhwAOAEVFCY1n3WDJ+JcrXu5rmYcol/1P3xZ1rGrrhe6PGU17/6b1Hm08fN+6pN1YimlO/0hjmDoSnaUTwzgn+aLGIVIJxVmQXqGcDo8Vity55BsYT/Faezdm9xKQVqVTjrv67PGvEflmqWyKyUyvw6nVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709324321; c=relaxed/simple;
-	bh=k8PnfdLlrbJCNs/j0R+9nMvSzfWV60dq0lhAeS4WAR8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cu9WEC+WUCxF+ztffRvd+DX3qEwNd1VcJEGSqbUIkM3HR8d1q53oX8cwxxYm8QVhzdq/0FA+5wrnTE7gul8qg8uyHo4PILggTJo92QQwD/a6Ge8RvLGqjPnRVuDmzOBhglzicet/8QTq2C5bjNShuuoNH/Zm6RF7RE2P/1VZmlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=PeJnQ3S0; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PeJnQ3S0"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e55731af5cso2094463b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 12:18:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1709324318; x=1709929118; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LB21/Ow/29CKfiD0k0+EGFc0FZT6nL4Wg3LThQF2Bvw=;
-        b=PeJnQ3S0o6RiGQL2xjKg4U90kpuGk+8+VJ6wzwg2FyH0e3sgN37MPcyHlh0hNaBMhq
-         lO/U3rHJ1+QxwYpp9Nykh8oKldkt2TWBSQjH4FUuhrhVz6J/RTOAwy+5HaDahQHqd7aP
-         9xs4lzZsfknAIOwRu4eQVAI3GXf1KZFtcgD+cdfJso2z3ZVjCL0T5+DWNWd5lCxxO6O2
-         fbVYG9TmBBQDE2+xV0mvUaEP4Apw9/YRv8jwqKnYj86tz8maIRPJfhTVFpY0Pg9RnUg3
-         MaYCsAeq0n9fLldxxyTuNeJd66IGkPKy/NU3dw21dUQCgjQhWE+1lxX3mVLAy4bDWqly
-         RCOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709324318; x=1709929118;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LB21/Ow/29CKfiD0k0+EGFc0FZT6nL4Wg3LThQF2Bvw=;
-        b=IZBGTfcujdvhsrWN4H45R+JKmGpvwcfxfNE4SYd/jaYhuAo+6taWIfBptozK9AW3uI
-         qC0Jt9n9Q7gMx3uPzz++91dYUXMFVzXtmwI05J0Nx2w3H/5l7jOSaBTspUjteU7v96eq
-         ufW3O1TWltNolSXK94bc8XjsghgDNTAaIfeBrqeBLhyeLcnM1Efupb+5gbrUOxatWjci
-         3JhA1tNWV1H/65pwQpBcVr7vIYHKMoIa3hvvwDjnADKwlRNH1HrGke9QT8W2UjrEQlBL
-         20YJ0ulo94c+TUN5HsbdMuSQyKWfb2fUFh2/J1MMrOYXhO8t+uYtDFnat5ZMGRoCAsjN
-         pIYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbE7cf6/gqZ+bEH7TTGavVvoaHfARJBUQ7kLYzGsEkTAMpN0puLICnGOyroqqpQWLhEBqtmsIBY8bxW1Siy2x44cCnJI41JZ2XZZp0
-X-Gm-Message-State: AOJu0YyMi0P0HFn/jmh6c7PMR5D5/4vPaA4Odur2rzPtciIany/QLJp+
-	xR6Tm9Nv4RNBSklHipHy/JOqjOBLby598Xq1CH9bPb/eAYYZQmJp2JHAaABll1g=
-X-Google-Smtp-Source: AGHT+IExvcW1+DuFlfwWmifCp/Y/jBPrieVmeDTXpbxoxgyVqpNwW9a77bIovFcPZGGfBE38pSzCvQ==
-X-Received: by 2002:a05:6a00:27a0:b0:6e4:f49f:bc9 with SMTP id bd32-20020a056a0027a000b006e4f49f0bc9mr3133223pfb.20.1709324318705;
-        Fri, 01 Mar 2024 12:18:38 -0800 (PST)
-Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id p26-20020aa79e9a000000b006e59688b828sm3364071pfq.19.2024.03.01.12.18.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 12:18:38 -0800 (PST)
-From: Samuel Holland <samuel.holland@sifive.com>
-To: linux-riscv@lists.infradead.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Dylan Jhong <dylan@andestech.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Sergey Matyukevich <sergey.matyukevich@syntacore.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: mm: Fix prototype to avoid discarding const
-Date: Fri,  1 Mar 2024 12:18:32 -0800
-Message-ID: <20240301201837.2826172-1-samuel.holland@sifive.com>
-X-Mailer: git-send-email 2.43.1
+	s=arc-20240116; t=1709324394; c=relaxed/simple;
+	bh=dmdQvBgGcFUSe5KL71t4XKvpm2QFV83YwaoViTYlKAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hgb/z2rcXJXOLhGNYh0R0M7FRf/5oC6eeF3HKwlHkrpL+hsQQpk9erGjVbW/Gc0Wqodj52ezGl76PBTiwp9RZ+RK37+evOnqpSO9GryD6fdkqvdmokdPdUbLTM7kMZ7M7BeYOpDiZqQPrTPsF/vNQZWX05KdkzPCgzYMnfSiBr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 45205 invoked by uid 1000); 1 Mar 2024 15:19:47 -0500
+Date: Fri, 1 Mar 2024 15:19:47 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+  Alim Akhtar <alim.akhtar@samsung.com>, linux-usb@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/4] usb: ehci-exynos: Use devm_clk_get_enabled()
+ helpers
+Message-ID: <d3c72bbf-2dd2-4d7f-9882-08710baa3f3a@rowland.harvard.edu>
+References: <20240301193831.3346-1-linux.amoon@gmail.com>
+ <20240301193831.3346-2-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240301193831.3346-2-linux.amoon@gmail.com>
 
-__flush_tlb_range() does not modify the provided cpumask, so its cmask
-parameter can be pointer-to-const. This avoids the unsafe cast of
-cpu_online_mask.
+On Sat, Mar 02, 2024 at 01:08:08AM +0530, Anand Moon wrote:
+> The devm_clk_get_enabled() helpers:
+>     - call devm_clk_get()
+>     - call clk_prepare_enable() and register what is needed in order to
+>      call clk_disable_unprepare() when needed, as a managed resource.
+> 
+> This simplifies the code and avoids the calls to clk_disable_unprepare().
+> 
+> While at it, use dev_err_probe consistently, and use its return value
+> to return the error code.
+> 
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  drivers/usb/host/ehci-exynos.c | 30 +++++-------------------------
+>  1 file changed, 5 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+> index f644b131cc0b..05aa3d9c2a3b 100644
+> --- a/drivers/usb/host/ehci-exynos.c
+> +++ b/drivers/usb/host/ehci-exynos.c
+> @@ -159,19 +159,12 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+>  
+>  	err = exynos_ehci_get_phy(&pdev->dev, exynos_ehci);
+>  	if (err)
+> -		goto fail_clk;
+> -
+> -	exynos_ehci->clk = devm_clk_get(&pdev->dev, "usbhost");
+> -
+> -	if (IS_ERR(exynos_ehci->clk)) {
+> -		dev_err(&pdev->dev, "Failed to get usbhost clock\n");
+> -		err = PTR_ERR(exynos_ehci->clk);
+> -		goto fail_clk;
+> -	}
+> +		goto fail_io;
+>  
+> -	err = clk_prepare_enable(exynos_ehci->clk);
+> -	if (err)
+> -		goto fail_clk;
+> +	exynos_ehci->clk = devm_clk_get_enabled(&pdev->dev, "usbhost");
+> +	if (IS_ERR(exynos_ehci->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(exynos_ehci->clk),
+> +				  "Failed to get usbhost clock\n");
 
-Fixes: 54d7431af73e ("riscv: Add support for BATCHED_UNMAP_TLB_FLUSH")
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
----
+What about the usb_put_hcd(hcd) call that used to happen here?
 
- arch/riscv/mm/tlbflush.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Alan Stern
 
-diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-index 893566e004b7..07d743f87b3f 100644
---- a/arch/riscv/mm/tlbflush.c
-+++ b/arch/riscv/mm/tlbflush.c
-@@ -99,7 +99,7 @@ static void __ipi_flush_tlb_range_asid(void *info)
- 	local_flush_tlb_range_asid(d->start, d->size, d->stride, d->asid);
- }
- 
--static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
-+static void __flush_tlb_range(const struct cpumask *cmask, unsigned long asid,
- 			      unsigned long start, unsigned long size,
- 			      unsigned long stride)
- {
-@@ -200,7 +200,7 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
- 
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
--	__flush_tlb_range((struct cpumask *)cpu_online_mask, FLUSH_TLB_NO_ASID,
-+	__flush_tlb_range(cpu_online_mask, FLUSH_TLB_NO_ASID,
- 			  start, end - start, PAGE_SIZE);
- }
- 
--- 
-2.43.1
-
+>  
+>  	hcd->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+>  	if (IS_ERR(hcd->regs)) {
+> @@ -223,8 +216,6 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+>  	exynos_ehci_phy_disable(&pdev->dev);
+>  	pdev->dev.of_node = exynos_ehci->of_node;
+>  fail_io:
+> -	clk_disable_unprepare(exynos_ehci->clk);
+> -fail_clk:
+>  	usb_put_hcd(hcd);
+>  	return err;
+>  }
+> @@ -240,8 +231,6 @@ static void exynos_ehci_remove(struct platform_device *pdev)
+>  
+>  	exynos_ehci_phy_disable(&pdev->dev);
+>  
+> -	clk_disable_unprepare(exynos_ehci->clk);
+> -
+>  	usb_put_hcd(hcd);
+>  }
+>  
+> @@ -249,7 +238,6 @@ static void exynos_ehci_remove(struct platform_device *pdev)
+>  static int exynos_ehci_suspend(struct device *dev)
+>  {
+>  	struct usb_hcd *hcd = dev_get_drvdata(dev);
+> -	struct exynos_ehci_hcd *exynos_ehci = to_exynos_ehci(hcd);
+>  
+>  	bool do_wakeup = device_may_wakeup(dev);
+>  	int rc;
+> @@ -260,25 +248,17 @@ static int exynos_ehci_suspend(struct device *dev)
+>  
+>  	exynos_ehci_phy_disable(dev);
+>  
+> -	clk_disable_unprepare(exynos_ehci->clk);
+> -
+>  	return rc;
+>  }
+>  
+>  static int exynos_ehci_resume(struct device *dev)
+>  {
+>  	struct usb_hcd *hcd = dev_get_drvdata(dev);
+> -	struct exynos_ehci_hcd *exynos_ehci = to_exynos_ehci(hcd);
+>  	int ret;
+>  
+> -	ret = clk_prepare_enable(exynos_ehci->clk);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = exynos_ehci_phy_enable(dev);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to enable USB phy\n");
+> -		clk_disable_unprepare(exynos_ehci->clk);
+>  		return ret;
+>  	}
+>  
+> -- 
+> 2.43.0
+> 
