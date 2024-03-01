@@ -1,268 +1,90 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697D023BD;
-	Fri,  1 Mar 2024 11:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BC16BFC2
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709291227; cv=none; b=uUKQSFK59b4Rh14Kxpd8bFLBbZ9Xlw6kWuW7V5wZZ8hW9rOSbgDR1Y9W2CeeXOwYG5yzsA7OOoO/uPxS/nrp5WkL8MWQXzaX8d+/sNFwlolMqpHxfEGnMk8rIcA12g4bX+iNq2zYUYtDg8Ms/5gOm8EDLQDpb1lRcRUukU/pzfA=
+	t=1709291400; cv=none; b=mFiCVBGcFUc0nr0O+fT9FOVKiu/i3wkwEnmfI5YYL+oSOoEdw4cZthviB4V8hUu+8EpzBMPbJSt7xw8snPLebHFDh1whlfko71td/W7q4JMwTUJ1brfkqUNlU6s4Jufs5iLy6LP5he0GQL2blqi1gvInWbyoHTnx+1zMbIZYLss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709291227; c=relaxed/simple;
-	bh=5bFpmhJNutqaRHya9G5up6sRV/+gFMoxq43MQp2WWm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dw4C8HrjurwooTglxi5EdnY4fuEyHalJBbsH+fTjoZ0Fs2wc9tNi9VKG0lOc690OTryNRc6gkfOGcrCVYQvYcU8wq74CqnTLMukxTHvON8udTVYQePK6+VwObLZx0vSh+LyqCMzNt5o62LRfOt+gUtMsrwmldW3+MTGBcPt03m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xems7rTN; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709291400; c=relaxed/simple;
+	bh=cIU2x/9cSdQPhUeeSvr7Kzw26igIgSSco/cPO4o5rn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qCiLvTFKT1Qp8jOCbRolnbA3u6ZTtucoHDCb0Vw32RnrO7KQeTKMlSKDPXIo9nzlaRKmsHU1nTcL6Rqg342Ejq21aBCv0IM3FVtyF5GiCXO+UnL6OR+3+kbIs8djWy5RH6Kcm/EuaQB8Ey3WfPdOsCKL/7tRMA8BCBduK81PCYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCedi0fD; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xems7rTN"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 421B6tKh118925;
-	Fri, 1 Mar 2024 05:06:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709291215;
-	bh=K0ubzdlroUOBglVY3S/rVyrZxp/5zoLq78kaG6y7qwk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=xems7rTNX/wBUTAhgzrViEwtkw/6X8Pc4dYyzjkvDq7CNycNe7f/sqWyknT5BSCPW
-	 21brxT62jDi7MQKOWJKlbT2ednsZbaty36Fnw0AHUro8hyGpK+0FSxwIu/W1FcX7Hy
-	 p8wa6VuUP79r9vRi1dheXW6gtkl2q2vf02Flc84w=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 421B6t0b105933
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 1 Mar 2024 05:06:55 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 1
- Mar 2024 05:06:54 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 1 Mar 2024 05:06:54 -0600
-Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 421B6oD0085832;
-	Fri, 1 Mar 2024 05:06:51 -0600
-Message-ID: <750369ae-71ef-4c07-8c61-14c0cd06ef4b@ti.com>
-Date: Fri, 1 Mar 2024 16:36:50 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCedi0fD"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d09cf00214so22319931fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 03:09:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709291396; x=1709896196; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=inEwXSSczXs7mM8CKQWguv/JU1JLS/a7ijcZ6Yyg+2k=;
+        b=kCedi0fDb0TpkCq06bfYCzw4dHhd2OxwAM3CL8kmHaqmIRywBEQgEQQ+zSOnNp8wL5
+         gY3gWUmIwo8q4QVe/7ZnZI8Ij0cMimGtO6A1raOkDN410MjduoaCRxNABSIae74UIhFl
+         Nlw8Ux0wO++aAxn/4MDlHAJc2XGluTUzXy4MfvU8e1DrumkamLjEiVK6k9Y29RE9j7i6
+         eynQJdMAdaJ5EbpUD/1rKO0ZgV6mHooG2RtK7p2qdph3P0Uv9n/cP8sOBXw5IN1OcY7d
+         blTHMCWO6LGAiHnD61JWKkVrzCtWy9aP3QFDNDrvXrr8wardyU0Bz8QDyaSV29ybwIFs
+         Tgyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709291396; x=1709896196;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=inEwXSSczXs7mM8CKQWguv/JU1JLS/a7ijcZ6Yyg+2k=;
+        b=pHZ9lO+20UN3MtXe4uwuIbbUrT0sE0zzjsKN5Ps7rgyN9kGYfwBXwPe3vNVHbxIZ5j
+         SKXJqaybjePzrCMRrW2I0xQelGvZRJAsp5pFDLj/t3HNOkroRmx73FZGfK2tAmXNBs0T
+         Ls3PFJp4/0xIImHrtvKFpqiiUrDIRBzlbgT2cBDP+7Ced48Rjc3NKgH8hKfT9iFq9uQL
+         kh/S+b1cRVx9j2dkisOw+BXM24hvRWoZ4o99EMKqhDtzsYiVLzcL9HlD0skYtvjjtPkP
+         RJwrpQ2Ae+zHW4tR1tuEFWRI7WcbMWkmD99JTKJLQqkZWYuOdiRS+ViJfVjQgjQcvAE1
+         7AUA==
+X-Gm-Message-State: AOJu0YyNsaRK3f9dosFa3etWEUs4Xco5pf/VoosHuGvsSW94EMUMyAYM
+	s2b3/vXQgIcEjI/+TkypOHcCOwE4qdxefPe9DTuVT4aP0gLrgVlwb81wCyQjaIE=
+X-Google-Smtp-Source: AGHT+IHTC8at8iAznM4DfGxo7vffl746rAA2WbcRpMdSMjljALoUgtzjhqr8pMbVElskzTvMz7q32w==
+X-Received: by 2002:a05:651c:33b:b0:2d2:29c2:e7ea with SMTP id b27-20020a05651c033b00b002d229c2e7eamr924831ljp.24.1709291396199;
+        Fri, 01 Mar 2024 03:09:56 -0800 (PST)
+Received: from kepler.redhat.com (1F2EF13F.nat.pool.telekom.hu. [31.46.241.63])
+        by smtp.gmail.com with ESMTPSA id b20-20020a05600c4e1400b00412cad66f8fsm490264wmq.44.2024.03.01.03.09.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 03:09:55 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: [PATCH 0/7] sched/balancing: Misc updates & cleanups
+Date: Fri,  1 Mar 2024 12:09:44 +0100
+Message-Id: <20240301110951.3707367-1-mingo@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 1/2] net: ethernet: ti: am65-cpts: Enable PTP RX
- HW timestamp using CPTS FIFO
-Content-Language: en-US
-To: Roger Quadros <rogerq@kernel.org>,
-        Dan Carpenter
-	<dan.carpenter@linaro.org>,
-        Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Richard
- Cochran <richardcochran@gmail.com>,
-        Paolo Abeni <pabeni@redhat.com>, Jakub
- Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S.
- Miller" <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <20240215110953.3225099-1-c-vankar@ti.com>
- <52ff5e18-3616-478a-ab40-8f9a6f7f3e37@kernel.org>
- <3713e01e-1e48-489b-8ec2-e98471ca22f0@ti.com>
- <0f62faa4-608f-4e8e-98e5-7e6e50e20308@kernel.org>
-From: Chintan Vankar <c-vankar@ti.com>
-In-Reply-To: <0f62faa4-608f-4e8e-98e5-7e6e50e20308@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+Improve a handful of things I noticed while looking through the
+scheduler balancing code. No change in functionality intended.
 
+Ingo Molnar (7):
+  sched/balancing: Switch the 'DEFINE_SPINLOCK(balancing)' spinlock into an 'atomic_t sched_balance_running' flag
+  sched/balancing: Change 'enum cpu_idle_type' to have more natural definitions
+  sched/balancing: Change comment formatting to not overlap Git conflict marker lines
+  sched/balancing: Fix comments (trying to) refer to NOHZ_BALANCE_KICK
+  sched/balancing: Update run_rebalance_domains() comments
+  sched/balancing: Vertically align the comments of 'struct sg_lb_stats' and 'struct sd_lb_stats'
+  sched/balancing: Update comments in 'struct sg_lb_stats' and 'struct sd_lb_stats'
 
-On 26/02/24 18:19, Roger Quadros wrote:
-> 
-> 
-> On 26/02/2024 11:08, Chintan Vankar wrote:
->>
->> On 19/02/24 16:54, Roger Quadros wrote:
->>>
->>> On 15/02/2024 13:09, Chintan Vankar wrote:
->>>> CPTS module supports capturing timestamp for every packet it receives,
->>>> add a new function named "am65_cpts_rx_find_ts()" to get the timestamp
->>>> of received packets from CPTS FIFO.
->>>>
->>>> Add another function named "am65_cpts_rx_timestamp()" which internally
->>>> calls "am65_cpts_rx_find_ts()" function and timestamps the received
->>>> PTP packets.
->>>>
->>>> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
->>>> ---
->>>>    drivers/net/ethernet/ti/am65-cpts.c | 84 +++++++++++++++++++++--------
->>>>    drivers/net/ethernet/ti/am65-cpts.h | 11 ++--
->>>>    2 files changed, 67 insertions(+), 28 deletions(-)
->>>>
->>>> diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
->>>> index c66618d91c28..92a3b40e60d6 100644
->>>> --- a/drivers/net/ethernet/ti/am65-cpts.c
->>>> +++ b/drivers/net/ethernet/ti/am65-cpts.c
->>>> @@ -859,29 +859,6 @@ static long am65_cpts_ts_work(struct ptp_clock_info *ptp)
->>>>        return delay;
->>>>    }
->>>>    -/**
->>>> - * am65_cpts_rx_enable - enable rx timestamping
->>>> - * @cpts: cpts handle
->>>> - * @en: enable
->>>> - *
->>>> - * This functions enables rx packets timestamping. The CPTS can timestamp all
->>>> - * rx packets.
->>>> - */
->>>> -void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en)
->>>> -{
->>>> -    u32 val;
->>>> -
->>>> -    mutex_lock(&cpts->ptp_clk_lock);
->>>> -    val = am65_cpts_read32(cpts, control);
->>>> -    if (en)
->>>> -        val |= AM65_CPTS_CONTROL_TSTAMP_EN;
->>>> -    else
->>>> -        val &= ~AM65_CPTS_CONTROL_TSTAMP_EN;
->>>> -    am65_cpts_write32(cpts, val, control);
->>>> -    mutex_unlock(&cpts->ptp_clk_lock);
->>>> -}
->>>> -EXPORT_SYMBOL_GPL(am65_cpts_rx_enable);
->>>> -
->>>>    static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
->>>>    {
->>>>        unsigned int ptp_class = ptp_classify_raw(skb);
->>>> @@ -906,6 +883,67 @@ static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
->>>>        return 1;
->>>>    }
->>>>    +static u64 am65_cpts_find_rx_ts(struct am65_cpts *cpts, struct sk_buff *skb,
->>>> +                int ev_type, u32 skb_mtype_seqid)
->>>> +{
->>>> +    struct list_head *this, *next;
->>>> +    struct am65_cpts_event *event;
->>>> +    unsigned long flags;
->>>> +    u32 mtype_seqid;
->>>> +    u64 ns = 0;
->>>> +
->>>> +    am65_cpts_fifo_read(cpts);
->>> am65_cpts_fifo_read() is called from the CPTS interrupt handler and the
->>> event is popped out of the FIFO and pushed into an event list.
->>>
->>> Doesn't this race with that interrupt handler?
->> Could you clarify why there be a race condition ?
-> 
-> I'm not sure so was asking. The question is, do you have to call
-> am65_cpts_fifo_read() here? If yes, could you please add a comment why.
+ include/linux/sched/idle.h |   3 +-
+ kernel/sched/fair.c        | 104 +++++++++++++++++++++++++++++++++++++----------------------------
+ 2 files changed, 60 insertions(+), 47 deletions(-)
 
-Yes. We need to call "am65_cpts_fifo_read()" here. If we don't call it
-here then there will be a race condition for the event to be added to
-the list before "am65_cpts_get_rx_ts()" function is called.
+-- 
+2.40.1
 
-If we have to implement it without invoking "am65_cpts_fifo_read()",
-then there has to be a check to ensure that the interrupt associated
-with the RX Event has successfully added that event to the list.
-Otherwise, due to the nature of "spin_lock_irqsave", when the interrupt
-has acquired the lock on one CPU, the "am65_cpts_get_rx_ts()" function
-running on another CPU might acquire the lock from the interrupt and
-search for the RX Event which the "am65_cpts_fifo_read()" invoked by
-the interrupt was supposed to add in the event list. This is racy due
-to which it is possible that the event is not yet added when
-"am65_cpts_get_rx_ts()" is invoked. Therefore, to ensure that the
-event is surely present, invoking "am65_cpts_fifo_read()" is
-required.
-
-> 
->>> Can't you use that event list instead of reading cpts_fifo directly?
->>>
->>> Something like am65_cpts_match_tx_ts()?
->>>
->>>> +    spin_lock_irqsave(&cpts->lock, flags);
->>>> +    list_for_each_safe(this, next, &cpts->events) {
->>>> +        event = list_entry(this, struct am65_cpts_event, list);
->>>> +        if (time_after(jiffies, event->tmo)) {
->>>> +            list_del_init(&event->list);
->>>> +            list_add(&event->list, &cpts->pool);
->>>> +            continue;
->>>> +        }
->>>> +
->>>> +        mtype_seqid = event->event1 &
->>>> +                  (AM65_CPTS_EVENT_1_MESSAGE_TYPE_MASK |
->>>> +                   AM65_CPTS_EVENT_1_SEQUENCE_ID_MASK |
->>>> +                   AM65_CPTS_EVENT_1_EVENT_TYPE_MASK);
->>>> +
->>>> +        if (mtype_seqid == skb_mtype_seqid) {
->>>> +            ns = event->timestamp;
->>>> +            list_del_init(&event->list);
->>>> +            list_add(&event->list, &cpts->pool);
->>>> +            break;
->>>> +        }
->>>> +    }
->>>> +    spin_unlock_irqrestore(&cpts->lock, flags);
->>>> +
->>>> +    return ns;
->>>> +}
->>>> +
->>>> +void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb)
->>>> +{
->>>> +    struct am65_cpts_skb_cb_data *skb_cb = (struct am65_cpts_skb_cb_data *)skb->cb;
->>>> +    struct skb_shared_hwtstamps *ssh;
->>>> +    int ret;
->>>> +    u64 ns;
->>>> +
->>>> +    ret = am65_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
->>>> +    if (!ret)
->>>> +        return; /* if not PTP class packet */
->>>> +
->>>> +    skb_cb->skb_mtype_seqid |= (AM65_CPTS_EV_RX << AM65_CPTS_EVENT_1_EVENT_TYPE_SHIFT);
->>>> +
->>>> +    dev_dbg(cpts->dev, "%s mtype seqid %08x\n", __func__, skb_cb->skb_mtype_seqid);
->>>> +
->>>> +    ns = am65_cpts_find_rx_ts(cpts, skb, AM65_CPTS_EV_RX, skb_cb->skb_mtype_seqid);
->>>> +    if (!ns)
->>>> +        return;
->>>> +
->>>> +    ssh = skb_hwtstamps(skb);
->>>> +    memset(ssh, 0, sizeof(*ssh));
->>>> +    ssh->hwtstamp = ns_to_ktime(ns);
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(am65_cpts_rx_timestamp);
->>>> +
->>>>    /**
->>>>     * am65_cpts_tx_timestamp - save tx packet for timestamping
->>>>     * @cpts: cpts handle
->>>> diff --git a/drivers/net/ethernet/ti/am65-cpts.h b/drivers/net/ethernet/ti/am65-cpts.h
->>>> index 6e14df0be113..6099d772799d 100644
->>>> --- a/drivers/net/ethernet/ti/am65-cpts.h
->>>> +++ b/drivers/net/ethernet/ti/am65-cpts.h
->>>> @@ -22,9 +22,9 @@ void am65_cpts_release(struct am65_cpts *cpts);
->>>>    struct am65_cpts *am65_cpts_create(struct device *dev, void __iomem *regs,
->>>>                       struct device_node *node);
->>>>    int am65_cpts_phc_index(struct am65_cpts *cpts);
->>>> +void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
->>>>    void am65_cpts_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
->>>>    void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
->>>> -void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en);
->>>>    u64 am65_cpts_ns_gettime(struct am65_cpts *cpts);
->>>>    int am65_cpts_estf_enable(struct am65_cpts *cpts, int idx,
->>>>                  struct am65_cpts_estf_cfg *cfg);
->>>> @@ -48,17 +48,18 @@ static inline int am65_cpts_phc_index(struct am65_cpts *cpts)
->>>>        return -1;
->>>>    }
->>>>    -static inline void am65_cpts_tx_timestamp(struct am65_cpts *cpts,
->>>> +static inline void am65_cpts_rx_timestamp(struct am65_cpts *cpts,
->>>>                          struct sk_buff *skb)
->>>>    {
->>>>    }
->>>>    -static inline void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts,
->>>> -                           struct sk_buff *skb)
->>>> +static inline void am65_cpts_tx_timestamp(struct am65_cpts *cpts,
->>>> +                      struct sk_buff *skb)
->>>>    {
->>>>    }
->>>>    -static inline void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en)
->>>> +static inline void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts,
->>>> +                           struct sk_buff *skb)
->>>>    {
->>>>    }
->>>>    
-> 
