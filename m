@@ -1,102 +1,140 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from hi1smtp01.de.adit-jv.com (smtp1.de.adit-jv.com [93.241.18.167])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DF77E1
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 12:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B970E7E1;
+	Fri,  1 Mar 2024 12:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.241.18.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709297176; cv=none; b=PMwTDpBIlgAkVxXsZHnkJjlEaybATLzDDtLdW/wUspTIC8xTassg3uKzab6JHAqKkjXOhWNHYTJIBjWAek0a+oGR0MS/ccxIzc7Zb6Ew/nqZNqpoAiwAWonQJ30njxtYRgA5OmIfgIAkJGW2/iUxzmCNtTvLo4P83cPaRRVP8sw=
+	t=1709297245; cv=none; b=cbwJZklosJBHmaQGSu3gsL0VS+khS7+bzzn9yCGtA9R0ZPdRrQOkW8GU/7pTDS6I3WH9hJkrYXNNpO53dhJkParSnBRTNeJhpZWYaz6RvSOayVGu+0ZYrncAnLfndJl2JfQpFHzoppQylpthUz6j3nS8nZ6o7Rz6qiUTDbsom+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709297176; c=relaxed/simple;
-	bh=AZR+noD3l0LO4X6LkzgkiZes2MssLiK0uXwj8oDVL8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AnNr0CyYEqB2pCCIu4W0XqBx8SaFh6gOgFj0bl2QNCrmMeKGMhX+knmqnHs8SpHUK0Hf10cKQd3k3QMg8BVrrJJFVkiL+N+AJQ2gjlSR/Sc19Jp9O+JyHjZv2rabKVrFskR8vqDsJqRIZNVAZkneT7URWd0oAxBFJQtt5GeDIkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kE8kJxhE; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kE8kJxhE"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e5d7f1f15bso28158b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 04:46:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709297174; x=1709901974; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M2eeFzJsafgYjz1aTeqb4t74nvXWY+dyBVmhOrpXIj0=;
-        b=kE8kJxhE+ghRjEca9RTo6vSMAPqY/+yRygLi7vkCFyhIAD1u5G3Pi1RCpXEbAniXjt
-         /lVnjBUiCTOH/SJwWWBQvkB9tKKk6wgo3ZbjOLQ0dSllE0Y0JgsnU63cmFHN+42bKRuW
-         fyA63kn6bZDFb/iO9sTfr2DqRQC+JbhuYOVobEH5q61u2mmPkyAmxWC3l5A1e3ojDHsP
-         1+8RN+26NoOCt6EIGTF5n1TQW9kyw4uViUdRiaF/QxhlE5jP736kWTxb7YZ8ISahpTkT
-         okwBue04+geXUwnIT/WuiXutklfzDf5Oa8rvJ1qxtmVpNxloXMOI6YKKHUvJb43Mt+Ik
-         3uOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709297174; x=1709901974;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M2eeFzJsafgYjz1aTeqb4t74nvXWY+dyBVmhOrpXIj0=;
-        b=b4QR8kZdHaATtihtOmsPZ4r8aykmxMCh5JVq5ALJlV6ANyxdpb1Yvma+L31uF3cOcY
-         oBS3swyGUpaTrSM8hGzWLv2Py4Qt8lw/1j8Z7GVRqMZd5ieZFZmlqQ/0glIZO9XDd8nF
-         enSDujrc7avtckXsOw5UoMv0JKduNjzUwvFI4yfp1USEaRC5qwO6Vy0FevMtwz0+nuLN
-         U7orXh8Hjn5/CFsTg0Yo/9l06K27tpEuG3QoIBkLLNLxQtZ/Ne49tEykpCeGvpdsKZ5d
-         PSeLCdOJ+YzuHLfoCrUZf8hGbr5eA0siPftnu0ZJqE22hnM1m4zrBCRjJ10l+9I3wEIi
-         u98Q==
-X-Gm-Message-State: AOJu0Yz4jnn3TSxrcwnv4KHESvy4DelY7AsGXhx1I1g2zjtStJ9mBdNz
-	0A+H3OgiCZmEZTxStpUROBHS5DMVfn11FL2WU5dpoqTCq2UV658omsW3xuVme9Q=
-X-Google-Smtp-Source: AGHT+IFJvVDCGYql4DB6oEsPDW/k9KaYZLbUkBNYVRLbF5p/6BFljMicHj4CXssZ0wjwshqrD4gQsg==
-X-Received: by 2002:a05:6a00:b48:b0:6e5:af58:20ac with SMTP id p8-20020a056a000b4800b006e5af5820acmr1656806pfo.13.1709297174476;
-        Fri, 01 Mar 2024 04:46:14 -0800 (PST)
-Received: from bala-mariner.. ([167.220.238.143])
-        by smtp.gmail.com with ESMTPSA id w7-20020aa79a07000000b006e5ac1b3c13sm1703751pfj.138.2024.03.01.04.46.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 04:46:14 -0800 (PST)
-From: bala <kumaran.4353@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: mingo@redhat.com,
-	peterz@infradead.org,
-	Bala <kumaran.4353@gmail.com>
-Subject: [PATCH] Check whether the wakeup task is eligible first
-Date: Fri,  1 Mar 2024 12:45:56 +0000
-Message-Id: <20240301124556.248820-1-kumaran.4353@gmail.com>
-X-Mailer: git-send-email 2.33.8
+	s=arc-20240116; t=1709297245; c=relaxed/simple;
+	bh=xmtt/dJqJpEhHTRjQVG1J/CP+alT6/cJsmAw7/JRl/I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GRrjH4TKJWAk9P02JU/KVhrA97W0losTQzHHYSrvpTESltrjomCYX8vz1NiEQ+mX143gI8r2J/LNaPdtBuk47l2XVFty2lCifMiILFo9X7C6HlFTfJ5eTS85BW5Qk62w1g2coWvWrgPZdifxocGHj/IqKbPTdGnTGLmAnm36etk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com; spf=pass smtp.mailfrom=de.adit-jv.com; arc=none smtp.client-ip=93.241.18.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.adit-jv.com
+Received: from hi2exch02.adit-jv.com (hi2exch02.adit-jv.com [10.72.92.28])
+	by hi1smtp01.de.adit-jv.com (Postfix) with ESMTP id 7AE30520252;
+	Fri,  1 Mar 2024 13:47:16 +0100 (CET)
+Received: from vmlxhi-118.adit-jv.com (10.72.93.77) by hi2exch02.adit-jv.com
+ (10.72.92.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 1 Mar
+ 2024 13:47:16 +0100
+From: Hardik Gajjar <hgajjar@de.adit-jv.com>
+To: <gregkh@linuxfoundation.org>, <michael@allwinnertech.com>,
+	<quic_linyyuan@quicinc.com>, <quic_ugoswami@quicinc.com>,
+	<brauner@kernel.org>, <sfr@canb.auug.org.au>, <quic_kriskura@quicinc.com>,
+	<axboe@kernel.dk>, <jlayton@kernel.org>
+CC: <hgajjar@de.adit-jv.com>, <hardik.gajjar@bosch.com>,
+	<eugeniu.rosca@bosch.com>, <linux-usb@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] usb: gadget: f_fs: Add the missing get_alt callback
+Date: Fri, 1 Mar 2024 13:47:08 +0100
+Message-ID: <20240301124708.120394-1-hgajjar@de.adit-jv.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: hi2exch02.adit-jv.com (10.72.92.28) To
+ hi2exch02.adit-jv.com (10.72.92.28)
 
-From: Bala <kumaran.4353@gmail.com>
+The Apple CarLife iAP gadget has a descriptor in userspace with two
+alternate settings. The host sends the set_alt request to configure
+alt_setting 0 or 1, and this is verified by the subsequent get_alt
+request.
 
-check_prempt_wakeup_fair is checking whether the current task has to be
-preempted by the newly wake-up task. To avoid multiple swaps the logic
-is decided as if the wake-up task is the best task then only preempt the
-current task.
+This patch implements and sets the get_alt callback. Without the
+get_alt callback, composite.c abruptly concludes the
+USB_REQ_GET/SET_INTERFACE request, assuming only one alt setting
+for the endpoint.
 
-In CFS time, getting the best task was as simple as piking the left-most
-node. But in EEVDF non-fast path, the entire tree has to be traversed in
-a worst case scenario.
+unlike the uvc and ncm, f_fs gadget is fully implemented in userspace,
+and driver just reset the eps and generate the event. so no additional
+adaptaion associated with this change is not required in set_alt callback
 
-So, IMHO let's first check the newly wake-up task is eligible before
-searching for the best task. At least until the comment becomes
-effective to preempt the curr irrespective of the waking task.
+Signed-off-by: Hardik Gajjar <hgajjar@de.adit-jv.com>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/function/f_fs.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 533547e3c90a..8d810d6a2cb7 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8334,7 +8334,7 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
- 	/*
- 	 * XXX pick_eevdf(cfs_rq) != se ?
- 	 */
--	if (pick_eevdf(cfs_rq) == pse)
-+	if (entity_eligible(cfs_rq, pse) && (pick_eevdf(cfs_rq) == pse))
- 		goto preempt;
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 6bff6cb93789..a3e8cf7963e7 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -42,6 +42,7 @@
+ #include "configfs.h"
  
- 	return;
+ #define FUNCTIONFS_MAGIC	0xa647361 /* Chosen by a honest dice roll ;) */
++#define MAX_ALT_SETTINGS	2		  /* Allow up to 2 alt settings to be set. */
+ 
+ /* Reference counter handling */
+ static void ffs_data_get(struct ffs_data *ffs);
+@@ -75,6 +76,7 @@ struct ffs_function {
+ 	short				*interfaces_nums;
+ 
+ 	struct usb_function		function;
++	int				cur_alt[MAX_CONFIG_INTERFACES];
+ };
+ 
+ 
+@@ -98,6 +100,7 @@ static int __must_check ffs_func_eps_enable(struct ffs_function *func);
+ static int ffs_func_bind(struct usb_configuration *,
+ 			 struct usb_function *);
+ static int ffs_func_set_alt(struct usb_function *, unsigned, unsigned);
++static int ffs_func_get_alt(struct usb_function *f, unsigned int intf);
+ static void ffs_func_disable(struct usb_function *);
+ static int ffs_func_setup(struct usb_function *,
+ 			  const struct usb_ctrlrequest *);
+@@ -3231,6 +3234,15 @@ static void ffs_reset_work(struct work_struct *work)
+ 	ffs_data_reset(ffs);
+ }
+ 
++static int ffs_func_get_alt(struct usb_function *f,
++			    unsigned int interface)
++{
++	struct ffs_function *func = ffs_func_from_usb(f);
++	int intf = ffs_func_revmap_intf(func, interface);
++
++	return (intf < 0) ? intf : func->cur_alt[interface];
++}
++
+ static int ffs_func_set_alt(struct usb_function *f,
+ 			    unsigned interface, unsigned alt)
+ {
+@@ -3238,6 +3250,9 @@ static int ffs_func_set_alt(struct usb_function *f,
+ 	struct ffs_data *ffs = func->ffs;
+ 	int ret = 0, intf;
+ 
++	if (alt > MAX_ALT_SETTINGS)
++		return -EINVAL;
++
+ 	if (alt != (unsigned)-1) {
+ 		intf = ffs_func_revmap_intf(func, interface);
+ 		if (intf < 0)
+@@ -3265,8 +3280,10 @@ static int ffs_func_set_alt(struct usb_function *f,
+ 
+ 	ffs->func = func;
+ 	ret = ffs_func_eps_enable(func);
+-	if (ret >= 0)
++	if (ret >= 0) {
+ 		ffs_event_add(ffs, FUNCTIONFS_ENABLE);
++		func->cur_alt[interface] = alt;
++	}
+ 	return ret;
+ }
+ 
+@@ -3573,6 +3590,7 @@ static struct usb_function *ffs_alloc(struct usb_function_instance *fi)
+ 	func->function.bind    = ffs_func_bind;
+ 	func->function.unbind  = ffs_func_unbind;
+ 	func->function.set_alt = ffs_func_set_alt;
++	func->function.get_alt = ffs_func_get_alt;
+ 	func->function.disable = ffs_func_disable;
+ 	func->function.setup   = ffs_func_setup;
+ 	func->function.req_match = ffs_func_req_match;
 -- 
-2.33.8
+2.17.1
 
