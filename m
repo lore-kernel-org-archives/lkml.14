@@ -1,190 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0206B69DE3;
-	Fri,  1 Mar 2024 08:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BEA69E0A;
+	Fri,  1 Mar 2024 08:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709281336; cv=none; b=IUpmIMyArekwuneFlbf6ezxmG009NaPsyJRA9tOypbs2M28PdJ6SKi8EZ0tHmSbjeGUvndxdXULqz9UJJRfn6oWD6b+0b+1OK+S7P0qmiHXmT8J9vWUJRC2V6KIjI+jZOnNCzbfrj2idJGzpsdR2eS3GNdtweZPRZM698zXWic0=
+	t=1709281346; cv=none; b=tPAneZkb5ybP0AV9N6+/gKaMzY9igl6au9OLlSFJgPb5O5AquzUIBYlwGpUyTPc0y+1O6cRqS/n5YAZhElike7Cc86pkQLMM5gODqfRtgy6mPW6tQfeAfJmEpqMmjAKwE4TKnAj62XZ1eMYNvbA2jaOK1aJKAF8Muo0vGGx0DEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709281336; c=relaxed/simple;
-	bh=L/oHwYBp57m19z3C6RvcmW7hmp890HYZJEwOnFdlmj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ka5J86z4qwcnMXkZ59gVB73MrdA0ffc6T6KJTXXiPwFHNt3wsaYCpr4PJ1qPfAKN4jQRamwGMYWMzavQj8x9zW9ycccM7lxMeV1xmN5iKzzCVbhNJ7pwK7Dhgxo1FA4FD98970E1yNyQkGNjvVH6cQH3CNyADeGnCiT4D6xHgD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPHk29tH; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPHk29tH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709281335; x=1740817335;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=L/oHwYBp57m19z3C6RvcmW7hmp890HYZJEwOnFdlmj0=;
-  b=HPHk29tH3MheYgb4ZtMyNosD1hKH/+JV/0FhFQ1/kpfCzx6/TrF823u8
-   37XPlgQw3XhwIFwlZc/iZGbw0C+2CT6ME0pQ7+IFz2xJXsDuWgsUvPJID
-   j7Rqqu9W0E9Y9VCBnET5vvQs7WqVEx1XuVEipNoxnMVfd2yQWI9RSLqvI
-   ePUWlqVJ0RCJDoqYZfpaxMkFw69b5rr4mHtnvOitZ2HPyl5UUbHeQ5z+2
-   wMLEhZrWGZW/z8VRRuW2krxtinoR4zdaEKNsSQC6Dh9BPigBmchge3Yb2
-   BcoIUJuElvGqD1HUhCJhhhh9bedp81I/ynRbkMVKTuUC6uM4pA8eSq/cU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3656743"
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="3656743"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 00:22:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="8047412"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.125.242.247]) ([10.125.242.247])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 00:22:09 -0800
-Message-ID: <7a90438a-6bb3-4e95-86a2-9ba199827675@linux.intel.com>
-Date: Fri, 1 Mar 2024 16:22:07 +0800
+	s=arc-20240116; t=1709281346; c=relaxed/simple;
+	bh=h6FtoEcIUz3yIkRmQPdlDZucxbkkGkvHrXaGeCM1nEs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k0dT4sj6uLgn36zIrqiX/bEyA0ogPU8YeEHhXTOW36d3RYfIcDbkK28lzUZUozySwevOkcwLr88lD8ZuXGQYQmATarPAXQO7f9uBEiYAF7ywkO13wgpWf88TVxuKrXdkQ31zkhtCvMz4j8gr//A3MSqm0muYYQmgawS76vNyXEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 05f06a440549480886f5d1928f357437-20240301
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:3aa1627a-5245-4c43-a2b5-b2ef66fe2ba0,IP:10,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-30
+X-CID-INFO: VERSION:1.1.37,REQID:3aa1627a-5245-4c43-a2b5-b2ef66fe2ba0,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-30
+X-CID-META: VersionHash:6f543d0,CLOUDID:c9637e84-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:2403011616558IO7NRVB,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
+	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 05f06a440549480886f5d1928f357437-20240301
+X-User: aichao@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1055854772; Fri, 01 Mar 2024 16:16:55 +0800
+From: Ai Chao <aichao@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v3] platform/x86: add lenovo generic wmi driver
+Date: Fri,  1 Mar 2024 16:16:48 +0800
+Message-Id: <20240301081648.265907-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 14/29] KVM: selftests: TDX: Add TDX IO reads test
-To: Sagi Shahar <sagis@google.com>
-Cc: linux-kselftest@vger.kernel.org, Ackerley Tng <ackerleytng@google.com>,
- Ryan Afranji <afranji@google.com>, Erdem Aktas <erdemaktas@google.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Peter Gonda <pgonda@google.com>, Haibo Xu <haibo1.xu@intel.com>,
- Chao Peng <chao.p.peng@linux.intel.com>,
- Vishal Annapurve <vannapurve@google.com>, Roger Wang <runanwang@google.com>,
- Vipin Sharma <vipinsh@google.com>, jmattson@google.com, dmatlack@google.com,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <20231212204647.2170650-1-sagis@google.com>
- <20231212204647.2170650-15-sagis@google.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20231212204647.2170650-15-sagis@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Add lenovo generic wmi driver to support camera button.
 
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
 
-On 12/13/2023 4:46 AM, Sagi Shahar wrote:
-> The test verifies IO reads of various sizes from the host to the guest.
->
-> Signed-off-by: Sagi Shahar <sagis@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Ryan Afranji <afranji@google.com>
-> ---
->   .../selftests/kvm/x86_64/tdx_vm_tests.c       | 87 +++++++++++++++++++
->   1 file changed, 87 insertions(+)
+v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+v3: Remove lenovo_wmi_remove function.
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+ drivers/platform/x86/Kconfig      |  10 +++
+ drivers/platform/x86/Makefile     |   1 +
+ drivers/platform/x86/lenovo-wmi.c | 113 ++++++++++++++++++++++++++++++
+ 3 files changed, 124 insertions(+)
+ create mode 100644 drivers/platform/x86/lenovo-wmi.c
 
->
-> diff --git a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> index a2b3e1aef151..699cba36e9ce 100644
-> --- a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> +++ b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> @@ -429,6 +429,92 @@ void verify_guest_writes(void)
->   	printf("\t ... PASSED\n");
->   }
->   
-> +#define TDX_IO_READS_TEST_PORT 0x52
-> +
-> +/*
-> + * Verifies IO functionality by reading values of different sizes
-> + * from the host.
-> + */
-> +void guest_io_reads(void)
-> +{
-> +	uint64_t data;
-> +	uint64_t ret;
-> +
-> +	ret = tdg_vp_vmcall_instruction_io(TDX_IO_READS_TEST_PORT, 1,
-> +					TDG_VP_VMCALL_INSTRUCTION_IO_READ,
-> +					&data);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +	if (data != 0xAB)
-> +		tdx_test_fatal(1);
-> +
-> +	ret = tdg_vp_vmcall_instruction_io(TDX_IO_READS_TEST_PORT, 2,
-> +					TDG_VP_VMCALL_INSTRUCTION_IO_READ,
-> +					&data);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +	if (data != 0xABCD)
-> +		tdx_test_fatal(2);
-> +
-> +	ret = tdg_vp_vmcall_instruction_io(TDX_IO_READS_TEST_PORT, 4,
-> +					TDG_VP_VMCALL_INSTRUCTION_IO_READ,
-> +					&data);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +	if (data != 0xFFABCDEF)
-> +		tdx_test_fatal(4);
-> +
-> +	// Read an invalid number of bytes.
-> +	ret = tdg_vp_vmcall_instruction_io(TDX_IO_READS_TEST_PORT, 5,
-> +					TDG_VP_VMCALL_INSTRUCTION_IO_READ,
-> +					&data);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	tdx_test_success();
-> +}
-> +
-> +void verify_guest_reads(void)
-> +{
-> +	struct kvm_vm *vm;
-> +	struct kvm_vcpu *vcpu;
-> +
-> +	vm = td_create();
-> +	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
-> +	vcpu = td_vcpu_add(vm, 0, guest_io_reads);
-> +	td_finalize(vm);
-> +
-> +	printf("Verifying guest reads:\n");
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_IO(vcpu, TDX_IO_READS_TEST_PORT, 1,
-> +			TDG_VP_VMCALL_INSTRUCTION_IO_READ);
-> +	*(uint8_t *)((void *)vcpu->run + vcpu->run->io.data_offset) = 0xAB;
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_IO(vcpu, TDX_IO_READS_TEST_PORT, 2,
-> +			TDG_VP_VMCALL_INSTRUCTION_IO_READ);
-> +	*(uint16_t *)((void *)vcpu->run + vcpu->run->io.data_offset) = 0xABCD;
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_IO(vcpu, TDX_IO_READS_TEST_PORT, 4,
-> +			TDG_VP_VMCALL_INSTRUCTION_IO_READ);
-> +	*(uint32_t *)((void *)vcpu->run + vcpu->run->io.data_offset) = 0xFFABCDEF;
-> +
-> +	td_vcpu_run(vcpu);
-> +	TEST_ASSERT_EQ(vcpu->run->exit_reason, KVM_EXIT_SYSTEM_EVENT);
-> +	TEST_ASSERT_EQ(vcpu->run->system_event.data[1], TDG_VP_VMCALL_INVALID_OPERAND);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_ASSERT_SUCCESS(vcpu);
-> +
-> +	kvm_vm_free(vm);
-> +	printf("\t ... PASSED\n");
-> +}
-> +
->   int main(int argc, char **argv)
->   {
->   	setbuf(stdout, NULL);
-> @@ -444,6 +530,7 @@ int main(int argc, char **argv)
->   	run_in_new_process(&verify_td_cpuid);
->   	run_in_new_process(&verify_get_td_vmcall_info);
->   	run_in_new_process(&verify_guest_writes);
-> +	run_in_new_process(&verify_guest_reads);
->   
->   	return 0;
->   }
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index bdd302274b9a..fbbb8fb843d7 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1001,6 +1001,16 @@ config INSPUR_PLATFORM_PROFILE
+ 	To compile this driver as a module, choose M here: the module
+ 	will be called inspur-platform-profile.
+ 
++config LENOVO_WMI
++	tristate "Lenovo Geneirc WMI driver"
++	depends on ACPI_WMI
++	depends on INPUT
++	help
++	This driver provides support for Lenovo WMI driver.
++
++	To compile this driver as a module, choose M here: the module
++	will be called lenovo-wmi.
++
+ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+ 
+ config FW_ATTR_CLASS
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 1de432e8861e..d51086552192 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
++obj-$(CONFIG_LENOVO_WMI)	+= lenovo-wmi.o
+ 
+ # Intel
+ obj-y				+= intel/
+diff --git a/drivers/platform/x86/lenovo-wmi.c b/drivers/platform/x86/lenovo-wmi.c
+new file mode 100644
+index 000000000000..96c2ec9e6441
+--- /dev/null
++++ b/drivers/platform/x86/lenovo-wmi.c
+@@ -0,0 +1,113 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Lenovo Generic WMI Driver
++ *
++ *  Copyright (C) 2024	      Ai Chao <aichao@kylinos.cn>
++ */
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/input.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
++
++static u8 camera_mode;
++
++struct lenovo_wmi_priv {
++	struct input_dev *idev;
++};
++
++static ssize_t camerabutton_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "%u\n", camera_mode);
++}
++
++DEVICE_ATTR_RO(camerabutton);
++
++static struct attribute *lenovo_wmi_attrs[] = {
++	&dev_attr_camerabutton.attr,
++	NULL,
++};
++
++static const struct attribute_group lenovo_wmi_group = {
++	.attrs = lenovo_wmi_attrs,
++};
++
++const struct attribute_group *lenovo_wmi_groups[] = {
++	&lenovo_wmi_group,
++	NULL,
++};
++
++static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	if (obj->type == ACPI_TYPE_BUFFER) {
++		camera_mode = obj->buffer.pointer[0];
++		input_report_key(priv->idev, KEY_CAMERA, 1);
++		input_sync(priv->idev);
++		input_report_key(priv->idev, KEY_CAMERA, 0);
++		input_sync(priv->idev);
++	} else {
++		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
++	}
++}
++
++static int lenovo_wmi_input_setup(struct wmi_device *wdev)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	priv->idev = devm_input_allocate_device(&wdev->dev);
++	if (!priv->idev)
++		return -ENOMEM;
++
++	priv->idev->name = "Lenovo WMI Camera Button";
++	priv->idev->phys = "wmi/input0";
++	priv->idev->id.bustype = BUS_HOST;
++	priv->idev->dev.parent = &wdev->dev;
++	priv->idev->evbit[0] = BIT_MASK(EV_KEY);
++	priv->idev->keybit[BIT_WORD(KEY_CAMERA)] = BIT_MASK(KEY_CAMERA);
++
++	return input_register_device(priv->idev);
++}
++
++static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct lenovo_wmi_priv *priv;
++	int err;
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(struct lenovo_wmi_priv),
++			    GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	dev_set_drvdata(&wdev->dev, priv);
++
++	err = lenovo_wmi_input_setup(wdev);
++	return err;
++}
++
++static const struct wmi_device_id lenovo_wmi_id_table[] = {
++	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
++	{  }
++};
++
++static struct wmi_driver lenovo_wmi_driver = {
++	.driver = {
++		.name = "lenovo-wmi",
++		.dev_groups = lenovo_wmi_groups,
++	},
++	.id_table = lenovo_wmi_id_table,
++	.probe = lenovo_wmi_probe,
++	.notify = lenovo_wmi_notify,
++};
++
++module_wmi_driver(lenovo_wmi_driver);
++
++MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
++MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
++MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
