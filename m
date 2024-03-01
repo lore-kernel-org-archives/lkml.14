@@ -1,94 +1,77 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5D179C2;
-	Fri,  1 Mar 2024 17:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF828BED;
+	Fri,  1 Mar 2024 17:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314747; cv=none; b=AcsWAIph84OM7+YfJsYeoroJkVkNHBNRCVYkA+AXO8cs4g258KY4g0tZrMX99UOusUXLz1+UQRXYnEdI/Mr7MYZBJ+mALNTvTkdHlUsHQjSOfWiO7RHG0JOHGRRVuVzao0Z7EqwKG+3XVrIPcx5xKAcYry15fb2SNGT5sVa28Bs=
+	t=1709314786; cv=none; b=d91UVd5syLU1lUC5Tcy9Imf3sGatNGnp/q6bKpzrHqvlisheEEqyasjC+Bz0INPAPdUqXujud6pjbW4HpvU99qYJve++7/+X7TDIJcuKKIRFjKY3eVORprKkMhWA0uR5YU16mW/nE0+fLytwXFqS1lmJUiTy0IfZ8P2qTLHb5N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314747; c=relaxed/simple;
-	bh=ebff8M+k/K6Wd1OgQ0pC/rYolW4WIr6/wiuY1cwp9d4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BZKijp6AsNChoNNLYRiup5qo7Jkva3opOwGLzy6eUPZYkphIWtIdqNVH1Az2HdAyh94zrtLXYgJk+zHIJejuHFJDmGMiIq32SQDYnKqrpLmtQgseQ0sj1ykYeReS1wREYlkIOJkeBvVkel5cFt9+N7mQmtwt7t3Ph9eWgpLNvWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QPyjuNKQ; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709314786; c=relaxed/simple;
+	bh=VE2uSRmbnrUTIwI0MsFFp9dkOgavVaKfIAsVt33kwLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QViCiqY10P9rHlKvTxmM1eecHO1+jVUYQ3LCxE2QW4KHDW2xaNYktllspb73CYazu9tk45kAUujq1mdKd7L99PbeCuOpECBAtMAM52D8ZfE4yNwS6+7CKA8zInn//CHXpK8ZzFf6GavqX3oh9Kj43gtamZdkV5FchD9Y0qu+XqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GWR6kZ6s; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPyjuNKQ"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a26fa294e56so450018766b.0;
-        Fri, 01 Mar 2024 09:39:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709314744; x=1709919544; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=arCunWF6dZb0FdspcIOQcAPY/BFPdx5+j+0Wod9wh5s=;
-        b=QPyjuNKQH+MoMTwuIvWsue5SiRNI0Ph67I2vgF7XPGg8KVJIoZ3YJXVbinaaHHnaTu
-         Y/9CNctWTUa1PSoMyJ0E9BtKiLAHYt1CegWzLi9oW5b66jM4O1+KgBNieZVUcp0ZTbFz
-         ju1jDgi8JJFFAMVBndzj5ZmIK+WPDkXG+euK2fAY+X3e+KnepIzptacczZDcYcEPwCla
-         s2bfu0UO/EkVyKXz1fPT6CFN+O2gOuNq8B5jlLWECyaLZXxM9piTfvxF4h9/lZTOCwIb
-         ZPIsyUTs44k46AjJO3jD6sX6xPOsMp3++EPDoPZrfGbT2kAqdbtPhaDVqNlxWP7Fwr/1
-         P/OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709314744; x=1709919544;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=arCunWF6dZb0FdspcIOQcAPY/BFPdx5+j+0Wod9wh5s=;
-        b=BRY9B7/cp94zlxdbTjMg9ufj9Q6v0vgXadlYPnWQrMZ4n6xEeyDXhCWhhgDGJtHz9a
-         1kkzplQKyaGXT/oXZWhSBbSb0e56NPUipzryog93smxa6nIH34I/cNd7tulViw5OPGsv
-         Ay/LyTx8Q31Hj1F0x+5XgrLcOspuF5XXOmJRLPgoqDHDHHG6MP+kr7/p0QtOWWnGF7Uc
-         b/7hZjp1ywZlMcJ1/NiL3KDqn0Y6DsHup9AU5X05APdzbbnLpSQb7QDF0MVlH12jlOzr
-         3UT4jmelSwmKQpHv3nmJ3ziHqAY7ovPf/qmqrwD95kSd46T/lZukZzE6bdl7c5Fvxp2k
-         U/eA==
-X-Forwarded-Encrypted: i=1; AJvYcCWebNrT61JpsvWZNZKfdrhYNenxkOGmZhjfn6XlzGOuWYflOwAGhR82DtRT6OmeSaRQpB0GGdMkXrfgA9eF07ewu2n21CehgaPbggeu
-X-Gm-Message-State: AOJu0YwdNyAtxM4civVSW/1LeEBWx0mFrhy/oLq47qth9vrsuARfxC/A
-	laBVUIXf3qq/r8hP1KNbjhVmuBdtQVj4bY4jpikwW8AXwT1l9cndFl8B6avo
-X-Google-Smtp-Source: AGHT+IE7AXO3E6G2ne+1f2DYdXoxnjHQYIU25pwZk7+DrB1wXm1nxF4HttFQpm6oGSN3UUV57/slSA==
-X-Received: by 2002:a17:906:b84e:b0:a3e:4d4c:d120 with SMTP id ga14-20020a170906b84e00b00a3e4d4cd120mr1724508ejb.12.1709314744157;
-        Fri, 01 Mar 2024 09:39:04 -0800 (PST)
-Received: from localhost.localdomain (ip-94-112-167-15.bb.vodafone.cz. [94.112.167.15])
-        by smtp.gmail.com with ESMTPSA id re8-20020a170906d8c800b00a43815bf5edsm1864522ejb.133.2024.03.01.09.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 09:39:03 -0800 (PST)
-From: Ilya Dryomov <idryomov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ceph-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fix for 6.8-rc7
-Date: Fri,  1 Mar 2024 18:37:09 +0100
-Message-ID: <20240301173710.2004467-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.41.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GWR6kZ6s"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1B7F1240003;
+	Fri,  1 Mar 2024 17:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709314782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HPOP82Swf39Z+Oml/HNNIoo3JMbE10x1ALBHxRiVIp4=;
+	b=GWR6kZ6sqnLHbD99ZA24rS7vAWtep94ya9NrWpvjdjoRU666FY23absUBejh5k+F1ZnjqS
+	vmTZ6iMMzqD49O7v2Yh+QIbMT1KE1zy+Tdi98zGRiKtU26wJSIs9TWcWZA+VQsfiRxYzwE
+	BAFH32DSCmJkBOMpqeHx96/SKusM3TlsbbTs3zo5dlNrr2aMoCdNhllZoYe3+wc2zFuogv
+	4QpwqK264eg2jGDAYH5JEdEo+ONGAJVGkwb72LSQ13MtxNVWRAupfGJIZytBJ0s+FVm0a0
+	MJYwRN0pi6J13FmpW2SUSbbHvHTLw+BO6oOD9USIHJPS9bsMOgtBWHmj+ml05Q==
+Date: Fri, 1 Mar 2024 18:39:36 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-staging@lists.linux.dev, linux-tegra@vger.kernel.org,
+ linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Hunter
+ <jonathanh@nvidia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sowjanya Komatineni <skomatineni@nvidia.com>, Thierry Reding
+ <thierry.reding@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: media: tegra-video: Use common error handling
+ code in tegra_vi_graph_parse_one()
+Message-ID: <20240301183936.505fcc72@booty>
+In-Reply-To: <dbebaea7-289c-47d9-ba06-cd58a10ea662@web.de>
+References: <dbebaea7-289c-47d9-ba06-cd58a10ea662@web.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hi Linus,
+Hello Markus,
 
-The following changes since commit d206a76d7d2726f3b096037f2079ce0bd3ba329b:
+On Thu, 29 Feb 2024 19:55:46 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-  Linux 6.8-rc6 (2024-02-25 15:46:06 -0800)
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Thu, 29 Feb 2024 19:44:36 +0100
+> 
+> Add a jump target so that a bit of exception handling can be better reused
+> at the end of this function implementation.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-are available in the Git repository at:
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-  https://github.com/ceph/ceph-client.git tags/ceph-for-6.8-rc7
-
-for you to fetch changes up to 51d31149a88b5c5a8d2d33f06df93f6187a25b4c:
-
-  ceph: switch to corrected encoding of max_xattr_size in mdsmap (2024-02-26 19:20:30 +0100)
-
-----------------------------------------------------------------
-A patch to catch up with mdsmap encoding rectification which ended up
-being necessary after all to enable cluster upgrades from problematic
-v18.2.0 and v18.2.1 releases.
-
-----------------------------------------------------------------
-Xiubo Li (1):
-      ceph: switch to corrected encoding of max_xattr_size in mdsmap
-
- fs/ceph/mdsmap.c | 7 ++++---
- fs/ceph/mdsmap.h | 6 +++++-
- 2 files changed, 9 insertions(+), 4 deletions(-)
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
