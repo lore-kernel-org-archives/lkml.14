@@ -1,99 +1,131 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F44B69D25;
-	Fri,  1 Mar 2024 08:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC32F69317;
+	Fri,  1 Mar 2024 08:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709281511; cv=none; b=ixQJIui6eeL5woPjJDOn5fHdvroVDBIHY+ExjcA7IgTbg1x0uBj1hSVRo++R+KRGiTWzgIPEgIHtO9viNLzeMgxPAEJ2WyQSzJCkp2nSSA9fq2QENS5OeuyTtDiTkQGziH2c/1zZOYDTJnYRoDj+3SQWlWKDLAj36OV+nYDVUTM=
+	t=1709281559; cv=none; b=Fbag1IHwRAqvMFnhyuov0csgLBYzK7ataZ3SdbkqZ/U//wgqUNrbrLn8HGqfmbn3OEyGJYqVxyPBkA/lGWMnebbaonaSCOwiWZLPJ+N2sLCcBLweTC0Zg7ZuztI5zgZ7qhfbEEHzrY4p+iJ33xckBLFZboReJE7GadgWY5vTafw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709281511; c=relaxed/simple;
-	bh=X4RuAEbCwi7LK+wrIeZK9w07Qub5Uxb8j6kTg3iOLfI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=ZHEkuOJ7V1g7+Nip2+Nyi8lkiXfR33Onq25XdjFs25GiYKkCkiip0K5LB/eO7UrSANGo/tOT/sYsnr02VMDTwHLdbSer/1OlIGftcn51bR64AR4i4k6PvsJ3/bpYw3L1Fi/2EXgAIrZIKxHCdvGHs0FpHc1joPXVFq7OqwucQE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=aexe0ZLN; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1709281559; c=relaxed/simple;
+	bh=B5b9ibF+22tppvs5WWOhUY+3DjIPr1oOBhj58DmZtbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QNLGsos6Wk2B1E7PCOxnNa7y5vKf5jNcovMFlfUsqlcTTJt0ZdrU1Lb8TzVJydQ2aSXr0TGZrIgNMwfDVTVatoDLaHkGU9EIDy3S40Zee0isHPW4IHeCJlfFMsiBZl0EYdJ8EtGCLLKaCwVHhsC5bVlaH+dZOT/zsFjbAgeKLz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxWIk5EJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="aexe0ZLN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxWIk5EJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03281C433F1;
+	Fri,  1 Mar 2024 08:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709281559;
+	bh=B5b9ibF+22tppvs5WWOhUY+3DjIPr1oOBhj58DmZtbE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OxWIk5EJjuXl1oHzZNiHNOKTSMhcclIzMwYzBocd5pqOCLDWgIryGu1UWsPwm7VNH
+	 qdxzYMa5hnw8Vcn7EH6DkBJoIiyJFxNyawPUS+1V6JBvyvkX4JYBFF16kE1aM7nCxI
+	 07MHuXIf+ULQlbcDyE5Eju7bluK6bUp8ReZk3oxVTXJ05SbO0xHwOC6/EWCvI1Igbe
+	 zoMLNoWwxvmeKL81Xq8P0JYR90A/itsrMDIKkxmQBhrF8T4+01niWgrO+WZ7RecTvW
+	 5ElvfBNVOrvi8DIGEx788rG0YlRiUedr4EGPXsVAVYPpsO2RDCwGYKPLPcWmJW/pu3
+	 oEaDu5w2f2jbg==
+Date: Fri, 1 Mar 2024 09:25:54 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, naresh.kamboju@linaro.org, daniel.diaz@linaro.org, 
+	linux@roeck-us.net
+Subject: Re: [PATCH 1/2] ext4: alloc test super block from sget
+Message-ID: <20240301-neuland-zoomen-4152b34c6fba@brauner>
+References: <20240301120816.22581-1-shikemeng@huaweicloud.com>
+ <20240301120816.22581-2-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1709281507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PML2KXW2NNHKig0QUJIbOqrTp9cjXhSc3Xi08SDJ2+4=;
-	b=aexe0ZLNbDKkg3CyRRdMeFW2hP8JVq3Si/3axw4AXvBM5sKWsTH0ZeW8kptyRFqeP7y/gl
-	SuX1UIlzo6PjaFE17g7+ohi8JC+ld5kGeyiAJOYBl6BzJIfPDJQy4WnbL4S6bLSwb4gQnL
-	hAuk0bf1UcQb9BUGltiQytmPW+uyBksKZpcoGVuRgsHdqpVOn/IJhX+cuSszim35vG0cXN
-	oFo7Nmex0agyQnFEyrXqcSredmgCUzcO87JTcoDZxPjGiwovxLiGihVAQ3PJToCMad2M/7
-	LNsD2KCiWBqe1lGazWjpUxdye3+DAf4661WuIdh/YTnqMok+IyaRehDPaHcpog==
-Date: Fri, 01 Mar 2024 09:25:07 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Chen-Yu
- Tsai <wens@kernel.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] arm64: dts: rockchip: enable automatic active
- cooling on Rock 5B
-In-Reply-To: <a8ebe39b28a34c3544481a4e43e61d2b@manjaro.org>
-References: <20240229-rk-dts-additions-v3-0-6afe8473a631@gmail.com>
- <20240229-rk-dts-additions-v3-2-6afe8473a631@gmail.com>
- <823379825559bb76088c31f44f998dd3@manjaro.org>
- <CABjd4YybaQnKm+VpU_xVrCb=pxQ7oQXPHGZzn_u1w_h3yn7gwg@mail.gmail.com>
- <a8ebe39b28a34c3544481a4e43e61d2b@manjaro.org>
-Message-ID: <b16f1d40549554598a3658679ceba9bf@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240301120816.22581-2-shikemeng@huaweicloud.com>
 
-On 2024-03-01 07:17, Dragan Simic wrote:
-> On 2024-03-01 06:21, Alexey Charkov wrote:
->> On Fri, Mar 1, 2024 at 1:25 AM Dragan Simic <dsimic@manjaro.org> 
->> wrote:
->>> On 2024-02-29 20:26, Alexey Charkov wrote:
->>> > This links the PWM fan on Radxa Rock 5B as an active cooling device
->>> > managed automatically by the thermal subsystem, with a target SoC
->>> > temperature of 65C and a minimum-spin interval from 55C to 65C to
->>> > ensure airflow when the system gets warm
->>> 
->>> I'd suggest that you replace "automatic active cooling" with "active
->>> cooling" in the patch subject.  I know, it may seem like more of the
->>> unnecessary nitpicking, :) but I hope you'll agree that "automatic"
->>> is actually redundant there.  It would also make the patch subject
->>> a bit shorter.
->>> 
->>> Another option would be to replace "automatic active cooling" with
->>> "automatic fan control", which may actually be a better choice.
->>> I'd be happy with whichever one you prefer. :)
->> 
->> Sounds good to me, thanks!
+On Fri, Mar 01, 2024 at 08:08:15PM +0800, Kemeng Shi wrote:
+> This fix the oops in ext4 unit test which is cuased by NULL sb.s_user_ns
+> as following:
+> <4>[ 14.344565] map_id_range_down (kernel/user_namespace.c:318)
+> <4>[ 14.345378] make_kuid (kernel/user_namespace.c:415)
+> <4>[ 14.345998] inode_init_always (include/linux/fs.h:1375 fs/inode.c:174)
+> <4>[ 14.346696] alloc_inode (fs/inode.c:268)
+> <4>[ 14.347353] new_inode_pseudo (fs/inode.c:1007)
+> <4>[ 14.348016] new_inode (fs/inode.c:1033)
+> <4>[ 14.348644] ext4_mb_init (fs/ext4/mballoc.c:3404 fs/ext4/mballoc.c:3719)
+> <4>[ 14.349312] mbt_kunit_init (fs/ext4/mballoc-test.c:57
+> fs/ext4/mballoc-test.c:314)
+> <4>[ 14.349983] kunit_try_run_case (lib/kunit/test.c:388 lib/kunit/test.c:443)
+> <4>[ 14.350696] kunit_generic_run_threadfn_adapter (lib/kunit/try-catch.c:30)
+> <4>[ 14.351530] kthread (kernel/kthread.c:388)
+> <4>[ 14.352168] ret_from_fork (arch/arm64/kernel/entry.S:861)
+> <0>[ 14.353385] Code: 52808004 b8236ae7 72be5e44 b90004c4 (38e368a1)
 > 
-> I'm glad that you like it. :)
+> Alloc test super block from sget to properly initialize test super block
+> to fix the issue.
 > 
->>> Otherwise, please feel free to add:
->>> 
->>> Reviewed-by: Dragan Simic <dsimic@manjaro.org>
->> 
->> Thank you Dragan, much appreciated!
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  fs/ext4/mballoc-test.c | 46 ++++++++++++++++++++++++++++--------------
+>  1 file changed, 31 insertions(+), 15 deletions(-)
 > 
-> Thank you for putting up with my nitpicking. :)
+> diff --git a/fs/ext4/mballoc-test.c b/fs/ext4/mballoc-test.c
+> index 12d0b22cabe1..1da52bbf4599 100644
+> --- a/fs/ext4/mballoc-test.c
+> +++ b/fs/ext4/mballoc-test.c
+> @@ -21,16 +21,27 @@ struct mbt_ctx {
+>  };
+>  
+>  struct mbt_ext4_super_block {
+> -	struct super_block sb;
+> +	struct ext4_super_block es;
+> +	struct ext4_sb_info sbi;
+>  	struct mbt_ctx mbt_ctx;
+>  };
+>  
+> -#define MBT_CTX(_sb) (&(container_of((_sb), struct mbt_ext4_super_block, sb)->mbt_ctx))
+> +#define MBT_SB(_sb) (container_of((_sb)->s_fs_info, struct mbt_ext4_super_block, sbi))
+> +#define MBT_CTX(_sb) (&MBT_SB(_sb)->mbt_ctx)
+>  #define MBT_GRP_CTX(_sb, _group) (&MBT_CTX(_sb)->grp_ctx[_group])
+>  
+>  static const struct super_operations mbt_sops = {
+>  };
+>  
+> +static void mbt_kill_sb(struct super_block *sb)
+> +{
+> +}
+> +
+> +static struct file_system_type mbt_fs_type = {
+> +	.name			= "mballoc test",
+> +	.kill_sb		= mbt_kill_sb,
+> +};
+> +
+>  static int mbt_mb_init(struct super_block *sb)
+>  {
+>  	int ret;
+> @@ -72,43 +83,48 @@ static void mbt_mb_release(struct super_block *sb)
+>  	kfree(sb->s_bdev);
+>  }
+>  
+> +static int mbt_set(struct super_block *sb, void *data)
+> +{
+> +	return 0;
+> +}
+> +
+>  static struct super_block *mbt_ext4_alloc_super_block(void)
+>  {
+> -	struct ext4_super_block *es = kzalloc(sizeof(*es), GFP_KERNEL);
+> -	struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+>  	struct mbt_ext4_super_block *fsb = kzalloc(sizeof(*fsb), GFP_KERNEL);
+> +	struct super_block *sb = sget(&mbt_fs_type, NULL, mbt_set, 0, NULL);
+> +	struct ext4_sb_info *sbi;
+>  
+> -	if (fsb == NULL || sbi == NULL || es == NULL)
+> +	if (fsb == NULL || sb == NULL)
 
-Perhaps the following tag would also be deserved for this patch:
-
-Helped-by: Dragan Simic <dsimic@manjaro.org>
-
-I hope you agree. :)
+sget() returns error pointer on failure. So you should check for IS_ERR(sb).
