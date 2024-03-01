@@ -1,57 +1,54 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04BB1170B
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71113134CB
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709315807; cv=none; b=dknMGHslK8pOuXH2pZVJAgjm2X8ysovt5epM/nn+X7/q+s2JmPq/kxO5NaIHHSmrb3tTyGTqa5xZyLsqY6H9maSns9/FENCIFqd4tkXDF8qhHqUupO+HA9ukKaUMjW0GOZKllAaZHfp4h4nPz8HexthiKyYqB9ORtfSma3QVnJE=
+	t=1709315808; cv=none; b=p5H5nZ8E/uMi5iLq/ApiJS8fVF63oOsgV5jZqMf6M+9dkP6/eKUSNTOnVvtwCICzHkLB++JJQNB6I+/kp+jK1imhoa2Yml1s5Vw8vgWYlQT24eWHUl0Rkv2JlJWw4JRCfFmuObjcRcwT6Wa76ySn92vrDV1B+VRyicZ4m3rEYBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709315807; c=relaxed/simple;
-	bh=h0960NSguWrPaEycEOjNIABQvoLMiDK9fkMLb1z/Dyw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EEA7/pA8CuiC5GD28p97pw6nqbAbgJUkGbp1LYpttpLBFgIzgb50GrKVRHwoUB2SK0yp96kFduDnO2ImiEYpHhl8RgC0gFH/eO4lq1n/YWF1l+Df/htItHEYs/1gTTmVBx0IoYNT9+5fyyA5aXGtDszRVqkThL3TSoK5v7s5Gnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LpcrB3wv; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1709315808; c=relaxed/simple;
+	bh=kMz954nBvgW2o4FoUK1az2mgv1DJs80476p6evrV/nM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lUch/hIvC5g5X8/wFJd6G9aKc9Z3xtmiGfIUC1WQiI31wNnKcm7VDzo60sEyzgkFp03Dvho82K/EEMy06Jkk/gtPwnKsqA5cds0CXB6h1Lv11EWnQqcklXSSgtOC3vrOU/bZ12h61x9qMQ59l3WL3A4aKdL+L1ahO2biwA/lIAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LnnkGwPL; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LpcrB3wv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LnnkGwPL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709315806; x=1740851806;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=h0960NSguWrPaEycEOjNIABQvoLMiDK9fkMLb1z/Dyw=;
-  b=LpcrB3wvqAxuxA3D3HMdXhBLKlPO0+Ff++Sc/n4wfPmBcebbCaucAgXh
-   J6+w3/aNTz3nj/3E8+tsbAkGX0o+05LC3HEpHVaEHzq0MIDhR69iiF/MR
-   k0oqNCw6nd3f3qfbj0Yizje3zFpBBDQ3y9mCkO88D7n7AWF0TiaOpqNOg
-   6irsj1mxvSpeRgo6Q34f69vtnAPwJDs0D99mtx6QKBBRCNEsyeMxzU/Bg
-   o44K5Q2TNJN15mbdysNse4Sjxezi5UcKhQtiGYxgGwIXcF3/iCFa0Ghp7
-   askLe3QEaHG3j9VT+4WGg4ndkFMMKAGL0ijdWkyLhztzAauM2imBvxH6U
+  t=1709315807; x=1740851807;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kMz954nBvgW2o4FoUK1az2mgv1DJs80476p6evrV/nM=;
+  b=LnnkGwPLttUZ8uovJlJ3SxsgTlS+7wmTw3Ep3D7dKPS1+PlpLF7esLwB
+   2lsat51HjQ2ccWSQxbgQTZ/dWZM0mI/Lk33ZMZ5a6R2Bi3c8/4ZApXwMh
+   e5cxNA4n2IHLeH+NpVFbGgyMUqLgoboTfbWjC/fABdgjhFD3i47/P4WXP
+   PFv3VHQigSiBCBKZAAKMtqtUPy0w7EyExgjzX0q+69Qxwc3YN7YJFamTG
+   wKkKmwU1RXzt9IZmmXMCLdABsb0pOjuTx0yl0mAUrPVJ6bH9HVjwAASgm
+   70fJkhrQobj3owP0At4XXNIEVHVgl1YkDsLx+RwtdpOlKV5fGPYHD+jIH
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="7684219"
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="7684220"
 X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="7684219"
+   d="scan'208";a="7684220"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:56:45 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="937037840"
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="937037841"
 X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="937037840"
+   d="scan'208";a="937037841"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2024 09:56:43 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2024 09:56:44 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E38075F5; Fri,  1 Mar 2024 19:56:42 +0200 (EET)
+	id C7DC528A; Fri,  1 Mar 2024 19:56:42 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 2/2] devres: Don't use "proxy" headers
-Date: Fri,  1 Mar 2024 19:55:37 +0200
-Message-ID: <20240301175641.270020-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 0/2] devres: A couple of cleanups
+Date: Fri,  1 Mar 2024 19:55:35 +0200
+Message-ID: <20240301175641.270020-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240301175641.270020-1-andriy.shevchenko@linux.intel.com>
-References: <20240301175641.270020-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,37 +57,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update header inclusions to follow IWYU (Include What You Use)
-principle.
+A couple of ad-hoc cleanups. No functional changes intended.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- lib/devres.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+v3:
+- rebased on top of driver-core-testing (Philipp)
+- added tags (Philipp)
 
-diff --git a/lib/devres.c b/lib/devres.c
-index f38e8297ad5a..f4b72ad812b5 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -1,10 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <linux/err.h>
--#include <linux/pci.h>
--#include <linux/io.h>
--#include <linux/gfp.h>
-+#include <linux/bug.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
- #include <linux/export.h>
-+#include <linux/gfp_types.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/pci.h>
- #include <linux/of_address.h>
-+#include <linux/types.h>
- 
- enum devm_ioremap_type {
- 	DEVM_IOREMAP = 0,
+v2:
+- fixed plural vs. singular "to have" (Philipp)
+
+Andy Shevchenko (2):
+  devres: Switch to use dev_err_probe() for unification
+  devres: Don't use "proxy" headers
+
+ lib/devres.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
+
 -- 
 2.43.0.rc1.1.gbec44491f096
 
