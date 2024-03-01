@@ -1,91 +1,135 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCBA42A8B;
-	Fri,  1 Mar 2024 09:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C7469D09;
+	Fri,  1 Mar 2024 09:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709287069; cv=none; b=neqBLCdd73td6B5eikHPE1szN7QP8F4+q4BMO0SlN++Qq0yDBNbcVsmMelhJ/CuU5YiuUd+74HwOcXrOmj1XdCeqOgR0yg9x3/uaE4RAmNM6zvmscSqaPUNTd/roc4bYRoZav+C0GZs6XvX/cU96gWwSNeEUzR7RkXF4swXLZdQ=
+	t=1709287164; cv=none; b=gHDudZUbQx04sXLzfD5DoKqC7pVHZuqeIIWm4Ni/H6B16DF3xt1ihUp+S7RBoSoXTJm4RgzFV9ID/jz9h6SGzk7t2Q2qppgZiAJ7EPWgbtOVWe0ghusKcNeqqFLLlmUuWzXLHD1kV29Vy+6bGxnge0E35N6v5BPecajzuN9Ya8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709287069; c=relaxed/simple;
-	bh=7i7qkNtRTTPOCju0zKhcOsfkVU1pD4TeLBCBwyMYrNc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MUuEddCE1+ZEUQb5Ilp6nRPzSmfIlOF9y3y9ECNn4oV9wjsENgNRvOhES0BOgVv/6aP+TSY1QmG9ICaTRN2FwAsobCl29Tv4VULZJNShoBOldavKdJ0YaPFc7CuBOwSIfssWvEtC0/kcvk14jS/4AKAznQ+q9NftsH5jBGYTXpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TmNm86Gd3zNp35;
-	Fri,  1 Mar 2024 17:56:56 +0800 (CST)
-Received: from kwepemm600012.china.huawei.com (unknown [7.193.23.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0259418007D;
-	Fri,  1 Mar 2024 17:57:37 +0800 (CST)
-Received: from build.huawei.com (10.175.101.6) by
- kwepemm600012.china.huawei.com (7.193.23.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 1 Mar 2024 17:57:36 +0800
-From: Wenchao Hao <haowenchao2@huawei.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Wenchao
- Hao <haowenchao2@huawei.com>, <linux-rdma@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] RDMA/restrack: Fix potential invalid address access
-Date: Fri, 1 Mar 2024 17:55:15 +0800
-Message-ID: <20240301095514.3598280-1-haowenchao2@huawei.com>
-X-Mailer: git-send-email 2.32.0
+	s=arc-20240116; t=1709287164; c=relaxed/simple;
+	bh=DM9FrFMvYTmMuDMxk7ODvfya/c8UKO1eBc5L44gAAcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=elk6y90/M3souQa3MaRJ4MG/Pq5PcfUwX6Vvn+UlosyKweHXXzMVbop7NVBofhMMpKHe91W0Ic+Mmka0Z5R6QOSjtvHSF8jHht6qi2u97X0VdFpl81xnKacDmEjaXczzFOZDPhxJUdRan86vKeb7zXgvEbPZF0nVEI5+b0yFbXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Qfh/gl+5; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Qfh/gl+5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C5422C0009;
+	Fri,  1 Mar 2024 09:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709287159;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DM9FrFMvYTmMuDMxk7ODvfya/c8UKO1eBc5L44gAAcQ=;
+	b=Qfh/gl+5SPMgENwA3uyhB/TdKCc0EczKLO34Vn64FnY78fcdfc0V3ZPnC0EFbOALpYOBzc
+	pSb7TFngnh5DOJNJp5HbbrKkg5+xEUlwJWkQ1cg0BBiFneK708IXy+xtjXqT/8yZvtAlQj
+	WirqEY0t0+O8iMj8wtWlj4VS1sljbNLGYMbm56xpL+WTtQdZqeTvod8XYuX5dgI+EVOQtY
+	WZtM4EV229cxddFzneY8CW/eY2WgNPrq5/K7gAvJqxVgAqy1HHvv8lqDSwP/mJJQhStOs7
+	ugjgdVxsEy1EkKjDAHjBn6/P0bFhlTGT9UAn482HmJCDlwbx7HTR+dSvH1caDg==
+Date: Fri, 1 Mar 2024 10:59:17 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, Frank Rowand
+ <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Xu Yang <xu.yang_2@nxp.com>, kernel-team@android.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?Q?Herv?=
+ =?UTF-8?Q?=C3=A9?= Codina <herve.codina@bootlin.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>
+Subject: Re: [REGRESSION] Re: [PATCH v2 2/3] of: property: Improve finding
+ the supplier of a remote-endpoint property
+Message-ID: <20240301105917.746e626b@booty>
+In-Reply-To: <CAL_JsqLxDozqONeN818qYg9QxQVte-9Cv_GuAz7SQ1FsscwuVw@mail.gmail.com>
+References: <20240207011803.2637531-1-saravanak@google.com>
+	<20240207011803.2637531-3-saravanak@google.com>
+	<20240223171849.10f9901d@booty>
+	<CAGETcx99hhfOaEn1CH1OLDGp_pnrVeJ2nWb3X5=0j8tij4NR9w@mail.gmail.com>
+	<20240226125226.705efef3@booty>
+	<CAL_JsqLMY94KmiEUcOYT4p1HdHENffOFgRJ+Tv6RDH7ewVbyig@mail.gmail.com>
+	<CAGETcx_6UEpOJteQ0Gmfb=NgU+9MZumtmyLbn++C=uj7nOon=g@mail.gmail.com>
+	<CAL_Jsq+edTZ3yC0Xxojo5bR3aCwAMFERjuqVFaU8sFmj=nAB8w@mail.gmail.com>
+	<20240229103423.1244de38@booty>
+	<CAL_JsqLxDozqONeN818qYg9QxQVte-9Cv_GuAz7SQ1FsscwuVw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600012.china.huawei.com (7.193.23.74)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-struct rdma_restrack_entry's kern_name was set to KBUILD_MODNAME
-in ib_create_cq(), while if the module exited but forgot del this
-rdma_restrack_entry, it would cause a invalid address access in
-rdma_restrack_clean() when print the owner of this rdma_restrack_entry.
+Hello Rob,
 
-Fix this issue by using kstrdup() to set rdma_restrack_entry's
-kern_name.
+On Thu, 29 Feb 2024 16:10:38 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
+[...]
+> > > > > It's just this one of the 3 patches that needs reverting? =20
+> >
+> > Just this patch. I reverted only this and the issue disappeared.
+> > =20
+> > > > I sent a fix. With the fix, it's just exposing a bug elsewhere. =20
+> >
+> > Exactly, this patch has two issues and only the easy one has a fix [0]
+> > currently as far as I know.
+> > =20
+> > > You say apply the fix. Luca says revert. I say I wish I made this 6.9
+> > > material. Which is it?
+> > >
+> > > If the overlay applying depends on out of tree code (likely as there
+> > > are limited ways to apply an overlay in mainline), then I don't really
+> > > care if there is still a regression. =20
+> >
+> > Obviously, to load and unload the overlays I'm using code not yet
+> > in mainline. It is using of_overlay_fdt_apply() and of_overlay_remove()
+> > via a driver underdevelopment that is similar to the one Herv=C3=A9 and
+> > Lizhi Hou are working on [1][2].
+> >
+> > I see the point that "we are not breaking existing use cases as no code
+> > is (un)loading overlays except unittest", sure.
+> >
+> > As I see it, we have a feature in the kernel that is not used, but it
+> > will be, eventually: there are use cases, development is progressing and
+> > patches are being sent actively. My opinion is that we should not
+> > put additional known obstacles that will make it even harder than it
+> > already is. =20
+>=20
+> Well, I don't care to do extra work of applying things and then have
+> to turn right around fix or revert them. It happens enough as-is with
+> just mainline. And no one wants to step up and fix the problems with
+> overlays, but are fine just carrying their out of tree patches. What's
+> one more. This is the 2nd case of overlay problems with out of tree
+> users *today*! Some days I'm tempted to just remove overlay support
+> altogether given the only way to apply them is unittest.
 
-Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
----
- drivers/infiniband/core/restrack.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Thanks for taking time to understand the situation.
 
-diff --git a/drivers/infiniband/core/restrack.c b/drivers/infiniband/core/restrack.c
-index 01a499a8b88d..6605011c4edc 100644
---- a/drivers/infiniband/core/restrack.c
-+++ b/drivers/infiniband/core/restrack.c
-@@ -177,7 +177,8 @@ static void rdma_restrack_attach_task(struct rdma_restrack_entry *res,
- void rdma_restrack_set_name(struct rdma_restrack_entry *res, const char *caller)
- {
- 	if (caller) {
--		res->kern_name = caller;
-+		kfree(res->kern_name);
-+		res->kern_name = kstrdup(caller, GFP_KERNEL);
- 		return;
- 	}
- 
-@@ -195,7 +196,7 @@ void rdma_restrack_parent_name(struct rdma_restrack_entry *dst,
- 			       const struct rdma_restrack_entry *parent)
- {
- 	if (rdma_is_kernel_res(parent))
--		dst->kern_name = parent->kern_name;
-+		dst->kern_name = kstrdup(parent->kern_name, GFP_KERNEL);
- 	else
- 		rdma_restrack_attach_task(dst, parent->task);
- }
-@@ -306,6 +307,7 @@ static void restrack_release(struct kref *kref)
- 		put_task_struct(res->task);
- 		res->task = NULL;
- 	}
-+	kfree(res->kern_name);
- 	complete(&res->comp);
- }
- 
--- 
-2.32.0
+Just to clarify my position: together with Herv=C3=A9 we are not just
+carrying out of tree code, we are actively developing code that uses
+overlay load/unload at runtime and we will send it to mainline as soon
+as it is ready.
 
+As part of this process, Herv=C3=A9 has already sent patches to fix various
+problems that happen when overlays are loaded and especially unloaded:
+https://lore.kernel.org/all/20240229105204.720717-1-herve.codina@bootlin.co=
+m/
+https://lore.kernel.org/all/20240227113426.253232-1-herve.codina@bootlin.co=
+m/
+https://lore.kernel.org/all/20240220133950.138452-1-herve.codina@bootlin.co=
+m/
+https://lore.kernel.org/all/20240220111044.133776-1-herve.codina@bootlin.co=
+m/
+
+Best regards,
+Luca
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
