@@ -1,106 +1,129 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D88067E78;
-	Fri,  1 Mar 2024 07:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41C169304
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 07:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709276642; cv=none; b=cdeYmxyk8hA3YFCjei3vB07kcVHSSFIO6YXK7WOJImLexl9Xn1t/vjl3A7tSFuVkqopwC/t25OqiBrlC3d+Ngl+UVpmmXYNAmRC454wUAlkad+tcCK3kcUtV+XzZvUN760k9Emr4kpf27/44tN7nVkflt39ixfycpYH9RxfS2Cs=
+	t=1709276683; cv=none; b=SLfQKAz21FLtqAKk4H5XoLFP+IZXg2ITnRiwMNd1mpxg0hkDUnaZIYfKdaMa3XcyDQaHtL5vlg3/ReWQZnFmiiDmVhCyljHPRv9C5DbJbVm2KvglB49dxboo/znjetjAo1Jv5CSurItlzlD2d79gm2L/VxCPUM7dr1QHApaJC8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709276642; c=relaxed/simple;
-	bh=n4GO0amLc6bIw/DDn5v7/jZicN+G4AVEDo5PV4Bf5ek=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=d1JI/pDCa/UG1eHE77g0Vhoujg78VXfY/89dgQ/gHyAx5ZdhNNmRiQFE7vVTmifPzj6iiUoOeyzQcIZJbeEvGGgtYyKNt7xG/AOU5yejzuCb7NZdsjRYBDOSeZJZ0aUFmhnNYGfJNypfbLrRDXAoAodrgKlo76Ofw/UG83DzBF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from ubuntu.localdomain (unknown [106.117.76.127])
-	by mail-app3 (Coremail) with SMTP id cC_KCgCHazXIfeFl6wq8AQ--.9024S2;
-	Fri, 01 Mar 2024 15:03:46 +0800 (CST)
-From: Duoming Zhou <duoming@zju.edu.cn>
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	michal.simek@amd.com,
-	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH v3] clk: zynq: Prevent null pointer dereference caused by kmalloc failure
-Date: Fri,  1 Mar 2024 15:03:36 +0800
-Message-Id: <20240301070336.13700-1-duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:cC_KCgCHazXIfeFl6wq8AQ--.9024S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7urW7Jr43AF4Uuw48Wr43Awb_yoW8Aw4kpF
-	WxWwn0yF4UXrWqgFn2kF18ZrySya17Wa42kw1rt3s7Z3Z8JFyUJFW5CF95Z3W8XrW8XFWa
-	vF4qkr48W3WUAF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
-	U==
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwQHAWXg0lMJ0AANsR
+	s=arc-20240116; t=1709276683; c=relaxed/simple;
+	bh=+fpJTr6RmOM7/oEcyjl781MXmUjhyZhONR28zM0E3+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AOyWpLK9hyD/s1jOH5pt4zP+bV2zFV86UN5NB4KuK9gXLo0d/EbENyazIVxnbGVGJd64cmsOpeGGtOxodpy+V2GlAX+4mkc4h19oPpwfj2Tg6YERZPexjLcFWR5yBJYq6k25A6q/E10lGJWQJYM2s6AqXQVE9SH2dtOlTLnjvnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPJTjZC/; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPJTjZC/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709276681; x=1740812681;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+fpJTr6RmOM7/oEcyjl781MXmUjhyZhONR28zM0E3+0=;
+  b=lPJTjZC/so23iah9ws4NmOc2Q7Ww9/+QBVLa3Q19r2BWqDPgXujuB3PI
+   jz+gu6axbMmg0JGaIboz0RTyLvGEq+T5ncStlJgxIE85fixmopGwlO7nO
+   Vli3QkEg54nC6fzSSZ5bdlwQrB/ktBzr1y83NOoqZfLn+KuiqkrehOfjx
+   YEHtJBtWV5Q5FeTP8oF7CjSJV3S4gkIsaHZmNSbHoECPddPpGO79r5I6K
+   UDcSEPxqyyfizXzk8HDuvdWOFytkS/ZFVpCfZ0H+AVKPOBC0qYNcrf9X6
+   jpa6mmme4EpfvEp5d8OIuwxRPpThrejO7L1wG9PlFSbDmwbSvIGKkN2u6
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="29226484"
+X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
+   d="scan'208";a="29226484"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 23:04:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
+   d="scan'208";a="12649055"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 23:04:38 -0800
+Message-ID: <69cf00a3-4b37-4e33-8b36-9a8c3e071ecd@linux.intel.com>
+Date: Fri, 1 Mar 2024 15:04:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu/vt-d: avoid sending explicit ATS invalidation
+ request to released device
+To: baolu.lu@linux.intel.com, bhelgaas@google.com, robin.murphy@arm.com,
+ jgg@ziepe.ca
+Cc: kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org,
+ lukas@wunner.de, yi.l.liu@intel.com, dan.carpenter@linaro.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240229033138.3379560-1-haifeng.zhao@linux.intel.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <20240229033138.3379560-1-haifeng.zhao@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The kmalloc() in zynq_clk_setup() will return null if the
-physical memory has run out. As a result, if we use snprintf()
-to write data to the null address, the null pointer dereference
-bug will happen.
 
-This patch uses a stack variable to replace the kmalloc().
+On 2/29/2024 11:31 AM, Ethan Zhao wrote:
+> The introduction of per iommu device rbtree also defines the lifetime of
+> interoperation between iommu and devices, if the device has been released
+> from device rbtree, no need to send ATS invalidation request to it anymore,
+> thus avoid the possibility of later ITE fault to be triggered.
+>
+> This is part of the followup of prior proposed patchset
+>
+> https://do-db2.lkml.org/lkml/2024/2/22/350
+>
+> To make sure all the devTLB entries to be invalidated in the device release
+> path, do implict invalidation by fapping the E bit of ATS control register.
+> see PCIe spec v6.2, sec 10.3.7 implicit invalidation events.
+>
+> Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table interface")
+> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+> ---
+>   drivers/iommu/intel/iommu.c | 6 ++++++
+>   drivers/iommu/intel/pasid.c | 7 +++++++
+>   2 files changed, 13 insertions(+)
+>
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 6743fe6c7a36..b85d88ccb4b0 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -1368,6 +1368,12 @@ static void iommu_disable_pci_caps(struct device_domain_info *info)
+>   	pdev = to_pci_dev(info->dev);
+>   
+>   	if (info->ats_enabled) {
+> +		pci_disable_ats(pdev);
+> +		/*
+> +		 * flap the E bit of ATS control register to do implicit
+> +		 * ATS invlidation, see PCIe spec v6.2, sec 10.3.7
+> +		 */
+> +		pci_enable_ats(pdev, VTD_PAGE_SHIFT);
+>   		pci_disable_ats(pdev);
+>   		info->ats_enabled = 0;
+>   		domain_update_iotlb(info->domain);
+> diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
+> index 108158e2b907..5f13e017a12c 100644
+> --- a/drivers/iommu/intel/pasid.c
+> +++ b/drivers/iommu/intel/pasid.c
+> @@ -215,6 +215,13 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
+>   		return;
+>   
+>   	sid = info->bus << 8 | info->devfn;
+> +	/*
+> +	 * If device has been released from rbtree, no need to send ATS
+> +	 * Invalidation	request anymore, that could cause ITE fault.
+> +	 */
+> +	if (!device_rbtree_find(iommu, sid))
+> +		return;
+> +
+>   	qdep = info->ats_qdep;
+>   	pfsid = info->pfsid;
+>   
 
-Fixes: 0ee52b157b8e ("clk: zynq: Add clock controller driver")
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
-Changes in v3:
-  - Put stack variable in the head of the function and remove variable tmp.
+Given maintainer is going to pick up patchset
+https://lore.kernel.org/lkml/2d1788da-521c-4531-a159-81d2fb801d6c@linux.intel.com/T/
+and this one is mutually exclusive with it, suspend.
 
- drivers/clk/zynq/clkc.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
-index 7bdeaff2bfd..45479653c3b 100644
---- a/drivers/clk/zynq/clkc.c
-+++ b/drivers/clk/zynq/clkc.c
-@@ -215,7 +215,7 @@ static void __init zynq_clk_setup(struct device_node *np)
- 	int i;
- 	u32 tmp;
- 	int ret;
--	char *clk_name;
-+	char clk_name[16];
- 	unsigned int fclk_enable = 0;
- 	const char *clk_output_name[clk_max];
- 	const char *cpu_parents[4];
-@@ -426,12 +426,10 @@ static void __init zynq_clk_setup(struct device_node *np)
- 			"gem1_emio_mux", CLK_SET_RATE_PARENT,
- 			SLCR_GEM1_CLK_CTRL, 0, 0, &gem1clk_lock);
- 
--	tmp = strlen("mio_clk_00x");
--	clk_name = kmalloc(tmp, GFP_KERNEL);
- 	for (i = 0; i < NUM_MIO_PINS; i++) {
- 		int idx;
- 
--		snprintf(clk_name, tmp, "mio_clk_%2.2d", i);
-+		snprintf(clk_name, 16, "mio_clk_%2.2d", i);
- 		idx = of_property_match_string(np, "clock-names", clk_name);
- 		if (idx >= 0)
- 			can_mio_mux_parents[i] = of_clk_get_parent_name(np,
-@@ -439,7 +437,6 @@ static void __init zynq_clk_setup(struct device_node *np)
- 		else
- 			can_mio_mux_parents[i] = dummy_nm;
- 	}
--	kfree(clk_name);
- 	clk_register_mux(NULL, "can_mux", periph_parents, 4,
- 			CLK_SET_RATE_NO_REPARENT, SLCR_CAN_CLK_CTRL, 4, 2, 0,
- 			&canclk_lock);
--- 
-2.17.1
+Thanks,
+Ethan
 
