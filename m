@@ -1,161 +1,344 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5108259B;
-	Fri,  1 Mar 2024 17:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9785646A4;
+	Fri,  1 Mar 2024 17:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709312833; cv=none; b=JBc4IYK37bA6OsxXJbVBKrEJC/KliTuqHcQQNm5N+v2tthntPHBGTs89SAeGwWpySc5GWviMFZxpcTcWvPLI2V23xU8dkMM/DkCOaonSqXyRGh/wErqvOw7XlnuVezy5d1XMp4f9nf3KkXEvScRj8Rj3H2wqLziYperLOiERKN4=
+	t=1709312834; cv=none; b=IPOQbl3bvRqdO2UP81MCm8VsIC8egP5z4KR/0Quos6B8PsptzowHYTpzq0mEoBfOjXoAVnPToEyIAVAELegANUSoXo9Bj/WcSlcFwYBchvPiF9VZfKXfAzanAy0joLuonoq5FG4iohviWxAmdkyuCqtH6fH9mlZbfFLF1kI/QfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709312833; c=relaxed/simple;
-	bh=rykT00e9RnV6xM7py0pfTSN+OEy9OLvHdbWKnJFpStA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qEz9CZyyF1Ff9AvVGP4WxGe4vY16VK2Qw91bfCRWK5Fzt8GGVRhekqYee3EZj6zkVOYHQZ0q6GZJXs0/0jIwuetyjDrmzf+FbkuwUELzK2NGj/7E8vp8FrnXiss8mOJJmXvXYdtFw4JGdchWZq0h0KNmh2I6IwPpPzXuduc5hpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o79NRdtq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o79NRdtq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F3FC433C7;
-	Fri,  1 Mar 2024 17:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709312833;
-	bh=rykT00e9RnV6xM7py0pfTSN+OEy9OLvHdbWKnJFpStA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o79NRdtq9bnUSEFuF4Du6Ce8be3X47MSFGfJJNzs56mnVYLPYxQiBGiXr1huhMbNE
-	 kg2dvmcCHxih7O+06875vfQwdNGSxLpawql30wk4YhOc2xYqW5aaQ92GjGdSfr2qvZ
-	 dRO8zWESf++QVH+HN/32QC+23RiTm5t3dBYfNAd9xacDfrQMv2sz1xYEoSla4j80Cm
-	 M3SmxxeT8WTryqGBobvVx4jOUgu3JQc7Qoq6fPDxc2wi8g6D9rIxz0LHmKP9naKeeE
-	 Au+jvNRTKsDC+o49XFE6S4cROK3wkgZY18iw8mUdD/oUSAK1ZzyuoJUafeLo/25vJ6
-	 NgiP3JyZCul3Q==
-Date: Fri, 1 Mar 2024 17:07:07 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Shengjiu Wang <shengjiu.wang@nxp.com>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] ASoC: dt-bindings: fsl-sai: allow only one
- dma-names
-Message-ID: <20240301-deluxe-tiptoeing-741af7d620b9@spud>
-References: <20240227-asrc_8qxp-v2-0-521bcc7eb1c0@nxp.com>
- <20240227-asrc_8qxp-v2-3-521bcc7eb1c0@nxp.com>
- <20240229-husband-penalty-8c1ab0f57f55@spud>
- <20240229-rundown-isotope-954ba9ea4c57@spud>
- <ZeDdMJlxBL4SGkws@lizhi-Precision-Tower-5810>
- <20240301-crudeness-resale-3c0a1228850d@spud>
- <ZeIGXEJ3l4tgjmxT@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1709312834; c=relaxed/simple;
+	bh=tRcNrdDwOlxAEXA83t7g4wJfIiyligzzo/g9KIbU0M8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VjnATXkxCDgv2HT4hj1cCoFwKpxOCgZrA7x8zk+KiVMZ7Jpz+bisIFx9A+5Kgp8zlA0iZl+ZFoTyvTFiiFgILfvgHrVR3Jx4B+NTwYnUrG4K2kiVjniLi0K32abiIqD33uKJsgVIp9j0mOgIB2bN0YgywC5jEp70ua/L6IRIJaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C4782207B6;
+	Fri,  1 Mar 2024 17:07:10 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A05F613AB0;
+	Fri,  1 Mar 2024 17:07:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +FbfJj4L4mUcGQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 01 Mar 2024 17:07:10 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Fri, 01 Mar 2024 18:07:09 +0100
+Subject: [PATCH RFC 2/4] mm, slab: move slab_memcg hooks to mm/memcontrol.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6B1Z/Uo6ygJQ4MXY"
-Content-Disposition: inline
-In-Reply-To: <ZeIGXEJ3l4tgjmxT@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240301-slab-memcg-v1-2-359328a46596@suse.cz>
+References: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
+In-Reply-To: <20240301-slab-memcg-v1-0-359328a46596@suse.cz>
+To: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, Kees Cook <kees@kernel.org>, 
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Roman Gushchin <roman.gushchin@linux.dev>, 
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+ Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
+ Muchun Song <muchun.song@linux.dev>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ Vlastimil Babka <vbabka@suse.cz>
+X-Mailer: b4 0.13.0
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 TAGGED_RCPT(0.00)[];
+	 REPLY(-4.00)[]
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: C4782207B6
+X-Spam-Flag: NO
 
+The hooks make multiple calls to functions in mm/memcontrol.c, including
+to th current_obj_cgroup() marked __always_inline. It might be faster to
+make a single call to the hook in mm/memcontrol.c instead. The hooks
+also don't use almost anything from mm/slub.c. obj_full_size() can move
+with the hooks and cache_vmstat_idx() to the internal mm/slab.h
 
---6B1Z/Uo6ygJQ4MXY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/memcontrol.c |  90 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ mm/slab.h       |  10 ++++++
+ mm/slub.c       | 100 --------------------------------------------------------
+ 3 files changed, 100 insertions(+), 100 deletions(-)
 
-On Fri, Mar 01, 2024 at 11:46:20AM -0500, Frank Li wrote:
-> On Fri, Mar 01, 2024 at 04:05:25PM +0000, Conor Dooley wrote:
-> > On Thu, Feb 29, 2024 at 02:38:24PM -0500, Frank Li wrote:
-> > > On Thu, Feb 29, 2024 at 06:57:29PM +0000, Conor Dooley wrote:
-> > > > On Thu, Feb 29, 2024 at 06:55:58PM +0000, Conor Dooley wrote:
-> > > > > On Tue, Feb 27, 2024 at 03:54:11PM -0500, Frank Li wrote:
-> > > > > > Some sai only connect one direction. So allow only "rx" or "tx"=
- for
-> > > > > > dma-names.
-> > > > >=20
-> > > > > Which sai? Can you restrict this per compatible please, so that s=
-omeone
-> > > > > cannot add 2 dmas for ones where only the tx is supported.
-> > > > >=20
-> > > > > |  dmas:
-> > > > > |    minItems: 1
-> > > > > |    items:
-> > > > > |      - description: DMA controller phandle and request line for=
- RX
-> > > > > |      - description: DMA controller phandle and request line for=
- TX
-> > > > >=20
-> > > > > The binding already allows only one, but it documents that the fi=
-rst dma
-> > > > > is always the RX dma, and that doesn't change with this patch..
-> > > >=20
-> > > > I said "doesn't change" - but I don't think you can change this
-> > > > trivially, as something could rely on the first dma being the rx on=
-e.
-> > > > You'd have to check that there is nothing using these using indices
-> > > > rather than names before making any changes here.
-> > >=20
-> > > Linux driver and dts with tx only work well. Only issue is dtb_check =
-will
-> > > report error. I want to eliminate these DTB_CHECK warning.
-> >=20
-> > Linux is not the only user of these bindings, citing linux as your
-> > evidence here is only sufficient if no other users exist. Do they?
->=20
-> But, 'dmas' should be common property for all these bindings? I don't thi=
-nk
-> they use 'descriptions:' property, which should guide dts writer to write
-> dts file. actually words 'DMA controller phandle and request line' just
-> nonsense words. let 'regs', it'd better descript at 'reg-names' instead
-> of 'regs' if reg-names exist. Only meansful words is "RX" and "TX", which
-> already show at "dma-names".
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index e4c8735e7c85..37ee9356a26c 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3575,6 +3575,96 @@ void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size)
+ 	refill_obj_stock(objcg, size, true);
+ }
+ 
++static inline size_t obj_full_size(struct kmem_cache *s)
++{
++	/*
++	 * For each accounted object there is an extra space which is used
++	 * to store obj_cgroup membership. Charge it too.
++	 */
++	return s->size + sizeof(struct obj_cgroup *);
++}
++
++bool __memcg_slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
++				  gfp_t flags, size_t size, void **p)
++{
++	struct obj_cgroup *objcg;
++	struct slab *slab;
++	unsigned long off;
++	size_t i;
++
++	/*
++	 * The obtained objcg pointer is safe to use within the current scope,
++	 * defined by current task or set_active_memcg() pair.
++	 * obj_cgroup_get() is used to get a permanent reference.
++	 */
++	objcg = current_obj_cgroup();
++	if (!objcg)
++		return true;
++
++	/*
++	 * slab_alloc_node() avoids the NULL check, so we might be called with a
++	 * single NULL object. kmem_cache_alloc_bulk() aborts if it can't fill
++	 * the whole requested size.
++	 * return success as there's nothing to free back
++	 */
++	if (unlikely(*p == NULL))
++		return true;
++
++	flags &= gfp_allowed_mask;
++
++	if (lru) {
++		int ret;
++		struct mem_cgroup *memcg;
++
++		memcg = get_mem_cgroup_from_objcg(objcg);
++		ret = memcg_list_lru_alloc(memcg, lru, flags);
++		css_put(&memcg->css);
++
++		if (ret)
++			return false;
++	}
++
++	if (obj_cgroup_charge(objcg, flags, size * obj_full_size(s)))
++		return false;
++
++	for (i = 0; i < size; i++) {
++		slab = virt_to_slab(p[i]);
++
++		if (!slab_objcgs(slab) &&
++		    memcg_alloc_slab_cgroups(slab, s, flags, false)) {
++			obj_cgroup_uncharge(objcg, obj_full_size(s));
++			continue;
++		}
++
++		off = obj_to_index(s, slab, p[i]);
++		obj_cgroup_get(objcg);
++		slab_objcgs(slab)[off] = objcg;
++		mod_objcg_state(objcg, slab_pgdat(slab),
++				cache_vmstat_idx(s), obj_full_size(s));
++	}
++
++	return true;
++}
++
++void __memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
++			    void **p, int objects, struct obj_cgroup **objcgs)
++{
++	for (int i = 0; i < objects; i++) {
++		struct obj_cgroup *objcg;
++		unsigned int off;
++
++		off = obj_to_index(s, slab, p[i]);
++		objcg = objcgs[off];
++		if (!objcg)
++			continue;
++
++		objcgs[off] = NULL;
++		obj_cgroup_uncharge(objcg, obj_full_size(s));
++		mod_objcg_state(objcg, slab_pgdat(slab), cache_vmstat_idx(s),
++				-obj_full_size(s));
++		obj_cgroup_put(objcg);
++	}
++}
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
+ /*
+diff --git a/mm/slab.h b/mm/slab.h
+index 54deeb0428c6..3f170673fa55 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -541,6 +541,12 @@ static inline bool kmem_cache_debug_flags(struct kmem_cache *s, slab_flags_t fla
+ 	return false;
+ }
+ 
++static inline enum node_stat_item cache_vmstat_idx(struct kmem_cache *s)
++{
++	return (s->flags & SLAB_RECLAIM_ACCOUNT) ?
++		NR_SLAB_RECLAIMABLE_B : NR_SLAB_UNRECLAIMABLE_B;
++}
++
+ #ifdef CONFIG_MEMCG_KMEM
+ /*
+  * slab_objcgs - get the object cgroups vector associated with a slab
+@@ -564,6 +570,10 @@ int memcg_alloc_slab_cgroups(struct slab *slab, struct kmem_cache *s,
+ 				 gfp_t gfp, bool new_slab);
+ void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_data *pgdat,
+ 		     enum node_stat_item idx, int nr);
++bool __memcg_slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
++				  gfp_t flags, size_t size, void **p);
++void __memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
++			    void **p, int objects, struct obj_cgroup **objcgs);
+ #else /* CONFIG_MEMCG_KMEM */
+ static inline struct obj_cgroup **slab_objcgs(struct slab *slab)
+ {
+diff --git a/mm/slub.c b/mm/slub.c
+index 7022a1246bab..64da169d672a 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1875,12 +1875,6 @@ static bool freelist_corrupted(struct kmem_cache *s, struct slab *slab,
+ #endif
+ #endif /* CONFIG_SLUB_DEBUG */
+ 
+-static inline enum node_stat_item cache_vmstat_idx(struct kmem_cache *s)
+-{
+-	return (s->flags & SLAB_RECLAIM_ACCOUNT) ?
+-		NR_SLAB_RECLAIMABLE_B : NR_SLAB_UNRECLAIMABLE_B;
+-}
+-
+ #ifdef CONFIG_MEMCG_KMEM
+ static inline void memcg_free_slab_cgroups(struct slab *slab)
+ {
+@@ -1888,79 +1882,6 @@ static inline void memcg_free_slab_cgroups(struct slab *slab)
+ 	slab->memcg_data = 0;
+ }
+ 
+-static inline size_t obj_full_size(struct kmem_cache *s)
+-{
+-	/*
+-	 * For each accounted object there is an extra space which is used
+-	 * to store obj_cgroup membership. Charge it too.
+-	 */
+-	return s->size + sizeof(struct obj_cgroup *);
+-}
+-
+-static bool __memcg_slab_post_alloc_hook(struct kmem_cache *s,
+-					 struct list_lru *lru,
+-					 gfp_t flags, size_t size,
+-					 void **p)
+-{
+-	struct obj_cgroup *objcg;
+-	struct slab *slab;
+-	unsigned long off;
+-	size_t i;
+-
+-	/*
+-	 * The obtained objcg pointer is safe to use within the current scope,
+-	 * defined by current task or set_active_memcg() pair.
+-	 * obj_cgroup_get() is used to get a permanent reference.
+-	 */
+-	objcg = current_obj_cgroup();
+-	if (!objcg)
+-		return true;
+-
+-	/*
+-	 * slab_alloc_node() avoids the NULL check, so we might be called with a
+-	 * single NULL object. kmem_cache_alloc_bulk() aborts if it can't fill
+-	 * the whole requested size.
+-	 * return success as there's nothing to free back
+-	 */
+-	if (unlikely(*p == NULL))
+-		return true;
+-
+-	flags &= gfp_allowed_mask;
+-
+-	if (lru) {
+-		int ret;
+-		struct mem_cgroup *memcg;
+-
+-		memcg = get_mem_cgroup_from_objcg(objcg);
+-		ret = memcg_list_lru_alloc(memcg, lru, flags);
+-		css_put(&memcg->css);
+-
+-		if (ret)
+-			return false;
+-	}
+-
+-	if (obj_cgroup_charge(objcg, flags, size * obj_full_size(s)))
+-		return false;
+-
+-	for (i = 0; i < size; i++) {
+-		slab = virt_to_slab(p[i]);
+-
+-		if (!slab_objcgs(slab) &&
+-		    memcg_alloc_slab_cgroups(slab, s, flags, false)) {
+-			obj_cgroup_uncharge(objcg, obj_full_size(s));
+-			continue;
+-		}
+-
+-		off = obj_to_index(s, slab, p[i]);
+-		obj_cgroup_get(objcg);
+-		slab_objcgs(slab)[off] = objcg;
+-		mod_objcg_state(objcg, slab_pgdat(slab),
+-				cache_vmstat_idx(s), obj_full_size(s));
+-	}
+-
+-	return true;
+-}
+-
+ static void memcg_alloc_abort_single(struct kmem_cache *s, void *object);
+ 
+ static __fastpath_inline
+@@ -1986,27 +1907,6 @@ bool memcg_slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
+ 	return false;
+ }
+ 
+-static void __memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
+-				   void **p, int objects,
+-				   struct obj_cgroup **objcgs)
+-{
+-	for (int i = 0; i < objects; i++) {
+-		struct obj_cgroup *objcg;
+-		unsigned int off;
+-
+-		off = obj_to_index(s, slab, p[i]);
+-		objcg = objcgs[off];
+-		if (!objcg)
+-			continue;
+-
+-		objcgs[off] = NULL;
+-		obj_cgroup_uncharge(objcg, obj_full_size(s));
+-		mod_objcg_state(objcg, slab_pgdat(slab), cache_vmstat_idx(s),
+-				-obj_full_size(s));
+-		obj_cgroup_put(objcg);
+-	}
+-}
+-
+ static __fastpath_inline
+ void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
+ 			  int objects)
 
-None of this matters. If there's a documented order for these, which
-there is, software is not obligated to use the names and can rely on the
-order alone. You need to check that there are no other users which will
-be broken by your proposed change.
+-- 
+2.44.0
 
-> > > And it also reasonable, only rx or tx for a special SAI.
-> > >=20
-> > > Can we remove 'description'? dmas should already descripted at common=
- place
-> > > and 'RX' and 'TX' are listed at 'dma-names'
-> >=20
-> > Removing the description has the same problem. The existing binding has
-> > set a fixed order that you now want to make flexible.
->=20
-> Actually original set minItems: is 1, which means allow 1 channel. but
-> set items to force two channel.=20
->=20
-> Does it work
->=20
-> oneOf:
->   items:=20
->   	- description: TX
-> 	- description: RX
->   items:
-> 	- description: TX
->   items:
-> 	- description: RX
->=20
-> >=20
-> > Thanks,
-> > Conor.
->=20
->=20
-
---6B1Z/Uo6ygJQ4MXY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeILOwAKCRB4tDGHoIJi
-0vPRAQD30nLmqvnQSjER93Ue59P+ueynbOrDKfMBE0R2y7D7TAD+NnAAqA7ycgcG
-24A0m2khdUZJAoZ7TGqfgOL5wSHiMww=
-=Mxzk
------END PGP SIGNATURE-----
-
---6B1Z/Uo6ygJQ4MXY--
