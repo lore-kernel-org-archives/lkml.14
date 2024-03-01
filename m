@@ -1,170 +1,155 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C92438DE0
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A32538DE7;
+	Fri,  1 Mar 2024 17:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709315276; cv=none; b=ql/QQE5EsH2GX1MCfd7LGJIMP1gFz7ZmZCDNM4BFBlU/9rYNuTOMyUsPcTr2UWrgko6XfgEdPQ54D4kVue10ZbVU5Y4HsEQLwfQMq4mHd/4rKHOgHBjRT8qpsLd9gy9IQ2gjnys1HlX+0UtHYMLpc2OcC4eL+CU6TLSPbexSHvE=
+	t=1709315275; cv=none; b=m33KxoYlKc6QNDVeA4+I+WMFKJYgMQoQn97U49fiXW1cgBJ8zgY2mD6Ji1I5jXTJU9UuLjaNr0D6KdYC3oJy1/qH1CNz1UZcF6PJT8Ot2JkuIjAJdLgl6Ay2o6KiJ0vf4PDMwtqcO9mDO1XS4HDloBZXzZaVZEpGrVAVCRVTZhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709315276; c=relaxed/simple;
-	bh=zy6gKC5LaLAogYlc3Rxu42cn3/EbxoV68OcLob1wRvU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pks3j2HtXuGUIg62+DVFLdQACJorkK8k9787zStu1eIRyq1PLRxNmg/SL/KF8crMkejdTGeb0Im/ssWzQJjBwFB3xW9spEDyZlvPsUTO1MRJ0tXq0wMouYqq4B2jP+sjUyPRnh06e6zUb74KQrZ9ollaqstC6nB0qYoX5g2NnuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9429711FB;
-	Fri,  1 Mar 2024 09:48:31 -0800 (PST)
-Received: from [10.1.197.60] (eglon.cambridge.arm.com [10.1.197.60])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3942C3F6C4;
-	Fri,  1 Mar 2024 09:47:52 -0800 (PST)
-Message-ID: <4ddba36d-3c7d-4412-8b09-d55af493423e@arm.com>
-Date: Fri, 1 Mar 2024 17:47:51 +0000
+	s=arc-20240116; t=1709315275; c=relaxed/simple;
+	bh=K8c2wBorxqggjEKYwjSzH32E/7kyU6uSehkmDr1/e8Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z4OUYUk06sb6b4/iTNaMnDGEItxVX0CHaQHKfjePQ7JPAUxMtecpNarpmpHGUhPsV6YC/iwMOKC8b5O7khHtvS6VBCPpqKCQwDEzn0D2zv7Iu+Pf6dBt7OsGzXv0pBQd+4GyY5VhBkmdSZdV2M2+NIe4r9XmSmV6iHZF0Kc/RSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XBGd3eSe; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBGd3eSe"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dca3951ad9so22259285ad.3;
+        Fri, 01 Mar 2024 09:47:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709315273; x=1709920073; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t5K43xaydVTO1PuV43+YCPcsWOpQXQNoMQ4Cz9/+c2w=;
+        b=XBGd3eSeEQfecxYV0Bw+Qk64LZTb2jVzv2sKQF5ZukUuNzmxlhZKZ0md4p8jIg/01v
+         bb0nPSoCg6kLh8+fUUkNbnyA+ABtCEiDJNc0RHuMmm3JfCwzSmR7eCP+YFgUMBzdJVos
+         V9WWQVdTAFTsYUu3eeHmdeRC/UhdV9vFfWEltYk9vonExN7FqTySyM5xRzoWwCH5HiLu
+         vQEO1AiVxG5Kwk3CAd4voOVnkcczaRc2BPXNoxUXaJRry54P0JYfgAdfclFIhBS1VC6W
+         rlz/jzFZmeEjry0aWSy6uX8TE2rBT1DHr5V0ZkTB1YNEU3nownUrdyg5qRSJPcybBPxG
+         VbHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709315273; x=1709920073;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t5K43xaydVTO1PuV43+YCPcsWOpQXQNoMQ4Cz9/+c2w=;
+        b=rwyNR9C24XIRaVor5sdMKHe8/Fr7iqa0RvuoIle3u7vSkeOBD/6Z0Rp4eczt48TxlV
+         Fnvjit9QNaGVk6+rxOB3o9GL5zD9ZZlaPyTZvu8psi3Fr1O9HYb51H7ck0ppdEYDeeeH
+         bUigfQOmkbDt5KLBdME0LmLrk4ea32KiGq2OlxZiEuZGy2G9FZ3zGnrwRVSSTKzIB8lR
+         nqQbAZ9e9A0+Oc6d90r/NSmQsci8cq5or8LZDyTtBJzbUutsBW1pipynn0QrnWDWhR40
+         Hn7vWbgN6PxKo3toXRAStdtTGfhmaoawV1JfztPxLPYcuJF/oyAL/u6dEXbqgYfvWqYT
+         ko/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXnD79C0gpuSat/o5iZtHNrAoZpsXvkKskwgpkeKLqAAfWGsTx2o/0u19v6X76bP3sXyUmYl+PKvtbh5pD0+oG6WyvUnGjqN6dSdTxsO3pHNmAZOGLa21YowjL7XbP9UuOBi+2+e9ViQ61LNfw4oHLKUWqG344NEch81Cq+5dAJWHFI7g==
+X-Gm-Message-State: AOJu0YzFMeST/hPK3quGIlDI0D9/LOCVvNEMycKUch5PZnPCKwl3ovvq
+	khOZO9ROb7p4yr81CDY+NFhXNGoqDaX/qJQwETLVUVXklbWVuZxm
+X-Google-Smtp-Source: AGHT+IF1CHMaxJVofw46VYsGcVxC3/eoKJaOwO77Vy/Fjpjn1DtXabpklwX0BKS+jltF5s4dQFC7fQ==
+X-Received: by 2002:a17:903:2445:b0:1dc:afff:9f96 with SMTP id l5-20020a170903244500b001dcafff9f96mr2762237pls.44.1709315273558;
+        Fri, 01 Mar 2024 09:47:53 -0800 (PST)
+Received: from localhost.localdomain ([2409:40f4:24:c27e:10bb:63fc:b695:4c40])
+        by smtp.googlemail.com with ESMTPSA id x6-20020a170902a38600b001db86c48221sm3796974pla.22.2024.03.01.09.47.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 09:47:53 -0800 (PST)
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+To: 
+Cc: dlemoal@kernel.org,
+	Animesh Agarwal <animeshagarwal28@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-ide@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: imx-pata: Convert to dtschema
+Date: Fri,  1 Mar 2024 23:17:21 +0530
+Message-ID: <20240301174729.238869-1-animeshagarwal28@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] x86/resctrl: Add tracepoint for llc_occupancy
- tracking
-Content-Language: en-GB
-To: Haifeng Xu <haifeng.xu@shopee.com>, reinette.chatre@intel.com
-Cc: fenghua.yu@intel.com, babu.moger@amd.com, peternewman@google.com,
- x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20240229071125.100991-1-haifeng.xu@shopee.com>
- <20240229071125.100991-3-haifeng.xu@shopee.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <20240229071125.100991-3-haifeng.xu@shopee.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello!
+Convert the imx-pata bindings to DT schema.
 
-On 29/02/2024 07:11, Haifeng Xu wrote:
-> In our production environment, after removing monitor groups, those unused
-> RMIDs get stuck in the limbo list forever because their llc_occupancy are
-> always larger than the threshold. But the unused RMIDs can be successfully
-> freed by turning up the threshold.
-> 
-> In order to know how much the threshold should be, perf can be used to acquire
-> the llc_occupancy of RMIDs in each rdt domain.
-> 
-> Instead of using perf tool to track llc_occupancy and filter the log manually,
-> it is more convenient for users to use tracepoint to do this work. So add a new
-> tracepoint that shows the llc_occupancy of busy RMIDs when scanning the limbo
-> list.
+Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+---
+ .../devicetree/bindings/ata/imx-pata.txt      | 16 ---------
+ .../devicetree/bindings/ata/imx-pata.yaml     | 34 +++++++++++++++++++
+ 2 files changed, 34 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/imx-pata.txt
+ create mode 100644 Documentation/devicetree/bindings/ata/imx-pata.yaml
 
-> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-> index c34a35ec0f03..ada392ca75b2 100644
-> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
-> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-> @@ -362,6 +363,13 @@ void __check_limbo(struct rdt_domain *d, bool force_free)
+diff --git a/Documentation/devicetree/bindings/ata/imx-pata.txt b/Documentation/devicetree/bindings/ata/imx-pata.txt
+deleted file mode 100644
+index f1172f00188a..000000000000
+--- a/Documentation/devicetree/bindings/ata/imx-pata.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-* Freescale i.MX PATA Controller
+-
+-Required properties:
+-- compatible: "fsl,imx27-pata"
+-- reg: Address range of the PATA Controller
+-- interrupts: The interrupt of the PATA Controller
+-- clocks: the clocks for the PATA Controller
+-
+-Example:
+-
+-	pata: pata@83fe0000 {
+-		compatible = "fsl,imx51-pata", "fsl,imx27-pata";
+-		reg = <0x83fe0000 0x4000>;
+-		interrupts = <70>;
+-		clocks = <&clks 161>;
+-	};
+diff --git a/Documentation/devicetree/bindings/ata/imx-pata.yaml b/Documentation/devicetree/bindings/ata/imx-pata.yaml
+new file mode 100644
+index 000000000000..78a562587fb5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/imx-pata.yaml
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ata/imx-pata.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX PATA Controller
++
++maintainers:
++  - Animesh Agarwal <animeshagarwal28@gmail.com>
++
++properties:
++  compatible: 
++    enum:
++      - fsl,imx27
++  reg:
++    maxItems: 1
++  interrupts:
++    items:
++      - description: PATA Controller interrupts
++  clocks:
++    items:
++      - description: PATA Controller clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    pata: pata@83fe0000 {
++        compatible = "fsl,imx51-pata", "fsl,imx27-pata";
++        reg = <0x83fe0000 0x4000>;
++        interrupts = <70>;
++        clocks = <&clks 161>;
++    };
+-- 
+2.44.0
 
-[expanded the diff hunk for better context]
->               entry = __rmid_entry(idx);
->               if (resctrl_arch_rmid_read(r, d, entry->closid, entry->rmid,
->                                          QOS_L3_OCCUP_EVENT_ID, &val,
->                                          arch_mon_ctx)) {
->                       rmid_dirty = true;
->               } else {
->                       rmid_dirty = (val >= resctrl_rmid_realloc_threshold);
->               }
->
->               if (force_free || !rmid_dirty) {
->                       clear_bit(idx, d->rmid_busy_llc);
->                       if (!--entry->busy)
->  				limbo_release_entry(entry);
->  		}
-
->  		cur_idx = idx + 1;
-
-Ideally this would be the last line in the loop, its how the iterator advances to the next
-bit in the bitmap.
-
-
-> +		/* x86's CLOSID and RMID are independent numbers, so the entry's
-> +		 * closid is a invalid CLOSID. But on arm64, the RMID value isn't
-> +		 * a unique number for each CLOSID. It's necessary to track both
-> +		 * CLOSID and RMID because there may be dependencies between each
-> +		 * other on some architectures */
-> +		trace_mon_llc_occupancy_limbo(entry->closid, entry->rmid, d->id, val);
-
-I agree outputting both these values is the right thing to do.
-
-resctrl_arch_rmid_read() could return an error, in which case val here is either
-uninitialised, or the value of another RMID.
-Could you put the tracepoint in the 'else' section of the if/else after
-resctrl_arch_rmid_read()? This way it will only output a value to user-space if it is correct.
-
-
-> diff --git a/arch/x86/kernel/cpu/resctrl/trace.h b/arch/x86/kernel/cpu/resctrl/trace.h
-> index 495fb90c8572..35149a75c951 100644
-> --- a/arch/x86/kernel/cpu/resctrl/trace.h
-> +++ b/arch/x86/kernel/cpu/resctrl/trace.h
-> @@ -35,6 +35,21 @@ TRACE_EVENT(pseudo_lock_l3,
->  	    TP_printk("hits=%llu miss=%llu",
->  		      __entry->l3_hits, __entry->l3_miss));
->  
-> +TRACE_EVENT(mon_llc_occupancy_limbo,
-> +	    TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int id, u64 occupancy),
-> +	    TP_ARGS(ctrl_hw_id, mon_hw_id, id, occupancy),
-> +	    TP_STRUCT__entry(__field(u32, ctrl_hw_id)
-> +			     __field(u32, mon_hw_id)
-
-> +			     __field(int, id)
-
-Nit: Could we call this 'domain_id'? We've got two other ids already, so we should be
-clear what each one is!
-
-
-> +			     __field(u64, occupancy)),
-
-Nit: 'occupancy_bytes'? Just to avoid user-space thinking it needs to convert from the
-hardware unit in Intel's SDM ... and just in case we ever have to add another parameter
-that is sort of occupancy too.
-
-
-> +	    TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
-> +			   __entry->mon_hw_id = mon_hw_id;
-> +			   __entry->id = id;
-> +			   __entry->occupancy = occupancy;),
-> +	    TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain=%d llc_occupancy=%llu",
-> +		      __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->id, __entry->occupancy)
-> +	   );
-> +
-
-Tracepoints always expose some implicit details of the kernel internals which can make
-supporting them a headache. In this case - I've had some discussion with folk about future
-work to defer the limbo work as late as possible - until a new control or monitor group is
-allocated. This would be to avoid interrupting user-space tasks to update the limbo list
-when the result isn't needed until alloc time.
-
-In this case the tracepoint wouldn't be hit unless user-space made a mkdir() syscall to
-force an update - I think this can just be a documentation problem.
-
-I also don't think we should commit to this outputting values for all dirty RMID - which
-it does today. If group creation were to fail because there weren't any free RMID you'd
-get all the values, I think this is the only case where user-space would care.
-
-Could we document the properties of the the trace-point that can be relied on in
-Documentation/arch/x86/resctrl.rst ?
-
-Something like:
-| This tracepoint gives you the precise occupancy values for a subset of RMID that are not
-| immediately available for allocation. This can't be relied on to produce output every
-| second, it may be necessary to attempt to create an empty monitor group to force an
-| update. Output may only be produced if creation of a control or monitor group fails.
-
-I think we'll always walk a list of dirty RMID before failing to allocate an RMID, so this
-should be future proof.
-
-
-With the val and documentation bits:
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-Thanks,
-
-James
