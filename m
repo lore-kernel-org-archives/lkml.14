@@ -1,70 +1,33 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFAF6BFCD
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0D1D6BFA2
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709292225; cv=none; b=MFxA6Af2GV7UDt2Qp2Q7cstHZmWeuyuxjJ6c8DOi0ap1T1AAi4QN/Fdibh7w6EeM45ttw/rtFbHSzNMy851UrsFdXJK9hdi7FPG918rd+CC//OGewaYaW4ujeZ6NVYDyiX2KmobdqrRy9XKhgLLR/YVpsbysyMND8xkg2MeDrOU=
+	t=1709292262; cv=none; b=TqjDwxlduB48RUzp2wylrWXabWM4eTuiivNHsISAvI6sNSeNcPoU+naBZniHKq0qTiarSuSX5JXpiDmPGxnRYidvq6IrdV+mvMUBSH1kLDsKP5mZ8wBXbluWecZfxSaDeVLynllHWdEISSWs3UJSzA87pFF3PVqf8DpNVY63u6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709292225; c=relaxed/simple;
-	bh=k8hEiunDT72IUYaIDVDVkRmFIKsyAIql5+BCw4Jt3ao=;
+	s=arc-20240116; t=1709292262; c=relaxed/simple;
+	bh=NXtVQpQbXjbQ+2nDWsgKqIjl673GUDImuBDZ3hHzKmI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a++e3t/cbWbn8tenafRZxxVOyxDHRiFfQQ5g5yo+1EAu0gMekXCGoevS93y55yFk6XgBA/q7PwYvet9duCRzm/mz9nEU5myjvNJjgN/5ludyuKOolYkzxk3v/1w1pI3KiJoFLUETjEHpex2DOQOSitXjPSvjYDvbfqEGvVlvSfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5aPG4RN; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5aPG4RN"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512d19e2cb8so2318411e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 03:23:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709292222; x=1709897022; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WbV4RstQ1yy3Py1H9UD5fXpvupqpgOucnTFrZXkpzwA=;
-        b=b5aPG4RNWLm7X1h+5G6+NCs2SVcPVdcjg+QcDDN5C6zsi1juv+ouPpK+O8XV0N8gs5
-         aMQsRADHAbKOQ0sO9I/6axn7MrJrQhz+7o4mjbLEndGrLUOsn+sYK7TGeATXcI0Tbbbi
-         7xQDb+6oXD/9KIzzRlCHiByQSOwE5kaDCyVJQvjILAeZpwoRK/ZR0S5gnj2SPUQ8yTZM
-         xoq0/XqMC11cC2XtXR64jvnrbavGgeL4aGK+367m230RuaG6eZu0e9dRNrSjraXSBVIf
-         M93+WgYsx+oTx6azWpbloV24li2l/YOTLWpOZ+rrE94OZrdfxbO9SfIQsC+lkLzRrKlc
-         kTaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709292222; x=1709897022;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WbV4RstQ1yy3Py1H9UD5fXpvupqpgOucnTFrZXkpzwA=;
-        b=bGh/vwkBsVye7exSR8LZIUYU3lZs1/kCkWseEn7K4PvxjGN/87RY/ytkaTdnpzjbee
-         zkZkqOje9fTAtib57z1K4fgKDK2+WRT7BBH290hurXE3f9IvNOPAntS9aO92123tjfoj
-         kJtFLwxNAKwMNbxbu+d0lyEXqKdcjlw1ta/Nnd7A2QktYCo6/eSE4k6whChHth2Q3xV+
-         HpKPOQlt36x8Q2qhXnfx4dbCa58qZA8bQDa2Znj0+KI4PCZD6H6WnzlGWk0ppPwCI6hn
-         FYni1U5cuoks7qUpKh+p+s+TmXRuS3rRepphlynV1Ep7lVtD92jG8see3CpQ0AUS2FX+
-         /yLA==
-X-Gm-Message-State: AOJu0YymvD0gsQEGUNOstp4y2AXapwLldl6CPx4DnuNArB5FlN/Ajw79
-	M821p2V2Z84HLbaSPjXLXHR3GgoqTp7rU+3GvlG7erarCQY2RJBbp+gcrjOBUY4=
-X-Google-Smtp-Source: AGHT+IENSEQ07cDz3q8C790qhQj0OM8mFS7XjvR6Usnh0oYpn27qJTc7d7i271qrlbbvK/a9Kq6u1g==
-X-Received: by 2002:ac2:4892:0:b0:513:1cc8:6d0d with SMTP id x18-20020ac24892000000b005131cc86d0dmr1026806lfc.12.1709292221702;
-        Fri, 01 Mar 2024 03:23:41 -0800 (PST)
-Received: from gmail.com (1F2EF13F.nat.pool.telekom.hu. [31.46.241.63])
-        by smtp.gmail.com with ESMTPSA id bv16-20020a0560001f1000b0033e0523b829sm4429110wrb.13.2024.03.01.03.23.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 03:23:41 -0800 (PST)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Fri, 1 Mar 2024 12:23:39 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: [PATCH 4/7 v2] sched/balancing: Fix comments (trying to) refer to
- NOHZ_BALANCE_KICK
-Message-ID: <ZeG6u2dOEXOqtvZw@gmail.com>
-References: <20240301110951.3707367-1-mingo@kernel.org>
- <20240301110951.3707367-5-mingo@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UxgJBJilwYHSSJtu3oVHruk7j56fP6IcNNgRn8QzJ4Q9QnFQLdCv57OQOgOESQDtl6CxINjDXfG4U6O1AyZGRXO+CMPSnOW44zXjnMSvcm0apxMC4rWeVpxDwq1+Bw4N5EOYdBacBtvgE4LCnfJI4fEZdQaPfainvCKeSfh2pBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58C141FB;
+	Fri,  1 Mar 2024 03:24:58 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.69.134])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AABE63F6C4;
+	Fri,  1 Mar 2024 03:24:18 -0800 (PST)
+Date: Fri, 1 Mar 2024 11:24:13 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Puranjay Mohan <puranjay12@gmail.com>, catalin.marinas@arm.com,
+	will@kernel.org
+Cc: nathan@kernel.org, broonie@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] arm64: prohibit probing on arch_kunwind_consume_entry()
+Message-ID: <ZeG63LbuDQaOYLKm@FVFF77S0Q05N>
+References: <20240229231620.24846-1-puranjay12@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,93 +36,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240301110951.3707367-5-mingo@kernel.org>
+In-Reply-To: <20240229231620.24846-1-puranjay12@gmail.com>
 
+On Thu, Feb 29, 2024 at 11:16:20PM +0000, Puranjay Mohan wrote:
+> Make arch_kunwind_consume_entry() as __always_inline otherwise the
+> compiler might not inline it and allow attaching probes to it.
+> 
+> Without this, just probing arch_kunwind_consume_entry() via
+> <tracefs>/kprobe_events will crash the kernel on arm64.
+> 
+> The crash can be reproduced using the following compiler and kernel
+> combination:
+> clang version 19.0.0git (https://github.com/llvm/llvm-project.git d68d29516102252f6bf6dc23fb22cef144ca1cb3)
+> commit 87adedeba51a ("Merge tag 'net-6.8-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+> 
+>  [root@localhost ~]# echo 'p arch_kunwind_consume_entry' > /sys/kernel/debug/tracing/kprobe_events
+>  [root@localhost ~]# echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
+> 
+>  Modules linked in: aes_ce_blk aes_ce_cipher ghash_ce sha2_ce virtio_net sha256_arm64 sha1_ce arm_smccc_trng net_failover failover virtio_mmio uio_pdrv_genirq uio sch_fq_codel dm_mod dax configfs
+>  CPU: 3 PID: 1405 Comm: bash Not tainted 6.8.0-rc6+ #14
+>  Hardware name: linux,dummy-virt (DT)
+>  pstate: 604003c5 (nZCv DAIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>  pc : kprobe_breakpoint_handler+0x17c/0x258
+>  lr : kprobe_breakpoint_handler+0x17c/0x258
+>  sp : ffff800085d6ab60
+>  x29: ffff800085d6ab60 x28: ffff0000066f0040 x27: ffff0000066f0b20
+>  x26: ffff800081fa7b0c x25: 0000000000000002 x24: ffff00000b29bd18
+>  x23: ffff00007904c590 x22: ffff800081fa6590 x21: ffff800081fa6588
+>  x20: ffff00000b29bd18 x19: ffff800085d6ac40 x18: 0000000000000079
+>  x17: 0000000000000001 x16: ffffffffffffffff x15: 0000000000000004
+>  x14: ffff80008277a940 x13: 0000000000000003 x12: 0000000000000003
+>  x11: 00000000fffeffff x10: c0000000fffeffff x9 : aa95616fdf80cc00
+>  x8 : aa95616fdf80cc00 x7 : 205d343137373231 x6 : ffff800080fb48ec
+>  x5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000
+>  x2 : 0000000000000000 x1 : ffff800085d6a910 x0 : 0000000000000079
+>  Call trace:
+>  kprobes: Failed to recover from reentered kprobes.
+>  kprobes: Dump kprobe:
+>  .symbol_name = arch_kunwind_consume_entry, .offset = 0, .addr = arch_kunwind_consume_entry+0x0/0x40
+>  ------------[ cut here ]------------
+>  kernel BUG at arch/arm64/kernel/probes/kprobes.c:241!
+>  kprobes: Failed to recover from reentered kprobes.
+>  kprobes: Dump kprobe:
+>  .symbol_name = arch_kunwind_consume_entry, .offset = 0, .addr = arch_kunwind_consume_entry+0x0/0x40
+> 
+> Fixes: 1aba06e7b2b49 ("arm64: stacktrace: factor out kunwind_stack_walk()")
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+Thanks for this!
 
-> Fix two typos:
-> 
->  - There's no such thing as 'nohz_balancing_kick', the
->    flag is named 'BALANCE' and is capitalized:  NOHZ_BALANCE_KICK.
-> 
->  - Likewise there's no such thing as a 'pending nohz_balance_kick'
->    either, the NOHZ_BALANCE_KICK flag is all upper-case.
-> 
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Valentin Schneider <vschneid@redhat.com>
+Whoops; I had meant to make this __always_inline (or noinstr), but I evidently
+messed that up. I don't recall any problem with making this __always_inline,
+and that's preferable here to allow the compiler to fold some of the
+indirection.
+
+From a scan of stacktrace.c I don't see anything else that needs similar
+treatment; the other functions lacking __always_inline and noinstr are safe to
+instrument as they aren't core to the unwinder, and won't recurse into
+themselves in a problematic way.
+
+Given all the above:
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+
+Catalin, Will, are you happy to queue this as a fix?
+
+Mark.
+
 > ---
->  kernel/sched/fair.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/kernel/stacktrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 934ace69eb30..31838b9dcf36 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -12410,14 +12410,14 @@ static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
+> diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
+> index 7f88028a00c0..b2a60e0bcfd2 100644
+> --- a/arch/arm64/kernel/stacktrace.c
+> +++ b/arch/arm64/kernel/stacktrace.c
+> @@ -247,7 +247,7 @@ struct kunwind_consume_entry_data {
+>  	void *cookie;
+>  };
 >  
->  /*
->   * run_rebalance_domains is triggered when needed from the scheduler tick.
-> - * Also triggered for nohz idle balancing (with nohz_balancing_kick set).
-> + * Also triggered for NOHZ idle balancing (with NOHZ_BALANCING_KICK set).
-
-    s/NOHZ_BALANCING_KICK
-     /NOHZ_BALANCE_KICK
-
-As the changelog says.
-
-This change got squashed into the wrong patch later in the rest of this series
-that I haven't posted yet. Find -v2 below.
-
-Thanks,
-
-	Ingo
-
-===============>
-From: Ingo Molnar <mingo@kernel.org>
-Date: Fri, 1 Mar 2024 11:30:42 +0100
-Subject: [PATCH] sched/balancing: Fix comments (trying to) refer to NOHZ_BALANCE_KICK
-
-Fix two typos:
-
- - There's no such thing as 'nohz_balancing_kick', the
-   flag is named 'BALANCE' and is capitalized:  NOHZ_BALANCE_KICK.
-
- - Likewise there's no such thing as a 'pending nohz_balance_kick'
-   either, the NOHZ_BALANCE_KICK flag is all upper-case.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Valentin Schneider <vschneid@redhat.com>
----
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 934ace69eb30..4c46bffb6a7a 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -12410,14 +12410,14 @@ static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
- 
- /*
-  * run_rebalance_domains is triggered when needed from the scheduler tick.
-- * Also triggered for nohz idle balancing (with nohz_balancing_kick set).
-+ * Also triggered for NOHZ idle balancing (with NOHZ_BALANCE_KICK set).
-  */
- static __latent_entropy void run_rebalance_domains(struct softirq_action *h)
- {
- 	struct rq *this_rq = this_rq();
- 	enum cpu_idle_type idle = this_rq->idle_balance;
- 	/*
--	 * If this CPU has a pending nohz_balance_kick, then do the
-+	 * If this CPU has a pending NOHZ_BALANCE_KICK, then do the
- 	 * balancing on behalf of the other idle CPUs whose ticks are
- 	 * stopped. Do nohz_idle_balance *before* rebalance_domains to
- 	 * give the idle CPUs a chance to load balance. Else we may
+> -static bool
+> +static __always_inline bool
+>  arch_kunwind_consume_entry(const struct kunwind_state *state, void *cookie)
+>  {
+>  	struct kunwind_consume_entry_data *data = cookie;
+> 
+> base-commit: 87adedeba51a822533649b143232418b9e26d08b
+> -- 
+> 2.40.1
+> 
