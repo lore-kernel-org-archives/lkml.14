@@ -1,199 +1,101 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367263A268
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0803D548
 	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709319399; cv=none; b=qjy57a4few9jyK90kumMwXOwJXnGstBn96B3f+wvfVNqFDtaCTofdbkuQ2yj2xCZxBfMRclgkrDJ6xDkrO3xnBfMmG8piMJGP/A/dI7MxJwPpsarFAiXosFMEOdqrq/F9ebOgbZDzMw3skuFW81qwztACuoUn5P9u7c7lGxv48E=
+	t=1709319400; cv=none; b=NdjvCytCdDKBH0f0cN7g7Y1Lb6o106B01Q7t1pnqBtvVhngLe+fDpJop72AIzpO6cFwTvcBAmvzqNlCVYxkyJ5zf0HmAlRdcRZn+QSu8WcLNcnp57+X9byImLApd6Q3J0roi1Y9XkgOG7KrpTVgbH8ix5sqK+3QOvub2bh6sa/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709319399; c=relaxed/simple;
-	bh=k1J00uEpMiU2X474jyjwVg/k5P8F66t0UkVBIUUJqo4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=LepFR8ngimCbhJwJdMR9BUkoU8jQChLQWPK/UD8UtkO6J6rnI7y3LIF18zhBZg5GrKm7h8q1GVzgnLo4f6J+P+rsxTC1HyuradobufJOdB19d29SLgko995hTL1ur70lpMlY98WpdpQB0kKDVoF74IEi4DGU3ofZJied/pPPgZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zRS310NL; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1709319400; c=relaxed/simple;
+	bh=k5E4WWGp+V+degHNN7v/pKAtVxC2pZvmpVUXfqdSfPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G3GF5xiRU4APKjZJmsseA48x9Pxd00hF3sfDHujNlTM38sFX8O1TYVfNxe1pGMjX1rcHsV6C06yMNvhmypMFmyRqq0pjQK0Hs7do6RCx3xWD6HybbBa7EFYGQkXCKeuyJyl8QNfoLCjhASPElQsZhU4dSiwJtZxBgOkA3PnhbHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=gT5c9ixn reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zRS310NL"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6087ffdac8cso38105907b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:56:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709319397; x=1709924197; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9bLt2tsDqrZIDuuzvN847pO8hmc3HFfJgCu/uhjrOeM=;
-        b=zRS310NLrNJ2W1snef+pGWF6jWs/UcoW5ws11DEexHK0E6hDNPJP5havwXBGzzkruH
-         iwWFuCj6KpNKavm/GI/EAi8ZDi7+igmL4BxhNrIkqvbk2QlQ63GuDa33ZoEgKIYuHGub
-         RFlRreK0nkSOx9l3qr76HN6xrs8MpF3CRC0hAnuIJl6P9GMJQC1LVQi1JoPPMorgbDuC
-         BlE+G+sjhWphvo+QIMKUCCHHjKsg2Y1rqez98v7YPQOq9UrFgPwvI7jH0rn8tVhyGP+z
-         gORclFSzXDXnThl0GosqMbBmFCM0BDjQlnKH8qTP2/Zrg5wu7e+PFluVRDXImJdqx79y
-         2DjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709319397; x=1709924197;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9bLt2tsDqrZIDuuzvN847pO8hmc3HFfJgCu/uhjrOeM=;
-        b=TTWxixJc9WddW/3i5t+qeyfCtBZNNYFQPre0R9SDodHCAABPV6asPz4euuXGESS551
-         qTzZ/ngy1oGjYLhlah11VRjeIEa7WQuL1S8aE21534Oo8thhsD0Pt79Y+SMY7ltLcRPD
-         ZGlQiDol5UER0a2vIP6u/2QMX6U7qsPQqPg06flaTpp52jMLn1SE+7mZLUjG5oBAaZYE
-         TTbIB4g5kJWYPvKotiA7o00Nm33xv/cUCYBKOuWGbdzWUibXRZmtu39GZu0mj69y914T
-         2jsL7NFPTjqqru1BnYTtqufsmLrKPt4k6bTC7eg+wK8qL004EC7hG+Nau/ERAoidjzny
-         p0Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPqYcWbxf58okgf+iTeDqBgXqCeWGF46LPOgl9kIRiti45QsllsGScJoCAZDw/Vgk/mcZ4C9YzsDdmOMkjqCmOG6mvuBtAtkr8fBfM
-X-Gm-Message-State: AOJu0YxKvIEWkqPM2ntPs9T1296hPd4uIggJUWLNF4tis88NN9JV6D4j
-	JzHa9qKrWbjSOv7u9IgiWdRLlE8HG8Uy6gk6+S+Aly8Cph2lDRYyBlGwaCd8TdNoJo/UHNaPYOV
-	KQucDOg==
-X-Google-Smtp-Source: AGHT+IHwyRBJirzqk8uMFTrQMDM0GgTTLbJhm8emnlvGpOsyNImTLygP+QzB4U2tZuzbYUFKAO/WbN+MMQ8c
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
- (user=irogers job=sendgmr) by 2002:a05:690c:c9d:b0:607:cd11:5464 with SMTP id
- cm29-20020a05690c0c9d00b00607cd115464mr604520ywb.9.1709319397235; Fri, 01 Mar
- 2024 10:56:37 -0800 (PST)
-Date: Fri,  1 Mar 2024 10:55:49 -0800
-In-Reply-To: <20240301185559.2661241-1-irogers@google.com>
-Message-Id: <20240301185559.2661241-11-irogers@google.com>
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="gT5c9ixn"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 834C440E0196;
+	Fri,  1 Mar 2024 18:56:36 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id UZe5OO0KE1r9; Fri,  1 Mar 2024 18:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1709319394; bh=aN+C2xm0YbEn8nVRyX6/uoOtPGSz1gU4UO9UwrqDSKk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gT5c9ixnrC+Rd0ZGaWzShfz63pxWzWEvv4QAlD6JlDrYbQNyan9DrUHoUgNOs70ql
+	 TAjZ5jMimNqGpSvUZGIvaLyiPNHRd/yT31LmtdhlaGvjtY3QUDfFkoYhoMxu35JuD3
+	 Lz6xFxNZpDE0ffEtwWbJi7YZ6VzpCnZLPejeNprKVwgxzcbuCgDuayyFRTsyaCkzSk
+	 4RJrxTavvRVpftkD7x96yyBrQTRoN7uuxpwtuN4/rsx9f/odUjQvInXLTXiENyroA+
+	 /YxYHwYepWM8JFXBIGpNhJ2F/cutx5r4LRJqLFe1M2BkBOi0x59lL/FpXM43vFJSGI
+	 tYVrfaONaRixZ3cIcyB3iHWTRY+/E8McHc93tcmEOpYV4qP+hgzMeZcWiF9p+lshf+
+	 MCgG1to6LT5fWpJJUlRSB8XDoXFqFZLfzKS0PlMjeikHXO4X9UIWaoNFikdPebunft
+	 Voe5rztrC4oiKqra+gNuAcuF/fc0I2/wBx+j3sHmBFaPsMyiCdpqrZ6ZL+l6wicKNB
+	 ob551g2FE6R/z7mBUNicivgzG+fRv9o37YcCYNpt1K6DjJDjKd5qPUAbHJEFyAqHUa
+	 Fm/C9GqErAxjUgjV+m+tTKx6vuNddMdbIOeELEAYvYRuJJgKT7rfJ+tlivLMi/3Z0s
+	 mjsoW/ySua6TmhYSGVgH+xo0=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0A2AB40E016C;
+	Fri,  1 Mar 2024 18:56:31 +0000 (UTC)
+From: Borislav Petkov <bp@alien8.de>
+To: Baoquan He <bhe@redhat.com>
+Cc: X86 ML <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH 1/2] Revert "x86/kexec/64: Prevent kexec from 5-level paging to a 4-level only kernel"
+Date: Fri,  1 Mar 2024 19:56:17 +0100
+Message-ID: <20240301185618.19663-2-bp@alien8.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240301185618.19663-1-bp@alien8.de>
+References: <20240301185618.19663-1-bp@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301185559.2661241-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v2 10/20] perf jevents: Add load store breakdown metrics ldst
- for Intel
-From: Ian Rogers <irogers@google.com>
-To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-Give breakdown of number of instructions. Use the counter mask (cmask)
-to show the number of cycles taken to retire the instructions.
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+This reverts commit ee338b9ee2822e65a85750da6129946c14962410.
+
+This whole dynamic switching support is silly. I don't see a use case
+where one would use an old kernel with CONFIG_X86_5LEVEL disabled to
+kexec into. I.e., you use pretty much the same kernel.
+
+But I'm open to corrections.
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 ---
- tools/perf/pmu-events/intel_metrics.py | 86 +++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
+ arch/x86/kernel/kexec-bzimage64.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 9f42b489a81e..061914834cff 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -2,7 +2,7 @@
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
-                     JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
--                    Metric, MetricGroup, MetricRef, Select)
-+                    Metric, MetricConstraint, MetricGroup, MetricRef, Select)
- import argparse
- import json
- import math
-@@ -515,6 +515,89 @@ def IntelSwpf() -> Optional[MetricGroup]:
-   ], description="Sofware prefetch instruction breakdown")
- 
- 
-+def IntelLdSt() -> Optional[MetricGroup]:
-+  if args.model in [
-+      "bonnell",
-+      "nehalemep",
-+      "nehalemex",
-+      "westmereep-dp",
-+      "westmereep-sp",
-+      "westmereex",
-+  ]:
-+    return None
-+  LDST_LD = Event("MEM_INST_RETIRED.ALL_LOADS", "MEM_UOPS_RETIRED.ALL_LOADS")
-+  LDST_ST = Event("MEM_INST_RETIRED.ALL_STORES", "MEM_UOPS_RETIRED.ALL_STORES")
-+  LDST_LDC1 = Event(f"{LDST_LD.name}/cmask=1/")
-+  LDST_STC1 = Event(f"{LDST_ST.name}/cmask=1/")
-+  LDST_LDC2 = Event(f"{LDST_LD.name}/cmask=2/")
-+  LDST_STC2 = Event(f"{LDST_ST.name}/cmask=2/")
-+  LDST_LDC3 = Event(f"{LDST_LD.name}/cmask=3/")
-+  LDST_STC3 = Event(f"{LDST_ST.name}/cmask=3/")
-+  ins = Event("instructions")
-+  LDST_CYC = Event("CPU_CLK_UNHALTED.THREAD",
-+                   "CPU_CLK_UNHALTED.CORE_P",
-+                   "CPU_CLK_UNHALTED.THREAD_P")
-+  LDST_PRE = None
-+  try:
-+    LDST_PRE = Event("LOAD_HIT_PREFETCH.SWPF", "LOAD_HIT_PRE.SW_PF")
-+  except:
-+    pass
-+  LDST_AT = None
-+  try:
-+    LDST_AT = Event("MEM_INST_RETIRED.LOCK_LOADS")
-+  except:
-+    pass
-+  cyc  = LDST_CYC
-+
-+  ld_rate = d_ratio(LDST_LD, interval_sec)
-+  st_rate = d_ratio(LDST_ST, interval_sec)
-+  pf_rate = d_ratio(LDST_PRE, interval_sec) if LDST_PRE else None
-+  at_rate = d_ratio(LDST_AT, interval_sec) if LDST_AT else None
-+
-+  ldst_ret_constraint = MetricConstraint.GROUPED_EVENTS
-+  if LDST_LD.name == "MEM_UOPS_RETIRED.ALL_LOADS":
-+    ldst_ret_constraint = MetricConstraint.NO_GROUP_EVENTS_NMI
-+
-+  return MetricGroup("ldst", [
-+      MetricGroup("ldst_total", [
-+          Metric("ldst_total_loads", "Load/store instructions total loads",
-+                 ld_rate, "loads"),
-+          Metric("ldst_total_stores", "Load/store instructions total stores",
-+                 st_rate, "stores"),
-+      ]),
-+      MetricGroup("ldst_prcnt", [
-+          Metric("ldst_prcnt_loads", "Percent of all instructions that are loads",
-+                 d_ratio(LDST_LD, ins), "100%"),
-+          Metric("ldst_prcnt_stores", "Percent of all instructions that are stores",
-+                 d_ratio(LDST_ST, ins), "100%"),
-+      ]),
-+      MetricGroup("ldst_ret_lds", [
-+          Metric("ldst_ret_lds_1", "Retired loads in 1 cycle",
-+                 d_ratio(max(LDST_LDC1 - LDST_LDC2, 0), cyc), "100%",
-+                 constraint = ldst_ret_constraint),
-+          Metric("ldst_ret_lds_2", "Retired loads in 2 cycles",
-+                 d_ratio(max(LDST_LDC2 - LDST_LDC3, 0), cyc), "100%",
-+                 constraint = ldst_ret_constraint),
-+          Metric("ldst_ret_lds_3", "Retired loads in 3 or more cycles",
-+                 d_ratio(LDST_LDC3, cyc), "100%"),
-+      ]),
-+      MetricGroup("ldst_ret_sts", [
-+          Metric("ldst_ret_sts_1", "Retired stores in 1 cycle",
-+                 d_ratio(max(LDST_STC1 - LDST_STC2, 0), cyc), "100%",
-+                 constraint = ldst_ret_constraint),
-+          Metric("ldst_ret_sts_2", "Retired stores in 2 cycles",
-+                 d_ratio(max(LDST_STC2 - LDST_STC3, 0), cyc), "100%",
-+                 constraint = ldst_ret_constraint),
-+          Metric("ldst_ret_sts_3", "Retired stores in 3 more cycles",
-+                 d_ratio(LDST_STC3, cyc), "100%"),
-+      ]),
-+      Metric("ldst_ld_hit_swpf", "Load hit software prefetches per second",
-+             pf_rate, "swpf/s") if pf_rate else None,
-+      Metric("ldst_atomic_lds", "Atomic loads per second",
-+             at_rate, "loads/s") if at_rate else None,
-+  ], description = "Breakdown of load/store instructions")
-+
-+
- all_metrics = MetricGroup("", [
-     Idle(),
-     Rapl(),
-@@ -522,6 +605,7 @@ all_metrics = MetricGroup("", [
-     Tsx(),
-     IntelBr(),
-     IntelL2(),
-+    IntelLdSt(),
-     IntelPorts(),
-     IntelSwpf(),
- ])
--- 
-2.44.0.278.ge034bb2e1d-goog
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bz=
+image64.c
+index cde167b0ea92..4f2e47338b7f 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -375,11 +375,6 @@ static int bzImage64_probe(const char *buf, unsigned=
+ long len)
+ 		return ret;
+ 	}
+=20
+-	if (!(header->xloadflags & XLF_5LEVEL) && pgtable_l5_enabled()) {
+-		pr_err("bzImage cannot handle 5-level paging mode.\n");
+-		return ret;
+-	}
+-
+ 	/* I've got a bzImage */
+ 	pr_debug("It's a relocatable bzImage64\n");
+ 	ret =3D 0;
+--=20
+2.43.0
 
