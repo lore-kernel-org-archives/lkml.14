@@ -1,115 +1,97 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.94])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFBC6F51A;
-	Fri,  1 Mar 2024 11:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C426BFC2
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709291423; cv=none; b=XiHu1hiT1Hzs98CnhtAYqQVfle+RVey6NmDtdETgpCSO4YcqKU1CP+Mir5EuBELOTytyNp/o1b/ss1JH2tVTug/073ktpzQTup0nTq+coqDBrpFEu0lJcvlWtI9heV+pxmDdsa+u/2NYUtdAVCpIcMqzkALjESvK7q/+kqJZ4I8=
+	t=1709291509; cv=none; b=dSQgg/Dzn/ro8IZbD5L/dSl53bLWXrrTe2Xqs1PH6pfOxgDKMDV+ComkJIgoZGPf+tIeaHHKSHi8Dpi4sEzyM2cRPW3y0AQiETMijNk2rLw+cDeXCD3jrFZ2cjI+em+9m959MxgvjjTzQq3zArwFkNuqrljqPnY4++n7TZS5H8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709291423; c=relaxed/simple;
-	bh=e51zttODIbyBxyNN35mjWWt+KgFVjTSgZK3n2T+b+wA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1DZdtpBrvgIph4L8I4Z+guafltAM/7N8I1pEZ3YaaKo5AcPLSpXNiWOI00JTvmtb0zGjK2MvpXcVfLPWdQFxMCDI0ZjIq5k+GUu0Tl7he3ykDy7jMignxlTiOdxfxZQ7stxzCqHmbAcMXvDP4O8pPsm3ewu+P8ZwnWuQLU8WF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=OYt9+PHK; arc=none smtp.client-ip=212.42.244.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+	s=arc-20240116; t=1709291509; c=relaxed/simple;
+	bh=/xDonUNC7ocYSfrZF0cRihan81CJlJLUmGBfW2so27Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AH5npPzQwqu6UkkFoS/AsPW54lksGJyIUS8naenYAIWHo+iwDcbZ2YZyiRtk9SU4K7iG2AmAj+AdtqE+fOxdNhs1KViKiulyIEa6wgD1xinIkxgfUyssgN0Qoq/wsMmvKbCVb8yoc6tKDxP4FI0H6/yMJpYDnxBVgVSYusfU03I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=UrkEDeyY; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="OYt9+PHK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1709291069; bh=e51zttODIbyBxyNN35mjWWt+KgFVjTSgZK3n2T+b+wA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OYt9+PHKFGKyVmiw2Fu9C7UcOW5wT3FzEZ/vWjYUpxiWfoxQhPxe16pyMOZ1ur80b
-	 vbPCGtdskDaris+wLpPUCg6CjTEhwz7GNYFgp69zBmGfTeypJokCTCH0zCWCudmsgG
-	 kWhfadgrV4lfaX/AabDRTdJ+1RNWWHtrA03vRyv0=
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Fri,  1 Mar 2024 12:04:29 +0100 (CET)
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id 809C680152;
-	Fri,  1 Mar 2024 12:04:29 +0100 (CET)
-Received: by buildd.core.avm.de (Postfix, from userid 1000)
-	id 744511812F7; Fri,  1 Mar 2024 12:04:29 +0100 (CET)
-Date: Fri, 1 Mar 2024 12:04:29 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2] kconfig: add some Kconfig env variables to make help
-Message-ID: <ZeG2PRYmdO0r44kS@buildd.core.avm.de>
-Mail-Followup-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240222032559.496127-1-senozhatsky@chromium.org>
- <CAK7LNARo4L6qxoqRU-0dgABarukJKAaZpCRtfA3MyUHhSuDQxQ@mail.gmail.com>
- <20240222051621.GH11472@google.com>
- <20240228045652.GH11972@google.com>
- <CAK7LNAQ8OyNMeGzVoTRg-sHDZ4YK0EKY_eEWNepekaibO_ZKwg@mail.gmail.com>
- <20240229021010.GM11972@google.com>
- <CAK7LNASujf8m4PpMyoCC1cTN_YGeG1HVaOR+3pZx5=3OJp=85A@mail.gmail.com>
- <20240229034739.GN11972@google.com>
- <CAK7LNAS-mOxY884pLEMwWaX+wgzXdc6+=vqN=wfHBekuKL5ryA@mail.gmail.com>
- <20240301043316.GO11972@google.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UrkEDeyY"
+X-UUID: 7a84b0dad7bc11ee935d6952f98a51a9-20240301
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Q5WuaCMJDw1pbZ4ztPZ18MjsiyYlAPImik90vW7Ffm8=;
+	b=UrkEDeyYB8C0tXbtAs6ECT+ZyTDSt/I9p6j4HpVXU3mXt7wK9D5/aUO4/HDN0FXvlxMKefC07hzbmlcPiDRnvHeBjx4u6VZnaAb4p7vlFd9JPD7O38bbeSGcbj4DbqLwrRKXXyG82KovOs4f/91cIDRPDz3oqbvYvGrOkiuIuGk=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:405a7b23-959c-4610-8378-1368add7859a,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:6cf664ff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 7a84b0dad7bc11ee935d6952f98a51a9-20240301
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 358478159; Fri, 01 Mar 2024 19:11:40 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 1 Mar 2024 19:11:39 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 1 Mar 2024 19:11:39 +0800
+From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Chun-Kuang Hu
+	<chunkuang.hu@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+CC: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jason-ch Chen <jason-ch.chen@mediatek.com>, "Jason-JH . Lin"
+	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
+ Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jason-jh Lin
+	<jason-jh.lin@mediatek.corp-partner.google.com>
+Subject: [PATCH 0/5] Add CMDQ API for upcoming ISP feature
+Date: Fri, 1 Mar 2024 19:11:21 +0800
+Message-ID: <20240301111126.22035-1-jason-jh.lin@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240301043316.GO11972@google.com>
-Organization: AVM GmbH
-X-purgate-ID: 149429::1709291069-3ED8F9CD-E71215DF/0/0
-X-purgate-type: clean
-X-purgate-size: 1915
-X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate: clean
+Content-Type: text/plain
+X-MTK: N
 
-On Fri, Mar 01, 2024 at 01:33:16PM +0900, Sergey Senozhatsky wrote:
-> On (24/03/01 00:35), Masahiro Yamada wrote:
-> > > >   "I am interested only in these. I do not care about the rest,
-> > >
-> > > It's "I *do NOT know* what the rest do".  I cannot document something
-> > > that I have no knowledge of, can I?  So as a reasonable start I added
-> > > only those that I'm familiar with (and I have explicitly stated that
-> > > in previous emails), and I disagree with the "bad attitude" label.
-> > 
-> > 
-> > You were aware of:
-> > 
-> >  - several env variables are listed in the document
-> >  - your patch would introduce a new "inconsistency"
-> >  - somebody else would need to make efforts to solve it
-> 
-> OK.
-> 
-> > > So the rational for that was that people run "make help" and find
-> > > out about new build targets, for instance, but there is no way for
-> > > people to find out about new Kconfig features (and yes, we are talking
-> > > "new features" here) that are controlled by env variables.  We need
-> > > to do something about it, don't you agree?
-> > 
-> > Disagree.
-> > 
-> > I maintain the entire Kconfig, not like you only caring about
-> > a particular feature.
-> > 
-> > If you add only two in help, I have no idea about
-> > what it will look like in the end.
-> > I am not convinced that it will be in good shape.
-> > So, it is reasonable for me to reject it.
-> 
-> Yes, OK.  I wasn't talking about this patch in particular at that
-> point, I was more curious whether you agreed that we need to document
-> in some way those vars in `make help` or not.  If you see value in
-> documenting them then I can sit down and try to come up with v3 that
-> will (in one way or another) give a simple "help" description for
-> each of Kconfig's vars.
+From: Jason-jh Lin <jason-jh.lin@mediatek.corp-partner.google.com>
 
-Perhaps it might be a compromise to let 'make help' point to the
-kbuild/kconfig documentation?
+In order to support the upcoming ISP functions, some CMDQ APIs
+need to be prepared:
+- cmdq_pkt_mem_move(): for memory or register vaule copy
+- cmdq_pkt_poll_addr(): extending cmdq_pkt_poll() to support polling
+                        address of register 
+- cmdq_pkt_acquire_event(): to support MUTEX_LOCK protection between
+                            GCE threads
+- cmdq_get_event()/cmdq_set_event(): to support ISP driver runtime control
+                                     some GCE events.
 
-Kind regards,
-Nicolas
+Jason-JH.Lin (5):
+  soc: mediatek: mtk-cmdq: Add specific purpose register definitions for
+    GCE
+  soc: mediatek: mtk-cmdq: Add cmdq_pkt_mem_move() function
+  soc: mediatek: mtk-cmdq: Add cmdq_pkt_poll_addr() function
+  soc: mediatek: mtk-cmdq: Add cmdq_pkt_acquire_event() function
+  mailbox: mtk-cmdq: Add support runtime get and set GCE event
+
+ drivers/mailbox/mtk-cmdq-mailbox.c       | 37 +++++++++++
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 79 ++++++++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h |  2 +
+ include/linux/soc/mediatek/mtk-cmdq.h    | 44 +++++++++++++
+ 4 files changed, 162 insertions(+)
+
+-- 
+2.18.0
+
