@@ -1,156 +1,105 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942BA6CDDA
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C006995C;
+	Fri,  1 Mar 2024 11:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709291511; cv=none; b=pjD3vynhxLnPsql0Mt70VvrtRj60aAd77sX5VKtGCsv/C3ctOK/ipBjX77xqznzZlsBLW5PEQdCSyCLmnLAf3yjGIsdxFR+qRqMFj2pvtU/umRJ8oTlLmWFrQgm93KHt8jvp6KtPfmYswb4wv3nepHHaL2XFf7qROPZCxivTApI=
+	t=1709291562; cv=none; b=hWtblprNlm7p32wgaYn5a/L/VwUeeaL3FP0UiZiunMdob3pcPMW8khv1w2LWlYLknosMRkNmPeaxcAg1IDVkFNHiFeZHaLL0Fgeu95XrVMtUmp0WFpB8bdx4BIXTV92JybuLYKKK7ifqlbGZTLqkop/BQnHr5bE+hC6m/iNrtoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709291511; c=relaxed/simple;
-	bh=pCS3VAhanK6FW0T+S6mC2Rzpg36ru90GoPvIG9yndp0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DgIQKMI7dYz0JbVQTPm0t5DtOqlNDAYixKv7RV6+L8g94ajFSLsRMqfHGUAEat+IZoQlqN2tNQ6pdXRpcqTub6H9p6zyjwIgQsT7OtV+6o+5xUu8b1YNfe4IE9Twc1WZJT8sw13mhLgOoWQBS6ZPNgASLOgYljI1P29DTNlhFXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Cf4QLUBW; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1709291562; c=relaxed/simple;
+	bh=G0Ytuzuhq5IT80Qym7JsUFTIlvAQ8ypbq/Q3B8+0Y5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qjGov+WQrHbVPqWWAqSxGjq1BR8wPP0NdHyqhTosYS1Nsjsg53BA1Q7ZMBn9BG4BYDrxUDDww2jV/FCgvRuWIH9vq2seV29CrrpODkVcb0szqh3eYGASoQuWdj3D31LlsfFN+7cAHcnUU6OtUDTDoV8g5KO+LayhO11etT/suMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LVKSgPXD; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Cf4QLUBW"
-X-UUID: 7b240540d7bc11eeb8927bc1f75efef4-20240301
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=94jyI1l4zxP83+JjpTOHmGYWOfnti0Bi8r2AEFAk7/A=;
-	b=Cf4QLUBWOg2lrORnyyMOhZqe/rWZfcBRbmetRzP+hdbo0RvDGxQKOMH8+0951qMWD93sNtH5zkPgyy7t8vtV5vtRG0svmIAkapiTKukUOWVZyrrL7HzTa2aZYdJ9RFhVlRGUr85dqUDrUf4nxRAssTmFupLgVmtky7ZiaddP2FQ=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:342ab9d1-8dc4-4367-8bb5-172de856da52,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6f543d0,CLOUDID:f6348084-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 7b240540d7bc11eeb8927bc1f75efef4-20240301
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1202025926; Fri, 01 Mar 2024 19:11:41 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 1 Mar 2024 19:11:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 1 Mar 2024 19:11:39 +0800
-From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>, Chun-Kuang Hu
-	<chunkuang.hu@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-CC: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jason-ch Chen <jason-ch.chen@mediatek.com>, "Jason-JH . Lin"
-	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, "Nancy
- Lin" <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH 2/5] soc: mediatek: mtk-cmdq: Add cmdq_pkt_mem_move() function
-Date: Fri, 1 Mar 2024 19:11:23 +0800
-Message-ID: <20240301111126.22035-3-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240301111126.22035-1-jason-jh.lin@mediatek.com>
-References: <20240301111126.22035-1-jason-jh.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVKSgPXD"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a446478b04bso180924666b.3;
+        Fri, 01 Mar 2024 03:12:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709291559; x=1709896359; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WpDmXfSvrjV3LnFP0ToCDaEvJaHWTSkPddd8OTrd0Rw=;
+        b=LVKSgPXDziy8XJcRQuZPN8smUI+AgzUZ1nCh/2QnkXl9WixBRJ74rM11mFa2BhqHlj
+         +yzmprDhuwfm5FpTKDuQ9eGpz+hScAhB2zKhqygdRYIa/KxjrBW6DsLiOoTFU1npLT+n
+         JphCUqXTpNBWnRej+T+TecjYtttQrETE7UqOdHv+aWyxjHYLEOqqPbXEZFLZN8yetdkB
+         YQbvyGUlIVbvQ5uNZYD6TO1SoJxTosL57ecNz0ffNXvLpQ6Q0VZZjMHuvWXC6avPPIwP
+         Oo+LCNY5FfdwsC0c+Y/+LoDZDapqq92hVfwfwN2f5+wF6L5z2bgkESGbKMivvYcMuUs6
+         SCZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709291559; x=1709896359;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WpDmXfSvrjV3LnFP0ToCDaEvJaHWTSkPddd8OTrd0Rw=;
+        b=V2EGVcZUAD3KegdGMFrEMXC5eDjIba1SMV4Rm5ZYMGL/gO9MQo6pMrspt7t9mvyZmA
+         6pwruf7tv38yj3C0JO2iQ+L01Fsw63ah8QojUMvP+QmMzhN/q2kmLvOFJfl6A1cfYMnJ
+         4O0x1Ordq91qKB2hLl3Kzl1nlsHPgAnZ0QyTLH0XWMWzIm/q7M58dNBLu4TWheFvmFHk
+         GLCcoztCX7Pv0aVrcRPDJXbmPNITR+LXMEKqDHwDyUvUM+BvbHOBeAlDyozhk71NA5zB
+         KmEgHY8npR9ryZPqFYhEw5awL0J3kQULcmt6Yke9KIHi2xlwE0HIAu0J3gW8y4/YbHl/
+         c4JA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhyLS4p4pLy1oftfAPUDrZfiX+Mn7n3nnKfF3SBXYci1WWLNFeC3zmtrxMTVVlIELJMAKbCcesUEEq9mnEOZjNhbqotKO+q8vPeM4/++uZXtmq2QnW6d+xScxaO7tdLCKfQ5RZ68sIPwzhPV/9RHrZObsYDSTOqOgeG7Y2uDg6CfdtWw==
+X-Gm-Message-State: AOJu0YxLPdr7lHZY3iBln9HaEMPS04xJ7H9dn3QOJcmnPxrXiGfItAYN
+	lhHDVOT/uFa3AdZizwawqKKzauNpWDziAiXplhsZhhP5NnXLbS1nCVarK41I
+X-Google-Smtp-Source: AGHT+IGaeVRjJhAGnRJBtIfjSECCgFgo+xctiX9YHIc0geBFEJq7kepaf3yCC0sfrkrvuOimxT4b4g==
+X-Received: by 2002:a17:906:5fd1:b0:a44:4fbd:a8fe with SMTP id k17-20020a1709065fd100b00a444fbda8femr974495ejv.1.1709291558645;
+        Fri, 01 Mar 2024 03:12:38 -0800 (PST)
+Received: from debian.fritz.box ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id n18-20020a170906089200b00a43a478e4f0sm1583254eje.180.2024.03.01.03.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 03:12:38 -0800 (PST)
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: 
+Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] pwm: add support for NXPs high-side switch MC33XS2410
+Date: Fri,  1 Mar 2024 12:11:21 +0100
+Message-Id: <20240301111124.29283-1-dima.fedrau@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--2.204500-8.000000
-X-TMASE-MatchedRID: QAAr3LZ6Q9JYXTxImR5ZvOTuT3JcmKqqgRykyfrH1xlLgo8+IIHbcCaq
-	HK7pZ0bRNKYaGFup4fz8EpYJMjL6Ls3AmdtMjGJVA9lly13c/gG7nrAU9KQxUbXvDHySC+eU61g
-	ErlDnM1dL0uSHldDmQGsZiCdzzpF5aPW3y1xO3y+eAiCmPx4NwBnUJ0Ek6yhjxEHRux+uk8ifEz
-	J5hPndGXtPpfTMCjuVNlds6sQQMyDPwoYawk8NLE7ctxtvVb+d9Zl60Bmq28/4Njekbe0FcjAzW
-	ve3SdKQDLTH7y+UQasWGXeKcz/ckHmVKZusLp922v9OjYWA2uMMswg45VMfPadst5iAforfVlxr
-	1FJij9s=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--2.204500-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	768E9CFAF985F85E58A88FDFA5099AD22FA56019257E4546F40075707BC89EF12000:8
-X-MTK: N
+Content-Transfer-Encoding: 8bit
 
-Add cmdq_pkt_mem_move() function to support CMDQ user making
-an instruction for moving a value from a source address to a
-destination address.
+The MC33XS2410 is a four channel high-side switch. Featuring advanced
+monitoring and control function, the device is operational from 3.0 V to
+60 V. The device is controlled by SPI port for configuration.
 
-Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-Change-Id: I0128db6a3412303fc6da61f8a57a0c08e0c0067e
----
- drivers/soc/mediatek/mtk-cmdq-helper.c | 26 ++++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  | 10 ++++++++++
- 2 files changed, 36 insertions(+)
+Changes in V2:
+  - fix title in devicetree binding
+  - fix commit message in devicetree binding patch
+  - remove external clock from pwms and create clocks property
+  - switch to unevaluatedProperties: false
+  - add missing properties for complete example:
+    - pwm-names
+    - pwms
+    - interrupts
+    - clocks
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index b0cd071c4719..3a1e47ad8a41 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -299,6 +299,32 @@ int cmdq_pkt_write_s_mask_value(struct cmdq_pkt *pkt, u8 high_addr_reg_idx,
- }
- EXPORT_SYMBOL(cmdq_pkt_write_s_mask_value);
- 
-+s32 cmdq_pkt_mem_move(struct cmdq_pkt *pkt, dma_addr_t src_addr, dma_addr_t dst_addr)
-+{
-+	s32 err;
-+	const u16 tmp_reg_idx = CMDQ_THR_SPR_IDX0;
-+	const u16 swap_reg_idx = CMDQ_THR_SPR_IDX1;
-+
-+	/* read the value of src_addr into swap_reg_idx */
-+	err = cmdq_pkt_assign(pkt, tmp_reg_idx, CMDQ_ADDR_HIGH(src_addr));
-+	if (err < 0)
-+		return err;
-+	err = cmdq_pkt_read_s(pkt, tmp_reg_idx, CMDQ_ADDR_LOW(src_addr), swap_reg_idx);
-+	if (err < 0)
-+		return err;
-+
-+	/* write the value of swap_reg_idx into dst_addr */
-+	err = cmdq_pkt_assign(pkt, tmp_reg_idx, CMDQ_ADDR_HIGH(dst_addr));
-+	if (err < 0)
-+		return err;
-+	err = cmdq_pkt_write_s(pkt, tmp_reg_idx, CMDQ_ADDR_LOW(dst_addr), swap_reg_idx);
-+	if (err < 0)
-+		return err;
-+
-+	return err;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_mem_move);
-+
- int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event, bool clear)
- {
- 	struct cmdq_instruction inst = { {0} };
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 1dae80185f9f..b6dbe2d8f16a 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -182,6 +182,16 @@ int cmdq_pkt_write_s_value(struct cmdq_pkt *pkt, u8 high_addr_reg_idx,
- int cmdq_pkt_write_s_mask_value(struct cmdq_pkt *pkt, u8 high_addr_reg_idx,
- 				u16 addr_low, u32 value, u32 mask);
- 
-+/**
-+ * cmdq_pkt_mem_move() - append memory move command to the CMDQ packet
-+ * @pkt:	the CMDQ packet
-+ * @src_addr:	source address
-+ * @dma_addr_t: destination address
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_mem_move(struct cmdq_pkt *pkt, dma_addr_t src_addr, dma_addr_t dst_addr);
-+
- /**
-  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
-  * @pkt:	the CMDQ packet
+Dimitri Fedrau (3):
+  dt-bindings: pwm: add support for MC33XS2410
+  pwm: add support for NXPs high-side switch MC33XS2410
+  pwm: mc33xs2410: add support for direct inputs
+
+ .../bindings/pwm/nxp,mc33xs2410.yaml          | 118 +++++
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-mc33xs2410.c                  | 418 ++++++++++++++++++
+ 4 files changed, 549 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+ create mode 100644 drivers/pwm/pwm-mc33xs2410.c
+
 -- 
-2.18.0
+2.39.2
 
