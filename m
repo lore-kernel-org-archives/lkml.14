@@ -1,113 +1,185 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F2871B43;
-	Fri,  1 Mar 2024 16:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74F773164;
+	Fri,  1 Mar 2024 16:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709310246; cv=none; b=pF1dHwa6ywz0E2RYrXaHtW4/sKCMYi5M69hbRI4W3NVGdcBJymwKJqrgkcxgcw0IqUfS4ERsaKOiLGsG+ZbrY4kDjUydBmvU6bKUkmBY/naLxL/vxXW9rUbvegAo9L7tZhDRNZ5Kyrx5UhBR8d5yd8Zgt3f/+visiomWxuMT4oY=
+	t=1709310263; cv=none; b=nH0uCIeB2gADUwEcvw66eFc1L6ChdKlf7VIwLyFvUQZMxw+FX9v8GdQ6wOJP5xttzFbiZ4KY7Oo6un4Ig1l3uzWj+cmoQ6IkWm1Yb4pFodFIq8Svgv0Ea4qQIpUi/6+BqNzlSarhuTzrtmEBWWu/lgUgKOaVWhVXFArrbV+pXyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709310246; c=relaxed/simple;
-	bh=nq+dTB9sZf2knTv8a3VS+AYoILhfpagAL7MZwhJ2pmE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=VBQlQXXa3JkzLOvAydCY9Kj5BIqRsbVH3WxY5wpVtFr6AvVuwUhrxpB9XoqlQkR80vgazH4FVbeluOsUrJ09ewyP0ft+Tc1kyp0M1eeDQqs+1mzuarkbgi9ZIho4MO9KKUAB2wDVken7KaklYwA9sC98590bXyNsflOhw0nyQdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ZQvK6iOT; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1709310263; c=relaxed/simple;
+	bh=PNkeetFswFigbWxmUl6UYDRRkyJ69Qs5VVQ+Oc2ktWc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cSb6aYGdHa2zatfm0+tFurWXUxOBUmNzL5gqxqKYGOyNosfX65NhPbWeKcxL9D9q1sy3F9PbadWfaex0PbrBMSRQGqN3tK6bfqTeODMyxuB5I3f3c+fPnuOGbZKwGrXav2gUuiI/wFjh8xh/u3tgpX1jtO6kSKKUAbl5XawXPGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YIIDja/+; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ZQvK6iOT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1709310212; x=1709915012; i=markus.elfring@web.de;
-	bh=nq+dTB9sZf2knTv8a3VS+AYoILhfpagAL7MZwhJ2pmE=;
-	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
-	b=ZQvK6iOT+bO4tPhYEnabsP9Xu4NuWKZALwGjgVtKfDNkBimaFc1j75CeTokSIHMX
-	 TA7lfeNKK8zYRfMu6CfukWcyWBYTQ8pjL07uhrn9xzb7/qxGWgYA5oJeTf1OMX4lg
-	 IBI/NNjcV4ooxaF+sVo2kKm8GR7TbYeOvpPkQ7SzrBiN7cBwKNCMurfiEiLDTAbic
-	 XhE55G+pyxzYVDqx64R4vJ5MsnZ0ANCIV250WNE1ylhXo48WiH8JaW+eDP7g7QGoM
-	 4R2M7H9eiPty88Gb7IwLop/KAOvrbunEbqGaVYNfD9SMZusNJ+98rvYHhgkwvtrdH
-	 JSAzTrsoyEiDUWg0dw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MKMA7-1rRbDv0YaF-00LuRI; Fri, 01
- Mar 2024 17:23:32 +0100
-Message-ID: <0b89e175-47da-4e66-bb3b-a45a400dc3ae@web.de>
-Date: Fri, 1 Mar 2024 17:23:25 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YIIDja/+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709310259; x=1740846259;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PNkeetFswFigbWxmUl6UYDRRkyJ69Qs5VVQ+Oc2ktWc=;
+  b=YIIDja/+ndeq38tuTuQWsMCfF3EQr2OmPL35pOcNEw+ed8nd8xLcv3HI
+   t1EeSVgmPzKytYFNZV6XLbtffT4SJxKBAwsSQ1EHMm8r72A2nOkn7mrLs
+   Qs5G40hAZWYBHed1gu9Q9zEnPRUaBVWZP3J5nWvuDNxRw4WMpYbSPxELL
+   4n7YImbI3MTBV3m1Q1B1zFWYfJG02Q96GLDpPZaknLSL6VRMeQUIxigmw
+   JsICDk0AevoWEG5K0uCRylYhjiO2N08qexWTQYmMsEy37NJuEfYwHsVAV
+   wvv7vuypkp5DZAZDRFtRrlAj+qey39EHJZBzkAohdrQE6Sm6iW1wona61
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="7673225"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="7673225"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 08:24:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="8139509"
+Received: from p12ill20yoongsia.png.intel.com ([10.88.227.28])
+  by fmviesa007.fm.intel.com with ESMTP; 01 Mar 2024 08:24:11 -0800
+From: Song Yoong Siang <yoong.siang.song@intel.com>
+To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@google.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	xdp-hints@xdp-project.net
+Subject: [PATCH iwl-next,v2 0/2] XDP Tx Hardware Timestamp for igc driver
+Date: Sat,  2 Mar 2024 00:23:46 +0800
+Message-Id: <20240301162348.898619-1-yoong.siang.song@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?= <linux@roeck-us.net>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- RD Babiera <rdbabiera@google.com>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Yu Zhe <yuzhe@nfschina.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] usb: typec: fusb302: Use common error handling code in
- fusb302_probe()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:o7GcYrUfVXrYS2ZCPe02m7WMplSN24/yNpO+Dv2Zv7dcHv5XFlE
- 15XhwzGS0OyPzBxck2FX65wbryPxGYv3vLUpqdTi9n/qNhVWghgdTzOnkgLnDYrXgAm+CWf
- 0nxH0Fd4Or8KrPaAKyLXSVrwDdNdRuwYoMHLq1WH4Hpf0ZAXdEepTBfgsyUqYvo95B/hs6c
- R2wFjcDaj9Bu41DxZWCOQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:XMDho9cx+UU=;b58AOzK5r9e5ujBhpUnW+QTrDF0
- af00PfU+SJcQuUSRd2WXaqjA+9JhPY62tJ4czPaQZZEyNSnF2r8A1cMYCB0OqjEWN8x/UbKHR
- n/EI4JZOhELQcvnF+IScPTH/dwEV31E4iUIdolKQGsdkVRc8IKsaRXykZPpFkDerl3QrRzTAq
- 1jApWXH7esPKjcqzaL7/Frn4Itj4TX/IVcbZDdifgN6fw+WB78D491AvPyZ72AbnaFBw3sUjv
- /4dLAcANQAoZmlP/JldAfoIQfYTRhHN1t0mUTrKCGP+XfjDIIdf7MlG6P/KikWWSndqNjr9jx
- Qcc4VUVXcJOfp0+qLuAxGo5G/VbygPezXoU/tpwnbYmUWWKKAxnLpDoSA7h4dta9J5kWGQ9Te
- sNydATeYIJh1hkc1GvMs16cYD52RtLjNgCxwWJp5AAk+jVRR7fddVl4ZrUWOCHu6UBqIMiIr3
- bdD55UqrmL+3AxZJvmzkP0OQ8Dz/OTkKObNv9XuSbAcw+xKKeEAHclXgMZUuTp2P1EHk1ZsMH
- wi1OzpMqvOFSiyjeaZEDJdf8IzerMZ4ZEyexnrOMZ2l7gDWwoH148dj4ULoTPEa9fWxNGUeZK
- kTgzbIhi3OhlSSilbqbpnTff6D41V2yRE4QxuvSQH1LsaQUMy6WORheU/hMglm5OtWprF4ch5
- vzfLJZeJtMMYJ9TqZBOI9HwE5r/PYTIHoWCoR4dZlfLvAIpZtgzZ/Pcn9cr67J46y4BP08F53
- i+SnzS6GokXepWVkqZlIYmOsHUgzqAio9QZRn2UxBW4vXB4vOzsl1s+DoADgQRaJIcOB5JgYl
- 9VAVFqnlB11s4d2rF41EguskBOHPbEv56nRxIZJbYfXvY=
+Content-Transfer-Encoding: 8bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 1 Mar 2024 17:00:23 +0100
+Implemented XDP transmit hardware timestamp metadata for igc driver.
 
-Add a label so that a bit of exception handling can be better reused
-at the end of this function implementation.
+This patchset is tested with tools/testing/selftests/bpf/xdp_hw_metadata
+on Intel ADL-S platform. Below are the test steps and results.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/usb/typec/tcpm/fusb302.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Test Step 1: Run xdp_hw_metadata app
+ sudo ./xdp_hw_metadata <iface> > /dev/shm/result.log
 
-diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fus=
-b302.c
-index ef18a448b740..e1e030da1dec 100644
-=2D-- a/drivers/usb/typec/tcpm/fusb302.c
-+++ b/drivers/usb/typec/tcpm/fusb302.c
-@@ -1741,10 +1741,9 @@ static int fusb302_probe(struct i2c_client *client)
+Test Step 2: Enable Tx hardware timestamp
+ sudo hwstamp_ctl -i <iface> -t 1 -r 1
 
- 	chip->tcpm_port =3D tcpm_register_port(&client->dev, &chip->tcpc_dev);
- 	if (IS_ERR(chip->tcpm_port)) {
--		fwnode_handle_put(chip->tcpc_dev.fwnode);
- 		ret =3D dev_err_probe(dev, PTR_ERR(chip->tcpm_port),
- 				    "cannot register tcpm port\n");
--		goto destroy_workqueue;
-+		goto put_fwnode;
- 	}
+Test Step 3: Run ptp4l and phc2sys for time synchronization
 
- 	ret =3D request_irq(chip->gpio_int_n_irq, fusb302_irq_intn,
-@@ -1761,6 +1760,7 @@ static int fusb302_probe(struct i2c_client *client)
+Test Step 4: Generate 1000 UDP packets with 1ms interval
+ sudo trafgen --dev <iface> '{eth(da=<mac addr>), udp(dp=9091)}' -t 1ms -n 1000
 
- tcpm_unregister_port:
- 	tcpm_unregister_port(chip->tcpm_port);
-+put_fwnode:
- 	fwnode_handle_put(chip->tcpc_dev.fwnode);
- destroy_workqueue:
- 	fusb302_debugfs_exit(chip);
-=2D-
-2.44.0
+Result of last 3 packets:
+poll: 1 (0) skip=50 fail=0 redir=998
+xsk_ring_cons__peek: 1
+0x55d7e76a02d0: rx_desc[997]->addr=96110 addr=96110 comp_addr=96110 EoP
+rx_hash: 0x11A51182 with RSS type:0x1
+HW RX-time:   1677795020447895823 (sec:1677795020.4479) delta to User RX-time sec:0.0000 (16.309 usec)
+XDP RX-time:   1677795020447906552 (sec:1677795020.4479) delta to User RX-time sec:0.0000 (5.580 usec)
+No rx_vlan_tci or rx_vlan_proto, err=-95
+0x55d7e76a02d0: ping-pong with csum=ab19 (want 315b) csum_start=34 csum_offset=6
+0x55d7e76a02d0: complete tx idx=997 addr=65010
+HW TX-complete-time:   1677795020447961519 (sec:1677795020.4480) delta to User TX-complete-time sec:0.0001 (79.979 usec)
+XDP RX-time:   1677795020447906552 (sec:1677795020.4479) delta to User TX-complete-time sec:0.0001 (134.946 usec)
+HW RX-time:   1677795020447895823 (sec:1677795020.4479) delta to HW TX-complete-time sec:0.0001 (65.696 usec)
+0x55d7e76a02d0: complete rx idx=1125 addr=96110
+
+poll: 1 (0) skip=50 fail=0 redir=999
+xsk_ring_cons__peek: 1
+0x55d7e76a02d0: rx_desc[998]->addr=98110 addr=98110 comp_addr=98110 EoP
+rx_hash: 0x11A51182 with RSS type:0x1
+HW RX-time:   1677795020448904440 (sec:1677795020.4489) delta to User RX-time sec:0.0000 (15.920 usec)
+XDP RX-time:   1677795020448915139 (sec:1677795020.4489) delta to User RX-time sec:0.0000 (5.221 usec)
+No rx_vlan_tci or rx_vlan_proto, err=-95
+0x55d7e76a02d0: ping-pong with csum=ab19 (want 315b) csum_start=34 csum_offset=6
+0x55d7e76a02d0: complete tx idx=998 addr=66010
+HW TX-complete-time:   1677795020448969442 (sec:1677795020.4490) delta to User TX-complete-time sec:0.0001 (80.163 usec)
+XDP RX-time:   1677795020448915139 (sec:1677795020.4489) delta to User TX-complete-time sec:0.0001 (134.466 usec)
+HW RX-time:   1677795020448904440 (sec:1677795020.4489) delta to HW TX-complete-time sec:0.0001 (65.002 usec)
+0x55d7e76a02d0: complete rx idx=1126 addr=98110
+
+poll: 1 (0) skip=50 fail=0 redir=1000
+xsk_ring_cons__peek: 1
+0x55d7e76a02d0: rx_desc[999]->addr=99110 addr=99110 comp_addr=99110 EoP
+rx_hash: 0x11A51182 with RSS type:0x1
+HW RX-time:   1677795020449912415 (sec:1677795020.4499) delta to User RX-time sec:0.0000 (16.441 usec)
+XDP RX-time:   1677795020449923362 (sec:1677795020.4499) delta to User RX-time sec:0.0000 (5.494 usec)
+No rx_vlan_tci or rx_vlan_proto, err=-95
+0x55d7e76a02d0: ping-pong with csum=ab19 (want 315b) csum_start=34 csum_offset=6
+0x55d7e76a02d0: complete tx idx=999 addr=67010
+HW TX-complete-time:   1677795020449977468 (sec:1677795020.4500) delta to User TX-complete-time sec:0.0001 (81.036 usec)
+XDP RX-time:   1677795020449923362 (sec:1677795020.4499) delta to User TX-complete-time sec:0.0001 (135.142 usec)
+HW RX-time:   1677795020449912415 (sec:1677795020.4499) delta to HW TX-complete-time sec:0.0001 (65.053 usec)
+0x55d7e76a02d0: complete rx idx=1127 addr=99110
+
+Besides, this patchset is tested with iperf3 to check the impact of holding tx completion.
+Based on results below, the impact is not observable.
+
+Result of iperf3 without trafgen command in step 4:
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-100.00 sec  27.4 GBytes  2.35 Gbits/sec    0             sender
+[  5]   0.00-100.04 sec  27.4 GBytes  2.35 Gbits/sec                  receiver
+
+Result of iperf3 running parallel with trafgen command in step 4:
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-100.00 sec  27.4 GBytes  2.35 Gbits/sec    0             sender
+[  5]   0.00-100.04 sec  27.4 GBytes  2.35 Gbits/sec                  receiver
+
+V1: https://patchwork.kernel.org/project/netdevbpf/patch/20231215162158.951925-1-yoong.siang.song@intel.com/
+
+changelog:
+V1 -> V2
+- In struct igc_tx_timestamp_request, keep a pointer to igc_tx_buffer,
+  instead of pointing xsk_pending_ts (Vinicius).
+- In struct igc_tx_timestamp_request, introduce buffer_type to indicate
+  whether skb or igc_tx_buffer pointer should be use (Vinicius).
+- In struct igc_metadata_request, remove igc_adapter pointer (Vinicius).
+- When request tx hwts, copy the value of cmd_type, instead of using
+  pointer (Vinicius).
+- For boolean variable, use true and false, instead of 1 and 0 (Vinicius).
+- In igc_xsk_request_timestamp(), make an early return if none of the 4 ts
+  registers is available (Vinicius).
+- Create helper functions to clear tx buffer and skb for tstamp (John).
+- Perform throughput test with mix traffic (Vinicius & John).
+
+Song Yoong Siang (2):
+  selftests/bpf: xdp_hw_metadata reduce sleep interval
+  igc: Add Tx hardware timestamp request for AF_XDP zero-copy packet
+
+ drivers/net/ethernet/intel/igc/igc.h          |  71 +++++++-----
+ drivers/net/ethernet/intel/igc/igc_main.c     | 108 +++++++++++++++++-
+ drivers/net/ethernet/intel/igc/igc_ptp.c      |  40 +++++--
+ tools/testing/selftests/bpf/xdp_hw_metadata.c |   2 +-
+ 4 files changed, 180 insertions(+), 41 deletions(-)
+
+-- 
+2.34.1
 
