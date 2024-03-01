@@ -1,143 +1,124 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A0438DC3;
-	Fri,  1 Mar 2024 15:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBCD38DC3
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709308268; cv=none; b=JR/wMcVGvfbUxsnls75da7m5k2CV0UCmff+G6/dBWNtcvf6E47g2hcXucefYA997N5OEWYLQHlYwCvvjdzs02wtCWcqOPdzw0Czk6hFbDYGIXtv4iM13ev6Ra+uM31kpiqYsEegcFgGj5u8z9ovGHWYhKMqpr8riA9ekSg6bD9g=
+	t=1709308281; cv=none; b=K/O6KOoh5g0FUbbySeAiAg0Cf1D67jOZGCJK/+0ONjX3sevqcyOZ8ZLTvi6WrpULYrsbGDZS/qkRNdzpxvK+MYAMpsXYz6kIu96P6+ljUIH2tKY0R6EDr4bgjbr2rwTZWh4Z4jNcl2eDWOg1kw2m/yMTB+ZLgZH/1g5kQsaPWp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709308268; c=relaxed/simple;
-	bh=1NVr50xCqj8bNUqZUVBbqR/mLlQgrKJ5lyxXHMeB10A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HdKSi1ThRYY5p+ZIUVe4FerADon93OF6cRQIOzi0f4xK7qg/hSofLVaD/idQedceIRlc9FPS4i2kcVXVLj5bra8/Gn43FJMJopMqCdoy2xgT84vWnV7aLonr1nB9oP7W34Acl9S4zIeyrMFE7pUOcoxFjgSJQ3JJiZNoSbxrhI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bWH1B6ZK; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1709308281; c=relaxed/simple;
+	bh=d6MyUCxfd8VWHve1C20bkt0ftD6ke8XNB2uL/3fRcT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pJ/3caYFOkHdfNsvz4j6pPzP6lFDtWe8383mnxRrkcqSW2p8rA7nL7cTA40WIpFRlQSQ9EKme3XOG0u8OIKtjspPNRU4G4/uV8t21+MSJPzsorWHkOQkwAx+f+hO6n0bebkXTP5QE7WZgl4w3Q6nJkfw/OSCPOLeGDsSWEDVcIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hxENJ5kg; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bWH1B6ZK"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 936D040E0028;
-	Fri,  1 Mar 2024 15:50:56 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id hELV_6bbTa8F; Fri,  1 Mar 2024 15:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709308253; bh=R8/DDqIKJ5vY+bniXhs9aL9h96pvuubAf51BT+x/gzo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bWH1B6ZKCMd/XJa/ZmBEXEErCh9M4Tvae5Z1mnmHVnm43per3TZvMsuYxLEKDS00G
-	 lxdRR6SHTysDFSp3/ExSjA9S/IOVnHrNkmSJ2DV/9ZVT3pjzR45zrbj74d37K1tln3
-	 rl9Q/R8if282SEVeX05FY0cBvNjIGFDnD4JxGhiYJqoOn1oZxV3iVeCbq0drEpCeJH
-	 O8s/w4mEuELAE+zcePWJjD8e1G4OSF1sCXeUHFxLaFkefzOSfJ69aRXK71nq9t+Hcu
-	 tcwLfSOf78nc4Sv+FS7gK/1jhOmFt8xCIj7WefVQLHfRB0b5EJLy4A9a3CgrLFwe5L
-	 5dC5T5S7gnNiiTMp4jQXrcl6FwDJs82ReY32XCp9W1hF5meRU7EA5gQVRdLWqbMAnY
-	 +MibdSepE7LdF+OS6YL4dqXLweQ3oEvObjmfhJsDgcCIQ07c8iCHDkDqmKCKU9e4Bj
-	 sEGTWa9QeKZTgtA8IiNjHTvgLAEvhguJBK3y2oMfANiPQLvbYDRdeS5m/gKOxl5W3h
-	 rAW0jzT8ntoIwpYdTKrefa0b6bqMynE1YgsKTIpVGTAzncrwMJh7iQj3bK9z2TMKR6
-	 FvAUrwQ1ijffEO8He/Ak6/+oyfIyJUOJhbfvpkLF2vpVCEIU+HzrF4PmG8TKrJdroF
-	 0gVxiMfDBMqXe/CBfhv6AMHU=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 60A0440E00B2;
-	Fri,  1 Mar 2024 15:50:44 +0000 (UTC)
-Date: Fri, 1 Mar 2024 16:50:34 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: tony.luck@intel.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
-	john.allen@amd.com, muralidhara.mk@amd.com, sathyapriya.k@amd.com,
-	naveenkrishna.chatradhi@amd.com
-Subject: Re: [PATCH v2 2/3] RAS/AMD/FMPM: Save SPA values
-Message-ID: <20240301155034.GAZeH5StN80cO15qq_@fat_crate.local>
-References: <20240301143748.854090-1-yazen.ghannam@amd.com>
- <20240301143748.854090-3-yazen.ghannam@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hxENJ5kg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709308279; x=1740844279;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=d6MyUCxfd8VWHve1C20bkt0ftD6ke8XNB2uL/3fRcT8=;
+  b=hxENJ5kgqAHQtOXES5Ks2/IOAIspQUC45KT/d0svZ4g6WxOXh/8qdfUd
+   Ud8d16EDKqiw6g7fc9slDVXni/80SGNfwj+A0GPbzU2XbA4vWC2CK4+tD
+   Z80h1/DmoQ0YWILQ4+5S0WVacDlsjwp/7g+3MkwXLDmxUQD7iql4A8XJX
+   nZ85STBOdeMlOBAMWevNlRz987MQe4F+74rJFGc82/b/w6KqDPom8/N9h
+   vAxqnuCdPcR9QwezIJtH8MEQYTuDgYlhLfP/teNCeR+r7CXpH3oDQo1at
+   ve7QyjrIr7iFFgRjNmo3Cd6/bExqaF2c9x4nj5rlHYjtpDR3dSOZi1+bM
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="3700832"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="3700832"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 07:51:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="8370177"
+Received: from linux-pnp-server-09.sh.intel.com ([10.239.176.190])
+  by fmviesa008.fm.intel.com with ESMTP; 01 Mar 2024 07:51:15 -0800
+From: rulinhuang <rulin.huang@intel.com>
+To: urezki@gmail.com,
+	bhe@redhat.com
+Cc: akpm@linux-foundation.org,
+	colin.king@intel.com,
+	hch@infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lstoakes@gmail.com,
+	rulin.huang@intel.com,
+	tianyou.li@intel.com,
+	tim.c.chen@intel.com,
+	wangyang.guo@intel.com,
+	zhiguo.zhou@intel.com
+Subject: [PATCH v7 0/2] mm/vmalloc: lock contention optimization under multi-threading
+Date: Fri,  1 Mar 2024 10:54:15 -0500
+Message-ID: <20240301155417.1852290-1-rulin.huang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240301143748.854090-3-yazen.ghannam@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 01, 2024 at 08:37:47AM -0600, Yazen Ghannam wrote:
-> The system physical address (SPA) of an error is not a stable value. It
-> will change depending on the location of the memory: parts can be
-> swapped. And it will change depending on memory topology: NUMA nodes
-> and/or interleaving can be adjusted.
-> 
-> Therefore, the SPA value is not part of the "FRU Memory Poison" record
-> format. And it will not be saved to persistent storage.
-> 
-> However, the SPA values can be helpful during debug and for system
-> admins during run time.
-> 
-> Save the SPA values in a separate structure. This is updated when
-> records are restored and when new errors are saved.
-> 
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> ---
-> Link:
-> https://lore.kernel.org/r/20240226152941.2615007-3-yazen.ghannam@amd.com
-> 
-> v1->v2:
-> * Changed variable names to remove "sys_" prefix. (Boris)
-> * Used "spa_" prefix to highlight that these are for SPA values. (Yazen)
-> * Added warning to "index out-of-bound" condition. (Boris)
-> * Reworked save_spa() flow to get a valid array position before saving
->   SPA value (Yazen).
-> 
->  drivers/ras/amd/fmpm.c | 68 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+Hi,
 
-Fixups ontop:
+This version has the rearrangement of macros from the previous one.
 
----
+We are not sure whether we have completely moved these macros and 
+their corresponding helper to the correct position. Could you please 
+help to check whether they are correct?
 
-diff --git a/drivers/ras/amd/fmpm.c b/drivers/ras/amd/fmpm.c
-index a7bb36eb60cb..8c3188488673 100644
---- a/drivers/ras/amd/fmpm.c
-+++ b/drivers/ras/amd/fmpm.c
-@@ -125,7 +125,7 @@ static u64 *spa_entries;
- 		  0x12, 0x0a, 0x44, 0x58)
- 
- /**
-- * DOC: fru_poison_entries (byte)
-+ * DOC: max_nr_entries (byte)
-  * Maximum number of descriptor entries possible for each FRU.
-  *
-  * Values between '1' and '255' are valid.
-@@ -285,10 +285,12 @@ static void save_spa(struct fru_rec *rec, unsigned int entry,
- 	unsigned long spa;
- 
- 	if (entry >= max_nr_entries) {
--		pr_warn_once("entry out-of-bounds\n");
-+		pr_warn_once("FRU descriptor entry %d out-of-bounds (max: %d)\n",
-+			     entry, max_nr_entries);
- 		return;
- 	}
- 
-+	/* spa_nr_entries is always multiple of max_nr_entries */
- 	for (i = 0; i < spa_nr_entries; i += max_nr_entries) {
- 		fru_idx = i / max_nr_entries;
- 		if (fru_records[fru_idx] == rec)
-@@ -296,7 +298,7 @@ static void save_spa(struct fru_rec *rec, unsigned int entry,
- 	}
- 
- 	if (i >= spa_nr_entries) {
--		pr_warn_once("record not found");
-+		pr_warn_once("FRU record %d not found\n", i);
- 		return;
- 	}
- 
+~
+
+1. Motivation
+
+When allocating a new memory area where the mapping address range is 
+known, it is observed that the vmap_node->busy.lock is acquired twice 
+but one of the acquisitions is actually unnecessary.
+
+2. Design
+
+Among the two acquisitions, the first one occurs in the 
+alloc_vmap_area() function when inserting the vm area into the vm 
+mapping red-black tree, and the second one occurs in the 
+setup_vmalloc_vm() function when updating the properties of the vm, 
+such as flags and address, etc.
+
+Combine these two operations together in alloc_vmap_area(), which 
+improves scalability when the vmap_node->busy.lock is contended.
+By doing so, the need to acquire the lock twice can also be eliminated 
+to once.
+
+3. Test results
+
+With the above change, tested on intel sapphire rapids
+platform(224 vcpu), a 4% performance improvement is gained on 
+stress-ng/pthread(https://github.com/ColinIanKing/stress-ng),
+which is the stress test of thread creations.
+
+rulinhuang
+
+[v1] https://lore.kernel.org/all/20240207033059.1565623-1-rulin.huang@intel.com/
+[v2] https://lore.kernel.org/all/20240220090521.3316345-1-rulin.huang@intel.com/
+[v3] https://lore.kernel.org/all/20240221032905.11392-1-rulin.huang@intel.com/
+[v4] https://lore.kernel.org/all/20240222120536.216166-1-rulin.huang@intel.com/
+[v5] https://lore.kernel.org/all/20240223130318.112198-2-rulin.huang@intel.com/
+[v6] https://lore.kernel.org/lkml/aa8f0413-d055-4b49-bcd3-401e93e01c6d@intel.com/
+
+
+rulinhuang (2):
+  mm/vmalloc: Moved macros with no functional change happened
+  mm/vmalloc: Eliminated the lock contention from twice to once
+
+ mm/vmalloc.c | 314 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 155 insertions(+), 159 deletions(-)
+
+
+base-commit: 10c2cf5fe97647d68ee89b1f921e982e71519f20
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
