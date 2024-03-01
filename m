@@ -1,126 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC823BB4E;
-	Fri,  1 Mar 2024 18:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BAB3C46C;
+	Fri,  1 Mar 2024 18:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709317127; cv=none; b=hfQvhmSVvTIuW2a5ZWgUdG1ajjuHywuYj9bp8gMlyZf1Ceb31akImaGNqVZe6dIi0s9ImOmHt8vDbm3S1pZS5M85bZl7FAd78rTH0RsPapk2I8KJvfGeRdJAROrcp9PKVSwg4Xb6hZ2e29sCZlejshTRcYoXNcZCZAZrgGAn7MQ=
+	t=1709317128; cv=none; b=iwW6AOZxsCh0YF0ckQp5FnmXTBhdBhGQBuj7jcWWYNYNuJ/t01w9ynThwHo+AzC0lfx2PhQLK1uaeGj7bdJ5va3K0XJVS4XMyehpYgyiuqr2Xjr5Ri2KQLXHnM+XcnQ5jvtbE8OzsD1jVwhr2S1YEbeLChzNjbyXOYpkZUsiTdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709317127; c=relaxed/simple;
-	bh=q/ftgULoZU14gjYyOUW8zk8XyZYRKnHrhnJsjauO4KA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hnH55WU1GteO1+2xrhkc3RhWSsFi+wVcUChit9jVfILIPPWH0iv8wIOefutlhugMRWkNJrY1kNT7sIsmsbzi/ilplrrN1HTFzLbAmAsPQgwjm3qCaey6IS+bLoADV2dvGS8rcYZwlHLNGlHrBPK9115cN7CnDBEqwYfIQmFk/6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="14571913"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="14571913"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 10:18:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="914022095"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="914022095"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 10:18:41 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rg7Sw-000000091jN-07sS;
-	Fri, 01 Mar 2024 20:18:38 +0200
-Date: Fri, 1 Mar 2024 20:18:37 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: geert@linux-m68k.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	andrew@lunn.ch, gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com, pavel@ucw.cz, lee@kernel.org,
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] auxdisplay: Add 7-segment LED display driver
-Message-ID: <ZeIb_TaKK1DE6l6U@smile.fi.intel.com>
-References: <20240301014203.2033844-1-chris.packham@alliedtelesis.co.nz>
- <20240301014203.2033844-2-chris.packham@alliedtelesis.co.nz>
+	s=arc-20240116; t=1709317128; c=relaxed/simple;
+	bh=MCwwm/uaOZTKaQ3CJuZ7Aqth/dw3YVtxCaMEr2Vs0mM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tQMQIgPQVvYYSAFxOQAIu3JEUEgAGONcmKAooqJKaEvbpFnD2Kj23boOQrAcbK00sp2UJi0DtFha7esWhQEZ1r340NZKOr53ijr1P8n4uy76kpB2Tla5SaYTVrhJCUHfU+rZT9Kn4fdGOXYOTrkjIqF9RCi+DDASBTbM9jIQgm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k79Tnt2S; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k79Tnt2S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2DE4C433F1;
+	Fri,  1 Mar 2024 18:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709317127;
+	bh=MCwwm/uaOZTKaQ3CJuZ7Aqth/dw3YVtxCaMEr2Vs0mM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=k79Tnt2ShXxnBeAoXK/KEb6ktRUwk23q3/OlVtfVVY8zOrotSi+uTDf3paXQ8g0zk
+	 rvgYfixa7Aj+3vhSsyc8DoZCUTI3ZmWIt4e02ZJmpySKF1pmgpko52JIgsKtuDmY4H
+	 bsaphPJdwk66Ahz6AAXe0h1A5o3zez6gOu941qCMwRBl7NPB5Wup4oOCe5dBxT2NNu
+	 t+IfUqh4Wl+UAxTv8m86hA+AXX1Q87dIgPevzQUPbt+uHGPGjjJgQP2c0DT7apl1Is
+	 9bAs7QdQMEgyDtScbe2BwL8rV+f+tDhlTWhz2keahfyU5ixq3r3z68inc0EJ0BBGqK
+	 pMnmiQqJRHUag==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 01 Mar 2024 19:18:29 +0100
+Subject: [PATCH net-next 05/15] mptcp: dump addrs in userspace pm list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240301014203.2033844-2-chris.packham@alliedtelesis.co.nz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240301-upstream-net-next-20240301-mptcp-userspace-pm-dump-addr-v1-5-dc30a420b3a0@kernel.org>
+References: <20240301-upstream-net-next-20240301-mptcp-userspace-pm-dump-addr-v1-0-dc30a420b3a0@kernel.org>
+In-Reply-To: <20240301-upstream-net-next-20240301-mptcp-userspace-pm-dump-addr-v1-0-dc30a420b3a0@kernel.org>
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3274; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=oj+WD2Qiz2y+QGN1F1vEBEbF15PvF2ufVBuTbZM1LxY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl4hv0inT7v7SM31h5ojK6U8VeKvmWj657GgeD/
+ vCK/3so8ciJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeIb9AAKCRD2t4JPQmmg
+ c+OAEACR+XRPTwiSXfGepQu9Lkq9UWoH/krsqtdkgyBo7VbNhPyyBbsyzEcElTqN101HIjcMFB3
+ dv9L8Q6ndQvyL9pcBJoa4e8OybOz5wG+oNBEYHGjhg5qlE61pZvz/ctGdidNUY4CIbRUFwuRWwg
+ S14FvS3HftztNvKY1pn8MTXsmDwmSbLY+WHdjo6I96FoKY2in2V7pleHY961Kl5L4Z9KpBOe9Rd
+ 5gtteNfjiCn3u8ziqmm++8agycNbGk64/gS1CMwU2jnAmX/kL28LeRLpe1NAmJXWOqm4iPkkEGO
+ F57D133OG1PJOV+YSbLqRGLFrYbi8QrJDy4ayu8c2WeMaV7a/u29hH2tASgkADxBCA+o78WpDJ3
+ CWLVMlbHXT19ulPT4SfnQstSfcje9p/DEFShoVqLN3bDSec/ZHjntAUeUoSreO5pzsX/8n2dxqO
+ w2SYmUVxC6UX1snE+Xd3hCrvgEsx6MBWmyn0MpFYl0hF4TtC/Mn46aFrsJ6l0qb3AW10KtHPjXi
+ e8W32dbMFAGqqVVoTeOifFtXEFfnjDBOUnJpz+qxotxN2ZOTu9COIZ7L/H0j7oxMPbNky5DY+qV
+ C3HHek/RU7MBRgJBWyVP7XkYRwkdHNW/dujX1ps5UTO09trsPhNDxc9aVaziovzyZQBP0TfpWTA
+ X7wxR9bgZx6e/Tg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Fri, Mar 01, 2024 at 02:42:00PM +1300, Chris Packham wrote:
-> Add a driver for a 7-segment LED display. At the moment only one
-> character is supported but it should be possible to expand this to
-> support more characters and/or 14-segment displays in the future.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-...
+This patch renames mptcp_pm_nl_get_addr_dumpit() as a dedicated in-kernel
+netlink PM dump addrs function mptcp_pm_nl_dump_addr(), and invoke a newly
+added wrapper mptcp_pm_dump_addr() in mptcp_pm_nl_get_addr_dumpit().
 
-> + * Driver for a 7 segment LED display
+Invoke in-kernel PM dump addrs function mptcp_pm_nl_dump_addr() or
+userspace PM dump addrs function mptcp_userspace_pm_dump_addr() based on
+whether the token parameter is passed in or not in the wrapper.
 
-7-segment
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/pm.c         |  9 +++++++++
+ net/mptcp/pm_netlink.c | 10 ++++++++--
+ net/mptcp/protocol.h   |  3 +++
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
-...
-
-> + * The GPIOs are wired to the 7 segments in a clockwise fashion starting from
-> + * the top.
-
-Not exactly. They can wire them as they wish, we just need to agree on the
-sequence of the segments in DT to be mapped to the 7-segment diagram.
-
-...
-
-> + *      -a-
-> + *     |   |
-> + *     f   b
-> + *     |   |
-> + *      -g-
-> + *     |   |
-> + *     e   c
-> + *     |   |
-> + *      -d-
-
-I would drop this as it's available in UAPI header...
-
-...
-
-> +#include <linux/bitmap.h>
-> +#include <linux/container_of.h>
-> +#include <linux/errno.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/types.h>
-> +#include <linux/workqueue.h>
-
-...which you forgot to include here.
-
-...
-
-> +static void seg_led_update(struct work_struct *work)
-> +{
-> +	struct seg_led_priv *priv = container_of(work, struct seg_led_priv, work.work);
-> +	struct linedisp *linedisp = &priv->linedisp;
-> +	struct linedisp_map *map = linedisp->map;
-> +	DECLARE_BITMAP(values, 8);
-
-> +	bitmap_zero(values, 8);
-
-Why do you need this zeroing?
-
-> +	bitmap_set_value8(values, map_to_seg7(&map->map.seg7, linedisp->buf[0]), 0);
-> +
-> +	gpiod_set_array_value_cansleep(priv->segment_gpios->ndescs, priv->segment_gpios->desc,
-> +				       priv->segment_gpios->info, values);
-> +}
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 53e0b08b1123..193198cec74a 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -441,6 +441,15 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id
+ 	return mptcp_pm_nl_get_flags_and_ifindex_by_id(msk, id, flags, ifindex);
+ }
+ 
++int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
++{
++	const struct genl_info *info = genl_info_dump(cb);
++
++	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
++		return mptcp_userspace_pm_dump_addr(msg, cb);
++	return mptcp_pm_nl_dump_addr(msg, cb);
++}
++
+ int mptcp_pm_set_flags(struct net *net, struct nlattr *token,
+ 		       struct mptcp_pm_addr_entry *loc,
+ 		       struct mptcp_pm_addr_entry *rem, u8 bkup)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index e8cb887561e0..5fae35b6b305 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1722,8 +1722,8 @@ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return ret;
+ }
+ 
+-int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
+-				struct netlink_callback *cb)
++int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
++			  struct netlink_callback *cb)
+ {
+ 	struct net *net = sock_net(msg->sk);
+ 	struct mptcp_pm_addr_entry *entry;
+@@ -1765,6 +1765,12 @@ int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
+ 	return msg->len;
+ }
+ 
++int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
++				struct netlink_callback *cb)
++{
++	return mptcp_pm_dump_addr(msg, cb);
++}
++
+ static int parse_limit(struct genl_info *info, int id, unsigned int *limit)
+ {
+ 	struct nlattr *attr = info->attrs[id];
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ab9c8004eb56..69338a6c040f 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1042,6 +1042,9 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
++int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb);
++int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
++			  struct netlink_callback *cb);
+ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+ 				 struct netlink_callback *cb);
+ 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
