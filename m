@@ -1,95 +1,75 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0561870030
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B64368;
+	Fri,  1 Mar 2024 16:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709309572; cv=none; b=S01lgJ9Y1FFjSZG/VSRGXZKBhJhh2TEKJFXBNyAV5qFs+QqGmNvX26jzJseT8D9fuzpr29ANRudM0tMpgdY3TrWelzlh8VtL7fg5N29+dAqnyjehw+QwPqOAPLF+vfvE/nrdOZ3DW8o1vN2ph4/1TKEyb0D54ENHAVi0LF34ULs=
+	t=1709309650; cv=none; b=HbIbgNg+wuRrLkIm2n4tQLTFbMTihHcWi9Mtywm9XypdyGxL4MNYOJzGFQH3erqTsNPP7brA8AvzDj5/BgBeqgUx3cfmbDamyFG92LVB1yPvkjCe+lHGVa4y9MqaxYV0obhU/qRnUZ19WWfKqZHPo6hhlQ5rocYzhGvmR4BleP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709309572; c=relaxed/simple;
-	bh=vDh09+dZ3VBmJF68aeZGfTWrikih0aY1G6yd5Dg8oO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GO2JJzzhXTUDg6t0e6NIjXVtNoMh3CO+AutBSKoOmJi21IwcM9aWJAGwQ7HF01d83Fer3xebcPcCIgHZU+8JUrsnrb9axwRdte4jBs+5gcwT2Byl78iI8mJgpf9zu766AnkeuezYBin5rBsus4X6FuAvftYhWF06FqfQJMe/4EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NDzNuBrz; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1709309650; c=relaxed/simple;
+	bh=BikzDK1QW0K2bWi7muKUljDgu1skoyyFPZELijkX52k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dirbx7EbcL3vTgfHH/Zk8+hpKhEs1Oe2UVoOz8ozw6Bue1IXRVWi2CQKNoWaysrLitsI/XHY3riv3GAMIBKe6SnluU8eCWtPDyYahqi0KEesfr3JGFMGifu9ifTdLzZaS1jksOr0ju9lq1ArcKd6wWr33bvyrAQJD4N5mqNGSsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEOzgbzV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NDzNuBrz"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 30A8240E0185;
-	Fri,  1 Mar 2024 16:12:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 7ioUtbWqE6Q9; Fri,  1 Mar 2024 16:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709309566; bh=wJEN0joQiYmuo6Ze0sGnkJl0zJ3wbOy6dvxMTyKWEa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NDzNuBrz9Xbn608O1fqBcbogJkQGMUN/1nMKmo2AV/Ex8UuybWZMkypFvAXDog1jU
-	 uAVsXlSgi5QtOPycs/jQ6jiI8ocLJa2JXk9OVs0ZpI4qa3J4vqr1ZnTUaARtLDU8xu
-	 NUOFDvKzQk4XHSZx+vCMQjmPlsibe6KURvY85pEeDsG++6hm5XlEYopzqGpmaru0w0
-	 1/c20Tb5JjFPAVGzHQNxTXpKzJqRp48QKbaHRoKPjpwrq7GGHIiAcOmLhaRKUPTSWw
-	 Q3bbZ1WI/My9XEA9lnmppRLh9Tr5sQ9nErecKTyg0+p83RGeT3qRjRiN6H0qjPAiYT
-	 QQkHSP8y4BSWE237neLwfqH2f7Rie55Suy3jl5GnAfF8vY38N2MfW3yhqFSH5P60Iy
-	 JYmujTeGKdCNPhuaCBqZwws8aT6+BU2+GyOpfMW/DuLwJxZKEN9GkW8o/fypRgwa3W
-	 JAP8BNmcaBoKvj8+Rw+PjJjJXNeWF36WflhJ2Pok6CSWeCafmNQmNtPGhcBgPYZqb4
-	 jcxrgn4ivlo4/+8aQG0URuJHfxoMML/trPkgTC3PmGWi20fyek3zaxRLAbFTxaUyD+
-	 yQCGcdivkq1cV9KUsHg+whvwOw4nyqirnLTfVy6sw7BEw80mqIpDdO8b3eD85axZmV
-	 Fw/epio9qqARIYDGnE07LvH8=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E17940E0028;
-	Fri,  1 Mar 2024 16:12:35 +0000 (UTC)
-Date: Fri, 1 Mar 2024 17:12:34 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>
-Subject: Re: [PATCH v7 4/9] x86/startup_64: Simplify virtual switch on
- primary boot
-Message-ID: <20240301161234.GCZeH-co78aShifhAN@fat_crate.local>
-References: <20240227151907.387873-11-ardb+git@google.com>
- <20240227151907.387873-15-ardb+git@google.com>
- <20240229103740.GKZeBedEybE0IeOXUG@fat_crate.local>
- <CAMj1kXEwRgbVtnNA2_Ewt0p2azpx=MBnc94fNWVZrzr4aH2EkQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEOzgbzV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B3EEC433C7;
+	Fri,  1 Mar 2024 16:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709309650;
+	bh=BikzDK1QW0K2bWi7muKUljDgu1skoyyFPZELijkX52k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TEOzgbzVFsLomQFvAfuSVAfDEuhsD4VvQdASJ6LjNj10+td2wi0MCxU4FIP3pi0V7
+	 a1TdcPajbG1NfAVladYc6nqtbsgm3GdUE8uSqAUN76NLm1P3oOASJQ4NOcT87a7FzR
+	 a6Zk/13yRchQIQ8WyZpiIKujV3KCDpKc44CQgFzPorDsheHjwjGq4M6uDjEkuMLGuv
+	 x8Fkbl1iqCWIZsmUnn511pkATzZudzJ7jsOqi3iuhNBT6HV6r2eTimTDV9+4RhQZxM
+	 PZjiakJ1gh/Tjya4WNczaoQIZ7roUSxYyfZEpOHv4dc8uTxI0L6Y5Azs4Tgl0QTplD
+	 MbhZGTNc1pykA==
+From: Conor Dooley <conor@kernel.org>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Jack Zhu <jack.zhu@starfivetech.com>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [v3] riscv: dts: starfive: jh7110: Add camera subsystem nodes
+Date: Fri,  1 Mar 2024 16:14:00 +0000
+Message-ID: <20240301-wildfire-glue-983d58132599@spud>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240219032741.18387-1-changhuang.liang@starfivetech.com>
+References: <20240219032741.18387-1-changhuang.liang@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEwRgbVtnNA2_Ewt0p2azpx=MBnc94fNWVZrzr4aH2EkQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=355; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=caay3mRU/JhC/YsFIkNMgzQjqWb0CeveGJRpWt2VyHA=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDKkP/x03ZRMI+/XnQ7JJfsT3mQumPClRPfv3XWH47x9vh TuVZ3D96ShlYRDjYJAVU2RJvN3XIrX+j8sO5563MHNYmUCGMHBxCsBENixl+CuzbQHLC3uW2w1f 791QF1ryMNCNP8f9iIV7BsvOAh/9kr2MDH3cs4Rz1yz8W+G18e7FDdkWKlNPz9ixe+2WSf3P8rc cZWYHAA==
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 29, 2024 at 11:36:01PM +0100, Ard Biesheuvel wrote:
-> Because we enter with a 1:1 mapping, and so we can only switch to
-> another set of page tables that also includes this 1:1 mapping. Once
-> we are running from the kernel mapping, we can drop the 1:1 mapping
-> but we still need it.
+From: Conor Dooley <conor.dooley@microchip.com>
+
+On Sun, 18 Feb 2024 19:27:41 -0800, Changhuang Liang wrote:
+> Add camera subsystem nodes for the StarFive JH7110 SoC. They contain the
+> dphy-rx, csi2rx, camss nodes.
 > 
-> What we could do for robustness is reduce this 1:1 mapping to text +
-> rodata, and make it read-only, but I'm not sure it's worth the churn.
+> 
 
-Yeah, I was experimenting a bit with some shenanigans with those two
-pagetables yesterday and arrived to a similar conclusion - there's no
-point in trying to unify them.
+Applied to riscv-dt-for-next, thanks!
 
-Thx.
+[1/1] riscv: dts: starfive: jh7110: Add camera subsystem nodes
+      https://git.kernel.org/conor/c/28ecaaa5af19
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Conor.
