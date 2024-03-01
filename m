@@ -1,90 +1,127 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED192EB0E;
-	Fri,  1 Mar 2024 09:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B6E6A8D6
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709285285; cv=none; b=tYpjXzXdtJluGwrMVB6kVH+pey0zLmfYYL1NNmHN91JrQKwGOiIt8kM6zEVNIEGeQpiGgMw9ZymmFt/Ox9tNcjE++v0UIpULNleZEgpBtBnPV4aaJ6rWM92sJYNtZR5F1Pj3T2j8qDVqMdwJBV8mHE4GQGARJAGXQbszZ6GDwgs=
+	t=1709285292; cv=none; b=Xm6TaGoAoT1L6bKAzBffCV/sEYqBd3RpnPhpqbIpPbZDCuKJ3P7XMNxH5J7vCA7mTfcIPqy7VipI1y8rIbeRdeyyI+NAv6tEWcETr1Lxwtk1fTUJQODejkzzn4p1uHMjAIF19r9SkYA2mLm1bP6KJXGvtjf8gab74A3lLlkgCHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709285285; c=relaxed/simple;
-	bh=L5nqEaZ564iQomLzTksYYC3TTFf26qlS+Q0ueXvuHXo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=O+dZPWmuJQMvn4CHkVSL5ER8cdh/9dJMSi250Z1DfkN2vCSq3RpMN1PJ5y/QiLwIy8wAKXcGoCB4WjyCTBI7PcsLkJQbNnWd0itwMPjxL28VbS7jtMbxEiBc5QjtM7uLNegS/4cAeUvF4U+GSF2OAXzpStyYWE+qNVh7zQcYa+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Bzk6hyKa; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709285292; c=relaxed/simple;
+	bh=l7/w/M9Qg8/uTF4RCzKi8u0Y/0s8UezyrPjWXYLzReY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gHMwb6KQDGczamoJLeoMaKamLOzMIIsoUivt2E7IxAstEjHpq8GZ5hqalfZlD45zhT0e1BbMAMbJTG1pnYouRgAM+grUwjZEIIbhGNpH3b8PW7pZM6cwI4gMtqhUGz4A10qYa3mWntX62fAZt7RexXucZq7/PPTR3szoRJlcZXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=E3r8JZ91; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Bzk6hyKa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709285282;
-	bh=L5nqEaZ564iQomLzTksYYC3TTFf26qlS+Q0ueXvuHXo=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=Bzk6hyKaK3hasC6i1scAlG78eYLWjj6OIWtqJMbLwQBZVYC0FpjhFJ3p6eFWTz+RL
-	 +1ZaqmvmNpnVwn/P1/ZfVUkJFIXVw+KvF5SdqB1YX1zKcSKybkLKeDF+daeaKFP5OQ
-	 LaT6R1Efisw/JFRFEJ/y5B0tcKgYnZSCiTUnBRnT1+8iTo4j3+S/K0lgprg++fzk6x
-	 BjY0h0Y+J80SbbY6DAyJZGP4pxKXYIlykYLmUr1BUNzs10dLhN9lQbkqCe4wpTTfMt
-	 gcQYe4wM7nWQiT8FU0kaLM3cr8K5MH5rjHD9zeqk7afl3Ubk7qZxbqK63x1yVsYI08
-	 f96PA872lvPLg==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B96AD37810CD;
-	Fri,  1 Mar 2024 09:28:00 +0000 (UTC)
-Message-ID: <d44ada61-8789-444c-9823-fc68704586bd@collabora.com>
-Date: Fri, 1 Mar 2024 14:28:27 +0500
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="E3r8JZ91"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709285289; x=1740821289;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l7/w/M9Qg8/uTF4RCzKi8u0Y/0s8UezyrPjWXYLzReY=;
+  b=E3r8JZ91XbFUDYTC/PSNRPAuDRdWIPMz19g1ZhyS6td3xvSJHeUNRM6c
+   10vzfnnn7uPDHLLoTCYw4XTS2FRY3dB3Qb0jjPoMAo1KgrXID7F2gM78T
+   oupnJXyEqcLMbk/Kov4OMiehFgN0OaeHhMBpZSId0bVAWQMpR0Y06cB43
+   OlYJeyeYvqC0RQYs6WxKUQl6m64/8Bsphr93eg4kGhicpaYr4UGF/cMwn
+   eUD7j2ukflzXjOvVftS41dml2I1tmI7qBJw1rzLatdapB6W7GQWiUVUdZ
+   22ljIlRjOLHETDn6+wXhSsy9pzsQpz38TZ8Up/BaVASz0H15NpQC7/wmo
+   Q==;
+X-CSE-ConnectionGUID: ygVnSIYfQEKFz2nIe+wEow==
+X-CSE-MsgGUID: v34koBgySemG9lkf8xSESQ==
+X-IronPort-AV: E=Sophos;i="6.06,195,1705388400"; 
+   d="asc'?scan'208";a="17056042"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Mar 2024 02:28:07 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 1 Mar 2024 02:27:44 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 1 Mar 2024 02:27:41 -0700
+Date: Fri, 1 Mar 2024 09:26:58 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+CC: Conor Dooley <conor@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Eric Biggers
+	<ebiggers@kernel.org>, Elliot Berman <quic_eberman@quicinc.com>, Charles Lohr
+	<lohr85@gmail.com>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] riscv: Set unaligned access speed at compile time
+Message-ID: <20240301-reload-gristle-b417fe02f980@wendy>
+References: <20240227-disable_misaligned_probe_config-v5-0-b6853846e27a@rivosinc.com>
+ <20240227-disable_misaligned_probe_config-v5-2-b6853846e27a@rivosinc.com>
+ <20240229-company-taste-daa305961e3a@spud>
+ <ZeDO4CVOi6q4u8Lt@ghost>
+ <20240229-dolphin-pennant-eef41ce44043@spud>
+ <ZeDZnIemm06yU4KF@ghost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, ben@decadent.org.uk,
- shuah@kernel.org, akpm@linux-foundation.org
-Subject: Re: [PATCH] selftests/mm: Dont fail testsuite due to a lack of
- hugepages
-Content-Language: en-US
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240301073300.287508-1-npache@redhat.com>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240301073300.287508-1-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="OWPJFMUiteII9XLr"
+Content-Disposition: inline
+In-Reply-To: <ZeDZnIemm06yU4KF@ghost>
 
-On 3/1/24 12:33 PM, Nico Pache wrote:
-> On systems that have large core counts and large page sizes, but limited
-> memory, the userfaultfd test hugepage requirement is too large.
-> 
-> Exiting early due to missing one test's requirements is a rather aggressive
-> strategy, and prevents a lot of other tests from running. Remove the
-> early exit to prevent this.
-Why don't we only skip that particular test which requires huge number of
-pages instead? Thus the behavior of this script would remain same.
+--OWPJFMUiteII9XLr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Fixes: ee00479d6702 ("selftests: vm: Try harder to allocate huge pages")
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  tools/testing/selftests/mm/run_vmtests.sh | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-> index 246d53a5d7f28..727ea22ba408e 100755
-> --- a/tools/testing/selftests/mm/run_vmtests.sh
-> +++ b/tools/testing/selftests/mm/run_vmtests.sh
-> @@ -173,7 +173,6 @@ if [ -n "$freepgs" ] && [ -n "$hpgsize_KB" ]; then
->  	if [ "$freepgs" -lt "$needpgs" ]; then
->  		printf "Not enough huge pages available (%d < %d)\n" \
->  		       "$freepgs" "$needpgs"
-> -		exit 1
->  	fi
->  else
->  	echo "no hugetlbfs support in kernel?"
+On Thu, Feb 29, 2024 at 11:23:08AM -0800, Charlie Jenkins wrote:
+> > > > 1 probe: probe at boot time, falling back to emulated if not perfor=
+mant
+> > > > 2 emulated: always emulate it in the kernel
+> > > > 3 slow: don't probe or emulate in the kernel
+> > > > 4 fast: Your current fast option
+> > >=20
+> > > Emulated doesn't mean that the kernel will always emulate the unalign=
+ed
+> > > accesses. It means that the kernel has the ability to emulate them. It
+> > > will only emulate them if the CPU traps on unaligned accesses. Kernel
+> > > code can choose to forcefully align an address it thinks may cause an
+> > > unaligned access, but that's slightly different from emulated.
+> >=20
+> > Sure, make option 2 "don't probe at boot time, emulate it in the kernel
+> > if we trap". I suppose in this case though, to get a correct output in
+> > hwprobe you'd have to still attempt an unaligned access at boot time to
+> > see if you trap but it will not perform the speed test?
+>=20
+> Are you trying to cover the case here that the kernel is compiled as
+> "emulate unaligned accesses" but the kernel isn't actually needed to
+> emulate unaligned accesses?
 
--- 
-BR,
-Muhammad Usama Anjum
+Nope, the case "don't probe at boot time, emulate it in the kernel if
+we trap" which is replacing 2 above.
+
+> Seems like if the kernel is compiled as
+> such it would make sense to report emulated with the assumption that if
+> the kernel isn't emulating it, something else is.
+
+Or maybe nothing is emulating it, we don't know. Feels to me like it
+should report slow by default, given that's the option you can infer the
+least information from, and then report emulated on trap.
+
+--OWPJFMUiteII9XLr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeGfXgAKCRB4tDGHoIJi
+0md+AQC9ln9J1hgmg38Hb8NELNWiEuurKRN0vtr8/lu8ceH4fQD/RjZiXsoMUXMx
+e4Gjfj0VS2ezNPwHU685ZVn5/3sqogI=
+=dmRT
+-----END PGP SIGNATURE-----
+
+--OWPJFMUiteII9XLr--
