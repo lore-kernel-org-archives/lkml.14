@@ -1,154 +1,165 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4B26F06D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1BF6EEF9;
 	Fri,  1 Mar 2024 13:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709299815; cv=none; b=CWtgbQPyt08pWP2cgclO5dEw7TGo/67xvyv3md+VEbGkcqOmDU3Q29NBfP+Etmc4rEy1lmbJHDtzHU3D5dgX/w2Krl6X7AFVVN0hi/dQhFSvRoIZFyCGCDCytwDgcJtZ+tpRZF6tysS7voB/nxFn7kNoBgrcMhuiIlZNhMdoIws=
+	t=1709299815; cv=none; b=VZhrQswEiTVj4bWxPUS3zmRFzZJFDsdNeJEEcsdEszFkW1mz3cejQMQIwedXONNa0fx5cj6qdBxclZFlRPJMGs2hX69Gk1ACnkOR+ABZ4seweQ+wADzr9JztX0p47p9ZaIzXrnM5yvOv20j9apG1EjJDBx9nS7Bg5ucl8tEKXW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709299815; c=relaxed/simple;
-	bh=Cb3N2rHpFtZQNAnh8qaVDyGADLlBDepE3AHgVkfB5/w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eSWVwQfdmsXQcU1nkU4ds9pYRL1tXrj6paBrwwlgftTaTgpe8uN1xHO1u5gSQOF7bTifWz8e0uWRBu4JCs5DRoVugok8Dttf0b78W30pZgxihItyij681/xnl5LkpdCL6sVupfV7ZYKRkLhH9sZDFfqi9vVnkZmpymJ1tP/oWow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FmdJHaBd; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=itW3zc1Au9gOrT+clWgE9czbBBJd8sNqwoxOtvPtCRo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tkne14w2qNLMcv56rfl93qZiC2+i/vHbBdb3eeC5xRmnDKpmfue0N3aTJ7wV2DEmOmSQJNCpelH6Wmcm0CNv3yWIt2vwET/EizS/u/N6PZRMsZsnO/nDLJRkH5462SA8HvS7RKjV67r9Ht3FeHnGOg/EtDqMS61Ub1+YJDJH0PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=oWK3UAjE; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmdJHaBd"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5e4613f2b56so1843292a12.1;
-        Fri, 01 Mar 2024 05:30:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709299813; x=1709904613; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HHckA948ZmaGkyMViYat8ojP3Slv0abWxwkHxBmiobA=;
-        b=FmdJHaBd+vm+05n71QyKuZTU4jegTE23JLXB0hhpdwJla4DAv7K/z/mK67HBd3kDWp
-         UtHKCFGEwAZRbcL2VLQCDXGrnU0X7W4fqMagEsHux11BjwDCLKoNCmLS/TwsTZQIbWV9
-         ccSe2AMPj8e0fNbwgV8kZNCk4zjBMR46IchgqEVBKKmdNELTk4L1S2cx3OceAZczq+2p
-         m2xVpszc65nVTKgth/qPhIkO+irkoYIatBBrM3YlmhCazS6lyJGV/XczExkCnijA/AUS
-         MKuhjnkOsTlbf658LhymSF07V7LMheWe9EwzCwIHD69yw7XMpHhzx5S3wFT8DnGOv8OF
-         ENyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709299813; x=1709904613;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HHckA948ZmaGkyMViYat8ojP3Slv0abWxwkHxBmiobA=;
-        b=K0WRQ8aAKSoDc2Co1K6aRDPtDJ5LxHDi3dP4S4GgQD6UQk1PAlRL6qfUNyu6W507PZ
-         Wj+qCtbXzB1Pi1YFtyJ2dwqJppjVs11KzhE66AkkrgbH9abU0FD9C6Bb0cAZ6ARgui1t
-         lXtLnpoGE3joCh/ReqHzFjJvzfj6MdlOD75RRj5j5atopaXzL//W31i1v+fTHoBwOPIy
-         J+qqXCB+sSXoNr8fIbAkL/o2AqvpqbFiHA13gCFTwIKiBZ7Km5xO1x2z+m9+4xfyp8mS
-         IIYOlBNmGlSdSs2pV/3AUMKz1vAAT1ZRXtXCl/tQCmJZWzfICbi3Xq4Br41jMHD0ArRX
-         TtdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWf0rd0RI7szp35qJ2WnMhKPGnkpSdk5vBwnupu+42QhwupsWLM1+rdwlzt4GgMWyX3GnNIVuxgQRAeOoYgrdCBFGPCXQP2CWH2gEpECqRSBAlJADo8iMclvClh/hh1PnAs8foR
-X-Gm-Message-State: AOJu0Yw8PhpgtWoVAjTA/kd02MC7TTEpl0Qv4YEQHorP+oVNGExwef//
-	6XQPdFtXdW/BWSz55G/DORQWmZpBaM4rfkj28Be4AyzGNtCcY0CcqjSghuv9I1Pxh2VcP42D/dL
-	CJxEZc3svICdReKDFQoSemN4Tp+bmJyJ8CG90fw==
-X-Google-Smtp-Source: AGHT+IFjPiaNvT7Wmp/5bfnXXjIvPQWaa0U3BGSTH5v/V1+baHlSVrYfIKXQxO+DT5ucIicUHZPSIsOYQ1+VUT2jHHs=
-X-Received: by 2002:a17:90a:4981:b0:29b:6a7:c52c with SMTP id
- d1-20020a17090a498100b0029b06a7c52cmr1588418pjh.38.1709299812985; Fri, 01 Mar
- 2024 05:30:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="oWK3UAjE"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id C478A1000E2;
+	Fri,  1 Mar 2024 16:30:05 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru C478A1000E2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1709299805;
+	bh=vnLiTkGUt6ZVR81n0z24N9mJLxmAWvIfkLqmfb9IF4s=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=oWK3UAjEsaPd18f3yPAy3wDnGwUcjkXRyBmZBlkYwTBjq1rQwmO7bsMcxC1eoP7U5
+	 eUGvtCHARVT9UAtWnXcxNRLzE/BagT2q0UFdE4zqolPk5De3bNHka+CmSFGhE5R6aq
+	 0xejryk4EFVfmd1pilBJ61L4kTF0pOpovStsNr1iJsxxoNnKZkoEe7x1IKgbSTVea+
+	 kZKwabs+CAGVzfnJd+FpGu1sZFYitv+pQTz5lF8qlOyA5xGGAcjRqoKRZo8RG3dzYF
+	 Sa00PPdBiS/ofUKr9gDqcpIEHc8czx/CTHF8++E5V7cuGU6gtIb2fQg8+t67AdlmaR
+	 lMxEmww2vjw5g==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri,  1 Mar 2024 16:30:05 +0300 (MSK)
+Received: from user-A520M-DS3H.sigma.sbrf.ru (100.64.160.123) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 1 Mar 2024 16:30:05 +0300
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: <neil.armstrong@linaro.org>, <clabbe@baylibre.com>,
+	<herbert@gondor.apana.org.au>, <davem@davemloft.net>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
+	<martin.blumenstingl@googlemail.com>, <vadim.fedorenko@linux.dev>
+CC: <linux-crypto@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kernel@salutedevices.com>, Alexey
+ Romanov <avromanov@salutedevices.com>
+Subject: [PATCH v5 04/21] drivers: crypto: meson: add MMIO helpers
+Date: Fri, 1 Mar 2024 16:29:19 +0300
+Message-ID: <20240301132936.621238-5-avromanov@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240301132936.621238-1-avromanov@salutedevices.com>
+References: <20240301132936.621238-1-avromanov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229195532.7815-1-christian.gmeiner@gmail.com> <2d65be7ae251221bd7524871e0cbf4b22d16a9f9.camel@pengutronix.de>
-In-Reply-To: <2d65be7ae251221bd7524871e0cbf4b22d16a9f9.camel@pengutronix.de>
-From: Christian Gmeiner <christian.gmeiner@gmail.com>
-Date: Fri, 1 Mar 2024 14:30:01 +0100
-Message-ID: <CAH9NwWe3r1sbB7BqW1zmFGxjnzOOg8Z-LBzhAP7x_kq=o9T=0A@mail.gmail.com>
-Subject: Re: [PATCH] etnaviv: Restore some id values
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Russell King <linux+etnaviv@armlinux.org.uk>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Christian Gmeiner <cgmeiner@igalia.com>, stable@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hi Lucas,
+Add MMIO access helpers: meson_dma_start() and meson_dma_ready().
 
->
-> prefix for etnaviv kernel patches should be "drm/etnaviv: ..."
+Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ drivers/crypto/amlogic/amlogic-gxl-cipher.c |  2 +-
+ drivers/crypto/amlogic/amlogic-gxl-core.c   | 24 ++++++++++++++++-----
+ drivers/crypto/amlogic/amlogic-gxl.h        |  2 ++
+ 3 files changed, 22 insertions(+), 6 deletions(-)
 
-Ah yeah .. corrected in v2.
-
->
-> Am Donnerstag, dem 29.02.2024 um 20:55 +0100 schrieb Christian Gmeiner:
-> > From: Christian Gmeiner <cgmeiner@igalia.com>
-> >
-> > The hwdb selection logic as a feature that allows it to mark some fields
-> > as 'don't care'. If we match with such a field we memcpy(..)
-> > the current etnaviv_chip_identity into ident.
-> >
-> > This step can overwrite some id values read from the GPU with the
-> > 'don't care' value.
-> >
-> > Fix this issue by restoring the affected values after the memcpy(..).
-> >
-> > As this is crucial for user space to know when this feature works as
-> > expected increment the minor version too.
->
-> Uh, right. Lying to userspace about the GPU identity doesn't seem like
-> a good idea.
->
-> >
-> > Fixes: 4078a1186dd3 ("drm/etnaviv: update hwdb selection logic")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Christian Gmeiner <cgmeiner@igalia.com>
-> > ---
-> >  drivers/gpu/drm/etnaviv/etnaviv_drv.c  |  2 +-
-> >  drivers/gpu/drm/etnaviv/etnaviv_hwdb.c | 14 ++++++++++++++
-> >  2 files changed, 15 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > index 6228ce603248..9a2965741dab 100644
-> > --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > @@ -494,7 +494,7 @@ static const struct drm_driver etnaviv_drm_driver = {
-> >       .desc               = "etnaviv DRM",
-> >       .date               = "20151214",
-> >       .major              = 1,
-> > -     .minor              = 3,
-> > +     .minor              = 4,
-> >  };
-> >
-> >  /*
-> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c b/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
-> > index 67201242438b..1e38d66702f1 100644
-> > --- a/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
-> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
-> > @@ -265,6 +265,9 @@ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
-> >  bool etnaviv_fill_identity_from_hwdb(struct etnaviv_gpu *gpu)
-> >  {
-> >       struct etnaviv_chip_identity *ident = &gpu->identity;
-> > +     const u32 product_id = ident->product_id;
-> > +     const u32 customer_id = ident->customer_id;
-> > +     const u32 eco_id = ident->eco_id;
-> >       int i;
-> >
-> >       for (i = 0; i < ARRAY_SIZE(etnaviv_chip_identities); i++) {
-> > @@ -278,6 +281,17 @@ bool etnaviv_fill_identity_from_hwdb(struct etnaviv_gpu *gpu)
-> >                        etnaviv_chip_identities[i].eco_id == ~0U)) {
-> >                       memcpy(ident, &etnaviv_chip_identities[i],
-> >                              sizeof(*ident));
-> > +
-> > +                     /* Restore some id values if ~0U aka 'don't care' is used. */
-> > +                     if (etnaviv_chip_identities[i].product_id == ~0U)
->
-> You can drop all those if clauses. Either the hwdb value is an exact
-> match and the value is the same or it's the don't care value and you
-> want to restore it, so a simple unconditional assignment would make
-> this a bit more compact.
->
-
-Makes sense - thanks for your review!
-
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+index 7eff3ae7356f..1fe916b0a138 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+@@ -225,7 +225,7 @@ static int meson_cipher(struct skcipher_request *areq)
+ 
+ 	reinit_completion(&mc->chanlist[flow].complete);
+ 	mc->chanlist[flow].status = 0;
+-	writel(mc->chanlist[flow].t_phy | 2, mc->base + ((mc->pdata->descs_reg + flow) << 2));
++	meson_dma_start(mc, flow);
+ 	wait_for_completion_interruptible_timeout(&mc->chanlist[flow].complete,
+ 						  msecs_to_jiffies(500));
+ 	if (mc->chanlist[flow].status == 0) {
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
+index a3a69a59f476..70c2433c56da 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-core.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+@@ -23,18 +23,32 @@
+ 
+ #include "amlogic-gxl.h"
+ 
++void meson_dma_start(struct meson_dev *mc, int flow)
++{
++	u32 offset = (mc->pdata->descs_reg + flow) << 2;
++
++	writel(mc->chanlist[flow].t_phy | 2, mc->base + offset);
++}
++
++static bool meson_dma_ready(struct meson_dev *mc, int flow)
++{
++	u32 offset = (mc->pdata->status_reg + flow) << 2;
++	u32 data = readl(mc->base + offset);
++
++	if (data)
++		writel_relaxed(0xF, mc->base + offset);
++
++	return data;
++}
++
+ static irqreturn_t meson_irq_handler(int irq, void *data)
+ {
+ 	struct meson_dev *mc = (struct meson_dev *)data;
+ 	int flow;
+-	u32 p;
+ 
+ 	for (flow = 0; flow < mc->flow_cnt; flow++) {
+ 		if (mc->chanlist[flow].irq == irq) {
+-			p = readl(mc->base + ((mc->pdata->status_reg + flow) << 2));
+-			if (p) {
+-				writel_relaxed(0xF, mc->base +
+-					      ((mc->pdata->status_reg + flow) << 2));
++			if (meson_dma_ready(mc, flow)) {
+ 				mc->chanlist[flow].status = 1;
+ 				complete(&mc->chanlist[flow].complete);
+ 				return IRQ_HANDLED;
+diff --git a/drivers/crypto/amlogic/amlogic-gxl.h b/drivers/crypto/amlogic/amlogic-gxl.h
+index 9ad75da214ff..8670f7ebcdda 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl.h
++++ b/drivers/crypto/amlogic/amlogic-gxl.h
+@@ -161,6 +161,8 @@ struct meson_alg_template {
+ #endif
+ };
+ 
++void meson_dma_start(struct meson_dev *mc, int flow);
++
+ int meson_enqueue(struct crypto_async_request *areq, u32 type);
+ 
+ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
 -- 
-greets
---
-Christian Gmeiner, MSc
+2.34.1
 
-https://christian-gmeiner.info/privacypolicy
