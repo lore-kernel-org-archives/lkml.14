@@ -1,60 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFBA3DB91;
-	Fri,  1 Mar 2024 20:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 8D2B23D0A8
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 20:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709324873; cv=none; b=dvycv67w950PO3dBbvbxi8bbVpSJiafwGjIx/3QL+u8My3tQ3SQojP7pKJVNB7oZpzU65YAF51wZjppdbeEfbcf6Zmk0HnF2ntrrQ7WiZ+HVqy5uYcXkeRO+dmA+DMLgUCZx76ZevwZ+mB7crySJU6yPWycjgaP7rl/StjpHq1k=
+	t=1709324902; cv=none; b=DscpGvBZnBVE1XHJNBpIADwhDaJdLhWMy7x1tz9bVXeVY2bGEdUvh0mW13j9/vff1wZoII6e3e78t8HkRox1bOjZoyGJPDAX+eJ45IP0ls7ek0hdpTRiOCkORX39VepW+9sWMJGkr2PeEK0y/Fh9Gguppsu6RyxHcllte9i1LSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709324873; c=relaxed/simple;
-	bh=8NqchkgmgZ+i8ZSZn6TysYQ/007CbNbJX+J+AJF8q8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MSUrg1BQdsrcRCgIWinOf1VbCuFl2lAVbSJjktrBExwxo/xzyA1PinXxf7KAJCIbYd0ZoEv22oIF1HKtZcK0KcGtowZ36pqFFJGHXWoQF1ZFn5nZNBPD8QVRU+cBg85Wl7xe30juXrS0s1KQS2ihfj882PW5qz+4cS0jWai2rto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9009CC433F1;
-	Fri,  1 Mar 2024 20:27:52 +0000 (UTC)
-Date: Fri, 1 Mar 2024 15:30:01 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Ankur Arora
- <ankur.a.arora@oracle.com>, Thomas Gleixner <tglx@linutronix.de>,
- kernel-team@meta.com
-Subject: Re: [PATCH RFC ftrace] Chose RCU Tasks based on TASKS_RCU rather
- than PREEMPTION
-Message-ID: <20240301153001.0d544f9c@gandalf.local.home>
-In-Reply-To: <2835d5ea-0396-49f6-88fb-be49cb998cc5@paulmck-laptop>
-References: <f6507b10-5bb5-4407-bd4d-c547193a5a28@paulmck-laptop>
-	<20240228152236.7a4c9eec@gandalf.local.home>
-	<b5acdc28-0441-49ca-9e8d-50d6ac40c395@paulmck-laptop>
-	<2835d5ea-0396-49f6-88fb-be49cb998cc5@paulmck-laptop>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709324902; c=relaxed/simple;
+	bh=EBfTrXbaVw8O69nDsibgHGIoJmqZhM54EJbwk5vcvOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b20zzsnBJAE9b9JXEM03Mf6VvWAOLJOnCNKUhpAPzbg/2HxXRIPyejA8Y+BZjG06GgCtL2pxAgpr/ow4+efa2xckEpFJksXfh6/bGNnXU3eqHvyW9FXVKOYeAd0/tbZ0SStMdbaiYkqcL7KISCkcaPKXwQr6op9FS6aO6WODF3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 45460 invoked by uid 1000); 1 Mar 2024 15:28:19 -0500
+Date: Fri, 1 Mar 2024 15:28:19 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+  Alim Akhtar <alim.akhtar@samsung.com>, linux-usb@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] usb: ehci-exynos: Switch from CONFIG_PM guards to
+ pm_ptr()
+Message-ID: <f989a532-a77e-4324-902b-968b12134f15@rowland.harvard.edu>
+References: <20240301193831.3346-1-linux.amoon@gmail.com>
+ <20240301193831.3346-3-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240301193831.3346-3-linux.amoon@gmail.com>
 
-On Fri, 1 Mar 2024 12:25:10 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> > That would work for me.  If there are no objections, I will make this
-> > change.  
+On Sat, Mar 02, 2024 at 01:08:09AM +0530, Anand Moon wrote:
+> Use the new PM macros for the suspend and resume functions to be
+> automatically dropped by the compiler when CONFIG_PM are disabled,
+> without having to use #ifdef guards. If CONFIG_PM unused,
+> they will simply be discarded by the compiler.
 > 
-> But I did check the latency of synchronize_rcu_tasks_rude() (about 100ms)
-> and synchronize_rcu() (about 20ms).  This is on a 80-hardware-thread
-> x86 system that is being flooded with calls to one or the other of
-> these two functions, but is otherwise idle.  So adding that unnecessary
-> synchronize_rcu() adds about 20% to that synchronization delay.
+> Use RUNTIME_PM_OPS runtime macro for suspend/resume function.
 > 
-> Which might still be OK, but...  In the immortal words of MS-DOS,
-> "Are you sure?".  ;-)
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  drivers/usb/host/ehci-exynos.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+> index 05aa3d9c2a3b..4676f45655cd 100644
+> --- a/drivers/usb/host/ehci-exynos.c
+> +++ b/drivers/usb/host/ehci-exynos.c
+> @@ -234,7 +234,6 @@ static void exynos_ehci_remove(struct platform_device *pdev)
+>  	usb_put_hcd(hcd);
+>  }
+>  
+> -#ifdef CONFIG_PM
+>  static int exynos_ehci_suspend(struct device *dev)
+>  {
+>  	struct usb_hcd *hcd = dev_get_drvdata(dev);
+> @@ -268,14 +267,9 @@ static int exynos_ehci_resume(struct device *dev)
+>  	ehci_resume(hcd, false);
+>  	return 0;
+>  }
+> -#else
+> -#define exynos_ehci_suspend	NULL
+> -#define exynos_ehci_resume	NULL
+> -#endif
 
-It's just safe to keep it. It's definitely not a fast path.
+Doesn't this now generate warnings about functions being defined but not 
+used when you build with CONFIG_PM disabled?
 
--- Steve
+Alan Stern
+
+>  
+>  static const struct dev_pm_ops exynos_ehci_pm_ops = {
+> -	.suspend	= exynos_ehci_suspend,
+> -	.resume		= exynos_ehci_resume,
+> +	RUNTIME_PM_OPS(exynos_ehci_suspend, exynos_ehci_resume, NULL)
+>  };
+>  
+>  #ifdef CONFIG_OF
+> @@ -292,7 +286,7 @@ static struct platform_driver exynos_ehci_driver = {
+>  	.shutdown	= usb_hcd_platform_shutdown,
+>  	.driver = {
+>  		.name	= "exynos-ehci",
+> -		.pm	= &exynos_ehci_pm_ops,
+> +		.pm	= pm_ptr(&exynos_ehci_pm_ops),
+>  		.of_match_table = of_match_ptr(exynos_ehci_match),
+>  	}
+>  };
+> -- 
+> 2.43.0
+> 
