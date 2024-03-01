@@ -1,244 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EF91FDD;
-	Fri,  1 Mar 2024 15:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825BD3A8F8
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709306216; cv=none; b=cYpSEWeIF3KJpD3H8J2RdZjxP26aLVyjae2nOsrxb4N2xZHjJwqJIGNJtRcNTUGwHrYP8HTihZrmBgDDpnLOGkT+hWK9zZ+rujqgEOe+VqtAgO726Lho5UsAZPm7ws2k5y30PLq9q7BZe/lEhD236CWjYL9FG2IFpjMmt+NEY3E=
+	t=1709306294; cv=none; b=bnU07r5PHQdxkiotor/ye4KsRz28/nWNQkU3wjUKePsSRrABaS0bR5Q9XNRxzVTcbM71Vl5xaaoO3A+iFwfVuVSnpKaSkAPKlIN4OR2X5IVJR1okfULd4eTg2JT1/9v4q16YcECl6JK13IVX7OVxUz3M9FY/I9kOvKBmap/+Jtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709306216; c=relaxed/simple;
-	bh=J2Vds4mlqs77XbVSxBgLgpHcoivpOW6VW8MgVYY5Mtg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hrUZbUZXNWwbm1IzNnKJR5CYGC7WYeTUMfmorbUlHStdKDuxJdIDlp/rPqOvqsRqXWVt3lHW/wYMUfKtOB8L5vqnL7cUYKEueKQzbMP3+41+WzsjIH6z+Ek55VU5w0oK+Oj0w8Wu3zHdH1o8BHYwFIy8lbCfrKszJP19dPdeB+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kdUy8HJe; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709306294; c=relaxed/simple;
+	bh=cb8XTZXLhtdief3sGmEOEiurGom3N0GO6VlK248uSz4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PUjbOgvQlbjarDgNfCTuf7CHecfsIoEwZfRwh7E5yAHtgXDtBqaqQOuIf9EH+/CzcVgAeD0ZBxiagwYqi5SLmTor2q2AGH2tZTIS14HLe9m2GQzzViCvF0ww3SO+5xdNah21OFpE2I2KMYeYYoyL1rLdCbyw/oKGLj4d9Uft/QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jQUc7LyP; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kdUy8HJe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709306215; x=1740842215;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=J2Vds4mlqs77XbVSxBgLgpHcoivpOW6VW8MgVYY5Mtg=;
-  b=kdUy8HJePdLvpGR+MwDMWxbd4Xgbf1QLqJWPDKRi5v3ec7UNXeC9d3CD
-   Harz2PH26afax95uckxHx5I7hLxDyjYvcSnF8IeHsTsJ9vwNdj1P0FQEw
-   f4Fm7nIg7/m6U/smgXgm9sqjwCJOHw+1DgD7C5gB5RgZTZ6nF+xVsHrBN
-   NKMJysC/+IfXNOc1Dcd39OfQGYElyAuZQHgNfKdhZVZYsf7bcAbM5Nl5l
-   VlHcZ2/AiYngEP6e0/y62VepK/jRkif79yskSuHDd6/vzvphhQmFLaYu2
-   Ut4R+39goSxx2Km4jhJj+xJoO6lWrDMqlAa2LpMf2RSGiKjr0CocYSXdG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="3698456"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="3698456"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 07:16:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="8363650"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa008.fm.intel.com with ESMTP; 01 Mar 2024 07:16:50 -0800
-Date: Fri, 1 Mar 2024 23:12:42 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Marco Pagani <marpagan@redhat.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Tull <atull@opensource.altera.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fpga@vger.kernel.org
-Subject: Re: [RFC PATCH v5 1/1] fpga: add an owner and use it to take the
- low-level module's refcount
-Message-ID: <ZeHwatupHVmC2N2+@yilunxu-OptiPlex-7050>
-References: <Zbh7iO9wlm9ekzB7@yilunxu-OptiPlex-7050>
- <0720eb91-72f9-4781-8558-8a1b0a3691c2@redhat.com>
- <Zb8dd9af0Ru/fzGi@yilunxu-OptiPlex-7050>
- <4aaa131a-4b64-4b86-9548-68aef63c87b3@redhat.com>
- <ZdHWaeU+/On6LmHX@yilunxu-OptiPlex-7050>
- <9a9d4018-fd65-49be-9e0a-1eecc9cbf15d@redhat.com>
- <ZdYKnZxdTCvu5THG@yilunxu-OptiPlex-7050>
- <ae3cd81b-82af-4977-91d7-fa809c6fc45a@redhat.com>
- <Zd7cff43ffbJOGNY@yilunxu-OptiPlex-7050>
- <0c885ff2-44bc-4158-b5dd-3d7513cb2857@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jQUc7LyP"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 421Ew7ot004373;
+	Fri, 1 Mar 2024 15:17:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=QRwgG5p9LXiYkhUTkDn+4GU4EqsUgxuh3E+OD24BUIM=;
+ b=jQUc7LyPUzrd97cgbu/R/URb0WPOe4X7QqDGyFYBwl2TC2YIi0EEAvpW2qZyF4s2ypDV
+ pVxwI3Z+5MxKo2BE6WEAK6fvMor8PilDTi/3/3oTvJhkRyAS09+8O56dRTt82Cn+3cag
+ m572+qtliOyq5Uls7GpXZPcRSsgNIZ1X8Rgv9EU3pBr7J0JkeC6ZLqngE1SO3X0qDGg4
+ bHcUi0umGAYAu3W0eHSzXR0u5f78LIdFjDChK0SaIjNr+pZWlTdrnCUrzUYgJYN7Rd9u
+ iVw4jbS242gjHTN+T7BUD7fiwfYVuLk33ODOaXLprYbZkky6XHqxjCZ3yjffU2KPC9uy 7Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wkh88gfew-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 15:17:57 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 421FBdM3021497;
+	Fri, 1 Mar 2024 15:17:56 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wkh88gfed-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 15:17:56 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 421DoCIh021792;
+	Fri, 1 Mar 2024 15:17:55 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfu60nak7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 15:17:55 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 421FHngt14418426
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 1 Mar 2024 15:17:51 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A4C6020040;
+	Fri,  1 Mar 2024 15:17:49 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 61A9F20043;
+	Fri,  1 Mar 2024 15:17:46 +0000 (GMT)
+Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.ibm.com.com (unknown [9.43.108.184])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  1 Mar 2024 15:17:46 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
+Cc: sshegde@linux.ibm.com, yu.c.chen@intel.com, dietmar.eggemann@arm.com,
+        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
+        aboorvad@linux.ibm.com, srikar@linux.ibm.com, vschneid@redhat.com,
+        pierre.gondois@arm.com, morten.rasmussen@arm.com, qyousef@layalina.io
+Subject: [PATCH v4 0/2] sched/fair: Limit access to overutilized
+Date: Fri,  1 Mar 2024 20:47:23 +0530
+Message-Id: <20240301151725.874604-1-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Jlku7Lk7abe4i4wh_cX5vKBmyxAXHFcb
+X-Proofpoint-ORIG-GUID: Md9zT3R3xfmmZ-B6tcN3RUFShZnTDDqs
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c885ff2-44bc-4158-b5dd-3d7513cb2857@redhat.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-01_14,2024-03-01_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 spamscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403010127
 
-On Thu, Feb 29, 2024 at 11:37:10AM +0100, Marco Pagani wrote:
-> 
-> On 2024-02-28 08:10, Xu Yilun wrote:
-> > On Tue, Feb 27, 2024 at 12:49:06PM +0100, Marco Pagani wrote:
-> >>
-> >>
-> >> On 2024-02-21 15:37, Xu Yilun wrote:
-> >>> On Tue, Feb 20, 2024 at 12:11:26PM +0100, Marco Pagani wrote:
-> >>>>
-> >>>>
-> >>>> On 2024-02-18 11:05, Xu Yilun wrote:
-> >>>>> On Mon, Feb 05, 2024 at 06:47:34PM +0100, Marco Pagani wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>> On 2024-02-04 06:15, Xu Yilun wrote:
-> >>>>>>> On Fri, Feb 02, 2024 at 06:44:01PM +0100, Marco Pagani wrote:
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> On 2024-01-30 05:31, Xu Yilun wrote:
-> >>>>>>>>>> +#define fpga_mgr_register_full(parent, info) \
-> >>>>>>>>>> +	__fpga_mgr_register_full(parent, info, THIS_MODULE)
-> >>>>>>>>>>  struct fpga_manager *
-> >>>>>>>>>> -fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
-> >>>>>>>>>> +__fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
-> >>>>>>>>>> +			 struct module *owner);
-> >>>>>>>>>>  
-> >>>>>>>>>> +#define fpga_mgr_register(parent, name, mops, priv) \
-> >>>>>>>>>> +	__fpga_mgr_register(parent, name, mops, priv, THIS_MODULE)
-> >>>>>>>>>>  struct fpga_manager *
-> >>>>>>>>>> -fpga_mgr_register(struct device *parent, const char *name,
-> >>>>>>>>>> -		  const struct fpga_manager_ops *mops, void *priv);
-> >>>>>>>>>> +__fpga_mgr_register(struct device *parent, const char *name,
-> >>>>>>>>>> +		    const struct fpga_manager_ops *mops, void *priv, struct module *owner);
-> >>>>>>>>>> +
-> >>>>>>>>>>  void fpga_mgr_unregister(struct fpga_manager *mgr);
-> >>>>>>>>>>  
-> >>>>>>>>>> +#define devm_fpga_mgr_register_full(parent, info) \
-> >>>>>>>>>> +	__devm_fpga_mgr_register_full(parent, info, THIS_MODULE)
-> >>>>>>>>>>  struct fpga_manager *
-> >>>>>>>>>> -devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
-> >>>>>>>>>> +__devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
-> >>>>>>>>>> +			      struct module *owner);
-> >>>>>>>>>
-> >>>>>>>>> Add a line here. I can do it myself if you agree.
-> >>>>>>>>
-> >>>>>>>> Sure, that is fine by me. I also spotted a typo in the commit log body
-> >>>>>>>> (in taken -> is taken). Do you want me to send a v6, or do you prefer
-> >>>>>>>> to fix that in place?
-> >>>>>>>
-> >>>>>>> No need, I can fix it.
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>> There is still a RFC prefix for this patch. Are you ready to get it merged?
-> >>>>>>>>> If yes, Acked-by: Xu Yilun <yilun.xu@intel.com>
-> >>>>>>>>
-> >>>>>>>> I'm ready for the patch to be merged. However, I recently sent an RFC
-> >>>>>>>> to propose a safer implementation of try_module_get() that would
-> >>>>>>>> simplify the code and may also benefit other subsystems. What do you
-> >>>>>>>> think?
-> >>>>>>>>
-> >>>>>>>> https://lore.kernel.org/linux-modules/20240130193614.49772-1-marpagan@redhat.com/
-> >>>>>>>
-> >>>>>>> I suggest take your fix to linux-fpga/for-next now. If your try_module_get()
-> >>>>>>> proposal is applied before the end of this cycle, we could re-evaluate
-> >>>>>>> this patch.
-> >>>>>>
-> >>>>>> That's fine by me.
-> >>>>>
-> >>>>> Sorry, I still found issues about this solution.
-> >>>>>
-> >>>>> void fpga_mgr_unregister(struct fpga_manager *mgr)
-> >>>>> {
-> >>>>>         dev_info(&mgr->dev, "%s %s\n", __func__, mgr->name);
-> >>>>>
-> >>>>>         /*
-> >>>>>          * If the low level driver provides a method for putting fpga into
-> >>>>>          * a desired state upon unregister, do it.
-> >>>>>          */
-> >>>>>         fpga_mgr_fpga_remove(mgr);
-> >>>>>
-> >>>>>         mutex_lock(&mgr->mops_mutex);
-> >>>>>
-> >>>>>         mgr->mops = NULL;
-> >>>>>
-> >>>>>         mutex_unlock(&mgr->mops_mutex);
-> >>>>>
-> >>>>>         device_unregister(&mgr->dev);
-> >>>>> }
-> >>>>>
-> >>>>> Note that fpga_mgr_unregister() doesn't have to be called in module_exit().
-> >>>>> So if we do fpga_mgr_get() then fpga_mgr_unregister(), We finally had a
-> >>>>> fpga_manager dev without mops, this is not what the user want and cause
-> >>>>> problem when using this fpga_manager dev for other FPGA APIs.
-> >>>>
-> >>>> How about moving mgr->mops = NULL from fpga_mgr_unregister() to
-> >>>> class->dev_release()? In that way, mops will be set to NULL only when the
-> >>>> manager dev refcount reaches 0.
-> >>>
-> >>> I'm afraid it doesn't help.  The lifecycle of the module and the fpga
-> >>> mgr dev is different.
-> >>>
-> >>> We use mops = NULL to indicate module has been freed or will be freed in no
-> >>> time.  On the other hand mops != NULL means module is still there, so
-> >>> that try_module_get() could be safely called.  It is possible someone
-> >>> has got fpga mgr dev but not the module yet, at that time the module is
-> >>> unloaded, then try_module_get() triggers crash.
-> >>>
-> >>>>
-> >>>> If fpga_mgr_unregister() is called from module_exit(), we are sure that nobody
-> >>>> got the manager dev earlier using fpga_mgr_get(), or it would have bumped up
-> >>>
-> >>> No, someone may get the manager dev but not the module yet, and been
-> >>> scheduled out.
-> >>>
-> >>
-> >> You are right. Overall, it's a bad idea. How about then using an additional 
-> >> bool flag instead of "overloading" the mops pointer? Something like:
-> >>
-> >> get:
-> >> 	if (!mgr->owner_valid || !try_module_get(mgr->mops_owner))
-> >>
-> >> remove:
-> >> 	mgr->owner_valid = false;
-> > 
-> > I'm not quite sure which function is actually mentioned by "remove".  I
-> > assume it should be fpga_mgr_unregister().
-> 
-> Yes, I was referring to fpga_mgr_unregister().
-> 
-> > IIUC this flag means no more reference to fpga mgr, but existing
-> > references are still valid.
-> 
-> Yes.
-> 
-> > 
-> > It works for me. But the name of this flag could be reconsidered to
-> > avoid misunderstanding.  The owner is still valid (we still need to put
-> > the owner) but allows no more reference.  Maybe "owner_inactive"?
-> 
-> Right, owner_valid might be misleading. How about removing any
-> reference to the owner module and name the flag unreg?
+When running a ISV workload on a large system (240 Cores, SMT8), it was
+observed from perf profile that newidle_balance and enqueue_task_fair
+were consuming more cycles. Perf annotate showed that most of the time
+was spent on accessing overutilized field of root domain.
 
-the full name "unregistered" is better.
+Aboorva was able to simulate similar perf profile by making some
+changes to stress-ng --wait. Both newidle_balance and enqueue_task_fair
+consume close to 5-7%. Perf annotate shows that most of the cycles are spent
+in accessing rd,rd->overutilized field.
 
-> 
-> __fpga_mgr_get:
-> 	if (mgr->unreg || !try_module_get(mgr->mops_owner))
-> 		mgr = ERR_PTR(-ENODEV);
-> 
-> fpga_mgr_unregister:
->  	mgr->unreg = true;
-> 
-> > I still wanna this owner reference change been splitted, so that
-> > we could simply revert it when the try_module_get_safe() got accepted.
-> 
-> I guess it may take some time to have try_module_get_safe() accepted.
-> What do you prefer to do with the bridge and the region in the
-> meantime?
+Overutilized was added for EAS(Energy aware scheduler) to decide whether
+to do load balance or not. Simultaneous access to overutilized by
+multiple CPUs lead cache invalidations due to true sharing. Updating
+overutilized is not required for non-EAS platforms. Since overutilized and
+overload are part of the same cacheline, there is false sharing as well.
 
-This issue could happen in little chance. I actually don't have much
-preference, either way is good to me.
+Patch 1/2 is the main patch. It helps in reducing the above said issue.
+Both the functions don't show up in the profile. With patch comparison is in
+changelog. With the patch stated problem in the ISV workload also got
+solved and throughput has improved.
+Patch 2/2 is only code refactoring to use the helper function instead of
+direct access of the field
 
-Thanks,
-Yilun
+Detailed perf annotate can be found in cover letter of v1.
 
-> 
-> Thanks,
-> Marco
-> 
+v4 -> v3:
+- corrected a mistake where EAS check was missed.
+v3 -> v2:
+- Pierre and Dietmar suggested we could add one more EAS check before
+calling cpu_overutilized. That makes sense since that value is not used
+anyway in Non-EAS case.
+- Refactored the code as dietmar suggested to avoid additional call to
+sched_energy_enabled().
+- Minor edits to change log.
+v2 -> v1:
+Chen Yu pointed out minor issue in code. Corrected that code and updated
+the changelog.
+
+v1: https://lore.kernel.org/lkml/20240223150707.410417-1-sshegde@linux.ibm.com/
+v2: https://lore.kernel.org/lkml/20240228071621.602596-1-sshegde@linux.ibm.com/
+v3: https://lore.kernel.org/lkml/20240229104010.747411-1-sshegde@linux.ibm.com/
+
+Shrikanth Hegde (2):
+  sched/fair: Add EAS checks before updating overutilized
+  sched/fair: Use helper function to access rd->overutilized
+
+ kernel/sched/fair.c | 63 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 21 deletions(-)
+
+--
+2.39.3
+
