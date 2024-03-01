@@ -1,138 +1,74 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A24138DC3;
-	Fri,  1 Mar 2024 01:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47AD39FCE;
+	Fri,  1 Mar 2024 01:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709256792; cv=none; b=RS/XotqBPd/IO3nAo/iIjQIIeGsxyXyprUKhO2gaZ0NQk9qX7rXu0+uutXpyTTg2OMyAv6Wn4UEJHwvIbTg/oGfPU1wIp7dfH3Jpkp0qY4XVD0SGgSg4WhqvpQ28eA8K0wgpNt+Unqk7sl5mJtbL9aZJBeIYBSgbVrcz8T1M7co=
+	t=1709256793; cv=none; b=dPW1Va2j+QeUXvK0YWj+mvRDOyBETbV+ruHf9xHGrXWGNp+p12Ai/PyUo/e2NhoqN/nB4QWyHk0FM5PKUxYHD5zJqHu3TfV2hsS8AXf3oRD2oRNk80VH7aLNrBYvjh7+fqMmr8VFQ9wpepaB7vALp1rBdwRp34u2jbGxOmFiU+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709256792; c=relaxed/simple;
-	bh=//shxWOgs6DUM19ppmRaIyOvk+IKSFn/j4eaP7r+Vgs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I7yze/Wte9hvaRdra7+xwFaJZWgwvB3JKD6vffdiaoHCWDqX2B2Q4nIHGLFKnhG1kleRfOgyrC80t2cDjlub3VG0d0iUnlNGu2cwmnZ5nYcjSnyVSxh3liNr6DHeengLV0DN44ohG5mJbVAPJyyXa29TvOYIXvKujv1BZSWF3d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=LNV7gEd4; arc=none smtp.client-ip=117.135.210.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1709256793; c=relaxed/simple;
+	bh=EPalguZMNI5Njq+cA0Z5vHIwAsvdVkw9Z6GsK4GJQw4=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=kZxJMcbUL5KqgOb1h60k6G6iW1+qkAnU8vF38V8Xdp+deL8b0FVpXlussYuIsJXaWz6/+3EEqxrx+7LbzBhIhkfc88qOZ+6jEkfUMKJy3l7jxkQDWWk2ZmoE3L6GEbUDyIL26z6NbajTxLhODReg/32RYSHBANzvyuNeLEAeRMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQdmN5Xf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="LNV7gEd4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=EqfKZ
-	GDvpnWQ+qwyxpLC5/VVhwI3t8YX1f9H+0jPymU=; b=LNV7gEd4lcR0AT8fPpbOh
-	isQfXcqySwZELJK+RkJV1ziIir+AwX7UsmPT28xH64Dqo+1lDj8mwKGttJWpjLJr
-	1jDiTpXu4BrfwP57HCsD37lZ+ckRHy+eRIUmMm8X/DAzbUYbJS9ywMq31/t4A9dc
-	1JK62+ID1kKXLEx0a9Gmzg=
-Received: from localhost.localdomain (unknown [116.128.244.171])
-	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDn7+APMOFlZSfbBA--.18054S7;
-	Fri, 01 Mar 2024 09:32:39 +0800 (CST)
-From: Genjian <zhanggenjian@126.com>
-To: stable@vger.kernel.org
-Cc: axboe@kernel.dk,
-	stable@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhanggenjian123@gmail.com,
-	Martijn Coenen <maco@android.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Genjian Zhang <zhanggenjian@kylinos.cn>
-Subject: [PATCH 4.19.y 3/9] loop: Remove sector_t truncation checks
-Date: Fri,  1 Mar 2024 09:30:22 +0800
-Message-Id: <20240301013028.2293831-4-zhanggenjian@126.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240301013028.2293831-1-zhanggenjian@126.com>
-References: <20240301013028.2293831-1-zhanggenjian@126.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQdmN5Xf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C741C433C7;
+	Fri,  1 Mar 2024 01:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709256792;
+	bh=EPalguZMNI5Njq+cA0Z5vHIwAsvdVkw9Z6GsK4GJQw4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=sQdmN5XfBeohDiRuXg5jE9JTzQsZoaXW1+rWjcvDXhcqo0t0yVw0gar/D1ZB3nu26
+	 cxMusPCGjm08abajYAE0U4MgNR/V1Pmdi6uNjsxzyN8Dvmd5v1OKTv8Mgn4oPmRvfY
+	 cvjHN8ZXEuY+1TRGf4c3uJXbrWDefmvYHzsal6HdPNkTd8tjf+5QLYwLgisTBAj8ZO
+	 zjE02xJbtMd+6zJ4HnXG+ifBOHEICZqbQ5+CqgFTI6n/2DO6bC9Of+e5wmBaoP7ljc
+	 3DT7VI6hBdI1CPLWeH7NBcTakqp2ujqHIn6kmrYFNCRR56K4MdAY7f2PvhQOQiHn6s
+	 fNisvaChiDmVg==
+Message-ID: <cd72dbb31387cd4e2551189d8d10d3a6.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn7+APMOFlZSfbBA--.18054S7
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAryDKF45WF17Ar4fuFy3Arb_yoW5Gw4xpF
-	sruFy5AayFqFWxWFsFqr4kZFyYg3ZrW343ury7C3409r1YqrnYqFy3AryFgrWktrykZF1Y
-	vws8JFy8ur1UCr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jUYFZUUUUU=
-X-CM-SenderInfo: x2kd0wxjhqyxldq6ij2wof0z/1tbiHhmUfmV2z7wVDwABsW
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CZHOCV35A23S.14HL07U73EH6X@bootlin.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com> <20240227-mbly-clk-v8-3-c57fbda7664a@bootlin.com> <Zd4X3NnBoEl0wu2H@smile.fi.intel.com> <CZGSB2O8P572.28HK6WFT43N6S@bootlin.com> <ZeBnX2upNRN0xXH4@smile.fi.intel.com> <CZHMSNWMH4KJ.2J6ZMWKMSZYH2@bootlin.com> <ZeCbvgWY6x1o17Kq@smile.fi.intel.com> <CZHOCV35A23S.14HL07U73EH6X@bootlin.com>
+Subject: Re: [PATCH v8 03/10] clk: eyeq5: add platform driver, and init routine at of_clk_init()
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Linus Walleij <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
+Date: Thu, 29 Feb 2024 17:33:10 -0800
+User-Agent: alot/0.10
 
-From: Martijn Coenen <maco@android.com>
+Quoting Th=C3=A9o Lebrun (2024-02-29 07:40:25)
+> Hello,
+>=20
+> On Thu Feb 29, 2024 at 3:59 PM CET, Andy Shevchenko wrote:
+> > On Thu, Feb 29, 2024 at 03:27:01PM +0100, Th=C3=A9o Lebrun wrote:
+> > > On Wed, Feb 28, 2024 at 03:33:29PM +0100, Th=C3=A9o Lebrun wrote:
+> > > > On Tue Feb 27, 2024 at 6:11 PM CET, Andy Shevchenko wrote:
+> > > > > On Tue, Feb 27, 2024 at 03:55:24PM +0100, Th=C3=A9o Lebrun wrote:
+>=20
+> > 2) Still I see a benefit from using lo_hi_readq() and friends directly.
+>=20
+> So it is:
+>=20
+>         u32 r0 =3D readl(base_plls + pll->reg64);
+>         u32 r1 =3D readl(base_plls + pll->reg64 + sizeof(r0));
+>=20
+> vs:
+>=20
+>         u64 r =3D lo_hi_readq(base_plls + pll->regs64);
+>         u32 r0 =3D r;
+>         u32 r1 =3D r >> 32;
+>=20
+> One is straight forward, the other uses an obscure helper that code
+> readers must understand and follows that with bit manipulation.
+>=20
 
-[ Upstream commit 083a6a50783ef54256eec3499e6575237e0e3d53 ]
-
-sector_t is now always u64, so we don't need to check for truncation.
-
-Signed-off-by: Martijn Coenen <maco@android.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
----
- drivers/block/loop.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index bd94406b90c9..281aefba2a6f 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -225,24 +225,20 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
- 	blk_mq_unfreeze_queue(lo->lo_queue);
- }
- 
--static int
-+static void
- figure_loop_size(struct loop_device *lo, loff_t offset, loff_t sizelimit)
- {
- 	loff_t size = get_size(offset, sizelimit, lo->lo_backing_file);
--	sector_t x = (sector_t)size;
- 	struct block_device *bdev = lo->lo_device;
- 
--	if (unlikely((loff_t)x != size))
--		return -EFBIG;
- 	if (lo->lo_offset != offset)
- 		lo->lo_offset = offset;
- 	if (lo->lo_sizelimit != sizelimit)
- 		lo->lo_sizelimit = sizelimit;
--	set_capacity(lo->lo_disk, x);
-+	set_capacity(lo->lo_disk, size);
- 	bd_set_size(bdev, (loff_t)get_capacity(bdev->bd_disk) << 9);
- 	/* let user-space know about the new size */
- 	kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
--	return 0;
- }
- 
- static inline int
-@@ -972,10 +968,8 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	    !file->f_op->write_iter)
- 		lo_flags |= LO_FLAGS_READ_ONLY;
- 
--	error = -EFBIG;
- 	size = get_loop_size(lo, file);
--	if ((loff_t)(sector_t)size != size)
--		goto out_unlock;
-+
- 	error = loop_prepare_queue(lo);
- 	if (error)
- 		goto out_unlock;
-@@ -1280,10 +1274,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 				lo->lo_device->bd_inode->i_mapping->nrpages);
- 			goto out_unfreeze;
- 		}
--		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
--			err = -EFBIG;
--			goto out_unfreeze;
--		}
-+		figure_loop_size(lo, info->lo_offset, info->lo_sizelimit);
- 	}
- 
- 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
-@@ -1486,7 +1477,9 @@ static int loop_set_capacity(struct loop_device *lo)
- 	if (unlikely(lo->lo_state != Lo_bound))
- 		return -ENXIO;
- 
--	return figure_loop_size(lo, lo->lo_offset, lo->lo_sizelimit);
-+	figure_loop_size(lo, lo->lo_offset, lo->lo_sizelimit);
-+
-+	return 0;
- }
- 
- static int loop_set_dio(struct loop_device *lo, unsigned long arg)
--- 
-2.25.1
-
+Just use readq() and include the correct header please. We know what
+readq() is in the kernel.
