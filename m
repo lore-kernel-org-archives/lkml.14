@@ -1,47 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEF328F4
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 05:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C4850255
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 05:26:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709270760; cv=none; b=orsRFK8suJoZZr/PCfe3ExQ+W89kaO/T33xiKsfQZRdfsfXAw6LiKn9BVwKtCZ3q6A89z6NITV+nuDqCB4+2bs/uSwkK7yQ87yEEs0PqFaWoxgV5+EdZrOy008Hk+akNwpB4O3iwHfIn/aYP+QOe+YspBmYIW3W8Y/sav57ZYVo=
+	t=1709270790; cv=none; b=KvjgZF6tM7KDJhGhxxMBELNnV+feNO0A6OmQEhDNm9I/GtOnJvveOfRieEUWPaj07fmZ2axGsGPVCaYwKt/MT8eYHNCDtPYzQdDF/EL/shZ6cdQsBGDru8OUi+C63h2C7BfyieDu/gV8lCUId0tFLYMMUMP9WgFKJcNYpB9Ull4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709270760; c=relaxed/simple;
-	bh=4ebfRbmS0JWfdjq7CYj6Y/ZbE6u+9jx+i55gYwkZsZE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jg2F9UXJEjsWRGVz0jmvLl34BQgyZbLMsaovrQmpwjB8wgV++ULl5z2A5MOioPQYIGLEw6sMSb75Z8ozJQNNBSSzgh54Vi1bdKRp5aauSatwrkKUta/tTmkQVFYyfv9eoFx/irtcsAYpYhnx+KlSQ33SH4h+Kj7hxctzFPPrBnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=HmcP8e9g; arc=none smtp.client-ip=68.232.153.233
+	s=arc-20240116; t=1709270790; c=relaxed/simple;
+	bh=AL/4ZvvFwmCOmUaslwsy4E+8TUsYU2ExbAs2QfvPrCE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dvv2Y61mon90L2J5fg/Z4cD719762Iy0alQ509nzERzHP3K68bCfSH2tDd8oa1dQQ3d4NYOGAikAuzQtZacXbwHntxLQscV0NbEKxOLTRwMW1fG3i+3x/S7d/A8dbX8D2vKFilo12mQ/O3j5nuHHn34jG59LipkCFg/ZqWlRBpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=zvja2t3O; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="HmcP8e9g"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zvja2t3O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709270757; x=1740806757;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4ebfRbmS0JWfdjq7CYj6Y/ZbE6u+9jx+i55gYwkZsZE=;
-  b=HmcP8e9ggyJyVATRsHTA2eUBVIheKyu38+FgIaMkPwaWdlRKaIQxc2+Y
-   9JU/v2D3fVzpExEmcfLNwm2MxjVYmLeXtiDn0upQcyIVK9tJvh6h3blAM
-   oEimd0fBvhtj5OXX+ElxNz8kagf97ici63DUxCMHnzxyvVbM8Zbwhskat
-   1WZvlOzgZv5qa2XwGm0pTQ3RCC7umFy3qmRsZSIzIedBceNAG4FQPvbBb
-   BiIIjTOuj7LjOnGX+XQiNE08gM7AaJ7HynLBeDipXWqKEzZedPq90uIdI
-   T5Vj4FfxuEEUfz6t/Bi4UxtjawJqigeguqSj40jkIEDLXJZV/4i8jM3jx
-   Q==;
-X-CSE-ConnectionGUID: BZ390usuRumcqlmVt1Bs/w==
-X-CSE-MsgGUID: 23iptx7wTeqHsOKVsq3PRA==
+  t=1709270789; x=1740806789;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=AL/4ZvvFwmCOmUaslwsy4E+8TUsYU2ExbAs2QfvPrCE=;
+  b=zvja2t3O5UkKAn6MPOVcBGtr1ebzS91X5TXmXtdssioY6tUDSn6eif10
+   FSH7AdJ+BdFvQKVDaLZuNIohgdW6Oy7VfdRgOudWO0J2qMSTIgohObG8Q
+   LfFu1B1spDeLTliwa/hqrB4QWEZyCOoDrnvjK2wyYp3QJsAltDdkIzaJ1
+   gm7eeRu8r6i8zX0Dwa1IXl/2EgJifI1cS2m0XaDxQrNDYWR3YRQcWPBUx
+   LLNrqrvoJDxSvLwyOr1tdDXGlSqbySN8LAl6QKu+YfR8zSdkl+w9tWO7n
+   gffZ7G4OoguYbcHOwW9FLIc3dT3mvhigR28D8VpwSZK5cTu/PQ/QJx1NJ
+   g==;
+X-CSE-ConnectionGUID: epEW2Y4BQQKheh4DRATFNw==
+X-CSE-MsgGUID: 2pog/TE/QoeBPFpdaKooqw==
 X-IronPort-AV: E=Sophos;i="6.06,195,1705388400"; 
-   d="scan'208";a="18663389"
+   d="scan'208";a="247809237"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Feb 2024 22:25:56 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Feb 2024 22:26:28 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 29 Feb 2024 22:25:53 -0700
+ 15.1.2507.35; Thu, 29 Feb 2024 22:26:11 -0700
 Received: from che-lt-i67131.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 29 Feb 2024 22:25:45 -0700
+ 15.1.2507.35 via Frontend Transport; Thu, 29 Feb 2024 22:26:02 -0700
 From: Manikandan Muralidharan <manikandan.m@microchip.com>
 To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
 	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
@@ -54,11 +55,14 @@ CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
 	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
 	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
 	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
- Muralidharan" <manikandan.m@microchip.com>
-Subject: [PATCH v9 0/8] Add support for XLCDC to sam9x7 SoC family.
-Date: Fri, 1 Mar 2024 10:55:26 +0530
-Message-ID: <20240301052534.38651-1-manikandan.m@microchip.com>
+ Muralidharan" <manikandan.m@microchip.com>, Durai Manickam KR
+	<durai.manickamkr@microchip.com>
+Subject: [PATCH v9 2/8] drm: atmel-hlcdc: Define XLCDC specific registers
+Date: Fri, 1 Mar 2024 10:55:28 +0530
+Message-ID: <20240301052534.38651-3-manikandan.m@microchip.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240301052534.38651-1-manikandan.m@microchip.com>
+References: <20240301052534.38651-1-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,80 +72,115 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-This patch series aims to add support for XLCDC IP of sam9x7 SoC family
-to the DRM subsystem.XLCDC IP has additional registers and new
-configuration bits compared to the existing register set of HLCDC IP.
-The new compatible string "microchip,sam9x75-xlcdc" is defined for sam9x75
-variant of the sam9x7 SoC family.The is_xlcdc flag under driver data and
-IP specific driver ops helps to differentiate the XLCDC and existing HLCDC
-code within the same driver.
+From: Durai Manickam KR <durai.manickamkr@microchip.com>
 
-changes in v9:
-* Fix struct comments as per kernel-doc format
-* Rename LCDC ops
-* Move regmap_read_poll_timeout change to separate commit
-* cosmetic fixes
+The register address of the XLCDC IP used in SAM9X7 SoC family
+are different from the previous HLCDC. Defining those address
+space with valid macros.
 
-changes in v8:
-* Re-arrange the patch set to prepare and update the current HLCDC
-code base with the new LCDC IP based driver ops and then add support
-for XLCDC code changes.
-* Fix Cosmetic issues.
-
-changes in v7:
-* LCDC IP driver ops functions are declared static and its 
-declaration are removed.
-
-changes in v6:
-* Fixed Cosmetic defects.
-* Added comments for readability.
-
-changes in v5:
-* return value of regmap_read_poll_timeout is checked in failure
-case.
-* HLCDC and XLCDC specific driver functions are now invoked
-using its IP specific driver ops w/o the need of checking is_xlcdc flag.
-* Removed empty spaces and blank lines.
-
-changes in v4:
-* fixed kernel warnings reported by kernel test robot.
-
-changes in v3:
-* Removed de-referencing the value of is_xlcdc flag multiple times in
-a single function.
-* Removed cpu_relax() call when using regmap_read_poll_timeout.
-* Updated xfactor and yfactor equations using shift operators
-* Defined CSC co-efficients in an array for code readability.
-
-changes in v2:
-* Change the driver compatible name from "microchip,sam9x7-xlcdc" to
-"microchip,sam9x75-xlcdc".
-* Move is_xlcdc flag to driver data.
-* Remove unsed Macro definitions.
-* Add co-developed-bys tags
-* Replace regmap_read() with regmap_read_poll_timeout() call
-* Split code into two helpers for code readablitity.
+Signed-off-by: Durai Manickam KR <durai.manickamkr@microchip.com>
+[manikandan.m@microchip.com: Remove unused macro definitions]
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
 ---
-Durai Manickam KR (1):
-  drm: atmel-hlcdc: Define XLCDC specific registers
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h | 42 ++++++++++++++++++++
+ include/linux/mfd/atmel-hlcdc.h              | 10 +++++
+ 2 files changed, 52 insertions(+)
 
-Manikandan Muralidharan (7):
-  drm: atmel-hlcdc: add driver ops to differentiate HLCDC and XLCDC IP
-  drm: atmel_hlcdc: replace regmap_read with regmap_read_poll_timeout
-  drm: atmel_hlcdc: Add support for XLCDC using IP specific driver ops
-  drm: atmel-hlcdc: add DPI mode support for XLCDC
-  drm: atmel-hlcdc: add vertical and horizontal scaling support for
-    XLCDC
-  drm: atmel-hlcdc: add support for DSI output formats
-  drm: atmel-hlcdc: add LCD controller layer definition for sam9x75
-
- .../gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c    | 172 ++++++--
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c  | 105 +++++
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h  | 132 +++++--
- .../gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c   | 369 +++++++++++++++---
- include/linux/mfd/atmel-hlcdc.h               |  10 +
- 5 files changed, 673 insertions(+), 115 deletions(-)
-
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+index d0ecf0f58cce..c32e5c8809d7 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+@@ -15,6 +15,7 @@
+ 
+ #include <drm/drm_plane.h>
+ 
++/* LCD controller common registers */
+ #define ATMEL_HLCDC_LAYER_CHER			0x0
+ #define ATMEL_HLCDC_LAYER_CHDR			0x4
+ #define ATMEL_HLCDC_LAYER_CHSR			0x8
+@@ -128,6 +129,47 @@
+ 
+ #define ATMEL_HLCDC_MAX_LAYERS			6
+ 
++/* XLCDC controller specific registers */
++#define ATMEL_XLCDC_LAYER_ENR			0x10
++#define ATMEL_XLCDC_LAYER_EN			BIT(0)
++
++#define ATMEL_XLCDC_LAYER_IER			0x0
++#define ATMEL_XLCDC_LAYER_IDR			0x4
++#define ATMEL_XLCDC_LAYER_ISR			0xc
++#define ATMEL_XLCDC_LAYER_OVR_IRQ(p)		BIT(2 + (8 * (p)))
++
++#define ATMEL_XLCDC_LAYER_PLANE_ADDR(p)		(((p) * 0x4) + 0x18)
++
++#define ATMEL_XLCDC_LAYER_DMA_CFG		0
++
++#define ATMEL_XLCDC_LAYER_DMA			BIT(0)
++#define ATMEL_XLCDC_LAYER_REP			BIT(1)
++#define ATMEL_XLCDC_LAYER_DISCEN		BIT(4)
++
++#define ATMEL_XLCDC_LAYER_SFACTC_A0_MULT_AS	(4 << 6)
++#define ATMEL_XLCDC_LAYER_SFACTA_ONE		BIT(9)
++#define ATMEL_XLCDC_LAYER_DFACTC_M_A0_MULT_AS	(6 << 11)
++#define ATMEL_XLCDC_LAYER_DFACTA_ONE		BIT(14)
++
++#define ATMEL_XLCDC_LAYER_A0_SHIFT		16
++#define ATMEL_XLCDC_LAYER_A0(x)			\
++	((x) << ATMEL_XLCDC_LAYER_A0_SHIFT)
++
++#define ATMEL_XLCDC_LAYER_VSCALER_LUMA_ENABLE		BIT(0)
++#define ATMEL_XLCDC_LAYER_VSCALER_CHROMA_ENABLE		BIT(1)
++#define ATMEL_XLCDC_LAYER_HSCALER_LUMA_ENABLE		BIT(4)
++#define ATMEL_XLCDC_LAYER_HSCALER_CHROMA_ENABLE		BIT(5)
++
++#define ATMEL_XLCDC_LAYER_VXSYCFG_ONE		BIT(0)
++#define ATMEL_XLCDC_LAYER_VXSYTAP2_ENABLE	BIT(4)
++#define ATMEL_XLCDC_LAYER_VXSCCFG_ONE		BIT(16)
++#define ATMEL_XLCDC_LAYER_VXSCTAP2_ENABLE	BIT(20)
++
++#define ATMEL_XLCDC_LAYER_HXSYCFG_ONE		BIT(0)
++#define ATMEL_XLCDC_LAYER_HXSYTAP2_ENABLE	BIT(4)
++#define ATMEL_XLCDC_LAYER_HXSCCFG_ONE		BIT(16)
++#define ATMEL_XLCDC_LAYER_HXSCTAP2_ENABLE	BIT(20)
++
+ /**
+  * Atmel HLCDC Layer registers layout structure
+  *
+diff --git a/include/linux/mfd/atmel-hlcdc.h b/include/linux/mfd/atmel-hlcdc.h
+index a186119a49b5..80d675a03b39 100644
+--- a/include/linux/mfd/atmel-hlcdc.h
++++ b/include/linux/mfd/atmel-hlcdc.h
+@@ -22,6 +22,8 @@
+ #define ATMEL_HLCDC_DITHER		BIT(6)
+ #define ATMEL_HLCDC_DISPDLY		BIT(7)
+ #define ATMEL_HLCDC_MODE_MASK		GENMASK(9, 8)
++#define ATMEL_XLCDC_MODE_MASK		GENMASK(10, 8)
++#define ATMEL_XLCDC_DPI			BIT(11)
+ #define ATMEL_HLCDC_PP			BIT(10)
+ #define ATMEL_HLCDC_VSPSU		BIT(12)
+ #define ATMEL_HLCDC_VSPHO		BIT(13)
+@@ -34,6 +36,12 @@
+ #define ATMEL_HLCDC_IDR			0x30
+ #define ATMEL_HLCDC_IMR			0x34
+ #define ATMEL_HLCDC_ISR			0x38
++#define ATMEL_XLCDC_ATTRE		0x3c
++
++#define ATMEL_XLCDC_BASE_UPDATE		BIT(0)
++#define ATMEL_XLCDC_OVR1_UPDATE		BIT(1)
++#define ATMEL_XLCDC_OVR3_UPDATE		BIT(2)
++#define ATMEL_XLCDC_HEO_UPDATE		BIT(3)
+ 
+ #define ATMEL_HLCDC_CLKPOL		BIT(0)
+ #define ATMEL_HLCDC_CLKSEL		BIT(2)
+@@ -48,6 +56,8 @@
+ #define ATMEL_HLCDC_DISP		BIT(2)
+ #define ATMEL_HLCDC_PWM			BIT(3)
+ #define ATMEL_HLCDC_SIP			BIT(4)
++#define ATMEL_XLCDC_SD			BIT(5)
++#define ATMEL_XLCDC_CM			BIT(6)
+ 
+ #define ATMEL_HLCDC_SOF			BIT(0)
+ #define ATMEL_HLCDC_SYNCDIS		BIT(1)
 -- 
 2.25.1
 
