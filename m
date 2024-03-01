@@ -1,131 +1,147 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137F525740
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A0227451
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314430; cv=none; b=td649d//Ke/jdf2owEWs3TmD08I0efQOtYAY6v0PFcdqHYxUdLIiWfLEwlH9kah/+cXTYd0HKR4wFSQoYJHg50tH/ig6WaXjjvuP1QF2JbhRXw+kEns/MS356/+gY+gUSPfByge2Y0K+9vDJqslLwJeOlur1JuekW14e8XFFk7k=
+	t=1709314432; cv=none; b=W/r4VkJ1nEBs9H+RijoFiAfChU5O5YUlH1LdRz4v957GNfIT3Jv4VCUMPytSL5JpIJhNL2Ddf+0XMd6gk7HC3WWqjECH2ZUSB3kwHORg1dZ7Q56Ay8L1mx4lQ/p6KrCFnufk1uG1GtPaMdphjd4OkKyqS7GzMi790uqOB2LrCMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314430; c=relaxed/simple;
-	bh=uPcrWwZo51EZo9dE7TOvBkTfx+6v7yhA6bRe7BwSO+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ie+9955uS/AJusdvTEJzAj55ZBbnIhNkBwqOUcNlC8VAWSBtKuXpt7kVrjPnwa78QdwjsBZ5+jAmqEF57HRYhAZmYdSPtnd5tw65JiP12KASAT+rqzTR6O63AlLT8L7UzpalHXVKU1DK2W/chhoSJEhHu1yGZ0PSDR4KtwSe+6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UTWarH1+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1709314432; c=relaxed/simple;
+	bh=TCSXMg81EsOE/fbyZwViVsT5K6QOfN37XAWM9EXzavc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FEN4ay6I1wOisg7bkUi5SDV2HP9qaDJmnqGR+T2Bx0Vb34o/15DkexTjisP9d1Ls3asoFZbmK1+yMY1QBMAilVmkMmg6VA7XzKhtVjVOaNt/yX3nmv5AKmPycvtfdn3Fd2D33VXz8kbY3logz3Pp1QsAYwD00EZ2KT8kaRfvVTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ay3h0ZBm; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UTWarH1+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8C2CE40E0028;
-	Fri,  1 Mar 2024 17:33:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6E5IhuBVq3GX; Fri,  1 Mar 2024 17:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709314422; bh=0spoTuQNwBK1qcqroj+kYN6zrHCgNmlEdBFjW5XSE+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UTWarH1+F3ypn+rMp1530yxS1poDgUq7Tm+/oBGi10vSklLnOV2oFwFu8NOTM6hb2
-	 fpK2bKMZQulEvRVEa76LHm6gBBOA0GKvQwkvKWCcgG3rMpyDkOthba8QORvMTCohXv
-	 3dN69w5idhdZO+1Y6QNlaaTAvld37Z6y4uYoJNEgAfihGhOHngn77ImkmwpJQAxThr
-	 oqDOwC0lPcDEURVvf1i5zTEAAxzRdkdNCJOURujATuEvFtaoDSgHYUmzSWeB4rX0mQ
-	 y4Bo+RJQErHw0jFfqRb3rae0DL9/qHQ91dR9kPwwE76q2WHiaiuaVNMNqaNF4yyGv6
-	 38T0NrMM7arGfxy+Gw7JPDXocgCaJjiA5WDS1h/8/YGYBhx0dkAxjM+9tzyyt8CdQM
-	 neHAbJGRZkEYnrg2EYa80PASfZ68GSWzY3+mNWD27ymllMhVTiSc0MwPYeqUzLtYwt
-	 4fw3RvtPsJ0q9EAoiBeoIMKtrzbCv9sVRntQjZblnR3q5g5TDZk1ZKD5OOsEsoNdff
-	 AXzwLLP6j0ruDGspiv8pK7bLW/fo2dJQIw4pFDGZYw6Aj2bDa9hKMVjm1Vy6BUqZ8o
-	 qnr9ka87yXK/eblWXUxPFoOct7tgzbqHLb91gzDcthlypxvsp8YmRxxHnfw4RoGLcR
-	 K8uB8p6UV5/RsEbxg2AEoAk8=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B1E1340E0196;
-	Fri,  1 Mar 2024 17:33:31 +0000 (UTC)
-Date: Fri, 1 Mar 2024 18:33:23 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>
-Subject: Re: [PATCH v7 2/9] x86/startup_64: Defer assignment of 5-level
- paging global variables
-Message-ID: <20240301173323.GDZeIRY_BVBqpudkEo@fat_crate.local>
-References: <20240227151907.387873-11-ardb+git@google.com>
- <20240227151907.387873-13-ardb+git@google.com>
- <20240228205540.GIZd-dzFYIBbtfIAo3@fat_crate.local>
- <CAMj1kXGhZU+FE2gE262Q8_vZEFHicsRtVPzXT-dhhCvBuiMjUA@mail.gmail.com>
- <20240301160921.GBZeH9sZhp73xX40ze@fat_crate.local>
- <CAMj1kXFJwEUExy7+Snh3QHVn-ATj0C+sYje22Qmc+y=cCtAV7g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ay3h0ZBm"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5a0deaf21efso1300661eaf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 09:33:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709314427; x=1709919227; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xImxJWc7Iog9OBF/0ks2T7kTvBm8QFAslDMxg3rdGPY=;
+        b=ay3h0ZBmVuRkGAoh2VyfAUd0ZhymQ7vgPYPcUM5Lhl/88nCG7pGWEDu5idilOve55f
+         PrHsq2VrVdklHKaNu4IQrwOGmxVmrVToejea8/bYe5Wp7Ij+njH2xscsEpOEfrQWp+by
+         AzRI3YLBBfKzv8TelPmIYbIZQB/XY0TVCS59up2quYyRE/r68Pp+W105zK74+Ex+grvH
+         6LZ5JIEVQuJ+rNZ8o5dxnbNTAjmuui683ZaXEYKM6vqyEGdqrqdU4JQNbl8RMcjel0kK
+         sZ7GDocVOi4s2jWVS2BPTGWJ41g4l3V7HPZRtybklizUDaXaMuG++kMcCQK418di92OI
+         uqkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709314427; x=1709919227;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xImxJWc7Iog9OBF/0ks2T7kTvBm8QFAslDMxg3rdGPY=;
+        b=XKxVGYUmYNJilPFVlEwubzAI07kb5aNj9vb3inOpZLiSV8+ioAyQVCz1xwP26MUwjt
+         athvk+LzaPOlUFqLmGHoBrM4guzYvPMVuS4GT/MpBcbqtlSslzK8wda2s15jtZBZQ+76
+         i5Ic6KAtZdutTLbsJLmCF+YKGpiueZmh7b9xMAv3HqRr6t88hDfe7tpuPjhXPwtQYTya
+         R1b0eUva763Cgp45CNdLXi3Ycx1pPy2r7i/koRXUbqFdcDqSHLZjDEgkmIZE3azhPmAA
+         ErWXOm4I5swV3RaX0xmM/bPmqfUmkOO3X4HWwor2PW0A0ZD3G7QZoKZJPya0fizTMHuV
+         5Vmw==
+X-Gm-Message-State: AOJu0YxNsNVW4urC3X/PtZDAOEbRxmlI6Vu08Aa1pZnzJYuduTROvjAI
+	j9lefPNz4CMLrTii1e3jJLr9jLHHvYxF5h9nVQb0GHWvhAisIMlQa1fsP9gAj7w=
+X-Google-Smtp-Source: AGHT+IEaS7QiqN3fYN6eqlEpEHexB1BrGI/DGifcbsfq0aYXNTMbYdF9ufVL3gHeLbRiAI+Dvz03rA==
+X-Received: by 2002:a05:6358:7e99:b0:17b:7738:de5a with SMTP id o25-20020a0563587e9900b0017b7738de5amr2678947rwn.2.1709314427513;
+        Fri, 01 Mar 2024 09:33:47 -0800 (PST)
+Received: from workbox.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id t14-20020ac86a0e000000b0042e6b901ebesm1885433qtr.40.2024.03.01.09.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 09:33:47 -0800 (PST)
+From: Trevor Gamblin <tgamblin@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	michael.hennerich@analog.com,
+	nuno.sa@analog.com,
+	devicetree@vger.kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	tgamblin@baylibre.com,
+	dlechner@baylibre.com
+Subject: [PATCH 0/2 v4] pwm: add axi-pwm-gen driver
+Date: Fri,  1 Mar 2024 12:33:40 -0500
+Message-ID: <20240301173343.1086332-1-tgamblin@baylibre.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFJwEUExy7+Snh3QHVn-ATj0C+sYje22Qmc+y=cCtAV7g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 01, 2024 at 06:09:53PM +0100, Ard Biesheuvel wrote:
-> On Fri, 1 Mar 2024 at 17:09, Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Fri, Mar 01, 2024 at 11:01:33AM +0100, Ard Biesheuvel wrote:
-> > > The scenario that I have not managed to test is entering from EFI with
-> > > 5 levels of paging enabled, and switching back to 4 levels (which
-> > > should work regardless of CONFIG_X86_5LEVEL). However, no firmware in
-> > > existence actually supports that today, and I am pretty sure that this
-> > > code has never been tested under those conditions to begin with. (OVMF
-> > > patches are under review atm to allow 5-level paging to be enabled in
-> > > the firmware)
-> >
-> > Aha.
-> >
-> 
-> I've built a debug OVMF image using the latest version of the series,
-> and put it at [0]
-> 
-> Run like this
-> 
-> qemu-system-x86_64 -M q35 \
->   -cpu qemu64,+la57 -smp 4 \
->   -bios OVMF-5level.fd \
->   -kernel arch/x86/boot/bzImage \
->   -append console=ttyS0\ earlyprintk=ttyS0 \
->   -vga none -nographic -m 1g \
->   -initrd <initrd.img>
-> 
-> and you will get loads of DEBUG output from the firmware first, and
-> then boot into Linux. (initrd can be omitted)
-> 
-> Right before entering, it will print
-> 
-> CpuDxe: 5-Level Paging = 1
-> 
-> which confirms that the firmware is running with 5 levels of paging.
-> 
-> I've confirmed that this boots happily with this series applied,
-> including when using 'no5lvl' on the command line, or when disabling
-> CONFIG_X86_5LEVEL [confirmed by inspecting
-> /sys/kernel/debug/page_tables/kernel].
-> 
-> 
-> [0] http://files.workofard.com/OVMF-5level.fd.gz
+This series adds support for the AXI PWM GEN subsystem found on FPGA IP
+cores. It can be used to generate configurable PWM outputs, and includes
+options for external synchronization and clock signals.  The work is
+being done on behalf of, and therefore lists maintainers from Analog
+Devices, Inc.
 
-Nice, that might come in handy for other testing too.
+The series has been tested on actual hardware using an EVAL-AD7985FMCZ
+evaluation board. An oscilloscope was used to validate that the
+generated PWM signal matched the requested one.
 
-Thx.
+---
+v4 changes:
+* Address feedback for driver in v3:
+  * Update to use devm_pwmchip_alloc() function
+  * Simplify use of dev symbol in axi_pwmgen_probe
+  * Remove unnecessary axi_pwmgen_from_chip function and use
+    pwmchip_get_drvdata directly
+
+Link to v3: https://lore.kernel.org/linux-pwm/20240131214042.1335251-1-tgamblin@baylibre.com/
+
+v3 changes:
+* Address feedback for driver in v2:
+  * Remove unnecessary blank line in axi_pwmgen_apply
+  * Use macros already defined in <linux/fpga/adi-axi-common.h> for
+    version checking
+
+Link to v2: https://lore.kernel.org/linux-pwm/20240123220515.279439-1-tgamblin@baylibre.com/
+
+v2 changes:
+* Address feedback for driver and device tree in v1:
+  * Use more reasonable Kconfig approach
+  * Use common prefixes for all functions
+  * Rename axi_pwmgen struct to axi_pwmgen_ddata
+  * Change use of "pwm" to "ddata"
+  * Set and check state->polarity
+  * Multiply safely with mul_u64_u64_div_u64()
+  * Improve handling of max and zero periods
+  * Error if clk_rate_hz > NSEC_PER_SEC
+  * Add "Limitations" section at top of pwm-axi-pwmgen.c
+  * Don't disable outputs by default
+  * Remove unnecessary macros for period, duty, offset
+  * Fix axi_pwmgen_ddata alignment
+  * Don't artificially limit npwm to four
+  * Use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
+  * Cache clk rate in axi_pwmgen_ddata
+  * Don't assign pwm->chip.base, do assign pwm->chip.atomic
+  * Relocate "unevaluatedProperties" in device tree binding
+* Remove redundant calls to clk_get_rate
+* Test contents of AXI_PWMGEN_REG_CORE_MAGIC instead of
+  arbitrary AXI_PWMGEN_TEST_DATA in AXI_PWMGEN_REG_SCRATCHPAD
+* Remove redundant clk struct from axi_pwmgen_ddata
+* Add self as module author
+* Add major version check for IP core
+
+Link to v1: https://lore.kernel.org/linux-pwm/20240115201222.1423626-1-tgamblin@baylibre.com/
+
+Drew Fustini (2):
+  dt-bindings: pwm: Add AXI PWM generator
+  pwm: Add driver for AXI PWM generator
+
+ .../bindings/pwm/adi,axi-pwmgen.yaml          |  48 ++++
+ MAINTAINERS                                   |   9 +
+ drivers/pwm/Kconfig                           |  13 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-axi-pwmgen.c                  | 244 ++++++++++++++++++
+ 5 files changed, 315 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+ create mode 100644 drivers/pwm/pwm-axi-pwmgen.c
 
 -- 
-Regards/Gruss,
-    Boris.
+2.43.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
