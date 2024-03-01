@@ -1,97 +1,156 @@
-Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC546A03E
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83466A329;
+	Fri,  1 Mar 2024 09:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709283955; cv=none; b=gzFet53CkER+qEBOX9iya4IWb8rbjdDCM8XGrryZpJZXqH3KvQG/7l5sZIgpRk3dYHWHur4m/WMj62pEfJi7U51v0IMjs/SP7RSFNNnjUSzJ0kyzMls59zLo6VF+lqqp7ixS8NSMStTeHUOAiYrcrR44ErvI+BR6lMDETD9luDQ=
+	t=1709283998; cv=none; b=FsjnqxoDtW6xVIDH4U3N1bykjT3c9XQuEKmhNwOZteXV3n4/k944+ANTtRnzHBB8fpetG/HLySJzpouYNf69xcZAP1hUHEvgJlOm0N1JGHNFjJkpavCST7D9QY433Apf+QipSe3VPYqal2L/xwJ8rG5JclSyjynbfKl4ZagWVV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709283955; c=relaxed/simple;
-	bh=U6zrGDf1CH9J4v5DCBN2pKsyO7iS9kDU6k4Ptp3kKy4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mo6eJLROW9hxQH2hBOpR2T6arW5FW3JAjTD4rdurh+Vv9wGRwTSMpelBPiNsNsOUrTf9U6ZtE4pMrZcyg5A/32YkUw4xkIqYpwux2EKUBBSju4pYu0iTw2CfM7scRQNCRYi0UNRGK0HAl3ROu7gP/0bmx57mbNjVcslHzYyiPUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=P8auQz5C; arc=none smtp.client-ip=195.19.76.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
+	s=arc-20240116; t=1709283998; c=relaxed/simple;
+	bh=t77D3hvYZjR15Q549ojSRDIMkv4v3gVrHr+1V9N+rL8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V+67/PvHV8FaBmUnvwIIxxvJ9Va3NQkkupKZezrCTThIJWrSxAtD+0X/B3WKppdrTnd3wrzLqzJs5U85qksT5HZHWYruro2/YigLgXwwLJ3+Sb4IKG0GiM0vaakIPiG3YKzjOogK4m4yPZ67a1zTFwmECY1zXAC1uUE6Kp+qxo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=uwBnz4EB; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="P8auQz5C"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 20489D998EC3B;
-	Fri,  1 Mar 2024 11:55:33 +0300 (MSK)
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id z6G6-abwn9Qu; Fri,  1 Mar 2024 11:55:33 +0300 (MSK)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id E0C91D99A42FF;
-	Fri,  1 Mar 2024 11:55:32 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru E0C91D99A42FF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
-	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1709283332;
-	bh=f2qKsIAGkUNEVelOg7DTK/0b4IF/e+zG6QgMW3olvD4=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=P8auQz5C6OaEzL92Wd4UVkrC0+agep5xnkw9WQbAvEflW8hYcBiV0bOPGTvWixe7R
-	 5gxvNYDmZDMIDT39UZNaUeriACLVOP+LYwBzNwp2rfCUbIjLGIV4y+Gn9PkkJH1Er2
-	 JUF5lJQmT3mMEr+/Q+tD7LNg94RH6EhR51r9IvJ99jPoMVABIFcQizUSbngm4T9xos
-	 YOlMDOS/3uc9mLjR6mQOjQb3qWpyRgPOrUpRCM0lhwhsDpkcZH8FPO5fhQU+YqsFOp
-	 sZn27iVdF2fI7cmW584/cJT+Vz4OzY87Bc1BK5LaXVEkH+8L44a/1Ao+xDCGi3r66n
-	 9aqkPUQvTnBAg==
-X-Virus-Scanned: amavisd-new at rosalinux.ru
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id I9d5Qmb4AYe6; Fri,  1 Mar 2024 11:55:32 +0300 (MSK)
-Received: from ubuntu.localdomain (unknown [144.206.93.23])
-	by mail.rosalinux.ru (Postfix) with ESMTPSA id 97E4FD998EC3B;
-	Fri,  1 Mar 2024 11:55:32 +0300 (MSK)
-From: Aleksandr Burakov <a.burakov@rosalinux.ru>
-To: Dave Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>
-Cc: Aleksandr Burakov <a.burakov@rosalinux.ru>,
-	virtualization@lists.linux-foundation.org,
-	spice-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] drm/qxl: fix NULL dereference in qxl_add_mode
-Date: Fri,  1 Mar 2024 11:55:11 +0300
-Message-Id: <20240301085511.23298-1-a.burakov@rosalinux.ru>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uwBnz4EB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709283994;
+	bh=t77D3hvYZjR15Q549ojSRDIMkv4v3gVrHr+1V9N+rL8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uwBnz4EBydDQpkGmpplf+4b/eYMciswh5zSoUmYvkIdces6Ahwl1mXDgcCyxMsVDJ
+	 yGKRWPhhP8oURbxsVglpDWzv0xU4x+gIf/MPc+k+NzfQfqwomPsgvn5z1LY0mzqx2U
+	 LlUBgbXCutq2ej76v9MoDWGxfFaelHwoDoUZXsCUV79yIQstIhpSnE/P9KCxqAFW5z
+	 uuyP1nUn27QGiQAPK+8pxn7RXLQgxFy0oMzdJQ5J1XS032saweZIM9VwPwbet/aShX
+	 QyhagQzGQnlxWm5UElT1hpU7rP4Fy36pXbqH+uh8B6k7yxkD0TcLwoLWNum/Vvt26w
+	 5b9UA+X7Ib9dQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0454E37814A4;
+	Fri,  1 Mar 2024 09:06:33 +0000 (UTC)
+Message-ID: <2b2effdd-0b9d-40fd-a88d-ab364f2b0668@collabora.com>
+Date: Fri, 1 Mar 2024 10:06:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI: mediatek-gen3: Assert MAC reset only if PHY reset
+ also present
+Content-Language: en-US
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
+ jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, bhelgaas@google.com, p.zabel@pengutronix.de,
+ matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel@collabora.com, wenst@chromium.org, nfraprado@collabora.com
+References: <20240229092449.580971-1-angelogioacchino.delregno@collabora.com>
+ <a55428b8-27b3-42f7-8154-ccc7dde469df@ti.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <a55428b8-27b3-42f7-8154-ccc7dde469df@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Return value of a function 'drm_cvt_mode' is dereferenced without
-checking for NULL but drm_mode_create() in drm_cvt_mode() may
-return NULL value in case of memory allocation error.
+Il 01/03/24 07:42, Siddharth Vadapalli ha scritto:
+> On Thu, Feb 29, 2024 at 10:24:49AM +0100, AngeloGioacchino Del Regno wrote:
+>> Some SoCs have two PCI-Express controllers: in the case of MT8195,
+>> one of them is using a dedicated PHY, but the other uses a combo PHY
+>> that is shared with USB and in that case the PHY cannot be reset
+>> from the PCIe driver, or USB functionality will be unable to resume.
+>>
+>> Resetting the PCIe MAC without also resetting the PHY will result in
+>> a full system lockup at PCIe resume time and the only option to
+>> resume operation is to hard reboot the system (with a PMIC cut-off).
+>>
+>> To resolve this issue, check if we've got both a PHY and a MAC reset
+>> and, if not, never assert resets at PM suspend time: in that case,
+>> the link is still getting powered down as both the clocks and the
+>> power domains will go down anyway.
+>>
+>> Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>
+>> Changes in v2:
+>>   - Rebased over next-20240229
+>>
+>>   drivers/pci/controller/pcie-mediatek-gen3.c | 25 ++++++++++++++-------
+>>   1 file changed, 17 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+>> index 975b3024fb08..99b5d7a49be1 100644
+>> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+>> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+>> @@ -874,17 +874,26 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
+>>   	return err;
+>>   }
+>>   
+>> -static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
+>> +static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie, bool is_suspend)
+>>   {
+>> +	bool suspend_reset_supported = pcie->mac_reset && pcie->phy_reset;
+>> +
+>>   	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>>   
+>>   	pm_runtime_put_sync(pcie->dev);
+>>   	pm_runtime_disable(pcie->dev);
+>> -	reset_control_assert(pcie->mac_reset);
+>> +
+>> +	/*
+>> +	 * Assert MAC reset only if we also got a PHY reset, otherwise
+>> +	 * the system will lockup at PM resume time.
+>> +	 */
+>> +	if (is_suspend && suspend_reset_supported)
+>> +		reset_control_assert(pcie->mac_reset);
+>>   
+>>   	phy_power_off(pcie->phy);
+>>   	phy_exit(pcie->phy);
+> 
+> Wouldn't this power off the shared PHY? Or will the PHY driver make this
+> NO-OP if the PHY is shared, in which case the above two statements could
+> be combined with the other statements in the:
+> if (is_suspend && suspend_reset_supported)
+> condition to get a single block of code that also combines the
+> reset_control_assert(pcie->phy_reset)
+> present below.
+> 
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+No, that'd be fine:
 
-Fixes: 1b043677d4be ("drm/qxl: add qxl_add_mode helper function")
-Signed-off-by: Aleksandr Burakov <a.burakov@rosalinux.ru>
----
- drivers/gpu/drm/qxl/qxl_display.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+static int mtk_phy_power_off(struct phy *phy)
+{
+	struct mtk_phy_instance *instance = phy_get_drvdata(phy);
+	struct mtk_tphy *tphy = dev_get_drvdata(phy->dev.parent);
 
-diff --git a/drivers/gpu/drm/qxl/qxl_display.c b/drivers/gpu/drm/qxl/qxl_=
-display.c
-index a152a7c6db21..447532c29e02 100644
---- a/drivers/gpu/drm/qxl/qxl_display.c
-+++ b/drivers/gpu/drm/qxl/qxl_display.c
-@@ -236,8 +236,10 @@ static int qxl_add_mode(struct drm_connector *connec=
-tor,
- 		return 0;
-=20
- 	mode =3D drm_cvt_mode(dev, width, height, 60, false, false, false);
--	if (preferred)
-+	if (preferred && mode)
- 		mode->type |=3D DRM_MODE_TYPE_PREFERRED;
-+	else
-+		return 0;
- 	mode->hdisplay =3D width;
- 	mode->vdisplay =3D height;
- 	drm_mode_set_name(mode);
---=20
-2.25.1
+	if (instance->type == PHY_TYPE_USB2)
+		u2_phy_instance_power_off(tphy, instance);
+	else if (instance->type == PHY_TYPE_PCIE)
+		pcie_phy_instance_power_off(tphy, instance);
+
+	return 0;
+}
+
+...it's two different PHY instances that we're dealing with, here :-)
+
+Cheers,
+Angelo
+
+>> -	reset_control_assert(pcie->phy_reset);
+>> +	if (is_suspend && suspend_reset_supported)
+>> +		reset_control_assert(pcie->phy_reset);
+>>   }
+>>   
+> ...
+> 
+> Regards,
+> Siddharth.
+
 
