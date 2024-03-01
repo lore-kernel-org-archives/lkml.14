@@ -1,126 +1,73 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE081FA0
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 14:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484751FA1;
+	Fri,  1 Mar 2024 14:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709303864; cv=none; b=PT3lOxe3JeLUXbnNwog8L1BF6OjzmJua+MecYIF7FWikUd9VBPlLx5YY9dz8KlhvlQs0ayhUoAVC07GJUcTZ9pCpfsX5NCCVv9iIvn3f4GCFulQX7uQr4Xu9zpp3uUrJlziMihfPbBDRZ15WY572g4V/PXArLRzbXwpe6y41YzU=
+	t=1709303876; cv=none; b=VXJW1sLvHCXIdKt+hylyWboOTdQz1NhWFXczWvsbMpTSOMrSPLhV43oaH+80ItWJCzHkQc5PqPFvLMjyQ6AXv71gxcqfWxm9I+pwzc5Z0bmiqUsltU7iCarne6Lb6QwJ2s6MQ4RicYxvtsyDttJdjq5inBZZ3X3atWpVP8D+0/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709303864; c=relaxed/simple;
-	bh=Tu1IhSm5ytRoCYM2NUIGoUQfc9tPBjeGnKpUrWBIzS4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eeBm8RKZKPtI4mU/6WHrjpmyBzTwWJ10utvu8nnr2tFSuGoc38GH3sXvbKoZcBD0/CdTmRkubYma98qYmBC9/apDH5RTbgqQfAKX01QSZQ1beX2x5+GvI2LspD1kVzP2FYDHsyG4vcM4TsNk7bsSkrorauw6qeG1g7u4aZHVjFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TV4qXrW6; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709303876; c=relaxed/simple;
+	bh=2r1Wp3rYCpQCXBRXRGrQRKnkowj3xl49dA+H2NJnMBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FsLOdZJnR0DV8Qve736fQ5+A0a6YjzsgbW0lMYHFdmFo8EqzqABdcPjgUst+jTKh6QWoPgIvVFgi0wrpAor2x6mbZt7trGSQ8Y0a7/jgC8CmcB3ur6oNYKxLgSkDDhbTajXOFQ0TnGI3n0hnFsarBhn8Ubs5k/gVxnQIJBMr0+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLcMwXej; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TV4qXrW6"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dbae7b8ff2so6097815ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 06:37:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709303862; x=1709908662; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oVtdCDkncAEjYp5VDfB0TkA+iNPQzbJhtZQ9XlyWAes=;
-        b=TV4qXrW63j5bHEgVYRDL5i5MnfUy4QudFtwBnXK5JBFifgyAyzNscdLpFUhh40SdYO
-         QsEqUAU9WT4kPyHqgZMsSrkAIBj/7EUdVcujrgssNMabe9khIAb5TleYStqMC6mMFXY2
-         +ovfR4q1D5pWeZGSTz+e+tExb6CzLLrS+4C0MO6pMMoVDz08WrtMVSYtRLhQ4TI7kQb9
-         EiZk9vv+mss9H61A0HrOp2jf5pg7edESrxqqcPc+48+jq8Gx88Z4kZwJ4AT3n+Y+w23y
-         tts8axSVuIH9A648mO3cZzEZFLRYCG8jqyE2CAiGjIGAerPwkFXCdPdvkcsCRnJP71Gp
-         lBEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709303862; x=1709908662;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oVtdCDkncAEjYp5VDfB0TkA+iNPQzbJhtZQ9XlyWAes=;
-        b=e0O9czIPHQ3Dwhq1AhNdzZoFJARSbMzTWV7gQ3QnezBCfA5GPTflGhXHuoygUxnmza
-         uUWPrXogGmeTcnt1yrkui/6OmPx6PrZJ/z38HB2DW/cvilI7gQHx1cgCkEznnN/Fzv9L
-         q7yV6HdZ6Qo1Xmdxe9cN2jXltOongABXSkLZorc62cSXKqq4fEckc1bQuu2ycty6nEpC
-         IBVbERmimbt0dl77uksTZ4g0w5Z7UEyCTvDa5c2XyWg4vF9kiHfWgi91rdZ2/wMlOoth
-         NKncrrar3+rJ021TdXFXbI7Eb1gcjNIBCbq0xYsPMGmDkFDDgIjYaKS62XAdWaMPr0Oa
-         144Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXYQjn+3pYZxi2I87t38LZ29vVCuzitXp3yz2Uvi0OqCmnZem1WNxnR6HTUpAMlgS+EZ8JPQo2kio+AhZl8HVhssK4kFHSMMrK2FNAu
-X-Gm-Message-State: AOJu0YzMb4LlaCtjYJ4UrURi9B48/OijQgHnvgWvsZWpMgpkzcl74Frx
-	hQgxN1cFYwbdpilKdfRig00MtVShGqxj2GWjnCrFXp/7ZONDoVZoSCDN/QcLHbQ=
-X-Google-Smtp-Source: AGHT+IEc0VYmCsFGtKuNFZxqUlC22U6RVuMYWS58KkWVcBcHQtJsz9h797yn3Q9ko08aW7bsTmOwSQ==
-X-Received: by 2002:a17:902:d3c4:b0:1dc:5d9d:6eb3 with SMTP id w4-20020a170902d3c400b001dc5d9d6eb3mr1641483plb.21.1709303862445;
-        Fri, 01 Mar 2024 06:37:42 -0800 (PST)
-Received: from sumit-X1.. ([223.178.213.98])
-        by smtp.gmail.com with ESMTPSA id c3-20020a170902d90300b001db94bead0asm3497899plz.193.2024.03.01.06.37.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 06:37:42 -0800 (PST)
-From: Sumit Garg <sumit.garg@linaro.org>
-To: op-tee@lists.trustedfirmware.org
-Cc: jens.wiklander@linaro.org,
-	ilias.apalodimas@linaro.org,
-	jerome.forissier@linaro.org,
-	linux-kernel@vger.kernel.org,
-	mikko.rapeli@linaro.org,
-	Sumit Garg <sumit.garg@linaro.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] tee: optee: Fix kernel panic caused by incorrect error handling
-Date: Fri,  1 Mar 2024 20:07:31 +0530
-Message-Id: <20240301143731.3494455-1-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLcMwXej"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4500FC433F1;
+	Fri,  1 Mar 2024 14:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709303875;
+	bh=2r1Wp3rYCpQCXBRXRGrQRKnkowj3xl49dA+H2NJnMBU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jLcMwXejD/CL3+8qjIs5Xj3U6dmo915+bS91i0UNfhbY253V+tu4oVODlVblYPfIK
+	 kBbJyaJFzSnPbMfHsBljKPLYaDqhB5LDPn9cjmmFucHfOs97juG4NLacHkyaeXJFnq
+	 KRzG2NgL8sxQCK8gpLrl56up+kw9N55G/Tw7S1zvNyQomdVACQLEaeAahE2nupVWHp
+	 Yt/4BL5t28vLoTWaClOc+rBGN1zQqc0b29ciA5scV8eXufEMsPJvjdKioJRV4fyHew
+	 6XY8fr7/coD3tETytB8GrViKeA/CBmmcZ5a0/ZuEjsCBnL3FrneePy4UPD8aV11hWZ
+	 Yb523th9q7o6Q==
+Date: Fri, 1 Mar 2024 06:37:54 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Florian
+ Westphal <fw@strlen.de>, Kishen Maloor <kishen.maloor@intel.com>, Shuah
+ Khan <shuah@kernel.org>, Peter Krystad <peter.krystad@linux.intel.com>,
+ Christoph Paasch <cpaasch@apple.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net 10/10] selftests: mptcp: explicitly trigger the
+ listener diag code-path
+Message-ID: <20240301063754.2ecefecf@kernel.org>
+In-Reply-To: <20240223-upstream-net-20240223-misc-fixes-v1-10-162e87e48497@kernel.org>
+References: <20240223-upstream-net-20240223-misc-fixes-v1-0-162e87e48497@kernel.org>
+	<20240223-upstream-net-20240223-misc-fixes-v1-10-162e87e48497@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The error path while failing to register devices on the TEE bus has a
-bug leading to kernel panic as follows:
+On Fri, 23 Feb 2024 17:14:20 +0100 Matthieu Baerts (NGI0) wrote:
+> From: Paolo Abeni <pabeni@redhat.com>
+> 
+> The mptcp diag interface already experienced a few locking bugs
+> that lockdep and appropriate coverage have detected in advance.
+> 
+> Let's add a test-case triggering the relevant code path, to prevent
+> similar issues in the future.
+> 
+> Be careful to cope with very slow environments.
+> 
+> Note that we don't need an explicit timeout on the mptcp_connect
+> subprocess to cope with eventual bug/hang-up as the final cleanup
+> terminating the child processes will take care of that.
 
-[   15.398930] Unable to handle kernel paging request at virtual address ffff07ed00626d7c
-[   15.406913] Mem abort info:
-[   15.409722]   ESR = 0x0000000096000005
-[   15.413490]   EC = 0x25: DABT (current EL), IL = 32 bits
-[   15.418814]   SET = 0, FnV = 0
-[   15.421878]   EA = 0, S1PTW = 0
-[   15.425031]   FSC = 0x05: level 1 translation fault
-[   15.429922] Data abort info:
-[   15.432813]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-[   15.438310]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[   15.443372]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[   15.448697] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000d9e3e000
-[   15.455413] [ffff07ed00626d7c] pgd=1800000bffdf9003, p4d=1800000bffdf9003, pud=0000000000000000
-[   15.464146] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+Hi!
 
-Commit 7269cba53d90 ("tee: optee: Fix supplicant based device enumeration")
-lead to the introduction of this bug. So fix it appropriately.
-
-Reported-by: Mikko Rapeli <mikko.rapeli@linaro.org>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218542
-Fixes: 7269cba53d90 ("tee: optee: Fix supplicant based device enumeration")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- drivers/tee/optee/device.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-index 9d2afac96acc..d296c70ddfdc 100644
---- a/drivers/tee/optee/device.c
-+++ b/drivers/tee/optee/device.c
-@@ -90,13 +90,14 @@ static int optee_register_device(const uuid_t *device_uuid, u32 func)
- 	if (rc) {
- 		pr_err("device registration failed, err: %d\n", rc);
- 		put_device(&optee_device->dev);
-+		return rc;
- 	}
- 
- 	if (func == PTA_CMD_GET_DEVICES_SUPP)
- 		device_create_file(&optee_device->dev,
- 				   &dev_attr_need_supplicant);
- 
--	return rc;
-+	return 0;
- }
- 
- static int __optee_enumerate_devices(u32 func)
--- 
-2.34.1
-
+There's a failure in CI under debug after merging net and net-next 
+in diag.sh. Maybe because of the patch which lowered timeout?
+https://lore.kernel.org/all/20240223-upstream-net-next-20240223-misc-improvements-v1-8-b6c8a10396bd@kernel.org/
