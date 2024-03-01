@@ -1,383 +1,181 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2069.outbound.protection.outlook.com [40.107.94.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664BFC2C7;
-	Fri,  1 Mar 2024 18:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709317035; cv=fail; b=tGQtKU8+96ESbWIqKL2yHamhszFxtCcavETiYK19LWHvuG1jrobRlT+KflLNChMERKm7BAIZLgDDrA+R9cY9Gyz4cE+fp7NKLUpwWfPb7l3efN57NVAm77GpjF+ru5vQyPDAKTx+IaET2L4/VWi+uehy6yvQqcuUBWf9CtQcA7w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709317035; c=relaxed/simple;
-	bh=khKv74DYQmIxxkHDNBn/tD9EKqIjHRpGz9WIhVVYj9w=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j6OjII6j6IXK49Vj9qEpK/03QjXrv6gw0xMaMHfdl7gXOW+i4EH4FJvKJHZfwZBLdugIf8ub4IfKnErm/IS5xN8xg67mEYag5bpzQpM5MYNuPqQRg8fXa5knmyoYjgJY4f2x9zG+yTddJsKsy3f6e9aXfPRQx0HgV/8Q8AzpvRQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=v7NUJBcW; arc=fail smtp.client-ip=40.107.94.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA883A1C5
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709317040; cv=none; b=PhXbVaeFmHnv5rBHpMRBCvYYXjbR1Ar0qDOvihwOV0shIdBpOHvM4w+63pUisnsIx51IUNGNUQkhjyiaItkCL77HWpHXuwi0bsFoEe9/sd0/AUToUU1O+rN91hHqZ8S00kwxBEhFihy43nJKk83+ZZERUOIcOiJIt6KjtwAJXRg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709317040; c=relaxed/simple;
+	bh=ORNRTXO5tve5Nbc9/dvCua1upVjXHlRaDwslfC29pOY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SOQGkfbT7Nj92GP7hOtHxrAvcfJ0ARYOOqqt7UB0q5rZ8YmFAK2RKtjKeO8t5k2XWj4yS+/dvrSfOfQm3s3Rz4qTFWlqt9DRZI30lqpJ02MN1Cz8k9YtcFBWxw8ZDsFYb/1dfbgqMQUJkbAzazw4x+KfmXUKC16d0sLOjemR1Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E+whfIv5; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="v7NUJBcW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ShvH/ksv9e+l/FGd7/tOtoKetF/wubgMEPFQmtwp13KuAASLi5A49cMRjqmDE+xkiZl2d9eAGBj2j1SR0fsZei379sXlS0I/clBmKp8tJybikTeeMq2lBLTLcgOuJAJGCqpXzxvLIBurQ4eJ4lK6lkDFUQsIxk2TLf/Zmi72Tn0syJoBu5wxouq+Ba9QAFMkUJGl83AbHnNJoE57LjbulrJYfPNdGPYhqR51vzRK9tfHVQuM2KVzLP4MgRaEkJZkrK353/FBu40xjQUbYgu7oOo+8qmlsdsEApYytHfElgOwn9Ts1k8lXQR9UIDO+OBmhzVwHGsEPtu6rhoBq8xfIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5QvdQz2M2/fLMvKSQ570m2pRkl/Vtg8xNlpHK6pkgLY=;
- b=GAJ9833o2pQavqbVeXaN2qj0hXg3TwrNqSti3csDtqgln1bVzfxT/kGSk0d3HtNREU6tPv15Okq0pZdNm8G77lCS7KV8PVIDdfFKRptp4TSPLQ8IFWZsLTt/304uH8RP5Q9Q+LlDNvlmmdRx0OLJKq3XgyounCxT5lp5k1rV9NDQ/ZSE+VPulXu3LiLT1gAAE9icQeQ+nNm62t8y2SP05l/rF3hEKQ5oJMPZdeqQl6YX/RopdwfxCtIYhS8IFrTw9CJ2a/qMvXeUeew7J4q6hW+hucxiGjfUobCnEpRLlXMEOEZMwwK11wLkIZZ4f9GC/ZpPTuhwoiO36t3toeKzdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5QvdQz2M2/fLMvKSQ570m2pRkl/Vtg8xNlpHK6pkgLY=;
- b=v7NUJBcWvxjEeNnbMSnsLskD8OMPGufRNWzb2G+NMMFFHqsg1TnkkmPU2rit+J8nXJYhjHXKjE8rX2IpAMu+AlI6bo0gstZYSyEguvqN+14DK2VfaVdFebO5SFNKJy5SDaYTOSr1GKKVixT7lHA7iR+6zCaFSH47YpyX/Pt4bEc=
-Received: from BN9PR03CA0666.namprd03.prod.outlook.com (2603:10b6:408:10e::11)
- by SN7PR12MB8603.namprd12.prod.outlook.com (2603:10b6:806:260::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.32; Fri, 1 Mar
- 2024 18:17:09 +0000
-Received: from BN3PEPF0000B06B.namprd21.prod.outlook.com
- (2603:10b6:408:10e:cafe::27) by BN9PR03CA0666.outlook.office365.com
- (2603:10b6:408:10e::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.34 via Frontend
- Transport; Fri, 1 Mar 2024 18:17:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN3PEPF0000B06B.mail.protection.outlook.com (10.167.243.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7362.0 via Frontend Transport; Fri, 1 Mar 2024 18:17:09 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 1 Mar
- 2024 12:17:08 -0600
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 1 Mar
- 2024 12:17:08 -0600
-Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Fri, 1 Mar 2024 12:17:07 -0600
-From: Tanmay Shah <tanmay.shah@amd.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <michal.simek@amd.com>, <ben.levinsky@amd.com>,
-	<tanmay.shah@amd.com>
-CC: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Subject: [PATCH v12 2/4] dt-bindings: remoteproc: add Tightly Coupled Memory (TCM) bindings
-Date: Fri, 1 Mar 2024 10:16:36 -0800
-Message-ID: <20240301181638.814215-3-tanmay.shah@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240301181638.814215-1-tanmay.shah@amd.com>
-References: <20240301181638.814215-1-tanmay.shah@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E+whfIv5"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-428405a0205so343411cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:17:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709317038; x=1709921838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7/XpCAVrNR7f3usUyCsnp/6VufeVu2JOUWJrzYbrmGQ=;
+        b=E+whfIv5HtsOENwRwBFdE0T2vskCsJAZtnt8OHrddv5xurWapjck55iYJm+LcLeJyW
+         /sNWfZtPsOHODuNej02qgvEHpf9/cs655CX7b2yWHNJVgia8JZEk1ZGRAlauRoJXJCrx
+         dxH/6paFv+z3N/w6SvS5BCPOGgFnlB03t0X8PEGQm3y7Zy7Z3b1dtjNmWMM5LhI3+9uZ
+         9s8WrmfnpIg4PtBtTl9/ZA5xVdFalB9OKpTqT33a5oiE6D+KG0euUxj/rpsRSxyulWTm
+         CVJkZY5md48Htfrwpfqqr/M4t870M/DeZDJT3c/su4vSJjTLBf+IwJDKgaEZUUsP9Rlg
+         Rtxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709317038; x=1709921838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7/XpCAVrNR7f3usUyCsnp/6VufeVu2JOUWJrzYbrmGQ=;
+        b=shXs7tciGMUolKrl7bCHzDyfAvkVR5PFS6rep47oExkRMYrmyMdy9kmiKCrCDfYikV
+         l+UqfhnO4wx8786DsQhNRS5zvi5b1g4CMYeS0usk6HXVbpBCX/7kzzK7VUsfFdCoe4fw
+         Is3i8En8B7lr7C4Qv/yNGSfLhxXNVw2Nh0lE/B7B7jQBJ7HIFiX/iRf6tDUH8IAY20MV
+         l0iiK19VK5Us8AdwIQsFzOXN0Q8xAzI725BZBAEzkabYom+y4aqnWb3bm0iv2Ls3erEf
+         bxXuWLQSj4AWj0qSzDsFDS1t1yzEV25AfdyELof8zm5KkOzltFNOk2T4fBJdpt73tTNG
+         IbeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGIqn2PfAxMRCPN3NDsbYPkfJyyWB3pk9mDvz4mDVdxC++1SC7DFrV6HMzBoKi2+lePWlP6jdpH1dbSxY1cui7WnfBh9ZqjRYPxqdm
+X-Gm-Message-State: AOJu0YxVEzVV0fD4jnRtZWR8Rm8tSxTC18Pbq2u2nVb8FW5NIVcusPV7
+	A6M3BmMnSpo1OPp2yuJxFgK3FvS8aTd6Lybb663eanldc/z0U0wxLTdHmDDgL4QXJSPugS5RbWF
+	CTLZQO/U3thaLaRUCSCEYqtcepd3y1yXq4YpZ
+X-Google-Smtp-Source: AGHT+IH64w3XM2tu4oMulQS5R0gtlaWwhUlwTSJvlTxAqKqMt8U0FgeFMcjORD/zd3TbgUq/mHHUYeh6xc3tPY4Rnnc=
+X-Received: by 2002:a05:622a:170b:b0:42e:d51e:c718 with SMTP id
+ h11-20020a05622a170b00b0042ed51ec718mr46389qtk.9.1709317037508; Fri, 01 Mar
+ 2024 10:17:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: tanmay.shah@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06B:EE_|SN7PR12MB8603:EE_
-X-MS-Office365-Filtering-Correlation-Id: d8e33428-863f-46b1-2b19-08dc3a1bcf28
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	f0Zil+mV5KbWj7HO230ErDD7Ww+3c+Ij6H+CMZ/VebL3rqNnI0nU0gUoxH/jptn5wdzsHQI731tohrXY83LvyPb/tIA6bGCpRJH+EKNADE1DptSpRFiJU0u8bE2HE6ntwkWUIO2KVlZ36fKgJXf4sutaRmu+NrQrYA2zwBHRQKpijz4+478V0fWvap5Rll3TKmwKB7GND1Lt3JWQgoedqDUSEUgBA2iSGGLFmYOvpD7/40sps5nFjzbKI3Aw1ens7bShjxqnF5ONsco4vMHnWX0fv61Zgl4FRWDNFCvglf/pUsZjYOwyzg+BxTX/qSfei7LZZF4T8As6fqgeFUrinJb5Z/ZolV5Jmg1joqh5L+KJ32FV7DkRkStBwpfMKfL9IO8sDqGgPEkTuWjaGpBBGCJ+4Wp4cU3qPrCsFzLxnA8lEmkqpQ0F9ZqCekFc/7F3jMhdDdIrKwjKgOCBg/QlEqShSKmKalBf7qzKP9B9CkZ3KM3mr0kaRRCcW3T6BwoBK2qZ1KLvL6X9xEqJygpLMt4rjqsC1z4OKivAAiBJCXl17Klk32rPWlc3VZmT2TLSTn0XH0OIJeGh8hPBScDDpZF2s5ZHKr8dfwXflBjLWnRjkPBF37T+BBDkdXfhqlKWG6ins8TgHtlZcVYJ/G4cUMlD/+E/6dD/U52pPkzfJj+bxrJzaCGIqzlZHFygWnWSacxu6amCQUPMa6Pr14h/gdKd6Wcv8h45UJ+GmhZQ6uf2344J5q+9UP+rNARBOgsr
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2024 18:17:09.2562
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8e33428-863f-46b1-2b19-08dc3a1bcf28
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B06B.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8603
+References: <20240229001806.4158429-1-irogers@google.com> <20240229001806.4158429-3-irogers@google.com>
+ <ZeIVQhfDMP7_bSJ8@tassilo>
+In-Reply-To: <ZeIVQhfDMP7_bSJ8@tassilo>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 1 Mar 2024 10:17:03 -0800
+Message-ID: <CAP-5=fWpXHXd8Dd39o_KEcVaBkQKk=aXjYSVTWCitaY6Xm-T4A@mail.gmail.com>
+Subject: Re: [PATCH v1 02/20] perf jevents: Add idle metric for Intel models
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, James Clark <james.clark@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+On Fri, Mar 1, 2024 at 9:49=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wrot=
+e:
+>
+> > +def Idle() -> Metric:
+> > +  cyc =3D Event("msr/mperf/")
+> > +  tsc =3D Event("msr/tsc/")
+> > +  low =3D max(tsc - cyc, 0)
+> > +  return Metric(
+> > +      "idle",
+> > +      "Percentage of total wallclock cycles where CPUs are in low powe=
+r state (C1 or deeper sleep state)",
+> > +      d_ratio(low, tsc), "100%")
+>
+> TBH I fail to see the advantage over the JSON. That's much more verbose
+> and we don't expect to have really complex metrics anyways.
 
-Introduce bindings for TCM memory address space on AMD-xilinx Zynq
-UltraScale+ platform. It will help in defining TCM in device-tree
-and make it's access platform agnostic and data-driven.
+Are you saying this is more verbose or the json? Here is an example of
+a json metric:
 
-Tightly-coupled memories(TCMs) are low-latency memory that provides
-predictable instruction execution and predictable data load/store
-timing. Each Cortex-R5F processor contains two 64-bit wide 64 KB memory
-banks on the ATCM and BTCM ports, for a total of 128 KB of memory.
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json?h=3Dperf-tools-=
+next#n652
+```
+    {
+        "BriefDescription": "Probability of Core Bound bottleneck
+hidden by SMT-profiling artifacts",
+        "MetricExpr": "(100 * (1 - tma_core_bound /
+(((EXE_ACTIVITY.EXE_BOUND_0_PORTS + tma_core_bound *
+RS_EVENTS.EMPTY_CYCLES) / CPU_CLK_UNHALTED.THREAD *
+(CYCLE_ACTIVITY.STALLS_TOTAL - CYCLE_ACTIVITY.STALLS_MEM_ANY) /
+CPU_CLK_UNHALTED.THREAD * CPU_CLK_UNHALTED.THREAD +
+(EXE_ACTIVITY.1_PORTS_UTIL + tma_retiring *
+EXE_ACTIVITY.2_PORTS_UTIL)) / CPU_CLK_UNHALTED.THREAD if
+ARITH.DIVIDER_ACTIVE < CYCLE_ACTIVITY.STALLS_TOTAL -
+CYCLE_ACTIVITY.STALLS_MEM_ANY else (EXE_ACTIVITY.1_PORTS_UTIL +
+tma_retiring * EXE_ACTIVITY.2_PORTS_UTIL) / CPU_CLK_UNHALTED.THREAD)
+if tma_core_bound < (((EXE_ACTIVITY.EXE_BOUND_0_PORTS + tma_core_bound
+* RS_EVENTS.EMPTY_CYCLES) / CPU_CLK_UNHALTED.THREAD *
+(CYCLE_ACTIVITY.STALLS_TOTAL - CYCLE_ACTIVITY.STALLS_MEM_ANY) /
+CPU_CLK_UNHALTED.THREAD * CPU_CLK_UNHALTED.THREAD +
+(EXE_ACTIVITY.1_PORTS_UTIL + tma_retiring *
+EXE_ACTIVITY.2_PORTS_UTIL)) / CPU_CLK_UNHALTED.THREAD if
+ARITH.DIVIDER_ACTIVE < CYCLE_ACTIVITY.STALLS_TOTAL -
+CYCLE_ACTIVITY.STALLS_MEM_ANY else (EXE_ACTIVITY.1_PORTS_UTIL +
+tma_retiring * EXE_ACTIVITY.2_PORTS_UTIL) / CPU_CLK_UNHALTED.THREAD)
+else 1) if tma_info_system_smt_2t_utilization > 0.5 else 0)",
+        "MetricGroup": "Cor;SMT;TopdownL1;tma_L1_group",
+        "MetricName": "tma_info_botlnk_core_bound_likely",
+        "MetricgroupNoGroup": "TopdownL1"
+    },
+```
 
-The TCM resources(reg, reg-names and power-domain) are documented for
-each TCM in the R5 node. The reg and reg-names are made as required
-properties as we don't want to hardcode TCM addresses for future
-platforms and for zu+ legacy implementation will ensure that the
-old dts w/o reg/reg-names works and stable ABI is maintained.
+Even with common metrics like tma_core_bound, tma_retiring and
+tma_info_system_smt_2t_utilization replacing sections of the metric, I
+think anyone has to admit the expression is pretty unintelligible
+because of its size/verbosity. To understand the metric would at a
+first step involve adding newlines. Comments would be nice, etc.
 
-It also extends the examples for TCM split and lockstep modes.
+> And then we have a gigantic patch kit for what gain?
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
----
+I see some of the gains as:
+ - metrics that are human intelligible,
+ - metrics for models that are no longer being updated,
+ - removing copy-paste of metrics like tsx and smi across each model's
+metric json (less lines-of-code),
+ - validation of events in a metric expression being in the event json
+for a model,
+ - removal of forward porting metrics to a new model if the event
+names of the new model line up with those of previous,
+ - in this patch kit there are metrics added that don't currently
+exist (more metrics should be better for users - yes there can always
+be bugs).
 
-Changes in v12:
-  - add "reg", "reg-names" and "power-domains" in pattern properties
-  - add "reg" and "reg-names" in required list
-  - keep "power-domains" in required list as it was before the change
+I also hope the metric grouping is clearer, etc, etc.
 
-Changes in v11:
-  - Fix yamllint warning and reduce indentation as needed
+> The motivation was the lack of comments in JSON? We could just add some
+> to the parser (e.g. with /* */ ).  And we could allow an JSON array for t=
+he
+> expression to get multiple lines.
 
- .../remoteproc/xlnx,zynqmp-r5fss.yaml         | 188 ++++++++++++++++--
- 1 file changed, 168 insertions(+), 20 deletions(-)
+Imo, a non-json variant of json would just be taking on a tech debt
+burden for something that is inferior to this approach and a wasted
+effort. We already generate the json from other more intelligible
+sources using python - so I don't find the approach controversial:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
-index 78aac69f1060..dc6ce308688f 100644
---- a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
-+++ b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
-@@ -20,9 +20,21 @@ properties:
-   compatible:
-     const: xlnx,zynqmp-r5fss
- 
-+  "#address-cells":
-+    const: 2
-+
-+  "#size-cells":
-+    const: 2
-+
-+  ranges:
-+    description: |
-+      Standard ranges definition providing address translations for
-+      local R5F TCM address spaces to bus addresses.
-+
-   xlnx,cluster-mode:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     enum: [0, 1, 2]
-+    default: 1
-     description: |
-       The RPU MPCore can operate in split mode (Dual-processor performance), Safety
-       lock-step mode(Both RPU cores execute the same code in lock-step,
-@@ -37,7 +49,7 @@ properties:
-       2: single cpu mode
- 
- patternProperties:
--  "^r5f-[a-f0-9]+$":
-+  "^r5f@[0-9a-f]+$":
-     type: object
-     description: |
-       The RPU is located in the Low Power Domain of the Processor Subsystem.
-@@ -54,8 +66,17 @@ patternProperties:
-       compatible:
-         const: xlnx,zynqmp-r5f
- 
-+      reg:
-+        minItems: 1
-+        maxItems: 4
-+
-+      reg-names:
-+        minItems: 1
-+        maxItems: 4
-+
-       power-domains:
--        maxItems: 1
-+        minItems: 2
-+        maxItems: 5
- 
-       mboxes:
-         minItems: 1
-@@ -101,35 +122,162 @@ patternProperties:
- 
-     required:
-       - compatible
-+      - reg
-+      - reg-names
-       - power-domains
- 
--    unevaluatedProperties: false
--
- required:
-   - compatible
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+allOf:
-+  - if:
-+      properties:
-+        xlnx,cluster-mode:
-+          enum:
-+            - 1
-+    then:
-+      patternProperties:
-+        "^r5f@[0-9a-f]+$":
-+          type: object
-+
-+          properties:
-+            reg:
-+              minItems: 1
-+              items:
-+                - description: ATCM internal memory
-+                - description: BTCM internal memory
-+                - description: extra ATCM memory in lockstep mode
-+                - description: extra BTCM memory in lockstep mode
-+
-+            reg-names:
-+              minItems: 1
-+              items:
-+                - const: atcm0
-+                - const: btcm0
-+                - const: atcm1
-+                - const: btcm1
-+
-+    else:
-+      patternProperties:
-+        "^r5f@[0-9a-f]+$":
-+          type: object
-+
-+          properties:
-+            reg:
-+              minItems: 1
-+              items:
-+                - description: ATCM internal memory
-+                - description: BTCM internal memory
-+
-+            reg-names:
-+              minItems: 1
-+              items:
-+                - const: atcm0
-+                - const: btcm0
-+
-+            power-domains:
-+              maxItems: 3
- 
- additionalProperties: false
- 
- examples:
-   - |
--    remoteproc {
--        compatible = "xlnx,zynqmp-r5fss";
--        xlnx,cluster-mode = <1>;
--
--        r5f-0 {
--            compatible = "xlnx,zynqmp-r5f";
--            power-domains = <&zynqmp_firmware 0x7>;
--            memory-region = <&rproc_0_fw_image>, <&rpu0vdev0buffer>, <&rpu0vdev0vring0>, <&rpu0vdev0vring1>;
--            mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
--            mbox-names = "tx", "rx";
-+    #include <dt-bindings/power/xlnx-zynqmp-power.h>
-+
-+    // Split mode configuration
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        remoteproc@ffe00000 {
-+            compatible = "xlnx,zynqmp-r5fss";
-+            xlnx,cluster-mode = <0>;
-+
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x10000>,
-+                     <0x0 0x20000 0x0 0xffe20000 0x0 0x10000>,
-+                     <0x1 0x0 0x0 0xffe90000 0x0 0x10000>,
-+                     <0x1 0x20000 0x0 0xffeb0000 0x0 0x10000>;
-+
-+            r5f@0 {
-+                compatible = "xlnx,zynqmp-r5f";
-+                reg = <0x0 0x0 0x0 0x10000>, <0x0 0x20000 0x0 0x10000>;
-+                reg-names = "atcm0", "btcm0";
-+                power-domains = <&zynqmp_firmware PD_RPU_0>,
-+                                <&zynqmp_firmware PD_R5_0_ATCM>,
-+                                <&zynqmp_firmware PD_R5_0_BTCM>;
-+                memory-region = <&rproc_0_fw_image>, <&rpu0vdev0buffer>,
-+                                <&rpu0vdev0vring0>, <&rpu0vdev0vring1>;
-+                mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
-+                mbox-names = "tx", "rx";
-+            };
-+
-+            r5f@1 {
-+                compatible = "xlnx,zynqmp-r5f";
-+                reg = <0x1 0x0 0x0 0x10000>, <0x1 0x20000 0x0 0x10000>;
-+                reg-names = "atcm0", "btcm0";
-+                power-domains = <&zynqmp_firmware PD_RPU_1>,
-+                                <&zynqmp_firmware PD_R5_1_ATCM>,
-+                                <&zynqmp_firmware PD_R5_1_BTCM>;
-+                memory-region = <&rproc_1_fw_image>, <&rpu1vdev0buffer>,
-+                                <&rpu1vdev0vring0>, <&rpu1vdev0vring1>;
-+                mboxes = <&ipi_mailbox_rpu1 0>, <&ipi_mailbox_rpu1 1>;
-+                mbox-names = "tx", "rx";
-+            };
-         };
-+    };
-+
-+  - |
-+    //Lockstep configuration
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        remoteproc@ffe00000 {
-+            compatible = "xlnx,zynqmp-r5fss";
-+            xlnx,cluster-mode = <1>;
-+
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x10000>,
-+                     <0x0 0x20000 0x0 0xffe20000 0x0 0x10000>,
-+                     <0x0 0x10000 0x0 0xffe10000 0x0 0x10000>,
-+                     <0x0 0x30000 0x0 0xffe30000 0x0 0x10000>;
-+
-+            r5f@0 {
-+                compatible = "xlnx,zynqmp-r5f";
-+                reg = <0x0 0x0 0x0 0x10000>,
-+                      <0x0 0x20000 0x0 0x10000>,
-+                      <0x0 0x10000 0x0 0x10000>,
-+                      <0x0 0x30000 0x0 0x10000>;
-+                reg-names = "atcm0", "btcm0", "atcm1", "btcm1";
-+                power-domains = <&zynqmp_firmware PD_RPU_0>,
-+                                <&zynqmp_firmware PD_R5_0_ATCM>,
-+                                <&zynqmp_firmware PD_R5_0_BTCM>,
-+                                <&zynqmp_firmware PD_R5_1_ATCM>,
-+                                <&zynqmp_firmware PD_R5_1_BTCM>;
-+                memory-region = <&rproc_0_fw_image>, <&rpu0vdev0buffer>,
-+                                <&rpu0vdev0vring0>, <&rpu0vdev0vring1>;
-+                mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
-+                mbox-names = "tx", "rx";
-+            };
- 
--        r5f-1 {
--            compatible = "xlnx,zynqmp-r5f";
--            power-domains = <&zynqmp_firmware 0x8>;
--            memory-region = <&rproc_1_fw_image>, <&rpu1vdev0buffer>, <&rpu1vdev0vring0>, <&rpu1vdev0vring1>;
--            mboxes = <&ipi_mailbox_rpu1 0>, <&ipi_mailbox_rpu1 1>;
--            mbox-names = "tx", "rx";
-+            r5f@1 {
-+                compatible = "xlnx,zynqmp-r5f";
-+                reg = <0x1 0x0 0x0 0x10000>, <0x1 0x20000 0x0 0x10000>;
-+                reg-names = "atcm0", "btcm0";
-+                power-domains = <&zynqmp_firmware PD_RPU_1>,
-+                                <&zynqmp_firmware PD_R5_1_ATCM>,
-+                                <&zynqmp_firmware PD_R5_1_BTCM>;
-+                memory-region = <&rproc_1_fw_image>, <&rpu1vdev0buffer>,
-+                                <&rpu1vdev0vring0>, <&rpu1vdev0vring1>;
-+                mboxes = <&ipi_mailbox_rpu1 0>, <&ipi_mailbox_rpu1 1>;
-+                mbox-names = "tx", "rx";
-+            };
-         };
-     };
- ...
--- 
-2.25.1
+The goal here has been to make a bunch of inhouse metrics public. It
+also gives a foundation for vendors and other concerned people to add
+metrics in a concise, with documentation and safe (broken events cause
+compile time failures) way. There are some similar things like common
+events/metrics on ARM:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/pmu-events/arch/arm64/arm/cmn/sys?h=3Dperf-tools-next
+but this lacks the structure, validation, documentation, etc. that's
+present here so my preference would be for more of the common things
+to be done in the python way started here.
 
+Thanks,
+Ian
+
+> -Andi
