@@ -1,136 +1,190 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D19E58209;
-	Fri,  1 Mar 2024 21:29:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B7B58AC5
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 21:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709328566; cv=none; b=uzby13Jo5DFukkPCd5UkfBV+ERIiM6i26LG483rsQDIwjl+e2CKmR/IDj107Kfw3wBcfBIEzUwLP8MzNFfAxtq5vp6JZnWIcNfKtgNngNem+tTzCqlM9CIRaJpk0QbtFbK3cqVVX/Ae/GbBZueGVvzNzHPnOjFLPvUUvErUuKTw=
+	t=1709328570; cv=none; b=N0CNb4+jh14hCHXpgzOfvsBVzt7lg//GVxhiRe2tb+S8rBvDod92knDlp2Hp46ETCg+ukKovPzwnvzaHRd/buD5qRff1feL+LFtaUE9Y0zVg7LxqCct+nL4qGU5QOuVoQstdhc8u+JAICTcPBiuDr4EIDNnkJOzB/1UDahQTDqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709328566; c=relaxed/simple;
-	bh=vj5xEH7fjHnCsUaWPp/rfGTkYmisd9/pyhsPrZI9JiU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=O8xIopO66I2nWXC+wnWfX9BDTLsdVz+O39TR1kwnK53t3pz+F4/IXlCzfOvxrQM1+EWKmstVLK1W6svi/cearZ3VLWAUeWcXVWlMzYbndKRXpW6JD+d270PEvmd4JkW0dLr7g/sxW9TeLP1cvm5aUvdudws0QgIGbDLXHkkivHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uL2nG3xa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709328570; c=relaxed/simple;
+	bh=pxAnCgtXnHsOiMTW3ZMSzEI1GBVzSdFKM38ZllF+d08=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ktz3OAywEu7cNgLk0udM+MHSKQIQkH5RceXor7u0XLcAntVXVyh1gKKdP48XuC5AHbd5B574RFfbf8x6qKAaBYfvEYUp32bV0hVQATXxhftAzsrvjqNcokyphd5D4ADoPubZoNQs1cko3L6CtTKcHO48fvkOTXG+OItKfdQaZqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbYHNsu+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uL2nG3xa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D890C433C7;
-	Fri,  1 Mar 2024 21:29:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbYHNsu+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A571C433A6;
+	Fri,  1 Mar 2024 21:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709328566;
-	bh=vj5xEH7fjHnCsUaWPp/rfGTkYmisd9/pyhsPrZI9JiU=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=uL2nG3xal35mWb0HMMwfMhRyxrm7y8/1u2N0RGpyIA7BdpuW8uokla19vF/+dS6t/
-	 8hPSLC+Huzu9kiEsxmmJnO4XHR8dTGrp2Hk2V7ZBJ9ZgrcgtylTkAUbK1aUJuan6vj
-	 YZaw2MsINK3X/oM1Dlwavne5RNddHYeGRfzKMBYjPJtUCiYA+PJxhud38kIMuJYFkE
-	 bIgUfBrV5s4n3ryKIglWE93yOVMfF6mOcUvBKp0+3VvbR3c/+7quBapeLn8TJ14sZK
-	 3k8t3Nnq7Ja8/cPXYBhJVHjBzkjHM3wcFbXB/ZlGape3EIpZHVYBnJQjHKPlbT6pGd
-	 zcNiU4EJrJBlA==
-Message-ID: <c75d35c1-13f8-4f79-bf96-9a73e88d1b19@kernel.org>
-Date: Fri, 1 Mar 2024 23:29:20 +0200
+	s=k20201202; t=1709328569;
+	bh=pxAnCgtXnHsOiMTW3ZMSzEI1GBVzSdFKM38ZllF+d08=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DbYHNsu+ctfLpiYryb1RGanZThfJbdxE1j5KabdlpXW4wrDyjrzxY/F8svvrk+E3D
+	 Xk/094vdoylBEcKGmaEs5G+cNfQxkeuE3arwb8/zES7ridP73OwINsL3pmJW8FTxIb
+	 /AKJiVvrTcroOS6bUrs7DU4J74014w5ldaKnJEYE5v9xUJkHoT6J0zbOKzHbSdGUHs
+	 nlcOD+ggNbrxQWM/qM3cpwCCNL7M5hZ3xYdK4PnA4ThoPkZeqttKps7uIlgD7oZ+DJ
+	 uv6qUrDvdw56J9z8F7dZCysvjBE5/zqnbyrCMRYTqd0KpMGmehaGfF7HZpIrhBK40Y
+	 nQv5smliCeACw==
+Date: Fri, 1 Mar 2024 21:29:25 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: x86 boot issues in -next
+Message-ID: <05a45cc8-e0fc-422e-80d2-596ed63202a3@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm: dts: ti: beagleplay: Fix Ethernet PHY RESET GPIOs
-Content-Language: en-US
-From: Roger Quadros <rogerq@kernel.org>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: srk@ti.com, s-vadapalli@ti.com, r-gunasekaran@ti.com,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240229-b4-for-v6-9-am65-beagleplay-ethernet-reset-v1-1-b3e4b33378bd@kernel.org>
- <bfd9b146-061b-4f82-a703-3bd32ffc09b7@kernel.org>
-In-Reply-To: <bfd9b146-061b-4f82-a703-3bd32ffc09b7@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Zv4FRpGtRGmXx0w6"
+Content-Disposition: inline
+X-Cookie: Schizophrenia beats being alone.
 
 
+--Zv4FRpGtRGmXx0w6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 01/03/2024 22:58, Roger Quadros wrote:
-> 
-> 
-> On 29/02/2024 18:25, Roger Quadros wrote:
->> The RESET GPIO pinmux should be part of MDIO bus node
->> so that they can be in the right state before the PHY
->> can be probed via MDIO bus scan.
->>
->> Add GPIO reset for the Gigabit Ethernet PHY. As per
->> RTL8211F datasheet, reset assert width is 10ms and
->> PHY registers can be access accessed after 50ms of
->> reset deassert.
->>
->> Signed-off-by: Roger Quadros <rogerq@kernel.org>
->> ---
->>  arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
->> index a34e0df2ab86..77240cf3ae4d 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
->> @@ -292,6 +292,8 @@ mdio0_pins_default: mdio0-default-pins {
->>  		pinctrl-single,pins = <
->>  			AM62X_IOPAD(0x0160, PIN_OUTPUT, 0) /* (AD24) MDIO0_MDC */
->>  			AM62X_IOPAD(0x015c, PIN_INPUT, 0) /* (AB22) MDIO0_MDIO */
->> +			AM62X_IOPAD(0x003c, PIN_INPUT, 7) /* (M25) GPMC0_AD0.GPIO0_15 */
-> 
-> This should be PIN_OUTPUT.
-> Will fix in next spin.
+Hi,
 
-Actually PIN_INPUT is correct else we won't be able to read the correct GPIO pin status
-on gpio read.
-I observe this issue on u-boot at least.
+For the past few days -next has been failing to boot an x86_64 defconfig
+on the x86 machine Linaro has available in their lab.  DMI says it's a
+"Dell Inc. PowerEdge R200/0TY019, BIOS 1.4.3 05/15/2009" and the CPU is
+described as "Intel(R) Xeon(R) CPU X3220  @ 2.40GHz (family: 0x6, model:
+0xf, stepping: 0xb)", it's running happily with mainline and
+pending-fixes.
 
-> 
->> +			AM62X_IOPAD(0x018c, PIN_OUTPUT, 7) /* (AC21) RGMII2_RD2.GPIO1_5 */
+The kernel crashes with:
 
-This one needs to be fixed to PIN_INPUT.
+[    2.012730] PCI: CLS 64 bytes, default 64
+[    2.016743] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    2.023181] software IO TLB: mapped [mem 0x00000000cbeb2000-0x00000000cf=
+eb2000] (64MB)
+[    2.032236] BUG: kernel NULL pointer dereference, address: 0000000000000=
+008
+[    2.032914] #PF: supervisor read access in kernel mode
+[    2.032914] #PF: error_code(0x0000) - not-present page
+[    2.032914] PGD 0 P4D 0=20
+[    2.032914] Oops: 0000 [#1] PREEMPT SMP PTI
+[    2.032914] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc6-next-202=
+40229 #1
+[    2.032914] Hardware name: Dell Inc. PowerEdge R200/0TY019, BIOS 1.4.3 0=
+5/15/2009
+[    2.032914] RIP: 0010:exra_is_visible+0xf/0x20
+[    2.032914] Code: b7 46 08 c3 cc cc cc cc 0f 1f 00 90 90 90 90 90 90 90 =
+90 90 90 90 90 90 90 90 90 f3 0f 1e fa 31 c0 83 3d 1b f0 c9 01 01 7e 04 <0f=
+> b7 46 08 c3 cc cc cc cc 0f 1f 84 00 00 00 00 00 90 90 90 90 90
+[    2.032914] RSP: 0000:ffffac7cc001bdd0 EFLAGS: 00010202
+[    2.032914] RAX: 0000000000000000 RBX: ffffffff90812ea0 RCX: ffffffff8ee=
+0ef00
+[    2.032914] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff97a6810=
+64c00
+[    2.032914] RBP: 0000000000000001 R08: 0000000000000228 R09: ffff97a6801=
+27310
+[    2.032914] R10: ffff97a68049ddd0 R11: 0000000000000000 R12: ffff97a6810=
+64c00
+[    2.032914] R13: ffffffff90812dc0 R14: 0000000000000001 R15: 00000000000=
+00000
+[    2.032914] FS:  0000000000000000(0000) GS:ffff97a7a7c00000(0000) knlGS:=
+0000000000000000
+[    2.032914] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.032914] CR2: 0000000000000008 CR3: 00000000bf42e000 CR4: 00000000000=
+006f0
+[    2.032914] Call Trace:
+[    2.032914]  <TASK>
+[    2.032914]  ? __die+0x1e/0x60
+[    2.032914]  ? page_fault_oops+0x17b/0x480
+[    2.032914]  ? search_module_extables+0x14/0x50
+[    2.032914]  ? exc_page_fault+0x6b/0x150
+[    2.032914]  ? asm_exc_page_fault+0x26/0x30
+[    2.032914]  ? __pfx_exra_is_visible+0x10/0x10
+[    2.032914]  ? exra_is_visible+0xf/0x20
+[    2.032914]  internal_create_group+0x9c/0x400
+[    2.032914]  internal_create_groups+0x3d/0xa0
+[    2.032914]  pmu_dev_alloc+0xbb/0xe0
+[    2.032914]  perf_event_sysfs_init+0x51/0xa0
 
->>  		>;
->>  	};
->>  
->> @@ -383,7 +385,6 @@ AM62X_IOPAD(0x017c, PIN_INPUT, 1) /* (AD22) RGMII2_RX_CTL.RMII2_RX_ER */
->>  			AM62X_IOPAD(0x016c, PIN_INPUT, 1) /* (Y18) RGMII2_TD0.RMII2_TXD0 */
->>  			AM62X_IOPAD(0x0170, PIN_INPUT, 1) /* (AA18) RGMII2_TD1.RMII2_TXD1 */
->>  			AM62X_IOPAD(0x0164, PIN_INPUT, 1) /* (AA19) RGMII2_TX_CTL.RMII2_TX_EN */
->> -			AM62X_IOPAD(0x018c, PIN_OUTPUT, 7) /* (AC21) RGMII2_RD2.GPIO1_5 */
->>  			AM62X_IOPAD(0x0190, PIN_INPUT, 7) /* (AE22) RGMII2_RD3.GPIO1_6 */
->>  			AM62X_IOPAD(0x01f0, PIN_OUTPUT, 5) /* (A18) EXT_REFCLK1.CLKOUT0 */
->>  		>;
->> @@ -597,6 +598,9 @@ &cpsw3g_mdio {
->>  
->>  	cpsw3g_phy0: ethernet-phy@0 {
->>  		reg = <0>;
->> +		reset-gpios = <&main_gpio0 15 GPIO_ACTIVE_LOW>;
->> +		reset-assert-us = <10000>;
->> +		reset-deassert-us = <50000>;
->>  	};
->>  
->>  	cpsw3g_phy1: ethernet-phy@1 {
->> @@ -615,7 +619,7 @@ &main_gpio0 {
->>  		"USR0", "USR1", "USR2", "USR3", "", "", "USR4",	/* 3-9 */
->>  		"EEPROM_WP",					/* 10 */
->>  		"CSI2_CAMERA_GPIO1", "CSI2_CAMERA_GPIO2",	/* 11-12 */
->> -		"CC1352P7_BOOT", "CC1352P7_RSTN", "", "", "",	/* 13-17 */
->> +		"CC1352P7_BOOT", "CC1352P7_RSTN", "GBE_RSTN", "", "",	/* 13-17 */
->>  		"USR_BUTTON", "", "", "", "", "", "", "", "",	/* 18-26 */
->>  		"", "", "", "", "", "", "", "", "", "HDMI_INT",	/* 27-36 */
->>  		"", "VDD_WLAN_EN", "", "", "WL_IRQ", "GBE_INTN",/* 37-42 */
->>
->> ---
->> base-commit: bbef42084cc170cbfc035bf784f2ff055c939d7e
->> change-id: 20240229-b4-for-v6-9-am65-beagleplay-ethernet-reset-098f274fbf15
->>
->> Best regards,
-> 
+A full boot log for a sample failure can be seen at:
 
--- 
-cheers,
--roger
+    https://validation.linaro.org/scheduler/job/4045256
+
+I bisected this, the bisect seemed to run smoothly and landed on commit
+f031242dbf22 ("Merge branch into tip/master: 'x86/apic'") with both
+parents being fine (full log below) - an issue in the x86 tree does seem
+plausible but I haven't investigated further.
+
+git bisect start
+# bad: [1870cdc0e8dee32e3c221704a2977898ba4c10e8] Add linux-next specific f=
+iles for 20240301
+git bisect bad 1870cdc0e8dee32e3c221704a2977898ba4c10e8
+# good: [d1e87c1d8f90f27a1ca3c90d9de048602beabc61] Merge branch 'for-linux-=
+next-fixes' of git://anongit.freedesktop.org/drm/drm-misc
+git bisect good d1e87c1d8f90f27a1ca3c90d9de048602beabc61
+# good: [907d374fa897fbbcdce1e027297d933bbab025e1] Merge branch 'main' of g=
+it://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
+git bisect good 907d374fa897fbbcdce1e027297d933bbab025e1
+# good: [c32a1272f32bf6189357816f510edf7411ecd0ba] Merge branch 'next-integ=
+rity' of git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity
+git bisect good c32a1272f32bf6189357816f510edf7411ecd0ba
+# bad: [2faf0484495c5288200f710966ec252fee2415a9] Merge branch 'next' of gi=
+t://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git
+git bisect bad 2faf0484495c5288200f710966ec252fee2415a9
+# bad: [0fa7bf8bf39eff1d304d2d46c92d94131205036f] Merge branch 'master' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+git bisect bad 0fa7bf8bf39eff1d304d2d46c92d94131205036f
+# bad: [f031242dbf22fc9c850946253324c72611a8b253] Merge branch into tip/mas=
+ter: 'x86/apic'
+git bisect bad f031242dbf22fc9c850946253324c72611a8b253
+# good: [f631c66c30faa6900e05aec06e7d0a541040dbde] Merge branch into tip/ma=
+ster: 'irq/msi'
+git bisect good f631c66c30faa6900e05aec06e7d0a541040dbde
+# good: [7f204eefe00c7a6677fc1dd515a02eb8b9c57495] Merge branch into tip/ma=
+ster: 'timers/core'
+git bisect good 7f204eefe00c7a6677fc1dd515a02eb8b9c57495
+# good: [c0a66c2847908e41c771ca2355fba935a82a9f62] x86/cpu/topology: Move r=
+egistration out of APIC code
+git bisect good c0a66c2847908e41c771ca2355fba935a82a9f62
+# good: [882e0cff9ef340e7a47659a9aab9da64f4b9b847] x86/cpu/topology: Mop up=
+ primary thread mask handling
+git bisect good 882e0cff9ef340e7a47659a9aab9da64f4b9b847
+# good: [6be4ec29685c216ebec61d35f56c3808092498aa] x86/apic: Build the x86 =
+topology enumeration functions on UP APIC builds too
+git bisect good 6be4ec29685c216ebec61d35f56c3808092498aa
+# good: [9be3b2f057d7a6752e8cf25c1d456198b4d3bd6a] ptp/kvm, arm_arch_timer:=
+ Set system_counterval_t.cs_id to constant
+git bisect good 9be3b2f057d7a6752e8cf25c1d456198b4d3bd6a
+# good: [27f6a9c87a97f5ea7459be08d5be231af6b32c20] kvmclock: Unexport kvmcl=
+ock clocksource
+git bisect good 27f6a9c87a97f5ea7459be08d5be231af6b32c20
+# good: [9b9c280b9af2aa851d83e7d0b79f36a3d869d745] Merge branch 'x86/urgent=
+' into x86/apic, to resolve conflicts
+git bisect good 9b9c280b9af2aa851d83e7d0b79f36a3d869d745
+# good: [670c000c11ec5c5131cdf502d062075a803214af] Merge branch into tip/ma=
+ster: 'timers/ptp'
+git bisect good 670c000c11ec5c5131cdf502d062075a803214af
+# first bad commit: [f031242dbf22fc9c850946253324c72611a8b253] Merge branch=
+ into tip/master: 'x86/apic'
+
+--Zv4FRpGtRGmXx0w6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXiSLQACgkQJNaLcl1U
+h9Bsdwf/eITSF+S/YeOWpFP+WYDHVs0RhkGJBR1MGlypfywJo4Gi4UhMEsIa8ue+
+0L57ea4kILxQRR3hhMf+zjiTEGhbTHxUymnvMqes8dvtJKTN/x+GUH6Gd6XSlYJt
+9NILkUIf/4xVj2d7cviyheEy/x+DaGXmMDYGcNYd9P18ke5J4DnCEnvEbQWuCed8
+KyQ9CxjJDPJtNizkOJJEEprgUN1iVh/VYhm9LHXrv7sU9L3frlUCIAwtayScexkb
+WPNGHpRKd8wF/AP/oLFYV2oZgdnxojhBrJmtFWoLEMyRUaYXoKS0chO/+xs8ArpD
+D9AYptlVzHx9hzDtgS8SNNJfQiiSdQ==
+=ibMi
+-----END PGP SIGNATURE-----
+
+--Zv4FRpGtRGmXx0w6--
