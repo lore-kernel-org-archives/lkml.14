@@ -1,38 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC1670CBB;
-	Fri,  1 Mar 2024 16:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D82471B5F;
+	Fri,  1 Mar 2024 16:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709310145; cv=none; b=jvEo6QhfbFCbUzuYgK9tjT+kKTREUkygN40NUBVr7eJFfXhq+rJZ+bMg529taFhM6z5Cje+U8W7Q7dnCKCDSEPZHPqb/EOFyiVr9wiU53ACPfuAO7Q/jJ6gJh+IPl+Xvx51prjVXhnPdr5hEfao/KrWWoheuMlh4cgGh7zWOIec=
+	t=1709310148; cv=none; b=UPGI/DmjIqxrU1kZw23KgMK+1DVctY7+Dp+yFMRibZnx/PVyONYSyWS4qPtMlVoMqpQfPLCSDpQboN4j+rZBwjpwC6z5CpC4HQWiWb7VIHU40wCBN0mBLY2zu7q0uQ3mV2MNLkEAGmVk0jBciB8N86b82Olrcadq0dfQv7hoxqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709310145; c=relaxed/simple;
-	bh=XQFMCVvLMuTgEmuZvCwSZR80iSzwJUDtOk42IMhvjDA=;
+	s=arc-20240116; t=1709310148; c=relaxed/simple;
+	bh=tK4x4KGtYIXb7OTHT3sFaJe5r/9OUZNpPI5rSRlDXrg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=of1FwG+DQLifcxbf1ATm7LYA3tmburazvqrH+Og+jUxVQ/j+Vup+UBuoJOp5HubXaoFKiyhkfTFVgtFNfrmhOfF9OAxdzpuyHa8C8OqvTEkVCNTlVUXIByKKYA9JhKT6/RxNGJU5X4pWym5qt+TLTdc2i/vfU9xBwMRoMFWcMIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bNANH/cy; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=QwhboXyoYt2AHCCi4FXSaNy+oGjpk0uccCuyS7UgKt2Rjl6ReiSQ27TTsEDP0arzRXgOnOUxFZbfw7PvGr/cn+pjeAfoG2SoGQ3BNLlpDkqSFFgG+xDT3uOSLMskfzdqDMWjB/9GzlqqLnuH++evq+Pyj1eLSUC9Nu+tiJGKufo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HfhA7zyl; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bNANH/cy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B9F77C0006;
-	Fri,  1 Mar 2024 16:22:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HfhA7zyl"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 47A42C000E;
+	Fri,  1 Mar 2024 16:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709310140;
+	t=1709310144;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EZ6aYBoDQNdUWsJ95bQT1KfFH8v+9T4bdUml4vxBjxw=;
-	b=bNANH/cyBhDBdTGMYKpai40l+cXsIYscyKFshcPq72E2dMeHXMVVY865EiWo4Fa2LcdjV1
-	XV2ejEjyg2kXIyWaN4XZUc2Fet5XRXXOiLUVl//Ze8y/BwAO7uPC9n1F5oTGG92u0x5VVQ
-	drYidYgXVRXtDEwp82EZC83gzGyr4nyzTgJCgLkHxckOk20dhuPgouMxZzZcLZWA+2DThR
-	vk7hfJ434L7onidgwDRtOwBWVkgrkj09Dc8LCvAjMTkRXWgpiaDRv2y/n8qEwaNNVrgmPP
-	d6MwRocXDkEhWpf2b/+HlO7wqX8yhBjZI8mlh54p//NmHpvfEuLd2n65180voA==
+	bh=v1HP/zKCNKZ7DKj4WcSicb0WzfIqg8843dS/QsXReo0=;
+	b=HfhA7zylFvj4MxMN9mlfQKvdy8Feu0OF2UnMZhKzg9yCg6HiTt0FnugId2jE4NbWQaBZ9h
+	VfH4qF3bKxroYuRnXxBqjxcjTM1E4uEOjzZ6/it/vei3CgZALoR0wm47LmG+LNWH4+bPE6
+	yYsTGj5wfguMm45ZvllQHJ8xcs6gVl1Is0b0GKit1o/PNKDN6YSoj6wJkpFFHkpCy71VG9
+	x4XxH0He2uv3F5xJCqIUr6wBr2XraFSRgrd4bWoy0XNv93FOyesXxGoF5X2AdxvKrlgzKB
+	9zfyMQpJZQ/Bx/moN/eooYhQd9mWve13BdcgMxBM2epsPtbPzm6CrlfL0vbRzA==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 01 Mar 2024 17:22:16 +0100
-Subject: [PATCH v9 3/9] reset: eyeq5: add platform driver
+Date: Fri, 01 Mar 2024 17:22:20 +0100
+Subject: [PATCH v9 7/9] MIPS: mobileye: eyeq5: use OLB clocks controller
+ node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240301-mbly-clk-v9-3-cbf06eb88708@bootlin.com>
+Message-Id: <20240301-mbly-clk-v9-7-cbf06eb88708@bootlin.com>
 References: <20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com>
 In-Reply-To: <20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com>
 To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
@@ -62,419 +63,199 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add the Mobileye EyeQ5 reset controller driver. It belongs to a syscon
-region called OLB. It might grow to add later support of other
-platforms from Mobileye.
+We add the clock controller inside the OLB syscon region and remove
+previous fixed devicetree nodes representing PLLs exposed by the clock
+controller.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/reset/Kconfig       |  12 ++
- drivers/reset/Makefile      |   1 +
- drivers/reset/reset-eyeq5.c | 361 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 374 insertions(+)
+ .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} | 54 +++++++---------------
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             | 11 ++++-
+ 2 files changed, 26 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index ccd59ddd7610..80bfde54c076 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -66,6 +66,18 @@ config RESET_BRCMSTB_RESCAL
- 	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
- 	  BCM7216.
+diff --git a/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi b/arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
+similarity index 88%
+rename from arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
+rename to arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
+index 78f5533a95c6..aa6db704a786 100644
+--- a/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
++++ b/arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
+@@ -3,42 +3,20 @@
+  * Copyright 2023 Mobileye Vision Technologies Ltd.
+  */
  
-+config RESET_EYEQ5
-+	bool "Mobileye EyeQ5 reset controller"
-+	depends on MFD_SYSCON
-+	depends on MACH_EYEQ5 || COMPILE_TEST
-+	default MACH_EYEQ5
-+	help
-+	  This enables the Mobileye EyeQ5 reset controller.
++#include <dt-bindings/clock/mobileye,eyeq5-clk.h>
 +
-+	  It has three domains, with a varying number of resets in each of them.
-+	  Registers are located in a shared register region called OLB accessed
-+	  through a syscon & regmap.
+ / {
+ 	/* Fixed clock */
+-	pll_cpu: pll-cpu {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <1500000000>;
+-	};
+-
+-	pll_vdi: pll-vdi {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <1280000000>;
+-	};
+-
+-	pll_per: pll-per {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <2000000000>;
+-	};
+-
+-	pll_ddr0: pll-ddr0 {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <1857210000>;
+-	};
+-
+-	pll_ddr1: pll-ddr1 {
++	xtal: xtal {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-		clock-frequency = <1857210000>;
++		clock-frequency = <30000000>;
+ 	};
+ 
+ /* PLL_CPU derivatives */
+ 	occ_cpu: occ-cpu {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_cpu>;
++		clocks = <&clocks EQ5C_PLL_CPU>;
+ 		#clock-cells = <0>;
+ 		clock-div = <1>;
+ 		clock-mult = <1>;
+@@ -101,7 +79,7 @@ mem_clk: mem-clk {
+ 	};
+ 	occ_isram: occ-isram {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_cpu>;
++		clocks = <&clocks EQ5C_PLL_CPU>;
+ 		#clock-cells = <0>;
+ 		clock-div = <2>;
+ 		clock-mult = <1>;
+@@ -115,7 +93,7 @@ isram_clk: isram-clk { /* gate ClkRstGen_isram */
+ 	};
+ 	occ_dbu: occ-dbu {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_cpu>;
++		clocks = <&clocks EQ5C_PLL_CPU>;
+ 		#clock-cells = <0>;
+ 		clock-div = <10>;
+ 		clock-mult = <1>;
+@@ -130,7 +108,7 @@ si_dbu_tp_pclk: si-dbu-tp-pclk { /* gate ClkRstGen_dbu */
+ /* PLL_VDI derivatives */
+ 	occ_vdi: occ-vdi {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_vdi>;
++		clocks = <&clocks EQ5C_PLL_VDI>;
+ 		#clock-cells = <0>;
+ 		clock-div = <2>;
+ 		clock-mult = <1>;
+@@ -144,7 +122,7 @@ vdi_clk: vdi-clk { /* gate ClkRstGen_vdi */
+ 	};
+ 	occ_can_ser: occ-can-ser {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_vdi>;
++		clocks = <&clocks EQ5C_PLL_VDI>;
+ 		#clock-cells = <0>;
+ 		clock-div = <16>;
+ 		clock-mult = <1>;
+@@ -158,7 +136,7 @@ can_ser_clk: can-ser-clk { /* gate ClkRstGen_can_ser */
+ 	};
+ 	i2c_ser_clk: i2c-ser-clk {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_vdi>;
++		clocks = <&clocks EQ5C_PLL_VDI>;
+ 		#clock-cells = <0>;
+ 		clock-div = <20>;
+ 		clock-mult = <1>;
+@@ -166,7 +144,7 @@ i2c_ser_clk: i2c-ser-clk {
+ /* PLL_PER derivatives */
+ 	occ_periph: occ-periph {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&clocks EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <16>;
+ 		clock-mult = <1>;
+@@ -225,7 +203,7 @@ gpio_clk: gpio-clk {
+ 	};
+ 	emmc_sys_clk: emmc-sys-clk {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&clocks EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <10>;
+ 		clock-mult = <1>;
+@@ -233,7 +211,7 @@ emmc_sys_clk: emmc-sys-clk {
+ 	};
+ 	ccf_ctrl_clk: ccf-ctrl-clk {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&clocks EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <4>;
+ 		clock-mult = <1>;
+@@ -241,7 +219,7 @@ ccf_ctrl_clk: ccf-ctrl-clk {
+ 	};
+ 	occ_mjpeg_core: occ-mjpeg-core {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&clocks EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <2>;
+ 		clock-mult = <1>;
+@@ -265,7 +243,7 @@ mjpeg_core_clk: mjpeg-core-clk { /* gate ClkRstGen_mjpeg_gen */
+ 	};
+ 	fcmu_a_clk: fcmu-a-clk {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&clocks EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <20>;
+ 		clock-mult = <1>;
+@@ -273,7 +251,7 @@ fcmu_a_clk: fcmu-a-clk {
+ 	};
+ 	occ_pci_sys: occ-pci-sys {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&clocks EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <8>;
+ 		clock-mult = <1>;
+diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+index e82d2a57f6da..1a65b43e13b1 100644
+--- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
++++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+@@ -5,7 +5,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/mips-gic.h>
+ 
+-#include "eyeq5-fixed-clocks.dtsi"
++#include "eyeq5-clocks.dtsi"
+ 
+ / {
+ 	#address-cells = <2>;
+@@ -106,6 +106,15 @@ olb: system-controller@e00000 {
+ 			ranges = <0x0 0x0 0xe00000 0x400>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 +
- config RESET_HSDK
- 	bool "Synopsys HSDK Reset Driver"
- 	depends on HAS_IOMEM
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 8270da8a4baa..4fabe0070390 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-+obj-$(CONFIG_RESET_EYEQ5) += reset-eyeq5.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
- obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
-diff --git a/drivers/reset/reset-eyeq5.c b/drivers/reset/reset-eyeq5.c
-new file mode 100644
-index 000000000000..b80dc6ed08d3
---- /dev/null
-+++ b/drivers/reset/reset-eyeq5.c
-@@ -0,0 +1,361 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Reset driver for the Mobileye EyeQ5 platform.
-+ *
-+ * The registers are located in a syscon region called OLB. We handle three
-+ * reset domains. Domains 0 and 2 look similar in that they both use one bit
-+ * per reset line. Domain 1 has a register per reset.
-+ *
-+ * We busy-wait after updating a reset in domains 0 or 1. The reason is hardware
-+ * logic built-in self-test (LBIST) that might be enabled.
-+ *
-+ * We use eq5r_ as prefix, as-in "EyeQ5 Reset", but way shorter.
-+ *
-+ * Known resets in domain 0:
-+ *  3. CAN0
-+ *  4. CAN1
-+ *  5. CAN2
-+ *  6. SPI0
-+ *  7. SPI1
-+ *  8. SPI2
-+ *  9. SPI3
-+ * 10. UART0
-+ * 11. UART1
-+ * 12. UART2
-+ * 13. I2C0
-+ * 14. I2C1
-+ * 15. I2C2
-+ * 16. I2C3
-+ * 17. I2C4
-+ * 18. TIMER0
-+ * 19. TIMER1
-+ * 20. TIMER2
-+ * 21. TIMER3
-+ * 22. TIMER4
-+ * 23. WD0
-+ * 24. EXT0
-+ * 25. EXT1
-+ * 26. GPIO
-+ * 27. WD1
-+ *
-+ * Known resets in domain 1:
-+ * 0. VMP0	(Vector Microcode Processors)
-+ * 1. VMP1
-+ * 2. VMP2
-+ * 3. VMP3
-+ * 4. PMA0	(Programmable Macro Array)
-+ * 5. PMA1
-+ * 6. PMAC0
-+ * 7. PMAC1
-+ * 8. MPC0	(Multi-threaded Processing Clusters)
-+ * 9. MPC1
-+ *
-+ * Known resets in domain 2:
-+ *  0. PCIE0_CORE
-+ *  1. PCIE0_APB
-+ *  2. PCIE0_LINK_AXI
-+ *  3. PCIE0_LINK_MGMT
-+ *  4. PCIE0_LINK_HOT
-+ *  5. PCIE0_LINK_PIPE
-+ *  6. PCIE1_CORE
-+ *  7. PCIE1_APB
-+ *  8. PCIE1_LINK_AXI
-+ *  9. PCIE1_LINK_MGMT
-+ * 10. PCIE1_LINK_HOT
-+ * 11. PCIE1_LINK_PIPE
-+ * 12. MULTIPHY
-+ * 13. MULTIPHY_APB
-+ * 15. PCIE0_LINK_MGMT
-+ * 16. PCIE1_LINK_MGMT
-+ * 17. PCIE0_LINK_PM
-+ * 18. PCIE1_LINK_PM
-+ *
-+ * Copyright (C) 2024 Mobileye Vision Technologies Ltd.
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/bug.h>
-+#include <linux/cleanup.h>
-+#include <linux/container_of.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/lockdep.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+/* Domain 0 register offsets */
-+#define D0_SARCR0	(0x004)
-+#define D0_SARCR1	(0x008)
-+
-+/* Domain 1 masks */
-+#define D1_ACRP_PD_REQ		BIT(0)
-+#define D1_ACRP_ST_POWER_DOWN	BIT(27)
-+#define D1_ACRP_ST_ACTIVE	BIT(29)
-+
-+/* Vendor-provided timeout values. D1 has a long timeout because of LBIST. */
-+#define D0_POLL_TIMEOUT_US	10
-+#define D0_POLL_DELAY_US	1
-+#define D1_POLL_TIMEOUT_US	(40 * USEC_PER_MSEC)
-+#define D1_POLL_DELAY_US	1
-+
-+/*
-+ * Masks for valid reset lines in each domain. This array is also used to get
-+ * the domain and reset counts.
-+ */
-+static const u32 eq5r_valid_masks[] = { 0x0FFFFFF8, 0x00001FFF, 0x0007BFFF };
-+
-+#define EQ5R_DOMAIN_COUNT ARRAY_SIZE(eq5r_valid_masks)
-+
-+/*
-+ * A reset ID, as returned by eq5r_of_xlate, is a (domain, offset) pair.
-+ * Low byte is domain, rest is offset.
-+ */
-+#define ID_DOMAIN_MASK	GENMASK(7, 0)
-+#define ID_OFFSET_MASK	GENMASK(31, 8)
-+
-+struct eq5r_private {
-+	struct mutex mutexes[EQ5R_DOMAIN_COUNT];
-+	void __iomem *base_d0;
-+	void __iomem *base_d1;
-+	void __iomem *base_d2;
-+	struct reset_controller_dev rcdev;
-+};
-+
-+#define rcdev_to_priv(rcdev) container_of(rcdev, struct eq5r_private, rcdev)
-+
-+static int eq5r_busy_wait_locked(struct eq5r_private *priv,
-+				   struct device *dev, u32 domain, u32 offset,
-+				   bool assert)
-+{
-+	void __iomem *reg;
-+	u32 val, mask;
-+	int ret;
-+
-+	lockdep_assert_held(&priv->mutexes[domain]);
-+
-+	switch (domain) {
-+	case 0:
-+		reg = priv->base_d0 + D0_SARCR1;
-+		mask = BIT(offset);
-+		ret = readl_poll_timeout(reg, val, !(val & mask) == assert,
-+					 D0_POLL_DELAY_US, D0_POLL_TIMEOUT_US);
-+		break;
-+	case 1:
-+		reg = priv->base_d1 + 4 * offset;
-+		mask = assert ? D1_ACRP_ST_POWER_DOWN : D1_ACRP_ST_ACTIVE;
-+		ret = readl_poll_timeout(reg, val, !!(val & mask),
-+					 D1_POLL_DELAY_US, D1_POLL_TIMEOUT_US);
-+		break;
-+	case 2:
-+		ret = 0; /* No busy waiting for domain 2. */
-+		break;
-+	default:
-+		WARN_ON(1);
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	if (ret == -ETIMEDOUT)
-+		dev_dbg(dev, "%u-%u: timeout\n", domain, offset);
-+	return ret;
-+}
-+
-+static void eq5r_assert_locked(struct eq5r_private *priv, u32 domain,
-+				 u32 offset)
-+{
-+	void __iomem *reg;
-+
-+	lockdep_assert_held(&priv->mutexes[domain]);
-+
-+	switch (domain) {
-+	case 0:
-+		reg = priv->base_d0 + D0_SARCR0;
-+		writel(readl(reg) & ~BIT(offset), reg);
-+		break;
-+	case 1:
-+		reg = priv->base_d1 + 4 * offset;
-+		writel(readl(reg) | D1_ACRP_PD_REQ, reg);
-+		break;
-+	case 2:
-+		reg = priv->base_d2;
-+		writel(readl(reg) & ~BIT(offset), reg);
-+		break;
-+	default:
-+		WARN_ON(1);
-+		break;
-+	}
-+}
-+
-+static int eq5r_assert(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	struct eq5r_private *priv = rcdev_to_priv(rcdev);
-+	u32 domain = FIELD_GET(ID_DOMAIN_MASK, id);
-+	u32 offset = FIELD_GET(ID_OFFSET_MASK, id);
-+
-+	dev_dbg(rcdev->dev, "%u-%u: assert request\n", domain, offset);
-+
-+	guard(mutex)(&priv->mutexes[domain]);
-+	eq5r_assert_locked(priv, domain, offset);
-+	return eq5r_busy_wait_locked(priv, rcdev->dev, domain, offset, true);
-+}
-+
-+static void eq5r_deassert_locked(struct eq5r_private *priv, u32 domain,
-+				   u32 offset)
-+{
-+	void __iomem *reg;
-+
-+	lockdep_assert_held(&priv->mutexes[domain]);
-+
-+	switch (domain) {
-+	case 0:
-+		reg = priv->base_d0 + D0_SARCR0;
-+		writel(readl(reg) | BIT(offset), reg);
-+		break;
-+	case 1:
-+		reg = priv->base_d1 + 4 * offset;
-+		writel(readl(reg) & ~D1_ACRP_PD_REQ, reg);
-+		break;
-+	case 2:
-+		reg = priv->base_d2;
-+		writel(readl(reg) | BIT(offset), reg);
-+		break;
-+	default:
-+		WARN_ON(1);
-+		break;
-+	}
-+}
-+
-+static int eq5r_deassert(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	struct eq5r_private *priv = rcdev_to_priv(rcdev);
-+	u32 domain = FIELD_GET(ID_DOMAIN_MASK, id);
-+	u32 offset = FIELD_GET(ID_OFFSET_MASK, id);
-+
-+	dev_dbg(rcdev->dev, "%u-%u: deassert request\n", domain, offset);
-+
-+	guard(mutex)(&priv->mutexes[domain]);
-+	eq5r_deassert_locked(priv, domain, offset);
-+	return eq5r_busy_wait_locked(priv, rcdev->dev, domain, offset, false);
-+}
-+
-+static int eq5r_status(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	struct eq5r_private *priv = rcdev_to_priv(rcdev);
-+	u32 domain = FIELD_GET(ID_DOMAIN_MASK, id);
-+	u32 offset = FIELD_GET(ID_OFFSET_MASK, id);
-+	u32 val;
-+
-+	dev_dbg(rcdev->dev, "%u-%u: status request\n", domain, offset);
-+
-+	guard(mutex)(&priv->mutexes[domain]);
-+
-+	switch (domain) {
-+	case 0:
-+		val = readl(priv->base_d0 + D0_SARCR1);
-+		return !(val & BIT(offset));
-+	case 1:
-+		val = readl(priv->base_d1 + 4 * offset);
-+		return !(val & D1_ACRP_ST_ACTIVE);
-+	case 2:
-+		val = readl(priv->base_d2);
-+		return !(val & BIT(offset));
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct reset_control_ops eq5r_ops = {
-+	.assert	  = eq5r_assert,
-+	.deassert = eq5r_deassert,
-+	.status	  = eq5r_status,
-+};
-+
-+static int eq5r_of_xlate(struct reset_controller_dev *rcdev,
-+			 const struct of_phandle_args *reset_spec)
-+{
-+	u32 domain, offset;
-+
-+	if (WARN_ON(reset_spec->args_count != 2))
-+		return -EINVAL;
-+
-+	domain = reset_spec->args[0];
-+	offset = reset_spec->args[1];
-+
-+	if (domain >= EQ5R_DOMAIN_COUNT || offset > 31 ||
-+	    !(eq5r_valid_masks[domain] & BIT(offset))) {
-+		dev_err(rcdev->dev, "%u-%u: invalid reset\n", domain, offset);
-+		return -EINVAL;
-+	}
-+
-+	return FIELD_PREP(ID_DOMAIN_MASK, domain) | FIELD_PREP(ID_OFFSET_MASK, offset);
-+}
-+
-+static int eq5r_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct eq5r_private *priv;
-+	unsigned int i;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->base_d0 = devm_platform_ioremap_resource_byname(pdev, "d0");
-+	if (IS_ERR(priv->base_d0))
-+		return PTR_ERR(priv->base_d0);
-+
-+	priv->base_d1 = devm_platform_ioremap_resource_byname(pdev, "d1");
-+	if (IS_ERR(priv->base_d1))
-+		return PTR_ERR(priv->base_d1);
-+
-+	priv->base_d2 = devm_platform_ioremap_resource_byname(pdev, "d2");
-+	if (IS_ERR(priv->base_d2))
-+		return PTR_ERR(priv->base_d2);
-+
-+	for (i = 0; i < EQ5R_DOMAIN_COUNT; i++)
-+		mutex_init(&priv->mutexes[i]);
-+
-+	priv->rcdev.ops = &eq5r_ops;
-+	priv->rcdev.owner = THIS_MODULE;
-+	priv->rcdev.dev = dev;
-+	priv->rcdev.of_node = np;
-+	priv->rcdev.of_reset_n_cells = 2;
-+	priv->rcdev.of_xlate = eq5r_of_xlate;
-+
-+	priv->rcdev.nr_resets = 0;
-+	for (i = 0; i < EQ5R_DOMAIN_COUNT; i++)
-+		priv->rcdev.nr_resets += hweight32(eq5r_valid_masks[i]);
-+
-+	ret = devm_reset_controller_register(dev, &priv->rcdev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed registering reset controller\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id eq5r_match_table[] = {
-+	{ .compatible = "mobileye,eyeq5-reset" },
-+	{}
-+};
-+
-+static struct platform_driver eq5r_driver = {
-+	.probe = eq5r_probe,
-+	.driver = {
-+		.name = "eyeq5-reset",
-+		.of_match_table = eq5r_match_table,
-+	},
-+};
-+builtin_platform_driver(eq5r_driver);
++			clocks: clock-controller@e0002c {
++				compatible = "mobileye,eyeq5-clk";
++				reg = <0x02c 0x50>, <0x11c 0x04>;
++				reg-names = "plls", "ospi";
++				#clock-cells = <1>;
++				clocks = <&xtal>;
++				clock-names = "ref";
++			};
+ 		};
+ 
+ 		gic: interrupt-controller@140000 {
 
 -- 
 2.44.0
