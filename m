@@ -1,65 +1,73 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98C13A8D0;
-	Fri,  1 Mar 2024 02:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935CE3B1B7;
+	Fri,  1 Mar 2024 02:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709259623; cv=none; b=PYacv4adNJ2mHyJ0oMdxF2eLu7EE/HxhaJjYtHD6xHTirj4wgQG8Iigv570DWFawtaHwBgEeDDL9VHfufTzV+Xdm3zmIiTm1PY25ZNnRKmD+awDbaJWI73hJzjN9TeDH7qixlzOl4M4xeWlPkTPIZfge3Q1lO9btm5DQFBWmCVc=
+	t=1709259625; cv=none; b=K/IAI6xGQcboZwHj1Sy3q7CLYatswj57cJ0880+vJE48GuJZtT7F343eBKzrW4bXxkYOiuHnaxeZ4mSiGWlMuARwCCr4jMB2bhe0TBMgL8QiYQDaxvgLNgJ7UVXpLPnktTvJWY1+SUr+PnvX1KIbCpCH/y0Llxd4KQRDJ+WP5/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709259623; c=relaxed/simple;
-	bh=gdZL027JjgWBp4yAX1JueovH7hZQ/1sj/DZJp44K3S4=;
+	s=arc-20240116; t=1709259625; c=relaxed/simple;
+	bh=CLARtP2DQJAVQ0De+jgJ+swpoDvVcBFDP0cS0U0AByc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=URe3UcSx8aWJw0tnVEuVcNicd2Nr7WomCFi+m7+DLbaStDHPqouyWZR5xr9L0KdZSMwlbAcGSAh7PQnL7cYL1XWSZNSvNZ+00Q82BfsUkfDYx8fZIlbaa9wVoaqoC0kcRK3Kjj+wafllPtkGOod77OQ8nCN4ANfHsBIGJNkSICo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=o14O78aB; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=mLZY9BQNvLXhhQo7aQT69gMBPv5GO98OOXSp/3tdlM/O9ou5C7qI4kV+ibsJZeYJYhdwW8Sw1B9XiqDzlqMm+v2z1lsVIeaXIEmPJBjrF+MFa+/RyAHrM24mVzdhxGdHdTawqqXiXUQqnJoyjsnUOD1PhS9tm41rLdufkITS1y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aCJGGgGh; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="o14O78aB"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4212HpRh028427;
-	Fri, 1 Mar 2024 02:20:15 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aCJGGgGh"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4211p8XZ026967;
+	Fri, 1 Mar 2024 02:20:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=6GJQ+POFkVJMen9g30DeKpSnoS+4aRChTobEoFY4Y9Y=;
- b=o14O78aBpPcDd27QXExR04lp3LSIEZ5iKDhGEBOMJL3b8oU2RsKQMCYgwpe9cnChRBlm
- veb1ipzOMqMfjLdQeQ7J0ttuiGV8ke1YJ90UoC5JIWyE1sy0jIVSKkgiDCai7BW9AQkT
- uE79rD5xZcmAw3Lo0EgyDAIHt8TeUF0kI94lsUzlOTii3lY5f2ALEH+5HnnWQTxfihvI
- 7dihUvHkZiRzK/rFzJWodKyTR7m3o4Qp0RFPCit6MKvk0+5k8xTbBclWsAl+Zdl6DxJ6
- WcgZIPEv2GOEQVmRUUFKnmfKzoGV6qmadlZlUELrjsC0ydHSTBl34L9B5qUxSxWAY+vG 9A== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wk63t81j4-1
+ bh=WscJRectOOpbFSdEkRLSkxTx5f/ng+ZZJOEX2Ey0I9k=;
+ b=aCJGGgGhomFIRs5vnjZajZrs2GiZpNtdE0rdX5URuLzetGIEhf0I1HgRwCJ5KvFlyT2c
+ f3fEUGlJ+YzmhqE78aGRoxbYlCyprCTs77lvFQExx2UY1nIouMwaKPI5YcESwJ3o/9MZ
+ GV8WIQ7Lwk2rRnpG+BRoM4QOoIsY7et6yRT81Sw2dGWeR7w6nRow+FDEiMVeGQEi+wxw
+ V0v4AxFzTL+nLfc4ef9RAwZtWQIhX2HJ+gcxMVUd2KSfJApRtAi5+7nx6xNN/W+uohjk
+ iTVhAnD3wE+0lAwFmXbRVSG2vwjfYI6Eshx9taqy7/4MR9vh4S9KzXIYNRMhSbxuWUxZ Rg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wk57h1dqj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 02:20:15 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41TNMBgw024122;
-	Fri, 1 Mar 2024 02:20:14 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wfw0ks93e-1
+	Fri, 01 Mar 2024 02:20:20 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4211xX2N017290;
+	Fri, 1 Mar 2024 02:20:20 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wk57h1dpf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 02:20:14 +0000
+	Fri, 01 Mar 2024 02:20:20 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41TNwnoF008827;
+	Fri, 1 Mar 2024 02:20:19 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wftsu1w70-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 02:20:19 +0000
 Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4212KCTc50856668
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4212KGVb44564750
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 1 Mar 2024 02:20:14 GMT
+	Fri, 1 Mar 2024 02:20:18 GMT
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 691705805D;
-	Fri,  1 Mar 2024 02:20:12 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 9360A58056;
+	Fri,  1 Mar 2024 02:20:16 +0000 (GMT)
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E78DB5806A;
-	Fri,  1 Mar 2024 02:20:11 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 12ED25805D;
+	Fri,  1 Mar 2024 02:20:16 +0000 (GMT)
 Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
 	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  1 Mar 2024 02:20:11 +0000 (GMT)
+	Fri,  1 Mar 2024 02:20:15 +0000 (GMT)
 From: Stefan Berger <stefanb@linux.ibm.com>
 To: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
         herbert@gondor.apana.org.au, davem@davemloft.net
 Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br, lukas@wunner.de,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v4 05/12] crypto: ecc - Add nbits field to ecc_curve structure
-Date: Thu, 29 Feb 2024 21:20:00 -0500
-Message-ID: <20240301022007.344948-6-stefanb@linux.ibm.com>
+        Stefan Berger <stefanb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH v4 12/12] crypto: x509 - Add OID for NIST P521 and extend parser for it
+Date: Thu, 29 Feb 2024 21:20:07 -0500
+Message-ID: <20240301022007.344948-13-stefanb@linux.ibm.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240301022007.344948-1-stefanb@linux.ibm.com>
 References: <20240301022007.344948-1-stefanb@linux.ibm.com>
@@ -71,128 +79,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lbfE8AGIA8HsfRveQwKVX843oZn5nxiE
-X-Proofpoint-ORIG-GUID: lbfE8AGIA8HsfRveQwKVX843oZn5nxiE
+X-Proofpoint-GUID: mRs7XMb-K63HGuk60utCdVeXCnhE_hbV
+X-Proofpoint-ORIG-GUID: bJt5Y1aNDD82emL5h9ejwVh6ZmBYPFfg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-29_08,2024-02-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- adultscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0 clxscore=1015
- impostorscore=0 priorityscore=1501 bulkscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 mlxlogscore=977 clxscore=1015
+ bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311290000 definitions=main-2403010018
 
-Add the number of bits a curve has to the ecc_curve definition and set it
-on all cruve definitions.
+Enable the x509 parser to accept NIST P521 certificates and add the
+OID for ansip521r1, which is the identifier for NIST P521.
 
+Cc: David Howells <dhowells@redhat.com>
 Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
 ---
- crypto/ecc_curve_defs.h    | 4 ++++
- crypto/ecrdsa_defs.h       | 5 +++++
- include/crypto/ecc_curve.h | 3 +++
- 3 files changed, 12 insertions(+)
+ crypto/asymmetric_keys/x509_cert_parser.c | 3 +++
+ include/linux/oid_registry.h              | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/crypto/ecc_curve_defs.h b/crypto/ecc_curve_defs.h
-index 9719934c9428..ab1ef3d94be5 100644
---- a/crypto/ecc_curve_defs.h
-+++ b/crypto/ecc_curve_defs.h
-@@ -17,6 +17,7 @@ static u64 nist_p192_b[] = { 0xFEB8DEECC146B9B1ull, 0x0FA7E9AB72243049ull,
- 				0x64210519E59C80E7ull };
- static struct ecc_curve nist_p192 = {
- 	.name = "nist_192",
-+	.nbits = 192,
- 	.g = {
- 		.x = nist_p192_g_x,
- 		.y = nist_p192_g_y,
-@@ -43,6 +44,7 @@ static u64 nist_p256_b[] = { 0x3BCE3C3E27D2604Bull, 0x651D06B0CC53B0F6ull,
- 				0xB3EBBD55769886BCull, 0x5AC635D8AA3A93E7ull };
- static struct ecc_curve nist_p256 = {
- 	.name = "nist_256",
-+	.nbits = 256,
- 	.g = {
- 		.x = nist_p256_g_x,
- 		.y = nist_p256_g_y,
-@@ -75,6 +77,7 @@ static u64 nist_p384_b[] = { 0x2a85c8edd3ec2aefull, 0xc656398d8a2ed19dull,
- 				0x988e056be3f82d19ull, 0xb3312fa7e23ee7e4ull };
- static struct ecc_curve nist_p384 = {
- 	.name = "nist_384",
-+	.nbits = 384,
- 	.g = {
- 		.x = nist_p384_g_x,
- 		.y = nist_p384_g_y,
-@@ -95,6 +98,7 @@ static u64 curve25519_a[] = { 0x000000000001DB41, 0x0000000000000000,
- 				0x0000000000000000, 0x0000000000000000 };
- static const struct ecc_curve ecc_25519 = {
- 	.name = "curve25519",
-+	.nbits = 255,
- 	.g = {
- 		.x = curve25519_g_x,
- 		.ndigits = 4,
-diff --git a/crypto/ecrdsa_defs.h b/crypto/ecrdsa_defs.h
-index 0056335b9d03..1c2c2449e331 100644
---- a/crypto/ecrdsa_defs.h
-+++ b/crypto/ecrdsa_defs.h
-@@ -47,6 +47,7 @@ static u64 cp256a_b[] = {
- 
- static struct ecc_curve gost_cp256a = {
- 	.name = "cp256a",
-+	.nbits = 256,
- 	.g = {
- 		.x = cp256a_g_x,
- 		.y = cp256a_g_y,
-@@ -80,6 +81,7 @@ static u64 cp256b_b[] = {
- 
- static struct ecc_curve gost_cp256b = {
- 	.name = "cp256b",
-+	.nbits = 256,
- 	.g = {
- 		.x = cp256b_g_x,
- 		.y = cp256b_g_y,
-@@ -117,6 +119,7 @@ static u64 cp256c_b[] = {
- 
- static struct ecc_curve gost_cp256c = {
- 	.name = "cp256c",
-+	.nbits = 256,
- 	.g = {
- 		.x = cp256c_g_x,
- 		.y = cp256c_g_y,
-@@ -166,6 +169,7 @@ static u64 tc512a_b[] = {
- 
- static struct ecc_curve gost_tc512a = {
- 	.name = "tc512a",
-+	.nbits = 512,
- 	.g = {
- 		.x = tc512a_g_x,
- 		.y = tc512a_g_y,
-@@ -211,6 +215,7 @@ static u64 tc512b_b[] = {
- 
- static struct ecc_curve gost_tc512b = {
- 	.name = "tc512b",
-+	.nbits = 512,
- 	.g = {
- 		.x = tc512b_g_x,
- 		.y = tc512b_g_y,
-diff --git a/include/crypto/ecc_curve.h b/include/crypto/ecc_curve.h
-index 70964781eb68..337a44956926 100644
---- a/include/crypto/ecc_curve.h
-+++ b/include/crypto/ecc_curve.h
-@@ -23,6 +23,8 @@ struct ecc_point {
-  * struct ecc_curve - definition of elliptic curve
-  *
-  * @name:	Short name of the curve.
-+ * @nbits:      Curves that do not use all bits in their ndigits must specify
-+ *              their number of bits here, otherwise can leave at 0.
-  * @g:		Generator point of the curve.
-  * @p:		Prime number, if Barrett's reduction is used for this curve
-  *		pre-calculated value 'mu' is appended to the @p after ndigits.
-@@ -34,6 +36,7 @@ struct ecc_point {
-  */
- struct ecc_curve {
- 	char *name;
-+	unsigned int nbits;
- 	struct ecc_point g;
- 	u64 *p;
- 	u64 *n;
+diff --git a/crypto/asymmetric_keys/x509_cert_parser.c b/crypto/asymmetric_keys/x509_cert_parser.c
+index 487204d39426..99f809b7910b 100644
+--- a/crypto/asymmetric_keys/x509_cert_parser.c
++++ b/crypto/asymmetric_keys/x509_cert_parser.c
+@@ -538,6 +538,9 @@ int x509_extract_key_data(void *context, size_t hdrlen,
+ 		case OID_id_ansip384r1:
+ 			ctx->cert->pub->pkey_algo = "ecdsa-nist-p384";
+ 			break;
++		case OID_id_ansip521r1:
++			ctx->cert->pub->pkey_algo = "ecdsa-nist-p521";
++			break;
+ 		default:
+ 			return -ENOPKG;
+ 		}
+diff --git a/include/linux/oid_registry.h b/include/linux/oid_registry.h
+index 3921fbed0b28..af16d96fbbf2 100644
+--- a/include/linux/oid_registry.h
++++ b/include/linux/oid_registry.h
+@@ -65,6 +65,7 @@ enum OID {
+ 	OID_Scram,			/* 1.3.6.1.5.5.14 */
+ 	OID_certAuthInfoAccess,		/* 1.3.6.1.5.5.7.1.1 */
+ 	OID_id_ansip384r1,		/* 1.3.132.0.34 */
++	OID_id_ansip521r1,		/* 1.3.132.0.35 */
+ 	OID_sha256,			/* 2.16.840.1.101.3.4.2.1 */
+ 	OID_sha384,			/* 2.16.840.1.101.3.4.2.2 */
+ 	OID_sha512,			/* 2.16.840.1.101.3.4.2.3 */
 -- 
 2.43.0
 
