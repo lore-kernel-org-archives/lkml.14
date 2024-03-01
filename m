@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EEA39FF2
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59483BB2E
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709318994; cv=none; b=FpnovMOKxIpuZg6e9XMHu1Ta4Q427M1mti8VzVzJVJZuu4xUnSrxgriuk3kuWEzKM7rhujxO7Zq68M68pfdH0Tf3aLczbAp5aJi/TiKxGKokX5AUrDMkd/mi3LKj69MEDuFyiEUVzqGlEr8zqs+0AE3IHlBP1GS8HTlir65VZsQ=
+	t=1709318996; cv=none; b=fdQ6MZ3xc494a6Yf5XC5dNZ+yVBBRL4azUX2r2mX6aZQd3A4LJcm7yAlSvZGvjcrdzKiIWvFc333ZhS8Le1OPj1ZYM0GqD2+/3yGiS7gAKlRZ8v1XfqfC3bhUCMOcDQ6Di7DaIlAXYBu1Kd2egQVbyiVtEs306wzcKvyB4Oo7x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709318994; c=relaxed/simple;
-	bh=2ERunsHO0HMaUms4KBACjWVsThU416l3Oxd77ww5Cx0=;
+	s=arc-20240116; t=1709318996; c=relaxed/simple;
+	bh=kRC2xm7uMHGebNB7a/TgeH2yuQp/mFiIM0iKAPFJjpE=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=vA45kMBLS1OfZuWT4egX3ekyzPGMI4ovEhbtr0fIfD4AkSNr3EwB3vp/cFdckFLmalkKRtroqmz113omVUaixB5dvhlwnc16sAY/WSAnGR2WjJxnnqy4bjKiwNBQk8J9rE0NEpMMGjClmf0JnbTywLwyj9PTMNSl/pGplSlVpBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H883z8KS; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=JiP4+kRebyVcfu5e3FwzeO/uQ7UC7D+0c0Cm5k1rNPrwPkj1mZOVtgPZ/OIanSg3u0U2HJ3riXEtqeATpnnAS5mXSOGPtQ/m216p54yIZMQWLM/VmIqK4LCZCHLVZB8Dd8VYC4ZoT4d/JcxVPkI4KIB1UYyoicYDnuxhS5VQUq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wr2U2aC9; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H883z8KS"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso4104028276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:49:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wr2U2aC9"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608ad239f8fso39541667b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:49:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709318991; x=1709923791; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709318994; x=1709923794; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3EjZ0ceRnqQlXX4BCEd3HoI0KPye9/6m0/wti2JUYDk=;
-        b=H883z8KSjBtADZXfpgQDGDjqDrm9FWmkhCdwRh69XyFob3Fn24la13XUOOkvfyXt+a
-         NzvWA5X3e2mX1uRaoutDDKuLHm/gkWdJwefITQyHuLEllhxJZ7qN5v+3dYH3ZtrXCm+o
-         sgkQSQNtUSakJQ9+tC7ETDD4QbtOe3fkT42mD1jD8aUuFDBmT9XMN7taRDJUuOmGaXjX
-         jHuT1AzVMsJ44K79jkPM/nbM0Z3HvyvIN1jid6Cbzvu92yzKv6X94FpyNnwT705zhRvh
-         X6PAQigUmNehM/ypCwR8ZyqzOcUyHzwqttAXQUz9F5QgoXRRhyKUU3pMxr02k9RIipvq
-         HnXQ==
+        bh=/6sZaREfZSp3hmPC0ObvAD1D5+ZR7J7opouN89RfYyQ=;
+        b=wr2U2aC9wuRXZguRjvyPgcxVnlP86sKVJp5IVKfB5oOzHIB8ZjNFpKVkhYnT0ATjZA
+         iZqKDDI35+gbm58/NXI4zGe5yhB+mHc1rciRZ6EwTKcffV5NSY+rtE+pPywbaVb67vJU
+         iXEXF6XSNK9FgOQL8Sy1g5+JaxZ//kXyPJ94GxoATTSDCfOWH9bHjieXYbAcaG1tMFHN
+         x+MsRG07rWRSw60S+vVsXK+A0Wx7O6E2YicqWuqSICR9oh/DRH3sMTmV+lNaPKP0SaSt
+         Fs/vKNq1WsNHJU7zyRE3pp8rn9FAXoKwf3GmWupYzhN2zctv1knEEa6PCIoEEbz3eIA0
+         YDkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709318991; x=1709923791;
+        d=1e100.net; s=20230601; t=1709318994; x=1709923794;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3EjZ0ceRnqQlXX4BCEd3HoI0KPye9/6m0/wti2JUYDk=;
-        b=u8kMli0VluNghKCl7Pkfa5LfoBIbaNbeZzQiIbZ0NctqXKbsVNgxhwm848kcZaLNTu
-         Gtj9dBm8F1Vgwt/aFxINfT8RUl4R77JSIg0OefWm7EVDgvWsYx6G6PtSI9ceT1cuLHmo
-         I2b2DJOsE3uSr+67HLgOmpIHfuLhSRItEC0mG9tgUKK3IT2VBbupXYE1zpTuLJ29AIjY
-         K2SY6uw+L02F5ifP3kQ03cd68BqoqqA4B31b9Swjns0ppBa2/cwUhPHpwSbQ0hEieyD3
-         7SCG/3BrYhXc6SwCtAm4eXbPvduEa9L+ltR7ucnHFEk0S8Fzdh6IbKxkEMaKKX2eASG4
-         N2+w==
-X-Forwarded-Encrypted: i=1; AJvYcCV/S6RwK3Oa4VB4BKgf438f6FTl/tOB4Jm86dGn/LMhMiRhTCIBlUdWGx8PmNZJ1U6HN3Nhs3CVhRSQ2UuqYfE14el0AKAjiG3pTYuu
-X-Gm-Message-State: AOJu0YzSzm5LtmiClzbYepqhCOJmPeHHu3L06wfqr0O63IICBt9xgSQT
-	GLGv+ChkkVI1jpjeRrS6zjaEGraXKeUyVl5SKD1Ib3+Wf6wBsCL491kzD6qVYmM0baeO+afKHCW
-	bLdQHGA==
-X-Google-Smtp-Source: AGHT+IG8JEXFF9978LatunnwkVIhj6OAPjqRyRG+w+is3ik30NBpeC3dfmCO6JKqk09Redgj4J1Sef6X7IH6
+        bh=/6sZaREfZSp3hmPC0ObvAD1D5+ZR7J7opouN89RfYyQ=;
+        b=o5O4zvx7tFGe+gK7ueT6XcxlUI0I5ZMNV9bMmnHLHWcaDufB/D5ZOOpNMAXK0wYKMr
+         cTAPDMK9Vaaje3PzCzE3VSCm9PcH9uxqSZE7mxXzmrFVatiOxCJppjFOM2BmprR0QaB0
+         JXWy/leIWOOxj7cwvj+tZDi5UyqNDosd6/5YAxJoTEa308YoyZM90WtU4Z7htoq5sjAw
+         dTZ52AlbSWaPlR3U3THtPaikF8c3I9WfmxoI/irGwBwudXUKn7QoiqCE8p8qg4zvMh+8
+         rxwt1jjhV+yO2prRW4zFwDRmI0e9nY+BRiacoSDyJkU2dgFuNdHkQ65uafxvVcmgQf+e
+         mj9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVYmLBg76p5Vh3NJG82w+QCRp3lqytjLTR5eZcpT9GnfNszaudpEwLncDD145/MIcHccqEGTCLdpqABBo4IUwlEn3i5yXiX0DzdXPZm
+X-Gm-Message-State: AOJu0YwbmKTitJzrgWeQY06cz1Jk1mcoKZSjnQzojElM93cmZC6LzXHN
+	IaPihIgbHYzywHlTz/9Je2P7Zdt3ePrMgiA9i/YnfONO1u8QiEB6gTJAvOplrhfSPMVeIS2wyf3
+	KNI7LmQ==
+X-Google-Smtp-Source: AGHT+IF7tSFYfPgzeywyxbiOairM8kbPeJ0Gj4zz01HG1jTS6aRheUlZC7o2t0zsuDKJLa/Z3qLLDeBYZB28
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
- (user=irogers job=sendgmr) by 2002:a25:df54:0:b0:dc6:53c3:bcbd with SMTP id
- w81-20020a25df54000000b00dc653c3bcbdmr538678ybg.7.1709318991586; Fri, 01 Mar
- 2024 10:49:51 -0800 (PST)
-Date: Fri,  1 Mar 2024 10:49:41 -0800
+ (user=irogers job=sendgmr) by 2002:a81:4c05:0:b0:608:d045:6eff with SMTP id
+ z5-20020a814c05000000b00608d0456effmr526031ywa.2.1709318994053; Fri, 01 Mar
+ 2024 10:49:54 -0800 (PST)
+Date: Fri,  1 Mar 2024 10:49:42 -0800
 In-Reply-To: <20240301184942.2660478-1-irogers@google.com>
-Message-Id: <20240301184942.2660478-2-irogers@google.com>
+Message-Id: <20240301184942.2660478-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240301184942.2660478-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v2 1/2] perf jevents: Add collection of topdown like metrics
- for arm64
+Subject: [PATCH v2 2/2] perf jevents: Add cycles breakdown metric for arm64/AMD/Intel
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,181 +73,110 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Metrics are created using legacy, common and recommended events. As
-events may be missing a TryEvent function will give None if an event
-is missing. To workaround missing JSON events for cortex-a53, sysfs
-encodings are used.
+Breakdown cycles to user, kernel and guest. Add a common_metrics.py
+file for such metrics.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arm64_metrics.py | 145 ++++++++++++++++++++++++-
- 1 file changed, 142 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/amd_metrics.py    |  3 +++
+ tools/perf/pmu-events/arm64_metrics.py  |  2 ++
+ tools/perf/pmu-events/common_metrics.py | 18 ++++++++++++++++++
+ tools/perf/pmu-events/intel_metrics.py  |  2 ++
+ 4 files changed, 25 insertions(+)
+ create mode 100644 tools/perf/pmu-events/common_metrics.py
 
+diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
+index 377ce413d051..5a1f10ecff4d 100755
+--- a/tools/perf/pmu-events/amd_metrics.py
++++ b/tools/perf/pmu-events/amd_metrics.py
+@@ -4,6 +4,7 @@ from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
+                     JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
+                     Metric, MetricGroup, Select)
+ import argparse
++from common_metrics import Cycles
+ import json
+ import math
+ import os
+@@ -572,6 +573,7 @@ def AmdUpc() -> Metric:
+   return Metric("upc", "Micro-ops retired per core cycle (higher is better)",
+                 upc, "uops/cycle")
+ 
++
+ def Idle() -> Metric:
+   cyc = Event("msr/mperf/")
+   tsc = Event("msr/tsc/")
+@@ -628,6 +630,7 @@ all_metrics = MetricGroup("", [
+     AmdHwpf(),
+     AmdSwpf(),
+     AmdUpc(),
++    Cycles(),
+     Idle(),
+     Rapl(),
+     UncoreL3(),
 diff --git a/tools/perf/pmu-events/arm64_metrics.py b/tools/perf/pmu-events/arm64_metrics.py
-index 7cd0ebc0bd80..0dcf5236ea1f 100755
+index 0dcf5236ea1f..516b3fa08600 100755
 --- a/tools/perf/pmu-events/arm64_metrics.py
 +++ b/tools/perf/pmu-events/arm64_metrics.py
-@@ -1,10 +1,11 @@
- #!/usr/bin/env python3
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
--from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
--                    MetricGroup)
-+from metric import (d_ratio, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
-+                    LoadEvents, Metric, MetricGroup)
+@@ -3,6 +3,7 @@
+ from metric import (d_ratio, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
+                     LoadEvents, Metric, MetricGroup)
  import argparse
++from common_metrics import Cycles
  import json
  import os
-+from typing import Optional
+ from typing import Optional
+@@ -154,6 +155,7 @@ def Arm64Topdown() -> MetricGroup:
  
- parser = argparse.ArgumentParser(description="ARM perf json generator")
- parser.add_argument("-metricgroups", help="Generate metricgroups data", action='store_true')
-@@ -15,7 +16,145 @@ args = parser.parse_args()
- directory = f"{os.path.dirname(os.path.realpath(__file__))}/arch/arm64/{args.vendor}/{args.model}/"
- LoadEvents(directory)
- 
--all_metrics = MetricGroup("",[])
-+def Arm64Topdown() -> MetricGroup:
-+  """Returns a MetricGroup representing ARM64 topdown like metrics."""
-+  def TryEvent(name: str) -> Optional[Event]:
-+    # Skip an event if not in the json files.
-+    try:
-+      return Event(name)
-+    except:
-+      return None
-+  # ARM models like a53 lack JSON for INST_RETIRED but have the
-+  # architetural standard event in sysfs. Use the PMU name to identify
-+  # the sysfs event.
-+  pmu_name = f'armv8_{args.model.replace("-", "_")}'
-+  ins = Event("instructions")
-+  ins_ret = Event("INST_RETIRED", f"{pmu_name}/inst_retired/")
-+  cycles = Event("cycles")
-+  stall_fe = TryEvent("STALL_FRONTEND")
-+  stall_be = TryEvent("STALL_BACKEND")
-+  br_ret = TryEvent("BR_RETIRED")
-+  br_mp_ret = TryEvent("BR_MIS_PRED_RETIRED")
-+  dtlb_walk = TryEvent("DTLB_WALK")
-+  itlb_walk = TryEvent("ITLB_WALK")
-+  l1d_tlb = TryEvent("L1D_TLB")
-+  l1i_tlb = TryEvent("L1I_TLB")
-+  l1d_refill = Event("L1D_CACHE_REFILL", f"{pmu_name}/l1d_cache_refill/")
-+  l2d_refill = Event("L2D_CACHE_REFILL", f"{pmu_name}/l2d_cache_refill/")
-+  l1i_refill = Event("L1I_CACHE_REFILL", f"{pmu_name}/l1i_cache_refill/")
-+  l1d_access = Event("L1D_CACHE", f"{pmu_name}/l1d_cache/")
-+  l2d_access = Event("L2D_CACHE", f"{pmu_name}/l2d_cache/")
-+  llc_access = TryEvent("LL_CACHE_RD")
-+  l1i_access = Event("L1I_CACHE", f"{pmu_name}/l1i_cache/")
-+  llc_miss_rd = TryEvent("LL_CACHE_MISS_RD")
-+  ase_spec = TryEvent("ASE_SPEC")
-+  ld_spec = TryEvent("LD_SPEC")
-+  st_spec = TryEvent("ST_SPEC")
-+  vfp_spec = TryEvent("VFP_SPEC")
-+  dp_spec = TryEvent("DP_SPEC")
-+  br_immed_spec = TryEvent("BR_IMMED_SPEC")
-+  br_indirect_spec = TryEvent("BR_INDIRECT_SPEC")
-+  br_ret_spec = TryEvent("BR_RETURN_SPEC")
-+  crypto_spec = TryEvent("CRYPTO_SPEC")
-+  inst_spec = TryEvent("INST_SPEC")
-+
-+  return MetricGroup("topdown", [
-+      MetricGroup("topdown_tl", [
-+          Metric("topdown_tl_ipc", "Instructions per cycle", d_ratio(
-+              ins, cycles), "insn/cycle"),
-+          Metric("topdown_tl_stall_fe_rate", "Frontend stalls to all cycles",
-+                 d_ratio(stall_fe, cycles), "100%") if stall_fe else None,
-+          Metric("topdown_tl_stall_be_rate", "Backend stalls to all cycles",
-+                 d_ratio(stall_be, cycles), "100%") if stall_be else None,
-+      ]),
-+      MetricGroup("topdown_fe_bound", [
-+          MetricGroup("topdown_fe_br", [
-+              Metric("topdown_fe_br_mp_per_insn",
-+                     "Branch mispredicts per instruction retired",
-+                     d_ratio(br_mp_ret, ins_ret), "br/insn") if br_mp_ret else None,
-+              Metric("topdown_fe_br_ins_rate",
-+                     "Branches per instruction retired", d_ratio(
-+                         br_ret, ins_ret), "100%") if br_ret else None,
-+              Metric("topdown_fe_br_mispredict",
-+                     "Branch mispredicts per branch instruction",
-+                     d_ratio(br_mp_ret, br_ret), "100%") if br_mp_ret else None,
-+          ]),
-+          MetricGroup("topdown_fe_itlb", [
-+              Metric("topdown_fe_itlb_walks", "Itlb walks per insn",
-+                     d_ratio(itlb_walk, ins_ret), "walk/insn"),
-+              Metric("topdown_fe_itlb_walk_rate", "Itlb walks per l1i access",
-+                     d_ratio(itlb_walk, l1i_tlb), "100%"),
-+          ]) if itlb_walk else None,
-+          MetricGroup("topdown_fe_icache", [
-+              Metric("topdown_fe_icache_l1i_per_insn",
-+                     "L1I cache refills per instruction",
-+                     d_ratio(l1i_refill, ins_ret), "l1i/insn"),
-+              Metric("topdown_fe_icache_l1i_miss_rate",
-+                     "L1I cache refills per L1I cache access",
-+                     d_ratio(l1i_refill, l1i_access), "100%"),
-+          ]),
-+      ]),
-+      MetricGroup("topdown_be_bound", [
-+          MetricGroup("topdown_be_dtlb", [
-+              Metric("topdown_be_dtlb_walks", "Dtlb walks per instruction",
-+                     d_ratio(dtlb_walk, ins_ret), "walk/insn"),
-+              Metric("topdown_be_dtlb_walk_rate", "Dtlb walks per l1d access",
-+                     d_ratio(dtlb_walk, l1d_tlb), "100%"),
-+          ]) if dtlb_walk else None,
-+          MetricGroup("topdown_be_mix", [
-+              Metric("topdown_be_mix_ld", "Percentage of load instructions",
-+                     d_ratio(ld_spec, inst_spec), "100%") if ld_spec else None,
-+              Metric("topdown_be_mix_st", "Percentage of store instructions",
-+                     d_ratio(st_spec, inst_spec), "100%") if st_spec else None,
-+              Metric("topdown_be_mix_simd", "Percentage of SIMD instructions",
-+                     d_ratio(ase_spec, inst_spec), "100%") if ase_spec else None,
-+              Metric("topdown_be_mix_fp",
-+                     "Percentage of floating point instructions",
-+                     d_ratio(vfp_spec, inst_spec), "100%") if vfp_spec else None,
-+              Metric("topdown_be_mix_dp",
-+                     "Percentage of data processing instructions",
-+                     d_ratio(dp_spec, inst_spec), "100%") if dp_spec else None,
-+              Metric("topdown_be_mix_crypto",
-+                     "Percentage of data processing instructions",
-+                     d_ratio(crypto_spec, inst_spec), "100%") if crypto_spec else None,
-+              Metric(
-+                  "topdown_be_mix_br", "Percentage of branch instructions",
-+                  d_ratio(br_immed_spec + br_indirect_spec + br_ret_spec,
-+                          inst_spec), "100%") if br_immed_spec and br_indirect_spec and br_ret_spec else None,
-+          ]) if inst_spec else None,
-+          MetricGroup("topdown_be_dcache", [
-+              MetricGroup("topdown_be_dcache_l1", [
-+                  Metric("topdown_be_dcache_l1_per_insn",
-+                         "L1D cache refills per instruction",
-+                         d_ratio(l1d_refill, ins_ret), "refills/insn"),
-+                  Metric("topdown_be_dcache_l1_miss_rate",
-+                         "L1D cache refills per L1D cache access",
-+                         d_ratio(l1d_refill, l1d_access), "100%")
-+              ]),
-+              MetricGroup("topdown_be_dcache_l2", [
-+                  Metric("topdown_be_dcache_l2_per_insn",
-+                         "L2D cache refills per instruction",
-+                         d_ratio(l2d_refill, ins_ret), "refills/insn"),
-+                  Metric("topdown_be_dcache_l2_miss_rate",
-+                         "L2D cache refills per L2D cache access",
-+                         d_ratio(l2d_refill, l2d_access), "100%")
-+              ]),
-+              MetricGroup("topdown_be_dcache_llc", [
-+                  Metric("topdown_be_dcache_llc_per_insn",
-+                         "Last level cache misses per instruction",
-+                         d_ratio(llc_miss_rd, ins_ret), "miss/insn"),
-+                  Metric("topdown_be_dcache_llc_miss_rate",
-+                         "Last level cache misses per L2D cache access",
-+                         d_ratio(llc_miss_rd, llc_access), "100%")
-+              ]) if llc_miss_rd and llc_access else None,
-+          ]),
-+      ]),
-+  ])
-+
-+
-+all_metrics = MetricGroup("",[
-+    Arm64Topdown(),
-+])
+ all_metrics = MetricGroup("",[
+     Arm64Topdown(),
++    Cycles(),
+ ])
  
  if args.metricgroups:
-   print(JsonEncodeMetricGroupDescriptions(all_metrics))
+diff --git a/tools/perf/pmu-events/common_metrics.py b/tools/perf/pmu-events/common_metrics.py
+new file mode 100644
+index 000000000000..74c58f9ab020
+--- /dev/null
++++ b/tools/perf/pmu-events/common_metrics.py
+@@ -0,0 +1,18 @@
++# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++from metric import (d_ratio, Event, Metric, MetricGroup)
++
++def Cycles() -> MetricGroup:
++  cyc_k = Event("cycles:kHh")
++  cyc_g = Event("cycles:G")
++  cyc_u = Event("cycles:uH")
++  cyc = cyc_k + cyc_g + cyc_u
++
++  return MetricGroup("cycles", [
++      Metric("cycles_total", "Total number of cycles", cyc, "cycles"),
++      Metric("cycles_user", "User cycles as a percentage of all cycles",
++             d_ratio(cyc_u, cyc), "100%"),
++      Metric("cycles_kernel", "Kernel cycles as a percentage of all cycles",
++             d_ratio(cyc_k, cyc), "100%"),
++      Metric("cycles_guest", "Hypervisor guest cycles as a percentage of all cycles",
++             d_ratio(cyc_g, cyc), "100%"),
++  ], description = "cycles breakdown per privilege level (users, kernel, guest)")
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index 5775ae8a87b4..1a34e2f7a590 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -4,6 +4,7 @@ from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
+                     JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
+                     Metric, MetricConstraint, MetricGroup, MetricRef, Select)
+ import argparse
++from common_metrics import Cycles
+ import json
+ import math
+ import os
+@@ -1012,6 +1013,7 @@ def UncoreUpiBw() -> Optional[MetricGroup]:
+ 
+ 
+ all_metrics = MetricGroup("", [
++    Cycles(),
+     Idle(),
+     Rapl(),
+     Smi(),
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
