@@ -1,248 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0E5538B
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF12E225D0
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709311229; cv=none; b=Asa4GcS92tPzZwaZNN/u2R6HzcGjC4AR/O//Id7bxMmuIlv0uLiLPo4pvvwmyAi5SP/WFrB124QEuBRKRJ/2EpoSd8bg45T9vsirsEnbNqo8r2e+MQzYKuc/A5kJ91bTYo/on3RzwcaNRllc34H6KgaEwhMousEyk7/FGkzHZzU=
+	t=1709311238; cv=none; b=ATjvJWsPVwDMLt4v4cv4KpbmmJ/EIqXqFtThsuSmUmUTUanyTVumyEFztfDOUJMBbrGMCXsTZsQW/z6HgsLNUcdcPNvobi+j+if1tfx/LA+nXN3LHINQzd2o5AX/qY3wiApMF8uapUDpEn/CF80qLao5AaXbns+q92r/6JI8JYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709311229; c=relaxed/simple;
-	bh=Fb3EEdeGG6hr40pcfHcbrnPc71Su9PqpTX7U2qzg2NY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UNXnzUWEejldf/xVI3R4iBrLjoa6CakYC9HCtbGJbbxtmqYb2xX2fF0tVqYzFiDctd8rKyVtz2xAvhLa7UpDiFqQ9at1ceuyuYhQCmqp9mOpKJTs/44DEptP1NlqDrrU1qYVTd/MiPEPaWAg+pv1kENZAh1WLvavx2TGX3uaJic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i717OacV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709311238; c=relaxed/simple;
+	bh=1DFl0ZbNmoHHCDx2NBctdiyCsC0l1eSWBPINNTEml0Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dJ1oqAoa14eq6E4PZc0t7acTnHe9wRkf4BRrhUnmTnUzEq/JRkjxsDBaC8/51KZgVa+Fjom6BT7RfIkpv055lXA1TlTz8uzbVJAsYAm4+6q6mBNDsz2I5gpZv4Je/po52fpIGbrv7mdi3XC484GVpuQmeLZ4cauay9AM26scUXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Rw3Dwuqs; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i717OacV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709311221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p2jcthewAMVGdt4V/a8GGyr1bztrZf6ReP981b5efaE=;
-	b=i717OacVvBbs/urCoPLmSupCESOaJE8VbmEfJQaLaFpoxHQkrZivZ03/ycbZ0Bgx7DcNxn
-	K2rohebRVNzB6OBZoKquuszNl5HrXpPY1VeTFuclROQqStlNM7h8IR9qtINhxdUeYrgY2o
-	2ELl7TStXpphVSkvVnjOqABLb8wboQw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-608-cdEG161INfu4y4GQlWa0JQ-1; Fri, 01 Mar 2024 11:39:02 -0500
-X-MC-Unique: cdEG161INfu4y4GQlWa0JQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B1CEE859554;
-	Fri,  1 Mar 2024 16:38:29 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 911D32015B7D;
-	Fri,  1 Mar 2024 16:38:28 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-afs@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 10/21] rxrpc: Split up the DATA packet transmission function
-Date: Fri,  1 Mar 2024 16:37:42 +0000
-Message-ID: <20240301163807.385573-11-dhowells@redhat.com>
-In-Reply-To: <20240301163807.385573-1-dhowells@redhat.com>
-References: <20240301163807.385573-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Rw3Dwuqs"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7c82cab0494so7083439f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 08:40:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1709311236; x=1709916036; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0xpVEUPupFJ4mY5Qxb0D2y0+A3GchrSV23FNcC1i+jo=;
+        b=Rw3DwuqsCzOiiHT9eSWMkJ0EoDc2l/s02nmZMNiKrWNT0TvusHRfdWpiAQ83kdmuRx
+         rUHmdSHs/wzp72ezfdcdGhWx8w8MDKJFExTF/BVL9ObWk8mXTOULJ737uoNBfJxUOken
+         AiTV8q3mNkZ1c9K6xH8aKqxzMzX8qXX+PFKtvpMClg/RnXdDgd583FGupCY0obX4Bg/p
+         V1/gvvPIdh0MB7Lg1TsUEDxm8w2it0DaUVIor6lX6mHmUv74yizHzVqA9zdpxgEb03ym
+         qD722WaHHwtLNJs2904i9eyEUjdJhQEGe1oPLVABAAR/bTjjSvUdERHeHKW2Chwm+RVJ
+         dH4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709311236; x=1709916036;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0xpVEUPupFJ4mY5Qxb0D2y0+A3GchrSV23FNcC1i+jo=;
+        b=PeW6vmnhWg+7/HbTYbV0prCGWQ+YIZZe5v8sX+3mG7nOy0K5t7qXwH+yvKqa7o3/x/
+         ZTVTEnfYWGXtlS50CmRUPF8l4j8NbPTgvpnHxJ4zFAK6Ri+Iu1tvjsy5rdUOO1Fo7JjT
+         p6WZkxVJh0WyP2cJHu8a5ScncWNecsDq/zV7CorN1W3g+fPLtdwAnN/PHAifqqjTZWos
+         jnK51c9oXq7ljxRd/OBYXNq9dpwVTC0u5Opm7RFT0CsrAT7Ztow0+bK1Jq8SHEfS6Hwf
+         qQbQAscOTii30aiODHLj3fZGD4umGAFmxeGW6xagHwA5icIs0kVVfKQhFe03xpR/dZ3O
+         tOgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWi5HCfcTu5PaTk2VN4rmi6g0NRSpnCQgePIN1ophuESzyoiZq676eLQLOQOgL/Ualz4BwQCVVw6KyO9PPfO4wyETwCOAAdtfnFWKtU
+X-Gm-Message-State: AOJu0YyiT+togc+U08TWuzjhhdd0hJEPvjBHqbE3ysTqoRkmzz0EeWC5
+	yT/38HV8QlVQ58HhOZuc3jOEAzaqRFKLap6tB6LOVKnhVQbAposqw9j48CiobxYTjJclCpSmIv+
+	r/ApDvIB2w26qnbh5yGkRP+R4Amca064k2m8RRA==
+X-Google-Smtp-Source: AGHT+IFA/8ZsTPlrzqpqMe1C7sAim+Tu77L5L4EC5Mu3PiP55/jHP04OSuPWwGne0ZjJhx4bUxIrY3D6GoIF2d46Q1U=
+X-Received: by 2002:a92:c24e:0:b0:365:c1fc:dc07 with SMTP id
+ k14-20020a92c24e000000b00365c1fcdc07mr2509460ilo.0.1709311235987; Fri, 01 Mar
+ 2024 08:40:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+References: <20240214123757.305347-1-apatel@ventanamicro.com>
+In-Reply-To: <20240214123757.305347-1-apatel@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Fri, 1 Mar 2024 22:10:25 +0530
+Message-ID: <CAAhSdy3ObzJHgF0QL9QqKVm37F83HzdF28A5107fm0dLFxoOLQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] KVM RISC-V report few more ISA extensions through ONE_REG
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Atish Patra <atishp@atishpatra.org>, 
+	Shuah Khan <shuah@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Andrew Jones <ajones@ventanamicro.com>, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Split (sub)packet preparation and timestamping out of the DATA packet
-transmission function to make it easier to glue multiple txbufs together
-into a jumbo DATA packet.  This will require preparation and timestamping
-of all the subpackets in a txbuf, and these functions provide convenient
-points to place the required iteration.
+On Wed, Feb 14, 2024 at 6:08=E2=80=AFPM Anup Patel <apatel@ventanamicro.com=
+> wrote:
+>
+> This series extends the KVM RISC-V ONE_REG interface to report few more
+> ISA extensions namely: Ztso and Zacas. These extensions are already
+> supported by the HWPROBE interface in Linux-6.8 kernel.
+>
+> To test these patches, use KVMTOOL from the riscv_more_exts_round2_v1
+> branch at: https://github.com/avpatel/kvmtool.git
+>
+> These patches can also be found in the riscv_kvm_more_exts_round2_v1
+> branch at: https://github.com/avpatel/linux.git
+>
+> Anup Patel (5):
+>   RISC-V: KVM: Forward SEED CSR access to user space
+>   RISC-V: KVM: Allow Ztso extension for Guest/VM
+>   KVM: riscv: selftests: Add Ztso extension to get-reg-list test
+>   RISC-V: KVM: Allow Zacas extension for Guest/VM
+>   KVM: riscv: selftests: Add Zacas extension to get-reg-list test
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: linux-afs@lists.infradead.org
-cc: netdev@vger.kernel.org
----
- net/rxrpc/ar-internal.h |  1 -
- net/rxrpc/output.c      | 98 +++++++++++++++++++++++++++++------------
- 2 files changed, 69 insertions(+), 30 deletions(-)
+Queued this series for Linux-6.9
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index c6731f43a2d5..54550ab62adc 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -1166,7 +1166,6 @@ static inline struct rxrpc_net *rxrpc_net(struct net *net)
-  */
- int rxrpc_send_ack_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb);
- int rxrpc_send_abort_packet(struct rxrpc_call *);
--int rxrpc_send_data_packet(struct rxrpc_call *, struct rxrpc_txbuf *);
- void rxrpc_send_conn_abort(struct rxrpc_connection *conn);
- void rxrpc_reject_packet(struct rxrpc_local *local, struct sk_buff *skb);
- void rxrpc_send_keepalive(struct rxrpc_peer *);
-diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-index f2b10c3e4cc2..25b8fc9aef97 100644
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -313,37 +313,23 @@ int rxrpc_send_abort_packet(struct rxrpc_call *call)
- }
- 
- /*
-- * send a packet through the transport endpoint
-+ * Prepare a (sub)packet for transmission.
-  */
--int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
-+static void rxrpc_prepare_data_subpacket(struct rxrpc_call *call, struct rxrpc_txbuf *txb,
-+					 rxrpc_serial_t serial)
- {
--	struct rxrpc_connection *conn = call->conn;
-+	struct rxrpc_wire_header *whdr = txb->kvec[0].iov_base;
- 	enum rxrpc_req_ack_trace why;
--	enum rxrpc_tx_point frag;
--	struct msghdr msg;
--	size_t len;
--	int ret, rtt_slot = -1;
-+	struct rxrpc_connection *conn = call->conn;
- 
- 	_enter("%x,{%d}", txb->seq, txb->len);
- 
--	/* Each transmission of a Tx packet+ needs a new serial number */
--	txb->serial = rxrpc_get_next_serial(conn);
--	txb->wire.serial = htonl(txb->serial);
--	txb->wire.cksum = txb->cksum;
-+	txb->serial = serial;
- 
- 	if (test_bit(RXRPC_CONN_PROBING_FOR_UPGRADE, &conn->flags) &&
- 	    txb->seq == 1)
- 		txb->wire.userStatus = RXRPC_USERSTATUS_SERVICE_UPGRADE;
- 
--	len = txb->kvec[0].iov_len;
--	iov_iter_kvec(&msg.msg_iter, WRITE, txb->kvec, txb->nr_kvec, len);
--
--	msg.msg_name = &call->peer->srx.transport;
--	msg.msg_namelen = call->peer->srx.transport_len;
--	msg.msg_control = NULL;
--	msg.msg_controllen = 0;
--	msg.msg_flags = 0;
--
- 	/* If our RTT cache needs working on, request an ACK.  Also request
- 	 * ACKs if a DATA packet appears to have been lost.
- 	 *
-@@ -376,6 +362,59 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
- 		txb->flags |= RXRPC_REQUEST_ACK;
- dont_set_request_ack:
- 
-+	whdr->flags = txb->flags & RXRPC_TXBUF_WIRE_FLAGS;
-+	whdr->serial	= htonl(txb->serial);
-+	whdr->cksum	= txb->cksum;
-+
-+	trace_rxrpc_tx_data(call, txb->seq, txb->serial, txb->flags, false);
-+}
-+
-+/*
-+ * Prepare a packet for transmission.
-+ */
-+static size_t rxrpc_prepare_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
-+{
-+	rxrpc_serial_t serial;
-+
-+	/* Each transmission of a Tx packet needs a new serial number */
-+	serial = rxrpc_get_next_serial(call->conn);
-+
-+	rxrpc_prepare_data_subpacket(call, txb, serial);
-+
-+	return txb->len;
-+}
-+
-+/*
-+ * Set the times on a packet before transmission
-+ */
-+static int rxrpc_tstamp_data_packets(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
-+{
-+	ktime_t tstamp = ktime_get_real();
-+	int rtt_slot = -1;
-+
-+	txb->last_sent = tstamp;
-+	if (txb->flags & RXRPC_REQUEST_ACK)
-+		rtt_slot = rxrpc_begin_rtt_probe(call, txb->serial, rxrpc_rtt_tx_data);
-+
-+	return rtt_slot;
-+}
-+
-+/*
-+ * send a packet through the transport endpoint
-+ */
-+static int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
-+{
-+	struct rxrpc_wire_header *whdr = txb->kvec[0].iov_base;
-+	struct rxrpc_connection *conn = call->conn;
-+	enum rxrpc_tx_point frag;
-+	struct msghdr msg;
-+	size_t len;
-+	int ret, rtt_slot = -1;
-+
-+	_enter("%x,{%d}", txb->seq, txb->len);
-+
-+	len = rxrpc_prepare_data_packet(call, txb);
-+
- 	if (IS_ENABLED(CONFIG_AF_RXRPC_INJECT_LOSS)) {
- 		static int lose;
- 		if ((lose++ & 7) == 7) {
-@@ -386,7 +425,13 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
- 		}
- 	}
- 
--	trace_rxrpc_tx_data(call, txb->seq, txb->serial, txb->flags, false);
-+	iov_iter_kvec(&msg.msg_iter, WRITE, txb->kvec, txb->nr_kvec, len);
-+
-+	msg.msg_name	= &call->peer->srx.transport;
-+	msg.msg_namelen	= call->peer->srx.transport_len;
-+	msg.msg_control	= NULL;
-+	msg.msg_controllen = 0;
-+	msg.msg_flags	= 0;
- 
- 	/* Track what we've attempted to transmit at least once so that the
- 	 * retransmission algorithm doesn't try to resend what we haven't sent
-@@ -405,11 +450,8 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
- 		frag = rxrpc_tx_point_call_data_nofrag;
- 	}
- 
--	txb->wire.flags = txb->flags & RXRPC_TXBUF_WIRE_FLAGS;
- retry:
--	txb->last_sent = ktime_get_real();
--	if (txb->flags & RXRPC_REQUEST_ACK)
--		rtt_slot = rxrpc_begin_rtt_probe(call, txb->serial, rxrpc_rtt_tx_data);
-+	rtt_slot = rxrpc_tstamp_data_packets(call, txb);
- 
- 	/* send the packet by UDP
- 	 * - returns -EMSGSIZE if UDP would have to fragment the packet
-@@ -424,11 +466,9 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
- 	if (ret < 0) {
- 		rxrpc_inc_stat(call->rxnet, stat_tx_data_send_fail);
- 		rxrpc_cancel_rtt_probe(call, txb->serial, rtt_slot);
--		trace_rxrpc_tx_fail(call->debug_id, txb->serial, ret,
--				    rxrpc_tx_point_call_data_nofrag);
-+		trace_rxrpc_tx_fail(call->debug_id, txb->serial, ret, frag);
- 	} else {
--		trace_rxrpc_tx_packet(call->debug_id, &txb->wire,
--				      rxrpc_tx_point_call_data_nofrag);
-+		trace_rxrpc_tx_packet(call->debug_id, whdr, frag);
- 	}
- 
- 	rxrpc_tx_backoff(call, ret);
+Thanks,
+Anup
 
+>
+>  arch/riscv/include/uapi/asm/kvm.h                |  2 ++
+>  arch/riscv/kvm/vcpu_insn.c                       | 13 +++++++++++++
+>  arch/riscv/kvm/vcpu_onereg.c                     |  4 ++++
+>  tools/testing/selftests/kvm/riscv/get-reg-list.c |  8 ++++++++
+>  4 files changed, 27 insertions(+)
+>
+> --
+> 2.34.1
+>
