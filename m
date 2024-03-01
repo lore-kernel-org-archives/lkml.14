@@ -1,129 +1,97 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FEF3A8E3;
-	Fri,  1 Mar 2024 15:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD543987B;
+	Fri,  1 Mar 2024 15:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709305492; cv=none; b=boStXpE3+EqKnevvRjjAeE1bGa9AlKBY4oEuey2tIzomjndNNC/CtsWjwQD2acxiWxdz+6D0YgXEzxkFwQErvMwxLyPN66fLR8qbT7WJbFeS3wCmjh+IJWpUtIhJJja7CwYBtNywI4XlG1F9qYjkpIBbQBudsoU49bJk8QEawMo=
+	t=1709305616; cv=none; b=jZlAZoeKBqOtLwS7HwYdi/j3VF7Zh05J7Roz/qRu+aJDNG9x1VjfAoveZtRzrC/8FGeGS8QvagAQiA9yPV01oorwjdL12w0CT9ViurZbrn2qdney7wnM3dW8VcuM01WjNVp6sFuUK0tCPiXFkoF/oSf3qDCFwgVC7MFDDWGyawE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709305492; c=relaxed/simple;
-	bh=AfZgX4PFBnRALIWRND3UH5sbBTC68YgJey8bmNSd1Gs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Vg6Y4oWloRv/uNM3fq/RhVnpLiO0eZ6TX6SZQw6slBpjQseFhrZDNCtLrif4A5x5cos0H5elRK9J6hHesalgfAw6jlEVCjTofNxjp1UZHP9bfirOFYfucA0q/FICUqIPqUj15nrbIpsDPi6iPFyeem/8d8hf1bN09MfDRW3IYI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=kB0AcZcq; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1709305616; c=relaxed/simple;
+	bh=klUhEQf+5iLq5itvvFsd/lwIyvrv5Jo42w7y/66wJTE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=deL0wUW9IAUW6II5xwnSxYftEf4AbAbLbeejihdcPtxdOMqPL5DTQRzA+tKq3dbm/G5V/Dln4iDvp1A6dEjeSUm3Gs29oScQjOf6IAOwiEgMebh+sZhvWFXg5UIAd90BqVILBgAbyBy6nt55TCH6m+hppjiDx0X4jrgi+WtKKWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GJS1yyVt; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="kB0AcZcq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1709305453; x=1709910253; i=markus.elfring@web.de;
-	bh=AfZgX4PFBnRALIWRND3UH5sbBTC68YgJey8bmNSd1Gs=;
-	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
-	b=kB0AcZcqRZbdRoRrzDoJeHiCdbwVp3/Vk4xRpQz1btthq8uEUSqqq8vpKxmc4eOx
-	 gQ6IMkGjXILh/SgPG/Num9rPpd1+31wAsJ/FLzEY8V8Y1vyEMiIjpjtZ/BrLawcFT
-	 ma3Z0dBCr/rVJe4h7Gwou8YFKhCQc1MEHTFW5m5uGV9JxNh3ROp2fwvWlxEKHn0O5
-	 OYqMqJVsZOvULV5VxESoaylgu3xeFOSXlHJXw1i0c553QLsT095qa6FqHqz5eMn/h
-	 Fw1lbq7u+PF2IxlaxshFKovge8CvTPMDiMcOzEd+ZwJ/mhhdUS6rPKfDzTPwzamtl
-	 4Zg5ctsHIaLzOKaTzQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2SL5-1qjnKk1Y1n-013yV0; Fri, 01
- Mar 2024 16:04:13 +0100
-Message-ID: <9a2e5053-07ec-4a11-bef4-7a8b0f80f740@web.de>
-Date: Fri, 1 Mar 2024 16:04:07 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GJS1yyVt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709305615; x=1740841615;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=klUhEQf+5iLq5itvvFsd/lwIyvrv5Jo42w7y/66wJTE=;
+  b=GJS1yyVtCuZjQOntjEmzmoBQRtwG8TSYApn9cRqAEm8xIdsV+Ec9K1C7
+   ngm+aKpIfkTFw4r5+QekX1yqOkOEX4Xut+Mt6fBU8XaWJqkFqQ/AxaEgS
+   2GvX198Fo9ShLT8N+nlr6ouP1Qfw1p75ewgzzvWeHPOS/3Q6CdUgg760T
+   aTLDENhsrtBmhhdyNbwItLxUdSbvldxahfMXHTtebBNpY7KpKcnFFFNIR
+   aeT/WDxkchMSB0j2ZgMRrj8xzqVJoIJ5TxcHh7snaKzdkYVljyTLkCuwe
+   wO+dpegsBoKftJT3ihE+fSC0bp5LExqtw3xF5K9+1DdMLY968gCkGeTOy
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="7659659"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="7659659"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 07:06:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="8279225"
+Received: from ybaron-mobl.ger.corp.intel.com (HELO localhost) ([10.94.249.66])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 07:06:51 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: "Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] PCI: Use the correct bit in Link Training not active check
+Date: Fri,  1 Mar 2024 17:06:41 +0200
+Message-Id: <20240301150641.4037-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Jijie Shao <shaojijie@huawei.com>,
- Paolo Abeni <pabeni@redhat.com>, Salil Mehta <salil.mehta@huawei.com>,
- Wojciech Drewek <wojciech.drewek@intel.com>,
- Yisen Zhuang <yisen.zhuang@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] net: hns: Use common error handling code in hns_mac_init()
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:g/zMKCWXPxqqIkYYxVNWWZBfee+4OeC3/qmzN2FMrL1NfKaGZqe
- KY8HnAlhIcoVZSvmAK1KFTZJN8S8cQXau9bTbnjlHnQCSSbBz/mwT3M0roMmr0dlVnWUaVu
- UCI3sGgoykx072KGYcOGYAXVgqZaDtzzffG94L3CK++C65Fo31Td19w+aEmzL4Pogdgi9pb
- VRJ8OvwC4EoKWR9bSYmOg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:TE01qw5ckh4=;A0WHE5wXuRiOqFiUs6hqO50bKta
- 8f9mN9shdG5P4elUuXaLtvwSRKFv4UNq3Ylyx2yJXlJBdWeRknqHyMMN2H6xM+SdlgcUkjw6W
- qc9XHEE3VM6b5I+4orgzEvn2Vr1wsX9mVvkpDCphCMd7GtB3NAVGxqwMkSRmEebcUoUyTsfnU
- DygQ13QK+xSZi1a7BRsP730efadTXmqd5zXRaXlCBrYIOSJ3tSBfMt3RaftBDBwS+QOFjVq1J
- GKCSOhs4NwRzpVnz+5/WJkkfgCsVNPU6br9QdSjI3KrXEW6wT6RNUdz0GswDJ9LBRAxKbZV9G
- l2zGqtd+L7gqvKdSY3lLQE9bHTH5cHwKxJpHdJ3IFZ1aquTzs3kUDrIXbEFbjnqKbnqIOLhr0
- r3NSazBpvw+PU2pDu/EBrKMsTqciBL97IgJlD4gfXTtcRcaFSC9qwr16CWZC88siCTGK2GZr6
- VNYkBeIy/rGKH3L7MX+bp762higr/y/cqjvpSVt1SrmHkQw05A4m2v0uq2te698arC0RgDcZ6
- ZxWcHKdhpB/p3pRY7sIr/YqY8Si2nrl6ioCAMnzgra/BEDELqp3l/+gXvM6n4TAmjOmLzHhYR
- oFEcyWEzYGTUiDY7Kge7h99faS3P4+lEmJGX1xK2Vkq81eQNqDp3CigyO7Mv1X/po1s6dr/nh
- uL+dB2UBWmggr/GCAe4xbaDeGjKVoFqGMKkTEFBQSaWmpwi3xxVkV+jQFtnGfC30W1QMRllJb
- 1iQoCSpJ07x8qBLB7j9eHFJHC6yEmjtCrPNoSpYImHB8zRlBbXz2VbhzNUB3JhNtI5J3N3z7v
- l/IWRf+7yls15iRGg39lBVSbqcDFL9JT9Bepiu1bmCmAg=
+Content-Transfer-Encoding: 8bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 1 Mar 2024 15:48:25 +0100
+Besides Link Training bit, pcie_retrain_link() can also be asked to
+wait for Data Link Layer Link Active bit (PCIe r6.1 sec 7.5.3.8) using
+'use_lt' parameter since the merge commit 1abb47390350 ("Merge branch
+'pci/enumeration'").
 
-Add a jump target so that a bit of exception handling can be better reused
-at the end of this function implementation.
+pcie_retrain_link() first tries to ensure Link Training is not
+currently active (see Implementation Note in PCIe r6.1 sec 7.5.3.7)
+which must always check Link Training bit regardless of 'use_lt'.
+Correct the pcie_wait_for_link_status() parameters to only wait for
+the correct bit to ensure there is no ongoing Link Training.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+Since waiting for Data Link Layer Link Active bit is only used for the
+Target Speed quirk, this only impacts the case when the quirk attempts
+to restore speed to higher than 2.5 GT/s (The link is Up at that point
+so pcie_retrain_link() will fail).
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c b/drivers/n=
-et/ethernet/hisilicon/hns/hns_dsaf_mac.c
-index f75668c47935..a4919aad45b6 100644
-=2D-- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
-@@ -1094,22 +1094,21 @@ int hns_mac_init(struct dsaf_device *dsaf_dev)
- 	device_for_each_child_node(dsaf_dev->dev, child) {
- 		ret =3D fwnode_property_read_u32(child, "reg", &port_id);
- 		if (ret) {
--			fwnode_handle_put(child);
- 			dev_err(dsaf_dev->dev,
- 				"get reg fail, ret=3D%d!\n", ret);
--			return ret;
-+			goto put_fwnode;
- 		}
- 		if (port_id >=3D max_port_num) {
--			fwnode_handle_put(child);
- 			dev_err(dsaf_dev->dev,
- 				"reg(%u) out of range!\n", port_id);
--			return -EINVAL;
-+			ret =3D -EINVAL;
-+			goto put_fwnode;
- 		}
- 		mac_cb =3D devm_kzalloc(dsaf_dev->dev, sizeof(*mac_cb),
- 				      GFP_KERNEL);
- 		if (!mac_cb) {
--			fwnode_handle_put(child);
--			return -ENOMEM;
-+			ret =3D -ENOMEM;
-+			goto put_fwnode;
- 		}
- 		mac_cb->fw_port =3D child;
- 		mac_cb->mac_id =3D (u8)port_id;
-@@ -1148,6 +1147,10 @@ int hns_mac_init(struct dsaf_device *dsaf_dev)
- 	}
+Fixes: 1abb47390350 ("Merge branch 'pci/enumeration'")
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- 	return 0;
-+
-+put_fwnode:
-+	fwnode_handle_put(child);
-+	return ret;
- }
-
- void hns_mac_uninit(struct dsaf_device *dsaf_dev)
-=2D-
-2.44.0
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d8f11a078924..251a0c66c8cb 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5016,7 +5016,7 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
+ 	 * avoid LTSSM race as recommended in Implementation Note at the
+ 	 * end of PCIe r6.0.1 sec 7.5.3.7.
+ 	 */
+-	rc = pcie_wait_for_link_status(pdev, use_lt, !use_lt);
++	rc = pcie_wait_for_link_status(pdev, true, false);
+ 	if (rc)
+ 		return rc;
+ 
+-- 
+2.39.2
 
