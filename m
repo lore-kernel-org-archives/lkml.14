@@ -1,81 +1,132 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D9A69312;
-	Fri,  1 Mar 2024 09:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE141E4BD
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709286189; cv=none; b=r8mAUn7u1jYtUekML08w4KufVyzIhucJIB3/QCupAhGcl9ROUPguCXvi1ZMJTIahH1BOkj8+jU+UNdTjMRjEIFwRSLjeSDwv6vhwhKff6HjazIjKQ2cjxnhqfMChYFGEnYzHh3iOafNiZytZGAcf45hs2kyAn9zxkZWPRb8L4d4=
+	t=1709286508; cv=none; b=DhtNqn95DL1AHAYaAZ1kCEQZYhj46rc6wx0I3KC84/nlC7FzPZHU0qpqpyn/VhoLGEefj4D5wAhJb7NJAtN8qMZ7IFoEn2I6Q0TkVjPxEO1vnPxxG9bkPCuJ2S66X7ucvm8fM4HL2HRoUaRF4CNa0Cm6ybU08WnN3qAmKx3HvB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709286189; c=relaxed/simple;
-	bh=Q/pSwiu5bnF00mc889Wu5nUt1owdaEavDfTTeHGOU/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LVqHYQ+dDkXeSBoi5i+JzKcSFpvEYcpYfTWvc/lnjFxlfLj31mLOXDEiSaCL7CQfDj4anFOGB2KjmVK8CyytQPRHA6RLWwsDAYmaJlBi3W3O5jQ1bw6wl0b7H6ztzWzolAemtPOuuJRI/M4FvFP7aZtAJsofU5YIc5xg7WYRql4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZqdM5MY; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709286508; c=relaxed/simple;
+	bh=zfr2/Z4XDDvKRxaran7leIT1e/JMlRwrHfuX/mcUawE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Luopc2C3cWsqRxarbplMUKJkYbvlkwAidGYyXJJkuUI0KaUvWa+rDVWgl9dR75+71i5TlDq6kjz3kzRNYFzko/lJUnbLOj/zD4aLUwuwa32TVKzM+f89JPz06766OxplF+4ITrUJnYhadECeFWCTach2KZxrDDJCVHCMJyU+C2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S2bHFfW+; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZqdM5MY"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e55731af5cso1506387b3a.0;
-        Fri, 01 Mar 2024 01:43:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709286187; x=1709890987; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q/pSwiu5bnF00mc889Wu5nUt1owdaEavDfTTeHGOU/4=;
-        b=bZqdM5MYaWgjcnUGupt95iffnplovf47Nbpksuwo0UbF6GdpsMKB+w73oyzpzT5v6S
-         VkGp2z51uc8PZhtEDh/UoXY06Tb4rW4L7LdtqKSoffi2T3zTc6jv5SrSjNHwkuE3ulq3
-         Ckj4AK+zjXT7mtVb1+XwOEB1hMTyxsLwltZRSI/QrCrxyLEZM3Sju9vG27OttlQ2dLuu
-         TfHdZERASRv/DCHu4RgnHXjuW8Yoj090a3GFxvopdTOzRESCDhKWfRRNr6NlmGSGkdlW
-         jRwKWFdct+aZY9NnLw45vZJ9ckZVUzW4zwS/ltmKvGz3lV1fDH8hXf9N4/0CIMRlGgcm
-         UIbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709286187; x=1709890987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q/pSwiu5bnF00mc889Wu5nUt1owdaEavDfTTeHGOU/4=;
-        b=JDmqixikFExNfU/G9GDSpJGS7jMDoLdP7Z853KLiQUOtZWcrZxUVna0VKYR0MI9pN8
-         RgWRhlw9RV6t8LfeReLHbeZ+Z3aY6bu8pnM65vXwe5+rOBbMtDWmfQN7u3n4bWNnUrsQ
-         Opvd6HXVOgoHv9argpeN9p8+Rqt6RiH2CavQlDar9y1W+RVtu1xkfimP8qJvpsQP19ju
-         LtwaB0ftc4U+6D2TXZxrv3csxxBxtzRIh82DdV0twc6yJ0nQt3JL5BAw6OSTAeTtidni
-         DyW9bVEQiq1bbGHZQ4Z06uWiqBJzXY7PvqlSPOP4Y1ItM6KzQHQhySoZPeavJh+hT25/
-         QqdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbVwAYcCnbvughrAre+ETsvBAcpBauDcN+S0MNRL9W4qrenW2NSXUH8Gs2rOYJ/I8RBVSpXYdRZiCt4Pv9EW4XGMKEqZstOdgc5jDVDhSuRWzh5twQn56WCkhQ28gj5tU4rB2hici6PQ==
-X-Gm-Message-State: AOJu0YwHsU9EdtWvWkFOtuC0N3tM0tfOluqy94G7/CxrZv7RWj5DRtH3
-	Iqj5eTFn4G5Yiuf+3hdUovQPDg8TzWJbkvDnWPksiO3sy8tYW5QaXmJPzcXcQLGD0kSbSM3nYMp
-	0kjIg3wJp5p3rFDP83Gi/NcN1etunCsvGUtE=
-X-Google-Smtp-Source: AGHT+IGbCad8v2Ljwyl4WWC/62pOxFrAt3peGaca8gfisX3q1k+RCJf/Ms8P/Oq3ilqvjavEzQMoiJCNFeUgwyknNsQ=
-X-Received: by 2002:a05:6a20:9187:b0:19e:b925:f191 with SMTP id
- v7-20020a056a20918700b0019eb925f191mr1061070pzd.10.1709286187448; Fri, 01 Mar
- 2024 01:43:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S2bHFfW+"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4219RbFl019260;
+	Fri, 1 Mar 2024 09:48:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pp1; bh=bQHgKVrBps8F4ZTJ72KaBlIvOaPrhJSEKrvDGJ2dDIw=;
+ b=S2bHFfW+pI6fncYQdpehLXKze7VXgbIEpQ6yc+DmcU7JwASz9+pHizpSCCVowDaV0GPN
+ U9Fx9F7gv1JRFs7DCgponu9gmhfyBJVCJKkP6Vhetl3tHyY02V+SHgZAbjpbEry8zA3E
+ YmkGsNa6NkNKt7H8bnzNMftZQWeRTi1IkFV1UMCDTJg6Ufb3qIcqdHIzLEgny63NxpxP
+ kYJfMrxzxYFqQqvazFPV8f9QRUDhrq2+MO63U3eftw4+INBHlosGhom6uSaFXHywBlO6
+ EW8BVvRSxOThSLxcDOK9aIoLCVnpL0EsfrCAFzr8mhc3qF8kBuy9a6ZhuzFDjYTiFki7 RQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wkcderj76-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 09:48:10 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4219lGU8031973;
+	Fri, 1 Mar 2024 09:48:10 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wkcderj57-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 09:48:10 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4216X6CJ008211;
+	Fri, 1 Mar 2024 09:26:44 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfv9mu98s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 09:26:43 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4219QckC23921392
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 1 Mar 2024 09:26:40 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4122D20043;
+	Fri,  1 Mar 2024 09:26:38 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4859820040;
+	Fri,  1 Mar 2024 09:26:35 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Fri,  1 Mar 2024 09:26:35 +0000 (GMT)
+Date: Fri, 1 Mar 2024 14:56:34 +0530
+From: Srikar Dronamraju <srikar@linux.ibm.com>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        yu.c.chen@intel.com, dietmar.eggemann@arm.com,
+        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
+        aboorvad@linux.ibm.com, vschneid@redhat.com, pierre.gondois@arm.com,
+        morten.rasmussen@arm.com, qyousef@layalina.io
+Subject: Re: [PATCH v3 1/2] sched/fair: Add EAS checks before updating
+ overutilized
+Message-ID: <20240301092634.GA826313@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.ibm.com>
+References: <20240229104010.747411-1-sshegde@linux.ibm.com>
+ <20240229104010.747411-2-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301153807.796a3a28@canb.auug.org.au>
-In-Reply-To: <20240301153807.796a3a28@canb.auug.org.au>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 1 Mar 2024 10:42:55 +0100
-Message-ID: <CANiq72mgE-3xYGabX9h3DgqCEbHjMvynpjbA=na9NUh8cxJVdA@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the rust tree with the arm64 tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20240229104010.747411-2-sshegde@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 0pi7lsYlI7UA7qBOqIvqvCNlVBwcCxqx
+X-Proofpoint-ORIG-GUID: 6-7toBEoOt6Ge1I9Jekxg8_jUXVlY332
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-01_05,2024-03-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2403010082
 
-On Fri, Mar 1, 2024 at 5:38=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org.=
-au> wrote:
->
-> I fixed it up (see below) and can carry the fix as necessary. This
+* Shrikanth Hegde <sshegde@linux.ibm.com> [2024-02-29 16:10:09]:
 
-The resolution looks good -- thanks!
+> Overutilized field of root domain is only used for EAS(energy aware scheduler)
+> to decide whether to do load balance or not. It is not used if EAS
+> not possible.
+> 
+> Currently enqueue_task_fair and task_tick_fair accesses, sometime updates
+> this field. In update_sd_lb_stats it is updated often. This causes cache
+> contention due to true sharing and burns a lot of cycles. overload and
+> overutilized are part of the same cacheline. Updating it often invalidates
+> the cacheline. That causes access  to overload to slow down due to
+> false sharing. Hence add EAS check before accessing/updating this field.
+> EAS check is optimized at compile time or it is a static branch.
+> Hence it shouldn't cost much.
+> 
+> With the patch, both enqueue_task_fair and newidle_balance don't show
+> up as hot routines in perf profile.
+> 
+> 6.8-rc4:
+> 7.18%  swapper          [kernel.vmlinux]              [k] enqueue_task_fair
+> 6.78%  s                [kernel.vmlinux]              [k] newidle_balance
+> +patch:
+> 0.14%  swapper          [kernel.vmlinux]              [k] enqueue_task_fair
+> 0.00%  swapper          [kernel.vmlinux]              [k] newidle_balance
+> 
+> Minor change: trace_sched_overutilized_tp expect that second argument to
+> be bool. So do a int to bool conversion for that.
+> 
+> Fixes: 2802bf3cd936 ("sched/fair: Add over-utilization/tipping point indicator")
+> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
 
-Cheers,
-Miguel
+Looks good to me.
+
+Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
+-- 
+Thanks and Regards
+Srikar Dronamraju
