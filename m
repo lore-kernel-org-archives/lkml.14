@@ -1,224 +1,72 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BEA69E0A;
-	Fri,  1 Mar 2024 08:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C873D482E5
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 08:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709281346; cv=none; b=tPAneZkb5ybP0AV9N6+/gKaMzY9igl6au9OLlSFJgPb5O5AquzUIBYlwGpUyTPc0y+1O6cRqS/n5YAZhElike7Cc86pkQLMM5gODqfRtgy6mPW6tQfeAfJmEpqMmjAKwE4TKnAj62XZ1eMYNvbA2jaOK1aJKAF8Muo0vGGx0DEc=
+	t=1709281389; cv=none; b=N+kxoIloWIGlMiXjp3xWoPaPfyLBPxqTT2VTXGX3XnQKWzPv+99t6iRw9ySRJBo2ff8g9gttE4Rild3DlWGIXl0ARfMLvov2ATwmQuwEvvbLqTiT2fr4V2dBoY6rJYNPbJklLCHB3WaemTWlQp6dd/Gf7K0bQY3j4ymw6qFMk9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709281346; c=relaxed/simple;
-	bh=h6FtoEcIUz3yIkRmQPdlDZucxbkkGkvHrXaGeCM1nEs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k0dT4sj6uLgn36zIrqiX/bEyA0ogPU8YeEHhXTOW36d3RYfIcDbkK28lzUZUozySwevOkcwLr88lD8ZuXGQYQmATarPAXQO7f9uBEiYAF7ywkO13wgpWf88TVxuKrXdkQ31zkhtCvMz4j8gr//A3MSqm0muYYQmgawS76vNyXEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 05f06a440549480886f5d1928f357437-20240301
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:3aa1627a-5245-4c43-a2b5-b2ef66fe2ba0,IP:10,
-	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:-30
-X-CID-INFO: VERSION:1.1.37,REQID:3aa1627a-5245-4c43-a2b5-b2ef66fe2ba0,IP:10,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-30
-X-CID-META: VersionHash:6f543d0,CLOUDID:c9637e84-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:2403011616558IO7NRVB,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 05f06a440549480886f5d1928f357437-20240301
-X-User: aichao@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-	(envelope-from <aichao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1055854772; Fri, 01 Mar 2024 16:16:55 +0800
-From: Ai Chao <aichao@kylinos.cn>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v3] platform/x86: add lenovo generic wmi driver
-Date: Fri,  1 Mar 2024 16:16:48 +0800
-Message-Id: <20240301081648.265907-1-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1709281389; c=relaxed/simple;
+	bh=2o5MGJBZw029P7UO7atYu1SLfVDDs6kTc58FZ61gsFw=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=qgLXf1/O/AO1ZHfbLPCrVwZkmlYrAPoFNu0CTCfc1Jx3RUfKzwdYDWRwXum7jMHJZNSGdPDiquJTFr1vqUJ9UCRkJW4aJSSA/5IlZsJ207FIFbbWKLoE692RBxUScpNVXuI730dReELToMVisg1QWyZFa/9CW6QTynQCJvkr8Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cu-phil.org; spf=pass smtp.mailfrom=cu-phil.org; dkim=pass (2048-bit key) header.d=cu-phil.org header.i=@cu-phil.org header.b=rtN255oA; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cu-phil.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cu-phil.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cu-phil.org header.i=@cu-phil.org header.b="rtN255oA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cu-phil.org
+	; s=ds202401; h=Content-Transfer-Encoding:Content-Type:Subject:From:To:
+	MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7Z2samfE5e277rhzgEAusEduWelCD1tpoWQQeCAo+Cc=; b=rtN255oAuwJMrzuPL4CAI/NsFG
+	D4whYP2ydpHAX4WpsBHTQGFSDXTiSdJOdX9muB1tCCj8Cjwhi4e47TfkOjTMX7qb+565oqyDyUYwt
+	8o9qxqoSjQM6iETLYV/zzYiRhpiPNe2gX6SkeMt1Nx6PYqDXfNh/8VVTelr8pvvRb3JJBfU/Q9oFG
+	Y6U4WVqs12fkkSzD4IwhtIHFYDfnQZ8tmRam6j77kD2V9YTl5VKmetSveFD7l3CypQpebuwzTbFEu
+	BylCIr2e0BI4huYK+1gQtwHXOSJTlW0UZrqnQFNKOBhnFR4+wQMVkOeDM9QpB9bKPO95SUROwsh5E
+	tS3rpt7g==;
+Received: from [2a02:fe1:7001:f100:34a4:85ed:697:262f] (port=58647)
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <Ywe_Caerlyn@cu-phil.org>)
+	id 1rfyAV-00DZVA-0G
+	for linux-kernel@vger.kernel.org;
+	Fri, 01 Mar 2024 09:22:59 +0100
+Message-ID: <4c99dab3-69e2-49d6-9620-61211a4b5a30@cu-phil.org>
+Date: Fri, 1 Mar 2024 09:22:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: Ywe Caerlyn <Ywe_Caerlyn@cu-phil.org>
+Subject: We X Symbolworld
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add lenovo generic wmi driver to support camera button.
+Yes, I talked about symbolworlds earlier.
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
+We have a symbolworld going back to the beginning of computers, and 
+particlary tapedrives. C64 Datasette is this in miniature, and 
+particulary with the C64 this type of culture gains popularity, and 
+reached height between C64 and Amiga.
 
-v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
-v3: Remove lenovo_wmi_remove function.
+This symbolworld will be updated as follows for the serious:
 
- drivers/platform/x86/Kconfig      |  10 +++
- drivers/platform/x86/Makefile     |   1 +
- drivers/platform/x86/lenovo-wmi.c | 113 ++++++++++++++++++++++++++++++
- 3 files changed, 124 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-wmi.c
+Saint Ignatius will be replaced with Saint Bit.
+Linux etc will be replaced by We X.
+Christianity will be replaced by Iclam.
+"God" will be replaced by "Charity-God".
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bdd302274b9a..fbbb8fb843d7 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1001,6 +1001,16 @@ config INSPUR_PLATFORM_PROFILE
- 	To compile this driver as a module, choose M here: the module
- 	will be called inspur-platform-profile.
- 
-+config LENOVO_WMI
-+	tristate "Lenovo Geneirc WMI driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	help
-+	This driver provides support for Lenovo WMI driver.
-+
-+	To compile this driver as a module, choose M here: the module
-+	will be called lenovo-wmi.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1de432e8861e..d51086552192 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-+obj-$(CONFIG_LENOVO_WMI)	+= lenovo-wmi.o
- 
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/lenovo-wmi.c b/drivers/platform/x86/lenovo-wmi.c
-new file mode 100644
-index 000000000000..96c2ec9e6441
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi.c
-@@ -0,0 +1,113 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Lenovo Generic WMI Driver
-+ *
-+ *  Copyright (C) 2024	      Ai Chao <aichao@kylinos.cn>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/wmi.h>
-+
-+#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-+
-+static u8 camera_mode;
-+
-+struct lenovo_wmi_priv {
-+	struct input_dev *idev;
-+};
-+
-+static ssize_t camerabutton_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%u\n", camera_mode);
-+}
-+
-+DEVICE_ATTR_RO(camerabutton);
-+
-+static struct attribute *lenovo_wmi_attrs[] = {
-+	&dev_attr_camerabutton.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group lenovo_wmi_group = {
-+	.attrs = lenovo_wmi_attrs,
-+};
-+
-+const struct attribute_group *lenovo_wmi_groups[] = {
-+	&lenovo_wmi_group,
-+	NULL,
-+};
-+
-+static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	if (obj->type == ACPI_TYPE_BUFFER) {
-+		camera_mode = obj->buffer.pointer[0];
-+		input_report_key(priv->idev, KEY_CAMERA, 1);
-+		input_sync(priv->idev);
-+		input_report_key(priv->idev, KEY_CAMERA, 0);
-+		input_sync(priv->idev);
-+	} else {
-+		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
-+	}
-+}
-+
-+static int lenovo_wmi_input_setup(struct wmi_device *wdev)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	priv->idev = devm_input_allocate_device(&wdev->dev);
-+	if (!priv->idev)
-+		return -ENOMEM;
-+
-+	priv->idev->name = "Lenovo WMI Camera Button";
-+	priv->idev->phys = "wmi/input0";
-+	priv->idev->id.bustype = BUS_HOST;
-+	priv->idev->dev.parent = &wdev->dev;
-+	priv->idev->evbit[0] = BIT_MASK(EV_KEY);
-+	priv->idev->keybit[BIT_WORD(KEY_CAMERA)] = BIT_MASK(KEY_CAMERA);
-+
-+	return input_register_device(priv->idev);
-+}
-+
-+static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct lenovo_wmi_priv *priv;
-+	int err;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(struct lenovo_wmi_priv),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	err = lenovo_wmi_input_setup(wdev);
-+	return err;
-+}
-+
-+static const struct wmi_device_id lenovo_wmi_id_table[] = {
-+	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-+	{  }
-+};
-+
-+static struct wmi_driver lenovo_wmi_driver = {
-+	.driver = {
-+		.name = "lenovo-wmi",
-+		.dev_groups = lenovo_wmi_groups,
-+	},
-+	.id_table = lenovo_wmi_id_table,
-+	.probe = lenovo_wmi_probe,
-+	.notify = lenovo_wmi_notify,
-+};
-+
-+module_wmi_driver(lenovo_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-+MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-+MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+If you are on the wrong side, it will be the same for yourself. And it 
+might aswell be Fathers OS, a fork of Terry Davis TempleOS you have 
+worked with.
+
+-Peace!
+https://www.youtube.com/@Saint_Bit
 
