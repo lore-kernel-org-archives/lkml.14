@@ -1,148 +1,121 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E581482C1
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 10:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF4C482C1
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 10:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709287458; cv=none; b=fnSJaNOx77n5fCHf8dU2M8y4lSG2bKvCuPJqDEHGF5T/SD386bPlG+mszhOKLzwENKNd0gWaXfw05W8JOgr65KKQYGs03MdCLJ6q0wfrxO9KOJ2BojcIKINnoDoYosm51+iYCrcZ6O1uVlSZoB0HdRALvRbcrdTQIGTpJJfLHX4=
+	t=1709287486; cv=none; b=lkU7YjAa2BDSh6FTFoNLVEQk7LXGdcAQaBSQNXb1zN6Eius6pWpa8ch5xRaqNw4wihJfryKHGV5PNMT66LLdCFJ5mjlO0797zcADdg1fB5tSvWXO6dNuMetJDGGrjSjwaR0iw8r3cBQv6jyl3xsE9gVAd8AocLqLrrynPyH1N+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709287458; c=relaxed/simple;
-	bh=2gdb8QFpvX/+BfbeE/tU8fiuiVqBgFxh855Pe4Pdm2g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bLtp9V9qmdXn4BjTvueNxChA44OFOFRD5RXLGXl70BU8gV9b4S/BXsmVsfcuNqkQrwH7yrSVR/cthSBTN+nk6RmMBDwo1tH/D4Q2Gp9TIgkl7nxz58r+BZ3/OAQ4IpUs00rMKGVNyrO8TZ5wPx8lSdLHBFZqq5nYnaTDYIzgehA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rfziG-0003of-LC; Fri, 01 Mar 2024 11:01:56 +0100
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rfziE-003kq7-JZ; Fri, 01 Mar 2024 11:01:54 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rfziE-003tMo-1g;
-	Fri, 01 Mar 2024 11:01:54 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Wei Fang <wei.fang@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH net-next v8 4/8] net: phy: Keep track of EEE configuration
-Date: Fri,  1 Mar 2024 11:01:49 +0100
-Message-Id: <20240301100153.927743-5-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240301100153.927743-1-o.rempel@pengutronix.de>
-References: <20240301100153.927743-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1709287486; c=relaxed/simple;
+	bh=Ywr521iUJfSrn2SrLrM5UvKDcsEi9DKyoi9OA0sjxV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nxwZe4CaW11PKKc78z1vbQMBUMb6eLB8EqqKAiBBOhYxQ2k93w9s+RS1VKtQyu2P5w/YUyoBgYvnUqrnvxJBTgunYSOx/cU15Yh1eX3vyrwrVYkJD5NmRwHH6D/jhHRAEz8E0QZhQ+fDGKUs82TbGB12T9PFBednGP31XGQ24UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lMKD6+g8; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lMKD6+g8"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1709287481; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=SZgTfC1fKx1O4M9nIhdIuFaeCZVB+kk+ad6JzpNSi/g=;
+	b=lMKD6+g8nc+bUmFYwwRIiNtMVgKP2wFBLc9StN1N9fV7fjjVcjAmCnyjFTu+uGo2zyufzAvoi3YRS9y06JfpXJlP/KAlv4c6plxg356sxHlLG1D5OVSQgtZSj1ozbrbcLCPCqatTQ0z/Jjq1+BshyEQdL+kEAtAw69ItIpSVNXg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=dtcccc@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W1bTuTN_1709287477;
+Received: from 30.97.48.218(mailfrom:dtcccc@linux.alibaba.com fp:SMTPD_---0W1bTuTN_1709287477)
+          by smtp.aliyun-inc.com;
+          Fri, 01 Mar 2024 18:04:39 +0800
+Message-ID: <72d3352e-e0dc-4527-bc50-a18d00d5195c@linux.alibaba.com>
+Date: Fri, 1 Mar 2024 18:04:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] sched/eevdf: Fix vruntime adjustment on reweight
+Content-Language: en-US
+To: Abel Wu <wuyun.abel@bytedance.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Valentin Schneider <valentin.schneider@arm.com>,
+ Barry Song <21cnbao@gmail.com>, Benjamin Segall <bsegall@google.com>,
+ Chen Yu <yu.c.chen@intel.com>, Daniel Jordan <daniel.m.jordan@oracle.com>,
+ "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ K Prateek Nayak <kprateek.nayak@amd.com>, Mike Galbraith <efault@gmx.de>,
+ Qais Yousef <qyousef@layalina.io>, Tim Chen <tim.c.chen@linux.intel.com>,
+ Yicong Yang <yangyicong@huawei.com>,
+ Youssef Esmat <youssefesmat@chromium.org>, linux-kernel@vger.kernel.org
+References: <c2ceff07-e1b4-4dbc-b945-f91a9076375e@linux.alibaba.com>
+ <59585184-d13d-46e0-8d68-42838e97a702@bytedance.com>
+ <9b58ef1d-0d45-4fbb-b154-abcbb10211c9@linux.alibaba.com>
+ <38a69b11-d6bb-4f0b-8080-7a051ad58206@bytedance.com>
+From: Tianchen Ding <dtcccc@linux.alibaba.com>
+In-Reply-To: <38a69b11-d6bb-4f0b-8080-7a051ad58206@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+On 2024/3/1 16:30, Abel Wu wrote:
+> On 3/1/24 2:41 PM, Tianchen Ding Wrote:
+>> On 2024/2/29 22:25, Abel Wu wrote:
+>>> Good catch. And to the best of my knowledge, the answer is YES. The
+>>> above Equation in the paper, which is Eq. (20), is based on the
+>>> assumption that:
+>>>
+>>>      "once client 3 leaves, the remaining two clients will
+>>>       proportionally support the eventual loss or gain in the
+>>>       service time"  -- Page 10
+>>>
+>>>      "by updating the virtual time according to Eq. (18,19) we
+>>>       ensure that the sum over the lags of all active clients
+>>>       is always zero"  -- Page 11
+>>>
+>>> But in Peter's implementation, it is the competitors in the new group
+>>> that client 3 later joins in who actually support the effect. So when
+>>> client 3 leaves competition with !0-lag in Linux, the rq's sum(lag_i)
+>>> is no longer zero.
+>>>
+>>
+>> I've different opinions. According to the comments above avg_vruntime_add(), V
+>> is calculated exactly to satisfy sum(lag_i)=0. This is guaranteed by math.
+> 
+> Yes, you are right. I mixed another fairness issue with this. What I
+> was thinking is that considering multiple competition groups (e.g.
+> runqueues), the latency bound could be violated, that is someone could
+> starve a bit. Say one entity even with positive lag could become less
+> competitive if migrated to a higher competitive group.
+> 
+> Staring at Eq. (20) again, what if we do a fake reweight? I mean let
+> the client leave and rejoin at the same time without changing weight?
+> IMHO it should have no effects, but according to Eq. (20) the V will
+> change to:
+> 
+>      V' = V + lag(j)/(W - w_j) - lag(j)/W != V
+> 
+> Have I missed anything?
+> 
 
-Have phylib keep track of the EEE configuration. This simplifies the
-MAC drivers, in that they don't need to store it.
+Good point! I've not ever noticed this conflict.
 
-Future patches to phylib will also make use of this information to
-further simplify the MAC drivers.
+I tried to modify reweight_entity() to run dequeue_entity() -> adjust se->vlag ->
+enqueue_entity(). And I found V do not changed.
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-v6: add @ in front of eee_cfg
----
- drivers/net/phy/phy.c | 7 +++++--
- include/linux/phy.h   | 3 +++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+The difference is, when doing enqueue_entity(), Peter enlarges the lag in place_entity().
+Because after enqueue, the lag will evaporate.
+In order to keep the same lag after enqueue, during place_entity(),
+the new lag(t) will be enlarged with (W+w_i)/W.
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index ab18b0d9beb47..f0ed07c74a36e 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -1660,8 +1660,8 @@ EXPORT_SYMBOL(phy_get_eee_err);
-  * @phydev: target phy_device struct
-  * @data: ethtool_keee data
-  *
-- * Description: it reportes the Supported/Advertisement/LP Advertisement
-- * capabilities.
-+ * Description: reports the Supported/Advertisement/LP Advertisement
-+ * capabilities, etc.
-  */
- int phy_ethtool_get_eee(struct phy_device *phydev, struct ethtool_keee *data)
- {
-@@ -1672,6 +1672,7 @@ int phy_ethtool_get_eee(struct phy_device *phydev, struct ethtool_keee *data)
- 
- 	mutex_lock(&phydev->lock);
- 	ret = genphy_c45_ethtool_get_eee(phydev, data);
-+	eeecfg_to_eee(&phydev->eee_cfg, data);
- 	mutex_unlock(&phydev->lock);
- 
- 	return ret;
-@@ -1694,6 +1695,8 @@ int phy_ethtool_set_eee(struct phy_device *phydev, struct ethtool_keee *data)
- 
- 	mutex_lock(&phydev->lock);
- 	ret = genphy_c45_ethtool_set_eee(phydev, data);
-+	if (!ret)
-+		eee_to_eeecfg(data, &phydev->eee_cfg);
- 	mutex_unlock(&phydev->lock);
- 
- 	return ret;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 432c561f58098..c315928357c8c 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -30,6 +30,7 @@
- #include <linux/refcount.h>
- 
- #include <linux/atomic.h>
-+#include <net/eee.h>
- 
- #define PHY_DEFAULT_FEATURES	(SUPPORTED_Autoneg | \
- 				 SUPPORTED_TP | \
-@@ -595,6 +596,7 @@ struct macsec_ops;
-  * @advertising_eee: Currently advertised EEE linkmodes
-  * @eee_enabled: Flag indicating whether the EEE feature is enabled
-  * @enable_tx_lpi: When True, MAC should transmit LPI to PHY
-+ * @eee_cfg: User configuration of EEE
-  * @lp_advertising: Current link partner advertised linkmodes
-  * @host_interfaces: PHY interface modes supported by host
-  * @eee_broken_modes: Energy efficient ethernet modes which should be prohibited
-@@ -715,6 +717,7 @@ struct phy_device {
- 	/* Energy efficient ethernet modes which should be prohibited */
- 	u32 eee_broken_modes;
- 	bool enable_tx_lpi;
-+	struct eee_config eee_cfg;
- 
- #ifdef CONFIG_LED_TRIGGER_PHY
- 	struct phy_led_trigger *phy_led_triggers;
--- 
-2.39.2
+So the Eq. (20) should be:
 
+
+     V' = V + lag(j)/(W - w_j) - lag'(j)/(W - w_j + w'_j)
+
+     lag'(j) = lag(j) * (W - w_j + w'_j)/(W - w_j)
+
+So we can get
+
+     V' = V + lag(j)/(W - w_j) - lag(j) * (W - w_j + w'_j)/(W - w_j)/(W - w_j + w'_j) = V
+
+So COROLLARY #2 is correct.
