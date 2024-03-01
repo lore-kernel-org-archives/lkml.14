@@ -1,753 +1,473 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195C453807
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 05:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A3A32F53;
+	Fri,  1 Mar 2024 05:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709271426; cv=none; b=QZyDqIpac+cjjhlrvXGuYxeOKK9KutgU5Mz6kZI8lR8QLBsMNKcBKeSb0r4CTgp7Jg30OiK8QNdXIHBzvdD5nOZ/Exb/Mjzhk+EXgO40HeEHwtDGMrFEUgl9ajNqMu41MA8M0jlglF6CMPqzhw4Ds5YCoDvnhjQqUc/gBdajQ4c=
+	t=1709271463; cv=none; b=GkKFEU0y2aqurergXV+zwUfcatfHwRFh2wf8LESn/vAL166CptLQbCvZMmrscktbsM975bcW93gPAKUj9v07SCXk7SrOnT8UZ7cvvoMntinIqIL86nUweVtEgXdCj+5YDWRBEvlPBHkrGFAgdyolwjBH8Z3L4UM1ETuPPfA61hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709271426; c=relaxed/simple;
-	bh=aOKvNCw0mP/aSzwrAr6tjIXHYZ6WOqSdyo+aZpChxCA=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=QMGyKrckwudfKh9C0coZYunaWAY1DKoO60Q/YMXFMUlw1chHZvwzE9j/2Bsh7NYYILt8yzoDgXm0zVI/wxlO15XPJ9xxWY/+yI+V5+FaPMO96U+f2dNzbwO0XfbsL7LnleOsUcMKBnS0y0gFeIVCF00yeG80TS2LuOfdDulF60o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=roPXcHyq; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="roPXcHyq"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6093f75fc81so31046637b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:37:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709271423; x=1709876223; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ROSXDwUomvqQuML9PMkfq2AQvT85kKoIeIu9nBJaVks=;
-        b=roPXcHyqgy8Gk6nnFgvnnRHDuYdbOT9ZL4WhuO3V+sUOYDZCBsVHyn0rE4XLrt30XH
-         9gT3Dh2Ya8OP+jBsgjeVbDqinInIOXajpjMrDggRRue0mNvuU6m37V9afQwHemaRSPcP
-         DU7YSE1NbXqA00uXJ2wMX6zSnatmseXQ/ym7KAfIosa4z0D5v4PUMT6UwcmQp1A0qRNZ
-         RD7Q/XVrRnBuYE3BojWXQDZ3gKzv3e3tFz/JwmeiWNNo56c8E63jPlsXioU48j7rFGdk
-         uF5yOR2bU/P5gwOkc2/e7wZ/Z5Fvj2IDj7YHrkWPLpnqfDn11+NIcNlVSLkbVLxRDNyU
-         tpWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709271423; x=1709876223;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ROSXDwUomvqQuML9PMkfq2AQvT85kKoIeIu9nBJaVks=;
-        b=m+gf5Xzvmisp9XINGfz3Zhdf1ay05UorYF6zXittuPx3UxIE3x+mjvAWn3N/XSsxOd
-         0mTHMZGmYBd3q+u90dp6lLEHRU+aR6+2Q+yG/KUsYeNgTf8yW4GBsF4WkMxhRy9EFpw/
-         iPJgsbPbeocVNLOIqEBxXlVNegHWCZp1nLHynetDCzZ1vksYdm3X+fBKRof8ZoIAbEOc
-         yP1FcTrlToAw8Be509ZVNnHpKtLvouebwE5VphC1xIubLT2jWH+3BXMMNtfzxRKyjpkb
-         38rY1QOLp7Ctiy3exFYBIyjQvME7V9mtL4/MfOTFPyhpXzP2ryCHt/b83fbwRdHJU1WM
-         8cQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOoWbDt1UxcZuXyiRL3DlQT9fOdEryuo4xoC3vMaktrjvfqkCTSANWjwA6h82syKKYRaxDhAub3Cay83fbDGpWV7xG22PYEVcg3tGO
-X-Gm-Message-State: AOJu0YwFQtMkVkxKtMVVOEdmPDyFQen4EhShACExMBvpOzOglg0fGqpr
-	GDPrjChglPbZ1YwmGbEVSsDxhp5DgTY6R2f2XhRIqlvlqQ+p5LVKGWWdCN1wmmWIsRiwc6OsSC1
-	ONC2FIA==
-X-Google-Smtp-Source: AGHT+IHzQdeM1X0crAbAfCGu8ncW89Nm1yPNhZsTC2Nfd9aa23Z5xJAhmN2erL3pTCl9ayhj96utvGNJOn0J
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
- (user=irogers job=sendgmr) by 2002:a05:690c:c86:b0:608:ce23:638c with SMTP id
- cm6-20020a05690c0c8600b00608ce23638cmr174942ywb.4.1709271423168; Thu, 29 Feb
- 2024 21:37:03 -0800 (PST)
-Date: Thu, 29 Feb 2024 21:36:43 -0800
-In-Reply-To: <20240301053646.1449657-1-irogers@google.com>
-Message-Id: <20240301053646.1449657-6-irogers@google.com>
+	s=arc-20240116; t=1709271463; c=relaxed/simple;
+	bh=iL+pGNNgmd70C0rWqDflHBLoKWck9FkmKXGOaKSX/P4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=B8tBATGtMJRs14t2MrkIp467ZrcqWc3iLOQLt2UU/NQ3wybgibPzOWws8Msrjx+wMIbd9xuA/dF3fE1vNZx6JJzpHTF/xi/7XaI/Sy6LBjBl15+A/X6wU26haC5LOxicC4uWnK5z5qUaIXLV62LShn/2HyRVZdEhezZLK/soQuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82A471FB;
+	Thu, 29 Feb 2024 21:38:17 -0800 (PST)
+Received: from [10.162.42.8] (a077893.blr.arm.com [10.162.42.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EADDE3F6C4;
+	Thu, 29 Feb 2024 21:37:34 -0800 (PST)
+Message-ID: <030247ac-46d9-4b3b-ab18-08df5ddf9d68@arm.com>
+Date: Fri, 1 Mar 2024 11:07:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301053646.1449657-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v4 5/7] perf threads: Move threads to its own files
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V16 3/8] drivers: perf: arm_pmuv3: Enable branch stack
+ sampling framework
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
+ James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-4-anshuman.khandual@arm.com>
+ <ZdYx8cawn0sAbktv@FVFF77S0Q05N>
+Content-Language: en-US
+In-Reply-To: <ZdYx8cawn0sAbktv@FVFF77S0Q05N>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Move threads out of machine and into its own file.
+On 2/21/24 22:55, Mark Rutland wrote:
+> Hi Anshuman,
+> 
+> On Thu, Jan 25, 2024 at 03:11:14PM +0530, Anshuman Khandual wrote:
+>> Branch stack sampling support i.e capturing branch records during execution
+>> in core perf, rides along with normal HW events being scheduled on the PMU.
+>> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
+>> with required HW implementation.
+> 
+> Please can we start a bit more clearly, e.g.
+> 
+> | drivers: perf: arm_pmu: add instructure for branch stack sampling
+> | 
+> | In order to support the Branch Record Buffer Extension (BRBE), we need to
+> | extend the arm_pmu framework with some basic infrastructure for branch stack
+> | sampling which arm_pmu drivers can opt-in to using. Subsequent patches will
+> | use this to add support for BRBE in the PMUv3 driver.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/Build     |   1 +
- tools/perf/util/machine.c | 248 --------------------------------------
- tools/perf/util/machine.h |  26 +---
- tools/perf/util/threads.c | 248 ++++++++++++++++++++++++++++++++++++++
- tools/perf/util/threads.h |  35 ++++++
- 5 files changed, 285 insertions(+), 273 deletions(-)
- create mode 100644 tools/perf/util/threads.c
- create mode 100644 tools/perf/util/threads.h
+Added this paragraph at the very beginning.
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 2cbeeb79b6ef..e0a723e24503 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -72,6 +72,7 @@ perf-y += ordered-events.o
- perf-y += namespaces.o
- perf-y += comm.o
- perf-y += thread.o
-+perf-y += threads.o
- perf-y += thread_map.o
- perf-y += parse-events-flex.o
- perf-y += parse-events-bison.o
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 224b53b4bfe2..527517db3182 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -43,17 +43,6 @@
- #include <linux/string.h>
- #include <linux/zalloc.h>
- 
--struct thread_rb_node {
--	struct rb_node rb_node;
--	struct thread *thread;
--};
--
--static struct threads_table_entry *threads__table(struct threads *threads, pid_t tid)
--{
--	/* Cast it to handle tid == -1 */
--	return &threads->table[(unsigned int)tid % THREADS__TABLE_SIZE];
--}
--
- static struct dso *machine__kernel_dso(struct machine *machine)
- {
- 	return map__dso(machine->vmlinux_map);
-@@ -66,18 +55,6 @@ static void dsos__init(struct dsos *dsos)
- 	init_rwsem(&dsos->lock);
- }
- 
--void threads__init(struct threads *threads)
--{
--	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads_table_entry *table = &threads->table[i];
--
--		table->entries = RB_ROOT_CACHED;
--		init_rwsem(&table->lock);
--		table->nr = 0;
--		table->last_match = NULL;
--	}
--}
--
- static int machine__set_mmap_name(struct machine *machine)
- {
- 	if (machine__is_host(machine))
-@@ -210,49 +187,11 @@ static void dsos__exit(struct dsos *dsos)
- 	exit_rwsem(&dsos->lock);
- }
- 
--static void __threads_table_entry__set_last_match(struct threads_table_entry *table,
--						  struct thread *th);
--
--void threads__remove_all_threads(struct threads *threads)
--{
--	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads_table_entry *table = &threads->table[i];
--		struct rb_node *nd;
--
--		down_write(&table->lock);
--		__threads_table_entry__set_last_match(table, NULL);
--		nd = rb_first_cached(&table->entries);
--		while (nd) {
--			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
--
--			nd = rb_next(nd);
--			thread__put(trb->thread);
--			rb_erase_cached(&trb->rb_node, &table->entries);
--			RB_CLEAR_NODE(&trb->rb_node);
--			--table->nr;
--
--			free(trb);
--		}
--		assert(table->nr == 0);
--		up_write(&table->lock);
--	}
--}
--
- void machine__delete_threads(struct machine *machine)
- {
- 	threads__remove_all_threads(&machine->threads);
- }
- 
--void threads__exit(struct threads *threads)
--{
--	threads__remove_all_threads(threads);
--	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads_table_entry *table = &threads->table[i];
--
--		exit_rwsem(&table->lock);
--	}
--}
--
- void machine__exit(struct machine *machine)
- {
- 	if (machine == NULL)
-@@ -568,121 +507,6 @@ static void machine__update_thread_pid(struct machine *machine,
- 	goto out_put;
- }
- 
--/*
-- * Front-end cache - TID lookups come in blocks,
-- * so most of the time we dont have to look up
-- * the full rbtree:
-- */
--static struct thread *__threads_table_entry__get_last_match(struct threads_table_entry *table,
--							    pid_t tid)
--{
--	struct thread *th, *res = NULL;
--
--	th = table->last_match;
--	if (th != NULL) {
--		if (thread__tid(th) == tid)
--			res = thread__get(th);
--	}
--	return res;
--}
--
--static void __threads_table_entry__set_last_match(struct threads_table_entry *table,
--						  struct thread *th)
--{
--	thread__put(table->last_match);
--	table->last_match = thread__get(th);
--}
--
--static void threads_table_entry__set_last_match(struct threads_table_entry *table,
--						struct thread *th)
--{
--	down_write(&table->lock);
--	__threads_table_entry__set_last_match(table, th);
--	up_write(&table->lock);
--}
--
--struct thread *threads__find(struct threads *threads, pid_t tid)
--{
--	struct threads_table_entry *table  = threads__table(threads, tid);
--	struct rb_node **p;
--	struct thread *res = NULL;
--
--	down_read(&table->lock);
--	res = __threads_table_entry__get_last_match(table, tid);
--	if (res)
--		return res;
--
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct rb_node *parent = *p;
--		struct thread *th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
--
--		if (thread__tid(th) == tid) {
--			res = thread__get(th);
--			break;
--		}
--
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else
--			p = &(*p)->rb_right;
--	}
--	up_read(&table->lock);
--	if (res)
--		threads_table_entry__set_last_match(table, res);
--	return res;
--}
--
--struct thread *threads__findnew(struct threads *threads, pid_t pid, pid_t tid, bool *created)
--{
--	struct threads_table_entry *table  = threads__table(threads, tid);
--	struct rb_node **p;
--	struct rb_node *parent = NULL;
--	struct thread *res = NULL;
--	struct thread_rb_node *nd;
--	bool leftmost = true;
--
--	*created = false;
--	down_write(&table->lock);
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct thread *th;
--
--		parent = *p;
--		th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
--
--		if (thread__tid(th) == tid) {
--			__threads_table_entry__set_last_match(table, th);
--			res = thread__get(th);
--			goto out_unlock;
--		}
--
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else {
--			p = &(*p)->rb_right;
--			leftmost = false;
--		}
--	}
--	nd = malloc(sizeof(*nd));
--	if (nd == NULL)
--		goto out_unlock;
--	res = thread__new(pid, tid);
--	if (!res)
--		free(nd);
--	else {
--		*created = true;
--		nd->thread = thread__get(res);
--		rb_link_node(&nd->rb_node, parent, p);
--		rb_insert_color_cached(&nd->rb_node, &table->entries, leftmost);
--		++table->nr;
--		__threads_table_entry__set_last_match(table, res);
--	}
--out_unlock:
--	up_write(&table->lock);
--	return res;
--}
--
- /*
-  * Caller must eventually drop thread->refcnt returned with a successful
-  * lookup/new thread inserted.
-@@ -699,7 +523,6 @@ static struct thread *__machine__findnew_thread(struct machine *machine,
- 		machine__update_thread_pid(machine, th, pid);
- 		return th;
- 	}
--
- 	if (!create)
- 		return NULL;
- 
-@@ -1147,20 +970,6 @@ static int machine_fprintf_cb(struct thread *thread, void *data)
- 	return 0;
- }
- 
--size_t threads__nr(struct threads *threads)
--{
--	size_t nr = 0;
--
--	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads_table_entry *table = &threads->table[i];
--
--		down_read(&table->lock);
--		nr += table->nr;
--		up_read(&table->lock);
--	}
--	return nr;
--}
--
- size_t machine__fprintf(struct machine *machine, FILE *fp)
- {
- 	struct machine_fprintf_cb_args args = {
-@@ -2093,39 +1902,6 @@ int machine__process_mmap_event(struct machine *machine, union perf_event *event
- 	return 0;
- }
- 
--void threads__remove(struct threads *threads, struct thread *thread)
--{
--	struct rb_node **p;
--	struct threads_table_entry *table  = threads__table(threads, thread__tid(thread));
--	pid_t tid = thread__tid(thread);
--
--	down_write(&table->lock);
--	if (table->last_match && RC_CHK_EQUAL(table->last_match, thread))
--		__threads_table_entry__set_last_match(table, NULL);
--
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct rb_node *parent = *p;
--		struct thread_rb_node *nd = rb_entry(parent, struct thread_rb_node, rb_node);
--		struct thread *th = nd->thread;
--
--		if (RC_CHK_EQUAL(th, thread)) {
--			thread__put(nd->thread);
--			rb_erase_cached(&nd->rb_node, &table->entries);
--			RB_CLEAR_NODE(&nd->rb_node);
--			--table->nr;
--			free(nd);
--			break;
--		}
--
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else
--			p = &(*p)->rb_right;
--	}
--	up_write(&table->lock);
--}
--
- void machine__remove_thread(struct machine *machine, struct thread *th)
- {
- 	return threads__remove(&machine->threads, th);
-@@ -3258,30 +3034,6 @@ int thread__resolve_callchain(struct thread *thread,
- 	return ret;
- }
- 
--int threads__for_each_thread(struct threads *threads,
--			     int (*fn)(struct thread *thread, void *data),
--			     void *data)
--{
--	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads_table_entry *table = &threads->table[i];
--		struct rb_node *nd;
--
--		down_read(&table->lock);
--		for (nd = rb_first_cached(&table->entries); nd; nd = rb_next(nd)) {
--			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
--			int rc = fn(trb->thread, data);
--
--			if (rc != 0) {
--				up_read(&table->lock);
--				return rc;
--			}
--		}
--		up_read(&table->lock);
--	}
--	return 0;
--
--}
--
- int machine__for_each_thread(struct machine *machine,
- 			     int (*fn)(struct thread *thread, void *p),
- 			     void *priv)
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 5b425b70140e..e28c787616fe 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -7,6 +7,7 @@
- #include "maps.h"
- #include "dsos.h"
- #include "rwsem.h"
-+#include "threads.h"
- 
- struct addr_location;
- struct branch_stack;
-@@ -28,31 +29,6 @@ extern const char *ref_reloc_sym_names[];
- 
- struct vdso_info;
- 
--#define THREADS__TABLE_BITS	8
--#define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
--
--struct threads_table_entry {
--	struct rb_root_cached  entries;
--	struct rw_semaphore    lock;
--	unsigned int	       nr;
--	struct thread	       *last_match;
--};
--
--struct threads {
--	struct threads_table_entry table[THREADS__TABLE_SIZE];
--};
--
--void threads__init(struct threads *threads);
--void threads__exit(struct threads *threads);
--size_t threads__nr(struct threads *threads);
--struct thread *threads__find(struct threads *threads, pid_t tid);
--struct thread *threads__findnew(struct threads *threads, pid_t pid, pid_t tid, bool *created);
--void threads__remove_all_threads(struct threads *threads);
--void threads__remove(struct threads *threads, struct thread *thread);
--int threads__for_each_thread(struct threads *threads,
--			     int (*fn)(struct thread *thread, void *data),
--			     void *data);
--
- struct machine {
- 	struct rb_node	  rb_node;
- 	pid_t		  pid;
-diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
-new file mode 100644
-index 000000000000..db52d233c2de
---- /dev/null
-+++ b/tools/perf/util/threads.c
-@@ -0,0 +1,248 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "threads.h"
-+#include "machine.h"
-+#include "thread.h"
-+
-+struct thread_rb_node {
-+	struct rb_node rb_node;
-+	struct thread *thread;
-+};
-+
-+static struct threads_table_entry *threads__table(struct threads *threads, pid_t tid)
-+{
-+	/* Cast it to handle tid == -1 */
-+	return &threads->table[(unsigned int)tid % THREADS__TABLE_SIZE];
-+}
-+
-+void threads__init(struct threads *threads)
-+{
-+	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
-+		struct threads_table_entry *table = &threads->table[i];
-+
-+		table->entries = RB_ROOT_CACHED;
-+		init_rwsem(&table->lock);
-+		table->nr = 0;
-+		table->last_match = NULL;
-+	}
-+}
-+
-+void threads__exit(struct threads *threads)
-+{
-+	threads__remove_all_threads(threads);
-+	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
-+		struct threads_table_entry *table = &threads->table[i];
-+
-+		exit_rwsem(&table->lock);
-+	}
-+}
-+
-+size_t threads__nr(struct threads *threads)
-+{
-+	size_t nr = 0;
-+
-+	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
-+		struct threads_table_entry *table = &threads->table[i];
-+
-+		down_read(&table->lock);
-+		nr += table->nr;
-+		up_read(&table->lock);
-+	}
-+	return nr;
-+}
-+
-+/*
-+ * Front-end cache - TID lookups come in blocks,
-+ * so most of the time we dont have to look up
-+ * the full rbtree:
-+ */
-+static struct thread *__threads_table_entry__get_last_match(struct threads_table_entry *table,
-+							    pid_t tid)
-+{
-+	struct thread *th, *res = NULL;
-+
-+	th = table->last_match;
-+	if (th != NULL) {
-+		if (thread__tid(th) == tid)
-+			res = thread__get(th);
-+	}
-+	return res;
-+}
-+
-+static void __threads_table_entry__set_last_match(struct threads_table_entry *table,
-+						  struct thread *th)
-+{
-+	thread__put(table->last_match);
-+	table->last_match = thread__get(th);
-+}
-+
-+static void threads_table_entry__set_last_match(struct threads_table_entry *table,
-+						struct thread *th)
-+{
-+	down_write(&table->lock);
-+	__threads_table_entry__set_last_match(table, th);
-+	up_write(&table->lock);
-+}
-+
-+struct thread *threads__find(struct threads *threads, pid_t tid)
-+{
-+	struct threads_table_entry *table  = threads__table(threads, tid);
-+	struct rb_node **p;
-+	struct thread *res = NULL;
-+
-+	down_read(&table->lock);
-+	res = __threads_table_entry__get_last_match(table, tid);
-+	if (res)
-+		return res;
-+
-+	p = &table->entries.rb_root.rb_node;
-+	while (*p != NULL) {
-+		struct rb_node *parent = *p;
-+		struct thread *th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
-+
-+		if (thread__tid(th) == tid) {
-+			res = thread__get(th);
-+			break;
-+		}
-+
-+		if (tid < thread__tid(th))
-+			p = &(*p)->rb_left;
-+		else
-+			p = &(*p)->rb_right;
-+	}
-+	up_read(&table->lock);
-+	if (res)
-+		threads_table_entry__set_last_match(table, res);
-+	return res;
-+}
-+
-+struct thread *threads__findnew(struct threads *threads, pid_t pid, pid_t tid, bool *created)
-+{
-+	struct threads_table_entry *table  = threads__table(threads, tid);
-+	struct rb_node **p;
-+	struct rb_node *parent = NULL;
-+	struct thread *res = NULL;
-+	struct thread_rb_node *nd;
-+	bool leftmost = true;
-+
-+	*created = false;
-+	down_write(&table->lock);
-+	p = &table->entries.rb_root.rb_node;
-+	while (*p != NULL) {
-+		struct thread *th;
-+
-+		parent = *p;
-+		th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
-+
-+		if (thread__tid(th) == tid) {
-+			__threads_table_entry__set_last_match(table, th);
-+			res = thread__get(th);
-+			goto out_unlock;
-+		}
-+
-+		if (tid < thread__tid(th))
-+			p = &(*p)->rb_left;
-+		else {
-+			leftmost = false;
-+			p = &(*p)->rb_right;
-+		}
-+	}
-+	nd = malloc(sizeof(*nd));
-+	if (nd == NULL)
-+		goto out_unlock;
-+	res = thread__new(pid, tid);
-+	if (!res)
-+		free(nd);
-+	else {
-+		*created = true;
-+		nd->thread = thread__get(res);
-+		rb_link_node(&nd->rb_node, parent, p);
-+		rb_insert_color_cached(&nd->rb_node, &table->entries, leftmost);
-+		++table->nr;
-+		__threads_table_entry__set_last_match(table, res);
-+	}
-+out_unlock:
-+	up_write(&table->lock);
-+	return res;
-+}
-+
-+void threads__remove_all_threads(struct threads *threads)
-+{
-+	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
-+		struct threads_table_entry *table = &threads->table[i];
-+		struct rb_node *nd;
-+
-+		down_write(&table->lock);
-+		__threads_table_entry__set_last_match(table, NULL);
-+		nd = rb_first_cached(&table->entries);
-+		while (nd) {
-+			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
-+
-+			nd = rb_next(nd);
-+			thread__put(trb->thread);
-+			rb_erase_cached(&trb->rb_node, &table->entries);
-+			RB_CLEAR_NODE(&trb->rb_node);
-+			--table->nr;
-+
-+			free(trb);
-+		}
-+		assert(table->nr == 0);
-+		up_write(&table->lock);
-+	}
-+}
-+
-+void threads__remove(struct threads *threads, struct thread *thread)
-+{
-+	struct rb_node **p;
-+	struct threads_table_entry *table  = threads__table(threads, thread__tid(thread));
-+	pid_t tid = thread__tid(thread);
-+
-+	down_write(&table->lock);
-+	if (table->last_match && RC_CHK_EQUAL(table->last_match, thread))
-+		__threads_table_entry__set_last_match(table, NULL);
-+
-+	p = &table->entries.rb_root.rb_node;
-+	while (*p != NULL) {
-+		struct rb_node *parent = *p;
-+		struct thread_rb_node *nd = rb_entry(parent, struct thread_rb_node, rb_node);
-+		struct thread *th = nd->thread;
-+
-+		if (RC_CHK_EQUAL(th, thread)) {
-+			thread__put(nd->thread);
-+			rb_erase_cached(&nd->rb_node, &table->entries);
-+			RB_CLEAR_NODE(&nd->rb_node);
-+			--table->nr;
-+			free(nd);
-+			break;
-+		}
-+
-+		if (tid < thread__tid(th))
-+			p = &(*p)->rb_left;
-+		else
-+			p = &(*p)->rb_right;
-+	}
-+	up_write(&table->lock);
-+}
-+
-+int threads__for_each_thread(struct threads *threads,
-+			     int (*fn)(struct thread *thread, void *data),
-+			     void *data)
-+{
-+	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
-+		struct threads_table_entry *table = &threads->table[i];
-+		struct rb_node *nd;
-+
-+		down_read(&table->lock);
-+		for (nd = rb_first_cached(&table->entries); nd; nd = rb_next(nd)) {
-+			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
-+			int rc = fn(trb->thread, data);
-+
-+			if (rc != 0) {
-+				up_read(&table->lock);
-+				return rc;
-+			}
-+		}
-+		up_read(&table->lock);
-+	}
-+	return 0;
-+
-+}
-diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
-new file mode 100644
-index 000000000000..ed67de627578
---- /dev/null
-+++ b/tools/perf/util/threads.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_THREADS_H
-+#define __PERF_THREADS_H
-+
-+#include <linux/rbtree.h>
-+#include "rwsem.h"
-+
-+struct thread;
-+
-+#define THREADS__TABLE_BITS	8
-+#define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
-+
-+struct threads_table_entry {
-+	struct rb_root_cached  entries;
-+	struct rw_semaphore    lock;
-+	unsigned int	       nr;
-+	struct thread	       *last_match;
-+};
-+
-+struct threads {
-+	struct threads_table_entry table[THREADS__TABLE_SIZE];
-+};
-+
-+void threads__init(struct threads *threads);
-+void threads__exit(struct threads *threads);
-+size_t threads__nr(struct threads *threads);
-+struct thread *threads__find(struct threads *threads, pid_t tid);
-+struct thread *threads__findnew(struct threads *threads, pid_t pid, pid_t tid, bool *created);
-+void threads__remove_all_threads(struct threads *threads);
-+void threads__remove(struct threads *threads, struct thread *thread);
-+int threads__for_each_thread(struct threads *threads,
-+			     int (*fn)(struct thread *thread, void *data),
-+			     void *data);
-+
-+#endif	/* __PERF_THREADS_H */
--- 
-2.44.0.278.ge034bb2e1d-goog
+> 
+>> ARMV8 PMU hardware support for branch stack sampling is indicated via a new
+>> feature flag called 'has_branch_stack' that can be ascertained via probing.
+>> This modifies current gate in armpmu_event_init() which blocks branch stack
+>> sampling based perf events unconditionally. Instead allows such perf events
+>> getting initialized on supporting PMU hardware.
+> 
+> This paragraph can be deleted. The addition of 'has_branch_stack' and its use
+> in armpmu_event_init() is trivial and obvious in-context, and this distracts
+> from the important parts of this patch.
 
+Okay, dropped the above paragraph.
+
+> 
+>> Branch stack sampling is enabled and disabled along with regular PMU events
+>> . This adds required function callbacks in armv8pmu_branch_xxx() format, to
+>> drive the PMU branch stack hardware when supported. This also adds fallback
+>> stub definitions for these callbacks for PMUs which would not have required
+>> support.
+> 
+> Those additions to the PMUv3 driver should all be in the next patch.
+
+Sure, will do that.
+
+> 
+> We don't add anything for the other PMU drivers that don't support branch
+> sampling, so why do we need to do *anything* to the PMUv3 driver here, given we
+> add the support in the next patch? Those additions only make this patch bigger
+> and more confusing (and hence more painful to review).
+
+Understood.
+
+> 
+>> If a task gets scheduled out, the current branch records get saved in the
+>> task's context data, which can be later used to fill in the records upon an
+>> event overflow. Hence, we enable PERF_ATTACH_TASK_DATA (event->attach_state
+>> based flag) for branch stack requesting perf events. But this also requires
+>> adding support for pmu::sched_task() callback to arm_pmu.
+> 
+> I think what this is trying to say is:
+> 
+> | With BRBE, the hardware records branches into a hardware FIFO, which will be
+> | sampled by software when perf events overflow. A task may be context-switched
+> | an arbitrary number of times between overflows, and to avoid losing samples
+> | we need to save the current records when a task is context-switched out. To
+> | do these we'll need to use the pmu::sched_task() callback, and we'll need to
+> | allocate some per-task storage space using PERF_ATTACH_TASK_DATA.
+
+Replaced as suggested.
+
+> 
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> Changes in V16:
+>>
+>> - Renamed arm_brbe.h as arm_pmuv3_branch.h
+>> - Updated perf_sample_save_brstack()'s new argument requirements with NULL
+>>
+>>  drivers/perf/arm_pmu.c          |  57 ++++++++++++-
+>>  drivers/perf/arm_pmuv3.c        | 141 +++++++++++++++++++++++++++++++-
+>>  drivers/perf/arm_pmuv3_branch.h |  50 +++++++++++
+>>  include/linux/perf/arm_pmu.h    |  29 ++++++-
+>>  include/linux/perf/arm_pmuv3.h  |   1 -
+>>  5 files changed, 273 insertions(+), 5 deletions(-)
+>>  create mode 100644 drivers/perf/arm_pmuv3_branch.h
+>>
+>> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+>> index 8458fe2cebb4..16f488ae7747 100644
+>> --- a/drivers/perf/arm_pmu.c
+>> +++ b/drivers/perf/arm_pmu.c
+>> @@ -317,6 +317,15 @@ armpmu_del(struct perf_event *event, int flags)
+>>  	struct hw_perf_event *hwc = &event->hw;
+>>  	int idx = hwc->idx;
+>>  
+>> +	if (has_branch_stack(event)) {
+>> +		WARN_ON_ONCE(!hw_events->brbe_users);
+>> +		hw_events->brbe_users--;
+>> +		if (!hw_events->brbe_users) {
+>> +			hw_events->brbe_context = NULL;
+>> +			hw_events->brbe_sample_type = 0;
+>> +		}
+>> +	}
+>> +
+> 
+> If this is going to leak into the core arm_pmu code, use "branch_stack" rather
+> than "brbe" for these field names.
+
+Right, makes sense. I too was contemplating for that rename, will change.
+
+> 
+> However, I reckon we could just have two new callbacks on arm_pmu:
+> 
+> 	branch_stack_add(struct perf_event *event, ...);
+> 	branch_stack_del(struct perf_event *event, ...);
+> 
+> ... and hide all of the details in the PMUv3 (or BRBE) driver for now, and the
+> code above can just do:
+> 
+> 	if (has_branch_stack(event))
+> 		branch_stack_del(event, ...);
+> 
+> ... and likewise in armpmu_add().
+> 
+> That way the actuel management logic for the context and so on can be added in
+> the next patch, where the lifetime would be *much* clearer.
+
+Right, will change as required.
+
+> 
+>>  	armpmu_stop(event, PERF_EF_UPDATE);
+>>  	hw_events->events[idx] = NULL;
+>>  	armpmu->clear_event_idx(hw_events, event);
+>> @@ -333,6 +342,38 @@ armpmu_add(struct perf_event *event, int flags)
+>>  	struct hw_perf_event *hwc = &event->hw;
+>>  	int idx;
+>>  
+>> +	if (has_branch_stack(event)) {
+>> +		/*
+>> +		 * Reset branch records buffer if a new CPU bound event
+>> +		 * gets scheduled on a PMU. Otherwise existing branch
+>> +		 * records present in the buffer might just leak into
+>> +		 * such events.
+>> +		 *
+>> +		 * Also reset current 'hw_events->brbe_context' because
+>> +		 * any previous task bound event now would have lost an
+>> +		 * opportunity for continuous branch records.
+>> +		 */
+> 
+> Doesn't this mean some user silently loses events? Why is that ok?
+
+Previous task bound event that has been on the CPU will loose current branch
+records available in BRBE when this happens. Buffer needs reset for records
+integrity for the upcoming CPU bound event. Following options are available
+in such cases. 
+
+- Let it loose some samples, anyways it's going to be rare (proposed here) 
+- Call armv8pmu_branch_save() to save them off on the event, before reset
+- Tell the event that it has lost some samples - PERF_RECORD_LOST ?
+
+Please suggest which would be a better solution ? OR there might be some other
+approach for this scenario ?
+
+> 
+>> +		if (!event->ctx->task) {
+>> +			hw_events->brbe_context = NULL;
+>> +			if (armpmu->branch_reset)
+>> +				armpmu->branch_reset();
+>> +		}
+>> +
+>> +		/*
+>> +		 * Reset branch records buffer if a new task event gets
+>> +		 * scheduled on a PMU which might have existing records.
+>> +		 * Otherwise older branch records present in the buffer
+>> +		 * might leak into the new task event.
+>> +		 */
+>> +		if (event->ctx->task && hw_events->brbe_context != event->ctx) {
+>> +			hw_events->brbe_context = event->ctx;
+>> +			if (armpmu->branch_reset)
+>> +				armpmu->branch_reset();
+>> +		}
+> 
+> Same question here.
+
+As explained above.
+
+> 
+> How does this work on other architectures?
+
+I had gone through some of them before but don't recollect the details right now.
+I will get back on this later.
+
+> 
+> What do we do if the CPU-bound and task-bound events want different filters,
+> etc?
+
+Unless the same task comes back again on the CPU, buffer needs to be reset in all
+other scenarios to guard against captured branch records integrity for the target
+event. Then filter differences does not really matter.
+
+> 
+> This is the sort of gnarly detail that should be explained (or at least
+> introduced) in the commit message.
+
+Understood, will try and update the commit message accordingly.
+
+> 
+>> +		hw_events->brbe_users++;
+>> +		hw_events->brbe_sample_type = event->attr.branch_sample_type;
+> 
+> What exactly is brbe_sample_type, and why does it get overriden *every time* we
+> add a new event? What happens when events have different values for
+> brbe_sample_type? Or is that forbidden somehow?
+
+brbe_sample_type contains the final perf branch filter that gets into BRBE HW for
+the recording session. The proposed solution here goes with the last perf event's
+'attr.branch_sample_type' when they get collected for the given PMU via pmu_add()
+callback.
+	
+	hw_events->brbe_sample_type = event->attr.branch_sample_type
+
+So in a scenario where multiple branch events are programmed with different filter
+requests, the captured branch records during PMU IRQ might not match the requests
+for many events that were scheduled together. Hence we only give the branch records
+to the matching events.
+
+static void read_branch_records()
+{
+...
+        /*
+         * Overflowed event's branch_sample_type does not match the configured
+         * branch filters in the BRBE HW. So the captured branch records here
+         * cannot be co-related to the overflowed event. Report to the user as
+         * if no branch records have been captured, and flush branch records.
+         * The same scenario is applicable when the current task context does
+         * not match with overflown event.
+         */
+        if ((cpuc->branch_sample_type != event->attr.branch_sample_type) ||
+            (event->ctx->task && cpuc->branch_context != event->ctx))
+                return;
+...
+}
+
+Please note that we don't prohibit the events from being grouped together on the PMU
+i.e pmu_add() does not fail when filters do not match. But there might be some other
+approaches that could be taken in such scenarios.
+
+A. Fail pmu_add() when branch_sample_type does not match
+
+B. OR together all event's event->attr.branch_sample_type on a given PMU
+
+	- Then captured records need to be post processed to find applicable samples
+	  matching event's original filter request
+
+	- But it might add some more latency to PMU IRQ handling ?
+
+But please do let me know if there are better solutions that can be taken up.
+
+> 
+>> +	}
+>> +
+>>  	/* An event following a process won't be stopped earlier */
+>>  	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+>>  		return -ENOENT;
+> 
+> Unless this cpumask check has been made redundant, it means that the code above
+> it is obviously wrong, since that pokes the BRBE HW and increments brbe_users
+> *before* we decide whether the event can be installed on this CPU. That'll blow
+> up on big.LITTLE,  e.g. we try and install a 'big' CPU event on a 'little' CPU,
+> poke the BRBE HW and increment brbe_users, then *after* that we abort
+> installing the event.
+
+Agreed, aborting to install the event on the cpu after incrementing brbe_users
+will be problematic.
+
+> 
+> Even ignoring big.LITTLE, we can fail immediately after this when we don't have
+> enough counters, since the following code is:
+> 
+> |        /* An event following a process won't be stopped earlier */
+> |        if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+> |                return -ENOENT;
+> |
+> |        /* If we don't have a space for the counter then finish early. */
+> |        idx = armpmu->get_event_idx(hw_events, event);
+> |        if (idx < 0)
+> |                return idx;
+> 
+> ... which'll go wrong if you try to open 1 more event than the CPU has
+> counters.
+
+Agreed, the event needs to clear that test as well before incrementing brbe_users.
+
+Should the branch stack context needs to be installed only after the event has
+cleared get_event_idx() successfully along with HW counters availability check
+etc before proceeding to install on the CPU ? IOW just move the block bit down
+
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index ac07911263a9..d657ce337f10 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -336,9 +336,6 @@ armpmu_add(struct perf_event *event, int flags)
+        struct hw_perf_event *hwc = &event->hw;
+        int idx;
+ 
+-       if (has_branch_stack(event))
+-               armpmu->branch_stack_add(event, hw_events);
+-
+        /* An event following a process won't be stopped earlier */
+        if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+                return -ENOENT;
+@@ -348,6 +345,9 @@ armpmu_add(struct perf_event *event, int flags)
+        if (idx < 0)
+                return idx;
+ 
++       if (has_branch_stack(event))
++               armpmu->branch_stack_add(event, hw_events);
++
+        /*
+         * If there is an event in the counter we are going to use then make
+         * sure it is disabled.
+
+
+> 
+>> @@ -511,13 +552,24 @@ static int armpmu_event_init(struct perf_event *event)
+>>  		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
+>>  		return -ENOENT;
+>>  
+>> -	/* does not support taken branch sampling */
+>> -	if (has_branch_stack(event))
+>> +	/*
+>> +	 * Branch stack sampling events are allowed
+>> +	 * only on PMU which has required support.
+>> +	 */
+>> +	if (has_branch_stack(event) && !armpmu->has_branch_stack)
+>>  		return -EOPNOTSUPP;
+>>  	return __hw_perf_event_init(event);
+>>  }
+>>  
+> 
+> I think we can delete the comment entirely here, but the code itself looks
+> fine here.
+
+Sure, will delete the above comment.
+
+> 
+>> +static void armpmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+>> +{
+>> +	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
+>> +
+>> +	if (armpmu->sched_task)
+>> +		armpmu->sched_task(pmu_ctx, sched_in);
+>> +}
+> 
+> This looks fine.
+> 
+>>  static void armpmu_enable(struct pmu *pmu)
+>>  {
+>>  	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+>> @@ -864,6 +916,7 @@ struct arm_pmu *armpmu_alloc(void)
+>>  	}
+>>  
+>>  	pmu->pmu = (struct pmu) {
+>> +		.sched_task	= armpmu_sched_task,
+>>  		.pmu_enable	= armpmu_enable,
+>>  		.pmu_disable	= armpmu_disable,
+>>  		.event_init	= armpmu_event_init,
+>> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+>> index 23fa6c5da82c..9e17764a0929 100644
+>> --- a/drivers/perf/arm_pmuv3.c
+>> +++ b/drivers/perf/arm_pmuv3.c
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/nmi.h>
+>>  
+>>  #include <asm/arm_pmuv3.h>
+>> +#include "arm_pmuv3_branch.h"
+> 
+> As above, I do not thing that the PMUv3 driver should change at all in this
+> patch. As of this patch it achieves nothing, and it makes it really hard to
+> understand what's going on because the important aspects are spread randomly
+> across this patch and the next patch which actually adds the BRBE management.
+> 
+> Please factor the PMUv3 changes out into the patch adding the actual BRBE code.
+
+Sure, will keep the following changes in this patch.
+
+A. drivers/perf/arm_pmu.c
+
+	- armpmu_add() --> armpmu->branch_stack_add()
+	- armpmu_del() --> armpmu->branch_stack_del()
+	- Allowing has_branch_stack() events in armpmu_event_init()
+	- Adding callback arm_pmu->pmu->sched_task = armpmu_sched_task
+
+B. include/linux/perf/arm_pmu.h
+
+	- Adding branch elements into pmu_hw_events
+	- Adding branch callbacks into arm_pmu
+	- Adding sched_task() into arm_pmu
+	- Adding has_branch_stack into arm_pmu
+
+Move everything else into the next patch implementing BRBE.
+
+drivers/perf/arm_pmuv3.c 
+drivers/perf/arm_pmuv3_branch.h
+
+> 
+> [...]
+> 
+>> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+>> index 46377e134d67..c3e7d2cfb737 100644
+>> --- a/include/linux/perf/arm_pmuv3.h
+>> +++ b/include/linux/perf/arm_pmuv3.h
+>> @@ -308,5 +308,4 @@
+>>  		default: WARN(1, "Invalid PMEV* index\n");	\
+>>  		}						\
+>>  	} while (0)
+>> -
+>>  #endif
+> 
+> Unrelated whitespace change.
+
+Already folded this in.
