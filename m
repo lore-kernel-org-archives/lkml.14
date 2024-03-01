@@ -1,66 +1,55 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC9A41AAC
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEE223BD;
+	Fri,  1 Mar 2024 09:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709285961; cv=none; b=tTxaN50A1na3O7176gFHuMXfmmhVdqHdDabt0UWRL/1ykOiK1TWfe5W0a3Vzh/Z7GR5yj6Q25Ht+HYHTmdXrhzZl9sOFDoNT+55OPUqUopjYHFLG1A/F3078iKKcabBABhKDnxe6EG5WBXOsGrYXOrjSXKyaQcB8Wl5H0wShD7A=
+	t=1709285994; cv=none; b=CkMXaB04liOKXOJq09yXKTMOjUOxSkks+b9bmqzJ5/kwF0/kNUl3Ts4TwqF7Uq9Lop5lhiKqcvw/5QAbD0GYQKAp6lSu+9WQDsQ3e29rVneuQw4sL3I9MOCzKKNzWMp9ycvMvvf15OZRg0w/YiwJIjIFwSTP2cjDsKtuc8V/f8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709285961; c=relaxed/simple;
-	bh=dwocay/ojmYkzVQJsnfotfx1l2ZC2l+MZCMNpvxNu/c=;
+	s=arc-20240116; t=1709285994; c=relaxed/simple;
+	bh=2H+wqfnKRplzPg5l6zYg26c/tyBENVooq2HXypPunyY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPlDsNsCbDFHVq1d6/MhjKXpqKjmWrSWK9dgvg9GJAyqWTjEGam7spE7zR8p2v1i52DwjwAOqIkUExgfy5Kn4QR+ul4NkOAo5fqZGcccxFLHe/7DBGIs5mEQfmK++GO1pXy4RV1h2V6lDEeN3Pf6OLzhr9cH5QrZHj6MrYZARJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bKlkoHyY; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TzHspioT8+qU6ZIuEiKKGvopzwc22eij77wAvmj5S+gXoA2eAhRw0PHcDFsiBfj0sjeuy5IWenXz1p03pAUmneiBLvvP4E8Jo+JJb9lOi8e21R1OcsiN7g7mxCalOfV1c47vDaz6yMV1Bw+/aGVgp2HLCloU+bEKLDanHhjWt24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZDYSkYo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bKlkoHyY"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a28a6cef709so296353566b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 01:39:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1709285955; x=1709890755; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ksja0aFvPs8vZW6J5BSMyrf5bgaFcujDoUqhbnnmQQ=;
-        b=bKlkoHyY+uLJptr/G+kWS44rcnH5aecaR6mWsurhy7z1HqiOj+re0IIoOvCXthT5/U
-         iWHUf29AjzOPSmKPvllhnWrk1YL4LIaInYG995AlOlpMU/EON7tYR5Y+VQtp3dAhBTeF
-         95OJSm+nIgkWTGbYbLAzvXJsKN2Sw83i5JaQGyKX3vQgO2dxQcwCMSlDCKAVCmPIhMwf
-         LquXqY+/b64/YUo31HCGTrpiwQRgsdTyAWfIDEVZ8k2/nT4XxK8NjVBjLYyZWuhyguO/
-         CNslqwcT5N+Vv7G1aoMJDJ9nFizfNhHD4TKt/iBT80QJ3jkgpR/7A/A4qOuvIG2BteDP
-         J/bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709285955; x=1709890755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8ksja0aFvPs8vZW6J5BSMyrf5bgaFcujDoUqhbnnmQQ=;
-        b=Y5AwO/sWvuYnZ7WtGeD5f/q5bWOvR6+Qb2Q8WD9Dp5dpZwyb53NPQpW0PqIkenSyI/
-         dMMegQTWoud7hv6ndEKXZePhjYhjdRJ++TGQiFZ5pc6BZOGb5yyTZuB+PCqhXrEcGVu6
-         NpZYbEiDPty6FaftWk2NMh+TAiYTJjAwUBDPjdK2APEvoXL/smfA+4IWlHd1SUfgPIY9
-         if1bpadokc8HL1bD6arsP2m7sUyyOD9PaJop9BlAtNeQ86F7tlMer46Qedyz08WOmwdQ
-         oBxlA2gJbdGDJ3Y1AMc3xheM9N6iUKgcs9B6iFfZTPYqFZFj0ZLweRruRKV8ruTLYRe/
-         LtnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSVzEu/8dRPo+Y9XqeVHZC2DNP3zbFaS1jE4cO4e8IGifpovfr8Nw4rVZz+toGQU7sWgqwjHlXZTBrFgHr9fSity9TsU07xbSKGWNi
-X-Gm-Message-State: AOJu0Yy/ykSfCHq2FFdIWvKt8+9Zfwq6u9N+RoceU86cA69BQc2grTbk
-	fxUNccJN3yRrG8bX910upOzzeMJcgCyvmQ/t1+dHxzaCs8EWJ95McMlSrfjDV+8=
-X-Google-Smtp-Source: AGHT+IE9EgSaidvKBKRB5QBeadA8MchJAu1Q5NI+0OHwDCYOn5AsV+MBfYpfDaRkXVRpVXJ5R/DaFg==
-X-Received: by 2002:a17:906:e0c:b0:a44:70a6:9421 with SMTP id l12-20020a1709060e0c00b00a4470a69421mr779551eji.36.1709285955180;
-        Fri, 01 Mar 2024 01:39:15 -0800 (PST)
-Received: from alley ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id gt25-20020a170906f21900b00a3ec216ec6csm1516211ejb.45.2024.03.01.01.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 01:39:14 -0800 (PST)
-Date: Fri, 1 Mar 2024 10:39:13 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH printk v2 20/26] printk: Track nbcon consoles
-Message-ID: <ZeGiQUZ0PfzKL4Ay@alley>
-References: <20240218185726.1994771-1-john.ogness@linutronix.de>
- <20240218185726.1994771-21-john.ogness@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZDYSkYo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79189C433F1;
+	Fri,  1 Mar 2024 09:39:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709285993;
+	bh=2H+wqfnKRplzPg5l6zYg26c/tyBENVooq2HXypPunyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OZDYSkYoJ2RjOFFVciA0Fsl1z/GJ9YxbNRyWwBBXRHjkQPIZ6Mx+B6ko/uiQZlOtG
+	 2seV4/AIoopDlGhLxeNPnGrth6CjMm6vT/FbPd0pokIHZ7hbFys+CiWVCcf8ZZSd1M
+	 30GY3nEvEi9oKpRGKVmI8lyjhkD4LhOaREMEuWsvzWir2+pe47Iit/qfmAdbXYwfSY
+	 Oaj0DLDvTMNvLe30h+KjhYe50WBYy/jFEkVeEwhDMiBmSTeClO3ZIouTkUuwOuazdP
+	 ZKxDil2QbzL7jO8GUGwrq5oRJc/HEcUT/LI2JN/bOgl/j7G1+NkObsLQG27dfoZhWP
+	 EOgSpn/OpRW3Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rfzN5-000000007Yk-2BYQ;
+	Fri, 01 Mar 2024 10:40:04 +0100
+Date: Fri, 1 Mar 2024 10:40:03 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+	Varadarajan Narayanan <quic_varada@quicinc.com>,
+	Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>,
+	Devi Priya <quic_devipriy@quicinc.com>,
+	Anusha Rao <quic_anusha@quicinc.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Georgi Djakov <gdjakov@mm-sol.com>, linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] clk: qcom: gcc-ipq5018: fix terminating of frequency
+ table arrays
+Message-ID: <ZeGic5cG8lneKJXp@hovoldconsulting.com>
+References: <20240229-freq-table-terminator-v1-0-074334f0905c@gmail.com>
+ <20240229-freq-table-terminator-v1-1-074334f0905c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,16 +58,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240218185726.1994771-21-john.ogness@linutronix.de>
+In-Reply-To: <20240229-freq-table-terminator-v1-1-074334f0905c@gmail.com>
 
-On Sun 2024-02-18 20:03:20, John Ogness wrote:
-> Add a global flag @have_nbcon_console to identify if any nbcon
-> consoles are registered. This will be used in follow-up commits
-> to preserve legacy behavior when no nbcon consoles are registered.
+On Thu, Feb 29, 2024 at 07:07:46PM +0100, Gabor Juhos wrote:
+> The frequency table arrays are supposed to be terminated with an
+> empty element. Add such entry to the end of the arrays where it
+> is missing in order to avoid possible out-of-bound access when
+> the table is traversed by functions like qcom_find_freq() or
+> qcom_find_freq_floor().
 > 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> Fixes: e3fdbef1bab8 ("clk: qcom: Add Global Clock controller (GCC) driver for IPQ5018")
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Good find!
 
-Best Regards,
-Petr
+Looks like these should be backported to the stable kernels as well so
+someone should add:
+
+Cc: stable@vger.kernel.org
+
+to all patches except possibly the sc8280xp one (that camera clock
+controller was added in 6.8-rc1 so that patch does not need it in case
+you can these fixes in before 6.8 is released).
+
+Johan
