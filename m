@@ -1,101 +1,79 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F0F482C1;
-	Fri,  1 Mar 2024 10:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3672EB0E;
+	Fri,  1 Mar 2024 10:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709288173; cv=none; b=QLAn7cB2hohuwyxZosWSI/7AgY9qssBIFFJymBy9I22QCDeVQX4RE0+S/uJxisgFUajBxWUxRgklhLCmYe5Eq9JFNTs8cO+LEzr0BwX7GexqH0J+iPmnAxvyR3Gev/jKEORKl8/dvBgVe667X0MMTcHz6TpnGt+ujCStrTEnZ2g=
+	t=1709288225; cv=none; b=K3L6aqGnk+sHYUMY01hakWaaWMCjdZCU9ZC0PpLAmSrJkMSt3w4v2mGaX4kkYTCQv4DiwlKIJror4zrL98VgT89ESr6008BdNZrOMLcQLsSHNLlXBaO7171Do8cDWnd6UOOq0NeiA4+FZs5hda6oBCVwBoXxuAdrykNRFz7z5Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709288173; c=relaxed/simple;
-	bh=6Agnyi8DLedM+Z6EYzVyW6OwLNrz92tvZUbDuL+GHwY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aNrqw6YzmeWTKVzMfFPcE2txHPlkmM4QAgIoSBXySkPmx1Yl1/0NU02E2Wbndczi/GQ6uVuR8GT0m4QWKquMng/kanNZpZa5Yb0covBErupLNmwn4BCTEIEqyjyjMtEzxg0zEYCH4z9uME0IYh1zbI7IH4PRPwbzvKpLMpM42To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Q5LiiEHx; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Q5LiiEHx"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4214rwHV014460;
-	Fri, 1 Mar 2024 04:15:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=f
-	UoFHpE8arqzQuv1VUMK76N/vXq5gSpbs+hWP4zYhQQ=; b=Q5LiiEHxNLjWedBUt
-	xofHsz+eNIxlDIF5SLa6x/sHtAuk/V8gVLGjT3gqkOO69LntWMvTMRveCY1n6Fcr
-	/PdThwBDaiASORSwq14rFXQbqikcSe2o4aQmj6wrKD7jldjBhO62UQMTBD7J63/w
-	efyfKn5qyqKoYun2lEw0FyxIiqQzLzK5ptTKD7FuFFRkrp9/MrNtCDsDyW1yeoBs
-	rlXwTq2k8B0NQwfWGtifNb6GZlJ+102cqvF7u4dTUwujGvl+t5ZyVu1LjLRiE9Ad
-	pyd74W7N8VpNr1gIaNtC0m4dwwPXw/ZzMz2Y8d71zOXyoeGq5Sa1dJpXCupuyvOP
-	TkWCw==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3wje8h23cc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 04:15:50 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 1 Mar
- 2024 10:15:49 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Fri, 1 Mar 2024 10:15:49 +0000
-Received: from ediswws03.ad.cirrus.com (ediswws03.ad.cirrus.com [198.90.208.11])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id EA6B4820241;
-	Fri,  1 Mar 2024 10:15:48 +0000 (UTC)
-From: Maciej Strozek <mstrozek@opensource.cirrus.com>
-To: Lee Jones <lee@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        Maciej Strozek
-	<mstrozek@opensource.cirrus.com>
-Subject: [PATCH] mfd: cs42l43: Fix wrong GPIO_FN_SEL and SPI_CLK_CONFIG1 defaults
-Date: Fri, 1 Mar 2024 10:15:47 +0000
-Message-ID: <20240301101547.2136948-1-mstrozek@opensource.cirrus.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1709288225; c=relaxed/simple;
+	bh=qwVIxiufJj1mr1cm23cxINBd1eTGOKopYIHThjoyex4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iaG5YaBDQYDKdDoOQnyozHQDFvyljgi4X7nOO2IpGHaO8H0+a0BlYw/pv5ZWITphUrLIWSTYj8l+Ot7rATLSDL3jWz1ehQn8oLpvR63O0CF/zSfa5BO7+8RVEJueyQcSBxIwye+edDqVTLTvx2U4oBesR9790cpiPmJKLCu7tcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1rfzwh-0002zb-00; Fri, 01 Mar 2024 11:16:51 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id D28FDC0267; Fri,  1 Mar 2024 10:39:47 +0100 (CET)
+Date: Fri, 1 Mar 2024 10:39:47 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 00/14] Add support for the Mobileye EyeQ5 SoC
+Message-ID: <ZeGiYyiQQ7pwpECE@alpha.franken.de>
+References: <20240216174227.409400-1-gregory.clement@bootlin.com>
+ <ZdSst3fM3EOQGH03@alpha.franken.de>
+ <CZGOPF51JA1R.2YN65K6WUH9N4@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: _DQfhOcg-vxb4Zl5wF253C9eCruaktL5
-X-Proofpoint-GUID: _DQfhOcg-vxb4Zl5wF253C9eCruaktL5
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <CZGOPF51JA1R.2YN65K6WUH9N4@bootlin.com>
 
-Two regs have wrong values in existing fields, change them to match
-the datasheet.
+On Wed, Feb 28, 2024 at 12:44:09PM +0100, Théo Lebrun wrote:
+> Hello Thomas,
+> 
+> On Tue Feb 20, 2024 at 2:44 PM CET, Thomas Bogendoerfer wrote:
+> > On Fri, Feb 16, 2024 at 06:42:09PM +0100, Gregory CLEMENT wrote:
+> > > Hello,
+> > > 
+> > > The EyeQ5 SoC from Mobileye is based on the MIPS I6500 architecture
+> > > and features multiple controllers such as the classic UART, I2C, SPI,
+> > > as well as CAN-FD, PCIe, Octal/Quad SPI Flash interface, Gigabit
+> > > Ethernet, MIPI CSI-2, and eMMC 5.1. It also includes a Hardware
+> > > Security Module, Functional Safety Hardware, and MJPEG encoder.
+> 
+> [...]
+> 
+> > series applied to mips-next.
+> >
+> > I've fixed generic|ingenic|realtek builds by adding select MACH_GENERIC_CORE
+> > in arch/mips/Kconfig.
+> 
+> Would it be possible to provide an immutable branch containing the two
+> series? I've got quite a few series that depend on them as they target
+> EyeQ5 devicetrees and defconfig.
 
-Fixes: ace6d1448138 ("mfd: cs42l43: Add support for cs42l43 core driver")
+that's IMHO too late, as I've merged it already to mips-next. mips-linux
+itself is immutable, but contains other mips related stuff.
 
-Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
----
- drivers/mfd/cs42l43.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thomas.
 
-diff --git a/drivers/mfd/cs42l43.c b/drivers/mfd/cs42l43.c
-index 73c88ee6a866..1cea3f8f467d 100644
---- a/drivers/mfd/cs42l43.c
-+++ b/drivers/mfd/cs42l43.c
-@@ -84,7 +84,7 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
- 	{ CS42L43_DRV_CTRL_5,				0x136C00C0 },
- 	{ CS42L43_GPIO_CTRL1,				0x00000707 },
- 	{ CS42L43_GPIO_CTRL2,				0x00000000 },
--	{ CS42L43_GPIO_FN_SEL,				0x00000000 },
-+	{ CS42L43_GPIO_FN_SEL,				0x00000004 },
- 	{ CS42L43_MCLK_SRC_SEL,				0x00000000 },
- 	{ CS42L43_SAMPLE_RATE1,				0x00000003 },
- 	{ CS42L43_SAMPLE_RATE2,				0x00000003 },
-@@ -217,7 +217,7 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
- 	{ CS42L43_CTRL_REG,				0x00000006 },
- 	{ CS42L43_FDIV_FRAC,				0x40000000 },
- 	{ CS42L43_CAL_RATIO,				0x00000080 },
--	{ CS42L43_SPI_CLK_CONFIG1,			0x00000000 },
-+	{ CS42L43_SPI_CLK_CONFIG1,			0x00000001 },
- 	{ CS42L43_SPI_CONFIG1,				0x00000000 },
- 	{ CS42L43_SPI_CONFIG2,				0x00000000 },
- 	{ CS42L43_SPI_CONFIG3,				0x00000001 },
---
-2.30.2
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
