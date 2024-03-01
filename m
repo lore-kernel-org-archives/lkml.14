@@ -1,54 +1,66 @@
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55733A1A7
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 19:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E093039AEA
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 19:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709320588; cv=none; b=M02lk4Lc74hOdfkSVjijUQMxOkA5yPFZQQivy1noRzL8ZhUDdB9aYJ7kAZOM9ovANmbonvGb5wQaYk5dNB2woOVvnTBrnSuBX1zAHs+T+Tn100SMyV0BN7V4nKO7pyNy/Cxe+fwbzYVrEp/U+Dq1Xl1YZ16/ZtSRujFsXXm0t2g=
+	t=1709320625; cv=none; b=axOaMCdFNfOBRUVKrxu7pe57IquoCbwIcg/IvXLuFHNlLUQit2U8fCwaihui/EBTGbVE3ewAQ97A4O7L5pgCpN3zbpfMslDIc/2uyPCLZkr/3nNCcznXyzBjseadwJTogD4QKsLrF98L8RKUNe8mtg0B2vw6H0kJq60SLZjIZz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709320588; c=relaxed/simple;
-	bh=Q7fU6Ub3q+6YxoCBFaoEp7a/GqkOwDsLuYbxuGhGrJY=;
+	s=arc-20240116; t=1709320625; c=relaxed/simple;
+	bh=dEmjzPDrT+npTyMci1PwxN3F1Q+kk+yxzW8fa60q1AU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kehAcMP1lKuM7LL+DpsX5fxZmnpQixZ+ZfiQVuUILrUs8ix3jnmv2DJ3Tr4WXziMA8Mk6ACd71U4dYWUY11Em1KxAlVR9pKt8XOMvNvlSkzbTc/mTJqZYCmSbFSQeL7tkNFhQyZ71duplmeMhClk47+Dwfvq2KNjuXbsHZmUMZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ekdE8C1Y; arc=none smtp.client-ip=185.125.25.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=WWiAu+Kb67OWGQX+HzzkbuG/XZrkcbW8JWehxFLTy59X2ACNCvPlGNSpBuMqPQD4OX9dzszDgIJxDDFdu0KGnHSbOkp+g7reMU7FufJ/9A6v6yDLpN5tOCzLkL9P8jRIAm953KdSK0T0DvGzvKpSwTg8Y1b4cUQzh9HaIr2stT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VO1Lo/Y1; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ekdE8C1Y"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Tmd9Y1VK2zXyj;
-	Fri,  1 Mar 2024 20:16:17 +0100 (CET)
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Tmd9W6JqCzpmw;
-	Fri,  1 Mar 2024 20:16:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1709320577;
-	bh=Q7fU6Ub3q+6YxoCBFaoEp7a/GqkOwDsLuYbxuGhGrJY=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VO1Lo/Y1"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6CA6A40E0196;
+	Fri,  1 Mar 2024 19:17:01 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 5jYA0sa8vCA5; Fri,  1 Mar 2024 19:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1709320619; bh=sd/nD7Yx33s4fZwmlkzXtyIVaIXVfPoDtiJXjkBlQOM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ekdE8C1Ycehc5cU0FFdPBLOQIWYuuwCoAVIcd6blq2ECeRFY83hIegduUPkzETJSJ
-	 1aED213nnnjEoQbHieGvuKeSAmm8UB1bPBZPlrobr+nQOfkOfTvxMUACoi0q1XEtyO
-	 1h134Jafh7/zywAVozq8HQY0K0a+ZnyoDROUVHAo=
-Date: Fri, 1 Mar 2024 20:16:05 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Kees Cook <keescook@chromium.org>
-Cc: Brendan Higgins <brendanhiggins@google.com>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Morris <jamorris@linux.microsoft.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Thara Gopinath <tgopinath@microsoft.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>, Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 8/8] kunit: Add tests for faults
-Message-ID: <20240301.aekiung2aL7K@digikod.net>
-References: <20240229170409.365386-1-mic@digikod.net>
- <20240229170409.365386-9-mic@digikod.net>
- <202402291027.6F0E4994@keescook>
+	b=VO1Lo/Y1GhJsKcSv6cC5FTu5R1YH02Ll27aXZ2PMSU6OFOWh9TJsU7z5Zh8ylBqKc
+	 C0vZOh/IDM1NWm7M7F/7lS3WNom7WiGQHz0BEB1UPjhLAlJ9s5Ao5uRfsH2O38duS8
+	 a3MusfPakfDxTCku6NUy66pOvGm0TQZi5Glw6CGgKa3dF8grfZh+3InDS/6G8Qrc7h
+	 l2CT5qPekiCSwJKa+Bzr72jnEZchbNb7+lJIXSlTxzH9q4uQSLzSR+bpYDYfX3sKDf
+	 7DrQcxXOwhBS2ypNkXZRij+I+llThaeIqfdedDNRP3bGI1mR5P5fpzJ2PKSd3T/QIT
+	 CCfpZGswpW9YsTTzNQYQemAzgmIT8Hxy1GuhHs5Vppnian1fkNQq5N0OnDVitHZR54
+	 HpqOWCGveg1yS0IMLA8FnJFKffnfUh65B5lysexEm0VKECdoGCj+u9tXEYCKb7BAqi
+	 /u0MHsEWzEDiFoN9tCNZzl6uc2W0pw7ypw5Wv7D5Rzkm/rQCV+b1LWqi9Csf33pBRq
+	 fvGwbq58w4lpRtQ/Nxk7HxibyHHdMcKQ5D1joAQa6Mc4qQMiokDbb88mFRu+BiijSO
+	 5KJ2dgPXJ2oym4vP2uofOLtdgfo8ihgWTzEr7reGsFsk0wEPACEWCL2zWlMCpOJd8o
+	 DKJjXwXg78j2X5x0Tsf+DKa8=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DDEAD40E00B2;
+	Fri,  1 Mar 2024 19:16:47 +0000 (UTC)
+Date: Fri, 1 Mar 2024 20:16:40 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>
+Subject: Re: [PATCH v7 6/9] x86/boot: Move mem_encrypt= parsing to the
+ decompressor
+Message-ID: <20240301191640.GNZeIpmAU3iM1EIg4S@fat_crate.local>
+References: <20240227151907.387873-11-ardb+git@google.com>
+ <20240227151907.387873-17-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,68 +69,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202402291027.6F0E4994@keescook>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20240227151907.387873-17-ardb+git@google.com>
 
-On Thu, Feb 29, 2024 at 10:28:18AM -0800, Kees Cook wrote:
-> On Thu, Feb 29, 2024 at 06:04:09PM +0100, Mickaël Salaün wrote:
-> > The first test checks NULL pointer dereference and make sure it would
-> > result as a failed test.
-> > 
-> > The second and third tests check that read-only data is indeed read-only
-> > and trying to modify it would result as a failed test.
-> > 
-> > This kunit_x86_fault test suite is marked as skipped when run on a
-> > non-x86 native architecture.  It is then skipped on UML because such
-> > test would result to a kernel panic.
-> > 
-> > Tested with:
-> > ./tools/testing/kunit/kunit.py run --arch x86_64 kunit_x86_fault
-> > 
-> > Cc: Brendan Higgins <brendanhiggins@google.com>
-> > Cc: David Gow <davidgow@google.com>
-> > Cc: Rae Moar <rmoar@google.com>
-> > Cc: Shuah Khan <skhan@linuxfoundation.org>
-> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> 
-> If we can add some way to collect WARN/BUG output for examination, I
-> could rewrite most of LKDTM in KUnit! I really like this!
+On Tue, Feb 27, 2024 at 04:19:14PM +0100, Ard Biesheuvel wrote:
+> diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+> index 01d19fc22346..eeea058cf602 100644
+> --- a/arch/x86/include/uapi/asm/bootparam.h
+> +++ b/arch/x86/include/uapi/asm/bootparam.h
+> @@ -38,6 +38,7 @@
+>  #define XLF_EFI_KEXEC			(1<<4)
+>  #define XLF_5LEVEL			(1<<5)
+>  #define XLF_5LEVEL_ENABLED		(1<<6)
+> +#define XLF_MEM_ENCRYPTION		(1<<7)
 
-Thanks!  About the WARN/BUG examination, I guess the easier way would be
-to do in in user space by extending kunit_parser.py.
+Needs documenting in Documentation/arch/x86/boot.rst.
 
-> 
-> > ---
-> >  lib/kunit/kunit-test.c | 115 ++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 114 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-> > index f7980ef236a3..57d8eff00c66 100644
-> > --- a/lib/kunit/kunit-test.c
-> > +++ b/lib/kunit/kunit-test.c
-> > @@ -10,6 +10,7 @@
-> >  #include <kunit/test-bug.h>
-> >  
-> >  #include <linux/device.h>
-> > +#include <linux/init.h>
-> >  #include <kunit/device.h>
-> >  
-> >  #include "string-stream.h"
-> > @@ -109,6 +110,117 @@ static struct kunit_suite kunit_try_catch_test_suite = {
-> >  	.test_cases = kunit_try_catch_test_cases,
-> >  };
-> >  
-> > +#ifdef CONFIG_X86
-> 
-> Why is this x86 specific?
+And yes, those 5LEVEL things are not documented either but I'm even
+questioning the justification for their existence. We'll see...
 
-Because I didn't test on other architecture, and it looks it crashed on
-arm64. :)
+Thx.
 
-I'll test on arm64 and change this condition with !CONFIG_UML.
+-- 
+Regards/Gruss,
+    Boris.
 
-> 
-> -- 
-> Kees Cook
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
