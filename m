@@ -1,120 +1,115 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25A169D14
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 08:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846C369D05
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 08:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709281621; cv=none; b=lQzzcGB732AVG986g+lCLZOjPtdFeOuCPT0BiSeIEW3DiBfflBZ73M9eL/jr0hlFlC39JxPMpf3Yob0AOsKgZ8NgK9M5oXeBUl52h4jOX+bkUxtBbX5dnopNMAd1M/JAFCSHoeFYgsV8GWAjSKzDIg3uw6KKdfb+s6SxIwjluf0=
+	t=1709281665; cv=none; b=GxBVI60ibzp8o0fl6/DAszYzx1fm59n5+FHrMImdHjli9i5fHQL8c7n6vGqCuIg1lzlLX/V+MzQYKeeralYfvbdVsdjACp+krOzEbeW0aIcUEc0fAbg0kVqp1bdxM3mAaQHF0RPysUx98rpFLckVzT9uIceYwEih2cIQX/141tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709281621; c=relaxed/simple;
-	bh=Qkm28q9qiqVdNpBzw+D1ZzW6MaJgVHb4vj9bN4B0IrM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HSsBt9EgtuUsiO6TSmOr63pqUVdVGdE2NomrnLIzVJk2rmIO2Qwz5zBehPkASWU4KG+imU8b5dKT5Tq6Sg/s8WazmTcxhvHaM9znm7Ec20GKLKBXnzusYgVg7pzIRUV4E3WzOVq+TXcN4EoRNQWgz0o4u7EBoV+xhpAm+ELIIqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 4218QCKa055787;
-	Fri, 1 Mar 2024 16:26:12 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TmLkR6XLSz2KQsFF;
-	Fri,  1 Mar 2024 16:25:19 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Fri, 1 Mar 2024 16:26:09 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
-        <hongyu.jin@unisoc.com>
-Subject: [PATCH 2/2] f2fs: fix to check return value of f2fs_gc_range
-Date: Fri, 1 Mar 2024 16:25:55 +0800
-Message-ID: <1709281555-11373-2-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1709281555-11373-1-git-send-email-zhiguo.niu@unisoc.com>
-References: <1709281555-11373-1-git-send-email-zhiguo.niu@unisoc.com>
+	s=arc-20240116; t=1709281665; c=relaxed/simple;
+	bh=XqfNJZAlUlGhU0tMLlsUHrVl8hhs+fFQE6upJ67bxBM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bMkyyYyWy4aggDxel7KonTR6J+Eso8TER3TaJEkIsjOO5S4XxTKM/1zATJ2ljCddDVO4ZNtb/B2jFNT83bskKnlTIcNG9JtAZL7nnNatww9Hfe57848sbCitmSnsOg1rbp+Xv8U9hsdI2yUYmgGdq629blHq2sTJMOB8nvMRT5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=M81FT9RJ; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="M81FT9RJ"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bc21303a35so577133b6e.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 00:27:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709281661; x=1709886461; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u+1gYR9fNMcL6Yz70ujlHI/EnqcOVjeumCs1fZJGDkY=;
+        b=M81FT9RJhuS9Xgc+mQidbYySp/9ztKdkjneZ+/Fya+5wAZ2jd4T5TT7PxYjUJNrVtQ
+         7nJ/ydMd8Lekbv9o+1sTbDzdvUa8jceAfl9NfegRUmgj0VsFOUQqjQXXsUB52qO35QwW
+         ibxtKFAZHEe1WFrNVSAjnlYdCILBObuCHZLZ1KW03DEUl0QyLficwx7qfOz4rBYgUn17
+         dmNlOlW5+E+pGHMIBw1ZeX7VGsrlepDADzU0ymBY5wyb18VL3tiebKSN8LENyRDfv3Us
+         xyM5DOCAMYwDultm2kbe4gnDu6tbxFmbn4W6aYjHEvqBtcuOwoXG5ejfvuhmh9IXBY4s
+         f8FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709281661; x=1709886461;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u+1gYR9fNMcL6Yz70ujlHI/EnqcOVjeumCs1fZJGDkY=;
+        b=e8wLHizqqmWgk6MoTKZvjb8w/Qxrni9nD8sM8QzRs6WU95n5XumjTEF53POjTktIW0
+         1nEJPy8vTB2fC0x3XvjfYlcf7/QEEK/b90loLzTI57uvRXr6UsVPxBgywuaDRBkSyRgJ
+         RG3Z7oIVh4B7f6ZQ7ey1pqAFeZRSkdEXM6WN5eojrTGg9erNLynfYn/6e/546AVpPveg
+         AOUAmORmeTYdbSyYoJNXW69szFmee+GyomRmFfXo79qPcrss5fR0wrL34IebmP57cI9t
+         UtLGnoUrrRUw/a3EprT3kimx+OGUTWFlRkYDOAbMqaw0tTSucjnafQb3Ows2CiaoccoQ
+         Q/8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVPe5pZvo6C9yZaeVUv9J+nhn4wuy2rC+bb72KlHp9OI5QRtmkUZtxNRZvMMwn/avPNryXTi6WOdIsb3+EB5kPD5uCxhpP5kt/xvgkI
+X-Gm-Message-State: AOJu0YyMiisUWsvHNq+V/33Gt01qwZTU1ZXI0XtkdfYh8CVkirQhZ29P
+	22lOS5mKiO2vPsdZ32BNcq+CC5hyDQlGHoh5e/p5deGpMFTg5o1fnTUCrsxYuDs=
+X-Google-Smtp-Source: AGHT+IEdyiT1lfztdP7slsQZvQ1H9ibF+1htyyfiSkFgE7uzu3qWKNguG9y0uIjwtsPG01jsOQ/DmQ==
+X-Received: by 2002:a05:6808:211a:b0:3c1:aa85:7ab4 with SMTP id r26-20020a056808211a00b003c1aa857ab4mr1284563oiw.3.1709281661587;
+        Fri, 01 Mar 2024 00:27:41 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:999:a3a0:1070:febd:b4af:e79a? ([2a01:e0a:999:a3a0:1070:febd:b4af:e79a])
+        by smtp.gmail.com with ESMTPSA id r7-20020aa78b87000000b006e13e202914sm2449292pfd.56.2024.03.01.00.27.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Mar 2024 00:27:40 -0800 (PST)
+Message-ID: <8e3003f0-ec27-47d4-9b1f-89de2afbb8b8@rivosinc.com>
+Date: Fri, 1 Mar 2024 09:27:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 4218QCKa055787
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/15] RISC-V: Add FIRMWARE_READ_HI definition
+Content-Language: en-US
+To: Atish Patra <atishp@rivosinc.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-kselftest@vger.kernel.org,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ kvm@vger.kernel.org, Will Deacon <will@kernel.org>,
+ Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Guo Ren <guoren@kernel.org>,
+ kvm-riscv@lists.infradead.org, Atish Patra <atishp@atishpatra.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+ Shuah Khan <shuah@kernel.org>, Andrew Jones <ajones@ventanamicro.com>
+References: <20240229010130.1380926-1-atishp@rivosinc.com>
+ <20240229010130.1380926-3-atishp@rivosinc.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20240229010130.1380926-3-atishp@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-f2fs_gc_range may return error, so its caller
-f2fs_allocate_pinning_section should determine whether
-to do retry based on ist return value.
 
-Also just do f2fs_gc_range when f2fs_allocate_new_section
-return -EAGAIN, and check cp error case in f2fs_gc_range.
 
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
----
- fs/f2fs/gc.c      |  3 +++
- fs/f2fs/segment.c | 13 ++++++++-----
- 2 files changed, 11 insertions(+), 5 deletions(-)
+On 29/02/2024 02:01, Atish Patra wrote:
+> SBI v2.0 added another function to SBI PMU extension to read
+> the upper bits of a counter with width larger than XLEN.
+> 
+> Add the definition for that function.
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/sbi.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> index 6e68f8dff76b..ef8311dafb91 100644
+> --- a/arch/riscv/include/asm/sbi.h
+> +++ b/arch/riscv/include/asm/sbi.h
+> @@ -131,6 +131,7 @@ enum sbi_ext_pmu_fid {
+>  	SBI_EXT_PMU_COUNTER_START,
+>  	SBI_EXT_PMU_COUNTER_STOP,
+>  	SBI_EXT_PMU_COUNTER_FW_READ,
+> +	SBI_EXT_PMU_COUNTER_FW_READ_HI,
+>  };
+>  
+>  union sbi_pmu_ctr_info {
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index e435e1f..c60b747 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1986,6 +1986,9 @@ int f2fs_gc_range(struct f2fs_sb_info *sbi,
- 	unsigned int segno;
- 	unsigned int gc_secs = dry_run_sections;
- 
-+	if (unlikely(f2fs_cp_error(sbi)))
-+		return -EIO;
-+
- 	for (segno = start_seg; segno <= end_seg; segno += SEGS_PER_SEC(sbi)) {
- 		struct gc_inode_list gc_list = {
- 			.ilist = LIST_HEAD_INIT(gc_list.ilist),
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 72f6ee3..1bb3019 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3109,6 +3109,7 @@ static int __allocate_new_segment(struct f2fs_sb_info *sbi, int type,
- {
- 	struct curseg_info *curseg = CURSEG_I(sbi, type);
- 	unsigned int old_segno;
-+	int err = 0;
- 
- 	if (type == CURSEG_COLD_DATA_PINNED && !curseg->inited)
- 		goto allocate;
-@@ -3121,8 +3122,9 @@ static int __allocate_new_segment(struct f2fs_sb_info *sbi, int type,
- 
- allocate:
- 	old_segno = curseg->segno;
--	if (new_curseg(sbi, type, true))
--		return -EAGAIN;
-+	err = new_curseg(sbi, type, true);
-+	if (err)
-+		return err;
- 	stat_inc_seg_type(sbi, curseg);
- 	locate_dirty_segment(sbi, old_segno);
- 	return 0;
-@@ -3151,13 +3153,14 @@ int f2fs_allocate_pinning_section(struct f2fs_sb_info *sbi)
- 	err = f2fs_allocate_new_section(sbi, CURSEG_COLD_DATA_PINNED, false);
- 	f2fs_unlock_op(sbi);
- 
--	if (f2fs_sb_has_blkzoned(sbi) && err && gc_required) {
-+	if (f2fs_sb_has_blkzoned(sbi) && err == -EAGAIN && gc_required) {
- 		f2fs_down_write(&sbi->gc_lock);
--		f2fs_gc_range(sbi, 0, GET_SEGNO(sbi, FDEV(0).end_blk), true, 1);
-+		err = f2fs_gc_range(sbi, 0, GET_SEGNO(sbi, FDEV(0).end_blk), true, 1);
- 		f2fs_up_write(&sbi->gc_lock);
- 
- 		gc_required = false;
--		goto retry;
-+		if (!err)
-+			goto retry;
- 	}
- 
- 	return err;
--- 
-1.9.1
+Reviewed-by: Clément Léger <cleger@rivosinc.com>
 
+Thanks,
+
+Clément
