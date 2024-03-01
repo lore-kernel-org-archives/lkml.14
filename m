@@ -1,175 +1,236 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB5B6BB57
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 10:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261246BFA4;
+	Fri,  1 Mar 2024 10:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709290389; cv=none; b=bAd5Ghd4XhYNcfKSgNWncg02nz/x9flF5wxdzGNrEjBcRot2JcIKSYWf5B+1QaKEwtlITE4LJa2mhp40rgUW8/hSesbBRDP9Oyg7gbxTRQ898TAjqbXEkSIRvM8cMAeCgXeICjAXntBuqm74Dun95UKeCU/G0gw4hn9qh8GR2WA=
+	t=1709290410; cv=none; b=KjyFmVZfTyuQb0Z1cRiEC7k9nrSGrFIsMPODHhVudvpmv1a5cAR+UVQn0oGE8RK+/S78cNtszJqfDh3BxQlgHTkzEQnYaBubGiDvkwKPz9edoJcYHyTfnyX57T1ioFRGCht3bOKej8VsoJHVmjZ/jlurh0pmhi2SRLiNhp7GBWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709290389; c=relaxed/simple;
-	bh=ulCG6y3yhF79+Xq3bHfN/KGrRQdGsfrD6NUWWkpaDV0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lyOPPae182vRm3VQl04gcz7lu46/dEFLWeZnf+HmQII+vhOuteWpgSYIKKz2AnDe0eFQXnVCN7fw6UjIThgAQUeTmhJ0gaWAB7O4UuUrIBf4BdKbuYZa/FG6mzjLcihZ0YSuer0kCsA+a2w+Zz6mLDBGHHSSn0ZIdguEbqtnmoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YypxsOQw; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YypxsOQw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709290387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=icNIdbNJLiHX8HLS/FchfvYxMBBdlKXDJTfhCxm4QoY=;
-	b=YypxsOQwxfCvm1lkoOUKpzbDxn8wMjiSWfSEpf7aLy8AJfSXmX0GWUNs/BlYWiPR0AtQov
-	TSY7hKsarwePMsOr1mI4YTCwRzCoiaVKtBWh6mZuDcd/MSDs2J4BKFrfGMLwTITzeHOQus
-	YB6iESkvCoWuSYTkPvrTS38Xvdg5lhg=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-260-L7Da5J5_OEyIwwbk3ruyZg-1; Fri, 01 Mar 2024 05:53:04 -0500
-X-MC-Unique: L7Da5J5_OEyIwwbk3ruyZg-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5131acee642so1433860e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 02:53:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709290383; x=1709895183;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=icNIdbNJLiHX8HLS/FchfvYxMBBdlKXDJTfhCxm4QoY=;
-        b=hmrX+D1Jbe84w7R16nGpf7YSoREmdZOI0aH+hMx+sknkFp/XpbJjb5h3yHQTDdKUyT
-         ofdtEWGqX7erxpdHWx+2j+bIsBDrKCSGnfQZ4HpLFcCYmwKcZBF5/YopqwoE/AexCnKw
-         pqilt22a453wcHlHkN02cpIGc6F0ukqW+XEnVIRUnpQpkzQDTBDWZjHSjFFYYEPa07po
-         YGHCyNp/OZ7OVBXvKHGC2b0Qh15t8PdCHQSFEOM2VqFf9jOe/HlT9y8e8HOAR8QdjTz9
-         r7XAA3ydf0wGH54q9C51koS2+la/1AEGRPHJ57UUJ+AhYWMDZp1YFrVHRHmqe7TsiozZ
-         NNHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTK9Dsf7Ao8qZLtw86GL2i4hiTPBGeDXr0a8y1lEYha5hRpMGhEet0YoI8NANVIwbcjdWh7jBuhrM3moHzvbmLDFAw1gRAF4jDL8X0
-X-Gm-Message-State: AOJu0Yz1luIiw/xtYgTWeqrwSqgZ3Hhgxfi72/eo2wCDhWARQ2g7dofc
-	jXFGonXcp9wzh0CYUp2u95TdpA7TYgrXaJKFevP5Gn8j7S70pbpKoTNJq//R+MeZHpvw8dZYZ0s
-	knak1HvF+FXk5rEKhufkt0mEDdEFMj5nvvz8UdL8r8bD36Yq4GCyr9MpfirLPHw==
-X-Received: by 2002:a05:6512:220c:b0:512:fc30:3ee4 with SMTP id h12-20020a056512220c00b00512fc303ee4mr1175712lfu.53.1709290383363;
-        Fri, 01 Mar 2024 02:53:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHNpDwtSFklfuMEegHArxGPyTbqXrGAwFiEg9hbahTvFZRLRZ9NzWJ7cgl9SN8sgn9iO4Mbzw==
-X-Received: by 2002:a05:6512:220c:b0:512:fc30:3ee4 with SMTP id h12-20020a056512220c00b00512fc303ee4mr1175693lfu.53.1709290382894;
-        Fri, 01 Mar 2024 02:53:02 -0800 (PST)
-Received: from ?IPV6:2003:cb:c713:3200:77d:8652:169f:b5f7? (p200300cbc7133200077d8652169fb5f7.dip0.t-ipconnect.de. [2003:cb:c713:3200:77d:8652:169f:b5f7])
-        by smtp.gmail.com with ESMTPSA id q9-20020adf9dc9000000b0033e192a5852sm2146471wre.30.2024.03.01.02.53.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Mar 2024 02:53:02 -0800 (PST)
-Message-ID: <33fb4546-df4e-4319-b498-69ddb5e2831f@redhat.com>
-Date: Fri, 1 Mar 2024 11:53:01 +0100
+	s=arc-20240116; t=1709290410; c=relaxed/simple;
+	bh=t4ccu+GWe684aqIDSKF9bD//mn+pVsNSlItyqSKCQgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ThG9ajKwQuEM+6aiQJ6J1MrUBPD6GEoxaZRIvott21tk4R3d5oEEEZTMtlaZ2aPM5Y5luzQtV2wMga8FNnUMVnqDG3GMn8Ukc+W8/U0TRbE7vlYIEnJhRJFI4V2ddO8bzNVjwsemeyX/PjNJyhVKME/Vj3sZsoAyhVcEKa4DFXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rg0UC-002Hbb-4N; Fri, 01 Mar 2024 18:51:29 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 01 Mar 2024 18:51:43 +0800
+Date: Fri, 1 Mar 2024 18:51:43 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Varshini Rajendran <varshini.rajendran@microchip.com>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+	mturquette@baylibre.com, sboyd@kernel.org, davem@davemloft.net,
+	andi.shyti@kernel.org, tglx@linutronix.de, tudor.ambarus@linaro.org,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	linus.walleij@linaro.org, sre@kernel.org,
+	u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
+	olivia@selenic.com, radu_nicolae.pirea@upb.ro,
+	richard.genoud@gmail.com, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+	wim@linux-watchdog.org, linux@roeck-us.net, linux@armlinux.org.uk,
+	andrei.simion@microchip.com, mihai.sain@microchip.com,
+	andre.przywara@arm.com, neil.armstrong@linaro.org, tony@atomide.com,
+	durai.manickamkr@microchip.com, geert+renesas@glider.be,
+	arnd@arndb.de, Jason@zx2c4.com, rdunlap@infradead.org,
+	rientjes@google.com, vbabka@suse.cz, mripard@kernel.org,
+	codrin.ciubotariu@microchip.com, eugen.hristev@collabora.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v4 00/39] Add support for sam9x7 SoC family
+Message-ID: <ZeGzPwdslHIj5IWt@gondor.apana.org.au>
+References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "vfio/type1: Unpin zero pages"
-Content-Language: en-US
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240229223544.257207-1-alex.williamson@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240229223544.257207-1-alex.williamson@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240223171342.669133-1-varshini.rajendran@microchip.com>
 
-On 29.02.24 23:35, Alex Williamson wrote:
-> This reverts commit 873aefb376bbc0ed1dd2381ea1d6ec88106fdbd4.
+On Fri, Feb 23, 2024 at 10:43:42PM +0530, Varshini Rajendran wrote:
+> This patch series adds support for the new SoC family - sam9x7.
+>  - The device tree, configs and drivers are added
+>  - Clock driver for sam9x7 is added
+>  - Support for basic peripherals is added
+>  - Target board SAM9X75 Curiosity is added
 > 
-> This was a heinous workaround and it turns out it's been fixed in mm
-> twice since it was introduced.  Most recently, commit c8070b787519
-> ("mm: Don't pin ZERO_PAGE in pin_user_pages()") would have prevented
-> running up the zeropage refcount, but even before that commit
-> 84209e87c696 ("mm/gup: reliable R/O long-term pinning in COW mappings")
-> avoids the vfio use case from pinning the zeropage at all, instead
-> replacing it with exclusive anonymous pages.
+>  Changes in v4:
+>  --------------
 > 
-> Remove this now useless overhead.
+>  - Addressed all the review comments in the patches
+>  - Picked up all Acked-by and Reviewed-by tags
+>  - Dropped applied patches from the series
+>  - Added pwm node and related dt binding documentation
+>  - Added support for exporting some clocks to DT
+>  - Dropped USB related patches and changes. See NOTE.
+>  - All the specific changes are captured in the corresponding patches
 > 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->   drivers/vfio/vfio_iommu_type1.c | 12 ------------
->   1 file changed, 12 deletions(-)
+>  NOTE: Owing to the discussion here
+>  https://lore.kernel.org/linux-devicetree/CAL_JsqJ9PrX6fj-EbffeJce09MXs=B7t+KS_kOinxaRx38=WxA@mail.gmail.com/
+>  the USB related changes are dropped from this series in order to enable
+>  us to work on the mentioned issues before adding new compatibles as
+>  said. The issues/warnings will be addressed in subsequent patches.
+>  After which the USB related support for sam9x7 SoCs will be added. Hope
+>  this works out fine.
 > 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index b2854d7939ce..b5c15fe8f9fc 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -567,18 +567,6 @@ static int vaddr_get_pfns(struct mm_struct *mm, unsigned long vaddr,
->   	ret = pin_user_pages_remote(mm, vaddr, npages, flags | FOLL_LONGTERM,
->   				    pages, NULL);
->   	if (ret > 0) {
-> -		int i;
-> -
-> -		/*
-> -		 * The zero page is always resident, we don't need to pin it
-> -		 * and it falls into our invalid/reserved test so we don't
-> -		 * unpin in put_pfn().  Unpin all zero pages in the batch here.
-> -		 */
-> -		for (i = 0 ; i < ret; i++) {
-> -			if (unlikely(is_zero_pfn(page_to_pfn(pages[i]))))
-> -				unpin_user_page(pages[i]);
-> -		}
-> -
->   		*pfn = page_to_pfn(pages[0]);
->   		goto done;
->   	}
+>  Changes in v3:
+>  --------------
+> 
+>  - Fixed the DT documentation errors pointed out in v2.
+>  - Dropped Acked-by tag in tcb DT doc patch as it had to be adapted
+>    according to sam9x7 correctly.
+>  - Picked by the previously missed tags.
+>  - Dropped this patch "dt-bindings: usb: generic-ehci: Document clock-names
+>    property" as the warning was not found while validating DT-schema for
+>    at91-sam9x75_curiosity.dtb.
+>  - Dropped redundant words in the commit message.
+>  - Fixed the CHECK_DTBS warnings validated against
+>    at91-sam9x75_curiosity.dtb.
+>  - Renamed dt nodes according to naming convention.
+>  - Dropped unwanted status property in dts.
+>  - Removed nodes that are not in use from the board dts.
+>  - Removed spi DT doc patch from the series as it was already applied
+>    and a fix patch was applied subsequently. Added a patch to remove the
+>    compatible to adapt sam9x7.
+>  - Added sam9x7 compatibles in usb dt documentation.
+> 
+> 
+>  Changes in v2:
+>  --------------
+> 
+>  - Added sam9x7 specific compatibles in DT with fallbacks
+>  - Documented all the newly added DT compatible strings
+>  - Added device tree for the target board sam9x75 curiosity and
+>    documented the same in the DT bindings documentation
+>  - Removed the dt nodes that are not supported at the moment
+>  - Removed the configs added by previous version that are not supported
+>    at the moment
+>  - Fixed all the corrections in the commit message
+>  - Changed all the instances of copyright year to 2023
+>  - Added sam9x7 flag in PIT64B configuration
+>  - Moved macro definitions to header file
+>  - Added another divider in mck characteristics in the pmc driver
+>  - Fixed the memory leak in the pmc driver
+>  - Dropped patches that are no longer needed
+>  - Picked up Acked-by and Reviewed-by tags
+> 
+> 
+> Varshini Rajendran (39):
+>   dt-bindings: net: cdns,macb: add sam9x7 ethernet interface
+>   dt-bindings: atmel-sysreg: add sam9x7
+>   dt-bindings: crypto: add sam9x7 in Atmel AES
+>   dt-bindings: crypto: add sam9x7 in Atmel SHA
+>   dt-bindings: crypto: add sam9x7 in Atmel TDES
+>   dt-bindings: i2c: at91: Add sam9x7 compatible string
+>   dt-bindings: atmel-ssc: add microchip,sam9x7-ssc
+>   dt-bindings: atmel-nand: add microchip,sam9x7-pmecc
+>   dt-bindings: pinctrl: at91: add sam9x7
+>   dt-bindings: rng: atmel,at91-trng: add sam9x7 TRNG
+>   dt-bindings: rtt: at91rm9260: add sam9x7 compatible
+>   dt-bindings: serial: atmel,at91-usart: add compatible for sam9x7.
+>   ASoC: dt-bindings: atmel-classd: add sam9x7 compatible
+>   dt-bindings: pwm: at91: Add sam9x7 compatible strings list
+>   dt-bindings: watchdog: sama5d4-wdt: add compatible for sam9x7-wdt
+>   spi: dt-bindings: atmel,at91rm9200-spi: remove 9x60 compatible from
+>     list
+>   ASoC: dt-bindings: microchip: add sam9x7
+>   ARM: at91: pm: add support for sam9x7 SoC family
+>   ARM: at91: pm: add sam9x7 SoC init config
+>   ARM: at91: add support in SoC driver for new sam9x7
+>   dt-bindings: clk: at91: add sam9x7
+>   dt-bindings: clk: at91: add sam9x7 clock controller
+>   clk: at91: clk-sam9x60-pll: re-factor to support individual core freq
+>     outputs
+>   clk: at91: sam9x7: add support for HW PLL freq dividers
+>   clk: at91: sama7g5: move mux table macros to header file
+>   dt-bindings: clock: at91: Allow PLLs to be exported and referenced in
+>     DT
+>   clk: at91: sam9x7: add sam9x7 pmc driver
+>   dt-bindings: irqchip/atmel-aic5: Add support for sam9x7 aic
+>   irqchip/atmel-aic5: Add support to get nirqs from DT for sam9x60 &
+>     sam9x7
+>   power: reset: at91-poweroff: lookup for proper pmc dt node for sam9x7
+>   power: reset: at91-reset: add reset support for sam9x7 SoC
+>   power: reset: at91-reset: add sdhwc support for sam9x7 SoC
+>   dt-bindings: reset: atmel,at91sam9260-reset: add sam9x7
+>   dt-bindings: power: reset: atmel,sama5d2-shdwc: add sam9x7
+>   ARM: at91: Kconfig: add config flag for SAM9X7 SoC
+>   ARM: configs: at91: enable config flags for sam9x7 SoC family
+>   ARM: dts: at91: sam9x7: add device tree for SoC
+>   dt-bindings: arm: add sam9x75 curiosity board
+>   ARM: dts: at91: sam9x75_curiosity: add sam9x75 curiosity board
+> 
+>  .../devicetree/bindings/arm/atmel-at91.yaml   |    6 +
+>  .../devicetree/bindings/arm/atmel-sysregs.txt |    7 +-
+>  .../bindings/clock/atmel,at91rm9200-pmc.yaml  |    2 +
+>  .../bindings/clock/atmel,at91sam9x5-sckc.yaml |    4 +-
+>  .../crypto/atmel,at91sam9g46-aes.yaml         |    6 +-
+>  .../crypto/atmel,at91sam9g46-sha.yaml         |    6 +-
+>  .../crypto/atmel,at91sam9g46-tdes.yaml        |    6 +-
+>  .../bindings/i2c/atmel,at91sam-i2c.yaml       |    4 +-
+>  .../interrupt-controller/atmel,aic.txt        |    2 +-
+>  .../devicetree/bindings/misc/atmel-ssc.txt    |    1 +
+>  .../devicetree/bindings/mtd/atmel-nand.txt    |    1 +
+>  .../devicetree/bindings/net/cdns,macb.yaml    |    5 +
+>  .../bindings/pinctrl/atmel,at91-pinctrl.txt   |    2 +
+>  .../power/reset/atmel,sama5d2-shdwc.yaml      |    3 +
+>  .../bindings/pwm/atmel,at91sam-pwm.yaml       |    3 +
+>  .../reset/atmel,at91sam9260-reset.yaml        |    4 +
+>  .../bindings/rng/atmel,at91-trng.yaml         |    4 +
+>  .../bindings/rtc/atmel,at91sam9260-rtt.yaml   |    4 +-
+>  .../bindings/serial/atmel,at91-usart.yaml     |   12 +-
+>  .../bindings/sound/atmel,sama5d2-classd.yaml  |    7 +-
+>  .../sound/microchip,sama7g5-i2smcc.yaml       |   11 +-
+>  .../bindings/spi/atmel,at91rm9200-spi.yaml    |    1 -
+>  .../bindings/watchdog/atmel,sama5d4-wdt.yaml  |   12 +-
+>  arch/arm/boot/dts/microchip/Makefile          |    3 +
+>  .../dts/microchip/at91-sam9x75_curiosity.dts  |  309 +++++
+>  arch/arm/boot/dts/microchip/sam9x60.dtsi      |    1 +
+>  arch/arm/boot/dts/microchip/sam9x7.dtsi       | 1214 +++++++++++++++++
+>  arch/arm/configs/at91_dt_defconfig            |    1 +
+>  arch/arm/mach-at91/Kconfig                    |   23 +-
+>  arch/arm/mach-at91/Makefile                   |    1 +
+>  arch/arm/mach-at91/generic.h                  |    2 +
+>  arch/arm/mach-at91/pm.c                       |   35 +
+>  arch/arm/mach-at91/sam9x7.c                   |   34 +
+>  drivers/clk/at91/Makefile                     |    1 +
+>  drivers/clk/at91/clk-sam9x60-pll.c            |   50 +-
+>  drivers/clk/at91/pmc.h                        |   18 +
+>  drivers/clk/at91/sam9x60.c                    |    7 +
+>  drivers/clk/at91/sam9x7.c                     |  946 +++++++++++++
+>  drivers/clk/at91/sama7g5.c                    |   42 +-
+>  drivers/irqchip/irq-atmel-aic5.c              |   12 +-
+>  drivers/power/reset/Kconfig                   |    4 +-
+>  drivers/power/reset/at91-sama5d2_shdwc.c      |    1 +
+>  drivers/soc/atmel/soc.c                       |   23 +
+>  drivers/soc/atmel/soc.h                       |    9 +
+>  include/dt-bindings/clock/at91.h              |    4 +
+>  45 files changed, 2788 insertions(+), 65 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/microchip/at91-sam9x75_curiosity.dts
+>  create mode 100644 arch/arm/boot/dts/microchip/sam9x7.dtsi
+>  create mode 100644 arch/arm/mach-at91/sam9x7.c
+>  create mode 100644 drivers/clk/at91/sam9x7.c
+> 
+> -- 
+> 2.25.1
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
+Patches 3-5 and 10 applied.  Thanks.
 -- 
-Cheers,
-
-David / dhildenb
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
