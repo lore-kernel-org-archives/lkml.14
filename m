@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE85A3AC19
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFE345018
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709319410; cv=none; b=vBd20cUiwdE3LkXrNby7k+4FG3wcj/ENxtD87BZgfmdacJbH7/C39yxiRgTIN9YENM/1Es5qR05+oth59XV0JiAC4H0iFgbbSyVu0SpUX4hlSNylsWlbCBsbIBpIk3+46ptNVcNEjPQ2pytCZ/fLj0ts/oeN0WdDHlJsIcGgpG8=
+	t=1709319412; cv=none; b=Zu55y0KLuoUBFCpDxYfivm7Bt2kviAaReikLMJ+6cwUOqfmtrRkqDBIfCD4XE7Ug6eCli/5cQ+0eaGAIgI9BujvUp4CyWuY2dzv7Rfypu5I91cHaWOHC1uMLgCi/JAF2QjgQIRiT2QK0cTpcCuCDkrj4rQ2pCuIeK0XZg6pqW6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709319410; c=relaxed/simple;
-	bh=ioqKuJWewNQmhIwOmTO7CGCh23AwMW0/VlYh24IVFkw=;
+	s=arc-20240116; t=1709319412; c=relaxed/simple;
+	bh=panIrCvcM8hwmTL6w73OOIwaBmO4XEVl+dEJoBh+wK8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=GmCGVc6toxoyjqmtZAQtptH4j3/gsYaa9nRtj4M+0n+LkCiwgEMP1NSMD9YEBDkr4zg4eF52gb5O47KOIziZZncZ4DI+rvtfcFaOUASDcPwhZ88DY2p8hVmhdd6TZWbXMao+Ry1v3KeqEA8FGH7xzHASl7PM5psh2QcI9eUVkGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ytYvK3rB; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=jT5MeZULZhb/jI2/bvzX3uSj2HB+KaO/qZ9gHT4poHvPKERR0UjuN2tBFiIEqhParhVrGNL3A/xmQPRgf7xRbsssjc+vk/ac3LNPu0VFMXLJM1sNgmCBeyShFg1FvRd9j5HcII6tx1wtak8ZtaGMRW138gn4Ow2ksNNeGyQSxsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=05HGQoF1; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ytYvK3rB"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-607e56f7200so24206407b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:56:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="05HGQoF1"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608ac8c5781so43335857b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:56:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709319408; x=1709924208; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709319410; x=1709924210; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=j29r0+uRis6oMNX35QsnEUIN73H3JiunuyPnByIi9hc=;
-        b=ytYvK3rBsX0Y2xqWdG6ypjs6MFmehN1zGOP61V9132ZQxdSB+NqJWqzQ9MquNI40cJ
-         43EFc0wrRcvUy591bRGSYM//rGz6O81MeEea8sTehq67xfZo83qac3ISFzCYlDO/6BNm
-         mKlYjzWUxrav2GqG7eaMf+mrwv9Sk5VYxfrw5nDGmEa0TQD0ahJkYLFtSshMjB2JcNkF
-         3Cv+G0IgNKYv4gMILjDoyPv+VantE5Bp2YGu/SnBRWW+HYz1Ho2fSwpWC9grALa7sBsx
-         oEBv8ODNAp84NlTflDKLW+zh0bpsbjvMEM4eBSkL8iitjtE+B8B04x8e54/kDzFIzISH
-         S7Zg==
+        bh=K9VN6M4iHhNGfXDgUsA95lPgDC+51/4VBbMVT4/EKng=;
+        b=05HGQoF1lQ+Rph0uRkJXdPfSSIX43pdvwKamXL16jErTuwF0wTiu5xSjQV1VLdiDBG
+         u/W2kw1B3MoLa7XDrKC1dVQoYxFcgQhURbqVcn40wBzDuBV6eeGqndPxmaRA4Mfkgx6J
+         yoCiWp+DlM5SEYhpjAD7lUyUNrY3ioliFtGhWs0Ka6PCI4Pji6OLeaXo+9vCJxEADgoc
+         vPF0ybl3XqmLUBtOJaf/rneqVl4xTNEb3eEHYIjHfIGfZULfuMdq7iwYCh27F7Ne5rt4
+         1/2Z+mZ+8JgMww/1zhZzP5OLa+y007lTDu9XAHfijFMslBEt3L8Iegr+16/pCbzIDSgF
+         MJ7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709319408; x=1709924208;
+        d=1e100.net; s=20230601; t=1709319410; x=1709924210;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j29r0+uRis6oMNX35QsnEUIN73H3JiunuyPnByIi9hc=;
-        b=KI81BH5iXXASEaO4Vvi0RTBtljYro5VcDA/Zz5f5ofS2vXUL15jQhANFlSJcaPywqU
-         GYZXScQENLh0fRJ2ArSm878DocQJiGPE3WQmr/PI/wCKhvjxeNTSOx0LFnZQLr8UGIHV
-         Wk1ztytaQYtgek4ULTPwBl8FbK+2wzznCgcWuGTe4ZaQ6aIUV/mGQCPKirierXT0FbiS
-         HIO1oqK3pOoZM4JvfRjoFln3glW1W96y+RnTW2vsqClNPRTs3p+ITSjQqvf1ZRo6m94P
-         niSGr8ODVVLKtNDcLaIR13qZar+Qz1CDbm9I2kR94A4Z+Pl6HXoSKpZJz1a5Cq43HJ5p
-         fiog==
-X-Forwarded-Encrypted: i=1; AJvYcCUQyZKa8ixd47H7htkwbPxpjZrgVfJy3XyBWjRfknEvuLk0Hn6R+nXbrXMMrsVVrIpP7YiedNyZp0EY7mGnA7rvJdvH8/M0xBTk3Ugl
-X-Gm-Message-State: AOJu0Yxr4Py+jyU4lqOLME27lbfORkF3ofqTxnnpx9TT1pRglJS8uDQb
-	G+LORIic8xO9yIoUFpyw+ViEKaOersXfJvzdyz1j7F4iPGoK9h9sO+2Fp3K+GKe6vM+uKfWIpJV
-	/C36S5g==
-X-Google-Smtp-Source: AGHT+IGKC95PVGcc/vbSVyPdG7qyY7ADCiD3b2UKPwJGOqVAXiZwP3VxyaDvT3c8w7YXBOBh4uN1Nw4liePH
+        bh=K9VN6M4iHhNGfXDgUsA95lPgDC+51/4VBbMVT4/EKng=;
+        b=a8tHpfpBxr/dVxtx1Up1/2zCUz+yPffUw1s1fIT5DqD1ShtqH5dIK/DidHa0fdDJbN
+         DVT6ESjOu5aHjJ84/4iB4uv0Q7X65HA5vDa3i2blRQy+hcL4VLFITqUN63UoQUjmTHVP
+         UaWqfQ+CTQrftIVvxfB+/DgKvVpANcbBWz9i0yCXksC2Xcckc5V/s6JGjoTRo0SbFRCZ
+         eEEpU8VaKtsNSH3lRRlUOjj5Vj2xPHRv2VH1AuiKmkx44tpx5gDjmWnkcx5/Xr7YV3mE
+         jGMApPr/kY+MD/X3UkqGKc5QiNb81jfepWP6w4CV891n4jjf3h9a9LyNR82ZqdlO7YTY
+         6M/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVHI7z+mqJ+n+6PDf0tJWnRm5UUBwHBxfKSUvTpOW/fDb3IQR10Zt+ijUaQTRP2YhPMgqs9OdDIZh+CepAq/Rq95NfahUCA6p0O4rlj
+X-Gm-Message-State: AOJu0YznDy7R7MsF/4t/qTchwwOAw6+zZuUNgulIu4MnxsYZGxSMXwDL
+	Bj6JQk2AhZlvDD6AE/MbIMIIYR3tvLrJI/Ldfy+vfLama2T9sy2bXE+bYfxT4iIQCV5xYt0eRFr
+	07OO7Fw==
+X-Google-Smtp-Source: AGHT+IHukrvXXf9dKyNrHu0Wr/egMKoGJpe2Mj9fmA3/yh9TWJLZGgHyZc7wGu29UBH6pQdCHemj+zr16pX3
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
- (user=irogers job=sendgmr) by 2002:a81:9950:0:b0:609:4d6f:7c0b with SMTP id
- q77-20020a819950000000b006094d6f7c0bmr473405ywg.4.1709319408201; Fri, 01 Mar
- 2024 10:56:48 -0800 (PST)
-Date: Fri,  1 Mar 2024 10:55:53 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:85:b0:609:3cdf:c737 with SMTP id
+ be5-20020a05690c008500b006093cdfc737mr528497ywb.10.1709319410636; Fri, 01 Mar
+ 2024 10:56:50 -0800 (PST)
+Date: Fri,  1 Mar 2024 10:55:54 -0800
 In-Reply-To: <20240301185559.2661241-1-irogers@google.com>
-Message-Id: <20240301185559.2661241-15-irogers@google.com>
+Message-Id: <20240301185559.2661241-16-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240301185559.2661241-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v2 14/20] perf jevents: Add Miss Level Parallelism (MLP)
- metric for Intel
+Subject: [PATCH v2 15/20] perf jevents: Add mem_bw metric for Intel
 From: Ian Rogers <irogers@google.com>
 To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
 	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
@@ -75,46 +74,97 @@ To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>
 	Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Number of outstanding load misses per cycle.
+Break down memory bandwidth using uncore counters. For many models
+this matches the memory_bandwidth_* metrics, but these metrics aren't
+made available on all models. Add support for free running counters.
+Query the event json when determining which what events/counters are
+available.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 62 ++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 6f18d5fd9f95..2cd30c557a59 100755
+index 2cd30c557a59..a5d68b7deab3 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -601,6 +601,20 @@ def IntelL2() -> Optional[MetricGroup]:
-   ], description = "L2 data cache analysis")
+@@ -784,6 +784,67 @@ def IntelLdSt() -> Optional[MetricGroup]:
+   ], description = "Breakdown of load/store instructions")
  
  
-+def IntelMlp() -> Optional[Metric]:
++def UncoreMemBw() -> Optional[MetricGroup]:
++  mem_events = []
 +  try:
-+    l1d = Event("L1D_PEND_MISS.PENDING")
-+    l1dc = Event("L1D_PEND_MISS.PENDING_CYCLES")
++    mem_events = json.load(open(f"{os.path.dirname(os.path.realpath(__file__))}"
++                                f"/arch/x86/{args.model}/uncore-memory.json"))
 +  except:
-+    return None
++    pass
 +
-+  l1dc = Select(l1dc / 2, Literal("#smt_on"), l1dc)
-+  ml = d_ratio(l1d, l1dc)
-+  return Metric("mlp",
-+                "Miss level parallelism - number of outstanding load misses per cycle (higher is better)",
-+                ml, "load_miss_pending/cycle")
++  ddr_rds = 0
++  ddr_wrs = 0
++  ddr_total = 0
++  for x in mem_events:
++    if "EventName" in x:
++      name = x["EventName"]
++      if re.search("^UNC_MC[0-9]+_RDCAS_COUNT_FREERUN", name):
++        ddr_rds += Event(name)
++      elif re.search("^UNC_MC[0-9]+_WRCAS_COUNT_FREERUN", name):
++        ddr_wrs += Event(name)
++      #elif re.search("^UNC_MC[0-9]+_TOTAL_REQCOUNT_FREERUN", name):
++      #  ddr_total += Event(name)
++
++  if ddr_rds == 0:
++    try:
++      ddr_rds = Event("UNC_M_CAS_COUNT.RD")
++      ddr_wrs = Event("UNC_M_CAS_COUNT.WR")
++    except:
++      return None
++
++  ddr_total = ddr_rds + ddr_wrs
++
++  pmm_rds = 0
++  pmm_wrs = 0
++  try:
++    pmm_rds = Event("UNC_M_PMM_RPQ_INSERTS")
++    pmm_wrs = Event("UNC_M_PMM_WPQ_INSERTS")
++  except:
++    pass
++
++  pmm_total = pmm_rds + pmm_wrs
++
++  scale = 64 / 1_000_000
++  return MetricGroup("mem_bw", [
++      MetricGroup("mem_bw_ddr", [
++          Metric("mem_bw_ddr_read", "DDR memory read bandwidth",
++                 d_ratio(ddr_rds, interval_sec), f"{scale}MB/s"),
++          Metric("mem_bw_ddr_write", "DDR memory write bandwidth",
++                 d_ratio(ddr_wrs, interval_sec), f"{scale}MB/s"),
++          Metric("mem_bw_ddr_total", "DDR memory write bandwidth",
++                 d_ratio(ddr_total, interval_sec), f"{scale}MB/s"),
++      ], description = "DDR Memory Bandwidth"),
++      MetricGroup("mem_bw_pmm", [
++          Metric("mem_bw_pmm_read", "PMM memory read bandwidth",
++                 d_ratio(pmm_rds, interval_sec), f"{scale}MB/s"),
++          Metric("mem_bw_pmm_write", "PMM memory write bandwidth",
++                 d_ratio(pmm_wrs, interval_sec), f"{scale}MB/s"),
++          Metric("mem_bw_pmm_total", "PMM memory write bandwidth",
++                 d_ratio(pmm_total, interval_sec), f"{scale}MB/s"),
++      ], description = "PMM Memory Bandwidth") if pmm_rds != 0 else None,
++  ], description = "Memory Bandwidth")
 +
 +
- def IntelPorts() -> Optional[MetricGroup]:
-   pipeline_events = json.load(open(f"{os.path.dirname(os.path.realpath(__file__))}"
-                                    f"/arch/x86/{args.model}/pipeline.json"))
-@@ -781,6 +795,7 @@ all_metrics = MetricGroup("", [
-     IntelIlp(),
-     IntelL2(),
-     IntelLdSt(),
-+    IntelMlp(),
+ all_metrics = MetricGroup("", [
+     Idle(),
+     Rapl(),
+@@ -798,6 +859,7 @@ all_metrics = MetricGroup("", [
+     IntelMlp(),
      IntelPorts(),
      IntelSwpf(),
++    UncoreMemBw(),
  ])
+ 
+ if args.metricgroups:
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
