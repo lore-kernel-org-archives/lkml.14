@@ -1,43 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5F0138C;
-	Fri,  1 Mar 2024 13:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3527E1;
+	Fri,  1 Mar 2024 13:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709298727; cv=none; b=aPHJTtynUryIuNwrjBSlS7g+gaEX5gWLX3p2swcrt5VkYwloyaffxrID8pI4cDnQ2L8L01MwDAuPczliDQLkFZT2FLhTJ4n+XXjJNQTmCFm8tZiLsrC7bokCCOqmMBmqSvYbC/GzGPw3+Q9D7agQCfJZosU4obDUBMMzIUZ+XGA=
+	t=1709298897; cv=none; b=MojtFafIOrKH65GCN11nH9yI039j4mqZdBfYngag94Nb6YZ5uvGTq/a5G40a/V5AYAPQ2N6ltdDJ9+EKUzDsL/tHIoGRvI4RE3PwfVs4aNQMih8hziMn0OBFOSqZCIPgTGF5mPgM4ka5ehWc313oTjx1TlksM0uYBp5W3RB1SIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709298727; c=relaxed/simple;
-	bh=FqHEPmazeGZLSdmw3+8lxXDZ2LpYgX5OJCWLme3ZdSI=;
+	s=arc-20240116; t=1709298897; c=relaxed/simple;
+	bh=D8wqWZgP5j4U3Gy8XWOlMUhgVBct6naC34RFtMGwxkY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SyZnmR9n3IrCSrzp6GymBoN+YkJtfz3flgB20GtX/SYW9dxsPZKje8yr6hmKsZ3LIY7xzvHjEBTLAZqWKaQVV5WAiG+LcDs0kjub8P0Jsee/gcMaIIdDLvIqrFfYV+KgDJoHVujnZnUs2O8b4qWXYuvUmnnwmGPorb52Fek1onc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jze1M2+d; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tjsu/bNqZZV5IbYsoG4Y3h/DcNQcruQ84wC3kVSKm/zRA0voeucLcji4R1V9nq8iOC5+Nu2wgmLRJxjJAOy7kjCDdUmvSg+KF/INB0M+LWZGQ5jMoc/zJbgasYkWKCYKHQUk+MhZYfHdW0HG5MVbvoC+t/eFEWmWDkkGzobRx0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LjLFSDgf; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jze1M2+d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB442C433C7;
-	Fri,  1 Mar 2024 13:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709298726;
-	bh=FqHEPmazeGZLSdmw3+8lxXDZ2LpYgX5OJCWLme3ZdSI=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LjLFSDgf"
+Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D14719CE;
+	Fri,  1 Mar 2024 14:14:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1709298879;
+	bh=D8wqWZgP5j4U3Gy8XWOlMUhgVBct6naC34RFtMGwxkY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jze1M2+d4/5vULXiqnomgWl4IdzhZznl1mil4VvcV5A6F8iXoQwgONXbah0SSmCow
-	 NvF5FqBiD04IfUCsk7/HoAlk1EG+xZnAG3p9do2BSc7QcCd4khszCpa6J4kfFzKPc6
-	 yHxr7I39UHt8F3r5vL54YWQt+Qu4XY80VBV9UB6QfX3sAJl7ZMd1qsY6oU4bxXg9oo
-	 wtm6a0Y+45zg+tGmOtvJNdn/Kna/WeSAYXecje30MxNZQBAA0t/ah09RliC4450EK/
-	 F6nMqnBWaWDmZDjMjcvOURVZBsDzCXF5tDqDkZXZZAyYNQ2seWnkov19iKe9SVobKj
-	 rL5qSKiQbFOGQ==
-Date: Fri, 1 Mar 2024 14:12:01 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Luis Henriques <lhenriques@suse.de>
-Cc: Theodore Ts'o <tytso@mit.edu>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Amir Goldstein <amir73il@gmail.com>, linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] fs_parser: handle parameters that can be empty and
- don't have a value
-Message-ID: <20240301-abheben-laborversuch-1a2c74c28643@brauner>
-References: <20240229163011.16248-1-lhenriques@suse.de>
+	b=LjLFSDgf9xJtOpGjsnakjFQLqZpvuXyW1biVwDDFPVlDtOF6sQxTd4gBSue31rZ18
+	 NhYdKsXdaxZnHBEm4DpDGzL2Xm4o/yxHoHAi4fyJ4sAImn7FOT9n4CQPizhLIe3UXp
+	 YDmQ0E51BE3OoAqm85a5hTpP6L1Ngz1vY1FDC0sQ=
+Date: Fri, 1 Mar 2024 15:14:55 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: rzg2l-csi2: Use common error handling code in
+ rzg2l_csi2_parse_dt()
+Message-ID: <20240301131455.GF30104@pendragon.ideasonboard.com>
+References: <c26c73d8-9b20-431e-a299-c9508ac3f6ed@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,15 +49,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240229163011.16248-1-lhenriques@suse.de>
+In-Reply-To: <c26c73d8-9b20-431e-a299-c9508ac3f6ed@web.de>
 
-> Unfortunately, the two filesystems that use this flag (ext4 and overlayfs)
-> aren't prepared to have the parameter value set to NULL.  Patches #2 and #3
-> fix this.
+On Fri, Mar 01, 2024 at 02:10:41PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 1 Mar 2024 14:02:22 +0100
+> 
+> Add a label so that a bit of exception handling can be better reused
+> in an if branch of this function implementation.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Both ext4 and overlayfs define
+Just in case someone may be tempted to apply this:
 
-#define fsparam_string_empty(NAME, OPT) \
-        __fsparam(fs_param_is_string, NAME, OPT, fs_param_can_be_empty, NULL)
+NAK
 
-Please add that to include/linux/fs_parser.h so that it can be used by both.
+Markus, don't bother replying to this e-mail, I will delete your reply
+without reading it.
+
+> ---
+>  drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> index e68fcdaea207..ef6922dad35f 100644
+> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> @@ -671,12 +671,13 @@ static int rzg2l_csi2_parse_dt(struct rzg2l_csi2 *csi2)
+>  	ret = v4l2_fwnode_endpoint_parse(ep, &v4l2_ep);
+>  	if (ret) {
+>  		dev_err(csi2->dev, "Could not parse v4l2 endpoint\n");
+> -		fwnode_handle_put(ep);
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+> +		goto put_fwnode_ep;
+>  	}
+> 
+>  	ret = rzg2l_csi2_parse_v4l2(csi2, &v4l2_ep);
+>  	if (ret) {
+> +put_fwnode_ep:
+>  		fwnode_handle_put(ep);
+>  		return ret;
+>  	}
+> --
+> 2.44.0
+> 
+> 
+
+-- 
+Regards,
+
+Laurent Pinchart
