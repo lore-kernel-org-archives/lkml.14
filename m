@@ -1,217 +1,392 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847796A34F
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADB96A343
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709284531; cv=none; b=W2huq1u3/oL1Y9eiUDtLtYZMU4xIgBbEXeFQIp/SZqkNUXWP129nOS1oX3GBX+DBvg0tAoGWMZxJEh9VX1KmdaaGUJKuTInjCdRLvRa6OK4TAVIa284kf8Ou6pkb42/VnF29CoNLDGrtOR59WU+07bRXm+aL+lxLkID5sL1HjkM=
+	t=1709284577; cv=none; b=pAUsHdXvXy/appQOQflEJsldHnGr4BvsAfclgInVQ4JDJ7SsYv5SjrTxvaRj0q9BnS8VgmczbB6SHjrrLf5zPR21C691FTKzZvFaUjLVmLbVF7eC/meZe78XCy7J//eg7DP0UyZ+/WK9Q9ghzI3ntPPoXbvMeErxLD44v2aecp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709284531; c=relaxed/simple;
-	bh=TSdl282jT/XjE0hf1mC2uPpBJjgfnCccVcSjhjs2qsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qT4QQNK7zUA43ox23/hsJ39aqHg5UiKoKMXKx/9sAjjPTsaTngcRYfTuN8+BakErJs207B65Nb9ZwnfhpJ8TpBe5IkhYVXbGxCAK8kqSLtSBaQ2AL8zuaclaA7cUlOd8whqKVYpYUwzKMFFWTQI9RqS58o7ACG/Lo/L2A16YdzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rfyzD-0006ij-8O; Fri, 01 Mar 2024 10:15:23 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rfyzB-003khx-PB; Fri, 01 Mar 2024 10:15:21 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rfyzB-00ES8C-2B;
-	Fri, 01 Mar 2024 10:15:21 +0100
-Date: Fri, 1 Mar 2024 10:15:21 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Magnus Damm <magnus.damm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v7 2/4] pwm: Add support for RZ/V2M PWM driver
-Message-ID: <ugotgpnicccowxv4d6wxc57mgznj4vdodvjplfma5mqxojuiyg@p42i56lx2vqr>
-References: <20240212210652.368680-1-fabrizio.castro.jz@renesas.com>
- <20240212210652.368680-3-fabrizio.castro.jz@renesas.com>
- <wwkzprliai3vge53fcveosfkixmri4hoyfjeulbzoezmaayoci@6hor5uwwdag4>
- <TYCPR01MB12093649FED62A25C3504E4D2C25F2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
+	s=arc-20240116; t=1709284577; c=relaxed/simple;
+	bh=Grv+B1lXOvsgkugd0xHmI2otveFzl/ke8dkw8ikngxA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=X92Rv+2IkoUOFMlb9w71qOTsebw3CBtCBRpUmLICOA03KB7soNncpxVnk7Vt0m4NxdSIzuvcDZfOxMiZmuzwtEzuWwXEzcfC8fsfmVlNrSouta/kvMv1HYQCY5/Wku+vW0vLDC43divOMN9sgorDr/O3wcijay4rqPqB19TWVtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=TWNV6pdP; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="TWNV6pdP"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d33986dbc0so4495381fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 01:16:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709284573; x=1709889373; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3HmYMQ4fCaWre3Z0n4nCWU3axYoW5M2HfRVImcv9VqU=;
+        b=TWNV6pdPdxvfH8VBVvwLB3dvscvb5F81aqw46QHY+ITfLjvUuxg/vX5G40pctmYBBP
+         kirkrV7tv91wbL3B+O1kRZGOM49L1kgAxRL6duDbsMMJaqig8UpqbuLfEeNPfsIDH61N
+         q82Mt09CWMcjmPLQDWvQgmbFOhB67FdPyCgoF8SwJHPSkpG9Ja2Hu4bKC/y7RFcDsFYA
+         QQonDP2P0iGC7c/Vxp3PojU6SpzIqDW47EZcJfIInEUCPV9fFWqQnxO+Gy8mxkaixlNH
+         hxy7mvZwyDgAvkGZFz7xROiwU4x5mJBV1FrGVKLSgO8Tfk7GTKTgsmJzgKPnCInaV8uj
+         sLlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709284573; x=1709889373;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3HmYMQ4fCaWre3Z0n4nCWU3axYoW5M2HfRVImcv9VqU=;
+        b=vKtE2qoS9/rf2bH2qxenJiTlYUm1CXMMmO+Qeb9qztCvA6soQCSzQEWoksOXCrpS6I
+         PqhP86+cVK7PkbVgSpTz7QtQbxhUN/+qacChU4v9kfyLiPldpLYoAPsf/j0fQ9uqlFXX
+         8p8xPM+ZzWC3BAzRntMNDO6ayJpx6DPzpNruskN48d8fAInuZM93nh98jjMsOXTXAato
+         InKpMBB4AaUG/W0mdJd1Ge/JaEawbQsyt/olSN9Ngo9mtgzQNd9LqMwECrgLZbXIJ984
+         yW+0JMNkg09dsb62CyQxFApPI+6s+HGL+rq1OgTAyZKpKgbUUk5ioeEE8mw2jQQY7drH
+         KUEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWplVYekc96ZFaFARt/pfjetckb3iXXmPfWZuL1UdebKGVPvlNbgyvKwCg6/gkh3c7SwPPgxwM6DfEQ1D82VrBvzJ3CmxvET1TjoRDx
+X-Gm-Message-State: AOJu0Yzse3JbQZr9TchNmDt9VcVOjjARDVbGcyYgIxnP05Lkcn3MahkA
+	nFzzL1UNz3kd7YaXqdoCNBTE+YjKsJUKhbMv4g/0n8fbp8kTO9oeyBAsyhiDHp8=
+X-Google-Smtp-Source: AGHT+IHQVU7ZdAsKvA/XTSgIwwIMQlWsmY+5DOvluKjOjYHWuq3/2JdBJ53cUSY5g2ynNIYVyWu0Lg==
+X-Received: by 2002:a05:651c:10cf:b0:2d2:eb8c:b3a6 with SMTP id l15-20020a05651c10cf00b002d2eb8cb3a6mr619531ljn.40.1709284573125;
+        Fri, 01 Mar 2024 01:16:13 -0800 (PST)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id m21-20020a7bcb95000000b00410b0ce91b1sm7777825wmi.25.2024.03.01.01.16.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 01:16:12 -0800 (PST)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH 1/9] riscv: Restore the pfn in a NAPOT pte when manipulated by core mm code
+Date: Fri,  1 Mar 2024 10:14:47 +0100
+Message-Id: <20240301091455.246686-2-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240301091455.246686-1-alexghiti@rivosinc.com>
+References: <20240301091455.246686-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="g4pc3vuo4korf24b"
-Content-Disposition: inline
-In-Reply-To: <TYCPR01MB12093649FED62A25C3504E4D2C25F2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+The core mm code expects to be able to extract the pfn from a pte. NAPOT
+mappings work differently since its ptes actually point to the first pfn
+of the mapping, the other bits being used to encode the size of the
+mapping.
 
---g4pc3vuo4korf24b
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So modify ptep_get() so that it returns a pte value that contains the
+*real* pfn (which is then different from what the HW expects) and right
+before storing the ptes to the page table, reset the pfn LSBs to the
+size of the mapping.
 
-Hello Fabrizio,
+And make sure that all NAPOT mappings are set using set_ptes().
 
-your MUA introduces strange line breaks. You could do every reader of
-you mails a favour and fix that. I fixed it up for my reply.
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/pgtable-64.h |  11 +++
+ arch/riscv/include/asm/pgtable.h    | 105 ++++++++++++++++++++++++++--
+ arch/riscv/mm/hugetlbpage.c         |  38 +++++-----
+ 3 files changed, 128 insertions(+), 26 deletions(-)
 
-On Thu, Feb 29, 2024 at 10:45:01PM +0000, Fabrizio Castro wrote:
-> > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > Sent: Thursday, February 29, 2024 4:42 PM
-> > To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Subject: Re: [PATCH v7 2/4] pwm: Add support for RZ/V2M PWM driver
-> >=20
-> > On Mon, Feb 12, 2024 at 09:06:50PM +0000, Fabrizio Castro wrote:
-> > > +static inline u64 rzv2m_pwm_mul_u64_u64_div_u64_roundup(u64 a, u64 b,
-> > u64 c)
-> > > +{
-> > > +	u64 ab =3D a * b;
-> >=20
-> > a * b might overflow?!
->=20
-> In the context of this driver, this cannot overflow.
-> The 2 formulas the above is needed for are:
-> 1) period =3D (cyc + 1)*(NSEC_PER_SEC * frequency_divisor)/rate
-> 2) duty_cycle =3D (cyc + 1 - low)*(NSEC_PER_SEC * frequency_divisor)/rate
->=20
-> With respect to 1), the dividend overflows when period * rate also
-> overflows (its product is calculated in rzv2m_pwm_config).
-> However, limiting the period to a maximum value of U64_MAX / rate
-> prevents the calculations from overflowing (in both directions, from peri=
-od to cyc, and from cyc to period). v6 introduced max_period for this.
-> The situation for 2) is very similar to 1), with duty_cycle<=3Dperiod,
-> therefore limiting period to a max value (and clamping the duty cycle
-> accordingly) will ensure that the calculation for duty_cycle won't
-> overflow, either.
+diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+index b42017d76924..a0f76c3071a9 100644
+--- a/arch/riscv/include/asm/pgtable-64.h
++++ b/arch/riscv/include/asm/pgtable-64.h
+@@ -106,6 +106,17 @@ enum napot_cont_order {
+ #define napot_cont_mask(order)	(~(napot_cont_size(order) - 1UL))
+ #define napot_pte_num(order)	BIT(order)
+ 
++static inline bool is_napot_order(unsigned int order)
++{
++	unsigned int napot_order;
++
++	for_each_napot_order(napot_order)
++		if (order == napot_order)
++			return true;
++
++	return false;
++}
++
+ #ifdef CONFIG_RISCV_ISA_SVNAPOT
+ #define HUGE_MAX_HSTATE		(2 + (NAPOT_ORDER_MAX - NAPOT_CONT_ORDER_BASE))
+ #else
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 0c94260b5d0c..951f3ceb5529 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -303,6 +303,8 @@ static inline unsigned long pte_napot(pte_t pte)
+ 	return pte_val(pte) & _PAGE_NAPOT;
+ }
+ 
++#define pte_valid_napot(pte)	(pte_present(pte) && pte_napot(pte))
++
+ static inline pte_t pte_mknapot(pte_t pte, unsigned int order)
+ {
+ 	int pos = order - 1 + _PAGE_PFN_SHIFT;
+@@ -312,6 +314,12 @@ static inline pte_t pte_mknapot(pte_t pte, unsigned int order)
+ 	return __pte((pte_val(pte) & napot_mask) | napot_bit | _PAGE_NAPOT);
+ }
+ 
++/* pte at entry must *not* encode the mapping size in the pfn LSBs. */
++static inline pte_t pte_clear_napot(pte_t pte)
++{
++	return __pte(pte_val(pte) & ~_PAGE_NAPOT);
++}
++
+ #else
+ 
+ static __always_inline bool has_svnapot(void) { return false; }
+@@ -321,17 +329,14 @@ static inline unsigned long pte_napot(pte_t pte)
+ 	return 0;
+ }
+ 
++#define pte_valid_napot(pte)	false
++
+ #endif /* CONFIG_RISCV_ISA_SVNAPOT */
+ 
+ /* Yields the page frame number (PFN) of a page table entry */
+ static inline unsigned long pte_pfn(pte_t pte)
+ {
+-	unsigned long res  = __page_val_to_pfn(pte_val(pte));
+-
+-	if (has_svnapot() && pte_napot(pte))
+-		res = res & (res - 1UL);
+-
+-	return res;
++	return __page_val_to_pfn(pte_val(pte));
+ }
+ 
+ #define pte_page(x)     pfn_to_page(pte_pfn(x))
+@@ -523,9 +528,91 @@ static inline void __set_pte_at(pte_t *ptep, pte_t pteval)
+ 	set_pte(ptep, pteval);
+ }
+ 
++#ifdef CONFIG_RISCV_ISA_SVNAPOT
++static inline int arch_contpte_get_num_contig(pte_t *ptep, unsigned long size,
++					      size_t *pgsize)
++{
++	pte_t __pte;
++
++	/* We must read the raw value of the pte to get the size of the mapping */
++	__pte = READ_ONCE(*ptep);
++
++	if (pgsize) {
++		if (size >= PGDIR_SIZE)
++			*pgsize = PGDIR_SIZE;
++		else if (size >= P4D_SIZE)
++			*pgsize = P4D_SIZE;
++		else if (size >= PUD_SIZE)
++			*pgsize = PUD_SIZE;
++		else if (size >= PMD_SIZE)
++			*pgsize = PMD_SIZE;
++		else
++			*pgsize = PAGE_SIZE;
++	}
++
++	/* Make sure __pte is not a swap entry */
++	if (pte_valid_napot(__pte))
++		return napot_pte_num(napot_cont_order(__pte));
++
++	return 1;
++}
++#endif
++
++static inline pte_t ptep_get(pte_t *ptep)
++{
++	pte_t pte = READ_ONCE(*ptep);
++
++#ifdef CONFIG_RISCV_ISA_SVNAPOT
++	/*
++	 * The pte we load has the N bit set and the size of the mapping in
++	 * the pfn LSBs: keep the N bit and replace the mapping size with
++	 * the *real* pfn since the core mm code expects to find it there.
++	 * The mapping size will be reset just before being written to the
++	 * page table in set_ptes().
++	 */
++	if (unlikely(pte_valid_napot(pte))) {
++		unsigned int order = napot_cont_order(pte);
++		int pos = order - 1 + _PAGE_PFN_SHIFT;
++		unsigned long napot_mask = ~GENMASK(pos, _PAGE_PFN_SHIFT);
++		pte_t *orig_ptep = PTR_ALIGN_DOWN(ptep, sizeof(*ptep) * napot_pte_num(order));
++
++		pte = __pte((pte_val(pte) & napot_mask) + ((ptep - orig_ptep) << _PAGE_PFN_SHIFT));
++	}
++#endif
++
++	return pte;
++}
++#define ptep_get	ptep_get
++
+ static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
+ 		pte_t *ptep, pte_t pteval, unsigned int nr)
+ {
++#ifdef CONFIG_RISCV_ISA_SVNAPOT
++	if (unlikely(pte_valid_napot(pteval))) {
++		unsigned int order = ilog2(nr);
++
++		if (!is_napot_order(order)) {
++			/*
++			 * Something's weird, we are given a NAPOT pte but the
++			 * size of the mapping is not a known NAPOT mapping
++			 * size, so clear the NAPOT bit and map this without
++			 * NAPOT support: core mm only manipulates pte with the
++			 * real pfn so we know the pte is valid without the N
++			 * bit.
++			 */
++			pr_err("Incorrect NAPOT mapping, resetting.\n");
++			pteval = pte_clear_napot(pteval);
++		} else {
++			/*
++			 * NAPOT ptes that arrive here only have the N bit set
++			 * and their pfn does not contain the mapping size, so
++			 * set that here.
++			 */
++			pteval = pte_mknapot(pteval, order);
++		}
++	}
++#endif
++
+ 	page_table_check_ptes_set(mm, ptep, pteval, nr);
+ 
+ 	for (;;) {
+@@ -533,6 +620,12 @@ static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
+ 		if (--nr == 0)
+ 			break;
+ 		ptep++;
++
++#ifdef CONFIG_RISCV_ISA_SVNAPOT
++		if (unlikely(pte_valid_napot(pteval)))
++			continue;
++#endif
++
+ 		pte_val(pteval) += 1 << _PAGE_PFN_SHIFT;
+ 	}
+ }
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index 29c7606414d2..3d84fbc5c572 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -256,8 +256,7 @@ void set_huge_pte_at(struct mm_struct *mm,
+ 
+ 	clear_flush(mm, addr, ptep, pgsize, pte_num);
+ 
+-	for (i = 0; i < pte_num; i++, ptep++, addr += pgsize)
+-		set_pte_at(mm, addr, ptep, pte);
++	set_ptes(mm, addr, ptep, pte, pte_num);
+ }
+ 
+ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+@@ -267,16 +266,16 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 			       int dirty)
+ {
+ 	struct mm_struct *mm = vma->vm_mm;
+-	unsigned long order;
++	size_t pgsize;
+ 	pte_t orig_pte;
+-	int i, pte_num;
++	int pte_num;
+ 
+ 	if (!pte_napot(pte))
+ 		return ptep_set_access_flags(vma, addr, ptep, pte, dirty);
+ 
+-	order = napot_cont_order(pte);
+-	pte_num = napot_pte_num(order);
+-	ptep = huge_pte_offset(mm, addr, napot_cont_size(order));
++	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
++	ptep = huge_pte_offset(mm, addr, pte_num * pgsize);
++
+ 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
+ 
+ 	if (pte_dirty(orig_pte))
+@@ -285,8 +284,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 	if (pte_young(orig_pte))
+ 		pte = pte_mkyoung(pte);
+ 
+-	for (i = 0; i < pte_num; i++, addr += PAGE_SIZE, ptep++)
+-		set_pte_at(mm, addr, ptep, pte);
++	set_ptes(mm, addr, ptep, pte, pte_num);
+ 
+ 	return true;
+ }
+@@ -301,7 +299,7 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 	if (!pte_napot(orig_pte))
+ 		return ptep_get_and_clear(mm, addr, ptep);
+ 
+-	pte_num = napot_pte_num(napot_cont_order(orig_pte));
++	pte_num = arch_contpte_get_num_contig(ptep, 0, NULL);
+ 
+ 	return get_clear_contig(mm, addr, ptep, pte_num);
+ }
+@@ -311,24 +309,23 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 			     pte_t *ptep)
+ {
+ 	pte_t pte = ptep_get(ptep);
+-	unsigned long order;
++	size_t pgsize;
+ 	pte_t orig_pte;
+-	int i, pte_num;
++	int pte_num;
+ 
+ 	if (!pte_napot(pte)) {
+ 		ptep_set_wrprotect(mm, addr, ptep);
+ 		return;
+ 	}
+ 
+-	order = napot_cont_order(pte);
+-	pte_num = napot_pte_num(order);
+-	ptep = huge_pte_offset(mm, addr, napot_cont_size(order));
++	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
++	ptep = huge_pte_offset(mm, addr, pte_num * pgsize);
++
+ 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
+ 
+ 	orig_pte = pte_wrprotect(orig_pte);
+ 
+-	for (i = 0; i < pte_num; i++, addr += PAGE_SIZE, ptep++)
+-		set_pte_at(mm, addr, ptep, orig_pte);
++	set_ptes(mm, addr, ptep, orig_pte, pte_num);
+ }
+ 
+ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+@@ -341,7 +338,7 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 	if (!pte_napot(pte))
+ 		return ptep_clear_flush(vma, addr, ptep);
+ 
+-	pte_num = napot_pte_num(napot_cont_order(pte));
++	pte_num = arch_contpte_get_num_contig(ptep, 0, NULL);
+ 
+ 	return get_clear_contig_flush(vma->vm_mm, addr, ptep, pte_num);
+ }
+@@ -351,6 +348,7 @@ void huge_pte_clear(struct mm_struct *mm,
+ 		    pte_t *ptep,
+ 		    unsigned long sz)
+ {
++	size_t pgsize;
+ 	pte_t pte = ptep_get(ptep);
+ 	int i, pte_num;
+ 
+@@ -359,8 +357,8 @@ void huge_pte_clear(struct mm_struct *mm,
+ 		return;
+ 	}
+ 
+-	pte_num = napot_pte_num(napot_cont_order(pte));
+-	for (i = 0; i < pte_num; i++, addr += PAGE_SIZE, ptep++)
++	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
++	for (i = 0; i < pte_num; i++, addr += pgsize, ptep++)
+ 		pte_clear(mm, addr, ptep);
+ }
+ 
+-- 
+2.39.2
 
-OK, so it might be right from a technical POV. From a maintainer POV
-this is still bad. Authors for other drivers might copy it, or the driver
-might be changed and there is no indication that the the function relies
-on only be called with certain parameters.
-
-> > > +	u64 d =3D div64_u64(ab, c);
-> > > +	u64 e =3D d * c;
-> > > +
-> > > +	return d + ((ab - e) ? 1 : 0);
-> > > +}
-> > > +
-> > > +static inline u64 rzv2m_pwm_mul_u64_u64_div_u64_rounddown(u64 a, u64=
- b,
-> > u64 c)
-> > > +{
-> > > +	return div64_u64(a * b, c);
-> >=20
-> > ditto. This is the same function as mul_u64_u64_div_u64() isn't it?
->=20
-> Since a * b cannot overflow in the case of this driver, I believe the
-> above to be a better option than mul_u64_u64_div_u64.
-
-Same technical POV vs maintainer POV as above. Plus: Even if
-mul_u64_u64_div_u64 is a tad slower, reusing it has some benefits
-nevertheless.
-=20
-> > > [...]
-> > > +	cyc =3D rzv2m_pwm_read(rzv2m_pwm, RZV2M_PWMCYC);
-> > > +	state->period =3D rzv2m_pwm_mul_u64_u64_div_u64_roundup(cyc + 1,
-> > > +				NSEC_PER_SEC * frequency_divisor,
-> > > +				rzv2m_pwm->rate);
-> > > +
-> > > +	low =3D rzv2m_pwm_read(rzv2m_pwm, RZV2M_PWMLOW);
-> > > +	state->duty_cycle =3D rzv2m_pwm_mul_u64_u64_div_u64_roundup(cyc + 1=
- - low,
-> > > +				NSEC_PER_SEC * frequency_divisor,
-> > > +				rzv2m_pwm->rate);
-> >=20
-> > The register semantic makes me wonder if each period starts with the low
-> > part. In that case the hardware called "normal" what is called inverted
-> > in the pwm framework?!
->=20
-> My understanding is that the PWM framework defines "normal" polarity a
-> signal that starts high (and stays high) for the duration of the duty cyc=
-le,
-> and goes low for the remainder of the period. Conversely, a signal with
-> "inversed" polarity starts low (and stays low) for the duration of the du=
-ty
-> cycle and goes high for the remainder of the period.
-
-Ack.
-
-> This IP _does_ start low, but it _doesn't_ stay low for the duration of t=
-he
-> duty cycle, as it then goes high for the duration of the duty cycle,
-> therefore this IP doesn't perfectly fit either ("normal" or "inverted")
-> definitions.
-> I think you can say that the "normal" signal is _shifted_ in phase for th=
-is
-> IP, rather than being "inverted".
-
-Alternatively (and a better match): What you describe is an inverted
-wave form with duty_cycle =3D period - duty_cycle.
-
-> > > +	return pm_runtime_put(chip->dev);
-> >=20
-> > If you evaluate the return value of pm_runtime_put() maybe check
-> > pm_runtime_get_sync() for symmetry, too?
->=20
-> Or I could just discard it and return 0?
-> I am fine with either, what's your preference?
-
-My preference would be to always check the return value, but given that
-many drivers don't care for that, I agree to accept never checking it.
-So choose one option and do it consistently please.
-=20
-> > > +	if (pwm_cyc && !FIELD_FIT(RZV2M_PWMCYC_PERIOD, pwm_cyc - 1))
-> > > +		pwm_cyc =3D RZV2M_PWMCYC_PERIOD + 1;
-> >=20
-> > I don't understand the relevance of FIELD_FIT(RZV2M_PWMCYC_PERIOD,
-> > pwm_cyc - 1).
->=20
-> CYC is only made of 24 bits, therefore this is to make sure we don't
-> go beyond a 24-bit representation.
-
-I would have understood:
-
-	if (FIELD_FIT(RZV2M_PWMCYC_PERIOD, pwm_cyc + 1))
-		pwm_cyc =3D RZV2M_PWMCYC_PERIOD + 1;
-
-Notice there are three changes compared to your variant:
- - drop pwm_cyc !=3D 0 check
- - drop ! from FIELD_FIT
- - pwm_cyc + 1 instead of pwm_cyc - 1
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---g4pc3vuo4korf24b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXhnKgACgkQj4D7WH0S
-/k58tAgArtsUR4cecwJJFnhEcL0IyaKukaU4zwUIQiYuzQfhII61clEX46SIJDLV
-gGdrrifbwdxbnAIGmmQA3HVSCz9+huSkGOCOBjqqUhE8wg2e7bk9xPIIiNOjtKc/
-ltNFC2zJEGp4T4ebfaDqbwaJJIq4rvcyg0/fIGMKD2tegKcpbtJu0fXsCbDlwh9T
-MLKgX5T4PzUyo4b0URHIwFRikdQKeZfgAreEqDyeF0DSZSgIPhUE91chjil81Sdy
-MwqtM64I2YIk9yPSgCSF9hzpUorowxVVif4xPzZtZuHik+2wO5sim2ZvgI7ZUsem
-NMSO5eIHqbiWejza8VkVzmWsytk9Ww==
-=8kxZ
------END PGP SIGNATURE-----
-
---g4pc3vuo4korf24b--
