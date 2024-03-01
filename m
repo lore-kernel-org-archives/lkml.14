@@ -1,370 +1,207 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7F55C81
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF54D882D
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709311089; cv=none; b=HS0h++bkK5jMnOzAdvAZ93ZLeEOkK8OEDJt6LxX3tVgllNOwmoFL6oYkD0EofEMUTS3RiPO3PS6qouwZnLufYQ+TW9hfrxrTLMY84wgmwVg3GEcoUT3Hzk6/9rgQ4NZ741YU4ICqnzH4k4KpAmzL89IeeHNVjWknpyHgkVfKEOw=
+	t=1709311098; cv=none; b=pJ38vhuL0RltKtprsVRziPGxYREnpx2Hx9z3jd4MXQJgXOe8mPUQyeUmW2lRxaJURWi0/a9H/ZDfFwf0NVIBJ2iCa66jvZnEX1/fGxhfWWbAvzyoeq8fmfO6CgUQEG+Z25vFChMesmfRCAvERtGaadTgI+H2oJFveKrEb9AyINg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709311089; c=relaxed/simple;
-	bh=UwSLOztaU4xS23FC7UA8haLkrJtuX7Ui3gT2b4+tasc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FROUV4sMnqmFBKvc+do96n1D9ZsdhIFhP/fvXJVANM7s9+TfOeBap+NKDJRqXU92u4d9ec/hlOqy9OqKF3/fYKZjmCzRerQnI86j7bJ/aC3gsU9KX35DItnTU9r6CEg+Vg0h0DJCPIiAWQsofhewsSdCxZuZ0OMqNcNPS4zqBdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0G4+89tU; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709311098; c=relaxed/simple;
+	bh=eHc3b394Q725AHnvceFtgot1OgP5V1Fgquz0NU91s+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iHAkfoDGkApmGWSzcbuoA2Rf3G0IoogJbO0dMeEOSs6iSyDRZjMo/nOs1xcxGA4Bty9CO+ur3gzIzjN/8XtiQtp8Ia0+aIIncowFoRqf/d9RkR+RDZnwiC+O+rdQYcEoWktah4zQL6FpumahLQTEbg79KWx/bsUd+7f+oK9FBgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QlVElvrD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0G4+89tU"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3650be5157fso172055ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 08:38:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709311087; x=1709915887; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QgTvz/kj0/zZVy0gcjbfgQ3NGR++QmNhx15pxeEz/jk=;
-        b=0G4+89tUNAysg7nwTkmMEAmPkrWtIGEDqxZIrg25jr61OZKxog2Cgk8YAM4mbkheDO
-         B++eSWPboAjYBiu7rn9IAY0rf5A+mg42mT//SW1o/hXdPDLzyDKbaZ0ivSbjWiiVHuEq
-         mWNSA2vZLzQMBDOriqOrL083w6plv1fHSLe1U9uIY5zVIXEPpsE74/jGoM10gj4EW86S
-         ZEbgd9fKBPNGuHH56nB9PY6sp8BWL1NkH7PFgON4p2fJhF9qVnYD4uBBl6jrL/BNOaxM
-         H7CmijAzrGgdVD0luuIIHWIc3mWYS9pswhtqfh/IuLPOvhy8jHU0FMUaA9EhXvMsVaXG
-         7J+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709311087; x=1709915887;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QgTvz/kj0/zZVy0gcjbfgQ3NGR++QmNhx15pxeEz/jk=;
-        b=YoVweMhkkFSyDBJ98j4zMOkk9Gan0rJFEtAVKurCqDCfd6CwHZ8R6rInad9G+emz0R
-         Qf2BUPFQUVfVjcH/KPqVlaMZuxnfe5mIMjYVHuJmVy8C3+jPBj0KpZ2Ng2q3rV0E9aqI
-         wasLmWniYZhOt71JIrrG6Fgs/ARO55lwz6Ngdt/KCcHLQv3QDhjDu32t7OISfFLVdpr4
-         fFGzwJp4afe2z+yGT4alfvlyUO5YS4OnBZlLF35Leu1NNxfQsHA9aB1JgxQy1IPjRwg4
-         tPkiVN2owZwCEdmo8JBcNY029rc8SywqiEFL8aItl0Dtwp/5i0uvau403mkmh8k4iEr0
-         b14g==
-X-Forwarded-Encrypted: i=1; AJvYcCXSut1KTDvdqXX5C/U6NOIfWmvqNBX0SfMIk095ImIebA9rN2OvM8FST8b2h0d2qXIVOp+cofmCL5XEWk1V3lSVqE81+iyiuhclQkiR
-X-Gm-Message-State: AOJu0YwLJaXYMjdUQc7zq760YZmQK9lmpBOzTXCH1HBkYBbBrMIrCcL0
-	G/Q12YkqNWS7feK9X5HIKiHwOCk9+n/ZHNb2n1ncatrKOpTEt2xmsOP+RSuAjtb58P5KKB6UQOH
-	yca1tNG8x0ykdJm4YyiqX7b5H/k2OQuHIOUVL
-X-Google-Smtp-Source: AGHT+IHFzPNDrcWQ5C7GssuggT3T5a8jn8iP3fNfZwnsT+g0ek6x5sZAzufql54tuPzKeshAbHzhS1Hf3BQj/UDSsSE=
-X-Received: by 2002:a92:c56a:0:b0:365:cc38:d9a5 with SMTP id
- b10-20020a92c56a000000b00365cc38d9a5mr196011ilj.15.1709311087098; Fri, 01 Mar
- 2024 08:38:07 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QlVElvrD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709311095;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FZ9ThxSLb1hIO4s1RwGwCheC8FH3deOOXNVi8s1Z1I4=;
+	b=QlVElvrDU6/A8oJZXQ9CwzvrX2c+vq++M7cWJk5YiQ+KK2JZeCbiat8NDxNiMqckpap22O
+	TIKLQhaJen5AzGrwPehhRUJUgD/yVAJiwkTzCdWtTreOhs2StVK5K42o5KnaIho8dAAZbh
+	KTYDzyLovPYqr19twuiZqT+4gDtMj78=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-hr5kiNF_P_2u4BgQ_AImYw-1; Fri,
+ 01 Mar 2024 11:38:12 -0500
+X-MC-Unique: hr5kiNF_P_2u4BgQ_AImYw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B287D28B7403;
+	Fri,  1 Mar 2024 16:38:11 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.114])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7937D492BE2;
+	Fri,  1 Mar 2024 16:38:10 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-afs@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 00/21] rxrpc: Miscellaneous changes and make use of MSG_SPLICE_PAGES
+Date: Fri,  1 Mar 2024 16:37:32 +0000
+Message-ID: <20240301163807.385573-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229001806.4158429-1-irogers@google.com> <20240229001806.4158429-5-irogers@google.com>
- <7aa2d2a2-b8f9-478f-9699-7b717d38a8ab@linux.intel.com> <CAP-5=fWSidi1zjwn8Zr93dAQvRBtngKrkVwDxorTMmVSVc9FWg@mail.gmail.com>
- <e1e04f03-5d99-466d-a2d1-ce7fb15e8b8e@linux.intel.com>
-In-Reply-To: <e1e04f03-5d99-466d-a2d1-ce7fb15e8b8e@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 1 Mar 2024 08:37:53 -0800
-Message-ID: <CAP-5=fVBPT9itsyruLeChu=90xnvuxT7PSBtBkWi5LiDNAm2iw@mail.gmail.com>
-Subject: Re: [PATCH v1 04/20] perf jevents: Add tsx metric group for Intel models
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On Fri, Mar 1, 2024 at 6:52=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
-m> wrote:
->
->
->
-> On 2024-02-29 8:01 p.m., Ian Rogers wrote:
-> > On Thu, Feb 29, 2024 at 1:15=E2=80=AFPM Liang, Kan <kan.liang@linux.int=
-el.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2024-02-28 7:17 p.m., Ian Rogers wrote:
-> >>> Allow duplicated metric to be dropped from json files.
-> >>>
-> >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> >>> ---
-> >>>  tools/perf/pmu-events/intel_metrics.py | 51 ++++++++++++++++++++++++=
-++
-> >>>  1 file changed, 51 insertions(+)
-> >>>
-> >>> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-=
-events/intel_metrics.py
-> >>> index 20c25d142f24..1096accea2aa 100755
-> >>> --- a/tools/perf/pmu-events/intel_metrics.py
-> >>> +++ b/tools/perf/pmu-events/intel_metrics.py
-> >>> @@ -7,6 +7,7 @@ import argparse
-> >>>  import json
-> >>>  import math
-> >>>  import os
-> >>> +from typing import Optional
-> >>>
-> >>>  parser =3D argparse.ArgumentParser(description=3D"Intel perf json ge=
-nerator")
-> >>>  parser.add_argument("-metricgroups", help=3D"Generate metricgroups d=
-ata", action=3D'store_true')
-> >>> @@ -77,10 +78,60 @@ def Smi() -> MetricGroup:
-> >>>      ])
-> >>>
-> >>>
-> >>> +def Tsx() -> Optional[MetricGroup]:
-> >>> +    if args.model not in [
-> >>> +        'alderlake',
-> >>> +        'cascadelakex',
-> >>> +        'icelake',
-> >>> +        'icelakex',
-> >>> +        'rocketlake',
-> >>> +        'sapphirerapids',
-> >>> +        'skylake',
-> >>> +        'skylakex',
-> >>> +        'tigerlake',> +    ]:
-> >>
-> >> Can we get ride of the model list? Otherwise, we have to keep updating
-> >> the list.
-> >
-> > Do we expect the list to update? :-)
->
-> Yes, at least for the meteorlake and graniterapids. They should be the
-> same as alderlake and sapphirerapids. I'm not sure about the future
-> platforms.
->
-> Maybe we can have a if args.model in list here to include all the
-> non-hybrid models which doesn't support TSX. I think the list should not
-> be changed shortly.
->
-> > The issue is the events are in
-> > sysfs and not the json. If we added the tsx events to json then this
-> > list wouldn't be necessary, but it also would mean the events would be
-> > present in "perf list" even when TSX is disabled.
->
-> I think there may an alternative way, to check the RTM events, e.g.,
-> RTM_RETIRED.START event. We only need to generate the metrics for the
-> platform which supports the RTM_RETIRED.START event.
->
->
-> >
-> >>> +        return None
-> >>> +> +    pmu =3D "cpu_core" if args.model =3D=3D "alderlake" else "cpu=
-"
-> >>
-> >> Is it possible to change the check to the existence of the "cpu" PMU
-> >> here? has_pmu("cpu") ? "cpu" : "cpu_core"
-> >
-> > The "Unit" on "cpu" events in json always just blank. On hybrid it is
-> > either "cpu_core" or "cpu_atom", so I can make this something like:
-> >
-> > pmu =3D "cpu_core" if metrics.HasPmu("cpu_core") else "cpu"
-> >
-> > which would be a build time test.
->
-> Yes, I think using the "Unit" is good enough.
->
-> >
-> >
-> >>> +    cycles =3D Event('cycles')
-> >>> +    cycles_in_tx =3D Event(f'{pmu}/cycles\-t/')
-> >>> +    transaction_start =3D Event(f'{pmu}/tx\-start/')
-> >>> +    cycles_in_tx_cp =3D Event(f'{pmu}/cycles\-ct/')
-> >>> +    metrics =3D [
-> >>> +        Metric('tsx_transactional_cycles',
-> >>> +                      'Percentage of cycles within a transaction reg=
-ion.',
-> >>> +                      Select(cycles_in_tx / cycles, has_event(cycles=
-_in_tx), 0),
-> >>> +                      '100%'),
-> >>> +        Metric('tsx_aborted_cycles', 'Percentage of cycles in aborte=
-d transactions.',
-> >>> +                      Select(max(cycles_in_tx - cycles_in_tx_cp, 0) =
-/ cycles,
-> >>> +                                    has_event(cycles_in_tx),
-> >>> +                                    0),
-> >>> +                      '100%'),
-> >>> +        Metric('tsx_cycles_per_transaction',
-> >>> +                      'Number of cycles within a transaction divided=
- by the number of transactions.',
-> >>> +                      Select(cycles_in_tx / transaction_start,
-> >>> +                                    has_event(cycles_in_tx),
-> >>> +                                    0),
-> >>> +                      "cycles / transaction"),
-> >>> +    ]
-> >>> +    if args.model !=3D 'sapphirerapids':
-> >>
-> >> Add the "tsx_cycles_per_elision" metric only if
-> >> has_event(f'{pmu}/el\-start/')?
-> >
-> > It's a sysfs event, so this wouldn't work :-(
->
-> The below is the definition of el-start in the kernel.
-> EVENT_ATTR_STR(el-start,        el_start,       "event=3D0xc8,umask=3D0x1=
-");
->
-> The corresponding event in the event list should be HLE_RETIRED.START
->       "EventCode": "0xC8",
->       "UMask": "0x01",
->       "EventName": "HLE_RETIRED.START",
->
-> I think we may check the HLE_RETIRED.START instead. If the
-> HLE_RETIRED.START doesn't exist, I don't see a reason why the
-> tsx_cycles_per_elision should be supported.
->
-> Again, in the virtualization world, it's possible that the
-> HLE_RETIRED.START exists in the event list but el_start isn't available
-> in the sysfs. I think it has to be specially handle in the test as well.
+Here are some changes to AF_RXRPC:
 
-So we keep the has_event test on the sysfs event to handle the
-virtualization and disabled case. We use  HLE_RETIRED.START to detect
-whether the model supports TSX. Should the event be the sysfs or json
-version? i.e.
+ (1) Cache the transmission serial number of ACK and DATA packets in the
+     rxrpc_txbuf struct and log this in the retransmit tracepoint.
 
-        "MetricExpr": "(cycles\\-t / el\\-start if
-has_event(el\\-start) else 0)",
+ (2) Don't use atomics on rxrpc_txbuf::flags[*] and cache the intended wire
+     header flags there too to avoid duplication.
 
-or
+ (3) Cache the wire checksum in rxrpc_txbuf to make it easier to create
+     jumbo packets in future (which will require altering the wire header
+     to a jumbo header and restoring it back again for retransmission).
 
-        "MetricExpr": "(cycles\\-t / HLE_RETIRED.START if
-has_event(el\\-start) else 0)",
+ (4) Fix the protocol names in the wire ACK trailer struct.
 
-I think I favor the former for some consistency with the has_event.
+ (5) Strip all the barriers and atomics out of the call timer tracking[*].
 
-Using HLE_RETIRED.START means the set of TSX models goes from:
-        'alderlake',
-        'cascadelakex',
-        'icelake',
-        'icelakex',
-        'rocketlake',
-        'sapphirerapids',
-        'skylake',
-        'skylakex',
-        'tigerlake',
+ (6) Remove atomic handling from call->tx_transmitted and
+     call->acks_prev_seq[*].
 
-To:
-   broadwell
-   broadwellde
-   broadwellx
-   cascadelakex
-   haswell
-   haswellx
-   icelake
-   rocketlake
-   skylake
-   skylakex
+ (7) Don't bother resetting the DF flag after UDP packet transmission.  To
+     change it, we now call directly into UDP code, so it's quick just to
+     set it every time.
 
-Using RTM_RETIRED.START it goes to:
-   broadwell
-   broadwellde
-   broadwellx
-   cascadelakex
-   emeraldrapids
-   graniterapids
-   haswell
-   haswellx
-   icelake
-   icelakex
-   rocketlake
-   sapphirerapids
-   skylake
-   skylakex
-   tigerlake
+ (8) Merge together the DF/non-DF branches of the DATA transmission to
+     reduce duplication in the code.
 
-So I'm not sure it is working equivalently to what we have today,
-which may be good or bad. Here is what I think the code should look
-like:
+ (9) Add a kvec array into rxrpc_txbuf and start moving things over to it.
+     This paves the way for using page frags.
 
-def Tsx() -> Optional[MetricGroup]:
-  pmu =3D "cpu_core" if CheckPmu("cpu_core") else "cpu"
-  cycles =3D Event('cycles')
-  cycles_in_tx =3D Event(f'{pmu}/cycles\-t/')
-  cycles_in_tx_cp =3D Event(f'{pmu}/cycles\-ct/')
-  try:
-    # Test if the tsx event is present in the json, prefer the
-    # sysfs version so that we can detect its presence at runtime.
-    transaction_start =3D Event("RTM_RETIRED.START")
-    transaction_start =3D Event(f'{pmu}/tx\-start/')
-  except:
-    return None
+(10) Split (sub)packet preparation and timestamping out of the DATA
+     transmission function.  This helps pave the way for future jumbo
+     packet generation.
 
-  elision_start =3D None
-  try:
-    # Elision start isn't supported by all models, but we'll not
-    # generate the tsx_cycles_per_elision metric in that
-    # case. Again, prefer the sysfs encoding of the event.
-    elision_start =3D Event("HLE_RETIRED.START")
-    elision_start =3D Event(f'{pmu}/el\-start/')
-  except:
-    pass
+(11) In rxkad, don't pick values out of the wire header stored in
+     rxrpc_txbuf, buf rather find them elsewhere so we can remove the wire
+     header from there.
 
-  return MetricGroup('transaction', [
-      Metric('tsx_transactional_cycles',
-             'Percentage of cycles within a transaction region.',
-             Select(cycles_in_tx / cycles, has_event(cycles_in_tx), 0),
-             '100%'),
-      Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted
-transactions.',
-             Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / cycles,
-                    has_event(cycles_in_tx),
-                    0),
-             '100%'),
-      Metric('tsx_cycles_per_transaction',
-             'Number of cycles within a transaction divided by the
-number of transactions.',
-             Select(cycles_in_tx / transaction_start,
-                    has_event(cycles_in_tx),
-                    0),
-             "cycles / transaction"),
-      Metric('tsx_cycles_per_elision',
-             'Number of cycles within a transaction divided by the
-number of elisions.',
-             Select(cycles_in_tx / elision_start,
-                    has_event(elision_start),
-                    0),
-             "cycles / elision") if elision_start else None,
-  ], description=3D"Breakdown of transactional memory statistics")
+(12) Move rxrpc_send_ACK() to output.c so that it can be merged with
+     rxrpc_send_ack_packet().
 
-Wdyt?
+(13) Use rxrpc_txbuf::kvec[0] to access the wire header for the packet
+     rather than directly accessing the copy in rxrpc_txbuf.  This will
+     allow that to be removed to a page frag.
 
-Thanks,
-Ian
+(14) Switch from keeping the transmission buffers in rxrpc_txbuf allocated
+     in the slab to allocating them using page fragment allocators.  There
+     are separate allocators for DATA packets (which persist for a while)
+     and control packets (which are discarded immediately).
 
-> Thanks,
-> Kan
->
-> >
-> > Thanks,
-> > Ian
-> >
-> >> Thanks,
-> >> Kan
-> >>
-> >>> +        elision_start =3D Event(f'{pmu}/el\-start/')
-> >>> +        metrics +=3D [
-> >>> +            Metric('tsx_cycles_per_elision',
-> >>> +                          'Number of cycles within a transaction div=
-ided by the number of elisions.',
-> >>> +                          Select(cycles_in_tx / elision_start,
-> >>> +                                        has_event(elision_start),
-> >>> +                                        0),
-> >>> +                          "cycles / elision"),
-> >>> +        ]
-> >>> +    return MetricGroup('transaction', metrics)
-> >>> +
-> >>> +
-> >>>  all_metrics =3D MetricGroup("", [
-> >>>      Idle(),
-> >>>      Rapl(),
-> >>>      Smi(),
-> >>> +    Tsx(),
-> >>>  ])
-> >>>
-> >>>  if args.metricgroups:
-> >
+     We can then turn on MSG_SPLICE_PAGES when transmitting DATA and ACK
+     packets.
+
+     We can also get rid of the RCU cleanup on rxrpc_txbufs, preferring
+     instead to release the page frags as soon as possible.
+
+(15) Parse received packets before handling timeouts as the former may
+     reset the latter.
+
+(16) Make sure we don't retransmit DATA packets after all the packets have
+     been ACK'd.
+
+(17) Differentiate traces for PING ACK transmission.
+
+(18) Switch to keeping timeouts as ktime_t rather than a number of jiffies
+     as the latter is too coarse a granularity.  Only set the call timer at
+     the end of the call event function from the aggregate of all the
+     timeouts, thereby reducing the number of timer calls made.  In future,
+     it might be possible to reduce the number of timers from one per call
+     to one per I/O thread and to use a high-precision timer.
+
+(19) Record RTT probes after successful transmission rather than recording
+     it before and then cancelling it after if unsuccessful[*].  This
+     allows a number of calls to get the current time to be removed.
+
+(20) Clean up the resend algorithm as there's now no need to walk the
+     transmission buffer under lock[*].  DATA packets can be retransmitted
+     as soon as they're found rather than being queued up and transmitted
+     when the locked is dropped.
+
+(21) When initially parsing a received ACK packet, extract some of the
+     fields from the ack info to the skbuff private data.  This makes it
+     easier to do path MTU discovery in the future when the call to which a
+     PING RESPONSE ACK refers has been deallocated.
+
+
+[*] Possible with the move of almost all code from softirq context to the
+    I/O thread.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/rxrpc-iothread-20240301
+
+And can be found on this branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-iothread
+
+David
+
+David Howells (21):
+  rxrpc: Record the Tx serial in the rxrpc_txbuf and retransmit trace
+  rxrpc: Convert rxrpc_txbuf::flags into a mask and don't use atomics
+  rxrpc: Note cksum in txbuf
+  rxrpc: Fix the names of the fields in the ACK trailer struct
+  rxrpc: Strip barriers and atomics off of timer tracking
+  rxrpc: Remove atomic handling on some fields only used in I/O thread
+  rxrpc: Do lazy DF flag resetting
+  rxrpc: Merge together DF/non-DF branches of data Tx function
+  rxrpc: Add a kvec[] to the rxrpc_txbuf struct
+  rxrpc: Split up the DATA packet transmission function
+  rxrpc: Don't pick values out of the wire header when setting up
+    security
+  rxrpc: Move rxrpc_send_ACK() to output.c with rxrpc_send_ack_packet()
+  rxrpc: Use rxrpc_txbuf::kvec[0] instead of rxrpc_txbuf::wire
+  rxrpc: Do zerocopy using MSG_SPLICE_PAGES and page frags
+  rxrpc: Parse received packets before dealing with timeouts
+  rxrpc: Don't permit resending after all Tx packets acked
+  rxrpc: Differentiate PING ACK transmission traces.
+  rxrpc: Use ktimes for call timeout tracking and set the timer lazily
+  rxrpc: Record probes after transmission and reduce number of time-gets
+  rxrpc: Clean up the resend algorithm
+  rxrpc: Extract useful fields from a received ACK to skb priv data
+
+ include/trace/events/rxrpc.h | 198 ++++++++--------
+ net/rxrpc/af_rxrpc.c         |  12 +-
+ net/rxrpc/ar-internal.h      |  88 ++++---
+ net/rxrpc/call_event.c       | 327 ++++++++++++--------------
+ net/rxrpc/call_object.c      |  56 ++---
+ net/rxrpc/conn_client.c      |   4 +-
+ net/rxrpc/conn_event.c       |  16 +-
+ net/rxrpc/conn_object.c      |   4 +
+ net/rxrpc/input.c            | 116 +++++----
+ net/rxrpc/insecure.c         |  11 +-
+ net/rxrpc/io_thread.c        |  11 +
+ net/rxrpc/local_object.c     |   3 +
+ net/rxrpc/misc.c             |   8 +-
+ net/rxrpc/output.c           | 441 +++++++++++++++++------------------
+ net/rxrpc/proc.c             |  10 +-
+ net/rxrpc/protocol.h         |   6 +-
+ net/rxrpc/rtt.c              |  36 +--
+ net/rxrpc/rxkad.c            |  58 ++---
+ net/rxrpc/sendmsg.c          |  63 ++---
+ net/rxrpc/sysctl.c           |  16 +-
+ net/rxrpc/txbuf.c            | 174 +++++++++++---
+ 21 files changed, 853 insertions(+), 805 deletions(-)
+
