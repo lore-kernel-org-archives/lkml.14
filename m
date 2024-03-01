@@ -1,101 +1,144 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF877657C8
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 06:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D7D67C4D
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 06:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709274805; cv=none; b=SBArXL4+wV1b33elCr57KK9C/z6TMf3cTWtB4Q6p0TI5OaGJ/QxmADqb02PXY4OpIabw6b5K4Hx7T62yQMKmm1ZxMasszGshRZ/I8u3DkAT/ioQWhhpNkGAyUUnlP1xWtdMjUhd/cHG0oDs59yxA++fB9QehiCrn2oYQK8RwXso=
+	t=1709274872; cv=none; b=HT9NFWMfSB5sL2NZUiikewL8Y315DQonvr9BQ3iUj6VlX5LJYAZFOcN8qYEU2FVtQRs+zU5fYZZvB7Y1R3ACQj2M5uFNdlQUT6U9oIzhx6eNHmmlNH2vT6ni6uR8qDynbwsEgN8p99TdUe1U0GvcHp5EVCoLn0ygUXhRYZO8dx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709274805; c=relaxed/simple;
-	bh=nDOja5tFv2kw4myGXPIMJqbuRiw4W1oOPbG/TQFLCSw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sjwmY5E3MSOMwiSxWgSsQV0/6lpH9VfcKS6EfU8SMP8IVux/YhVCP9rfB3bmxYFnY9ZYnVJD9HG95wbK4DW2RPZ4MlshG/bQ/eizA+1GKIPlY949vr8gcd1DLx6P7yUpO2jekYQTa07MJzNkEcdFARh+ku4gbm/uyE8OUjsT5B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RlHp8fvq; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709274872; c=relaxed/simple;
+	bh=SmdKxeIixIsAU0Agzo28Zt1EVfMxmohDwoG9rgI9Tf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W+OAEBbpMZjLz2hTHRi8wGzFsRKxOwVzR+BejpYA/L4UWDPLHFIZhb31OAuh6vz6A3tQnCq2Bb56YgyI4FOtZJPrP3Ti87PH7ewg3B+84VzWELBngJoetmeFLkNLqX9C+P9QwKflehWhYs3s/4G1g215arN2Sz9MGF/ZgvL5y1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=pac3JJdo; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RlHp8fvq"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5132cf9167fso647184e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 22:33:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709274802; x=1709879602; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=I4AvLK/FjCNfuk8kByJg2sRy0XAPgz7MRQQYrJtxRXE=;
-        b=RlHp8fvq1+dHuszktO9r9Ybyukn+PpTZ7g8MLtu+uNeNtSWOkWUpZz08I2qBOj1ubq
-         azRpt4ykhUPACOH0al4g+cfG6Enb1El3beJ8vj0fLmcpBGLevZQ0MWSOhj0ZrxYY3orB
-         qO9zU2qY8zKxrI6BsnfNk1IgLeYbu6LmUilxjK04cY3G8IYi6dbx24ksnsAcdV9jZNqU
-         5O1P9TqRWrRcbRrJA8vcpxF/vlnZ8MJ5jNOLwOL7p6nOAxd2FiFdLUO5fEPIvsCJVXeD
-         PANb6XrCshizD32ALET4uuQIRCNKq7E5rTiQEtjDnz78jQMH5JEINXs1LYCPoLihVAWC
-         027A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709274802; x=1709879602;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I4AvLK/FjCNfuk8kByJg2sRy0XAPgz7MRQQYrJtxRXE=;
-        b=Soh4JAFXCAwm64tHUBk9bB46BliZnYFz+XkB9D/XRMpJwo8omw39KMc4qvpGdjSle5
-         AP76d761HBz+OrizzLNRh7BofRxfyXlfj9SyoyRs7MdxZB7yRzFfVAkwQ2hn2uY6RwYk
-         Q47x7+HC3f3GQQmcSKgMiPJi5wMnZzdIYFlNQB3sWg3xnOw2vGH8iTab3C0c/NNOzt5Z
-         KS75wjHb/+bxhnIT7864vHzqLAsi8aiJI/fbXJ/TSDGQf1zOpDIhVoETgSZc7bV0QRGN
-         Jl3oGLCE9CjuTfzupxsumpPVyRMVoefMt8zG2uFftI+oB30ZWR/xupRGrlNt261seMb6
-         lOxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBEzjQeY/iA+StRL3GhAm61x0FXYoa0uMmZVz30nk/rENYPzIvFocz2TK6mFr2ysWh3QU3/ZfhfXn0G3dR+HERMHUS4AKPXNqIROFM
-X-Gm-Message-State: AOJu0YwM0jhm/zMgED0eUKKq4xrFYHpMIzJ5wTFeCgROm38qwpBnLZKt
-	BSDd+5f6h/nUYPsFPq67tLMhWEZoidoKpDSmmsXSLcHz2kp4ScyjcIFEYeJ3FoduAWY7iuZ9wDh
-	9vGY6PkrLLRJsSV3hhhzxXlZDoCDItqdn0BOI5A==
-X-Google-Smtp-Source: AGHT+IF53t416hDTlEtbXDXQmjAY2eCQAvbfGdjlHpLL4jfA6RJI4WdAuRVR4lP0YB8xoY72Ina08cBomwWxYjV/f70=
-X-Received: by 2002:a05:6512:200b:b0:512:ee1f:b5af with SMTP id
- a11-20020a056512200b00b00512ee1fb5afmr453495lfb.41.1709274802001; Thu, 29 Feb
- 2024 22:33:22 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pac3JJdo"
+Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7CD8D899;
+	Fri,  1 Mar 2024 07:34:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1709274854;
+	bh=SmdKxeIixIsAU0Agzo28Zt1EVfMxmohDwoG9rgI9Tf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pac3JJdoVeVMXCMqjgYq+cC4iQ50HdypMFlLzAlmNCG5D6fdnKMBMkkO0Tfs6LfHx
+	 7kmQjPrOxANvmFFCdcZqHetxKvt9rCWvWdpvJaXptcZmRhL73spTZwRaceDqP3XOPY
+	 hTDFj4MG0ONIdOkReqUW7IRlAG23dMyEj4DutZtc=
+Date: Fri, 1 Mar 2024 08:34:31 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	owen <qwt9588@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>,
+	Marek Vasut <marex@denx.de>,
+	Adrien Grassein <adrien.grassein@gmail.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Vinay Simha BN <simhavcs@gmail.com>,
+	Christopher Vollo <chris@renewoutreach.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
+	kernel@collabora.com, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v2 0/9] drm: Switch from dev_err to dev_err_probe for
+ missing DSI host error path
+Message-ID: <20240301063431.GM30889@pendragon.ideasonboard.com>
+References: <20240229-anx7625-defer-log-no-dsi-host-v2-0-00506941049a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301063214.2310855-1-kojima.masahisa@socionext.com>
-In-Reply-To: <20240301063214.2310855-1-kojima.masahisa@socionext.com>
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Fri, 1 Mar 2024 08:32:45 +0200
-Message-ID: <CAC_iWjLtDjHUd-eD-xDaV-mw4e_bzAPcO9+XXPOSDZ62E8x_oA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: net: netsec: add myself as co-maintainer
-To: Masahisa Kojima <kojima.masahisa@socionext.com>
-Cc: jaswinder.singh@linaro.org, davem@davemloft.net, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240229-anx7625-defer-log-no-dsi-host-v2-0-00506941049a@collabora.com>
 
-On Fri, 1 Mar 2024 at 08:32, Masahisa Kojima
-<kojima.masahisa@socionext.com> wrote:
->
-> Add myself as co-maintainer for Socionext netsec driver.
-> This commit also removes Jassi from maintainer since he
-> no longer has a Developerbox.
->
-> Cc: Jassi Brar <jaswinder.singh@linaro.org>
-> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> Signed-off-by: Masahisa Kojima <kojima.masahisa@socionext.com>
+Hi Nícolas,
+
+On Thu, Feb 29, 2024 at 07:12:06PM -0500, Nícolas F. R. A. Prado wrote:
+> This series changes every occurence of the following pattern: 
+> 
+> 	dsi_host = of_find_mipi_dsi_host_by_node(dsi);
+> 	if (!dsi_host) {
+> 		dev_err(dev, "failed to find dsi host\n");
+> 		return -EPROBE_DEFER;
+> 	}
+> 
+> into
+> 
+> 	dsi_host = of_find_mipi_dsi_host_by_node(dsi);
+> 	if (!dsi_host)
+> 		return dev_err_probe(dev, -EPROBE_DEFER, "failed to find dsi host\n");
+> 
+> This registers the defer probe reason (so it can later be printed by the
+> driver core or checked on demand through the devices_deferred file in
+> debugfs) and prevents errors to be spammed in the kernel log every time
+> the driver retries to probe, unnecessarily alerting userspace about
+> something that is a normal part of the boot process.
+
+The idea is good, but I have a small issue with patches 1/9 to 7/9. They
+all patch a function that is called by the probe function. Calling
+dev_err_probe() in such functions is error-prone. I had to manually
+check when reviewing the patches that those functions were indeed called
+at probe time, and not through other code paths, and I also had to check
+that no callers were using dev_err_probe() in the error handling path,
+as that would have overridden the error message.
+
+Would there be a way to move the dev_err_probe() to the top-level ? I
+understand it's not always possible or convenient, but if it was doable
+in at least some of the drivers, I think it would be better. I'll let
+you be the judge.
+
+> I have omitted a Fixes: tag in the last patch, for the truly-nt35597
+> panel, because it predates the dev_err_probe() helper.
+> 
+> Changes in v2:
+> - Added patches 2 onwards to fix all occurences of this pattern instead
+>   of just for the anx7625 driver
+> - Link to v1: https://lore.kernel.org/r/20240226-anx7625-defer-log-no-dsi-host-v1-1-242b1af31884@collabora.com
+> 
 > ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2ecaaec6a6bf..494e08683b64 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20214,8 +20214,8 @@ F:      Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
->  F:     drivers/net/ethernet/socionext/sni_ave.c
->
->  SOCIONEXT (SNI) NETSEC NETWORK DRIVER
-> -M:     Jassi Brar <jaswinder.singh@linaro.org>
->  M:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> +M:     Masahisa Kojima <kojima.masahisa@socionext.com>
->  L:     netdev@vger.kernel.org
->  S:     Maintained
->  F:     Documentation/devicetree/bindings/net/socionext,synquacer-netsec.yaml
-> --
-> 2.34.1
->
+> Nícolas F. R. A. Prado (9):
+>       drm/bridge: anx7625: Don't log an error when DSI host can't be found
+>       drm/bridge: icn6211: Don't log an error when DSI host can't be found
+>       drm/bridge: lt8912b: Don't log an error when DSI host can't be found
+>       drm/bridge: lt9611: Don't log an error when DSI host can't be found
+>       drm/bridge: lt9611uxc: Don't log an error when DSI host can't be found
+>       drm/bridge: tc358775: Don't log an error when DSI host can't be found
+>       drm/bridge: dpc3433: Don't log an error when DSI host can't be found
+>       drm/panel: novatek-nt35950: Don't log an error when DSI host can't be found
+>       drm/panel: truly-nt35597: Don't log an error when DSI host can't be found
+> 
+>  drivers/gpu/drm/bridge/analogix/anx7625.c     |  6 ++----
+>  drivers/gpu/drm/bridge/chipone-icn6211.c      |  6 ++----
+>  drivers/gpu/drm/bridge/lontium-lt8912b.c      |  6 ++----
+>  drivers/gpu/drm/bridge/lontium-lt9611.c       |  6 ++----
+>  drivers/gpu/drm/bridge/lontium-lt9611uxc.c    |  6 ++----
+>  drivers/gpu/drm/bridge/tc358775.c             |  6 ++----
+>  drivers/gpu/drm/bridge/ti-dlpc3433.c          | 17 +++++++++--------
+>  drivers/gpu/drm/panel/panel-novatek-nt35950.c |  6 ++----
+>  drivers/gpu/drm/panel/panel-truly-nt35597.c   |  6 ++----
+>  9 files changed, 25 insertions(+), 40 deletions(-)
+> ---
+> base-commit: 2ae0a045e6814c8c1d676d6153c605a65746aa29
+> change-id: 20240226-anx7625-defer-log-no-dsi-host-c3f9ccbcb287
 
-Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+-- 
+Regards,
+
+Laurent Pinchart
