@@ -1,159 +1,80 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07A47468;
-	Fri,  1 Mar 2024 17:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B45F9FD;
+	Fri,  1 Mar 2024 17:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709312891; cv=none; b=nVGkXCj//yqK9KiLG3kE8Qh1b8Nrv6WiiY4YRPOfncJVZVbgvnM+IMB4AEmTXwv1TT26Oej3SXwb6WGp/E+Vwd/6DDNcqvPgnZYkT/9Ug5kbw6AiSFgNVw3EIroVfyo75V8Tfgvx9wgeWXHJthZg8mV59QS8liKWBdI7u3DJkcg=
+	t=1709312919; cv=none; b=Uov+lzzJf76OK9uMB/cWQzIgnUTC0uxR7cEDyu8vO2ZiJSwsEdpZIatWT2Xt7QkIqqGW+OybO5NS/xMveVRoVgr3fZjlymzS+pi3t7Hx4jUZEw9Xk7JgpFil1zIbW67rQQ50z312HIBBSf1pq2BycAB+447msbR0BNjsWD6IfB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709312891; c=relaxed/simple;
-	bh=w0uFf7UE97zt2wdqPoLkH+UX7mNIxYfpHO1pyRyDbyw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BdsK0A2YXREGL1nPVDV8nBew8VFVD6Zv3ruU4g+PBu2rTeH2KJJ8kudOjnNszoggRQv3CskzhhkmLDqwWfq5+XdhUt7SYRibK9CW5lmOQUuXfHMHUF8ykaEjzqKw0whqWccS266L7/qY7ji8jqtaVM2lJlO3j1Qxd1E0AqnLbso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MBK5sIsS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vwK5ViTl; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MBK5sIsS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vwK5ViTl; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709312919; c=relaxed/simple;
+	bh=dQWhTKqicP29reyqSeNu/vMazISZHdnkYuuXEej6Pz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W257XcJdzEOIR7o5wFleG5zjb6Lz3TQ47wF5WUhSl6zgZxg85xShEft6sSDSaZAYrkeXA5A4G1xHsy9gPYo5QXPdaCwEvjv01+znxCJFjWh8DpoQib9uUMM9DxtZims7GwH57Pjl8fcNLjJYK5aBDKTb9j+g3PjN4keUoKXe3JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHcos0Pz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MBK5sIsS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vwK5ViTl";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MBK5sIsS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vwK5ViTl"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C041133D2E;
-	Fri,  1 Mar 2024 17:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709312887; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RqJGuSNtEKivYtKHzuQHc54bH1ErddF8H5FukziJrvY=;
-	b=MBK5sIsSId/tyrKP+kU3ieWRHT/L04VfkV/+b/kW3+75gNUaXMlbZnG9aflnFcOdGi/hFB
-	s2zEv0uZgHLZVGM5NcskABpjAo3Jq0fL4SSBSWqfeap6xhee/z2erhzJo8n6dPa25bWs3P
-	01tmrt/7Da0hD2BV1556vS3lz4gK37A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709312887;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RqJGuSNtEKivYtKHzuQHc54bH1ErddF8H5FukziJrvY=;
-	b=vwK5ViTlttLYWkeoRlfCISz9XtLVUYHzTzXugQbfvnv4s0dbCU8plBXOftlTpm1Pht7gRe
-	l1CIDNn7krPIJYBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709312887; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RqJGuSNtEKivYtKHzuQHc54bH1ErddF8H5FukziJrvY=;
-	b=MBK5sIsSId/tyrKP+kU3ieWRHT/L04VfkV/+b/kW3+75gNUaXMlbZnG9aflnFcOdGi/hFB
-	s2zEv0uZgHLZVGM5NcskABpjAo3Jq0fL4SSBSWqfeap6xhee/z2erhzJo8n6dPa25bWs3P
-	01tmrt/7Da0hD2BV1556vS3lz4gK37A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709312887;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RqJGuSNtEKivYtKHzuQHc54bH1ErddF8H5FukziJrvY=;
-	b=vwK5ViTlttLYWkeoRlfCISz9XtLVUYHzTzXugQbfvnv4s0dbCU8plBXOftlTpm1Pht7gRe
-	l1CIDNn7krPIJYBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A285613A59;
-	Fri,  1 Mar 2024 17:08:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id g35fI3YL4mVwGQAAD6G6ig
-	(envelope-from <hare@suse.de>); Fri, 01 Mar 2024 17:08:06 +0000
-Message-ID: <1e789901-82a2-40db-b818-cc1c5b6e9ea5@suse.de>
-Date: Fri, 1 Mar 2024 18:08:05 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHcos0Pz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6D44C433F1;
+	Fri,  1 Mar 2024 17:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709312918;
+	bh=dQWhTKqicP29reyqSeNu/vMazISZHdnkYuuXEej6Pz4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rHcos0PzRuz4UdjZjyMoX73NdGAjqFbDAr1Jd8vyGXu3BayLGaB7uwICV/c8BU1m9
+	 agaOQYfKzMN5o71Azn12aXvklX/paZlRt/2ibz8nMsmUNJGsKhgYUqL9tcPirqRsC7
+	 Zdo/QgNfo9NQYkasAp+Rp8vDyfGLW8Zwqou9ADlOg9lXRvo5Tmrd3eS57IB5YB8Rax
+	 T6/XOoD4ejiZ4B+rJzWjwVvqRwagMPfj3mKx5lHMAGHqHSOwf3hYLncHHANvCphqba
+	 D7zEThR8hRDP/CK/5LYHDLJCleFEU+zfBuSjU1FsANZACmVniTpf3q9iMkStOuuMR4
+	 skExEjJ0Owx2g==
+Date: Fri, 1 Mar 2024 09:08:36 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: Jiri Pirko <jiri@resnulli.us>, <intel-wired-lan@lists.osuosl.org>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Mateusz Pacuszka
+ <mateuszx.pacuszka@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Lukasz Plachno <lukasz.plachno@intel.com>, Jakub Buchocki
+ <jakubx.buchocki@intel.com>, Pawel Kaminski <pawel.kaminski@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>, Michal Swiatkowski
+ <michal.swiatkowski@linux.intel.com>, Mateusz Polchlopek
+ <mateusz.polchlopek@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ "Pawel Chmielewski" <pawel.chmielewski@intel.com>, Jesse Brandeburg
+ <jesse.brandeburg@intel.com>
+Subject: Re: [PATCH iwl-net 0/5] ice: LLDP support for VFs
+Message-ID: <20240301090836.185e3b79@kernel.org>
+In-Reply-To: <ZeDb8Dr8mBvov9fc@lzaremba-mobl.ger.corp.intel.com>
+References: <20240228155957.408036-1-larysa.zaremba@intel.com>
+	<20240228084745.2c0fef0e@kernel.org>
+	<ZeBMRXUjVSwUHxU-@nanopsycho>
+	<20240229072813.5d7614c3@kernel.org>
+	<ZeDb8Dr8mBvov9fc@lzaremba-mobl.ger.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/13] mm: Support order-1 folios in the page cache
-Content-Language: en-US
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Cc: djwong@kernel.org, mcgrof@kernel.org, linux-mm@kvack.org,
- david@fromorbit.com, akpm@linux-foundation.org, gost.dev@samsung.com,
- linux-kernel@vger.kernel.org, chandan.babu@oracle.com, willy@infradead.org
-References: <20240301164444.3799288-1-kernel@pankajraghav.com>
- <20240301164444.3799288-2-kernel@pankajraghav.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20240301164444.3799288-2-kernel@pankajraghav.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=MBK5sIsS;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=vwK5ViTl
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.54 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-0.04)[59.09%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Score: -1.54
-X-Rspamd-Queue-Id: C041133D2E
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 3/1/24 17:44, Pankaj Raghav (Samsung) wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Thu, 29 Feb 2024 20:33:04 +0100 Larysa Zaremba wrote:
+> > This is an LLDP agent which runs as part of the NIC FW, AFAIU, not about
+> > forwarding or filtering.
+> > 
+> > They already have the priv flag, so best to reuse that. If not possible
+> > we can explore options, but as Larysa mentioned herself in the cover
+> > letter sysfs is probably low on the preference list :(
 > 
-> Folios of order 1 have no space to store the deferred list.  This is
-> not a problem for the page cache as file-backed folios are never
-> placed on the deferred list.  All we need to do is prevent the core
-> MM from touching the deferred list for order 1 folios and remove the
-> code which prevented us from allocating order 1 folios.
+> FW agent is disabled NIC-wide, so only PF should be able to set such flag.
+
+Sorry, then I misread. If it's about which VF gets the LLDP traffic
+from the _wire_, then I'm with Jiri. It's a basic forwarding problem,
+isn't it? Match on EtherType and forward?
+
+> The lazy part of me likes the private flag direction, because just
+> replacing sysfs entries with corresponding private flags would make
+> patch look better while not changing the implementation much.
 > 
-> Link: https://lore.kernel.org/linux-mm/90344ea7-4eec-47ee-5996-0c22f42d6a6a@google.com/
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->   include/linux/huge_mm.h |  7 +++++--
->   mm/filemap.c            |  2 --
->   mm/huge_memory.c        | 23 ++++++++++++++++++-----
->   mm/internal.h           |  4 +---
->   mm/readahead.c          |  3 ---
->   5 files changed, 24 insertions(+), 15 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
-
+> I guess, treating it like a normal eswitch configuration would be
+> ideal, but it would not be purely generic, as there is an added level
+> of complexity because of FW Agent interactions.
