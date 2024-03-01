@@ -1,110 +1,184 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4343C067;
-	Fri,  1 Mar 2024 20:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40FEC132;
+	Fri,  1 Mar 2024 20:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709325463; cv=none; b=PxsnyEntvO/SS5x41vtY93CNH++PdlWEQYJkQtQoVCc5p5TJpEkvr0VKTfaZZFtbJMSSxLs8oEICxD/K5BS6qw6mGqIZ6hE05B6E+0HQBkAbFdVya4Nvx6VfAqH3Xh75V2oeb3dReJAUVwHJ/Oe44LKkIGzwq+oz9hWefXn1Tx0=
+	t=1709325619; cv=none; b=bVOz/KMtcBXdSJS8oNlbuXeID/IvCCId0Hh/cyZJ7JZLVFaRBpe4H54sykKmSCs5jBs8yQslIa6MtWlrkqM05cl9U1Mw5fK/8yMm9UQTkOBBzoTNjTwwvDNvR+U/tQWZzhJkW99Q0L16rGlch1qk6jVpQD89Krf7sYZoAJkQzR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709325463; c=relaxed/simple;
-	bh=jDk+Rr+D+yrxNBXemNzJit3fk+TeM+fn/xgB37dy9Y0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=md6owclgUSJDxqHd2HFFJqzAvaezks+lj9IfV/qzJq1eGgal5PVhmcH4V/bXJjgp2ohognkDUO7ICsYAL9berkbqmpsZn7ZVvxNh5YN+8D1GflpwpZp1HSVU4i+Seka+S1EUwNx+p7j2m6jjcMkO1efvnZVwy9Q+4Ggtqe8ZMZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5a10f19d4a0so35679eaf.0;
-        Fri, 01 Mar 2024 12:37:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709325461; x=1709930261;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aA81n8gjpnioNNFqryBLhwwan57m+hU0QtyE/pL0sz4=;
-        b=gk8a1OE0suE5Yldljp6UM3PlNcgz/17ejrjzNM1Af8EfUGkIaN3trtby/7qWqqrFl7
-         sq857NssLt9sPgax3EQuFVduZs1vsge1Wnb0sffj7hOu9vZxHaDnQw+Z1W6jjulUvfjP
-         p0bDHNnZTwjl7flJOOVFW4+TqkczIaVpSwIjplDkPamMehLkBjrxjPK/F5dJ/vF+Cil3
-         cMCJk7Pu6Jg2p1cUkfSS0A3fsmjf7tEE38bMXTN8dA/eil749B3IWIfXB6fSzRLZj5j9
-         7UnalioZIBQFWvdzrAgi+nJ7TsSO/knS0yppMJgMqLSu+o427oQ8IW+QQyfHoXO2TstM
-         CYjA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2FYsro2a9/ehU2DQgIGe3PkNDsws84ehMkTEsmdarEGKoNIQOp29idtJmmyuVWqHb2DVRJdu3usE9roThaT4AzT3q7ZyAqsnTpjd0
-X-Gm-Message-State: AOJu0YzyPgPOot07KHKhBoSxe+CC8OligpKto6+Dw1boLDIor7h0l/JM
-	bS5kM8alBmKSPD6MAmen+8kim44zVUFctIccpoD4+t7p617Yw6kiLo5elqmg0RinyMfSSyggbOY
-	oRxcVhhqcYwEPhzevGUBFqMpSjFI=
-X-Google-Smtp-Source: AGHT+IFlqnj2ZRoupaw1r/5HvSXa4w4tESFY9IgyT5VAxYYLwMgAPyX72tAGxz6v1xyl82sXmux6gvTDEE5oSheHqMU=
-X-Received: by 2002:a05:6870:332c:b0:21f:cd7d:9904 with SMTP id
- x44-20020a056870332c00b0021fcd7d9904mr2777170oae.4.1709325461366; Fri, 01 Mar
- 2024 12:37:41 -0800 (PST)
+	s=arc-20240116; t=1709325619; c=relaxed/simple;
+	bh=ZwhwYeZHjwCE+vDRa8E+VJ06lF+5Z0Wtom9hTPOPs8M=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Wamq6H8UYhky78iDOLTJwrc4JLT3zP6SR2PlwzTLMWS47VdHM6fouujT3c1Jn6g2URdrjWKAJf0cYMxn5Tud9Ob5si7y3numYMpI/upFaRfxg/qR38xHoSz5W8Ui0JDOKQX9Esj3dxHVGfnHesM7zqFzAzUDU9ejtaBcQAXLplg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hscPwgTO; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hscPwgTO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709325619; x=1740861619;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZwhwYeZHjwCE+vDRa8E+VJ06lF+5Z0Wtom9hTPOPs8M=;
+  b=hscPwgTOcCkqnNF0Z4n5cAm4OhXl2w0iVRENYarPm4cWNu8b4+kMAfog
+   +RMVmVH9OX+yRaiPAjKjkE7+UjyxMTrou+Vi+Vj7vLa6ectjRGDbNjXYI
+   CiYpHZaQH2tveb9IPiDo5Az00Gu9Ui1tuWOf8pZ7aQV80n6c+1OOc5MIz
+   wDjXNSX0dmY8fOC3dC8+SKA6te9CACC5HqH9osdzh9Vpr4tXqQw2FOMDI
+   x2XLkijVunz8CG/k6w9LqonkOv5+rSsh8K7bfIVlfB9XVH7Rw9e4JrS9n
+   iz8pKwURewsy1gbjPD6vDEh3441w0F5DGsfUdZ7V8lQCu9p+9yhzVYduO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="4000389"
+X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
+   d="scan'208";a="4000389"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 12:40:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
+   d="scan'208";a="8243052"
+Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 12:40:17 -0800
+Date: Fri, 1 Mar 2024 12:39:24 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
+To: Xu Yilun <yilun.xu@linux.intel.com>
+cc: hao.wu@intel.com, trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com, 
+    linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fpga: dfl: afu: support Rev 2 of DFL Port feature
+In-Reply-To: <ZdYhUK5yFFlhVV62@yilunxu-OptiPlex-7050>
+Message-ID: <alpine.DEB.2.22.394.2403011142350.240045@sj-4150-psse-sw-opae-dev2>
+References: <20240125233715.861883-1-matthew.gerlach@linux.intel.com> <ZbjHl8ptQG5FdHvC@yilunxu-OptiPlex-7050> <alpine.DEB.2.22.394.2401300948590.112016@sj-4150-psse-sw-opae-dev2> <Zbnd8W1ciTKeoKc4@yilunxu-OptiPlex-7050> <alpine.DEB.2.22.394.2401311610020.112016@sj-4150-psse-sw-opae-dev2>
+ <ZcBIjcFJjGKf0qcO@yilunxu-OptiPlex-7050> <alpine.DEB.2.22.394.2402051600190.122158@sj-4150-psse-sw-opae-dev2> <ZdF4JvYQQL8irnbW@yilunxu-OptiPlex-7050> <alpine.DEB.2.22.394.2402201658400.191484@sj-4150-psse-sw-opae-dev2>
+ <ZdYhUK5yFFlhVV62@yilunxu-OptiPlex-7050>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1333a397b93e0e15cb7cb358e21a289bc7d71a63.1709193295.git.viresh.kumar@linaro.org>
- <20240301055042.p4jaa4v3tshlbwnb@dhruva>
-In-Reply-To: <20240301055042.p4jaa4v3tshlbwnb@dhruva>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 1 Mar 2024 21:37:29 +0100
-Message-ID: <CAJZ5v0hHTuEXmQA=0D90eR_KUsOsfcxYbTS=zQYDTXuY6o_K_Q@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: Don't unregister cpufreq cooling on CPU hotplug
-To: Dhruva Gole <d-gole@ti.com>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>, Roman Stratiienko <r.stratiienko@gmail.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Fri, Mar 1, 2024 at 6:50=E2=80=AFAM Dhruva Gole <d-gole@ti.com> wrote:
->
-> Hi,
->
-> On Feb 29, 2024 at 13:42:07 +0530, Viresh Kumar wrote:
-> > Offlining a CPU and bringing it back online is a common operation and i=
-t
-> > happens frequently during system suspend/resume, where the non-boot CPU=
-s
-> > are hotplugged out during suspend and brought back at resume.
-> >
-> > The cpufreq core already tries to make this path as fast as possible as
-> > the changes are only temporary in nature and full cleanup of resources
-> > isn't required in this case. For example the drivers can implement
-> > online()/offline() callbacks to avoid a lot of tear down of resources.
-> >
-> > On similar lines, there is no need to unregister the cpufreq cooling
-> > device during suspend / resume, but only while the policy is getting
-> > removed.
-> >
-> > Moreover, unregistering the cpufreq cooling device is resulting in an
-> > unwanted outcome, where the system suspend is eventually aborted in the
-> > process.  Currently, during system suspend the cpufreq core unregisters
-> > the cooling device, which in turn removes a kobject using device_del()
-> > and that generates a notification to the userspace via uevent broadcast=
-.
-> > This causes system suspend to abort in some setups.
-> >
-> > This was also earlier reported (indirectly) by Roman [1]. Maybe there i=
-s
-> > another way around to fixing that problem properly, but this change
-> > makes sense anyways.
-> >
-> > Move the registering and unregistering of the cooling device to policy
-> > creation and removal times onlyy.
-> >
-> > Reported-by: Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
-> > Reported-by: Roman Stratiienko <r.stratiienko@gmail.com>
-> > Link: https://patchwork.kernel.org/project/linux-pm/patch/2022071016402=
-6.541466-1-r.stratiienko@gmail.com/ [1]
-> > Tested-by: Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
->
-> Makes sense to me,
->
-> Reviewed-by: Dhruva Gole <d-gole@ti.com>
 
-Applied (for 6.9), added a Closes: tag as suggested by Daniel.
 
-Thanks!
+[snip]
+
+>>
+>> Hi Yilun,
+>>
+>> I think this conversation has gotten a little off track. This patch only
+>> changes the port reset behavior at driver initialization for revision 2 of
+>> the port IP. The behavior and the requirements of port reset during run time
+>> have not changed. The existing implementation requires the user performing
+>> the port reset to ensure appropriate SW was quiesced. This patch does not
+>> change this requirement.
+>
+> You are actually adding support to the new devices behavior defined by
+> revision 2.  Previously the user requires the management PF driver to do port
+> reset, and this only affects some logic in the PF itself and the impact could
+> be handled inside the driver.  The current PF driver doesn't actually do anything
+> because it (or any kernel component) never touches the disabled logic, and the
+> user accessing of the mmapped but disabled logic won't cause system issues.
+
+I'm wondering about the use case when Virtual Functions (VFs) 
+are enabled with the current driver. If partial reconfiguration of the port 
+occurs, which includes a reset, what happens to the user software attached 
+to the VFs when the hardware has changed out from under it? While the 
+current port implementation won't cause PCIe errors when the logic is 
+disable, something has to notify the user software that the hardware 
+changed. I think the user space software would be typically notified of 
+the change by the orchestration software performing the partial 
+reconfiguration. I think the use case of VFs with the original port 
+implementation is logically equivalent to the new port implementation with 
+multiple PFs/VFs.
+
+>
+> But the new management PF does port reset and affect other PFs, and may
+> cause disorder in other drivers. so you need extra code to support the
+> behavior.
+
+I think the real problem is that the new port is not doing as good of a 
+job preventing PCIe errors during port reset as the previous version.
+
+Matthew
+>
+> This patch does make some progress, as you said, "With revision 2,the
+> initial state of the logic inside the port is guaranteed to be valid, and
+> a port reset is not required during driver initialization".  But it
+> should not be the only patch to enable the new port reset behavior.
+>
+>>
+>>>
+>>>>
+>>>>>
+>>>>>> image. I don't think the driver performing the port_reset() can know all the
+>>>>>
+>>>>> Other PF drivers should know their own components. They should be aware
+>>>>> that their devices are being reset.
+>>>>
+>>>> The other PF drivers depend on the actual FPGA image being run.
+>>>>
+>>>>>
+>>>>>> components to be able to provide any meaningful management.
+>>>>>
+>>>>> If the reset provider and reset consumer are not in the same driver,
+>>>>> they should interact with each other. IIRC, some reset controller class
+>>>>> works for this purpose.
+>>>>
+>>>> The other PFs in many cases can present as standard devices with existing
+>>>> drivers like virtio-net or virtio-blk. It does not seem desireable to have
+>>>> to change existing drivers for a particular FPGA implementation
+>>>
+>>> If you have to use a specific method for reset, it is not a standard virtio
+>>> pci device, and you have to make some change.
+>>
+>> From the perspective of the PCI PF/VF implementing the virtio or other
+>> standard device, the pci endpoint is completely compliant to the standard,
+>> and no driver changes should be required. As mentioned above, this patch
+>> does nothing to change any of this behavior. Consider a port reset that is
+>> part of a partial configuration flow. The virtio endpoint can become
+>> something completely different with a completely different driver. This
+>
+> Then how could the virtio driver stop and remove itself to avoid crashing the
+> kernel, and how could the new driver be probed.  If the answer is still
+> userspace responsible for everything, that's not good to me.
+>
+> Thanks,
+> Yilun
+>
+>> patch does not affect this flow either.
+>>
+>> Thanks,
+>> Matthew
+>>
+>>>
+>>> Thanks,
+>>> Yilun
+>>>
+>>>>
+>>>> Thanks,
+>>>> Matthew
+>>>>>
+>>>>> Thanks,
+>>>>> Yilun
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Matthew
+>>>>>>
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Yilun
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Do you want me to update the commit message with this information?
+>>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Matthew
+>>>>>>>
+>>>>>>>
+>>>>>
+>>>>>
+>>>
+>
