@@ -1,189 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C0B59158
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 22:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D198058ACC;
+	Fri,  1 Mar 2024 22:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709331396; cv=none; b=C7sWGJabFaP/gVxuldx6SoyBFwrnv1FWZXLCongNcpmuMBKuDafB6FhF09qyczhxOw0M1eUf1bV1cAb8Mu5vh66+t3j5B+XkossPv/fX0nKUcOgdfYnJujkc/pIXsKE+fxiz340/5CNuzLoiT3h+C7Ncoypju/Nvbo0PwP0ChpQ=
+	t=1709331450; cv=none; b=Qp6mHXrfViAVi3HvpM9eUoT8sKhI6h38u8kEs5sAZ8etr79zaEfcqdvlPzyM4PFVoIclVh9th+EA2uQcSk50NE5S8nZsRn+0Spc2fsECWawpJtFk93DPH1I7QoJ77uY6L+aSU6w+rsMLarOCbOAgD/EL3t0G4s5qKFVM3lZQ2hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709331396; c=relaxed/simple;
-	bh=gSS6Fqkxcbd+zL7nBDEwycxjyL3GP+RoZtmbD4ph2F0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=mxMTkKxndJcHWAMJidDJfK36dfxGDrdATxUEWBgXCSbrS6SfXPYdG0Gk2ljoxWq7LDXE8TpJ2TadCGSHQoIYm95XKNtXDgQPR6rQq6vf3f0hidkBbBWuy5LKg1tGIbZOlHIc1I0zciuvvtXMNKRUlWiUkNKUpEzbCfOg18e6aXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GscC6/3X; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709331450; c=relaxed/simple;
+	bh=RtYnoBdgyTyGCAew4GI4ZQR1HjLse4QQTxlkOcvLYvw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m5BQQEYcaVKP1CqjtxMIYgxJJ9k33lo55y85/4cFBmxpmd6LRJLAtN7MvXDknNzLr5LD8ifZISN9lAMVPUj5gIJYn+iqgENQMeDFmnQ7yhXaTmMViR8cngzgT2pWY1bLunOYuvZRuEKCdlsFUk4wNppUmDlPiIdicdzJPp4FpDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKBqTVSO; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GscC6/3X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709331394; x=1740867394;
-  h=date:from:to:cc:subject:message-id;
-  bh=gSS6Fqkxcbd+zL7nBDEwycxjyL3GP+RoZtmbD4ph2F0=;
-  b=GscC6/3XM2JYwESE0zsh2X+7P1B+EsGEzX4vgeoGVyaoGdQigRlfNGqO
-   zGtqhp3BW+DHjfWPj7X5ma7a6WTDqNZHlGvqKcUZUOhuFPDwZpVojpVe5
-   S4xJFSOi1GRCs8bUVhTrA4l8y4JMVbwzomPN8C6PGrqbRKoJyMHVCTlM7
-   Y/qilYeCUTbOswrxxOWNj6A8Qn5F3qlx2FG44TNCaTPNh+2ks3na0K7uF
-   1pDhg1gClSC14qtQF4r4DenTAa9+jB4mktbE7fs32hd785YVCYrpzR23f
-   8e7YkhlHRlxtvWrQOT+rdSUOoYB1TBitnkE3IlAS0v6+ZFVbyeZb6vSu4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="4010431"
-X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
-   d="scan'208";a="4010431"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 14:16:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
-   d="scan'208";a="8392428"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 01 Mar 2024 14:16:32 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rgBB7-000E8T-1z;
-	Fri, 01 Mar 2024 22:16:29 +0000
-Date: Sat, 02 Mar 2024 06:15:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 75480e629506c25dffb563221fe0ff6b9db48360
-Message-ID: <202403020626.SDWnFgeN-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKBqTVSO"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a43f922b2c5so323524066b.3;
+        Fri, 01 Mar 2024 14:17:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709331447; x=1709936247; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eX7OuHGQJSKtF4cLUl19jdWhJJb2B/RbPr2UvRdYxsU=;
+        b=NKBqTVSOasxbbaEp5yzItqo+ipLDlSAgUsHPIJqVcCdPxZ2Yz/hol7NDK28kV74p4y
+         G22hinpRTFX19oi4Km5puogTRIVBqM/yhriN1VJlQqQ71vbv2NV1rGTEFJ7yY0X4Qz2s
+         4egDaj313TyLWuc8dt1/fv2aH8xyhd3v3VH3Zs6gri3XoU+Ets6//VbtRflp2h1N6W9c
+         WVpQXMcC5q70XtcAJ9q6Sm6JUeCBlH3L4g637WNTqmMMihTn3bPVFD020y6i9GBgadav
+         7udWT47URUng65AHiJsRpsNrXa/fvFRxR7J2GEk1J42zyHQ+mLCP4NVLsdDCLVCERYUK
+         kHqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709331447; x=1709936247;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eX7OuHGQJSKtF4cLUl19jdWhJJb2B/RbPr2UvRdYxsU=;
+        b=FZepK+9y72YCgKSuPEEQBM/ZKot7A7YXgAoHl+eyAdpZ9rl3nWzXJom8fhSEoXf4gA
+         BKPi/dI3baibvtjG5VF30gSwnudsPlDojuAfw9nrx0GbnuglYZ6K947YWquz3CeQaMJT
+         CaWeYk9gVMbR3TWOlD5626+Dc0S31Izn4YGW14is0vDYPTSZfwFnddSNhcrxTb/LZ5CA
+         4p2kJ2ErpQcBqUwRm+jSuXhFJt+5da+uy9cT1Dfoxd0/ectMta0mtXDF/p4SRrzFT8re
+         f/rFTd40IrkO+jCQMtjkCYDbbvL2wX3MEuC8D49vAWWF+1vbnuA0j5ftFX8ucvDQbYCq
+         BVYg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdqCMEqDA8CFlaEQ7MlC7KZZficczWBc3ZoUFsK9HOjfmvVqJ1MtWx0euLFE2G+PPbFnDbEiOvV7Xp6M9KMhmfUK04LdJEIFtbAWfx
+X-Gm-Message-State: AOJu0YwIH+ETlVmnEgKefYipw1pv0sPmjYSAFjkgMoU0NON3gEXeEDLD
+	v6+LSud+v5yOJn4WHfqKS+LgGTRcLTYFGpUMklx4znSDwUCPYPzjGfIdgtdVyAs=
+X-Google-Smtp-Source: AGHT+IEhfwJ+k4ldaSdMniNey18iTGJ31m0VO9/5iW+JDSR2e2XpNXHO1l9/eZ/qGJhhranoHMcckQ==
+X-Received: by 2002:a17:906:a391:b0:a44:512e:9e44 with SMTP id k17-20020a170906a39100b00a44512e9e44mr2311542ejz.7.1709331446514;
+        Fri, 01 Mar 2024 14:17:26 -0800 (PST)
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id g16-20020a17090613d000b00a3f480154a3sm2091122ejc.65.2024.03.01.14.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 14:17:26 -0800 (PST)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Simon Horman <horms@kernel.org>,
+	Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com,
+	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v6 00/16] net: dsa: vsc73xx: Make vsc73xx usable
+Date: Fri,  1 Mar 2024 23:16:22 +0100
+Message-Id: <20240301221641.159542-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
-branch HEAD: 75480e629506c25dffb563221fe0ff6b9db48360  Merge tag 'v6.8-rc6' into sched/core, to pick up fixes
+This patch series focuses on making vsc73xx usable.
 
-elapsed time: 728m
+The first patch was added in v2; it switches from a poll loop to
+read_poll_timeout.
 
-configs tested: 116
-configs skipped: 3
+The second patch is a simple conversion to phylink because adjust_link
+won't work anymore.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The third patch is preparation for future use. Using the
+"phy_interface_mode_is_rgmii" macro allows for the proper recognition
+of all RGMII modes.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                                 defconfig   clang
-arm                        keystone_defconfig   gcc  
-arm                          sp7021_defconfig   gcc  
-arm                       spear13xx_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   clang
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240301   clang
-i386         buildonly-randconfig-002-20240301   clang
-i386         buildonly-randconfig-003-20240301   gcc  
-i386         buildonly-randconfig-004-20240301   clang
-i386         buildonly-randconfig-005-20240301   clang
-i386         buildonly-randconfig-006-20240301   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240301   clang
-i386                  randconfig-002-20240301   clang
-i386                  randconfig-003-20240301   clang
-i386                  randconfig-004-20240301   clang
-i386                  randconfig-005-20240301   gcc  
-i386                  randconfig-006-20240301   gcc  
-i386                  randconfig-011-20240301   gcc  
-i386                  randconfig-012-20240301   clang
-i386                  randconfig-013-20240301   clang
-i386                  randconfig-014-20240301   gcc  
-i386                  randconfig-015-20240301   gcc  
-i386                  randconfig-016-20240301   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                            mac_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                         cobalt_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      arches_defconfig   gcc  
-powerpc                        cell_defconfig   gcc  
-powerpc                    klondike_defconfig   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          r7785rp_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                           alldefconfig   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
+Patches 4-5 involve some cleanup: The fourth patch introduces
+a definition with the maximum number of ports to avoid using
+magic numbers. The next one fills in documentation.
+
+The sixth patch implements port state configuration, which is required
+for bridge functionality. STP frames are not forwarded at this moment.
+BPDU frames are only forwarded from/to the PI/SI interface.
+For more information, see chapter 2.7.1 (CPU Forwarding) in the
+datasheet.
+
+Patches 7, 12-15 provide a basic implementation of tag8021q
+functionality with QinQ support, without VLAN filtering in
+the bridge and simple VLAN awareness in VLAN filtering mode.
+
+Patches 8-11 came from Vladimir Oltean. They prepare for making
+tag8021q more common. VSC73XX uses very similar tag recognition,
+and some code from tag_sja1105 could be moved to tag8021q for
+common use.
+
+Patch 16 is required to avoid problem with learning on standalone ports.
+
+Pawel Dembicki (12):
+  net: dsa: vsc73xx: use read_poll_timeout instead delay loop
+  net: dsa: vsc73xx: convert to PHYLINK
+  net: dsa: vsc73xx: use macros for rgmii recognition
+  net: dsa: vsc73xx: Add define for max num of ports
+  net: dsa: vsc73xx: add structure descriptions
+  net: dsa: vsc73xx: add port_stp_state_set function
+  net: dsa: vsc73xx: Add vlan filtering
+  net: dsa: vsc73xx: introduce tag 8021q for vsc73xx
+  net: dsa: vsc73xx: Implement the tag_8021q VLAN operations
+  net: dsa: Define max num of bridges in tag8021q implementation
+  net: dsa: vsc73xx: Add bridge support
+  net: dsa: vsc73xx: start treating the BR_LEARNING flag
+
+Vladimir Oltean (4):
+  net: dsa: tag_sja1105: absorb logic for not overwriting precise info
+    into dsa_8021q_rcv()
+  net: dsa: tag_sja1105: absorb entire sja1105_vlan_rcv() into
+    dsa_8021q_rcv()
+  net: dsa: tag_sja1105: prefer precise source port info on SJA1110 too
+  net: dsa: tag_sja1105: refactor skb->dev assignment to
+    dsa_tag_8021q_find_user()
+
+ drivers/net/dsa/Kconfig                |   2 +-
+ drivers/net/dsa/sja1105/sja1105_main.c |   3 +-
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 990 +++++++++++++++++++++----
+ drivers/net/dsa/vitesse-vsc73xx.h      |  56 +-
+ include/linux/dsa/8021q.h              |   5 +
+ include/net/dsa.h                      |   2 +
+ net/dsa/Kconfig                        |   6 +
+ net/dsa/Makefile                       |   1 +
+ net/dsa/tag_8021q.c                    |  81 +-
+ net/dsa/tag_8021q.h                    |   7 +-
+ net/dsa/tag_ocelot_8021q.c             |   2 +-
+ net/dsa/tag_sja1105.c                  |  72 +-
+ net/dsa/tag_vsc73xx_8021q.c            |  67 ++
+ 13 files changed, 1072 insertions(+), 222 deletions(-)
+ create mode 100644 net/dsa/tag_vsc73xx_8021q.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
