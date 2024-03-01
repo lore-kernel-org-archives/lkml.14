@@ -1,140 +1,100 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4B96A00F;
-	Fri,  1 Mar 2024 08:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194076A032;
+	Fri,  1 Mar 2024 08:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709282965; cv=none; b=b0IuzqpfMQniuats+8vKi0Yg2A7ykapsKStTi2PqIwRGV45R7sV63u7pQAUEATUjlbnB4KT/cESsa1aMnQfogVPH5cfXnp+1aDTHlIoztHJpXQpVxuOtEVloXTMjwaoi6adafjXkbGSGLIGkWHBf7VRBrXRkgM74bzMBOHMTzSI=
+	t=1709282967; cv=none; b=fvqJBamAaoHOHMcsuh4mKTliZTKbhlTkBNkg38Kt7cVRsU/KRF/gs4YrHtvu8FwqpO4RCw0vYgUMZpx+3kwhovzVqXuQhYcKupERyMbpYJgvZwYN5baLAPMYkMIi6XLd8VSbobDI1UXkxuKAoAcYjw4mT6e7coYutmEnX2dTzAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709282965; c=relaxed/simple;
-	bh=QMn7tuLCg5ec9fZk25T59FlsZWXuZo6ZxWhP65pQSXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oDHT+0UgM/QGsvmMC5Ml76Q4m0UBIAfA7KrbDLU4giTIMdNmGRslHgBPHdnZZl7EH7ZxfJYQEq0fPbBgzUZ5NIbr4TL+lDT70naYnDddQMeerll8zWF/3xwC4qsinQI3CWFLNydiwHExOsvm2u3lNXybtkfiGvf0WbdM7l3D4ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=cJnepm/T; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1709282967; c=relaxed/simple;
+	bh=gbWWC4K9eTGH4dhmTQDU1bh6VuuTU/OkgdClr0lTnKo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HVzduVdceHokYIa8N/us1/TDo0kcZsl9ghTiXQidSuhNIh9mWR1IesgtiaUNjUB4aGABi1M1ovIypNtFXiyt+3ZGP9h9jLQXtEpoN+zB/gH/BibnnUqvXqAXE8onP1SZ6qB9mHAQOdklimLvRdCDBIhRBWCHYEBdLR4qLUPpIqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W24gBmbu; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cJnepm/T"
-Received: from [192.168.88.20] (91-154-35-128.elisa-laajakaista.fi [91.154.35.128])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B99C0899;
-	Fri,  1 Mar 2024 09:49:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1709282948;
-	bh=QMn7tuLCg5ec9fZk25T59FlsZWXuZo6ZxWhP65pQSXk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cJnepm/Tlz9E/UhO1n52YiDDC+eVmSqw9owozuANc+fQxcmGEQi61P3Gp3eV803Zs
-	 LdFsgs92GyIIegyYAhFG3VhuoIxWTWx0NAFvUovlXwHmxh5oS+xuxZ/qvxeqkXbqJp
-	 lHr55c2IXjy/sfxnpXW1q15s5GKnWif9NikVt1AA=
-Message-ID: <db1d7227-f9a4-42fa-89ba-b484e1260e0b@ideasonboard.com>
-Date: Fri, 1 Mar 2024 10:49:19 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W24gBmbu"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d27184197cso22533621fa.1;
+        Fri, 01 Mar 2024 00:49:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709282964; x=1709887764; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jrYRSAUoeQ8J5WS8v4YJVTlbKwPXfvoBkY+Nt0CJRX0=;
+        b=W24gBmbu82hSLEg2+ZcJDSG5apM9JwxrBBtuTmW57P54hQmB8aBW/0lNJ2lmuhArBu
+         9+WN6nFOLl0c10ynOVCuGDgqA3o5i1mRwK33AYHUbaev8MYSrhy90VOT3JeXEeJdYR2y
+         i1BC9vDoxI8Y8mdk9ElgYHEZMGgV2OPufuY6DSA6L1YymUUABHFtEwQ6ZKIA3hq8Tp8F
+         oEz3V7rF0fhiDwNQD+qozwkIs9EZL4gXMgv8iwjPMbbZJe9FQz29qKCFA3PIm0UDmcMb
+         /uWFcYRWsg718iU7xejNs0Q4tbgJ4Dwrcj79aylv6O04DC7wtY0L7BuwyEP89svMsGXJ
+         psSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709282964; x=1709887764;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jrYRSAUoeQ8J5WS8v4YJVTlbKwPXfvoBkY+Nt0CJRX0=;
+        b=Y66E7H5MT4dZIB1P8PIxQr2Ey3ImBnBFYYyjE2heq2GT6GxrDUnZe/jooyx+VsjdVu
+         9KuSFbznarU+B3bKMNKSpmetuEHXgyi4v8v6m+se+ifsMAoVN5bckh613gmaFWKvtscM
+         5qrPdCztVVwUWBiTZEIchnzXpRyrDhwS3GF8Cv4bZPHGtYZeUJnWfyaH7uVEWHZq2q1D
+         9Gq+TExrq04w+Un2zmmER/nOzvUagyl+oega3vFXgoHN0htT8xdj/wmNq7EEhOh0/S6b
+         BRWcpw1MpwUmzIE3ShGZfDeuggbIbCdalMoWHqmPxVNXeG0Z6+rPSsc7n4Vanef13IWI
+         vHag==
+X-Forwarded-Encrypted: i=1; AJvYcCWU/iafyIwYCTExAwVxNGL3ai7XPMlEp9HRwr3AO5nMkKIN0FoJrQd77xRXnxaUk+hevNZ8KYbLoom06bZWT6mbrCH3nOx6Umik6I7kFJSzCP9Yz8UTXDD+AnpFyetqRGhGBuj3ZkZZzw==
+X-Gm-Message-State: AOJu0YwjldJvNBtudf7sAf68ynCFtDbMLFYjV4HifzACZjxrAWtRFTcN
+	hEo6m5atjlqtnXniejNNt7RO163Z7AA4dznzNN5SIEwh+ruHIVi8
+X-Google-Smtp-Source: AGHT+IHnu4c6XyaUCopPrBZplYhIt51nFKHDhwroMzJezwFzgWmL1hNnrWVBkUooTXCo7TUqCZQGog==
+X-Received: by 2002:a19:4359:0:b0:512:9857:34f3 with SMTP id m25-20020a194359000000b00512985734f3mr719899lfj.39.1709282963921;
+        Fri, 01 Mar 2024 00:49:23 -0800 (PST)
+Received: from eichest-laptop.toradex.int ([2a02:168:af72:0:46fd:a61a:68:ed87])
+        by smtp.gmail.com with ESMTPSA id 4-20020a05600c028400b00412b10ce488sm4583566wmk.23.2024.03.01.00.49.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 00:49:23 -0800 (PST)
+From: Stefan Eichenberger <eichest@gmail.com>
+To: nm@ti.com,
+	vigneshr@ti.com,
+	kristo@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	francesco.dolcini@toradex.com,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Subject: [PATCH v1 0/2] arm64: dts: ti: k3-am62-verdin: add sleep-moci support
+Date: Fri,  1 Mar 2024 09:48:59 +0100
+Message-Id: <20240301084901.16656-1-eichest@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: i2c: ds90ub960: Delete duplicate source code in
- ub960_parse_dt_rxports()
-Content-Language: en-US
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <79fa4854-976d-4aad-86ac-c156b0c4937e@web.de>
- <ZeGV_siWFkfqSEgZ@kekkonen.localdomain>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <ZeGV_siWFkfqSEgZ@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
-On 01/03/2024 10:46, Sakari Ailus wrote:
-> Hi Markus,
-> 
-> On Fri, Mar 01, 2024 at 08:46:25AM +0100, Markus Elfring wrote:
->> From: Markus Elfring <elfring@users.sourceforge.net>
->> Date: Fri, 1 Mar 2024 08:23:24 +0100
->>
->> Avoid the specification of a duplicate fwnode_handle_put() call
->> in this function implementation.
->>
->> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
->> ---
->>   drivers/media/i2c/ds90ub960.c | 5 +----
->>   1 file changed, 1 insertion(+), 4 deletions(-)
->>
->> diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
->> index ffe5f25f8647..eb708ed7b56e 100644
->> --- a/drivers/media/i2c/ds90ub960.c
->> +++ b/drivers/media/i2c/ds90ub960.c
->> @@ -3486,10 +3486,7 @@ static int ub960_parse_dt_rxports(struct ub960_data *priv)
->>   		}
->>   	}
->>
->> -	fwnode_handle_put(links_fwnode);
->> -
->> -	return 0;
->> -
->> +	ret = 0;
-> 
-> I think it'd be nicer to initialise ret as zero, then you can just drop the
-> assignment above.
+This patch series adds support for sleep-moci to the Verdin AM62 in
+combination with the Dahlia carrier board. sleep-moci is a GPIO that
+allows the system on module to turn off regulators that are not needed
+in suspend mode on the carrier board.
 
-I don't like successful execution entering error paths. That's why 
-there's the return 0.
+Commit ba9d3cd71f15 ("dt-bindings: usb: microchip,usb5744: Remove
+peer-hub as requirement") from linux-next is needed to make DTB_CHECK
+pass without peer-hub set for the hub on the usb1 interface.
 
-  Tomi
+Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
->>   err_put_links:
->>   	fwnode_handle_put(links_fwnode);
->>
-> 
+Stefan Eichenberger (2):
+  arm64: dts: ti: k3-am62-verdin: replace sleep-moci hog with regulator
+  arm64: dts: ti: k3-am62-verdin-dahlia: support sleep-moci
+
+ .../boot/dts/ti/k3-am62-verdin-dahlia.dtsi    | 22 +++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi    | 24 ++++++++++++-------
+ 2 files changed, 38 insertions(+), 8 deletions(-)
+
+-- 
+2.40.1
 
