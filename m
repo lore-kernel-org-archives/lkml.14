@@ -1,179 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CE7538B
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 00:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4B42570
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 00:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709253450; cv=none; b=lIdq3Uffe4XGII5VNMNfx96b4yzMKOFKvfUJHpRWZO7uD0N704lQP43O6Gz555bZkHHB/sdt4Vsuu3KEJ1C1q7mUrSEtONfbf5tQgEoDZKNHhdM2C/AdntmScZxGI3M4xK7dOyjAEwOnv5AWLiJLG40cIDdqsPf4RtBp1V7WIvE=
+	t=1709253605; cv=none; b=fcS/FM5xhcKuplQ5mb6PWbidgKOOcexpbL8J8EK38q4L33LgdnInzCdaT7LTCQNZqnSjLt8Y9MV5GejAlSvpwyKLnrkBSWc0Ao/ZjHFlBb6JJs/c7J4/bpL2hGgdjty/FUlnX4NLYrKgHzgR9S1bYGZ/K529Ft7wgCsSVoxED+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709253450; c=relaxed/simple;
-	bh=XRKjEm6PKQ9R1SbEeJLraW4dFbXuNtXD/2iSi0Qg4a4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=t8VgBrTcx8XkuBbSicMvLvU7/EU08770FPXCdNjGi1h9ZyvvIQ+ihzXLM9ARn8lmvbPs+Nf7H5iJv8uwvzZAOvFtcaC/ujkpHuwQE1xlfLS1sm6e/CvK8EYc3MiEtrv3H/uhw17S0r038UdZRQTbstIsRM7iuT8EiWoiCqG/jL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YR/nP0ye; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709253605; c=relaxed/simple;
+	bh=lYtLzPPW/z966kwacpoZ8g46ZAY0gZ9kGfAS51bcavA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AZgY84JA2fW1PqOn+buOqbY3pCwsoX3mS2XYhtvlxIxyeSg9iJO4vehPk+ox/+w0v8oU7XXJKYG+EmobKbEqm7yxCrIHaUNSao5FZ7vI1fZ7TBU8cmFd3Vfqh+kqzklf7uKCaEAntwEem6enOn2nxv2ZMpviTwNRGWrmV+QeTZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name; spf=pass smtp.mailfrom=chrisdown.name; dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b=TpVOeK+l; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YR/nP0ye"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709253448; x=1740789448;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=XRKjEm6PKQ9R1SbEeJLraW4dFbXuNtXD/2iSi0Qg4a4=;
-  b=YR/nP0yeQLrhOoj+UqfmOkEPLSAI7GWZ0E94zdvqIDb2XqcWzboaYG77
-   Nj0vHa4xd0urWzKXBWnoI7zk0Xps8fKZO9fbuIlJoyp0/wU5aLMjI58lx
-   UM1X1mfNOD7Ge7wSSYKlbXZxWTIRAeubxb02apyTG1TYMv+w56WDVtKq5
-   8DIlkHo/WU+QcuVRId1Tdu/r/xbSC5m3hNi49ZRo43LnLtXeLSGE8BbUb
-   CDd7H5nJFfYJgcjoEBbY1NJ/lYw0tuMSF42IzGWNuLO0+fCSkW+WVM+rN
-   5G9uHpo+kCHMJ480L0PLrHhRW/hEEZFWom9J6Fqj6dYrtENHKwLGjkU9s
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3944688"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="3944688"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 16:37:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="7933575"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 29 Feb 2024 16:37:26 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rfqtn-000DOP-1t;
-	Fri, 01 Mar 2024 00:37:18 +0000
-Date: Fri, 1 Mar 2024 08:35:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: fs/bcachefs/quota.c:130:15: warning: arithmetic between different
- enumeration types ('enum quota_types' and 'enum quota_counters')
-Message-ID: <202403010825.qnve2eAU-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="TpVOeK+l"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-412bcb76703so9368415e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 16:40:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google; t=1709253602; x=1709858402; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gV3niUCTSl6gtqi0cGOEMe9/Tm7btRuQ6YcO62YSGhA=;
+        b=TpVOeK+lHsDCaPIgpWWlgKq8I5D9ULKCn0+69/2RxVQWBY03TyOlQ1iFQkiZYepVN5
+         3oJODlcOc6vbtNjp9FL9JsRDCOjbU1uaBxxAVtxAIIpKpKuOpTmCoRdV9wArYE1ZF5y0
+         HRXGjnC+vy3XRcdVCJJm57YRjm9YmgP5ZA9oI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709253602; x=1709858402;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gV3niUCTSl6gtqi0cGOEMe9/Tm7btRuQ6YcO62YSGhA=;
+        b=V9ehRO6lOimfSb52m55FeqquL1TVKusnWwLorEL3ygvBrAj4o0HpjeCbj9I6T6bixd
+         kL2tcf68vmQjtYZ87IS1I3tz5LNVZwsDKcd2Zyos4k8jEhQsM/L2puB2Sy27qOo/UGMl
+         aphVBOhvipf6IGi6kxLMrkY92T6DMEz3RHLMQAFwddlED/d0U2rPmt1nj6lCRaPneWCv
+         Fk5I9Ofk00T3L68TqlCk+5mVwcAJLao+vCo8YYRVA73zP+KGdorPnyZJ3sGIIoz1Fput
+         xp42/QZ0HJ1rCCK4fPQb3c3XesLO9ecVdORLqjs556E9ejWPx12O1jF/z5M/U0qAkz6B
+         pz3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVwO0rIjknSTIZNgVnaLfXcqz1wWIHWa6rvkeOKKKYc6DVsJJ4p0o0tps89R3SM/YyD39aHTzbxP0ssgTiQuM98tDUp4kgvel2l5+ZO
+X-Gm-Message-State: AOJu0YyeFkQx+dc8Xj5cZpdQB/nTNVhA0R6PNUrjok+sH5njU/6QFkrX
+	g70rzkK8GgXBBbNmqdUs45fcJwD/jMYyX0c0yoz8JOI+Fmsw43yKPP65SxTRulY=
+X-Google-Smtp-Source: AGHT+IEwfmcug1aTGUzafnFeCI/ObU1i6mZjItOY64bGc42eoE1907pWp003h6IR5J7XGh1bi4umjA==
+X-Received: by 2002:a05:600c:4f0d:b0:412:beee:36b3 with SMTP id l13-20020a05600c4f0d00b00412beee36b3mr185074wmq.7.1709253602157;
+        Thu, 29 Feb 2024 16:40:02 -0800 (PST)
+Received: from localhost ([93.115.193.42])
+        by smtp.gmail.com with ESMTPSA id f15-20020adffccf000000b0033dedd63382sm3045765wrs.101.2024.02.29.16.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 16:40:01 -0800 (PST)
+Date: Fri, 1 Mar 2024 00:40:01 +0000
+From: Chris Down <chris@chrisdown.name>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Petr Mladek <pmladek@suse.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jessica Yu <jeyu@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org,
+	ceph-devel@vger.kernel.org
+Subject: Re: [PATCH net-next] Simplify net_dbg_ratelimited() dummy
+Message-ID: <ZeEj4TmNGuRhfAHf@chrisdown.name>
+References: <5d75ce122b5cbfe62b018a7719960e34cfcbb1f2.1709128975.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
+In-Reply-To: <5d75ce122b5cbfe62b018a7719960e34cfcbb1f2.1709128975.git.geert+renesas@glider.be>
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   87adedeba51a822533649b143232418b9e26d08b
-commit: 1c6fdbd8f2465ddfb73a01ec620cbf3d14044e1a bcachefs: Initial commit
-date:   4 months ago
-config: hexagon-randconfig-001-20240229 (https://download.01.org/0day-ci/archive/20240301/202403010825.qnve2eAU-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project edd4aee4dd9b5b98b2576a6f783e4086173d902a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240301/202403010825.qnve2eAU-lkp@intel.com/reproduce)
+Geert Uytterhoeven writes:
+>There is no need to wrap calls to the no_printk() helper inside an
+>always-false check, as no_printk() already does that internally.
+>
+>Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403010825.qnve2eAU-lkp@intel.com/
+In the context of the larger printk index changes:
 
-All warnings (new ones prefixed by >>):
+Acked-by: Chris Down <chris@chrisdown.name>
 
-   In file included from fs/bcachefs/quota.c:2:
-   In file included from fs/bcachefs/bcachefs.h:184:
-   In file included from include/linux/bio.h:10:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:10:
-   In file included from include/linux/mm.h:2168:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from fs/bcachefs/quota.c:2:
-   In file included from fs/bcachefs/bcachefs.h:184:
-   In file included from include/linux/bio.h:10:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:337:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from fs/bcachefs/quota.c:2:
-   In file included from fs/bcachefs/bcachefs.h:184:
-   In file included from include/linux/bio.h:10:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:337:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from fs/bcachefs/quota.c:2:
-   In file included from fs/bcachefs/bcachefs.h:184:
-   In file included from include/linux/bio.h:10:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:337:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   fs/bcachefs/quota.c:25:24: warning: variable 'dq' set but not used [-Wunused-but-set-variable]
-      25 |         struct bkey_s_c_quota dq;
-         |                               ^
->> fs/bcachefs/quota.c:130:15: warning: arithmetic between different enumeration types ('enum quota_types' and 'enum quota_counters') [-Wenum-enum-conversion]
-     130 |         }               m[QTYP_NR * Q_COUNTERS];
-         |                           ~~~~~~~ ^ ~~~~~~~~~~
-   fs/bcachefs/quota.c:612:28: warning: variable 'q' set but not used [-Wunused-but-set-variable]
-     612 |         struct bch_memquota_type *q;
-         |                                   ^
-   fs/bcachefs/quota.c:765:8: error: call to undeclared function 'COUNT_ARGS'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     765 |         ret = bch2_btree_insert_at(c, NULL, NULL, NULL, 0,
-         |               ^
-   fs/bcachefs/btree_update.h:72:10: note: expanded from macro 'bch2_btree_insert_at'
-      72 |                 .nr             = COUNT_ARGS(__VA_ARGS__),              \
-         |                                   ^
-   10 warnings and 1 error generated.
-
-
-vim +130 fs/bcachefs/quota.c
-
-   124	
-   125	struct quota_msgs {
-   126		u8		nr;
-   127		struct {
-   128			u8	qtype;
-   129			u8	msg;
- > 130		}		m[QTYP_NR * Q_COUNTERS];
-   131	};
-   132	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>---
+> include/linux/net.h | 5 +----
+> 1 file changed, 1 insertion(+), 4 deletions(-)
+>
+>diff --git a/include/linux/net.h b/include/linux/net.h
+>index c9b4a63791a45948..15df6d5f27a7badc 100644
+>--- a/include/linux/net.h
+>+++ b/include/linux/net.h
+>@@ -299,10 +299,7 @@ do {									\
+> 	net_ratelimited_function(pr_debug, fmt, ##__VA_ARGS__)
+> #else
+> #define net_dbg_ratelimited(fmt, ...)				\
+>-	do {							\
+>-		if (0)						\
+>-			no_printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__); \
+>-	} while (0)
+>+	no_printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
+> #endif
+>
+> #define net_get_random_once(buf, nbytes)			\
+>-- 
+>2.34.1
+>
