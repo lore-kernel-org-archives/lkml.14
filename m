@@ -1,178 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEFB5C8EE
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 22:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709331492; cv=fail; b=RR//94/dc81KUuZHyHKthzCsnmrQZqRZWK+werJjQQo0fmUNYVe7ElqHKExfeSDAnRbxkwcnd67N22SgKF0r3xCOZjjT1m3abvXgLSxFpbakU6bTMYBznNL3q7RBbaBqnKNT/oRY35PK+LXCRXCYUlgb7cgKgzTQHkPBHiZ6YAU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709331492; c=relaxed/simple;
-	bh=HWe/vR8jWJ9hc+pbNDjxogz/CyO1LqDgaqyFGij/PyI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QzFDU5g5o88iqs62+HhUHV9aD5BMkXYMkhzp/7PeyQBPihLDifyFAR3V7idxLSkTjKNiPHDIsHcKSqBehFeLsTRFixkqZ2HNcEN9M0V1cX3j4MBnctvOwvXAFS5K9Od9jOwDMKTZg8LQDZyAuQM5O+V52uyEXQyLpzIsx2SffBY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jZi9RuId; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F235C90B;
+	Fri,  1 Mar 2024 22:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709331494; cv=none; b=XFX0U1fcYRDjS3kd4itItKx5p9j2rb7Dkz39+QkkK0q1Q9rb4Cwjbsh7SewULhivGYtaRhy2baEFSe0A2HXnUFkL1GK+W0TNIOkML+YkW3hrFjqYUgY4/85IVg74K451R7I8l+Cr+4ztzp2eDz83mKk5NR+a0riMSW2roNTPQFw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709331494; c=relaxed/simple;
+	bh=IfQrtti16WuHwjOGf3KP2KKdwU/2ZkAy/e81LJ1LFZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=B0RDCAT/7ro2W3w007rfbfzbhad3qTp5PqUJdGaf+ymXAl8Rcch9I+eVuMnWiSwzoZ4hkCp4KpwMPpEkEBhYtSS6Ua2vrGVg4Q7/h6go9RYDb9MalFwIKOLCA0TT6k+BXsaM3CPLlpgiAqwiEeyztpSpEnStZG4fBDLoTDZ5Qxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jqhhlJJc; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jZi9RuId"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709331491; x=1740867491;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=HWe/vR8jWJ9hc+pbNDjxogz/CyO1LqDgaqyFGij/PyI=;
-  b=jZi9RuIdHxwhsemDxsT7E9SRkWUf0iH6f/vhqE9ORZOvJiEG0vxMxon6
-   OxTV88Fd9qjvpz4ZEaMHmzC1mnKx5W0j4ARdRVOieavR5i8TeGd75YVOB
-   390yRodS8MjMgXeEnc5GNUapj9T1bXRxcktRPdP7H2Q4meVLgvx07ZIRU
-   g/uZJRwrWloqTpJIw9rLSQJPguWMzmhFVl3kDeFQh9jjb1NZq11byH17d
-   XH6IZyeLndM+TBa7kZIIay5OM4TiFdUj0o1Q7gqX9N2Wt0RX0w34z+4YE
-   rUa1bdS8fTXYagoWpfIe1cujXb08LcHERdnNJWQaegFWgJR+udV0HE9vm
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="14531084"
-X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
-   d="scan'208";a="14531084"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 14:17:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
-   d="scan'208";a="8467184"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Mar 2024 14:17:47 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 1 Mar 2024 14:17:47 -0800
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 1 Mar 2024 14:17:46 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 1 Mar 2024 14:17:46 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 1 Mar 2024 14:17:45 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yted9wYAP8XBcwu7S4l2Z5pE5rpIalCOjEv/+f/3CC/4jD8XRiHJYvGrJb+8IQWxAQl6UWmWCaaf/AsW0INkQ0oF7pbb3gp+H63xs3SnsruL4aqfcnvex1SmNlXoZWYe2t0qtPkjia319cBA7P3QdbQl2J61IZ3p5pxGH8RNlfMPzN0LZa/F6NEjShd8wbnq9Mxh148tooGJ8tmH3NK/Zh6jb10GSt40TcFjooChKD9SeOFeWCtfxdjxGN4QOerOoQpaWu8+6DCr0nmKhWQkaBVoY1sozn7t8DIIzaCWeVrNltNoQp6DdZWbImwMw1wWQ+BnPj5xaqcDOTIrV5tDmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4hD1q/bIMHRMN5b1UPSJCLmBLr03cw1SqfHmDBNkBvA=;
- b=NmCx29abt3P6phptWoK2hW/8sE7++lVcWHAmy1lavn+3nWxln2cQRKrxiAkWlXTF6dTcxrjQMNOHI8FwCDTHi9Y7Tak5dYJYH+LEyDxconP+cyuDlSUYRKBxVOV8U0oP1uwuBl2LN8ZYFd9+KYzd/bf26qqPWC17Vxoc6W7ANoEJFB0bRBNVBBMx8ooeWuZggbw0664g3Fj2I4XjAx8aKTJWNMfTJ7ZVc1MweXakTxzaeiv12zI8BA26HcKafcG7QktxipbICc0MCRO77DzrfGcH4zLfdpLeIpPgvR2PywEOdh0lKPlCUiaV5Vh+HULPZrvzva/Y+wNMACN3M89M+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB7915.namprd11.prod.outlook.com (2603:10b6:610:12f::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.16; Fri, 1 Mar
- 2024 22:17:43 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7339.019; Fri, 1 Mar 2024
- 22:17:43 +0000
-Date: Fri, 1 Mar 2024 14:17:40 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Hansen <dave.hansen@intel.com>, Mark Brown <broonie@kernel.org>, Ingo
- Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Pawan
- Gupta" <pawan.kumar.gupta@linux.intel.com>, Dave Hansen
-	<dave.hansen@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, "Dan
- Williams" <dan.j.williams@intel.com>
-CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<gregkh@linuxfoundation.org>
-Subject: Re: x86 boot issues in -next
-Message-ID: <65e254047fbce_2bce9294cf@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <05a45cc8-e0fc-422e-80d2-596ed63202a3@sirena.org.uk>
- <71f9b0b7-190f-453c-b55b-c842db4a825d@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <71f9b0b7-190f-453c-b55b-c842db4a825d@intel.com>
-X-ClientProxiedBy: MW4PR03CA0037.namprd03.prod.outlook.com
- (2603:10b6:303:8e::12) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqhhlJJc"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a44b0b2c7cdso121140066b.0;
+        Fri, 01 Mar 2024 14:18:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709331490; x=1709936290; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=79CWB+FAWzBWpGynqkW+uoHcutiDjMhuchSIrgf3T2E=;
+        b=jqhhlJJcT8eCacloxSwAtv3jZOCu9cDz99177FW1J1U/ryrKP6QEJMfmKOZtYQKSqk
+         usBVTDULyqBoAoYfvehNTO2dGGfYctHT0wTl8m6qNJv6iyjn4UkkEzuzf8CQUvEzvIpz
+         Avi5yMBRXNJ/effZMsvTHb82rLQ7wclARuENC/TdM5CDLj95z+2kbC3Lrdo7jGZ7VFU+
+         HIXkqxbqAHeZKwWMfr8dai70xjRg+OHnQyurJZkIUkdaCh1Bg/jhBtxFUYIXPc+1Wewi
+         2uL3KwPCoNFqFMjAk16/F/ZWeRvzfDpvAa9yK19x+8Y7TnfzfVTq84ow7NCNdIZlVMFj
+         7WeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709331490; x=1709936290;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=79CWB+FAWzBWpGynqkW+uoHcutiDjMhuchSIrgf3T2E=;
+        b=MovO2M526IsZejSl7Lzw1BTvMOCDSNGbwSKNzH0T29+9SNS+KzO0mYf48WRXAiLkgs
+         VqLFvLXUkQDxMZDTl/TED/H1YO2e5BWnYCGigYQUB/dGq8STachhW7Q/CPDUsKt+Z5cH
+         U+Vn+RxntZLErRpuqqGN28ddmYPg6Bmle7unDKMPb1eBJow9hyIWRm3RCBvIK2t+bUlt
+         HrlB1EhGwCWfUZhnsP4QV1eZDsskYKujrZ+OA/34fNJpDXwNGO8WCDITX/IzLfhZcyDG
+         aLP/tzmMyruOxibYqNFl4pdO+gBObZesOgh/WtoRYb+rAFy4ZWccLwjF1kgKGxhnFCU6
+         wfUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpnVLtVU7ha2vc7eWvIQpjOWClzyDJK9WNikTgZ0pGuvQaJ9M5I/ZcaO/zcMzrbZdeIY8HLBHX/XQxETCrCBSmWrVuSk0Sza+rDyLr
+X-Gm-Message-State: AOJu0YwtRafdiiTHElY8pRTXwL2pxchY7x74srX2bUl3N4xjuvqMrY5X
+	PsOJmDiQ5wcRGtRTCTQOkOtrsvnexS6I1tOLRVqOlC2I/OA3+oa2kUwKAdpa+Gw=
+X-Google-Smtp-Source: AGHT+IECFSncbR8rAEim0HD5C18uzE1HFhDu7q9Ix304o52k7L11ZetK+Tb/JQ2rzZ+X676gS9SNPw==
+X-Received: by 2002:a17:906:fa92:b0:a3e:d5ac:9995 with SMTP id lt18-20020a170906fa9200b00a3ed5ac9995mr2106250ejb.59.1709331490348;
+        Fri, 01 Mar 2024 14:18:10 -0800 (PST)
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id g16-20020a17090613d000b00a3f480154a3sm2091122ejc.65.2024.03.01.14.18.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 14:18:09 -0800 (PST)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Simon Horman <horms@kernel.org>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com,
+	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v6 11/16] net: dsa: tag_sja1105: refactor skb->dev assignment to dsa_tag_8021q_find_user()
+Date: Fri,  1 Mar 2024 23:16:33 +0100
+Message-Id: <20240301221641.159542-12-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240301221641.159542-1-paweldembicki@gmail.com>
+References: <20240301221641.159542-1-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB7915:EE_
-X-MS-Office365-Filtering-Correlation-Id: 096b4c52-22f9-4065-5d1f-08dc3a3d6a3e
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VfsMKL2ytC8p14yhSACtJV9JC7NEB+oe9kqddZRWSc9A2rhLvqF3PUlecBO16D3tLqOw1H/yw8Ufq+nSwDKQUs6sVvkp8ilxI5zGMBvC5JWh9LMhnZt0zh5NYakGtk/PLkW29xiIpgg+HxZeb8XW6KrSo7T2vUuaUYIRzdd9SLcoHnYQpGhPA6KvkL6pWQ6zBPtKJFKIxF89B2cpQqzEARa7ZgliZ1coSPfr+tMKvPgzLYXpKxLHIWs7W2utl5KvO8oh4xZzUROo5FDihNDbx7EiMMTeDQf2lCjxb8BITcwArec30SIsfn7i0GoppUgpXNt7XC30BYe0UFsL8rYTeYrfRQptWJ/zus3Re8eKPyP0d17ZnXGN3XwSjiGGNTecefZFg+d7U7KdfMQOhbr8mk6QXzd2tuOCu9huKxfqmrsJbuewEg6RMBLV4TgpjcS9yWR2coo2ot1rAopCvAenOf8ubJp6T+i59oVbi5JmmJotmJ+uAj9LT7WiHs6C3+JEMnzNStQqPQ0czMl8QBcCczm76F9nqzQEiFM1QhVVu8RGkOoM8ERVZRncxUB7FD4kQyLKy5QAADVKn9c0V6yk0Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cG58tuvRpjloUJXjKEHHUyL6Ta7ygOlQSTQoEd0s1ITn1wYdX82Mfh8bBlE/?=
- =?us-ascii?Q?6ZDzLTmEzKlOTvDxWa4VRs+TTGmJZhiy11Ok4/IVm8EydAEAqvEWoUJtWy16?=
- =?us-ascii?Q?cLSewXFb4XCYCvhFIOhUQHZsopCCIUqgbuAg6t/VK7hUOLDWkTY5grnCcbBT?=
- =?us-ascii?Q?ftY6a/IPNDQK7BgLx7uraoADfLCPss6xbJOnClA5zpo4u2c4Suu1fJXIf3NM?=
- =?us-ascii?Q?UGs7bxxrZUOBT5jSK4stomPtHxzqnWVvINTWCdxgY4AdCV4QOE/g8jnrfDmP?=
- =?us-ascii?Q?sh3pV7pZKmcRWQnflSHpcgTeLtSDy5JqfSnKt6z8QRJWkZfX7PHNRq93Kp7d?=
- =?us-ascii?Q?uwR2kcaKolo2P3pw8E1Bp+UZedtl1MAuJvLvcuW4FfK3zkeaCIdkkSBreUyM?=
- =?us-ascii?Q?sRmrJRPHAw1+1IA5QazygpOfAzIZEr5OKrpTm2EYfKpE4i5Ny+diCiY5DNWZ?=
- =?us-ascii?Q?Osex5LzJaJLIrJUoF2o7CJi9R3pSw6Pwpe52mK+s9gcf0S7/n8uAfYwrSwoI?=
- =?us-ascii?Q?bVtQpCYYy/ZR3kdY984RPuHnIqqCTk9aFBqE6QhE9WxpESvBaELjI2CmHmm/?=
- =?us-ascii?Q?aNxNzV3QVM4Luhb/ZGmwt5yo/WwheNMDaZYNMNejI133fNnlZM8OO/0lLsa4?=
- =?us-ascii?Q?KejXNIYMvaEtjlGpDPHBNFcNgake4iZw3YkVeQErVGJoaru8VEC+KcWqK1yB?=
- =?us-ascii?Q?L/qzxARbNQlEY8YqonHHHsRAP91EZBz9skUOL2X9mF5FY4bFFepheBwTfdUt?=
- =?us-ascii?Q?WB2zt1fANEz43OAxanIKhlE2LPGF41wbslP3aGnv+zZ+cXXMGXMtS1eGbWsb?=
- =?us-ascii?Q?3dV+NV/vyEvZOqAelpkgTFkgiSaQzY+p4JCi2NAqemRrqpUsEh2HBfpH+Sku?=
- =?us-ascii?Q?KoP5iWH52+lgflTTtYmjyXqc9FuI3jYXPRtWiM9aZAld3mIlh8zjhnYMgcBS?=
- =?us-ascii?Q?sxFdmilmHvbtP67RUgAzbH7FMNFbWemSjQ5ZOV8xpmb2Fcdvk0B0+enQchI4?=
- =?us-ascii?Q?bYx+TDDif6HVLxL3F9ganxMD/xOZ/I0bS2Uuo33PgMI9Ap7Vl9r06GAzQSsB?=
- =?us-ascii?Q?R5lJ22tiwSIJoK9XIVnm2sZrikExH+d7QrhT/sIenMOlm4S1JZxz/X7yeWZZ?=
- =?us-ascii?Q?9uq9anS5vujEXdlcPUmDBTymlHN+bK4qG8eLz7M8kSBSOyWXmWy6G+60Dw35?=
- =?us-ascii?Q?MQRyEBLnI5EOt73o3e+UwcHZ8oWQUmv+tpJWDYk9WC7z6BC/h1T4uVuuAdR7?=
- =?us-ascii?Q?Ffj8BxvmPrxKnjLLfGNDxuXdlbUYlkrjFr4sUImTBNEPBUykI8msvPCvhgiI?=
- =?us-ascii?Q?0LtvMeXio+JTaVqJRQwMd3q2GSfRQ26agUWpj4LYjWWsFESvm5RtMGjjUcTI?=
- =?us-ascii?Q?1Y3gwww6lEUNRKk/3AOjz43Y3O/1pbTYzRXmT9qbMwlrxyg86F1z9b0qgD62?=
- =?us-ascii?Q?AX4dSg/z8BVpGFVMgI5ydHgQTxELn2z5WayuKZBN9ROLUCpX4FgkIgvMIzu/?=
- =?us-ascii?Q?EzcA1c+MKP3wiMkROceyM8ljKeLt6hb7MLC4agvgXPb8GhYh9mSiEj8gvCmZ?=
- =?us-ascii?Q?0TF4onNBQ64IH28WLJpnE4LrVyRjNqOGXuSIPjoXnKwyloRPqF53XS7jFZE6?=
- =?us-ascii?Q?qw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 096b4c52-22f9-4065-5d1f-08dc3a3d6a3e
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2024 22:17:43.0983
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ABkqACVmWVNwngDLKmF075uIHQVpVmgKh1Fq31KJzb9H99916QH6XTvtLhN5Ixn5ibqZyOHbWaXR3Q3Wy11BdwWACindFQxxKl0YbTM/Klc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7915
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-[ add Greg ]
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Dave Hansen wrote:
-> On 3/1/24 13:29, Mark Brown wrote:
-> > For the past few days -next has been failing to boot an x86_64 defconfig
-> > on the x86 machine Linaro has available in their lab.  DMI says it's a
-> > "Dell Inc. PowerEdge R200/0TY019, BIOS 1.4.3 05/15/2009" and the CPU is
-> > described as "Intel(R) Xeon(R) CPU X3220  @ 2.40GHz (family: 0x6, model:
-> > 0xf, stepping: 0xb)", it's running happily with mainline and
-> > pending-fixes.
-> 
-> This wouldn't explain the bisect results, but there's been a crash fixed
-> in here:
-> 
-> > https://lore.kernel.org/all/170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com/
-> 
-> that looks pretty similar to your signature.
-> 
-> Could you give Dan's patch a shot?
-> 
+A new tagging protocol implementation based on tag_8021q is on the
+horizon, and it appears that it also has to open-code the complicated
+logic of finding a source port based on a VLAN header.
 
-Hey Greg, this indeed looks like something that will be fixed when you
-update driver-core-next.
+Create a single dsa_tag_8021q_find_user() and make sja1105 call it.
 
-http://lore.kernel.org/r/2024022342-unbroken-september-e58d@gregkh
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+---
+v6, v5:
+  - resend only
+v4:
+  - introduce patch and change from master to conduit and slave to user
+
+ net/dsa/tag_8021q.c   | 19 ++++++++++++++++---
+ net/dsa/tag_8021q.h   |  5 +++--
+ net/dsa/tag_sja1105.c | 17 +++++------------
+ 3 files changed, 24 insertions(+), 17 deletions(-)
+
+diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
+index 332b0ae02645..454d36c84671 100644
+--- a/net/dsa/tag_8021q.c
++++ b/net/dsa/tag_8021q.c
+@@ -468,8 +468,8 @@ struct sk_buff *dsa_8021q_xmit(struct sk_buff *skb, struct net_device *netdev,
+ }
+ EXPORT_SYMBOL_GPL(dsa_8021q_xmit);
+ 
+-struct net_device *dsa_tag_8021q_find_port_by_vbid(struct net_device *conduit,
+-						   int vbid)
++static struct net_device *
++dsa_tag_8021q_find_port_by_vbid(struct net_device *conduit, int vbid)
+ {
+ 	struct dsa_port *cpu_dp = conduit->dsa_ptr;
+ 	struct dsa_switch_tree *dst = cpu_dp->dst;
+@@ -495,7 +495,20 @@ struct net_device *dsa_tag_8021q_find_port_by_vbid(struct net_device *conduit,
+ 
+ 	return NULL;
+ }
+-EXPORT_SYMBOL_GPL(dsa_tag_8021q_find_port_by_vbid);
++
++struct net_device *dsa_tag_8021q_find_user(struct net_device *conduit,
++					   int source_port, int switch_id,
++					   int vid, int vbid)
++{
++	/* Always prefer precise source port information, if available */
++	if (source_port != -1 && switch_id != -1)
++		return dsa_conduit_find_user(conduit, switch_id, source_port);
++	else if (vbid >= 1)
++		return dsa_tag_8021q_find_port_by_vbid(conduit, vbid);
++
++	return dsa_find_designated_bridge_port_by_vid(conduit, vid);
++}
++EXPORT_SYMBOL_GPL(dsa_tag_8021q_find_user);
+ 
+ /**
+  * dsa_8021q_rcv - Decode source information from tag_8021q header
+diff --git a/net/dsa/tag_8021q.h b/net/dsa/tag_8021q.h
+index 0c6671d7c1c2..27b8906f99ec 100644
+--- a/net/dsa/tag_8021q.h
++++ b/net/dsa/tag_8021q.h
+@@ -16,8 +16,9 @@ struct sk_buff *dsa_8021q_xmit(struct sk_buff *skb, struct net_device *netdev,
+ void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
+ 		   int *vbid, int *vid);
+ 
+-struct net_device *dsa_tag_8021q_find_port_by_vbid(struct net_device *conduit,
+-						   int vbid);
++struct net_device *dsa_tag_8021q_find_user(struct net_device *conduit,
++					   int source_port, int switch_id,
++					   int vid, int vbid);
+ 
+ int dsa_switch_tag_8021q_vlan_add(struct dsa_switch *ds,
+ 				  struct dsa_notifier_tag_8021q_vlan_info *info);
+diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
+index 35a6346549f2..3e902af7eea6 100644
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -509,12 +509,8 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 		 */
+ 		return NULL;
+ 
+-	if (source_port != -1 && switch_id != -1)
+-		skb->dev = dsa_conduit_find_user(netdev, switch_id, source_port);
+-	else if (vbid >= 1)
+-		skb->dev = dsa_tag_8021q_find_port_by_vbid(netdev, vbid);
+-	else
+-		skb->dev = dsa_find_designated_bridge_port_by_vid(netdev, vid);
++	skb->dev = dsa_tag_8021q_find_user(netdev, source_port, switch_id,
++					   vid, vbid);
+ 	if (!skb->dev) {
+ 		netdev_warn(netdev, "Couldn't decode source port\n");
+ 		return NULL;
+@@ -652,12 +648,9 @@ static struct sk_buff *sja1110_rcv(struct sk_buff *skb,
+ 	if (likely(sja1105_skb_has_tag_8021q(skb)))
+ 		dsa_8021q_rcv(skb, &source_port, &switch_id, &vbid, &vid);
+ 
+-	if (source_port != -1 && switch_id != -1)
+-		skb->dev = dsa_conduit_find_user(netdev, switch_id, source_port);
+-	else if (vbid >= 1)
+-		skb->dev = dsa_tag_8021q_find_port_by_vbid(netdev, vbid);
+-	else
+-		skb->dev = dsa_find_designated_bridge_port_by_vid(netdev, vid);
++	skb->dev = dsa_tag_8021q_find_user(netdev, source_port, switch_id,
++					   vid, vbid);
++
+ 	if (!skb->dev) {
+ 		netdev_warn(netdev, "Couldn't decode source port\n");
+ 		return NULL;
+-- 
+2.34.1
+
