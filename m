@@ -1,121 +1,79 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay162.nicmail.ru (relay162.nicmail.ru [91.189.117.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9DC3C470
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 20:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16E57EC;
+	Fri,  1 Mar 2024 20:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.117.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709324003; cv=none; b=WOgB02p1OtWjW588rMP3aXBSDX9E1RXbFoQOI8hgmExgTeZySG+pjL11C0clL4LaKEdfcAw6Vkm5b/jaymtDv0QgRkT1tBjtJIWGNjS5zfPT5bseSw3iGuTs8+fvwj+YI8OPPwDvwBZjsLhF0CbPr3ZYbFjonhkhx4KFI6AWwVI=
+	t=1709324019; cv=none; b=Ir0V9Bo4msHa+o+lDzw4XUZifydg8uym72nR/dAKRGMJij2kb2TTqCydsQUKqgna7+CwvvC6wxmlBiy5HQPyGaVYb+Lbru7LAsZKFkhlAHqHHy2SPQNiVSWVgrAqXQaFBwn3qsARAQMUknSiaJYXyemHGh/dWnXzRO2aRYofkN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709324003; c=relaxed/simple;
-	bh=+kXeHXthEWZD7iWx2K1wgOR5WC1VJeE1+Ab0otEfR+s=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Q0Zwn4Q9Sxochww1gwpGJ9x2duabU2SvV32fh2HtmoYEtIFTbbWCct9kAm4FKjVnAWo4Whhu4ECscx4EdvBtK//tsgjvIBdbaoZAdYXnIOGwm7MhmUcf975qI1naNFoGCcbZDLMWQJ4rLhZJtnIkqxY2yXfLXdgNYS1ywT98kWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4uuUvcJP; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4uuUvcJP"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so3523051276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 12:13:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709324001; x=1709928801; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=leHy2ZuaaIVqOoEaFIcU0dOPh3TtFIVXPy4dpXtCtQQ=;
-        b=4uuUvcJP4diR1DgxCzpfQ0oXzCEZRYp7YbVphmRn3/ubpFdYpJqYn1W031AhxHbpU9
-         HgFOCH1qHJDvMyrosnPmJKgZsrgZvAq6FPVcREKlLKFUJzb0a/iOVpskNZ8ZpK2xnFVd
-         /bU6HPEQXgeyA0C6zMMP3mFlVqvmzhm5EgmTuXjPS977SvRKtiSu/fO2B+YXCJe/6WHM
-         f7MNR+5LpRoGXjJgupuo+vIrzEukBZVmK/r2wTw4kd9KXr3jPlmkqUQNQEyifLrJ0ZG3
-         WL7LUzU3TnWNEl8qiYlkdn+qDSKz8dwtCtuerR/aIeul1vkW/Dfnbdgqvz2EBjU21sem
-         F80Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709324001; x=1709928801;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=leHy2ZuaaIVqOoEaFIcU0dOPh3TtFIVXPy4dpXtCtQQ=;
-        b=f054WW925USVO45b50Z+IHPb8WW3YsPV9jchDubQRUrgjCfN8RlYKa0vjEijX1Ptsc
-         q9ckqRNCzRAwmtSx7ypFhaqyl2ETOvKPfabERKTImnhgAVVJjsFpWZ0NRdiayEa5cN+I
-         rYGz+ce52ySnzFdKqOo3XNouOXGmzdJF2Ud207jyanTh9zDVLzGwtihapYVwRyc1kRoC
-         gtCX3XRr22tDDXk5QaqJCyDxCEE6A7whe0mJ2IWLhX8LIFBediM0JSmEotpZRLM4F2Wg
-         XzrEw5MgshftidqZ3FDRHZ1USJXdCZs6/nqFdLT2m+zO0JFgBq8WyHmMSuqgpVo6oiJp
-         3YXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXx5HNrCzJ7c4m6LpXMADhF80+OSoV1kJJpKFCXAlWMgZXCmEveEZKFGc9S5VdrEGP6GneXqPEUWWlsvktir7Rp5AfY1p5GGrSqwLlv
-X-Gm-Message-State: AOJu0Yx3quOV+NrjgVECxtVCxxdovddW1nYR8fYWL5q3bf2DoUjSjGqI
-	wh8TcSNToBo4IzLJJ7pDteUrlxQUklrpERzrSV39MKAnA1bJGGd9bq4frRnR/0qQHoIvuarrkLu
-	8y9P59Q==
-X-Google-Smtp-Source: AGHT+IEUiEJgQKhFhf5xIrWptGoM/WUTdtVbrogONGApTvzoFpWCMS1CeyeugDGls8ujT2Nb1x5Zs7wqJnl4
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
- (user=irogers job=sendgmr) by 2002:a25:ce8a:0:b0:dcc:8927:7496 with SMTP id
- x132-20020a25ce8a000000b00dcc89277496mr102198ybe.5.1709324000837; Fri, 01 Mar
- 2024 12:13:20 -0800 (PST)
-Date: Fri,  1 Mar 2024 12:13:06 -0800
-In-Reply-To: <20240301201306.2680986-1-irogers@google.com>
-Message-Id: <20240301201306.2680986-2-irogers@google.com>
+	s=arc-20240116; t=1709324019; c=relaxed/simple;
+	bh=qsTCsmAF3I9S9oSBSGdZteZ9eWDoMSLbY3Z0xeS0S9Q=;
+	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
+	 In-Reply-To:Content-Type; b=grd85gljeFW9Z0z2Wxc/jPSzjQuP/6dt3YK7Ab59+2WG25hOnKQ1pd0VzYXL3R0hwgk07hyuVDZMY4whDJ9W5Rfoq1H71jiD5/27qnVnN94uL3xOc50y6Z1crfUr7oGnexEHtdGPWbHNOkv41XtdqwuOcuOoQFpDZWSfKy0IHSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru; spf=pass smtp.mailfrom=ancud.ru; arc=none smtp.client-ip=91.189.117.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ancud.ru
+Received: from [10.28.138.19] (port=5690 helo=[192.168.95.111])
+	by relay.hosting.mail.nic.ru with esmtp (Exim 5.55)
+	(envelope-from <kiryushin@ancud.ru>)
+	id 1rg8wl-00053b-8I;
+	Fri, 01 Mar 2024 22:53:32 +0300
+Received: from [87.245.155.195] (account kiryushin@ancud.ru HELO [192.168.95.111])
+	by incarp1106.mail.hosting.nic.ru (Exim 5.55)
+	with id 1rg8wl-000Kr6-1b;
+	Fri, 01 Mar 2024 22:53:31 +0300
+Message-ID: <1d6c298a-81d5-4ffd-becb-3a796690f4be@ancud.ru>
+Date: Fri, 1 Mar 2024 22:53:29 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301201306.2680986-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v2 2/2] perf help: Lower levenshtein penality for deleting character
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Nikita Kiryushin <kiryushin@ancud.ru>
+Subject: [PATCH] staging: sm750fb: Remove unneeded setting of
+ info->screen_size
+References: <>
+Content-Language: en-US
+To: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+In-Reply-To: <>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MS-Exchange-Organization-SCL: -1
 
-The levenshtein penalty for deleting a character was far higher than
-subsituting or inserting a character. Lower the penalty to match that
-of inserting a character.
 
-Before:
-```
-$ perf recccord
-perf: 'recccord' is not a perf-command. See 'perf --help'.
-```
+In lynxfb_set_fbinfo info->screen_size is set twice, the first value is
+never used and then overwritten.
 
-After:
-```
-$ perf recccord
-perf: 'recccord' is not a perf-command. See 'perf --help'.
+Remove the first time the value is set.
 
-Did you mean this?
-        record
-```
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
+Signed-off-by: Nikita Kiryushin <kiryushin@ancud.ru>
 ---
- tools/perf/util/help-unknown-cmd.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+  drivers/staging/sm750fb/sm750.c | 1 -
+  1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/util/help-unknown-cmd.c b/tools/perf/util/help-unknown-cmd.c
-index 2ba3369f1620..a0a46e34f8d1 100644
---- a/tools/perf/util/help-unknown-cmd.c
-+++ b/tools/perf/util/help-unknown-cmd.c
-@@ -73,10 +73,14 @@ const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds)
- 
- 	if (main_cmds->cnt) {
- 		/* This reuses cmdname->len for similarity index */
--		for (i = 0; i < main_cmds->cnt; ++i)
-+		for (i = 0; i < main_cmds->cnt; ++i) {
- 			main_cmds->names[i]->len =
--				levenshtein(cmd, main_cmds->names[i]->name, 0, 2, 1, 4);
--
-+				levenshtein(cmd, main_cmds->names[i]->name,
-+					/*swap_penalty=*/0,
-+					/*substition_penality=*/2,
-+					/*insertion_penality=*/1,
-+					/*deletion_penalty=*/1);
-+		}
- 		qsort(main_cmds->names, main_cmds->cnt,
- 		      sizeof(*main_cmds->names), levenshtein_compare);
- 
+diff --git a/drivers/staging/sm750fb/sm750.c 
+b/drivers/staging/sm750fb/sm750.c
+index 04c1b32a22c5..70d1c8292df0 100644
+--- a/drivers/staging/sm750fb/sm750.c
++++ b/drivers/staging/sm750fb/sm750.c
+@@ -845,7 +845,6 @@ static int lynxfb_set_fbinfo(struct fb_info *info, 
+int index)
+  	info->pseudo_palette = &par->pseudo_palette[0];
+  	info->screen_base = crtc->v_screen;
+  	pr_debug("screen_base vaddr = %p\n", info->screen_base);
+-	info->screen_size = line_length * var->yres_virtual;
+   	/* set info->fix */
+  	fix->type = FB_TYPE_PACKED_PIXELS;
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.34.1
 
