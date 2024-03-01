@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532EE6BFA3;
-	Fri,  1 Mar 2024 10:42:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288B320319;
+	Fri,  1 Mar 2024 10:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709289779; cv=none; b=ek6h404bPtUXgFp+pstPd6aKR9uvKH7YOl2mFwMYZoV+jAU+0O/HM/bY9/rJhjSHITcnda+4iWScOrRIbJOTLJVcSttbusgh0z8GcIYLAcXDdBcU7g5FY6ud/dvApXoze2z65VT3RzVALMuOvtXGBpuL3KOF5l3SOBI9blSvzT4=
+	t=1709289779; cv=none; b=mvQvgcx4GYDAi8MpXF5DagjOEz87U0UkawMmEi+8gtYxWxjJYq1lBz8Yubk0Tn5xMoMce8ddq9X+oeDAph/DNlJUvknhcDEAixyo0LlfczAJR2b/tOkzRSANObk5O0qX9lg2T0GPrayMujARomKoEH+UwC09biD82RDFwIuUPvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709289779; c=relaxed/simple;
-	bh=bdj2sXbKKEcSVYU72hwdKppcUWhM0GPYmoe4dwmAPtA=;
+	bh=r9/r4cAgofxq2YbjbbxXvYSIDlSWSINkDrq9AA9RzRc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GWhv8iQ0Y4J9dDNInQC+etWULp+5SwXaWbQOCnbBrY9WhfqS4XjZpz++OXWWxE5j1XREMylb0mK+3kQd2JnwIT+9cduHoVzrF0C/JOlOldps9iyRFgATMIQM12kMv7v9qD2IuTBx2ox+98Cd/hbsiCJ4zcmHdy7suPRmPI2Mknk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8pnK0O6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=t26iq2rIq57DOXDBQz/Blxik/Y4y/KF7heAmHEWsDx0UiRGBZpz83ekt+FaSlaR3ucuDvAUQMbWGTbcv5/SyXBG0ACKDqu1O6qV6EDUL7auA5cNUAE6+tiLfpwXX1aII4bLq2C/TA9CHSoB+bQ+S+ctokXO0w0JEuE6imcpFWpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dI/2KUcd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8pnK0O6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 19053C43142;
-	Fri,  1 Mar 2024 10:42:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dI/2KUcd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C1AF6C433C7;
+	Fri,  1 Mar 2024 10:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709289779;
-	bh=bdj2sXbKKEcSVYU72hwdKppcUWhM0GPYmoe4dwmAPtA=;
+	s=k20201202; t=1709289778;
+	bh=r9/r4cAgofxq2YbjbbxXvYSIDlSWSINkDrq9AA9RzRc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=I8pnK0O6SunHZxJiOSjoPzu6eLrP/erBBlrYjVIt9YA+hIs1pPWabn56SSzh5DK8Q
-	 W6yfvcM+9gWMXKH3rWOIXjrgPxzbcIS4LrnPdUZu9Y+Mt1Hfjq12APfcJAKIlz4RBk
-	 akfIgkZBR/6ZW0KotndncFGPKuSCKA6YcX2km6VPMVu0CgYrA+hFxKxv0JpgvYq6Io
-	 mwybjn1zxwhkAE1xw/hbpn87cmULjWhfqtxMEaBX3cJQhJmnneYUSASgMyOFqD0gJV
-	 ig2I7GdDEuN8npR8zGWBITMZhseJlbZdtGG7RJGsAnTMqo1/M5qA3N3n47o211KcPC
-	 t+/9UCEEgT15g==
+	b=dI/2KUcd+fDTnT/+PqCQ8mdvjUgbLe0MVjTKrAyNZtblt93VTNTsX2QzNWKKvzPpP
+	 tSxd8mZXVuAIWilRyZrYLCIgDVQL8z1i2q9RXscAUVKsnUyPg9H9PIeVnfc1AMActj
+	 ryD8dfnIV802q2fQ703U0n4/0fmhVW+0m7Q+W6KbAnyYdZExhvQIW7AXvJtShUntez
+	 Zo8Jbl5PJ2aXv1Wc0vtzSqFyg5If7MH3d20fh9Umz7hd1xOc4o0opz19y18zjuyLCO
+	 +5R1HOc0b4F0IOcMD19aVReofAq5LMqo8LxUYAQ94B/id8kbfQm2YPhEEDRDaKJQVP
+	 4R3K2bRcnhkzQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C52C54E41;
-	Fri,  1 Mar 2024 10:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DB0C5475B;
+	Fri,  1 Mar 2024 10:42:58 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 01 Mar 2024 12:43:03 +0200
-Subject: [PATCH net-next v3 7/9] net: dsa: mt7530: put initialising PCS
- devices code back to original order
+Date: Fri, 01 Mar 2024 12:42:57 +0200
+Subject: [PATCH net-next v3 1/9] net: dsa: mt7530: remove .mac_port_config
+ for MT7988 and make it optional
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id:
- <20240301-for-netnext-mt7530-improvements-3-v3-7-449f4f166454@arinc9.com>
+ <20240301-for-netnext-mt7530-improvements-3-v3-1-449f4f166454@arinc9.com>
 References:
  <20240301-for-netnext-mt7530-improvements-3-v3-0-449f4f166454@arinc9.com>
 In-Reply-To:
@@ -63,11 +63,11 @@ Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709289776; l=1570;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709289776; l=2593;
  i=arinc.unal@arinc9.com; s=arinc9-Xeront; h=from:subject:message-id;
- bh=/2CkKGukm0R4V69WhBvbbIMKcr0CwYye/LAy2VcbSV0=;
- b=jhj5rpVeLTk6pp6nZ74IqJOF62xtP/gZRjxzV6gmsJ/mCB/nP34kSs028tQQ0/2WrX6tvkMGJ
- ykUTxIRPKOhARn1bax3sYOsUZQsHfG6i6H4204OyFLMD8QH9wvCic4L
+ bh=zsBRS25Kdr7LfGGSqrR3mLbX7RMd9/oxSXqAjEC3Jr8=;
+ b=5r5D4AVXyAxUEdPgPCrz37wKin9bxfUjIN/dykb87Ikxk23j7k5+Qfzu+IrpQlCIy+HkPLNwp
+ 30Bvz+KpQ1cBm1DesQ/ZPQww9ihyGYAPYcI3kkJBYRBWxjY1Cu9xDRw
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=z49tLn29CyiL4uwBTrqH9HO1Wu3sZIuRp4DaLZvtP9M=
 X-Endpoint-Received:
@@ -77,55 +77,78 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-The commit fae463084032 ("net: dsa: mt753x: fix pcs conversion regression")
-fixes regression caused by cpu_port_config manually calling phylink
-operations. cpu_port_config was deemed useless and was removed. Therefore,
-put initialising PCS devices code back to its original order.
+For the switch on the MT7988 SoC, the mac_port_config member for ID_MT7988
+in mt753x_table is not needed as the interfaces of all MACs are already
+handled on mt7988_mac_port_get_caps().
 
+Therefore, remove the mac_port_config member from ID_MT7988 in
+mt753x_table. Before calling priv->info->mac_port_config(), if there's no
+mac_port_config member in mt753x_table, exit mt753x_mac_config()
+successfully.
+
+Remove calling priv->info->mac_port_config() from the sanity check as the
+sanity check requires a pointer to a mac_port_config function to be
+non-NULL. This will fail for MT7988 as mac_port_config won't be a member of
+its info table.
+
+Co-developed-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/net/dsa/mt7530.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/net/dsa/mt7530.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index e353c03dd1db..5c8ad41ce8cd 100644
+index 03d966fa67b2..94d4b2c87799 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -2812,17 +2812,9 @@ static int
- mt753x_setup(struct dsa_switch *ds)
+@@ -2655,17 +2655,6 @@ static bool mt753x_is_mac_port(u32 port)
+ 	return (port == 5 || port == 6);
+ }
+ 
+-static int
+-mt7988_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+-		  phy_interface_t interface)
+-{
+-	if (dsa_is_cpu_port(ds, port) &&
+-	    interface == PHY_INTERFACE_MODE_INTERNAL)
+-		return 0;
+-
+-	return -EINVAL;
+-}
+-
+ static int
+ mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		  phy_interface_t interface)
+@@ -2706,6 +2695,9 @@ mt753x_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
  {
  	struct mt7530_priv *priv = ds->priv;
--	int i, ret;
--
--	/* Initialise the PCS devices */
--	for (i = 0; i < priv->ds->num_ports; i++) {
--		priv->pcs[i].pcs.ops = priv->info->pcs_ops;
--		priv->pcs[i].pcs.neg_mode = true;
--		priv->pcs[i].priv = priv;
--		priv->pcs[i].port = i;
--	}
-+	int ret = priv->info->sw_setup(ds);
-+	int i;
  
--	ret = priv->info->sw_setup(ds);
- 	if (ret)
- 		return ret;
- 
-@@ -2834,6 +2826,14 @@ mt753x_setup(struct dsa_switch *ds)
- 	if (ret && priv->irq)
- 		mt7530_free_irq_common(priv);
- 
-+	/* Initialise the PCS devices */
-+	for (i = 0; i < priv->ds->num_ports; i++) {
-+		priv->pcs[i].pcs.ops = priv->info->pcs_ops;
-+		priv->pcs[i].pcs.neg_mode = true;
-+		priv->pcs[i].priv = priv;
-+		priv->pcs[i].port = i;
-+	}
++	if (!priv->info->mac_port_config)
++		return 0;
 +
- 	if (priv->create_sgmii) {
- 		ret = priv->create_sgmii(priv);
- 		if (ret && priv->irq)
+ 	return priv->info->mac_port_config(ds, port, mode, state->interface);
+ }
+ 
+@@ -3169,7 +3161,6 @@ const struct mt753x_info mt753x_table[] = {
+ 		.phy_write_c45 = mt7531_ind_c45_phy_write,
+ 		.cpu_port_config = mt7988_cpu_port_config,
+ 		.mac_port_get_caps = mt7988_mac_port_get_caps,
+-		.mac_port_config = mt7988_mac_config,
+ 	},
+ };
+ EXPORT_SYMBOL_GPL(mt753x_table);
+@@ -3197,8 +3188,7 @@ mt7530_probe_common(struct mt7530_priv *priv)
+ 	 * properly.
+ 	 */
+ 	if (!priv->info->sw_setup || !priv->info->phy_read_c22 ||
+-	    !priv->info->phy_write_c22 || !priv->info->mac_port_get_caps ||
+-	    !priv->info->mac_port_config)
++	    !priv->info->phy_write_c22 || !priv->info->mac_port_get_caps)
+ 		return -EINVAL;
+ 
+ 	priv->id = priv->info->id;
 
 -- 
 2.40.1
