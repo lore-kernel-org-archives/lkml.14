@@ -1,94 +1,101 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570981FDB
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017571FDB
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709311037; cv=none; b=CRhl7reW7PnpoPwDwgieNjHgWSf8GdGB0mCpK785TEWUIgzJCo8IowXrMXqDzCxVqaJu4bnEy/QTYWeWFG0we49VxseczElV08MPy0PYTE6NDmzeRq7UYbKwoMjM54ghNK+CZTOv5G197hsqeLh5uhoFKvIiH5mzVp3/zyCt+8A=
+	t=1709311085; cv=none; b=SmK6Weq2IbzJ6s237pLeWvk/Z9UgWaBZj6aDOhxXDoVbo6TKMuIp7DXZCmqfEJPcutQA10y0+02NpGiI0M2EwvB64WmXxiySWVwlPuNC68M2Wq8R6c2hhJpt+5ax0VMrWNMJFFhDLxERpEYTmSZufqxnJMYTdctoJLQW6aPpc+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709311037; c=relaxed/simple;
-	bh=W8ekqyFDNdERMviLQlmLPvASDFIuRXeZIKAz6X0wpqE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lpCGDlITlYP7pKWc3PfCbioBjsXB+Dgm6G2Z1WDoTeY8CXMhYqZK4FGZ+kCh30zdkOsj7CiuOmNUjhYDyKMs/jYUVHbMobfXBSwldgWvg3PVndoqtzz4bRaUDk9gsJzpP71ekMXhR8L8B1u8F6c9O+GHRnhI3g8KFJyx6vQQUuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eLfuyKAU; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709311085; c=relaxed/simple;
+	bh=aS1+wesxMC3304+Y6xIr3I7pfuQIDNnZAXBMf1sELWQ=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AfqjpGuYDcWV3NvRmajdcrkl4k9LIkfD9sH0JbgHCjUaT/nXGkfWswubrv8a4tjO9xDFyM/9tLpBfOolh9cQUYggkp2b4RKLAkqJ+zKvpL47RAfX7f6701eptGGPwjs3SFxD7yBlq5e3IC+Fx1SsmtOApJzNYD75h/h5MDeFVJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sc0nKhFK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eLfuyKAU"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c19b79535aso1399068b6e.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 08:37:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709311035; x=1709915835; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F0S1pjMIEbQhahvKt9V4WgWqNibwCApPjl+YvM8irZw=;
-        b=eLfuyKAUbffS/v/1thMq1zcsFshSGOAusKjCOTeSBvM+LNqqRpeC12IF7Z3bpJ5lge
-         7I4OMes0RnWOBSRuVMJYfGn+5vFd5SVpnF25hXTEOk2jc+UOLZYBgUnDFTk3GxTGuTvO
-         yuipT3DZVvOKftLZe0myhbCwyVPzXAj8hcB16QYTPpNkSgT59xRwBGDvs+tq6zIpBfLR
-         LCvlqNnMoSyaIDOIE6HA8/XTkPvLw07NVCjyotq2D8gQKo9x5i9oqijSWg7Uw0GJXvzp
-         lbjU2JBjClRe5U1815i+Jk+xEF3DZo4VHrD7J5po1kF3ENLhbMn8JYJ9SE1BMQolhmNp
-         6cvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709311035; x=1709915835;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F0S1pjMIEbQhahvKt9V4WgWqNibwCApPjl+YvM8irZw=;
-        b=uScodQlz318MliQsZQYohlhYU0FzqmcgyhHR5Mas9PNuXF2auD4pgsGSAmEILD7kSB
-         8pSjU+HLfyyJoP0Uz2UQFBZy8pSWkD2q2K/DZRrOBC1gPzwyE/BMmbjA5rNjbdsynvvX
-         ximVxGMFiPE2N6w40ja4PlkqY31Xuq5Q8aXfnna8/PtIXU8rb/6Xn/CtpzKrsMEp3wJe
-         VkQTGQneNM0dyY4xjyGYwB/WEgqUjYpW6JwU8VOPNiUTrZ3Nnc7JzHQbxgynb8IZ5ate
-         me0OSLEBq2ouO428+McPCLtQiVYAS2v1lk1U298d19WA3tgNyAa2wIOeVw4dUAKK7fOL
-         jm+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXY2cv2y7Vzkm5Sbxo/BV+Fj7dBrXVLmdLGddVJ1yUwKqj94vqXE8iI2+c2QSgzCl5/a9Z6X6IS/KcgPlamxSaZ9f0RyUsJJi4QLpie
-X-Gm-Message-State: AOJu0Yy+kLPS//cnqtiWfb/eeyHht1j+nHkMybeVjdDnJAy5tYLgjZh3
-	ZCNav0o4eTk9Xqhp5i15VTDycwGLRTE4pUTw9HrrEh8/6Di2nbGiHclfs6x+/xg=
-X-Google-Smtp-Source: AGHT+IFj0GoRPprx2GuYPkyopZPppe0fMe+bFr3Nqv8uhWiYNQXQ99+Hhzb/IA0zdNSDj3aIomVZgA==
-X-Received: by 2002:a05:6808:13d3:b0:3c1:7c55:373f with SMTP id d19-20020a05680813d300b003c17c55373fmr2061160oiw.6.1709311035461;
-        Fri, 01 Mar 2024 08:37:15 -0800 (PST)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id bq16-20020a05622a1c1000b0042e8f150417sm1857674qtb.45.2024.03.01.08.37.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Mar 2024 08:37:15 -0800 (PST)
-Message-ID: <30604225-dec5-4ba7-9e7d-4c845c8ee9d6@linaro.org>
-Date: Fri, 1 Mar 2024 10:37:13 -0600
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sc0nKhFK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709311082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=w5kX5tNV5k9mZgn3zO6nEfb0LWgxJCKy7vnkIWzw2ws=;
+	b=Sc0nKhFKLFEITh+wyuUA+/I+FSO7GoPuPvq4y+YHOwF2h12rl+2sWiB2D6yGh84OlkG1tl
+	8yFrcMZHC3jtE6lb146ojl4KFmID9NivQ1YA/tDCe/btHg3hmEyuKrtoQkNYrPjqNhNnwA
+	3Cvy7/2EiBzX8TK+9lN0OJjPrSpSv8U=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-fdQLSedOMiKO2bl8bYyBpw-1; Fri,
+ 01 Mar 2024 11:37:56 -0500
+X-MC-Unique: fdQLSedOMiKO2bl8bYyBpw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2E3793830094;
+	Fri,  1 Mar 2024 16:37:55 +0000 (UTC)
+Received: from localhost (unknown [10.22.9.150])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5A24D2015B7D;
+	Fri,  1 Mar 2024 16:37:54 +0000 (UTC)
+Date: Fri, 1 Mar 2024 13:37:53 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Carsten Emde <C.Emde@osadl.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Wagner <daniel.wagner@suse.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
+	Jeff Brady <jeffreyjbrady@gmail.com>,
+	Luis Goncalves <lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.210-rt102
+Message-ID: <ZeIEYRctrbzCHDZh@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 1/7] net: ipa: change ipa_interrupt_config()
- prototype
-Content-Language: en-US
-To: Simon Horman <horms@kernel.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, mka@chromium.org, andersson@kernel.org,
- quic_cpratapa@quicinc.com, quic_avuyyuru@quicinc.com,
- quic_jponduru@quicinc.com, quic_subashab@quicinc.com, elder@kernel.org,
- netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240229205554.86762-1-elder@linaro.org>
- <20240229205554.86762-2-elder@linaro.org>
- <20240301162628.GF403078@kernel.org>
-From: Alex Elder <elder@linaro.org>
-In-Reply-To: <20240301162628.GF403078@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On 3/1/24 10:26 AM, Simon Horman wrote:
-> There are two cases where this function still returns a pointer.
+Hello RT-list!
 
-Yeah I saw that.  I'm in the middle of testing v2 right now.
+I'm pleased to announce the 5.10.210-rt102 stable release.
 
-I'm very sorry about that.  My process includes testing
-every patch but somehow I missed these errors on patches 1
-and 2 this time.  (The netdev CI doesn't report all the
-problems with patch 2; I'm not sure why.)
+This release is just an update to the new stable 5.10.210 version and no
+RT-specific changes have been performed.
 
-Anyway, a new version is coming.  Thanks for the note.
+You can get this release via the git tree at:
 
-					-Alex
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v5.10-rt
+  Head SHA1: 2e4f63341da86cf080b22925a8f4f8cb746b8e25
+
+Or to build 5.10.210-rt102 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.210.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.210-rt102.patch.xz
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Luis
+
