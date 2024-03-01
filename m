@@ -1,182 +1,101 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59483BB2E
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130BD39FF2;
+	Fri,  1 Mar 2024 18:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709318996; cv=none; b=fdQ6MZ3xc494a6Yf5XC5dNZ+yVBBRL4azUX2r2mX6aZQd3A4LJcm7yAlSvZGvjcrdzKiIWvFc333ZhS8Le1OPj1ZYM0GqD2+/3yGiS7gAKlRZ8v1XfqfC3bhUCMOcDQ6Di7DaIlAXYBu1Kd2egQVbyiVtEs306wzcKvyB4Oo7x8=
+	t=1709319005; cv=none; b=qM/0+6AwdcxlDjLBes/JB5+gq0TO2eCOjXvRHqgIAR8xjfmByWavyVqDvou46WyXaRVcmI5/sV8qMoE4fQrZt/3yVachcBOX9ItqjP/D3wz7f/3sqdI/SWNIFwh1Jl0lf6Ne7D5xDrZhC36f+CSLnWa6t8jefIA9xVcS8uAOat8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709318996; c=relaxed/simple;
-	bh=kRC2xm7uMHGebNB7a/TgeH2yuQp/mFiIM0iKAPFJjpE=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=JiP4+kRebyVcfu5e3FwzeO/uQ7UC7D+0c0Cm5k1rNPrwPkj1mZOVtgPZ/OIanSg3u0U2HJ3riXEtqeATpnnAS5mXSOGPtQ/m216p54yIZMQWLM/VmIqK4LCZCHLVZB8Dd8VYC4ZoT4d/JcxVPkI4KIB1UYyoicYDnuxhS5VQUq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wr2U2aC9; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1709319005; c=relaxed/simple;
+	bh=tLJu7ylBVLKDcDz0H2Gy43nmkrZwb++Fe+dzgeQcDT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AlYnCfNHwQvMITNhGwDzkR8qk5ekHNwB76MZJ996CF6wyg0kZD2UUAmmoEx4YpwpNIuWq/VMbpD5/HP5etK4/mJrPDHyO+1dBNQAn9eb2T/1gu0XsM+zFWGELZJAe+7Q9Bbal+HHdImzdird0q9K4avKRfgj8J1sVn5Nv5D83IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEgSFkvE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wr2U2aC9"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608ad239f8fso39541667b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:49:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709318994; x=1709923794; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/6sZaREfZSp3hmPC0ObvAD1D5+ZR7J7opouN89RfYyQ=;
-        b=wr2U2aC9wuRXZguRjvyPgcxVnlP86sKVJp5IVKfB5oOzHIB8ZjNFpKVkhYnT0ATjZA
-         iZqKDDI35+gbm58/NXI4zGe5yhB+mHc1rciRZ6EwTKcffV5NSY+rtE+pPywbaVb67vJU
-         iXEXF6XSNK9FgOQL8Sy1g5+JaxZ//kXyPJ94GxoATTSDCfOWH9bHjieXYbAcaG1tMFHN
-         x+MsRG07rWRSw60S+vVsXK+A0Wx7O6E2YicqWuqSICR9oh/DRH3sMTmV+lNaPKP0SaSt
-         Fs/vKNq1WsNHJU7zyRE3pp8rn9FAXoKwf3GmWupYzhN2zctv1knEEa6PCIoEEbz3eIA0
-         YDkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709318994; x=1709923794;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/6sZaREfZSp3hmPC0ObvAD1D5+ZR7J7opouN89RfYyQ=;
-        b=o5O4zvx7tFGe+gK7ueT6XcxlUI0I5ZMNV9bMmnHLHWcaDufB/D5ZOOpNMAXK0wYKMr
-         cTAPDMK9Vaaje3PzCzE3VSCm9PcH9uxqSZE7mxXzmrFVatiOxCJppjFOM2BmprR0QaB0
-         JXWy/leIWOOxj7cwvj+tZDi5UyqNDosd6/5YAxJoTEa308YoyZM90WtU4Z7htoq5sjAw
-         dTZ52AlbSWaPlR3U3THtPaikF8c3I9WfmxoI/irGwBwudXUKn7QoiqCE8p8qg4zvMh+8
-         rxwt1jjhV+yO2prRW4zFwDRmI0e9nY+BRiacoSDyJkU2dgFuNdHkQ65uafxvVcmgQf+e
-         mj9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVYmLBg76p5Vh3NJG82w+QCRp3lqytjLTR5eZcpT9GnfNszaudpEwLncDD145/MIcHccqEGTCLdpqABBo4IUwlEn3i5yXiX0DzdXPZm
-X-Gm-Message-State: AOJu0YwbmKTitJzrgWeQY06cz1Jk1mcoKZSjnQzojElM93cmZC6LzXHN
-	IaPihIgbHYzywHlTz/9Je2P7Zdt3ePrMgiA9i/YnfONO1u8QiEB6gTJAvOplrhfSPMVeIS2wyf3
-	KNI7LmQ==
-X-Google-Smtp-Source: AGHT+IF7tSFYfPgzeywyxbiOairM8kbPeJ0Gj4zz01HG1jTS6aRheUlZC7o2t0zsuDKJLa/Z3qLLDeBYZB28
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
- (user=irogers job=sendgmr) by 2002:a81:4c05:0:b0:608:d045:6eff with SMTP id
- z5-20020a814c05000000b00608d0456effmr526031ywa.2.1709318994053; Fri, 01 Mar
- 2024 10:49:54 -0800 (PST)
-Date: Fri,  1 Mar 2024 10:49:42 -0800
-In-Reply-To: <20240301184942.2660478-1-irogers@google.com>
-Message-Id: <20240301184942.2660478-3-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEgSFkvE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EABAC433C7;
+	Fri,  1 Mar 2024 18:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709319004;
+	bh=tLJu7ylBVLKDcDz0H2Gy43nmkrZwb++Fe+dzgeQcDT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YEgSFkvEmZJVkzuvCkuWj3Iuk3RWW5AkWQk1LOkhZIsdBGOyuVWDf2rX7zH7R07a5
+	 hbFmyKz/cJXxMq5rnzAzlik6vYxKVw6Vhis+L++9H+3mossKO/mLWZ10lyBgk1N/0O
+	 JylGz2aTWcWuAq4AEyd7FESvDeof23w3v3HW5IvPgbRPcWSZTConXL3NDB+LAw8hER
+	 zwT9jATJZWX1+9DjIwjKiSP61NRHohkFV9dybsfNRQjeFA0DsgCP/3tRoYnv41hw5x
+	 S4DUFTNSl/JhfA3nlBV/Y8VuVI7JuEUKYaEYpOBpzLfN2iaQw5lgpjziH2R3m+Qth5
+	 NLHd5VFZPV2fw==
+Date: Fri, 1 Mar 2024 12:50:03 -0600
+From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: Christian Brauner <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>,
+	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+	James Morris <jmorris@namei.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, audit@vger.kernel.org,
+	selinux@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH v2 11/25] security: add hooks for set/get/remove of fscaps
+Message-ID: <ZeIjW9JUeAqd0D85@do-x1extreme>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+ <20240221-idmap-fscap-refactor-v2-11-3039364623bd@kernel.org>
+ <c5b496e53dac2b4b5402cc5aa9a09178d63323b7.camel@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301184942.2660478-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v2 2/2] perf jevents: Add cycles breakdown metric for arm64/AMD/Intel
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5b496e53dac2b4b5402cc5aa9a09178d63323b7.camel@huaweicloud.com>
 
-Breakdown cycles to user, kernel and guest. Add a common_metrics.py
-file for such metrics.
+On Fri, Mar 01, 2024 at 04:59:16PM +0100, Roberto Sassu wrote:
+> On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOcean) wrote:
+> > In preparation for moving fscaps out of the xattr code paths, add new
+> > security hooks. These hooks are largely needed because common kernel
+> > code will pass around struct vfs_caps pointers, which EVM will need to
+> > convert to raw xattr data for verification and updates of its hashes.
+> > 
+> > Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
+> > ---
+> >  include/linux/lsm_hook_defs.h |  7 +++++
+> >  include/linux/security.h      | 33 +++++++++++++++++++++
+> >  security/security.c           | 69 +++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 109 insertions(+)
+> > 
+> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> > index 76458b6d53da..7b3c23f9e4a5 100644
+> > --- a/include/linux/lsm_hook_defs.h
+> > +++ b/include/linux/lsm_hook_defs.h
+> > @@ -152,6 +152,13 @@ LSM_HOOK(int, 0, inode_get_acl, struct mnt_idmap *idmap,
+> >  	 struct dentry *dentry, const char *acl_name)
+> >  LSM_HOOK(int, 0, inode_remove_acl, struct mnt_idmap *idmap,
+> >  	 struct dentry *dentry, const char *acl_name)
+> > +LSM_HOOK(int, 0, inode_set_fscaps, struct mnt_idmap *idmap,
+> > +	 struct dentry *dentry, const struct vfs_caps *caps, int flags);
+> > +LSM_HOOK(void, LSM_RET_VOID, inode_post_set_fscaps, struct mnt_idmap *idmap,
+> > +	 struct dentry *dentry, const struct vfs_caps *caps, int flags);
+> > +LSM_HOOK(int, 0, inode_get_fscaps, struct mnt_idmap *idmap, struct dentry *dentry);
+> > +LSM_HOOK(int, 0, inode_remove_fscaps, struct mnt_idmap *idmap,
+> > +	 struct dentry *dentry);
+> 
+> Uhm, there should not be semicolons here.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/amd_metrics.py    |  3 +++
- tools/perf/pmu-events/arm64_metrics.py  |  2 ++
- tools/perf/pmu-events/common_metrics.py | 18 ++++++++++++++++++
- tools/perf/pmu-events/intel_metrics.py  |  2 ++
- 4 files changed, 25 insertions(+)
- create mode 100644 tools/perf/pmu-events/common_metrics.py
+Yes, I've fixed this already for the next version.
 
-diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index 377ce413d051..5a1f10ecff4d 100755
---- a/tools/perf/pmu-events/amd_metrics.py
-+++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -4,6 +4,7 @@ from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
-                     JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
-                     Metric, MetricGroup, Select)
- import argparse
-+from common_metrics import Cycles
- import json
- import math
- import os
-@@ -572,6 +573,7 @@ def AmdUpc() -> Metric:
-   return Metric("upc", "Micro-ops retired per core cycle (higher is better)",
-                 upc, "uops/cycle")
- 
-+
- def Idle() -> Metric:
-   cyc = Event("msr/mperf/")
-   tsc = Event("msr/tsc/")
-@@ -628,6 +630,7 @@ all_metrics = MetricGroup("", [
-     AmdHwpf(),
-     AmdSwpf(),
-     AmdUpc(),
-+    Cycles(),
-     Idle(),
-     Rapl(),
-     UncoreL3(),
-diff --git a/tools/perf/pmu-events/arm64_metrics.py b/tools/perf/pmu-events/arm64_metrics.py
-index 0dcf5236ea1f..516b3fa08600 100755
---- a/tools/perf/pmu-events/arm64_metrics.py
-+++ b/tools/perf/pmu-events/arm64_metrics.py
-@@ -3,6 +3,7 @@
- from metric import (d_ratio, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
-                     LoadEvents, Metric, MetricGroup)
- import argparse
-+from common_metrics import Cycles
- import json
- import os
- from typing import Optional
-@@ -154,6 +155,7 @@ def Arm64Topdown() -> MetricGroup:
- 
- all_metrics = MetricGroup("",[
-     Arm64Topdown(),
-+    Cycles(),
- ])
- 
- if args.metricgroups:
-diff --git a/tools/perf/pmu-events/common_metrics.py b/tools/perf/pmu-events/common_metrics.py
-new file mode 100644
-index 000000000000..74c58f9ab020
---- /dev/null
-+++ b/tools/perf/pmu-events/common_metrics.py
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+from metric import (d_ratio, Event, Metric, MetricGroup)
-+
-+def Cycles() -> MetricGroup:
-+  cyc_k = Event("cycles:kHh")
-+  cyc_g = Event("cycles:G")
-+  cyc_u = Event("cycles:uH")
-+  cyc = cyc_k + cyc_g + cyc_u
-+
-+  return MetricGroup("cycles", [
-+      Metric("cycles_total", "Total number of cycles", cyc, "cycles"),
-+      Metric("cycles_user", "User cycles as a percentage of all cycles",
-+             d_ratio(cyc_u, cyc), "100%"),
-+      Metric("cycles_kernel", "Kernel cycles as a percentage of all cycles",
-+             d_ratio(cyc_k, cyc), "100%"),
-+      Metric("cycles_guest", "Hypervisor guest cycles as a percentage of all cycles",
-+             d_ratio(cyc_g, cyc), "100%"),
-+  ], description = "cycles breakdown per privilege level (users, kernel, guest)")
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 5775ae8a87b4..1a34e2f7a590 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -4,6 +4,7 @@ from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
-                     JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
-                     Metric, MetricConstraint, MetricGroup, MetricRef, Select)
- import argparse
-+from common_metrics import Cycles
- import json
- import math
- import os
-@@ -1012,6 +1013,7 @@ def UncoreUpiBw() -> Optional[MetricGroup]:
- 
- 
- all_metrics = MetricGroup("", [
-+    Cycles(),
-     Idle(),
-     Rapl(),
-     Smi(),
--- 
-2.44.0.278.ge034bb2e1d-goog
-
+Thanks,
+Seth
