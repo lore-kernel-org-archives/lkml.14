@@ -1,189 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79D420E3
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29831C33;
+	Fri,  1 Mar 2024 15:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709305320; cv=none; b=bJP0q+7FfGw/v2Igx3nuC31WCzZH6PJAgxV/8RNldzgZ0suGn5n7lXxpWsDcmwDD2JTez2k4Rotyp3GeHkXkXJmwCvE1b7jClUbpW+5FZBq22yfD9NM1vjh2tcNdVtwqZ9vf6HW8JC1I9V6OpYmost3vcaXSF2lG+v3gEpwrJKs=
+	t=1709305376; cv=none; b=KzW+lEUHFUG4m4UIzyB0ktAVdEp+D9VYsiNfzRB5XmGhTk8QVqw3IzeYACfXy00Vw80IgIa23DorY43cYfR2Zk1AwAkwdcAYHzNJBw7dtO9/BAF/+RGiR5b6SBXk4KdGPcveFY2IAfgWmT9avW5EKluyDz64RgZ7F117Loq2hzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709305320; c=relaxed/simple;
-	bh=WcFb6UJyrAj6vMVXS9jpaavIcTkGQ6WkUCPf39EjXH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvH7zw2dTTFzzmXm83BqcV086e1mbg28ZS18cZK6qK0hdo2vVb+Lx3WUAHSGO6TMsVzb5qQh5OgUWwKNk7Sh8bR2OXHPvS/O8HrWJL5GNvb8pm4Kt+k9VJaUIdP6jwNKdJEY0J/0nHF4v1Ss8Gp14Wg5xz0VzCFnLETUBcZYgRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HYZO2k/3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709305376; c=relaxed/simple;
+	bh=iAO65WgB4KgPDeH34KBkH8XenXcHBUEjtlarWO4AjMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XhrwVRAwvAUqcSP+oNlKI4T9o7n5g0lV094a6v3wW2Jra5iIz3nDHd3+pHP02codJFeWBVjhlaumgseFNX8gtzVQK0aaAkv73zSnjO4yjpP4sZy9VeTwMc3ZoTTh4GVhC/NTqDT5twF32Qiv+E5P9DZHgkH5qXpyl/3oetwlhi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZdvvhqT5; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HYZO2k/3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709305317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LxpqDIonN0/AQ1Q5Zx4aN7Ac1V+lU2NoYWrXBhd0Etg=;
-	b=HYZO2k/3AZ8rab5l0RfJcWYyc15vbYzy4r0b6U/ciZV/oYWjoPI1+Ze5nVQ2gJA6qzxMqK
-	Gkv8UfzdFU99zS3v78wFnYXtHbUeZ3pfO36cUshMOCSYISAAnCcU0bgLwwmLqpmLeNuotv
-	fJxgj7PS6wGAeP3nYvc6d54BQOcFwzI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-189-gdLcepOFNM2CPVAuVBP41Q-1; Fri,
- 01 Mar 2024 10:01:55 -0500
-X-MC-Unique: gdLcepOFNM2CPVAuVBP41Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5CCE42815E29;
-	Fri,  1 Mar 2024 15:01:53 +0000 (UTC)
-Received: from bfoster (unknown [10.22.32.137])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 25F21111D3E6;
-	Fri,  1 Mar 2024 15:01:53 +0000 (UTC)
-Date: Fri, 1 Mar 2024 10:03:35 -0500
-From: Brian Foster <bfoster@redhat.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	djwong@kernel.org
-Subject: Re: [PATCH 04/21] bcachefs: Disk space accounting rewrite
-Message-ID: <ZeHuRyZLlVD5vc7v@bfoster>
-References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
- <20240225023826.2413565-5-kent.overstreet@linux.dev>
- <Zd4F1qE1IFCz0/ML@bfoster>
- <3dug3vvjmlkhu42glwhkm5ozgkp4tzqvekxdabbgv4dv4yhxig@r5bw746uaxym>
- <ZeDQi3mRwJc7wqX/@bfoster>
- <nywd7rix6qapogaqg5kxny3k272ptpzi4qv5q2dqts42bqbxrw@te5enoxvdhti>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdvvhqT5"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-412ce4f62f8so603285e9.0;
+        Fri, 01 Mar 2024 07:02:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709305373; x=1709910173; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TXEv9EP2Y22NukxIhiLYf8BGk4fGYg5i0JkzdzS8yhk=;
+        b=ZdvvhqT5IVMBmY7/xDACy3t1BuLoFJ1g70OTFL0x4LUqM6C27ur7UmvP+p3OdFt4HT
+         aEsjGMVgRqasME05qCODpS67hYhgr8mvJttLFpk3eS2D86hD25FdbqDocO2Jv8DCnVeT
+         lkuOYlClL4CHJASwT7zqMpfvvF5AZW1Qx5v4wcUoBbpiI5maN8IuwpBJMTV3TaadahWb
+         qTte9cz7KDmBPoGqoNLdKnyyyfnmOG2Ruf7quSreQysM3Jrm+j+/90V2F58d11IKw+kx
+         SEQNfCIH2VN4iGRRKoPhQXKs54NhKj2wKEPLvptZUfv7cWPapyrRVLiEpv6vFO0mdBod
+         cZ9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709305373; x=1709910173;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TXEv9EP2Y22NukxIhiLYf8BGk4fGYg5i0JkzdzS8yhk=;
+        b=CyAl3QxKXfvuo4/kwv60XR0e3mwGAetw5AXaWazJ6tOmOeUiF95rcxltXBP1nkEH/w
+         l1nQLKiNxwqcpQpzvQU6lu2uYT51v9/hOrf18NFzMUWVQrWQAOFOvfT+XaI7YPGRt2xn
+         3yWmNl1yT/g8vG4rB01cjtY1GgfZDh55Az3qvv5Crl9SNFHS18/UGErl6QCVfWtFqGnT
+         RyxKftEBIspMMiWYtVuGZOAr58TmWiQm9vRDQDp5AGb5g4+24D2kA4/3IZp4lcfb9OGn
+         xzT6Ev+vvYs+htZJs9Jn0QVhppXlXoW1FZwq4AAU7XWVbgQIO96Acwwc7seGXrS9CNjf
+         I0Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGovptbQm27XOJ6lnYsZCs857h69P+IHmtIi/s8sz0K6EK3VPeWZLd/KErwWk5ERYLNBmA2XpQepvjaoBWVVwLPufIf6t+3gt533U6shgI/ZBBUvpNAqDHi21NncTX7a1x+WM82ic9rEZWV5ZVuULHJx+1UErfBW9nSdG3pDcDszNYXbJZ
+X-Gm-Message-State: AOJu0YzqXiP5Y/UzDUTRAZ442dzgjZjg2q0NwGFMYCS7gDL9DmHWe4Si
+	YY/DAMcdx2u2s/fDU4OjfpSxk+20cEQAFIVgYTzO4/qxKtqcGOs+
+X-Google-Smtp-Source: AGHT+IHC2s7wvqmklz0Axg33a4MUM1hHFtWw1cVqjlcY2Fbt7Oa9Hzilb0sussISrfWRUAlvPCnNXw==
+X-Received: by 2002:a05:600c:190a:b0:412:c9e6:fcfd with SMTP id j10-20020a05600c190a00b00412c9e6fcfdmr1116333wmq.23.1709305372934;
+        Fri, 01 Mar 2024 07:02:52 -0800 (PST)
+Received: from debian ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id 14-20020a5d47ae000000b0033cf80ad6f5sm4911569wrb.60.2024.03.01.07.02.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Mar 2024 07:02:52 -0800 (PST)
+Message-ID: <e803766b-6a3d-4eab-8335-d415518392e0@gmail.com>
+Date: Fri, 1 Mar 2024 16:02:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nywd7rix6qapogaqg5kxny3k272ptpzi4qv5q2dqts42bqbxrw@te5enoxvdhti>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Subject: Re: [PATCH net-next 1/3] net: gro: set {inner_,}network_header in
+ receive phase
+To: Eric Dumazet <edumazet@google.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ dsahern@kernel.org, shuah@kernel.org, liujian56@huawei.com,
+ horms@kernel.org, aleksander.lobakin@intel.com, linyunsheng@huawei.com,
+ therbert@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <e1d22505-c5f8-4c02-a997-64248480338b@gmail.com>
+ <446695cb-50b8-4187-bf11-63aedb6e9aed@gmail.com>
+ <CANn89iJxCT0Bcmqjdd1kp4VCf5i3Me7yATsZXO7SkYTPQ9BOAA@mail.gmail.com>
+ <a10b6d19-232c-4b6d-bd71-eb3451675f64@gmail.com>
+ <CANn89iK8rDOc14HMGMq=sw0zECcg88Mb=67044r_OA=mSh=xtQ@mail.gmail.com>
+From: Richard Gobert <richardbgobert@gmail.com>
+In-Reply-To: <CANn89iK8rDOc14HMGMq=sw0zECcg88Mb=67044r_OA=mSh=xtQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 29, 2024 at 04:16:00PM -0500, Kent Overstreet wrote:
-> On Thu, Feb 29, 2024 at 01:44:27PM -0500, Brian Foster wrote:
-> > On Wed, Feb 28, 2024 at 11:10:12PM -0500, Kent Overstreet wrote:
-> > > I think it ended up not needing to be moved, and I just forgot to drop
-> > > it - originally I disallowed accounting entries that referenced
-> > > nonexistent devices, but that wasn't workable so now it's only nonzero
-> > > accounting keys that aren't allowed to reference nonexistent devices.
-> > > 
-> > > I'll see if I can delete it.
-> > > 
-> > 
-> > Do you mean to delete the change that moves the call, or the flush call
-> > entirely?
-> 
-> Delte the change, I think there's further cleanup (& probably bugs to
-> fix) possible with that flush call but I'm not going to get into it
-> right now.
-> 
 
-Ok, just trying to determine whether I need to look back and make sure
-this doesn't regress the problem this originally fixed.
 
-> > > +/*
-> > > + * Notes on disk accounting:
-> > > + *
-> > > + * We have two parallel sets of counters to be concerned with, and both must be
-> > > + * kept in sync.
-> > > + *
-> > > + *  - Persistent/on disk accounting, stored in the accounting btree and updated
-> > > + *    via btree write buffer updates that treat new accounting keys as deltas to
-> > > + *    apply to existing values. But reading from a write buffer btree is
-> > > + *    expensive, so we also have
-> > > + *
-> > 
-> > I find the wording a little odd here, and I also think it would be
-> > helpful to explain how/from where the deltas originate. For example,
-> > something along the lines of:
-> > 
-> > "Persistent/on disk accounting, stored in the accounting btree and
-> > updated via btree write buffer updates. Accounting updates are
-> > represented as deltas that originate from <somewhere? trans triggers?>.
-> > Accounting keys represent these deltas through commit into the write
-> > buffer. The accounting/delta keys in the write buffer are then
-> > accumulated into the appropriate accounting btree key at write buffer
-> > flush time."
+Eric Dumazet wrote:
+> On Thu, Feb 29, 2024 at 2:22 PM Richard Gobert <richardbgobert@gmail.com> wrote:
+>>
+>>
+>>
+>> Eric Dumazet wrote:
+>>>
+>>> My intuition is that this patch has a high cost for normal GRO processing.
+>>> SW-GRO is already a bottleneck on ARM cores in smart NICS.
+>>>
+>>> I would suggest instead using parameters to give both the nhoff and thoff values
+>>> this would avoid many conditionals in the fast path.
+>>>
+>>> ->
+>>>
+>>> INDIRECT_CALLABLE_SCOPE int udp6_gro_complete(struct sk_buff *skb, int
+>>> nhoff, int thoff)
+>>> {
+>>>  const struct ipv6hdr *ipv6h = (const struct ipv6hdr *)(skb->data + nhoff);
+>>>  struct udphdr *uh = (struct udphdr *)(skb->data + thoff);
+>>> ...
+>>> }
+>>>
+>>> INDIRECT_CALLABLE_SCOPE int tcp6_gro_complete(struct sk_buff *skb, int
+>>> nhoff, int thoff)
+>>> {
+>>>        const struct ipv6hdr *iph =  (const struct ipv6hdr *)(skb->data + nhoff);
+>>>        struct tcphdr *th = (struct tcphdr *)(skb->data + thoff);
+>>>
+>>> Why storing in skb fields things that really could be propagated more
+>>> efficiently as function parameters ?
+>>
+>> Hi Eric,
+>> Thanks for the review!
+>>
+>> I agree, the conditionals could be a problem and are actually not needed.
+>> The third commit in this patch series introduces an optimisation for
+>> ipv6/ipv4 using the correct {inner_}network_header. We can remove the
+>> conditionals; I thought about multiple ways to do so. First, remove the
+>> conditional in skb_gro_network_offset:
+>>
+>>     static inline int skb_gro_network_offset(const struct sk_buff *skb)
+>>     {
+>>         const u32 mask = NAPI_GRO_CB(skb)->encap_mark - 1;
+>>         return (skb_network_offset(skb) & mask) | (skb_inner_network_offset(skb) & ~mask);
+>>     }
 > 
-> yeah, that's worth including.
+> I was trying to say that we do not need all these helpers, storing
+> state in NAPI_GRO_CB(skb),
+> dirtying cache lines...
 > 
-> There's an interesting point that you're touching on; btree write buffer
-> are always dependent state changes from some other (non write buffer)
-> btree; we never look at a write buffer btree and generate an update
-> there - we can't, reading from a write buffer btree doesn't get you
-> anything consistent or up to date.
+> Ideally, the skb network/transport/... headers could be set at the
+> last stage, in gro_complete(big_gro_skb),
+> instead of doing this for each segment.
 > 
-> So in normal operation it really only makes sense to do write buffer
-> updates from a transactional trigger - that's the only way to use them
-> and have them be consistent with the resst of the filesystem.
+> All the gro_receive() could be much faster by using additional
+> parameters (nhoff, thoff)
 > 
-> And since triggers work by comparing old and new, they naturally
-> generate updates that are deltas.
+> skb_gro_offset() could be replaced by the current offset (nhoff or
+> other name), passed as a parameter.
 > 
-
-Hm that is interesting, I hadn't made that connection. Thanks.
-
-Brian
-
-> > > + *  - In memory accounting, where accounting is stored as an array of percpu
-> > > + *    counters, indexed by an eytzinger array of disk acounting keys/bpos (which
-> > > + *    are the same thing, excepting byte swabbing on big endian).
-> > > + *
-> > 
-> > Not really sure about the keys vs. bpos thing, kind of related to my
-> > comments on the earlier patch. It might be more clear to just elide the
-> > implementation details here, i.e.:
-> > 
-> > "In memory accounting, where accounting is stored as an array of percpu
-> > counters that are cheap to read, but not persistent. Updates to in
-> > memory accounting are propagated from the transaction commit path."
-> > 
-> > ... but NBD, and feel free to reword, drop and/or correct any of that
-> > text.
+> Here is a WIP for gro_complete() step, this looks large but this is
+> only adding a 2nd 'offset' parameter
 > 
-> It's there because bch2_accounting_mem_read() takes a bpos when it
-> should be a disk_accounting_key. I'll fix that if I can...
-> 
-> > > + *    Cheap to read, but non persistent.
-> > > + *
-> > > + * To do a disk accounting update:
-> > > + * - initialize a disk_accounting_key, to specify which counter is being update
-> > > + * - initialize counter deltas, as an array of 1-3 s64s
-> > > + * - call bch2_disk_accounting_mod()
-> > > + *
-> > > + * This queues up the accounting update to be done at transaction commit time.
-> > > + * Underneath, it's a normal btree write buffer update.
-> > > + *
-> > > + * The transaction commit path is responsible for propagating updates to the in
-> > > + * memory counters, with bch2_accounting_mem_mod().
-> > > + *
-> > > + * The commit path also assigns every disk accounting update a unique version
-> > > + * number, based on the journal sequence number and offset within that journal
-> > > + * buffer; this is used by journal replay to determine which updates have been
-> > > + * done.
-> > > + *
-> > > + * The transaction commit path also ensures that replicas entry accounting
-> > > + * updates are properly marked in the superblock (so that we know whether we can
-> > > + * mount without data being unavailable); it will update the superblock if
-> > > + * bch2_accounting_mem_mod() tells it to.
-> > 
-> > I'm not really sure what this last paragraph is telling me, but granted
-> > I've not got that far into the code yet either.
-> 
-> yeah that's for a whole different subsystem that happens to be slaved to
-> the accounting - replicas.c, which also used to help out quite a bit
-> with the accounting but now it's pretty much just for managing the
-> superblock replicas section.
-> 
-> The superblock replicas section is just a list of entries, where each
-> entry is a list of devices - "there is replicated data present on this
-> set of devices". We also have full counters of how much data is present
-> replicated across each set of devices, so the superblock section is just
-> a truncated version of the accounting - "data exists on these devices",
-> instead of saying how much.
+> Prior offset (typically network offset), called p_off
+> Old argument nhoff, (renamed thoff if that makes sense), pointing to
+> the current offset.
 > 
 
+You're right, it seemed to me like a broad change but it is mainly
+cosmetic. I'll finish your version and submit it to fix the bug.
+
+I still believe that setting inner_network_header is a valuable change.
+For example, although skb_gro_network_offset is used - setting it in
+encapsulation protocol functions (such as ipip_gro_receive) allow us to
+remove conditionals from {ipv6,inet}_gro_receive gro_list loop and remove
+flush_id from napi_gro_cb as written in the 3rd commit.
+What are your thoughts about it as a separate patch?
