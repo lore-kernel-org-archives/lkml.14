@@ -1,206 +1,215 @@
-Received: from bee.tesarici.cz (unknown [77.93.223.253])
+Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497E0F9FF
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059AC39FF7
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314410; cv=none; b=QbvaG/9+8tCYCY8C1uFXTf45gBnFqXS7OTJRjfbKmgJZoIfTYdIwMTvFj1mb/DRLBUdi6HR9rHewhF+gjsAbO/DJuNxaGx/6DKevZeToEbqGvXv8SO0wlUVJUK+nBryY4akjO/Z0k1/p1iKqvERwVaPR1jKRyOsi1oxQ8pBvvsY=
+	t=1709314419; cv=none; b=I+xpusp8SfyLE/umaWBNNmAIjQiiUsb1RLj6anEZM98RVHb5biEKASSs3cnNMLsv0x1XbQoUvAUPov2dd9cXbdXZeErh1FnAxPgBtn33HJ/cyRuR8BJLBJD1tSHkHhS6evfB83SuXJfL0g9hHRFn/QgNMOSY2ztxRSRro5LgF7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314410; c=relaxed/simple;
-	bh=kqFNymNhulpq3C9J15L9aRCKq+ZlvGBWEINffETSl9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bEdGVXq5X6wTRdRfaRPRBAvFbzn7/JS0Kei+JCh/DAVNEL4SLX8jGlTV7L21miQs/IqgnZiTnHuekhzkvmh4Jrhaj1QzX1B8kHDTdwBfpl2Q866WZ6wAkzc7A477P2GbkYoLdfRsS+n7MfQAR3t0gW5On+5Z46eKY6z3VCBim8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=q8/zY7Ut; arc=none smtp.client-ip=77.93.223.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1709314419; c=relaxed/simple;
+	bh=6C7kUWjoZj+bDBVzxj0XxvUNYCpEIU3ZAbUZhUfTY7s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DBi+Fo86KDSXlu2CGyg3sfHJm44bpzbZ01AJZFmhymTWrW8CsrANJmltNoOAHfBksWv985XqJO3+cAE+AUtL3iIHfy2WVJjfHQCUkhWoO1aZdD8o7dpeiOObmdIZ+F3LvBthRP19bs8YAqtYMhAMbqsLz9xW7na/WBq8pgPNnz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Oc+DiUx3; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="q8/zY7Ut"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Oc+DiUx3"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 6970FC001BE3;
+	Fri,  1 Mar 2024 09:33:31 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 6970FC001BE3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1709314411;
+	bh=6C7kUWjoZj+bDBVzxj0XxvUNYCpEIU3ZAbUZhUfTY7s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Oc+DiUx3upQyGnYCXF5R8QY4m108L92oXeUVTSXMT8Ftt5uEWCuz6bBxlr9MNpi2H
+	 7j8k7Pv9f2sgRSVumab94vpUDzIoNyUJ4N2W8okEmgf1zx8XE+b3puc3Ek4t64TG6J
+	 Sr/eBB9WXozgkm+VqVdXj5VVK1BfLrnZPRJqJx5c=
+Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id C6EDC1C163E;
-	Fri,  1 Mar 2024 18:33:25 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1709314406; bh=y5F9nq6Ty0/dF9UJva7lXz28jL0DsAwabnPmvR0UHIE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=q8/zY7UtxCWkrAUnWSom6lRc1oWwIcjPkd1EABwXDjtLeNLlAm/gioZB9DVWI32Q4
-	 cqFsBTSoCbjJ5rAO7SE2TdjtDKLcJwFX7LQMFzMRm7/1ya2TeqZT11eqJcByM5werx
-	 sipjchVa0oxNkwVdcEgIrHJ3dAa5ndy0VSYqptc4a+C6IbL6ZEDO7ZyL+IzGDACu5L
-	 R2MafJFrtLRiCWSHezTBXeh8DNklH+cT6GrRYL5r+bL/HO5/C6lE7L0PliCOzE1wtk
-	 dAuI5QfzE2I4F+kTmEf2TZX8iGr4QYKBJ5SXpdN75JJ0t6JQv1uC3HxGUknYq3vP+e
-	 BPjRubOeuEDpg==
-Date: Fri, 1 Mar 2024 18:33:24 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Christoph Hellwig <hch@lst.de>, Michael Kelley <mhklinux@outlook.com>,
- Will Deacon <will@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Petr Tesarik
- <petr.tesarik1@huawei-partners.com>, "kernel-team@android.com"
- <kernel-team@android.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Dexuan Cui
- <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
- allocations >= PAGE_SIZE
-Message-ID: <20240301183324.11e76df2@meshulam.tesarici.cz>
-In-Reply-To: <4fbcdd49-cd93-4af8-83e2-f1cef0ea2eeb@arm.com>
-References: <20240228133930.15400-1-will@kernel.org>
-	<20240228133930.15400-7-will@kernel.org>
-	<SN6PR02MB4157A62353559DA8DB8BC4ADD45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<SN6PR02MB41577D09E97B1D9645369D58D45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<20240229133346.GA7177@lst.de>
-	<SN6PR02MB4157314F142D05E279B7991ED45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<20240229154756.GA10137@lst.de>
-	<20240301163927.18358ee2@meshulam.tesarici.cz>
-	<4fbcdd49-cd93-4af8-83e2-f1cef0ea2eeb@arm.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id D363318041CAC4;
+	Fri,  1 Mar 2024 09:33:29 -0800 (PST)
+From: William Zhang <william.zhang@broadcom.com>
+To: Linux MTD List <linux-mtd@lists.infradead.org>,
+	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
+Cc: f.fainelli@gmail.com,
+	kursad.oney@broadcom.com,
+	joel.peshkin@broadcom.com,
+	miquel.raynal@bootlin.com,
+	anand.gore@broadcom.com,
+	dregan@mail.com,
+	kamal.dasu@broadcom.com,
+	tomer.yacoby@broadcom.com,
+	dan.beygelman@broadcom.com,
+	William Zhang <william.zhang@broadcom.com>,
+	David Regan <dregan@broadcom.com>,
+	linux-kernel@vger.kernel.org,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Brian Norris <computersforpeace@gmail.com>,
+	Richard Weinberger <richard@nod.at>
+Subject: [PATCH v8] mtd: rawnand: brcmnand: Add support for getting ecc setting from strap
+Date: Fri,  1 Mar 2024 09:33:07 -0800
+Message-Id: <20240301173308.226004-1-william.zhang@broadcom.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 1 Mar 2024 16:38:33 +0000
-Robin Murphy <robin.murphy@arm.com> wrote:
+BCMBCA broadband SoC based board design does not specify ecc setting in
+dts but rather use the SoC NAND strap info to obtain the ecc strength
+and spare area size setting. Add brcm,nand-ecc-use-strap dts propety for
+this purpose and update driver to support this option. However these two
+options can not be used at the same time.
 
-> On 2024-03-01 3:39 pm, Petr Tesa=C5=99=C3=ADk wrote:
-> > On Thu, 29 Feb 2024 16:47:56 +0100
-> > Christoph Hellwig <hch@lst.de> wrote:
-> >  =20
-> >> On Thu, Feb 29, 2024 at 03:44:11PM +0000, Michael Kelley wrote: =20
-> >>> Any thoughts on how that historical behavior should apply if
-> >>> the DMA min_align_mask is non-zero, or the alloc_align_mask
-> >>> parameter to swiotbl_tbl_map_single() is non-zero? As currently
-> >>> used, alloc_align_mask is page aligned if the IOMMU granule is =20
-> >>>> =3D PAGE_SIZE. But a non-zero min_align_mask could mandate =20
-> >>> returning a buffer that is not page aligned. Perhaps do the
-> >>> historical behavior only if alloc_align_mask and min_align_mask
-> >>> are both zero? =20
-> >>
-> >> I think the driver setting min_align_mask is a clear indicator
-> >> that the driver requested a specific alignment and the defaults
-> >> don't apply.  For swiotbl_tbl_map_single as used by dma-iommu
-> >> I'd have to tak a closer look at how it is used. =20
-> >=20
-> > I'm not sure it helps in this discussion, but let me dive into a bit
-> > of ancient history to understand how we ended up here.
-> >=20
-> > IIRC this behaviour was originally motivated by limitations of PC AT
-> > hardware. Intel 8237 is a 16-bit DMA controller. To make it somehow
-> > usable with addresses up to 16MB (yeah, the infamous DMA zone), IBM
-> > added a page register, but it was on a separate chip and it did not
-> > increment when the 8237 address rolled over back to zero. Effectively,
-> > the page register selected a 64K-aligned window of 64K buffers.
-> > Consequently, DMA buffers could not cross a 64K physical boundary.
-> >=20
-> > Thanks to how the buddy allocator works, the 64K-boundary constraint
-> > was satisfied by allocation size, and drivers took advantage of it when
-> > allocating device buffers. IMO software bounce buffers simply followed
-> > the same logic that worked for buffers allocated by the buddy allocator.
-> >=20
-> > OTOH min_align_mask was motivated by NVME which prescribes the value of
-> > a certain number of low bits in the DMA address (for simplicity assumed
-> > to be identical with the same bits in the physical address).
-> >=20
-> > The only pre-existing user of alloc_align_mask is x86 IOMMU code, and
-> > IIUC it is used to guarantee that unaligned transactions do not share
-> > the IOMMU granule with another device. This whole thing is weird,
-> > because swiotlb_tbl_map_single() is called like this:
-> >=20
-> >                  aligned_size =3D iova_align(iovad, size);
-> >                  phys =3D swiotlb_tbl_map_single(dev, phys, size, align=
-ed_size,
-> >                                                iova_mask(iovad), dir, a=
-ttrs);
-> >=20
-> > Here:
-> >=20
-> > * alloc_size =3D iova_align(iovad, size)
-> > * alloc_align_mask =3D iova_mask(iovad)
-> >=20
-> > Now, iova_align() rounds up its argument to a multiple of iova granule
-> > and iova_mask() is simply "granule - 1". This works, because granule
-> > size must be a power of 2, and I assume it must also be >=3D PAGE_SIZE.=
- =20
->=20
-> Not quite, the granule must *not* be larger than PAGE_SIZE (but can be=20
-> smaller).
+Signed-off-by: William Zhang <william.zhang@broadcom.com>
+Reviewed-by: David Regan <dregan@broadcom.com>
 
-OK... I must rethink what is achieved with the alignment then.
+---
 
-> > In that case, the alloc_align_mask argument is not even needed if you
-> > adjust the code to match documentation---the resulting buffer will be
-> > aligned to a granule boundary by virtue of having a size that is a
-> > multiple of the granule size. =20
->=20
-> I think we've conflated two different notions of "allocation" here. The=20
-> page-alignment which Christoph quoted applies for dma_alloc_coherent(),=20
-> which nowadays *should* only be relevant to SWIOTLB code in the=20
-> swiotlb_alloc() path for stealing coherent pages out of restricted DMA=20
-> pools. Historically there was never any official alignment requirement=20
-> for the DMA addresses returned by dma_map_{page,sg}(), until=20
-> min_align_mask was introduced.
->=20
-> > To sum it up:
-> >=20
-> > 1. min_align_mask is by far the most important constraint. Devices will
-> >     simply stop working if it is not met.
-> > 2. Alignment to the smallest PAGE_SIZE order which is greater than or
-> >     equal to the requested size has been documented, and some drivers
-> >     may rely on it. =20
->=20
-> Strictly it stopped being necessary since fafadcd16595 when the=20
-> historical swiotlb_alloc() was removed, but 602d9858f07c implies that=20
-> indeed the assumption of it for streaming mappings had already set in.=20
-> Of course NVMe is now using min_align_mask, but I'm not sure if it's=20
-> worth taking the risk to find out who else should also be.
->=20
-> > 3. alloc_align_mask is a misguided fix for a bug in the above. =20
->=20
-> No, alloc_align_mask is about describing the explicit requirement rather=
-=20
-> than relying on any implicit behaviour, and thus being able to do the=20
-> optimal thing for, say, a 9KB mapping given a 4KB IOVA granule and 64KB=20
-> PAGE_SIZE.
+Changes in v8:
+- Remove the patch revision info from the commit log
 
-It's getting confusing. Can we stay with the IOMMU use case for a
-moment? Since you don't use IO_TLB_SIZE or IO_TLB_SHIFT, I assume the
-code should work with any SWIOTLB slot size.
+Changes in v7:
+- Simply the logic for sector size detection
+- Update the error message
 
-For granule sizes up to SWIOTLB slot size, you always get a buffer that
-is not shared with any other granule.
+Changes in v6:
+- Combine the ecc step size and ecc strength into one get function
+- Treat it as error condition if both brcm,nand-ecc-use-strap and nand
+ecc dts properties are set
+- Add intermediate steps to get the sector size bitfield
 
-For granule sizes between SWIOTLB slot size and page size, you want to
-get as many slots as needed to cover the whole granule. Indeed, that
-would not be achieved with size alone.
+Changes in v4:
+- Update the comments for ecc setting selection
 
-What if we change the size-based alignment constraint to:
+Changes in v2:
+- Minor cosmetic fixes
 
-   Aligned to the smallest IO_TLB_SIZE order which is greater than or
-   equal to the requested size.
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 83 ++++++++++++++++++++++--
+ 1 file changed, 77 insertions(+), 6 deletions(-)
 
-AFAICS this is stricter, i.e. it covers the already documented
-PAGE_SIZE alignment, but it would also cover IOMMU needs.
-
-I have the feeling that the slot search has too many parameters. This
-alloc_align_mask has only one in-tree user, so it's a logical candidate
-for reduction.
-
-Petr T
-
->=20
-> Thanks,
-> Robin.
->=20
-> >=20
-> > Correct me if anything of the above is wrong.
-> >=20
-> > HTH
-> > Petr T =20
->=20
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index ef7d340475be..8a26ff97c8e2 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -1038,6 +1038,22 @@ static inline int brcmnand_sector_1k_shift(struct brcmnand_controller *ctrl)
+ 		return -1;
+ }
+ 
++static bool brcmnand_get_sector_size_1k(struct brcmnand_host *host)
++{
++	struct brcmnand_controller *ctrl = host->ctrl;
++	int sector_size_bit = brcmnand_sector_1k_shift(ctrl);
++	u16 acc_control_offs = brcmnand_cs_offset(ctrl, host->cs,
++						  BRCMNAND_CS_ACC_CONTROL);
++	u32 acc_control;
++
++	if (sector_size_bit < 0)
++		return false;
++
++	acc_control = nand_readreg(ctrl, acc_control_offs);
++
++	return ((acc_control & BIT(sector_size_bit)) != 0);
++}
++
+ static void brcmnand_set_sector_size_1k(struct brcmnand_host *host, int val)
+ {
+ 	struct brcmnand_controller *ctrl = host->ctrl;
+@@ -1055,6 +1071,43 @@ static void brcmnand_set_sector_size_1k(struct brcmnand_host *host, int val)
+ 	nand_writereg(ctrl, acc_control_offs, tmp);
+ }
+ 
++static int brcmnand_get_spare_size(struct brcmnand_host *host)
++{
++	struct brcmnand_controller *ctrl = host->ctrl;
++	u16 acc_control_offs = brcmnand_cs_offset(ctrl, host->cs,
++						  BRCMNAND_CS_ACC_CONTROL);
++	u32 acc = nand_readreg(ctrl, acc_control_offs);
++
++	return (acc & brcmnand_spare_area_mask(ctrl));
++}
++
++static void brcmnand_get_ecc_settings(struct brcmnand_host *host, struct nand_chip *chip)
++{
++	struct brcmnand_controller *ctrl = host->ctrl;
++	u16 acc_control_offs = brcmnand_cs_offset(ctrl, host->cs,
++						  BRCMNAND_CS_ACC_CONTROL);
++	bool sector_size_1k = brcmnand_get_sector_size_1k(host);
++	int spare_area_size, ecc_level;
++	u32 acc;
++
++	spare_area_size = brcmnand_get_spare_size(host);
++	acc = nand_readreg(ctrl, acc_control_offs);
++	ecc_level = (acc & brcmnand_ecc_level_mask(ctrl)) >> ctrl->ecc_level_shift;
++	if (sector_size_1k)
++		chip->ecc.strength = ecc_level * 2;
++	else if (spare_area_size == 16 && ecc_level == 15)
++		chip->ecc.strength = 1; /* hamming */
++	else
++		chip->ecc.strength = ecc_level;
++
++	if (chip->ecc.size == 0) {
++		if (sector_size_1k)
++			chip->ecc.size = 1024;
++		else
++			chip->ecc.size = 512;
++	}
++}
++
+ /***********************************************************************
+  * CS_NAND_SELECT
+  ***********************************************************************/
+@@ -2625,19 +2678,37 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
+ 		nanddev_get_memorg(&chip->base);
+ 	struct brcmnand_controller *ctrl = host->ctrl;
+ 	struct brcmnand_cfg *cfg = &host->hwcfg;
+-	char msg[128];
++	struct device_node *np = nand_get_flash_node(chip);
+ 	u32 offs, tmp, oob_sector;
++	bool use_strap = false;
++	char msg[128];
+ 	int ret;
+ 
+ 	memset(cfg, 0, sizeof(*cfg));
++	use_strap = of_property_read_bool(np, "brcm,nand-ecc-use-strap");
+ 
+-	ret = of_property_read_u32(nand_get_flash_node(chip),
+-				   "brcm,nand-oob-sector-size",
++	/*
++	 * Either nand-ecc-xxx or brcm,nand-ecc-use-strap can be set. Error out
++	 * if both exist.
++	 */
++	if (chip->ecc.strength && use_strap) {
++		dev_err(ctrl->dev,
++			"ECC strap and DT ECC configuration properties are mutually exclusive\n");
++		return -EINVAL;
++	}
++
++	if (use_strap)
++		brcmnand_get_ecc_settings(host, chip);
++
++	ret = of_property_read_u32(np, "brcm,nand-oob-sector-size",
+ 				   &oob_sector);
+ 	if (ret) {
+-		/* Use detected size */
+-		cfg->spare_area_size = mtd->oobsize /
+-					(mtd->writesize >> FC_SHIFT);
++		if (use_strap)
++			cfg->spare_area_size = brcmnand_get_spare_size(host);
++		else
++			/* Use detected size */
++			cfg->spare_area_size = mtd->oobsize /
++						(mtd->writesize >> FC_SHIFT);
+ 	} else {
+ 		cfg->spare_area_size = oob_sector;
+ 	}
+-- 
+2.37.3
 
