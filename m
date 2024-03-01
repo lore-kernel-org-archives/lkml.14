@@ -1,286 +1,175 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84296A333;
-	Fri,  1 Mar 2024 09:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5AD6A34B
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709284786; cv=none; b=L+56X2iSnVQabyAoRxwBTFyWQ/esYS5tQ35CNNzpcIFgEeJqj995BOwMuMcr/4J8fYV/T7kzySWPJkZhZYzExEfs+VrwbXM4YOw/xSppMN8vTRI9zq7NaDwlyujNRCh4TI2Gp2zRInO69vyFXI5HZWzU/fnnGNj697ojJc+z6oY=
+	t=1709284820; cv=none; b=WpVWFzLVWvAQWKUHn1bXzzjLWzKZ26ZLZyoVWsIE5qvaz89TAYEjZnO/1VdWPFM5cpPqf/YYfpExm2k4vN7KaNp1W8gYmiZxWgQ4bnZNzIIOSKuyAJ+12bXSr9rmQf6BRgCHJkc9PjQIfRIiNfZzFaX7CGXaaw+mJ8IEW44UDjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709284786; c=relaxed/simple;
-	bh=V2N7MGSgdyGPxrhJtiTatU21KOYhXXTnYWVquWX1ox4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ow7vgljQCxhMfP/ea2F3Vcq6QJI12CsGFzNUYhR5Sdcf+GgrLllzVvcEj+WIfFZh/XwiP7pCLqGgh3dyN5tM/s1u3wTSJv6PEW3E8gJqFcZHJwj8scluISOfRntH8OYDcGWNXOYEkjaoP4QifFuvCDR7y7SuJJWJtnw2Yxgp/mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TmMb237kbz9xvhF;
-	Fri,  1 Mar 2024 17:03:58 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id A9A4F140428;
-	Fri,  1 Mar 2024 17:19:33 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwCHfheUneFlFot_Aw--.47301S2;
-	Fri, 01 Mar 2024 10:19:33 +0100 (CET)
-Message-ID: <15a69385b49c4f8626f082bc9b957132388414fb.camel@huaweicloud.com>
-Subject: Re: [PATCH v2 14/25] evm: add support for fscaps security hooks
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>, Christian Brauner
- <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>, Paul Moore
- <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, James Morris
- <jmorris@namei.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara
- <jack@suse.cz>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej
- Mosnacek <omosnace@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg
- <eric.snowberg@oracle.com>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi
- <miklos@szeredi.hu>,  Amir Goldstein <amir73il@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
-Date: Fri, 01 Mar 2024 10:19:13 +0100
-In-Reply-To: <20240221-idmap-fscap-refactor-v2-14-3039364623bd@kernel.org>
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
-	 <20240221-idmap-fscap-refactor-v2-14-3039364623bd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1709284820; c=relaxed/simple;
+	bh=deJfNqmd+84vDDBO0fDBd8YCdfhsA76uVTjUbdf6HeU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mJOz939GfnMa5SzyKDCcWv5uY2AeAexXHXNUKwGEWPlqWuw3DmiaBYLzseA3Gb6ujyhb4ktRQj8n4g7r6Iyk4nmBV0HXCc/l49fG7D0gFMPUkOgYjQgLxfZiF6qYkG5SqM7sdsjj9fy2JKIe971I4vKbRqtSIKwbIpuSReBiLEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=zPCwsrHJ; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="zPCwsrHJ"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-412a9e9c776so17909525e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 01:20:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709284817; x=1709889617; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rdWlfuEJdB5bVZdrcri04Zmq/yhRfMcRDdftEw7qNFA=;
+        b=zPCwsrHJ0eOHW1Zv7kbRW3DsboeAnoZUSy0hAXtloUAYPfO4RAkUjsac/X2ewPz05k
+         W6hoat+sjn8uzRpkkIEHZ/bxqUXkMWuIhCymnz5+GL2NRotPD2c3n0Vs9caGI/nP9MAg
+         7/yY4MVZ4/Pws1E8MFkip8bxCsn/2/k5FrTdIh50aDXYOjZVJD/qLxxN1D5ietqs28Y1
+         fsrcWfMP+K4AQF1mphtfOYovOE3FA/b8HfnCJkaaBMsr6BGDPQv+24Q318PBfhdK9cEj
+         Vcs2DwNsQFc/qFX6IITboGPZAjyfk+nN2bPmiDjOHbBRPIerGSIGZfpJuCGyt1I6qQMX
+         wBOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709284817; x=1709889617;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rdWlfuEJdB5bVZdrcri04Zmq/yhRfMcRDdftEw7qNFA=;
+        b=hAsxSpopjcCdoCdM7aXFhbRdCzIZK8lHZmCxLZLSKxmJxwGfP61P1JcIuETRHqHo3u
+         5TMgj+7NU4UebDQX9TCzjGpEwqPSrN8SLIkLKtZHz9FBfTxvKHBgGkGroLHp1s95i7Tx
+         OtF8J9wmtdIng9sb0zcxHwJfBvIERbiM2MHs+IhECIlI/GZb1g7m3M3EJAovWaqG6xBq
+         0iXR44l9S4N8OJuKpELb8zt0a+tknS2kSYHkUek1D9FJIVfv0n9hAd7d7ScMYaegZscE
+         MQ4WRp5TnPtOWzMcnSzD4ik9GcMvoV7lFy7CC0fvr2rU62YoSNRINdEsxxAVLB/NGYsX
+         zDLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLB7yOdZipiapj6YFKl6mo2Iv92wv2xL9B3KDKuuAOp73nUwtWmhX26uwZjXD1A/fKNdrDMXNh2xsA/7MEbfZ1eEOFugE//2VxnOHc
+X-Gm-Message-State: AOJu0YxdAZWDJp0UnSK+6oTk5P4Odw2V4rogoJMOhR1jeYNXtN2e+TPC
+	jxlUGOllBwiEEYC+MowPN4hZUVz6qwjJ4WBFLiDCmWbge0Ez0cY2dRnJwaV2kPw=
+X-Google-Smtp-Source: AGHT+IHirYUWWAQ3EzQ3D3sM4w5kbNmWdiMfyHww76VDivA5fk7+UlmhKkRo6vORNs4FOsSe8ylbjw==
+X-Received: by 2002:adf:a3c9:0:b0:33e:21bc:bc6f with SMTP id m9-20020adfa3c9000000b0033e21bcbc6fmr809159wrb.11.1709284817327;
+        Fri, 01 Mar 2024 01:20:17 -0800 (PST)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id l9-20020a056000022900b0033cf2063052sm3994161wrz.111.2024.03.01.01.20.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 01:20:17 -0800 (PST)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH 5/9] mm: Use common huge_pte_clear() function for riscv/arm64
+Date: Fri,  1 Mar 2024 10:14:51 +0100
+Message-Id: <20240301091455.246686-6-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240301091455.246686-1-alexghiti@rivosinc.com>
+References: <20240301091455.246686-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwCHfheUneFlFot_Aw--.47301S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Wr17Xw4UKFW3tFyUKw18uFg_yoWxXrWxpF
-	W5Ja1Fkw1rJFy3WryFqF4UZa1S9F1fG3yUZa4xW34SyFnxJrWxtFyIkryjyr1fJr48GrnI
-	qFs0vrn5Cw43t3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYY7kG6xAYrwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
-	WxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUguHqUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAJBF1jj5bb3QADst
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOcean) wrote:
-> Support the new fscaps security hooks by converting the vfs_caps to raw
-> xattr data and then handling them the same as other xattrs.
+Both architectures have the same implementation so move it to generic code.
 
-Hi Seth
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/arm64/mm/hugetlbpage.c | 12 ------------
+ arch/riscv/mm/hugetlbpage.c | 19 -------------------
+ mm/contpte.c                | 13 +++++++++++++
+ 3 files changed, 13 insertions(+), 31 deletions(-)
 
-I started looking at this patch set.
-
-The first question I have is if you are also going to update libcap
-(and also tar, I guess), since both deal with the raw xattr.
-
-From IMA/EVM perspective (Mimi will add on that), I guess it is
-important that files with a signature/HMAC continue to be accessible
-after applying this patch set.
-
-Looking at the code, it seems the case (if I understood correctly,
-vfs_getxattr_alloc() is still allowed).
-
-To be sure that everything works, it would be really nice if you could
-also extend our test suite:
-
-https://github.com/mimizohar/ima-evm-utils/blob/next-testing/tests/portable=
-_signatures.test
-
-and
-
-https://github.com/mimizohar/ima-evm-utils/blob/next-testing/tests/evm_hmac=
-.test
-
-
-The first test we would need to extend is check_cp_preserve_xattrs,
-which basically does a cp -a. We would need to set fscaps in the
-origin, copy to the destination, and see if the latter is accessible.
-
-I would also extend:
-
-check_tar_extract_xattrs_different_owner
-check_tar_extract_xattrs_same_owner
-check_metadata_change
-check_evm_revalidate
-check_evm_portable_sig_ima_appraisal
-check_evm_portable_sig_ima_measurement_list
-
-It should not be too complicated. The purpose would be to exercise your
-code below.
-
-
-Regarding the second test, we would need to extend just check_evm_hmac.
-
-
-Just realized, before extending the tests, it would be necessary to
-modify also evmctl.c, to retrieve fscaps through the new interfaces,
-and to let users provide custom fscaps the HMAC or portable signature
-is calculated on.
-
-
-You can run the tests locally (even with UML linux), or make a PR in
-Github for both linux and ima-evm-utils, and me and Mimi will help to
-run them. For Github, for now please use:
-
-https://github.com/linux-integrity/linux
-https://github.com/mimizohar/ima-evm-utils/
-
-Thanks
-
-Roberto
-
-> Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
-> ---
->  include/linux/evm.h               | 39 +++++++++++++++++++++++++
->  security/integrity/evm/evm_main.c | 60 +++++++++++++++++++++++++++++++++=
-++++++
->  2 files changed, 99 insertions(+)
->=20
-> diff --git a/include/linux/evm.h b/include/linux/evm.h
-> index 36ec884320d9..aeb9ff52ad22 100644
-> --- a/include/linux/evm.h
-> +++ b/include/linux/evm.h
-> @@ -57,6 +57,20 @@ static inline void evm_inode_post_set_acl(struct dentr=
-y *dentry,
->  {
->  	return evm_inode_post_setxattr(dentry, acl_name, NULL, 0);
->  }
-> +extern int evm_inode_set_fscaps(struct mnt_idmap *idmap,
-> +				struct dentry *dentry,
-> +				const struct vfs_caps *caps, int flags);
-> +static inline int evm_inode_remove_fscaps(struct dentry *dentry)
-> +{
-> +	return evm_inode_set_fscaps(&nop_mnt_idmap, dentry, NULL, XATTR_REPLACE=
-);
-> +}
-> +extern void evm_inode_post_set_fscaps(struct mnt_idmap *idmap,
-> +				      struct dentry *dentry,
-> +				      const struct vfs_caps *caps, int flags);
-> +static inline void evm_inode_post_remove_fscaps(struct dentry *dentry)
-> +{
-> +	return evm_inode_post_set_fscaps(&nop_mnt_idmap, dentry, NULL, 0);
-> +}
-> =20
->  int evm_inode_init_security(struct inode *inode, struct inode *dir,
->  			    const struct qstr *qstr, struct xattr *xattrs,
-> @@ -164,6 +178,31 @@ static inline void evm_inode_post_set_acl(struct den=
-try *dentry,
->  	return;
->  }
-> =20
-> +static inline int evm_inode_set_fscaps(struct mnt_idmap *idmap,
-> +				       struct dentry *dentry,
-> +				       const struct vfs_caps *caps, int flags)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int evm_inode_remove_fscaps(struct dentry *dentry)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void evm_inode_post_set_fscaps(struct mnt_idmap *idmap,
-> +					     struct dentry *dentry,
-> +					     const struct vfs_caps *caps,
-> +					     int flags)
-> +{
-> +	return;
-> +}
-> +
-> +static inline void evm_inode_post_remove_fscaps(struct dentry *dentry)
-> +{
-> +	return;
-> +}
-> +
->  static inline int evm_inode_init_security(struct inode *inode, struct in=
-ode *dir,
->  					  const struct qstr *qstr,
->  					  struct xattr *xattrs,
-> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/e=
-vm_main.c
-> index cc7956d7878b..ecf4634a921a 100644
-> --- a/security/integrity/evm/evm_main.c
-> +++ b/security/integrity/evm/evm_main.c
-> @@ -805,6 +805,66 @@ void evm_inode_post_removexattr(struct dentry *dentr=
-y, const char *xattr_name)
->  	evm_update_evmxattr(dentry, xattr_name, NULL, 0);
->  }
-> =20
-> +int evm_inode_set_fscaps(struct mnt_idmap *idmap, struct dentry *dentry,
-> +			 const struct vfs_caps *caps, int flags)
-> +{
-> +	struct inode *inode =3D d_inode(dentry);
-> +	struct vfs_ns_cap_data nscaps;
-> +	const void *xattr_data =3D NULL;
-> +	int size =3D 0;
-> +
-> +	/* Policy permits modification of the protected xattrs even though
-> +	 * there's no HMAC key loaded
-> +	 */
-> +	if (evm_initialized & EVM_ALLOW_METADATA_WRITES)
-> +		return 0;
-> +
-> +	if (caps) {
-> +		size =3D vfs_caps_to_xattr(idmap, i_user_ns(inode), caps, &nscaps,
-> +					 sizeof(nscaps));
-> +		if (size < 0)
-> +			return size;
-> +		xattr_data =3D &nscaps;
-> +	}
-> +
-> +	return evm_protect_xattr(idmap, dentry, XATTR_NAME_CAPS, xattr_data, si=
-ze);
-> +}
-> +
-> +void evm_inode_post_set_fscaps(struct mnt_idmap *idmap, struct dentry *d=
-entry,
-> +			       const struct vfs_caps *caps, int flags)
-> +{
-> +	struct inode *inode =3D d_inode(dentry);
-> +	struct vfs_ns_cap_data nscaps;
-> +	const void *xattr_data =3D NULL;
-> +	int size =3D 0;
-> +
-> +	if (!evm_revalidate_status(XATTR_NAME_CAPS))
-> +		return;
-> +
-> +	evm_reset_status(dentry->d_inode);
-> +
-> +	if (!(evm_initialized & EVM_INIT_HMAC))
-> +		return;
-> +
-> +	if (is_unsupported_fs(dentry))
-> +		return;
-> +
-> +	if (caps) {
-> +		size =3D vfs_caps_to_xattr(idmap, i_user_ns(inode), caps, &nscaps,
-> +					 sizeof(nscaps));
-> +		/*
-> +		 * The fscaps here should have been converted to an xattr by
-> +		 * evm_inode_set_fscaps() already, so a failure to convert
-> +		 * here is a bug.
-> +		 */
-> +		if (WARN_ON_ONCE(size < 0))
-> +			return;
-> +		xattr_data =3D &nscaps;
-> +	}
-> +
-> +	evm_update_evmxattr(dentry, XATTR_NAME_CAPS, xattr_data, size);
-> +}
-> +
->  static int evm_attr_change(struct mnt_idmap *idmap,
->  			   struct dentry *dentry, struct iattr *attr)
->  {
->=20
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 4da951e81bde..09b55bac8c7c 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -284,18 +284,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
+ 	return entry;
+ }
+ 
+-void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+-		    pte_t *ptep, unsigned long sz)
+-{
+-	int i, ncontig;
+-	size_t pgsize;
+-
+-	ncontig = arch_contpte_get_num_contig(NULL, sz, &pgsize);
+-
+-	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
+-		pte_clear(mm, addr, ptep);
+-}
+-
+ pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 			      unsigned long addr, pte_t *ptep)
+ {
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index ebc735f5d325..01b1403dd4cb 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -254,25 +254,6 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 	return get_clear_contig_flush(vma->vm_mm, addr, ptep, pte_num);
+ }
+ 
+-void huge_pte_clear(struct mm_struct *mm,
+-		    unsigned long addr,
+-		    pte_t *ptep,
+-		    unsigned long sz)
+-{
+-	size_t pgsize;
+-	pte_t pte = ptep_get(ptep);
+-	int i, pte_num;
+-
+-	if (!pte_napot(pte)) {
+-		pte_clear(mm, addr, ptep);
+-		return;
+-	}
+-
+-	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
+-	for (i = 0; i < pte_num; i++, addr += pgsize, ptep++)
+-		pte_clear(mm, addr, ptep);
+-}
+-
+ static bool is_napot_size(unsigned long size)
+ {
+ 	unsigned long order;
+diff --git a/mm/contpte.c b/mm/contpte.c
+index f7bfa861c6a1..5200c234404d 100644
+--- a/mm/contpte.c
++++ b/mm/contpte.c
+@@ -19,6 +19,7 @@
+  * This file implements the following contpte aware API:
+  * huge_ptep_get()
+  * set_huge_pte_at()
++ * huge_pte_clear()
+  */
+ 
+ pte_t huge_ptep_get(pte_t *ptep)
+@@ -101,3 +102,15 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 
+ 	set_contptes(mm, addr, ptep, pte, ncontig, pgsize);
+ }
++
++void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
++		    pte_t *ptep, unsigned long sz)
++{
++	int i, ncontig;
++	size_t pgsize;
++
++	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
++
++	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
++		pte_clear(mm, addr, ptep);
++}
+-- 
+2.39.2
 
