@@ -1,100 +1,119 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EAE39AC4
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 14:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F3E442A;
+	Fri,  1 Mar 2024 14:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709303983; cv=none; b=nFmd+j/Y3Cxy+4lGV76sNoBjrj4uLB50dndhnEVxDJUDKcz1pycN+rZdH01hUJ1aMZnWLtlZpbk9FSKEmj5+YzwfzIzUp1uhz14hipV4A1e7kNlOJ0YzTaeduBQ6ZpQKDqi+ibYAmjQHGXKyeqVUCd0NVlEJ3b1VdP77/MhpPP0=
+	t=1709303990; cv=none; b=WGw+yuhpsZRQGYbCWNYjZmJe0IVoqJfR8Bk803izm4apQje9HMhyBJBGYf6Nf8sn2a2oZyUBjW0IxIxFjUQPPbDF7nOd/JDXmVdU4SU8MXxQFHCZ9PZOaOMl9zjJT4dnsJXAssRta7GExRjDjBCWsgbr0Pic0wmCTLcvaVS8jTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709303983; c=relaxed/simple;
-	bh=hhOiuxD/7I2XtZlyGE+8MWxyIp1mdrvLK5p2WFjNQkQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u2mNuZR9lqdm8LkfpnuLmZRubAwd5mh9RLfokiXG1Imsnv3xslB/RNUaWngmECBtGES9BwTX0PNb5dVAyAnGi08keu0UWuyIXzsCh3TrJ6bDr9BixNKR6ltPfWvRgqgX/rtMahflRjKRZJPoFbkB4oPVvAbGQx60YLHUZQjtq14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d7x8mjPl; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709303990; c=relaxed/simple;
+	bh=hxhuvMYF4B3Dog5TINXGHY1tM8RGbN4JK+KayqqRuxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W/Ga5q6nw+Gke7sHTyVYku08FrGEkcg7liixt0wduQIxopoKc0PMSAfCNHYC1BTyFNNRhTt9tV66hCiMUCPIwz6gG/OppHnnKV7XRvcvYfCGrqW0XsQdGqAlNnj/WjhJYD9O0vPX0NAZHJRyviXB0or4ma2hU8nzElg+vOwEhGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkTYwZHI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7x8mjPl"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dccb1421bdeso2420968276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 06:39:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709303980; x=1709908780; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hhOiuxD/7I2XtZlyGE+8MWxyIp1mdrvLK5p2WFjNQkQ=;
-        b=d7x8mjPlL5cqjpENIzqKjoLCfWObvxJ6sKDKgPtdJStsPe0E7i458BfORbHxeKWziA
-         N5GrrPgeX+cNllhf5mxit/lqLaG+foNKaD/NOB5Jl+GUWW9dxtlF5XxpvOKjON+bmjg1
-         60v57kzlF6UIR5H4m1qlycZu43ISBtkzOhA5OiDFnBowPbzrjFnxA2inE88onpesVEWs
-         tdAghWAJAPQsXCCQVSjs2rb0KSeOU9P4ku9ZcQPFrEGy2ZVVJKgmMOI84z4Xbhk9UJH+
-         TFUMcumWVMhO71w3uGilZX86RqPU3VDu5KFGxWueXkb3dFKvDxYr8R7Y/WvQLyoGgx2a
-         Oe0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709303980; x=1709908780;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hhOiuxD/7I2XtZlyGE+8MWxyIp1mdrvLK5p2WFjNQkQ=;
-        b=VnjXvXfPlauAp4YDxx4s9x0FTFPLmfksjO4/v6pko3WHemmp65tXrx/iysLsK5yWT9
-         edHmcjdZxCjcRq1iMTT+6uyu42co5DUZU7ipUKXMer0tHzX/zu3tQj3n15n9m434bMrZ
-         pHU1zWOjBE0BSiaysjymXD8pmDKDlESXVX6rt/BXUUcfGnpt1ydEz4LZYB5d1h5Na1/Q
-         rr7Vc4CTTywxxv9KhEfi2zbvdQvAoOKjMrfYdwM9hXwf94+XQlEnj5IW3sEcsWfdzrdj
-         0MT1HyME9C5WCH0hBc5HYOAfL1JNJU867s/opqcAd8ACeVm++pnhp1EpJE/6vMwFRIme
-         ZgKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFtPZbop3tvp29Bcy0EnTeA+Q8dPSFvBt7zvXdrZUAbqbWQx0/jWkCMp0gfbdfkGjavPX5iqB2zKy+jTsNIZeOKpgpbDiinYwPbUwG
-X-Gm-Message-State: AOJu0YxVCSo6EnXzf/FoKwa1TbC5PmytfQHahOGqC8K89CJDqbDXxtWj
-	hcetXZnO7P5f82kdB54IRN3qfdhj2LHMZ7YWnt97icqh0AGikp7uUQH+dR1d6Ancms96pMWIkqQ
-	Vx2iFPq2dc7fEyQ8W3ozkiel1+/66dj+GXRDTKw==
-X-Google-Smtp-Source: AGHT+IHk/6HtxsiZdN+Qd0QXXpvSBbg1h2sMTZtFLQ6r2OIGZks/3qDqGmIOb93W+LJfhpd4AHjB5kBTgFcpcAPar8s=
-X-Received: by 2002:a25:b94e:0:b0:dcd:2f89:6aac with SMTP id
- s14-20020a25b94e000000b00dcd2f896aacmr1557192ybm.10.1709303980278; Fri, 01
- Mar 2024 06:39:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkTYwZHI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 676C9C433C7;
+	Fri,  1 Mar 2024 14:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709303989;
+	bh=hxhuvMYF4B3Dog5TINXGHY1tM8RGbN4JK+KayqqRuxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YkTYwZHIPbpwdds7MCHekEZIpXeMkc994OXWtMlhE2HLlHz1HRtOqxs0YJJ4pNWKC
+	 PJMC2lMg0K4RYccYFEG5FHLGnOx6ChUfr0h9xGGQ4+cvZfhic8DrWEyFDne1BaV3Rj
+	 3WPvSOBxcctqjKRJqbovZgzTnmPE8Fa7zlPzlx6f0BshJNkd3zjo65vobG/R22s3K7
+	 tdFcaxj31SrPEUz6Eoijz6AedsUpSuXefn86R/846mGnFQ2g4DdyFItnw1hwssRh7O
+	 LboBYFH+1vgzL5Bold2ITr4bGuLtkAtJZ17346ntLqf72vpYtgpOS1fUgExwlgywc/
+	 SwpC/1pignJ6g==
+Date: Fri, 1 Mar 2024 08:39:48 -0600
+From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: Christian Brauner <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>,
+	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+	James Morris <jmorris@namei.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, audit@vger.kernel.org,
+	selinux@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH v2 14/25] evm: add support for fscaps security hooks
+Message-ID: <ZeHotBrI0aYd2HeA@do-x1extreme>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+ <20240221-idmap-fscap-refactor-v2-14-3039364623bd@kernel.org>
+ <15a69385b49c4f8626f082bc9b957132388414fb.camel@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301-mbly-gpio-kconfig-fix-v1-1-2785cebd475d@bootlin.com>
-In-Reply-To: <20240301-mbly-gpio-kconfig-fix-v1-1-2785cebd475d@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 1 Mar 2024 15:39:28 +0100
-Message-ID: <CACRpkdaBsBNb7r788V=dNeNuAANfS7MWvyFNHYq=spBk6Qj4MA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: nomadik: fix Kconfig dependencies inbetween pinctrl
- & GPIO
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <15a69385b49c4f8626f082bc9b957132388414fb.camel@huaweicloud.com>
 
-On Fri, Mar 1, 2024 at 11:39=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
+On Fri, Mar 01, 2024 at 10:19:13AM +0100, Roberto Sassu wrote:
+> On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOcean) wrote:
+> > Support the new fscaps security hooks by converting the vfs_caps to raw
+> > xattr data and then handling them the same as other xattrs.
+> 
+> Hi Seth
+> 
+> I started looking at this patch set.
+> 
+> The first question I have is if you are also going to update libcap
+> (and also tar, I guess), since both deal with the raw xattr.
 
-> PINCTRL_NOMADIK cannot select GPIO_NOMADIK without first selecting
-> GPIOLIB on which GPIO_NOMADIK depends. GPIO_NOMADIK depends on OF_GPIO,
-> it is a direct dependency.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202403010917.pnDhdS1Y-lkp@i=
-ntel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202403011102.v8w2zPOU-lkp@i=
-ntel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202403011329.1VnABMRz-lkp@i=
-ntel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202403011546.Hpt8sBTa-lkp@i=
-ntel.com/
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> ---
-> Test robot usefully reported four related issues; see Closes
-> trailers for links. Here is a proposed fix. It applies on
-> top of ib-nomadik-gpio [0].
+There are no changes needed for userspace; it will still deal with raw
+xattrs. As I mentioned in the cover letter, capabilities tests from
+libcap2, libcap-ng, ltp, and xfstests all pass against this sereies.
+That's with no modifications to userspace.
 
-Quick work!
+> From IMA/EVM perspective (Mimi will add on that), I guess it is
+> important that files with a signature/HMAC continue to be accessible
+> after applying this patch set.
+> 
+> Looking at the code, it seems the case (if I understood correctly,
+> vfs_getxattr_alloc() is still allowed).
 
-I applied this patch and pushed the branch again!
+So this is something that would change based on Christian's request to
+stop using the xattr handlers entirely for fscaps as was done for acls.
+I see how this would impact EVM, but we should be able to deal with it.
 
-Yours,
-Linus Walleij
+I am a little curious now about this code in evm_calc_hmac_or_hash():
+
+		size = vfs_getxattr_alloc(&nop_mnt_idmap, dentry, xattr->name,
+					  &xattr_value, xattr_size, GFP_NOFS);
+		if (size == -ENOMEM) {
+			error = -ENOMEM;
+			goto out;
+		}
+		if (size < 0)
+			continue;
+
+		user_space_size = vfs_getxattr(&nop_mnt_idmap, dentry,
+					       xattr->name, NULL, 0);
+		if (user_space_size != size)
+			pr_debug("file %s: xattr %s size mismatch (kernel: %d, user: %d)\n",
+				 dentry->d_name.name, xattr->name, size,
+				 user_space_size);
+
+Because with the current fscaps code you actually could end up getting
+different sizes from these two interfaces, as vfs_getxattr_alloc() reads
+the xattr directly from disk but vfs_getxattr() goes through
+cap_inode_getsecurity(), which may do conversion between v2 and v3
+formats which are different sizes.
+
+Thanks,
+Seth
