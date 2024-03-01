@@ -1,122 +1,88 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837FE365;
-	Fri,  1 Mar 2024 00:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A583F7EC
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 00:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709251315; cv=none; b=WflXAJ2v3oHcMMotQjKWAh9ozlZzbi8KV9aeIAUTmZ5ZovpEMA/mBHm0kGkm+hYZssD+t/OEW18cXxpnV5spphaJElpTuOR/iiTtqIRg1UDOfrhjgDhvuTXtYHKLrOASA3EyTOJfZWf9YjhhlMYizV0+8gArw8nhSzsjEVw8YPA=
+	t=1709251348; cv=none; b=pXPmtywafu+fYaYFmjdezNjMHcQLJDDkFyUblqi+4/IjEoo+67YPsyVCrsfgXJG+nrrawZa6kIegi/ZhdndHVUcZ52QEttIbz51CPfnOYG90T/C+ts7+C/HzO7dCQLIk43hn+67hcUY07h13DfwIJ5aOZPD+Y/stVHl4YxXJIKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709251315; c=relaxed/simple;
-	bh=t0X7t7GGFniRIOEqYfK4TYBaU7eXwThHc9/pKtKp17w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JnQrwfxGJwTp4Pv5vAp6oFP505Lgjanu4Fb0/YkR77CXHtbOFkwlS+w3n28hUUGspaizJUlKUhuc4eqA/Yz0rt7f2ft5P4YMQL2puskOqtMslwq9fpqY2Axhkpvu81sfFrixkiXmDI1e9TOoWvL+Tb85B0ntvztJ+z72pXea82E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=TDvZPeRh; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1709251348; c=relaxed/simple;
+	bh=oUJiaf0TY3gDkbZPcr6f6p1dgQYPYkH6NvKCqsgj1dk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cEEO6mjJ+Lfu9J70UPXWaqbvKOAYQFf3KQkGReL2BSvbbTNhNCFOACjYyzECUBI4XnPxcYVW3qhFOzibS7z1VXLh4Gu/dy/lnbvfNYsKs/fK+0gkuoXUkpDcIZsvQzfHU20d625JCv/ONdDlsQIjriXFxQY1JzHjbYL/nDrbAmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sl2K9FRu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UcJ+hhU2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="TDvZPeRh"
-Received: from [192.168.68.112] (ppp14-2-70-176.adl-apt-pir-bras31.tpg.internode.on.net [14.2.70.176])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 21BD22012A;
-	Fri,  1 Mar 2024 08:01:50 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1709251311;
-	bh=wLcneC51g0yvr2rzTMvDPFpjn3ptVrIuHETKFxaBzdQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=TDvZPeRhAQ/ae5/L624GhlPAeR3buY0n8UuSKpHSUNxzU+Oc12emprmoIoHsRaIeu
-	 MkFUPSISftOmnJv+B1ew/H3oAvCgSoxsCgcJue/SizLC6PMC2ElnRb9Fgj0dA9ZkhC
-	 yX/NfH5gtdMsaYAm595hUfiJwfeHC1hhAvVe4tLejzqS9SomPFYy10/gf+87knqox/
-	 f44qFlLO3i4WKXEBykHfikAVUP1Y47xSuKxn8PweCj16eENDn7HPq8PP1GaJ1RaCys
-	 sFUMhiZzA4J5CRayMyuEEpSzBYR49shqXw8LpD2HA15kz59xs/Ru87jSSCi0bScftq
-	 kCtM4H64KHGSw==
-Message-ID: <cc13d3f4fc7f117d0f29cf18a085066fd4b560cc.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v5 2/2] ARM: dts: aspeed: x4tf: Add dts for asus x4tf
- project
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Kelly Hung <ppighouse@gmail.com>, robh+dt@kernel.org
-Cc: krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	openbmc@lists.ozlabs.org, kelly_hung@asus.com, Allenyy_Hsu@asus.com
-Date: Fri, 01 Mar 2024 10:31:47 +1030
-In-Reply-To: <20240229111123.1932504-2-Kelly_Hung@asus.com>
-References: <20240229111123.1932504-1-Kelly_Hung@asus.com>
-	 <20240229111123.1932504-2-Kelly_Hung@asus.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sl2K9FRu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UcJ+hhU2"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1709251343;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SNLxnwnRr0Lnru2BqChvcZ/4Fhlb3GVJp1r6JvXa0JY=;
+	b=Sl2K9FRuLPWlgdM1XhIQXkH4ku/NSnMTZaIVaJ584hSHJ4hov86MiSvUZuCZepIUVR1cAx
+	oIAd19FIiFpZhPHCMUytfz736D85uQuykrl1uiXXBGU+ehS0tIR5i6Og713rtfA4Vb3thb
+	2MYEb04nw1jZ0UZbBMj+WDKy0/TT6nIgqd1FYRfe5qhT95dSEyKVrkioPYQTEJfR70tBMI
+	av5wCrc8Ha2AZQfzPfAXK+btFjrbeNVb8EJFZgZonhyLldweWhvrA/VoI8CpvtXRTzsGmy
+	4w8r/0MEaWbhCmuU0X9wAgisrnK4Ab4CPdYU22KqF6zJkMuwXqFyKqQfCiIE6Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1709251343;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SNLxnwnRr0Lnru2BqChvcZ/4Fhlb3GVJp1r6JvXa0JY=;
+	b=UcJ+hhU2wQDuzErMMuwb1abPj6Fwm77imjQaAgGeflRvwfr7OUJZxk2PWYmAx8HPt83+vl
+	EzRkidiP60XJfEAQ==
+To: Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, mingo@kernel.org
+Subject: Re: [PATCH 1/2] sched/core: switch struct rq->nr_iowait to a normal
+ int
+In-Reply-To: <f1fc564c-528a-47d0-8b68-d596d6681eb5@kernel.dk>
+References: <20240228192355.290114-1-axboe@kernel.dk>
+ <20240228192355.290114-2-axboe@kernel.dk> <8734tb8b57.ffs@tglx>
+ <c3abe716-3d8f-47dc-9c7d-203b05b25393@kernel.dk> <87wmqn6uaw.ffs@tglx>
+ <edd520ab-b95f-4a60-a35a-2490a6d5057f@kernel.dk> <87sf1b6o9w.ffs@tglx>
+ <f1fc564c-528a-47d0-8b68-d596d6681eb5@kernel.dk>
+Date: Fri, 01 Mar 2024 01:02:22 +0100
+Message-ID: <87jzmm7rap.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Thu, 2024-02-29 at 19:11 +0800, Kelly Hung wrote:
-> Base on aspeed-g6.dtsi and can boot into BMC console.
->=20
-> Signed-off-by: Kelly Hung <Kelly_Hung@asus.com>
->=20
-> ---
-> V4 -> V5: None
-> V3 -> V4: None
-> V2 -> V3:
-> - fmc lable change to bmc.
-> - use 64M partition layout.
-> - rename spi1 label to bios.
-> - remove bios partition section.
-> V1 -> V2:
-> - do schema check and remove all warings.
-> - remove all unnecessary sections.
-> ---
->  arch/arm/boot/dts/aspeed/Makefile             |   1 +
->  .../boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts  | 581 ++++++++++++++++++
->  2 files changed, 582 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
->=20
-> diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed=
-/Makefile
-> index d3ac20e31..32c41f3d9 100644
-> --- a/arch/arm/boot/dts/aspeed/Makefile
-> +++ b/arch/arm/boot/dts/aspeed/Makefile
-> @@ -10,6 +10,7 @@ dtb-$(CONFIG_ARCH_ASPEED) +=3D \
->  	aspeed-bmc-arm-stardragon4800-rep2.dtb \
->  	aspeed-bmc-asrock-e3c246d4i.dtb \
->  	aspeed-bmc-asrock-romed8hm3.dtb \
-> +	aspeed-bmc-asus-x4tf.dtb \
->  	aspeed-bmc-bytedance-g220a.dtb \
->  	aspeed-bmc-delta-ahe50dc.dtb \
->  	aspeed-bmc-facebook-bletchley.dtb \
-> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts b/arch/arm=
-/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
-> new file mode 100644
-> index 000000000..64f4ed07c
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
-> @@ -0,0 +1,581 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright 2024 ASUS Corp.
-> +
-> +/dts-v1/;
-> +
-> +#include "aspeed-g6.dtsi"
-> +#include "aspeed-g6-pinctrl.dtsi"
+On Thu, Feb 29 2024 at 15:30, Jens Axboe wrote:
+> On 2/29/24 12:52 PM, Thomas Gleixner wrote:
+>>         return atomic_read(&cpu_rq(cpu)->nr_iowait) & ((1 << 16) - 1);
+>> 
+>> Obviously written with proper inline wrappers and defines, but you get
+>> the idea.
+>
+> I'll play with this a bit, but do we want to switch to an atomic_long_t
+> for this? 2^16 in iowait seems extreme, but it definitely seems possible
+> to overflow it.
 
-aspeed-g6.dtsi already includes aspeed-g6-pinctrl.dtsi, so the include
-here is unnecessary.
+Indeed. 32bit has PID_MAX_LIMIT == 0x8000 which obviously fits into 16
+bits, while 64bit lifts that limit and relies on memory exhaustion to
+limit the number of concurrent threads on the machine, but that
+obviously can exceed 16bits.
 
-Other than that the patch looks okay to me. There are bunch of issues
-exposed by `make CHECK_DTBS=3Dy aspeed/aspeed-bmc-asus-x4tf.dtb`, however
-they're almost all generic issues with aspeed-g6.dtsi or deficient
-binding definitions for the Aspeed controllers. I've put together a
-patch stack to clean them up and am working to upstream them.
+Whether more than 2^16 sit in iowait concurrently on a single CPU that's
+a different question and probably more academic. :)
 
-So for now:
+Though as this will touch all nr_iowait places anyway changing it to
+atomic_long_t in a preparatory patch first makes a lot of sense.
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+Thanks,
 
-I'll put v5 in a tree for Joel to pick up if he doesn't have any
-concerns. I'll drop the redundant include when applying the patch
-there.
+        tglx
 
-Andrew
+
+
+
