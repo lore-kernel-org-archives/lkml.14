@@ -1,296 +1,175 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0E16A8D4;
-	Fri,  1 Mar 2024 10:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB5B6BB57
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 10:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709290388; cv=none; b=BYCBKy3IZ3Hv4Va2p3t9KFLdVFnZ+WMJGvIb4YikJEkeWpon1WLHOHmFSRZPK9HcJydwAfJqfmjueiYNzpzU7g2kqk4l0evz2eHc/HZR/agj3dFoGeVietRpvRQxYmapBVKmLEHq23/iWP9aoIe2arSw7FxyZ4uEo8IeEuTR1Ig=
+	t=1709290389; cv=none; b=bAd5Ghd4XhYNcfKSgNWncg02nz/x9flF5wxdzGNrEjBcRot2JcIKSYWf5B+1QaKEwtlITE4LJa2mhp40rgUW8/hSesbBRDP9Oyg7gbxTRQ898TAjqbXEkSIRvM8cMAeCgXeICjAXntBuqm74Dun95UKeCU/G0gw4hn9qh8GR2WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709290388; c=relaxed/simple;
-	bh=iseJShyNV63nWHzyvAXGeGsH4cHKLBG1iHU/wK0hPmI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SWZBH8BO/YlPpsSgu0z+mc9YG0GqvgFlW/6mkLUGYjiYKVuP+SkIEsxs2jO9XGnnnzQ8gOoWU5Ah3SfSjdYJQNKczgDzQB48eRoATI32i3ecR8+fpXyh9G9SCrVC1qwwsXQAdW1kA9C47JtOMW/E8X0I5RfZpoyGbVeVg0dVd4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TmPyz1Hnrz1xpr2;
-	Fri,  1 Mar 2024 18:51:23 +0800 (CST)
-Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7745E14037B;
-	Fri,  1 Mar 2024 18:52:55 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 1 Mar 2024 18:52:54 +0800
-From: Junxian Huang <huangjunxian6@hisilicon.com>
-To: <jgg@ziepe.ca>, <leon@kernel.org>
-CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
-Subject: [PATCH v2 for-next] RDMA/hns: Support userspace configuring congestion control algorithm with QP granularity
-Date: Fri, 1 Mar 2024 18:48:45 +0800
-Message-ID: <20240301104845.1141083-1-huangjunxian6@hisilicon.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1709290389; c=relaxed/simple;
+	bh=ulCG6y3yhF79+Xq3bHfN/KGrRQdGsfrD6NUWWkpaDV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lyOPPae182vRm3VQl04gcz7lu46/dEFLWeZnf+HmQII+vhOuteWpgSYIKKz2AnDe0eFQXnVCN7fw6UjIThgAQUeTmhJ0gaWAB7O4UuUrIBf4BdKbuYZa/FG6mzjLcihZ0YSuer0kCsA+a2w+Zz6mLDBGHHSSn0ZIdguEbqtnmoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YypxsOQw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YypxsOQw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709290387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=icNIdbNJLiHX8HLS/FchfvYxMBBdlKXDJTfhCxm4QoY=;
+	b=YypxsOQwxfCvm1lkoOUKpzbDxn8wMjiSWfSEpf7aLy8AJfSXmX0GWUNs/BlYWiPR0AtQov
+	TSY7hKsarwePMsOr1mI4YTCwRzCoiaVKtBWh6mZuDcd/MSDs2J4BKFrfGMLwTITzeHOQus
+	YB6iESkvCoWuSYTkPvrTS38Xvdg5lhg=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-260-L7Da5J5_OEyIwwbk3ruyZg-1; Fri, 01 Mar 2024 05:53:04 -0500
+X-MC-Unique: L7Da5J5_OEyIwwbk3ruyZg-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5131acee642so1433860e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 02:53:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709290383; x=1709895183;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=icNIdbNJLiHX8HLS/FchfvYxMBBdlKXDJTfhCxm4QoY=;
+        b=hmrX+D1Jbe84w7R16nGpf7YSoREmdZOI0aH+hMx+sknkFp/XpbJjb5h3yHQTDdKUyT
+         ofdtEWGqX7erxpdHWx+2j+bIsBDrKCSGnfQZ4HpLFcCYmwKcZBF5/YopqwoE/AexCnKw
+         pqilt22a453wcHlHkN02cpIGc6F0ukqW+XEnVIRUnpQpkzQDTBDWZjHSjFFYYEPa07po
+         YGHCyNp/OZ7OVBXvKHGC2b0Qh15t8PdCHQSFEOM2VqFf9jOe/HlT9y8e8HOAR8QdjTz9
+         r7XAA3ydf0wGH54q9C51koS2+la/1AEGRPHJ57UUJ+AhYWMDZp1YFrVHRHmqe7TsiozZ
+         NNHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTK9Dsf7Ao8qZLtw86GL2i4hiTPBGeDXr0a8y1lEYha5hRpMGhEet0YoI8NANVIwbcjdWh7jBuhrM3moHzvbmLDFAw1gRAF4jDL8X0
+X-Gm-Message-State: AOJu0Yz1luIiw/xtYgTWeqrwSqgZ3Hhgxfi72/eo2wCDhWARQ2g7dofc
+	jXFGonXcp9wzh0CYUp2u95TdpA7TYgrXaJKFevP5Gn8j7S70pbpKoTNJq//R+MeZHpvw8dZYZ0s
+	knak1HvF+FXk5rEKhufkt0mEDdEFMj5nvvz8UdL8r8bD36Yq4GCyr9MpfirLPHw==
+X-Received: by 2002:a05:6512:220c:b0:512:fc30:3ee4 with SMTP id h12-20020a056512220c00b00512fc303ee4mr1175712lfu.53.1709290383363;
+        Fri, 01 Mar 2024 02:53:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHNpDwtSFklfuMEegHArxGPyTbqXrGAwFiEg9hbahTvFZRLRZ9NzWJ7cgl9SN8sgn9iO4Mbzw==
+X-Received: by 2002:a05:6512:220c:b0:512:fc30:3ee4 with SMTP id h12-20020a056512220c00b00512fc303ee4mr1175693lfu.53.1709290382894;
+        Fri, 01 Mar 2024 02:53:02 -0800 (PST)
+Received: from ?IPV6:2003:cb:c713:3200:77d:8652:169f:b5f7? (p200300cbc7133200077d8652169fb5f7.dip0.t-ipconnect.de. [2003:cb:c713:3200:77d:8652:169f:b5f7])
+        by smtp.gmail.com with ESMTPSA id q9-20020adf9dc9000000b0033e192a5852sm2146471wre.30.2024.03.01.02.53.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Mar 2024 02:53:02 -0800 (PST)
+Message-ID: <33fb4546-df4e-4319-b498-69ddb5e2831f@redhat.com>
+Date: Fri, 1 Mar 2024 11:53:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500006.china.huawei.com (7.221.188.68)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "vfio/type1: Unpin zero pages"
+Content-Language: en-US
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240229223544.257207-1-alex.williamson@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240229223544.257207-1-alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Currently, congestion control algorithm is statically configured in
-FW, and all QPs use the same algorithm(except UD which has a fixed
-configuration of DCQCN). This is not flexible enough.
+On 29.02.24 23:35, Alex Williamson wrote:
+> This reverts commit 873aefb376bbc0ed1dd2381ea1d6ec88106fdbd4.
+> 
+> This was a heinous workaround and it turns out it's been fixed in mm
+> twice since it was introduced.  Most recently, commit c8070b787519
+> ("mm: Don't pin ZERO_PAGE in pin_user_pages()") would have prevented
+> running up the zeropage refcount, but even before that commit
+> 84209e87c696 ("mm/gup: reliable R/O long-term pinning in COW mappings")
+> avoids the vfio use case from pinning the zeropage at all, instead
+> replacing it with exclusive anonymous pages.
+> 
+> Remove this now useless overhead.
+> 
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>   drivers/vfio/vfio_iommu_type1.c | 12 ------------
+>   1 file changed, 12 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index b2854d7939ce..b5c15fe8f9fc 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -567,18 +567,6 @@ static int vaddr_get_pfns(struct mm_struct *mm, unsigned long vaddr,
+>   	ret = pin_user_pages_remote(mm, vaddr, npages, flags | FOLL_LONGTERM,
+>   				    pages, NULL);
+>   	if (ret > 0) {
+> -		int i;
+> -
+> -		/*
+> -		 * The zero page is always resident, we don't need to pin it
+> -		 * and it falls into our invalid/reserved test so we don't
+> -		 * unpin in put_pfn().  Unpin all zero pages in the batch here.
+> -		 */
+> -		for (i = 0 ; i < ret; i++) {
+> -			if (unlikely(is_zero_pfn(page_to_pfn(pages[i]))))
+> -				unpin_user_page(pages[i]);
+> -		}
+> -
+>   		*pfn = page_to_pfn(pages[0]);
+>   		goto done;
+>   	}
 
-Support userspace configuring congestion control algorithm with QP
-granularity while creating QPs. If the algorithm is not specified in
-userspace, use the default one.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
----
-v1 -> v2:
-
-* Remove the printings triggered by bad userspace input.
-
-* Remove unnecessary bit flags in enum hns_roce_congest_type_flags and
-  enum hns_roce_cong_type.
-
-* Move enum hns_roce_congest_type_flags and hns_roce_create_qp_comp_mask
-  above struct hns_roce_ib_create_qp.
-
-* Change HNS_ROCE_CREATE_QP_MASK_CONGEST_TYPE in enum
-  hns_roce_create_qp_comp_mask from 1 << 1 to 1 << 0.
-
-* Remove unused reserved0 in struct hns_roce_ib_alloc_ucontext_resp.
----
- drivers/infiniband/hw/hns/hns_roce_device.h |  3 +-
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 12 +----
- drivers/infiniband/hw/hns/hns_roce_hw_v2.h  |  3 +-
- drivers/infiniband/hw/hns/hns_roce_main.c   |  3 ++
- drivers/infiniband/hw/hns/hns_roce_qp.c     | 60 +++++++++++++++++++++
- include/uapi/rdma/hns-abi.h                 | 16 ++++++
- 6 files changed, 85 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index 1d062c522d69..bc015901a7d3 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -845,7 +845,8 @@ struct hns_roce_caps {
- 	u16		default_aeq_period;
- 	u16		default_aeq_arm_st;
- 	u16		default_ceq_arm_st;
--	enum hns_roce_cong_type cong_type;
-+	u8		cong_cap;
-+	enum hns_roce_cong_type default_cong_type;
- };
- 
- enum hns_roce_device_state {
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 42e28586cefa..38e426f4afb5 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -2209,11 +2209,12 @@ static int hns_roce_query_caps(struct hns_roce_dev *hr_dev)
- 	caps->max_wqes = 1 << le16_to_cpu(resp_c->sq_depth);
- 
- 	caps->num_srqs = 1 << hr_reg_read(resp_d, PF_CAPS_D_NUM_SRQS);
--	caps->cong_type = hr_reg_read(resp_d, PF_CAPS_D_CONG_TYPE);
-+	caps->cong_cap = hr_reg_read(resp_d, PF_CAPS_D_CONG_CAP);
- 	caps->max_srq_wrs = 1 << le16_to_cpu(resp_d->srq_depth);
- 	caps->ceqe_depth = 1 << hr_reg_read(resp_d, PF_CAPS_D_CEQ_DEPTH);
- 	caps->num_comp_vectors = hr_reg_read(resp_d, PF_CAPS_D_NUM_CEQS);
- 	caps->aeqe_depth = 1 << hr_reg_read(resp_d, PF_CAPS_D_AEQ_DEPTH);
-+	caps->default_cong_type = hr_reg_read(resp_d, PF_CAPS_D_DEFAULT_ALG);
- 	caps->reserved_pds = hr_reg_read(resp_d, PF_CAPS_D_RSV_PDS);
- 	caps->num_uars = 1 << hr_reg_read(resp_d, PF_CAPS_D_NUM_UARS);
- 	caps->reserved_qps = hr_reg_read(resp_d, PF_CAPS_D_RSV_QPS);
-@@ -4737,14 +4738,8 @@ enum {
- static int check_cong_type(struct ib_qp *ibqp,
- 			   struct hns_roce_congestion_algorithm *cong_alg)
- {
--	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
- 	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
- 
--	if (ibqp->qp_type == IB_QPT_UD || ibqp->qp_type == IB_QPT_GSI)
--		hr_qp->cong_type = CONG_TYPE_DCQCN;
--	else
--		hr_qp->cong_type = hr_dev->caps.cong_type;
--
- 	/* different congestion types match different configurations */
- 	switch (hr_qp->cong_type) {
- 	case CONG_TYPE_DCQCN:
-@@ -4772,9 +4767,6 @@ static int check_cong_type(struct ib_qp *ibqp,
- 		cong_alg->wnd_mode_sel = WND_LIMIT;
- 		break;
- 	default:
--		ibdev_warn(&hr_dev->ib_dev,
--			   "invalid type(%u) for congestion selection.\n",
--			   hr_qp->cong_type);
- 		hr_qp->cong_type = CONG_TYPE_DCQCN;
- 		cong_alg->alg_sel = CONG_DCQCN;
- 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-index cd97cbee682a..359a74672ba1 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-@@ -1214,12 +1214,13 @@ struct hns_roce_query_pf_caps_d {
- #define PF_CAPS_D_RQWQE_HOP_NUM PF_CAPS_D_FIELD_LOC(21, 20)
- #define PF_CAPS_D_EX_SGE_HOP_NUM PF_CAPS_D_FIELD_LOC(23, 22)
- #define PF_CAPS_D_SQWQE_HOP_NUM PF_CAPS_D_FIELD_LOC(25, 24)
--#define PF_CAPS_D_CONG_TYPE PF_CAPS_D_FIELD_LOC(29, 26)
-+#define PF_CAPS_D_CONG_CAP PF_CAPS_D_FIELD_LOC(29, 26)
- #define PF_CAPS_D_CEQ_DEPTH PF_CAPS_D_FIELD_LOC(85, 64)
- #define PF_CAPS_D_NUM_CEQS PF_CAPS_D_FIELD_LOC(95, 86)
- #define PF_CAPS_D_AEQ_DEPTH PF_CAPS_D_FIELD_LOC(117, 96)
- #define PF_CAPS_D_AEQ_ARM_ST PF_CAPS_D_FIELD_LOC(119, 118)
- #define PF_CAPS_D_CEQ_ARM_ST PF_CAPS_D_FIELD_LOC(121, 120)
-+#define PF_CAPS_D_DEFAULT_ALG PF_CAPS_D_FIELD_LOC(127, 122)
- #define PF_CAPS_D_RSV_PDS PF_CAPS_D_FIELD_LOC(147, 128)
- #define PF_CAPS_D_NUM_UARS PF_CAPS_D_FIELD_LOC(155, 148)
- #define PF_CAPS_D_RSV_QPS PF_CAPS_D_FIELD_LOC(179, 160)
-diff --git a/drivers/infiniband/hw/hns/hns_roce_main.c b/drivers/infiniband/hw/hns/hns_roce_main.c
-index b55fe6911f9f..1dc60c2b2b7a 100644
---- a/drivers/infiniband/hw/hns/hns_roce_main.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_main.c
-@@ -394,6 +394,9 @@ static int hns_roce_alloc_ucontext(struct ib_ucontext *uctx,
- 			resp.config |= HNS_ROCE_RSP_CQE_INLINE_FLAGS;
- 	}
- 
-+	if (hr_dev->pci_dev->revision >= PCI_REVISION_ID_HIP09)
-+		resp.congest_type = hr_dev->caps.cong_cap;
-+
- 	ret = hns_roce_uar_alloc(hr_dev, &context->uar);
- 	if (ret)
- 		goto error_out;
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index 31b147210688..f35a66325d9a 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -1004,6 +1004,60 @@ static void free_kernel_wrid(struct hns_roce_qp *hr_qp)
- 	kfree(hr_qp->sq.wrid);
- }
- 
-+static void default_congest_type(struct hns_roce_dev *hr_dev,
-+				 struct hns_roce_qp *hr_qp)
-+{
-+	if (hr_qp->ibqp.qp_type == IB_QPT_UD ||
-+	    hr_qp->ibqp.qp_type == IB_QPT_GSI)
-+		hr_qp->cong_type = CONG_TYPE_DCQCN;
-+	else
-+		hr_qp->cong_type = hr_dev->caps.default_cong_type;
-+}
-+
-+static int set_congest_type(struct hns_roce_qp *hr_qp,
-+			    struct hns_roce_ib_create_qp *ucmd)
-+{
-+	struct hns_roce_dev *hr_dev = to_hr_dev(hr_qp->ibqp.device);
-+
-+	switch (ucmd->cong_type_flags) {
-+	case HNS_ROCE_CREATE_QP_FLAGS_DCQCN:
-+		hr_qp->cong_type = CONG_TYPE_DCQCN;
-+		break;
-+	case HNS_ROCE_CREATE_QP_FLAGS_LDCP:
-+		hr_qp->cong_type = CONG_TYPE_LDCP;
-+		break;
-+	case HNS_ROCE_CREATE_QP_FLAGS_HC3:
-+		hr_qp->cong_type = CONG_TYPE_HC3;
-+		break;
-+	case HNS_ROCE_CREATE_QP_FLAGS_DIP:
-+		hr_qp->cong_type = CONG_TYPE_DIP;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (!test_bit(hr_qp->cong_type, (unsigned long *)&hr_dev->caps.cong_cap))
-+		return -EOPNOTSUPP;
-+
-+	if (hr_qp->ibqp.qp_type == IB_QPT_UD &&
-+	    hr_qp->cong_type != CONG_TYPE_DCQCN)
-+		return -EOPNOTSUPP;
-+
-+	return 0;
-+}
-+
-+static int set_congest_param(struct hns_roce_dev *hr_dev,
-+			     struct hns_roce_qp *hr_qp,
-+			     struct hns_roce_ib_create_qp *ucmd)
-+{
-+	if (ucmd->comp_mask & HNS_ROCE_CREATE_QP_MASK_CONGEST_TYPE)
-+		return set_congest_type(hr_qp, ucmd);
-+
-+	default_congest_type(hr_dev, hr_qp);
-+
-+	return 0;
-+}
-+
- static int set_qp_param(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
- 			struct ib_qp_init_attr *init_attr,
- 			struct ib_udata *udata,
-@@ -1043,6 +1097,10 @@ static int set_qp_param(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
- 			ibdev_err(ibdev,
- 				  "failed to set user SQ size, ret = %d.\n",
- 				  ret);
-+
-+		ret = set_congest_param(hr_dev, hr_qp, ucmd);
-+		if (ret)
-+			return ret;
- 	} else {
- 		if (hr_dev->pci_dev->revision >= PCI_REVISION_ID_HIP09)
- 			hr_qp->config = HNS_ROCE_EXSGE_FLAGS;
-@@ -1051,6 +1109,8 @@ static int set_qp_param(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
- 			ibdev_err(ibdev,
- 				  "failed to set kernel SQ size, ret = %d.\n",
- 				  ret);
-+
-+		default_congest_type(hr_dev, hr_qp);
- 	}
- 
- 	return ret;
-diff --git a/include/uapi/rdma/hns-abi.h b/include/uapi/rdma/hns-abi.h
-index c996e151081e..158670da2b2a 100644
---- a/include/uapi/rdma/hns-abi.h
-+++ b/include/uapi/rdma/hns-abi.h
-@@ -73,6 +73,17 @@ struct hns_roce_ib_create_srq_resp {
- 	__u32	cap_flags; /* Use enum hns_roce_srq_cap_flags */
- };
- 
-+enum hns_roce_congest_type_flags {
-+	HNS_ROCE_CREATE_QP_FLAGS_DCQCN,
-+	HNS_ROCE_CREATE_QP_FLAGS_LDCP,
-+	HNS_ROCE_CREATE_QP_FLAGS_HC3,
-+	HNS_ROCE_CREATE_QP_FLAGS_DIP,
-+};
-+
-+enum hns_roce_create_qp_comp_mask {
-+	HNS_ROCE_CREATE_QP_MASK_CONGEST_TYPE = 1 << 0,
-+};
-+
- struct hns_roce_ib_create_qp {
- 	__aligned_u64 buf_addr;
- 	__aligned_u64 db_addr;
-@@ -81,6 +92,9 @@ struct hns_roce_ib_create_qp {
- 	__u8    sq_no_prefetch;
- 	__u8    reserved[5];
- 	__aligned_u64 sdb_addr;
-+	__aligned_u64 comp_mask; /* Use enum hns_roce_create_qp_comp_mask */
-+	__aligned_u64 create_flags;
-+	__aligned_u64 cong_type_flags;
- };
- 
- enum hns_roce_qp_cap_flags {
-@@ -114,6 +128,8 @@ struct hns_roce_ib_alloc_ucontext_resp {
- 	__u32	reserved;
- 	__u32	config;
- 	__u32	max_inline_data;
-+	__u8	congest_type;
-+	__u8	reserved0[7];
- };
- 
- struct hns_roce_ib_alloc_ucontext {
 -- 
-2.30.0
+Cheers,
+
+David / dhildenb
 
