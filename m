@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E1E47F63;
-	Fri,  1 Mar 2024 03:36:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C8E482D0;
+	Fri,  1 Mar 2024 03:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709264161; cv=none; b=HfzKfQ/bjVReWZStN1MYU461qu4kmcOK7lSCu3fZ6wyxmcknMVEmx+V/rbbmS0dolpN4UAfqJKbJZduF2GSTFmNMccFRWV1FGmBvxo62KrBeFL5ETD00lYzEKh8qxw/qITVAB8jXiB/ZN33g7wUh1JUUOpx1HH8yHfDwvjF45lo=
+	t=1709264161; cv=none; b=SjZITtmdendQ5vcA3LHvXzFMIQp51ALmRXZcG4y6k/JEevYT9/5C8Grz5YMdFkHvtUTuT+lmxMSkmTYgeou1dMjbQBhx/Z/eXQ9txlN8s0UHHIpMP+fnFpVETjWieQTgSyVAt4yFQ6G1yy7aWnm7OmsNi+ypoal67uu7O9Byjtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709264161; c=relaxed/simple;
-	bh=Mv+wjnpaqjDPxpuudt6hmB75f7eiz4A9FMh4nOvAHfM=;
+	bh=11Z9ihFs1F9o4coCr+bkAMvEXdj6rVyn442xR9Dxq2M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TNykv03MT7gPN+RX9arT39Rp3gVAB75LENiM0uO6LK/2JTEPSmHImMMaIdo5LdZUVpKaJXhN4fWjKagyQTYJiF7EeErfeUL9/ZwYY0M489joJlsB7A5rsBPr/+KIDYNl9yksGzqeY81Gsof2ZuIG7oXBoSmi/v0V3Chwmyi5cNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aY4wL1QZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FaQZ07EUHGjh2zhIBIbQBbFLdFqXzOMQJdaEi0ipKqwftRa74Q+8kr6G93vD42/Nx6g6qtdkNRSekSNoNALpbvrjmWSIz3k32NhFjGF7gW06oQ5wJI2WBRy1lrjG/1M2TPjKd053rr4a2ztNOkNdwa9GZ2Br5YS/CKQPqZaV1Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pCsNOZm2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aY4wL1QZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9C541C43141;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pCsNOZm2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B6328C4167D;
 	Fri,  1 Mar 2024 03:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709264160;
-	bh=Mv+wjnpaqjDPxpuudt6hmB75f7eiz4A9FMh4nOvAHfM=;
+	bh=11Z9ihFs1F9o4coCr+bkAMvEXdj6rVyn442xR9Dxq2M=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=aY4wL1QZZIKTXEhVFS9tdpnvD6LFRYXiMfym3JCw552ajEVxw895UnVXlIGaHtKYj
-	 NEG7deqEbwWuAOhENeKXg4b1V9JJMBi0DBLVDt5d1CfruW+pXY+87e+mK+hHShBnWT
-	 /bu6/MWY71E9eAU5ozHrjtXm8U92QxMgXg8+hfBkuuynGhrAk/FrLPp6AJ5UeWcZ8i
-	 Wt778GJuw3U0g89xj9R8vKJlZxocuIqmQMjeWQphP5ZkykCpiNfS3lE4N5yw1W1JH2
-	 I+ZOFHRsnUsL8nX/+AvqLHcawNjhPgNoPNOnd+tfkg93mW0nT/BSWb8kls3Jv1Y054
-	 wK9P9oYPGQnRg==
+	b=pCsNOZm2Cfl4AHFNj8aoHoxmHxhpja+H/W4s5PoxdJViH4P6sz4gP/l7bL6aDI3dc
+	 zH/bPqKZvj62BI1kj+cvNZgNnRhHuR+XhYbTrbPWHaDE1k19m/PypLOrukSDTB5dHD
+	 sb2B6cMNZ9w04lOB4wVXsFIsHwLgRc21OsRfH8Qz/jvqXtcXJX5WFMeZyb/ChglDy7
+	 I2TPS09kkAnrNnMIRU+uV0sQJFMfY5cLlQncQd5LabFNz3SRT+6PAw1m72uhzaFa0a
+	 /COuNUKquf5ZqpUG5HmYVj/RgdlB6PRuJdIrLTfiV66X23yT+HRTLe3ZmQCjEMgQWm
+	 ocwd102M1F6MQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FF5C54E59;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FA7C54E5A;
 	Fri,  1 Mar 2024 03:36:00 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Fri, 01 Mar 2024 11:35:57 +0800
-Subject: [PATCH net-next v7 4/9] dt-bindings: net: convert hisi-femac.txt
- to YAML
+Date: Fri, 01 Mar 2024 11:36:00 +0800
+Subject: [PATCH net-next v7 7/9] net: hisi_femac: remove unused compatible
+ strings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240301-net-v7-4-45823597d4d4@outlook.com>
+Message-Id: <20240301-net-v7-7-45823597d4d4@outlook.com>
 References: <20240301-net-v7-0-45823597d4d4@outlook.com>
 In-Reply-To: <20240301-net-v7-0-45823597d4d4@outlook.com>
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
@@ -56,11 +56,11 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709264157; l=5303;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709264157; l=1002;
  i=forbidden405@outlook.com; s=20240228; h=from:subject:message-id;
- bh=Y31W+EBTMTCB+g3jeFUiVgLCSMs5MTAdgXmolrXBmrQ=;
- b=U3x1tHE7aPBoRfqnNe5Vdo+X2BhLWZlb9syW0kR5I+pLw5+r2g3d+SFhX9MPp7GjgJgUk2doh
- mA7/+QCl3qrC0OO38YZ3dfj4u+V2CKxqjqHGcF2sZNSYRcHer4nXe+D
+ bh=yJR/Lso4vTyxua+LycT+Z/1Tv6PHgtjLoMfikCd0gbo=;
+ b=qF36YvzEkBC4gbu8ZacVt7bvEGW7u3W3l04x4zhH6UnfZ3doNYngX+A0hR/F9LC1fba2yTecP
+ PK3V9yf1vAFCgcp0psus12wATixxNzaGWLD09ceH3/S/d/Z0fGPHYmH
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=KAWv6ZzFsT54MGllOczJgFiWB+DuayEmyn24iiVVThU=
 X-Endpoint-Received:
@@ -70,162 +70,31 @@ Reply-To: <forbidden405@outlook.com>
 
 From: Yang Xiwen <forbidden405@outlook.com>
 
-Convert the old text binding to new YAML.
+It's hard to get the version number for each FEMAC core and it's unknown
+how the version can be used. Remove them until it's really needed.
 
-While at it, make some changes to the binding:
-- The version numbers are not documented publicly. The version also does
-not change programming interface. Remove it until it's really needed.
-- A few clocks are missing in old binding file. Add them to match the real
-hardware.
+While at it, remove SoC compatibles and only use fallback compatible.
 
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- .../bindings/net/hisilicon,hisi-femac.yaml         | 89 ++++++++++++++++++++++
- .../devicetree/bindings/net/hisilicon-femac.txt    | 41 ----------
- 2 files changed, 89 insertions(+), 41 deletions(-)
+ drivers/net/ethernet/hisilicon/hisi_femac.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
-new file mode 100644
-index 000000000000..ba207f2c9ae4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/hisilicon,hisi-femac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Hisilicon Fast Ethernet MAC controller
-+
-+maintainers:
-+  - Yang Xiwen <forbidden405@foxmail.com>
-+
-+allOf:
-+  - $ref: ethernet-controller.yaml
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - hisilicon,hi3516cv300-femac
-+      - const: hisilicon,hisi-femac
-+
-+  reg:
-+    items:
-+      - description: The first region is the MAC core register base and size.
-+      - description: The second region is the global MAC control register.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: MAC main clock
-+      - description: MAC bus interface clock
-+      - description: PHY clock
-+
-+  clock-names:
-+    items:
-+      - const: mac
-+      - const: macif
-+      - const: phy
-+
-+  resets:
-+    items:
-+      - description: MAC reset signal
-+      - description: PHY reset signal
-+
-+  reset-names:
-+    items:
-+      - const: mac
-+      - const: phy
-+
-+  hisilicon,phy-reset-delays-us:
-+    description: PHY reset timing requirement (in micro seconds).
-+      The integrated PHY usually have a special reset timing sequence and must
-+      interact with MAC controller to accomplish the entire reset procedure. So
-+      these properties belong to MAC controller, not PHY.
-+    items:
-+      - description: pre-reset delay for PHY
-+      - description: reset pulse for PHY
-+      - description: post-reset delay for PHY
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - resets
-+  - reset-names
-+  - phy-mode
-+  - phy-handle
-+  - hisilicon,phy-reset-delays-us
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    ethernet@10090000 {
-+        compatible = "hisilicon,hi3516cv300-femac", "hisilicon,hisi-femac";
-+        reg = <0x10090000 0x1000>, <0x10091300 0x200>;
-+        interrupts = <12>;
-+        clocks = <&clk_femac>, <&clk_femacif>, <&clk_fephy>;
-+        clock-names = "mac", "macif", "phy";
-+        resets = <&crg 0xec 0>, <&crg 0xec 3>;
-+        reset-names = "mac", "phy";
-+        mac-address = [00 00 00 00 00 00];
-+        phy-mode = "mii";
-+        phy-handle = <&fephy>;
-+        hisilicon,phy-reset-delays-us = <10000 20000 20000>;
-+    };
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-femac.txt b/Documentation/devicetree/bindings/net/hisilicon-femac.txt
-deleted file mode 100644
-index 5f96976f3cea..000000000000
---- a/Documentation/devicetree/bindings/net/hisilicon-femac.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--Hisilicon Fast Ethernet MAC controller
--
--Required properties:
--- compatible: should contain one of the following version strings:
--	* "hisilicon,hisi-femac-v1"
--	* "hisilicon,hisi-femac-v2"
--	and the soc string "hisilicon,hi3516cv300-femac".
--- reg: specifies base physical address(s) and size of the device registers.
--  The first region is the MAC core register base and size.
--  The second region is the global MAC control register.
--- interrupts: should contain the MAC interrupt.
--- clocks: A phandle to the MAC main clock.
--- resets: should contain the phandle to the MAC reset signal(required) and
--	the PHY reset signal(optional).
--- reset-names: should contain the reset signal name "mac"(required)
--	and "phy"(optional).
--- phy-mode: see ethernet.txt [1].
--- phy-handle: see ethernet.txt [1].
--- hisilicon,phy-reset-delays-us: triplet of delays if PHY reset signal given.
--	The 1st cell is reset pre-delay in micro seconds.
--	The 2nd cell is reset pulse in micro seconds.
--	The 3rd cell is reset post-delay in micro seconds.
--
--The MAC address will be determined using the optional properties
--defined in ethernet.txt[1].
--
--[1] Documentation/devicetree/bindings/net/ethernet.txt
--
--Example:
--	hisi_femac: ethernet@10090000 {
--		compatible = "hisilicon,hi3516cv300-femac","hisilicon,hisi-femac-v2";
--		reg = <0x10090000 0x1000>,<0x10091300 0x200>;
--		interrupts = <12>;
--		clocks = <&crg HI3518EV200_ETH_CLK>;
--		resets = <&crg 0xec 0>,<&crg 0xec 3>;
--		reset-names = "mac","phy";
--		mac-address = [00 00 00 00 00 00];
--		phy-mode = "mii";
--		phy-handle = <&phy0>;
--		hisilicon,phy-reset-delays-us = <10000 20000 20000>;
--	};
+diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
+index 2406263c9dd3..5a088cba7d4e 100644
+--- a/drivers/net/ethernet/hisilicon/hisi_femac.c
++++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
+@@ -945,9 +945,7 @@ static int hisi_femac_drv_resume(struct platform_device *pdev)
+ #endif
+ 
+ static const struct of_device_id hisi_femac_match[] = {
+-	{.compatible = "hisilicon,hisi-femac-v1",},
+-	{.compatible = "hisilicon,hisi-femac-v2",},
+-	{.compatible = "hisilicon,hi3516cv300-femac",},
++	{.compatible = "hisilicon,hisi-femac",},
+ 	{},
+ };
+ 
 
 -- 
 2.43.0
