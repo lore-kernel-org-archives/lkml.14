@@ -1,107 +1,127 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882846EB7B;
-	Fri,  1 Mar 2024 11:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB946F071;
+	Fri,  1 Mar 2024 11:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709291411; cv=none; b=k9H+jNqqZ9tPuau+6z+Hpd+vb3ZSw9iwOi15xcblBN+JCThAJbR8uT9iH6LZnZDZ6wm6RJXT0+0MFT/D42uofU54a3s9336lfw6uaOtseBAmjD/vw+Vtjfv85o2BYVvezfCn05iiyJ4h0O+K6Jodg4D3B54kXKxXHqoukx6BQWk=
+	t=1709291414; cv=none; b=c/ua6bhFbsDn3veIeDTdYYM60yGySaqp4B4PsEQ4W/1kM0vDBiygPyv4iTbLsz+r3ayR+Yv1yC8w8ALoLNNjFBT8FKLmSZdnPKCTuQlO5eA4B7TvC9NRHZXIs+gPm3MSy+wjsTlKJa2lNiSjB13t/a7y2VfJeWP7Lfau+frbeKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709291411; c=relaxed/simple;
-	bh=QRbExAMvXdH77Tuwests8b8zj5ZvrcJ6Ix6vLJ+34M8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CkdupNdAWLWvt4iNv6BXZ3yzM5IqHzTnYKoD958DvLxKEvd6DEAgBeB9KA9e8z3rQcpi445KESc31hqZYw8nP7thG8mu400W8NM6YQ9y5Xs1AlzkOjQWN1220M1zV701c5egtVdod1fSma3OD0JnvMbGCcWvtXF5jLtT+tuaymk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PAZ7hQ7k; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709291414; c=relaxed/simple;
+	bh=ZPuYGNDtU2C61JrD8awnzL2eNGY9J7zqh51rLsBoCO8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gYTTPZFPIaJkBjmg412wlp+FChAgnwuxdT77BAjbdNi6uShIp5WbEgUpCEvir707ybTaTCQGGjeu6i5+uLJbadqxYIB0W6VZxU3Ynk3rVaHNkGybE3H7EX1siW//XprndPgs0Hizvs56CSaIewT2GBlygnOGz1b0uvFCCbSHgX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQDnH84x; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PAZ7hQ7k"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 421B9tBL120075;
-	Fri, 1 Mar 2024 05:09:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709291395;
-	bh=WthVMSlBC04LR7tfpauZDWEDm6N7t/Hgl+E1wPR/kR4=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=PAZ7hQ7kUNUaI1reBgkk8AFHWJ4SvLVGUkTqhxIpDJd++wVWfRoOpW24dN1AeFRQN
-	 tfzcx2UJiUy48RQ/17pmLYaG+N7qApykx3i3JVOgFCh4M/KkNiB703kIb2ufU0ZdhA
-	 tP/yRxbZD2DcOBzLZIA2Xb/zeYsY+TlouBKIjB6k=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 421B9txW099588
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 1 Mar 2024 05:09:55 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 1
- Mar 2024 05:09:55 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 1 Mar 2024 05:09:55 -0600
-Received: from [172.24.227.88] (uda0500640.dhcp.ti.com [172.24.227.88])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 421B9odN124584;
-	Fri, 1 Mar 2024 05:09:51 -0600
-Message-ID: <03bf515c-9f90-487c-ecfa-90d407dc5d86@ti.com>
-Date: Fri, 1 Mar 2024 16:39:50 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQDnH84x"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a3e552eff09so273814666b.3;
+        Fri, 01 Mar 2024 03:10:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709291412; x=1709896212; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9f1cuB9REaK+HmuUhlOguaJHGRgFgUSmSu3BLd/is7Q=;
+        b=SQDnH84x/ZNsySWFhpU5nHUcErnFjQ2nfUJusVWCdLIJQFPyZ2qgQ9SECHJ4RxwZZu
+         vX5dZLV7Pvp9FM3t5gZcVY+2n6HzENGAuR66FoxFScxXM5YigxHanpEh/zWdAJxf9b3G
+         2wwPNnTctj6kVG1rrQpJhWx6uuUjrTliAhEvXrkufPOKScF3vTDVLa8U6XKH7+ILt0fP
+         XP9W1I9oZISp49xZryuWAJOjA2Z7VA7rtbrgOdseFOdgicvBWGuA2rNO6veDOax7LHOu
+         FTEaM0Ntcnm/aildzEFlKwsi1Ih3LQuj6JA9pSwwEl3RmX3dokza41lmBCawfr7XiPkL
+         lTYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709291412; x=1709896212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9f1cuB9REaK+HmuUhlOguaJHGRgFgUSmSu3BLd/is7Q=;
+        b=iETZYQxN+m2t+vX94fzBEOt0xrm/e8a7Kp8LHFSYWt3Ks/NjjxYknzhj/OOqhXBLI8
+         gwMdfCaeXkEZzBTb14tLn+lvjDO/1MveaNqMATNd3dGfn9+y5p4dvgbCXtLT42Ve46SP
+         1JhFyibyBC4YBvO+2PUzjVQsbdaOtq8SN6ZlCA3Gm8wgkJbCnZnC4meWkGFpwYcI7Mjv
+         Y/ZDHKSVFjUgT27b7d472B8J9IO0rz1fSV64ai8fdCkP7YYedJyyNhj8U/qm92NjwwkM
+         Eq/cRgVyG7yrmzvgdL75ZydrPSzV7iUv20P9AfRoOOblZ5A4mw4zgNXXdzWzb8lhNMTO
+         +h3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVDIULqGBrhYKpqbkTtutYDkCyDuyimTE5NNRM+i7yH0Shk2nSZS8vJVHO5+wZ/OMU44HcgGhkh96M+NsQ9izRdYwma49tDexU0qVARSLUrKGJ3ZXY8y3M4JKsUZ00ur17z3NOFGfvOm6jv8Ykr
+X-Gm-Message-State: AOJu0YyfUN6mOc+tE8p3asrnNhBSLTN7dpabtPJINnfd6P1Et+5r5rXO
+	qNUrq5QAGNBoDYv+ltiN/RTDmZVO7FXpkuEcxTdlOAVD+JQGH43qKIrckB7KXRLGrngYMBFlfUg
+	pJRy8hvsFyyADgQpdyzM8d/Oeoso=
+X-Google-Smtp-Source: AGHT+IG4ULdoDoSbkfrP+miccWHuw/7d6R6I5AAI3byeWcQqNIfoQWB5rAdNyRBtfs5i55sB6OBzHA6Tf/ZWQ1w7uhI=
+X-Received: by 2002:a17:906:4951:b0:a3f:2259:da62 with SMTP id
+ f17-20020a170906495100b00a3f2259da62mr1035572ejt.52.1709291404238; Fri, 01
+ Mar 2024 03:10:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH net RESEND] net: ethernet: ti: am65-cpsw: Add
- IFF_UNICAST_FLT flag to port device
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>,
-        =?UTF-8?B?U2FuanXDoW4gR2FyY8OtYSwgSm9yZ2U=?= <Jorge.SanjuanGarcia@duagon.com>
-CC: "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "s-vadapalli@ti.com" <s-vadapalli@ti.com>,
-        "rogerq@kernel.org"
-	<rogerq@kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "olteanv@gmail.com"
-	<olteanv@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ravi
- Gunasekaran <r-gunasekaran@ti.com>
-References: <20240228111300.2516590-1-jorge.sanjuangarcia@duagon.com>
- <20240228200516.1166a097@kernel.org>
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-In-Reply-To: <20240228200516.1166a097@kernel.org>
+References: <20240301002416.it.092-kees@kernel.org> <20240301002650.1544829-1-keescook@chromium.org>
+In-Reply-To: <20240301002650.1544829-1-keescook@chromium.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 1 Mar 2024 13:09:27 +0200
+Message-ID: <CAHp75VdhY6-OmNYtbpnb+dv1Du=LTnignsTRSU9+8yqpbFqPsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] string: Convert selftest to KUnit
+To: Kees Cook <keescook@chromium.org>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Mar 1, 2024 at 2:26=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> Convert test_string.c to KUnit so it can be easily run with everything
+> else.
 
+Have you run it?
 
-On 2/29/24 9:35 AM, Jakub Kicinski wrote:
-> On Wed, 28 Feb 2024 11:13:23 +0000 Sanjuán García, Jorge wrote:
->> Since commit 8940e6b669ca ("net: dsa: avoid call to __dev_set_promiscuity()
->> while rtnl_mutex isn't held") when conecting one of this switch's port
->> to a DSA switch as the conduit interface, the network interface is set to
->> promiscuous mode by default and cannot be set to not promiscuous mode again
->> from userspace. The reason for this is that the cpsw ports net devices
->> do not have the flag IFF_UNICAST_FLT set in their private flags.
->>
->> The cpsw switch should be able to set not promiscuous mode as otherwise
->> a '1' is written to bit ALE_PORT_MACONLY_CAF which makes ethernet frames
->> get an additional VLAN tag when entering the port connected to the DSA
->> switch. Setting the IFF_UNICAST_FLT flag to all ports allows us to have
->> the conduit interface on the DSA subsystem set as not promiscuous.
-> 
-> It doesn't look like am65-cpsw-nuss supports unicast filtering, 
-> tho, does it? So we're lying about support to work around some 
-> CPSW weirdness (additional VLAN tag thing)?
+...
 
-CPSW driver does not support unicast filtering. 
+>         if (i < 256)
+> -               return (i << 24) | (j << 16) | k | 0x8000;
+> -       return 0;
+> +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x80=
+00);
 
--- 
-Regards,
-Ravi
+First of all, this special value encodes the problematic patterns, so
+you missed proper messaging.
+Second, the returned value has a constant, how do you expect 0 to be
+equal to something (guaranteed not to be 0)?
+
+This needs a good rethink of what you should do in the KUnit approach.
+
+...
+
+> +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x80=
+00);
+
+Ditto.
+
+...
+
+> +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x80=
+00);
+
+Ditto.
+
+...
+
+>         for (i =3D 0; i < strlen(test_string) + 1; i++) {
+>                 result =3D strchr(test_string, test_string[i]);
+> -               if (result - test_string !=3D i)
+> -                       return i + 'a';
+> +               KUNIT_ASSERT_EQ(test, result - test_string, i);
+
+In a similar way, all returned values are *special*, you really need
+to think about them before converting to a simple (and sometimes
+wrong) checks)
+
+...
+
+I dunno if KUnit has a fault ejection simulation. It should, in order
+to be sure that test cases are fine when they fail.
+
+--=20
+With Best Regards,
+Andy Shevchenko
