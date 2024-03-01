@@ -1,150 +1,211 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2758A381DE
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 13:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBAF7E1;
+	Fri,  1 Mar 2024 13:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709300520; cv=none; b=kqYXVIpoU72S42SwKwKPa2/GgE1j1u1FrUZShE3XlzD283HxwzLms3B4rYaiZhwnBeopZBNh+olIzamVC/iua/J6oDpg2KlidBYwdI9D8o8YhokHh1sj4ji1DimByVGla0ZUxO4ZRlbdkrCmvB/rfxiCtlQaWzg330sFhfe6PVk=
+	t=1709300522; cv=none; b=Yp6jvxaWgwtAICSAMlCAwZOyLkTd6JH7fo+yYph/Eu46RY9I2aV2l0xyyIvEvRzDT+By1O3YoV8yUsJGb6FwJcHQAuEf3WAVudZVF0GFVZ/wXx+sTmQ5TVf1+NyuSia+Odne4WGR2Gie7uUEAI/tqXyBKi4d/J0s45K6rHdAVhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709300520; c=relaxed/simple;
-	bh=2vk9V19VUlgEPl/3Idd/ZI+pMX1LOMB9aDys6AIl9Ao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GnKf65K+eoeOc+3+0w2jLR4FtyfDXDQPhT3c5h2ie0CvFZ7FqeaZxyded2Ufepvav41HQmlHOCkrbWQEPsjzMo838+Y8PozmjSmQ+eWc7rUzW/6pZ9oO81YAT0X6KGC8DLsqMnesXNlPjy5W3P+uT8yD/APToq5YRheyAQco1yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U7Y2Xi+1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709300522; c=relaxed/simple;
+	bh=Y9SwzoxYcapFKA/eWs8SzI3sCgAD67MmxsRX57sigzA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nBJacV+nRShqX64bvtrtmc9jsPgABb25qXG0xhut4aSt9pilvT4FJ71rW0rutEeRRMQ6ozvZukVg4xrG6PdFNvvL7/q9xGPoqgsbwsTjEPIftnMQ1mJd03YSnb1+hr0JM/bq972bDgyg18OCCsHyvDQbIHEB1S057yylrqMm9mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=G7OwHWaz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U7Y2Xi+1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709300518;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IV5GI9ggtOV7YL4yWU+pWO5696jTgiyXslpZgRz6IkE=;
-	b=U7Y2Xi+1/tq9+/n3uOSZkq9WWox8vOwnpgfR3JQF9oo1YtH8FArI7wO2QKUKZUhfP3xljQ
-	tDCcZ2ZuoiYpH35gw/dXGqQAKC67V9ltQmSV5P+aMmKr1J96DH70ATfdq7bv6PFVthyyI5
-	7Bo4+RVczpvd8wWuvL3dxxH32Ao90FM=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-66-Y_dIfbA-OuKv5jE3xYEGpg-1; Fri, 01 Mar 2024 08:41:57 -0500
-X-MC-Unique: Y_dIfbA-OuKv5jE3xYEGpg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a44170156daso160288366b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 05:41:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709300515; x=1709905315;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IV5GI9ggtOV7YL4yWU+pWO5696jTgiyXslpZgRz6IkE=;
-        b=U3oeWP5rqZ5OSTbkEgl8GKyoMk1DyEVb8vjsjyIT+sHgtoJ1jHCbnflHJRxbLEywOd
-         pydiiTAoDDi8RujCGxC/SNHJf4cpN6V84aLG/iln4nNhLv0xm0LYpcWq1DrlCeukZO56
-         189rcknFxwz8tg4qxi8PdKslGt8BVWOcLbyAAGojf4SGqDz5qV6+4N1fWVHA9WfHBDbO
-         D2saVGO7PJHrW9Jr+YpM0/6R/5ozxjmRduD1wqNKR6iizREDe7NWauRFZANZlkOH9KEd
-         rtWdJ9zLnoRbysvbf2lJHD25vLYX9BdXtSJ9tdNMkjMlftC3zCcwh2pUp1JvzdG0gTKC
-         K47Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVjqJkQDQTYLuzmBqmV9VUpDtAbUibMYbeICXwhTkfwvN2eVp9iI02fLbwE2A8yAcI6eronRpKBs5V7L/rFdax3/MbWQuWN9o6FLNZj
-X-Gm-Message-State: AOJu0YwAUspIBWnDnqEiI6Iq0VRL3Pu7/+SKchn/xAnd8wcqrGtlvJ3s
-	mPkOy+WUk9/6/QY5hCYBlVuZpvG/yUSg5mJrUepEL/WYDRqnEFdk6YDsf6IyeQUhQpKwyl5teqs
-	caNr0FUn+4IykWwYxR2Nh49cDFZf+OwMl4rikWyxq2T0VuqJldmlRG1UbaGONQtA3o0gjTA==
-X-Received: by 2002:a17:906:b214:b0:a3f:9629:d305 with SMTP id p20-20020a170906b21400b00a3f9629d305mr1372880ejz.28.1709300515431;
-        Fri, 01 Mar 2024 05:41:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGLbgF6qBOfPODlpr/w/K+nFzei0cb6QwGv163EHqSi9QSh8ayVYUSqzu7zpVrOH7v0/7CwUQ==
-X-Received: by 2002:a17:906:b214:b0:a3f:9629:d305 with SMTP id p20-20020a170906b21400b00a3f9629d305mr1372862ejz.28.1709300514951;
-        Fri, 01 Mar 2024 05:41:54 -0800 (PST)
-Received: from redhat.com ([2.52.158.48])
-        by smtp.gmail.com with ESMTPSA id vk1-20020a170907cbc100b00a445c16d902sm1267866ejc.96.2024.03.01.05.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 05:41:54 -0800 (PST)
-Date: Fri, 1 Mar 2024 08:41:50 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, iommu@lists.linux.dev,
-	Zelin Deng <zelin.deng@linux.alibaba.com>
-Subject: Re: [RFC] dma-mapping: introduce dma_can_skip_unmap()
-Message-ID: <20240301082703-mutt-send-email-mst@kernel.org>
-References: <20240301071918.64631-1-xuanzhuo@linux.alibaba.com>
- <64be2e23-c526-45d3-bb7b-29e31241bbef@arm.com>
- <20240301064632-mutt-send-email-mst@kernel.org>
- <a00f0b55-0681-4e9c-b75e-e7e3d4110471@arm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="G7OwHWaz"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4215cCjj006462;
+	Fri, 1 Mar 2024 13:41:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=zheshLQXi7uJZs+Iz0byhTVO8VTQDzKpy9DsiQROJ3w=; b=G7
+	OwHWazXgZbwZiceeg3PMVQmgunsFA7M6kLrRYlh4I+ZzlJO9oEsb7ktvmtGCSBK7
+	CuAEWyvmCPp0NtRe5w/a1gMwnuWMwskZRD+WZn/nv8J/sNpo2oJ8WFw2NCuXmwNR
+	DsviLHyewM2q22Xgy4yw5KytV7Ezy8WQktRtZ4XqtbzeFkk3WaP9j396A7M8Ne/j
+	eE+NrFerx0shT0NKbq02+f/jRkgNqZAFwpfSUSqkRgBtL0/PdRmphJVfjJpD+WWU
+	H/x+ABKJ3TvA5HkQXEdKjbyzg6fU0UmJS/obCVZ24xR4RO1KKAQOV70B9RRuVeP6
+	PlBW0UiRYoa8J8GHGx6g==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wk91912dd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 13:41:54 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 421DfrXx007273
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 1 Mar 2024 13:41:53 GMT
+Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 1 Mar 2024 05:41:47 -0800
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.co>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH v5 0/4] arm64: qcom: add AIM300 AIoT board suppo
+Date: Fri, 1 Mar 2024 21:41:09 +0800
+Message-ID: <20240301134113.14423-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a00f0b55-0681-4e9c-b75e-e7e3d4110471@arm.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Qv0xSGrXaHh21HSYY5s9MjgrF8EGLTzR
+X-Proofpoint-ORIG-GUID: Qv0xSGrXaHh21HSYY5s9MjgrF8EGLTzR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-01_13,2024-03-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1011 suspectscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403010114
 
-On Fri, Mar 01, 2024 at 12:42:39PM +0000, Robin Murphy wrote:
-> On 2024-03-01 11:50 am, Michael S. Tsirkin wrote:
-> > On Fri, Mar 01, 2024 at 11:38:25AM +0000, Robin Murphy wrote:
-> > > Not only is this idea not viable, the entire premise seems flawed - the
-> > > reasons for virtio needing to use the DMA API at all are highly likely to be
-> > > the same reasons for it needing to use the DMA API *properly* anyway.
-> > 
-> > The idea has nothing to do with virtio per se
-> 
-> Sure, I can see that, but if virtio is presented as the justification for
-> doing this then it's the justification I'm going to look at first. And the
-> fact is that it *does* seem to have particular significance, since having up
-> to 19 DMA addresses involved in a single transfer is very much an outlier
-> compared to typical hardware drivers.
+Add AIM300 AIoT support along with usb, ufs, regulators, serial, PCIe,
+and PMIC functions.
+AIM300 Series is a highly optimized family of modules designed to
+support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC
+chip etc.
+Here is a diagram of AIM300 AIoT Carrie Board and SoM
+ +--------------------------------------------------+
+ |             AIM300 AIOT Carrie Board             |
+ |                                                  |
+ |           +-----------------+                    |
+ |power----->| Fixed regulator |---------+          |
+ |           +-----------------+         |          |
+ |                                       |          |
+ |                                       v VPH_PWR  |
+ | +----------------------------------------------+ |
+ | |                          AIM300 SOM |        | |
+ | |                                     |VPH_PWR | |
+ | |                                     v        | |
+ | |   +-------+       +--------+     +------+    | |
+ | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+ | |   +-------+       +--------+     +------+    | |
+ | |                                              | |
+ | +----------------------------------------------+ |
+ |                                                  |
+ |                    +----+          +------+      |
+ |                    |USB |          | UART |      |
+ |                    +----+          +------+      |
+ +--------------------------------------------------+
+The following functions have been verified:
+  - uart
+  - usb
+  - ufs
+  - PCIe
+  - PMIC
+  - display
+  - adsp
+  - cdsp
+  - tlmm
 
-That's a valid comment. Xuan Zhuo do other drivers do this too,
-could you check pls?
+Documentation for qcs8550[1] and sm8550[2]
+[1] https://docs.qualcomm.com/bundle/publicresource/87-61717-1_REV_A_Qualcomm_QCS8550_QCM8550_Processors_Product_Brief.pdf
+[2] https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/Snapdragon-8-Gen-2-Product-Brief.pdf
 
-> Furthermore the fact that DMA API
-> support was retrofitted to the established virtio design means I would
-> always expect it to run up against more challenges than a hardware driver
-> designed around the expectation that DMA buffers have DMA addresses.
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
+
+v4 -> v5:
+  - "2023-2024" instead of "2023~2024" for License
+  - update patch commit message to previous comments and with an updated
+    board diagram
+  - use qcs8550.dtsi instead of qcm8550.dtsi
+  - remove the reserved memory regions which will be handled by
+    bootloader
+  - remove pm8550_flash, pm8550_pwm nodes, Type-C USB/DP function node,
+    remoteproc_mpss function node, audio sound DTS node, new patch will
+    be updated after respective team's end to end full verification
+  - address comments to vph_pwr, move vph_pwr node and related
+    references to qcs8550-aim300-aiot.dts
+  - use "regulator-vph-pwr" instead of "vph_pwr_regulator"
+  - add pcie0I AND pcie1 support together
+  - the following patches were applied, so remove these patches from new
+    patch series:
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-3-quic_tengfan@quicinc.com
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-4-quic_tengfan@quicinc.com
+  - verified with dtb check, and result is expected, because those
+    warnings are not introduced by current patch series.
+    DTC_CHK arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb
+    arch/arm64/boot/dts/qcom/sm8550.dtsi:3015.27-3070.6: Warning
+    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
+    #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-75000000:opp-hz:0: [75000000, 0, 0, 75000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-150000000:opp-hz:0: [150000000, 0, 0, 150000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-300000000:opp-hz:0: [300000000, 0, 0, 300000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: Unevaluated properties are not allowed ('opp-150000000', 'opp-300000000', 'opp-75000000' were unexpected)
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+
+v3 -> v4:
+  - use qcm8550.dtsi instead of qcs8550.dtsi, qcs8550 is a QCS version
+    of qcm8550, another board with qcm8550 will be added later
+  - add AIM300 AIoT board string in qcom.yaml file
+  - add sm8550 and qcm8550 fallback compatible
+  - add qcm8550 SoC id
+  - add reserved memory map codes in qcm8550.dtsi
+  - pm8010 and pmr73d are splited into carrier board DTS file. Because
+    the regulators which in pm8550, pm8550ve and pm8550vs are present
+    on the SoM. The regulators which in pm8010 and pmr73d are present
+    on the carrier board.
+  - stay VPH_PWR at qcs8550-aim300.dtsi file
+      VPH_PWR is obtained by vonverting 12v voltage into 3.7 voltage
+      with a 3.7v buck. VPH_PWR is power supply for regulators in AIM300
+      SOM. VPH_PWR regulator is defined in AIM300 SOM dtsi file.
+
+v2 -> v3:
+  - introduce qcs8550.dtsi
+  - separate fix dtc W=1 warning patch to another patch series
+
+v1 -> v2:
+  - merge the splited dts patches into one patch
+  - update dts file name from qcom8550-aim300.dts to qcs8550-aim300 dts
+  - drop PCIe1 dts node due to it is not enabled
+  - update display node name for drop sde characters
+
+previous discussion here:
+[1] v4: https://lore.kernel.org/linux-arm-msm/20240119100621.11788-1-quic_tengfan@quicinc.com
+[2] v3: https://lore.kernel.org/linux-arm-msm/20231219005007.11644-1-quic_tengfan@quicinc.com
+[3] v2: https://lore.kernel.org/linux-arm-msm/20231207092801.7506-1-quic_tengfan@quicinc.com
+[4] v1: https://lore.kernel.org/linux-arm-msm/20231117101817.4401-1-quic_tengfan@quicinc.com
+
+Tengfei Fan (4):
+  dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
+  arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
+  arm64: dts: qcom: add base AIM300 dtsi
+  arm64: dts: qcom: aim300: add AIM300 AIoT
+
+ .../devicetree/bindings/arm/qcom.yaml         |   8 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 384 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi  | 345 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550.dtsi         | 169 ++++++++
+ 5 files changed, 907 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
 
 
-It seems virtio can't drive any DMA changes then it's forever tainted?
-Seems unfair - we retrofitted it years ago, enough refactoring happened
-since then.
-
-
-> > - we are likely not the
-> > only driver that wastes a lot of memory (hot in cache, too) keeping DMA
-> > addresses around for the sole purpose of calling DMA unmap.  On a bunch
-> > of systems unmap is always a nop and we could save some memory if there
-> > was a way to find out. What is proposed is an API extension allowing
-> > that for anyone - not just virtio.
-> 
-> And the point I'm making is that that "always" is a big assumption, and in
-> fact for the situations where it is robustly true we already have the
-> DEFINE_DMA_UNMAP_{ADDR,LEN} mechanism.
-> I'd consider it rare for DMA
-> addresses to be stored in isolation, as opposed to being part of some kind
-> of buffer descriptor (or indeed struct scatterlist, for an obvious example)
-> that a driver or subsystem still has to keep track of anyway, so in general
-> I believe the scope for saving decidedly small amounts of memory at runtime
-> is also considerably less than you might be imagining.
-> 
-> Thanks,
-> Robin.
-
-
-Yes. DEFINE_DMA_UNMAP_ exits but that's only compile time.
-And I think the fact we have that mechanism is a hint that
-enough configurations could benefit from a runtime
-mechanism, too.
-
-E.g. since you mentioned scatterlist, it has a bunch of ifdefs
-in place.
-
-Of course
-- finding more examples would be benefitial to help maintainers
-  do the cost/benefit analysis
-- a robust implementation is needed
-
-
+base-commit: 1870cdc0e8dee32e3c221704a2977898ba4c10e8
 -- 
-MST
+2.17.1
 
