@@ -1,125 +1,175 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD296996E
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 07:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C0A6996A;
+	Fri,  1 Mar 2024 07:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709279864; cv=none; b=iqgpftcwcpSNdY08yCXbjq3KvyL8HPkWx4iKvSXfZMXeeDNEQz/dQV7MY3gzo/s1B7+IS03+iB6FlSfpeyU/pIznWn8lyysMUWOe26ToGD5zWvJ61iImf3JA5VOrdJqa/n40/MClfp5hF9Q8KB5Mk5gqB6qURkJPNyLBEWDbUJ8=
+	t=1709279875; cv=none; b=WMdGNlrXeIe4OXdh5FyoO5UAPKoGUwOPLV9QngY6cYOQwabbhd0ACfreFrV7yHd+ZarbwSMzGqmBM5a1+eQNWRTSWtYAvnWa8/yuw6okXajUpfEcaiJYwqE2xNySs1N1esJ9Y+EivHQFvCkWqFusNIDO3bmCh5nHjErvfGmD1tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709279864; c=relaxed/simple;
-	bh=EY+KjoQfFNP0k4txFcmHFPAWMfY97bzGGaKhYbfpPxY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cMO0v4Gkwpocpld/ncWT+MdTp2fL51/LFGuUmMq9zLjpYrH7OyfNUU3dvCBBrF04cMmP2AUpk5K3QB2aXGlyFw+q5J7jGPHo/D1f2vxYHyn81nPf++vzK0HYY3b82PN0EM6yIrGtmfMHToT2iLYCzN8cURJrEMt/XvxOMnvAc7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=v470jyqh; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="v470jyqh"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d5c40f874aso854337241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:57:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709279861; x=1709884661; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xkiaUF+hdMe8h/C4CJAPJ/LWbY3R6H000QKjPRyoNcU=;
-        b=v470jyqhK5bm4AmG7nQ48XsD6hKCNdN1sE32K0LLkkA+B318WvGHDyMNBNOMLOALMs
-         aXleDiBwyem0iHm0mQ2JkIn/AKf0J0q/DyobPm+V7EA9Hih80MPI82dRR1F83YI7HkFM
-         GgLx0cZW6v+XNir798MLRZlHLMNxnReanTmHhF6MBUByHwg3HoPNtVvElGybDiPJTKku
-         aF8/Tm9DVZv3yP3iSHemPa8Gcn6fhC0IyrsEKav1ukUMxCrjheXPWcAYj8AYcg2wLKxE
-         MovIA1Tig0xZd5/0kewIKaMxR5M61az0qCGfpv2Hh47usSknIpawdCYoSkeIddGvrtDZ
-         s0dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709279861; x=1709884661;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xkiaUF+hdMe8h/C4CJAPJ/LWbY3R6H000QKjPRyoNcU=;
-        b=fAClEsQ0gwdL8Po9Aqp/PU588XkYxTuizlJJdMMhCEo3WGOE7EIUuZjkJ3Jdl+EI0h
-         PA8DD16U1EPXkYfgwOMBSeOnaqbbjIHwhKENHfL4fufA6ohl7PXfTrpcz4MBfEbMwzJD
-         aC/tDSWr2E1mNL/+Lpe0H2w90GmfPCfHS4NrZcqmfV7L+p8AVHYM5P9UIhTppBKdKqMh
-         XPvKcDvnC8Y4nC0py0huzEoFzPaNsAXJzdKab9SeupooUylqkxF1fhDynkIGP6enuaIu
-         NqG3UGiSYM7Rf5ucsEaYVJqYgBkhv0o5u85vOBorvZAbU4iqnF5mTe62QizfHfg95TNy
-         v+6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUb8g18dPkwXn1+WGW6GIAoDK/iM3gUHnwUx4zK/TJCdNBpMkyaOsb9f/x5fWgyUTUdgit3N0c7dieQ24mR+UaJh6/exQ8fBeW/ZPA+
-X-Gm-Message-State: AOJu0YzYJX7pJcSuibfgBy5NkKNixUoOR+sswjd8DNY4Rf4VsSjBw90k
-	R0nmY4LgDhsoaE2+IGwwFZH/VkY4xK2OX6q5+A0gQDCsXC2VhuxVByaYWlVdLg3Y52qvWDCKyZv
-	bY7pGalCTliNxAuB/sWjELbOtFl2pt1YF+UUuWA==
-X-Google-Smtp-Source: AGHT+IGN2X5A0M8EfK1+uSSkjf89cvrxL24neCyB7LinGR9R07wrQdQVBwW2MYtM5nqkAGtidYo4Q18dL2PrWdKR9yw=
-X-Received: by 2002:ac5:c28d:0:b0:4c0:9ed8:57b3 with SMTP id
- h13-20020ac5c28d000000b004c09ed857b3mr689031vkk.1.1709279860878; Thu, 29 Feb
- 2024 23:57:40 -0800 (PST)
+	s=arc-20240116; t=1709279875; c=relaxed/simple;
+	bh=1HnXrNCczlojfDwK0Lj32V+7Nhy5BOZgDCKbCA6NdwM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X0LR3IlOC/Dw7j4jFOzMvoz1DbcM66VM2V3hwppwY1GR1s3WHgQqOxLnrDeOffHB5DEGTeYOdgkdB2khSZN5v28zd/3gmiqIhnl07P0dNktj5l/L5v5XpQCFmMgHDe6v2r+DsDAyOovmYCAZXn+PSaoY3Dim7M7SM2+CmXCpbfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4TmL6k6bZ5z9v8R;
+	Fri,  1 Mar 2024 08:57:50 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id d5WQLkBCU8dg; Fri,  1 Mar 2024 08:57:50 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4TmL6c6G14z9v7S;
+	Fri,  1 Mar 2024 08:57:44 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C8BCB8B774;
+	Fri,  1 Mar 2024 08:57:44 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 9JRALyKYH8lu; Fri,  1 Mar 2024 08:57:44 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.117])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id AD2718B766;
+	Fri,  1 Mar 2024 08:57:42 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Johan Almbladh <johan.almbladh@anyfinetworks.com>,
+	Paul Burton <paulburton@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Wang YanQing <udknight@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	netdev@vger.kernel.org,
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>,
+	Kees Cook <keescook@chromium.org>
+Subject: [PATCH bpf-next RESEND v2 1/2] bpf: Take return from set_memory_ro() into account with bpf_prog_lock_ro()
+Date: Fri,  1 Mar 2024 08:57:23 +0100
+Message-ID: <8f3b3823cce2177e5912ff5f2f11381a16db07db.1709279661.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229172549.444227-1-brgl@bgdev.pl>
-In-Reply-To: <20240229172549.444227-1-brgl@bgdev.pl>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 1 Mar 2024 08:57:30 +0100
-Message-ID: <CAMRc=Mf3cVBr-FUpT51c=w5=LwtvYrMJTA4p+=a2OaumAGeUew@mail.gmail.com>
-Subject: Re: [PATCH] gpio: fix resource unwinding order in error path
-To: Linus Walleij <linus.walleij@linaro.org>, Johan Hovold <johan@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709279844; l=2767; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=1HnXrNCczlojfDwK0Lj32V+7Nhy5BOZgDCKbCA6NdwM=; b=dSZBTT9qth3ODdOJv+HPXE6vZVAWv23et0yw75PIiB3gdOiY3UXnigDyUvxewEonfvli9lvIo +Qux59pCUBvDQzFTq83UHZHd0c0SdTUdPTiHh7L0OSrlNqTbBKzEz8V
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 29, 2024 at 6:25=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Hogs are added *after* ACPI so should be removed *before* in error path.
->
-> Fixes: 6d86750ce623 ("gpio: fix gpio leak in gpiochip_add error path")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpiolib.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 21edc5eafa68..7fd9c59e73c5 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1025,11 +1025,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
-gc, void *data,
->
->         ret =3D gpiochip_irqchip_init_valid_mask(gc);
->         if (ret)
-> -               goto err_remove_acpi_chip;
-> +               goto err_free_hogs;
->
->         ret =3D gpiochip_irqchip_init_hw(gc);
->         if (ret)
-> -               goto err_remove_acpi_chip;
-> +               goto err_remove_irqchip_mask;
->
->         ret =3D gpiochip_add_irqchip(gc, lock_key, request_key);
->         if (ret)
-> @@ -1054,11 +1054,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
-gc, void *data,
->         gpiochip_irqchip_remove(gc);
->  err_remove_irqchip_mask:
->         gpiochip_irqchip_free_valid_mask(gc);
-> -err_remove_acpi_chip:
-> +err_free_hogs:
-> +       gpiochip_free_hogs(gc);
->         acpi_gpiochip_remove(gc);
->         gpiochip_remove_pin_ranges(gc);
->  err_remove_of_chip:
-> -       gpiochip_free_hogs(gc);
->         of_gpiochip_remove(gc);
->  err_cleanup_desc_srcu:
->         for (i =3D 0; i < gdev->ngpio; i++)
-> --
-> 2.40.1
->
+set_memory_ro() can fail, leaving memory unprotected.
 
-Queued for fixes.
+Check its return and take it into account as an error.
 
-Bart
+Link: https://github.com/KSPP/linux/issues/7
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+Sorry for the resend, I forgot to flag patch 2 as bpf-next
+
+Note: next patch is autonomous, it is sent as a follow-up of this one to minimize risk of conflict on filter.h because the two changes are too close to each other.
+
+v2: No modification (Just added link in patch message), patchwork discarded this series due to failed test of s390 but it seems unrelated, see https://lore.kernel.org/bpf/wvd5gzde5ejc2rzsbrtwqyof56uw5ea3rxntfrxtkdabzcuwt6@w7iczzhmay2i/T/#m2e61446f42d5dc3d78f2e0e8b7a783f15cfb109d
+---
+ include/linux/filter.h | 5 +++--
+ kernel/bpf/core.c      | 4 +++-
+ kernel/bpf/verifier.c  | 4 +++-
+ 3 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 36cc29a2934c..7dd59bccaeec 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -884,14 +884,15 @@ bpf_ctx_narrow_access_offset(u32 off, u32 size, u32 size_default)
+ 
+ #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
+ 
+-static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
++static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
+ {
+ #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+ 	if (!fp->jited) {
+ 		set_vm_flush_reset_perms(fp);
+-		set_memory_ro((unsigned long)fp, fp->pages);
++		return set_memory_ro((unsigned long)fp, fp->pages);
+ 	}
+ #endif
++	return 0;
+ }
+ 
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 71c459a51d9e..c49619ef55d0 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2392,7 +2392,9 @@ struct bpf_prog *bpf_prog_select_runtime(struct bpf_prog *fp, int *err)
+ 	}
+ 
+ finalize:
+-	bpf_prog_lock_ro(fp);
++	*err = bpf_prog_lock_ro(fp);
++	if (*err)
++		return fp;
+ 
+ 	/* The tail call compatibility check can only be done at
+ 	 * this late stage as we need to determine, if we deal
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 1c34b91b9583..6ec134f76a11 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -19096,7 +19096,9 @@ static int jit_subprogs(struct bpf_verifier_env *env)
+ 	 * bpf_prog_load will add the kallsyms for the main program.
+ 	 */
+ 	for (i = 1; i < env->subprog_cnt; i++) {
+-		bpf_prog_lock_ro(func[i]);
++		err = bpf_prog_lock_ro(func[i]);
++		if (err)
++			goto out_free;
+ 		bpf_prog_kallsyms_add(func[i]);
+ 	}
+ 
+-- 
+2.43.0
+
