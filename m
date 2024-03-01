@@ -1,215 +1,131 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059AC39FF7
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137F525740
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 17:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314419; cv=none; b=I+xpusp8SfyLE/umaWBNNmAIjQiiUsb1RLj6anEZM98RVHb5biEKASSs3cnNMLsv0x1XbQoUvAUPov2dd9cXbdXZeErh1FnAxPgBtn33HJ/cyRuR8BJLBJD1tSHkHhS6evfB83SuXJfL0g9hHRFn/QgNMOSY2ztxRSRro5LgF7U=
+	t=1709314430; cv=none; b=td649d//Ke/jdf2owEWs3TmD08I0efQOtYAY6v0PFcdqHYxUdLIiWfLEwlH9kah/+cXTYd0HKR4wFSQoYJHg50tH/ig6WaXjjvuP1QF2JbhRXw+kEns/MS356/+gY+gUSPfByge2Y0K+9vDJqslLwJeOlur1JuekW14e8XFFk7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314419; c=relaxed/simple;
-	bh=6C7kUWjoZj+bDBVzxj0XxvUNYCpEIU3ZAbUZhUfTY7s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DBi+Fo86KDSXlu2CGyg3sfHJm44bpzbZ01AJZFmhymTWrW8CsrANJmltNoOAHfBksWv985XqJO3+cAE+AUtL3iIHfy2WVJjfHQCUkhWoO1aZdD8o7dpeiOObmdIZ+F3LvBthRP19bs8YAqtYMhAMbqsLz9xW7na/WBq8pgPNnz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Oc+DiUx3; arc=none smtp.client-ip=192.19.166.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1709314430; c=relaxed/simple;
+	bh=uPcrWwZo51EZo9dE7TOvBkTfx+6v7yhA6bRe7BwSO+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ie+9955uS/AJusdvTEJzAj55ZBbnIhNkBwqOUcNlC8VAWSBtKuXpt7kVrjPnwa78QdwjsBZ5+jAmqEF57HRYhAZmYdSPtnd5tw65JiP12KASAT+rqzTR6O63AlLT8L7UzpalHXVKU1DK2W/chhoSJEhHu1yGZ0PSDR4KtwSe+6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UTWarH1+; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Oc+DiUx3"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 6970FC001BE3;
-	Fri,  1 Mar 2024 09:33:31 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 6970FC001BE3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1709314411;
-	bh=6C7kUWjoZj+bDBVzxj0XxvUNYCpEIU3ZAbUZhUfTY7s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Oc+DiUx3upQyGnYCXF5R8QY4m108L92oXeUVTSXMT8Ftt5uEWCuz6bBxlr9MNpi2H
-	 7j8k7Pv9f2sgRSVumab94vpUDzIoNyUJ4N2W8okEmgf1zx8XE+b3puc3Ek4t64TG6J
-	 Sr/eBB9WXozgkm+VqVdXj5VVK1BfLrnZPRJqJx5c=
-Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UTWarH1+"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8C2CE40E0028;
+	Fri,  1 Mar 2024 17:33:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 6E5IhuBVq3GX; Fri,  1 Mar 2024 17:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1709314422; bh=0spoTuQNwBK1qcqroj+kYN6zrHCgNmlEdBFjW5XSE+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UTWarH1+F3ypn+rMp1530yxS1poDgUq7Tm+/oBGi10vSklLnOV2oFwFu8NOTM6hb2
+	 fpK2bKMZQulEvRVEa76LHm6gBBOA0GKvQwkvKWCcgG3rMpyDkOthba8QORvMTCohXv
+	 3dN69w5idhdZO+1Y6QNlaaTAvld37Z6y4uYoJNEgAfihGhOHngn77ImkmwpJQAxThr
+	 oqDOwC0lPcDEURVvf1i5zTEAAxzRdkdNCJOURujATuEvFtaoDSgHYUmzSWeB4rX0mQ
+	 y4Bo+RJQErHw0jFfqRb3rae0DL9/qHQ91dR9kPwwE76q2WHiaiuaVNMNqaNF4yyGv6
+	 38T0NrMM7arGfxy+Gw7JPDXocgCaJjiA5WDS1h/8/YGYBhx0dkAxjM+9tzyyt8CdQM
+	 neHAbJGRZkEYnrg2EYa80PASfZ68GSWzY3+mNWD27ymllMhVTiSc0MwPYeqUzLtYwt
+	 4fw3RvtPsJ0q9EAoiBeoIMKtrzbCv9sVRntQjZblnR3q5g5TDZk1ZKD5OOsEsoNdff
+	 AXzwLLP6j0ruDGspiv8pK7bLW/fo2dJQIw4pFDGZYw6Aj2bDa9hKMVjm1Vy6BUqZ8o
+	 qnr9ka87yXK/eblWXUxPFoOct7tgzbqHLb91gzDcthlypxvsp8YmRxxHnfw4RoGLcR
+	 K8uB8p6UV5/RsEbxg2AEoAk8=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id D363318041CAC4;
-	Fri,  1 Mar 2024 09:33:29 -0800 (PST)
-From: William Zhang <william.zhang@broadcom.com>
-To: Linux MTD List <linux-mtd@lists.infradead.org>,
-	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
-Cc: f.fainelli@gmail.com,
-	kursad.oney@broadcom.com,
-	joel.peshkin@broadcom.com,
-	miquel.raynal@bootlin.com,
-	anand.gore@broadcom.com,
-	dregan@mail.com,
-	kamal.dasu@broadcom.com,
-	tomer.yacoby@broadcom.com,
-	dan.beygelman@broadcom.com,
-	William Zhang <william.zhang@broadcom.com>,
-	David Regan <dregan@broadcom.com>,
-	linux-kernel@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Brian Norris <computersforpeace@gmail.com>,
-	Richard Weinberger <richard@nod.at>
-Subject: [PATCH v8] mtd: rawnand: brcmnand: Add support for getting ecc setting from strap
-Date: Fri,  1 Mar 2024 09:33:07 -0800
-Message-Id: <20240301173308.226004-1-william.zhang@broadcom.com>
-X-Mailer: git-send-email 2.37.3
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B1E1340E0196;
+	Fri,  1 Mar 2024 17:33:31 +0000 (UTC)
+Date: Fri, 1 Mar 2024 18:33:23 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>
+Subject: Re: [PATCH v7 2/9] x86/startup_64: Defer assignment of 5-level
+ paging global variables
+Message-ID: <20240301173323.GDZeIRY_BVBqpudkEo@fat_crate.local>
+References: <20240227151907.387873-11-ardb+git@google.com>
+ <20240227151907.387873-13-ardb+git@google.com>
+ <20240228205540.GIZd-dzFYIBbtfIAo3@fat_crate.local>
+ <CAMj1kXGhZU+FE2gE262Q8_vZEFHicsRtVPzXT-dhhCvBuiMjUA@mail.gmail.com>
+ <20240301160921.GBZeH9sZhp73xX40ze@fat_crate.local>
+ <CAMj1kXFJwEUExy7+Snh3QHVn-ATj0C+sYje22Qmc+y=cCtAV7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFJwEUExy7+Snh3QHVn-ATj0C+sYje22Qmc+y=cCtAV7g@mail.gmail.com>
 
-BCMBCA broadband SoC based board design does not specify ecc setting in
-dts but rather use the SoC NAND strap info to obtain the ecc strength
-and spare area size setting. Add brcm,nand-ecc-use-strap dts propety for
-this purpose and update driver to support this option. However these two
-options can not be used at the same time.
+On Fri, Mar 01, 2024 at 06:09:53PM +0100, Ard Biesheuvel wrote:
+> On Fri, 1 Mar 2024 at 17:09, Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Fri, Mar 01, 2024 at 11:01:33AM +0100, Ard Biesheuvel wrote:
+> > > The scenario that I have not managed to test is entering from EFI with
+> > > 5 levels of paging enabled, and switching back to 4 levels (which
+> > > should work regardless of CONFIG_X86_5LEVEL). However, no firmware in
+> > > existence actually supports that today, and I am pretty sure that this
+> > > code has never been tested under those conditions to begin with. (OVMF
+> > > patches are under review atm to allow 5-level paging to be enabled in
+> > > the firmware)
+> >
+> > Aha.
+> >
+> 
+> I've built a debug OVMF image using the latest version of the series,
+> and put it at [0]
+> 
+> Run like this
+> 
+> qemu-system-x86_64 -M q35 \
+>   -cpu qemu64,+la57 -smp 4 \
+>   -bios OVMF-5level.fd \
+>   -kernel arch/x86/boot/bzImage \
+>   -append console=ttyS0\ earlyprintk=ttyS0 \
+>   -vga none -nographic -m 1g \
+>   -initrd <initrd.img>
+> 
+> and you will get loads of DEBUG output from the firmware first, and
+> then boot into Linux. (initrd can be omitted)
+> 
+> Right before entering, it will print
+> 
+> CpuDxe: 5-Level Paging = 1
+> 
+> which confirms that the firmware is running with 5 levels of paging.
+> 
+> I've confirmed that this boots happily with this series applied,
+> including when using 'no5lvl' on the command line, or when disabling
+> CONFIG_X86_5LEVEL [confirmed by inspecting
+> /sys/kernel/debug/page_tables/kernel].
+> 
+> 
+> [0] http://files.workofard.com/OVMF-5level.fd.gz
 
-Signed-off-by: William Zhang <william.zhang@broadcom.com>
-Reviewed-by: David Regan <dregan@broadcom.com>
+Nice, that might come in handy for other testing too.
 
----
+Thx.
 
-Changes in v8:
-- Remove the patch revision info from the commit log
-
-Changes in v7:
-- Simply the logic for sector size detection
-- Update the error message
-
-Changes in v6:
-- Combine the ecc step size and ecc strength into one get function
-- Treat it as error condition if both brcm,nand-ecc-use-strap and nand
-ecc dts properties are set
-- Add intermediate steps to get the sector size bitfield
-
-Changes in v4:
-- Update the comments for ecc setting selection
-
-Changes in v2:
-- Minor cosmetic fixes
-
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 83 ++++++++++++++++++++++--
- 1 file changed, 77 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index ef7d340475be..8a26ff97c8e2 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -1038,6 +1038,22 @@ static inline int brcmnand_sector_1k_shift(struct brcmnand_controller *ctrl)
- 		return -1;
- }
- 
-+static bool brcmnand_get_sector_size_1k(struct brcmnand_host *host)
-+{
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+	int sector_size_bit = brcmnand_sector_1k_shift(ctrl);
-+	u16 acc_control_offs = brcmnand_cs_offset(ctrl, host->cs,
-+						  BRCMNAND_CS_ACC_CONTROL);
-+	u32 acc_control;
-+
-+	if (sector_size_bit < 0)
-+		return false;
-+
-+	acc_control = nand_readreg(ctrl, acc_control_offs);
-+
-+	return ((acc_control & BIT(sector_size_bit)) != 0);
-+}
-+
- static void brcmnand_set_sector_size_1k(struct brcmnand_host *host, int val)
- {
- 	struct brcmnand_controller *ctrl = host->ctrl;
-@@ -1055,6 +1071,43 @@ static void brcmnand_set_sector_size_1k(struct brcmnand_host *host, int val)
- 	nand_writereg(ctrl, acc_control_offs, tmp);
- }
- 
-+static int brcmnand_get_spare_size(struct brcmnand_host *host)
-+{
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+	u16 acc_control_offs = brcmnand_cs_offset(ctrl, host->cs,
-+						  BRCMNAND_CS_ACC_CONTROL);
-+	u32 acc = nand_readreg(ctrl, acc_control_offs);
-+
-+	return (acc & brcmnand_spare_area_mask(ctrl));
-+}
-+
-+static void brcmnand_get_ecc_settings(struct brcmnand_host *host, struct nand_chip *chip)
-+{
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+	u16 acc_control_offs = brcmnand_cs_offset(ctrl, host->cs,
-+						  BRCMNAND_CS_ACC_CONTROL);
-+	bool sector_size_1k = brcmnand_get_sector_size_1k(host);
-+	int spare_area_size, ecc_level;
-+	u32 acc;
-+
-+	spare_area_size = brcmnand_get_spare_size(host);
-+	acc = nand_readreg(ctrl, acc_control_offs);
-+	ecc_level = (acc & brcmnand_ecc_level_mask(ctrl)) >> ctrl->ecc_level_shift;
-+	if (sector_size_1k)
-+		chip->ecc.strength = ecc_level * 2;
-+	else if (spare_area_size == 16 && ecc_level == 15)
-+		chip->ecc.strength = 1; /* hamming */
-+	else
-+		chip->ecc.strength = ecc_level;
-+
-+	if (chip->ecc.size == 0) {
-+		if (sector_size_1k)
-+			chip->ecc.size = 1024;
-+		else
-+			chip->ecc.size = 512;
-+	}
-+}
-+
- /***********************************************************************
-  * CS_NAND_SELECT
-  ***********************************************************************/
-@@ -2625,19 +2678,37 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
- 		nanddev_get_memorg(&chip->base);
- 	struct brcmnand_controller *ctrl = host->ctrl;
- 	struct brcmnand_cfg *cfg = &host->hwcfg;
--	char msg[128];
-+	struct device_node *np = nand_get_flash_node(chip);
- 	u32 offs, tmp, oob_sector;
-+	bool use_strap = false;
-+	char msg[128];
- 	int ret;
- 
- 	memset(cfg, 0, sizeof(*cfg));
-+	use_strap = of_property_read_bool(np, "brcm,nand-ecc-use-strap");
- 
--	ret = of_property_read_u32(nand_get_flash_node(chip),
--				   "brcm,nand-oob-sector-size",
-+	/*
-+	 * Either nand-ecc-xxx or brcm,nand-ecc-use-strap can be set. Error out
-+	 * if both exist.
-+	 */
-+	if (chip->ecc.strength && use_strap) {
-+		dev_err(ctrl->dev,
-+			"ECC strap and DT ECC configuration properties are mutually exclusive\n");
-+		return -EINVAL;
-+	}
-+
-+	if (use_strap)
-+		brcmnand_get_ecc_settings(host, chip);
-+
-+	ret = of_property_read_u32(np, "brcm,nand-oob-sector-size",
- 				   &oob_sector);
- 	if (ret) {
--		/* Use detected size */
--		cfg->spare_area_size = mtd->oobsize /
--					(mtd->writesize >> FC_SHIFT);
-+		if (use_strap)
-+			cfg->spare_area_size = brcmnand_get_spare_size(host);
-+		else
-+			/* Use detected size */
-+			cfg->spare_area_size = mtd->oobsize /
-+						(mtd->writesize >> FC_SHIFT);
- 	} else {
- 		cfg->spare_area_size = oob_sector;
- 	}
 -- 
-2.37.3
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
