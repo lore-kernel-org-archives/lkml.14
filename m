@@ -1,152 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B263BB21;
-	Fri,  1 Mar 2024 18:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC823BB4E;
+	Fri,  1 Mar 2024 18:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709317124; cv=none; b=qhWlyUWdr6fj0uk50EbgvLA3pYFnBrUri+QNO/Cusx9QNLACtpC6FyDps19G5ENqkVlSy6rq+6D+6NJwhJ25AvopiVyTdHNZmRRhQNe4hzP/rU/mrtk0V+llhYYQ5iihFi4k1MksfFwFWIqj5ixmmKrg/6/queXRVaATbh6K9jI=
+	t=1709317127; cv=none; b=hfQvhmSVvTIuW2a5ZWgUdG1ajjuHywuYj9bp8gMlyZf1Ceb31akImaGNqVZe6dIi0s9ImOmHt8vDbm3S1pZS5M85bZl7FAd78rTH0RsPapk2I8KJvfGeRdJAROrcp9PKVSwg4Xb6hZ2e29sCZlejshTRcYoXNcZCZAZrgGAn7MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709317124; c=relaxed/simple;
-	bh=wTNLhVtGoV4ze+fIYMOM7sxbJFFWejuuzNnN9RQXZ6g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XACZjUEpvxsAxuCo/5xqo2x6p4UQWkZB2lTuiT3omHpayUoWbamS+9WS8LpnMR8F2sLF0c4i+gSMzPs09HhwXw0tZ9LORSMrAU2NrEuudaM078zk6wQbLfSd3Yy+c7CZbAYUE8VJGYT+p1GkYrYViIY47x5Y90QrocraIUPR3BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgY/IR6k; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgY/IR6k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94A1C43390;
-	Fri,  1 Mar 2024 18:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709317124;
-	bh=wTNLhVtGoV4ze+fIYMOM7sxbJFFWejuuzNnN9RQXZ6g=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=BgY/IR6knG5JPt1plb++/g2/xbWhydWrDRhmNsBFBr2oc4b8PTuSEQVPO/yVg055j
-	 il55nf6L/l2/CH5+S//SwoqvYjVq7yE4KxyYL3aYGZ+FQoKKIpdJzJOEI1/0wjfiWp
-	 wp+HhSZtKqmwMQyMZgt2Rpcm5L+EngoNqRez8+BcxJihwB01g0yHpXZBYUNlQ0fteb
-	 YKV2InvljnWEyojlGuE13ATJBfQbcCpT9QoS3RPBl3zbF+Bw9OETf2kNyXatzZboil
-	 OJjGj+uPm0OKzflW+R103VXpDyV+DVVelpN3pstFJqXnso0BXmd6bpBOmnH9Rs20cV
-	 2fkZIkpuDAcSQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 01 Mar 2024 19:18:28 +0100
-Subject: [PATCH net-next 04/15] mptcp: add token for get-addr in yaml
+	s=arc-20240116; t=1709317127; c=relaxed/simple;
+	bh=q/ftgULoZU14gjYyOUW8zk8XyZYRKnHrhnJsjauO4KA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnH55WU1GteO1+2xrhkc3RhWSsFi+wVcUChit9jVfILIPPWH0iv8wIOefutlhugMRWkNJrY1kNT7sIsmsbzi/ilplrrN1HTFzLbAmAsPQgwjm3qCaey6IS+bLoADV2dvGS8rcYZwlHLNGlHrBPK9115cN7CnDBEqwYfIQmFk/6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="14571913"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="14571913"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 10:18:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="914022095"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="914022095"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 10:18:41 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rg7Sw-000000091jN-07sS;
+	Fri, 01 Mar 2024 20:18:38 +0200
+Date: Fri, 1 Mar 2024 20:18:37 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: geert@linux-m68k.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	andrew@lunn.ch, gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com, pavel@ucw.cz, lee@kernel.org,
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] auxdisplay: Add 7-segment LED display driver
+Message-ID: <ZeIb_TaKK1DE6l6U@smile.fi.intel.com>
+References: <20240301014203.2033844-1-chris.packham@alliedtelesis.co.nz>
+ <20240301014203.2033844-2-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240301-upstream-net-next-20240301-mptcp-userspace-pm-dump-addr-v1-4-dc30a420b3a0@kernel.org>
-References: <20240301-upstream-net-next-20240301-mptcp-userspace-pm-dump-addr-v1-0-dc30a420b3a0@kernel.org>
-In-Reply-To: <20240301-upstream-net-next-20240301-mptcp-userspace-pm-dump-addr-v1-0-dc30a420b3a0@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3262; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=MtlF9xRmcwFi9Km9WSgOTuDFuVjLVFk9I1/xuUhE2Ao=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl4hv0nW6PXRVfJh6Uq5hPPjIxpQId6iEyiF3u9
- KKR18JjC8CJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeIb9AAKCRD2t4JPQmmg
- cy7MEADkZr+/SOv7/ekJ2zg6eU0zFGPNsuwRKvruhBg1XYsUi9Pki4zhlz4NKqCpweabc+sP7EO
- j6ncKk6s2TJuInE70nLtYGu3ErvO4+z/1o+ekerbOUwotu8cOiEI7OcYflBr5vhAAkXyvIxUBdq
- ycI58RY/iwYUNYQZgYrMSmVa5AHDE0i+DfgkEkb//JWv3FR2RcknCsdnUYgQ7Wi/jqvy9X5hJd6
- 7FDwt0HLi/FwbsCFsdzCws+gihZbkKyoe10PxOFjeMZekoc55m7E80wGGwgBXq6J/FaDZCKua0+
- wsQo7FpzhoTp9wjGZMB47C24DoOsrLZ03uZrZz25fvL6nH+kdMdzECmu6XW21hvqf733hqiwEph
- U1QLuYHZFZKrIT1WCHZVAWRPbtJmlMglzoBSMxRtWP6b6kTCMxmFoKX/LHOnx9BRrwgy/2IOISE
- f/CKngKX/VLuU+kOiQOQFJBc0bUlihzIDoi7gUieVadvFLKtGbU9NgQ2oqHpnuh8BQaLIAelC0T
- ylaoAyIdq9kwTrt6mJEpG6K0V2bt3ROCj/aASZ7hdUBRN0PmjhL3FGaszo+uLCfcVZsSj4ULVSk
- +AMQ5vnBP+pynMvUsKsd7RlIudXuY6oOc4bIWNrKV67e/KqENltkvF4iFnyZoAer8IplgsbT26P
- MCOaCJB7RmO3hCQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240301014203.2033844-2-chris.packham@alliedtelesis.co.nz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Fri, Mar 01, 2024 at 02:42:00PM +1300, Chris Packham wrote:
+> Add a driver for a 7-segment LED display. At the moment only one
+> character is supported but it should be possible to expand this to
+> support more characters and/or 14-segment displays in the future.
 
-This patch adds token parameter together with addr in get-addr section in
-mptcp_pm.yaml, then use the following commands to update mptcp_pm_gen.c
-and mptcp_pm_gen.h:
+...
 
-./tools/net/ynl/ynl-gen-c.py --mode kernel \
-        --spec Documentation/netlink/specs/mptcp_pm.yaml --source \
-        -o net/mptcp/mptcp_pm_gen.c
-./tools/net/ynl/ynl-gen-c.py --mode kernel \
-        --spec Documentation/netlink/specs/mptcp_pm.yaml --header \
-        -o net/mptcp/mptcp_pm_gen.h
+> + * Driver for a 7 segment LED display
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- Documentation/netlink/specs/mptcp_pm.yaml | 3 ++-
- net/mptcp/mptcp_pm_gen.c                  | 7 ++++---
- net/mptcp/mptcp_pm_gen.h                  | 2 +-
- 3 files changed, 7 insertions(+), 5 deletions(-)
+7-segment
 
-diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
-index 49f90cfb4698..af525ed29792 100644
---- a/Documentation/netlink/specs/mptcp_pm.yaml
-+++ b/Documentation/netlink/specs/mptcp_pm.yaml
-@@ -292,13 +292,14 @@ operations:
-     -
-       name: get-addr
-       doc: Get endpoint information
--      attribute-set: endpoint
-+      attribute-set: attr
-       dont-validate: [ strict ]
-       flags: [ uns-admin-perm ]
-       do: &get-addr-attrs
-         request:
-           attributes:
-            - addr
-+           - token
-         reply:
-           attributes:
-            - addr
-diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
-index 670da7822e6c..c30a2a90a192 100644
---- a/net/mptcp/mptcp_pm_gen.c
-+++ b/net/mptcp/mptcp_pm_gen.c
-@@ -32,8 +32,9 @@ const struct nla_policy mptcp_pm_del_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1]
- };
- 
- /* MPTCP_PM_CMD_GET_ADDR - do */
--const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1] = {
--	[MPTCP_PM_ENDPOINT_ADDR] = NLA_POLICY_NESTED(mptcp_pm_address_nl_policy),
-+const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ATTR_TOKEN + 1] = {
-+	[MPTCP_PM_ATTR_ADDR] = NLA_POLICY_NESTED(mptcp_pm_address_nl_policy),
-+	[MPTCP_PM_ATTR_TOKEN] = { .type = NLA_U32, },
- };
- 
- /* MPTCP_PM_CMD_FLUSH_ADDRS - do */
-@@ -110,7 +111,7 @@ const struct genl_ops mptcp_pm_nl_ops[11] = {
- 		.doit		= mptcp_pm_nl_get_addr_doit,
- 		.dumpit		= mptcp_pm_nl_get_addr_dumpit,
- 		.policy		= mptcp_pm_get_addr_nl_policy,
--		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
-+		.maxattr	= MPTCP_PM_ATTR_TOKEN,
- 		.flags		= GENL_UNS_ADMIN_PERM,
- 	},
- 	{
-diff --git a/net/mptcp/mptcp_pm_gen.h b/net/mptcp/mptcp_pm_gen.h
-index ac9fc7225b6a..e24258f6f819 100644
---- a/net/mptcp/mptcp_pm_gen.h
-+++ b/net/mptcp/mptcp_pm_gen.h
-@@ -18,7 +18,7 @@ extern const struct nla_policy mptcp_pm_add_addr_nl_policy[MPTCP_PM_ENDPOINT_ADD
- 
- extern const struct nla_policy mptcp_pm_del_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
- 
--extern const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
-+extern const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ATTR_TOKEN + 1];
- 
- extern const struct nla_policy mptcp_pm_flush_addrs_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
- 
+...
+
+> + * The GPIOs are wired to the 7 segments in a clockwise fashion starting from
+> + * the top.
+
+Not exactly. They can wire them as they wish, we just need to agree on the
+sequence of the segments in DT to be mapped to the 7-segment diagram.
+
+...
+
+> + *      -a-
+> + *     |   |
+> + *     f   b
+> + *     |   |
+> + *      -g-
+> + *     |   |
+> + *     e   c
+> + *     |   |
+> + *      -d-
+
+I would drop this as it's available in UAPI header...
+
+...
+
+> +#include <linux/bitmap.h>
+> +#include <linux/container_of.h>
+> +#include <linux/errno.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/types.h>
+> +#include <linux/workqueue.h>
+
+...which you forgot to include here.
+
+...
+
+> +static void seg_led_update(struct work_struct *work)
+> +{
+> +	struct seg_led_priv *priv = container_of(work, struct seg_led_priv, work.work);
+> +	struct linedisp *linedisp = &priv->linedisp;
+> +	struct linedisp_map *map = linedisp->map;
+> +	DECLARE_BITMAP(values, 8);
+
+> +	bitmap_zero(values, 8);
+
+Why do you need this zeroing?
+
+> +	bitmap_set_value8(values, map_to_seg7(&map->map.seg7, linedisp->buf[0]), 0);
+> +
+> +	gpiod_set_array_value_cansleep(priv->segment_gpios->ndescs, priv->segment_gpios->desc,
+> +				       priv->segment_gpios->info, values);
+> +}
 
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
