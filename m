@@ -1,103 +1,65 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EBD736118
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 01:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BC72B9B6;
+	Fri,  1 Mar 2024 01:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709256026; cv=none; b=hf+RRND9G9LQeLQqC/kuhyeQsVIwnGTNCG202+m/qHUKKx+BP4ZyMyG0ivIUL7rBn+pjAndWZ8UsRLirSOZaW2xBilDUVCLcxa50V+izhSTNoASSpUnf8txtFYqiBOTw1XWv+fabvXYFOnsQ5BDsF4frT0/xh4kgzoC0yICvfog=
+	t=1709256109; cv=none; b=MQcqs6qM4aXDVAtY/o/nWi63DW4lASvz8/22ydyO7IXKTEaq2Pu9W/DwSWfNrn/da0zDDCy2sm/6zP+nAl2IfqSi7PPCggamDeokdKPobFNwb+fnZaMbanGg50DjNmjbHB5amvziOKFVLYFdM+vkm9naOnbf1c01ad9vJBr2I1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709256026; c=relaxed/simple;
-	bh=0Qce3EgeLPkKjkHYKQFnccarXSgWI3VcDD+V67lSULE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EsjJYYuyhaWPCtFKeqDid28R/+zUn50r+pAJXas9oU0Ocke1mJuELiz4KfxIdNNzGD/Bbok30/xoFN9F07Eo+gkK35Z6JP7cB7cFoFeaxcFjBMOLg7msa8FsTQuHMK8uPM60JKGQVAU+NTXJUnNEFIqAkJoutwiQA7OYA6tzH70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=RYoHruyp; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1709256109; c=relaxed/simple;
+	bh=9VZL3OL61O3NqsqmXJrrO9tTNisjXKO547fUEATu2vU=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=cDx/zjfa7p4+53D6WlzPccME91uAydl/hC0+iXosgjW/hWRbx7v7NwNJ5kqR96NCD1Fdu2pMEKwUTllpNSbpJE2I1s7RW+Ik4gFyyAAgC5OEcUllj9bsLVxefgijUquEcXwpLA0tsoEZm/rJpxgIuC2Gq3PQvz62NItJ2rMu2/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsZq25qy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="RYoHruyp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=8eX63
-	ggw/SlvICRxbqzBzag4pSVNVLQSaMXoM3yRais=; b=RYoHruypxU2y8XMLNwpfe
-	x82VogKFQ52DfiQ8DY2anUkdfP78KsUwqx73O6sGczzQ/Fv6zuv7XIb/I7zRBMWr
-	3RuR6RY72Rui/vcvrkeVGlzukpUiym0GYEK3F/12VWsbUbMelVwosdMOT+mSrhx+
-	p/I57hKRFvYLYNlvy88co0=
-Received: from localhost.localdomain (unknown [111.48.58.12])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wCHb57yLOFlXN+REw--.49146S2;
-	Fri, 01 Mar 2024 09:18:43 +0800 (CST)
-From: songxiebing <soxiebing@163.com>
-To: tiwai@suse.de
-Cc: alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org,
-	songxiebing@kylinos.cn,
-	soxiebing@163.com,
-	tiwai@suse.com
-Subject: [PATCH v2] ALSA: hda: optimize the probe codec process
-Date: Fri,  1 Mar 2024 09:18:41 +0800
-Message-Id: <20240301011841.7247-1-soxiebing@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <878r35huf0.wl-tiwai@suse.de>
-References: <878r35huf0.wl-tiwai@suse.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsZq25qy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82733C433F1;
+	Fri,  1 Mar 2024 01:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709256108;
+	bh=9VZL3OL61O3NqsqmXJrrO9tTNisjXKO547fUEATu2vU=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=fsZq25qywIs9aZM87HNQqN7jD/u/zMvNq8lDWNMIYumdv6JFDkyND3G+26Wh3Ujis
+	 cC808MZtWWqfWykpCRLGUtylhrAg205t1zU3T8RtOeqzhEWrz+3UjV7c88jUoG/TKT
+	 dzQKqWEVpKiTS/98oBu8R0mz7XSo3UY7J0E25aIhRwNcZogODlhbsV/tzJDNUTW82Z
+	 RbmSqk1ixxldWvmcPjpoS4+2zP6DimOJdxI/6lvG97fdy7O4Q2+SHVENAOVHxMBU5L
+	 iAX4e/BUTzZouaEgp+QmaDK2iIKPqhQeUKqP1PdnDRcu9e2Pm1V1KLuwjozJ5hBbsg
+	 +q1lowHWcHGTw==
+Message-ID: <6bfce5ec26a26c327c4196dbe57b63d5.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHb57yLOFlXN+REw--.49146S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Wry7tFW5Kw43KFW5Cr1DGFg_yoW8KF18p3
-	W7Cr1fGayxtF4akFs7Gw43Ka4xWa4vqan8Jw1Yyw13Zwn7Kr1fXr9YyrW8AFW8ur4I9r1Y
-	vw4UK3WkX3s8CaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piwIDrUUUUU=
-X-CM-SenderInfo: 5vr0xvpelqwqqrwthudrp/1tbiJxaUw2XAkqqxxgAAsM
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2b274111-e65a-4b99-8f07-220324f1e214@amd.com>
+References: <20240229122250.24786-1-duoming@zju.edu.cn> <2b274111-e65a-4b99-8f07-220324f1e214@amd.com>
+Subject: Re: [PATCH v2] clk: zynq: Prevent null pointer dereference caused by kmalloc failure
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mturquette@baylibre.com
+To: Duoming Zhou <duoming@zju.edu.cn>, Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org
+Date: Thu, 29 Feb 2024 17:21:46 -0800
+User-Agent: alot/0.10
 
-From: songxiebing <songxiebing@kylinos.cn>
+Quoting Michal Simek (2024-02-29 04:45:54)
+> On 2/29/24 13:22, Duoming Zhou wrote:
+> > diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
+> > index 7bdeaff2bfd..e4c4c9adf79 100644
+> > --- a/drivers/clk/zynq/clkc.c
+> > +++ b/drivers/clk/zynq/clkc.c
+> > @@ -427,7 +427,7 @@ static void __init zynq_clk_setup(struct device_nod=
+e *np)
+> >                       SLCR_GEM1_CLK_CTRL, 0, 0, &gem1clk_lock);
+> >  =20
+> >       tmp =3D strlen("mio_clk_00x");
+> > -     clk_name =3D kmalloc(tmp, GFP_KERNEL);
+> > +     char clk_name[tmp];
+>=20
+> I know that Stephen asked for it but variable with variable length in the=
+ middle=20
+> of code doesn't look good or useful.
 
-In azx_probe_codecs function, when bus->codec_mask is becomes to 0(no codecs),
-execute azx_init_chip, bus->codec_mask will be initialized to a value again,
-this causes snd_hda_codec_new function to run, the process is as follows:
--->snd_hda_codec_new
--->snd_hda_codec_device_init
--->snd_hdac_device_init---snd_hdac_read_parm(...AC_PAR_VENDOR_ID) 2s
-		       ---snd_hdac_read_parm(...AC_PAR_VENDOR_ID) 2s
-		       ---snd_hdac_read_parm(...AC_PAR_SUBSYSTEM_ID) 2s
-		       ---snd_hdac_read_parm(...AC_PAR_REV_ID) 2s
-		       ---snd_hdac_read_parm(...AC_PAR_NODE_COUNT) 2s
-when no codecs, read communication is error, each command will be polled for
-2 second, a total of 10s, it is easy to some problem.
-like this:
-  2 [   14.833404][ 6] [  T164] hda 0006:00: Codec #0 probe error; disabling it...
-  3 [   14.844178][ 6] [  T164] hda 0006:00: codec_mask = 0x1
-  4 [   14.880532][ 6] [  T164] hda 0006:00: too slow response, last cmd=0x0f0000
-  5 [   15.891988][ 6] [  T164] hda 0006:00: too slow response, last cmd=0x0f0000
-  6 [   16.978090][ 6] [  T164] hda 0006:00: too slow response, last cmd=0x0f0001
-  7 [   18.140895][ 6] [  T164] hda 0006:00: too slow response, last cmd=0x0f0002
-  8 [   19.135516][ 6] [  T164] hda 0006:00: too slow response, last cmd=0x0f0004
- 10 [   19.900086][ 6] [  T164] hda 0006:00: no codecs initialized
- 11 [   45.573398][ 2] [    C2] watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [kworker/2:0:25]
-
-Here, when bus->codec_mask is 0, use a direct break to avoid execute snd_hda_codec_new function.
-
-Signed-off-by: songxiebing <songxiebing@kylinos.cn>
----
-Changes in v2: fix some non-ASCII comma letters.
----
- sound/pci/hda/hda_controller.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
-index e5c53ad..e1ece0a 100644
---- a/sound/pci/hda/hda_controller.c
-+++ b/sound/pci/hda/hda_controller.c
-@@ -1474,6 +1474,9 @@ int azx_probe_codecs(struct azx *chip, unsigned int max_slots)
- 				dev_warn(chip->card->dev,
- 					 "Codec #%d probe error; disabling it...\n", c);
- 				bus->codec_mask &= ~(1 << c);
-+				/* no codecs */
-+				if (bus->codec_mask == 0)
-+					break;
- 				/* More badly, accessing to a non-existing
- 				 * codec often screws up the controller chip,
- 				 * and disturbs the further communications.
--- 
-2.7.4
-
+I didn't ask for it to be in the middle of the function :)
