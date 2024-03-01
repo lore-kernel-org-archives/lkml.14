@@ -1,270 +1,279 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2087.outbound.protection.outlook.com [40.107.95.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A9C6EB52;
-	Fri,  1 Mar 2024 14:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709301631; cv=none; b=ES+1De0A71btAwCcON6GK7LhCu5QO+DwDZus94uqJqCf8gaw573AIbRni3el8kqxFymgBfJ6Iq9VEE1esrEfkquZFPrImBXr8Z006DL2kBghnukT00k8pB7jnzqgcmUwJrxiV0a9Y3+TpKbJWR6T2eIJNroIt17iS3DIMf+tS98=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709301631; c=relaxed/simple;
-	bh=rnQG0RYa0vCgi5/RqR0kfUP0JURoJ9BVtlS3WqRsXqs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L+iUT5SFirVS3O5mxduGdj2ZuRgGiIFd/dG2xLzVEx9+RvJAxBGVJzSoxkyV3FZiJ4U5roy1orCPP1MplsAQemafbaFlESe1mP9KEZmGsDbDBemrF03Pt8CR7bHb5sqVMMP2LtuvanVcYO/xpQV58KVO7+e7z6TnTjyN/nFx9oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ASbjTFCj; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008DB6F06C;
+	Fri,  1 Mar 2024 14:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709301640; cv=fail; b=dJb+0SLhNOagqgx5amXbwXiYkQQlnnDGyD+9hCucUQjbaGFC3U1/JpSScr8ck67McFao47TroIruDBa2kJbHQzsYeTH40aGZuq9GB5TgmqF1z0C5Uxk+ssAOA+xLvnpDoLpKbAVW5Gt+e6C5+Us/6FzHNarpSRIhnAGBXn9fI+8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709301640; c=relaxed/simple;
+	bh=Wxi1uj1RB5mWSEa1yjlMGVl3WeO3lXdzn3eLgh/BJkU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ljta4xVmtgwMaFSNX7S97U26mwj4So48+K25WNvb8UMGBVrsHFOi6lm2xAKtaXj07q8SnqqaW5fgqOS8CyQa8XxjnDUnXfYNa3vci1fBC2omn7FTL20TNqiXMprCwwGAmIuvxiCNPj3PjxeYyWsfFflquNMOTyJ9K+C+XOzbXvI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XmUiHa/M; arc=fail smtp.client-ip=40.107.95.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASbjTFCj"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso1925599a12.2;
-        Fri, 01 Mar 2024 06:00:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709301629; x=1709906429; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7hpDxMagyZiMsrEcLSx4CKqR7Q5yVjUbUGFKDQCjEe8=;
-        b=ASbjTFCj2L70sjzIk6Kz4L1vGamoiRO3yq1Nrax3j7sEoMegiWPhvrQiXoZBMVauWZ
-         r0dULVuTptNssrnQo2GOWGwRIzllAp5z3XygMKg1/BKQLrgE22LsMXlUyC/cq0ghzC/3
-         Po6pKgN7Rj4mOU+V0/HcrU8WzF0OiesdiaJE51vlpVunnr0RJSHyrSydL5ZIgHd8uHf0
-         qQ6PKp6J2hyl/pWFYvXtmDwbM/RxmBYfb/rsRRUMT4oDlwP/mJ+c9oqN0A5coonaMYS+
-         DrUn/MKgBeSpoSNEv8MD2o7GGiu50VX68+9KapkZlU/rEzsZcTWLGZYV6uwkQb5sDvI/
-         u4UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709301629; x=1709906429;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7hpDxMagyZiMsrEcLSx4CKqR7Q5yVjUbUGFKDQCjEe8=;
-        b=Xz1spPGvck4ctJBvHpcmXBPV/W6m0KEMxMW6Fk4YyV1vJMckE+Jc5qUfvqE8j4GwGg
-         oU0BtwwXODJ2RbTuxv/wBu9fzz2ZbhaNpzbWpJlEvrqNl3wD9PJodhZiB8WiFPShTwEk
-         a1RB9EmEEwxaIbPFf3qLDtoYbtIdv7pR7TauNSFUNSAhINaP9iax9MpUtiJXWB43UV6+
-         eYR7AlTn2Ub0Mgx9SPsZCbCXPtVm0IC9QLL66U2FVol5aEL3VtdlOGogxZTFsINsv5TO
-         u5vPWcv9GQmJoNIM7UnPJiut1NjW4F1avZYQGC6SjKNKWVyUqrOyYgMi4TgEYU9b6i6I
-         cGnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOwTvfpim+9rKX+50QF2UJ/k3wuLavxK/vSZRSfrp/4OrW5tNA48ZpQltIfHEm3ojAgYW3XDWKR+vZpEtrLodsk4oDrJO9ppyoBGLbNW7MNKYZbxhDsdEVT/xgHnLqU36B
-X-Gm-Message-State: AOJu0YxO8Hy13nHqFwIauYuG1XNPOiz3ce0Gq6H33OZyUh3/qcFWD4V2
-	P+IVMEh1uciKNSdguTSbznuHg6PTnVhPaEOaU8DmHO7qgYLb7oZC34jCZ9ffu9qlFpDcNOrTmDU
-	PjYgu+yrX5fx72KCVih5Wm5HXFpw=
-X-Google-Smtp-Source: AGHT+IEN3fKckUQ9bIamtgU20Go7E3qdpBliAncF94FYF8hBWPLJ+p02vAHPjpbiOhvjXwyaawlg7U5DKeweY+PKcng=
-X-Received: by 2002:a05:6a20:d808:b0:1a0:dcf0:c73e with SMTP id
- iv8-20020a056a20d80800b001a0dcf0c73emr1681454pzb.56.1709301629404; Fri, 01
- Mar 2024 06:00:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XmUiHa/M"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KeXJhmBBiY9a3GJUzytlMZlijRhuDzIdrhT1sS2uzgODa0ctT7IT2KBy0c/V09m5qtZAly3mt3Lo73ksNPvmZ5JlUOYNhrDyIIWtBMxEFgU4SsE2+rx28T7Tp+Ni1zCKVMpg3s6MREysptqIw3I2NRQ4izN/vu0fP/WCqWGq5dJs0z7gnGZzIT7LaOoLLUrtJV4Vd8BrHctWbW+ybUQGSiC9fa7iVHo1jlnY1pgTNvrc3S34uDs3NDkB/oEcgW4rfX5EWKr0IZVDon8rphdPkWueX0WI+c60xLkJrD9vb3hu6mp31v1Gfa+hWniFPfZaCu8xX8FQJDg7sZ4WFpu49A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QhubtjR5YhDRRIOMUyRXY2eCk22CB3ZtNmJMhE2vjuY=;
+ b=fEs4t8obfuewOXC9VBCAFeIlGA+juq5l/LvJpFUFg143ek7iewO60GaAZ+eGpuO29sgvS6HyeoWXcEMKphaGXw00lZI2TONRcbXKsBetaPjN5jVzbQ/nOOuNSvDuGVSdps/L6pB8lg9dzkNHqJ7FJTR7X9sO8s/tki52afQQHbdvyt2JRIoXcm++GCu9+DNNAaCaFX4qU5+2caMiBr3wsv+tFDFFeb6PdXHDw6td0RQWqF4ov4TmceIy0CIlzyiO89jJdxfwameJfVkdIS8nl8UALsmNy9foMU5J9SIXpgCIoyBtuXlh16g39dBFruClZrfwPK2hNj/Ci80i4OrrFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QhubtjR5YhDRRIOMUyRXY2eCk22CB3ZtNmJMhE2vjuY=;
+ b=XmUiHa/Mfs/VB0crw9i4xcS5U0CN/C5wJAly3hZkC0pwB7IzwsZxCLH9QySl37Is8AKY8zTCeEwJVKSmj2DgpgHJJIxjT7fyYXDWqf6vDfUgoCy2qhcH2ehBNd+QdDkn2BkvKK2OJSZKOFZGlPlIkr41mPNCBh+c6Ag7UtpZ97LOCP6/48G0BBxsStyXGW6NARS8TSVGUtDjKxRRXNFWB8U07RTzw6+vL99VwW2g9mzkhUJM46QYPxGkZAqlfP/H07IGm0BdwJ5aoADXi/pVfad26MfkxK01V4LEHRgr7kqE3y0Jhx9t0WzMrjq3S5SlZ+SwbJjdPaVnUDTQn6BISA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
+ SN7PR12MB6929.namprd12.prod.outlook.com (2603:10b6:806:263::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Fri, 1 Mar
+ 2024 14:00:36 +0000
+Received: from DS7PR12MB5744.namprd12.prod.outlook.com
+ ([fe80::dc5c:2cf1:d5f5:9753]) by DS7PR12MB5744.namprd12.prod.outlook.com
+ ([fe80::dc5c:2cf1:d5f5:9753%6]) with mapi id 15.20.7339.033; Fri, 1 Mar 2024
+ 14:00:35 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Aishwarya TCV <aishwarya.tcv@arm.com>
+Cc: "\"Pankaj Raghav (Samsung)\"" <kernel@pankajraghav.com>,
+ linux-mm@kvack.org, "\"Matthew Wilcox (Oracle)\"" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Yang Shi <shy828301@gmail.com>,
+ Yu Zhao <yuzhao@google.com>,
+ "\"Kirill A . Shutemov\"" <kirill.shutemov@linux.intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ =?utf-8?q?=22Michal_Koutn=C3=BD=22?= <mkoutny@suse.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ "\"Zach O'Keefe\"" <zokeefe@google.com>, Hugh Dickins <hughd@google.com>,
+ Luis Chamberlain <mcgrof@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 8/8] mm: huge_memory: enable debugfs to split huge
+ pages to any order.
+Date: Fri, 01 Mar 2024 09:00:33 -0500
+X-Mailer: MailMate (1.14r6018)
+Message-ID: <2ED5C25C-FDB2-490F-B740-E413E8186C12@nvidia.com>
+In-Reply-To: <082e48c8-71b7-4937-a5da-7a37b4be16ba@arm.com>
+References: <20240226205534.1603748-1-zi.yan@sent.com>
+ <20240226205534.1603748-9-zi.yan@sent.com>
+ <082e48c8-71b7-4937-a5da-7a37b4be16ba@arm.com>
+Content-Type: multipart/signed;
+ boundary="=_MailMate_733E91E2-3397-4C86-9CED-883987CDD269_=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+X-ClientProxiedBy: BL1PR13CA0004.namprd13.prod.outlook.com
+ (2603:10b6:208:256::9) To DS7PR12MB5744.namprd12.prod.outlook.com
+ (2603:10b6:8:73::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226143630.33643-1-jiangshanlai@gmail.com>
- <CABgObfaSGOt4AKRF5WEJt2fGMj_hLXd7J2x2etce2ymvT4HkpA@mail.gmail.com> <Zd4bhQPwZDvyrF44@google.com>
-In-Reply-To: <Zd4bhQPwZDvyrF44@google.com>
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-Date: Fri, 1 Mar 2024 22:00:16 +0800
-Message-ID: <CAJhGHyChprt9LvLXXDeu1KwS4_V5mqhUTwJyDvqca-S_PSy6zg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/73] KVM: x86/PVM: Introduce a new hypervisor
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, kvm@vger.kernel.org, x86@kernel.org, 
-	Kees Cook <keescook@chromium.org>, Juergen Gross <jgross@suse.com>, 
-	Hou Wenlong <houwenlong.hwl@antgroup.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|SN7PR12MB6929:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07be0362-e9c9-45a2-89f2-08dc39f7f7da
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+rHgJQsXfjFSWhh5BKn8RmKmknq4J7s3EdC6WY+hfwuupxCSq3m6u94GNzlGue8WCyIkJJQK2t6lOaTSN+ZN9CREQrcKmVnU3zB3PFPH+k25KjOHmnUhzlO4OKA1mP+CkjvnKBmFQbMuLYrlNxdmd8MaxB/Czgb/7usPjYTb4ISpYSoFl4KWmBQPJ4cSuyYqtTZyKqVtaVIVLVCvbkWK/D0NmlzrrKeNFYRwrF6OEBNx/BOB8f5e9s6x7pSN2noB8LXjAI8VnFFINcMVz0rRtVXrlt7Rw6yvNobv9eCHFnKYZE0eNzWMXdtc4RHPMmCwQGrw6UU+onDxwguAiT37Ywu102NrK5KSo1Bdmt+rH0ipbPzICRioXOcU/L9ivTW/jvA7OGA+pqejChBwWW28JAopoMzN8xNEBKK8XDWWE/PN0XKfVW81aKaX7tc/lyzPMvu9uTqFGsapA7AHKZt7G/xDj+x3frPT1fP3GlQ9TrwcievtXT3JUq7FJapxVGnYYmhi32AkVDnpA3FldNePJt1v26NrJxEH17uHUsO7vm9sdvvioOYjPhgpsj/8z0IZISBhDMOKnVv8G4VRJoRNUbE9pLceLCjgqYnmnvpHj6g4eGn53yQJuKU01zV815aqTfpyfeNE4FRG2f3Sjr6k3Q==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VlRtaGl5MVVNOGZNQ3pBY1JkTzAzUnJXL2M4RW9YMERWaEZTd3dLRE40NDl6?=
+ =?utf-8?B?Mm1KYWVFQk5COVRSOUVCaXdycWtWK0NsMldMZi80QUx0elZZV2xzNDVZVTJI?=
+ =?utf-8?B?N3dqZEw1TjE4QUFjdXR1UmFLR1RJUG1UTmh0aW9rQ2xrdGhkQk5vZHVRK0VI?=
+ =?utf-8?B?UnlCOW92N2RCNTg5M3MxbUI2aDkvWndqV1M3VWpob1loSzhkZWlmUFdRTlVz?=
+ =?utf-8?B?Rk1EK0NjN24wQTBWYUtDTkluZllRemZEaHB1ckFPaDdGSm4wWTJ0TFI0LzRn?=
+ =?utf-8?B?Zis3NUN3QXJLYUNOSitndTdQbG1sYklwTmlmRkhnTTR3clh6dWVVMVYvc0Rh?=
+ =?utf-8?B?ZWlQencyRnVpRDJxaFZpbFVLM3BNeGFsaklCeGxFWjdtSUNkOWdnRUR3cUR4?=
+ =?utf-8?B?SGpXRmZxaWRPQnlLck5vTnphcTlrUXozNC9QbkJtaGlJQ0ZBaVNnUkJHdkRa?=
+ =?utf-8?B?NU9FMGloUkF6NUdQQWF5Ri9xUlZHeHk2NEpCZ2VZNDdiRlZCaGlRaUY2TUtu?=
+ =?utf-8?B?ZmlvbHlpUy9tOWtYVThSZGhNMFVPWmtHSWhRbkJtZGprSHpjbmlkSTc5TmtR?=
+ =?utf-8?B?d3pJWmcyWHFnMjUvTEc2VVZpRUY5WiswNGhpb0RtZnQzYTZVNTl1K1FuVUtj?=
+ =?utf-8?B?Y2NMa3EyWlBjcnpWcjVaRzJmeDZEK2RXeUZET1dXTXU2T3JpTWcrYzR6d21J?=
+ =?utf-8?B?MVdCd1Q3TERweDlsUE1Jai81dDM1bjlpZStYdU1ZeUQ5VTVHRzU1RG1GYUJi?=
+ =?utf-8?B?U2tJUkFBRmFwZk4zY29HeEM0UWt2Z2swSDYwWm12NENxSTZzNTdFYm1CdUhY?=
+ =?utf-8?B?dUpTMjRhQkZkbFJCNVB6V1RtVisvQXNQS25rbzlWcjFhbkVoRDVGOUk1Wjkx?=
+ =?utf-8?B?NVhnWFJnMVh1Zml1SU9JRncwWEpwMXVDYjN5Q01RTG4xNXZZMnFyd25XUDV0?=
+ =?utf-8?B?MitaYXZobUMvMjJxbExmc2VwWm5BQlNKc2pBcVRvMkMvUDRKK0llTG5xN0Vh?=
+ =?utf-8?B?NkFuRG9HbmV1c2MxV3crcG9kNWZ6Z0o1T1M0UFNNd1VtS3h5dVFaSWJBSS9E?=
+ =?utf-8?B?bnM0R1grMmMrM3EwdUdmalUxK05NSE9hUjYrZGp0dk96YVNGVisxZytuUmJK?=
+ =?utf-8?B?QWlFMHNQWk9HNmFsWUpOSkZGcmg3RVhtL1BrcVhiMzBkZEcyUXhzb1J4YkJO?=
+ =?utf-8?B?RVZxZ0JwaXVHbDdjN3dnK3ZEbUd3dUduRXFSQXRVdG1YTGZhNkhSdlFvbVFo?=
+ =?utf-8?B?NmxCa2hWeVp4L1pMNGN1K1V4MkhlUkZwL25PSm9TRXFsL1JiTG05TXdxZjBG?=
+ =?utf-8?B?U1dYQkxHV2U3MWwwUVVZVTRmd1N4ZkxzbTgrRmxBTldSNDNhWHhaY1h0dE53?=
+ =?utf-8?B?VEJKdU4zQUJETC85M0E1dzVScmZKWkFaVnhBbnFIU2dlN0RsTndNYStLSnBM?=
+ =?utf-8?B?cHlmQjBWTk1nVlM2MmF6aE1GQ3JXVEQ0YUlOMUV4NEdTSDNSQzVWclU1REw2?=
+ =?utf-8?B?d1hyQmM2eUNhZkhWU0tPWmRxNlFxb0hUWDIySWdzSnV5RWIwVVNPT1FUTTB6?=
+ =?utf-8?B?Slg5TmV4QkcyR0xudFJIeVkvMEVmZVdTdWtHUnc5VHNha0ROOHp4RXJyV0VN?=
+ =?utf-8?B?SUhQYTZ2VzRWZUo5TGpQL0NOd1F5QXNibW14YXR3UXRmcG5JamNXWmNJZlpw?=
+ =?utf-8?B?dmVsbjhmcVZra290cEtubCt0RSs1RHVmanAyNWJ5TVU5MTZEN1p1R2UyRXN4?=
+ =?utf-8?B?amVKY0NHVlNJNkJMaUJGallYVEdHa0hMY29iVDA2cW9qMHdCZEYzU0o1TXdj?=
+ =?utf-8?B?TXdObU5QeFJYeWlVcW5EMFBDcHNDd0tUVWhyQklPak82SnlEQzVvUDFJa0NO?=
+ =?utf-8?B?TThjWkNaL3N1VTZaVWl2MUtGbElhazdXdC83MWNiWENEbFB5WUxqUVNWbTJk?=
+ =?utf-8?B?a3ZXTFN4TGhVa3BrWi9vZXNVVkRGZVVRS1Q4UWM3MVFzUDJQY3RtM1lzdSt5?=
+ =?utf-8?B?blZCdDlHYXoxbzVYaFJwVTRxOEZwb2tteWt0anJkQ0pWQXRndlNnSXZEd3pq?=
+ =?utf-8?B?SE5RTHA5Zkw0YjI0NURqZy91YzBlTkxDRDBqeUZRVWViclJiUjMvWTJ3eGRY?=
+ =?utf-8?Q?EHLgcz+hLkxUEHWquK13d6Vxe?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07be0362-e9c9-45a2-89f2-08dc39f7f7da
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2024 14:00:35.8956
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s9k46kjN2BzTAqjhTyvd3/+xK971g7L43Cm7gJHJ/ICr2hgxbrdOdYEBZcqm/gya
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6929
+
+--=_MailMate_733E91E2-3397-4C86-9CED-883987CDD269_=
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hello, Sean
+On 1 Mar 2024, at 4:51, Aishwarya TCV wrote:
 
-On Wed, Feb 28, 2024 at 1:27=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
+> On 26/02/2024 20:55, Zi Yan wrote:
+>> From: Zi Yan <ziy@nvidia.com>
+>>
+>> It is used to test split_huge_page_to_list_to_order for pagecache THPs=
+=2E
+>> Also add test cases for split_huge_page_to_list_to_order via both
+>> debugfs.
+>>
+>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>> ---
+>>  mm/huge_memory.c                              |  34 ++++--
+>>  .../selftests/mm/split_huge_page_test.c       | 115 +++++++++++++++++=
+-
+>>  2 files changed, 131 insertions(+), 18 deletions(-)
+>>
 >
-> On Mon, Feb 26, 2024, Paolo Bonzini wrote:
-> > On Mon, Feb 26, 2024 at 3:34=E2=80=AFPM Lai Jiangshan <jiangshanlai@gma=
-il.com> wrote:
-> > > - Full control: In XENPV/Lguest, the host Linux (dom0) entry code is
-> > >   subordinate to the hypervisor/switcher, and the host Linux kernel
-> > >   loses control over the entry code. This can cause inconvenience if
-> > >   there is a need to update something when there is a bug in the
-> > >   switcher or hardware.  Integral entry gives the control back to the
-> > >   host kernel.
-> > >
-> > > - Zero overhead incurred: The integrated entry code doesn't cause any
-> > >   overhead in host Linux entry path, thanks to the discreet design wi=
-th
-> > >   PVM code in the switcher, where the PVM path is bypassed on host ev=
-ents.
-> > >   While in XENPV/Lguest, host events must be handled by the
-> > >   hypervisor/switcher before being processed.
-> >
-> > Lguest... Now that's a name I haven't heard in a long time. :)  To be
-> > honest, it's a bit weird to see yet another PV hypervisor. I think
-> > what really killed Xen PV was the impossibility to protect from
-> > various speculation side channel attacks, and I would like to
-> > understand how PVM fares here.
-> >
-> > You obviously did a great job in implementing this within the KVM
-> > framework; the changes in arch/x86/ are impressively small. On the
-> > other hand this means it's also not really my call to decide whether
-> > this is suitable for merging upstream. The bulk of the changes are
-> > really in arch/x86/kernel/ and arch/x86/entry/, and those are well
-> > outside my maintenance area.
+> Hi Zi,
 >
-> The bulk of changes in _this_ patchset are outside of arch/x86/kvm, but t=
-here are
-> more changes on the horizon:
+> When booting the kernel against next-master(20240228)with Arm64 on
+> Marvell Thunder X2 (TX2), the kselftest-mm test 'split_huge_page_test'
+> is failing in our CI (with rootfs over NFS). I can send the full logs i=
+f
+> required.
 >
->  : To mitigate the performance problem, we designed several optimizations
->  : for the shadow MMU (not included in the patchset) and also planning to
->  : build a shadow EPT in L0 for L2 PVM guests.
+> A bisect (full log below) identified this patch as introducing the
+> failure. Bisected it on the tag "next-20240228" at repo
+> "https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git".
 >
->  : - Parallel Page fault for SPT and Paravirtualized MMU Optimization.
->
-> And even absent _new_ shadow paging functionality, merging PVM would effe=
-ctively
-> shatter any hopes of ever removing KVM's existing, complex shadow paging =
-code.
->
-> Specifically, unsync 4KiB PTE support in KVM provides almost no benefit f=
-or nested
-> TDP.  So if we can ever drop support for legacy shadow paging, which is a=
- big if,
-> but not completely impossible, then we could greatly simplify KVM's shado=
-w MMU.
->
+> This works fine on  Linux version 6.8.0-rc6
 
-One of the important goals of open-sourcing PVM is to allow for the
-optimization of shadow paging, especially through paravirtualization
-methods, and potentially even to eliminate the need for shadow paging.
+Hi Aishwarya,
 
-1) Technology: Shadow paging is a technique for page table compaction in
-   the category of "one-dimensional paging", which includes the direct
-   paging technology in XenPV. When the page tables are stable,
-   one-dimensional paging can outperform TDP because it saves on TLB
-   resources. Another one-dimensional paging technology would be better
-   to be introduced before shadow paging is removed for performance.
+I am trying to fix the issue. When I am compiling selftests/mm, I encount=
+ered
+the error below when I run make under the folder. Am I missing any config=
+uration?
+Since you are able to run the test, I assume you know what is happening. =
+Thanks.
 
-2) Naming: The reason we use the name shadowpage in our paper and the
-   cover letter is that this term is more widely recognized and makes it
-   easier for people to understand how PVM implements its page tables.
-   It also demonstrates that PVM is able to implement a paging mechanism
-   with very little code on top of KVM. However, this does not mean we
-   adhere to shadow paging. Any one-dimensional paging technology can
-   work here too.
+vm_util.c: In function =E2=80=98__pagemap_scan_get_categories=E2=80=99:
+vm_util.c:34:28: error: storage size of =E2=80=98arg=E2=80=99 isn=E2=80=99=
+t known
+   34 |         struct pm_scan_arg arg;
+      |                            ^~~
+vm_util.c:41:27: error: invalid application of =E2=80=98sizeof=E2=80=99 t=
+o incomplete type =E2=80=98struct pm_scan_arg=E2=80=99
+   41 |         arg.size =3D sizeof(struct pm_scan_arg);
+      |                           ^~~~~~
+vm_util.c:45:35: error: =E2=80=98PAGE_IS_WPALLOWED=E2=80=99 undeclared (f=
+irst use in this function)
+   45 |         arg.category_anyof_mask =3D PAGE_IS_WPALLOWED | PAGE_IS_W=
+RITTEN | PAGE_IS_FILE |
+      |                                   ^~~~~~~~~~~~~~~~~
+vm_util.c:45:35: note: each undeclared identifier is reported only once f=
+or each function it appears in
+vm_util.c:45:55: error: =E2=80=98PAGE_IS_WRITTEN=E2=80=99 undeclared (fir=
+st use in this function)
+   45 |         arg.category_anyof_mask =3D PAGE_IS_WPALLOWED | PAGE_IS_W=
+RITTEN | PAGE_IS_FILE |
+      |                                                       ^~~~~~~~~~~=
+~~~~
+vm_util.c:45:73: error: =E2=80=98PAGE_IS_FILE=E2=80=99 undeclared (first =
+use in this function)
+   45 |         arg.category_anyof_mask =3D PAGE_IS_WPALLOWED | PAGE_IS_W=
+RITTEN | PAGE_IS_FILE |
+      |                                                                  =
+       ^~~~~~~~~~~~
+vm_util.c:46:35: error: =E2=80=98PAGE_IS_PRESENT=E2=80=99 undeclared (fir=
+st use in this function); did you mean =E2=80=98PAGEMAP_PRESENT=E2=80=99?=
 
-3) Paravirt: As you mentioned, the best way to eliminate shadow paging
-   is by using a paravirtualization (PV) approach. PVM is inherently
-   suitable for having PV since it is a paravirt solution and has a
-   corresponding framework. However, PV pagetables leads to a complex
-   patchset, which we prefer not to include in the initial PVM patchset
-   introduction.
+   46 |                                   PAGE_IS_PRESENT | PAGE_IS_SWAPP=
+ED | PAGE_IS_PFNZERO |
+      |                                   ^~~~~~~~~~~~~~~
+      |                                   PAGEMAP_PRESENT
+vm_util.c:46:53: error: =E2=80=98PAGE_IS_SWAPPED=E2=80=99 undeclared (fir=
+st use in this function)
+   46 |                                   PAGE_IS_PRESENT | PAGE_IS_SWAPP=
+ED | PAGE_IS_PFNZERO |
+      |                                                     ^~~~~~~~~~~~~=
+~~
+vm_util.c:46:71: error: =E2=80=98PAGE_IS_PFNZERO=E2=80=99 undeclared (fir=
+st use in this function)
+   46 |                                   PAGE_IS_PRESENT | PAGE_IS_SWAPP=
+ED | PAGE_IS_PFNZERO |
+      |                                                                  =
+     ^~~~~~~~~~~~~~~
+vm_util.c:47:35: error: =E2=80=98PAGE_IS_HUGE=E2=80=99 undeclared (first =
+use in this function)
+   47 |                                   PAGE_IS_HUGE | PAGE_IS_SOFT_DIR=
+TY;
+      |                                   ^~~~~~~~~~~~
+vm_util.c:47:50: error: =E2=80=98PAGE_IS_SOFT_DIRTY=E2=80=99 undeclared (=
+first use in this function); did you mean =E2=80=98PM_SOFT_DIRTY=E2=80=99=
+?
+   47 |                                   PAGE_IS_HUGE | PAGE_IS_SOFT_DIR=
+TY;
+      |                                                  ^~~~~~~~~~~~~~~~=
+~~
+      |                                                  PM_SOFT_DIRTY
+vm_util.c:50:26: error: =E2=80=98PAGEMAP_SCAN=E2=80=99 undeclared (first =
+use in this function); did you mean =E2=80=98PAGEMAP_PFN=E2=80=99?
+   50 |         return ioctl(fd, PAGEMAP_SCAN, &arg);
+      |                          ^~~~~~~~~~~~
+      |                          PAGEMAP_PFN
 
-4) Pave the path: One of the purposes of open-sourcing PVM is to bring
-   in a new scenario for possibly introducing PV pagetable interfaces
-   and optimizing shadow paging. Moreover, investing development effort
-   in shadow paging is the only way to ultimately remove it.
+--
+Best Regards,
+Yan, Zi
 
-5) Optimizations: We have experimented with numerous optimizations
-   including at least two categories: parallel-pagetable and
-   enlightened-pagetable. The parallel pagetable overhauls the locking
-   mechanism within the shadow paging. The enlightened-pagetable
-   introduces PVOPS in the guest to modify the page tables. One set of
-   PVOPS, used on 4KiB PTEs, queues the pointers of the modified GPTEs
-   in a hypervisor-guest shared ring buffer. Although the overall
-   mechanism, including TLB handling, is not simple, the hypervisor
-   portion is simpler than the unsync-sp method, and it bypasses many
-   unsync-sp related code paths. The other set of PVOPS targets larger
-   page table entries and directly issues hypercalls. Should both sets
-   of PVOPS be utilized, write-protect for SPs is unneeded and shadow
-   paging could be considered as being removed.
+--=_MailMate_733E91E2-3397-4C86-9CED-883987CDD269_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename=signature.asc
+Content-Type: application/pgp-signature; name=signature.asc
 
+-----BEGIN PGP SIGNATURE-----
 
-> Which is a good segue into my main question: was there any one thing that=
- was
-> _the_ motivating factor for taking on the cost+complexity of shadow pagin=
-g?  And
-> as alluded to be Paolo, taking on the downsides of reduced isolation?
->
-> It doesn't seem like avoiding L0 changes was the driving decision, since =
-IIUC
-> you have plans to make changes there as well.
->
->  : To mitigate the performance problem, we designed several optimizations
->  : for the shadow MMU (not included in the patchset) and also planning to
->  : build a shadow EPT in L0 for L2 PVM guests.
->
+iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmXh34EPHHppeUBudmlk
+aWEuY29tAAoJEOJ/noEUByhUkIoQAJVaEmpOlSOcfeJpEDI92YVEksQHkSmlCMy+
+SFkfW7DjWABKWjhoY4sL/vv0Lt9mkX9TeHdDEXh7austZe2el7B2dEJUa2QL+5PX
+Ltes2IRj9gRpLuANv6mUQvE6S78Tx/xtaFge8Vu75cLIgQqQ10pwnyoYWvmMX1sC
+L9NlALQ9FyypJnUQRt8q4sKSCIEPWlJlcWwaNTjZeHI04IuxU31YdpxEknQ9uhj9
+X8j6SSvbOraXitE+jbZcnXaLQwAn4xf+W1ZVID8wtPzSyFoC9IQTJCs2z/l/sOul
+wseZYryqQtP5tJr8giDXlqRz603RZAfl95qiG2xtn2lit1SXy0BmTcg9AicdjvkL
+J8zCdt7Uf1JWI+2zfBcwKNk5fe9urGrmuZUpXWIGtq/sizcxqM7AQnKZlqiTwRrI
+10JvtLbmysfpu1/PReJPlSRhEfiB0Fxw3c48UGXygiHLipXFs2zWPlUszgjXs3JW
+/A0O9oV3zpRDNL1PJrQKr9Yl4KYfkb1m+hurFWSeYkenvMXnCCwApHMvQnnc9rl2
+UCLdJ7d9wG+tyjQaBTNXh+dpFgBwnIBrTbuYAS+zuKVdm7+9cT8a3EOO/AsyywOE
+Gf6AWfVJs33roAw+iCXqvf9VMN3gBK3RhTEn5hzRCk9h5LJc9IbJQ+VvyKHssdUu
+kuUFA5S7
+=5Ey1
+-----END PGP SIGNATURE-----
 
-
-Getting every cloud provider to adopt a technology is more challenging
-than developing the technology itself. It is easy to compile a list that
-includes many technologies for L0 that have been merged into upstream
-KVM for quite some time, yet not all major cloud providers use or
-support them.
-
-The purpose of PVM includes enabling the use of KVM within various cloud
-VMs, allowing for easy operation of businesses with secure containers.
-Therefore, it cannot rely on whether cloud providers make such changes
-to L0.
-
-The reason we are experimenting with modifications to L0 is because we
-have many physical machines. Developing this technology getting help from
-L0 for L2 paging could provide us and others who have their own physical
-machines with an additional option.
-
-
-> Performance I can kinda sorta understand, but my gut feeling is that the =
-problems
-> with nested virtualization are solvable by adding nested paravirtualizati=
-on between
-> L0<=3D>L1, with likely lower overall cost+complexity than paravirtualizin=
-g L1<=3D>L2.
->
-> The bulk of the pain with nested hardware virtualization lies in having t=
-o emulate
-> VMX/SVM, and shadow L1's TDP page tables.  Hyper-V's eVMCS takes some of =
-the sting
-> off nVMX in particular, but eVMCS is still hobbled by its desire to be al=
-most
-> drop-in compatible with VMX.
->
-> If we're willing to define a fully PV interface between L0 and L1 hypervi=
-sors, I
-> suspect we provide performance far, far better than nVMX/nSVM.  E.g. if L=
-0 provides
-> a hypercall to map an L2=3D>L1 GPA, then L0 doesn't need to shadow L1 TDP=
-, and L1
-> doesn't even need to maintain hardware-defined page tables, it can use wh=
-atever
-> software-defined data structure best fits it needs.
->
-> And if we limit support to 64-bit L2 kernels and drop support for unneces=
-sary cruft,
-> the L1<=3D>L2 entry/exit paths could be drastically simplified and stream=
-lined.  And
-> it should be very doable to concoct an ABI between L0 and L2 that allows =
-L0 to
-> directly emulate "hot" instructions from L2, e.g. CPUID, common MSRs, etc=
-.  I/O
-> would likely be solvable too, e.g. maybe with a mediated device type solu=
-tion that
-> allows L0 to handle the data path for L2?
->
-> The one thing that I don't see line of sight to supporting is taking L0 o=
-ut of the
-> TCB, i.e. running L2 VMs inside TDX/SNP guests.  But for me at least, tha=
-t alone
-> isn't sufficient justification for adding a PV flavor of KVM.
-
-
-I didn't want to suggest that running PVM inside TDX is an important use
-case, but I just used it to emphasize PVM's universally accessibility in
-all environments, including inside the notoriously otherwise impossible
-environment as TDX as Paolo said in a LWN comment:
-https://lwn.net/Articles/865807/
-
- : TDX cannot be used in a nested VM, and you cannot use nested
- : virtualization inside a TDX virtual machine.
-
-(and actually the support for PVM in TDX/SNP is not completed yet)
-
-Thanks
-Lai
+--=_MailMate_733E91E2-3397-4C86-9CED-883987CDD269_=--
