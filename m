@@ -1,132 +1,159 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE141E4BD
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1FDA6995C;
+	Fri,  1 Mar 2024 09:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709286508; cv=none; b=DhtNqn95DL1AHAYaAZ1kCEQZYhj46rc6wx0I3KC84/nlC7FzPZHU0qpqpyn/VhoLGEefj4D5wAhJb7NJAtN8qMZ7IFoEn2I6Q0TkVjPxEO1vnPxxG9bkPCuJ2S66X7ucvm8fM4HL2HRoUaRF4CNa0Cm6ybU08WnN3qAmKx3HvB0=
+	t=1709286686; cv=none; b=kLz9yNTPmjS7bsUORvbu0yNAu/mEsmfXoiJUTqTexh8srPmeA3hrgG3vQrJa0ipmiE5e20Vigs1grmjtFbEpu+ls/ZyNZxaSUNKlUDpTWbv54BDCQwIdwAkiWvSqpxGSmCQL/JvGe43Y/BMRQIXZwE69tYhx4FyGq3sWiBbSkL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709286508; c=relaxed/simple;
-	bh=zfr2/Z4XDDvKRxaran7leIT1e/JMlRwrHfuX/mcUawE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Luopc2C3cWsqRxarbplMUKJkYbvlkwAidGYyXJJkuUI0KaUvWa+rDVWgl9dR75+71i5TlDq6kjz3kzRNYFzko/lJUnbLOj/zD4aLUwuwa32TVKzM+f89JPz06766OxplF+4ITrUJnYhadECeFWCTach2KZxrDDJCVHCMJyU+C2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S2bHFfW+; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S2bHFfW+"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4219RbFl019260;
-	Fri, 1 Mar 2024 09:48:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=bQHgKVrBps8F4ZTJ72KaBlIvOaPrhJSEKrvDGJ2dDIw=;
- b=S2bHFfW+pI6fncYQdpehLXKze7VXgbIEpQ6yc+DmcU7JwASz9+pHizpSCCVowDaV0GPN
- U9Fx9F7gv1JRFs7DCgponu9gmhfyBJVCJKkP6Vhetl3tHyY02V+SHgZAbjpbEry8zA3E
- YmkGsNa6NkNKt7H8bnzNMftZQWeRTi1IkFV1UMCDTJg6Ufb3qIcqdHIzLEgny63NxpxP
- kYJfMrxzxYFqQqvazFPV8f9QRUDhrq2+MO63U3eftw4+INBHlosGhom6uSaFXHywBlO6
- EW8BVvRSxOThSLxcDOK9aIoLCVnpL0EsfrCAFzr8mhc3qF8kBuy9a6ZhuzFDjYTiFki7 RQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wkcderj76-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 09:48:10 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4219lGU8031973;
-	Fri, 1 Mar 2024 09:48:10 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wkcderj57-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 09:48:10 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4216X6CJ008211;
-	Fri, 1 Mar 2024 09:26:44 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfv9mu98s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 09:26:43 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4219QckC23921392
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 1 Mar 2024 09:26:40 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4122D20043;
-	Fri,  1 Mar 2024 09:26:38 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4859820040;
-	Fri,  1 Mar 2024 09:26:35 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Fri,  1 Mar 2024 09:26:35 +0000 (GMT)
-Date: Fri, 1 Mar 2024 14:56:34 +0530
-From: Srikar Dronamraju <srikar@linux.ibm.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        yu.c.chen@intel.com, dietmar.eggemann@arm.com,
-        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
-        aboorvad@linux.ibm.com, vschneid@redhat.com, pierre.gondois@arm.com,
-        morten.rasmussen@arm.com, qyousef@layalina.io
-Subject: Re: [PATCH v3 1/2] sched/fair: Add EAS checks before updating
- overutilized
-Message-ID: <20240301092634.GA826313@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.ibm.com>
-References: <20240229104010.747411-1-sshegde@linux.ibm.com>
- <20240229104010.747411-2-sshegde@linux.ibm.com>
+	s=arc-20240116; t=1709286686; c=relaxed/simple;
+	bh=IXPS1YTOuSXz2bhI7nEjXLQQJhT3X+YyX8FgPiHLd2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UvsW3yISRazAi5bfZo5JkODacgjBb5P9Z1YdZpoJG4cynJfxQhV8N2JG0XMLR5fhy1xA9lSlvsmuGqs8huDudQ9iAZjmyS2Eh2q9wdjkpRmuwYpEyJlyW/QnbWHud5WaZQer9Kp7359QlxLIbyyU1X/+m1Mpx5caN1d+96oBPMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7515F1FB;
+	Fri,  1 Mar 2024 01:52:02 -0800 (PST)
+Received: from [10.57.10.152] (unknown [10.57.10.152])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 474DD3F762;
+	Fri,  1 Mar 2024 01:51:21 -0800 (PST)
+Message-ID: <082e48c8-71b7-4937-a5da-7a37b4be16ba@arm.com>
+Date: Fri, 1 Mar 2024 09:51:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20240229104010.747411-2-sshegde@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 0pi7lsYlI7UA7qBOqIvqvCNlVBwcCxqx
-X-Proofpoint-ORIG-GUID: 6-7toBEoOt6Ge1I9Jekxg8_jUXVlY332
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-01_05,2024-03-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
- mlxlogscore=999 malwarescore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403010082
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 8/8] mm: huge_memory: enable debugfs to split huge
+ pages to any order.
+To: Zi Yan <ziy@nvidia.com>, "Pankaj Raghav (Samsung)"
+ <kernel@pankajraghav.com>, linux-mm@kvack.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Yang Shi <shy828301@gmail.com>,
+ Yu Zhao <yuzhao@google.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, Roman Gushchin <roman.gushchin@linux.dev>,
+ Zach O'Keefe <zokeefe@google.com>, Hugh Dickins <hughd@google.com>,
+ Luis Chamberlain <mcgrof@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
+References: <20240226205534.1603748-1-zi.yan@sent.com>
+ <20240226205534.1603748-9-zi.yan@sent.com>
+Content-Language: en-US
+From: Aishwarya TCV <aishwarya.tcv@arm.com>
+In-Reply-To: <20240226205534.1603748-9-zi.yan@sent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-* Shrikanth Hegde <sshegde@linux.ibm.com> [2024-02-29 16:10:09]:
 
-> Overutilized field of root domain is only used for EAS(energy aware scheduler)
-> to decide whether to do load balance or not. It is not used if EAS
-> not possible.
-> 
-> Currently enqueue_task_fair and task_tick_fair accesses, sometime updates
-> this field. In update_sd_lb_stats it is updated often. This causes cache
-> contention due to true sharing and burns a lot of cycles. overload and
-> overutilized are part of the same cacheline. Updating it often invalidates
-> the cacheline. That causes access  to overload to slow down due to
-> false sharing. Hence add EAS check before accessing/updating this field.
-> EAS check is optimized at compile time or it is a static branch.
-> Hence it shouldn't cost much.
-> 
-> With the patch, both enqueue_task_fair and newidle_balance don't show
-> up as hot routines in perf profile.
-> 
-> 6.8-rc4:
-> 7.18%  swapper          [kernel.vmlinux]              [k] enqueue_task_fair
-> 6.78%  s                [kernel.vmlinux]              [k] newidle_balance
-> +patch:
-> 0.14%  swapper          [kernel.vmlinux]              [k] enqueue_task_fair
-> 0.00%  swapper          [kernel.vmlinux]              [k] newidle_balance
-> 
-> Minor change: trace_sched_overutilized_tp expect that second argument to
-> be bool. So do a int to bool conversion for that.
-> 
-> Fixes: 2802bf3cd936 ("sched/fair: Add over-utilization/tipping point indicator")
-> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
 
-Looks good to me.
+On 26/02/2024 20:55, Zi Yan wrote:
+> From: Zi Yan <ziy@nvidia.com>
+> 
+> It is used to test split_huge_page_to_list_to_order for pagecache THPs.
+> Also add test cases for split_huge_page_to_list_to_order via both
+> debugfs.
+> 
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> ---
+>  mm/huge_memory.c                              |  34 ++++--
+>  .../selftests/mm/split_huge_page_test.c       | 115 +++++++++++++++++-
+>  2 files changed, 131 insertions(+), 18 deletions(-)
+> 
 
-Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
--- 
-Thanks and Regards
-Srikar Dronamraju
+Hi Zi,
+
+When booting the kernel against next-master(20240228)with Arm64 on
+Marvell Thunder X2 (TX2), the kselftest-mm test 'split_huge_page_test'
+is failing in our CI (with rootfs over NFS). I can send the full logs if
+required.
+
+A bisect (full log below) identified this patch as introducing the
+failure. Bisected it on the tag "next-20240228" at repo
+"https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git".
+
+This works fine on  Linux version 6.8.0-rc6
+
+
+Sample log from failure against run on TX2:
+------
+07:17:34.056125  # # ------------------------------
+07:17:34.056543  # # running ./split_huge_page_test
+07:17:34.056839  # # ------------------------------
+07:17:34.057114  # # TAP version 13
+07:17:34.058564  # # 1..12
+07:17:34.156822  # # ok 1 Split huge pages successful
+07:17:34.214074  # # ok 2 Split PTE-mapped huge pages successful
+07:17:34.215630  # # # Please enable pr_debug in
+split_huge_pages_in_file() for more info.
+07:17:34.225503  # # # Please check dmesg for more information
+07:17:34.225862  # # ok 3 File-backed THP split test done
+07:17:34.236944  # # Bail out! Failed to create a file at /mnt/thp_fs#
+Planned tests != run tests (12 != 3)
+07:17:34.237307  # # # Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
+07:17:34.237620  # # [FAIL]
+07:17:34.246430  # not ok 51 split_huge_page_test # exit=1
+
+
+Bisect log:
+------
+git bisect start
+# good: [d206a76d7d2726f3b096037f2079ce0bd3ba329b] Linux 6.8-rc6
+git bisect good d206a76d7d2726f3b096037f2079ce0bd3ba329b
+# bad: [20af1ca418d2c0b11bc2a1fe8c0c88f67bcc2a7e] Add linux-next
+specific files for 20240228
+git bisect bad 20af1ca418d2c0b11bc2a1fe8c0c88f67bcc2a7e
+# bad: [1322f1801e59dddce10591d602d246c1bf49990c] Merge branch 'main' of
+git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
+git bisect bad 1322f1801e59dddce10591d602d246c1bf49990c
+# bad: [a82f70041487790b7b09fe4bb45436e1b57021d3] Merge branch 'dev' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git
+git bisect bad a82f70041487790b7b09fe4bb45436e1b57021d3
+# bad: [ce90480b9352ba2bebe8946dad9223e3f24c6e9a] Merge branch
+'for-next' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
+git bisect bad ce90480b9352ba2bebe8946dad9223e3f24c6e9a
+# bad: [5daac92ed3881fd0c656478a301a4e1d124100ee] Merge branch
+'mm-everything' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+git bisect bad 5daac92ed3881fd0c656478a301a4e1d124100ee
+# good: [acc2643d9e988c63dd4629a9af380ad9ac69c54a] Merge branch
+'mm-stable' into mm-unstable
+git bisect good acc2643d9e988c63dd4629a9af380ad9ac69c54a
+# good: [0294de8fe7d7c1a7eddc979cbf4c1886406e36b7] Merge branch 'fixes'
+of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git
+git bisect good 0294de8fe7d7c1a7eddc979cbf4c1886406e36b7
+# good: [83e0c8f0e777a1ef0977b2f8189101765703b32d] Merge branch
+'mm-nonmm-stable' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+git bisect good 83e0c8f0e777a1ef0977b2f8189101765703b32d
+# good: [a739cbe236e0dd3b6ff26a01fa1d31c73d4fac93] mm: memcg: make memcg
+huge page split support any order split
+git bisect good a739cbe236e0dd3b6ff26a01fa1d31c73d4fac93
+# bad: [efb520aa333b2f11daaaaa13f4a598b5ae4ae823] mm: allow non-hugetlb
+large folios to be batch processed
+git bisect bad efb520aa333b2f11daaaaa13f4a598b5ae4ae823
+# bad: [2258bdebb55e3ad3d30fd3849ddb955ff36825de] mm/zsmalloc: don't
+hold locks of all pages when free_zspage()
+git bisect bad 2258bdebb55e3ad3d30fd3849ddb955ff36825de
+# bad: [7fc0be45acf2878cbacc4dba56923c34c3fd8b1e] mm: remove
+total_mapcount()
+git bisect bad 7fc0be45acf2878cbacc4dba56923c34c3fd8b1e
+# good: [d55fac55da2f87ad5a99178e107df09770bbc411] mm: thp: split huge
+page to any lower order pages
+git bisect good d55fac55da2f87ad5a99178e107df09770bbc411
+# bad: [4050d591c1aaf9336c08511fa5984827186e9ad1] mm/memfd: refactor
+memfd_tag_pins() and memfd_wait_for_pins()
+git bisect bad 4050d591c1aaf9336c08511fa5984827186e9ad1
+# bad: [c0ba89c29ef559c95273feb481b049f622c43c17] mm: huge_memory:
+enable debugfs to split huge pages to any order
+git bisect bad c0ba89c29ef559c95273feb481b049f622c43c17
+# first bad commit: [c0ba89c29ef559c95273feb481b049f622c43c17] mm:
+huge_memory: enable debugfs to split huge pages to any order
+
+
+Thanks,
+Aishwarya
