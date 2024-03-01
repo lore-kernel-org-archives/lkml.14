@@ -1,143 +1,68 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230AC25623
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 21:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D27E57322;
+	Fri,  1 Mar 2024 21:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709329479; cv=none; b=bw2gmxJJf+51BhtBXIslgcJNxJxhMpva2YB+FxKuTuSQQ+UjVim7oVhx6JesdFGWapdHrthVH+2GGHV1rZHhx0weoJVJYT0uPbT3ndd38nry4JOqftScI7JHpTgVIyVgTWLSchyHyIsIIjNAxIcC4P6/6/idoCbheJSEjW/mLqs=
+	t=1709329543; cv=none; b=Un8BwOpC78OJlhKUvHZpnE9SJBlALWfAc0e7kFN2KnQYUCwGUszORoW00TvObxFWwpFGlWJlausCq4iJbA7tKVxrRxL9FBp8bb6AsXGcdRfhboQ8moSLCUWolNNVL3/vHBIHWtsIvVZ/rieA2WAAnvUSWHTiB/t8y62UuMzc3s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709329479; c=relaxed/simple;
-	bh=2xY5RVyUcdnRzDiqOnWZP2xAM6fMoZ6RnVVMw7ZnaNg=;
+	s=arc-20240116; t=1709329543; c=relaxed/simple;
+	bh=4gfFqVOZg0+bckkDoMH9sSGKsuJGpOlBZ1xS62hIMQ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bmSGpet0DcK9A5XIBxS7Ws+CUb9PM9sDW0XhH1hF1TUHbunWJc3b7Xs1JyGfTefCyVZ9NToRnt9Ph4UZ+8QdEwefm1cFwVtMK3iSyfKYue1SBBn7xbmr78fqoW+h3Ff5+HrUbpmQEI75a/9CQteBCYxd4QSMJegRJ0yqGWVAhwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Wvw6d+Ef; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=L4X7VIdHKCcyvieBEuSF0f3HIY2qKNnD3xriCA1z4s/EF9/MZnYbsdnRGaopnowkTPD+eI2J23h5L+lPpEH4b3fUoH94LOFuL3Ock8Phibsd9NybeEPWEPwfxGWZh1GeUX1I1Kq8grHcV+5uEBJVKk19rNFHLFU8fn2kpT/DqdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HjWqvnR6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Wvw6d+Ef"
-Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9776B673;
-	Fri,  1 Mar 2024 22:44:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1709329461;
-	bh=2xY5RVyUcdnRzDiqOnWZP2xAM6fMoZ6RnVVMw7ZnaNg=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HjWqvnR6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCF97C433F1;
+	Fri,  1 Mar 2024 21:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709329543;
+	bh=4gfFqVOZg0+bckkDoMH9sSGKsuJGpOlBZ1xS62hIMQ4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wvw6d+Efg4zfPGiPhEdGGpTNTVwkssBWr7Pfr/mjCFp0adU5FNIwJf9ti6hDNGV7k
-	 d6ZonBUAjGiiCSAk84BGvNuOTSsMXQtTz/X5ZB3AG8XaGC47dDxUDMQKxy4bhyOpQP
-	 RT7qkhWoGTpE1wDaryq4bnW4Abc6SbIXm+MvA5vE=
-Date: Fri, 1 Mar 2024 23:44:38 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	owen <qwt9588@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>,
-	Marek Vasut <marex@denx.de>,
-	Adrien Grassein <adrien.grassein@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Vinay Simha BN <simhavcs@gmail.com>,
-	Christopher Vollo <chris@renewoutreach.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
-	kernel@collabora.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v2 0/9] drm: Switch from dev_err to dev_err_probe for
- missing DSI host error path
-Message-ID: <20240301214438.GA11073@pendragon.ideasonboard.com>
-References: <20240229-anx7625-defer-log-no-dsi-host-v2-0-00506941049a@collabora.com>
- <20240301063431.GM30889@pendragon.ideasonboard.com>
- <33209063-de58-4d53-a6e0-2d9f74052358@notapiano>
+	b=HjWqvnR6FSGmcN7LluVqt6vDQ3SAdANGPivcR1XGpOCO52A8mjSau1QeTREHAoiTm
+	 5k7E4T+lFcYAP3OStZ3JHdDUbHuQ7WM4Cz5zPrTGiFuVLE53uPfOTDi8144YIKf+E6
+	 F/XcTknmpga6kr1W7MMgMHlJbgDU92eGSDoX8frE=
+Date: Fri, 1 Mar 2024 22:45:40 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: Thinh.Nguyen@synopsys.com, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH] usb: dwc3: core: Add DWC31 version 2.00a controller
+Message-ID: <2024030121-unfold-murky-aae1@gregkh>
+References: <20240301213554.7850-1-quic_wcheng@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <33209063-de58-4d53-a6e0-2d9f74052358@notapiano>
+In-Reply-To: <20240301213554.7850-1-quic_wcheng@quicinc.com>
 
-On Fri, Mar 01, 2024 at 11:19:27AM -0500, Nícolas F. R. A. Prado wrote:
-> On Fri, Mar 01, 2024 at 08:34:31AM +0200, Laurent Pinchart wrote:
-> > Hi Nícolas,
-> > 
-> > On Thu, Feb 29, 2024 at 07:12:06PM -0500, Nícolas F. R. A. Prado wrote:
-> > > This series changes every occurence of the following pattern: 
-> > > 
-> > > 	dsi_host = of_find_mipi_dsi_host_by_node(dsi);
-> > > 	if (!dsi_host) {
-> > > 		dev_err(dev, "failed to find dsi host\n");
-> > > 		return -EPROBE_DEFER;
-> > > 	}
-> > > 
-> > > into
-> > > 
-> > > 	dsi_host = of_find_mipi_dsi_host_by_node(dsi);
-> > > 	if (!dsi_host)
-> > > 		return dev_err_probe(dev, -EPROBE_DEFER, "failed to find dsi host\n");
-> > > 
-> > > This registers the defer probe reason (so it can later be printed by the
-> > > driver core or checked on demand through the devices_deferred file in
-> > > debugfs) and prevents errors to be spammed in the kernel log every time
-> > > the driver retries to probe, unnecessarily alerting userspace about
-> > > something that is a normal part of the boot process.
-> > 
-> > The idea is good, but I have a small issue with patches 1/9 to 7/9. They
-> > all patch a function that is called by the probe function. Calling
-> > dev_err_probe() in such functions is error-prone. I had to manually
-> > check when reviewing the patches that those functions were indeed called
-> > at probe time, and not through other code paths, and I also had to check
-> > that no callers were using dev_err_probe() in the error handling path,
-> > as that would have overridden the error message.
-> > 
-> > Would there be a way to move the dev_err_probe() to the top-level ? I
-> > understand it's not always possible or convenient, but if it was doable
-> > in at least some of the drivers, I think it would be better. I'll let
-> > you be the judge.
+On Fri, Mar 01, 2024 at 01:35:54PM -0800, Wesley Cheng wrote:
+> Add revision value for identifying DWC31 version 2.00a based controllers.
 > 
-> Hey Laurent, thanks for the review.
+> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> ---
+>  drivers/usb/dwc3/core.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> I get where you're coming from, as I checked those things myself while writing
-> the patch. That said, I don't think moving dev_err_probe() to the top-level is a
-> good move for a few reasons:
-> * Keeping the log message as close to the source of the error makes it more
->   specific, and consequently, more useful.
-> * The original code already returned -EPROBE_DEFER, implying the function is
->   expected to be called only from the probe function.
-> 
-> With those points in mind, the only way I see to guarantee
-> dev_err_probe(...,-EPROBE_DEFER...) would only be called by probe, and that the
-> reason wouldn't be overriden, would be to move the entire code path of that
-> function that calls into dev_err_probe() up into the probe function. But if we
-> adopt this pattern consistently across the drivers in the tree, I think it would
-> drastically worsen readability and cancel out the benefits.
-> 
-> IMO the way forward with the API we have, is to make use of warnings and static
-> checkers to catch cases where dev_err_probe() is overriding a defer probe
-> reason, and where it's called outside of the probe function scope.
-> 
-> So I'm inclined to leave the patches as they are, but am happy to discuss this
-> further or other ideas.
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index df544ec730d2..f3bbbc1947bd 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -1259,6 +1259,7 @@ struct dwc3 {
+>  #define DWC31_REVISION_170A	0x3137302a
+>  #define DWC31_REVISION_180A	0x3138302a
+>  #define DWC31_REVISION_190A	0x3139302a
+> +#define DWC31_REVISION_200A	0x3230302a
 
-Thanks for checking and having taken the time to explain your rationale.
-For the whole series,
+What code uses this define?
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Why add a define that is not used?
 
--- 
-Regards,
+confused,
 
-Laurent Pinchart
+greg k-h
