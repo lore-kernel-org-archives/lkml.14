@@ -1,110 +1,145 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A17423A6
-	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 14:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A57D17BA2
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 14:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709391151; cv=none; b=Zjr9eW7R6OxDP/SOvgnowwGuNjhvf23ZuWIMf80tM3FnZQjjpKALtTNtBne8dWoQVyU9+AYQqeZ+s/bGdZf3V5FiaarS86N0GB9A0kKhfv6WBwpDBeSsfthn3OCGWqM1dzl5gMuPiuY6Ba9ddPqgoo98bKGwk34IqJBVYyGV0XI=
+	t=1709391442; cv=none; b=Hgkzs+D48iSNPDeNlcvxNQUz2jy4fBKQsdpistF9AXeBVCltFrQUWeM+0bVVzBQpERA/NjtARJG3dyGqahsKWuo4DvcawOymQVHUyd7CqkKUuUz+zAPVT5szOLkv3KsQMSzMWEZetOb/9u8ruIYKxmwpS/VORvgXmF1THkWnNfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709391151; c=relaxed/simple;
-	bh=Ef+N4vGlqlUybLHJPcdwa+UvNP8PKIs+Su40x32riHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=prTDx2IPuPVyFVU8YhwVVNW8KzOcpxIXZadc/E8ZrUK3i9eW+NGNmxUSFKiEtWBjxlRBBX0y0e758m5kvYuHlCstlXQkCHaTf4rsu4+jZl1T9EAu1WQaVZN54ogV9Gm6agP/q0Lt7FCCIVuJNerBEU1XYFKv4+JjbN6KeRbkQp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BFEbfMiN; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709391442; c=relaxed/simple;
+	bh=vsDO370P9L0eb7fcWgulrtTqYp1omUqwzrlkY+TsrEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NNhUYGLx5uO4rM8Ssmh07Wn18Nf2T5Ly4uG4Vosd7mk/73B8uk77tklp16jWD2SYpPjBzFBrnWRFwRBaLF4ZMf48ozTer09A6oBq1Iyyjci9pW85kOm8Yo4SiFF6Fci83NxQPvVoNKZMFDJtoeyIzWvAuKTqkwugiLRg3b6d/Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=Lv79n+GI; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFEbfMiN"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33e1878e357so1158343f8f.3
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2024 06:52:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="Lv79n+GI"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6905d51fdfbso9742776d6.0
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2024 06:57:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709391148; x=1709995948; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q/ES2FJW4PaZ/LjH5h1eFhluoaUopAjREsxQYkJ4pLs=;
-        b=BFEbfMiNTg06ruIKknCk72Svv74Ra0YjvuZfQa1gpMP1xF7Ssmrli8Wbgo2MA9dtUW
-         /KvmhGoEL50BWesqyoI45Rr8rM9UThLvXA8xrMs1DqkU2dqU4S2Op7bFRQ8DP7tYfGJe
-         9kUvJGJrtRjjUfUpp7UKY4x1JA8whuXH4rye+6FuHBEQsGKRRjgZYWe2wSw0rYQLHOAC
-         Kyqvc8INz2piCQgIWUG/9uOGkRTFZHEDY7LVeZpn11lDAKcH/lWzlWtF77YWl1/cqTOO
-         9udKD0czFSD3nUf+jyu8BTs1VdHWkC3RIX4RDTy85lQA5g4R0N5g6aW5CwJosgRrCcHQ
-         Q7JQ==
+        d=ieee.org; s=google; t=1709391438; x=1709996238; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wfIgoTdA9N+MeIiEy0xWNsxv5l2fuvtP53bPZ++Mceg=;
+        b=Lv79n+GIukZYNqW1yCfnmacMqZztGlrqCYXSwWvvghpWzeYdvbqeVPIjwy8U1+UEIU
+         1spN8WqMdkyDUTg//9erJCwQZ9AdfixlaejrMNJYpDeMhaEgkWHzh11uOEiyDKu9cv0C
+         8d6baKt65vEglCpqT7adkjYN5CKrZW5CWZVtM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709391148; x=1709995948;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q/ES2FJW4PaZ/LjH5h1eFhluoaUopAjREsxQYkJ4pLs=;
-        b=YV9NBrfJjpdxHcFkH9XUk/jOuRghnhsxAPexMCVlvW9RmauLQqy9LjEWHJJXKXxjJn
-         crayWAp6WCIkj8jr71cXHY1rqloXRhR3crkBzVfhvvnMiB9zhI3Uc+grSXSUIUcmxI20
-         Qe+pp1EkkQoHxPxeMtZCgPHpXBaA8f8klrERitBMPPZc1dIKAfx9z2ZxZMsvl5EqUjeZ
-         37i7Wi5msF3huOHIZvgxpAOppnlINNkqDBDYQgXZM/C1+j4u4at/q3dYvkhUL9l6Agyh
-         Xob6gYoflGNRDVBTxT74/XAhlP7zHmJHmW6HsC0z7ybXLV8IF0DN/frtd5WBnKnO8GbJ
-         OD2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUPg3/q4CJiNXcQ03Z0TapfGNLt8h1LKCSBftH34aA4d160M+ZSVhddEpQHlGBodhl1woVfIiDyPzFWLta6/tIQQkOqeKF0Ut71ZHkn
-X-Gm-Message-State: AOJu0Yy3IS0nTPkla88Xc/kUk6j5Cx8W4aGmIcOkucK6KD9mwjgxMFt4
-	ms0ajrP20sJba4faq2dlaHMf/J0f5s5GBb7vrnmou+1aQXed3ltE
-X-Google-Smtp-Source: AGHT+IGxWNMD5uOCujmqbxrHNDAoUpOevGETa2GqEm4G+m57sD9n+m4Qie72K4Nv3xJ1eUz1tMjDHw==
-X-Received: by 2002:adf:9d83:0:b0:33d:d7be:3bec with SMTP id p3-20020adf9d83000000b0033dd7be3becmr3254953wre.58.1709391148038;
-        Sat, 02 Mar 2024 06:52:28 -0800 (PST)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id by1-20020a056000098100b0033e22341942sm4085502wrb.78.2024.03.02.06.52.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 Mar 2024 06:52:27 -0800 (PST)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	anshuman.khandual@arm.com,
-	mark.rutland@arm.com,
-	ardb@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: puranjay12@gmail.com
-Subject: [PATCH] arm64: head: remove unnecessary instructions from __relocate_kernel
-Date: Sat,  2 Mar 2024 14:52:10 +0000
-Message-Id: <20240302145210.65919-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1709391438; x=1709996238;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wfIgoTdA9N+MeIiEy0xWNsxv5l2fuvtP53bPZ++Mceg=;
+        b=Ql5FxwekMGSjdQs/BPj8lqe0FdF3d+zQAgRoMshQcps8p3NUGR16J77BK5cTJCzHZ5
+         lsd465UM07Gu/8k1NfuVnauaJkSg1DXjtsJAHE8AEV2AnLhW+U/Wj7W9iWK/IBrMBmAO
+         GJAO8y7Zr0rw+4RyfCR15LaUBBDj9cQ47mGDMro617Q7MSoUhDpagFTJM09EhJyr0L6W
+         wHSv6GpKyXfmXzIa6O6QA+flS2X1+KbEmOXNjIOUazqeYCPKzw+qk8Z6zyrkF0ghaXDM
+         pqqO70cMlRkC0XQIj0rGF5peB6O1ZqDDw+luP1iFPXGDsat0Ex6juHtN8NEEGsAbjtjw
+         jFEA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9AmxQUiikuBq444IoFe7F2NpuyXl66hB2/3kKW2s/jnbSQ5UVam7ziWsDH93j35dlUlkq1YTWKe0wpwb7DOteX2bMCgMXnz/YyNV1
+X-Gm-Message-State: AOJu0Yw+OGcKVzXV7+MzMV2uKOQo8eMppI7KJyEjNDQG8kW/j/og6G2o
+	Ta1zpI6ijx5KU2km+8jPYkRUnNcvd9YnYJSyoLxPjb1YkJLu+IJ0/xGCOkriRQ==
+X-Google-Smtp-Source: AGHT+IG9qW7IYS8D4z4TN+vHi467Y/Zi72+/DehK/Phj0uWp6/CbVvutRoW9BsGBwd53MOe9t8x0Hw==
+X-Received: by 2002:a0c:da84:0:b0:690:5ff8:cc0 with SMTP id z4-20020a0cda84000000b006905ff80cc0mr2942320qvj.11.1709391438501;
+        Sat, 02 Mar 2024 06:57:18 -0800 (PST)
+Received: from [10.211.55.3] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.googlemail.com with ESMTPSA id or33-20020a05621446a100b0068f455083fbsm3018169qvb.63.2024.03.02.06.57.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Mar 2024 06:57:18 -0800 (PST)
+Message-ID: <36a4d208-9945-4a65-bdf1-d8309d779e63@ieee.org>
+Date: Sat, 2 Mar 2024 08:57:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [greybus-dev] Re: [PATCH] greybus: Fix deref of NULL in
+ __gb_lights_flash_brightness_set
+Content-Language: en-US
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Mikhail Lobanov <m.lobanov@rosalinux.ru>, rmfrfs@gmail.com
+Cc: greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240301190425.120605-1-m.lobanov@rosalinux.ru>
+ <7ef732ad-a50f-4cf5-8322-376f42eb051b@moroto.mountain>
+From: Alex Elder <elder@ieee.org>
+In-Reply-To: <7ef732ad-a50f-4cf5-8322-376f42eb051b@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Formerly, we had to access the RELA and RELR tables via the kernel
-mapping that was being relocated, and so deriving the start and end
-addresses was done by loading __rela_offset in x9 and then adding the
-actual virtual offset of the kernel to it.
+On 3/2/24 3:59 AM, Dan Carpenter wrote:
+> On Fri, Mar 01, 2024 at 02:04:24PM -0500, Mikhail Lobanov wrote:
+>> Dereference of null pointer in the __gb_lights_flash_brightness_set function.
+>> Assigning the channel the result of executing the get_channel_from_mode function
+>> without checking for NULL may result in an error.
+> 
+> get_channel_from_mode() can only return NULL when light->channels_count
+> is zero.
+> 
+> Although get_channel_from_mode() seems buggy to me.  If it can't
+> find the correct mode, it just returns the last channel.  So potentially
+> it should be made to return NULL.
 
-d7bea550279d ("arm64: head: use relative references to the RELA and RELR
-tables") changed this to load the entries via the ID map as we map the
-entire kernel image via the ID map.
+I agree with you.  This looks quite wrong to me, and I
+like your fix, *except* there is also no need to check
+whether the channel pointer is null inside the loop.
+It's the address of an object, and will always be non-null.
 
-The two instructions for finding the actual virtual offset were left by
-that commit, so remove them now as they are unnecessary and add runtime
-overhead.
+     static struct gb_channel *
+     get_channel_from_mode(struct gb_light *light, u32 mode)
+     {
+         struct gb_channel *channel;
+         u32 i;
 
-Fixes: d7bea550279d ("arm64: head: use relative references to the RELA and RELR tables")
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- arch/arm64/kernel/head.S | 2 --
- 1 file changed, 2 deletions(-)
+         for (i = 0; i < light->channels_count; i++) {
+             channel = &light->channels[i];
+             if (channel->mode == mode)
+                 return channel;
+         }
+         return NULL;
+     }
 
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index cab7f91949d8..90db196f7c19 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -787,8 +787,6 @@ SYM_FUNC_START_LOCAL(__relocate_kernel)
- 	 */
- 	adr_l	x9, __rela_start
- 	adr_l	x10, __rela_end
--	mov_q	x11, KIMAGE_VADDR		// default virtual offset
--	add	x11, x11, x23			// actual virtual offset
- 
- 0:	cmp	x9, x10
- 	b.hs	1f
 
-base-commit: 5ad3cb0ed525b80c7f66c32b49a68c1f3510bec9
--- 
-2.42.0
+Rui, could you please confirm what Dan says (and his
+proposed change) was your intention?
+
+If so (and assuming you also fix the check for a null
+channel pointer inside the loop):
+
+Reviewed-by: Alex Elder <elder@linaro.org>
+
+					-Alex
+
+> 
+> diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+> index d62f97249aca..acd435f5d25d 100644
+> --- a/drivers/staging/greybus/light.c
+> +++ b/drivers/staging/greybus/light.c
+> @@ -95,15 +95,15 @@ static struct led_classdev *get_channel_cdev(struct gb_channel *channel)
+>   static struct gb_channel *get_channel_from_mode(struct gb_light *light,
+>   						u32 mode)
+>   {
+> -	struct gb_channel *channel = NULL;
+> +	struct gb_channel *channel;
+>   	int i;
+>   
+>   	for (i = 0; i < light->channels_count; i++) {
+>   		channel = &light->channels[i];
+>   		if (channel && channel->mode == mode)
+> -			break;
+> +			return channel;
+>   	}
+> -	return channel;
+> +	return NULL;
+>   }
+>   
+>   static int __gb_lights_flash_intensity_set(struct gb_channel *channel,
+> _______________________________________________
+> greybus-dev mailing list -- greybus-dev@lists.linaro.org
+> To unsubscribe send an email to greybus-dev-leave@lists.linaro.org
 
