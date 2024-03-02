@@ -1,181 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232571756E;
-	Sat,  2 Mar 2024 04:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205EE1799E
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 04:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709352062; cv=none; b=DQPi2Gt0QYkosaF92WKV60yobCW6IuXVifz3K/To08wi6BND59TIWePR7IIrPwlutDuq8vOBzVbbcrL6bVUkYweVEBQHeYPgAR7mDoKzp1rkHVhsWK5GkhD0Bnj6PpMS5hBGbp0Lz+I6N4ROAJp/I4Z+zzFGsjlRE/9RP45++hc=
+	t=1709352066; cv=none; b=VyRIT8fFtcNPd3JG98vrbgGwgZnjfNfv+cGdy4Qbr0zaiQz4qtG1jFtxiW+I0Ggnd5HXjjShMIrmAjwT0+mGwjFdyuLizn/bfl/NHkgKjzXNXDQgOh1ZLY5G/GgLtIh3s0GcMFQn2byiUs7AbXHWq8a7+srz3HnLz91TpKTl3+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709352062; c=relaxed/simple;
-	bh=nSpbkHHNz+FKFBbDuIW+CvRRR7bDmGt7PvmlIiVYSsQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=a6QQ7m6nzqKQZyyILdwLCPTsKdGMPqUS278LK6X8YluvENLhlc/aF/e37EDnLMDG/XtN3QQ+5ByVX4eIzc+4H70ZwxEqleLW5oLzcwMN9XDuCViHsgtqSGpKnp0Ef9ZTszzsdfjeL4mEAq+jDlaxS2R4e4ya6BP2B2cIfu/yzGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ccl2kzYj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ccl2kzYj"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4223xFjf021339;
-	Sat, 2 Mar 2024 04:00:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=NzS2INWWqVE2VaxwVYFo0ZkDao5Z7uZu2P/3PWHMcGI
-	=; b=ccl2kzYjUR9+HKqDrThNoouCmQXHID7IwazpIoO+DkMwxbcfR+pLL/d3pKs
-	AJe2LRNU/6O9+cGeZuRFq8BmCMXlxkKtYSg6Xhi1HWMIhN0UfYT5qmXBBUvdax1F
-	vQjYMSWKBgGiqdUzuR5zcFKn+YIE7KdAk3u/S234dukEPxoICVu7vMgczcrSRp+l
-	qiHEU/nKqJjWKpF6rPIicsYHwRpoBhWX7lTp7PSYb8kkIRr8nyMEQrUcYEIcF2gt
-	1lBWaoq/PEQUaAIoyr9yCG9AYFpM1a7aw0zmcyGZeGcAExCuPKlcqiVNJQsF+l0b
-	gNKCoUH7vDT7+BgKkNa+P5p6rtA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wkuq50275-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 02 Mar 2024 04:00:52 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42240oCL007050
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 2 Mar 2024 04:00:51 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 1 Mar 2024 20:00:44 -0800
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Sat, 2 Mar 2024 09:30:00 +0530
-Subject: [PATCH v8 6/7] PCI: Bring the PCIe speed to MBps logic to new
- pcie_link_speed_to_mbps()
+	s=arc-20240116; t=1709352066; c=relaxed/simple;
+	bh=hBzsYWOZ9hwVRXW6geWH07Rr3cKQIp/xHP8NxOBSE6I=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=iPsI9AIz3pGICAs0uS3ypGL45TQgzl9I6GjNB8xZ2R/jIcaK3kHeOJKTzYM6wPfTSoCDNCqMUBXxNYjhCpq6ZmFoVmxarhX+DS4BriAEyZ5oIN50ieSFiHd39/buRuEH1hRD2Qtbqvnqx5ub/NE3TDYO6Tu3LHGeHyL6SRsmoDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c7c4065282so366766439f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 20:01:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709352064; x=1709956864;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AmhzJqAXV+V57NGkxV+UmRMvCvOpY6avUDCxlJj3E2s=;
+        b=SW8Z4Pg8y8na5GGJpMe34g1VKAABplosCpOugf5IsnAq4nONqVfP7gdIo6kg6NhYjO
+         SG3v/GM7cgxWze/uDgrQ9wkpGe2XchlkowhOxF8yRIIR+EAaOqBZTpTGqBorVqXsT0eX
+         ovDArla8nKEimUm0wd+LC9EtwX4TB8/7HPo55L4adbGMn0yEvCotSnr2/CIhlc7IlbTM
+         4NwyV9shMNlSVbB7GjVUSUYGo+l3Ud+EtYUR9Shu4Ti6zuYMvy6/YGkToEtteYd//bD7
+         JWp+K7MMM64nWHm5mkmkdRhk19TJbpNDi2qwmSi/+KSfkRFov7CQK+s99Ojvlu0S7FEf
+         NIGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVsMR8D/1KRQlHj7knm3YZPvVHcVFNAVdXgQtInInpxcLqQHaNMoNryA0ARMOmjmIqWU4d295ZEnzWinsOJzIkdmD87TDVpNCo5MMZV
+X-Gm-Message-State: AOJu0YwOeBQTAxrrotmt1w1nPqNYbM4jLQQPEA+pr2m7MGc1UjCuzQBc
+	osAv2Ud1ZcU2a68iHnDTWFfenN4ecgG9sTqcBzlSuTmpF3Ed8wjOF/2DGUQ7cDHNticGwMdUnnW
+	H0NXrnAR3mAPvGxQvyaplxzwtD1tslzHO9oa27q6/z3n/twjd7cNe64E=
+X-Google-Smtp-Source: AGHT+IFRUPmPplefbtK78IRnZ5w2Y8t+CinCnvRdEIVgWapklblAFrEUL2DNokXKruJqxz68JUXw4NlF+Na97JF2EwECkee1Xbso
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240302-opp_support-v8-6-158285b86b10@quicinc.com>
-References: <20240302-opp_support-v8-0-158285b86b10@quicinc.com>
-In-Reply-To: <20240302-opp_support-v8-0-158285b86b10@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Brian Masney
-	<bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>,
-        Krishna chaitanya chundru
-	<quic_krichai@quicinc.com>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709352004; l=1963;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=nSpbkHHNz+FKFBbDuIW+CvRRR7bDmGt7PvmlIiVYSsQ=;
- b=j3d2h6SUWrZPRZyoY8IypkYWBISHl59nk2Y2kGCMa6t1Aa7VDgxqiqVH9XWfql8CR6f1cfLln
- xUXjjeNvqLfBej+lNNO+jM0F/8b33HlUt4Dk8FOL1dHFN65HSSH5Yz7
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bDslgW6CwmrHY1LOWqCl-OtZddYO-Xf9
-X-Proofpoint-ORIG-GUID: bDslgW6CwmrHY1LOWqCl-OtZddYO-Xf9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-01_24,2024-03-01_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 suspectscore=0 mlxscore=0 phishscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 mlxlogscore=923 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403020031
+X-Received: by 2002:a05:6638:3795:b0:474:d271:9ee7 with SMTP id
+ w21-20020a056638379500b00474d2719ee7mr84168jal.3.1709352063321; Fri, 01 Mar
+ 2024 20:01:03 -0800 (PST)
+Date: Fri, 01 Mar 2024 20:01:03 -0800
+In-Reply-To: <tencent_DAEC42CF7878366DC42DD16D289568E95E0A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000087ddf70612a58a19@google.com>
+Subject: Re: [syzbot] [rds?] WARNING in rds_conn_connect_if_down
+From: syzbot <syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Bring the switch case in pcie_link_speed_mbps() to new function to
-the header file so that it can be used in other places like
-in controller driver.
+Hello,
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
----
- drivers/pci/pci.c | 19 +------------------
- drivers/pci/pci.h | 22 ++++++++++++++++++++++
- 2 files changed, 23 insertions(+), 18 deletions(-)
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in rds_conn_connect_if_down
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d8f11a078924..b441ab862a8d 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6309,24 +6309,7 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
- 	if (err)
- 		return err;
- 
--	switch (to_pcie_link_speed(lnksta)) {
--	case PCIE_SPEED_2_5GT:
--		return 2500;
--	case PCIE_SPEED_5_0GT:
--		return 5000;
--	case PCIE_SPEED_8_0GT:
--		return 8000;
--	case PCIE_SPEED_16_0GT:
--		return 16000;
--	case PCIE_SPEED_32_0GT:
--		return 32000;
--	case PCIE_SPEED_64_0GT:
--		return 64000;
--	default:
--		break;
--	}
--
--	return -EINVAL;
-+	return pcie_link_speed_to_mbps(to_pcie_link_speed(lnksta));
- }
- EXPORT_SYMBOL(pcie_link_speed_mbps);
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2336a8d1edab..40403783229f 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -282,6 +282,28 @@ void pci_bus_put(struct pci_bus *bus);
- 	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
- 	 0)
- 
-+static inline int pcie_link_speed_to_mbps(enum pci_bus_speed speed)
-+{
-+	switch (speed) {
-+	case PCIE_SPEED_2_5GT:
-+		return 2500;
-+	case PCIE_SPEED_5_0GT:
-+		return 5000;
-+	case PCIE_SPEED_8_0GT:
-+		return 8000;
-+	case PCIE_SPEED_16_0GT:
-+		return 16000;
-+	case PCIE_SPEED_32_0GT:
-+		return 32000;
-+	case PCIE_SPEED_64_0GT:
-+		return 64000;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- const char *pci_speed_string(enum pci_bus_speed speed);
- enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
- enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5694 at net/rds/connection.c:933 rds_conn_connect_if_down+0x95/0xb0 net/rds/connection.c:933
+Modules linked in:
+CPU: 1 PID: 5694 Comm: syz-executor.0 Not tainted 6.8.0-rc6-syzkaller-g5ad3cb0ed525-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+RIP: 0010:rds_conn_connect_if_down+0x95/0xb0 net/rds/connection.c:933
+Code: 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 ee f8 43 f7 49 8b 3e 5b 41 5e 41 5f e9 f1 fa ff ff e8 2c db e1 f6 90 <0f> 0b 90 eb cb 89 d9 80 e1 07 38 c1 7c a9 48 89 df e8 35 f8 43 f7
+RSP: 0018:ffffc900050c78a0 EFLAGS: 00010293
+RAX: ffffffff8ab19224 RBX: 0000000000000002 RCX: ffff88807f89bb80
+RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
+RBP: ffffc900050c7ad0 R08: ffffffff8ab191eb R09: ffffffff8ab2b261
+R10: 0000000000000002 R11: ffff88807f89bb80 R12: ffff8880218c2800
+R13: ffff88802b6d9740 R14: ffff8880182f2000 R15: dffffc0000000000
+FS:  00007f22049de6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020d10000 CR3: 000000006ea98000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ rds_sendmsg+0x1409/0x2280 net/rds/send.c:1319
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:745
+ ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
+ ___sys_sendmsg net/socket.c:2638 [inline]
+ __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2667
+ do_syscall_64+0xf9/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f2204e7dda9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f22049de0c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f2204fac120 RCX: 00007f2204e7dda9
+RDX: 0000000000000000 RSI: 0000000020000800 RDI: 0000000000000003
+RBP: 00007f2204eca47a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000006e R14: 00007f2204fac120 R15: 00007ffff6293078
+ </TASK>
 
--- 
-2.42.0
+
+Tested on:
+
+commit:         5ad3cb0e Merge tag 'for-v6.8-rc2' of git://git.kernel...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=120ebcf2180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fad652894fc96962
+dashboard link: https://syzkaller.appspot.com/bug?extid=d4faee732755bba9838e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=107427ac180000
 
