@@ -1,141 +1,89 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0382376
-	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 09:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1197134A1;
+	Sat,  2 Mar 2024 09:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709370847; cv=none; b=fIZA2oYSAOimLvDsJpqjlaKCt9vLiMqEc+W0MT2VAMrxgyFkspzgkOM8eTVQct2H1Jwd9fA33fPJvZG33/UfgTA+Oq3pJItqKyDf4VdSNir9uvNaZ7O865AZc59wkSeb4tHRHB9y7fxqZZ+juSzJ+Qxm/uWbJPl2mYYQoQa7mFc=
+	t=1709371283; cv=none; b=EWMCeCdkUWyLPZYZRZyE82GH5QsvFwD8Douq9+9FD46Grwxy5R8TIMIg6HVxXAOBytoD6JoD2HHxgkmmicAygIvh6SBJKzPd/qODUVSrVHXK51e62VsT/5NqYG6yu+dL/eIODkB6qU4TqNvqdzN6o327CRC+79TNXyb0xwGZmhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709370847; c=relaxed/simple;
-	bh=AQCHu6wjC1Mc61DwzXSbpHVMgu3N08Sag4neGTjHap8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mn9FuFsiEGm+/YAHYgNXi4LFLj/WibWYRVldk+q1fhZQOZyZHl9+tuoiZZCMohDJkuIHEpcUSNlUo2MMW5Nxd14TwrT1YfPA2Gz3zXlUyV6lYB4KI4mqKFR5fP21l7g60eRtR5e8G+dC5pwFhnQGIMtYP/tF9djZF1C0L/9z0+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TyzyDhVy; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TyzyDhVy"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a4429c556efso458949066b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2024 01:14:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709370844; x=1709975644; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DFSpcwT4Hy2bJfwJLXbvIJSYRBInQpfC3lHF7abplN0=;
-        b=TyzyDhVykPJyXTVESsrhxoch0+bBcNML8ayZyTOIlmiUJlvLSNocu76IrF//dhYNHT
-         D5ZKcSshJIkRd0VtR5WG8ul12ginmdsDbM0xkmj7pBbqhMcbtNGLtFxSswUIjK+brm04
-         C/zBMUxlBeSPPK7oLOBc6oNtgHdBRjFmC3fafPeIWJlA568cufqfyt5y+hEL/k0w6QMM
-         nqDortpPlKMM2sJJDyxwfRKn0ijAcD262kURRZ9A9tLr5/OXXApD1l18rfbGsCMywS5V
-         wnICBIC3EEl5lBhsuHJEIOpmbaEhgkptCal5r10karvwzZwtFejLy++qS+Dd3TC5LDIm
-         4UDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709370844; x=1709975644;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DFSpcwT4Hy2bJfwJLXbvIJSYRBInQpfC3lHF7abplN0=;
-        b=Nhqqog3kIwP3tY718yV9g82+yHm/idIK+ssgUYqASoPcEJJH8Qpn26tNdeBT8uxPaf
-         xRTMIwMKAWloXXP+FSj8OdXlS4rATZmVPKz09+VCA4kBvUeHgXdNa3UKg8C2UW6Kh+Zt
-         GR2VSYarP7uHC7Y39I71m3v1lSPCQgJhtaKjyMZWquk6mY74KAHvpLmkKlzBb+gwcSNz
-         7jL7UpbLw44lI2TtpzQeKiGnhNZrksQpS6Z7/CA7XsO/IKeQ+yBoJE0xjJcOrrkGRd6/
-         WEsiuwglTWgKaz64KZ7k9u3mDIeOVwE6XIb81NN90pVCODLyvrXymZDGyVOHXXccOoAt
-         WwWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvY5NipFIdf7EyYOuuvX9R0Cyjyt0qaKBEvH10y7WA0oUfD+ChR2tXEvv+fDEpUrV7HCR8arjdiftCtjsyfV20oCkYHVTCNPSD7pk+
-X-Gm-Message-State: AOJu0YxrUOMZspiv2WSE5u93G7gDDa9uA1/DawBHk74Wa8MEKivlY7pP
-	ln0fAD+FKFpT+1/ssg3w0U3WLeHw7GE/wEy9ELEordWjjptDanSH9rCgOwplFlY=
-X-Google-Smtp-Source: AGHT+IFw0H9KYLYbJ+iK2SiQXFZ3sKDi47m5yY6mq2kN5tKP5jX67KeShfXodKkF3G4h5YBsmaugIw==
-X-Received: by 2002:a17:906:80cc:b0:a40:2998:567c with SMTP id a12-20020a17090680cc00b00a402998567cmr3019889ejx.41.1709370843819;
-        Sat, 02 Mar 2024 01:14:03 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id c13-20020a056000104d00b0033dfa7ecd33sm5901777wrx.61.2024.03.02.01.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Mar 2024 01:14:03 -0800 (PST)
-Date: Sat, 2 Mar 2024 12:13:59 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Markus Elfring <Markus.Elfring@web.de>, linux-media@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: i2c: ds90ub960: Delete duplicate source code in
- ub960_parse_dt_rxports()
-Message-ID: <8ece4c88-dbc7-4327-ac2a-0a097fc990d0@moroto.mountain>
-References: <79fa4854-976d-4aad-86ac-c156b0c4937e@web.de>
- <ZeGV_siWFkfqSEgZ@kekkonen.localdomain>
- <db1d7227-f9a4-42fa-89ba-b484e1260e0b@ideasonboard.com>
- <ZeGZsRtH6YLx2FiM@kekkonen.localdomain>
- <ZeISEYXTaiyA-b4K@smile.fi.intel.com>
+	s=arc-20240116; t=1709371283; c=relaxed/simple;
+	bh=qdezucad5cPvzaEjmiAU3jX0Q8SyunCIEy72jkWfi5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PTeAxagwl1gSW02SMjEgTvh7BPeL7/noelLj+Dar1bT1OOEmBqwsCqMqJnAIo2JiUITutE4AM2JBv5kntPsT6HOXB8OegsDdemlsxozO3xcpdcPRZ2R85h/R5gEZu4ENTB89G/bJC6vLI312DyDUxNnFdpy5H94fLN2tOyuRvkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TmzwJ4J3sz4f3lg8;
+	Sat,  2 Mar 2024 17:21:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 072411A0C43;
+	Sat,  2 Mar 2024 17:21:12 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP4 (Coremail) with SMTP id gCh0CgA3imyE7+Jld1cqFw--.52350S2;
+	Sat, 02 Mar 2024 17:21:10 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	naresh.kamboju@linaro.org,
+	daniel.diaz@linaro.org,
+	linux@roeck-us.net,
+	brauner@kernel.org
+Subject: [PATCH v3 0/3] Fix crashes and warning in ext4 unit test
+Date: Sun,  3 Mar 2024 02:17:52 +0800
+Message-Id: <20240302181755.9192-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZeISEYXTaiyA-b4K@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgA3imyE7+Jld1cqFw--.52350S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF1DZF47ZFWfXry5Kr4fGrg_yoWfGrb_GF
+	W8Z3s5JrWxJ3WjyFWxtryFqry8Kay2yry8ZF47JFW3GrWxZw17Aa4kGr1vy3Z8Ww45Ar9I
+	q3Wvkr1fZwnFqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+	AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWD
+	JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oV
+	Cq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG
+	8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2js
+	IE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY
+	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
+	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUIf-PUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Fri, Mar 01, 2024 at 07:36:17PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 01, 2024 at 09:02:41AM +0000, Sakari Ailus wrote:
-> > On Fri, Mar 01, 2024 at 10:49:19AM +0200, Tomi Valkeinen wrote:
-> > > On 01/03/2024 10:46, Sakari Ailus wrote:
-> > > > On Fri, Mar 01, 2024 at 08:46:25AM +0100, Markus Elfring wrote:
-> > > > > From: Markus Elfring <elfring@users.sourceforge.net>
-> > > > > Date: Fri, 1 Mar 2024 08:23:24 +0100
-> > > > > 
-> > > > > Avoid the specification of a duplicate fwnode_handle_put() call
-> > > > > in this function implementation.
-> > > > > 
-> > > > > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> > > > > ---
-> > > > >   drivers/media/i2c/ds90ub960.c | 5 +----
-> > > > >   1 file changed, 1 insertion(+), 4 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
-> > > > > index ffe5f25f8647..eb708ed7b56e 100644
-> > > > > --- a/drivers/media/i2c/ds90ub960.c
-> > > > > +++ b/drivers/media/i2c/ds90ub960.c
-> > > > > @@ -3486,10 +3486,7 @@ static int ub960_parse_dt_rxports(struct ub960_data *priv)
-> > > > >   		}
-> > > > >   	}
-> > > > > 
-> > > > > -	fwnode_handle_put(links_fwnode);
-> > > > > -
-> > > > > -	return 0;
-> > > > > -
-> > > > > +	ret = 0;
-> > > > 
-> > > > I think it'd be nicer to initialise ret as zero, then you can just drop the
-> > > > assignment above.
-> 
-> I think tearing apart the assignment and its actual user is not good.
-> 
-> > > I don't like successful execution entering error paths. That's why there's
-> > > the return 0.
-> > 
-> > It could be called a common cleanup path as what you really want to do here
-> > is to put the fwnode handle, independently of whether there was an error.
-> > I think the current code is of course fine, too.
-> > 
-> > Soon you can do
-> > 
-> > 	struct fwnode_handle *links_fwnode __free(fwnode_handle);
-> > 
-> > and forget about putting it (but you must need putting it).
-> 
-> Let's wait for the Jonathan's patches to land (v6.9-rc1 I hope) and then
-> we may modify drivers if needed.
+v2->v3:
+-fix warning that sb->s_umount is still held when unit test finishs
+-fix warning that sbi->s_freeclusters_counter is used before
+initialization.
 
-The __free(fwnode_handle) stuff has already been merged.
+v1->v2:
+-properly handle error from sget()
 
-We could do some additional work to make a _scoped() macro for
-fwnode_handles but here it's function wide so we already have what we
-need.
+Previously, the new mballoc unit tests are only tested by running
+"./tools/testing/kunit/kunit.py run ..." in which case only rare configs
+are enabled.
+This series fixes issues when more debug configs are enabled. Fixes are
+tested with and without kunit_tool [1].
 
-regards,
-dan carpenter
+[1] https://docs.kernel.org/dev-tools/kunit/run_manual.html
 
+Kemeng Shi (3):
+  ext4: alloc test super block from sget
+  ext4: hold group lock in ext4 kunit test
+  ext4: initialize sbi->s_freeclusters_counter before use in kunit test
+
+ fs/ext4/mballoc-test.c | 77 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 60 insertions(+), 17 deletions(-)
+
+-- 
+2.30.0
 
