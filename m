@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA39F40859
-	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 19:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549AF4206E
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 19:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709409203; cv=none; b=dMZ0dQVJzalkILiOOLkRco/ji8S0C99J3wlKyrUqKOcIUjxWeRZuquYptWnpQ8XbdMxVt8x+rhLa7QHy2oTOVoBDWci5jJbJK5ri3ggk6SZEUM/wnbU4c37tkjergVBj89HsRr4AGtrl+lHGo89E6v1dpogf6t4ykv4u+Vm2cBs=
+	t=1709409204; cv=none; b=FPcZEYUv+bDnyb9FxxxXG2tKZKZLm9Q9vHNIWF+tTZNdaVfRW2hItjIsH57GfLBH6bIVZ274vKQ7+UHZ4SYyuJC9LTFla0RjochwEua3o1Uv51xO4/EXogFZISrbEwKsWGq6w71UsiVWrr2K3lXguHZ5Kb3zraZO/57XidKm6aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709409203; c=relaxed/simple;
-	bh=zi9g+OpMxoJsipyIh0jSxJiyN/227S9V/hTBfIK19hA=;
+	s=arc-20240116; t=1709409204; c=relaxed/simple;
+	bh=pwl/nm8VqR5HxU43/b+GLZActVEhfzu3cSXEyZSs9Ng=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QlF83VqNb4TlkJma5W1VbskBoB9S+XzcFTUBJg+brurHw2NBJBZQZ+FdU1GPNUN6V2+JTROACKFgWTzjy4uIKave1Bsda4IAvVwisUcX+mNV4L+Y2Up5oMLcAoyEEz2cBHvOORqFeUxKvFNWl7xj8+h16d1uDuaaDVYmvA+SYUM=
+	 MIME-Version; b=G/jF56XsXf1zPcLOmK1HQVMarCqQFGnVrfTSAi55X3Y5nvjScNoML8mGXLXb3SAsCxWP2+GH5ezP5xZrxaCDtTyCL9aonR+rAxF2D7FhuOKFuGA/RTCIH8Mq6ShWqToqUjK4cY6vrwtL1ZC21qxeFxmlFh8HIn666M5ZGLFyzVA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rgVPx-0007Gw-Me; Sat, 02 Mar 2024 20:53:09 +0100
+	id 1rgVPx-0007Gy-Ln; Sat, 02 Mar 2024 20:53:09 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rgVPv-0041mF-Py; Sat, 02 Mar 2024 20:53:07 +0100
+	id 1rgVPv-0041mK-Rt; Sat, 02 Mar 2024 20:53:07 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rgVPv-00DSUN-2H;
+	id 1rgVPv-00DSUs-2S;
 	Sat, 02 Mar 2024 20:53:07 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Wei Fang <wei.fang@nxp.com>,
@@ -37,18 +37,16 @@ To: Wei Fang <wei.fang@nxp.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
 	Russell King <linux@armlinux.org.uk>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	Shenwei Wang <shenwei.wang@nxp.com>,
 	Clark Wang <xiaoning.wang@nxp.com>,
 	NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH net-next v9 3/7] net: phy: Keep track of EEE configuration
-Date: Sat,  2 Mar 2024 20:53:02 +0100
-Message-Id: <20240302195306.3207716-4-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v9 6/7] net: fec: Move fec_enet_eee_mode_set() and helper earlier
+Date: Sat,  2 Mar 2024 20:53:05 +0100
+Message-Id: <20240302195306.3207716-7-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240302195306.3207716-1-o.rempel@pengutronix.de>
 References: <20240302195306.3207716-1-o.rempel@pengutronix.de>
@@ -66,83 +64,110 @@ X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 From: Andrew Lunn <andrew@lunn.ch>
 
-Have phylib keep track of the EEE configuration. This simplifies the
-MAC drivers, in that they don't need to store it.
+FEC is about to get its EEE code re-written. To allow this, move
+fec_enet_eee_mode_set() before fec_enet_adjust_link() which will
+need to call it.
 
-Future patches to phylib will also make use of this information to
-further simplify the MAC drivers.
-
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Wei Fang <wei.fang@nxp.com>
 ---
-v6: add @ in front of eee_cfg
----
- drivers/net/phy/phy.c | 7 +++++--
- include/linux/phy.h   | 3 +++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/fec_main.c | 75 ++++++++++++-----------
+ 1 file changed, 38 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 2bc0a7d51c63f..95c4ef5d4e97f 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -1640,8 +1640,8 @@ EXPORT_SYMBOL(phy_get_eee_err);
-  * @phydev: target phy_device struct
-  * @data: ethtool_keee data
-  *
-- * Description: it reportes the Supported/Advertisement/LP Advertisement
-- * capabilities.
-+ * Description: reports the Supported/Advertisement/LP Advertisement
-+ * capabilities, etc.
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 207f1f66c117a..a2c786550342f 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -2017,6 +2017,44 @@ static int fec_get_mac(struct net_device *ndev)
+ /*
+  * Phy section
   */
- int phy_ethtool_get_eee(struct phy_device *phydev, struct ethtool_keee *data)
++
++/* LPI Sleep Ts count base on tx clk (clk_ref).
++ * The lpi sleep cnt value = X us / (cycle_ns).
++ */
++static int fec_enet_us_to_tx_cycle(struct net_device *ndev, int us)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++
++	return us * (fep->clk_ref_rate / 1000) / 1000;
++}
++
++static int fec_enet_eee_mode_set(struct net_device *ndev, bool enable)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++	struct ethtool_keee *p = &fep->eee;
++	unsigned int sleep_cycle, wake_cycle;
++	int ret = 0;
++
++	if (enable) {
++		ret = phy_init_eee(ndev->phydev, false);
++		if (ret)
++			return ret;
++
++		sleep_cycle = fec_enet_us_to_tx_cycle(ndev, p->tx_lpi_timer);
++		wake_cycle = sleep_cycle;
++	} else {
++		sleep_cycle = 0;
++		wake_cycle = 0;
++	}
++
++	p->tx_lpi_enabled = enable;
++
++	writel(sleep_cycle, fep->hwp + FEC_LPI_SLEEP);
++	writel(wake_cycle, fep->hwp + FEC_LPI_WAKE);
++
++	return 0;
++}
++
+ static void fec_enet_adjust_link(struct net_device *ndev)
  {
-@@ -1652,6 +1652,7 @@ int phy_ethtool_get_eee(struct phy_device *phydev, struct ethtool_keee *data)
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
+@@ -3121,43 +3159,6 @@ static int fec_enet_set_coalesce(struct net_device *ndev,
+ 	return 0;
+ }
  
- 	mutex_lock(&phydev->lock);
- 	ret = genphy_c45_ethtool_get_eee(phydev, data);
-+	eeecfg_to_eee(data, &phydev->eee_cfg);
- 	mutex_unlock(&phydev->lock);
- 
- 	return ret;
-@@ -1674,6 +1675,8 @@ int phy_ethtool_set_eee(struct phy_device *phydev, struct ethtool_keee *data)
- 
- 	mutex_lock(&phydev->lock);
- 	ret = genphy_c45_ethtool_set_eee(phydev, data);
-+	if (!ret)
-+		eee_to_eeecfg(&phydev->eee_cfg, data);
- 	mutex_unlock(&phydev->lock);
- 
- 	return ret;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index a880f6d7170ea..695e366bd75c1 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -30,6 +30,7 @@
- #include <linux/refcount.h>
- 
- #include <linux/atomic.h>
-+#include <net/eee.h>
- 
- #define PHY_DEFAULT_FEATURES	(SUPPORTED_Autoneg | \
- 				 SUPPORTED_TP | \
-@@ -595,6 +596,7 @@ struct macsec_ops;
-  * @advertising_eee: Currently advertised EEE linkmodes
-  * @eee_enabled: Flag indicating whether the EEE feature is enabled
-  * @enable_tx_lpi: When True, MAC should transmit LPI to PHY
-+ * @eee_cfg: User configuration of EEE
-  * @lp_advertising: Current link partner advertised linkmodes
-  * @host_interfaces: PHY interface modes supported by host
-  * @eee_broken_modes: Energy efficient ethernet modes which should be prohibited
-@@ -715,6 +717,7 @@ struct phy_device {
- 	/* Energy efficient ethernet modes which should be prohibited */
- 	u32 eee_broken_modes;
- 	bool enable_tx_lpi;
-+	struct eee_config eee_cfg;
- 
- #ifdef CONFIG_LED_TRIGGER_PHY
- 	struct phy_led_trigger *phy_led_triggers;
+-/* LPI Sleep Ts count base on tx clk (clk_ref).
+- * The lpi sleep cnt value = X us / (cycle_ns).
+- */
+-static int fec_enet_us_to_tx_cycle(struct net_device *ndev, int us)
+-{
+-	struct fec_enet_private *fep = netdev_priv(ndev);
+-
+-	return us * (fep->clk_ref_rate / 1000) / 1000;
+-}
+-
+-static int fec_enet_eee_mode_set(struct net_device *ndev, bool enable)
+-{
+-	struct fec_enet_private *fep = netdev_priv(ndev);
+-	struct ethtool_keee *p = &fep->eee;
+-	unsigned int sleep_cycle, wake_cycle;
+-	int ret = 0;
+-
+-	if (enable) {
+-		ret = phy_init_eee(ndev->phydev, false);
+-		if (ret)
+-			return ret;
+-
+-		sleep_cycle = fec_enet_us_to_tx_cycle(ndev, p->tx_lpi_timer);
+-		wake_cycle = sleep_cycle;
+-	} else {
+-		sleep_cycle = 0;
+-		wake_cycle = 0;
+-	}
+-
+-	p->tx_lpi_enabled = enable;
+-
+-	writel(sleep_cycle, fep->hwp + FEC_LPI_SLEEP);
+-	writel(wake_cycle, fep->hwp + FEC_LPI_WAKE);
+-
+-	return 0;
+-}
+-
+ static int
+ fec_enet_get_eee(struct net_device *ndev, struct ethtool_keee *edata)
+ {
 -- 
 2.39.2
 
