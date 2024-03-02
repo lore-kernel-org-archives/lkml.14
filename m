@@ -1,118 +1,63 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E981EB3F;
-	Sat,  2 Mar 2024 23:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3261E538
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 23:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709421588; cv=none; b=AzFRuI2MVDY/WYVv50KfZJuDI/YVfKSP3izAaKA1jIsCnweDiUlo6nntlIImqv6zLfkHPtRsCqRnQgCAmPoX0m8lwrYuYllQ0PhsUlodaYf/DVElPI9hZsCIlzg+Q+zTr435/joFZT3eJqu1P5UGNAo1yFdpvZSspfMoAeKPyLE=
+	t=1709421623; cv=none; b=LADCrwMAc+BH1w5eNyYXQTRCEWzZ89oUeuedqcFSPDJp7Nr6jCM7R/CLvtE7D3EvRgH3tW2vekH+n6fXHBS8aUKfOmVIDbrCXp95OSGCZX+ycv/DDNF+ioPqSAYd2elVNEbsqDIwkyv0t4n1V4vxh30wSqFkTOzI3hAhNNJxdkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709421588; c=relaxed/simple;
-	bh=vPP3p9GGRRGZegKNSobm2wNf5DV/YCF3ypsLBCmSIdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oD3U0fWO6G1+sYnaKxQUxROftZk7qo1jCsVgCQS9vzmiUlMwK+1w0VCuu3Mc/gsdn5wAtF0bLr3PcVPcMtoje3opjt2hCttQ94zUQMwm2XBajVS005p5uDms4Ol1pbuepRtkcQ49WG4kvQDbsxF/Z/tYQDqG2VTZ8jI2rkYGm8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J8WsILe/; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709421623; c=relaxed/simple;
+	bh=5hT1Gm9kieKmDtLN+o5bF5+d0pJA1q6p0U4HJJi5Gzk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=W5p9ZIguYv13f9dDy3IIYglZJufETpTyGY2OhADXn40d6s5Uc5JUvH7tjqfalLO2p/L/8riBxDPDxa1ak8qB52FLNV3JbtotcBFXCSOoI8w+xuOqAiyL30jv6GhSZ34dDEcEHkttvxev2AjNQY9IuOyRU/+DMcLiJoxP6IuArZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIw1Eff2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8WsILe/"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42e78c39ff0so39808111cf.0;
-        Sat, 02 Mar 2024 15:19:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709421586; x=1710026386; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yl9YhJ9Pat9I4841GAOwQcUbovZDN591i7vJgihLH04=;
-        b=J8WsILe/c0lxtcCKQQ/0R2OH3stc/HlsnH+PpbuTa3bzXSbYECsURyZ9OYW12x193e
-         f0uR1c0q4NgkE0SrCDCWa9kKZLTvsiHVmkQ+n611oGCbAH0aQ3LRV/zVP0AzugW93MsE
-         ybDVfU0BNnB2XZJUrzQhnZgWI5PmOmXMM3qy5w8OEPYFPIpZKt/wgssVnsUBi79mTi8r
-         MZo0SiwfIu7C9HdwrQlV5LJRr8abFTPQnKabX3CwZC2bGoZpCozPzWahQLmirNGDtUkD
-         97u2n6cqunBELdpH8ZaIgXuGI0h8wWxcxN2orgxPfu2CoDtZiLj9Lm6f8RPQ/hgz0Sas
-         GNFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709421586; x=1710026386;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yl9YhJ9Pat9I4841GAOwQcUbovZDN591i7vJgihLH04=;
-        b=j6I6xnSKVPZNL29TptI0XvNw2fTmKReDia9KZLcO7xIXpNuWdcdQL1QimqiVicreWf
-         MVC81wgHR1OBuofdmKMeHAZXqts7yJrhQ5WjT2mZkkm+H4dknm0YEnU12sTx9eL37ZgX
-         DZJSbD4zPai9CdcfwftAKG6RzVdwSxTObZAf2/2uLtQRw+XpMKEVu1A9S8hFgQRXiQTY
-         JTW3bCpph4I4DwysjPipOm53c/YNzdMK/ERfSHNMUdzMZlwpMyvPDtfChOBoxwKYSlim
-         iMha+KEDtPCFy8Q+4YsCT8W8nHT8bMH8/KrR2F0felmzZVkMEGX5NBpJkW7Aryx28AE5
-         UD2A==
-X-Forwarded-Encrypted: i=1; AJvYcCX4rvRFQ2It8hC7Y4NzpLyGG7Gy9hvC+VK3O8pEX+yieGQ7tonRZI14MsxkNVx76Qdt/bLhVJuzZ+CyeT7Uu8FxzjEUHF9RxFAdd3wBh2Hdmto2YoRQUWMl7sCNZsqNBFfu
-X-Gm-Message-State: AOJu0YwkOdO9kqhP1a9R8hRiQLrHMHhmNjePFLGjAFJVfoyT7UrT+KdC
-	KNjtzYla7hI94F9+HDVHoE4jLQV3hxrJfMGHj8LK2JFNw3auySN9wmOYPAT7
-X-Google-Smtp-Source: AGHT+IF2R0RJsIJvVpl1bvm8wghq1conzqkpFu40cOsz9Pou4iTg2Ord2Jc4YemBxx9LHR+Lm28KYA==
-X-Received: by 2002:ac8:5a41:0:b0:42e:ca55:e89a with SMTP id o1-20020ac85a41000000b0042eca55e89amr8281122qta.34.1709421585966;
-        Sat, 02 Mar 2024 15:19:45 -0800 (PST)
-Received: from localhost ([2601:8c:502:14f0:acdd:1182:de4a:7f88])
-        by smtp.gmail.com with ESMTPSA id nw5-20020a0562143a0500b0068f2d2f64d1sm3422697qvb.32.2024.03.02.15.19.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Mar 2024 15:19:45 -0800 (PST)
-Date: Sat, 2 Mar 2024 13:19:42 -0500
-From: Oliver Crumrine <ozlinuxc@gmail.com>
-To: alx@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
-Message-ID: <hxiq3upwxs3j5mc5arwlx4jriqm7fq5z54wroc4h4kqcq4gq7m@uwnoq2vnkhup>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIw1Eff2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 13D0AC433C7;
+	Sat,  2 Mar 2024 23:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709421623;
+	bh=5hT1Gm9kieKmDtLN+o5bF5+d0pJA1q6p0U4HJJi5Gzk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=fIw1Eff2KyGOxveOF6bgCLrPuZXNbCkY4THXS5/nMahynkjHsBXnhQkpd7h2lbxSP
+	 QPsF+7q/PO77zVvLfV+JyQp6S0G7HZLqnSNG1OaFyzGED+UNompb4BApOHOzUeM6ig
+	 R80vi0R3syCf+OUUW0h5GYfGbYqPPMhHANdG0JEHH6ouzK14NKdieBF17taHg3cpAn
+	 lx3MoPxzj+wbKQksGKUZvJI0yVo88t4U2b77WuQABq5OwdrXXKTPEBhUP9g0pHjrOn
+	 7xISxDX3SOlt58X2Vv7AUhONLrxvIezQCewmKXToH/CS/fqlkPLlzORJtk7pe/TKwc
+	 Eplr4+goZ928A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 020CAC595D1;
+	Sat,  2 Mar 2024 23:20:23 +0000 (UTC)
+Subject: Re: [GIT PULL] firewire fixes for v6.8-rc7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240302231242.GA33788@workstation.local>
+References: <20240302231242.GA33788@workstation.local>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240302231242.GA33788@workstation.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-fixes-6.8-rc7
+X-PR-Tracked-Commit-Id: d0b06dc48fb15902d7da09c5c0861e7f042a9381
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 04b8076df2534f08bb4190f90a24e0f7f8930aca
+Message-Id: <170942162299.12689.18397051625287685447.pr-tracker-bot@kernel.org>
+Date: Sat, 02 Mar 2024 23:20:22 +0000
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-It was not made clear in several socket options that they were not
-supported by SOCK_STREAM; this patch fixes that.
+The pull request you sent on Sun, 3 Mar 2024 08:12:42 +0900:
 
-Socket options not supported by SOCK_STREAM are handled in the
-ip_cmsg_recv_offset function in net/ipv4/ip_sockglue.c. The function is
-called for udp sockets, and indirectly by ping and raw sockets, but not
-for TCP sockets, as they don't support these options.
+> git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-fixes-6.8-rc7
 
-Signed-off-by: Oliver Crumrine <ozlinuxc@gmail.com>
----
- man7/ip.7 | 9 +++++++++
- 1 file changed, 9 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/04b8076df2534f08bb4190f90a24e0f7f8930aca
 
-diff --git a/man7/ip.7 b/man7/ip.7
-index 2b4b06324..104e65feb 100644
---- a/man7/ip.7
-+++ b/man7/ip.7
-@@ -828,6 +828,9 @@ is not zero, the primary local address of the interface specified by the
- index overwrites
- .I ipi_spec_dst
- for the routing table lookup.
-+Not supported for
-+.B SOCK_STREAM
-+sockets.
- .TP
- .BR IP_RECVERR " (since Linux 2.2)"
- .\" Precisely: since Linux 2.1.15
-@@ -989,6 +992,9 @@ in which the kernel returns the original destination address
- of the datagram being received.
- The ancillary message contains a
- .IR "struct sockaddr_in" .
-+Not supported for
-+.B SOCK_STREAM
-+sockets.
- .TP
- .BR IP_RECVTOS " (since Linux 2.2)"
- .\" Precisely: since Linux 2.1.68
-@@ -998,6 +1004,9 @@ ancillary message is passed with incoming packets.
- It contains a byte which specifies the Type of Service/Precedence
- field of the packet header.
- Expects a boolean integer flag.
-+Not supported for
-+.B SOCK_STREAM
-+sockets.
- .TP
- .BR IP_RECVTTL " (since Linux 2.2)"
- .\" Precisely: since Linux 2.1.68
+Thank you!
+
 -- 
-2.44.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
