@@ -1,380 +1,268 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1A818659;
-	Sat,  2 Mar 2024 08:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EF1168BD
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 08:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709367946; cv=none; b=OyqRGvo3cGT6z1l+dlPaBNRCy16iblgdPdUg9VTHz7+6xjjnceRu3hhAw8j8DeSITIWVCM2er2sWZnfc1E23sWkAsnvtrNn3U/GdVvp94UqUTeTH/xUcR5dD1JR/mFDw99loeuNpfc1AXSsM5fEdvrj13YHBlpe1tnwoIGkKot4=
+	t=1709367967; cv=none; b=e+IeBP5kMAW6MXJ7ZrBGfQvYtbnvXiEuKhPFKoUHBrP3nDS+hK1wNcMzEpq2mx0nB1iB/lygXTSiB6MjEyTe4MYllusvu2nzLRLayPVktgkCbGu/VwzfRWmezeFzOaoKvcckr5u160w+ieChNepEwo0ZrkcQxTRdNGFDsBBv0O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709367946; c=relaxed/simple;
-	bh=YS030k40TsaKC7Al33RIXoNq0zRM2Jnh7Pw8VJbAxpQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SyrbqMQo3MnYGwyU5GVyB3mYi3fTf7o89nLY3LtMkkeBP8g+75SaL4b7Gmi/5YK8IYEagkMwvS1CjpCzbZA+qYARtAi51R+35jVVHmHutlZYETML87WErEEO6tFGk+OZCYzHUfPyh6JyFZ2wYXjF9+HDvL81OD+1SbP5d14H9e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Bx3+uG4uJlMIoTAA--.49263S3;
-	Sat, 02 Mar 2024 16:25:42 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLBN84uJlqlhMAA--.6847S8;
-	Sat, 02 Mar 2024 16:25:41 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Juergen Gross <jgross@suse.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: [PATCH v6 6/7] LoongArch: Add pv ipi support on guest kernel side
-Date: Sat,  2 Mar 2024 16:25:31 +0800
-Message-Id: <20240302082532.1415200-7-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240302082532.1415200-1-maobibo@loongson.cn>
-References: <20240302082532.1415200-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1709367967; c=relaxed/simple;
+	bh=iEHyzy4gnltEx44DkUqdsK5b2oJpnosXHkWcEgjCEbs=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=I5CM6HQs67/bjnta1wjX9W6m2pDAhXttC7W9IP/qsmDUU1vFOpK8EcvHcqXp3uPyvTOnS2AwJanDOLNMLqp8qXuVZ5FozK9dOZ3awnlJ8SDe93yp6lUHVJzh9PWjc2KFw04WrfG3t46Tzqo9ZGDh5d+LSH6q7Li5f+jSU07IhvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iiKNlYwZ; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iiKNlYwZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709367966; x=1740903966;
+  h=date:from:to:cc:subject:message-id;
+  bh=iEHyzy4gnltEx44DkUqdsK5b2oJpnosXHkWcEgjCEbs=;
+  b=iiKNlYwZb7sXH6Az32IKSGTaM8Hwv2ybN1ZfXZ1xUIhQpOyY8/py6oRN
+   Jr7koXVClVeVQkG3XttVyrWSXN+16hK5G8zUMvETUHagjttxmOud/ivCm
+   DaeCp9PMgHS5AEM4tv6YMRWKetxHYvm4h/MNomIfdpkGvm8HQOsCYI0XY
+   IbFjLWCYFtasQP3MpUlkHGBsa+u2Mph4vGd/VW1aMgaE/xJpojyrsZlBj
+   A6pgL1fZs2m/FqNpBOjlcEp7fnfuTm1v5+rjar+//tJaHe8D5ko0hZKMT
+   SBjdw2ySliqVEczZT87t0cFoPXk8U/S954bKuATZ9s0nufAEaYVnWuXOO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="6864890"
+X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
+   d="scan'208";a="6864890"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2024 00:26:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
+   d="scan'208";a="8329669"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 02 Mar 2024 00:26:04 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rgKgz-000ESy-2L;
+	Sat, 02 Mar 2024 08:26:01 +0000
+Date: Sat, 02 Mar 2024 16:25:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:locking/core] BUILD SUCCESS
+ ce3576ebd62d99f79c1dc98824e2ef6d6ab68434
+Message-ID: <202403021610.iC5DYLOZ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxLBN84uJlqlhMAA--.6847S8
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Zr1UZw4kZF4fKFWUGF1Dtwc_yoWDXw1DpF
-	ZrAr1kWr4rGFn7A395G395ur15J3s7Cw12q3W7AFyrAFsFqF15Xr4kKFyqqFy8ta97Ga4F
-	gF95Gr4qga1UAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUI0eHUUUUU
 
-PARAVIRT option and pv ipi is added on guest kernel side, function
-pv_ipi_init() is to add ipi sending and ipi receiving hooks. This function
-firstly checks whether system runs on VM mode. If kernel runs on VM mode,
-it will call function kvm_para_available() to detect current hypervirsor
-type. Now only KVM type detection is supported, the paravirt function can
-work only if current hypervisor type is KVM, since there is only KVM
-supported on LoongArch now.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
+branch HEAD: ce3576ebd62d99f79c1dc98824e2ef6d6ab68434  locking/rtmutex: Use try_cmpxchg_relaxed() in mark_rt_mutex_waiters()
 
-PV IPI uses virtual IPI sender and virtual IPI receiver function. With
-virutal IPI sender, ipi message is stored in DDR memory rather than
-emulated HW. IPI multicast is supported, and 128 vcpus can received IPIs
-at the same time like X86 KVM method. Hypercall method is used for IPI
-sending.
+elapsed time: 1187m
 
-With virtual IPI receiver, HW SW0 is used rather than real IPI HW. Since
-VCPU has separate HW SW0 like HW timer, there is no trap in IPI interrupt
-acknowledge. And IPI message is stored in DDR, no trap in get IPI message.
+configs tested: 195
+configs skipped: 4
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/Kconfig                        |   9 ++
- arch/loongarch/include/asm/hardirq.h          |   1 +
- arch/loongarch/include/asm/paravirt.h         |  27 ++++
- .../include/asm/paravirt_api_clock.h          |   1 +
- arch/loongarch/kernel/Makefile                |   1 +
- arch/loongarch/kernel/irq.c                   |   2 +-
- arch/loongarch/kernel/paravirt.c              | 151 ++++++++++++++++++
- arch/loongarch/kernel/smp.c                   |   4 +-
- 8 files changed, 194 insertions(+), 2 deletions(-)
- create mode 100644 arch/loongarch/include/asm/paravirt.h
- create mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
- create mode 100644 arch/loongarch/kernel/paravirt.c
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 929f68926b34..fdaae9a0435c 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -587,6 +587,15 @@ config CPU_HAS_PREFETCH
- 	bool
- 	default y
- 
-+config PARAVIRT
-+	bool "Enable paravirtualization code"
-+	depends on AS_HAS_LVZ_EXTENSION
-+	help
-+          This changes the kernel so it can modify itself when it is run
-+	  under a hypervisor, potentially improving performance significantly
-+	  over full virtualization.  However, when run without a hypervisor
-+	  the kernel is theoretically slower and slightly larger.
-+
- config ARCH_SUPPORTS_KEXEC
- 	def_bool y
- 
-diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/include/asm/hardirq.h
-index 9f0038e19c7f..b26d596a73aa 100644
---- a/arch/loongarch/include/asm/hardirq.h
-+++ b/arch/loongarch/include/asm/hardirq.h
-@@ -21,6 +21,7 @@ enum ipi_msg_type {
- typedef struct {
- 	unsigned int ipi_irqs[NR_IPI];
- 	unsigned int __softirq_pending;
-+	atomic_t message ____cacheline_aligned_in_smp;
- } ____cacheline_aligned irq_cpustat_t;
- 
- DECLARE_PER_CPU_SHARED_ALIGNED(irq_cpustat_t, irq_stat);
-diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
-new file mode 100644
-index 000000000000..58f7b7b89f2c
---- /dev/null
-+++ b/arch/loongarch/include/asm/paravirt.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_LOONGARCH_PARAVIRT_H
-+#define _ASM_LOONGARCH_PARAVIRT_H
-+
-+#ifdef CONFIG_PARAVIRT
-+#include <linux/static_call_types.h>
-+struct static_key;
-+extern struct static_key paravirt_steal_enabled;
-+extern struct static_key paravirt_steal_rq_enabled;
-+
-+u64 dummy_steal_clock(int cpu);
-+DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
-+
-+static inline u64 paravirt_steal_clock(int cpu)
-+{
-+	return static_call(pv_steal_clock)(cpu);
-+}
-+
-+int pv_ipi_init(void);
-+#else
-+static inline int pv_ipi_init(void)
-+{
-+	return 0;
-+}
-+
-+#endif // CONFIG_PARAVIRT
-+#endif
-diff --git a/arch/loongarch/include/asm/paravirt_api_clock.h b/arch/loongarch/include/asm/paravirt_api_clock.h
-new file mode 100644
-index 000000000000..65ac7cee0dad
---- /dev/null
-+++ b/arch/loongarch/include/asm/paravirt_api_clock.h
-@@ -0,0 +1 @@
-+#include <asm/paravirt.h>
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 3c808c680370..662e6e9de12d 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -48,6 +48,7 @@ obj-$(CONFIG_MODULES)		+= module.o module-sections.o
- obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
- 
- obj-$(CONFIG_PROC_FS)		+= proc.o
-+obj-$(CONFIG_PARAVIRT)		+= paravirt.o
- 
- obj-$(CONFIG_SMP)		+= smp.o
- 
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index ce36897d1e5a..4863e6c1b739 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -113,5 +113,5 @@ void __init init_IRQ(void)
- 			per_cpu(irq_stack, i), per_cpu(irq_stack, i) + IRQ_STACK_SIZE);
- 	}
- 
--	set_csr_ecfg(ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 | ECFGF_IPI | ECFGF_PMC);
-+	set_csr_ecfg(ECFGF_SIP0 | ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 | ECFGF_IPI | ECFGF_PMC);
- }
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-new file mode 100644
-index 000000000000..9044ed62045c
---- /dev/null
-+++ b/arch/loongarch/kernel/paravirt.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/export.h>
-+#include <linux/types.h>
-+#include <linux/interrupt.h>
-+#include <linux/jump_label.h>
-+#include <linux/kvm_para.h>
-+#include <asm/paravirt.h>
-+#include <linux/static_call.h>
-+
-+struct static_key paravirt_steal_enabled;
-+struct static_key paravirt_steal_rq_enabled;
-+
-+static u64 native_steal_clock(int cpu)
-+{
-+	return 0;
-+}
-+
-+DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
-+
-+#ifdef CONFIG_SMP
-+static void pv_send_ipi_single(int cpu, unsigned int action)
-+{
-+	unsigned int min, old;
-+	irq_cpustat_t *info = &per_cpu(irq_stat, cpu);
-+
-+	old = atomic_fetch_or(BIT(action), &info->message);
-+	if (old)
-+		return;
-+
-+	min = cpu_logical_map(cpu);
-+	kvm_hypercall3(KVM_HCALL_FUNC_PV_IPI, 1, 0, min);
-+}
-+
-+#define KVM_IPI_CLUSTER_SIZE		(2 * BITS_PER_LONG)
-+static void pv_send_ipi_mask(const struct cpumask *mask, unsigned int action)
-+{
-+	unsigned int cpu, i, min = 0, max = 0, old;
-+	__uint128_t bitmap = 0;
-+	irq_cpustat_t *info;
-+
-+	if (cpumask_empty(mask))
-+		return;
-+
-+	action = BIT(action);
-+	for_each_cpu(i, mask) {
-+		info = &per_cpu(irq_stat, i);
-+		old = atomic_fetch_or(action, &info->message);
-+		if (old)
-+			continue;
-+
-+		cpu = cpu_logical_map(i);
-+		if (!bitmap) {
-+			min = max = cpu;
-+		} else if (cpu > min && cpu < min + KVM_IPI_CLUSTER_SIZE) {
-+			max = cpu > max ? cpu : max;
-+		} else if (cpu < min && (max - cpu) < KVM_IPI_CLUSTER_SIZE) {
-+			bitmap <<= min - cpu;
-+			min = cpu;
-+		} else {
-+			/*
-+			 * Physical cpuid is sorted in ascending order ascend
-+			 * for the next mask calculation, send IPI here
-+			 * directly and skip the remainding cpus
-+			 */
-+			kvm_hypercall3(KVM_HCALL_FUNC_PV_IPI,
-+				(unsigned long)bitmap,
-+				(unsigned long)(bitmap >> BITS_PER_LONG), min);
-+			min = max = cpu;
-+			bitmap = 0;
-+		}
-+		__set_bit(cpu - min, (unsigned long *)&bitmap);
-+	}
-+
-+	if (bitmap)
-+		kvm_hypercall3(KVM_HCALL_FUNC_PV_IPI, (unsigned long)bitmap,
-+				(unsigned long)(bitmap >> BITS_PER_LONG), min);
-+}
-+
-+static irqreturn_t loongson_do_swi(int irq, void *dev)
-+{
-+	irq_cpustat_t *info;
-+	long action;
-+
-+	/* Clear swi interrupt */
-+	clear_csr_estat(1 << INT_SWI0);
-+	info = this_cpu_ptr(&irq_stat);
-+	action = atomic_xchg(&info->message, 0);
-+	if (action & SMP_CALL_FUNCTION) {
-+		generic_smp_call_function_interrupt();
-+		info->ipi_irqs[IPI_CALL_FUNCTION]++;
-+	}
-+
-+	if (action & SMP_RESCHEDULE) {
-+		scheduler_ipi();
-+		info->ipi_irqs[IPI_RESCHEDULE]++;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void pv_init_ipi(void)
-+{
-+	int r, swi0;
-+
-+	swi0 = get_percpu_irq(INT_SWI0);
-+	if (swi0 < 0)
-+		panic("SWI0 IRQ mapping failed\n");
-+	irq_set_percpu_devid(swi0);
-+	r = request_percpu_irq(swi0, loongson_do_swi, "SWI0", &irq_stat);
-+	if (r < 0)
-+		panic("SWI0 IRQ request failed\n");
-+}
-+#endif
-+
-+static bool kvm_para_available(void)
-+{
-+	static int hypervisor_type;
-+	int config;
-+
-+	if (!hypervisor_type) {
-+		config = read_cpucfg(CPUCFG_KVM_SIG);
-+		if (!memcmp(&config, KVM_SIGNATURE, 4))
-+			hypervisor_type = HYPERVISOR_KVM;
-+	}
-+
-+	return hypervisor_type == HYPERVISOR_KVM;
-+}
-+
-+int __init pv_ipi_init(void)
-+{
-+	int feature;
-+
-+	if (!cpu_has_hypervisor)
-+		return 0;
-+	if (!kvm_para_available())
-+		return 0;
-+
-+	/*
-+	 * check whether KVM hypervisor supports pv_ipi or not
-+	 */
-+	feature = read_cpucfg(CPUCFG_KVM_FEATURE);
-+#ifdef CONFIG_SMP
-+	if (feature & KVM_FEATURE_PV_IPI) {
-+		smp_ops.init_ipi		= pv_init_ipi;
-+		smp_ops.send_ipi_single		= pv_send_ipi_single;
-+		smp_ops.send_ipi_mask		= pv_send_ipi_mask;
-+	}
-+#endif
-+
-+	return 1;
-+}
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 1fce775be4f6..9eff7aa4c552 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -29,6 +29,7 @@
- #include <asm/loongson.h>
- #include <asm/mmu_context.h>
- #include <asm/numa.h>
-+#include <asm/paravirt.h>
- #include <asm/processor.h>
- #include <asm/setup.h>
- #include <asm/time.h>
-@@ -309,6 +310,7 @@ void __init loongson_smp_setup(void)
- 	cpu_data[0].core = cpu_logical_map(0) % loongson_sysconf.cores_per_package;
- 	cpu_data[0].package = cpu_logical_map(0) / loongson_sysconf.cores_per_package;
- 
-+	pv_ipi_init();
- 	iocsr_write32(0xffffffff, LOONGARCH_IOCSR_IPI_EN);
- 	pr_info("Detected %i available CPU(s)\n", loongson_sysconf.nr_cpus);
- }
-@@ -352,7 +354,7 @@ void loongson_boot_secondary(int cpu, struct task_struct *idle)
- void loongson_init_secondary(void)
- {
- 	unsigned int cpu = smp_processor_id();
--	unsigned int imask = ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 |
-+	unsigned int imask = ECFGF_SIP0 | ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 |
- 			     ECFGF_IPI | ECFGF_PMC | ECFGF_TIMER;
- 
- 	change_csr_ecfg(ECFG0_IM, imask);
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                            hsdk_defconfig   gcc  
+arc                   randconfig-001-20240302   gcc  
+arc                   randconfig-002-20240302   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                            dove_defconfig   gcc  
+arm                       omap2plus_defconfig   gcc  
+arm                   randconfig-001-20240302   gcc  
+arm                   randconfig-002-20240302   gcc  
+arm                   randconfig-003-20240302   gcc  
+arm                   randconfig-004-20240302   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240302   gcc  
+arm64                 randconfig-002-20240302   gcc  
+arm64                 randconfig-003-20240302   clang
+arm64                 randconfig-004-20240302   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240302   gcc  
+csky                  randconfig-002-20240302   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240302   clang
+hexagon               randconfig-002-20240302   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240301   clang
+i386         buildonly-randconfig-002-20240301   clang
+i386         buildonly-randconfig-002-20240302   gcc  
+i386         buildonly-randconfig-003-20240301   gcc  
+i386         buildonly-randconfig-003-20240302   gcc  
+i386         buildonly-randconfig-004-20240301   clang
+i386         buildonly-randconfig-005-20240301   clang
+i386         buildonly-randconfig-005-20240302   gcc  
+i386         buildonly-randconfig-006-20240301   clang
+i386         buildonly-randconfig-006-20240302   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240301   clang
+i386                  randconfig-002-20240301   clang
+i386                  randconfig-002-20240302   gcc  
+i386                  randconfig-003-20240301   clang
+i386                  randconfig-004-20240301   clang
+i386                  randconfig-004-20240302   gcc  
+i386                  randconfig-005-20240301   gcc  
+i386                  randconfig-005-20240302   gcc  
+i386                  randconfig-006-20240301   gcc  
+i386                  randconfig-011-20240301   gcc  
+i386                  randconfig-011-20240302   gcc  
+i386                  randconfig-012-20240301   clang
+i386                  randconfig-012-20240302   gcc  
+i386                  randconfig-013-20240301   clang
+i386                  randconfig-013-20240302   gcc  
+i386                  randconfig-014-20240301   gcc  
+i386                  randconfig-014-20240302   gcc  
+i386                  randconfig-015-20240301   gcc  
+i386                  randconfig-016-20240301   gcc  
+i386                  randconfig-016-20240302   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240302   gcc  
+loongarch             randconfig-002-20240302   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         amcore_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        m5272c3_defconfig   gcc  
+m68k                       m5275evb_defconfig   gcc  
+m68k                        m5307c3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          malta_defconfig   gcc  
+mips                  maltasmvp_eva_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240302   gcc  
+nios2                 randconfig-002-20240302   gcc  
+openrisc                         alldefconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240302   gcc  
+parisc                randconfig-002-20240302   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240302   clang
+powerpc               randconfig-002-20240302   clang
+powerpc               randconfig-003-20240302   gcc  
+powerpc                  storcenter_defconfig   gcc  
+powerpc64             randconfig-001-20240302   clang
+powerpc64             randconfig-002-20240302   gcc  
+powerpc64             randconfig-003-20240302   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240302   gcc  
+riscv                 randconfig-002-20240302   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240302   gcc  
+s390                  randconfig-002-20240302   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          r7780mp_defconfig   gcc  
+sh                    randconfig-001-20240302   gcc  
+sh                    randconfig-002-20240302   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                          rsk7264_defconfig   gcc  
+sh                   rts7751r2dplus_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240302   gcc  
+sparc64               randconfig-002-20240302   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240302   gcc  
+um                    randconfig-002-20240302   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240302   clang
+x86_64       buildonly-randconfig-002-20240302   clang
+x86_64       buildonly-randconfig-003-20240302   gcc  
+x86_64       buildonly-randconfig-004-20240302   gcc  
+x86_64       buildonly-randconfig-005-20240302   gcc  
+x86_64       buildonly-randconfig-006-20240302   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240302   clang
+x86_64                randconfig-002-20240302   gcc  
+x86_64                randconfig-003-20240302   gcc  
+x86_64                randconfig-004-20240302   clang
+x86_64                randconfig-005-20240302   gcc  
+x86_64                randconfig-006-20240302   clang
+x86_64                randconfig-011-20240302   clang
+x86_64                randconfig-012-20240302   clang
+x86_64                randconfig-013-20240302   gcc  
+x86_64                randconfig-014-20240302   gcc  
+x86_64                randconfig-015-20240302   clang
+x86_64                randconfig-016-20240302   gcc  
+x86_64                randconfig-071-20240302   clang
+x86_64                randconfig-072-20240302   clang
+x86_64                randconfig-073-20240302   clang
+x86_64                randconfig-074-20240302   gcc  
+x86_64                randconfig-075-20240302   clang
+x86_64                randconfig-076-20240302   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                  audio_kc705_defconfig   gcc  
+xtensa                       common_defconfig   gcc  
+xtensa                randconfig-001-20240302   gcc  
+xtensa                randconfig-002-20240302   gcc  
+xtensa                         virt_defconfig   gcc  
+
 -- 
-2.39.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
