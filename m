@@ -1,364 +1,186 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED01018C08;
-	Sat,  2 Mar 2024 15:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771E518657
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 15:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709394576; cv=none; b=r65T+muq8VmkPO4OCSWacVClM79SDqhhl/t6DoEpLG+GdrA4BgLlbAmcKo66VT9Czy8GXuz9A1YzuYX49Ck7BrANfqGt1sODUngkEmyWzvRfG7p43mc63iWdjTBOxz1Vm2UyHQ2v2VpAwEFx5GqTSbjQCdU37l3weyC0gVjgcM0=
+	t=1709394631; cv=none; b=deReMYnJBFSssXkZrMHBf5bftVAsQxVzMsfjPAF/HFtzsbg0k+gRV+vYRhV/tpfdTu278mnjovzeaibEJi5Z07Cm8oC+73HBc6fJKUtjmdQGkUor09FB1gy4BXEFnTHpkgovPjICXExcA6aeMab236x+436DNtOuGnY1WcbS1ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709394576; c=relaxed/simple;
-	bh=pVdbaVjIIA20Bjg3c6GsLHOmOo/dWqiDf6i0eRkE78c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oBbba+NQWVsw6qrFZSXDdVcPLivg6kJXBRT4fe4084WI+IHngZearKLRLSm/63KCPPnScGnuEaCk5FE/rDCMpXPPUWboq4aRYP6lSMv1J3w2n7PGnbBUoN/wtDn+r++53uFBx+xdaaO+2zbyp0piURvNs2MqsJYPH3bsb5akjLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Q7+2ok62; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709394631; c=relaxed/simple;
+	bh=mN2LAc9j8pitp4/pP5rakUYeQUXvQd/UY0ksJb5F/AY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pJkem1w21m3sLGtE46aRiwaNmCt9MHv8BCTH+WtzQgSct7TSwZxcGKGOM/fg+m7tn4PE1X4Mklv33qMSc6dTdrjqj03is79uMSb9F7M6RSxNCE8ZhQBh7/aoKTtxk9eI0gEH17G3DfBhrPAfq6fhRWG41lCFRrOIMGobiFa1NV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=M5Qh4XVd; arc=none smtp.client-ip=80.12.242.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Q7+2ok62"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709394573;
-	bh=pVdbaVjIIA20Bjg3c6GsLHOmOo/dWqiDf6i0eRkE78c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q7+2ok625bLrkH3ObT64vZxoMSGrYnzdkt2J6ct9diCtRTHf9116ukA7dAfR4Jmel
-	 yKgid/5g+4UR6amFRnAwgJxdnpi1aFpi5pvs4me18uanPOHnHslJZHljf0LqQO2vUm
-	 GO3vB9SAqn3+5Gr6FYdsXDQBpt5DHEB23dK/ChC4kles4CWEOam59fJshn7+isRSh5
-	 2TsvlMZCEQofX2h8uZ+zV437kMHIGg34mlYdPG+LPcwdX7lQnOxUhxlRtdnQhdckYM
-	 GzsKMSrZdpHp8Zy5ZIwMotvyF+G3S4TmJHknOFoaL2K6bSb7MMM2hiT9T/iT2wrbn+
-	 Y99P5bpocz2WA==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: alarumbe)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5455F378208D;
-	Sat,  2 Mar 2024 15:49:32 +0000 (UTC)
-From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v2 1/1] drm/panfrost: Replace fdinfo's profiling debugfs knob with sysfs
-Date: Sat,  2 Mar 2024 15:48:41 +0000
-Message-ID: <20240302154845.3223223-3-adrian.larumbe@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240302154845.3223223-2-adrian.larumbe@collabora.com>
-References: <20240302154845.3223223-2-adrian.larumbe@collabora.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="M5Qh4XVd"
+Received: from [192.168.1.18] ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id gRbkrY9aBQ6QsgRd4rNOK9; Sat, 02 Mar 2024 16:50:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1709394627;
+	bh=Qv/ssscVV7fGs0JMzWV8vaTZi3w3mSOL334YpDMghuU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=M5Qh4XVdS6CPVQ81wW+vqU6fBYIuJCy8mfyGplrusU67MKNuulUnmada7l0zc574r
+	 xvDL/a5djesp7qHh6m3Khpe0DA1+qArKAQrROkYAY+8IwnDRM9sg6HwUAvtnG4W4nz
+	 3a9UftEkSeZbjVo0abo+ByJDl/+JcYoqMwNSaHAJwSb47dbcPVAW2CJTtidonOWjtW
+	 wRbWYlH8dliC/a+3hXdLGmLpbbRb/RXZqa/ixorXOuZz7GWC4HoeOjRb7hNWeYGtrQ
+	 QIDKmL0Ri1Dgk4eCl3o5Xvf5DyQXOY47I5XmDtheOlbAJrm4NtdS3SYV+vf2ULFNXV
+	 zrXr+L+f4Ff4g==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 02 Mar 2024 16:50:27 +0100
+X-ME-IP: 92.140.202.140
+Message-ID: <52158bf6-16fe-4ce2-b9b6-bbc6550a6e14@wanadoo.fr>
+Date: Sat, 2 Mar 2024 16:50:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/4] usb: dwc3: exynos: Use
+ devm_regulator_bulk_get_enable() helper function
+Content-Language: en-MW
+To: Anand Moon <linux.amoon@gmail.com>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240301193831.3346-1-linux.amoon@gmail.com>
+ <20240301193831.3346-4-linux.amoon@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240301193831.3346-4-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Debugfs isn't always available in production builds that try to squeeze
-every single byte out of the kernel image, but we still need a way to
-toggle the timestamp and cycle counter registers so that jobs can be
-profiled for fdinfo's drm engine and cycle calculations.
+Le 01/03/2024 à 20:38, Anand Moon a écrit :
+> Use devm_regulator_bulk_get_enable() instead of open coded
+> 'devm_regulator_get(), regulator_enable(), regulator_disable().
+> 
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>   drivers/usb/dwc3/dwc3-exynos.c | 49 +++-------------------------------
+>   1 file changed, 4 insertions(+), 45 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+> index 5d365ca51771..7c77f3c69825 100644
+> --- a/drivers/usb/dwc3/dwc3-exynos.c
+> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> @@ -32,9 +32,6 @@ struct dwc3_exynos {
+>   	struct clk		*clks[DWC3_EXYNOS_MAX_CLOCKS];
+>   	int			num_clks;
+>   	int			suspend_clk_idx;
+> -
+> -	struct regulator	*vdd33;
+> -	struct regulator	*vdd10;
+>   };
+>   
+>   static int dwc3_exynos_probe(struct platform_device *pdev)
+> @@ -44,6 +41,7 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>   	struct device_node	*node = dev->of_node;
+>   	const struct dwc3_exynos_driverdata *driver_data;
+>   	int			i, ret;
+> +	static const char * const regulators[] = { "vdd33", "vdd10" };
+>   
+>   	exynos = devm_kzalloc(dev, sizeof(*exynos), GFP_KERNEL);
+>   	if (!exynos)
+> @@ -78,27 +76,9 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>   	if (exynos->suspend_clk_idx >= 0)
+>   		clk_prepare_enable(exynos->clks[exynos->suspend_clk_idx]);
+>   
+> -	exynos->vdd33 = devm_regulator_get(dev, "vdd33");
+> -	if (IS_ERR(exynos->vdd33)) {
+> -		ret = PTR_ERR(exynos->vdd33);
+> -		goto vdd33_err;
+> -	}
+> -	ret = regulator_enable(exynos->vdd33);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to enable VDD33 supply\n");
+> -		goto vdd33_err;
+> -	}
+> -
+> -	exynos->vdd10 = devm_regulator_get(dev, "vdd10");
+> -	if (IS_ERR(exynos->vdd10)) {
+> -		ret = PTR_ERR(exynos->vdd10);
+> -		goto vdd10_err;
+> -	}
+> -	ret = regulator_enable(exynos->vdd10);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to enable VDD10 supply\n");
+> -		goto vdd10_err;
+> -	}
+> +	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(regulators), regulators);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to enable regulators\n");
+>   
+>   	if (node) {
+>   		ret = of_platform_populate(node, NULL, NULL, dev);
+> @@ -115,10 +95,6 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>   	return 0;
+>   
+>   populate_err:
+> -	regulator_disable(exynos->vdd10);
+> -vdd10_err:
+> -	regulator_disable(exynos->vdd33);
+> -vdd33_err:
+>   	for (i = exynos->num_clks - 1; i >= 0; i--)
+>   		clk_disable_unprepare(exynos->clks[i]);
+>   
+> @@ -140,9 +116,6 @@ static void dwc3_exynos_remove(struct platform_device *pdev)
+>   
+>   	if (exynos->suspend_clk_idx >= 0)
+>   		clk_disable_unprepare(exynos->clks[exynos->suspend_clk_idx]);
+> -
+> -	regulator_disable(exynos->vdd33);
+> -	regulator_disable(exynos->vdd10);
+>   }
+>   
+>   static const struct dwc3_exynos_driverdata exynos5250_drvdata = {
+> @@ -196,9 +169,6 @@ static int dwc3_exynos_suspend(struct device *dev)
+>   	for (i = exynos->num_clks - 1; i >= 0; i--)
+>   		clk_disable_unprepare(exynos->clks[i]);
+>   
+> -	regulator_disable(exynos->vdd33);
+> -	regulator_disable(exynos->vdd10);
 
-Drop the debugfs knob and replace it with a sysfs file that accomplishes
-the same functionality, and document its ABI in a separate file.
+Hi,
 
-Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
----
- .../testing/sysfs-driver-panfrost-profiling   | 10 +++
- Documentation/gpu/panfrost.rst                |  9 +++
- drivers/gpu/drm/panfrost/Makefile             |  5 +-
- drivers/gpu/drm/panfrost/panfrost_debugfs.c   | 21 ------
- drivers/gpu/drm/panfrost/panfrost_debugfs.h   | 14 ----
- drivers/gpu/drm/panfrost/panfrost_device.h    |  5 +-
- drivers/gpu/drm/panfrost/panfrost_drv.c       | 14 ++--
- drivers/gpu/drm/panfrost/panfrost_job.c       |  2 +-
- drivers/gpu/drm/panfrost/panfrost_sysfs.c     | 70 +++++++++++++++++++
- drivers/gpu/drm/panfrost/panfrost_sysfs.h     | 15 ++++
- 10 files changed, 120 insertions(+), 45 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-panfrost-profiling
- delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.c
- delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.h
- create mode 100644 drivers/gpu/drm/panfrost/panfrost_sysfs.c
- create mode 100644 drivers/gpu/drm/panfrost/panfrost_sysfs.h
+Same here, I don't think that removing regulator_[en|dis]able from the 
+suspend and resume function is correct.
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-panfrost-profiling b/Documentation/ABI/testing/sysfs-driver-panfrost-profiling
-new file mode 100644
-index 000000000000..889527b71b9d
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-panfrost-profiling
-@@ -0,0 +1,10 @@
-+What:		/sys/bus/.../drivers/panfrost/.../drm/../profiling/status
-+Date:		February 2024
-+KernelVersion:	6.8.0
-+Contact:	Adrian Larumbe <adrian.larumbe@collabora.com>
-+Description:
-+		Get/set drm fdinfo's engine and cycles profiling status.
-+		Valid values are:
-+		0: Don't enable fdinfo job profiling sources.
-+		1: Enable fdinfo job profiling sources, this enables both the GPU's
-+		   timestamp and cycle counter registers.
-\ No newline at end of file
-diff --git a/Documentation/gpu/panfrost.rst b/Documentation/gpu/panfrost.rst
-index b80e41f4b2c5..be4ac282ef63 100644
---- a/Documentation/gpu/panfrost.rst
-+++ b/Documentation/gpu/panfrost.rst
-@@ -38,3 +38,12 @@ the currently possible format options:
- 
- Possible `drm-engine-` key names are: `fragment`, and  `vertex-tiler`.
- `drm-curfreq-` values convey the current operating frequency for that engine.
-+
-+Users must bear in mind that engine and cycle sampling are disabled by default,
-+because of power saving concerns. `fdinfo` users and benchmark applications which
-+query the fdinfo file must make sure to toggle the job profiling status of the
-+driver by writing into the appropriate sysfs node::
-+
-+    echo <N> > /sys/bus/platform/drivers/panfrost/[a-f0-9]*.gpu/drm/card1/profiling
-+
-+Where `N` is either `0` or `1`, depending on the desired enablement status.
-diff --git a/drivers/gpu/drm/panfrost/Makefile b/drivers/gpu/drm/panfrost/Makefile
-index 2c01c1e7523e..6e718595d8a6 100644
---- a/drivers/gpu/drm/panfrost/Makefile
-+++ b/drivers/gpu/drm/panfrost/Makefile
-@@ -10,8 +10,7 @@ panfrost-y := \
- 	panfrost_job.o \
- 	panfrost_mmu.o \
- 	panfrost_perfcnt.o \
--	panfrost_dump.o
--
--panfrost-$(CONFIG_DEBUG_FS) += panfrost_debugfs.o
-+	panfrost_dump.o \
-+	panfrost_sysfs.o
- 
- obj-$(CONFIG_DRM_PANFROST) += panfrost.o
-diff --git a/drivers/gpu/drm/panfrost/panfrost_debugfs.c b/drivers/gpu/drm/panfrost/panfrost_debugfs.c
-deleted file mode 100644
-index 72d4286a6bf7..000000000000
---- a/drivers/gpu/drm/panfrost/panfrost_debugfs.c
-+++ /dev/null
-@@ -1,21 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/* Copyright 2023 Collabora ltd. */
--/* Copyright 2023 Amazon.com, Inc. or its affiliates. */
--
--#include <linux/debugfs.h>
--#include <linux/platform_device.h>
--#include <drm/drm_debugfs.h>
--#include <drm/drm_file.h>
--#include <drm/panfrost_drm.h>
--
--#include "panfrost_device.h"
--#include "panfrost_gpu.h"
--#include "panfrost_debugfs.h"
--
--void panfrost_debugfs_init(struct drm_minor *minor)
--{
--	struct drm_device *dev = minor->dev;
--	struct panfrost_device *pfdev = platform_get_drvdata(to_platform_device(dev->dev));
--
--	debugfs_create_atomic_t("profile", 0600, minor->debugfs_root, &pfdev->profile_mode);
--}
-diff --git a/drivers/gpu/drm/panfrost/panfrost_debugfs.h b/drivers/gpu/drm/panfrost/panfrost_debugfs.h
-deleted file mode 100644
-index c5af5f35877f..000000000000
---- a/drivers/gpu/drm/panfrost/panfrost_debugfs.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright 2023 Collabora ltd.
-- * Copyright 2023 Amazon.com, Inc. or its affiliates.
-- */
--
--#ifndef PANFROST_DEBUGFS_H
--#define PANFROST_DEBUGFS_H
--
--#ifdef CONFIG_DEBUG_FS
--void panfrost_debugfs_init(struct drm_minor *minor);
--#endif
--
--#endif  /* PANFROST_DEBUGFS_H */
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 62f7e3527385..2f3580c7ba0d 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -130,7 +130,10 @@ struct panfrost_device {
- 	struct list_head scheduled_jobs;
- 
- 	struct panfrost_perfcnt *perfcnt;
--	atomic_t profile_mode;
-+	struct kobj_profiling {
-+		struct kobject base;
-+		bool profile_mode;
-+	} profiling;
- 
- 	struct mutex sched_lock;
- 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index a926d71e8131..6db1ea453514 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -20,7 +20,7 @@
- #include "panfrost_job.h"
- #include "panfrost_gpu.h"
- #include "panfrost_perfcnt.h"
--#include "panfrost_debugfs.h"
-+#include "panfrost_sysfs.h"
- 
- static bool unstable_ioctls;
- module_param_unsafe(unstable_ioctls, bool, 0600);
-@@ -600,10 +600,6 @@ static const struct drm_driver panfrost_drm_driver = {
- 
- 	.gem_create_object	= panfrost_gem_create_object,
- 	.gem_prime_import_sg_table = panfrost_gem_prime_import_sg_table,
--
--#ifdef CONFIG_DEBUG_FS
--	.debugfs_init		= panfrost_debugfs_init,
--#endif
- };
- 
- static int panfrost_probe(struct platform_device *pdev)
-@@ -663,8 +659,14 @@ static int panfrost_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_out2;
- 
-+	err = panfrost_sysfs_init(pfdev);
-+	if (err)
-+		goto err_out3;
-+
- 	return 0;
- 
-+err_out3:
-+	panfrost_gem_shrinker_cleanup(ddev);
- err_out2:
- 	drm_dev_unregister(ddev);
- err_out1:
-@@ -681,6 +683,8 @@ static void panfrost_remove(struct platform_device *pdev)
- 	struct panfrost_device *pfdev = platform_get_drvdata(pdev);
- 	struct drm_device *ddev = pfdev->ddev;
- 
-+	panfrost_sysfs_cleanup(pfdev);
-+
- 	drm_dev_unregister(ddev);
- 	panfrost_gem_shrinker_cleanup(ddev);
- 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
-index 0c2dbf6ef2a5..1be9c31b2b61 100644
---- a/drivers/gpu/drm/panfrost/panfrost_job.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_job.c
-@@ -243,7 +243,7 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
- 	subslot = panfrost_enqueue_job(pfdev, js, job);
- 	/* Don't queue the job if a reset is in progress */
- 	if (!atomic_read(&pfdev->reset.pending)) {
--		if (atomic_read(&pfdev->profile_mode)) {
-+		if (pfdev->profiling.profile_mode) {
- 			panfrost_cycle_counter_get(pfdev);
- 			job->is_profiled = true;
- 			job->start_time = ktime_get();
-diff --git a/drivers/gpu/drm/panfrost/panfrost_sysfs.c b/drivers/gpu/drm/panfrost/panfrost_sysfs.c
-new file mode 100644
-index 000000000000..380d74e61611
---- /dev/null
-+++ b/drivers/gpu/drm/panfrost/panfrost_sysfs.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright 2023 Collabora ltd. */
-+/* Copyright 2023 Amazon.com, Inc. or its affiliates. */
-+
-+#include <linux/platform_device.h>
-+#include <drm/drm_file.h>
-+#include <drm/panfrost_drm.h>
-+
-+#include "panfrost_device.h"
-+#include "panfrost_gpu.h"
-+#include "panfrost_sysfs.h"
-+
-+static ssize_t
-+profiling_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+	bool *profile_mode =
-+		&container_of(kobj, struct panfrost_device,
-+			      profiling.base)->profiling.profile_mode;
-+
-+	return sysfs_emit(buf, "%d\n", *profile_mode);
-+}
-+
-+static ssize_t
-+profiling_store(struct kobject *kobj, struct kobj_attribute *attr,
-+	       const char *buf, size_t count)
-+{
-+	bool *profile_mode =
-+		&container_of(kobj, struct panfrost_device,
-+			      profiling.base)->profiling.profile_mode;
-+	int err, value;
-+
-+	err = kstrtoint(buf, 0, &value);
-+	if (err)
-+		return err;
-+
-+	*profile_mode = !!value;
-+
-+	return count;
-+}
-+
-+static const struct kobj_attribute profiling_status =
-+__ATTR(status, 0644, profiling_show, profiling_store);
-+
-+static const struct kobj_type kobj_profile_type = {
-+	.sysfs_ops = &kobj_sysfs_ops,
-+};
-+
-+int panfrost_sysfs_init(struct panfrost_device *pfdev)
-+{
-+	struct device *kdev = pfdev->ddev->primary->kdev;
-+	int err;
-+
-+	kobject_init(&pfdev->profiling.base, &kobj_profile_type);
-+
-+	err = kobject_add(&pfdev->profiling.base, &kdev->kobj, "%s", "profiling");
-+	if (err)
-+		return err;
-+
-+	err = sysfs_create_file(&pfdev->profiling.base, &profiling_status.attr);
-+	if (err)
-+		kobject_del(&pfdev->profiling.base);
-+
-+	return err;
-+}
-+
-+void panfrost_sysfs_cleanup(struct panfrost_device *pfdev)
-+{
-+	sysfs_remove_file(&pfdev->profiling.base, &profiling_status.attr);
-+	kobject_del(&pfdev->profiling.base);
-+}
-diff --git a/drivers/gpu/drm/panfrost/panfrost_sysfs.h b/drivers/gpu/drm/panfrost/panfrost_sysfs.h
-new file mode 100644
-index 000000000000..5fc9c8c1091a
---- /dev/null
-+++ b/drivers/gpu/drm/panfrost/panfrost_sysfs.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2023 Collabora ltd.
-+ * Copyright 2023 Amazon.com, Inc. or its affiliates.
-+ */
-+
-+#ifndef PANFROST_SYSFS_H
-+#define PANFROST_SYSFS_H
-+
-+struct panfrost_device;
-+
-+int panfrost_sysfs_init(struct panfrost_device *pfdev);
-+void panfrost_sysfs_cleanup(struct panfrost_device *pfdev);
-+
-+#endif  /* PANFROST_SYSFS_H */
--- 
-2.43.0
+The goal is to stop some hardware when the system is suspended, in order 
+to save some power.
+
+Why did you removed it?
+
+CJ
+
+> -
+>   	return 0;
+>   }
+>   
+> @@ -207,17 +177,6 @@ static int dwc3_exynos_resume(struct device *dev)
+>   	struct dwc3_exynos *exynos = dev_get_drvdata(dev);
+>   	int i, ret;
+>   
+> -	ret = regulator_enable(exynos->vdd33);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to enable VDD33 supply\n");
+> -		return ret;
+> -	}
+> -	ret = regulator_enable(exynos->vdd10);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to enable VDD10 supply\n");
+> -		return ret;
+> -	}
+> -
+>   	for (i = 0; i < exynos->num_clks; i++) {
+>   		ret = clk_prepare_enable(exynos->clks[i]);
+>   		if (ret) {
 
