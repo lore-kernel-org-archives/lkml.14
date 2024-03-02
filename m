@@ -1,94 +1,80 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A17179BC;
-	Sat,  2 Mar 2024 17:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2353C1E489;
+	Sat,  2 Mar 2024 17:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709400991; cv=none; b=j1DONSzanjr4/qkVqn4rVh7Mo1SRnODEZnLsEfLYbr/Kkc41RXK6nWOoHNuDWvdQAOeEBatMiVtirmUW0/Sjx+AV5epnnmcLLySlrB0HHH4st9r6hfTT9kpvOPpoKbFEJOWTrtVKzqUK6PzDGnVr2RBrZWQOdAGfR9tl5aYAF+8=
+	t=1709401045; cv=none; b=Y7B7DffISHeORAprO2OPsYdkCHjv/OAy7+aXMvmLmMe3BceDLRjO8dfrAcjMED0XNgFBwieP8D+cnRxQBadzHBPd4rzzwfUObg1MAMNPG26NwZEwzOoObJWc56JJ/XH9o8mAAysZ5/8YA/xMbnBRA++RsepHn+JBnRVcY+6FsaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709400991; c=relaxed/simple;
-	bh=RLdzpXnFmAtgrD2Zfzq+44gRPLSpIDew0PVRbaP61CI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mb5/p5SODK2vMcQ9qeSRpPAa4Eo+hlJPJ7KirLDlvuU2tuDhcg+bSi6k29Z4913FtNS/2WpQ386nHZwvjPEn/hHVEJ8kZS0GtNTEk5bQGfc6GBAvnCk8HUIc0bdSoLWRopfdceS+cZtn7o0p3Qp3tejjQXutPncpsYwKcZ3bEVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqVdyMiW; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709401045; c=relaxed/simple;
+	bh=5fjo3sW6ZItv7pEgLKPHc8QFAJBO26lF5AlePNl8bqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c1L2lWMTs8Vj6qa1JLB1yHkkQMyUc2CXt4iFa3I+zz0nyWTcTdLrAQ+9ameSAef7nAGLng99wEXTzMVvI3piZQwMwcrBFAMdvP9Y5HQr+f91zukflnlhNgqfbT9FYJKzc/A6z564q7/8sqNdq6y4D9kv9GAi37IZafWCBCyDZc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ds54LrPD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqVdyMiW"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so7151023a12.1;
-        Sat, 02 Mar 2024 09:36:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709400988; x=1710005788; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RLdzpXnFmAtgrD2Zfzq+44gRPLSpIDew0PVRbaP61CI=;
-        b=EqVdyMiWy9FlMUsHc3EX5QToTRvL4ChW19+bjYkQxSfWK6kxQLXvajgp/Xs/nrMuXV
-         L9Jv5Qqa8L7BCZX8NqUP0TcdY2BmzrNZa3P7RExUbLC8n5VqPbTL1shdBR13wEWKxANx
-         oSjMH33WkkyYsIrpcwV9togSlQead611Ae7XPbK4aLel56pc7tdvClNai0ea8mJsl7T3
-         /5env0txyeFplZc0/lJx0GiC3PR7KcuPPQQAF713h5LU3E63YWs788esi+nH/kw4fK5e
-         SvlgEH+NK7eqr62ErZv+iEmE+KEximjnXXI1YCbp3ZaOIdHImc36lO4mVk3oPC20eTbG
-         MLog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709400988; x=1710005788;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RLdzpXnFmAtgrD2Zfzq+44gRPLSpIDew0PVRbaP61CI=;
-        b=HJvfhOcP8LpeyNIpDaRBjNmTxbuo9T9XCd3Y24HTa4rgI7/XVD2nCn6Y55DOqe3Rnl
-         HQbSHBMJVUtFNE8/p3NaDgzM3Pm/yw/uVfipjZdRC5uS/QxJFZsP1kwqhf7lAB/aIw36
-         ZGqWxt/3E07oDf3KGIqjGfnIwaD7cd478jVPanhaJZFCA+dvtr/sRh37e8LSdSogNrp9
-         7Cy8eg25sYYU5WeZFUqwZPGP+689TCZK7S7Us+tJ6mLvulb4n5khxAF8Iy9SItSTymUA
-         SnmYb4zd5Y4IGOexarpVBzjZkcBv06OGT+xgglUjWKJz6tU6L1Eq8fCYAYeFI4Z72Rja
-         51vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxPcqI4AhMeGXlUNHgj+Ip+Wwht9/9up5SZp3nugEakjDnxOj34kEiUlahGI+yCZdSIwR8eG3COxWRJwWxKufoS7cPgianEWhanF5x+Sv85OIp5ip2473b9IH92iTa5vGdrcd3Hf9/6g==
-X-Gm-Message-State: AOJu0Yy/NqP4JZ+UtP2LBhOHZaV+fEdBjctUIK2AWNcfpeIxoT0oun7X
-	9KxnHUMzsKM2pJb4byzNpP1DKn/AW6FtD1yCX6BQlmcUnuEySx3xeICbXOtiHyOy1ARvXhUHkkb
-	1h5EC67CNASAtahYFM//npHsiPkNi97w4mu0=
-X-Google-Smtp-Source: AGHT+IFrrxEVYIkJAO4igQyninAx7J7D4sivKYKMg5FuAvVo7ovBXEvLmAE+w4HWscVfJBUqb9lAyeafiY8eNWiYEAs=
-X-Received: by 2002:a17:907:101b:b0:a44:591:a3d8 with SMTP id
- ox27-20020a170907101b00b00a440591a3d8mr3752629ejb.31.1709400988430; Sat, 02
- Mar 2024 09:36:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ds54LrPD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 468BEC433C7;
+	Sat,  2 Mar 2024 17:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709401044;
+	bh=5fjo3sW6ZItv7pEgLKPHc8QFAJBO26lF5AlePNl8bqE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ds54LrPDa+oVlj++Xnuj1EnO55m4D7uzun/o4zOqrxpfl3JUsFNoh049YpSRKtGBl
+	 RlmCPfbRPo46Zh4UZ79BxNj01otZHW7WEn91dxjqcoKc76n8cujLePE36voZgAKo5O
+	 4apmlXeCDHCu0OlIGeosf9X1bMuDDWACwqp/LIq8=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	torvalds@linux-foundation.org,
+	stable@vger.kernel.org
+Cc: lwn@lwn.net,
+	jslaby@suse.cz,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: Linux 6.6.20
+Date: Sat,  2 Mar 2024 18:37:20 +0100
+Message-ID: <2024030256-left-drier-1724@gregkh>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <2024030256-unpledged-wrinkly-084d@gregkh>
+References: <2024030256-unpledged-wrinkly-084d@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240302004439.197232-1-andy.shevchenko@gmail.com> <CACRpkdadN6gQvbAEDc8fjhucB2JmSH25HP+gKC0vS1vic0j1GA@mail.gmail.com>
-In-Reply-To: <CACRpkdadN6gQvbAEDc8fjhucB2JmSH25HP+gKC0vS1vic0j1GA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 2 Mar 2024 19:35:51 +0200
-Message-ID: <CAHp75VdvWEhJGtv+V4TG1TCzqBGggy3pwnaGQVLT3M++bzVvAw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio: nomadik: Finish conversion to use firmware
- node APIs
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	=?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 2, 2024 at 10:41=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
-> On Sat, Mar 2, 2024 at 1:44=E2=80=AFAM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-
-...
-
-> > v2: also update necessary parts in the respective pin control driver
->
-> Patch applied on top the rest, thanks for this rapid cleanup!!
-
-> If the test servers are happy and my manual tests also work I will
-> merge it all down to next and send a pull request to Bartosz
-> soon.
-
-Thanks, but it seems I made a silly mistake with types (forgot to
-replace them), and LKP wasn't happy about it. Hence v3 has been sent.
-
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/Makefile b/Makefile
+index 6130b6bd8d6c..a3bdd583afcc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 6
+ PATCHLEVEL = 6
+-SUBLEVEL = 19
++SUBLEVEL = 20
+ EXTRAVERSION =
+ NAME = Hurr durr I'ma ninja sloth
+ 
+diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
+index 61c51650266e..22fe7f58ad63 100644
+--- a/fs/ntfs3/frecord.c
++++ b/fs/ntfs3/frecord.c
+@@ -2457,7 +2457,6 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
+ 	struct ATTR_LIST_ENTRY *le = NULL;
+ 	struct runs_tree *run = &ni->file.run;
+ 	u64 valid_size = ni->i_valid;
+-	loff_t i_size = i_size_read(&ni->vfs_inode);
+ 	u64 vbo_disk;
+ 	size_t unc_size;
+ 	u32 frame_size, i, npages_disk, ondisk_size;
+@@ -2509,6 +2508,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
+ 		err = -EOPNOTSUPP;
+ 		goto out1;
+ #else
++		loff_t i_size = i_size_read(&ni->vfs_inode);
+ 		u32 frame_bits = ni_ext_compress_bits(ni);
+ 		u64 frame64 = frame_vbo >> frame_bits;
+ 		u64 frames, vbo_data;
