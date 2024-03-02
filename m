@@ -1,117 +1,79 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3791134DE;
-	Sat,  2 Mar 2024 09:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54AAF13FFA;
+	Sat,  2 Mar 2024 09:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709371285; cv=none; b=l+SEGhq/4SLaVGu1/Na6BHVoPSbCCBGVcN7TttrzAjjx9Fw2O4z6OwJ3tBA5gxU2h6WNavuWmgm6BIjgc1XScuYb3X5Z44Z9clgT6lkgyO6OxeNt7fyzWnoLAqlIp2vRgBRITlKtDTELvDs0r1xZjtBkcxdsaS239tKjUASx8n8=
+	t=1709371636; cv=none; b=CcQLJGD8vpUpEhvPb/1cofwytgYJFT4cA1yDzF5kEgQyJ2A8XZi5FWyXICUnJclH9p0cwLZ5jjicthiIFqyIu1sHv8mGRzpfD5XAXe+4hINV+4yzXPMWs5g3Fcqs1C5QQU0/ll28ma/q8U350HpwZqJfzjJLQ8mddwpTLiuXOHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709371285; c=relaxed/simple;
-	bh=5hzRnUh34nUYKLiZt7NaTdrTOrhwlApFtHI+0BahY4k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TbqrehMGgtf3o62Ifr5K+7uZdCBapqug8KgNgOJstE/dIZZtR+YVQN/PaRyLyKedaThy2AI9SVUkg4EFf+k4OR9zADI6rcVHQtofuezJHTN26qXGqGKEcSUFdjY+JF5nFrR2nMoNwbW6wj1XpLEwhyX4kmnhQxzLOZ28bxiKB/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TmzwP2TfCz4f3jqt;
-	Sat,  2 Mar 2024 17:21:09 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id C001C1A0175;
-	Sat,  2 Mar 2024 17:21:12 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP4 (Coremail) with SMTP id gCh0CgA3imyE7+Jld1cqFw--.52350S4;
-	Sat, 02 Mar 2024 17:21:12 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca
-Cc: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	naresh.kamboju@linaro.org,
-	daniel.diaz@linaro.org,
-	linux@roeck-us.net,
-	brauner@kernel.org
-Subject: [PATCH v3 2/3] ext4: hold group lock in ext4 kunit test
-Date: Sun,  3 Mar 2024 02:17:54 +0800
-Message-Id: <20240302181755.9192-3-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240302181755.9192-1-shikemeng@huaweicloud.com>
-References: <20240302181755.9192-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1709371636; c=relaxed/simple;
+	bh=1v4MAWQqngr29S0hpMnjNmLuhvL8quZ03lPLgKrRH2k=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uNN+qfOITdO1rmAOEjv74ytHWem3ipvBuzaQ3KKzCxL5PuTF+XQiTnne5CARBs3OOHR/OCBvLM4Jx81Okr+k0+JtXxoDc/IeRIZQdBXSAGweVFal1jA39uaDyNs4ETrA1lv61vJoW+GcOPZjh8M0GBuLmfSt0ude/wQwkLfPjsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8Dxfevv8OJlbowTAA--.49159S3;
+	Sat, 02 Mar 2024 17:27:11 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf8_r8OJlZWBMAA--.5897S3;
+	Sat, 02 Mar 2024 17:27:10 +0800 (CST)
+Subject: Re: [PATCH v6 0/7] LoongArch: Add pv ipi support on LoongArch VM
+To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20240302075120.1414999-1-maobibo@loongson.cn>
+ <b2084dbd-3ea6-736a-293e-2309e828a960@loongson.cn>
+ <562473e1080ce8a4d283cc8fb330073115b21019.camel@xry111.site>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <6ad837fb-6c0e-4586-4bd0-de00db3472dc@loongson.cn>
+Date: Sat, 2 Mar 2024 17:27:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <562473e1080ce8a4d283cc8fb330073115b21019.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgA3imyE7+Jld1cqFw--.52350S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tw1UuFyUArWrur17KFyUJrb_yoW8ArW8pa
-	nxCrn0kF45Wr1kuw47G3y0q3Z7Kw4kuw18GrWfCw1fArWfJr9rCF98twnIgr48tF4xXF45
-	A3Z0vry3Crs7uaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK
-	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4
-	x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
-	z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jguciUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-CM-TRANSID:AQAAf8Cxf8_r8OJlZWBMAA--.5897S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUBGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF54CYxVAaw2AFwI0_Jrv_JF1l4I8I3I0E
+	4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGw
+	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
+	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
+	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2
+	z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5WrAUUUUU=
 
-Although there is no concurrent block allocation/free in unit test,
-internal functions mb_mark_used and mb_free_blocks assert group
-lock is always held. Acquire group before calling mb_mark_used and
-mb_free_blocks in unit test to avoid the assertion.
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
----
- fs/ext4/mballoc-test.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/fs/ext4/mballoc-test.c b/fs/ext4/mballoc-test.c
-index 9d061f80f150..4d9eb4807c98 100644
---- a/fs/ext4/mballoc-test.c
-+++ b/fs/ext4/mballoc-test.c
-@@ -701,7 +701,10 @@ test_mb_mark_used_range(struct kunit *test, struct ext4_buddy *e4b,
- 	ex.fe_start = start;
- 	ex.fe_len = len;
- 	ex.fe_group = TEST_GOAL_GROUP;
-+
-+	ext4_lock_group(sb, TEST_GOAL_GROUP);
- 	mb_mark_used(e4b, &ex);
-+	ext4_unlock_group(sb, TEST_GOAL_GROUP);
- 
- 	mb_set_bits(bitmap, start, len);
- 	/* bypass bb_free validatoin in ext4_mb_generate_buddy */
-@@ -761,7 +764,9 @@ test_mb_free_blocks_range(struct kunit *test, struct ext4_buddy *e4b,
- 	if (len == 0)
- 		return;
- 
-+	ext4_lock_group(sb, e4b->bd_group);
- 	mb_free_blocks(NULL, e4b, start, len);
-+	ext4_unlock_group(sb, e4b->bd_group);
- 
- 	mb_clear_bits(bitmap, start, len);
- 	/* bypass bb_free validatoin in ext4_mb_generate_buddy */
-@@ -805,7 +810,11 @@ static void test_mb_free_blocks(struct kunit *test)
- 	ex.fe_start = 0;
- 	ex.fe_len = EXT4_CLUSTERS_PER_GROUP(sb);
- 	ex.fe_group = TEST_GOAL_GROUP;
-+
-+	ext4_lock_group(sb, TEST_GOAL_GROUP);
- 	mb_mark_used(&e4b, &ex);
-+	ext4_unlock_group(sb, TEST_GOAL_GROUP);
-+
- 	grp->bb_free = 0;
- 	memset(bitmap, 0xff, sb->s_blocksize);
- 
--- 
-2.30.0
+On 2024/3/2 下午5:10, Xi Ruoyao wrote:
+> On Sat, 2024-03-02 at 16:52 +0800, maobibo wrote:
+>> Sorry for the noise. It seems that there is some problem with my mail
+>> client when batch method.
+>>
+>> Please ignore this series, will send one by one manually.
+> 
+> Maybe you can try git send-email.
+> 
+yeap, git send-email --in-reply-to=xxx can be used to send the last two 
+patches rather than discard the whole thread -:)
+
+Thanks anyway.
 
