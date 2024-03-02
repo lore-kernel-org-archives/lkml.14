@@ -1,107 +1,125 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A730113AE8
-	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 09:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29213125B2
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 09:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709371848; cv=none; b=cEKE2gwySr/WYor72M3A6gsBa896lOhqTm8qW+ULVqfy+4kOpXEPu1tTn9a6P9mt64+3AssKw1cM4aZBx0UQ5tAH9xwEshw7neQ2SnfZsrY8WfNZQljyfl6Zl8ZTJtW2LjW88qYNwJZIc0Tiy0TE1cZahgE5O7g/EXQw3Bx+sAY=
+	t=1709372212; cv=none; b=T4IqnpCmHu7mlxJ1OadXiXjC4BKBcITHlHBhzRjA+hvkyKQvim2fXyCbHooOJ1TRoZmwmBgTe9XfrBgeLF/wO/IqxQ6dc8RMMLsxCxUAr/8NQB+DDewoZ1p4E5S8WKq4aV/AxWyBjhRzcdLeNXYIkKnshuejQvQaHkU42VHJ8bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709371848; c=relaxed/simple;
-	bh=eCgnW8M/j8u34ZboqlKqp7zGcLxGZiu6FsXWMaJggYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJlGSnAvtnMGmvDgBpEVzZpu/Zjb/SJT5Ljbp00DGMOdj1rPfPipmVPIibaORk0QQit5urP27duXRJvlByXkdZ/JV3pMsHiKVFUL1nhGC+VUmVCxpW+fKiP0Ja3hV0iDOO62qhVoTsulg+eCyzCjNfTWRg4isgH7rEhhI/pf+Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hmfcTGw8; arc=none smtp.client-ip=209.85.221.49
+	s=arc-20240116; t=1709372212; c=relaxed/simple;
+	bh=X/AL9TvNX/+ErvbiZEnbteQ6E0iQD2tAJQ+ARrkNOXQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HAIIBDT/ZXE1PfOINYAKneFfkxY1Qr/en+WxCLD+qJrnMxfoP6RCqNc0EUloEXihWZsS3X76un0X8NHuEgry/9fCxnTghCCV+TyzpBd+0B3I4dK7UgdrFWkIH3P/NbTuztQQkIl1HVs2rXAjpyic4Lm6XQEkZkVzj+FliBauxzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rk1gZxzV; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hmfcTGw8"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33d568fbf62so1463386f8f.3
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2024 01:30:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rk1gZxzV"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a26fa294e56so538558766b.0
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2024 01:36:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709371845; x=1709976645; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jiIgfGNGkcSh1CwXpg72grT/j2Z4zd63NwGcxMrVBgY=;
-        b=hmfcTGw8yF9Cy9MHRW5sZ5MU3wbD6jdvUXBreLEQLNPRqKVkd3yLqmOAu0tjC+qE/c
-         RPDTTdgwnNr0vM/QFvV4ZgANU4jsIFSSNNT666rtIXZE8gVe+f1FAKEQOsrfR6kve7Yf
-         Z77FcjIgmIv/gaNUnrSi1RuDWuIDHGvci2ReRxq9/hfeCMgmNJTF0/anvtT3hwhxi1nT
-         p9YyMGIiNfxDZgigSDXf1CjSffgGANAqxIChL0XCKyAVRYeF87o0rF4C7JKJr6D84LzT
-         1oA+XuyI2Rrzmd/ZJiWFmqA1wzY5gNZNwxZJC6kYLHZ88mkrNx7jKhbmkqqDslvVux8j
-         RsvQ==
+        d=linaro.org; s=google; t=1709372209; x=1709977009; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LvcKz/ggpTufe8TwOw+mHRKPGyMuEJMkdqXs69fMMA8=;
+        b=rk1gZxzVOrImSi5lm6BSOIdmipt/aGrrQsjmXqjYJ0iPRPcew9Mi4ClysL3GOKE7Q4
+         jhns6tOoFMc4ppQ2kJ4CI6aNCz+o1RJr8JMwzQOI4rAJbxWNI6hf9eC3PnQ+vKUS55t2
+         QzxJ/PqrqgjowgwklGYa78//wsY0Hmuayh0BiG1RuURLV7k3H2agHuGDaTSHmL/SYOV7
+         T8vB0wecw9Za/c/njLPme6NlEoMbIxe67KHpI5x6rAS29eGXcu6ea7PhL3ynltror9C2
+         XU1Hmlp+jRoCWNV+ia4nSMIVCYCuFLACMfhlDrzyD2NB7jXzNiNvY7lmmTWRnxNwByto
+         /VfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709371845; x=1709976645;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jiIgfGNGkcSh1CwXpg72grT/j2Z4zd63NwGcxMrVBgY=;
-        b=GxstipouUEIdw9NgV3I44T+4mTjUbGEi/wYpwsLltH0jFdpAIu5ZeNU74UhrNHHyG9
-         rkilyQL1dIEJZMxxoWKh+LTqr5cXQfCOD48VLRc8/N5KVaL8g3hQVhCSy7HjzOgaS1gl
-         AQAeAOCaK/SniXg86TnpLQie1wqYtE5AlT/jewKL2Ix/6ECqSE4Ww0xRWW8f0dnmeHo8
-         z5pxJGIpy1xbt0flIdjiFcVpRgZCfqs9IS8SXjDI9lZEFghFaVYr9L/3Yj4mf/mUaWr2
-         c6/aHD05Ktjs5635oR/AkOp4LvW2Ubjh9fxuxoygEzEidtq7Bx0e0tCNh5W3EYR7UPJR
-         08tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViCXc9kXj60X7mDoTra8DOIrm+Gq38eEpD955qBq62Zzcj95yyYojQIAdDAp/AedzuVv/UjKRvJFge/w0amFl7mOCDDvTqVZ04H3LR
-X-Gm-Message-State: AOJu0Yz79OGnv68QbhRJP41VXPT77/T9F0KFJO4lSc9/BRdK9QNNBNkc
-	GrAS1I03F6TbS6ObRlSurUJHER7OgPv0C2GTu/GXCHhVeH662rZ2pbkIw9iTXnc=
-X-Google-Smtp-Source: AGHT+IFXnqTy0LUAEYOwQYMJaDu0a5N2FH3MFiuF8hU4HaaEjIayxdAj9Dv0vCC/pvvTbMPTpzxg5A==
-X-Received: by 2002:a5d:4d45:0:b0:33a:ff66:fecc with SMTP id a5-20020a5d4d45000000b0033aff66feccmr3044907wru.26.1709371844864;
-        Sat, 02 Mar 2024 01:30:44 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id j11-20020a5d604b000000b0033d9ee09b7asm6832874wrt.107.2024.03.02.01.30.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Mar 2024 01:30:44 -0800 (PST)
-Date: Sat, 2 Mar 2024 12:30:41 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Markus Elfring <Markus.Elfring@web.de>, linux-staging@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-media@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sowjanya Komatineni <skomatineni@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: media: tegra-video: Use common error handling
- code in tegra_vi_graph_parse_one()
-Message-ID: <9f1b617f-06cb-4b22-a050-325424720c57@moroto.mountain>
-References: <dbebaea7-289c-47d9-ba06-cd58a10ea662@web.de>
- <20240301183936.505fcc72@booty>
+        d=1e100.net; s=20230601; t=1709372209; x=1709977009;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LvcKz/ggpTufe8TwOw+mHRKPGyMuEJMkdqXs69fMMA8=;
+        b=jctfUzsk/0Dr2XQrrHM9sRFqW3mfv7RAlZ4BeJKWGTGIVdKLj1frmO2DM/n4Av9K9d
+         gGbk8x0OP6aiHQ1+rh/LNht3EqF6O2zkyytBEJcYTEf+HeFoinuhbI37eydiTHxfQnyn
+         59SoZTFHXLJjH+1zOOS0kXE1FmFxlqjja3r0y2xi5uivG4kM2g4/naK10KysTiTU8Lx+
+         KJloVVR8qBlGKHq7dss6hDF2V6Td+bOKJumr+fbuufqCAaiG0Uqwqq4sKdbm+DYFTHEO
+         oD/jRFUcVcDMIzXfgRGR6u4cuQlA/36B7oFwtGISKKeLYbAglR/aeLvejHEaEo4DLe3F
+         pwSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVOg4Eiok80Vx1e5vyVVzAbwsbq/cgl52amRNRZBqAFY9vje8l1zTo8AkxZmLbzqJGZF1HkBmIdIk7PITTYgCbss5kPGaONyxICIfm
+X-Gm-Message-State: AOJu0YwAdNd2oOD/Q5V48NDyyZCvYH/vZ5hBxCdghlXfZf3g0rZ5vLOe
+	Ts6TFoJQicp8wmAxYAOCVaFjgGOZ6DDj82HEEB6J5DObxLf1L9KfClZFqpRzDPQ=
+X-Google-Smtp-Source: AGHT+IHyHU7L10kTlkkTRniCEnzyER/dAOmXjiBsxNbkczBaTHO/POH2wBkjJHVx2ngJK0q2toRjLg==
+X-Received: by 2002:a17:906:5a9a:b0:a43:bf25:989 with SMTP id l26-20020a1709065a9a00b00a43bf250989mr2973140ejq.9.1709372209521;
+        Sat, 02 Mar 2024 01:36:49 -0800 (PST)
+Received: from [192.168.0.173] ([79.115.63.35])
+        by smtp.gmail.com with ESMTPSA id gs4-20020a170906f18400b00a449d12cdc5sm1210443ejb.119.2024.03.02.01.36.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Mar 2024 01:36:49 -0800 (PST)
+Message-ID: <f06328e4-b283-4302-b9c1-6473aa3cfa25@linaro.org>
+Date: Sat, 2 Mar 2024 11:36:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240301183936.505fcc72@booty>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: dt-bindings: samsung: make dma properties not
+ required
+To: Mark Brown <broonie@kernel.org>,
+ Sam Protsenko <semen.protsenko@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: andi.shyti@kernel.org, robh+dt@kernel.org, conor+dt@kernel.org,
+ linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ andre.draszik@linaro.org, peter.griffin@linaro.org, willmcvicker@google.com,
+ kernel-team@android.com
+References: <20240301115546.2266676-1-tudor.ambarus@linaro.org>
+ <CAPLW+4=6oYcs0NPXo4ffLiCvtNQ-tY1s_isaxTX8dcPkV56xMw@mail.gmail.com>
+ <cb426fb0-2f27-4c9b-89f5-7139354ea425@sirena.org.uk>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Content-Language: en-US
+In-Reply-To: <cb426fb0-2f27-4c9b-89f5-7139354ea425@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 01, 2024 at 06:39:36PM +0100, Luca Ceresoli wrote:
-> Hello Markus,
+
+
+On 01.03.2024 22:42, Mark Brown wrote:
+> On Fri, Mar 01, 2024 at 01:28:35PM -0600, Sam Protsenko wrote:
+>> On Fri, Mar 1, 2024 at 5:55 AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
 > 
-> On Thu, 29 Feb 2024 19:55:46 +0100
-> Markus Elfring <Markus.Elfring@web.de> wrote:
+>>> Since the addition of the driver in 2009, the driver selects between DMA
+>>> and polling mode depending on the transfer length - DMA mode for
+>>> transfers bigger than the FIFO depth, polling mode otherwise. All
+>>> versions of the IP support polling mode, make the dma properties not
+>>> required.
 > 
-> > From: Markus Elfring <elfring@users.sourceforge.net>
-> > Date: Thu, 29 Feb 2024 19:44:36 +0100
-> > 
-> > Add a jump target so that a bit of exception handling can be better reused
-> > at the end of this function implementation.
-> > 
-> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+>> AFAIU, the device tree has nothing to do with drivers, it's about
+>> hardware description. Does making DMA properties not required here
+
+correct
+
+>> mean that there are some HW out there which doesn't integrate DMA in
+
+no, to me it means that the IP can work without DMA, only in PIO mode,
+regardless if DMA is integrated or not. Not required means that the
+property is not mandatory, which is what I'm trying to achieve here.
+
+>> SPI blocks? Even if this change is ok (I'm not sure), the
+>> argumentation doesn't look sound to me.
+
+switching to PIO mode in the driver for sizes smaller than FIFO depths
+in the driver guarantees that all existing compatibles support PIO mode.
+
+Are you saying that if there is a physical line between an IP and DMA
+controller, then the DMA properties must always be specified in dt? I
+thought they can be marked as optional in this case, and that's what I
+did with this patch.
+
 > 
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> I do remember there being some SoC which shipped a SPI controller in
+> that configuration for some reason.  Possibly one of the OEM ones rather
+> than one in a Samsung SoC?
 
-These patches make the code worse.  If we're in the middle of a loop,
-then we should clean up the partial loop before doing the goto.
-Otherwise it creates a mess when we add a new allocation function after
-the end of the loop.
+with DMA you mean?
 
-Someone is going to add a _scoped() loop which uses cleanup.h magic to
-call _put automatically.  This is a good option.
-
-regards,
-dan carpenter
-
+Thanks,
+ta
