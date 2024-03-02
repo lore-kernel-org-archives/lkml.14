@@ -1,173 +1,137 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549AF4206E
-	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 19:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7113FE42
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 20:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709409204; cv=none; b=FPcZEYUv+bDnyb9FxxxXG2tKZKZLm9Q9vHNIWF+tTZNdaVfRW2hItjIsH57GfLBH6bIVZ274vKQ7+UHZ4SYyuJC9LTFla0RjochwEua3o1Uv51xO4/EXogFZISrbEwKsWGq6w71UsiVWrr2K3lXguHZ5Kb3zraZO/57XidKm6aU=
+	t=1709409602; cv=none; b=cIF/zKrywiKL75pBmLNIKe5hWeyifJoJLdrws0v27BvvkZAZor9BAPboJrXDMAQwMt6QjfKqpSUwpwx1ZA6p4v1lhPznqcGQ/toX8YUifiHi3bFQeh/CTQ3/lKI+nA1sESFvPCvwcxbhTdkRypB8DZyUYnUELloePHyeFuatVhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709409204; c=relaxed/simple;
-	bh=pwl/nm8VqR5HxU43/b+GLZActVEhfzu3cSXEyZSs9Ng=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G/jF56XsXf1zPcLOmK1HQVMarCqQFGnVrfTSAi55X3Y5nvjScNoML8mGXLXb3SAsCxWP2+GH5ezP5xZrxaCDtTyCL9aonR+rAxF2D7FhuOKFuGA/RTCIH8Mq6ShWqToqUjK4cY6vrwtL1ZC21qxeFxmlFh8HIn666M5ZGLFyzVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rgVPx-0007Gy-Ln; Sat, 02 Mar 2024 20:53:09 +0100
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rgVPv-0041mK-Rt; Sat, 02 Mar 2024 20:53:07 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rgVPv-00DSUs-2S;
-	Sat, 02 Mar 2024 20:53:07 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Wei Fang <wei.fang@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH net-next v9 6/7] net: fec: Move fec_enet_eee_mode_set() and helper earlier
-Date: Sat,  2 Mar 2024 20:53:05 +0100
-Message-Id: <20240302195306.3207716-7-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240302195306.3207716-1-o.rempel@pengutronix.de>
-References: <20240302195306.3207716-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1709409602; c=relaxed/simple;
+	bh=U5Rq+R1WMj1Yv3GOTWlbyfwofTJDskewFguoi1iyjaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qgXc3WzBQC16nVumNSpoI/c+6DG51Qlp47Ik+l9g7r+hVo10ojcjaaVT3PCXeGQkgmKTrbSY/U+Lsl7P6HvWX3zMwzIGB/5ZkpNOGcGln5hEi3xeT/a65Bs5E22iLk78EYkEgMXH4moq7rEIXxCBL4YypwUPyc3V6jm7sr7OI3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98C1DC433C7;
+	Sat,  2 Mar 2024 20:00:00 +0000 (UTC)
+Date: Sat, 2 Mar 2024 14:59:58 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [GIT PULL] tracing: Prevent trace_marker being bigger than
+ unsigned short
+Message-ID: <20240302145958.05aabdd2@rorschach.local.home>
+In-Reply-To: <CAHk-=wj376WMgZ24wKGEWDs_ojNtod-LDZBedPzDYRRcY60UYA@mail.gmail.com>
+References: <20240302111244.3a1674be@gandalf.local.home>
+	<CAHk-=wj376WMgZ24wKGEWDs_ojNtod-LDZBedPzDYRRcY60UYA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Andrew Lunn <andrew@lunn.ch>
+On Sat, 2 Mar 2024 09:24:37 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-FEC is about to get its EEE code re-written. To allow this, move
-fec_enet_eee_mode_set() before fec_enet_adjust_link() which will
-need to call it.
+> On Sat, 2 Mar 2024 at 08:10, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > - The change to allow trace_marker writes to be as big as the trace_seq can
+> >   hold, and also the change that increases the size of the trace_seq to two
+> >   pages, caused PowerPC kselftest trace_marker test to fail. The trace_marker
+> >   kselftest writes up to subbuffer size which is determined by PAGE_SIZE.
+> >   On PowerPC, the PAGE_SIZE can be 64K, which means the selftest will write
+> >   a string that is around 64K in size. The output of the trace_marker is
+> >   performed with a vsnprintf("%.*s", size, string), but this write would make
+> >   the size greater than 32K, which is the max precision of "%.*s", and that
+> >   causes a kernel warning. The fix is simply to keep the write of trace_marker
+> >   less than or equal to max signed short.  
+> 
+> Please don't just add random limits that are based on other random limits.
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Wei Fang <wei.fang@nxp.com>
----
- drivers/net/ethernet/freescale/fec_main.c | 75 ++++++++++++-----------
- 1 file changed, 38 insertions(+), 37 deletions(-)
+It's not random limits, it's resource limits.
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 207f1f66c117a..a2c786550342f 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -2017,6 +2017,44 @@ static int fec_get_mac(struct net_device *ndev)
- /*
-  * Phy section
-  */
-+
-+/* LPI Sleep Ts count base on tx clk (clk_ref).
-+ * The lpi sleep cnt value = X us / (cycle_ns).
-+ */
-+static int fec_enet_us_to_tx_cycle(struct net_device *ndev, int us)
-+{
-+	struct fec_enet_private *fep = netdev_priv(ndev);
-+
-+	return us * (fep->clk_ref_rate / 1000) / 1000;
-+}
-+
-+static int fec_enet_eee_mode_set(struct net_device *ndev, bool enable)
-+{
-+	struct fec_enet_private *fep = netdev_priv(ndev);
-+	struct ethtool_keee *p = &fep->eee;
-+	unsigned int sleep_cycle, wake_cycle;
-+	int ret = 0;
-+
-+	if (enable) {
-+		ret = phy_init_eee(ndev->phydev, false);
-+		if (ret)
-+			return ret;
-+
-+		sleep_cycle = fec_enet_us_to_tx_cycle(ndev, p->tx_lpi_timer);
-+		wake_cycle = sleep_cycle;
-+	} else {
-+		sleep_cycle = 0;
-+		wake_cycle = 0;
-+	}
-+
-+	p->tx_lpi_enabled = enable;
-+
-+	writel(sleep_cycle, fep->hwp + FEC_LPI_SLEEP);
-+	writel(wake_cycle, fep->hwp + FEC_LPI_WAKE);
-+
-+	return 0;
-+}
-+
- static void fec_enet_adjust_link(struct net_device *ndev)
- {
- 	struct fec_enet_private *fep = netdev_priv(ndev);
-@@ -3121,43 +3159,6 @@ static int fec_enet_set_coalesce(struct net_device *ndev,
- 	return 0;
- }
- 
--/* LPI Sleep Ts count base on tx clk (clk_ref).
-- * The lpi sleep cnt value = X us / (cycle_ns).
-- */
--static int fec_enet_us_to_tx_cycle(struct net_device *ndev, int us)
--{
--	struct fec_enet_private *fep = netdev_priv(ndev);
--
--	return us * (fep->clk_ref_rate / 1000) / 1000;
--}
--
--static int fec_enet_eee_mode_set(struct net_device *ndev, bool enable)
--{
--	struct fec_enet_private *fep = netdev_priv(ndev);
--	struct ethtool_keee *p = &fep->eee;
--	unsigned int sleep_cycle, wake_cycle;
--	int ret = 0;
--
--	if (enable) {
--		ret = phy_init_eee(ndev->phydev, false);
--		if (ret)
--			return ret;
--
--		sleep_cycle = fec_enet_us_to_tx_cycle(ndev, p->tx_lpi_timer);
--		wake_cycle = sleep_cycle;
--	} else {
--		sleep_cycle = 0;
--		wake_cycle = 0;
--	}
--
--	p->tx_lpi_enabled = enable;
--
--	writel(sleep_cycle, fep->hwp + FEC_LPI_SLEEP);
--	writel(wake_cycle, fep->hwp + FEC_LPI_WAKE);
--
--	return 0;
--}
--
- static int
- fec_enet_get_eee(struct net_device *ndev, struct ethtool_keee *edata)
- {
--- 
-2.39.2
+> 
+> That printk warning is for "you did something obviously crazy".
+> 
+> That does NOT MEAN that you now should limit your strings to something
+> JUST BORDERLINE CRAZY.
 
+I don't have control over the strings. Anyone can do in user space:
+
+	fd = open("/sys/kernel/tracing/trace_marker", O_WRONLY);
+	r = write(fd, huge_string, 10000000);
+
+And this code only gives you what is returned in 'r'. It doesn't error
+out. It just limits what the max write size is. I just default it to
+what the resources available are.
+
+> 
+> See?
+> 
+> There is not a way in hell that printing a 32kB string in tracing is
+> valid. EVER.
+
+Well, the limit is really PAGE_SIZE, which on most architectures is
+4096, but on PowerPC, PAGE_SIZE is 64K. And the test in
+tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc finds the
+PAGE_SIZE and writes a string as long as it to see if it doesn't crash
+the kernel. And all the resources can hold a 60K write. The problem
+that this patch addresses is that the vsnprintf() used to move the data
+into seq_file has a precision variable that checks for overflow, and it
+has a max of 32K.
+
+Yes, in most cases, 4K is the limit, which is why this doesn't trigger
+on any architecture that has 4K page sizes.
+
+> 
+> So stop it. Stop making limits be some random implementation detail.
+> Make limits *sane*.
+
+The "implementation detail" is PAGE_SIZE. Similar to writing large
+amounts of data to pipes and sockets. It may not write all data, but
+just a smaller amount. The write doesn't error, it just says "this is
+all I can write that you passed to me".
+
+> 
+> Make a *sane* limit for tracing. Not a "avoid being called crazy" limit.
+
+What arbitrary limit do I do? It's just changes how the string will be
+broken up, as "echo" or "cat" into trace_marker will continue writing the rest
+of the string. It doesn't cause errors in the write. It simply breaks
+the string up into smaller blocks.
+
+> 
+> Honestly, I suspect that a sane limit for tracing strings is likely on
+> the order of tens or maybe hundreds of bytes. Not some kind of "fits
+> in a short" that is just printk saying "I refuse to waste memory on
+> the stack".
+
+The error isn't printk, it's vsnprintf() that is writing to a seq_file
+to user space. There's no stack or printk involved here.
+
+	trace_seq_printf(s, ": %.*s", max, field->buf);
+
+Where 's' is a trace_seq with a PAGE_SIZE buffer, that later gets passed
+to seq_file.
+
+> 
+> Side note: for similar reasons the field-width is a 24-bit integer.
+> And no, if you think that passing a 16MB field width is sane, you need
+> to rethink your life. Again, that's a small implementation detail, not
+> a "let's explore how stupid we can be".
+
+I really don't understand what you mean by the above. This code is what
+user space can write into the tracing ring buffer. If the ring buffer
+sub-buffer is 64K, and user space does a 32K write into it, why prevent
+that? The only limit here, is that the vsnprintf() has a max of signed
+short for the precision it uses, which I used to prevent overflow.
+That vsnprintf which writes into a memory buffer that will be sent out
+via seq_file doesn't like huge strings greater than 32K, even though
+what it is writing into is big enough to hold it.
+
+-- Steve
