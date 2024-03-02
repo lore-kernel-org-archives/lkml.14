@@ -1,157 +1,238 @@
-Received: from port70.net (port70.net [81.7.13.123])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7488713FFA;
-	Sat,  2 Mar 2024 15:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.7.13.123
+Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4D31877
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 15:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709391795; cv=none; b=AMYLg8N/4qrCqPw9ORGMPbZKu1LN5Sj6BdazhNyb8woUDMZAxjiSGspc+v8Ui5RMNu2eaLVacXZ2tLjjPjQqXlyMefomQ8Xw6+cuV1pk4Ut+2CirNqFKLMNypLKrk0898DM233sZizazGYmzwPN1393SOHfw9oXfc8Y9s3JemcU=
+	t=1709391859; cv=none; b=h103KkNqpf0ZbGAi13wK6FvZe+jx3700c9d+NsJ//vMfH4ASRHusFTyvvkiGZgMjNQE10+XAK7IaVTnW/8GWDINBmDM2XyNwiRLIE2xvNRI7kXJCCnFxX3U++mWGXDau2IWS3RHwbmNWcKAc1fDfpOrqVoohB6MpLpl2zcElEjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709391795; c=relaxed/simple;
-	bh=F+Ft9ySflUOsjYRoTJD/SuxsOSEZzbIMaYW9w/glpJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a0bMNapnZQa0/quYl7TDYybdZwf7CKj/0H0By6h7DqP9XawkWoSR+aIAMtq+XjSHGR1rjjEv7UbIHlii3pDBhvTZ+9nv5StBR3EHYqegB8MTHSfmLOJ6yzI5bt7hKDvjcTu39UnB1emDFSOJCsxwqSL1njDZSzUwlJnIcGug/gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=port70.net; spf=pass smtp.mailfrom=port70.net; arc=none smtp.client-ip=81.7.13.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=port70.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=port70.net
-Received: by port70.net (Postfix, from userid 1002)
-	id 691CEABEC0C7; Sat,  2 Mar 2024 15:57:02 +0100 (CET)
-Date: Sat, 2 Mar 2024 15:57:02 +0100
-From: Szabolcs Nagy <nsz@port70.net>
-To: Mark Brown <broonie@kernel.org>
-Cc: "dalias@libc.org" <dalias@libc.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"Szabolcs.Nagy@arm.com" <Szabolcs.Nagy@arm.com>,
-	"musl@lists.openwall.com" <musl@lists.openwall.com>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"debug@rivosinc.com" <debug@rivosinc.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"arnd@arndb.de" <arnd@arndb.de>, "maz@kernel.org" <maz@kernel.org>,
-	"oleg@redhat.com" <oleg@redhat.com>,
-	"fweimer@redhat.com" <fweimer@redhat.com>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"ebiederm@xmission.com" <ebiederm@xmission.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"hjl.tools@gmail.com" <hjl.tools@gmail.com>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"thiago.bauermann@linaro.org" <thiago.bauermann@linaro.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"sorear@fastmail.com" <sorear@fastmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [musl] Re: [PATCH v8 00/38] arm64/gcs: Provide support for GCS
- in userspace
-Message-ID: <20240302145702.GD1884416@port70.net>
-Mail-Followup-To: Mark Brown <broonie@kernel.org>,
-	"dalias@libc.org" <dalias@libc.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"Szabolcs.Nagy@arm.com" <Szabolcs.Nagy@arm.com>,
-	"musl@lists.openwall.com" <musl@lists.openwall.com>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"debug@rivosinc.com" <debug@rivosinc.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"arnd@arndb.de" <arnd@arndb.de>, "maz@kernel.org" <maz@kernel.org>,
-	"oleg@redhat.com" <oleg@redhat.com>,
-	"fweimer@redhat.com" <fweimer@redhat.com>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"ebiederm@xmission.com" <ebiederm@xmission.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"hjl.tools@gmail.com" <hjl.tools@gmail.com>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"thiago.bauermann@linaro.org" <thiago.bauermann@linaro.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"sorear@fastmail.com" <sorear@fastmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-References: <22a53b78-10d7-4a5a-a01e-b2f3a8c22e94@app.fastmail.com>
- <4c7bdf8fde9cc45174f10b9221fa58ffb450b755.camel@intel.com>
- <20240220185714.GO4163@brightrain.aerifal.cx>
- <9fc9c45ff6e14df80ad023e66ff7a978bd4ec91c.camel@intel.com>
- <20240220235415.GP4163@brightrain.aerifal.cx>
- <a57d6c7eada4b9a7c35addbc8556f5b53a0c3e6f.camel@intel.com>
- <20240221012736.GQ4163@brightrain.aerifal.cx>
- <d18f060d-37ac-48b1-9f67-a5c5db79b34e@sirena.org.uk>
- <20240221145800.GR4163@brightrain.aerifal.cx>
- <4a3809e8-61b2-4341-a868-292ba6e64e8a@sirena.org.uk>
+	s=arc-20240116; t=1709391859; c=relaxed/simple;
+	bh=m73e+2MqGvs4gmpRYL8WGDwBq851Ng6wBqDejLN06fg=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=pbsTQP2E653weOfPZYpST8uCWgkDfU3vRl1uN0+y/DxtzS9QTr0mua+VjA765FqcJ+i0VWygmRqTPjOhXkZMj6hc+QGNI4Z265IZljXq0QiXtsb32x+xc4DzvIbso16vgh+ys1TdYYhxssCvv+nNsy2NSZhxluAxthERcm7bsoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=WMcUGTgG; arc=none smtp.client-ip=203.205.221.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="WMcUGTgG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1709391840;
+	bh=flCSkjm8nfxOMgB/T8eCfmJzMmizL75i09vf3K97ajI=;
+	h=From:To:Cc:Subject:Date;
+	b=WMcUGTgGDwO9bVwWfHBkFLu0yMeBJZtNlS3CYsRnvizBfR2xlinZ5KB/59xwzt/yF
+	 WS/S9JvdMbBBNWQ05d5XHzC6Y43Ar+2jzZOOcN2NayEIL7u50AxAKOtnYAXlsi9c9u
+	 ztfRqenMSvfJHeyCkq6sDGobfbfMHyg0u73DkdNA=
+Received: from localhost.localdomain ([2409:8a60:2a61:ef40:643:4925:a13c:f154])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id F9AA099; Sat, 02 Mar 2024 23:03:57 +0800
+X-QQ-mid: xmsmtpt1709391837tsij0uqqu
+Message-ID: <tencent_F4E6583FBF67A22A436AA020A5C9A7F44207@qq.com>
+X-QQ-XMAILINFO: N3l5ASPewLWqIr31YICvIFYmkQ1uvZnKT9+0d2DtKhdPGnfEufz9TDuSjWY2hh
+	 65fUrBCYfi9eUYVAlD2Kc8CAcX/LlaoA2psnP9YBRWxnB+JzMlr/FfasDPiKWrHrbFZIyV/4bzeo
+	 lUKd3sfuFrjsWmF70rboPUkT+Pc/AWQ/snBgoV5m/J7W7elNiNJh/Np3rOrWUk4fDf4Dz4jALbea
+	 hbZyFpxWeVIxfq+guCvs+AXZwdSiq6bpZ4WB5bC387D4w9pt/ZUtNBJxYOcErWyVXiBpm+rr2Mxm
+	 ZPHyRaGPkbiY5YyiybnHFtVJ8QGR4qjQVULTk9MRA9hJmy1OEOV+FcombZOijAmw+eFD5RpHezpG
+	 BzlHtJda2qznyYku2ts3kd2gIvsFvm2BtcR4jGHELhDzqrNwkFDz+ASC4dEEd/hjxX3fetPvVZyC
+	 XFAPmTShMBBbdUqjbDvNgOL3C/yJnP/9hT6PygqR9gAAEZXKkJbTPx4KGmMYiBXIbNbOUKXlBKAO
+	 Bn0XOfIZw4H0gZsuVzZ3T00e3KLETOd5NPPvW5WV+0FaVJADU+oPQP5zRM/Y5uJTd8bDWyHgY7bH
+	 FsRlbv5a5hFlOXlrl4hfPMYC+SnwARUV7DfFxvMnmdgqz22l0Ui8omV3eFHYD0vAwHojXxijqLJs
+	 A8++QyLruooYxxPh7AJbcZwgDbmUcF3f0EDHFmehQg2XNyO4DrPRcZ522pAsV5daXdtCw3kYLvw9
+	 ePekcNcwmvclL2AN7v3k44VociuPJ8mC97kHYtD3XBp90oF2FTH2zjINOPE2Fkog1qQ+dfh0QiWG
+	 E4DZb3qIUlZvZrqPkGZ+hfVuKE/9MwAeNyhP1UOuW5Cc06ti2IVw4WMHB4/nBkRwpl30IuUU70od
+	 L8sOUWKD+dOh3DdQgu+y/+uzDq8OYMLGqS3tiHtm6aGiVqLO44WH8OTLnwmOpB/t4wnIJE5GyOfx
+	 TeI95tTm6svuDbD5rfYonHra7u3frgbvA7cFNV3FBB0Auy0/VlLziFN4kDF40U+Tz74twvAE1iqR
+	 V52TQP+ZzAltnTkz5RkMOIYL0J37I=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: wenyang.linux@foxmail.com
+To: Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Wen Yang <wenyang.linux@foxmail.com>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] sysctl: move the extra1/2 boundary check of u8 to sysctl_check_table_array
+Date: Sat,  2 Mar 2024 23:03:43 +0800
+X-OQ-MSGID: <20240302150343.111766-1-wenyang.linux@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a3809e8-61b2-4341-a868-292ba6e64e8a@sirena.org.uk>
+Content-Transfer-Encoding: 8bit
 
-* Mark Brown <broonie@kernel.org> [2024-02-21 17:36:12 +0000]:
+From: Wen Yang <wenyang.linux@foxmail.com>
 
-> On Wed, Feb 21, 2024 at 09:58:01AM -0500, dalias@libc.org wrote:
-> > On Wed, Feb 21, 2024 at 01:53:10PM +0000, Mark Brown wrote:
-> > > On Tue, Feb 20, 2024 at 08:27:37PM -0500, dalias@libc.org wrote:
-> > > > On Wed, Feb 21, 2024 at 12:35:48AM +0000, Edgecombe, Rick P wrote:
-> 
-> > > > > (INCSSP, RSTORSSP, etc). These are a collection of instructions that
-> > > > > allow limited control of the SSP. When shadow stack gets disabled,
-> > > > > these suddenly turn into #UD generating instructions. So any other
-> > > > > threads executing those instructions when shadow stack got disabled
-> > > > > would be in for a nasty surprise.
-> 
-> > > > This is the kernel's problem if that's happening. It should be
-> > > > trapping these and returning immediately like a NOP if shadow stack
-> > > > has been disabled, not generating SIGILL.
-> 
-> > > I'm not sure that's going to work out well, all it takes is some code
-> > > that's looking at the shadow stack and expecting something to happen as
-> > > a result of the instructions it's executing and we run into trouble.  A
-> 
-> > I said NOP but there's no reason it strictly needs to be a NOP. It
-> > could instead do something reasonable to convey the state of racing
-> > with shadow stack being disabled.
-> 
-> This feels like it's getting complicated and I fear it may be an uphill
-> struggle to get such code merged, at least for arm64.  My instinct is
+The boundary check of u8's extra is currently performed at runtime.
+This may result in some kernel modules that can be loaded normally without
+any errors, but not works, as follows:
 
-the aarch64 behaviour is already nop
-for gcs instructions when gcs is disabled.
-the isa was designed so async disable is
-possible.
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/sysctl.h>
 
-only x86 linux would have to emulate this.
+static struct ctl_table_header *_table_header;
+unsigned char _data = 0;
+struct ctl_table table[] = {
+	{
+		.procname       = "foo",
+		.data           = &_data,
+		.maxlen         = sizeof(u8),
+		.mode           = 0644,
+		.proc_handler   = proc_dou8vec_minmax,
+		.extra1         = SYSCTL_ZERO,
+		.extra2         = SYSCTL_ONE_THOUSAND,
+	},
+	{}
+};
 
-> that it's going to be much more robust and generally tractable to let
-> things run to some suitable synchronisation point and then disable
-> there, but if we're going to do that then userspace can hopefully
-> arrange to do the disabling itself through the standard disable
-> interface anyway.  Presumably it'll want to notice things being disabled
-> at some point anyway?  TBH that's been how all the prior proposals for
-> process wide disable I've seen were done.
+static int init_demo(void) {
+	if (!_table_header)
+		_table_header = register_sysctl("kernel", table);
 
+	pr_info("test: init module.\n");
+	return 0;
+}
+
+static void cleanup_demo(void) {
+	if (_table_header) {
+		unregister_sysctl_table(_table_header);
+	}
+
+	pr_info("test: cleanup module.\n");
+}
+
+module_init(init_demo);
+module_exit(cleanup_demo);
+MODULE_LICENSE("GPL");
+
+ # insmod test.ko
+ # cat /proc/sys/kernel/foo
+ cat: /proc/sys/kernel/foo: Invalid argument
+ # echo 1 >  /proc/sys/kernel/foo
+ -bash: echo: write error: Invalid argument
+
+This patch moves the boundary check forward to module loading and
+also adds a kunit test case.
+
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joel Granados <j.granados@samsung.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/proc/proc_sysctl.c | 12 ++++++++++++
+ kernel/sysctl-test.c  | 30 ++++++++++++++++++++++++++++++
+ kernel/sysctl.c       | 14 ++++----------
+ 3 files changed, 46 insertions(+), 10 deletions(-)
+
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 37cde0efee57..136e3f8966c3 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1096,6 +1096,7 @@ static int sysctl_err(const char *path, struct ctl_table *table, char *fmt, ...)
+ 
+ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
+ {
++	unsigned int extra;
+ 	int err = 0;
+ 
+ 	if ((table->proc_handler == proc_douintvec) ||
+@@ -1107,6 +1108,17 @@ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
+ 	if (table->proc_handler == proc_dou8vec_minmax) {
+ 		if (table->maxlen != sizeof(u8))
+ 			err |= sysctl_err(path, table, "array not allowed");
++
++		if (table->extra1) {
++			extra = *(unsigned int *) table->extra1;
++			if (extra > 255U)
++				err |= sysctl_err(path, table, "array not allowed");
++		}
++		if (table->extra2) {
++			extra = *(unsigned int *) table->extra2;
++			if (extra > 255U)
++				err |= sysctl_err(path, table, "array not allowed");
++		}
+ 	}
+ 
+ 	if (table->proc_handler == proc_dobool) {
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+index 6ef887c19c48..3918c9310220 100644
+--- a/kernel/sysctl-test.c
++++ b/kernel/sysctl-test.c
+@@ -367,6 +367,35 @@ static void sysctl_test_api_dointvec_write_single_greater_int_max(
+ 	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
+ }
+ 
++/*
++ * Test that registering an invalid extra value is not allowed.
++ */
++static void sysctl_test_register_sysctl_sz_invalid_extra_value(
++		struct kunit *test)
++{
++	unsigned char data = 0;
++	struct ctl_table table[] = {
++		{
++			.procname	= "foo",
++			.data		= &data,
++			.maxlen		= sizeof(u8),
++			.mode		= 0644,
++			.proc_handler	= proc_dou8vec_minmax,
++			.extra1		= SYSCTL_ZERO,
++			.extra2		= SYSCTL_ONE_THOUSAND,
++		},
++		{}
++	};
++	unsigned int size = ARRAY_SIZE(table);
++
++	KUNIT_EXPECT_NULL(test, register_sysctl_sz("foo", table, size));
++	table[0].extra1 = SYSCTL_ONE_THOUSAND;
++	KUNIT_EXPECT_NOT_NULL(test, register_sysctl_sz("foo", table, size));
++	table[0].extra1 = SYSCTL_ONE_HUNDRED;
++	table[0].extra2 = SYSCTL_TWO_HUNDRED;
++	KUNIT_EXPECT_NOT_NULL(test, register_sysctl_sz("foo", table, size));
++}
++
+ static struct kunit_case sysctl_test_cases[] = {
+ 	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
+@@ -378,6 +407,7 @@ static struct kunit_case sysctl_test_cases[] = {
+ 	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_negative),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
++	KUNIT_CASE(sysctl_test_register_sysctl_sz_invalid_extra_value),
+ 	{}
+ };
+ 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index f67b39d3d6e5..28888744626a 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -977,16 +977,10 @@ int proc_dou8vec_minmax(struct ctl_table *table, int write,
+ 	if (table->maxlen != sizeof(u8))
+ 		return -EINVAL;
+ 
+-	if (table->extra1) {
+-		min = *(unsigned int *) table->extra1;
+-		if (min > 255U)
+-			return -EINVAL;
+-	}
+-	if (table->extra2) {
+-		max = *(unsigned int *) table->extra2;
+-		if (max > 255U)
+-			return -EINVAL;
+-	}
++	if (table->extra1)
++		min = *(unsigned char *) table->extra1;
++	if (table->extra2)
++		max = *(unsigned char *) table->extra2;
+ 
+ 	tmp = *table;
+ 
+-- 
+2.25.1
 
