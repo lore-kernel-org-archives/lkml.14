@@ -1,74 +1,76 @@
-Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id D84A56AD6;
-	Sat,  2 Mar 2024 10:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
+Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486D2111AA
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 10:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709376944; cv=none; b=dk8ZzPzVQ9PW9R3EzqJYMRGpO6wzOSs9EQuY0YEUro88RoCeVmH5efsuekkoUIEJb4RN7Tg7oVkYJvnDZ9ivcqnQJfLlfD9YbOX9T4Nnlp50yx5EMk5RL62r3XcByhMk66SDI3MYuzU8MMTmkEX8ErvUNIDP4pGDFiSnXauHnpA=
+	t=1709376996; cv=none; b=LEoWmGXGpggYxIhXMIY3z6pKt2vgM/A5vOmi8CBg2AH8Rh+K1gNWnHKSZvnrFVlRSZUmxX5aDGwWRjS0u4QxKJcQS/QqU2Lmbp+WIrY/z0/5TR/dx18oVprzeangHTlguKFiNYzeRECpwSBmgBMpvt5ZOZdqh6Y3WjE7eiH5Dac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709376944; c=relaxed/simple;
-	bh=3XioTpY8UndFIGe5+xld28+YcpEE3AwYivnNJ176usg=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Ql455zOUIxmYB479Er+jiemCHw4HuZ5tMlzIZJx+Ui/+jxyTDi6Lk856FWk8pn1TbMWkG3GunoiSFYkM3QSTXpiGmaJqJ2mBP3IW2L4JUlfsasIZtG4b9mjvTP6WwRo2KeAvX4M+bDLU+MYijsL/6Q9315/LqOD4dA8PLZTYsYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
-Received: from mail.didiglobal.com (unknown [10.79.65.12])
-	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 9CBCC18B4B6941;
-	Sat,  2 Mar 2024 18:52:30 +0800 (CST)
-Received: from didi-ThinkCentre-M920t-N000 (10.79.64.101) by
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sat, 2 Mar 2024 18:52:29 +0800
-Date: Sat, 2 Mar 2024 18:52:24 +0800
-X-MD-Sfrom: fuyuanli@didiglobal.com
-X-MD-SrcIP: 10.79.65.12
-From: fuyuanli <fuyuanli@didiglobal.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<fuyuanli@didiglobal.com>
-Subject: [PATCH net-next] net/nlmon: Cancel setting filelds of statistics to
- zero.
-Message-ID: <20240302105224.GA7223@didi-ThinkCentre-M920t-N000>
-Mail-Followup-To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, fuyuanli@didiglobal.com
+	s=arc-20240116; t=1709376996; c=relaxed/simple;
+	bh=hZFOvbQPEDGmTgeovQ4UwGsq5+k0H4RphcUCC2vd0eA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pFUKkU6Rzx51JjPKTLlNge3lcPvly5o46geOWQrZbeG4loLS7H79GTQkjxoBRJam/gxXiunaQ4uwPsWzj/4LFIcCwkLEgjqIY4yaYMe33pvwaqgAEn2w35PNghT21GpIZQEf7zlVJiSJUpCwu4GSgS/d9vNyOadAGy4F5EZe878=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.11.109])
+	by sina.com (10.75.12.45) with ESMTP
+	id 65E305D300008B1C; Sat, 2 Mar 2024 18:56:23 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 16710631457660
+X-SMAIL-UIID: 1159B31607ED43CBBF2940A7E6D7CCBD-20240302-185623-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+b2391895514ed9ef4a8e@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in v4l2_fh_open
+Date: Sat,  2 Mar 2024 18:56:11 +0800
+Message-Id: <20240302105611.1139-1-hdanton@sina.com>
+In-Reply-To: <00000000000017937c05bb617f1d@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: ZJY02-PUBMBX-01.didichuxing.com (10.79.65.31) To
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
+Content-Transfer-Encoding: 8bit
 
-Since filelds of rtnl_link_stats64 have been set to zero in previous
-dev_get_stats function, there is no need to set again in ndo_get_stats64
-function.
+On Mon, 15 Feb 2021 07:18:22 -0800
+> syzbot found the following issue on:
+> 
+> HEAD commit:    291009f6 Merge tag 'pm-5.11-rc8' of git://git.kernel.org/p..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17179dd4d00000
 
-Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
----
- drivers/net/nlmon.c | 2 --
- 1 file changed, 2 deletions(-)
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
-diff --git a/drivers/net/nlmon.c b/drivers/net/nlmon.c
-index 5e19a6839dea..9b205b152734 100644
---- a/drivers/net/nlmon.c
-+++ b/drivers/net/nlmon.c
-@@ -56,10 +56,8 @@ nlmon_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
- 	dev_lstats_read(dev, &packets, &bytes);
+--- x/drivers/media/usb/em28xx/em28xx-video.c
++++ y/drivers/media/usb/em28xx/em28xx-video.c
+@@ -2152,6 +2152,10 @@ static int em28xx_v4l2_open(struct file
+ 	if (mutex_lock_interruptible(&dev->lock))
+ 		return -ERESTARTSYS;
  
- 	stats->rx_packets = packets;
--	stats->tx_packets = 0;
++	if (!dev->v4l2) {
++		mutex_unlock(&dev->lock);
++		return -ENODEV;
++	}
+ 	ret = v4l2_fh_open(filp);
+ 	if (ret) {
+ 		dev_err(&dev->intf->dev,
+@@ -2161,6 +2165,7 @@ static int em28xx_v4l2_open(struct file
+ 		return ret;
+ 	}
  
- 	stats->rx_bytes = bytes;
--	stats->tx_bytes = 0;
- }
++	v4l2 = dev->v4l2;
+ 	if (v4l2->users == 0) {
+ 		em28xx_set_mode(dev, EM28XX_ANALOG_MODE);
  
- static u32 always_on(struct net_device *dev)
--- 
-2.17.1
-
+--
