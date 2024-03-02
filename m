@@ -1,113 +1,138 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47EA12E40;
-	Sat,  2 Mar 2024 00:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4E653AC
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 00:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709337713; cv=none; b=ZdPEnFuCKMZmLNO1RXPPnwP1ac+h0hSHWK2QplJQGQk80ZEQSX0woAm9assIw3S0q1kOBPh9bS8d0qb+YTY7AA07vuI3yirOUzYfRG9jcm73i1U0NqmSHcAqnZ+2+8mTc0fpowvyD0txdnGfnSu4QnKyqIEhHSpVvDYWLPiwSwU=
+	t=1709337733; cv=none; b=XShDbOZzE0xJQXuBSeji/Ab5F+fvDCYKKW1mHe3EdwbHyuCxyj5XmeFvkOdMnQzehFChKx6Cgc9soVDEciY3dQxhsBQxe71O4u/VT0omkKC3nNxZnmJmE16cJplhfCpMXyYfkIbYQX+JF7J3+3CzOLwcsL3Aqt4pc7pI19DK814=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709337713; c=relaxed/simple;
-	bh=arBEGhBteVO4RjPz9tkU04LZ/Jgo6OcNUGZs76IOUR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jlLoteLvgJBMqIjlx4BxAmPhbhUZOzhpSBUJaYGEQj01WTpAy0UGp9MTJJ2ExE9VJ37Y4dId+Xjqj2pRtNVH4BpHFV/9mKGjlMyO6aus/dGN+XrnHV7LpGsw3AkMZ+mDOJWdcnQ9cVr7y538RTeIII46AGJ9X3Cw/OvFaXEWjwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kdA8FGru; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1709337733; c=relaxed/simple;
+	bh=p0aTg4Dk43UsooOLlnRb/erthY//r0L6e7MIujI2S88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=IZUon7Yu2a4x9YC60lQ7848ZbJ9ZltDh4S4giGGkuisNiXKmtm8zqzeQmPNr5hNf0EDd2N6XbPD6LRTRbrr+uMBmTzyJSHDlA5v90SjNa5qKMMffWm3J9AHqAymB0gKqIyjw3au/NpFxRploX4SEnkkBDhJzykKL0yTE0a9VdpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Trhf9yhm; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kdA8FGru"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 421Lhnt8026634;
-	Sat, 2 Mar 2024 00:01:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=vKDPVMXw44ehTbUTyV9p12c9dr4eCzluThD8Tq6MyeU=;
- b=kdA8FGruOG9ZjTI7oQ2CYF9M2Gf1ziYDgoa/3325BIrQ396s1qxs8v40B6/1+t6ZKqml
- hbNE9lVrV6RgwIx6tZuRUOyKuMaHMixlGtB734LBqo6EW6CP8iUxUKbJAnmU0kPNoUQb
- hshaljT6Zwkr+A8VpZ//L0023zqeeoCOf87HYbFJnbZZZiCKVOsy9lWuj1aikEjcLicz
- C/kU8fHItDHTo5JbKRE3ND3YT+LSjAg1nJjGPdYFHAhYIvCr01oKiV0HyN/anNpRsJP0
- BlJk+q02iw+dqopsww5VMF9jWLWn7FtbU1KZxlwLt+B1kC/wHQFgmMjjY6UfGDcoeL0y vg== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf722t5av-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 02 Mar 2024 00:01:36 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 421M2Rdi005715;
-	Sat, 2 Mar 2024 00:01:35 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wjrrct3pc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 02 Mar 2024 00:01:35 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42201YFC037587;
-	Sat, 2 Mar 2024 00:01:34 GMT
-Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3wjrrct3ne-1;
-	Sat, 02 Mar 2024 00:01:34 +0000
-From: Yifei Liu <yifei.l.liu@oracle.com>
-To: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com
-Cc: yifei.l.liu@oracle.com, harshit.m.mogalapalli@oracle.com,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jack.vogel@oracle.com,
-        lihong.yang@intel.com, ramanan.govindarajan@oracle.com
-Subject: [PATCH Linux-6.8-rc5 1/1] ixgbevf: start negotiate with api version 1.4
-Date: Fri,  1 Mar 2024 15:58:37 -0800
-Message-ID: <20240301235837.3741422-1-yifei.l.liu@oracle.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Trhf9yhm"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a4429c556efso435733966b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 16:02:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709337730; x=1709942530; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4lsVKpZIUbg+frwT+YCemkgWx1etFYNAbDoPF/jLkUg=;
+        b=Trhf9yhmOoOzd38KlJ4cSFHNPZWAmFaDO7FtfI0CBXSge73F4wQump/EDj1GPsRTHR
+         OLkFeVtF00y6u4Pt5PyITtD5OGxBuFEYNm/3XeXykr8U0zrqxvZP77ZzgOFOHqqtnYQk
+         +42s19Mu0k8yhPprkgIuzsnZxf3/6pPIDK4tHVYqdRkL6NrdCvhIxCqPp0A2AgTmuGcH
+         5N3s8BOJL6H5vyitWDfUAudsFqeR3h6EpODDnrEp3IDFn9aB61Lrj1ic21JSz177Rnu8
+         fXVlDroPQo2rv7nUSGPZdaIn24uiB4o7zkoPE1v78y3XmWwtoFlTbzDovUEvfbJC9+1A
+         fErQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709337730; x=1709942530;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4lsVKpZIUbg+frwT+YCemkgWx1etFYNAbDoPF/jLkUg=;
+        b=h24xffrWyAdoPs0+PuPgcza6qtMrcWC9/w4unHmAdQqONGZlWAuwz5Vq+6KnrZ7m8w
+         T7TQmrivcFO1RyWn61GhrQKPwhfoMblkL4RgWf3Wbev2ZUdCQ++ikS05Isq0+DmFHIx9
+         czmZjgHdZL8qyEyqrhbg7W/ahnyuQEp+hvlKUrocCaOZaQlPPXzbDLalBjiEYbZZGkgc
+         WSZgbVzwtXXCelGD5QX9rGRn16ml8fIo3ug9ioPiE+H0hgxirV5ogOIf/b90FyK2AekZ
+         hEKcJLL3NnDLGxIyouzZWAVz/8jDdGOilrZdaWEvKM3L+q4KA9WC7CPgcZomKf42yu97
+         mMfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoCFd25Qqlyd3bawNCObeytK4PeA2/HPiW36bzS7X4i/LnxwkyXhRIDMglUbFV7epNbTpLtHPI0e4kw6a73Xl1HnkQRgIY21G1Rdtk
+X-Gm-Message-State: AOJu0Ywj3Gf2IS1iAWE3F5xsJSfxC2IT/vRnBT4TXpaTDqvnZFRrjIPM
+	HiVfHeDBFVn15TmwbhZz1ghYCEyyd5P4dA2EO/ImXGkXbzi+JeOA15esrFEFCEU=
+X-Google-Smtp-Source: AGHT+IF6zq9dPDniFnLIyOkagRML1XNJz5FGHbstGRGs8rXD11h/jejzFqz92hWv8HiSgKBoSNfTCw==
+X-Received: by 2002:a17:906:1cd5:b0:a44:512d:fb19 with SMTP id i21-20020a1709061cd500b00a44512dfb19mr2503710ejh.38.1709337729940;
+        Fri, 01 Mar 2024 16:02:09 -0800 (PST)
+Received: from [192.168.216.32] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id w25-20020a170906131900b00a44bd00ed4csm466451ejb.0.2024.03.01.16.02.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Mar 2024 16:02:09 -0800 (PST)
+Message-ID: <825762ea-8d53-4231-91dc-1c63b955e655@linaro.org>
+Date: Sat, 2 Mar 2024 01:02:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-01_23,2024-03-01_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403010197
-X-Proofpoint-ORIG-GUID: sROpH13LIyOES2ZB_47V_jY2iDavSJKo
-X-Proofpoint-GUID: sROpH13LIyOES2ZB_47V_jY2iDavSJKo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: x1e80100-crd: switch WSA8845
+ speakers to shared reset-gpio
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240227142725.625561-1-krzysztof.kozlowski@linaro.org>
+ <20240227142725.625561-2-krzysztof.kozlowski@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240227142725.625561-2-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-ixgbevf updates to api version to 1.5 via
-	commit 339f28964147d ("ixgbevf: Add support for new mailbox
-	communication between PF and VF")
-while the pf side is not updated to 1.5 properly. It will lead to a
-failure of negotiation of api version 1.5 This commit will enforce
-the negotiation to start with 1.4 which is working fine.
+On 27.02.2024 15:27, Krzysztof Kozlowski wrote:
+> Each pair of WSA8845 speakers share the powerdown SD_N GPIO, thus this
+> GPIO is specified twice in each WSA8845 device node.  Such DTS was added
+> hoping non-exclusive GPIO usage would be accepted, but it turned out
+> otherwise: it is not supported by the Linux kernel.
+> 
+> Linux kernel however supports sharing reset GPIOs, when used bia the
+> reset controller framework as implemented in commit 26c8a435fce6 ("ASoC:
+> dt-bindings: qcom,wsa8840: Add reset-gpios for shared line") and
+> commit c721f189e89c ("reset: Instantiate reset GPIO controller for
+> shared reset-gpios").
+> 
+> Convert the property with shutdown GPIO to "reset-gpios" to use
+> mentioned Linux kernel feature.  This allows to bring all four speakers
+> out of reset.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
 
-Normally the pf and vf side should be updated together. Example:
-	commit adef9a26d6c39 ("ixgbevf: add defines for IPsec offload request")
-	commit 7269824046376 ("ixgbe: add VF IPsec offload request message handling")
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-
-Reported-by: Manjunatha Gowda <manjunatha.gowda@oracle.com>
-Signed-off-by: Yifei Liu <yifei.l.liu@oracle.com>
-Reviewed-by: Jack Vogel <jack.vogel@oracle.com>
----
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index a44e4bd56142..a1b9b789d1d4 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -2286,6 +2286,12 @@ static void ixgbevf_negotiate_api(struct ixgbevf_adapter *adapter)
- 
- 	spin_lock_bh(&adapter->mbx_lock);
- 
-+	/* There is no corresponding drivers in pf for
-+	 * api version 1.5. Try to negociate with version
-+	 * 1.5 will always fail. Start to negociate with
-+	 * version 1.4.
-+	 */
-+	idx = 1;
- 	while (api[idx] != ixgbe_mbox_api_unknown) {
- 		err = hw->mac.ops.negotiate_api_version(hw, api[idx]);
- 		if (!err)
--- 
-2.42.0
-
+Konrad
