@@ -1,208 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170AE15E9C;
-	Sat,  2 Mar 2024 11:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23436171BF;
+	Sat,  2 Mar 2024 11:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709379853; cv=none; b=p+0LepFMWpyE8Tw3o09gYvEgS7IiYWy97ac1tw4MNlXCYWV4WMtafFB3BZbg23ytlaQueoWZm3W9d7fnci+DnTgt/EiVrCtwIeTrsBIbjJRXBWUs+ShCwxlgkYIYjtwN5dTrhiuDx5QGjXlV9C7hcfxxvzQZAmWIWykIJsCSRpQ=
+	t=1709380008; cv=none; b=XN9ResLvqMm4Lo1fntqb8x6+4WydDF+XYjpmWeyabBKinN5J3VeVvInFVjB1mt/dhZ/VXVbCAl5dVSVEa6dy9KwjcP84lW5hTxg7vQhUGDc058YEng2swVNIvC+1DgUx+G90k3UBcr0BDfneAU55rAv7pNfcMPt1HrZTayapFFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709379853; c=relaxed/simple;
-	bh=TNT3Rx25q+66RksmLIf8H3eVPQJ5mFxDycrmZ1FMbNU=;
+	s=arc-20240116; t=1709380008; c=relaxed/simple;
+	bh=6ybbMazjaeBS8YeBDGv/Cm5reWpCfIW0IWKWohJFMZo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bZwjoMeH8kWy1hOFAy3BY0USNm8LcHSdpAQdpnCmYz+WEVTU3tU3HnVnIuphF3FomdEp6EVa203xa9gJN/galPVT3D5xrD57iM6syWeMzvmyabinvnzB8W8NlOiRzp6d7NKh1dN+3ZAzNWotTKG+m40vCtkAb/RMlaoGFg2Wagk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lKD7pmZR; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y4XaGO742MEBw9qxHOudVocV3Vxdv8RpwJ6fwPYKW9ijR3hcJaoifXtYEMMz5Z6yN6oGsyDUs++I1Rhaq0odDgdNvalDXWVeK6b/IM1UQDN7apNm+BRAF/Pntt1Q7B8n07Mb2VR9C/lqKBO2A+s8N+FV0cZGsShkrXunlpaLGWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4tMOrHK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lKD7pmZR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709379851; x=1740915851;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TNT3Rx25q+66RksmLIf8H3eVPQJ5mFxDycrmZ1FMbNU=;
-  b=lKD7pmZRIdXmq05J8qAewl2p2IHr1/0Mt6OMQ7sxR9dDmTirVITFgv5R
-   cWSQWFl6Xt+7mPyafI8Lw/SotXTzD6Ns3mb+nK2oLPEqhVwsQKmODHSdb
-   tIXjchQVn5KSpv+UahRSowox8kKVUZX3OPTFTRPVknoGqs5ZZyAlwdQss
-   BBikFc7DN6yq/SuSibmZsS/hTdo4g6tR1laAR2vI3yEbKYiMBxQAwzRwa
-   b6jvDNvZNvAOL8RcEOU+E7rYQb76K18EF1SjkqODvBTU7mt11ync4J3oP
-   /srhXXD0qEPsSneMMlaatKufywVN643cyXCzCiABW88/7B0/KMMqsoSnW
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="15364420"
-X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
-   d="scan'208";a="15364420"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2024 03:44:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
-   d="scan'208";a="12990824"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa005.fm.intel.com with ESMTP; 02 Mar 2024 03:44:08 -0800
-Date: Sat, 2 Mar 2024 19:39:59 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: matthew.gerlach@linux.intel.com
-Cc: hao.wu@intel.com, trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com,
-	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] fpga: dfl: afu: support Rev 2 of DFL Port feature
-Message-ID: <ZeMQD+PH8lUfbVKa@yilunxu-OptiPlex-7050>
-References: <ZbjHl8ptQG5FdHvC@yilunxu-OptiPlex-7050>
- <alpine.DEB.2.22.394.2401300948590.112016@sj-4150-psse-sw-opae-dev2>
- <Zbnd8W1ciTKeoKc4@yilunxu-OptiPlex-7050>
- <alpine.DEB.2.22.394.2401311610020.112016@sj-4150-psse-sw-opae-dev2>
- <ZcBIjcFJjGKf0qcO@yilunxu-OptiPlex-7050>
- <alpine.DEB.2.22.394.2402051600190.122158@sj-4150-psse-sw-opae-dev2>
- <ZdF4JvYQQL8irnbW@yilunxu-OptiPlex-7050>
- <alpine.DEB.2.22.394.2402201658400.191484@sj-4150-psse-sw-opae-dev2>
- <ZdYhUK5yFFlhVV62@yilunxu-OptiPlex-7050>
- <alpine.DEB.2.22.394.2403011142350.240045@sj-4150-psse-sw-opae-dev2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4tMOrHK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5DB5C433F1;
+	Sat,  2 Mar 2024 11:46:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709380007;
+	bh=6ybbMazjaeBS8YeBDGv/Cm5reWpCfIW0IWKWohJFMZo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I4tMOrHK23Pkkn1kDxMqBt0gfVxve00K9dk6+AN7WC3lM5MEh6L9QJj2Ghj7A42fz
+	 k93yrwr8rXsSvSP7EkDVl5Epmtup3GeBjC35GAxnbDpu4xLUFBf9uAvkn2feBhZwIQ
+	 muSESoyxAg6humaLYqA2iY/RR92SFJB0HRUeKGgI7bhSEQHvvVcG051dpZnvAwyCUr
+	 AI6G/4ttXvFbcbRF7sT1CFgpDv0ZakY1kyXw6MdB9AbWnf/MmYP8eIHzRNgELWV2L7
+	 /0amtXNG6C1bOELcdUltZ73hN3XPrrhoViHwgQ6vlV9l5z5mjdVwwtaZK4MOUDiNvp
+	 nxPXRM9P3mpEQ==
+Date: Sat, 2 Mar 2024 12:46:41 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Luis Henriques <lhenriques@suse.de>, 
+	Eric Sandeen <sandeen@sandeen.net>
+Cc: Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] fs_parser: handle parameters that can be empty and
+ don't have a value
+Message-ID: <20240302-avancieren-sehtest-90eb364bfcd5@brauner>
+References: <20240229163011.16248-1-lhenriques@suse.de>
+ <20240229163011.16248-2-lhenriques@suse.de>
+ <20240301-gegossen-seestern-683681ea75d1@brauner>
+ <87il269crs.fsf@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2403011142350.240045@sj-4150-psse-sw-opae-dev2>
+In-Reply-To: <87il269crs.fsf@suse.de>
 
-On Fri, Mar 01, 2024 at 12:39:24PM -0800, matthew.gerlach@linux.intel.com wrote:
+On Fri, Mar 01, 2024 at 03:45:27PM +0000, Luis Henriques wrote:
+> Christian Brauner <brauner@kernel.org> writes:
 > 
+> > On Thu, Feb 29, 2024 at 04:30:08PM +0000, Luis Henriques wrote:
+> >> Currently, only parameters that have the fs_parameter_spec 'type' set to
+> >> NULL are handled as 'flag' types.  However, parameters that have the
+> >> 'fs_param_can_be_empty' flag set and their value is NULL should also be
+> >> handled as 'flag' type, as their type is set to 'fs_value_is_flag'.
+> >> 
+> >> Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> >> ---
+> >>  fs/fs_parser.c | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+> >> index edb3712dcfa5..53f6cb98a3e0 100644
+> >> --- a/fs/fs_parser.c
+> >> +++ b/fs/fs_parser.c
+> >> @@ -119,7 +119,8 @@ int __fs_parse(struct p_log *log,
+> >>  	/* Try to turn the type we were given into the type desired by the
+> >>  	 * parameter and give an error if we can't.
+> >>  	 */
+> >> -	if (is_flag(p)) {
+> >> +	if (is_flag(p) ||
+> >> +	    (!param->string && (p->flags & fs_param_can_be_empty))) {
+> >>  		if (param->type != fs_value_is_flag)
+> >>  			return inval_plog(log, "Unexpected value for '%s'",
+> >>  				      param->key);
+> >
+> > If the parameter was derived from FSCONFIG_SET_STRING in fsconfig() then
+> > param->string is guaranteed to not be NULL. So really this is only
+> > about:
+> >
+> > FSCONFIG_SET_FD
+> > FSCONFIG_SET_BINARY
+> > FSCONFIG_SET_PATH
+> > FSCONFIG_SET_PATH_EMPTY
+> >
+> > and those values being used without a value. What filesystem does this?
+> > I don't see any.
+> >
+> > The tempting thing to do here is to to just remove fs_param_can_be_empty
+> > from every helper that isn't fs_param_is_string() until we actually have
+> > a filesystem that wants to use any of the above as flags. Will lose a
+> > lot of code that isn't currently used.
 > 
-> [snip]
+> Right, I find it quite confusing and I may be fixing the issue in the
+> wrong place.  What I'm seeing with ext4 when I mount a filesystem using
+> the option '-o usrjquota' is that fs_parse() will get:
 > 
-> > > 
-> > > Hi Yilun,
-> > > 
-> > > I think this conversation has gotten a little off track. This patch only
-> > > changes the port reset behavior at driver initialization for revision 2 of
-> > > the port IP. The behavior and the requirements of port reset during run time
-> > > have not changed. The existing implementation requires the user performing
-> > > the port reset to ensure appropriate SW was quiesced. This patch does not
-> > > change this requirement.
-> > 
-> > You are actually adding support to the new devices behavior defined by
-> > revision 2.  Previously the user requires the management PF driver to do port
-> > reset, and this only affects some logic in the PF itself and the impact could
-> > be handled inside the driver.  The current PF driver doesn't actually do anything
-> > because it (or any kernel component) never touches the disabled logic, and the
-> > user accessing of the mmapped but disabled logic won't cause system issues.
+>  * p->type is set to fs_param_is_string
+>    ('p' is a struct fs_parameter_spec, ->type is a function)
+>  * param->type is set to fs_value_is_flag
+>    ('param' is a struct fs_parameter, ->type is an enum)
 > 
-> I'm wondering about the use case when Virtual Functions (VFs) are enabled
-> with the current driver. If partial reconfiguration of the port occurs,
-> which includes a reset, what happens to the user software attached to the
-> VFs when the hardware has changed out from under it? While the current port
+> This is because ext4 will use the __fsparam macro to set define a
+> fs_param_spec as a fs_param_is_string but will also set the
+> fs_param_can_be_empty; and the fsconfig() syscall will get that parameter
+> as a flag.  That's why param->string will be NULL in this case.
 
-Ah, yes. That may be the problem for user, you can fix it.  But the fix
-could actually be easier, cause the port driver is fully aware of the
-reset request and the reset flow is under its control.
+Thanks for the details. Let me see if I get this right. So you're saying that
+someone is doing:
 
-> implementation won't cause PCIe errors when the logic is disable, something
-> has to notify the user software that the hardware changed. I think the user
-> space software would be typically notified of the change by the
-> orchestration software performing the partial reconfiguration. I think the
-> use case of VFs with the original port implementation is logically
-> equivalent to the new port implementation with multiple PFs/VFs.
+fsconfig(..., FSCONFIG_SET_FLAG, "usrjquota", NULL, 0); // [1]
 
-The difference is that, the original port driver is fully responsible for the
-reset flow and the AFU mapping, while the new port implementation has no
-control to the to-be-resetted logic, it blindly does the reset.
+? Is so that is a vital part of the explanation. So please put that in the
+commit message.
 
-> 
-> > 
-> > But the new management PF does port reset and affect other PFs, and may
-> > cause disorder in other drivers. so you need extra code to support the
-> > behavior.
-> 
-> I think the real problem is that the new port is not doing as good of a job
-> preventing PCIe errors during port reset as the previous version.
+Then ext4 defines:
 
-Even if the reset won't cause PCIe errors, the other PF/VF drivers may
-still meet HW access issues not understandable by themselves and cause
-kernel level panic.
+	fsparam_string_empty ("usrjquota",		Opt_usrjquota),
 
-Thanks,
-Yilun
+So [1] gets us:
 
-> 
-> Matthew
-> > 
-> > This patch does make some progress, as you said, "With revision 2,the
-> > initial state of the logic inside the port is guaranteed to be valid, and
-> > a port reset is not required during driver initialization".  But it
-> > should not be the only patch to enable the new port reset behavior.
-> > 
-> > > 
-> > > > 
-> > > > > 
-> > > > > > 
-> > > > > > > image. I don't think the driver performing the port_reset() can know all the
-> > > > > > 
-> > > > > > Other PF drivers should know their own components. They should be aware
-> > > > > > that their devices are being reset.
-> > > > > 
-> > > > > The other PF drivers depend on the actual FPGA image being run.
-> > > > > 
-> > > > > > 
-> > > > > > > components to be able to provide any meaningful management.
-> > > > > > 
-> > > > > > If the reset provider and reset consumer are not in the same driver,
-> > > > > > they should interact with each other. IIRC, some reset controller class
-> > > > > > works for this purpose.
-> > > > > 
-> > > > > The other PFs in many cases can present as standard devices with existing
-> > > > > drivers like virtio-net or virtio-blk. It does not seem desireable to have
-> > > > > to change existing drivers for a particular FPGA implementation
-> > > > 
-> > > > If you have to use a specific method for reset, it is not a standard virtio
-> > > > pci device, and you have to make some change.
-> > > 
-> > > From the perspective of the PCI PF/VF implementing the virtio or other
-> > > standard device, the pci endpoint is completely compliant to the standard,
-> > > and no driver changes should be required. As mentioned above, this patch
-> > > does nothing to change any of this behavior. Consider a port reset that is
-> > > part of a partial configuration flow. The virtio endpoint can become
-> > > something completely different with a completely different driver. This
-> > 
-> > Then how could the virtio driver stop and remove itself to avoid crashing the
-> > kernel, and how could the new driver be probed.  If the answer is still
-> > userspace responsible for everything, that's not good to me.
-> > 
-> > Thanks,
-> > Yilun
-> > 
-> > > patch does not affect this flow either.
-> > > 
-> > > Thanks,
-> > > Matthew
-> > > 
-> > > > 
-> > > > Thanks,
-> > > > Yilun
-> > > > 
-> > > > > 
-> > > > > Thanks,
-> > > > > Matthew
-> > > > > > 
-> > > > > > Thanks,
-> > > > > > Yilun
-> > > > > > 
-> > > > > > > 
-> > > > > > > Thanks,
-> > > > > > > Matthew
-> > > > > > > 
-> > > > > > > > 
-> > > > > > > > Thanks,
-> > > > > > > > Yilun
-> > > > > > > > 
-> > > > > > > > > 
-> > > > > > > > > Do you want me to update the commit message with this information?
-> > > > > > > > > 
-> > > > > > > > > Thanks,
-> > > > > > > > > Matthew
-> > > > > > > > 
-> > > > > > > > 
-> > > > > > 
-> > > > > > 
-> > > > 
-> > 
+        param->type == fs_value_is_flag
+        param->string == NULL
+
+Now we enter into
+fs_parse()
+-> __fs_parse()
+   -> fs_lookup_key() for @param and that does:
+
+        bool want_flag = param->type == fs_value_is_flag;
+
+        *negated = false;
+        for (p = desc; p->name; p++) {
+                if (strcmp(p->name, name) != 0)
+                        continue;
+                if (likely(is_flag(p) == want_flag))
+                        return p;
+                other = p;
+        }
+
+So we don't have a flag parameter defined so the only real match we get is
+@other for:
+
+        fsparam_string_empty ("usrjquota",		Opt_usrjquota),
+
+What happens now is that you call p->type == fs_param_is_string() and that
+rejects it as bad parameter because param->type == fs_value_is_flag !=
+fs_value_is_string as required. So you dont end up getting Opt_userjquota
+called with param->string NULL, right? So there's not NULL deref or anything,
+right?
+
+You just fail to set usrjquota. Ok, so I think the correct fix is to do
+something like the following in ext4:
+
+        fsparam_string_empty ("usrjquota",      Opt_usrjquota),
+        fs_param_flag        ("usrjquota",      Opt_usrjquota_flag),
+
+and then in the switch you can do:
+
+switch (opt)
+case Opt_usrjquota:
+        // string thing
+case Opt_usrjquota_flag:
+        // flag thing
+
+And I really think we should kill all empty handling for non-string types and
+only add that when there's a filesystem that actually needs it.
