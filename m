@@ -1,74 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1593417F3;
-	Sat,  2 Mar 2024 00:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73D110E3
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 00:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709338582; cv=none; b=MBeZhQgxLLzJOaUuI+bkp7jjT87OLBIfbxeHpjbiKJhRFFYPL2vOUWFz/w9JKJp/LXbeKIhVAp9tEin+JInJlPgdiPopSbHkbFyywjT8pk14mtIzWgP7sZf5E2J7Ek3lvIJuh+nAG6sl2NTkqhlIOpAgEGSlxK8IKVq5OIMcCYA=
+	t=1709338617; cv=none; b=K4vHjT3EN7dy0Lek3FjcVyO8b5zstbqHT6rLL+L05276+Y9jNsAGHiGodRM6aRv8yM8RLKZYZTE4Wo/aQGTkmWFJgQyYPjkLwc84OeNONvD7ejLcak2SwwlyAFAPtT+loXHnoo6MGyFS24MZ2oRoAmvrJ01lpa9ORSogROTeQok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709338582; c=relaxed/simple;
-	bh=e1sMeEwV6zrYXOM9M9z2DLs2bzRRRslBRFpB8ITBido=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ARSUtlDT/RfVailIwwfG8UkPAwdXAubc1s3jLNjs1uGX0PSMJ8JnbYq+3bl1rpOsKdq+skkbBc7nFupcBv40xkPPOUlHSxRQT+jjUINGJNGYpVqsVMpYF3SnGAR9fMsqE+6eGAiGZ10wmZWsww4KP/wMbNRleN7AX/FbmMLyWSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVVn7fb3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709338617; c=relaxed/simple;
+	bh=pgSiW+xTZmFhlX83o7Jy94TLdmZvLPZgS0gnfRjbOfE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=K9+RlpTjsgyBpA5FNjDLYbV24LNZywXio+DnpxXm2DkgmAthiwhevykjY93pe3FsG4sfws1jFvcaZwcKltr974kDamQH4XaZioKJSxpdwSCL0QVEIK+7+L9o4PI9bCbrDd7Z5KqGApnQTsMDhtl034rQC5BREBAcEOqjan/GtHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uc0F4Ca6; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVVn7fb3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCDAC433C7;
-	Sat,  2 Mar 2024 00:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709338581;
-	bh=e1sMeEwV6zrYXOM9M9z2DLs2bzRRRslBRFpB8ITBido=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LVVn7fb3930ZHmaDmxv3Z6Vd1Bo6TsmqTBJ2N8WWx5XosEAqJOZsWs7pvpzXZAare
-	 qNwwz9Ap7rlKVE8uNFDfs6gHYzMF7S09S8JJcfLt0bBnZAjPofIifVHuXwa3rDRm/1
-	 xSh/Tan9At8mFSFKjF1qjjMpGj2F4PNcwcmNS2qIW3ai/YEHqgJnpgD7B2XsyCg9uY
-	 XDDZMHBTtvXUwXztcg1L8XDBt6s+50ybSfSHdMbyho2gvwu8xHN6qUlkKBi99K0Fiy
-	 Isb0PIg7EMX92l3yLvxYEdkG3a0sg5kqAdc7YQUZq4ccPgrG1Q7pMeHxfM9VJ3zd7E
-	 lzvA/lcYr/sag==
-Date: Sat, 2 Mar 2024 01:16:16 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
-	Gregory Clement <gregory.clement@bootlin.com>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
-	Andi Shyti <andi.shyti@kernel.org>
-Subject: Re: [SPAM] [PATCH v2 03/11] i2c: nomadik: rename private struct
- pointers from dev to priv
-Message-ID: <heuizvxx7zu2if33wofbecdroiqg6k3wmovmhtjjlb4b7qx4as@4ksrhcn5ohk4>
-References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
- <20240229-mbly-i2c-v2-3-b32ed18c098c@bootlin.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uc0F4Ca6"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so4694612276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 16:16:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709338614; x=1709943414; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XJVqfGzfplRxpO5E0p6+cO7VAdJkT8FDhuCSfsmbM5I=;
+        b=Uc0F4Ca6r8FXVZSUSeciJODpxecUFJ/UH7kkvl3HBmmg/tnNFI76oedrrciyfRf6Y1
+         E1jOXF4ihLc1zmwvOgWN3Kl0aOyJ0azxqpHreaSEc0Kj3upVwVp/bNvz/RZbgnC395Ij
+         rDPZbS8QSTFTYfvOb0Oww8lruD1oaiyIeaJFTbosCz0/MNWm4qlH0ug/svU9uYhijzzg
+         d8pugB0guCjYycedqAJ4bDhh8DzbBrJq0EkbDjnfKc/oFjFQNAjZwpz6NHfLbnOEY7EY
+         c02pkEpj/IaNrWg2F4jabQYmXd1XzgD11FSLo/qjcUh3ZB+i2nWmIfqVtMpnPUeWLI9z
+         JXhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709338614; x=1709943414;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XJVqfGzfplRxpO5E0p6+cO7VAdJkT8FDhuCSfsmbM5I=;
+        b=vSW/cGhNh56lyPpuQp2iAGNHyDOW6aUJbY52AkuTOvXQeoOLl5nuA0XmP+XZVqeS/J
+         F7we83eR8S7fxcL5gqhcYZ9q7g3U7NzEuw817QkC8bx1uj+Z5PYKTkg84VAkw2DreTdj
+         vhxdU7XInFqeyxf5lzFrSHM6hs+Yi/ViKwYF+2OYqkcsUDxPkiJDtRCqxXQr5wnSUFKP
+         OwpqoWP7kg4ek9MfPDBHZf3rY7jzhq0s7MC8zwhCncxHM+944wii7qF39d8cpTjt6q8t
+         3QEGo8JKM9JZapYeQdRxggNzRFKzAPd96MjRcDr2OTkFH2AJc1gXQJMVBrm1WVKQBk6F
+         Anzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCHJ+P90Pji8kmmUZWHKF/8d/mQfxQsE3AzR76IRBa5lYZSsDFkkWb3gYzOkbJXEjFt38AFvUQNbnLLDdXpj5vhRnT4CN3EdO2FwwZ
+X-Gm-Message-State: AOJu0YydH8dF6uKPoH5knSJr+/n5Ctu/Kgm9igCsEfBOSd5pHeu9Uoe3
+	KdKkIatXtYE33rnhNLtyBPro8pKKpnAt1/ooTWSGcYwgw2VagcPJdxuSs/nhctjOO6srmWlSyPh
+	L4CHydzIA0g==
+X-Google-Smtp-Source: AGHT+IF8MBkXR+4X6PdgrM7IJa8RzUArE+pN73OYsy0OYujkB856aRXm5tQ58UhSH5oUu5ad9tsySL5EyAhqGQ==
+X-Received: from ipylypiv.svl.corp.google.com ([2620:15c:2c5:13:2afe:1a8e:f846:999f])
+ (user=ipylypiv job=sendgmr) by 2002:a05:6902:1209:b0:dc6:e20f:80cb with SMTP
+ id s9-20020a056902120900b00dc6e20f80cbmr115663ybu.3.1709338613902; Fri, 01
+ Mar 2024 16:16:53 -0800 (PST)
+Date: Fri,  1 Mar 2024 16:15:57 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240229-mbly-i2c-v2-3-b32ed18c098c@bootlin.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <20240302001603.1012084-1-ipylypiv@google.com>
+Subject: [PATCH v2 0/5] NCQ Priority sysfs sttributes for libsas
+From: Igor Pylypiv <ipylypiv@google.com>
+To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Jason Yan <yanaijie@huawei.com>, 
+	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Jack Wang <jinpu.wang@cloud.ionos.com>, Hannes Reinecke <hare@suse.de>
+Cc: TJ Adams <tadamsjr@google.com>, linux-ide@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Igor Pylypiv <ipylypiv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Theo,
+This patch series adds sas_ncq_prio_supported and sas_ncq_prio_enable
+sysfs sttributes for libsas managed SATA devices. Existing libata sysfs
+attributes cannot be used directly because the ata_port location is
+different for libsas.
 
-On Thu, Feb 29, 2024 at 07:10:51PM +0100, Théo Lebrun wrote:
-> Disambiguate the usage of dev as a variable name; it is usually best to
-> keep it reserved for struct device pointers. Avoid having multiple
-> names for the same struct pointer (previously: dev, nmk, nmk_i2c).
+Changes since v1:
+- Dropped the "sas_" prefix to align sysfs sttributes naming with AHCI.
+- Dropped ternary operators to make the code more readable.
+- Corrected the formatting %u -> %d in sysfs_emit().
+- Changed kstrtol() to kstrtobool() in [ata|sas]_ncq_prio_enable_store().
+- Changed comments to use the "/* */" style instead of "//".
+- Added libsas SATA sysfs attributes to mvsas and hisi_sas.
+- Dropped the 'Reviewed-by' tags because they were not sent in-reply
+  to the patch emails.
 
-just a nitpick here: this patch does also some small style fixes.
-Could you please mention them in the commit log in your v3?
+Igor Pylypiv (5):
+  ata: libata-sata: Factor out NCQ Priority configuration helpers
+  scsi: libsas: Define NCQ Priority sysfs attributes for SATA devices
+  scsi: pm80xx: Add libsas SATA sysfs attributes group
+  scsi: mvsas: Add libsas SATA sysfs attributes group
+  scsi: hisi_sas: Add libsas SATA sysfs attributes group
 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+ drivers/ata/libata-sata.c              | 139 ++++++++++++++++++-------
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |   6 ++
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |   6 ++
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |   6 ++
+ drivers/scsi/libsas/sas_ata.c          |  92 ++++++++++++++++
+ drivers/scsi/mvsas/mv_init.c           |   7 ++
+ drivers/scsi/pm8001/pm8001_ctl.c       |   5 +
+ drivers/scsi/pm8001/pm8001_init.c      |   1 +
+ drivers/scsi/pm8001/pm8001_sas.h       |   1 +
+ include/linux/libata.h                 |   4 +
+ include/scsi/sas_ata.h                 |   6 ++
+ 11 files changed, 233 insertions(+), 40 deletions(-)
 
-In any case,
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
-
-Thanks,
-Andi
