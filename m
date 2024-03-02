@@ -1,54 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4156B12B80
-	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 10:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61FB79C8
+	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 11:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709377047; cv=none; b=fg+v5ZfOM48s+hB0Q+ImLbZb/O3TfRRjnZpjFSjoJXoTs+tW7aIAvHC6t96zk7xzGl8J/t3jV0ohxN2GWSPBlg9vqo6qNqX8gRNozQfsFXWINgX/yRDXgRSGmrCBFJa23yZ9m1jp327zTeJDuig9pAlSlwWfwTMGKJKDI59gNoY=
+	t=1709377269; cv=none; b=dkPD+qRJetv0poYFu5+CFx+vQ5CZjbAAaxTgkA1dBbcAEja3IJYbmYc5JmwkWyuOABgL2gOY0Jkng0rC/Pybvv1e1r4hFjlxnSqkgm+ZCxnmOuGHB0lcqY7mO4Ds22hzqmD/QgnH80KLDobSx5OFYb1Rw264thv4iRoKH+iXcrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709377047; c=relaxed/simple;
-	bh=sW4Amv+bfSPTytN7KXKV7NTTi+cPJ7HEPBTAJMxiyi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GuTSkNuGyNLMaVQEJBqLHwcSMgNRXrcBPwI6giYS/VsJvH2YJyscv+rdZ8MdIo46J97+PeQQuD8YcLEYkQ7F1bILD45Jc3vAUg6x6LmFV+j//3ef7dXnJ7kgncdL0vk97N7BZkaiSeS384RRh6Fdh70REFADMF/C0gppFqHMabg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YyPg4KC6; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709377269; c=relaxed/simple;
+	bh=QIqM/BeUdDzc4fcCgwEcSQUPcDNmvMpROD3uyltk1rU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s11F2jkBxxNS4Wzac65gfhX+CJFYC1shSW+SOXUN/0463iLAutU0zboAy02sWAaROKKX+SxtdXcDLT38hLZsi/IOQioJ1sIhhbT7mBLhYJ00AgRe0DMLfJqSt2BzvWjxY/QGaY2H4ZU8p4dlodHfbB/+24JcxJmiEHYOSbhEuEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=N7vCnMtV; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YyPg4KC6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709377045; x=1740913045;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=sW4Amv+bfSPTytN7KXKV7NTTi+cPJ7HEPBTAJMxiyi4=;
-  b=YyPg4KC6ACwdE5LfeVmmtS8Hc6AxDJVZ2XHnJW0IgMxe/QLiHJkuFHhS
-   E/zkLJbLnSZOf0u2Al1T+/ztbZzRXHV6fgyMjc4s6iJb8j++XvXY2MoQX
-   pD3CyoxpjsaXhyXTA8JF5LIYxNRBQNtFQAfqBGiKukQGjZIhlLZ7QTnqs
-   xxrSeSgB+uDyjWd+9Hps7UXDlbZDN+UrrS4q+ZomkK1kGAKj7v6UbqOR9
-   YmuGjI5w0PL+9fPaLMo6jh5p7nb38dP9wUnYYe4Wk6Ku4jbmhTr5eUGnw
-   3n/AChN9A/x/qft/MwNlX9Nv3P9Vg6O/LgMq68ISTP8MXI/se4cBBHQMd
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="6871514"
-X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
-   d="scan'208";a="6871514"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2024 02:57:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
-   d="scan'208";a="8892606"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 02 Mar 2024 02:57:24 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rgN3B-000EYJ-0n;
-	Sat, 02 Mar 2024 10:57:14 +0000
-Date: Sat, 2 Mar 2024 18:54:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Michal Simek <monstr@monstr.eu>
-Subject: arch/microblaze/kernel/entry.S:945: Error: unknown opcode "suspend"
-Message-ID: <202403021817.I7WRFyV9-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="N7vCnMtV"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33d7b8f563eso1799146f8f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2024 03:01:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1709377266; x=1709982066; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnBh9q3h81nttMpKclVeCqqdtApMcvk+N5PgmMdmQjQ=;
+        b=N7vCnMtVbH6tV9AqPoSAgYvyo2u8AJB+RumemowDY/sIu3cLXzhTJf3lp0uxAGp0ct
+         dmcaPWoK6gLiHO7R77j7ybRc7qVWWLj11/oWBTD+Vbk16aXL5nn9kCBfewdU+3fH5r0f
+         aKmGZWBlvmbe1kfDhd+FjiYDH0WcrNJqTR+3eX6xPFI29u+wJHBIT5kk+x93N6fWdzSl
+         X1aZ4KIeuK7nb/TIHqed7tbImDbpkRPFVULZAX07dJiq8/QIInK78qdgO8u/S2Sgg3W8
+         xW1EH0jKBVugDylPLbDCmZZTjML2QCDqy/9hotQhFsNgdWvEnCZdWURnmv5VR4Hdcj0/
+         ESyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709377266; x=1709982066;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BnBh9q3h81nttMpKclVeCqqdtApMcvk+N5PgmMdmQjQ=;
+        b=byZhWjNkyPUchc49TT4jkVrgDb85aA2p2u8XirqixR7IHK7ASB6sGHoaguvXMTvcqi
+         vPFxcgtjRtS1BQpv40R5OCWxsZEfxsMZo/f5u62/ofSPzzejd9gXB7nhM/Ec3cQgp2Us
+         hT3L7l20eq0pIly1R5Fql1FERgpAGZvndK4hYqfIAGIzia0YbcdNMXj48ilIUXpHixFB
+         3/Wy/0DZIQY1VzQ7gDZnV6ZTyFku/k2uWrqeT3Gzp8mc6Y9xH5PrqgHldL4DAOSpqEMc
+         g9rueX+Ox5OEoaLX8IBdEdL9o8pm8HVX69UF5Lh7h9dGHNbKgqgc8rFHhUmnoJPKUCHo
+         GCyA==
+X-Gm-Message-State: AOJu0YzJ9IvgcB9QFLo3ZzLWuUhkPpRs5P9EWvas+OM7vb0VyD1up91h
+	WIIJwevAsQD4htHr1HRlTC+Q5Maw6YfmqdFx1WMpDcDsK6t/iBrKhpQ38Pj7D0k=
+X-Google-Smtp-Source: AGHT+IFBE0FYUXd6PXNSgQDWSCL6Ga0yuS3Bws39s4NBtN3Sv+6V9ZcPw12uO6ds6wR23yK7a7LHrg==
+X-Received: by 2002:a5d:510b:0:b0:33d:e140:a81f with SMTP id s11-20020a5d510b000000b0033de140a81fmr3159514wrt.56.1709377265670;
+        Sat, 02 Mar 2024 03:01:05 -0800 (PST)
+Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
+        by smtp.gmail.com with ESMTPSA id p3-20020a5d4583000000b0033b47ee01f1sm6994178wrq.49.2024.03.02.03.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Mar 2024 03:01:05 -0800 (PST)
+Date: Sat, 2 Mar 2024 12:00:59 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Conor Dooley <conor.dooley@microchip.com>, 
+	Guo Ren <guoren@kernel.org>, Icenowy Zheng <uwu@icenowy.me>, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Shuah Khan <shuah@kernel.org>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 12/15] KVM: riscv: selftests: Add SBI PMU extension
+ definitions
+Message-ID: <20240302-698f4322ab7ba74fc3dba416@orel>
+References: <20240229010130.1380926-1-atishp@rivosinc.com>
+ <20240229010130.1380926-13-atishp@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,157 +74,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240229010130.1380926-13-atishp@rivosinc.com>
 
-Hi Appana,
+On Wed, Feb 28, 2024 at 05:01:27PM -0800, Atish Patra wrote:
+> The SBI PMU extension definition is required for upcoming SBI PMU
+> selftests.
+> 
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  .../selftests/kvm/include/riscv/processor.h   | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/tools/testing/selftests/kvm/include/riscv/processor.h
+> index f75c381fa35a..a49a39c8e8d4 100644
+> --- a/tools/testing/selftests/kvm/include/riscv/processor.h
+> +++ b/tools/testing/selftests/kvm/include/riscv/processor.h
 
-FYI, the error/warning still remains.
+We should probably create a new header (include/riscv/sbi.h) since
+otherwise processor.h is very quickly going to look like an SBI
+header with a few non-sbi things in it. Can we add a patch prior to
+this one that moves the SBI stuff we currently have in processor.h
+out to an sbi.h? Or, we could start synchronizing a copy of
+arch/riscv/include/asm/sbi.h in tools/arch/riscv/include/asm like
+we've done for csr.h
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5ad3cb0ed525b80c7f66c32b49a68c1f3510bec9
-commit: 88707ebe77e23e856981e597f322cabbf6415662 microblaze: Add custom break vector handler for mb manager
-date:   1 year, 5 months ago
-config: microblaze-allmodconfig (https://download.01.org/0day-ci/archive/20240302/202403021817.I7WRFyV9-lkp@intel.com/config)
-compiler: microblaze-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240302/202403021817.I7WRFyV9-lkp@intel.com/reproduce)
+> @@ -169,17 +169,84 @@ void vm_install_exception_handler(struct kvm_vm *vm, int vector, exception_handl
+>  enum sbi_ext_id {
+>  	SBI_EXT_BASE = 0x10,
+>  	SBI_EXT_STA = 0x535441,
+> +	SBI_EXT_PMU = 0x504D55,
+>  };
+>  
+>  enum sbi_ext_base_fid {
+>  	SBI_EXT_BASE_PROBE_EXT = 3,
+>  };
+>  
+> +enum sbi_ext_pmu_fid {
+> +	SBI_EXT_PMU_NUM_COUNTERS = 0,
+> +	SBI_EXT_PMU_COUNTER_GET_INFO,
+> +	SBI_EXT_PMU_COUNTER_CFG_MATCH,
+> +	SBI_EXT_PMU_COUNTER_START,
+> +	SBI_EXT_PMU_COUNTER_STOP,
+> +	SBI_EXT_PMU_COUNTER_FW_READ,
+> +	SBI_EXT_PMU_COUNTER_FW_READ_HI,
+> +	SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
+> +};
+> +
+> +union sbi_pmu_ctr_info {
+> +	unsigned long value;
+> +	struct {
+> +		unsigned long csr:12;
+> +		unsigned long width:6;
+> +#if __riscv_xlen == 32
+> +		unsigned long reserved:13;
+> +#else
+> +		unsigned long reserved:45;
+> +#endif
+> +		unsigned long type:1;
+> +	};
+> +};
+> +
+>  struct sbiret {
+>  	long error;
+>  	long value;
+>  };
+>  
+> +/** General pmu event codes specified in SBI PMU extension */
+> +enum sbi_pmu_hw_generic_events_t {
+> +	SBI_PMU_HW_NO_EVENT			= 0,
+> +	SBI_PMU_HW_CPU_CYCLES			= 1,
+> +	SBI_PMU_HW_INSTRUCTIONS			= 2,
+> +	SBI_PMU_HW_CACHE_REFERENCES		= 3,
+> +	SBI_PMU_HW_CACHE_MISSES			= 4,
+> +	SBI_PMU_HW_BRANCH_INSTRUCTIONS		= 5,
+> +	SBI_PMU_HW_BRANCH_MISSES		= 6,
+> +	SBI_PMU_HW_BUS_CYCLES			= 7,
+> +	SBI_PMU_HW_STALLED_CYCLES_FRONTEND	= 8,
+> +	SBI_PMU_HW_STALLED_CYCLES_BACKEND	= 9,
+> +	SBI_PMU_HW_REF_CPU_CYCLES		= 10,
+> +
+> +	SBI_PMU_HW_GENERAL_MAX,
+> +};
+> +
+> +/* SBI PMU counter types */
+> +enum sbi_pmu_ctr_type {
+> +	SBI_PMU_CTR_TYPE_HW = 0x0,
+> +	SBI_PMU_CTR_TYPE_FW,
+> +};
+> +
+> +/* Flags defined for config matching function */
+> +#define SBI_PMU_CFG_FLAG_SKIP_MATCH	(1 << 0)
+> +#define SBI_PMU_CFG_FLAG_CLEAR_VALUE	(1 << 1)
+> +#define SBI_PMU_CFG_FLAG_AUTO_START	(1 << 2)
+> +#define SBI_PMU_CFG_FLAG_SET_VUINH	(1 << 3)
+> +#define SBI_PMU_CFG_FLAG_SET_VSINH	(1 << 4)
+> +#define SBI_PMU_CFG_FLAG_SET_UINH	(1 << 5)
+> +#define SBI_PMU_CFG_FLAG_SET_SINH	(1 << 6)
+> +#define SBI_PMU_CFG_FLAG_SET_MINH	(1 << 7)
+> +
+> +/* Flags defined for counter start function */
+> +#define SBI_PMU_START_FLAG_SET_INIT_VALUE (1 << 0)
+> +#define SBI_PMU_START_FLAG_INIT_FROM_SNAPSHOT BIT(1)
+> +
+> +/* Flags defined for counter stop function */
+> +#define SBI_PMU_STOP_FLAG_RESET (1 << 0)
+> +#define SBI_PMU_STOP_FLAG_TAKE_SNAPSHOT BIT(1)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403021817.I7WRFyV9-lkp@intel.com/
+When changing shifts to BIT()'s, don't forget these (easy not to forget
+if we go with the synch sbi.h to tools approach)
 
-All errors (new ones prefixed by >>):
+> +
+>  struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
+>  			unsigned long arg1, unsigned long arg2,
+>  			unsigned long arg3, unsigned long arg4,
+> -- 
+> 2.34.1
+>
 
-   arch/microblaze/kernel/entry.S: Assembler messages:
->> arch/microblaze/kernel/entry.S:945: Error: unknown opcode "suspend"
-
-
-vim +/suspend +945 arch/microblaze/kernel/entry.S
-
-   825	
-   826		/* restore all the tlb's */
-   827		addik	r3, r0, TOPHYS(tlb_skip)
-   828		addik	r6, r0, PT_TLBL0
-   829		addik	r7, r0, PT_TLBH0
-   830	restore_tlb:
-   831		add	r6, r6, r1
-   832		add	r7, r7, r1
-   833		lwi	r2, r6, 0
-   834		mts 	rtlblo, r2
-   835		lwi	r2, r7, 0
-   836		mts	rtlbhi, r2
-   837		addik	r6, r6, 4
-   838		addik	r7, r7, 4
-   839		bgtid	r3, restore_tlb
-   840		addik	r3, r3, -1
-   841	
-   842		lwi  	r5, r0, TOPHYS(xmb_manager_dev)
-   843		lwi	r8, r0, TOPHYS(xmb_manager_reset_callback)
-   844		set_vms
-   845		/* return from reset need -8 to adjust for rtsd r15, 8 */
-   846		addik   r15, r0, ret_from_reset - 8
-   847		rtbd	r8, 0
-   848		nop
-   849	
-   850	ret_from_reset:
-   851		set_bip /* Ints masked for state restore */
-   852		VM_OFF
-   853		/* MS: Restore all regs */
-   854		RESTORE_REGS
-   855		lwi	r14, r1, PT_R14
-   856		lwi	r16, r1, PT_PC
-   857		addik	r1, r1, PT_SIZE + 36
-   858		rtbd	r16, 0
-   859		nop
-   860	
-   861	/*
-   862	 * Break handler for MB Manager. Enter to _xmb_manager_break by
-   863	 * injecting fault in one of the TMR Microblaze core.
-   864	 * FIXME: This break handler supports getting
-   865	 * called from kernel space only.
-   866	 */
-   867	C_ENTRY(_xmb_manager_break):
-   868		/*
-   869		 * Reserve memory in the stack for context store/restore
-   870		 * (which includes memory for storing tlbs (max two tlbs))
-   871		 */
-   872		addik	r1, r1, -PT_SIZE - 36
-   873		swi	r1, r0, xmb_manager_stackpointer
-   874		SAVE_REGS
-   875		swi	r14, r1, PT_R14	/* rewrite saved R14 value */
-   876		swi	r16, r1, PT_PC; /* PC and r16 are the same */
-   877	
-   878		lwi	r6, r0, TOPHYS(xmb_manager_baseaddr)
-   879		lwi	r7, r0, TOPHYS(xmb_manager_crval)
-   880		/*
-   881		 * When the break vector gets asserted because of error injection,
-   882		 * the break signal must be blocked before exiting from the
-   883		 * break handler, below code configures the tmr manager
-   884		 * control register to block break signal.
-   885		 */
-   886		swi	r7, r6, 0
-   887	
-   888		/* Save the special purpose registers  */
-   889		mfs	r2, rpid
-   890		swi	r2, r1, PT_PID
-   891	
-   892		mfs	r2, rtlbx
-   893		swi	r2, r1, PT_TLBI
-   894	
-   895		mfs	r2, rzpr
-   896		swi	r2, r1, PT_ZPR
-   897	
-   898	#if CONFIG_XILINX_MICROBLAZE0_USE_FPU
-   899		mfs	r2, rfsr
-   900		swi	r2, r1, PT_FSR
-   901	#endif
-   902		mfs	r2, rmsr
-   903		swi	r2, r1, PT_MSR
-   904	
-   905		/* Save all the tlb's */
-   906		addik	r3, r0, TOPHYS(tlb_skip)
-   907		addik	r6, r0, PT_TLBL0
-   908		addik	r7, r0, PT_TLBH0
-   909	save_tlb:
-   910		add	r6, r6, r1
-   911		add	r7, r7, r1
-   912		mfs	r2, rtlblo
-   913		swi	r2, r6, 0
-   914		mfs	r2, rtlbhi
-   915		swi	r2, r7, 0
-   916		addik	r6, r6, 4
-   917		addik	r7, r7, 4
-   918		bgtid	r3, save_tlb
-   919		addik	r3, r3, -1
-   920	
-   921		lwi  	r5, r0, TOPHYS(xmb_manager_dev)
-   922		lwi	r8, r0, TOPHYS(xmb_manager_callback)
-   923		/* return from break need -8 to adjust for rtsd r15, 8 */
-   924		addik   r15, r0, ret_from_break - 8
-   925		rtbd	r8, 0
-   926		nop
-   927	
-   928	ret_from_break:
-   929		/* flush the d-cache */
-   930		bralid	r15, mb_flush_dcache
-   931		nop
-   932	
-   933		/*
-   934		 * To make sure microblaze i-cache is in a proper state
-   935		 * invalidate the i-cache.
-   936		 */
-   937		bralid	r15, mb_invalidate_icache
-   938		nop
-   939	
-   940		set_bip; /* Ints masked for state restore */
-   941		VM_OFF;
-   942		mbar	1
-   943		mbar	2
-   944		bri	4
- > 945		suspend
-   946		nop
-   947	#endif
-   948	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+drew
