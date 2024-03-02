@@ -1,129 +1,137 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F8B12B83;
-	Sat,  2 Mar 2024 08:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980117469;
+	Sat,  2 Mar 2024 08:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709367612; cv=none; b=lDa4O5KNgKL6tjXXGyRdgog1bH9vhRk4hoWr441ZQ5q0P6I8EOdug99aib6QE/C+l+NFFN9agmOnaGYPDbrjiJhgHrNx02Zld3C6KSlewX/qAHLPlhVz1f20RhBpzxKF2+GRRBkKa2lLae7LGYeBkgdT61ySMm49WX+ZqOdgze4=
+	t=1709367903; cv=none; b=SaGMDx124vuTndv4wN7rbZvJ6vxDhVjXEsLE1G2oAu/64Vq8QDthSYdRAio+Y1vFuMqLZ0y3vf+AIBgDsrutc3Z0/dqU8R8NRLblN8ARnBHyCQTbmL/hCdlZdYSxRiYLW7ayeY31w+yeToLXfL3+jMGA6AYRKHdrPVvqDmN8lt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709367612; c=relaxed/simple;
-	bh=HlGnkN+gyjOOzDLmS5VehlLSLAGxnQMbjYYBTtTaveA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HLlQoFJ0BknlZJ8meoJylVm4FJzlk+LJOF8f0gCiIaTZmASHOwqIWd6a/a86JYqUJQ10PxLNDiLlT128RfXM5DXuG/x7oT/k6dtFCUMsIRGeLEh8FH4T2xecyzxQmwT6jCTXp+3WaQO819GzUr9BUUTfgxp79FdMfHx0HKSn0ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5aeb37.dynamic.kabel-deutschland.de [95.90.235.55])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id BAD2661E5FE05;
-	Sat,  2 Mar 2024 09:19:06 +0100 (CET)
-Message-ID: <51b6c48b-a33e-46cd-9b00-5568ccc529ca@molgen.mpg.de>
-Date: Sat, 2 Mar 2024 09:19:05 +0100
+	s=arc-20240116; t=1709367903; c=relaxed/simple;
+	bh=yxRHpAE7Su6Yi++mYKCyTKa75U5UXl1rl+cNRpQDmog=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=Wa/pfMlMUvu5vACxKh6oY6HmkpD6tQYDYNPWlflo7MNotsfKCxk3oxQhpe9zAIc/G/C0oz06b/u2Rn/rLzBjRv/vkmmd2mbiE+vDjN0XJwAJMsdcucDhwAtXwy91jat4YnZ8KHamZ6VVzXpalwzYQiGFDlqnqZXjZjCI+jNk6OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=i8nUdSzo; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=i8nUdSzo; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="i8nUdSzo";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="i8nUdSzo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1709367900;
+	bh=yxRHpAE7Su6Yi++mYKCyTKa75U5UXl1rl+cNRpQDmog=;
+	h=Message-ID:Subject:From:To:Date:From;
+	b=i8nUdSzoplFMdAusSEFd2X39x1qtDcUZ8L9gbgoli77AShQlzUYW/WbM3P6POycHj
+	 joG/QNkks87A6QsxZiUaL/KRgUnFTpeDgD+2zZgmHSjsprvO8U7KYmq0RAY5V1OjyI
+	 7LIAbnP+Ewdp6yo1eZBlKE88XY8aqVMShYS/Akok=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id B52241286E23;
+	Sat,  2 Mar 2024 03:25:00 -0500 (EST)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id FHF77ltlOsGh; Sat,  2 Mar 2024 03:25:00 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1709367900;
+	bh=yxRHpAE7Su6Yi++mYKCyTKa75U5UXl1rl+cNRpQDmog=;
+	h=Message-ID:Subject:From:To:Date:From;
+	b=i8nUdSzoplFMdAusSEFd2X39x1qtDcUZ8L9gbgoli77AShQlzUYW/WbM3P6POycHj
+	 joG/QNkks87A6QsxZiUaL/KRgUnFTpeDgD+2zZgmHSjsprvO8U7KYmq0RAY5V1OjyI
+	 7LIAbnP+Ewdp6yo1eZBlKE88XY8aqVMShYS/Akok=
+Received: from [10.0.15.72] (unknown [49.231.15.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 376981286E22;
+	Sat,  2 Mar 2024 03:24:59 -0500 (EST)
+Message-ID: <1f7995571142ef7e7ed2739bc6f8574d40159de7.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 6.8-rc6
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds
+	 <torvalds@linux-foundation.org>
+Cc: linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel
+	 <linux-kernel@vger.kernel.org>
+Date: Sat, 02 Mar 2024 15:24:53 +0700
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH Linux-6.8-rc5 1/1] ixgbevf: start
- negotiate with api version 1.4
-To: Yifei Liu <yifei.l.liu@oracle.com>
-Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, lihong.yang@intel.com, harshit.m.mogalapalli@oracle.com,
- linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
- jack.vogel@oracle.com, netdev@vger.kernel.org,
- ramanan.govindarajan@oracle.com
-References: <20240301235837.3741422-1-yifei.l.liu@oracle.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240301235837.3741422-1-yifei.l.liu@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Dear Yifei,
+Two small fixes, all in drivers (the more obsolete mpt3sas and the
+newer mpi3mr).
 
+The patch is available here:
 
-Thank you very much for your patch.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-Am 02.03.24 um 00:58 schrieb Yifei Liu:
-> ixgbevf updates to api version to 1.5 via
-> 	commit 339f28964147d ("ixgbevf: Add support for new mailbox
-> 	communication between PF and VF")
-> while the pf side is not updated to 1.5 properly. It will lead to a
-> failure of negotiation of api version 1.5 This commit will enforce
-> the negotiation to start with 1.4 which is working fine.
-> 
-> Normally the pf and vf side should be updated together. Example:
-> 	commit adef9a26d6c39 ("ixgbevf: add defines for IPsec offload request")
-> 	commit 7269824046376 ("ixgbe: add VF IPsec offload request message handling")
+The short changelog is:
 
-Why can’t the PF side not be updated to version 1.5 too?
+Arnd Bergmann (1):
+      scsi: mpi3mr: Reduce stack usage in mpi3mr_refresh_sas_ports()
 
-If you don’t mind, I’d format the commit message like below.
+Ranjan Kumar (1):
+      scsi: mpt3sas: Prevent sending diag_reset when the controller is ready
 
-Commit 339f28964147d ("ixgbevf: Add support for new mailbox communication
-between PF and VF") updates the driver ixgbevf to API version 1.5 while the
-pf side is not updated to 1.5 properly. This leads to a negotiation failure
-of api version 1.5. So, enforce the negotiation to start with 1.4 which is
-working fine.
+And the diffstat:
 
-Normally the pf and vf side should be updated together. Example:
+ drivers/scsi/mpi3mr/mpi3mr_transport.c | 7 ++++++-
+ drivers/scsi/mpt3sas/mpt3sas_base.c    | 4 +++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-1.  commit adef9a26d6c39 ("ixgbevf: add defines for IPsec offload request")
-2.  commit 7269824046376 ("ixgbe: add VF IPsec offload request message 
-handling")
+With full diff below.
 
-> Reported-by: Manjunatha Gowda <manjunatha.gowda@oracle.com>
-> Signed-off-by: Yifei Liu <yifei.l.liu@oracle.com>
-> Reviewed-by: Jack Vogel <jack.vogel@oracle.com>
+James
 
-Please add a Fixes: tag.
+---
 
-Fixes: 39f28964147d ("ixgbevf: Add support for new mailbox communication 
-between PF and VF")
+diff --git a/drivers/scsi/mpi3mr/mpi3mr_transport.c b/drivers/scsi/mpi3mr/mpi3mr_transport.c
+index c0c8ab586957..d32ad46318cb 100644
+--- a/drivers/scsi/mpi3mr/mpi3mr_transport.c
++++ b/drivers/scsi/mpi3mr/mpi3mr_transport.c
+@@ -1671,7 +1671,7 @@ mpi3mr_update_mr_sas_port(struct mpi3mr_ioc *mrioc, struct host_port *h_port,
+ void
+ mpi3mr_refresh_sas_ports(struct mpi3mr_ioc *mrioc)
+ {
+-	struct host_port h_port[64];
++	struct host_port *h_port = NULL;
+ 	int i, j, found, host_port_count = 0, port_idx;
+ 	u16 sz, attached_handle, ioc_status;
+ 	struct mpi3_sas_io_unit_page0 *sas_io_unit_pg0 = NULL;
+@@ -1685,6 +1685,10 @@ mpi3mr_refresh_sas_ports(struct mpi3mr_ioc *mrioc)
+ 	sas_io_unit_pg0 = kzalloc(sz, GFP_KERNEL);
+ 	if (!sas_io_unit_pg0)
+ 		return;
++	h_port = kcalloc(64, sizeof(struct host_port), GFP_KERNEL);
++	if (!h_port)
++		goto out;
++
+ 	if (mpi3mr_cfg_get_sas_io_unit_pg0(mrioc, sas_io_unit_pg0, sz)) {
+ 		ioc_err(mrioc, "failure at %s:%d/%s()!\n",
+ 		    __FILE__, __LINE__, __func__);
+@@ -1814,6 +1818,7 @@ mpi3mr_refresh_sas_ports(struct mpi3mr_ioc *mrioc)
+ 		}
+ 	}
+ out:
++	kfree(h_port);
+ 	kfree(sas_io_unit_pg0);
+ }
+ 
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 8761bc58d965..b8120ca93c79 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -7378,7 +7378,9 @@ _base_wait_for_iocstate(struct MPT3SAS_ADAPTER *ioc, int timeout)
+ 		return -EFAULT;
+ 	}
+ 
+- issue_diag_reset:
++	return 0;
++
++issue_diag_reset:
+ 	rc = _base_diag_reset(ioc);
+ 	return rc;
+ }
 
-Unfortunately, I am unable to find this commit hash. What archive/tree 
-is it from?
-
-> ---
->   drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-> index a44e4bd56142..a1b9b789d1d4 100644
-> --- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-> +++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-> @@ -2286,6 +2286,12 @@ static void ixgbevf_negotiate_api(struct ixgbevf_adapter *adapter)
->   
->   	spin_lock_bh(&adapter->mbx_lock);
->   
-> +	/* There is no corresponding drivers in pf for
-> +	 * api version 1.5. Try to negociate with version
-
-negotiate
-
-> +	 * 1.5 will always fail. Start to negociate with
-> +	 * version 1.4.
-
-Could you please use the fully allowed line length, so less lines are used?
-
-> +	 */
-> +	idx = 1; >   	while (api[idx] != ixgbe_mbox_api_unknown) {
->   		err = hw->mac.ops.negotiate_api_version(hw, api[idx]);
->   		if (!err)
-
-Where is `idx` set before?
-
-Unrelated to the problem at hand, but enums or macros should be used for 
-the API version.
-
-
-Kind regards,
-
-Paul
