@@ -1,91 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F9E17562
-	for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2024 11:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8CF376;
+	Sat,  2 Mar 2024 11:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709379455; cv=none; b=oLvye2Cuog9SzJp6N4G8isZPMKEeMEgvB+up92cGnMRw+4NmXx7As1K9XM9QGczAtDCFois8avUQO80fCU7vsnDQZ3ddUHpt2EgkzGZaDzmCskkPA1XZ98SUD9lpy9puzY6Xu2br6TitMyJzp/+iRmQ6LWKRAWLHSjzrXXqvYdg=
+	t=1709379747; cv=none; b=J+DfQcJ3/srqAtB5JDAC0fYLo+UKHPG9Wtl0YkTI7B4/gCG9m4YaROMtHKiLMxrSatAB/9cdUWRSu8vpeh9lsHSlHnppfzWRw9IGA45fm6QsI4+lwcOpD7AkwBAdLvH9sidgSrzZrbtLk9JmiVyelqT/M3eNLoGW7OclYrvT1bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709379455; c=relaxed/simple;
-	bh=lK4U4ZLcWMRofj4C36viEsAPI2ibBqPBg1dl/C+Vbbc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OsIkAjRZpyagtvleq20eimt6+D7piJ3cjIK+NJWgpxpRE0Poo5z05gWdulO+nJmohlvlpjTH/W5oU27BI3IrRFwDNDFN1I1Q9Jcq3L4kHyrvweE/9WLLbSKV5Qq9GRF2rcoiMQWJyf4hI++I0HfkpA+J92PJO1PGJR6UNTdMJVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D+k8uPyE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C2g7laN4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D+k8uPyE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C2g7laN4"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709379450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kg/HWn0RBgyKR0X6ry85czEeS/YqxSOJwvJfCZhfBZE=;
-	b=D+k8uPyEfOjyY7Y0Omj3cDddiEEu8SaBgIHTay1QinYalGHInnrklrlVczSIpdy/E7rQPi
-	m6EDAtJ0M/MAisOkml9qRxBTCn5oTE4q3uHL/+ZveRqpuWWIYebRWPokmgQizgjHSs/pEi
-	TYKEDPzd04wuvLmlN/XdYx1YV6KsdQ1zKiER/uf/GcyJhY2ktmA2HoBlbj2pqo3LQj4mIQ
-	zc2BqjxQMWImomdPstx38eNXjg10lLEj53Vm4c5B2Y7ZK2Pj8ebKn2d85Bg2iHGtHwTZmj
-	b5a45iReS/WDwdDzEc46RVscRi9YHSi6pPJNpogyYU8tzATG+wdn2PQODJ/GsQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709379450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kg/HWn0RBgyKR0X6ry85czEeS/YqxSOJwvJfCZhfBZE=;
-	b=C2g7laN4Pmwh8tpWg9OdccAbRvdNL0XIMpX8TyeXV/MolAmcZZRzkxZ8/SBG5y2yIHM3/C
-	1rqICYqY6avmkXCQ==
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, Arjan van
- de Ven <arjan@linux.intel.com>, x86@kernel.org
-Subject: Re: arch/x86/include/asm/processor.h:698:16: sparse: sparse:
- incorrect type in initializer (different address spaces)
-In-Reply-To: <87a5nhwpus.ffs@tglx>
-References: <202403020457.RCJoQ3ts-lkp@intel.com> <87edctwr6y.ffs@tglx>
- <87a5nhwpus.ffs@tglx>
-Date: Sat, 02 Mar 2024 12:37:29 +0100
-Message-ID: <87y1b0vp8m.ffs@tglx>
+	s=arc-20240116; t=1709379747; c=relaxed/simple;
+	bh=8T1xxnqxA4Cn7ZALmW7k2vXmJDpc3Ja/SWJ6xwaLSSU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sb8e5h/71CWHatm/BPRZIgTGXjZapWA82aUwk73829pAi14yN1TFhoMNMa4b2+uM26EfyQsQt/tPKP5AEhmS5Yw6hV0tUBYhFaYtljQwcflWi5o8DIw+t+NAXCnLGWsw/pPeCbaoOy+gklrxlmX53PdYazxi0V056jNCRyd5msE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-364f794f237so16020815ab.1;
+        Sat, 02 Mar 2024 03:42:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709379744; x=1709984544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8T1xxnqxA4Cn7ZALmW7k2vXmJDpc3Ja/SWJ6xwaLSSU=;
+        b=GYfBSgJyOUG5dIrxsx7F7ngSAdY0uR67Kr4S2ArzeptoF1DnE5doFfGuBiNxkAGc5C
+         NQjmk8tvSl7BtMWwVfeBVVnhNGI8/qXtIbIOplfFqqfX2gKL/RH03KTdMgMjWmINYbI0
+         UWXx2lZkPB6T1Rrrvnjt4M+91kdWU9nrwd47xFn6fCpetZSZl5OyCvjezUcValhi94MS
+         FdP2MtEXCvp9RgZSqESKBXtj7+LqznIpkX56zGUlFxHA4vjQHLAJarOrUnvSxg//jg8U
+         FIhs546Ok8RSy7BmJHYK+7M8nbYtHRHCFkXE+3K1py35pOFFvmayzyNAtRGKoye3RAPy
+         g+0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVu2W28iIQHc0gbW4l69djqD8RFLYgaxM/AgdRiSwQCjRG1RLhMYE78tI3hntHshS7A6dSV3MQ0GnjU4+WRfl3WNN57I07U06DnUD2WR6Z9PyXmI1uWIHRmUnfARzIVZtnQ/FSj8i7k
+X-Gm-Message-State: AOJu0YzvANwD1eX52s60ok8o010RR+uFhGcK8YO+GCSvayCT/aKSeL4q
+	EaHWAoPprdmDvlcZqpJj0tpo4iGl5QQvPB+pZhZ4rKPcUZyxHymLW5iGZ4kMCsg=
+X-Google-Smtp-Source: AGHT+IFs99ciz34AgjU6tYTk8CBGIC0GwTWWtLgku/rr7RbRwZVEX4po93RZ7o6KdJhKXMJF9GaRxg==
+X-Received: by 2002:a05:6e02:144c:b0:363:d9eb:c2e0 with SMTP id p12-20020a056e02144c00b00363d9ebc2e0mr5361535ilo.28.1709379744409;
+        Sat, 02 Mar 2024 03:42:24 -0800 (PST)
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com. [209.85.210.173])
+        by smtp.gmail.com with ESMTPSA id fh8-20020a056a00390800b006e4e600d15esm4374906pfb.160.2024.03.02.03.42.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Mar 2024 03:42:24 -0800 (PST)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6da4a923b1bso2630985b3a.2;
+        Sat, 02 Mar 2024 03:42:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVsQBV9jd5jNQGYjVjM4ZoJ6XgRr/hQCEyxco9yrnDkHB7M4UgS9lyTuGDCiCwMD8RcOZDVFwYzBxQbvyxfW2z2meahrLDl5rutxeYwQpOGl+ObYV5lMp7ZvAs5ekidl+NoUwiy4mkM
+X-Received: by 2002:a05:6a20:8e01:b0:1a1:e75:477c with SMTP id
+ y1-20020a056a208e0100b001a10e75477cmr5238403pzj.9.1709379743994; Sat, 02 Mar
+ 2024 03:42:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20231013181712.2128037-1-jernej.skrabec@gmail.com>
+In-Reply-To: <20231013181712.2128037-1-jernej.skrabec@gmail.com>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Sat, 2 Mar 2024 19:42:11 +0800
+X-Gmail-Original-Message-ID: <CAGb2v651T28yrkaAbX3ckV8gEsYXdGgHMgCb3Jdmbej2OnNyLQ@mail.gmail.com>
+Message-ID: <CAGb2v651T28yrkaAbX3ckV8gEsYXdGgHMgCb3Jdmbej2OnNyLQ@mail.gmail.com>
+Subject: Re: [PATCH] clk: sunxi-ng: h6: Reparent CPUX during PLL CPUX rate change
+To: Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: samuel@sholland.org, sboyd@kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Chad Wagner <wagnerch42@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 01 2024 at 23:26, Thomas Gleixner wrote:
-> Sorry, my fault. I can reproduce now but it still does not make any
-> sense. The code is correct...
+On Sat, Oct 14, 2023 at 2:17=E2=80=AFAM Jernej Skrabec <jernej.skrabec@gmai=
+l.com> wrote:
 >
-> Let me put something together which the sparse folks can digest.
+> While PLL CPUX clock rate change when CPU is running from it works in
+> vast majority of cases, now and then it causes instability. This leads
+> to system crashes and other undefined behaviour. After a lot of testing
+> (30+ hours) while also doing a lot of frequency switches, we can't
+> observe any instability issues anymore when doing reparenting to stable
+> clock like 24 MHz oscillator.
+>
+> Fixes: 524353ea480b ("clk: sunxi-ng: add support for the Allwinner H6 CCU=
+")
+> Reported-by: Chad Wagner <wagnerch42@gmail.com>
+> Link: https://forum.libreelec.tv/thread/27295-orange-pi-3-lts-freezes/
+> Tested-by: Chad Wagner <wagnerch42@gmail.com>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-Bah. sparse is actually right. I completely missed the fact that this is
-an UP build which has:
-
-extern struct cpuinfo_x86	boot_cpu_data;
-
-#define cpu_info		boot_cpu_data
-
-So any access with this_cpu*(), per_cpu*() etc. is actually incorrect from
-sparse's point of view.
-
-From a compiler point of view it just works because __percpu dissolves
-and the whole thing produces correct code magically.
-
-Most places in x86 use cpu_data(cpu) to access per cpu data which is
-defined as per_cpu(cpu_info, cpu) for SMP and boot_cpu_info for UP.
-
-That's fine, but there are places like the MCE code which really needs
-raw_cpu_ptr(). Sure we can write ugly wrappers for that and for some
-other accessors. But that's all just wrong and ugly.
-
-The proper solution would be to force SMP for x86, but Linus shot it
-down when I wanted to do that last time.
-
-Let me think about it.
-
-Thanks,
-
-        tglx
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
