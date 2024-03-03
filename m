@@ -1,67 +1,61 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593CBB654
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 10:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C585EB642;
+	Sun,  3 Mar 2024 10:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709460358; cv=none; b=UWA0jys5BsiA1wuB/gl8kUZeiALnOah2Z5Vhn0JINWTvMpQwQWOo8cR7RJJTkZkZTSl3MkTvs04Vx51i81OgBbWwyYkoniLlMDWaX1DaNT5Hm9eAjC40qtFx9IOu4WtZ/LCV88LwERVlNR3BhhrI2B6YsM9EWlS5x4c4Z4wGX3M=
+	t=1709460935; cv=none; b=gZcw27mNfJusZnYT4v67IVeo4iovN6D83HbdPiv/OFVG6fueyYzVD4MbFLPqC/ZQcoIcKMkxUdeq3fPBks8WmSCwTY/FaS5ybn+0N8pJW718/u/Rz60fI6xnMCStQ/21LkOeElhrigyOLd8sQnlk9zpm/SoV5Kt2Set6XMzo5s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709460358; c=relaxed/simple;
-	bh=OmYET0QB0zeLXSGxbulUqK1HnTbhzf6jYRRsCBroE6k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Gzmk/p5S0hIp09RVSErYu/IJs1EaNNMtiHL2gzeKLUyAVZ1YaKiIutYoz0MUA1gT0omIdM9wlumAWOdrtO5BhTHsf1nPSnwJ+0iOxzKzP8GvJevzBzMgxNVsSJKQIVfmoTy7qTfPO7eArlz1bD2sQ3ahON/YRsjhyM4bfh4KP60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BHX/kwrC; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709460935; c=relaxed/simple;
+	bh=y4upltIYbr5815lbbJcq3QZupeGcFF1aeW5dMLuiP8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dt2oKd4Q9fs2dxrQKalNhwvJV4dHQnQzTQawczIrp/hUiu+Ib49KOPyl5U3SUlJw+2VigPpe+acsNdQArCYQIWumnBeflDUgTfZXTu06A6RexFQmFSL+ILpQ9tiF+QtM0ZqcKPPk/lW4TLV2emJ0MIGttI/5lrd2LphSFIFUsSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz; dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b=GjUcTofE; arc=none smtp.client-ip=195.113.20.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHX/kwrC"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d29111272eso53287271fa.0
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 02:05:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709460354; x=1710065154; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cH1ky7tDsOuUrQSh4kqJYPWEuylUXg0nuBp9vVXdmio=;
-        b=BHX/kwrCi5Cqp2M3DYvJQwND3s6/O5RoWas6dOkH1zk7Mbn7/7YATpzoj909ghZceo
-         zYmjfo9OrJnHkQpsUJdWx91VXJj0rBnT9rr4eih4GYaMDVE1AGvqZbffa03dFtKH9oCG
-         uwKedqNDrVho8upARiyW3fVDjtYcn+YN3DRPGtc+94vXc1L6pMKrh0q/6tKoSy6g2K4z
-         gtyS/CB8fjW4tBity3awyXuT5tSKOS33LbM61glVkbMSraPTZEkTJx3AHw+d+f3aTyzs
-         N0LHFMtXMLrQ28FQb45t79oIEC3bL97tWWrDxDrQ5ls34gDDpbT8jT/RyVy2t7Xv8an3
-         c0ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709460354; x=1710065154;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cH1ky7tDsOuUrQSh4kqJYPWEuylUXg0nuBp9vVXdmio=;
-        b=CyRkqCB8QcOvB35D8enp43lABX3Tfg0y10UFrrbd7slYCv6y47Lte3xFXfWlAlFx8M
-         SC5ad/MVA0wRAZDUD1gTiY9d9VOR37U6xsF34GlRVmvmEDF+UtZf6Sd9iiszsV0knvfY
-         EK6lzoq8GnDix8TNbSpD0uwSycc9bZsE5vNTvzxPyMepe1JEw4mVjR+T6aifZKUiRBIW
-         ATyav4HTgGNbL7pQjqP0NiQTqfSTJgskUuRX/SrgjdRh1xrmy8y1pR563wiy8NdCxsyl
-         3XphvenFX+s8c5V1mE0AjmRlM+FdVutJzTSEIHeypDUMS1uUUwop/wx7mudIcTBaGTAP
-         5w1A==
-X-Gm-Message-State: AOJu0YzbNoMwEbqKje/aOnrMsW+by/Etv9rbdBAp/K0WvlxvETsYvYE7
-	O9B40EBouQak5HBsA4Uq8TezaSBiOH/xZ3USCzT+aHgTq8sVcV24
-X-Google-Smtp-Source: AGHT+IEZVXinPCiO3KXm0qAAZIfUiLOJMk/yd4ylYi+UQWXvWeEPxY44iceYS8KUIeMWbG2wep2wOw==
-X-Received: by 2002:a2e:8e93:0:b0:2d3:7e8e:de23 with SMTP id z19-20020a2e8e93000000b002d37e8ede23mr554596ljk.23.1709460354168;
-        Sun, 03 Mar 2024 02:05:54 -0800 (PST)
-Received: from localhost.localdomain (c83-255-24-248.bredband.tele2.se. [83.255.24.248])
-        by smtp.googlemail.com with ESMTPSA id n5-20020a2e9045000000b002d24306ada3sm1264523ljg.120.2024.03.03.02.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 02:05:53 -0800 (PST)
-From: Jonathan Bergh <bergh.jonathan@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Jonathan Bergh <bergh.jonathan@gmail.com>
-Subject: [PATCH 2/2] staging: vme_user: Add a newline after variable declarations
-Date: Sun,  3 Mar 2024 11:05:47 +0100
-Message-Id: <20240303100547.153636-2-bergh.jonathan@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240303100547.153636-1-bergh.jonathan@gmail.com>
-References: <20240303100547.153636-1-bergh.jonathan@gmail.com>
+	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="GjUcTofE"
+Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id F2C5328428C;
+	Sun,  3 Mar 2024 11:15:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
+	s=gen1; t=1709460924;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lZvjtksvf4qK4UfszmybD7ivOvG0abGJuHgkrZ/Ur8E=;
+	b=GjUcTofEQJxcRwBtKVE1oi06Oetf0EvQXf90RKJyGa9n817Mr+dCjUHO5HxDMnINtIbUKg
+	kVi1QN4POB05+nF+3vfbjsoqnmdibc3YUqEIGH0so2j7LjSlXlGF3ji0O2kmiqFWsVfULv
+	6+ouhuW9+uqkzuGAmM5e5zG5iLMPj70=
+Received: from localhost (internet5.mraknet.com [185.200.108.250])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: karelb)
+	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id CEED2456F3E;
+	Sun,  3 Mar 2024 11:15:23 +0100 (CET)
+From: Karel Balej <karelb@gimli.ms.mff.cuni.cz>
+To: Karel Balej <balejk@matfyz.cz>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org
+Subject: [RFC PATCH v3 0/5] initial support for Marvell 88PM886 PMIC
+Date: Sun,  3 Mar 2024 11:04:21 +0100
+Message-ID: <20240303101506.4187-1-karelb@gimli.ms.mff.cuni.cz>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,27 +64,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch makes the following change:
- * Adds a newline after the variable declarations as per checkpatch's
-   warning
+From: Karel Balej <balejk@matfyz.cz>
 
-Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
+Hello,
+
+the following implements basic support for Marvell's 88PM886 PMIC which
+is found for instance as a component of the samsung,coreprimevelte
+smartphone which inspired this and also serves as a testing platform.
+
+The code for the MFD is based primarily on this old series [1] with the
+addition of poweroff based on the smartphone's downstream kernel tree
+[2]. The onkey and regulators drivers are based on the latter. I am not
+in possesion of the datasheet.
+
+[1] https://lore.kernel.org/all/1434098601-3498-1-git-send-email-yizhang@marvell.com/
+[2] https://github.com/CoderCharmander/g361f-kernel
+
+Thank you and kind regards,
+K. B.
 ---
- drivers/staging/vme_user/vme_tsi148.h | 1 +
- 1 file changed, 1 insertion(+)
+RFC v3:
+- Address Rob's feedback:
+  - Drop onkey bindings patch.
+- Rename PM88X -> PM886 everywhere.
+- RFC v2: https://lore.kernel.org/all/20240211094609.2223-1-karelb@gimli.ms.mff.cuni.cz/
+RFC v2:
+- Merge with the regulators series to have multiple devices and thus
+  justify the use of the MFD framework.
+- Rebase on v6.8-rc3.
+- Reorder patches.
+- MFD RFC v1: https://lore.kernel.org/all/20231217131838.7569-1-karelb@gimli.ms.mff.cuni.cz/
+- regulators RFC v1: https://lore.kernel.org/all/20231228100208.2932-1-karelb@gimli.ms.mff.cuni.cz/
 
-diff --git a/drivers/staging/vme_user/vme_tsi148.h b/drivers/staging/vme_user/vme_tsi148.h
-index 2a92497c5570..a1b8288b101a 100644
---- a/drivers/staging/vme_user/vme_tsi148.h
-+++ b/drivers/staging/vme_user/vme_tsi148.h
-@@ -34,6 +34,7 @@ struct tsi148_driver {
- 	void __iomem *base;	/* Base Address of device registers */
- 	wait_queue_head_t dma_queue[2];
- 	wait_queue_head_t iack_queue;
-+
- 	void (*lm_callback[4])(void *);	/* Called in interrupt handler */
- 	void *lm_data[4];
- 	void *crcsr_kernel;
+Karel Balej (5):
+  dt-bindings: mfd: add entry for Marvell 88PM886 PMIC
+  mfd: add driver for Marvell 88PM886 PMIC
+  regulator: add regulators driver for Marvell 88PM886 PMIC
+  input: add onkey driver for Marvell 88PM886 PMIC
+  MAINTAINERS: add myself for Marvell 88PM886 PMIC
+
+ .../bindings/mfd/marvell,88pm886-a1.yaml      |  76 +++++++
+ MAINTAINERS                                   |   9 +
+ drivers/input/misc/88pm886-onkey.c            |  92 ++++++++
+ drivers/input/misc/Kconfig                    |   7 +
+ drivers/input/misc/Makefile                   |   1 +
+ drivers/mfd/88pm886.c                         | 210 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |  12 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/regulator/88pm886-regulator.c         | 195 ++++++++++++++++
+ drivers/regulator/Kconfig                     |   6 +
+ drivers/regulator/Makefile                    |   1 +
+ include/linux/mfd/88pm886.h                   |  46 ++++
+ 12 files changed, 656 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/marvell,88pm886-a1.yaml
+ create mode 100644 drivers/input/misc/88pm886-onkey.c
+ create mode 100644 drivers/mfd/88pm886.c
+ create mode 100644 drivers/regulator/88pm886-regulator.c
+ create mode 100644 include/linux/mfd/88pm886.h
+
 -- 
-2.40.1
+2.44.0
 
