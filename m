@@ -1,186 +1,101 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26342EB09;
-	Sun,  3 Mar 2024 15:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DED67C43;
+	Sun,  3 Mar 2024 15:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709479621; cv=none; b=pIrBgIo1bGLErPfevaoi3HvAkEx/79eooay/HP+u7koWs6Xu2O6Ea68ajPelTl5fXvOs5vrdy98b5nqUC4enpH7YEzVY6aFWXCc1UMGes8ot2ChpiF+ET2k+i3qzWGjlUkrngIiyva5+Z4ZzPQ+0kFmbFw/3Uib5k7HdUAkub/g=
+	t=1709479892; cv=none; b=ZwbDIymB/V9P9p0EH8Y2zydrKiIVZz1ix/wCOZiicGfZSNLHr6gG6Nu260CHEeOkwo8ciEf1ky+Uut7AHKdp4CBHU6GiDhrjcVM9m615N0zPBChZixDtPO6UudN0uL7Zc2VSBJQ5e6dENgah52qJeOEuE9YGVOeRgXPwtbo22zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709479621; c=relaxed/simple;
-	bh=1LWbhrusFI+fpSiQ95v3jpN22v5e67tvYdI607w+6Qg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AvNhRozCNNrcZoXxRBgbgxd8Uot5HTIvWPk0+egewGKjbaJ2xQsi37jMSReYKAr/y24NWHVvuw0fe4BaYlYrL37XIyVbamBsxKAypmaHGZXKFqf9ty9t3WsTPbYjht8WL7a0Zh8RWEADvpmHYfewzH7maxx4ATL9oqncS1lb1dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aUuxqnl5; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709479892; c=relaxed/simple;
+	bh=vO0wi2by1WM0BWnFkPRqBVKMUBA1OoHp/KPmP50MDPk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cDHoCX/y3a7You53ezbFYQdnH4Vz0Ay6osBKDEljqKN919zLo6uOgbMgh1wD8VRJH5yVRo+4OXtqyLf4BVr07TPQIi82nG38CmBQd/wvK5UTGSPbv3rgCWS9lm/XBJP4oAkmAH8+wPeyNOmhQEwldah/4JZ1dI0sobZ80DXk68g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=STo5rBOq; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUuxqnl5"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e56d594b31so1814335b3a.1;
-        Sun, 03 Mar 2024 07:26:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709479619; x=1710084419; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=1p1/REnFcJbIVx5JbAa8h2USBJYGT2uWIMxpDb/jKUs=;
-        b=aUuxqnl5oCibkm+bX744luR0JkKx8kQbocSiSbwDj9JEDRNQYIXPG8wX2PU0St1b1W
-         WOv+KruBT/j4t4jSNCPUJccAzWmER86hfaKAGG9AY7q9ski5Qpu+TWa5Dyvq0GElmzJn
-         7iGmAtXx905gksKsE91li+xu8Lw/J9nz2IvIhEnQG1HTknsLRc6DjgXj+KuhB6a+RXpU
-         OmivVsmlwuJp+mxvR+kgiLld2RH51uRaxUVVi8L1YhY7pAB/EKQl8mfX37gdgsxzZUJN
-         4m4fRHNF+ZhAdhp8vGVODcDWad1XRhiuRp+lKc12pdlm0YYSwy80FUyo5nWdzKNkrNCR
-         T8cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709479619; x=1710084419;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1p1/REnFcJbIVx5JbAa8h2USBJYGT2uWIMxpDb/jKUs=;
-        b=Szz8jcX+bN/mCCJojVb8xuzzuPvKElm3+R/jLd63bRafrDJgUs33Z3OGlYmcsQNShr
-         TPGeTXkxF0ltPeH6jmvg1DyvKadTg58oxz3DLhOOmZ90BJP6B9c1uRnG8kSjCS/hc8KG
-         ADZMQYK7P4/7kO+3DyieH+6tLWuODNkf5DUpkhMseYtALcE+ra/zpx/kloZDW/uT5dWB
-         /+MywpGPfjumcycrhI3ABzPOwZk6uNT3TzOZzYejg7EzMijw5le85IA47SGWiL6AYmfC
-         pUje9+Sh9WR6cV5jk1xNJNkjKmp1wrQb096knpFlidxMgFm/hLrrsXrHNwfoc3hapJrm
-         OF1w==
-X-Forwarded-Encrypted: i=1; AJvYcCWDK1eKGdFYnVOVvY7Dc+2wrKce4sNmXtLa47VMJDc4R7k6iu/1EC2hDj9HIIN4es0K4iFLlbjPsl17EdEwdp5wsvFF4XY9oCW7rgM1
-X-Gm-Message-State: AOJu0YwLbAIF8TlzSlTj6HW0YwoFARPfJPeo/JT9XGWYUAPoPwIR+KOH
-	pBBTtUrQcxfQ6K3yLF6RcgyM3DoOLwrVhvR3T/E8yjf8ORezzZO8
-X-Google-Smtp-Source: AGHT+IF6pq9/4mLXjtwmN2TiWhC2kuX6KuIxfSDTB2gKmzOytdu7sHPSH/LBKhz1NS9PGrdPhYqqtQ==
-X-Received: by 2002:a17:902:e54f:b0:1dc:d588:bc6b with SMTP id n15-20020a170902e54f00b001dcd588bc6bmr8890187plf.0.1709479618889;
-        Sun, 03 Mar 2024 07:26:58 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h19-20020a170902f2d300b001db63cfe07dsm6759238plc.283.2024.03.03.07.26.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Mar 2024 07:26:57 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <6df98c91-26b1-497a-9202-18bf86c0130d@roeck-us.net>
-Date: Sun, 3 Mar 2024 07:26:55 -0800
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="STo5rBOq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1709479880;
+	bh=vO0wi2by1WM0BWnFkPRqBVKMUBA1OoHp/KPmP50MDPk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=STo5rBOqunq7z5IG7wu5dKvIA21c5NhAPYn8+cuq24n/Jhmfbey52WnUd3saXvOib
+	 lmFqOc0+d6dojbXEDmVKLFlriXFtVfStoMX7D/euAS4ubVg79IbwHhQfxNc28sfB3C
+	 lKlB7Js9uLTD4BntdbzoS2fbU5Vf/V3dGNaI1avQ=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Sun, 03 Mar 2024 16:31:14 +0100
+Subject: [PATCH v2 2/4] power: supply: core: ease special formatting
+ implementations
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11] lib: checksum: Use aligned accesses for ip_fast_csum
- and csum_ipv6_magic tests
-Content-Language: en-US
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Russell King <linux@armlinux.org.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, David Laight <David.Laight@aculab.com>,
- Charlie Jenkins <charlie@rivosinc.com>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Palmer Dabbelt <palmer@rivosinc.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Parisc List <linux-parisc@vger.kernel.org>
-References: <20240229-fix_sparse_errors_checksum_tests-v11-1-f608d9ec7574@rivosinc.com>
- <62b69aaf-7633-4bd8-aefe-5ba47147dba7@roeck-us.net>
- <f422742a-4c86-4cb0-a4f7-a62f0310eb23@csgroup.eu>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <f422742a-4c86-4cb0-a4f7-a62f0310eb23@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240303-power_supply-charge_behaviour_prop-v2-2-8ebb0a7c2409@weissschuh.net>
+References: <20240303-power_supply-charge_behaviour_prop-v2-0-8ebb0a7c2409@weissschuh.net>
+In-Reply-To: <20240303-power_supply-charge_behaviour_prop-v2-0-8ebb0a7c2409@weissschuh.net>
+To: Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709479879; l=1698;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=vO0wi2by1WM0BWnFkPRqBVKMUBA1OoHp/KPmP50MDPk=;
+ b=a4Tl17+Sqj9JWs4YaN8gTyUAG/AsZ3gSSPoZt8UeygTkJQEzuF9NsdqZb1pGUJMgoyw2rQ7Tg
+ Zn8LkgaBgGiBhXTaqmL8u+iil5YwHxL5grGwjfDu4HtLuCyrnXTJjEd
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On 3/3/24 02:20, Christophe Leroy wrote:
-> 
-> 
-> Le 01/03/2024 à 19:32, Guenter Roeck a écrit :
->> This leaves the mps2-an385:mps2_defconfig crash, which is avoided by
->> this patch.
->> My understanding, which may be wrong, is that arm images with thumb
->> instructions
->> do not support unaligned accesses (maybe I should say do not support
->> unaligned
->> accesses with the mps2-an385 qemu emulation; I did not test with real
->> hardware,
->> after all).
->>
->> Given all that, the continued discussion around the subject, and the lack
->> of agreement if unaligned accesses should be tested or not, I don't really
->> see a path forward for this patch. The remaining known problem is arm with
->> thumb instructions. I don't think that is going to be fixed. I suspect that
->> no one but me even tries to run that code (or any arm:nommu images, for
->> that
->> matter). I'd suggest to drop this patch, and I'll stop testing IP checksum
->> generation for mps2-an385:mps2_defconfig.
-> 
-> I'm trying to run an ARM kernel built with GCC 13.2 and mps2_defconfig
-> on the mps2-an385 qemu emulation, and I get the following fatal error.
-> 
-> $ qemu-system-arm -M mps2-an385 -kernel vmlinux
-> qemu: fatal: Lockup: can't escalate 3 to HardFault (current priority -1)
-> 
-> R00=00000000 R01=00000000 R02=00000000 R03=00000000
-> R04=00000000 R05=00000000 R06=00000000 R07=00000000
-> R08=00000000 R09=00000000 R10=00000000 R11=00000000
-> R12=00000000 R13=ffffffe0 R14=fffffff9 R15=00000000
-> XPSR=40000003 -Z-- A handler
-> FPSCR: 00000000
-> Abandon (core dumped)
-> 
-> Can you tell how to proceed ?
-> 
+By moving the conditional into the default-branch of the switch new
+additions to the switch won't have to bypass the conditional.
 
-You can't run it directly. mps2-an385 is one of the platforms where
-the qemu maintainers insisted that qemu shall not initialize the CPU.
-You have to provide a shim such as
-https://github.com/groeck/linux-build-test/blob/master/rootfs/arm/mps2-boot.axf
-as bios. You also have to provide the dtb file.
+This makes it easier to implement those special cases like the upcoming
+change to the formatting of "charge_behaviour".
 
-On top of that, you would need a customized version of qemu which
-actually reads the command line, the bios file, and the dtb. See
-https://github.com/groeck/linux-build-test/tree/master/qemu
-branch v8.2.1-local or v8.1.5-local.
+Suggested-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/lkml/53082075-852f-4698-b354-ed30e7fd2683@redhat.com/
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/power/supply/power_supply_sysfs.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-It might be possible to find a bootloader which does all that and
-prepares the emulation for running Linux, but I don't know if that
-exists somewhere.
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index 977611e16373..10fec411794b 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -298,11 +298,6 @@ static ssize_t power_supply_show_property(struct device *dev,
+ 		}
+ 	}
+ 
+-	if (ps_attr->text_values_len > 0 &&
+-	    value.intval < ps_attr->text_values_len && value.intval >= 0) {
+-		return sysfs_emit(buf, "%s\n", ps_attr->text_values[value.intval]);
+-	}
+-
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_USB_TYPE:
+ 		ret = power_supply_show_usb_type(dev, psy->desc,
+@@ -312,7 +307,12 @@ static ssize_t power_supply_show_property(struct device *dev,
+ 		ret = sysfs_emit(buf, "%s\n", value.strval);
+ 		break;
+ 	default:
+-		ret = sysfs_emit(buf, "%d\n", value.intval);
++		if (ps_attr->text_values_len > 0 &&
++				value.intval < ps_attr->text_values_len && value.intval >= 0) {
++			ret = sysfs_emit(buf, "%s\n", ps_attr->text_values[value.intval]);
++		} else {
++			ret = sysfs_emit(buf, "%d\n", value.intval);
++		}
+ 	}
+ 
+ 	return ret;
 
-Guenter
+-- 
+2.44.0
 
