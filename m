@@ -1,60 +1,59 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAE1DDCD
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 12:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6815101C1
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 12:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709468451; cv=none; b=ArEbw9b33WMtxki1OMY3H9qDKqAHypBO3qNkqHNzBcy0gMCljs8iT4N65dZooVnKj7dGbz5Cckg6MWFrn+hFjw8iFqFhGDjL0rIL9t1ecJeHSbNkVsGreSk3X7DmP8ziZjitht+id61xUZ7kVO7q3U5W6TdS1GmVnI2eL+BL9bM=
+	t=1709468476; cv=none; b=unDTdqyY7wM5hI9UltTRcU6rOd2aBF8PsRE2NhyZqUVja+NT8bY9aq0jLycfq69ofpahS6cfFG0roQxycohUYsIn26TQ0kKcK9E8YtD+OJN1mCwWkt7mdsF9nJgSShP2laco//EdRrS2Ted1QSHVov/Z/H3sglKch+KILh7z7uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709468451; c=relaxed/simple;
-	bh=ie061LENUD0zBdDlewZewpA9Ylp6l3STHYJtKnOroog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PCfvoBNiBdnvKZFS+4388M9iXHgh62mX/Q5dH5nbvORLHoHJI9Gm0PmXKowupf5T3jHDafU74Tmfvi/1mUqswmLVSfaYoB7KjyU4JYQA9rM6QVV+slQThWrrcooWzWMVLDclGsgR0xn2BZKyo+j+/knccUN+WRZHyLCNajLi0sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=i9j3UdCw; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1709468476; c=relaxed/simple;
+	bh=+AjCBkW4gkpvH/e2j2T2ltEFC1H/go0g9gAg46E/NBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CU1KIDUM94WoqGnuRVO1Fm7gt9YLDRubq4Wi18LrPeKyRFS0h80657N9H0T2e88bmq6Pp5hnlslQkjo/GHCF2HVxetVATGDz8n7mzgYqTnK1ZicKJcePniSrVjStrVG7s7aMcoDRYBRG4zxaq5qwT2F9rrcAzJD1kCYx6odZeAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=C6reyuFr; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="i9j3UdCw"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-412dda84216so3290245e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 04:20:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="C6reyuFr"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33e1207bba1so2731754f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 04:21:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1709468448; x=1710073248; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=tuxon.dev; s=google; t=1709468473; x=1710073273; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vc2uBM9o+piyOkEM24AeBHy2SzwmaERQqvELLRhZ1Is=;
-        b=i9j3UdCwuBfTacPKv+Zml8UipbK+A6r84OYQjEv2PNATL9kO3YjKPOcSvuGhZ7PuBE
-         6Nbx0yfhXbajx81Q3UGnyyOfhDgYZ7If2QFa1SdzS8GPQOxKeQdPOyyJjK0J+tHB4wtF
-         63TDmna1QDB4RND6GINQb9mQ8szd8+F7sl6SMYOoLeUjABDwR/04LQUY3uqyChSZk8cn
-         ivcQ5cFWEbksi5liOGfm9n0Oa5agK5lDeO2SnWN4961EMEWj8LQFI17NDXK+aRHJ8jBL
-         dxrfBWMS7mMUIxLZ1Z6mUkPFbrK5ut7xoTuBASp/KOe4/U9fr7MeZPOOLGuX6vAjl84z
-         JsbQ==
+        bh=NDnEAy0pAbQJrgpo4wTbJR5x2HUNb3fFgJPTxRDHJ8w=;
+        b=C6reyuFrOKzJKbFVIdJVgGbZQCPjSSU+dnPZRXX4goo9fAE4HnUmmbbBkCc1bYFYYM
+         6K2wnqaRbPN/182Vbbkm5aUpbryuQ0Dt1Lpucgco2OkHovEFjGwjIernpmIF3JI27PeU
+         QR1VU41ADBV/Q+T3co02D0jfnEypfWEOQMj1Jzvj3AjZY9tcKcuLYTwRF9djMXvgBXOo
+         SUK8EV5wnjOqpLPfWlp0N8uuqzq9dQtPGz1BsdwowvZt16TWuNP5qqGgpuWVF6obVZXf
+         WZF00kAnDd6Ch9iOYRc/L9z/X1n1aDpWneHq0PiaUi0dQ2YollP/MexdFOic8rkE4VV4
+         JARw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709468448; x=1710073248;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=1e100.net; s=20230601; t=1709468473; x=1710073273;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vc2uBM9o+piyOkEM24AeBHy2SzwmaERQqvELLRhZ1Is=;
-        b=sQSK99LDCGXjUJRcn0Bop9R35PeFzBFlJ0BOKs9kfWNZ0LnzRvAi3ZJUyveoT0Uvqz
-         G9U1/9ZHC/Gt7TP2tEHLeOVUpRPH8lOLJHUo0bRbhCvwE6chtkfCw+T7+Dcx2nRF9q6O
-         T6iasv1YDkiwtoH4RAa7xKwxg48Bdc66s6zgNFFzk1BEJOXZ396GHgDsqcWQU4ebvtQC
-         5Q8WxLPOMnsdv6zld436kUinGeYENWxh0XRMo3WMnAD2ZpTDGUVMeVQifCLeJhQT6zve
-         GE+TMIrK7A1fGUvqpaip051rKnDS/yYivzchv1iQAEQ9TUIfwX5++s683kVYQ0a5UBva
-         I8Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPuhYv+igK/QwjVxd3RyCn7D+u1o1rdexnJ5z+rRH8hgNUXGzu0e8zg3dT7BPXWtLomeapYjkEHN3dpjujyrmyJED8QeoYkjRGtPbN
-X-Gm-Message-State: AOJu0YwqTvOm2sQ3XHAcJG8r6me8C7fCzr4LstDkrwcyGXxM8rSzg/fC
-	12zuwXfzvMPVVZ9GIHJlZdX08//cUOdbhRApLUxRgB0QUK5tu6kB1FZkMy5We9gUZ15dNv5ftdi
-	6
-X-Google-Smtp-Source: AGHT+IHLZ4QWY38Lf8oPCRxwk+l+R/Eh0/ewB5WuOQhn76FiE8GJwjR/nN3XAQGqIy5nmomYs3q1Rw==
-X-Received: by 2002:a5d:4ad2:0:b0:33d:8751:2288 with SMTP id y18-20020a5d4ad2000000b0033d87512288mr4684524wrs.13.1709468447558;
-        Sun, 03 Mar 2024 04:20:47 -0800 (PST)
+        bh=NDnEAy0pAbQJrgpo4wTbJR5x2HUNb3fFgJPTxRDHJ8w=;
+        b=qLxFWdRCN/kqAV0z+x1OYSG2vwqpCReO7xYTMXwfld8c95BbMy42bEjn6LEnLd6KSn
+         E7Oz5ckAp6uJScuKvofOT0/p1sIxBniAqvnKoBGtqLCBpwCdlGsdHwYppVuW+bfukdLU
+         XNcWRni8iYmmCFqqzCqEUVG9pXmpkxfTIOV7ndDH+XoUsFGzZChMk5i7xFvfjIzPkrKD
+         xhGKiPlRtL2B2hzY3xpBNiYa3bEQfkQ/lzKLaF3UUUh5gKyuRjYo6ZDjEEGmP/Nt0zdS
+         CynBJ4HkOvBd85pG02sHfOsgH8RaplUY4ci4O0GNdKHORDpfptGbyhXm2Ytnh3bKr0s7
+         WuZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFAS/FqimC+8R/Q3C5AUyfWiLLMxjzS46ObaKm/WckylFdQUXPLAUtXFoaXIn2cmRadcrCAUlUVo/JyUlJDaLDz0D3GL7+IIK4ckBq
+X-Gm-Message-State: AOJu0Yx7llpj7dPvsT7vv0Sxrioeul+T/8kE/AbHnQZe3xP0j0nVuND9
+	qquMGFe7b2HBwt8jFIl8FuTFVoj/OLfq9aR2UpNE/hsfhO1NBAzG2NPEUDsOtAA=
+X-Google-Smtp-Source: AGHT+IGKoczi43rEP+/na2g7kDMMbjQH9azs0dGCmXX9wN3QD0VbMk1T6oRuaWKht+wVBisq27bEDg==
+X-Received: by 2002:a5d:6283:0:b0:33d:1153:f41a with SMTP id k3-20020a5d6283000000b0033d1153f41amr3810677wru.20.1709468473077;
+        Sun, 03 Mar 2024 04:21:13 -0800 (PST)
 Received: from [192.168.50.4] ([82.78.167.38])
-        by smtp.gmail.com with ESMTPSA id dw2-20020a0560000dc200b0033ddfba0c67sm9477927wrb.41.2024.03.03.04.20.46
+        by smtp.gmail.com with ESMTPSA id dw2-20020a0560000dc200b0033ddfba0c67sm9477927wrb.41.2024.03.03.04.21.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Mar 2024 04:20:47 -0800 (PST)
-Message-ID: <824558b5-f83a-40f6-8ae7-bc38051d4058@tuxon.dev>
-Date: Sun, 3 Mar 2024 14:20:46 +0200
+        Sun, 03 Mar 2024 04:21:12 -0800 (PST)
+Message-ID: <ec00b007-a521-46a1-9b9e-1bd138b46522@tuxon.dev>
+Date: Sun, 3 Mar 2024 14:21:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,88 +61,104 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/39] ARM: at91: pm: add sam9x7 SoC init config
+Subject: Re: [PATCH v4 20/39] ARM: at91: add support in SoC driver for new
+ sam9x7
 Content-Language: en-US
 To: Varshini Rajendran <varshini.rajendran@microchip.com>,
- linux@armlinux.org.uk, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
 References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
- <20240223172713.672537-1-varshini.rajendran@microchip.com>
+ <20240223172722.672592-1-varshini.rajendran@microchip.com>
 From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20240223172713.672537-1-varshini.rajendran@microchip.com>
+In-Reply-To: <20240223172722.672592-1-varshini.rajendran@microchip.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 23.02.2024 19:27, Varshini Rajendran wrote:
-> Add SoC init config for sam9x7 family.
+> Add support for SAM9X7 SoC in the SoC driver.
 > 
 > Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+> Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
->  arch/arm/mach-at91/Makefile |  1 +
->  arch/arm/mach-at91/sam9x7.c | 34 ++++++++++++++++++++++++++++++++++
->  2 files changed, 35 insertions(+)
->  create mode 100644 arch/arm/mach-at91/sam9x7.c
+> Changes in v4:
+> - Sorted the entries alphabetically as per comment from Claudiu
+> - Updated EXID
+> Note: Did not remove the Reviewed-by tag since the changes were only
+> cosmetic and did not affect functionality
+> ---
+>  drivers/soc/atmel/soc.c | 23 +++++++++++++++++++++++
+>  drivers/soc/atmel/soc.h |  9 +++++++++
+>  2 files changed, 32 insertions(+)
 > 
-> diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
-> index 794bd12ab0a8..7d8a7bc44e65 100644
-> --- a/arch/arm/mach-at91/Makefile
-> +++ b/arch/arm/mach-at91/Makefile
-> @@ -7,6 +7,7 @@
->  obj-$(CONFIG_SOC_AT91RM9200)	+= at91rm9200.o
->  obj-$(CONFIG_SOC_AT91SAM9)	+= at91sam9.o
->  obj-$(CONFIG_SOC_SAM9X60)	+= sam9x60.o
-> +obj-$(CONFIG_SOC_SAM9X7)	+= sam9x7.o
->  obj-$(CONFIG_SOC_SAMA5)		+= sama5.o sam_secure.o
->  obj-$(CONFIG_SOC_SAMA7)		+= sama7.o
->  obj-$(CONFIG_SOC_SAMV7)		+= samv7.o
-> diff --git a/arch/arm/mach-at91/sam9x7.c b/arch/arm/mach-at91/sam9x7.c
-> new file mode 100644
-> index 000000000000..d998fb327860
-> --- /dev/null
-> +++ b/arch/arm/mach-at91/sam9x7.c
-> @@ -0,0 +1,34 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Setup code for SAM9X7.
-> + *
-> + * Copyright (C) 2023 Microchip Technology Inc. and its subsidiaries
-> + *
-> + * Author: Varshini Rajendran <varshini.rajendran@microchip.com>
-> + */
-> +
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +
-> +#include <asm/mach/arch.h>
-> +#include <asm/system_misc.h>
+> diff --git a/drivers/soc/atmel/soc.c b/drivers/soc/atmel/soc.c
+> index cc9a3e107479..cae3452cbc60 100644
+> --- a/drivers/soc/atmel/soc.c
+> +++ b/drivers/soc/atmel/soc.c
+> @@ -101,6 +101,29 @@ static const struct at91_soc socs[] __initconst = {
+>  		 AT91_CIDR_VERSION_MASK, SAM9X60_D6K_EXID_MATCH,
+>  		 "sam9x60 8MiB SDRAM SiP", "sam9x60"),
+>  #endif
+> +#ifdef CONFIG_SOC_SAM9X7
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X72_EXID_MATCH,
+> +		 "sam9x72", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X70_EXID_MATCH,
+> +		 "sam9x70", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, SAM9X75_D1G_EXID_MATCH,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75 1Gb DDR3L SiP ", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, SAM9X75_D5M_EXID_MATCH,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75 512Mb DDR2 SiP", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, SAM9X75_D1M_EXID_MATCH,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75 128Mb DDR2 SiP", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, SAM9X75_D2G_EXID_MATCH,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75 2Gb DDR3L SiP", "sam9x7"),
 
-This one could be removed.
+Could you keep these sorted after SoC name and memory size? E.g. see
+sama7g5 entries, sama5dX entries.
+
+> +#endif
+>  #ifdef CONFIG_SOC_SAMA5
+>  	AT91_SOC(SAMA5D2_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+>  		 AT91_CIDR_VERSION_MASK, SAMA5D21CU_EXID_MATCH,
+> diff --git a/drivers/soc/atmel/soc.h b/drivers/soc/atmel/soc.h
+> index 7a9f47ce85fb..fc4157c5f6e3 100644
+> --- a/drivers/soc/atmel/soc.h
+> +++ b/drivers/soc/atmel/soc.h
+> @@ -44,6 +44,7 @@ at91_soc_init(const struct at91_soc *socs);
+>  #define AT91SAM9X5_CIDR_MATCH		0x019a05a0
+>  #define AT91SAM9N12_CIDR_MATCH		0x019a07a0
+>  #define SAM9X60_CIDR_MATCH		0x019b35a0
+> +#define SAM9X7_CIDR_MATCH		0x09750020
+>  #define SAMA7G5_CIDR_MATCH		0x00162100
+>  
+>  #define AT91SAM9M11_EXID_MATCH		0x00000001
+> @@ -74,6 +75,14 @@ at91_soc_init(const struct at91_soc *socs);
+>  #define SAMA7G54_D2G_EXID_MATCH		0x00000020
+>  #define SAMA7G54_D4G_EXID_MATCH		0x00000028
+>  
+> +#define SAM9X70_EXID_MATCH		0x00000005
+> +#define SAM9X72_EXID_MATCH		0x00000004
+> +#define SAM9X75_D1G_EXID_MATCH		0x00000018
+> +#define SAM9X75_D2G_EXID_MATCH		0x00000020
+> +#define SAM9X75_D1M_EXID_MATCH		0x00000003
+> +#define SAM9X75_D5M_EXID_MATCH		0x00000010
+> +#define SAM9X75_EXID_MATCH		0x00000000
+
+Could you keep this chunk after SAM9X60_* one to have some kind of
+alphanumerical sort?
 
 > +
-> +#include "generic.h"
-> +
-> +static void __init sam9x7_init(void)
-> +{
-> +	of_platform_default_populate(NULL, NULL, NULL);
-> +
-> +	sam9x7_pm_init();
-> +}
-> +
-> +static const char *const sam9x7_dt_board_compat[] __initconst = {
-
-you can add a space after * for clarity, e.g.:
-
-static const char * const sam9x7_dt_board_compat[] __initconst = {
-
-> +	"microchip,sam9x7",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(sam9x7_dt, "Microchip SAM9X7")
-> +	/* Maintainer: Microchip */
-> +	.init_machine	= sam9x7_init,
-> +	.dt_compat	= sam9x7_dt_board_compat,
-> +MACHINE_END
+>  #define AT91SAM9XE128_CIDR_MATCH	0x329973a0
+>  #define AT91SAM9XE256_CIDR_MATCH	0x329a93a0
+>  #define AT91SAM9XE512_CIDR_MATCH	0x329aa3a0
