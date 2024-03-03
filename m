@@ -1,95 +1,89 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770D167C74;
-	Sun,  3 Mar 2024 15:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ADA679F8;
+	Sun,  3 Mar 2024 15:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709480114; cv=none; b=hSpXz+S84qzqwswxJ5YIZuoKEZpwEESSFEuhQ6OTfvrG2yIoUtfrhXewtuzVOTQbUPbcWmFli0bMkvTFfaG4tnw+6rMKYdqFxpEOAeqAm+3IjAIz0mv+F0/HYvMYztREtvSy1Oo6nl7BAdikwDPYm3bQRKB27jlp6CwGNbNx61U=
+	t=1709480367; cv=none; b=hppNIzHjVcNfPoWNDAZxJnAUB/kwLDKdA0chOSP9wipEsz5bVve3hxUxMLjhaBdttNPW4GeIl93TzKGSe+IFxnqlP1cMek3chPk96z9XQtfR2NYBEYP+MYWWhmbkU37OohwUF7MSVz2jO00LhsW5kazypm043H+4pqEti2V2P8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709480114; c=relaxed/simple;
-	bh=J1rKlv0QptsyaOZm/cu/A0gnZSOEK20bfTcqTL6hjWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cu5cc1hAZ3elXiOU5eLMR3EOhmFfkSfqRPV6DZPmRnDmXGSGnE3J8jd4xNpPsZXMJtDRYn24MQNKzMSu0x4JOppAMXsKHM/YQm81KTG99BjkQUPkbwKPBYl4pg3sSzbVrjTY+tkEm+oeZ4CLBovLULhgWKTMCjktPz3kSEERIBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=gRzx/h4V; arc=none smtp.client-ip=212.227.126.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
+	s=arc-20240116; t=1709480367; c=relaxed/simple;
+	bh=XplKrTH6YCJ0IDOk3BxUgRV0HbH1Oa6kx9jBhsTY1uo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZLzJzt+5eU9DdLh1WS+/h1J+Zpbba+vC9XjG/yWMiD3D+BuhX7Izn0dShKFxutRdNBm//NTfa/rXSHPmqb89bi9fk/T9N2Ynfs+eFYjjqptiHYdsaTfx95HvDc1AEeLkkanAD2pFk1AmsqcoNp0TisDEq6RdkN9ZIBD3bGbt2Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=iW5D5N8O; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="gRzx/h4V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
-	s=s1-ionos; t=1709480104; x=1710084904; i=kernel@valentinobst.de;
-	bh=J1rKlv0QptsyaOZm/cu/A0gnZSOEK20bfTcqTL6hjWA=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=gRzx/h4VmDhnnkT5ed1o2MnufKxrqha0WjEPS90AwiBQK7BEIlYLPZfG7kzjJs/8
-	 aBcElFg0qzH8EM8rpzOdjLWuUl7BFnHmbbomc/gZpA6zaY/dQP8F1PnEFkBS/RdBU
-	 qt7PBwm03aVYfpohi076RB73HMwjDNT/F3vMp4kRk+c/v2EuPB1deDKZN4+IbKcgw
-	 iUfw8J4UwER9ynkzWjC9IvGjo0OhYXSFl6JQZNE85I/7ATlCgvwIPAZQ2bVBDLp+v
-	 UTGtis/vO5I7E/Z8ZeZrc4X5s+SxSTspI6Kk9jL5urpzLbuI51dfS+jvZTTCcgcaf
-	 gNdZwrU1U0oph8Z0oQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from archbook.speedport.ip ([80.133.137.1]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MVaQW-1rFONH0AHU-00RcDR; Sun, 03 Mar 2024 15:49:03 +0100
-From: Valentin Obst <kernel@valentinobst.de>
-To: laura.nao@collabora.com
-Cc: a.hindborg@samsung.com,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	kernel@collabora.com,
-	kernel@valentinobst.de,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	ojeda@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	sergio.collado@gmail.com,
-	shuah@kernel.org,
-	usama.anjum@collabora.com,
-	wedsonaf@gmail.com,
-	Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v5] kselftest: Add basic test for probing the rust sample modules
-Date: Sun,  3 Mar 2024 15:48:57 +0100
-Message-ID: <20240303144857.22733-1-kernel@valentinobst.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240229155235.263157-1-laura.nao@collabora.com>
-References: <20240229155235.263157-1-laura.nao@collabora.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="iW5D5N8O"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 14842418B6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1709480365; bh=2x/tLZ3JXMv1iZzytZCA40HbTYsn9biwz7yj7+QKAfI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=iW5D5N8Ozt603G6lHabiIUwnENIUKvd4XgYYIXGyjb9WNOq3wYg/8QwWcaratpdc6
+	 QHSDf2B1Yol6VPLqti27g3rjFCs/qj7SunnOqt3X6skEVNT4Y5KCsPgtdlB/00wD6n
+	 uAO0TZ9jZwV/XzeZNFFmENYbvFt2e4s3fYcgflNzZdmD/Csxvxn+/CrQbmob7BTqun
+	 xdvcCD5sXUIJ6VoQsRgnwhBkaQtlE5Dr7HZP5rjfk4eh3fVvGrDhRdDAJpypXGNms4
+	 c+jFWsOL0MieaGC1BaJ6LQRUqGflDwFVC7sNPFzWTF8fmJrHqbKXV3870kcN7NPyO2
+	 77ImQyoqJ1NfA==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 14842418B6;
+	Sun,  3 Mar 2024 15:39:25 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Nathan
+ Chancellor <nathan@kernel.org>, Petr =?utf-8?B?VGVzYcWZw61r?=
+ <petr@tesarici.cz>, Vegard
+ Nossum <vegard.nossum@oracle.com>, Jani Nikula
+ <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v2] docs: new text on bisecting which also covers bug
+ validation
+In-Reply-To: <6d282271-25fa-4ed9-9748-df3705f9d5fb@leemhuis.info>
+References: <02b084a06de4ad61ac4ecd92b9265d4df4d03d71.1709282441.git.linux@leemhuis.info>
+ <6d282271-25fa-4ed9-9748-df3705f9d5fb@leemhuis.info>
+Date: Sun, 03 Mar 2024 08:39:24 -0700
+Message-ID: <878r2zz5n7.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:O1P97DOM4jgrahyMeAR2tBK7dMmKKRstg0K4U156wgJCHTA+z42
- v8C2reGcPJM5I+wQvyQEbBltI2ugLivq769T6daBguSi8/QITNR8PiI08rh190+DiNOvTKw
- sLIBNSOQYnlppnlzXx4czGaxKLHdGroEif2vvbKvno6s7JmH3ls9jckqqkVjDGviIsm79iU
- vvQqIu2pKKrbS3eBNRMHA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6nQpzSL+oWU=;bOKAzYAD5DSYsoAOUG00Pgj3ffU
- kj4w7BeH0+5FZJ7i8e4Lx+UULAKHa0dx1AjqQWcz/VL+5HN+uv66YU7g9wiqskc0j6RZpVQEM
- 8XSmASrvCc6aj6Ja60g2+QzW034+XbGVHn4LOeqSXUuTtR+xu8fzIf1z1LFvlYiW0WthcFRky
- LvzToT9mtQGX0FBAuptdpKv/+3ICUQZnP4xxf0jypQSJN9vYEW9nTMJq3cnMdJTn8299z3S10
- UA+vaaa4kf3a5o/D69q8p1CXWPI8MmIKiHrcAgu4Gfpd2kSlRLAHYlrh3VdeIb2i2wXMjBMaN
- rFhNsnET+o15dqPiGJzuYZ3JLW3CZK2837v9iLULkK01q6Qcvbcp7pcSd/buNyaB6otdYS4GH
- gZLA6hRxcoocKqmYKzVlIdq3wgXTAKOSNd6pqdlbySnTU/YsY2Z9iZp1kZ6Yr0pfM37qEyS/J
- CebfM+B1tgpX3kNs3/mEoXTcvgD39XtoFRJHfvS4E2ZPtOlCyMdPXfiao0ltKZQmvBaL1qC4J
- 7B6colu74E0UgoQFTU38wXlA9JsIZIQzh8ffHUAvpKCJ7uX7AQzczsysFuGqoJlPr0UZP5U6l
- hFCfNnT3Z27CkFVYIHmm+RUzkn441TF8XIcVTAViHqB2ookCixQ+OVDRz+D/TZ9N4DZcOZnHd
- 5XEtYJmHDtcYKMq+5C7TekAm8t3TZiIyYN9GaS2lcz9EefFqqcYPL0HOC5pLnItEUek6sEnKX
- rNbECbdrDYvsOB92kWzsadGXZWdg/ogCgDtUfVBnHKIAfnuofUQZBs=
+Content-Type: text/plain
 
-Perhaps we can also add a section about these tests to the new
-`Documentation/rust/testing.rst` [1]. We could mention that they exist,
-how to run them, and link to the kselftest documentation for further
-information.
+"Linux regression tracking (Thorsten Leemhuis)"
+<regressions@leemhuis.info> writes:
 
-Not necessary to resend, perhaps we can do that in a separate patch when
-this patch and the one by Dirk are merged.
+> On 01.03.24 09:41, Thorsten Leemhuis wrote:
+>> Add a second document on bisecting regressions explaining the whole
+>> process from beginning to end -- while also describing how to validate
+>> if a problem is still present in mainline.  This "two in one" approach
+>> is possible, as checking whenever a bug is in mainline is one of the
+>> first steps before performing a bisection anyway and thus needs to be
+>> described. Due to this approach the text also works quite nicely in
+>> conjunction with Documentation/admin-guide/reporting-issues.rst, as it
+>> covers all typical cases where users will need to build a kernel in
+>> exactly the same order.
+>> [...]
+>> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+>> index ed8a629e59c86a..c53bb6e36291b8 100644
+>> --- a/Documentation/admin-guide/index.rst
+>> +++ b/Documentation/admin-guide/index.rst
+>> @@ -1,4 +1,3 @@
+>> -=================================================
+>
+> Just saw that, that line obviously was not meant to be removed. Sorry.
+>
+> Jonathan, in case you consider merging this "soon", as suggested
+> yesterday by  Vegard, could you please fix this up? Otherwise I'll fix
+> this with v3.
 
-    - Best Valentin
+I've applied the patch and undone the little change, no need for a v3.
 
-Cc: Dirk Behme <dirk.behme@de.bosch.com>
-Link: https://lore.kernel.org/r/20240130075117.4137360-1-dirk.behme@de.bosch.com [1]
+Thanks,
+
+jon
