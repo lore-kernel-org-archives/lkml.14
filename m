@@ -1,66 +1,58 @@
 Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E797F;
-	Sun,  3 Mar 2024 04:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E076FB2;
+	Sun,  3 Mar 2024 04:14:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709438591; cv=none; b=J4V1s+hyP6CUeY0OzLi84k76YiaN/lWERxe35ttluv0VsKEvL7gNW1B02XLs0avACZMm4plRO4JhU9ieyySiJMYp1XDYU0bSMLRa51viCYVhF5c/TErcdDQhGYex040B2fr1mue2OzZfOoM7GDzjPYlsLaUdPctP0jHOlUvLZFs=
+	t=1709439246; cv=none; b=hch6WH/JQ1kNUoAiwQgYYsCSmsvjLRzmLf+O6dUyLiho/yZ+rE56yX/+mQDjxI93xPrsd8L7SFSo73WfbjYsSwvHefwCa3yXxwtlgq8FNO9tr4ptdDxvOrMRtyKcfpQvJoKXYqBsQQr/ufAFFfnWaXfv1CSHoaqg5Eu5P8s8k5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709438591; c=relaxed/simple;
-	bh=Bh7Ou7LNgE3RsAKDPXarLzfNkzyOUV0mLT1ZekkctT4=;
+	s=arc-20240116; t=1709439246; c=relaxed/simple;
+	bh=rf5fal84uJ2jOLoroYcA/kvOKu5iirvX8PqRYGkfhWg=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=KaVihlUCJflJJ+Mk4MBNdtxQi+M46B1dxJdqj1w25AE94eTg3M7UD75dQnYWIxagjyMpiujJTV1vvvrorUnivxCdgXCwgyenRask3ouS80FnvYASV51cJiQCTHgZqdXCj/65/wWjW29wkezL3eTQWSUBvBA4YR55C7LyMLqkdeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=YRJwV5+I; arc=none smtp.client-ip=203.205.221.173
+	 MIME-Version; b=O06+DCwcLKVGmrpVoFqXz7PY8wbxFocjyviLjRGvOcL32g1IRwwGy8EkrmYuxoSeMSObdAI/cM+WxIgz9dcR4g93ByHltsdwOAi2QONFoSGu+L8vv5kwUKK/EtOZ/HTK8lJQynNmiGe5ALWiT+y5wpACCEi3sp80GD/PsruLqfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=IFnbXCvd; arc=none smtp.client-ip=203.205.221.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="YRJwV5+I"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="IFnbXCvd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709438279; bh=5dDVBe3HuaAOncRzOnzyWpaD0IWT/pNJgquP/aC+9ec=;
+	t=1709439241; bh=pQE/OFAzfDGdmp5SC5XpXEyv/mDUk2/vmhd8gjt2QaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YRJwV5+IZigCcYfmkfOk+xNBw3b7b0xDO/kAl1ztQD73Ru33wBkitAQHHOowVkUVu
-	 XUhs0bFgcS0LDC8Kg9P/yUS5ViMxtJ0u21Rn/z7LhH/PXNNuxgNGZi/UUPcH9zeUgY
-	 faCY7S3Ukv8MPOK4yuR/vXwlp3KITVOhsLFgzoto=
+	b=IFnbXCvdrBJUgjDkOCI9Xpnp2oVjzZ+YFQBop1yT9TzV/Ay5Yy7R2AA2DUdpznLuY
+	 ZjNYX9f+MRwAO7RUUmoFd2Rogl4MHKal+KAqnGGYkb2WYzgeyYGobvwOqqKE9VxipA
+	 INz4U7oE7V82k2tN/ot4AhKAQ55/dBSVs4WsWfQI=
 Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id E7807020; Sun, 03 Mar 2024 11:57:56 +0800
-X-QQ-mid: xmsmtpt1709438276tbcyekehu
-Message-ID: <tencent_08EA7471775F67F03DE536C096A636144B09@qq.com>
-X-QQ-XMAILINFO: Nq1uWKlIb9DMAoxRSw7gHe9zvgZW9iTWgoA6Jqvu26fsyiuvGY1WoQ6ANc2rtQ
-	 6KGvuvN+EYtq3DQR8xt7mrLrivvfqqt4PJPF37WMgly2OES3LiOZI2ZNrCQFOuGRqxl3YywurdJN
-	 U01yhfiiG/pFqhp1x/e5V9UpCN8bA8/bz/aFdiz7OsDBqOWRZ2o835ntuaV3AcbdqUsm6aVpWT0Z
-	 LrFEEvrf+Nd571dnl5ZRDyzvNUxYDn9+mT9lNXdq4nrVtk7kofEE03QVBXnyy3XJ3CWXIN50Gg6g
-	 GRNV6YdNG7NeGEu8l+++PcFi11Wi3TeVUw0gtV0NAxjpgoJ+DCFvaCEwA2BMapKIE+GebKolK/K6
-	 unkgN8jwIGH13xG7ji03MhhBVdq2jy83Msu7XOPwMet0BFLPVDUemOLCDPn3nbZUgZxmHKspoUAa
-	 JgV2KO7Iye03/qw7gNFkAap71SdO+52Q3wAwLuHmtRx50msHjoJuJpWjRvarLh4xVFmzyi8kyHBW
-	 h7Zd1EBXMImTAhPaaLxMKNdQ6fSAXOLQL8ZkK0799nBOy0T8AySFnqD+kh2a4b+TlHPRkCpxGvGe
-	 uvH9MdfUdNcTXuOQ/iQhydERRPyeu4Ul4j4jpqt4596620ns+j/+Afyay+BZOWNlmj9gXEJe6e/v
-	 5yW1IfHWQS75ty41fENDrvtoU3g3ie1HB2sTbB7SDDoEBczrAkopo/Uo7hDpOTD9Bv5slDchs2XK
-	 8lYFtJGgGNvGZ9FjolmU+I6GWE6G9ioXMdVVf37ewrkx37wL4q1RE8slxTzl0T8ZWhDQPJSUmtj4
-	 eA2aC9z+Fwge/75jr30+I5h5Mw8EKH/l56hJqmDV7c5UPesQdF4qXuBtAU7mz0eo6tzSZ5NwgxbL
-	 2fCvU7kCzlr/fMYx7H4n6zG4KlBCtNiopMUc5nAvsVriqz+1/KTUhquOVjM3Ub0A5nAL4eBUv74m
-	 Lcew8tpGo=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 37B01A6A; Sun, 03 Mar 2024 12:13:59 +0800
+X-QQ-mid: xmsmtpt1709439239t6d0dh5z2
+Message-ID: <tencent_12A5D80DB512365D805DB9195CCFA88D9A07@qq.com>
+X-QQ-XMAILINFO: MR/iVh5QLeiedauoAo0FVnxfWOK8zPUzNjfK5wRkfs+6Y6ayx4OSdfHtUWnmQr
+	 S44er8JSj1nTJADaCXfD5VSDI7LUUz080gzPs0cqZWt3lhcObYkolWxmIgbeMfWKiiFpDkfVcT5K
+	 le/nXIZeZut1VD+lYQ7fQK9PddmDTk6czYA9Z9FehjQe4RJU69Lur3fC2loY5w0wBgopCg2a2XYO
+	 6o2yx73GgUJaC1sXhaRKVmVZIYdrr+q65Y4BwUZMM7b/AQfFGj4WeEPSr5n/fxEEgjnctnJCKa9E
+	 pUhVE5j/owYPF+fEQnNrLTPOy1LcmaAMeri67PtD3CPrACjAccLNgbrTj+c5XYtDPzXevv6WK0Cv
+	 WNW2G0aHy943jfn5V1WQEnU8xyFJVFpphbSELGZ9qHfLfPI1sclr1djZ0bxFkLgU3DXZHL2i1Fxp
+	 ijKjFGSa4nDzcMfRTmbnJSFFgjqtJH0L4psIgo3javl93ljlxvqQNI2BRu+F52VY9TUZDic1r28I
+	 V+v36+fkhJgvjcrqqxXhBMVYKCVKSnlfzfRzpFFxb8m+5pJR9MJDLM9YQVU/Vtf28BBWm/Z4Kh5H
+	 7tDbkHOigoc0gj/I/MLEJKJODd2ngkQ8WrKu5dnWeH1hA9nt1O/KmkNrD7Q67GFJAI7V5XPTZXPx
+	 /eWdiMlDryHiskgHtTRtbifpMDtP/gjVvFcUnpeiJy23IwCf0KpDKj5ET0ond+FXOexQuqfa+Sb9
+	 o8S8C8IOZYOYTyz/spKbSljf1Qmuaj0ovNj2O7/hTKM5M9edOLm1FI2n3VutUopgfR81uA7HarRe
+	 i4HMYiPGDVwRUPRBa2QR8cyG7IgF4NliJ+ErY9w+KVpWKrqjzr0ZysQBRwa07EErvcsY8B3PlbpZ
+	 Pg0m+rKYBkuImFnLeTzPTfL/UyfyQSrgrp3Wzd/fs/itF9TuhIpAVAraWe9a5be6cojGPMQwqm12
+	 mlSr5zdh0=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
 From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com
-Cc: allison.henderson@oracle.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
+To: syzbot+04486d87f6240a004c85@syzkaller.appspotmail.com
+Cc: linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	rds-devel@oss.oracle.com,
-	santosh.shilimkar@oracle.com,
 	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] net/rds: fix WARNING in rds_conn_connect_if_down
-Date: Sun,  3 Mar 2024 11:57:56 +0800
-X-OQ-MSGID: <20240303035755.8320-2-eadavis@qq.com>
+Subject: [PATCH] hfs: fix uninit-value in hfs_cat_keycmp
+Date: Sun,  3 Mar 2024 12:14:00 +0800
+X-OQ-MSGID: <20240303041359.26168-2-eadavis@qq.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000c0550506125e4118@google.com>
-References: <000000000000c0550506125e4118@google.com>
+In-Reply-To: <00000000000098b3700612b5ee0f@google.com>
+References: <00000000000098b3700612b5ee0f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,49 +61,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If connection isn't established yet, get_mr() will fail, trigger connection after
-get_mr().
+[Syzbot Reported]
+=====================================================
+BUG: KMSAN: uninit-value in hfs_cat_keycmp+0x154/0x210 fs/hfs/catalog.c:178
+ hfs_cat_keycmp+0x154/0x210 fs/hfs/catalog.c:178
+ __hfs_brec_find+0x250/0x820 fs/hfs/bfind.c:75
+ hfs_brec_find+0x436/0x970 fs/hfs/bfind.c:138
+ hfs_brec_read+0x3f/0x1a0 fs/hfs/bfind.c:165
+ hfs_cat_find_brec+0xe6/0x400 fs/hfs/catalog.c:194
+ hfs_fill_super+0x1f27/0x23c0 fs/hfs/super.c:419
+ mount_bdev+0x38f/0x510 fs/super.c:1658
+ hfs_mount+0x4d/0x60 fs/hfs/super.c:456
+ legacy_get_tree+0x110/0x290 fs/fs_context.c:662
+ vfs_get_tree+0xa5/0x560 fs/super.c:1779
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+ path_mount+0x73d/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+ __x64_sys_mount+0xe4/0x140 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-Fixes: 584a8279a44a - RDS: RDMA: return appropriate error on rdma map failures 
-Reported-and-tested-by: syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:3819 [inline]
+ slab_alloc_node mm/slub.c:3860 [inline]
+ __do_kmalloc_node mm/slub.c:3980 [inline]
+ __kmalloc+0x919/0xf80 mm/slub.c:3994
+ kmalloc include/linux/slab.h:594 [inline]
+ hfs_find_init+0x91/0x250 fs/hfs/bfind.c:21
+ hfs_fill_super+0x1eb9/0x23c0 fs/hfs/super.c:416
+ mount_bdev+0x38f/0x510 fs/super.c:1658
+ hfs_mount+0x4d/0x60 fs/hfs/super.c:456
+ legacy_get_tree+0x110/0x290 fs/fs_context.c:662
+ vfs_get_tree+0xa5/0x560 fs/super.c:1779
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+ path_mount+0x73d/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+ __x64_sys_mount+0xe4/0x140 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+
+[Fix]
+Let's clear all search_key fields at alloc time.
+
+Reported-and-tested-by: syzbot+04486d87f6240a004c85@syzkaller.appspotmail.com
 Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 ---
- net/rds/rdma.c | 3 +++
- net/rds/send.c | 6 +-----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ fs/hfs/bfind.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/rds/rdma.c b/net/rds/rdma.c
-index fba82d36593a..a4e3c5de998b 100644
---- a/net/rds/rdma.c
-+++ b/net/rds/rdma.c
-@@ -301,6 +301,9 @@ static int __rds_rdma_map(struct rds_sock *rs, struct rds_get_mr_args *args,
- 			kfree(sg);
- 		}
- 		ret = PTR_ERR(trans_private);
-+		/* Trigger connection so that its ready for the next retry */
-+		if (ret == -ENODEV)
-+			rds_conn_connect_if_down(cp->cp_conn);
- 		goto out;
- 	}
+diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
+index ef9498a6e88a..c74d864bc29e 100644
+--- a/fs/hfs/bfind.c
++++ b/fs/hfs/bfind.c
+@@ -18,7 +18,7 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
  
-diff --git a/net/rds/send.c b/net/rds/send.c
-index 5e57a1581dc6..fa1640628b2f 100644
---- a/net/rds/send.c
-+++ b/net/rds/send.c
-@@ -1313,12 +1313,8 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
- 
- 	/* Parse any control messages the user may have included. */
- 	ret = rds_cmsg_send(rs, rm, msg, &allocated_mr, &vct);
--	if (ret) {
--		/* Trigger connection so that its ready for the next retry */
--		if (ret ==  -EAGAIN)
--			rds_conn_connect_if_down(conn);
-+	if (ret) 
- 		goto out;
--	}
- 
- 	if (rm->rdma.op_active && !conn->c_trans->xmit_rdma) {
- 		printk_ratelimited(KERN_NOTICE "rdma_op %p conn xmit_rdma %p\n",
+ 	fd->tree = tree;
+ 	fd->bnode = NULL;
+-	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
++	ptr = kzalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
+ 	if (!ptr)
+ 		return -ENOMEM;
+ 	fd->search_key = ptr;
 -- 
 2.43.0
 
