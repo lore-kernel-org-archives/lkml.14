@@ -1,100 +1,97 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313475684;
-	Sun,  3 Mar 2024 13:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F54DF62;
+	Sun,  3 Mar 2024 13:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.87.125.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709472754; cv=none; b=GutdplUfaaFr0gyelJGjcP757U26gb7Eg9zV/lkW2A9wEnb+rMwXoMYJhQ7DgUxMtyS4J5cMY14eKWWQNUa2Fqe8QXX/80eomvak1q5rLZBHDO/enMsMJmYEe6AA2aM6rSoHgE9/gHKkszDTFHBbQNw8bp9sJ+ftwCd87Ws2j0A=
+	t=1709472957; cv=none; b=ZK+VobdZqtDMmtj9Mw6mSxl/KmP4ueHlwZOsAl+OrFsCk7Khb+brVC9a7ZEVnROt3SmpMx3wY9M0OZ4cSE2kGrQLlB71ffuQFBGGpH9HrUf+uFRuQWxxgZ8arsNizgAvYuIXF/Cet1D7+JcPWyADUnQHigCwmSZn6+ZyuBsb1vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709472754; c=relaxed/simple;
-	bh=3xboL4uDKO9puxjaC/KLuajulbpu8+6bh9CscgkXE6g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JcPjBvK+o8lDSiOt3e+vFIOz+WcPZhphAs+xQ3GYCq75a8DF0K4dV7RjjT4vr9xYTgsLRLPgEsMwN62OwRAp8BEt82ovd8vSMA06N7z5oc3dX905kbrPXNT/QbcrgZ2LuLQryMEMtNxR6ZhkNtDAY9f7LDXyo8ceYx8NdwKY8qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMrKSLbI; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMrKSLbI"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc29f1956cso28478895ad.0;
-        Sun, 03 Mar 2024 05:32:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709472752; x=1710077552; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kwlx5IgoHl5RII/i/nv9JimUnsVXypM6jybnxn6UlcA=;
-        b=aMrKSLbIfjQ1rXHem83eSr6FLYGmd7NVad2A24IX/St6eAPlwVCaJuDWaM0pWHEk7J
-         yuK6UIVYdHkVrTJg1tTLJt2HZUEPBIUcFht5fv+gzkIQcSy86eHL4uHy0lzfjUXTeYfV
-         xDH3sWoRQDQW/UJWha8l4+MmzbATwCTYkp44eGqQcChBzN3gN7SIm7kVPZJzCnyWLMUZ
-         qDBNpMp2SGDIB+dQY9gZaf16Uv94XeJglUew65ExfEDTGRjg9nA0QnAnG04UG1jlUm3b
-         LfDqnTnxTnLRGhmjnrBEiv4lRhn9FL5kuxuZvf14jEu8NMwyrV+ChI4DEnaRsNqriXrJ
-         UaFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709472752; x=1710077552;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kwlx5IgoHl5RII/i/nv9JimUnsVXypM6jybnxn6UlcA=;
-        b=EQdSJ6xsF/c63mHo037AmXKhNb0sDH7efApVGpoXaxwphjQ2FI9B9JG4XNCWjR69nY
-         hI4pCm4QRdFBxIB51nicbcunfEglDOVgmMiR5WJWgCdfRb0ir6lo9eO9xCjRL/LO/pjK
-         aM71vhGm6OSVNmqnu8QiJ7xi0S6gclhs29dSTviKIBrDTS7xxlLjy8ytNs1Rm1CrxWtW
-         vTIgrryZ4nuuV1E7ER89I2IMJxpFpnoNuPqJ08d53OpHdbCd0/1LNmtEdr15h5L/WLT8
-         +yv3yTOwqSISv9Nb/gGY2cSY+oOGSjTyzf528FmNSAPvywPuibudbGICvFvQ5JULKb90
-         OF9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXUP1VdJN2qLJDujztkzdmWa+NX9094wWF1imBXjPH75w5xuNQPy3iAeK9zMV9jjiC7js4eZJdfzQ80ug/YHTJa5htWV7BjwHW+A7kS
-X-Gm-Message-State: AOJu0Yzay5IwhYIaZbY0DVMVGiC9bpx2mrHeC5aPGoe9MYUk2HU6mLk8
-	BolSSFGaxBvan+PC3NVpFingWojd/YH3YrZUPQoqmSpk2BU1Ia4n
-X-Google-Smtp-Source: AGHT+IHySZPGneCeilbyiEHd2PBEFR0SDxJNhhWhViVxgeze4L1iRiaZQ0PmXq9Zn3zXXB12k080lQ==
-X-Received: by 2002:a17:903:2408:b0:1d8:e4b8:95e5 with SMTP id e8-20020a170903240800b001d8e4b895e5mr6717407plo.32.1709472752496;
-        Sun, 03 Mar 2024 05:32:32 -0800 (PST)
-Received: from kernel.. ([2402:e280:214c:86:98b4:6d91:d5f4:8f27])
-        by smtp.gmail.com with ESMTPSA id u9-20020a170902e80900b001d9a42f6183sm6634803plg.45.2024.03.03.05.32.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 05:32:32 -0800 (PST)
-From: R SUNDAR <prosunofficial@gmail.com>
-To: bingbu.cao@intel.com,
-	tian.shu.qiu@intel.com,
-	sakari.ailus@linux.intel.com,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	R SUNDAR <prosunofficial@gmail.com>
-Subject: [PATCH] Removed reserved1/2 fields to prevent kernel-doc warnings
-Date: Sun,  3 Mar 2024 19:02:23 +0530
-Message-Id: <20240303133223.5506-1-prosunofficial@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709472957; c=relaxed/simple;
+	bh=rxQYtttE67pvhkuGigdqMY8sxIQ+TwJZKtUgdqVMvOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bB4m3tMcXDarDHsgNRNYEumvlvasUmlzc4HvyOVlX5x11RXkGrkxs1hdSOTTsyOjjNq59bu592d3ds1dAsEpf4EGBOEoGkIuHJA/OpqeS1nd6hKTi2JD3ig/HXCIfVERyKyJLkPxDyUxTk3kLLRzL6bMJsxBeMfiERbW0fsYSs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=www.linux-watchdog.org; spf=pass smtp.mailfrom=linux-watchdog.org; arc=none smtp.client-ip=185.87.125.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=www.linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
+Received: by www.linux-watchdog.org (Postfix, from userid 502)
+	id 8C47F40A06; Sun,  3 Mar 2024 14:15:22 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 8C47F40A06
+Date: Sun, 3 Mar 2024 14:15:22 +0100
+From: gituser@www.linux-watchdog.org
+To: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+Cc: Guenter Roeck <linux@roeck-us.net>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] watchdog: qcom: fine tune the max timeout value
+ calculation
+Message-ID: <20240303131522.GA28319@www.linux-watchdog.org>
+References: <20240116-wdt-v2-1-501c7694c3f0@quicinc.com>
+ <2c4f9829-138d-41a5-8810-d13cf749fded@roeck-us.net>
+ <67ed3805-40cb-4f00-9d0d-b0fd012d6221@quicinc.com>
+ <9f084781-2233-4b36-8b1c-db1fa9a9db49@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <9f084781-2233-4b36-8b1c-db1fa9a9db49@quicinc.com>
+User-Agent: Mutt/1.5.20 (2009-12-10)
 
-./drivers/staging/media/ipu3/include/uapi/intel-ipu3.h:2522: warning: Excess struct member 'reserved1' description in 'ipu3_uapi_acc_param'
-./drivers/staging/media/ipu3/include/uapi/intel-ipu3.h:2522: warning: Excess struct member 'reserved2' description in 'ipu3_uapi_acc_param'
+Ji Kathiravan,
 
-Signed-off-by: R SUNDAR <prosunofficial@gmail.com>
----
- drivers/staging/media/ipu3/include/uapi/intel-ipu3.h | 2 --
- 1 file changed, 2 deletions(-)
+> 
+> On 2/3/2024 12:07 PM, Kathiravan Thirumoorthy wrote:
+> >
+> >
+> >On 1/16/2024 8:32 PM, Guenter Roeck wrote:
+> >>On 1/16/24 00:22, Kathiravan Thirumoorthy wrote:
+> >>>To determine the max_timeout value, the below calculation is used.
+> >>>
+> >>>    max_timeout = 0x10000000 / clk_rate
+> >>>
+> >>>cat /sys/devices/platform/soc@0/b017000.watchdog/watchdog/watchdog0/max_timeout
+> >>>8388
+> >>>
+> >>>However, this is not valid for all the platforms. IPQ SoCs starting from
+> >>>IPQ40xx and recent Snapdragron SoCs also has the bark and bite
+> >>>time field
+> >>>length of 20bits, which can hold max up to 32 seconds if the clk_rate is
+> >>>32KHz.
+> >>>
+> >>>If the user tries to configure the timeout more than 32s, then the value
+> >>>will be truncated and the actual value will not be reflected in the HW.
+> >>>
+> >>>To avoid this, lets add a variable called max_tick_count in
+> >>>the device data,
+> >>>which defines max counter value of the WDT controller. Using
+> >>>this, max-timeout
+> >>>will be calculated in runtime for various WDT contorllers.
+> >>>
+> >>>With this change, we get the proper max_timeout as below and restricts
+> >>>the user from configuring the timeout higher than this.
+> >>>
+> >>>cat /sys/devices/platform/soc@0/b017000.watchdog/watchdog/watchdog0/max_timeout
+> >>>32
+> >>>
+> >>>Signed-off-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+> >>
+> >>Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> >
+> >
+> >Guenter / Will, Can this be picked for v6.9? I don't see this in
+> >linux- next yet, so please consider this as a gentle reminder!
+> 
+> 
+> Guenter / Will, Gentle Reminder... is this change queued for v6.9?
 
-diff --git a/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h b/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
-index caa358e0bae4..926fcf84e33c 100644
---- a/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
-+++ b/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
-@@ -2485,11 +2485,9 @@ struct ipu3_uapi_anr_config {
-  *		&ipu3_uapi_yuvp1_y_ee_nr_config
-  * @yds:	y down scaler config. See &ipu3_uapi_yuvp1_yds_config
-  * @chnr:	chroma noise reduction config. See &ipu3_uapi_yuvp1_chnr_config
-- * @reserved1: reserved
-  * @yds2:	y channel down scaler config. See &ipu3_uapi_yuvp1_yds_config
-  * @tcc:	total color correction config as defined in struct
-  *		&ipu3_uapi_yuvp2_tcc_static_config
-- * @reserved2: reserved
-  * @anr:	advanced noise reduction config.See &ipu3_uapi_anr_config
-  * @awb_fr:	AWB filter response config. See ipu3_uapi_awb_fr_config
-  * @ae:	auto exposure config  As specified by &ipu3_uapi_ae_config
--- 
-2.34.1
+Yes, it is.
+
+Kind regards,
+Wim.
 
