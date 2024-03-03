@@ -1,206 +1,157 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9191D79DAE
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 19:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E21BE49
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 19:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709492832; cv=none; b=dzUHbvYED0M9QQVrwyJ5aAJ1QUjm7vuCZ3gpNA4VkE2uzNPM12MIVkmN7XtSCGmRIz4t9ILBLIOjFQqPgy1+zLY8DvempLhKwUcgp8AD1cBXgEg8LwodWG3IYbCdTjb++NBJV/g8XuUnMy44RnTK+vH5Dg3cbelcRC/HJPZ2Pms=
+	t=1709493005; cv=none; b=dd8NLN+u6yH50OQtY4HC3NFXDMOWKD0WEojsRRcxsQ285+NrXoeChYn8V18jxR/rJzCi8cEvFmgGvwTdZFfgk0E2INlwLZyjF75Q3/5InnlOLy2JWEgjZIRfD/oQyjX6KuhjdjjDCujeTJP7wOhJO3ZWSfF+B5ufCY+XtJLwtFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709492832; c=relaxed/simple;
-	bh=Xq/6EX7Vma5DVArRtVZxDv2nekiTsrf7RQfu18aVsJM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b8PZ0gFo/PHFvBvPiBMezHz9KBDQBI7XNakGMcLVdPSpclnNmRMf+NpmMWASwPpqrf+Lw86VTa1n0oUVkjFw/o/bigS59DgXj4UVxaXrwxQKpNoFj79o7D7AchsUBzs3IUdbSEPk8vU5d2dD8Q24HjbJI42jlXzVF4BO23DMcZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SO7/Pzm9; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709493005; c=relaxed/simple;
+	bh=Hba6oGgosc6iwpGMmhuvvHdDdH9qXw51Goup0NOi2RI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IIaE9WjWtXaAXi3Fu2BjVzY9bwmbeQAWpdCBXFuERpzZEJNgeaYY0TUWuRzkBGrgOXoL3q0VZKsqVQF+aLkULGx5/NeZvLFFyj3WqmdeFMipeuh/wQ8gw8A3Q31yYXVSHf9c88qMElR5PVvtISh4Q5HDULT8AeK0q4gD7E/gq5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hyUCackn; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SO7/Pzm9"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a44ad785a44so245150366b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 11:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709492829; x=1710097629; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8+5hz1pC1NUruMJAl+eg8w3VSt8O+IZDxY81DWZbIU=;
-        b=SO7/Pzm9XXLWchfdpbRM7BK4v1xSE2gJZO6QvknP/GGWh4HQiYt23TF7R5Mo3SRPJk
-         Tini7fQ1mr2gRlMkpyLEn5XYngrkSfOP/8vHwSLNy0n5E8sn88YfFv/CY2IbzL9LbXwx
-         MrEEX9DRZ8n3qvGEz68ipgB78d9gZsJAwTXXBoGAHYqeEBqzIAjKLKV9Sp8z5e/f2DiW
-         j2UnoJ8EUe1bS/lQAlkq8PHs29hu0aq5LYMWhW5dHFRkm7K1CS4gmA+ArScysfm3Mgra
-         eT4um6nF9vQxWOI3R/6jv7VL5PMEUIxHGAtw7sm60eZUag5GkqTBxokevwQS/AE9UYMt
-         HLWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709492829; x=1710097629;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t8+5hz1pC1NUruMJAl+eg8w3VSt8O+IZDxY81DWZbIU=;
-        b=Tj3wfxody4qvEyNsbKVu6MP9thc2Mzh5e3LNLN4e4sN1w1iV2BGwvR6IWmD7VS1jNA
-         K9vy4sfrtQvJKSkRBs63DQwy0/rPX8i1LO/+ROP40WoOorTdXoMINPN3GRjlV5JtyEqL
-         tpvPsuZM0mRpQVYTUThT3deVoehk96l4/s4YYhK9CszBL/1ttD17ZyYz8y0E+YQ0Nr9y
-         ePWKV2thSeYdRQf/TafFWg9JC7lr8K7yKAFIOrwK8qoJsqd7IHUInCfySMuyUDr3a+3v
-         BJCN3hjUKfPFCMPdPwJYbtbo20Va8ROO4bRfRYGilgzbjcMf0gqTrZ+oO4U0X7Gu2bg1
-         sbkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSZv15DIG193nysNCgDO/1w9jF2BhyC1qnkrodyH8PzKzaPGAlwuLWg75rtKpX6V2UHCbt5Sqqq2avXasG9T5h+qwMOpCTUNcaJnRS
-X-Gm-Message-State: AOJu0YwpEWI6YEWcxakSCVitx1NNQYScXdahFNoxtf9EHwTH3hb4gHPB
-	ROpaRdoVp4RmfFhUlsghdNY4nZlVGuHF/D05OCnAyx6bkxcBc7JZGDcfWwI6c0w=
-X-Google-Smtp-Source: AGHT+IE0gq/QoToo3IKKgK/wLQhOrWdvlyROKGxYxQmMgG7sJ8DJthEQl1WpJmZwJWFdPBX9DJ+/Sw==
-X-Received: by 2002:a17:906:48c6:b0:a45:2038:4caa with SMTP id d6-20020a17090648c600b00a4520384caamr1109660ejt.76.1709492828895;
-        Sun, 03 Mar 2024 11:07:08 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id ld15-20020a170906f94f00b00a44e7afde87sm1669822ejb.148.2024.03.03.11.07.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Mar 2024 11:07:08 -0800 (PST)
-Message-ID: <e13610f6-6e09-4073-bc26-108b76c2a88f@linaro.org>
-Date: Sun, 3 Mar 2024 20:07:05 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hyUCackn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709493004; x=1741029004;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Hba6oGgosc6iwpGMmhuvvHdDdH9qXw51Goup0NOi2RI=;
+  b=hyUCackn4pnVr3NJjAVsxO9vzg5n4oAeVeHoAHkAIqTSEAd7zwvuVpgA
+   SAGtKSmEWMcI+7qJVG/1cTOS+gxN4XZq3P6BNfxFJ/MLXX0UZzZUUKpfG
+   +7FZU5528pOWJKk5eE384HyN6v5o9pvCPnD+3Iw7brtPY/DYyr8X7j42x
+   ydpHPeIdKhZnfmFIftAA/3+oy3h438ALFgUGk1vwtONK7C2ESVnbrckE1
+   +RvZyhz30g6n3DQ50t8a528q1+x0H50J0aojYqtLYQ7zUDrbUP+X1Oq8e
+   V51Qn9l7GuVa9Eny3k/YADnf+JnPHjJZCl5mVCRUY0hWECDQi4WGiqiRu
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="7795067"
+X-IronPort-AV: E=Sophos;i="6.06,201,1705392000"; 
+   d="scan'208";a="7795067"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 11:10:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,201,1705392000"; 
+   d="scan'208";a="13441951"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 03 Mar 2024 11:09:59 -0800
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rgrDg-00022K-10;
+	Sun, 03 Mar 2024 19:09:56 +0000
+Date: Mon, 4 Mar 2024 03:09:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: WARNING: modpost: "strcat" [lib/strcat_kunit.ko] has no CRC!
+Message-ID: <202403040332.AgBq81MC-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: misc: merge qcom,qrc
-To: Canfeng Zhuang <quic_czhuang@quicinc.com>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240304-qcom_qrc-v1-0-2a709f95fd61@quicinc.com>
- <20240304-qcom_qrc-v1-2-2a709f95fd61@quicinc.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240304-qcom_qrc-v1-2-2a709f95fd61@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 03/03/2024 17:53, Canfeng Zhuang wrote:
-> Merge Qualcomm-specific qrc binding
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   04b8076df2534f08bb4190f90a24e0f7f8930aca
+commit: 3bf301e1ab85e18ed0e337ce124dc71d6d7b5fd7 string: Add Kunit tests for strcat() family
+date:   10 months ago
+config: alpha-randconfig-r032-20221115 (https://download.01.org/0day-ci/archive/20240304/202403040332.AgBq81MC-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240304/202403040332.AgBq81MC-lkp@intel.com/reproduce)
 
-Merge? No, instead describe the hardware.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403040332.AgBq81MC-lkp@intel.com/
 
-Similar problem with the sibject.
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-> 
-> Signed-off-by: Canfeng Zhuang <quic_czhuang@quicinc.com>
-> ---
->  .../devicetree/bindings/misc/qcom,qrc.yaml         | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/qcom,qrc.yaml b/Documentation/devicetree/bindings/misc/qcom,qrc.yaml
-> new file mode 100644
-> index 000000000000..730efd679ba0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/qcom,qrc.yaml
-> @@ -0,0 +1,32 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/misc/qcom,qrc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Robotics Communication Driver
+WARNING: modpost: vmlinux.o: EXPORT_SYMBOL used for init/exit symbol: page_is_ram (section: .init.text)
+WARNING: modpost: EXPORT symbol "strcpy" [vmlinux] version generation failed, symbol will not be versioned.
+Is "strcpy" prototyped in <asm/asm-prototypes.h>?
+WARNING: modpost: EXPORT symbol "strcat" [vmlinux] version generation failed, symbol will not be versioned.
+Is "strcat" prototyped in <asm/asm-prototypes.h>?
+WARNING: modpost: EXPORT symbol "strncpy" [vmlinux] version generation failed, symbol will not be versioned.
+Is "strncpy" prototyped in <asm/asm-prototypes.h>?
+WARNING: modpost: EXPORT symbol "strncat" [vmlinux] version generation failed, symbol will not be versioned.
+Is "strncat" prototyped in <asm/asm-prototypes.h>?
+WARNING: modpost: "strcpy" [fs/overlayfs/overlay.ko] has no CRC!
+WARNING: modpost: "strcat" [fs/overlayfs/overlay.ko] has no CRC!
+WARNING: modpost: "strncat" [lib/kunit/kunit.ko] has no CRC!
+WARNING: modpost: "strncpy" [lib/test_hexdump.ko] has no CRC!
+WARNING: modpost: "strcpy" [lib/test_rhashtable.ko] has no CRC!
+WARNING: modpost: "strcpy" [lib/crc64-rocksoft.ko] has no CRC!
+WARNING: modpost: "strncat" [lib/strcat_kunit.ko] has no CRC!
+>> WARNING: modpost: "strcat" [lib/strcat_kunit.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/video/fbdev/cyber2000fb.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/video/fbdev/sis/sisfb.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/video/fbdev/savage/savagefb.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/video/fbdev/s3fb.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/video/fbdev/mb862xx/mb862xxfb.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/video/fbdev/ocfb.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/char/ipmi/ipmi_si.ko] has no CRC!
+WARNING: modpost: "strcat" [drivers/char/ipmi/ipmi_si.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/char/ipmi/ipmi_watchdog.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/tests/drm_cmdline_parser_test.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/tests/drm_connector_test.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/tests/drm_dp_mst_helper_test.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/tests/drm_framebuffer_test.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/tests/drm_plane_helper_test.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/tests/drm_probe_helper_test.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/hisilicon/hibmc/hibmc-drm.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/drm.ko] has no CRC!
+WARNING: modpost: "strncpy" [drivers/gpu/drm/drm.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/gpu/drm/nouveau/nouveau.ko] has no CRC!
+WARNING: modpost: "strncpy" [drivers/gpu/drm/nouveau/nouveau.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/base/regmap/regmap-kunit.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/misc/cb710/cb710.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/misc/apds990x.ko] has no CRC!
+WARNING: modpost: "strncpy" [drivers/misc/c2port/core.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/firewire/firewire-core.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/i2c/busses/i2c-at91.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/i2c/busses/i2c-owl.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/media/dvb-frontends/cxd2841er.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/media/platform/nxp/imx7-media-csi.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/power/supply/wm831x_backup.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/power/supply/wm831x_power.ko] has no CRC!
+WARNING: modpost: "strncpy" [drivers/power/supply/bq2515x_charger.ko] has no CRC!
+WARNING: modpost: "strncpy" [drivers/power/supply/bq25980_charger.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/leds/leds-bd2802.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/leds/leds-lm3530.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/leds/leds-wm831x-status.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hid/hid-wiimote.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hid/hid-sensor-custom.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/staging/vme_user/vme_tsi148.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/staging/greybus/gb-loopback.ko] has no CRC!
+WARNING: modpost: "strcat" [drivers/staging/sm750fb/sm750fb.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/iio/adc/hx711.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/iio/adc/mcp3422.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/iio/adc/mxs-lradc-adc.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/iio/light/cm32181.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/iio/proximity/srf08.ko] has no CRC!
+WARNING: modpost: "strncpy" [drivers/iio/proximity/sx9324.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/iio/test/iio-test-rescale.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/perf/marvell_cn10k_tad_pmu.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/rapidio/rapidio.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hwmon/adm1029.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hwmon/adt7462.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hwmon/adt7475.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hwmon/f71882fg.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hwmon/fschmd.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hwmon/i5k_amb.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hwmon/amc6821.ko] has no CRC!
+WARNING: modpost: "strncpy" [drivers/hwmon/pmbus/pmbus_core.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/hwtracing/stm/stm_console.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/fpga/fpga-mgr.ko] has no CRC!
+WARNING: modpost: "strcpy" [drivers/fpga/dfl-fme.ko] has no CRC!
 
-Driver? Unfortunately bindings are for hardware, not drivers.
-
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +  The QRC (Qualcomm Robotics Communication) driver is used for information interaction
-
-Agaim, driver?
-
-> +  between the robot control board and the main board when using a uart port connection.
-> +  This Driver will support uart read & write and robot control board
-
-No, describe the hardware.
-
-> +  reset function.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,qrc-uart
-> +
-> +required:
-> +  - compatible
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    qrc: qcom,qrc_uart {
-
-
-How does it remotely look like upstream DTS? Please don't send
-downstream/vendor DTS before cleaning it up. Before posting, please read
-submitting patches and/or quite extensive Qualcomm upstreaming guides.
-
-> +        compatible = "qcom,qrc-uart";
-
-Nope, so this is just to instantiate Linux device? No resources? This
-looks really incomplete.
-
-> +    };
-> +
-> 
-
-Best regards,
-Krzysztof
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
