@@ -1,82 +1,72 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95225BE4A;
-	Sun,  3 Mar 2024 12:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A499BE4A
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 12:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709467980; cv=none; b=e3B7mu+UwZRF6rjllwIUOUjGbwvNRxDWWjnWqRPMR/8HAhMPD9rtgvoJIwsK6TA23IrgSfvTcHtesLTQQ4uuov2KdkMAsSu4oZp5MuREMXFtXctVHWaliRlG6DexmeMgWmAe5ojIje2fxlotvWJlRckaVLRxUe+ej7FB1ydeX5w=
+	t=1709468061; cv=none; b=hhVkT/2ZDrPIvK1uPG3Re8mqS5s8fda3IF2GkhDrDPDPLlrV17e6fHywFoj1+Yhni4xLb8Iaj0RbyfoCLE1eDL/FDqWqPOBhBxz92E5pbyxPD+2B7c0Pp769cXzHYQT9wlB16vizSOLUxfy857LMkuXNElYLVMFmKavl6uLFMiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709467980; c=relaxed/simple;
-	bh=SBOPZsrdqZ/NNDMbOM0UYx3P98xhQulgQAGDn5mg7Zg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NBHdYwZLAKomizScmcY6XS589WGpsp4zVVE/cpdmzR7rC6Dcl1pXmbBog8s0iYC34oMRwjHlknvfdACYeln5pH5W3MTIbTk6Rtf3xbLq/s0gibKC1irNzzvO8TWCyvA/CkjggZlkfU6AHUj7HLfo3MgqbogFQoioUk22HCX7d+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=K4+z7M4V; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="K4+z7M4V"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=SBOPZsrdqZ/NNDMbOM0UYx3P98xhQulgQAGDn5mg7Zg=;
-	t=1709467978; x=1709899978; b=K4+z7M4V7mynQwndJVgwr/opirGmmeGOgwchIZAQPIfklrZ
-	kgVfUoOh2VP8w7/HZRxgbwPcVbB1883Kk4To3ppmTjjekPkiMwJtqhEqUrs4W0dXqAd1rH4o9CqwZ
-	kZG/PyPQibsFjjlPdUTj08gBrxYmcfMGBx3OKhhScEwm8xf0GsNIKvZupSzwBA0+al/j8egd9WSg6
-	rRRK8EzJeaFHpkZRQhWntfcmaUUwIJaFXeyppX1NY+UfEPERNV46oFzyBtKOAtaBN9aIn85GpHYRx
-	gfegNs21eW/YddCe/OICU0QoyVfWuHg68dWFdIwnSZ3lHbatYgJVrnmgl+pPOZqg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rgkPH-0008Ly-3H; Sun, 03 Mar 2024 12:53:27 +0100
-Message-ID: <78c14dd8-b655-4405-85e6-5c9530c77282@leemhuis.info>
-Date: Sun, 3 Mar 2024 12:53:26 +0100
+	s=arc-20240116; t=1709468061; c=relaxed/simple;
+	bh=ueeAezcywm5cI/6F2f6lA2+yuhtrVFvftQ3aZWTbDfo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ud1YxLb0PQUe8SDZZqnCIxvC+n8JHM4CnwZUEkm/CxYINNYxjLd52UWWFUHzz0jFbdGc/Grw3bk2P7JfEsjzN4sazgH8icg6LzL0OoG1sXU6Y3JL+23dY5YOOS5ludQHLv8KiLFsL/OXrLK1H1E9pAFM6PdQ28PBvhPOsLe5pYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 8b2a64d2-d957-11ee-b972-005056bdfda7;
+	Sun, 03 Mar 2024 14:14:11 +0200 (EET)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v1 1/1] clk: fractional-divider: Move mask calculations out of lock
+Date: Sun,  3 Mar 2024 14:14:10 +0200
+Message-ID: <20240303121410.240761-1-andy.shevchenko@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] Revert "scsi: ufs: core: Only suspend clock scaling
- if scaling down"
-Content-Language: en-US, de-DE
-To: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Cc: linux-scsi@vger.kernel.org
-References: <20240228053421.19700-1-quic_rampraka@quicinc.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240228053421.19700-1-quic_rampraka@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709467978;bb23a397;
-X-HE-SMSGID: 1rgkPH-0008Ly-3H
+Content-Transfer-Encoding: 8bit
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+There is no need to calculate masks under the lock taken.
+Move them out of it.
 
-On 28.02.24 06:34, Ram Prakash Gupta wrote:
-> This reverts commit 1d969731b87f122108c50a64acfdbaa63486296e.
-> Approx 28% random perf IO degradation is observed by suspending clk
-> scaling only when clks are scaled down. Concern for original fix was
-> power consumption, which is already taken care by clk gating by putting
-> the link into hibern8 state.
+Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+ drivers/clk/clk-fractional-divider.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+diff --git a/drivers/clk/clk-fractional-divider.c b/drivers/clk/clk-fractional-divider.c
+index a0178182fc72..da057172cc90 100644
+--- a/drivers/clk/clk-fractional-divider.c
++++ b/drivers/clk/clk-fractional-divider.c
+@@ -195,14 +195,14 @@ static int clk_fd_set_rate(struct clk_hw *hw, unsigned long rate,
+ 		n--;
+ 	}
+ 
++	mmask = GENMASK(fd->mwidth - 1, 0) << fd->mshift;
++	nmask = GENMASK(fd->nwidth - 1, 0) << fd->nshift;
++
+ 	if (fd->lock)
+ 		spin_lock_irqsave(fd->lock, flags);
+ 	else
+ 		__acquire(fd->lock);
+ 
+-	mmask = GENMASK(fd->mwidth - 1, 0) << fd->mshift;
+-	nmask = GENMASK(fd->nwidth - 1, 0) << fd->nshift;
+-
+ 	val = clk_fd_readl(fd);
+ 	val &= ~(mmask | nmask);
+ 	val |= (m << fd->mshift) | (n << fd->nshift);
+-- 
+2.44.0
 
-#regzbot ^introduced 1d969731b87f122108c50a64acfdbaa63486296e
-#regzbot title scsi: ufs: core: approx 28% random perf IO degradation
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
