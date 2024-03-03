@@ -1,63 +1,68 @@
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECD8FBFC;
-	Sun,  3 Mar 2024 13:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313475684;
+	Sun,  3 Mar 2024 13:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709472641; cv=none; b=RjUFMilLrbaY/Xnq5AyiIzv08QUTL/FFK9WkwNc5AfG8quEM5qcbEoINnHiIaI6LetQBA3VnQ5erZMW5J6FVPeVAvh5otkLOih4Mo7w5gqjfbuxin/5GLDOADA11B51JCxggRM430vfcSEL8SO+6siQacwQz+sIu8RdpgjehALU=
+	t=1709472754; cv=none; b=GutdplUfaaFr0gyelJGjcP757U26gb7Eg9zV/lkW2A9wEnb+rMwXoMYJhQ7DgUxMtyS4J5cMY14eKWWQNUa2Fqe8QXX/80eomvak1q5rLZBHDO/enMsMJmYEe6AA2aM6rSoHgE9/gHKkszDTFHBbQNw8bp9sJ+ftwCd87Ws2j0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709472641; c=relaxed/simple;
-	bh=rxdJ/+aOv2gHONz7u651HyYacZjNdwfVMJzTD8JojKE=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=dqU4tubVUsI7smYvGfj6xBUmH7PodVrP0bbN+/LVOsQ12rt7eMElKhZawkL3eBrFj404Wk8FqzwCvAGhhKnCThmCPDDaYQ6aN+q+bBLBqU+/QhLm/GhZETLNtkmw/PFgu/uhIe2pgGG8audyjvDkajnpk82JEg0nSxbaXQNmBUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=GctLVweN; arc=none smtp.client-ip=203.205.221.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1709472754; c=relaxed/simple;
+	bh=3xboL4uDKO9puxjaC/KLuajulbpu8+6bh9CscgkXE6g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JcPjBvK+o8lDSiOt3e+vFIOz+WcPZhphAs+xQ3GYCq75a8DF0K4dV7RjjT4vr9xYTgsLRLPgEsMwN62OwRAp8BEt82ovd8vSMA06N7z5oc3dX905kbrPXNT/QbcrgZ2LuLQryMEMtNxR6ZhkNtDAY9f7LDXyo8ceYx8NdwKY8qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMrKSLbI; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GctLVweN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709472337; bh=0NnuotmW82k9Uowjug3hFc1tBh20nPWYMO1pQs9NtRU=;
-	h=From:To:Cc:Subject:Date;
-	b=GctLVweN2bt94o0GW0IDtMFLTA2Ht8varYIami5ayj3VwOyQrExLu2nH3/wyAcOwO
-	 2sEzMxfIQDOxI8J512z+p9CG08FdHs5XiNgDbjUDx9gH/90VDh0E05/BGZ1YwAAGe0
-	 S4YkdR6rkepDV+Y5VJIJG3jQ+RtOVGFM0o6hl4VE=
-Received: from cyy-pc.lan ([240e:379:2240:e500:994d:62ab:74a6:932b])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id 66020E94; Sun, 03 Mar 2024 21:25:32 +0800
-X-QQ-mid: xmsmtpt1709472332tpga3oaze
-Message-ID: <tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com>
-X-QQ-XMAILINFO: OAope3s6+8XpDdhJJsQ3bRuNam29vw7aFRTpansOS8sQmNaPjd7Xszx2BYgI7u
-	 Td30rFfPDfs0CCsxthDeMzuSbG+KEfeDD88J9Chx0ds7Dgl78SHvhY5XIFFv/Yp2b3gs82bIEXtb
-	 jR0As8tbpQEP2ci/vrabea1X1eWOawXDEuvf7FMqLd05cx+zi1Pj9cpt63uQIC8vaCDLeFuPj8iE
-	 Gww+jVvbSw/pDiiiCZ3GTtuBzQqoKJSgLw2g1BWOSLyfATbKT1G8l+04+CE2gln2hGwCaGj4HgOk
-	 4Hntiax37kiHJcRfhp7+B0tVeb30deSakyaDf5d7HRnq1t2He6GzgiAhT7cHuKQ7Oom7fESNSLIm
-	 CTKPfxnr2rP0Z8T5yBA3ZScunYW7HOibZFkqro5u6cU6rLwyz9V4whWwtJXs2jhvem+SoEwnpMch
-	 KNJgbgpcx2ITmDZiWyaGC148LIj6qgjB7Cm31mFlDqyV6mz/ZeUy10DqjkgHCpskBsDHhQfEqBDq
-	 O8wUU5ogleoc5IUilB0ME6d12MCW+rTwNOHxTqdcx6Y0ZKPayfj8ylahTpxqJp5beKZj5+vls01Y
-	 CA6uH1+aL3EW6iDOMD+nFpKQ+3vdAsP3shtoxyTVvtQS+PR0I3Nl87dbCBBkS7A+AdunvA0JaxOp
-	 1msHnuAiOEQtUy9vNV45WE4QiAJsEGwSlPeZ84IxH3/yj08bH2W5GdeymU9W/skO88rrswAcqcs0
-	 q9OaH5gOoaa+pQBxZ8bA/ZynFu/7tHv5zmoOLzYfI6aeTydKwh9AgWRY5YtEqxTHNek/Yx1QMfd5
-	 CByDJU4VMgARlVzuB3d2h8SoBowF3A2BhkWyODLQe/6s6XTG0kO9dgYmNgrjJbTgE2/A6kDnV9oQ
-	 k20ZQqxYu/Qro2sTJguxJn0e4VklZHqy5k+x4iprefrQYrcs8otLPS+1bmulpXJ/TBmROIzpQXjS
-	 Hm7zb0lt+++33S0S2LldrcBeLJG/B0kuE1VDCkFMGsPtRTmp/XvfLpIWdNnWlflWZAO4FTR/CrkR
-	 AYPYtl2gPtCsdxJKmf
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Guo Ren <guoren@kernel.org>,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMrKSLbI"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc29f1956cso28478895ad.0;
+        Sun, 03 Mar 2024 05:32:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709472752; x=1710077552; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kwlx5IgoHl5RII/i/nv9JimUnsVXypM6jybnxn6UlcA=;
+        b=aMrKSLbIfjQ1rXHem83eSr6FLYGmd7NVad2A24IX/St6eAPlwVCaJuDWaM0pWHEk7J
+         yuK6UIVYdHkVrTJg1tTLJt2HZUEPBIUcFht5fv+gzkIQcSy86eHL4uHy0lzfjUXTeYfV
+         xDH3sWoRQDQW/UJWha8l4+MmzbATwCTYkp44eGqQcChBzN3gN7SIm7kVPZJzCnyWLMUZ
+         qDBNpMp2SGDIB+dQY9gZaf16Uv94XeJglUew65ExfEDTGRjg9nA0QnAnG04UG1jlUm3b
+         LfDqnTnxTnLRGhmjnrBEiv4lRhn9FL5kuxuZvf14jEu8NMwyrV+ChI4DEnaRsNqriXrJ
+         UaFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709472752; x=1710077552;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kwlx5IgoHl5RII/i/nv9JimUnsVXypM6jybnxn6UlcA=;
+        b=EQdSJ6xsF/c63mHo037AmXKhNb0sDH7efApVGpoXaxwphjQ2FI9B9JG4XNCWjR69nY
+         hI4pCm4QRdFBxIB51nicbcunfEglDOVgmMiR5WJWgCdfRb0ir6lo9eO9xCjRL/LO/pjK
+         aM71vhGm6OSVNmqnu8QiJ7xi0S6gclhs29dSTviKIBrDTS7xxlLjy8ytNs1Rm1CrxWtW
+         vTIgrryZ4nuuV1E7ER89I2IMJxpFpnoNuPqJ08d53OpHdbCd0/1LNmtEdr15h5L/WLT8
+         +yv3yTOwqSISv9Nb/gGY2cSY+oOGSjTyzf528FmNSAPvywPuibudbGICvFvQ5JULKb90
+         OF9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXUP1VdJN2qLJDujztkzdmWa+NX9094wWF1imBXjPH75w5xuNQPy3iAeK9zMV9jjiC7js4eZJdfzQ80ug/YHTJa5htWV7BjwHW+A7kS
+X-Gm-Message-State: AOJu0Yzay5IwhYIaZbY0DVMVGiC9bpx2mrHeC5aPGoe9MYUk2HU6mLk8
+	BolSSFGaxBvan+PC3NVpFingWojd/YH3YrZUPQoqmSpk2BU1Ia4n
+X-Google-Smtp-Source: AGHT+IHySZPGneCeilbyiEHd2PBEFR0SDxJNhhWhViVxgeze4L1iRiaZQ0PmXq9Zn3zXXB12k080lQ==
+X-Received: by 2002:a17:903:2408:b0:1d8:e4b8:95e5 with SMTP id e8-20020a170903240800b001d8e4b895e5mr6717407plo.32.1709472752496;
+        Sun, 03 Mar 2024 05:32:32 -0800 (PST)
+Received: from kernel.. ([2402:e280:214c:86:98b4:6d91:d5f4:8f27])
+        by smtp.gmail.com with ESMTPSA id u9-20020a170902e80900b001d9a42f6183sm6634803plg.45.2024.03.03.05.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Mar 2024 05:32:32 -0800 (PST)
+From: R SUNDAR <prosunofficial@gmail.com>
+To: bingbu.cao@intel.com,
+	tian.shu.qiu@intel.com,
+	sakari.ailus@linux.intel.com,
+	mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH 0/5] riscv: add initial support for Canaan Kendryte K230
-Date: Sun,  3 Mar 2024 21:24:19 +0800
-X-OQ-MSGID: <20240303132419.553143-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.43.0
+	R SUNDAR <prosunofficial@gmail.com>
+Subject: [PATCH] Removed reserved1/2 fields to prevent kernel-doc warnings
+Date: Sun,  3 Mar 2024 19:02:23 +0530
+Message-Id: <20240303133223.5506-1-prosunofficial@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,43 +71,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-K230 is an ideal chip for testing RISC-V Vector 1.0 now. Add initial
-support for it to allow more people to participate in building drivers
-to mainline for it.
+./drivers/staging/media/ipu3/include/uapi/intel-ipu3.h:2522: warning: Excess struct member 'reserved1' description in 'ipu3_uapi_acc_param'
+./drivers/staging/media/ipu3/include/uapi/intel-ipu3.h:2522: warning: Excess struct member 'reserved2' description in 'ipu3_uapi_acc_param'
 
-This kernel has been tested upon factory SDK [1] with
-k230_evb_only_linux_defconfig and patched mainline opensbi [2] to skip
-locked pmp and successfully booted to busybox on initrd with this log [3].
+Signed-off-by: R SUNDAR <prosunofficial@gmail.com>
+---
+ drivers/staging/media/ipu3/include/uapi/intel-ipu3.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-[1] https://github.com/kendryte/k230_sdk
-[2] https://github.com/cyyself/opensbi/tree/k230
-[3] https://gist.github.com/cyyself/b9445f38cc3ba1094924bd41c9086176
-
-Yangyu Chen (5):
-  dt-bindings: riscv: Add T-HEAD C908 compatible
-  dt-bindings: add Canaan K230 boards compatible strings
-  riscv: Kconfig.socs: Allow SOC_CANAAN with MMU for K230
-  riscv: dts: add initial canmv-k230 and k230-evb dts
-  riscv: config: enable SOC_CANAAN in defconfig
-
- .../devicetree/bindings/riscv/canaan.yaml     |  13 +-
- .../devicetree/bindings/riscv/cpus.yaml       |   1 +
- arch/riscv/Kconfig.socs                       |   5 +-
- arch/riscv/boot/dts/canaan/Makefile           |   2 +
- arch/riscv/boot/dts/canaan/canmv-k230.dts     |  23 +++
- arch/riscv/boot/dts/canaan/k230-evb.dts       |  23 +++
- arch/riscv/boot/dts/canaan/k230.dtsi          | 146 ++++++++++++++++++
- arch/riscv/configs/defconfig                  |   1 +
- 8 files changed, 210 insertions(+), 4 deletions(-)
- create mode 100644 arch/riscv/boot/dts/canaan/canmv-k230.dts
- create mode 100644 arch/riscv/boot/dts/canaan/k230-evb.dts
- create mode 100644 arch/riscv/boot/dts/canaan/k230.dtsi
-
-
-base-commit: 45e0b0fd6dc574101825ac2738b890da024e4cda
-prerequisite-patch-id: 2374c56c0032e616e45854d2bc2bb1073996313d
-
-Dependencies: https://lore.kernel.org/linux-riscv/tencent_88FEE0A2C5E0852436A2F1A1087E6803380A@qq.com/
+diff --git a/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h b/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
+index caa358e0bae4..926fcf84e33c 100644
+--- a/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
++++ b/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
+@@ -2485,11 +2485,9 @@ struct ipu3_uapi_anr_config {
+  *		&ipu3_uapi_yuvp1_y_ee_nr_config
+  * @yds:	y down scaler config. See &ipu3_uapi_yuvp1_yds_config
+  * @chnr:	chroma noise reduction config. See &ipu3_uapi_yuvp1_chnr_config
+- * @reserved1: reserved
+  * @yds2:	y channel down scaler config. See &ipu3_uapi_yuvp1_yds_config
+  * @tcc:	total color correction config as defined in struct
+  *		&ipu3_uapi_yuvp2_tcc_static_config
+- * @reserved2: reserved
+  * @anr:	advanced noise reduction config.See &ipu3_uapi_anr_config
+  * @awb_fr:	AWB filter response config. See ipu3_uapi_awb_fr_config
+  * @ae:	auto exposure config  As specified by &ipu3_uapi_ae_config
 -- 
-2.43.0
+2.34.1
 
