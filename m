@@ -1,145 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435DD613C
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 04:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18176FA8
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 04:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709439553; cv=none; b=WLdYjIluGiTIyeDnriRG5NTkJ9eyBHue34s76tCte6vm5gU2IKnyh0pBXodEacLJ5YZuMgjev/ihU4ilyjixagxQ2eoGRC5uNXkwR4u/eaKUQ7QV8tGfVvZSTGtfc3sK8mFmweLODUTb04GrZBqTIL78cSrOowT27yvce2YdgNk=
+	t=1709439960; cv=none; b=hqf7jXttxqix28lp4hApqbmWGd99NZVdfEd6aCWkCrzQ5zpyLUHcmrPck6k+77PBuFsmOf5Wu+Vw467tIiNo1DKqnTyYmcOmpew38DNIfSyIapNZ4OoYx4+CQlN+8x+RecZnO7PaBOwBN1tuFdaGe3YUbo3J2sS00hVnqumn3sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709439553; c=relaxed/simple;
-	bh=si42yFEpCanPNmQJ4y+sktTxBcBKsrSsKXjsZiX82Gs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gTHjFKuXhCz/Ah1L/G2Tfhyl/LtchFAG3f8hbHDp0NN9O6JtS3ROvEiprqWCPbT5V7qQ/lwcROtVt+vHpQfTHwWDA6nZflkSo6mfNuCb0vxFska/ES8wFp5+ENFmVuGOyVp6ojwLlYBeMLKqToNEgAAbO8PJhmcFxyQFxuBTrgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AReOSQna; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709439960; c=relaxed/simple;
+	bh=JGEMTSw+h3Tskj6UQtxs7o4Z1kUEuraMEQeoCqx4kXk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QU4oUOisFz5Ae0C9TdLbVuTAiEGl6UbuOl8ZHdEj3ZmmcRE1OIZ24yrBHO+Dxej6k4Cf4lmz2Xq6gLA/VNBmLzySziuLhxII66t0hOOe6NekN+v7ilARUcCbNDpp21h38MEazPbmorQM96nmxACUGkUGrHwNPAJ1kPSlGmyvGwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z9dvYHnL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AReOSQna"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709439550; x=1740975550;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=si42yFEpCanPNmQJ4y+sktTxBcBKsrSsKXjsZiX82Gs=;
-  b=AReOSQnaozy3ltawqJ5n9c0dGJ8BQaB7SKMNktHIHChACZpAWOU/5MFG
-   WzefxYcg+f8qBSpqKBLJG7yI8Ll3eJwmHMzVnDcPqzp8dDp+DUTmHjC2H
-   yye7sDiND4RWHzB9nFRQZVsKYHLt6Z+b86FXqLXy8CckPNjC8pVaQhh9F
-   SKGKtbjRt6nFJNOfu/2ftnrOmhJ0wu4Zp1ixZePuah4VyMGHvVtYUToo8
-   icp2ZU2cHAKuJ4fcgM6AlRJYL9bvH0WkrDS9n73ymR6DZyi77hz5L4hZK
-   vtk5gRj+amAeuwl3XXtynP5/tlss47MW0RCIl8QdgBfzDAlQ6GwFY/17K
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11001"; a="7762419"
-X-IronPort-AV: E=Sophos;i="6.06,200,1705392000"; 
-   d="scan'208";a="7762419"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2024 20:19:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,200,1705392000"; 
-   d="scan'208";a="13298772"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 02 Mar 2024 20:19:07 -0800
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rgdJZ-0000VI-05;
-	Sun, 03 Mar 2024 04:19:05 +0000
-Date: Sun, 3 Mar 2024 12:18:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: include/linux/vmstat.h:400:43: error: arithmetic between different
- enumeration types ('enum zone_stat_item' and 'enum numa_stat_item')
-Message-ID: <202403031232.DGh2J4ks-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z9dvYHnL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709439957;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4tP8cj/EkhDB5rHKjBPyA2CO06IZFpZarql6Oarbplo=;
+	b=Z9dvYHnLhfcZrg55SDEICqj4yXNuICq5rSOfZjlvKI5px847G4XeOcjcgThuAoEbpG+eMc
+	yQWx43I9wNvWesO8nBQFycb+8hqpF3ui2PzTp81Sx6Y7vsns8YClA/LNLDmjh0GeDlVOvw
+	WG9F6LBdNLNSiwm9fg4SaU6BiC7qDfk=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-408-coMkeA93Ow-062Wa0M69gA-1; Sat,
+ 02 Mar 2024 23:25:53 -0500
+X-MC-Unique: coMkeA93Ow-062Wa0M69gA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5D71429AB40A;
+	Sun,  3 Mar 2024 04:25:53 +0000 (UTC)
+Received: from [10.22.32.39] (unknown [10.22.32.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 994452166B31;
+	Sun,  3 Mar 2024 04:25:52 +0000 (UTC)
+Message-ID: <87fe0004-0e53-4b7a-b19d-c6b37c8db8dc@redhat.com>
+Date: Sat, 2 Mar 2024 23:25:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH/RFC] locking/spinlocks: Make __raw_* lock ops static
+Content-Language: en-US
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <c395b02613572131568bc1fd1bc456d20d1a5426.1709325647.git.geert+renesas@glider.be>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <c395b02613572131568bc1fd1bc456d20d1a5426.1709325647.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   04b8076df2534f08bb4190f90a24e0f7f8930aca
-commit: c348c16305280fe3e6c1186378f96c8634c149f9 lib: make a test module with set/clear bit
-date:   3 years, 9 months ago
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20240303/202403031232.DGh2J4ks-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 325f51237252e6dab8e4e1ea1fa7acbb4faee1cd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240303/202403031232.DGh2J4ks-lkp@intel.com/reproduce)
+On 3/1/24 15:43, Geert Uytterhoeven wrote:
+> sh/sdk7786_defconfig (CONFIG_GENERIC_LOCKBREAK=y and
+> CONFIG_DEBUG_LOCK_ALLOC=n):
+>
+> kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_spin_lock' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_spin_lock_irqsave' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_spin_lock_irq' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_spin_lock_bh' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_read_lock' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_read_lock_irqsave' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_read_lock_irq' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_read_lock_bh' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_write_lock' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_write_lock_irqsave' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_write_lock_irq' [-Wmissing-prototypes]
+> kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_write_lock_bh' [-Wmissing-prototypes]
+>
+> Fix this by making the __raw_* lock ops static.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Compile-tested only.
+>
+> Is SH really the only SMP platform where CONFIG_GENERIC_LOCKBREAK=y?
+> ---
+>   kernel/locking/spinlock.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/locking/spinlock.c b/kernel/locking/spinlock.c
+> index 8475a0794f8c5ad2..7009b568e6255d64 100644
+> --- a/kernel/locking/spinlock.c
+> +++ b/kernel/locking/spinlock.c
+> @@ -65,7 +65,7 @@ EXPORT_PER_CPU_SYMBOL(__mmiowb_state);
+>    * towards that other CPU that it should break the lock ASAP.
+>    */
+>   #define BUILD_LOCK_OPS(op, locktype)					\
+> -void __lockfunc __raw_##op##_lock(locktype##_t *lock)			\
+> +static void __lockfunc __raw_##op##_lock(locktype##_t *lock)		\
+>   {									\
+>   	for (;;) {							\
+>   		preempt_disable();					\
+> @@ -77,7 +77,7 @@ void __lockfunc __raw_##op##_lock(locktype##_t *lock)			\
+>   	}								\
+>   }									\
+>   									\
+> -unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock)	\
+> +static unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock) \
+>   {									\
+>   	unsigned long flags;						\
+>   									\
+> @@ -95,12 +95,12 @@ unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock)	\
+>   	return flags;							\
+>   }									\
+>   									\
+> -void __lockfunc __raw_##op##_lock_irq(locktype##_t *lock)		\
+> +static void __lockfunc __raw_##op##_lock_irq(locktype##_t *lock)	\
+>   {									\
+>   	_raw_##op##_lock_irqsave(lock);					\
+>   }									\
+>   									\
+> -void __lockfunc __raw_##op##_lock_bh(locktype##_t *lock)		\
+> +static void __lockfunc __raw_##op##_lock_bh(locktype##_t *lock)		\
+>   {									\
+>   	unsigned long flags;						\
+>   									\
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403031232.DGh2J4ks-lkp@intel.com/
+This may not work if CONFIG_GENERIC_LOCKBREAK is defined. We had been 
+talking about taking out CONFIG_GENERIC_LOCKBREAK before. See the thread 
+in [1]. However, we didn't proceed further at that time as we weren't 
+totally sure if there were still some configurations that required 
+CONFIG_GENERIC_LOCKBREAK.
 
-All errors (new ones prefixed by >>):
+[1] https://lore.kernel.org/lkml/20211022120058.1031690-1-arnd@kernel.org/
 
-   In file included from lib/test_bitops.c:9:
-   In file included from include/linux/module.h:18:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:145:
-   In file included from arch/s390/include/asm/mmu_context.h:11:
-   In file included from arch/s390/include/asm/pgalloc.h:18:
-   In file included from include/linux/mm.h:1485:
->> include/linux/vmstat.h:400:43: error: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Werror,-Wenum-enum-conversion]
-     400 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     401 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:407:43: error: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Werror,-Wenum-enum-conversion]
-     407 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     408 |                            NR_VM_NUMA_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~
->> include/linux/vmstat.h:414:36: error: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Werror,-Wenum-enum-conversion]
-     414 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:419:43: error: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Werror,-Wenum-enum-conversion]
-     419 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     420 |                            NR_VM_NUMA_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:428:43: error: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Werror,-Wenum-enum-conversion]
-     428 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     429 |                            NR_VM_NUMA_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~
-   5 errors generated.
+Anyway, without taking out CONFIG_GENERIC_LOCKBREAK, the proper way to 
+fix this issue is probably to declare the proper function prototypes in 
+include/linux/rwlock_api_smp.h and include/linux/spinlock_api_smp.h when 
+CONFIG_GENERIC_LOCKBREAK is defined.
 
+Cheers,
+Longman
 
-vim +400 include/linux/vmstat.h
-
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  396  
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  397  #ifdef CONFIG_NUMA
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  398  static inline const char *numa_stat_name(enum numa_stat_item item)
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  399  {
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04 @400  	return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  401  			   item];
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  402  }
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  403  #endif /* CONFIG_NUMA */
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  404  
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  405  static inline const char *node_stat_name(enum node_stat_item item)
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  406  {
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  407  	return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  408  			   NR_VM_NUMA_STAT_ITEMS +
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  409  			   item];
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  410  }
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  411  
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  412  static inline const char *lru_list_name(enum lru_list lru)
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  413  {
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04 @414  	return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  415  }
-9d7ea9a297e644 Konstantin Khlebnikov 2019-12-04  416  
-
-:::::: The code at line 400 was first introduced by commit
-:::::: 9d7ea9a297e6445d567056f15b469dde13ca4134 mm/vmstat: add helpers to get vmstat item names for each enum type
-
-:::::: TO: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
