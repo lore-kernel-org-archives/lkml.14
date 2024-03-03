@@ -1,64 +1,66 @@
-Received: from out203-205-221-249.mail.qq.com (out203-205-221-249.mail.qq.com [203.205.221.249])
+Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41A6101E3;
-	Sun,  3 Mar 2024 13:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4A0947B;
+	Sun,  3 Mar 2024 13:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709472247; cv=none; b=nLObS+pQP9lJ6XfBOLmedPMjyzySJwjJzGmVTfjQuRn2i9uJo3Fs2GLebc+3Tcvyy8b3sfA87aPbBsZkT9hrz6c4hUKZw43kZa7Qhkjla2B2YKYWw9eJxMvlpY9IiT0a6UcWZbSzI2Q6yW/n2VoYupP9rdLYVWiMXNAjfzt/tJU=
+	t=1709472434; cv=none; b=gBNyYP+x2ZQl4Ts19sRy6ieJOEkQLorsClQvbV4lb1FNYcdCFctNpL2ZzVELz0dpgxuXcItrVlIIfC9OkfItVFrAoVpTkctx3zbIlZbarvfl5joDA1++ueftrB5Mb/5YrQARSF0zjWw6HE1dDCn3k0eyNfTeUMuw4nYY8cwJ82w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709472247; c=relaxed/simple;
-	bh=G/uUIcpfGezZClHWnrZDD9K0NYrXcF/UXKZ/8huSANM=;
+	s=arc-20240116; t=1709472434; c=relaxed/simple;
+	bh=DKttMB1N2T/a3qA0drlDnJPhu/xAsypRFFsP4i1eoa0=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=lBOw/uDlgxnekWKLmZWgAsGq041Vk1YDLVWw1kPWA2nQ/tLUJDq6cS81ImppwIiDYE4XdpbJ2nL9TnYYZIXv029QjSrzzSRsHlEZZhbZ4gz0eTjZ4dtsD7k/DM646oRux3zC9EQDQrB0UbKV4Mo+JREO6wMPTeRW+O/ZDnkwaEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=eBPo8idw; arc=none smtp.client-ip=203.205.221.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	 MIME-Version; b=Rp2rWWfrd8v37rZAiBYJONWuR58vHQp5NAttuEqvducOChJIf/GoK28OQP1YUDdSritgSxJnjUGdfnAGwFoPkod7ch6LKqpPMpMt59ANVl0CNBb4pPFqSG/JkYlen5q7CzTyLgWlTI/pt+xWkrgxwZ4cv/7uK0WMuJ1dpiMbbYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=tKwO6mQP; arc=none smtp.client-ip=203.205.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="eBPo8idw"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tKwO6mQP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709472241; bh=Uo6+rVGqUfEBi3BWpquQslrkKBAv6/iFpXZsRLuvnJM=;
+	t=1709472429; bh=CQkJ2LPVHwvfrPpeo+8GgP/58OCyvWTP8GNw56RzbQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eBPo8idwVoLhTJ7X/bqvn7JnBbFiyJiyoNYw7fNldKYN1UcFh33Gkkp6vIgdCa024
-	 bU5JedGe+MaGryxQ5y+doWoUSAfrXoGyoeR4YNYToAVwXEIkpBTVqA5JZHBnERFgjR
-	 KuZIaMgFErJ9+CE+qw4nfoe5grhCvaEf9xfKE0ms=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id 5FA2D2AD; Sun, 03 Mar 2024 21:23:58 +0800
-X-QQ-mid: xmsmtpt1709472238t63b8jqob
-Message-ID: <tencent_ECF3CC90A7DB86E312FF464F09BF2EEAAE06@qq.com>
-X-QQ-XMAILINFO: M/NR0wiIuy70vNwuqXnPcAATd38i+Hrt5nu5F7SU8jslSYo5IjGQa9TJ1wQdik
-	 Oun75WagS/8ZoK0TZ7S1N26r7C7sQE3LlrldG+1Ni9cHqmW/1dtGJmFd7UNuMZXRX03nR6tjf6nA
-	 BnnVJPZa2IoJlmcNLillPdbFwsQOwMDh9kyCqBQG/msZVSusQJvScF4tHHYlu/2IfLMBIIvUn5zs
-	 u2Nok8SVFOhjq7ThRqQJXlQGzDE18FVcc2e4NZ0+AT80PawnfU6XqBpXgAK9lCe4Ui12sCoBt+xJ
-	 SRhCDFF/EZn3F9tLhtpDb97HlKYOWtD2XiGBBvK6dXX0WXh5oTqA/+5R2XzHW4ORYsdPVEfFeEQc
-	 zlURosOWssYK+doMORe7kF2mpYo5atBOdIniDzcnmdnhh5FPoyo5xknvGSXj7kRSaqzNOIj4kwjg
-	 bAQoXWnD3MWFghthM8RIdD/BJ2RqM47nkak/qSS9QTU8m/UTg4YD0he5Cbzlt8dkm4jQU3X1Ujg/
-	 glXwh8TTz5zbpCAlqUDmSPanlfwYwMrlQ6GM7H0vu9CYQIm6SoP+kXBBjmMmQwRI5G0j0MyoY4xN
-	 /yvSmoRZEIkVUzyAZ/21MmcqQzRzhvvJXvO3vGD+z9hUFRHiyvK/hczX4tk3cNgpx3g3pZcMIlg5
-	 433FZruVXIFy3NhdSe5VX4/eQ9dBqzxXQgECQKWtiSw35fPcNrZ3qONr/wk8rIsbs4Vy86fZgFCi
-	 75cxqlmiJydXeQ6tbx18hWcPgIvt/eQaUV71fUs3BpIRlhWONxsJ0AuXsW8e7beuuec2jS316bAd
-	 UNn7g4SuVUbUK7ERPTH8UHsd/3Jx4od6GXy1w/UPe0sqhGtMaNDadVn9ju131bMEFNVcOCS6x2k5
-	 1AY3RHKTYJ3MhCUWEQ8gvV4daC84OVxywA0W6PaWBZZUOKIaQ0dAw1gNkPEuGmGwW+/eSL1UDa2J
-	 TW1DCnPf99xozrFY+0mPKrqjkmOCdlTgBc5lXrlHS3/Nplmen0p/yVRQJ0R6nc
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+f770ce3566e60e5573ac@syzkaller.appspotmail.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	linux-hams@vger.kernel.org,
+	b=tKwO6mQPFw5cJnvW9iZdO+4F+Fj7cvoG7yRoabkdN/r/QnJ0G7FZHTTRlkrzeL6yB
+	 jUSH8N81er7ctRDeb8LB0HmRFCMVhqWjnZDMAZitlnS3y5R3CQglD+yOsRcHAQOowa
+	 0WtC6ZhVL48BIi6LYQHDXg4Bk3MNlhwvmLm7AWn0=
+Received: from cyy-pc.lan ([240e:379:2240:e500:994d:62ab:74a6:932b])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id 6C4A707D; Sun, 03 Mar 2024 21:27:04 +0800
+X-QQ-mid: xmsmtpt1709472424teu4q778f
+Message-ID: <tencent_BD3B8D107CA98249DA8D8EFDB862310A2108@qq.com>
+X-QQ-XMAILINFO: OIPiZ4jSkGWAZMr6Ai1HjCrB8QSkmDI5dCBZcs7t5CsaTLJpeQjYNPa1nAh6i9
+	 vLm1o/lSq1q2vruFwcQuRjjn9ndi/Dx72VelHIjd9o9m+zODLXpbc2q3OctAbbw6xgpFqUipNzV0
+	 PrJbD+tsx91vOhFO6g0K2CgSI4DFTXW5RW0AfwP4wTdpxZe3iDoAu8iq9C0Z2beNcaUdyn6d4xv5
+	 mRBbFJtNANynNXGEM4vl/c+yuHiLX3iG4jpfxY9Dpj+9I4+w5QcsYOl1vEUeJ2VjlUyRAo2zzuPh
+	 ZnFmxIV0w+7hI9ZrTFCugjP11FVPHO3rXzq5gac0GQh6BktB2rtDTCg7Kvip4nsx5s/2Q5PVFmYV
+	 X8aC7QRVp8YnshWObfCnW5at1Se2OO234UPFzsHU3tML06CHGGiCH0Brl/xXJ57lEImlXeXlQkFz
+	 P/3fYYvie4MO9cHc1cfTRsWgFbBZVPnfFV+h7xP7xfrFrdoSy7woz3vyvNuMwCs/N2WFvjVGsqIz
+	 VVgsJb68/zNw5yAjkhxYKYuQ4woZltAV24p4/b6sZiJzE9mf18Oim0AHweMBJV7jm9Ulf2V9F9tx
+	 UWeCUpcHV5XmtFHRKa8wAHofaMBqcOc7P/DT6NhjiCxY7QgcUa/yB1kxxD0eeXvj2bk5BPN2qyon
+	 gUsPaamN3TVjK0BrdJrOPSURAScSyL9TKrdrSO5+xh3ayM4Cr+f8L+OQdDqUPRAv+I2T/ATdS+n2
+	 yV168QtHisVIYyNzUppidF6T1PxVyQSgxjaOhyfgse5ouhYYY7VeITROHvEAFmT3aDYo6Dg/h0i7
+	 J2TAUPVqzm9AeaplMUbdlWBOT21BZtJpAB5qwxFe225sjA8EB1btIAfdnZK8zMqAlCuQcTYgFB/f
+	 0MCnhsR6SjgSLurjeDSjkIp9ZhPZC9n+Rs6DLEBVn4lmCaClf8ZcQIRuOqPyZUfO1XpM6b0Uwa48
+	 u/OHdXAJo7gseZGtJuyTjKnut8Mu4DZx6IfTcSYxZTIr5Z6v7PEIo91GGYaCJ0Dk6xf0/lWkr5oj
+	 53ssMz4uNJjeSgViTr
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Yangyu Chen <cyy@cyyself.name>
+To: linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Guo Ren <guoren@kernel.org>,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	ralf@linux-mips.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] skbuff: fix uninit-value in nr_route_frame
-Date: Sun,  3 Mar 2024 21:23:59 +0800
-X-OQ-MSGID: <20240303132358.639892-2-eadavis@qq.com>
+	Yangyu Chen <cyy@cyyself.name>
+Subject: [PATCH 1/5] dt-bindings: riscv: Add T-HEAD C908 compatible
+Date: Sun,  3 Mar 2024 21:26:23 +0800
+X-OQ-MSGID: <20240303132627.553698-1-cyy@cyyself.name>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000b69bf20612bf586e@google.com>
-References: <000000000000b69bf20612bf586e@google.com>
+In-Reply-To: <tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com>
+References: <tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,75 +69,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-[Syzbot reported]
-BUG: KMSAN: uninit-value in nr_route_frame+0x4a9/0xfc0 net/netrom/nr_route.c:787
- nr_route_frame+0x4a9/0xfc0 net/netrom/nr_route.c:787
- nr_xmit+0x5a/0x1c0 net/netrom/nr_dev.c:144
- __netdev_start_xmit include/linux/netdevice.h:4980 [inline]
- netdev_start_xmit include/linux/netdevice.h:4994 [inline]
- xmit_one net/core/dev.c:3547 [inline]
- dev_hard_start_xmit+0x244/0xa10 net/core/dev.c:3563
- __dev_queue_xmit+0x33ed/0x51c0 net/core/dev.c:4351
- dev_queue_xmit include/linux/netdevice.h:3171 [inline]
- raw_sendmsg+0x64e/0xc10 net/ieee802154/socket.c:299
- ieee802154_sock_sendmsg+0x91/0xc0 net/ieee802154/socket.c:96
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584
- ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
- __sys_sendmsg net/socket.c:2667 [inline]
- __do_sys_sendmsg net/socket.c:2676 [inline]
- __se_sys_sendmsg net/socket.c:2674 [inline]
- __x64_sys_sendmsg+0x307/0x490 net/socket.c:2674
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+The thead,c908 is a RISC-V CPU core from T-HEAD Semiconductor which used
+in Canaan Kendryte K230 SoC.
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:3819 [inline]
- slab_alloc_node mm/slub.c:3860 [inline]
- kmem_cache_alloc_node+0x5cb/0xbc0 mm/slub.c:3903
- kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:560
- __alloc_skb+0x352/0x790 net/core/skbuff.c:651
- alloc_skb include/linux/skbuff.h:1296 [inline]
- alloc_skb_with_frags+0xc8/0xbd0 net/core/skbuff.c:6394
- sock_alloc_send_pskb+0xa80/0xbf0 net/core/sock.c:2783
- sock_alloc_send_skb include/net/sock.h:1855 [inline]
- raw_sendmsg+0x367/0xc10 net/ieee802154/socket.c:282
- ieee802154_sock_sendmsg+0x91/0xc0 net/ieee802154/socket.c:96
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584
- ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
- __sys_sendmsg net/socket.c:2667 [inline]
- __do_sys_sendmsg net/socket.c:2676 [inline]
- __se_sys_sendmsg net/socket.c:2674 [inline]
- __x64_sys_sendmsg+0x307/0x490 net/socket.c:2674
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-[Fix]
-Let's clear all skb data at alloc time.
-
-Reported-and-tested-by: syzbot+f770ce3566e60e5573ac@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: Yangyu Chen <cyy@cyyself.name>
 ---
- net/core/skbuff.c | 1 +
+ Documentation/devicetree/bindings/riscv/cpus.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index edbbef563d4d..5ca5a608daec 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -656,6 +656,7 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
- 	 * to allow max possible filling before reallocation.
- 	 */
- 	prefetchw(data + SKB_WITH_OVERHEAD(size));
-+	memset(data, 0, size);
- 
- 	/*
- 	 * Only clear those fields we need to clear, not those that we will
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+index 9d8670c00e3b..e853a7fcee8a 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.yaml
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -47,6 +47,7 @@ properties:
+               - sifive,u74
+               - sifive,u74-mc
+               - thead,c906
++              - thead,c908
+               - thead,c910
+               - thead,c920
+           - const: riscv
 -- 
 2.43.0
 
