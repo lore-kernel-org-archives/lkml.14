@@ -1,57 +1,57 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B30692EB
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 15:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B35967A19
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 15:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709478093; cv=none; b=FRVnrLRkFk/VgICZjX4SSpO+1YkWQk0iEj41FhexvPKWgKREGveccqnNLo7NBY4Gt5cjFF1eVhNmZuc5hGLbp4n9p04AdN84p3bWCZdXbFUEOYOdPjG7n2FIOYnqWO3DK8f86NP5AL53secwodVsF8K2KxroIFEz0xkwvaUylus=
+	t=1709478097; cv=none; b=C4jUUOiO1yFcS9oq35frs17tHcGxjxCnwoPkCaDWvnx4HaK9VmyNmJx1SbxWtG8sbDntUBF/28RjI13X85TR7Py4M6Vfs7INdXLr1wxABnH2bbFxJu/XR6w9+QCojk/r4Da4kov+lQrWp/AIQcP2yS9agfX7zWeRr1VtF6T7bzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709478093; c=relaxed/simple;
-	bh=yG+TshWtjJCiqqxLLFxJZ8WZUu8dYiNTiWAwfrTaYNc=;
+	s=arc-20240116; t=1709478097; c=relaxed/simple;
+	bh=BUOiJMJAEpUEY/4J8P8EFUX7DemWfjIpSlIVs71qurE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PkRLAJ6w7LwUim/QW/PTHk0tQdcladKBbLHPw0oh3av5fTwKUAPN0lHPYuteIhYv/5ZI9fLz29YoDj4e1VNqGQn5U0mTAydBSmzbY/OUM5Eb5Lc2j6HR7m5PJjPdj7nUe/ER7J4IyPjKgPjOqcH23JlGNQwXkab5mdYIi8sXJA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PV1L2Sxa; arc=none smtp.client-ip=209.85.218.42
+	 MIME-Version; b=GGD/v6dnTnvrfy97xdXyLK6GPRvjqlppdZ5sCeu6X/Ulab5g/52EqJy0eQrnaE8FTKUY6PeEmCKXV1Vtj6JBmrbkzO21GHvGrGsDeJ6ksqagvImAIUsZONLBHKlKoBks02xKwq6384uzBYS/IRs5Pw9wA6s59gAspvVRxbLGCkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Qt2//bnh; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PV1L2Sxa"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a44ad785a44so233439966b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 07:01:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Qt2//bnh"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a450bedffdfso63009266b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 07:01:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709478090; x=1710082890; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709478094; x=1710082894; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=objFWYLJTsCFID4bxkiF8sYIttYlyjZ7w2ytPsMa/co=;
-        b=PV1L2SxaGWMjzKvuMU/ATUwTE6U90rh2YWO5O8AlPCkVrhggKuaERoWyGDLSHsjQZx
-         TctV+Od8GHTI8U8kyQxsnD3bg/z6sGDFDd00Zq9DMaRDTw7731zEADItsS8Qtj2LiS1O
-         b9bLxK4nkCjrV8sNlUhFs2XnL+b8yRj8HN1X1Ar85a//kYJMk/1RvnUipZkkrdLsEW15
-         S/k63qFN+De4f4a1D4WRzDLsorwgLpPlqIa66uwB5RnniHFvyXPvjwZt/Mhlz1umnGIx
-         OfwbFnzjnZN5cQ/Yu9E42vUAiXxQ/gPqetQH58NRYL3yuUFeDbsKpVWwmbOGtKpC8PAS
-         sK+g==
+        bh=L12WZQfIjPLa8ST8Z/BOMDM6oqnRCJHCQVsMSwzBc0M=;
+        b=Qt2//bnh3TZAGI+9m51FSvWPjhRu3YnmakxQix81idiR0cfKUQUpwVGxY1I3TTXgRS
+         BHFV8PnzZpBKTSw/CtTeODNwM9PyfBkWo1UDYrRTrCyHLMNPbE8KaxpPacW+AaXO4Sfp
+         JRsjFi3fdoAn3FcknjVrtP4WHSEe44hq0uM2VHKMYxC1uJ2F8rtZl4HpklVaddAzWdNE
+         Ecfl0H3Q6jJ1j8p9L1Cvcg3JwUgy3ukekthDhar5JPV4hxupobyCBJ9iuzyUByqAoUrC
+         602IafQhESNUoomwdYoWYLwcML52syDaJwLTrWfxN1fJjFz4vM6rlqNW4qhe1g2TmSSA
+         LzjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709478090; x=1710082890;
+        d=1e100.net; s=20230601; t=1709478094; x=1710082894;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=objFWYLJTsCFID4bxkiF8sYIttYlyjZ7w2ytPsMa/co=;
-        b=oT6dywlTOwtPJn1G/kf5f2HnysY69Ljhnjp9PaLQr9VFVyRfCS//rmehD8avbZqxAm
-         AbFNjUatMKj+xWYlCjuVKRQRYUPWOIEBZD8vc/z/IPMrNKedgQ8Ww+bM1FRza3LYLEzl
-         7Z34wb6KzK4mhOUoWV5iDo1L7zqMsoIQjoR6bGn6tZizESfyeDbx0sS9R86hJ7R8fvVU
-         xTHhKJ3AC+JStZc08kS0Qv8IAga4ErnAvUahhLfCB0c+st1Qm8pKD/VDNMP/sOUnJQMG
-         YtzaaSl2mQh/kzyVg9WT9Vy6X3ii4xClW4T8vfmDtDbskcx3mTQi+HnfII7SHQ0DlprX
-         Oelw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnqNPhMaVQOqjK+ZX1PIa2hB4L9X943pWgWXxiVaiuWsZON2NI2Ji3RDWvd6p0ROdE9zxrZeLJ9p8C/sip61iXzbbzXSftfhtGLvKV
-X-Gm-Message-State: AOJu0YzLmzpT4Nv4X0qu8tGlj+PBgRjNudiKOfIkTb95WvLdw89qBsgz
-	pOnjZW6LiNTAZrS1IvZHW+lAbmdY3VgX7mYtliZePYTPB4I/6NFmHcBtOtA9fGA=
-X-Google-Smtp-Source: AGHT+IEgUKslhbCFFA9X8FIivCaFHvZzj0Mw+hoRLlezgDrkKgO3aZB7DIdSuQrBqwbWWHQQ4Gcy0w==
-X-Received: by 2002:a17:906:f355:b0:a3f:da1c:ae4c with SMTP id hg21-20020a170906f35500b00a3fda1cae4cmr5201250ejb.54.1709478090047;
-        Sun, 03 Mar 2024 07:01:30 -0800 (PST)
+        bh=L12WZQfIjPLa8ST8Z/BOMDM6oqnRCJHCQVsMSwzBc0M=;
+        b=gQ4bdfUefMXDq6Hl8yR9XVKuop+gEzq1zbcvu2DZ5TwmNrFFD9VhLZADk9N3N5og+4
+         TL+IqyPn0qOuC4UGI6nyct+97cPKBVCWsy2W15oIfPXoxnRg6UhrcFGF5KY66JaS/fyi
+         Xhek+qf0Rhke7HfArv1mSef685fbLWvGtAWHTKa5QcjjC6bixiC/A5PL9lf+onNiec6E
+         CdCTwrGLTJON1jM9B4fc7aRHDe4vlCIN43vo+u7GEBlBgh5CwdvBdEDza6MlWlFqjKua
+         0lhTGZvepa78gcpCyW5IqWdDAkcAWy3L2D6ys6ZFRrMpDRK1R+c7O5+LVp7ndhwgJsjv
+         9XyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXTSXSWPWo6zeHH/JpVKe1YUbidF2O2QaPQuVD4If2I0Y8/EdtgGXXdCGoJb5d+WMbjbsPXPKVoHHkxGqgRanJ6FYhKdME1GPyP8QA
+X-Gm-Message-State: AOJu0Yx9WllXAjZ7PD1GI08sW/AMjXxNp5/vFfbjDgHvrsmVf1+J3XB5
+	RfIy/mdFNM2A8H+JqbeoGFi/QnXnUQ4Ha0h4i7xg+BYKYmrN6JqrY92KPCrGzn8=
+X-Google-Smtp-Source: AGHT+IHW70cWGZpmNZWU3rtJ73z8LCBjIZw93+By8b7kiMvBnTYxyj+8PGipVGYRTU0OyQfXajoSsA==
+X-Received: by 2002:a17:906:4f0a:b0:a45:46f8:a181 with SMTP id t10-20020a1709064f0a00b00a4546f8a181mr125275eju.46.1709478093972;
+        Sun, 03 Mar 2024 07:01:33 -0800 (PST)
 Received: from brgl-uxlite.. ([77.241.232.10])
-        by smtp.gmail.com with ESMTPSA id ch14-20020a170906c2ce00b00a42ea946917sm3740293ejb.130.2024.03.03.07.01.29
+        by smtp.gmail.com with ESMTPSA id ch14-20020a170906c2ce00b00a42ea946917sm3740293ejb.130.2024.03.03.07.01.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 07:01:29 -0800 (PST)
+        Sun, 03 Mar 2024 07:01:33 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Andy Gross <agross@kernel.org>,
 	Bjorn Andersson <andersson@kernel.org>,
@@ -70,9 +70,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	kernel@quicinc.com,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Deepti Jaggi <quic_djaggi@quicinc.com>
-Subject: [PATCH v8 07/12] firmware: qcom: scm: make qcom_scm_qseecom_app_get_id() use the TZ allocator
-Date: Sun,  3 Mar 2024 16:01:10 +0100
-Message-Id: <20240303150115.133633-8-brgl@bgdev.pl>
+Subject: [PATCH v8 11/12] firmware: qcom: scm: clarify the comment in qcom_scm_pas_init_image()
+Date: Sun,  3 Mar 2024 16:01:14 +0100
+Message-Id: <20240303150115.133633-12-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240303150115.133633-1-brgl@bgdev.pl>
 References: <20240303150115.133633-1-brgl@bgdev.pl>
@@ -86,65 +86,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Let's use the new TZ memory allocator to obtain a buffer for this call
-instead of manually kmalloc()ing it and then mapping to physical space.
+The "memory protection" mechanism mentioned in the comment is the SHM
+Bridge. This is also the reason why we do not convert this call to using
+the TZ memory allocator.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Andrew Halaney <ahalaney@redhat.com>
-Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
 Tested-by: Andrew Halaney <ahalaney@redhat.com> # sc8280xp-lenovo-thinkpad-x13s
 Tested-by: Deepti Jaggi <quic_djaggi@quicinc.com> #sa8775p-ride
 Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/firmware/qcom/qcom_scm.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ drivers/firmware/qcom/qcom_scm.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index ed2600bbd4eb..b0fc0727d090 100644
+index 811f93edac7f..fbacc959b6fa 100644
 --- a/drivers/firmware/qcom/qcom_scm.c
 +++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -1525,37 +1525,27 @@ int qcom_scm_qseecom_app_get_id(const char *app_name, u32 *app_id)
- 	unsigned long app_name_len = strlen(app_name);
- 	struct qcom_scm_desc desc = {};
- 	struct qcom_scm_qseecom_resp res = {};
--	dma_addr_t name_buf_phys;
--	char *name_buf;
- 	int status;
- 
- 	if (app_name_len >= name_buf_size)
- 		return -EINVAL;
- 
--	name_buf = kzalloc(name_buf_size, GFP_KERNEL);
-+	char *name_buf __free(qcom_tzmem) = qcom_tzmem_alloc(__scm->mempool,
-+							     name_buf_size,
-+							     GFP_KERNEL);
- 	if (!name_buf)
- 		return -ENOMEM;
- 
- 	memcpy(name_buf, app_name, app_name_len);
- 
--	name_buf_phys = dma_map_single(__scm->dev, name_buf, name_buf_size, DMA_TO_DEVICE);
--	status = dma_mapping_error(__scm->dev, name_buf_phys);
--	if (status) {
--		kfree(name_buf);
--		dev_err(__scm->dev, "qseecom: failed to map dma address\n");
--		return status;
--	}
--
- 	desc.owner = QSEECOM_TZ_OWNER_QSEE_OS;
- 	desc.svc = QSEECOM_TZ_SVC_APP_MGR;
- 	desc.cmd = QSEECOM_TZ_CMD_APP_LOOKUP;
- 	desc.arginfo = QCOM_SCM_ARGS(2, QCOM_SCM_RW, QCOM_SCM_VAL);
--	desc.args[0] = name_buf_phys;
-+	desc.args[0] = qcom_tzmem_to_phys(name_buf);
- 	desc.args[1] = app_name_len;
- 
- 	status = qcom_scm_qseecom_call(&desc, &res);
--	dma_unmap_single(__scm->dev, name_buf_phys, name_buf_size, DMA_TO_DEVICE);
--	kfree(name_buf);
- 
- 	if (status)
- 		return status;
+@@ -566,6 +566,13 @@ int qcom_scm_pas_init_image(u32 peripheral, const void *metadata, size_t size,
+ 	 * During the scm call memory protection will be enabled for the meta
+ 	 * data blob, so make sure it's physically contiguous, 4K aligned and
+ 	 * non-cachable to avoid XPU violations.
++	 *
++	 * For PIL calls the hypervisor creates SHM Bridges for the blob
++	 * buffers on behalf of Linus so we must not do it ourselves hence
++	 * not using the TZMem allocator here.
++	 *
++	 * If we pass a buffer that is already part of an SHM Bridge to this
++	 * call, it will fail.
+ 	 */
+ 	mdata_buf = dma_alloc_coherent(__scm->dev, size, &mdata_phys,
+ 				       GFP_KERNEL);
 -- 
 2.40.1
 
