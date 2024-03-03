@@ -1,45 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56CE945A;
-	Sun,  3 Mar 2024 04:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E797F;
+	Sun,  3 Mar 2024 04:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709438444; cv=none; b=lBOZIhfGsRyuN/RDVYl2IXk5HP0fX8SrRaG69kgolecjuaevVEmohLRBo0lRp4zdEpLHOLDiQAF9YJs3KlNWWfUQ803lpGFb4pXs6J0QHonrK8gSPWY75T+/mJ6PqESU+kKyJNTNADNieDbqzOolbLyDgVm1EAIFrSCedMYQnLo=
+	t=1709438591; cv=none; b=J4V1s+hyP6CUeY0OzLi84k76YiaN/lWERxe35ttluv0VsKEvL7gNW1B02XLs0avACZMm4plRO4JhU9ieyySiJMYp1XDYU0bSMLRa51viCYVhF5c/TErcdDQhGYex040B2fr1mue2OzZfOoM7GDzjPYlsLaUdPctP0jHOlUvLZFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709438444; c=relaxed/simple;
-	bh=b61Pfq2+8r8OGJHhDhI5Mm5KHha8WJXnv9P4YukQfBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=suq4dTgks5DkwrsJG0I5taTlDDdqn9YBoFmgyH/McMKf590T1J/Pz2Hq8qZWnY6TpnCvLXE7tTCEybIRTQgfV2nf3wB6dCr/Jp+V+SVA42UXoqlHB8jY+nBn80HCvHSfOHlqi6Ns69/uYCqAaE+kJ2S6sH/rrJ6ngrY2odQyRiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLbbt3NZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709438591; c=relaxed/simple;
+	bh=Bh7Ou7LNgE3RsAKDPXarLzfNkzyOUV0mLT1ZekkctT4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=KaVihlUCJflJJ+Mk4MBNdtxQi+M46B1dxJdqj1w25AE94eTg3M7UD75dQnYWIxagjyMpiujJTV1vvvrorUnivxCdgXCwgyenRask3ouS80FnvYASV51cJiQCTHgZqdXCj/65/wWjW29wkezL3eTQWSUBvBA4YR55C7LyMLqkdeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=YRJwV5+I; arc=none smtp.client-ip=203.205.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLbbt3NZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B9FEC433C7;
-	Sun,  3 Mar 2024 04:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709438443;
-	bh=b61Pfq2+8r8OGJHhDhI5Mm5KHha8WJXnv9P4YukQfBI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MLbbt3NZn0xrsQuW9NCvbKNKiSeesbi6x6G29LqmLs3fYnPcVm7MeeqbvRau/8PG3
-	 FwmfASUsLjng7lF3Fkjctm2zv9ZxrWz0v22602HMBVOhdmNtKpFfseGvkR0cxti8bK
-	 RPJhTsci3ncZ2rDYkW9bKDRCewOWaHQxCHrmMLfNk9nxgxd/9ZsspeMzlT1axf5NgP
-	 Gnqs5OFFGwLQe2pi1hrAgCS8nWR1gu7/mXxE5Puxw38GVX9h3AbyKtWH8MX7qPO9Tu
-	 McpIzOkvHW9c+YYNd4jg65rXTrzHxZx5ehM48GDVJIxMCL9fFzTNxK/EK3dYi4xGOv
-	 5ba1zvvnbJDrA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 3/3] kconfig: remove named choice support
-Date: Sun,  3 Mar 2024 13:00:35 +0900
-Message-Id: <20240303040035.3450914-3-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240303040035.3450914-1-masahiroy@kernel.org>
-References: <20240303040035.3450914-1-masahiroy@kernel.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="YRJwV5+I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709438279; bh=5dDVBe3HuaAOncRzOnzyWpaD0IWT/pNJgquP/aC+9ec=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=YRJwV5+IZigCcYfmkfOk+xNBw3b7b0xDO/kAl1ztQD73Ru33wBkitAQHHOowVkUVu
+	 XUhs0bFgcS0LDC8Kg9P/yUS5ViMxtJ0u21Rn/z7LhH/PXNNuxgNGZi/UUPcH9zeUgY
+	 faCY7S3Ukv8MPOK4yuR/vXwlp3KITVOhsLFgzoto=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id E7807020; Sun, 03 Mar 2024 11:57:56 +0800
+X-QQ-mid: xmsmtpt1709438276tbcyekehu
+Message-ID: <tencent_08EA7471775F67F03DE536C096A636144B09@qq.com>
+X-QQ-XMAILINFO: Nq1uWKlIb9DMAoxRSw7gHe9zvgZW9iTWgoA6Jqvu26fsyiuvGY1WoQ6ANc2rtQ
+	 6KGvuvN+EYtq3DQR8xt7mrLrivvfqqt4PJPF37WMgly2OES3LiOZI2ZNrCQFOuGRqxl3YywurdJN
+	 U01yhfiiG/pFqhp1x/e5V9UpCN8bA8/bz/aFdiz7OsDBqOWRZ2o835ntuaV3AcbdqUsm6aVpWT0Z
+	 LrFEEvrf+Nd571dnl5ZRDyzvNUxYDn9+mT9lNXdq4nrVtk7kofEE03QVBXnyy3XJ3CWXIN50Gg6g
+	 GRNV6YdNG7NeGEu8l+++PcFi11Wi3TeVUw0gtV0NAxjpgoJ+DCFvaCEwA2BMapKIE+GebKolK/K6
+	 unkgN8jwIGH13xG7ji03MhhBVdq2jy83Msu7XOPwMet0BFLPVDUemOLCDPn3nbZUgZxmHKspoUAa
+	 JgV2KO7Iye03/qw7gNFkAap71SdO+52Q3wAwLuHmtRx50msHjoJuJpWjRvarLh4xVFmzyi8kyHBW
+	 h7Zd1EBXMImTAhPaaLxMKNdQ6fSAXOLQL8ZkK0799nBOy0T8AySFnqD+kh2a4b+TlHPRkCpxGvGe
+	 uvH9MdfUdNcTXuOQ/iQhydERRPyeu4Ul4j4jpqt4596620ns+j/+Afyay+BZOWNlmj9gXEJe6e/v
+	 5yW1IfHWQS75ty41fENDrvtoU3g3ie1HB2sTbB7SDDoEBczrAkopo/Uo7hDpOTD9Bv5slDchs2XK
+	 8lYFtJGgGNvGZ9FjolmU+I6GWE6G9ioXMdVVf37ewrkx37wL4q1RE8slxTzl0T8ZWhDQPJSUmtj4
+	 eA2aC9z+Fwge/75jr30+I5h5Mw8EKH/l56hJqmDV7c5UPesQdF4qXuBtAU7mz0eo6tzSZ5NwgxbL
+	 2fCvU7kCzlr/fMYx7H4n6zG4KlBCtNiopMUc5nAvsVriqz+1/KTUhquOVjM3Ub0A5nAL4eBUv74m
+	 Lcew8tpGo=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com
+Cc: allison.henderson@oracle.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	rds-devel@oss.oracle.com,
+	santosh.shilimkar@oracle.com,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] net/rds: fix WARNING in rds_conn_connect_if_down
+Date: Sun,  3 Mar 2024 11:57:56 +0800
+X-OQ-MSGID: <20240303035755.8320-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000c0550506125e4118@google.com>
+References: <000000000000c0550506125e4118@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,82 +69,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 5a1aa8a1aff6 ("kconfig: add named choice group") did not provide
-enough explanation. A use case was found in another project [1], but
-this has never been used in the kernel.
+If connection isn't established yet, get_mr() will fail, trigger connection after
+get_mr().
 
-[1]: https://lore.kernel.org/all/201012150034.01356.yann.morin.1998@anciens.enib.fr/
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 584a8279a44a - RDS: RDMA: return appropriate error on rdma map failures 
+Reported-and-tested-by: syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 ---
+ net/rds/rdma.c | 3 +++
+ net/rds/send.c | 6 +-----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
- Documentation/kbuild/kconfig-language.rst |  6 +-----
- scripts/kconfig/parser.y                  | 10 +++-------
- 2 files changed, 4 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-index 0135905c0aa3..79ac2e8184f6 100644
---- a/Documentation/kbuild/kconfig-language.rst
-+++ b/Documentation/kbuild/kconfig-language.rst
-@@ -393,7 +393,7 @@ of C0, which doesn't depend on M::
+diff --git a/net/rds/rdma.c b/net/rds/rdma.c
+index fba82d36593a..a4e3c5de998b 100644
+--- a/net/rds/rdma.c
++++ b/net/rds/rdma.c
+@@ -301,6 +301,9 @@ static int __rds_rdma_map(struct rds_sock *rs, struct rds_get_mr_args *args,
+ 			kfree(sg);
+ 		}
+ 		ret = PTR_ERR(trans_private);
++		/* Trigger connection so that its ready for the next retry */
++		if (ret == -ENODEV)
++			rds_conn_connect_if_down(cp->cp_conn);
+ 		goto out;
+ 	}
  
- choices::
+diff --git a/net/rds/send.c b/net/rds/send.c
+index 5e57a1581dc6..fa1640628b2f 100644
+--- a/net/rds/send.c
++++ b/net/rds/send.c
+@@ -1313,12 +1313,8 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
  
--	"choice" [symbol]
-+	"choice"
- 	<choice options>
- 	<choice block>
- 	"endchoice"
-@@ -412,10 +412,6 @@ the kernel, but all drivers can be compiled as modules.
+ 	/* Parse any control messages the user may have included. */
+ 	ret = rds_cmsg_send(rs, rm, msg, &allocated_mr, &vct);
+-	if (ret) {
+-		/* Trigger connection so that its ready for the next retry */
+-		if (ret ==  -EAGAIN)
+-			rds_conn_connect_if_down(conn);
++	if (ret) 
+ 		goto out;
+-	}
  
- A choice accepts another option "optional", which allows to set the
- choice to 'n' and no entry needs to be selected.
--If no [symbol] is associated with a choice, then you can not have multiple
--definitions of that choice. If a [symbol] is associated to the choice,
--then you may define the same choice (i.e. with the same entries) in another
--place.
- 
- comment::
- 
-diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-index b505e43e0d02..22f616334585 100644
---- a/scripts/kconfig/parser.y
-+++ b/scripts/kconfig/parser.y
-@@ -94,7 +94,7 @@ struct menu *current_menu, *current_entry;
- %type <expr> if_expr
- %type <string> end
- %type <menu> if_entry menu_entry choice_entry
--%type <string> word_opt assign_val
-+%type <string> assign_val
- %type <flavor> assign_op
- 
- %destructor {
-@@ -222,13 +222,12 @@ config_option: T_MODULES T_EOL
- 
- /* choice entry */
- 
--choice: T_CHOICE word_opt T_EOL
-+choice: T_CHOICE T_EOL
- {
--	struct symbol *sym = sym_lookup($2, SYMBOL_CHOICE);
-+	struct symbol *sym = sym_lookup(NULL, SYMBOL_CHOICE);
- 	sym->flags |= SYMBOL_NO_WRITE;
- 	menu_add_entry(sym);
- 	menu_add_expr(P_CHOICE, NULL, NULL);
--	free($2);
- 	printd(DEBUG_PARSE, "%s:%d:choice\n", cur_filename, cur_lineno);
- };
- 
-@@ -449,9 +448,6 @@ symbol:	  nonconst_symbol
- 	| T_WORD_QUOTE	{ $$ = sym_lookup($1, SYMBOL_CONST); free($1); }
- ;
- 
--word_opt: /* empty */			{ $$ = NULL; }
--	| T_WORD
--
- /* assignment statement */
- 
- assignment_stmt:  T_WORD assign_op assign_val T_EOL	{ variable_add($1, $3, $2); free($1); free($3); }
+ 	if (rm->rdma.op_active && !conn->c_trans->xmit_rdma) {
+ 		printk_ratelimited(KERN_NOTICE "rdma_op %p conn xmit_rdma %p\n",
 -- 
-2.40.1
+2.43.0
 
