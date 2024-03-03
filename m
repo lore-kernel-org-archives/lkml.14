@@ -1,67 +1,59 @@
-Received: from out203-205-251-73.mail.qq.com (out203-205-251-73.mail.qq.com [203.205.251.73])
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42026FA8;
-	Sun,  3 Mar 2024 04:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAF316FF4C;
+	Sun,  3 Mar 2024 04:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709440049; cv=none; b=pjGf/vDOC0QXylhNnUAt4hvjjCrafjicZOiTcRf/7D7HI0DN3tYvJNidKnj9UYYMqn2K+/q7k1R39pBYLvo+PApWQRZeBetvwHzD3NH/bKS8cfQLyGUHInXEsevK6iiwesbDAuCZKs0TOTBkiYptR/PzfTqqdB08UX9SdIWzQYo=
+	t=1709441368; cv=none; b=qgK9QULMBRJVNrxjvWW0nBczscrrQWCUmPILZJ21Wu/0MzLHPDTiYTQL15Cv2ZNmI3bpRLhABTnEIyR9MO3ymdD9QISSZZSg2rZ2MQKjVKgfdjS9dqLljLVwAq1hNVPtUAf6Uv677/nmyuxse0X3l1qQrLqUwb8L49jPFtGkuZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709440049; c=relaxed/simple;
-	bh=tgkxv0wJipx7iT6D8udnhav/UB2N8Ez2CrQrfJ3/1Fk=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=RgkrrUfNJusT1Pfc5R39fnlUKpS6wMZAFHUO2VJnrAyrqzt4ZHpuMmeTfpvxoMmTPI//n3TN8iKLHE4polsZVuI+sUMVeEET37LoBvIjJPpDKAcHL/7DqrWSqHwY+Nm4nB7E5YFJYgbChcLWkEyaQgNDEUYtjGRApoSpORHMYJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ospqSB5k; arc=none smtp.client-ip=203.205.251.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709441368; c=relaxed/simple;
+	bh=/mMBea5qOP8qQVAp1Iyo3m+jJso1XFmBlu1283c3SAs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XQl021RW8FNpk1esOc6BPb0bdzlhZspSE3xsCeWPbuSHwlcX/e/d9IfpKQdRA7aNkuly+Ia3yRu3uHfYsCi27MhZ4C5C7+56vVsb2Fv2UGnlWp7fC8N2pJN7Ggyr9Nz052TVYHT6+Gmjpq9AiKupWnzlNfA7oqU7prx4UmxHE8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=vJvCPUow; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ospqSB5k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709440038; bh=aS+G9OyqYa6igSB8+oaADpXxrUcRmnnV1ukdP5ZUw40=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ospqSB5kzogVUhsCSraNkPwC0bVgRVkHNZ+PZrlqmJxfE0N5jWvKBtfb2tLmafeZ9
-	 /h7mjK4NhfMvsDx21laMMxI/eEuquDM2MVDJxpJ90nnw8YLjCbTl6GuOnpAvKWUQZ/
-	 oRl6sxxB65urwq0EdeCmsA+6ECd8aptVAQgwS7V0=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 4B91820F; Sun, 03 Mar 2024 12:18:57 +0800
-X-QQ-mid: xmsmtpt1709439537tv7yagi3y
-Message-ID: <tencent_25067C49AB2EDF6EE5CC95A7FA86C992F806@qq.com>
-X-QQ-XMAILINFO: MyIXMys/8kCtrKzo+WwWQUCutSBfQRboT1XAuuTchFnlDdd28/APvRLxK7ln2S
-	 RDVzZtWZJqG9hKC2xWGS5+4d6sgY7dts/L42PLnF5ySVCZWnppoD3fk+RoEDgs3O881WKyhBMb33
-	 mRBnAj8LgaAk2tTijlN0fFof8RdAvD8HwT9Tvm0tMOQoMPS/CKtOPl/ooaSC/2rM7AXF7ZrRkWJx
-	 CToej6NhIINDxPeCjhOEjmuJToRByK7AmZGrplDIggmnkMTe1n9edwzQqBPtZtl8byLVkYPJxHAz
-	 SVNsN3/Gg3MqiN0F+qApukqKRCUqAr10jQwKDEv092B/LbaSO4p5sHCFMw9yOaWNFwPr5Ip5lNus
-	 Qu/htmJprUzq+CPVfKnwO51FIJrBcmQpxXZK8f+DbDnZeENGxbHa/Scz4MF7RvfYRPzW82Vcftt1
-	 gRiHoiJYMaz2cJKK+4ToFJb7IK0LhOhg2aqtXjwD7xeb+/O+3zvWIBQEWejB/KkIlNlJ0NfXIR/G
-	 rP8VLdybv/C9MujLrQqQ77cpFGWg9we8a70OJg/KPYtWZvA9UjdVUHpvf2VCdtpMBrT9uLjJF1nW
-	 qFj7oWw+p2BCMdV4IRIOLBJS0YKFxxfj0CXGH2WSTCn/QpcrRrDtBmxc0plGWMWwwo0/jBCgEeAz
-	 gLvZNSFr5peqIe7qFURSD7xx/7fvOqrOtPjClIyoNVwIx9zrFej4dqWAs56qzMJdKCO/P+1m/4aD
-	 HbGOZJgPTPEYIv09CmdTzFH7/eE0YQwG7wrurhaoQtBcRchLwqA8jjm2xdwubj71j/7EnYQn94AA
-	 fw8ZTU6NLLqkwFKBrqLkmsmZosa/HBrcHyF5SqOMmgSMrEb2aQmjcOVvytxD9Ypw/boj8BSvZbCb
-	 2t3w0AGKdjNBALPBF+eughIKO5GR0OihUz7N3hXThLeKPoTUVSLpd3yUQFLexPsPRq/f/+sZ0iO6
-	 6zsm8mg/2m1U2EbeCAp2K/2sz0v/tpYB4cFmzdMoKllNEyBZ4vsisp3YAQpLBnHoRSQk+jOf4Ib9
-	 /H/dRYmw==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com
-Cc: allison.henderson@oracle.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	rds-devel@oss.oracle.com,
-	santosh.shilimkar@oracle.com,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] net/rds: fix WARNING in rds_conn_connect_if_down
-Date: Sun,  3 Mar 2024 12:18:57 +0800
-X-OQ-MSGID: <20240303041856.31749-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000c0550506125e4118@google.com>
-References: <000000000000c0550506125e4118@google.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vJvCPUow"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1709441366; x=1740977366;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EcAkR74T37oaMFgDuTvxPlS3yLJ8+qDqwNv46qMyVV4=;
+  b=vJvCPUowcs9mjlz38yg5SeXnN9n2yrVsQ2PWvYwE1JC3irXJ7UFzDF58
+   bwN80YFRBad1u5MDlHwy4uKyILPE0/UcCVcuMNUKADS5EiqnDdDsGAJrx
+   auyeJGGx7DTWSRZTG+/u9vT63BACf57TqVD5dK0GOBinGxICpufgExClZ
+   k=;
+X-IronPort-AV: E=Sophos;i="6.06,200,1705363200"; 
+   d="scan'208";a="638173303"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 04:49:23 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.43.254:33619]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.9.254:2525] with esmtp (Farcaster)
+ id 0f94f4e3-8c8b-42ed-9481-e718686ab622; Sun, 3 Mar 2024 04:49:21 +0000 (UTC)
+X-Farcaster-Flow-ID: 0f94f4e3-8c8b-42ed-9481-e718686ab622
+Received: from EX19D026EUB004.ant.amazon.com (10.252.61.64) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Sun, 3 Mar 2024 04:49:21 +0000
+Received: from uc3ecf78c6baf56.ant.amazon.com (10.187.170.45) by
+ EX19D026EUB004.ant.amazon.com (10.252.61.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Sun, 3 Mar 2024 04:49:18 +0000
+From: Andrew Paniakin <apanyaki@amazon.com>
+To: <stable@vger.kernel.org>
+CC: Benjamin Herrenschmidt <benh@amazon.com>, Andrew Panyakin
+	<apanyaki@amazon.com>, Maximilian Heyne <mheyne@amazon.de>, Boris Ostrovsky
+	<boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>, "Stefano
+ Stabellini" <sstabellini@kernel.org>, Sasha Levin <sashal@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, Julien Grall
+	<jgrall@amazon.com>, <xen-devel@lists.xenproject.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH 5.4] xen/events: close evtchn after mapping cleanup
+Date: Sat, 2 Mar 2024 20:45:39 -0800
+Message-ID: <20240303044539.2673085-1-apanyaki@amazon.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,50 +61,167 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D035UWA004.ant.amazon.com (10.13.139.109) To
+ EX19D026EUB004.ant.amazon.com (10.252.61.64)
 
-If connection isn't established yet, get_mr() will fail, trigger connection after
-get_mr().
+From: Andrew Panyakin <apanyaki@amazon.com>
 
-Fixes: 584a8279a44a ("RDS: RDMA: return appropriate error on rdma map failures") 
-Reported-and-tested-by: syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+From: Maximilian Heyne <mheyne@amazon.de>
+
+Commit fa765c4b4aed2d64266b694520ecb025c862c5a9 upstream
+
+shutdown_pirq and startup_pirq are not taking the
+irq_mapping_update_lock because they can't due to lock inversion. Both
+are called with the irq_desc->lock being taking. The lock order,
+however, is first irq_mapping_update_lock and then irq_desc->lock.
+
+This opens multiple races:
+- shutdown_pirq can be interrupted by a function that allocates an event
+  channel:
+
+  CPU0                        CPU1
+  shutdown_pirq {
+    xen_evtchn_close(e)
+                              __startup_pirq {
+                                EVTCHNOP_bind_pirq
+                                  -> returns just freed evtchn e
+                                set_evtchn_to_irq(e, irq)
+                              }
+    xen_irq_info_cleanup() {
+      set_evtchn_to_irq(e, -1)
+    }
+  }
+
+  Assume here event channel e refers here to the same event channel
+  number.
+  After this race the evtchn_to_irq mapping for e is invalid (-1).
+
+- __startup_pirq races with __unbind_from_irq in a similar way. Because
+  __startup_pirq doesn't take irq_mapping_update_lock it can grab the
+  evtchn that __unbind_from_irq is currently freeing and cleaning up. In
+  this case even though the event channel is allocated, its mapping can
+  be unset in evtchn_to_irq.
+
+The fix is to first cleanup the mappings and then close the event
+channel. In this way, when an event channel gets allocated it's
+potential previous evtchn_to_irq mappings are guaranteed to be unset already.
+This is also the reverse order of the allocation where first the event
+channel is allocated and then the mappings are setup.
+
+On a 5.10 kernel prior to commit 3fcdaf3d7634 ("xen/events: modify internal
+[un]bind interfaces"), we hit a BUG like the following during probing of NVMe
+devices. The issue is that during nvme_setup_io_queues, pci_free_irq
+is called for every device which results in a call to shutdown_pirq.
+With many nvme devices it's therefore likely to hit this race during
+boot because there will be multiple calls to shutdown_pirq and
+startup_pirq are running potentially in parallel.
+
+  ------------[ cut here ]------------
+  blkfront: xvda: barrier or flush: disabled; persistent grants: enabled; indirect descriptors: enabled; bounce buffer: enabled
+  kernel BUG at drivers/xen/events/events_base.c:499!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 44 PID: 375 Comm: kworker/u257:23 Not tainted 5.10.201-191.748.amzn2.x86_64 #1
+  Hardware name: Xen HVM domU, BIOS 4.11.amazon 08/24/2006
+  Workqueue: nvme-reset-wq nvme_reset_work
+  RIP: 0010:bind_evtchn_to_cpu+0xdf/0xf0
+  Code: 5d 41 5e c3 cc cc cc cc 44 89 f7 e8 2b 55 ad ff 49 89 c5 48 85 c0 0f 84 64 ff ff ff 4c 8b 68 30 41 83 fe ff 0f 85 60 ff ff ff <0f> 0b 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44 00 00
+  RSP: 0000:ffffc9000d533b08 EFLAGS: 00010046
+  RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000006
+  RDX: 0000000000000028 RSI: 00000000ffffffff RDI: 00000000ffffffff
+  RBP: ffff888107419680 R08: 0000000000000000 R09: ffffffff82d72b00
+  R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000001ed
+  R13: 0000000000000000 R14: 00000000ffffffff R15: 0000000000000002
+  FS:  0000000000000000(0000) GS:ffff88bc8b500000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 0000000002610001 CR4: 00000000001706e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   ? show_trace_log_lvl+0x1c1/0x2d9
+   ? show_trace_log_lvl+0x1c1/0x2d9
+   ? set_affinity_irq+0xdc/0x1c0
+   ? __die_body.cold+0x8/0xd
+   ? die+0x2b/0x50
+   ? do_trap+0x90/0x110
+   ? bind_evtchn_to_cpu+0xdf/0xf0
+   ? do_error_trap+0x65/0x80
+   ? bind_evtchn_to_cpu+0xdf/0xf0
+   ? exc_invalid_op+0x4e/0x70
+   ? bind_evtchn_to_cpu+0xdf/0xf0
+   ? asm_exc_invalid_op+0x12/0x20
+   ? bind_evtchn_to_cpu+0xdf/0xf0
+   ? bind_evtchn_to_cpu+0xc5/0xf0
+   set_affinity_irq+0xdc/0x1c0
+   irq_do_set_affinity+0x1d7/0x1f0
+   irq_setup_affinity+0xd6/0x1a0
+   irq_startup+0x8a/0xf0
+   __setup_irq+0x639/0x6d0
+   ? nvme_suspend+0x150/0x150
+   request_threaded_irq+0x10c/0x180
+   ? nvme_suspend+0x150/0x150
+   pci_request_irq+0xa8/0xf0
+   ? __blk_mq_free_request+0x74/0xa0
+   queue_request_irq+0x6f/0x80
+   nvme_create_queue+0x1af/0x200
+   nvme_create_io_queues+0xbd/0xf0
+   nvme_setup_io_queues+0x246/0x320
+   ? nvme_irq_check+0x30/0x30
+   nvme_reset_work+0x1c8/0x400
+   process_one_work+0x1b0/0x350
+   worker_thread+0x49/0x310
+   ? process_one_work+0x350/0x350
+   kthread+0x11b/0x140
+   ? __kthread_bind_mask+0x60/0x60
+   ret_from_fork+0x22/0x30
+  Modules linked in:
+  ---[ end trace a11715de1eee1873 ]---
+
+Fixes: d46a78b05c0e ("xen: implement pirq type event channels")
+Co-debugged-by: Andrew Panyakin <apanyaki@amazon.com>
+Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+[apanyaki: backport to v5.4-stable]
+Signed-off-by: Andrew Paniakin <apanyaki@amazon.com>
 ---
- net/rds/rdma.c | 3 +++
- net/rds/send.c | 6 +-----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+Compare to upstream patch this one does not have close_evtchn flag
+because there is no need to handle static event channels.
+This feature was added only in 58f6259b7a08f ("xen/evtchn: Introduce new
+IOCTL to bind static evtchn")
 
-diff --git a/net/rds/rdma.c b/net/rds/rdma.c
-index fba82d36593a..a4e3c5de998b 100644
---- a/net/rds/rdma.c
-+++ b/net/rds/rdma.c
-@@ -301,6 +301,9 @@ static int __rds_rdma_map(struct rds_sock *rs, struct rds_get_mr_args *args,
- 			kfree(sg);
+ drivers/xen/events/events_base.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index 91806dc1236d..f8554d9a9f28 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -825,8 +825,8 @@ static void shutdown_pirq(struct irq_data *data)
+ 		return;
+ 
+ 	do_mask(info, EVT_MASK_REASON_EXPLICIT);
+-	xen_evtchn_close(evtchn);
+ 	xen_irq_info_cleanup(info);
++	xen_evtchn_close(evtchn);
+ }
+ 
+ static void enable_pirq(struct irq_data *data)
+@@ -869,8 +869,6 @@ static void __unbind_from_irq(unsigned int irq)
+ 	if (VALID_EVTCHN(evtchn)) {
+ 		unsigned int cpu = cpu_from_irq(irq);
+ 
+-		xen_evtchn_close(evtchn);
+-
+ 		switch (type_from_irq(irq)) {
+ 		case IRQT_VIRQ:
+ 			per_cpu(virq_to_irq, cpu)[virq_from_irq(irq)] = -1;
+@@ -883,6 +881,7 @@ static void __unbind_from_irq(unsigned int irq)
  		}
- 		ret = PTR_ERR(trans_private);
-+		/* Trigger connection so that its ready for the next retry */
-+		if (ret == -ENODEV)
-+			rds_conn_connect_if_down(cp->cp_conn);
- 		goto out;
+ 
+ 		xen_irq_info_cleanup(info);
++		xen_evtchn_close(evtchn);
  	}
  
-diff --git a/net/rds/send.c b/net/rds/send.c
-index 5e57a1581dc6..fa1640628b2f 100644
---- a/net/rds/send.c
-+++ b/net/rds/send.c
-@@ -1313,12 +1313,8 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
- 
- 	/* Parse any control messages the user may have included. */
- 	ret = rds_cmsg_send(rs, rm, msg, &allocated_mr, &vct);
--	if (ret) {
--		/* Trigger connection so that its ready for the next retry */
--		if (ret ==  -EAGAIN)
--			rds_conn_connect_if_down(conn);
-+	if (ret) 
- 		goto out;
--	}
- 
- 	if (rm->rdma.op_active && !conn->c_trans->xmit_rdma) {
- 		printk_ratelimited(KERN_NOTICE "rdma_op %p conn xmit_rdma %p\n",
+ 	xen_free_irq(irq);
 -- 
-2.43.0
+2.40.1
 
