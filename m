@@ -1,119 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB3D2EB09;
-	Sun,  3 Mar 2024 14:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56235B1E8;
+	Sun,  3 Mar 2024 14:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709477148; cv=none; b=cb3BQ8La/+s0Ofncp8Zhu13kqKxdzF/V4oFDyjs4CgNvjTbvlQmWhA1ZdT4I9wKJ4gxGtAV6T6ga8Oh6dmwT8QwbvSWe8nGNBYakfp+I80L7uTZi/zr2MDCdZywLIhG1X7SpM/pgqk76v1Ei7Fw7+t2bIUTsyXzQPpvzDqf15p8=
+	t=1709477724; cv=none; b=M44U1adKFplhLJEVCCjral3QDtdYgZF87m5hjhlAoxf8hb2B2m4G2/vL2Y6tZQrlRgXlUfYyr5SU1VNgjc9aRbP8r2vtiiD8iNkdRIT32lFlMf6biHoh/bnpduxjVkdNolru+No09iVaftbLWW1z6hvrH9zPnrS6yyYkYzdSnyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709477148; c=relaxed/simple;
-	bh=Lla/Lbk/BFpYbCgKYKgOofS/ieuIKnepxJxl1QWSEv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JTopyj5Cy9DdDfW7cBJtp8tUy/6wH7iRtkoGI08xnkzfmdQ9U5NH4D30CTEW9tncN68goiQVjoGVTpKiEg32AZJiwCcsV8HyI1obbOybr5NUO45e1la92hg9/MFtPEQe5aURf/RDHgnaVFRbWrE/RTYxXaOB9Bd715EZAlsCm6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HAVjpDeU; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709477724; c=relaxed/simple;
+	bh=zKFNE4/BKI7X/507/duOC2eR6r5WNqry55jGlRdStBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i1zrnA2vuYovJ3NCM71ouVfX/QGHHkXczp1tIi61P11L8ib9YnaLbuIGDHsKuwiA04BTzhH+8eWRSMZraWsv1TCXOHHN/S8K2eKNL/nCQ+D8ngwy+pMR2pt/zf+T0MTzIg3szPevFNHGEfOy6PLQ66LOCrnnm24pfYCiHZOzZOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LlA8FB3X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAVjpDeU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709477145; x=1741013145;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Lla/Lbk/BFpYbCgKYKgOofS/ieuIKnepxJxl1QWSEv8=;
-  b=HAVjpDeU3bv2dmKb+uwqy2VPjtDemc/0p/lYwRG3Rxh4oG2lYWQttHHo
-   DwLdcBNWmSX/cEvzp7cxRDRrQt1UhmDBqz0ulC5V2wUXYJ+pE+iOw5sB+
-   NCy3yZRSzfiQmvSMbL6R7a2vz6BqOIHU2n7/aPyUiL6exsj8RPGU9b2m4
-   KpaWov40rBrS0LcecA3YI5ab0gFarrHTXXzQ93lE1HGM+Lc8b1JDaU+DC
-   usoUSvQw0WosEaPzkl7CEUFISAds+u6rSKsWDwoKdXtoU/steg7gsh0Al
-   KehHZz5ACfK1stcnOhYM+6D4ngsQpejc+q+3S1uMKufXPdSuGFsUE/gjR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11001"; a="14679406"
-X-IronPort-AV: E=Sophos;i="6.06,201,1705392000"; 
-   d="scan'208";a="14679406"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 06:45:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,201,1705392000"; 
-   d="scan'208";a="13222029"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa005.fm.intel.com with ESMTP; 03 Mar 2024 06:45:42 -0800
-Date: Sun, 3 Mar 2024 22:41:32 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
-	michael.roth@amd.com, isaku.yamahata@intel.com,
-	thomas.lendacky@amd.com
-Subject: Re: [PATCH 16/21] KVM: guest_memfd: pass error up from
- filemap_grab_folio
-Message-ID: <ZeSMHIEmnzUVUplr@yilunxu-OptiPlex-7050>
-References: <20240227232100.478238-1-pbonzini@redhat.com>
- <20240227232100.478238-17-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LlA8FB3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23353C433F1;
+	Sun,  3 Mar 2024 14:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709477724;
+	bh=zKFNE4/BKI7X/507/duOC2eR6r5WNqry55jGlRdStBY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LlA8FB3XCAxwgDjFJsiFiFuTyjZ64l6OeN5agero4ToCq5TU8mBzF8lcgMa+aM3ie
+	 autugMIakkuYrAqS48HfPKGT26DtEG0yHCrb5zahZBgo/txX48sw6pGDALMHeZG99U
+	 XOxqnVITNY38et6w9Se2Pb1Q8jb9xAJLrg9/fSYp31+LWikOn59swQkjwjB/YA7fkO
+	 50Dx8NaKM1Vl/7dl4VYdPm63IWht95z+jMUKrbBqsScq79z11Lj2syNXPrHhNf/wo5
+	 BGYvJF3FLJ5apx4yya+hExUtFVB+WaAMI0/iLNoPuo0IQlLvX3E4xABTO+vIhllpoH
+	 NhUfagF9bBqhw==
+Date: Sun, 3 Mar 2024 14:55:07 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Subhajit Ghosh
+ <subhajit.ghosh@tweaklogic.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob
+ Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Marek Vasut <marex@denx.de>, Anshul Dalal <anshulusr@gmail.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, Matt Ranostay
+ <matt@ranostay.sg>, Stefan Windfeldt-Prytz
+ <stefan.windfeldt-prytz@axis.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 5/5] iio: light: Add support for APDS9306 Light
+ Sensor
+Message-ID: <20240303145507.25523b35@jic23-huawei>
+In-Reply-To: <a5aa10f3-e487-4e70-8010-1604bea3a936@gmail.com>
+References: <20240228122408.18619-1-subhajit.ghosh@tweaklogic.com>
+	<20240228122408.18619-6-subhajit.ghosh@tweaklogic.com>
+	<a828e77c-b3d4-49bb-b0bb-b9fd6cb7d114@gmail.com>
+	<Zd9tApJClX7Frq20@smile.fi.intel.com>
+	<45386f39-a034-4d70-a6d4-8804c27aadce@tweaklogic.com>
+	<21ecfb62-30b7-4073-bad6-46a9e08e08b0@gmail.com>
+	<ZeCJ3T8HVaQZC1Ps@smile.fi.intel.com>
+	<a5aa10f3-e487-4e70-8010-1604bea3a936@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240227232100.478238-17-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024 at 06:20:55PM -0500, Paolo Bonzini wrote:
-> Some SNP ioctls will require the page not to be in the pagecache, and as such they
-> will want to return EEXIST to userspace.  Start by passing the error up from
-> filemap_grab_folio.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  virt/kvm/guest_memfd.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 0f4e0cf4f158..de0d5a5c210c 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -20,7 +20,7 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
->  	/* TODO: Support huge pages. */
->  	folio = filemap_grab_folio(inode->i_mapping, index);
->  	if (IS_ERR_OR_NULL(folio))
-> -		return NULL;
-> +		return folio;
+On Thu, 29 Feb 2024 17:35:01 +0200
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-I think it impacts kvm_gmem_get_pfn()
+> On 2/29/24 15:42, Andy Shevchenko wrote:
+> > On Thu, Feb 29, 2024 at 02:58:52PM +0200, Matti Vaittinen wrote: =20
+> >> On 2/29/24 14:34, Subhajit Ghosh wrote: =20
+> >>> On 29/2/24 03:57, Andy Shevchenko wrote: =20
+> >>>> On Wed, Feb 28, 2024 at 03:08:56PM +0200, Matti Vaittinen wrote: =20
+> >>>>> On 2/28/24 14:24, Subhajit Ghosh wrote: =20
+> >=20
+> > ...
+> >  =20
+> >>>>>> +=C2=A0=C2=A0=C2=A0 if (gain_new < 0) {
+> >>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err_ratelimited(de=
+v, "Unsupported gain with time\n");
+> >>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return gain_new;
+> >>>>>> +=C2=A0=C2=A0=C2=A0 } =20
+> >>>>
+> >>>> What is the difference between negative response from the function
+> >>>> itself and
+> >>>> similar in gain_new?
+> >>>> =20
+> >>> -ve response form the function is an error condition.
+> >>> -ve value in gain_new means - no valid gains could be computed.
+> >>> In case of error conditions from the function, the gain_new is also s=
+et
+> >>> to -1.
+> >>> My use case is valid hardware gain so I went for checking only gain_n=
+ew.
+> >>> Matti will be the best person to answer on this. =20
+> >>
+> >> I now rely on the kerneldoc for the
+> >> iio_gts_find_new_gain_by_old_gain_time() as it seems reasonable to me:
+> >>
+> >> * Return: 0 if an exactly matching supported new gain was found. When a
+> >> * non-zero value is returned, the @new_gain will be set to a negative =
+or
+> >> * positive value. The negative value means that no gain could be compu=
+ted.
+> >> * Positive value will be the "best possible new gain there could be". =
+There
+> >> * can be two reasons why finding the "best possible" new gain is not d=
+eemed
+> >> * successful. 1) This new value cannot be supported by the hardware. 2=
+) The
+> >> new
+> >> * gain required to maintain the scale would not be an integer. In this=
+ case,
+> >> * the "best possible" new gain will be a floored optimal gain, which m=
+ay or
+> >> * may not be supported by the hardware. =20
+> >  =20
+> >> Eg, if ret is zero, there is no need to check validity of the gain_new=
+ but
+> >> it is guaranteed to be one of the supported gains. =20
+> >=20
+> > Right, but this kernel doc despite being so verbose does not fully answ=
+er my
+> > question. What is the semantic of that "negative value"?  =20
+>=20
+> Current approach is to always investigate the function return value as=20
+> error if the 'new_gain' is negative. Or, caller specific error if=20
+> new_gain is unsuitable in some other way. When this is done, the=20
+> absolute value of the negative 'new_gain' does not matter.
+>=20
+> > I would expect to have
+> > the error code there (maybe different to what the function returns), bu=
+t at
+> > least be able to return it to the upper layers if needed. =20
+>=20
+> I am not sure I see the benefit of returning the new_gain over returning=
+=20
+> the error returned by the function. Well, maybe the benefit to be able=20
+> to not evaluate the value returned by the=20
+> iio_gts_find_new_gain_by_old_gain_time() - although I'm not sure I love i=
+t.
+>=20
+> > Hence 2 ARs I see:
+> > 1) clarify the kernel documentation there;
+> > 2) update the semantic of the gain_new to simplify caller's code. =20
+>=20
+> Yes, I agree. Patches welcome :) By the very least the kerneldoc can be=20
+> improved. I'm undecided on benefits of having the error code in 'new_gain=
+'.
 
-{
-	...
+It's definitely a weird bit of API and would benefit from a rethink.
+>=20
+> The GTS API fixes shouldn't be required in the context of this driver=20
+> series though.
+Agreed.
+>=20
+> Yours,
+> 	--Matti
+>=20
 
-	folio = kvm_gmem_get_folio(file_inode(file), index);
-	if (!folio) {
-		r = -ENOMEM;
-		goto out_fput;
-	}
-
-	...
-}
-
-Thanks,
-Yilun
-
->  
->  	/*
->  	 * Use the up-to-date flag to track whether or not the memory has been
-> @@ -146,8 +146,8 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
->  		}
->  
->  		folio = kvm_gmem_get_folio(inode, index);
-> -		if (!folio) {
-> -			r = -ENOMEM;
-> +		if (IS_ERR_OR_NULL(folio)) {
-> +			r = folio ? PTR_ERR(folio) : -ENOMEM;
->  			break;
->  		}
->  
-> -- 
-> 2.39.0
-> 
-> 
-> 
