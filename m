@@ -1,104 +1,129 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EF6AD58
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 08:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267A69463;
+	Sun,  3 Mar 2024 08:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709455693; cv=none; b=u0ItwICzh5/kJHY578dI+Ve85lRRYhDggN6d87dlfAqf+YvjxF8llmafTp/uBjhsPtt6f2drDL0lHRz7OKK01AiGShiN4Emfa75YBRQroA9RgJZasf6NFhkvPOquqqA+FLPjRQ0muTPJNZ6lCCEUQ/p8Nkwg2G8rqOsLB2lAwwc=
+	t=1709455807; cv=none; b=b/izIhpN0mRTpI84OFvXHWVk5ttpIfNyIWsCbP3lvYYEfJ5SbNsQQ/oAyEacl4koK3NB91sNcXsrD9MpQMzs8bD9iHMGGLfah1biMhi4Jg9Pz6/XoHpJ3EQCIIwsgkBDaH+2P36l4hHp0DKLbU8Fe/3DQEwAEchKBBVZL1KjgUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709455693; c=relaxed/simple;
-	bh=kLYaTjP5R2oq1R/5Twd/mx9E1Qx85BwSSo78QQuvl+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WW19/4RVALwVjaL0iN4tX9S9GW6f0yu3IB/ANwVgoqGwZCyBfxP3rlXrYUveerXv8m02E2J8Cgt2Dq7PxY4GNWMXeCz1sgoRcTMaROIVAp72h+toI37lm8Hcm70rdTcTNgappB9Pk3k+B63VJqnz3EgD6Qe04hfBPwM58K+OjoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pNA73hkW; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709455807; c=relaxed/simple;
+	bh=Yj6iX0LL5X90eG+2pDyO+Qzz9M+jP/NmAc3mleyIkZQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OuR/6RFFgi2gi5e/ZPoZUt2AQz8+hk7ykU90YUqXwet8575v8tHE09t5suTAePcz2IjsQ5wyi5oe3033CFQIoj31QohomVoH6Iii9+IO0wrTG0IYNlbKs/6JFA9Ax04JH53RNYjjm+9YTU2leky1rkoiXCy2cRDnt3d/lh2VXug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URdqFMO/; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pNA73hkW"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6098b9ed2a3so12526827b3.0
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 00:48:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URdqFMO/"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5a127c1feb0so242787eaf.2;
+        Sun, 03 Mar 2024 00:50:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709455691; x=1710060491; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1709455805; x=1710060605; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kLYaTjP5R2oq1R/5Twd/mx9E1Qx85BwSSo78QQuvl+8=;
-        b=pNA73hkWKG5hBTFzkSQB9Rci2BFiBoAUaoOfrU5+NFg7sEqvm8W29LtG8D9YhmFZy+
-         hOQdg7pRinoXHTOYfyWNbU/V4iTQoYflmMgnZJUo4kVqGbqMG1yqAOenq9STYLi2maFW
-         ThmZeT1NiYfaaMK+uthM9k0ZRzVsoySAa8FauEAv/tV5m341VcsKvJ4n4ejZSG33NmKO
-         BeZ5LP5pUfcbeh6smpK6u8jH1nTU1HGUj6yET6vgPhJwWImVavuf4bpYBQFLlIGBiVwu
-         ZPY3pfhIW87JHtiNsJDksyb/oTCKHzOkmnVzxNZ5A3fzQ7fTzq4hyWflh3LRQtyXo6DR
-         ISDA==
+        bh=urYDUe+DtMbYmGQD/lY83L/cyDLHJDDpcAruR8ELVew=;
+        b=URdqFMO/AbYQH/M/+VNWONSUfdcCT6L8m0Xp83S5ivtp3fDIZmYZdQ1U8+DfjdLoZC
+         G4CMZjXZlDa+Qycgq+6UK8GBKfs6LZdEyvkq72f3cN1lt+EIK122dIAIuWE3x6XlyLZt
+         +D56BkqSKE4bt3C8Leb2U0OMajVuzQUCDnB86esxSMfXn+7KwZiSU/rUZbAv50aMFdLy
+         G48+9JeuDIpal3s4V6wVi5uOHUH8AXhXhWmnMPA9nZZVxwlNSMDaDsv56Qfd+AyedXPR
+         xqOAnFRmSmpiVPCFiVGNuoyJNQ7xNCQSP2dfP7iNBfB3se84crmZizxV4gxVkFbZL+4s
+         fdQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709455691; x=1710060491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709455805; x=1710060605;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kLYaTjP5R2oq1R/5Twd/mx9E1Qx85BwSSo78QQuvl+8=;
-        b=lBqvlas6LMsVYGI1vhy1gK8RfNrjhqkpE/+eRQ375EVuXpVbQQT3wPEbxdn+jWdtfH
-         ZA8SYgIQ5PppoaU0FS2NFTNSvxO58sO5G7NNikuslZmbT4ecbuUtSitIJDZGcU6h1+yR
-         31lg6XlHhQOeVZHN46AYvLsZXAolFJudCGkEDwgHZcbjHSoy+l/AtjtTafG2mw009rW6
-         F6rWCYdHNW5QPd4zvUsBm1fBOiwF+Rvij7CdPIw9RawdA6nGoaWso4vUKGSF4Hyxo+eE
-         vLC5+tnomyeVLsAD+YjSYjp+KvxyOcPP+dzZ75mnHd9oN9HrlVMPoKR8dFcmJsVEGHST
-         HN6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOYFmHRjoAdua67wSxnTvaopOrUr+YrYAt3x+zuf4j1sV/bS36QpvuODSmp0goZquTIhYAt0PDO4595qhJW5ZLI8R97wtphiSJcN0V
-X-Gm-Message-State: AOJu0Yw6/DFCAdnFj4RLFfjWVib2D81TpvoPIS/eQh/3D5iblDvsIgeW
-	+gH0pREdPe+stDuziW5fMLAIAgrJ8afEfxWHsq4r+CZ5o1qpPB/5bGLzsH7YpPyjqvySAXDMydR
-	ivUdMj5nBDCJ9bhopDz/0i+APgLuMod8QmtfHZg==
-X-Google-Smtp-Source: AGHT+IHBdRv9QfjCZh/K8ngsmlUj0sB9GmAcizj5skko5rUg2FHag7v7Vi1eEBnFSP2Nv1DpYsQn3HvCRk62lQBOy0s=
-X-Received: by 2002:a81:7705:0:b0:604:9d6d:681f with SMTP id
- s5-20020a817705000000b006049d6d681fmr6160056ywc.31.1709455691305; Sun, 03 Mar
- 2024 00:48:11 -0800 (PST)
+        bh=urYDUe+DtMbYmGQD/lY83L/cyDLHJDDpcAruR8ELVew=;
+        b=rv79DucLbmjBKO2358n/rLdSWosAwTCm5VzL6bIkdUkEpshKmaSh1a4GXkpUmWcpfj
+         DbI2Ood0eJzimKROY6iRmEIw4VnUyCT3UBmEZ7MMJil+lpSCBdAJKbkXgaxNx718c+BI
+         fZOgUQzGDl50Pq9XbOPWzVNX/7J4/zklr6mXIfj73Psnf5+JbeiPupJzm2BL2v2diFLt
+         fqT7IyKucrStkyAaBRV2dmZLi3xoNtAu41o4cHyPE6Rwd81RI/Imhr5Qm27U/O4R5pGi
+         s7l3LTPCAliKtY6VHL/2LY4qP+HVACePdyhk/lbAZEHhlCtGaMDGRDrfTqftV5VbQcjK
+         bdbg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPbv9ihlyEIs59mewSYQ1/b1tvkBoU/4F6QZSrhleDGdQZyn0xtXIZ9g9VKqPH+HVQ5fC9gtC9jQq/0GgBCyBClp/vIkZWATUeGqPc
+X-Gm-Message-State: AOJu0YyDLHNTQX1hl0z9CbJr0gmrAp0wS7pkt0VN0cqfSZ5oFqTmeZxz
+	cOQ7EcbKZHnmAE9o18aY1Sng6Vc+VuHs7zLJlQtBNN3ovXidvFuN
+X-Google-Smtp-Source: AGHT+IHC1+8NHI84yDKUlYRB3brf7bA+Jl7CeCimrpD66l5vgEewW+qff+2s9REMJE9X/qcmw/NlWg==
+X-Received: by 2002:a05:6808:13d1:b0:3c1:c36e:9ed2 with SMTP id d17-20020a05680813d100b003c1c36e9ed2mr8644542oiw.36.1709455805180;
+        Sun, 03 Mar 2024 00:50:05 -0800 (PST)
+Received: from VM-147-239-centos.localdomain ([43.132.141.8])
+        by smtp.gmail.com with ESMTPSA id o8-20020a17090a744800b00299d061656csm5738592pjk.41.2024.03.03.00.50.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 03 Mar 2024 00:50:04 -0800 (PST)
+From: hyper <hyperlyzcs@gmail.com>
+To: shannon.nelson@amd.com,
+	brett.creeley@amd.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jitxie@tencent.com,
+	huntazhang@tencent.com,
+	hyper <hyperlyzcs@gmail.com>
+Subject: [PATCH net V2] net: pds_core: Fix possible double free in error handling path
+Date: Sun,  3 Mar 2024 16:49:54 +0800
+Message-Id: <20240303084954.14498-1-hyperlyzcs@gmail.com>
+X-Mailer: git-send-email 2.36.1
+In-Reply-To: <333dca5e-fae7-4684-afa8-10b8fdd48bf6@amd.com>
+References: <333dca5e-fae7-4684-afa8-10b8fdd48bf6@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227113426.253232-1-herve.codina@bootlin.com>
- <CAMRc=MeSMTnPUYGyJir4fc=6=Gnw_MVP9wfEKMQ6Ck33FYCrRA@mail.gmail.com>
- <CACRpkdZbGUd-u3ZcmmK1POSEq8z9J1aDhbGPAbcR6guKuEpEFQ@mail.gmail.com>
- <CAMRc=MeqiYZv3ViHRKKUsXTqG5Pc8Ev2jUcN=A4VuX3RU7dDtw@mail.gmail.com>
- <CACRpkdYWDzu+VMQOYO_Sh1NM2ei=VRC-0df4teAZjirfrTB67A@mail.gmail.com> <CAMRc=MdLmU3uezKSg2d83HSZ3wYXFx68oGshx_yJyvJToN261Q@mail.gmail.com>
-In-Reply-To: <CAMRc=MdLmU3uezKSg2d83HSZ3wYXFx68oGshx_yJyvJToN261Q@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 3 Mar 2024 09:48:00 +0100
-Message-ID: <CACRpkdaQ5OthgFMG+6DNy7BGi+qLMgqNMOfk+cqra37EGyEYRA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio-cdev: Release IRQ used by gpio-cdev on gpio
- chip removal
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Herve Codina <herve.codina@bootlin.com>, Kent Gibson <warthog618@gmail.com>, 
-	Saravana Kannan <saravanak@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 2, 2024 at 10:00=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Fri, Mar 1, 2024 at 9:15=E2=80=AFPM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
+When auxiliary_device_add() returns error and then calls
+auxiliary_device_uninit(), Callback function pdsc_auxbus_dev_release
+calls kfree(padev) to free memory. We shouldn't call kfree(padev)
+again in the error handling path.
 
-> > The problem is that I have never heard about a user unbinding/binding
-> > a driver from sysfs for anything but debugging a drivers ability to
-> > bind/unbind. Partly I feel that thing should just be moved
-> > to debugfs given the usecase and because it just looks like a way for
-> > attackers to provoke crashes given how some drivers look.
->
-> That's not the only thing - device unbind can also be triggered by
-> removing the module providing the driver which is a completely normal
-> operation for user-space.
+Fix this by cleaning up the redundant kfree() and putting
+the error handling back to where the errors happened.
 
-That is one thing, but every time I hear about "have you thought about
-users going in and using bind/unbind in sysfs" it's for builtin bool
-drivers.
+Fixes: 4569cce43bc6 ("pds_core: add auxiliary_bus devices")
+Signed-off-by: hyper <hyperlyzcs@gmail.com>
+---
+ drivers/net/ethernet/amd/pds_core/auxbus.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-I almost feel like bool drivers should have bind/unbind disabled by
-default :/
+diff --git a/drivers/net/ethernet/amd/pds_core/auxbus.c b/drivers/net/ethernet/amd/pds_core/auxbus.c
+index 11c23a7f3172..fd1a5149c003 100644
+--- a/drivers/net/ethernet/amd/pds_core/auxbus.c
++++ b/drivers/net/ethernet/amd/pds_core/auxbus.c
+@@ -160,23 +160,19 @@ static struct pds_auxiliary_dev *pdsc_auxbus_dev_register(struct pdsc *cf,
+ 	if (err < 0) {
+ 		dev_warn(cf->dev, "auxiliary_device_init of %s failed: %pe\n",
+ 			 name, ERR_PTR(err));
+-		goto err_out;
++		kfree(padev);
++		return ERR_PTR(err);
+ 	}
+ 
+ 	err = auxiliary_device_add(aux_dev);
+ 	if (err) {
+ 		dev_warn(cf->dev, "auxiliary_device_add of %s failed: %pe\n",
+ 			 name, ERR_PTR(err));
+-		goto err_out_uninit;
++		auxiliary_device_uninit(aux_dev);
++		return ERR_PTR(err);
+ 	}
+ 
+ 	return padev;
+-
+-err_out_uninit:
+-	auxiliary_device_uninit(aux_dev);
+-err_out:
+-	kfree(padev);
+-	return ERR_PTR(err);
+ }
+ 
+ int pdsc_auxbus_dev_del(struct pdsc *cf, struct pdsc *pf)
+-- 
+2.36.1
 
-The introduction of deferred probe has made the situation much better
-because it tends to exercise the bind/unbind path a bit.
-
-Yours,
-Linus Walleij
