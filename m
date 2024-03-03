@@ -1,63 +1,58 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xmbg9.mail.qq.com (xmbg9.mail.qq.com [81.69.217.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CF543143
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 13:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048CBDDBD
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 13:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.69.217.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709473510; cv=none; b=Mrj5ay/aGx9V3kD1toPdR0HjSJEhbPAlrPOTdMBCfIbUXqxamDLDUlOPEdPOBD1DsukRSI0MedylacedkUIowaa3PJjFCn/Xd0Ol0YLWhf6RckxWLGpr8E9WR9wgPEyPR4l061saHogNJq0Yz3obPNTk0xWX2yLJK0oaXYi9PFQ=
+	t=1709473812; cv=none; b=S/XgSTB3bf1vnxql6z4udBOlr3dqtUDsxESa0g+hHQg0vulXXWEJVqzKJukC3MhhWD2sV8gla2qh+2lwydhhMJYIFDyl48OR90N83vJIwkfwMl5NX5ScH0seMuYb0e+38Llbs+zzrV+4KdkbA81alNvu/PuPkX15G9He6GtCV3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709473510; c=relaxed/simple;
-	bh=HEgCdTvbhWhM9cKHruQw6qkKlH2qIXp7yjM9KSOCWwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bVKGCG2Gwe4Vsi8JSNDoxwxohrhqPwYl+zFVmp3qqUePxGNpb/Xi7pYPeDAUTeV2hnHwZFd5huukPkR3yUUFtk2VTrEFbty8re2p1RIH7//bYPnKmRvz0TTByQAP3KRVIKO6JTVkg9B4TudtSPIB9U4XpoTurKOXbokTFjJVW/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UnzvAxc9; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709473812; c=relaxed/simple;
+	bh=q7aVnpQfojbNvVjLMpOGPbY3ZgvtHFpeN7zbX1Nsa3M=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=CD0aAG0po3J7Artzk52LhANcYLG8Kpkby24ey8drctzvcJWExujO5hrix0S8qkXpiLZ1sLDTlmotLQPJ/Idd6Hud1gAOS2+uqFkWnpmFypwX6iu5qvmyvYcnqXZgun46ikZeVQuHgTBja96OLf79+qTr1pa9pOEKo5frO9eDORc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=D9LfZCp9; arc=none smtp.client-ip=81.69.217.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnzvAxc9"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dcce5e84bcso29018755ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 05:45:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709473509; x=1710078309; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=f+XvaSacvZv2FwpCKQI/VZDC6hmI2YHWeRkctoTLloI=;
-        b=UnzvAxc9tjvBnVSx8yGbFhELy39UJVu+FyDQytWNlL5T2/tP3ThXYdGu2prjpSPxeA
-         ues6tpBbsWL5GhXN3MdwY4JeS81XEKYFtSgJ4YXRzL7wIQUIq5KRNTZq8qzBUwrMxR4U
-         WvTBtBU7TuRHqHIs+x6D5R+ATPKcOUNjreMZKJC63DwA5W3d32J6amvzlbY9bwq/9rtz
-         3rCDr5shsR4Ke26jqEYib3l6WPDN6hevw0dlYZ2e9wypVTmHnQKqKrGwxZPRHjJ25ygI
-         A3BF7zLDKhfxAZwYY5BrdwqMWAWNxsokN3qxUfH8Aga7gxKxJoA3SMmN58K2sG3UiAr3
-         YiKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709473509; x=1710078309;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f+XvaSacvZv2FwpCKQI/VZDC6hmI2YHWeRkctoTLloI=;
-        b=H5msZmCSvvpGbdC6nhXzHe8CknSy0Y3dZCzngM0QilttWkbxWfZfYL9V8GZ2OyYL/z
-         fY5al8T+Plwq3KDaBQVS8qok7i4vqgSOoXT5I8sdJnoIUdDWEfVRV/zIEQ3fj8DVRd9Z
-         KJSRWfCl/aS4r9UyLXKtw8WcFdH6lJHr1KCb+Zy/r3EO50LF/jeuPbiisP6YhyGKNP6n
-         Z5Lu++tqXCu+kUy7toWEI6I71JL0xVVOhiGu89+DBdtXujtY1tyIhDwXj5uh6BvKAhDU
-         vkmw0juj/lWzQAitGBVQVHLgSFlLHpxYhnD26Ffl5ERueJOUx4Q0x1OA8RfqqIPkBrR6
-         SK9A==
-X-Gm-Message-State: AOJu0YwXztRYKRmBTJ7zasM+rBuA7+eo26Yuna6j2cyMnJ/D658sZm3I
-	s/Oj8hlLSFvbQ2yadNeWmUpCP1Zx2arlzhlIc7uJI1gyjpAL5hF1ANwoQ/3T
-X-Google-Smtp-Source: AGHT+IHp0+kCn7euvS782F+lC0zGNSOjCiP4/N9VFfmkptpZU9eXdpG/ngz60LloISbZgst1lD4Q5g==
-X-Received: by 2002:a17:903:22cb:b0:1db:c6ff:664a with SMTP id y11-20020a17090322cb00b001dbc6ff664amr6965221plg.53.1709473508876;
-        Sun, 03 Mar 2024 05:45:08 -0800 (PST)
-Received: from kernel.. ([2402:e280:214c:86:98b4:6d91:d5f4:8f27])
-        by smtp.gmail.com with ESMTPSA id c9-20020a170902d48900b001db37fd26bcsm6658041plg.116.2024.03.03.05.45.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 05:45:08 -0800 (PST)
-From: R SUNDAR <prosunofficial@gmail.com>
-To: openbmc@lists.ozlabs.org,
-	iwona.winiarska@intel.com
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="D9LfZCp9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709473804; bh=sBqmRt7qqG9ivI2p3xgtXTCdIlBqGzWhtXzBZBhAO0U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=D9LfZCp9LNSJPNLDcF6jdBryN03Ic3FEj3WhR/3u7Ra3TCt8ag3kiMnjJnz9IyF9t
+	 vjuzdTI6byd7eQUFC5LiLChpvjGdl000psqg2PHep9rwRmoVPLTnO+8nYy9a9aQ0oi
+	 48un2rvj3sezw0F/OJh+ZV4J2841NaGT46ybvec4=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id A4C07C52; Sun, 03 Mar 2024 20:41:12 +0800
+X-QQ-mid: xmsmtpt1709469672to7x0bnhv
+Message-ID: <tencent_146CC89774EBA6EC92CFA4783E6CA42D850A@qq.com>
+X-QQ-XMAILINFO: MbOQvCiz/DlEBSLO3bCgeAInCPH/hw+KFIIHVly85jF/Nqup/gpW5WJBrHrIw1
+	 jBh09JNzyD+1Z2c1ZI6CS6+R56QFF9/lJOBxe43hX+Bv2VH5qSAAz+g1OxwVwJvrtYeitdAfwqH7
+	 2SrtVVY23J8DbpBKr1sWD1oHRsmG2MjjFbOIc00ZNjV5pIZsLDRd6f2vlpw8Ja+ol2Vc9vOogKZV
+	 lOlAnZVHHuA9xcWVej27OqKuQQmvNOhfVH/oao3SC6jbj+5iObxp/FFTWHi7twN3vvoKf56fVbwj
+	 ke2TTPJ9n0ISwR39LhqNWo4u6I9g8uC+U8aV/hyiDlvfjUC8LXyZfAqhgEddngrEPcwTk3uqkVCG
+	 eytPTUjtYLOLxRAmegyVTrQKUxiJL8Za8yqGAfCjAQealbpDjyMzBlyjzF02R0NpNm0v5kONON7c
+	 gEropmuMgVSoJQ/NBXyOGn9+xIkhv3KqsfVTwBqj81/QYYc0cdTUOeVOTk4TksAdYUgrcxYRZKzY
+	 P3SXIzkla76juuL52RrFVJmcb3Zlaxoz1EuBblxNVgU2koIz5EtzrJA20QSj5hL6B70pqZlCUrQI
+	 rXE93K5BunnF9cXywXW/zBbOYFk0y9yO38x76H+1L7sAB3KlrM+Nro7IV5tOCGSDV0o51izIqBPW
+	 JRUYhmj8wZLXB3qgvxmm8Bp5ixlkM9J++bTc5Budxm1vlL+dQQixLiHvOGo7QZAfXvpmuYGS2L2v
+	 SZKSDCuV3ijSwbjAjj+H+86e+1acL3fslneaIHF1RAAZiYtE29FB6oILWC1QiM/4iFLBnXWU1JP3
+	 NtkJKyb3SaKJoeH7D5O55jblKZNZVKj4kIHu0WQ+A+feIV+OW4fwh+pZSEcb44Nh/Qlwvi/iPAcp
+	 1JfX+x5Fl556rEDs0fhujdNU+Mu1Lrbe6s6a81s5siE7ui+3q/xdSAH6R+laPs0jTKgoWoBxGvae
+	 Hci4PaMoWVKJgI4St6yF/oOX3nd2BxxKqzeK/m95SUUQxubaE3n5UZdxdG86CE5WMLpOSWstE7Ox
+	 vfSepxpFd7Pt1R288RTJyQFlgQg/s=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+f770ce3566e60e5573ac@syzkaller.appspotmail.com
 Cc: linux-kernel@vger.kernel.org,
-	R SUNDAR <prosunofficial@gmail.com>
-Subject: [PATCH] Removed controller field description to prevent kernel-doc warnings
-Date: Sun,  3 Mar 2024 19:14:53 +0530
-Message-Id: <20240303134453.5791-1-prosunofficial@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hams?] KMSAN: uninit-value in nr_route_frame
+Date: Sun,  3 Mar 2024 20:41:12 +0800
+X-OQ-MSGID: <20240303124111.596358-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000b69bf20612bf586e@google.com>
+References: <000000000000b69bf20612bf586e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,25 +61,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-./include/linux/peci.h:84: warning: Excess struct member 'controller' description in 'peci_device'
+please test uninit-value in nr_route_frame
 
-Signed-off-by: R SUNDAR <prosunofficial@gmail.com>
----
- include/linux/peci.h | 1 -
- 1 file changed, 1 deletion(-)
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-diff --git a/include/linux/peci.h b/include/linux/peci.h
-index 9b3d36aff431..90e241458ef6 100644
---- a/include/linux/peci.h
-+++ b/include/linux/peci.h
-@@ -58,7 +58,6 @@ static inline struct peci_controller *to_peci_controller(void *d)
- /**
-  * struct peci_device - PECI device
-  * @dev: device object to register PECI device to the device model
-- * @controller: manages the bus segment hosting this PECI device
-  * @info: PECI device characteristics
-  * @info.family: device family
-  * @info.model: device model
--- 
-2.34.1
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index edbbef563d4d..5ca5a608daec 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -656,6 +656,7 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
+ 	 * to allow max possible filling before reallocation.
+ 	 */
+ 	prefetchw(data + SKB_WITH_OVERHEAD(size));
++	memset(data, 0, size);
+ 
+ 	/*
+ 	 * Only clear those fields we need to clear, not those that we will
 
