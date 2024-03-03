@@ -1,57 +1,57 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A524A6A023
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 15:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994DA6A002
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 15:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709478097; cv=none; b=MLP9So6P/Nk/HIC0Y0fPrtX2bQQUToPvONjgBrxXP9Q9cTZfugpLaZcTIQjb+EMoHuy9YB/Fsc9oafS4Rrv7m/NiyXAPV+NWvUxCyUJom63TC43iOmzuRbEtrdNa/6S75pFgO6Kws55V+LaB1F5J+iUyhN2hX+txIKdOIb/QY0M=
+	t=1709478098; cv=none; b=DbEp2P/wwXP3T8X8F+Lk5tt7CE4dk3aT2ZSKkNzXK8OE1Q+JDHbIo4kNVCtvoFoFgjkMBvQTZebmD+rjVL+GEIZVM02D8N8ahr01y/KOz2YnzDKI9iUuyRZlOU31k5hDhqRBIf7QViNr3ZvZ79GpaLVPbJRvwikSXpxTsEQJXRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709478097; c=relaxed/simple;
-	bh=0briAiyPRiJEP600+6nIXKr7LZ+aMokwPT/ZNkPZr+k=;
+	s=arc-20240116; t=1709478098; c=relaxed/simple;
+	bh=r4MrdpfQItW+VY2TV1TWENdOVO+4+6domQX8f1WokzU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LP8sPZk+qqJLEI9LVcIYDkwGaDhzRLJLF+9Hwyw+zmCEHFHfvYyup7/l59E5cc/7YSFNgYlu7+xKeSOC9brF4s/DLjuWwGyVB17jQonFijpIDmau3x/bBsvXo6Uz3AOjYPvFQqZMj2M7f7y4KLLajnbK4xpq+27HURIuSmVr1UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=N+wNNDXN; arc=none smtp.client-ip=209.85.218.47
+	 MIME-Version; b=ZjsCzTEF3fFzwrMuhXVy9FjtHg764/Lr1UvBYXNo0pDg1iYil5WPEo4LuMua8MwSdOXacVMrCrtt86xJRcBtN3t6BUGp1JaKxE3+t+9+K2pWT6dEY74myJH55Ddiab6FURLhkxoViTx+mosOotOEUGfNaqjarDbqPsBXkpiG6zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ADaenkqS; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="N+wNNDXN"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a441d7c6125so452649666b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 07:01:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ADaenkqS"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-564372fb762so4904899a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 07:01:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709478092; x=1710082892; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709478095; x=1710082895; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PV6Bccvs+nkQVtMy0HS2mdVNnOrY1QHK087YP1JZNRc=;
-        b=N+wNNDXNQNLZxlkuUNzkfWU+HuJiujOH7F+qUC+NuROmEYMifzKi0YLDC58h+5HQFv
-         TKpi2bFwbs4oiaybDKPpYuUeMzXFIcb2wKwoHQHrewaBYVAkBUNE9sYxhjcQ/jBGCd03
-         yGmKW86mXa17XHkZntEM0zUzBPb6jmVuBqkiaf1aXP1IVckpF7QSTVEjfKmkcQaNtOXx
-         lqi+m3LGEqCsFnA4GSQGJE0QteqCNHo7dhEzJWYaHTA2YyKzHGB0yZZlJxzUeCULy4dX
-         cDpDAo/LO+/4Rt4UH+SOzU4QMhgNE3gJ275g0n7NkbF33ZU9g/4kBzobQbmIuP3XSEF3
-         z1sA==
+        bh=4wfEydsGbvddKil/3Z8l6vz+rSpkbDji/d2z7vS115c=;
+        b=ADaenkqSJZTdy1iD5HXeDXQ6qAg/NB4ipyYmj7G0qKZ49nloYL/0dx7+dbVQ+4o0oA
+         AzeKinUtDEC6uFzFmBOZTuTA4oLuIjNYy92iSjG1pHT+LIZlo0wo0K8FTrU6pr08Lf7z
+         Fn9yYZ7yeVWdxHzEb2fngBWuyB9oQXYv9RWU4TvIOUFACH7Lxp2bRm5cBt+NJR+rv4S0
+         1pE2GyKY61fNaCArkPWiXhXGWBSF98l4pEyhw5lH4DQYVuf3ejeEUWS7w+yh8PLkeHxG
+         O6oEhFu+6a46r6S01pYv35ED3+bc1y4UPbunZmJsrAoX7e9DRaqWRSZw1tvd7DgjTc3m
+         7rPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709478092; x=1710082892;
+        d=1e100.net; s=20230601; t=1709478095; x=1710082895;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PV6Bccvs+nkQVtMy0HS2mdVNnOrY1QHK087YP1JZNRc=;
-        b=LPPXLwNRSo8s75X7Q/b7DFZdKy4OIE6iTDGVRbGNUwfHMyqwlxwosu5vPZ7CI6DaJf
-         i7GTxQ74Z1r7Fh5NlulQ0CZxFC7zMO2x3++ia+I/sZHMX3fCz2JIUYIb4ijc1OwqcttA
-         XHbSM7ZMZBPzBJUyuUocF1DOwQXxcuDkC26GoDEczB8ToLJ09nw+2vNO3mAnQHEpC6WK
-         opDqne8nGT/kX7kqKqdUAJyAdgYWzH8AMFZn6SaGZl0OP32ZuPifFr7hqUpevvjUluaE
-         MNQ/IbBXqazB2H+glXUH7A1MNUpeUOeEE+8mPtKzY+k/8ZboWOyOt+qJVA9z6nWXpIG/
-         +XEA==
-X-Forwarded-Encrypted: i=1; AJvYcCULypDeU1LxYRZltWT+wPabHu70FwH6+JhWgXEZtKCf1OtTBU2hkcXxNsNP2TcHM/+s/uUOPTQQ+/1sTkYH+jv3jmJtJOesNrid2ZrR
-X-Gm-Message-State: AOJu0YzqS+VQvszzSmHbrpJ2n4miQ7jerAXaZBp0tY3A+fo+jjAXh5rS
-	qZ1WJ3w2FvPJF6FP/cq7/+kGMwD+emUtyCS/qX0XKlofIatYL9VevpsXXTHo3oY=
-X-Google-Smtp-Source: AGHT+IFHVsfYNMZvuV5f2VQ5QM1pkpcOCZ7nI/fNzFRDcQqQ24G2/1AZ4ClktJYSkad6jGqZvMhN9g==
-X-Received: by 2002:a17:906:c289:b0:a44:bd2:c4a with SMTP id r9-20020a170906c28900b00a440bd20c4amr4217136ejz.51.1709478092094;
-        Sun, 03 Mar 2024 07:01:32 -0800 (PST)
+        bh=4wfEydsGbvddKil/3Z8l6vz+rSpkbDji/d2z7vS115c=;
+        b=KDGyAlU+RFbM8PovGpeQRYlGGTwYIkm2GQCxE/odtTyH9Fm+rwfpBaT/cWghv5RG9r
+         6I8fcbVNcW8YYw0CVd3OWYL6mErXrJaCxP567kECLsFEqPnpBjq8RlSmCsVqVniBwxOi
+         Z+Rhj29CM+cJqsYg1q0GhJ5JOpE3ewdwHp/K6+9bvkLlNDcFOxwg/zCK+K2jcgjLDR73
+         HCo574a+bi+23p+IdM8cdHtDoyaOlZpmXiWSPta+YT4sYzRjpKU8CGOfNjGY37Ol9o6b
+         mmFBdD19RCozAgamhn6AsF+8QKe1ClYSU7ixtsrE8Qeek3A+DScNrhfJJ1sTBupgRVwu
+         GNxw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5eVPIZ3pLP3xIGrZ9jUwPkKeQiDsMMIXWRm7VmOqN3TCFzLphoEY2k1msINzPQnxhl41IeIwfTF1NEtZIxDMKNg90qFO/JtWNLe53
+X-Gm-Message-State: AOJu0Yx5GKZrGvz2pfjh4NR6Tf2cl2Kicr0NgIYAaj38tzGBUmRdw6eb
+	okGjZFSXIB9+sCGq5vp3jLxMKrz4ttXM2nA+ruR1FXD/Fv5N4HHizAq03wCpU0E=
+X-Google-Smtp-Source: AGHT+IHaKPYTKkceAREIbdiaxB2ZZXS4LTPdk7piZ4fOASBtCzFFy+kH4Zbu3DN08O6YHZeK1/WFjg==
+X-Received: by 2002:a17:906:24d4:b0:a3e:d835:5685 with SMTP id f20-20020a17090624d400b00a3ed8355685mr4362651ejb.67.1709478094847;
+        Sun, 03 Mar 2024 07:01:34 -0800 (PST)
 Received: from brgl-uxlite.. ([77.241.232.10])
-        by smtp.gmail.com with ESMTPSA id ch14-20020a170906c2ce00b00a42ea946917sm3740293ejb.130.2024.03.03.07.01.31
+        by smtp.gmail.com with ESMTPSA id ch14-20020a170906c2ce00b00a42ea946917sm3740293ejb.130.2024.03.03.07.01.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 07:01:31 -0800 (PST)
+        Sun, 03 Mar 2024 07:01:34 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Andy Gross <agross@kernel.org>,
 	Bjorn Andersson <andersson@kernel.org>,
@@ -70,9 +70,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	kernel@quicinc.com,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Deepti Jaggi <quic_djaggi@quicinc.com>
-Subject: [PATCH v8 09/12] firmware: qcom: scm: add support for SHM bridge operations
-Date: Sun,  3 Mar 2024 16:01:12 +0100
-Message-Id: <20240303150115.133633-10-brgl@bgdev.pl>
+Subject: [PATCH v8 12/12] arm64: defconfig: enable SHM Bridge support for the TZ memory allocator
+Date: Sun,  3 Mar 2024 16:01:15 +0100
+Message-Id: <20240303150115.133633-13-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240303150115.133633-1-brgl@bgdev.pl>
 References: <20240303150115.133633-1-brgl@bgdev.pl>
@@ -86,126 +86,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-SHM Bridge is a safety mechanism allowing to limit the amount of memory
-shared between the kernel and the TrustZone to regions explicitly marked
-as such.
-
-Add low-level primitives for enabling SHM bridge support as well as
-creating and destroying SHM bridges to qcom-scm.
+Enable SHM Bridge support in the Qualcomm TrustZone allocator by default
+as even on architectures that don't support it, we automatically fall
+back to the generic allocator.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Acked-by: Andrew Halaney <ahalaney@redhat.com>
 Tested-by: Andrew Halaney <ahalaney@redhat.com> # sc8280xp-lenovo-thinkpad-x13s
 Tested-by: Deepti Jaggi <quic_djaggi@quicinc.com> #sa8775p-ride
 Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/firmware/qcom/qcom_scm.c       | 60 ++++++++++++++++++++++++++
- drivers/firmware/qcom/qcom_scm.h       |  3 ++
- include/linux/firmware/qcom/qcom_scm.h |  6 +++
- 3 files changed, 69 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index 6578fe9c8d62..811f93edac7f 100644
---- a/drivers/firmware/qcom/qcom_scm.c
-+++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -1323,6 +1323,66 @@ bool qcom_scm_lmh_dcvsh_available(void)
- }
- EXPORT_SYMBOL_GPL(qcom_scm_lmh_dcvsh_available);
- 
-+int qcom_scm_shm_bridge_enable(void)
-+{
-+	struct qcom_scm_desc desc = {
-+		.svc = QCOM_SCM_SVC_MP,
-+		.cmd = QCOM_SCM_MP_SHM_BRIDGE_ENABLE,
-+		.owner = ARM_SMCCC_OWNER_SIP
-+	};
-+
-+	struct qcom_scm_res res;
-+
-+	if (!__qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_MP,
-+					  QCOM_SCM_MP_SHM_BRIDGE_ENABLE))
-+		return -EOPNOTSUPP;
-+
-+	return qcom_scm_call(__scm->dev, &desc, &res) ?: res.result[0];
-+}
-+EXPORT_SYMBOL_GPL(qcom_scm_shm_bridge_enable);
-+
-+int qcom_scm_shm_bridge_create(struct device *dev, u64 pfn_and_ns_perm_flags,
-+			       u64 ipfn_and_s_perm_flags, u64 size_and_flags,
-+			       u64 ns_vmids, u64 *handle)
-+{
-+	struct qcom_scm_desc desc = {
-+		.svc = QCOM_SCM_SVC_MP,
-+		.cmd = QCOM_SCM_MP_SHM_BRIDGE_CREATE,
-+		.owner = ARM_SMCCC_OWNER_SIP,
-+		.args[0] = pfn_and_ns_perm_flags,
-+		.args[1] = ipfn_and_s_perm_flags,
-+		.args[2] = size_and_flags,
-+		.args[3] = ns_vmids,
-+		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
-+					 QCOM_SCM_VAL, QCOM_SCM_VAL),
-+	};
-+
-+	struct qcom_scm_res res;
-+	int ret;
-+
-+	ret = qcom_scm_call(__scm->dev, &desc, &res);
-+
-+	if (handle && !ret)
-+		*handle = res.result[1];
-+
-+	return ret ?: res.result[0];
-+}
-+EXPORT_SYMBOL_GPL(qcom_scm_shm_bridge_create);
-+
-+int qcom_scm_shm_bridge_delete(struct device *dev, u64 handle)
-+{
-+	struct qcom_scm_desc desc = {
-+		.svc = QCOM_SCM_SVC_MP,
-+		.cmd = QCOM_SCM_MP_SHM_BRIDGE_DELETE,
-+		.owner = ARM_SMCCC_OWNER_SIP,
-+		.args[0] = handle,
-+		.arginfo = QCOM_SCM_ARGS(1, QCOM_SCM_VAL),
-+	};
-+
-+	return qcom_scm_call(__scm->dev, &desc, NULL);
-+}
-+EXPORT_SYMBOL_GPL(qcom_scm_shm_bridge_delete);
-+
- int qcom_scm_lmh_profile_change(u32 profile_id)
- {
- 	struct qcom_scm_desc desc = {
-diff --git a/drivers/firmware/qcom/qcom_scm.h b/drivers/firmware/qcom/qcom_scm.h
-index aa7d06939f8e..cb7273aa0a5e 100644
---- a/drivers/firmware/qcom/qcom_scm.h
-+++ b/drivers/firmware/qcom/qcom_scm.h
-@@ -116,6 +116,9 @@ struct qcom_tzmem_pool *qcom_scm_get_tzmem_pool(void);
- #define QCOM_SCM_MP_IOMMU_SET_CP_POOL_SIZE	0x05
- #define QCOM_SCM_MP_VIDEO_VAR			0x08
- #define QCOM_SCM_MP_ASSIGN			0x16
-+#define QCOM_SCM_MP_SHM_BRIDGE_ENABLE		0x1c
-+#define QCOM_SCM_MP_SHM_BRIDGE_DELETE		0x1d
-+#define QCOM_SCM_MP_SHM_BRIDGE_CREATE		0x1e
- 
- #define QCOM_SCM_SVC_OCMEM		0x0f
- #define QCOM_SCM_OCMEM_LOCK_CMD		0x01
-diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
-index ccaf28846054..9b6054813f59 100644
---- a/include/linux/firmware/qcom/qcom_scm.h
-+++ b/include/linux/firmware/qcom/qcom_scm.h
-@@ -115,6 +115,12 @@ int qcom_scm_lmh_dcvsh(u32 payload_fn, u32 payload_reg, u32 payload_val,
- int qcom_scm_lmh_profile_change(u32 profile_id);
- bool qcom_scm_lmh_dcvsh_available(void);
- 
-+int qcom_scm_shm_bridge_enable(void);
-+int qcom_scm_shm_bridge_create(struct device *dev, u64 pfn_and_ns_perm_flags,
-+			       u64 ipfn_and_s_perm_flags, u64 size_and_flags,
-+			       u64 ns_vmids, u64 *handle);
-+int qcom_scm_shm_bridge_delete(struct device *dev, u64 handle);
-+
- #ifdef CONFIG_QCOM_QSEECOM
- 
- int qcom_scm_qseecom_app_get_id(const char *app_name, u32 *app_id);
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e70a599046b5..281cdcacc627 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -252,6 +252,7 @@ CONFIG_INTEL_STRATIX10_RSU=m
+ CONFIG_MTK_ADSP_IPC=m
+ CONFIG_EFI_CAPSULE_LOADER=y
+ CONFIG_IMX_SCU=y
++CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y
+ CONFIG_QCOM_QSEECOM=y
+ CONFIG_QCOM_QSEECOM_UEFISECAPP=y
+ CONFIG_GNSS=m
 -- 
 2.40.1
 
