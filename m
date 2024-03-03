@@ -1,240 +1,139 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D863E76417;
-	Sun,  3 Mar 2024 19:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0B679942
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 19:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709492651; cv=none; b=Xw3FEHbt6UcbdDbVD7FpQupJnNIOXPm0MFsb93QNDcB3C+LlnDyCGVF+x3TADTmZWU7x9Wq81Blbbr26pPQssCo3PitzZaHg0/aVs8CNH3/T62nqR525Y8DQmz+ktOqY3GOGQcdpdtVHa2iyC+kv2HCDjMCInG7dQTShnlLCm9Y=
+	t=1709492829; cv=none; b=P66bV1YyKMJ1q6BCeTE1jvTxnjs3xNW4nF4ld8CH/b09RNqq+MhZKVytg7r0HyG3SzkTlJW38d6tg39bO2JzOGaafk2Atk1WHNvnICPvwb4HOn9yAyUMYO6WWChH6GIVbVAh3V0J/mJfLi/Jh74kDuf3b/0yx6aMBKygd4In3ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709492651; c=relaxed/simple;
-	bh=XcvvUXceBSb176i0TRf9vtM0/PGGD8QMPdQJXgBDrGM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k5cF//b39Ihxsc7F2r6JXkdwUimX8A4R3k9FQmIHqDio6EceWUW1w8KcL9uEhQYLCWJPQQu9vLVJoFcjoe/kA+ONytlTE9k0Y71YUaiWRoDYsHS8krLPePjuj4HV6nSciL6Jlafxf2Y9vQqSGUfW5XxhX93PPXakRB/z+44cDEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+a5ypPK; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+a5ypPK"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d27fef509eso51989561fa.3;
-        Sun, 03 Mar 2024 11:04:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709492648; x=1710097448; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1DVCx1/HHcWKKtGLW0BdzytODfQzaAANbwcrDliILZk=;
-        b=g+a5ypPKj39pLt0g100sovnhYOjmmpKRjj5SOMZzfM0X5JFz6Q9fjQ/i6lsZV6nr4z
-         3EiKITfu0Lxkjmi2b0EzFOTpZzKI3Br8AFbaHd3GI6BNnaqjU+yu8LUNVtWB+oCSNJtN
-         uFFNQZSkRl/hhL6zNI1Hk9L+ae0jZw81Rc+LfB1wJQvMd2WEe/ywWHab9Zvpfszb1MhT
-         YC5+JEk4BZZYCCmUW5sPHJ+IA8TlB7HJfOilhiLr+qNbpsM0XJIPmNmimTTgiH2XwWBY
-         fasCUXyWFFmfXZpkUbJY2DM6IolgmNWIStw2nx1vwRM8dARZMdu1J84l5T9aq61RPRUb
-         NVDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709492648; x=1710097448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1DVCx1/HHcWKKtGLW0BdzytODfQzaAANbwcrDliILZk=;
-        b=qWoYJ5XlqUCVi89M0gyhWTuEhblZvD0h7eXDFCCFN1/dzCUNgunf3rp2hkHKhEjNky
-         V2FGZrSjxqWjDgUvgUqwhA6hBAa4035GaMsuk8gJQTLpttYkDjTK+/Latekqi0Jzs+91
-         c6bn59s8LXFVJ7CcOyagtj8Tya8BzoCG5vZtz0ugGPneGJrKfrbdp3jV1ea/u6RLm6Qd
-         /Iibf1kqbU5OiFZqBipeX6pBYgpGkDVM1JD7yjSp4r53M+HcPSvlJ6SGEebN6gnGE5iT
-         R6xeFMgUKiJqcsKihyp8GoNpYQLIoFiJdExNspQ62tmy8wtc4/3SH7DdIxNFbb23Hh+F
-         lOzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaafcDldWlfWmcORKFO05QtFtkJe/jUVaOM+4kCu9/aXVhkoHQ5OmG0hp9fQSmz1VVkV8xIVYQ5hSzuvMmx6HpBbx+d7fkf1JpjOI1/50XnzMoGSHqoXash4P180IQe+el+snEJxnTZuEM
-X-Gm-Message-State: AOJu0Ywlfu1Ok96Ud8KQ50E+zFRhrI32f/mcml3490SO45Wfo7Lk9T5/
-	RsiK8O61T9nTJOTgajVVuPl48yyA+q4ru6WeofguIObPkDuFxtsCZDYa6R8aVC+JC/HLAOW2+IA
-	s/dRaolKJQFQHOKq0iHDtspUHXtQSyxt62/U=
-X-Google-Smtp-Source: AGHT+IFCSdD6OHt6bljSwkVkmweyQrmbR5W6Rf3Y/xTV8dRYMkGvWt4G0Q4Zm0KA/B2fjDQRxo5V6x5AwJlIy4MUrgI=
-X-Received: by 2002:a2e:6e10:0:b0:2d2:8fb4:46cf with SMTP id
- j16-20020a2e6e10000000b002d28fb446cfmr4825247ljc.15.1709492647620; Sun, 03
- Mar 2024 11:04:07 -0800 (PST)
+	s=arc-20240116; t=1709492829; c=relaxed/simple;
+	bh=4aA/QhnOS8y/rJZfTHI33lkdZ9aduMlhTAqLH88yuFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PaoJpOyDJPuwyhbImXlYFTdFKvAEzWu7Dw1TwKhwaPWC61s/idFxsv7eVTb9u/JRqC8QfNa6y10aV+ips3y9eMB9pgWT4lrT5EtRjrCMEHTMA2srSPdFvZhHI3djPmaHfmxks8TXiheCwb1VWLHswQ8br7wkiOFO8mXLXsk70no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10666C433F1;
+	Sun,  3 Mar 2024 19:07:07 +0000 (UTC)
+Date: Sun, 3 Mar 2024 14:07:05 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Sachin Sant <sachinp@linux.ibm.com>
+Subject: Re: [GIT PULL] tracing: Prevent trace_marker being bigger than
+ unsigned short
+Message-ID: <20240303140705.0f655e36@rorschach.local.home>
+In-Reply-To: <CAHk-=wiLdWetJgKHB72VeDALZsjpggEyyuiZ2KmoY_g+3horwQ@mail.gmail.com>
+References: <20240302111244.3a1674be@gandalf.local.home>
+	<CAHk-=wj376WMgZ24wKGEWDs_ojNtod-LDZBedPzDYRRcY60UYA@mail.gmail.com>
+	<20240302145958.05aabdd2@rorschach.local.home>
+	<CAHk-=wgjhdRj1V847NTF4veMN_tCbrySiEHXO8RO3n05cNeXeA@mail.gmail.com>
+	<20240302154713.71e29402@rorschach.local.home>
+	<CAHk-=wioeo5vyEWUZcGBKMsf3jnjrnnHc3uJiV=JjSKPdvZOEw@mail.gmail.com>
+	<20240303075937.36fc6043@rorschach.local.home>
+	<CAHk-=wiLdWetJgKHB72VeDALZsjpggEyyuiZ2KmoY_g+3horwQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202403020457.RCJoQ3ts-lkp@intel.com> <87edctwr6y.ffs@tglx>
- <87a5nhwpus.ffs@tglx> <87y1b0vp8m.ffs@tglx> <87sf18vdsq.ffs@tglx>
- <87le70uwf0.ffs@tglx> <CAHk-=wiWhfdc4Sw2VBq_2nL2NDxmZS32xG4P7mBVwABGqUoJnw@mail.gmail.com>
- <87edcruvja.ffs@tglx>
-In-Reply-To: <87edcruvja.ffs@tglx>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sun, 3 Mar 2024 20:03:56 +0100
-Message-ID: <CAFULd4bVEUBEidTLbHNzRaJbSjXm99yC8LT=jdzFWb7xnuFH7g@mail.gmail.com>
-Subject: Re: arch/x86/include/asm/processor.h:698:16: sparse: sparse:
- incorrect type in initializer (different address spaces)
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, kernel test robot <lkp@intel.com>, 
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Arjan van de Ven <arjan@linux.intel.com>, x86@kernel.org, 
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
-	Sparse Mailing-list <linux-sparse@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Mar 3, 2024 at 5:31=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
- wrote:
->
-> On Sat, Mar 02 2024 at 14:49, Linus Torvalds wrote:
-> > On Sat, 2 Mar 2024 at 14:00, Thomas Gleixner <tglx@linutronix.de> wrote=
-:
-> >>
-> >> I had commented out both. But the real reason is the EXPORT_SYMBOL,
-> >> which obviously wants to be EXPORT_PER_CPU_SYMBOL_GPL...
+On Sun, 3 Mar 2024 09:38:04 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Sun, 3 Mar 2024 at 04:59, Steven Rostedt <rostedt@goodmis.org> wrote:
 > >
-> > Side note: while it's nice to hear that sparse kind of got this right,
-> > I wonder what gcc does when we start using the named address spaces
-> > for percpu variables.
-> >
-> > We actively make EXPORT_PER_CPU_SYMBOL_XYZ be a no-op for sparse
-> > exactly because sparse ended up warning about the regular
-> > EXPORT_SYMBOL, and we didn't have any "real" per-cpu export model.
->
-> Right.
->
-> > So EXPORT_PER_CPU_SYMBOL_GPL() is kind of an artificial "shut up
-> > sparse".
->
-> Aside of that it's also making it clear what this is about. So I don't
-> think it's purely artifical.
->
-> > But with __seg_gs/fs support for native percpu symbols with
-> > gcc, I wonder if we'll hit the same thing. Or is there something that
-> > makes gcc not warn about the named address spaces?
->
-> Right now the pending code in tip does not complain about the
-> EXPORT_PER_CPU_SYMBOL_GPL() part because our current macro maze is
-> hideous. Here is the preprocessor output.
->
-> This is DECLARE_PER_CPU() in the header:
->
-> extern __attribute__((section(".data..percpu" ""))) __typeof__(u64) x86_s=
-pec_ctrl_current;
->
-> Here is DEFINE_PER_CPU():
->
-> __attribute__((section(".data..percpu" ""))) __typeof__(u64) x86_spec_ctr=
-l_current;
->
-> And the EXPORT:
->
-> extern typeof(x86_spec_ctrl_current) x86_spec_ctrl_current;
->
-> static void * __attribute__((__used__))
->    __attribute__((__section__(".discard.addressable")))
->    __UNIQUE_ID___addressable_x86_spec_ctrl_current804 =3D (void *)(uintpt=
-r_t)&x86_spec_ctrl_current;
->
->    asm(".section \".export_symbol\",\"a\" ;
->        __export_symbol_x86_spec_ctrl_current: ;
->        .asciz \"GPL\" ; .asciz \"\" ; .balign 8 ; .quad x86_spec_ctrl_cur=
-rent ; .previous");
->
-> And the __seg_gs magic happens only in the per CPU accessor itself:
->
-> __attribute__((__noinline__)) __attribute__((no_instrument_function))
->  __attribute((__section__(".noinstr.text")))
->  __attribute__((__no_sanitize_address__))
->  __attribute__((__no_profile_instrument_function__))
->  u64 spec_ctrl_current(void)
-> {
->  return ({
->     // this_cpu_read(x86_spec_ctrl_current)
->
->     typeof(x86_spec_ctrl_current) pscr_ret__;
->
->     do { const void *__vpp_verify =3D (typeof((&(x86_spec_ctrl_current)) =
-+ 0))((void *)0); (void)__vpp_verify;
->     } while (0);
->
->     switch(sizeof(x86_spec_ctrl_current))
->     {
->     case 1: pscr_ret__ =3D ({
->             *(volatile typeof(x86_spec_ctrl_current) __seg_gs *)(typeof(*=
-&(x86_spec_ctrl_current)) __seg_gs *)(uintptr_t)(&(x86_spec_ctrl_current));=
- });
->             break;
->     case 2: pscr_ret__ =3D ({
->             *(volatile typeof(x86_spec_ctrl_current) __seg_gs *)(typeof(*=
-&(x86_spec_ctrl_current)) __seg_gs *)(uintptr_t)(&(x86_spec_ctrl_current));=
- });
->             break;
->     case 4: pscr_ret__ =3D ({
->             *(volatile typeof(x86_spec_ctrl_current) __seg_gs *)(typeof(*=
-&(x86_spec_ctrl_current)) __seg_gs *)(uintptr_t)(&(x86_spec_ctrl_current));=
- });
->             break;
->     case 8: pscr_ret__ =3D ({
->             *(volatile typeof(x86_spec_ctrl_current) __seg_gs *)(typeof(*=
-&(x86_spec_ctrl_current)) __seg_gs *)(uintptr_t)(&(x86_spec_ctrl_current));=
- });
->             break;
->
->     default: __bad_size_call_parameter(); break;
->     }
->
->     pscr_ret__;
->   });
-> }
->
-> So all the export etc. just works because it all operates on a plain
-> data type and the __seg_gs is only bolted on via type casts in the
-> accessors.
->
-> As the per cpu variables are in the .data..percpu section the linker
-> puts them at address 0 and upwards. So the cast to a __seg_gs pointer
-> makes it end up at the real kernel address because of GSBASE + "offset".
->
-> The compiler converts this to RIP relative addressing:
->
->   movq   $0x0,%gs:0x7e14169f(%rip)        # 1ba08 <fpu_fpregs_owner_ctx>
->
-> This obviously has a downside. If I do:
->
->    u64 foo;
->
->    this_cpu_read(foo);
->
-> the compiler is just happy to build that w/o complaining and it will
-> only explode at runtime because foo is a kernel data address which added
-> to GSBASE will result in accessing some random address:
->
->   mov    %gs:0x15d08d4(%rip),%rax        # ffffffff834aac60 <x86_spec_ctr=
-l_base>
->
-> This is not at all different from the inline ASM based version which is
-> in your tree. The only difference is that the macro maze is pure C and
-> the __set_gs cast allows the compiler to (micro) optimize, e.g. 'mov
-> %gs:...; movzbl' into a single 'movzbl'.
->
-> IOW, right now the only defense against such a mistake is actually the
-> sparse check. Maybe one of the coccinelle scripts has something similar,
-> I don't know.
->
-> I did not follow the __set_gs work closely, so I don't know whether Uros
-> ever tried to actually mark the per CPU variable __set_gs right away,
-> which would obviously catch the above 'foo' nonsense.
+> > -       trace_seq_printf(s, ": %.*s", max, field->buf);
+> > +       trace_seq_puts(s, ": ");
+> > +       /* Write 1K chunks at a time */
+> > +       p = field->buf;
+> > +       do {
+> > +               int pre = max > 1024 ? 1024 : max;
+> > +               trace_seq_printf(s, "%.*s", pre, p);
+> > +               max -= pre;
+> > +               p += pre;
+> > +       } while (max > 0);  
+> 
+> The above loop is complete garbage.
+> 
+> If 'p' is a string, you're randomly just walking past the end of the
+> string with 'p += pre'
 
-No, because [1]:
+The string in question isn't some random string. It's a print event on
+the ring buffer where the size is strlen(p) rounded up to word size.
+That means, max will be no bigger than word-size - 1 greater than
+strlen(p). That means the chunks of 1024 will never land in the middle
+of garbage.
 
-"gcc does not provide a way to remove segment qualifiers, which is needed
-to use typeof() to create local instances of the per-cpu variable. For
-this reason, do not use the segment qualifier for per-cpu variables, and
-do casting using the segment qualifier instead."
+And even if for some reason it did, it would simply print garbage in
+the output that is already available to user space via reading the raw
+ring buffer.
 
-[1] https://lore.kernel.org/lkml/20190823224424.15296-3-namit@vmware.com/
+> 
+> And if 'o' isn't a string but has a fixed size, you shouldn't use '%s'
+> in the first place, you should just use seq_write().
 
-Uros.
+The precision actually isn't needed. I added it just in case for some
+reason a bug happened and the \0 was truncated.
 
->
-> I think this should just work, but that would obviously require to do
-> the type cast magic at the EXPORT_SYMBOL side and in some other places.
->
-> Thanks,
->
->         tglx
->
->
+> 
+> Just stop. You are doing things entirely wrong, and you're just adding
+> random code.
+> 
+> I'm not taking *any* fixes from you as things are now, you're once
+> again only making things worse.
+> 
+> What was wrong with saying "don't do that"? You seem to be bending
+> over backwards to doing stupid things, and then insisting on doing
+> them entirely wrong.
+
+Don't do what?
+
+The previous change was just adding some random limit to a write into
+the ring buffer, to prevent one of the readers of the ring buffer from
+overflowing the precision check.
+
+Hell, I'm sorry I added that precision check. I guess this could all be
+solved with:
+
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 3e7fa44dc2b2..d8b302d01083 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1587,12 +1587,11 @@ static enum print_line_t trace_print_print(struct trace_iterator *iter,
+ {
+ 	struct print_entry *field;
+ 	struct trace_seq *s = &iter->seq;
+-	int max = iter->ent_size - offsetof(struct print_entry, buf);
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+ 	seq_print_ip_sym(s, field->ip, flags);
+-	trace_seq_printf(s, ": %.*s", max, field->buf);
++	trace_seq_printf(s, ": %s", field->buf);
+ 
+ 	return trace_handle_return(s);
+ }
+@@ -1601,11 +1600,10 @@ static enum print_line_t trace_print_raw(struct trace_iterator *iter, int flags,
+ 					 struct trace_event *event)
+ {
+ 	struct print_entry *field;
+-	int max = iter->ent_size - offsetof(struct print_entry, buf);
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	trace_seq_printf(&iter->seq, "# %lx %.*s", field->ip, max, field->buf);
++	trace_seq_printf(&iter->seq, "# %lx %s", field->ip, field->buf);
+ 
+ 	return trace_handle_return(&iter->seq);
+ }
+
+Because the string should always end with a '\0' in the first
+place.
+
+-- Steve
+		
