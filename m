@@ -1,122 +1,82 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160AFB664
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 12:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95225BE4A;
+	Sun,  3 Mar 2024 12:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709467926; cv=none; b=tYIv5g2v3nrvqr28Fl7Tr0uzXrZeQXLEkZ7NkcO/Byfh0H8SwA6F7Qt7XE5RYdIt/x5KOIwqIEsB3Ubk8iO4lQQpf8u5p2FsNH70RIjItSWkm5OBViRshYV6yPVrcn6Pgiy+MCf4lTpjBlh171pf+BNgLLZZFTO1uVW0diUQ9h0=
+	t=1709467980; cv=none; b=e3B7mu+UwZRF6rjllwIUOUjGbwvNRxDWWjnWqRPMR/8HAhMPD9rtgvoJIwsK6TA23IrgSfvTcHtesLTQQ4uuov2KdkMAsSu4oZp5MuREMXFtXctVHWaliRlG6DexmeMgWmAe5ojIje2fxlotvWJlRckaVLRxUe+ej7FB1ydeX5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709467926; c=relaxed/simple;
-	bh=wdQWhihA+tWxfIIIQj2ZJilwsv+rh/p06y1AI3SN5E4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=F9SdoTdH1kj+d8JDqLCKwYOW6L5fiNWUfcX07ZlGaP6+hla0skYMl1A3fIx1OWb+65GVW8kT14U3eM+MRQIv2spkqnmg3K8LzwxaQj92WT8tr4kB9o1ySNnpccbEuVZssGSYc4XbhIsuoO11M4WltTLlrmZrmtGRmCQllOryo6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c83e0f8c51so52457639f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 04:12:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709467924; x=1710072724;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S4kfNbpTnOQSD55Iq/AlBz6zYWL46TQpEdNRvS9MKaU=;
-        b=lpsTGr16TDG74y/pvdYppeeBiM3/JJnecJigNeQyYNqLDXpM9SbJkquIUGnm0ANoRT
-         KbN2ljIqaVijMY0f1I38aftBIRL6ifGyGHslFskXrJDdIjZr/6otxrgTsH4p+UkP8taP
-         sLI4eYNF61kPnTs+Feaqm8a9ZHsw8Efu0QuOaZBwYlDaJn4wbG6ucOYM2f+/54+U1CuE
-         o322sguuRWB99dUcAgsrrXDpHu5o9Z2gHYTDOmkLhJns7BCNVvZJqYx5Omt8/eJYg4e9
-         KMK3PSdqPXseEoAEyiAqhYakAIY+bc7SsRnKjeSClIDFExyn3fw7lKy1dr9gOOkkyfgk
-         G9WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIDOQDZ2sNAVnist5dc1bcGidPbZv4+lxUlvpYucLK+FhISq9cOzzeMU/5O4LaqO+Cu9yqiR3Ds4yJPoLcTP2GXnOqUU8qT4jvKsq3
-X-Gm-Message-State: AOJu0Yyy9f76j6b9xXw8QeVJXufiC6Cex9E2cR/Mn6sHX6lqNsxpORhb
-	b7uMBNWOFGjUnOQ89khhyZu75ZoqOmfjhr1Et/NuMpLMzEXL+wq1qJrS16spWxDYwGzInmxZVkd
-	JjdsC4pScz8wi/tPh+fLtUgfDfrYjkVUyfsNxfTzqQApEa7HmvSiruWM=
-X-Google-Smtp-Source: AGHT+IGLTkyhKrHhu1BRRI+WzCnaHq1/epNXDS0Zm+OVmJ2Ng9KhNlB511rXvLnpZNntiskmr1eH/PVfN7uagNk7bbnwQ+Mri12w
+	s=arc-20240116; t=1709467980; c=relaxed/simple;
+	bh=SBOPZsrdqZ/NNDMbOM0UYx3P98xhQulgQAGDn5mg7Zg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NBHdYwZLAKomizScmcY6XS589WGpsp4zVVE/cpdmzR7rC6Dcl1pXmbBog8s0iYC34oMRwjHlknvfdACYeln5pH5W3MTIbTk6Rtf3xbLq/s0gibKC1irNzzvO8TWCyvA/CkjggZlkfU6AHUj7HLfo3MgqbogFQoioUk22HCX7d+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=K4+z7M4V; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="K4+z7M4V"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=SBOPZsrdqZ/NNDMbOM0UYx3P98xhQulgQAGDn5mg7Zg=;
+	t=1709467978; x=1709899978; b=K4+z7M4V7mynQwndJVgwr/opirGmmeGOgwchIZAQPIfklrZ
+	kgVfUoOh2VP8w7/HZRxgbwPcVbB1883Kk4To3ppmTjjekPkiMwJtqhEqUrs4W0dXqAd1rH4o9CqwZ
+	kZG/PyPQibsFjjlPdUTj08gBrxYmcfMGBx3OKhhScEwm8xf0GsNIKvZupSzwBA0+al/j8egd9WSg6
+	rRRK8EzJeaFHpkZRQhWntfcmaUUwIJaFXeyppX1NY+UfEPERNV46oFzyBtKOAtaBN9aIn85GpHYRx
+	gfegNs21eW/YddCe/OICU0QoyVfWuHg68dWFdIwnSZ3lHbatYgJVrnmgl+pPOZqg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rgkPH-0008Ly-3H; Sun, 03 Mar 2024 12:53:27 +0100
+Message-ID: <78c14dd8-b655-4405-85e6-5c9530c77282@leemhuis.info>
+Date: Sun, 3 Mar 2024 12:53:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c8b:b0:365:1c10:9ce2 with SMTP id
- w11-20020a056e021c8b00b003651c109ce2mr518474ill.2.1709467924139; Sun, 03 Mar
- 2024 04:12:04 -0800 (PST)
-Date: Sun, 03 Mar 2024 04:12:04 -0800
-In-Reply-To: <tencent_FB46CF407B6A6CBC2C596F7C97BCE8EEEE0A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005f96040612c084b5@google.com>
-Subject: Re: [syzbot] [hams?] KMSAN: uninit-value in nr_route_frame
-From: syzbot <syzbot+f770ce3566e60e5573ac@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] Revert "scsi: ufs: core: Only suspend clock scaling
+ if scaling down"
+Content-Language: en-US, de-DE
+To: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Cc: linux-scsi@vger.kernel.org
+References: <20240228053421.19700-1-quic_rampraka@quicinc.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240228053421.19700-1-quic_rampraka@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709467978;bb23a397;
+X-HE-SMSGID: 1rgkPH-0008Ly-3H
 
-Hello,
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: uninit-value in nr_route_frame
+On 28.02.24 06:34, Ram Prakash Gupta wrote:
+> This reverts commit 1d969731b87f122108c50a64acfdbaa63486296e.
+> Approx 28% random perf IO degradation is observed by suspending clk
+> scaling only when clks are scaled down. Concern for original fix was
+> power consumption, which is already taken care by clk gating by putting
+> the link into hibern8 state.
 
-=====================================================
-BUG: KMSAN: uninit-value in nr_route_frame+0x4a9/0xfc0 net/netrom/nr_route.c:787
- nr_route_frame+0x4a9/0xfc0 net/netrom/nr_route.c:787
- nr_xmit+0x5a/0x1c0 net/netrom/nr_dev.c:144
- __netdev_start_xmit include/linux/netdevice.h:4980 [inline]
- netdev_start_xmit include/linux/netdevice.h:4994 [inline]
- xmit_one net/core/dev.c:3547 [inline]
- dev_hard_start_xmit+0x244/0xa10 net/core/dev.c:3563
- __dev_queue_xmit+0x33ed/0x51c0 net/core/dev.c:4351
- dev_queue_xmit include/linux/netdevice.h:3171 [inline]
- raw_sendmsg+0x64e/0xc10 net/ieee802154/socket.c:299
- ieee802154_sock_sendmsg+0x91/0xc0 net/ieee802154/socket.c:96
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584
- ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
- __sys_sendmsg net/socket.c:2667 [inline]
- __do_sys_sendmsg net/socket.c:2676 [inline]
- __se_sys_sendmsg net/socket.c:2674 [inline]
- __x64_sys_sendmsg+0x307/0x490 net/socket.c:2674
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:3819 [inline]
- slab_alloc_node mm/slub.c:3860 [inline]
- kmem_cache_alloc_node+0x5cb/0xbc0 mm/slub.c:3903
- kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:560
- __alloc_skb+0x33d/0x7a0 net/core/skbuff.c:651
- alloc_skb include/linux/skbuff.h:1296 [inline]
- alloc_skb_with_frags+0xc8/0xbd0 net/core/skbuff.c:6395
- sock_alloc_send_pskb+0xa80/0xbf0 net/core/sock.c:2783
- sock_alloc_send_skb include/net/sock.h:1855 [inline]
- raw_sendmsg+0x367/0xc10 net/ieee802154/socket.c:282
- ieee802154_sock_sendmsg+0x91/0xc0 net/ieee802154/socket.c:96
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584
- ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
- __sys_sendmsg net/socket.c:2667 [inline]
- __do_sys_sendmsg net/socket.c:2676 [inline]
- __se_sys_sendmsg net/socket.c:2674 [inline]
- __x64_sys_sendmsg+0x307/0x490 net/socket.c:2674
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+#regzbot ^introduced 1d969731b87f122108c50a64acfdbaa63486296e
+#regzbot title scsi: ufs: core: approx 28% random perf IO degradation
+#regzbot ignore-activity
 
-CPU: 1 PID: 5501 Comm: syz-executor.0 Not tainted 6.8.0-rc6-syzkaller-g04b8076df253-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-=====================================================
-
-
-Tested on:
-
-commit:         04b8076d Merge tag 'firewire-fixes-6.8-rc7' of git://g..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=149cd06c180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=80c7a82a572c0de3
-dashboard link: https://syzkaller.appspot.com/bug?extid=f770ce3566e60e5573ac
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1666dc36180000
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
