@@ -1,56 +1,63 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5E6B64C
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 10:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B6FB642
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 10:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709460011; cv=none; b=OMlax2bU3BzGu4b0F5vQzEJQnFBbKb73rylOGqhWCEbRNpBFaRWatP5rQDC1RjfQA2ziRYg9nuTvM77qXfHevH6tj6tKlSLeDaUGa/8ug0ay1UhzPaLOhKYtKsOO4Y75HlHmXFB0z0XuTI9XleTcabrrarauoCBr5l3d4NdGAvk=
+	t=1709460356; cv=none; b=MvZrGSr6rVqthpHXFAg71J1YKv1u32ZMKBddgqVxxM9vO7//75nKnBy1gRyEznvFf+SfkzHeZZb5hQXczqMVRTWk63zH0gaJ8XRE3dwhGcvqffYl4PcjNzH0ETOlm65YTyIrFzu5mQlGaxt7Jg/vgyB6WR/iKDNUilvXy9PnyU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709460011; c=relaxed/simple;
-	bh=oTNm2sz94HQbmc54Z1Yh40klQw3t4+DI6D97vMSEdlU=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=kNsZ7cjBh48VFfZJgTuRDv0kAkdgPk3WhoviEUogQxObhW1WcsC36E2Z9Ah6h5ua9VCtfa9VhV7404a43xReYQqZ23+Hkc53ky0sjbQASAu5YcxyTlD/9HZwsnAzoCoTGeZAfGt37gfYo1JpDeWITJRujzjziQYVcO7oIdRnUfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=VxNYqvyQ; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709460356; c=relaxed/simple;
+	bh=tSobmWen73fv9nPU7r7xbyASdzEXsh6NI0D5+8vjLR4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Yqu8p9IOVgVNZPnN1cncp0dRaXFZz4bCdEKlWNYtcy++CxvfsSilkGDNeBuQsBF/B17bkNPgm4fRfe3Outs1wSIiL7hjd81AcRkmLJt0hWm2BfX8MQKHbREhdzgX9c8IHnEkCva6Vv/yKHBFrhVjw+nR9ry9juJGPsys+MY7m5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fX9tktsv; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="VxNYqvyQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709459999; bh=Pyd0R/H1GCUYWEEmLv/msqnms2K/V2Adl4vdvLJRepM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VxNYqvyQo/mnDb34yq+AXBrf5FdWvdgALdUxsqmWUktX6MnHFVXOT3hOsJnQ8dbXU
-	 bOiEvyoZkS6/p22cuYlSo92MQKuILUseeRWqx7Ju3S2ce6kluGpXbv5DCChgJANSty
-	 HQUgcauGCZFAQ+aPM/dqa43T62iz+1Mp4ycCUKwE=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id D75012AF; Sun, 03 Mar 2024 17:53:53 +0800
-X-QQ-mid: xmsmtpt1709459633th45589k2
-Message-ID: <tencent_BF366E402C056C3C97D8E9DEEE0ECDEC7A0A@qq.com>
-X-QQ-XMAILINFO: MvTK+AXQ7a4FK5B8iB3iGPYOCYHqr+HIjfbMFReRzJAQMTRQZoyWAdoMHcZo8y
-	 CW5ISZy5zOb1qMMwGU0hifmVQx55lgdnBJZTnhQ0YqASfAQHtG8q0HAwNkLUCt+/eaxgdB7FdU81
-	 8UZl8Uj3OZW/Hw78NISTa+g/pcsFvRn0HVYnJcYADTlCWVVGC+LC4wYT/a4AmuvHVS1ojB1JJCsq
-	 aJxJi2wdrhqsGQHPXjjelR69GYybJpYPdb2pTG3pHCRplVW5zhdzskvYXKUY0henM/bqGCciMXe1
-	 588sQwZa1RLhxd/dWAjgRrRBx+aMHXWhYXtuqkdpAT6KKL/HX6/ev4VIz+0MBhN5UKw26+MkUpus
-	 USGYSB+qVs5RDCeKSj8yzmGbouTEsD7S/CEz7i6oN9ipNxkVN0AlENYaB5ND5bcZ8rULkt/3fZ0U
-	 NakCd0TIIluKkcsqJpDETdPFW9MoDFfUr2CGp+B8qCE/Zef24m1ZB52cOe4Cp4Oq8xkq3+QIuvsX
-	 cwBVSgYFLwOKpb8FFpvTCl2Ql7T5QIsO5tsZfrv1L1C0ABIdrLy/UmPNhcEmdwhieoueLNPOo+yO
-	 NGwuZT16Sq6De2Ppq21IRwbraQG/RXTY3ILlyQgT6vyHcCFAXe9VdteDBBcArujvAGfdsRKwbvFl
-	 vJynr5fE0Ag8z8VFlpfgWOC8LCI8zle4uFbInomIeU0VnOtN++qTLleCmz7bghia5HxYXXSgB5ri
-	 YcRy7QQf7fCl22EzbbfCnxjMCMngUGFm+HkK7XVHLE83u0WbEXM6Gl8QX8qMUocVMhPKfofIntMp
-	 a7hTkERNjWW7g3n9Ryqcg34LD7gMc649tKxwCIVNzrNhTwKIKtsAfx6FHmkjg4rk7jnDQ/lgLXKf
-	 ge88JRBoVBsEnRWB7H6Cd09irp6asqdAMp66KVQVo5+U4RhlhJzPYcA0ZLPv6+2dawUAf5tHZD
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+b91eb2ed18f599dd3c31@syzkaller.appspotmail.com
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fX9tktsv"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d228a132acso44072491fa.0
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 02:05:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709460353; x=1710065153; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J8iW5FUb6Ai9/iyJ+EPFHL8GpePG+BU8Uo9Ut8WfDZE=;
+        b=fX9tktsvhjkjwbIb0EMG4WwZBojWKRrf4gNgANfs6fbgFp7f2n6C8hmK17TnvEa8p3
+         iy+4xZIp6ztil+Hz1WnwrkA13TdkqpkrHWJ0iksODK4iiZA+s0vbMXyTxh7tZr2Dg03b
+         alBgB3+jjP2qP5IibM2sVVIjAhQ+8y9wqn7IwSD8rLCRWTlmMjj54FGABlFWT4dPA9VN
+         JW21OQdD6IRw/k2P3wO2tWEaqXzYM8BctwaNWrJ8pqgiQVZDW3poD/5AdW4SjUV721rR
+         1dbvnhz7YrlKtIyCii4tIi/aah8e6OyDpZywrh3B8rJmMSTRxlpyw1pDR+rhJ13xG9/R
+         Z/YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709460353; x=1710065153;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J8iW5FUb6Ai9/iyJ+EPFHL8GpePG+BU8Uo9Ut8WfDZE=;
+        b=jbJkO5Y+sM/fUeQDtbFJiTEf3q9RKkmQh0ZGyhQnG6nyjfZi7n+e45QG9GNVmsGE7w
+         iuZHYD60tgduXSkoZ572o24I9SpUGYIDYUUl5jqc0uoqagz86jFa5DS0XP7fyPBd8n6L
+         wHfkQ/i4wyhTgnPLnPcUgxgOj91LjlhLzQfNBfm2zzzkA/ohVbZ0G5QDOWSpWLX3tzCh
+         UKqCD22ne4DVhbVJxrt835aG0GxdaUSFjbm45HF2wrVeYIN7GXIfNxQ8wehBd3dYplwS
+         Pd23vB70HmJhTaUzeKY9s3NHb18o9w9/BUM5tV73FEe5EedKXK1V4UC2Dx3SNDYfdBab
+         xxkA==
+X-Gm-Message-State: AOJu0YyH907vPStRT+EA05pSYUhwnECc9qq7Jv6Y9+JzqbSrFXrIvQd0
+	nDz8zYtumQ56FNd6siTfONlZp/UwqinDqjfC/v5jejKEw96P30TN
+X-Google-Smtp-Source: AGHT+IGdvgKm2MhCmmOaXXHkFFtt/k8NV+hwFxoNtCcO+7XEAbDrKUH+xlmE515EW/FbQOoYfPmRUw==
+X-Received: by 2002:a2e:a688:0:b0:2d2:a9d6:c435 with SMTP id q8-20020a2ea688000000b002d2a9d6c435mr3697205lje.34.1709460352548;
+        Sun, 03 Mar 2024 02:05:52 -0800 (PST)
+Received: from localhost.localdomain (c83-255-24-248.bredband.tele2.se. [83.255.24.248])
+        by smtp.googlemail.com with ESMTPSA id n5-20020a2e9045000000b002d24306ada3sm1264523ljg.120.2024.03.03.02.05.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Mar 2024 02:05:52 -0800 (PST)
+From: Jonathan Bergh <bergh.jonathan@gmail.com>
+To: gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] KASAN: slab-use-after-free Read in sys_io_cancel
-Date: Sun,  3 Mar 2024 17:53:53 +0800
-X-OQ-MSGID: <20240303095352.445841-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000006945730612bc9173@google.com>
-References: <0000000000006945730612bc9173@google.com>
+	linux-staging@lists.linux.dev,
+	Jonathan Bergh <bergh.jonathan@gmail.com>
+Subject: [PATCH 1/2] staging: vme_user: Fix misaligned closing comment */
+Date: Sun,  3 Mar 2024 11:05:46 +0100
+Message-Id: <20240303100547.153636-1-bergh.jonathan@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,39 +66,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-please test uaf in sys_io_cancel
+This patch makes the following change:
+ * Ensures the trailing */ for comments is on the same line as the opening
+   /*
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
+---
+ drivers/staging/vme_user/vme_tsi148.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/aio.c b/fs/aio.c
-index 28223f511931..0fed22ed9eb8 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1762,9 +1762,8 @@ static void aio_poll_complete_work(struct work_struct *work)
- 	} /* else, POLLFREE has freed the waitqueue, so we must complete */
- 	list_del_init(&iocb->ki_list);
- 	iocb->ki_res.res = mangle_poll(mask);
--	spin_unlock_irq(&ctx->ctx_lock);
--
- 	iocb_put(iocb);
-+	spin_unlock_irq(&ctx->ctx_lock);
- }
+diff --git a/drivers/staging/vme_user/vme_tsi148.h b/drivers/staging/vme_user/vme_tsi148.h
+index 4dd224d0b86e..2a92497c5570 100644
+--- a/drivers/staging/vme_user/vme_tsi148.h
++++ b/drivers/staging/vme_user/vme_tsi148.h
+@@ -691,8 +691,7 @@ static const int TSI148_GCSR_MBOX[4] = { TSI148_GCSR_MBOX0,
  
- /* assumes we are called with irqs disabled */
-@@ -2198,7 +2197,6 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, struct iocb __user *, iocb,
- 			break;
- 		}
- 	}
--	spin_unlock_irq(&ctx->ctx_lock);
+ #define TSI148_LCSR_VMCTRL_RMWEN       BIT(20)	/* RMW Enable */
  
- 	/*
- 	 * The result argument is no longer used - the io_event is always
-@@ -2206,6 +2204,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, struct iocb __user *, iocb,
- 	 */
- 	if (ret == 0 && kiocb->rw.ki_flags & IOCB_AIO_RW)
- 		aio_complete_rw(&kiocb->rw, -EINTR);
-+	spin_unlock_irq(&ctx->ctx_lock);
+-#define TSI148_LCSR_VMCTRL_ATO_M       (7 << 16)	/* Master Access Time-out Mask
+-						 */
++#define TSI148_LCSR_VMCTRL_ATO_M       (7 << 16)	/* Master Access Time-out Mask */
+ #define TSI148_LCSR_VMCTRL_ATO_32      (0 << 16)	/* 32 us */
+ #define TSI148_LCSR_VMCTRL_ATO_128     BIT(16)	/* 128 us */
+ #define TSI148_LCSR_VMCTRL_ATO_512     (2 << 16)	/* 512 us */
+@@ -753,8 +752,7 @@ static const int TSI148_GCSR_MBOX[4] = { TSI148_GCSR_MBOX0,
+ #define TSI148_LCSR_VCTRL_DLT_16384    (0xB << 24)	/* 16384 VCLKS */
+ #define TSI148_LCSR_VCTRL_DLT_32768    (0xC << 24)	/* 32768 VCLKS */
  
- 	percpu_ref_put(&ctx->users);
+-#define TSI148_LCSR_VCTRL_NERBB        BIT(20)	/* No Early Release of Bus Busy
+-						 */
++#define TSI148_LCSR_VCTRL_NERBB        BIT(20)	/* No Early Release of Bus Busy */
  
+ #define TSI148_LCSR_VCTRL_SRESET       BIT(17)	/* System Reset */
+ #define TSI148_LCSR_VCTRL_LRESET       BIT(16)	/* Local Reset */
+-- 
+2.40.1
 
