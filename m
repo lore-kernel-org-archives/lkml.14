@@ -1,145 +1,196 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274812EB09;
-	Sun,  3 Mar 2024 14:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2451467A1E
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 15:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709477763; cv=none; b=cUCa+cpNT7rrT3a/CWq96zMMLNP4mK4I8VntrAWQLlTS/9lre7abT83osOf4UQV/dhxofZZv/q+1F2tTLTy3nq7gaqoCtxgzm287GtafrY8U+0miXHKRuzmhw8rsxr9emE1RBKbUJhZO9C3ctk8MAnAW9TK+WKfGUqh7KK/Fwlc=
+	t=1709478087; cv=none; b=c4Xolm6PdHSNNol2+P6plyZJGqvBWA2bJMD3G89LEVU5/BqW8q25GVBLrnyZtrX2yfLPl7TyNXwxl5zry9WGtc48QHmb343+/ptmEB6i/VTuvt4cPVe9lOEWpQxFfFWTmqxZnbVI56f4oNjVEC4tqTFUvTyLES+iI3pOHWInRh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709477763; c=relaxed/simple;
-	bh=PDW3W9UUOB58picWGQF59vY7+3Fq1Mklcn3pNhiZtuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=cRU70etn8tZFDgkmy/EkUC9dWzfZz6U8qaUB0F1845y6BQTL+8Gdf4iKWQhhfdYF13Bh3PspJ9jr9UrYS8bYZlaNhMIHLFULHIcRhS6IM/BYkB0za/dvlr4HI1OJ8zzFqkV+ajOrW+KbAkv2XDTTmzO8n+qrb39X79yTjk1qEgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav115.sakura.ne.jp (fsav115.sakura.ne.jp [27.133.134.242])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 423Esgxl036017;
-	Sun, 3 Mar 2024 23:54:42 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav115.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav115.sakura.ne.jp);
- Sun, 03 Mar 2024 23:54:42 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav115.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 423Esf8G035999
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sun, 3 Mar 2024 23:54:41 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <ab2a337d-c2dd-437d-9ab8-e3b837f1ff1a@I-love.SAKURA.ne.jp>
-Date: Sun, 3 Mar 2024 23:54:38 +0900
+	s=arc-20240116; t=1709478087; c=relaxed/simple;
+	bh=vGQbrMfFdPpFdFs7Qu5IAQBhUT25rDD/52ZctcPWzms=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EyOBkO0aUxZryHzwCy+MH9B0EAN3fKdljkj+U7LuUe1sZewM8acCLdJu5RaHj3OxN0i2y/uc4gkvjof1DQ31eYjl9xjuxgz5ghcJLhAx0ln2ytI/a37ZrYjfYL9uibWrqxFZ6tju9Sedzg5O1lO6Tvg3URcHJ4IjocB/nZbriLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zMQQtaek; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zMQQtaek"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5131c0691feso4500671e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 07:01:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709478083; x=1710082883; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eYW9KQXf8V+PKlETqcpcfZNaabV0OKD9pMan6c/GyBU=;
+        b=zMQQtaekv2V4zW9mHtku1BBIsG3PxaZIBbr0PivXNz988jdn62kO5OwLR5xdlc/acR
+         hq2i7P4fCKJ/KkM+nwZPG0/cV9TyRuQAJGVFXxDijqAQcWER/m9Kz+RklVC/dvsWmnMT
+         52uG9Zj9rXVLukvoLVWT2gZ7oHVoT+8EP0eT+9qYpOpYxWv+CD50PBztBd4C5WqtpSns
+         CAcmjinVRRpXNTRfX7VtPN5vVe+DiOBVdNSQHcCYZYWmZDlVZ6hXo0cZSbyKFqHUJHZD
+         rMfDyXywzMexxIJwDU/3t+RSLxLkAULtlOwqs26Y5BNyA+ERUKYx22LIBONJ2dH7C5yN
+         //3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709478083; x=1710082883;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eYW9KQXf8V+PKlETqcpcfZNaabV0OKD9pMan6c/GyBU=;
+        b=up0LgTHSKdVA9VYfB9khd2WQQHfheZIYHqIbmdg+6BVdbUhC6uzwlFO6DS+qjzKVm+
+         yCIfUePG3YysSn8TYsWmisAv/5gswVc5VUUqDtC1r81xG1jtYAmsshrCzyFJWBKC7b8R
+         7SaW73sVgSjTrQvUVOoN18IvnXYyiMV0SXWMkFz/aQTPpqh2d4eidVParZfSHa2qIEUe
+         ePUcBpY43MAY1oNWAuSoCImzOlgi4Z1VRg+Re5mHp7Ew6DPUDrSgYNjOO3oYzpo7MpSk
+         HfkbqidRsTS2SWhQ1RKVlb+3fhnOr2nXSWrqAeTi8o6hhOiIXJbtP7t6D+sL1Fo7Hfhv
+         DCfA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYu26dZHotSLpCazMNpQWN2L9kY9GRSSu33CwFzB9kDp3Q7wZnk4DiEHyKYU6Js48BrXupxJ0X50g/FHIwBtemyxQUetD/pEVUSIgf
+X-Gm-Message-State: AOJu0YwbfW9ucEGSYmnyjL/LoDXcE7vfXT6G7BE2ofzGmcE/Aq3nRvBs
+	RDd36GEZCN66WYi5u2CzsOiqQR0SnKNiEruFfLCy2c5nx6D+pTY4hFpiYehqmGU=
+X-Google-Smtp-Source: AGHT+IHhlDO5fo+sXyanwUyWP/ORnjid3vFDepYJHD6/jLbt27UMTibRuvZGPXLcCuOowXifDEMHsg==
+X-Received: by 2002:a05:6512:3714:b0:513:13a4:95e4 with SMTP id z20-20020a056512371400b0051313a495e4mr3786910lfr.36.1709478083134;
+        Sun, 03 Mar 2024 07:01:23 -0800 (PST)
+Received: from brgl-uxlite.. ([77.241.232.10])
+        by smtp.gmail.com with ESMTPSA id ch14-20020a170906c2ce00b00a42ea946917sm3740293ejb.130.2024.03.03.07.01.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Mar 2024 07:01:22 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Guru Das Srinagesh <quic_gurus@quicinc.com>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@quicinc.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v8 00/12] firmware: qcom: implement support for and enable SHM bridge
+Date: Sun,  3 Mar 2024 16:01:03 +0100
+Message-Id: <20240303150115.133633-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [integrity?] [lsm?] KMSAN: uninit-value in
- ima_add_template_entry
-Content-Language: en-US
-To: syzbot <syzbot+7bc44a489f0ef0670bd5@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>
-References: <0000000000002be12a0611ca7ff8@google.com>
- <40746a9ae6d2e76d748ec0bf7710bba7e49a53ac.camel@huaweicloud.com>
-Cc: linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <40746a9ae6d2e76d748ec0bf7710bba7e49a53ac.camel@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024/02/20 19:40, Roberto Sassu wrote:
-> On Mon, 2024-02-19 at 22:41 -0800, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    4f5e5092fdbf Merge tag 'net-6.8-rc5' of git://git.kernel.o..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=135ba81c180000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=e3dd779fba027968
->> dashboard link: https://syzkaller.appspot.com/bug?extid=7bc44a489f0ef0670bd5
->> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> I would add the VFS people in CC, in case they have some ideas.
+SCM calls that take memory buffers as arguments require that they be
+page-aligned, physically continuous and non-cachable. The same
+requirements apply to the buffer used to pass additional arguments to SCM
+calls that take more than 4.
 
-This is an erofs bug. Since the filesystem image in the reproducer
-is crafted, decompression generates bogus result and
-z_erofs_transform_plain() misbehaves.
+To that end drivers typically use dma_alloc_coherent() to allocate memory
+of suitable format which is slow and inefficient space-wise.
 
-You can obtain a single-threaded reproducer from
-https://syzkaller.appspot.com/x/repro.c?x=1256096a180000 with below diff.
+SHM Bridge is a safety mechanism that - once enabled - will only allow
+passing buffers to the TrustZone that have been explicitly marked as
+shared. It improves the overall system safety with SCM calls and is
+required by the upcoming scminvoke functionality.
 
-----------------------------------------
---- old/1256096a180000.c
-+++ new/1256096a180000.c
-@@ -676,6 +676,6 @@
-   syscall(__NR_mmap, /*addr=*/0x21000000ul, /*len=*/0x1000ul, /*prot=*/0ul,
-           /*flags=MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE*/ 0x32ul, /*fd=*/-1,
-           /*offset=*/0ul);
--  loop();
-+  execute_one();
-   return 0;
- }
-----------------------------------------
+The end goal of this series is to enable SHM bridge support for those
+architectures that support it but to that end we first need to unify the
+way memory for SCM calls is allocated. This in itself is beneficial as
+the current approach of using dma_alloc_coherent() in most places is quite
+slow.
 
-With CONFIG_EROFS_FS_DEBUG=y, the reproducer hits DBG_BUGON().
-With debug printk() shown below, you can get output shown below.
+First let's add a new TZ Memory allocator that allows users to create
+dynamic memory pools of format suitable for sharing with the TrustZone.
+Make it ready for implementing multiple build-time modes.
 
-----------------------------------------
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index d4cee95af14c..f221133a0731 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -323,7 +323,11 @@ static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
- 	unsigned int cur = 0, ni = 0, no, pi, po, insz, cnt;
- 	u8 *kin;
- 
--	DBG_BUGON(rq->outputsize > rq->inputsize);
-+	if (rq->outputsize > rq->inputsize) {
-+		pr_err("rq->inputsize=%u rq->outputsize=%u\n", rq->inputsize, rq->outputsize);
-+		pr_err("rq->pageofs_in=%u rq->pageofs_out=%u\n", rq->pageofs_in, rq->pageofs_out);
-+		pr_err("nrpages_in=%u nrpages_out=%u\n", nrpages_in, nrpages_out);
-+	}
- 	if (rq->alg == Z_EROFS_COMPRESSION_INTERLACED) {
- 		cur = bs - (rq->pageofs_out & (bs - 1));
- 		pi = (rq->pageofs_in + rq->inputsize - cur) & ~PAGE_MASK;
-@@ -352,7 +356,8 @@ static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
- 		do {
- 			no = (rq->pageofs_out + cur + pi) >> PAGE_SHIFT;
- 			po = (rq->pageofs_out + cur + pi) & ~PAGE_MASK;
--			DBG_BUGON(no >= nrpages_out);
-+			if (no >= nrpages_out)
-+				pr_err("no=%u nrpages_out=%u\n", no, nrpages_out);
- 			cnt = min(insz - pi, PAGE_SIZE - po);
- 			if (rq->out[no] == rq->in[ni]) {
- 				memmove(kin + po,
-@@ -366,7 +371,8 @@ static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
- 		} while (pi < insz);
- 		kunmap_local(kin);
- 	}
--	DBG_BUGON(ni > nrpages_in);
-+	if (ni > nrpages_in)
-+		pr_err("ni=%u nrpages_in=%u\n", ni, nrpages_in);
- 	return 0;
- }
- 
-----------------------------------------
+Convert all relevant drivers to using it. Add separate pools for SCM core
+and for qseecom.
 
-----------------------------------------
-[  138.991810][ T2983] loop0: detected capacity change from 0 to 16
-[  139.804002][ T2983] erofs: (device loop0): mounted with root inode @ nid 36.
-[  139.810464][   T87] erofs: rq->inputsize=4096 rq->outputsize=8194
-[  139.821540][   T87] erofs: rq->pageofs_in=0 rq->pageofs_out=0
-[  139.824347][   T87] erofs: nrpages_in=1 nrpages_out=3
-[  139.827008][   T87] erofs: ni=3 nrpages_in=1
-[  139.873777][ T2983] =====================================================
-[  139.881268][ T2983] BUG: KMSAN: uninit-value in ima_add_template_entry+0x626/0xa80
-----------------------------------------
+Finally add support for SHM bridge and make it the default mode of
+operation with the generic allocator as fallback for the platforms that
+don't support SHM bridge.
 
-#syz set subsystems: erofs
+Tested on db410c, RB5, sm8550-qrd. Previous iteration tested also on
+sa8775p-ride and lenovo X13s (please do retest on those platforms if you
+can).
+
+v7 -> v8:
+- make the pool size dynamic and add different policies for pool growth
+- improve commit messages and the cover letter: describe what the SHM
+  bridge is and why do we need it and the new allocator, explain why it's
+  useful to merge these changes already, independently from scminvoke
+- improve kerneldoc format
+- improve the comment on the PIL SCM calls
+- fix license tags, drop "or-later" for GPL v2
+- add lockdep and sleeping asserts
+- minor tweaks and improvements
+
+v6 -> v7:
+- fix a Kconfig issue: TZMEM must select GENERIC_ALLOCATOR
+
+v5 -> v6:
+Fixed two issues reported by autobuilders:
+- add a fix for memory leaks in the qseecom driver as the first patch for
+  easier backporting to the v6.6.y branch
+- explicitly cast the bus address stored in a variable of type dma_addr_t
+  to phys_addr_t expected by the genpool API
+
+v4 -> v5:
+- fix the return value from qcom_tzmem_init() if SHM Bridge is not supported
+- remove a comment that's no longer useful
+- collect tags
+
+v3 -> v4:
+- include linux/sizes.h for SZ_X macros
+- use dedicated RCU APIs to dereference radix tree slots
+- fix kerneldocs
+- fix the comment in patch 14/15: it's the hypervisor, not the TrustZone
+  that creates the SHM bridge
+
+v2 -> v3:
+- restore pool management and use separate pools for different users
+- don't use the new allocator in qcom_scm_pas_init_image() as the
+  TrustZone will create an SHM bridge for us here
+- rewrite the entire series again for most part
+
+v1 -> v2:
+- too many changes to list, it's a complete rewrite as explained above
+
+Bartosz Golaszewski (12):
+  firmware: qcom: add a dedicated TrustZone buffer allocator
+  firmware: qcom: scm: enable the TZ mem allocator
+  firmware: qcom: scm: smc: switch to using the SCM allocator
+  firmware: qcom: scm: make qcom_scm_assign_mem() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_ice_set_key() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_lmh_dcvsh() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_qseecom_app_get_id() use the TZ
+    allocator
+  firmware: qcom: qseecom: convert to using the TZ allocator
+  firmware: qcom: scm: add support for SHM bridge operations
+  firmware: qcom: tzmem: enable SHM Bridge support
+  firmware: qcom: scm: clarify the comment in qcom_scm_pas_init_image()
+  arm64: defconfig: enable SHM Bridge support for the TZ memory
+    allocator
+
+ MAINTAINERS                                   |   8 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/firmware/qcom/Kconfig                 |  31 ++
+ drivers/firmware/qcom/Makefile                |   1 +
+ .../firmware/qcom/qcom_qseecom_uefisecapp.c   | 288 +++++------
+ drivers/firmware/qcom/qcom_scm-smc.c          |  30 +-
+ drivers/firmware/qcom/qcom_scm.c              | 182 ++++---
+ drivers/firmware/qcom/qcom_scm.h              |   6 +
+ drivers/firmware/qcom/qcom_tzmem.c            | 455 ++++++++++++++++++
+ drivers/firmware/qcom/qcom_tzmem.h            |  13 +
+ include/linux/firmware/qcom/qcom_qseecom.h    |   4 +-
+ include/linux/firmware/qcom/qcom_scm.h        |   6 +
+ include/linux/firmware/qcom/qcom_tzmem.h      |  56 +++
+ 13 files changed, 816 insertions(+), 265 deletions(-)
+ create mode 100644 drivers/firmware/qcom/qcom_tzmem.c
+ create mode 100644 drivers/firmware/qcom/qcom_tzmem.h
+ create mode 100644 include/linux/firmware/qcom/qcom_tzmem.h
+
+-- 
+2.40.1
 
