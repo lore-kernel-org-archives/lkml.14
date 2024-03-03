@@ -1,80 +1,71 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A787F
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 03:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB927F
+	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 03:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709435663; cv=none; b=HLK0sMAXZtIdfl/yuELgx4/JgCONmK3ma5Vck3LXQMRtqseYu4lujwpFt3Bxvzvxoco7qlLDGxL7wf+vvC7DbSat+bCOvspNVxyUb3Ak4HbANA1+3sbSkaEk+VNoJuS9jHOGXZ8URE4vfwmofWwxUaXiLfOjTTQvacfliYo0vf4=
+	t=1709436725; cv=none; b=TOm5FbqNuVcoDkOjL819HjNsL8bjQT4towZakOOKvwDMoRibBGnyMG/F8kFt2NFfCvvWvnUIFHFWRRLrdt8D/FRqucypSGsu/XO+nSXsPpdizITnwGgEq3Zxtg2UutAwLaL+GFJDIio15L64LRGh1JKaKrBBKFV+h32X5qIMCns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709435663; c=relaxed/simple;
-	bh=5OCH4ubpafnoDYSK1m9V4em9FxgzMYJjrO1TpLlSxS4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=ZQsRrSbtVJeXS+qzUuQmkb7/a8yxyqfMxVOr2+rO1HSd/HrXRgHdLfbDQi8v6LRD2eFMs2oVWgsG6aTf8Vb/Yyw9T/aIzWOzc/I+gGYPFKWZbQftz2weS36/3zeXGGphekQT4ouuG/1Qn/n7XKzAj/vxS9vdG1sVNRI0oIDp/N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=C8UF+y9x; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="C8UF+y9x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709435351; bh=v3WpzfiMBJXywrT2erFA2ns2yDgHUiWRul3btSHpFJ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=C8UF+y9xFH8wmeXc9Ki2hzIEYByIK0j2CJL0JQTyH4uKs7yjKFALQMxRvUAEIwh+f
-	 /cLodqG7cu79k9oBSJ8hlA8EpKvb0f14Xe/g6WEBOtEeM5LVrQo5k6mnXCDiXb+QEx
-	 pqlZ6IIgTOiKy40dzJuZxbsYtY+IASDDwuydSWuY=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id 249A4A0D; Sun, 03 Mar 2024 11:09:09 +0800
-X-QQ-mid: xmsmtpt1709435349t4qjp5ka6
-Message-ID: <tencent_8C9B67BC3CDF3618963837324B3874D17709@qq.com>
-X-QQ-XMAILINFO: NojR6Ao/DkEDVDit6y81s9TWIncZk1a8zeWyLZjjfhzjFG9K8fpSUnX3uBhXWB
-	 3AYB8wuFAy6KxP9JsS0YBqdH/IuI6ClMCsUeN5gwPDlFzI+XUC8S92TkFfL9CDR8KMvd97BTg1Ja
-	 xQ1ftGERyst92+xi9LBv91GpXaIwDSSbHMOU5WE+Rrtjyg9TZ1UYfAJdyMmsdgz9dYwRf/Nthd1/
-	 jeK3Bzu26G6hqVmdcegiOaDtPAbRlBIZj0SNQqGSj5bv7FLc5gW8iq7UBLUhCfBNLOXD1pEoGrJC
-	 agw0wjSWef5enjDHK2hvnoGhPrTvdzXqi7S78M429E8j/PMDrLgzZgCQRdGwNQ9cTlhXbhvOh7Pp
-	 IEwg14QTuLizM/qGrrUR8Psv9nSEgDh0SA+YiMNYDgRreURTP80dmVLmJXl5oxqpET5yEjOX/jT/
-	 5YDiS4p+uq2rkL8hntJJpme2+ajdnuHkeO8kGXZ7ICX3VX4hr2d7o0bS10Pg6SYQOcxWUDin87MO
-	 FPTeyJVwT0XCciJ6HdEx7tXeHWorV4+KMrxUXMv63P42xKmMEWTpyIP4tSKs3k2uXeST4CSASmwa
-	 9U4cqhe20Ea1Z4F6/7Hq/Da7tEUH7iCF8veH6S8AKXGZgC/Cru4G/8Uo8rpljh09/n5LUMG/nM7o
-	 U15FUHbCCL7N/uWWdZF/eZ9F4WWf/45haPvissOoql3Gq2NlJP+GhE4fviyp7wO7KSWf+jHnk+xr
-	 iNgVN2vli4knbpbHnqVAjOK5zsMyzwPC5gf/wApWAjinK3LFGf3GKLhgFGUp+yDhFMy2A9b9aUuX
-	 y+NhOWG/UFmm7qchyC9Vp8bQ208qehNt44xxjPS40WFr2iiEQsT0LAYLINF8qOCKgPRoCuzqSQ1c
-	 pZbzcRSZ/a74n/uCCypTaicgXf8G6k8/D9/TGswfKYhLJcMonK4JVzax3F+VmGr8nQJq8MgYKcXs
-	 dA9VgHXH80fpDUgVk95AITPnQc3/ISLd91NvfnF9c=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+04486d87f6240a004c85@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hfs?] KMSAN: uninit-value in hfs_cat_keycmp (2)
-Date: Sun,  3 Mar 2024 11:09:10 +0800
-X-OQ-MSGID: <20240303030909.4147285-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000098b3700612b5ee0f@google.com>
-References: <00000000000098b3700612b5ee0f@google.com>
+	s=arc-20240116; t=1709436725; c=relaxed/simple;
+	bh=7F27g76O/3Kwht8hvrPpNnKLfEt5/A1Oo0QEJwz7IoI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=klnSN1dYsxJXuQojv62YAxj6FyNnKspzoxD8NSmkS4aImvNmK9enMQKx97i6IuTWpuwm65fi5nKZeeMaDkCtgag+ip+8BUcmKfBk7OzzOTDUwz0i9JwIhouOE+VGs0XJKOyJdy+OtNxYA5wLuQ9dPEP0YVjNPkKmyYiHGys0cGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c49c867608so371333739f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2024 19:32:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709436723; x=1710041523;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aNZb/Zi73x+E8vkJJgvZSx/ipGNVfIr8rYMqwrAdp9k=;
+        b=mzHTtxUrH/zcXGLQvG73FKz2t4lDZEyORCVRO/zss3FbYaVNrgXj0cyIOSs0Q+NAmK
+         CaWh1UcwBKsMvv8BCV4WAOFIKEB33gAkBnQEcSaD4CBzF3ZjaZz46+GKhDRIHqOlaWRn
+         barS3P1LqOWbyvw8yf2R3Yrtp9pMXGGtbOXPilnmtK8ZHh9a2ipVay5MyZVHVjAGLC7n
+         ++ueskNsAgZLmY2ATRRUUFQNPzL51vd74ujA9hIg+o1Kniw+kfL/yvT/lo03Xq5p1L/k
+         cZE1jmPlgNId1XK2TfMjeb0mqIKTwQrVCU3DsnTKbWTQWT0GEmDhvEYihjGJmTSAPurT
+         yyhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkv0VWh6mXHZaSiCm8zZsyliOOa5rObt2TLxeunOxUd98mPQceahTSRygg3U6WhcXgQTZ4jvfB6sJE2GBt2GKYQbFd2rwk4Yf8JQM/
+X-Gm-Message-State: AOJu0Yz/oOnAaTMHZ70g2NasMDmHPFdJsgX31BCRy2BJ+aFFZ+xhHYMw
+	zTywHZBx6k876fNByYgLAIY4zG1Ev6/DZQ5bKBBk3X/tc7ITDhBHI48japH2DTiWAzsWoOSxA+r
+	jsVOARqzNvXV4eI157CyNnnlNAM9EPh3KiisqbiH7XVUY9nzahF0p5qg=
+X-Google-Smtp-Source: AGHT+IHUA7lrMvxcHGD8eU214F3hqzU/Wd5nC1WVccZoCvs55keHUn9t90y8EdE/XU9fFS/iMuzeKEx6ZOAh9Vs4xQ56HL2hcoYb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:35a6:b0:474:d358:7f4e with SMTP id
+ v38-20020a05663835a600b00474d3587f4emr194874jal.2.1709436723251; Sat, 02 Mar
+ 2024 19:32:03 -0800 (PST)
+Date: Sat, 02 Mar 2024 19:32:03 -0800
+In-Reply-To: <tencent_5436144A4A74DD76DD66D03C89363E96E009@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a7ceb20612b940b4@google.com>
+Subject: Re: [syzbot] [rds?] WARNING in rds_conn_connect_if_down
+From: syzbot <syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-please test uninit-value in hfs_cat_keycmp
+Hello,
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
-index ef9498a6e88a..c74d864bc29e 100644
---- a/fs/hfs/bfind.c
-+++ b/fs/hfs/bfind.c
-@@ -18,7 +18,7 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
- 
- 	fd->tree = tree;
- 	fd->bnode = NULL;
--	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
-+	ptr = kzalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
- 	fd->search_key = ptr;
+Reported-and-tested-by: syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         04b8076d Merge tag 'firewire-fixes-6.8-rc7' of git://g..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=133adc36180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fad652894fc96962
+dashboard link: https://syzkaller.appspot.com/bug?extid=d4faee732755bba9838e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1429e874180000
+
+Note: testing is done by a robot and is best-effort only.
