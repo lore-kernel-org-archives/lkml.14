@@ -1,84 +1,95 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A791BE5B;
-	Sun,  3 Mar 2024 15:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770D167C74;
+	Sun,  3 Mar 2024 15:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709480106; cv=none; b=BN9OqbpI/aV26SuQPec3sugjM/v747tgoYITKLeGzAt6FvpOWO/aOo7GGsiVIWwaN/Nl/78BrRYdBAqi41PEpywB7b67WDGEaBLq7fTGd2dBarNbpFtGjbq0rRF0XKaNZMj8vOLR4iZsiGMKS6p2s1YVANYlUVcjPlbGDqUhZ3Y=
+	t=1709480114; cv=none; b=hSpXz+S84qzqwswxJ5YIZuoKEZpwEESSFEuhQ6OTfvrG2yIoUtfrhXewtuzVOTQbUPbcWmFli0bMkvTFfaG4tnw+6rMKYdqFxpEOAeqAm+3IjAIz0mv+F0/HYvMYztREtvSy1Oo6nl7BAdikwDPYm3bQRKB27jlp6CwGNbNx61U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709480106; c=relaxed/simple;
-	bh=3MKVBHEu0N6EzRncaRdIJP+pdeGSMCtu9w+rZsprsZM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tHoUX8Fsc6mIxSQO0eykqJfVoL2Sfilg+cpQCAp5JDQ+Ut1AJI7qmlJtWSx9QiJhnvJilbftaiilqw5xPYJWoUT6YKZbxbXOebd8hxRl5n47tAELXgdEaXl4+DMmaaorDK4K7DZeJkCW3Jqxae61K3W4oTSMypHwnNGb3wQvb7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ls5L7mHc; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1709480114; c=relaxed/simple;
+	bh=J1rKlv0QptsyaOZm/cu/A0gnZSOEK20bfTcqTL6hjWA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Cu5cc1hAZ3elXiOU5eLMR3EOhmFfkSfqRPV6DZPmRnDmXGSGnE3J8jd4xNpPsZXMJtDRYn24MQNKzMSu0x4JOppAMXsKHM/YQm81KTG99BjkQUPkbwKPBYl4pg3sSzbVrjTY+tkEm+oeZ4CLBovLULhgWKTMCjktPz3kSEERIBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=gRzx/h4V; arc=none smtp.client-ip=212.227.126.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ls5L7mHc"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8B26C418B6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1709480102; bh=IqZO9YkoE1oQJOVKbcqklngw16HV175A5ImJkkZYBMY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ls5L7mHcAScYICDNrQxaIaXLcKi03oJVmOPhckNxdJ4l5tHNcHa3U7nXX3L1UoSCh
-	 Ob1oUAekmTkE2EWCDBotPFws5os2UDbDl78ySX/RQCo5jPDT00JQqjd+kJVjV2eFHK
-	 YFUTTwMag6uJgVBHPHiHq3WjlQKB89lUaSocabVy6iUngL3nBhi32moan47eUOqhVO
-	 ADz2h9eeBEv8NvyzKoFlIMhOJ1A6HS9/RID+4kahuwPngHDeDV6yAN66UnTXVvpdd3
-	 AYXdV45tVEhMgRbD+ZFtnnlK+j86gQDa/dJmgI0FjGwbKE7NnVmL4g3bkl4bV+i48l
-	 CcGZw8hxXBp/g==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 8B26C418B6;
-	Sun,  3 Mar 2024 15:35:02 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Vegard Nossum <vegard.nossum@oracle.com>, Thorsten Leemhuis
- <linux@leemhuis.info>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Nathan
- Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH v1] docs: new text on bisecting which also covers bug
- validation
-In-Reply-To: <99b7841b-62d4-404e-815b-5eb5cccd2580@oracle.com>
-References: <bf1d2eba0d291ff583e01b5985a0dec248eaf27a.1708072870.git.linux@leemhuis.info>
- <87edd8m7l0.fsf@meer.lwn.net>
- <99b7841b-62d4-404e-815b-5eb5cccd2580@oracle.com>
-Date: Sun, 03 Mar 2024 08:35:01 -0700
-Message-ID: <87frx7z5ui.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="gRzx/h4V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
+	s=s1-ionos; t=1709480104; x=1710084904; i=kernel@valentinobst.de;
+	bh=J1rKlv0QptsyaOZm/cu/A0gnZSOEK20bfTcqTL6hjWA=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=gRzx/h4VmDhnnkT5ed1o2MnufKxrqha0WjEPS90AwiBQK7BEIlYLPZfG7kzjJs/8
+	 aBcElFg0qzH8EM8rpzOdjLWuUl7BFnHmbbomc/gZpA6zaY/dQP8F1PnEFkBS/RdBU
+	 qt7PBwm03aVYfpohi076RB73HMwjDNT/F3vMp4kRk+c/v2EuPB1deDKZN4+IbKcgw
+	 iUfw8J4UwER9ynkzWjC9IvGjo0OhYXSFl6JQZNE85I/7ATlCgvwIPAZQ2bVBDLp+v
+	 UTGtis/vO5I7E/Z8ZeZrc4X5s+SxSTspI6Kk9jL5urpzLbuI51dfS+jvZTTCcgcaf
+	 gNdZwrU1U0oph8Z0oQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from archbook.speedport.ip ([80.133.137.1]) by
+ mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MVaQW-1rFONH0AHU-00RcDR; Sun, 03 Mar 2024 15:49:03 +0100
+From: Valentin Obst <kernel@valentinobst.de>
+To: laura.nao@collabora.com
+Cc: a.hindborg@samsung.com,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	benno.lossin@proton.me,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	kernel@collabora.com,
+	kernel@valentinobst.de,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	sergio.collado@gmail.com,
+	shuah@kernel.org,
+	usama.anjum@collabora.com,
+	wedsonaf@gmail.com,
+	Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v5] kselftest: Add basic test for probing the rust sample modules
+Date: Sun,  3 Mar 2024 15:48:57 +0100
+Message-ID: <20240303144857.22733-1-kernel@valentinobst.de>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240229155235.263157-1-laura.nao@collabora.com>
+References: <20240229155235.263157-1-laura.nao@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Provags-ID: V03:K1:O1P97DOM4jgrahyMeAR2tBK7dMmKKRstg0K4U156wgJCHTA+z42
+ v8C2reGcPJM5I+wQvyQEbBltI2ugLivq769T6daBguSi8/QITNR8PiI08rh190+DiNOvTKw
+ sLIBNSOQYnlppnlzXx4czGaxKLHdGroEif2vvbKvno6s7JmH3ls9jckqqkVjDGviIsm79iU
+ vvQqIu2pKKrbS3eBNRMHA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:6nQpzSL+oWU=;bOKAzYAD5DSYsoAOUG00Pgj3ffU
+ kj4w7BeH0+5FZJ7i8e4Lx+UULAKHa0dx1AjqQWcz/VL+5HN+uv66YU7g9wiqskc0j6RZpVQEM
+ 8XSmASrvCc6aj6Ja60g2+QzW034+XbGVHn4LOeqSXUuTtR+xu8fzIf1z1LFvlYiW0WthcFRky
+ LvzToT9mtQGX0FBAuptdpKv/+3ICUQZnP4xxf0jypQSJN9vYEW9nTMJq3cnMdJTn8299z3S10
+ UA+vaaa4kf3a5o/D69q8p1CXWPI8MmIKiHrcAgu4Gfpd2kSlRLAHYlrh3VdeIb2i2wXMjBMaN
+ rFhNsnET+o15dqPiGJzuYZ3JLW3CZK2837v9iLULkK01q6Qcvbcp7pcSd/buNyaB6otdYS4GH
+ gZLA6hRxcoocKqmYKzVlIdq3wgXTAKOSNd6pqdlbySnTU/YsY2Z9iZp1kZ6Yr0pfM37qEyS/J
+ CebfM+B1tgpX3kNs3/mEoXTcvgD39XtoFRJHfvS4E2ZPtOlCyMdPXfiao0ltKZQmvBaL1qC4J
+ 7B6colu74E0UgoQFTU38wXlA9JsIZIQzh8ffHUAvpKCJ7uX7AQzczsysFuGqoJlPr0UZP5U6l
+ hFCfNnT3Z27CkFVYIHmm+RUzkn441TF8XIcVTAViHqB2ookCixQ+OVDRz+D/TZ9N4DZcOZnHd
+ 5XEtYJmHDtcYKMq+5C7TekAm8t3TZiIyYN9GaS2lcz9EefFqqcYPL0HOC5pLnItEUek6sEnKX
+ rNbECbdrDYvsOB92kWzsadGXZWdg/ogCgDtUfVBnHKIAfnuofUQZBs=
 
-Vegard Nossum <vegard.nossum@oracle.com> writes:
+Perhaps we can also add a section about these tests to the new
+`Documentation/rust/testing.rst` [1]. We could mention that they exist,
+how to run them, and link to the kselftest documentation for further
+information.
 
-> Something I really like about the current set of books is that they are,
-> at least in theory, roughly divided by their target audience
-> (user/admin, userspace dev, kernel dev).
+Not necessary to resend, perhaps we can do that in a separate patch when
+this patch and the one by Dirk are merged.
 
-That's good, since that was one of my primary goals when I took on the
-docs maintainership :)
+    - Best Valentin
 
-> I'd worry that "tutorials"
-> as a top-level book would unintentionally end up as a very mixed bag of
-> documents that don't have a clearly defined target audience.
-
-Could be.  The thing is, there's two axes (at least) that can be used to
-describe an audience.  One is who the readers are; that's what we have
-been working toward over the years.  The other, though, is the type of
-information they want, traditionally divided into tutorials, how-to
-guides, explanations, and reference manuals.  Mixing those types (as we
-do now) tends to lead to not doing any of them well.
-
-Perhaps the bisection doc is more of a howto, now that I think of it.
-
-Anyway, that is a problem that we're not going to be able to solve for
-the 6.9 merge window, but adding this document is.
-
-Thanks,
-
-jon
+Cc: Dirk Behme <dirk.behme@de.bosch.com>
+Link: https://lore.kernel.org/r/20240130075117.4137360-1-dirk.behme@de.bosch.com [1]
