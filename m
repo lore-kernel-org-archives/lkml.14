@@ -1,79 +1,122 @@
-Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DD9BE48
-	for <linux-kernel@vger.kernel.org>; Sun,  3 Mar 2024 11:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14915BE49;
+	Sun,  3 Mar 2024 11:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709466774; cv=none; b=JgW+LPgnLy5BHGAWYGM4O8CLz9K2zlpYeosxvFbEr4qk9UHGss6e5wUiXaOLTUN1oCZ7hTJZyw6qorVQRUV46kETpSpJr2lZSVvqvoWch2EzvW4o4xrmGD8mbHJ17xC53C8G2BnzdcuvG6RDa6M1Tin7bE1U1LwKAgJuyG44AKc=
+	t=1709467007; cv=none; b=jAXa1O5RW/4kyoRDxhGGwG9XjpynuN/ivTPW7yfcja0YYEkC8JcjvjlUfHnMG1vQUIjjNG4JbzYb5qaAfdr+oJyzWUzCW2+iX326NZaxnfCzVoaesgxzmpBRg+AYYDhErPeWIDolr+ng+ujRTn/IHlWYi3KG3SkyTs+ZET6l4L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709466774; c=relaxed/simple;
-	bh=6O3MEpm0Y4AStwCVFXGmlpgVaNsNpnXJvOK4VyQqWxs=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=Dtnf3E4cGyiGXvBf43JuBLCAGRlgBpDN6a3b5VW4mxDPyqfneyRi7KfDFycoEwYLAvsk4gcHGdODR5e7aj7HASGUiSWIvmUUDczx9LTWbCpc/Vie8wIO05nutvGAQUrKzEzw5EcYSDQ8koUn4ebV4UUAklJHmaDoLp5amo8ZCgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=lMffPfTP; arc=none smtp.client-ip=203.205.221.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709467007; c=relaxed/simple;
+	bh=rsWl8E4VnDoBE0w9p8LDB9GFa21nhzS6req7J0ChWt8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gunc1D3mporN6VnXhHcOMqHGZGG+kgxIUWNPCtT/M0eAROGwv4twGWAW2jdJmV9bUQBupIQXpL+doMsJUzVdfbO0yGgrUyshzvEbyKPfCgzqzS98ADVUx+Y5blClITvX1pn3Yf+fJrj64eNnxYJTk6QPr4orl0JRNvsEnZnse7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L94S4Hdg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="lMffPfTP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709466769; bh=DWQfP/VPsnzHv398WDomEW70GNsznKRGKOkuUEm1iuU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lMffPfTPjG01Z4NuPuCC5Hh32cIJHgFtQ+v2gTnUAN8UzLlqXhcYFQOOcA/Ng0vSx
-	 3ArAwcGFah6ms7N977Rea9cyN1qPcBRNFfX7n2fTikdVE3rIC7Ymi1X8iDqeE7DDnx
-	 lEhc56LPBZErHHR/R9/VqnI2oS+Jh210AEJtIMHI=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id D3029086; Sun, 03 Mar 2024 19:52:48 +0800
-X-QQ-mid: xmsmtpt1709466768tiz3q6kxo
-Message-ID: <tencent_FB46CF407B6A6CBC2C596F7C97BCE8EEEE0A@qq.com>
-X-QQ-XMAILINFO: NDgMZBR9sMmaP+1mcOH883vq/+M6jorP655z+GGLQOKO5QYlfCMVCYi2EKfR69
-	 qP3yp7bhi/HG99nVtJTdN05AuBJ67BWUeatRX28IVFVSpoebdVwbMvi/JrSKVO41ysMML30bHyFf
-	 qdTt5J50225hKuVK4bf3HCh5jIZMI6XXt/UoahcuXny+5o/UhaKEQc/6ceBg1TBF7k7kw+q61cTW
-	 FdmWyM39qijCR4eKx4GHWteruL0A8kjIccd19R46Yt0NkdTf73u7Lc7/Rej+Ud+PteSyyldp31xS
-	 Y1mqWJKLYQh1eDJhboXp0qH0h3ZJZdnZsZ6VEm9jXWF7TijYd4sku3mCLWhc6kQNj3dGdH7EfqCF
-	 EKiilRtFWzTQQ3PpvTXxCIV8Bq9pkOC4OVDq/Lw0shEzl5Rm150sIiUg9SKQK2VPNwj8IVZtH/ER
-	 4CoZpuw8MsTKYWsN8mjZmzhIicM801KM8a9+U1lER/bsHEJPW0UzqZr1ZRjLM9icRHIZxbGgz2sV
-	 i4243SzvjiEwHdhKmuFrZCAFs8tFD68OI5ni9gHhbHS1unxUkCPK/UuZkH3dAVnUDIrqlXGIsA33
-	 5s955I++w9OOJmQI27DitNruMtiKlrjsaIhnLEoIwAVJ3Opi7WF9Qn0Zal6PaonM/1VMAFHowT9+
-	 COuXEsIAEkGhcQbbJjd4wB2UuJpMW8brB6ONqzEPY75RxIAl5GEfXWA3xw0Xfpb1GsVRXgPoRfS9
-	 3xIFY0CNuuWqRCJTDyrj5Zz6MoNdnkawkDNMM6Ab1Mt9E2WKgWbK9sB1CrUVbAz5GxhLBbWVdRa8
-	 tmlb77AUPgBMEfkqE9/Krq79TGfVDWvMsD70oK1FD3uDUY6GfUFKdSg83QiBtq8+ixjmmKbtd3+m
-	 +s2JQXn1wT6aJv+oGZpygSNAenbhdHphGfo+a3YoAVmtecjpg32Sjf4zjRb6oWeryuCeYBQpi/cx
-	 pV3pQ6GDM=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+f770ce3566e60e5573ac@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hams?] KMSAN: uninit-value in nr_route_frame
-Date: Sun,  3 Mar 2024 19:52:48 +0800
-X-OQ-MSGID: <20240303115248.552050-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000b69bf20612bf586e@google.com>
-References: <000000000000b69bf20612bf586e@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L94S4Hdg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 862E4C433F1;
+	Sun,  3 Mar 2024 11:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709467006;
+	bh=rsWl8E4VnDoBE0w9p8LDB9GFa21nhzS6req7J0ChWt8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L94S4Hdg4NOB/gnWF3F3EtBD6SGQZtG8ZR+nZBM8YKXgqzxKsMaKmpYTCDmeH+CFg
+	 lSwg35SgBsBeo2QI1hZrm+yPvuZyz6dUO9gm8cb8GoH1EOZju3TU4eMgvVarEq6nfQ
+	 pyH+d0bIUJbKalgO4MClmvFkoh799XVpq0JGvUp2H9u/puZefqefWlZBXpw7AMRk7r
+	 ZczF3yigRFMJzVusJRBFINZLcu1VIbM3e7liPgLGJMp2mglQ0SVzKjvI52mHvruy9L
+	 NYScZMnnN3Gy6jNKMsvlzyhDa8gnymCmMLWxSPGNROBjXyLay2eaYTwdAzXmXENyQY
+	 Z6vWuCQOfFbDg==
+Date: Sun, 3 Mar 2024 11:56:33 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Frank Rowand
+ <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, Julia Lawall
+ <Julia.Lawall@inria.fr>, Peter Zijlstra <peterz@infradead.org>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, marek.vasut@gmail.com, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>
+Subject: Re: [RESEND PATCH v2 0/4] of: automate of_node_put() - new approach
+ to loops.
+Message-ID: <20240303115633.41128a62@jic23-huawei>
+In-Reply-To: <20240301223942.GA3179769-robh@kernel.org>
+References: <20240225142714.286440-1-jic23@kernel.org>
+	<20240301223942.GA3179769-robh@kernel.org>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-please test uninit-value in nr_route_frame
+On Fri, 1 Mar 2024 16:39:42 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> On Sun, Feb 25, 2024 at 02:27:10PM +0000, Jonathan Cameron wrote:
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > Some discussion occured on previous posting.
+> > https://lore.kernel.org/linux-iio/20240223124432.26443-1-Jonathan.Cameron@huawei.com/
+> > 
+> > Summary:
+> > * fwnode conversions should be considered when applying this
+> >   infrastructure to a driver. Perhaps better to move directly to
+> >   the generic FW property handling rather than improve existing
+> >   of specific code.
+> > * There are lots of potential places to use this based on detections
+> >   from Julia's coccinelle scripts linked below.
+> > 
+> > The equivalent device_for_each_child_node_scoped() series for
+> > fwnode will be queued up in IIO for the merge window shortly as
+> > it has gathered sufficient tags. Hopefully the precdent set there
+> > for the approach will reassure people that instantiating the
+> > child variable inside the macro definition is the best approach.
+> > https://lore.kernel.org/linux-iio/20240217164249.921878-1-jic23@kernel.org/
+> > 
+> > v2: Andy suggested most of the original converted set should move to
+> >     generic fwnode / property.h handling.  Within IIO that was
+> >     a reasonable observation given we've been trying to move away from
+> >     firmware specific handling for some time. Patches making that change
+> >     to appropriate drivers posted.
+> >     As we discussed there are cases which are not suitable for such
+> >     conversion and this infrastructure still provides clear benefits
+> >     for them.
+> > 
+> > Ideally it would be good if this introductory series adding the
+> > infrastructure makes the 6.9 merge window. There are no dependencies
+> > on work queued in the IIO tree, so this can go via devicetree
+> > if the maintainers would prefer. I've had some off list messages
+> > asking when this would be merged, as there is interest in building
+> > on it next cycle for other parts of the kernel (where conversion to
+> > fwnode handling may be less appropriate).  
+> 
+> I'll let you take it. For the series:
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> I've got some drivers/of/ conversions too, but they are probably next 
+> cycle at this point.
+> 
+> Rob
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index edbbef563d4d..c8662be35000 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -656,6 +656,7 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
- 	 * to allow max possible filling before reallocation.
- 	 */
- 	prefetchw(data + SKB_WITH_OVERHEAD(size));
-+	memset(data, 0, sizeof(*data));
- 
- 	/*
- 	 * Only clear those fields we need to clear, not those that we will
+Thanks Rob,
 
+Whether this makes it for this cycle is probably dependent on whether
+Linus does decide to do got to rc8 as hinted at as a possibility
++ whether Greg feels comfortable taking these through his tree
+(char-misc is the normal path for IIO).  I know various people
+are hoping this series makes it, but if doesn't we can do an immutable
+tree early next cycle (though obviously that may reduce speed of adoption).
+
+We are discussing the equivalent pull request for the fwnode version here:
+
+https://lore.kernel.org/linux-iio/2024030239-gift-cabdriver-266b@gregkh/T/#m87e7208820ebf6416a77a2973773b65a087b4796
+
+I've optimistically applied this series to my togreg-cleanup branch
+and merged that into the togreg branch of iio.git for linux-next to pick up.
+
+Thanks,
+
+Jonathan
