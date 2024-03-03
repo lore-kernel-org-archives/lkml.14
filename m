@@ -1,191 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A105EC121;
-	Sun,  3 Mar 2024 13:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C11CA73;
+	Sun,  3 Mar 2024 13:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709471386; cv=none; b=u8B0MbfN3Vkk0L/lSHn7zNlV5JfE/wZOfj+fwvbjeUaG3RhXsSGpLQkp0GTOP2h82UIRCgCnjKcACOIf2pQ1G2XYDp/LEUjY92ycj3a7k+97SnoJU/Dd5J5w/TvoOyO3gXCKoFne+JY3sEju8WeBz5PkJLNOpxDo1h0kJQQMqqM=
+	t=1709471476; cv=none; b=T3C7xibDzFBuUuUxxuKHJVnGl0FGS103eUw3uQB8aOYeBlUbEelswcteNdbbe1ITruo6kCE8N3Cv5CF885jst3oZc+CIvK2RuFQutzp0vA9j1RDEUi7ohBHXCCA9pXXQzT8dl39WQh1ZCrVcBdr2N8r5V+O2iZ4iGvk2XHckDsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709471386; c=relaxed/simple;
-	bh=vrYalRsEVZ5fLjX42yXSYdIo9++d6kZ4+2yqiD07orw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o0oH6VrDhaJSXMKlqcEMWIxmVVK9gqOipHOgH+705Yt1lfvgtd49IpeeWJkXncn7U8qYJNF10wWtir1C8KeXpjh2WnGknwBhja3rhqgwziYbdchdvAlQlGyv0iBR33f4x60+Z9U6MrexS29fJxMWB96fRy8VcF8q7O6xAPTL5vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFS4Wcld; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709471476; c=relaxed/simple;
+	bh=PYafNNhjJMBNjwpI8k3yoMSKo6rMOK3JKkJ6SSwHO/c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cDfuEZAjRYsaCsgUk7n02O7ePGL0/OlfVvK4h9K4WQswt8cseZlyGNPF2fz8eANGMYCH/hiFD2xkvuQaUwxKAXVumXZMWoKpgfN6NGDPy80HcOJwa++y3t7OXsidMhwuMQ9Rstt7yPZVlSjPOjzDJysM1aJ/mjhVOBxDPqpZtbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=sv+TsEdx; arc=none smtp.client-ip=217.72.192.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFS4Wcld"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDD6C433C7;
-	Sun,  3 Mar 2024 13:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709471386;
-	bh=vrYalRsEVZ5fLjX42yXSYdIo9++d6kZ4+2yqiD07orw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TFS4WclduKBieWz1UkcNTKSuCZDyLEdTgFUGthkob7mjSQrWCfm9HvCnDfnyY6qtW
-	 MkNYLN/+XpB8K5gsWQPw9jLMIA09LfI+cLBVXF39xCggrkuXWM8et+8sLHBUbBJRqI
-	 xDrdrgOWWfgXvxEDr6Gh1WcJHxAOynrX5AmOLrn8EPti9G+E7lNvw6MrWX7xS3wt1a
-	 iR5kSIXQa3DC4H0bDcBa/OR87oQv//6vdDCNA27zEcdCrWAQ4BNq4xlKYmmDjJ2gJs
-	 prN85/sJhYV3U+JYiPlVPjJGOFuu9uyRmpGARyS0QvQrrLnM99LERQnKwoZHA2+avH
-	 8Vgq+BsIhZqhA==
-Date: Sun, 3 Mar 2024 13:09:28 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul
- <vkoul@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan
- Cameron <Jonathan.Cameron@huawei.com>, Mark Brown <broonie@kernel.org>,
- Kees Cook <keescook@chromium.org>, linux-arm-kernel@lists.infradead.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter Clausen
- <lars@metafoo.de>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>
-Subject: Re: [PATCH v4 5/8] iio: core: Use new helpers from overflow.h in
- iio_device_alloc()
-Message-ID: <20240303130928.0c2fea09@jic23-huawei>
-In-Reply-To: <9519dda9acd9db009dcb43102cc9b36943b35217.camel@gmail.com>
-References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
-	<20240228204919.3680786-6-andriy.shevchenko@linux.intel.com>
-	<9519dda9acd9db009dcb43102cc9b36943b35217.camel@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="sv+TsEdx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
+	s=s1-ionos; t=1709471466; x=1710076266; i=kernel@valentinobst.de;
+	bh=PYafNNhjJMBNjwpI8k3yoMSKo6rMOK3JKkJ6SSwHO/c=;
+	h=X-UI-Sender-Class:From:Date:Subject:To:Cc;
+	b=sv+TsEdxulpP6xxBh3w2qqlA/lfQr9iE+QyomVvKB9E9gm4XPQpo5dJ/Nmx0XTaO
+	 qMIHS2fm/+wT4ramoa1MW6Zii10EdHYDCDyiysaqZNdZ4NIxEhIdOPdN2e51Q0bh9
+	 Rrbo9kIqPwEpeFlBAMmkWPpr95zUBzVawsWaJQ4Ys71MzL0dbwvAOneA+lHlkSsgW
+	 e2k+FNTLV/t0DZeEU0/FLXxpg9+C1b/Zf8m/4H++5RmlIdgVab4dBhpwFat46B09u
+	 N5ynokZbx6ZFroKpEqTeV5LT6ESqQU1jTIYUHFWzRXdYgVA/H4M+hbnW5hDwKLzvb
+	 Wzkbp7Oz7l8/AdBV6w==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.2.229] ([80.133.137.1]) by mrelayeu.kundenserver.de
+ (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis) id
+ 1MWAay-1rNOzJ37xi-00XgKM; Sun, 03 Mar 2024 13:44:59 +0100
+From: Valentin Obst <kernel@valentinobst.de>
+Date: Sun, 03 Mar 2024 13:44:36 +0100
+Subject: [PATCH RFC] selftests: default to host arch for LLVM builds
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <20240303-selftests-libmk-llvm-rfc-v1-1-9ab53e365e31@valentinobst.de>
+X-B4-Tracking: v=1; b=H4sIALNw5GUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDYwNj3eLUnLSS1OKSYt2czKTcbN2cnLJc3aK0ZF3TtFTj5LREyzQDSxM
+ loPaCotS0zAqw0dFKQW7OSrG1tQA8nkx2bwAAAA==
+To: Shuah Khan <shuah@kernel.org>
+Cc: Anders Roxell <anders.roxell@linaro.org>, 
+ Benjamin Poirier <bpoirier@nvidia.com>, 
+ Guillaume Tucker <guillaume.tucker@collabora.com>, 
+ John Hubbard <jhubbard@nvidia.com>, 
+ Marcos Paulo de Souza <mpdesouza@suse.com>, Mark Brown <broonie@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Sasha Levin <sashal@kernel.org>, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Valentin Obst <kernel@valentinobst.de>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709469899; l=4000;
+ i=kernel@valentinobst.de; s=20240131; h=from:subject:message-id;
+ bh=yZzV08YOvoeLyJJ85Mn+deJxF5jyLGkheHCV3AY3Ufs=;
+ b=TSN9jyLjY6bKdK+NLS7g1B8qOvrNCSBg8JOwMdTGuEH/NmHm11YJWG+eHr+U7CQMkaHgHO8id
+ 5nbK2BFfjh8ABJuP+6uaorPV+sBQssX/76EHtCTvre8y/PTwgfmYMvs
+X-Developer-Key: i=kernel@valentinobst.de; a=ed25519;
+ pk=3s7U8y0mqkaiurgHSQQTYWOo2tw5HgzCg5vnJVfw37Y=
+X-Provags-ID: V03:K1:Sz5F4HnDlLJMIKupiDJCbYrM2nc8zUpYRbGOYYRMiddrKjStcw/
+ 7V1Vf7oZPMHDJla9MJDzF50E2SsmkBk8MyFa51I8SIkUHNjyfTUIbiyOjYKlXSmfZs6+4i+
+ J9bGyVj07bHh7iqUEIXrXQvsJhufztJxHDS5uA8tOykeY7LZ9RkI+wEOBOmh7YUsT/7tyxz
+ Z19I4Xx70anfa2xxF7+BA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/CEI+nyxZus=;PvNMHw0P8TdM9bclnRLsNCwmtWm
+ qzi2i0QYj3wTVzmHuEm3Jws0S1FtDwbYkByzou1DMeLFGHYdXFXyTQ1P+OTBNcj6nDYIwiIVV
+ oqVFJjzCU6ZwVjVvTsUP7FRASskasGhy0K4z8jrmf9bKE/XzhQcz2GYPD00l1AfMD0TsB9BSR
+ Vviu0/MFFQ0AvTuoxEGneDrf5ffFF7GEXkYewC59V4ALVqY/cC29FtC3ILu7dK71P6rnWTLpG
+ JHDCQHz+zBeEqKphOJaYBIXRNC0rykQ0vbu3x+4B2o2GWWd+Le3fBzYn+0Mc0dD6nLVCXWriQ
+ K9PKOFqNT2jUlgDZGqiPRytgMH4Syvrw60bdMl/cqlnRToPH8ZHvEOLF3dScr6foGxGVwbRAM
+ n5hlv7Or+wrrYefzxXVtoqMCleJ4ZOW1AFUOFhM6fD7+k0/iebjx+Jv4XPJQ2Phh+nyYApBHP
+ u3rsrfgHLMa8Hx1XFEaT6Pi83jHazAC39TaPSglzekwassWue8S8dgb+kxW7Ss33VZFeF1O02
+ fnF6UGnWbRjvuNeOGiKR0DuG/MHtULGix0X/uH/fTH8a9kwUM32SV1kryzCUJDu4oiLbPDlvX
+ mkulJZOQvzYBTbSChQIIQGZbUuZQyppPjBFiAdU7fBMyPGcnK2bfJcbG8xEz2C1hYBZ1dY8gu
+ B+6hC2lU30bYXm071ALFt7AwdatS81m4z7UYiYzr2dRan5IY+y5YJmZeglFSZe99Lu4vev9Vc
+ t/DpYFPrhVkZWKs5CNZ55UBjw8b3bKtG+Q2axAb1Eno0VWVCfdeJCo=
 
-On Thu, 29 Feb 2024 16:29:43 +0100
-Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+When using gcc without cross compiling, i.e., `CROSS_COMPILE` unset or
+empty, the selftests build defaults to the host architecture, i.e., it use=
+s
+plain gcc. However, when compiling with clang an unset `ARCH` variable in
+combination with an unset `CROSS_COMPILE` variable, i.e., compiling for
+the host architecture, leads to compilation failures since `lib.mk` can
+not determine the clang target triple. In this case, the following error
+message is displayed for each subsystem that does not set `ARCH` in its
+own Makefile before including `lib.mk` (lines wrapped at 75 chrs):
 
-> On Wed, 2024-02-28 at 22:41 +0200, Andy Shevchenko wrote:
-> > We have two new helpers struct_size_with_data() and struct_data_pointer=
-()
-> > that we can utilize in iio_device_alloc(). Do it so.
-> >=20
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-> > ---
-> > =C2=A0drivers/iio/industrialio-core.c | 5 ++---
-> > =C2=A01 file changed, 2 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio=
--core.c
-> > index 1986b3386307..223013725e32 100644
-> > --- a/drivers/iio/industrialio-core.c
-> > +++ b/drivers/iio/industrialio-core.c
-> > @@ -1644,7 +1644,7 @@ struct iio_dev *iio_device_alloc(struct device *p=
-arent,
-> > int sizeof_priv)
-> > =C2=A0	size_t alloc_size;
-> > =C2=A0
-> > =C2=A0	if (sizeof_priv)
-> > -		alloc_size =3D ALIGN(alloc_size, IIO_DMA_MINALIGN) +
-> > sizeof_priv;
-> > +		alloc_size =3D struct_size_with_data(iio_dev_opaque,
-> > IIO_DMA_MINALIGN, sizeof_priv);
-> > =C2=A0	else
-> > =C2=A0		alloc_size =3D sizeof(struct iio_dev_opaque);
-> > =C2=A0
-> > @@ -1655,8 +1655,7 @@ struct iio_dev *iio_device_alloc(struct device *p=
-arent,
-> > int sizeof_priv)
-> > =C2=A0	indio_dev =3D &iio_dev_opaque->indio_dev;
-> > =C2=A0
-> > =C2=A0	if (sizeof_priv)
-> > -		indio_dev->priv =3D (char *)iio_dev_opaque +
-> > -			ALIGN(sizeof(struct iio_dev_opaque),
-> > IIO_DMA_MINALIGN);
-> > +		indio_dev->priv =3D struct_data_pointer(iio_dev_opaque,
-> > IIO_DMA_MINALIGN); =20
->=20
-> I'd +1 for implementing what Kees suggested in IIO. Only thing is (I thin=
-k), we
-> need to move struct iio_dev indioo_dev to the end of struct iio_dev_opaqu=
-e.
+  make[1]: Entering directory '/mnt/build/linux/tools/testing/selftests/
+   sysctl'
+  ../lib.mk:33: *** Specify CROSS_COMPILE or add '--target=3D' option to
+   lib.mk.  Stop.
+  make[1]: Leaving directory '/mnt/build/linux/tools/testing/selftests/
+   sysctl'
 
-That is going to be messy and without horrible hacks (I think) add more pad=
-ding we
-don't need.  At the moment the struct iio_dev and the struct iio_dev_opaque
-are aligned as at the start of the structure.
+Align the behavior for gcc and clang builds by interpreting unset
+`ARCH` and `CROSS_COMPILE` variables in `LLVM` builds as a sign that the
+user wants to build for the host architecture.
 
-The priv data is aligned by padding the larger struct iio_dev_opaque,
-so if you want the priv handle to be to data defined in struct iio_dev you =
-would
-need to add additional padding so that
+This preserves the property that setting the `ARCH` variable to an
+unknown value will trigger an error that complains about insufficient
+information.
 
-struct iio_dev_opaque {
-	stuff...
-	// this next __aligned() is implicit anyway because of the rules for
-	// a structure always being aligned to the alignment of it's max aligned
-	// element.
-	struct iio_dev __aligned (IIO_DMA_ALIGN) { =20
-		stuff
-		u8 priv[] __aligned(IIO_DMA_ALIGN);
-	}
-}
+RFC since I am not entirely sure if this behavior is in fact known and
+intended, and whether the way to obtain the host target triple is
+sufficiently general. (The flag was introduced in llvm-8 with [1], it
+will be an error for older clang versions, however, currently 13.0.1 is th=
+e
+minimal version required to build the kernel. For some clang binaries it
+prints the 'unknown' instead of the 'linux' version of the target, e.g.,
+mips [2]). An alternative could be to simply do:
 
-How about using what Kees suggests on the iio_dev_opaque (which think is cl=
-eaner
-anyway as that's what we are allocating) and keeping the magic pointer to p=
-riv
-in the struct iio_dev; The compiler looses some visibility for iio_priv() a=
-ccesses
-but can it do much with those anyway? They always get cast to a struct driv=
-er_specific *
-and getting the original allocation wrong is not easy to do as we pass
-that struct size in.  Note, for others not aware of what is going on here, =
-the
-priv pointer in iio_dev is to allow efficient static inline iio_priv() call=
-s without
-needing to either make a function call, or expose the internals of the opaq=
-ue
-structure in which the iio_dev and the priv data are embedded.
+  ARCH ?=3D $(shell uname -m)
 
-Standard pattern is:
+before using it to select the target. Possibly with some post processing,
+but at that point we would likely be replicating `scripts/subarch.include`=
+.
 
-struct driver_specific *bob;
-struct iio_dev *indio_dev =3D dev_iio_device_alloc(dev, sizeof(*bob));
-// which allocates the iio_dev_opaque, but returns the contained iio_dev
-bob =3D iio_priv(indio_dev);
+Also unsure if it needs a 'Fixes: 795285ef2425 ("selftests: Fix clang
+cross compilation")'. Furthermore, this change might make it possible to
+remove the explicit setting of `ARCH` from the few subsystem Makefiles
+that do it.
 
-So
+Would be happy to get some feedback on those points. If it looks OK I
+can also send it as a patch.
 
-struct iio_dev_opaque {
-	struct iio_dev indio_dev {
-		stuff..
-		void *priv;=09
-	};
-	stuff..
-	int priv_count;
-	u8 priv[] __aligned(IIO_DMA_ALIGN) __counted_by(priv_count);
-}
-with indio_dev->priv =3D iio_dev_opaque->dev?
+Link: https://reviews.llvm.org/D50755 [1]
+Link: https://godbolt.org/z/r7Gn9bvv1 [2]
+Signed-off-by: Valentin Obst <kernel@valentinobst.de>
+=2D--
+ tools/testing/selftests/lib.mk | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-This cleanups up a few IIO core bits but no impact outside them.
-Nice to have those cleanups.
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.=
+mk
+index aa646e0661f3..a8f0442a36bc 100644
+=2D-- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -7,6 +7,8 @@ else ifneq ($(filter -%,$(LLVM)),)
+ LLVM_SUFFIX :=3D $(LLVM)
+ endif
 
-Is there any way to have that internal iio_dev->priv pointer associated with
-a __counted_by even though it's pointing elsewhere than a local variable si=
-zed
-trailing element? =20
++CLANG :=3D $(LLVM_PREFIX)clang$(LLVM_SUFFIX)
++
+ CLANG_TARGET_FLAGS_arm          :=3D arm-linux-gnueabi
+ CLANG_TARGET_FLAGS_arm64        :=3D aarch64-linux-gnu
+ CLANG_TARGET_FLAGS_hexagon      :=3D hexagon-linux-musl
+@@ -18,7 +20,13 @@ CLANG_TARGET_FLAGS_riscv        :=3D riscv64-linux-gnu
+ CLANG_TARGET_FLAGS_s390         :=3D s390x-linux-gnu
+ CLANG_TARGET_FLAGS_x86          :=3D x86_64-linux-gnu
+ CLANG_TARGET_FLAGS_x86_64       :=3D x86_64-linux-gnu
+-CLANG_TARGET_FLAGS              :=3D $(CLANG_TARGET_FLAGS_$(ARCH))
++
++# Default to host architecture if ARCH is not explicitly given.
++ifeq ($(ARCH),)
++CLANG_TARGET_FLAGS :=3D $(shell $(CLANG) -print-target-triple)
++else
++CLANG_TARGET_FLAGS :=3D $(CLANG_TARGET_FLAGS_$(ARCH))
++endif
 
-struct iio_dev {
-	stuff
+ ifeq ($(CROSS_COMPILE),)
+ ifeq ($(CLANG_TARGET_FLAGS),)
+@@ -30,7 +38,7 @@ else
+ CLANG_FLAGS     +=3D --target=3D$(notdir $(CROSS_COMPILE:%-=3D%))
+ endif # CROSS_COMPILE
 
-	u32 count;
-	void *priv __counted_by(count);
-}
-compiles with gcc but without digging further I have no idea if it does any=
-thing useful!
+-CC :=3D $(LLVM_PREFIX)clang$(LLVM_SUFFIX) $(CLANG_FLAGS) -fintegrated-as
++CC :=3D $(CLANG) $(CLANG_FLAGS) -fintegrated-as
+ else
+ CC :=3D $(CROSS_COMPILE)gcc
+ endif # LLVM
 
-Jonathan
+=2D--
+base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
+change-id: 20240303-selftests-libmk-llvm-rfc-5fe3cfa9f094
 
->=20
-> - Nuno S=C3=A1
->=20
->=20
->=20
+Best regards,
+=2D-
+Valentin Obst <kernel@valentinobst.de>
 
