@@ -1,257 +1,84 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF9739FE8
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665183AC26
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709550504; cv=none; b=VNchG/b8MkXaCzVOqId3qSERxwtdfVJa88Zm2Rjt9y1rqRe+ERtxdQkjqPoiDOkpth4KPLPjn7BGJ7p0Rsal6Opf2QQOU/0oSQVfzK7ouSJm7oPXDXjEEBnLuZ4dKViQSRUb9jm+MZ5Awi40TxOE+mPhD8GZV496ajTyFN56TAo=
+	t=1709550518; cv=none; b=W02YMEEhplUHYHhTJ6537UL3JD8h7a+N0M4TqPc1p9ekVBUspZqlB8EPWbCgT/6wpUivWzx7cj2EifgIWS3fD7u5VY5TZXQXJOJhyyXD4CEhgQwnwT6bHjMoPIXxax3UzCAXmjBIqQJyx8Ccbki686QjsmDFj+64Mfr9kaShA/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709550504; c=relaxed/simple;
-	bh=FQ6sLDKliZQxGaM/0fZ2Dlbeq3FZV7uzrQlqY13q4kU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WcroKHtBwc0w4NUhz76DJqeYigjAzqHbGMdWObAQbUQXqwfdPTfhe0MZSgPIWrLFviW/yzqSEombSa5kx/yDpQv58ay5Vv0FVQOpErHjJ5hXAG6E28LcDnW6V2cQ8+OxqlZIVaVi7KU2FE6rox1RvEI7mSLS5+qKrhdtjU9edWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=cio8SLAN; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1709550518; c=relaxed/simple;
+	bh=J8QRT14PUSYYy03uk34X/ZoBf4XH47r3nKBEcmsMw+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rgv1KSBVDCR8Knj122I4DKnNDZ/CRVYUikZFCk4IICwNWAuVm2Gzrz5a6d4vn60KOt/yZMATdqhBJ4e/NxgV+m4/RGCOgOScrccoixXNHP5iHTXvHxicA6ZZXSs36UVIwIr5dWoBSTV7PsKpcHoqzNiJ5JA0KesQTG0K74HmmTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpCHFWAc; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="cio8SLAN"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cfb8126375so673492a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 03:08:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpCHFWAc"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33e1207bba1so3477543f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 03:08:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709550502; x=1710155302; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2RLTgvH0qYoneoQ+N+6ayDYFDcXGD4luCEt+X8Py56w=;
-        b=cio8SLANw7fertsc3r5ZmCdJ7hbRoaDpL1ZZveIYND2iSSCG0H3jQIvFnkg8NU4TrL
-         0jXiQF6nBkxU2381b8Szo8g8bZ2bHaiCYSXd0CrckzzeTdCC2+gxT+v1qEjlOzkP3mVV
-         A+wdUOQT5UOx9rKNR+91muojmOi8zvj8aZ1zwLIhj80gHxqLE0F2pi3BhGT/UFyjO0Ch
-         UYa8Bgj9W4YoQqshqox11kqr/yROvPVyk3JsylBheyYrJxy87YIUR5vV9bHfuPVU80GU
-         pqmgvV14SD1/V7+nZVi578SwX33t1ItZZmC7KDWAPKMFRh5RNj6m9yaphnZiCeFxxLxY
-         xbqQ==
+        d=linaro.org; s=google; t=1709550515; x=1710155315; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J8QRT14PUSYYy03uk34X/ZoBf4XH47r3nKBEcmsMw+Q=;
+        b=QpCHFWAcdkI19m5G5tOzbJ3x9HmLEVLjsi0QPJvVtC7fQLG1EB949j73nYX8DniMzl
+         n0WmnDKEZRkfUIPY2sX8i0ywd4Z9O3wPfuMyC5HoipsvPH0bOY0lgDCdcWz5jSc+Aa8U
+         rFw9GaHB9X0eFeGs4CtJ7rgVv+vqBXnxYxHnJZtXOMYSi0eSwv9leeyrxY1M+I52of9j
+         uKSFZb57rpzopLO1OuFDSQfkNPBn0ZTAkxbjDgbg8vvj1fWPhXp9ocEKgI0UROrTXIvI
+         AHbtsaZW0x/6v2t7GLeM0vC9DL6AfKI5H3nqd79Q1RCm2JGi3agN7V9AjGixc1M7JO62
+         3Flw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709550502; x=1710155302;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2RLTgvH0qYoneoQ+N+6ayDYFDcXGD4luCEt+X8Py56w=;
-        b=XMWUikQqY9YwSVSg42XsuYmCt13ArZJ5yNhK59gGVU2p9m6+lM3zIGYQamsivi0Bms
-         YuHwLQZ9G/7GFBfpOG30GK/V7AvkfxxNCDWWMYvCLWoybA0SdOj86+CgiJPVRnyLVz4Q
-         jmeTCV1iCQe/gQxso10C3fxAv7JmOUHi+OVd0qNWUhAUb/nxBv7YeKPH+kVl8D3ZXDqL
-         O5+Y1VODMtvk+gJLDlDpsdQ1IFARqcfg2GkoXy9pb51JRdAQ08AbNm3aeZ6JqqKroRUO
-         zsBY547RwKslzNpPyMAULHHZlmiWEATVdM2mfXnM9pSXUfcf04Z1sxvQ8/HEh0+fcru/
-         QKXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgH0SzBJSI931Kloqj0cHvebiATKKS9AWnGNrhAuDs086K4XLYOpFk6ytMxjDUe+K+a5iB1DiOgd6EIcJquIvigaw/0fPFgN+GscY9
-X-Gm-Message-State: AOJu0YwvfpsCjRJRLp7ejd/gEI5+noNwPVNK5eDjrYJABgZNvrnvFmzt
-	TWUicyiT6th4k5Qm/keWK9YuVkCAIfdcqB5b/IS0rJdokI8dWwSODg4jvB/fzJk=
-X-Google-Smtp-Source: AGHT+IFBOOIUNI94cOhOoYb8AwpERd5isoTBK9odWtV+MEuzyzhHwVrtYw8sFJceXMlJR9tIyeo1cQ==
-X-Received: by 2002:a05:6a20:1b30:b0:1a1:480e:7711 with SMTP id ch48-20020a056a201b3000b001a1480e7711mr5045368pzb.0.1709550501853;
-        Mon, 04 Mar 2024 03:08:21 -0800 (PST)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.154])
-        by smtp.gmail.com with ESMTPSA id y5-20020a17090aca8500b0029b59bf77b4sm587410pjt.42.2024.03.04.03.08.16
+        d=1e100.net; s=20230601; t=1709550515; x=1710155315;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J8QRT14PUSYYy03uk34X/ZoBf4XH47r3nKBEcmsMw+Q=;
+        b=kCOvHD0UbmY6xRLAKUO6VCY8WX8UXkzsOYgXnHAecfl8ujBj0AEg0/KsTsD+HZUqMg
+         AZknNt1yFJ/RWJeKkAcDondN8bWy6lq04KshN3USbvFzSUhYOfUuCQunlysaTNOpzfaX
+         dEobTfIYa6EfTtVBoVCHuj/O//uId5Xk4k/J7kCulLRbifi5rzv8u0m2Mdsinv2WDWR9
+         9jHAmtaoJgxMEHkyhjUGdKQnofmLkd7q+ozluqod4wWhC0ggNf5zpPc3BeMA3Ac9I4ZQ
+         3VXPCPW8d5xI6VaECpC5D8jZ3L7FgkQhJWabMmpjKLJADFoH5eAUn5/uH/rxrtCm2H86
+         JGCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJvWzzLYjWgwlnbTFQpx60m6v2jVLuHby9HdRd1JGRza+AQKCJmIbOGiwKNJrTu2LQBhfHRNe8QBUwM5m+CnsSOd+APxs0C0Edncbo
+X-Gm-Message-State: AOJu0Yx9XmX0tUNwr6TCIgACFrJYKEk9t4pCQt14tp61Pao+DJoMSQEZ
+	CExpW65bgZDZxfx074s2MzQCpiSJ/kAutk3y0DGiiaSaRVdQPczp7zWFu3BSRdY=
+X-Google-Smtp-Source: AGHT+IHM96X7a2A8hQD7HFP/kAS8dWVSqvNaJeysD5QyLGeU4kUUmWcLPlRWWkxANifuMKzE4sEu1g==
+X-Received: by 2002:a05:6000:124f:b0:33b:5725:e516 with SMTP id j15-20020a056000124f00b0033b5725e516mr5363029wrx.51.1709550514754;
+        Mon, 04 Mar 2024 03:08:34 -0800 (PST)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id a16-20020a5d53d0000000b0033de10c9efcsm11932573wrw.114.2024.03.04.03.08.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 03:08:21 -0800 (PST)
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-To: akpm@linux-foundation.org,
-	vishal.moola@gmail.com,
-	hughd@google.com,
-	david@redhat.com,
-	rppt@kernel.org,
-	willy@infradead.org,
-	muchun.song@linux.dev
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH 3/3] s390: supplement for ptdesc conversion
-Date: Mon,  4 Mar 2024 19:07:20 +0800
-Message-Id: <04beaf3255056ffe131a5ea595736066c1e84756.1709541697.git.zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <cover.1709541697.git.zhengqi.arch@bytedance.com>
-References: <cover.1709541697.git.zhengqi.arch@bytedance.com>
+        Mon, 04 Mar 2024 03:08:34 -0800 (PST)
+Date: Mon, 4 Mar 2024 11:08:32 +0000
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+	Helge Deller <deller@gmx.de>, dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] backlight: pandora_bl: Drop unneeded ENOMEM error
+ message
+Message-ID: <20240304110832.GG102563@aspen.lan>
+References: <20240304-backlight-probe-v1-0-e5f57d0df6e6@linaro.org>
+ <20240304-backlight-probe-v1-7-e5f57d0df6e6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240304-backlight-probe-v1-7-e5f57d0df6e6@linaro.org>
 
-After commit 6326c26c1514 ("s390: convert various pgalloc functions to use
-ptdescs"), there are still some positions that use page->{lru, index}
-instead of ptdesc->{pt_list, pt_index}. In order to make the use of
-ptdesc->{pt_list, pt_index} clearer, it would be better to convert them
-as well.
+On Mon, Mar 04, 2024 at 11:11:44AM +0100, Krzysztof Kozlowski wrote:
+> Core code already prints detailed information about failure of memory
+> allocation.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
----
- arch/s390/include/asm/pgalloc.h |  4 ++--
- arch/s390/mm/gmap.c             | 38 +++++++++++++++++----------------
- arch/s390/mm/pgalloc.c          |  8 +++----
- 3 files changed, 26 insertions(+), 24 deletions(-)
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
-index 502d655fe6ae..7b84ef6dc4b6 100644
---- a/arch/s390/include/asm/pgalloc.h
-+++ b/arch/s390/include/asm/pgalloc.h
-@@ -23,9 +23,9 @@ unsigned long *crst_table_alloc(struct mm_struct *);
- void crst_table_free(struct mm_struct *, unsigned long *);
- 
- unsigned long *page_table_alloc(struct mm_struct *);
--struct page *page_table_alloc_pgste(struct mm_struct *mm);
-+struct ptdesc *page_table_alloc_pgste(struct mm_struct *mm);
- void page_table_free(struct mm_struct *, unsigned long *);
--void page_table_free_pgste(struct page *page);
-+void page_table_free_pgste(struct ptdesc *ptdesc);
- extern int page_table_allocate_pgste;
- 
- static inline void crst_table_init(unsigned long *crst, unsigned long entry)
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 8da39deb56ca..4d2674f89322 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -206,9 +206,11 @@ static void gmap_free(struct gmap *gmap)
- 
- 	/* Free additional data for a shadow gmap */
- 	if (gmap_is_shadow(gmap)) {
-+		struct ptdesc *ptdesc;
-+
- 		/* Free all page tables. */
--		list_for_each_entry_safe(page, next, &gmap->pt_list, lru)
--			page_table_free_pgste(page);
-+		list_for_each_entry_safe(ptdesc, next, &gmap->pt_list, pt_list)
-+			page_table_free_pgste(ptdesc);
- 		gmap_rmap_radix_tree_free(&gmap->host_to_rmap);
- 		/* Release reference to the parent */
- 		gmap_put(gmap->parent);
-@@ -1348,7 +1350,7 @@ static void gmap_unshadow_pgt(struct gmap *sg, unsigned long raddr)
- {
- 	unsigned long *ste;
- 	phys_addr_t sto, pgt;
--	struct page *page;
-+	struct ptdesc *ptdesc;
- 
- 	BUG_ON(!gmap_is_shadow(sg));
- 	ste = gmap_table_walk(sg, raddr, 1); /* get segment pointer */
-@@ -1361,9 +1363,9 @@ static void gmap_unshadow_pgt(struct gmap *sg, unsigned long raddr)
- 	*ste = _SEGMENT_ENTRY_EMPTY;
- 	__gmap_unshadow_pgt(sg, raddr, __va(pgt));
- 	/* Free page table */
--	page = phys_to_page(pgt);
--	list_del(&page->lru);
--	page_table_free_pgste(page);
-+	ptdesc = page_ptdesc(phys_to_page(pgt));
-+	list_del(&ptdesc->pt_list);
-+	page_table_free_pgste(ptdesc);
- }
- 
- /**
-@@ -1377,7 +1379,7 @@ static void gmap_unshadow_pgt(struct gmap *sg, unsigned long raddr)
- static void __gmap_unshadow_sgt(struct gmap *sg, unsigned long raddr,
- 				unsigned long *sgt)
- {
--	struct page *page;
-+	struct ptdesc *ptdesc;
- 	phys_addr_t pgt;
- 	int i;
- 
-@@ -1389,9 +1391,9 @@ static void __gmap_unshadow_sgt(struct gmap *sg, unsigned long raddr,
- 		sgt[i] = _SEGMENT_ENTRY_EMPTY;
- 		__gmap_unshadow_pgt(sg, raddr, __va(pgt));
- 		/* Free page table */
--		page = phys_to_page(pgt);
--		list_del(&page->lru);
--		page_table_free_pgste(page);
-+		ptdesc = page_ptdesc(phys_to_page(pgt));
-+		list_del(&ptdesc->pt_list);
-+		page_table_free_pgste(ptdesc);
- 	}
- }
- 
-@@ -2058,19 +2060,19 @@ int gmap_shadow_pgt(struct gmap *sg, unsigned long saddr, unsigned long pgt,
- {
- 	unsigned long raddr, origin;
- 	unsigned long *table;
--	struct page *page;
-+	struct ptdesc *ptdesc;
- 	phys_addr_t s_pgt;
- 	int rc;
- 
- 	BUG_ON(!gmap_is_shadow(sg) || (pgt & _SEGMENT_ENTRY_LARGE));
- 	/* Allocate a shadow page table */
--	page = page_table_alloc_pgste(sg->mm);
--	if (!page)
-+	ptdesc = page_table_alloc_pgste(sg->mm);
-+	if (!ptdesc)
- 		return -ENOMEM;
--	page->index = pgt & _SEGMENT_ENTRY_ORIGIN;
-+	ptdesc->pt_index = pgt & _SEGMENT_ENTRY_ORIGIN;
- 	if (fake)
--		page->index |= GMAP_SHADOW_FAKE_TABLE;
--	s_pgt = page_to_phys(page);
-+		ptdesc->pt_index |= GMAP_SHADOW_FAKE_TABLE;
-+	s_pgt = page_to_phys(ptdesc_page(ptdesc));
- 	/* Install shadow page table */
- 	spin_lock(&sg->guest_table_lock);
- 	table = gmap_table_walk(sg, saddr, 1); /* get segment pointer */
-@@ -2088,7 +2090,7 @@ int gmap_shadow_pgt(struct gmap *sg, unsigned long saddr, unsigned long pgt,
- 	/* mark as invalid as long as the parent table is not protected */
- 	*table = (unsigned long) s_pgt | _SEGMENT_ENTRY |
- 		 (pgt & _SEGMENT_ENTRY_PROTECT) | _SEGMENT_ENTRY_INVALID;
--	list_add(&page->lru, &sg->pt_list);
-+	list_add(&ptdesc->pt_list, &sg->pt_list);
- 	if (fake) {
- 		/* nothing to protect for fake tables */
- 		*table &= ~_SEGMENT_ENTRY_INVALID;
-@@ -2114,7 +2116,7 @@ int gmap_shadow_pgt(struct gmap *sg, unsigned long saddr, unsigned long pgt,
- 	return rc;
- out_free:
- 	spin_unlock(&sg->guest_table_lock);
--	page_table_free_pgste(page);
-+	page_table_free_pgste(ptdesc);
- 	return rc;
- 
- }
-diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
-index 008e487c94a6..abb629d7e131 100644
---- a/arch/s390/mm/pgalloc.c
-+++ b/arch/s390/mm/pgalloc.c
-@@ -135,7 +135,7 @@ int crst_table_upgrade(struct mm_struct *mm, unsigned long end)
- 
- #ifdef CONFIG_PGSTE
- 
--struct page *page_table_alloc_pgste(struct mm_struct *mm)
-+struct ptdesc *page_table_alloc_pgste(struct mm_struct *mm)
- {
- 	struct ptdesc *ptdesc;
- 	u64 *table;
-@@ -147,12 +147,12 @@ struct page *page_table_alloc_pgste(struct mm_struct *mm)
- 		memset64(table, _PAGE_INVALID, PTRS_PER_PTE);
- 		memset64(table + PTRS_PER_PTE, 0, PTRS_PER_PTE);
- 	}
--	return ptdesc_page(ptdesc);
-+	return ptdesc;
- }
- 
--void page_table_free_pgste(struct page *page)
-+void page_table_free_pgste(struct ptdesc *ptdesc)
- {
--	pagetable_free(page_ptdesc(page));
-+	pagetable_free(ptdesc);
- }
- 
- #endif /* CONFIG_PGSTE */
--- 
-2.30.2
 
+Daniel.
