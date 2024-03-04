@@ -1,133 +1,195 @@
-Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09CC3D542
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 13:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271683EA88;
+	Mon,  4 Mar 2024 13:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560160; cv=none; b=FizWN0bjx41XEPIWJCF0+YZVt/IiQuALBlb16vpBtOK+p2PpdPrUAJYMKM9QX3Au+DLyfvSOAMvMCd8/7ae7lKL2/+sgXq9E8OlZf1Q/tmEXNG95fWDwMCVGJnFi1WhD3RkLIPfg0gL80KOK6Ovi93d6nKHBe9/3LfKA5SkWsNw=
+	t=1709560199; cv=none; b=LOyn8vr5U83G02nbi1SjDT6iqIsLkawLdW0krpZA73m3Qhp9KNXAnj98YJrws2XQdzIo92h3PdObEeUuymR5f8M0xE2E3FlqoxFjnzsFEKzTV8sNWXedntLyxzEI6+hD6E/WzdAr5ez3A9n0CkJWJMRxTgoIAaCzlG2LNHw140w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560160; c=relaxed/simple;
-	bh=FjRTxTcDPieY+TUIG9nrUIHRLmgaFcGm7LwfN+LNBow=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=BMSQ8eL+Zyk0gnhVfIII1Q3rk0sJGzz1q1BjTvQBoRxozvz0/x5JqH1OkoKCE8HfB2+4sH8tsi1cDvKx6wt3aQU6rlbsg2mC59VtEAtSzo+9Nc7vmm+8l2LiT1jbGJQ9m4obkTkN+YKciQK2TuDUngI97yJBV7AfxxfXWFtSzB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=AmWRSk25; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VAgEIm/0; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709560199; c=relaxed/simple;
+	bh=58D6ebcjk8KLk8CII8GL/GHVhbo+dUmqw9nPg10UTCQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gXP1MbIpebWZjXGRXl+bnW1hzNfYTzAObVCBlTjsiYuw0uDGNt2lDOgMlddY/vAGf/y8vl4Cry3mIYDASo+rxqp4fuX2xexthttxeIrrJvLePOYUC72yn2VfCNImCgp9lj5y/mtaKv/3nmtlmxs2GS1+uqEAnd+RQagzhXizFy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Vq9e9s+A; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="AmWRSk25";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VAgEIm/0"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id D5B5C138010B;
-	Mon,  4 Mar 2024 08:49:17 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 04 Mar 2024 08:49:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709560157; x=1709646557; bh=BRaQGMUhZF
-	+5gvPmzCZj10RTFRpRoCHi8lIQAFa6I38=; b=AmWRSk25knneYEOIKlZQ9P4pod
-	w7Zzklals0aZcGl24S0l5doNkX4rUc+l/jiTAnJ/Xu98d07n5cwfJjFcHjGU+0H3
-	4KWQcEyS9eesEKaQ4qvMetqJC3l60ZMQ0EMx6kHOWPNU3eIBPrmgNXq+JdokN/fC
-	mDnl/nlvqVNSaJUKopHul8y4fnIdnUNdtIVOjHwiBPrDzTXUR/xsEr08hOeDcXN6
-	aPhMTbEyA0gc74n/Jy4DyzcQ94hW7d8+IHuQS8lBDd6t3WEcdQomwnKRTl9tKEhD
-	U17Es/Ue/hGgfpc2nD/JwwsM6gQ4gKnzoslNEeHTYlyvG1PwnnjLHSpyZeBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709560157; x=1709646557; bh=BRaQGMUhZF+5gvPmzCZj10RTFRpR
-	oCHi8lIQAFa6I38=; b=VAgEIm/0E/dM3PQQEGcKjdRAkjB52xCRMiOmUHipXPF6
-	EOjCeHBFpV2jWZSMmSh9YRunduraSrgp0nFYo7MpzsPyFvOv5bMeDohJYa8chrBw
-	CcgjFk2vHzMCs8pm0IaZ8u+DFTY4AFd+zF55rtpDE89bTaa0jmAXsgw0CGc2+RpH
-	bxPz5scghGuO8wLvtNzkqnkPXutoJKXAX06OJDOWRXQmYzeBc2C3H4NIqdQq1WOj
-	ttakdq2RKGiz9c/5s1H28skDrExUU3kkMJV5lSNjk+R/DeLc8DKa7Q+mV03XTScq
-	wxfcNb0bwfb3Nn3OhkV3ePgtB0ZssPOsut5T/rttIA==
-X-ME-Sender: <xms:XdHlZU-1-ZnHZ7iRn66pd8kJL3f2lnnJWpNMBzUqo5GHakhBFgHbYw>
-    <xme:XdHlZctIAdfdnTPOkErAzD6tcHkhx_Z30FC_85rVP_kiM5ThI13N8fA2b2S-NClci
-    5thPFQGkSkZHns9Ll8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrheejgdehhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:XdHlZaC4ds8JJ8D4G2yGujtYaloJSPg26lo6xIJ_jov-4U4WSHDohQ>
-    <xmx:XdHlZUfIzzdXKnPhrkgE0KFCUmhxtJ8W6_GU06pcmZJZe_y4AkrVJg>
-    <xmx:XdHlZZPUH-EFk838YNgLGI2KF_v3cViyIWYiVkHMVXwJy-C-RoxrsQ>
-    <xmx:XdHlZaGxwGtBp2WAhh3bmnvTtWPbZsOBY3rNBmxnlwo8_uz5Tg9wcA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 9AD75B6008D; Mon,  4 Mar 2024 08:49:17 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-205-g4dbcac4545-fm-20240301.001-g4dbcac45
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Vq9e9s+A"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id D4D3810000A;
+	Mon,  4 Mar 2024 16:49:46 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru D4D3810000A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1709560186;
+	bh=pwwpRwyfONwWk//y+tBtyGsJGgbXPSMvyR6jl6OmDgI=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version:From;
+	b=Vq9e9s+AuV3T+kHpKUXL7fwvjVXrQvM8PiWG6SUPXWPPNRgwFPdbeNYk90w8mi9h+
+	 Juol9IeA7kOFdpR9iSu0TGl+NL0YrwbJAnI1t5ro0kt4CfqMHLeqtE9yaw4CX0w4li
+	 9bNCgZ3PjtaBqPo5L19tiK2tmrrl7VgO7gbaZI0DYEzijYtBWcGiKItGrIwzhZd4p7
+	 yjkT8Q/ovtweJV8I+do01U4dcqprsYtrZ0p/Zq0TBHJoeLKUbnb99Uw4KTX4bw//2b
+	 g/jyPFrlKEqypPcPOBOv4CUkMi2a+lXG7xqweEdIAT7XbY9hYyM6p3vqXwuiaNqKFf
+	 tTpYVxZr+2sZw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Mon,  4 Mar 2024 16:49:46 +0300 (MSK)
+Received: from p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 4 Mar 2024 16:49:46 +0300
+Received: from p-i-exch-sc-m01.sberdevices.ru ([fe80::6d41:e8f1:b95e:ba1]) by
+ p-i-exch-sc-m01.sberdevices.ru ([fe80::6d41:e8f1:b95e:ba1%7]) with mapi id
+ 15.02.1118.040; Mon, 4 Mar 2024 16:49:46 +0300
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: Jerome Brunet <jbrunet@baylibre.com>
+CC: "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
+	"clabbe@baylibre.com" <clabbe@baylibre.com>, "herbert@gondor.apana.org.au"
+	<herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "khilman@baylibre.com"
+	<khilman@baylibre.com>, "martin.blumenstingl@googlemail.com"
+	<martin.blumenstingl@googlemail.com>, "vadim.fedorenko@linux.dev"
+	<vadim.fedorenko@linux.dev>, "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>, "linux-amlogic@lists.infradead.org"
+	<linux-amlogic@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, kernel <kernel@sberdevices.ru>
+Subject: Re: [PATCH v5 03/21] drivers: crypto: meson: make CLK controller
+ optional
+Thread-Topic: [PATCH v5 03/21] drivers: crypto: meson: make CLK controller
+ optional
+Thread-Index: AQHaa9yRWJ/V2yQniEGD1LRIiVhVdrEizjUAgASdYgA=
+Date: Mon, 4 Mar 2024 13:49:46 +0000
+Message-ID: <20240304134923.hk5xp5rs3itgw3pk@cab-wsm-0029881.sigma.sbrf.ru>
+References: <20240301132936.621238-1-avromanov@salutedevices.com>
+ <20240301132936.621238-4-avromanov@salutedevices.com>
+ <1jwmqmrmva.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jwmqmrmva.fsf@starbuckisacylon.baylibre.com>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4B84D65356BE894DBF25ACCD733B0601@sberdevices.ru>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <61aa333f-aa13-4068-b73f-eeae615f4640@app.fastmail.com>
-In-Reply-To: 
- <CAMj1kXENYqUx=esK9b_pGd4wpwE43fNaGRCUhJLK_4MQzrAQeg@mail.gmail.com>
-References: 
- <CA+G9fYvG9KE15PGNoLu+SBVyShe+u5HBLQ81+kK9Zop6u=ywmw@mail.gmail.com>
- <338c89bb-a70b-4f35-b71b-f974e90e3383@app.fastmail.com>
- <20240304112441.707ded23@donnerap.manchester.arm.com>
- <1baf9a7f-b0e4-45d8-ac57-0727a213d82d@app.fastmail.com>
- <20240304114546.4e8e1e32@donnerap.manchester.arm.com>
- <badf279a-f1fa-4938-a5d2-492b89d7c27c@app.fastmail.com>
- <CAMj1kXENYqUx=esK9b_pGd4wpwE43fNaGRCUhJLK_4MQzrAQeg@mail.gmail.com>
-Date: Mon, 04 Mar 2024 14:48:56 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ard Biesheuvel" <ardb@kernel.org>
-Cc: "Andre Przywara" <andre.przywara@arm.com>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
- linux-sunxi@lists.linux.dev, dri-devel@lists.freedesktop.org,
- lkft-triage@lists.linaro.org, "Maxime Ripard" <mripard@kernel.org>,
- "Dave Airlie" <airlied@redhat.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>
-Subject: Re: arm: ERROR: modpost: "__aeabi_uldivmod"
- [drivers/gpu/drm/sun4i/sun4i-drm-hdmi.ko] undefined!
-Content-Type: text/plain
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Mon, Mar 4, 2024, at 14:01, Ard Biesheuvel wrote:
-> On Mon, 4 Mar 2024 at 13:35, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Mon, Mar 4, 2024, at 12:45, Andre Przywara wrote:
->> It's not critical if this is called infrequently, and as Maxime
->> just replied, the 64-bit division is in fact required here.
->> Since we are dividing by a constant value (200), there is a good
->> chance that this will be get turned into fairly efficient
->> multiply/shift code.
->>
->
-> Clang does not implement that optimization for 64-bit division. That
-> is how we ended up with this error in the first place.
+Hello Jerome,
 
-I meant it will use the optimization after the patch to convert
-the plain '/' to div_u64().
+On Fri, Mar 01, 2024 at 04:21:20PM +0100, Jerome Brunet wrote:
+>=20
+> On Fri 01 Mar 2024 at 16:29, Alexey Romanov <avromanov@salutedevices.com>=
+ wrote:
+>=20
+> > Amlogic crypto IP doesn't take a clock input on some
+> > SoCs: AXG / A1 / S4 / G12. So make it optional.
+> >
+>=20
+> I commented this patch on v2 and the comment keep on being un-addressed.
+>=20
+> The SoC either:
+> * has a clock that is required for the IP to work
+> * Or does not
+>=20
+> It is not something you are free to provide or not.
+>=20
+> For the record, I find very hard believe that some SoC would have clock,
+> and other would not, for the same HW.
+>=20
+> Isn't it more likely that the clock just happens to be left enabled by
+> the bootloader on some SoC and it conviently allows to ignore it ?
 
-> Perhaps it is worthwhile to make div_u64() check its divisor, e.g.,
->
-> --- a/include/linux/math64.h
-> +++ b/include/linux/math64.h
-> @@ -127,6 +127,9 @@
->  static inline u64 div_u64(u64 dividend, u32 divisor)
->  {
->         u32 remainder;
-> +
-> +       if (IS_ENABLED(CONFIG_CC_IS_GCC) && __builtin_constant_p(divisor))
-> +               return dividend / divisor;
->         return div_u64_rem(dividend, divisor, &remainder);
->  }
 
-I think the div_u64()->do_div()->__div64_const32()->__arch_xprod_64()
-optimization in asm-generic/div64.h already produces what we want
-on both compilers. Is there something missing there?
+S905X and newer SoC's uses DMA engine for crypto HW and they
+don't required clock input to work. Clock input is needed for
+blkmv engine.
 
-     Arnd
+Therefore, I'm not sure that it is needed for GXL too (and the second
+interrupt line). I tested it on vim1 board witouht them and everything
+works correctly.
+
+>=20
+> > Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> > ---
+> >  drivers/crypto/amlogic/amlogic-gxl-core.c | 14 +++-----------
+> >  1 file changed, 3 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto=
+/amlogic/amlogic-gxl-core.c
+> > index e9e733ed98e0..a3a69a59f476 100644
+> > --- a/drivers/crypto/amlogic/amlogic-gxl-core.c
+> > +++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+> > @@ -269,16 +269,11 @@ static int meson_crypto_probe(struct platform_dev=
+ice *pdev)
+> >  		dev_err(&pdev->dev, "Cannot request MMIO err=3D%d\n", err);
+> >  		return err;
+> >  	}
+> > -	mc->busclk =3D devm_clk_get(&pdev->dev, "blkmv");
+> > +
+> > +	mc->busclk =3D devm_clk_get_optional_enabled(&pdev->dev, "blkmv");
+> >  	if (IS_ERR(mc->busclk)) {
+> >  		err =3D PTR_ERR(mc->busclk);
+> > -		dev_err(&pdev->dev, "Cannot get core clock err=3D%d\n", err);
+> > -		return err;
+> > -	}
+> > -
+> > -	err =3D clk_prepare_enable(mc->busclk);
+> > -	if (err !=3D 0) {
+> > -		dev_err(&pdev->dev, "Cannot prepare_enable busclk\n");
+> > +		dev_err(&pdev->dev, "Cannot get and enable core clock err=3D%d\n", e=
+rr);
+> >  		return err;
+> >  	}
+> > =20
+> > @@ -306,7 +301,6 @@ static int meson_crypto_probe(struct platform_devic=
+e *pdev)
+> >  	meson_unregister_algs(mc);
+> >  error_flow:
+> >  	meson_free_chanlist(mc, mc->flow_cnt - 1);
+> > -	clk_disable_unprepare(mc->busclk);
+> >  	return err;
+> >  }
+> > =20
+> > @@ -321,8 +315,6 @@ static void meson_crypto_remove(struct platform_dev=
+ice *pdev)
+> >  	meson_unregister_algs(mc);
+> > =20
+> >  	meson_free_chanlist(mc, mc->flow_cnt - 1);
+> > -
+> > -	clk_disable_unprepare(mc->busclk);
+> >  }
+> > =20
+> >  static const struct meson_pdata meson_gxl_pdata =3D {
+>=20
+>=20
+> --=20
+> Jerome
+
+--=20
+Thank you,
+Alexey=
