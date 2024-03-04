@@ -1,131 +1,79 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6498C1B97C;
-	Mon,  4 Mar 2024 09:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A269B23747;
+	Mon,  4 Mar 2024 09:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709543812; cv=none; b=TJKsLvpQRUUxbHMqonRZcZeOymCETSONn9AGNtBvccYl7HgI/m1mrsyVy4Pb9sf68TvarZdgcbIQRC66a4SjmxpXIIMGXlP9uiNOVEZ+mwSW8T+WBOEr4Lm1fx58ERlcnqmVtUtvBTMkzkre6pFiWTjrRZaypudk7mIt9Opt4w0=
+	t=1709543816; cv=none; b=ZySTT6uOMkcF5GGJesZsvpTZljkA1u3zsr715wG6xlvXHiJ6E7VJO24mI99MjU/RtRXXRb05yw3LAsfX0XRTeSYrWh6G3+2bJPLHbzmwP/mpu4d6j7BONTjwNt6FGhEYYpTZlwxSjDRxwvnSqT+unXBupjiX4s68du1+zIZzGyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709543812; c=relaxed/simple;
-	bh=zseSRa6wXr7QVJKhGnqeZU4nSAnBMOPbW06T7r7hqZw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qas0n5fo4IK9YC7KM/BZn4yMfVeDpMm8LzbwKkzbAPL0Yl8C3BYj9786iL8C78aAO+tEAHAN2Nw8G/97QsEjJikQM//+2Zo3B70m9nZZ+KWAzen3JoaryVfAAuHZEdyBQVvkdBwNR2W+wCx07y/UPtUVovmcgWUqqGmQBMz75fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=QvkwNkGu; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1709543816; c=relaxed/simple;
+	bh=smtWowPoYhv7nEqimgeA8xDDf1PSEUGTNJKR2E0PKfE=;
+	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:References:
+	 In-Reply-To; b=Q3RmKN6OLUsz6yLmY8jLbdjzcHa7nZMce2nP2pPS6XbVjrdYqa/zhaE1jcLS2Tsnyxj0SBIh1d4PsbL61MZnoqpX/u9pS78RiGRoc8NNJQ0xnfUKc0nAdwe3lLx6ZfK+hRrtRXczihL+8VHIwKm4PZIUdr79QJTvVSnrPM8iJpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tak5sBNU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="QvkwNkGu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709543811; x=1741079811;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zseSRa6wXr7QVJKhGnqeZU4nSAnBMOPbW06T7r7hqZw=;
-  b=QvkwNkGuRbKij7tWpMWBRrJK5PW52YJua5frFAg5xXHMXvES0O9yqo7d
-   PKSLtEo0P+F/1rBRsmNy9+9zlKaXshoLb8ScoHEJ7j3ZLYq6dF4sqKJUM
-   J9EswjXS0dYr5xaoNp5OuJ5rRHbf0HLTLR2j6SalXcLpk2N+OHhjIMTbA
-   ST44RSIjlsEilyaHUunBfWwBH+KZ0p/pxSgmPhFWTB4bC2o5PFFkpWuwU
-   XSfVd1JPymYniATXurTFuJgcj88G5+55h2YCyDiEr090AO3svsEgK1kR2
-   aOMPN3Esf0ms+I/1DOUzoJjWNJICqOIAz9hL1qCUQ5BAHHBy8AfDQbkHf
-   w==;
-X-CSE-ConnectionGUID: 7oblNlVzTXGpgkVkuiMXRA==
-X-CSE-MsgGUID: ViKNQmJISyi7R0WCPHQlsA==
-X-IronPort-AV: E=Sophos;i="6.06,203,1705388400"; 
-   d="scan'208";a="247914620"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Mar 2024 02:16:48 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 02:16:28 -0700
-Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 4 Mar 2024 02:16:25 -0700
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <wojciech.drewek@intel.com>,
-	<arun.ramadoss@microchip.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<UNGLinuxDriver@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v3 2/2] net: phy: micrel: lan8814 cable improvement errata
-Date: Mon, 4 Mar 2024 10:15:48 +0100
-Message-ID: <20240304091548.1386022-3-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240304091548.1386022-1-horatiu.vultur@microchip.com>
-References: <20240304091548.1386022-1-horatiu.vultur@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tak5sBNU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCFA8C433F1;
+	Mon,  4 Mar 2024 09:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709543816;
+	bh=smtWowPoYhv7nEqimgeA8xDDf1PSEUGTNJKR2E0PKfE=;
+	h=Date:Cc:From:To:Subject:References:In-Reply-To:From;
+	b=Tak5sBNUjnXkT+jt+oS3upMdOErw/XV1bnFuq3gV7KE6pHzfe53DwvyBxSTvqOmk5
+	 gtJg0BnwMKflLZksQRhxucvAfFIb/ngzzsCFglrW0Q+6p1EeIhxFRw4Ny+moOxJ9ER
+	 BzoxbjOE5qfdnmTNiLcXluFS6MPSkKUBZmhMVwQxgtV931ayWpAAycnqhggvNTDbiN
+	 TUarNka6cEvsIydUSzFXP+EthiiuBTrPHyva8eeA3dOJTtY+vHnzpNQMmCncVaP4gw
+	 pXY3aJEuuDAmwF0S3RkMKRMxJEtvLO0GMtM1KQGqwhvFHSi67MvIE1NqreluH6qjZV
+	 pY9M5r4PlCaCg==
+Content-Type: multipart/signed;
+ boundary=56c5c757e8efd87fd596512d7c6b13800a50b7e712b376cf74eec9ce7510;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Mon, 04 Mar 2024 10:16:53 +0100
+Message-Id: <CZKUPDY8GTHC.BQ9KN9FR2R0H@kernel.org>
+Cc: <kernel@collabora.com>, <kernel-janitors@vger.kernel.org>,
+ <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Muhammad Usama Anjum" <usama.anjum@collabora.com>, "Tudor Ambarus"
+ <tudor.ambarus@linaro.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Miquel
+ Raynal" <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>, "Takahiro Kuwano"
+ <Takahiro.Kuwano@infineon.com>
+Subject: Re: [PATCH v2] mtd: spi-nor: core: correct type of i
+X-Mailer: aerc 0.16.0
+References: <20240304090103.818092-1-usama.anjum@collabora.com>
+In-Reply-To: <20240304090103.818092-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-When the length of the cable is more than 100m and the lan8814 is
-configured to run in 1000Base-T Slave then the register of the device
-needs to be optimized.
+--56c5c757e8efd87fd596512d7c6b13800a50b7e712b376cf74eec9ce7510
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Workaround this by setting the measure time to a value of 0xb. This
-value can be set regardless of the configuration.
+On Mon Mar 4, 2024 at 10:01 AM CET, Muhammad Usama Anjum wrote:
+> The i should be signed to find out the end of the loop. Otherwise,
+> i >=3D 0 is always true and loop becomes infinite. Make its type to be
+> int.
+>
+> Fixes: 6a9eda34418f ("mtd: spi-nor: core: set mtd->eraseregions for non-u=
+niform erase map")
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-This issue is described in 'LAN8814 Silicon Errata and Data Sheet
-Clarification' and according to that, this will not be corrected in a
-future silicon revision.
+Reviewed-by: Michael Walle <mwalle@kernel.org>
 
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/net/phy/micrel.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+--56c5c757e8efd87fd596512d7c6b13800a50b7e712b376cf74eec9ce7510
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 88cc03982bb78..8b8634600c519 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -117,6 +117,10 @@
- #define LAN8814_EEE_STATE			0x38
- #define LAN8814_EEE_STATE_MASK2P5P		BIT(10)
- 
-+#define LAN8814_PD_CONTROLS			0x9d
-+#define LAN8814_PD_CONTROLS_PD_MEAS_TIME_MASK	GENMASK(3, 0)
-+#define LAN8814_PD_CONTROLS_PD_MEAS_TIME_VAL	0xb
-+
- /* Represents 1ppm adjustment in 2^32 format with
-  * each nsec contains 4 clock cycles.
-  * The value is calculated as following: (1/1000000)/((2^-32)/4)
-@@ -3304,6 +3308,20 @@ static void lan8814_clear_2psp_bit(struct phy_device *phydev)
- 	lanphy_write_page_reg(phydev, 2, LAN8814_EEE_STATE, val);
- }
- 
-+static void lan8814_update_meas_time(struct phy_device *phydev)
-+{
-+	u16 val;
-+
-+	/* By setting the measure time to a value of 0xb this will allow cables
-+	 * longer than 100m to be used. This configuration can be used
-+	 * regardless of the mode of operation of the PHY
-+	 */
-+	val = lanphy_read_page_reg(phydev, 1, LAN8814_PD_CONTROLS);
-+	val &= ~LAN8814_PD_CONTROLS_PD_MEAS_TIME_MASK;
-+	val |= LAN8814_PD_CONTROLS_PD_MEAS_TIME_VAL;
-+	lanphy_write_page_reg(phydev, 1, LAN8814_PD_CONTROLS, val);
-+}
-+
- static int lan8814_probe(struct phy_device *phydev)
- {
- 	const struct kszphy_type *type = phydev->drv->driver_data;
-@@ -3342,6 +3360,7 @@ static int lan8814_probe(struct phy_device *phydev)
- 
- 	/* Errata workarounds */
- 	lan8814_clear_2psp_bit(phydev);
-+	lan8814_update_meas_time(phydev);
- 
- 	return 0;
- }
--- 
-2.34.1
+-----BEGIN PGP SIGNATURE-----
 
+iIgEABYIADAWIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZeWRhRIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQzcodo7VsRvvI9QD+NBOU1OgPhPQF+0Iw2vVU+MRbcTw0ux1D
+p4zNxDJ+bogBAIO88z955ZP4Qg575PSYdMtAVZ7V6Xt8v3OTgB8inEwA
+=0b60
+-----END PGP SIGNATURE-----
+
+--56c5c757e8efd87fd596512d7c6b13800a50b7e712b376cf74eec9ce7510--
