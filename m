@@ -1,209 +1,276 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC460224F9;
-	Mon,  4 Mar 2024 10:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4646722625
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709547631; cv=none; b=L8bvgzOWt8wTxX8mp2FbDw6XktHOY3tJCVuD39iCyiD//JzSuZJstisDxkAQSGTHf4K/8Nu/8MlZ2KA/VBsgrfvBl1B4S81poPpdIxjvdrprjV1LmnfBMdqaHEMtvlto79/NCbvGv9/jInDQy4uNJxw3/l0z6qgWw5/7ODoyERY=
+	t=1709547641; cv=none; b=QLq2ctc/hCObnQOmHHw2QmlwsbZgv5WkAwc22SjlUXK9zdRMOjA1CfU2xq43UfjAN4Ee8hMR0mAdo0I8rx422wKnAWmpeHiaWhd71Sh8XMxTdv9n1bzqoL3UU9PVs3bdMit+k/XMYYfCvty9Zu+A/808gwp3atj9fmVW4z3fYLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709547631; c=relaxed/simple;
-	bh=w741xtU6JN1TVvn/J0kQJ41j00UtJv+ZD9k8RAXfQbs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KlN9AzOCug8h7IBmyEQPz9D8w0QMmmh4Gax/eXwBiDWzIzX/p6vRKSURtVj6VMRbU+AVew8H5LQ/pjUe4ALveXCdUHu71tC35k0DkPuBDysn8+5SoVYSJ6tvadTIY+OTZnxvWPSb+F6bB2Ru3PLR3LZMiZIUyku3SvANDN6Tvjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TpDnn3kRdz9xGgp;
-	Mon,  4 Mar 2024 18:04:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 992D0140796;
-	Mon,  4 Mar 2024 18:20:14 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwC3YBlNoOVlNsuwAw--.61382S2;
-	Mon, 04 Mar 2024 11:20:13 +0100 (CET)
-Message-ID: <dcbd9e7869d2fcce69546b53851d694b8ebad54e.camel@huaweicloud.com>
-Subject: Re: [PATCH v2 24/25] commoncap: use vfs fscaps interfaces
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>, Christian Brauner
- <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>, Paul Moore
- <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, James Morris
- <jmorris@namei.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara
- <jack@suse.cz>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej
- Mosnacek <omosnace@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg
- <eric.snowberg@oracle.com>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi
- <miklos@szeredi.hu>,  Amir Goldstein <amir73il@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
-Date: Mon, 04 Mar 2024 11:19:54 +0100
-In-Reply-To: <20240221-idmap-fscap-refactor-v2-24-3039364623bd@kernel.org>
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
-	 <20240221-idmap-fscap-refactor-v2-24-3039364623bd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1709547641; c=relaxed/simple;
+	bh=2WLaY6eqKv6rBswgiO8JI2DBDzh7KJg/smdKRll/6Ko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P/Lo6M2oadTgoWmqF47AgphfzpcQ2JkyaEFH+ZBpZ58P5LPzCiwJ1vVlPmHxsSjEUYjBYzq53e4vbuDcsuVVxOCyPuHtsp8iIJs7xtllqCsB72qH3THNSfjW1/KqrcXY2vnde1SMLLJH+EfCkRRir/v72Brzmgqvj2ffOjyvsys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=YVsh0H7p; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="YVsh0H7p"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dd1d9daf02so2102405ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 02:20:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1709547639; x=1710152439; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A/DJVtxZvGSCKoS+yY9PcXRHWiBZMtGTQN3gpK4VsPo=;
+        b=YVsh0H7pf9iqJVU9++524FnPxXUBE/qdZhT2kfZo+vVw3eNaqnsiZxAQfbVlfgECTS
+         WQT15/XZ28pezapM6fXIAozK6P9kjqgn6PhY4He9e83Bo4lMi8ZwXXOO85/uhTQIY3DW
+         ZCHhipwvwvh3VjicV0N6PVX9WGKisPH+IaiHjvmoitlJVCo0XscFSV0ZT0tWpD8wbIGT
+         vmbxN0b2o9hT32xsXT29mpif3Bf7m8KSxef14AZ5uaiRZ3g47iTjeCSVX6s9T8/u0+32
+         ZdwptLoBYoFIXPvDzBMzfeD1iMfgemPWkDViY+0SuAYdLqwZk2ie6oFA5+cuQfjzIo12
+         8UXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709547639; x=1710152439;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A/DJVtxZvGSCKoS+yY9PcXRHWiBZMtGTQN3gpK4VsPo=;
+        b=JIMX+3RzKtnhg/SfTyfaPdbSsPuZoarzZ7IKdK5/dp7tIO3ioGZ3Q5qFVSR6yPhRnU
+         /6kIxy+sR3TNXFpf1dgD4coY/fhXTwPMVskQWOel0Qezo4n5qAIGrC8EI+QfqTEvVDD9
+         E+KRjBrQDqiMDcy3nl21KEYL7nohYo0rUrWK0UR5ZwGYtxwRp2BCnuL1Yxl7gbG9cvcG
+         PjmFaqo4LE/gqd4BORzjPTp6vp5F6hcKnrAXgZrFmUJEO8rT+mmGOgyBl4jM0Y3JeTuk
+         aunoJ5qA2sIFUCZ4bbFCkv8ii3zYVN5b5pQfFEUsAA421CjwUxX5oxtJfdh8uHf7o3r+
+         xB+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWr+DsuamIljhUnoU3/2zuQUeptJwu2L2nJT5Zhnf2+8mlHK2qODs/N5T8gDTjxZr9u9omBR4HEH6viq43d/ENRFAb0YpVnyfoGN65r
+X-Gm-Message-State: AOJu0YzEkElOBKtiTD0ZczwFbx4pwC0VuuCKzl9Sh5GJH6oGvWKlbUmh
+	BqvneS5amF9e8iwHBwCo8+ORfeI8abmA6aMmhQos2lbq9kDRiwuBxXgH1DKGSwU=
+X-Google-Smtp-Source: AGHT+IGNf6d/KjqoEkB6i3css4Ghljv6x7mLmw/ox2UBDC/0ylRWfyGuP0B7LoSaO2wMg5CRK4hD8g==
+X-Received: by 2002:a17:903:2406:b0:1d7:5d88:f993 with SMTP id e6-20020a170903240600b001d75d88f993mr9267803plo.41.1709547639351;
+        Mon, 04 Mar 2024 02:20:39 -0800 (PST)
+Received: from sunil-laptop ([106.51.184.12])
+        by smtp.gmail.com with ESMTPSA id j6-20020a170903024600b001d8d1a2e5fesm8126502plh.196.2024.03.04.02.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 02:20:38 -0800 (PST)
+Date: Mon, 4 Mar 2024 15:50:29 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Haibo Xu <haibo1.xu@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+	Marc Zyngier <maz@kernel.org>
+Subject: Re: [RFC PATCH v3 00/17] RISC-V: ACPI: Add external interrupt
+ controller support
+Message-ID: <ZeWgbU2muPdMo0E9@sunil-laptop>
+References: <20231219174526.2235150-1-sunilvl@ventanamicro.com>
+ <CAJZ5v0j6Veze8xDFKTbVZ5=WAfmLdeJ8NXRnh9kwCZgyaDdgew@mail.gmail.com>
+ <ZbiQ/tO/odnJCBD1@sunil-laptop>
+ <CAJZ5v0gnH0uPEM0q9VzJOg2Z_7bOP9XdQbOttpRtnkLGej45Sw@mail.gmail.com>
+ <ZbzdQ2TdsSsb7PL/@sunil-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwC3YBlNoOVlNsuwAw--.61382S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXr47ArWUtw13Kr1rWr4rKrg_yoWrKr47pF
-	WftF9xKrWrXry7Wr18ta1Dua4F9ayfGFW7urW293sYywnrGr1ftr4xCr18CFy3Cr97Wr1Y
-	k3ZFyr98GwsrAw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAMBF1jj5rxjAAAsf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZbzdQ2TdsSsb7PL/@sunil-laptop>
 
-On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOcean) wrote:
-> Use the vfs interfaces for fetching file capabilities for killpriv
-> checks and from get_vfs_caps_from_disk(). While there, update the
-> kerneldoc for get_vfs_caps_from_disk() to explain how it is different
-> from vfs_get_fscaps_nosec().
->=20
-> Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
-> ---
->  security/commoncap.c | 30 +++++++++++++-----------------
->  1 file changed, 13 insertions(+), 17 deletions(-)
->=20
-> diff --git a/security/commoncap.c b/security/commoncap.c
-> index a0ff7e6092e0..751bb26a06a6 100644
-> --- a/security/commoncap.c
-> +++ b/security/commoncap.c
-> @@ -296,11 +296,12 @@ int cap_capset(struct cred *new,
->   */
->  int cap_inode_need_killpriv(struct dentry *dentry)
->  {
-> -	struct inode *inode =3D d_backing_inode(dentry);
-> +	struct vfs_caps caps;
->  	int error;
-> =20
-> -	error =3D __vfs_getxattr(dentry, inode, XATTR_NAME_CAPS, NULL, 0);
-> -	return error > 0;
-> +	/* Use nop_mnt_idmap for no mapping here as mapping is unimportant */
-> +	error =3D vfs_get_fscaps_nosec(&nop_mnt_idmap, dentry, &caps);
-> +	return error =3D=3D 0;
->  }
-> =20
->  /**
-> @@ -323,7 +324,7 @@ int cap_inode_killpriv(struct mnt_idmap *idmap, struc=
-t dentry *dentry)
->  {
->  	int error;
-> =20
-> -	error =3D __vfs_removexattr(idmap, dentry, XATTR_NAME_CAPS);
-> +	error =3D vfs_remove_fscaps_nosec(idmap, dentry);
+On Fri, Feb 02, 2024 at 05:47:16PM +0530, Sunil V L wrote:
+> On Thu, Feb 01, 2024 at 07:10:28PM +0100, Rafael J. Wysocki wrote:
+> > On Tue, Jan 30, 2024 at 7:02 AM Sunil V L <sunilvl@ventanamicro.com> wrote:
+> > >
+> > > On Tue, Dec 19, 2023 at 06:50:19PM +0100, Rafael J. Wysocki wrote:
+> > > > On Tue, Dec 19, 2023 at 6:45 PM Sunil V L <sunilvl@ventanamicro.com> wrote:
+> > > > >
+> > > > > This series adds support for the below ECR approved by ASWG.
+> > > > > 1) MADT - https://drive.google.com/file/d/1oMGPyOD58JaPgMl1pKasT-VKsIKia7zR/view?usp=sharing
+> > > > >
+> > > > > The series primarily enables irqchip drivers for RISC-V ACPI based
+> > > > > platforms.
+> > > > >
+> > > > > The series can be broadly categorized like below.
+> > > > >
+> > > > > 1) PCI ACPI related functions are migrated from arm64 to common file so
+> > > > > that we don't need to duplicate them for RISC-V.
+> > > > >
+> > > > > 2) Introduced support for fw_devlink for ACPI nodes for IRQ dependency.
+> > > > > This helps to support deferred probe of interrupt controller drivers.
+> > > > >
+> > > > > 3) Modified pnp_irq() to try registering the IRQ  again if it sees it in
+> > > > > disabled state. This solution is similar to how
+> > > > > platform_get_irq_optional() works for regular platform devices.
+> > > > >
+> > > > > 4) Added support for re-ordering the probe of interrupt controllers when
+> > > > > IRQCHIP_ACPI_DECLARE is used.
+> > > > >
+> > > > > 5) ACPI support added in RISC-V interrupt controller drivers.
+> > > > >
+> > > > > This series is based on Anup's AIA v11 series. Since Anup's AIA v11 is
+> > > > > not merged yet and first time introducing fw_devlink, deferred probe and
+> > > > > reordering support for IRQCHIP probe, this series is still kept as RFC.
+> > > > > Looking forward for the feedback!
+> > > > >
+> > > > > Changes since RFC v2:
+> > > > >         1) Introduced fw_devlink for ACPI nodes for IRQ dependency.
+> > > > >         2) Dropped patches in drivers which are not required due to
+> > > > >            fw_devlink support.
+> > > > >         3) Dropped pci_set_msi() patch and added a patch in
+> > > > >            pci_create_root_bus().
+> > > > >         4) Updated pnp_irq() patch so that none of the actual PNP
+> > > > >            drivers need to change.
+> > > > >
+> > > > > Changes since RFC v1:
+> > > > >         1) Abandoned swnode approach as per Marc's feedback.
+> > > > >         2) To cope up with AIA series changes which changed irqchip driver
+> > > > >            probe from core_initcall() to platform_driver, added patches
+> > > > >            to support deferred probing.
+> > > > >         3) Rebased on top of Anup's AIA v11 and added tags.
+> > > > >
+> > > > > To test the series,
+> > > > >
+> > > > > 1) Qemu should be built using the riscv_acpi_b2_v8 branch at
+> > > > > https://github.com/vlsunil/qemu.git
+> > > > >
+> > > > > 2) EDK2 should be built using the instructions at:
+> > > > > https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
+> > > > >
+> > > > > 3) Build Linux using this series on top of Anup's AIA v11 series.
+> > > > >
+> > > > > Run Qemu:
+> > > > > qemu-system-riscv64 \
+> > > > >  -M virt,pflash0=pflash0,pflash1=pflash1,aia=aplic-imsic \
+> > > > >  -m 2G -smp 8 \
+> > > > >  -serial mon:stdio \
+> > > > >  -device virtio-gpu-pci -full-screen \
+> > > > >  -device qemu-xhci \
+> > > > >  -device usb-kbd \
+> > > > >  -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
+> > > > >  -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
+> > > > >  -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
+> > > > >  -kernel arch/riscv/boot/Image \
+> > > > >  -initrd rootfs.cpio \
+> > > > >  -append "root=/dev/ram ro console=ttyS0 rootwait earlycon=uart8250,mmio,0x10000000"
+> > > > >
+> > > > > To boot with APLIC only, use aia=aplic.
+> > > > > To boot with PLIC, remove aia= option.
+> > > > >
+> > > > > This series is also available in acpi_b2_v3_riscv_aia_v11 branch at
+> > > > > https://github.com/vlsunil/linux.git
+> > > > >
+> > > > > Based-on: 20231023172800.315343-1-apatel@ventanamicro.com
+> > > > > (https://lore.kernel.org/lkml/20231023172800.315343-1-apatel@ventanamicro.com/)
+> > > > >
+> > > > > Sunil V L (17):
+> > > > >   arm64: PCI: Migrate ACPI related functions to pci-acpi.c
+> > > > >   RISC-V: ACPI: Implement PCI related functionality
+> > > > >   PCI: Make pci_create_root_bus() declare its reliance on MSI domains
+> > > > >   ACPI: Add fw_devlink support for ACPI fwnode for IRQ dependency
+> > > > >   ACPI: irq: Add support for deferred probe in acpi_register_gsi()
+> > > > >   pnp.h: Reconfigure IRQ in pnp_irq() to support deferred probe
+> > > > >   ACPI: scan.c: Add weak arch specific function to reorder the IRQCHIP
+> > > > >     probe
+> > > > >   ACPI: RISC-V: Implement arch function to reorder irqchip probe entries
+> > > > >   irqchip: riscv-intc: Add ACPI support for AIA
+> > > > >   irqchip: riscv-imsic: Add ACPI support
+> > > > >   irqchip: riscv-aplic: Add ACPI support
+> > > > >   irqchip: irq-sifive-plic: Add ACPI support
+> > > > >   ACPI: bus: Add RINTC IRQ model for RISC-V
+> > > > >   ACPI: bus: Add acpi_riscv_init function
+> > > > >   ACPI: RISC-V: Create APLIC platform device
+> > > > >   ACPI: RISC-V: Create PLIC platform device
+> > > > >   irqchip: riscv-intc: Set ACPI irqmodel
+> > > >
+> > > > JFYI, I have no capacity to provide any feedback on this till 6.8-rc1 is out.
+> > > >
+> > > Hi Rafael,
+> > >
+> > > Gentle ping.
+> > >
+> > > Could you please provide feedback on the series? Patches 4, 5, 6, 7 and
+> > > 8 are bit critical IMO. So, I really look forward for your and other
+> > > ACPI experts!.
+> > 
+> > There was quite a bit of discussion on patch [6/21] and it still seems
+> > relevant to me.
+> > 
+> > ACPI actually has a way to at least indicate what the probe ordering
+> > should be which is _DEP.
+> > 
+> > The current handling of _DEP in the kernel may not be covering this
+> > particular use case, but I would rather extend it (if necessary)
+> > instead of doing all of the -EPROBE_DEFER dance which seems fragile to
+> > me.
+> > 
+> Hi Rafael,
+> 
+> Appreciate your help to look at the patches. Thank you very much!.
+> 
+> I am not very sure whether you looked into patches in the v3 of the
+> series. Because, unlike in v2, v3 doesn't need changing all drivers to
+> handle EPROBE_DEFER. In v3, it creates fw_devlink for the dependency as
+> suggested by Marc. Please take a look at PATCH 4/17.
+> 
+> For the IRQ dependency, I think adding _DEP is not required. The
+> "Extended Interrupt Descriptor" supports ResourceSource to
+> indicate the dependency. Or GSI mapping can indicate the source. This is
+> already handled in acpi_irq_parse_one_cb(). PATCH 4 uses this
+> information to create links between producer and consumer so that DD
+> framework probes the driver in the required order.
+> 
+> As you know, PNP devices are enumerated in a different way. I don't know
+> why it was done like this. But pnpacpi_init() is called via
+> fs_initcall() and acpi_dev_resource_interrupt() called from
+> pnpacpi_allocated_resource() doesn't handle the ResourceSource
+> dependency. It caches the information in PNP data structure and expects
+> the IRQ mapping to be available. Even if we add support to
+> handle extended interrupt descriptor, it is not going to help. Hence, I
+> had to add PATCH 5/17 and PATCH 6/17. Again, the change is mainly in
+> pnp_irq() now and hence it doesn't need changing all drivers.
+> 
+Hi Rafael,
 
-Uhm, I see that the change is logically correct... but the original
-code was not correct, since the EVM post hook is not called (thus the
-HMAC is broken, or an xattr change is allowed on a portable signature
-which should be not).
+Any further feedback on this? Do you see any issues with fw_devlink and
+pnp_irq() changes for the interrupt controller dependency?
 
-For completeness, the xattr change on a portable signature should not
-happen in the first place, so cap_inode_killpriv() would not be called.
-However, since EVM allows same value change, we are here.
+BTW, I explored the _DEP option you mentioned. But I think the current
+approach would probably be better with lesser impact than _DEP. Below are
+my findings.
 
-Here is how I discovered this problem.
+1) When PNP device like PNP0501 (16550A UART) has _DEP, it does not get
+created in the first pass (as expected) but they won't get created even
+after the supplier clears the dependency. This is because
+acpi_pnp_attach() returns success without calling pnpacpi_add_device()
+when acpi_scan_clear_dep_fn() calls acpi_bus_attach(). Either
+acpi_pnp_attach() needs to be modified or pnpacpi_add_device()
+should be called as part of clearing the dependency. I may be wrong but
+I think modifying pnp_irq() would probably affect only RISC-V than any
+of the approaches above.
 
-Example:
+2) _DEP doesn't support PCI devices. When we have PCI link devices
+(PNP0C0F) in the _PRT, the PCI driver probe as part of PCI scan can happen
+prior to link device probe since link device will have dependency on the
+interrupt controller which may not be probed yet. This will cause issue
+to the PCI device driver init because _PRT says there is link device for
+legacy PCI interrupt routing but the link driver is not probed yet.
 
-# ls -l test-file
--rw-r-Sr--. 1 3001 3001 5 Mar  4 10:11 test-file
+3) _DEP needs namespace interrupt controllers. We would like to avoid
+adding namespace devices also along with MADT.
 
-# getfattr -m - -d -e hex test-file
-# file: test-file
-security.capability=3D0x0100000202300000023000000000000000000000
-security.evm=3D0x05020498c82b5300663064023052a1aa6200d08b3db60a1c636b97b526=
-58af369ee0bf521cfca6c733671ebf5764b1b122f67030cfc688a111c19a7ed302303989596=
-6cf92217ea55c1405212ced1396c2d830ae55dbdb517c5d199c5a43638f90d430bad4819114=
-9dcc7c01f772ac
-security.ima=3D0x0404f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52=
-e6ccc26fd2
-security.selinux=3D0x756e636f6e66696e65645f753a6f626a6563745f723a756e6c6162=
-656c65645f743a733000
+Please let me know your thoughts.
 
-# chown 3001 test-file
-
-# ls -l test-file
--rw-r-Sr--. 1 3001 3001 5 Mar  4 10:14 test-file
-
-# getfattr -m - -d -e hex test-file
-# file: test-file
-security.evm=3D0x05020498c82b5300673065023100cdd772fa7f9c17aa66e654c7f9c124=
-de1ccfd36abbe5b8100b64a296164da45d0025fd2a2dec2e9580d5c82e5a32bfca02305ea34=
-58b74e53d743408f65e748dc6ee52964e3aedac7367a43080248f4e000c655eb8e1f4338bec=
-b81797ea37f0bca6
-security.ima=3D0x0404f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52=
-e6ccc26fd2
-security.selinux=3D0x756e636f6e66696e65645f753a6f626a6563745f723a756e6c6162=
-656c65645f743a733000
-
-
-which breaks EVM verification.
-
-Roberto
-
->  	if (error =3D=3D -EOPNOTSUPP)
->  		error =3D 0;
->  	return error;
-> @@ -719,6 +720,10 @@ ssize_t vfs_caps_to_user_xattr(struct mnt_idmap *idm=
-ap,
->   * @cpu_caps:	vfs capabilities
->   *
->   * Extract the on-exec-apply capability sets for an executable file.
-> + * For version 3 capabilities xattrs, returns the capabilities only if
-> + * they are applicable to current_user_ns() (i.e. that the rootid
-> + * corresponds to an ID which maps to ID 0 in current_user_ns() or an
-> + * ancestor), and returns -ENODATA otherwise.
->   *
->   * If the inode has been found through an idmapped mount the idmap of
->   * the vfsmount must be passed through @idmap. This function will then
-> @@ -731,25 +736,16 @@ int get_vfs_caps_from_disk(struct mnt_idmap *idmap,
->  			   struct vfs_caps *cpu_caps)
->  {
->  	struct inode *inode =3D d_backing_inode(dentry);
-> -	int size, ret;
-> -	struct vfs_ns_cap_data data, *nscaps =3D &data;
-> +	int ret;
-> =20
->  	if (!inode)
->  		return -ENODATA;
-> =20
-> -	size =3D __vfs_getxattr((struct dentry *)dentry, inode,
-> -			      XATTR_NAME_CAPS, &data, XATTR_CAPS_SZ);
-> -	if (size =3D=3D -ENODATA || size =3D=3D -EOPNOTSUPP)
-> +	ret =3D vfs_get_fscaps_nosec(idmap, (struct dentry *)dentry, cpu_caps);
-> +	if (ret =3D=3D -EOPNOTSUPP || ret =3D=3D -EOVERFLOW)
->  		/* no data, that's ok */
-> -		return -ENODATA;
-> +		ret =3D -ENODATA;
-> =20
-> -	if (size < 0)
-> -		return size;
-> -
-> -	ret =3D vfs_caps_from_xattr(idmap, inode->i_sb->s_user_ns,
-> -				  cpu_caps, nscaps, size);
-> -	if (ret =3D=3D -EOVERFLOW)
-> -		return -ENODATA;
->  	if (ret)
->  		return ret;
-> =20
->=20
-
+Thanks,
+Sunil
