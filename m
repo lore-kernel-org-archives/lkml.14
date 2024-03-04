@@ -1,120 +1,94 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810D436AF1;
-	Mon,  4 Mar 2024 10:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A532B3E49D;
+	Mon,  4 Mar 2024 10:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709547193; cv=none; b=k9c0qv6orq/FZqH5TuDjH10FTIIwpQ6eYeAmA8HjQ3E7q4W64CyoVjwZwa2wQrG5XsoB10glVI2lWf2gat18tNOETkuvruZwHAPPyS2aQpeAl47Tk9roftqZApP3vzOCxdzWSdoXURdec6DYMJ/LHXw/cuBUDi3yRxyYxyEq6oU=
+	t=1709547202; cv=none; b=I8gn+q18IOGjtdkeH0pkhDTyL4SH5Yfx1POcuzBD+VgypeDZIR7UB9EtfwLWpbqNEUugmxw+ZmgyeOX1kQS6xtlb6/ohWjhUoFbuAKUSzuikUFPrXHeLBeF6s1jSq9BV2ZjbAhZIWs3UPoAWo9wb98NIBEFWEdKyfXp/+0FXqEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709547193; c=relaxed/simple;
-	bh=sJ4KOxVtmcc7XeECsdsqOlAheKAO0mDagIQEbtEy1/U=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YS+D1Tb5u46cZYHlA/TxiMhig5xbYpxa0gcUGftI8hf1qJbTGP+uGp9jbLOqf+4rE0mqo5QQcGQYMAfzS7j3FAfq59B9524aWaxXS+2RqorfCVafHbJb3izehMEVDKETlkIZgLtxAmPp46CYOwEWg5w5GSMAGnp4hiTZ74MWLuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pienItvX; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1709547202; c=relaxed/simple;
+	bh=mL5gAOPgp7I1aSd3xpkKdxtF2Zjaucw/vmjKyyRakaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pza+ySQ8YIg6Oz7xfKAqOfQRqYFlygTHjXzWCfyL2p/H0reuLXLM4jRmLq7WESGak/Q86JEun3lpdMAgjXBNgz7emP2p3L4iTdVMFyUJbbxVozzhbXha69pMXiTKFgS+zMyojoY8ppDRkuLLa2oFafQt8Ac5S9hrWR8kGE0cBH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1mtAGLgh; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pienItvX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709547192; x=1741083192;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sJ4KOxVtmcc7XeECsdsqOlAheKAO0mDagIQEbtEy1/U=;
-  b=pienItvXf6WWCtZsPsLvi9awgT7Dawbc0ayRQ0XTgTHmSwdLiJdl+fHk
-   RKMPCR6VOcGs89l4et03yGh1Ku6h8AS0nSlQpHhafwFNcFh/I5GByWiqd
-   XcvJ4IzUtqsdtAvh9wF8O6QQjJf56BYVp0L3rA8uiuzkcvMLwZbw2FrX7
-   UgOGbJfidvACIGGjpvY40XUIjDoanP4eN/d7qLxygQPBMFJEqaGKUXvXP
-   wfTeSUEFKHe5qsCBeiD+kTOzLU+OYKQksYKzVb79iiPSHExG/3xyol3LK
-   BOXoRFKFG22zhob1jubkUdmDV17DejTkBqHT6Zaxtlhs73aw4A9THsgwd
-   Q==;
-X-CSE-ConnectionGUID: Goj1IDGUTvCf0ooKZ5NpOg==
-X-CSE-MsgGUID: NuxxthElRJ2+wV0lAx3k4g==
-X-IronPort-AV: E=Sophos;i="6.06,203,1705388400"; 
-   d="asc'?scan'208";a="247916573"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Mar 2024 03:13:10 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 03:12:58 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Mon, 4 Mar 2024 03:12:56 -0700
-Date: Mon, 4 Mar 2024 10:12:12 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Yangyu Chen <cyy@cyyself.name>
-CC: <linux-riscv@lists.infradead.org>, Conor Dooley <conor@kernel.org>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: riscv: Add T-HEAD C908 compatible
-Message-ID: <20240304-password-swerve-f82a682fb619@wendy>
-References: <tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com>
- <tencent_BD3B8D107CA98249DA8D8EFDB862310A2108@qq.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1mtAGLgh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709547199;
+	bh=mL5gAOPgp7I1aSd3xpkKdxtF2Zjaucw/vmjKyyRakaY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=1mtAGLghMf3iESaIeNOGt1Mt5mrdXTnTL+HSXApGoLFBRiYeJk+UwrdU90zi9pLkx
+	 68dRZ/eodispEozhUg5L9A+4LVP9n4QDIINQd92cnbihbTcSamTjJ7htxNcUeutC8V
+	 QVRkmE26HO72ae/XyEdPYiZWCqiQL9uNRcmv3W9znTbiCVAEGf0c0PagzQcryqKRV1
+	 QQduFiEQ2G2VG64LaxuEgLEBzUwaKtVVcQg/RbFV/w2zm8JsDZwVJM8lrEwfhBqkmO
+	 uVagJuF1ZRwvQM4G6WSigKYJdHRsmzwXAYKus0wheJveZDnGKwgC/4H+H5Fm4jth+S
+	 VU4RZQPOqtLSw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5263E37820C3;
+	Mon,  4 Mar 2024 10:13:18 +0000 (UTC)
+Message-ID: <6c7a1768-c553-460b-97db-1e51e3a7ed64@collabora.com>
+Date: Mon, 4 Mar 2024 11:13:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ugvRUHfMu+512og8"
-Content-Disposition: inline
-In-Reply-To: <tencent_BD3B8D107CA98249DA8D8EFDB862310A2108@qq.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] arm64: dts: mediatek: mt7622: drop "reset-names" from
+ thermal block
+Content-Language: en-US
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20240301113506.22944-1-zajec5@gmail.com>
+ <20240301113506.22944-5-zajec5@gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240301113506.22944-5-zajec5@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---ugvRUHfMu+512og8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Il 01/03/24 12:35, Rafał Miłecki ha scritto:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> Binding doesn't specify "reset-names" property and Linux driver also
+> doesn't use it.
+> 
+> Fix following validation error:
+> arch/arm64/boot/dts/mediatek/mt7622-rfb1.dtb: thermal@1100b000: Unevaluated properties are not allowed ('reset-names' was unexpected)
+>          from schema $id: http://devicetree.org/schemas/thermal/mediatek,thermal.yaml#
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 
-On Sun, Mar 03, 2024 at 09:26:23PM +0800, Yangyu Chen wrote:
-> The thead,c908 is a RISC-V CPU core from T-HEAD Semiconductor which used
-> in Canaan Kendryte K230 SoC.
->=20
-> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+Fixes tag missing
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
 
 > ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Document=
-ation/devicetree/bindings/riscv/cpus.yaml
-> index 9d8670c00e3b..e853a7fcee8a 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -47,6 +47,7 @@ properties:
->                - sifive,u74
->                - sifive,u74-mc
->                - thead,c906
-> +              - thead,c908
->                - thead,c910
->                - thead,c920
->            - const: riscv
-> --=20
-> 2.43.0
->=20
+>   arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index 7da4ac273a15..9d19dd8ee524 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -513,7 +513,6 @@ thermal: thermal@1100b000 {
+>   			 <&pericfg CLK_PERI_AUXADC_PD>;
+>   		clock-names = "therm", "auxadc";
+>   		resets = <&pericfg MT7622_PERI_THERM_SW_RST>;
+> -		reset-names = "therm";
+>   		mediatek,auxadc = <&auxadc>;
+>   		mediatek,apmixedsys = <&apmixedsys>;
+>   		nvmem-cells = <&thermal_calibration>;
 
---ugvRUHfMu+512og8
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeWefAAKCRB4tDGHoIJi
-0lyxAQDRzUkuJwBkpYeAvRrCLhGNK9XYFWh7fKJrI7yo2WVD/QEAik6+0zb4XGGW
-M8ScvQFXGFBwYs1ke00bhDaARkvIOgg=
-=+dYI
------END PGP SIGNATURE-----
-
---ugvRUHfMu+512og8--
