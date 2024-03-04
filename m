@@ -1,205 +1,76 @@
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D92A7AE71
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 19:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B12E7CF17;
+	Mon,  4 Mar 2024 19:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709579463; cv=none; b=YXn+yJYqIv8lNjZWtM0aQv141k3yt/uTOgA0NqtUABjHMuvPI4sTMafw+lT1p7ZfSMn/Iajc3Z3qS+dbaBWGMZrkWGDCmq+nNWyujQGjZGIHsgx4yhEGw17mruT9bLHiElsM+JQFtk6eAgkV6newCpx8O8/4Nf/73VwhzDaTBHM=
+	t=1709579472; cv=none; b=p/4C4ZWF9gxFWCAE4T27Pn0QDBAiGi/7oadFbicGPzGFZjumTWDHPvruWV4KzSs8iR5Quztv09rLtAOALB4wEdWqZ9CZQXBc3QGlhOpA1chnmbuGlVHl+YHpKMnkkVRcDulgU0rtWpeHBuH0+RqnVH1ztBcxYBeGHntHKlPzJes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709579463; c=relaxed/simple;
-	bh=0Qs2/gVugGzcMDJ264P/mZg1kkf7oxzK2+XqzvHvLIg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=igPd8nFUm8f0MMm7EcBuw2EfahmZ2OajhX5Lnv6fMVXzrdTmYSjlqMT8hcmAmbhE2d91qo5tUCKA0y8BKLpZy3kwVp9uObDIpMqAT1nCdf02UK8o1QnLqVRP+ZLmoNplIAJNLZfXMUx3DqorERvplRvDqUcH90Trg36TaM/GHYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:2716:1247:52e8:4f90])
-	by andre.telenet-ops.be with bizsmtp
-	id ujAr2B00E2qflky01jArLe; Mon, 04 Mar 2024 20:10:52 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rhDhv-002KJt-L6;
-	Mon, 04 Mar 2024 20:10:51 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rhDi7-00BCcd-Aa;
-	Mon, 04 Mar 2024 20:10:51 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-sh@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/7] sh: cache: Move forward declarations to <asm/cacheflush.h>
-Date: Mon,  4 Mar 2024 20:10:43 +0100
-Message-Id: <f47ab87636d16db4c47bebe1bf62650045f61989.1709579038.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1709579038.git.geert+renesas@glider.be>
-References: <cover.1709579038.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1709579472; c=relaxed/simple;
+	bh=K3yrAUxiGdxT7G8PGb78Jnh5WW5YiKan5RDHOUdHxAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZVimDZc73F6C1HDjpaYE9dWzWA1hvCuOIeskq42WeasuZ3vERpPetmrdRtPpX4ZwShMNtZqhdJenZDiW98/iVfxDR1CVgJGQz5zQ/mMuSsdu0h66QeMawNcMaCW54ExK2St7OQnt+a3tr3dK4j29cV/a9IT8xI3sMSC2GFRfBqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QMqei85U; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QMqei85U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709579468;
+	bh=K3yrAUxiGdxT7G8PGb78Jnh5WW5YiKan5RDHOUdHxAQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=QMqei85Ub5fJFt0Uw9DIkhVOxC8Cjbc5f/XONZH8HXy9F0yQ2I+KxVxp8evAKgyuW
+	 RXsCvF14+INkMQqGREGKq/P0JGAwpxPy+QV+oDXQD/pDqX5VXVVQmYkBz3DoHr5G46
+	 CjrZMa6v3kp6HyYPfxJNzRJXAFWN/O3Rt+eu3qUnuyrJylruhL8DF0FKDQHnJoACZl
+	 EYPBVZgsZU46hzraNRVd6h1HVH69mRlDAskUcI43/yfUS+7XjtE7HP4Ikcg9y274ox
+	 ewPozdep0uZADlomZXnMjLXRz61U1z9IKpJg0cBPzeOT/wQAd6lbIiz8A5Jezw35Or
+	 xeXP7kWWJkKGw==
+Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 24DA23780480;
+	Mon,  4 Mar 2024 19:11:07 +0000 (UTC)
+Message-ID: <db53a405-362f-4c8d-82e2-49c001b29dd1@collabora.com>
+Date: Mon, 4 Mar 2024 21:11:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] ASoC: SOF: amd: Skip IRAM/DRAM size modification
+ for Steam Deck OLED
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, Mark Brown
+ <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Cc: sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20240220201623.438944-1-cristian.ciocaltea@collabora.com>
+In-Reply-To: <20240220201623.438944-1-cristian.ciocaltea@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-arch/sh/kernel/cpu/init.c:99:29: warning: no previous prototype for 'l2_cache_init' [-Wmissing-prototypes]
-arch/sh/kernel/cpu/sh4a/setup-sh7723.c:422:6: warning: no previous prototype for 'l2_cache_init' [-Wmissing-prototypes]
-arch/sh/kernel/cpu/sh4a/setup-sh7724.c:842:6: warning: no previous prototype for 'l2_cache_init' [-Wmissing-prototypes]
-arch/sh/mm/cache-j2.c:48:13: warning: no previous prototype for 'j2_cache_init' [-Wmissing-prototypes]
-arch/sh/mm/cache-sh2.c:85:13: warning: no previous prototype for 'sh2_cache_init' [-Wmissing-prototypes]
-arch/sh/mm/cache-sh2a.c:181:13: warning: no previous prototype for 'sh2a_cache_init' [-Wmissing-prototypes]
-arch/sh/mm/cache-sh3.c:90:13: warning: no previous prototype for 'sh3_cache_init' [-Wmissing-prototypes]
-arch/sh/mm/cache-sh4.c:384:13: warning: no previous prototype for 'sh4_cache_init' [-Wmissing-prototypes]
-arch/sh/mm/cache-shx3.c:18:13: warning: no previous prototype for 'shx3_cache_init' [-Wmissing-prototypes]
-arch/sh/mm/flush-sh4.c:106:13: warning: no previous prototype for 'sh4__flush_region_init' [-Wmissing-prototypes]
-arch/sh/mm/cache-sh7705.c:190:13: warning: no previous prototype for 'sh7705_cache_init' [-Wmissing-prototypes]
+On 2/20/24 22:16, Cristian Ciocaltea wrote:
+> This patch series restores audio support on Valve's Steam Deck OLED model, which
+> broke after the recent introduction of ACP/PSP communication for IRAM/DRAM fence
+> register programming.
 
-Fix this by moving all cache-related forward declarations to
-<asm/cacheflush.h>, and by including the latter where needed.
+Hi Mark,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/sh/include/asm/cacheflush.h       | 12 ++++++++++++
- arch/sh/kernel/cpu/sh4a/setup-sh7723.c |  3 +++
- arch/sh/kernel/cpu/sh4a/setup-sh7724.c |  1 +
- arch/sh/mm/cache-sh4.c                 |  2 --
- arch/sh/mm/cache-shx3.c                |  1 +
- arch/sh/mm/cache.c                     | 14 --------------
- 6 files changed, 17 insertions(+), 16 deletions(-)
+Could we get this queued for merging as v6.9 material?
 
-diff --git a/arch/sh/include/asm/cacheflush.h b/arch/sh/include/asm/cacheflush.h
-index 51112f54552b329a..e6642ff148898bec 100644
---- a/arch/sh/include/asm/cacheflush.h
-+++ b/arch/sh/include/asm/cacheflush.h
-@@ -104,6 +104,18 @@ void kunmap_coherent(void *kvaddr);
- 
- void cpu_cache_init(void);
- 
-+void __weak l2_cache_init(void);
-+
-+void __weak j2_cache_init(void);
-+void __weak sh2_cache_init(void);
-+void __weak sh2a_cache_init(void);
-+void __weak sh3_cache_init(void);
-+void __weak shx3_cache_init(void);
-+void __weak sh4_cache_init(void);
-+void __weak sh7705_cache_init(void);
-+
-+void __weak sh4__flush_region_init(void);
-+
- static inline void *sh_cacheop_vaddr(void *vaddr)
- {
- 	if (__in_29bit_mode())
-diff --git a/arch/sh/kernel/cpu/sh4a/setup-sh7723.c b/arch/sh/kernel/cpu/sh4a/setup-sh7723.c
-index 83ae1ad4a86e86b7..d64d28c4f0595d60 100644
---- a/arch/sh/kernel/cpu/sh4a/setup-sh7723.c
-+++ b/arch/sh/kernel/cpu/sh4a/setup-sh7723.c
-@@ -14,9 +14,12 @@
- #include <linux/sh_timer.h>
- #include <linux/sh_intc.h>
- #include <linux/io.h>
-+
-+#include <asm/cacheflush.h>
- #include <asm/clock.h>
- #include <asm/mmzone.h>
- #include <asm/platform_early.h>
-+
- #include <cpu/sh7723.h>
- 
- /* Serial */
-diff --git a/arch/sh/kernel/cpu/sh4a/setup-sh7724.c b/arch/sh/kernel/cpu/sh4a/setup-sh7724.c
-index 0d990ab1ba2a9ed7..ef4b26a4b3d6428c 100644
---- a/arch/sh/kernel/cpu/sh4a/setup-sh7724.c
-+++ b/arch/sh/kernel/cpu/sh4a/setup-sh7724.c
-@@ -21,6 +21,7 @@
- #include <linux/io.h>
- #include <linux/notifier.h>
- 
-+#include <asm/cacheflush.h>
- #include <asm/suspend.h>
- #include <asm/clock.h>
- #include <asm/mmzone.h>
-diff --git a/arch/sh/mm/cache-sh4.c b/arch/sh/mm/cache-sh4.c
-index 862046f26981b61d..195e739ee2be77d8 100644
---- a/arch/sh/mm/cache-sh4.c
-+++ b/arch/sh/mm/cache-sh4.c
-@@ -376,8 +376,6 @@ static void __flush_cache_one(unsigned long addr, unsigned long phys,
- 	} while (--way_count != 0);
- }
- 
--extern void __weak sh4__flush_region_init(void);
--
- /*
-  * SH-4 has virtually indexed and physically tagged cache.
-  */
-diff --git a/arch/sh/mm/cache-shx3.c b/arch/sh/mm/cache-shx3.c
-index 24c58b7dc02265c7..dec039a75664083f 100644
---- a/arch/sh/mm/cache-shx3.c
-+++ b/arch/sh/mm/cache-shx3.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/io.h>
- #include <asm/cache.h>
-+#include <asm/cacheflush.h>
- 
- #define CCR_CACHE_SNM	0x40000		/* Hardware-assisted synonym avoidance */
- #define CCR_CACHE_IBE	0x1000000	/* ICBI broadcast */
-diff --git a/arch/sh/mm/cache.c b/arch/sh/mm/cache.c
-index 9bcaa5619eabd142..ceffd3ffc81e3ee2 100644
---- a/arch/sh/mm/cache.c
-+++ b/arch/sh/mm/cache.c
-@@ -320,30 +320,20 @@ void __init cpu_cache_init(void)
- 		goto skip;
- 
- 	if (boot_cpu_data.type == CPU_J2) {
--		extern void __weak j2_cache_init(void);
--
- 		j2_cache_init();
- 	} else if (boot_cpu_data.family == CPU_FAMILY_SH2) {
--		extern void __weak sh2_cache_init(void);
--
- 		sh2_cache_init();
- 	}
- 
- 	if (boot_cpu_data.family == CPU_FAMILY_SH2A) {
--		extern void __weak sh2a_cache_init(void);
--
- 		sh2a_cache_init();
- 	}
- 
- 	if (boot_cpu_data.family == CPU_FAMILY_SH3) {
--		extern void __weak sh3_cache_init(void);
--
- 		sh3_cache_init();
- 
- 		if ((boot_cpu_data.type == CPU_SH7705) &&
- 		    (boot_cpu_data.dcache.sets == 512)) {
--			extern void __weak sh7705_cache_init(void);
--
- 			sh7705_cache_init();
- 		}
- 	}
-@@ -351,14 +341,10 @@ void __init cpu_cache_init(void)
- 	if ((boot_cpu_data.family == CPU_FAMILY_SH4) ||
- 	    (boot_cpu_data.family == CPU_FAMILY_SH4A) ||
- 	    (boot_cpu_data.family == CPU_FAMILY_SH4AL_DSP)) {
--		extern void __weak sh4_cache_init(void);
--
- 		sh4_cache_init();
- 
- 		if ((boot_cpu_data.type == CPU_SH7786) ||
- 		    (boot_cpu_data.type == CPU_SHX3)) {
--			extern void __weak shx3_cache_init(void);
--
- 			shx3_cache_init();
- 		}
- 	}
--- 
-2.34.1
-
+Thanks,
+Cristian
