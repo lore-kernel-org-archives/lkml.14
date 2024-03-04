@@ -1,163 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E652539FEE;
-	Mon,  4 Mar 2024 11:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ADA3838B;
+	Mon,  4 Mar 2024 11:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709552581; cv=none; b=rDV+UIiYnzJw4hIaBm/RXcezBrsa9vyc04ZvQK7djsIA7vhGYNJwoxJpSbAHBAqj6YsLfH3p7R4yoSZ/5QYLTowPy+/jQIBTpV4DVGqlntVhrn4f6SokT6fof81cvXhDzLlliDZPMXpNItoWd7jpslkAvks+3iZ5vP3076FuKn8=
+	t=1709552626; cv=none; b=jofjJcASFD5wkvkD5dFVTa1k634WAb5X5iHQ5IlTSsj4WWofVJ9CsGZHgw+kMLzCmaa3YDCJGHBf1DKrhKLdiexyx5egjWIb7lzoiipPKu48OZ5fp1jhpT7JbACJmIOTAo57ufow8esJmvif2jBzLZA86aInssgc3/onsV0ZbPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709552581; c=relaxed/simple;
-	bh=0wECyTFNn/czi0BC/9vnk0G4cpXjt7XdbPGnqVO5lDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MQN1z886iX9t7lqE4WCBs71FOVlEFPTQW/EVxzfNAoo/jYD7z15q+zMHODMaSyNa3w9ce7TZGaOO36sgpT9v4aoUEucDm/M932ttGs8AkykCjeTcoMGyG0Mlb4DCS0rXCcpTSssxjdQKCFeAZXNPRNyZ9qVVECdEff7uL0/z+Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EZUDxhEb; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EZUDxhEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709552580; x=1741088580;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0wECyTFNn/czi0BC/9vnk0G4cpXjt7XdbPGnqVO5lDo=;
-  b=EZUDxhEbVhucUImwTXGpniIeOXpDbtZwIHA5dXWFZa3iZ4aucrl/MWzl
-   14cbYEOKPgsUlK6MaCu++/iaV8YXMotNJVFop+zZESJ10+HQYG0DP3uiq
-   /ympFcHDuSPTIJ1s9A2lTP2iOGry8n20Tr01BUUsj0SqcoK8w1WNc22IC
-   IMv/uZiJHuO824gjrOZODRN/qZLdSSWQ7AIgu1bZUz6hbD/7QLaFnKX7s
-   MYBqivF94hl5frwRk5J7FTjWayisx5hSsbX0zb4L9ptnMC4hPHXNbXAPz
-   HrkZqUmBEEtce8Ru9gYtlMrOXdH6iruFoz4Ub7WhsD/r1453ddes99ZNw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="7811175"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="7811175"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 03:42:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="914103611"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="914103611"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 03:42:56 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rh6ib-00000009hhP-1kXc;
-	Mon, 04 Mar 2024 13:42:53 +0200
-Date: Mon, 4 Mar 2024 13:42:53 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Vasileios Amoiridis <vassilisamir@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, ang.iglesiasg@gmail.com,
-	mazziesaccount@gmail.com, ak@it-klinger.de,
-	petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] iio: pressure: Add scale value for channels
-Message-ID: <ZeWzvewAtqKKfnwI@smile.fi.intel.com>
-References: <20240303165300.468011-1-vassilisamir@gmail.com>
- <20240303165300.468011-3-vassilisamir@gmail.com>
+	s=arc-20240116; t=1709552626; c=relaxed/simple;
+	bh=h/N89wHsupO3eOr5saosVZAEbXKftzVyWze4j0uXvhg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eUzkq1zpO6u5ivbLg6cLjxBjU7rPIo9x62bYXReDBCigaFZyYeQZR3cuJ4nudHhdgTzOvGkdJRkunR2o84SLfl4qBbNHYA4USD9mZ74jSFNQ3i2UjcOFr3JYsgKZ988eji9F7uxvEuUTmyC2UJZz4CCmOzgPWutq1DOw9JBsfvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
+From: Daniil Dulov <D.Dulov@aladdin.ru>
+To: Vadim Pasternak <vadimp@nvidia.com>, Hans de Goede <hdegoede@redhat.com>
+CC: Mark Gross <mgross@linux.intel.com>, Andy Shevchenko <andy@infradead.org>,
+	Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
+	<lvc-project@linuxtesting.org>
+Subject: RE: [PATCH] platform/mellanox: mlxreg-hotplug: Check pointer for NULL
+ before dereferencing it
+Thread-Topic: [PATCH] platform/mellanox: mlxreg-hotplug: Check pointer for
+ NULL before dereferencing it
+Thread-Index: AQHaaMPFv4wPmJNqB0Oh/Aq5IIhcv7EciV8AgAS1laA=
+Date: Mon, 4 Mar 2024 11:43:38 +0000
+Message-ID: <e34edced65e747c5870ee439e3c84457@aladdin.ru>
+References: <20240226145442.3468-1-d.dulov@aladdin.ru>
+ <BN9PR12MB538106C733D231B73FC1C1AAAF5A2@BN9PR12MB5381.namprd12.prod.outlook.com>
+In-Reply-To: <BN9PR12MB538106C733D231B73FC1C1AAAF5A2@BN9PR12MB5381.namprd12.prod.outlook.com>
+Accept-Language: ru-RU, en-US
+Content-Language: ru-RU
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240303165300.468011-3-vassilisamir@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sun, Mar 03, 2024 at 05:52:58PM +0100, Vasileios Amoiridis wrote:
-> Add extra IIO_CHAN_INFO_SCALE in order to be able to have the scales
-> for the values in userspace. Can be used for triggered buffers.
-
-...
-
-
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->type) {
-> +		case IIO_HUMIDITYRELATIVE:
-> +			if (!strcmp(indio_dev->name, "bme280")) {
-> +				*val = 1000;
-> +				*val2 = 1024;
-> +				ret = IIO_VAL_FRACTIONAL;
-> +			} else {
-> +				ret = -EINVAL;
-> +			}
-
-No, just make these int arrays part of chip_info, then
-
-		case IIO_HUMIDITYRELATIVE:
-			if (chip_info->hrel) {
-				*val = chip_info->hrel[0];
-				*val2 = chip_info->hrel[1];
-				ret = IIO_VAL_FRACTIONAL;
-			} else {
-				ret = -EINVAL;
-			}
-
-> +			break;
-> +		case IIO_PRESSURE:
-> +			if ((!strcmp(indio_dev->name, "bmp085")) ||
-> +			    (!strcmp(indio_dev->name, "bmp180")) ||
-> +			    (!strcmp(indio_dev->name, "bmp181"))) {
-> +				*val = 1;
-> +				*val2 = 1000;
-> +				ret = IIO_VAL_FRACTIONAL;
-> +			} else if ((!strcmp(indio_dev->name, "bmp280")) ||
-> +				   (!strcmp(indio_dev->name, "bme280"))) {
-> +				*val = 1;
-> +				*val2 = 256000;
-> +				ret = IIO_VAL_FRACTIONAL;
-> +			} else if (!strcmp(indio_dev->name, "bmp380")) {
-> +				*val = 1;
-> +				*val2 = 100000;
-> +				ret = IIO_VAL_FRACTIONAL;
-> +			} else if (!strcmp(indio_dev->name, "bmp580")) {
-> +				*val = 1;
-> +				*val2 = 64000;
-> +				ret = IIO_VAL_FRACTIONAL;
-> +			} else {
-> +				ret = -EINVAL;
-> +			}
-> +			break;
-
-Ditto.
-
-> +		case IIO_TEMP:
-> +			if ((!strcmp(indio_dev->name, "bmp085")) ||
-> +			    (!strcmp(indio_dev->name, "bmp180")) ||
-> +			    (!strcmp(indio_dev->name, "bmp181"))) {
-> +				*val = 100;
-> +				*val2 = 1;
-> +				ret = IIO_VAL_FRACTIONAL;
-> +			} else if ((!strcmp(indio_dev->name, "bmp280")) ||
-> +				   (!strcmp(indio_dev->name, "bme280"))) {
-> +				*val = 10;
-> +				*val2 = 1;
-> +				ret = IIO_VAL_FRACTIONAL;
-> +			} else if (!strcmp(indio_dev->name, "bmp380")) {
-> +				*val = 10;
-> +				*val2 = 1;
-> +				ret = IIO_VAL_FRACTIONAL;
-> +			} else if (!strcmp(indio_dev->name, "bmp580")) {
-> +				*val = 1000;
-> +				*val2 = 16;
-> +				ret = IIO_VAL_FRACTIONAL_LOG2;
-> +			} else {
-> +				ret = -EINVAL;
-> +			}
-> +			break;
-
-Ditto.
-
-> +		default:
-> +			ret = -EINVAL;
-> +			break;
-> +		}
-> +		break;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+SGVsbG8hDQoNCkkgc3VwcG9zZSB0aGVyZSBpcyBubyBzZW5zZSB0byBwcm9kdWNlIGRldl9lcnIo
+KSBpbnNpZGUNCm1seHJlZ19ob3RwbHVnX3dvcmtfaGVscGVyKCkgc2luY2UgaXRlbSBpcyBkZXJl
+ZmVyZW5jZWQgdHdpY2UNCmJlZm9yZSB3ZSBjYWxsIHRoaXMgZnVuY3Rpb24uIFNob3VsZCB3ZSBw
+cm9kdWNlIGRldl9lcnIoKQ0KaW5zaWRlIHRoZSBsb29wIGluIG1seHJlZ19ob3RwbHVnX3dvcmtf
+aGFuZGxlcigpIGluc3RlYWQ/DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBW
+YWRpbSBQYXN0ZXJuYWsgW21haWx0bzp2YWRpbXBAbnZpZGlhLmNvbV0gDQpTZW50OiBNb25kYXks
+IEZlYnJ1YXJ5IDI2LCAyMDI0IDY6MTUgUE0NClRvOiBEYW5paWwgRHVsb3YgPEQuRHVsb3ZAYWxh
+ZGRpbi5ydT47IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+DQpDYzogTWFyayBH
+cm9zcyA8bWdyb3NzQGxpbnV4LmludGVsLmNvbT47IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZy
+YWRlYWQub3JnPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgcGxhdGZvcm0t
+ZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+IGx2Yy1wcm9qZWN0QGxpbnV4dGVzdGluZy5vcmcNClN1YmplY3Q6IFJFOiBbUEFUQ0hdIHBsYXRm
+b3JtL21lbGxhbm94OiBtbHhyZWctaG90cGx1ZzogQ2hlY2sgcG9pbnRlciBmb3IgTlVMTCBiZWZv
+cmUgZGVyZWZlcmVuY2luZyBpdA0KDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
+PiBGcm9tOiBEYW5paWwgRHVsb3YgPGQuZHVsb3ZAYWxhZGRpbi5ydT4NCj4gU2VudDogTW9uZGF5
+LCAyNiBGZWJydWFyeSAyMDI0IDE2OjU1DQo+IFRvOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUBy
+ZWRoYXQuY29tPg0KPiBDYzogRGFuaWlsIER1bG92IDxkLmR1bG92QGFsYWRkaW4ucnU+OyBNYXJr
+IEdyb3NzDQo+IDxtZ3Jvc3NAbGludXguaW50ZWwuY29tPjsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5
+QGluZnJhZGVhZC5vcmc+OyBEYXJyZW4NCj4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBW
+YWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBudmlkaWEuY29tPjsNCj4gcGxhdGZvcm0tZHJpdmVyLXg4
+NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGx2Yy0NCj4g
+cHJvamVjdEBsaW51eHRlc3Rpbmcub3JnDQo+IFN1YmplY3Q6IFtQQVRDSF0gcGxhdGZvcm0vbWVs
+bGFub3g6IG1seHJlZy1ob3RwbHVnOiBDaGVjayBwb2ludGVyIGZvciBOVUxMDQo+IGJlZm9yZSBk
+ZXJlZmVyZW5jaW5nIGl0DQo+IA0KPiBtbHhyZWdfaG90cGx1Z193b3JrX2hlbHBlcigpIGltcGxp
+ZXMgdGhhdCBpdGVtIGNhbiBiZSBOVUxMLiBUaGVyZSBpcyBhDQo+IHNhbml0eSBjaGVjayB0aGF0
+IGNoZWNrcyBpdGVtIGZvciBOVUxMIGFuZCB0aGVuIGRlcmVmZXJlbmNlcyBpdC4NCj4gDQo+IEV2
+ZW4gdGhvdWdoLCB0aGUgY29tbWVudCBiZWZvcmUgc2FuaXR5IGNoZWNrIHNheXMgdGhhdCBpdCBj
+YW4gb25seSBoYXBwZW4gaWYNCj4gc29tZSBwaWVjZSBvZiBoYXJkd2FyZSBpcyBicm9rZW4sIGJ1
+dCBpbiB0aGlzIGNhc2UgaXQgd2lsbCBsZWFkIHRvIE5VTEwtcG9pbnRlcg0KPiBkZXJlZmVyZW5j
+ZSBiZWZvcmUgdGhlIGZ1bmN0aW9uIGlzIGV2ZW4gY2FsbGVkLCBzbyBsZXQncyBjaGVjayBpdCBi
+ZWZvcmUNCj4gZGVyZWZlcmVuY2luZy4NCj4gDQo+IEZvdW5kIGJ5IExpbnV4IFZlcmlmaWNhdGlv
+biBDZW50ZXIgKGxpbnV4dGVzdGluZy5vcmcpIHdpdGggU1ZBQ0UuDQo+IA0KPiBGaXhlczogYzZh
+Y2FkNjhlYjJkICgicGxhdGZvcm0vbWVsbGFub3g6IG1seHJlZy1ob3RwbHVnOiBNb2RpZnkgdG8g
+dXNlIGENCj4gcmVnbWFwIGludGVyZmFjZSIpDQo+IFNpZ25lZC1vZmYtYnk6IERhbmlpbCBEdWxv
+diA8ZC5kdWxvdkBhbGFkZGluLnJ1Pg0KPiAtLS0NCj4gIGRyaXZlcnMvcGxhdGZvcm0vbWVsbGFu
+b3gvbWx4cmVnLWhvdHBsdWcuYyB8IDE2ICstLS0tLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFu
+Z2VkLCAxIGluc2VydGlvbigrKSwgMTUgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5veC9tbHhyZWctaG90cGx1Zy5jDQo+IGIvZHJpdmVycy9w
+bGF0Zm9ybS9tZWxsYW5veC9tbHhyZWctaG90cGx1Zy5jDQo+IGluZGV4IDVjMDIyYjI1OGY5MS4u
+NTI0MTIxYjlmMDcwIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21s
+eHJlZy1ob3RwbHVnLmMNCj4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5veC9tbHhyZWct
+aG90cGx1Zy5jDQo+IEBAIC0zNDgsMjAgKzM0OCw2IEBAIG1seHJlZ19ob3RwbHVnX3dvcmtfaGVs
+cGVyKHN0cnVjdA0KPiBtbHhyZWdfaG90cGx1Z19wcml2X2RhdGEgKnByaXYsDQo+ICAJdTMyIHJl
+Z3ZhbCwgYml0Ow0KPiAgCWludCByZXQ7DQo+IA0KPiAtCS8qDQo+IC0JICogVmFsaWRhdGUgaWYg
+aXRlbSByZWxhdGVkIHRvIHJlY2VpdmVkIHNpZ25hbCB0eXBlIGlzIHZhbGlkLg0KPiAtCSAqIEl0
+IHNob3VsZCBuZXZlciBoYXBwZW4sIGV4Y2VwdGVkIHRoZSBzaXR1YXRpb24gd2hlbiBzb21lDQo+
+IC0JICogcGllY2Ugb2YgaGFyZHdhcmUgaXMgYnJva2VuLiBJbiBzdWNoIHNpdHVhdGlvbiBqdXN0
+IHByb2R1Y2UNCj4gLQkgKiBlcnJvciBtZXNzYWdlIGFuZCByZXR1cm4uIENhbGxlciBtdXN0IGNv
+bnRpbnVlIHRvIGhhbmRsZSB0aGUNCj4gLQkgKiBzaWduYWxzIGZyb20gb3RoZXIgZGV2aWNlcyBp
+ZiBhbnkuDQo+IC0JICovDQo+IC0JaWYgKHVubGlrZWx5KCFpdGVtKSkgew0KPiAtCQlkZXZfZXJy
+KHByaXYtPmRldiwgIkZhbHNlIHNpZ25hbDogYXQgb2Zmc2V0Om1hc2sNCj4gMHglMDJ4OjB4JTAy
+eC5cbiIsDQo+IC0JCQlpdGVtLT5yZWcsIGl0ZW0tPm1hc2spOw0KPiAtDQo+IC0JCXJldHVybjsN
+Cj4gLQl9DQoNCkl0IHdvdWxkIGJlIGVub3VnaCBqdXN0IHRvIHByb2R1Y2UgZGV2X2Vycihwcml2
+LT5kZXYsICJGYWxzZSBzaWduYWxcbiIpOw0KQW5kIHJldHVybi4NCg0KPiAtDQo+ICAJLyogTWFz
+ayBldmVudC4gKi8NCj4gIAlyZXQgPSByZWdtYXBfd3JpdGUocHJpdi0+cmVnbWFwLCBpdGVtLT5y
+ZWcgKw0KPiBNTFhSRUdfSE9UUExVR19NQVNLX09GRiwNCj4gIAkJCSAgIDApOw0KPiBAQCAtNTU2
+LDcgKzU0Miw3IEBAIHN0YXRpYyB2b2lkIG1seHJlZ19ob3RwbHVnX3dvcmtfaGFuZGxlcihzdHJ1
+Y3QNCj4gd29ya19zdHJ1Y3QgKndvcmspDQo+IA0KPiAgCS8qIEhhbmRsZSB0b3BvbG9neSBhbmQg
+aGVhbHRoIGNvbmZpZ3VyYXRpb24gY2hhbmdlcy4gKi8NCj4gIAlmb3IgKGkgPSAwOyBpIDwgcGRh
+dGEtPmNvdW50ZXI7IGkrKywgaXRlbSsrKSB7DQo+IC0JCWlmIChhZ2dyX2Fzc2VydGVkICYgaXRl
+bS0+YWdncl9tYXNrKSB7DQo+ICsJCWlmIChpdGVtICYmIChhZ2dyX2Fzc2VydGVkICYgaXRlbS0+
+YWdncl9tYXNrKSkgew0KPiAgCQkJaWYgKGl0ZW0tPmhlYWx0aCkNCj4gIAkJCQltbHhyZWdfaG90
+cGx1Z19oZWFsdGhfd29ya19oZWxwZXIocHJpdiwNCj4gaXRlbSk7DQo+ICAJCQllbHNlDQo+IC0t
+DQo+IDIuMjUuMQ0KDQo=
