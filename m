@@ -1,143 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F82F12E73;
-	Mon,  4 Mar 2024 09:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B211B7F1
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709543713; cv=none; b=Y9xzeLWP8mQqAkl3N+qp3hCE0lTLU3c1RZ0vR9scSgx7gj1kUodR5z5Q/UJ8tWiTFio2uepBeMXikEIi2pfz3HaRRG0MFe87bNz3M0qTz2RTfRfHkqjFRvSh4Vkfi9V92K0e+mJKX0pHl+bHQlWgwksscL5L/3Gy4m8xSt60p4E=
+	t=1709543769; cv=none; b=byhn+nBUR25ywXK4eMf0AQgv//5tE+pZ2FhDMH+COHKCHbtdV8yDOJ36SRnuFa/cJgOP9g/zTqu4PKz2RhplBnKkyDuxsyASv749iSKKDhGLfr9twVrHRIafcMXsRRrFJnk6xd01S+zqqZk9FIyXy6V5MGdUtT8DluHkwU/71ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709543713; c=relaxed/simple;
-	bh=/HGmx2mq7+zg1VO1bSo8RtqdxxMsZLXO968The90xlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q37i9ms1wyoOX/LdGQST/U7xEXOSRkqhpLf/YXCS50hSAuFcyMfB4bC9Q66+tHBkL4gQO0KD3TeRBCjh7dEw572WHFAkvbzT2yR85VHL2mUGDEEB80jYFHzBWpgAVBs7proUxpr0+OgT+ldrpkyFa1R3pQIhKUxxNS0OY3Z96xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HP+FZFPX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709543769; c=relaxed/simple;
+	bh=7/Cg7bSkP3P3KzE9IpfjIHLKep/5j0YfikDfAl96988=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BsYrQiwmoIUmAjqKJ+M9DH8jIxIH5//C/D78tE4lxLur4BAKXT/SMwmnSQPqjRl3ACOqYY2YiGY+MTa5hQ1zHfkZvL2tJ5dLBW0o2/ue/4Gd73xIinq99yZ4wJp0Y/aEC25ZAbJ4YioIyKH3xqH1QPDqts3mQHItjmNFUkgrdTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=rDYzV2TL; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HP+FZFPX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53598C433F1;
-	Mon,  4 Mar 2024 09:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709543712;
-	bh=/HGmx2mq7+zg1VO1bSo8RtqdxxMsZLXO968The90xlA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HP+FZFPXOKKVJQsIdgavlDGoYvqXJQUUJTik+VmyfcSVlIHCJoOStOdSi67o8BgPM
-	 RNxJ35itRHMj1xY40xFyKnCgdz3eUb8MP1wyTyhkKisRaFFZJxOXzFUwUuguJ2jNT2
-	 GqcVwRbfg/acC7TVu9+6Mfvs+gkXBi4QWXYhuEbnN9CSGMlzH+GPwt3QyHJj/Bx3tp
-	 Gpk/72avlZJlrZv+YakX+vBFNnYwKVT/EYQZUskVAkmgb05w5CnLqJK3yGfkQEr7gW
-	 QK00Wouky8PtAZDqSL9ruRet3bKRKQhct0Nhq2l5tqQpqGgxjXjFk/i6v3wuSzk4/U
-	 XwIwYdTcGOzbg==
-Date: Mon, 4 Mar 2024 10:15:10 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, 
-	Guenter Roeck <groeck@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>, 
-	Nikolai Kondrashov <spbnick@gmail.com>, Helen Koike <helen.koike@collabora.com>, linuxtv-ci@linuxtv.org, 
-	dave.pigott@collabora.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kselftest@vger.kernel.org, gustavo.padovan@collabora.com, pawiecz@collabora.com, 
-	tales.aparecida@gmail.com, workflows@vger.kernel.org, kernelci@lists.linux.dev, 
-	skhan@linuxfoundation.org, kunit-dev@googlegroups.com, nfraprado@collabora.com, 
-	davidgow@google.com, cocci@inria.fr, Julia.Lawall@inria.fr, laura.nao@collabora.com, 
-	ricardo.canuelo@collabora.com, kernel@collabora.com, gregkh@linuxfoundation.org
-Subject: Re: [PATCH 1/3] kci-gitlab: Introducing GitLab-CI Pipeline for
- Kernel Testing
-Message-ID: <20240304-transparent-oriole-of-honeydew-f4174e@houat>
-References: <20240228225527.1052240-1-helen.koike@collabora.com>
- <20240228225527.1052240-2-helen.koike@collabora.com>
- <20240229-dancing-laughing-groundhog-d85161@houat>
- <5d7ed81b-37f9-48e9-ab7e-484b74ca886c@gmail.com>
- <CAHk-=wixVy3WYvjbt43ZSrCqPDsS76QJQSkXFbbPsAOs1MCSAQ@mail.gmail.com>
- <CABXOdTeT2ip1uS2EG2w8pW7254Tnd=ZDNz-KC61-G-yqDTVgJA@mail.gmail.com>
- <269232e6-41c9-4aa1-9320-662beabcd69b@infradead.org>
- <CAMuHMdXuXV9WV3aANFTteuP8Q3JY6R5OWsVBedGOP7e_JguxqA@mail.gmail.com>
- <CAMuHMdWi069YAvOoXe7sHJ_o702tY4tDQgL3sfApPR3aCnZboQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rDYzV2TL"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-68f51ba7043so29128576d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:16:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1709543767; x=1710148567; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AWM0i1D+FispfxeIOLK4vZoGix8afRI2zst62UErbPs=;
+        b=rDYzV2TLx1y2l/44xBbi2rloN3uAyytTyJ3BLccvZ9p3519cGkwmK8pNAj6PqLt9Ag
+         RGWFoJ+D/ZO1YpObXtqsYScF84CVIoeUbaiFIXTULcN0G22XBrzCEvQ34spkHg2LkIRl
+         Kv/d+ALiRJqrAVbgw+DsyoEbFMTvjop8IjIAs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709543767; x=1710148567;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AWM0i1D+FispfxeIOLK4vZoGix8afRI2zst62UErbPs=;
+        b=hiaCuYNYRp7QCPvIGnvASbweidNVzsym581mMGeH+wHG5NH7JArMOmUjx6Yh8kFgwD
+         azfwDbyxyw53mESRbw5yK2F7ByiUKl7F4kPtaCLIhK/9jrMu2OOfdDyPcYSFfg7NvTok
+         Km3cqw2ZN/RfE/7kMyITYTUaO3lVBIeOkWZbCmNB+UzkVTgnK42rM+5mami3DHwz7qcd
+         Z8YqY48E4fUfiD5BAsDXImH/lUpfE4Qv2O0+gHw7p2J9nrD9xD6L/Kk+DMxz97VXyMQc
+         j1Msc2WRKhHGLaM0iQadNVUvZ0ZsfgIw7M7mGsgv8hK/bFdk5cIRRTcirm/5oKtlNS36
+         gT3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVITxjGf5v+gLYmueT4zQhyC88SXxbVAcezAPeVcOV1E3ZVz61mdW9txyVQK1Gn3fcLc5/gb5ag368xwqYYyZP/v+MnxOKbC4mg3jJs
+X-Gm-Message-State: AOJu0YxEQAVrcAWPjT4RiyGdKgXh1opW0GovZwBSqylAhfS6EyYbMX8o
+	Vb2/seninTqfJl8SYN2c5PTYNb0ylffQRsmVcqzIQFmR2/ecKJhf6cbWXZgHFBY=
+X-Google-Smtp-Source: AGHT+IG+Y2v7EYKVufOejhc+r1//YCAbl9GRmef/EobZWtTzDz0WoEMeaAAPF6++0ntNwDKN6wy6hw==
+X-Received: by 2002:a0c:e303:0:b0:68f:19a7:cd4e with SMTP id s3-20020a0ce303000000b0068f19a7cd4emr9377247qvl.33.1709543767119;
+        Mon, 04 Mar 2024 01:16:07 -0800 (PST)
+Received: from [10.5.0.2] ([91.196.69.189])
+        by smtp.gmail.com with ESMTPSA id lz4-20020a0562145c4400b0068f4520e42dsm4913063qvb.16.2024.03.04.01.16.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 01:16:06 -0800 (PST)
+Message-ID: <fcaf6cad-9959-4b6d-a6e4-05ae1b2fabdc@joelfernandes.org>
+Date: Mon, 4 Mar 2024 04:16:01 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pjbdi6a4euq6tzrc"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWi069YAvOoXe7sHJ_o702tY4tDQgL3sfApPR3aCnZboQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: raise RCU qs after each threaded NAPI poll
+Content-Language: en-US
+From: Joel Fernandes <joel@joelfernandes.org>
+To: paulmck@kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Network Development <netdev@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
+ kernel-team <kernel-team@cloudflare.com>
+References: <55900c6a-f181-4c5c-8de2-bca640c4af3e@paulmck-laptop>
+ <10FC3F5F-AA33-4F81-9EB6-87EB2D41F3EE@joelfernandes.org>
+ <99b2ccae-07f6-4350-9c55-25ec7ae065c0@paulmck-laptop>
+ <CAEXW_YQ+40a1-hk5ZP+QJ54xniSutosC7MjMscJJy8fen-gU9Q@mail.gmail.com>
+ <f1e77cd2-18b2-4ab1-8ce3-da2c6babbd53@paulmck-laptop>
+ <CAEXW_YRDiTXJ_GwK5soSVno73yN9FUA5GjLYAOcCTtqQvPGcFA@mail.gmail.com>
+In-Reply-To: <CAEXW_YRDiTXJ_GwK5soSVno73yN9FUA5GjLYAOcCTtqQvPGcFA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Paul,
 
---pjbdi6a4euq6tzrc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/2/2024 8:01 PM, Joel Fernandes wrote:
+>> As you noted, one thing that Ankur's series changes is that preemption
+>> can occur anywhere that it is not specifically disabled in kernels
+>> built with CONFIG_PREEMPT_NONE=y or CONFIG_PREEMPT_VOLUNTARY=y.  This in
+>> turn changes Tasks Rude RCU's definition of a quiescent state for these
+>> kernels, adding all code regions where preemption is not specifically
+>> disabled to the list of such quiescent states.
+>>
+>> Although from what I know, this is OK, it would be good to check the
+>> calls to call_rcu_tasks_rude() or synchronize_rcu_tasks_rude() are set
+>> up so as to expect these new quiescent states.  One example where it
+>> would definitely be OK is if there was a call to synchronize_rcu_tasks()
+>> right before or after that call to synchronize_rcu_tasks_rude().
+>>
+>> Would you be willing to check the call sites to verify that they
+>> are OK with this change in 
+> Yes, I will analyze and make sure those users did not unexpectedly
+> assume something about AUTO (i.e. preempt enabled sections using
+> readers).
 
-On Mon, Mar 04, 2024 at 09:12:38AM +0100, Geert Uytterhoeven wrote:
-> On Sun, Mar 3, 2024 at 10:30=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> > On Sun, Mar 3, 2024 at 3:30=E2=80=AFAM Randy Dunlap <rdunlap@infradead.=
-org> wrote:
-> > > On 3/2/24 14:10, Guenter Roeck wrote:
-> > > > While checkpatch is indeed of arguable value, I think it would help=
- a
-> > > > lot not having to bother about the persistent _build_ failures on
-> > > > 32-bit systems. You mentioned the fancy drm CI system above, but th=
-ey
-> > > > don't run tests and not even test builds on 32-bit targets, which h=
-as
-> > > > repeatedly caused (and currently does cause) build failures in drm
-> > > > code when trying to build, say, arm:allmodconfig in linux-next. Most
-> > > > trivial build failures in linux-next (and, yes, sometimes mainline)
-> > > > could be prevented with a simple generic CI.
-> > >
-> > > Yes, definitely. Thanks for bringing that up.
-> >
-> > +1
->=20
-> > Kisskb can send out email when builds get broken, and when they get
-> > fixed again.  I receive such emails for the m68k builds.
->=20
-> Like this (yes, one more in DRM; sometimes I wonder if DRM is meant only
-> for 64-bit little-endian platforms with +200 GiB/s memory bandwidth):
->
-> ---8<-------------------------------------------------------------------
-> Subject: kisskb: FAILED linux-next/m68k-allmodconfig/m68k-gcc8 Mon Mar 04=
-, 06:35
-> To: geert@linux-m68k.org
-> Date: Mon, 04 Mar 2024 08:05:14 -0000
->=20
-> FAILED linux-next/m68k-allmodconfig/m68k-gcc8 Mon Mar 04, 06:35
->=20
-> http://kisskb.ellerman.id.au/kisskb/buildresult/15135537/
->=20
-> Commit:   Add linux-next specific files for 20240304
->           67908bf6954b7635d33760ff6dfc189fc26ccc89
-> Compiler: m68k-linux-gcc (GCC) 8.5.0 / GNU ld (GNU Binutils) 2.36.1
->=20
-> Possible errors
-> ---------------
->=20
-> ERROR: modpost: "__udivdi3" [drivers/gpu/drm/sun4i/sun4i-drm-hdmi.ko] und=
-efined!
-> make[3]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 1
-> make[2]: *** [Makefile:1871: modpost] Error 2
-> make[1]: *** [Makefile:240: __sub-make] Error 2
-> make: *** [Makefile:240: __sub-make] Error 2
->=20
-> No warnings found in log.
-> ------------------------------------------------------------------->8---
+Other than RCU test code, there are just 3 call sites for RUDE right now, all in
+ftrace.c.
 
-The driver is meant for a controller featured in an SoC with a Cortex-A8
-ARM CPU and less than a GiB/s memory bandwidth.
+(Long story short, PREEMPT_AUTO should not cause wreckage in TASKS_RCU_RUDE
+other than any preexisting wreckage that !PREEMPT_AUTO already had. Steve is on
+CC as well to CMIIW).
 
-And I just sent a fix for that one, thanks for the report.
+Case 1: For !CONFIG_DYNAMIC_FTRACE update of ftrace_trace_function
 
-Maxime
+This config is itself expected to be slow. However seeing what it does, it is
+trying to make sure the global function pointer "ftrace_trace_function" is
+updated and any readers of that pointers would have finished reading it. I don't
+personally think preemption has to be disabled across the entirety of the
+section that calls into this function. So sensitivity to preempt disabling
+should not be relevant for this case IMO, but lets see if ftrace folks disagree
+(on CC). It has more to do with, any callers of this function pointer are no
+longer calling into the old function.
 
---pjbdi6a4euq6tzrc
-Content-Type: application/pgp-signature; name="signature.asc"
+Case 2: Trampoline structures accessing
 
------BEGIN PGP SIGNATURE-----
+For this there is a code comment that says preemption will disabled so it should
+not be dependent on any of the preemptiblity modes, because preempt_disable()
+should disable preempt with PREEMPT_AUTO.
 
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZeWRHQAKCRDj7w1vZxhR
-xWFcAPoCgSeoB/8bmUbd4z1ay49ZfEoCqaiqzPyPCcSF7f1QgwD/d8uPHuZl+yLF
-9/aw+Ej9d0qSGEpya7QRzssHubW/7wA=
-=khgr
------END PGP SIGNATURE-----
+		/*
+		 * We need to do a hard force of sched synchronization.
+		 * This is because we use preempt_disable() to do RCU, but
+		 * the function tracers can be called where RCU is not watching
+		 * (like before user_exit()). We can not rely on the RCU
+		 * infrastructure to do the synchronization, thus we must do it
+		 * ourselves.
+		 */
+		synchronize_rcu_tasks_rude();
+		[...]
+		ftrace_trampoline_free(ops);
 
---pjbdi6a4euq6tzrc--
+Code comment probably needs update because it says 'can not rely on RCU..' ;-)
+
+My *guess* is the preempt_disable() mentioned in this case is
+ftrace_ops_trampoline() where trampoline-related datas tructures are accessed
+for stack unwinding purposes. This is a data structure protection thing AFAICS
+and nothing to do with "trampoline execution" itself which needs "Tasks RCU" to
+allow for preemption in trampolines.
+
+Case 3: This has to do with update of function graph tracing and there is the
+same comment as case 2, where preempt will be disabled in readers, so it should
+be safe for PREEMPT_AUTO (famous last words).
+
+Though I am not yet able to locate that preempt_disable() which is not an
+PREEMPT_AUTO-related issue anyway. Maybe its buried in function graph tracing
+logic somewhere?
+
+Finally, my thought also was, if any of these thread usages/cases of Tasks RCU
+RUDE assume working only on a CONFIG_PREEMPT_NONE=y or
+CONFIG_PREEMPT_VOLUNTARY=y kernel, that could be worrying but AFAICS, they don't
+assume anything related to that.
+
+thanks,
+
+ - Joel
