@@ -1,121 +1,91 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA218F44;
-	Mon,  4 Mar 2024 22:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA597BB0F;
+	Mon,  4 Mar 2024 22:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709592109; cv=none; b=cJo0Lr70liu+uNSrbndjdXc4eOnospkFFAoNC6RQ4hiLEYg6uxsFlMgyXKlS4IlEAb80ngu5dSzjk0vVGpu8jR1FMcUFom5m1M5Jo61PyC2fYOCYWzvDEcQEIab7Qd2IlMO4IYsEnNWylkUaqGoTAeuJEVCk12Q0olI4210S/xI=
+	t=1709592114; cv=none; b=m+FatyIrmZ9GYAXAx6wFruMP/jeAUXHUv0FbnixqTpiC2BMBx4WWTM21nqh5MZM3MAp1V5JZ6dKfm/j04LL7GUg4McdCPjgjheoFVXBUM6tAFEBIge2f3DXgHxQXN+ohnVCO28IHtnMIGpRv7YN1Iv5oO6eTTcU527qZ18VX5Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709592109; c=relaxed/simple;
-	bh=HWFANnbfyh550S/G6W+HjyeNPbThbmyjuPz5MkKe0IE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=r6HBlYKvX9Gcw4m6oUTGgebMElzIxnrhHVETvZUNZ3syCYuILr/Sx7y8hE5BQhaRJXZ9f2OpzbRNdnhqBMYL7VCmzJ+NIg16aR9IeNmIW/zflGP9twS1uwnqpoxUl9xXzub5S8mAiGJwO49+D0xvfZ0z6wSKXEKquYZptrWhLck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UeEgay1a; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UeEgay1a"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 424MP7Zt014327;
-	Mon, 4 Mar 2024 22:41:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=esL
-	Cy/asd2qFbuOcZUlzDM/SjCHIES7hirGA2lXMTyk=; b=UeEgay1a9CGAIv1KRLY
-	Ni2AtnFSFXSLd/94H6LdSMLUDDQb6j9hSBBEIABSR/+TScVvYpOPqeUcF+od00MN
-	OfA6S39MbV4S/EKONr3ssExQmpU99KizElfBACRbW/BR1rgBq6StKr7ePOv/0+5U
-	IDLL2rnenSgAVFdobVKl4ZkTHyZZSWQYjPjuniMSkMAIzpbUCkBYdjD1tHYJBKWt
-	k4E2A38GZTS4O+jVs4mc5oSwbZo4qbl3XOLn8rqltn4L2bFqYb8FGYn1cUPqw5F7
-	sszaghO2qc/CjcUEVIQtw+w4OHugT2NOTMh352EKRLl8SRA084NlgOcnKO9uA71E
-	SsA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wn8fxt355-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Mar 2024 22:41:43 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 424Mfgjb011510
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 4 Mar 2024 22:41:42 GMT
-Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 4 Mar 2024 14:41:42 -0800
-From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Mon, 4 Mar 2024 14:41:15 -0800
-Subject: [PATCH] arm64: dts: qcom: sm8650: Add missing reserved memory for
- chipinfo
+	s=arc-20240116; t=1709592114; c=relaxed/simple;
+	bh=N86BZ3vurduX6ZYiqZPgoddJQ4lkNaFSYKU9x17lROo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pQqzWbV4PpFbkArzaY5Z6Av/qx7Kzb6nTZq8zFmWQMdprBOywnKRU0kyBpw6xbfthbMUcHrffBd2ROAbAbrB+ZtxZ2owq+RRaASDily3QnrEcJp5I69fp9wIuw16qEDPS0S19g4/hrPkM5QaFnlFg8gKnB6OgSv6lG/+3tGQWTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2999CC433F1;
+	Mon,  4 Mar 2024 22:41:53 +0000 (UTC)
+Date: Mon, 4 Mar 2024 17:43:41 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Sachin Sant <sachinp@linux.ibm.com>
+Subject: [PATCH] tracing: Remove precision vsnprintf() check from print
+ event
+Message-ID: <20240304174341.2a561d9f@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240304-sm8650-missing-chipinfo-region-v1-1-8a0b41dd8308@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAApO5mUC/x2NOwqAMBAFryJbuxCD/6uIhcY1vsIoWRBBvLvBc
- oqZeUglQpT67KEoFxRHSFDkGbltCl4YS2KyxpbG2pZ1b+vK8A5VBM9uw4mwHhzFJ5UXV1fz3E1
- NWTSUImeUFfc/GMb3/QBQM84PcAAAAA==
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Patrick Daly <quic_pdaly@quicinc.com>,
-        "Elliot Berman" <quic_eberman@quicinc.com>
-X-Mailer: b4 0.12.4
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rgYwrrmCIzi8zUlWTUUE6oIb8ZJvFvr7
-X-Proofpoint-ORIG-GUID: rgYwrrmCIzi8zUlWTUUE6oIb8ZJvFvr7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-04_18,2024-03-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 bulkscore=0 mlxlogscore=821 clxscore=1015 phishscore=0
- mlxscore=0 adultscore=0 suspectscore=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403040176
 
-Add missing reserved memory for chipinfo region.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Cc: Patrick Daly <quic_pdaly@quicinc.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>
-Fixes: d2350377997f ("arm64: dts: qcom: add initial SM8650 dtsi")
-Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+This reverts 60be76eeabb3d ("tracing: Add size check when printing
+trace_marker output"). The only reason the precision check was added
+was because of a bug that miscalculated the write size of the string into
+the ring buffer and it truncated it removing the terminating nul byte. On
+reading the trace it crashed the kernel. But this was due to the bug in
+the code that happened during development and should never happen in
+practice. If anything, the precision can hide bugs where the string in the
+ring buffer isn't nul terminated and it will not be checked.
+
+Link: https://lore.kernel.org/all/C7E7AF1A-D30F-4D18-B8E5-AF1EF58004F5@linux.ibm.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20240227125706.04279ac2@gandalf.local.home
+Link: https://lore.kernel.org/all/20240302111244.3a1674be@gandalf.local.home/
+
+Reported-by: Sachin Sant <sachinp@linux.ibm.com>
+Fixes: 60be76eeabb3d ("tracing: Add size check when printing trace_marker output")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/arm64/boot/dts/qcom/sm8650.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_output.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index 12ba839f215e..a8f2bd7fd1ff 100644
---- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -485,9 +485,9 @@ aop_cmd_db_mem: aop-cmd-db@81c60000 {
- 			no-map;
- 		};
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 3e7fa44dc2b2..d8b302d01083 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1587,12 +1587,11 @@ static enum print_line_t trace_print_print(struct trace_iterator *iter,
+ {
+ 	struct print_entry *field;
+ 	struct trace_seq *s = &iter->seq;
+-	int max = iter->ent_size - offsetof(struct print_entry, buf);
  
--		/* Merged aop_config, tme_crash_dump, tme_log and uefi_log regions */
-+		/* Merged aop_config, tme_crash_dump, tme_log, uefi_log, and chipinfo regions */
- 		aop_tme_uefi_merged_mem: aop-tme-uefi-merged@81c80000 {
--			reg = <0 0x81c80000 0 0x74000>;
-+			reg = <0 0x81c80000 0 0x75000>;
- 			no-map;
- 		};
+ 	trace_assign_type(field, iter->ent);
  
-
----
-base-commit: f6265e31fc717283224752dde476128191737d69
-change-id: 20240228-sm8650-missing-chipinfo-region-dc65bb9a7417
-
-Best regards,
+ 	seq_print_ip_sym(s, field->ip, flags);
+-	trace_seq_printf(s, ": %.*s", max, field->buf);
++	trace_seq_printf(s, ": %s", field->buf);
+ 
+ 	return trace_handle_return(s);
+ }
+@@ -1601,11 +1600,10 @@ static enum print_line_t trace_print_raw(struct trace_iterator *iter, int flags,
+ 					 struct trace_event *event)
+ {
+ 	struct print_entry *field;
+-	int max = iter->ent_size - offsetof(struct print_entry, buf);
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	trace_seq_printf(&iter->seq, "# %lx %.*s", field->ip, max, field->buf);
++	trace_seq_printf(&iter->seq, "# %lx %s", field->ip, field->buf);
+ 
+ 	return trace_handle_return(&iter->seq);
+ }
 -- 
-Elliot Berman <quic_eberman@quicinc.com>
+2.43.0
 
