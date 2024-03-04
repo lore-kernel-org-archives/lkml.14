@@ -1,180 +1,142 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E2022EE9;
-	Mon,  4 Mar 2024 09:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18CF1B819;
+	Mon,  4 Mar 2024 09:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709545610; cv=none; b=ZF7AK8KTbTYYRo8yGXpT3fXTagYIJ1qD4JAx0mK0p5TYanhFQF3q4IwRcN5ZJY6vLqOx48fk1L4/hey4DeS7D0i0Zr8vnREpohVSQwG+VR2f5ds0CbIgKnQDo80Hb8+9qW4s3W8jmt/Gp7tyUB3l+aq4c88QW4gDj7W7EaURQd4=
+	t=1709545675; cv=none; b=IVLrt/F8f2Y3BFoyQ/s18pRkVoo9J6kuKRTtwIHQwKLntYjq1YELVoewfv+1g7vD4Lq9/P9cDRQ0/fiBFEXNbvFrdrPx8avXx2EVDloKAiZP58w9IKGwE6bn5qZjdpIuvurR9nUBsEca98592mdhGu1Peo/Sdjcj8gf1ycXs+6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709545610; c=relaxed/simple;
-	bh=GaG3ObaB0qeVflpuF54KvjopVGszqbKkABfFXosbmzY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=siqvhWpiNfzoDbq+R/majrwVAb3dcWzprM6sc5Q6PZ9MfTpNB4tAU4V5u84LJ3q0z92r3kBMSrea6uV+0G8+MjmMW1TBSOlrztsN93MtxCYsAJpDIAoXxjupJ/sXWZS73qvKvSAEzSiUwgX1XmkbMcto8PgK4To8OTbTwg4nsQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KMyzprIR; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KMyzprIR"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4249k4O5077008;
-	Mon, 4 Mar 2024 03:46:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709545564;
-	bh=mslq3oEcDFjb5NrDfM4TJEgZ5rKZf6BLkDDUk9nnFi4=;
-	h=From:To:CC:Subject:Date;
-	b=KMyzprIRZGUDe9TqJL469AQzwpeLmp5CN71/X+I85ZtD2c0mHPXGRV8zhLOI/m9M9
-	 czVx/N9MTe0YionudDR1CTDRUmA/2J9vzZRS9nJasAgFkafZ8ovQx6bkKhh7mknINr
-	 KcuzBQZGa3tSEUGmfR1f8Ho4jEXuyo09m/+nlvE0=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4249k4Ze092163
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 4 Mar 2024 03:46:04 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 4
- Mar 2024 03:46:04 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 4 Mar 2024 03:46:04 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4249k0RC128695;
-	Mon, 4 Mar 2024 03:46:01 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <afd@ti.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-j7200-evm: Add overlay for PCIE1 Endpoint Mode
-Date: Mon, 4 Mar 2024 15:15:59 +0530
-Message-ID: <20240304094559.76406-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709545675; c=relaxed/simple;
+	bh=1+BaANjFRse1vGdsqvAOD3WKOHIrG01YneoKjzaNY78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=moT5Y0gGnVglyuKYh6XFL/yayil42EjrcwD2vzqUmWFRmVjEbByjXXnr6cwZTQRuRuX/lITGkVLDy7zn/vy00B2G+LOY5Hi05GZg4TvF6YoeJGOzkBe2pCKi+Gk8PIZblGpu9PTRYmAq5pt+ko27uFiHHUaaXP/H4IxnFfBI4H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TpDMY0VBxz1h1HM;
+	Mon,  4 Mar 2024 17:45:29 +0800 (CST)
+Received: from kwepemd100008.china.huawei.com (unknown [7.221.188.193])
+	by mail.maildlp.com (Postfix) with ESMTPS id 369B01A016C;
+	Mon,  4 Mar 2024 17:47:48 +0800 (CST)
+Received: from kwepemd500012.china.huawei.com (7.221.188.25) by
+ kwepemd100008.china.huawei.com (7.221.188.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Mon, 4 Mar 2024 17:47:47 +0800
+Received: from [10.67.111.176] (10.67.111.176) by
+ kwepemd500012.china.huawei.com (7.221.188.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Mon, 4 Mar 2024 17:47:47 +0800
+Message-ID: <f472dffa-d888-1566-e1e2-313f4eb842c2@huawei.com>
+Date: Mon, 4 Mar 2024 17:47:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH] bcachefs: Fix null-ptr-deref in bch2_fs_alloc()
+Content-Language: en-US
+To: Su Yue <l@damenly.org>
+CC: <kent.overstreet@linux.dev>, <bfoster@redhat.com>,
+	<linux-bcachefs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240304032203.3480001-1-lizetao1@huawei.com>
+ <frx6edjh.fsf@damenly.org>
+From: Li Zetao <lizetao1@huawei.com>
+In-Reply-To: <frx6edjh.fsf@damenly.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-ClientProxiedBy: dggpeml500009.china.huawei.com (7.185.36.209) To
+ kwepemd500012.china.huawei.com (7.221.188.25)
 
-Add overlay to enable the PCIE1 instance of PCIe on J7200-EVM in
-Endpoint mode of operation.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
 
-Hello,
+On 2024/3/4 13:12, Su Yue wrote:
+> 
+> On Mon 04 Mar 2024 at 11:22, Li Zetao <lizetao1@huawei.com> wrote:
+> 
+>> There is a null-ptr-deref issue reported by kasan:
+>>
+>>   KASAN: null-ptr-deref in range   
+>> [0x0000000000000000-0x0000000000000007]
+>>   Call Trace:
+>>     <TASK>
+>>     bch2_fs_alloc+0x1092/0x2170 [bcachefs]
+>>     bch2_fs_open+0x683/0xe10 [bcachefs]
+>>     ...
+>>
+>> When initializing the name of bch_fs, it needs to dynamically alloc 
+>> memory
+>> to meet the length of the name. However, when name allocation failed, it
+>> will cause a null-ptr-deref access exception in subsequent string copy.
+>>
+> bch2_printbuf_make_room() does return -ENOMEM but
+> bch2_prt_printf() doesn't check the return code. And there are too many
+> callers of bch2_prt_printf() don't check allocation_failure.
+Indeed, too many callers do not check whether name allocation is 
+successful, which may cause hidden dangers. Maybe it is neccssary to use 
+somethings like __GFP_NOFAIL flag here?
+> 
+>> Fix this issue by checking if name allocation is successful.
+>>
+>> Fixes: 401ec4db6308 ("bcachefs: Printbuf rework")
+>> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+>> ---
+>>  fs/bcachefs/super.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
+>> index 6b23e11825e6..24fa41bbe7e3 100644
+>> --- a/fs/bcachefs/super.c
+>> +++ b/fs/bcachefs/super.c
+>> @@ -818,13 +818,13 @@ static struct bch_fs *bch2_fs_alloc(struct 
+>> bch_sb *sb, struct bch_opts opts)
+>>          goto err;
+>>
+>>      pr_uuid(&name, c->sb.user_uuid.b);
+>> -    strscpy(c->name, name.buf, sizeof(c->name));
+>> -    printbuf_exit(&name);
+>> -
+>>      ret = name.allocation_failure ? -BCH_ERR_ENOMEM_fs_name_alloc  : 0;
+>>      if (ret)
+>>          goto err;
+>>
+> IIRC, krealloc() doesn't free old pointer if new-size allocation failed.
+> There is no printbuf_exit called in label err then memory leak happens.
+> 
+Here krealloc() is a bit complicated:
+1.if name allocation failure happens on the first time, the old pointer 
+will be NULL, which cause a null-ptr-deref issue.
+2.if name allocation failure don't happens on the first time, the old 
+pointer will be available and need to free.
 
-This patch is based on linux-next tagged next-20240304.
+So the correct modification should be something like this:
+     pr_uuid(&name, c->sb.user_uuid.b);
+     if (unlikely(!name.buf)) {
+         ret = -BCH_ERR_ENOMEM_fs_name_alloc;
+         goto err;
+     }
 
-Regards,
-Siddharth.
+     strscpy(c->name, name.buf, sizeof(c->name));
+     printbuf_exit(&name);
 
- arch/arm64/boot/dts/ti/Makefile               |  5 ++
- .../boot/dts/ti/k3-j7200-evm-pcie1-ep.dtso    | 53 +++++++++++++++++++
- 2 files changed, 58 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-evm-pcie1-ep.dtso
+     ret = name.allocation_failure ? -BCH_ERR_ENOMEM_fs_name_alloc  : 0;
+     if (ret)
+         goto err;
+> -- 
+> Su
+>>
+>> +    strscpy(c->name, name.buf, sizeof(c->name));
+>> +    printbuf_exit(&name);
+>> +
+>>      /* Compat: */
+>>      if (le16_to_cpu(sb->version) <= 
+>>  bcachefs_metadata_version_inode_v2 &&
+>>          !BCH_SB_JOURNAL_FLUSH_DELAY(sb))
 
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 9a722c2473fb..0c04db76fd05 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -76,6 +76,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am654-pcie-usb3.dtbo
- # Boards with J7200 SoC
- k3-j7200-evm-dtbs := k3-j7200-common-proc-board.dtb k3-j7200-evm-quad-port-eth-exp.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-j7200-evm.dtb
-+dtb-$(CONFIG_ARCH_K3) += k3-j7200-evm-pcie1-ep.dtbo
- 
- # Boards with J721e SoC
- k3-j721e-evm-dtbs := k3-j721e-common-proc-board.dtb k3-j721e-evm-quad-port-eth-exp.dtbo
-@@ -139,6 +140,8 @@ k3-am68-sk-base-board-csi2-dual-imx219-dtbs := k3-am68-sk-base-board.dtb \
- 	k3-j721e-sk-csi2-dual-imx219.dtbo
- k3-am69-sk-csi2-dual-imx219-dtbs := k3-am69-sk.dtb \
- 	k3-j721e-sk-csi2-dual-imx219.dtbo
-+k3-j7200-evm-pcie1-ep-dtbs := k3-j7200-common-proc-board.dtb \
-+	k3-j7200-evm-pcie1-ep.dtbo
- k3-j721e-evm-pcie0-ep-dtbs := k3-j721e-common-proc-board.dtb \
- 	k3-j721e-evm-pcie0-ep.dtbo
- k3-j721e-sk-csi2-dual-imx219-dtbs := k3-j721e-sk.dtb \
-@@ -163,6 +166,7 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
- 	k3-am642-tqma64xxl-mbax4xxl-wlan.dtb \
- 	k3-am68-sk-base-board-csi2-dual-imx219-dtbs \
- 	k3-am69-sk-csi2-dual-imx219-dtbs \
-+	k3-j7200-evm-pcie1-ep.dtbo \
- 	k3-j721e-evm-pcie0-ep.dtb \
- 	k3-j721e-sk-csi2-dual-imx219-dtbs \
- 	k3-j721s2-evm-pcie1-ep.dtb
-@@ -178,6 +182,7 @@ DTC_FLAGS_k3-am642-tqma64xxl-mbax4xxl += -@
- DTC_FLAGS_k3-am6548-iot2050-advanced-m2 += -@
- DTC_FLAGS_k3-am68-sk-base-board += -@
- DTC_FLAGS_k3-am69-sk += -@
-+DTC_FLAGS_k3-j7200-common-proc-board += -@
- DTC_FLAGS_k3-j721e-common-proc-board += -@
- DTC_FLAGS_k3-j721e-sk += -@
- DTC_FLAGS_k3-j721s2-common-proc-board += -@
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-evm-pcie1-ep.dtso b/arch/arm64/boot/dts/ti/k3-j7200-evm-pcie1-ep.dtso
-new file mode 100644
-index 000000000000..ee30b10d1a75
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-evm-pcie1-ep.dtso
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/**
-+ * DT Overlay for enabling PCIE1 instance in Endpoint Configuration with the
-+ * J7 common processor board.
-+ *
-+ * J7 Common Processor Board Product Link: https://www.ti.com/tool/J721EXCPXEVM
-+ *
-+ * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/soc/ti,sci_pm_domain.h>
-+
-+#include "k3-pinctrl.h"
-+
-+/*
-+ * Since Root Complex and Endpoint modes are mutually exclusive
-+ * disable Root Complex mode.
-+ */
-+&pcie1_rc {
-+	status = "disabled";
-+};
-+
-+&cbass_main {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	interrupt-parent = <&gic500>;
-+
-+	pcie1_ep: pcie-ep@2910000 {
-+		compatible = "ti,j7200-pcie-ep", "ti,j721e-pcie-ep";
-+		reg = <0x00 0x02910000 0x00 0x1000>,
-+		      <0x00 0x02917000 0x00 0x400>,
-+		      <0x00 0x0d800000 0x00 0x00800000>,
-+		      <0x00 0x18000000 0x00 0x08000000>;
-+		reg-names = "intd_cfg", "user_cfg", "reg", "mem";
-+		interrupt-names = "link_state";
-+		interrupts = <GIC_SPI 330 IRQ_TYPE_EDGE_RISING>;
-+		ti,syscon-pcie-ctrl = <&scm_conf 0x4074>;
-+		max-link-speed = <3>;
-+		num-lanes = <2>;
-+		power-domains = <&k3_pds 240 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 240 6>;
-+		clock-names = "fck";
-+		max-functions = /bits/ 8 <6>;
-+		max-virtual-functions = /bits/ 8 <4 4 4 4 0 0>;
-+		dma-coherent;
-+		phys = <&serdes0_pcie_link>;
-+		phy-names = "pcie-phy";
-+	};
-+};
--- 
-2.34.1
-
+Best regards,
+--
+Li Zetao
