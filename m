@@ -1,359 +1,139 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65BE495E0
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 15:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AE12C18D;
+	Mon,  4 Mar 2024 15:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709565419; cv=none; b=agzHMbvH+PlVHcCaMZElNY0iBjYNyxFyxfGwy8bmFNAsuLw8jgViCtbhgp3sF8kNh6z3LxdSMz8iWuETKQc2G9gBpT6+vt2oZ/yalk2cLmKKBH5JYpP/1EZJAW9hCGArgkVmFAQcCOV5w9baE0IZi+/E0kmsczFJt8qq3eOzgEo=
+	t=1709565470; cv=none; b=o9q9ybajKgB+q6RtAbtJ2CQFc8K/um1EHgeURlg8w72l43sUzRkFZ7zNmhPFFtf+byNLzBrqi35BWV1wB4m6vLUiG2+GLiXdW3gBTCaWwgagcQDyZcQ5d/gIlCD6daFBOQEXt0X2CC1wZSpEhgBwPw6+y9ZpNmS6u8LidrwKRxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709565419; c=relaxed/simple;
-	bh=svHORtdA7UleLqvpdbr4TfoSjZ5fbg9NfdoKGhGUKxE=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=NyCnEsi21NzihHTLlXk4wmRkl8VTTM9OezwEDITrrxlJCXUH7H/0Ez/uedZT9UIjUZdMRBd8p5obVIoLN0su2qU8nlletoU9vB/qmTo1WlsA2CsG4CSThbvBMCzU2y71+d9kZg3N/eLRwb+l4vYxO3sIdgEyZ5lm+ZqY8kjVMFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kpEUF+UU; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1709565470; c=relaxed/simple;
+	bh=z3F2OYMszvnRIPoGc6Z6uw/DcVkCj5UXNrrtVZGh/s4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WFpcPwApWwqKGt7/LNZtmYWCjW447LWgNzB+ZufFzmhD1G3UTxQi8JeD5OWrgiQidxEKsBKtjMqyv75BqBRyRqiqyZ8Y7e6Kva0sD8Eya4P4PTq6viDMmkvY7Kie+b++EEGFLgJvHRkjuQcByeoRRoLAZcSPUSObVCfrr5b2I38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=n6JDnEaB; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kpEUF+UU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709565412; bh=+LJFgx05z4klHhsYVCs5zN6Ma+EsyWIs5Ylbotmy3iE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kpEUF+UUIWwbr58uZ2fAfGU5w7os5TF6h7jumjapJGHJJz9FfYNx+K8bZiy7rpTAf
-	 p0uhWVb+33pkBJBpWWi02q9LQmI680u4sWLjKwAw/SRNsuxgUYmbFA1nGYPIdsyZsp
-	 QgNq3hYBvd7U0XMfFHV8XyJMMsLhiwnSqxRMCa/o=
-Received: from cyy-pc.lan ([240e:379:2240:e500:994d:62ab:74a6:932b])
-	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
-	id 42726AAD; Mon, 04 Mar 2024 23:16:39 +0800
-X-QQ-mid: xmsmtpt1709565410td9p26k0r
-Message-ID: <tencent_1352FBDA710F572F663E44B9B19BAF453005@qq.com>
-X-QQ-XMAILINFO: Np4jLj3/5V/eBOIdT8HbeL2qSNrZLllO2XB0W0dhDFDMpc6pY2lab7d8HvOscs
-	 3pCGyN7d8inSpU/CIY9vXLCf7+pn93ufzKKS+aR7NHP2iPvlwp4+nQbqf7RHUujGUApuFwiKbYDQ
-	 JDuAIMBfXKh+pnAS15lCbnJELVoSnGC/sieo8idk6B5s34BhSBeWkQOazPY3RmvQeT4wmOAE/Xb3
-	 1IrQRivDnue/2HHRMpAl73eljf3dJ6pwx0m8b03vj+c/1gi425yRKiUiEx1sITtm8BIggTHrbOa/
-	 x6V/jh0E6mDO/IyevIdANmgLmueyOZSaNfVu7IfyYAnQ9VYsFOh4EOVd3buzaQfWI9SJwnOmaF0o
-	 7/fHgE4EvoF4q4QmvuJqYL++24F75pnu6TiatdiowgkbNeK1+3mMsezaKVFHciUcKQDD7Jli68NP
-	 QibtXCtRILXf3roAMvWov6Op1qVqREtjYXqpf3waIziEIT3BkxGiOmF25rzek2M9/kSuX1ZiS7js
-	 b0sA03t2JY3ne1v0J8nEIwRWj33UjGIZe2djZAwxRkyLAcWRcsokAKlvZXOSf1bmopE2Rf40bVZT
-	 aUKKoUBCh5wvxK81X46EMEsyjaXuEDOxNExsPbVaVEwEgPx1Lqp3T1EvpCCfGdCvOuzZOd4vI2bt
-	 XUjnOkTF2LVyrR8CrlxRqcopRlwo+KdtDJ0Ze1znovWzy557vttJwf/ZdIWCEABEb7GCYPuv9IdV
-	 gYerEQ8TwyUVEASC/cv3LQdT4RK23ksPO83uBGKpR2K/jagTWhuSOrXWIKLWSMB0FRtuAOVQkWUw
-	 NYp1zHq5nPNf4yHmiIrtXdxVEvaRztA0p76GR5H5/KKaB0VifPNCtfFYIBJaCk8COHr01KS/uJyD
-	 M1W020mStp/Ba712eAiEr4TTs740Fkb3fSLt6OscR8PANyNCZxquaH+DROir5/AXu4l840YOO1W1
-	 26rj+CvoTVi1JT+lR0lBqvSuST/0TYX1uD9IRlAprBvddbZ96pjlXZB6lVYxoG5zChM6m0SGGD+l
-	 vO+e8QDWkwNY1fhvm7zBcHevFv/Vlq8Uq3SYp2vQnwocnzk2eTHH2ZDES1GLpnXDUBuPIomw==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Guo Ren <guoren@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH v2 6/7] riscv: dts: add initial canmv-k230 and k230-evb dts
-Date: Mon,  4 Mar 2024 23:16:25 +0800
-X-OQ-MSGID: <20240304151626.759150-6-cyy@cyyself.name>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <tencent_64A9B4B31C2D70D5633042461AC9F80C0509@qq.com>
-References: <tencent_64A9B4B31C2D70D5633042461AC9F80C0509@qq.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="n6JDnEaB"
+Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 4928787FAE;
+	Mon,  4 Mar 2024 16:17:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1709565465;
+	bh=SiJFFDcJ1G5N/oDqz5nfDb5RfxaofB8Dmaiikpx9tIg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=n6JDnEaBWjq1/XyKwDLyLlobhIRpkIaBTDLQGKHjJUqVTJN830/3gEVS+NkCK2Vaj
+	 91+xJVuOtkH57l81Uhsfi8OW0FeSEcchaWUVvduLvP1vC6rv7lgMNzP20MuT39xsy/
+	 xS1FGUOojm7kqVZjDDVK1iU/18FdQNTy4WVMS1yHWRlnZUYLzmU9psSoBWB/B+2Ay1
+	 F7QPte3TFIePh+CwW/oo6oqjhjyCplBXBUO5RYDywqZHrAasiW2LG3+X5MBIYdHpcJ
+	 x0zALFOm50xNwokirT2w2ROdAoXSdZvV8aGBtM446bGRjtjuootNLxx9YrSgLxr8bK
+	 gdsG2sJW+ymxA==
+Date: Mon, 4 Mar 2024 16:17:35 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Eric Dumazet
+ <edumazet@google.com>, Vladimir Oltean <olteanv@gmail.com>, "David S.
+ Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ netdev@vger.kernel.org, Tristram.Ha@microchip.com, Sebastian Andrzej
+ Siewior <bigeasy@linutronix.de>, Paolo Abeni <pabeni@redhat.com>, Ravi
+ Gunasekaran <r-gunasekaran@ti.com>, Nikita Zhandarovich
+ <n.zhandarovich@fintech.ru>, Murali Karicheri <m-karicheri2@ti.com>, Ziyang
+ Xuan <william.xuanziyang@huawei.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: hsr: Use full string description when opening HSR
+ network device
+Message-ID: <20240304161735.75b14548@wsk>
+In-Reply-To: <3f2fc5cb-8c79-4e8a-b72e-edcbbc78971e@lunn.ch>
+References: <20240304093220.4183179-1-lukma@denx.de>
+	<3f2fc5cb-8c79-4e8a-b72e-edcbbc78971e@lunn.ch>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/feukiOtbZ5tDUoJE=MvPUT/";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Add initial dts for CanMV-K230 and K230-EVB powered by Canaan Kendryte
-K230 SoC [1].
+--Sig_/feukiOtbZ5tDUoJE=MvPUT/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Some key consideration:
-- Only place BigCore which is 1.6GHz RV64GCBV
+Hi Andrew,
 
-The existence of cache coherence between the two cores remains unknown
-since they have dedicated L2 caches. And the factory SDK uses it for
-other OS by default. I don't know whether the two CPUs on K230 SoC
-can be used in one system. So only place BigCore here.
+> On Mon, Mar 04, 2024 at 10:32:20AM +0100, Lukasz Majewski wrote:
+> > Up till now only single character ('A' or 'B') was used to provide
+> > information of HSR slave network device status.
+> >=20
+> > As it is also possible and valid, that Interlink network device may
+> > be supported as well, the description must be more verbose. As a
+> > result the full string description is now used.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > ---
+> >  net/hsr/hsr_device.c | 13 ++++++-------
+> >  1 file changed, 6 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+> > index 9d71b66183da..9a60489fba96 100644
+> > --- a/net/hsr/hsr_device.c
+> > +++ b/net/hsr/hsr_device.c
+> > @@ -142,30 +142,29 @@ static int hsr_dev_open(struct net_device
+> > *dev) {
+> >  	struct hsr_priv *hsr;
+> >  	struct hsr_port *port;
+> > -	char designation;
+> > +	char *designation =3D NULL; =20
+>=20
+> Thanks for splitting this into a patch.
+>=20
+> Reverse Christmas tree. I know it is broken already, but we should not
+> make it worse.
+>=20
+> I guess you can also add a const, since "Slave A" is probably const.
+>=20
 
-Meanwhile, although docs from Canaan said 1.6GHz Core with Vector is
-CPU1, the csr.mhartid of this core is 0.
+Yes, "Slave A/B" would be allocated in .rodata (as it it just a string
+label).
 
-- Support for "zba" "zbb" "zbc" "zbs" are tested by hand
+const keyword added would help with the readability.=20
 
-The user manual of C908 from T-Head does not document it specifically.
-It just said it supports B extension V1.0-rc1. [2]
+> 	Andrew
 
-I have tested it by using this [3] which attempts to execute "add.uw",
-"andn", "clmulr", "bclr" and they doesn't traps on K230. But on JH7110,
-"clmulr" and "bclr" will trap.
 
-- Support for "zicbom" is tested by hand
 
-Have tested with some out-of-tree drivers that need DMA and they do not
-come to the dts currently.
 
-- Cache parameters are inferred from T-Head docs [2] and Canaan docs [1]
+Best regards,
 
-L1i: 32KB, VIPT 4-Way set-associative, 64B Cacheline
-L1d: 32KB, VIPT 4-Way set-associative, 64B Cacheline
-L2: 256KB, PIPT 16-way set-associative, 64B Cacheline
+Lukasz Majewski
 
-The numbers of cache sets are calculated from these parameters.
+--
 
-- MMU only supports Sv39
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
 
-Since T-Head docs [2] say C908 should support Sv48. However, it will fail
-during the kernel probe when running Linux on K230. I also tested it by
-hand on M-Mode software, writing Sv48 to satp.mode will not trap but will
-leave the csr unchanged. While writing Sv39 it will take effect. It shows
-that this CPU does not support Sv48.
+--Sig_/feukiOtbZ5tDUoJE=MvPUT/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-- Svpbmt and T-Head MAEE both supported
+-----BEGIN PGP SIGNATURE-----
 
-T-Head C908 does support both Svpbmt and T-Head MAEE for page-based memory
-attributes and is controlled by csr.mxstatus. If the kernel wants to use
-svpbmt, the m-mode software should set BIT(21) of csr.mxstatus to zero
-before entering the s-mode kernel. Otherwise, the kernel will not boot as 0
-on T-Head MAEE represent to NonCachable Memory and it will lose dirty cache
-lines modification that haven't been written back to the memory.
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmXl5g8ACgkQAR8vZIA0
+zr10bAf/W9J8h5CHGGhdey5IJgO5608R6oaCdJFoNs8kZuIWBaVVdtRQwJURCjLi
+gzj1jimxMQd0If/Ha8fqTZ1U4cIdNHM3oevkWKFAzyyhlor/jAF7m/yIKjuwhnVz
+Mo+zcf1+1nBVe0tYaHKuCAiffsVjrODDK+wWi8gBUNqW2nGmQ81v9E23YTSpdE7a
+LnkbyWprWx8VtUzMSyKbi41YIs1vQbpUfjJ/vJpvkxYntVm7ZL6O7Kb3rsGpST81
+t+Yhqs7Pdomgkj/wJLGvX3fa9LCFq/hLaPu/uIrwWXVwvMmz/KWrguOqYLcFmM4v
+mPSrHEnIrr8xmDI4WnWjq5eb1dWGdQ==
+=djua
+-----END PGP SIGNATURE-----
 
-[1] https://developer.canaan-creative.com/k230/dev/zh/00_hardware/K230_datasheet.html#chapter-1-introduction
-[2] https://occ-intl-prod.oss-ap-southeast-1.aliyuncs.com/resource//1699268369347/XuanTie-C908-UserManual.pdf
-[3] https://github.com/cyyself/rvb_test
-
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
----
- arch/riscv/boot/dts/canaan/Makefile       |   2 +
- arch/riscv/boot/dts/canaan/canmv-k230.dts |  24 ++++
- arch/riscv/boot/dts/canaan/k230-evb.dts   |  24 ++++
- arch/riscv/boot/dts/canaan/k230.dtsi      | 140 ++++++++++++++++++++++
- 4 files changed, 190 insertions(+)
- create mode 100644 arch/riscv/boot/dts/canaan/canmv-k230.dts
- create mode 100644 arch/riscv/boot/dts/canaan/k230-evb.dts
- create mode 100644 arch/riscv/boot/dts/canaan/k230.dtsi
-
-diff --git a/arch/riscv/boot/dts/canaan/Makefile b/arch/riscv/boot/dts/canaan/Makefile
-index 987d1f0c41f0..9befd088c0e5 100644
---- a/arch/riscv/boot/dts/canaan/Makefile
-+++ b/arch/riscv/boot/dts/canaan/Makefile
-@@ -5,3 +5,5 @@ dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_bit.dtb
- dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_dock.dtb
- dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_go.dtb
- dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maixduino.dtb
-+dtb-$(CONFIG_ARCH_CANAAN) += k230-evb.dtb
-+dtb-$(CONFIG_ARCH_CANAAN) += canmv-k230.dtb
-diff --git a/arch/riscv/boot/dts/canaan/canmv-k230.dts b/arch/riscv/boot/dts/canaan/canmv-k230.dts
-new file mode 100644
-index 000000000000..740ce80ccc07
---- /dev/null
-+++ b/arch/riscv/boot/dts/canaan/canmv-k230.dts
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-+ */
-+
-+#include "k230.dtsi"
-+
-+/ {
-+	model = "Canaan CanMV-K230";
-+	compatible = "canaan,canmv-k230", "canaan,kendryte-k230";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	ddr: memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x1fdff000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/riscv/boot/dts/canaan/k230-evb.dts b/arch/riscv/boot/dts/canaan/k230-evb.dts
-new file mode 100644
-index 000000000000..c3db44934aa2
---- /dev/null
-+++ b/arch/riscv/boot/dts/canaan/k230-evb.dts
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-+ */
-+
-+#include "k230.dtsi"
-+
-+/ {
-+	model = "Kendryte K230 EVB";
-+	compatible = "canaan,k230-usip-lp3-evb", "canaan,kendryte-k230";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	ddr: memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x1fdff000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi b/arch/riscv/boot/dts/canaan/k230.dtsi
-new file mode 100644
-index 000000000000..a384e2dfa277
---- /dev/null
-+++ b/arch/riscv/boot/dts/canaan/k230.dtsi
-@@ -0,0 +1,140 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/dts-v1/;
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	compatible = "canaan,kendryte-k230";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		timebase-frequency = <27000000>;
-+
-+		cpu@0 {
-+			compatible = "thead,c908", "riscv";
-+			device_type = "cpu";
-+			reg = <0>;
-+			riscv,isa = "rv64imafdcv_zba_zbb_zbc_zbs_zicbom_svpbmt";
-+			riscv,isa-base = "rv64i";
-+			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zba", "zbb",
-+					       "zbc", "zbs", "zicbom", "zicntr", "zicsr",
-+					       "zifencei", "zihpm", "svpbmt";
-+			riscv,cbom-block-size = <64>;
-+			d-cache-block-size = <64>;
-+			d-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			i-cache-block-size = <64>;
-+			i-cache-sets = <128>;
-+			i-cache-size = <32768>;
-+			next-level-cache = <&l2_cache>;
-+			mmu-type = "riscv,sv39";
-+
-+			cpu0_intc: interrupt-controller {
-+				compatible = "riscv,cpu-intc";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
-+		};
-+
-+		l2_cache: l2-cache {
-+			compatible = "cache";
-+			cache-block-size = <64>;
-+			cache-level = <2>;
-+			cache-size = <262144>;
-+			cache-sets = <256>;
-+			cache-unified;
-+		};
-+	};
-+
-+	apb_clk: apb-clk-clock {
-+		compatible = "fixed-clock";
-+		clock-frequency = <50000000>;
-+		clock-output-names = "apb_clk";
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&plic>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		dma-noncoherent;
-+		ranges;
-+
-+		plic: interrupt-controller@f00000000 {
-+			compatible = "canaan,k230-plic" ,"thead,c900-plic";
-+			reg = <0xf 0x00000000 0x0 0x04000000>;
-+			interrupts-extended = <&cpu0_intc 11>, <&cpu0_intc 9>;
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <2>;
-+			riscv,ndev = <208>;
-+		};
-+
-+		clint: timer@f04000000 {
-+			compatible = "canaan,k230-clint", "thead,c900-clint";
-+			reg = <0xf 0x04000000 0x0 0x04000000>;
-+			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>;
-+		};
-+
-+		uart0: serial@91400000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x91400000 0x0 0x1000>;
-+			clocks = <&apb_clk>;
-+			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@91401000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x91401000 0x0 0x1000>;
-+			clocks = <&apb_clk>;
-+			interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@91402000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x91402000 0x0 0x1000>;
-+			clocks = <&apb_clk>;
-+			interrupts = <18 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@91403000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x91403000 0x0 0x1000>;
-+			clocks = <&apb_clk>;
-+			interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@91404000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x91404000 0x0 0x1000>;
-+			clocks = <&apb_clk>;
-+			interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
-+			status = "disabled";
-+		};
-+	};
-+};
--- 
-2.43.0
-
+--Sig_/feukiOtbZ5tDUoJE=MvPUT/--
