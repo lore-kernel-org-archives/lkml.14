@@ -1,140 +1,137 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3164319474
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333A61AADE;
+	Mon,  4 Mar 2024 08:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709542350; cv=none; b=Mdzmf56gMuoCwPVIq4Xh2wyhTNrqYzn2mH/Ijls3CKQZtAwfXGZ9vxULw997zCHbU2Wkt9lymNuSlQkAgIfSpMLzGUGQfNlD3EFdhjdwLOGcdrs1z7+3wVbVHf9K+dWNDvJikwTxBIprK6UIwJ6CZnmbC/McAtJMQq82pxmBalM=
+	t=1709542393; cv=none; b=AfrH2ZbxTkSxHWrrZ4sWTrGYqwVlz9yg9nlGi7dwZDjA7YAOSbHqELS9Kgx2Vpuo5PnKjv2gQpWxStn0aLgXSMb1hmKWE2pfBFDqu4l/vAbT2KqNbLTtqzXM5VY5hqw3awaJ+3pDUrB5RTZHWPnG2dZ5rFzCv4eTN/OLgAdq+5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709542350; c=relaxed/simple;
-	bh=dFdLZwzVb32v1eTbKWoNzytYjuFHCSDRMkVJM58ZX+M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n09BqeYTerzK7jOU4q6Regt3AB68bnxJRoOgRqtuuRWn5OGzubOTg+pnztZrC6jjR/Hub3Q27rPbFdBVlOw4wni1fm2lVnQ2eIxuBwwxWKZ39hDHDPZtG1SlRvyB57EKK6NTleXr9RAIwwm+9LyyZMd/OA5/YUYDc3suR5MTft4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=nFTs5sfQ; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="nFTs5sfQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709542337; bh=mbuvwZO50R9Q6N8yNmFTfgRFRn2FhfRiifIW8jkWut0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nFTs5sfQfANH6UTAr+Bxz575Yo2FS8OTvte9tkQytAjD+mpEmvaN+WKADuJLVN6fW
-	 txgmGiuUonMY9kgSX0HTGahpnUfJjDHYRTm+6PSCj8L+5yzh6GEEgscwvlFEHcpXZO
-	 FTbbvkD2ib5fO3HyrMhcc7L1n7LYyN7cFN2mv51g=
-Received: from [IPV6:2001:da8:c800:d084:f0c8:5d03:8100:4abe] ([2001:da8:c800:d084:f0c8:5d03:8100:4abe])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id CC5BCEE2; Mon, 04 Mar 2024 16:51:05 +0800
-X-QQ-mid: xmsmtpt1709542265tg1r7o721
-Message-ID: <tencent_BF607C338244DA7F8EB2B8F2314A218B8D08@qq.com>
-X-QQ-XMAILINFO: M1rD3f8svNznan3rGAt6euEY2qNi8leQ7tpHeu6fo+m9tItMjXsZj8H0v9S+83
-	 qpSGVhUnE1gxye9pkJ0kgG5xMB8tC2p3Wk67WyeosYwmYPqyax2KEBjVppVuZ8pEiYWBL1BDz849
-	 Z3hnL53It3BNVZxnk04A1fZ14wE7yPGDF0bDyjoiySIKzQfCq9HPTCWw/fDzvTdIXyypX2QQ05kf
-	 8ABXE7ywGTdlBkPaZq6c3JCznPaYAQL+TxWKdOUPGxmmbSQ6nYxV8ouM64rtTdoUbhs0+fTmt9P3
-	 7gPwLbV4kyXZArCozSJ92Ikp41cJPbbCCVxzjq+HFdP5lXBI/IJbmiZ92WRQ92qGO/N7nT8/j/I1
-	 2LfvF+q39t6UDiWbu8ZefO06zHn7lh8fKjpe52ZlaUGtIjt7UNk6v+YBQix56MlVSQwBMdWzRF+a
-	 pZVGgO+SoL5Xv2eks5aATQPV5QWdbtG/8maE3y7njD6RY3wc8U7AId/1Z8BMmKmgCTRRbigMiuLY
-	 l22NeZNjMBYs8GRYLmlbhgQCHS+hb4WFb9yzRbcmraQxzaFK19J/RPDz3XjmEQbfUPjTj9rxhkCB
-	 eXDOKp4XFV/o/8mlmP9zPR0/WaKTmyzOUBupFdCXVI/QHX/NEzAe7XYoWH2kzjUSb4MpAxTpibB1
-	 VYKTqtNpC2zvkNZvBvl4HNbke6E0R2sF/jTFTjWRYbPClfFs1+E70Md+BZOwEhLMo+0AdMkSs5w/
-	 WZlqgPI4Qmg58sj3wXS0ic0YU+yb9xjLNX+xp7In4oRDRWq7S0+1fcJQGxJTsLtk1S3TBDjtMSzy
-	 x8HCu/yX5tANxqGl07MR6bsQZ0b46G0q4kszlAsFKoJq47/m5GHAd6vJN12QdjOtKmkGcxvkQ8gn
-	 7W/60Jz1cee332QVexi9+o6YeJZCxnRgV7oMZoJ/pmrpzzumqBygCvJ4NvQkIrkIwC/CY/ZNH2Im
-	 rTDIXeDlRvswf0j8UrTGqBd09Y8nYznWGYBnRbuGLHI69voorfkB/+eQCg/HM7
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-OQ-MSGID: <db0272a3-ee70-4de8-85ce-1b65d7dfdaa9@cyyself.name>
-Date: Mon, 4 Mar 2024 16:51:05 +0800
+	s=arc-20240116; t=1709542393; c=relaxed/simple;
+	bh=lZjS9KQIklaHVo9RkVEZuFyeCOlTaULg5xVUzMo42g8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EQ1NQ3wO6Gwth6QvYrgyn6XOCr+4BwbQBPJtbuN1CjvWRvwCUT9N6w7CjByimBsxwjFWgBKmwM+/sLd45+vjfM0wpsky6fwnLLF/y7gmc4x0XLWMXqz7KQc8/awWvKnIeqFXntz8MAieOClHkg8+P5TOA/bjKEhjOyx3IEdxNDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TpBQV4KnCz9xGgj;
+	Mon,  4 Mar 2024 16:17:54 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id ABC0A14068C;
+	Mon,  4 Mar 2024 16:33:26 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwAH9CdGh+VluhunAw--.56753S2;
+	Mon, 04 Mar 2024 09:33:26 +0100 (CET)
+Message-ID: <be91c7158b1b9bed35aa9c3205e8f8e467778a5f.camel@huaweicloud.com>
+Subject: Re: [PATCH v2 06/25] capability: provide helpers for converting
+ between xattrs and vfs_caps
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>,
+  Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, James
+ Morris <jmorris@namei.org>,  Alexander Viro <viro@zeniv.linux.org.uk>, Jan
+ Kara <jack@suse.cz>, Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>,  Casey Schaufler
+ <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
+ <roberto.sassu@huawei.com>,  Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi
+ <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
+ selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Date: Mon, 04 Mar 2024 09:33:06 +0100
+In-Reply-To: <ZeIlwkUx5lNBrdS9@do-x1extreme>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+	 <20240221-idmap-fscap-refactor-v2-6-3039364623bd@kernel.org>
+	 <7633ab5d5359116a602cdc8f85afd2561047960e.camel@huaweicloud.com>
+	 <ZeIlwkUx5lNBrdS9@do-x1extreme>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: add Canaan K230 boards compatible
- strings
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com>
- <tencent_D5188EA5B85A31AC21588DBD7C7482ACDA08@qq.com>
- <7c3c578a-d662-4485-ad15-47250ad0e935@linaro.org>
-From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <7c3c578a-d662-4485-ad15-47250ad0e935@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:GxC2BwAH9CdGh+VluhunAw--.56753S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJF1Uur1fKFWxWryDZw1UKFg_yoW8WFyDpF
+	y3K3Z8KFs2qr1Ygr48Jr45Aa1SkFyrJry7WayUCas0y3Wqgr13AFy09a48uFy5uw4kGr15
+	XFs0yas8Cry3AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFYFCUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAMBF1jj5rvqQACsm
 
-On 2024/3/4 16:11, Krzysztof Kozlowski wrote:
-> On 03/03/2024 14:26, Yangyu Chen wrote:
->> Since K230 was released, K210 is no longer the only SoC in the Kendryte
->> series, so remove the K210 string from the description. Also, add two
->> boards based on k230 to compatible strings to allow them to be used in the
->> dt.
->>
->> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
->> ---
->>   Documentation/devicetree/bindings/riscv/canaan.yaml | 13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/riscv/canaan.yaml b/Documentation/devicetree/bindings/riscv/canaan.yaml
->> index 41fd11f70a49..444758db964e 100644
->> --- a/Documentation/devicetree/bindings/riscv/canaan.yaml
->> +++ b/Documentation/devicetree/bindings/riscv/canaan.yaml
->> @@ -10,7 +10,7 @@ maintainers:
->>     - Damien Le Moal <dlemoal@kernel.org>
->>   
->>   description:
->> -  Canaan Kendryte K210 SoC-based boards
->> +  Canaan Kendryte SoC-based boards
->>   
->>   properties:
->>     $nodename:
->> @@ -42,6 +42,17 @@ properties:
->>         - items:
->>             - const: canaan,kendryte-k210
->>   
->> +      - items:
->> +          - const: canaan,k230-usip-lp3-evb
->> +          - const: canaan,kendryte-k230
->> +
->> +      - items:
->> +          - const: canaan,canmv-k230
-> 
-> Why this is not part of previous entry in an enum?
-> 
->> +          - const: canaan,kendryte-k230
->> +
->> +      - items:
->> +          - const: canaan,kendryte-k230
-> 
-> Usually you cannot run SoCs alone. What does it represent (in real life)?
-> 
+On Fri, 2024-03-01 at 13:00 -0600, Seth Forshee (DigitalOcean) wrote:
+> On Fri, Mar 01, 2024 at 05:30:55PM +0100, Roberto Sassu wrote:
+> > > +/*
+> > > + * Inner implementation of vfs_caps_to_xattr() which does not return=
+ an
+> > > + * error if the rootid does not map into @dest_userns.
+> > > + */
+> > > +static ssize_t __vfs_caps_to_xattr(struct mnt_idmap *idmap,
+> > > +				   struct user_namespace *dest_userns,
+> > > +				   const struct vfs_caps *vfs_caps,
+> > > +				   void *data, size_t size)
+> > > +{
+> > > +	struct vfs_ns_cap_data *ns_caps =3D data;
+> > > +	struct vfs_cap_data *caps =3D (struct vfs_cap_data *)ns_caps;
+> > > +	kuid_t rootkuid;
+> > > +	uid_t rootid;
+> > > +
+> > > +	memset(ns_caps, 0, size);
+> >=20
+> > size -> sizeof(*ns_caps) (or an equivalent change)
+>=20
+> This is zeroing out the passed buffer, so it should use the size passed
+> for the buffer. sizeof(*ns_caps) could potentially be more than the size
+> of the buffer.
 
-I'm not sure what it means.
+Uhm, then maybe the problem is that you are passing the wrong argument?
 
-If you wonder why should I add a compatible string for soc, that is 
-although we cannot run SoCs alone, adding a soc compatible will allow 
-some bootloaders or SBI on RISC-V to choose an errata for a soc. Such as 
-this opensbi patch. [1]
+ssize_t
+do_getxattr(struct mnt_idmap *idmap, struct dentry *d,
+	struct xattr_ctx *ctx)
+{
+	ssize_t error;
+	char *kname =3D ctx->kname->name;
 
-If you wonder why I should allow a soc-compatible string with soc alone, 
-that is because k210 did it previously. And provide a k210_generic.dts 
-to use it. I haven't provided generic dts now but allowing only 
-soc-compatible string alone would also be acceptable I think.
+	if (is_fscaps_xattr(kname)) {
+		struct vfs_caps caps;
+		struct vfs_ns_cap_data data;
+		int ret;
 
-[1] 
-https://github.com/cyyself/opensbi/commit/b113c1c01d700314a4a696297ec09031a9399354
+		ret =3D vfs_get_fscaps(idmap, d, &caps);
+		if (ret)
+			return ret;
+		/*
+		 * rootid is already in the mount idmap, so pass nop_mnt_idmap
+		 * so that it won't be mapped.
+		 */
+		ret =3D vfs_caps_to_user_xattr(&nop_mnt_idmap, current_user_ns(),
+					     &caps, &data, ctx->size);
 
-Thanks,
-Yangyu Chen
 
-> Best regards,
-> Krzysztof
-> 
+ctx->size in my case is 1024 bytes.
+
+Roberto
+
+> Maybe it would be clearer if it was memset(data, 0, size)?
+>=20
+> > I was zeroing more (the size of the buffer passed to vfs_getxattr()).
+> >=20
+> > Roberto
 
