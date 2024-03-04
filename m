@@ -1,134 +1,304 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7309917748;
-	Mon,  4 Mar 2024 09:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D6317748;
+	Mon,  4 Mar 2024 09:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709543369; cv=none; b=Fher7wAfTyCtnwSRtfZHZvmIGw5rxOF3/TlXyaE5oVciwrKhL1mfR9iJJM2BOOPZP7vH2M+MdkPrRRYyz0Cq+CO23uGr1FP5/xCbBU5FUO+P02QQ+WJt0ZpK4wsUsua7Emtmkp0SFrcqemxDbiYR/0e1pSBeRK82SKKz2tFiMcw=
+	t=1709543443; cv=none; b=olqQRATMsjXvlcjmf+9XTS4Fwcz67/24epRdp4iwUwJKbSlVFLhurgxQz0/roIM2tyjTyNkYoH/T+lABCT2jcGpr9VVaHgLY3lFDq9MXscnq0grY6jRuhf9z8IWePOY0RJQgApbCLCT3X2nSY2gD7907rm2P/LZkczseDg2+bZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709543369; c=relaxed/simple;
-	bh=NTeM1KJ3g7QyFyVSvupqryocHsXHyWEGZB+Y/y8Wfzc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OZouDm+aHI/Hps+vLjQ32jwSlzc7fFdpx36k+NkNGO+nLz0JelmmGsq8W/YbJUU+Rt/8zVUkOpJum+ic2CIEt/3dJoZZxm9pCalUvAcYCz264iolie7taCKsb2bNQ2Q1FrvnIOnlQywpMnaviPv6bWCtOFVrrC47LHVdn1H4ngY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=m41JRwtT; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="m41JRwtT"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4247gAFC026675;
-	Mon, 4 Mar 2024 09:41:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=bJnRc0D0H74QihxsMJduhmW8GQyOwkO9RFjU12y0p4M=; b=m4
-	1JRwtTlXG3PcefLldIGEl77X0tUzuX+IDQXBAmHPBC+tOYP8w+XPQ9oqzVVDSJ8p
-	dG9F5BbzPgdp6eHuOSyBrgE3B9oIFZA8U5rdki+EXke2aT4mQyO0sXWsUVt5bXFA
-	3+dO8XJm8hfWyt1RSiRnQHT1angHmSEvKMivYax6ZkCoeHnWxSFAFjjtvH/a3WM4
-	/RFWp74L8NlLfmaFny43+2JvSpVzbB2HVogeui34sDQhYfT95ZMLKZ1MC4KqyuYO
-	EB++E08T+M3PlmY8fjXumYfQd0qtjfj/Du80U34MqRTLapNdflV0p6DblR6KSDWa
-	smqORLvSC+TfwCrRRMnA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wktdkxss1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Mar 2024 09:41:56 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7E2584002D;
-	Mon,  4 Mar 2024 09:41:51 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C3E60255E46;
-	Mon,  4 Mar 2024 09:41:16 +0100 (CET)
-Received: from [10.252.5.201] (10.252.5.201) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 4 Mar
- 2024 09:41:15 +0100
-Message-ID: <562cdbfe-9353-4f5d-a804-34e158a190a7@foss.st.com>
-Date: Mon, 4 Mar 2024 09:41:14 +0100
+	s=arc-20240116; t=1709543443; c=relaxed/simple;
+	bh=ecM/81Cew8tqn1qCfB4rRxkuZKAfzrO6bVDhJi9nQiQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=K33QCj1Y0iLQzTb6bZJGGY1eEKp0FOYpCTXl9bWQmHn3ZhSy3LrZ19AgtVbXTPSnwngjp2iSl9wgnn8WA6COqZ/IJgO4XgxlZ/yMZFqNB2NvQIO99F9UkJsd7HeM0L7tSaTs5YyvzuPwdAePexWRHDb2Y/+/cO9c9BhJz6m4+DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8Cx77sIkOVlYwQUAA--.30763S3;
+	Mon, 04 Mar 2024 17:10:32 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXRMEkOVl7rBNAA--.9973S3;
+	Mon, 04 Mar 2024 17:10:30 +0800 (CST)
+Subject: Re: [PATCH v6 7/7] Documentation: KVM: Add hypercall for LoongArch
+To: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org
+References: <20240302082532.1415200-1-maobibo@loongson.cn>
+ <20240302084724.1415344-1-maobibo@loongson.cn>
+ <846a5e46-4e8f-4f73-ac5b-323e78ec1bb1@xen0n.name>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <853f2909-e455-bd1c-c6a4-6a13beb37125@loongson.cn>
+Date: Mon, 4 Mar 2024 17:10:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] counter: Introduce the COUNTER_COMP_FREQUENCY() macro
-To: William Breathitt Gray <william.gray@linaro.org>
-CC: <syednwaris@gmail.com>, <vigneshr@ti.com>, <jpanis@baylibre.com>,
-        <alexandre.torgue@foss.st.com>, <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240301102505.591918-1-fabrice.gasnier@foss.st.com>
- <ZeH6e02zzfAjw-sd@ishi>
+In-Reply-To: <846a5e46-4e8f-4f73-ac5b-323e78ec1bb1@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <ZeH6e02zzfAjw-sd@ishi>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-04_04,2024-03-01_03,2023-05-22_02
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxXRMEkOVl7rBNAA--.9973S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3WryUJr1UGrWfuFW7tF43urX_yoWfZw4fpF
+	95J3s7KrWkJryxAw17tw1UXryYyr1xJ3W7Jr18tFy8Jw45Zr1aqr4jqrn093W8Gw48AF1j
+	qr4jqr17ur1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
 
-On 3/1/24 16:55, William Breathitt Gray wrote:
-> On Fri, Mar 01, 2024 at 11:25:05AM +0100, Fabrice Gasnier wrote:
->> Now that there are two users for the "frequency" extension, introduce a
->> new COUNTER_COMP_FREQUENCY() macro.
->> This extension is intended to be a read-only signal attribute.
+
+
+On 2024/3/2 下午5:41, WANG Xuerui wrote:
+> On 3/2/24 16:47, Bibo Mao wrote:
+>> Add documentation topic for using pv_virt when running as a guest
+>> on KVM hypervisor.
 >>
->> Suggested-by: William Breathitt Gray <william.gray@linaro.org>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 >> ---
->> Changes in v5
->> - "frequency" extension is read-only, so there's no need to provide
->>   a write parameter.
->> - patch sent separately from "counter: Add stm32 timer events support" [1]
->> [1] https://lore.kernel.org/lkml/20240227173803.53906-2-fabrice.gasnier@foss.st.com/
->> ---
->>  include/linux/counter.h | 7 +++++++
->>  1 file changed, 7 insertions(+)
+>>   Documentation/virt/kvm/index.rst              |  1 +
+>>   .../virt/kvm/loongarch/hypercalls.rst         | 79 +++++++++++++++++++
+>>   Documentation/virt/kvm/loongarch/index.rst    | 10 +++
+>>   3 files changed, 90 insertions(+)
+>>   create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
+>>   create mode 100644 Documentation/virt/kvm/loongarch/index.rst
 >>
->> diff --git a/include/linux/counter.h b/include/linux/counter.h
->> index 702e9108bbb4..0ac36f815b7d 100644
->> --- a/include/linux/counter.h
->> +++ b/include/linux/counter.h
->> @@ -602,6 +602,13 @@ struct counter_array {
->>  #define COUNTER_COMP_FLOOR(_read, _write) \
->>  	COUNTER_COMP_COUNT_U64("floor", _read, _write)
->>  
->> +#define COUNTER_COMP_FREQUENCY(_read) \
->> +{ \
->> +	.type = COUNTER_COMP_U64, \
->> +	.name = "frequency", \
->> +	.signal_u64_read = (_read), \
->> +}
+>> diff --git a/Documentation/virt/kvm/index.rst 
+>> b/Documentation/virt/kvm/index.rst
+>> index ad13ec55ddfe..9ca5a45c2140 100644
+>> --- a/Documentation/virt/kvm/index.rst
+>> +++ b/Documentation/virt/kvm/index.rst
+>> @@ -14,6 +14,7 @@ KVM
+>>      s390/index
+>>      ppc-pv
+>>      x86/index
+>> +   loongarch/index
+>>      locking
+>>      vcpu-requests
+>> diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst 
+>> b/Documentation/virt/kvm/loongarch/hypercalls.rst
+>> new file mode 100644
+>> index 000000000000..1679e48d67d2
+>> --- /dev/null
+>> +++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
+>> @@ -0,0 +1,79 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
 >> +
->>  #define COUNTER_COMP_POLARITY(_read, _write, _available) \
->>  { \
->>  	.type = COUNTER_COMP_SIGNAL_POLARITY, \
->> -- 
->> 2.25.1
+>> +===================================
+>> +The LoongArch paravirtual interface
+>> +===================================
+>> +
+>> +KVM hypercalls use the HVCL instruction with code 0x100, and the 
+>> hypercall
+>> +number is put in a0 and up to five arguments may be placed in a1-a5, the
+>> +return value is placed in v0 (alias with a0).
 > 
-> Hi Fabrice,
+> Just say a0: the name v0 is long deprecated (has been the case ever 
+> since LoongArch got mainlined).
 > 
-> Setting the structure members directly works, but why not use
-> COUNTER_COMP_SIGNAL_U64("frequency", _read, NULL) instead to keep the
-> code more succinct?
+Sure, will modify since you are compiler export :)
 
-Hi William,
-
-I originally wrote it this way, but I had a doubt since some macros use
-the structure members directly.
-
-I can update to use COUNTER_COMP_SIGNAL_U64() instead, that will spare
-few lines.
-
-Please let me know what you prefer (I guess your proposal above ?).
-
-Best Regards,
-Thanks,
-Fabrice
-
+>> +
+>> +The code for that interface can be found in arch/loongarch/kvm/*
+>> +
+>> +Querying for existence
+>> +======================
+>> +
+>> +To find out if we're running on KVM or not, cpucfg can be used with 
+>> index
+>> +CPUCFG_KVM_BASE (0x40000000), cpucfg range between 0x40000000 - 
+>> 0x400000FF
+>> +is marked as a specially reserved range. All existing and future 
+>> processors
+>> +will not implement any features in this range.
+>> +
+>> +When Linux is running on KVM, cpucfg with index CPUCFG_KVM_BASE 
+>> (0x40000000)
+>> +returns magic string "KVM\0"
+>> +
+>> +Once you determined you're running under a PV capable KVM, you can 
+>> now use
+>> +hypercalls as described below.
 > 
-> William Breathitt Gray
+> So this is still the approach similar to the x86 CPUID-based 
+> implementation. But here the non-privileged behavior isn't specified -- 
+> I see there is PLV checking in Patch 3 but it's safer to have the 
+> requirement spelled out here too.
+> 
+> But I still think this approach touches more places than strictly 
+> needed. As it is currently the case in 
+> arch/loongarch/kernel/cpu-probe.c, the FEATURES IOCSR is checked for a 
+> bit IOCSRF_VM that already signifies presence of a hypervisor; if this 
+> information can be interpreted as availability of the HVCL instruction 
+> (which I suppose is the case -- a hypervisor can always trap-and-emulate 
+> in case HVCL isn't provided by hardware), here we can already start 
+> making calls with HVCL.
+> 
+> We can and should define a uniform interface for probing the hypervisor 
+> kind, similar to the centrally-managed RISC-V SBI implementation ID 
+> registry [1]: otherwise future non-KVM hypervisors would have to
+> 
+> 1. somehow pretend they are KVM and eventually fail to do so, leading to 
+> subtle incompatibilities,
+> 2. invent another way of probing for their existence,
+> 3. piggy-back on the current KVM definition, which is inelegant (reading 
+> the LoongArch-KVM-defined CPUCFG leaf only to find it's not KVM) and 
+> utterly makes the definition here *not* KVM-specific.
+> 
+> [1]: 
+> https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0/src/ext-base.adoc
+> 
+Sorry, I know nothing about riscv. Can you describe how sbi_get_mimpid() 
+is implemented in detailed? Is it a simple library or need trap into 
+secure mode or need trap into hypervisor mode?
+
+> My take on this:
+> 
+> To check if we are running on Linux KVM or not, first check IOCSR 0x8 
+> (``LOONGARCH_IOCSR_FEATURES``) for bit 11 (``IOCSRF_VM``); we are 
+> running under a hypervisor if the bit is set. Then invoke ``HVCL 0`` to 
+> find out the hypervisor implementation ID; a return value in ``$a0`` of 
+> 0x004d564b (``KVM\0``) means Linux KVM, in which case the rest of the 
+> convention applies.
+> 
+I do not think so. `HVCL 0` requires that hypercall ABIs need be unified 
+for all hypervisors. Instead it is not necessary, each hypervisor can 
+has its own hypercall ABI.
+
+>> +
+>> +KVM hypercall ABI
+>> +=================
+>> +
+>> +Hypercall ABI on KVM is simple, only one scratch register a0 (v0) and 
+>> at most
+>> +five generic registers used as input parameter. FP register and 
+>> vector register
+>> +is not used for input register and should not be modified during 
+>> hypercall.
+>> +Hypercall function can be inlined since there is only one scratch 
+>> register.
+> 
+> It should be pointed out explicitly that on hypercall return all 
+Well, return value description will added. What do think about the 
+meaning of return value for KVM_HCALL_FUNC_PV_IPI hypercall?  The number 
+of CPUs with IPI delivered successfully like kvm x86 or simply 
+success/failure?
+> architectural state except ``$a0`` is preserved. Or is the whole ``$a0 - 
+> $t8`` range clobbered, just like with Linux syscalls?
+> 
+what is advantage with $a0 - > $t8 clobbered?
+
+It seems that with linux Loongarch syscall, t0--t8 are clobber rather 
+than a0-t8. Am I wrong?
+
+>> +
+>> +The parameters are as follows:
+>> +
+>> +        ========    ================    ================
+>> +    Register    IN            OUT
+>> +        ========    ================    ================
+>> +    a0        function number        Return code
+>> +    a1        1st parameter        -
+>> +    a2        2nd parameter        -
+>> +    a3        3rd parameter        -
+>> +    a4        4th parameter        -
+>> +    a5        5th parameter        -
+>> +        ========    ================    ================
+>> +
+>> +Return codes can be as follows:
+>> +
+>> +    ====        =========================
+>> +    Code        Meaning
+>> +    ====        =========================
+>> +    0        Success
+>> +    -1        Hypercall not implemented
+>> +    -2        Hypercall parameter error
+> 
+> What about re-using well-known errno's, like -ENOSYS for "hypercall not 
+> implemented" and -EINVAL for "invalid parameter"? This could save people 
+> some hair when more error codes are added in the future.
+> 
+No, I do not think so. Here is hypercall return value, some OS need see 
+it. -ENOSYS/-EINVAL may be not understandable for non-Linux OS.
+
+>> +    ====        =========================
+>> +
+>> +KVM Hypercalls Documentation
+>> +============================
+>> +
+>> +The template for each hypercall is:
+>> +1. Hypercall name
+>> +2. Purpose
+>> +
+>> +1. KVM_HCALL_FUNC_PV_IPI
+>> +------------------------
+>> +
+>> +:Purpose: Send IPIs to multiple vCPUs.
+>> +
+>> +- a0: KVM_HCALL_FUNC_PV_IPI
+>> +- a1: lower part of the bitmap of destination physical CPUIDs
+>> +- a2: higher part of the bitmap of destination physical CPUIDs
+>> +- a3: the lowest physical CPUID in bitmap
+> 
+> "CPU ID", instead of "CPUID" for clarity: I suppose most people reading 
+> this also know about x86, so "CPUID" could evoke the wrong intuition.
+> 
+Both "CPU core id" or "CPUID" are ok for me since there is csr register 
+named LOONGARCH_CSR_CPUID already.
+
+> This function is equivalent to the C signature "void hypcall(int func, 
+> u128 mask, int lowest_cpu_id)", which I think is fine, but one can also 
+> see that the return value description is missing.
+> 
+Sure, the return value description will added.
+
+And it is not equivalent to the C signature "void hypcall(int func, u128 
+mask, int lowest_cpu_id)". int/u128/stucture is not permitted with 
+hypercall ABI, all parameter is "unsigned long".
+
+Regards
+Bibo Mao
+
+>> +
+>> +The hypercall lets a guest send multicast IPIs, with at most 128
+>> +destinations per hypercall.  The destinations are represented by a 
+>> bitmap
+>> +contained in the first two arguments (a1 and a2). Bit 0 of a1 
+>> corresponds
+>> +to the physical CPUID in the third argument (a3), bit 1 corresponds 
+>> to the
+>> +physical ID a3+1, and so on.
+>> diff --git a/Documentation/virt/kvm/loongarch/index.rst 
+>> b/Documentation/virt/kvm/loongarch/index.rst
+>> new file mode 100644
+>> index 000000000000..83387b4c5345
+>> --- /dev/null
+>> +++ b/Documentation/virt/kvm/loongarch/index.rst
+>> @@ -0,0 +1,10 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +=========================
+>> +KVM for LoongArch systems
+>> +=========================
+>> +
+>> +.. toctree::
+>> +   :maxdepth: 2
+>> +
+>> +   hypercalls.rst
+> 
+
