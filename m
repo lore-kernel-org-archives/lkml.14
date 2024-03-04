@@ -1,289 +1,190 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 007EA2C840;
-	Mon,  4 Mar 2024 20:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BDE179B8
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 20:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709583449; cv=none; b=H9skxixbhDi04ii4VhbAu21gxaTSGd4GrzUYU51ioU8m7BT9oSOi1zOzU2w7w06ImbErxuZ5ocrAQSs0c13AEulkB8RBkwwzKJwdRSb2odpq670sY42c8FO7jYcZf/SfZ4tum02XUG8RahEtv4INSV8GVm3PaClPy7GYoFOEbVs=
+	t=1709583475; cv=none; b=WsGKGCU07TLj9CPz65FZQUmlRMSUAeyi8pRqGaCHshELlfvmYxWLoLkgr9cwYkEngPpZIq0goa5hCXTPc5DWlTnrtHqu3OppLDO3LLXRX3ZlixUESg9jiz0q0yWyTbQeGRh7vQyySmASI3tAuB5eV0E14rNRe/dSzfbcAp2g8n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709583449; c=relaxed/simple;
-	bh=clDidIhiTcDaNyPWQCdL6Rs1LruWiA738NpcAJs2/80=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fgNLZu8K7xoGjYp/tflv6lZkmF24UHRtcmOXv7yglnIcT2xzOW8yBU23blOtOqvVqfZzzAdsa4zjj+KfQGu+YqHAmgK7Y9iujimwd3o2MPv+yJEi0bco1OeABPPMVIFkBSD4lsQn0DTQ+RZP7UJWShe9/X4ZUdLcXlidjWgLnok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41B2C1576;
-	Mon,  4 Mar 2024 12:17:54 -0800 (PST)
-Received: from e133047.arm.com (unknown [10.57.95.7])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C84B13F738;
-	Mon,  4 Mar 2024 12:17:13 -0800 (PST)
-From: Christian Loehle <christian.loehle@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org,
-	juri.lelli@redhat.com,
-	mingo@redhat.com,
-	rafael@kernel.org,
-	dietmar.eggemann@arm.com,
-	vschneid@redhat.com,
-	vincent.guittot@linaro.org,
-	Johannes.Thumshirn@wdc.com,
-	adrian.hunter@intel.com,
-	ulf.hansson@linaro.org,
-	andres@anarazel.de,
-	asml.silence@gmail.com,
-	linux-pm@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	io-uring@vger.kernel.org,
-	Christian Loehle <christian.loehle@arm.com>
-Subject: [RFC PATCH 2/2] cpufreq/schedutil: Remove iowait boost
-Date: Mon,  4 Mar 2024 20:16:25 +0000
-Message-Id: <20240304201625.100619-3-christian.loehle@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240304201625.100619-1-christian.loehle@arm.com>
-References: <20240304201625.100619-1-christian.loehle@arm.com>
+	s=arc-20240116; t=1709583475; c=relaxed/simple;
+	bh=InLePziy+w7EsIrWLjImxPDq+19gpyA1+VGaRFRzyDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b1RiamIrDfSLAnmqP31zuhbAYENSn44RMbG+MeSsXsFeT1Z3gj4cbtYRvnMSHXTBHihtRhHItU3GrNe1Krw5TNRU9Vv0K3juygSXKfgQDXW1USEObDeHFkLd0ItRbYd8rEpcUiKeH3QFeBAcqi6UlvncUVlQTDePrEX0UEL1loE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fx6SWR4z; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fx6SWR4z"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7c84125f416so26154739f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 12:17:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1709583473; x=1710188273; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6OGnlqSS1kDH9oWockEB3mGHxHlxI0+QQdTZLw4GbL0=;
+        b=fx6SWR4zh9OkLbqFFysAja9qFCZQyEm/khCDXNW/WOscVfxsIaQCeV9ODLNi2xpSB5
+         dBVpxrKF8j+RBPNP7tgsp2qc0k0fdYddCEu+96y5Xt2biusZ+tVOCy+XGdtuxCVCl+IH
+         /UFjwSxcim1cp+QoSWEU7zcRRbO8m3mMTNzQw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709583473; x=1710188273;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6OGnlqSS1kDH9oWockEB3mGHxHlxI0+QQdTZLw4GbL0=;
+        b=qwGvzznnNaZMc+S4EU0wFoo8Hum8hc1zaUE9oG5bmiTP5UFqIXCusG9Pz//1Xv59BJ
+         A3zIZnkY4+EI6n5wTFrSywUUDfSWOc4Di8nNA2bdSzMl9t84zJeFfu7jEhujLNrM0tJi
+         FuNNAumdjSo4MmXkkZrPDysYA4xCQNfJlaPa6EL4f3L/3FGMih2+H0RH6AP4jf93aJZu
+         MhN1nz+cdHTb8oZgBIGB6UnuY28WdxHmR4N3ijqi6eJ+zPMEqgvQIdoBT47ppmDKU4p1
+         V7+rB0+hkfp6cI+/nK2YhM3z8TcfEb5nkM54p/kL633nPZUlkcRl3ErCVD7/LGv7EUxo
+         A6pw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxcLuv6ttT5u77/qYIfZ7exZ6uiG9OEFUtHn2zAt751DXBtnz+4jfTbhMm2KMo3+//gv6TxAQxAV79PRyYS8NOxpNMZrjdlDq7hbNB
+X-Gm-Message-State: AOJu0YxTJHW/Q8b/vTadM0oOCj7ZAQ0Y++1xPPHVqV4LM9wVxohQ2etG
+	mURGXZdtm3VlA+ufE482bqd5V/zNHE48Jih7p0jyHSX5lJHRvDIYp9MmCUk47RY=
+X-Google-Smtp-Source: AGHT+IFCOzr4devM1c9VYw7YymWcLmFzcFEeqrjLWZV1a0vIUexdAt/0/HkFEs+J5NsbnASpH/KsfA==
+X-Received: by 2002:a5e:8806:0:b0:7c8:4963:5bb4 with SMTP id l6-20020a5e8806000000b007c849635bb4mr4324564ioj.2.1709583472793;
+        Mon, 04 Mar 2024 12:17:52 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id q9-20020a02a309000000b00474f8b4ac47sm389631jai.143.2024.03.04.12.17.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 12:17:52 -0800 (PST)
+Message-ID: <b8f6ba98-5683-4985-a8c4-53b36bc1090e@linuxfoundation.org>
+Date: Mon, 4 Mar 2024 13:17:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] kselftest: Add basic test for probing the rust sample
+ modules
+Content-Language: en-US
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Laura Nao <laura.nao@collabora.com>
+Cc: a.hindborg@samsung.com, alex.gaynor@gmail.com, aliceryhl@google.com,
+ benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, kernel@collabora.com, kernel@valentinobst.de,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ ojeda@kernel.org, rust-for-linux@vger.kernel.org, sergio.collado@gmail.com,
+ shuah@kernel.org, usama.anjum@collabora.com, wedsonaf@gmail.com,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240229155235.263157-1-laura.nao@collabora.com>
+ <20240301152232.122399-1-laura.nao@collabora.com>
+ <CANiq72nMo72ObJaQ=Eki4E6t5dMOnF+xmHE1Z2Tn3=33ooSYGA@mail.gmail.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <CANiq72nMo72ObJaQ=Eki4E6t5dMOnF+xmHE1Z2Tn3=33ooSYGA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The previous commit provides a new cpu_util_cfs_boost_io interface for
-schedutil which uses the io boosted utilization of the per-task
-tracking strategy. Schedutil iowait boosting is therefore no longer
-necessary so remove it.
+On 3/1/24 09:28, Miguel Ojeda wrote:
+> On Fri, Mar 1, 2024 at 4:22 PM Laura Nao <laura.nao@collabora.com> wrote:
+>>
+>> Adding --first-time (you meant --first-time, right?) definitely makes
+>> sense, thanks for the pointer. I think having the modules being built-in
+>> should be treated as a skip, same as when they are not there at all.
+> 
+> Yeah, I meant `--first-time`, sorry.
+> 
+> I didn't see other tests using it, so I am not sure if there is a
+> reason not to do that (ditto for adding `MODULES` etc. to `config` and
+> whether we should fail/skip in certain cases) -- I guess Shuah will
+> let us know.
+> 
+>> So something like this:
+>>
+>>   for sample in "${rust_sample_modules[@]}"; do
+>> -    if ! /sbin/modprobe -n -q "$sample"; then
+>> +    if ! /sbin/modprobe -n -q --first-time "$sample"; then
+>>           ktap_skip_all "module $sample is not found in /lib/modules/$(uname -r)"
+>>           exit "$KSFT_SKIP"
+>>       fi
+>>
+>> will cover both cases.
+> 
+> What about the other calls to `modprobe`?
+> 
+>> I think it's safe to assume no other module will depend on the sample
+>> rust modules, so is there any other reason unloading the modules
+>> might fail apart from MODULE_UNLOAD not being enabled? If not, then I
+> 
+> I was thinking more in general terms: that we would like to catch if
+> unloading does not work as expected.
+> 
+> Especially since these "simple samples" are, in part, testing that the
+> basic infrastructure for Rust modules works. So I would say it is
+> important to check whether module unloading failed.
+> 
+> For instance, if something is very broken, a Rust module could in
+> principle fail unloading even if `MODULE_UNLOAD=y` and even if C
+> modules unload without issue.
+> 
+>> I can't just simply skip all tests like this though:
+>>
+>>   for sample in "${rust_sample_modules[@]}"; do
+>>       if /sbin/modprobe -q "$sample"; then
+>> -        /sbin/modprobe -q -r "$sample"
+>> +        if ! /sbin/modprobe -q -r "$sample"; then
+>> +            ktap_skip_all "Failed to unload module $sample, please enable CONFIG_MODULE_UNLOAD"
+>> +            exit "$KSFT_SKIP"
+>> +        fi
+>>           ktap_test_pass "$sample"
+>>       else
+>>           ktap_test_fail "$sample"
+>>
+>> as the test plan has already been printed by then.
+>> I'll need to rework the script a bit to skip the test upon errors on
+>> module removal.
+> 
+> Perhaps Shuah prefers to merge this before and then improve it instead
+> -- I don't know. I didn't mean to trigger a rework :)
+> 
+> Especially since it is unclear what is the "pattern" to follow here --
+> perhaps this is another case of a wider cleanup for more tests, like
+> the ktap helpers I suggested (thanks for implementing those by the
+> way!).
+> 
+>> If we need more granularity on the feedback provided to the user (i.e.
+>> indication on what particular options are missing), then I guess we
+>> could check the current kernel config (/proc/config.gz) and skip the
+>> entire test if any required config is missing. However, this adds an
+>> extra dependency on CONFIG_IKCONFIG=y and CONFIG_IKCONFIG_PROC=y.
+>>
+>> Any advice on the best approach here?
+> 
+> I guess this also depends on what tests are supposed to do etc., so
+> let's see what Shuah says.
 
-Signed-off-by: Christian Loehle <christian.loehle@arm.com>
----
- kernel/sched/cpufreq_schedutil.c | 152 +------------------------------
- 1 file changed, 5 insertions(+), 147 deletions(-)
+Kselftest should all the tests it can run and skip only the ones it can't
+run if configuration and other dependencies aren't met. The reason is to
+avoid false failures.
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index cd0ca3cbd212..ed9fc88a74fc 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -6,8 +6,6 @@
-  * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-  */
- 
--#define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
--
- struct sugov_tunables {
- 	struct gov_attr_set	attr_set;
- 	unsigned int		rate_limit_us;
-@@ -42,10 +40,6 @@ struct sugov_cpu {
- 	struct sugov_policy	*sg_policy;
- 	unsigned int		cpu;
- 
--	bool			iowait_boost_pending;
--	unsigned int		iowait_boost;
--	u64			last_update;
--
- 	unsigned long		util;
- 	unsigned long		bw_min;
- 
-@@ -195,141 +189,17 @@ unsigned long sugov_effective_cpu_perf(int cpu, unsigned long actual,
- 	return max(min, max);
- }
- 
--static void sugov_get_util(struct sugov_cpu *sg_cpu, unsigned long boost)
-+static void sugov_get_util(struct sugov_cpu *sg_cpu)
- {
- 	unsigned long min, max, util = cpu_util_cfs_boost(sg_cpu->cpu);
- 	unsigned long io_boost = cpu_util_io_boost(sg_cpu->cpu);
- 
--	/*
--	 * XXX: This already includes io boost now, makes little sense with
--	 * sugov iowait boost on top
--	 */
- 	util = max(util, io_boost);
- 	util = effective_cpu_util(sg_cpu->cpu, util, &min, &max);
--	util = max(util, boost);
- 	sg_cpu->bw_min = min;
- 	sg_cpu->util = sugov_effective_cpu_perf(sg_cpu->cpu, util, min, max);
- }
- 
--/**
-- * sugov_iowait_reset() - Reset the IO boost status of a CPU.
-- * @sg_cpu: the sugov data for the CPU to boost
-- * @time: the update time from the caller
-- * @set_iowait_boost: true if an IO boost has been requested
-- *
-- * The IO wait boost of a task is disabled after a tick since the last update
-- * of a CPU. If a new IO wait boost is requested after more then a tick, then
-- * we enable the boost starting from IOWAIT_BOOST_MIN, which improves energy
-- * efficiency by ignoring sporadic wakeups from IO.
-- */
--static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
--			       bool set_iowait_boost)
--{
--	s64 delta_ns = time - sg_cpu->last_update;
--
--	/* Reset boost only if a tick has elapsed since last request */
--	if (delta_ns <= TICK_NSEC)
--		return false;
--
--	sg_cpu->iowait_boost = set_iowait_boost ? IOWAIT_BOOST_MIN : 0;
--	sg_cpu->iowait_boost_pending = set_iowait_boost;
--
--	return true;
--}
--
--/**
-- * sugov_iowait_boost() - Updates the IO boost status of a CPU.
-- * @sg_cpu: the sugov data for the CPU to boost
-- * @time: the update time from the caller
-- * @flags: SCHED_CPUFREQ_IOWAIT if the task is waking up after an IO wait
-- *
-- * Each time a task wakes up after an IO operation, the CPU utilization can be
-- * boosted to a certain utilization which doubles at each "frequent and
-- * successive" wakeup from IO, ranging from IOWAIT_BOOST_MIN to the utilization
-- * of the maximum OPP.
-- *
-- * To keep doubling, an IO boost has to be requested at least once per tick,
-- * otherwise we restart from the utilization of the minimum OPP.
-- */
--static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
--			       unsigned int flags)
--{
--	bool set_iowait_boost = flags & SCHED_CPUFREQ_IOWAIT;
--
--	/* Reset boost if the CPU appears to have been idle enough */
--	if (sg_cpu->iowait_boost &&
--	    sugov_iowait_reset(sg_cpu, time, set_iowait_boost))
--		return;
--
--	/* Boost only tasks waking up after IO */
--	if (!set_iowait_boost)
--		return;
--
--	/* Ensure boost doubles only one time at each request */
--	if (sg_cpu->iowait_boost_pending)
--		return;
--	sg_cpu->iowait_boost_pending = true;
--
--	/* Double the boost at each request */
--	if (sg_cpu->iowait_boost) {
--		sg_cpu->iowait_boost =
--			min_t(unsigned int, sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
--		return;
--	}
--
--	/* First wakeup after IO: start with minimum boost */
--	sg_cpu->iowait_boost = IOWAIT_BOOST_MIN;
--}
--
--/**
-- * sugov_iowait_apply() - Apply the IO boost to a CPU.
-- * @sg_cpu: the sugov data for the cpu to boost
-- * @time: the update time from the caller
-- * @max_cap: the max CPU capacity
-- *
-- * A CPU running a task which woken up after an IO operation can have its
-- * utilization boosted to speed up the completion of those IO operations.
-- * The IO boost value is increased each time a task wakes up from IO, in
-- * sugov_iowait_apply(), and it's instead decreased by this function,
-- * each time an increase has not been requested (!iowait_boost_pending).
-- *
-- * A CPU which also appears to have been idle for at least one tick has also
-- * its IO boost utilization reset.
-- *
-- * This mechanism is designed to boost high frequently IO waiting tasks, while
-- * being more conservative on tasks which does sporadic IO operations.
-- */
--static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
--			       unsigned long max_cap)
--{
--	/* No boost currently required */
--	if (!sg_cpu->iowait_boost)
--		return 0;
--
--	/* Reset boost if the CPU appears to have been idle enough */
--	if (sugov_iowait_reset(sg_cpu, time, false))
--		return 0;
--
--	if (!sg_cpu->iowait_boost_pending) {
--		/*
--		 * No boost pending; reduce the boost value.
--		 */
--		sg_cpu->iowait_boost >>= 1;
--		if (sg_cpu->iowait_boost < IOWAIT_BOOST_MIN) {
--			sg_cpu->iowait_boost = 0;
--			return 0;
--		}
--	}
--
--	sg_cpu->iowait_boost_pending = false;
--
--	/*
--	 * sg_cpu->util is already in capacity scale; convert iowait_boost
--	 * into the same scale so we can compare.
--	 */
--	return (sg_cpu->iowait_boost * max_cap) >> SCHED_CAPACITY_SHIFT;
--}
--
- #ifdef CONFIG_NO_HZ_COMMON
- static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
- {
-@@ -357,18 +227,12 @@ static inline bool sugov_update_single_common(struct sugov_cpu *sg_cpu,
- 					      u64 time, unsigned long max_cap,
- 					      unsigned int flags)
- {
--	unsigned long boost;
--
--	sugov_iowait_boost(sg_cpu, time, flags);
--	sg_cpu->last_update = time;
--
- 	ignore_dl_rate_limit(sg_cpu);
- 
- 	if (!sugov_should_update_freq(sg_cpu->sg_policy, time))
- 		return false;
- 
--	boost = sugov_iowait_apply(sg_cpu, time, max_cap);
--	sugov_get_util(sg_cpu, boost);
-+	sugov_get_util(sg_cpu);
- 
- 	return true;
- }
-@@ -458,7 +322,7 @@ static void sugov_update_single_perf(struct update_util_data *hook, u64 time,
- 	sg_cpu->sg_policy->last_freq_update_time = time;
- }
- 
--static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
-+static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu)
- {
- 	struct sugov_policy *sg_policy = sg_cpu->sg_policy;
- 	struct cpufreq_policy *policy = sg_policy->policy;
-@@ -469,11 +333,8 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
- 
- 	for_each_cpu(j, policy->cpus) {
- 		struct sugov_cpu *j_sg_cpu = &per_cpu(sugov_cpu, j);
--		unsigned long boost;
--
--		boost = sugov_iowait_apply(j_sg_cpu, time, max_cap);
--		sugov_get_util(j_sg_cpu, boost);
- 
-+		sugov_get_util(j_sg_cpu);
- 		util = max(j_sg_cpu->util, util);
- 	}
- 
-@@ -489,13 +350,10 @@ sugov_update_shared(struct update_util_data *hook, u64 time, unsigned int flags)
- 
- 	raw_spin_lock(&sg_policy->update_lock);
- 
--	sugov_iowait_boost(sg_cpu, time, flags);
--	sg_cpu->last_update = time;
--
- 	ignore_dl_rate_limit(sg_cpu);
- 
- 	if (sugov_should_update_freq(sg_policy, time)) {
--		next_f = sugov_next_freq_shared(sg_cpu, time);
-+		next_f = sugov_next_freq_shared(sg_cpu);
- 
- 		if (!sugov_update_next_freq(sg_policy, time, next_f))
- 			goto unlock;
--- 
-2.34.1
+> 
+>> Kselftest exit codes are predefined
+>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/selftests/kselftest.h?h=v6.8-rc6#n74),
+>> so if we use `set -e` and source a missing file we end up returning "1"
+>> as if the test was run and failed. With this check we're sure to return
+>> a value that makes sense in the event the helpers file ever gets moved.
+> 
+> Yeah, definitely. I was thinking here about just failing if something
+> does not work as expected, i.e. speaking more generally (that is why I
+> also mentioned even other languages).
+> 
+> By "failing" here I didn't mean reporting the test as failing; I see
+> it as something in the layer above. That is, if the helpers file is
+> ever moved or is not installed for whatever reason, then it is the
+> test infrastructure that failed. So I would have expected that "skip"
+> is due to a reason related to the test itself rather than something
+> unexpected related to the infrastructure, but I guess it may be part
+> of the "skip" meaning in kselftests. So it depends on what is supposed
+> to mean in kselftests, which I don't know.
+> 
+
+I applied this to linux-kselftest next for Linux 6.9-rc1.
+
+We can make improvements if any on top of this.
+
+thanks,
+-- Shuah
 
