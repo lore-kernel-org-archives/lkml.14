@@ -1,273 +1,220 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB5810A19
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 21:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709586180; cv=none; b=V3+/uAxSLudUn4nTalYqLNxe/JoZHfkTDHBK3keI3aBuBFniq0CKWDu452V/V0Toanqs/hZ4gunxjU7NgaAtsJsn/bhDfCCh2DIVBlumOeQazSOHP0CY1OdACTmXuakiR+7GkBFBd4MDA3LR6DJq+1GLvEdJdlMXz+tuMCcqjXg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709586180; c=relaxed/simple;
-	bh=CItsUH8Iz8Zkqjz2l2xieBX+JKyAS448urbfViqgtbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SRcMyAZkg/qmuu79G2m0J3NEt8lW4IBBd0o8EmliuSbCbJiEJg6Zzl3maapJoLEuFgzX4jiR+mu/zFiy31RQpJK4ZlS1gn1NNIKIMU7bcOjFM4E9hBn1Drw8Jssi4x5sOhc/CxmdBzzxJdPHGkeYd4d3PC5Pstm3KDbSIjZ0gpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WcboNZol; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DC510A19;
+	Mon,  4 Mar 2024 21:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709586277; cv=fail; b=Qt4o5ZmW4UFaZ1cqIfKjFWuivqiKDIYDnqukuFmLAhS1JJfM0jGGuwoGxxNGiLiznIwwVK0cpzDYA8VhL/DQZ4T5rHnrWvunmSfR7AUqUUgzq6+SJ4B+YiUTgTlWbsb9FAxcjCoVhb5LFFlG6bfj2+Q5PX31b9+u9O2mNCfSQuI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709586277; c=relaxed/simple;
+	bh=ydMqWyA2Eoi6YVVxZ7RctrIQYu0VjMuAl0M+XVvvaww=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=POwMe57WxA5pjWV+/QjRtaRUY28K8aRGlxUaY+qWY6qft7Ku/11ZSUkwNBD8rI3fw7k7VpocMxuDydC6oY1ky1Z03+kl69TfTBbV513Tqxa/2N/mn3m5QjA3HmnmywPuiwjlfo9U3BSa/eXreevwVfhfmdbi5bq/DuxcgIQPjcA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=JGFtbeXq; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=GyTdzJcp; arc=fail smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WcboNZol"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709586178;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=cese54POTivQZ+W5GHwwAwK3ptv9CAQYY/x9CSNE4fs=;
-	b=WcboNZolgEHxAdRvI2VDixEJ4cyfQvYJLSnZBZ1NCPNllN+FY5ia3Ma1vZWqn9vHK6d8Qs
-	p+VfbXSeSKa1THQ8PYV1EtYy2uoR+G1GwFH52vPZSMISrv0cnsCsae1PsWcvnQdVVyh7Vq
-	PZZLevNdy5m1GXJJ4/sIxgmyLg1L2DM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-5nrLTC2SPWaZDQdTmWKXwA-1; Mon, 04 Mar 2024 16:02:56 -0500
-X-MC-Unique: 5nrLTC2SPWaZDQdTmWKXwA-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33d19951a9bso1860197f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 13:02:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709586175; x=1710190975;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cese54POTivQZ+W5GHwwAwK3ptv9CAQYY/x9CSNE4fs=;
-        b=DwHHwnrqMDER8dvxTEKhBzjJNugzX8uNKS0HkmOcu+WAwrOqTjhbm4gL0tPWgeYkaI
-         FCEoHwS8LSNNvKD4PhImX++GDBM9cUQ77FTnPK0SDdZHJicvNnSMjA6pJv/KkOR2MN8x
-         9eRPieFlDkZFYwVLnOyjiuQ5l3YRdFd+oOftv42NLpWGfsOA4WVyXkNPoiuQQHico272
-         X3O4cg4giqbvMFTecuytQpNaJBiB9JxdSSC9YWifS2royWjvmt2hkWLZgUBex+M/ImsZ
-         /Ag8x9AouUuVcEii08a8xriFiQ2VLSh0R7Mg1ZbsB8nLTnmRLN72htASWVmiAet9OGZw
-         IUeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFtL+Rtr4Ln2ccEUQFGDMB1/a+6Av5j3GrNM0UgKcoUS6zDuZdrukJcqi2HrazNa+FZeKF/Q9ZLx6tLv1cn/OTU4bBpt/Uyv3nCQFm
-X-Gm-Message-State: AOJu0YymgejDNaBykBvVndHHynkebo0yzGbI5yAUxTNelpzle6kvFqU6
-	25SkmvgAX/am8UWDDrk8nDe09OE9zwmsF9TFASsgERcM9hEvKyT1c/Fbxv9XjKktNKN9/EEs2yD
-	dUk5NEvuMw4nugGXAIyh+53/UJqHGtFhxyqAm+CGJ1ShHlWE6SB4nY1qIK+ABfQ==
-X-Received: by 2002:a05:6000:400c:b0:33e:3055:366c with SMTP id cp12-20020a056000400c00b0033e3055366cmr4738382wrb.51.1709586175535;
-        Mon, 04 Mar 2024 13:02:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG9Ow4Gg01zZ5Z5RUfqHK6uq+IV49G+BPhDqRY1aOg7hJUg2sVqmBmk1nes7yhjSkc5kR+D6A==
-X-Received: by 2002:a05:6000:400c:b0:33e:3055:366c with SMTP id cp12-20020a056000400c00b0033e3055366cmr4738358wrb.51.1709586175086;
-        Mon, 04 Mar 2024 13:02:55 -0800 (PST)
-Received: from ?IPV6:2003:cb:c733:f100:75e7:a0a4:9ac2:1abb? (p200300cbc733f10075e7a0a49ac21abb.dip0.t-ipconnect.de. [2003:cb:c733:f100:75e7:a0a4:9ac2:1abb])
-        by smtp.gmail.com with ESMTPSA id q9-20020adf9dc9000000b0033e192a5852sm10972816wre.30.2024.03.04.13.02.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 13:02:54 -0800 (PST)
-Message-ID: <882fcbdd-5392-4dbf-99e4-b35defd9e3dc@redhat.com>
-Date: Mon, 4 Mar 2024 22:02:53 +0100
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JGFtbeXq";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="GyTdzJcp"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1709586275; x=1741122275;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ydMqWyA2Eoi6YVVxZ7RctrIQYu0VjMuAl0M+XVvvaww=;
+  b=JGFtbeXq9o8Quv/SkiICGEMlTWuEVnXrErA3mPWPcJ01EducYSCsLTUv
+   Phv01Dotwzawz3WGNUbkK8jp72EKEtwRQ3eV+FX0WRSD6iWK/w+zaA55f
+   9fWXSQV0JBMPL9/ZINl6MVtYhCEJKK4Uw10XlqdrwzyhWJ/F1ZRrFSL1d
+   x/WiV84gqiRme/GjMPdV3z+MTYwgLZk0WYIefCiOs+/DpY82vi4E1ojl1
+   6t0T7u93EURCHEUZTuhhbzHY+fFDfV8+dk+6nU2AIP3XgrkX6vGIYKRwF
+   RgMyiF/ZGe7f8WFARVhDq8HSrzsLKSkZIil+d1iZHK6B4BvK14rtfTV4b
+   g==;
+X-CSE-ConnectionGUID: xfP7h+82StKo6Bb1xk5THA==
+X-CSE-MsgGUID: Nw7wXD1/TQGtkdrGEyc8Ww==
+X-IronPort-AV: E=Sophos;i="6.06,204,1705334400"; 
+   d="scan'208";a="10780089"
+Received: from mail-bn8nam12lp2168.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.168])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Mar 2024 05:04:32 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J/jkbPRd16ado1n1F8oAtRRTyPIGabVkNOs3RweNFejYTf3XQa3V5wm6XwE93ECN3d2AoWcxkWyIq3OzybIsZgJ17C9p/gtlNXgvpJenfTNk3i8JoU6+0R0BGfWYIGGC9MbEFU5f9GpeNKM+SfKFuPWURCFWM3GLxj+JAi9TrgEiYWIlJEUjDohnHrR88DC3koXlYq/RIKoI/Pp+MpMmX26Xmpwcq3BwiZPjsvSm2DBE3suz2iM3+9iU9UE/88YEUCxBujtgN9Wj6PsBJCvcf9LxDAgFjWoVY17wNQb04V/EQ970nRPcrgD7e0AMlWBORnMY2v4+dL9nn33Sz0Vyog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ioYDdcHR1pnwo2wGi42WtZtjBIMI+pu5Wf/P6/ezC48=;
+ b=G7zak/Wj4hv9E+bADyYBtq+LP0pAwdjj9DhH7CbczXUvziaPYQElBJ3aUcX4iiKT3OCPue3B+FsNwI4fpSJRvs/LFDmsm09l2GTxx+J3wy4262J0xTmm7Z/gja1W57bpO8nMGUvZLQ4VF/mybTQP5i5mxThhLVT+NSJPFg5mUwiy1y4nttE4bI5BoMYekDnRp5slBAPdQX6ffUYCwp04bwpzU7xAfFwYdrCWZguwP0AqLmW8Jk3LMiWG5yY9LlGEMRUxQdzXV/SuqNeBbB0TWSGIki5Vx+tfDxhqqIENPjVzNpi2QN9vzHF0E3lysOJt/NtPKCv/dFR+H3GVr4i5rA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ioYDdcHR1pnwo2wGi42WtZtjBIMI+pu5Wf/P6/ezC48=;
+ b=GyTdzJcphBCkveEjYURbNMr5xEzO4bRBtxoXFBqhSi1CbPYtpJQKxB9GkMdAQBX8nRED/GuE5/dypzZwWa3sUG3Hi7jepQLSivLHmHbDBlatdbo+OvkcGHTEAaNvqXvZmzFNQ3SUzM0hjMl1POiOkdVXVL8gEw0xoBYOycrHR7c=
+Received: from SJ0PR04MB8326.namprd04.prod.outlook.com (2603:10b6:a03:3db::16)
+ by MN2PR04MB6398.namprd04.prod.outlook.com (2603:10b6:208:1a9::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
+ 2024 21:04:30 +0000
+Received: from SJ0PR04MB8326.namprd04.prod.outlook.com
+ ([fe80::a115:b72e:ac9:d144]) by SJ0PR04MB8326.namprd04.prod.outlook.com
+ ([fe80::a115:b72e:ac9:d144%7]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
+ 21:04:30 +0000
+From: Niklas Cassel <Niklas.Cassel@wdc.com>
+To: Frank Li <Frank.li@nxp.com>
+CC: Manivannan Sadhasivam <mani@kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel
+	<gustavo.pimentel@synopsys.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jon Mason
+	<jdmason@kudzu.us>, "open list:PCI DRIVER FOR SYNOPSYS DESIGNWARE"
+	<linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
+ complex reinit endpoint
+Thread-Topic: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
+ complex reinit endpoint
+Thread-Index:
+ AQHaMja1NResTHTkFE6//FhBs62b57CwYdiAgABGuYCAAAUWgIB3lVEXgAAW+ICAABG0gIAAHwcA
+Date: Mon, 4 Mar 2024 21:04:30 +0000
+Message-ID: <ZeY3XqgUf84qAMCL@fedora>
+References: <20231219044844.1195294-1-Frank.Li@nxp.com>
+ <ZYFrUWM7JXdv7rtb@x1-carbon> <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
+ <ZYGq6RdCfdhXFF/9@x1-carbon> <20240304084841.GJ2647@thinkpad>
+ <ZeX7KDuwLWxwb5Kw@lizhi-Precision-Tower-5810>
+ <20240304181005.GF31079@thinkpad>
+ <ZeYdV3xMWa0nbz3k@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZeYdV3xMWa0nbz3k@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR04MB8326:EE_|MN2PR04MB6398:EE_
+x-ms-office365-filtering-correlation-id: dace8d74-d200-4e18-a79d-08dc3c8eaf7e
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ KGZPA5SWrP1gIa3hg+1DDaidXzqRq92DOnZL0UpHK7/BPtMqLLNVdNKuQa/rCXc+xV4qFllIapNLZB0FFSkSxKrs/Z8YyuR4LRECQHo9CHp+RuqpjMrcZJ4FajstDKl/Ae6A7v8SEre7ilSADIQuZ63tvAW0utNvdsU5kzzeLlmgXJSAyyi7KVuJOv1fVjsvHnkubIDfr7vT17S5MqycWjbeWZXnlMGqa3OC+iUCAbbBayCHEbRp+UxCyZqjq1ck9pwyye11G+JrJ4T3uJdd1xROYMq6gJGZruUAnfkl05Kl+o2mthr3BwKO+MsTRk1spgWYQcwfBolkoGiNVttNYSbUpPoRHv52UmKCfJaT+boVvRXr4YqWH77Tx7GF7LEONjAxekPApTzmtsKGpH1iqbeLOw9WH3yk4RDwcOApWSiHCmYADp3ZaNv8GQPsffuRwyWyeK1Ezd/nbcQnK0COYPqw2x5EK6uV2aouahgz53QpSmhCAwyNMcFGZJjtlo523TwFMXx5sIfh58No0bxK3gC5fNaqLiJbPrH7v1zhqD/vM8PJRnPU3/eQoMNNAFJK0ozVHqbd6qIEkgurGT937ELfyPW+rOAOnNVLTgg0FrNEmX4xEYPgu9Ib2VIPosE+J2pn/mCnEix7SzkPSCT/hpoTO7uRE6S+q5eKYmw3cQV0x0qHU72j+XAMEFJSv2KMAz4MvmbO08PVZm6KX3vJXRUqcABa15bMt8EnWdxXChg=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR04MB8326.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?Yw5HEYzSYzfI65s8oLWgMbc2ooNZwVaLiCwaPQ5/Uqv3H7HyTOn2gxPKcG?=
+ =?iso-8859-2?Q?NkQP34xpRyFReXZwTrtCrCQDYLq67YxMJujldDjAsfBar8A4qhGLoIVFSD?=
+ =?iso-8859-2?Q?zEHkeaH3Zy4rOwkwsqh7TiVt8I9aE0y3eFHq9gEC2vHuMwRGcCnfZjZpPd?=
+ =?iso-8859-2?Q?pl55vU1eDi4vpJtvxnIZG0Eo5QvVWYYpX3bmyho7FhQ1PWM89VrKyPMfPQ?=
+ =?iso-8859-2?Q?r9SsYOlDCUgxi9Zljlzx0Ppf/tcUJQGoAGOQA6nBB0+s6ZPaUkQlOgRkyX?=
+ =?iso-8859-2?Q?XUh3SkRY+zSnIvG0vxaicT1m8EPg4Nz/5dC8oF29yfH5NausB6eQIPgrtO?=
+ =?iso-8859-2?Q?a917ZNzR1N+3OmAHcRYoK3tp4RY9s8q8VesbnE+mFKiAA9hzVZvBW5+7RV?=
+ =?iso-8859-2?Q?Wkuol+Z/nvffxVS2A0wQ6O1yG27bg76tIlHWHe5zET0MkYzqhx/OkCQwxR?=
+ =?iso-8859-2?Q?oEdu4/HNajW3ikg9fatIY1nfDAzcDY7046nfm0fJKB9USiNW+avK5w53MF?=
+ =?iso-8859-2?Q?pyyILr5yz4EjqYrWuosW3n0Q0f9VVkQvQwQff2JJmJEAQP6W/tOJOUelhc?=
+ =?iso-8859-2?Q?MbyALXbC22m1WeRCqQ5Qz0Z5W5lDN6B2ef1U3gcPYrl89DpJttBshIWBqd?=
+ =?iso-8859-2?Q?3RT+EYJbpMH7ABgoImbDXHEmHmuacRgpni4qGO8u0w/GNHWM2cEr8Sxv5h?=
+ =?iso-8859-2?Q?OHN5icIv9szUxoagvKAZ5AEzo7YvJLRiJMJVVBqXZxmC8k7h4X54ZyJRiG?=
+ =?iso-8859-2?Q?vrvYAX/HgXOI54uKmQii53UpJx+7OzZIkPPq1MRNLI/7FX1nWW9RoDC5mo?=
+ =?iso-8859-2?Q?qlLQLtL7qyCdUu1FM51Js8h9/EBq5uhxqXqrTu9AkOJemJIfRxeFcKroyz?=
+ =?iso-8859-2?Q?hjqekeVVcfMzlneUjsFVuwH4pQI1+X9eFF+jv3969LK850k+CZW7/7JFQJ?=
+ =?iso-8859-2?Q?T8N3KjT/1tWhib4DfNep+VDrc18ooTt4iKlhmJhBkHQMp3RT/rYbcp8IVz?=
+ =?iso-8859-2?Q?p2ODgekq72YvUH5ZxFdv4sWNJUlI6dqMetQH6VxNm/KSiz2PtfsVBCqjVB?=
+ =?iso-8859-2?Q?85bc/myQh7AjSBw4589rTkCXgoXynbWt53AP9cfYLANVI5JWIU7aroXwB6?=
+ =?iso-8859-2?Q?VLSycFWm6Tr6mul5CIf4VNvRIs7S/B3iLUR5PQBUKu+SwX+PT9ArVL25Uh?=
+ =?iso-8859-2?Q?tMWY//BG460PbpFtA5f+842oZInFml+xYwLahGCL5bGKc+Cv03Mjnh/s96?=
+ =?iso-8859-2?Q?9VozTTuveE0I32N7G+7EgHTfy6Opw4FHBOuIGRsdgIUW8uLQv8jz3J6yVA?=
+ =?iso-8859-2?Q?GE356lFG+iaP1bKWg9VY2X13YDj2/s+nSnSO9t6+we8vAhGygztKO3PcYd?=
+ =?iso-8859-2?Q?khEZjc3qEbcj+Rd1QDK0PNDCFuxBaddcFgRNGM9YD/+rmeGtmF+89CImAU?=
+ =?iso-8859-2?Q?YMJ74FS18joKFZK4VBExzfbMbakcI/kvdQdNBYbS3MCKWA3W+BC875h0Pm?=
+ =?iso-8859-2?Q?xodapHlU7aJnA8BO3HkVW+XOpxQnMVpcLWBk/wiCV/H9cvYQAOTs9Y6sBM?=
+ =?iso-8859-2?Q?MEK0+qTcJK51HCXMt4jzLeS3SvNH7+SQmYY1puF8aAYDSRSBZrp9PF5Nvc?=
+ =?iso-8859-2?Q?9FTRg9dgLymgO45k29wvkuJJVtQlzar02tsHf90GpJrKLVSnXfKficXw?=
+ =?iso-8859-2?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-ID: <5124D72B5B2CEE4F86F1CF50DAD77673@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
- large folio
-Content-Language: en-US
-To: Barry Song <21cnbao@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org, chrisl@kernel.org, yuzhao@google.com,
- hanchuanhua@oppo.com, linux-kernel@vger.kernel.org, willy@infradead.org,
- ying.huang@intel.com, xiang@kernel.org, mhocko@suse.com,
- shy828301@gmail.com, wangkefeng.wang@huawei.com,
- Barry Song <v-songbaohua@oppo.com>, Hugh Dickins <hughd@google.com>
-References: <20240304103757.235352-1-21cnbao@gmail.com>
- <706b7129-85f6-4470-9fd9-f955a8e6bd7c@arm.com>
- <37f1e6da-412b-4bb4-88b7-4c49f21f5fe9@redhat.com>
- <10f9542e-f3d8-42b0-9de4-9867cab997b9@arm.com>
- <17b4527c-3782-4eab-8b33-e0c6ff57139f@redhat.com>
- <CAGsJ_4wgMtY2=xRFSx8xAgROR97MevAtCYRUG+Xy+n6FUw9a1w@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAGsJ_4wgMtY2=xRFSx8xAgROR97MevAtCYRUG+Xy+n6FUw9a1w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	dDike5KwL2GHiI//p4xjJKL0SuqAyI+0roW8LS9TwWAd4Mcf4eKdO7S66J+PopYB0iWh42o2yyBSQbLkr0OpKwVUBx60v4aHW8UWb1lvXkTpAeazp8q45j+hR12pMDn1xq+U3WzUGrSkZcoX3m8SUmOutoyt4oFSEWMXnwh22vMjC71kWUom50oshfH6W2YRipI2hvFFan5ZQNPmIcMJBfHhWXkCikFXgzxH39YXH34wu4hGBUDwd19sT8DXCAoUOb69bKcc2FqhNjCVeHrPfJWYPink8H3jupmXBGHmthBKt5hSPus/VU5FQ4UhRFODJGTS4oK1DbA2P6AWOSAxuLak+WHjENB9Ty4esobdfei64m9Z+mcy5+cCv+C5I0oax/CPIjpC8HmDhLXStzUhc85JVXSOra71v+1o/x8473RMg+yxKP4tTxhHJNGSpZjPjpm0xHIqUHNEK7iEUjCbH9r4dnUVwZ+xdiXShgVouNWTSlh2pvtkWnsXSx61KhJDwkfjUh/sGw2gK4muSJBZ8iZvPLpNFYXIL5rvrOcmvSOzF2F9qaDGYsUVixoi7JkAkjAh6DRE5rEIi8/fCN26S9I3j0UCiqEDqYtV35DKTJurjgIzhBPnDKCUgmthIvmU
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR04MB8326.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dace8d74-d200-4e18-a79d-08dc3c8eaf7e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2024 21:04:30.6734
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0GPPovrwFJHQRY7JAvfSsVTrEAhyfpWlGls+HMUd3zyZ6fdUX4xh5oUoi0hN4DgQb6mR4Ei5N3217AX13nmNVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6398
 
-On 04.03.24 21:42, Barry Song wrote:
-> On Tue, Mar 5, 2024 at 3:27 AM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 04.03.24 14:03, Ryan Roberts wrote:
->>> On 04/03/2024 12:41, David Hildenbrand wrote:
->>>> On 04.03.24 13:20, Ryan Roberts wrote:
->>>>> Hi Barry,
->>>>>
->>>>> On 04/03/2024 10:37, Barry Song wrote:
->>>>>> From: Barry Song <v-songbaohua@oppo.com>
->>>>>>
->>>>>> page_vma_mapped_walk() within try_to_unmap_one() races with other
->>>>>> PTEs modification such as break-before-make, while iterating PTEs
->>>>>> of a large folio, it will only begin to acquire PTL after it gets
->>>>>> a valid(present) PTE. break-before-make intermediately sets PTEs
->>>>>> to pte_none. Thus, a large folio's PTEs might be partially skipped
->>>>>> in try_to_unmap_one().
->>>>>
->>>>> I just want to check my understanding here - I think the problem occurs for
->>>>> PTE-mapped, PMD-sized folios as well as smaller-than-PMD-size large folios? Now
->>>>> that I've had a look at the code and have a better understanding, I think that
->>>>> must be the case? And therefore this problem exists independently of my work to
->>>>> support swap-out of mTHP? (From your previous report I was under the impression
->>>>> that it only affected mTHP).
->>>>>
->>>>> Its just that the problem is becoming more pronounced because with mTHP,
->>>>> PTE-mapped large folios are much more common?
->>>>
->>>> That is my understanding.
->>>>
->>>>>
->>>>>> For example, for an anon folio, after try_to_unmap_one(), we may
->>>>>> have PTE0 present, while PTE1 ~ PTE(nr_pages - 1) are swap entries.
->>>>>> So folio will be still mapped, the folio fails to be reclaimed.
->>>>>> What’s even more worrying is, its PTEs are no longer in a unified
->>>>>> state. This might lead to accident folio_split() afterwards. And
->>>>>> since a part of PTEs are now swap entries, accessing them will
->>>>>> incur page fault - do_swap_page.
->>>>>> It creates both anxiety and more expense. While we can't avoid
->>>>>> userspace's unmap to break up unified PTEs such as CONT-PTE for
->>>>>> a large folio, we can indeed keep away from kernel's breaking up
->>>>>> them due to its code design.
->>>>>> This patch is holding PTL from PTE0, thus, the folio will either
->>>>>> be entirely reclaimed or entirely kept. On the other hand, this
->>>>>> approach doesn't increase PTL contention. Even w/o the patch,
->>>>>> page_vma_mapped_walk() will always get PTL after it sometimes
->>>>>> skips one or two PTEs because intermediate break-before-makes
->>>>>> are short, according to test. Of course, even w/o this patch,
->>>>>> the vast majority of try_to_unmap_one still can get PTL from
->>>>>> PTE0. This patch makes the number 100%.
->>>>>> The other option is that we can give up in try_to_unmap_one
->>>>>> once we find PTE0 is not the first entry we get PTL, we call
->>>>>> page_vma_mapped_walk_done() to end the iteration at this case.
->>>>>> This will keep the unified PTEs while the folio isn't reclaimed.
->>>>>> The result is quite similar with small folios with one PTE -
->>>>>> either entirely reclaimed or entirely kept.
->>>>>> Reclaiming large folios by holding PTL from PTE0 seems a better
->>>>>> option comparing to giving up after detecting PTL begins from
->>>>>> non-PTE0.
->>>>>>
->>>>
->>>> I'm sure that wall of text can be formatted in a better way :) . Also, I think
->>>> we can drop some of the details,
->>>>
->>>> If you need some inspiration, I can give it a shot.
->>>>
->>>>>> Cc: Hugh Dickins <hughd@google.com>
->>>>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->>>>>
->>>>> Do we need a Fixes tag?
->>>>>
->>>>
->>>> What would be the description of the problem we are fixing?
->>>>
->>>> 1) failing to unmap?
->>>>
->>>> That can happen with small folios as well IIUC.
->>>>
->>>> 2) Putting the large folio on the deferred split queue?
->>>>
->>>> That sounds more reasonable.
->>>
->>> Isn't the real problem today that we can end up writng a THP to the swap file
->>> (so 2M more IO and space used) but we can't remove it from memory, so no actual
->>> reclaim happens? Although I guess your (2) is really just another way of saying
->>> that.
->>
->> The same could happen with small folios I believe? We might end up
->> running into the
->>
->> folio_mapped()
->>
->> after the try_to_unmap().
->>
->> Note that the actual I/O does not happen during add_to_swap(), but
->> during the pageout() call when we find the folio to be dirty.
->>
->> So there would not actually be more I/O. Only swap space would be
->> reserved, that would be used later when not running into the race.
-> 
-> I am not worried about small folios at all as they have only one PTE.
-> so the PTE is either completely unmapped or completely mapped.
-> 
-> In terms of large folios, it is a different story. for example, a large
-> folio with 16 PTEs with CONT-PTE, we will have
-> 
-> 1. unfolded CONT-PTE, eg. PTE0 present, PTE1-PTE15 swap entries
-> 
-> 2. page faults on PTE1-PTE15 after try_to_unmap if we access them.
-> 
-> This is totally useless PF and can be avoided if we can try_to_unmap
-> properly at the beginning.
-> 
-> 3. potential need to split a large folio afterwards. for example, MADV_PAGEOUT,
-> MADV_FREE might split it after finding it is not completely mapped.
-> 
-> For small folios, we don't have any concern on the above issues.
+On Mon, Mar 04, 2024 at 02:13:27PM -0500, Frank Li wrote:
+> >=20
+> > Niklas's initial suggestion of keeping u8 for the array and 0 as the un=
+allocated
+> > placeholder sounds good to me. Please use that instead.
+> >=20
+>=20
+> It is impossible to keep u8, because 255 + 1 will 0 for u8. Previously
+> Niklas's initial suggestion have not consider this condition. If u8 have =
+to
+> change to u16 or s16 anyways, I prefer use -1 as free.
 
-Right, but when we talk about "Fixes:", what exactly are we consider 
-"really broken" above and what is "undesired"?
+Well, to be fair, my suggestion was:
+"If we continue to use a u8, and offset the saved value by one,
+we will at least be able to support 255-1 =3D=3D 254 iATUs."
 
-(a) is there a correctness issue? I don't think so.
+But we have this define:
+drivers/pci/controller/dwc/pcie-designware.h:#define MAX_IATU_IN 256
+(Even if it isn't used anywhere.)
 
-(b) is there a real performance issue? I'd like to understand.
+But as ridiculous as it may seem to support that many inbound ranges,
+that is the max number of windows supported by the hardware, so why
+not just let the driver support the max supported by the hardware?
 
-After all, we've been living with that ever since we supported THP_SWAP, 
-correct? "something does not work ideally in some corner cases" might be 
-reasonable to handle here (and I really think we should), but might not 
-be worth a "Fixes:".
 
-So if we could clarify that, it would be great.
+We are talking about:
+struct dw_pcie_ep {
+	...
+        u8                      bar_to_atu[PCI_STD_NUM_BARS];
+	...
+}
 
--- 
-Cheers,
+where PCI_STD_NUM_BARS =3D=3D 6.
 
-David / dhildenb
+And where struct dw_pcie_ep is kzalloced for what I assume is all drivers.
 
+So I'm actually for your idea of changing it to u16, or even unsigned int.
+
+If the code is simplified if we use a u16 or unsigned int (because we don't
+need any weird if (val < MAX_IATU_IN - 1) check), then I'm all for it.
+
+
+What I personally don't like with your patch in $subject,
+was that you changed both dw_pcie_ep_clear_bar() to set the "clear value"
+to -1, but you also need a
+memset(ep->bar_to_atu, -1, sizeof(ep->bar_to_atu)); in dw_pcie_ep_init().
+
+
+I much prefer to have 0 as the default/unused value, because it will
+automatically get set when you do kzalloc().
+Seeing a memset -1 just looks a bit hackish to be, but I realize that
+it is personal preference.
+
+
+If it is super important to save 8 bytes from the heap, then I would
+even prefer changing the MAX_IATU_IN 256 to something smaller, like
+127 or whatever, just as long as we don't need that extra memset -1 :)
+
+
+Kind regards,
+Niklas
