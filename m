@@ -1,87 +1,172 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-108-mta139.mxroute.com (mail-108-mta139.mxroute.com [136.175.108.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE47374FC
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C334B25764
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709550226; cv=none; b=rt+v2fzKkM45n5fNwAx81bVzKuUNqKv+ODNS0N2LzLwN78EwzKxnBjSjz45cL03eSxbU/TOUmF142IrPwvneKmSldsxJIpBd8Ag4dXfbLKi+dBuVLazzdg2di6ZgOsm1eXe+Q8ltLL40IH0Y188VDrpsvAKmKDJCDDaoNsplSmc=
+	t=1709550248; cv=none; b=m8f+uQegrquDB3DFsm60EKc7BMujJuwGDipp2n0eaLTkwKe6s5pqo1+WzaSzTnyF2v/6jkLRf/V5iumMOaJjOBon6GC1/Dz8j/TkAjR6rHGmxdb4re0XHi3/fTguyPbBO1KlMbGFkcfr4GitRsC6DubFzbf27Hw9SKJVe6Mv1GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709550226; c=relaxed/simple;
-	bh=Cgn+AbUmEAUkw7Gtthr0yt0NYWx7rqcOh+VRv3isIy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sNDDhcob0b9PxJXJE4AQf9Cf0Bq1FYAhcnatC1WUo+l/O1Oa0rBkZlE2LSA2ZnJ1wJThkMNNKBqggj9S8aRguohzc74BonlprihHok3uD5tyMiySfPR+VfJ6nwPpnxNrTkUCiRTUYKt2C7L4Ds2erDtC3Qvp/egjEhethWXIBys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UVlrbSZ1; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709550248; c=relaxed/simple;
+	bh=ABUoXqb4QcK+r5diPiS8LiJQ/RSUu4on3uLn1QJNZcw=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=VvqSa/ssRuh2eRDhwJPGrFdk1KO1kAZiReZJ6y9nMPO7ux54L2GFEecofzc8BBkUhFMerzRT691YpS7JixFFMxCJNIpd6w7/ZMLfD57X1DXweNc6YshQdJO4+IED91/OWg2VGC2VQc4LLdgcUMokPI9Kk5KhDvNql7fHycS3RQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org; spf=pass smtp.mailfrom=damenly.org; dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b=WbY6V3Aj; arc=none smtp.client-ip=136.175.108.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damenly.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UVlrbSZ1"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e57a3bf411so2421692b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 03:03:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709550225; x=1710155025; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uRCimQwiaMy/3k7Ta7kTx3HHC9SAus7Ndnzb5kkMHD0=;
-        b=UVlrbSZ1O3X16VEi1JHckwrjDdm0LX+xFXgz8nGoPIa1DpQH9KaZ1n3LOXwR0APPP0
-         G52Oul5bQr0PYx4Y/6gIe9dTqiHjH12B0FpwgddBVXiwwHhqzBVSMbw0ZPxdhkNQhsa7
-         pAg99heaozZG93DiFfHgTfsg7ntxBrR0Lhaoub/wIiAkoCK4RWKLdkHid+oXdpwv7PIH
-         5GA5XHLJ2y4hKluvN2tDUsL0lsVwNf+TCJpLNXb73sQL/OOGiVM/1zOejJ/xcDhM8vvV
-         lS8sSYSVFVwE/Frpd4Cd7vzpL71MMYMj349parDCc19Wi6Ka0JkglUQar/JlS70nqFXj
-         f1EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709550225; x=1710155025;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uRCimQwiaMy/3k7Ta7kTx3HHC9SAus7Ndnzb5kkMHD0=;
-        b=NNsXSQ2H1cVWii0Ykk5gUSi4Nm++acAs0KDGjZ4w2JThy7A4ckYxpMGuz00197VMhE
-         oN/27XsiCcElh4ekYWZXPeEzy9xdy/QpWai7Czdkndx4cqq67lZY5G8R5xMkurcFmA1J
-         /oYL2MFsVfZ7WgyTj1GN5UGrhiXoNulW248nMIG5S33PQ4w4segn9Faj1f3vgOnNXIIa
-         iGKs71tjZPNs/avbTCH6uTjl0s5dAg0m0PErO/l/KR6WSMon5RbV+YRtPWgfq8fa8LcW
-         eIKJxbih4CqGcWMD/47pljM35k4QHszyfupOKCRN9BwZzHBvoozggZMfQ2dbfy/3mG6P
-         PN6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUL0nBfRCeeGFSkYL5rGtwcRfKr6wpx6T7vN42J1tkyiAnvyDvNBJ+AnMMDiOK3svGCVlbBSRiC6+1I56RY/cfgGXV3OE8irkhE2skV
-X-Gm-Message-State: AOJu0Yx8RoM0F58b5B2ZMViiWQ5nRk0YNpG7ZMQUkphpyYK01d569vgq
-	n3b1sIFKogrtWxOjf1/ZB0GBL3QemQnXaFfSl/L6RW6lJwfhyjwXnh1vdWJHOsI=
-X-Google-Smtp-Source: AGHT+IFHnmY9rsYiBuXaQPJyCeTKsOqjxrv1/2WHgvsre2aqcSomXoz0h9mLcg2wzjoF7OHK2UyQ7g==
-X-Received: by 2002:a05:6a00:852:b0:6e6:24d0:a171 with SMTP id q18-20020a056a00085200b006e624d0a171mr2452853pfk.27.1709550224498;
-        Mon, 04 Mar 2024 03:03:44 -0800 (PST)
-Received: from localhost ([122.172.85.206])
-        by smtp.gmail.com with ESMTPSA id w189-20020a6262c6000000b006e629bd793esm923045pfb.108.2024.03.04.03.03.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 03:03:44 -0800 (PST)
-Date: Mon, 4 Mar 2024 16:33:41 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Sibi Sankar <quic_sibis@quicinc.com>
-Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, rafael@kernel.org,
-	morten.rasmussen@arm.com, dietmar.eggemann@arm.com,
-	lukasz.luba@arm.com, sboyd@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_mdtipton@quicinc.com,
-	linux-arm-msm@vger.kernel.org, nm@ti.com
-Subject: Re: [PATCH V2 3/3] cpufreq: scmi: Enable boost support
-Message-ID: <20240304110341.vd6w4mbcq6uwrpif@vireshk-i7>
-References: <20240227173434.650334-1-quic_sibis@quicinc.com>
- <20240227173434.650334-4-quic_sibis@quicinc.com>
+	dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b="WbY6V3Aj"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta139.mxroute.com (ZoneMTA) with ESMTPSA id 18e091dda850003bea.005
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Mon, 04 Mar 2024 10:58:55 +0000
+X-Zone-Loop: 32bf8802ebccda33ae8fe587da874fb3fcacce6f3235
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=damenly.org
+	; s=x; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
+	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=1UHzGpZdyo1LjOM2X4xUat1TELrdDB5G2pictjBphhE=; b=WbY6V3AjRRB67xfHdY9ToSWf/A
+	iyAsRRXYbHErJ2EpvW0vKvDz7xup68uZuW5A5psDgsDbjWB/LSo0SMhsnChCO7JphKL/advlksyOp
+	j3fCR2AOEiNzzJMN5L5pxB8LPMtGIxU8GM5RjzPz30RBZ0Cmwm5yNRnbYCxv9RHXyUXg7oD8JW7z+
+	1WwjGpN7gFsUZK7Etbiv276r4yPtfw/BqgiLw2DK5XSIou0SFASie8y6zVf2UnG39DvcKw/5vLoBy
+	DukPlxn8VBxeRqPZgDzeAi7aSb8WEyie3ajr2DIZI0gnV+NXH5o7wh+UO7RlIpAvA3+6ErAdHTVV0
+	NGVy0iwg==;
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Date: Mon, 04 Mar 2024 10:58:53 +0000
+From: l@damenly.org
+To: Li Zetao <lizetao1@huawei.com>
+Cc: kent.overstreet@linux.dev, bfoster@redhat.com,
+ linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: Fix null-ptr-deref in bch2_fs_alloc()
+In-Reply-To: <f472dffa-d888-1566-e1e2-313f4eb842c2@huawei.com>
+References: <20240304032203.3480001-1-lizetao1@huawei.com>
+ <frx6edjh.fsf@damenly.org> <f472dffa-d888-1566-e1e2-313f4eb842c2@huawei.com>
+Message-ID: <c7a48c2f58f409b3446de7655ce59a42@damenly.org>
+X-Sender: l@damenly.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240227173434.650334-4-quic_sibis@quicinc.com>
+X-Authenticated-Id: l@damenly.org
 
-On 27-02-24, 23:04, Sibi Sankar wrote:
-> +	priv->policy = policy;
+On 2024-03-04 09:47, Li Zetao wrote:
+> On 2024/3/4 13:12, Su Yue wrote:
+>> 
+>> On Mon 04 Mar 2024 at 11:22, Li Zetao <lizetao1@huawei.com> wrote:
+>> 
+>>> There is a null-ptr-deref issue reported by kasan:
+>>> 
+>>>   KASAN: null-ptr-deref in range   
+>>> [0x0000000000000000-0x0000000000000007]
+>>>   Call Trace:
+>>>     <TASK>
+>>>     bch2_fs_alloc+0x1092/0x2170 [bcachefs]
+>>>     bch2_fs_open+0x683/0xe10 [bcachefs]
+>>>     ...
+>>> 
+>>> When initializing the name of bch_fs, it needs to dynamically alloc 
+>>> memory
+>>> to meet the length of the name. However, when name allocation failed, 
+>>> it
+>>> will cause a null-ptr-deref access exception in subsequent string 
+>>> copy.
+>>> 
+>> bch2_printbuf_make_room() does return -ENOMEM but
+>> bch2_prt_printf() doesn't check the return code. And there are too 
+>> many
+>> callers of bch2_prt_printf() don't check allocation_failure.
+> Indeed, too many callers do not check whether name allocation is 
+> successful, which may cause hidden dangers. Maybe it is neccssary to 
+> use somethings like __GFP_NOFAIL flag here?
 
-Did I miss applying something ? Dropped the commit now.
+No need of this as printbuf is not critical for using __GFP_NOFAIL. 
+__GFP_NOFAIL should be used carefully.
+It's just my nags. IOW, a fix as your fix is fine to me unless someone 
+sends 100+ patches to fix places like this.
 
-drivers/cpufreq/scmi-cpufreq.c:272:6: error: ‘struct scmi_data’ has no member named ‘policy’
+>> 
+>>> Fix this issue by checking if name allocation is successful.
+>>> 
+>>> Fixes: 401ec4db6308 ("bcachefs: Printbuf rework")
+>>> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+>>> ---
+>>>  fs/bcachefs/super.c | 6 +++---
+>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>> 
+>>> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
+>>> index 6b23e11825e6..24fa41bbe7e3 100644
+>>> --- a/fs/bcachefs/super.c
+>>> +++ b/fs/bcachefs/super.c
+>>> @@ -818,13 +818,13 @@ static struct bch_fs *bch2_fs_alloc(struct 
+>>> bch_sb *sb, struct bch_opts opts)
+>>>          goto err;
+>>> 
+>>>      pr_uuid(&name, c->sb.user_uuid.b);
+>>> -    strscpy(c->name, name.buf, sizeof(c->name));
+>>> -    printbuf_exit(&name);
+>>> -
+>>>      ret = name.allocation_failure ? -BCH_ERR_ENOMEM_fs_name_alloc  : 
+>>> 0;
+>>>      if (ret)
+>>>          goto err;
+>>> 
+>> IIRC, krealloc() doesn't free old pointer if new-size allocation 
+>> failed.
+>> There is no printbuf_exit called in label err then memory leak 
+>> happens.
+>> 
+> Here krealloc() is a bit complicated:
+> 1.if name allocation failure happens on the first time, the old pointer 
+> will be NULL, which cause a null-ptr-deref issue.
+
+But kfree(NULL) is safe, right?
+
+mm/slub.c:
+/**
+  * kfree - free previously allocated memory
+  * @object: pointer returned by kmalloc() or kmem_cache_alloc()
+  *
+  * If @object is NULL, no operation is performed.
+  */
+void kfree(const void *object)
+
 
 -- 
-viresh
+Su
+> 2.if name allocation failure don't happens on the first time, the old 
+> pointer will be available and need to free.
+> 
+> So the correct modification should be something like this:
+>     pr_uuid(&name, c->sb.user_uuid.b);
+>     if (unlikely(!name.buf)) {
+>         ret = -BCH_ERR_ENOMEM_fs_name_alloc;
+>         goto err;
+>     }
+> 
+>     strscpy(c->name, name.buf, sizeof(c->name));
+>     printbuf_exit(&name);
+> 
+>     ret = name.allocation_failure ? -BCH_ERR_ENOMEM_fs_name_alloc  : 0;
+>     if (ret)
+>         goto err;
+>> -- Su
+>>> 
+>>> +    strscpy(c->name, name.buf, sizeof(c->name));
+>>> +    printbuf_exit(&name);
+>>> +
+>>>      /* Compat: */
+>>>      if (le16_to_cpu(sb->version) <= 
+>>>  bcachefs_metadata_version_inode_v2 &&
+>>>          !BCH_SB_JOURNAL_FLUSH_DELAY(sb))
+> 
+> Best regards,
+> --
+> Li Zetao
