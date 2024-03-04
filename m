@@ -1,48 +1,49 @@
 Received: from out203-205-251-36.mail.qq.com (out203-205-251-36.mail.qq.com [203.205.251.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865A110A2B
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 21:06:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8547BAFB
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 21:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709586401; cv=none; b=kbDN3MNRldFHiifByvQc3OipX4/tT2tQWtFQYB+9+SLCKG8jp51oRqh0Ze3LksDjB9No1zQeAOo5Wg46QQGN/vM8k9+7Kx4FQRvRhzkCDEmhtKsP2rEuK8aKnrcpfqEv6NZXhlTkLlqK2hpcRSwBJPn/ZB/ibAIEbBP+rOUiNO4=
+	t=1709586402; cv=none; b=lip9W/Q3oK+BzXp+7cuQx0GCTtEboq4rrFEUoYKxOufbQgEcrwYab2PC4nrNVDAyt4td3o8j6WuuNFZ7Lah3Hntvw8iMtf2FVj1SGyths59xkUlVwFJw1noHk4C79WAsHVQiejJyBXmqPRBsXJIwBYVoA9h67AV7E0gPMHJGsYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709586401; c=relaxed/simple;
-	bh=weW5//40oIeSOmT3+nNyK1hV5Tfvi+28xWQO5yyRa2g=;
+	s=arc-20240116; t=1709586402; c=relaxed/simple;
+	bh=P8jNX7CJX28JnzDnoqwlE54sj83Ai0UkkAgdRX77wpA=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=g9ri+f6zh9oIqvSzgNzUTa5/GER404YsUmAHUlTL08bMCr6Vj5Ztmzvf/QfjGSd7qtluQmK92zXfKjtoL0KglsUhszXmBf9OzoZnQEMV5ICKdVAsGGzUpSSWKMrQrRnk5/ILnZdK1EeAKwWGKzxZap+bLLvkafEiso+rSVRb9gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ceaLihVg; arc=none smtp.client-ip=203.205.251.36
+	 MIME-Version; b=fxJVBNPABfMSbw0s77ytdrKk4g355DAWqwc9Ec+PNi2PSkLaFQOj3YHUypMpbOYHgwAAbJe24owE8Ns8vzGzHKcCIim91P9sSjrG9t3UTWVY/WlpqLjj1mVqVQK6ufz0W8e1HaUncw6OPP6DYVQibXg0Hke0gZC/I6R43Ngnz7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=nzGyLKnP; arc=none smtp.client-ip=203.205.251.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ceaLihVg"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="nzGyLKnP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709586391; bh=pMaLts8PXA5REiyGeypCyU36YZO+RzJa569u2oVazis=;
+	t=1709586398; bh=ZIJLq3BiSFnxhdHDEf99zRwFrDLRKM6iSM1wB2EtUew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ceaLihVg8y5mUsomMZbBLA+atCasT6619NzNq1ssi5djzsT0hmjbz8Lsa+bHQqcz+
-	 ES454s55XjrlpsN1CBLN2VIHsl28yjzfjg+iNgqjrnYG6oNDAXAjtgrnKWsz3jaGcT
-	 onDQZsGyjpleE2iZU26+qHGsCNcO1Q+hbzUhjbNo=
+	b=nzGyLKnPoGwBIxlwfAUkuIQaPJA9KVS2EVwhIN+BOpCesuCz0Torj02Xss3nbkPkN
+	 KWd69ANDZl307XhIZylOq5CSU0Hz1gAZUEteiBbMBSTqcoOtehKwF1xTZSMrGN9yM+
+	 GrVImA5ab/6WEg6pJoSoWl0+Ge8K2nBmcEEM2hMI=
 Received: from cyy-pc.lan ([240e:379:2240:e500:994d:62ab:74a6:932b])
 	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
 	id 1953A8D2; Tue, 05 Mar 2024 05:06:21 +0800
-X-QQ-mid: xmsmtpt1709586389tfhvjy0km
-Message-ID: <tencent_CC6884F036B6F3D50A6269733BEAE226C40A@qq.com>
-X-QQ-XMAILINFO: N7h1OCCDntujUM20gunPaMedHkDBepcC8+uwF0oYczOXSdekrAihPwKwaTG3s3
-	 WmSohxDN6+V0rQGtpzybTDviWfbbJqiJqLjvmYxKpSP8dWGRDhGwmZKFpeY+UcsR3S5k2HY1bu/v
-	 rwsxzQuLj7RjbBSD/bVBnOZriqSFsse/K/2IlVILbvVr9OQjwcfrilAY3CQk2G8eZnlDVjwK3eeK
-	 eaz7cy1Uw0lyDu7I/gQramQlatjcshUnERa9W1Inbx8kB6eEhEQvhzlBzCALzfu1eaIlFti83/hX
-	 chC1CscEVeWmvEtmFK/kYHkg9RcOQyZb7Oo7P2FIFtEECJ06cQ3jr7PalIkv94y7cTRJeEcdqXDK
-	 zrOmtn0ZuvORy3xN9w9OqLXRXzQx9TxHkgAvt08fNrFGqb+UkbVxTqly9IYWoocj5sVa05eCqbkN
-	 Ubh1dKEHqF2u8gFSx6xOXCiwo47mPIlnMvcNawoAc7xq6P/xydXespiO+ObcvvwjO4TWAqwSREGA
-	 Lrxi/UOB9Jh3NV73emoTB0WlRVDc5LpeCZlyVGnhzMqc4TtR9Tgzozgxjw/bDMb0CaFQYF7UOO9v
-	 lCA7jOySVlyIbgH5uRcg1IzZ5WMV2vMiWmPuTwlCIpy/HFY/s97W1AFPUOrfBkP6JkFqg66B4TqZ
-	 kEPaQnP7yax7ps3zT0jdrlrFg7yhW2ydpWmWhk5zKUDnnfBVEWk17Khm4a1S37kawK60X9toWLU/
-	 Q8MyHUMLtYn894lwUDhv7u049CbXtpITq4sgv7osPfi4y4fxHLpek3Skoxaau9g7FfpKVFsUUGp8
-	 faUaYou4e8pC/D8C+ZmbAyMgYsok6P/2xkgklWWUMnjz2ARBP8C2iEc/TWaI9ILAIeJWgtNFgr4f
-	 jISb10vTSuqGK57GRy7jZVOSltJ/uNRrw7tZf1OQ8SpHTYLhnKYKqk4sPCEYIcHrvHKDKw5fk9mk
-	 wseMuPwo4JF9CwU4Rnjj3LdIxv4F31IvExtgH3wqeucztDHo9sQt3V10YZZC8CXbbzsj0fzPNYH3
-	 qa3Bn1UyH5oTJt38VUa2GSgv0KVVvgUPdW3jrnoXHB7HXaIFhZ
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-mid: xmsmtpt1709586396tlqjaady1
+Message-ID: <tencent_E2812086B695A334EE5E8C70C85CA3171F06@qq.com>
+X-QQ-XMAILINFO: OOPJ7pYMv25tJaZk7lZP4Q8/mDJpXDiT5T4zZuM22dEU2c/Gy7TSuOPa/AA6bu
+	 CpJhKfQjQJeyJPTNUNGRG2pPp6A2yctjqvUlxBJeAR5MVOUPMLUyufmP5Xl2lsP8bMG26G8oHdoy
+	 bWNkiPHu9SK6l5PYmClXHLRkHYRSxMeHn6ic6toVKBXjVUQkWhTCnDx8yofLUVXv3BMk9mAPxMt/
+	 ardIAzSS/Bxv6LPxdswI/Xq5er/yWIxI8iNiC3bX42yEpNRABbNbOlM2X01nR0i0peEpV9VCidWG
+	 SmRfDuSENS7VykPyUNhLUpL+w1YHbalNtuiVt/RqpO2OgPLEN+IQ5a1vLUd+igd8tHaNz2+QJ6L4
+	 ZXCySTc+oe/MSNMBW/1g0KiJAvDcQWs9cYwCU7QrdgW4VId7FnLcfIv6QqDUw7oNcyLWS/UqK9JW
+	 W9XyGDpbQzF6d2nL8FV/P58/6IbQMh3aIgkl6GaT1CcW+ccfHxl95/uEg9XA/nsXF862Q3ExJmW5
+	 6fVVWWkOoOKHLb3dJB0P3q0lGkCwALjBzGl2QUgBFR3HxdB7kweRDhoiRcpL8tpbOgdZVxu2zYRq
+	 WjoV4jvBFBCGB1CkRi9tQgT2RErH5mtk69d8yYcNC/a4QUObCIQo0W7n3rWf9uXJi7qkK6eUVSKt
+	 WvRxwEzmbHn266f4AS5slz29IDA9ElFbKIO6kUWNFLK41//9a4Qf44bG7qNUgkNM0MnrlYUR3eZh
+	 E1HzGvnKgM4cgfxCROws6zzowP+OouIYRKwqh6JMw/46RK2fXwAezH/S0UyyE61R/uD7ry1ckW8H
+	 f3YJPg+lHw8hRbNeBSqaTYIypSTS6xB4lBl7Z/QnMAaVURaC8pn2Gmty6X9fEQOkIanniTuCgw8p
+	 HHSNzNHwQKb6F1tTdl25fiMRzzwT5bUAOzedonNPjYyzVe9KHUa3+hvLiyO8bs6grusXlvS3ZAVx
+	 WX/AaIZD6SRoQWqhKFiiOuGY7TdUWiPL1quwVLV9PugG9+cf++uink06Z28C0eKdufxYybiEyH+A
+	 vC3+rb/94l24P7q9OyoNhrQ18Y2uRKKRewkX1alGFpxdjvvBTNy7IGyJ8UgwlxfdaQ7Ckw9RP/0B
+	 57rk/F
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
 From: Yangyu Chen <cyy@cyyself.name>
 To: linux-riscv@lists.infradead.org
 Cc: Conor Dooley <conor@kernel.org>,
@@ -55,10 +56,11 @@ Cc: Conor Dooley <conor@kernel.org>,
 	Guo Ren <guoren@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH v3 3/7] dt-bindings: timer: Add Canaan K230 CLINT
-Date: Tue,  5 Mar 2024 05:05:57 +0800
-X-OQ-MSGID: <20240304210601.777883-3-cyy@cyyself.name>
+	Yangyu Chen <cyy@cyyself.name>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v3 7/7] riscv: config: enable SOC_CANAAN in defconfig
+Date: Tue,  5 Mar 2024 05:06:01 +0800
+X-OQ-MSGID: <20240304210601.777883-7-cyy@cyyself.name>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <tencent_BB2364BBF1812F4E304F7BDDD11E57356605@qq.com>
 References: <tencent_BB2364BBF1812F4E304F7BDDD11E57356605@qq.com>
@@ -70,26 +72,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add compatible string for Canaan K230 CLINT.
+Since K230 has been supported, allow SOC_CANAAN to be selected to build dt
+and drivers for it in defconfig.
 
 Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- Documentation/devicetree/bindings/timer/sifive,clint.yaml | 1 +
+ arch/riscv/configs/defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-index fced6f2d8ecb..06c67f20ad3c 100644
---- a/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-+++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-@@ -38,6 +38,7 @@ properties:
-       - items:
-           - enum:
-               - allwinner,sun20i-d1-clint
-+              - canaan,k230-clint
-               - sophgo,cv1800b-clint
-               - sophgo,cv1812h-clint
-               - thead,th1520-clint
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index 89a009a580fe..20b557ec28df 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -33,6 +33,7 @@ CONFIG_SOC_STARFIVE=y
+ CONFIG_ARCH_SUNXI=y
+ CONFIG_ARCH_THEAD=y
+ CONFIG_SOC_VIRT=y
++CONFIG_SOC_CANAAN=y
+ CONFIG_SMP=y
+ CONFIG_HOTPLUG_CPU=y
+ CONFIG_PM=y
 -- 
 2.43.0
-
 
