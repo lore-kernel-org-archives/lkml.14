@@ -1,132 +1,110 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2075.outbound.protection.outlook.com [40.107.241.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB047134A3;
-	Mon,  4 Mar 2024 07:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709536957; cv=fail; b=PkGAcOvTIj818RdEHZLpL3XSTrixVA6OwouG7LAuSoynSPZ7Q8C6IJV9qVSZrUKyM/AfjTwTcnX+UkG+ZZKnS5VzXbtIBH1dXSjpjTGx0IYVZm7vT8gFTxnjdJZ4Pbll/oQbVtBIyQ16ZDPhMlgvyAshA7wPDePJxVOTptHE6cg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709536957; c=relaxed/simple;
-	bh=shH8ZWCgeHNzihz1VC0GbToJnf+nqHNbbLP4T2mvDdU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WmWZyLz7fpsFsJ80ZuCx7eXer1MwlRUgT4O2tpZbB+7LGFSo8MpwP6Db6BWSA43/VrqXXWvPDYM9R4rze3h0KHXLBVEp+bVFRGh1SbdkyD48hVJkONe1kBtFTUQEz/Xa6E8usFnNI23wSm7xeoUli8vZWCRJKjFWm49K7nKVF7E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=MO0qmrPk; arc=fail smtp.client-ip=40.107.241.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="MO0qmrPk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cXZpG6LhjPY7MYGLTl3iZyfBpq8IU8rZMQ0YAC6SMyVmE3eBtT8BOU+pA5nfK4Xqpw5qIM+wof30gPsdTjITjQ/VCZpT/t0COfZUHYHzZwd2YdgAYu69tSfPNEWP7CSp3ZtpF/trnF1tIQq+zvmNAJwwKHUaBhKDREoBXa76gMyLFPZi3DNP8zyU53Utj3vUVqEuGQtBVgzs6sBRg2IwrtrAArGAusA6ilX5BINjr0fsVNCDFdsLPdefTSki3AfutABdy1PG11Z510NboRsaPejcGioPsQ+sL3T2LMw8bmYr7fl91JPcx54jesRFlub6Mj2A7xb7Y7UaC7zYVCL3Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EDr7kQ7N4C5Fv9m+3hLfFosAE4soBb/1s0hyoD1rzvs=;
- b=V2HaDl5Z99iO5VVQCVZCh6lDXnv1IJtzYVztcWovpa9anCSA7xv4FqhE3BdKz+o5RawCA/eWUvS0QEP8XDH7QMgyQFlEdlcCksj29FF5qKDZOfKq8/rtN2F/AccbdZJjLw9KQ83d12MVBUDjwU0RjmdAjjNQyoaTu02+cTlLaz4X3IvNOnZm2qjxSKVxW5ukn0rL74fXiml2P/qbajWsxDC/tp0AF5/5HsTQD8i5Ua1JBr6XQx3QOrRuw29Q0+VuwgkzGWs5o0LtpGX6IrD25Rbwyz+NnXFdzk2WG8rn5jml/KudnsxdCcrcefqXHWS2194gKh1cHZtxfrWL34VFKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.203) smtp.rcpttodomain=valentinobst.de smtp.mailfrom=de.bosch.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EDr7kQ7N4C5Fv9m+3hLfFosAE4soBb/1s0hyoD1rzvs=;
- b=MO0qmrPkLNVeCxiE/Airkhiv4prVYVqM1NcmgTrMG5d/WA1jua7R1L3GCIfboJwUKvP/ELnRbvhORV8trLlKSFbOcjAjXOK+7Ckl+Wka3zH1ODx9d7aQ/pKkIfV2yIes1zRvuoKY329jIcypwVcjPsmwuzJc5IKkdelM8fgVRZUrSbPJJ5FWZJbg/ZLSSClu9GaQUqpkH2nRxAWHKSh1DaSX1u6gViS4056GBF2P1LaxJQ+HEXOS9z5UZZVYiYUHw4HN6RrwZmYYvyRpYP0owAacC48g66gyAHHRFvxPAAA0DT0U/FQumyAETsBZXROsW1yarhnIK/PRdy7eWH1AzQ==
-Received: from AS9P194CA0004.EURP194.PROD.OUTLOOK.COM (2603:10a6:20b:46d::32)
- by DU2PR10MB7765.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:49a::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.37; Mon, 4 Mar
- 2024 07:22:30 +0000
-Received: from AM4PEPF00027A66.eurprd04.prod.outlook.com
- (2603:10a6:20b:46d:cafe::da) by AS9P194CA0004.outlook.office365.com
- (2603:10a6:20b:46d::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39 via Frontend
- Transport; Mon, 4 Mar 2024 07:22:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.203)
- smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=de.bosch.com;
-Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.203 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.203; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.203) by
- AM4PEPF00027A66.mail.protection.outlook.com (10.167.16.91) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7362.11 via Frontend Transport; Mon, 4 Mar 2024 07:22:30 +0000
-Received: from FE-EXCAS2001.de.bosch.com (10.139.217.200) by eop.bosch-org.com
- (139.15.153.203) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 4 Mar
- 2024 08:22:29 +0100
-Received: from [10.34.222.178] (10.139.217.196) by FE-EXCAS2001.de.bosch.com
- (10.139.217.200) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 4 Mar
- 2024 08:22:29 +0100
-Message-ID: <3f61c6f4-f058-46bc-a7b1-ce4a397a06dd@de.bosch.com>
-Date: Mon, 4 Mar 2024 08:22:17 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CD9134B7
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 07:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709537006; cv=none; b=Rpcv10LX2fiwstZ0XPk5+ELqYdv9tH5B28RY8AXGzsG18cxE4aVp4zhaZotehcTHPhnAzAOfH2ElCxXF0bGVXJKYdmg4+9gwgi9QtNKJbEQU5QaEPv1T5k30U3DTGd3TikYD1DNOrSD0NzLFjGGYqfX4eh6ff7S0cS2YkwsaWc8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709537006; c=relaxed/simple;
+	bh=uZVPkag5AAXBeA+sFAklmErR3BGsvvJg/HeilNA4UWc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=e+er5/of1qoYHrVNQXvqEl0bO/20KAs8s/AFWBiAEjXnUrgAiLp+rVJslWNTdIUAcH60/ew6ONQhe9/etzX1mIKrKLqdAz0TNb1b4BE4Qp+5nnnVPuP7a8NZ0VXpvlsDSUYpVixPmeeJ8Nt3LE1Wg5/dB61P+xdCOK+xNnu09lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c846da7ad2so98441839f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 23:23:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709537004; x=1710141804;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0tpG0eDwWW5kcoi19UELPjP4fL+iOhGGTyJmkrVdifU=;
+        b=UG23jPSqrk2+wyVBsq3RBCOKvf2pZAK1x9FvidTCqxPZmMaZUTUbQKNUiHpnQVXOPP
+         x6m5sVbw3QMyOqY3PfutVhT/v8PBMyT/6nn9AmZTZ1q/SYHNWa4KBJ//k306a8SWXMp6
+         /aXxqr/hOWkBeXwc77ijxsxa1f26JovMTMjJzGPLv2SxId7BW1m55/WcgLb3hphafh7Y
+         4gD8aLDVKeIk4MPPD8CPCzPc7yZxI0W3Ti9mFENTk+Rqy96wato7RYkNjmdugzOJ79i8
+         EHzxQdTb+UGDMH8ZEr+B0Jkx/h8EeWlR/EbdITmUdjO2lkgvQ6Xr0IfBqzKEnq62rD4t
+         u+OA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxTJIKDkYb4QlJDwGgcm2hN46GhMvlVBItLOp5QWkpN7/VAfF3jkMtx3CACjqzXlMr6tBLgFjY6G+but3GqpRDjIEGRKFnHS59KfmB
+X-Gm-Message-State: AOJu0Yyk2XcCvYm9f/Dm+ykdy5F1WdJdg1F4sPDc2poAZu7IGHHG1uk7
+	GCJOfgkbnd1q2EcKp2GmrSJoIj+0xm2Y6dFUyeit/RwDMiufCj22YbRD3C5DDEWQ/V7D9vYliF8
+	kz7LEybeCHhCBr+QLGhiCXtE1S6DLQqu1vNsQDwzxB5LtHd9Fxon2Hqc=
+X-Google-Smtp-Source: AGHT+IFjA7/eq7vxEVBVY5D06vCo1DteiS6LkpGXtmk3Tly1vrk328qEQjpu/DZfM2joVCaFNCyjlUKyQSgAds0XeYOjkSA+zkN1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] kselftest: Add basic test for probing the rust sample
- modules
-To: Valentin Obst <kernel@valentinobst.de>, <laura.nao@collabora.com>
-CC: <a.hindborg@samsung.com>, <alex.gaynor@gmail.com>, <aliceryhl@google.com>,
-	<benno.lossin@proton.me>, <bjorn3_gh@protonmail.com>, <boqun.feng@gmail.com>,
-	<gary@garyguo.net>, <kernel@collabora.com>, <linux-kernel@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <ojeda@kernel.org>,
-	<rust-for-linux@vger.kernel.org>, <sergio.collado@gmail.com>,
-	<shuah@kernel.org>, <usama.anjum@collabora.com>, <wedsonaf@gmail.com>
-References: <20240229155235.263157-1-laura.nao@collabora.com>
- <20240303144857.22733-1-kernel@valentinobst.de>
-Content-Language: en-US
-From: Dirk Behme <dirk.behme@de.bosch.com>
-In-Reply-To: <20240303144857.22733-1-kernel@valentinobst.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM4PEPF00027A66:EE_|DU2PR10MB7765:EE_
-X-MS-Office365-Filtering-Correlation-Id: ee09fc0e-b23b-44d7-d7a5-08dc3c1bda82
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0EgRfbgPmmAvdjTshyM2E49HYf40rEx1L4ynM+d+EgpO5Fdf4P+yippUQ4vxHXUyKQy/Hlo2/1JV0C7auSz/53UaZOezVJPF+MxdMqHNAds9fmJGfhRPukOFs+bYbZCvxXmWr0xBsRVXFKrhIPXmiNL18cHRori1HOAAg+0u5w7rV7vG8oKtdnFQB61g2/fOQeo9JWU/khj8O0oX568WYFJUTcWKO0B5WWSCo/eHb5p8vlOrXWotiGE44tjrIXyMMY2Pdzqc6Rrdq8MMv8kqBdDf4CQlREY66OC28BP53H99aa2MCIVELlZww7NAGTd3pqhs9PoAaS0KW5GBiUXkdgWYsIsC1mE2yYNB/jSEisoiDsNNrqh+jnVVH9tQXlTzRj4AadsalIq9aUOv4bsBL4Xg/mNEF1jaZ4GePfdStQM/Up8oeoX3sA5y5C0FoCMmuDKBXLroanvK1WCtXEbDrjjGfimxjBv/RMG62AJN3K3x8si77ZKkNcxX0NtzHvOeZTI7QhEGeafKgKCHNlWJ7NohbyaV+i9rR96x57BoVQkJD/BK3Wi3ZV8wzI8oRXwDKtV4TpvL11Y7KibJS9fkkiGGT6L8sAbrZHlc5tVXO2a9IZEqrTIYCzgd7dsPhVBDeekDV7TO2fYTqR64lvtdjYuq2jql/7kUpt4xCfCpS6PHffHEbPw0bgHCIL8h4xHj1L375Hda/AOnF4oJZFXNQA==
-X-Forefront-Antispam-Report:
-	CIP:139.15.153.203;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 07:22:30.6621
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee09fc0e-b23b-44d7-d7a5-08dc3c1bda82
-X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.203];Helo=[eop.bosch-org.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A66.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR10MB7765
+X-Received: by 2002:a05:6e02:219d:b0:365:26e3:6e48 with SMTP id
+ j29-20020a056e02219d00b0036526e36e48mr664367ila.0.1709537004058; Sun, 03 Mar
+ 2024 23:23:24 -0800 (PST)
+Date: Sun, 03 Mar 2024 23:23:24 -0800
+In-Reply-To: <000000000000b18c2406124b652e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000db848a0612d09997@google.com>
+Subject: Re: [syzbot] [wireless?] KMSAN: uninit-value in ieee80211_amsdu_to_8023s
+From: syzbot <syzbot+d050d437fe47d479d210@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, johannes.berg@intel.com, 
+	johannes@sipsolutions.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 03.03.2024 15:48, Valentin Obst wrote:
-> Perhaps we can also add a section about these tests to the new
-> `Documentation/rust/testing.rst` [1]. We could mention that they exist,
-> how to run them, and link to the kselftest documentation for further
-> information.
-> 
-> Not necessary to resend, perhaps we can do that in a separate patch when
-> this patch and the one by Dirk are merged.
+syzbot has found a reproducer for the following issue on:
 
-Yes, that sounds good :)
+HEAD commit:    58c806d867bf Merge tag 'phy-fixes2-6.8' of git://git.kerne..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=12374c96180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=80c7a82a572c0de3
+dashboard link: https://syzkaller.appspot.com/bug?extid=d050d437fe47d479d210
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14227612180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134411a2180000
 
-Laura: If you like to write some basic intro as proposed by Valentin 
-please do it against
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b2b0ed9886ae/disk-58c806d8.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/372dff1b6033/vmlinux-58c806d8.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d2b87ebe3e7b/bzImage-58c806d8.xz
 
-https://github.com/Rust-for-Linux/linux/blob/rust-next/Documentation/rust/testing.rst
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d050d437fe47d479d210@syzkaller.appspotmail.com
 
-in a separate patch.
+=====================================================
+BUG: KMSAN: uninit-value in ieee80211_amsdu_to_8023s+0x8c1/0x2d40 net/wireless/util.c:856
+ ieee80211_amsdu_to_8023s+0x8c1/0x2d40 net/wireless/util.c:856
+ __ieee80211_rx_h_amsdu+0x91a/0x13b0 net/mac80211/rx.c:3047
+ ieee80211_rx_h_amsdu net/mac80211/rx.c:3133 [inline]
+ ieee80211_rx_handlers+0x571a/0x10c40 net/mac80211/rx.c:4141
+ ieee80211_invoke_rx_handlers net/mac80211/rx.c:4185 [inline]
+ ieee80211_prepare_and_rx_handle+0x5640/0x9690 net/mac80211/rx.c:5033
+ __ieee80211_rx_handle_packet net/mac80211/rx.c:5239 [inline]
+ ieee80211_rx_list+0x642c/0x65d0 net/mac80211/rx.c:5410
+ ieee80211_rx_napi+0x84/0x3e0 net/mac80211/rx.c:5433
+ ieee80211_rx include/net/mac80211.h:4983 [inline]
+ ieee80211_tasklet_handler+0x19f/0x330 net/mac80211/main.c:318
+ tasklet_action_common+0x391/0xd30 kernel/softirq.c:780
+ tasklet_action+0x26/0x30 kernel/softirq.c:805
+ __do_softirq+0x1b7/0x7c5 kernel/softirq.c:553
+ run_ksoftirqd+0x24/0x40 kernel/softirq.c:921
+ smpboot_thread_fn+0x558/0xa60 kernel/smpboot.c:164
+ kthread+0x3ed/0x550 kernel/kthread.c:388
+ ret_from_fork+0x66/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:243
 
-Best regards
+Local variable hdr created at:
+ ieee80211_amsdu_to_8023s+0x5b/0x2d40 net/wireless/util.c:832
+ __ieee80211_rx_h_amsdu+0x91a/0x13b0 net/mac80211/rx.c:3047
 
-Dirk
+CPU: 0 PID: 15 Comm: ksoftirqd/0 Not tainted 6.8.0-rc6-syzkaller-00278-g58c806d867bf #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+=====================================================
 
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
