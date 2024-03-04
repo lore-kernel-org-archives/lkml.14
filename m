@@ -1,110 +1,152 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C372225DF
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884DB19BA6
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709546538; cv=none; b=i3gYO70kfmqOT0SR6WAWWtNWOmNCWO9CzsOr1z4LjukVebIUkNhiPFvDJpSP2i78R3vBVbq3Cy+B5uIAEDTPCXviNDFOdp366sFTEaHKJnpZHX9Wn12hkYYJv59HXujHDY7MVdPObb7traC98SylncoqPfd+/s33ZXLh/327/Rs=
+	t=1709546754; cv=none; b=YlTyMnLTPXE/kXo2IN+U+S1Oxp994MmlSa+yg3UNxbhUj6d48pDgUoHbrg790eUBidTQWU8v+9FCyXo5gnm1uVojPCJ6NJ8p5LPjqaiUmAEAt+x6CFD1EwwpbhSuipmCFkaeKt/9Go2NEd1g5CHL0k93xBExYGM9G868TLFzTeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709546538; c=relaxed/simple;
-	bh=fs+dn1KZl06mxOaRXQyIVqpj15EiHFUABl6v9QMnbgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OsXmtOlGsRCYKGrLrFnIsNPb3SDriYK1GPaeahjtzLTgGjFkxfpUC9Tl2yXLh53Ha84CqXiJgfocrIfeLsdvf6QLuslmnkhrCDEntHKKvDHxEl8i2e22McdgfPeOaQUb28odFkBAj+Vbsv+dumm0Ql1VyCXhbFA+jqjHupTE6pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp83t1709546464tu9e1xsu
-X-QQ-Originating-IP: kh9aUmyxjyUl4zwZL1fChSvzQIYaeJHkGEmOd9fAvBQ=
-Received: from localhost ( [112.22.30.30])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 04 Mar 2024 18:01:03 +0800 (CST)
-X-QQ-SSF: 01400000000000505000000A0000000
-X-QQ-FEAT: +oIWmpEafD8OVAQfNNpTjIHw8qZhJIYDRrXOZUtmxSmzmlacXcINFLIpaIMVt
-	huQSSluLBpbnu7UeOPiaU+D5ZRAiHAYgyNlyp8yb98m0dzevjhiPyzPdWF4x36miGPHU/a+
-	iG2GmJlMxZwNtfhbiFn5WDklX23pYbAIaTD6RLCUVnDthdxk4nXdqZmZJdLBvm2Yg/q8rz8
-	l90RIkO0EaoSKWkiHAVUJvsVel6OFJw5XA6YubVcadD5X4TYZ3aEDGvFnH1X2lpC+Iqw4G0
-	m9nwHcp4yA3Jli9cEA40/tFCPD/v4iYM+m9bFnxUWvl6THUQCqXkZ+4Ebkmkn4Gb1xVHBG/
-	QkbpLaU3hS8KxJCfgtOeT+pDhva6PAZKgWMVi2mPoHro2Seums8QcY3oD2XaGquOK9BclSR
-	fcnWn53r8HVbny0pQUT4ig==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 5907862964829062476
-Date: Mon, 4 Mar 2024 18:01:03 +0800
-From: Dawei Li <dawei.li@shingroup.cn>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: daire.mcnamara@microchip.com, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] firmware: microchip: Fix over-requested allocation size
-Message-ID: <04A659134520CC60+ZeWb3xHvErS113zU@centos8>
-References: <20240304092532.125751-1-dawei.li@shingroup.cn>
- <20240304-dislike-enchanted-bab883cdd609@wendy>
+	s=arc-20240116; t=1709546754; c=relaxed/simple;
+	bh=lEVGehSBFjA/oLsvuBM7tDdI4uNapzzSDtjugpkUM1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dTN6CS+LMEZgqu3Hv5LLXBPE6jDc4wvBa8q7AGo7q6ij2H02JKGIFFJNrWUbWXYCW95oLfviLGJcPWM4MDJwDRt9QNztf0lJcAbAz3nLKGiU/ZHzVXiGYP2s0kDm1kU4qqBpFviFHF1rAQoETfVL/PgimHPyIStx0y9m/AJe6QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=u648iBAL; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="u648iBAL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709546750;
+	bh=lEVGehSBFjA/oLsvuBM7tDdI4uNapzzSDtjugpkUM1E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u648iBALFnbEregncZZ5/ZV7XZFR61wPlXgXehGOrGlVtWgfP+paEkV89he4qoqLb
+	 0lPbMaDLlnftYQWfPlqMnuioFJ4dnrD/UWsuI9C8Targm7H9+6WkIq0lac1odESx4o
+	 +yGwu81yVrUkh9BoyfRdxYX/RivPa/3420rlBzS5d5qMgAnPXpZqL7rugIkBJJ1ZlC
+	 zZd51qRCuThyQz86ag2om49x6hI3nsgbrxV6MX0cA6MPabE76+UIP7wQhZpXnzVcE1
+	 rWqodqh6P3K5ssyJxKnQHbCwMmxGuJr67WsfV3/4WjDZcZZa5mam7T+XcH7Z3ficBq
+	 bRid2umc47ZMw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BEA5837803EE;
+	Mon,  4 Mar 2024 10:05:49 +0000 (UTC)
+Message-ID: <41a2017f-5627-42fe-a624-642c3c47f436@collabora.com>
+Date: Mon, 4 Mar 2024 11:05:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240304-dislike-enchanted-bab883cdd609@wendy>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] soc: mediatek: mtk-cmdq: Add cmdq_pkt_mem_move()
+ function
+Content-Language: en-US
+To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>,
+ Jassi Brar <jassisinghbrar@gmail.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Jason-ch Chen <jason-ch.chen@mediatek.com>,
+ Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
+ Shawn Sung <shawn.sung@mediatek.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20240301111126.22035-1-jason-jh.lin@mediatek.com>
+ <20240301111126.22035-3-jason-jh.lin@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240301111126.22035-3-jason-jh.lin@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Conor,
-
-Thanks for the quick review.
-
-On Mon, Mar 04, 2024 at 09:52:52AM +0000, Conor Dooley wrote:
-> Hey,
+Il 01/03/24 12:11, Jason-JH.Lin ha scritto:
+> Add cmdq_pkt_mem_move() function to support CMDQ user making
+> an instruction for moving a value from a source address to a
+> destination address.
 > 
-> On Mon, Mar 04, 2024 at 05:25:32PM +0800, Dawei Li wrote:
-> > cocci warnings: (new ones prefixed by >>)
-> > >> drivers/firmware/microchip/mpfs-auto-update.c:387:72-78:
-> >    ERROR: application of sizeof to pointer
-> >    drivers/firmware/microchip/mpfs-auto-update.c:170:72-78:
-> >    ERROR: application of sizeof to pointer
-> > 
-> > response_msg is a pointer to u32, so the size of element it points to is
-> > supposed to be a multiple of sizeof(u32), rather than sizeof(u32 *).
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202403040516.CYxoWTXw-lkp@intel.com/
-> > Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> > ---
-> >  drivers/firmware/microchip/mpfs-auto-update.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/firmware/microchip/mpfs-auto-update.c b/drivers/firmware/microchip/mpfs-auto-update.c
-> > index 682e417be5a3..7ea3cdb917bc 100644
-> > --- a/drivers/firmware/microchip/mpfs-auto-update.c
-> > +++ b/drivers/firmware/microchip/mpfs-auto-update.c
-> > @@ -384,7 +384,7 @@ static int mpfs_auto_update_available(struct mpfs_auto_update_priv *priv)
-> >  	u32 *response_msg;
-> >  	int ret;
-> >  
-> > -	response_msg = devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(response_msg),
-> > +	response_msg = devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(u32),
+> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+> Change-Id: I0128db6a3412303fc6da61f8a57a0c08e0c0067e
+
+Drop Change-id please
+
+> ---
+>   drivers/soc/mediatek/mtk-cmdq-helper.c | 26 ++++++++++++++++++++++++++
+>   include/linux/soc/mediatek/mtk-cmdq.h  | 10 ++++++++++
+>   2 files changed, 36 insertions(+)
 > 
-> Why not use `sizeof(*response_msg)`?
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index b0cd071c4719..3a1e47ad8a41 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -299,6 +299,32 @@ int cmdq_pkt_write_s_mask_value(struct cmdq_pkt *pkt, u8 high_addr_reg_idx,
+>   }
+>   EXPORT_SYMBOL(cmdq_pkt_write_s_mask_value);
+>   
+> +s32 cmdq_pkt_mem_move(struct cmdq_pkt *pkt, dma_addr_t src_addr, dma_addr_t dst_addr)
+> +{
+> +	s32 err;
+> +	const u16 tmp_reg_idx = CMDQ_THR_SPR_IDX0;
+> +	const u16 swap_reg_idx = CMDQ_THR_SPR_IDX1;
 
-Because checkpatch complains about 100-character violation and I don't
-want to wrap lines :)
+s32 err at the end please
 
-I will respin V2 as you suggested.
+> +
+> +	/* read the value of src_addr into swap_reg_idx */
+> +	err = cmdq_pkt_assign(pkt, tmp_reg_idx, CMDQ_ADDR_HIGH(src_addr));
+> +	if (err < 0)
+> +		return err;
+> +	err = cmdq_pkt_read_s(pkt, tmp_reg_idx, CMDQ_ADDR_LOW(src_addr), swap_reg_idx);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	/* write the value of swap_reg_idx into dst_addr */
+> +	err = cmdq_pkt_assign(pkt, tmp_reg_idx, CMDQ_ADDR_HIGH(dst_addr));
+> +	if (err < 0)
+> +		return err;
+> +	err = cmdq_pkt_write_s(pkt, tmp_reg_idx, CMDQ_ADDR_LOW(dst_addr), swap_reg_idx);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	return err;
 
-Thanks,
+In the documentation, you say "0 for success", so...
 
-    Dawei
+return 0; here :-)
 
-> 
-> Cheers,
-> Conor.
-> 
-> >  				    GFP_KERNEL);
-> >  	if (!response_msg)
-> >  		return -ENOMEM;
-> > -- 
-> > 2.27.0
-> > 
+> +}
+> +EXPORT_SYMBOL(cmdq_pkt_mem_move);
+> +
+>   int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event, bool clear)
+>   {
+>   	struct cmdq_instruction inst = { {0} };
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 1dae80185f9f..b6dbe2d8f16a 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -182,6 +182,16 @@ int cmdq_pkt_write_s_value(struct cmdq_pkt *pkt, u8 high_addr_reg_idx,
+>   int cmdq_pkt_write_s_mask_value(struct cmdq_pkt *pkt, u8 high_addr_reg_idx,
+>   				u16 addr_low, u32 value, u32 mask);
+>   
+> +/**
+> + * cmdq_pkt_mem_move() - append memory move command to the CMDQ packet
+> + * @pkt:	the CMDQ packet
+> + * @src_addr:	source address
+> + * @dma_addr_t: destination address
+> + *
 
+  * @dst_addr: destination address
+  *
+  * Appends a CMDQ command to copy the value found in `src_addr` to `dst_addr`
+  *
+  * Return ....
+
+> + * Return: 0 for success; else the error code is returned
+> + */
+> +int cmdq_pkt_mem_move(struct cmdq_pkt *pkt, dma_addr_t src_addr, dma_addr_t dst_addr);
+> +
+>   /**
+>    * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+>    * @pkt:	the CMDQ packet
 
