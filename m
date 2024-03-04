@@ -1,79 +1,94 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D12F3DB9A;
-	Mon,  4 Mar 2024 13:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EE73DB9A;
+	Mon,  4 Mar 2024 13:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560376; cv=none; b=Gv2bqYIuPZMn9t96Kk+Q/CY8hnHv7u2O48LIbroil1OHgt7ntz8kE2MaWR7woJCbuaoFE67B04rDZ50llfNCgjSgc8JLG/UOK3z1Sz+cEvXjuAVdoQAgktVhMfanppo6LcgHqjdXvlYhnEX4YQz/Y8cs39HE9UMDCYnBXLJGQy0=
+	t=1709560410; cv=none; b=Mz5OnVoQy3zdSdrygKI+pvHPoW9pdB3jE5G5ad4+MuD/1stX3da8JAYQrkG+Az3OkCgBW5G2WBhq71e8buLvyeKMup3iUbfG6K0L4XXOV8PJGJYIsk1jV0Z7q0cs2babg6zZ+T1DMW1OqUl8SIrdPiNw4Um6jLkqnqHt3f27jfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560376; c=relaxed/simple;
-	bh=VgKcy/wt8otFtLEAxcf4FH/B26139TXWisSm6/+JazE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=VaN3olmLOQWcOwFn84yD0Stdp6NpRQzW4qEn8TxJ/mkRTnqcLu/vnw5kAQYhbMzOuVYcm4snz/xubMgJwXBwf4ta0Djn1vRNEAq+6iwTRpnEFmd5yqiJuf/cfc1ZdxSDJFr3atix1+2i86yjg6kshn8FiAex8ykfyS9tYIaKzuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jPMT5EX0; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1709560410; c=relaxed/simple;
+	bh=ct6yeXiMSgF37VG2k47ZlEma0v/nfDSkmTtol+8MQnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BDz4PTlDkvN0PEbFjIz/IoLE1zl95kSqF66Wyjf5GjqyiDLcyX1H/u5+2UZJBupAisjFDlXm6V50iR+vHyKCBMfBivj8yr4Ucpjw8UUOOMPkSWbdrf77Qid/19PXnJKJnlBXx2YMXJ3rkIP9IC+IxdNUwAnIxAo9//UXj+HUtD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nIQXKEjQ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jPMT5EX0"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1797020B74C0;
-	Mon,  4 Mar 2024 05:52:47 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1797020B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1709560367;
-	bh=PwpulH08AbMmhYDOwT7qW2eiML06lbhG8MMra/FdQ18=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jPMT5EX0OAD69cpEVDfCC+1P+D2qcCpPIEVIiELZLGub/shudqSU96en2OZSzyMJ+
-	 HKJTlEn1pdwUlIIxD+VZ4wn8bgxYQ5jIAKuO81HIuDCyaUc5D9x5l/OH/n2WJqlLTk
-	 JTDHfNd87b6A9YISrYlptLiY+8zYcLdpseIGqyHo=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	sharmaajay@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next v3 0/2] RDMA/mana_ib: Improve dma region creation
-Date: Mon,  4 Mar 2024 05:52:39 -0800
-Message-Id: <1709560361-26393-1-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nIQXKEjQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709560409; x=1741096409;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ct6yeXiMSgF37VG2k47ZlEma0v/nfDSkmTtol+8MQnI=;
+  b=nIQXKEjQK/p9H+KmkyNSHPWuQFYnSAou8hozdJ65f/mmMbqOQuJ5rFJl
+   /5Le7PlL5pQhzUffB6bbW2jdKMP1qnBVSojFzHs+EGdt2EbrM5LrmZPzH
+   wX9KQZ6e4iKN/V6FF7cuJAP90lGFTCVjcvgMUF4/0G8nDRAXFNr9JpUCK
+   vzYA2sc31p4unfkSp7neA/+FsOXWHy8oQPZ9yT8U/CMJFiDUWrU+f6YiM
+   2yxrKIm2ZQCX9i4DEpVS0YnvulEHjAG7+o8lXsvxTUFQK0NJDxBNhwNDg
+   EfieTv+28Oc2g3wHjaiA1UuMKcrKlamsPadvSrwVbA2fLhkJvra1Rf98X
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="26515948"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="26515948"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:53:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="13661839"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa004.jf.intel.com with ESMTP; 04 Mar 2024 05:53:25 -0800
+Date: Mon, 4 Mar 2024 21:49:12 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Marco Pagani <marpagan@redhat.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Tull <atull@opensource.altera.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fpga@vger.kernel.org
+Subject: Re: [RFC PATCH v5 1/1] fpga: add an owner and use it to take the
+ low-level module's refcount
+Message-ID: <ZeXRWDGvd8P7KhxJ@yilunxu-OptiPlex-7050>
+References: <Zbh7iO9wlm9ekzB7@yilunxu-OptiPlex-7050>
+ <0720eb91-72f9-4781-8558-8a1b0a3691c2@redhat.com>
+ <Zb8dd9af0Ru/fzGi@yilunxu-OptiPlex-7050>
+ <4aaa131a-4b64-4b86-9548-68aef63c87b3@redhat.com>
+ <ZdHWaeU+/On6LmHX@yilunxu-OptiPlex-7050>
+ <9a9d4018-fd65-49be-9e0a-1eecc9cbf15d@redhat.com>
+ <ZdYKnZxdTCvu5THG@yilunxu-OptiPlex-7050>
+ <ae3cd81b-82af-4977-91d7-fa809c6fc45a@redhat.com>
+ <Zd7cff43ffbJOGNY@yilunxu-OptiPlex-7050>
+ <08ba8bce-0ebf-4c8f-952d-a6665dc7fdf9@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08ba8bce-0ebf-4c8f-952d-a6665dc7fdf9@redhat.com>
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+> Just to be sure that I understood correctly, you want to split the
+> changes into two patches, like:
+> 
+> a) add module owner to the manager struct and take it in
+> __fpga_mgr_get(); move put_device() from __fpga_mgr_get() to
+> fpga_mgr_get() and of_fpga_mgr_get().
+> 
+> b) add the mutex and the unregistered flag for protection against races.
+> 
+> So that (b) can be reverted if try_module_get_safe() will be accepted?
 
-This patch series fixes an incorrect offset calculation for dma
-regions and adds new functions to create dma regions:
-1)  with iova
-2)  without iova but with zero dma offset
+Yes, that's what I mean.
 
-Changes:
-v1->v2:
-Split the patch into 2 commits
-In 1/2, Improved commit messages and added "Fixes:"
-In 2/2, Used correct helpers to get page size for iova and no-iova cases
-In 2/2, Introduced mana helpers to work with iova and no-iova cases
-
-v2->v3:
-In 2/2, Return -EINVAL on failed ib_umem_find_best_pgoff
-In 2/2, Improved commit message and added "Fixes:"
-
-Konstantin Taranov (2):
-  RDMA/mana_ib: Fix bug in creation of dma regions
-  RDMA/mana_ib: Use virtual address in dma regions for MRs
-
- drivers/infiniband/hw/mana/cq.c      |  4 +--
- drivers/infiniband/hw/mana/main.c    | 42 +++++++++++++++++++++-------
- drivers/infiniband/hw/mana/mana_ib.h |  7 +++--
- drivers/infiniband/hw/mana/mr.c      |  4 +--
- drivers/infiniband/hw/mana/qp.c      |  6 ++--
- drivers/infiniband/hw/mana/wq.c      |  4 +--
- 6 files changed, 46 insertions(+), 21 deletions(-)
-
-
-base-commit: 14b526f55ba5916856126f9793309fd6de5c5e7e
--- 
-2.43.0
-
+> 
+> > [...]
+> 
+> Thanks,
+> Marco
+> 
+> 
