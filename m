@@ -1,196 +1,84 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D586169E
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 18:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573F262141
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 18:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709575696; cv=none; b=FDyFqTcHaCGIdXmP/985YpUrQlteDPpRaXEcqqUMIOS2X2DSzP78sQBzr8SJ/uNY7UQWo9IxyIW3UOaEGk2IRRxGVM6F9rdrpvJho7jZl4onajmxFvlG4lVxgGAYJZR7O7JiYJyeNUz3eeaVM0wH5icyRxeWafUCK/G4RZTGNHo=
+	t=1709575715; cv=none; b=YzkEcCPGQ5Tl+yqpT3kBMprjO+4j74bHL4JqPcMc8a5ntyelPhouH6+7mM81vwjwOcjEdZLQSglAbPCCnBhbI21mK0SGC6TvfVtlNURQNrPIe2nug+8yUB73/2gRgu4r70vplQEigxxRqc7OcOJmtSiSUAN2x/QZkr3SqL+fgtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709575696; c=relaxed/simple;
-	bh=SCCU9dbfZqUMw7g1ftHwe7lhiBrDP1IoW13xbyD472Q=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=jnA58rNv6nr5VOyMkYEQvwSnaVx20DyVt6vFz0MZcoFNOL3mdnZIN1o3+0j0zKCjRcnvzTw8seS0n6WM1KrA/cERxOwqp0blG8S4nDggat8Nv3W3mj+U0OiiG2nKLL8IYi5hN90Zvw5Jq9V+a9D00xVXpvH/F6ZS4ZrDWkaToLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=e5cWzcyq; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1709575715; c=relaxed/simple;
+	bh=gvMDpb519wOKHrPH0B1aX0Q4gY4/wAoliTS5gT+P3ks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qm6oKqmNkTo4q+PSe+Kp6iulbYBt11doLjOVJ7LMzVygdCRZAjDu3P38JttEiyOD7BAgQ0x0uBTtnAQpnnHETVNRpvhAWSiz5twDsxWXW1G8ssEKZsuqM2RgagEKlLnTIDiDYaq+Aw2kSkqjGf1wJTWqhvP/L4Wz8S2GuyFzvYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bh2IjlNI; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="e5cWzcyq"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d3907ff128so4775491a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 10:08:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1709575693; x=1710180493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aizblNvc9Cf2btttMWelCC6kMijS1p5vy42920jDwTY=;
-        b=e5cWzcyqyDy+69v+oaErXiT4T6SwOmNPAowtEemMkU4mmWJ4T5hfleUs4acVf8v4PO
-         FFiRsFy6LVb6QRv6ydgK1vY59/vytWvEL7lbZt1jjc35GaEqJYxN0XXkKDdN8J0p91ey
-         lSbzRoCalAND2OhVnq0e36pM1NdKhfA6mzVtIMgDbaLGhdYMHK+2K+mQUTkIEvR08hmX
-         0NLOjA0lvjzFXETVgGw30WodRrfz3g567iEVDAYvaPW4tMpv+42fIaq9c/V638m/2FFV
-         F2c/zzjj+yXliFZgtk+UBRi+WaDH6sm/cTE36niNyTsbh+u7Vqiqo8YWi2gC4CUjyEjD
-         yYqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709575693; x=1710180493;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aizblNvc9Cf2btttMWelCC6kMijS1p5vy42920jDwTY=;
-        b=TQNUhDYBGVSlPFFIntUR/gAVBQlDNbW0G2gM9MMSe65BNEGlDYRBrE50+qBnrPBwq2
-         j5uhlkZ/PsD6FbRE1YmjoPdkr8fQC2plzRkPi6Sg53PQBjgZq4deOh3vcnT7aRTmmfeD
-         Py/lwYXGSfLbR6HoFf/TPh50TFJynlRGCC9uN0bHNc5cqvbOyVDOreBhLhSOnN/ZYJfN
-         97EweaUm0zpgxVeMwSvwhcKzICmNcq9X+uGabMGgTcMNK0HfCJzvR3VvkDgi14ZO47UT
-         gAAaq7aOa350D27ULfb8J+8F+grBDIbRyDw+BNtbnr1nwudIMHreG5/+qGrKGtbRjxY1
-         avsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVA2qXdSQ1DIeRgypNN+0VpbiVZxbof54iaXlS6AFhVAFV/AHbtUg1geDcCiFWFknCWq1vUk7/LHhYCsGtSrJwb0QfHfeuf5ePoN74c
-X-Gm-Message-State: AOJu0YzXixGg5fzAopw2LbYHzmAN12r8pLfBP4/6EfjXyalhSfMp9An/
-	9zOYpXelbWtp9GaXe65mBj5wBQji4O30Avow3aerBB/k4XNF1Im7Oc4rti+bHNU=
-X-Google-Smtp-Source: AGHT+IFhlrCJ7z/RMUFxQQf2zMzCvbw2MLdNLsKVNf46b6Rg0IEtkQiqwfm6zGkZbeAOroe6+Tng3g==
-X-Received: by 2002:a17:90a:8a0e:b0:29a:a08d:4809 with SMTP id w14-20020a17090a8a0e00b0029aa08d4809mr7511710pjn.2.1709575693052;
-        Mon, 04 Mar 2024 10:08:13 -0800 (PST)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id l3-20020a17090ac58300b0029b2e00359esm5161382pjt.36.2024.03.04.10.08.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 10:08:06 -0800 (PST)
-Date: Mon, 04 Mar 2024 10:08:06 -0800 (PST)
-X-Google-Original-Date: Mon, 04 Mar 2024 10:08:04 PST (-0800)
-Subject:     Re: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout workaround to host drivers.
-In-Reply-To: <ZeCd+xqE6x2ZFtJN@lpieralisi>
-CC: minda.chen@starfivetech.com, Conor Dooley <conor@kernel.org>, kw@linux.com,
-  robh+dt@kernel.org, bhelgaas@google.com, tglx@linutronix.de, daire.mcnamara@microchip.com,
-  emil.renner.berthing@canonical.com, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, p.zabel@pengutronix.de, mason.huo@starfivetech.com,
-  leyfoon.tan@starfivetech.com, kevin.xie@starfivetech.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: lpieralisi@kernel.org
-Message-ID: <mhng-87e7ef5a-d60b-4057-960d-41bc901b6c7f@palmer-ri-x1c9>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bh2IjlNI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709575715; x=1741111715;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gvMDpb519wOKHrPH0B1aX0Q4gY4/wAoliTS5gT+P3ks=;
+  b=Bh2IjlNI5EGZiUhYytjRvb9vvwk+NXh/IkR4XaZwOjLAcwlbRngZ6ajk
+   cTDbNgMh8V+qVmwrPAD1OdDoT16a6XUv2/G46/EtZQ8GqdG7kzQJ/X6tU
+   2EJ2+dbcGGVsrXLcvizdHWreBMpG2il6A28/nS/ghfq47EGKzeajNghnM
+   PrHY0txbfLLq0K1ARHK1A0n+Pfrh8RLB/7I+e7uO4i/kx1b2HDQ1YTJct
+   DzfmX/1PSQvtgnjb2L860geYnV2dP4H5gM8Qsm2VMPEesTYd7bN7cAQ1d
+   L2DZkZuW6reT+eOeg3Nfw2/SqEp71JoL76JCcNv3yOrU3nOdn4+ZdCXsV
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="7855731"
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="7855731"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 10:08:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="937040919"
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="937040919"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 10:08:31 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id BB2EA15C; Mon,  4 Mar 2024 20:08:30 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: John Stultz <jstultz@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v1 1/1] misc: hisi_hikey_usb: Remove unused of_gpio.h
+Date: Mon,  4 Mar 2024 20:08:29 +0200
+Message-ID: <20240304180829.1201726-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 29 Feb 2024 07:08:43 PST (-0800), lpieralisi@kernel.org wrote:
-> On Tue, Feb 27, 2024 at 06:35:21PM +0800, Minda Chen wrote:
->> From: Kevin Xie <kevin.xie@starfivetech.com>
->>
->> As the Starfive JH7110 hardware can't keep two inbound post write in
->> order all the time, such as MSI messages and NVMe completions. If the
->> NVMe completion update later than the MSI, an NVMe IRQ handle will miss.
->
-> Please explain what the problem is and what "NVMe completions" means
-> given that you are talking about posted writes.
->
-> If you have a link to an erratum write-up it would certainly help.
+of_gpio.h is deprecated and subject to remove.
+The driver doesn't use it, simply remove the unused header.
 
-I think we really need to see that errata document.  Our formal memory 
-model doesn't account for device interactions so it's possible there's 
-just some arch fence we can make stronger in order to get things ordered 
-again -- we've had similar problems with some other RISC-V chips, and 
-while it ends up being slow at least it's correct.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/misc/hisi_hikey_usb.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> This looks completely broken to me, if the controller can't guarantee
-> PCIe transactions ordering it is toast, there is not even a point
-> considering mainline merging.
+diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
+index 2165ec35a343..42e12f11ae6e 100644
+--- a/drivers/misc/hisi_hikey_usb.c
++++ b/drivers/misc/hisi_hikey_usb.c
+@@ -14,7 +14,6 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/notifier.h>
+-#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
+ #include <linux/regulator/consumer.h>
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-I wouldn't be at all surprised if that's the case.  Without some 
-concrete ISA mechanisms here we're sort of just stuck hoping the SOC 
-vendors do the right thing, which is always terrifying.
-
-I'm not really a PCIe person so this is all a bit vague, but IIRC we had 
-a bunch of possible PCIe ordering violations in the SiFive memory system 
-back when I was there and we never really got a scheme for making sure 
-things were correct.
-
-So I think we really do need to see that errata document to know what's 
-possible here.  Folks have been able to come up with clever solutions to 
-these problems before, maybe we'll get lucky again.
-
->> As a workaround, we will wait a while before going to the generic
->> handle here.
->>
->> Verified with NVMe SSD, USB SSD, R8169 NIC.
->> The performance are stable and even higher after this patch.
->
-> I assume this is a joke even though it does not make me laugh.
-
-So you're new to RISC-V, then?  It gets way worse than this ;)
-
-> Thanks,
-> Lorenzo
->
->>
->> Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
->> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> ---
->>  drivers/pci/controller/plda/pcie-plda-host.c | 12 ++++++++++++
->>  drivers/pci/controller/plda/pcie-plda.h      |  1 +
->>  drivers/pci/controller/plda/pcie-starfive.c  |  1 +
->>  3 files changed, 14 insertions(+)
->>
->> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
->> index a18923d7cea6..9e077ddf45c0 100644
->> --- a/drivers/pci/controller/plda/pcie-plda-host.c
->> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
->> @@ -13,6 +13,7 @@
->>  #include <linux/msi.h>
->>  #include <linux/pci_regs.h>
->>  #include <linux/pci-ecam.h>
->> +#include <linux/delay.h>
->>
->>  #include "pcie-plda.h"
->>
->> @@ -44,6 +45,17 @@ static void plda_handle_msi(struct irq_desc *desc)
->>  			       bridge_base_addr + ISTATUS_LOCAL);
->>  		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
->>  		for_each_set_bit(bit, &status, msi->num_vectors) {
->> +			/*
->> +			 * As the Starfive JH7110 hardware can't keep two
->> +			 * inbound post write in order all the time, such as
->> +			 * MSI messages and NVMe completions.
->> +			 * If the NVMe completion update later than the MSI,
->> +			 * an NVMe IRQ handle will miss.
->> +			 * As a workaround, we will wait a while before
->> +			 * going to the generic handle here.
->> +			 */
->> +			if (port->msi_quirk_delay_us)
->> +				udelay(port->msi_quirk_delay_us);
->>  			ret = generic_handle_domain_irq(msi->dev_domain, bit);
->>  			if (ret)
->>  				dev_err_ratelimited(dev, "bad MSI IRQ %d\n",
->> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
->> index 04e385758a2f..feccf285dfe8 100644
->> --- a/drivers/pci/controller/plda/pcie-plda.h
->> +++ b/drivers/pci/controller/plda/pcie-plda.h
->> @@ -186,6 +186,7 @@ struct plda_pcie_rp {
->>  	int msi_irq;
->>  	int intx_irq;
->>  	int num_events;
->> +	u16 msi_quirk_delay_us;
->>  };
->>
->>  struct plda_event {
->> diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
->> index 9bb9f0e29565..5cfc30572b7f 100644
->> --- a/drivers/pci/controller/plda/pcie-starfive.c
->> +++ b/drivers/pci/controller/plda/pcie-starfive.c
->> @@ -391,6 +391,7 @@ static int starfive_pcie_probe(struct platform_device *pdev)
->>
->>  	plda->host_ops = &sf_host_ops;
->>  	plda->num_events = PLDA_MAX_EVENT_NUM;
->> +	plda->msi_quirk_delay_us = 1;
->>  	/* mask doorbell event */
->>  	plda->events_bitmap = GENMASK(PLDA_INT_EVENT_NUM - 1, 0)
->>  			     & ~BIT(PLDA_AXI_DOORBELL)
->> --
->> 2.17.1
->>
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
