@@ -1,176 +1,196 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124FC4653A
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 19:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DE91E4AA;
+	Mon,  4 Mar 2024 19:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709581588; cv=none; b=sW4fAQwArsEGq4+lvSOEoD+JFgt2DqYK2OJpZSpaUpS+VFZA9v8xAMEtejh6/fm/kg9mvedjmPfOnre9FsaUzNmdQwiMrc2ZmDozmTtvr7EW2ths/e8+F24aWHZinsRsSqzznu9Zk3/XFQ2vLWwT5x+WdXiQefEq+e8JD8K6M3E=
+	t=1709581887; cv=none; b=p9xZOCTFS/wggE2ou6/BYpPlTWNuE3kXYsPGJ0D/hU/MjpxDH0NNxuOR1KV96YCjFXEykykQcyuyA+1g06QOZ/pzvt3UquiIehQVyOt3lzhP9xR4qV1AJmXhyMnGe95k7NEOjaG5VnWsv4WflIa44IRDWfpStHva+II5yOgA4aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709581588; c=relaxed/simple;
-	bh=aOqHk6SVd7G59dSUt4yGvRnSNmhLPrAQTYd8u3xfOEA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DdD9W+3cCzwbuU1T4LSmAt6JbgaZF0btLNd+h8YRqwOJ0g7d2c5RFJAgT+dwdaQ0GbY3iY1+TcbgBycqgf4KvIt6wQvU5RJ3boMlpDD/nX1MA4M5mG3ZW2h9cJznlPPhpIHD30ZrJk5gsYnUXYzPdRxA2/zV8fViyKRHNEDDqPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=if4l83O9; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1709581887; c=relaxed/simple;
+	bh=OhgJRXuTB3k0zKcrFF9pnuEs+xWlMUxr3v8NIsiXFgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MtqR/cCkMCPYO4gYYAssay66dCEoiFmSIgWcpKqqHEc+4tMAH7be6ezg3Ml5MSNaMJ1/nAmBDSR4T1Lpon7ifTZ65J7vmcczsDoDi7uDxNn4CaugUmaBjdXn7uslwdRgQbPCjr26f9+s083bWWhRu/CPBcClPe9OzoqZ1wBLp7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=oFGTEtVb; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="if4l83O9"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26eef6cso6608635276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 11:46:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709581586; x=1710186386; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VWzHdRna3zMy+XLYBNvG6plLaOTh5XkeubVVBNUfIw0=;
-        b=if4l83O9zqyZF+RJplfo5dSbH52VmsnlZcb+cEBy+Lu4BBdvRbRyDcv4zlSU83N7P7
-         UDaQLd1QTNkBkKokjLT7a3ShrDisPSDo4wJD0cBJ/ucXhCYN3nNmDJZnobOWiT2YBPbK
-         AJRAmwIu+/Co35w2pOV16b8FkR894pC8PTLgb4FaJA+twPq/cAA7cCGZINXCEPI7MbyX
-         CphkbzYw/qG7Li38Qr9yfmKMo7DRF10VrDTBRaZGqxWptKn/4RXSMtR7JzwpU2kVVXo+
-         dMHZmWrAzUk1+W+UA6P94dutGKyXKz4CsYsmuTl4XrmqXWgbqYvmszayMSGMHz+kpvdc
-         vT5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709581586; x=1710186386;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VWzHdRna3zMy+XLYBNvG6plLaOTh5XkeubVVBNUfIw0=;
-        b=M3ScB20bwWZNKB2iToOxOcGVY0kDm2S2F1XZ8KVwT9EeYXZXnACDg8hCKCVLwImKMP
-         C4CuzGSh85GlzrBmt6w6Ap6ooR+5MStckQsojS9NHWkqQjezH1SVKcp8KJJEFPBFPXR1
-         mRKrEVqDZXNXWnk05lM+JE1vL7xrmekx8e7Kp5bPMA0FMHQDHY/bQ0srZqqGFdxgYxRh
-         XI7OJKoGGs8FuXFOrLo1ZTEOOCDuakiI/MHnbrLoOTEERu3z4LZsHL/js6gWw7eewfvX
-         d2QQegg8wvA1K+NMlHM3N4n+vQ+vhPDT8O9lSObYszDaoNtmbGWSBUtPOjpPGcRJq9Rr
-         A/PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVH/Rel8a3e2RorpMEi+hwC3grrIItRL72H7oJBSw3WxPpAPfsW63dXttO5FaLc82Qzn3ePofBK1me1msAHm33ty/woQtzhL6SlDaCb
-X-Gm-Message-State: AOJu0Yyg4HrBAWcYM9aqfody6mtXJR0bNryV0JQ+zhgsQ1mLTZu8pl43
-	n0FPUf86aEQ7fAZc3DEbumn5yHwJPIFxwCZjiJtn+qjspHI41NfaZ+JUbwZHSXn/sCJ6RCd4zPy
-	ahQ==
-X-Google-Smtp-Source: AGHT+IHSp+E82/ypS4UweAZlpJyK2PaD1v+2hDqPO3hjubOPh1Qou0p7AnyKgGQKbThW17QfzK3uokGmnz0=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1143:b0:dc7:6cfa:dc59 with SMTP id
- p3-20020a056902114300b00dc76cfadc59mr389188ybu.4.1709581585728; Mon, 04 Mar
- 2024 11:46:25 -0800 (PST)
-Date: Mon, 4 Mar 2024 11:46:24 -0800
-In-Reply-To: <f5bbe9ac-ca35-4c3e-8cd7-249839fbb8b8@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="oFGTEtVb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709581874; bh=aUV7ui9OssFAkAUYQZM978SYBGiOeof7R/xUNj09ngo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=oFGTEtVbNh/0r2cdHOgOXs8YzgvHRR6AtX0InqYiIjNB6x+iQ+9Ud53psrKHSpB0P
+	 0W1YEXmLX1RnlfE1DOTDLPfQ19a/lKjjDFw/2fiHmVumx09z3egLMcXx01k/be7a0J
+	 sWrZxr0uajJxqd+L3KEqcSgqU6BnKVc3/zuYesYE=
+Received: from [IPV6:2001:da8:c800:d084:f0c8:5d03:8100:4abe] ([2001:da8:c800:d084:f0c8:5d03:8100:4abe])
+	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
+	id CCB30CA2; Tue, 05 Mar 2024 03:51:11 +0800
+X-QQ-mid: xmsmtpt1709581871t0bl0pgus
+Message-ID: <tencent_CD84A131884F52F041BBC3510D7732662705@qq.com>
+X-QQ-XMAILINFO: M5g+bqkaOkZD1nVsDzmb/KiRnIRVOiuy4VyXCY3MwN6yKbdbcBhWCfQBQafO08
+	 THBMK9a4n1j378qVIngxXGyXkyBcGa3If9za4BoFbgP0g4iw05d+QOlYLsSgQ5oBS7svrRwXWndt
+	 6Z1vjwzbhvHkNN8b5v8Ay6p4SY3QsgqHgO7QDygd4WJLfujun7vUQdJuDxgaBvnXpt7eqW3wfIEI
+	 3qVbwEgn18/la4PtbSHl8WNbONL1LpWG1pUXw8l3UfUTHnzKl1z0xzUvc/vKRbmcWstJ6h2Tsu4T
+	 Dl50kGgKfiqcuP45KrN40VPFxH4du4DOJJ5FUKc8Y9jSYxDys8xtrRWZLZqebCrh2itAcK0s4z+E
+	 jC3MKhvCgXilrB2Wd7HlU1CyfCALoF9Lw45DzxkyU5fV6cp8kJTbVlO3235dGnlP7LQEGOyeBv5g
+	 OYfmv0DI9C7jKRWncRXY4gMFf86Hak1XsI4hPjKcp10ihoeQ0P1/iMEcgXlDKL4Ipn/c7LW518V2
+	 CCk2k8RzeDbdFPr4Iukp3XIIrnqbpqgUXmKeppUp25BvyItceXfLoLu90s8vA0vf28Fy1SPyPdd6
+	 g/r8UdGBhDy7eQfLUhH7JTgZcJ5+2HMEkWboaQLalwCBlTNPxgNyjUpShZVauz1Fv8LcC38gXK8h
+	 EAT7YYdlqJrEethk7SG1+2WfOR9eImZKrB57WYg2+HQ2teq4dYf/1lOy8M2luMKwYIALAqfWMbDc
+	 LGZFXj4Z4d8aSvMMaoqw2zJLTPNxNVJXrguxx90TLCfJ1Z76AWh9gtZRq9iYfQohuMnk9xMzz0Or
+	 4nRcymljxOGp3Xf+mkf16mGULp6PGxwAxRGwbAuIwqLm4KLJtPrHfuOIjU8oiwMr1KPygl6M+ehD
+	 Q3VS7nFe7YRb3cBKD6vGrFrz5Ca4HsTIdbrFv+8EqgmdD9fAbL6VZUVc/g5q+zZAJxjso4pLyFJU
+	 dtcvaYMYNG988+fpLdiCTuWeiuRxg4XZRkMXNhZfCWeC6J9YlzXX+9gtUMB4YE
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-OQ-MSGID: <fe2f0f7e-f01a-4fd3-95f9-2afc807a9430@cyyself.name>
+Date: Tue, 5 Mar 2024 03:51:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301075007.644152-1-sandipan.das@amd.com> <06061a28-88c0-404b-98a6-83cc6cc8c796@gmail.com>
- <cc8699be-3aae-42aa-9c70-f8b6a9728ee3@amd.com> <f5bbe9ac-ca35-4c3e-8cd7-249839fbb8b8@linux.intel.com>
-Message-ID: <ZeYlEGORqeTPLK2_@google.com>
-Subject: Re: [PATCH] KVM: x86/svm/pmu: Set PerfMonV2 global control bits correctly
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Sandipan Das <sandipan.das@amd.com>, Like Xu <like.xu.linux@gmail.com>, pbonzini@redhat.com, 
-	mizhang@google.com, jmattson@google.com, ravi.bangoria@amd.com, 
-	nikunj.dadhania@amd.com, santosh.shukla@amd.com, manali.shukla@amd.com, 
-	babu.moger@amd.com, kvm list <kvm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] riscv: dts: add initial canmv-k230 and k230-evb dts
+Content-Language: en-US
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com>
+ <tencent_1DB2D1914F4E30569BC4B103B724A6214405@qq.com>
+ <20240304-veteran-frightful-b0700233c98f@spud>
+From: Yangyu Chen <cyy@cyyself.name>
+In-Reply-To: <20240304-veteran-frightful-b0700233c98f@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 04, 2024, Dapeng Mi wrote:
->=20
-> On 3/1/2024 5:00 PM, Sandipan Das wrote:
-> > On 3/1/2024 2:07 PM, Like Xu wrote:
-> > > On 1/3/2024 3:50 pm, Sandipan Das wrote:
-> > > > With PerfMonV2, a performance monitoring counter will start operati=
-ng
-> > > > only when both the PERF_CTLx enable bit as well as the correspondin=
-g
-> > > > PerfCntrGlobalCtl enable bit are set.
-> > > >=20
-> > > > When the PerfMonV2 CPUID feature bit (leaf 0x80000022 EAX bit 0) is=
- set
-> > > > for a guest but the guest kernel does not support PerfMonV2 (such a=
-s
-> > > > kernels older than v5.19), the guest counters do not count since th=
-e
-> > > > PerfCntrGlobalCtl MSR is initialized to zero and the guest kernel n=
-ever
-> > > > writes to it.
-> > > If the vcpu has the PerfMonV2 feature, it should not work the way leg=
-acy
-> > > PMU does. Users need to use the new driver to operate the new hardwar=
-e,
-> > > don't they ? One practical approach is that the hypervisor should not=
- set
-> > > the PerfMonV2 bit for this unpatched 'v5.19' guest.
-> > >=20
-> > My understanding is that the legacy method of managing the counters sho=
-uld
-> > still work because the enable bits in PerfCntrGlobalCtl are expected to=
- be
-> > set. The AMD PPR does mention that the PerfCntrEn bitfield of PerfCntrG=
-lobalCtl
-> > is set to 0x3f after a system reset. That way, the guest kernel can use=
- either
->=20
-> If so, please add the PPR description here as comments.
+On 2024/3/5 03:00, Conor Dooley wrote:
+> Hey,
+> 
+> Meant to reply here earlier but I got distracted.
+> 
+> On Sun, Mar 03, 2024 at 09:26:26PM +0800, Yangyu Chen wrote:
+>> Add initial dts for CanMV-K230 and K230-EVB powered by Canaan Kendryte
+>> K230 SoC [1].
+>>
+>> Some key considerations:
+>> - Only enable BigCore which is 1.6GHz RV64GCBV
+>>
+>> Since is there cache coherence between two cores remains a mystery since
+>> they have a dedicated L2 Cache. And the factory SDK uses it for other OS
+>> by default.
+>>
+>> Meanwhile, although docs from Canaan said 1.6GHz Core with Vector is
+>> CPU1, the csr.mhartid of this core is 0.
+>>
+>> - Support for "zba" "zbb" "zbc" "zbs" are tested by hand
+>>
+>> The user manual of C908 from T-Head does not document it specifically.
+>> It just said it supports B extension V1.0-rc1. [2]
+>>
+>> - Support for "zicbom" is tested by hand
+>>
+>> Have tested with some out-of-tree drivers that need DMA and they do not
+>> come to the dts currently.
+>>
+>> - Cache parameters are inferred from T-Head docs [2] and Cannan docs [1]
+>>
+>> L1i: 32KB, VIPT 4-Way set-associative, 64B Cacheline
+>> L1d: 32KB, VIPT 4-Way set-associative, 64B Cacheline
+>> L2: 256KB, PIPI 16-way set-associative, 64B Cacheline
+>>
+>> The numbers of cache sets are calculated from these parameters.
+>>
+>> - MMU only supports Sv39
+>>
+>> Since T-Head docs [2] says C908 should support sv48. However, it will fail
+>> during the kernel probe. I also tested it by hand on M-Mode software,
+>> writing sv48 to satp.mode will not trap but will leave the csr unchanged.
+>>
+>> [1] https://developer.canaan-creative.com/k230/dev/zh/00_hardware/K230_datasheet.html#chapter-1-introduction
+>> [2] https://occ-intl-prod.oss-ap-southeast-1.aliyuncs.com/resource//1699268369347/XuanTie-C908-UserManual.pdf
+>>
+>> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+>> ---
+>>   arch/riscv/boot/dts/canaan/Makefile       |   2 +
+>>   arch/riscv/boot/dts/canaan/canmv-k230.dts |  23 ++++
+> 
+> Could you name this file "k230-canmv.dts" please, so that the soc comes
+> first?
+> 
 
-Or even better, make that architectural behavior that's documented in the A=
-PM.
+OK. For patch v3.
 
-> > > > ---
-> > > >  =C2=A0 arch/x86/kvm/svm/pmu.c | 1 +
-> > > >  =C2=A0 1 file changed, 1 insertion(+)
-> > > >=20
-> > > > diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-> > > > index b6a7ad4d6914..14709c564d6a 100644
-> > > > --- a/arch/x86/kvm/svm/pmu.c
-> > > > +++ b/arch/x86/kvm/svm/pmu.c
-> > > > @@ -205,6 +205,7 @@ static void amd_pmu_refresh(struct kvm_vcpu *vc=
-pu)
-> > > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pmu->version > 1) {
-> > > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmu->global=
-_ctrl_mask =3D ~((1ull << pmu->nr_arch_gp_counters) - 1);
-> > > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmu->global=
-_status_mask =3D pmu->global_ctrl_mask;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmu->global_ctrl =3D ~p=
-mu->global_ctrl_mask;
->=20
-> It seems to be more easily understand to calculate global_ctrl firstly an=
-d
-> then derive the globol_ctrl_mask (negative logic).
+>>   arch/riscv/boot/dts/canaan/k230-evb.dts   |  23 ++++
+>>   arch/riscv/boot/dts/canaan/k230.dtsi      | 146 ++++++++++++++++++++++
+>>   4 files changed, 194 insertions(+)
+>>   create mode 100644 arch/riscv/boot/dts/canaan/canmv-k230.dts
+>>   create mode 100644 arch/riscv/boot/dts/canaan/k230-evb.dts
+>>   create mode 100644 arch/riscv/boot/dts/canaan/k230.dtsi
+>>
+>> diff --git a/arch/riscv/boot/dts/canaan/Makefile b/arch/riscv/boot/dts/canaan/Makefile
+>> index 987d1f0c41f0..b4a0ec668f9a 100644
+>> --- a/arch/riscv/boot/dts/canaan/Makefile
+>> +++ b/arch/riscv/boot/dts/canaan/Makefile
+>> @@ -5,3 +5,5 @@ dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_bit.dtb
+>>   dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_dock.dtb
+>>   dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_go.dtb
+>>   dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maixduino.dtb
+>> +dtb-$(CONFIG_ARCH_CANAAN) += k230-evb.dtb
+>> +dtb-$(CONFIG_ARCH_CANAAN) += canmv-k230.dtb
+>> \ No newline at end of file
+>> diff --git a/arch/riscv/boot/dts/canaan/canmv-k230.dts b/arch/riscv/boot/dts/canaan/canmv-k230.dts
+>> new file mode 100644
+>> index 000000000000..09777616d30e
+>> --- /dev/null
+>> +++ b/arch/riscv/boot/dts/canaan/canmv-k230.dts
+>> @@ -0,0 +1,23 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+> 
+> Is there a reason that you only put these under GPL-2.0+?
+> The usual license for DT stuff is (GPL-2.0 OR BSD-2-Clause), dual
+> licensing makes it easier for other projects to use the devicetrees.
+> 
 
-Hrm, I'm torn.  On one hand, awful name aside (global_ctrl_mask should real=
-ly be
-something like global_ctrl_rsvd_bits), the computation of the reserved bits=
- should
-come from the capabilities of the PMU, not from the RESET value.
+No. Just choose the same license from K210. I will change to both 
+GPL-2.0 or BSD-2-Caluse on patchv3.
 
-On the other hand, setting _all_ non-reserved bits will likely do the wrong=
- thing
-if AMD ever adds bits in PerfCntGlobalCtl that aren't tied to general purpo=
-se
-counters.  But, that's a future theoretical problem, so I'm inclined to vot=
-e for
-Sandipan's approach.
+>> +
+>> +		plic: interrupt-controller@f00000000 {
+>> +			compatible = "thead,c900-plic";
+>> +			reg = <0xf 0x00000000 0x0 0x04000000>;
+>> +			interrupts-extended = <&cpu0_intc 11>, <&cpu0_intc 9>;
+>> +			interrupt-controller;
+>> +			reg-names = "control";
+>> +			#address-cells = <0>;
+>> +			#interrupt-cells = <2>;
+>> +			riscv,ndev = <208>;
+>> +		};
+>> +
+>> +		clint: timer@f04000000 {
+>> +			compatible = "thead,c900-clint";
+>> +			reg = <0xf 0x04000000 0x0 0x04000000>;
+>> +			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>;
+>> +		};
+> 
+> Both of these should have SoC-specific compatibles. Without them, this
+> should not pass dtbs_check. Did you run it?
+> 
 
-> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-> index e886300f0f97..7ac9b080aba6 100644
-> --- a/arch/x86/kvm/svm/pmu.c
-> +++ b/arch/x86/kvm/svm/pmu.c
-> @@ -199,7 +199,8 @@ static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
-> kvm_pmu_cap.num_counters_gp);
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pmu->version > 1) {
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 pmu->global_ctrl_mask =3D ~((1ull << pmu->nr_arch_gp_counters)
-> - 1);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 pmu->global_ctrl =3D (1ull << pmu->nr_arch_gp_counters) - 1;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 pmu->global_ctrl_mask =3D ~pmu->global_ctrl;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 pmu->global_status_mask =3D pmu->global_ctrl_mask;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->=20
-> > > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > >  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmu->counter_bitmask[KVM_PMC=
-_GP] =3D ((u64)1 << 48) - 1;
-> >=20
+Sorry. I haven't run it before submitting patch v1. But I have run it 
+and got something fixed on patchv2.
+
+> Cheers,
+> Conor.
+> 
+
+To be honest, I want some review comments on the CPU node. As we know 
+K230 is a dual-core soc. But I didn't know the details of the bus, even 
+for is there was cache coherence between two cores. The factory SDK also 
+provides a linux dts having only one core. I don't know whether it is 
+acceptable.
+
