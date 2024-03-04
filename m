@@ -1,103 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8026245BF6
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 14:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F00F495E5;
+	Mon,  4 Mar 2024 14:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709563161; cv=none; b=gJ+KCj5zoFrPw2vEAiV+iaM0nNL/fthZADKGk16JRjr8ILjJzg61U+y7ZGumlfi5Slc3iT4yckhcxQGdaflm8NVLjuTmxxH2dN9wY2/JBGU8+b4lyj1iKMvnnV6knoulWSX0eb3m6jOjBQQnnp5znOyNb5jBMDE2j0t2e4aaVwM=
+	t=1709563163; cv=none; b=qFYx+0COf6J1ZQ4zbbXWZ1uneGOzLLaw/lk6oCslkM+lNScSVb3gPPs986oDrieJoi03N5JR2/IOF3QKqpmxbzQsy4NjLycYSRC9KrE0FxMubgv6klfa1AJUKJEh8fInZwh/fAXu6NGOdTDtdHALD2ZihEfJExF+16iEZeVzCJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709563161; c=relaxed/simple;
-	bh=TQZp5xpOX2dnHZfG1mH9kj65SYkNhEAl0tLk1zElFu0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uCiE6aIjKPW5DmpSMMI6WAAwmwZEa/Y25IxvSe3xRFPUOWOdQV0GJycNY4hWI4ZaOVqT8cN749Byn2c59m4oSLIhKSbCivjI6AM9AzSBtMB0kldwjaJbhN1ES0T3LQFiM8sAyh7HNzvU3XPAESDay9EwXRBjsyexxMFTVew+VYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxTbWTPM; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709563163; c=relaxed/simple;
+	bh=izAXvc7UkjU7STvEMBh35M4iT8s1W0W9zz7tDRGPHzo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FAlNRRqSXZxrfZJ0e0sDr9hYoErwmuvGBPEP9cYoWQXdonqDOFtbDO7Do1jdeT9l7GUGCz2FJzfwNBLnDBOciiTr8GSqlQtMNs9TuNs15UgNa44eQ/jcs2NKN/K6wD52OVqCvSz5JX2JCsNsf/tOwmBpp7IdljaKJ783dCUszh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glZ7W4vr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxTbWTPM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709563159; x=1741099159;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TQZp5xpOX2dnHZfG1mH9kj65SYkNhEAl0tLk1zElFu0=;
-  b=fxTbWTPM6vY/SxI7rqxSR1H3NzoWUV1/AUSyNp/Sx/ezxh6hhqgH8V0n
-   TlWm0kt1bOoBTvsFLPfHQ4+7Ft3Kc5QGmOQVn6hcGKJ7+Sr87uRXWjJHF
-   b4zYBoPX3VoAtE93HX3Gb2XTSEvT6H2rIHr6Ge9f28bAX0JN7wsuMMEjk
-   2uhZVEhppkDYglOT/VZOX4HWM/LOWciBZqsOfN1iQZKXFeo0Fw00cNZt8
-   kZzaU3r4ytx/F/M9kHtbxc2OuYjbAACAAyVytaL+0uuQAWVv1JhUvbnev
-   meExvP4Tz8pdUg8JTpQknzh/1paqPDsfuphR++SR5VCstWRW3WpLf0gb2
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="15464644"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="15464644"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 06:39:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="9162552"
-Received: from josouza-mobl2.bz.intel.com ([10.87.243.88])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 06:39:18 -0800
-From: =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>
-To: linux-kernel@vger.kernel.org,
-	intel-xe@lists.freedesktop.org
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jonathan Cavitt <jonathan.cavitt@intel.com>,
-	=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>
-Subject: [PATCH v3 4/4] drm/xe: Increase devcoredump timeout
-Date: Mon,  4 Mar 2024 06:39:05 -0800
-Message-ID: <20240304143905.52740-4-jose.souza@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240304143905.52740-1-jose.souza@intel.com>
-References: <20240304143905.52740-1-jose.souza@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glZ7W4vr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9AEC433C7;
+	Mon,  4 Mar 2024 14:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709563163;
+	bh=izAXvc7UkjU7STvEMBh35M4iT8s1W0W9zz7tDRGPHzo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=glZ7W4vrTQkpbpVmXiwoko4e1UeWuHDoPnBQw0pf+rW2ralwhpahvWWNoPWGWN/HC
+	 KK8H3DuYdZYgEGSL1NzUp9Tcdto2oyGOaTNk6248P1Ycl+REHkHPbmqxOnizE9P3Hk
+	 JSslNvj+PKtkL+hSWE0Z+XYLu87XNAwvIc0nvUHDCn+A9fUpYb2iqVqVKGd1C07eAl
+	 bEsifpEGtV4018VCgDG7gXF453EX/g2QHjnLnpFpEitgfG2TgOpSfpU3sv1/JaGfBO
+	 ttMQWHbgiELj7QQAgxzcKKXdNia1ZAvqb32hS/vWo7LAQmnbOIFKU7ulLoTA0WFUui
+	 s064K+6tTCm0A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rh9TM-009FjJ-9f;
+	Mon, 04 Mar 2024 14:39:20 +0000
+Date: Mon, 04 Mar 2024 14:39:19 +0000
+Message-ID: <86v86212p4.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: arm64: Only save S1PIE registers when dirty
+In-Reply-To: <50c5cdd2-fceb-44c4-aff1-dc98180161a1@sirena.org.uk>
+References: <20240301-kvm-arm64-defer-regs-v1-1-401e3de92e97@kernel.org>
+	<ZeItTLQxdxxICw01@linux.dev>
+	<562f5e62-c26c-41d9-9ab9-aac02c91c7ae@sirena.org.uk>
+	<86zfvh0vy5.wl-maz@kernel.org>
+	<50c5cdd2-fceb-44c4-aff1-dc98180161a1@sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: broonie@kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, joey.gouly@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-5 minutes is too short for a regular user to search and understand
-what he needs to do to report capture devcoredump and report a bug to
-us, so here increasing this timeout to 1 hour.
+On Mon, 04 Mar 2024 14:11:19 +0000,
+Mark Brown <broonie@kernel.org> wrote:
+> 
+> [1  <text/plain; us-ascii (7bit)>]
+> On Sat, Mar 02, 2024 at 10:28:18AM +0000, Marc Zyngier wrote:
+> > Mark Brown <broonie@kernel.org> wrote:
+> > > On Fri, Mar 01, 2024 at 07:32:28PM +0000, Oliver Upton wrote:
+> 
+> > > > The overheads of guest exits are extremely configuration dependent, and
+> > > > on VHE the save/restore of EL1 state happens at vcpu_load() / vcpu_put()
+> > > > rather than every exit. There isn't a whole lot KVM can do to lessen the
+> > > > blow of sharing EL1 in the nVHE configuration.
+> 
+> > > > Looking a bit further out, the cost of traps will be dramatically higher
+> > > > when running as a guest hypervisor, so we'd want to avoid them if
+> > > > possible...
+> 
+> > > Indeed, but OTOH I got some complaints about adding more system register
+> 
+> > Complains from whom? I can't see anything in my inbox, so it my
+> > conclusion that these "issues" are not serious enough to be publicly
+> > mentioned.
+> 
+> This was you saying that adding more registers to be context switched
+> here needed special explanation, rather than just being the default and
+> generally unremarkable place to put context switching of registers for
+> EL0/1.
 
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Jonathan Cavitt <jonathan.cavitt@intel.com>
-Acked-by: Jonathan Cavitt <jonathan.cavitt@intel.com>
-Signed-off-by: José Roberto de Souza <jose.souza@intel.com>
----
- drivers/gpu/drm/xe/xe_devcoredump.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+What I remember saying is that it is wrong to add extra registers to
+the context switch without gating them with the VM configuration.
+Which is a very different thing.
 
-diff --git a/drivers/gpu/drm/xe/xe_devcoredump.c b/drivers/gpu/drm/xe/xe_devcoredump.c
-index 109c027188bd9..08c60531e0db4 100644
---- a/drivers/gpu/drm/xe/xe_devcoredump.c
-+++ b/drivers/gpu/drm/xe/xe_devcoredump.c
-@@ -52,6 +52,9 @@
- 
- #ifdef CONFIG_DEV_COREDUMP
- 
-+/* 1 hour timeout */
-+#define XE_COREDUMP_TIMEOUT_JIFFIES (60 * 60 * HZ)
-+
- static struct xe_device *coredump_to_xe(const struct xe_devcoredump *coredump)
- {
- 	return container_of(coredump, struct xe_device, devcoredump);
-@@ -229,8 +232,9 @@ void xe_devcoredump(struct xe_sched_job *job)
- 	drm_info(&xe->drm, "Check your /sys/class/drm/card%d/device/devcoredump/data\n",
- 		 xe->drm.primary->index);
- 
--	dev_coredumpm(xe->drm.dev, THIS_MODULE, coredump, 0, GFP_KERNEL,
--		      xe_devcoredump_read, xe_devcoredump_free);
-+	dev_coredumpm_timeout(xe->drm.dev, THIS_MODULE, coredump, 0, GFP_KERNEL,
-+			      xe_devcoredump_read, xe_devcoredump_free,
-+			      XE_COREDUMP_TIMEOUT_JIFFIES);
- }
- 
- static void xe_driver_devcoredump_fini(struct drm_device *drm, void *arg)
+I don't know where you got the idea that I wanted to make this sort of
+things lazy. Quite the contrary, actually. I want to trap things to
+make them UNDEF. And this is exactly how -next now behaves (see
+58627b722ee2).
+
+What I want to see explained in all cases is why a register has to be
+eagerly switched and not deferred to the load/put phases, specially on
+VHE. because that has a very visible impact on the overall performance.
+
+> > If anything, I'm actually minded to remove existing instances of this
+> > stupid trapping, such as PAuth, which is entirely pointless.
+> 
+> That one was part of why it appeared that this sort of thing was what
+> you were asking for.
+
+No, really not.
+
+	M.
+
 -- 
-2.44.0
-
+Without deviation from the norm, progress is not possible.
