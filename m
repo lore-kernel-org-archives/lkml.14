@@ -1,79 +1,86 @@
-Received: from tdksf2.jp.tdk.com (tdksf2.jp.tdk.com [211.16.239.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB69E7CF2B;
-	Mon,  4 Mar 2024 23:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.16.239.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DD47CF2B;
+	Mon,  4 Mar 2024 23:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709596210; cv=none; b=YQSlaWgK3sDNd6uhXrieZenT3fOAmMnv0ORcjie86IvwMs9y4g8eNxok6ZLCjCcmV20CiCz9cYF/+hubBp62FnkKJww/yMxuCX66LM53mNK5vdM4s9iLSpOKhPAjFBMZr6XnoTROEqizJ3As/uaCWEi0rniJFkWExO6TYxKweG8=
+	t=1709596234; cv=none; b=Xrc8hDgPqQyTGPbeCyDH8z4OCYS0zxeOsXwzpOUG5s6DXP8o1tcp+R13IQFsjiHufNoaV4FaW+HLo3q4g0chX+kCjzQ2YJmuPH9sIzi2AQllp8zAWvFzXK3p6zhIeCg/5m1UGhEtpKYvQacTfTJL5n208Pb9NaN6JWo1y9HWJO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709596210; c=relaxed/simple;
-	bh=gNxB/kEJ2bC3vnX2J88FBXVKDTIphz/mAZSs5thjCvE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RpI6up5qPthfT5yuo6K61mnVTD5HPWD5IAmjX7CKgYYPVZcHxb6CCu9N2zhXEEgp94t6XO5d1qi9K7FBO7vFgB/q9HYPNVM/BxzWM0xt4ZiBVr4entMHMlcTMEPd2vPnETUvXJO1VvcZ3NuUmqMUJX/Be2Iw5QaYVDzKEnvktFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tdk.com; spf=pass smtp.mailfrom=tdk.com; arc=none smtp.client-ip=211.16.239.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tdk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tdk.com
-IronPort-SDR: 44OhpWk1rFBxA2b8OV0aJekNX5f83hbEX6UIEqEvvT7NriKOeSRB+vqFOpD5je9ApTbIMRD1dT
- P2Hk7jACH8Aw==
-IronPort-Data: =?us-ascii?q?A9a23=3AUi0n6qCLvHr1ZBVW//Lhw5YqxClBgxIJ4kV8j?=
- =?us-ascii?q?S/XYbTApD0q1DcEz2sXUWjQaaveN2rxeI13Pouw8UIP78TWmodhHQtv/xmBb?=
- =?us-ascii?q?VoT8pOdWo7xwmQcns+qw0aqoHtPt63yV/GbRCwKZi6FzvuSGui5xZVM/fngq?=
- =?us-ascii?q?ovUUIYoCAgoLeNXYHtJZSZYpgIMqtUAbe5VrO+6kYiaT8X3YDdJ0tPvW44ew?=
- =?us-ascii?q?/rrRBhH5JwetN6E12HSa8ynvHeG/5UUJIoPeK/3M3f7BIJTWOyiLwrB5Ojhu?=
- =?us-ascii?q?DqIoVF3TIn9y94XcWVTKlLWFRSJkGd+R6ShxBNFo0Te145hbKpBMhwL0Wvhc?=
- =?us-ascii?q?9dZjY8lWYaLYQMoOLDc3fkGWTFGHCxke65L4rnKJT64q8P750nHdWb8hvZjF?=
- =?us-ascii?q?kc7OaUG9ettR2JD7/oVLHYKdB/rr96x2q/9aeBwj8siNsjDII8c/HpnyFnxA?=
- =?us-ascii?q?uwrTpPDa6HL48JI0jAtgMxHAffZYYweczUHRBbHYxRJElQaEpQzmKGvnHaXT?=
- =?us-ascii?q?tHygDp5voJuuy6KnVI3iv63aIO9RzBDfu0N9m7wm44M1z2R7skmCeGi?=
-IronPort-HdrOrdr: =?us-ascii?q?A9a23=3ABu+gf6DZqa53XFjlHels55DYdb4zR+YMi2?=
- =?us-ascii?q?TDtnoBKyC9F/bzqynAppgmPHPP6Qr5O0tPpTn/Asa9qBrnnPYfjLX5Vo3SPz?=
- =?us-ascii?q?UO1lHJEKhSqa/Y6XnLBzfi8OpQzs5bAs9DIey1KWNRyebWiTPIduoI8Z2iy4?=
- =?us-ascii?q?rtoe/fyh5WPGVXQpAlyzxSTj2WGE1uRAVAGPMCZfyhz/sCgwGLPUoQdca2HR?=
- =?us-ascii?q?A+LpH+m+E=3D?=
-Received: from unknown (HELO px5f.tdk.co.jp) ([10.196.2.201])
-  by tdksf2.jp.tdk.com with ESMTP; 05 Mar 2024 08:48:57 +0900
-Received: from toru-VirtualBox.localdomain ([10.132.234.153])
-	by px5f.tdk.co.jp (8.14.4/8.14.4) with ESMTP id 424Nmv8F004456;
-	Tue, 5 Mar 2024 08:48:57 +0900
-Received: by toru-VirtualBox.localdomain (Postfix, from userid 1000)
-	id DC01058A2B7; Tue,  5 Mar 2024 08:48:55 +0900 (JST)
-From: Toru Katagiri <Toru.Katagiri@tdk.com>
-To: johan@kernel.org, gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Toru.Katagiri@tdk.com
-Subject: [PATCH] USB: serial: cp210x: add pid/vid for TDK NC0110013M and MM0110113M
-Date: Tue,  5 Mar 2024 08:46:14 +0900
-Message-Id: <20240304234614.3811-1-Toru.Katagiri@tdk.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709596234; c=relaxed/simple;
+	bh=FUqV7V3jF4155KU2wYQ2VpqDEN8BLRgff07ULcK6dDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UpIw2MQT4ZbZne3p9XWzzv9BhtQZWhiCPiqOaNBb706SMg71gxd9FobsDEfM9GUIPLjuJseHkJzQCVQ4pAo/cRBsW6y66V0zJ76kZ9G+3VwmgKl3+iXWFGmh5BvFIMBc7K2FJ6nAaCNM+QmQHxNSszZSQf4Ifm+qwG6CkgYLISg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TV8VBHum; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TV8VBHum"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B69C433F1;
+	Mon,  4 Mar 2024 23:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709596234;
+	bh=FUqV7V3jF4155KU2wYQ2VpqDEN8BLRgff07ULcK6dDo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TV8VBHum6DhMa9heo77mkcgh5EBnsNaX7tquiD7C18YX4iQEgSqwDrOXJcKqWKyDQ
+	 xA2/V+2wisq0K2kay3/O1WyD74yhX6ITb6oVQnUEUouULKCluzUMqEuD/9iPC75fEO
+	 7nY4DCfKezJgEqYAoYisyEbqtRPwy6L7yQOLB4q+ooziskwwYQBgPBLd51R7DkbWKA
+	 0zlVreg1ZmTWPewFZSq3y/0xV8YPYlmA39gahM2hlMsHYzbE9eHxKDQt1KCnRYl0Z2
+	 yfK/aj1itIUE+WpsSPw9CPjfui40ZRp5CGrlD6BkBWjxwBedhicj5nnMbNhRwyX4/W
+	 Gc+21lWvvFW1w==
+Message-ID: <2a206c9b-b570-4081-b4e4-d177343482f3@kernel.org>
+Date: Tue, 5 Mar 2024 08:50:29 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 7/7] riscv: config: enable SOC_CANAAN in defconfig
+Content-Language: en-US
+To: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+References: <tencent_BB2364BBF1812F4E304F7BDDD11E57356605@qq.com>
+ <tencent_E2812086B695A334EE5E8C70C85CA3171F06@qq.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <tencent_E2812086B695A334EE5E8C70C85CA3171F06@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-TDK NC0110013M and MM0110113M have custom USB IDs for CP210x,
-so we need to add them to the driver.
+On 3/5/24 06:06, Yangyu Chen wrote:
+> Since K230 has been supported, allow SOC_CANAAN to be selected to build dt
+> and drivers for it in defconfig.
+> 
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  arch/riscv/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 89a009a580fe..20b557ec28df 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -33,6 +33,7 @@ CONFIG_SOC_STARFIVE=y
+>  CONFIG_ARCH_SUNXI=y
+>  CONFIG_ARCH_THEAD=y
+>  CONFIG_SOC_VIRT=y
+> +CONFIG_SOC_CANAAN=y
 
-Signed-off-by: Toru Katagiri <Toru.Katagiri@tdk.com>
----
- drivers/usb/serial/cp210x.c | 2 ++
- 1 file changed, 2 insertions(+)
+Given that the k210 need !MMU, including it like this in the defconfig is
+odd... I do not even see how that could work. But that depends on patch 5,
+which does not seem OK to me.
 
-diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
-index 923e0ed85444..883ed97eb7e6 100644
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -56,6 +56,8 @@ static const struct usb_device_id id_table[] = {
- 	{ USB_DEVICE(0x0471, 0x066A) }, /* AKTAKOM ACE-1001 cable */
- 	{ USB_DEVICE(0x0489, 0xE000) }, /* Pirelli Broadband S.p.A, DP-L10 SIP/GSM Mobile */
- 	{ USB_DEVICE(0x0489, 0xE003) }, /* Pirelli Broadband S.p.A, DP-L10 SIP/GSM Mobile */
-+	{ USB_DEVICE(0x04BF, 0x1301) }, /* TDK Corporation NC0110013M - Network Controller */
-+	{ USB_DEVICE(0x04BF, 0x1303) }, /* TDK Corporation MM0110113M - i3 Micro Module */
- 	{ USB_DEVICE(0x0745, 0x1000) }, /* CipherLab USB CCD Barcode Scanner 1000 */
- 	{ USB_DEVICE(0x0846, 0x1100) }, /* NetGear Managed Switch M4100 series, M5300 series, M7100 series */
- 	{ USB_DEVICE(0x08e6, 0x5501) }, /* Gemalto Prox-PU/CU contactless smartcard reader */
+>  CONFIG_SMP=y
+>  CONFIG_HOTPLUG_CPU=y
+>  CONFIG_PM=y
+
 -- 
-2.34.1
+Damien Le Moal
+Western Digital Research
 
