@@ -1,144 +1,120 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn2070.outbound.protection.outlook.com [40.92.90.70])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F733B296;
-	Mon,  4 Mar 2024 12:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.90.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709554115; cv=fail; b=meHrqDzjDq5eF8q11LNqz7ICWVZkBCfrlBL//RbY7ljJv1m/2Vj3VwLxvIUmK7Mnk4tEpY3rQ8/vo/HRi4WTKItmg88DIKUqKTyAK23XNs2GIGrk2zRxT5Gppo3dvdlTqg4S1909Ozb9IpruumDd+gtaJkMLgZ1OkjLgdgcZyv8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709554115; c=relaxed/simple;
-	bh=sPpMHZi7dschW/YoNRabwqj25iFF9ki10/vkuSG76JI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YDU1mwLTNzuZXOK+AO5hBGvk1+N7gXFkzRN5pZgdtdBZnC0gYojh8T3O9j8X3Tp9UYTeYu/g+q02BLoD0UnnqDoN7MwDWHvqn2Rs47DdMk6DUrEwdy8szdjeMJyHCzvc5DIAbsrnfEWrPC26HbaSk4NraKuSrKFH7NhWwKDWCE0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=aysvxr+D; arc=fail smtp.client-ip=40.92.90.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728BA2261A;
+	Mon,  4 Mar 2024 12:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709554244; cv=none; b=JuGjdcma9e0UgsLvImxKf6IV7ToGsajkiBzNCIHSayCb9dleWPZxvYe//s/8acmx+wwpVC9YIkPNX8fQG9HZSqYcPkG3nseMlRr/PviE0OjSb3AfmdIG/eedFBxkkkdZ6mNddR86lI1XHuxpBPpPfkJBEzOoBWcU2p0hqhefk8I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709554244; c=relaxed/simple;
+	bh=w8KVMfNx2zd6C6LYa7vJU1D+To3lrbFoF0bVr9U0imU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U2lHm+IW5Kl764I7kk5M0aPjVPnJXy9L+3K0QEpyd5AeYFiJvVDVM8khWhpIU9YGlcJYtnYF0yIfX8WIhXetzPk6egOeEFow/qoui3W+joE6SiZZv1ORlSLAC+wgdtKblQpkw1K1tVG2IkVLRU1Q4vrVg2gbsPpwk7rmf8O+0lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Zmc3PHWa; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="aysvxr+D"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nr3E971/7//B67YpiZ1oE2xTx+7ElRCMCUFtmk4059ytbzJx56yBOLG/AQLfyPk2Jh3Mx2vIKaAibUmX/dknxLAKM/Nqhkp4qpZiiozrzk1wglQctkPDuNwlwvbtW7hUZKUuiAW0tImhDzXhJ6ZFxSxH2hvNMMw6XS5iltaSBDhzxVBwveWDf7q4X1BGpefLbjEDx1ATzND6m1cREEuvN9xrk8IjqBTS0hUbXGRLvSmJBwN/weaW4c3OR61zQbbFKKuhzrOMIXHb1m17mkImVmhDC2pSc7di5i7ksSoTb+gtrDNSBginfKP64jBvb3vcfSRGwUPipQdROYmKG/nvxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aEoNqMfhLIMjWS60JemBKHbtSHZkTm251ieZoUgn1hc=;
- b=bgCxu1bUdDqsYIqszZvbwrnLjHiaJJE0HMx4V3OB4kn9C60LBE+NoXCE2zRe9ZyJ+0k++fiA1f2kqemwgcj5vLLRCl8Lcxcbg5+nc+3TIRCg48gBAHQ3jpwfF+AfjM2UAkfoDrpviPDCjJD1nZ0kqX88prb4s5BbDV6Ll7ZbWzGh4UAExb0Hs333BylLe44mxwHmJbqKuIv/7rwKqlUdAUCBBS1M8pMkr39hirQUxMOqfbuBWOY1P07zumMt9fXg5SymTZM3itL9YGt4rJ3T/+jp303VPEEJopTGK9ieJk6u8KrWxA0FPbqlai9hGIwvP+myDATzsXrL+G4FXay1XA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aEoNqMfhLIMjWS60JemBKHbtSHZkTm251ieZoUgn1hc=;
- b=aysvxr+DsW0r8YXKl1dllbpA8EpM7PuIdzv/J5CnT4gAwLrneFjh1N7j1Z8VUdxCEoB4VydVYGKsESqX9kgzFAsA1J+TrHSXNQ0fOS8+Yf3OBxFoeKoCCdQzHEeJn5ArqYMJlHJgDCKwuKSgZOMORMMhijQu72mLg9+JzAnLvmPEKMs3qHKx/nKCavCeYWtsQYlVdqdF+6bOe9Pw17Q2BQzuUzY239qwUN/8b34J20PMLBqyOxIn6H81QxWR5IMIzXtHjDXNYDlaOZvuUodg9f6UQxanfJDjgxOaegqW+5voCYGu93VuPFkQLyvDmWC+oKVqGdyz5qPrgnU+4rNwiA==
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
- by AS2PR03MB8905.eurprd03.prod.outlook.com (2603:10a6:20b:5e5::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.32; Mon, 4 Mar
- 2024 12:08:27 +0000
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::58d5:77b7:b985:3a18]) by AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::58d5:77b7:b985:3a18%7]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
- 12:08:27 +0000
-Message-ID:
- <AM6PR03MB5848FE9567FCB44911E8E4D599232@AM6PR03MB5848.eurprd03.prod.outlook.com>
-Date: Mon, 4 Mar 2024 20:08:28 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] inet: Add getsockopt support for IP_ROUTER_ALERT and
- IPV6_ROUTER_ALERT
-To: Eric Dumazet <edumazet@google.com>
-Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org,
- pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <AM6PR03MB5848BD89913195FF68DC625599232@AM6PR03MB5848.eurprd03.prod.outlook.com>
- <CANn89iKzGS39jLrRszBLh6BMyYykX-d_n3egdDU77z_fcXbiXQ@mail.gmail.com>
-From: Juntong Deng <juntong.deng@outlook.com>
-In-Reply-To: <CANn89iKzGS39jLrRszBLh6BMyYykX-d_n3egdDU77z_fcXbiXQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TMN: [Qgai2JlTW25CZRL9duFv7m3qn+YDLvop]
-X-ClientProxiedBy: LO6P123CA0024.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:313::16) To AM6PR03MB5848.eurprd03.prod.outlook.com
- (2603:10a6:20b:e4::10)
-X-Microsoft-Original-Message-ID:
- <c17bc801-d7c7-414f-9626-8fbfa046addb@outlook.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Zmc3PHWa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1709554212; x=1710159012; i=markus.elfring@web.de;
+	bh=w8KVMfNx2zd6C6LYa7vJU1D+To3lrbFoF0bVr9U0imU=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=Zmc3PHWa6lOwpCA6+weIY3sdyr7tgF0RQpb+052BMFhBYTrSqBDa0Ni1ytlwX9mN
+	 EnJjLYwD5wJ/YRS3UYUAzb7xLyVVC3GRF77iqYnvBcL02gcuUyQb+FK2f+UPVndie
+	 aK6uYpeJY095Yl1Zv+aOAYI8ah+1CuKPVrMtX5M0xc7JREXbJgd2TaNDfetW8Jv2j
+	 N6SzcWlcCy0ZmgAYA1sh+2v4GHmqti8T/TvSl0ein80ZIwiuD1NdmsXPBIqRC1gCm
+	 mvRrHQwbn1ZUdECEtGZEzMykMpLHEjP9W974pfMyOh2TDf5ovDtAUr22HDqS7Eg0+
+	 /dANATb3HxV9AlMmVA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M2gkl-1riU3f36XH-004NU4; Mon, 04
+ Mar 2024 13:10:12 +0100
+Message-ID: <a8cae5ad-8a2a-4752-a2cd-634c1746af8f@web.de>
+Date: Mon, 4 Mar 2024 13:10:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5848:EE_|AS2PR03MB8905:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8668c34-2473-4ed8-c61c-08dc3c43cc9c
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GUDJBW7G7xtM8evbPAVT2R5gkcQmKsx1ODdbS36HDMET5bTtDnOnJ44aA8HGAjCGeWF7xWmAW5tntuFKV4R+w4OmkeYLxL32yQpn+hLNeakCGOFyFtCbBG78udllaJ/iCAs0NQ+KVbaqEDKoOkkP4kokuL2pKo6KaGQqmRjMVBC/KP56aJ0vij0IwZu8tdhOrhJbDhcfBIx9pKEQIPNjqc9MYAUmLQQ6eOOlb6fxtyXbRM2Rm3swTuTCpiHroobdbeYyrrF26unl4kpwh4HJ43LVSosNhPomCsxSog8XfpeIR5d3sHLSciVAsA6ehClQ3acZc5zxHlJzXgOvQE/DcvowCEurhoTWNljDnRCjpb7gSJgzHwZiJqR152ANxrFPy0KiGGOIocWz6IpdkrBRYH0qvemws2HTr706DVtEZH3wBPSq8rKRt7pyxheqAVi5qSXRsi+C33XswrdVjiaC+4CAM34x9SJwwcdGHgnOtNYatYKwpDbYnkYdIugqGHT94OsUAjfyyNdPor82hM2JHgIuECaQ2wIKN/lgT7WBzoZn4aEIwxH6ZHlzn9Q00dfJ
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RlZMRVdqdk1GbnREUndZUGpZc1VYNW5BL0tTc3JuSndjcXN5RDRTMFF6aDU4?=
- =?utf-8?B?Sm9qTm52RVpWUlk4czU0Z3NkdzFSQzNwZ0Vua3NOTEtiUWdLRWs3VVdOOEpX?=
- =?utf-8?B?UkFNVG5hdk1BalUxaW9rampDa0ZkdmxZeEJWa2tGL1l3U1V3dVJ0Y2VyZWxY?=
- =?utf-8?B?bUVuMkVRMDdqTzdMNGJTMVNJNHFoRTY5T1VwYXhMcFBJZERpMEYzU055SDBt?=
- =?utf-8?B?enhLbC95ZUM5OHZBNU5EL2JKYnNXYmhzdms1S2lpK05xSml4MmZoR0luMndn?=
- =?utf-8?B?UDlCNGVZMFFmcnBnZGU2ZDR0T1djeUpNOXZUOGcrVytjOHlodkVNUmFHY2oy?=
- =?utf-8?B?SW00UFdtQlJsV1pTNGJ5R0p5UFZBOU5VZmpadld6ekJWc09WOFFKODJ0bjh1?=
- =?utf-8?B?cGQ1OXdKOFNKWmE1QmJvd0h2OTdPc0ZnVW02WmwwZ2JuZnJ3T2F1QisyT0cv?=
- =?utf-8?B?UGR5NjdTd1RNZGRPUjQwNnNCZnJvV0p5emhmcVVXbThuNE93Qys3UkhuaTBI?=
- =?utf-8?B?Sjkwcm1XZ3hRZWRxN3pZNE1TTGFvSnkxWUVWaUhSTGlQdUZMTkZReThRbnFs?=
- =?utf-8?B?UWxqR2s1eVpVQzhSRG1CZ3MyaGJ5Nkw2YWxPeVEvTml4elh4ZUprTklVY2dk?=
- =?utf-8?B?MEkwaHozNzdpdTZDQVNsc2M1K0dpOUNoelN0dHVTTnh3MmZsNEpGWUIwMlNr?=
- =?utf-8?B?M0k5all5bU95KytMVVl0VFArQ0RzaDc3VnA4dHlVVElBTVVoZVprRXM3UktH?=
- =?utf-8?B?MzFMU0hITkgvZWEyNS8zVGFaZXBFdjU4Q28xUEV1UlhKdTNBMHc2SHhDNHdj?=
- =?utf-8?B?VnZNbWZOamVEU0FRazUyZDV1R0t1eENiMmtvQmxsMDZxYkpHNklMUmpDN1BG?=
- =?utf-8?B?NjRrU3lwWXdjZzdWd093UHQzRGZET1hnYjY2WCtHUEowZk9Tb3FGYk9Nd3lO?=
- =?utf-8?B?SkNKWWtrM1JGRDRIYXgrWGNUY3JGN25nUFNKM2ZvbXNpNjFrVzhkZTd1OERj?=
- =?utf-8?B?RXFsV2Vvd2lGR2dvZmpYakZmWlgwa1c2TXZsVUo2TWloTG5HS0N1Qyt1U21N?=
- =?utf-8?B?UGxoR1FTdU1GR2tkb24zTkNGWE1zTWlOUktEdHZTSXZOcGxSL0VyRUhSS3Fo?=
- =?utf-8?B?VC9KRHQvK3pwMGd4c1pEYUdHcWxRYytWaHhqeEdMY004MUNuWHl0U2RoL0p0?=
- =?utf-8?B?eE9hSUFPZjhiUW1xRS9qbUpJbjB5WTFiL0xHS2Z4SnBBeDJyNnJXTWJsemgx?=
- =?utf-8?B?RWVqU0tuTGhUV2FJZmFCblJrQzNocnJsN1ZieFdTMFVmcFJhZHYrL2tMSEIv?=
- =?utf-8?B?eVpiTW9lSkxlQ0tyUFRkbVBZZ2hvdndZYURGb3RaU1lOeWdqVW9PeFJmVk1J?=
- =?utf-8?B?NjlxSHByVVp4czdaUEp3UEx0MlVDM0JnQmFmNW5IY2xUcUI0VEFSbEhUZklv?=
- =?utf-8?B?dE81L0VmUUtuTGE2YkdlbTdtUG9HM3pWUmhERmhKRlJYMTJMTU00VllQM1Uz?=
- =?utf-8?B?MGVsQ29tVkJxL1hoRUs4aldZbGdUeUVqZWFoSE9YRlBQb2hxUXBVblJ0TndW?=
- =?utf-8?B?R0sxRjV0Z1pvQUVDYzBhdCtYczR4MHJNMzMva0hBQ1dmOU5CTktHN3NXVmJ0?=
- =?utf-8?B?WUUvUFg1b3djNnl6WWFSdVQ3cVZEWGhOUmdET2VWMXBuNExsczE3MWdvU000?=
- =?utf-8?Q?Khenu9ralXqGeHAY9vqz?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8668c34-2473-4ed8-c61c-08dc3c43cc9c
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5848.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 12:08:27.5044
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR03MB8905
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Input: iqs626a - Use scope-based resource management
+ in iqs626_parse_events()
+Content-Language: en-GB
+To: Julia Lawall <julia.lawall@inria.fr>, linux-input@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>, Jeff LaBundy <jeff@labundy.com>,
+ Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <8a7607f8-d634-415e-8269-e26dcc0f9fdc@web.de>
+ <ZeU8ENmnPj3sKxAv@nixie71> <ZeVOPSt0L1D4BxuZ@google.com>
+ <e8a2b63f-4f9a-463b-b419-c5f673191111@web.de>
+ <b91fe21-fe2-eac8-d1ee-ea8922a08861@inria.fr>
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <b91fe21-fe2-eac8-d1ee-ea8922a08861@inria.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:PKES2OXGqOX5haTvklakPWg73v8jW8wtWclFnqH2pzuUBW7Xr/w
+ A7vLT6ATYTbJCX52lGPrSnYwgWGdPvOtk/tT0Hq9gOhLL5TpBaFVVChg48PyAY8cOl8h7lo
+ DUidwoYKeYgHpNQfBqCu0lQai6cmp5xznL8rdueAnME+ruajHrPr8O7VRg59m0prqwJb/6a
+ qrNJuFRqPRdnGA6al/OxQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:DNcDAss1Lss=;J+Ty/FXrv4R1l3N0EljlsZQhbMX
+ e+tYAqBtBYmJg3e1gA/d67ve0J8cQuNw8Suas1sIgfGZskJNuPTkukqwm5UEkxdAyT3vjckmv
+ MfS109EG+fH2VtNp2C/BawYffFYWMW9lZ8lpYLAXBGN4u3nxG20Z1ZG6XtyDeibgNN/Sb3MyI
+ kPzYEWLfBJkurOUy/DUda/zblrQ6TjxL64yoLxWmVV9gNZzK3e8T0dp37B5zjz543w6hhlKH9
+ u8gKEF9Z5/fe5yzvpIwa2EMvp48ckEy2LcwlYpSu8+pUj06CgQU9KLB1RhJoMvtRu9KM3c9uk
+ vtcT6xkEGZHAuAuzyF+/BBXqwIUimqmdNJ7amxLSoqbDu1lGvW+Zy3ew47SRTlgnWkz81Wf2Q
+ TXpAMGuYEXXZpTh2ZTPTAOG2XwuR9l79ELZ6Do2BnClxmjK3C3RIRa353YTCYXSSI0FA3RW9y
+ t86kC61H1uT4X/PF5dRMOf7wsgWQuVu0XJP/cddIQLH51Xth/Wz2DdLOsxq8lyy97PMEVyqjy
+ V0USe2t7YzRfEsASjdMYCx+6WqmYVn+u04PCHq+zx8lrNHit2qsz8T5zLQXh5N1y+KU1wlbES
+ skxAYskP2K2dmC8NAe2mqsX0VV0pM8U4Sri5v8OTLaqkZ4GrqaQJVoGBsqnKky2WoZ1eMPMlE
+ uj/Y1/9e3Hf4McYl1Ei0B7RBDoX4GRC0FAn0Yf2CBwO5PjY2YMIM8QztXF80s6q1NLZ8D02KQ
+ 6U5IuNmef30R3FscUbMWRY4fUBiSR9/yKmzazpyHVEr4R8F9LTYKLBErRCsLOC5vY0hZEw8ar
+ 3NQ/UZ9RmGms6lWsFxT+ZwvlA/kIdiknUNt6d/rpB4Ak0=
 
-On 2024/3/4 19:49, Eric Dumazet wrote:
-> On Mon, Mar 4, 2024 at 12:33 PM Juntong Deng <juntong.deng@outlook.com> wrote:
+>> Scope-based resource management became supported also for this software
+>> area by contributions of Jonathan Cameron on 2024-02-17.
 >>
->> Currently getsockopt does not support IP_ROUTER_ALERT and
->> IPV6_ROUTER_ALERT, and we are unable to get the values of these two
->> socket options through getsockopt.
+>> device property: Add cleanup.h based fwnode_handle_put() scope based cl=
+eanup.
+>> https://lore.kernel.org/r/20240217164249.921878-3-jic23@kernel.org
 >>
->> This patch adds getsockopt support for IP_ROUTER_ALERT and
->> IPV6_ROUTER_ALERT.
 >>
->> Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
+>> * Thus use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D.
 >>
-> 
-> This looks good to me, thanks, assuming this is net-next material.
-> 
-> Make sure next time to include the target tree (net or net-next)
-> 
-> Reviewed-by: Eric Dumazet <edumazet@google.com>
+>> * Reduce the scope for the local variable =E2=80=9Cev_node=E2=80=9D int=
+o a for loop.
+=E2=80=A6
+>> +++ b/drivers/input/misc/iqs626a.c
+>> @@ -462,7 +462,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
+>>  {
+>>  	struct iqs626_sys_reg *sys_reg =3D &iqs626->sys_reg;
+>>  	struct i2c_client *client =3D iqs626->client;
+>> -	struct fwnode_handle *ev_node;
+>>  	const char *ev_name;
+>>  	u8 *thresh, *hyst;
+>>  	unsigned int val;
+>> @@ -501,6 +500,8 @@ iqs626_parse_events(struct iqs626_private *iqs626,
+>>  		if (!iqs626_channels[ch_id].events[i])
+>>  			continue;
+>>
+>> +		struct fwnode_handle *ev_node __free(fwnode_handle);
+>
+> Doesn't this need to be initialized?
 
-Hi Eric Dumazet,
+This variable should usually be set in both branches of the subsequent if =
+statement,
+shouldn't it?
 
-Thanks for the review.
+Please take another look at the proposed scope reduction
+for the affected variable.
+May additional curly brackets be omitted for this source code transformati=
+on?
 
-Yes, I made this patch based on net-next.
-
-Sorry for the oversight, I will add the target tree next time.
+Regards,
+Markus
