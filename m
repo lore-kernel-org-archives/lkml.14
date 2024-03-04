@@ -1,125 +1,110 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562B3605A5
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 16:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA5F5C611
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 16:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571089; cv=none; b=c90A3KYzJlDTIepC7UUnQyLEB6neal2QTCrPC+3URRGce8VW8rXPlaz6avkhCRx7dqaCdsWxAfRUaLmGljnGbBFoSfcvoNTcRjDs4Sb8RIjwWjAX+9dBE8dGSrUFCk98SMe4zqn6VvDNA3htnJkt8cLjPkW3x6dvRpS9NgfqAI4=
+	t=1709571112; cv=none; b=UTA/IYGg57fwyBuX/MCXsTCpDdIqDIPO5g7dxscFVHen5pDl7D+sJe0896ZpnnKlhjfQ7GqmEn57uRnOouOC0DZp4Gr95H2BleXcMAbML9kF85XEF9gcwhiFi46/INV0tM2DXA2rPeVeQdkBCPu7CYnlm3e41iSQ8YC5nRp9g0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571089; c=relaxed/simple;
-	bh=8YEW8/QYd153IU1YcCsQ5FCqtApBQaAp36ELoAoTGug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rfEkEPnELTtCMMpDmKdpiqhya0X1pNLo3vtuQwTB/vDAp7QWKpWQrzjprrWOYjCfbSsXE5qEw0VGbBzOZxYZT8IqeLGQn4WHfMjG+KyboHrwJDWcUv6RuQSH/TFNdaJPg9hEzpASVzexZBgDV+eT5rBkXVg5kmPgz/2hxm1/y3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Xz6yhItV; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709571112; c=relaxed/simple;
+	bh=DJTqJrjrHlAoRJqjQnntulfFZGXjgIOpKQ2L7DkN6ME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KkNzMxMhDi5n7sdMuRt4vOq62v64YimG1fGQFOnMOQhrcRAUHXkhVSyp+ZrHQFuSkkGNK7sYAiunTvnv8GqM2JMXxTiyns7UvG7J3Nc1S3lMoySn6CkotyxvEaMAdyeYNSVO5nDgb/9TeapUeqMQESvu/L4wLsM3GkKxap8rVkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=UpIyXMpM; arc=none smtp.client-ip=198.252.153.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xz6yhItV"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a4532f84144so171433566b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 08:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709571084; x=1710175884; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xOyMFcdZeiizIIdM2h9cviSaGUWkoYW6H6plPEQ7/JE=;
-        b=Xz6yhItVu+bd1OAN+7W4IPdXqG1psTBThcOsS9BGq2nKTtjGKtg5WzzH41d74Rrgf4
-         KUIk8doq6pwt4t5ZlWE+Qvsvu5NPKYFluovGINCBMnJcJfaZLEV1xWCG03um9qOHt4oO
-         lD96ebXl460RM4ACBsNlXtAgY0EOGG+1BpxoU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571084; x=1710175884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xOyMFcdZeiizIIdM2h9cviSaGUWkoYW6H6plPEQ7/JE=;
-        b=ZaRGJW88v3jWC/p7UDxL0XQpzaK7vcnhzR0ACgBp2XjdugjBw6F92xukj12e8Vr/dR
-         jENNS8JY2NLUWIE+AuRWZwgGK9sqnsHw5SUfj+sDBUyEc4VF9Vh4r2SeYf690+Y3MZOE
-         osze2YnQJX7RSIe93j2iNs4El8pGteLxcXcVnPkEfd/xAVyNOTc3ScVBi9UBwZEePxO1
-         /ZEfj9bmegTOs/2lGDXjxWlIXuxb2NfvCiyDuvfN/WScHGRfq9/BEOPuvw1s4spWj6OL
-         H102WIXxn03vjGJMl7Y8ZkjhEz8SR5jkj/JhCjKU53OF8gULQbcX382Ut2C+euUf5GwX
-         VNEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZT6/OwKPH8H2CUvoq0AuihnJX/qMUbmU7R6QZrHUi2xpTZS+tgVv8IjCEXB17zcMHXzTsZhvCR2TgSm1mqYtuAimlf03js5kUsm9b
-X-Gm-Message-State: AOJu0YwuOe1OznWseTBdRrzpQnWvSGpD6jRiSvemY9cTSLwPyx1qNiMg
-	zfouJbW0LdpefCDOT/cwGV/Y4DaDXD0dC4Y16MQCd9uE8Eiqf/iaXsXhyDCDIiFyICPFZqMCzSv
-	bXClB
-X-Google-Smtp-Source: AGHT+IHXK+XtlwXCl54s51VMYEMUiKbRfQ4zxHBP7JEcAcbRCvuL2sY5IEmmr1VQxe5pTnz2GVA/iw==
-X-Received: by 2002:a17:906:d295:b0:a3e:5589:6099 with SMTP id ay21-20020a170906d29500b00a3e55896099mr6140222ejb.70.1709571083803;
-        Mon, 04 Mar 2024 08:51:23 -0800 (PST)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
-        by smtp.gmail.com with ESMTPSA id sa24-20020a1709076d1800b00a440019ac45sm5033319ejc.69.2024.03.04.08.51.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 08:51:22 -0800 (PST)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-412d84ffbfaso98005e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 08:51:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWN4eS1nwxuEc/aHi5eeVJ6C/WjTgEFIxGLjBfFJcFxw6KX4cAJZ7yyrn5rENfh24gBNpnvzT7anF8PcF4XtJkBrLXScwPQvvYljv/G
-X-Received: by 2002:a7b:c417:0:b0:412:dd21:292 with SMTP id
- k23-20020a7bc417000000b00412dd210292mr263164wmi.0.1709571082557; Mon, 04 Mar
- 2024 08:51:22 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="UpIyXMpM"
+Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4TpPqT273bzDqfp;
+	Mon,  4 Mar 2024 16:51:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1709571109; bh=DJTqJrjrHlAoRJqjQnntulfFZGXjgIOpKQ2L7DkN6ME=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=UpIyXMpMAo0OZLv5zfEBQRN/shiYM+8HOOF/FFxNrylzMc9PaSpuiy/rhccn76V2C
+	 /bRvSM1qAYSXEaXvPd4nViOZbzME28tEGhD10NaaOlnbraMPZAcVf69S9h+Ah2TabY
+	 QkXWqmJZPQL2YKb7HA5Di7EtDEOVQjIzIMc196Z8=
+X-Riseup-User-ID: FA1D33366E1C79C3B9466C79853F08938AD91ED24D444E2BD1C545552ECD762E
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4TpPqN2XcdzJqTr;
+	Mon,  4 Mar 2024 16:51:44 +0000 (UTC)
+Message-ID: <a1de0c95-cb5f-456d-8831-684b4e5573db@riseup.net>
+Date: Mon, 4 Mar 2024 13:51:42 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301061128.3145982-1-yangcong5@huaqin.corp-partner.google.com>
-In-Reply-To: <20240301061128.3145982-1-yangcong5@huaqin.corp-partner.google.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 4 Mar 2024 08:51:06 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UP9NxfmT8rqLd-HUq8QwJXa5xO7UbrgYHLw4vOKZO7hA@mail.gmail.com>
-Message-ID: <CAD=FV=UP9NxfmT8rqLd-HUq8QwJXa5xO7UbrgYHLw4vOKZO7hA@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: boe-tv101wum-nl6: Fine tune Himax83102-j02
- panel HFP and HBP
-To: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
-	hsinyi@chromium.org, swboyd@chromium.org, airlied@gmail.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Feb 29, 2024 at 10:11=E2=80=AFPM Cong Yang
-<yangcong5@huaqin.corp-partner.google.com> wrote:
->
-> The current measured frame rate is 59.95Hz, which does not meet the
-> requirements of touch-stylus and stylus cannot work normally. After
-> adjustment, the actual measurement is 60.001Hz. Now this panel looks
-> like it's only used by me on the MTK platform, so let's change this
-> set of parameters.
->
-> Fixes: cea7008190ad ("drm/panel: Fine tune Himax83102-j02 panel HFP and H=
-BP")
-
-Your "Fixes:" tag is not quite right. It needs to have the _exact_
-subject of the old commit message, AKA:
-
-Fixes: cea7008190ad ("drm/panel: boe-tv101wum-nl6: Fine tune
-Himax83102-j02 panel HFP and HBP")
-
-> Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-> ---
->  drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-
-A little odd that the patch you're fixing claimed that it caused the
-measured rate to be 60.01Hz and here you're saying that it ended up
-being 59.95Hz. I guess there was a measurement error when the previous
-patch was posted?
-
-In any case, the argument still holds that this is a panel that still
-appears to be only used by your board, so small tweaks to the numbers
-here seem OK.
-
-Landed to "drm-misc-fixes" after:
-* Adding "(again)" to the end of the subject to make it distinct from
-the previous patch description
-* Fixing your Fixes tag
-
-9dfc46c87cdc drm/panel: boe-tv101wum-nl6: Fine tune Himax83102-j02
-panel HFP and HBP (again)
+Subject: Re: [PATCH v2 6/9] drm/vkms: Add YUV support
+Content-Language: en-US
+To: Pekka Paalanen <pekka.paalanen@collabora.com>,
+ Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+ thomas.petazzoni@bootlin.com
+References: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
+ <20240223-yuv-v2-6-aa6be2827bb7@bootlin.com>
+ <20240226141916.1627bbbd.pekka.paalanen@collabora.com>
+ <Zd35c_CJbhY46TjQ@localhost.localdomain>
+ <b23da076-0bfb-48b2-9386-383a6dec1868@riseup.net>
+ <8fc07f0f-f14d-4878-9884-2bc4b4c6f426@riseup.net>
+ <20240229141238.51891cad.pekka.paalanen@collabora.com>
+ <ZeXoo4DJxlzhuK4W@localhost.localdomain>
+ <fde6b1d5-56c9-43d0-9ccc-87683b700734@riseup.net>
+ <ZeXtWAM1XDEhxWOM@localhost.localdomain>
+From: Arthur Grillo <arthurgrillo@riseup.net>
+In-Reply-To: <ZeXtWAM1XDEhxWOM@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
--Doug
+
+On 04/03/24 12:48, Louis Chauvet wrote:
+> [...]
+> 
+>>> @arthur, I will submit a v4 with this:
+>>> - matrix selection in plane_atomic_update (so it's selected only once)
+>>> - s64 numbers for matrix
+>>> - avoiding multiple loop implementation by switching matrix columns
+>>
+>> This looks good to me.
+>>
+>>>
+>>> Regarding the YUV part, I don't feel confortable adressing Pekka's 
+>>> comments, would you mind doing it?
+>>
+>> I'm already doing that, how do you want me to send those changes? I reply to
+>> your series, like a did before?
+> 
+> Yes, simply reply to my series, so I can rebase everything on the 
+> line-by-line work.
+
+OK, I will do that.
+
+Best Regards,
+~Arthur Grillo
+
+> Kind regards,
+> Louis Chauvet
+> 
+>> Best Regards,
+>> ~Arthur Grillo
+>>
+>>>
+>>> Kind regards,
+>>> Louis Chauvet
+>>>
+>>> [...]
+>>>
+> 
