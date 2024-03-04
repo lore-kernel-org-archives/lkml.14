@@ -1,197 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78BC63DF
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 03:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB2617C9
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 03:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709521208; cv=none; b=H7OZGh/qK6z/wx5lJBp+k5qdhBLCkzCqe3228FU/g+NHaOpqK1bqF2zpZDaLP8m1xoBuXpBZZE+sNqu2lq4Bpe/HniFepmynGhfpf4xh5wgM/rxsygZEbhJ+yKYtmCq8suQ3WcTY4ID5V20hDCn8FNIeBHtL0XHs7bWlahS6IVI=
+	t=1709521256; cv=none; b=pcXpAbRqi5D2IMk2zZaGBqRoldlQS6vTCh8rvosHOkz+54cv2EG+ZHMaR7a0ArtDsAEhuke2J1ai7oWXyQmscpySYttyXLef3jyYiGZCN+N5qd06HMFK3C8+mAxPkbvwZtJnQieKq9LkD3VTxSQclyACwoh38Ii/H6n86ruq0wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709521208; c=relaxed/simple;
-	bh=c2Vi9fIkjTQ90K5e3JM+WiE51SJGyWOmrkvaQ1LNIC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=B1CH6HyxBFWkUexHGhHjymCV9YHUtrOALimkWS5g3U7m+Hz7MegHaXPVpGEsVCGTXnFC43iNKYQgeb7NZs9pA22alfSN2QBJQA3hUtab4/m/Vk8V8GzMx6B6VEpCzpb0h3VJ9Tb68iaSDe36GPYObrlMOqDO239GU1j9uG3Ws7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ltsoV4Bv; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709521256; c=relaxed/simple;
+	bh=nw9L+W2RdaeA/JiFU5L3vP+VcASNnK3QbAN7wrUFDFQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=e96P08fQlqNRrAr9zjl9l1jBaLpHKFHRme0dmhjFt+yFHOakS5X1dnB/oy3jPFRhOzY2V7KTL5ylRxZLXuS8oGSG7A/FF6OON+ohZ2qQVFSB3SqqfB7VzNw2o5jwA3cF5hvauhr5aeKGcXTWzcFeGxhc2gb2BBCSOtz9cO86Mp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Myqptbhw; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ltsoV4Bv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709521206; x=1741057206;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=c2Vi9fIkjTQ90K5e3JM+WiE51SJGyWOmrkvaQ1LNIC4=;
-  b=ltsoV4Bvi5ljgtUfAwpIhpMKTDAGrVem9pxOav8LopsTJLDmDloLhs6B
-   Q563wHB3nWvH2gIubNSjiSead/lrEMtiO4ndj0gpVTW08Skj4MfZCIGRx
-   hqlXMRP0O6xs5HRuxJx51FNGq7pCId70+Skt0kB1nyzHesY1HWgwlfkbW
-   t8a5QFBKkvnmDJFuWhNUl7X84qbjhoEj52fyZBj2pzbb/Aqk4lUyMeDLV
-   C0ZLSOmgMWpoZHWCvbfW7GI4esv6C71K1y2s+M1dRRnxS5uFdTTP5EzBo
-   Nqx8Wz6FA00bWSy8cnjB78jMAhlPQs50jeZtyKql8xq2l6O5Elsq/Rf7j
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4573269"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="4573269"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 19:00:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="13498488"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 03 Mar 2024 19:00:02 -0800
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rgyYZ-0002IT-2w;
-	Mon, 04 Mar 2024 02:59:59 +0000
-Date: Mon, 4 Mar 2024 10:59:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: George Stark <gnstark@sberdevices.ru>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: WARNING: modpost: "strcpy" [drivers/iio/adc/meson_saradc.ko] has no
- CRC!
-Message-ID: <202403041010.vzeCY1aN-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Myqptbhw"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1709521251; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=OAEj4XYKb6Z7iXVcveEaFUEGuCaJ8azk2/tiA7nFnrA=;
+	b=MyqptbhwDSgqNFwQg+dfz2ORR+xFL8mW4MSbmcPLxGILWPfp38hCZEkkVjOf0c4ECOQYbr9awrQiQNUYM7nz4s82gHNdmKOjzNDPd3Aqqqiqq9WrOKOutK+XjlNIkasaain0TgkMXudi3fFGwaZnfsl/ZlbruKmjlvROTSGur88=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=dtcccc@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W1i0XYp_1709521250;
+Received: from localhost.localdomain(mailfrom:dtcccc@linux.alibaba.com fp:SMTPD_---0W1i0XYp_1709521250)
+          by smtp.aliyun-inc.com;
+          Mon, 04 Mar 2024 11:00:50 +0800
+From: Tianchen Ding <dtcccc@linux.alibaba.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Abel Wu <wuyun.abel@bytedance.com>
+Subject: [PATCH 2/2] sched/eevdf: Fix miscalculation in reweight_entity() when se is not curr
+Date: Mon,  4 Mar 2024 11:00:42 +0800
+Message-Id: <20240304030042.2690-3-dtcccc@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240304030042.2690-1-dtcccc@linux.alibaba.com>
+References: <20240304030042.2690-1-dtcccc@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-commit: b593ce5db22483dd66405861ac3f782e5a7cd9f3 iio: adc: meson: add channel labels
-date:   8 months ago
-config: alpha-randconfig-r001-20230205 (https://download.01.org/0day-ci/archive/20240304/202403041010.vzeCY1aN-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240304/202403041010.vzeCY1aN-lkp@intel.com/reproduce)
+reweight_eevdf() only keeps V unchanged inside itself. When se !=
+cfs_rq->curr, it would be dequeued from rb tree first. So that V is
+changed and the result is wrong. Pass the original V to reweight_eevdf()
+to fix this issue.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403041010.vzeCY1aN-lkp@intel.com/
+Fixes: eab03c23c2a1 ("sched/eevdf: Fix vruntime adjustment on reweight")
+Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
+---
+ kernel/sched/fair.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: "strcpy" [fs/hpfs/hpfs.ko] has no CRC!
-WARNING: modpost: "strcpy" [fs/overlayfs/overlay.ko] has no CRC!
-WARNING: modpost: "strcat" [fs/overlayfs/overlay.ko] has no CRC!
-WARNING: modpost: "strcpy" [fs/btrfs/btrfs.ko] has no CRC!
-WARNING: modpost: "strcpy" [security/keys/encrypted-keys/encrypted-keys.ko] has no CRC!
-WARNING: modpost: "strncpy" [security/keys/encrypted-keys/encrypted-keys.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/gpio/gpio-sim.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/video/backlight/backlight.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/soc/qcom/cmd-db.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/gpu/drm/hisilicon/hibmc/hibmc-drm.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/gpu/drm/drm.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/gpu/drm/drm.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/gpu/drm/radeon/radeon.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/gpu/drm/mgag200/mgag200.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/gpu/drm/nouveau/nouveau.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/gpu/drm/nouveau/nouveau.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/gpu/drm/ast/ast.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/gpu/drm/etnaviv/etnaviv.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/target/target_core_pscsi.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/target/sbp/sbp_target.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/spi/spi-butterfly.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/spi/spi-lm70llp.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/net/phy/libphy.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/phy/fixed_phy.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/net/phy/smsc.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/mdio/mdio-xgene.ko] has no CRC!
-WARNING: modpost: "strcat" [drivers/net/hamradio/baycom_ser_fdx.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/hamradio/baycom_ser_fdx.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/hamradio/baycom_ser_hdx.ko] has no CRC!
-WARNING: modpost: "strcat" [drivers/net/hamradio/baycom_ser_hdx.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/wireless/broadcom/b43/b43.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/wireless/broadcom/brcm80211/brcmutil/brcmutil.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/net/wireless/broadcom/brcm80211/brcmsmac/brcmsmac.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/wireless/intel/ipw2x00/ipw2100.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/wireless/intel/ipw2x00/ipw2200.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/net/wireless/intel/ipw2x00/ipw2200.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/wireless/marvell/mwifiex/mwifiex.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/wireless/marvell/mwifiex/mwifiex_pcie.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/wireless/ti/wlcore/wlcore.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/net/wireless/ti/wlcore/wlcore.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/net/wireless/ti/wl1251/wl1251.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/net/wireless/ti/wl18xx/wl18xx.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/net/wwan/rpmsg_wwan_ctrl.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/tun.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/plip/plip.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/net/thunderbolt/thunderbolt_net.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/firewire/firewire-core.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/i2c/busses/i2c-jz4780.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/i2c/busses/i2c-qcom-cci.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/i2c/busses/i2c-sprd.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/media/rc/rc-core.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/media/dvb-frontends/cxd2841er.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/power/supply/wm831x_power.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/power/supply/charger-manager.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/power/supply/bq24190_charger.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/md/raid1.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/md/raid10.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/md/md-cluster.ko] has no CRC!
-WARNING: modpost: "strcat" [drivers/md/bcache/bcache.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/md/md-mod.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/md/md-mod.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/md/dm-crypt.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hid/hid.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/hid/uhid.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hid/hid-wiimote.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hid/hid-sensor-custom.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/staging/rtl8192e/rtllib.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/staging/rtl8192e/rtllib.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/staging/rtl8723bs/r8723bs.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/staging/rts5208/rts5208.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/staging/iio/adc/ad7816.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/staging/iio/addac/adt7316.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/staging/iio/impedance-analyzer/ad5933.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/staging/greybus/gb-firmware.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/staging/greybus/gb-loopback.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/staging/greybus/gb-arche.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/staging/vc04_services/vchiq.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/staging/vc04_services/vchiq-mmal/bcm2835-mmal-vchiq.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/perf/arm_smmuv3_pmu.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/perf/arm_dmc620_pmu.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hwtracing/intel_th/intel_th.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hwtracing/intel_th/intel_th_gth.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/rapidio/rapidio.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/ata/libata.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/input/keyboard/atkbd.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/input/rmi4/rmi_core.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hwmon/adcxx.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hwmon/adt7475.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hwmon/gpio-fan.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hwmon/i5k_amb.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/hwmon/nct7802.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/hwmon/pmbus/pmbus_core.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/greybus/greybus.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/rpmsg/rpmsg_core.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/rpmsg/rpmsg_ns.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/rpmsg/virtio_rpmsg_bus.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/soundwire/soundwire-bus.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/iio/accel/sca3000.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/iio/adc/hx711.ko] has no CRC!
->> WARNING: modpost: "strcpy" [drivers/iio/adc/meson_saradc.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/iio/adc/mxs-lradc-adc.ko] has no CRC!
-WARNING: modpost: "strncpy" [drivers/iio/adc/stm32-adc.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/iio/light/cm32181.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/iio/light/tsl2583.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/thunderbolt/thunderbolt.ko] has no CRC!
-WARNING: modpost: "strcat" [drivers/thunderbolt/thunderbolt.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/fpga/fpga-mgr.ko] has no CRC!
-WARNING: modpost: "strcpy" [drivers/fpga/dfl-fme.ko] has no CRC!
-WARNING: modpost: "strncpy" [net/xfrm/xfrm_user.ko] has no CRC!
-WARNING: modpost: "strcpy" [net/xfrm/xfrm_user.ko] has no CRC!
-WARNING: modpost: "strcpy" [net/ipv6/ip6_tunnel.ko] has no CRC!
-WARNING: modpost: "strcpy" [net/wireless/cfg80211.ko] has no CRC!
-WARNING: modpost: "strcpy" [net/key/af_key.ko] has no CRC!
-WARNING: modpost: "strcpy" [net/rose/rose.ko] has no CRC!
-WARNING: modpost: "strcpy" [net/rfkill/rfkill.ko] has no CRC!
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 5551ce2af73e..091a1a750638 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3676,11 +3676,10 @@ static inline void
+ dequeue_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) { }
+ #endif
+ 
+-static void reweight_eevdf(struct cfs_rq *cfs_rq, struct sched_entity *se,
++static void reweight_eevdf(struct sched_entity *se, u64 avruntime,
+ 			   unsigned long weight)
+ {
+ 	unsigned long old_weight = se->load.weight;
+-	u64 avruntime = avg_vruntime(cfs_rq);
+ 	s64 vlag, vslice;
+ 
+ 	/*
+@@ -3787,10 +3786,12 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+ 			    unsigned long weight)
+ {
+ 	bool curr = cfs_rq->curr == se;
++	u64 avruntime;
+ 
+ 	if (se->on_rq) {
+ 		/* commit outstanding execution time */
+ 		update_curr(cfs_rq);
++		avruntime = avg_vruntime(cfs_rq);
+ 		if (!curr)
+ 			__dequeue_entity(cfs_rq, se);
+ 		update_load_sub(&cfs_rq->load, se->load.weight);
+@@ -3804,7 +3805,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+ 		 */
+ 		se->vlag = div_s64(se->vlag * se->load.weight, weight);
+ 	} else {
+-		reweight_eevdf(cfs_rq, se, weight);
++		reweight_eevdf(se, avruntime, weight);
+ 	}
+ 
+ 	update_load_set(&se->load, weight);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.3
+
