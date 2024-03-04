@@ -1,112 +1,128 @@
-Received: from smtp1.iitb.ac.in (smtpd9.iitb.ac.in [103.21.126.64])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4C5BA27
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 05:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.21.126.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE6FC2C4;
+	Mon,  4 Mar 2024 05:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709531633; cv=none; b=jSkPj3al+JQNijyhwPDkv8mP6Ku2prpOZYbC41CTocxIucpGm32RzI0fnZuklZn2Qij5WQhMvuW9iwOnINqBkwxb3mnuM0AZxnrLrgh/uU5Bzte2CfdnhGuZSR8ab/ckPAGT23awoF227EZ8qV+MzjOnV/HjrTt9tP/QpDMvY+w=
+	t=1709531637; cv=none; b=R44ksZnbivZVXW0lt65OaSc+987oQRjYHxVuiCRZ8DRSRvU8mn5h/I8Ni5lWWw8UBN8RuJh4DyVEwLtlLtBlTbCofoTertsw/1YVbGqopBK4myqB5Gja46490Ok8/g3s3sMaaGDKQpfSI1Vw0HyUPtyb7CPm4CZ/mFN6J5Im1N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709531633; c=relaxed/simple;
-	bh=h+kBNKpg6K7RtepCFQNzRMfkyN2SbsIJc7s8qriTZoc=;
-	h=MIME-Version:Date:From:To:Cc:Subject:Message-ID:Content-Type; b=u1ukch0kvNzNLIpQH0uaEut0pxe67A8mSh/hM8ekLq6KhugFCtyjdgr16ybT7MM+Lpk5xMVGdzMEzZp34pOIDgt2Cuxwk0fj7zUl8xdgk55cKJ+oEvix2aRi3Jeki5wsUzIGARh4jmyl/1yxBj3TYviSuOqxdGT1+hseqXLpe9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iitb.ac.in; spf=pass smtp.mailfrom=iitb.ac.in; dkim=pass (1024-bit key) header.d=iitb.ac.in header.i=@iitb.ac.in header.b=ssBB4zbd; arc=none smtp.client-ip=103.21.126.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iitb.ac.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iitb.ac.in
+	s=arc-20240116; t=1709531637; c=relaxed/simple;
+	bh=cXWBfwlxuJAj0jL1HGZC8UaFHLZLGppJZ2bEL+NQH14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ICvO2D3tcD+oxgeVnCGNlSZ5UeWyomtB7gOJ4wUG0N5yj6lexjBFZsiz8s2A2w+RQ9agrZVSm3c5TpuHXgvf+u+jAArK8n7uDH82KE8O4OZWP8by0uX5grqnttiDLiUhy/vaC+DPP427Hkjmeigqi5JENxc4FcIaaesNHYNAToM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YASgxzAg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iitb.ac.in header.i=@iitb.ac.in header.b="ssBB4zbd"
-Received: from ldns2.iitb.ac.in (ldns2.iitb.ac.in [10.200.12.2])
-	by smtp1.iitb.ac.in (Postfix) with SMTP id 11845104D0DE
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:23:44 +0530 (IST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.iitb.ac.in 11845104D0DE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iitb.ac.in; s=mail;
-	t=1709531624; bh=h+kBNKpg6K7RtepCFQNzRMfkyN2SbsIJc7s8qriTZoc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ssBB4zbd4AbkulS5HsblTByt9Meyp/UyNfLpBQ9qZea/1sxd39M4RLv5fVK8NaD+A
-	 xEuHk2QQabRwJxWp+G2Jp++N3wyvzXPyYggNwv9VJQIFALjc9TRdnkOr78UY7cDBJH
-	 rqrJ5N2SjBmNzugKPveH78RxgX17n+ru3iSsmgNU=
-Received: (qmail 18002 invoked by uid 510); 4 Mar 2024 11:23:44 +0530
-X-Qmail-Scanner-Diagnostics: from 10.200.1.25 by ldns2 (envelope-from <210100011@iitb.ac.in>, uid 501) with qmail-scanner-2.11
- spamassassin: 3.4.1. mhr: 1.0. {clamdscan: 0.100.0/26337} 
- Clear:RC:1(10.200.1.25):SA:0(0.0/7.0):. Processed in 3.489452 secs; 04 Mar 2024 11:23:44 +0530
-X-Spam-Level: 
-X-Spam-Pyzor: Reported 0 times.
-X-Envelope-From: 210100011@iitb.ac.in
-X-Qmail-Scanner-Mime-Attachments: |
-X-Qmail-Scanner-Zip-Files: |
-Received: from unknown (HELO ldns2.iitb.ac.in) (10.200.1.25)
-  by ldns2.iitb.ac.in with SMTP; 4 Mar 2024 11:23:40 +0530
-Received: from wm1.iitb.ac.in (wm1.iitb.ac.in [10.200.17.1])
-	by ldns2.iitb.ac.in (Postfix) with ESMTP id 53C91341636;
-	Mon,  4 Mar 2024 11:23:40 +0530 (IST)
-Received: from webmail-sso.iitb.ac.in (localhost [IPv6:::1])
-	by wm1.iitb.ac.in (Postfix) with ESMTP id 5115C608E11;
-	Mon,  4 Mar 2024 11:23:40 +0530 (IST)
-Received: from [10.9.9.42]
- by webmail.iitb.ac.in
- with HTTP (HTTP/1.1 POST); Mon, 04 Mar 2024 11:23:40 +0530
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YASgxzAg"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4245MLU4001401;
+	Mon, 4 Mar 2024 05:53:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=qcppdkim1; bh=6Sqwzv7znzrMn4zPRPwy
+	YvyWRsFApx42RpVbA3uYIic=; b=YASgxzAgDqoUIh2dagzOjQmS7LDO31BSHmFk
+	V8H6NHuKqjW6Js7kIUZMYpFKD5TorhbbzvJm6BI0llNEeN9ajtcC/DcyfCjP8Yk8
+	7h+BPEbAz1zGP+sL97hg45Dihwczq/ceyeEXQ3oGIVOEBUmK5HviH1p6gVw9num4
+	L1tB+eiCezcxeKUpCN1wmVPoOtns1x38Mghu0e0Ua4SIUcUFUivDr5cANkPFGFQx
+	Ke//0JIwWE+JNGRRtHAivevBod8nttZ9HO52qCvsGXKT+ByONFLaW2519Pv88LXh
+	8sRdfd11yUeeXLKD/WOebbNQZ+QDA0hG1ki3Wb/D15fpCaidKg==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wmsqnry6r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Mar 2024 05:53:51 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 4245rlv7007938;
+	Mon, 4 Mar 2024 05:53:48 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3wkw6kx58x-1;
+	Mon, 04 Mar 2024 05:53:47 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4245rltD007916;
+	Mon, 4 Mar 2024 05:53:47 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.242.220])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 4245rknC007912;
+	Mon, 04 Mar 2024 05:53:47 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 3944840)
+	id C01A3500946; Mon,  4 Mar 2024 11:23:45 +0530 (+0530)
+From: Wasim Nazir <quic_wasimn@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@quicinc.com,
+        Wasim Nazir <quic_wasimn@quicinc.com>
+Subject: [PATCH v2 0/3] arm64: qcom: add support for QCS8550 RB5gen2 board
+Date: Mon,  4 Mar 2024 11:23:30 +0530
+Message-ID: <20240304055333.15952-1-quic_wasimn@quicinc.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 04 Mar 2024 11:23:40 +0530
-From: Aman Sharma <210100011@iitb.ac.in>
-To: Gregkh <gregkh@linuxfoundation.org>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Staging: pi433: Updated bitrate range from datasheet
-Message-ID: <91454ef9b4a12f01e13d69b675d81aff@iitb.ac.in>
-X-Sender: 210100011@iitb.ac.in
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 7iqzTHfaEl-XyOmsswgDNfbuJzi6ep5r
+X-Proofpoint-GUID: 7iqzTHfaEl-XyOmsswgDNfbuJzi6ep5r
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-04_02,2024-03-01_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0
+ impostorscore=0 clxscore=1015 mlxlogscore=787 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403040042
 
-Updated bitrate range for FSK and OOK modulation from the RFM69 
-Datasheet.
-The values are mentioned in Section 2.3.2 of the datasheet.
+RB5gen2 is Thundercomm's development platform used for IOT solutions.
+It is based on Rb5gen2-SOM which is using QCOM's QCS8550 SoC.
 
-Signed-off-by: Aman Sharma<amansharma6122002@gmail.com>
----
-  drivers/staging/pi433/Documentation/pi433.txt | 6 ++++--
-  drivers/staging/pi433/TODO                    | 1 -
-  2 files changed, 4 insertions(+), 3 deletions(-)
+On-board components:
+- Qualcomm QCS8550 SoC
+- LPDDR5, 12 GiB
+- UFS3.1, 128 GiB
+- USB3.1
 
-diff --git a/drivers/staging/pi433/Documentation/pi433.txt 
-b/drivers/staging/pi433/Documentation/pi433.txt
-index 4a0d34b4ad37..9ce7282ef6f8 100644
---- a/drivers/staging/pi433/Documentation/pi433.txt
-+++ b/drivers/staging/pi433/Documentation/pi433.txt
-@@ -78,7 +78,8 @@ rf params:
-  		Allowed values: 433050000...434790000
-  	bit_rate
-  		bit rate used for transmission.
--		Allowed values: #####
-+		Allowed values (For FSK): 1200...320000
-+		Allowed values (For OOK): 1200...32768
-  	dev_frequency
-  		frequency deviation in case of FSK.
-  		Allowed values: 600...500000
-@@ -169,7 +170,8 @@ rf params:
-  		Allowed values: 433050000...434790000
-  	bit_rate
-  		bit rate used for transmission.
--		Allowed values: #####
-+		Allowed values (For FSK): 1200...320000
-+		Allowed values (For OOK): 1200...32768
-  	dev_frequency
-  		frequency deviation in case of FSK.
-  		Allowed values: 600...500000
-diff --git a/drivers/staging/pi433/TODO b/drivers/staging/pi433/TODO
-index 63a40bfcc67e..61ed3a1578bc 100644
---- a/drivers/staging/pi433/TODO
-+++ b/drivers/staging/pi433/TODO
-@@ -2,4 +2,3 @@
-  * still TODOs, annotated in the code
-  * currently the code introduces new IOCTLs. I'm afraid this is a bad 
-idea.
-    -> Replace this with another interface, hints are welcome!
--* Some missing data (marked with ###) needs to be added in the 
-documentation
--- 
-2.34.1
+On-board PMICs:
+- PM8550VS
+- PM8550VE
+- PM8550
+- PM8550BH
+- PMK8550
+- PMR735D
+- PM8010
+
+v1 -> v2:
+ - Update board name from qcs8550-rb5gen2-hdk to qcs8550-rb5gen2.
+ - Update SOM name to qcs8550-rb5gen2-som.
+ - Remove qcm8550 from board definition.
+ - Update DT files wrt board/som name changes.
+ - Link to v1 [2].
+
+This series depends on [1].
+
+[1]: https://lore.kernel.org/all/20240301134113.14423-1-quic_tengfan@quicinc.com/
+[2]: https://lore.kernel.org/all/20240202133638.4720-1-quic_wasimn@quicinc.com/
+
+Wasim Nazir (3):
+  dt-bindings: arm: qcom: Document rb5gen2 board
+  arm64: dts: qcom: Add initial support for rb5gen2 SOM
+  arm64: dts: qcom: Add initial support for rb5gen2 board
+
+ .../devicetree/bindings/arm/qcom.yaml         |   7 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/qcs8550-rb5gen2-som.dtsi    | 438 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550-rb5gen2.dts  | 136 ++++++
+ 4 files changed, 582 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-rb5gen2-som.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-rb5gen2.dts
+
+--
+2.43.2
+
