@@ -1,81 +1,96 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCE479DC1;
-	Mon,  4 Mar 2024 19:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABB77869E;
+	Mon,  4 Mar 2024 19:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709580454; cv=none; b=YmZQIyOu3sZ753EbEpOho+SWSds23IvNKSYNwR4IVgC3OoHkIjeinrN7wA+i4bavAQmntduCA9RdZOfTb9oT/FA3uvvrGcOncjLxBLgWocT5g0XB9OESqZcKdcvVnJhDeMfD1eF6FecPsMvb2oSUZMrTIykzGPXGyf8ccr1mlO4=
+	t=1709580550; cv=none; b=gI9ahKJuyR4W3o22TpYoj4DyCNNJ8Ug7zrrm+lDxjGvTAtuxmFULO1BO6GXBsH0xPCJPdvCPZmZxNZFpO6YZWS0TXl5Sk+vF07zezlwosXH49Uj68NxrDKxH8ncZq0CzISw2EGUByZitiyKcolabGwrYjSid/cPivM9uUoJfEWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709580454; c=relaxed/simple;
-	bh=hANRgoNVGaZU4rZ+XDQgnMgAvRmbrD9MTNHj1xOU1c4=;
+	s=arc-20240116; t=1709580550; c=relaxed/simple;
+	bh=V8gmN+cucgc/503pO37ENBKhzWyVzgTTUpxzw+uscCc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABTt1oL4VkweFKeYZc7KpX0SMuLOeOa7+RZj7MXgSdP+cMOOevd/6NSsEeJxx/mrjBceFBxlSxK5wOUauqo6K825lEafns3hLaPrtlynYnUaG0ABNdgO3WmqGyRibgPhB/rPjgcBvDTzo3oZhDQJsEtBHZIMY0p/+QJ+6JzKxjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=jncod8sh; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ags2AcpBk03Ddi2bkONM4RX3Yq78LeBhGP0CxLqBTUcCXJkHhER83a1gtKit12kys5sVKX0ai2rmifLfuZJi1PwnKTlrXtZjZ13rBHmn5z2uKvQf99xn5pqSPeDA1jbG3n7w54DXpUnUdH+XmxCxTokUTDDkSiJoCc3k7t3ox+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvYNXVFR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jncod8sh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UFjQCiD5weQa18oNxEgo6gN7ayWqxgCNs3etg8HITds=; b=jncod8shLs0Tc/C6HJKYzYW0FL
-	whcy1kq9S4e4SzhZtcuVjoJi8h3RAeSBt10loUEBobfjZJiv5zsZgO9eiJZ1NFduO3gNnp9axoWzj
-	L2Ve3H4G/UiNhOEnqA/fvtDA08pijJ/ziBxzNoo9s+Fue7z+cumBoPlBzthwfhkIWsaLeSnNaOecE
-	42C5dgx/Ap3QwpnWBUkC5aemWKxa+h/M0LRcw92juQWPHI+ujIvX2KJHHIIf7oZw7jySo6EqB3t3c
-	9VMG0XO0TfY6Md0Zvv1uoflF0L1zzKzSlop8UW2CXm3pGsRCC4K+2fEftfrctASnKHhOd75i79CmP
-	3GxQiZTA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39752)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rhDy5-00069q-17;
-	Mon, 04 Mar 2024 19:27:21 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rhDy2-0004id-Dg; Mon, 04 Mar 2024 19:27:18 +0000
-Date: Mon, 4 Mar 2024 19:27:18 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Robert Marko <robimarko@gmail.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, andrew@lunn.ch,
-	hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, ansuelsmth@gmail.com,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH net] net: phy: qca807x: fix compilation when
- CONFIG_GPIOLIB is not set
-Message-ID: <ZeYglnW6/k0nvmiL@shell.armlinux.org.uk>
-References: <20240304192244.2924407-1-robimarko@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvYNXVFR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF2CC433C7;
+	Mon,  4 Mar 2024 19:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709580550;
+	bh=V8gmN+cucgc/503pO37ENBKhzWyVzgTTUpxzw+uscCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LvYNXVFRMh4C/CW9oQo7AnwCsurlRlFLoO3zdy8DQqw+gA/tTAU8+Hj3CAXE9kqE2
+	 0kDm4U3+4fQNf5PMRJuQdxVQWwkqjMxbDWXg6MOpuTgmkUbYMGDXQ0aFEvF0sLQrr6
+	 idA/WDl3GfUewLIDCNhnjjXns2Jd6Lg7ylYgCa+/DbunU2ExrE3pq0G8RwmYbjDqTt
+	 mq8/I3WRbuDmkLnEEqCTqtw3x5SjEVnlTlTHEg1SiqdHZrTOAjddYiv3W2ktfUt/Ku
+	 x6DNCc+y5658KPyzjutARzwEZIsZ2B8ci7e/ImBtYazayHt1u64lI67/lXAYOJhFDI
+	 L3rZy45BO7kkg==
+Date: Mon, 4 Mar 2024 19:29:04 +0000
+From: Conor Dooley <conor@kernel.org>
+To: =?iso-8859-1?Q?J=E9r=E9mie?= Dautheribes <jeremie.dautheribes@bootlin.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Yen-Mei Goh <yen-mei.goh@keysight.com>
+Subject: Re: [PATCH v2 0/3] panel-simple: add support for Crystal Clear
+ CMT430B19N00
+Message-ID: <20240304-drivable-property-feaeba782880@spud>
+References: <20240304160454.96977-1-jeremie.dautheribes@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rI073bo/OhsyVdFq"
 Content-Disposition: inline
-In-Reply-To: <20240304192244.2924407-1-robimarko@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20240304160454.96977-1-jeremie.dautheribes@bootlin.com>
 
-On Mon, Mar 04, 2024 at 08:21:36PM +0100, Robert Marko wrote:
-> -	if (IS_ENABLED(CONFIG_GPIOLIB)) {
-> +#if IS_ENABLED(CONFIG_GPIOLIB)
->  		/* Make sure we don't have mixed leds node and gpio-controller
->  		 * to prevent registering leds and having gpio-controller usage
->  		 * conflicting with them.
-> @@ -749,7 +749,7 @@ static int qca807x_probe(struct phy_device *phydev)
->  			if (ret)
->  				return ret;
->  		}
-> -	}
-> +#endif
 
-I know it makes for a bigger patch, but #if is not equivalent to if()
-in terms of indentation, so the indentation also needs to be changed.
+--rI073bo/OhsyVdFq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+On Mon, Mar 04, 2024 at 05:04:51PM +0100, J=E9r=E9mie Dautheribes wrote:
+> Hello everyone,
+>=20
+> This patch series add support for the Crystal Clear Technology
+> CMT430B19N00 4.3" 480x272 TFT-LCD panel.
+> It also adds Crystal Clear Technology to vendor-prefixes.yaml.
+>=20
+> Please note that unfortunately there is no public datasheet available
+> for this panel.
+>=20
+> Changes in v2:
+>   - add link to the Crystal Clear Technology website in commit message, as
+>   suggested by Conor Dooley and Neil Armstrong.
+
+You forgot however to add the acks that I gave you for the two
+dt-binding patches.
+
+--rI073bo/OhsyVdFq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeYhAAAKCRB4tDGHoIJi
+0nAcAQCc3o01bI3Ifa5xoNkCxhVQ62sJgXDVhXy3VZlzzE4KmgD8D61G2EON3aLG
+RtxPHF0vPEGYsIXGqwyz/wkAwB4j3w4=
+=fyIn
+-----END PGP SIGNATURE-----
+
+--rI073bo/OhsyVdFq--
