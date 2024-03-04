@@ -1,187 +1,162 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2064.outbound.protection.outlook.com [40.107.93.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3E54D599
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 16:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709570706; cv=none; b=hrEHkJ/3sK5yXwmT4tLuTCpF46nwUPA5q5lZauMMItR3q5vg5vLdz7qR7H4cAnY1MdCtpqUwvmYxzRiddIFGEHdwZsDqUWUlhxpYa6YYDT8QQ+DiYVfie1vmP5eMZfVX0yoVf5UJAGHl88ceh2EoQf2AICbEglZo5vF+2ZsDdwE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709570706; c=relaxed/simple;
-	bh=c0nOlOGVKnbvZd0aqgDLKYGxvgeBthYhCQaGDdivyEs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VzfPvA9RSg1+W3xj+drLsBVpy261Al2QLP4rYyuJZnSYEd2AUH4BrrFG9nk/81yPqh/n2XOkKyNywhdqoM6ASQ5C5sYY6QDSeiJVxahNYUZ7D3IOEvNsFtVeUpi+uf2oRPFxOymFMYC19udjpAdTmFIZsENQ7+QZT/6awAZHiMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=SdOoF4mr; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4AC20323;
+	Mon,  4 Mar 2024 16:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709570778; cv=fail; b=qj/cWQhH2HHX+YYqaG8vwhOKMTwvdFzc7ImZjXBzIZTu7cOGzIwZtbzFF0lbStQZHkcUX1jnNJ4bHcrkihHavVySuDDp031GFyQev3BlPIB5eACIRaLylCLAP4txjs/pbsoiDKPF8H8AKvb811mQsBQB44Pqk4odokgAgpI45bg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709570778; c=relaxed/simple;
+	bh=VmFxFAkDwirddRzt63pRfzbXgo2sGc7qDpaGPtytP9w=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HcIpYFMdYAvyK3XzSqfKPkq/O/J3lvG3oDp3Fcuvj+UMRdMBslcw9Bk3MqiwSCgjRE1fFCDlXAwhi8gMMoWQdmZrcHynQ5c5iGnw0rlygEdc3W/A4WouS3fobU3O5X9d3zV0VUPoeMgRmwdMFuCwfnbDEe8IJKcuGOu3AMiQO3s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SimkksoN; arc=fail smtp.client-ip=40.107.93.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="SdOoF4mr"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a4499ef8b5aso325168066b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 08:45:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1709570702; x=1710175502; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=U0FiBP+//kknF4KTWR0RQTkCl2jmVnjkFryXNaTnTKI=;
-        b=SdOoF4mrSlAdjK9UaeVBwgi4DdH+MCwVNUgesfP1i8NU1A4JVITvV2ls/TY5iHa++C
-         /ARcvjNIn/LzZmI6l6VWNXW7TRPG7On8w2U74KlwEG04Gh7usZxOxB07mPh1zNC3Wz1P
-         +dgftEU4v3RH3DNHmLwps3hGNfKjmrllrRDb/refdSZBMowKw3RdblLSmRDtxeR184eS
-         5DDCw0RI2USWcRfW2h6kSONvYfODJ15egDv75sUijxsWfbv1/iDcL0KudUkjs4XDhncO
-         nIbCG1pmpm4MGxyFxNPpb7ssSKszDa2AJiEraCb+rxreyKr94UNVBNENtr9da+5r0g0C
-         Q3Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709570702; x=1710175502;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U0FiBP+//kknF4KTWR0RQTkCl2jmVnjkFryXNaTnTKI=;
-        b=ERgsf4qvu+Bj31pGE5s3ttTTZWlMe/h/llOKYFJRjascdJrw/1+CBi8ZT1UKwSr225
-         OAQ/jVjywIq7VVNZrDgTqVMy3YYD4zfHSFQnRuaao1ryZ03L/6Kh4MqkKkLXUoer+AAA
-         8zfawFk/ZEds4qZRALc76YUr3l02KoAYsIjGzdqk8WLqWMI8TKHVa27jJHCGCR2+6xwc
-         R07qy8m8dpnTJXX484PaiWz6NqH/JHkbxP5wRBVwPWj63h81N+BPFlRigoTD60sageCf
-         M7hMujwAn0XNoCvjWYe8VPIHBjqocF+hfCn+VE6ps74FJw0Uv4AVrduvUbuM4D3e1BUA
-         bQzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWSm2MKVkGM3xxl7QD5d884jKdizU1AhkYUzsztcZ199C5VWfwayPkchjKWhH7VZzXGvlJ32Oaab1IXX5Ub0FucWgrNqrez6tHCg47R
-X-Gm-Message-State: AOJu0YzJDx4YSc9m+N6FCnRybNIm5iYTT2wXDGYapp7UAV8lnf8vHwVP
-	HYy+7lq4GvgHw8+b3Qj7IePh65PeCfRnZXursnAnUYTtpWkf7Fq/6yTnMhWgEXo=
-X-Google-Smtp-Source: AGHT+IFthzWupti03xmrvDkDDb409q1iZzMy1+qIF98CiKTob9vlGgRjPGGQxXx6uxpB2vQieX3Pow==
-X-Received: by 2002:a17:906:b014:b0:a44:c6b4:ee4b with SMTP id v20-20020a170906b01400b00a44c6b4ee4bmr4831161ejy.25.1709570701689;
-        Mon, 04 Mar 2024 08:45:01 -0800 (PST)
-Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
-        by smtp.gmail.com with ESMTPSA id tj7-20020a170907c24700b00a413d1eda4bsm5039616ejc.87.2024.03.04.08.45.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:45:01 -0800 (PST)
-From: Naresh Solanki <naresh.solanki@9elements.com>
-To: Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>
-Cc: mazziesaccount@gmail.com,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] hwmon: (pmbus/mp2975) Fix IRQ masking
-Date: Mon,  4 Mar 2024 22:14:45 +0530
-Message-ID: <20240304164446.4153915-1-naresh.solanki@9elements.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SimkksoN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MR96neI04ELr2m6lukS5CMaGFvTZQSZAZd2BA/yLsDMyQ+mKgfssewB4Djy4PqZufAXLSm98OoQh4nKQ4BLl9Cxl0xSxXpYkOQpZhxoOfFkNbbLr+eDaMrLpYDWmGOUC31gqhUyH3ulOU6b9srGmNV20YaxH9mIT9O9uFxYRpyI6UY153NOFKTOH1sz9FqufmnzP2nU2eDsj2i9fUfvdqOmpThQovA/TLYhflMB5bffJbfJcK50KyW0Zc3Imwhum4ZmYWXiqeWqHcWgfeQ+lZGn+2d+jTn2u0Nl884TFM/J+MosG43dCg7Lr+XyNelMxtNJ/eLJ56JPmQvBoQpkm8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sYm3SgqIWPCZgfA6CdEk8duTE9If765PHlprpyO7+hs=;
+ b=X68IlCRb+2bzTctKm2isAfyNhCk1gD0D5uvFmXsl7s35YN9toTseDcOHuEB6i2jYyf3o/8Uu2Bwk50ARk4cTdQGiA9ImRXLZiuBbYFmiz0qsKtLAu9ZFoj59+TqrC8Ekqq1JveBPlxNUiGT1/NcL6nDhTzWFRNP44Ry+IUxY4+nEiAka+WfSF1WsPHp3I+Td3B2PeI9qPwiBFR8nn+u25v1kdMh6vo4AOH6Z2/NoXOGyhvvHO9GMYv+NAZjGJ8K5lpzeUB3prohW8oiFzS/vMKFfA3XrbnljluYVCOrYoszeTn0775urMX4h03SkARo1V7lBS0WiZhc8c0h9ZfX5Fg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sYm3SgqIWPCZgfA6CdEk8duTE9If765PHlprpyO7+hs=;
+ b=SimkksoNgYX4XWFr00eZJZ4psBxg/c3tzFVYNlQb8b1LqXs17NVQymHeVxrFVTnN9btFyZ6Ge3914wPzaxYeW8Wetvo31o2eA89Jrdeky2VjQkErSO+ppdfiD3S5AfNgqQZZGkxezh7oh0Wo9VWrNmV0fCPuk6n+99PLiwhlqbE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ0PR12MB5673.namprd12.prod.outlook.com (2603:10b6:a03:42b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Mon, 4 Mar
+ 2024 16:46:13 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::dcf1:946c:3879:5765]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::dcf1:946c:3879:5765%4]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
+ 16:46:13 +0000
+Message-ID: <a3c78f89-2170-429e-a6af-59398b8a85e5@amd.com>
+Date: Mon, 4 Mar 2024 10:46:10 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: amd: yc: Add HP Pavilion Aero Laptop
+ 13-be2xxx(8BD6) into DMI quirk table
+Content-Language: en-US
+To: Al Raj Hassain <alrajhassain@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Jeremy Soller <jeremy@system76.com>,
+ August Wikerfors <git@augustwikerfors.se>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240304103924.13673-1-alrajhassain@gmail.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240304103924.13673-1-alrajhassain@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0185.namprd04.prod.outlook.com
+ (2603:10b6:806:126::10) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB5673:EE_
+X-MS-Office365-Filtering-Correlation-Id: c525967f-726e-44af-29a1-08dc3c6a9a30
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	UaziAYKS9EuZQW9S7gbpIPYEiGWGIgDNNUsEcFO4GssbNYSoUu0JZZRhamfKzcuuGkGoyypCum+kxPx4/TQ9DN1y45m6BCIiNR7TP9mp4WdL0oi+ScJDerURPn0UYa3SHASXaxfx3RhSrwwRg7Psf+BHzN/98xgMwOkIz/FXJNunwZdmIqndZXl46Sqn1h0OUZsxQqYLT6wVeyT0euMld7J+hJnEqUgD1vWMLI68xe67fnEWSNsNVSDiLTWYqhhi0n4F/eRFJenst07s38SfnuEdwDcgMh9vpkZCoHOqf4ZtI2r1Ig2ua1m3SHuX6vsJ/OL6DY6RqnvGHHhUZabp9euhtHufAUd2DMAd9r0VVsrWy+GDYK7Nd+xpg2+U1xBqrikaQ5E1nIShqTfSpQybrb67bqIMw4k4j8vwc311yVe6pXsvcvwIxTNXyP0aIdRP4g4MO+NY+rGMPOowWLeVxSAKDiANasv7RkylLoLmhbsqbMjMNY4JIqSL0jdCxdwbzecuRKUFey2WMCN4Qe5yQleBi+XLaC4WthUQ3kezJhOT74zKvoqwAbUni/v4xW7wi9QQblDEz3nTRND9JC5fzXU4rrdNf3jAEtOK7ylLftPcJn62UKdE/1H8pNDl083m
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UDJWRmprVGFibml4S2V2RFVJMUpDdXpRNVV6UFpWTnQrOFRsN3BjcXpGRHBJ?=
+ =?utf-8?B?dXBzaTZYK2xkWTdQcFdyYy9CT0NYbnpkc0ppR29JZ3p0Qis0TEF6N2RhT3BU?=
+ =?utf-8?B?MEVvbnRTcy8yOExVeC9UVXlkeS9xdHhVOTgxSC9BYWRENmZWNVRWZm81a0ND?=
+ =?utf-8?B?ZTdsSkl6MHhMTFB2MDlaZDhqWnZlZnZuRStKSkNrL1JOaDA2bGpSblN3N2hs?=
+ =?utf-8?B?QnpYQWIzdmdxdFhCbEZURmN4cjBKYmswQXRpNmFCdjg1TDNMbk9nSTB4eUQ2?=
+ =?utf-8?B?VnAxU0FJQkJYbDZ5S0RkeXBKUlNwSWV3OHZDaFdpZzVEQ0tOKzM4S3dFR3ZR?=
+ =?utf-8?B?L2d2MjFDbnZDeFhGckN2VFFEUHpkMW5VT0Raanc1VTVlV2JNekczRnRCWnc2?=
+ =?utf-8?B?dU1VQndPaitaNWpTSWwyTjg2RDFvMm9HcVJDUWkzMkJvSFNxdCtvWGxjMDFi?=
+ =?utf-8?B?S01rcTJwd2dtQnI5ZzAzcDBkaTRQUkg3R3hseXlacDZzUmpJenNTL1BLaU5T?=
+ =?utf-8?B?YTdiRDVWalprUll4WkdRcEJXL0dLdGp5cGJCR2ZVOWxKZGVDeHF5TTNaNUVU?=
+ =?utf-8?B?c2VzM2RUaE5SM3FaR0V5TzQvOXczRFdKb3JIdnJVRkF3L29JcGdxMHY2OG9J?=
+ =?utf-8?B?RDBVcG9LRDZMaHRhaGY0RXZRY3doL0Jpb09XbGU3L2xjNSs1MGNuSGZkSHZ1?=
+ =?utf-8?B?b1NpLzdiZkVHS01oZUlaWkpQWUdVQ2NGTkRWSGdKYkFhcDJwUmhxTFlJVzdi?=
+ =?utf-8?B?UmFXcmNtZ21oYS9manBUTWQ4N0NFM1NqbGxkOWR1ZmNKWXhhNDBKeit1NXpi?=
+ =?utf-8?B?L0xCQ0dHREY3OHpWVTk2UVFMeWxubmJGTklCelFCbG9TOTBEdXFtbkdLbGlF?=
+ =?utf-8?B?MnJVcVFQUUhXdTYzd2lvMmdZdlgwOGhNcjNUcHJVMEVvU056ejJNdUthT2cv?=
+ =?utf-8?B?ZEU1bXZlMjFZMWpnSWJ6NHZ0THdQeCs3VGhtYUtnVXZycUROb2lDMU9RU2Zs?=
+ =?utf-8?B?cVUrSWF5UkJLYmxleTc3TEFYSFViNVIrQVUrTnMxS21KeFFrRkFUOC9PWGNM?=
+ =?utf-8?B?TlhOd2FDbFdDSTVHeWszUzJxOWtKL0NmL0YvTlpUM2dDWWtGV0FNY0FJc3hC?=
+ =?utf-8?B?Y1NlcXN3TzR4K1c0QlV0S0FGeWVNM0lmbnAzUnAveS80QzNJc2tmdEtKRnpv?=
+ =?utf-8?B?eVVwalhCOWZOK3FONGI2NnU1Wmg3QlNHbDJ2T0Q5czFVdmJic3ZaVnM1L2pv?=
+ =?utf-8?B?V0pYbTZOWm9SRGlsZ3ZSRTl3SExjRXA4V0NZblVQZGNBMGF4TGR1VGNRTEww?=
+ =?utf-8?B?a0NjRmg1NGtPUUpCU2pVSU1qM0RNMmZWcG9RTFJlTkZCVENQcVVyeSsyaHUx?=
+ =?utf-8?B?MU1QR1lZWDJyOVRmOUdkTW05dkRpZWY2aHQwR0xqanQ4dHY3YVhSTXpLSnV3?=
+ =?utf-8?B?STg3VVA1bWFUcmViaWRMbkZFRXo5OHJzTjJpMkpNc3dmbHpWSXRjSjc4VUc3?=
+ =?utf-8?B?NllJL25UQXEvbEpiS1p6alBZT1ZqNWFORmxuUU5nTkpOMmlJMGM2SmdWbXNQ?=
+ =?utf-8?B?eHBlZHF0TVdFOTZUb0FBcW1pZ0JYdGh2Qi80SVNpOFl3bVMxQzFQQzV3WFVS?=
+ =?utf-8?B?VEhvL3VGZ2p5M0NCYk9peDVpUU9OcTdXUFVPOUt2V2kyMjNnSis1RXBpK3VW?=
+ =?utf-8?B?Q2VDbVRadUtjU2FJUHJTaDZLTlFZQ3VVQlFCS3NEa1UvdnFTM1lVaGMyMHZP?=
+ =?utf-8?B?WDhxdkJBdHNyclpXanBzUTZZZ282RHFSNnN2YVAwSmdXQk42MzBYRmI3ZUVC?=
+ =?utf-8?B?Mk13amFlQTB1azFqMTJGVU5FOGlIditYMjhLbHU4NWxqQlY4LzJsWmJzTDNh?=
+ =?utf-8?B?RVdWL3ExekQvU0cvRnhLVXVwZHNrNWdiTTkyVDcxam9rZ090bVZqS2lxY0dn?=
+ =?utf-8?B?RW1rNmM5SnVhTUxVSW9DOTNLOUZmU1pTNVpNaiswQnd4SXBRbUVBeHZEbGQ0?=
+ =?utf-8?B?bkdsNnpVRFo3Q1p0NnYrcjZJQzE4QktyOGx0cXZXdDcyUGNtK2hjSGlXOUJh?=
+ =?utf-8?B?V0JZTGFiUmJ5ejlmYmtZSU9pTTlMTHdTTlJMa3BRQWY0bTVIUjNmV3BoM2g0?=
+ =?utf-8?Q?x311wjtcH4jqaytA46FoP1T5H?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c525967f-726e-44af-29a1-08dc3c6a9a30
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 16:46:13.2239
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B35444F+4ehFuhKvvgOjDAMiPCCGvqnS65qaWRjdlKdLrQloJcO2/lK8VVx3NXdMtafBj0egDRWLQ/4BLlQxcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5673
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+On 3/4/2024 04:39, Al Raj Hassain wrote:
+> The HP Pavilion Aero Laptop 13-be2xxx(8BD6) requires a quirk entry for its internal microphone to function.
+> 
+> Signed-off-by: Al Raj Hassain <alrajhassain@gmail.com>
 
-The MP2971/MP2973 use a custom 16bit register format for
-SMBALERT_MASK which doesn't follow the PMBUS specification.
+Makes sense as this is a 7735U/7535U based product 
+(https://www.amd.com/en/product/12951 / 
+https://www.amd.com/en/product/12956).
 
-Map the PMBUS defined bits used by the common code onto the custom
-format used by MPS and since the SMBALERT_MASK is currently never read
-by common code only implement the mapping for write transactions.
-
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
-Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
----
- drivers/hwmon/pmbus/mp2975.c | 77 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
-
-diff --git a/drivers/hwmon/pmbus/mp2975.c b/drivers/hwmon/pmbus/mp2975.c
-index e5fa10b3b8bc..766026204d88 100644
---- a/drivers/hwmon/pmbus/mp2975.c
-+++ b/drivers/hwmon/pmbus/mp2975.c
-@@ -392,6 +392,82 @@ static int mp2973_read_word_data(struct i2c_client *client, int page,
- 	return ret;
- }
- 
-+static int mp2973_write_word_data(struct i2c_client *client, int page,
-+				  int reg, u16 word)
-+{
-+	u8 target, mask;
-+	int ret;
-+
-+	if (reg != PMBUS_SMBALERT_MASK)
-+		return -ENODATA;
-+
-+	/*
-+	 * Vendor-specific SMBALERT_MASK register with 16 maskable bits.
-+	 */
-+	ret = pmbus_read_word_data(client, 0, 0, PMBUS_SMBALERT_MASK);
-+	if (ret < 0)
-+		return ret;
-+
-+	target = word & 0xff;
-+	mask = word >> 8;
-+
-+/*
-+ * Set/Clear 'bit' in 'ret' based on condition followed by define for each bit in SMBALERT_MASK.
-+ * Also bit 2 & 15 are reserved.
-+ */
-+#define SWAP(cond, bit) (ret = (mask & cond) ? (ret & ~BIT(bit)) : (ret | BIT(bit)))
-+
-+#define MP2973_TEMP_OT		0
-+#define MP2973_VIN_UVLO		1
-+#define MP2973_VIN_OVP		3
-+#define MP2973_MTP_FAULT	4
-+#define MP2973_OTHER_COMM	5
-+#define MP2973_MTP_BLK_TRIG	6
-+#define MP2973_PACKET_ERROR	7
-+#define MP2973_INVALID_DATA	8
-+#define MP2973_INVALID_COMMAND	9
-+#define MP2973_IOUT_OC_LV	10
-+#define MP2973_IOUT_OC		11
-+#define MP2973_VOUT_MAX_MIN_WARNING 12
-+#define MP2973_VOLTAGE_UV	13
-+#define MP2973_VOLTAGE_OV	14
-+
-+	switch (target) {
-+	case PMBUS_STATUS_CML:
-+		SWAP(PB_CML_FAULT_INVALID_DATA, MP2973_INVALID_DATA);
-+		SWAP(PB_CML_FAULT_INVALID_COMMAND,  MP2973_INVALID_COMMAND);
-+		SWAP(PB_CML_FAULT_OTHER_COMM, MP2973_OTHER_COMM);
-+		SWAP(PB_CML_FAULT_PACKET_ERROR, MP2973_PACKET_ERROR);
-+		break;
-+	case PMBUS_STATUS_VOUT:
-+		SWAP(PB_VOLTAGE_UV_FAULT, MP2973_VOLTAGE_UV);
-+		SWAP(PB_VOLTAGE_OV_FAULT, MP2973_VOLTAGE_OV);
-+		break;
-+	case PMBUS_STATUS_IOUT:
-+		SWAP(PB_IOUT_OC_FAULT, MP2973_IOUT_OC);
-+		SWAP(PB_IOUT_OC_LV_FAULT, MP2973_IOUT_OC_LV);
-+		break;
-+	case PMBUS_STATUS_TEMPERATURE:
-+		SWAP(PB_TEMP_OT_FAULT, MP2973_TEMP_OT);
-+		break;
-+	/*
-+	 * Map remaining bits to MFR specific to let the PMBUS core mask
-+	 * those bits by default.
-+	 */
-+	case PMBUS_STATUS_MFR_SPECIFIC:
-+		SWAP(BIT(1), MP2973_VIN_UVLO);
-+		SWAP(BIT(3), MP2973_VIN_OVP);
-+		SWAP(BIT(4), MP2973_MTP_FAULT);
-+		SWAP(BIT(6), MP2973_MTP_BLK_TRIG);
-+		break;
-+	default:
-+		return 0;
-+	}
-+#undef SWAP
-+
-+	return pmbus_write_word_data(client, 0, PMBUS_SMBALERT_MASK, ret);
-+}
-+
- static int mp2975_read_word_data(struct i2c_client *client, int page,
- 				 int phase, int reg)
- {
-@@ -907,6 +983,7 @@ static struct pmbus_driver_info mp2973_info = {
- 		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_POUT |
- 		PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT,
- 	.read_word_data = mp2973_read_word_data,
-+	.write_word_data = mp2973_write_word_data,
- #if IS_ENABLED(CONFIG_SENSORS_MP2975_REGULATOR)
- 	.num_regulators = 1,
- 	.reg_desc = mp2975_reg_desc,
-
-base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
--- 
-2.42.0
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>   sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
+> index abb9589b8477..90360f8b3e81 100644
+> --- a/sound/soc/amd/yc/acp6x-mach.c
+> +++ b/sound/soc/amd/yc/acp6x-mach.c
+> @@ -416,6 +416,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
+>   			DMI_MATCH(DMI_BOARD_NAME, "8B2F"),
+>   		}
+>   	},
+> +	{
+> +		.driver_data = &acp6x_card,
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "8BD6"),
+> +		}
+> +	},
+>   	{
+>   		.driver_data = &acp6x_card,
+>   		.matches = {
 
