@@ -1,56 +1,56 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5131A224DE
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783D725750
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709545729; cv=none; b=o3Xqudn/Qwfxbl+eMQ/NmKtfHCIEX7newRa1fjrmt8/lrmnbru2HDcz1WSYZvz7i6E5lgsJ0EOzDXckeQro1VUgE1Eh8eHodfAsTt9WZ0ej9/RLlwbaIHDj5RLzzfp1np+wGjXtlY6iKWlRFZwg1vwlcgTYYn0OYd/N63aDRONc=
+	t=1709545731; cv=none; b=maB7Y7J74az1OAldfMwjK8/cFp97oD3oc1DmEEoTEo5yVhdNbsk3L8xvXq7eKdc/bJirBzPCPgy/C+BjMW1Dx7elgLv/JKnm/3LZuexX2FeX/2DGnVSQE8pm38vheN+bzV0g4jCECFny88Mud4e2RqX6IhsKXYciVQycR5wk0BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709545729; c=relaxed/simple;
-	bh=wGnnv0R/i5/PFNWqQGKADyW9AWcXKqVYmEaB4jhEARo=;
+	s=arc-20240116; t=1709545731; c=relaxed/simple;
+	bh=MzMJY9/zgf5Oz86g7Hieae+K/U88BNmCb9J5ynGrUUk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Uv2R86xryxpMtFNl4YIhpsJUEo6y8SQWm5faKJ7YB6AF4Mvr+8e4UMZapNKBc+WMAn5K6tE5n4dBp6Eow3zgwneFLZ9iNAecCgsQJNMGjvatyBfvq1AIVz4upveluLKBa756jKGaZj5KjTkDGK+U3XUYUra/eHXnY6zDU+w+mdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MJzpPPBG; arc=none smtp.client-ip=209.85.218.41
+	 MIME-Version; b=um5wek52Sfht0uu+OmSKI/Wht+N3w+FR9U04qiTtaJ9aHrbKPOysfQlfiR5Poxn2H5l0qmBfA/oxwjWQ9F2PlSLlhJrhu9hM0XFMbPFJWNFb3diTHADAxNuFUlHAqvOsJjUSRC7q2eBVMvL5C77XzNWH7j6WpkXH5lHBcIHXhgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IpekwtjC; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJzpPPBG"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a44665605f3so445951166b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:48:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IpekwtjC"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5672afabb86so812663a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:48:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709545726; x=1710150526; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1709545728; x=1710150528; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tqL84XLNVn0Cp5LtqkDs2ZJplR67S7lT/DN/daWYchI=;
-        b=MJzpPPBGzzB+wocEiP2Lw1a22hifMTk0ye6X+OxnJHMTmWCRORlXrCqAznkQd5Wg/t
-         svd4fH+q7+n9HSOH3zS8E5LFYlmWEX85BXUO9Mw47wjK2IMZSE9Ry12/Y3Wlwd9m2dwu
-         /C3s3XePCGcXyEVE2WFwK2h/gTPj0I2R7WPC6hnYV1ysUngpaiecY7x1LPJYfBrs433a
-         nh7CIojBtPmGIARiYiPY5SfJmPf7WhTZHwAHKdQ++VSM9htfqjqluEnLECU2jQADa0HF
-         fqZZRValzIuvMZOB38WvxDzPnoQ74x2vJER1I72csJyXe1TSuRJD+OyULjFHW7qqthYs
-         2Qwg==
+        bh=GyidcM4nXcEaVfVvwbOfTiXrFeqdSr6X/aGwmAepY54=;
+        b=IpekwtjCpsKJZSp25TIKYofc1BjLVik0e3LlvD3c1SxFQaK/FNBwjc3jN+Gb0ldkMd
+         +ErZe8cCEK/HFwmBdvuuyOribkh35u5ZE8zdTR9in+5ASiLPS3HrLOjsMQcFlBPnHfyZ
+         WP6WTOWFxGjZ+133NvhJrf1G7wxoaeCOIx1b+PdGs4fLhzM5YVDrTkv4X46OEgVcHUcy
+         iYliXS3y/zdMSmIEkr3gAJwq/2Jg9j07epuY6GfKLj3i3S2c/UmdRJ1lgnFg9L7zpZEj
+         cigs6B5lumFsvHL3xoYxYyNzNcIK1PIG9xlpkOLf7AK/IcTlnV+S1jJStRBKyd8kyM6T
+         hWPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709545726; x=1710150526;
+        d=1e100.net; s=20230601; t=1709545728; x=1710150528;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tqL84XLNVn0Cp5LtqkDs2ZJplR67S7lT/DN/daWYchI=;
-        b=kLx/wNgwyVFW9DMYKarMwMNXxuoq1/kxYtrlCq+5rZ/m3xgKFnQ4M3IVaeqBf+Rwar
-         G1PzRUpYXw0cMdqzLEW7amlueJVHJVdqHypaaU40fedOgg2WWFQKfbhAPhWXfXxuu1sv
-         z/11N0iJWzJWU5ouNWvO9fhm2PpxBh/e6FFpOCf7NukJpHq2W5127ya82Zi7AT+3BmhT
-         VkCILEgAT4XrzHiE2I6D2cBRwtiWi60doRA39Jt2amVgn1yrxF9+t2zmPCZIpe/pGH8X
-         U9wrmqqhUIjgdelhnVl7kxnckkmysy3IBrJMWrq4w+bcSknDlr1029rykAEWeosAvanf
-         TWxg==
-X-Gm-Message-State: AOJu0YyrKfBWjvAen12XFFrurtO7XSRkSXGM/TbGnVjvvGM/cP1eNBkb
-	JRbHbk3iTWlFYqJ7zsp07MdJXt/gZqVwQFgXjx3GaPKtqENjmpy1CGPofbtfrdU=
-X-Google-Smtp-Source: AGHT+IHV0HTMqTVqrfr0L03RNRjP18egljCvxPlSy3wm30aYM2snihMa+ewSPAaFDShsElvpB+I4YQ==
-X-Received: by 2002:a17:906:19cf:b0:a44:1f20:e6d6 with SMTP id h15-20020a17090619cf00b00a441f20e6d6mr5618226ejd.1.1709545725576;
-        Mon, 04 Mar 2024 01:48:45 -0800 (PST)
+        bh=GyidcM4nXcEaVfVvwbOfTiXrFeqdSr6X/aGwmAepY54=;
+        b=rmM/1Nve2gd481S6zU7pP/Dwywx1/hyY1qn3BTgbtFE54eFAx8WETp8Xj3/vo61tW1
+         b93UgvGJt+5/sgWPwTVECujoeZEEJ90suz0v7Go9NRuKTQVpbUvzv9mWv/GLuXkxirtZ
+         bHm1Y+ibhOPuPGW5/0u3FLmPRbb0+1XRa4kI4lIkN5sczQeXhshamCjMmUdCk9xcn2TZ
+         sciaBkSXEujxlK8XxGeM+TqLvLoklZwPgydvkKx+fKYFW9B5psD/W1AWx4CbCclWfdH2
+         gSDAMGc7hesmeVt7LHF6WAuDkcnu+HdgT4pyuyX5gpw/l93n2S/hGrodiPLIJm7Rf7WN
+         Q6og==
+X-Gm-Message-State: AOJu0YySCAjhMV8ois7Q4OWnEuJH++SWOcmlVOKCBtsdK+dq6hsKnzL7
+	XcEV2ugoUWZ8rhhfPUow7IT08Lwsx+zHc7eHMx0d4cmtxhn9ioU1M4Wgj8Ajdk4=
+X-Google-Smtp-Source: AGHT+IGrWu7ee0LRPYL/ogLZoLapZyet5fE/pHJ0/OdMvcuuyaSKS29gsFHD7A6W/DvdQU2UBJTt5w==
+X-Received: by 2002:a17:906:d045:b0:a44:4d9b:9062 with SMTP id bo5-20020a170906d04500b00a444d9b9062mr4866205ejb.69.1709545727613;
+        Mon, 04 Mar 2024 01:48:47 -0800 (PST)
 Received: from kepler.redhat.com (1F2EF13F.nat.pool.telekom.hu. [31.46.241.63])
-        by smtp.gmail.com with ESMTPSA id s22-20020a170906501600b00a42e2bc82dbsm4569839ejj.169.2024.03.04.01.48.44
+        by smtp.gmail.com with ESMTPSA id s22-20020a170906501600b00a42e2bc82dbsm4569839ejj.169.2024.03.04.01.48.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 01:48:45 -0800 (PST)
+        Mon, 04 Mar 2024 01:48:47 -0800 (PST)
 Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
@@ -60,9 +60,9 @@ Cc: Shrikanth Hegde <sshegde@linux.ibm.com>,
 	Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Valentin Schneider <vschneid@redhat.com>
-Subject: [PATCH 3/9] sched/balancing: Change 'enum cpu_idle_type' to have more natural definitions
-Date: Mon,  4 Mar 2024 10:48:25 +0100
-Message-Id: <20240304094831.3639338-4-mingo@kernel.org>
+Subject: [PATCH 5/9] sched/balancing: Fix comments (trying to) refer to NOHZ_BALANCE_KICK
+Date: Mon,  4 Mar 2024 10:48:27 +0100
+Message-Id: <20240304094831.3639338-6-mingo@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240304094831.3639338-1-mingo@kernel.org>
 References: <20240304094831.3639338-1-mingo@kernel.org>
@@ -74,35 +74,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The cpu_idle_type enum has the confusingly inverted property
-that 'not idle' is 1, and 'idle' is '0'.
+Fix two typos:
 
-This resulted in a number of unnecessary complications in the code.
+ - There's no such thing as 'nohz_balancing_kick', the
+   flag is named 'BALANCE' and is capitalized:  NOHZ_BALANCE_KICK.
 
-Reverse the order, remove the CPU_NOT_IDLE type, and convert
-all code to a natural boolean form.
-
-It's much more readable:
-
-  -       enum cpu_idle_type idle = this_rq->idle_balance ?
-  -                                               CPU_IDLE : CPU_NOT_IDLE;
-  -
-  +       enum cpu_idle_type idle = this_rq->idle_balance;
-
-  --------------------------------
-
-  -       if (env->idle == CPU_NOT_IDLE || !busiest->sum_nr_running)
-  +       if (!env->idle || !busiest->sum_nr_running)
-
-  --------------------------------
-
-And gets rid of the double negation in these usages:
-
-  -               if (env->idle != CPU_NOT_IDLE && env->src_rq->nr_running <= 1)
-  +               if (env->idle && env->src_rq->nr_running <= 1)
-
-Furthermore, this makes code much more obvious where there's
-differentiation between CPU_IDLE and CPU_NEWLY_IDLE.
+ - Likewise there's no such thing as a 'pending nohz_balance_kick'
+   either, the NOHZ_BALANCE_KICK flag is all upper-case.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -111,132 +89,30 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 ---
- include/linux/sched/idle.h |  3 +--
- kernel/sched/fair.c        | 27 ++++++++++++---------------
- 2 files changed, 13 insertions(+), 17 deletions(-)
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sched/idle.h b/include/linux/sched/idle.h
-index 478084f9105e..4a6423700ffc 100644
---- a/include/linux/sched/idle.h
-+++ b/include/linux/sched/idle.h
-@@ -5,8 +5,7 @@
- #include <linux/sched.h>
- 
- enum cpu_idle_type {
--	CPU_IDLE,
--	CPU_NOT_IDLE,
-+	CPU_IDLE = 1,
- 	CPU_NEWLY_IDLE,
- 	CPU_MAX_IDLE_TYPES
- };
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 64ae3d8dc93b..f11fc6dd39b1 100644
+index 934ace69eb30..4c46bffb6a7a 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -9070,7 +9070,7 @@ static int detach_tasks(struct lb_env *env)
- 		 * We don't want to steal all, otherwise we may be treated likewise,
- 		 * which could at worst lead to a livelock crash.
- 		 */
--		if (env->idle != CPU_NOT_IDLE && env->src_rq->nr_running <= 1)
-+		if (env->idle && env->src_rq->nr_running <= 1)
- 			break;
+@@ -12410,14 +12410,14 @@ static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
  
- 		env->loop++;
-@@ -9803,7 +9803,7 @@ static inline bool smt_vs_nonsmt_groups(struct sched_group *sg1,
- static inline bool smt_balance(struct lb_env *env, struct sg_lb_stats *sgs,
- 			       struct sched_group *group)
- {
--	if (env->idle == CPU_NOT_IDLE)
-+	if (!env->idle)
- 		return false;
- 
- 	/*
-@@ -9827,7 +9827,7 @@ static inline long sibling_imbalance(struct lb_env *env,
- 	int ncores_busiest, ncores_local;
- 	long imbalance;
- 
--	if (env->idle == CPU_NOT_IDLE || !busiest->sum_nr_running)
-+	if (!env->idle || !busiest->sum_nr_running)
- 		return 0;
- 
- 	ncores_busiest = sds->busiest->cores;
-@@ -9927,8 +9927,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 				sgs->group_misfit_task_load = rq->misfit_task_load;
- 				*sg_status |= SG_OVERLOAD;
- 			}
--		} else if ((env->idle != CPU_NOT_IDLE) &&
--			   sched_reduced_capacity(rq, env->sd)) {
-+		} else if (env->idle && sched_reduced_capacity(rq, env->sd)) {
- 			/* Check for a task running on a CPU with reduced capacity */
- 			if (sgs->group_misfit_task_load < load)
- 				sgs->group_misfit_task_load = load;
-@@ -9940,7 +9939,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 	sgs->group_weight = group->group_weight;
- 
- 	/* Check if dst CPU is idle and preferred to this group */
--	if (!local_group && env->idle != CPU_NOT_IDLE && sgs->sum_h_nr_running &&
-+	if (!local_group && env->idle && sgs->sum_h_nr_running &&
- 	    sched_group_asym(env, sgs, group))
- 		sgs->group_asym_packing = 1;
- 
-@@ -10698,7 +10697,7 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 			 * waiting task in this overloaded busiest group. Let's
- 			 * try to pull it.
- 			 */
--			if (env->idle != CPU_NOT_IDLE && env->imbalance == 0) {
-+			if (env->idle && env->imbalance == 0) {
- 				env->migration_type = migrate_task;
- 				env->imbalance = 1;
- 			}
-@@ -10913,7 +10912,7 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
- 		goto force_balance;
- 
- 	if (busiest->group_type != group_overloaded) {
--		if (env->idle == CPU_NOT_IDLE) {
-+		if (!env->idle) {
- 			/*
- 			 * If the busiest group is not overloaded (and as a
- 			 * result the local one too) but this CPU is already
-@@ -11121,7 +11120,7 @@ asym_active_balance(struct lb_env *env)
- 	 * the lower priority @env::dst_cpu help it. Do not follow
- 	 * CPU priority.
- 	 */
--	return env->idle != CPU_NOT_IDLE && sched_use_asym_prio(env->sd, env->dst_cpu) &&
-+	return env->idle && sched_use_asym_prio(env->sd, env->dst_cpu) &&
- 	       (sched_asym_prefer(env->dst_cpu, env->src_cpu) ||
- 		!sched_use_asym_prio(env->sd, env->src_cpu));
- }
-@@ -11159,7 +11158,7 @@ static int need_active_balance(struct lb_env *env)
- 	 * because of other sched_class or IRQs if more capacity stays
- 	 * available on dst_cpu.
- 	 */
--	if ((env->idle != CPU_NOT_IDLE) &&
-+	if (env->idle &&
- 	    (env->src_rq->cfs.h_nr_running == 1)) {
- 		if ((check_cpu_capacity(env->src_rq, sd)) &&
- 		    (capacity_of(env->src_cpu)*sd->imbalance_pct < capacity_of(env->dst_cpu)*100))
-@@ -11735,8 +11734,8 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
- 				 * env->dst_cpu, so we can't know our idle
- 				 * state even if we migrated tasks. Update it.
- 				 */
--				idle = idle_cpu(cpu) ? CPU_IDLE : CPU_NOT_IDLE;
--				busy = idle != CPU_IDLE && !sched_idle_cpu(cpu);
-+				idle = idle_cpu(cpu);
-+				busy = !idle && !sched_idle_cpu(cpu);
- 			}
- 			sd->last_balance = jiffies;
- 			interval = get_sd_balance_interval(sd, busy);
-@@ -12416,9 +12415,7 @@ static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
+ /*
+  * run_rebalance_domains is triggered when needed from the scheduler tick.
+- * Also triggered for nohz idle balancing (with nohz_balancing_kick set).
++ * Also triggered for NOHZ idle balancing (with NOHZ_BALANCE_KICK set).
+  */
  static __latent_entropy void run_rebalance_domains(struct softirq_action *h)
  {
  	struct rq *this_rq = this_rq();
--	enum cpu_idle_type idle = this_rq->idle_balance ?
--						CPU_IDLE : CPU_NOT_IDLE;
--
-+	enum cpu_idle_type idle = this_rq->idle_balance;
+ 	enum cpu_idle_type idle = this_rq->idle_balance;
  	/*
- 	 * If this CPU has a pending nohz_balance_kick, then do the
+-	 * If this CPU has a pending nohz_balance_kick, then do the
++	 * If this CPU has a pending NOHZ_BALANCE_KICK, then do the
  	 * balancing on behalf of the other idle CPUs whose ticks are
+ 	 * stopped. Do nohz_idle_balance *before* rebalance_domains to
+ 	 * give the idle CPUs a chance to load balance. Else we may
 -- 
 2.40.1
 
