@@ -1,339 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B180B7BAF5;
-	Mon,  4 Mar 2024 21:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8D41F5FA;
+	Mon,  4 Mar 2024 21:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587223; cv=none; b=hhUH3MfKbXjnuHbUidJkKBSAx3i4r2XvEwg1wTI/wPih0FD+E+vcAwv1PoyHBgo3pP3S0T/Vs50pAM8nzYbUkAtu1VZgb6Ske2A9r75vGwscOHs/n+JGYJ5ZIbGbieHYH3qGkQ3ozILp4SPQfxN+v8JYAQoInDzZ80DfuyjVW1M=
+	t=1709587315; cv=none; b=SouT7TXVrG7a/AhfpZW/io9PIqlM/yJ5KNXog8bukkCqwcYxlsatSfmMHMQV50sBRplWeyLju+rCqGnK9OnJTt7HIQISD/RDlQ8wvwF60+0Pnt+xBnhebC/kdQb5QmqlXv2eeTvQyuthobkwlpVc/j7CtiYGMl5Z4OJO9lMhBXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587223; c=relaxed/simple;
-	bh=Ykx1BfrSd1tjyZ02xfrWYUAEX8QKoOkzNcCwDPyIQZg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XC+ctlQdoLCG48qh3V6eN3fVBNpXjKmUH3D6IeumivURinofsVMJWG+qh2ksuQqZJX3VXihe1PVEbLEiNZ1rwWom0JJcnSIZ5P3U0Zk7m5h/9Ng6IDvO+7WE6PXDUBZMg/3dk7YJT9pCWHTlQpraMlD9RARx+KJiEwKctEAWJ30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xv1ig345; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709587315; c=relaxed/simple;
+	bh=+Uw688kr3sFUV/JRZ0dwhqYglG3zdxJv4LleOWUj+aE=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OfcY9aT3/1DUM56m31GFdI+ip4NM+Oy2lpMKsceScSKqdJiSmNYNri22TTCxPj8gM0QWt8tBVWwF1GFLRzOUht+Q4XqXDiv0BQPqffXVxpPSISKBPikhBzx1D2lqoG9bnRP2+8R0UMxynXPUCMpqsYUispWP8Kr7ln12TosKn4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Kj8vWBpt; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xv1ig345"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709587222; x=1741123222;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ykx1BfrSd1tjyZ02xfrWYUAEX8QKoOkzNcCwDPyIQZg=;
-  b=Xv1ig345hspxvdUKvbA7P9GcPygxw/bOkxD37brtHeEbZrMIRO87BAPw
-   lx2nRKyEQ8Q6Sm54D7DyG4IYpkpriUQ/QgixPFHa0lYjWklT3Fktg7HmI
-   3UfsTStv+j57lzLxCNZW6jWRLUpznUhsBqQ72MpQtSwC/kKkShp7Y/IPy
-   kVqdPZuDggaygKz54vvP6ugFA9JJsiEQ0r3ATren5hJV9ypph2Y4qxekz
-   ju67eUn8MdnDRyoGXt1vOL7saYD3z2f2FbfZeD5M46r5oxj8c8Zam0ec1
-   QjAVu+pkBVldqzw9qqvs71ibug6eN4e9KhX5y/W3OGehRbpk4LKzX/ljt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4271358"
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="4271358"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 13:20:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="9040278"
-Received: from skedaras-mobl1.amr.corp.intel.com (HELO tzanussi-mobl1.amr.corp.intel.com) ([10.212.77.241])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 13:20:21 -0800
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
-To: herbert@gondor.apana.org.au,
-	davem@davemloft.net
-Cc: andre.glover@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org
-Subject: [PATCH 4/4] crypto: iaa - Change iaa statistics to atomic64_t
-Date: Mon,  4 Mar 2024 15:20:11 -0600
-Message-Id: <20240304212011.1525003-5-tom.zanussi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240304212011.1525003-1-tom.zanussi@linux.intel.com>
-References: <20240304212011.1525003-1-tom.zanussi@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Kj8vWBpt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1709587314; x=1741123314;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=6zwWcPAYAWHQfzlWhyN0qe/pCFOF7SDZ5bS/wSSOiVg=;
+  b=Kj8vWBpt2BG+l+Q4LZ5dp6EffkB4XujZ8SRSyESOYkwsS4O02PaFk6pr
+   jXKHA1eS8ryTQZSrj+9IisorEvcW1ptfb2KeIpR/CJqPdkQWMVg736kVH
+   Q4nUGhE6CSFxdLbC1f8bUZC9piKuWI0SViMYQQfMcfuAdSItJw+paHN7M
+   A=;
+X-IronPort-AV: E=Sophos;i="6.06,204,1705363200"; 
+   d="scan'208";a="638522381"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 21:21:52 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:20127]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.42.123:2525] with esmtp (Farcaster)
+ id d57f359e-8ff9-4dd4-a86f-6f9c3864b2ec; Mon, 4 Mar 2024 21:21:50 +0000 (UTC)
+X-Farcaster-Flow-ID: d57f359e-8ff9-4dd4-a86f-6f9c3864b2ec
+Received: from EX19D026EUB004.ant.amazon.com (10.252.61.64) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Mon, 4 Mar 2024 21:21:46 +0000
+Received: from uc3ecf78c6baf56.ant.amazon.com (10.187.170.53) by
+ EX19D026EUB004.ant.amazon.com (10.252.61.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Mon, 4 Mar 2024 21:21:43 +0000
+Date: Mon, 4 Mar 2024 13:21:39 -0800
+From: Andrew Panyakin <apanyaki@amazon.com>
+To: <stable@vger.kernel.org>
+CC: Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross
+	<jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Oleksandr
+ Tyshchenko" <oleksandr_tyshchenko@epam.com>, Marc Zyngier <maz@kernel.org>,
+	Samuel Holland <samuel@sholland.org>, Sasha Levin <sashal@kernel.org>,
+	Maximilian Heyne <mheyne@amazon.de>, Jeremy Fitzhardinge
+	<jeremy.fitzhardinge@citrix.com>, Konrad Rzeszutek Wilk
+	<konrad.wilk@oracle.com>, "xen-devel@lists.xenproject.org"
+	<xen-devel@lists.xenproject.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH 5.15] xen/events: close evtchn after mapping cleanup
+Message-ID: <20240304212139.GA3585816@uc3ecf78c6baf56.ant.amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: EX19D039UWB001.ant.amazon.com (10.13.138.119) To
+ EX19D026EUB004.ant.amazon.com (10.252.61.64)
 
-Change all the iaa statistics to use atomic64_t instead of the current
-u64, to avoid potentially inconsistent counts.
+From: Maximilian Heyne <mheyne@amazon.de>
 
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Commit fa765c4b4aed2d64266b694520ecb025c862c5a9 upstream
+
+shutdown_pirq and startup_pirq are not taking the
+irq_mapping_update_lock because they can't due to lock inversion. Both
+are called with the irq_desc->lock being taking. The lock order,
+however, is first irq_mapping_update_lock and then irq_desc->lock.
+
+This opens multiple races:
+- shutdown_pirq can be interrupted by a function that allocates an event
+  channel:
+
+  CPU0                        CPU1
+  shutdown_pirq {
+    xen_evtchn_close(e)
+                              __startup_pirq {
+                                EVTCHNOP_bind_pirq
+                                  -> returns just freed evtchn e
+                                set_evtchn_to_irq(e, irq)
+                              }
+    xen_irq_info_cleanup() {
+      set_evtchn_to_irq(e, -1)
+    }
+  }
+
+  Assume here event channel e refers here to the same event channel
+  number.
+  After this race the evtchn_to_irq mapping for e is invalid (-1).
+
+- __startup_pirq races with __unbind_from_irq in a similar way. Because
+  __startup_pirq doesn't take irq_mapping_update_lock it can grab the
+  evtchn that __unbind_from_irq is currently freeing and cleaning up. In
+  this case even though the event channel is allocated, its mapping can
+  be unset in evtchn_to_irq.
+
+The fix is to first cleanup the mappings and then close the event
+channel. In this way, when an event channel gets allocated it's
+potential previous evtchn_to_irq mappings are guaranteed to be unset already.
+This is also the reverse order of the allocation where first the event
+channel is allocated and then the mappings are setup.
+
+On a 5.10 kernel prior to commit 3fcdaf3d7634 ("xen/events: modify internal
+[un]bind interfaces"), we hit a BUG like the following during probing of NVMe
+devices. The issue is that during nvme_setup_io_queues, pci_free_irq
+is called for every device which results in a call to shutdown_pirq.
+With many nvme devices it's therefore likely to hit this race during
+boot because there will be multiple calls to shutdown_pirq and
+startup_pirq are running potentially in parallel.
+
+  ------------[ cut here ]------------
+  blkfront: xvda: barrier or flush: disabled; persistent grants: enabled; indirect descriptors: enabled; bounce buffer: enabled
+  kernel BUG at drivers/xen/events/events_base.c:499!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 44 PID: 375 Comm: kworker/u257:23 Not tainted 5.10.201-191.748.amzn2.x86_64 #1
+  Hardware name: Xen HVM domU, BIOS 4.11.amazon 08/24/2006
+  Workqueue: nvme-reset-wq nvme_reset_work
+  RIP: 0010:bind_evtchn_to_cpu+0xdf/0xf0
+  Code: 5d 41 5e c3 cc cc cc cc 44 89 f7 e8 2b 55 ad ff 49 89 c5 48 85 c0 0f 84 64 ff ff ff 4c 8b 68 30 41 83 fe ff 0f 85 60 ff ff ff <0f> 0b 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44 00 00
+  RSP: 0000:ffffc9000d533b08 EFLAGS: 00010046
+  RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000006
+  RDX: 0000000000000028 RSI: 00000000ffffffff RDI: 00000000ffffffff
+  RBP: ffff888107419680 R08: 0000000000000000 R09: ffffffff82d72b00
+  R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000001ed
+  R13: 0000000000000000 R14: 00000000ffffffff R15: 0000000000000002
+  FS:  0000000000000000(0000) GS:ffff88bc8b500000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 0000000002610001 CR4: 00000000001706e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   ? show_trace_log_lvl+0x1c1/0x2d9
+   ? show_trace_log_lvl+0x1c1/0x2d9
+   ? set_affinity_irq+0xdc/0x1c0
+   ? __die_body.cold+0x8/0xd
+   ? die+0x2b/0x50
+   ? do_trap+0x90/0x110
+   ? bind_evtchn_to_cpu+0xdf/0xf0
+   ? do_error_trap+0x65/0x80
+   ? bind_evtchn_to_cpu+0xdf/0xf0
+   ? exc_invalid_op+0x4e/0x70
+   ? bind_evtchn_to_cpu+0xdf/0xf0
+   ? asm_exc_invalid_op+0x12/0x20
+   ? bind_evtchn_to_cpu+0xdf/0xf0
+   ? bind_evtchn_to_cpu+0xc5/0xf0
+   set_affinity_irq+0xdc/0x1c0
+   irq_do_set_affinity+0x1d7/0x1f0
+   irq_setup_affinity+0xd6/0x1a0
+   irq_startup+0x8a/0xf0
+   __setup_irq+0x639/0x6d0
+   ? nvme_suspend+0x150/0x150
+   request_threaded_irq+0x10c/0x180
+   ? nvme_suspend+0x150/0x150
+   pci_request_irq+0xa8/0xf0
+   ? __blk_mq_free_request+0x74/0xa0
+   queue_request_irq+0x6f/0x80
+   nvme_create_queue+0x1af/0x200
+   nvme_create_io_queues+0xbd/0xf0
+   nvme_setup_io_queues+0x246/0x320
+   ? nvme_irq_check+0x30/0x30
+   nvme_reset_work+0x1c8/0x400
+   process_one_work+0x1b0/0x350
+   worker_thread+0x49/0x310
+   ? process_one_work+0x350/0x350
+   kthread+0x11b/0x140
+   ? __kthread_bind_mask+0x60/0x60
+   ret_from_fork+0x22/0x30
+  Modules linked in:
+  ---[ end trace a11715de1eee1873 ]---
+
+Fixes: d46a78b05c0e ("xen: implement pirq type event channels")
+Cc: stable@vger.kernel.org
+Co-debugged-by: Andrew Panyakin <apanyaki@amazon.com>
+Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+[apanyaki: backport to v5.15-stable]
+Signed-off-by: Andrew Paniakin <apanyaki@amazon.com>
 ---
- drivers/crypto/intel/iaa/iaa_crypto.h       |  16 +--
- drivers/crypto/intel/iaa/iaa_crypto_stats.c | 125 +++++++++++---------
- 2 files changed, 77 insertions(+), 64 deletions(-)
+Compare to upstream patch this one does not have close_evtchn flag
+because there is no need to handle static event channels.
+This feature was added only in 58f6259b7a08f ("xen/evtchn: Introduce new
+IOCTL to bind static evtchn")
 
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto.h b/drivers/crypto/intel/iaa/iaa_crypto.h
-index 2524091a5f70..56985e395263 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto.h
-+++ b/drivers/crypto/intel/iaa/iaa_crypto.h
-@@ -49,10 +49,10 @@ struct iaa_wq {
+ drivers/xen/events/events_base.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index ee691b20d4a3..04ff194fecf4 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -936,8 +936,8 @@ static void shutdown_pirq(struct irq_data *data)
+ 		return;
  
- 	struct iaa_device	*iaa_device;
- 
--	u64			comp_calls;
--	u64			comp_bytes;
--	u64			decomp_calls;
--	u64			decomp_bytes;
-+	atomic64_t		comp_calls;
-+	atomic64_t		comp_bytes;
-+	atomic64_t		decomp_calls;
-+	atomic64_t		decomp_bytes;
- };
- 
- struct iaa_device_compression_mode {
-@@ -73,10 +73,10 @@ struct iaa_device {
- 	int				n_wq;
- 	struct list_head		wqs;
- 
--	u64				comp_calls;
--	u64				comp_bytes;
--	u64				decomp_calls;
--	u64				decomp_bytes;
-+	atomic64_t			comp_calls;
-+	atomic64_t			comp_bytes;
-+	atomic64_t			decomp_calls;
-+	atomic64_t			decomp_bytes;
- };
- 
- struct wq_table_entry {
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.c b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-index 0f225bdf2279..f5cc3d29ca19 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-@@ -17,117 +17,117 @@
- #include "iaa_crypto.h"
- #include "iaa_crypto_stats.h"
- 
--static u64 total_comp_calls;
--static u64 total_decomp_calls;
--static u64 total_sw_decomp_calls;
--static u64 total_comp_bytes_out;
--static u64 total_decomp_bytes_in;
--static u64 total_completion_einval_errors;
--static u64 total_completion_timeout_errors;
--static u64 total_completion_comp_buf_overflow_errors;
-+static atomic64_t total_comp_calls;
-+static atomic64_t total_decomp_calls;
-+static atomic64_t total_sw_decomp_calls;
-+static atomic64_t total_comp_bytes_out;
-+static atomic64_t total_decomp_bytes_in;
-+static atomic64_t total_completion_einval_errors;
-+static atomic64_t total_completion_timeout_errors;
-+static atomic64_t total_completion_comp_buf_overflow_errors;
- 
- static struct dentry *iaa_crypto_debugfs_root;
- 
- void update_total_comp_calls(void)
- {
--	total_comp_calls++;
-+	atomic64_inc(&total_comp_calls);
+ 	do_mask(info, EVT_MASK_REASON_EXPLICIT);
+-	xen_evtchn_close(evtchn);
+ 	xen_irq_info_cleanup(info);
++	xen_evtchn_close(evtchn);
  }
  
- void update_total_comp_bytes_out(int n)
- {
--	total_comp_bytes_out += n;
-+	atomic64_add(n, &total_comp_bytes_out);
- }
+ static void enable_pirq(struct irq_data *data)
+@@ -981,8 +981,6 @@ static void __unbind_from_irq(unsigned int irq)
+ 		unsigned int cpu = cpu_from_irq(irq);
+ 		struct xenbus_device *dev;
  
- void update_total_decomp_calls(void)
- {
--	total_decomp_calls++;
-+	atomic64_inc(&total_decomp_calls);
- }
+-		xen_evtchn_close(evtchn);
+-
+ 		switch (type_from_irq(irq)) {
+ 		case IRQT_VIRQ:
+ 			per_cpu(virq_to_irq, cpu)[virq_from_irq(irq)] = -1;
+@@ -1000,6 +998,7 @@ static void __unbind_from_irq(unsigned int irq)
+ 		}
  
- void update_total_sw_decomp_calls(void)
- {
--	total_sw_decomp_calls++;
-+	atomic64_inc(&total_sw_decomp_calls);
- }
+ 		xen_irq_info_cleanup(info);
++		xen_evtchn_close(evtchn);
+ 	}
  
- void update_total_decomp_bytes_in(int n)
- {
--	total_decomp_bytes_in += n;
-+	atomic64_add(n, &total_decomp_bytes_in);
- }
- 
- void update_completion_einval_errs(void)
- {
--	total_completion_einval_errors++;
-+	atomic64_inc(&total_completion_einval_errors);
- }
- 
- void update_completion_timeout_errs(void)
- {
--	total_completion_timeout_errors++;
-+	atomic64_inc(&total_completion_timeout_errors);
- }
- 
- void update_completion_comp_buf_overflow_errs(void)
- {
--	total_completion_comp_buf_overflow_errors++;
-+	atomic64_inc(&total_completion_comp_buf_overflow_errors);
- }
- 
- void update_wq_comp_calls(struct idxd_wq *idxd_wq)
- {
- 	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
- 
--	wq->comp_calls++;
--	wq->iaa_device->comp_calls++;
-+	atomic64_inc(&wq->comp_calls);
-+	atomic64_inc(&wq->iaa_device->comp_calls);
- }
- 
- void update_wq_comp_bytes(struct idxd_wq *idxd_wq, int n)
- {
- 	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
- 
--	wq->comp_bytes += n;
--	wq->iaa_device->comp_bytes += n;
-+	atomic64_add(n, &wq->comp_bytes);
-+	atomic64_add(n, &wq->iaa_device->comp_bytes);
- }
- 
- void update_wq_decomp_calls(struct idxd_wq *idxd_wq)
- {
- 	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
- 
--	wq->decomp_calls++;
--	wq->iaa_device->decomp_calls++;
-+	atomic64_inc(&wq->decomp_calls);
-+	atomic64_inc(&wq->iaa_device->decomp_calls);
- }
- 
- void update_wq_decomp_bytes(struct idxd_wq *idxd_wq, int n)
- {
- 	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
- 
--	wq->decomp_bytes += n;
--	wq->iaa_device->decomp_bytes += n;
-+	atomic64_add(n, &wq->decomp_bytes);
-+	atomic64_add(n, &wq->iaa_device->decomp_bytes);
- }
- 
- static void reset_iaa_crypto_stats(void)
- {
--	total_comp_calls = 0;
--	total_decomp_calls = 0;
--	total_sw_decomp_calls = 0;
--	total_comp_bytes_out = 0;
--	total_decomp_bytes_in = 0;
--	total_completion_einval_errors = 0;
--	total_completion_timeout_errors = 0;
--	total_completion_comp_buf_overflow_errors = 0;
-+	atomic64_set(&total_comp_calls, 0);
-+	atomic64_set(&total_decomp_calls, 0);
-+	atomic64_set(&total_sw_decomp_calls, 0);
-+	atomic64_set(&total_comp_bytes_out, 0);
-+	atomic64_set(&total_decomp_bytes_in, 0);
-+	atomic64_set(&total_completion_einval_errors, 0);
-+	atomic64_set(&total_completion_timeout_errors, 0);
-+	atomic64_set(&total_completion_comp_buf_overflow_errors, 0);
- }
- 
- static void reset_wq_stats(struct iaa_wq *wq)
- {
--	wq->comp_calls = 0;
--	wq->comp_bytes = 0;
--	wq->decomp_calls = 0;
--	wq->decomp_bytes = 0;
-+	atomic64_set(&wq->comp_calls, 0);
-+	atomic64_set(&wq->comp_bytes, 0);
-+	atomic64_set(&wq->decomp_calls, 0);
-+	atomic64_set(&wq->decomp_bytes, 0);
- }
- 
- static void reset_device_stats(struct iaa_device *iaa_device)
- {
- 	struct iaa_wq *iaa_wq;
- 
--	iaa_device->comp_calls = 0;
--	iaa_device->comp_bytes = 0;
--	iaa_device->decomp_calls = 0;
--	iaa_device->decomp_bytes = 0;
-+	atomic64_set(&iaa_device->comp_calls, 0);
-+	atomic64_set(&iaa_device->comp_bytes, 0);
-+	atomic64_set(&iaa_device->decomp_calls, 0);
-+	atomic64_set(&iaa_device->decomp_bytes, 0);
- 
- 	list_for_each_entry(iaa_wq, &iaa_device->wqs, list)
- 		reset_wq_stats(iaa_wq);
-@@ -136,10 +136,14 @@ static void reset_device_stats(struct iaa_device *iaa_device)
- static void wq_show(struct seq_file *m, struct iaa_wq *iaa_wq)
- {
- 	seq_printf(m, "    name: %s\n", iaa_wq->wq->name);
--	seq_printf(m, "    comp_calls: %llu\n", iaa_wq->comp_calls);
--	seq_printf(m, "    comp_bytes: %llu\n", iaa_wq->comp_bytes);
--	seq_printf(m, "    decomp_calls: %llu\n", iaa_wq->decomp_calls);
--	seq_printf(m, "    decomp_bytes: %llu\n\n", iaa_wq->decomp_bytes);
-+	seq_printf(m, "    comp_calls: %llu\n",
-+		   atomic64_read(&iaa_wq->comp_calls));
-+	seq_printf(m, "    comp_bytes: %llu\n",
-+		   atomic64_read(&iaa_wq->comp_bytes));
-+	seq_printf(m, "    decomp_calls: %llu\n",
-+		   atomic64_read(&iaa_wq->decomp_calls));
-+	seq_printf(m, "    decomp_bytes: %llu\n\n",
-+		   atomic64_read(&iaa_wq->decomp_bytes));
- }
- 
- static void device_stats_show(struct seq_file *m, struct iaa_device *iaa_device)
-@@ -149,10 +153,14 @@ static void device_stats_show(struct seq_file *m, struct iaa_device *iaa_device)
- 	seq_puts(m, "iaa device:\n");
- 	seq_printf(m, "  id: %d\n", iaa_device->idxd->id);
- 	seq_printf(m, "  n_wqs: %d\n", iaa_device->n_wq);
--	seq_printf(m, "  comp_calls: %llu\n", iaa_device->comp_calls);
--	seq_printf(m, "  comp_bytes: %llu\n", iaa_device->comp_bytes);
--	seq_printf(m, "  decomp_calls: %llu\n", iaa_device->decomp_calls);
--	seq_printf(m, "  decomp_bytes: %llu\n", iaa_device->decomp_bytes);
-+	seq_printf(m, "  comp_calls: %llu\n",
-+		   atomic64_read(&iaa_device->comp_calls));
-+	seq_printf(m, "  comp_bytes: %llu\n",
-+		   atomic64_read(&iaa_device->comp_bytes));
-+	seq_printf(m, "  decomp_calls: %llu\n",
-+		   atomic64_read(&iaa_device->decomp_calls));
-+	seq_printf(m, "  decomp_bytes: %llu\n",
-+		   atomic64_read(&iaa_device->decomp_bytes));
- 	seq_puts(m, "  wqs:\n");
- 
- 	list_for_each_entry(iaa_wq, &iaa_device->wqs, list)
-@@ -162,17 +170,22 @@ static void device_stats_show(struct seq_file *m, struct iaa_device *iaa_device)
- static int global_stats_show(struct seq_file *m, void *v)
- {
- 	seq_puts(m, "global stats:\n");
--	seq_printf(m, "  total_comp_calls: %llu\n", total_comp_calls);
--	seq_printf(m, "  total_decomp_calls: %llu\n", total_decomp_calls);
--	seq_printf(m, "  total_sw_decomp_calls: %llu\n", total_sw_decomp_calls);
--	seq_printf(m, "  total_comp_bytes_out: %llu\n", total_comp_bytes_out);
--	seq_printf(m, "  total_decomp_bytes_in: %llu\n", total_decomp_bytes_in);
-+	seq_printf(m, "  total_comp_calls: %llu\n",
-+		   atomic64_read(&total_comp_calls));
-+	seq_printf(m, "  total_decomp_calls: %llu\n",
-+		   atomic64_read(&total_decomp_calls));
-+	seq_printf(m, "  total_sw_decomp_calls: %llu\n",
-+		   atomic64_read(&total_sw_decomp_calls));
-+	seq_printf(m, "  total_comp_bytes_out: %llu\n",
-+		   atomic64_read(&total_comp_bytes_out));
-+	seq_printf(m, "  total_decomp_bytes_in: %llu\n",
-+		   atomic64_read(&total_decomp_bytes_in));
- 	seq_printf(m, "  total_completion_einval_errors: %llu\n",
--		   total_completion_einval_errors);
-+		   atomic64_read(&total_completion_einval_errors));
- 	seq_printf(m, "  total_completion_timeout_errors: %llu\n",
--		   total_completion_timeout_errors);
-+		   atomic64_read(&total_completion_timeout_errors));
- 	seq_printf(m, "  total_completion_comp_buf_overflow_errors: %llu\n\n",
--		   total_completion_comp_buf_overflow_errors);
-+		   atomic64_read(&total_completion_comp_buf_overflow_errors));
- 
- 	return 0;
- }
+ 	xen_free_irq(irq);
 -- 
-2.34.1
+2.40.1
 
