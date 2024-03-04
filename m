@@ -1,91 +1,104 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.67.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F76225CB
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.67.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92D537166
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709547533; cv=none; b=iXtp+PNw0wJ1KFWuZAeFHY1C7RFaMVNqrImrpvcbuBXodaMGg08VQVsvj7dzE6SGToPyfXCwdhoEWP6ECMGrfM/1CxTEWbOwD6VLINlI8gq/jGqEBQU0ZIRGWRdl5YKKtEZ5qgkykkoqlWzklAR4LkOEZMlwPDhT9ImAfOAymqI=
+	t=1709547541; cv=none; b=Qb60MI+v+HaDqrG2GG3oq3XWVE57H8u5Mg7UVyysZaMrfua2Ps3j95E7d3dOg9NNY1jFUz57AtXzrbq4KUbknLN5RNwNvrIjZQSOqwT5KqH/XMrQayt4WWF1CiUYRIAJysGaGYCBX7vUPWbuJYLzRgodD/vAET/33EaJhLRcOv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709547533; c=relaxed/simple;
-	bh=dpj4ufgifj7GIAYt7yGK4hK+qv6CPi//o/CWx5UlmNo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P1HRHfBYLeNcdVKlthrCHuG4kEyoDe10aIFRvbav3szshQOvXavYW1F05ZAzZTVvrw4+/FeH+PuA5QbooMlzHsaA++4CJ5PYpkqTnWt3J3tcApZQ0aQFjkQGev6j7XrDCQ68YKkIffnKRTQ4AlEti0KpMf9SoZgm3UKmtRAhGng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.67.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp62t1709547436tgx9g8d8
-X-QQ-Originating-IP: 5APuCEWtsWVVSMzxS98Vxt66O3rkkYqE//ZKcb3vJ+g=
-Received: from localhost ( [112.22.30.30])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 04 Mar 2024 18:17:15 +0800 (CST)
-X-QQ-SSF: 01400000000000505000000A0000000
-X-QQ-FEAT: K2/klV1qoGlTWfl/w1BagxXdSiRmYm4VevULtmbJrZ7m+uuFIYP55sr8PKkvE
-	LFZQXXHCr2EtSCCK5SmQK1O3CRe7068aVPwYQHDZCMfx7QBCLRqh9MtFSaXOyEVk4S+IfnL
-	2/c6rzZrUKUayJFC/T2TuxVOdQKJPK4MvcEOso17dcNqbz53yLtACjYbYOWZKrry9iwT4rK
-	XzDZJLmzJEfCUTJb7aJM8LZ5wN7nvXIEDScRqEYoc9zVus6PtEhY12m8BHXaIfrp3UvkIuq
-	UmrF6GqiRFa+hiBGw0LgRdJa9CPzsujyNW9C5ZPnUspyt0oTr42TjiB9UjisUspC6pYOJY+
-	VID4BefrRwRQu91VAot+KD4yuNquhwGHqQx/zo6dV5tqUydf5QcwodVxY4LKfdFhmVkUqnD
-	1lKiJBNLonDN+eqHPG21JpBfAZ4tTl0e
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 11784876487773860519
-From: Dawei Li <dawei.li@shingroup.cn>
-To: conor.dooley@microchip.com,
-	daire.mcnamara@microchip.com
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Dawei Li <dawei.li@shingroup.cn>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v2] firmware: microchip: Fix over-requested allocation size
-Date: Mon,  4 Mar 2024 18:16:53 +0800
-Message-Id: <20240304101653.126570-1-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1709547541; c=relaxed/simple;
+	bh=L8Yd9aivs1y5S31tf+SgGvY1CAv2qBofPRQcyrKZogA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DV+qRhvUJ3QXRUtgQsOrrFLzc3u80cMphSUtFOpLDnFZGPxWS5+dxTe+JSIcwVnabNf5gRTOh5OPSauive7+Y1lru3MKVLTicDFNsDTKQXlETkrui/t4qHwjnz7NaIQ4T2rPDk6xpKvUPF7AFxPT4YW/AaauVfOEyeXSUtO18oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hAXvO2PO; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hAXvO2PO"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-412e84f501dso893765e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 02:18:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709547538; x=1710152338; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fmW5zcFPe9YbXP0IPxGliLDGDmB0I6XEzcryOh8vMLU=;
+        b=hAXvO2PO5itBLRLfsKsZGObwFCSzsGqdjkOOfeMRIRjONXUhGWeOW9p2NN9843D4OS
+         DIgfqHzxCS5lwYXsvEzs85vuKppRzDY3+J3CGVR/v6uaerdgyxKK9MLnNh6GdUlE5F1V
+         j5w4w21p3QP8PiK4VYRktvotkvU+/3f2XFkNdv6nhbE3wt/4P4QmammOEzX1JaTLhCY/
+         5J6NT9x1PQ9uXMlGEEZx01RnZu0kRqOfq0MclNx37lBX6Ga0NdBfJ8iz5R4FRSonSa/d
+         1xyQpyR+RHEVroquWGZSBWk3Nw8p1Jkm2tRPD9iVjy8RDVYxpYtra4UvFhnZ32gdBijJ
+         1FJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709547538; x=1710152338;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fmW5zcFPe9YbXP0IPxGliLDGDmB0I6XEzcryOh8vMLU=;
+        b=QOiWhSUKuJAZfTRvXes3kjB55ho6GPFA4IsO/EG5Yavovn/oYO3oknG5XGPswLE8/r
+         oE0O1/TpFhgQztTBZUPqaXZu7DQfzXIorZH9R+1L1jNAk5w0DyRVIWIQLBFBhnYSK4gr
+         S6UIJs+tK7unPo277/1SHjX7s+YpAtRVZMzTjwlDOdJkRWzI3EkMIahlNl3V/EOcjLu4
+         x4Gf/UFFZbP0EbUzebJpD+LyAAjJnx2AynwyoqIN9akzIDOB4i+80jTEQLpGRJAtVU5U
+         ZbrT5GPa7S1YTqYNgmNEByHwjKmTDY4n5qumucB2xk3GClI8kwQBqE6ZkCrnzeqdk5ea
+         0dpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWB3ZsCd34Zn9Qvu8kX3JPYsY3685tyhnv68HsAbyxdSm2VEBh+8xTewFu1hBoXX1HmLBvofFM4Dh89ZO8LZVFD0sMs2EUZls9iqFG7
+X-Gm-Message-State: AOJu0YyX5htZHH/oLlSlC2V7eWVP7sG4sXu2xhsspZe6VihvzLmJYaLu
+	rgG2+JvFmGNVMeBnG9LyJmj3vyOPFY485ddWctDExofBR6FQvwtJ8NUYZ15GHQA=
+X-Google-Smtp-Source: AGHT+IG7Ov7Kyt5GXCvjUp+CIJ4MuPiibAQif/bU5BPfLZ2jv6mBHOrOSrzTXlmjfbxDND2MEzFxPg==
+X-Received: by 2002:a05:600c:19cf:b0:412:c219:6206 with SMTP id u15-20020a05600c19cf00b00412c2196206mr6630691wmq.39.1709547538248;
+        Mon, 04 Mar 2024 02:18:58 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id p20-20020a05600c1d9400b00412e795f270sm763534wms.22.2024.03.04.02.18.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 02:18:57 -0800 (PST)
+Date: Mon, 4 Mar 2024 13:18:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Aman Sharma <210100011@iitb.ac.in>
+Cc: Gregkh <gregkh@linuxfoundation.org>, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Staging: pi433: Updated bitrate range from datasheet
+Message-ID: <835bba82-c144-4674-b8ec-a6bd6af89daa@moroto.mountain>
+References: <91454ef9b4a12f01e13d69b675d81aff@iitb.ac.in>
+ <1440d44b-c16d-4307-9457-5c3ae44716ff@moroto.mountain>
+ <74ec69941cb67e3a351ebd23d5ad4a5b@iitb.ac.in>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <74ec69941cb67e3a351ebd23d5ad4a5b@iitb.ac.in>
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/firmware/microchip/mpfs-auto-update.c:387:72-78:
-   ERROR: application of sizeof to pointer
-   drivers/firmware/microchip/mpfs-auto-update.c:170:72-78:
-   ERROR: application of sizeof to pointer
+On Mon, Mar 04, 2024 at 02:04:08PM +0530, Aman Sharma wrote:
+> Tbh this is my first patch and I don't have the hardware to test this. I
+> thought updating the values from the datasheet directly might be a good idea
+> as it would be the correct range. Please correct me if there is something
+> that I missed / need to know.
+> 
 
-response_msg is a pointer to u32, so the size of element it points to is
-supposed to be a multiple of sizeof(u32), rather than sizeof(u32 *).
+No, patch is fine.  There is no downside to updating the .txt
+documentation in this way.  I was just wondering.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202403040516.CYxoWTXw-lkp@intel.com/
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
+> On 2024-03-04 13:55, Dan Carpenter wrote:
+> > On Mon, Mar 04, 2024 at 11:23:40AM +0530, Aman Sharma wrote:
+> > > Updated bitrate range for FSK and OOK modulation from the RFM69
+> > > Datasheet.
+> > > The values are mentioned in Section 2.3.2 of the datasheet.
+> > 
+> > Have you tested these as well?  Sending untested patches is not
+> > necessarily against the rules, but it seems like maybe you have this
+> > hardware and can test it.  Could you please talk about what testing you
+> > did?
+> > 
+> > > 
+> > > Signed-off-by: Aman Sharma<amansharma6122002@gmail.com>
+> >                             ^
+> > Missing space.
+> > 
+> 
+> I'll fix this if I am allowed to submit a new patch.
 
-V1 -> V2:
-sizeof(u32)->sizeof(*response_msg) 
-
-V1:
-https://lore.kernel.org/lkml/20240304092532.125751-1-dawei.li@shingroup.cn/
-
- drivers/firmware/microchip/mpfs-auto-update.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/microchip/mpfs-auto-update.c b/drivers/firmware/microchip/mpfs-auto-update.c
-index 682e417be5a3..fbeeaee4ac85 100644
---- a/drivers/firmware/microchip/mpfs-auto-update.c
-+++ b/drivers/firmware/microchip/mpfs-auto-update.c
-@@ -384,7 +384,8 @@ static int mpfs_auto_update_available(struct mpfs_auto_update_priv *priv)
- 	u32 *response_msg;
- 	int ret;
- 
--	response_msg = devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(response_msg),
-+	response_msg = devm_kzalloc(priv->dev,
-+				    AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(*response_msg),
- 				    GFP_KERNEL);
- 	if (!response_msg)
- 		return -ENOMEM;
--- 
-2.27.0
-
+regards,
+dan carpenter
