@@ -1,128 +1,139 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14F161662
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 17:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C351EB2D;
+	Mon,  4 Mar 2024 17:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709573807; cv=none; b=Vi4zZFSSZjuk/0YmKtFzNe+M0fZr37kg7MaEw0/iIoVghWkm7EVrpJ4dG0k3kKae1DdCDRAaGIBqxTkUTwU3nAtdqApxSd9Qd/51hVwA6Yga2rASTPqGLdanyy3n2NEVfTGH3qm1hFn/b+LGoILEMbZWiEuLyZEWppXu1MFhXUo=
+	t=1709573818; cv=none; b=J+yUOSWKbJb0YBwyHQNezIL4V+q+u0XKJoP+6HzaOceOFi7m1mEhwNJ+uCXCSOnfMXhg/hZ8OAW7HCC1/2Er8naNEF3PRgcvVa7lDefK/VL2EKCe2tO/mQZ6u3ZUzo6kYJBRBAUvMb1SI1kFYN2hGn+y6dSdZuiw7Pn2kd5MdQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709573807; c=relaxed/simple;
-	bh=HpONkFOmk9WCDOiqE/57zwq8lJstKwLF4gqAsKfFXQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lvdq0IjmL2CDkX5gMS6sSAg57VVq9kjFLwOwWjl7UzKR3oeJvNS5GpwnOPhLCLktIoYBbbVnKezn3vjUgyfMl3nOLQvVm0edQJNNP2J5t3+8HSoOwLlU3R5Kqe/Oertq2fJ98lIt2dQh0Rmraza1RtCHso6DDcZj4YP899U//8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uxjlboZU; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709573818; c=relaxed/simple;
+	bh=+zRC9k4FeLLggfyxfSuH2+QwyCyfaApzEENTTaBSX48=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JEk+yG0enn3CfA4fVjbRI/DDIKacOMkfruzy4VhU+GLhzZcG/n9sRETZA/nWHJGgPCQn8d+Pb5DnsA8I9L3anqXvAXhsLbg0MFTvViFv/IX4dwW0RhQV/H20vPfPBIvFNKf4MNZUaPMOAZ9qSdLf/172CfEztugfJSHVbsI8/yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WpqcYSUe; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uxjlboZU"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d094bc2244so68988721fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 09:36:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709573804; x=1710178604; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OXEvMA5w5rvjI27ttLhue2/cB4ftFG6hZNeiSaW+NeA=;
-        b=uxjlboZUO+FUxmOv28QVSxusXalT+RU6CoziCqpGr/MO+6fQTu2mMeiwaToxflNFFI
-         7/ihKJgw+S1K6g/v8rsiCOvk41S/iao3iKghg/3G9dOHzJUPpDprlmU6RnnqA2GWZRNm
-         fh/e22c6SeTzokGY+gaUrp6aRjgUpEm6N2ATrApUybWiPxRbcwiCgp1EajWjnxz+1Glq
-         1T3DljyUwpUsw00925wCSRW1tvTsJONPaqsg8gBCB+q3SJCJcA7oi4aC+xTDKrP+AaZI
-         f+EIAwA2gFtDa7qtyPhvPkca+JWvFxu5cS0uecvH8bmd0WvhzpV/dUMFW8A/JzPu/kSr
-         NXOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709573804; x=1710178604;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OXEvMA5w5rvjI27ttLhue2/cB4ftFG6hZNeiSaW+NeA=;
-        b=tXZJcJZypXGCmhRwybV8vyHeQnzF6CYLoYSiScP1eZYd4w4J2YQfQ0ThnLhsg+dMRg
-         E47NZbZ8AHU5bmEGKeUliQSJwPc0Axu8Z1eUQKdJu7wJH4b8Hl6zVobr1ivi+jze9jTh
-         Tw09+e8IrdYfNgMI7oIWFVI0jyAWXBDbYfLUNY1cu6mH2wiYuouB0c1cvWxrR0o69UxS
-         Vou6WAXZPT3dSNCuLSHmfMRwnw2XJg4qf3acfTJCsP7TtJj+3mM8lxGSPzPn2Y7GL6p3
-         ZW/1/nP92tDudqkzId5z6x0k3m/GGWztkX7iSzy6CSLqynf1hU8NQ3N5pKYBzNuWlTU4
-         XDoA==
-X-Forwarded-Encrypted: i=1; AJvYcCXUqUawWm31fMr53MU9itN3DUmQJRC8SFpH2TcDQkYRMcCklPeIcbTFW1F85MOgonXZpnOFXa8Kdw8maQtUEUxMBrWz4I9OaODc3vUB
-X-Gm-Message-State: AOJu0YymH4Ai51i5UziD72LSZNJUbdK7v0x6hky8qpxr1KfQR2NIyNaK
-	tfU8I0wDhgyITUqPDVEofV+SHCSUn11J6plss12E3BoiyT7AZtmmVlCRrx/Vc1U=
-X-Google-Smtp-Source: AGHT+IGFq4RAkfHr79J2Xhsh8YYiYxntXslFUyjgCDcsPphD5lS7JnGn6fRFVDEb9nHHQFLLMI1nWA==
-X-Received: by 2002:a2e:9ac5:0:b0:2d3:93dd:a192 with SMTP id p5-20020a2e9ac5000000b002d393dda192mr3263691ljj.45.1709573803913;
-        Mon, 04 Mar 2024 09:36:43 -0800 (PST)
-Received: from [172.30.204.149] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id w15-20020a2e958f000000b002d277882eb6sm1827909ljh.83.2024.03.04.09.36.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 09:36:43 -0800 (PST)
-Message-ID: <98e154f7-a01d-43d0-bd0b-70122ad880c6@linaro.org>
-Date: Mon, 4 Mar 2024 18:36:40 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WpqcYSUe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709573817; x=1741109817;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+zRC9k4FeLLggfyxfSuH2+QwyCyfaApzEENTTaBSX48=;
+  b=WpqcYSUe+Ve4z7iFmvBhOEIbihbT40pJFueYeO0CQKUchz+L//DlOLWN
+   O2B6TDWJQxq/NyePJO7aiqrP6sX4z7lU3rFihU56o2Cbt3+O8YFvXQMph
+   wyIdMSW31azD/HxMP/QgCJ9lXtS9zxSN6Kqe8LeBnewShu6IYjfSj+StZ
+   KeEf+dazlBgcEMEJ1/e78rqX+ahEuxrWF9g7INnwLNNUn65GXFM+EDkNX
+   LYGDazFlzB1zPx+m5+7zE79wVJ7nlaM86RujMV/MxbtNSdJF+TUJgD7wq
+   2z1iWcH6VTKxjWxuybXxv1z0ARw18GYvM/x06xKFDtetA41rxYr/GHGAN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4207278"
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="4207278"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 09:36:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="937040902"
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="937040902"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 09:36:32 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3AB9815C; Mon,  4 Mar 2024 19:36:31 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/1] gpiolib: Deduplicate cleanup for-loop in gpiochip_add_data_with_key()
+Date: Mon,  4 Mar 2024 19:35:33 +0200
+Message-ID: <20240304173630.1150382-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] interconnect: qcom: x1e80100: Remove inexistent ACV_PERF
- BCM
-To: Mike Tipton <quic_mdtipton@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Georgi Djakov
- <djakov@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
- Sibi Sankar <quic_sibis@quicinc.com>,
- Rajendra Nayak <quic_rjendra@quicinc.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240302-topic-faux_bcm_x1e-v1-1-c40fab7c4bc5@linaro.org>
- <20240304164009.GB25492@hu-mdtipton-lv.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240304164009.GB25492@hu-mdtipton-lv.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+There is no need to repeat for-loop twice in the error path in
+gpiochip_add_data_with_key(). Deduplicate it. While at it,
+rename loop variable to be more specific and avoid ambguity.
 
+It also properly unwinds the SRCU, i.e. in reversed order of allocating.
 
-On 3/4/24 17:40, Mike Tipton wrote:
-> On Sat, Mar 02, 2024 at 03:22:49AM +0100, Konrad Dybcio wrote:
->> Booting the kernel on X1E results in a message like:
->>
->> [    2.561524] qnoc-x1e80100 interconnect-0: ACV_PERF could not find RPMh address
->>
->> And indeed, taking a look at cmd-db, no such BCM exists. Remove it.
->>
->> Fixes: 9f196772841e ("interconnect: qcom: Add X1E80100 interconnect provider driver")
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> 
-> Reviewed-by: Mike Tipton <quic_mdtipton@quicinc.com>
-> 
-> For some background, ACV "perf mode" does exist, but not as a separate
-> BCM. It's controlled by a separate bit in the ACV mask. By default, the
-> ACV node only sets the bit indicating the HLOS voter. It doesn't assert
-> the perf mode bit.
-> 
-> Enabling perf mode toggles different trade-offs within the DDR subsystem
-> for slightly improved performance at the expense of slightly higher
-> power. There are limited use cases of this downstream, where we expose
-> control over this bit to clients through icc_set_tag(). It primarily
-> improves certain latency sensitive benchmarks, AFAIK. I don't think it
-> has much impact on real world use cases.
-> 
-> This is true for many other targets as well, not just x1e80100.
-> 
-> Voting for perf-mode is entirely optional and in most cases also
-> entirely unnecessary. So, removing this broken way to control it without
-> adding the proper control is totally fine.
-> 
-> I have a local series to add the proper support, but haven't posted it
-> yet. There aren't any users for it upstream yet, nor am I aware of any
-> near term plans to add them. So, it would be unused for a little while,
-> at least. That said, anybody could use it to set that tag on their BW
-> votes on the off-chance it improves performance and they don't care
-> about the power trade-offs.
-> 
-> I could post the series soon if there's interest.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: rebased on top of the latest fixes for GPIO library (Bart)
+ drivers/gpio/gpiolib.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
-I think adding a sysfs entry for toggling this could be very interesting.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e2e583b40207..ce94e37bcbee 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -861,7 +861,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 			       struct lock_class_key *request_key)
+ {
+ 	struct gpio_device *gdev;
+-	unsigned int i, j;
++	unsigned int desc_index;
+ 	int base = 0;
+ 	int ret = 0;
+ 
+@@ -965,8 +965,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 		}
+ 	}
+ 
+-	for (i = 0; i < gc->ngpio; i++)
+-		gdev->descs[i].gdev = gdev;
++	for (desc_index = 0; desc_index < gc->ngpio; desc_index++)
++		gdev->descs[desc_index].gdev = gdev;
+ 
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+@@ -992,19 +992,16 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	if (ret)
+ 		goto err_cleanup_gdev_srcu;
+ 
+-	for (i = 0; i < gc->ngpio; i++) {
+-		struct gpio_desc *desc = &gdev->descs[i];
++	for (desc_index = 0; desc_index < gc->ngpio; desc_index++) {
++		struct gpio_desc *desc = &gdev->descs[desc_index];
+ 
+ 		ret = init_srcu_struct(&desc->srcu);
+-		if (ret) {
+-			for (j = 0; j < i; j++)
+-				cleanup_srcu_struct(&gdev->descs[j].srcu);
+-			goto err_free_gpiochip_mask;
+-		}
++		if (ret)
++			goto err_cleanup_desc_srcu;
+ 
+-		if (gc->get_direction && gpiochip_line_is_valid(gc, i)) {
++		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index)) {
+ 			assign_bit(FLAG_IS_OUT,
+-				   &desc->flags, !gc->get_direction(gc, i));
++				   &desc->flags, !gc->get_direction(gc, desc_index));
+ 		} else {
+ 			assign_bit(FLAG_IS_OUT,
+ 				   &desc->flags, !gc->direction_input);
+@@ -1061,9 +1058,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ err_remove_of_chip:
+ 	of_gpiochip_remove(gc);
+ err_cleanup_desc_srcu:
+-	for (i = 0; i < gdev->ngpio; i++)
+-		cleanup_srcu_struct(&gdev->descs[i].srcu);
+-err_free_gpiochip_mask:
++	while (desc_index--)
++		cleanup_srcu_struct(&gdev->descs[desc_index].srcu);
+ 	gpiochip_free_valid_mask(gc);
+ err_cleanup_gdev_srcu:
+ 	cleanup_srcu_struct(&gdev->srcu);
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-Userspace could toggle this based on "power profile"-style settings.
-
-Konrad
