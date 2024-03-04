@@ -1,38 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EF6524BF
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 15:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAD854745
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 15:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709566175; cv=none; b=FGcemnBlb8LAR3vIkGsGwmAef5VQTgw1KXzIZnzYM81VimJZ8knWekVJqSMoUR0C4vhjhjLckxfQtP0FcEb1EuQd2AoChq0qIlWw7pFtC9ch6Bpunz9j1H4tO5b9w5cPFKqeDgCGn8142SKagnrt/LxYlL4EaJ6eopy0Vdx4wF0=
+	t=1709566178; cv=none; b=WJVvXLdw1gthF/qImXP9T0IcuR/KgEWDPlKtszVG3CVBYx+U9GETYxH1+kw9WdNl9b7xzmgs9s/huHEfNQjNDUxrKm0VTVrXm/pJNSCyC8ACIvpqCgFjY41UEPdsjnAkJBma86Y2Dmac3n7egb8h6sQ4XBlmYdy5fB6q8+3ylfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709566175; c=relaxed/simple;
-	bh=tX97I+ro7Alwfoz9evzQvXNQB38XTBMySkDAvlE/C80=;
+	s=arc-20240116; t=1709566178; c=relaxed/simple;
+	bh=fXKiE8oreceOOqPqncuQdk6eyUwYiFstX/vvkBDvpmo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dkw7gu+IBxAFxTbGpUsaTr7SaQeuV3p2WX+OqXDUTdwQQ+Phkv9ztZ4P6jxFuOvWw5K9a5PIWdJNzWEjDnBXfimMbGKD+0P3L3RsFMDJ4e9ORmPa9xl2OtzgXtElRbGyQFbcXI04KVbvyT8EtKr4fmI0oLfz2hboKr8VDRdFLus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WmebUhcJ; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=H4qeT6rfPcEn4I0KrwDBd+JlwR8FCVocs0QQeRv/NHRLl1I45lWUVZrtSMW9yXMDqfPosqZX8AyhHfjILf+EB8aS31FYDWtbxGM++1Op9s7BeROAb1JVKjHKSMCQN//Xjtum4EZLvZThYQ/9k/vjq4i7GbMAR/zm9MUhGYhOYT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kV3Vg5ij; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WmebUhcJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2AD051C000D;
-	Mon,  4 Mar 2024 15:29:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kV3Vg5ij"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 625D81C0011;
+	Mon,  4 Mar 2024 15:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709566171;
+	t=1709566174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dnaSpd8gQBPW2mCDvj7nDjUQi8Lv+iKD5qb1DicVeGs=;
-	b=WmebUhcJmHP1xljSCOiAXdEh+LBTtatFvR/AnPra7Ek/CegVYRyG3N/TlpXUAVNsPLkERG
-	ahX8D3bAYJrrcvdwvQxlDugNTyiF6dMacUtlWGpqkvDXNfoRL48tbqLCJZ5sRECy7F5wry
-	+8Gs3BqlkWltCMFAiENRGpUOI4/7z3YbEgKI+iFr9PjFDxvhltWY6d+XOmfu/L38JUabSU
-	/vQT/nFeYKFNOGSUNC3/nguL0rNW4cGWvR255y4VZqlWc6Fbsu+sFQlKJAlCTgDjUBuVn1
-	Hmtr7G+GYl1xhUqB/CX3AxxA88uLKzPjbaPF6r3tJmjiZ1OUUZxqLu/NsGYrHA==
+	bh=Sxj7PD7QU9ATJPEMVZ0jCO8idYJAgbdOpi3aVdMCsmM=;
+	b=kV3Vg5ijL9b5AdnNkmG9kUZ4jn/zrvdgEKB8/rsRl2Dp3Mnj5IOLpuuLdqCJkO4/6Tsgwf
+	rohZUr12EcBNjGKGiN+H492zw4tcJO2KphkVyPyRKRoqvxlpM0pw8Nnp+YdznDOt0os/eA
+	4iyAsV2r0021vPX2lwYSBHm7Ymc7S5CV67CbUFmHUWh4k+/zj1ln2zq8MgwMNL1kfrAi5v
+	dN44qC5+vnJysmdbAZaRvEry5wiZGRCsOsHlhGEnImjYKXn3QnSidmNSe7ksvrjMQPZOL0
+	Fr8ZR3QztMjBKSYQs0XZNBeCut0O1ZrxApFnm98bGUwqq2DhPPoqIdoFZCkuXg==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Mon, 04 Mar 2024 16:28:16 +0100
-Subject: [PATCH v4 11/14] drm/vkms: Add YUV support
+Date: Mon, 04 Mar 2024 16:28:19 +0100
+Subject: [PATCH v4 14/14] drm/vkms: Create KUnit tests for YUV conversions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240304-yuv-v4-11-76beac8e9793@bootlin.com>
+Message-Id: <20240304-yuv-v4-14-76beac8e9793@bootlin.com>
 References: <20240304-yuv-v4-0-76beac8e9793@bootlin.com>
 In-Reply-To: <20240304-yuv-v4-0-76beac8e9793@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -57,565 +57,301 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
  nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=17940;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10466;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=ENcAK3ynLvDm24VjMw7uHS+29wtrHy71ENTfOEy1bHs=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl5ejM/XIO+t56GWpsyH+wQU/veQdqyHaEvnFFB8dF
- +wp2vbeJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZeXozAAKCRAgrS7GWxAs4rf2D/
- 4wGOkjYVqrBsuXnPd1V3z2ChA5Pf5+khCvocrJfRTrP7yHrLeVB34dN4i8UJEneSSHiTHOgNvQ4CMB
- yKa+tIxPakpzmm+4Lz8NR1S6rzPtPEddss5Qq0c2aKuDnlp19jWfMX7R/6IyCSWE4r0POyI7LOzFJo
- 0B1PmSq+KDOa+52tWWM71CUA71hupjB1VMum5INMnuNp0+4ZcggjAGqkGfwTFmjdLDNe26F4k3uOti
- k/X02+0SCh9C7C+XDPYg1YG+M69j0mAIAYaMYAg6OhOxaSKvlJsZh03oEFWYpWTj+T9gKFCbsrCKs6
- ry2UcbGSurUPnxxkQ22w88+80bqKbLwwa6PuI4nxyuQQfB9jSJtVCxCd/ZKrPgbqtsr9gsweYOlS/t
- IW2YkkN34v9v0GPuPbh0dsOttbLZHRd+xbwYZC6kwHugalh7yHb4arzexPH50H+utujlozzN4jVwTT
- u0ZoHcJ7yhMePtu2dLAC2U0SgLGDyGxs2O8Fv0nYvgsPU6QAgGBbYdYOfH5J+MoOZkrGTVnQ7v6I0+
- bwmAz2vV7/STj8U/DzLi0Jx+aPufSlEa4bxwG8SGxZRJF2ZGTFpz1SbgAQKZOb1fsml24Pgtv50Xp5
- HnGQFbkkpUK+EfKdRKsyPVAx2slvX9HARDcPgniDMueq0z2sjKeLhg9Kc0+A==
+ bh=oit4DBZsqYBsCSeCVnB90xL2YrQEqzM2Rsn5P03j1zs=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl5ejNN1MQo+P1mq5+sUn5p5kzGYr35Lao4Xt3vrkl
+ hn+gONyJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZeXozQAKCRAgrS7GWxAs4tRhEA
+ C+8Urz+c3RbOiqiY+106LXtJxOGqN2KIp8qYemSm/SFIJV8SGLVcCLk/07Wuyixeg3gPw6vrc/aSex
+ eKXyNmmKCiI4laJU5Dp9Ci1/HP0njBEQQCTsZtQXjM+DyyBDNZ46FOezgGsgN5dHdN7uJZwYA+8Jqi
+ rJDuHAims+TJ5A8xBmOTzml5wvZWm4PCylvmrTFo6DFKqpWKoMKHrJAzkb1Mt5uU/YYyP9uOxJowPb
+ oSnez51Yt4TxoI9Ldx3ZxihL4/Zvkf5VMXhTO4cUHaVk61tI1WTVC4Sh7LJzjoBS27eot5awr3wdrC
+ NSRT92mPfjZX9OyAWckKPRenTr8/vwCFX3lfqazc9XzvxVNqSrU1crxHSKKr6oQfUY7XOT+yXUggMR
+ OxsIjAR5YNX/8up0lCF3uOgtDu6p41pNTpLRghHW9u8a3eo/ipFfHEo6OGjJN7tX++sAneZ0SLO0Xc
+ 8IRiRJsHL9yque6iqdfXMx2Qq22/NOkpygkgu58aVER48SAjFOKd2Dhk76yLMhuE/LOZQNmw9IU67D
+ ckLhhqwchi95f/lBVq8fubuj82cDrOV1g2T7RLq+eDRPwwIyBJDabhk/852Wy9fnIxQHFrt0U/sV0v
+ Eam6nfIt49N/WDBWvIDdm3Y/AB39OcdERAFyCuhx2Ubu+98gJZ8sj0oUfwRA==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
 From: Arthur Grillo <arthurgrillo@riseup.net>
 
-Add support to the YUV formats bellow:
-
-- NV12/NV16/NV24
-- NV21/NV61/NV42
-- YUV420/YUV422/YUV444
-- YVU420/YVU422/YVU444
-
-The conversion from yuv to rgb is done with fixed-point arithmetic, using
-32.32 floats.
-
-To do the conversion, a specific matrix must be used for each color range
-(DRM_COLOR_*_RANGE) and encoding (DRM_COLOR_*). This matrix is stored in
-the `conversion_matrix` struct, along with the specific y_offset needed.
-This matrix is queried only once, in `vkms_plane_atomic_update` and
-stored in a `vkms_plane_state`. Those conversion matrices of each
-encoding and range were obtained by rounding the values of the original
-conversion matrices multiplied by 2^32. This is done to avoid the use of
-fixed point operations.
-
-The same reading function is used for YUV and YVU formats. As the only
-difference between those two category of formats is the order of field, a
-simple swap in conversion matrix columns allows using the same function.
+Create KUnit tests to test the conversion between YUV and RGB. Test each
+conversion and range combination with some common colors.
 
 Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-[Louis Chauvet:
-- Adapted Arthur's work
-- Implemented the read_line_t callbacks for yuv
-- add struct conversion_matrix
-- remove struct pixel_yuv_u8
-- update the commit message]
+[Louis Chauvet: fix minor formating issues (whitespace, double line), change expected alpha from 0x0000 to 0xffff, adapt to the new get_conversion_matrix usage]
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_drv.h     |  23 +++
- drivers/gpu/drm/vkms/vkms_formats.c | 374 ++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_formats.h |   4 +
- drivers/gpu/drm/vkms/vkms_plane.c   |  16 +-
- 4 files changed, 416 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/Kconfig                  |  15 +++
+ drivers/gpu/drm/vkms/Makefile                 |   1 +
+ drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
+ drivers/gpu/drm/vkms/tests/Makefile           |   3 +
+ drivers/gpu/drm/vkms/tests/vkms_format_test.c | 158 ++++++++++++++++++++++++++
+ drivers/gpu/drm/vkms/vkms_formats.c           |   5 +-
+ drivers/gpu/drm/vkms/vkms_formats.h           |   4 +
+ 7 files changed, 189 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index 23e1d247468d..393b76e7c694 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -99,6 +99,28 @@ typedef void (*pixel_read_line_t)(const struct vkms_plane_state *plane, int x_st
- 				  int y_start, enum pixel_read_direction direction, int count,
- 				  struct pixel_argb_u16 out_pixel[]);
+diff --git a/drivers/gpu/drm/vkms/Kconfig b/drivers/gpu/drm/vkms/Kconfig
+index b9ecdebecb0b..9b0e1940c14f 100644
+--- a/drivers/gpu/drm/vkms/Kconfig
++++ b/drivers/gpu/drm/vkms/Kconfig
+@@ -13,3 +13,18 @@ config DRM_VKMS
+ 	  a VKMS.
  
+ 	  If M is selected the module will be called vkms.
 +
-+/**
-+ * CONVERSION_MATRIX_FLOAT_DEPTH - Number of digits after the point for conversion matrix values
-+ */
-+#define CONVERSION_MATRIX_FLOAT_DEPTH 32
++config DRM_VKMS_KUNIT_TESTS
++	tristate "Tests for VKMS" if !KUNIT_ALL_TESTS
++	depends on DRM_VKMS && KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  This builds unit tests for VKMS. This option is not useful for
++	  distributions or general kernels, but only for kernel
++	  developers working on VKMS.
 +
-+/**
-+ * struct conversion_matrix - Matrix to use for a specific encoding and range
-+ *
-+ * @matrix: Conversion matrix from yuv to rgb. The matrix is stored in a row-major manner and is
-+ * used to compute rgb values from yuv values:
-+ *     [[r],[g],[b]] = @matrix * [[y],[u],[v]]
-+ *   OR for yvu formats:
-+ *     [[r],[g],[b]] = @matrix * [[y],[v],[u]]
-+ *  The values of the matrix are fixed floats, 32.CONVERSION_MATRIX_FLOAT_DEPTH
-+ * @y_offest: Offset to apply on the y value.
-+ */
-+struct conversion_matrix {
-+	s64 matrix[3][3];
-+	s64 y_offset;
++	  For more information on KUnit and unit tests in general,
++	  please refer to the KUnit documentation in
++	  Documentation/dev-tools/kunit/.
++
++	  If in doubt, say "N".
+\ No newline at end of file
+diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
+index 1b28a6a32948..8d3e46dde635 100644
+--- a/drivers/gpu/drm/vkms/Makefile
++++ b/drivers/gpu/drm/vkms/Makefile
+@@ -9,3 +9,4 @@ vkms-y := \
+ 	vkms_writeback.o
+ 
+ obj-$(CONFIG_DRM_VKMS) += vkms.o
++obj-$(CONFIG_DRM_VKMS_KUNIT_TESTS) += tests/
+diff --git a/drivers/gpu/drm/vkms/tests/.kunitconfig b/drivers/gpu/drm/vkms/tests/.kunitconfig
+new file mode 100644
+index 000000000000..70e378228cbd
+--- /dev/null
++++ b/drivers/gpu/drm/vkms/tests/.kunitconfig
+@@ -0,0 +1,4 @@
++CONFIG_KUNIT=y
++CONFIG_DRM=y
++CONFIG_DRM_VKMS=y
++CONFIG_DRM_VKMS_KUNIT_TESTS=y
+diff --git a/drivers/gpu/drm/vkms/tests/Makefile b/drivers/gpu/drm/vkms/tests/Makefile
+new file mode 100644
+index 000000000000..2d1df668569e
+--- /dev/null
++++ b/drivers/gpu/drm/vkms/tests/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_DRM_VKMS_KUNIT_TESTS) += vkms_format_test.o
+diff --git a/drivers/gpu/drm/vkms/tests/vkms_format_test.c b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+new file mode 100644
+index 000000000000..4636b013602f
+--- /dev/null
++++ b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+@@ -0,0 +1,158 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++#include <kunit/test.h>
++
++#include <drm/drm_fixed.h>
++#include <drm/drm_fourcc.h>
++#include <drm/drm_print.h>
++
++#include "../../drm_crtc_internal.h"
++
++#include "../vkms_drv.h"
++#include "../vkms_formats.h"
++
++#define TEST_BUFF_SIZE 50
++
++struct yuv_u8_to_argb_u16_case {
++	enum drm_color_encoding encoding;
++	enum drm_color_range range;
++	size_t n_colors;
++	struct format_pair {
++		char *name;
++		struct pixel_yuv_u8 yuv;
++		struct pixel_argb_u16 argb;
++	} colors[TEST_BUFF_SIZE];
 +};
 +
- /**
-  * vkms_plane_state - Driver specific plane state
-  * @base: base plane state
-@@ -110,6 +132,7 @@ struct vkms_plane_state {
- 	struct drm_shadow_plane_state base;
- 	struct vkms_frame_info *frame_info;
- 	pixel_read_line_t pixel_read_line;
-+	struct conversion_matrix *conversion_matrix;
- };
- 
- struct vkms_plane {
++static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
++	{
++		.encoding = DRM_COLOR_YCBCR_BT601,
++		.range = DRM_COLOR_YCBCR_FULL_RANGE,
++		.n_colors = 6,
++		.colors = {
++			{"white", {0xff, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x00, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x4c, 0x55, 0xff}, {0xffff, 0xffff, 0x0000, 0x0000}},
++			{"green", {0x96, 0x2c, 0x15}, {0xffff, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x1d, 0xff, 0x6b}, {0xffff, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT601,
++		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
++		.n_colors = 6,
++		.colors = {
++			{"white", {0xeb, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x10, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x51, 0x5a, 0xf0}, {0xffff, 0xffff, 0x0000, 0x0000}},
++			{"green", {0x91, 0x36, 0x22}, {0xffff, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x29, 0xf0, 0x6e}, {0xffff, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT709,
++		.range = DRM_COLOR_YCBCR_FULL_RANGE,
++		.n_colors = 4,
++		.colors = {
++			{"white", {0xff, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x00, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x36, 0x63, 0xff}, {0xffff, 0xffff, 0x0000, 0x0000}},
++			{"green", {0xb6, 0x1e, 0x0c}, {0xffff, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x12, 0xff, 0x74}, {0xffff, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT709,
++		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
++		.n_colors = 4,
++		.colors = {
++			{"white", {0xeb, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x10, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x3f, 0x66, 0xf0}, {0xffff, 0xffff, 0x0000, 0x0000}},
++			{"green", {0xad, 0x2a, 0x1a}, {0xffff, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x20, 0xf0, 0x76}, {0xffff, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT2020,
++		.range = DRM_COLOR_YCBCR_FULL_RANGE,
++		.n_colors = 4,
++		.colors = {
++			{"white", {0xff, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x00, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x43, 0x5c, 0xff}, {0xffff, 0xffff, 0x0000, 0x0000}},
++			{"green", {0xad, 0x24, 0x0b}, {0xffff, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x0f, 0xff, 0x76}, {0xffff, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT2020,
++		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
++		.n_colors = 4,
++		.colors = {
++			{"white", {0xeb, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x10, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x4a, 0x61, 0xf0}, {0xffff, 0xffff, 0x0000, 0x0000}},
++			{"green", {0xa4, 0x2f, 0x19}, {0xffff, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x1d, 0xf0, 0x77}, {0xffff, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++};
++
++static void vkms_format_test_yuv_u8_to_argb_u16(struct kunit *test)
++{
++	const struct yuv_u8_to_argb_u16_case *param = test->param_value;
++	struct pixel_argb_u16 argb;
++
++	for (size_t i = 0; i < param->n_colors; i++) {
++		const struct format_pair *color = &param->colors[i];
++
++		const struct conversion_matrix *matrix = get_conversion_matrix_to_argb_u16
++			(DRM_FORMAT_NV12, param->encoding, param->range);
++
++		argb = argb_u16_from_yuv888(color->yuv.y, color->yuv.u, color->yuv.v, matrix);
++
++		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.a, color->argb.a), 257,
++				    "On the A channel of the color %s expected 0x%04x, got 0x%04x",
++				    color->name, color->argb.a, argb.a);
++		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.r, color->argb.r), 257,
++				    "On the R channel of the color %s expected 0x%04x, got 0x%04x",
++				    color->name, color->argb.r, argb.r);
++		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.g, color->argb.g), 257,
++				    "On the G channel of the color %s expected 0x%04x, got 0x%04x",
++				    color->name, color->argb.g, argb.g);
++		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.b, color->argb.b), 257,
++				    "On the B channel of the color %s expected 0x%04x, got 0x%04x",
++				    color->name, color->argb.b, argb.b);
++	}
++}
++
++static void vkms_format_test_yuv_u8_to_argb_u16_case_desc(struct yuv_u8_to_argb_u16_case *t,
++							  char *desc)
++{
++	snprintf(desc, KUNIT_PARAM_DESC_SIZE, "%s - %s",
++		 drm_get_color_encoding_name(t->encoding), drm_get_color_range_name(t->range));
++}
++
++KUNIT_ARRAY_PARAM(yuv_u8_to_argb_u16, yuv_u8_to_argb_u16_cases,
++	vkms_format_test_yuv_u8_to_argb_u16_case_desc);
++
++static struct kunit_case vkms_format_test_cases[] = {
++	KUNIT_CASE_PARAM(vkms_format_test_yuv_u8_to_argb_u16, yuv_u8_to_argb_u16_gen_params),
++	{}
++};
++
++static struct kunit_suite vkms_format_test_suite = {
++	.name = "vkms-format",
++	.test_cases = vkms_format_test_cases,
++};
++
++kunit_test_suite(vkms_format_test_suite);
++
++MODULE_LICENSE("GPL");
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index 87af3962ee12..d9b70d9b99ef 100644
+index d9b70d9b99ef..44d9b9b3bdc3 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.c
 +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -90,6 +90,45 @@ static int get_step_1x1(struct drm_framebuffer *fb, enum pixel_read_direction di
- 	return 0;
- }
+@@ -7,6 +7,8 @@
+ #include <drm/drm_rect.h>
+ #include <drm/drm_fixed.h>
  
-+/**
-+ * get_subsampling() - Get the subsampling divisor value on a specific direction
-+ */
-+static int get_subsampling(const struct drm_format_info *format,
-+			   enum pixel_read_direction direction)
-+{
-+	switch (direction) {
-+	case READ_BOTTOM_TO_TOP:
-+	case READ_TOP_TO_BOTTOM:
-+		return format->vsub;
-+	case READ_RIGHT_TO_LEFT:
-+	case READ_LEFT_TO_RIGHT:
-+		return format->hsub;
-+	}
-+	WARN_ONCE(true, "Invalid direction for pixel reading: %d\n", direction);
-+	return 1;
-+}
++#include <kunit/visibility.h>
 +
-+/**
-+ * get_subsampling_offset() - An offset for keeping the chroma siting consistent regardless of
-+ * x_start and y_start values
-+ */
-+static int get_subsampling_offset(enum pixel_read_direction direction, int x_start, int y_start)
-+{
-+	switch (direction) {
-+	case READ_BOTTOM_TO_TOP:
-+		return -y_start;
-+	case READ_TOP_TO_BOTTOM:
-+		return y_start;
-+	case READ_RIGHT_TO_LEFT:
-+		return -x_start;
-+	case READ_LEFT_TO_RIGHT:
-+		return x_start;
-+	}
-+	WARN_ONCE(true, "Invalid direction for pixel reading: %d\n", direction);
-+	return 0;
-+}
-+
-+
- /*
-  * The following  functions take pixel data (a, r, g, b, pixel, ...), convert them to the format
-  * ARGB16161616 in out_pixel.
-@@ -146,6 +185,40 @@ static struct pixel_argb_u16 argb_u16_from_RGB565(const u16 *pixel)
+ #include "vkms_formats.h"
+ 
+ /**
+@@ -185,7 +187,7 @@ static struct pixel_argb_u16 argb_u16_from_RGB565(const u16 *pixel)
  	return out_pixel;
  }
  
-+static struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
-+						  struct conversion_matrix *matrix)
-+{
-+	u8 r, g, b;
-+	s64 y_16, cb_16, cr_16;
-+	s64 r_16, g_16, b_16;
-+
-+	y_16 = y - matrix->y_offset;
-+	cb_16 = cb - 128;
-+	cr_16 = cr - 128;
-+
-+	r_16 = matrix->matrix[0][0] * y_16 + matrix->matrix[0][1] * cb_16 +
-+	       matrix->matrix[0][2] * cr_16;
-+	g_16 = matrix->matrix[1][0] * y_16 + matrix->matrix[1][1] * cb_16 +
-+	       matrix->matrix[1][2] * cr_16;
-+	b_16 = matrix->matrix[2][0] * y_16 + matrix->matrix[2][1] * cb_16 +
-+	       matrix->matrix[2][2] * cr_16;
-+
-+	// rounding the values
-+	r_16 = r_16 + (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH - 4));
-+	g_16 = g_16 + (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH - 4));
-+	b_16 = b_16 + (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH - 4));
-+
-+	r_16 = clamp(r_16, 0, (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH + 8)) - 1);
-+	g_16 = clamp(g_16, 0, (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH + 8)) - 1);
-+	b_16 = clamp(b_16, 0, (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH + 8)) - 1);
-+
-+	r = r_16 >> CONVERSION_MATRIX_FLOAT_DEPTH;
-+	g = g_16 >> CONVERSION_MATRIX_FLOAT_DEPTH;
-+	b = b_16 >> CONVERSION_MATRIX_FLOAT_DEPTH;
-+
-+	return argb_u16_from_u8888(255, r, g, b);
-+}
-+
+-static struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
++VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
+ 						  struct conversion_matrix *matrix)
+ {
+ 	u8 r, g, b;
+@@ -218,6 +220,7 @@ static struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
+ 
+ 	return argb_u16_from_u8888(255, r, g, b);
+ }
++EXPORT_SYMBOL_IF_KUNIT(argb_u16_from_yuv888);
+ 
  /*
   * The following functions are read_line function for each pixel format supported by VKMS.
-  *
-@@ -263,6 +336,70 @@ static void RGB565_read_line(const struct vkms_plane_state *plane, int x_start,
- 	}
- }
- 
-+/*
-+ * This callback can be used for yuv and yvu formats, given a properly modified conversion matrix
-+ * (column inversion)
-+ */
-+static void semi_planar_yuv_read_line(const struct vkms_plane_state *plane, int x_start,
-+				      int y_start, enum pixel_read_direction direction, int count,
-+				      struct pixel_argb_u16 out_pixel[])
-+{
-+	u8 *y_plane = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
-+	u8 *uv_plane = packed_pixels_addr(plane->frame_info,
-+					  x_start / plane->frame_info->fb->format->hsub,
-+					  y_start / plane->frame_info->fb->format->vsub,
-+					  1);
-+	int step_y = get_step_1x1(plane->frame_info->fb, direction, 0);
-+	int step_uv = get_step_1x1(plane->frame_info->fb, direction, 1);
-+	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);
-+	int subsampling_offset = get_subsampling_offset(direction, x_start, y_start);
-+	struct conversion_matrix *conversion_matrix = plane->conversion_matrix;
-+
-+	for (int i = 0; i < count; i++) {
-+		*out_pixel = argb_u16_from_yuv888(y_plane[0], uv_plane[0], uv_plane[1],
-+						  conversion_matrix);
-+		out_pixel += 1;
-+		y_plane += step_y;
-+		if ((i + subsampling_offset + 1) % subsampling == 0)
-+			uv_plane += step_uv;
-+	}
-+}
-+
-+/*
-+ * This callback can be used for yuv and yvu formats, given a properly modified conversion matrix
-+ * (column inversion)
-+ */
-+static void planar_yuv_read_line(const struct vkms_plane_state *plane, int x_start,
-+				 int y_start, enum pixel_read_direction direction, int count,
-+				 struct pixel_argb_u16 out_pixel[])
-+{
-+	u8 *y_plane = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
-+	u8 *u_plane = packed_pixels_addr(plane->frame_info,
-+					 x_start / plane->frame_info->fb->format->hsub,
-+					 y_start / plane->frame_info->fb->format->vsub,
-+					 1);
-+	u8 *v_plane = packed_pixels_addr(plane->frame_info,
-+					 x_start / plane->frame_info->fb->format->hsub,
-+					 y_start / plane->frame_info->fb->format->vsub,
-+					 2);
-+	int step_y = get_step_1x1(plane->frame_info->fb, direction, 0);
-+	int step_u = get_step_1x1(plane->frame_info->fb, direction, 1);
-+	int step_v = get_step_1x1(plane->frame_info->fb, direction, 2);
-+	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);
-+	int subsampling_offset = get_subsampling_offset(direction, x_start, y_start);
-+	struct conversion_matrix *conversion_matrix = plane->conversion_matrix;
-+
-+	for (int i = 0; i < count; i++) {
-+		*out_pixel = argb_u16_from_yuv888(*y_plane, *u_plane, *v_plane, conversion_matrix);
-+		out_pixel += 1;
-+		y_plane += step_y;
-+		if ((i + subsampling_offset + 1) % subsampling == 0) {
-+			u_plane += step_u;
-+			v_plane += step_v;
-+		}
-+	}
-+}
-+
- /*
-  * The following functions take one argb_u16 pixel and convert it to a specific format. The
-  * result is stored in @out_pixel.
-@@ -384,6 +521,20 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
- 		return &XRGB16161616_read_line;
- 	case DRM_FORMAT_RGB565:
- 		return &RGB565_read_line;
-+	case DRM_FORMAT_NV12:
-+	case DRM_FORMAT_NV16:
-+	case DRM_FORMAT_NV24:
-+	case DRM_FORMAT_NV21:
-+	case DRM_FORMAT_NV61:
-+	case DRM_FORMAT_NV42:
-+		return &semi_planar_yuv_read_line;
-+	case DRM_FORMAT_YUV420:
-+	case DRM_FORMAT_YUV422:
-+	case DRM_FORMAT_YUV444:
-+	case DRM_FORMAT_YVU420:
-+	case DRM_FORMAT_YVU422:
-+	case DRM_FORMAT_YVU444:
-+		return &planar_yuv_read_line;
- 	default:
- 		/*
- 		 * This is a bug in vkms_plane_atomic_check. All the supported
-@@ -400,6 +551,229 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
- 	}
- }
- 
-+/**
-+ * get_conversion_matrix_to_argb_u16() - Retrieve the correct yuv to rgb conversion matrix for a
-+ * given encoding and range.
-+ *
-+ * If the matrix is not found, return a null pointer. In all other cases, it return a simple
-+ * diagonal matrix, which act as a "no-op".
-+ *
-+ * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
-+ * @encoding: DRM_COLOR_* value for which to obtain a conversion matrix
-+ * @range: DRM_COLOR_*_RANGE value for which to obtain a conversion matrix
-+ */
-+struct conversion_matrix *
-+get_conversion_matrix_to_argb_u16(u32 format, enum drm_color_encoding encoding,
-+				  enum drm_color_range range)
-+{
-+	static struct conversion_matrix no_operation = {
-+		.matrix = {
-+			{ 4294967296, 0, 0, },
-+			{ 0, 4294967296, 0, },
-+			{ 0, 0, 4294967296, },
-+		},
-+		.y_offset = 0,
-+	};
-+	static struct conversion_matrix yuv_bt601_full = {
-+		.matrix = {
-+			{ 4294967296, 0,           6021544149 },
-+			{ 4294967296, -1478054095, -3067191994 },
-+			{ 4294967296, 7610682049,  0 },
-+		},
-+		.y_offset = 0,
-+	};
-+	static struct conversion_matrix yuv_bt601_limited = {
-+		.matrix = {
-+			{ 5020601039, 0,           6881764740 },
-+			{ 5020601039, -1689204679, -3505362278 },
-+			{ 5020601039, 8697922339,  0 },
-+		},
-+		.y_offset = 16,
-+	};
-+	static struct conversion_matrix yuv_bt709_full = {
-+		.matrix = {
-+			{ 4294967296, 0,          6763714498 },
-+			{ 4294967296, -804551626, -2010578443 },
-+			{ 4294967296, 7969741314, 0 },
-+		},
-+		.y_offset = 0,
-+	};
-+	static struct conversion_matrix yuv_bt709_limited = {
-+		.matrix = {
-+			{ 5020601039, 0,          7729959424 },
-+			{ 5020601039, -919487572, -2297803934 },
-+			{ 5020601039, 9108275786, 0 },
-+		},
-+		.y_offset = 16,
-+	};
-+	static struct conversion_matrix yuv_bt2020_full = {
-+		.matrix = {
-+			{ 4294967296, 0,          6333358775 },
-+			{ 4294967296, -706750298, -2453942994 },
-+			{ 4294967296, 8080551471, 0 },
-+		},
-+		.y_offset = 0,
-+	};
-+	static struct conversion_matrix yuv_bt2020_limited = {
-+		.matrix = {
-+			{ 5020601039, 0,          7238124312 },
-+			{ 5020601039, -807714626, -2804506279 },
-+			{ 5020601039, 9234915964, 0 },
-+		},
-+		.y_offset = 16,
-+	};
-+	static struct conversion_matrix yvu_bt601_full = {
-+		.matrix = {
-+			{ 4294967296, 6021544149,  0 },
-+			{ 4294967296, -3067191994, -1478054095 },
-+			{ 4294967296, 0,           7610682049 },
-+		},
-+		.y_offset = 0,
-+	};
-+	static struct conversion_matrix yvu_bt601_limited = {
-+		.matrix = {
-+			{ 5020601039, 6881764740,  0 },
-+			{ 5020601039, -3505362278, -1689204679 },
-+			{ 5020601039, 0,           8697922339 },
-+		},
-+		.y_offset = 16,
-+	};
-+	static struct conversion_matrix yvu_bt709_full = {
-+		.matrix = {
-+			{ 4294967296, 6763714498,  0 },
-+			{ 4294967296, -2010578443, -804551626 },
-+			{ 4294967296, 0,           7969741314 },
-+		},
-+		.y_offset = 0,
-+	};
-+	static struct conversion_matrix yvu_bt709_limited = {
-+		.matrix = {
-+			{ 5020601039, 7729959424,  0 },
-+			{ 5020601039, -2297803934, -919487572 },
-+			{ 5020601039, 0,           9108275786 },
-+		},
-+		.y_offset = 16,
-+	};
-+	static struct conversion_matrix yvu_bt2020_full = {
-+		.matrix = {
-+			{ 4294967296, 6333358775,  0 },
-+			{ 4294967296, -2453942994, -706750298 },
-+			{ 4294967296, 0,           8080551471 },
-+		},
-+		.y_offset = 0,
-+	};
-+	static struct conversion_matrix yvu_bt2020_limited = {
-+		.matrix = {
-+			{ 5020601039, 7238124312,  0 },
-+			{ 5020601039, -2804506279, -807714626 },
-+			{ 5020601039, 0,           9234915964 },
-+		},
-+		.y_offset = 16,
-+	};
-+
-+	/* Breaking in this switch means that the color format+encoding+range is not supported */
-+	switch (format) {
-+	case DRM_FORMAT_NV12:
-+	case DRM_FORMAT_NV16:
-+	case DRM_FORMAT_NV24:
-+	case DRM_FORMAT_YUV420:
-+	case DRM_FORMAT_YUV422:
-+	case DRM_FORMAT_YUV444:
-+		switch (encoding) {
-+		case DRM_COLOR_YCBCR_BT601:
-+			switch (range) {
-+			case DRM_COLOR_YCBCR_LIMITED_RANGE:
-+				return &yuv_bt601_limited;
-+			case DRM_COLOR_YCBCR_FULL_RANGE:
-+				return &yuv_bt601_full;
-+			case DRM_COLOR_RANGE_MAX:
-+				break;
-+			}
-+			break;
-+		case DRM_COLOR_YCBCR_BT709:
-+			switch (range) {
-+			case DRM_COLOR_YCBCR_LIMITED_RANGE:
-+				return &yuv_bt709_limited;
-+			case DRM_COLOR_YCBCR_FULL_RANGE:
-+				return &yuv_bt709_full;
-+			case DRM_COLOR_RANGE_MAX:
-+				break;
-+			}
-+			break;
-+		case DRM_COLOR_YCBCR_BT2020:
-+			switch (range) {
-+			case DRM_COLOR_YCBCR_LIMITED_RANGE:
-+				return &yuv_bt2020_limited;
-+			case DRM_COLOR_YCBCR_FULL_RANGE:
-+				return &yuv_bt2020_full;
-+			case DRM_COLOR_RANGE_MAX:
-+				break;
-+			}
-+			break;
-+		case DRM_COLOR_ENCODING_MAX:
-+			break;
-+		}
-+		break;
-+	case DRM_FORMAT_YVU420:
-+	case DRM_FORMAT_YVU422:
-+	case DRM_FORMAT_YVU444:
-+	case DRM_FORMAT_NV21:
-+	case DRM_FORMAT_NV61:
-+	case DRM_FORMAT_NV42:
-+		switch (encoding) {
-+		case DRM_COLOR_YCBCR_BT601:
-+			switch (range) {
-+			case DRM_COLOR_YCBCR_LIMITED_RANGE:
-+				return &yvu_bt601_limited;
-+			case DRM_COLOR_YCBCR_FULL_RANGE:
-+				return &yvu_bt601_full;
-+			case DRM_COLOR_RANGE_MAX:
-+				break;
-+			}
-+			break;
-+		case DRM_COLOR_YCBCR_BT709:
-+			switch (range) {
-+			case DRM_COLOR_YCBCR_LIMITED_RANGE:
-+				return &yvu_bt709_limited;
-+			case DRM_COLOR_YCBCR_FULL_RANGE:
-+				return &yvu_bt709_full;
-+			case DRM_COLOR_RANGE_MAX:
-+				break;
-+			}
-+			break;
-+		case DRM_COLOR_YCBCR_BT2020:
-+			switch (range) {
-+			case DRM_COLOR_YCBCR_LIMITED_RANGE:
-+				return &yvu_bt2020_limited;
-+			case DRM_COLOR_YCBCR_FULL_RANGE:
-+				return &yvu_bt2020_full;
-+			case DRM_COLOR_RANGE_MAX:
-+				break;
-+			}
-+			break;
-+		case DRM_COLOR_ENCODING_MAX:
-+			break;
-+		}
-+		break;
-+	case DRM_FORMAT_ARGB8888:
-+	case DRM_FORMAT_XRGB8888:
-+	case DRM_FORMAT_ARGB16161616:
-+	case DRM_FORMAT_XRGB16161616:
-+	case DRM_FORMAT_RGB565:
-+		/*
-+		 * Those formats are supported, but they don't need a conversion matrix. Return
-+		 * a valid pointer to avoid kernel panic in case this matrix is used/checked
-+		 * somewhere.
-+		 */
-+		return &no_operation;
-+	default:
-+		break;
-+	}
-+	WARN(true, "Unsupported encoding (%d), range (%d) and format (%4cc) combination\n",
-+		  encoding, range, format);
-+	return &no_operation;
-+}
-+
- /**
-  * Retrieve the correct write_pixel function for a specific format.
-  * If the format is not supported by VKMS a warn is emitted and a dummy "don't do anything"
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
-index 8d2bef95ff79..e1d324764b17 100644
+index e1d324764b17..21e66a0cac16 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.h
 +++ b/drivers/gpu/drm/vkms/vkms_formats.h
-@@ -9,4 +9,8 @@ pixel_read_line_t get_pixel_read_line_function(u32 format);
+@@ -13,4 +13,8 @@ struct conversion_matrix *
+ get_conversion_matrix_to_argb_u16(u32 format, enum drm_color_encoding encoding,
+ 				  enum drm_color_range range);
  
- pixel_write_t get_pixel_write_function(u32 format);
- 
-+struct conversion_matrix *
-+get_conversion_matrix_to_argb_u16(u32 format, enum drm_color_encoding encoding,
-+				  enum drm_color_range range);
++#if IS_ENABLED(CONFIG_KUNIT)
++struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr, struct conversion_matrix *matrix);
++#endif
 +
  #endif /* _VKMS_FORMATS_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index 8875bed76410..93d0a39fa8c5 100644
---- a/drivers/gpu/drm/vkms/vkms_plane.c
-+++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -17,7 +17,19 @@ static const u32 vkms_formats[] = {
- 	DRM_FORMAT_XRGB8888,
- 	DRM_FORMAT_XRGB16161616,
- 	DRM_FORMAT_ARGB16161616,
--	DRM_FORMAT_RGB565
-+	DRM_FORMAT_RGB565,
-+	DRM_FORMAT_NV12,
-+	DRM_FORMAT_NV16,
-+	DRM_FORMAT_NV24,
-+	DRM_FORMAT_NV21,
-+	DRM_FORMAT_NV61,
-+	DRM_FORMAT_NV42,
-+	DRM_FORMAT_YUV420,
-+	DRM_FORMAT_YUV422,
-+	DRM_FORMAT_YUV444,
-+	DRM_FORMAT_YVU420,
-+	DRM_FORMAT_YVU422,
-+	DRM_FORMAT_YVU444
- };
- 
- static struct drm_plane_state *
-@@ -123,6 +135,8 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
- 
- 
- 	vkms_plane_state->pixel_read_line = get_pixel_read_line_function(fmt);
-+	vkms_plane_state->conversion_matrix = get_conversion_matrix_to_argb_u16
-+		(fmt, new_state->color_encoding, new_state->color_range);
- }
- 
- static int vkms_plane_atomic_check(struct drm_plane *plane,
 
 -- 
 2.43.0
