@@ -1,143 +1,197 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C1246B9A
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 15:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CE44D134;
+	Mon,  4 Mar 2024 15:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709566372; cv=none; b=mucYcq+czQDW9gpMKhHBhP4SR52tiVm3lCqT2Jz4P5hzMviHjm1rfUQ+xSvOiUiECAudXplwYf4LPiX3kaNmWg+3mB03+b9YUKhDSTWZ90LVDiVWObZfghL8mQaZsweTvsU/N3K6+uHlZKicHr0WVlsgAHx3S2FN9ZYDqjg8OFc=
+	t=1709566375; cv=none; b=QxtWonXixoUtumE8D4fGUmiIEQYa+V8lZkTj8xOPotrUSCc4NB65upGYQdb3UMq+Fqznea/+mt8PhxNr+gwlvu6ugYusnsagj/XJfN9JdDrBlhIyRlKcCar6HpUFq+vsFV5HkepkEhERoL0nBoJLIjzmBIjM29imt9xoy4SjTFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709566372; c=relaxed/simple;
-	bh=ipSpV2qD9jkYTa4eAd/rzpfOh1a8zEwZPzXdy0N/iBs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mMjoqj1hTIfrR2cmDJ1kJHzwZBiR2Vjc9D8G9kc2bhIflsKMSSXjRh/LA9p9ojYk1bY37CS/5pCHgCj0Sd2KyFL9f/pAwwimPBTNW7VFH2MrWSZX7Pw1r/pyIyWNRbaNx+EwNCb9wOHee5Jg8/lh/2WTaJUpj2e+dSU3bbidsvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xPAbY96G; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709566375; c=relaxed/simple;
+	bh=3EAj3xv1au4Q4TJ50vvjHAcAy5htc0pMEaTTLlfhjOQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c98cGUrQvBOvqo7XGLOaGpPfH5Won6BS+xUeMfapek2/QjEAMNXeBY5Vq7e2x/HlVuBAgQy/I0KInGee8cimDa2ni52CWdxPZOuIH9yVHBG07mvIJsqqHn0FGCUPrdm0JkzMLhAq61UN0HDRPWGHLZdSBUHJysBrklaxldk8xwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IwV6aY0S; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xPAbY96G"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56454c695e6so7638635a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 07:32:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwV6aY0S"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a441d7c6125so562907966b.2;
+        Mon, 04 Mar 2024 07:32:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709566369; x=1710171169; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g242gZ20gMqlxDrc+4jsxkuK7MSNCCnXaLkzx45ab5k=;
-        b=xPAbY96GzO2qHp7OJF22QwtcNgL5U3OOcHcagqFJ7XwU3EKslkjJWssAHkcpJmqhBk
-         i7zYNDjdDx2LJrjwSiylAJEgBswlK5hbTpGvtYRJcy09ipcpg5Yl5dhHjPTp3vAck3lu
-         SIYys4CZnKZpfndWnTO/qPIALMQ6spXZTPXEIsWsUA7EQZ5IbNCYHNThfUKmkVgvJ9nN
-         AreuUVzKgJxYXXWKGxGGWxJ0XJsSvcMatkF6IU2jl8VD84PgjfkTGDOYpXDOGqzqyOiK
-         qhdZG6ZsqBC3I/F1b/a/7keap3JuO8/ovxvYn/+GgGlQ1e1WGrIBoDZUQG80ruporFJU
-         eKnQ==
+        d=gmail.com; s=20230601; t=1709566372; x=1710171172; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bWvYOuCuRfEcVskjhEHNCFWud68WSGUgd2zUqGEpjT0=;
+        b=IwV6aY0Szpjtuexl28y/Bg5Dzx2rQ3Mf07TlyJbpZIvjp+rsxbH/TBcFmb4ZIDH/fz
+         Gj87MHiS5CIqUjlHg8SEBaMMrXu4nHnEHsj6kZGPGnp6CIMWlmPR97PGY6BovE2mzbGG
+         HyJ11E2ZFMD1YATGRNl6lrQi7QAZQoP7L9HIlOgeB5NWRYYbNq/TG7AgPACg86Gf/ciG
+         Ic+hQcmpI5eeI1Fce64wUA6uYMneuP93ybU/sTzgH5CF4kdvmTyOOC/4G5WKbdRKHEl6
+         vRke1BbVd8aj8lC6PPu+nNnElTg4CNe88THHmoWnchVq9k1d3B6oXIajB0uziDlLcOd1
+         EhSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709566369; x=1710171169;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g242gZ20gMqlxDrc+4jsxkuK7MSNCCnXaLkzx45ab5k=;
-        b=e6sN38vYSQmqNvaySTtOkpWkDXsKna4KarzofTji+eGcg7T/w+H6/ifJEBpKc9+tDA
-         6YlmX0zphdXLo5x1qpD5Y9Jui+iheertZhm5FBlAqrfQQ2MnWRsIgcStK3FgJCKSv/+N
-         jePFa07/LCKOHncmptEdeYecCjYPkKUUSHgQextfIT/+7ufH7VPf3irr1CFa/cnlLFN4
-         XS0/hatazX19HeEIIY8vF5TKbGD3+Y83LMdO4zl7Cl/MDv6j612uIbrAQoGouEARx9Sz
-         Ns5kGZgXnRZDmWuYDLQEbl9JlpAGmRwnzhagWrlfVXmauMnbVPqG2iShc+lqEJSnacpX
-         k4HA==
-X-Forwarded-Encrypted: i=1; AJvYcCXT8Eewoip739w2PG9SV4ps5ydApmQSRGqL5QALew5n8ZnjS2f+Tt62wXPFrTX7ctlSEGE1dT1aM8DZb6QnY0en9Gmngy7LZUShh/J9
-X-Gm-Message-State: AOJu0YzrVjaTlVzCdXW8q8ilY9a7Cl67YexvufjVnxwANFbQxku5P111
-	wJ3trCCK2DvCz954mL28B5HalEaK82/jDiHAuHthkQvFp5RjQsw7pIjWS+PYzzt5+sKEWIlh/yc
-	H
-X-Google-Smtp-Source: AGHT+IEVmrIE42z1UaAPiKEVaJl6mRUA7Z3DIpCzRppDZZh15CmBAiQmpyv7ylWIH3NWJwMPcY49kg==
-X-Received: by 2002:a05:6402:40c2:b0:567:1947:d53f with SMTP id z2-20020a05640240c200b005671947d53fmr5769203edb.9.1709566369353;
-        Mon, 04 Mar 2024 07:32:49 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id ig10-20020a056402458a00b005657eefa8e9sm4763217edb.4.2024.03.04.07.32.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 07:32:48 -0800 (PST)
-Message-ID: <c93d53b8-fcfa-4e32-a167-31646b6b9086@linaro.org>
-Date: Mon, 4 Mar 2024 16:32:47 +0100
+        d=1e100.net; s=20230601; t=1709566372; x=1710171172;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bWvYOuCuRfEcVskjhEHNCFWud68WSGUgd2zUqGEpjT0=;
+        b=lOZ7VcF6w+F2OkX6kTWcdf+ENp9qJtfuNFPtOgkRKvIZPYfsLljPfXVwNFyp5jnRwE
+         RAFmh7+BB+FxgsPkU60dlkVKPVx4h6CHMGEYyRnhTsYRE5dFV3W6mmxIZDnYDhy3+nxX
+         xHJNXhVLoJnjGKh+alVsxac6NYT9zHHf2sUY0lQ+bPyveHNCGLAXAqza3b2O7ERTc54S
+         VxzUhuGrU14BA+Zsjk5SusMRQzNtzrEfBUdIKv1jIIb/yq12/Szblq1c9KR21nPVYyYb
+         +0andbAxj5BI70dx9npG5GYmGnza2UwZvcICdJCAvMhucF5yMNt+Wyzm3IfPdAlOMPlQ
+         PHtg==
+X-Forwarded-Encrypted: i=1; AJvYcCWicphpRxCFdQB7ED0O3QBs3me51CHiGYNrpcFetXiooWpUSMcwLWlIYavv2zAIQxTjAN77ni2HeDqLiyvh8/LFdjpF0OnHl4ZFIYDidotF0/WmVdrSrKOkKUACzemj+f2QPk9rFHv0/EOtjYGwmco9vMkMpodfc6cW4n3dK/mhrg==
+X-Gm-Message-State: AOJu0YwvpwXMwv+fcjpluJv9wL4nohcO6ez0MeMeBM//WvO71hHkihHD
+	OY6EjwgoLD6FmRp4lAYZbndUgNcHShtxXz8wTemmPtxsf5V7ic/v
+X-Google-Smtp-Source: AGHT+IHKE7kIPPNrF2w6yyuuVMCu9i3ZIMUD02F9duWP7L1huDB65YHByUXUVOOjQ3Ls99sC0F1W4g==
+X-Received: by 2002:a17:906:f35b:b0:a43:fd9e:2d69 with SMTP id hg27-20020a170906f35b00b00a43fd9e2d69mr7096029ejb.6.1709566371768;
+        Mon, 04 Mar 2024 07:32:51 -0800 (PST)
+Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
+        by smtp.gmail.com with ESMTPSA id wp1-20020a170907060100b00a44ce0671b1sm2937118ejb.108.2024.03.04.07.32.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 07:32:51 -0800 (PST)
+Message-ID: <93d0adf0ee6f3737af4d482dc206fe152f762482.camel@gmail.com>
+Subject: Re: [PATCH v3 2/2] of: overlay: Synchronize of_overlay_remove()
+ with the devlink removals
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Frank Rowand <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
+ Zhen <max.zhen@amd.com>,  Sonal Santan <sonal.santan@amd.com>, Stefano
+ Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, stable@vger.kernel.org
+Date: Mon, 04 Mar 2024 16:36:15 +0100
+In-Reply-To: <20240304152202.GA222088-robh@kernel.org>
+References: <20240229105204.720717-1-herve.codina@bootlin.com>
+	 <20240229105204.720717-3-herve.codina@bootlin.com>
+	 <acb69aa8c1a4c4e9849123ef538b9646a71507a0.camel@gmail.com>
+	 <20240304152202.GA222088-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] dt-bindings: add Canaan K230 boards compatible
- strings
-Content-Language: en-US
-To: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor@kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <tencent_64A9B4B31C2D70D5633042461AC9F80C0509@qq.com>
- <tencent_1DF18DF87C3E8281DA758E55B82831AD2108@qq.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <tencent_1DF18DF87C3E8281DA758E55B82831AD2108@qq.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 04/03/2024 16:16, Yangyu Chen wrote:
-> Since K230 was released, K210 is no longer the only SoC in the Kendryte
-> series, so remove the K210 string from the description. Also, add two
-> boards based on k230 to compatible strings to allow them to be used in the
-> dt.
-> 
-> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-> ---
->  Documentation/devicetree/bindings/riscv/canaan.yaml | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+On Mon, 2024-03-04 at 09:22 -0600, Rob Herring wrote:
+> On Thu, Feb 29, 2024 at 12:18:49PM +0100, Nuno S=C3=A1 wrote:
+> > On Thu, 2024-02-29 at 11:52 +0100, Herve Codina wrote:
+> > > In the following sequence:
+> > > =C2=A0 1) of_platform_depopulate()
+> > > =C2=A0 2) of_overlay_remove()
+> > >=20
+> > > During the step 1, devices are destroyed and devlinks are removed.
+> > > During the step 2, OF nodes are destroyed but
+> > > __of_changeset_entry_destroy() can raise warnings related to missing
+> > > of_node_put():
+> > > =C2=A0 ERROR: memory leak, expected refcount 1 instead of 2 ...
+> > >=20
+> > > Indeed, during the devlink removals performed at step 1, the removal
+> > > itself releasing the device (and the attached of_node) is done by a j=
+ob
+> > > queued in a workqueue and so, it is done asynchronously with respect =
+to
+> > > function calls.
+> > > When the warning is present, of_node_put() will be called but wrongly
+> > > too late from the workqueue job.
+> > >=20
+> > > In order to be sure that any ongoing devlink removals are done before
+> > > the of_node destruction, synchronize the of_overlay_remove() with the
+> > > devlink removals.
+> > >=20
+> > > Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > > ---
+> > > =C2=A0drivers/of/overlay.c | 10 +++++++++-
+> > > =C2=A01 file changed, 9 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> > > index 2ae7e9d24a64..7a010a62b9d8 100644
+> > > --- a/drivers/of/overlay.c
+> > > +++ b/drivers/of/overlay.c
+> > > @@ -8,6 +8,7 @@
+> > > =C2=A0
+> > > =C2=A0#define pr_fmt(fmt)	"OF: overlay: " fmt
+> > > =C2=A0
+> > > +#include <linux/device.h>
+> >=20
+> > This is clearly up to the DT maintainers to decide but, IMHO, I would v=
+ery
+> > much
+> > prefer to see fwnode.h included in here rather than directly device.h (=
+so
+> > yeah,
+> > renaming the function to fwnode_*).
+>=20
+> IMO, the DT code should know almost nothing about fwnode because that's=
+=20
+> the layer above it. But then overlay stuff is kind of a layer above the=
+=20
+> core DT code too.
 
+Yeah, my reasoning is just that it may be better than knowing about device.=
+h
+code... But maybe I'm wrong :)
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>=20
+> > But yeah, I might be biased by own series :)
+> >=20
+> > > =C2=A0#include <linux/kernel.h>
+> > > =C2=A0#include <linux/module.h>
+> > > =C2=A0#include <linux/of.h>
+> > > @@ -853,6 +854,14 @@ static void free_overlay_changeset(struct
+> > > overlay_changeset *ovcs)
+> > > =C2=A0{
+> > > =C2=A0	int i;
+> > > =C2=A0
+> > > +	/*
+> > > +	 * Wait for any ongoing device link removals before removing some
+> > > of
+> > > +	 * nodes. Drop the global lock while waiting
+> > > +	 */
+> > > +	mutex_unlock(&of_mutex);
+> > > +	device_link_wait_removal();
+> > > +	mutex_lock(&of_mutex);
+> >=20
+> > I'm still not convinced we need to drop the lock. What happens if someo=
+ne
+> > else
+> > grabs the lock while we are in device_link_wait_removal()? Can we guara=
+ntee
+> > that
+> > we can't screw things badly?
+>=20
+> It is also just ugly because it's the callers of=20
+> free_overlay_changeset() that hold the lock and now we're releasing it=
+=20
+> behind their back.
+>=20
+> As device_link_wait_removal() is called before we touch anything, can't=
+=20
+> it be called before we take the lock? And do we need to call it if=20
+> applying the overlay fails?
+>=20
 
-Best regards,
-Krzysztof
+My natural feeling was to put it right before checking the node refcount...=
+ and
+I would like to still see proof that there's any potential deadlock. I did =
+not
+checked the code but the issue with calling it before we take the lock is t=
+hat
+likely the device links wont be removed because the overlay removal path (w=
+hich
+unbinds devices from drivers) needs to run under the lock?
 
+- Nuno S=C3=A1
