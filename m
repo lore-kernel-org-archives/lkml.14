@@ -1,94 +1,148 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D268B78B4A;
-	Mon,  4 Mar 2024 18:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D3F3F9FD;
+	Mon,  4 Mar 2024 18:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709577532; cv=none; b=BQylPT6B/OiFrx1gWfQa6tTj+m0E3x8+kVu9ghc/Se5TD+rnTl3fApG3F+AVIA/BpPTwNuaY7gl8XxrhE8BLd9pz5KmizDDZknJQKmD+RkvbKjKnUJJmNUEs5h6YslwSmkTsNZVu5ZJbNYLquQ4IstYxwxEBJ4ebMMtV5UPmqmI=
+	t=1709577635; cv=none; b=ggziK9t+BcNNKvZ/I/cMegw+lGhVc21IcrDPV6vVwwbgQf8XN1gukH5UYl3B/HN1zlTWbDF22B5TfivnHmn11n8XO/KUIkUd70Z2fA3/urdraHUL/4kQkYgeh+8HuxFcUqjmREgj2D1C3ZohMDpSjS3cMwU0o5xJIKmEiPbf8IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709577532; c=relaxed/simple;
-	bh=G3E1d+84x8xXVqhy+1WXOgtV5Tf07lUnzqrmHl07wKI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S/LvCyNE8mCo0CMJXh75SEB+R+pccr3vKwt9esJTx9+PNr6DDMdkGH24lzYky3KfnlfDeBz3tIkNih8RF71f3+Y5uLacpG/DSIO9uISTX3TRXPQ1fDq3o/7AjLfFPGKmjoc4NmhRdxz36s+Y5Qdk7CHX6qwjRTBMXgaNT1Clcpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so789868466b.0;
-        Mon, 04 Mar 2024 10:38:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709577529; x=1710182329;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fnoi1H+j4clEhXj1HIttNv5q1C/92NCaQWwcE97Vd+Y=;
-        b=kOy+SvuE/2SshULcfMdUOO5YKPOmtGdAfqBUbyQKcqfiP5pWwH+/b908aSs/val+0E
-         iQLZLL3c6R9jo2pv10fvJWn60WasDmtqokT0N03im4GwPeQxjncAcyjmVsfjkQgABrDI
-         imAZUOrGSeOU0y2YssK0mzcMcpSkjTYi9hh0NXl7+1uQCBqA2HVVq4+XyDVHN1VYK0RO
-         V2VemY4Mdb8Uvwm1tJlK0tBWRkzq72AiMkqfx+BVWOALYDRkMwXXkfHRoX74WgdrB2Vo
-         41isCIJiKLDb1w0DSF6GTDV444XK+PHW+m/RbrdwCSUDyukm45wBEdWhU15YcvLWla38
-         4eSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ305vgFsrrW8rOuBEiDmYgbaUA8qtV3DygxHNQmLAr/jsPYfsdntrMGgiuN62G+MkZqkWygVnhLEkqmYfY/wMEBdwpleAt04BIf7R
-X-Gm-Message-State: AOJu0YxFTFABzkTAACxrzjBrY7q21EsDDbuljFTB9BROvn1ojArt940g
-	OUl3upSAm8TeZDiJVFyO1g3zfwwIUQxKj9whBDM2NFK3SKjcmokr
-X-Google-Smtp-Source: AGHT+IEjDKoxs7M4FkK6BsyvwavYoCjPmPWQ55cq7nluhEoUfuXQXBx1OfwbtCY9VBKuh4doC+3shw==
-X-Received: by 2002:a17:906:cc93:b0:a43:3f37:4d94 with SMTP id oq19-20020a170906cc9300b00a433f374d94mr6649732ejb.16.1709577529141;
-        Mon, 04 Mar 2024 10:38:49 -0800 (PST)
-Received: from localhost (fwdproxy-lla-119.fbsv.net. [2a03:2880:30ff:77::face:b00c])
-        by smtp.gmail.com with ESMTPSA id tb25-20020a1709078b9900b00a4557115465sm1285404ejc.13.2024.03.04.10.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 10:38:48 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-To: kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Jason Wang <jasowang@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	horms@kernel.org,
-	dsahern@kernel.org
-Subject: [PATCH net-next 2/2] net: tap: Remove generic .ndo_get_stats64
-Date: Mon,  4 Mar 2024 10:38:08 -0800
-Message-ID: <20240304183810.1474883-2-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240304183810.1474883-1-leitao@debian.org>
-References: <20240304183810.1474883-1-leitao@debian.org>
+	s=arc-20240116; t=1709577635; c=relaxed/simple;
+	bh=7vh4iyPXOaOgnr49RuHWi1jSWORQ0cB+J4ov6rz10CY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYTE8JKASTqNRpTlXLSn0+lXdx+aFwoyR6nY2iWiqZ5LuOddNpKCvzHJLBMhaZch+EhXEBrKN5yV/toqTl8/ZRG9RSny8rgZey+V2O/SciLQlnqAHsr2Tnk/eYJqR0mElViIEAj8Zf1U1J7l6lUboO/hMBbOeV3WWucX7qNOWcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rahm3Kp4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rahm3Kp4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE45C433C7;
+	Mon,  4 Mar 2024 18:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709577635;
+	bh=7vh4iyPXOaOgnr49RuHWi1jSWORQ0cB+J4ov6rz10CY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rahm3Kp4K15IbjidKWNlUNUEbKT1XAqkt9tB2YlZqVXTPrYMa7IrMt9UxN9cdRdNV
+	 SN11popSbGR9Ujlg49wTuKDZt+EamtXziRhi8KU/S+hDlGQnWrqVphkVFPEHUuGZPJ
+	 yPfDZ5aTeI8vOWndAXulFV010eWAwduB5upNgWONQ5GPHc4oKw0u1WAfh/2cq7pr5h
+	 Sl19wQvMPbJD1dPFmX0FBDRfoZJTSErer8kIc1ZA2gENu2NxMa5z5u8NZWb0SJEcyf
+	 URAMwAd5p/K/u7NZXL7FljcG9XsfE402zSdX00M4Z7mBWprpZ2NhNgtMYvqGk2Gscj
+	 a+Do5D6CO5Suw==
+Date: Mon, 4 Mar 2024 12:40:32 -0600
+From: Rob Herring <robh@kernel.org>
+To: Raphael Gallais-Pou <rgallaispou@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	Lee Jones <lee@kernel.org>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: thermal: convert st,stih407-thermal
+ to DT schema
+Message-ID: <20240304184032.GA865748-robh@kernel.org>
+References: <20240301-thermal-v2-0-1b32752029ec@gmail.com>
+ <20240301-thermal-v2-1-1b32752029ec@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240301-thermal-v2-1-1b32752029ec@gmail.com>
 
-Commit 3e2f544dd8a33 ("net: get stats64 if device if driver is
-configured") moved the callback to dev_get_tstats64() to net core, so,
-unless the driver is doing some custom stats collection, it does not
-need to set .ndo_get_stats64.
+On Fri, Mar 01, 2024 at 06:47:28PM +0100, Raphael Gallais-Pou wrote:
+> 'st,passive_colling_temp' does not appear in the device-tree, and 'reg'
+> is missing in the device description.
+> 
+> Convert st,stih407-thermal binding to DT schema format in order to clean
+> unused 'st,passive_cooling_temp' and add missing 'reg' property.
+> 
+> Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+> ---
+> Changes in v2:
+>   - Change commit log to use imperative
+>   - Drop description
+>   - Drop 'clocks' description
+>   - Add 'reg' property
+>   - Add '#thermal-sensor-cells'
+>   - Make node name generic in example
+>   - Fix YAML style
+> ---
+>  .../bindings/thermal/st,stih407-thermal.yaml       | 56 ++++++++++++++++++++++
+>  .../devicetree/bindings/thermal/st-thermal.txt     | 32 -------------
+>  2 files changed, 56 insertions(+), 32 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/st,stih407-thermal.yaml b/Documentation/devicetree/bindings/thermal/st,stih407-thermal.yaml
+> new file mode 100644
+> index 000000000000..68d7dd8b892f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/st,stih407-thermal.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/st,stih407-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STi digital thermal sensor (DTS)
+> +
+> +maintainers:
+> +  - Patrice Chotard <patrice.chotard@foss.st.com>
+> +  - Lee Jones <lee@kernel.org>
+> +
+> +allOf:
+> +  - $ref: thermal-sensor.yaml
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stih407-thermal
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: thermal
+> +
+> +  interrupts:
+> +    description:
+> +      For thermal sensors for which no interrupt has been defined, a polling
+> +      delay of 1000ms will be used to read the temperature from device.
 
-Since this driver is now relying in NETDEV_PCPU_STAT_TSTATS, then, it
-doesn't need to set the dev_get_tstats64() generic .ndo_get_stats64
-function pointer.
+maxItems: 1
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/tun.c | 1 -
- 1 file changed, 1 deletion(-)
+> +
+> +  '#thermal-sensor-cells': true
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 6c594a3c2c37..8d258e263f54 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1338,7 +1338,6 @@ static const struct net_device_ops tap_netdev_ops = {
- 	.ndo_select_queue	= tun_select_queue,
- 	.ndo_features_check	= passthru_features_check,
- 	.ndo_set_rx_headroom	= tun_set_headroom,
--	.ndo_get_stats64	= dev_get_tstats64,
- 	.ndo_bpf		= tun_xdp,
- 	.ndo_xdp_xmit		= tun_xdp_xmit,
- 	.ndo_change_carrier	= tun_net_change_carrier,
--- 
-2.43.0
+const: 1
 
+Also, not in the original binding, so please state in the commit msg 
+why you are adding it.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    temperature-sensor@91a0000 {
+> +        compatible = "st,stih407-thermal";
+> +        reg = <0x91a0000 0x28>;
+> +        clock-names = "thermal";
+> +        clocks = <&CLK_SYSIN>;
+> +        interrupts = <GIC_SPI 205 IRQ_TYPE_EDGE_RISING>;
+> +        #thermal-sensor-cells = <0>;
+> +    };
+> +...
