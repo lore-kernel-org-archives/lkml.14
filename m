@@ -1,106 +1,111 @@
-Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791D0383B6
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CD51B965;
+	Mon,  4 Mar 2024 11:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709551632; cv=none; b=gpyuvZFIGl+36YPJQRby/1jL6HeFqilabvSg4Nhr8XCF05ALJxgRV0cKmZbb+oKiCWC2vqeQ6OAdiBWRY0AUfdFrPrJtaSvhcSLd0l85p3OGTF6XWRBrIelypvbSOfbg5PNSo04PpKsmta92C58nKklSgcChm1YCHXDIXI+ix+g=
+	t=1709551716; cv=none; b=Mcbvigxfu3mg8uiqZpI6TeTdvdcD/NdcCjB/5Rz7WpE2P0DQ5eNuyg0MAfKeskn5JHOBJugTWwj1fmgrZsjz+EJiXbBIsBTeZsJY4xZIMDRWcRhgdmth8IIKE7qw4NnucqYOL4cL+/QLcZd3xv3mX3Y4t+AqK5QCkjGL0uewWoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709551632; c=relaxed/simple;
-	bh=q+MR42ynKnzBEfpDhrIPiClecKa04mxXqTO3cHk85Qc=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=rb/EU2bclsv8C0hd6N880m0hdiNVjrvoGnWDaoMKjjxeytG587BosX8b7FPAGnuCZDMdYg+PYNrcXoyfNEvt7+0Lo6If5miDq/lw6vfbeWX41Sg5TSAgjAr6clxyrcDHf06GU2pPqp4Gu5u9mf5esZdtJ6fCjO9uw1cImOdyNbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=eRq7C42j; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ro/Zm46E; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709551716; c=relaxed/simple;
+	bh=NEBYof5k9QJEgydUQqeTNGKxzFXbpJp/phcxbRBQ0M0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PqAL69e7/XTKmbMR8WS/rZnL5xT3WjkM/buZzAvDvm3HtsSv3ax1XVrBn7fIGR/kaVyPImeROHw+otkxRPYk+PkrzDKPeYUZ6aYP3vhb6UfxeaK6fceQnD227zSNLDJ6xBBoA/khDXeGyzByOFjMCEENbApkSRkKxSf7gJsB6gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dMaMUhnh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="eRq7C42j";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ro/Zm46E"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 9137C11400AA;
-	Mon,  4 Mar 2024 06:27:10 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 04 Mar 2024 06:27:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709551630; x=1709638030; bh=WCLCx6ZXib
-	mkTszLQSSQ7hZc4cbzBKS93Xk+HpWXKXg=; b=eRq7C42jv0AVG+FYFsv3Xw43fr
-	rV6E/nvYM21RbXjn3fXQBH8l2aFkmDTpyjwXVGR2ldOeN33m8y2reY8mm1+asd89
-	XeLVDyzt5YFPIOFjDcyd7Q26dwvTRcA768lp9lDsIEJCr2KVTYYvhrmX8TafAqtA
-	3694/F49vq711//XazCx4o/eFmoauA5E0r1o9aOtxZF+1mKDwbIZfA8ZT5MefHwd
-	+RLVgmOi0uajoei5Mej9rjhM3ujtmmiiiVdtmgiUBqfjYhDUNICI12n5S2Mo7ELu
-	7boySfVmDoipTB4Wp1va34ylhlEvGXudJXqUVd+OuJOqiQ8zAi6bt+n0d1tQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709551630; x=1709638030; bh=WCLCx6ZXibmkTszLQSSQ7hZc4cbz
-	BKS93Xk+HpWXKXg=; b=Ro/Zm46EuO3nd92ZCxytDuo9hBCXLF/cZmtg1ONfP5cr
-	t4xjhm7yOoMxI9q6gOnsvFAofIL/tXOiqSBHAeZi5E5AWiRNaA3jp2jt103MrRks
-	8/2rTP82txkOYf+QfR4vl6w12h1Q+ZznZp2+dHgJApFn0OoP6YvmogL4yPbnlXNc
-	pnlNbPpwEb0Wb7s5kg1/Pq4Qe5Zb8SfWslhDk29TKlZOq/wKw0BwpsbZwCKt4ypF
-	rw0+hvsNEd99IHK907WWne8rF3k59uDovu9RB6GPHApTc8e+VnwbY664UJHiCRvs
-	Tlm72+mjdZ8cYwYBakOM3qXC6b5NyeLwMNi+uOFc8w==
-X-ME-Sender: <xms:DrDlZXntkvws9IQn3ORO4enwQBHkCLTp3pwe7sgcWrHt8y-DpeFqJg>
-    <xme:DrDlZa3ua634C7USDJNZ4uDU0a2UaWOyRn1tRNqytbaRjC3KKL5O6y6Yntkju0cj6
-    Ca0Fh8hZ-j7agBfI1c>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrheejgddvjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:DrDlZdplQNTvcUoTNsECURnF4Qi8faEISXUABHp2IUIKdwdp2VnKKQ>
-    <xmx:DrDlZfmlyHD6-nfbYFrL9r9pTKiz47WmMBQ-n-vXG3SrrviTV01q-w>
-    <xmx:DrDlZV0lXHYkWXttK2dbV5v9zVXe79f74wqrPazIWUd0O-H7lfiinQ>
-    <xmx:DrDlZevIOiRT-axKExEQu8-6neS-9FmHi2dnVdzCIa2tUktonrEUIw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 46BEEB6008D; Mon,  4 Mar 2024 06:27:10 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-205-g4dbcac4545-fm-20240301.001-g4dbcac45
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dMaMUhnh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECBF3C433C7;
+	Mon,  4 Mar 2024 11:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709551716;
+	bh=NEBYof5k9QJEgydUQqeTNGKxzFXbpJp/phcxbRBQ0M0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dMaMUhnh2LfWm37z6cJrU9SorGFCIu8Jd8exYE37eMk+b+nf0uHAD86zfIeOWs5nu
+	 KmToUzZC/uNnkgM0z65XtQQfGDWqgHk/9v83AUqicI+lsTjbIxGC3JxFwLPX4Kbicv
+	 6sJJtUkCVqsvm5hg7yXHX4400udNN/UbMocZKUWxBekbl5phZYAi94YFQKVLg5a5Sr
+	 fwWzi5uukTKJEJv1Rpg5pbfys1oYaJI7fLt/l4XPaf5x5v0og8hnXC7oecARUAq1By
+	 hKjvBYJhUaSYuBpj5y7j9/5SfuRdELhOFDF8eFVtEE3nXvdZ7jxjqT6HWHONhJDekq
+	 JiPzRBGBqBF2Q==
+Date: Mon, 4 Mar 2024 12:28:33 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>, ying.huang@intel.com,
+	feng.tang@intel.com, fengwei.yin@intel.com
+Subject: Re: [tip:timers/core] [timers]  7ee9887703:  netperf.Throughput_Mbps
+ -1.2% regression
+Message-ID: <ZeWwYUY56IG0yzzQ@localhost.localdomain>
+References: <202403011511.24defbbd-oliver.sang@intel.com>
+ <ZeUWreWcp4UWQ081@pavilion.home>
+ <ZeUuLPXfLCmB39qq@xsang-OptiPlex-9020>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1baf9a7f-b0e4-45d8-ac57-0727a213d82d@app.fastmail.com>
-In-Reply-To: <20240304112441.707ded23@donnerap.manchester.arm.com>
-References: 
- <CA+G9fYvG9KE15PGNoLu+SBVyShe+u5HBLQ81+kK9Zop6u=ywmw@mail.gmail.com>
- <338c89bb-a70b-4f35-b71b-f974e90e3383@app.fastmail.com>
- <20240304112441.707ded23@donnerap.manchester.arm.com>
-Date: Mon, 04 Mar 2024 12:26:46 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andre Przywara" <andre.przywara@arm.com>
-Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
- linux-sunxi@lists.linux.dev, dri-devel@lists.freedesktop.org,
- lkft-triage@lists.linaro.org, "Maxime Ripard" <mripard@kernel.org>,
- "Dave Airlie" <airlied@redhat.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Ard Biesheuvel" <ardb@kernel.org>
-Subject: Re: arm: ERROR: modpost: "__aeabi_uldivmod"
- [drivers/gpu/drm/sun4i/sun4i-drm-hdmi.ko] undefined!
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZeUuLPXfLCmB39qq@xsang-OptiPlex-9020>
 
-On Mon, Mar 4, 2024, at 12:24, Andre Przywara wrote:
-> On Mon, 04 Mar 2024 12:11:36 +0100 "Arnd Bergmann" <arnd@arndb.de> wrote:
->>
->> This used to be a 32-bit division. If the rate is never more than
->> 4.2GHz, clock could be turned back into 'unsigned long' to avoid
->> the expensive div_u64().
->
-> Wouldn't "div_u64(clock, 200)" solve this problem?
+Le Mon, Mar 04, 2024 at 10:13:00AM +0800, Oliver Sang a écrit :
+> On Mon, Mar 04, 2024 at 01:32:45AM +0100, Frederic Weisbecker wrote:
+> > Le Fri, Mar 01, 2024 at 04:09:24PM +0800, kernel test robot a écrit :
+> > > commit: 
+> > >   57e95a5c41 ("timers: Introduce function to check timer base is_idle flag")
+> > >   7ee9887703 ("timers: Implement the hierarchical pull model")
+> > 
+> > Is this something that is observed also with the commits that follow in this
+> > branch?
+> 
+> when this bisect done, we also tested the tip of timers/core branch at that time
+> 8b3843ae3634b vdso/datapage: Quick fix - use asm/page-def.h for ARM64
+> 
+> the regression still exists on it:
+> 
+> 57e95a5c4117dc6a 7ee988770326fca440472200c3e 8b3843ae3634b472530fb69c386
+> ---------------- --------------------------- ---------------------------
+>          %stddev     %change         %stddev     %change         %stddev
+>              \          |                \          |                \
+>       4.10            -1.2%       4.05            -1.2%       4.05        netperf.ThroughputBoth_Mbps
+>       1049            -1.2%       1037            -1.2%       1036        netperf.ThroughputBoth_total_Mbps
+>       4.10            -1.2%       4.05            -1.2%       4.05        netperf.Throughput_Mbps
+>       1049            -1.2%       1037            -1.2%       1036        netperf.Throughput_total_Mbps
 
-Yes, that's why I mentioned it as the worse of the two obvious
-solutions. ;-)
+Oh, I see... :-/
 
-     Arnd
+> > Ie: would it be possible to compare instead:
+> > 
+> >     57e95a5c4117 (timers: Introduce function to check timer base is_idle flag)
+> > VS
+> >     b2cf7507e186 (timers: Always queue timers on the local CPU)
+> > 
+> > Because the improvements introduced by 7ee9887703 are mostly relevant after
+> > b2cf7507e186.
+> 
+> got it. will test.
+> 
+> at the same time, we noticed current tip of timers/core is
+> a184d9835a0a6 (tip/timers/core) tick/sched: Fix build failure for
+> CONFIG_NO_HZ_COMMON=n
+
+Shouldn't be a problem as it fixes an issue introduced after:
+
+	  b2cf7507e186 (timers: Always queue timers on the local CPU)
+
+> 
+> though it seems irelevant, we will still get data for it.
+
+Thanks a lot, this will be very helpful. Especially with all the perf diff
+details like in the initial email report. Because I'm having some troubles
+running those lkp tests. How is it working BTW? I've seen it downloading
+two kernel trees but I haven't noticed a kernel build. Are the two compared
+instances running through kvm?
+
+Thanks.
+
+> 
+> > 
+> > Thanks.
