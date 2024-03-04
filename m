@@ -1,119 +1,92 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73916166E;
-	Mon,  4 Mar 2024 17:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F0A612E6
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 17:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709573681; cv=none; b=erowN15VTsk5KRGII1rI3Fp7aoxts2Rgidk80xZqF0btPa32LaLTwIlHXeiSrJJMrJTcOXiDgDQu+4PIS5SuFMMAxFOsFYbuugNirzESjxg2z1R7fofk/GoVN0BRFO8taYZpfVAaoeq/E8Tyag0PpmTRnJk8FbykC8xpTCr2qW8=
+	t=1709573786; cv=none; b=YSJiV4JRpIyWRUy4grmVBrdYbDhAwP2SOuTrMdse2CVT6q3beE9wOFsqce6Cc0zgdhS1f84woCgS/FmhRyTyrbbySK8hSp03+eMUmICY3dP4VQnVxEa94EI+YacAFhlzuVHHS2+PSoloXyQhgWBLfbZaIoeVRE8YwugIl2IFL9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709573681; c=relaxed/simple;
-	bh=xw6aC+A8gVg8jidmMdZ/OwGyhEFufS4cf1tmpKI+rMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HacHxY822bjcJfa/jFOI2+HXecTWpwOh3adfezXkcdBmvPoihC1iTbkw67MmM+F0kcPQEYipfR4GllRZloeEJQzln3m7GvDFQcTb2Ljj295XltPPZqG/6KWbqbByK0I0smo4Y1V+FLjLjNPl5eSkfY+FrwMx4J1gUs80HR7g4o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Taia1kv2; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709573786; c=relaxed/simple;
+	bh=8ooV8dB1mFGHQY9jMgeckMAWoFF0hDH+vzsJ4I6wVLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IDBRC013A8PLUXtv+DvfdPgi6Yi3Qxbu1l/dRhtBMfwLixwkdBeHxxy4o08RjHWAiP0mz92AXrpucQGZmIIWgvtbJDnun0y/SSEzxPjZ3xxwxT0aFj4zAhBbN64qrC21q+55qy9NNLl+6vza1n0Pan1V8WGGlRLEY9RUMg3GoeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V7cUH+H9; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Taia1kv2"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d28464c554so65189551fa.3;
-        Mon, 04 Mar 2024 09:34:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V7cUH+H9"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e55731af5cso3627187b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 09:36:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709573678; x=1710178478; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d2FR1/AlUdSswXJG03DmWoIi/sBHU8HYBddm5uluiH4=;
-        b=Taia1kv2u+2L11oJ50GARtae8dUonvKkre7duEosmVUsf7rq77OjArTvDEPv1g1j+n
-         e+KtWYnye7v7yaThfZ23DAFt7865P2z9sUeQ/Yd8eVVh8mAnlaXiUzJMMaLPgOI9eJx4
-         BGTdd19OPycBWW8SrBH4S+fVnz2Ji2RP5bSnQwkJ/DioUwHFFHC/N7NaTOFpyyOhzS5f
-         JcOeXpPcuoKNqFIXx4KmUC0trGJwf6R97X2cziG76neu3n1bjfJ9yAhCO4OBKdpAf9ps
-         USHVMaupW0t0ZGOEKpe2/9FiOfXYdVkw4mGYw9mW2V+pa/iOZVmzzcSkSywXGl6c2ZH1
-         bJ5A==
+        d=chromium.org; s=google; t=1709573784; x=1710178584; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JWlfNcQD5ehyoT1o3mhe5Duet0Ppnvl8B0mdktks9m0=;
+        b=V7cUH+H9ELHH0cNKbSVsG/WWfSt8TMCgu0abHVykmJfVEAl/4GkEo1M/lbG0U8Rmz7
+         mn84RQVeGgkL5c1Rlf2FUmQFpEhoGInrOZmR4EewGnaTNE87dat43H3kFoN0ZcHiidsq
+         haq5MxwsSuABBTzFU4NnIpXSiuK2qdVILvb7g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709573678; x=1710178478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d2FR1/AlUdSswXJG03DmWoIi/sBHU8HYBddm5uluiH4=;
-        b=Q29rr1y77ODJ4aib1IyvZ/0eq8kU7i/gFUfiRj2Y8Rq81ZXGdHxxNQgRUV+ICbGDtE
-         ZmZ8ZcM3Ddp/VJ4GPFqR5mAS7teM7NTgMcDslvSXOBoUiVhTec2DvCU8bOeX7ghTqewm
-         EvJ6489GihA9Wupyg3x9SRlJvP4bHhVy08ZsfYKryqbG8ruBuKFXn0nPJ7PaCjmoqlIZ
-         UxYrxf9TonCwKoPEW0oj8NzJJF6dku3Dj92CEnSRP30c2L3klzkYEtn1SJCOWW9y4D3N
-         DMhBo1cySqGzs3HxPz616CPFQErQ9Reg+fGpRUgJGfzgQk74c3dRBhL7FnYQyCEteFp5
-         GQ7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUhpAg9hkfgM04baN3N59lVLxWZxXcB0cWBilJTh1Y+9JicCIZb5gEGXJ6HoplF0Prnnj0dpal6X21dNjR36BqwNFEIXEkiIesGY93m0NWIFkoNPeTdRrd15e3GXHAncqAov5575Fr3GMexzzPr
-X-Gm-Message-State: AOJu0YxUrRRimmRLMXjQkra3XRV3IN5uVef0z9SEYuE6hGUIxGPlfqVH
-	Qo15dxHy/VE5dSCjfbel0tu+172ZaxjqCwdBn7HCgP7KWkqZSXhbIGKG6bhv8lG0+6FWxJrMzSA
-	UY4URufgQFZtwOeznhXBbDqVhoV0=
-X-Google-Smtp-Source: AGHT+IGunG7KN2xT4wHChFr7YnPoTN76KLIjMpoQgX93fs+NLugh0voNXHnAKUKWEr2kahJppkbFtyR3YMhLXQWyg3k=
-X-Received: by 2002:a05:651c:1031:b0:2d2:5129:4ffd with SMTP id
- w17-20020a05651c103100b002d251294ffdmr6633774ljm.53.1709573677499; Mon, 04
- Mar 2024 09:34:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709573784; x=1710178584;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JWlfNcQD5ehyoT1o3mhe5Duet0Ppnvl8B0mdktks9m0=;
+        b=pJ12Ox3Vm5zsg8FpkeNgNCn/eOrqfv//CQCk19ZRbHTOnGqNIPBZdc7qUbrsx/E+Nx
+         gqt8AydQos/Dk4xfYuwQ4bAlqEe8F1Q1YxPpP1jGrGTQllFBkrD91V4t1TPmgAwKbJJ/
+         3RsgwHr5Je0J/rb/mxNnjcfsQkVFKJGV6RAj9ibZtc5UmAqwxEA0zkK8r/OF2ToUme87
+         QZsYsa9xarXjswngV1i0V/COuLcXJgrdnqWlfxs8g+RxOO+rGob2xQ42UrWo5IMdtAQe
+         zc17FvMzFAtpUISpoGfvMktnfHzIB1lfFJRPMdU/CPKWasHNyHmbUbHg2aubUtPtcBvn
+         BOTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWh2YTyIP1YAVhYj/QRGt84e9KS30zrygB8c69f3tpnbebHKdUPdqS3/itoEqx0fLhfXks8IRNKkEzA/f5Fwh8D6aPZMDyLrqHSdENv
+X-Gm-Message-State: AOJu0YwfnI8hGH9ZQh96uG5AU/F2EUru7Yp1reTsXn2+cwg0fEAhruB8
+	QmjVGtvUJQNIj+ShYjkfZi4yD9mAFFrUe5UGtwvP4g1kP2BGVN3PcwmGVVM43Q==
+X-Google-Smtp-Source: AGHT+IGH+PXOCFE8Sx+8SDXrIRe2J4LTaRX/jocxs+KNVTAxz1MSfGPWTzHpvTrkX9a//yribdgf2w==
+X-Received: by 2002:a05:6a20:8e16:b0:1a1:4d74:cc48 with SMTP id y22-20020a056a208e1600b001a14d74cc48mr3248181pzj.21.1709573784240;
+        Mon, 04 Mar 2024 09:36:24 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r27-20020aa7845b000000b006e04d2be954sm7484585pfn.187.2024.03.04.09.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 09:36:23 -0800 (PST)
+Date: Mon, 4 Mar 2024 09:36:23 -0800
+From: Kees Cook <keescook@chromium.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] spi: axi-spi-engine: use __counted_by() attribute
+Message-ID: <202403040936.E933B96@keescook>
+References: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
+ <20240304-mainline-axi-spi-engine-small-cleanups-v2-2-5b14ed729a31@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231018145540.34014-1-marcel@ziswiler.com> <20231018145540.34014-2-marcel@ziswiler.com>
- <ZWEG40nzRhm6oVEq@francesco-nb.int.toradex.com> <20240304165215.GA11208@francesco-nb>
-In-Reply-To: <20240304165215.GA11208@francesco-nb>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Mon, 4 Mar 2024 12:34:24 -0500
-Message-ID: <CABBYNZLaWadMieheoUV=XVXfBmJGsU4L_+k+MuNiP_oCsvrVnQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] Bluetooth: btnxpuart: Fix btnxpuart_close
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>, linux-bluetooth@vger.kernel.org, 
-	Sherry Sun <sherry.sun@nxp.com>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>, linux-kernel@vger.kernel.org, 
-	Marcel Holtmann <marcel@holtmann.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, 
-	Amitkumar Karwar <amitkumar.karwar@nxp.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Marcel Ziswiler <marcel@ziswiler.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240304-mainline-axi-spi-engine-small-cleanups-v2-2-5b14ed729a31@baylibre.com>
 
-Hi Francesco,
+On Mon, Mar 04, 2024 at 10:04:24AM -0600, David Lechner wrote:
+> This adds the __counted_by() attribute to the flex array at the end of
+> struct spi_engine_program in the AXI SPI Engine controller driver.
+> 
+> The assignment of the length field has to be reordered to be before
+> the access to the flex array in order to avoid potential compiler
+> warnings/errors due to adding the __counted_by() attribute.
+> 
+> Suggested-by: Nuno Sá <nuno.sa@analog.com>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-On Mon, Mar 4, 2024 at 11:52=E2=80=AFAM Francesco Dolcini <francesco@dolcin=
-i.it> wrote:
->
-> Hi Luiz,
->
-> On Fri, Nov 24, 2023 at 09:26:11PM +0100, Francesco Dolcini wrote:
-> > On Wed, Oct 18, 2023 at 04:55:39PM +0200, Marcel Ziswiler wrote:
-> > > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> > >
-> > > Unfortunately, btnxpuart_close() may trigger a BUG: scheduling while
-> > > atomic. Fix this by properly purging the transmit queue and freeing t=
-he
-> > > receive skb.
-> > >
-> > > Fixes: 689ca16e5232 ("Bluetooth: NXP: Add protocol support for NXP Bl=
-uetooth chipsets")
-> > >
-> > > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> > > ---
-> > > This is the kernel trace this commit fixes:
-> > > [   29.270685] BUG: scheduling while atomic: kworker/u3:0/55/0x000000=
-02
-> >
-> > I just hit this bug with 6.7-rc2, I think it would be worth to
-> > apply this fix.
->
-> Do you need any change for having this patch (1/2) applied? Do you want t=
-his
-> to be re-sent without the second patch (2/2) from this series that is
-> maybe more controversial?
+Looks good! Thanks for the respin.
 
-Yes please just resend it.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> Let me know how I can help,
->
-> Thanks,
-> Francesco
->
-
-
---=20
-Luiz Augusto von Dentz
+-- 
+Kees Cook
