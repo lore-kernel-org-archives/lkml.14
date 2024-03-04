@@ -1,115 +1,207 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070611BDEE
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AC31B7E8;
+	Mon,  4 Mar 2024 09:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709543467; cv=none; b=pdPyYi9XMSzSZvVTOTSpJ/0JLfpWaJoy9VeJTPWyV9bGUaBSi2mowYyoI6qifeq1K3bEKclvScP1U4X69nBNNijItijX4Y0/VWAjc8j0MtJjPWfEP0c1Z3bZkLoJFC6X1mfHjjjZXJl9Rhsspv6r8XYiP3Sh7AeQ0VkGdbBnClA=
+	t=1709543528; cv=none; b=s1SCJWP9+Hd5Abrq7y7wahz+xKpQwTi8WbSmMu6DbiqDmEptRgapeHqDUHu8wji7py0XlWHIhfOdvTfoRMlJFwrc3Q+HerVqNYKNQmKP+8JuibrNrUR4eU7LHOv3W8vN1WNGP9n6jpcQ3PVHn4WQDV8d/luPZbhJ+OvtDI1Y314=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709543467; c=relaxed/simple;
-	bh=CUtZhKapsZY/xavUkp55/c+tMUGvUPzfYmx4hsetBuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K5L/mldskj4NIgwfm+R4whwN0iWEfaWkngowBIriz2kRr83EqB+hCWiS5l7Ol/WLuM6BSIQ1k1Rv+Ks/0AzvS9zs01cYCH/ZTHNa2xUXAc2eDaioA3VSgIgSexCgi6W1sLc7TvQOq4NbaBjdIH+9YQpdyVS+K37a3QDfi6p9v4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wle3JIf2; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709543528; c=relaxed/simple;
+	bh=fC8sKkBs7GE4sHdOuIW0zqhWGl2e7aLtrNEvA/GFT88=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DQh3nm0qcnle0v+h3FlfZfrTB72eBsHby9Y2FgJ6u/cJfpo7wOj4i3PqfqvuHVjPkPYFXqGTVTgmuVWWelvnfFYJQet0j2djaO8hjnpvOdMHL0ZuUxgE4kK+WYaXO1823y7stsvgPvX1ao9YHOfe0hq3lX3PYrDKjDxZhysMd8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ZtaNkAYo; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wle3JIf2"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-412ddef6f83so7347345e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:11:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ZtaNkAYo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709543464; x=1710148264; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MAS4NfgNmP0HvgF3U0o9wHMePf9MEveoKdtR6KEo+dA=;
-        b=Wle3JIf2cCXXveWmsO+XQsfI6Wp0LQTBv0yAv9UfmuNDPSrpLITeSQRpdGphXW6PXv
-         LzfdKadXWFohNf5bpwLXbu3iJv+winXnVqwnXi8LZ5CfbzS3KcR/uNIpxZpwHm/0m9nP
-         xCdB1CPe5S4tOkrY40GLX2QT2K+F5OdHZIbjEZ6GZOep7AAEsT+qV19qxiyYONHZFrrz
-         4AKI5/xgg1/9cu/uvH/Wc+wVyNMI3Xb+3zSQeWMZMiTKWz+MSyfRpZE0zo63el3vjBiX
-         9/FoK2Yt/KGK56Y3aeiBW8z+NAonX2nPQfQx77Fa7acZFxOCxqemWX3w1S1MWpTKtE9e
-         be/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709543464; x=1710148264;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MAS4NfgNmP0HvgF3U0o9wHMePf9MEveoKdtR6KEo+dA=;
-        b=SqK/95UvqhClm4fDSLJPZPL+S0X7DTLR1soCYImfXX9f0czd5J+eC5eaC2WDpMKfFB
-         HuhPdRSFfBOviP+gNoO6aryVoOwiSGSo4u7G59Mt05VCrUAZkP0WDdb1MMJOR+aktCCf
-         /2ooMLcEsm5B4zq0a79pnPu5f3phzRQRSrx4qWP8jc/bGBhpcjMjxYnQBHjv5CJvqyZh
-         tJkm7h2au88fzVmRLtgZ8ev+3xSd10vHOI3qFWvitVHBsMfPyYjHc19gQrQEPEQBDbeT
-         UidJxEvXiME+a/8NiIUQZMnEvhntJl3RK1Y4LheiAd1ruwafDvqDwGH+ybFujPXaE+st
-         eRUg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/d4ojr5N/+BAK15jxEJ38aYWrFLAbx+7EiXglzqRXdPVHVjjJsCR7pFXt6I3f7hKj78roCbWrutAa7DThLV/MBH2XM4nttIvCdGjB
-X-Gm-Message-State: AOJu0YycI6NizZsEIYBH9hD96ZZYb5S8T4Gamlf66yvFi4j825UR8Ol+
-	2mKJ7PbCojuIMdfriZ7A6OhnacIFsVR6aMnUqYYd23802jw7dJ0Tg2n9uaMPVJ0=
-X-Google-Smtp-Source: AGHT+IFEmXB1YdPhR2t7PE+oBbpNOs7QcDk2q6Z7v8XjJnD94Ikv7TDFwaNIEDds2pPVHP4cpZUn0g==
-X-Received: by 2002:a05:600c:3d91:b0:412:e555:f90e with SMTP id bi17-20020a05600c3d9100b00412e555f90emr938804wmb.35.1709543464434;
-        Mon, 04 Mar 2024 01:11:04 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.35])
-        by smtp.gmail.com with ESMTPSA id j11-20020a5d604b000000b0033d9ee09b7asm11634328wrt.107.2024.03.04.01.11.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 01:11:04 -0800 (PST)
-Message-ID: <9e4461ec-2207-42bb-a3a9-826eac1757da@linaro.org>
-Date: Mon, 4 Mar 2024 09:11:02 +0000
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1709543525; x=1741079525;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nbX+hWAcORuUJGtFt2cByM1P4IXCj3Ob/hyO09aRE3k=;
+  b=ZtaNkAYo/Fj6+BnffXAeVTgkpOoCWpKnovaYzq104KHpjHr4A+sNHZIR
+   yEYLs/QoNyCOnE9/L+drGILrEBqdBHHjQB4iqC/bWLOmiJ3DAIa2E++Xe
+   5e6ZRE6TAKMfHEHW2ErJNSwaJWmHH+Fs+EK/mmq9t5XFVxtxZLYH+Cn66
+   NStWlfI9jpB8j8XoxmoTF+XB2iIk4BIXDjvV6StzU1mPkmLmMzRADz67O
+   TtLsEbBDpcnr6alN8f2R+6iw5JMEYY8PtkAInA3GE4RpehXL/RzIe/o9F
+   sHleNyg0j2VbY1Eg29iFwmEZu6QrZYk1VBnKfc9pDzVC0Y+j+DfkQ9xzu
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.06,203,1705359600"; 
+   d="scan'208";a="35711019"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 04 Mar 2024 10:11:56 +0100
+Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 68946280071;
+	Mon,  4 Mar 2024 10:11:56 +0100 (CET)
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Frank Li <Frank.Li@nxp.com>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v2 1/4] arm64: dts: imx8: add cm40 subsystem dtsi
+Date: Mon, 04 Mar 2024 10:11:57 +0100
+Message-ID: <5761273.DvuYhMxLoT@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20240302-m4_lpuart-v2-1-89a5952043b6@nxp.com>
+References: <20240302-m4_lpuart-v2-0-89a5952043b6@nxp.com> <20240302-m4_lpuart-v2-1-89a5952043b6@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mtd: spi-nor: core: correct type of i
-Content-Language: en-US
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Takahiro Kuwano <Takahiro.Kuwano@infineon.com>
-Cc: kernel@collabora.com, kernel-janitors@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240304090103.818092-1-usama.anjum@collabora.com>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240304090103.818092-1-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-Miquel,
+Hi Frank,
 
-Can you please queue this to mtd/next after you pull in the SPI NOR
-changes? Thanks!
+thanks for the update.
 
-ta
-
-On 3/4/24 09:01, Muhammad Usama Anjum wrote:
-> The i should be signed to find out the end of the loop. Otherwise,
-> i >= 0 is always true and loop becomes infinite. Make its type to be
-> int.
-> 
-> Fixes: 6a9eda34418f ("mtd: spi-nor: core: set mtd->eraseregions for non-uniform erase map")
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-
+Am Samstag, 2. M=E4rz 2024, 17:27:44 CET schrieb Frank Li:
+> From: Dong Aisheng <aisheng.dong@nxp.com>
+>=20
+> Add cm40 subsystem dtsi.
+>=20
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> Changes since v1:
-> - Make i int instead of u8
-> ---
->  drivers/mtd/spi-nor/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-> index 65b32ea59afc6..3e1f1913536bf 100644
-> --- a/drivers/mtd/spi-nor/core.c
-> +++ b/drivers/mtd/spi-nor/core.c
-> @@ -3373,7 +3373,7 @@ static u32
->  spi_nor_get_region_erasesize(const struct spi_nor_erase_region *region,
->  			     const struct spi_nor_erase_type *erase_type)
->  {
-> -	u8 i;
-> +	int i;
->  
->  	if (region->overlaid)
->  		return region->size;
+>  arch/arm64/boot/dts/freescale/imx8-ss-cm40.dtsi | 67 +++++++++++++++++++=
+++++++
+>  arch/arm64/boot/dts/freescale/imx8dxl.dtsi      |  2 +
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi      |  1 +
+>  3 files changed, 70 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-cm40.dtsi b/arch/arm64=
+/boot/dts/freescale/imx8-ss-cm40.dtsi
+> new file mode 100644
+> index 0000000000000..68043ab74e765
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8-ss-cm40.dtsi
+> @@ -0,0 +1,67 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2019 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +#include <dt-bindings/firmware/imx/rsrc.h>
+> +
+> +cm40_ipg_clk: clock-cm40-ipg {
+> +	compatible =3D "fixed-clock";
+> +	#clock-cells =3D <0>;
+> +	clock-frequency =3D <132000000>;
+> +	clock-output-names =3D "cm40_ipg_clk";
+> +};
+> +
+> +cm40_subsys: bus@34000000 {
+> +	compatible =3D "simple-bus";
+> +	interrupt-parent =3D <&cm40_intmux>;
+
+I would have put that below ranges, but it might be just personal preferenc=
+e.
+
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <1>;
+> +	ranges =3D <0x34000000 0x0 0x34000000 0x4000000>;
+> +
+> +	cm40_i2c: i2c@37230000 {
+> +		compatible =3D "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +		reg =3D <0x37230000 0x1000>;
+> +		interrupts =3D <9 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks =3D <&cm40_i2c_lpcg 0>,
+> +			 <&cm40_i2c_lpcg 1>;
+> +		clock-names =3D "per", "ipg";
+> +		assigned-clocks =3D <&clk IMX_SC_R_M4_0_I2C IMX_SC_PM_CLK_PER>;
+> +		assigned-clock-rates =3D <24000000>;
+> +		power-domains =3D <&pd IMX_SC_R_M4_0_I2C>;
+> +		status =3D "disabled";
+> +	};
+> +
+> +	cm40_intmux: intmux@37400000 {
+> +		compatible =3D "fsl,imx-intmux";
+> +		reg =3D <0x37400000 0x1000>;
+> +		interrupts =3D <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-controller;
+> +		interrupt-parent =3D <&gic>;
+
+Please put this above interrupt property, you are mixing interrupt
+properties of the device itself with interrupt-controller properties.
+
+With these things addressed:
+Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+
+> +		#interrupt-cells =3D <2>;
+> +		clocks =3D <&cm40_ipg_clk>;
+> +		clock-names =3D "ipg";
+> +		power-domains =3D <&pd IMX_SC_R_M4_0_INTMUX>;
+> +		status =3D "disabled";
+> +	};
+> +
+> +	cm40_i2c_lpcg: clock-controller@37630000 {
+> +		compatible =3D "fsl,imx8qxp-lpcg";
+> +		reg =3D <0x37630000 0x1000>;
+> +		#clock-cells =3D <1>;
+> +		clocks =3D <&clk IMX_SC_R_M4_0_I2C IMX_SC_PM_CLK_PER>,
+> +			 <&cm40_ipg_clk>;
+> +		clock-indices =3D <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
+> +		clock-output-names =3D "cm40_lpcg_i2c_clk",
+> +				     "cm40_lpcg_i2c_ipg_clk";
+> +		power-domains =3D <&pd IMX_SC_R_M4_0_I2C>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8dxl.dtsi b/arch/arm64/boot=
+/dts/freescale/imx8dxl.dtsi
+> index a0674c5c55766..9d49c75a26222 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
+> @@ -5,6 +5,7 @@
+> =20
+>  #include <dt-bindings/clock/imx8-clock.h>
+>  #include <dt-bindings/dma/fsl-edma.h>
+> +#include <dt-bindings/clock/imx8-lpcg.h>
+>  #include <dt-bindings/firmware/imx/rsrc.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> @@ -231,6 +232,7 @@ xtal24m: clock-xtal24m {
+>  	};
+> =20
+>  	/* sorted in register address */
+> +	#include "imx8-ss-cm40.dtsi"
+>  	#include "imx8-ss-adma.dtsi"
+>  	#include "imx8-ss-conn.dtsi"
+>  	#include "imx8-ss-ddr.dtsi"
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot=
+/dts/freescale/imx8qxp.dtsi
+> index 10e16d84c0c3b..0313f295de2e9 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -317,6 +317,7 @@ map0 {
+>  	/* sorted in register address */
+>  	#include "imx8-ss-img.dtsi"
+>  	#include "imx8-ss-vpu.dtsi"
+> +	#include "imx8-ss-cm40.dtsi"
+>  	#include "imx8-ss-gpu0.dtsi"
+>  	#include "imx8-ss-adma.dtsi"
+>  	#include "imx8-ss-conn.dtsi"
+>=20
+>=20
+
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
+
