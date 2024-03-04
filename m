@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734D05C5F4;
-	Mon,  4 Mar 2024 16:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0D15FDDD;
+	Mon,  4 Mar 2024 16:51:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571084; cv=none; b=uKI7lz0bvW8PH6JzFF9lOiELCFpDh8sgYw40/WBFVUGWd7LzKlWyenMVHV8yZcEAYl0Di/UjwZZ/xSuUGoINjSGRss1GyFqgB68w4QQ4VewatSTKVhDQCwYs+k7iOyOg6GiFES1RO/V98OtO8l9zGbegmIEAAVGeTDW4DtO6V1E=
+	t=1709571086; cv=none; b=FGUydnPZ+i2TsCnou0XcxHXyQflv90kCkeV5QZV6sQrZEsn6ScUkp87eDZ16kD3HryT69PMX7NRV4rJ2VCQTmPoA7Trej5ujyMnsQUJOQ9P1h/fpm9vVjOZq8QDDpEQtjpJJauFITWZ5k3t2mlJathuT7MTp1WF0CIIJnBSvIxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571084; c=relaxed/simple;
-	bh=rG3U6LWU/wcU3QEj+fG+akk0USwnOpVG1fe7DgWukKE=;
+	s=arc-20240116; t=1709571086; c=relaxed/simple;
+	bh=dQbmAu2rwruOqP/ABkEiJsKHiX/3Vyq2dMg6yOxWuPo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=iVBkmuFw/AYNlX3+ON1TgF2iDV0H3JuNnqzWgotJm45nKtuhmiEbPzf10+d9aZWKXrHYxie3OgIwch/WkZDJiriwC6U0N5EZIF6CU14/XPS7T5EeyRU+VvhM0s0vm7iE5WIfcwJlv4DBelO57/AP6M3Wly7Pj1sO0labHVlMRN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qgdlEbPi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c1cD+0eD; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=RIiznai8d/SPGzo4JF+cnw2uGD/kTtuShexycHgqq4Tn2lmwz5XeJ73Cutm/ThpwZsxFVHIaM1dBi+lSY4eyPasqo+DsQ/FprKp07XTsu9yISTLn1zwvkcyjlj+acyVSQVxpeWHyCYGFqhP6Zidu691aP4lTa5a1kEAxw+eR2s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LAdEtoEE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U/mnxoCn; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qgdlEbPi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c1cD+0eD"
-Date: Mon, 04 Mar 2024 16:51:13 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LAdEtoEE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U/mnxoCn"
+Date: Mon, 04 Mar 2024 16:51:15 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709571074;
+	s=2020; t=1709571076;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BK7JKajrbVZFXAoR6poQzrLX7ERI9qkNZKOHBww1XBE=;
-	b=qgdlEbPix4f7Xj/f+mYgVHgXxLJHFSd7uFFvG7/opxI9zrDro9AK/S7dH3dyPTBeLRUSz8
-	2m1G1IEkMMrzAdK7Iclog7lYqavnBU4s17BQPspbP0VPsbNY+i+0CnXIOfmE3sEdM/YWVW
-	Lrp5WmBZkIdKpUqjb62sBVKnMQAPyWJGaTw8JGfgRTtvmoLZ0e+WooqCPA2subzpu7lrp+
-	05To0B9cWgLTLrohGyi13sX6xHoDV6apVzrPM2f+gV50Pp+KpUU+BHCpCd+CC1NO6jJJjQ
-	UEnZ+2hLDWzHgUlUMEOpoBI6ghrtpdHve5PUeguz66p/MWr1YrvbPweUGPYJlw==
+	bh=GC5ZbR6JL0+F9LFYFrxKkVTnjHv8MW3IG4YBYZHG/FU=;
+	b=LAdEtoEE0xOCTE1QP7wccUNGcpCC/so0EFhuXUXsAdXRdgOcHsmoNc9bVVrZ1mtmCKjmO6
+	u59fewJX35mNjXpFpVeT8BXkPXJu3o/9l5Jtac7rNit9F1NBGOIyGYKA35hgF2/CeI/t/N
+	h8on4QL78HrbGDVW2E8u2njW9QVg4aF1X0pyX3V7Ee1WW2fe1RjJaf2jTcFFtSezDNFr4h
+	LWRn9UmfwDyP87TQRQ2Tvu7C1lR8j6fb9Lu8w2bpoOj6TAkQMCtOshSFW6YhCKyq70B+sV
+	jJ7J+eDQ1dwfDG9pMVY86/N+Ukr5XcnsIQyJTCRP3XRGMXTQNKDLKvx7P/w0DQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709571074;
+	s=2020e; t=1709571076;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BK7JKajrbVZFXAoR6poQzrLX7ERI9qkNZKOHBww1XBE=;
-	b=c1cD+0eD9qhWgiAIA5nT5SlZKPLgKtf5racc+FeTNevoeEn+gnOAuvFgOaIft0KLNQaN9i
-	u4zUH8tEWwCj/YBQ==
+	bh=GC5ZbR6JL0+F9LFYFrxKkVTnjHv8MW3IG4YBYZHG/FU=;
+	b=U/mnxoCnXhmwz73W2DzUW/MDpnKV+BKSxVK2zk2UQr0vQ2F/fe6Eo09JBfqXnMFJVaymxf
+	RQYRZhxOZiqNPvCw==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/idle: Let prefer_mwait_c1_over_halt() return bool
+Subject: [tip: x86/core] x86/idle: Clean up idle selection
 Cc: Thomas Gleixner <tglx@linutronix.de>,
  "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240229142248.518723854@linutronix.de>
-References: <20240229142248.518723854@linutronix.de>
+In-Reply-To: <20240229142248.392017685@linutronix.de>
+References: <20240229142248.392017685@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170957107395.398.2216128900889603168.tip-bot2@tip-bot2>
+Message-ID: <170957107541.398.17375423777710078618.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,69 +67,44 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     5f75916ec6ecdc6314b637746f3ad809f2fc7379
-Gitweb:        https://git.kernel.org/tip/5f75916ec6ecdc6314b637746f3ad809f2fc7379
+Commit-ID:     0ab562875c01c91ec8167f8f6593ea61e510fd0a
+Gitweb:        https://git.kernel.org/tip/0ab562875c01c91ec8167f8f6593ea61e510fd0a
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 29 Feb 2024 15:23:41 +01:00
+AuthorDate:    Thu, 29 Feb 2024 15:23:38 +01:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
 CommitterDate: Mon, 04 Mar 2024 17:39:24 +01:00
 
-x86/idle: Let prefer_mwait_c1_over_halt() return bool
+x86/idle: Clean up idle selection
 
-The return value is truly boolean. Make it so.
-
-No functional change.
+Clean up the code to make it readable. No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20240229142248.518723854@linutronix.de
+Link: https://lore.kernel.org/r/20240229142248.392017685@linutronix.de
 ---
- arch/x86/kernel/process.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kernel/process.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 9709959..ccaacc7 100644
+index b86ff0f..792394b 100644
 --- a/arch/x86/kernel/process.c
 +++ b/arch/x86/kernel/process.c
-@@ -853,21 +853,21 @@ void __noreturn stop_this_cpu(void *dummy)
-  * Do not prefer MWAIT if MONITOR instruction has a bug or idle=nomwait
-  * is passed to kernel commandline parameter.
-  */
--static int prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
-+static bool prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
+@@ -910,11 +910,13 @@ static __cpuidle void mwait_idle(void)
+ 
+ void select_idle_routine(const struct cpuinfo_x86 *c)
  {
- 	u32 eax, ebx, ecx, edx;
+-#ifdef CONFIG_SMP
+-	if (boot_option_idle_override == IDLE_POLL && smp_num_siblings > 1)
+-		pr_warn_once("WARNING: polling idle and HT enabled, performance may degrade\n");
+-#endif
+-	if (x86_idle_set() || boot_option_idle_override == IDLE_POLL)
++	if (boot_option_idle_override == IDLE_POLL) {
++		if (IS_ENABLED(CONFIG_SMP) && smp_num_siblings > 1)
++			pr_warn_once("WARNING: polling idle and HT enabled, performance may degrade\n");
++		return;
++	}
++
++	if (x86_idle_set())
+ 		return;
  
- 	/* If override is enforced on the command line, fall back to HALT. */
- 	if (boot_option_idle_override != IDLE_NO_OVERRIDE)
--		return 0;
-+		return false;
- 
- 	/* MWAIT is not supported on this platform. Fallback to HALT */
- 	if (!cpu_has(c, X86_FEATURE_MWAIT))
--		return 0;
-+		return false;
- 
- 	/* Monitor has a bug or APIC stops in C1E. Fallback to HALT */
- 	if (boot_cpu_has_bug(X86_BUG_MONITOR) || boot_cpu_has_bug(X86_BUG_AMD_APIC_C1E))
--		return 0;
-+		return false;
- 
- 	cpuid(CPUID_MWAIT_LEAF, &eax, &ebx, &ecx, &edx);
- 
-@@ -876,13 +876,13 @@ static int prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
- 	 * with EAX=0, ECX=0.
- 	 */
- 	if (!(ecx & CPUID5_ECX_EXTENSIONS_SUPPORTED))
--		return 1;
-+		return true;
- 
- 	/*
- 	 * If MWAIT extensions are available, there should be at least one
- 	 * MWAIT C1 substate present.
- 	 */
--	return (edx & MWAIT_C1_SUBSTATE_MASK);
-+	return !!(edx & MWAIT_C1_SUBSTATE_MASK);
- }
- 
- /*
+ 	if (prefer_mwait_c1_over_halt(c)) {
