@@ -1,128 +1,261 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2C51CAA9
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 21:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B0210A36
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 21:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709586284; cv=none; b=oAS4Lzd/JZbBTG1l9oTIAOyfi8ls/YKAw0qZJxBCKAtX2Udt2D6CJqs0R8v05Z8mPWq5jRSNKDCmi+dcoEMLNAnsimC5BVgq/k1D/dUpa7eFG5f8kjJjDMAtHEHZO8jvQ0rJAAIXljKocXX5SoAmyC7c4VfJxt8ZNxmCtFHNleY=
+	t=1709586289; cv=none; b=ntqyh6/sdDraTnx3XkDXaKVrXYCjyuE97O+2EH6hCIFu8VXMZkzFP647ooMlcqxG8W7WAfe9xgHcOSmT+Ip79Qy0DQ+LgeS61OfO4BHe54d+rMXqv42KsbgW7R7bZ2PUJ539zKRF0SymwRRwD9pEGZcrBF9eLaXzpT0cR4ITrQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709586284; c=relaxed/simple;
-	bh=Tw6Vginuy7S095bACk50UnmKKPupKBfXrXjYBWULZyE=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=glKxS8rWClvHuP2g6rj2FgF5YXvOLWzoW0+wu7biQeEjBplXcDXSIKYqfvqnCAess9OIWrdZJfiij0E5ZP1nON19mbX9K1+R6dnYRzAXWQJu1iIDeLrrQFhZqSPpyif1VqMkFBgUegzWrVzY7yi36yawVqFCso/VG72Za0paocg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Y9XH6vec; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1709586289; c=relaxed/simple;
+	bh=wcN0X4D5vAY7Fzi4SXe8LKE3eY9n8Hr99aj0im2D6Do=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kdbCHCh+Le/KyKVULUJNyUyBmT71johK21nOn8nTvAeGDOslIXSwIrQSaSy5QPE0tWslFVo4q5kbeRyqAC8ilKUoVUdboaztsCeapEcRjJz6+2vyWBWRc5ujBcp2T/U01Y2AQDLnSi62y4L9qd+ZLWHafNqv+UF+9hoG8daWhMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=COKIpK6A; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Y9XH6vec"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709586276; bh=GFMJlJjTlI/YnjqaRDuRJEvR/O/AOIAkbGZdzMRZ1v0=;
-	h=From:To:Cc:Subject:Date;
-	b=Y9XH6vec7VecGyC+qUpR5WS7gAphXv1mDq3MeWyze30OlEeSV8lRbv/FJXi7aeghm
-	 LJf+8yHAkIe2DkLhFUdPiqWfYZRP7wPbFi++duJj8Gf/9esBp0Bz5s2+HUJ6O4JEuY
-	 KpbueOpbM9pEB81kn7QrNGNXrVRjepSGsaqA9reo=
-Received: from cyy-pc.lan ([240e:379:2240:e500:994d:62ab:74a6:932b])
-	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
-	id 11F9664F; Tue, 05 Mar 2024 05:04:31 +0800
-X-QQ-mid: xmsmtpt1709586271t3nxb2zjd
-Message-ID: <tencent_BB2364BBF1812F4E304F7BDDD11E57356605@qq.com>
-X-QQ-XMAILINFO: OOnbKU/qCQQlTfJAqINLSh0d4KoIoE+5EG42uJPeTXDuDxpVHH4R5nzqxk1Ct5
-	 NW7LDGxcpXuOVjHMhG8ahYOt/uaDlZzhmWYtv+/b2580LFjJJ9xS4+lr6KmiiYri0Bke+VWzYxhy
-	 sPqdPDEcfzc341a9H4kUVehG5L0/ociq/P2j+GnN8gkPhcxzkbpQgbo7NxDP2kGPLeAwA8bPWwVV
-	 p6fJVOv1KFwUc7WukryBd07MbPSMEwNrTEGbvLr07Z1CQjk5aJZ7Gri89VxKv0X2jxXJJpZA3kV/
-	 s54fnlvwjfare/3qqfxBkGS4oRU+yekg3anKR8VdvdE5S+A7y/GX+AXDvLwB9TpsKZ9zg8uHQ/QW
-	 /Ii7c6QOKtY03P+NoPalujMCajnQsLk9PermHgKU+F6WiY3U+aeyt09OST52VALFAGXLnZfinU3a
-	 z1w8wh5pk6ZFQyqEIt0qI8n6PWpTNj+JZVYyi74e8rL/G2GcWeeZO4bAJekU9m+K22E94hDKbNDZ
-	 v4KwIiiMfHmFhn0uggiLcnMvv4aY2a/9ScF3K7PI6AkyQJaunwaUjX33EQAgvTOipfgw5dU8rKCP
-	 v+ox8MaJnn5eguzT+ikx7RbczyZxXdvIOsmX4o33pke+xFK0PF4hv/7VXvA43t1wHp+gHFtBioro
-	 LawTYZXJeGy3qcef21pbQVQBqHBL/XaDoAa/6XFw9lDi2Ejw1pOjuBS8kA9eRVlJoeCQUo2lE0/7
-	 w2xsFCzoyvB0YRmk+leqY29Fw7UQFkAtiQrSsLJeJduZqkvvztOCk295T+SGpDROGFrVHjxKf2Bx
-	 4gtlcVpwz1fnPEKnAHhSVMatX3MSMHF0Q80Py6nhArxU3B1fynNJkMUx9pCgHs0eKP71Bhfij/p4
-	 ODic4vcVBJyH2IEnrtVudlPX4TzFPiz4g9A5gNU/f84w2kWws5JkLc5hcFG4d1rZ9jSJ8Lcp5WsG
-	 U0BewuP0ZT/Jvl0LzYg+byRNH6ZF5NL31PjksCgaY7pLEPyJLrbtSuFUAPpAQh20oGvGu0U2/cWW
-	 zF1OhNdhXalt1jbpHt
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Guo Ren <guoren@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH v3 0/7] riscv: add initial support for Canaan Kendryte K230
-Date: Tue,  5 Mar 2024 05:03:21 +0800
-X-OQ-MSGID: <20240304210321.777296-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COKIpK6A"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c1f6a387a3so389591b6e.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 13:04:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709586286; x=1710191086; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8TVmEhSKhlDR6P3G5ys+4kcir1aOuZN32lH8jTi+5V4=;
+        b=COKIpK6ASxCm9dIaK4nb2Ijz1oMUXy96fGHOt8iSUP1UkfeodbXY9+McbOtBafb13c
+         LIdIuNb5CsqtTTEtk7rTgeaHCZ5sI7WP1dQ5nHFFhNDMWMCUasBLRgP9G5T3N6Vua9F6
+         gW6msJ6pHyk2XDkDe5n02eyb+ACt1jbXKqGB9FDgaCq/XC1CntEH1Bj2ivz2fZNdx8fr
+         +uSVWUYwC+n7PTBUSq5mwsFnk8FuMRRV3zRGXwBsU8j04+Ei0a+BJrPpG+Wgd3ONEnKE
+         CoZTiXMNEoIHtpcCqsAwBphAOUSrR17KWmmnDiS93Yjin3CTdbUhji56Tku5rhf6rcg9
+         sJ7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709586286; x=1710191086;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8TVmEhSKhlDR6P3G5ys+4kcir1aOuZN32lH8jTi+5V4=;
+        b=VRB0P4afDvGFngEp8PegHZWH7mxkQFQ5o7xo7pqSyuH1XNJqzFZ6E+qPRgxkXlTrbs
+         pJfBEuRK8kX5llxPVnRNKm23AIkALUHbB1AGog/0owR7bslE0SyXHn8Wl920QXJp35Wr
+         N5LUhM3t2uM9t3AUv50P+rJ0U5ynFGleSHzCXmsJ2dsamsJ0vBQetZ0hG1B30m7mxXph
+         U6btegJx766FWnJaJJUKsioyaRLyoGDHyDH8WHdpsQg7BghCPzvcnbdJ+3l4rM+8AD/T
+         xMGQc3iFCVk5imyjzu/n1DIB8+fK7pGIO+mIjJTu15VqBlJiF5h2/BZIiWhlvD9EOIC1
+         GTAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoON/zh4ExuXx8CD4j/2pqtBz/zTv42PgQvj/le4xXbHWHRT2iPwXIYbEYXcWqtPBZptCbO63bFVAr+HoeanMl4RKw8KnFgDYk8sDe
+X-Gm-Message-State: AOJu0Yx4Mn1zIRgJdjNIUhvbCnZrfaJrFEsdMa05Lxcnj24fxpuNbPhs
+	NTgiVAj1b8J2T5O1VmeuMBlA0ixng1KIP+9W+AaSx8p42PfelijL0uRZajeY32BYeqifT7ncjSA
+	xolCUmrJ30UU9a6QqTo8i+68pCOI=
+X-Google-Smtp-Source: AGHT+IH40sUK7/cQYOFbmLuq2L+jqwEit/A3MGsAyOy/hs1vuPRuz9cQpYooWpOftsRNDh2IOhs4cox54PoSdEH3TvU=
+X-Received: by 2002:a05:6808:f04:b0:3c2:66f:8be6 with SMTP id
+ m4-20020a0568080f0400b003c2066f8be6mr1223511oiw.43.1709586286341; Mon, 04 Mar
+ 2024 13:04:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240304103757.235352-1-21cnbao@gmail.com> <706b7129-85f6-4470-9fd9-f955a8e6bd7c@arm.com>
+ <37f1e6da-412b-4bb4-88b7-4c49f21f5fe9@redhat.com>
+In-Reply-To: <37f1e6da-412b-4bb4-88b7-4c49f21f5fe9@redhat.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 5 Mar 2024 10:04:34 +1300
+Message-ID: <CAGsJ_4yJ3yCyN_KgBO8W+jFx8RN6_JhS9OwX3FH6X_gpU7g62w@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
+ large folio
+To: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	chrisl@kernel.org, yuzhao@google.com, hanchuanhua@oppo.com, 
+	linux-kernel@vger.kernel.org, willy@infradead.org, ying.huang@intel.com, 
+	xiang@kernel.org, mhocko@suse.com, shy828301@gmail.com, 
+	wangkefeng.wang@huawei.com, Barry Song <v-songbaohua@oppo.com>, 
+	Hugh Dickins <hughd@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-K230 is an ideal chip for RISC-V Vector 1.0 evaluation now. Add initial
-support for it to allow more people to participate in building drivers
-to mainline for it.
+On Tue, Mar 5, 2024 at 1:41=E2=80=AFAM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 04.03.24 13:20, Ryan Roberts wrote:
+> > Hi Barry,
+> >
+> > On 04/03/2024 10:37, Barry Song wrote:
+> >> From: Barry Song <v-songbaohua@oppo.com>
+> >>
+> >> page_vma_mapped_walk() within try_to_unmap_one() races with other
+> >> PTEs modification such as break-before-make, while iterating PTEs
+> >> of a large folio, it will only begin to acquire PTL after it gets
+> >> a valid(present) PTE. break-before-make intermediately sets PTEs
+> >> to pte_none. Thus, a large folio's PTEs might be partially skipped
+> >> in try_to_unmap_one().
+> >
+> > I just want to check my understanding here - I think the problem occurs=
+ for
+> > PTE-mapped, PMD-sized folios as well as smaller-than-PMD-size large fol=
+ios? Now
+> > that I've had a look at the code and have a better understanding, I thi=
+nk that
+> > must be the case? And therefore this problem exists independently of my=
+ work to
+> > support swap-out of mTHP? (From your previous report I was under the im=
+pression
+> > that it only affected mTHP).
+> >
+> > Its just that the problem is becoming more pronounced because with mTHP=
+,
+> > PTE-mapped large folios are much more common?
+>
+> That is my understanding.
+>
+> >
+> >> For example, for an anon folio, after try_to_unmap_one(), we may
+> >> have PTE0 present, while PTE1 ~ PTE(nr_pages - 1) are swap entries.
+> >> So folio will be still mapped, the folio fails to be reclaimed.
+> >> What=E2=80=99s even more worrying is, its PTEs are no longer in a unif=
+ied
+> >> state. This might lead to accident folio_split() afterwards. And
+> >> since a part of PTEs are now swap entries, accessing them will
+> >> incur page fault - do_swap_page.
+> >> It creates both anxiety and more expense. While we can't avoid
+> >> userspace's unmap to break up unified PTEs such as CONT-PTE for
+> >> a large folio, we can indeed keep away from kernel's breaking up
+> >> them due to its code design.
+> >> This patch is holding PTL from PTE0, thus, the folio will either
+> >> be entirely reclaimed or entirely kept. On the other hand, this
+> >> approach doesn't increase PTL contention. Even w/o the patch,
+> >> page_vma_mapped_walk() will always get PTL after it sometimes
+> >> skips one or two PTEs because intermediate break-before-makes
+> >> are short, according to test. Of course, even w/o this patch,
+> >> the vast majority of try_to_unmap_one still can get PTL from
+> >> PTE0. This patch makes the number 100%.
+> >> The other option is that we can give up in try_to_unmap_one
+> >> once we find PTE0 is not the first entry we get PTL, we call
+> >> page_vma_mapped_walk_done() to end the iteration at this case.
+> >> This will keep the unified PTEs while the folio isn't reclaimed.
+> >> The result is quite similar with small folios with one PTE -
+> >> either entirely reclaimed or entirely kept.
+> >> Reclaiming large folios by holding PTL from PTE0 seems a better
+> >> option comparing to giving up after detecting PTL begins from
+> >> non-PTE0.
+> >>
+>
+> I'm sure that wall of text can be formatted in a better way :) . Also, I
+> think we can drop some of the details,
+>
+> If you need some inspiration, I can give it a shot.
+>
+> >> Cc: Hugh Dickins <hughd@google.com>
+> >> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> >
+> > Do we need a Fixes tag?
 
-This kernel has been tested upon factory SDK [1] with
-k230_evb_only_linux_defconfig and patched mainline opensbi [2] to skip
-locked pmp and successfully booted to busybox on initrd with this log [3].
+I am not quite sure which commit should be here for a fixes tag.
+I think it's more of an optimization.
 
-[1] https://github.com/kendryte/k230_sdk
-[2] https://github.com/cyyself/opensbi/tree/k230
-[3] https://gist.github.com/cyyself/b9445f38cc3ba1094924bd41c9086176
+> >
+>
+> What would be the description of the problem we are fixing?
+>
+> 1) failing to unmap?
+>
+> That can happen with small folios as well IIUC.
+>
+> 2) Putting the large folio on the deferred split queue?
+>
+> That sounds more reasonable.
 
-Changes since v2:
-- Add MIT License to dts file
-- Sort dt-binding stings in alphanumerical order
-- Sort filename in dts Makefile in alphanumerical order
-- Rename canmv-k230.dts to k230-canmv.dts
+I don't feel it is reasonable. Avoiding this kind of accident splitting
+from the kernel's improper code is a more reasonable approach
+as there is always a price to pay for splitting and unfolding PTEs
+etc.
 
-v2: https://lore.kernel.org/linux-riscv/tencent_64A9B4B31C2D70D5633042461AC9F80C0509@qq.com/
+While we can't avoid splitting coming from userspace's
+MADV_DONTNEED, munmap, mprotect, we have a way
+to ensure the kernel itself doesn't accidently break up a
+large folio.
 
-Changes since v1:
-- Patch dt-bindings in clint and plic
-- Use enum in K230 compatible dt bindings
-- Fix dts to pass `make dtbs_check`
-- Add more details in commit message
+In OPPO's phones, we ran into some weird bugs due to skipped PTEs
+in try_to_unmap_one. hardly could we fix it from the root cause. with
+various races, figuring out their timings was really a big pain :-)
 
-v1: https://lore.kernel.org/linux-riscv/tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com/
+But we did "resolve" those bugs by entirely untouching all PTEs if we
+found some PTEs were skipped in try_to_unmap_one [1].
 
-Yangyu Chen (7):
-  dt-bindings: riscv: Add T-HEAD C908 compatible
-  dt-bindings: add Canaan K230 boards compatible strings
-  dt-bindings: timer: Add Canaan K230 CLINT
-  dt-bindings: interrupt-controller: Add Canaan K230 PLIC
-  riscv: Kconfig.socs: Allow SOC_CANAAN with MMU for K230
-  riscv: dts: add initial canmv-k230 and k230-evb dts
-  riscv: config: enable SOC_CANAAN in defconfig
+While we find we only get the PTL from 2nd, 3rd but not
+1st PTE, we entirely give up on try_to_unmap_one, and leave
+all PTEs untouched.
 
- .../sifive,plic-1.0.0.yaml                    |   1 +
- .../devicetree/bindings/riscv/canaan.yaml     |   8 +-
- .../devicetree/bindings/riscv/cpus.yaml       |   1 +
- .../bindings/timer/sifive,clint.yaml          |   1 +
- arch/riscv/Kconfig.socs                       |   5 +-
- arch/riscv/boot/dts/canaan/Makefile           |   2 +
- arch/riscv/boot/dts/canaan/k230-canmv.dts     |  24 +++
- arch/riscv/boot/dts/canaan/k230-evb.dts       |  24 +++
- arch/riscv/boot/dts/canaan/k230.dtsi          | 140 ++++++++++++++++++
- arch/riscv/configs/defconfig                  |   1 +
- 10 files changed, 203 insertions(+), 4 deletions(-)
- create mode 100644 arch/riscv/boot/dts/canaan/k230-canmv.dts
- create mode 100644 arch/riscv/boot/dts/canaan/k230-evb.dts
- create mode 100644 arch/riscv/boot/dts/canaan/k230.dtsi
+/* we are not starting from head */
+if (!IS_ALIGNED((unsigned long)pvmw.pte, CONT_PTES * sizeof(*pvmw.pte))) {
+                   ret =3D false;
+                   atomic64_inc(&perf_stat.mapped_walk_start_from_non_head)=
+;
+                   set_pte_at(mm, address, pvmw.pte, pteval);
+                   page_vma_mapped_walk_done(&pvmw);
+                   break;
+}
+This will ensure all PTEs still have a unified state such as CONT-PTE
+after try_to_unmap fails.
+I feel this could have some false postive because when racing
+with unmap, 1st PTE might really become pte_none. So explicitly
+holding PTL from 1st PTE seems a better way.
 
-base-commit: 45e0b0fd6dc574101825ac2738b890da024e4cda
-prerequisite-patch-id: 2374c56c0032e616e45854d2bc2bb1073996313d
+[1] https://github.com/OnePlusOSS/android_kernel_oneplus_sm8550/blob/oneplu=
+s/sm8550_u_14.0.0_oneplus11/mm/rmap.c#L1730
 
-Dependencies: https://lore.kernel.org/linux-riscv/tencent_88FEE0A2C5E0852436A2F1A1087E6803380A@qq.com/
--- 
-2.43.0
+>
+> >> ---
+> >>   mm/vmscan.c | 11 +++++++++++
+> >>   1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> >> index 0b888a2afa58..e4722fbbcd0c 100644
+> >> --- a/mm/vmscan.c
+> >> +++ b/mm/vmscan.c
+> >> @@ -1270,6 +1270,17 @@ static unsigned int shrink_folio_list(struct li=
+st_head *folio_list,
+> >>
+> >>                      if (folio_test_pmd_mappable(folio))
+> >>                              flags |=3D TTU_SPLIT_HUGE_PMD;
+> >> +                    /*
+> >> +                     * if page table lock is not held from the first =
+PTE of
+> >> +                     * a large folio, some PTEs might be skipped beca=
+use of
+> >> +                     * races with break-before-make, for example, PTE=
+s can
+> >> +                     * be pte_none intermediately, thus one or more P=
+TEs
+> >> +                     * might be skipped in try_to_unmap_one, we might=
+ result
+> >> +                     * in a large folio is partially mapped and parti=
+ally
+> >> +                     * unmapped after try_to_unmap
+> >> +                     */
+> >> +                    if (folio_test_large(folio))
+> >> +                            flags |=3D TTU_SYNC;
+> >
+> > This looks sensible to me after thinking about it for a while. But I al=
+so have a
+> > gut feeling that there might be some more subtleties that are going ove=
+r my
+> > head, since I'm not expert in this area. So will leave others to provid=
+e R-b :)
+> >
+>
+> As we are seeing more such problems with lockless PT walks, maybe we
+> really want some other special value (nonswap entry?) to indicate that a
+> PTE this is currently ondergoing protection changes. So we'd avoid the
+> pte_none() temporarily, if possible.
+>
+> Without that, TTU_SYNC feels like the right thing to do.
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
 
+Thanks
+Barry
