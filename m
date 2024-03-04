@@ -1,90 +1,113 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5695911713;
-	Mon,  4 Mar 2024 07:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6374912E4F;
+	Mon,  4 Mar 2024 07:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709535983; cv=none; b=A6hDM9i3OJHDZToChUFseZlQGK0SCZYnA5ewgzqfUfIlQxcI8BcM0Vq6i3DImMFPD23JvbTa2v8/dKBubZ8LOsD4rr5srJ71ggDckeZn8zfZ2m/9tM+US+VJUUSO3M9mGXmVQ0s16jQh4D5f9Mlsem6eTiEFf3nuvdNHFz0vUgY=
+	t=1709536067; cv=none; b=QwVetv2OrmF+zpD4/pSxb7eVS/p+QeaQg6n28sC3Q1w5D72dEGMbUEbIrX7HmbfDSJiltTajTY2Q1tFA9s7dThOOwyuf/H27weYCIi1urpicOmiex/yYxclpWuiPce0KTanxx+O3b80lwoHAJ/eQ335AceTrj/ZDXCLZ2loUM2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709535983; c=relaxed/simple;
-	bh=bu/CNzq/D3hnEEr3AOVp/iiwUc8F/2qAm4XX6DSlh/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=bzyCi6ardLGrmnGEDj7eNq6Ts8xNYLpS8UtlFCzv6iPJVvjE0gzwRFhWXq35dLyq1FYs/BieZM0H9I/SbclTMhNinauuQe0OoJxbUKpGWWzGJLstO7dJz5zU0iK9mhn6J2sz7jPIww8aMnCAy1TMUdx8sNIcr+d6e4Vc8K5/2tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gZFF8td0; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709536067; c=relaxed/simple;
+	bh=60SVu1KVHedJVfxJcO9wjvgnDUx3m4ZLvGGuTu8iRX0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QQek5yBSqipQATADpbQ8+z2Fy2pLItvq04t67wj1CC+EMctzS7Gq7Kdhfpu5HiGT0LLKkeDcIsOF0n3yWDkZawEsNCfgaOVoq3jKUyG0eFMD7dOpA0IifJ6fRyJu5OWJp5jxMDjdRZt/XPNpF8WX948DZlmBFM2MlSJKn3kfng0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v3BwV6w6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TzZh3cXI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZFF8td0"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-564fd9eea75so5904967a12.3;
-        Sun, 03 Mar 2024 23:06:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709535980; x=1710140780; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bu/CNzq/D3hnEEr3AOVp/iiwUc8F/2qAm4XX6DSlh/o=;
-        b=gZFF8td0dWiSNPJd00QnbzsrsZvQf0WGbxpreTEjrykWKPcfP8FlLBTZJjx59j76z3
-         5klS565ryZ/hScCJe6uyyv6yrZ/o7wWZjvsmxZryni/K5k797q6GXX0Tz8o0Ju0IcVBv
-         EsVCEYZ1R/xnpvpLiH+tQXioJBL21bHpi78wiuQXPDpnTOXJCuZ4UgmYVCucnyeqyNzn
-         dRjkk4q2bmk0Xs4DdXqyWTLf/Hpi1XJfEJ4i93fspqyKG66c5YFNpjPtS5Dxea7weazL
-         eI5kqw6i3+e5f3fS4S8n4Zbj/f4XlvbgRiFbB97+y9wj3tfi/wXSFGl5u4FhEYYXh138
-         Iw4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709535980; x=1710140780;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bu/CNzq/D3hnEEr3AOVp/iiwUc8F/2qAm4XX6DSlh/o=;
-        b=CoTrPUOo9XE0om33+LDQCicDy3OVjaCJbjxsNMg+/AYjgFQ8RYPJd8rRajUk/R5O5d
-         jGeLv9Rn5EwkbOUtHy/F9EuCKrFxUu+OZ6d8mY5hELWQJcQhZmJze0In71MD6imMmcTK
-         KeJSpfiD+lxHPJPdjT66D5o0Gc94xPIq54K6HHXino2OK0UDgOW+7q+jRyJ2yQAMWh7A
-         eToA+fBt2EyuB3U0SugRv0LPphH1l63CIDsVWMdL+I2Z2/UZixTf09VSpxX9wmJdWD8a
-         giHtV4eCjIHZK1KIfbFEMeU9ELvH4sL4HZbBdveCrPR0mwfNxtdg9kFPV4QhCEG50mt7
-         +Kig==
-X-Forwarded-Encrypted: i=1; AJvYcCVnB2OMcEUvbLfokZU4JNGiOWKHuUlkc5IMpEKO+A3u9imoYDn+IKkbJY36/E6eGJCB2eLviRxm4WXppqyPX451fPy7guPxO6YroHFeapKUaLiChbAySg9AObsIq+OEgggnjY/Dt4RAQ1Be8cC1rS3M2kxh2l65q3sZDvAzqPUnbW08zKljPF1S
-X-Gm-Message-State: AOJu0YyIlBi8mABJfj7OD/feI+1CoqhWlf0aYomDGULgiK/WsDpcVM9f
-	klLrROpB4PNu8Fb+clGR8IKepjbfvhawnRUEGn51WRTZHye7bSr4l95yO7ACaSVOY18qgfbSg3R
-	LOeAOxRGzBPGrgSj5+X5rImkuk10=
-X-Google-Smtp-Source: AGHT+IF7R4mdCSpEefF4n6saDdKVfyULSPlhKZqpG1teF+3r9bzzsrYNTGStc3z3IQjOySZ9x9xzBe2sNH5+7cPFfmU=
-X-Received: by 2002:a17:906:4108:b0:a45:4416:1fa4 with SMTP id
- j8-20020a170906410800b00a4544161fa4mr1102563ejk.40.1709535979561; Sun, 03 Mar
- 2024 23:06:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v3BwV6w6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TzZh3cXI"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1709536064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=60SVu1KVHedJVfxJcO9wjvgnDUx3m4ZLvGGuTu8iRX0=;
+	b=v3BwV6w6KaPN4Wp25kEa7zvrQRv6IeRbPnlSIPu2PjFRPH+HNW72t7QKZBcqIITs/lfF7R
+	lFb6pnVU2HmFXmU5SDSpeP0Ob/R2Tdu0NMhrVkLjLFdfHK+aWEHVEH4BJYgIl0NQTKeic2
+	8ll0FlaW93mvS4DRPSc5/uvxvcoQ7aM7cdfv02ISV0LuSruoN4fWsfLvnZ84v2IsWsqIJe
+	ZwX7RMPMARvPgCbDA6YSAy7+RWXl2JLOD1rTD6lGaL6pvTI7I96G2tYPAERAowHB3ezSBp
+	XNJUZnT43aFVL645x0uvcubl4sVNSjIDo8N67Fzb8aP6u3QJM8o5uN6bn17kfg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1709536064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=60SVu1KVHedJVfxJcO9wjvgnDUx3m4ZLvGGuTu8iRX0=;
+	b=TzZh3cXIGv03GDF2Z7s7WIsb9G3jhkVcJ3YJBatqRbF/mjku8eCQSY0YyabxKE0oMYXcnh
+	kYWQLoGOIectnTBQ==
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, kernel test robot
+ <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>,
+ x86@kernel.org, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, Sparse
+ Mailing-list <linux-sparse@vger.kernel.org>, "Paul E. McKenney"
+ <paulmck@kernel.org>
+Subject: Re: arch/x86/include/asm/processor.h:698:16: sparse: sparse:
+ incorrect type in initializer (different address spaces)
+In-Reply-To: <CAFULd4aEe2KU=UXEt2=GeLQq2uTSFvydBiwAdSa7B6T61Am=5w@mail.gmail.com>
+References: <202403020457.RCJoQ3ts-lkp@intel.com> <87edctwr6y.ffs@tglx>
+ <87a5nhwpus.ffs@tglx> <87y1b0vp8m.ffs@tglx> <87sf18vdsq.ffs@tglx>
+ <87le70uwf0.ffs@tglx>
+ <CAHk-=wiWhfdc4Sw2VBq_2nL2NDxmZS32xG4P7mBVwABGqUoJnw@mail.gmail.com>
+ <87edcruvja.ffs@tglx>
+ <CAFULd4bVEUBEidTLbHNzRaJbSjXm99yC8LT=jdzFWb7xnuFH7g@mail.gmail.com>
+ <87bk7vuldh.ffs@tglx>
+ <CAFULd4arHT+_fy9_oUNpmsvyfVPGaeB_pdeuqVS3UTpP5R757A@mail.gmail.com>
+ <CAFULd4b0HN6eUJsOW6po8Hf16T3eMhjdKUvw-TS8yncNn-+Vyw@mail.gmail.com>
+ <87bk7ux4e9.ffs@tglx>
+ <CAFULd4aEe2KU=UXEt2=GeLQq2uTSFvydBiwAdSa7B6T61Am=5w@mail.gmail.com>
+Date: Mon, 04 Mar 2024 08:07:43 +0100
+Message-ID: <878r2ywk3k.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304034632.GA21357@didi-ThinkCentre-M920t-N000>
-In-Reply-To: <20240304034632.GA21357@didi-ThinkCentre-M920t-N000>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Mon, 4 Mar 2024 15:05:43 +0800
-Message-ID: <CAL+tcoBbBgubwcghyT30Zk7g8SZYbTx1fKCvPDYqcJjQ8eGbOQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] tcp: Add skb addr and sock addr to arguments
- of tracepoint tcp_probe.
-To: edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	fuyuanli@didiglobal.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 4, 2024 at 11:46=E2=80=AFAM fuyuanli <fuyuanli@didiglobal.com> =
-wrote:
->
-> It is useful to expose skb addr and sock addr to user in tracepoint
-> tcp_probe, so that we can get more information while monitoring
-> receiving of tcp data, by ebpf or other ways.
->
-> For example, we need to identify a packet by seq and end_seq when
-> calculate transmit latency between lay 2 and lay 4 by ebpf, but which is
-> not available in tcp_probe, so we can only use kprobe hooking
-> tcp_rcv_esatblised to get them. But we can use tcp_probe directly if skb
-> addr and sock addr are available, which is more efficient.
->
-> Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
-> Link: https://lore.kernel.org/netdev/20240229052813.GA23899@didi-ThinkCen=
-tre-M920t-N000/
+On Mon, Mar 04 2024 at 06:42, Uros Bizjak wrote:
 
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+> On Mon, Mar 4, 2024 at 12:49=E2=80=AFAM Thomas Gleixner <tglx@linutronix.=
+de> wrote:
+>>
+>> On Sun, Mar 03 2024 at 21:24, Uros Bizjak wrote:
+>> > On Sun, Mar 3, 2024 at 9:21=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com>=
+ wrote:
+>> >> On Sun, Mar 3, 2024 at 9:10=E2=80=AFPM Thomas Gleixner <tglx@linutron=
+ix.de> wrote:
+>> >> > That's so sad because it would provide us compiler based __percpu
+>> >> > validation.
+>> >>
+>> >> Unfortunately, the c compiler can't strip qualifiers, so typeof() is
+>> >> of limited use also when const and volatile qualifiers are used.
+>> >> Perhaps some extension could be introduced to c standard to provide an
+>> >> unqualified type, e.g. typeof_unqual().
+>> >
+>> > Oh, there is one in C23 [1].
+>>
+>> Yes. I found it right after ranting.
+>>
+>> gcc >=3D 14 and clang >=3D 16 have support for it of course only when ad=
+ding
+>> -std=3Dc2x to the command line.
+>>
+>> Sigh. The name space qualifiers are non standard and then the thing
+>> which makes them more useful is hidden behind a standard.
+>
+> With GCC, you can use __typeof_unqual__ (please note underscores)
+> without -std=3Dc2x [1]:
+>
+> "... Alternate spelling __typeof_unqual__ is available in all C modes
+> and provides non-atomic unqualified version of what __typeof__
+> operator returns..."
+>
+> Please also see the example in my last post. It can be compiled without -=
+std=3D...
+
+With gcc >=3D 14. Not so with clang...
