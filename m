@@ -1,192 +1,274 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808247AE47;
-	Mon,  4 Mar 2024 22:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709590210; cv=fail; b=ZO4oFvNvqz5920cuCrEYhlU3pJgJWz7wk7Zjy9rqJSPFNGIVCIFZDlINY7XO+flBeNCcXWvJlqDJxpw+E2A831KQaHM9HEVmrR7jl5L+e8F3kJPfWfRFaA9pM4k2PwiyhTYpiLcxEIKVUURg6cI3Fq/g/unI/6Nh31pJFqNkrDE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709590210; c=relaxed/simple;
-	bh=UqwD2n/gx+v7cklMxC/zHKNWYI+LL1BgBHpLBhIE7A0=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BYQECO4gLXJEHOwo9IRGYSIfppiK9c8I0UOVvOCDh6NlG/dxiS7y352i6SyRmiz32CAd5flmb/moZkKyoLYWdiRNTFBo5VAUC8dLzgpAYWg2LEMeEqhVAUeElOKI2/2yBImKTnGQ3GBCXX2i0Ul077fWE73iVopXzWKkxNiq9aA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MbTf6s++; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0975C78B5E
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 22:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709590535; cv=none; b=SdHLDd6EMVqZYZQGw3OkF6jP4oghHTW9di/4ro5ve/bqYgAfEdl/Lc+usfQKJx50gdv39nYBTpkhDrg6WoJG3IvBMJjxiuq8aCa2S3e3Rihd1dwA5yVpEwbEtsvUYPcT7Dvs1t01cuIzai4NktI8P7/AnZwxTOrgxBqRdRGW7NI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709590535; c=relaxed/simple;
+	bh=Ywwfa5hw3g3wV4YuKstMZgWxolfExRYUJDz6ONhDQPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UyeOhAsH0BH4SrNL3Wm+V/E2rXQGvDsgtEl+f5IINRa2L0HXwFthVA7FR6KPTq+YE1cWKLCRX9ECxgd5UnvtMFWYaFsZYaugBDdicwB+qlrY6doZlbxU/GrGGaqqXgY+4G4kjQMdyvqC5LzyDJ7Sq47TcWIZiOvtB/dBOhebbr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GByNeGXu; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MbTf6s++"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709590210; x=1741126210;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=UqwD2n/gx+v7cklMxC/zHKNWYI+LL1BgBHpLBhIE7A0=;
-  b=MbTf6s++1XnQPIsUOW14GfnZygd5wrHQo6wLVvgI04XrE6SqqdoxCEpQ
-   yARpTQpfsfqkSMdfU9WWLoy3H4krVEYZUbS8LgkwILedgnaAQ2+HXIcN0
-   si48z4wYjAU4+x13fgzGQT9olA17Y81rY0dGU/XBJsdnklezNmfT2g9Gh
-   ecjahRhVCle5O03pyjjUzIcTy16vmzt040u9pCu67kEiUhish5BLTRDSK
-   sGMU9Y/Jui814q+ODeXpy4hbEiVynOv4RB6CXTYXQCY17IUdVa0Z2yoXS
-   zni8PnsanGNuanVpOpu9vAlef6+E7ZLt6LI90qitfqZMNQGpp/vj3giID
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="7929076"
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="7929076"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 14:09:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="8989126"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Mar 2024 14:09:53 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 14:09:52 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 4 Mar 2024 14:09:52 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 4 Mar 2024 14:09:52 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CF39dOq0XWR5PJxb+zWWcc2mboW2I/leH6u0PH43+DAheoFiRTPjowbZuI7BznRxRSDgkKLR5iYNz5RGkTMIdRhl9eUjdYe9vTySagqqhODgYslMvgHHN0lfIpDQIyEOAoAAf0oPM/JrBmmyW1xQ73yfF0CyJ5CiFegNHU0tsfW8fRahuqkKJS8RORT4diGKtbpmLm0BtanXEcDDT1PfjGB7XL7ybApudUJRoUtYNMUXYKNWc/uYAxeSX9V9Zp4HeL4Gj3NofhbPXikBbDULmTZeWRAKWrcT5PgDEO/qH9THZVNJsutwZkS1mu2+2wHeZVfNjjU7bKkp4aEtQdT+0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ALnQ83HWOFVyhETRtRIp9jFjscQVbnh9kHDpA0eQ9WM=;
- b=kOHafwhalBRoDY6fMyX8TQ36PYNWzPX+fZ8CmzZ8G7wNwXdJsj05vYRPW6dctJs57a0uNcSCycgb9KEAEBZ2j9D7angfPn3zHaAWPB0PbIUZEs2IHvOE3H5wqTaqaIRU2CYWYLSaciqHXyx4rUgPN/Op4JWtfya3JM5XmPsZ+DGcoc9R6L/g9UAOF0GKTD2Wtf2Iv/ul5dI+R647qrcks6MVgh2f/u4A3I/fgfnUob9ZXle/GuzBqccIxJ2rumonzVYHxFVKCHxpLxmUrcQCnxKDS+vqmlqT4WpnaDoDaT6TcstL4ICBll0uqSNmWB5dwmGJK8kccDhMpE6nyNGmIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BL3PR11MB6435.namprd11.prod.outlook.com (2603:10b6:208:3bb::9)
- by PH7PR11MB8122.namprd11.prod.outlook.com (2603:10b6:510:235::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.22; Mon, 4 Mar
- 2024 22:09:50 +0000
-Received: from BL3PR11MB6435.namprd11.prod.outlook.com
- ([fe80::9c80:a200:48a2:b308]) by BL3PR11MB6435.namprd11.prod.outlook.com
- ([fe80::9c80:a200:48a2:b308%4]) with mapi id 15.20.7362.019; Mon, 4 Mar 2024
- 22:09:49 +0000
-Message-ID: <827d22da-fb32-1012-422d-d283b28ce5ec@intel.com>
-Date: Mon, 4 Mar 2024 14:09:46 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] i40e: Prevent setting MTU if greater than MFS
-To: Erwan Velu <erwanaliasr1@gmail.com>
-CC: Erwan Velu <e.velu@criteo.com>, Jesse Brandeburg
-	<jesse.brandeburg@intel.com>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, <intel-wired-lan@lists.osuosl.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240227192704.376176-1-e.velu@criteo.com>
-Content-Language: en-US
-From: Tony Nguyen <anthony.l.nguyen@intel.com>
-In-Reply-To: <20240227192704.376176-1-e.velu@criteo.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0258.namprd03.prod.outlook.com
- (2603:10b6:303:b4::23) To BL3PR11MB6435.namprd11.prod.outlook.com
- (2603:10b6:208:3bb::9)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GByNeGXu"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5dca1efad59so4239713a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 14:15:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709590533; x=1710195333; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CSTIJJSftklFQL8UGUvWnO8gT1gJvRrz6tflwqRvH64=;
+        b=GByNeGXu3mpKAP7KYOO2fiHJHa12KRG5RXYRwRreTb8kjQGlPb0RYVix/kQssGHzmg
+         JyZkr1G+DCzUaVkvFbYRvhxx9+Kz6YtOI5GvgK/VnU6jiDY/q8suiKabRqggLFwKc7cF
+         0FCcwp822HVaZE8nCNLytXMZK1IGGepTyQhh9k+9FAHHwiZm7tIKUapF/7ha6Ggi+vit
+         LbRq6SJUvTvGRHwyDoex4Z49D1LSVb4CTHynN1rJn2vW53bZ6A19OF+teVNUWP0wGo7H
+         XJz2WQ5ipdscUGNS2SFFGtqmiNBmrd5Jpr3Ltf+N90XXkx/ja3yqa/4QVuZngYMLhHs9
+         B4aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709590533; x=1710195333;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CSTIJJSftklFQL8UGUvWnO8gT1gJvRrz6tflwqRvH64=;
+        b=pXqj7mhAPNBHwcRQq/a1NrvcI3jHlG3mFDmEs7eOzdoSZqq/YFSj1RKf+9aHZJbXgW
+         9Op/MIDQ+mprty5z1q3twNfBE4KVBFT7yscX8z3t/t9+QtI7rJQP8BVW5sFGik/hXk8r
+         9GAZvi0zSd1fskt6dcNCUxd5xfj1+cvOr/8IQXBbUiAHEN6TmKuAEGpC9woocD0sH6yv
+         qw2vlJEUx431Uio2ui6AO8PoISFmASWhcTtZ9J3q9leb/GkfSvwLF9HN6BIvGqqfVTFy
+         PYrGBydHcjZ+BzeCl4PsqmOHC42qUWqXqnUkTXMCul9ZiIXF2IwWuj7ajyY6g3cfMM+P
+         +SQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVp2OCl6c0n0GZ5W4Q4z1+1E2D+G9mK4o2U7H9pY3bboDo7T+mJftYR5iTTY3le2Es6UojfvhZc+5MO3vLT9MirwQiB2nytD8DEukSp
+X-Gm-Message-State: AOJu0YyteXkXE9PB9xy5cCOhlmxstq1Wjd1O22WzhhaYukqQrsQd5rgU
+	EY0/nbeBDABpxegPRw1U2IUWvC4OoYcHpMV9srwH1L0m5dv1wa18yafAsc2vnAnSHVr915muW05
+	Ts3Eh
+X-Google-Smtp-Source: AGHT+IHt/hQua7h8iZoyVsAhREKa+jlMeGGZA/YCtHYwR0B6JyCyglCHiHhKof9hlPuS6WTl1DYncQ==
+X-Received: by 2002:a05:6a20:938f:b0:1a1:e75:477c with SMTP id x15-20020a056a20938f00b001a10e75477cmr39790pzh.9.1709590532931;
+        Mon, 04 Mar 2024 14:15:32 -0800 (PST)
+Received: from google.com ([2620:15c:2c5:13:e901:e760:20cd:d870])
+        by smtp.gmail.com with ESMTPSA id hq4-20020a056a00680400b006e4e93f4f17sm7817163pfb.117.2024.03.04.14.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 14:15:32 -0800 (PST)
+Date: Mon, 4 Mar 2024 14:15:26 -0800
+From: Igor Pylypiv <ipylypiv@google.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+	Jason Yan <yanaijie@huawei.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Jack Wang <jinpu.wang@cloud.ionos.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Xiang Chen <chenxiang66@hisilicon.com>,
+	Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	TJ Adams <tadamsjr@google.com>, linux-ide@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] ata: libata-sata: Factor out NCQ Priority
+ configuration helpers
+Message-ID: <ZeZH_jX4SO9YxgXk@google.com>
+References: <20240302201636.1228331-1-ipylypiv@google.com>
+ <20240302201636.1228331-2-ipylypiv@google.com>
+ <5c20140a-79e8-4d0a-899a-d4ec5c9def42@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR11MB6435:EE_|PH7PR11MB8122:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1cec3ba3-b35e-4be9-b15e-08dc3c97cf3b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +9r6ELQHYsclLDe8u/Ql1+ziYC+PFM3xbM7xwGIbb/TAHSjScsO+Ltn4xh1qWREpH+rixxLIAGO1LfLvT1I90Hd8NYul8kUfjlclkSlhHWyB/l6YXcR28w/nPuCejP/MRzwz2vl98azelLy8YUaQqikOBsryjqufNly+9c0xc80D0/QO0EC1nJM8D7ZdUuY4m8q/1u10MbXoA5Vz759RL2pMrknUTAaYCll3JlW93gjVpQCp7pEIPCHJ6EkHf4Vg4vtazzOitC21LX169B3PRkGvcYIhvdBSLjAR2aGfUTZiQMXwTR4E80vS1wNMH2HlpIAcmkPUwD3T9xcDsv8/YcPmbgQWpXBoxBuOGO5jSoGznlNfQ/FR6ZZ3SAcV8XXqQ+03ffrko5meKDgPvGy14zpxghOI2IFgtuI/Pj+ogcAq8RhokA7Fe/c+4Kazrv3Nwao4lp6CltWbki2v3s+TnVUi0P84n0+cxyj9O7em7bEswRo1hrKuWqLFaUbbtNjO/TS+H20HvVcf4coG3K5aenkP6xLWfpOs5SZn6G5x6fKm5V5X+SI5IxXOFElX+6n3JoItsVUbCSLNGiG0ZyWx5Kq9tXv69uXgqVOk2amdAOvRqTnC+Srtkg+xmGQlFziXlWAlzBaU/+Yq3xKGrdPDpYqjmfyM75R+qcxGHPwgIdA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR11MB6435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Tm1XTm9yMjE3dm9oYWlQL1FZWUFFSzdCeDN5NGVzWXB6N3ZkNlJXRmJ2dkh6?=
- =?utf-8?B?T1p2ZzRQdjZheFFhMEw4aU5HN2lLSU1ESmpjM2hEVnkrRWlpN2dxbFRNdjF0?=
- =?utf-8?B?ZkNrMlFhUGNHTGt1MTJMVHEweE9lckJnMXBIN2x4TE8vb0ZuM2E4SFlEQ3I5?=
- =?utf-8?B?TStwRHExNEhleTFUZGEwdVRPcEpsS3B4ZkJqWU9JTjljS1lKSDlmK3c1VkZ1?=
- =?utf-8?B?Y2p3VklId2daRUR3WTMwZG50eHovTHpHSTBUMHZsS1ZEM3BYUWxzWjJiR3ds?=
- =?utf-8?B?NG1PYS9pMzhXVllIbTR5N1JLYlRGMkJJVFJZQjlrYzdSMFBZQXg3bG1zMkVQ?=
- =?utf-8?B?TVhaZXZYSXBLRzZ3VEt5RzBnL25WYkczQzBwWFB3cThsd3R3VDArVGhBeVhi?=
- =?utf-8?B?YWpEQVl0ZllYYmcvajJydStJOXdlbm1VRFg2bHYxQ2wrMkdSSUtwTXhoVXIy?=
- =?utf-8?B?aWpTQWgwNmJGT01JQTJCT2llbkNpQStiZjNhdXhra05tQyt2U3UyaVNwYXlU?=
- =?utf-8?B?L0ZUazdDYjV3THFHYVNlMmdUVFNKZ1NNLy9OU1RWYk5jWnRieG9ueThsbnVW?=
- =?utf-8?B?QjgxWlUrYVpJK0lWYmV3ckdMcWF6NkRMdlBtaFRpcUVFZG1Bb3dnQzZ5UjE3?=
- =?utf-8?B?dTk4N1Y0TW9malNoYXhQK2piUFFXbW95MHMxWnZTRXowcGdTdnRySmZHVUF5?=
- =?utf-8?B?MTVaV1pPQzZXeFFMYnZEVzRWZ3UxRkRHR2pvK25Udy9EQkJyZ05TRUw3QUgz?=
- =?utf-8?B?MWhIaXU3SDZnR3IxcnJtb2QvYkpCVGlOY2Fxb2d1c0E2eWhtS0RzRnVSYzhz?=
- =?utf-8?B?Wis2WGluTHlZZ24yVjQ1VUMvcUJ4eDFad0szVndXSTg4NkFXSlBzM3VtOTNF?=
- =?utf-8?B?dUMreXVjY1VQVStuemgrcjJaUkd4L042ZHNWakpjM2NZN3NYN1hsYS9JRDN1?=
- =?utf-8?B?WlgxUzlVRzkrSjYvQmp1Q0wwZG5UUVFSL3IvRkJkZFhDVEZnanB3dTg4dTdw?=
- =?utf-8?B?T1BCNXg1dXBaY0x1QVpnbHc0WjU0QVNHd1B2Z0F6cTc1M212c29qd3NvT3dY?=
- =?utf-8?B?RmFWY3ZIVVpydHBQQndrazFuUGdYNFBhcmRnbU10ZEM1cW1GTjFtZHlNbGdi?=
- =?utf-8?B?QnpHOUJhZ1RPRkRzNjZTcG02VUxnVDhFUElwY0w3OHJhSC9ZSmhHQnhQamJB?=
- =?utf-8?B?ZEtYRUF2bmpvRTNFaU56b1U2UXUzTy9sMmpLcXZPMVo0TXpQSEhCVkFXTmtF?=
- =?utf-8?B?SS9EWWhTMGs2UjhpTTJUWVFsQk1WR0VPaTZLenNqOFowbHdoMlh6OS9FRXZC?=
- =?utf-8?B?SlNZSTVIRXZYbDc5RFZlQjJIRHhFcE1jY01Lc2dhUDh4SVMxaEVIaHNwTjNq?=
- =?utf-8?B?dktvZlhiU003WUErdlNwcTFuK3VPeTMrdHhZVlJSZlV5Zy9ON1QvaDBITjRa?=
- =?utf-8?B?OHpCZ0d2aEVoWXNFeDlOcjEwUmxzWWxPblU4NnA1S1RiSnlYU1cybTFGTDFr?=
- =?utf-8?B?bGNrSHlJWklGN09PdWs3R0dxd1N1WGJMT3Y4b2crTW4zNHVrSndIWHYraTJ6?=
- =?utf-8?B?cGxGSG9TTlpKcVVXVlFuY3NXT0pleHVSWFcvT0JGZjcvdFdBZ2s4SlNGdU5s?=
- =?utf-8?B?UGwxYnlkalZyUFAydjk4dVRQSko1aFJFUkVWL1lDTWVxV243M012M0hHejZE?=
- =?utf-8?B?bFNKL3JPQWpVVzg0MmQwY1Rod3NCcUc5ci9tYSt5QUNSR0ZEaVJSNjUrZTc1?=
- =?utf-8?B?U21wc1o4S0hHV0owcEY0MlhkdWxhYk1XRHhjbjRONEhrK09uaVhmeUZDY1ls?=
- =?utf-8?B?OHFuS3MzSmc5M3VoS0ErWnlySllYU2pxU3l1V09zWkJjRU04SlZibnpZc2pU?=
- =?utf-8?B?cDhTMDQwaU5jcDVyaFcreHZFbS9aMnIrQ2I5OTFaUGViQm54VU9nY1pGemZZ?=
- =?utf-8?B?SWxxWVhaa0pvNExIUEpWYXhhejBuTHBpdGdZRWF3ZDJyNmJuNTZlR3N6Rjdp?=
- =?utf-8?B?NlNCSjl3YUpQSEFXOERhRm9pZFFnbGRiUGpEcGRaU2NJakJSTjlJMm1lVFdk?=
- =?utf-8?B?WmVHTG9TYm16SFZjM2t5dnp4THl4N1FSbHBiZWd2eWRDZEwveGpCLzd3VDVu?=
- =?utf-8?B?RlFHdkRFZVU2NkJjNEtVelJUS3lXd3NzbDlWZ21obFB1V2lMbWI0U0I0cXVL?=
- =?utf-8?B?NVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cec3ba3-b35e-4be9-b15e-08dc3c97cf3b
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR11MB6435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 22:09:49.6179
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OmI1mQ5O7uHW5kV5fqK60RmWZ2S1io1zggLXa2qHjzbbT+VZXfdkJdn0Vs6hlw0+eRVIQPIEMQXAOFDLTEU0DkE1Pi/EdbKq87Rb8E6eMNM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8122
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c20140a-79e8-4d0a-899a-d4ec5c9def42@oracle.com>
 
-On 2/27/2024 11:27 AM, Erwan Velu wrote:
-> Commit 6871a7de705b6f6a4046f0d19da9bcd689c3bc8e from iPXE project is
-> setting the MFS to 0x600 = 1536.
+On Mon, Mar 04, 2024 at 08:34:52AM +0000, John Garry wrote:
+> On 02/03/2024 20:16, Igor Pylypiv wrote:
+> > Export libata NCQ Priority configuration helpers to be reused
+> > for libsas managed SATA devices.
+> > 
+> > Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
 > 
-> At boot time the i40e driver complains about it with
-> the following message but continues.
+> This looks ok. Some small code comments below, though.
 > 
-> 	MFS for port 1 has been set below the default: 600
+> > ---
+> >   drivers/ata/libata-sata.c | 139 +++++++++++++++++++++++++++-----------
+> >   include/linux/libata.h    |   4 ++
+> >   2 files changed, 103 insertions(+), 40 deletions(-)
+> > 
+> > diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
+> > index 0fb1934875f2..a8d5e36d5211 100644
+> > --- a/drivers/ata/libata-sata.c
+> > +++ b/drivers/ata/libata-sata.c
+> > @@ -848,29 +848,73 @@ DEVICE_ATTR(link_power_management_policy, S_IRUGO | S_IWUSR,
+> >   	    ata_scsi_lpm_show, ata_scsi_lpm_store);
+> >   EXPORT_SYMBOL_GPL(dev_attr_link_power_management_policy);
+> > +/**
+> > + *	ata_ncq_prio_supported - Check if device supports NCQ Priority
+> > + *	@ap: ATA port of the target device
+> > + *	@sdev: SCSI device
+> > + *
+> > + *	Helper to check if device supports NCQ Priority feature,
+> > + *	usable with both libsas and libata.
+> > + */
+> > +int ata_ncq_prio_supported(struct ata_port *ap, struct scsi_device *sdev)
+> > +{
+> > +	struct ata_device *dev;
+> > +	unsigned long flags;
+> > +	int rc;
+> > +
+> > +	spin_lock_irqsave(ap->lock, flags);
+> > +	dev = ata_scsi_find_dev(ap, sdev);
+> > +	if (!dev)
+> > +		rc = -ENODEV;
+> > +	else
+> > +		rc = !!(dev->flags & ATA_DFLAG_NCQ_PRIO);
+> > +	spin_unlock_irqrestore(ap->lock, flags);
+> > +	return rc;
+> > +}
 > 
-> If the MTU size is increased, the driver accept it but large packets will not
-> be processed by the firmware generating tx_errors. The issue is pretty
-> silent for users. i.e doing TCP in such context will generates lots of
-> retransmissions until the proper window size (below 1500) will be used.
+> I'm not the biggest fan of functions which effectively return both a boolean
+> and an error code.
 > 
-> To fix this case, it would have been ideal to increase the MFS,
-> via i40e_aqc_opc_set_mac_config, but I didn't found a reliable way to do it.
+> I like this patten more:
 > 
-> At least, this commit prevents setting up an MTU greater than the current MFS.
-> It will avoid being in the position of having an MTU set to 9000 on the
-> netdev with a firmware refusing packets larger than 1536.
+> int ata_ncq_prio_supported(struct ata_port *ap, struct scsi_device *sdev,
+> bool *supported)
+> {
+> 	...
+> 	if (rc)
+> 		return rc;
+> 	*supported = true/false.
+> 	return 0;
+> }
 > 
-> A typical trace looks like the following :
-> [  377.548696] i40e 0000:5d:00.0 eno5: Error changing mtu to 9000 which is greater than the current mfs: 1536
-> 
-> Signed-off-by: Erwan Velu <e.velu@criteo.com>
+> No big deal, though.
 
-The Author and Sign-off needs to be fixed; they don't match.
+Thanks for the review, John. Separating out an error code and a boolean
+makes the code a bit more readable. Sent out v4 with the changes.
 
-WARNING: From:/Signed-off-by: email address mismatch: 'From: Erwan Velu 
-<erwanaliasr1@gmail.com>' != 'Signed-off-by: Erwan Velu <e.velu@criteo.com>'
-
-Thanks,
-Tony
+> 
+> > +EXPORT_SYMBOL_GPL(ata_ncq_prio_supported);
+> > +
+> >   static ssize_t ata_ncq_prio_supported_show(struct device *device,
+> >   					   struct device_attribute *attr,
+> >   					   char *buf)
+> >   {
+> >   	struct scsi_device *sdev = to_scsi_device(device);
+> >   	struct ata_port *ap = ata_shost_to_port(sdev->host);
+> > +	int rc;
+> > +
+> > +	rc = ata_ncq_prio_supported(ap, sdev);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	return sysfs_emit(buf, "%d\n", rc);
+> > +}
+> > +
+> > +DEVICE_ATTR(ncq_prio_supported, S_IRUGO, ata_ncq_prio_supported_show, NULL);
+> > +EXPORT_SYMBOL_GPL(dev_attr_ncq_prio_supported);
+> > +
+> > +/**
+> > + *	ata_ncq_prio_enabled - Check if NCQ Priority is enabled
+> > + *	@ap: ATA port of the target device
+> > + *	@sdev: SCSI device
+> > + *
+> > + *	Helper to check if NCQ Priority feature is enabled,
+> > + *	usable with both libsas and libata.
+> 
+> It's usable by anything which uses libata, really. For the moment that is
+> libsas and libata.
+> 
+> > + */
+> > +int ata_ncq_prio_enabled(struct ata_port *ap, struct scsi_device *sdev)
+> > +{
+> >   	struct ata_device *dev;
+> > -	bool ncq_prio_supported;
+> > -	int rc = 0;
+> > +	unsigned long flags;
+> > +	int rc;
+> > -	spin_lock_irq(ap->lock);
+> > +	spin_lock_irqsave(ap->lock, flags);
+> >   	dev = ata_scsi_find_dev(ap, sdev);
+> >   	if (!dev)
+> >   		rc = -ENODEV;
+> >   	else
+> > -		ncq_prio_supported = dev->flags & ATA_DFLAG_NCQ_PRIO;
+> > -	spin_unlock_irq(ap->lock);
+> > -
+> > -	return rc ? rc : sysfs_emit(buf, "%u\n", ncq_prio_supported);
+> > +		rc = !!(dev->flags & ATA_DFLAG_NCQ_PRIO_ENABLED);
+> > +	spin_unlock_irqrestore(ap->lock, flags);
+> > +	return rc;
+> >   }
+> > -
+> > -DEVICE_ATTR(ncq_prio_supported, S_IRUGO, ata_ncq_prio_supported_show, NULL);
+> > -EXPORT_SYMBOL_GPL(dev_attr_ncq_prio_supported);
+> > +EXPORT_SYMBOL_GPL(ata_ncq_prio_enabled);
+> >   static ssize_t ata_ncq_prio_enable_show(struct device *device,
+> >   					struct device_attribute *attr,
+> > @@ -878,50 +922,45 @@ static ssize_t ata_ncq_prio_enable_show(struct device *device,
+> >   {
+> >   	struct scsi_device *sdev = to_scsi_device(device);
+> >   	struct ata_port *ap = ata_shost_to_port(sdev->host);
+> > -	struct ata_device *dev;
+> > -	bool ncq_prio_enable;
+> > -	int rc = 0;
+> > +	int rc;
+> > -	spin_lock_irq(ap->lock);
+> > -	dev = ata_scsi_find_dev(ap, sdev);
+> > -	if (!dev)
+> > -		rc = -ENODEV;
+> > -	else
+> > -		ncq_prio_enable = dev->flags & ATA_DFLAG_NCQ_PRIO_ENABLED;
+> > -	spin_unlock_irq(ap->lock);
+> > +	rc = ata_ncq_prio_enabled(ap, sdev);
+> > +	if (rc < 0)
+> > +		return rc;
+> > -	return rc ? rc : sysfs_emit(buf, "%u\n", ncq_prio_enable);
+> > +	return sysfs_emit(buf, "%d\n", rc);
+> >   }
+> > -static ssize_t ata_ncq_prio_enable_store(struct device *device,
+> > -					 struct device_attribute *attr,
+> > -					 const char *buf, size_t len)
+> > +/**
+> > + *	ata_ncq_prio_enable - Enable/disable NCQ Priority
+> > + *	@ap: ATA port of the target device
+> > + *	@sdev: SCSI device
+> > + *	@enable: true - enable NCQ Priority, false - disable NCQ Priority
+> > + *
+> > + *	Helper to enable/disable NCQ Priority feature, usable with both
+> > + *	libsas and libata.
+> > + */
+> > +int ata_ncq_prio_enable(struct ata_port *ap, struct scsi_device *sdev,
+> > +			bool enable)
+> >   {
+> > -	struct scsi_device *sdev = to_scsi_device(device);
+> > -	struct ata_port *ap;
+> >   	struct ata_device *dev;
+> > -	long int input;
+> > +	unsigned long flags;
+> >   	int rc = 0;
+> > -	rc = kstrtol(buf, 10, &input);
+> > -	if (rc)
+> > -		return rc;
+> > -	if ((input < 0) || (input > 1))
+> > -		return -EINVAL;
+> > +	spin_lock_irqsave(ap->lock, flags);
+> > -	ap = ata_shost_to_port(sdev->host);
+> >   	dev = ata_scsi_find_dev(ap, sdev);
+> > -	if (unlikely(!dev))
+> > -		return  -ENODEV;
+> > -
+> > -	spin_lock_irq(ap->lock);
+> > +	if (unlikely(!dev)) {
+> 
+> no need for unlikely() - this is not fathpath
+> 
+> > +		rc = -ENODEV;
+> > +		goto unlock;
+> > +	}
+> >   	if (!(dev->flags & ATA_DFLAG_NCQ_PRIO)) {
+> >   		rc = -EINVAL;
+> >   		goto unlock;
+> 
