@@ -1,121 +1,196 @@
-Received: from mail-108-mta96.mxroute.com (mail-108-mta96.mxroute.com [136.175.108.96])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A004CBE4C
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 06:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CABBA5E;
+	Mon,  4 Mar 2024 06:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709532840; cv=none; b=cPKIy5rRAdwI5Gy2TXelxruHXIXM7YPCry0Xx5p/i7ZYQFndCHJJ9l2F9+VGVTZNEHR0FvQ7W7cvwtaZDYyR9wmObAdBJcx7qMWxf4JaT1t9wRukknbSirp1MdR295/9iPyR492nMcFmSvWUVe4RD35BCrwxjA2CzamJX220q9E=
+	t=1709533012; cv=none; b=Jn4XSyb+9e923eu93nX7yKdzBTYLVYtIL0AE/QTdWWhnbr6zpy1C+726TKQTagRnqDc9YXgI0QagcZPGuQnUJ4o6vPcYh0Zw7q0vFoxNfrg4mOcKluRIoc/pVDlQvzVMrgmSSkCUpUUZAb0f899IFpI6Cf7x5Tk/5C7p7tpfmIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709532840; c=relaxed/simple;
-	bh=JA+ToT62ofN18tC9Y/a9EcQCQzLzVQ2/LikqbqFWxmQ=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=TwN7hrmFFqK1Zw4O9FHtFZxSKzTNDcUCy6UDWNjp7VY4RDlrf+vsj7CTas+5ZZNqVVwy3QBD77duSXNF+KY5i+7VATC32401tZOiMywN9akY6eMrDtuN23XnHHTEBZpA+RRy7NyJP+nPi369na/W0DpUIIifPFzLsmE+nc9gd0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org; spf=pass smtp.mailfrom=damenly.org; dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b=VehTBCH6; arc=none smtp.client-ip=136.175.108.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damenly.org
+	s=arc-20240116; t=1709533012; c=relaxed/simple;
+	bh=vDEkHhbgoncuK1EhIkt+qBLzvO6pAGjxBO7E/Z8jvNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ef/yaCzT3pXQ3Ay+kK6c+s/N8u/NsCxor/dBeBcccAS01X4bVhvkZMO6/06Qg535BgcnkkjNP8sB1BYvIe8+6QvK5zhQKNBE5zrqqlc9nlOFf86oehAQIMqlDTNV6ZrRp2c4+ubo+PmdRLrfYXf+QRlevy+WJqbg2H3MBznuJMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=DpT3jIfe; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b="VehTBCH6"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta96.mxroute.com (ZoneMTA) with ESMTPSA id 18e08143a6c0003bea.005
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Mon, 04 Mar 2024 06:08:47 +0000
-X-Zone-Loop: b5e7bc1f501381cbd12b8d0184a100cb8442c75b9a3b
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=damenly.org
-	; s=x; h=Content-Type:MIME-Version:Message-ID:In-reply-to:Date:Subject:Cc:To:
-	From:References:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=nYqwQY5WZpB5b6Y6JJAAKQwIZSkHfM0YPUUkqlGVit8=; b=VehTBCH6AwnsY01KTB2REayOUu
-	h1eNlti/BBAG8E9pYQoCgKCACBZKDWLs6WvX42i86tVb+OcCOp2TWR4pJBCT4wXU35r+TnwEpyFbv
-	5PxrNXtNP+BMLlSUjwrsEej8PFqgCjpYLgcyKlyY+Tk43TZsle4eB4hbVmW2HYZkv54gNjpkSXq4D
-	kjiwmv94Nb752a2YAZvRKZyUx9MCWT3QvxDF4yl74c9ZS3/DUmFJ2xh7P0vttceERpOy/uh4ZmVmR
-	bFwIb5l6g/2etsUDEnsDK15Ngc2WlUws08/5NYfZClQcD1OKIbHb2K/oDAg+M2kTg6Z/awO4R1jtz
-	LgDD0mAg==;
-References: <20240304032203.3480001-1-lizetao1@huawei.com>
-User-agent: mu4e 1.7.5; emacs 28.2
-From: Su Yue <l@damenly.org>
-To: Li Zetao <lizetao1@huawei.com>
-Cc: kent.overstreet@linux.dev, bfoster@redhat.com,
- linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bcachefs: Fix null-ptr-deref in bch2_fs_alloc()
-Date: Mon, 04 Mar 2024 13:12:07 +0800
-In-reply-to: <20240304032203.3480001-1-lizetao1@huawei.com>
-Message-ID: <frx6edjh.fsf@damenly.org>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="DpT3jIfe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=BJJ1FnvZ+/hL3/GZOS7H0S2hO+1YoMgqTri63N9h0ZM=; t=1709533010;
+	x=1709965010; b=DpT3jIfeeua4C8TkKdh93dK/4LNNN6yUumz3OfzpaoTb/V+v/Se2sZLRqjn80
+	/NytuTIWzY/p+4vn0qEIF7xfkRyQxwyD7UStKAFzCaUEV541sJ/G6OpzWoyFpn/M13v7yqp2axyoh
+	LMEtDGO9NVwZVcl+b1tcPOBnr/FbI6kUBhkCeyJWL+GvQ6Em7QdwLVNXYag1u3YeyRC+JRyUK6Ou8
+	IcLEhLl8j+I+TzIDfaGLIAOxriT3tyw/dWCjPvapBfxmcuc8xgoCMmd5YEecWTJcXb0NLSDYaH/vb
+	v+U+KinOQTMDBM/OfLgJm8G2fnDK5pfGhjjW2K1Vlk68IAretA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rh1cw-0002hs-9B; Mon, 04 Mar 2024 07:16:42 +0100
+Message-ID: <e1d87d5c-97ee-4e08-84c9-61a02c81ca63@leemhuis.info>
+Date: Mon, 4 Mar 2024 07:16:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Authenticated-Id: l@damenly.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: guide on bisecting (was Re: [REGRESSION] kexec does firmware
+ reboot in kernel v6.7.6)
+Content-Language: en-US, de-DE
+To: Pavin Joseph <me@pavinjoseph.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Doc Mailing List <linux-doc@vger.kernel.org>
+References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
+ <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
+ <3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
+ <a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
+ <806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
+ <4630483e-fc4e-448d-8fd6-916d3422784e@leemhuis.info>
+ <66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1709533010;dcd7aaf7;
+X-HE-SMSGID: 1rh1cw-0002hs-9B
 
+On 03.03.24 11:17, Pavin Joseph wrote:
+> On 3/3/24 14:06, Thorsten Leemhuis wrote:
+> 
+>> That being said: I think I might know what sent you sideways: the main
+>> section lacked a "git remote add -t master stable
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git". :-((
+> Now that I read through it with a fresh pair of eyes, this is exactly
+> the problem!
 
-On Mon 04 Mar 2024 at 11:22, Li Zetao <lizetao1@huawei.com> wrote:
+Thx for confirming, fixed this up locally and will submit a patch to fix
+this for inclusion (the text is now in -next, yeah!).
 
-> There is a null-ptr-deref issue reported by kasan:
->
->   KASAN: null-ptr-deref in range 
->   [0x0000000000000000-0x0000000000000007]
->   Call Trace:
->     <TASK>
->     bch2_fs_alloc+0x1092/0x2170 [bcachefs]
->     bch2_fs_open+0x683/0xe10 [bcachefs]
->     ...
->
-> When initializing the name of bch_fs, it needs to dynamically 
-> alloc memory
-> to meet the length of the name. However, when name allocation 
-> failed, it
-> will cause a null-ptr-deref access exception in subsequent 
-> string copy.
->
-bch2_printbuf_make_room() does return -ENOMEM but
-bch2_prt_printf() doesn't check the return code. And there are too 
-many
-callers of bch2_prt_printf() don't check allocation_failure.
+>>> 2. The "installkernel" command is called "kernel-install" in OpenSuse,
+>>
+>> Yeah, it looks like that, but that's not really the case. :-) In short:
+>> on Fedora "installkernel" calls into kernel-install -- and
+>> "installkernel" has a long history, so doing what Fedora does is likely
+>> a wise thing for distros. And openSUSE had a "installkernel" as well,
+>> which was part of the dracut package. Not sure if that is still the case
+>> for current Leap and Tumbleweed. Could you check?
+> 
+> It's not available even as a symlink in OpenSuse TW / Slowroll I'm afraid.
 
-> Fix this issue by checking if name allocation is successful.
->
-> Fixes: 401ec4db6308 ("bcachefs: Printbuf rework")
-> Signed-off-by: Li Zetao <lizetao1@huawei.com>
-> ---
->  fs/bcachefs/super.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
-> index 6b23e11825e6..24fa41bbe7e3 100644
-> --- a/fs/bcachefs/super.c
-> +++ b/fs/bcachefs/super.c
-> @@ -818,13 +818,13 @@ static struct bch_fs *bch2_fs_alloc(struct 
-> bch_sb *sb, struct bch_opts opts)
->  		goto err;
->
->  	pr_uuid(&name, c->sb.user_uuid.b);
-> -	strscpy(c->name, name.buf, sizeof(c->name));
-> -	printbuf_exit(&name);
-> -
->  	ret = name.allocation_failure ? -BCH_ERR_ENOMEM_fs_name_alloc 
->  : 0;
->  	if (ret)
->  		goto err;
->
-IIRC, krealloc() doesn't free old pointer if new-size allocation 
-failed.
-There is no printbuf_exit called in label err then memory leak 
-happens.
+I'm not really familiar with openSUSE, but it set up a TW container and
+found that a package kernel-install-tools provides installkernel script.
+Not sure how good it works though. Could you maybe test that?
 
---
-Su
->
-> +	strscpy(c->name, name.buf, sizeof(c->name));
-> +	printbuf_exit(&name);
-> +
->  	/* Compat: */
->  	if (le16_to_cpu(sb->version) <= 
->  bcachefs_metadata_version_inode_v2 &&
->  	    !BCH_SB_JOURNAL_FLUSH_DELAY(sb))
+>>> and it doesn't really perform all the steps to install kernel. It calls
+>>> dracut to create initramfs though, but that's hardly much help.
+>> Could you please elaborate a bit on that "hardly much help", as I'm not
+>> really sure what you exactly mean here. Are you and/or openSUSE normally
+>> not using dracut?
+> I meant that calling kernel-install in OpenSuse only seems to then call
+> dracut to build an initramfs for the kernel. I can call dracut myself
+> without adding an unnecessary middleman (kernel-install) in the process
+> and less verbosely too: dracut --kver $(make -s kernelrelease)
+
+kernel-install is normally meant to copy the image over to /boot/ as
+well afaik; maybe it did not do that in your case because you already
+had placed it there manually?
+
+> Perhaps you could add generic details such as I provided in the
+> reference section for distros where installkernel doesn't exist or don't
+> perform all the steps required.
+
+Go look, they are there since the start. They differ from your
+instructions though, as you put the image in /usr/lib/modules/ which
+only works with distros that have kernel-install. Hmmm. Maybe it at some
+point will likely be better to just use it for the manual install
+instructions; but it feels a bit like it's to early for that. Not sure.
+
+>>> 3. The dependencies for kernel building in OpenSuse and other major
+>>> distros are incomplete,
+>> So what was missing?
+> Sorry, I don't remember.
+
+I checked using a container and fixed this this.
+
+> The compile/build threw some error and I looked
+> up how to install kernel building dependencies in OpenSuse only to find
+> out there was a pattern for it already.
+
+I just checked, the command you provided earlier would download ~250
+MByte of packages that would consume 1,5 GByte disk space, all of which
+are unneeded afaics. I'm taken a bit back and forth there, but I think
+sticking to just listing the packages that are actually needed might be
+the better approach.
+
+> Perhaps you could list the basic dependencies in the main section and
+> provide the collection/patterns in the reference section.
+
+I want to keep the main section distro-agnostic as much as possible;
+listing package names for distros would also make it longer. I think
+it's better to do that in the reference section.
+
+>>> 4. The command to build RPM package (make binrpm-pkg) fails as the
+>>> modules are installed into "/home/<user>/linux/.../lib" while depmod
+>>> checks for modules in "/home/<user>/linux/.../usr/lib".
+>> That sounds like a bug that should be reported and fixed, not something
+>> that docs should catch and work around. Could you report that?
+> Please, could you tell me where to report this bug? Kernel bugzilla?
+> Which category/component?
+
+Just sent a mail to Masahiro Yamada <masahiroy@kernel.org> with
+linux-kbuild@vger.kernel.org and linux-kernel@vger.kernel.org in CC.
+
+> Thanks for all your help 😉
+
+Thx for your feedback, it helped making things better!
+
+Ciao, Thorsten
