@@ -1,80 +1,111 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D535FF0E
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 20:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18D35FF0E;
+	Mon,  4 Mar 2024 20:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709584082; cv=none; b=S2NjZXqFCI0CS9KdbM5rx15NZyNciPAG86WnER+gv9xWff8AdaNnNXymOtluIUN9tcnZgz8vcW1l20+S+KgK0khCVnBK16Wwk1cwvMHzfMo7TPD4R6wZ4h1qhyPUdlbedFVSF7iKcRCqOzSGUBRvfDxBMepkDj+w2lbU/8z6BkU=
+	t=1709584100; cv=none; b=DMx+9gPe2ZRvrxMPHRoGTGmRdZKeoXTOtvjjV4eE3ufQ7nMr8GFi1XkJzeOmqVr5FFW4jcLRYAxVAh1xMHz/mETokEloze2XyuGs2lg0PgaceDoQisU5DImqVfmuUpZB1lyPhQO7rAq+ZXdDzKjWn+HIgB3Sk4Bu5JuzkwMoXJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709584082; c=relaxed/simple;
-	bh=8BV7mEbxpQ3N++S3mY+V2k9JTVu8r7BS31hUtho6Ans=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cuHEKNbaN42hlldH90pQdB6WU3OY3NTSXZp6m0573f1DpQNPNBubPDUNI/3YNvVxO4GdyQhV/Sy60XbsQ1LuUJpf9qtVFIJVshzQPj1uyqVfH4a3Bwn9QbXmDeJo2u8rwJs6i48sdGI339Yi8i4lmarzIuZp01CLJL2yIJDGM4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HCIToB/F; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709584100; c=relaxed/simple;
+	bh=Wpxa/TK4b0ZLhe17uwNFCNqly4luRjWd6+LrHrOSp08=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:To:From:
+	 References:In-Reply-To; b=uXLXIe/Uro530eyjHEkIB+2f+uuz0ZdtJkyEdce2MG9aDdzVbha6dJxNtDyNya6tKTNW9DgMlHml3ketjZ+EbS8K7Ae+XCmYD9a915RV5tZT+7EX6XZg4sRcD2wb6O5Q9am/dgoetekrrzDcEEWI8n+FRV2J239W1w/QEvzPCpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz; dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b=WS6j8opJ; arc=none smtp.client-ip=195.113.20.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HCIToB/F"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-412a2c2ce88so17615e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 12:28:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709584079; x=1710188879; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8BV7mEbxpQ3N++S3mY+V2k9JTVu8r7BS31hUtho6Ans=;
-        b=HCIToB/FZhH8SLNhH8seFmED9H00rPzjOJrkYx/xG4WcNhGzXGo8sTiZdmSFSFzXUb
-         Ia/4CBKYwGpOXqXUvYTKC1LR2V7KU2+YdAhALHybUT66UkHtiqdg27R0KPdsUOlU3Ead
-         gzjLaQul/fv6cUjzShvS/H8UZlu4oxvwOuNsbsnoZRsP3sUEr38v4q5xGrfq/sP+Nxbo
-         +oGOTJvQpeBQt64s00gQXQGZjlSjTU+/jAWm2H8VVoU/d+BiCZTZW2r55qORsx9sjYYI
-         iZBzzspEoWOyWtq/7pWX5yT8NSSXbpK7ayvrHplZ5pOK+3RJWm3XrI6RgR93BXNruOJP
-         3I4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709584079; x=1710188879;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8BV7mEbxpQ3N++S3mY+V2k9JTVu8r7BS31hUtho6Ans=;
-        b=Ww0Pg+wUm7ljsQHocmL5AMbqz2gJa2h9I1tLcpZZIs2TGJz7zdbzpvLnoUZYeszrbT
-         cqxc+CotQ7XceCOVcGoCfC5NHzSLEPz4XcrWigrrCL6iJYN0B4o48f9JjI8uu/nGeJHt
-         yfttX00U6LuvmOLMbfbJX9OoobDWRW9DkWG3B19M4tdJMz/87wOaXxwezi8vCKzSBRde
-         kE8oCzKM2o4jgL6IvUyvbFhChgyCOu0a8eEB/Sd+6oSew+DhAsWSE3ioEuRt5bG/8Xhx
-         W7jqyhq+8KHe9j1yOFD1oTl9YTYbKreWrYGY3SdcW6GVQ6J6vBCM5i5/A2xKyG+GgXDI
-         Qkww==
-X-Gm-Message-State: AOJu0YxrAa6PZoNpp8Xyj8Xnous6yxZJ15kbObvI6e/Dn/z1C3j3T1Ng
-	Lfrza0sniodG2Rt+dbTxt2YlNJI5d9kO7r7C0oGIY6fdhDIhuKT/jQ1s1/QZmH/SUjMTFGn3sj/
-	EZcwQz8GQJC3K7B71stn8NsW68f2MfYtT4dw=
-X-Google-Smtp-Source: AGHT+IFdipdDLYllu2rLBaMDcqB8B9T+KTxthawpJhJ6k/YKp8BeMCQCjv2B1xdctIBPxZgV7sHAlBJ93G6vjWZgciA=
-X-Received: by 2002:a1c:7918:0:b0:412:c931:299f with SMTP id
- l24-20020a1c7918000000b00412c931299fmr11954wme.2.1709584079525; Mon, 04 Mar
- 2024 12:27:59 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="WS6j8opJ"
+Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id 509FC2843B5;
+	Mon,  4 Mar 2024 21:28:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
+	s=gen1; t=1709584089;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/0gGSi9ctqlSm0+Gdj84gUSgxHdqznSURe1C3VVntQE=;
+	b=WS6j8opJpfs0wpsyX6yLSCrostCOINwT8dTgsY2V+OjcaE6QPC7vvhaBybZwwLw2sPQO9f
+	VNFBi0Z0Q2XBY0ZyL5gEd76Y6OJK3+Nl2cSO4NaPOW/j+mrRI+N1Bm23jHZ3edJyhrEwrY
+	tj/03Qr1cnAi+fyfrA1Y5A8wN3h59f4=
+Received: from localhost (koleje-wifi-0023.koleje.cuni.cz [78.128.191.23])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: karelb)
+	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id 2C9E0457628;
+	Mon,  4 Mar 2024 21:28:09 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240304180829.1201726-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240304180829.1201726-1-andriy.shevchenko@linux.intel.com>
-From: John Stultz <jstultz@google.com>
-Date: Mon, 4 Mar 2024 12:27:47 -0800
-Message-ID: <CANDhNCo4BGkFvFz2ZRftvfvY=izjWF7_MP4xFDSwOA1LwCF4Vg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] misc: hisi_hikey_usb: Remove unused of_gpio.h
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 04 Mar 2024 21:28:45 +0100
+Message-Id: <CZL8ZSZAVEBI.349BV2Y6AKIPN@gimli.ms.mff.cuni.cz>
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown"
+ <broonie@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+ <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>
+Subject: Re: [RFC PATCH v3 4/5] input: add onkey driver for Marvell 88PM886
+ PMIC
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+From: "Karel Balej" <karelb@gimli.ms.mff.cuni.cz>
+References: <20240303101506.4187-1-karelb@gimli.ms.mff.cuni.cz>
+ <20240303101506.4187-5-karelb@gimli.ms.mff.cuni.cz>
+ <ZeTgEmjJc_VhYpLm@google.com>
+In-Reply-To: <ZeTgEmjJc_VhYpLm@google.com>
 
-On Mon, Mar 4, 2024 at 10:08=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Dmitry,
+
+Dmitry Torokhov, 2024-03-03T12:39:46-08:00:
+> On Sun, Mar 03, 2024 at 11:04:25AM +0100, Karel Balej wrote:
+> > From: Karel Balej <balejk@matfyz.cz>
+> >=20
+> > Marvell 88PM886 PMIC provides onkey among other things. Add client
+> > driver to handle it. The driver currently only provides a basic support
+> > omitting additional functions found in the vendor version, such as long
+> > onkey and GPIO integration.
+> >=20
+> > Signed-off-by: Karel Balej <balejk@matfyz.cz>
+> > ---
+> >=20
+> > Notes:
+> >     RFC v3:
+> >     - Drop wakeup-source.
+> >     RFC v2:
+> >     - Address Dmitry's feedback:
+> >       - Sort includes alphabetically.
+> >       - Drop onkey->irq.
+> >       - ret -> err in irq_handler and no initialization.
+> >       - Break long lines and other formatting.
+> >       - Do not clobber platform_get_irq error.
+> >       - Do not set device parent manually.
+> >       - Use input_set_capability.
+> >       - Use the wakeup-source DT property.
+> >       - Drop of_match_table.
 >
-> of_gpio.h is deprecated and subject to remove.
-> The driver doesn't use it, simply remove the unused header.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> I only said that you should not be using of_match_ptr(), but you still
+> need to have of_match_table set and have MODULE_DEVICE_TABLE() for the
+> proper module loading support.
 
-Untested, but looks ok to me.
+I removed of_match_table because I no longer need compatible for this --
+there are no device tree properties and the driver is being instantiated
+by the MFD driver.
 
-Acked-by: John Stultz <jstultz@google.com>
+Is the MODULE_DEVICE_TABLE() entry needed for the driver to probe when
+compiled as module? If that is the case, given what I write above, am I
+correct that MODULE_DEVICE_TABLE(platform,...) would be the right thing
+to use here?
+
+Thank you, kind regards,
+K. B.
