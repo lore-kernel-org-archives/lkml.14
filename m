@@ -1,127 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1251F95E
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 21:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18361CA94;
+	Mon,  4 Mar 2024 21:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587527; cv=none; b=SgA4w9ZktgwilrhuhpT4hF9ebXsSaicyV2SLtrPcN4XFR7MHHauppwDqofOWPp3g1U/fnfd2SzUOdsMJmDja8STUxNmg//rE5azdVNvwfzTp2IPC/z26cTwP/c5KW+NenbTVZpPS+jZpCp1yo47R0hTUwllzKk2lE4xmRo0LmOs=
+	t=1709587573; cv=none; b=iyirjt0p6GOI1MaASR5tPiR4K4xuIw/tBS7hqKy70yxs03nvLjpsbJLlyXzJbBRPIsBecZJbm6ae3xFiAxKptVYrszCVnAlMEHeXFkcsMt5YQ3jheiTLKHlbAHT1P9njJGJTqc7jekBPZFkvlfg4fk8ddE1/4OmiYoorFYf7N8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587527; c=relaxed/simple;
-	bh=0TWUKCDgxRZFqQLCQUzZZnZ4A3GPQ9+rr11L3/1F5iE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PkzFywpeNx2z+szbuUNwfQt3/aazaHOrDynCkuf8t3VBTYUY6vaLxLtJujOafKnxubUct7sZkLiIMdmUXoIlpIXPjt18aSgso0UmnOZphmBPg3rkHuG+svZhsyheIdCKzVHu5iHesUG3ict4Hc2EGs3fteNbHcPB24Z84UxBk8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=El15yIhS; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709587573; c=relaxed/simple;
+	bh=j3/VuXcdAAUeB/9osjvAgkL6rASQvBSAah7VCvAx5wg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jvGSFS0I72WqvU+wkH9jONpOb8sPn/DzpZz/q/UeEKGHFl4LE+86E/eaSVyvRWQlQCJWr9kUAKU56oarAan02y8nqj7EYrG00ZCEObgQKlMBbwj/rf+GJB3rZnnmRfVql/Y6hq4XeuZ1mBhB6NgVSzPOAWWdXHAf01hRHetgRzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AJTghnHF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="El15yIhS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709587526; x=1741123526;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=0TWUKCDgxRZFqQLCQUzZZnZ4A3GPQ9+rr11L3/1F5iE=;
-  b=El15yIhSiCdvwteExWrriLndsXjE5z1pOCgSr99Zt0URP7OS58+fKaba
-   I4K30JpeYiXGmYdnG8yiCCXi4NV8ajr73TqiLT4KJhzQAsJb3o8p8KWv2
-   Pe/6gICzTlORF+wWgrLtWO9BiDU5iMvPOEc39fu2DU3pDTk6kRIj0RWdh
-   jNzCHv3LwYa404sTlt/NctaX4vCQnUPX90XrIAqW7DMivSf4olCIcyKNz
-   v8tX3vMU2CCELKbAn+5JcIcAe6QobiaVCvtOWsSbNYXDE7XFvRNSEqhiX
-   lXGAP5x30QQ9FRfhoPhv7xF7Cwk81grxC3Swh6amwQIuTb7K9GPmGZZnQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="3962079"
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="3962079"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 13:25:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="9076106"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 04 Mar 2024 13:25:23 -0800
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rhFoH-0002mT-0I;
-	Mon, 04 Mar 2024 21:25:21 +0000
-Date: Tue, 5 Mar 2024 05:25:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: drivers/platform/x86/intel/pmc/core_ssram.c:98:25: sparse: sparse:
- incorrect type in argument 1 (different address spaces)
-Message-ID: <202403050547.qnZtuNlN-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AJTghnHF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CC1C433C7;
+	Mon,  4 Mar 2024 21:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709587573;
+	bh=j3/VuXcdAAUeB/9osjvAgkL6rASQvBSAah7VCvAx5wg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AJTghnHFzAZkVVOP3bTPWb0PI/JGS7hXwJuVBRfdKlN9FgW3WHe3Vz07oRnrljkcp
+	 9cVguoS36kVFCueuuhNdSP66VM/hihp8RmxIaXOqnpnIfT4JJwQuhj4/Vu0cT/YS0r
+	 rCq+wvoEp9w5siDgSdZLKhQZKydWCspuMJoAdlmM=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com
+Subject: [PATCH 4.19 00/16] 4.19.309-rc1 review
+Date: Mon,  4 Mar 2024 21:23:21 +0000
+Message-ID: <20240304211534.328737119@linuxfoundation.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.309-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.309-rc1
+X-KernelTest-Deadline: 2024-03-06T21:15+00:00
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-commit: a01486dc4bb17de976c6d0a4b1ad5f8106525dfb platform/x86/intel/pmc: Cleanup SSRAM discovery
-date:   3 months ago
-config: x86_64-randconfig-r111-20240304 (https://download.01.org/0day-ci/archive/20240305/202403050547.qnZtuNlN-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240305/202403050547.qnZtuNlN-lkp@intel.com/reproduce)
+This is the start of the stable review cycle for the 4.19.309 release.
+There are 16 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403050547.qnZtuNlN-lkp@intel.com/
+Responses should be made by Wed, 06 Mar 2024 21:15:26 +0000.
+Anything received after that time might be too late.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/platform/x86/intel/pmc/core_ssram.c:98:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile *val @@     got void [noderef] __iomem *__val @@
-   drivers/platform/x86/intel/pmc/core_ssram.c:98:25: sparse:     expected void const volatile *val
-   drivers/platform/x86/intel/pmc/core_ssram.c:98:25: sparse:     got void [noderef] __iomem *__val
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.309-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-vim +98 drivers/platform/x86/intel/pmc/core_ssram.c
+thanks,
 
-    70	
-    71	static int
-    72	pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
-    73	{
-    74		struct pci_dev *ssram_pcidev = pmcdev->ssram_pcidev;
-    75		void __iomem __free(pmc_core_iounmap) *tmp_ssram = NULL;
-    76		void __iomem __free(pmc_core_iounmap) *ssram = NULL;
-    77		const struct pmc_reg_map *map;
-    78		u64 ssram_base, pwrm_base;
-    79		u16 devid;
-    80	
-    81		if (!pmcdev->regmap_list)
-    82			return -ENOENT;
-    83	
-    84		ssram_base = ssram_pcidev->resource[0].start;
-    85		tmp_ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
-    86	
-    87		if (pmc_idx != PMC_IDX_MAIN) {
-    88			/*
-    89			 * The secondary PMC BARS (which are behind hidden PCI devices)
-    90			 * are read from fixed offsets in MMIO of the primary PMC BAR.
-    91			 */
-    92			ssram_base = get_base(tmp_ssram, offset);
-    93			ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
-    94			if (!ssram)
-    95				return -ENOMEM;
-    96	
-    97		} else {
-  > 98			ssram = no_free_ptr(tmp_ssram);
-    99		}
-   100	
-   101		pwrm_base = get_base(ssram, SSRAM_PWRM_OFFSET);
-   102		devid = readw(ssram + SSRAM_DEVID_OFFSET);
-   103	
-   104		map = pmc_core_find_regmap(pmcdev->regmap_list, devid);
-   105		if (!map)
-   106			return -ENODEV;
-   107	
-   108		return pmc_core_pmc_add(pmcdev, pwrm_base, map, PMC_IDX_MAIN);
-   109	}
-   110	
+greg k-h
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.309-rc1
+
+Arturas Moskvinas <arturas.moskvinas@gmail.com>
+    gpio: 74x164: Enable output pins after registers are reset
+
+Baokun Li <libaokun1@huawei.com>
+    cachefiles: fix memory leak in cachefiles_add_cache()
+
+Ivan Semenov <ivan@semenov.dev>
+    mmc: core: Fix eMMC initialization with 1-bit bus connection
+
+David Sterba <dsterba@suse.com>
+    btrfs: dev-replace: properly validate device names
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: nl80211: reject iftype change with mesh ID change
+
+Alexander Ofitserov <oficerovas@altlinux.org>
+    gtp: fix use-after-free and null-ptr-deref in gtp_newlink()
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: Drop leftover snd-rtctimer stuff from Makefile
+
+Hans de Goede <hdegoede@redhat.com>
+    power: supply: bq27xxx-i2c: Do not free non existing IRQ
+
+Arnd Bergmann <arnd@arndb.de>
+    efi/capsule-loader: fix incorrect allocation size
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    Bluetooth: Enforce validation on max value of connection interval
+
+Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+    Bluetooth: hci_event: Fix handling of HCI_EV_IO_CAPA_REQUEST
+
+Ying Hsu <yinghsu@chromium.org>
+    Bluetooth: Avoid potential use-after-free in hci_error_reset
+
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
+    net: usb: dm9601: fix wrong return value in dm9601_mdio_read
+
+Oleksij Rempel <o.rempel@pengutronix.de>
+    lan78xx: enable auto speed configuration for LAN7850 if no EEPROM is detected
+
+Yunjian Wang <wangyunjian@huawei.com>
+    tun: Fix xdp_rxq_info's queue_index when detaching
+
+Ryosuke Yasuoka <ryasuoka@redhat.com>
+    netlink: Fix kernel-infoleak-after-free in __skb_datagram_iter
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                   |  4 ++--
+ drivers/firmware/efi/capsule-loader.c      |  2 +-
+ drivers/gpio/gpio-74x164.c                 |  4 ++--
+ drivers/mmc/core/mmc.c                     |  2 ++
+ drivers/net/gtp.c                          | 12 ++++++------
+ drivers/net/tun.c                          |  1 +
+ drivers/net/usb/dm9601.c                   |  2 +-
+ drivers/net/usb/lan78xx.c                  |  3 ++-
+ drivers/power/supply/bq27xxx_battery_i2c.c |  4 +++-
+ fs/btrfs/dev-replace.c                     | 24 ++++++++++++++++++++----
+ fs/cachefiles/bind.c                       |  3 +++
+ net/bluetooth/hci_core.c                   |  7 ++++---
+ net/bluetooth/hci_event.c                  |  9 ++++++++-
+ net/bluetooth/l2cap_core.c                 |  8 +++++++-
+ net/netlink/af_netlink.c                   |  2 +-
+ net/wireless/nl80211.c                     |  2 ++
+ sound/core/Makefile                        |  1 -
+ 17 files changed, 65 insertions(+), 25 deletions(-)
+
+
