@@ -1,124 +1,93 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E973B797;
-	Mon,  4 Mar 2024 13:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792A93BB3A;
+	Mon,  4 Mar 2024 13:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560623; cv=none; b=FKX7qqNz9VrUC80aQcU18Ct2SZvU/zPibTa+76yryfdQgA8saKJfQOQ9SVDpv/ui3MRHuT7oLZXcyZ1v836sO+hk0lzl2JlXzPWt4IxDlGbbyYjLdTgOmnxW/uWdq9fOc8aOLo8vGOYEcGTGyM2KJ57ouBpHop4u5QDp7txeBl4=
+	t=1709560645; cv=none; b=ht/41+m9KZoBbHnXzVDspeOMOh+PrwM9GE3eafu0utGoQgzN65lNtQupQCrkU8jjdQk1fIJe9yLe/db90micw8kgbHq5A4UNZmt1fcKo417eGkSSwjqhKfktTUcgaUluhjYzoG84W2bv/PtNkNen/C9npst1SmJRYcHFqOAcJXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560623; c=relaxed/simple;
-	bh=LD/AgASlwrxqBIDBgB4m0hmo8Hapri/eJonpkMZCy1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZcCNF6sNfHnuaLJhvjfoIcSrW0h0EEBeiPg1g3lrpGQSXk32XUpwPRW6goxjedDnqp7uGL9DpUWHo/ZO4NnpS6kztcXQaE8N+T2CcLPDRnzmkYWEBr4XXSRv/U414I/W4SM96xmmGXrfHqDFiQ1M+Lk4U25QDjQNQjtKmutFMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Pvl5NY5U; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709560645; c=relaxed/simple;
+	bh=t4HFn7eIQvSgZ5wRMktcT8dDyGdFxF5R14Sx2I7vfPA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=HInLCEsyXSXX4Dyr4DkWnRPjzNIxJ5vj5HrnJeSg6H6ff2jVac6yfYYA5x41whZsd8pEuqS2VCwzyxlntD5SDOUO+zpkerkBtVrJ5DXcD3B/qFfQQKi0nmozk1AbuzuIXXDTJ0UEzFbCvwvTXPcKYtWiN6XPy5y0tYtvpIWK4Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=bCWJcTC+; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Pvl5NY5U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709560619;
-	bh=LD/AgASlwrxqBIDBgB4m0hmo8Hapri/eJonpkMZCy1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pvl5NY5U/6KsC14RL4xbqefNMPgwztO8QUkpJqQ8yKpzZs3/Ix895cqDVNYxuhJan
-	 e24WIbNh/3XsDD6pI9gSl/dPuPUmNKtcjwBnAJiXrATu/D/37wkvSCDYOJQlZtMWkp
-	 vby9vUePcCzdLpy00bR6CizekNigfZJu6V/RsUKkyLEwyeilbiNJpVG4c+h6asqnjb
-	 WHtJ02yqLYfaEn4rqbgKTYaZuoZk567fOe/qIu0n+VmjAVrhoW/Y0oK9w76XtTa1jN
-	 Ubofr1xStvh+561IFwQU+iMnUnZdqvn1nGq+yKqiOHWwAajiIkN9co3VfZTPrDMbp5
-	 rGRQPF+i/QofQ==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6509A37820C3;
-	Mon,  4 Mar 2024 13:56:56 +0000 (UTC)
-Date: Mon, 4 Mar 2024 08:56:54 -0500
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Brian Norris <briannorris@chromium.org>,
-	Julius Werner <jwerner@chromium.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	kernel@collabora.com, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Tzung-Bi Shih <tzungbi@kernel.org>
-Subject: Re: [PATCH v4 0/4] Allow coreboot modules to autoload and enable
- cbmem in the arm64 defconfig
-Message-ID: <36df8535-083f-4ce3-84c7-b8f652a9085b@notapiano>
-References: <20240212-coreboot-mod-defconfig-v4-0-d14172676f6d@collabora.com>
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="bCWJcTC+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=/9y+afRjJ9gLFaGiuSXGFB7Y07dNe/W9ADUFEmL+ed8=; b=bCWJcTC+qhzGEcw0AlIPOLXZMv
+	kB99hkpaGpzUUsbTOkEnCLqlnPQxfI8zpFRheZLYeATnoe6WspE6EORRspXR0jKLkhwR7qR8asYEu
+	/NYxVOPmYlHXxaP952ZNhI5wV+7As+uLHXPPF45xksU4HyQE0+GAmr/Lzj7/KRfcKJMAn8pilpnaz
+	a5m8Y37DS84apb0+4Z2WwTJ5sFQUcfpYfpS0hSSwgF4ZrRb5Q9hhYCGaT6IskNyM6cEwy9cweuuv2
+	xuEtvH+KqwwfDn7x0ry5aoQFBY14fRKLmlBi/bYSf31Z6+0bN3EXH1TeIkWMytBVJAwLyNZchluvL
+	b932B+SQ==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rh8od-0005eq-A2; Mon, 04 Mar 2024 14:57:15 +0100
+Received: from [178.197.248.27] (helo=linux.home)
+	by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rh8oc-0003y7-Jh; Mon, 04 Mar 2024 14:57:14 +0100
+Subject: Re: [PATCH net-next v2] net/nlmon: Cancel setting the fields of
+ statistics to zero.
+To: Jason Xing <kerneljasonxing@gmail.com>, yuanli fu <fuyuanli0722@gmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ fuyuanli@didiglobal.com
+References: <20240303114139.GA11018@didi-ThinkCentre-M920t-N000>
+ <CAL+tcoDAmA4q+FxJchgA1LQ2fxhD8oRdjDOmVPeJ1-eSnkSt5Q@mail.gmail.com>
+ <CABbqxmcJ+bybv0e-Rby9Q1jVR59Na_XE9MBee+f_zu0HUTmvqA@mail.gmail.com>
+ <CAL+tcoDkTPLFksXWReGXNjujOQbgtiTKN0_-MW1f7Yhj8+CzgA@mail.gmail.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <df93a088-e8f8-3708-8009-b0560c0d07f7@iogearbox.net>
+Date: Mon, 4 Mar 2024 14:57:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <CAL+tcoDkTPLFksXWReGXNjujOQbgtiTKN0_-MW1f7Yhj8+CzgA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240212-coreboot-mod-defconfig-v4-0-d14172676f6d@collabora.com>
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27204/Mon Mar  4 10:25:09 2024)
 
-On Mon, Feb 12, 2024 at 09:50:04AM -0500, N�colas F. R. A. Prado wrote:
-> This series adds the missing pieces to the coreboot bus and the module
-> alias generation to allow coreboot modules to be automatically loaded
-> when matching devices are detected.
+On 3/4/24 2:25 PM, Jason Xing wrote:
+> On Mon, Mar 4, 2024 at 7:14 PM yuanli fu <fuyuanli0722@gmail.com> wrote:
+>> Jason Xing <kerneljasonxing@gmail.com> 于2024年3月4日周一 15:05写道：
+>>> On Sun, Mar 3, 2024 at 7:43 PM fuyuanli <fuyuanli@didiglobal.com> wrote:
+>>>>
+>>>> Since fields of rtnl_link_stats64 have been set to zero in the previous
+>>>> dev_get_stats function, there is no need to set them again in the
+>>>> ndo_get_stats64 function.
+>>>>
+>>>> Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
+>>>> Link: https://lore.kernel.org/netdev/20240302105224.GA7223@didi-ThinkCentre-M920t-N000/
+>>>
+>>> Suggested-by: Jason Xing <kerneljasonxing@gmail.com>
+>>> See https://lore.kernel.org/all/CAL+tcoA=FVBJi2eJgAELhWG_f+N-kwmrHc+XRfKXhYk2RJcPKg@mail.gmail.com/
+>> OK, I will submit a v3 patch which updating commit message, thanks.
 > 
-> The configs for cbmem coreboot entries are then enabled in the arm64
-> defconfig, as modules, to allow reading logs from coreboot on arm64
-> Chromebooks, which is useful for debugging the boot process.
-> 
-> Changes in v4:
-> - Added driver_data to device_id struct
-> - Link to v3: https://lore.kernel.org/r/20240117-coreboot-mod-defconfig-v3-0-049565a27bba@collabora.com
-> 
-> Changes in v3:
-> - Merged all "add to module device table" commits into a single commit
->   which also changes the coreboot_driver struct to contain an id table
->   and avoid unused variable warnings for the id tables.
-> 
-> Changes in v2:
-> - Added commits for vpd, memconsole and framebuffer drivers to add them
->   to the module device table
-> 
-> ---
-> N�colas F. R. A. Prado (4):
->       firmware: coreboot: Generate modalias uevent for devices
->       firmware: coreboot: Generate aliases for coreboot modules
->       firmware: coreboot: Replace tag with id table in driver struct
->       arm64: defconfig: Enable support for cbmem entries in the coreboot table
+> I don't think you need to send a new version of the patch unless
+> someone points out other changes that should be made.
 
-Hi Arnd,
+I think this patch is not needed anymore, see net-next :
 
-is it ok for Tzung-Bi to merge this last patch for the defconfig through the
-chrome-platform-firmware tree?
+4f41ce81a919 ("net: nlmon: Remove init and uninit functions")
+26b5df99bf60 ("net: nlmon: Simplify nlmon_get_stats64")
 
 Thanks,
-N�colas
-
-> 
->  arch/arm64/configs/defconfig                   |  3 +++
->  drivers/firmware/google/cbmem.c                |  8 +++++++-
->  drivers/firmware/google/coreboot_table.c       | 20 +++++++++++++++++++-
->  drivers/firmware/google/coreboot_table.h       |  3 ++-
->  drivers/firmware/google/framebuffer-coreboot.c |  8 +++++++-
->  drivers/firmware/google/memconsole-coreboot.c  |  8 +++++++-
->  drivers/firmware/google/vpd.c                  |  8 +++++++-
->  include/linux/mod_devicetable.h                | 10 ++++++++++
->  scripts/mod/devicetable-offsets.c              |  3 +++
->  scripts/mod/file2alias.c                       | 10 ++++++++++
->  10 files changed, 75 insertions(+), 6 deletions(-)
-> ---
-> base-commit: 0f067394dd3b2af3263339cf7183bdb6ee0ac1f8
-> change-id: 20240117-coreboot-mod-defconfig-826b01e242d9
-> 
-> Best regards,
-> -- 
-> N�colas F. R. A. Prado <nfraprado@collabora.com>
-> 
+Daniel
