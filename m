@@ -1,191 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B29446549;
-	Mon,  4 Mar 2024 14:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709562937; cv=fail; b=ZkR8MQgEqCeOPJiFprUyMtQqshGgEuVEVal/30Cp8vlFWPyrrTBABEQfepUAq2aq8Y6gYdjC6fMtlPLjMNw8Vl0Mgf4IYYnvP/P7+fYpdOnOQkCQWvbKzKvsZPi7XcgCvQNshYMc67Yoi0Q1ohijgDJfgrMZ93BWRb4Shq5SI1E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709562937; c=relaxed/simple;
-	bh=R/F0YJAof3qBIfALfYzfQ9DREpJ0InKgxJywKTdRmvc=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NaxodNlSkaUs4oNXylVnfH+KZSOclGRr7fCFZnMdZMFYRx56hePBkQ47uHhsfOi8kya/t/qM5x6FYRK+wuu5Vz5APMZSTxWUg1NBu9jJ+wHswcDUnyGxymas0km+NBvNVcv4l+ZNPzNwxiEtV0bhibN+fQtkn2XSVLceFVBhJQw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k+7hjm+W; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8FD481CD;
+	Mon,  4 Mar 2024 14:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709562948; cv=none; b=PR2Fb4Fr6oBVuQR27bq215jfbMn5kP/WeuDMBj6zNnz954G4O4q39yUobZCFYVykLwxkAb6rcPmxpJQgpdozlKiZFTeoHx2j3jypiP6cavL+0BA+gaLIkqa6cIAEv2At0xmg0udfPt3r6a5VMBNKoD3DshPlJ4YlLBjlsxn8Myk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709562948; c=relaxed/simple;
+	bh=q9f7jSXfpd9bEo6UkCv1LEyThgtNtItIMZvG8v/XxyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LAACIyKmar0v610IM6QYiTt1+06qutbr8paidy5IjorPXPl8EDxvrKuSFKHAkbmelOGNYzCvidd/qPQKV4Ui7466XhmkeFFSsAkBXeUJNVHkMC1zjWaIy/dmjAWmGIeNy9jY+FDbIhKQv2gSK8bAuJU6jalv6JXLNuiRGMZ/hNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Igjde9ZN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k+7hjm+W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709562935; x=1741098935;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=R/F0YJAof3qBIfALfYzfQ9DREpJ0InKgxJywKTdRmvc=;
-  b=k+7hjm+WvGxOhT7ISxIrJheKzwN59FOVC1Ekp0oaQP30VSKVtGJkQVDC
-   NqgrrnJj3gxESyphIqQnJM5TMo35iUHMUOPcHgyyZTMXSaGF8PwI1pc44
-   6dyT9DpyaKIWePdy/+oeekjxLrolcrQ5TOSPxd4Z1SfJ1WQSP9W+4f2W4
-   +cPZiTjK6UU2B7EpcuZyhZ9o4QLZW2HQwiZKT42Kz2o2RDllDFSzCsMUA
-   m6NvfwpfrC3gYQOWzsH/7LPVOBTLR2gM+MhRMLy0Al0Wau0CICBUEDdO+
-   jkT4Gg6vCIrSsfuXY8M5suKuE0MugxfmL867fP+4zcj/IpmTGqF7vdOCn
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="21517029"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="21517029"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 06:34:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="9399109"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Mar 2024 06:34:00 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 06:33:59 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 4 Mar 2024 06:33:59 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 4 Mar 2024 06:33:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jh3TO9vL3p3DtUlZ9vlM9XL7EmDuWPZ12Fw7PrRyqTqEPFbYDYOMK3VbZ+13tXDkywOpukOMOfEPMYIx+jtkWaTcTntZX/QFV1/svrfECWfYfgWfr3VZYBIEcxb5GK+IxvqCgZPU3Djbv71wJzASi+8whZDw9GgqloIuVJmyCDbmJj70Uq76FTXiH5hGCYpi8hEKjXRQaz6JZXEW588FB4F+ldu34SgUGrfWvp/19LMJrMqUzA9gV9g2nhQUVEvaG777B3oZhfpoy8R9PRRFSwHAxEgoTD+8kIsNi8LeeUUiJMf8WNTvuFiBQndSrm933uGxi0qZAE/VH9O0AsKwrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AnKgNTXk1pjM5SHpKP5/Q6eIveIamSiVHUYxUv+WTus=;
- b=Yfh6Z7IrnDvd/MbWosKb+JtLFOV14+M+oaHnFRa6D/J9bqtbYiME0ijbRJMIUSVO2t12hZ/inXMCIgypTi7oHx1lEa4/EAJczrPPyo0BPHXGBpbDN3TRGaVJaBtL662VHJPnaPSUXvQrxOwNBENO3EYdh81vRxpZb/TrE+uSAtjrQAZVvnYgd2eOMrfFRLh8FOSqgqHpWGjgnxpRp2qmyw6g4j7VJo5qBG9VQeWMVtPiWp6/puzDDwHGkOr7KRLJRJxm37I927kVmIWrWFbvrMmde4o7JN8mAKl2rb6Mm4gz57bncGjjymMqNF0zW9BiFxne/cH1XLQPGPnkiACmkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by PH7PR11MB6906.namprd11.prod.outlook.com (2603:10b6:510:202::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.23; Mon, 4 Mar
- 2024 14:33:57 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::f082:826a:7761:7aca]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::f082:826a:7761:7aca%2]) with mapi id 15.20.7362.019; Mon, 4 Mar 2024
- 14:33:57 +0000
-Message-ID: <ae6b1114-1c71-46f0-82e5-23b9f05df1bf@intel.com>
-Date: Mon, 4 Mar 2024 15:32:51 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Eric Dumazet <edumazet@google.com>, Kees Cook <keescook@chromium.org>,
-	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, Simon Horman <horms@kernel.org>, "Jiri
- Pirko" <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, Coco Li
-	<lixiaoyan@google.com>, Amritha Nambiar <amritha.nambiar@intel.com>,
-	<linux-kernel@vger.kernel.org>
-References: <20240229213018.work.556-kees@kernel.org>
- <20240229225910.79e224cf@kernel.org>
- <CANn89iKeJGvhY0K=kLhhR39NVbaizP2UBk0Vk0r_XCe2XMBZHg@mail.gmail.com>
- <9050bdec-b34a-4133-8ba5-021dfd4b1c75@intel.com>
- <CANn89iLSLPn5PyXNQcA2HO0e5jGYvHKhTh_9_EMmfbTJKZPfbg@mail.gmail.com>
- <77d3f074-8cb6-466b-ab31-a7b0bac659d0@intel.com>
- <20240301093517.428e5b5d@kernel.org>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-In-Reply-To: <20240301093517.428e5b5d@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0208.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a5::18) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Igjde9ZN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAAFAC433F1;
+	Mon,  4 Mar 2024 14:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709562947;
+	bh=q9f7jSXfpd9bEo6UkCv1LEyThgtNtItIMZvG8v/XxyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Igjde9ZNKPtjRk1+omIGDhEgrS4a4lSnvVm69VeaEefz65x/Er0tW7LU5p18gAUvp
+	 k4iYZNWyO9p3EfLjkO2FcTbto/ZlZPLbh1q5mkSo/z7ApTi2VlszMinw/0ADoter7x
+	 TnF6JSMwoNZFJLAkOvctELk+1a4f3c4QXiE/o+9FBLEqDq5twdMEMmLuFK5qaOKLVt
+	 ugf5Y/4vDBMgs+2plwRmO01C7QgqDUDPBv1p/K15nY+wEbHLVOfpGBpF0O5UnsWJGA
+	 8c52lqpM4M2Tkfs2B/PZF8hGYrUSr5gPYuNaLKbLmB2KSiizNiQ2U67AA6oPDja+TP
+	 hm/OxdSV3Zztw==
+Date: Mon, 4 Mar 2024 08:35:46 -0600
+From: Seth Forshee <sforshee@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>, v9fs@lists.linux.dev,
+	linux-kernel@vger.kernel.org, xingwei lee <xrivendell7@gmail.com>,
+	sam sun <samsun1006219@gmail.com>
+Subject: Re: [PATCH] 9p: cap xattr max size to XATTR_SIZE_MAX
+Message-ID: <ZeXcQmHWcYvfCR93@do-x1extreme>
+References: <20240304-xattr_maxsize-v1-1-322357ec6bdf@codewreck.org>
+ <4091309.WcpKHNDlqE@silver>
+ <20240304-zeitschrift-tagung-6f2a28e781bc@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|PH7PR11MB6906:EE_
-X-MS-Office365-Filtering-Correlation-Id: a7ba5a97-62e6-4110-fd33-08dc3c581ffd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kJ7DogRHmJoBeMeQm6uD7zXi6pPdBYRivghnOemWEPn2V+xR2ZSeLvFsIBaTz6G7p7jBGyHNi1VZ5WFGU3r3GHd8c7I+yFarUUPXeyqRUdKqlnXT0Ny1iFoMacj+4D9l+xEhM4WgGV8iLs6a5hBN4/JxlDGr81m/JwC01gRWuTIQMrgB177qFtr4DA068xgUaBbkTtXB6aGZRWOriW+P8N3ArDn7S9dOn8uqLDEUhukXzuPUn+MNsjnN9FJ41h6MZ9oF6n2Q2yNulikXX9MIMJRx0JX2VliIpSdXD6nBU8FH7LMW6cxVvC7mBF7PpxR5VguGhe3OVonU29U+vFf0rbMPduRn8mCEwFd9M23A8CDdMqdBFwjxDOxnxiFPNpmVddtCWcwuJGdy/Gdcz+3cd9gMAMn2xdtmZ4cyz7IILjC08U58rq31CaVKumERy9ZDoDFgP3b0+d0egw/BnFC5B0/JiRJApQaZARawNIIuUKleIC67KVEZYCPGf3kGYuSJs0IAKCTXqRmboNDnC+YyleyYR241WXMCih3wDtJADu+FZVFlCNNH1qKGwn5zIkUltgHUMK5BVEQu6Xpiwaokx9xSXF7lKwr1bOoMPCeYftdOVBGGZJ27+4QUbh7k8rMZNhGtv/4HUIeni9IUf9dD9QB6/MVJgXiOnnqvYIcww+Q=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d1h1d0tkZUdWa0txZVloeEZmQnYvMS9KSXBWMFFXcmoxM0VNVWs0dFkwQ0VI?=
- =?utf-8?B?RFVva2VHYXh3NVJMNmtsVTI0cTI5b0wzelF1MFZDYnJHNjZWaUVrVW9QMklP?=
- =?utf-8?B?cDc3NXZvSDlURHIzU3o1WTVMdXRjeVRHNW03YmJTZDFnNms1dTZlY2FlejJZ?=
- =?utf-8?B?VUpyd1hPR2pYcGp0Q0RUb2E2L0NCblVCZVBiZm9EOWxmQnFldTdEYk1UVHMv?=
- =?utf-8?B?TXR0dXludlFtU09iVlYvblZKcE9zbllFcWdoTjA2QldpVTdnTnFSSUhGYkZO?=
- =?utf-8?B?YndMSHpUcEt2c2F3b3Y4WTVsWDJhYzVUbmlSRkZiN1diMG90S25hMnpHSGl4?=
- =?utf-8?B?cEo1VTA3WWZKRTd1TTF6ZTVtSDRyQ2JQYkQ3TEdIaFl6RjNuUTFoUmRFTEFJ?=
- =?utf-8?B?Wkx5NytQOXFNQlNaeFNtdUdobVBxZFpZcjNNMGsyTnpDL0VrQWV5QzhQd3VZ?=
- =?utf-8?B?M3A0VjdXZWFNMTQ5ajhKa2Y0WkViRDVZZWI1NUxublMvZ3dYTTNabU5ZZTBw?=
- =?utf-8?B?QkJYazErS3JFVmNLc0ZBMk5tL0pFNDhCeFdjbEgwY0IrZTNUdldhVWdIRnU4?=
- =?utf-8?B?cU9IZ3A4cGI2QkNOeHlkNkZJMC9jb2ZwNFc2SHcxa3lSem9QTGxLbzYydHB2?=
- =?utf-8?B?eGFGcGpjdjRGTlo4MHVleEpZb2hZZWNCVGxzL2czSUhENFdZcFZ1bFp1TG9u?=
- =?utf-8?B?Vmo0Q0JJcFpKQ3EzM2diandmc2wreS9yT3ppR1ZYbDRBZVNoUVVIQzJ2RFhF?=
- =?utf-8?B?S2V5aEo0OGRZeU9hcm41bmdHRFI4RlllUzVzNzJvNmliblIyWmFiTW1Wb3F3?=
- =?utf-8?B?VnZPR2dpbzNDS3BPOWM3QzJJV3pGN29RZ2FvTTJZcTZzL3J4QUdndDZkdFJL?=
- =?utf-8?B?bFg1Q00yR0RZRjhqOHFQcm8vc0Zoc1o3VndTWnlacUdsaDlOdU9FcVpXUy9P?=
- =?utf-8?B?d1pFNFlHTlhoMk1HdTE0dlo0V24xRHZzNGQrSDRsTWVpMmNpcVNXVWN0WUM2?=
- =?utf-8?B?YmRqM0Q4bjR6dkl3aEMvOFFTMndLZVMzT2N1OTJJeFdkMkZDV0ZCY2QvTFp3?=
- =?utf-8?B?K1hNbUxQYmVsN2tyNUFqem4wUUVNNWxOYy8vckl2YVVpMjk2NXRIaWVScHM0?=
- =?utf-8?B?MVpRejJKZUVaaHBQSDNxam5rS1BYOUFOVTVnc0xLbzRMSzJua3dwdzFvTDBn?=
- =?utf-8?B?ZzNCTk56U3ZtTW9HZnhXV3BKOUNYWUptYmpnWExjdXhwbHBicEpkTjdvOXhq?=
- =?utf-8?B?WVptL2NndHVZOGJRbW4yTmRSODVVREhEdWh4eHA2Q09hQm81REQxbGJJdzEv?=
- =?utf-8?B?SEJVM2hFN2w1ejQ2OGVmakR5MlJRemFpUDVuU1lBUVY0M24ybktsV2MvTkdu?=
- =?utf-8?B?YS9hSm5iWXlaMWtHZ3dONHo3b1BQTVVFYmc2Y3dqcGZQQktMMmcybElNanJh?=
- =?utf-8?B?Nk94VXc2SERIZ25wMHFKbUlhemRjY0MrQ2V5UVFNTWFzWWlLK1piT21VTS9P?=
- =?utf-8?B?UkUrTUZqWnJ6WWoyeVFUa2pNK1BTQ1dEdUxhMFN2dFEyNVBzWHBUdHNQTkg3?=
- =?utf-8?B?UlJrQXY1bXFGT3VRVkhzQ1pVNWNncUNNajhKZEV4cWFPd00xaC9YelRrYThF?=
- =?utf-8?B?NzRKeGxWNm94SVJPMmQyK3V2bHpaLzZRSktnWU9NbkZwcnRqelZIV3J6ckZu?=
- =?utf-8?B?V1Fhd3dpN0R2UGx6RUIvSmgrTkk5MDQ4RHVtOUhZYTVFZHRDRHVuSGc4VmI0?=
- =?utf-8?B?NWtlYXQrS0ttYThHM2t2UXRjTmRxMmlodHlkRUF5Y1Y2d1RZTHRycHFUL00x?=
- =?utf-8?B?VmlxbW4wYnpHak9Bb2wvVTZoMTQzMXlzaTkzbmRzM25pd283Wnp4ODRadGg4?=
- =?utf-8?B?dWZGSUhYVDBYSHphM2lvUkxJdXQ5MERDUnNxSmd6QkswbFN2TUlTRVdXTVhm?=
- =?utf-8?B?dW5JbFRjSjR6dmlCRWg0VE9OSjFzZGY2cU5QNms1Smthbm5RN1lyeFI4UGNh?=
- =?utf-8?B?SGRaNG9ObVJhKzVEenB6YllHTyt4ZGlBRGk5Ukxwa1NVaFFyUGlaS01DcHlz?=
- =?utf-8?B?NG5CNE01b3lGdWdkL1Z0Y0JuSFdiYXRMaTd2WHBtRzhlbVdkRDVHUjg0aldy?=
- =?utf-8?B?eWpxbXdCR1VRd3NiTzJlUTUwKzNaemw1RDg4OHBpbGJRTUVGS2tod3k4K0J6?=
- =?utf-8?B?TlE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7ba5a97-62e6-4110-fd33-08dc3c581ffd
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 14:33:57.3960
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E1ECCZrC49g1UqobHA9f5XFC4nxu/bZgBjlBtnWSAmuB0+7cE0ISkXnyez+P2irAfCSm7sbu03buY3mV/JBTAmpDYziJgwO9ciiMgMh1XiY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6906
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240304-zeitschrift-tagung-6f2a28e781bc@brauner>
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Fri, 1 Mar 2024 09:35:17 -0800
-
-> On Fri, 1 Mar 2024 15:30:03 +0100 Alexander Lobakin wrote:
->> I like the idea of declaring priv explicitly rather than doing size +
->> ptr magic. But maybe we could just add this flex array to struct
->> net_device and avoid introducing a new structure.
+On Mon, Mar 04, 2024 at 03:19:58PM +0100, Christian Brauner wrote:
+> On Mon, Mar 04, 2024 at 02:35:07PM +0100, Christian Schoenebeck wrote:
+> > On Monday, March 4, 2024 1:42:43 PM CET Dominique Martinet wrote:
+> > > We probably shouldn't ever get an xattr bigger than that, and the current check
+> > > of SSIZE_MAX is a bit too large.
+> > 
+> > Maybe, OTOH e.g. ACLs (dynamic size) are implemented by storing them as xattrs
+> > on 9p server as well, and this change somewhat expects server to run Linux as
+> > well. So maybe s/XATTR_SIZE_MAX/KMALLOC_MAX_SIZE/ might be more appropriate,
+> > considering that this patch is about fixing a potential kmalloc() warning?
+> > 
+> > Worth to mention in the commit log BTW what the issue was.
+> > 
+> > /Christian
 > 
-> 100% I should have linked to the thread that led to Kees's work.
-> Adding directly to net_device would be way better but there's
-> a handful of drivers which embed the struct.
+> So the error is somewhat specific to filesystem capabilities which also
+> live in the xattr apis but Seth is working to get rid of them in there.
+> 
+> They currently use a special api vfs_getxattr_alloc() which is an
+> in-kernel api that does a racy query-size+allocate-buffer+retrieve-data
+> dance.
 
-I think it's okay to embed a struct with flex array at the end as long
-as it's not used? Or the compiler will say that the flex array is not at
-the end of the structure?
+Yes, the patches I've sent does use vfs_getxattr_alloc() for fscaps
+anymore.
 
-> If we can switch them to dynamic allocation, that'd be great.
+> That api is used for fscaps, security labels, and other xattrs. And that
+> api doesn't do any size checks which probably should also be fixed now
+> that I write this.
+> 
+> @Seth?
 
-It's mega weird to embed &net_device rather than do alloc_*dev() >_<
-
-> And, as you may be alluding to, it removes the need for the WARN_ON()
-> entirely as well.
-
-Thanks,
-Olek
+I agree. I don't see any reason that vfs_getxattr_alloc() shouldn't just
+bail out with an error if the size of the xattr is >= XATTR_SIZE_MAX.
