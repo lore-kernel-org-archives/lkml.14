@@ -1,181 +1,121 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-108-mta96.mxroute.com (mail-108-mta96.mxroute.com [136.175.108.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B478B666
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 06:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A004CBE4C
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 06:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.96
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709532432; cv=none; b=p3WgWa2WnUrRcMh6jRizmvPzJMZgWIMEed8rkKxdM4nAiNZmlLodZlKd3QjowgjA4F1LlRFZuoJ2Z4Yv1kwIuX9i4ChCjxIf8qwiUFvNtQ9zXYW4GnzXgAbdbCrkJPVZPFD1KaUn/2lsnwhSECcpGIvtVMJ/xLBCZr5hlCVo14E=
+	t=1709532840; cv=none; b=cPKIy5rRAdwI5Gy2TXelxruHXIXM7YPCry0Xx5p/i7ZYQFndCHJJ9l2F9+VGVTZNEHR0FvQ7W7cvwtaZDYyR9wmObAdBJcx7qMWxf4JaT1t9wRukknbSirp1MdR295/9iPyR492nMcFmSvWUVe4RD35BCrwxjA2CzamJX220q9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709532432; c=relaxed/simple;
-	bh=0WP8Ltd4+HZ7yFqiob65ZX8Kr15q2vLC5UlPnNe9mBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KThoYOjnQLpzXfyH+V77WMIevPWN4UYOgw6x8dr/GKSw020xZmpw3wbINJ3Na7QoxfUln5PzZJKS6bnKmcjx2Bx/zpoaOZvbFAMnrnwOwb9ayTqyjnVJYafeMedkbu+tf2d5rFOOUxYvUQeBbj4U2/nKMGSa7LXs6emhuNoTl7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RmWvIpHY; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709532840; c=relaxed/simple;
+	bh=JA+ToT62ofN18tC9Y/a9EcQCQzLzVQ2/LikqbqFWxmQ=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=TwN7hrmFFqK1Zw4O9FHtFZxSKzTNDcUCy6UDWNjp7VY4RDlrf+vsj7CTas+5ZZNqVVwy3QBD77duSXNF+KY5i+7VATC32401tZOiMywN9akY6eMrDtuN23XnHHTEBZpA+RRy7NyJP+nPi369na/W0DpUIIifPFzLsmE+nc9gd0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org; spf=pass smtp.mailfrom=damenly.org; dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b=VehTBCH6; arc=none smtp.client-ip=136.175.108.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damenly.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RmWvIpHY"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d944e8f367so27100465ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 22:07:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709532431; x=1710137231; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FhEJRlvCaCR4wDqO5rRMM6OSqb/H9Os2oUv3uFwDX/g=;
-        b=RmWvIpHYTx6naKUeUfRcZ6vzg82p7PDDyf25ongV74N3RNh0ebYiSQdA3IL2kczw9L
-         NJ7PrJK8JDUJp2Lq9pPIt55zhEh8mO6gvuS9WdvawohLIz0tzlbqVIwSz/J88joDmp1V
-         euWGgpjH4pRLtqruPI8TTIi6UtJ/AX2jJx/I0zh76jgOovvyUfrkHZSk2yi23vlb+BxM
-         Fexso6In3kxtxNl2Aujxyopo1LkPp+kC0GgDrBOyyoLmgGRz6NM9EF1IxclZHrA1dnc1
-         PbLLiLT0TwLw2EwfIPPmnVkgF3MNPvlDy04bCLttJ+PAFDFU6hUvgklhqxisH9LCQ1pX
-         b2qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709532431; x=1710137231;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FhEJRlvCaCR4wDqO5rRMM6OSqb/H9Os2oUv3uFwDX/g=;
-        b=peGst8BwNFfKlNh/xPq4YNHD3XJaPdYZKa+1Kl9vpiWvBx9H8Cr2ZQ5V7c1mRcM3FI
-         LOQC86pi5EU1nataDcm26lOIoTq/a42vBSPpnR3K1BH6z3rrRzdBs425leaWsE8hjhr1
-         rcSrw3Nbv7uDnGomdkckhUxeOO7xTacdO2tt9MYqh2KLtejpCh4Ff2XibIiYdtqA4HyR
-         nVmT3NYDjYoMLIpNb2Qa8ujVmmJJfIUKAFot0cEhsL9ZmOUINLsf2GgC/cwp7JjAgTWJ
-         UySssoQfCyZKuiyPS/ZQl24Pfa6dNFnWiQscfY6GvEk3FurJqlL+cznCbUpWrO+id9vM
-         4ZWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUm3+QfnvqbqBfiYpX8cL7YCovmYMvG8Qylp0vlPQSOKmVh/VJk1vNOOzTLcNJ8osVomOeeb2FQxw7dLD22M/8/OMoPeoFcgSLouBqS
-X-Gm-Message-State: AOJu0Yyigk3IPc7rOVXfpsjz6MMb70N1+I2mhYYatPvqFLO9NqKjVkHU
-	RqSp21TK7rJZFT6RiSLPPxijawxZu4Sp5cbcgHxZqKbvT2ft0EcaaC/iei/oJQ==
-X-Google-Smtp-Source: AGHT+IH2zrIOPzr3AI4ZasZTAXun5czB2o+PuFfZI1017C8l5WdYVlq8oSSCVAQTv+1lcEPhiCemaA==
-X-Received: by 2002:a17:902:9a07:b0:1dc:7890:cb27 with SMTP id v7-20020a1709029a0700b001dc7890cb27mr7278937plp.48.1709532430393;
-        Sun, 03 Mar 2024 22:07:10 -0800 (PST)
-Received: from thinkpad ([117.207.30.163])
-        by smtp.gmail.com with ESMTPSA id u8-20020a17090341c800b001dd1029db99sm1395975ple.4.2024.03.03.22.07.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 22:07:10 -0800 (PST)
-Date: Mon, 4 Mar 2024 11:37:00 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org,
-	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-	dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com, quic_schintav@quicinc.com,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
-Message-ID: <20240304060700.GD2647@thinkpad>
-References: <1708697021-16877-1-git-send-email-quic_msarkar@quicinc.com>
- <1708697021-16877-2-git-send-email-quic_msarkar@quicinc.com>
+	dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b="VehTBCH6"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta96.mxroute.com (ZoneMTA) with ESMTPSA id 18e08143a6c0003bea.005
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Mon, 04 Mar 2024 06:08:47 +0000
+X-Zone-Loop: b5e7bc1f501381cbd12b8d0184a100cb8442c75b9a3b
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=damenly.org
+	; s=x; h=Content-Type:MIME-Version:Message-ID:In-reply-to:Date:Subject:Cc:To:
+	From:References:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=nYqwQY5WZpB5b6Y6JJAAKQwIZSkHfM0YPUUkqlGVit8=; b=VehTBCH6AwnsY01KTB2REayOUu
+	h1eNlti/BBAG8E9pYQoCgKCACBZKDWLs6WvX42i86tVb+OcCOp2TWR4pJBCT4wXU35r+TnwEpyFbv
+	5PxrNXtNP+BMLlSUjwrsEej8PFqgCjpYLgcyKlyY+Tk43TZsle4eB4hbVmW2HYZkv54gNjpkSXq4D
+	kjiwmv94Nb752a2YAZvRKZyUx9MCWT3QvxDF4yl74c9ZS3/DUmFJ2xh7P0vttceERpOy/uh4ZmVmR
+	bFwIb5l6g/2etsUDEnsDK15Ngc2WlUws08/5NYfZClQcD1OKIbHb2K/oDAg+M2kTg6Z/awO4R1jtz
+	LgDD0mAg==;
+References: <20240304032203.3480001-1-lizetao1@huawei.com>
+User-agent: mu4e 1.7.5; emacs 28.2
+From: Su Yue <l@damenly.org>
+To: Li Zetao <lizetao1@huawei.com>
+Cc: kent.overstreet@linux.dev, bfoster@redhat.com,
+ linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: Fix null-ptr-deref in bch2_fs_alloc()
+Date: Mon, 04 Mar 2024 13:12:07 +0800
+In-reply-to: <20240304032203.3480001-1-lizetao1@huawei.com>
+Message-ID: <frx6edjh.fsf@damenly.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1708697021-16877-2-git-send-email-quic_msarkar@quicinc.com>
+Content-Type: text/plain; format=flowed
+X-Authenticated-Id: l@damenly.org
 
-On Fri, Feb 23, 2024 at 07:33:38PM +0530, Mrinmay Sarkar wrote:
 
-Subject should be:
+On Mon 04 Mar 2024 at 11:22, Li Zetao <lizetao1@huawei.com> wrote:
 
-"PCI: qcom: Override NO_SNOOP attribute for SA8775P"
+> There is a null-ptr-deref issue reported by kasan:
+>
+>   KASAN: null-ptr-deref in range 
+>   [0x0000000000000000-0x0000000000000007]
+>   Call Trace:
+>     <TASK>
+>     bch2_fs_alloc+0x1092/0x2170 [bcachefs]
+>     bch2_fs_open+0x683/0xe10 [bcachefs]
+>     ...
+>
+> When initializing the name of bch_fs, it needs to dynamically 
+> alloc memory
+> to meet the length of the name. However, when name allocation 
+> failed, it
+> will cause a null-ptr-deref access exception in subsequent 
+> string copy.
+>
+bch2_printbuf_make_room() does return -ENOMEM but
+bch2_prt_printf() doesn't check the return code. And there are too 
+many
+callers of bch2_prt_printf() don't check allocation_failure.
 
-> Due to some hardware changes, SA8775P has set the NO_SNOOP attribute
-> in its TLP for all the PCIe controllers. NO_SNOOP attribute when set,
-> the requester is indicating that there no cache coherency issues exit
-> for the addressed memory on the host i.e., memory is not cached. But
-
-s/host/endpoint
-
-> in reality, requester cannot assume this unless there is a complete
-> control/visibility over the addressed memory on the host.
-> 
-
-s/host/endpoint
-
-> And worst case, if the memory is cached on the host, it may lead to
-
-s/host/endpoint
-
-> memory corruption issues. It should be noted that the caching of memory
-> on the host is not solely dependent on the NO_SNOOP attribute in TLP.
-> 
-
-s/host/endpoint
-
-> So to avoid the corruption, this patch overrides the NO_SNOOP attribute
-> by setting the PCIE_PARF_NO_SNOOP_OVERIDE register. This patch is not
-> needed for other upstream supported platforms since they do not set
-> NO_SNOOP attribute by default.
-> 
-> 8775 has IP version 1.34.0 so intruduce a new cfg(cfg_1_34_0) for this
-> platform. Assign enable_cache_snoop flag into struct qcom_pcie_cfg and
-> set it true in cfg_1_34_0 and enable cache snooping if this particular
-> flag is true.
-> 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> Fix this issue by checking if name allocation is successful.
+>
+> Fixes: 401ec4db6308 ("bcachefs: Printbuf rework")
+> Signed-off-by: Li Zetao <lizetao1@huawei.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 2ce2a3bd932b..872be7f7d7b3 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -51,6 +51,7 @@
->  #define PARF_SID_OFFSET				0x234
->  #define PARF_BDF_TRANSLATE_CFG			0x24c
->  #define PARF_SLV_ADDR_SPACE_SIZE		0x358
-> +#define PARF_NO_SNOOP_OVERIDE			0x3d4
->  #define PARF_DEVICE_TYPE			0x1000
->  #define PARF_BDF_TO_SID_TABLE_N			0x2000
->  
-> @@ -117,6 +118,10 @@
->  /* PARF_LTSSM register fields */
->  #define LTSSM_EN				BIT(8)
->  
-> +/* PARF_NO_SNOOP_OVERIDE register fields */
-> +#define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
-> +#define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
+>  fs/bcachefs/super.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
+> index 6b23e11825e6..24fa41bbe7e3 100644
+> --- a/fs/bcachefs/super.c
+> +++ b/fs/bcachefs/super.c
+> @@ -818,13 +818,13 @@ static struct bch_fs *bch2_fs_alloc(struct 
+> bch_sb *sb, struct bch_opts opts)
+>  		goto err;
+>
+>  	pr_uuid(&name, c->sb.user_uuid.b);
+> -	strscpy(c->name, name.buf, sizeof(c->name));
+> -	printbuf_exit(&name);
+> -
+>  	ret = name.allocation_failure ? -BCH_ERR_ENOMEM_fs_name_alloc 
+>  : 0;
+>  	if (ret)
+>  		goto err;
+>
+IIRC, krealloc() doesn't free old pointer if new-size allocation 
+failed.
+There is no printbuf_exit called in label err then memory leak 
+happens.
+
+--
+Su
+>
+> +	strscpy(c->name, name.buf, sizeof(c->name));
+> +	printbuf_exit(&name);
 > +
->  /* PARF_DEVICE_TYPE register fields */
->  #define DEVICE_TYPE_RC				0x4
->  
-> @@ -229,6 +234,7 @@ struct qcom_pcie_ops {
->  
-
-Please add Kdoc comments for this struct. And describe the "override_no_snoop"
-member as below:
-
-"Override NO_SNOOP attribute in TLP to enable cache snooping"
-
->  struct qcom_pcie_cfg {
->  	const struct qcom_pcie_ops *ops;
-> +	bool enable_cache_snoop;
-
-Rename this to "override_no_snoop"
-
->  };
->  
->  struct qcom_pcie {
-> @@ -961,6 +967,13 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->  
->  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
->  {
-> +	const struct qcom_pcie_cfg *pcie_cfg = pcie->cfg;
-> +
-> +	/* Enable cache snooping for SA8775P */
-
-Remove this comment in favor of Kdoc mentioned above.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+>  	/* Compat: */
+>  	if (le16_to_cpu(sb->version) <= 
+>  bcachefs_metadata_version_inode_v2 &&
+>  	    !BCH_SB_JOURNAL_FLUSH_DELAY(sb))
