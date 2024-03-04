@@ -1,308 +1,184 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D282C840;
-	Mon,  4 Mar 2024 20:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9AA4AEF9;
+	Mon,  4 Mar 2024 20:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709583685; cv=none; b=Uj0yhw8I2r2mcnV3483C5tX9t2lvBej/858RveUdPNDNWg7CskqazRtBIqywTq24m/NEI5RlUK5P83wHEPbIxl8hbqRH5n7wrGE3gPQXz6P5Q21xhwtuUZpg+U2n6RG+jcd+WNyURLk9Aunz8OoDL2v0p+34BpN9o6E6RuG3muw=
+	t=1709583745; cv=none; b=e/FNfirikuGl/F0UJvWzafgKjmQOIY6W/XFlAYE9SiDHoOoQgKEosrEYlX0sU73fOm9C0PFXiGrmwqcQ3zBUDgTI/nqG5kUxa+90UEUCxlGWnGfO9+duKcPSPNvbHtTIr9FtCeZeV6psgAmdQItz6bWH6++3GqO0bmHFypvUTFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709583685; c=relaxed/simple;
-	bh=AmoRIvLmMQnVEYPQ8Gvg/fIyOLg1vnqmhYOCD8vsVy0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N2Cgky8RjeaCL1qkMaZjkTnu6mo+zJMTsR9QZVA/i2hB8lURsuv6/f0oW0Hz5zen8I64ebZNNbVTx/Dg9EJDqOSSdCiPKoamFJGqmkfZYEzIfdlLWBFtX6eI8wWHLlO41Hhyh1J2lv8FJ82TXvp1Bn2kEtDR0svcvR3AD+mcVqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipYj0o9l; arc=none smtp.client-ip=209.85.218.41
+	s=arc-20240116; t=1709583745; c=relaxed/simple;
+	bh=CCgENNhMF/8TvGn5GCj4PBL+aZdDyrq2Bayv8Qqsu84=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=V7F43fc2x2qjS5i/1d8Nu2GXEMVZTC7r/L9SWEOU2KtBrNIeLiV/anmxG2r5Sa2uwjW5+HUYpdX9lZvkqnjv/6wg316Pc8feex9Obpgx9tgspJ0YBNtIaNjEyzmGuobSueqtlet7UHT8xW1+UcZSqZZc6vPPn/PexLCg9zHq9a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l7i2/hQX; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipYj0o9l"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3122b70439so744910666b.3;
-        Mon, 04 Mar 2024 12:21:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7i2/hQX"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d28387db09so58789441fa.0;
+        Mon, 04 Mar 2024 12:22:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709583682; x=1710188482; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=layVb4r7VmNjWsOKd0JDFtRUwuim1yeHZBOM5lzRFlU=;
-        b=ipYj0o9lCL/MeMYQDGh/oF5e6twaNpa9/eMFYQSRqwpITo6sqWvPt+kggF+OPsmeaH
-         Sw6ttfmxfBXLolEotAGGzkZxp61NxyvQDRAsnRBUOSxzsyxiJKNcOtv6kRVRYyLyStnc
-         buu9EosLu9IAh28K9t8UMy8PLrQjBxSq7DK3CXXdrl6xgUz7oAeVcCg21eYAhsrCeztS
-         lvrrqVw9t2bgmsLNg4Eq4rbo//+3iNZ3QqVc8moqUNt+vyprzDJkP1OaD7RkdnFjERhC
-         fmnp5bFevxwbDyfMEOfjFbna3koiLO8Lg4fx+tTcWObdyP+Yc9bpDgE+LXtaODtbszUc
-         YgeQ==
+        d=gmail.com; s=20230601; t=1709583742; x=1710188542; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=8fxFB8N57hfAiZrRByccOlSQfamUKiybD6QOVLL+RAg=;
+        b=l7i2/hQXoP4Nj/PnpuJhbFXqkpG5aDh4xtlkGw+qu4dMI19rQfySZJgX7gsNGBw2cj
+         IvhsZmElK9VVSyi3lGOIas30fELE3nYQCGK6YCuHl3EmHQ4O5N6PQI/O477czyFwKs7p
+         21zVOqzIvdufnxsiXUWXEXpaPooE1PJkyTmOPT8gSoqugKef/Uk3lzOo+nJJ+CHm3JpT
+         tjRrlwlcCPzOiPWzCRMNsd37qWj6XzsI5vUWqQ524yXz6HJXLfkgLgLktckYfOloazhh
+         WEOq47tSpQZtp4i3HIfRlxhdqFKIjEq1629Rg2POkC/2MZZ+oLlo9nob66pCzAUidJkP
+         1MnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709583682; x=1710188482;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=layVb4r7VmNjWsOKd0JDFtRUwuim1yeHZBOM5lzRFlU=;
-        b=USEKHSg4STm2QuYs1Nc8nUCV6qHWfgZKXwy0Wjaxeh93jAFiSqXHIp0dBxxpWdwLD9
-         uAjF5Nz8a9V8viGB4rsrmFEhPtx4UasnY0Hj7K1gFfXs6kdlA3CHwXbkX9LJOv+2R+Mm
-         +mmygwmIJx6GDD96tvUiTZfskri9/IDv5hse9c1qcNYWHVNCjBcZcMNNTEb60cTigqh7
-         WKaUdRXpHoeZ348GKSlLzwTFEQSt+y7Ceor3uP71xAmjDlVX99UG+TldOYJb3JJdWwou
-         YIP2D2CR6hZGbXQaVHd6RimEeE6xvIzWGnOQABMvlSkgfcZ/7k9shqBURCqCDlmO2zqc
-         MLuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgeyhVpRipuDr0OcEaT3sC9p2qqiPdaPm1P0tbQnHaK6UqC10iChz5vI3vZDPb5b1j4VSWQo6aGGj9WqxbazhPJYGQtG7krj+4y63i6cPZewnlJrAmbNCXUWSdW6snKX8Me3M3JWqyLtw=
-X-Gm-Message-State: AOJu0Yw3gAmBz5xcTQ3cIFcFkbQ4js29Inf0XYFyq/r3SReWnO+kxnPg
-	wOs0XUICfgCYkCQUmwqGYHU0LDeMOgjC4WyUZOwJ1F/OM9WhnY92
-X-Google-Smtp-Source: AGHT+IEDBAkVJq3/bxcg0d/Wna1qRImKqxXHA3lzpegeS8cL1vTYF75FvZwuGpXQo/c5qMwu5GSVRQ==
-X-Received: by 2002:a17:906:1c8d:b0:a44:415d:fa39 with SMTP id g13-20020a1709061c8d00b00a44415dfa39mr5204051ejh.37.1709583682023;
-        Mon, 04 Mar 2024 12:21:22 -0800 (PST)
-Received: from ?IPV6:2a02:8389:41cf:e200:b4fe:bc05:cea3:29e3? (2a02-8389-41cf-e200-b4fe-bc05-cea3-29e3.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:b4fe:bc05:cea3:29e3])
-        by smtp.gmail.com with ESMTPSA id a15-20020a17090640cf00b00a4354b9893csm5231660ejk.74.2024.03.04.12.21.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 12:21:21 -0800 (PST)
-Message-ID: <449417ca-aae1-4868-a96f-a99ac5d187d6@gmail.com>
-Date: Mon, 4 Mar 2024 21:21:19 +0100
+        d=1e100.net; s=20230601; t=1709583742; x=1710188542;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8fxFB8N57hfAiZrRByccOlSQfamUKiybD6QOVLL+RAg=;
+        b=cZuL33hsFt1S/Nm70znMsNopR95DkjHiy+WR4FW30cOOhkzZVVbKbZ8BciT765f7IF
+         A9HmlOSwBBfg2CqR2c8mwXvgoSIs4awv+3OPqiJv0Mb/1FWwi5AKqGyJCre+0A4OsMMh
+         fNNMxxIjH9HSRswK/+moTK2XV3UI+wJ8gm+3Vsj2oTBJwfaBWTHfpgZ2DdyqSqxz9RGv
+         MiDV1xLIY1OPeEBmceQFWnZBx+1ueYjert/GMts+gVmmiN7NjxluX4JORz+IrlOCdt4E
+         cn01JdDmviKsPt4tOwyL3mKiEVeDqsaU+McDwkAqa+rawh/wTjrFHW8QhrFCGdQF9IXG
+         woyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZK84Ncna/VZWTmOdh40NQ0zGpXZZZxiEszhuYapMW/V7Bim4hnMdK4uv7AgYQ3GnN12BHPA1s6lbWhIrp/U58fBZteMib6irhat0=
+X-Gm-Message-State: AOJu0YyE21jVWTORCvo0NNmaxYUdyZMJtAT13IkvsJCDViBOWsJc46mb
+	yZs7dnoN2yIVHIfOHsPxh6t32SIUZajDCz5EZItl0UDReBLSr/Yg
+X-Google-Smtp-Source: AGHT+IEeiz3Lwz5LXdMFw/NJ7/qtw+liFm+ZYMrdHXD8p9Rhf2MZkqYh6y0ihTR7OqPz/C9g56OosQ==
+X-Received: by 2002:a2e:a316:0:b0:2d3:7c06:bb14 with SMTP id l22-20020a2ea316000000b002d37c06bb14mr3978819lje.47.1709583742057;
+        Mon, 04 Mar 2024 12:22:22 -0800 (PST)
+Received: from razdolb ([89.208.103.172])
+        by smtp.gmail.com with ESMTPSA id k12-20020a2e240c000000b002d2904e959csm1855698ljk.5.2024.03.04.12.22.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 12:22:21 -0800 (PST)
+References: <20240229165333.227484-1-mike.rudenko@gmail.com>
+ <20240229165333.227484-13-mike.rudenko@gmail.com>
+ <170957124561.566498.576610873794356352@ping.linuxembedded.co.uk>
+User-agent: mu4e 1.10.8; emacs 29.2.50
+From: Mikhail Rudenko <mike.rudenko@gmail.com>
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>,
+ Tommaso Merciai <tomm.merciai@gmail.com>, Christophe JAILLET
+ <christophe.jaillet@wanadoo.fr>, Dave Stevenson
+ <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>
+Subject: Re: [PATCH v3 12/20] media: i2c: ov4689: Implement vflip/hflip
+ controls
+Date: Mon, 04 Mar 2024 23:19:35 +0300
+In-reply-to: <170957124561.566498.576610873794356352@ping.linuxembedded.co.uk>
+Message-ID: <871q8phhmt.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Missing bcm5974 touchpad on Macbooks
-Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>,
- Javier Carrasco <javier.carrasco@wolfvision.net>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- Henrik Rydberg <rydberg@euromail.se>, John Horan <knasher@gmail.com>
-References: <87sf161jjc.wl-tiwai@suse.de>
- <6ef6c5bf-e6e5-4711-81c6-6ae41de2e61e@wolfvision.net>
- <874jdm17yt.wl-tiwai@suse.de>
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-In-Reply-To: <874jdm17yt.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
 
+Hi Kieran,
 
-On 04.03.24 13:45, Takashi Iwai wrote:
-> On Mon, 04 Mar 2024 12:26:48 +0100,
-> Javier Carrasco wrote:
+and thanks for the review!
+
+On 2024-03-04 at 16:54 GMT, Kieran Bingham <kieran.bingham@ideasonboard.com> wrote:
+
+> Quoting Mikhail Rudenko (2024-02-29 16:53:25)
+>> The OV4689 sensor supports horizontal and vertical flipping. Add
+>> appropriate controls to the driver. Toggling both array flip and
+>> digital flip bits allows to achieve flipping while maintaining output
+>> Bayer order. Note that the default value of hflip control corresponds
+>> to both bits set, as it was before this patch.
 >>
->> On 04.03.24 09:35, Takashi Iwai wrote:
->>> Hi,
->>>
->>> we've received a few regression reports for openSUSE Leap about the
->>> missing touchpad on Macbooks.  After debugging, this turned out to be
->>> the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
->>>     Input: bcm5974 - check endpoint type before starting traffic
->>>
->>> And, the same regression was confirmed on the upstream 6.8-rc6
->>> kernel.
->>>
->>> Reverting the commit above fixes the problem, the touchpad reappears.
->>>
->>> The detailed hardware info is found at:
->>>   https://bugzilla.suse.com/show_bug.cgi?id=1220030
->>>
->>> Feel free to join the bugzilla above, or let me know if you need
->>> something for debugging, then I'll delegate on the bugzilla.
->>>
->>>
->>> thanks,
->>>
->>> Takashi
->>>
+>> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
+>> ---
+>>  drivers/media/i2c/ov4689.c | 24 ++++++++++++++++++++++--
+>>  1 file changed, 22 insertions(+), 2 deletions(-)
 >>
->> Hi Takashi,
+>> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
+>> index 8283a9ac86c9..01ee8cadb7c9 100644
+>> --- a/drivers/media/i2c/ov4689.c
+>> +++ b/drivers/media/i2c/ov4689.c
+>> @@ -42,6 +42,14 @@
+>>  #define OV4689_REG_VTS                 CCI_REG16(0x380e)
+>>  #define OV4689_VTS_MAX                 0x7fff
 >>
->> The commit adds a check to ensure that the endpoint type is interrupt.
+>> +#define OV4689_REG_TIMING_FORMAT1      CCI_REG8(0x3820)
+>> +#define OV4689_REG_TIMING_FORMAT2      CCI_REG8(0x3821)
+>
+> I assume these registerse are called TIMING_FORMAT1 and TIMING_FORMAT2,
+> and they don't have any named reference to H/V?
+
+Exactly.
+
+> It's a shame, but I might add /* Horizontal */ and /* Vertical */
+> accordingly to these definitions, though not specifically required.
+
+Thanks for the tip, will do it in v3.
+
+> Looks like a good breakdown of the control though.
+>
+> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+>
+>> +#define OV4689_TIMING_FLIP_MASK                GENMASK(2, 1)
+>> +#define OV4689_TIMING_FLIP_ARRAY       BIT(1)
+>> +#define OV4689_TIMING_FLIP_DIGITAL     BIT(2)
+>> +#define OV4689_TIMING_FLIP_BOTH                (OV4689_TIMING_FLIP_ARRAY |\
+>> +                                        OV4689_TIMING_FLIP_DIGITAL)
+>> +
+>>  #define OV4689_REG_TEST_PATTERN                CCI_REG8(0x5040)
+>>  #define OV4689_TEST_PATTERN_ENABLE     0x80
+>>  #define OV4689_TEST_PATTERN_DISABLE    0x0
+>> @@ -183,7 +191,6 @@ static const struct cci_reg_sequence ov4689_2688x1520_regs[] = {
+>>         {CCI_REG8(0x3811), 0x08}, /* H_WIN_OFF_L h_win_off[7:0] = 0x08*/
+>>         {CCI_REG8(0x3813), 0x04}, /* V_WIN_OFF_L v_win_off[7:0] = 0x04 */
+>>         {CCI_REG8(0x3819), 0x01}, /* VSYNC_END_L vsync_end_point[7:0] = 0x01 */
+>> -       {CCI_REG8(0x3821), 0x06}, /* TIMING_FORMAT2 array_h_mirror = 1, digital_h_mirror = 1 */
 >>
->> According to that report, the issue arose with a MacBook Pro 5.1 (no
->> button, only trackpad endpoint), so the check on the tp_ep address
->> (0x81) returns false. I assume that you see an error message
->> ("Unexpected non-int endpoint) and  the probe function fails returning
->> -ENODEV.
-> 
-> Right, there is the message.
-> 
->> Do you see any warning in the logs when you revert the commit? It was
->> added to prevent using wrong endpoint types, which will display the
->> following warning: "BOGUS urb xfer, pipe "some_number" != type
->> "another_number""
-> 
-> The revert was tested on the downstream kernel, but it has also the
-> check of bogus pipe, and there was no such warning, as far as I see
-> the report.
-> 
->> I am just wondering if for some reason the check on interrupt type is
->> wrong here.
-> 
-> I'll ask reporters to give the lsusb -v output so that we can take a
-> deeper look.  Also, I'm building a test kernel based on 6.8-rc7 with
-> the revert, and ask reporters to test with it, just to be sure.
-> 
-> 
-> thanks,
-> 
-> Takashi
-
-I retrieved the relevant node from the report that was uploaded a few
-minutes ago:
-
-Bus 003 Device 003: ID 05ac:0237 Apple, Inc. Internal Keyboard/Trackpad
-(ISO)
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               2.00
-  bDeviceClass            0
-  bDeviceSubClass         0
-  bDeviceProtocol         0
-  bMaxPacketSize0         8
-  idVendor           0x05ac Apple, Inc.
-  idProduct          0x0237 Internal Keyboard/Trackpad (ISO)
-  bcdDevice            0.77
-  iManufacturer           1 Apple, Inc.
-  iProduct                2 Apple Internal Keyboard / Trackpad
-  iSerial                 0
-  bNumConfigurations      1
-  Configuration Descriptor:
-    bLength                 9
-    bDescriptorType         2
-    wTotalLength       0x0054
-    bNumInterfaces          3
-    bConfigurationValue     1
-    iConfiguration          0
-    bmAttributes         0xa0
-      (Bus Powered)
-      Remote Wakeup
-    MaxPower               40mA
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        0
-      bAlternateSetting       0
-      bNumEndpoints           1
-      bInterfaceClass         3 Human Interface Device
-      bInterfaceSubClass      1 Boot Interface Subclass
-      bInterfaceProtocol      1 Keyboard
-      iInterface              3 Apple Internal Keyboard
-        HID Device Descriptor:
-          bLength                 9
-          bDescriptorType        33
-          bcdHID               1.11
-          bCountryCode           13 International (ISO)
-          bNumDescriptors         1
-          bDescriptorType        34 Report
-          wDescriptorLength     156
-         Report Descriptors:
-           ** UNAVAILABLE **
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x83  EP 3 IN
-        bmAttributes            3
-          Transfer Type            Interrupt
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x000a  1x 10 bytes
-        bInterval               8
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       0
-      bNumEndpoints           1
-      bInterfaceClass         3 Human Interface Device
-      bInterfaceSubClass      0
-      bInterfaceProtocol      0
-      iInterface              4 Touchpad
-        HID Device Descriptor:
-          bLength                 9
-          bDescriptorType        33
-          bcdHID               1.11
-          bCountryCode            0 Not supported
-          bNumDescriptors         1
-          bDescriptorType        34 Report
-          wDescriptorLength      27
-         Report Descriptors:
-           ** UNAVAILABLE **
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x81  EP 1 IN
-        bmAttributes            3
-          Transfer Type            Interrupt
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               2
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        2
-      bAlternateSetting       0
-      bNumEndpoints           1
-      bInterfaceClass         3 Human Interface Device
-      bInterfaceSubClass      1 Boot Interface Subclass
-      bInterfaceProtocol      2 Mouse
-      iInterface              4 Touchpad
-        HID Device Descriptor:
-          bLength                 9
-          bDescriptorType        33
-          bcdHID               1.11
-          bCountryCode            0 Not supported
-          bNumDescriptors         1
-          bDescriptorType        34 Report
-          wDescriptorLength      52
-         Report Descriptors:
-           ** UNAVAILABLE **
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x84  EP 4 IN
-        bmAttributes            3
-          Transfer Type            Interrupt
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0008  1x 8 bytes
-        bInterval               8
-Device Status:     0x0000
-  (Bus Powered)
+>>         /* OTP control */
+>>         {CCI_REG8(0x3d85), 0x36}, /* OTP_REG85 OTP_power_up_load_setting_enable = 1,
+>> @@ -607,6 +614,16 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+>>                           (ctrl->val + ov4689->cur_mode->width) /
+>>                           OV4689_HTS_DIVIDER, &ret);
+>>                 break;
+>> +       case V4L2_CID_VFLIP:
+>> +               cci_update_bits(regmap, OV4689_REG_TIMING_FORMAT1,
+>> +                               OV4689_TIMING_FLIP_MASK,
+>> +                               ctrl->val ? OV4689_TIMING_FLIP_BOTH : 0, &ret);
+>> +               break;
+>> +       case V4L2_CID_HFLIP:
+>> +               cci_update_bits(regmap, OV4689_REG_TIMING_FORMAT2,
+>> +                               OV4689_TIMING_FLIP_MASK,
+>> +                               ctrl->val ? 0 : OV4689_TIMING_FLIP_BOTH, &ret);
+>> +               break;
+>>         default:
+>>                 dev_warn(dev, "%s Unhandled id:0x%x, val:0x%x\n",
+>>                          __func__, ctrl->id, ctrl->val);
+>> @@ -637,7 +654,7 @@ static int ov4689_initialize_controls(struct ov4689 *ov4689)
+>>
+>>         handler = &ov4689->ctrl_handler;
+>>         mode = ov4689->cur_mode;
+>> -       ret = v4l2_ctrl_handler_init(handler, 10);
+>> +       ret = v4l2_ctrl_handler_init(handler, 12);
+>>         if (ret)
+>>                 return ret;
+>>
+>> @@ -677,6 +694,9 @@ static int ov4689_initialize_controls(struct ov4689 *ov4689)
+>>                                      ARRAY_SIZE(ov4689_test_pattern_menu) - 1,
+>>                                      0, 0, ov4689_test_pattern_menu);
+>>
+>> +       v4l2_ctrl_new_std(handler, &ov4689_ctrl_ops, V4L2_CID_VFLIP, 0, 1, 1, 0);
+>> +       v4l2_ctrl_new_std(handler, &ov4689_ctrl_ops, V4L2_CID_HFLIP, 0, 1, 1, 0);
+>> +
+>>         if (handler->error) {
+>>                 ret = handler->error;
+>>                 dev_err(ov4689->dev, "Failed to init controls(%d)\n", ret);
+>> --
+>> 2.43.0
+>>
 
 
-There is indeed an interrupt endpoint with address 0x81, but the driver
-defines bInterfaceProtocol = 2 (Mouse), and the endpoint in that
-interface is 0x84:
-
-#define BCM5974_DEVICE(prod) {					\
-	.match_flags = (USB_DEVICE_ID_MATCH_DEVICE |		\
-			USB_DEVICE_ID_MATCH_INT_CLASS |		\
-			USB_DEVICE_ID_MATCH_INT_PROTOCOL),	\
-	.idVendor = USB_VENDOR_ID_APPLE,			\
-	.idProduct = (prod),					\
-	.bInterfaceClass = USB_INTERFACE_CLASS_HID,		\
-	.bInterfaceProtocol = USB_INTERFACE_PROTOCOL_MOUSE	\
-}
-
-where USB_INTERFACE_PROTOCOL_MOUSE = 2.
-
-
-My interpretation is that the driver is checking if the endpoint with
-address 0x81 form the interface with bInterfaceProtocol = 2 (that is the
-last interface of the list, the one with bInterfaceNumber = 2), but it
-is not found, because its only endpoint has a different address (0x84).
-
-Interestingly, 0x84 is the address given to the endpoint of the button
-interface. The button interface should not be relevant for Macbook 5,1
-(TYPE 2 in the driver), according to 43f482b48d03 ("Input: bcm5974 -
-only setup button urb for TYPE1 devices").
-
-If that is true, does anyone know why bInterfaceProtocol is always set
-to USB_INTERFACE_PROTOCOL_MOUSE, and why the driver works anyway with
-bEndpointAddress = 0x81 for the trackpad? The urb setup for 0x84 is only
-executed for TYPE 1 devices, and the mouse interface does not have an
-endpoint with address 0x81. Or am I missing something?
-
-We could revert the patch in question, but I see no reason why checking
-an expected interrupt endpoint should cause trouble. It looks like there
-is something fishy going on.
-
+--
 Best regards,
-Javier Carrasco
-
-
+Mikhail Rudenko
