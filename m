@@ -1,530 +1,194 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2107.outbound.protection.partner.outlook.cn [139.219.17.107])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB7A3D55D;
-	Mon,  4 Mar 2024 13:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB3B3F9C2;
+	Mon,  4 Mar 2024 13:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709557659; cv=fail; b=tqREbXdhSvVge+93v0CPGpu5epDf7ABEICQgc433X4OnebextnkQnnUjhslsI7gAwaeA3jJlQmT72YaTHtxNEcHtyfPLgLO3CBPts4MaSFabXDdzS2/9uX7sGN7EJ2szTiMQF8EM/1BRdWN3iZL153Khh7dU/i7tHs6plWzU50M=
+	t=1709557663; cv=fail; b=UJO6cDgrDdP5J9uHPoXBKhqMYp3mK1WtiytOZt214MtFzLCfGn6mrV0CLsE571Ojjvk7xkG6Y9j0hWgB5Ld7TnzhICfHY6+qt1rcd7V9ErR8tQpCSFh3l2P2/xCWV2BcnbWqQI+otVCaya1XwS+UIzW9/+vd4uLkqIoCiTVKXew=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709557659; c=relaxed/simple;
-	bh=eexKpw08DUxGgzkywEXB7FR4fjVoLBm6V1J0ohopiEw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZbSk6HwE6ptuXTsHTR2bU6YiRhv0z6hkFpIohpEFM3JXabSCxk7w/136Dhsd7obJ/phLSuX76ABE/sy3PBCh/2jO2530jPopO8nwnkUI+/LKHOqy4BoHxdIQyigVwT4bUByVFxzb6Is1tQYjmek9bqUXZioAygKqTJ3Okqlf26w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1709557663; c=relaxed/simple;
+	bh=bya5+n1lE9I2rj+emKMw47YgA+nop4TXUk+4hhTNEbw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=auzyBL7h+Z0XzIIOD/e2MUr5eJawi0Xdrrdnmd5bszceCYNxuX+Sg1ETKZkD/4+rbhoJwgDRpEUQMJTklyTzk2Cj75JaekjiTUEFFNACEC38RYMHGJ9bcIXoIdurGUvKXASDMj8hAs3bcubxodAeggEicks7786lKxWu293JgyU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aA0lwIoW; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=QnwwdA8Q; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aA0lwIoW";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="QnwwdA8Q"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 424BT879016931;
+	Mon, 4 Mar 2024 13:05:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version;
+ s=corp-2023-11-20; bh=YKeU5/UbS9tXv6rTbtg85ISQ6CHZttBeC7rs34WbSAM=;
+ b=aA0lwIoWkbS4znMDQyG1rOXUmdF5zWmeIUWIngKvrNVq6Qy7QFFM2R+4FCiUt34aHbLQ
+ Mdo7bHvZlywyr0DA/l3nM1T1p3874lgropE6g3IH2raGZs3495iUey9PQMxBsShMllfW
+ h6CYLH04Up8xg65eU8ugScNyR9v1Vt86dKTTHgUJ9Eo89H8iHo3GsbViPEuCU3gWzeSA
+ 5bFPKtTpaTKDwHoXGRh1OUCbBfjy4Tg1o5U7Qx/vzYbWmIkLWtqzyl482C8NutWjMyF9
+ fU/8VH4U8fiigy18orp2wrG60Ws6ifu72xjSxQ43qwP5bUUBPnfrfm5RhxLVTQ2VdRM2 5w== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wkv5dbkbv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 04 Mar 2024 13:05:28 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 424Cc6gG015200;
+	Mon, 4 Mar 2024 13:05:27 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wktj607gn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 04 Mar 2024 13:05:27 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hdODi3GhUip+VpSOWq5YQkWfNI7S9YctMpA+rbiBVqOP4tlGJso8WmWaZ42fGuZsjDBYlZBnjirV6gRKox4ixDxqUZybWINXwljw+azSZpBeF6wsBu5LJzhim9D/vORUZ5yd1+dCe230x/rJ9vbaKIEwkO2G80atwMSzqA5xJqG4UAcGXp3xtlQ3aLmJjghcva1L2YtTF+u8FyYp7wriIb2yl56O9gUoAf/qcjqKshG0rbHF4teR7oswOGch2LyuZo2/dLnUtyhToCy0cuyqVgLcAQ28RNyo7vhsaVHzPR3ucw0ohIg24jZN0EPW9476QChnps2TESeQTwpIZNTnsA==
+ b=AAFCtZNIdk2i041Xy5WXnjvlOHlyWVom04xg1C3tbiOoIo+xOmBP2N+d4r6Xxk99Dg3VMunJX/3XvJUhT/6ffQlDvYMwzej8sN/p7MPXQegXSWOnY+ZyodLIX8CcMhyg5qj3z1e676s8a25E/KWYZcLZwxGqIJVJSHi2OwJDRUfVTF+br4TIQOv/ssW9putJYdZGr5dVcku9DTatgUasj3/Oe5zfIuB2lQK/6ygGgUOGNiC5gNAvYo3ViZBKtz6Wzdv/e5CdLFItFJH9ZTazy5EmyJ+nvwZwp6EPrzhaRuWROmZ4eBLgkXSBOoRZkA/4li3XxPjdB1ho/QE5AEuJ9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cuLgaCec2X4iRlkDxeTa7P0vo5cmxd69iq/V87PCF9Y=;
- b=VqBkB1YEnVM45AWYE4cRwCR6R9s5xxYU+8pZVN/eLDNwouND3DEwBwMiWhc5kizk1pL4UuELWnepF9CJuBUocyakoF3j6z721sRJiFr8ew/fFYy+nBBOdqFZZ+ODXasGxAuaE5xOBq02sEL0mbL/Xx0Bieo3DgHq1t7DFPVaeyGGWAvTGRlpNpKRYYk/RBuIaxkY5QfFcM8t3rz/36V3mkf/2RkSOa1VWrSlGOKKJW8dsBgPHnl2+9qHgJCCy2+Y0IqbssD3wJL9Af7iigYZERO+Mx1LIHTvGKzoqd1vNaAYA9AlLM9GGsw4FGdHD1Jwg7NnK6a8LYnhXOQmG9KokA==
+ bh=YKeU5/UbS9tXv6rTbtg85ISQ6CHZttBeC7rs34WbSAM=;
+ b=d2B1zaEj8duWDr3rnsKMr6aA4znB3M3hM+aANUTZVo611TDnHyDkAeDravff6/QMqmJInAiA/MOLvBFxKfdWXXjwuEeYVWg8d2lPdysDa9OdrzZeh0yoTdw0ZGqgaOFKtRyf+Mf6caKSFmJNMwjFLkfQu/KQ3NTUmRiVyAKgmMGwUWsFBhe2MoQCYNPLVVCp+oW5GeC82gKjtJHYy8HC9Q++2/+ne2EfIFGzLsEAu3VeBWO8qwAPHyDDscSVRiABhVLldyWiHDWi0alcjm5xTX9tFuYuoimnwzoO1k0sEpLd3yeZ0XUT8JJbLJcOyY3qDZpQsobHZFxfcQ6pNqehQw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550::13) by ZQ0PR01MB1205.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1a::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.51; Mon, 4 Mar
- 2024 12:52:59 +0000
-Received: from ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
- ([fe80::521f:319d:d2e0:8b91]) by
- ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn ([fe80::521f:319d:d2e0:8b91%4])
- with mapi id 15.20.7316.032; Mon, 4 Mar 2024 12:52:59 +0000
-From: Kevin Xie <kevin.xie@starfivetech.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Minda Chen
-	<minda.chen@starfivetech.com>
-CC: Conor Dooley <conor@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
-	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Daire McNamara
-	<daire.mcnamara@microchip.com>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Philipp
- Zabel <p.zabel@pengutronix.de>, Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>
-Subject: Re: [PATCH v15,RESEND 21/23] PCI: starfive: Add JH7110 PCIe
- controller
-Thread-Topic: [PATCH v15,RESEND 21/23] PCI: starfive: Add JH7110 PCIe
- controller
-Thread-Index: AQHaaWi8BSKFyVphIUWdBo9IckSBIrEhYxMAgAYv43A=
-Date: Mon, 4 Mar 2024 12:52:59 +0000
-Message-ID:
- <ZQ0PR01MB098190462A6A394DA292BBE58223A@ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn>
-References: <20240227103522.80915-1-minda.chen@starfivetech.com>
- <20240227103522.80915-22-minda.chen@starfivetech.com>
- <ZeCThFcD2HBg8/bx@lpieralisi>
-In-Reply-To: <ZeCThFcD2HBg8/bx@lpieralisi>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ0PR01MB0981:EE_|ZQ0PR01MB1205:EE_
-x-ms-office365-filtering-correlation-id: f2b54047-ea85-439b-fd3f-08dc3c4a051c
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- QTphUh/LN8KHmG9m7BmkerHtHZ9iy6p4bqmqW/7bszO6B84Lr5ujBu9YRPjMJ0C0B/G+lDzwkKlj1UbEl9GXRwGL+AylQWqDfDfnEUF1pE2gb13DKMy00tdW8WTKS03bM/whMTxdBFDrVTR1TS6pWRcbq82UUXCZ9YKMHaejQe9S2BHqPFOOK+v2JWAIo4LjOsX/zRwIHWoVBLo9hBhXGS/PNMQfpyhkElcsC7phuWIQNGFiogaBhvNF0B2Td1Ky7x7jDWd5vVxdDZuY02Cp6x0pB0sJT1ryuwJ6ore4ceZD728eV6vPWgG8woCfohT+CxxRxQ6mjUxwV+g9nrrY6j4fyYm7id+wOo778tphLbTIiEkWAzQcgUShIhiK5t4KS3G90gdiEhxGP5tcDP2frRut8Qxd1O6F/zZZOFw0d0dCQO3wXfnDeyYujhcNMIrdSY++UMqJdqmCFcTmXGC3MzsfAZY39NQLIfHB5yn/TeIEVYd6pqGHef5goV3wYLSSx21HPsHPqatZ45cmi4Ch52RF2LJT0dmjqLw+q3b5nJpSceMA09V6L659eEdu1czUnF6Ogzex7AeQwTXygn3Z7sHBGtdraUnhc9FSbJlXXNAI7AS1YBR3ZhWUVvHS84EA
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?6lniIDTPobBD5zcLSUxHLgj1INA0blJhXaLdV3KBYShwzibrZc+vcabKVn?=
- =?iso-8859-2?Q?H1JppykKF24G8Q8wHqxfHvRh1k+M4t0+M/gjGf2Kt4MSl8X1OBluUBQ6Z5?=
- =?iso-8859-2?Q?eZhl7yYdsE7tAPv5q9A6jU7bssYrcUAc4PRaZCi/8e+2oXwE5TuHsMsV+r?=
- =?iso-8859-2?Q?+v+/Osv46XxX1rdeM0cFrV+0omjerOTJjpaKNmUDV4NNfgi4v1dfaSS3KH?=
- =?iso-8859-2?Q?ywSDmi0/AhsgIlYWSatjGkjVyqGC9LMb1gwxgJdXI7Xy8w1Nf4266A5cGx?=
- =?iso-8859-2?Q?yWtiDgRTFRFilRc37wPwcos/DnW2rbNnl8IyUCDMNEXtvkxS73NhCogLHh?=
- =?iso-8859-2?Q?yJcBEWDjOOPa2EAzIZ0rJh1u/tNuuaEkWmoC+CT1FAO+2w41oJxNX6UVaR?=
- =?iso-8859-2?Q?9RHdXxHrGFXVXWwii6TbuaMqHf6Jyyhuqt5fBsExih5PKSuidN3eV5FPGJ?=
- =?iso-8859-2?Q?qspL7Q8b5pcOhKmWouo+u+Yg3tf320oS2lIL6Fi6gtkIvRPzJD8qqz/Cx1?=
- =?iso-8859-2?Q?4ueTHX937U+vlBVRvr0WY8Z3KIB/4I0oCrvMg8OQADq2NwcSWMGDWdnY3e?=
- =?iso-8859-2?Q?Zmma6GG/g4c7pghzdlgSbf289PXI4IH+5nbOSxjR7gCG3HnYlj63neIbmX?=
- =?iso-8859-2?Q?ZScOjWPjbS0QbQztGLqb7TKh6C99x8SxUFm0UteYFrmlM4ySLyA70wTxH2?=
- =?iso-8859-2?Q?5+mlP+jHkNpYaH8PBwDFCKiDbhqyJZAnvyrzNhIrQ96i4s/dopuxYSfwku?=
- =?iso-8859-2?Q?XzMy3cSDvTFZ2tcNKfdNjflvqvFihV4bFJNrbIBXuJ04c9Aq2YETDz041K?=
- =?iso-8859-2?Q?iJ6NWfofwMiDdw2l1zQ1hbxnSLxA2aUqh88Xih9tDJScjRAHlX34Je9iG5?=
- =?iso-8859-2?Q?UEv573QYfCqFdDlLovi/9k87YWoTVJCwsftRGC93A86g39O2uei2PoYAbi?=
- =?iso-8859-2?Q?Sua+8FPdATvllvYy4KZS/x17FyqebIrpAxqreH74N/6g1sZ1t8OyVPXUSc?=
- =?iso-8859-2?Q?i2US3miLQ1NwQORSwciUv46n3sU1PacZrf6HUFlU1eBVphgJvivtdOYi+J?=
- =?iso-8859-2?Q?Em0LeHOuxNuUyXDlsEEeMIrlurOAgCqjISBgYQGcB8IMCVIcef04rF1kJI?=
- =?iso-8859-2?Q?gE8UNFJOhFwgrxFy9Z2QY0VOudb+/cbqM+InLKsWlryPuGseAHzCcw+iFO?=
- =?iso-8859-2?Q?nXkmJ8LbZVAb+WJeR9yWItazhUsMQoLeYJultU6ktBIYDT9Ld3j9TmZHGk?=
- =?iso-8859-2?Q?kpPbqPkVB+yyouHpXtON4oWOwYgSBo8o4sLONBC6AWug6vu7NII9EBImtl?=
- =?iso-8859-2?Q?mtilF2CJVci96aGucr1ghJQvEE199CC+1/hrDfenHNxqOOtHJ77ixsqnNO?=
- =?iso-8859-2?Q?9lrhv8E7YTlMp/BhZ1XbtwPeRIKPfbXL73cZ4nDqHLpk4fqFFV98iNMv9g?=
- =?iso-8859-2?Q?cMQzSR2vvH1OosuWfAAG2YoUNpBBDs19flWF/vIBaHXgHfP1SzC4QS4/GA?=
- =?iso-8859-2?Q?NnJ1AcRxDJvE8bwcE6hGugVtn8Pn9OkzRqlI1WCipWGyx5atTrbPZBsFj3?=
- =?iso-8859-2?Q?+6AqgJ49nKURBwd5SFe9amRqG0YLglwdEgBKXPWUlIxCY6ehBzQXRfuafk?=
- =?iso-8859-2?Q?qvCUH0KGfqcStLyry6CgHMmkS6LNz7n7ODeuPUoXYl/op41yGXMMEmPg?=
- =?iso-8859-2?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YKeU5/UbS9tXv6rTbtg85ISQ6CHZttBeC7rs34WbSAM=;
+ b=QnwwdA8Qwiu/NWDsoazTQjtaN8WPyRzwXC8YY/AbfE9m/L6Z+FwTanPV+u0kSgK1gvsQD27a5u07wg1LBkHabBhZmv2B4TYXpOhdBz9Z+gS2bRiQOsZSOlC9PByb7zYjti5eSTFSnrUHmkdWD4SWavo4uxagnlb3Q1M/BDISoso=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by CH3PR10MB6860.namprd10.prod.outlook.com (2603:10b6:610:14d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
+ 2024 13:05:25 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::97a0:a2a2:315e:7aff]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::97a0:a2a2:315e:7aff%4]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
+ 13:05:25 +0000
+From: John Garry <john.g.garry@oracle.com>
+To: djwong@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org,
+        jack@suse.cz, chandan.babu@oracle.com, david@fromorbit.com,
+        axboe@kernel.dk
+Cc: martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com,
+        ritesh.list@gmail.com, linux-block@vger.kernel.org,
+        John Garry <john.g.garry@oracle.com>
+Subject: [PATCH v2 13/14] fs: xfs: Validate atomic writes
+Date: Mon,  4 Mar 2024 13:04:27 +0000
+Message-Id: <20240304130428.13026-14-john.g.garry@oracle.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240304130428.13026-1-john.g.garry@oracle.com>
+References: <20240304130428.13026-1-john.g.garry@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0193.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::18) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH3PR10MB6860:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11aeb72c-93f6-4dd2-a632-08dc3c4bc1c3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	UF2H7eJDpIGtXh0Cwl4MQQnAab8li2phPunS+E+aOMnjxftTuez6MbEe/fHBycYKMsKuU3uiunsCyg5o6L4Ya+0kLSG2EHFBFyZL51W0wFGuXzjAbb4G74DNMHiaJ+qI3aDIP3EJEQdJig+Ka2GeBBqKzKfh42L2PnV4MiYHQHC6EOnobCpmAFG6OcuOVZ3CbPa5RmSL9mKPApg/KNKp3nHheX86xaMLJnnoNdRFMOTsg/Jz+t5BL5OfRHeogTWszjF4WODh8n39xK27NnWx+X0B7Bu49t4QYkesta95CpaOY7cJOmNY+gH6jqktdmARx5DZZGQ9DZxNy3C9++zOKSqekU5zhAc50kWsyQ+Op3cu4pEucL+oaznTR/RqrnLrOAYoqnDA5NKKfm+59xB3TL+xDwxLOMiVfZIMOqTSvJ9KTFwtSjXYxmEMNJIc5nDvlfZwmtfyaZgtVi9boRPNxmfDgTMj4MPCnvIE64dcRnIBF9pwvZdjhNIu3FsIGhZ5LMOX1P5Ojf7qh2xVLzPvghUflVh3BSsa0MT6CKmHysVm5pPk56fbDxyzW8FLMSko3S6MTbT2iXp+Es2HmDQvo2f1gr9cUO2FUEnLAbjI/Cudt2jEBudZuCS+k+SzcFUkjZDyswetlYVuIomb8969gLUAzsg37shpwQAGcvKG3SY=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?6MJxle0zvcJgrXnbom0zEA1tRHlkLxt3gObr9E6KyLjhNKQqQ2vUNWlzTtMq?=
+ =?us-ascii?Q?LrCeRUwWwvzjLDXZy2OXthK9DR+z2DkhHh56TcjwAA+Cb+iC1PCPVYs570Wc?=
+ =?us-ascii?Q?Z3glHSQsTttCCuepFpk82Q66AsXvFYHoOnvXXJFz+yhSMDrtkB8Or8t/9i2P?=
+ =?us-ascii?Q?tzZLmdWZM0vcLbBEaXFQwlQoh47+mXUiiFXZHp59FtK3joee4kDxj4eiFLYB?=
+ =?us-ascii?Q?eBe7JYHHMDzoPOwwbCgBF01c8s4gPAsSdzKpT+y1mq5t3hoHHBbUTZDKgBZV?=
+ =?us-ascii?Q?pj20MZCHTAj8bdXEuImAnN4wGOZtrFm7FWXKFegUbZy+u5NJZD3agOLQCqUo?=
+ =?us-ascii?Q?mLGxMxy75AHMPJxBWjAJ3Wp+QhDDOJNdAYXMAH8c5sg5ZYlUDX1iuipuW2fz?=
+ =?us-ascii?Q?ILzDf01p/ws7Nvhk4QqishG1rXhivzlIkFLGsvQ8zyup3OgrqHNi2SSbOucX?=
+ =?us-ascii?Q?gSca/06bMB1HbC9rSsmk/VssRmlSEJuRj19G4BZHjvf1AJVmUpK21kdRfQhD?=
+ =?us-ascii?Q?YdrSXlrM5QpCVskVrkpINIEdVkEtg+Agg/65AFVH1E6kjjfXi5QBy3u2aoKw?=
+ =?us-ascii?Q?XWSlT4KnGWTK04OOfkYHBtZz0LVQ51uNlDn5KKcHG16OgDQF0QXYMoByyR9W?=
+ =?us-ascii?Q?TKYkBCuW1OcTbOTgBYTAzV6OtYL1fy+HEc9gsSbElrEi4MmOKu6VwVCbMvtc?=
+ =?us-ascii?Q?GXhaIdTF3u2Z/deUWFYQQ9DDpAWLm3XhIHILC6/Hv8WNMNRbN3OhubPzZ3Ka?=
+ =?us-ascii?Q?QDEnIa4Enf/Rd46vHK8oKzc2ogHIvPd8G2CVvTRLitTIW/0gshQpzeZxyCTj?=
+ =?us-ascii?Q?t7miU5AjMgacrPEZoV28pglF+/8waGmVXZBIM96dz0FUjlWc5VWKxot6B5rT?=
+ =?us-ascii?Q?j74bWmPMMb0ItBi/HXmh0a84cE3asdX3lxwwXq2mZoS6hoOf3ii2dXOZ6Fk8?=
+ =?us-ascii?Q?V8sIScjycVyJctBRdHXFTAkr05T8qbaxvJP1jJazK7jU3T3xkdV7hwRoxL5I?=
+ =?us-ascii?Q?b4BD+j4aLAgle1qs8CzZ/5nrl6votuCOZTaChdcsDz2RWHg9/v4V63vDbnIr?=
+ =?us-ascii?Q?RZ+GD2srUl8C2JGY5SlpHXQiWQQqOUrlPcmZcskzUFfbeQqK19s3jiE/fkgE?=
+ =?us-ascii?Q?yP9XFCTnf8YNs7t+jWtFDgMwOslbCqJQJhNs0XOWbt6ITrW9VwWo98ffB4WW?=
+ =?us-ascii?Q?tYn6AdLtf4+gKK1xynQke6LpX0gX7gvDnAVSk8rSY6nzBNZA085YA45ldgKE?=
+ =?us-ascii?Q?h7oLtZ088Hxf1l7HJ3tHaLvqOpc/PmKWB+kTCB98HA2BItAbKRFTGlZS7VyU?=
+ =?us-ascii?Q?+bqJYhjbU/MiqfG58JvVaPZ+O0Hn46Lrb/7NUaUKLNY62Be05iAkrPbdnDGS?=
+ =?us-ascii?Q?nWIG9sH/IsCOMX5DFFFA0RZGzIMpBEqHmUDuOpTInLzF6RlmgSQmlb9AFs8A?=
+ =?us-ascii?Q?9bMw80CPu82po0H0lrNX8xT+5ayrO+FBGo7wGGKt5/fCZfhspyMmcyKGCloA?=
+ =?us-ascii?Q?RNskE56Ivj7XP8sFCvONPxA+K0ZVlghJbdg0QLhLD0OFCSHsIeDfbo2qFecP?=
+ =?us-ascii?Q?j9wf2T7CcAEiDNFe3OHtGkDCL10JMBydvRC7PmKG/rvtMgUc46u+6I9fD1Yj?=
+ =?us-ascii?Q?tA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	Xs9hehA4fuTSSukiqrJ9XFg8/SHD7toJS4PKHp6eg0U+SRkdMH+Gr1OcJC2nL4yAW6M01tpAUMicuMk7Frg0zvCP1Oz1pituhUT/B33ytvq+JNYtAYCRwxhN9mH+RjlgnBsAusPn1ywLtVI3Q7qm/ZJELnJ6SooJy4r4lPBO2/DQcLjH1e67n71cE2CzkXGtif1CPR4uJSfgj3qHvNocar2TrQDLlRW01yMcpI+kP9/mERWnC5HmO8ArN8xaD+oCvMbBsOWpVxWXv9YtsTDOZq1UYThGg38BcWM2QsrMnEb1kIJj7v6OUtT26+RWrHew2YMte7bKGsalGUDLtHaJBawsvRsKVoM1IP7+1s/xoYEbLHA+V4IB2BOiqVIokaeZcJBiRKG7Ia9xBnBRlSrgZP93ATvsmhzdMamzmKiDISXaO3tRqQszmGIz9g/pl5zAoakVCf/A7DeKoMjlQjueCyLeZjeJfYWwHDGCjo/KypwigDa63ttglwyFNy89TrqMcOdUANVnBrLOJooXQup5HuBubBevERoWH9TtNswj76sT8+gep9SgBlWev+qR2St4oQQjh9YUsQeQVbcQIlWH48aSYlXNSXGbG/n6YRR147M=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11aeb72c-93f6-4dd2-a632-08dc3c4bc1c3
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2b54047-ea85-439b-fd3f-08dc3c4a051c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2024 12:52:59.0654
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 13:05:25.1944
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lM55YT3CnU3zYaCoaf4LLoE6LnkzumqdHWRBljuZgKE6VQI/INoMxJCQTU9Sr83zvNqg7SR8cVgMVxL9I1w5WXNTy2PJ/Qv2ydvpvT2M6CQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1205
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a2jT+TW8QlCPaYU+plKS0p9pWyXElOLrHKhUI9jDOWl5RNvmjpQYMhl4acSceXziULVz8MVK988wu+ofhmCmjQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6860
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-04_09,2024-03-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403040098
+X-Proofpoint-GUID: OdW0a3HQdkTLDYAqz4R11zCLjRCmob6_
+X-Proofpoint-ORIG-GUID: OdW0a3HQdkTLDYAqz4R11zCLjRCmob6_
 
-> On Tue, Feb 27, 2024 at 06:35:20PM +0800, Minda Chen wrote:
-> > Add StarFive JH7110 SoC PCIe controller platform driver codes, JH7110
-> > with PLDA host PCIe core.
-> >
-> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> > Co-developed-by: Kevin Xie <kevin.xie@starfivetech.com>
-> > Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
-> > ---
-> >  MAINTAINERS                                 |   7 +
-> >  drivers/pci/controller/plda/Kconfig         |  12 +
-> >  drivers/pci/controller/plda/Makefile        |   1 +
-> >  drivers/pci/controller/plda/pcie-plda.h     |  71 ++-
-> >  drivers/pci/controller/plda/pcie-starfive.c | 473
-> > ++++++++++++++++++++
-> >  5 files changed, 563 insertions(+), 1 deletion(-)  create mode 100644
-> > drivers/pci/controller/plda/pcie-starfive.c
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS index
-> > fc9576e69a71..d3b0a0fb754f 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -17078,6 +17078,13 @@ S:	Maintained
-> >  F:	Documentation/devicetree/bindings/pci/socionext,uniphier-pcie*
-> >  F:	drivers/pci/controller/dwc/pcie-uniphier*
-> >
-> > +PCIE DRIVER FOR STARFIVE JH71x0
-> > +M:	Kevin Xie <kevin.xie@starfivetech.com>
-> > +L:	linux-pci@vger.kernel.org
-> > +S:	Maintained
-> > +F:	Documentation/devicetree/bindings/pci/starfive*
-> > +F:	drivers/pci/controller/plda/pcie-starfive.c
-> > +
-> >  PCIE DRIVER FOR ST SPEAR13XX
-> >  M:	Pratyush Anand <pratyush.anand@gmail.com>
-> >  L:	linux-pci@vger.kernel.org
+Validate that an atomic write adheres to length/offset rules. Since we
+require extent alignment for atomic writes, this effectively also enforces
+that the BIO which iomap produces is aligned.
 
-> > diff --git a/drivers/pci/controller/plda/pcie-plda.h
-> > b/drivers/pci/controller/plda/pcie-plda.h
-> > index 7b69891700a4..04e385758a2f 100644
-> > --- a/drivers/pci/controller/plda/pcie-plda.h
-> > +++ b/drivers/pci/controller/plda/pcie-plda.h
-> > @@ -10,10 +10,20 @@
-> >  #define PLDA_MAX_NUM_MSI_IRQS			32
-> >
-> >  /* PCIe Bridge Phy Regs */
-> > +#define GEN_SETTINGS				0x80
-> > +#define  RP_ENABLE				1
-> > +#define PCIE_PCI_IDS_DW1			0x9c
-> > +#define  IDS_CLASS_CODE_SHIFT			16
-> > +#define  REVISION_ID_MASK			GENMASK(7, 0)
-> > +#define  CLASS_CODE_ID_MASK			GENMASK(31, 8)
-> >  #define PCIE_PCI_IRQ_DW0			0xa8
-> >  #define  MSIX_CAP_MASK				BIT(31)
-> >  #define  NUM_MSI_MSGS_MASK			GENMASK(6, 4)
-> >  #define  NUM_MSI_MSGS_SHIFT			4
-> > +#define PCI_MISC				0xb4
-> > +#define  PHY_FUNCTION_DIS			BIT(15)
-> > +#define PCIE_WINROM				0xfc
-> > +#define  PREF_MEM_WIN_64_SUPPORT		BIT(3)
-> >
-> >  #define IMASK_LOCAL				0x180
-> >  #define  DMA_END_ENGINE_0_MASK			0x00000000u
-> > @@ -65,6 +75,8 @@
-> >  #define ISTATUS_HOST				0x18c
-> >  #define IMSI_ADDR				0x190
-> >  #define ISTATUS_MSI				0x194
-> > +#define PMSG_SUPPORT_RX				0x3f0
-> > +#define  PMSG_LTR_SUPPORT			BIT(2)
-> >
-> >  /* PCIe Master table init defines */
-> >  #define ATR0_PCIE_WIN0_SRCADDR_PARAM		0x600u
-> > @@ -86,6 +98,8 @@
-> >  #define  PCIE_TX_RX_INTERFACE			0x00000000u
-> >  #define  PCIE_CONFIG_INTERFACE			0x00000001u
-> >
-> > +#define CONFIG_SPACE_ADDR_OFFSET		0x1000u
-> > +
-> >  #define ATR_ENTRY_SIZE				32
-> >
-> >  enum plda_int_event {
-> > @@ -200,4 +214,59 @@ static inline void plda_set_default_msi(struct
-> plda_msi *msi)
-> >  	msi->vector_phy =3D IMSI_ADDR;
-> >  	msi->num_vectors =3D PLDA_MAX_NUM_MSI_IRQS;  } -#endif
-> > +
-> > +static inline void plda_pcie_enable_root_port(struct plda_pcie_rp
-> > +*plda) {
-> > +	u32 value;
-> > +
-> > +	value =3D readl_relaxed(plda->bridge_addr + GEN_SETTINGS);
-> > +	value |=3D RP_ENABLE;
-> > +	writel_relaxed(value, plda->bridge_addr + GEN_SETTINGS); }
-> > +
-> > +static inline void plda_pcie_set_standard_class(struct plda_pcie_rp
-> > +*plda) {
-> > +	u32 value;
-> > +
-> > +	/* set class code and reserve revision id */
-> > +	value =3D readl_relaxed(plda->bridge_addr + PCIE_PCI_IDS_DW1);
-> > +	value &=3D REVISION_ID_MASK;
-> > +	value |=3D (PCI_CLASS_BRIDGE_PCI << IDS_CLASS_CODE_SHIFT);
-> > +	writel_relaxed(value, plda->bridge_addr + PCIE_PCI_IDS_DW1); }
-> > +
-> > +static inline void plda_pcie_set_pref_win_64bit(struct plda_pcie_rp
-> > +*plda) {
-> > +	u32 value;
-> > +
-> > +	value =3D readl_relaxed(plda->bridge_addr + PCIE_WINROM);
-> > +	value |=3D PREF_MEM_WIN_64_SUPPORT;
-> > +	writel_relaxed(value, plda->bridge_addr + PCIE_WINROM); }
->=20
-> What does this do ?
->=20
+Signed-off-by: John Garry <john.g.garry@oracle.com>
+---
+ fs/xfs/xfs_file.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-This is an internal register to enable the prefetchable memory window
-64-bit addressing support. ( disabled by default)
-After this enable configuration, the address translation config in DTS
-and ATU about 64-bit prefetchable memory are useful.
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index d0bd9d5f596c..cecc5428fd7c 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -709,11 +709,20 @@ xfs_file_dio_write(
+ 	struct kiocb		*iocb,
+ 	struct iov_iter		*from)
+ {
+-	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
++	struct inode		*inode = file_inode(iocb->ki_filp);
++	struct xfs_inode	*ip = XFS_I(inode);
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	struct xfs_buftarg      *target = xfs_inode_buftarg(ip);
+ 	size_t			count = iov_iter_count(from);
+ 
++	if (iocb->ki_flags & IOCB_ATOMIC) {
++		if (!generic_atomic_write_valid(iocb->ki_pos, from,
++			i_blocksize(inode),
++			XFS_FSB_TO_B(mp, xfs_get_extsz(ip)))) {
++			return -EINVAL;
++		}
++	}
++
+ 	/* direct I/O must be aligned to device logical sector size */
+ 	if ((iocb->ki_pos | count) & target->bt_logical_sectormask)
+ 		return -EINVAL;
+-- 
+2.31.1
 
-I will add the annotation here in the next version.
-
-> > +static inline void plda_pcie_disable_ltr(struct plda_pcie_rp *plda) {
-> > +	u32 value;
-> > +
-> > +	value =3D readl_relaxed(plda->bridge_addr + PMSG_SUPPORT_RX);
-> > +	value &=3D ~PMSG_LTR_SUPPORT;
-> > +	writel_relaxed(value, plda->bridge_addr + PMSG_SUPPORT_RX); }
-> > +
-> > +static inline void plda_pcie_disable_func(struct plda_pcie_rp *plda)
-> > +{
-> > +	u32 value;
-> > +
-> > +	value =3D readl_relaxed(plda->bridge_addr + PCI_MISC);
-> > +	value |=3D PHY_FUNCTION_DIS;
-> > +	writel_relaxed(value, plda->bridge_addr + PCI_MISC); }
-> > +
-> > +static inline void plda_pcie_write_rc_bar(struct plda_pcie_rp *plda,
-> > +u64 val) {
-> > +	void __iomem *addr =3D plda->bridge_addr +
-> CONFIG_SPACE_ADDR_OFFSET;
-> > +
-> > +	writel_relaxed(lower_32_bits(val), addr + PCI_BASE_ADDRESS_0);
-> > +	writel_relaxed(upper_32_bits(val), addr + PCI_BASE_ADDRESS_1); }
-> > +#endif /* _PCIE_PLDA_H */
-> > diff --git a/drivers/pci/controller/plda/pcie-starfive.c
-> > b/drivers/pci/controller/plda/pcie-starfive.c
-> > new file mode 100644
-> > index 000000000000..9bb9f0e29565
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/plda/pcie-starfive.c
-> > @@ -0,0 +1,473 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * PCIe host controller driver for StarFive JH7110 Soc.
-> > + *
-> > + * Copyright (C) 2023 StarFive Technology Co., Ltd.
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_pci.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/reset.h>
-> > +#include "../../pci.h"
-> > +
-> > +#include "pcie-plda.h"
-> > +
-> > +#define PCIE_FUNC_NUM			4
-> > +
-> > +/* system control */
-> > +#define STG_SYSCON_PCIE0_BASE			0x48
-> > +#define STG_SYSCON_PCIE1_BASE			0x1f8
-> > +
-> > +#define STG_SYSCON_AR_OFFSET			0x78
-> > +#define STG_SYSCON_AXI4_SLVL_AR_MASK		GENMASK(22, 8)
-> > +#define STG_SYSCON_AXI4_SLVL_PHY_AR(x)
-> 	FIELD_PREP(GENMASK(20, 17), x)
-> > +#define STG_SYSCON_AW_OFFSET			0x7c
-> > +#define STG_SYSCON_AXI4_SLVL_AW_MASK		GENMASK(14, 0)
-> > +#define STG_SYSCON_AXI4_SLVL_PHY_AW(x)
-> 	FIELD_PREP(GENMASK(12, 9), x)
-> > +#define STG_SYSCON_CLKREQ			BIT(22)
-> > +#define STG_SYSCON_CKREF_SRC_MASK		GENMASK(19, 18)
-> > +#define STG_SYSCON_RP_NEP_OFFSET		0xe8
-> > +#define STG_SYSCON_K_RP_NEP			BIT(8)
-> > +#define STG_SYSCON_LNKSTA_OFFSET		0x170
-> > +#define DATA_LINK_ACTIVE			BIT(5)
-> > +
-> > +/* Parameters for the waiting for link up routine */
-> > +#define LINK_WAIT_MAX_RETRIES	10
-> > +#define LINK_WAIT_USLEEP_MIN	90000
-> > +#define LINK_WAIT_USLEEP_MAX	100000
-> > +
-> > +struct starfive_jh7110_pcie {
-> > +	struct plda_pcie_rp plda;
-> > +	struct reset_control *resets;
-> > +	struct clk_bulk_data *clks;
-> > +	struct regmap *reg_syscon;
-> > +	struct gpio_desc *power_gpio;
-> > +	struct gpio_desc *reset_gpio;
-> > +	struct phy *phy;
-> > +
-> > +	unsigned int stg_pcie_base;
-> > +	int num_clks;
-> > +};
-> > +
-> > +/*
-> > + * The BAR0/1 of bridge should be hidden during enumeration to
-> > + * avoid the sizing and resource allocation by PCIe core.
->=20
-> Please explain. This is what's preventing this driver to re-use the
-> PCI_HOST_COMMON infrastructure and it is unclear why.
->=20
-
-Sorry, we didn't explain it clearly enough here.
-JH7110 PCIe port BAR0/1 is configured as 64-bit prefetchable memory
-space, PCIe read and write requests targeting BAR0/1 are routed to so
-called 'Bridge Configuration space' in PLDA datasheet, which contains
-the bridge internal registers, such as interrupt, DMA & ATU registers...
-
-JH7110 can access the Bridge Configuration space by local bus, and don`t
-want the bridge internal registers accessed by the DMA from EP devices.
-Thus, they are unimplemented and should be hidden.
-
-I will modify the annotation in next version if you think it is ok.
-
-> > + */
-> > +static bool starfive_pcie_hide_rc_bar(struct pci_bus *bus, unsigned in=
-t
-> devfn,
-> > +				      int offset)
-> > +{
-> > +	if (pci_is_root_bus(bus) && !devfn &&
-> > +	    (offset =3D=3D PCI_BASE_ADDRESS_0 || offset =3D=3D PCI_BASE_ADDRE=
-SS_1))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +static int starfive_pcie_config_write(struct pci_bus *bus, unsigned in=
-t devfn,
-> > +				      int where, int size, u32 value) {
-> > +	if (starfive_pcie_hide_rc_bar(bus, devfn, where))
-> > +		return PCIBIOS_SUCCESSFUL;
-> > +
-> > +	return pci_generic_config_write(bus, devfn, where, size, value); }
-> > +
-> > +static int starfive_pcie_config_read(struct pci_bus *bus, unsigned int=
- devfn,
-> > +				     int where, int size, u32 *value) {
-> > +	if (starfive_pcie_hide_rc_bar(bus, devfn, where)) {
-> > +		*value =3D 0;
-> > +		return PCIBIOS_SUCCESSFUL;
-> > +	}
-> > +
-> > +	return pci_generic_config_read(bus, devfn, where, size, value); }
-> > +
-> > +static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie,
-> > +				  struct device *dev)
-> > +{
-> > +	int domain_nr;
-> > +
-> > +	pcie->num_clks =3D devm_clk_bulk_get_all(dev, &pcie->clks);
-> > +	if (pcie->num_clks < 0)
-> > +		return dev_err_probe(dev, pcie->num_clks,
-> > +				     "failed to get pcie clocks\n");
-> > +
-> > +	pcie->resets =3D devm_reset_control_array_get_exclusive(dev);
-> > +	if (IS_ERR(pcie->resets))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->resets),
-> > +				     "failed to get pcie resets");
-> > +
-> > +	pcie->reg_syscon =3D
-> > +		syscon_regmap_lookup_by_phandle(dev->of_node,
-> > +						"starfive,stg-syscon");
-> > +
-> > +	if (IS_ERR(pcie->reg_syscon))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->reg_syscon),
-> > +				     "failed to parse starfive,stg-syscon\n");
-> > +
-> > +	pcie->phy =3D devm_phy_optional_get(dev, NULL);
-> > +	if (IS_ERR(pcie->phy))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->phy),
-> > +				     "failed to get pcie phy\n");
-> > +
-> > +	domain_nr =3D of_get_pci_domain_nr(dev->of_node);
-> > +
-> > +	if (domain_nr < 0 || domain_nr > 1)
-> > +		return dev_err_probe(dev, -ENODEV,
-> > +				     "failed to get valid pcie domain\n");
-> > +
-> > +	if (domain_nr =3D=3D 0)
-> > +		pcie->stg_pcie_base =3D STG_SYSCON_PCIE0_BASE;
-> > +	else
-> > +		pcie->stg_pcie_base =3D STG_SYSCON_PCIE1_BASE;
->=20
-> I don't agree with this. The domain number is a software allocated value
-> attached to a controller. It is written nowhere that you can't swap them =
-and
-> leave this code path broken.
->=20
-
-We set 'linux,pci-domain =3D <0>' in our pcie0 DTS node, and <1> for=20
-pcie1. The value should be static now.
-
-As the STG system controller defines different bases in PCIe RP0 & RP1,
-we have to identify which controller is doing the hardware initialization.
-We discussed this before with other maintainers, do you have a better
-suggestion?
-
-> > +	pcie->reset_gpio =3D devm_gpiod_get_optional(dev, "perst",
-> > +						   GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(pcie->reset_gpio))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->reset_gpio),
-> > +				     "failed to get perst-gpio\n");
-> > +
-> > +	pcie->power_gpio =3D devm_gpiod_get_optional(dev, "enable",
-> > +						   GPIOD_OUT_LOW);
-> > +	if (IS_ERR(pcie->power_gpio))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->power_gpio),
-> > +				     "failed to get power-gpio\n");
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct pci_ops starfive_pcie_ops =3D {
-> > +	.map_bus	=3D plda_pcie_map_bus,
->=20
-> It looks like this is an ECAM driver with the read/config quirks for read=
-/write in
-> the method below. Please explain why they are needed.
->=20
-
-Yes, that's for the hide RC BAR operations mentioned above.
-
-> > +	.read           =3D starfive_pcie_config_read,
-> > +	.write          =3D starfive_pcie_config_write,
-> > +};
-> > +
-> > +static int starfive_pcie_clk_rst_init(struct starfive_jh7110_pcie
-> > +*pcie) {
-> > +	struct device *dev =3D pcie->plda.dev;
-> > +	int ret;
-> > +
-> > +	/* PCIe PCI Standard Configuration Identification Settings. */
-> > +	plda_pcie_set_standard_class(plda);
-> > +
-> > +	/*
-> > +	 * The LTR message forwarding of PCIe Message Reception was set by
-> > +core
->=20
-> "LTR message forwarding of PCIe Message Reception".
->=20
-> What is this referring to ?
->=20
-
-Sorry, this sentence is ambiguous.
-"PCIe Message Reception" is a register to enable the function about forward=
-ing
-specific PCIe messages to AXI application, such as ATS/LTR/OBFF messages...
-Here we clear bit 2 to disable the LTR message forwarding to the AXI applic=
-ation.
-
-I will modify the annotation in next version if you think it is ok.
-
-Thank you for your valuable comments.
-Kevin.
-
-> Thanks,
-> Lorenzo
->=20
-> > +	 * as default, but the forward id & addr are also need to be reset.
-> > +	 * If we do not disable LTR message forwarding here, or set a legal
-> > +	 * forwarding address, the kernel will get stuck after the driver pro=
-be.
-> > +	 * To workaround, disable the LTR message forwarding support on
-> > +	 * PCIe Message Reception.
-> > +	 */
-> > +	plda_pcie_disable_ltr(plda);
-> > +
-> > +	/* Prefetchable memory window 64-bit addressing support */
-> > +	plda_pcie_set_pref_win_64bit(plda);
-> > +
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
