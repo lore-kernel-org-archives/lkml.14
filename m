@@ -1,122 +1,87 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2948747772
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0D24CB47
 	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 15:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709565348; cv=none; b=jOoMf/otwhOrB2tiqK/lGbocGuYa9ZhqsHMq6xawxO6i1hHVohGDME67tXghpD/r7aKNEwtO6i2Tuh5fuQjUUCA8wSPr9y49BZ85amrHl0wW+TnVXc45r/DJEvOX5jLq7fix83z6v7tRc9mxNw+xnoMAliiINAXnGUCEUeyHPAo=
+	t=1709565348; cv=none; b=bQYioIOYzf+A7yfm/YiXm+rmLlfAihzT7CV6Yg3BlqgYskZ3xrApR6uOtM86+8Xkv8mx6tUCdsFgsw3z2Bw85UuThW39Ng5WqGkVj+U3dMQ7mG1Il9YV0mmMjO/vZtdliH2V3SdsaBi6JAd2CGmNUaNVMoGGewQSHNsJFAsGHMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709565348; c=relaxed/simple;
-	bh=PHagvGZN49C8CopjtNuDmKmGFqr3kmXN7R8kWRH/HsA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nOVje8SJyfIG32kILBznAgsLyRXcDeHHLCJxSx5abAUKGRJdBjNt4J/mFuWwO+1tpQBkjKJ2JDh9p//xAL76jVBOAcEQ+bIMqqY4OcWkvsRIIvIQcdHRpuVmD7+02CHf7y+w8fB/Ch/b6xCxNZgAinYAwxtDM/mK1WAdCW9liV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kd4b+qkS; arc=none smtp.client-ip=209.85.214.201
+	bh=JaftqBjRUd5OiE9mP6ElGruCPofNrsQHVf3pU9lO0lo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BmrS2zwIpW+8+V1KLUVEgP9qTgwaPDNJkvfor5c0JIGMWfKzEUJ38I55/8SD4wg+dn3EFbqXokhncILmna9Ry/pirw+Wqkr7WAUw+28k6uWZCzp0E6TVGa9f508AyYz/a9ntvt+CiGRUqtFfBvpTrw8p5EQyMOqQMtLvOv8kfDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FN46C1w0; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kd4b+qkS"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1dcfc3ae5d9so23728415ad.3
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FN46C1w0"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56693f0d235so23481a12.0
         for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 07:15:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709565346; x=1710170146; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pFO6+UywViZZyvnPAa9tMMRLlhb9803+MwFU94Wmgk4=;
-        b=Kd4b+qkSPT44csNE/JIMN3qr5t0cBmih5H7hsQQpfsihY4rIBv+OLNhz/2uD9gcMa2
-         +5+0nBMfAxzZLlhm9SyuHLmXO1ifG1CT57cSFaV/lJXkMWeZH1VWVFH+ciC/0vk7VgtK
-         vizuUJr0u2eA76d1aqYy8tI1MSxWxGfVM4el+ydURYfImxTE1seRKetCyevUToXbD3a7
-         abIjNEY/yXF8Y8etFIb5Kx/Myrk/t2NQBgWmvYzeFTPaGHIuOAUCiPjrtM0CiLQrpad+
-         BOYKWG2BtAj+iX1znxEwm3n54lLSpbhIE+1HDXwpq0pdDV68rjCKUx3nhvaC9hGZ2lRC
-         H9Kg==
+        d=google.com; s=20230601; t=1709565345; x=1710170145; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JaftqBjRUd5OiE9mP6ElGruCPofNrsQHVf3pU9lO0lo=;
+        b=FN46C1w0opZL3pGHIueXrQM50J/X+AFiedCy/K528RxK763i+sQCdC2uY7bnXfK82f
+         A9+2zCM8hCtu4sp81xtJiNEq9IT19WJF3WtakgIMRd51hXxnRJHQzxyvmbuQ1+FC0Y3B
+         8pKg7oWwCsIoqYfQs6WG9XRykmZIFoNaSWAm+VaIpupWLR+PVfWh2G8NOF78d2EuAngy
+         BGI46NV0vW/PofhoEtOAm1e2T2wmcJd9GtWDpdyA1ZJeEkohbbX4OtAH+YK5pQkafxMR
+         hCIlyk2x35x50+RvMMaG/pt05FsHcJTTan01adb5a9qfyxo0VvXozafRMfkHs7PKV7Th
+         tu7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709565346; x=1710170146;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pFO6+UywViZZyvnPAa9tMMRLlhb9803+MwFU94Wmgk4=;
-        b=PR430IYtM426utBSZjmi4eMpaFrMT8VNhj3z5ychodGz9dgWG9lT3+U5NlhrCSeyN3
-         9RFAqc37C75b/vqYpavJHxnRJoS171E2e+tT5zKPNwY01IvLM6Ij6KtGKkahQmEqeVUt
-         KEmBJrf8oZMtVVEz1W9deeZ9NnWzsDuF1lBeJU/yDcoqJRfGUT5Of0xsEsEriMDmhOBY
-         vEToRqvSgfUuvW513TJm1TwiEihgTUeNcctwzRDqL2XqYLmsaYaccENj7Ef54sjxcpXe
-         6oFcp11H5LjV2MAiAQrxKviOtI51SzNDUpAswTgIMPK9xZGNhNBdmnXPcDM00LNal3pJ
-         0Lvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFJr7iR5uIr3aJHIX68BXBzOychjbzAJ+qb5SKuYCn0f7mnLOHe5Lf4o1fH1KCVvzY/kDd03Wq4pZYqlBt/ps7JPpMq0Ogay2xmsXx
-X-Gm-Message-State: AOJu0YxhLkLhqeVw/QZNqp/IR/ytTn0ZAJt6e5ZHAjFO9E/JrgJVaG6Q
-	YIl7cnFJgS54PcvbYuyUXnpJa81tstXJbNe0qWUpnaDNWsbeiNskh+FfC02XwhJK0HURtmog3xY
-	w0A==
-X-Google-Smtp-Source: AGHT+IHGAA0Lrr6D8JJnCJuBRYdJyqZCbHSa/69Uam1kLs9A6DxL38nQx5C9WFnOxNa+i/UXz2cKgvYsNBM=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:e5c8:b0:1dc:e9e:374e with SMTP id
- u8-20020a170902e5c800b001dc0e9e374emr91930plf.12.1709565346183; Mon, 04 Mar
- 2024 07:15:46 -0800 (PST)
-Date: Mon, 4 Mar 2024 07:15:44 -0800
-In-Reply-To: <20240301101410.356007-2-kraxel@redhat.com>
+        d=1e100.net; s=20230601; t=1709565345; x=1710170145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JaftqBjRUd5OiE9mP6ElGruCPofNrsQHVf3pU9lO0lo=;
+        b=KIb6fJqvQ+J/dx1t1BDuUnxWJTgSoKzWbpzg/m/Usa7HY8r2qvGfbnA0Q97lbiJcrr
+         0eOhFzlGItJalOgUZSgdp/3e/rWFd6X3Cwr8omEepbdgN8h//2EPcOCDYVzMoNKQGcHd
+         KpYTz4HzPXClbADsAbjag6hHjcaAPSLmDlu+QGgXQPeME9U5xStnAfQYUxufnjQe7m0v
+         /DddNlKLM457WrTj4goH57jD4vHTxszUXIwr3g1rsa70gWyaVunm++2zoJgfR10yu407
+         7VCbmzCxRTqC/MWhgHiUTOh1/6+mUdGK752ZCSMXcbkQi2Dh68GNKZAX2yTzioowFelZ
+         LQRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpSsQuk2Jhmav6BEk+dUZdBmp4BsJpQLbBYDcnH1ZC/kN5CUA4aVQ4BEcq/RvYuB4dMQa2/Ijm5z9H1V2uti8pS4jhv5aGtaUQOczT
+X-Gm-Message-State: AOJu0YwgrMs4khds9MPPevvpfuu/b8zn+BMRN8qnUXDU/AdS8/Incqxz
+	y8QwqVlT2ZUJfluuVxKxzDiIlALIDbsoC8N955dUKqqnrZYDBTQNPRiXHsFAf0JoimPK9SRDu9C
+	ewVcunipjtDHJUHIzyz/w7ZktKO1ugYVL4dtb
+X-Google-Smtp-Source: AGHT+IEtc8iFkUDhfxTXSKFmqZJRm6+dqGzN80jS12Vcq179DqSiAJDtL89r2EpdoV8ru4yX3BzzCTnXQuN4tukZYxk=
+X-Received: by 2002:a50:bac2:0:b0:566:ecde:290d with SMTP id
+ x60-20020a50bac2000000b00566ecde290dmr291227ede.4.1709565344548; Mon, 04 Mar
+ 2024 07:15:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301101410.356007-1-kraxel@redhat.com> <20240301101410.356007-2-kraxel@redhat.com>
-Message-ID: <ZeXloHPV1dkOwBTe@google.com>
-Subject: Re: [PATCH 1/3] kvm: wire up KVM_CAP_VM_GPA_BITS for x86
-From: Sean Christopherson <seanjc@google.com>
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+In-Reply-To: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 4 Mar 2024 16:15:07 +0100
+Message-ID: <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
+Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
+To: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Cc: gustavoars@kernel.org, akpm@linux-foundation.org, jpoimboe@kernel.org, 
+	peterz@infradead.org, dave.hansen@linux.intel.com, 
+	kirill.shutemov@linux.intel.com, keescook@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, nixiaoming@huawei.com, kepler.chenxin@huawei.com, 
+	wangbing6@huawei.com, wangfangpeng1@huawei.com, douzhaolei@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 01, 2024, Gerd Hoffmann wrote:
-> Add new guest_phys_bits field to kvm_caps, return the value to
-> userspace when asked for KVM_CAP_VM_GPA_BITS capability.
-> 
-> Initialize guest_phys_bits with boot_cpu_data.x86_phys_bits.
-> Vendor modules (i.e. vmx and svm) can adjust this field in case
-> additional restrictions apply, for example in case EPT has no
-> support for 5-level paging.
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  arch/x86/kvm/x86.h | 2 ++
->  arch/x86/kvm/x86.c | 5 +++++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 2f7e19166658..e03aec3527f8 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -24,6 +24,8 @@ struct kvm_caps {
->  	bool has_bus_lock_exit;
->  	/* notify VM exit supported? */
->  	bool has_notify_vmexit;
-> +	/* usable guest phys bits */
-> +	u32  guest_phys_bits;
->  
->  	u64 supported_mce_cap;
->  	u64 supported_xcr0;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 48a61d283406..e270b9b708d1 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4784,6 +4784,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->  		if (kvm_is_vm_type_supported(KVM_X86_SW_PROTECTED_VM))
->  			r |= BIT(KVM_X86_SW_PROTECTED_VM);
->  		break;
-> +	case KVM_CAP_VM_GPA_BITS:
-> +		r = kvm_caps.guest_phys_bits;
+On Mon, Mar 4, 2024 at 3:02=E2=80=AFAM Jiangfeng Xiao <xiaojiangfeng@huawei=
+.com> wrote:
+> When the last instruction of a noreturn function is a call
+> to another function, the return address falls outside
+> of the function boundary. This seems to cause kernel
+> to interrupt the backtrace.
+[...]
+> Delete __noreturn from usercopy_abort,
 
-This is not a fast path, just compute the effective guest.MAXPHYADDR on the fly
-using tdp_root_level and max_tdp_level.  But as pointed out and discussed in the
-previous thread, adverising a guest.MAXPHYADDR that is smaller than host.MAXPHYADDR
-simply doesn't work[*].
-
-I thought the plan was to add a way for KVM to advertise the maximum *addressable*
-GPA, and figure out a way to communicate that to the guest, e.g. so that firmware
-doesn't try to use legal GPAs that the host cannot address.
-
-Paolo, any update on this?
-
-[*] https://lore.kernel.org/all/CALMp9eTutnTxCjQjs-nxP=XC345vTmJJODr+PcSOeaQpBW0Skw@mail.gmail.com
+This sounds like the actual bug is in the backtracing logic? I don't
+think removing __noreturn annotations from an individual function is a
+good fix, since the same thing can happen with other __noreturn
+functions depending on what choices the compiler makes.
