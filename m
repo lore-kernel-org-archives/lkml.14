@@ -1,193 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3E66025E;
-	Mon,  4 Mar 2024 16:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562B3605A5
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 16:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571087; cv=none; b=dY17MAFbPQMooD89e97Fy+zPNQf7bltWT6wBzxNLCfNjBEHMlEOSWapPhZGd7NqgSLk5dj2Sqm1BBlAkbtW5sZz54l9kEpWdVUL6ND3MMvqxNHDWwQfPeVtjP31nR+IxMCW2igr7QAEOYSxgTs4tSIStla5jAE6n8a8JnZo2xu0=
+	t=1709571089; cv=none; b=c90A3KYzJlDTIepC7UUnQyLEB6neal2QTCrPC+3URRGce8VW8rXPlaz6avkhCRx7dqaCdsWxAfRUaLmGljnGbBFoSfcvoNTcRjDs4Sb8RIjwWjAX+9dBE8dGSrUFCk98SMe4zqn6VvDNA3htnJkt8cLjPkW3x6dvRpS9NgfqAI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571087; c=relaxed/simple;
-	bh=yqKuxOx1DXfPwnHtYoxJ3KAN1P+JEH1gy0hqR/4ZeUk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IA6eltxY/gUvN8PcFGDeyBnXS/rq5mQwfPbSu9LdqjB6j1ZSO3spqKDBZpN9MIiAznIbenbETju5XqJH/WC4bK8ZgmDI0d+N4cBc9Sz1OU8AqO2jZFQ5EoZr3Mcw7BijNE368GIh5rcPaOBY047zycV8sVonKXKTIaLdD3bVZu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Bwg0PFWW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nbqu66zV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1709571089; c=relaxed/simple;
+	bh=8YEW8/QYd153IU1YcCsQ5FCqtApBQaAp36ELoAoTGug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rfEkEPnELTtCMMpDmKdpiqhya0X1pNLo3vtuQwTB/vDAp7QWKpWQrzjprrWOYjCfbSsXE5qEw0VGbBzOZxYZT8IqeLGQn4WHfMjG+KyboHrwJDWcUv6RuQSH/TFNdaJPg9hEzpASVzexZBgDV+eT5rBkXVg5kmPgz/2hxm1/y3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Xz6yhItV; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bwg0PFWW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nbqu66zV"
-Date: Mon, 04 Mar 2024 16:51:16 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709571077;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UEkc6RVS8CnKBI9aoRjXwPPHjcEsiWy4gTC4RHc4te0=;
-	b=Bwg0PFWWdY41S0JXQzt2om9AyG++LMSFJU2T1KWjduMWigUQoKHV8DLHBNZAcbN/oxK8KZ
-	Ug8QT7QidpUxkjQz2iWrj0KZ+ZP3POxPaDAZiEeIBMcdEP0u6+fhINP3xug3uNrrNgDSfc
-	BTp79iz2BDqxPSStu/bykpHipNCp8sn9WTWyYpnj5DGTlY3vW+fyDDabJzTQhfrXObmDyz
-	+wDbxr8q2T/W6lWrXQ+JbnF9uECiHLQesNrqDoTCB21xjRILaawRXkRAnerkn+2LBNamxf
-	Ra9Z1kw/T3rd+buzwYyDl4bqOs9WmnRFeqmxdtHJ5p96eNZpiCRt5RazbGbaqw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709571077;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UEkc6RVS8CnKBI9aoRjXwPPHjcEsiWy4gTC4RHc4te0=;
-	b=nbqu66zVImeXc5qrEGSjwX80kVSROmoYsYvHg7+cSMb1+N6IH7EImsNvP9iF0lfIDdPPLj
-	ahKXhS9RAQVF+qCQ==
-From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/idle: Sanitize X86_BUG_AMD_E400 handling
-Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <877cim6sis.ffs@tglx>
-References: <877cim6sis.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xz6yhItV"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a4532f84144so171433566b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 08:51:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709571084; x=1710175884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xOyMFcdZeiizIIdM2h9cviSaGUWkoYW6H6plPEQ7/JE=;
+        b=Xz6yhItVu+bd1OAN+7W4IPdXqG1psTBThcOsS9BGq2nKTtjGKtg5WzzH41d74Rrgf4
+         KUIk8doq6pwt4t5ZlWE+Qvsvu5NPKYFluovGINCBMnJcJfaZLEV1xWCG03um9qOHt4oO
+         lD96ebXl460RM4ACBsNlXtAgY0EOGG+1BpxoU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709571084; x=1710175884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xOyMFcdZeiizIIdM2h9cviSaGUWkoYW6H6plPEQ7/JE=;
+        b=ZaRGJW88v3jWC/p7UDxL0XQpzaK7vcnhzR0ACgBp2XjdugjBw6F92xukj12e8Vr/dR
+         jENNS8JY2NLUWIE+AuRWZwgGK9sqnsHw5SUfj+sDBUyEc4VF9Vh4r2SeYf690+Y3MZOE
+         osze2YnQJX7RSIe93j2iNs4El8pGteLxcXcVnPkEfd/xAVyNOTc3ScVBi9UBwZEePxO1
+         /ZEfj9bmegTOs/2lGDXjxWlIXuxb2NfvCiyDuvfN/WScHGRfq9/BEOPuvw1s4spWj6OL
+         H102WIXxn03vjGJMl7Y8ZkjhEz8SR5jkj/JhCjKU53OF8gULQbcX382Ut2C+euUf5GwX
+         VNEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZT6/OwKPH8H2CUvoq0AuihnJX/qMUbmU7R6QZrHUi2xpTZS+tgVv8IjCEXB17zcMHXzTsZhvCR2TgSm1mqYtuAimlf03js5kUsm9b
+X-Gm-Message-State: AOJu0YwuOe1OznWseTBdRrzpQnWvSGpD6jRiSvemY9cTSLwPyx1qNiMg
+	zfouJbW0LdpefCDOT/cwGV/Y4DaDXD0dC4Y16MQCd9uE8Eiqf/iaXsXhyDCDIiFyICPFZqMCzSv
+	bXClB
+X-Google-Smtp-Source: AGHT+IHXK+XtlwXCl54s51VMYEMUiKbRfQ4zxHBP7JEcAcbRCvuL2sY5IEmmr1VQxe5pTnz2GVA/iw==
+X-Received: by 2002:a17:906:d295:b0:a3e:5589:6099 with SMTP id ay21-20020a170906d29500b00a3e55896099mr6140222ejb.70.1709571083803;
+        Mon, 04 Mar 2024 08:51:23 -0800 (PST)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id sa24-20020a1709076d1800b00a440019ac45sm5033319ejc.69.2024.03.04.08.51.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 08:51:22 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-412d84ffbfaso98005e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 08:51:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWN4eS1nwxuEc/aHi5eeVJ6C/WjTgEFIxGLjBfFJcFxw6KX4cAJZ7yyrn5rENfh24gBNpnvzT7anF8PcF4XtJkBrLXScwPQvvYljv/G
+X-Received: by 2002:a7b:c417:0:b0:412:dd21:292 with SMTP id
+ k23-20020a7bc417000000b00412dd210292mr263164wmi.0.1709571082557; Mon, 04 Mar
+ 2024 08:51:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170957107613.398.3124673060349800615.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20240301061128.3145982-1-yangcong5@huaqin.corp-partner.google.com>
+In-Reply-To: <20240301061128.3145982-1-yangcong5@huaqin.corp-partner.google.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 4 Mar 2024 08:51:06 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UP9NxfmT8rqLd-HUq8QwJXa5xO7UbrgYHLw4vOKZO7hA@mail.gmail.com>
+Message-ID: <CAD=FV=UP9NxfmT8rqLd-HUq8QwJXa5xO7UbrgYHLw4vOKZO7hA@mail.gmail.com>
+Subject: Re: [PATCH] drm/panel: boe-tv101wum-nl6: Fine tune Himax83102-j02
+ panel HFP and HBP
+To: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
+	hsinyi@chromium.org, swboyd@chromium.org, airlied@gmail.com, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/core branch of tip:
+Hi,
 
-Commit-ID:     cb81deefb59de01325ab822f900c13941bfaf67f
-Gitweb:        https://git.kernel.org/tip/cb81deefb59de01325ab822f900c13941bfaf67f
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 28 Feb 2024 23:13:00 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 04 Mar 2024 17:38:06 +01:00
+On Thu, Feb 29, 2024 at 10:11=E2=80=AFPM Cong Yang
+<yangcong5@huaqin.corp-partner.google.com> wrote:
+>
+> The current measured frame rate is 59.95Hz, which does not meet the
+> requirements of touch-stylus and stylus cannot work normally. After
+> adjustment, the actual measurement is 60.001Hz. Now this panel looks
+> like it's only used by me on the MTK platform, so let's change this
+> set of parameters.
+>
+> Fixes: cea7008190ad ("drm/panel: Fine tune Himax83102-j02 panel HFP and H=
+BP")
 
-x86/idle: Sanitize X86_BUG_AMD_E400 handling
+Your "Fixes:" tag is not quite right. It needs to have the _exact_
+subject of the old commit message, AKA:
 
-amd_e400_idle(), the idle routine for AMD CPUs which are affected by
-erratum 400 violates the RCU constraints by invoking tick_broadcast_enter()
-and tick_broadcast_exit() after the core code has marked RCU non-idle.  The
-functions can end up in lockdep or tracing, which rightfully triggers a
-RCU warning.
+Fixes: cea7008190ad ("drm/panel: boe-tv101wum-nl6: Fine tune
+Himax83102-j02 panel HFP and HBP")
 
-The core code provides now a static branch conditional invocation of the
-broadcast functions.
+> Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+> ---
+>  drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-Remove amd_e400_idle(), enforce default_idle() and enable the static branch
-on affected CPUs to cure this.
+A little odd that the patch you're fixing claimed that it caused the
+measured rate to be 60.01Hz and here you're saying that it ended up
+being 59.95Hz. I guess there was a measurement error when the previous
+patch was posted?
 
-  [ bp: Fold in a fix for a IS_ENABLED() check fail missing a "CONFIG_"
-    prefix which tglx spotted. ]
+In any case, the argument still holds that this is a panel that still
+appears to be only used by your board, so small tweaks to the numbers
+here seem OK.
 
-Reported-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/877cim6sis.ffs@tglx
----
- arch/x86/Kconfig          |  1 +-
- arch/x86/kernel/process.c | 42 ++++++++------------------------------
- 2 files changed, 10 insertions(+), 33 deletions(-)
+Landed to "drm-misc-fixes" after:
+* Adding "(again)" to the end of the subject to make it distinct from
+the previous patch description
+* Fixing your Fixes tag
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5029862..0802653 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -147,6 +147,7 @@ config X86
- 	select EDAC_ATOMIC_SCRUB
- 	select EDAC_SUPPORT
- 	select GENERIC_CLOCKEVENTS_BROADCAST	if X86_64 || (X86_32 && X86_LOCAL_APIC)
-+	select GENERIC_CLOCKEVENTS_BROADCAST_IDLE	if GENERIC_CLOCKEVENTS_BROADCAST
- 	select GENERIC_CLOCKEVENTS_MIN_ADJUST
- 	select GENERIC_CMOS_UPDATE
- 	select GENERIC_CPU_AUTOPROBE
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 45a9d49..b86ff0f 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -846,31 +846,6 @@ void __noreturn stop_this_cpu(void *dummy)
- }
- 
- /*
-- * AMD Erratum 400 aware idle routine. We handle it the same way as C3 power
-- * states (local apic timer and TSC stop).
-- *
-- * XXX this function is completely buggered vs RCU and tracing.
-- */
--static void amd_e400_idle(void)
--{
--	/*
--	 * We cannot use static_cpu_has_bug() here because X86_BUG_AMD_APIC_C1E
--	 * gets set after static_cpu_has() places have been converted via
--	 * alternatives.
--	 */
--	if (!boot_cpu_has_bug(X86_BUG_AMD_APIC_C1E)) {
--		default_idle();
--		return;
--	}
--
--	tick_broadcast_enter();
--
--	default_idle();
--
--	tick_broadcast_exit();
--}
--
--/*
-  * Prefer MWAIT over HALT if MWAIT is supported, MWAIT_CPUID leaf
-  * exists and whenever MONITOR/MWAIT extensions are present there is at
-  * least one C1 substate.
-@@ -890,8 +865,8 @@ static int prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
- 	if (!cpu_has(c, X86_FEATURE_MWAIT))
- 		return 0;
- 
--	/* Monitor has a bug. Fallback to HALT */
--	if (boot_cpu_has_bug(X86_BUG_MONITOR))
-+	/* Monitor has a bug or APIC stops in C1E. Fallback to HALT */
-+	if (boot_cpu_has_bug(X86_BUG_MONITOR) || boot_cpu_has_bug(X86_BUG_AMD_APIC_C1E))
- 		return 0;
- 
- 	cpuid(CPUID_MWAIT_LEAF, &eax, &ebx, &ecx, &edx);
-@@ -942,17 +917,15 @@ void select_idle_routine(const struct cpuinfo_x86 *c)
- 	if (x86_idle_set() || boot_option_idle_override == IDLE_POLL)
- 		return;
- 
--	if (boot_cpu_has_bug(X86_BUG_AMD_E400)) {
--		pr_info("using AMD E400 aware idle routine\n");
--		static_call_update(x86_idle, amd_e400_idle);
--	} else if (prefer_mwait_c1_over_halt(c)) {
-+	if (prefer_mwait_c1_over_halt(c)) {
- 		pr_info("using mwait in idle threads\n");
- 		static_call_update(x86_idle, mwait_idle);
- 	} else if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
- 		pr_info("using TDX aware idle routine\n");
- 		static_call_update(x86_idle, tdx_safe_halt);
--	} else
-+	} else {
- 		static_call_update(x86_idle, default_idle);
-+	}
- }
- 
- void amd_e400_c1e_apic_setup(void)
-@@ -985,7 +958,10 @@ void __init arch_post_acpi_subsys_init(void)
- 
- 	if (!boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
- 		mark_tsc_unstable("TSC halt in AMD C1E");
--	pr_info("System has AMD C1E enabled\n");
-+
-+	if (IS_ENABLED(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST_IDLE))
-+		static_branch_enable(&arch_needs_tick_broadcast);
-+	pr_info("System has AMD C1E erratum E400. Workaround enabled.\n");
- }
- 
- static int __init idle_setup(char *str)
+9dfc46c87cdc drm/panel: boe-tv101wum-nl6: Fine tune Himax83102-j02
+panel HFP and HBP (again)
+
+
+-Doug
