@@ -1,138 +1,168 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79B23F9F4
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 13:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709557840; cv=fail; b=L4mA9t9aYndPvymq/Bm1r8g2JJQn0NijgI/EK2j0xjIMtV6ojN4UIJjI6vlTpJzmdImcrtK0qVkXnp+++D2f2Dndc04UstKmwRRQrZ7DIdu2EW8ibt97XK7kvTs5mmBXO/DAgvVS8IrK2WyFO2dRCbzUZXQ9QOLOa8eqEUaywpg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709557840; c=relaxed/simple;
-	bh=GVe8esTujzziImLi8UrmDbY7MASWrbhnML+nRW9NBz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=HLWuvbTB9BqBrmlGkwJ29K5fFKbCb9eV9/Yl5rGFbcBT+eH9CZQyfIZ9Ns7iqEZMIU8Il6no2K0YpNvkbTZ9OW9UmEGwEyXegDzw2JTk2IlM8+1aqW6PtBeoZCg23ZB3JBtmgJafY6nonwbTh5IIkVqypWKcUTQwR/Epc068m0c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Md6xUEq0; arc=fail smtp.client-ip=40.107.92.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ADE3D3BE
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 13:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709557856; cv=none; b=M+KTOEOTSpJsfJU0hlAqrvULbActfKoyNFLBR9yY7riMKsvpATH8ip+P7S/0Iww7jAbb5cYiQdNdwCHZAiAcWqpRPiDsZwCWSEs0QKe5esV1V8JBbMThm8F5IhJ9JucIxdhHwUSVGGiEDOGO4v/f1fTJIPajQsoZKFU1PQIiP9A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709557856; c=relaxed/simple;
+	bh=edMqvmg6y2VKb4yfnj4dW1OskK2vzKd7zQJdJKQMyrs=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCRp6mQoDgRDZn4rWQEPDi9O7XtEf01s5e5FBg4hrB7etpNWitsSdqBh2vfzMnudgnahR5fP49un8Q+rhWsDxMq5PihmUCwOmMMGoveAsv87ogUJyNNWvNctmWvHPfhyzTh7ocZkSwDueLJB0H4y5wZwljd16X+wmn3SN03jDMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LJgRO+Hb; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Md6xUEq0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y07ilV7Cp03dwUkRYooWgkCVk6DsK4EiTAZ7HtM7uJXqkiC1YsjrZsyNRzNkcjKAhAkFRLBWiwy6a4YTJtHm6iUusqX8p93iNu3XyAaK7A6WtBm9rAoDrmNzDAYFo665Djoa/InASKfaO8wcd4J9fdixQn1Md+2DDOejuAudchJBTup+ma4ivrAgCY819D2DvIN7YgeK1++0y1/Ip6UXYzr+LsaDqzEwCgCV5FlPQ0/dqSfFydg2oAkrB+chJUlnD0U5mLNtWIlzUM0+wODFs3JWP7Iyi4U7uz13mUizYOMcOauPrCIoOwXtyZ4LxQKquROTS3WpfBfZKaUKt5o43w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k5rNV9EyIvhZ382muK0IM27yTk/CEVCsOJII29fdSbo=;
- b=myIBpgwsbcyf+GzyJmSXNE+darBp7MmZ/YpF9R2utBeVPysu5BDikN13RYkAQPVUiXVnfjoUfwg5i69m3ZaeSmWyZqO/wnjUs+dsbrq3dRjUUfqh/ozreQZKcYABhaMs+nX2weiobbeNFtMi09zii8jpkQhxqghLDjBT6f8L0j0DrG8NHbzUUtIe5CdlNK35QXI4rAVIK4WKEmZaW5VWaxVj2Kbsq1Wdo9FX7PeD94zvO4kDPM7OmJ2ba/kDEwwCupht1wRJagT5d1GSkX/4nmXghdxQ7ktIDo/JJZhpqYYs7X5nyTIitN2FZFUJLsh+GGykGgBYuIE3fc1eRpGLnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k5rNV9EyIvhZ382muK0IM27yTk/CEVCsOJII29fdSbo=;
- b=Md6xUEq0wlonPKhwHRZz+CER7oNPvNqOCo4EZ1nAj3iw4wcrxT1QQPfOPO4WEdNBHoumTUDcJLF9h3QzjLBIpEtVxkMjTg4ke/XT0MI046l097J6l/Qq3ZTiNp2Ee4+bx31a+XsYkB0v4CVC/Qfu5nmy4aoCY04OJ1ASIsjw4nJp4lI2o0GK+aqxluoRQbKetsU3QbES/67RDjmpzAvEpfUiDu0JviBOhoXcXkBebn3gsIv3ZzlrjAn0rZJvwlE0CFosVAXR2sC5CyEYrGiKAmeO4dXXSNRXX2DXqlSc8nuHmRiVOhGTteHWBdcOsOeodZhU3wV0tmiZI5uuaI3vXw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by DM4PR12MB6662.namprd12.prod.outlook.com (2603:10b6:8:b5::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
- 2024 13:10:33 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c33c:18db:c570:33b3]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c33c:18db:c570:33b3%5]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
- 13:10:33 +0000
-Date: Mon, 4 Mar 2024 09:10:31 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: peterx@redhat.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Yang Shi <shy828301@gmail.com>,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org
-Subject: Re: [PATCH v2 7/7] mm/treewide: Drop pXd_large()
-Message-ID: <20240304131031.GU9179@nvidia.com>
-References: <20240229084258.599774-1-peterx@redhat.com>
- <20240229084258.599774-8-peterx@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240229084258.599774-8-peterx@redhat.com>
-X-ClientProxiedBy: SA0PR11CA0051.namprd11.prod.outlook.com
- (2603:10b6:806:d0::26) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LJgRO+Hb"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3f893ad5f4so669614566b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 05:10:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709557853; x=1710162653; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z3m7OivOxzJeGdkMzIGOv6kRagQeqCuoThPb8xlNbgo=;
+        b=LJgRO+HbeUy+EAApm7gnwP1G5T1RzxP/43RuN159JitjmB+tqdik+WseMa7ppc0Lsw
+         zFJ/Qi4F2nmvJIcG0J3r6XAbWwoibIB/l1J8L0LBqT9cfVHrFCP2fSuj53GXHlK2MgTN
+         KOf4NIk6XpxoKoJopFvDojC8rQWS3tpNWkF60XOnb7NXm0Lmo8pL0YaDTLyRvX8bLHFx
+         a6kbFFniAVqz0C8/pXNe+MUMsm03pMjJFqyu0ozGtPkTCqoCZER98AHfi/8SUIdOYHEL
+         SvLwOaZvfecGr7W8VQxZHVJqAJUUAuCNp9lon7ghkhiS3+vIlx0DPSIQplF9fjXXF24I
+         Arwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709557853; x=1710162653;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z3m7OivOxzJeGdkMzIGOv6kRagQeqCuoThPb8xlNbgo=;
+        b=KBcTNCPJ1j5yKjQP2Ehy8B0t9CbVD6wyk9H4SPINxNM18u6r/0phYD74UUCXFc9IIT
+         pbwTxOXRYmDzrrmB3wjIymVg/ptfWKRh9xcAnQT2HcfbLI5S1hoHBEq4bGxkeznvpZoH
+         GqQxSwr3dS35mz9F9jW9DHJ2b4h4Zt86NG0DRkNs/KVn570bbranl5PtQ5Ki4N/E6thm
+         To5UwiOmJGIl/IuTDHyMK9aklyYcc3WtpVqSTigc7S0svs0dt3ZXgLnOoWCbe3ihi3/x
+         ceeQoLg+A6f4ZYRT1qnS4b4L29KuvQe1bweC5I26PJehQVgsPNae8g/WhgGaoO5qnGe6
+         GJCA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9s7VM/rm5aYaKqACHzogVX68iwy0gHnz+6e8u85osT22FPWcCFneIooeV1XkAbdrpUwE4ny7DE8NjTOhUR3aUoUgkHpgKeETOJtaP
+X-Gm-Message-State: AOJu0YzgqehuTRhJ5+XcYr1hwxt8hmSb6lHfPtzJ+JAJfqa2Z7QN3Ttj
+	mRT6eytpBEySe/l7AHN5Cx0VBW4MXeeTcRfreRJ5NT0/ObARNIw5uEA0pGEo3g==
+X-Google-Smtp-Source: AGHT+IGrvXADFoe0PTlXPw7y7hmD/cJqKu6+s04vNFfdc9+9OA1wUWqNlu47ZlZ+Fh8V1+pbnqa8SA==
+X-Received: by 2002:a17:906:4f09:b0:a45:70b9:252b with SMTP id t9-20020a1709064f0900b00a4570b9252bmr965095eju.57.1709557852486;
+        Mon, 04 Mar 2024 05:10:52 -0800 (PST)
+Received: from google.com (64.227.90.34.bc.googleusercontent.com. [34.90.227.64])
+        by smtp.gmail.com with ESMTPSA id r18-20020a1709067fd200b00a4589f3392esm98523ejs.207.2024.03.04.05.10.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 05:10:51 -0800 (PST)
+Date: Mon, 4 Mar 2024 13:10:48 +0000
+From: Quentin Perret <qperret@google.com>
+To: Christoph Hellwig <hch@infradead.org>, Will Deacon <will@kernel.org>,
+	Chris Goldsworthy <quic_cgoldswo@quicinc.com>,
+	Android KVM <android-kvm@google.com>,
+	Patrick Daly <quic_pdaly@quicinc.com>,
+	Alex Elder <elder@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Murali Nalajal <quic_mnalajal@quicinc.com>,
+	Trilok Soni <quic_tsoni@quicinc.com>,
+	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
+	Carl van Schaik <quic_cvanscha@quicinc.com>,
+	Philip Derrin <quic_pderrin@quicinc.com>,
+	Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Fuad Tabba <tabba@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org
+Subject: Re: Re: [PATCH v17 19/35] arch/mm: Export direct {un,}map functions
+Message-ID: <ZeXIWBLVWzVycm0r@google.com>
+References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
+ <20240222-gunyah-v17-19-1e9da6763d38@quicinc.com>
+ <ZdhEtH7xzbzdhS2j@infradead.org>
+ <20240223071006483-0800.eberman@hu-eberman-lv.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|DM4PR12MB6662:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0ed7d36-0f8b-4a9d-2e7d-08dc3c4c7937
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ZbNlEjS72xL1ABOxRMkvc2OR+Rxx2MGvXl7z0nhSWvyPPYj+UDxL8maLj1ITfL9nCLmHzvNQpzKALqNUuUibv61Z6ffTjEtSkxxu56JoaQwF3pzIb+BqH9A+1JPpvxcrMOdIfOX8ulxZzYd+PGfE6Z2gFXjGpefP7SnFLFkRlb7/GRI4nBDqcTfc0vNveUv8yMCAw1imsKooVPRPNHMf8Yt6vWDWH2bqTNPsmeqrfbvdf35DA1PWC51fEZMNe3Ui1kvgBSnsDineGIxruhdKbG7Zt92IncG1ikkFCtueajGSCIBZGCJkRDxxSvfXrxQu0SfTFQVsLyjXgIA2NFz+LPHXRw6ahdaIDfIJr26M6EAN3cLzfEWSg4brdZ6TOR8qD2M19hIxDTfCURCAMS6FvJWQyZoKyn1o9fF/6lDo70WeCVjecMEg2Ft3DZhTUy6m/txFepd2U5zJkhFSQ0OZ1z5AcraLrXkeTQ3jeXfM1pxS2ICFP9O0k4wRkSDDyR6xiYjpxoBcXjLzPm+JNMBhP9/RG2kn8sht1Nzd5LzQwIjLSTZobGfWErWBb5QioML6y18qY0BWpBHcVg+AucOnT42SAab9xqEfofLy/UeqM2gqymQ8TqHm4KOzObgVnNSnmdI/HG1+6ojEX8lK2RQRufuXMs9BOKwYU9Gk8BEWudY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?C6XuJF7ahQi5aCx+/Lr+UDakxD3FQ9zDJREbDs8LcTJuL0nIaX6XuwjFcz4X?=
- =?us-ascii?Q?cPT3HMUrp0VV9vpQpqgG7i5dS5t1laUCmriS5IZru4iDLs690rX146kmXWbk?=
- =?us-ascii?Q?XN+7MJMm0s/7zE9wUimosUcfLI67RwGfgOPIfODbneZQkTtHUdR0DK2/0rh4?=
- =?us-ascii?Q?c2AH8E+pud8vOJShiliPbf356IS0O8Yza7izJhRDmnFXkLykoitowy59ZKOc?=
- =?us-ascii?Q?zeZLl/03wLXWhPJBp8mKvF7z1g6ibQZ+hnUsk23mUyl8n4b2Vv9MFtO7SWBm?=
- =?us-ascii?Q?c1eRWR9b/g/hFcPtJz9eDnP+xvWcq1KNjptFpNmVALvXAcHpdvBOv/n2ojuZ?=
- =?us-ascii?Q?OzAnlfHBnj3sJY+rDNjwLJM9LeNKgz7eaG02PCP7p4wb1z9ivMDmc6kAGPvC?=
- =?us-ascii?Q?ZZA1eklzmy/rOIjXQd7hF/WuvDHgsRKaSOVThjZ2TFWkjDrSaPUPAMTAiP17?=
- =?us-ascii?Q?mRpdS398cdVtA3FYF3Aygy7KvPBWf3rX0qptkgzm+8ap5BIqmqVQywEjFOP7?=
- =?us-ascii?Q?cls6anTH7I7rDROHMuwJ0IDaMPF29vr4cNhV70SkmV6vV826R6kte0ir3WGe?=
- =?us-ascii?Q?3Zpu8ZyF9016PGW58j4Z+GQLACy/V1ER0cgwoz8V/2h/G+UbYfnDEwITQ3oV?=
- =?us-ascii?Q?5+Qch7I9VfwHFG68DfgWjNt+EUzW40vPsm1gbHIIjcsQu5EgPp1N8R0jg6Om?=
- =?us-ascii?Q?561m8zXzYxurO18VRN7iL+nZj3i2TyNRwOaxOkhNOSbNhHTjf5H4+JMj6ZH8?=
- =?us-ascii?Q?NxO9yVYIbDlL6kYsy6W7JrQk5X51SO1dNsEeXwurTgsyo+ZzpxJsuJDAcogh?=
- =?us-ascii?Q?aZ705Sihr3Wxu7VL78m3EfTqc5DPzn1VpA6lEVUmeRn0iTOdKx9LZDwccHUE?=
- =?us-ascii?Q?pcP2bse2fDf++/Qz5ituksmc4k9GnP4WQ3aHPpU9tokUZRJPALt0+Wm72tO7?=
- =?us-ascii?Q?6+SPzuoRNUpx5FejSuJ8sx1q4XWdQ794U0R7/z3KCc2qy0mxwnOWX8EkJerv?=
- =?us-ascii?Q?By2s3yA7AmSDWALxQ53XMR0k6tvIN9cwIqvuCF41vICGzdEzDDoJ580Y6Xq8?=
- =?us-ascii?Q?rPFCDFzfD43SaFDfAgyPHEO5cEnb9Dy11tmSONoUvEXC6s9UmN0zCUk9xkLz?=
- =?us-ascii?Q?HGXo9MoIGtN0zmVxbe5IuRRi1eMPYpmgSupIoiX6o5ev+AplBMaZfEESW+AE?=
- =?us-ascii?Q?cOnxKE8Bbg4bgVJjEsASYEC9gIBgimShvg49QBp930JY+ABj/h4c6JuRd9x+?=
- =?us-ascii?Q?TCDuQ+J/xJvlVroMZRLD3Qz1uI9MjqkNUE2utI4JqSiXMODsdzlhleLvhO0t?=
- =?us-ascii?Q?pVzxW43EFAFwlEy1Y5kBKT3b9t18vJ+XH1ub0CvITjP+wDWFegv3ug6tUyHk?=
- =?us-ascii?Q?KmWXpbwAR/wXDe5HLBlQLR5PhErmQNgtqYJOGPs9rkIedxBBw3YeDNbwlghl?=
- =?us-ascii?Q?0dHnDbYlrQ6Uod1WdGYgYd1ksSAICthKkJV4M36a+J1c76Q+uwNx3ws4DOpg?=
- =?us-ascii?Q?zx0rwN/PInpi0yq4Bz0Q39qKJJfoYr/UF23HMreR8CaBoFhcx5Nx5yAEeCQl?=
- =?us-ascii?Q?ZC3wqwASKrIf7LY5efM=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0ed7d36-0f8b-4a9d-2e7d-08dc3c4c7937
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 13:10:32.9480
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6PrW9FcIVy4CHmBOq7TTUXgz06T5ZrwBltMs15jYjiyxlJXmCZQJodF5x0+tB8SY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6662
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240223071006483-0800.eberman@hu-eberman-lv.qualcomm.com>
 
-On Thu, Feb 29, 2024 at 04:42:58PM +0800, peterx@redhat.com wrote:
-> From: Peter Xu <peterx@redhat.com>
+On Friday 23 Feb 2024 at 16:37:23 (-0800), Elliot Berman wrote:
+> On Thu, Feb 22, 2024 at 11:09:40PM -0800, Christoph Hellwig wrote:
+> > On Thu, Feb 22, 2024 at 03:16:42PM -0800, Elliot Berman wrote:
+> > > Firmware and hypervisor drivers can donate system heap memory to their
+> > > respective firmware/hypervisor entities. Those drivers should unmap the
+> > > pages from the kernel's logical map before doing so.
+> > > 
+> > > Export can_set_direct_map, set_direct_map_invalid_noflush, and
+> > > set_direct_map_default_noflush.
+> > 
+> > Err, not they should not.  And not using such super low-level interfaces
+> > from modular code.
 > 
-> They're not used anymore, drop all of them.
-> 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  arch/arm/include/asm/pgtable-2level.h        |  1 -
->  arch/arm/include/asm/pgtable-3level.h        |  1 -
->  arch/powerpc/include/asm/book3s/64/pgtable.h |  4 +---
->  arch/powerpc/include/asm/pgtable.h           |  4 ----
->  arch/s390/include/asm/pgtable.h              |  8 ++++----
->  arch/sparc/include/asm/pgtable_64.h          |  8 ++++----
->  arch/x86/include/asm/pgtable.h               | 19 +++++++------------
->  7 files changed, 16 insertions(+), 29 deletions(-)
+> Hi Cristoph,
+>  
+> We've observed a few times that Linux can unintentionally access a page
+> we've unmapped from host's stage 2 page table via an unaligned load from
+> an adjacent page. The stage 2 is managed by Gunyah. There are few
+> scenarios where even though we allocate and own a page from buddy,
+> someone else could try to access the page without going through the
+> hypervisor driver. One such instance we know about is
+> load_unaligned_zeropad() via pathlookup_at() [1].
+>  
+> load_unaligned_zeropad() could be called near the end of a page. If the
+> next page isn't mapped by the kernel in the stage one page tables, then
+> the access from to the unmapped page from load_unaligned_zeropad() will
+> land in __do_kernel_fault(), call fixup_exception(), and fill the
+> remainder of the load with zeroes. If the page in question is mapped in
+> stage 1 but was unmapped from stage 2, then the access lands back in
+> Linux in do_sea(), leading to a panic().
+>  
+> Our preference would be to add fixup_exception() to S2 PTW errors for
+> two reasons:
+> 1. It's cheaper to do performance wise: we've already manipulated S2
+>    page table and prevent intentional access to the page because
+>    pKVM/Gunyah drivers know that access to the page has been lost.
+> 2. Page-granular S1 mappings only happen on arm64 with rodata=full.
+>  
+> In an off-list discussion with the Android pkvm folks, their preference
+> was to have the pages unmapped from stage 1. I've gone with that
+> approach to get started but welcome discussion on the best approach.
+>  
+> The Android (downstream) implementation of arm64 pkvm is currently
+> implementing a hack where s2 ptw faults are given back to the host as s1
+> ptw faults (i.e. __do_kernel_fault() gets called and not do_sea()) --
+> allowing the kernel to fixup the exception.
+>  
+> arm64 pKVM will also face this issue when implementing guest_memfd or
+> when donating more memory to the hyp for s2 page tables, etc. As far as
+> I can tell, this isn't an issue for arm64 pKVM today because memory
+> isn't being dynamically donated to the hypervisor.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+FWIW pKVM already donates memory dynamically to the hypervisor, to store
+e.g. guest VM metadata and page-tables, and we've never seen that
+problem as far as I can recall.
 
-Jason
+A key difference is that pKVM injects a data abort back into the kernel
+in case of a stage-2 fault, so the whole EXTABLE trick/hack in
+load_unaligned_zeropad() should work fine out of the box.
+
+As discussed offline, Gunyah injecting an SEA into the kernel is
+questionable, but I understand that the architecture is a bit lacking in
+this department, and that's probably the next best thing.
+
+Could the Gunyah driver allocate from a CMA region instead? That would
+surely simplify unmapping from EL1 stage-1 (similar to how drivers
+usually donate memory to TZ).
+
+Thanks,
+Quentin
+
+
