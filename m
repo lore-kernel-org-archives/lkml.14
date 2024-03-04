@@ -1,184 +1,238 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9AA4AEF9;
-	Mon,  4 Mar 2024 20:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A2F4AEF9;
+	Mon,  4 Mar 2024 20:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709583745; cv=none; b=e/FNfirikuGl/F0UJvWzafgKjmQOIY6W/XFlAYE9SiDHoOoQgKEosrEYlX0sU73fOm9C0PFXiGrmwqcQ3zBUDgTI/nqG5kUxa+90UEUCxlGWnGfO9+duKcPSPNvbHtTIr9FtCeZeV6psgAmdQItz6bWH6++3GqO0bmHFypvUTFg=
+	t=1709583813; cv=none; b=sALatm6mOCyAZ52oKXAjKcBwckZ/376IBXhicu8mQVHq0U37H5ghU0h0UGAJwSXhe/LAngRW74lyc27RqgRmTdxGWjZMjqy+3xV4Zfl6aZERZUFEkYixC2pSHQnN+WQ2Jc4DxrWkyADrljLINmB1JTGcx01ZDwY1g4VNvZfgwfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709583745; c=relaxed/simple;
-	bh=CCgENNhMF/8TvGn5GCj4PBL+aZdDyrq2Bayv8Qqsu84=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=V7F43fc2x2qjS5i/1d8Nu2GXEMVZTC7r/L9SWEOU2KtBrNIeLiV/anmxG2r5Sa2uwjW5+HUYpdX9lZvkqnjv/6wg316Pc8feex9Obpgx9tgspJ0YBNtIaNjEyzmGuobSueqtlet7UHT8xW1+UcZSqZZc6vPPn/PexLCg9zHq9a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l7i2/hQX; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709583813; c=relaxed/simple;
+	bh=V1Qaqr+cyN7FZy2RgN8ZX4Ee45PfginbyyRueKS1KDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hCZL/+9dhNwU5MWY9un31MW2u1H1KdKHxxX0r/aQpKkndCHnjCpO52emdCRxQad9FWcsKPpWieCD8lmGCdcCZHkgNFWf36EQCH3gfx5SFqodbuVvxJ9+4uWAFeUixMmYhyX5nGk5qSrGBxI/tHW9xB4LTTFwBtAUKDeJIJxKVjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcPo69xN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7i2/hQX"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d28387db09so58789441fa.0;
-        Mon, 04 Mar 2024 12:22:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709583742; x=1710188542; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=8fxFB8N57hfAiZrRByccOlSQfamUKiybD6QOVLL+RAg=;
-        b=l7i2/hQXoP4Nj/PnpuJhbFXqkpG5aDh4xtlkGw+qu4dMI19rQfySZJgX7gsNGBw2cj
-         IvhsZmElK9VVSyi3lGOIas30fELE3nYQCGK6YCuHl3EmHQ4O5N6PQI/O477czyFwKs7p
-         21zVOqzIvdufnxsiXUWXEXpaPooE1PJkyTmOPT8gSoqugKef/Uk3lzOo+nJJ+CHm3JpT
-         tjRrlwlcCPzOiPWzCRMNsd37qWj6XzsI5vUWqQ524yXz6HJXLfkgLgLktckYfOloazhh
-         WEOq47tSpQZtp4i3HIfRlxhdqFKIjEq1629Rg2POkC/2MZZ+oLlo9nob66pCzAUidJkP
-         1MnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709583742; x=1710188542;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8fxFB8N57hfAiZrRByccOlSQfamUKiybD6QOVLL+RAg=;
-        b=cZuL33hsFt1S/Nm70znMsNopR95DkjHiy+WR4FW30cOOhkzZVVbKbZ8BciT765f7IF
-         A9HmlOSwBBfg2CqR2c8mwXvgoSIs4awv+3OPqiJv0Mb/1FWwi5AKqGyJCre+0A4OsMMh
-         fNNMxxIjH9HSRswK/+moTK2XV3UI+wJ8gm+3Vsj2oTBJwfaBWTHfpgZ2DdyqSqxz9RGv
-         MiDV1xLIY1OPeEBmceQFWnZBx+1ueYjert/GMts+gVmmiN7NjxluX4JORz+IrlOCdt4E
-         cn01JdDmviKsPt4tOwyL3mKiEVeDqsaU+McDwkAqa+rawh/wTjrFHW8QhrFCGdQF9IXG
-         woyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZK84Ncna/VZWTmOdh40NQ0zGpXZZZxiEszhuYapMW/V7Bim4hnMdK4uv7AgYQ3GnN12BHPA1s6lbWhIrp/U58fBZteMib6irhat0=
-X-Gm-Message-State: AOJu0YyE21jVWTORCvo0NNmaxYUdyZMJtAT13IkvsJCDViBOWsJc46mb
-	yZs7dnoN2yIVHIfOHsPxh6t32SIUZajDCz5EZItl0UDReBLSr/Yg
-X-Google-Smtp-Source: AGHT+IEeiz3Lwz5LXdMFw/NJ7/qtw+liFm+ZYMrdHXD8p9Rhf2MZkqYh6y0ihTR7OqPz/C9g56OosQ==
-X-Received: by 2002:a2e:a316:0:b0:2d3:7c06:bb14 with SMTP id l22-20020a2ea316000000b002d37c06bb14mr3978819lje.47.1709583742057;
-        Mon, 04 Mar 2024 12:22:22 -0800 (PST)
-Received: from razdolb ([89.208.103.172])
-        by smtp.gmail.com with ESMTPSA id k12-20020a2e240c000000b002d2904e959csm1855698ljk.5.2024.03.04.12.22.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 12:22:21 -0800 (PST)
-References: <20240229165333.227484-1-mike.rudenko@gmail.com>
- <20240229165333.227484-13-mike.rudenko@gmail.com>
- <170957124561.566498.576610873794356352@ping.linuxembedded.co.uk>
-User-agent: mu4e 1.10.8; emacs 29.2.50
-From: Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>,
- Tommaso Merciai <tomm.merciai@gmail.com>, Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>
-Subject: Re: [PATCH v3 12/20] media: i2c: ov4689: Implement vflip/hflip
- controls
-Date: Mon, 04 Mar 2024 23:19:35 +0300
-In-reply-to: <170957124561.566498.576610873794356352@ping.linuxembedded.co.uk>
-Message-ID: <871q8phhmt.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcPo69xN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46DD4C433F1;
+	Mon,  4 Mar 2024 20:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709583812;
+	bh=V1Qaqr+cyN7FZy2RgN8ZX4Ee45PfginbyyRueKS1KDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BcPo69xNTWbhO57HEa1G617Db21l02p4Gon6X7YSOl6YpywckluTFZMgliFwCSsqJ
+	 FA0NwdejFMI7Zi2a48kyI+PWD3ui+zH0dO0QOqJnsPpgDbZkAAA1EBdr/b4/uJds2O
+	 H3RKJ9Y2r2o8QI8YgRQKFmSbOS/QXtHmtutMoc5fvU3+/iomuQiDLv/tOClrGnTgxu
+	 S4PJz4ULuXdurrE78SviCipbqX1LCpeIEoIUQ5T6bqFXsZHKdTIN+HW8xdYCL8BPPe
+	 1C0g5Dfh8CcQDO5tvJoDF5nkDCwPeo/84jiwr7keVuO/wLeCL1BaArsBcWXwznUDca
+	 y6J5OCU48OMsA==
+Date: Mon, 4 Mar 2024 20:23:27 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl,
+	krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+	conor+dt@kernel.org, joel@jms.id.au, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to DT
+ schema
+Message-ID: <20240304-radio-urban-9843704f374e@spud>
+References: <20240226031951.284847-1-andrew@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="WBinYbWIzry76kSg"
+Content-Disposition: inline
+In-Reply-To: <20240226031951.284847-1-andrew@codeconstruct.com.au>
 
 
-Hi Kieran,
+--WBinYbWIzry76kSg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-and thanks for the review!
+On Mon, Feb 26, 2024 at 01:49:51PM +1030, Andrew Jeffery wrote:
+> Squash warnings such as:
+>=20
+> ```
+> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e60=
+0000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,as=
+t2400-gpio']
+> ```
+>=20
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+> v2: Address feedback from Krzysztof:
+>     https://lore.kernel.org/all/0d1dd262-b6dd-4d71-9239-8b0aec8cceff@lina=
+ro.org/
+>=20
+> v1: https://lore.kernel.org/all/20240220052918.742793-1-andrew@codeconstr=
+uct.com.au/
+>=20
+>  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 73 +++++++++++++++++++
+>  .../devicetree/bindings/gpio/gpio-aspeed.txt  | 39 ----------
+>  2 files changed, 73 insertions(+), 39 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400=
+-gpio.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.y=
+aml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> new file mode 100644
+> index 000000000000..74d376567dfc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Aspeed GPIO controller
+> +
+> +maintainers:
+> +  - Andrew Jeffery <andrew@codeconstruct.com.au>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2400-gpio
+> +      - aspeed,ast2500-gpio
+> +      - aspeed,ast2600-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: The clock to use for debounce timings
 
-On 2024-03-04 at 16:54 GMT, Kieran Bingham <kieran.bingham@ideasonboard.com> wrote:
+The original binding does not require this clock, but I can't help but
+wonder if it should be required. I suspect that this peripheral does
+not actually work if a clock is not provided to it. Whether or not the
+rate of the clock is then used by the driver for debounce timings or
+whatever is a different question.
 
-> Quoting Mikhail Rudenko (2024-02-29 16:53:25)
->> The OV4689 sensor supports horizontal and vertical flipping. Add
->> appropriate controls to the driver. Toggling both array flip and
->> digital flip bits allows to achieve flipping while maintaining output
->> Bayer order. Note that the default value of hflip control corresponds
->> to both bits set, as it was before this patch.
->>
->> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
->> ---
->>  drivers/media/i2c/ov4689.c | 24 ++++++++++++++++++++++--
->>  1 file changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
->> index 8283a9ac86c9..01ee8cadb7c9 100644
->> --- a/drivers/media/i2c/ov4689.c
->> +++ b/drivers/media/i2c/ov4689.c
->> @@ -42,6 +42,14 @@
->>  #define OV4689_REG_VTS                 CCI_REG16(0x380e)
->>  #define OV4689_VTS_MAX                 0x7fff
->>
->> +#define OV4689_REG_TIMING_FORMAT1      CCI_REG8(0x3820)
->> +#define OV4689_REG_TIMING_FORMAT2      CCI_REG8(0x3821)
->
-> I assume these registerse are called TIMING_FORMAT1 and TIMING_FORMAT2,
-> and they don't have any named reference to H/V?
+Otherwise though, this looks fine to me.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Exactly.
+Cheers,
+Conor.
 
-> It's a shame, but I might add /* Horizontal */ and /* Vertical */
-> accordingly to these definitions, though not specifically required.
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +  gpio-line-names: true
+> +  gpio-ranges: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  ngpios: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2600-gpio
+> +    then:
+> +      required:
+> +        - ngpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    gpio@1e780000 {
+> +        compatible =3D "aspeed,ast2400-gpio";
+> +        reg =3D <0x1e780000 0x1000>;
+> +        interrupts =3D <20>;
+> +        interrupt-controller;
+> +        #gpio-cells =3D <2>;
+> +        gpio-controller;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Doc=
+umentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> deleted file mode 100644
+> index b2033fc3a71a..000000000000
+> --- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> +++ /dev/null
+> @@ -1,39 +0,0 @@
+> -Aspeed GPIO controller Device Tree Bindings
+> --------------------------------------------
+> -
+> -Required properties:
+> -- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
+> -					or "aspeed,ast2600-gpio".
+> -
+> -- #gpio-cells 		: Should be two
+> -			  - First cell is the GPIO line number
+> -			  - Second cell is used to specify optional
+> -			    parameters (unused)
+> -
+> -- reg			: Address and length of the register set for the device
+> -- gpio-controller	: Marks the device node as a GPIO controller.
+> -- interrupts		: Interrupt specifier (see interrupt bindings for
+> -			  details)
+> -- interrupt-controller	: Mark the GPIO controller as an interrupt-contro=
+ller
+> -
+> -Optional properties:
+> -
+> -- clocks		: A phandle to the clock to use for debounce timings
+> -- ngpios		: Number of GPIOs controlled by this controller. Should	be set
+> -				  when there are multiple GPIO controllers on a SoC (ast2600).
+> -
+> -The gpio and interrupt properties are further described in their respect=
+ive
+> -bindings documentation:
+> -
+> -- Documentation/devicetree/bindings/gpio/gpio.txt
+> -- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> -
+> -  Example:
+> -	gpio@1e780000 {
+> -		#gpio-cells =3D <2>;
+> -		compatible =3D "aspeed,ast2400-gpio";
+> -		gpio-controller;
+> -		interrupts =3D <20>;
+> -		reg =3D <0x1e780000 0x1000>;
+> -		interrupt-controller;
+> -	};
+> --=20
+> 2.39.2
+>=20
 
-Thanks for the tip, will do it in v3.
+--WBinYbWIzry76kSg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Looks like a good breakdown of the control though.
->
-> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
->
->> +#define OV4689_TIMING_FLIP_MASK                GENMASK(2, 1)
->> +#define OV4689_TIMING_FLIP_ARRAY       BIT(1)
->> +#define OV4689_TIMING_FLIP_DIGITAL     BIT(2)
->> +#define OV4689_TIMING_FLIP_BOTH                (OV4689_TIMING_FLIP_ARRAY |\
->> +                                        OV4689_TIMING_FLIP_DIGITAL)
->> +
->>  #define OV4689_REG_TEST_PATTERN                CCI_REG8(0x5040)
->>  #define OV4689_TEST_PATTERN_ENABLE     0x80
->>  #define OV4689_TEST_PATTERN_DISABLE    0x0
->> @@ -183,7 +191,6 @@ static const struct cci_reg_sequence ov4689_2688x1520_regs[] = {
->>         {CCI_REG8(0x3811), 0x08}, /* H_WIN_OFF_L h_win_off[7:0] = 0x08*/
->>         {CCI_REG8(0x3813), 0x04}, /* V_WIN_OFF_L v_win_off[7:0] = 0x04 */
->>         {CCI_REG8(0x3819), 0x01}, /* VSYNC_END_L vsync_end_point[7:0] = 0x01 */
->> -       {CCI_REG8(0x3821), 0x06}, /* TIMING_FORMAT2 array_h_mirror = 1, digital_h_mirror = 1 */
->>
->>         /* OTP control */
->>         {CCI_REG8(0x3d85), 0x36}, /* OTP_REG85 OTP_power_up_load_setting_enable = 1,
->> @@ -607,6 +614,16 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->>                           (ctrl->val + ov4689->cur_mode->width) /
->>                           OV4689_HTS_DIVIDER, &ret);
->>                 break;
->> +       case V4L2_CID_VFLIP:
->> +               cci_update_bits(regmap, OV4689_REG_TIMING_FORMAT1,
->> +                               OV4689_TIMING_FLIP_MASK,
->> +                               ctrl->val ? OV4689_TIMING_FLIP_BOTH : 0, &ret);
->> +               break;
->> +       case V4L2_CID_HFLIP:
->> +               cci_update_bits(regmap, OV4689_REG_TIMING_FORMAT2,
->> +                               OV4689_TIMING_FLIP_MASK,
->> +                               ctrl->val ? 0 : OV4689_TIMING_FLIP_BOTH, &ret);
->> +               break;
->>         default:
->>                 dev_warn(dev, "%s Unhandled id:0x%x, val:0x%x\n",
->>                          __func__, ctrl->id, ctrl->val);
->> @@ -637,7 +654,7 @@ static int ov4689_initialize_controls(struct ov4689 *ov4689)
->>
->>         handler = &ov4689->ctrl_handler;
->>         mode = ov4689->cur_mode;
->> -       ret = v4l2_ctrl_handler_init(handler, 10);
->> +       ret = v4l2_ctrl_handler_init(handler, 12);
->>         if (ret)
->>                 return ret;
->>
->> @@ -677,6 +694,9 @@ static int ov4689_initialize_controls(struct ov4689 *ov4689)
->>                                      ARRAY_SIZE(ov4689_test_pattern_menu) - 1,
->>                                      0, 0, ov4689_test_pattern_menu);
->>
->> +       v4l2_ctrl_new_std(handler, &ov4689_ctrl_ops, V4L2_CID_VFLIP, 0, 1, 1, 0);
->> +       v4l2_ctrl_new_std(handler, &ov4689_ctrl_ops, V4L2_CID_HFLIP, 0, 1, 1, 0);
->> +
->>         if (handler->error) {
->>                 ret = handler->error;
->>                 dev_err(ov4689->dev, "Failed to init controls(%d)\n", ret);
->> --
->> 2.43.0
->>
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeYtvwAKCRB4tDGHoIJi
+0sA/AQC/NSqxk+gOMc2YKFuxBEmSMAC+J4rmo8SMcdjAjYJccwD8DNJO0vzMwQ7l
+7ZJZiqqGTf2fmGaQkS/nuX0wdNesOQ0=
+=jXZ8
+-----END PGP SIGNATURE-----
 
---
-Best regards,
-Mikhail Rudenko
+--WBinYbWIzry76kSg--
