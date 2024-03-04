@@ -1,183 +1,143 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2065.outbound.protection.outlook.com [40.107.93.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92A61B965;
-	Mon,  4 Mar 2024 11:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709551832; cv=fail; b=GRwAUrqNie6SZ0137up2K8Hgd5HgZilXiO9L8bWqygUOpbOUsGcGYicaUSUF+kmPFaWocTGRqQYq+BIGU7y5EwxG0G55ZnB+1BaBAoCy/ljbVgV3NRvKiC3iT3Qe1/IOMWuO+Rm67RWcbDrjuQ42c8s4NvPUFUyKsnCikZKbyEA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709551832; c=relaxed/simple;
-	bh=PJOcwZ6Y4aMHBOi54hyxUlLbskT6r9CHj6MHH++stfc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=swjsNlLt6xGZDYERrpBxndnr60HdeLJl6nekS57j8jSybuKiqp8MqEC320LCZmzQqK/GWrN+rxaHqr22+z97s4LmnhF7ZAArAL82rl3JJFXT0yOUz2NCaS8qLErtxVzsmXVcWWK3mUGJP/4m/RX8jYAIxCLcLAChFqudF7PrYwU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oEVpa2VL; arc=fail smtp.client-ip=40.107.93.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DDC33839F
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709551982; cv=none; b=YIktYJQRZA/LH9cSMC8N6X8t7GrD3ci+4M9ERHnoubbT8GulyIIrF8dMgXFtQPB19vVyqFVQ+TAEWWkCUJvPY08ewvGxjlmSB4zJl/o76Asr2N742D4Y/g6wdkAvOq+BT5219cGt7WQ30EVr4yj+ARBE56s0tPKS4cNL1N15dTs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709551982; c=relaxed/simple;
+	bh=8tXG9rx3pLAtn54IfYAwMD1l9xHfhlAoTKmFPJpoLtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aRPw9TBGZ1GrDG+IIsOKBMvn+xmZ5fZjx6m2ktfiEJrXVgPbJcycQD0NuutTIGY9hk9A6u6tCjyy+o056wn/sXt1f7kP6ks9DhYXe9vY7TzTAFcF5LsBVSej0knOMYvjFT3tf/qQhiNXQxpzSgoOfL7atByKEt/Lz3SYyt7mgv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J5xudpDt; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oEVpa2VL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EsqwPy8qyfQFKgrrJ7/bWRGBT678c/LBI/5XRS87nZN3scUT/ViTdponx7HBqBBxEv8BriYpZ5rGnOEfY8c9JgO+grFAaxU4sOrGxpm9FF7/8zrjUQdGnARlZDDoUF/sgzitp2u8VybxUJtZcG/SkFYcnoq1D7HnE7m5/xaBpShSCIP8ro2h9Nt0DDakF7mQcX1lGzpf7NUJ7eETmxmY2zefya3DKZkF5hx2wERn2h34trNUxigO1t9cbjyHGumtF4mHEuN8/6T+SCxU9HoNyPXkNbWiafZHeic7BMcF+beAlhRUNu47F31M3cgWOiQydqD0qOvwLqI/ezJXmzjdCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZGzOqXNS+P5oZ+XLAw+ZBmGG8HcIzmV7IEKw9V7dNO8=;
- b=cb5Hs1TdMAopeMkI5KRmcJq/IDSWmhCHwMVYdLLZ0a9mAZUwcF1nu9U1TTHSrkBJlftBBCWyCvme65pmvXziv0NH5hBLI2004lxU2cRJdp0bW00GDfzm0JekA1yV8MoItcoFzWt6r0BunOmcjI4XwF3N91u2EP3wBt3ek0wfbAMkekHnotiIBmklzVjQaZ6BffbaO9gHacQM/mCbtk/lA3uRNx0re5FN1lAPqc7wk0U74PEs02MYZUtCULF6qAoZ2W6XwB3fDvuTtYCQRT9945tO79bI9zxulN1oDIDgum/6jVYG/C3YCDetbtzNWfGdVO6tvhtlqrQ9xsEZaAtVvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZGzOqXNS+P5oZ+XLAw+ZBmGG8HcIzmV7IEKw9V7dNO8=;
- b=oEVpa2VLsX2IxXW6iaTFanoSu/2SQ9Ec/Xfzjgrc3HJi2T8deg8F/kEpoqkQl9plHqFJCRUq3p/tuNThrSUaig+FqOymYiFSVvy7e/BCAHG8//Q0M2p5uO3F/W8/I2EvPOmw/dMhLPK/yFwLs8E+g4WvjLfWPLJiSnJEbvX+3tU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9193.namprd12.prod.outlook.com (2603:10b6:610:195::14)
- by CH2PR12MB4230.namprd12.prod.outlook.com (2603:10b6:610:aa::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
- 2024 11:30:28 +0000
-Received: from CH3PR12MB9193.namprd12.prod.outlook.com
- ([fe80::9cff:98b9:1e88:d07d]) by CH3PR12MB9193.namprd12.prod.outlook.com
- ([fe80::9cff:98b9:1e88:d07d%5]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
- 11:30:28 +0000
-Message-ID: <172bead3-6b65-4598-9d5d-a560da4b153e@amd.com>
-Date: Mon, 4 Mar 2024 17:00:16 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] vfio/cdx: add interrupt support
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: tglx@linutronix.de, gregkh@linuxfoundation.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, maz@kernel.org,
- git@amd.com, harpreet.anand@amd.com, pieter.jansen-van-vuuren@amd.com,
- nikhil.agarwal@amd.com, michal.simek@amd.com, abhijit.gangurde@amd.com,
- srivatsa@csail.mit.edu
-References: <20240226084813.101432-1-nipun.gupta@amd.com>
- <20240226084813.101432-2-nipun.gupta@amd.com>
- <20240301104521.228f8e84.alex.williamson@redhat.com>
-Content-Language: en-US
-From: "Gupta, Nipun" <nipun.gupta@amd.com>
-In-Reply-To: <20240301104521.228f8e84.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0093.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::21) To CH3PR12MB9193.namprd12.prod.outlook.com
- (2603:10b6:610:195::14)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J5xudpDt"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412e90ef887so225375e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 03:33:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709551979; x=1710156779; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=202rFosXjhFYE+j5mBIhVw+lc/s83SboshMBdgomeu8=;
+        b=J5xudpDtGICFcsnA8mmLg5/3OOOxbp9sIUI8WpmUM1DLOexrELc/IsMiqV3lIw3S3E
+         y5T/mP+SPGk0UAVXjsE8vt0Q890FWM6XpPqoFWNViMZlfkmaFWd45YdSLaa7Aag9fV+1
+         QQbeZ2GzwKkhKRqwjawZkRZFiM+bajATadJyUCdDIW2AwwqbAMVuz1w4HrlhwOlAJe54
+         2CYWEonhqsyeW5G4Nus2DJgZXAhpi9nn+V80MHWBRO+2U/CTwtfujF9HMxVGpMBNGAK7
+         X7y+bU5xz+dgbaMwFvZvsZnE/wxzZp3MNMX6GMoqfZFklEk6PRRQI88UuV07vxn/o3QI
+         u+Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709551979; x=1710156779;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=202rFosXjhFYE+j5mBIhVw+lc/s83SboshMBdgomeu8=;
+        b=SAd/1hIeoKcY6Iax5epci2e5Zy2akgl0CdgurbQ+NrObBC4Sqo2XuM5AlnysFaqtc+
+         MCpN7suMF5DMdmBXhgLuaY6Bf4mSixT9PjO52mOGJUM9G1yZZCAXrgsU5vsYAtKXh1fr
+         Td4kaFwZcDd2JRqj1gB2ao2yJDi20Q9ySQVvtQN01HYGbzNQ4j3aNkJKW5mwdpIwOeqL
+         mPFnWxqYjO+2ceezO6vj3DFT1hpbVkkeePG9v22qPJ/fHcKgJHG4164soXJieAsZo8L0
+         0k+nzpJ3jDy0bW/lgqGDufm/ChStbbh0CJ1KOjBwsSL+2efQIEs0SGbiF5sZ11mI/iV6
+         BzPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG7IWDvoJGOffF89ow2I6OFW1srT7H8L/JWqpa65Cl3u7nIeasrjfn7TrYw5/gOUORoUSBpe8sZP/4KVmMLQD11+dbrx3Ro/UfRaln
+X-Gm-Message-State: AOJu0YwLDI0FyA7W9d2hlamMyBHdISQVgcK1Cq/efOhvj0rytutmaGIV
+	vSC03CdD5lv6JFRXHYcP0j2AsEaAIc0rSWhLztMJ+afriP+f5wXX9quZ+orQS6UROLv8PlYdaNa
+	4
+X-Google-Smtp-Source: AGHT+IEr2Xo21Q/br36eGatLTCNsEagP+hGAH1EvtLB+2zZMEM7q81Z9ROjZaGk0RaPEBYMhUEyO7w==
+X-Received: by 2002:a05:600c:4508:b0:412:c288:d22b with SMTP id t8-20020a05600c450800b00412c288d22bmr7323696wmo.14.1709551978868;
+        Mon, 04 Mar 2024 03:32:58 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id f12-20020a05600c4e8c00b00412ae4b45b3sm17796835wmq.30.2024.03.04.03.32.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 03:32:58 -0800 (PST)
+Date: Mon, 4 Mar 2024 14:32:54 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Markus Elfring <Markus.Elfring@web.de>, linux-input@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Jeff LaBundy <jeff@labundy.com>, Rob Herring <robh@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2] Input: iqs626a - Use scope-based resource management
+ in iqs626_parse_events()
+Message-ID: <2be02b12-84ce-4f83-b104-685f3b7cfd95@moroto.mountain>
+References: <8a7607f8-d634-415e-8269-e26dcc0f9fdc@web.de>
+ <ZeU8ENmnPj3sKxAv@nixie71>
+ <ZeVOPSt0L1D4BxuZ@google.com>
+ <e8a2b63f-4f9a-463b-b419-c5f673191111@web.de>
+ <b91fe21-fe2-eac8-d1ee-ea8922a08861@inria.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9193:EE_|CH2PR12MB4230:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11f73971-0f98-41c9-af05-08dc3c3e7de7
-X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	LY8K5bajm+hUMDonjnnqXBJKBsWEwN4PGdnhhH0EvL0zIYVGHa6D4TXKDgaaUFW12gvnZ9PU3zw+cU8IrtpW3vIQ73mYaXJ+mopSZyJBx901HuIcVQeYj62piq/TcIwOI0S7+95IGb9SyVVPY/0RZ107z8Kcix4RSNCiJomejXAVwDOvPMIxYNhDwo1IBLr0jMJeyOdhvK9tXO2Vb/rYfyg6/gTGviJH2ZsdJPHa2u9W/oFpd2WwNQCspEO5KIkNk1IhyagSFRvQPMqWuCATPCHKj/C6cPm06NvGDY0mWk4TiSms3JBrHrFUgwYLfw3Y05wvnIm6FdlGLzFAYSm7sovy6QZDCw6dMkJGo3mcEEatKe1nYOU331CXLRsqm0ezaVF/pNC2DjZIi4aHeKkr9/FeAgz6n68uUl0uHMbEJsZlqfbVdKylpBHXDWA1F6vl1aSw7yu7rt/3SPLuW9gZ+ot5spYS8oTq3YNO0T6wsOVWbCV9TOQOySBmWyxc2O6doTckd0osGWS5Ys3LT6gCFPrm5ZQ2EMsjsFv+NFDljqvmBhSV0q1EIYKFjdKzeXnLypmdCCH8aB03Es6I+FCtzNdhUWIyz4u1vKlp4/mnBtbjkEUiKY9+SggTL2iiyC7a9JAm/DGJx4SdJ0hz7DUBCFQh+l2wRByzqjS8Ct3AAns=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9193.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S3FrUVhLL214RVcwcWpzSll0ZUE5M0wzbjdYeUtidzZyS3FGb3BpVHpwZmJZ?=
- =?utf-8?B?WmtxY01HM0tWRkF0N1Vsa294djJaZ01WSXlOMlJoeVpKUk13bDFjU3ZzQThH?=
- =?utf-8?B?WEdleEdJSUpkaUUxWThlSjl0VUlML1h4R2RVWkVwZjlIazYvaVU3bEg4VlNO?=
- =?utf-8?B?QXhieHVOQzZ5eFdTVEp3bkxBK3hFNXpoZ3JyYlNRL3NUYklxUkNZRERkS1RN?=
- =?utf-8?B?T2JoUnZNYkNId1BjamNUcXJQOHloVHFlem43YkJCTHhnMDRtTVRmSkxRY0VV?=
- =?utf-8?B?c0JQT1RUYnFtZmF0MkdEZy9xaVRrN2QwMHJiYkh1TzBOY2xRUW5WbmkzbVpS?=
- =?utf-8?B?dFRqT1lJZGl0QUU2SThIeERPajBrQzVGRGdqbkFCUkxjV0ZuOEMrWDlpZUZl?=
- =?utf-8?B?Zmd5L2Y4SkhneDVVUzJ4c0JaWVZ4V2U0UU9ZUzRtY2RvTC8yck9vUTlkdWtQ?=
- =?utf-8?B?WEtxbFg4K2dGay9zM1M4RXltem1jd29pb1crWG9uMDJNUEVZNUFTQzZ6dkZO?=
- =?utf-8?B?SU4vSEtBZGRFNzAzWEZGQlZ6WVY4ck1kZHlQUzJVcmd2ZGJIaXZWVEhkN21m?=
- =?utf-8?B?ZlBtazJZWW1FUURwR09mSU9IK3plbVdSNk5OUmpOeEpaL2NUR211NTNHdjVF?=
- =?utf-8?B?OUJRVkllY05BM2VvQVArT1k2TkpKZmNPMllnVGRISmwzT2Z4Slpxa1grYStG?=
- =?utf-8?B?ZGhDNTdrRDR4Njh4L0lXNVR4ZStsaU5lZWtEeDNtZ3NBaTlnRzU5QTRrc0kr?=
- =?utf-8?B?WEg0eHYycDlSajI5NVJTckkzRCtxaXdER2w0OWplSW9SWkR4MTA5MjUvK0Zk?=
- =?utf-8?B?MThXaTgzSC8vaVFBdFRZQUh1Wkhwd3BJaFBoNG5FVnlkUTE2Z0Faek5VczNl?=
- =?utf-8?B?LytBbE9PSWtRUXEyM2hXYlEyb2tRS2FXUmd2eUtUK0czZy9DMHB3Wml4NFkr?=
- =?utf-8?B?eG9NaXdvUFovQ3NxTlpuUENQckE2Y3oxT015MG55SmVOVlBIdXI0am4zUVl3?=
- =?utf-8?B?VjB3aVZ2eEphRkVDaXFRZzR2RUk5cjhmaGNucndjM1FkMWF3YzZvRHE0TWhU?=
- =?utf-8?B?Q3l1RjdveWNzWXFuVTFlUG0wSTNFV3pReDVhcFM3aitXcUZQVXJ6ZHVzNVZ5?=
- =?utf-8?B?QmVyYnQ2T2U5Z1VwLzU3UTdmd3JCM3ZlZFBVVXFnS0hlZ0x4VDdwSm9wbno3?=
- =?utf-8?B?TlFzdlEyRTBveE1jeStRNnRtOUw3M2prUFY5TXp0UkVRRmhPemZFSXVxd3p0?=
- =?utf-8?B?MExMR2x2aXZrZlh1TnVMMU9uUG4raXFwSk1oVG9hQVkwZTZQWXlSMjNocGh6?=
- =?utf-8?B?Zmo2WHQzTkdMbkN2VlBhc2NhczlkaXlIdlByRHJ1dkVnTDZLV25jYmpLMHlU?=
- =?utf-8?B?R3hqODNGeFhmKzZRS2Q2YVdUSVhSZ2M1dkdHWkgyVFN4SFIrR21MYTJSSSt2?=
- =?utf-8?B?ZDJYeVBCNVhaUklGV2xiTDdReVNhc25keGhMSlR2ZnBpQWZSYU1Od1pEdXZL?=
- =?utf-8?B?V1d0UHBpbDhWNzVsN2FrUnd0TWRmMG1DZlhwa1NZaDRSbjJCdlVoY3RJYVNp?=
- =?utf-8?B?QjdOajkxSVo4a3d4dWFEczZRc2JubDZYS1FsRHM2UkkrQndiMjB0aGcvOVgy?=
- =?utf-8?B?emE5cjgvZ2FORnIvUG5yQzJETEh1Tm9hY1lOTnNzUnFESEpxSWRhcU1Bby9r?=
- =?utf-8?B?SnB3OHE1bk1MVk1OU1YwalFqaUEybmI2dmowY3Jxd1dUN292MWZndmNsOWtj?=
- =?utf-8?B?d09NVXpqNEpqSnZ2QVJZUG1xdEh6WlhjTU9NMlFaUlN4aEg1eXBBZVZReCtj?=
- =?utf-8?B?emh1TEtSYVdMcmwzS24xNlhwK1Q1MlpRSFhUT0pWZHRSZi9XUGJGeWdaN2ZM?=
- =?utf-8?B?VitoODQ2cFFuNjEvbGs1eStRdk9mOXdhdHlZS1hhOXNnTXcrZmFVN0l6NFZU?=
- =?utf-8?B?b3VGT25VVTUzayt6aVRpaVZjbk9hMXV2OFpzVjREbEM3aVVBSEgrUTh3YTIy?=
- =?utf-8?B?QnZQR0ljMGkyakMxSHZ5c2xjTk40VURFYU85aHBnSVEwQXR3SHpEKzgxdWtk?=
- =?utf-8?B?dWhRTGVWMjNldndEZHovQld0TllOTTZIUGpJQitETjhFdFhweG0xY2VQdEhG?=
- =?utf-8?Q?lQWhyfTdTG426LQ5xusAWjzok?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11f73971-0f98-41c9-af05-08dc3c3e7de7
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9193.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 11:30:28.1733
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /QYbm6M0EOjD9RhlxvWeeFNQsWq4kOXMK3t4yRxL6yS42qShEpYfjMBInn7z8jcl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4230
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b91fe21-fe2-eac8-d1ee-ea8922a08861@inria.fr>
 
-
-
-On 3/1/2024 11:15 PM, Alex Williamson wrote:
-> On Mon, 26 Feb 2024 14:18:13 +0530
-> Nipun Gupta <nipun.gupta@amd.com> wrote:
-> 
->> Support the following ioctls for CDX devices:
->> - VFIO_DEVICE_GET_IRQ_INFO
->> - VFIO_DEVICE_SET_IRQS
->>
->> This allows user to set an eventfd for cdx device interrupts and
->> trigger this interrupt eventfd from userspace.
->> All CDX device interrupts are MSIs. The MSIs are allocated from the
->> CDX-MSI domain.
->>
->> Signed-off-by: Nipun Gupta <nipun.gupta@amd.com>
->> Reviewed-by: Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>
->> ---
->>
-
-<snip>
-
->> +static int vfio_cdx_ioctl_get_irq_info(struct vfio_cdx_device *vdev,
->> +				       struct vfio_irq_info __user *arg)
->> +{
->> +	unsigned long minsz = offsetofend(struct vfio_irq_info, count);
->> +	struct cdx_device *cdx_dev = to_cdx_device(vdev->vdev.dev);
->> +	struct vfio_irq_info info;
->> +
->> +	if (copy_from_user(&info, arg, minsz))
->> +		return -EFAULT;
->> +
->> +	if (info.argsz < minsz)
->> +		return -EINVAL;
->> +
->> +	if (info.index >= 1)
->> +		return -EINVAL;
->> +
->> +	info.flags = VFIO_IRQ_INFO_EVENTFD;
+On Mon, Mar 04, 2024 at 11:55:23AM +0100, Julia Lawall wrote:
 > 
 > 
-> I think the way you're using this you'd also need the
-> VFIO_IRQ_INFO_NORESIZE to indicate the MSI range cannot be expanded
-> from the initial setting.  Thanks,
-
-Yes, agree. Will update the flags in the next spin.
-
-Thanks,
-Nipun
-
+> On Mon, 4 Mar 2024, Markus Elfring wrote:
 > 
-> Alex
+> > From: Markus Elfring <elfring@users.sourceforge.net>
+> > Date: Mon, 4 Mar 2024 11:40:04 +0100
+> >
+> > Scope-based resource management became supported also for this software
+> > area by contributions of Jonathan Cameron on 2024-02-17.
+> >
+> > device property: Add cleanup.h based fwnode_handle_put() scope based cleanup.
+> > https://lore.kernel.org/r/20240217164249.921878-3-jic23@kernel.org
+> >
+> >
+> > * Thus use the attribute “__free(fwnode_handle)”.
+> >
+> > * Reduce the scope for the local variable “ev_node” into a for loop.
+> >
+> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> > ---
+> >
+> > v2:
+> > An other cleanup technique was applied as requested by Dmitry Torokhov
+> > and Jeff LaBundy.
+> >
+> >
+> >  drivers/input/misc/iqs626a.c | 8 ++------
+> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/input/misc/iqs626a.c b/drivers/input/misc/iqs626a.c
+> > index 0dab54d3a060..86fcb5134f45 100644
+> > --- a/drivers/input/misc/iqs626a.c
+> > +++ b/drivers/input/misc/iqs626a.c
+> > @@ -462,7 +462,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
+> >  {
+> >  	struct iqs626_sys_reg *sys_reg = &iqs626->sys_reg;
+> >  	struct i2c_client *client = iqs626->client;
+> > -	struct fwnode_handle *ev_node;
+> >  	const char *ev_name;
+> >  	u8 *thresh, *hyst;
+> >  	unsigned int val;
+> > @@ -501,6 +500,8 @@ iqs626_parse_events(struct iqs626_private *iqs626,
+> >  		if (!iqs626_channels[ch_id].events[i])
+> >  			continue;
+> >
+> > +		struct fwnode_handle *ev_node __free(fwnode_handle);
+> 
+> Doesn't this need to be initialized?
+> 
+
+Only if you declared before the continue; statement.  Generally kernel
+style is that you have to declare variables at the start of the block...
+But that's becoming less universal now that it's not a compile error.
+
+regards,
+dan carpenter
+
+
