@@ -1,46 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7335C2EB0F;
-	Mon,  4 Mar 2024 13:54:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221D43D97F;
+	Mon,  4 Mar 2024 13:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560473; cv=none; b=UDMVhjIICKihWxElnHsHP47R7+NC2b/tUBqX3EXRn3q7c4Zov2djNG4gQXo0Z2rx7q96NfR4+GFpHQWSKrgpzPPP7lBiBa+24R8UQtVEDCa9+IiNozHIRblJid97ppjjk4Pch77Igm9zqCnzv6ftGzc6iIJzJUorig8CrETwOmw=
+	t=1709560515; cv=none; b=dOg1NpNprCiwwO+mC7zLm7NK9RtCCQNwomqsJKY+xqVhSPAEh07R24Ovrl5skjjBNhcSJWJwMq4RWttJknw7lDceddFW/SX+9Ta4sb0wWTyD84bUo/vyNRnZfVuDq31fOl132KeLGXmBt1F99+zx8kc6HiyzMDPAioxqmyVw46c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560473; c=relaxed/simple;
-	bh=mWRjn7hvcn6TDv6eSOXSuLbqd/PVmvXDiSISYrczEcc=;
+	s=arc-20240116; t=1709560515; c=relaxed/simple;
+	bh=JUZYfNWqeyu8ax9/CquXg+BUUuuvENf3/WvlTt7mlvg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/VxSqsW67w5rpNz6U52qHwDhdYm+BUfU6bK5G6UPvt4TDCbzyk9UNGdGK6bAaaP4hNFVyPjt2hvRoxE9i3u9s3cj3X4qbnRZFym2AS3F5vaXPl9u/YGBjRvzbnVueeCJ5G3JLD9e8ug5zmm2MOdOdVrPPrysEJQHtA3l4GA+rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=naGONxvi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MBmFwSpHRoIYSkXRmHLFCUrTwYg9an2PebJAJMZ+NwFL0pb9j/iNYwjRNzUdCMsp3C3RjI59oRTmIGUPo/xZtBocwdX6Ghx/yUhBLH4aom7RPuxWrHRELlrOUdPcKk9hRZb8sZyFAPOZI3O72AZg0dxbVek4nZ498uGC61gftGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W9K8S3N9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naGONxvi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BDBEC433C7;
-	Mon,  4 Mar 2024 13:54:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W9K8S3N9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA7DC43390;
+	Mon,  4 Mar 2024 13:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709560473;
-	bh=mWRjn7hvcn6TDv6eSOXSuLbqd/PVmvXDiSISYrczEcc=;
+	s=k20201202; t=1709560514;
+	bh=JUZYfNWqeyu8ax9/CquXg+BUUuuvENf3/WvlTt7mlvg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=naGONxvixu1JN3g9GxpNn1Nnh3iTkNTzYFs9D1EkMV0hrEejQT5nG3J+uIOIOdd+i
-	 BTKQv3zQAswJJIHDHASL8ufiBaSVJcswdSrouOkjFurPtUmpnWQaWL2LjfvCSv7BuV
-	 1om5rZBGVIf4xpqZ+MgSPoU/J4VZw7Y/arvZNRZCXGTbjI+Ir6cF2zM/uosa3Nseac
-	 /5AiOjqLOl6wP6gXE/dUvVmPc9pxH0+tAouQpZmWq+G0dECRvi6Hz//5DTUi8PICxX
-	 jemN+rnZA8cJLwJ7UwaKTzw663VZ4wpia6oURBKK1YJ6CgGPZ42ovO0A9l6Wy99TDw
-	 z7G5GUwkzCKAA==
-Date: Mon, 4 Mar 2024 14:54:28 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
-	Gregory Clement <gregory.clement@bootlin.com>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Subject: Re: [SPAM] [PATCH v2 06/11] i2c: nomadik: support short xfer
- timeouts using waitqueue & hrtimer
-Message-ID: <uq6n6s4ksuxvkonowouhr747cnu4ccwvhgpl6r7txgdtnimqnz@sl33zjshzemk>
-References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
- <20240229-mbly-i2c-v2-6-b32ed18c098c@bootlin.com>
+	b=W9K8S3N9URDm+X7z2jypotzkYL8LSs2LjKWeGlAnwAMSB4izfdnJcLG+5fKlzJ03f
+	 j7Tcuky8aipYB/OzxP51i7SFrvNpv8pMRrJDItdfMiaPN14bai6lCEl2yqu03WlFvF
+	 2qGKZTGyrUDKKtcr2bBz9xPVDoSCxCuB5738Q7EifYU3c+7v1qoMHCAGCFfA05yVSI
+	 GOMYRLc7OWUKLLWyanL+KDgqxrGA0M6G9Kzw/6U0HBjyse8zCFrBZdolzSLUFf2mx2
+	 lNATCEOA6+eOPiWkit3C3lVLPScI2+VQJ4p9zjpU670RxvAP/s18uRQKX9UUO63UsX
+	 tpPRkitG4xNtQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rh8mo-000000000yW-2VPm;
+	Mon, 04 Mar 2024 14:55:23 +0100
+Date: Mon, 4 Mar 2024 14:55:22 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] USB: serial: keyspan: Remove redundant assignment
+ to pointer data
+Message-ID: <ZeXSyit1fq5CFJSc@hovoldconsulting.com>
+References: <20240207104128.2441210-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,45 +48,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240229-mbly-i2c-v2-6-b32ed18c098c@bootlin.com>
+In-Reply-To: <20240207104128.2441210-1-colin.i.king@gmail.com>
 
-Hi Theo,
+On Wed, Feb 07, 2024 at 10:41:28AM +0000, Colin Ian King wrote:
+> The pointer data is being assigned a value that is not being
+> read afterwards, it is being re-assigned later inside a do-while
+> loop. The assignment is redundant and can be removed.
+> 
+> Cleans up clang scan warning:
+> drivers/usb/serial/keyspan.c:924:2: warning: Value stored to 'data'
+> is never read [deadcode.DeadStores]
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-...
+Applied, thanks.
 
-> +static bool nmk_i2c_wait_xfer_done(struct nmk_i2c_dev *priv)
-> +{
-> +	if (priv->timeout_usecs < jiffies_to_usecs(1)) {
-> +		unsigned long timeout_usecs = priv->timeout_usecs;
-> +		ktime_t timeout = ktime_set(0, timeout_usecs * NSEC_PER_USEC);
-> +
-> +		wait_event_hrtimeout(priv->xfer_wq, priv->xfer_done, timeout);
-> +	} else {
-> +		unsigned long timeout = usecs_to_jiffies(priv->timeout_usecs);
-> +
-> +		wait_event_timeout(priv->xfer_wq, priv->xfer_done, timeout);
-> +	}
-> +
-> +	return priv->xfer_done;
-
-You could eventually write this as
-
-  static bool nmk_i2c_wait_xfer_done(struct nmk_i2c_dev *priv)
-  {
-	if (priv->timeout_usecs < jiffies_to_usecs(1)) {
-		...
-
-		return !wait_event_hrtimeout(...);
-	}
-
-	...
-	return wait_event_timeout(...);
-  }
-
-It looks a bit cleaner to me... your choice.
-
-Rest looks good.
-
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
-
-Andi
+Johan
