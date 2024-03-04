@@ -1,122 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F00F495E5;
-	Mon,  4 Mar 2024 14:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1471487B5
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 14:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709563163; cv=none; b=qFYx+0COf6J1ZQ4zbbXWZ1uneGOzLLaw/lk6oCslkM+lNScSVb3gPPs986oDrieJoi03N5JR2/IOF3QKqpmxbzQsy4NjLycYSRC9KrE0FxMubgv6klfa1AJUKJEh8fInZwh/fAXu6NGOdTDtdHALD2ZihEfJExF+16iEZeVzCJ8=
+	t=1709563165; cv=none; b=GycW5FcqQDeWgC48dMzo0c7YdeeYQIt6RSq3PtJJIsyO+wdB0y9YQxXTo6ygpIPlpI74K3wj8LS9uipbkjURswj80B3dbbKQnaTtARs91GnYNbz4peaI5j60omDPwYAME53Xz3OdGYX9CcT9K42FS2MxZIMfE6GRTJRAmDX93AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709563163; c=relaxed/simple;
-	bh=izAXvc7UkjU7STvEMBh35M4iT8s1W0W9zz7tDRGPHzo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FAlNRRqSXZxrfZJ0e0sDr9hYoErwmuvGBPEP9cYoWQXdonqDOFtbDO7Do1jdeT9l7GUGCz2FJzfwNBLnDBOciiTr8GSqlQtMNs9TuNs15UgNa44eQ/jcs2NKN/K6wD52OVqCvSz5JX2JCsNsf/tOwmBpp7IdljaKJ783dCUszh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glZ7W4vr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709563165; c=relaxed/simple;
+	bh=vDGpRCxAORqJMueKt34edr+rCaYe1PnBVeh9tbmSp1w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FXpSVwsI5w72jO3FRaqwAgoO0R5Y8ktfTLtAF1cIaUeFYKyFt3hFO6MTfbA+U2InkG4CF5EcnV4CXesPI5BtQn0+Z7XttUvXSqd0sgx/LRBsBfsGAu/u2y1KBYmA5Sg/fdSc2KWrepTAiSgh/mP4SBh9GP7HzrAfYN/w5ewhkig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=emGzoon8; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glZ7W4vr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9AEC433C7;
-	Mon,  4 Mar 2024 14:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709563163;
-	bh=izAXvc7UkjU7STvEMBh35M4iT8s1W0W9zz7tDRGPHzo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=glZ7W4vrTQkpbpVmXiwoko4e1UeWuHDoPnBQw0pf+rW2ralwhpahvWWNoPWGWN/HC
-	 KK8H3DuYdZYgEGSL1NzUp9Tcdto2oyGOaTNk6248P1Ycl+REHkHPbmqxOnizE9P3Hk
-	 JSslNvj+PKtkL+hSWE0Z+XYLu87XNAwvIc0nvUHDCn+A9fUpYb2iqVqVKGd1C07eAl
-	 bEsifpEGtV4018VCgDG7gXF453EX/g2QHjnLnpFpEitgfG2TgOpSfpU3sv1/JaGfBO
-	 ttMQWHbgiELj7QQAgxzcKKXdNia1ZAvqb32hS/vWo7LAQmnbOIFKU7ulLoTA0WFUui
-	 s064K+6tTCm0A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rh9TM-009FjJ-9f;
-	Mon, 04 Mar 2024 14:39:20 +0000
-Date: Mon, 04 Mar 2024 14:39:19 +0000
-Message-ID: <86v86212p4.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: arm64: Only save S1PIE registers when dirty
-In-Reply-To: <50c5cdd2-fceb-44c4-aff1-dc98180161a1@sirena.org.uk>
-References: <20240301-kvm-arm64-defer-regs-v1-1-401e3de92e97@kernel.org>
-	<ZeItTLQxdxxICw01@linux.dev>
-	<562f5e62-c26c-41d9-9ab9-aac02c91c7ae@sirena.org.uk>
-	<86zfvh0vy5.wl-maz@kernel.org>
-	<50c5cdd2-fceb-44c4-aff1-dc98180161a1@sirena.org.uk>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="emGzoon8"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d2ab9c5e83so45513811fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 06:39:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709563161; x=1710167961; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vDGpRCxAORqJMueKt34edr+rCaYe1PnBVeh9tbmSp1w=;
+        b=emGzoon81ObDc4HA71OMLgO4ZeiTeZ9nxIEmUiplvEnTErKGmNFq/UAAtQpMukhgeh
+         UsUihWdRHlhFop3CKe1sbTPt+89G61a4VpVQYYAMhtzmasYXMRxrtvohfns29DIXSOlx
+         C8E9N2dhuwZN31xn3F3yX1EXrCOGVbe/G8C6kCpBUQwiI7a9KwgzI5Ba92jPYwftLORI
+         y/zmcdwE/EANdx1CfzNC+BakxmFGOeHkdfE3iirJGXtXUBMkL6FOOKd08r9A8aZedhd4
+         CtA9k5nSfmskCkazvO/nYQWnlu16a1Rds1zf6mvBshyo8sHm/Chp7YcWbtlZjeQuNFAS
+         +6+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709563161; x=1710167961;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vDGpRCxAORqJMueKt34edr+rCaYe1PnBVeh9tbmSp1w=;
+        b=qo3mnR9UwNcWrzYzxZ/Kshiof+KlAnLar8Ka8We4tivladT3J2EtYP0rl2egv2jfoT
+         GNdcgsG75o95ExzhWq1uuHxAyh5XAvv5zK6Wp5uVtepZCRJDTt6fNJiNSx2xOOXQYZxf
+         fMUPTufuuV/hEMPn/MLUH3yNsG8oeiZFxOnEG899pdfpgKYJzn0jS6+uQbKn1HXivSlC
+         YR5g81Ee+z01e3Oj6C6Ipkqrf6guig2WLtM9DvqlAqDWgHuyZVJ6aRB9mGk1nocrq8Pl
+         1m+qYl+qVERzqkx50eCHmdYeVsOJSpbQ5c6ozPm4xsh8Rz9fEQTPRPo/O6ZXzmtxqFqg
+         Miow==
+X-Forwarded-Encrypted: i=1; AJvYcCVIUGHj4QUo/VNKbwlgvLB0hb/kILlxgvdc2swZMohu/F6m8DRP3dAaxfwk+KthlyQGP/jJaCQ/fjks7qxY9LuFLex3JrOgdKP9sGaY
+X-Gm-Message-State: AOJu0YyeqhxAEEfn5J8U6cAW+IR55uqeKsXR+4uGYPTgn0bM75/vlg0h
+	eNl1+VJrbnGbtIRG5rXIcB0XYlTBPlZO1zcC63wctL6zLPFQ3Cc1B+++Mb57zFzVOG7ElyWjTJe
+	ZcfqAQ+Z9I9ux8brb0leiVyNMgsmGW7MRwMycwg==
+X-Google-Smtp-Source: AGHT+IHDk6ElikIs8iamzUoSTyAOXOafoUhC1GRAhOK3vIrfpyJwvtQAHDA/PPtsiDzT5clDw/wzuhOyU+TXxJplUy4=
+X-Received: by 2002:a2e:b057:0:b0:2d3:3305:c37d with SMTP id
+ d23-20020a2eb057000000b002d33305c37dmr6796096ljl.2.1709563161280; Mon, 04 Mar
+ 2024 06:39:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: broonie@kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, joey.gouly@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20240304140650.977784-1-andriy.shevchenko@linux.intel.com> <20240304140650.977784-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240304140650.977784-2-andriy.shevchenko@linux.intel.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Mon, 4 Mar 2024 08:39:10 -0600
+Message-ID: <CAMknhBFLVaEBE_aPYADpDdYVNhfz5aSb4vhP6v7L3de27K7V1Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] iio: core: Leave private pointer NULL when no
+ private data supplied
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 04 Mar 2024 14:11:19 +0000,
-Mark Brown <broonie@kernel.org> wrote:
-> 
-> [1  <text/plain; us-ascii (7bit)>]
-> On Sat, Mar 02, 2024 at 10:28:18AM +0000, Marc Zyngier wrote:
-> > Mark Brown <broonie@kernel.org> wrote:
-> > > On Fri, Mar 01, 2024 at 07:32:28PM +0000, Oliver Upton wrote:
-> 
-> > > > The overheads of guest exits are extremely configuration dependent, and
-> > > > on VHE the save/restore of EL1 state happens at vcpu_load() / vcpu_put()
-> > > > rather than every exit. There isn't a whole lot KVM can do to lessen the
-> > > > blow of sharing EL1 in the nVHE configuration.
-> 
-> > > > Looking a bit further out, the cost of traps will be dramatically higher
-> > > > when running as a guest hypervisor, so we'd want to avoid them if
-> > > > possible...
-> 
-> > > Indeed, but OTOH I got some complaints about adding more system register
-> 
-> > Complains from whom? I can't see anything in my inbox, so it my
-> > conclusion that these "issues" are not serious enough to be publicly
-> > mentioned.
-> 
-> This was you saying that adding more registers to be context switched
-> here needed special explanation, rather than just being the default and
-> generally unremarkable place to put context switching of registers for
-> EL0/1.
+On Mon, Mar 4, 2024 at 8:07=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> In iio_device_alloc() when size of the private data is 0,
+> the private pointer is calculated to point behind the valid data.
+> Leave it NULL when no private data supplied.
+>
+> Fixes: 6d4ebd565d15 ("iio: core: wrap IIO device into an iio_dev_opaque o=
+bject")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
-What I remember saying is that it is wrong to add extra registers to
-the context switch without gating them with the VM configuration.
-Which is a very different thing.
-
-I don't know where you got the idea that I wanted to make this sort of
-things lazy. Quite the contrary, actually. I want to trap things to
-make them UNDEF. And this is exactly how -next now behaves (see
-58627b722ee2).
-
-What I want to see explained in all cases is why a register has to be
-eagerly switched and not deferred to the load/put phases, specially on
-VHE. because that has a very visible impact on the overall performance.
-
-> > If anything, I'm actually minded to remove existing instances of this
-> > stupid trapping, such as PAuth, which is entirely pointless.
-> 
-> That one was part of why it appeared that this sort of thing was what
-> you were asking for.
-
-No, really not.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Reviewed-by: David Lechner <dlechner@baylibre.com>
