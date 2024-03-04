@@ -1,290 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FDE19A
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 02:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE1E17C9;
+	Mon,  4 Mar 2024 02:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709520912; cv=none; b=blpjSjZ3IB0zofhNYbrpIHZUhCJ6XEg9FRpCB4kCkhrRg5xbc14kzSoPGkZCsikx7XrZDrM0AiCTC3hEsR9TWVN2gaEL3xk2dXnYSSD5YQZLupevzGBBS7b+tAfmAUnJdacaZQy1FVStEvFVTFQ0Y86/LanfegTF8wqXmFjdb4s=
+	t=1709521188; cv=none; b=cR3FoGtUdHUT2iGUwprV7OHoSc47enD6k9iySl9SlOoi9A9rXy+QcGvyVvBm26BzKVafCk9Z5pLU+AmBhL0FddexNOUsY2WMuETrfmz1JVhCB8tfyB9lfrbTu1yv4loT16ossQ6K5gpp3ZIxvzGwAOaJseGQq3HGzKmDzhZyg0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709520912; c=relaxed/simple;
-	bh=rGFFJnDtv0L9OHuWzvD93REogofl/C8gf1EGmZI+SyE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=t6zVE4rRRz9TBGcY38rmMhg/ZbdHi9QpIjp5sO8CzWan65aeTaC882u/1J/lNo6xLr+yvDiPrRzJWO65aboFKUKkGlAi+Ek03DMT9PfELwMbU/RTW5y7jorTdmRBfI+h0DoT+8NPlUZG9uKWaq+moTItH9OcQ3/XP7608xM5P1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Svb61Mky; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709521188; c=relaxed/simple;
+	bh=baAlzvP/8gvZkunwMUl4mKXb0Fl9O5lk3e87e/oqOtM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dv0TRdsYOyGg4tEwBkimdTdwgOwLDlIkPljPjBNfubzh7hd/cw6wLcXpFP0ju7xcc7y/2rXUkCsUNToJY+ka7F4Et19ryGwT0e1VlAJSKoEOFCDZ8jqOnulsTAtAtyevOqPwhDveAtyJZz65U3eknN/87pTRaElVIO/lpRMiZ9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gPRhWubK; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Svb61Mky"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gPRhWubK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709520910; x=1741056910;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=rGFFJnDtv0L9OHuWzvD93REogofl/C8gf1EGmZI+SyE=;
-  b=Svb61MkyghPuFbCo7InCLTrANqqkl654szt2PGKFzS0b0mIy+BqrPoG/
-   g//Z7tuY7DJhyDqgr/hzLTN/jtpnr46Bvub3+WkbhDM0mqDbyq8BaYwj7
-   6+hyWQc7zuJA2CKcgYnOIXOXDAspalhopZX6dFI9d+cu91odxBBanJ/+r
-   DdawYaO1HK0J92mdx4HsvKfiyidNM3Qmctvibq3k0xRESzZZWCB/q838+
-   SFeRT3EaEcg4MKYEpkxfcojClse14VmEba239cwcXQtBH/6zOEOs2p1yv
-   RqaGgQFatu3NhB1yhnjO7zkfXsXWYFzr/JukUIYswDnaMm4mjt9Usf4Lg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4572878"
+  t=1709521186; x=1741057186;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=baAlzvP/8gvZkunwMUl4mKXb0Fl9O5lk3e87e/oqOtM=;
+  b=gPRhWubKG+ZrRBjylEPrzODXxe6R5gyrq3OfLdQSACa67qNRhnnaNFho
+   UJqban+TwUTzuZ0fBZKzlHdKSlCq4buIMcsVm/rryMC4u6oipFOQ/xdE8
+   f/q6GIVA6BClrQzj70H1/Y1wlCLORbr5LhUf6w64ZdU2YLCHnieekuG1C
+   +QP1I26EJgkJtvWYyialzSV5MHUFGBNfGpbiUB6M4k27fT4spx67dRV4J
+   sbNk1flf8tDw21/xGIBpvCaXk2yJBfQqPZTGdj+ExSR/Dm5bJKZP5nSYg
+   hiMdxcQqIhb/8BPIPY8hafUkBsbqqukUTTIMlWAkPuK8GizESuccpv4YW
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4160406"
 X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="4572878"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 18:55:09 -0800
+   d="scan'208";a="4160406"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 18:59:45 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="13497612"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 18:55:06 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Byungchul Park <byungchul@sk.com>
-Cc: <akpm@linux-foundation.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-mm@kvack.org>,  <kernel_team@skhynix.com>,  <yuzhao@google.com>,
-  <hannes@cmpxchg.org>
-Subject: Re: [PATCH v5] mm, vmscan: retry kswapd's priority loop with
- cache_trim_mode off on failure
-In-Reply-To: <20240304023018.69705-1-byungchul@sk.com> (Byungchul Park's
-	message of "Mon, 4 Mar 2024 11:30:18 +0900")
-References: <20240304023018.69705-1-byungchul@sk.com>
-Date: Mon, 04 Mar 2024 10:53:11 +0800
-Message-ID: <87bk7ubtd4.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="9201834"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa007.jf.intel.com with ESMTP; 03 Mar 2024 18:59:43 -0800
+Date: Mon, 4 Mar 2024 10:55:31 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	michael.roth@amd.com, isaku.yamahata@intel.com,
+	thomas.lendacky@amd.com
+Subject: Re: [PATCH 17/21] filemap: add FGP_CREAT_ONLY
+Message-ID: <ZeU4I+w7DfRgtDMO@yilunxu-OptiPlex-7050>
+References: <20240227232100.478238-1-pbonzini@redhat.com>
+ <20240227232100.478238-18-pbonzini@redhat.com>
+ <Zd6W-aLnovAI1FL3@google.com>
+ <CAJD7tkapC6es9qjaOf=SmE9XYUdbh_fAperjSe9hy=_iqdB0wQ@mail.gmail.com>
+ <Zd8x3w2mwyAufKvm@casper.infradead.org>
+ <CABgObfZ9LFDrtLkMaT5LVwy0Z2QMk6SqJ104+D=w7o9i0gEu+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABgObfZ9LFDrtLkMaT5LVwy0Z2QMk6SqJ104+D=w7o9i0gEu+g@mail.gmail.com>
 
-Byungchul Park <byungchul@sk.com> writes:
+On Wed, Feb 28, 2024 at 02:28:45PM +0100, Paolo Bonzini wrote:
+> On Wed, Feb 28, 2024 at 2:15 PM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Tue, Feb 27, 2024 at 06:17:34PM -0800, Yosry Ahmed wrote:
+> > > On Tue, Feb 27, 2024 at 6:15 PM Sean Christopherson <seanjc@google.com> wrote:
+> > > >
+> > > > On Tue, Feb 27, 2024, Paolo Bonzini wrote:
+> > > >
+> > > > This needs a changelog, and also needs to be Cc'd to someone(s) that can give it
+> > > > a thumbs up.
+> > >
+> > > +Matthew Wilcox
+> >
+> > If only there were an entry in MAINTAINERS for filemap.c ...
+> 
+> Not CCing you (or mm in general) was intentional because I first
+> wanted a review of the KVM APIs; of course I wouldn't have committed
+> it without an Acked-by. But yeah, not writing the changelog yet was
+> pure laziness.
+> 
+> Since you're here: KVM would like to add a ioctl to encrypt and
+> install a page into guest_memfd, in preparation for launching an
+> encrypted guest. For this API we want to rule out the possibility of
+> overwriting a page that is already in the guest_memfd's filemap,
+> therefore this API would pass FGP_CREAT_ONLY|FGP_CREAT
+> into__filemap_get_folio. Do you think this is bogus...
+> 
+> > This looks bogus to me, and if it's not bogus, it's incomplete.
+> 
+> ... or if not, what incompleteness can you spot?
+> 
+> Thanks,
+> 
+> Paolo
+> 
+> > But it's hard to judge without a commit message that describes what it's
+> > supposed to mean.
+> >
+> > > >
+> > > > > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > ---
+> > > > >  include/linux/pagemap.h | 2 ++
+> > > > >  mm/filemap.c            | 4 ++++
+> > > > >  2 files changed, 6 insertions(+)
+> > > > >
+> > > > > diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> > > > > index 2df35e65557d..e8ac0b32f84d 100644
+> > > > > --- a/include/linux/pagemap.h
+> > > > > +++ b/include/linux/pagemap.h
+> > > > > @@ -586,6 +586,7 @@ pgoff_t page_cache_prev_miss(struct address_space *mapping,
+> > > > >   * * %FGP_CREAT - If no folio is present then a new folio is allocated,
+> > > > >   *   added to the page cache and the VM's LRU list.  The folio is
+> > > > >   *   returned locked.
+> > > > > + * * %FGP_CREAT_ONLY - Fail if a folio is not present
+                                                     ^
+So should be: Fail if a folio is present.
 
-> Sorry for noise. I should've applied v5's change in v4.
->
-> Changes from v4:
-> 	1. Make other scans start with may_cache_trim_mode = 1.
->
-> Changes from v3:
-> 	1. Update the test result in the commit message with v4.
-> 	2. Retry the whole priority loop with cache_trim_mode off again,
-> 	   rather than forcing the mode off at the highest priority,
-> 	   when the mode doesn't work. (feedbacked by Johannes Weiner)
->
-> Changes from v2:
-> 	1. Change the condition to stop cache_trim_mode.
->
-> 	   From - Stop it if it's at high scan priorities, 0 or 1.
-> 	   To   - Stop it if it's at high scan priorities, 0 or 1, and
-> 	          the mode didn't work in the previous turn.
->
-> 	   (feedbacked by Huang Ying)
->
-> 	2. Change the test result in the commit message after testing
-> 	   with the new logic.
->
-> Changes from v1:
-> 	1. Add a comment describing why this change is necessary in code
-> 	   and rewrite the commit message with how to reproduce and what
-> 	   the result is using vmstat. (feedbacked by Andrew Morton and
-> 	   Yu Zhao)
-> 	2. Change the condition to avoid cache_trim_mode from
-> 	   'sc->priority != 1' to 'sc->priority > 1' to reflect cases
-> 	   where the priority goes to zero all the way. (feedbacked by
-> 	   Yu Zhao)
-> --->8---
-> From 58f1a0e41b9feea72d7fd4bd7bed1ace592e6e4c Mon Sep 17 00:00:00 2001
-> From: Byungchul Park <byungchul@sk.com>
-> Date: Mon, 4 Mar 2024 11:24:40 +0900
-> Subject: [PATCH v5] mm, vmscan: retry kswapd's priority loop with cache_trim_mode off on failure
->
-> With cache_trim_mode on, reclaim logic doesn't bother reclaiming anon
-> pages.  However, it should be more careful to use the mode because it's
-> going to prevent anon pages from being reclaimed even if there are a
-> huge number of anon pages that are cold and should be reclaimed.  Even
-> worse, that leads kswapd_failures to reach MAX_RECLAIM_RETRIES and
-> stopping kswapd from functioning until direct reclaim eventually works
-> to resume kswapd.
->
-> So kswapd needs to retry its scan priority loop with cache_trim_mode
-> off again if the mode doesn't work for reclaim.
->
-> The problematic behavior can be reproduced by:
->
->    CONFIG_NUMA_BALANCING enabled
->    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
->    numa node0 (8GB local memory, 16 CPUs)
->    numa node1 (8GB slow tier memory, no CPUs)
->
->    Sequence:
->
->    1) echo 3 > /proc/sys/vm/drop_caches
->    2) To emulate the system with full of cold memory in local DRAM, run
->       the following dummy program and never touch the region:
->
->          mmap(0, 8 * 1024 * 1024 * 1024, PROT_READ | PROT_WRITE,
->               MAP_ANONYMOUS | MAP_PRIVATE | MAP_POPULATE, -1, 0);
->
->    3) Run any memory intensive work e.g. XSBench.
->    4) Check if numa balancing is working e.i. promotion/demotion.
->    5) Iterate 1) ~ 4) until numa balancing stops.
->
-> With this, you could see that promotion/demotion are not working because
-> kswapd has stopped due to ->kswapd_failures >= MAX_RECLAIM_RETRIES.
->
-> Interesting vmstat delta's differences between before and after are like:
->
->    +-----------------------+-------------------------------+
->    | interesting vmstat    | before        | after         |
->    +-----------------------+-------------------------------+
->    | nr_inactive_anon      | 321935        | 1646193       |
->    | nr_active_anon        | 1780700       | 456388        |
->    | nr_inactive_file      | 30425         | 27836         |
->    | nr_active_file        | 14961         | 1217          |
->    | pgpromote_success     | 356           | 1310120       |
->    | pgpromote_candidate   | 21953245      | 1736872       |
->    | pgactivate            | 1844523       | 3292443       |
->    | pgdeactivate          | 50634         | 1526701       |
->    | pgfault               | 31100294      | 6715375       |
->    | pgdemote_kswapd       | 30856         | 1954199       |
->    | pgscan_kswapd         | 1861981       | 7100099       |
->    | pgscan_anon           | 1822930       | 7061135       |
->    | pgscan_file           | 39051         | 38964         |
->    | pgsteal_anon          | 386           | 1925214       |
->    | pgsteal_file          | 30470         | 28985         |
->    | pageoutrun            | 30            | 500           |
->    | numa_hint_faults      | 27418279      | 3090773       |
->    | numa_pages_migrated   | 356           | 1310120       |
->    +-----------------------+-------------------------------+
->
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
-> ---
->  mm/vmscan.c | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index bba207f41b14..77948b0f8b5b 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -108,6 +108,9 @@ struct scan_control {
->  	/* Can folios be swapped as part of reclaim? */
->  	unsigned int may_swap:1;
->  
-> +	/* Can cache_trim_mode be turned on as part of reclaim? */
-> +	unsigned int may_cache_trim_mode:1;
-> +
+Thanks,
+Yilun
 
-Although it's generally not good to use negative logic, I think that
-it's better to name the flag as something like "no_cache_trim_mode" to
-make it easier to initialize the flag to its default value ("0").
-
->  	/* Proactive reclaim invoked by userspace through memory.reclaim */
->  	unsigned int proactive:1;
->  
-> @@ -1500,6 +1503,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
->  	struct scan_control sc = {
->  		.gfp_mask = GFP_KERNEL,
->  		.may_unmap = 1,
-> +		.may_cache_trim_mode = 1,
->  	};
->  	struct reclaim_stat stat;
->  	unsigned int nr_reclaimed;
-> @@ -2094,6 +2098,7 @@ static unsigned int reclaim_folio_list(struct list_head *folio_list,
->  		.may_writepage = 1,
->  		.may_unmap = 1,
->  		.may_swap = 1,
-> +		.may_cache_trim_mode = 1,
->  		.no_demotion = 1,
->  	};
->  
-> @@ -2268,7 +2273,8 @@ static void prepare_scan_control(pg_data_t *pgdat, struct scan_control *sc)
->  	 * anonymous pages.
->  	 */
->  	file = lruvec_page_state(target_lruvec, NR_INACTIVE_FILE);
-> -	if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FILE))
-> +	if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FILE) &&
-> +	    sc->may_cache_trim_mode)
->  		sc->cache_trim_mode = 1;
->  	else
->  		sc->cache_trim_mode = 0;
-> @@ -5435,6 +5441,7 @@ static ssize_t lru_gen_seq_write(struct file *file, const char __user *src,
->  		.may_writepage = true,
->  		.may_unmap = true,
->  		.may_swap = true,
-> +		.may_cache_trim_mode = 1,
->  		.reclaim_idx = MAX_NR_ZONES - 1,
->  		.gfp_mask = GFP_KERNEL,
->  	};
-> @@ -6394,6 +6401,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
->  		.may_writepage = !laptop_mode,
->  		.may_unmap = 1,
->  		.may_swap = 1,
-> +		.may_cache_trim_mode = 1,
->  	};
->  
->  	/*
-> @@ -6439,6 +6447,7 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->  		.may_unmap = 1,
->  		.reclaim_idx = MAX_NR_ZONES - 1,
->  		.may_swap = !noswap,
-> +		.may_cache_trim_mode = 1,
->  	};
->  
->  	WARN_ON_ONCE(!current->reclaim_state);
-> @@ -6482,6 +6491,7 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
->  		.may_writepage = !laptop_mode,
->  		.may_unmap = 1,
->  		.may_swap = !!(reclaim_options & MEMCG_RECLAIM_MAY_SWAP),
-> +		.may_cache_trim_mode = 1,
->  		.proactive = !!(reclaim_options & MEMCG_RECLAIM_PROACTIVE),
->  	};
->  	/*
-> @@ -6744,6 +6754,7 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
->  		.gfp_mask = GFP_KERNEL,
->  		.order = order,
->  		.may_unmap = 1,
-> +		.may_cache_trim_mode = 1,
->  	};
->  
->  	set_task_reclaim_state(current, &sc.reclaim_state);
-> @@ -6898,8 +6909,14 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
->  			sc.priority--;
->  	} while (sc.priority >= 1);
->  
-> -	if (!sc.nr_reclaimed)
-> +	if (!sc.nr_reclaimed) {
-> +		if (sc.may_cache_trim_mode) {
-
-sc.may_cache_trim_mode && cache_trim_mode ?
-
-> +			sc.may_cache_trim_mode = 0;
-> +			goto restart;
-> +		}
-> +
->  		pgdat->kswapd_failures++;
-> +	}
->  
->  out:
->  	clear_reclaim_active(pgdat, highest_zoneidx);
-> @@ -7202,6 +7219,7 @@ unsigned long shrink_all_memory(unsigned long nr_to_reclaim)
->  		.may_writepage = 1,
->  		.may_unmap = 1,
->  		.may_swap = 1,
-> +		.may_cache_trim_mode = 1,
->  		.hibernation_mode = 1,
->  	};
->  	struct zonelist *zonelist = node_zonelist(numa_node_id(), sc.gfp_mask);
-> @@ -7360,6 +7378,7 @@ static int __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned in
->  		.may_writepage = !!(node_reclaim_mode & RECLAIM_WRITE),
->  		.may_unmap = !!(node_reclaim_mode & RECLAIM_UNMAP),
->  		.may_swap = 1,
-> +		.may_cache_trim_mode = 1,
->  		.reclaim_idx = gfp_zone(gfp_mask),
->  	};
->  	unsigned long pflags;
-
---
-Best Regards,
-Huang, Ying
+> > > > >   * * %FGP_FOR_MMAP - The caller wants to do its own locking dance if the
+> > > > >   *   folio is already in cache.  If the folio was allocated, unlock it
+> > > > >   *   before returning so the caller can do the same dance.
+> > > > > @@ -606,6 +607,7 @@ typedef unsigned int __bitwise fgf_t;
+> > > > >  #define FGP_NOWAIT           ((__force fgf_t)0x00000020)
+> > > > >  #define FGP_FOR_MMAP         ((__force fgf_t)0x00000040)
+> > > > >  #define FGP_STABLE           ((__force fgf_t)0x00000080)
+> > > > > +#define FGP_CREAT_ONLY               ((__force fgf_t)0x00000100)
+> > > > >  #define FGF_GET_ORDER(fgf)   (((__force unsigned)fgf) >> 26) /* top 6 bits */
+> > > > >
+> > > > >  #define FGP_WRITEBEGIN               (FGP_LOCK | FGP_WRITE | FGP_CREAT | FGP_STABLE)
+> > > > > diff --git a/mm/filemap.c b/mm/filemap.c
+> > > > > index 750e779c23db..d5107bd0cd09 100644
+> > > > > --- a/mm/filemap.c
+> > > > > +++ b/mm/filemap.c
+> > > > > @@ -1854,6 +1854,10 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+> > > > >               folio = NULL;
+> > > > >       if (!folio)
+> > > > >               goto no_page;
+> > > > > +     if (fgp_flags & FGP_CREAT_ONLY) {
+> > > > > +             folio_put(folio);
+> > > > > +             return ERR_PTR(-EEXIST);
+> > > > > +     }
+> > > > >
+> > > > >       if (fgp_flags & FGP_LOCK) {
+> > > > >               if (fgp_flags & FGP_NOWAIT) {
+> > > > > --
+> > > > > 2.39.0
+> > > > >
+> > > > >
+> > > >
+> >
+> 
+> 
