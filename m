@@ -1,200 +1,103 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5294462143;
-	Mon,  4 Mar 2024 20:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3983DB663;
+	Mon,  4 Mar 2024 20:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709584109; cv=none; b=sWn/BQ2qKrxbup96XzeGjiwe/UAc0FarQThDEtxOI1uGz4lvRQ50LDP7t3gIXOsI+UQ7Typ9a/OWiVleSIUBgo4uRL72ZGVftmcpg/ZlKPyK8QlXyuJ7Q+9/YO5cfIXB5+UsJ4cSY+/WrfSGM01kvzOrs5gDhBFHRRA9PnG0Gio=
+	t=1709584399; cv=none; b=J6Pu1b87Q/kHQtIMmgWkXExXbN98eTbNEexW6iAsLpzb7YwzwhgbspYitl9GTUg2JXH0vXIkSJZc7oZjFdrBg5fWNF+SrJgxrNnqjmdt/alNvJr4/JfrapRrlkiGRkgVC8hO0uu94cnkURFTDeASW1mTrMJQs6zT1Vrs4aZYDDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709584109; c=relaxed/simple;
-	bh=kK56UPJtrMgrhC+eWkyoWONsRRS13BbXbI9WLikncpM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uQ7PKM8DrG96fmCKUtfLp4w5i+6Or4nJQuKn68KzwcaN+hw1o0oi4SsHX9z8IfrB9/82QX0ejImG9UL6odRBOHwTT4WpuTp36y9ecV2KM3RPokdVuBOACqFY9QKKHxlM7AXuwwmv9qioKh0+Sdw4TQMvnOuBP4rkK0+pjhRZ2n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=STOXi1xk; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709584399; c=relaxed/simple;
+	bh=kpA/7pn9mASzroHmqDoFxSE2elACiXObSuvnlyB3WC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BH48YelbHjGhqg9+8sDcAVQAERj1mx4wqdq6E8ceRrFzMDA+34RansIW1EJN1WNmwhQpvsJlbfxrjXyxX9a30UEZR0dEBvcj68gpiddlydt7oROzCqr9cO/YBxKcOBE1hpGpD0u7w/DPHt1tAxMgJOTCcomLmOcZvINyaIm49dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0p/wUtl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STOXi1xk"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412e8c63f23so5526345e9.0;
-        Mon, 04 Mar 2024 12:28:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709584105; x=1710188905; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C8374zjIQzoAP6NawexwSb/Q1q4lgTdoXyDk5N8EOwc=;
-        b=STOXi1xk0r6wDpy/h2h3fUddJHNio+JfY733HmrvlR/nTAj+3ZIgEWknZwAXYLe6dP
-         H2mW5cGaSiycDzQzk8KfmvqskHhdbr5Ol+l4u63uz5EMahXT6hB4+br2vSgGnpPgeDTP
-         VXu+X7JE57a4de9C7EZEYb+bJXgF/2QOE66wnsC1w9PHMzqvKyMYp74pPgoUfCkrBA4h
-         NicNvufdsIXHOk27vJH00QyGi2vPPVu0jS3rsqMCAE02dCGnMxNAI+xM0ElLMvfItfUj
-         HPMMW8pHm+T8YS6JzabGpcV7YW8Ygv9tQ3igwGGeRWgDe6NPxBHWedquGcduvJh3j9ye
-         FhBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709584105; x=1710188905;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C8374zjIQzoAP6NawexwSb/Q1q4lgTdoXyDk5N8EOwc=;
-        b=AiteLH3DswiFAdu5OcYSzQoPLgen2PK5N8BLQbjMX4Ph2GcTB23bKX3hqHL7BNUsQU
-         VOnQTzvGkFrHA31kGyj6pQ2IN1BDjkPHHBkbUZgp59gmaXZH+i/s+lBnLVZdbAHgU4jW
-         Rf/v1C0GDa0QGcY5udLFHsUIfnxILlyjB7+tvX6cfXRUBswcprBzpXGbJwSO2d7KFdgn
-         sNHitVocluLAUU9kICD6NnijHhUxLabx+oe28S49RGqIzfRXA87US+1rUCloqHFWRR19
-         gAnB3ZvAxP8sHIq/kEAnAXoxUGV+E6MIGjNpCu8JO3BcDnpSyFfPZO3ruRWzPIIn51Vx
-         g6DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxxBZ+zeW/XCaMwHNaVmk0Bi63PIjhK9fHR3sWq5rmiI3521k8dDvsx2A76yw33H8+itEuzi1QueTy/ixYexMnCZNgQ1sdz0vsO7z0KDEC1bfDJ8d7nvHSAJ0z3bJ/mtYv
-X-Gm-Message-State: AOJu0YzaU9wYRvoELhx93rs1Jt7S5oc+F3cYZp/yc2yLYW1UqxW8hrul
-	KSz04z2TnepClBdUkcYajBdVuD/h+7P35fdAJKVp42DHvr2R86TJ
-X-Google-Smtp-Source: AGHT+IHbTbMtHaq9bspX/vZCCO1+aoX9vsybER44sO+00buq4wgGQxNpZxIz6qKi6v4tq9zIdZpxYQ==
-X-Received: by 2002:a05:600c:5191:b0:412:e902:87a7 with SMTP id fa17-20020a05600c519100b00412e90287a7mr1117353wmb.20.1709584105222;
-        Mon, 04 Mar 2024 12:28:25 -0800 (PST)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id o39-20020a05600c512700b00412d60cb914sm8808428wms.5.2024.03.04.12.28.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2024 12:28:24 -0800 (PST)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	song@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com,
-	bpf@vger.kernel.org,
-	kpsingh@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	xukuohai@huaweicloud.com
-Cc: puranjay12@gmail.com
-Subject: [PATCH bpf-next] arm64, bpf: Use bpf_prog_pack for arm64 bpf trampoline
-Date: Mon,  4 Mar 2024 20:28:03 +0000
-Message-Id: <20240304202803.31400-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0p/wUtl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A327C433C7;
+	Mon,  4 Mar 2024 20:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709584398;
+	bh=kpA/7pn9mASzroHmqDoFxSE2elACiXObSuvnlyB3WC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l0p/wUtlCENa0byHYGPMmupleg8lrPhhXs1o1qKUEb+SRYVOrehff1u1dEjYMoawr
+	 4pc2tOJQFbjUUnLq0ETNLwgdIeUS/FYMtrLqM+Lyj/TNhEZwVEX9Vo3H1SJOmRhj6q
+	 xUbh+9H0MF1vOxas6WZd6Nax+MzUY9+C6rP3Yvf2iHB0Kx3HsE7vc3Oj2lNfwHYWBh
+	 AWbitvC/2Nmm2kZ75G+mf9CWOAGxD9AJf8AxHVp720gjU5swjYVPwFijnWu28tt5HF
+	 YXAn8mBz+paSX03iBMcIrSgwrbcfwGeft11VA1kM/fOpD/SerTeMK6o8v01xcbnKnQ
+	 ZC72KDaIDdvOA==
+Date: Mon, 4 Mar 2024 20:33:14 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: linux-riscv@lists.infradead.org, Damien Le Moal <dlemoal@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] dt-bindings: interrupt-controller: Add Canaan
+ K230 PLIC
+Message-ID: <20240304-froth-ecosphere-9ee29b2085ec@spud>
+References: <tencent_64A9B4B31C2D70D5633042461AC9F80C0509@qq.com>
+ <tencent_23A08076AB6331AE43CC64C87FA3081F8006@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CACqwa9A6+6CIXkZ"
+Content-Disposition: inline
+In-Reply-To: <tencent_23A08076AB6331AE43CC64C87FA3081F8006@qq.com>
 
-We used bpf_prog_pack to aggregate bpf programs into huge page to
-relieve the iTLB pressure on the system. This was merged for ARM64[1]
-We can apply it to bpf trampoline as well. This would increase the
-preformance of fentry and struct_ops programs.
 
-[1] https://lore.kernel.org/bpf/20240228141824.119877-1-puranjay12@gmail.com/
+--CACqwa9A6+6CIXkZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- arch/arm64/net/bpf_jit_comp.c | 55 +++++++++++++++++++++++++++++------
- 1 file changed, 46 insertions(+), 9 deletions(-)
+On Mon, Mar 04, 2024 at 11:16:23PM +0800, Yangyu Chen wrote:
+> Add compatible string for Canaan K230 PLIC.
+>=20
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> ---
+>  .../bindings/interrupt-controller/sifive,plic-1.0.0.yaml         | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifiv=
+e,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/=
+sifive,plic-1.0.0.yaml
+> index 709b2211276b..da147faf32bd 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-=
+1.0.0.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-=
+1.0.0.yaml
+> @@ -69,6 +69,7 @@ properties:
+>                - sophgo,cv1812h-plic
+>                - sophgo,sg2042-plic
+>                - thead,th1520-plic
+> +              - canaan,k230-plic
 
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index 5afc7a525eca..c5b461dda438 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -2076,7 +2076,7 @@ static int prepare_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
- 		/* store return value */
- 		emit(A64_STR64I(A64_R(0), A64_SP, retval_off), ctx);
- 		/* reserve a nop for bpf_tramp_image_put */
--		im->ip_after_call = ctx->image + ctx->idx;
-+		im->ip_after_call = ctx->ro_image + ctx->idx;
- 		emit(A64_NOP, ctx);
- 	}
- 
-@@ -2091,7 +2091,7 @@ static int prepare_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
- 				run_ctx_off, false);
- 
- 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
--		im->ip_epilogue = ctx->image + ctx->idx;
-+		im->ip_epilogue = ctx->ro_image + ctx->idx;
- 		emit_addr_mov_i64(A64_R(0), (const u64)im, ctx);
- 		emit_call((const u64)__bpf_tramp_exit, ctx);
- 	}
-@@ -2124,9 +2124,6 @@ static int prepare_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
- 		emit(A64_RET(A64_R(10)), ctx);
- 	}
- 
--	if (ctx->image)
--		bpf_flush_icache(ctx->image, ctx->image + ctx->idx);
--
- 	kfree(branches);
- 
- 	return ctx->idx;
-@@ -2169,14 +2166,43 @@ int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
- 	return ret < 0 ? ret : ret * AARCH64_INSN_SIZE;
- }
- 
--int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image,
--				void *image_end, const struct btf_func_model *m,
-+void *arch_alloc_bpf_trampoline(unsigned int size)
-+{
-+	return bpf_prog_pack_alloc(size, jit_fill_hole);
-+}
-+
-+void arch_free_bpf_trampoline(void *image, unsigned int size)
-+{
-+	bpf_prog_pack_free(image, size);
-+}
-+
-+void arch_protect_bpf_trampoline(void *image, unsigned int size)
-+{
-+}
-+
-+void arch_unprotect_bpf_trampoline(void *image, unsigned int size)
-+{
-+}
-+
-+int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *ro_image,
-+				void *ro_image_end, const struct btf_func_model *m,
- 				u32 flags, struct bpf_tramp_links *tlinks,
- 				void *func_addr)
- {
- 	int ret, nregs;
-+	void *image, *tmp;
-+	u32 size = ro_image_end - ro_image;
-+
-+	/* image doesn't need to be in module memory range, so we can
-+	 * use kvmalloc.
-+	 */
-+	image = kvmalloc(size, GFP_KERNEL);
-+	if (!image)
-+		return -ENOMEM;
-+
- 	struct jit_ctx ctx = {
- 		.image = image,
-+		.ro_image = ro_image,
- 		.idx = 0,
- 	};
- 
-@@ -2185,15 +2211,26 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image,
- 	if (nregs > 8)
- 		return -ENOTSUPP;
- 
--	jit_fill_hole(image, (unsigned int)(image_end - image));
-+	jit_fill_hole(image, (unsigned int)(ro_image_end - ro_image));
- 	ret = prepare_trampoline(&ctx, im, tlinks, func_addr, nregs, flags);
- 
--	if (ret > 0 && validate_code(&ctx) < 0)
-+	if (ret > 0 && validate_code(&ctx) < 0) {
- 		ret = -EINVAL;
-+		goto out;
-+	}
- 
- 	if (ret > 0)
- 		ret *= AARCH64_INSN_SIZE;
- 
-+	tmp = bpf_arch_text_copy(ro_image, image, size);
-+	if (IS_ERR(tmp)) {
-+		ret = PTR_ERR(tmp);
-+		goto out;
-+	}
-+
-+	bpf_flush_icache(ro_image, ro_image + size);
-+out:
-+	kvfree(image);
- 	return ret;
- }
- 
--- 
-2.40.1
+Add this in alphanumerical order please.
 
+>            - const: thead,c900-plic
+>        - items:
+>            - const: sifive,plic-1.0.0
+> --=20
+> 2.43.0
+>=20
+
+--CACqwa9A6+6CIXkZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeYwCgAKCRB4tDGHoIJi
+0stTAPwKRfMRoeIDnrMRXeK7RYpCbLmlvm8J8cf/OixdlnJk9gD+KTSYTpv8jygT
+ZSw3TqHWSdZ0u27JE6N5rE2R2h7pMw0=
+=tgwG
+-----END PGP SIGNATURE-----
+
+--CACqwa9A6+6CIXkZ--
