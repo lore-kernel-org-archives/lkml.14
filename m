@@ -1,403 +1,160 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1479762147;
-	Mon,  4 Mar 2024 18:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3842F7869A
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 18:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709578144; cv=none; b=g280BvRvqgUHzW1PV10VHG6gPHMzk9CyRSfji3A3cnTBTLJq5sQHrOgLl3tXRSd9elqmHlqlR8BCbBbowWBOoQuR+CSplQdE3huWWTE5trEcc28gw8xkIdtnJ1ZKL3al+QZLiIQKHbOLQGlSn0uAea9NtCOrUcQg/VCMTKf8XK8=
+	t=1709578178; cv=none; b=Ws/OavoamTAEnadCSjmzzBsFz7F/c7lBic3+abt5jW3QUGXWd+Jw5+22HXNrEx9rH/ZAqIgIuEN4Lg7a9e4/8/haLzUkDPB1h/oUftF325ua0314rsvgh6j6+zzBF2gOYQjJCdtblPkOtAzb5Kg7EFWYaB8eaBpiwBsUvyCVghQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709578144; c=relaxed/simple;
-	bh=wCeMmjOVaelKD8oogKosv57Mla3F7vrvDFGNe7ukOGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P+gAqvBcdjXeGUgKcyCvBbHjPHPmnkKJLdgMA2jg83Uz7C1Q7Lw5tpyMXgEbEKe6otN9wt+VNPSMNgW0mxXlrbN8INEYPOR8QNwx9PGnGBy4+QLHh3khkYShGab5jxs3vJ858KfpNymu7VvSg25JN3r4eHRvkwivbsZlkCCSjfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z2AZW5xm; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709578178; c=relaxed/simple;
+	bh=+zltM60WJIwhQhbYbj+QC0RcHFfEEaTaC5b3PkagfmU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pDPpCj130TfE8hz0NwDMj0VnxclcLiommVFjPKuWdlDiXcPvE/maOlKoeS5ydDmRPQCAg5cnxDYDE+RIvL439DnBfTdtIH0ROe73J+i533bBq92Q+NIFbscLZ7AI/wCrrRTKL7PZUyDPhzzW2ptdvO6sMyUZOHhoQdRxILAEV7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lnAxA0LX; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2AZW5xm"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d228a132acso63633881fa.0;
-        Mon, 04 Mar 2024 10:49:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lnAxA0LX"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5cfd95130c6so3175848a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 10:49:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709578140; x=1710182940; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wWoJrpZOS87hlJNbNLhOaG5cqW5NwVFhPcdY4O3k/7I=;
-        b=Z2AZW5xmabxQtOMwi1WgIC8LYDJ/v4OJKOW9ww/i9/CSnNVFknEbv7tNRAc0z7WImh
-         9MRCq1lNcuEoMoPFCqaqEpNpPVfrUi8vuhwDJXJd0MWm0BAEnnbTiaDZamgZr96HPgbl
-         q15VmyOzLgpS3IZAxPBRTJ1WPEN5wi/t6P49tyhp38jkebPvYsH97AwQMFj+Ppx8A6QU
-         nPJesJDGsVZGmqUWd4vpXvv//zXl0MuQAXxJo8rH8UqmMIalxXg/ArmAyijGkxxA7S8Y
-         3cnzCHdiuAQRDDeOUWFo2ls2Eyf21hBXmb9oDpQJ63UJDVKsNs9qNByk44RYAn28Yzcj
-         KwDA==
+        d=chromium.org; s=google; t=1709578176; x=1710182976; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=63pQSv4lgdcPPxgjmIdkeCTgPw+ykuMnj3qldPskCm4=;
+        b=lnAxA0LX5r4TexID833cxBb9m6AYk1kuPjjHNW75Uz5yV5mnYRoxey8+d/FilyimRc
+         z6bcJsRjZhuOgaGrcoPoZjEjOD7lTn6SCdPL9Egl121TaxJLgeYqQLiPxoUVz/ArfXce
+         2ZxCUOR4cid/r/gD9cESFTgMJ2GsjxvVqVbzc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709578140; x=1710182940;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wWoJrpZOS87hlJNbNLhOaG5cqW5NwVFhPcdY4O3k/7I=;
-        b=rwjzshWhU9vj9NS3+OWVDSVFgtUDhngLgGc4Xvksxr0oEw7jL2VQF2CnAHYG7uWZqK
-         4EwvLOLUaYxdaOfyHhQesvBRJRmWtv6l5ce+R4oSTFYVbKZ9p3nawYPwfLlPmF6ZBzwZ
-         pLmx0OIIiT8D3PGLysTeXIhTEqHMKfGoTRdgl2whcSPLwMyVab9WkvAvvqvgwjbkWODW
-         to61vbHyePiib5Xt5RpLGQuQv2zJd91C2fWNNt4U3uioWKgz0DaMZfwM+9myt5eRWfac
-         53XdM2IlxPrjSJpvczngs3Xy8zWRRvkj7Eg7RXfgR16997vOruzgoGqqkLNF239JHoKC
-         IZtw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfAzEuEs00Zhpx/rBUyBGLLLPv8jP/jG5Oai2KpbN3v5T+ySu/KRvk10pcEsEHDU6IzDuW1Ba7S183L/AKSvYLuyD2jEV5+SMVtduzzzLIVgj1Vt1TbUaI394rQGFxZhU+/IP6YqOv5Elzj2DZoiUq4+yzHePT9ul/GuQwGWX3mH4pSg==
-X-Gm-Message-State: AOJu0Yw0Js0RSjoARgm4kUucTjgY75CTBoPiVuDRBQsqGby5FQTp+rkS
-	DdsGu6Ag0GgK+MGWMzlbu2iGjRXCC9HmWv4ccS3j8r7MZWK/hjk4M/hZD6le
-X-Google-Smtp-Source: AGHT+IE1xMAXUtFeWgPIAWFRo1Vl3Spqn6vhYkTizrLe8m+VQjFdgpfNvg8BUjW+dZPJVm/Oud5cbw==
-X-Received: by 2002:a05:6512:308b:b0:513:2011:3d2f with SMTP id z11-20020a056512308b00b0051320113d2fmr7761213lfd.9.1709578139832;
-        Mon, 04 Mar 2024 10:48:59 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id t5-20020a056512208500b00512e263d246sm1840674lfr.296.2024.03.04.10.48.58
+        d=1e100.net; s=20230601; t=1709578176; x=1710182976;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=63pQSv4lgdcPPxgjmIdkeCTgPw+ykuMnj3qldPskCm4=;
+        b=i5+RTo5mc0riqZwTm1uAI5oyBYMe8n4SPEpeUgMV30y/CMJ1abft+/mhmtkzLIuy5t
+         eKIxZvoWF9IN8wBQ9feyXnXGWysMomdGIduOlE7MC+qHoR1Ezi36Q3PpQ6Ky4sj+dygP
+         KGmvlGiKXjt3RVl7rEOwE2IoTigl7adFxUN2xhRpfn5ipOUKwHJwsEqfX1eYWKvqSXdE
+         HqQVdR/AUIR+kDBxo2cpg/05v4VG8bZlbDNP6GUON8xkmqbMLQpPNWlWyJIQTbLiV997
+         5p+PoSeGQYrU6l0S3jstbicYDxn6wTcsNYNqABe/64wliALM6907Qz+pJDJ/f7hOMhIR
+         5V4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWKHoF6E0X+jftcg4sG73uogm6yZSEc0bh9U16MwHFLTS9IyVOpJLkx6OtkUIIng/q6qrcnlDvk5CsFMQ4gBlj47bUA/eT+ThLBJQ9u
+X-Gm-Message-State: AOJu0YzMQRxgWXwuzSkCqdCJgK+umHLCbVZR7eZOIsUCzLSuYxQ5BX43
+	BFGHQF3LUjcNM20QPIT46BP+gJOpEDSUXjPQxM7kh+iRxpEihW8zl2XmHJwbSw==
+X-Google-Smtp-Source: AGHT+IEqbrBUCeaoycN6eZ+VoJQJ/3ekxM3Ni9GrmrAmVAhx541ISPKoahwiO20Sd0vgoGv+eX/7cQ==
+X-Received: by 2002:a05:6a21:9214:b0:1a1:4842:6760 with SMTP id tl20-20020a056a21921400b001a148426760mr1903106pzb.50.1709578176499;
+        Mon, 04 Mar 2024 10:49:36 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j4-20020a654284000000b005d8be4c125csm6743414pgp.80.2024.03.04.10.49.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 10:48:59 -0800 (PST)
-Date: Mon, 4 Mar 2024 21:48:56 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] dt-bindings: PCI: dwc: Add 'msg' register region
-Message-ID: <3nu77xnuaq7pb7lmct76n37n7g5snwhcghgodqd5q6paihdxbp@4imk4w2qfrlx>
-References: <ZcK2/tmLG9O7CBEH@lizhi-Precision-Tower-5810>
- <luk5hswq4wnk5p7axml73qih35hio3y3pfnklctbn6rwres62s@mumnvygjh5ch>
- <ZcOpehO3rzCfAwXf@lizhi-Precision-Tower-5810>
- <gl7zmzkezr6k4txrrgqyikspfah3vmgwwz2e3j5kwb2iarpkxv@3ofwrhtxl2sz>
- <20240214061412.GB4618@thinkpad>
- <20240228160346.GA4069607-robh@kernel.org>
- <Zd9eDgxx5BiFWYD8@lizhi-Precision-Tower-5810>
- <CAL_Jsq+tfDHM7T1xVm5dcn62A8Sd3GTtDRmxVUQpYtJtGg=pKA@mail.gmail.com>
- <fvre5zsj3a2dkvctbamuisomlq2lav7mqmugq2oasx7hibelsm@czz4ypnrqboj>
- <20240301160816.GA2221899-robh@kernel.org>
+        Mon, 04 Mar 2024 10:49:34 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <keescook@chromium.org>,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 2/4] ipc, msg: Use dedicated slab buckets for alloc_msg()
+Date: Mon,  4 Mar 2024 10:49:30 -0800
+Message-Id: <20240304184933.3672759-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240304184252.work.496-kees@kernel.org>
+References: <20240304184252.work.496-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2289; i=keescook@chromium.org;
+ h=from:subject; bh=+zltM60WJIwhQhbYbj+QC0RcHFfEEaTaC5b3PkagfmU=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5he8qRUAcVCqu4hpjGv4CjmdHzSAnbUNg4er3
+ NYamCewr9+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeYXvAAKCRCJcvTf3G3A
+ JuDzEACBBwraGVldgENLbkSYf63dOOHOPJEiqhaSkAxMKXMPigi7yQdQbfcNSnwgtebo1L2uUYv
+ 8a5GjWZgg0pW2K8BJCfxaWqaOKGcKcaQl1JGzOhYIznQhTvy3eFL7liqoKr/iyqINgJllEJw5u1
+ 73nGpA9SrpjgMVQ1WWjUKo3CDRewIUR0dTk28fcGEgg2RubRBocB+ojMwSQvPfl2WwXNNJ6NnaM
+ t1jPN5TOfmjkQwM+IKkwdXSau+eNTMhtba3hE02RRu1OPtszIgPzv9e6R7LQqcPA+z5Nnw9Mx4y
+ ZbqEuw8j6jqARnWfEt9pH8SBkxg5A5JD8uhSVvD9eLQTvHQ47gbqoIV3OvqhNEVQB2mMxiFpJIK
+ NlLkEb/nSKSv3ezcvBEPp9sNggeP6uknRz72aj7v0lLBeL9dnwoPjQS8Vx4tIco3WJcVgCiOxes
+ 11aqWUfxoQSK/Hm/2uAQSZRBPq9t11u4mLp4PCdwiyhfBdIqhHXQUXwKfqAd5M95kCOWSger5J9
+ de8D2cgNhvOQlrVe+1Oj+J515SQVuJJH4p1jmyS5NEs9nXqR8qExyhvPhjm7ka/HrKG77o3MS0F
+ 7hijfdr4qYUQTGuK0lTaECipjA3875yLPsHC4EB0tB+xynBLCgMVx7JT6jFuddPDRtCkf8QdmaT L+aT5CFzJLRrfWA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240301160816.GA2221899-robh@kernel.org>
 
-On Fri, Mar 01, 2024 at 10:08:16AM -0600, Rob Herring wrote:
-> On Thu, Feb 29, 2024 at 02:26:34PM +0300, Serge Semin wrote:
-> > On Wed, Feb 28, 2024 at 06:39:36PM -0600, Rob Herring wrote:
-> > > On Wed, Feb 28, 2024 at 10:23 AM Frank Li <Frank.li@nxp.com> wrote:
-> > > >
-> > > > On Wed, Feb 28, 2024 at 10:03:46AM -0600, Rob Herring wrote:
-> > > > > On Wed, Feb 14, 2024 at 11:44:12AM +0530, Manivannan Sadhasivam wrote:
-> > > > > > On Fri, Feb 09, 2024 at 12:52:52PM +0300, Serge Semin wrote:
-> > > > > > > On Wed, Feb 07, 2024 at 11:02:02AM -0500, Frank Li wrote:
-> > > > > > > > On Wed, Feb 07, 2024 at 03:37:30PM +0300, Serge Semin wrote:
-> > > > > > > > > On Tue, Feb 06, 2024 at 05:47:26PM -0500, Frank Li wrote:
-> > > > > > > > > > On Mon, Feb 05, 2024 at 02:13:37PM -0500, Frank Li wrote:
-> > > > > > > > > > > On Mon, Feb 05, 2024 at 06:30:48PM +0000, Rob Herring wrote:
-> > > > > > > > > > > > On Sat, Feb 03, 2024 at 01:44:31AM +0300, Serge Semin wrote:
-> > > > > > > > > > > > > On Fri, Feb 02, 2024 at 10:11:27AM -0500, Frank Li wrote:
-> > > > > > > > > > > > > > Add an outbound iATU-capable memory-region which will be used to send PCIe
-> > > > > > > > > > > > > > message (such as PME_Turn_Off) to peripheral. So all platforms can use
-> > > > > > > > > > > > > > common method to send out PME_Turn_Off message by using one outbound iATU.
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > > > > > > > > > > ---
-> > > > > > > > > > > > > >  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml | 4 ++++
-> > > > > > > > > > > > > >  1 file changed, 4 insertions(+)
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > > > > > > > > > > > > > index 022055edbf9e6..25a5420a9ce1e 100644
-> > > > > > > > > > > > > > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > > > > > > > > > > > > > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > > > > > > > > > > > > > @@ -101,6 +101,10 @@ properties:
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > >              Outbound iATU-capable memory-region which will be used to access
-> > > > > > > > > > > > > >              the peripheral PCIe devices configuration space.
-> > > > > > > > > > > > > >            const: config
-> > > > > > > > > > > > > > +        - description:
-> > > > > > > > > > > > > > +            Outbound iATU-capable memory-region which will be used to send
-> > > > > > > > > > > > > > +            PCIe message (such as PME_Turn_Off) to peripheral.
-> > > > > > > > > > > > > > +          const: msg
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Note there is a good chance Rob won't like this change. AFAIR he
-> > > > > > > > > > > > > already expressed a concern regarding having the "config" reg-name
-> > > > > > > > > > > > > describing a memory space within the outbound iATU memory which is
-> > > > > > > > > > > > > normally defined by the "ranges" property. Adding a new reg-entry with
-> > > > > > > > > > > > > similar semantics I guess won't receive warm welcome.
-> > > > > > > > > > > >
-> > > > > > > > > > > > I do think it is a bit questionable. Ideally, the driver could
-> > > > > > > > > > > > just configure this on its own. However, since we don't describe all of
-> > > > > > > > > > > > the CPU address space (that's input to the iATU) already, that's not
-> > > > > > > > > > > > going to be possible. I suppose we could fix that, but then config space
-> > > > > > > > > > > > would have to be handled differently too.
-> > > > > > > > > > >
-> > > > > > > > > > > Sorry, I have not understand what your means. Do you means, you want
-> > > > > > > > > > > a "cpu-space", for example, 0x8000000 - 0x9000000 for all ATU.
-> > > > > > > > > > >
-> > > > > > > > > > > Then allocated some space to 'config', 'io', 'memory' and this 'msg'.
-> > > > > > > > > >
-> > > > > > > > > > @rob:
-> > > > > > > > > >
-> > > > > > > > > >     So far, I think "msg" is feasilbe solution. Or give me some little
-> > > > > > > > > > detail direction?
-> > > > > > > > >
-> > > > > > > > > Found the Rob' note about the iATU-space chunks utilized in the reg
-> > > > > > > > > property:
-> > > > > > > > > https://lore.kernel.org/linux-pci/CAL_JsqLp7QVgxrAZkW=z38iB7SV5VeWH1O6s+DVCm9p338Czdw@mail.gmail.com/
-> > > > > > > > >
-> > > > > > > > > So basically Rob meant back then that
-> > > > > > > > > either originally we should have defined a new reg-name like "atu-out"
-> > > > > > > > > with the entire outbound iATU CPU-space specified and unpin the
-> > > > > > > > > regions like "config"/"ecam"/"msg"/etc from there in the driver
-> > > > > > > > > or, well, stick to the chunking further. The later path was chosen
-> > > > > > > > > after the patch with the "ecam" reg-name was accepted (see the link
-> > > > > > > > > above).
-> > > > > > > > >
-> > > > > > > > > Really ECAM/config space access, custom TLP messages, legacy interrupt
-> > > > > > > > > TLPs, etc are all application-specific features. Each of them is
-> > > > > > > > > implemented based on a bit specific but basically the same outbound
-> > > > > > > > > iATU engine setup. Thus from the "DT is a hardware description" point
-> > > > > > > > > of view it would have been enough to describe the entire outbound iATU
-> > > > > > > > > CPU address space and then let the software do the space
-> > > > > > > > > reconfiguration in runtime based on it' application needs.
-> > > > > > > >
-> > > > > > > > There are "addr_space" in EP mode, which useful map out outbound iatu
-> > > > > > > > region. We can reuse this name.
-> > > > > > > >
-> > > > > > > > To keep compatiblity, cut hole from 'config' and 'ranges'. If there are
-> > > > > > > > not 'config', we can alloc a 1M(default) from top for 'config', then, 4K
-> > > > > > > > (default) for msg, 64K( for IO if not IO region in 'ranges'), left is
-> > > > > > > > mem region. We can config each region size by module parameter or drvdata.
-> > > > > > > >
-> > > > > > > > So we can deprecate 'config', even 'ranges'
-> > > > > > >
-> > > > > > > Not sure I fully understand what you mean. In anyway the "config" reg
-> > > > > > > name is highly utilized by the DW PCIe IP-core instances. We can't
-> > > > > > > deprecate it that easily. At least the backwards compatibility must be
-> > > > > > > preserved. Moreover "addr_space" is also just a single value reg which
-> > > > > > > won't solve a problem with the disjoint DW PCIe outbound iATU memory
-> > > > > > > regions.
-> > > > > > >
-> > > > > > > The "ranges" property is a part of the DT specification.  The
-> > > > > > > PCI-specific way of the property-based mapping is de-facto a standard
-> > > > > > > too. So this can't be deprecated.
-> > > > > > >
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > * Rob, correct me if am wrong.
-> > > > > > > > >
-> > > > > > > > > On the other hand it's possible to have more than one disjoint CPU
-> > > > > > > > > address region handled by the outbound iATU (especially if there is no
-> > > > > > > > > AXI-bridge enabled, see XALI - application transmit client interfaces
-> > > > > > > > > in HW manual). Thus having a single reg-property might get to be
-> > > > > > > > > inapplicable in some cases. Thinking about that got me to an idea.
-> > > > > > > > > What about just extending the PCIe "ranges" property flags
-> > > > > > > > > (IORESOURCE_TYPE_BITS) with the new ones in this case indicating the
-> > > > > > > > > TLP Msg mapping? Thus we can avoid creating app-specific reg-names and
-> > > > > > > > > use the flag to define a custom memory range for the TLP messages
-> > > > > > > > > generation. At some point it can be also utilized for the config-space
-> > > > > > > > > mapping. What do you think?
-> > > > > > > >
-> > > > > > >
-> > > > > > > > IORESOURCE_TYPE_BITS is 1f, Only 5bit. If extend IORESOURCE_TYPE_BITS,
-> > > > > > > > all IORESOURCE_* bit need move. And it is actual MEMORY regain.
-> > > > > > >
-> > > > > > > No. The lowest four bits aren't flags but the actual value. They are
-> > > > > > > retrieved from the PCI-specific memory ranges mapping:
-> > > > > > > https://elinux.org/Device_Tree_Usage#PCI_Address_Translation
-> > > > > > > https://elixir.bootlin.com/linux/latest/source/arch/sparc/kernel/of_device_64.c#L141
-> > > > > > > https://elixir.bootlin.com/linux/latest/source/arch/sparc/kernel/of_device_32.c#L78
-> > > > > > > Currently only first four out of _sixteen_ values have been defined so
-> > > > > > > far. So we can freely use some of the free values for custom TLPs,
-> > > > > > > etc. Note the config-space is already defined by the ranges property
-> > > > > > > having the 0x0 space code (see the first link above), but it isn't
-> > > > > > > currently supported by the PCI subsystem. So at least that option can
-> > > > > > > be considered as a ready-to-implement replacement for the "config"
-> > > > > > > reg-name.
-> > > > > > >
-> > > > > >
-> > > > > > Agree. But still, the driver has to support both options: "config" reg name and
-> > > > > > "ranges", since ammending the binding would be an ABI break.
-> > > > > >
-> > > > > > > >
-> > > > > > > > Or we can use IORESOURCE_BITS (0xff)
-> > > > > > > >
-> > > > > > > > /* PCI ROM control bits (IORESOURCE_BITS) */
-> > > > > > > > #define IORESOURCE_ROM_ENABLE           (1<<0)  /* ROM is enabled, same as PCI_ROM_ADDRESS_ENABLE */
-> > > > > > > > #define IORESOURCE_ROM_SHADOW           (1<<1)  /* Use RAM image, not ROM BAR */
-> > > > > > > >
-> > > > > > > > /* PCI control bits.  Shares IORESOURCE_BITS with above PCI ROM.  */
-> > > > > > > > #define IORESOURCE_PCI_FIXED            (1<<4)  /* Do not move resource */
-> > > > > > > > #define IORESOURCE_PCI_EA_BEI           (1<<5)  /* BAR Equivalent Indicator */
-> > > > > > > >
-> > > > > > > > we can add
-> > > > > > > >
-> > > > > > > > IORESOURCE_PRIV_WINDOWS                 (1<<6)
-> > > > > > > >
-> > > > > > > > I think previous method was more extendable. How do you think?
-> > > > > > >
-> > > > > > > IMO extending the PCIe "ranges" property semantics looks more
-> > > > > > > promising, more flexible and more portable across various PCIe
-> > > > > > > controllers. But the most importantly is what Rob and Bjorn think
-> > > > > > > about that, not me.
-> > > > > > >
-> > > > > >
-> > > > > > IMO, using the "ranges" property to allocate arbitrary memory region should be
-> > > > > > the way forward, since it has almost all the info needed by the drivers to
-> > > > > > allocate the memory regions.
-> > > > > >
-> > > > > > But for the sake of DT backwards compatiblity, we have to keep supporting the
-> > > > > > existing reg entries (addr_space, et al.), because "ranges" is not a required
-> > > > > > property for EP controllers.
-> > > > >
-> > > > > I don't know that its worth the effort to carry both. Maybe if it is
-> > > > > useful on more than just DW host.
-> > > > >
-> > > > > I believe we had config space in ranges at some point on some
-> > > > > binding and moved away from that. I forget the reasoning.
-> > > >
-> > > > I can alloc a 64k windows from IORESOURCE_MEM windows to do 'msg' windows
-> > > > in dwc host driver in v4.
-> > > >
-> > > > But I think it is wonthful to discuss if we can extend of_map bits, add
-> > > > more type beside CONFIG/IO/MEM/MEM64.
-> > > >
-> > > > https://elinux.org/Device_Tree_Usage#PCI_Address_Translation
-> > > >
-> > > > phys.hi cell: npt000ss bbbbbbbb dddddfff rrrrrrrr
-> > > >
-> > 
-> > > > There are '000' before 'ss'.  If we use it as dwc private resource.
-> > 
-> > Frank, why do you mis-inform about the idea? The point was to use the
-> > ranges property for:
-> > 1. PCIe Config-space mapping.
-> > 2. PCIe TLP messages region.
-> > There is _nothing_ DWC-specific in the original suggestion. Case 1 has
-> > already implicitly defined by the DT standard, see the link above (but
-> > for some reason hasn't been implemented in the PCIe subsystem). Case 2
-> > hasn't been determined, but could be seeing there are three unused
-> > bits in the ss-code of the phys.hi cell. All of that can be used by
-> > _any_ PCIe RC/EP device.
-> > 
-> > > 
-> > > DWC (or any host controller) specific things? No!
-> > 
-> > Rob, could you please dive deeper in this thread? The idea is to use
-> > the "ranges" property for the "config" (PCIe config space) and the
-> > custom PCIe TLP messages regions.
-> 
+The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
+use-after-free type confusion flaws in the kernel for both read and
+write primitives. Avoid having a user-controlled size cache share the
+global kmalloc allocator by using a separate set of kmalloc buckets.
 
-> I did in my prior response. Here, I was just making it clear that 
-> something host controller specific is a non-starter as you did.
+After a fresh boot under Ubuntu 23.10, we can see the caches are already
+in use:
 
-Not sure what exactly you meant by "host controller specific". Did you
-mean a particular host-controller or all the host-controllers? I meant
-that the "msg" range could be used by _any_ host-controller, but the
-usage would be platform-specific indeed because the message-type depends on
-the peripheral devices.
+ # grep ^msg_msg /proc/slabinfo
+ msg_msg-8k             0      0   8192    4    8 : ...
+ msg_msg-4k            96    128   4096    8    8 : ...
+ msg_msg-2k            64     64   2048   16    8 : ...
+ msg_msg-1k            64     64   1024   16    4 : ...
+ msg_msg-16          1024   1024     16  256    1 : ...
+ msg_msg-8              0      0      8  512    1 : ...
 
-> 
-> For config, we had some bindings that did this and we moved away from 
-> it. I don't remember the details. Unless it's ECAM region, I don't think 
-> using ranges makes any sense as how to use the region will still be host 
-> specific.
+Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
+Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
+Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
+Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
+Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
+Link: https://zplin.me/papers/ELOISE.pdf [6]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+---
+ ipc/msgutil.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Could you please elaborate why exactly the config-region would still
-be host-specific? Strictly speaking the normal MEM or IO region is
-also host-specific because what lays behind depends on the attached
-device and the enumeration procedure. IMO the reason of not using the
-'ranges' for the config/ECAM space would be in opposite to what you
-said.  Unlike the CPU-to-MEM/IO mapping the ECAM/config-space is a
-pre-determined _linear_ space with in most of the case no need in
-special space remapping (unless we would wish to map particular
-peripheral device config-space). So normal "reg" is enough especially
-seeing the config-space is a set of registers. (Please correct me if I
-was wrong.)
+diff --git a/ipc/msgutil.c b/ipc/msgutil.c
+index d0a0e877cadd..36f1aa9ea1cf 100644
+--- a/ipc/msgutil.c
++++ b/ipc/msgutil.c
+@@ -42,6 +42,15 @@ struct msg_msgseg {
+ #define DATALEN_MSG	((size_t)PAGE_SIZE-sizeof(struct msg_msg))
+ #define DATALEN_SEG	((size_t)PAGE_SIZE-sizeof(struct msg_msgseg))
+ 
++static struct kmem_buckets *msg_buckets __ro_after_init;
++
++static int __init init_msg_buckets(void)
++{
++	msg_buckets = kmem_buckets_create("msg_msg", 0, SLAB_ACCOUNT, 0, 0, NULL);
++
++	return 0;
++}
++subsys_initcall(init_msg_buckets);
+ 
+ static struct msg_msg *alloc_msg(size_t len)
+ {
+@@ -50,7 +59,7 @@ static struct msg_msg *alloc_msg(size_t len)
+ 	size_t alen;
+ 
+ 	alen = min(len, DATALEN_MSG);
+-	msg = kmalloc(sizeof(*msg) + alen, GFP_KERNEL_ACCOUNT);
++	msg = kmem_buckets_alloc(msg_buckets, sizeof(*msg) + alen, GFP_KERNEL);
+ 	if (msg == NULL)
+ 		return NULL;
+ 
+-- 
+2.34.1
 
-> 
-> For TLP messages, do we have other hosts that could use ranges for them? 
-
-AFAICS the next controllers might also be able to generate the
-messages via the outbound AT-memory:
-Rockchip PCIe controller (see pcie-rockchip.h AXI_WRAPPER_* macros)
-Cadence PCIe controller (see pcie-cadence.h CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_* macros)
-Mediatek PCIe Gen3 controller (see pcie-mediatek-gen3.c PCIE_ATR_TLP_TYPE() macro)
-...
-although I am not absolutely sure.
-
-> Is there something in the PCIe spec that defines TLP as an address 
-> space and what that address space looks like? IIRC, some hosts (Altera?) 
-> just have a message sending interface and that includes config space 
-> accesses.
-
-I already sited it in the message to Frank here:
-https://lore.kernel.org/linux-pci/pprkba3ygxwv4lzieu5spqamcn2gzdcviv4kb2kzkzam4fbhit@6uqtmevzm5uj/
-Here is an excerpt from there:
-
-< Note paragraph 2.1.1. of for instance the PCIe-4.0 spec:
-< 
-< 2.1.1  Address Spaces, Transaction Types, and Usage
-< "Transactions form the basis for information transfer between a
-< Requester and Completer. Four _address spaces_ are defined, and
-< different Transaction types are defined, each with its own unique
-< intended usage, as shown in Table 2-12."
-< 
-< Address Space     | Transaction Types    |  Basic Usage
-< -------------------------------------------------------------------------
-< Memory            | Read/Write           | Transfer data to/from a
-<                   |                      | memory-mapped location
-< I/O               | Read/Write           | Transfer data to/from an
-<                   |                      | I/O-mapped location
-< Configuration     | Read/Write           | Device Function config/setup
-< _Message_         | Baseline (including  | From event signaling mechanism
-<                   | Vendor–Defined)      | to general purpose messaging
-< 
-< So basically the PCIe-spec defines four _address spaces_. The
-< _message_ space is one of them. Seeing the "ranges" DT-property is
-< about the space-to-space mapping IMO there is nothing wrong with using
-< it for the _message_ space mapping.
-
-As you can see the MEM, IO, config and Message are defined as address
-space. Looking at the message request description in the spec, there
-can be various types of the messages. All of them are listed in "2.2.8
-Message Request Rules". Some of them can be routed by _address_ or
-_ID_ (BDF), but some of them can lack of any address/ID field. In
-accordance with the "Table 2-17: Message Routing" footnote there is no
-message requests defined at the moment with the Address-based routing.
-In the meantime for the address-less messages there is no address
-translation needs to be performed, thus having the ranges-based
-mapping would be just pointless for them. But if we had a message
-request defined with the address-based routing then it might have
-required a mapping similar to the MEM and IO ones.
-
-Anyway giving to all of that a second thought, I more-and-more getting
-further away from my original idea of having the config and message
-region mapped over the "ranges" property. There is no actual address
-translation performed at least in the second cases. So using the "ranges"
-property for it would be pointless indeed... ( But originally the idea
-seemed very attractive seeing the PCIe-specific "ranges" property has
-unused mapping type flags and permitted special address format...
-
-
-Let's get back to the Frank work then. What would you suggest as a
-good solution? There are two options at the moment:
-1. Define DWC-specific "msg" reg-name with a peace of the outbound
-iATU space which would be used to generate the messages. (thus
-implementing the same approach as being utilized for the config-space
-mapping).
-2. Manually, in the driver, reserve a peace of the CPU-to-PCIe-MEM
-"ranges" region and have it utilized for the message request TLPs
-(implemented in this patch).
-
-The later one seems less safe since the entire outbound iATU range
-could be dedicated for some platform-specific means. So reserving
-a peace of it will cause problems in those platforms.
-
--Serge(y)
-
-> 
-> Rob
