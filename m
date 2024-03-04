@@ -1,130 +1,100 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2BF219E2
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E68208A2;
+	Mon,  4 Mar 2024 09:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709546034; cv=none; b=g3t+tTJzBeYUoJUvllWTKcQXglFNrGxsr4gztqgaqAG1WElqIKp4VHrzJqXWIrxpIFq7/r7fgPAQoBjejxqqwf0cCewa1uj+sl1Py7Bs/VsmSQ9S18NPW/xXarXsPV3i/ARSkq2mzkXEOHCeCNb9zZr1tMniUtrfXDIEBQr3mFM=
+	t=1709546131; cv=none; b=KcFNo6xINQv33OLT7DMJS6H5OKNjp2ya/T4kuXbwZAQtGiTUDkiWyOgGPgxmO3PKchuFLFlE5OAi6qCa6Z0rhOT4Btq+QEjy4wc5205Gj5MwYE/py3yCRNSFJGLhf9e4SelLEHV75cvHSFtX1umSXZU+3h0q0+FWS23roPal0Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709546034; c=relaxed/simple;
-	bh=AdFn9XLJWQqe0dLUDaSJYnhDPaicR7vWmLQPaoGeX3w=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jDsLEOYJgNZBhUzXTBr1qk2zv5323hNC4jKVvQq0PcrAnq+OrVjHgGA+m1O8Xms+q7wkaNFG4zS1FlP6K2S7QW/+zFooryUSg4Msg6QLoWM7wG2fiI1c1Xc1lDnk5hte7X4nCLCqM14a64+o67g1n0dwQ7UPJWq3BY+gFKtV+e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=oo/ttSbX; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1709546131; c=relaxed/simple;
+	bh=tGGIjtvf2OqUUpfEvU1EyE4HH8U209KvVuAbHYsXd6A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OP2a4+G+8rl7GS7Lhtxe0jZeKcvbC6IgQA2EvtqH68PjOqKs40va/RVJeSQCe8hS4BQ94HDiXOSoWRTHR8nw1CyFH6+Gfpil4MEj5fMKwyzVlr1A9im7x9qcdqUBZQDqCewjOUZ4Lr1DeEJN0VOLRHkv87DtdILP2sz3tfkOvBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C8v3+ZIp; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="oo/ttSbX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C8v3+ZIp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709546031; x=1741082031;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AdFn9XLJWQqe0dLUDaSJYnhDPaicR7vWmLQPaoGeX3w=;
-  b=oo/ttSbXns+04twPj1JGh0zfGrDwRUfAUspFBXOJcBj+ZzwShHRRJ0GZ
-   DIdPRSgEHMvDET9EYXqxvaiQOmw4O5oe4C167uN/Ld4JKzWBA35fvBzmz
-   ayOfPZFLkeVYhnBfLMglWIED9Jyh37G4q4M7GVRMXfNBtQGxbHCbRzNDX
-   npDwY4pf4A6w7co6fz+HI+t823kxoJNei87vZ536Vzpuz2SFMn5KdwijH
-   z8oGovpyKdOfE++RzyHTNZCHZnehTtZXVJxF70iZlvKbzq1FFkdgcqJw5
-   Gh8LhCp38+cDcaoZeq46uD6wptIoDVgSoG9KvBP6ALGJfOW4hmKcscCAf
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709546129; x=1741082129;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tGGIjtvf2OqUUpfEvU1EyE4HH8U209KvVuAbHYsXd6A=;
+  b=C8v3+ZIp8FldoJsjrciDDtKs1srhE/DgqU2INnEKQty6DM9IvBrs0z8/
+   Nd/rzDZwkfAvlQ0dABF1pyUawGwkuEmf/pMkYDNX4gON3JB7sacJnsA4u
+   gfOXzXidGT1FqJJ3k4Q3Ns2w2+2T1NpRFlPiRo3fZd48caMuJJ5OWGI4v
+   CjUkS5li04bjZr+2WCIKJM+Cxpi2z5eKEIMqe50Am+kdPp9sa+coYNBbd
+   40Zzbz4qokcKbs4Lc+d3av/sw41zvHh+GbQ98dkznS9HbL+gkzV1+AR88
+   9BL/fOXcMyax+TqD/K4AdgxvEGoLGm6LL1TGpa2jN80Le7ki2aNsSS3xN
    w==;
-X-CSE-ConnectionGUID: ZJsDVXyFTta/H+MNZycEbA==
-X-CSE-MsgGUID: 0T2mkppsRHm+zl/8ZK18Og==
-X-IronPort-AV: E=Sophos;i="6.06,203,1705388400"; 
-   d="asc'?scan'208";a="17149560"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Mar 2024 02:53:50 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 02:53:37 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Mon, 4 Mar 2024 02:53:36 -0700
-Date: Mon, 4 Mar 2024 09:52:52 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Dawei Li <dawei.li@shingroup.cn>
-CC: <daire.mcnamara@microchip.com>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] firmware: microchip: Fix over-requested allocation size
-Message-ID: <20240304-dislike-enchanted-bab883cdd609@wendy>
-References: <20240304092532.125751-1-dawei.li@shingroup.cn>
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="7799078"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="7799078"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 01:55:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="39934272"
+Received: from syakovle-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.51.3])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 01:55:24 -0800
+From: Jani Nikula <jani.nikula@intel.com>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	linuxppc-dev@lists.ozlabs.org
+Cc: jani.nikula@intel.com,
+	dri-devel@lists.freedesktop.org,
+	lkft-triage@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Helge Deller <deller@gmx.de>,
+	linux-fbdev@vger.kernel.org
+Subject: [PATCH] powerpc: include linux/backlight.h from asm/backlight.h
+Date: Mon,  4 Mar 2024 11:55:12 +0200
+Message-Id: <20240304095512.742348-1-jani.nikula@intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CA+G9fYsAk5TbqqxFC2W4oHLGA0CbTHMxbeq8QayFXTU75YiueA@mail.gmail.com>
+References: <CA+G9fYsAk5TbqqxFC2W4oHLGA0CbTHMxbeq8QayFXTU75YiueA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="QfI9bt87W6Fw+2hP"
-Content-Disposition: inline
-In-Reply-To: <20240304092532.125751-1-dawei.li@shingroup.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
---QfI9bt87W6Fw+2hP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Removal of the backlight include from fb.h uncovered an implicit
+dependency in powerpc asm/backlight.h. Add the explicit include.
 
-Hey,
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Closes: https://lore.kernel.org/r/CA+G9fYsAk5TbqqxFC2W4oHLGA0CbTHMxbeq8QayFXTU75YiueA@mail.gmail.com
+Fixes: 11b4eedfc87d ("fbdev: Do not include <linux/backlight.h> in header")
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 
-On Mon, Mar 04, 2024 at 05:25:32PM +0800, Dawei Li wrote:
-> cocci warnings: (new ones prefixed by >>)
-> >> drivers/firmware/microchip/mpfs-auto-update.c:387:72-78:
->    ERROR: application of sizeof to pointer
->    drivers/firmware/microchip/mpfs-auto-update.c:170:72-78:
->    ERROR: application of sizeof to pointer
->=20
-> response_msg is a pointer to u32, so the size of element it points to is
-> supposed to be a multiple of sizeof(u32), rather than sizeof(u32 *).
->=20
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202403040516.CYxoWTXw-lkp@i=
-ntel.com/
-> Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> ---
->  drivers/firmware/microchip/mpfs-auto-update.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/firmware/microchip/mpfs-auto-update.c b/drivers/firm=
-ware/microchip/mpfs-auto-update.c
-> index 682e417be5a3..7ea3cdb917bc 100644
-> --- a/drivers/firmware/microchip/mpfs-auto-update.c
-> +++ b/drivers/firmware/microchip/mpfs-auto-update.c
-> @@ -384,7 +384,7 @@ static int mpfs_auto_update_available(struct mpfs_aut=
-o_update_priv *priv)
->  	u32 *response_msg;
->  	int ret;
-> =20
-> -	response_msg =3D devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE =
-* sizeof(response_msg),
-> +	response_msg =3D devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE =
-* sizeof(u32),
+---
 
-Why not use `sizeof(*response_msg)`?
+Not even compile tested!
+---
+ arch/powerpc/include/asm/backlight.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Cheers,
-Conor.
+diff --git a/arch/powerpc/include/asm/backlight.h b/arch/powerpc/include/asm/backlight.h
+index 1b5eab62ed04..275d5bb9aa04 100644
+--- a/arch/powerpc/include/asm/backlight.h
++++ b/arch/powerpc/include/asm/backlight.h
+@@ -10,6 +10,7 @@
+ #define __ASM_POWERPC_BACKLIGHT_H
+ #ifdef __KERNEL__
+ 
++#include <linux/backlight.h>
+ #include <linux/fb.h>
+ #include <linux/mutex.h>
+ 
+-- 
+2.39.2
 
->  				    GFP_KERNEL);
->  	if (!response_msg)
->  		return -ENOMEM;
-> --=20
-> 2.27.0
->=20
-
---QfI9bt87W6Fw+2hP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeWZ8wAKCRB4tDGHoIJi
-0gNkAQDrYx1n8zCrpLlvIsxyn7lq+cHSOFFk09yS527hkWOx1QD/XtVUb9uF9ym5
-eciZRxHMosB+KXsKQLAG2/26fBdUXQQ=
-=uSlh
------END PGP SIGNATURE-----
-
---QfI9bt87W6Fw+2hP--
