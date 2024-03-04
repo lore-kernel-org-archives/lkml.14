@@ -1,161 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18361CA94;
-	Mon,  4 Mar 2024 21:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C33E1F5FD;
+	Mon,  4 Mar 2024 21:26:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587573; cv=none; b=iyirjt0p6GOI1MaASR5tPiR4K4xuIw/tBS7hqKy70yxs03nvLjpsbJLlyXzJbBRPIsBecZJbm6ae3xFiAxKptVYrszCVnAlMEHeXFkcsMt5YQ3jheiTLKHlbAHT1P9njJGJTqc7jekBPZFkvlfg4fk8ddE1/4OmiYoorFYf7N8o=
+	t=1709587590; cv=none; b=YBNZcefiO/RxkpSwqhf3p15yK1ptLA7OnSArBc/RDcZuAiUAnljq0ItXgGCuTmdtJPPgUa5fzDgF+HIxN1ODin4f7nAMV+k7MRVJWHN0dxyLbqvB3RkYlP3j65h2I0f/XKT6TUQ1xL9yRPjCS4tuHkpoMuqnGz3u2Eeu/lr3Wvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587573; c=relaxed/simple;
-	bh=j3/VuXcdAAUeB/9osjvAgkL6rASQvBSAah7VCvAx5wg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jvGSFS0I72WqvU+wkH9jONpOb8sPn/DzpZz/q/UeEKGHFl4LE+86E/eaSVyvRWQlQCJWr9kUAKU56oarAan02y8nqj7EYrG00ZCEObgQKlMBbwj/rf+GJB3rZnnmRfVql/Y6hq4XeuZ1mBhB6NgVSzPOAWWdXHAf01hRHetgRzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AJTghnHF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709587590; c=relaxed/simple;
+	bh=CzbbppJj4URu/ZwENXc/SuZfwfRp3h53NmuSsst2lhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qng4tSQkd5O4WHmrSkY4b2wKUsFXJOxWZQaVBM1YVVZ3mfHf9juECA7Y1JOmSLJuYQf8LeS7MkHcX/4NAlEiQSaXVPhkUFO25QS3xJVJ2Ez0LqEOAsukJ8glAuA11OYN8gubch0AL/SdhrQOOcxw/6p8OQ6t44LHPgeYVkti/FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3IviibI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AJTghnHF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CC1C433C7;
-	Mon,  4 Mar 2024 21:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709587573;
-	bh=j3/VuXcdAAUeB/9osjvAgkL6rASQvBSAah7VCvAx5wg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AJTghnHFzAZkVVOP3bTPWb0PI/JGS7hXwJuVBRfdKlN9FgW3WHe3Vz07oRnrljkcp
-	 9cVguoS36kVFCueuuhNdSP66VM/hihp8RmxIaXOqnpnIfT4JJwQuhj4/Vu0cT/YS0r
-	 rCq+wvoEp9w5siDgSdZLKhQZKydWCspuMJoAdlmM=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: [PATCH 4.19 00/16] 4.19.309-rc1 review
-Date: Mon,  4 Mar 2024 21:23:21 +0000
-Message-ID: <20240304211534.328737119@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3IviibI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1DBC433F1;
+	Mon,  4 Mar 2024 21:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709587590;
+	bh=CzbbppJj4URu/ZwENXc/SuZfwfRp3h53NmuSsst2lhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R3IviibIpF8P/rEwyPHUlxmjM4bm7oKTCJ2hG5lucAODpyCpDjyIJ1rfH+Xeztw0F
+	 7vgs5XFLVSC5mmLBT5k3NYBL6tMv7CPDcaEnJlRxaa4BjqXGSfLkcnGXNtRMrfiePF
+	 pA/wbX6pMCvdWKePcmF5JNOVKd9TEcROjV6BWOoQCmqcthpPKTzk50ENyRWOnl4QNw
+	 exoCyPJ5B6IynansJAnBc+eVZ0lTGHFB03AX6Hl5hYS9ZtOhQqdfGdrtTD26VNAPQZ
+	 Cem1whi4fO4PwuON9cUh3xhN09Flhn12xqOhXyKe1nvX4zMqzDALyPIwDyXQM4hPJ3
+	 blDe15l9V0YhQ==
+Date: Mon, 4 Mar 2024 15:26:27 -0600
+From: Rob Herring <robh@kernel.org>
+To: Javier =?iso-8859-1?Q?Garc=EDa?= <javier.gar.tab@gmail.com>
+Cc: Jack Yu <jack.yu@realtek.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>, daniel.baluta@nxp.com,
+	alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: dt-bindings: rt1015: Convert to dtschema
+Message-ID: <170958758740.1075337.15453587624816097337.robh@kernel.org>
+References: <20240304142315.14522-1-javier.gar.tab@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.309-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.309-rc1
-X-KernelTest-Deadline: 2024-03-06T21:15+00:00
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 4.19.309 release.
-There are 16 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Wed, 06 Mar 2024 21:15:26 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.309-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.19.309-rc1
-
-Arturas Moskvinas <arturas.moskvinas@gmail.com>
-    gpio: 74x164: Enable output pins after registers are reset
-
-Baokun Li <libaokun1@huawei.com>
-    cachefiles: fix memory leak in cachefiles_add_cache()
-
-Ivan Semenov <ivan@semenov.dev>
-    mmc: core: Fix eMMC initialization with 1-bit bus connection
-
-David Sterba <dsterba@suse.com>
-    btrfs: dev-replace: properly validate device names
-
-Johannes Berg <johannes.berg@intel.com>
-    wifi: nl80211: reject iftype change with mesh ID change
-
-Alexander Ofitserov <oficerovas@altlinux.org>
-    gtp: fix use-after-free and null-ptr-deref in gtp_newlink()
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: Drop leftover snd-rtctimer stuff from Makefile
-
-Hans de Goede <hdegoede@redhat.com>
-    power: supply: bq27xxx-i2c: Do not free non existing IRQ
-
-Arnd Bergmann <arnd@arndb.de>
-    efi/capsule-loader: fix incorrect allocation size
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    Bluetooth: Enforce validation on max value of connection interval
-
-Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-    Bluetooth: hci_event: Fix handling of HCI_EV_IO_CAPA_REQUEST
-
-Ying Hsu <yinghsu@chromium.org>
-    Bluetooth: Avoid potential use-after-free in hci_error_reset
-
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-    net: usb: dm9601: fix wrong return value in dm9601_mdio_read
-
-Oleksij Rempel <o.rempel@pengutronix.de>
-    lan78xx: enable auto speed configuration for LAN7850 if no EEPROM is detected
-
-Yunjian Wang <wangyunjian@huawei.com>
-    tun: Fix xdp_rxq_info's queue_index when detaching
-
-Ryosuke Yasuoka <ryasuoka@redhat.com>
-    netlink: Fix kernel-infoleak-after-free in __skb_datagram_iter
+In-Reply-To: <20240304142315.14522-1-javier.gar.tab@gmail.com>
 
 
--------------
+On Mon, 04 Mar 2024 15:23:07 +0100, Javier García wrote:
+> Convert the RT1015 Mono Class D Audio Amplifier to DT schema.
+> 
+> Signed-off-by: Javier García <javier.gar.tab@gmail.com>
+> ---
+>  .../bindings/sound/realtek,rt1015.yaml        | 41 +++++++++++++++++++
+>  .../devicetree/bindings/sound/rt1015.txt      | 23 -----------
+>  2 files changed, 41 insertions(+), 23 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/realtek,rt1015.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/rt1015.txt
+> 
 
-Diffstat:
-
- Makefile                                   |  4 ++--
- drivers/firmware/efi/capsule-loader.c      |  2 +-
- drivers/gpio/gpio-74x164.c                 |  4 ++--
- drivers/mmc/core/mmc.c                     |  2 ++
- drivers/net/gtp.c                          | 12 ++++++------
- drivers/net/tun.c                          |  1 +
- drivers/net/usb/dm9601.c                   |  2 +-
- drivers/net/usb/lan78xx.c                  |  3 ++-
- drivers/power/supply/bq27xxx_battery_i2c.c |  4 +++-
- fs/btrfs/dev-replace.c                     | 24 ++++++++++++++++++++----
- fs/cachefiles/bind.c                       |  3 +++
- net/bluetooth/hci_core.c                   |  7 ++++---
- net/bluetooth/hci_event.c                  |  9 ++++++++-
- net/bluetooth/l2cap_core.c                 |  8 +++++++-
- net/netlink/af_netlink.c                   |  2 +-
- net/wireless/nl80211.c                     |  2 ++
- sound/core/Makefile                        |  1 -
- 17 files changed, 65 insertions(+), 25 deletions(-)
-
+Reviewed-by: Rob Herring <robh@kernel.org>
 
