@@ -1,137 +1,96 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333A61AADE;
-	Mon,  4 Mar 2024 08:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637371B5B2
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709542393; cv=none; b=AfrH2ZbxTkSxHWrrZ4sWTrGYqwVlz9yg9nlGi7dwZDjA7YAOSbHqELS9Kgx2Vpuo5PnKjv2gQpWxStn0aLgXSMb1hmKWE2pfBFDqu4l/vAbT2KqNbLTtqzXM5VY5hqw3awaJ+3pDUrB5RTZHWPnG2dZ5rFzCv4eTN/OLgAdq+5s=
+	t=1709542559; cv=none; b=uS0YoDvov8lFkizKqucevE0z1AazaGYGyO4QkCqHaY/a+a9l52PZD8kFecByiTK8eHRqMw49mCkV4911ZTMRx8AwQ3T0KytbFVcVhyiitaenYDe6wTzmQOZ2D9LPnwKIkjKUrOg5zE/OcY3+hEFODDVgsScIxvfW95iz5VyMyds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709542393; c=relaxed/simple;
-	bh=lZjS9KQIklaHVo9RkVEZuFyeCOlTaULg5xVUzMo42g8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EQ1NQ3wO6Gwth6QvYrgyn6XOCr+4BwbQBPJtbuN1CjvWRvwCUT9N6w7CjByimBsxwjFWgBKmwM+/sLd45+vjfM0wpsky6fwnLLF/y7gmc4x0XLWMXqz7KQc8/awWvKnIeqFXntz8MAieOClHkg8+P5TOA/bjKEhjOyx3IEdxNDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TpBQV4KnCz9xGgj;
-	Mon,  4 Mar 2024 16:17:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id ABC0A14068C;
-	Mon,  4 Mar 2024 16:33:26 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwAH9CdGh+VluhunAw--.56753S2;
-	Mon, 04 Mar 2024 09:33:26 +0100 (CET)
-Message-ID: <be91c7158b1b9bed35aa9c3205e8f8e467778a5f.camel@huaweicloud.com>
-Subject: Re: [PATCH v2 06/25] capability: provide helpers for converting
- between xattrs and vfs_caps
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>,
-  Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, James
- Morris <jmorris@namei.org>,  Alexander Viro <viro@zeniv.linux.org.uk>, Jan
- Kara <jack@suse.cz>, Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>,  Casey Schaufler
- <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
- <roberto.sassu@huawei.com>,  Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi
- <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
- selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
-Date: Mon, 04 Mar 2024 09:33:06 +0100
-In-Reply-To: <ZeIlwkUx5lNBrdS9@do-x1extreme>
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
-	 <20240221-idmap-fscap-refactor-v2-6-3039364623bd@kernel.org>
-	 <7633ab5d5359116a602cdc8f85afd2561047960e.camel@huaweicloud.com>
-	 <ZeIlwkUx5lNBrdS9@do-x1extreme>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1709542559; c=relaxed/simple;
+	bh=BCVH8caV3eJZnst0zjGp6cLMi/unVfiC59OWDvK3zu0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r6E735SXoJrreCKvMhamOygU198DxThl4RU0NHwpsgJF3Emu7eC0QSV/Eb35fH4QArAPg9R4TMkYQsFtjL397teO9Q9KEVWhTROL/UZ0GC/L3vYOqvmByEmCpLv3CYgesQMSx8IjGgaAtI34E5CzOPApuK1zjAag6h/6oozObpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp69t1709542507tx60w49v
+X-QQ-Originating-IP: j/t1lN4+T/EzHFlHMLaia4UWmdXBjku6RWJFXoUD+6s=
+Received: from localhost ( [112.22.30.30])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 04 Mar 2024 16:55:05 +0800 (CST)
+X-QQ-SSF: 01400000000000505000000A0000000
+X-QQ-FEAT: 807rdhwoR6uy/+E3pBfzXZHZy374eWAo5dxa5PXnJBGPu1CMZTVkYdBWZ1Rfn
+	WRqfAAXfqNtSoWjBKfW/UauMfOls/5n3cxyhJMpVSLNZEjIoTx0j+9wU8/Vvxi9VWknITPV
+	ImI+R4cnzFhLl6gUbp5nL3pHJzR3fLr694h12Jtenim6uPNQWlgb/QRAlj3Kel9oqaQaRjm
+	gvr03M1QiRV16oOlxNHUvHLE2r6rpkPlh6x/RfhmBHtCM3pvREXb05qEdDxCGek73M4FkRj
+	NNM6c76GRXN/b4awzygIS2psbOwdspDed5M+oPqsdyfcWs++go01Sxghl+0sNzk95CXgxkA
+	cbrEecG0CpIxp2gEEiuXSlBkSUoOfcm9MyzUFUiz2+rxPDmba89TDqTDYSA/b99YSCGG8jq
+	RzOpGcW/epU=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 2245615275566401135
+From: Dawei Li <dawei.li@shingroup.cn>
+To: geert@linux-m68k.org
+Cc: linux-m68k@lists.linux-m68k.org,
+	linux-kernel@vger.kernel.org,
+	Dawei Li <dawei.li@shingroup.cn>
+Subject: [PATCH] m68k: Calculate THREAD_SIZE from THREAD_SIZE_ORDER
+Date: Mon,  4 Mar 2024 16:54:55 +0800
+Message-Id: <20240304085455.125063-1-dawei.li@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:GxC2BwAH9CdGh+VluhunAw--.56753S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF1Uur1fKFWxWryDZw1UKFg_yoW8WFyDpF
-	y3K3Z8KFs2qr1Ygr48Jr45Aa1SkFyrJry7WayUCas0y3Wqgr13AFy09a48uFy5uw4kGr15
-	XFs0yas8Cry3AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFYFCUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAMBF1jj5rvqQACsm
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-On Fri, 2024-03-01 at 13:00 -0600, Seth Forshee (DigitalOcean) wrote:
-> On Fri, Mar 01, 2024 at 05:30:55PM +0100, Roberto Sassu wrote:
-> > > +/*
-> > > + * Inner implementation of vfs_caps_to_xattr() which does not return=
- an
-> > > + * error if the rootid does not map into @dest_userns.
-> > > + */
-> > > +static ssize_t __vfs_caps_to_xattr(struct mnt_idmap *idmap,
-> > > +				   struct user_namespace *dest_userns,
-> > > +				   const struct vfs_caps *vfs_caps,
-> > > +				   void *data, size_t size)
-> > > +{
-> > > +	struct vfs_ns_cap_data *ns_caps =3D data;
-> > > +	struct vfs_cap_data *caps =3D (struct vfs_cap_data *)ns_caps;
-> > > +	kuid_t rootkuid;
-> > > +	uid_t rootid;
-> > > +
-> > > +	memset(ns_caps, 0, size);
-> >=20
-> > size -> sizeof(*ns_caps) (or an equivalent change)
->=20
-> This is zeroing out the passed buffer, so it should use the size passed
-> for the buffer. sizeof(*ns_caps) could potentially be more than the size
-> of the buffer.
+Current THREAD_SIZE_OERDER implementatin is not generic for common case.
 
-Uhm, then maybe the problem is that you are passing the wrong argument?
+Improve it by:
+- Define THREAD_SIZE_ORDER by specific platform configs.
+- Calculate THREAD_SIZE by THREAD_SIZE_ORDER.
 
-ssize_t
-do_getxattr(struct mnt_idmap *idmap, struct dentry *d,
-	struct xattr_ctx *ctx)
-{
-	ssize_t error;
-	char *kname =3D ctx->kname->name;
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+---
 
-	if (is_fscaps_xattr(kname)) {
-		struct vfs_caps caps;
-		struct vfs_ns_cap_data data;
-		int ret;
+V1 -> V2:
+- Remove ilog2().
+- Calculate THREAD_SIZE by THREAD_SIZE_ORDER.
 
-		ret =3D vfs_get_fscaps(idmap, d, &caps);
-		if (ret)
-			return ret;
-		/*
-		 * rootid is already in the mount idmap, so pass nop_mnt_idmap
-		 * so that it won't be mapped.
-		 */
-		ret =3D vfs_caps_to_user_xattr(&nop_mnt_idmap, current_user_ns(),
-					     &caps, &data, ctx->size);
+V1:
+https://lore.kernel.org/lkml/20240228085824.74639-1-dawei.li@shingroup.cn/
 
+ arch/m68k/include/asm/thread_info.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-ctx->size in my case is 1024 bytes.
-
-Roberto
-
-> Maybe it would be clearer if it was memset(data, 0, size)?
->=20
-> > I was zeroing more (the size of the buffer passed to vfs_getxattr()).
-> >=20
-> > Roberto
+diff --git a/arch/m68k/include/asm/thread_info.h b/arch/m68k/include/asm/thread_info.h
+index 31be2ad999ca..3e31adbddc75 100644
+--- a/arch/m68k/include/asm/thread_info.h
++++ b/arch/m68k/include/asm/thread_info.h
+@@ -12,14 +12,15 @@
+  */
+ #if PAGE_SHIFT < 13
+ #ifdef CONFIG_4KSTACKS
+-#define THREAD_SIZE	4096
++#define THREAD_SIZE_ORDER	0
+ #else
+-#define THREAD_SIZE	8192
++#define THREAD_SIZE_ORDER	1
+ #endif
+ #else
+-#define THREAD_SIZE	PAGE_SIZE
++#define THREAD_SIZE_ORDER	0
+ #endif
+-#define THREAD_SIZE_ORDER	((THREAD_SIZE / PAGE_SIZE) - 1)
++
++#define THREAD_SIZE	(PAGE_SIZE << THREAD_SIZE_ORDER)
+ 
+ #ifndef __ASSEMBLY__
+ 
+-- 
+2.27.0
 
