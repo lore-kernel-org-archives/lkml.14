@@ -1,98 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89D13CF40
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 18:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC613CF40;
+	Mon,  4 Mar 2024 18:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709575475; cv=none; b=fhgdSrvAq458rh39M67n4Hm7bJBnF4XbHrSYn+TprhLuBAQ++/H9TzSRUe/7vXUxebHUFQB5guJD2dLdr5lIJQUdaAMig8gJ0jgrtVgYvv7tidGPE+mtdGFH5wB8PMEQ+yUyqzBsxMBq8537ed+0NUMO1pqSvXUYyYpWDjpT6LE=
+	t=1709575516; cv=none; b=MnQzMPhfB5klulXq5aMy+4uE5euFSGgYV4ev732I1a70e1hJoeg1BHnG2LXO8SKqTN7XjqlfOJ88tT8PWAn9r9oj7SB2rSs+2cGaWXmOuEd8YOFRK6Akp6GQziRBX3PADYgFTCGsVWP9BuXkGH1EpPdbD+YbUHzR+NPnXx+cufA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709575475; c=relaxed/simple;
-	bh=zCSQOLBMW/dXzbiniKZg+jQ3DjKtHORHN2WIjSPZGTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CQSuVKs8b4pntHj4hocyF8dB9MiBrg/jQXK6UXOtxsLZtEEs2vdKzSTiYlx+Apk/tjL/yJ96z+Nd2EiHesqyBbdwBDkCvsWOB+rmdfR7RyRLGZzfRw+Y51c3Cao73aK7inZbCm1ZqawFEVMUqGmwarOU8k1gFkwqTVscQPXJfgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASP9tDum; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709575516; c=relaxed/simple;
+	bh=+PqoMC6PQY8ox0RzrFV0Txo65ucWo6osZJCfNRoWvEE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iLkyht/CnWK+Zpqg12zuJNGSTQyUY1AI6PozJGVTk8/NRahE45DSYUmgCP0+vR2X9uZHSz7qlVw+lYRFeWo+Ga9tAZqltZorh60EXm/B4NuEmJTKf1ghZ7UMshQPzcT81u76CY5sfIBnjCSP2qYqyJ+Qbx4HukNej8OesMmvyUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S8axCc+3; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASP9tDum"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FBE2C433F1;
-	Mon,  4 Mar 2024 18:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709575475;
-	bh=zCSQOLBMW/dXzbiniKZg+jQ3DjKtHORHN2WIjSPZGTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ASP9tDum5p+yuPKxJUnVgX/bUl/11L13Z0hTdqAQ7AAujOJqI42sCZ46P06Y61odg
-	 +E7bLzUL0zgG7kgUCzBco/Nm4K3Nr8U3AsaflyDhyPZqO0qzq/pe5WxVKPs1UCXdoD
-	 fwCXmc1Fi8KgsSDE4u0dyHYNQsV8px3Ya0Cr8o+xSoigkUaGWVCO9H+iz78UP2imC0
-	 BB2ZqVBt3sbC/KekWZ+17a1ZyzK0ZDpCqbfSRS02nr/lImZpi/ma8PEPGe7bcCuho1
-	 9OIJ8LVeGbvhpsZv+YodiN3R/FK4vIBBjOCVHEzhlUKyc22ak+T3AajJp3TJdwy4k/
-	 yl9Q3yVdcRh4Q==
-Date: Mon, 4 Mar 2024 18:04:29 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Dan Williams <dan.j.williams@intel.com>, x86@kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S8axCc+3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709575515; x=1741111515;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+PqoMC6PQY8ox0RzrFV0Txo65ucWo6osZJCfNRoWvEE=;
+  b=S8axCc+34IXxoLzUPF0GpZQ2F28S+7PqQNReM8HbHVAB7QM8LkPYkwDc
+   nJZUzUJhPwrdivhIjQ2PExwTAOTKhbK/bHJkesr96WYWLyExxHz6TvpRs
+   eKoXU6R4xMa7Rnnw4sBM4YXNbeEmOzFnfnR6tvzLpCFmH8ZAX7ePt+Kf7
+   X4eNmGEd/WXnSKM2GDegPFj+7ZsDN/PA/x5HPsIOr2FyXDrEAa288Mlti
+   r1XfGCWY7CZcUMe8e1SVMcoQTR2mWrMLBEwl+KeSULIGZFGymr9sacR9t
+   eUmnMZGYi94/ODw+YAK417KElZfH+0yA3PNoSeWl+UL/9AbBLdPEco7IC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="7855294"
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="7855294"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 10:05:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="937040916"
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="937040916"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 10:05:12 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 6991715C; Mon,  4 Mar 2024 20:05:11 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: x86 boot issues in -next
-Message-ID: <f2dc0a62-f9b0-41e7-8e13-d81887fc1f48@sirena.org.uk>
-References: <05a45cc8-e0fc-422e-80d2-596ed63202a3@sirena.org.uk>
- <71f9b0b7-190f-453c-b55b-c842db4a825d@intel.com>
+Cc: Sean Young <sean@mess.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] media: rc: gpio-ir-recv: Remove unused of_gpio.h
+Date: Mon,  4 Mar 2024 20:05:10 +0200
+Message-ID: <20240304180510.1201042-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i0qNiEXbJs1qiWn9"
-Content-Disposition: inline
-In-Reply-To: <71f9b0b7-190f-453c-b55b-c842db4a825d@intel.com>
-X-Cookie: He who hesitates is last.
+Content-Transfer-Encoding: 8bit
 
+of_gpio.h is deprecated and subject to remove.
+The driver doesn't use it, simply remove the unused header.
 
---i0qNiEXbJs1qiWn9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/media/rc/gpio-ir-recv.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On Fri, Mar 01, 2024 at 01:48:41PM -0800, Dave Hansen wrote:
-> On 3/1/24 13:29, Mark Brown wrote:
+diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
+index 41eeec648803..b29a1a9f381d 100644
+--- a/drivers/media/rc/gpio-ir-recv.c
++++ b/drivers/media/rc/gpio-ir-recv.c
+@@ -9,7 +9,6 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/slab.h>
+ #include <linux/of.h>
+-#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/pm_qos.h>
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-> > For the past few days -next has been failing to boot an x86_64 defconfig
-> > on the x86 machine Linaro has available in their lab.  DMI says it's a
-> > "Dell Inc. PowerEdge R200/0TY019, BIOS 1.4.3 05/15/2009" and the CPU is
-> > described as "Intel(R) Xeon(R) CPU X3220  @ 2.40GHz (family: 0x6, model:
-> > 0xf, stepping: 0xb)", it's running happily with mainline and
-> > pending-fixes.
-
-> This wouldn't explain the bisect results, but there's been a crash fixed
-> in here:
-
-> > https://lore.kernel.org/all/170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com/
-
-> that looks pretty similar to your signature.
-
-> Could you give Dan's patch a shot?
-
-Whatever the issue was it's gone today - Dan's patch is in -next so I'm
-guessing it may well have been it.  I'm guessing the bisection might've
-been due to some combination of the two trees causing an empty group to
-get added?  Thanks for looking into it.
-
---i0qNiEXbJs1qiWn9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXmDS0ACgkQJNaLcl1U
-h9Cmzgf/Um8ZI9/CArhfn8sgMoPIAh3/Q//gEUzaWU8T7eWm3cKqdogEMQOf1OMZ
-bwm4nCcp+ltmZsid6wJrOSIbuyiWpi15gKkPgfA6l5oNHRg+BJGzmmC6g952mg1s
-PQ7HTMBS3nrtRJhCOxNqh/eX58tsUmJGPcc6GSolgwJ26e/ctzAUpKU95dTwDtOZ
-/TxJ8St/K7FzSs+eLHIYF7/0/W4xDvZ3SvX+kz5dXPEf5UqQjJa31QhjPNk18vxS
-ABzSCR+mXsdT7oBZjLFkcS9Jqox1YKOho6cRJRlZFKuGj81SKg72G1tUd6oNhVAq
-5FRYhwgaaXDvYv6+i19XF4SYlm7ssQ==
-=FRnd
------END PGP SIGNATURE-----
-
---i0qNiEXbJs1qiWn9--
