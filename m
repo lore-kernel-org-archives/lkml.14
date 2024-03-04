@@ -1,209 +1,113 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CBB225DE
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B7B2374B;
+	Mon,  4 Mar 2024 09:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709544200; cv=none; b=OXTBlhcNfwOHWZvEailpAFovvdRKjxWJYQVMDWpXYxZQDW+H9eR1qIoIJ7CPoDdnLUIZeSTWu3qBfEP5YpPtd6au+0flt1s0MoD/sNlJ1uR0sN5UgE3Kvmw9hDMNHVBqSNZwN1rr5zOn8xjq1G+RGz6vW+Z93U/VIul2ZQi9ljg=
+	t=1709544207; cv=none; b=hxTbHPerVspfAZW43lHRax3HrG4ouw6h+zUAdqYxfuziSKwIqqYe4mqDgqabgxv0yrDBrjWs0a/R1ZBGJFyAVuCKva54QPxTmrS4EFK35jdUmM3faHut6jiPTd5N9aoeq0WsKNtsLo/y+5d2KcvW5Ira0Qf6NyNQk639Xkxvp8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709544200; c=relaxed/simple;
-	bh=ypYDM92zx+ByY0T7WnwufvgR277d6q8zr4H0b9YIwoo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uA0lTt6Ksfs4uThEtT6TZMYZH/ZE/+oXj26C7RJOAH1GbCCHuGRSQp+3+UCXQpI5TvAjHfu8GD4Pr94pTVjYgxULeWN3Ucoe62oWQAPJHonqyXOCPkp1fvJ7lvdGPUzwJSMkOmI8Adl/ko4+q2VwkqzqEkNVLEsw+JXByOuA+iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DHzDLm6S; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709544207; c=relaxed/simple;
+	bh=Fjyke14FhJVuxn1qjXkhnPeP7VsIKBGI3TtDfBX5g7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0IUki6sJpXG1mpcwT26g10Scamjj6CmdDVmTSWm4H9Pc566S11xDy6vwK9cE8pKtjEh7xxtceVfEA7nGCJ6thuOtWXi7KNjoft4jYcP8glz0wKsC/Ylj9Uyt47Dgu3fRPxIXxZecsqb8cmMZRRlPYXen9Ivf+zGBEy1Kudv0Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDzdg1Z8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DHzDLm6S"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so3032866a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:23:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709544198; x=1710148998; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1iAAKsut+Lnr406fDiuI97iuObX28NmTfTZPzkL+1fo=;
-        b=DHzDLm6SdRCdzBz4MakgqG3S6HDtPxZLRw1nWF0UbicgCxu5P37Cod6/S+0/jvOJtj
-         ftsA8ycZ+vm+p8INHIA+rt0SlGqvCm6y8BTwTAgRE1AC+c2dnPxJEJP90/yMmxrrppnm
-         baUAlDJQOv/v9j1rEoWGdTAC/de3nMOgD8voG/a3+hdT2ydaVqGnPoLzRCOZCYLRCPpM
-         c1YCdn9m0cfRGJ4p2eG61LkKmPzeIjSvXwRGpP6MoLII5CdOzofFhKI1iFZKPiTEv0FG
-         BEHKcB8maWtbfXFTgw8fpO40l3LwKcWxUcU/AyIEEcmJwfwas/U4yIu4yCVthcTwgCVs
-         8xPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709544198; x=1710148998;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1iAAKsut+Lnr406fDiuI97iuObX28NmTfTZPzkL+1fo=;
-        b=BgTM6/RnrpeawCEZzQrOvXmYv8tTqsE4H8FGGKUfn6M0VRJStaLJSPgUXunU2b4B6G
-         NPtELnUcZE7mE1Gg9GHxs5ZB+Bd2KnUj8SplFXf+PlFWq/uH/G8mSl+xgnSIuOYh81Tn
-         qUpID0qFvqyYsxpJJeQnfRkfoGCu+VF7kfLcApuRSWQu/LNpcr6/q/X7Vc/E+F3/sBmT
-         9N8sWl1AdB/7gWtkmDkFSAWtkU+NmRF8MEKmJH8rqbAu8iGOSpx4+0TYEYD3k70lcQ0B
-         a7dUg9p1p/0pBTPauuX6KmU58U0x9KWcaY6CUnm58VMdABWI5HBw/l9w5xDSMstxUiOZ
-         1f6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWk7gUVeVs4TcGXxoPcJsT3FTwOCa/A/eRX1mEWv2ZqHL5yfRyRfoItohm36E9OmI/ftRT8ovs3KdgjNSO6lxh0YUqbIw7uvAw0PZO/
-X-Gm-Message-State: AOJu0YxaJlvgcR7dHj0oDmuOZtxsCK1k1v1C1uFgTcwNepaSl7GCT7ZV
-	7zpGn+baRwQC2JuqHiXQu7Ec8gp5L/pUg8cVPH9baS1zlLZ/QHLT5WViwtRu+Q==
-X-Google-Smtp-Source: AGHT+IGgKnmiFQobeMh2YTWAxlSLgx0/pU4aP23F9C12AqEGAOggZ8ib8OKjkD4YAlDCeDhLjLF+FQ==
-X-Received: by 2002:a05:6a20:4f91:b0:1a1:4a97:c2bf with SMTP id gh17-20020a056a204f9100b001a14a97c2bfmr2180987pzb.38.1709544197821;
-        Mon, 04 Mar 2024 01:23:17 -0800 (PST)
-Received: from [127.0.1.1] ([117.202.187.165])
-        by smtp.gmail.com with ESMTPSA id c5-20020a170902c1c500b001dbb06b6138sm7996648plc.252.2024.03.04.01.23.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 01:23:17 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Mon, 04 Mar 2024 14:52:15 +0530
-Subject: [PATCH v9 03/10] PCI: dwc: ep: Introduce dw_pcie_ep_cleanup() API
- for drivers supporting PERST#
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDzdg1Z8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD21C433C7;
+	Mon,  4 Mar 2024 09:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709544207;
+	bh=Fjyke14FhJVuxn1qjXkhnPeP7VsIKBGI3TtDfBX5g7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LDzdg1Z8PXwnwGjYQ4nm55CeEZ0UJ8Jj3hScHoRe7rhX1gUNkstTGpGvhRTgJtxbu
+	 OaHYE9XjY1a2dWg8jYFitJjCALv4shw7qUlRbYEJco5MxsLYQvYemONynN4uZlysFQ
+	 kXzz07BmAA78ss3V82Ov7u4eb5tOd0aOqu7RIsQstDPjjotYciNQnfYpaqRFIctkXU
+	 Xb2V9fSrqPinyYpc731SSf/m9t40BhCEZweynNeTi84EVcpo4LtJT2z9yx6k1CfEMv
+	 UUWjIy3iM4XemV/RBLLfJxTyU1R9XLfB62vK8vkfwVCtu59azNVXUo+pxliAXyODLE
+	 FLdHMQ4EzoZsQ==
+Date: Mon, 4 Mar 2024 10:23:23 +0100
+From: Wolfram Sang <wsa@kernel.org>
+To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH v2 07/11] i2c: nomadik: replace jiffies by ktime for FIFO
+ flushing timeout
+Message-ID: <ZeWTC4Eq9CzOs5AV@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	=?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
+ <20240229-mbly-i2c-v2-7-b32ed18c098c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240304-pci-dbi-rework-v9-3-29d433d99cda@linaro.org>
-References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
-In-Reply-To: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Kishon Vijay Abraham I <kishon@ti.com>, Vidya Sagar <vidyas@nvidia.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
- Roy Zang <roy.zang@nxp.com>, 
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Jesper Nilsson <jesper.nilsson@axis.com>, 
- Srikanth Thokala <srikanth.thokala@intel.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
- Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@axis.com, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3682;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=ypYDM92zx+ByY0T7WnwufvgR277d6q8zr4H0b9YIwoo=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl5ZLXx8mL4OCigKAtsTSBN5DEBwsyik+wZ/JB4
- La0Ju5zCXGJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZeWS1wAKCRBVnxHm/pHO
- 9VloCACPrI8Hr2htGt2mk5PgpFmGydL8nF02RLuxbzk867sLalnQnopNSdlBgv+prE7meJI+5sC
- iasOG4gXUO03I/Oyf6FQRtVvBtIDO4p3+QpgV4PXzIXmRxKvVsTfbnFPdKLPvINV+iiMk75fOmL
- +libQ1tupUQQwAwjaNXiLnUbEJrvK0qyDZsPVmebFDRlRDNEhDTz1d3ANBUuTOl1Wosc6QBpDDg
- 8C8GDvJpbdbo7paCLVTDSTw9/Fq0nvwx8zZaC0RDeYTb/2qFb/uFL3EFTWfmytI7tucLvRwkigg
- YJv5KU0bD1RU56bbRN47G1CNoplP33MCsI6YbE+lWtWj2Q1X
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7C433FooVKfPFjO0"
+Content-Disposition: inline
+In-Reply-To: <20240229-mbly-i2c-v2-7-b32ed18c098c@bootlin.com>
 
-For DWC glue drivers supporting PERST# (currently Qcom and Tegra194), some
-of the DWC resources like eDMA should be cleaned up during the PERST#
-assert time.
 
-So let's introduce a dw_pcie_ep_cleanup() API that could be called by these
-drivers to cleanup the DWC specific resources. Currently, it just removes
-eDMA.
+--7C433FooVKfPFjO0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Niklas Cassel <cassel@kernel.org>
-Closes: https://lore.kernel.org/linux-pci/ZWYmX8Y%2F7Q9WMxES@x1-carbon
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 11 +++++++++--
- drivers/pci/controller/dwc/pcie-designware.h    |  5 +++++
- drivers/pci/controller/dwc/pcie-qcom-ep.c       |  1 +
- drivers/pci/controller/dwc/pcie-tegra194.c      |  2 ++
- 4 files changed, 17 insertions(+), 2 deletions(-)
+On Thu, Feb 29, 2024 at 07:10:55PM +0100, Th=C3=A9o Lebrun wrote:
+> The FIFO flush function uses a jiffies amount to detect timeouts as the
+> flushing is async. Replace with ktime to get more accurate precision
+> and support short timeouts.
+>=20
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 2b11290aab4c..1205bfba8310 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -564,12 +564,19 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	return 0;
- }
- 
--void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
-+void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
--	struct pci_epc *epc = ep->epc;
- 
- 	dw_pcie_edma_remove(pci);
-+}
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_cleanup);
-+
-+void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
-+{
-+	struct pci_epc *epc = ep->epc;
-+
-+	dw_pcie_ep_cleanup(ep);
- 
- 	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
- 			      epc->mem->window.page_size);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 61465203bb60..351d2fe3ea4d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -672,6 +672,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep);
- int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
- void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
- void dw_pcie_ep_deinit(struct dw_pcie_ep *ep);
-+void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep);
- int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no);
- int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- 			     u8 interrupt_num);
-@@ -705,6 +706,10 @@ static inline void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
- {
- }
- 
-+static inline void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
-+{
-+}
-+
- static inline int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
- {
- 	return 0;
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 36e5e80cd22f..59b1c0110288 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -507,6 +507,7 @@ static void qcom_pcie_perst_assert(struct dw_pcie *pci)
- 		return;
- 	}
- 
-+	dw_pcie_ep_cleanup(&pci->ep);
- 	qcom_pcie_disable_resources(pcie_ep);
- 	pcie_ep->link_status = QCOM_PCIE_EP_LINK_DISABLED;
- }
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 7afa9e9aabe2..68bfeed3429b 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1715,6 +1715,8 @@ static void pex_ep_event_pex_rst_assert(struct tegra_pcie_dw *pcie)
- 	if (ret)
- 		dev_err(pcie->dev, "Failed to go Detect state: %d\n", ret);
- 
-+	dw_pcie_ep_cleanup(&pcie->pci.ep);
-+
- 	reset_control_assert(pcie->core_rst);
- 
- 	tegra_pcie_disable_phy(pcie);
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
--- 
-2.25.1
 
+--7C433FooVKfPFjO0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXlkwsACgkQFA3kzBSg
+KbZlmQ/7BeOpHXFkVAV8V35Hfz9OhDx1QR4Sbzc1KklBr+gm5IbuVyYn6GgB5HVY
+6Xs/IIPgOk4V7xk079tFAfFCJ7X+I3vPVLh3l7ZXKSVpGKfoU4rmuBNnHL+eG4uL
++YIpuSlM05j1ne+TnkvY8fdFFFDFkpE+w0ZSlLMTiEkU9BOJSTkF7VX3vHqXDO2d
+E+SzqxObu4EuQonD5OSVMUsP/KTdWUciUejZSY4C5G1GjObV0hfNsG9CffYDAKH0
+HAVqfiH28XQ3ZDpqZ44n91eL0CtU5MIj4F/UESfrlny8F9Pi8pf48bHSCNBnFFyk
+wLsEgar+GHwlGL1QiIuLafN99CPAh2vNXDI29+UzziyMo4nkd1Zr5ap5HdLrIx/g
+mT87ioofGWlDkuGWaLjRMOPK/lxdrdiSKw3ctQ7Te1KSLzh5WY4VjvY0jWsnvOGa
+TlkHIuZYWiSyb6p7nSUBKZKkAv2GQbcagC+4B6JRS1vb8dxjv6xyz2+6WzNsVmyb
+QoH00jNGkpHczE4QOj35d0JMuZq3GeBnxJo2brOMXgcsHEUabQv+SAIGreIa2Haj
+zVaOmRb6ymLb9SgS5bp11kqbwjnJ/rPunzxoq29UteqSy+oECRt+EXUyuauEuf4r
+2m/tvl/MqTDN1qhuR3Yb3f4reiA2lTNSNOu7yUGF84Aa18fb0VU=
+=XC4v
+-----END PGP SIGNATURE-----
+
+--7C433FooVKfPFjO0--
