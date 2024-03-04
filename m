@@ -1,83 +1,97 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from e2i652.smtp2go.com (e2i652.smtp2go.com [103.2.142.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FE9381DF
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0545018EC3
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709544392; cv=none; b=VEVGEVkinmGVC25B3424yNbAumbqqxmilZkc4pBJsQScZKYmXYNO0SGXQdt7ww7IR+URdsqlBIzv43ZnXlmm6DHloWsDnmBBLYTDHo7mfGGapjqt9arWrg97RrF5qCv0py8EWkthzdsDobKsI31NjBKBejTarABYDoSnCfRD1Qo=
+	t=1709544428; cv=none; b=XR0tGJTprYQpFSd9FiTrrPmloYDodk9pP4bYbEg9Vi73AWua/AaKW6KSjFLVze8fDxp/vn62B/VQ7x12d3Z9PKCS9Bodij+qRUh3SI8qX5U7QzcUKTuPR42ws10p/BhIH6KfiEA+x+d/WHV2hCC2S2vx338CDANcLooN7PRuGXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709544392; c=relaxed/simple;
-	bh=rA9xcrP1qRp2vmLyo1/NoCl09tOZioaFK+zMV5UQ+a0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Aq0A0T4YcNGEKnq0SC4EGZ24HW14zMrntVZs8OITP42lN/H/abIXuyQvNyLncEyXV+DPqA8/ZgtNqnskcDM19RFrhWztzXM2Jdh7PhcNHcJ/+PQJiCIBPaECLSeQHGbXAG88Ce6Dy/gouaCOC6o6cyZTsnw/65Bbtg4dRb6GY0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp77t1709544338tbvh7m0l
-X-QQ-Originating-IP: /8qetr6ORn/X+N+f2KO84Qws+LjhcD+YICaQ7LCYY1w=
-Received: from localhost ( [112.22.30.30])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 04 Mar 2024 17:25:37 +0800 (CST)
-X-QQ-SSF: 01400000000000505000000A0000000
-X-QQ-FEAT: qPPBrXN7Wh+uu+Oshg+pJH+InOcUFIlvm2eJlW3zNBPIzyTLwKQAunGD3FCwb
-	zwyMY7CdMV2tZ54TuJOawKbq57h5TE6z3bq9+dKiI2AsgkqwjjDfTVg5lIaoVkDLYq9zDYr
-	B+NC4YSSdaexh+v2RbdouhF0KG8MQkHwfvAV9dKQd2ZpKw6mCjxCjr+vxi4lVnO4DffIhy7
-	Bp8bES/XvFY32VFOiR49STQmxEgSBPeNzmBJpHKaqsWPOBFUfSoc6ImedCXlvonCQvw/XkC
-	ToAlhHse/0shw2Jkgra+fw3FaQQJiDxuxXp4XT6UWxSGLDZ60zcvXXmre+31R0+pdOe9C28
-	zxShzXKHft+hSESzzPFzcWabdAqyOZNshksj13TcTCY2nogMtqgP9uLM22wzb+VL3jwi//t
-	nBkaCl93UStK79lsqDOIhQ==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 14106722739390484581
-From: Dawei Li <dawei.li@shingroup.cn>
-To: conor.dooley@microchip.com,
-	daire.mcnamara@microchip.com,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Dawei Li <dawei.li@shingroup.cn>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] firmware: microchip: Fix over-requested allocation size
-Date: Mon,  4 Mar 2024 17:25:32 +0800
-Message-Id: <20240304092532.125751-1-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1709544428; c=relaxed/simple;
+	bh=7VDmsob5dJwaz3X9qMt+VxPXL/JvM00gxmRyrpIxXqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUqh1CEJHM0+v9Mq1axaMhXAq7HkAsmy3fbhpgxoVzIivJIUEYrdPvuK1Au3GKXfgcGMltyYWAIV2TsO3xPEu5yL7Ykg6GqxRx6ngkRJLvb2Hn2wU3ZtLtLBqxdcF41YyTqxLbJ7+GKUkeB22Av+fH49881mT/DgO7faqAp/I1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=vbtjW0GC; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=h7rmg+v+; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=L8PbEoDI; arc=none smtp.client-ip=103.2.142.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="vbtjW0GC";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="h7rmg+v+";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="L8PbEoDI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1709545321; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe; bh=dSA4zZatV9UqbY6asTaR1XvA3gHAvLPK2adXkrBBVSE=; b=vbtjW0GC
+	BLX51jz5AlvSmVa9hxalu5bVfHkoY7HGoIrewuPL/QxFmgTWWF6UFzcuLCN7zdLPrR6oeQbuKsOHc
+	WnFPtI45ZXjQ73Av4CRhx9u7zVPQE4yW6e45l48Hx3fLWk8XgOWkIwoxdj7cONC09ksXZRQknPxuv
+	7Yawu+EtK/yQxhraMD6c78DQkBRaVgVNvAgAsGpIAxTlB4LxgDZfB9fFogZmvLZb/bBZMUzvPE/+S
+	DTZw3C9o4deBKxKx6lyPQpfKIReUq2/wJv2EHOcLVGTrPkbeRXZbPWMAMgKi79dEzjOVupi5/NCc4
+	yP8/xr710koUPV52vScOVz9+5g==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1709544421; h=from : subject :
+ to : message-id : date;
+ bh=dSA4zZatV9UqbY6asTaR1XvA3gHAvLPK2adXkrBBVSE=;
+ b=h7rmg+v+J6WpSvdoVzyIetOFgvNuRDdmjJG9QNLUeWOSskxmzsbxAlmVV6sBAdm22hvEP
+ kQBWENGBMaXaC1UmCroSvHliGhT8rdjKbo+pPbVkh5ZnCN4rj1VdNusvaA2/enkR0UoBwpE
+ 62J41E7Jro7XdoTOTdFjepH54mf2qYiI1sX7adz9xT7UGOZUuK0PimZyphZLoYm7CkPsl+n
+ t/UU5C2QNqC4HKZLr+y/1Ha/9U8dMsNW6DjBUoSUO20c5kayidqdxMZuuOlNbc9J6UXH2kb
+ V5Gv+7LQkUkkk9u/GczdSLogR6Bo0IOZenPc2Wmmy+SOMAK99RnXPnNNefxQ==
+Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1rh4al-qt4Jyi-NR; Mon, 04 Mar 2024 09:26:39 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.96.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1rh4ak-4XdKRo-2S; Mon, 04 Mar 2024 09:26:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1709544397; bh=7VDmsob5dJwaz3X9qMt+VxPXL/JvM00gxmRyrpIxXqc=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=L8PbEoDIRyhOAJsNNVtfEGp7Kf/YyPuMCfIc/ZbYWls23k8CexemOWoOVkteqmQV+
+ u/aXJwND072hSFMlOdTCvXjGIp84hoX2VkIE0nN8MLQqYZq6k/HfIzMsB9ON4P4VjA
+ cAu3YCePvRfbpxtgFMOjN2F04gszsBWfMy3+Lfmk=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id E94683C312; Mon,  4 Mar 2024 10:26:36 +0100 (CET)
+Date: Mon, 4 Mar 2024 10:26:36 +0100
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] kconfig: link menus to a symbol
+Message-ID: <ZeWTzJK8rX35tRnJ@fjasle.eu>
+References: <20240303040035.3450914-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240303040035.3450914-1-masahiroy@kernel.org>
+X-Smtpcorp-Track: 1rh4ak4bdKRo2S.5leN9HMjaWrVc
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286syjhgZ2FMH
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/firmware/microchip/mpfs-auto-update.c:387:72-78:
-   ERROR: application of sizeof to pointer
-   drivers/firmware/microchip/mpfs-auto-update.c:170:72-78:
-   ERROR: application of sizeof to pointer
+On Sun, Mar 03, 2024 at 01:00:33PM +0900 Masahiro Yamada wrote:
+> Currently, there is no direct link from (struct symbol *) to
+> (struct menu *).
+> 
+> It is still possible to access associated menus through the P_SYMBOL
+> property, because property::menu is the relevant menu entry, but it
+> results in complex code, as seen in get_symbol_str().
+> 
+> Use a linked list for simpler traversal of relevant menus.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  scripts/kconfig/expr.h   | 5 +++++
+>  scripts/kconfig/menu.c   | 4 +++-
+>  scripts/kconfig/symbol.c | 4 ++++
+>  3 files changed, 12 insertions(+), 1 deletion(-)
 
-response_msg is a pointer to u32, so the size of element it points to is
-supposed to be a multiple of sizeof(u32), rather than sizeof(u32 *).
+Thanks, the whole series looks good to me.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202403040516.CYxoWTXw-lkp@intel.com/
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- drivers/firmware/microchip/mpfs-auto-update.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/microchip/mpfs-auto-update.c b/drivers/firmware/microchip/mpfs-auto-update.c
-index 682e417be5a3..7ea3cdb917bc 100644
---- a/drivers/firmware/microchip/mpfs-auto-update.c
-+++ b/drivers/firmware/microchip/mpfs-auto-update.c
-@@ -384,7 +384,7 @@ static int mpfs_auto_update_available(struct mpfs_auto_update_priv *priv)
- 	u32 *response_msg;
- 	int ret;
- 
--	response_msg = devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(response_msg),
-+	response_msg = devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(u32),
- 				    GFP_KERNEL);
- 	if (!response_msg)
- 		return -ENOMEM;
--- 
-2.27.0
-
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
