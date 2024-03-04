@@ -1,123 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F133BB51
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1F11DA5B;
+	Mon,  4 Mar 2024 08:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709541851; cv=none; b=KWVtnl/gOKP32LwctuQuAgCyPJh/Il2jJm6+mM+0GRhlKihvZnGUGV2VuHQcw3jaQaeUCtbIaqMAIiykzmfEIcVenw/SewHtSdDJev6sfqVYEcoI6B9sswD+sRnNldAfthYwnzInVTdzTL9rAaeinqkJWzQ6hxeMrbTWk0T68Oo=
+	t=1709541857; cv=none; b=Z/YOcVD7FlkLgfutSGPiyQaUfkf3BI5BkPihzBd/L/BELEmT0ASHDIjjDYbsKUX+qAxRMaMe+/sIcq3Gbs1/vMe8Q1ytbTbQdAqQZCShz4SoQgEdKhLrzCulX2jzgo/0x1NGbOYCm7EYqrsYhrHofOmVCOi0RuZ9+bSE5t+FQL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709541851; c=relaxed/simple;
-	bh=LtDaQEcUgwlyLQoeDa5Vdh8VqlUPSCUSWH4hyTU1oBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pKAHP9giqYJNfc/IB9t8QYzbbjVDa2/9GRAORu/JthPT4fbA9TxlPrI1iFmhcz6wwgBzC/tnACUkp0BwyGU8wCCpy8rMtYlWNynKnRDTVpHO9WouVnkImf4UXrhRG3FiIZ7PzGCoxCIfu1f8J6KtEcH2pn3t9rAo1KFL74jsRaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xc2KYp/2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709541857; c=relaxed/simple;
+	bh=m3btwuB1XUM+0/1Srhrmy8oBrwYrCSMk8C4cHIhZwpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8//Pn/8aHczXdhdITMkbuoWyNbn3fJiFBrsNln9Ub4R1wkPgydhVBH0yQidmnROAm7SV3Boq0tDsLbjsr9Azd9mpMBVZIqBeHbORynRXi8OeMH7brpc5hc5VC4qz4Qlipdoh8Zevnr0kPc1wopNIoRkYoWgohR5ARRV+jdM668=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXE51NYD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xc2KYp/2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709541848;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XkwsEs6LGiGvvVcBvR5BaMQvRZjXx8qXujYu/a9gwf0=;
-	b=Xc2KYp/2hi09IELHf7D8yiazpAY7Tvq3leRa3YI4lCnbKubmS4iVc1p5GtBwC51fZ1/j63
-	1vMmF6nP8FoAbt5Ym7fENiuzZB7gSS8jm0D2M/F9SjVksrtTEYRvSu7aAVOEdQRtBBFeVz
-	Uc6003vz1HmtI9ADtXAsNTRayyICRQs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-519-VbX4U4iEMUiNOzUOzeQuIQ-1; Mon, 04 Mar 2024 03:44:05 -0500
-X-MC-Unique: VbX4U4iEMUiNOzUOzeQuIQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B98E88489A7;
-	Mon,  4 Mar 2024 08:44:04 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C2F24492BC7;
-	Mon,  4 Mar 2024 08:44:02 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-afs@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 17/21] rxrpc: Differentiate PING ACK transmission traces.
-Date: Mon,  4 Mar 2024 08:43:14 +0000
-Message-ID: <20240304084322.705539-18-dhowells@redhat.com>
-In-Reply-To: <20240304084322.705539-1-dhowells@redhat.com>
-References: <20240304084322.705539-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXE51NYD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E0C3C43399;
+	Mon,  4 Mar 2024 08:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709541857;
+	bh=m3btwuB1XUM+0/1Srhrmy8oBrwYrCSMk8C4cHIhZwpI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GXE51NYDqpQ6Rpt9NCI+I0KTgTxx8Ob9USgAHcXYvtmVdkGqv9AJOiPikODi/j8+J
+	 7JMubxXRMWEnVhoLTktK0+ZSoBnHvSbaG7TShTXMSmNd9wdyeXvcVBKx5E859ICTT4
+	 HBoz1rjslk7YRW72BGTovEg/P++8uW9LfQTYy3vhl5wn0yn/ioLGvJ/fW707WhVa78
+	 m216Hm24/eDT/aA9PiVuIvA2ukGsRri5g7nghmfQOMZv6wHhIPtASbOLZCoWVsjGHV
+	 N/uK6O2Dkz6XaukXb+Ik9dnu49PD3loVvBZsOhM/NIJ7CUuAonay1v5ra93D6LBqYR
+	 PKHtKW3BB9x3g==
+Date: Mon, 4 Mar 2024 09:44:09 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Frank Li <Frank.Li@nxp.com>, bhelgaas@google.com, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, festevam@gmail.com,
+	hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de,
+	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
+	kw@linux.com, l.stach@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	s.hauer@pengutronix.de, shawnguo@kernel.org,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH v10 03/14] PCI: imx6: Simplify reset handling by using by
+ using *_FLAG_HAS_*_RESET
+Message-ID: <ZeWJ2Z5kKoqbeWYn@lpieralisi>
+References: <20240205173335.1120469-4-Frank.Li@nxp.com>
+ <20240301190931.GA403500@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240301190931.GA403500@bhelgaas>
 
-There are three points that transmit PING ACKs and all of them use the same
-trace string.  Change two of them to use different strings.
+On Fri, Mar 01, 2024 at 01:09:31PM -0600, Bjorn Helgaas wrote:
+> [+cc Nathan]
+> 
+> On Mon, Feb 05, 2024 at 12:33:24PM -0500, Frank Li wrote:
+> > Refactors the reset handling logic in the imx6 PCI driver by adding
+> > IMX6_PCIE_FLAG_HAS_*_RESET bitmask define for drvdata::flags.
+> > 
+> > The drvdata::flags and a bitmask ensures a cleaner and more scalable
+> > switch-case structure for handling reset.
+> > 
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> 
+> Lorenzo, would you mind squashing in Nathan's fix from
+> https://lore.kernel.org/r/20240301-pci-imx6-fix-clang-implicit-fallthrough-v1-1-db78c7cbb384@kernel.org?
+> 
+> Also, the subject line has a repeated "by using by using".
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: linux-afs@lists.infradead.org
-cc: netdev@vger.kernel.org
----
- include/trace/events/rxrpc.h | 2 ++
- net/rxrpc/call_event.c       | 4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+I will fix it up.
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index c730cd732348..3b726a6c8c42 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -364,11 +364,13 @@
- 
- #define rxrpc_propose_ack_traces \
- 	EM(rxrpc_propose_ack_client_tx_end,	"ClTxEnd") \
-+	EM(rxrpc_propose_ack_delayed_ack,	"DlydAck") \
- 	EM(rxrpc_propose_ack_input_data,	"DataIn ") \
- 	EM(rxrpc_propose_ack_input_data_hole,	"DataInH") \
- 	EM(rxrpc_propose_ack_ping_for_keepalive, "KeepAlv") \
- 	EM(rxrpc_propose_ack_ping_for_lost_ack,	"LostAck") \
- 	EM(rxrpc_propose_ack_ping_for_lost_reply, "LostRpl") \
-+	EM(rxrpc_propose_ack_ping_for_0_retrans, "0-Retrn") \
- 	EM(rxrpc_propose_ack_ping_for_old_rtt,	"OldRtt ") \
- 	EM(rxrpc_propose_ack_ping_for_params,	"Params ") \
- 	EM(rxrpc_propose_ack_ping_for_rtt,	"Rtt    ") \
-diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
-index ef28ebf37c7d..bc1a5abb7d6f 100644
---- a/net/rxrpc/call_event.c
-+++ b/net/rxrpc/call_event.c
-@@ -197,7 +197,7 @@ void rxrpc_resend(struct rxrpc_call *call, struct sk_buff *ack_skb)
- 		if (ktime_to_us(ack_ts) < (call->peer->srtt_us >> 3))
- 			goto out;
- 		rxrpc_send_ACK(call, RXRPC_ACK_PING, 0,
--			       rxrpc_propose_ack_ping_for_lost_ack);
-+			       rxrpc_propose_ack_ping_for_0_retrans);
- 		goto out;
- 	}
- 
-@@ -387,7 +387,7 @@ bool rxrpc_input_call_event(struct rxrpc_call *call, struct sk_buff *skb)
- 		trace_rxrpc_timer(call, rxrpc_timer_exp_ack, now);
- 		call->delay_ack_at = now + MAX_JIFFY_OFFSET;
- 		rxrpc_send_ACK(call, RXRPC_ACK_DELAY, 0,
--			       rxrpc_propose_ack_ping_for_lost_ack);
-+			       rxrpc_propose_ack_delayed_ack);
- 	}
- 
- 	t = call->ack_lost_at;
-
+Thanks,
+Lorenzo
