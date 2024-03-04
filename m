@@ -1,231 +1,230 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AD7224D6
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5056320B33;
+	Mon,  4 Mar 2024 09:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709545928; cv=none; b=a2dTgkekPjYa9VrlkCDos4Bb0CaCLpgWr9/dWpaPhAJ4VbAAsriBvFNBL7wu3+YdDt5Ln6WN5gcoGuolRp5V0Qkw/vjyCWqtgHvomQ+K8LnQLK9Pgf5t6PejCZJ6ZSfwaVM4GBfbzUWetWSpciEUe7+/nI5AsxXRqr5lpuu1V+Q=
+	t=1709545999; cv=none; b=Veh+nAxKX29WhabGhwnN2bI7jorrmsvD5zMqg8ZFyTaOV/Ppni0qGP/v5qbCTEA4A2cjLlwxVPl05NNQzkvhxbH1/zmfJkpLoi9LuVqUIYEDVEESZabYjtkcxSl3C5a8fjViY9MOHm4ekBVjHvy6XJ1E1ik+FGxSqiRFGuew8FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709545928; c=relaxed/simple;
-	bh=7zhw6Zih7M1ulHr1+pXMmEbdpTGGIap6zKSkMv/zTyM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nwYusuhgzeCSa0E8GwfpBrNOelyy9XtU+Eqvj7inYgHohwF7gqf0hc3gVcDAyQfI2cvbJFzGshPH1Pl7/fdYZidEOdQKBDyTE9rNP/DZrK+m2PjSgWfHfKRY91lpQjB8J3XaB975shXQKfXxwl02nAopGYkVLjpOTBsUOTPl48g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LLItQcx8; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709545999; c=relaxed/simple;
+	bh=SwJYBVWCQc/s1GHsKd1+fyA8kLw1X4cfpZ2y4tcEMwU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tbbUh+tgxuPtGI98cFqIZoO8Ea01don3dz3bK5VJf+CiKHbAqkyCmBC4rIiYPmZb05ZSSxpI7UHIFlrMtJnBvtmQTfp1MSs6C73edtH157s5atc+RrdN5OPbHFtGclnso2MaK3oBe8h9Z6CGbCvOegUaLMcG5PqlZj+juMPzlr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8gYRhje; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LLItQcx8"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7c810b04bc0so177958939f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:52:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8gYRhje"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-564fc495d83so5151693a12.0;
+        Mon, 04 Mar 2024 01:53:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709545925; x=1710150725; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hx8/Hsvcr26lKZm0DtuzO5aNbidCutGEeUVS79P8xjM=;
-        b=LLItQcx80TApUtMo+lCUiyAngyGtWvdbmmNVOFE41Pz7dfDK7gR8RUp/+Nt+Htaslp
-         fn1zmtNVgVNENKBx/YHCb+VbkYSCdhPrH7ZA+ho/W9Ep/a2c+Ti4h2G6btC+eHEZkArO
-         axpCuYZW+8/HS9PBZvgPnkmaLsXXuF8zyqIZg=
+        d=gmail.com; s=20230601; t=1709545995; x=1710150795; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tT70S1p+PH9hL091yd8+31qBGcRCEfw7ATgxMs9BG/I=;
+        b=L8gYRhjehDkUIppEFDQuTLuaCmKg144SUmBFGd6oGyUHdNsZqda1HExI74a0StVg7D
+         JwVmNtImPYnR/toaj7ijkw8rYAzBGJoIeqtGe167mT3WamdJCj9/bZAtVFD7qnsgnw2s
+         c5bMgPITFUYxUaJiGVoh5iatpKjY/8zv5tzlvZNQd4V+kf9U1vzq17/AI+S11O7Xz/cE
+         NpAUfJINez0PHpkG8cTJ9QOGRu+1dWogRaEBuXWNbDG4v8pM8keUx97WpMr92PPPaFZ8
+         6FY/Ve5g3Ig/DgmjuRtYS1hPLfJ2G94h9KH9Iga5L2GtRFgDq0+VqlIhxyKnyrkNf9TW
+         d04A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709545925; x=1710150725;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hx8/Hsvcr26lKZm0DtuzO5aNbidCutGEeUVS79P8xjM=;
-        b=iUS5OCetM6JFH6PXaCOfSfMbwkI0GTkxq7FKzWHrX7ftA2kjJEF+DKq+E66upVh6Y1
-         kdeMy8soihW6YG7q7fjnmu1o7vhHJOcnMxlbPo8zHtTFWjBNYGq4fyjjoauHs9XW3cGX
-         T2eYVU9nrBiJ0dNj/2qQ3qVefowfyxh69Y5HKhW+JJHNKm/0ij8Qn8Rpdq7iNqUnmTea
-         uLJKYsHgAMOw+W2YRJ35XMu0GppVcXcyeb8h2UDXgegJHyqSS58aB1pVfRxfPS8PFOxj
-         BmdnHtLRQwvP+aIsW2uDKZNITpF9l4CUYOW5A6bq9YiEY9I/Q9PDT3E2Jr/YjVgsKNCI
-         +P5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWtUzlKLPV+Tgwl4/qLrJHemiRVlgE5trkRGpqQdbGSyVrmB+RDx41dn5LCLSmAN7mb0EYji+HBgzW9s1ChlUtmbfm8Q+KWwoqK0+K2
-X-Gm-Message-State: AOJu0YwEYMIjwl/jYnInpF97P2BnFU3F1UkrnS0MUbhuC1TYgNFtU33d
-	j9JUrdYUABmRR89fw6MQhzMset3snWp/Jaca4u29fu3IfrI1hqpa2hpl89o2BjlKJPMDdjc4/nH
-	hCA4lfSZH2lRvzqNvKRY4gg5y5xZTyWH+9oXL
-X-Google-Smtp-Source: AGHT+IH/NAnRd0+yII2gWLY3BpVKXn2PCZi/S1811itOlN+9KIoSfK3mWzqkvq+toKSfLZpuAryNZA+TrKh7tLuCAvo=
-X-Received: by 2002:a92:c569:0:b0:365:c6ae:c40e with SMTP id
- b9-20020a92c569000000b00365c6aec40emr10789756ilj.0.1709545925353; Mon, 04 Mar
- 2024 01:52:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709545995; x=1710150795;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tT70S1p+PH9hL091yd8+31qBGcRCEfw7ATgxMs9BG/I=;
+        b=wKWpjhWGUUiVBsNFsbV5OYBxy6rkUVrQv/0agx791uQlvu8xMO52WCK1AwKJrpiSKq
+         fpGjPp2buVXL7eiD9jh20QfrvNC+4P5k68Vc3MKXGaGycRFuY+mL3X3z9Qscx5jPKjnO
+         /0hSj7OhdMDWUzXH52CGNOubCO4q/tvoEW/21jS2h2f670lCiI9P4SZWX3qoahaHGcO4
+         8saT//C97Q2ZALCS5KCdzX6kRbmnBkYxNWoaijC55700A4NA5xkB50WK3FiYd9HY4GHg
+         +ZXmVdbuMQVEK+ECintn4zQqrO0blsMZOYgd2/Ele4UNJhvilGz22TtpVAGO9II3PUY6
+         H76g==
+X-Gm-Message-State: AOJu0YwjnNva919Mka2SNkj7s3fA+rbJbe8adyg9QEUplmMvOXma+rgM
+	UWFZuEeILQDPdBj8Hs8NwL4rRSPAUfnDFMCjfyc7o6eyc9rcFjwDzgB3DgY7AEOo8ieqYWuqne8
+	pG7y6BLpsnR768XJoL7Gpep7bqagApDHu0JwTdBGCe20=
+X-Google-Smtp-Source: AGHT+IHD3r2nRqBLuByj4KH/VSRGl6yyQ483mWi6KKegjcjJKJVO94ku8hbcUcBPwQslZHXDAYmHxAumL5G4+oGEg5Q=
+X-Received: by 2002:a17:907:20b9:b0:a43:e550:4067 with SMTP id
+ pw25-20020a17090720b900b00a43e5504067mr4995407ejb.12.1709545995101; Mon, 04
+ Mar 2024 01:53:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304031945.250763-1-kuro.chung@ite.com.tw> <20240304031945.250763-2-kuro.chung@ite.com.tw>
-In-Reply-To: <20240304031945.250763-2-kuro.chung@ite.com.tw>
-From: Pin-yen Lin <treapking@chromium.org>
-Date: Mon, 4 Mar 2024 17:51:54 +0800
-Message-ID: <CAEXTbpc6084rcmhFABw51SibU7FVyTWo=teQsETq5vCujGKWng@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] UPSTREAM: drm/bridge: it6505: fix hibernate to
- resume no display issue
-To: kuro <kuro.chung@ite.com.tw>
-Cc: Kenneth Haung <kenneth.hung@ite.com.tw>, Andrzej Hajda <a.hajda@samsung.com>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
-	open list <linux-kernel@vger.kernel.org>
+From: Sam Sun <samsun1006219@gmail.com>
+Date: Mon, 4 Mar 2024 17:53:03 +0800
+Message-ID: <CAEkJfYP5T4Xv7vn7GZnQ7ig6_QZB8B_g-DS9dk7xhxRntYNY7g@mail.gmail.com>
+Subject: [PATCH net] drivers/net/bonding: Fix out-of-bounds read in bond_option_arp_ip_targets_set()
+To: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org, j.vosburgh@gmail.com, andy@greyhouse.net, 
+	davem@davemloft.net, Eric Dumazet <edumazet@google.com>, kuba@kernel.org, 
+	pabeni@redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Kuro,
+Dear kernel developers and maintainers,
 
-On Mon, Mar 4, 2024 at 11:08=E2=80=AFAM kuro <kuro.chung@ite.com.tw> wrote:
->
-> From: kuro chung <kuro.chung@ite.com.tw>
->
-> ITE added a FIFO reset bit for input video. When system power resume,
-> the TTL input of it6505 may get some noise before video signal stable
-> and the hardware function reset is required.
-> But the input FIFO reset will also trigger error interrupts of output mod=
-ule rising.
-> Thus, it6505 have to wait a period can clear those expected error interru=
-pts
-> caused by manual hardware reset in one interrupt handler calling to avoid=
- interrupt looping.
->
-> Signed-off-by: Allen Chen <allen.chen@ite.corp-partner.google.com>
-> (cherry picked from commit Iaa3cd9da92a625496f579d87d0ab74ca9c4937c4)
->
-> BUG=3DNone
-> TEST=3DNone
->
-> Change-Id: Iaa3cd9da92a625496f579d87d0ab74ca9c4937c4
+We found a bug through our modified Syzkaller. In function
+bond_option_arp_ip_targets_set(), if newval->string is an empty
+string, newval->string+1 will point to the byte after the string,
+causing an out-of-bound read.  KASAN report is listed below.
 
-Again, please remove the gerrit-specific lines like "BUG=3D",
-"Change-Id", and the "cherry picked from commit ...".
-> ---
->  drivers/gpu/drm/bridge/ite-it6505.c | 54 ++++++++++++++++++++++++-----
->  1 file changed, 45 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge=
-/ite-it6505.c
-> index b53da9bb65a16..e592e14a48578 100644
-> --- a/drivers/gpu/drm/bridge/ite-it6505.c
-> +++ b/drivers/gpu/drm/bridge/ite-it6505.c
-> @@ -1318,6 +1318,8 @@ static void it6505_video_reset(struct it6505 *it650=
-5)
->         it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_VID_MUTE, EN_VID_M=
-UTE);
->         it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_VID_CTRL_PKT, 0x00=
-);
->         it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET)=
-;
-> +       it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x02);
-> +       it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x00);
->         it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, RST_501_=
-FIFO);
->         it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, 0x00);
->         it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, 0x00);
-> @@ -2480,10 +2482,6 @@ static void it6505_irq_video_fifo_error(struct it6=
-505 *it6505)
->         struct device *dev =3D &it6505->client->dev;
->
->         DRM_DEV_DEBUG_DRIVER(dev, "video fifo overflow interrupt");
-> -       it6505->auto_train_retry =3D AUTO_TRAIN_RETRY;
-> -       flush_work(&it6505->link_works);
-> -       it6505_stop_hdcp(it6505);
-> -       it6505_video_reset(it6505);
->  }
->
->  static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
-> @@ -2491,10 +2489,6 @@ static void it6505_irq_io_latch_fifo_overflow(stru=
-ct it6505 *it6505)
->         struct device *dev =3D &it6505->client->dev;
->
->         DRM_DEV_DEBUG_DRIVER(dev, "IO latch fifo overflow interrupt");
-> -       it6505->auto_train_retry =3D AUTO_TRAIN_RETRY;
-> -       flush_work(&it6505->link_works);
-> -       it6505_stop_hdcp(it6505);
-> -       it6505_video_reset(it6505);
->  }
->
->  static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
-> @@ -2502,6 +2496,46 @@ static bool it6505_test_bit(unsigned int bit, cons=
-t unsigned int *addr)
->         return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
->  }
->
-> +static bool it6505_is_video_error_int(const int *int_status)
-> +{
-> +       if ((it6505_test_bit(BIT_INT_VID_FIFO_ERROR, (unsigned int *)int_=
-status)) || (it6505_test_bit(BIT_INT_IO_FIFO_OVERFLOW, (unsigned int *)int_=
-status)))
-> +               return 1;
-> +       return 0;
-> +}
-> +
-> +static void it6505_irq_video_error_handler(struct it6505 *it6505)
-> +{
-> +       struct device *dev =3D &it6505->client->dev;
-> +       int int_status[3] =3D {0};
-> +       int reg_0d;
-> +       int i;
-> +
-> +       it6505->auto_train_retry =3D AUTO_TRAIN_RETRY;
-> +       flush_work(&it6505->link_works);
-> +       it6505_stop_hdcp(it6505);
-> +       it6505_video_reset(it6505);
-> +
-> +       DRM_DEV_DEBUG_DRIVER(dev, "Video Error reset wait video...");
-> +
-> +       for (i =3D 0; i < 10; i++) {
-> +               usleep_range(10000, 11000);
-> +               int_status[2] =3D it6505_read(it6505, INT_STATUS_03);
-> +               reg_0d =3D it6505_read(it6505, REG_SYSTEM_STS);
-> +               it6505_write(it6505, INT_STATUS_03, int_status[2]);
-> +
-> +               DRM_DEV_DEBUG_DRIVER(dev, "reg08 =3D 0x%02x", int_status[=
-2]);
-> +               DRM_DEV_DEBUG_DRIVER(dev, "reg0D =3D 0x%02x", reg_0d);
-> +
-> +               if ((reg_0d & VIDEO_STB) && (reg_0d >=3D 0))
-> +                       break;
-> +
-> +               if (it6505_is_video_error_int(int_status)) {
-> +                       it6505_video_reset(it6505);
-> +                       DRM_DEV_DEBUG_DRIVER(dev, "Video Error reset wait=
- video (%d)", i);
-> +               }
-> +       }
-> +}
-> +
->  static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
->  {
->         struct it6505 *it6505 =3D data;
-> @@ -2522,7 +2556,7 @@ static irqreturn_t it6505_int_threaded_handler(int =
-unused, void *data)
->                 { BIT_INT_VID_FIFO_ERROR, it6505_irq_video_fifo_error },
->                 { BIT_INT_IO_FIFO_OVERFLOW, it6505_irq_io_latch_fifo_over=
-flow },
->         };
-> -       int int_status[3], i;
-> +       int int_status[3], i, reg_0d;
->
->         if (it6505->enable_drv_hold || !it6505->powered)
->                 return IRQ_HANDLED;
-> @@ -2550,6 +2584,8 @@ static irqreturn_t it6505_int_threaded_handler(int =
-unused, void *data)
->                         if (it6505_test_bit(irq_vec[i].bit, (unsigned int=
- *)int_status))
->                                 irq_vec[i].handler(it6505);
->                 }
-> +               if (it6505_is_video_error_int(int_status))
-> +                       it6505_irq_video_error_handler(it6505);
->         }
->
->         pm_runtime_put_sync(dev);
-> --
-> 2.25.1
->
+==================================================================
+BUG: KASAN: slab-out-of-bounds in strlen+0x7d/0xa0 lib/string.c:418
+Read of size 1 at addr ffff8881119c4781 by task syz-executor665/8107
 
-Did you check my comments in v1? Please reply if you don't agree with
-those comments.
+CPU: 1 PID: 8107 Comm: syz-executor665 Not tainted 6.7.0-rc7 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:364 [inline]
+ print_report+0xc1/0x5e0 mm/kasan/report.c:475
+ kasan_report+0xbe/0xf0 mm/kasan/report.c:588
+ strlen+0x7d/0xa0 lib/string.c:418
+ __fortify_strlen include/linux/fortify-string.h:210 [inline]
+ in4_pton+0xa3/0x3f0 net/core/utils.c:130
+ bond_option_arp_ip_targets_set+0xc2/0x910
+drivers/net/bonding/bond_options.c:1201
+ __bond_opt_set+0x2a4/0x1030 drivers/net/bonding/bond_options.c:767
+ __bond_opt_set_notify+0x48/0x150 drivers/net/bonding/bond_options.c:792
+ bond_opt_tryset_rtnl+0xda/0x160 drivers/net/bonding/bond_options.c:817
+ bonding_sysfs_store_option+0xa1/0x120 drivers/net/bonding/bond_sysfs.c:156
+ dev_attr_store+0x54/0x80 drivers/base/core.c:2366
+ sysfs_kf_write+0x114/0x170 fs/sysfs/file.c:136
+ kernfs_fop_write_iter+0x337/0x500 fs/kernfs/file.c:334
+ call_write_iter include/linux/fs.h:2020 [inline]
+ new_sync_write fs/read_write.c:491 [inline]
+ vfs_write+0x96a/0xd80 fs/read_write.c:584
+ ksys_write+0x122/0x250 fs/read_write.c:637
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+RIP: 0033:0x7f797835cfcd
+Code: 28 c3 e8 46 1e 00 00 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
+01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffff464ffb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007ffff46501b8 RCX: 00007f797835cfcd
+RDX: 00000000000000f5 RSI: 0000000020000140 RDI: 0000000000000003
+RBP: 0000000000000001 R08: 0000000000000000 R09: 00007ffff46501b8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffff46501a8 R14: 00007f79783da530 R15: 0000000000000001
+ </TASK>
 
-By the way, some mails are bounced back because of the address
-changes. Please refer to the MAINTINERS file on the latest kernel (not
-ChromeOS v5.15 downstream branch) for the contacts.
+Allocated by task 8107:
+ kasan_save_stack+0x22/0x40 mm/kasan/common.c:45
+ kasan_set_track+0x25/0x30 mm/kasan/common.c:52
+ ____kasan_kmalloc mm/kasan/common.c:374 [inline]
+ ____kasan_kmalloc mm/kasan/common.c:333 [inline]
+ __kasan_kmalloc+0xa3/0xb0 mm/kasan/common.c:383
+ kasan_kmalloc include/linux/kasan.h:198 [inline]
+ __do_kmalloc_node mm/slab_common.c:1007 [inline]
+ __kmalloc_node_track_caller+0x5e/0xd0 mm/slab_common.c:1027
+ kstrndup+0x72/0x110 mm/util.c:108
+ bonding_sysfs_store_option+0x66/0x120 drivers/net/bonding/bond_sysfs.c:153
+ dev_attr_store+0x54/0x80 drivers/base/core.c:2366
+ sysfs_kf_write+0x114/0x170 fs/sysfs/file.c:136
+ kernfs_fop_write_iter+0x337/0x500 fs/kernfs/file.c:334
+ call_write_iter include/linux/fs.h:2020 [inline]
+ new_sync_write fs/read_write.c:491 [inline]
+ vfs_write+0x96a/0xd80 fs/read_write.c:584
+ ksys_write+0x122/0x250 fs/read_write.c:637
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-Regards,
-Pin-yen
+The buggy address belongs to the object at ffff8881119c4780
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes to the right of
+ allocated 1-byte region [ffff8881119c4780, ffff8881119c4781)
+
+The buggy address belongs to the physical page:
+page:ffffea0004467100 refcount:1 mapcount:0 mapping:0000000000000000
+index:0xffff8881119c4fc1 pfn:0x1119c4
+flags: 0x57ff00000000800(slab|node=1|zone=2|lastcpupid=0x7ff)
+page_type: 0x3f()
+raw: 057ff00000000800 ffff888013040100 ffffea000405a650 ffffea0004156b90
+raw: ffff8881119c4fc1 ffff8881119c4000 000000010000003f 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask
+0x2420c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_COMP|__GFP_THISNODE),
+pid 25, tgid 25 (kworker/u6:0), ts 73787966798, free_ts 73774684635
+ set_page_owner include/linux/page_owner.h:31 [inline]
+ post_alloc_hook+0x2d9/0x350 mm/page_alloc.c:1537
+ prep_new_page mm/page_alloc.c:1544 [inline]
+ get_page_from_freelist+0xd38/0x2fa0 mm/page_alloc.c:3312
+ __alloc_pages+0x21d/0x21f0 mm/page_alloc.c:4568
+ __alloc_pages_node include/linux/gfp.h:238 [inline]
+ kmem_getpages mm/slab.c:1356 [inline]
+ cache_grow_begin+0x9b/0x3c0 mm/slab.c:2550
+ cache_alloc_refill+0x289/0x3a0 mm/slab.c:2923
+ ____cache_alloc mm/slab.c:2999 [inline]
+ ____cache_alloc mm/slab.c:2982 [inline]
+ __do_cache_alloc mm/slab.c:3185 [inline]
+ slab_alloc_node mm/slab.c:3230 [inline]
+ __kmem_cache_alloc_node+0x374/0x420 mm/slab.c:3521
+ __do_kmalloc_node mm/slab_common.c:1006 [inline]
+ __kmalloc_node+0x50/0xd0 mm/slab_common.c:1014
+ kmalloc_array_node include/linux/slab.h:698 [inline]
+ kcalloc_node include/linux/slab.h:703 [inline]
+ memcg_alloc_slab_cgroups+0x10e/0x210 mm/memcontrol.c:2968
+ account_slab mm/slab.h:637 [inline]
+ kmem_getpages mm/slab.c:1364 [inline]
+ cache_grow_begin+0x349/0x3c0 mm/slab.c:2550
+ cache_alloc_refill+0x289/0x3a0 mm/slab.c:2923
+ ____cache_alloc mm/slab.c:2999 [inline]
+ ____cache_alloc mm/slab.c:2982 [inline]
+ __do_cache_alloc mm/slab.c:3182 [inline]
+ slab_alloc_node mm/slab.c:3230 [inline]
+ kmem_cache_alloc_node+0x3e1/0x4a0 mm/slab.c:3509
+ alloc_task_struct_node kernel/fork.c:173 [inline]
+ dup_task_struct kernel/fork.c:1110 [inline]
+ copy_process+0x3f6/0x73e0 kernel/fork.c:2332
+ kernel_clone+0xeb/0x8c0 kernel/fork.c:2907
+ user_mode_thread+0xb4/0xf0 kernel/fork.c:2985
+ call_usermodehelper_exec_work kernel/umh.c:172 [inline]
+ call_usermodehelper_exec_work+0xd0/0x180 kernel/umh.c:158
+ process_one_work+0x878/0x15c0 kernel/workqueue.c:2627
+page last free stack trace:
+ reset_page_owner include/linux/page_owner.h:24 [inline]
+ free_pages_prepare mm/page_alloc.c:1137 [inline]
+ free_unref_page_prepare+0x4c5/0xa60 mm/page_alloc.c:2347
+ free_unref_page+0x33/0x3d0 mm/page_alloc.c:2487
+ rcu_do_batch kernel/rcu/tree.c:2158 [inline]
+ rcu_core+0x817/0x1670 kernel/rcu/tree.c:2431
+ __do_softirq+0x1d4/0x85e kernel/softirq.c:553
+
+Memory state around the buggy address:
+ ffff8881119c4680: fa fb fb fb fc fc fc fc 00 01 fc fc fc fc fc fc
+ ffff8881119c4700: 00 05 fc fc fc fc fc fc 00 00 00 fc fc fc fc fc
+>ffff8881119c4780: 01 fc fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+                   ^
+ ffff8881119c4800: 00 01 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff8881119c4880: 00 fc fc fc fc fc fc fc 00 01 fc fc fc fc fc fc
+==================================================================
+
+We developed a patch to fix this problem. Check the string length
+first before calling in4_pton().
+
+Reported-by: Yue Sun <samsun1006219@gmail.com>
+Signed-off-by: Yue Sun <samsun1006219@gmail.com>
+
+diff --git a/drivers/net/bonding/bond_options.c
+b/drivers/net/bonding/bond_options.c
+index f3f27f0bd2a6..a6d01055f455 100644
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1198,7 +1198,7 @@ static int bond_option_arp_ip_targets_set(struct
+bonding *bond,
+     __be32 target;
+
+     if (newval->string) {
+-        if (!in4_pton(newval->string+1, -1, (u8 *)&target, -1, NULL)) {
++        if (!strlen(newval->string) || !in4_pton(newval->string+1,
+-1, (u8 *)&target, -1, NULL)) {
+             netdev_err(bond->dev, "invalid ARP target %pI4 specified\n",
+                    &target);
+             return ret;
