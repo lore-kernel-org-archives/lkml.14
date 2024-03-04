@@ -1,33 +1,35 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41CC47A55;
-	Mon,  4 Mar 2024 15:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7325F47772;
+	Mon,  4 Mar 2024 15:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709565019; cv=none; b=a4cqwawVM8gNAM5bH+bAa4Xu2b0d6RsFHO2coHZp5ESaQYzBNHoA4fo9ILg1tayzBc3XAjACPp2qSYMRnvrUROYngrRRt6YaGcl1+TrleI95CNLYYAo6aLQv5U3UED45yjOPLoE5Bc/fRy3tdAz0NwLd2/VdMM9aFekqlksfm0w=
+	t=1709565021; cv=none; b=EvIZklK4N3PJZEKAbViwoCFSlh7nVFmsArkxkt4YF59R+gRYnOtc4ogvxyf+LuuaBqbbtbwnDFPSTyslaHuGyc7dotDLhQNDVbDPf1AhUklRX/QUkjgaKQJp+LJNO+PpDkxleqBU+J9JnuSjNXGD5Tsn2ynlbKpJ/fKFLeENwMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709565019; c=relaxed/simple;
-	bh=3zs1diFi1eJwEzuhCh0qwqp31NaJFh6GXURjDFkZ5cU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rwKzai5fCCu4+bO9k/npcol/Ng2ilUNkhJ9qlEiIDwGgieqhJ18fvq8cOPOc6XFiEQRilQjDMi+qVLoO2NBzNdKhmkkHt26xSMAVh9e4B7+1xPdSB5GYP8+kgeEFr8G9myz8QLIoWoA6ZFJ3Pa+iSOYrN52s6b73+CoQvtzF2QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IwLqK2H6; arc=none smtp.client-ip=217.70.183.201
+	s=arc-20240116; t=1709565021; c=relaxed/simple;
+	bh=pW+1V7YqOhkcLioMl2DX0tOkmXUQtbPF3XcSxdIf7OE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RZy4abN0/KZIu/LWvWwlE15EqXAMiA/BojWlBqLmFjPO8af/rqv2z+BVmCdhzctygoCt2CdKFSGwK1e1E2rnYOZebvoeg3GkScPZn42plsBwEkxRyM4wAluk3epCEfrzo5GluP2uByi/pv6WmgkiJDdvzgB6g6G0zyK3cUEj/Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jOWFc6YT; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IwLqK2H6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A99091BF208;
-	Mon,  4 Mar 2024 15:10:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jOWFc6YT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4405B1BF20B;
+	Mon,  4 Mar 2024 15:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709565014;
+	t=1709565017;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WsNgSOpjtWQmZZv60CAcLfQL2I5mUrvH2ZyGtdiLJDE=;
-	b=IwLqK2H6OCUjPetuhgBl4kiXhtLtwaFH0MZZC8KnwnVMiZvNeOmIw7qjDOfHkjElyVNI4g
-	LNbYBTQ/WHT/tv/gzJz88iACfWdTYkiFz7SOcx7E+BicV4x5JFwJUsRj6WRAp8qGzG8Hh/
-	prtRb6XlSMghWOOQRwz9W6BLmjSTprnxbfLhlz641+l2stYhfPEV3zlWTGV3tGyYzCMtYE
-	Tpw41HLB4YhRItwZcB9xi1AxMG/wzasM6f5lEl6vPccRgn38xjWfakaZHHy3bUpb2Z25Q9
-	yFA1UJEFGxOm9vNozKsBO5keb1okJ19CYSEC1ZqV83CaY3xwIh8KmJRg5She9A==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OmCZ8+vUM5DG7x+TAmA4cTrV/kcQNelYUOaYHrZMngk=;
+	b=jOWFc6YTA+JqZ8uZMFTD1zxcWx2ZZf7jB1sEU+oTscYmKbqz2oFj3fFqQF4TtGOIrdja5Y
+	Ih949WqcLOaLh4y6ZrMU3x2dGW4pfFyOa/tLtYEH7w9PItt++G4sei7qmVDsjunOL7tqFb
+	yXrggYyFSHiMbLfGiDK7dPF87MJkqo4Nf16x09XaTC1aZhSpidzepVWkA00KblZMgRp6Ep
+	ZUjCwYp9EurDlbd6ZYv9twBz++Jh+g9HIjWf/KKF3L+t0o1SyWPtsyNEgWhjm6ZhLz1poa
+	n3AzhjQFrrlTtdbYfpkbl78+gjzsrAgv/LYMl6zKl9T0fVFPdPGG1Vkb6FK1Hg==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -54,10 +56,12 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
 	Simon Horman <horms@kernel.org>,
 	mwojtas@chromium.org
-Subject: [PATCH net-next v10 00/13] Introduce PHY listing and link_topology tracking
-Date: Mon,  4 Mar 2024 16:09:56 +0100
-Message-ID: <20240304151011.1610175-1-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v10 02/13] net: sfp: pass the phy_device when disconnecting an sfp module's PHY
+Date: Mon,  4 Mar 2024 16:09:58 +0100
+Message-ID: <20240304151011.1610175-3-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240304151011.1610175-1-maxime.chevallier@bootlin.com>
+References: <20240304151011.1610175-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,108 +71,75 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hello everyone,
+Pass the phy_device as a parameter to the sfp upstream .disconnect_phy
+operation. This is preparatory work to help track phy devices across
+a net_device's link.
 
-This is V10 for the link topology addition, allowing to track all PHYs
-that are linked to netdevices. V10 addresses a misnamed field in the
-ethtool spec, in patch 08/13.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+V10: No changes
+V9: No changes
+V8: No changes
+V7: No changes
+V6: Moved an incorrectly added hunk from the previous series to patch 0003
+V5: No changes
+V4: No changes
+V3: No changes
 
-As a remainder, here's what the PHY listings would look like :
- - eth0 has a 88x3310 acting as media converter, and an SFP module with
-   an embedded 88e1111 PHY
- - eth2 has a 88e1510 PHY
+ drivers/net/phy/phylink.c | 3 ++-
+ drivers/net/phy/sfp-bus.c | 4 ++--
+ include/linux/sfp.h       | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-# ethtool --show-phys *
-
-PHY for eth0:
-PHY index: 1
-Driver name: mv88x3310
-PHY device name: f212a600.mdio-mii:00
-Downstream SFP bus name: sfp-eth0
-PHY id: 0
-Upstream type: MAC
-
-PHY for eth0:
-PHY index: 2
-Driver name: Marvell 88E1111
-PHY device name: i2c:sfp-eth0:16
-PHY id: 21040322
-Upstream type: PHY
-Upstream PHY index: 1
-Upstream SFP name: sfp-eth0
-
-PHY for eth2:
-PHY index: 1
-Driver name: Marvell 88E1510
-PHY device name: f212a200.mdio-mii:00
-PHY id: 21040593
-Upstream type: MAC
-
-Ethtool patches : https://github.com/minimaxwell/ethtool/tree/link-topo-v6
-
-Link to V9: https://lore.kernel.org/netdev/20240228114728.51861-1-maxime.chevallier@bootlin.com/
-Link to V8: https://lore.kernel.org/netdev/20240220184217.3689988-1-maxime.chevallier@bootlin.com/
-Link to V7: https://lore.kernel.org/netdev/20240213150431.1796171-1-maxime.chevallier@bootlin.com/
-Link to V6: https://lore.kernel.org/netdev/20240126183851.2081418-1-maxime.chevallier@bootlin.com/
-Link to V5: https://lore.kernel.org/netdev/20231221180047.1924733-1-maxime.chevallier@bootlin.com/
-Link to V4: https://lore.kernel.org/netdev/20231215171237.1152563-1-maxime.chevallier@bootlin.com/
-Link to V3: https://lore.kernel.org/netdev/20231201163704.1306431-1-maxime.chevallier@bootlin.com/
-Link to V2: https://lore.kernel.org/netdev/20231117162323.626979-1-maxime.chevallier@bootlin.com/
-Link to V1: https://lore.kernel.org/netdev/20230907092407.647139-1-maxime.chevallier@bootlin.com/
-
-Maxime Chevallier (13):
-  net: phy: Introduce ethernet link topology representation
-  net: sfp: pass the phy_device when disconnecting an sfp module's PHY
-  net: phy: add helpers to handle sfp phy connect/disconnect
-  net: sfp: Add helper to return the SFP bus name
-  net: ethtool: Allow passing a phy index for some commands
-  netlink: specs: add phy-index as a header parameter
-  net: ethtool: Introduce a command to list PHYs on an interface
-  netlink: specs: add ethnl PHY_GET command set
-  net: ethtool: plca: Target the command to the requested PHY
-  net: ethtool: pse-pd: Target the command to the requested PHY
-  net: ethtool: cable-test: Target the command to the requested PHY
-  net: ethtool: strset: Allow querying phy stats by index
-  Documentation: networking: document phy_link_topology
-
- Documentation/netlink/specs/ethtool.yaml      |  62 ++++
- Documentation/networking/ethtool-netlink.rst  |  46 +++
- Documentation/networking/index.rst            |   1 +
- .../networking/phy-link-topology.rst          | 121 +++++++
- MAINTAINERS                                   |   2 +
- drivers/net/phy/Makefile                      |   2 +-
- drivers/net/phy/marvell-88x2222.c             |   2 +
- drivers/net/phy/marvell.c                     |   2 +
- drivers/net/phy/marvell10g.c                  |   2 +
- drivers/net/phy/phy_device.c                  |  55 ++++
- drivers/net/phy/phy_link_topology.c           | 105 +++++++
- drivers/net/phy/phylink.c                     |   3 +-
- drivers/net/phy/qcom/at803x.c                 |   2 +
- drivers/net/phy/qcom/qca807x.c                |   2 +
- drivers/net/phy/sfp-bus.c                     |  15 +-
- include/linux/netdevice.h                     |   4 +-
- include/linux/phy.h                           |   6 +
- include/linux/phy_link_topology.h             |  72 +++++
- include/linux/phy_link_topology_core.h        |  25 ++
- include/linux/sfp.h                           |   8 +-
- include/uapi/linux/ethtool.h                  |  16 +
- include/uapi/linux/ethtool_netlink.h          |  21 ++
- net/core/dev.c                                |   9 +
- net/ethtool/Makefile                          |   2 +-
- net/ethtool/cabletest.c                       |  16 +-
- net/ethtool/netlink.c                         |  53 +++-
- net/ethtool/netlink.h                         |  10 +
- net/ethtool/phy.c                             | 297 ++++++++++++++++++
- net/ethtool/plca.c                            |  19 +-
- net/ethtool/pse-pd.c                          |  13 +-
- net/ethtool/strset.c                          |  17 +-
- 31 files changed, 967 insertions(+), 43 deletions(-)
- create mode 100644 Documentation/networking/phy-link-topology.rst
- create mode 100644 drivers/net/phy/phy_link_topology.c
- create mode 100644 include/linux/phy_link_topology.h
- create mode 100644 include/linux/phy_link_topology_core.h
- create mode 100644 net/ethtool/phy.c
-
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 503fd7c40523..8a34883eb99b 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -3385,7 +3385,8 @@ static int phylink_sfp_connect_phy(void *upstream, struct phy_device *phy)
+ 	return ret;
+ }
+ 
+-static void phylink_sfp_disconnect_phy(void *upstream)
++static void phylink_sfp_disconnect_phy(void *upstream,
++				       struct phy_device *phydev)
+ {
+ 	phylink_disconnect_phy(upstream);
+ }
+diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
+index db39dec7f247..e05013aeecc3 100644
+--- a/drivers/net/phy/sfp-bus.c
++++ b/drivers/net/phy/sfp-bus.c
+@@ -486,7 +486,7 @@ static void sfp_unregister_bus(struct sfp_bus *bus)
+ 			bus->socket_ops->stop(bus->sfp);
+ 		bus->socket_ops->detach(bus->sfp);
+ 		if (bus->phydev && ops && ops->disconnect_phy)
+-			ops->disconnect_phy(bus->upstream);
++			ops->disconnect_phy(bus->upstream, bus->phydev);
+ 	}
+ 	bus->registered = false;
+ }
+@@ -742,7 +742,7 @@ void sfp_remove_phy(struct sfp_bus *bus)
+ 	const struct sfp_upstream_ops *ops = sfp_get_upstream_ops(bus);
+ 
+ 	if (ops && ops->disconnect_phy)
+-		ops->disconnect_phy(bus->upstream);
++		ops->disconnect_phy(bus->upstream, bus->phydev);
+ 	bus->phydev = NULL;
+ }
+ EXPORT_SYMBOL_GPL(sfp_remove_phy);
+diff --git a/include/linux/sfp.h b/include/linux/sfp.h
+index 9346cd44814d..0573e53b0c11 100644
+--- a/include/linux/sfp.h
++++ b/include/linux/sfp.h
+@@ -544,7 +544,7 @@ struct sfp_upstream_ops {
+ 	void (*link_down)(void *priv);
+ 	void (*link_up)(void *priv);
+ 	int (*connect_phy)(void *priv, struct phy_device *);
+-	void (*disconnect_phy)(void *priv);
++	void (*disconnect_phy)(void *priv, struct phy_device *);
+ };
+ 
+ #if IS_ENABLED(CONFIG_SFP)
 -- 
 2.44.0
 
