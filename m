@@ -1,167 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E589728FC
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 05:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8FF613A
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 05:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709529079; cv=none; b=LGHK0nnnBJmUE2frFYF64jwghkFEC8m7fgwEnd5L66ceDLyBZLv7+L8MZpgyxfzDsqByPt1Y0nw9vPJeabhuS7Bziqi1AhGScJXF2Blg2fqBW1nBFHMpYCwa8uAYUnDzsw7XTY6YUMnIV8sZ5/komMpZEoEtik4AESgjw2lMWp8=
+	t=1709529148; cv=none; b=YdKl/nt0notFeXmq2gs697dd5KNTaKDnnAzdY/xrcmRWIvkrZALdozvTI5ArAYSW1Go9NYjXJDw7sVkWztcnAgdQx75GYotjXFl7+fj/2xT+sfAcrOArDJMB2m+/VZdTGXaJoGuYA0bhqTIhRdMM2uNH3m0Ci3KHdnEEayrMqX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709529079; c=relaxed/simple;
-	bh=ZOYW8UTMBYJQ6axlQIR7e8zg+0bO/l0sGmvwj+Klrdg=;
+	s=arc-20240116; t=1709529148; c=relaxed/simple;
+	bh=RkZR6AQGNumxUNeiUTcE2zH9/MxQFnrzWkHwzZzIdoo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AmjnwKWgryelyOXNNWgTKKzAEvc1gkawEJF1YtNHZj+KjEL735YbX2kOqmFdVGoTyfpJDGg+2K9WkG27wjCnM5mxTTVYqnZ6jmayDpXsjsYNixNDdN8R444dPFt441eovRKp5oxQwDtr2+nhXc3falKFbaxRAGX88hMIJHzf/k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TliRnDVd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=eUWMpaD1YhuK/uasOzQf34V1w7Ugqs8zqiU6GnhYWyQi9OMHrNszOAjaq0NFUwJT96u8nZx/k/kjdM5A5iWJszIinS0XgNTX8/Gtj+qC/THdEWcApcSxqE3wHANO7yNKh2ARqEo/H1wUjgWR+l+Mlg830zhWSa6dELi8uscidiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZaV8S7NY; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TliRnDVd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709529076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VNtSjcwA+rZxPvjqQS2ZPVR3ZuvVQM7xXjlLPshD5do=;
-	b=TliRnDVdj340WlTdhj5zqOxFgRvvLIqBxX0aj6T12MJgQ0KAuBIOQCkjo7IgS0T7NB47fL
-	JtqW/WYb8DJ/IGO0RVMjgxohT3s8FMa28BUyb2AjVCiNRb5O5F0blIq9Rc1kXCmDyCWto/
-	1Y4HTOOd9BVEp+CXT1Db6Pl6WEagH+4=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-41-poOAT-8KNDWO-auA0ze_1w-1; Mon, 04 Mar 2024 00:11:14 -0500
-X-MC-Unique: poOAT-8KNDWO-auA0ze_1w-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-29954faf16dso3179833a91.1
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 21:11:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZaV8S7NY"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso22509a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 21:12:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709529144; x=1710133944; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EUR3SXQYlMBJ+S1TsUhop+VTYRh3FUB5752NRTIEWf8=;
+        b=ZaV8S7NYxn1hackDu4FBfGIe5dr0W7lzNLYC+HxKvJW8Rv7+Z6gqkKP/z1fMQeC1dn
+         E+ffuop3JvrDNaB8h7a7lWGQrJnqNHNoyFBg4WxtXKRfrrl+nIaXOqlcCCSiYPBKgtUB
+         xHSF6/FfJPZL0Hp7Sw1ELSuz3vqvJESBp4QoWLSSp8iUxaWw0Tuw5q+cvHZBikgYbqrp
+         mYhSX1bg1mDFTq2Csop5Y2rvIHtjvH1InfrpLhKy3I/daktYp3CYZJbsLqJPEOjpLPjU
+         Y9uWWmav2sX/xCgyK1myD3ijjJbMHvoC44AdUnJfA7RPbPeRvW/yUSFV8U+zRx8lyQlH
+         4rhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709529073; x=1710133873;
+        d=1e100.net; s=20230601; t=1709529144; x=1710133944;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VNtSjcwA+rZxPvjqQS2ZPVR3ZuvVQM7xXjlLPshD5do=;
-        b=CWp75gMUnMtzM1kkMKOlPJa1M1YZGc5nFe46LfI1L6A5mMmj3zbjDT+naAcyua7wPl
-         U6IAsh3G81G8bfNEBKz1PIqTBLksLUWQ6Le/EUYn7RJ5ef9jBSSraGmVZX2Fu7Iec4uc
-         aWwMnkWXSHGcwUfJhvP/KU/FxvA6pQeBOGsCcqG0YLTUIfIa4F0EexJG63n9g47Qv+Fn
-         XIp2hEQMY9083Bk0b6R0aXFjTlT1IPeMOmbogwKDxAbkqGHHrwq9ZhwBTg1yFNGC4JmV
-         QI73ax+XbvW3G2OU0KkFaAUdHQ1FLJphQstIo535AVwR0unm/2BKvkUoUfec8eTaYzoE
-         ekkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGXAJqclY/HwjW2CsrSO/6vj/TCONTCV/GmHG/E72/+DgMTMpFtI0yvY+Oa4T7QCj4lNG9FzwN+FidE4nZdSSI+Z3n4MX2oKIMyIZu
-X-Gm-Message-State: AOJu0Yz91+pZcB8kcQBUvZ42jl2MrrR0+9ZuhIL/PQVBlo3Nzs3/oJfz
-	4gpuFc0etDTyh32Gj/WD8AvHqFc5ndnnixtOKd+nfW4JCf4jqDvTcTZVRmeIxrdzgACbZ2rC6t0
-	sVkm9o1cEAdHkgeBAbMwjuzRTxLPATyB6/xfeHAMAdnxP8hFua8iydY8w8lb/4KYegxn7kKDTxC
-	EB+vFID+vwKizU0NbLwFmwwVxhsA9p+WssrDEY
-X-Received: by 2002:a17:90b:4d91:b0:296:f2d5:6567 with SMTP id oj17-20020a17090b4d9100b00296f2d56567mr10845344pjb.4.1709529073569;
-        Sun, 03 Mar 2024 21:11:13 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGTvvRy71qBU2Sm7ohelOZtP1t+4VAgk6pSsu8CZIjm3Tj7+TC2Ap5yN47Wk/l6tTwscQQm97wyQISa0K29L+s=
-X-Received: by 2002:a17:90b:4d91:b0:296:f2d5:6567 with SMTP id
- oj17-20020a17090b4d9100b00296f2d56567mr10845332pjb.4.1709529073243; Sun, 03
- Mar 2024 21:11:13 -0800 (PST)
+        bh=EUR3SXQYlMBJ+S1TsUhop+VTYRh3FUB5752NRTIEWf8=;
+        b=hqKNkS9C4FLCQxA2TTmN0dhQYw9i1TjnOlPUDPTG9ExVnqunul3dJOplA9+4FpshCz
+         Wn8yJqIplIqNqaOmweWhX5Na3Fa2CttWEaBOZ/Bf/DIr83eBHOtfQabOoVBYX8H0fMCi
+         8dgEcFwF28LFaBcWNpyeSEcY5wEVf/+utj2CnsvV6GnNXRT5rP9T/2KuFtTjin98rWf0
+         GqNkeoXLII1deQgcvRtp4ThpNCt9yano9d0F7q94onfiRgSYnImFy4JplS2EjLA5bCtU
+         pleGOoD/DAI81PO2oMfhajRYYNc6So3cHx5Zp+gAvjuBctlsol0rEFFx16YymEmFKHp8
+         gimg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7LZ8ObLNPH1xOMGhL3Vj91Wox4tWbnLOAEfBNdIcM6B7z7MZ+TYRyI3TBoCJt4h/OxOWVlwFsFT3TbUxnyR3XjQkTvk2fw/j9tr/8
+X-Gm-Message-State: AOJu0YxDJoTEwEmSyO3nGUwiCEXNVP+xMdgn/Ojsy5Qlw4qbovykdRjV
+	dwHlCzMfeVNpuawq4FT4UxapbIhq8+l/JL/to6Fnw1OrgZIMc4JvVmKzVhLGmN97HZahDdj1dOe
+	aGsjmvmy1o4bOCvV6227wl1Bq5TfHPYzLtXLD
+X-Google-Smtp-Source: AGHT+IFk/yOw56LrMBCcjw5FkqWSmRn9c37C4hrrela5SKpQ0FiUwD8BBhxVSWUFxhxJtKdGT7I9Ik2nnrrNCi8cpxY=
+X-Received: by 2002:a05:6402:3496:b0:566:ff41:69f1 with SMTP id
+ v22-20020a056402349600b00566ff4169f1mr182364edc.3.1709529144406; Sun, 03 Mar
+ 2024 21:12:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240207054701.616094-1-lulu@redhat.com> <20240207054701.616094-6-lulu@redhat.com>
-In-Reply-To: <20240207054701.616094-6-lulu@redhat.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Mon, 4 Mar 2024 13:11:02 +0800
-Message-ID: <CACGkMEuGwVwstzCGyYs90YjtE-QZGs1ztDKF4-gqFM_JZhSjmQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] Documentation: Add reconnect process for VDUSE
-To: Cindy Lu <lulu@redhat.com>
-Cc: mst@redhat.com, xieyongji@bytedance.com, linux-kernel@vger.kernel.org, 
-	maxime.coquelin@redhat.com
+References: <CANn89i+fJis6omMAuEmgkFy7iND97cA8WecRSVG6P=z15DpHnQ@mail.gmail.com>
+ <tencent_FD84E7D8C6D392F1C66E89816EF36ED48C06@qq.com>
+In-Reply-To: <tencent_FD84E7D8C6D392F1C66E89816EF36ED48C06@qq.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 4 Mar 2024 06:12:11 +0100
+Message-ID: <CANn89i+cfMWX_ybtP-VHX7PgLT-mwuUkYMuqsnUwZ3jki8oTcA@mail.gmail.com>
+Subject: Re: [PATCH] net/netrom: fix uninit-value in nr_route_frame
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: davem@davemloft.net, kuba@kernel.org, linux-hams@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	ralf@linux-mips.org, syzbot+f770ce3566e60e5573ac@syzkaller.appspotmail.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 7, 2024 at 1:47=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrote:
+On Mon, Mar 4, 2024 at 6:05=E2=80=AFAM Edward Adam Davis <eadavis@qq.com> w=
+rote:
 >
-> Add a document explaining the reconnect process, including what the
-> Userspace App needs to do and how it works with the kernel.
+> [Syzbot reported]
 >
-> Signed-off-by: Cindy Lu <lulu@redhat.com>
+> [Fix]
+> Let's clear all skb data at alloc time.
+>
+> Reported-and-tested-by: syzbot+f770ce3566e60e5573ac@syzkaller.appspotmail=
+.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 > ---
->  Documentation/userspace-api/vduse.rst | 32 +++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  net/core/skbuff.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/Documentation/userspace-api/vduse.rst b/Documentation/usersp=
-ace-api/vduse.rst
-> index bdb880e01132..a2be85e0e516 100644
-> --- a/Documentation/userspace-api/vduse.rst
-> +++ b/Documentation/userspace-api/vduse.rst
-> @@ -231,3 +231,35 @@ able to start the dataplane processing as follows:
->     after the used ring is filled.
->
->  For more details on the uAPI, please see include/uapi/linux/vduse.h.
-> +
-> +HOW VDUSE devices reconnectoin works
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index edbbef563d4d..5ca5a608daec 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -656,6 +656,7 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t =
+gfp_mask,
+>          * to allow max possible filling before reallocation.
+>          */
+>         prefetchw(data + SKB_WITH_OVERHEAD(size));
+> +       memset(data, 0, size);
 
-Typos, let's use a spell checker.
 
-> +----------------
-> +0. Userspace APP checks if the device /dev/vduse/vduse_name exists.
-> +   If it does not exist, need to create the instance.goto step 1
-> +   If it does exist, it means this is a reconnect and goto step 3.
-> +
-> +1. Create a new VDUSE instance with ioctl(VDUSE_CREATE_DEV) on
-> +   /dev/vduse/control.
-> +
-> +2. When the ioctl(VDUSE_CREATE_DEV) function is called, the kernel alloc=
-ates memory
-> +   to save the reconnect information.
-> +
-> +3. Userspace App need to mmap the pages to userspace
+We are not going to accept such a change, for obvious performance reasons.
 
-Need to describe what kind of pages need to be mapped. And what's more:
+Instead, please fix net/netrom/nr_route.c
 
-Does this require cooperation from the disconnected application? If
-yes, how to distinguish from the one that is not cooperative (doesn't
-support reconnection)?
-
-> +   Userspace App need to map Pages 0 to vq_number for vq status,
-> +   Users can define the structure for saving the reconnect information t=
-hemselves
-> +   in the userspace.
-> +
-> +4. Check if the infomatin sutiable for reconnect
-
-Typos again.
-
-> +   If this is reconnect:
-> +   Before attempting to reconnect, The userspace application need to the
-> +   ioctl VDUSE_DEV_GET_CONFIG,VDUSE_DEV_GET_STATUS,VDUSE_DEV_GET_FEATURE=
-S...
-
-"..." is not good, let's describe the steps in detail.
-
-> +   to get the and confirm if these information are suitable for reconnec=
-ting.
-> +
-> +5. Start the userspace App.
-
-I had a hard time understanding this, does it mean the application
-needs to restart itself?
-
-> +   While running, the application should store the relevant information =
-about
-> +   reconnections in mapped pages.
-> +   When calling ioctl VDUSE_VQ_GET_INFO from the userspace APP
-
-Abbrev is not good here. Let's use "application" for consistency.
-
-> to get vq information, it is necessary
-> +   to check if this is a reconnection.
-
-How to check whether or not it is reconnected?
-
-> If a reconnection has occurred, the vq-related information
-> +   must be get from the mapped pages.
-> +
-> +6. When the Userspace App exits, it is necessary to unmap all the reconn=
-ect pages.
-> --
-> 2.43.0
->
-
-Thanks
-
+Thank you.
