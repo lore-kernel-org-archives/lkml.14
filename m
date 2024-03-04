@@ -1,109 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C89E385;
-	Mon,  4 Mar 2024 00:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2411E64D;
+	Mon,  4 Mar 2024 00:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709512368; cv=none; b=ATBqcP7czQEiC5QapQqZIx5QwLw4iwBCUQwe4kOQjZRkM6tdXfcK6lk88v87ECA43L+dDA+iDHSVjAb/MmPVeCwMIOttTZbU8VR4PL1nO9H0HdHVec8wrCCLizLFkSZEp5lvnCqyHE7eWYXZae55+evxj2fNVipLq8b8PZDPTCk=
+	t=1709512962; cv=none; b=j1As81cA1LwONG75j2Jui3UeVUOumaFJ9X5TCe85qmK8XDXVuvYSxZvVhg5z9H6Iy7H2ahdAXF1ulcFIRoqflskhbvV97ZaMG+Wo5L9L82cong2H55RK+tK8rNTupmHMjx4fUax9Y+y/u+4wBh8O+7MOwa3j1dkdWLddkPASyjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709512368; c=relaxed/simple;
-	bh=UgCWly0UHLVcIo6ZXg1u/0Hm0vg0qVNbXLhu2wTP8mE=;
+	s=arc-20240116; t=1709512962; c=relaxed/simple;
+	bh=EaqFz1aU1LFJy50LAfuxSbt3Xrl9diEj8YEoxK9Kz1c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nhdslTlgB1zMfsk+XVAefg77TjDPiHqOClZs2xNerOfCVuluEliXhmPFT/9pwgfo9CXOs+CaKaFsZ4Lpf+oKVqJAivOmeIBGxexWs7/YfoobfeKtuhGCcFPztQlJvlJW7o+rkcLwLx2aG1cR2KpKFYWskyI20XCCePTTfqk7kWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7fsotAN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/Jka/Lw1EGOeiIr+yBgz4KccN+oEOtsMEDsmxQXC2jCzgIZ1zHKsJUd+rKBA/LBQ4Lz44CQLkL+QCNmrIJ3gGWEzNzmFe2G47/hWDqLIWsSDLJYanqxEpCJ6lJxZ+0FCmbmDYmhFZQfllg8aVfNSthmmbtJxgTUTCZ3FM2GeoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JNaPcdNt; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7fsotAN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D431AC433C7;
-	Mon,  4 Mar 2024 00:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709512368;
-	bh=UgCWly0UHLVcIo6ZXg1u/0Hm0vg0qVNbXLhu2wTP8mE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T7fsotANAhkLwGycPo7xK06l+On1+9VnehWeiSvXLBJdvCl+6iL3zM6oqLVI6XQjl
-	 KwYAOA6G8Ec4sMdpv1Qz/PX/NldbaiwGbFoqtItH6zqZRY82UIZYgRmym8G9Du2y5Z
-	 5qmlE9jnEvkhvK364HvpH91ziIPMeTDBaiGhTsRKcR5AGo9HnySra1Jewjjr6Dhs2q
-	 7WNoIR045G/e7O63AwivPon6uZel6M08h0ukJecobQc88VmaTCE01dkiTwdd6t4jGm
-	 1aF2ZX6Ur/H32k1JCh+w9J1Fgi1u3zcPnL0XS3YGz2AvL/T5F5XkNWpK3ZZca7ALrO
-	 Enr2aUNb6loow==
-Date: Mon, 4 Mar 2024 01:32:45 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>, ying.huang@intel.com,
-	feng.tang@intel.com, fengwei.yin@intel.com
-Subject: Re: [tip:timers/core] [timers]  7ee9887703:  netperf.Throughput_Mbps
- -1.2% regression
-Message-ID: <ZeUWreWcp4UWQ081@pavilion.home>
-References: <202403011511.24defbbd-oliver.sang@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JNaPcdNt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709512960; x=1741048960;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EaqFz1aU1LFJy50LAfuxSbt3Xrl9diEj8YEoxK9Kz1c=;
+  b=JNaPcdNtMd2vXpUUnE9CgwdRYz16U/54CQcCogO4VkoEsrsnQ2Rcd4Uo
+   NlGP9ZsKjfPiIOLDowdkD+xqsGgM1/7kGYtCJuNrJk7/gLFf9zFY27CeB
+   bRjSBXKF0IlJcXDNNAo6KReAmW1ct/wXKxtTIs/9A9YmzNOWzUk1He6yh
+   MRe2tP9VDiixV3x3h1Nc0Qpgo+xI/oQtDxd03NEl05FckEw+aOYzlXySg
+   U/JtrLCvOFhSurZWVerj405S7KIUL+g35Ouf0AI6Dc2Wd07OOow86d7/4
+   0V10G/mVt8BP11I6DffEPYbKCI82m/WoGQxaAqsTNs8RavZ9pHNoCUpcN
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="6939915"
+X-IronPort-AV: E=Sophos;i="6.06,201,1705392000"; 
+   d="scan'208";a="6939915"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 16:42:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,201,1705392000"; 
+   d="scan'208";a="9257394"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 03 Mar 2024 16:42:36 -0800
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rgwPZ-0002E5-1w;
+	Mon, 04 Mar 2024 00:42:33 +0000
+Date: Mon, 4 Mar 2024 08:41:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Canfeng Zhuang <quic_czhuang@quicinc.com>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Canfeng Zhuang <quic_czhuang@quicinc.com>
+Subject: Re: [PATCH 1/2] misc: qualcomm: QRC driver for Robotic SDK MCU
+Message-ID: <202403040831.fk22ur0f-lkp@intel.com>
+References: <20240304-qcom_qrc-v1-1-2a709f95fd61@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202403011511.24defbbd-oliver.sang@intel.com>
+In-Reply-To: <20240304-qcom_qrc-v1-1-2a709f95fd61@quicinc.com>
 
-Le Fri, Mar 01, 2024 at 04:09:24PM +0800, kernel test robot a écrit :
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed a -1.2% regression of netperf.Throughput_Mbps on:
-> 
-> 
-> commit: 7ee988770326fca440472200c3eb58935fe712f6 ("timers: Implement the hierarchical pull model")
-> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git timers/core
-> 
-> testcase: netperf
-> test machine: 128 threads 2 sockets Intel(R) Xeon(R) Gold 6338 CPU @ 2.00GHz (Ice Lake) with 256G memory
-> parameters:
-> 
-> 	ip: ipv4
-> 	runtime: 300s
-> 	nr_threads: 200%
-> 	cluster: cs-localhost
-> 	test: SCTP_STREAM
-> 	cpufreq_governor: performance
-> 
-> 
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202403011511.24defbbd-oliver.sang@intel.com
-> 
-> 
-> Details are as below:
-> -------------------------------------------------------------------------------------------------->
-> 
-> 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20240301/202403011511.24defbbd-oliver.sang@intel.com
-> 
-> =========================================================================================
-> cluster/compiler/cpufreq_governor/ip/kconfig/nr_threads/rootfs/runtime/tbox_group/test/testcase:
->   cs-localhost/gcc-12/performance/ipv4/x86_64-rhel-8.3/200%/debian-12-x86_64-20240206.cgz/300s/lkp-icl-2sp2/SCTP_STREAM/netperf
-> 
-> commit: 
->   57e95a5c41 ("timers: Introduce function to check timer base is_idle flag")
->   7ee9887703 ("timers: Implement the hierarchical pull model")
+Hi Canfeng,
 
-Is this something that is observed also with the commits that follow in this
-branch?
+kernel test robot noticed the following build errors:
 
-Ie: would it be possible to compare instead:
+[auto build test ERROR on 805d849d7c3cc1f38efefd48b2480d62b7b5dcb7]
 
-    57e95a5c4117 (timers: Introduce function to check timer base is_idle flag)
-VS
-    b2cf7507e186 (timers: Always queue timers on the local CPU)
+url:    https://github.com/intel-lab-lkp/linux/commits/Canfeng-Zhuang/misc-qualcomm-QRC-driver-for-Robotic-SDK-MCU/20240304-005601
+base:   805d849d7c3cc1f38efefd48b2480d62b7b5dcb7
+patch link:    https://lore.kernel.org/r/20240304-qcom_qrc-v1-1-2a709f95fd61%40quicinc.com
+patch subject: [PATCH 1/2] misc: qualcomm: QRC driver for Robotic SDK MCU
+config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20240304/202403040831.fk22ur0f-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240304/202403040831.fk22ur0f-lkp@intel.com/reproduce)
 
-Because the improvements introduced by 7ee9887703 are mostly relevant after
-b2cf7507e186.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403040831.fk22ur0f-lkp@intel.com/
 
-Thanks.
+All errors (new ones prefixed by >>):
+
+>> drivers/misc/qrc/qrc_uart.c:83:24: error: initialization of 'ssize_t (*)(struct serdev_device *, const u8 *, size_t)' {aka 'long int (*)(struct serdev_device *, const unsigned char *, long unsigned int)'} from incompatible pointer type 'int (*)(struct serdev_device *, const unsigned char *, size_t)' {aka 'int (*)(struct serdev_device *, const unsigned char *, long unsigned int)'} [-Werror=incompatible-pointer-types]
+      83 |         .receive_buf = qrc_uart_receive,
+         |                        ^~~~~~~~~~~~~~~~
+   drivers/misc/qrc/qrc_uart.c:83:24: note: (near initialization for 'qrc_serdev_ops.receive_buf')
+   cc1: some warnings being treated as errors
+
+
+vim +83 drivers/misc/qrc/qrc_uart.c
+
+    81	
+    82	static struct serdev_device_ops qrc_serdev_ops = {
+  > 83		.receive_buf = qrc_uart_receive,
+    84		.write_wakeup = qrc_uart_wakeup,
+    85	};
+    86	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
