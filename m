@@ -1,142 +1,155 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB26612D8
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 17:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F94C612ED
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 17:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709574104; cv=none; b=aG+NGcnXDUQvZH4euRUBsmRKsuShoGi0vrEWudyuNmWOJZcNMUlQwAwo6k/rXcd+HAIu4NTk/f1sXV0Svh5XpqfNpgN5J1h20e5cMippnQT36CFhORqAwB2Wdbz0/GmfON0C/LDAOgkjOyI6nZw4NDfxRzgW9kq8rUwff3ZMowU=
+	t=1709574105; cv=none; b=bQZUDK0q3vMkCW1Oqv4zYP7N/ExmPznO+btBsSBCM/mxkrriI7M1ALP2x+0ihOCWDqpN/SrteT28RhU89CBsZj1DP0JGEPy2J9CShCEe09v/5KASfDC8VMFU/39oCqFLKeb1E0mReAKz7WA/3ibzZZvOeafZ384xfbdi92nQ9i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709574104; c=relaxed/simple;
-	bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IZclY7NpaESZ29u47FYQTtcfZxGU1rghhewr18m4AKnt/yRwviATFQrPPWD66X1YrKnvyVscCdoznCUdEXumWRKG6IsDxnGOl70TL7Fr/3M2YXS9Rp8u0Kw65pwzDVEUHjJ8kWQkqXg8lBgItmLWIJyyiXKprsDk4w8WEmcauGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JWAlWxKh; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709574105; c=relaxed/simple;
+	bh=qJMgPawedp3OfAEL1xk7KGXyHJTjGNsXEZPqedbFgnY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kqdwWrFkjJfRhnRyxaFCYAPYlzh01iBIETv+8SiunxAKayh9fb/B2Karj5O5x9vjJSta0AzEZ95UWgv+Xsg0H3QxOph+asGhDNefARyW7Vjogq0ry/JAwoRfbi33H7tz5nlEnvMypYEWZVyoR3uSWWnoEVzFKxs5RZg0/v2hbWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dVvnZGIn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JWAlWxKh"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7882d713f6fso37341485a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 09:41:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709574101; x=1710178901; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
-        b=JWAlWxKhQQqe6DVlZgMygQiOkn25ZUUpEnGBECt7yNdl0SSNMac2jbFKUlyX16uueu
-         6FZmJZH8Y8Pm2cjEuiO1TooTt1de/jWjSoJbsBaCJ4ucKWgRNpv1WWjZAUnRvZ4f2oy0
-         PNC7CwKJkQFG1fSbQhiEdroOPMwuKmsygoflo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709574101; x=1710178901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
-        b=YX01rBpcKtJw6OmUC5h5AiXOBgefYHMDSVtmIrIul3cP3TMFwi82fCZBkOH297kTrI
-         Up/d3Euhli89zkNxB8SQYgWLKactVJghyPgtPozSPpbfQ2Or0u/19lOC75zt6AQAFUj3
-         1qQczYk3XL5cBQ/OChaOtJGTBtAgqIjUzS727fiX9qMucVeQHgc1aImViFtMs4pGxydX
-         TCLM8XLgwxgn5HrX/WLSd38Jf511yvXccbAIilVgufafbPPMCJY65ZnUSEDunSC2f+Yk
-         dvGV4dxZZsyENb8VyMpCIq62ULpj0oE46frAkP+AkuJ/Kan1xJEF8r+50BCpU6fGTgTw
-         iGYw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7k3R0qx7UKiGOhLZD5VWcrCD7y4urHPUfvAtuI8RrkpxFEgVKTcfDuiU+etJMd402Q2OP9o/fNsNfnPPTDMPV6qHGFJPKXg6cSbTo
-X-Gm-Message-State: AOJu0YxbkjMLGgbbUNhjb/HQcvww7Q0qqY0vDe9Phd9rsAq2AKUiLScQ
-	7oYu05KWducHZ2cjADlpcMXXeeNkZet/UvNpZMx5ySPvE4K7LLOvrCJgYl3XTuMbCdM1haAG7q1
-	8SXBK
-X-Google-Smtp-Source: AGHT+IHh8RdTdgbReobl1pk1/aqOI9U6Q7tpR1zU/kPD1OZnUGo0RNVmE776cMFxS8a7mzvuKh0qZQ==
-X-Received: by 2002:a05:620a:810:b0:788:2a7d:c5a4 with SMTP id s16-20020a05620a081000b007882a7dc5a4mr2845269qks.78.1709574101376;
-        Mon, 04 Mar 2024 09:41:41 -0800 (PST)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id x16-20020a05620a0ed000b00787b95c91d3sm4589051qkm.62.2024.03.04.09.41.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 09:41:41 -0800 (PST)
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-512fab8cc6aso8774e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 09:41:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXBHrTHLv/i4poJlp3hZ3K8oeBas/ju3wl7CtVO6BfTywGVfi58a+oiuNx2mBNdIjeXZN2Q0I/uE+GmvVsjO07nNsl6zBvaBtfsCNld
-X-Received: by 2002:a05:600c:4f07:b0:412:d6be:a32b with SMTP id
- l7-20020a05600c4f0700b00412d6bea32bmr2093wmq.6.1709573676220; Mon, 04 Mar
- 2024 09:34:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dVvnZGIn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709574103;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=irOzKbJngmE8lAvg1EEurmlk1LMdtkA2xD+8hsC2ASY=;
+	b=dVvnZGInY9C5IQNV2gQh+TsZfwy6BC6ZPQm9xNeK8tm+NTf8LdZYMGFtWE62qjHuEV7+FR
+	4l0K6YEbuF5BLJ7noV0IqkXnXzY6wDg+VMbmI7tGZMt1zkaJOgM9BTCCSb/1wH53Jce7ak
+	H0YHAZZD/fhpz9qYzRlGGD0Jb060IsI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-326-dxNZ4nP2NaaFgBJchMmRPg-1; Mon, 04 Mar 2024 12:41:37 -0500
+X-MC-Unique: dxNZ4nP2NaaFgBJchMmRPg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EBF80185A787;
+	Mon,  4 Mar 2024 17:41:27 +0000 (UTC)
+Received: from [10.22.34.161] (unknown [10.22.34.161])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7652648C;
+	Mon,  4 Mar 2024 17:41:27 +0000 (UTC)
+Message-ID: <76d4a653-3525-4359-bcdc-b5e80f63a426@redhat.com>
+Date: Mon, 4 Mar 2024 12:41:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
- <CAD=FV=WtJCkdSY=HYDmBjn3hc4TYT7j0bMxGCV-=B3o3bm-kpQ@mail.gmail.com>
- <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com> <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
-In-Reply-To: <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 4 Mar 2024 09:34:19 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XJhvVO7k0hhz_KPH4eSrJQdb+k2CJQeCAP40+PYAdDBg@mail.gmail.com>
-Message-ID: <CAD=FV=XJhvVO7k0hhz_KPH4eSrJQdb+k2CJQeCAP40+PYAdDBg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
- should try non-NMI first
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, Misono Tomohiro <misono.tomohiro@fujitsu.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <swboyd@chromium.org>, 
-	Daniel Thompson <daniel.thompson@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Tony Luck <tony.luck@intel.com>, Valentin Schneider <vschneid@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] locking/spinlocks: Make __raw_* lock ops static
+Content-Language: en-US
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-s390@vger.kernel.org
+References: <78c366485bff13753de758fd27fb6b465ed2850a.1709549641.git.geert+renesas@glider.be>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <78c366485bff13753de758fd27fb6b465ed2850a.1709549641.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Hi,
 
-On Fri, Mar 1, 2024 at 8:06=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
-wrote:
+On 3/4/24 05:56, Geert Uytterhoeven wrote:
+> If CONFIG_GENERIC_LOCKBREAK=y and CONFIG_DEBUG_LOCK_ALLOC=n
+> (e.g. sh/sdk7786_defconfig):
 >
-> Hi Doug,
+>      kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_spin_lock' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_spin_lock_irqsave' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_spin_lock_irq' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_spin_lock_bh' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_read_lock' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_read_lock_irqsave' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_read_lock_irq' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_read_lock_bh' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_write_lock' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_write_lock_irqsave' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_write_lock_irq' [-Wmissing-prototypes]
+>      kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_write_lock_bh' [-Wmissing-prototypes]
 >
-> On Tue, Feb 27, 2024 at 04:57:31PM -0800, Doug Anderson wrote:
-> > On Mon, Jan 8, 2024 at 4:54=E2=80=AFPM Doug Anderson <dianders@chromium=
-.org> wrote:
-> > > On Thu, Dec 7, 2023 at 5:03=E2=80=AFPM Douglas Anderson <dianders@chr=
-omium.org> wrote:
+> All __raw_* lock ops are internal functions without external callers.
+> Hence fix this by making them static.
 >
-> > > The sound of crickets is overwhelming. ;-) Does anyone have any
-> > > comments here? Is this a terrible idea? Is this the best idea you've
-> > > heard all year (it's only been 8 days, so maybe)? Is this great but
-> > > the implementation is lacking (at best)? Do you hate that this waits
-> > > for 1 second and wish it waited for 1 ms? 10 ms? 100 ms? 8192 ms?
-> > >
-> > > Aside from the weirdness of a processor being killed while holding th=
-e
-> > > console lock, it does seem beneficial to give IRQs at least a little
-> > > time to finish before killing a processor. I don't have any other
-> > > explicit examples, but I could just imagine that things might be a
-> > > little more orderly in such a case...
-> >
-> > I'm still hoping to get some sort of feedback here. If people think
-> > this is a terrible idea then I'll shut up now and leave well enough
-> > alone, but it would be nice to actively decide and get the patch out
-> > of limbo.
-> >
-> > FWIW the serial console dumping issue that originally inspired me to
-> > track this down has been worked around at least well enough to not
-> > spew garbage in my console. See commit 9e957a155005 ("serial:
-> > qcom-geni: Don't cancel/abort if we can't get the port lock"). It's
-> > still a little awkward because we'll be running fully lockless during
-> > panic time, but it seems to work...
+> Note that if CONFIG_GENERIC_LOCKBREAK=y, no lock ops are inlined, as all
+> of CONFIG_INLINE_*_LOCK* depend on !GENERIC_LOCKBREAK.
 >
-> This is on my list of things to look into, but I haven't had the chance t=
-o go
-> through it in detail.
->
-> From a high level, I think this sounds reasonable; I just want to make su=
-re
-> this doesn't lead to any new surprises...
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Waiman Long <longman@redhat.com>
 
-Sounds good. For now I'll snooze this for another 2 months and if I
-haven't heard from you then I'll pester you again. There's no crazy
-hurry, I was just hoping for some sort of decision one way or the
-other. For now I'll hold off on changing things to match x86 exactly
-until I get your take on it too.
+Thanks for updating the change log.
 
--Doug
+Cheers,
+Longman
+
+> ---
+> Compile-tested on all defconfigs that have CONFIG_GENERIC_LOCKBREAK=y:
+>    - sh/sdk7786_defconfig,
+>    - sh/shx3_defconfig,
+>    - s390/debug_defconfig,
+> and also on s390/debug_defconfig after changing:
+>      CONFIG_DEBUG_LOCK_ALLOC=n
+>      CONFIG_DEBUG_WW_MUTEX_SLOWPATH=n
+>      CONFIG_LOCK_STAT=n
+>      CONFIG_PROVE_LOCKING=n
+>
+> v2:
+>    - Add Acked-by,
+>    - Drop RFC,
+>    - Improve patch description.
+> ---
+>   kernel/locking/spinlock.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/locking/spinlock.c b/kernel/locking/spinlock.c
+> index 8475a0794f8c5ad2..7009b568e6255d64 100644
+> --- a/kernel/locking/spinlock.c
+> +++ b/kernel/locking/spinlock.c
+> @@ -65,7 +65,7 @@ EXPORT_PER_CPU_SYMBOL(__mmiowb_state);
+>    * towards that other CPU that it should break the lock ASAP.
+>    */
+>   #define BUILD_LOCK_OPS(op, locktype)					\
+> -void __lockfunc __raw_##op##_lock(locktype##_t *lock)			\
+> +static void __lockfunc __raw_##op##_lock(locktype##_t *lock)		\
+>   {									\
+>   	for (;;) {							\
+>   		preempt_disable();					\
+> @@ -77,7 +77,7 @@ void __lockfunc __raw_##op##_lock(locktype##_t *lock)			\
+>   	}								\
+>   }									\
+>   									\
+> -unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock)	\
+> +static unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock) \
+>   {									\
+>   	unsigned long flags;						\
+>   									\
+> @@ -95,12 +95,12 @@ unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock)	\
+>   	return flags;							\
+>   }									\
+>   									\
+> -void __lockfunc __raw_##op##_lock_irq(locktype##_t *lock)		\
+> +static void __lockfunc __raw_##op##_lock_irq(locktype##_t *lock)	\
+>   {									\
+>   	_raw_##op##_lock_irqsave(lock);					\
+>   }									\
+>   									\
+> -void __lockfunc __raw_##op##_lock_bh(locktype##_t *lock)		\
+> +static void __lockfunc __raw_##op##_lock_bh(locktype##_t *lock)		\
+>   {									\
+>   	unsigned long flags;						\
+>   									\
+
