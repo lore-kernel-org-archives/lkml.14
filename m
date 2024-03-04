@@ -1,162 +1,235 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9034E3F8E2;
-	Mon,  4 Mar 2024 14:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFA03F9CB;
+	Mon,  4 Mar 2024 14:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709561072; cv=none; b=SxpPFSZNRV5qNRypzOGLkN2MbqXnji0G7bOmFFnfsVVJiW2lDbu9qYNlIoQrOu8ItztZtAqPTm/qNaeaIO3t4rNYDv2JgeJ+4Nz3nur5936SoVM8uNLe5gp5vWUk9R6WsSotPp7MvGVDEfj4FvH+RYZSvaZixYsjpNXO3McNx1k=
+	t=1709561162; cv=none; b=jRT53Vy2TdusBgsPNdFI25dwvtST3VJjbLsyd7jbHJ05OXghq/oLbgMVh/RK6UwPVTPXLfJ7ryGW4KiOF0RGsmX/9KBYOPLXJk4LnEtckCD3uJAsTKbc95P8u6myPKFMQOAQCh1JspHn74MPZHuL5KpdeU4c+5DWG41bO3Q/4XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709561072; c=relaxed/simple;
-	bh=SLbSjt9SbkPv+g6/vROjXm/Gz3EE39aUaCGhCyjYusE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qZqcCfKA1XvWVszmgO9Q9jNHF02Bk2B1DDqBU2kKcDYc2K5qwmaYg6X9uQOx0pf4Xo2WIpFccmYXHxeliKOWU5Dvck8zxAMONRzpRXSKxEZDKFn8WIoPkuL7yI6nDqhqxX8dlsFybVc8F1PfesJskvXuJdutfcNIAgPsbhHk38w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jNVJp4Zd; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709561162; c=relaxed/simple;
+	bh=s1zQ71bLde/eKiV6DypERODOwCYcGUlkgXu0fdjnFB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E2eeBEuiNCwAVQrCrJT6WX6w6ufNLRNSyvXJRLG6fN7dHawm8TMTxHJqSZV0/V3lT8SK16Y/htJ4pZ02XKNrubaGudnJlV4PlLqu//Rcrk+EqrlFjtnGIZ+CM2t+NkE0bGAJ19Oha8SdigZbk8GJw8bC1MgbrO/GTnq4ZQqQF3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASVbVfeB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNVJp4Zd"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51320ca689aso5277189e87.2;
-        Mon, 04 Mar 2024 06:04:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709561069; x=1710165869; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+A2MIgcuwPWk7lZwI41C//csGmOFt/MFKi0gAzZz/R8=;
-        b=jNVJp4Zd1kqK0JOh8wzUQal45ptHZeQKbv4gwNFVXmBsWOyu8BT9LRGanUvH4BwTst
-         oVsah7sJTMfAE2f1o1Zc8mDf7I/fOwbSpQT1dQ1XWN/apqPF74tEWZvY3KXjl0XU2SJt
-         C4MMWzbhr0nd2LuZbfCL5R2dmVTNYoxEQrTq7sC5l5MrGz6tEXlSdGzZP0tTgbr4+m8f
-         ZdSyOjzxCzQSkMES8bxZjmQhDyM4DzVkC4qwXzfXh5sMnvwU64JxoIKFkFCEHyfNMbHB
-         gc7Kel3/Ps3PlwPoheDsXV53XtH0gbVYOI6/ks0FFwaQfDU447pT4VpVN9zDdpXcRcL/
-         SDpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709561069; x=1710165869;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+A2MIgcuwPWk7lZwI41C//csGmOFt/MFKi0gAzZz/R8=;
-        b=Ux+CIXiBEkY83fvCKrpBPuu3o+sIgR+P14ha12RQ4bsV6qyd2XC2vjJfJOZCpBqOuC
-         biin8QxIG9YmHngnzUvyVXAC3SRYQXckSce0TnmmZqRAJBvqYVC1xouAh5UzhQKaGiym
-         oSoiJTEat4k6pL3DFOOfNL9i6q1aGMD3v0xyqjfgTuvQZPpmywnXFzWJXRwA13G8RUpC
-         9VO0+0J3hlXleyl+V+b96LlxmU5Cdq772jaICr+fSImH/rtZb9fovU+uf8Q+3bFpw7NZ
-         NAA0ZvsGNENh6ic8kBWBb3tG1dzltEKCLoaoyhp43bvw1eO4i8wtBKMzjrL6d8PDVAdt
-         cBCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdfzgPoTkRKwpGLwzEVAMOJM4mWJKgwolA9rMXjSwEHGmXJhlgLiJYcGOwk2Z8fLv+7jUrLDB326XX7jL6yQ0SvZwod7wcV42XSKvNhB5i+MXU6QTgK48J4NYFiAe4eY91NWP1A95+pbA=
-X-Gm-Message-State: AOJu0Ywr1f0kRtr/ZLvFOCckwRpbACb2yqsYl2PPAzoz/k+wJl9E08pH
-	EUoms/6kMCjvd5in3wxUW5iOTQwWXxpWEdDsCV8v//IpRXBBYCGW
-X-Google-Smtp-Source: AGHT+IEz+skFuqRkbnNFQLR4g/WSQnRAMiBY6M1c7WhrM5/JBrRjGoqo0wpSyC71RQNJ1tmb9ttgfg==
-X-Received: by 2002:a05:6512:34c8:b0:512:b00f:a55e with SMTP id w8-20020a05651234c800b00512b00fa55emr5880137lfr.13.1709561068360;
-        Mon, 04 Mar 2024 06:04:28 -0800 (PST)
-Received: from [192.168.0.31] (84-115-209-225.cable.dynamic.surfer.at. [84.115.209.225])
-        by smtp.gmail.com with ESMTPSA id q22-20020aa7da96000000b005669ce3f761sm4660283eds.59.2024.03.04.06.04.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 06:04:27 -0800 (PST)
-Message-ID: <c2e4ae25-1e8a-4f54-8321-800a7b7f8583@gmail.com>
-Date: Mon, 4 Mar 2024 15:04:26 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASVbVfeB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81610C433C7;
+	Mon,  4 Mar 2024 14:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709561161;
+	bh=s1zQ71bLde/eKiV6DypERODOwCYcGUlkgXu0fdjnFB0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ASVbVfeBUX2kc+fQgsWLOBYMMk4uCVBFKDhLlkoXEXB7BtvDESGdut+IbP4D4ar0v
+	 zwJld4LUHk8tTXgvC5eWqdpXP+iXBs5WoH/s1UUhKhWdc8H1e6tOrJK5t9EEL7fpZI
+	 1v4KBEofRqOxh3TEazHmIu0QORmT3KjPEOzbovmhLU3kX2ev3m3kkSmRdpW1VX/IsT
+	 3mFD+yY8J/7N9Z1MTU0X7XQnFEGSBlbElTMyDJEQk6LLcIJdTimxYgSBJpMSwpwFv3
+	 C4GsS5a4UmssM/jKNl8x4xx1WivCXePeT5rzca3eCLrvoIZqRCjb9q1uYgnD/hCtFm
+	 V4Q2ik2ppZxlw==
+Date: Mon, 4 Mar 2024 15:05:55 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: linux-fsdevel@vger.kernel.org, kernel@collabora.com, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Guenter Roeck <groeck@chromium.org>, Doug Anderson <dianders@chromium.org>, 
+	Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Mike Frysinger <vapier@chromium.org>
+Subject: Re: [PATCH v2] proc: allow restricting /proc/pid/mem writes
+Message-ID: <20240304-legten-pelzmantel-1dca3659a892@brauner>
+References: <20240301213442.198443-1-adrian.ratiu@collabora.com>
+ <20240304-zugute-abtragen-d499556390b3@brauner>
+ <39e47-65e5d100-1-5e37bd0@176022561>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Missing bcm5974 touchpad on Macbooks
-Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>,
- Javier Carrasco <javier.carrasco@wolfvision.net>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <87sf161jjc.wl-tiwai@suse.de>
- <6ef6c5bf-e6e5-4711-81c6-6ae41de2e61e@wolfvision.net>
- <874jdm17yt.wl-tiwai@suse.de>
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-In-Reply-To: <874jdm17yt.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <39e47-65e5d100-1-5e37bd0@176022561>
 
-
-On 04.03.24 13:45, Takashi Iwai wrote:
-> On Mon, 04 Mar 2024 12:26:48 +0100,
-> Javier Carrasco wrote:
->>
->> On 04.03.24 09:35, Takashi Iwai wrote:
->>> Hi,
->>>
->>> we've received a few regression reports for openSUSE Leap about the
->>> missing touchpad on Macbooks.  After debugging, this turned out to be
->>> the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
->>>     Input: bcm5974 - check endpoint type before starting traffic
->>>
->>> And, the same regression was confirmed on the upstream 6.8-rc6
->>> kernel.
->>>
->>> Reverting the commit above fixes the problem, the touchpad reappears.
->>>
->>> The detailed hardware info is found at:
->>>   https://bugzilla.suse.com/show_bug.cgi?id=1220030
->>>
->>> Feel free to join the bugzilla above, or let me know if you need
->>> something for debugging, then I'll delegate on the bugzilla.
->>>
->>>
->>> thanks,
->>>
->>> Takashi
->>>
->>
->> Hi Takashi,
->>
->> The commit adds a check to ensure that the endpoint type is interrupt.
->>
->> According to that report, the issue arose with a MacBook Pro 5.1 (no
->> button, only trackpad endpoint), so the check on the tp_ep address
->> (0x81) returns false. I assume that you see an error message
->> ("Unexpected non-int endpoint) and  the probe function fails returning
->> -ENODEV.
+On Mon, Mar 04, 2024 at 01:48:19PM +0000, Adrian Ratiu wrote:
+> On Monday, March 04, 2024 15:20 EET, Christian Brauner <brauner@kernel.org> wrote:
 > 
-> Right, there is the message.
+> > On Fri, Mar 01, 2024 at 11:34:42PM +0200, Adrian Ratiu wrote:
+> > > Prior to v2.6.39 write access to /proc/<pid>/mem was restricted,
+> > > after which it got allowed in commit 198214a7ee50 ("proc: enable
+> > > writing to /proc/pid/mem"). Famous last words from that patch:
+> > > "no longer a security hazard". :)
+> > > 
+> > > Afterwards exploits appeared started causing drama like [1]. The
+> > > /proc/*/mem exploits can be rather sophisticated like [2] which
+> > > installed an arbitrary payload from noexec storage into a running
+> > > process then exec'd it, which itself could include an ELF loader
+> > > to run arbitrary code off noexec storage.
+> > > 
+> > > As part of hardening against these types of attacks, distrbutions
+> > > can restrict /proc/*/mem to only allow writes when they makes sense,
+> > > like in case of debuggers which have ptrace permissions, as they
+> > > are able to access memory anyway via PTRACE_POKEDATA and friends.
+> > > 
+> > > Dropping the mode bits disables write access for non-root users.
+> > > Trying to `chmod` the paths back fails as the kernel rejects it.
+> > > 
+> > > For users with CAP_DAC_OVERRIDE (usually just root) we have to
+> > > disable the mem_write callback to avoid bypassing the mode bits.
+> > > 
+> > > Writes can be used to bypass permissions on memory maps, even if a
+> > > memory region is mapped r-x (as is a program's executable pages),
+> > > the process can open its own /proc/self/mem file and write to the
+> > > pages directly.
+> > > 
+> > > Even if seccomp filters block mmap/mprotect calls with W|X perms,
+> > > they often cannot block open calls as daemons want to read/write
+> > > their own runtime state and seccomp filters cannot check file paths.
+> > > Write calls also can't be blocked in general via seccomp.
+> > > 
+> > > Since the mem file is part of the dynamic /proc/<pid>/ space, we
+> > > can't run chmod once at boot to restrict it (and trying to react
+> > > to every process and run chmod doesn't scale, and the kernel no
+> > > longer allows chmod on any of these paths).
+> > > 
+> > > SELinux could be used with a rule to cover all /proc/*/mem files,
+> > > but even then having multiple ways to deny an attack is useful in
+> > > case on layer fails.
+> > > 
+> > > [1] https://lwn.net/Articles/476947/
+> > > [2] https://issues.chromium.org/issues/40089045
+> > > 
+> > > Based on an initial patch by Mike Frysinger <vapier@chromium.org>.
+> > > 
+> > > Cc: Guenter Roeck <groeck@chromium.org>
+> > > Cc: Doug Anderson <dianders@chromium.org>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > Cc: Jann Horn <jannh@google.com>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > > Cc: Christian Brauner <brauner@kernel.org>
+> > > Co-developed-by: Mike Frysinger <vapier@chromium.org>
+> > > Signed-off-by: Mike Frysinger <vapier@chromium.org>
+> > > Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> > > ---
+> > > Changes in v2:
+> > >  * Added boot time parameter with default kconfig option
+> > >  * Moved check earlier in mem_open() instead of mem_write()
+> > >  * Simplified implementation branching
+> > >  * Removed dependency on CONFIG_MEMCG
+> > > ---
+> > >  .../admin-guide/kernel-parameters.txt         |  4 ++
+> > >  fs/proc/base.c                                | 47 ++++++++++++++++++-
+> > >  security/Kconfig                              | 22 +++++++++
+> > >  3 files changed, 71 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > index 460b97a1d0da..0647e2f54248 100644
+> > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -5618,6 +5618,10 @@
+> > >  	reset_devices	[KNL] Force drivers to reset the underlying device
+> > >  			during initialization.
+> > >  
+> > > +	restrict_proc_mem_write= [KNL]
+> > > +			Enable or disable write access to /proc/*/mem files.
+> > > +			Default is SECURITY_PROC_MEM_RESTRICT_WRITE_DEFAULT_ON.
+> > > +
+> > >  	resume=		[SWSUSP]
+> > >  			Specify the partition device for software suspend
+> > >  			Format:
+> > > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > > index 98a031ac2648..92f668191312 100644
+> > > --- a/fs/proc/base.c
+> > > +++ b/fs/proc/base.c
+> > > @@ -152,6 +152,30 @@ struct pid_entry {
+> > >  		NULL, &proc_pid_attr_operations,	\
+> > >  		{ .lsmid = LSMID })
+> > >  
+> > > +#ifdef CONFIG_SECURITY_PROC_MEM_RESTRICT_WRITE
+> > > +DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_SECURITY_PROC_MEM_RESTRICT_WRITE_DEFAULT_ON,
+> > > +			   restrict_proc_mem_write);
+> > > +static int __init early_restrict_proc_mem_write(char *buf)
+> > > +{
+> > > +	int ret;
+> > > +	bool bool_result;
+> > > +
+> > > +	ret = kstrtobool(buf, &bool_result);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	if (bool_result)
+> > > +		static_branch_enable(&restrict_proc_mem_write);
+> > > +	else
+> > > +		static_branch_disable(&restrict_proc_mem_write);
+> > > +	return 0;
+> > > +}
+> > > +early_param("restrict_proc_mem_write", early_restrict_proc_mem_write);
+> > > +# define PROC_PID_MEM_MODE S_IRUSR
+> > > +#else
+> > > +# define PROC_PID_MEM_MODE (S_IRUSR|S_IWUSR)
+> > > +#endif
+> > > +
+> > >  /*
+> > >   * Count the number of hardlinks for the pid_entry table, excluding the .
+> > >   * and .. links.
+> > > @@ -829,6 +853,25 @@ static int mem_open(struct inode *inode, struct file *file)
+> > >  {
+> > >  	int ret = __mem_open(inode, file, PTRACE_MODE_ATTACH);
+> > >  
+> > > +#ifdef CONFIG_SECURITY_PROC_MEM_RESTRICT_WRITE
+> > > +	struct mm_struct *mm = file->private_data;
+> > > +	struct task_struct *task = get_proc_task(inode);
+> > > +
+> > > +	if (mm && task) {
+> > > +		/* Only allow writes by processes already ptracing the target task */
+> > > +		if (file->f_mode & FMODE_WRITE &&
+> > > +		    static_branch_maybe(CONFIG_SECURITY_PROC_MEM_RESTRICT_WRITE_DEFAULT_ON,
+> > > +					&restrict_proc_mem_write)) {
+> > > +			rcu_read_lock();
+> > > +			if (!ptracer_capable(current, mm->user_ns) ||
+> > > +			    current != ptrace_parent(task))
+> > > +				ret = -EACCES;
+> > 
+> > Uhm, this will break the seccomp notifier, no? So you can't turn on
+> > SECURITY_PROC_MEM_RESTRICT_WRITE when you want to use the seccomp
+> > notifier to do system call interception and rewrite memory locations of
+> > the calling task, no? Which is very much relied upon in various
+> > container managers and possibly other security tools.
+> > 
+> > Which means that you can't turn this on in any of the regular distros.
+> > 
+> > So you need to either account for the calling task being a seccomp
+> > supervisor for the task whose memory it is trying to access or you need
+> > to provide a migration path by adding an api that let's caller's perform
+> > these writes through the seccomp notifier.
 > 
->> Do you see any warning in the logs when you revert the commit? It was
->> added to prevent using wrong endpoint types, which will display the
->> following warning: "BOGUS urb xfer, pipe "some_number" != type
->> "another_number""
+> Thanks for raising this!
 > 
-> The revert was tested on the downstream kernel, but it has also the
-> check of bogus pipe, and there was no such warning, as far as I see
-> the report.
+> I did test seccomp filtering/blocking functionality which seemed to
+> work but I'll make sure to also test syscall interception before
+> sending v3, to confirm whether it breaks.
 > 
->> I am just wondering if for some reason the check on interrupt type is
->> wrong here.
-> 
-> I'll ask reporters to give the lsusb -v output so that we can take a
-> deeper look.  Also, I'm building a test kernel based on 6.8-rc7 with
-> the revert, and ask reporters to test with it, just to be sure.
-> 
-> 
-> thanks,
-> 
-> Takashi
+> The simplest solution is to add an exception for seccomp supervisors
+> just like we did for tracers, yes, so I'm inclined to go with that if
+> needed. :)
 
+Ok. Note that your patch also doesn't cover process_vm_writev() which
+means that you can still use that as an alternative to write to memory -
+albeit with a lote more raciness. IOW, a seccomp notifier can do the
+dance of:
 
-Getting the output of lsusb would be awesome, thank you.
+pidfd = clone3(CLONE_PIDFD)
+// handle error
+int fd_mem = open("/proc/$pid/mem", O_RDWR);:
+// handle error
+if (pidfd_send_signal(pidfd, 0, ...) == 0)
+        write(fd_mem, ...);
 
-The bcm9547 driver has always made the assumption that the endpoint type
-is interrupt, and the expected output from lsusb would be something like
+which lets it avoid the raciness. That's not possible with
+process_vm_writev() especially if it's received via AF_UNIX sockets
+which happens if the seccomp notifier lives in a proxy process. I know
+that happens in the wild.
 
-bEndpointAddress     0x81  EP 1 IN
-bmAttributes         3
-Transfer Type        Interrupt
-
-which is what the reverted commit checks.
-
-I don't have the specific piece of hardware the report mentions, but I
-triggered the probe with the endpoint type = interrupt and the check was
-fine i.e. the probe did not fail. That made me think that the endpoint
-type could be different, but I am dubious about that.
-
-I will keep an eye on the bugzilla you linked, in case we get feedback
-quickly.
-
-Best regards,
-Javier Carrasco
+So overall, it seems a bit odd to me because why block /proc/<pid>/mem
+specifically and not also cover process_vm_writev()? Because that's easy
+to block via regular seccomp system call filtering?
