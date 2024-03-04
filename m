@@ -1,129 +1,136 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083201A702
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B129199A2;
+	Mon,  4 Mar 2024 08:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709541269; cv=none; b=UnTZNYsYn8BH4KlP+63m/6zhqdbH21PhZywVlvsINSmxROY7j/dS5f462RJIiWgKrsFgIffeH8WWKu0hB68sb70ulTF+iJ2tJTtkMRzyw4hFBY10RVGy3PlstqedKCLvCI8uHi1MJloNzfjem6bRILkAPa/+f9OJD8FjEhY9XGk=
+	t=1709541339; cv=none; b=pTi9jVJrbS44BXiBl+go3kNzkcWs392B8jsXrtfPIwgLtDvreCdvvT/d9RzvcJFX/4BMpzO3fDHJknAhqSKQIsw1pdpS98i0HD9t9P1gtlKqkBl58RB6NOYnf3Tqa+zzxeWqaqaP83z5eq37mTcmb6wh+CeboPQwW+Apo3qk4YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709541269; c=relaxed/simple;
-	bh=rHt8xRd7wPtj4nzrL5yUEYuZxlSpCnM79WMoVHGv/GM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WPv2TAI7RLr+Y+Cnpm7m3/rmt1gjIz0C0PobPmB3QIKlZ9TAY4rlx6KSYNqxUtMxZsY/QJ+sHRItd3H3YbxjlZZByoQCdtDPDy6xAZJ8IyVr4EJpgReLkblMsBDetlmr08PN/gJBK3T7RhbgLamnxpjFw7SkITGYrRIVy5PeY6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=GQPd+y3k; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1709541339; c=relaxed/simple;
+	bh=WKGGpWRMANQaqtEPi4SVdmap1qUQKAiiyE9H3DFCJF8=;
+	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=h65i/dNqlX3iId6PR5RHDfa1s0FBg6m/AJuZIawgjd7cUZaAyHV0RCs9By014saIcARp716XbLz+4OkmcsJSc2MGxltpDINjkFO3mSsUbYeb8s9ARdlh45bAY2rKNhcsjVhhjisKa8nWcRlqL96KmdAqp+ZlSmsZdSBIrHDQxqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cuKySK/g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PhtnxHOY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cuKySK/g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PhtnxHOY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GQPd+y3k"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4248XYnT449332
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 4 Mar 2024 00:33:39 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4248XYnT449332
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1709541220;
-	bh=u5MzfYslbwvnWZsLlHhoH6dB+B9y4C5n+dg6pZDkb0I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GQPd+y3kbiU0y6OU0+1fgS8TmyqqCK9SoA0aHp/ONyWTSNTS57BZlHRyDAAf3oYLQ
-	 T0lsWLgRxjGhJTHbub4LbGBOB5h/iO4bQsiSkvZNtv2p2ZLoUEy5tv2rR420WMuNt5
-	 lpNJSNyKv0k0omAspzGNdUtfI3m3TTeupmMR0sdZHTdAi/LE8DYEuqKqVkRwN8mFSZ
-	 alr3QYRNa97Y0Xe7VJtSagpcQY5AB7q/fEW8qSC9bDf0wN/TmYjm9iLAQpxL/m5j8t
-	 ZulPzFa+/DoNshIxNLC/T8YcgdI9dW+gvk2zSVFuDahyArrpuJGXNRve+v/jDinVPy
-	 L7/wpF0XQjujw==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, boris.ostrovsky@oracle.com, arnd@arndb.de,
-        andrew.cooper3@citrix.com, brgerst@gmail.com
-Subject: [PATCH v2 1/1] x86/fred: Fix init_task thread stack pointer initialization
-Date: Mon,  4 Mar 2024 00:33:33 -0800
-Message-ID: <20240304083333.449322-1-xin@zytor.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cuKySK/g";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PhtnxHOY";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cuKySK/g";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PhtnxHOY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4EC2768848;
+	Mon,  4 Mar 2024 08:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709541336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
+	b=cuKySK/gWSj3aRK5Akjm7J4dlysMBPpA6EKLtardyf/lc5ZodDMeelhHejt/rPUEQSdMam
+	VlTUVqT10JUVTYPWYEPu6kCJZdQPtVRHey6zhFzXKTfLF6X3lBXJ1jyjFBY1xbY5EjB7xv
+	3w7pvKRu6XNmgYE1SjGu/CTSlOqNp7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709541336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
+	b=PhtnxHOYukPKzudsPxUY3YQPZJNaj5df0/OOXPic59SJ3yk9oQF0i95b75cBYYSxqtXZS5
+	nWL8jnFUFY3H/xCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709541336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
+	b=cuKySK/gWSj3aRK5Akjm7J4dlysMBPpA6EKLtardyf/lc5ZodDMeelhHejt/rPUEQSdMam
+	VlTUVqT10JUVTYPWYEPu6kCJZdQPtVRHey6zhFzXKTfLF6X3lBXJ1jyjFBY1xbY5EjB7xv
+	3w7pvKRu6XNmgYE1SjGu/CTSlOqNp7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709541336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
+	b=PhtnxHOYukPKzudsPxUY3YQPZJNaj5df0/OOXPic59SJ3yk9oQF0i95b75cBYYSxqtXZS5
+	nWL8jnFUFY3H/xCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1629813A5B;
+	Mon,  4 Mar 2024 08:35:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id d3qxA9iH5WX1bgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 04 Mar 2024 08:35:36 +0000
+Date: Mon, 04 Mar 2024 09:35:35 +0100
+Message-ID: <87sf161jjc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+    linux-input@vger.kernel.org,
+    linux-kernel@vger.kernel.org,
+    regressions@lists.linux.dev
+Subject: [REGRESSION] Missing bcm5974 touchpad on Macbooks
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="cuKySK/g";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=PhtnxHOY
+X-Spamd-Result: default: False [-1.94 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.com:url];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.63)[98.35%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 4EC2768848
+X-Spam-Level: 
+X-Spam-Score: -1.94
+X-Spam-Flag: NO
 
-As TOP_OF_KERNEL_STACK_PADDING is defined as 0 on x86_64, no one noticed
-it's missing in the calculation of the .sp field in INIT_THREAD until it
-is defined to 16 with CONFIG_X86_FRED=y.
+Hi,
 
-Subtract TOP_OF_KERNEL_STACK_PADDING from the .sp field of INIT_THREAD.
+we've received a few regression reports for openSUSE Leap about the
+missing touchpad on Macbooks.  After debugging, this turned out to be
+the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
+    Input: bcm5974 - check endpoint type before starting traffic
 
-Fixes: 65c9cc9e2c14 ("x86/fred: Reserve space for the FRED stack frame")
-Fixes: 3adee777ad0d ("x86/smpboot: Remove initial_stack on 64-bit")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202402262159.183c2a37-lkp@intel.com
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
+And, the same regression was confirmed on the upstream 6.8-rc6
+kernel.
 
-Change Since v1:
-* Apply offset TOP_OF_KERNEL_STACK_PADDING to all uses of __end_init_task
-  (Brian Gerst).
----
- arch/x86/include/asm/processor.h | 6 ++++--
- arch/x86/kernel/head_64.S        | 3 ++-
- arch/x86/xen/xen-head.S          | 2 +-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+Reverting the commit above fixes the problem, the touchpad reappears.
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 26620d7642a9..17fe81998ce4 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -664,8 +664,10 @@ static __always_inline void prefetchw(const void *x)
- #else
- extern unsigned long __end_init_task[];
- 
--#define INIT_THREAD {							    \
--	.sp	= (unsigned long)&__end_init_task - sizeof(struct pt_regs), \
-+#define INIT_THREAD {							\
-+	.sp	= (unsigned long)&__end_init_task -			\
-+		  TOP_OF_KERNEL_STACK_PADDING -				\
-+		  sizeof(struct pt_regs),				\
- }
- 
- extern unsigned long KSTK_ESP(struct task_struct *task);
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index d4918d03efb4..c38e43589046 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -26,6 +26,7 @@
- #include <asm/apicdef.h>
- #include <asm/fixmap.h>
- #include <asm/smp.h>
-+#include <asm/thread_info.h>
- 
- /*
-  * We are not able to switch in one step to the final KERNEL ADDRESS SPACE
-@@ -66,7 +67,7 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	mov	%rsi, %r15
- 
- 	/* Set up the stack for verify_cpu() */
--	leaq	(__end_init_task - PTREGS_SIZE)(%rip), %rsp
-+	leaq	(__end_init_task - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE)(%rip), %rsp
- 
- 	leaq	_text(%rip), %rdi
- 
-diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-index a0ea285878db..04101b984f24 100644
---- a/arch/x86/xen/xen-head.S
-+++ b/arch/x86/xen/xen-head.S
-@@ -49,7 +49,7 @@ SYM_CODE_START(startup_xen)
- 	ANNOTATE_NOENDBR
- 	cld
- 
--	leaq	(__end_init_task - PTREGS_SIZE)(%rip), %rsp
-+	leaq	(__end_init_task - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE)(%rip), %rsp
- 
- 	/* Set up %gs.
- 	 *
+The detailed hardware info is found at:
+  https://bugzilla.suse.com/show_bug.cgi?id=1220030
 
-base-commit: e13841907b8fda0ae0ce1ec03684665f578416a8
--- 
-2.44.0
+Feel free to join the bugzilla above, or let me know if you need
+something for debugging, then I'll delegate on the bugzilla.
 
+
+thanks,
+
+Takashi
