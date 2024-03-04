@@ -1,182 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AF361683;
-	Mon,  4 Mar 2024 19:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8591B48CC7;
+	Mon,  4 Mar 2024 19:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709578814; cv=none; b=qyWLvMAuINECpUxbercIgN2kvmObflk4NSV0PxoDogE1QgXIZC3YfWDhR9LK5lwratgJNnI7I5C1hhVRQCDSrXGbV86T3uSHznrgCB2pk5ujyqkxbf2o4tThC4Pz8wgBaFY0Iv/ullNOalX0hqomjfBd4fgfjQJg7Gi3qjSbfmc=
+	t=1709578931; cv=none; b=GpaL1iWpUxj11eCMdjpM6HdcqxwNyy5KIeXIyoSkkVhmCgmm8iqhlYqpWgHhzpPh+TJkXH0/CArykiofmtIIxWzbgLbBdvFSfKf1IayslKBIJvUVmB87vRbZzQpH/cG0mdvKU8krhdRBDZ9sj8jdLWB1lFMvLaG1ZX8iJLqeTPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709578814; c=relaxed/simple;
-	bh=SWDsJO4ZHNXRWOcWTB3PKNmeEVWvRKfUX+uqo98LLi8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y4tqdgy5g8Kho/SCn/b4WIslAjG+Sb25KRimaYcsoTYKqtYizIIyhFf3LVEq8czMdwgDBGdMeXpt47WMXPktw435F5y6WtwMe0Wl6/JEvDI0ZuH7T3XJdV8qdspZv0sfM8lmdkluItxvcPrTfNNKR1f2rZd5rre7Lp/1O/QHc4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DERdcgyr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DERdcgyr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68129C433C7;
-	Mon,  4 Mar 2024 19:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709578813;
-	bh=SWDsJO4ZHNXRWOcWTB3PKNmeEVWvRKfUX+uqo98LLi8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DERdcgyrjXto8iQ69aYWa2VEWcp0xllWKxDjq4BNdq95iZSzXZ/uUDvz8YeZBouA+
-	 pT+yax23HQKzVr1KWd0OZ/F2ZBZJ2y+5vRRvffZC8eRABcrSPibC3K5ep21WV6x46l
-	 y1rjNu3Ui/i+jkvWwJj8qSQhKFzLbJtaQNe3OnRsLzILkc/ImLhsPPDBlN6ugYh4Lr
-	 xH8knnTEHFVtwgjrOv0MNz/qLJkXYfXrHuQq5xZglDpGnUSQraokeB4NpoM2MR6ynv
-	 pkdKTG2RI3BUkDypfAVKeOVoNHACr/lETGerfqzZhGLJrf4ETLbKlDcK3Jeirx74mX
-	 LOD3XIJBkAvgw==
-Date: Mon, 4 Mar 2024 19:00:09 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Yangyu Chen <cyy@cyyself.name>
-Cc: linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] riscv: dts: add initial canmv-k230 and k230-evb dts
-Message-ID: <20240304-veteran-frightful-b0700233c98f@spud>
-References: <tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com>
- <tencent_1DB2D1914F4E30569BC4B103B724A6214405@qq.com>
+	s=arc-20240116; t=1709578931; c=relaxed/simple;
+	bh=jz+YaBY6pOhcQeRXB2G4cm+3RZ3GXD8LU3XyAlsEUug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KaYTCdkYe8G+sJqgxMPQLPTyvUJ2HgISgrwkbQlvODe3rpDRqoe0fGOb7c7wFfwPyHw4naoDIkET/mvmsObbtykBc615SuAW7g+QUsEgZjZmtxc3aSosC3qGtoFTo+cJTRl/aViw5tHLkaLcUHcxl8iiXSTLNfFpjapGXLRP9GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc74435c428so5312289276.2;
+        Mon, 04 Mar 2024 11:02:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709578928; x=1710183728;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LYl1mIRYbr8vmVU4jA2oiSVVNLp+IoIPd1/D/iVf0OQ=;
+        b=mA21OxOmYlV1KRDI06BXJ01zNFPGfQ6O9hL+lWVx0o8bTvc7ixGQWn4euJuCTlHG44
+         tbRr2wsG0XNx/5QoW8bQLYcsrwptZB4qXsPaA9RfYAcWiwZotsTSLhfsH+ffHy84dwKR
+         xvJsS70P4hJeY26gG2ceUTnVtShU5t0DVfsD9h04FigcjhVl5BrBxLcXu0E1AGcr2dFx
+         Z9NbwCa2JWOTIpRiv4soVVbfPmEBlYbo9DIQt3PgxhRJ3k6PqtjPYCvBlHMBuDq6tAjn
+         J+1v6geIQdtjZ8VbhDyYrdX/CwbaF+3aiP6zLHRDFJ/9knbc0UMjLea/QAz3I+H1vHeL
+         GVww==
+X-Forwarded-Encrypted: i=1; AJvYcCVxI6GfRbDYIRHuiJLgWCPne7e7Q6iZgXLJUOWSl3Ms5zhAnuzye4n4ZrcWYscEPe7h0HCKw/PClpbKkIKjpQXM2nM+GE/6Dqn608z0Q2vpOYsedUMML7N/Kkt4YdYC38b+ENA9BdLQkegg372XbsExdmipJwNOUHRgAceO2RIkG8rYUfk=
+X-Gm-Message-State: AOJu0YxnMbX9xKF3tYUpPJcEc/plutMvZEpUpaXEh8yM8ywilrAyEMc9
+	DfuuFGiF0sVdHpH70A75bBaUNpxkrI+NqSEasFIMco0BpReJMkKLYPZ8HB9AHus=
+X-Google-Smtp-Source: AGHT+IHcGnKBnMT8d7rh2gKo/LhCbodyr0HL6t21lbnSOzsIBsDg9Jhv8uRbsuCx21k7kmdGmJTR+Q==
+X-Received: by 2002:a25:c546:0:b0:dc6:ff66:87a8 with SMTP id v67-20020a25c546000000b00dc6ff6687a8mr6990780ybe.51.1709578928022;
+        Mon, 04 Mar 2024 11:02:08 -0800 (PST)
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
+        by smtp.gmail.com with ESMTPSA id x3-20020a258583000000b00dcc234241c4sm2269850ybk.55.2024.03.04.11.02.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 11:02:07 -0800 (PST)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-60925d20af0so48776787b3.2;
+        Mon, 04 Mar 2024 11:02:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXjRVp8g/Ijxu1BPEJDwJQ3cbUB3aYLsyV9MxLOI9BmmctTfDKF9ZmqKoiE0OMh6aeQ3a6huXZzdnfyO/rHXyM8U+oWPSi99eP733TcFHVv9Q3TJM119cgSXqOeq90csZWMyOCCeFlCNkja+/mQc8FfZbiLr20FRYuwescsv8gbO7k0+Ps=
+X-Received: by 2002:a0d:d4c6:0:b0:609:3250:865 with SMTP id
+ w189-20020a0dd4c6000000b0060932500865mr10236091ywd.7.1709578927167; Mon, 04
+ Mar 2024 11:02:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UYXkKkp3DI44EvOn"
-Content-Disposition: inline
-In-Reply-To: <tencent_1DB2D1914F4E30569BC4B103B724A6214405@qq.com>
-
-
---UYXkKkp3DI44EvOn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240301014203.2033844-1-chris.packham@alliedtelesis.co.nz>
+ <20240301014203.2033844-5-chris.packham@alliedtelesis.co.nz>
+ <ZeIdXIx5zYjKQiSO@smile.fi.intel.com> <CAMuHMdVJiWtB4MSGHXXz=OAEvu-+b9Xp-jQ_NXWck+hwKGK4TQ@mail.gmail.com>
+ <CAHp75VesLCo72ftQ2BNEKSXwF9A2pe0Vbnuves2-L3ist_twNQ@mail.gmail.com>
+ <CAMuHMdXjqVQeQF6TFr1nQmUCLrEbY1gq5OdCcz6T60W33QO2-Q@mail.gmail.com> <CAHp75Vfh_pv50Pk84JGz6qT=K9m3w=0_HDGX2WvqEN4Nm8fFDw@mail.gmail.com>
+In-Reply-To: <CAHp75Vfh_pv50Pk84JGz6qT=K9m3w=0_HDGX2WvqEN4Nm8fFDw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 4 Mar 2024 20:01:58 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVuiYdjV46aS2fqPsFdW-vGK7zm_sY-LbWGYg4U0Ar5yQ@mail.gmail.com>
+Message-ID: <CAMuHMdVuiYdjV46aS2fqPsFdW-vGK7zm_sY-LbWGYg4U0Ar5yQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] ARM: dts: marvell: Indicate USB activity on x530
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Chris Packham <chris.packham@alliedtelesis.co.nz>, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, 
+	pavel@ucw.cz, lee@kernel.org, linux-leds@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hey,
+Hi Andy,
 
-Meant to reply here earlier but I got distracted.
+On Mon, Mar 4, 2024 at 7:17=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Mar 4, 2024 at 11:57=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > On Sun, Mar 3, 2024 at 9:43=E2=80=AFPM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+>
+> ...
+>
+> > So IMHO it would be a bad idea to make the DP mandatory.
+>
+> But I'm not talking about making it mandatory, I'm talking about the
 
-On Sun, Mar 03, 2024 at 09:26:26PM +0800, Yangyu Chen wrote:
-> Add initial dts for CanMV-K230 and K230-EVB powered by Canaan Kendryte
-> K230 SoC [1].
->=20
-> Some key considerations:
-> - Only enable BigCore which is 1.6GHz RV64GCBV
->=20
-> Since is there cache coherence between two cores remains a mystery since
-> they have a dedicated L2 Cache. And the factory SDK uses it for other OS
-> by default.
->=20
-> Meanwhile, although docs from Canaan said 1.6GHz Core with Vector is
-> CPU1, the csr.mhartid of this core is 0.
->=20
-> - Support for "zba" "zbb" "zbc" "zbs" are tested by hand
->=20
-> The user manual of C908 from T-Head does not document it specifically.
-> It just said it supports B extension V1.0-rc1. [2]
->=20
-> - Support for "zicbom" is tested by hand
->=20
-> Have tested with some out-of-tree drivers that need DMA and they do not
-> come to the dts currently.
->=20
-> - Cache parameters are inferred from T-Head docs [2] and Cannan docs [1]
->=20
-> L1i: 32KB, VIPT 4-Way set-associative, 64B Cacheline
-> L1d: 32KB, VIPT 4-Way set-associative, 64B Cacheline
-> L2: 256KB, PIPI 16-way set-associative, 64B Cacheline
->=20
-> The numbers of cache sets are calculated from these parameters.
->=20
-> - MMU only supports Sv39
->=20
-> Since T-Head docs [2] says C908 should support sv48. However, it will fail
-> during the kernel probe. I also tested it by hand on M-Mode software,
-> writing sv48 to satp.mode will not trap but will leave the csr unchanged.
->=20
-> [1] https://developer.canaan-creative.com/k230/dev/zh/00_hardware/K230_da=
-tasheet.html#chapter-1-introduction
-> [2] https://occ-intl-prod.oss-ap-southeast-1.aliyuncs.com/resource//16992=
-68369347/XuanTie-C908-UserManual.pdf
->=20
-> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-> ---
->  arch/riscv/boot/dts/canaan/Makefile       |   2 +
->  arch/riscv/boot/dts/canaan/canmv-k230.dts |  23 ++++
+OK.
 
-Could you name this file "k230-canmv.dts" please, so that the soc comes
-first?
+> DP to be used as DP when it _is_ present and wired. If current
+> platform wants to use DP for something else, I'm pretty much worried
+> that this is the right thing to do.
 
->  arch/riscv/boot/dts/canaan/k230-evb.dts   |  23 ++++
->  arch/riscv/boot/dts/canaan/k230.dtsi      | 146 ++++++++++++++++++++++
->  4 files changed, 194 insertions(+)
->  create mode 100644 arch/riscv/boot/dts/canaan/canmv-k230.dts
->  create mode 100644 arch/riscv/boot/dts/canaan/k230-evb.dts
->  create mode 100644 arch/riscv/boot/dts/canaan/k230.dtsi
->=20
-> diff --git a/arch/riscv/boot/dts/canaan/Makefile b/arch/riscv/boot/dts/ca=
-naan/Makefile
-> index 987d1f0c41f0..b4a0ec668f9a 100644
-> --- a/arch/riscv/boot/dts/canaan/Makefile
-> +++ b/arch/riscv/boot/dts/canaan/Makefile
-> @@ -5,3 +5,5 @@ dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_bit.dtb
->  dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_dock.dtb
->  dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_go.dtb
->  dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maixduino.dtb
-> +dtb-$(CONFIG_ARCH_CANAAN) +=3D k230-evb.dtb
-> +dtb-$(CONFIG_ARCH_CANAAN) +=3D canmv-k230.dtb
-> \ No newline at end of file
-> diff --git a/arch/riscv/boot/dts/canaan/canmv-k230.dts b/arch/riscv/boot/=
-dts/canaan/canmv-k230.dts
-> new file mode 100644
-> index 000000000000..09777616d30e
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/canaan/canmv-k230.dts
-> @@ -0,0 +1,23 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+There is not much we can do about that. People can already model
+such displays as individual LEDs, too.
+And in some sense, the auxdisplay/linedisp driver for
+"generic-gpio-7seg" imposes a policy, too.
+What if people want to e.g. use 4 7-seg displays to show a continuously
+running snake?
 
-Is there a reason that you only put these under GPL-2.0+?
-The usual license for DT stuff is (GPL-2.0 OR BSD-2-Clause), dual
-licensing makes it easier for other projects to use the devicetrees.
+Gr{oetje,eeting}s,
 
-> +
-> +		plic: interrupt-controller@f00000000 {
-> +			compatible =3D "thead,c900-plic";
-> +			reg =3D <0xf 0x00000000 0x0 0x04000000>;
-> +			interrupts-extended =3D <&cpu0_intc 11>, <&cpu0_intc 9>;
-> +			interrupt-controller;
-> +			reg-names =3D "control";
-> +			#address-cells =3D <0>;
-> +			#interrupt-cells =3D <2>;
-> +			riscv,ndev =3D <208>;
-> +		};
-> +
-> +		clint: timer@f04000000 {
-> +			compatible =3D "thead,c900-clint";
-> +			reg =3D <0xf 0x04000000 0x0 0x04000000>;
-> +			interrupts-extended =3D <&cpu0_intc 3>, <&cpu0_intc 7>;
-> +		};
+                        Geert
 
-Both of these should have SoC-specific compatibles. Without them, this
-should not pass dtbs_check. Did you run it?
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Cheers,
-Conor.
-
-
---UYXkKkp3DI44EvOn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeYaOQAKCRB4tDGHoIJi
-0jU9AP9wbUelD6ratQqXy2IleW+7MGXimY6JP5GbRbgIUomb2gD+O6cGO3g9VH5+
-vpEpWkPBpVWXpFbpnYKra7HLPzeuJQE=
-=2txQ
------END PGP SIGNATURE-----
-
---UYXkKkp3DI44EvOn--
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
