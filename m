@@ -1,136 +1,119 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFAA45945;
-	Mon,  4 Mar 2024 15:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EA33F9C0;
+	Mon,  4 Mar 2024 15:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709564583; cv=none; b=kW0ySVdwiAW/Dd+AqSOUNOrDyicl0bj9sKyQxo8J41a+V21cKU13hS14gJbQDvGeoelvGOHAAsuWVqiX/ej/fCIxSkTP7wnpIaoc5Hdc/not7jhYJmWkXf+i5dVi40VBefKQxb4CPok7xesReK1IkA3NzhTcOUlQO67EfjYpoKg=
+	t=1709564652; cv=none; b=BYg/4w4bqFAy/L+ONk5mySjLDUnR/zW3gU0vcWTWLpBtvYbq/4bWRhvcILXsKp55j/r80EBaA46Cf7Gkt+OZQRLbLjWmcqaERBcMS6A9EnFQQRPofjAnlVGeeEoNT/Kd516DhmuqHhVH9ZY+hZMDiPgd/JLkBCCDMFZG9njWoZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709564583; c=relaxed/simple;
-	bh=E7m7xNV1pXS9SED3gi2iwd2vJh0Ek189A/1Yh1JvJYs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DTlOgsN5oi22NeJZaLmhLT4jYWOwtkgB12+tKY4WSmNi3XZ5/Lk93ZO7RXQBoaPFunOqDN3GSZ/ZZ+HK8Ab9nfOCjX7ixvy8J5vh5ZsGHzrZxZI04MgXFj6Fwac+63fWIyRzQejGjRsQ5T7G4HgahpzT38sDoZYFGHn6eCQZLlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f4I7lUmX; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709564652; c=relaxed/simple;
+	bh=sUkZRyJ98U5WESus3dO/qr3DdVnkuuLZdtsBx6GFUVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i5q9YhPubmeMnF0/ZdEShYpEy7VUhXwjl+vprWbnVUQaYhbtQ7VxyGb7dJb9pYr8BBWSSmWKMe3j+Qt+K2qqJwfL6+7ZXPpAyQN4+e7Ue/s21hFMJGBD2JuOiX2viO4P+c147yOA8yoo4dfDiyx9h4yxMkap6Y6I5NlahGYT06E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwlfxjuC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4I7lUmX"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d944e8f367so30548845ad.0;
-        Mon, 04 Mar 2024 07:03:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709564581; x=1710169381; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rnXcc/0pU6MGyLtNvp9rjgwSJZoETOROqPJlOVOWeAQ=;
-        b=f4I7lUmXaF2BxDpr4TxBgWY2gKw/zAlaiA+dz1iFtI4mMKWEvKiFVSA+5ZU60AyxpX
-         +eKqyI1dchTMjqFK+m0NT9yi3pVHV0YZ+GQBdjgI+N2Kn1wPPJtVE4Gs3aaoRDS0DemU
-         OktQCCiS2BUvTtjEfNkpmEXiNh9hSqsPIO+RMQ66m6V82HGqyYadWtrMlt3xZsuEOacd
-         Ih5ZnXfszDILs8pAmjL/O6ShAGChiM324AbizdoRgGg+98LeHZbrh8R3/lRbhUvt6kP5
-         ydnbPKZw/8PeoVKd8EcMxtH5KuuNykAyACl6v2tMMn1xea8fUuDHPXt6sFHHzCe2o9M3
-         qAQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709564581; x=1710169381;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rnXcc/0pU6MGyLtNvp9rjgwSJZoETOROqPJlOVOWeAQ=;
-        b=rcH79JsGIf+R3nUU9jMfLIw2ETBrDHPfMPEIpDeqLg24Cq7OyXndujfgdKvkED2ACk
-         D8zxcyzeuXn/VIDRIJjs/+FO/zDv4S2SraTlLORy4NDo5bFWeJFQ522nW9ITAqqgOqbE
-         dN0X0p67Oa92jbdkS1r/FtK5qeh1F9FPRr4GIDQB5i88dEvtQLrr1zuvApbM7BzbMbGz
-         vo0TAxv1C1vKUs4iwGtCibPU/920UgHqQR3oXgZHNqc4MYr4+qBr8hDRMriEyAwxr61R
-         T4o/hjh/DwJYWYMXTFI0hExKYGdQ94Dwq8vcWDiaxhEErOiF7E7+gx0fgGlzXuT7m9yA
-         6/Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkdalI/PGPXRh6x1fjQg/f6tN2spzZiBLwVlTWtgsfw50qeQ2YNNGsepfzSrBhAoutZ+o6BE61bslM1mh70spbm0LuT1yiv62CGYcz
-X-Gm-Message-State: AOJu0YzXFIYojIgRlgm+kDrs79gUV0C2w0gA6XyGa2T3KcrT/Gn8NBWj
-	k0Ig/FHw/g/0yPjovsGJOh9IVIaLNKDXeRRv0l/cRHhAt8Ul4jv1VBd7fU10
-X-Google-Smtp-Source: AGHT+IHo7uSAOY7xHevAVNoD1yPBJfJR6TsI+tzQsEB+aQtTPbfOY8hhCOXO32d8l+xm5jAzUffExA==
-X-Received: by 2002:a17:902:ecd2:b0:1dc:c9f4:2dab with SMTP id a18-20020a170902ecd200b001dcc9f42dabmr10973649plh.1.1709564581287;
-        Mon, 04 Mar 2024 07:03:01 -0800 (PST)
-Received: from localhost.localdomain ([49.142.40.215])
-        by smtp.gmail.com with ESMTPSA id g1-20020a170902fe0100b001dc941f145dsm8639675plj.253.2024.03.04.07.02.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 07:03:00 -0800 (PST)
-From: skseofh@gmail.com
-To: robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org,
-	frowand.list@gmail.com,
-	linux-kernel@vger.kernel.org,
-	skseofh@gmail.com
-Subject: [PATCH] of: fdt: modify small size memory check
-Date: Tue,  5 Mar 2024 00:02:26 +0900
-Message-Id: <20240304150227.166053-1-skseofh@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAL_JsqKNGjKq3vcUPFiPa9JNq-8=oP=uBSD=tyKaPMH3cvAkww@mail.gmail.com>
-References: <CAL_JsqKNGjKq3vcUPFiPa9JNq-8=oP=uBSD=tyKaPMH3cvAkww@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwlfxjuC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0096C433F1;
+	Mon,  4 Mar 2024 15:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709564652;
+	bh=sUkZRyJ98U5WESus3dO/qr3DdVnkuuLZdtsBx6GFUVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jwlfxjuCNqmqMUTyLOsCMywTHyYeve0FUWr0Nh+EKoe2ysWjPj2eUeVAk6UPDA7Rv
+	 6hUG+TK+e4c4aV6d7C04+jNVHrgWxRc0BsnUlU9zYmUS3QGjS+mRkhTRYK6FKmUwbX
+	 EkkGOGl6t0zo84p0autOIEGHNxXNtNWvWeH3t1Tel1fnt2pPgEj1OCzjb80BHwzSgP
+	 LMFNXe+diQiiY437/I5LByPyodDxfuIafqX7Qs8C4Ygt2yvMZJ5KovPKvm9fIRdWO3
+	 rJCnfuj20yoyigyqm2E1CthVLJFcK5waVtglDg4+K14KBqPAunP9lpKuGh9EXmB/MF
+	 RCPNOOzzrWnzg==
+Date: Mon, 4 Mar 2024 16:04:08 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Jesper Nilsson <jesper.nilsson@axis.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@axis.com, 
+	Andi Shyti <andi.shyti@kernel.org>
+Subject: Re: [PATCH] i2c: exynos5: Init data before registering interrupt
+ handler
+Message-ID: <vpe5jvnhz3r5cpfiofwrelp62awe74knbxrz47i2deflczx276@yahhrshr355r>
+References: <20240304-i2c_exynos5-v1-1-e91c889d2025@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240304-i2c_exynos5-v1-1-e91c889d2025@axis.com>
 
+Hi Jesper,
 
->>
->> From: Daero Lee <skseofh@gmail.com>
->>
->> After page aligning, the size may become zero. So I added exception
->> handling code for size 0.
->
->That may be true, but when would anyone only have memory regions of
->less than 2 pages. In any case memblock_add will just do nothing. What
->is the actual problem you are having?
->
->Rob
+On Mon, Mar 04, 2024 at 12:01:14PM +0100, Jesper Nilsson wrote:
+> devm_request_irq() is called before we initialize the "variant"
+> member variable from of_device_get_match_data(), so if an interrupt
+> is triggered inbetween, we can end up following a NULL pointer
+> in the interrupt handler.
+> 
+> This problem was exposed when the I2C controller in question was
+> (mis)configured to be used in both secure world and Linux.
+> 
+> That this can happen is also reflected by the existing code that
+> clears any pending interrupts from "u-boot or misc causes".
+> 
+> Move the clearing of pending interrupts and the call to
+> devm_request_irq() to the end of probe.
 
-Ignore the previous mail.
-I modified the patch to clear this size check routine. Please check
+I'm OK with moving the irq request at the end and I'm going to
+give my r-b anyway. There is still one comment below.
 
--------------------------------------------------------------------------
-From 2135d37c37f8c369033f79102b17ddf5bb3ff838 Mon Sep 17 00:00:00 2001
-From: Daero Lee <skseofh@gmail.com>
-Date: Mon, 4 Mar 2024 23:21:14 +0900
-Subject: [PATCH] of: fdt: modify small size memory check
+> Additionally, return failure if we can't find a match in devicetree.
+> 
+> Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
 
-Small size memory which is less than 1 PAGE_SIZE after page align
-should not be added to memblock.
+The way you are describing it you would need the Fixes tag here
+and this patch should be treated as a fix.
 
-In this patch, the size check was modified to make it clear.
+Nevertheless, I think that it's odd that the device is sending
+interrupts at this phase and the real fix should be preventing
+the controller to send interrupts here.
 
-Signed-off-by: Daero Lee <skseofh@gmail.com>
----
- drivers/of/fdt.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+How have you tested this patch?
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index bf502ba8da95..9cf844e664b0 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1220,18 +1220,16 @@ int __init early_init_dt_scan_chosen(char *cmdline)
- void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
- {
-        const u64 phys_offset = MIN_MEMBLOCK_ADDR;
-+       u64 abase = PAGE_ALIGN(base), aend = PAGE_ALIGN_DOWN(base + size);
+> ---
+>  drivers/i2c/busses/i2c-exynos5.c | 32 ++++++++++++++++++--------------
+>  1 file changed, 18 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
+> index 385ef9d9e4d4..eba717e5cad7 100644
+> --- a/drivers/i2c/busses/i2c-exynos5.c
+> +++ b/drivers/i2c/busses/i2c-exynos5.c
+> @@ -906,24 +906,14 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
+>  	i2c->adap.algo_data = i2c;
+>  	i2c->adap.dev.parent = &pdev->dev;
+>  
+> -	/* Clear pending interrupts from u-boot or misc causes */
+> -	exynos5_i2c_clr_pend_irq(i2c);
+> -
+>  	spin_lock_init(&i2c->lock);
+>  	init_completion(&i2c->msg_complete);
+>  
+> -	i2c->irq = ret = platform_get_irq(pdev, 0);
+> -	if (ret < 0)
+> -		goto err_clk;
+> -
+> -	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
+> -			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
+> -	if (ret != 0) {
+> -		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
+> -		goto err_clk;
+> -	}
+> -
+>  	i2c->variant = of_device_get_match_data(&pdev->dev);
+> +	if (!i2c->variant) {
+> +		dev_err(&pdev->dev, "can't match device variant\n");
+> +		return -ENODEV;
 
--       if (size < PAGE_SIZE - (base & ~PAGE_MASK)) {
-+       if((aend - abase) < PAGE_SIZE) {
-                pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
-                        base, base + size);
-                return;
-        }
+return dev_err_probe(), please.
 
--       if (!PAGE_ALIGNED(base)) {
--               size -= PAGE_SIZE - (base & ~PAGE_MASK);
--               base = PAGE_ALIGN(base);
--       }
--       size &= PAGE_MASK;
-+       base = abase;
-+       size = (aend - abase) & PAGE_MASK;
-
-        if (base > MAX_MEMBLOCK_ADDR) {
-                pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
---
-2.25.1
-
+Andi
