@@ -1,140 +1,105 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA9A5CDC8;
-	Mon,  4 Mar 2024 17:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E4D60267
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 17:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571670; cv=none; b=p7ruElG6fxszs8C0R561lSK6vMMO1lldXMSi3ov4zOY8jtSu4/RHUozGWw/XGZ48MB+mcboy9b4HbDXzqrvNUzjcUbdrBE5u5LWFj5qKV1Ym+5Hgwt5Hh2WpzFzuyZPlbk8bhqxbf990o86TQTJ5i9OKLD0apl5eBWPvkd+pnDI=
+	t=1709571677; cv=none; b=BEaJ3Dtu3sUcKs76lEPOHoW807QHwM5S/+sqxo/nA1dKU+KgbIOfaoq3OqydXW/PUa9+Sk2kKW91wrPa/Xy+vnMQnGwqzLCsnzn+d1AG3dvoMUqtrRd2R/cbpBot7rkkhtcZoms5tQ+0jvzmlz205sqrExTBpMWKMUFLksDJZCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571670; c=relaxed/simple;
-	bh=YIorEZgZ3oGb/vzKCLKNk60LiCpWqfOM0YBnH4BtxMA=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=QGEGc3OCnku3BjqBsKcQ9GW5VcsgcXkzyvMr9Yd9I4WOudzHcAKF3+gj1jj6Cg5GtE6AHSAR0fxuj1EfkLBnZcEoe/UmBVQIQxd3kePfwEu1vJXtIv8aHpsSPtOHyGNSeWHxtFNYfV+4JUJx8u+6YU9qp6A028IAtkdgaRS0p8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=pXvtHXTd; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1709571677; c=relaxed/simple;
+	bh=Y1hODsyOTqk2qNlu5XLNFWyxBpWwax0wrwGYV8h0bf8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jc8pScauEG3XI+tADOpMG5G3Q1c7Uus/OhB6q+JXyOvUfyCa0oWPkPUfhmVV2xOFN1J9nRrGJbG1QSfAXl9lT59LguqdnqJndWjyTn7X57Qt9u4vBmGwaurkKxcEO+O2TmKvMVJMG5WzWjbLMbAOhwWWNbEOHTU1NAqTqp/hMwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ftkDgRLz; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pXvtHXTd"
-Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B66DC3871;
-	Mon,  4 Mar 2024 18:00:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1709571650;
-	bh=YIorEZgZ3oGb/vzKCLKNk60LiCpWqfOM0YBnH4BtxMA=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=pXvtHXTdPpvHnkCmRsMboe7vEl69AKv7bnOeRk36NgDF4PafK9ejuA2kHr/zSmVGM
-	 BLHcWgjoY9Z2ROjTiN0T2wfyz2vWdqPnHPygsBA9Dsjpqx3cZeqWeOWYnj1goedBse
-	 DpBV4uFxed/GJ9DHT2TNSFKbD22yUkV3DX6epKwA=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ftkDgRLz"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412e7fe422fso5022265e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 09:01:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1709571674; x=1710176474; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s/uotU1HGCeXUT4H5saUqikW28hMXwwL7oNQgmFD0EY=;
+        b=ftkDgRLzdt3TOkpuSPtEhIa8mNuW44Q1s/dMB9989NckTQdAQOTkHz8VkbjJfgtBcN
+         OOuUZy/qAeJ6l9Ml/MopbxazrybNVMvVekbKFcdc2qv1hs5cBSs24zl3vpVKHdI6PGEU
+         YzVnE/Y+Tldeq5YJizSLoExKhEucKfdnmD1NyA/ZUXnqHaqwBvt46fqGOQ8MxQ1JLOmg
+         gIR0NZrQnqe+pnqVNgM1xkWoQC8h2yu7VFMlxgp4B4ZsDdk8Cvy9lGIRWjxqqOyQsK3S
+         h3vyeTQhvAq8w/6NeELLB7eLSVoTqWZIRV8h+DG275N9IldIeAD268Prr91OR15hJlW6
+         Gl5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709571674; x=1710176474;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s/uotU1HGCeXUT4H5saUqikW28hMXwwL7oNQgmFD0EY=;
+        b=IFCZ0A5RZtQ2tCDBLH8hTPagTuHXERsV1asealRxhlcAeS02tMc73xIq6kEemePkzr
+         6E+T0MoHNr53iFEnU2vtz+S9FpiukYhAJz+gdZ16qxYzES3vw3U4P/kOvimxryVtjTEC
+         8nH7U0nRqs2XqKpY06rx/kSnlf1knEQGkSw0AGuvLUtU0XyCGS7jKdCDjb9ItILpgG0o
+         1kzVxkizGPpU+p2NxEfPZp38glCtpPH0f2Eu05ndIY8Jr3ArCrGSSbhd5VpTbZVRxo4Z
+         2D/p4OYqYe31Ozj88ULSip7dCbgpaDyXAKGXnv5lJtU48nhTc9l69zyw1baEu9kWuFpD
+         HaDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnZyXmWL5ILOzm9oe057iTJXkYNvIb8jYlQHhiC5bdm51yBGwZJcCdHjGeK1Akgm+ha1onjAdMDHuvXH4YOiHDEv73q4dkvbLKs/7o
+X-Gm-Message-State: AOJu0YzUR1cieFGmJmjGniD7NKQWFqvgnY7BMXzKUnkITjbGW0elXzrX
+	PgN1FGBxe3hXU2gCPY7q1zFNueMHNyTSb6W9jK2P3RaGY369Gy2QH1S0mGIZEYA=
+X-Google-Smtp-Source: AGHT+IGZzfhyMUkVQDEbxidUeo+sp6ipbXiw/f98kRVENVpcTyhXxPwrE0AypKvSiUcuMEpZK88sqQ==
+X-Received: by 2002:a05:600c:458f:b0:412:bfa1:2139 with SMTP id r15-20020a05600c458f00b00412bfa12139mr6919053wmo.37.1709571674138;
+        Mon, 04 Mar 2024 09:01:14 -0800 (PST)
+Received: from fedora.fritz.box (aftr-82-135-80-152.dynamic.mnet-online.de. [82.135.80.152])
+        by smtp.gmail.com with ESMTPSA id i4-20020a05600c354400b004101f27737asm18520049wmq.29.2024.03.04.09.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 09:01:13 -0800 (PST)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: "Theodore Ts'o" <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] ext4: Remove unneeded if checks before kfree
+Date: Mon,  4 Mar 2024 17:55:08 +0100
+Message-ID: <20240304165507.156076-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240229165333.227484-16-mike.rudenko@gmail.com>
-References: <20240229165333.227484-1-mike.rudenko@gmail.com> <20240229165333.227484-16-mike.rudenko@gmail.com>
-Subject: Re: [PATCH v3 15/20] media: i2c: ov4689: Move pixel array size out of struct ov4689_mode
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Tommaso Merciai <tomm.merciai@gmail.com>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Dave Stevenson <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Date: Mon, 04 Mar 2024 17:01:03 +0000
-Message-ID: <170957166393.566498.15793679548329156107@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
 
-Quoting Mikhail Rudenko (2024-02-29 16:53:28)
-> Pixel array dimensions and default crop size do not belong to the
-> ov4689_mode structure, since they are mode independent. Make them
-> defines instead.
->=20
-> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
+kfree already checks if its argument is NULL. This fixes two
+Coccinelle/coccicheck warnings reported by ifnullfree.cocci.
 
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ fs/ext4/super.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 0f931d0c227d..9b7a0b4f2d3d 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2079,8 +2079,7 @@ static int unnote_qf_name(struct fs_context *fc, int qtype)
+ {
+ 	struct ext4_fs_context *ctx = fc->fs_private;
+ 
+-	if (ctx->s_qf_names[qtype])
+-		kfree(ctx->s_qf_names[qtype]);
++	kfree(ctx->s_qf_names[qtype]);
+ 
+ 	ctx->s_qf_names[qtype] = NULL;
+ 	ctx->qname_spec |= 1 << qtype;
+@@ -2485,8 +2484,7 @@ static int parse_options(struct fs_context *fc, char *options)
+ 			param.size = v_len;
+ 
+ 			ret = ext4_parse_param(fc, &param);
+-			if (param.string)
+-				kfree(param.string);
++			kfree(param.string);
+ 			if (ret < 0)
+ 				return ret;
+ 		}
+-- 
+2.44.0
 
-> ---
->  drivers/media/i2c/ov4689.c | 29 +++++++++++++----------------
->  1 file changed, 13 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-> index 6c36fe5f3b44..cc8d9fa369e7 100644
-> --- a/drivers/media/i2c/ov4689.c
-> +++ b/drivers/media/i2c/ov4689.c
-> @@ -70,6 +70,11 @@
->  #define OV4689_LANES                   4
->  #define OV4689_XVCLK_FREQ              24000000
-> =20
-> +#define OV4689_PIXEL_ARRAY_WIDTH       2720
-> +#define OV4689_PIXEL_ARRAY_HEIGHT      1536
-> +#define OV4689_DUMMY_ROWS              8       /* 8 dummy rows on each s=
-ide */
-> +#define OV4689_DUMMY_COLUMNS           16      /* 16 dummy columns on ea=
-ch side */
-> +
->  static const char *const ov4689_supply_names[] =3D {
->         "avdd", /* Analog power */
->         "dovdd", /* Digital I/O power */
-> @@ -90,10 +95,6 @@ struct ov4689_mode {
->         u32 vts_def;
->         u32 exp_def;
->         u32 pixel_rate;
-> -       u32 sensor_width;
-> -       u32 sensor_height;
-> -       u32 crop_top;
-> -       u32 crop_left;
->         const struct cci_reg_sequence *reg_list;
->         unsigned int num_regs;
->  };
-> @@ -254,10 +255,6 @@ static const struct ov4689_mode supported_modes[] =
-=3D {
->                 .id =3D OV4689_MODE_2688_1520,
->                 .width =3D 2688,
->                 .height =3D 1520,
-> -               .sensor_width =3D 2720,
-> -               .sensor_height =3D 1536,
-> -               .crop_top =3D 8,
-> -               .crop_left =3D 16,
->                 .exp_def =3D 1536,
->                 .hts_def =3D 10296,
->                 .hts_min =3D 3432,
-> @@ -385,8 +382,6 @@ static int ov4689_get_selection(struct v4l2_subdev *s=
-d,
->                                 struct v4l2_subdev_state *state,
->                                 struct v4l2_subdev_selection *sel)
->  {
-> -       const struct ov4689_mode *mode =3D to_ov4689(sd)->cur_mode;
-> -
->         if (sel->which !=3D V4L2_SUBDEV_FORMAT_ACTIVE)
->                 return -EINVAL;
-> =20
-> @@ -394,15 +389,17 @@ static int ov4689_get_selection(struct v4l2_subdev =
-*sd,
->         case V4L2_SEL_TGT_CROP_BOUNDS:
->                 sel->r.top =3D 0;
->                 sel->r.left =3D 0;
-> -               sel->r.width =3D mode->sensor_width;
-> -               sel->r.height =3D mode->sensor_height;
-> +               sel->r.width =3D OV4689_PIXEL_ARRAY_WIDTH;
-> +               sel->r.height =3D OV4689_PIXEL_ARRAY_HEIGHT;
->                 return 0;
->         case V4L2_SEL_TGT_CROP:
->         case V4L2_SEL_TGT_CROP_DEFAULT:
-> -               sel->r.top =3D mode->crop_top;
-> -               sel->r.left =3D mode->crop_left;
-> -               sel->r.width =3D mode->width;
-> -               sel->r.height =3D mode->height;
-> +               sel->r.top =3D OV4689_DUMMY_ROWS;
-> +               sel->r.left =3D OV4689_DUMMY_COLUMNS;
-> +               sel->r.width =3D
-> +                       OV4689_PIXEL_ARRAY_WIDTH - 2 * OV4689_DUMMY_COLUM=
-NS;
-> +               sel->r.height =3D
-> +                       OV4689_PIXEL_ARRAY_HEIGHT - 2 * OV4689_DUMMY_ROWS;
->                 return 0;
->         }
-> =20
-> --=20
-> 2.43.0
->
