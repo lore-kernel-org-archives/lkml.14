@@ -1,156 +1,92 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660B538DDD;
-	Mon,  4 Mar 2024 10:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30005374F7
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709549800; cv=none; b=XOoFiTVHrxkVkc0L8FuJhxrq/O/jxYtZpRT0qdj1yQyVie+Q8da6MGqIa7WQ+Q9qu2PpM2IZXgb0OvIrCOR7uX5Hxzaz+FHsyLoCHZOZdS/ZnGFpZUXwqXstfYamkqeD05XKSNp2kLPeW7ZRE5YMc87sI1v54NGKfNPqwxj2KTk=
+	t=1709549905; cv=none; b=nfHh/xMXMa7805pDuFmnljLxs0WgVy8K3Au5LPZZTvMcteFwXhMYUnsKZWEsGW4wcFv39eyps0nAGvBVGj/SNaxnN3vLdxlHOeSGWLt65tRscrRNsVK5tBq6hrgZRsO6WSPM9By9XfUtJ4CcLlE0b6YCJxK2StlcXTknBTovONU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709549800; c=relaxed/simple;
-	bh=24Wt4baQz9Fe57w/o1XeNPq06hI45Sc0xGbmnFC7+Js=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZX8svERORf4O109Uf9qnLZ6eodhnK/x7eQy3qL4AWUtA9ZBLnGaVaD7Y3UqwH1JHqqw0IWebS6FJAFZwyTdxWWJ8f4DIkBRi8mMBW5tFfPOdaDOKBwj+ijkzJr6XqAvWmNwq0ctBqHFNmAqRtigyHBQTptWQGMB7KDSNljTIqGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=Nei2I58y; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1709549905; c=relaxed/simple;
+	bh=SU0P+6mERyVFW+8OS0nJ5FDl/7jXIMmV2cJFkItJc+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jKE2yOD8BIImoTcCo+j1hR3HY+pSIrRw99TwNM+eUWfskObVlholuj18kiB6bEoaruYu/dmR14xQWiyZ4TpyvCMB1l+I35sETpsvt81XT2c4FU7lc6PCfcGnfxGZ2OerqHfzMNdTJf79D8PA9aVMYZ19Fq3hKU9Xn6HBpjMaSbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O2j2Mqz+; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="Nei2I58y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O2j2Mqz+"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso4054833a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 02:58:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=AsaY1BGuEP7x4VKORfviVFJfoqV+zfnSfsG0OgmTAfI=;
-  b=Nei2I58yJdspuHmu1GK0f6Tq9JvoRwbqBsa/879VDpcWRjnl1ohIflZ1
-   JAJE7QuiHr5zDABDSfDqRmv64HL9qXRlcj6f7CySt9NcGQ2Hbgvs5LZE1
-   FLh4ruWWA7hoZpoU3pLimakxt6kGOqgD4gzJ0DA+YVqCRnLPdrs/DETz2
-   M=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.06,203,1705359600"; 
-   d="scan'208";a="81213033"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 11:55:24 +0100
-Date: Mon, 4 Mar 2024 11:55:23 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Markus Elfring <Markus.Elfring@web.de>
-cc: linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-    Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-    Jeff LaBundy <jeff@labundy.com>, Rob Herring <robh@kernel.org>, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2] Input: iqs626a - Use scope-based resource management
- in iqs626_parse_events()
-In-Reply-To: <e8a2b63f-4f9a-463b-b419-c5f673191111@web.de>
-Message-ID: <b91fe21-fe2-eac8-d1ee-ea8922a08861@inria.fr>
-References: <8a7607f8-d634-415e-8269-e26dcc0f9fdc@web.de> <ZeU8ENmnPj3sKxAv@nixie71> <ZeVOPSt0L1D4BxuZ@google.com> <e8a2b63f-4f9a-463b-b419-c5f673191111@web.de>
+        d=linaro.org; s=google; t=1709549903; x=1710154703; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dMoA5iWDNFyiJx9tRtvnvsvxhpL7jN9qbbKy50/eZLA=;
+        b=O2j2Mqz+gWAFAN3ZWJRE1+ItIdtpJ9ZlC3TCt64xuav+2HVEpd/+5xZZ6ywTEsQtLQ
+         N+kpynj/NgFIHtzmEAgHSYAV+gbbqyvVqQoudm8H6/6e9+ldX/GKLdflnKcC4hm7dKDm
+         xHW/sBtoZOU+C9z62t0PvPAXtHb9M8ef+9YhxhkzmZTxB67kAY048kvyEjeu3MyRyL4d
+         mZRoPvYkMA0pmBKbloEdRAAtj+nPJb+wmrf76pd2exPmOet7vU00bxQD3ciRlM8IVTfk
+         CCYSYEaEyuto1rzUuDYhjDJvJdnsvvR4IRiiuZIvPu308uAgDL8XpYyiRdtpd4EChLnS
+         MuEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709549903; x=1710154703;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dMoA5iWDNFyiJx9tRtvnvsvxhpL7jN9qbbKy50/eZLA=;
+        b=Q0i+TP6DJQrNjoQNNvSkoaSnKw0VspTGkKKP80kyHWaOW1KrjkD9m8U8OtaRcfPqrv
+         8uN3VI+9oWEWJAfVfmDXLyJE+Q6iCynvETIT30RVCaAvoRwXj5G6Ol7uiK3qxAROgQGq
+         SKjq5a4139c5W9/24ZS/+kmqamzVo9LkPua2CGVvGlqxgGOWfTwnDPBoOjXOVQcQI2eq
+         M/+xaVKTA7oRuC0UvuZOgPwkEF6zfcqdiufxSNz2sukUpqL57T0rm4A3ZerLlX2DW/Bw
+         iq+kg1vZC9imBoSJpvxWKmgaNOOqzyRheopIZ51NH+OJrjuZ7P9SXRrTk+RbwxRvaqGe
+         GFTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVSTrLNzBnqaMEpp7a9ghIx3b2QBXlbQi9Kbs8Dnbyd1cn0oO1BfowT93daJBxDpRko/7lJETtMBJWcNj4hUuakxdcfuPrD5bVaBzU
+X-Gm-Message-State: AOJu0YynPcvtExa5HZ4i+SuPZZ7cwQrS89VSmAK19tDE8MiQVS141TWI
+	vE87gVkLI043Ck6uz0tV31y6sJe7Z3LWUuzCpbvvdkJCoxUnc0ortXUIeqZXz4s=
+X-Google-Smtp-Source: AGHT+IFclK9KSuIBkEGO5u4U5zTs0p5rv4do1pwK9OoxRSfIWqOpITeZZDuYlsvkxdVYPtU0c0rYiQ==
+X-Received: by 2002:a05:6a20:4308:b0:1a1:4b74:1102 with SMTP id h8-20020a056a20430800b001a14b741102mr3009164pzk.16.1709549903528;
+        Mon, 04 Mar 2024 02:58:23 -0800 (PST)
+Received: from localhost ([122.172.85.206])
+        by smtp.gmail.com with ESMTPSA id z18-20020a170903019200b001d8be6d1ec4sm8198202plg.39.2024.03.04.02.58.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 02:58:23 -0800 (PST)
+Date: Mon, 4 Mar 2024 16:28:20 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Dhruva Gole <d-gole@ti.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] OPP: debugfs: Fix warning with W=1 builds
+Message-ID: <20240304105820.urasbqh7gtiwt2o3@vireshk-i7>
+References: <50a1a0f23efdc261844a306f5e611051843b4e52.1709536847.git.viresh.kumar@linaro.org>
+ <ae566a5d-b31c-4e69-8e79-92322ac7e104@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-544120387-1709549724=:3479"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae566a5d-b31c-4e69-8e79-92322ac7e104@ti.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 04-03-24, 13:12, Dhruva Gole wrote:
+> I'd rather we use malloc
 
---8323329-544120387-1709549724=:3479
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+The problem is that we don't know the length of the string here and we
+don't want to hardcode the number of clks, regulators, etc.
 
+> or else change the limits of the
+> "rate_hz_%d" to "rate_hz_%4d" or how many ever digits makes sense.
 
+That will not work I am afraid. This works as you intend to for %s,
+but not for %d. With %Nd, N only signifies the minimum space the value
+will take.
 
-On Mon, 4 Mar 2024, Markus Elfring wrote:
+Let me make it better anyway, will try something.
 
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Mon, 4 Mar 2024 11:40:04 +0100
->
-> Scope-based resource management became supported also for this software
-> area by contributions of Jonathan Cameron on 2024-02-17.
->
-> device property: Add cleanup.h based fwnode_handle_put() scope based cleanup.
-> https://lore.kernel.org/r/20240217164249.921878-3-jic23@kernel.org
->
->
-> * Thus use the attribute “__free(fwnode_handle)”.
->
-> * Reduce the scope for the local variable “ev_node” into a for loop.
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->
-> v2:
-> An other cleanup technique was applied as requested by Dmitry Torokhov
-> and Jeff LaBundy.
->
->
->  drivers/input/misc/iqs626a.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/input/misc/iqs626a.c b/drivers/input/misc/iqs626a.c
-> index 0dab54d3a060..86fcb5134f45 100644
-> --- a/drivers/input/misc/iqs626a.c
-> +++ b/drivers/input/misc/iqs626a.c
-> @@ -462,7 +462,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
->  {
->  	struct iqs626_sys_reg *sys_reg = &iqs626->sys_reg;
->  	struct i2c_client *client = iqs626->client;
-> -	struct fwnode_handle *ev_node;
->  	const char *ev_name;
->  	u8 *thresh, *hyst;
->  	unsigned int val;
-> @@ -501,6 +500,8 @@ iqs626_parse_events(struct iqs626_private *iqs626,
->  		if (!iqs626_channels[ch_id].events[i])
->  			continue;
->
-> +		struct fwnode_handle *ev_node __free(fwnode_handle);
-
-Doesn't this need to be initialized?
-
-julia
-
-
-> +
->  		if (ch_id == IQS626_CH_TP_2 || ch_id == IQS626_CH_TP_3) {
->  			/*
->  			 * Trackpad touch events are simply described under the
-> @@ -530,7 +531,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
->  					dev_err(&client->dev,
->  						"Invalid input type: %u\n",
->  						val);
-> -					fwnode_handle_put(ev_node);
->  					return -EINVAL;
->  				}
->
-> @@ -545,7 +545,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
->  				dev_err(&client->dev,
->  					"Invalid %s channel hysteresis: %u\n",
->  					fwnode_get_name(ch_node), val);
-> -				fwnode_handle_put(ev_node);
->  				return -EINVAL;
->  			}
->
-> @@ -566,7 +565,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
->  				dev_err(&client->dev,
->  					"Invalid %s channel threshold: %u\n",
->  					fwnode_get_name(ch_node), val);
-> -				fwnode_handle_put(ev_node);
->  				return -EINVAL;
->  			}
->
-> @@ -575,8 +573,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
->  			else
->  				*(thresh + iqs626_events[i].th_offs) = val;
->  		}
-> -
-> -		fwnode_handle_put(ev_node);
->  	}
->
->  	return 0;
-> --
-> 2.44.0
->
->
->
---8323329-544120387-1709549724=:3479--
+-- 
+viresh
