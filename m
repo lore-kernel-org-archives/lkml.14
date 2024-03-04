@@ -1,50 +1,75 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0631D53F;
-	Mon,  4 Mar 2024 12:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478161E497;
+	Mon,  4 Mar 2024 12:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709555445; cv=none; b=gHpsyJ5wlY6nvSBSkWeN8kBYS3tibt+UB3jsfhWn7bDOUF2CcMiH8numtdLFy/uGfNSiIREslA1SfMp8SdiGlktnchV+N61Nv51ll35UxIQiCnGkhWmu+Fjj6btLK4BCj8RLe9eSu8mPwwybCoTBmK0375AGLIMGJCjlKJ8oCoo=
+	t=1709555447; cv=none; b=Tbx9tHANcHs+JWb/Z6pNILD56lDq/w5505JsvW9cfLXBz4NWAIfFbXCqsTDmRg+VKqHxwM3PMtPX/V2sNVMMY0fjk2Mmq/PLkq4RgFpTjS7O4KW6u4l/toSpodYZvQWFYmc3z2Jlrdkt5einmW3FPWv2hSMetk5mRhR/EWRPAYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709555445; c=relaxed/simple;
-	bh=FeBZR3SGL2Om8m5Kdr9xfsj804J10OkYTMQW2JZj7VE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f4L0zkxRz8U6lcNcVk4YMlSS5If7pR8M/woV9msX1og7rp76+RSF8VjrHnF1e2rMz0IBXutEM0qBi1YQC1Uidb+1AakqfQfkbLzRvwpnR+Anot0uAMHXli4H7K1wFRbqWs5ej8neldF/ygpKaDS+EcKnW2Av6XY4RI5a8hDgGLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=USsmf+ae; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1709555447; c=relaxed/simple;
+	bh=dDFiSzziXJFNdVtCeloj7uM1p/JFexseASaR1J4v3lc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L+keNI6aT7/jzTm2zbV2otuiy4n/IoB3rxe0aBZorLJCkQp9v/+aq9IN+NLGFQ2SJeZ6LpR2lHd6p7+LayuTSIH8HmvZ0uhxk7TqjIJg0drQP84v87EJbUnpinaKGgShSSiq+tWtLQiyAgw9BzpP2vFLNabSxo1gmIT+FaDp/hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k4dInaOs; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="USsmf+ae"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 14559100002;
-	Mon,  4 Mar 2024 15:22:19 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1709554939; bh=YbTF9cKWyBV3OLPeCxcCiIlnH5+s0eWfsFAU6u80XD8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=USsmf+aeiLQI1maKyJZCHhC3uyVMfHOojULGaFWYvhPTEoegbnXGOiaA+Wt+ckXQ8
-	 tsnL6RA1DUE7YrfOXx0ZPF30wRf+jNS4DyWPA4M/cIYXkc/ds9EA6GKlbzRCS30opr
-	 2ygKtaj6qi0qFya1KmnN20qfMsBDifLnRCZq2DVTsfEhwfSg8jzjwKYrnHsvCdyI0H
-	 PDD1E+nDLSTkp/rcc6nWYJBBnwhh3sRYf6+r2uSYXf4/RPQKopiFO8Ke8gMr51bYgH
-	 61D7azudCxIcFVJ45f2xvoUyHiqAzDIqqIjaV6aOd3a4Qsp93JLDTBwOF95RDxvAdH
-	 m1XXng71rCzfQ==
-Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Mon,  4 Mar 2024 15:21:17 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 4 Mar 2024
- 15:20:56 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Corentin Labbe <clabbe@baylibre.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>,
-	Heiko Stuebner <heiko@sntech.de>, <linux-crypto@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] crypto: rockchip/rk3288 - Add dereference of NULL pointer check
-Date: Mon, 4 Mar 2024 15:20:31 +0300
-Message-ID: <20240304122031.25325-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k4dInaOs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709555445; x=1741091445;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dDFiSzziXJFNdVtCeloj7uM1p/JFexseASaR1J4v3lc=;
+  b=k4dInaOsQ5SZFMsZboHXT5bG5Dod5DKk3lutYHkXPIK2eEoSCCy/gooZ
+   0RMY4zao9Sm+IFyEPTjhjG7JdIGrLuSJsuyzv9a3rmwVvrV3k53Jsn/Vt
+   wfzpJzFBgUUpbLR6zLUOavqlkOnBQiQHaNMXqCvH1MTNl8j7GT27vpsS8
+   KtzSATr9D88+YoqtrhKJWrfpp37hJ4Kq7UXnGokUuPr2+IvgbMNdPQWAb
+   u0iUm8qcAJgaNvVqjjDS84MiZbG2PmNYB2CfacknTY0bFycMrg/2cQiSN
+   uM9+lLeeR6EledU6KauD3T3zjBkDF2eutr6Fel41hQytKJA3tz3BOBO0e
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="7815025"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="7815025"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 04:30:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="937040421"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="937040421"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 04:30:38 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 29C201D6; Mon,  4 Mar 2024 14:30:37 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v3 00/14] serial: Add a helper to parse device properties and more
+Date: Mon,  4 Mar 2024 14:27:01 +0200
+Message-ID: <20240304123035.758700-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,56 +77,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 183922 [Mar 04 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.3
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 8 0.3.8 4a99897b35b48c45ee5c877607d26a2d9f419920, {Tracking_from_domain_doesnt_match_to}, t-argos.ru:7.1.1;mx1.t-argos.ru.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/03/04 09:16:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/03/04 08:11:00 #23960386
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-In rk_crypto_probe() crypto_engine_alloc_init() is assigned to
-crypto_info->engine and there is a dereference of it in
-clk_mt2712_top_init_early() which could lead to a NULL pointer
-dereference on failure of crypto_engine_alloc_init().
+I have noticed that many drivers are using the subset of the common
+properties and IRQ retrieval code. With the moving it to one place
+we have got a common parser one for many.
 
-Fix this bug by adding a check of crypto_info->engine.
+Tested on Intel Apollo Lake with DesingWare 8250 UARTs (clang compiled)
+and in QEMU for Aspeed configuration (gcc compiled). The rest has been
+compile tested on x86_64 with clang.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+In v3:
+- split the helper to two and export as GPL (Greg)
+- added tags (Florian, Kunihiko)
 
-Fixes: 57d67c6e8219 ("crypto: rockchip - rework by using crypto_engine")
+In v2:
+- fixed typo (Hugo)
+- renamed UPIO_UNSET --> UPIO_UNKNOWN (Florian)
+- fixed 8250_of not working (Andrew)
+- dropped unused variable in 8250_bcm7271 (LKP)
+- added tag to 8250_aspeed_vuart (Andrew)
 
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/crypto/rockchip/rk3288_crypto.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Andy Shevchenko (14):
+  serial: core: Move struct uart_port::quirks closer to possible values
+  serial: core: Add UPIO_UNKNOWN constant for unknown port type
+  serial: port: Introduce a common helper to read properties
+  serial: 8250_aspeed_vuart: Switch to use uart_read_port_properties()
+  serial: 8250_bcm2835aux: Switch to use uart_read_port_properties()
+  serial: 8250_bcm7271: Switch to use uart_read_port_properties()
+  serial: 8250_dw: Switch to use uart_read_port_properties()
+  serial: 8250_ingenic: Switch to use uart_read_port_properties()
+  serial: 8250_lpc18xx: Switch to use uart_read_port_properties()
+  serial: 8250_of: Switch to use uart_read_port_properties()
+  serial: 8250_omap: Switch to use uart_read_port_properties()
+  serial: 8250_pxa: Switch to use uart_read_port_properties()
+  serial: 8250_tegra: Switch to use uart_read_port_properties()
+  serial: 8250_uniphier: Switch to use uart_read_port_properties()
 
-diff --git a/drivers/crypto/rockchip/rk3288_crypto.c b/drivers/crypto/rockchip/rk3288_crypto.c
-index 70edf40bc523..88cea1e36afa 100644
---- a/drivers/crypto/rockchip/rk3288_crypto.c
-+++ b/drivers/crypto/rockchip/rk3288_crypto.c
-@@ -371,6 +371,10 @@ static int rk_crypto_probe(struct platform_device *pdev)
- 	}
- 
- 	crypto_info->engine = crypto_engine_alloc_init(&pdev->dev, true);
-+	if (!crypto_info->engine) {
-+		dev_err(&pdev->dev, "memory allocation failed.\n");
-+		goto err_crypto;
-+	}
- 	crypto_engine_start(crypto_info->engine);
- 	init_completion(&crypto_info->complete);
- 
+ drivers/tty/serial/8250/8250_aspeed_vuart.c |  50 ++-----
+ drivers/tty/serial/8250/8250_bcm2835aux.c   |  92 ++++++-------
+ drivers/tty/serial/8250/8250_bcm7271.c      |  56 +++-----
+ drivers/tty/serial/8250/8250_dw.c           |  67 ++++-----
+ drivers/tty/serial/8250/8250_ingenic.c      |  20 +--
+ drivers/tty/serial/8250/8250_lpc18xx.c      |  20 ++-
+ drivers/tty/serial/8250/8250_of.c           | 105 +++-----------
+ drivers/tty/serial/8250/8250_omap.c         |  29 ++--
+ drivers/tty/serial/8250/8250_pxa.c          |  22 ++-
+ drivers/tty/serial/8250/8250_tegra.c        |  26 ++--
+ drivers/tty/serial/8250/8250_uniphier.c     |  17 +--
+ drivers/tty/serial/serial_port.c            | 145 ++++++++++++++++++++
+ include/linux/serial_core.h                 |  11 +-
+ 13 files changed, 325 insertions(+), 335 deletions(-)
+
 -- 
-2.30.2
+2.43.0.rc1.1.gbec44491f096
 
