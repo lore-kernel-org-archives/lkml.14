@@ -1,71 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DD579946;
-	Mon,  4 Mar 2024 19:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3B079934;
+	Mon,  4 Mar 2024 19:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709580590; cv=none; b=WbjB6NogBJDxFBKh0IRVdi0Pw9xafpEGXJ0qE0xweJdtSccUwiUSXLXgUUnBbgvheo1OzmGbbceuk8C3lzfiU/MEYgH4+PoXo0jq8RzIhA9d0+QULqfkGcLah+EKPjbnwi4aUPxpQ+nLYhVBqaCqKjB3sjxEAiKRkGMkt3/RnpY=
+	t=1709580604; cv=none; b=cZ3RS5CGwckDcDWpFa5IHabb5eCnM3Tcr30Z2hajAVbyU+j3G/koiV+shkp7L9JaTU8bKA+ecrXATSHESDi28adp3KKN6RdfmwwvcYKz8EaKAo0ohnplwvNcppSDXJJhjclhLVvTATkFic+Wa5OHiQ+Cduyc55ipcJzwz08m2f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709580590; c=relaxed/simple;
-	bh=Mm9viwy6QqpvUGccQ4BabLbBp9gEZSSvrumFydB1Blk=;
+	s=arc-20240116; t=1709580604; c=relaxed/simple;
+	bh=OHHQkLHOYhKzzUAIATtYY0qzmwZeAs+dZRjgbBX/R1s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icMih2ZInNPMD72wc6qUZtnxEqsbYIS2ZfIT4/SSStJsn9Mz8ig/+8FDILiRsYLjz6QrC96SSwXTsPJYmWOd22dyIwQO9uxEyfZJL8pWjw+t0NdQWnYtVLR7D3591jdJg37er0fqmoHsgl479yn+yXzZh8BeLDiGT+lpiC99WtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OFVmGEKn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HyyVI/6gB5cqjWUox8ESQKioo1H6q8+wnd4m445g4zMUVhnyYvIKKfnf+Eei+Z/T76D32boMJrewMsGWKYactfzavIJp5saX6iybaDEQAyiFEeBoNB5nePADUjvSa+xR0MqdkV8Si55YoMzLjORYCy2H9l4EC/cGePf1S529VC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=H9O9cVle; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFVmGEKn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AE3C433F1;
-	Mon,  4 Mar 2024 19:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709580589;
-	bh=Mm9viwy6QqpvUGccQ4BabLbBp9gEZSSvrumFydB1Blk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OFVmGEKnZl9oNM/uyxv6LIOqolwMWSVESKukMkKYYQqonADKvZtXKOJiHjRpJhj+U
-	 bb/JBfVD/O4AuddQqo0zP94eCTFAtMYPIqbntKGZ5cck9I0ereDkKyj8wYyiXfHffz
-	 TVijbKq/O4OuvI1IiAmIbxrOv29E7f36/beVyaIfi7rEcED1rSTHspfI6TMZd9EB9R
-	 w+RFUlhfg26LRwGc4y1YKHKY3QSIw3QGIF/NAxHFACjh7pKmCN2AMqDeRdp84KGt2N
-	 kl1ScWwscTJWvJBwjLIPHImaxTv9DJ7mqeAlPhj9l2I9iOk2hIxi7kK3gkVgLB9mYI
-	 DwoEBIi8Fff+g==
-Date: Mon, 4 Mar 2024 19:28:16 +0000
-From: Simon Horman <horms@kernel.org>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Richard Cochran <richardcochran@gmail.com>,
-	Min Li <min.li.xe@renesas.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ptp: fc3: Convert to platform remove callback returning
- void
-Message-ID: <20240304192816.GS403078@kernel.org>
-References: <20240304091325.717546-2-u.kleine-koenig@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="H9O9cVle"
+Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id 3B4A320272;
+	Mon,  4 Mar 2024 20:29:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1709580597;
+	bh=gYZ+/ZNs5fL/27laenTgswxEUSGg+HFZXtEGcfk/WM8=; h=From:To:Subject;
+	b=H9O9cVlewkYHIk3S/Cj4ZSQ5uqbe4unbHVBrnYKoUOdB0fHbS4ZOkyP9HhYp2Llsi
+	 +klTM/4bR/M27dzGGAZr9au1TAgEPFWH4BOqosriFlWqGmS1bECUR2eNBx728/totM
+	 mijIwfXuGK6zuv+T75j5pgjoZ/t4nJF1F2tiAgiWtUz3HokTRmPsw78KevG2SPDwWW
+	 MATWS6uNniA3F2V0CNWRVMnA5CYqhAh8dOHXBR3Yt903uKL4IqDdPtbxo/nhj3RNGB
+	 YR6+j2AiuBFFM6JHWfBpGXiKlj/7kez9vP3/gusltez2nO6LUpoJ9QUgOlbrXNZlRb
+	 ydDhF8L6/hFmA==
+Date: Mon, 4 Mar 2024 20:29:52 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+	amitkumar.karwar@nxp.com, rohit.fule@nxp.com, sherry.sun@nxp.com,
+	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Subject: Re: [PATCH v2] Bluetooth: btnxpuart: Enable Power Save feature on
+ startup
+Message-ID: <20240304192952.GA17410@francesco-nb>
+References: <20240304170753.500074-1-neeraj.sanjaykale@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240304091325.717546-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20240304170753.500074-1-neeraj.sanjaykale@nxp.com>
 
-On Mon, Mar 04, 2024 at 10:13:25AM +0100, Uwe Kleine-König wrote:
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
+On Mon, Mar 04, 2024 at 10:37:53PM +0530, Neeraj Sanjay Kale wrote:
+> This sets the default power save mode setting to enabled.
 > 
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
-> 
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
-> Hello,
-> 
-> note this driver is currently only available in next.
+> The power save feature is now stable and stress test issues, such as the
+> TX timeout error, have been resolved.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+I assume that the stability issue has been fixed in firmware, correct?
+What's going to happen if running the updated driver with old firmware?
+What about combo Wi-Fi/BT firmware files, were those updated? I'm
+currently using this driver with this firmware [1]
+
+[1] https://github.com/nxp-imx/imx-firmware/blob/lf-5.15.52_2.1.0/nxp/FwImage_IW416_SD/sdiouartiw416_combo_v0.bin
+
+Francesco
 
