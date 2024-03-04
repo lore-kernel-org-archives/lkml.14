@@ -1,131 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACBD3E483;
-	Mon,  4 Mar 2024 13:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5DD3D578;
+	Mon,  4 Mar 2024 13:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709558782; cv=none; b=MifjlY2MxH4rtzeUPclDDlPnKnx5XJeaUkjiMtO1CIsEZtmE+HiVSYAi5xS6clKy+0APakWrUoZcNuNo0lOg216U08t0fGGb7ktWcsVZC0djV5zsVR2Vwwg5TjwsTeRm/n71srs9KNFHtHBysp0MUQtQlCDdiQx7kaKNmZ4qyGY=
+	t=1709558817; cv=none; b=MFeYcIbvqZDAAxZtHYmGdY7kb5/cN2MqowycpRi0jy6J6XJ/5imeTZlAcvv2govV+lBXOv+nnnw2g9BJ0+BylFpz4uF4c9ePPrdsZz6sd6eW9CZ4sXone0OEqnJEkQ59mQP6vhbV9JdKzDw5JIIW0ALXXTHzzWPT8yLWpQdn+E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709558782; c=relaxed/simple;
-	bh=qe2k0nYrlf1Lva6jJWOnpQ9vdVzVZst19ij+LTDda0A=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WOZajhItdJOajp4kzAbHPao6KFChnl4pjJAIXX0AZj3dcIgI3vodQVmi05y1TO5IkwmDAa3tX5h+F0XZ5edwOPk6gStTDhCD93MmjAaxXd1P8hNVd26SZivhl4JP9uXbCijZ9r9fWRzTo/r/7O/ULsNqosOFTYmsR5AiCKOI7JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fFDvsmgs; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709558817; c=relaxed/simple;
+	bh=+I0soG2y9wOLdzgs+iOEFQHNkm2pStAlIL7zVcgMi74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zqw3fHDeU756qLLBsUS7/KLBtjlQzTwswoezx+WoKUI0C6Jd5Wy2Y+cnsPs73oQFfJfFzfTgte/iVkS5nNhDDpDFHqo7gfdXRZW1qCJ6SWklvY+IynXSNlgDqOWsKwHbB8LZ7/v6rfRaLwSNH6hVjbyEDvg7IW2JOdGxGAhTwck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oMzp99FF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fFDvsmgs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709558780; x=1741094780;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=qe2k0nYrlf1Lva6jJWOnpQ9vdVzVZst19ij+LTDda0A=;
-  b=fFDvsmgs/krvJukX9jJlUKaUxBqMvIhTobSxzmfsaU49vE2aN+J6qAwK
-   z4KhFbBavar2j/fJVUW9YIZr9rk/PAjS1FLZb/q0lu+lOhbxg1cjbvEaH
-   JFqSxHT0ck7OSuxMoq0IlSH7ZzKgeQ7l18fTSTcSUJ3hsrYrIWih3tRFc
-   8CnsETKPiekKoLJajWgLaHc0rpWgn8OQlhW4GnO66Axnkhj4tDxGiKs8A
-   hLN1bQ7C6k2HNBoSe+G17q33ljT680Q6VEOg2Zv5isOIWq0tMnFsppjdp
-   yITP0dpHkNYTYicRk9u2jHetHJygWf7prkOIAo+ukVX7cbbjjyQ+4tH45
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="3912332"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="3912332"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:26:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="9065025"
-Received: from ekohn-mobl1.ger.corp.intel.com (HELO localhost) ([10.246.49.145])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:26:17 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 4 Mar 2024 15:26:12 +0200 (EET)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: rajvi.jingar@linux.intel.com, platform-driver-x86@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, hdegoede@redhat.com, 
-    ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH V2 3/9] platform/x86/intel/sdsi: Add in-band BIOS lock
- support
-In-Reply-To: <20240228000016.1685518-4-david.e.box@linux.intel.com>
-Message-ID: <4502a46c-cd1f-f030-f0e0-5ed717a38a02@linux.intel.com>
-References: <20240228000016.1685518-1-david.e.box@linux.intel.com> <20240228000016.1685518-4-david.e.box@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oMzp99FF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96F3C433C7;
+	Mon,  4 Mar 2024 13:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709558816;
+	bh=+I0soG2y9wOLdzgs+iOEFQHNkm2pStAlIL7zVcgMi74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oMzp99FFoYxE/vOBF28I+Id1o/+jfqk2QKtf8z+qedFCDQo44dR1zoMcm4EHWUsN2
+	 9S7n+Qb7qUQaJTViEMqp0ZTD1looj6HK046a++qWpRN5hfjMkaubXIkZT/MmcI6S8X
+	 vdbb37LSe6aZm0VVDWGarbOZAntFjiFfFUm5jW9o=
+Date: Mon, 4 Mar 2024 14:26:53 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Andrew Panyakin <apanyaki@amazon.com>
+Cc: stable@vger.kernel.org, boris.ostrovsky@oracle.com, jgross@suse.com,
+	sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
+	jgrall@amazon.com, sashal@kernel.org,
+	jeremy.fitzhardinge@citrix.com, konrad.wilk@oracle.com,
+	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+	benh@amazon.com, mheyne@amazon.de
+Subject: Re: [PATCH 5.10] xen/events: close evtchn after mapping cleanup
+Message-ID: <2024030433-legacy-unrivaled-f5fc@gregkh>
+References: <20240302160357.GA2232656@uc3ecf78c6baf56.ant.amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-531824783-1709558772=:986"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240302160357.GA2232656@uc3ecf78c6baf56.ant.amazon.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-531824783-1709558772=:986
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Tue, 27 Feb 2024, David E. Box wrote:
-
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.=
-com>
->=20
-> As per SDSi in-band interface specification, sec titled "BIOS lock for
-> in-band provisioning", when IB_LOCK bit is set in control qword, the
-> SDSI agent is only allowed to perform the read flow, but not allowed to
-> provision license blob or license key. So add check for it in
-> sdsi_provision().
->=20
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
-ux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+On Sat, Mar 02, 2024 at 08:03:57AM -0800, Andrew Panyakin wrote:
+> From: Maximilian Heyne <mheyne@amazon.de>
+> 
+> Commit fa765c4b4aed2d64266b694520ecb025c862c5a9 upstream
+> 
+> shutdown_pirq and startup_pirq are not taking the
+> irq_mapping_update_lock because they can't due to lock inversion. Both
+> are called with the irq_desc->lock being taking. The lock order,
+> however, is first irq_mapping_update_lock and then irq_desc->lock.
+> 
+> This opens multiple races:
+> - shutdown_pirq can be interrupted by a function that allocates an event
+>   channel:
+> 
+>   CPU0                        CPU1
+>   shutdown_pirq {
+>     xen_evtchn_close(e)
+>                               __startup_pirq {
+>                                 EVTCHNOP_bind_pirq
+>                                   -> returns just freed evtchn e
+>                                 set_evtchn_to_irq(e, irq)
+>                               }
+>     xen_irq_info_cleanup() {
+>       set_evtchn_to_irq(e, -1)
+>     }
+>   }
+> 
+>   Assume here event channel e refers here to the same event channel
+>   number.
+>   After this race the evtchn_to_irq mapping for e is invalid (-1).
+> 
+> - __startup_pirq races with __unbind_from_irq in a similar way. Because
+>   __startup_pirq doesn't take irq_mapping_update_lock it can grab the
+>   evtchn that __unbind_from_irq is currently freeing and cleaning up. In
+>   this case even though the event channel is allocated, its mapping can
+>   be unset in evtchn_to_irq.
+> 
+> The fix is to first cleanup the mappings and then close the event
+> channel. In this way, when an event channel gets allocated it's
+> potential previous evtchn_to_irq mappings are guaranteed to be unset already.
+> This is also the reverse order of the allocation where first the event
+> channel is allocated and then the mappings are setup.
+> 
+> On a 5.10 kernel prior to commit 3fcdaf3d7634 ("xen/events: modify internal
+> [un]bind interfaces"), we hit a BUG like the following during probing of NVMe
+> devices. The issue is that during nvme_setup_io_queues, pci_free_irq
+> is called for every device which results in a call to shutdown_pirq.
+> With many nvme devices it's therefore likely to hit this race during
+> boot because there will be multiple calls to shutdown_pirq and
+> startup_pirq are running potentially in parallel.
+> 
+>   ------------[ cut here ]------------
+>   blkfront: xvda: barrier or flush: disabled; persistent grants: enabled; indirect descriptors: enabled; bounce buffer: enabled
+>   kernel BUG at drivers/xen/events/events_base.c:499!
+>   invalid opcode: 0000 [#1] SMP PTI
+>   CPU: 44 PID: 375 Comm: kworker/u257:23 Not tainted 5.10.201-191.748.amzn2.x86_64 #1
+>   Hardware name: Xen HVM domU, BIOS 4.11.amazon 08/24/2006
+>   Workqueue: nvme-reset-wq nvme_reset_work
+>   RIP: 0010:bind_evtchn_to_cpu+0xdf/0xf0
+>   Code: 5d 41 5e c3 cc cc cc cc 44 89 f7 e8 2b 55 ad ff 49 89 c5 48 85 c0 0f 84 64 ff ff ff 4c 8b 68 30 41 83 fe ff 0f 85 60 ff ff ff <0f> 0b 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44 00 00
+>   RSP: 0000:ffffc9000d533b08 EFLAGS: 00010046
+>   RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000006
+>   RDX: 0000000000000028 RSI: 00000000ffffffff RDI: 00000000ffffffff
+>   RBP: ffff888107419680 R08: 0000000000000000 R09: ffffffff82d72b00
+>   R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000001ed
+>   R13: 0000000000000000 R14: 00000000ffffffff R15: 0000000000000002
+>   FS:  0000000000000000(0000) GS:ffff88bc8b500000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 0000000000000000 CR3: 0000000002610001 CR4: 00000000001706e0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   Call Trace:
+>    ? show_trace_log_lvl+0x1c1/0x2d9
+>    ? show_trace_log_lvl+0x1c1/0x2d9
+>    ? set_affinity_irq+0xdc/0x1c0
+>    ? __die_body.cold+0x8/0xd
+>    ? die+0x2b/0x50
+>    ? do_trap+0x90/0x110
+>    ? bind_evtchn_to_cpu+0xdf/0xf0
+>    ? do_error_trap+0x65/0x80
+>    ? bind_evtchn_to_cpu+0xdf/0xf0
+>    ? exc_invalid_op+0x4e/0x70
+>    ? bind_evtchn_to_cpu+0xdf/0xf0
+>    ? asm_exc_invalid_op+0x12/0x20
+>    ? bind_evtchn_to_cpu+0xdf/0xf0
+>    ? bind_evtchn_to_cpu+0xc5/0xf0
+>    set_affinity_irq+0xdc/0x1c0
+>    irq_do_set_affinity+0x1d7/0x1f0
+>    irq_setup_affinity+0xd6/0x1a0
+>    irq_startup+0x8a/0xf0
+>    __setup_irq+0x639/0x6d0
+>    ? nvme_suspend+0x150/0x150
+>    request_threaded_irq+0x10c/0x180
+>    ? nvme_suspend+0x150/0x150
+>    pci_request_irq+0xa8/0xf0
+>    ? __blk_mq_free_request+0x74/0xa0
+>    queue_request_irq+0x6f/0x80
+>    nvme_create_queue+0x1af/0x200
+>    nvme_create_io_queues+0xbd/0xf0
+>    nvme_setup_io_queues+0x246/0x320
+>    ? nvme_irq_check+0x30/0x30
+>    nvme_reset_work+0x1c8/0x400
+>    process_one_work+0x1b0/0x350
+>    worker_thread+0x49/0x310
+>    ? process_one_work+0x350/0x350
+>    kthread+0x11b/0x140
+>    ? __kthread_bind_mask+0x60/0x60
+>    ret_from_fork+0x22/0x30
+>   Modules linked in:
+>   ---[ end trace a11715de1eee1873 ]---
+> 
+> Fixes: d46a78b05c0e ("xen: implement pirq type event channels")
+> Cc: stable@vger.kernel.org
+> Co-debugged-by: Andrew Panyakin <apanyaki@amazon.com>
+> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+> [apanyaki: backport to v5.10-stable]
+> Signed-off-by: Andrew Paniakin <apanyaki@amazon.com>
 > ---
->=20
-> V2 - Move sdsi_ib_locked() check after overflow check
->=20
->  drivers/platform/x86/intel/sdsi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/int=
-el/sdsi.c
-> index d80c2dc0ce71..bb3eaf5eb382 100644
-> --- a/drivers/platform/x86/intel/sdsi.c
-> +++ b/drivers/platform/x86/intel/sdsi.c
-> @@ -67,6 +67,7 @@
->  #define CTRL_OWNER=09=09=09GENMASK(5, 4)
->  #define CTRL_COMPLETE=09=09=09BIT(6)
->  #define CTRL_READY=09=09=09BIT(7)
-> +#define CTRL_INBAND_LOCK=09=09BIT(32)
->  #define CTRL_STATUS=09=09=09GENMASK(15, 8)
->  #define CTRL_PACKET_SIZE=09=09GENMASK(31, 16)
->  #define CTRL_MSG_SIZE=09=09=09GENMASK(63, 48)
-> @@ -346,6 +347,11 @@ static int sdsi_mbox_read(struct sdsi_priv *priv, st=
-ruct sdsi_mbox_info *info, s
->  =09return sdsi_mbox_cmd_read(priv, info, data_size);
->  }
-> =20
-> +static bool sdsi_ib_locked(struct sdsi_priv *priv)
-> +{
-> +=09return !!FIELD_GET(CTRL_INBAND_LOCK, readq(priv->control_addr));
-> +}
-> +
->  static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t =
-count,
->  =09=09=09      enum sdsi_command command)
->  {
-> @@ -355,6 +361,10 @@ static ssize_t sdsi_provision(struct sdsi_priv *priv=
-, char *buf, size_t count,
->  =09if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
->  =09=09return -EOVERFLOW;
-> =20
-> +=09/* Make sure In-band lock is not set */
-> +=09if (sdsi_ib_locked(priv))
-> +=09=09return -EPERM;
-> +
+> Compare to upstream patch this one does not have close_evtchn flag
+> because there is no need to handle static event channels.
+> This feature was added only in 58f6259b7a08f ("xen/evtchn: Introduce new
+> IOCTL to bind static evtchn")
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Where is the 5.15.y version of this commit?  We have to have that before
+we can take a 5.10.y version, right?
 
---=20
- i.
+thanks,
 
---8323328-531824783-1709558772=:986--
+greg k-h
