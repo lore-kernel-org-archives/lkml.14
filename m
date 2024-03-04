@@ -1,227 +1,68 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8D41F5FA;
-	Mon,  4 Mar 2024 21:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E4EEED3;
+	Mon,  4 Mar 2024 21:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587315; cv=none; b=SouT7TXVrG7a/AhfpZW/io9PIqlM/yJ5KNXog8bukkCqwcYxlsatSfmMHMQV50sBRplWeyLju+rCqGnK9OnJTt7HIQISD/RDlQ8wvwF60+0Pnt+xBnhebC/kdQb5QmqlXv2eeTvQyuthobkwlpVc/j7CtiYGMl5Z4OJO9lMhBXU=
+	t=1709587430; cv=none; b=bacTK/eJG4cTnDrkIW9M+orAtbtN6yyXvJ22SuogzEbxe8LsW0Okw0L6bAXkeqJbBCS5Gq1AOvs0MsHfE05VAm2YbWcK7gHspkESaBpcFW1Yca1q3H3KFDKJ3tK4uSDtw7rhJZm1O1Pjy41hcyx71+nydjZRCD8+qzhjHU77cgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587315; c=relaxed/simple;
-	bh=+Uw688kr3sFUV/JRZ0dwhqYglG3zdxJv4LleOWUj+aE=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OfcY9aT3/1DUM56m31GFdI+ip4NM+Oy2lpMKsceScSKqdJiSmNYNri22TTCxPj8gM0QWt8tBVWwF1GFLRzOUht+Q4XqXDiv0BQPqffXVxpPSISKBPikhBzx1D2lqoG9bnRP2+8R0UMxynXPUCMpqsYUispWP8Kr7ln12TosKn4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Kj8vWBpt; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1709587430; c=relaxed/simple;
+	bh=Xma0zHQ+LNitZLyloUMLCtH9PdDg7Sn3sQbNyew6nrA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=orH1yUXb/lWaJJ/z7I9ite5y2FtCAJ8MeFe4RYg6bYRCT9+Wv32vTjpcZ4KcE8i2PhGVAmwdOgsfE+hWH/lYJEfVC9nyGqjfuHkU0wNzNXoCf+Jb3CXyUs5yZ7BKDGO2xeoD0q4XMovR4XpCzoC8kn4bIrtb74wgmRiKqLWc8ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyJKO6kl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Kj8vWBpt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1709587314; x=1741123314;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=6zwWcPAYAWHQfzlWhyN0qe/pCFOF7SDZ5bS/wSSOiVg=;
-  b=Kj8vWBpt2BG+l+Q4LZ5dp6EffkB4XujZ8SRSyESOYkwsS4O02PaFk6pr
-   jXKHA1eS8ryTQZSrj+9IisorEvcW1ptfb2KeIpR/CJqPdkQWMVg736kVH
-   Q4nUGhE6CSFxdLbC1f8bUZC9piKuWI0SViMYQQfMcfuAdSItJw+paHN7M
-   A=;
-X-IronPort-AV: E=Sophos;i="6.06,204,1705363200"; 
-   d="scan'208";a="638522381"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 21:21:52 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:20127]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.42.123:2525] with esmtp (Farcaster)
- id d57f359e-8ff9-4dd4-a86f-6f9c3864b2ec; Mon, 4 Mar 2024 21:21:50 +0000 (UTC)
-X-Farcaster-Flow-ID: d57f359e-8ff9-4dd4-a86f-6f9c3864b2ec
-Received: from EX19D026EUB004.ant.amazon.com (10.252.61.64) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 4 Mar 2024 21:21:46 +0000
-Received: from uc3ecf78c6baf56.ant.amazon.com (10.187.170.53) by
- EX19D026EUB004.ant.amazon.com (10.252.61.64) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 4 Mar 2024 21:21:43 +0000
-Date: Mon, 4 Mar 2024 13:21:39 -0800
-From: Andrew Panyakin <apanyaki@amazon.com>
-To: <stable@vger.kernel.org>
-CC: Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross
-	<jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Oleksandr
- Tyshchenko" <oleksandr_tyshchenko@epam.com>, Marc Zyngier <maz@kernel.org>,
-	Samuel Holland <samuel@sholland.org>, Sasha Levin <sashal@kernel.org>,
-	Maximilian Heyne <mheyne@amazon.de>, Jeremy Fitzhardinge
-	<jeremy.fitzhardinge@citrix.com>, Konrad Rzeszutek Wilk
-	<konrad.wilk@oracle.com>, "xen-devel@lists.xenproject.org"
-	<xen-devel@lists.xenproject.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 5.15] xen/events: close evtchn after mapping cleanup
-Message-ID: <20240304212139.GA3585816@uc3ecf78c6baf56.ant.amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyJKO6kl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65FD2C433C7;
+	Mon,  4 Mar 2024 21:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709587430;
+	bh=Xma0zHQ+LNitZLyloUMLCtH9PdDg7Sn3sQbNyew6nrA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gyJKO6klpOm+nLT2D+jzTXO2dfuSt43tKltok6RX8I/pNlFUzjZKPBof2nC74e+2k
+	 5CqmUX5FKikWZ3HfZLrrmUiTOWIkxthHQ+DZI8kh5Tv6HO/VrK3oSq7vhPgRdBlz2o
+	 I/xGUGXMWNC194Y20D+FYULyoCnS560xH1bBhdRPLqkBU1ZAwMqsTYh0gLcbTw93/x
+	 JX7M9n9Hrz9FRbSaDHuI/ti9Y420mmg+vc6Nm/bg40PAJMwN04hZkIQEP7+01zMb9/
+	 j+L83gG7YJtNnMM2U7YV/Uf5MT+eomXzvlk8X+LSm1rCnk9X8Jr2RP6flSCkuNfust
+	 /M/0M9khS9sMg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v2 0/2] arm64: dts: qcom: Fix SPMI channels size for SM8550 and SM8650
+Date: Mon,  4 Mar 2024 13:28:38 -0800
+Message-ID: <170958768034.1828118.8833896666591244737.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240221-dts-qcom-sm8550-fix-spmi-chnls-size-v2-0-72b5efd9dc4f@linaro.org>
+References: <20240221-dts-qcom-sm8550-fix-spmi-chnls-size-v2-0-72b5efd9dc4f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: EX19D039UWB001.ant.amazon.com (10.13.138.119) To
- EX19D026EUB004.ant.amazon.com (10.252.61.64)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-From: Maximilian Heyne <mheyne@amazon.de>
 
-Commit fa765c4b4aed2d64266b694520ecb025c862c5a9 upstream
+On Wed, 21 Feb 2024 15:04:24 +0200, Abel Vesa wrote:
+> 
 
-shutdown_pirq and startup_pirq are not taking the
-irq_mapping_update_lock because they can't due to lock inversion. Both
-are called with the irq_desc->lock being taking. The lock order,
-however, is first irq_mapping_update_lock and then irq_desc->lock.
 
-This opens multiple races:
-- shutdown_pirq can be interrupted by a function that allocates an event
-  channel:
+Applied, thanks!
 
-  CPU0                        CPU1
-  shutdown_pirq {
-    xen_evtchn_close(e)
-                              __startup_pirq {
-                                EVTCHNOP_bind_pirq
-                                  -> returns just freed evtchn e
-                                set_evtchn_to_irq(e, irq)
-                              }
-    xen_irq_info_cleanup() {
-      set_evtchn_to_irq(e, -1)
-    }
-  }
+[1/2] arm64: dts: qcom: sm8550: Fix SPMI channels size
+      commit: 77dd1e50ffcba33c3195ae4fc78f354368ddacb2
+[2/2] arm64: dts: qcom: sm8650: Fix SPMI channels size
+      commit: a4f82b8045e3c7913266aa6ea1ee15752a062abd
 
-  Assume here event channel e refers here to the same event channel
-  number.
-  After this race the evtchn_to_irq mapping for e is invalid (-1).
-
-- __startup_pirq races with __unbind_from_irq in a similar way. Because
-  __startup_pirq doesn't take irq_mapping_update_lock it can grab the
-  evtchn that __unbind_from_irq is currently freeing and cleaning up. In
-  this case even though the event channel is allocated, its mapping can
-  be unset in evtchn_to_irq.
-
-The fix is to first cleanup the mappings and then close the event
-channel. In this way, when an event channel gets allocated it's
-potential previous evtchn_to_irq mappings are guaranteed to be unset already.
-This is also the reverse order of the allocation where first the event
-channel is allocated and then the mappings are setup.
-
-On a 5.10 kernel prior to commit 3fcdaf3d7634 ("xen/events: modify internal
-[un]bind interfaces"), we hit a BUG like the following during probing of NVMe
-devices. The issue is that during nvme_setup_io_queues, pci_free_irq
-is called for every device which results in a call to shutdown_pirq.
-With many nvme devices it's therefore likely to hit this race during
-boot because there will be multiple calls to shutdown_pirq and
-startup_pirq are running potentially in parallel.
-
-  ------------[ cut here ]------------
-  blkfront: xvda: barrier or flush: disabled; persistent grants: enabled; indirect descriptors: enabled; bounce buffer: enabled
-  kernel BUG at drivers/xen/events/events_base.c:499!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 44 PID: 375 Comm: kworker/u257:23 Not tainted 5.10.201-191.748.amzn2.x86_64 #1
-  Hardware name: Xen HVM domU, BIOS 4.11.amazon 08/24/2006
-  Workqueue: nvme-reset-wq nvme_reset_work
-  RIP: 0010:bind_evtchn_to_cpu+0xdf/0xf0
-  Code: 5d 41 5e c3 cc cc cc cc 44 89 f7 e8 2b 55 ad ff 49 89 c5 48 85 c0 0f 84 64 ff ff ff 4c 8b 68 30 41 83 fe ff 0f 85 60 ff ff ff <0f> 0b 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44 00 00
-  RSP: 0000:ffffc9000d533b08 EFLAGS: 00010046
-  RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000006
-  RDX: 0000000000000028 RSI: 00000000ffffffff RDI: 00000000ffffffff
-  RBP: ffff888107419680 R08: 0000000000000000 R09: ffffffff82d72b00
-  R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000001ed
-  R13: 0000000000000000 R14: 00000000ffffffff R15: 0000000000000002
-  FS:  0000000000000000(0000) GS:ffff88bc8b500000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000000 CR3: 0000000002610001 CR4: 00000000001706e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   ? show_trace_log_lvl+0x1c1/0x2d9
-   ? show_trace_log_lvl+0x1c1/0x2d9
-   ? set_affinity_irq+0xdc/0x1c0
-   ? __die_body.cold+0x8/0xd
-   ? die+0x2b/0x50
-   ? do_trap+0x90/0x110
-   ? bind_evtchn_to_cpu+0xdf/0xf0
-   ? do_error_trap+0x65/0x80
-   ? bind_evtchn_to_cpu+0xdf/0xf0
-   ? exc_invalid_op+0x4e/0x70
-   ? bind_evtchn_to_cpu+0xdf/0xf0
-   ? asm_exc_invalid_op+0x12/0x20
-   ? bind_evtchn_to_cpu+0xdf/0xf0
-   ? bind_evtchn_to_cpu+0xc5/0xf0
-   set_affinity_irq+0xdc/0x1c0
-   irq_do_set_affinity+0x1d7/0x1f0
-   irq_setup_affinity+0xd6/0x1a0
-   irq_startup+0x8a/0xf0
-   __setup_irq+0x639/0x6d0
-   ? nvme_suspend+0x150/0x150
-   request_threaded_irq+0x10c/0x180
-   ? nvme_suspend+0x150/0x150
-   pci_request_irq+0xa8/0xf0
-   ? __blk_mq_free_request+0x74/0xa0
-   queue_request_irq+0x6f/0x80
-   nvme_create_queue+0x1af/0x200
-   nvme_create_io_queues+0xbd/0xf0
-   nvme_setup_io_queues+0x246/0x320
-   ? nvme_irq_check+0x30/0x30
-   nvme_reset_work+0x1c8/0x400
-   process_one_work+0x1b0/0x350
-   worker_thread+0x49/0x310
-   ? process_one_work+0x350/0x350
-   kthread+0x11b/0x140
-   ? __kthread_bind_mask+0x60/0x60
-   ret_from_fork+0x22/0x30
-  Modules linked in:
-  ---[ end trace a11715de1eee1873 ]---
-
-Fixes: d46a78b05c0e ("xen: implement pirq type event channels")
-Cc: stable@vger.kernel.org
-Co-debugged-by: Andrew Panyakin <apanyaki@amazon.com>
-Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
-[apanyaki: backport to v5.15-stable]
-Signed-off-by: Andrew Paniakin <apanyaki@amazon.com>
----
-Compare to upstream patch this one does not have close_evtchn flag
-because there is no need to handle static event channels.
-This feature was added only in 58f6259b7a08f ("xen/evtchn: Introduce new
-IOCTL to bind static evtchn")
-
- drivers/xen/events/events_base.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
-index ee691b20d4a3..04ff194fecf4 100644
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -936,8 +936,8 @@ static void shutdown_pirq(struct irq_data *data)
- 		return;
- 
- 	do_mask(info, EVT_MASK_REASON_EXPLICIT);
--	xen_evtchn_close(evtchn);
- 	xen_irq_info_cleanup(info);
-+	xen_evtchn_close(evtchn);
- }
- 
- static void enable_pirq(struct irq_data *data)
-@@ -981,8 +981,6 @@ static void __unbind_from_irq(unsigned int irq)
- 		unsigned int cpu = cpu_from_irq(irq);
- 		struct xenbus_device *dev;
- 
--		xen_evtchn_close(evtchn);
--
- 		switch (type_from_irq(irq)) {
- 		case IRQT_VIRQ:
- 			per_cpu(virq_to_irq, cpu)[virq_from_irq(irq)] = -1;
-@@ -1000,6 +998,7 @@ static void __unbind_from_irq(unsigned int irq)
- 		}
- 
- 		xen_irq_info_cleanup(info);
-+		xen_evtchn_close(evtchn);
- 	}
- 
- 	xen_free_irq(irq);
+Best regards,
 -- 
-2.40.1
-
+Bjorn Andersson <andersson@kernel.org>
