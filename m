@@ -1,124 +1,102 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45AF487B0
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 16:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BFF482ED;
+	Mon,  4 Mar 2024 16:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709568418; cv=none; b=mN5adOE5T4O1LM1G7Zv9FxGsfpgP31fd6NhYOhzqbXhjcoyacEFmmF3HVe48MEBGGdzZgVZmENgwWM62L8Rfva0GNNoA2BLfK93eeXcsVeIELd+e0GX+mpzgHG/cpLw0mzCdwL1GBTmKDZWc1+o8NNyyh7Ytm+istDLhXnZCgiw=
+	t=1709568436; cv=none; b=aIxVNST48oz5gyXY6sPG6MjcoDZ/EdLftGDUiasqyWm1rkx/VGlEVfA70EO0d1urkhbfPr9C5rrnL84yCc03HOY0m+9Nnu3IHJl+I/3ITAWuzyS47zPyvFM16VmmgPsVG4kw8x3hxQ1LmrdVqN+VB5KsJlwiepXyoeZLuBa0zgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709568418; c=relaxed/simple;
-	bh=HDTEIEeTth+YlarlZwpbtqNSffqitQLrinmgPBP7yu8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OpU9UR5tQLrmZYVkDIYMIgrPVW16wxuVgT5stO5clZqdaQXLC/E7GZTXkMQ5iUwHcUFdfdEY/4cuCAlYjqSGrR5vPY62p0j65Q1BZDjyeOjkuze8zTLIzWEt8OELXLGtyArTNFFdcz9m65NpujykAzEi1iaHzhMuEAAQI1MWsRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HIh9XJsY; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1709568436; c=relaxed/simple;
+	bh=k4TR10OnNmINkmPorunrjDAzeD+rHb7FeAaVbqOaY1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=crgQkzjNO49RtuL7ubKsaH/L7I8yOth4BTr99jMxsKOXIb4nrHTbMlBxsDXEc6VS47oIsFg/g4cfd+CBDlLa9m7C1sjpbKhNZwcvCZNOvk/8Y7ZBGTOC8xaoZlYD6kbxeWy46iL9f3XhaJIEyx/0cs22Rwos5yCxvLKbmrv3Dq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m/CJu2+P; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HIh9XJsY"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-21f5ab945e9so2306817fac.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 08:06:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/CJu2+P"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e59bbdd8c7so3783153b3a.3;
+        Mon, 04 Mar 2024 08:07:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709568416; x=1710173216; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1709568434; x=1710173234; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yn3BxlJjgBPLtIhw8+vZTdHKWgVz7bubHMhhj+7dA28=;
-        b=HIh9XJsYBqEMYRZ8eqTP1tlbkwygZg35Z15NyWUUL9pqFI+K7BC8nxqaRJCUP4bTYa
-         fJNFOGfr89S6ZL1dr12WqBLdhoRmjg0PRO0L/Z/tc5HgQB0DA59XtGE5yZKpLjA720Ll
-         kTNbBKV90lMMKndvzQ1EJU5DFWuP4+mZ+UivCTHTfN2yywKjzrNayUQh/+JfvQeQYHO3
-         tdlRTiY6oiycYraN+2Pa97OQEmeseynPpZ6Zk2HfrkQ/Hij0uByIY0JQivFE0eVqJnUo
-         geRetPZWlRrrs22mfqNq862Lw3xhLMKRbg4K9Dg/1zkvr3BVU/X37m3NOYBtGT7c5ixA
-         GXag==
+        bh=k4TR10OnNmINkmPorunrjDAzeD+rHb7FeAaVbqOaY1M=;
+        b=m/CJu2+Pbjyhmw2VJUJkQnQCtkFpJxrHGLFusviOtE57QrQlYj0JV8GDYH7UPApmS+
+         OfQajgoitkqbikc6cKTqY3gzXuMokc8vU1QMrDe9FIbOYnXH4Do0J9wWA0uIUot2N2EC
+         lO3ni+F68czaxLF3PO4uzNe5dDZeRVipeQQUuYMBvAwFSW6fyfzoLJXlpBUaS8UhtChG
+         FLQ7LQuCDvfpCJkHkt4BhZLM5bdInmCQfOhkGcdTV/eIQ/3M3ouk/nUMrIjv8LCmyKe0
+         AnLGGmEkoyPNC/mWDi+i6xoxFBrRJlSCq9mrWF/kY6ry+A4afyFvKz8Qjv4sbmJKIhO4
+         rBQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709568416; x=1710173216;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709568434; x=1710173234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yn3BxlJjgBPLtIhw8+vZTdHKWgVz7bubHMhhj+7dA28=;
-        b=BNjVU2CHtMWAzYZWlt+/jC8MOWwAmb6lQwspv+KIN+UdyJc4t/gIZbrr4ovqIpg7Op
-         E7uoHGC3/MktCvliY2Xgc+Q/aze6kmon3maRIlowaC3U/obb6LQz5nOFvxC3hX3vfOYK
-         FtP5olCHSATz0Ufhm5j9A6uEa2LOc46OJrP1qspL2iRQ6cZLL6gVSysKNvxi2awybHC0
-         ijuIf3ZWs8qxqeLvSOn/4fNpPMejkeUn4HGju4UwNm/TUOXMH2aleITpRyVe4wgwK/Gb
-         N6w+Lm+iplQq2AFzuPUm8ujKKAIEdbdkxXgjG4HdD7HH78bpJc1s0jp4SKxGVl75/DsH
-         Vlxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuCbdpnGsDkHwicNvX+Y1q4qXBBUuoO6vJ7lVbrF4OnwwmTxQWDlRLyovkFsTB2r84uu+hkFZT4nN5OPwTK1F7tjFW4W6zBDxHP43Y
-X-Gm-Message-State: AOJu0YyV53VLzLzYbbXS/1ViXQh2wxbzBxbchxWjCzxXR5PODPCXVFou
-	tydhZ7RgjistIMRmFSTysWFNRMeNiotGw7pNKtmnDqlHCcL7wDttTzAgkIgDhV8=
-X-Google-Smtp-Source: AGHT+IEf31u9H/Myq6t1QuUwWolHTsna+Q0D0Xy9VLu1SozYg1bm/W09fH44eW599tqlHTEORQ0BUQ==
-X-Received: by 2002:a05:6870:55d2:b0:220:c434:385b with SMTP id qk18-20020a05687055d200b00220c434385bmr4105937oac.0.1709568415975;
-        Mon, 04 Mar 2024 08:06:55 -0800 (PST)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id lu6-20020a056871314600b00221287ebd03sm83392oac.4.2024.03.04.08.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:06:55 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v2 3/3] spi: axi-spi-engine: use struct_size() macro
-Date: Mon,  4 Mar 2024 10:04:25 -0600
-Message-ID: <20240304-mainline-axi-spi-engine-small-cleanups-v2-3-5b14ed729a31@baylibre.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
-References: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
+        bh=k4TR10OnNmINkmPorunrjDAzeD+rHb7FeAaVbqOaY1M=;
+        b=Kw2c9WOhGbGXOZREypfVj5LN9hw6PfSH+tyGDnmbbyHU+KeUeHRqWMPKEY8wA99IHu
+         s7m+xaY9GoFrJj44Q6zaaQMqbFybtkIwU8wGBTfASx+An+KXXYn5uEnhk1kW6juKSkrT
+         19oaz3M0N5cF/vkEZUZtgZAgjViHlVnr2gRxAqfIpY+CRWbL4yKdrzTDqzD5uidKYzXy
+         BHjcAObtpxb97KUTxsjWfjbk0pAPlvemGab346pKtLIPOZ8Ipz3zllK6C8NEzS1ysEvF
+         tCQu4DJrsXG5o8bdKp+x7xX/XNBHyBS+YpTPkhfzcFPUVjnv5s1+rs6EfccuiE6J1S2D
+         VSYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqtX+maSLXZfDSI0s5pUN3W8YJCcBg297al5R7MuB/iCHo9ew737KqFTmIl2rMp+nnF/A1vDtEWs/ArU0oHmL+Z1F/GVi2D7ebOOwYvECMP0I1jidVhaggSHMQ0vMATi5Tv0pXrTV6v7j8zig=
+X-Gm-Message-State: AOJu0YxTKxjLpjo5+52vwMH6a3i1q/GcSGbFxakb5e4NQPjjhQRufWwL
+	nzt46tbtPrpVq/qLH89E+jq/UgW4pN/JAOsm9QJxRe7fN/lfo79sbCT7dONjwBiNY5o0X196j4i
+	zXWMh3hRK5CANLR4KQyc8rDqFI7s=
+X-Google-Smtp-Source: AGHT+IFlTw+graS1GYFpuHX/+si581ZuRx910SbrbDYCgQI+m5x+oiChingS48e76W97/gjoZixOgklCOzjzBhM/d4E=
+X-Received: by 2002:a05:6a20:160d:b0:1a0:dbf2:fd8f with SMTP id
+ l13-20020a056a20160d00b001a0dbf2fd8fmr11819869pzj.21.1709568434111; Mon, 04
+ Mar 2024 08:07:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+References: <20240304141426.163517-1-wangrui@loongson.cn>
+In-Reply-To: <20240304141426.163517-1-wangrui@loongson.cn>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 4 Mar 2024 17:07:00 +0100
+Message-ID: <CANiq72mvdVrzN19PC8pNrvuBLkOEEQ3yX0WG6JcWc+RVaSM2nA@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: rust: Switch to use built-in rustc target
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This makes use of the struct_size() macro to calculate the size of the
-struct axi_spi_engine when allocating it.
+On Mon, Mar 4, 2024 at 3:14=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wrote=
+:
+>
+> This commit switches to using the built-in rustc
+> loongarch64-unknown-none-softfloat target for LoongArch.
+>
+> The Rust samples have been tested with this commit.
+>
+> Signed-off-by: WANG Rui <wangrui@loongson.cn>
+> ---
+> base-commit: ("rust: Refactor the build target to allow the use of builti=
+n targets")
 
-Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/spi/spi-axi-spi-engine.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+I couldn't apply it on top of commit f82811e22b48 in arm64's tree
+(which is the base? -- the offset differs significantly in the arch
+Makefile), but I nevertheless applied it manually on top of that one,
+build-tested it for loongarch64 and boot-tested it for x86_64:
 
-diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index a8f626165f44..7cc219d78551 100644
---- a/drivers/spi/spi-axi-spi-engine.c
-+++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -12,6 +12,7 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/module.h>
-+#include <linux/overflow.h>
- #include <linux/platform_device.h>
- #include <linux/spi/spi.h>
- 
-@@ -502,15 +503,13 @@ static irqreturn_t spi_engine_irq(int irq, void *devid)
- static int spi_engine_optimize_message(struct spi_message *msg)
- {
- 	struct spi_engine_program p_dry, *p;
--	size_t size;
- 
- 	spi_engine_precompile_message(msg);
- 
- 	p_dry.length = 0;
- 	spi_engine_compile_message(msg, true, &p_dry);
- 
--	size = sizeof(*p->instructions) * (p_dry.length + 1);
--	p = kzalloc(sizeof(*p) + size, GFP_KERNEL);
-+	p = kzalloc(struct_size(p, instructions, p_dry.length + 1), GFP_KERNEL);
- 	if (!p)
- 		return -ENOMEM;
- 
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
--- 
-2.43.2
+Thanks!
 
+Cheers,
+Miguel
