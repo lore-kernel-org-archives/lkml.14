@@ -1,150 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024BA8F6E
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 20:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E825779DD;
+	Mon,  4 Mar 2024 20:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709585063; cv=none; b=K9tRp49kWFPrgdXswK+1z8jei4yZ34me/i7Slz3lxptbZQs9je4efPs94YHVhnJ285+KrUTDA738BKn7aEeaN1JhcOGu1uXnBVgcLZgwqDmuutnfEsj8vtPsWkgvePkcYiSTrr7Me8XzzeSDwghbwhBh2ZHL354txrvTMbs+I/M=
+	t=1709585065; cv=none; b=NKXPr67f4bUWuUnLz6d8Oyvn88VCIGntRFYsF85x+7VDf5BIu+fq7hhX+fKMEfh6RbT+N3v9w0PiUQ078IkhafOSVGpeycaPZWXjrl4fBXkf2aw2oMgEHF/jfhU9UKWHNyQqQyynH/99xYzPP3kKiaZ6S4dVBEyvlK9//leJPzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709585063; c=relaxed/simple;
-	bh=+LDt+7BROXBNv2O1HJAcO8FeyqvfobiscAmbl8mDiQk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=X2q0/B4dWphvGQ1VAIBgu1l1WSPGigEfx50h5Rh0FgxsKSYalr7vcSNFq0HcT4g+THkgneOQapN/BUSA9bmA82yIO3eKMSEoNhi+3NIS0LDZizODMg9sn8qhnQw5zjEGKd9roFnbcapgejKQGdNFA3ch0vRCmxbP9PRmlaPZUWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=isixOAQd; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709585065; c=relaxed/simple;
+	bh=eAtThA93+pvXHiAHOt627BHvIYo8wc/buI8bL6xbOVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WbgKUiaYKkupuRiOfWR6V57QYz6hKcn0S334Q0WwRsThhrX7umS8cAGu9DXeHvvLws2PKTZ6+FH8VCMXunPGXmI65o3KL45VIOKfYNSB8ozJsIZ1I6PxecwKegk2GNyVxbvB+J0XHLqWvh5D3lTjSRasptOiqDEl2aG5tPd3mmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=ltV3spUD; arc=none smtp.client-ip=89.177.23.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="isixOAQd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709585062; x=1741121062;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=+LDt+7BROXBNv2O1HJAcO8FeyqvfobiscAmbl8mDiQk=;
-  b=isixOAQdCUb0vHHFbrVUQxDN6Dq/AExS5y6Q9RnDRlJodjOJpjsrNR6V
-   0YEzZXbGM6dAC68lfjMt78Q4xgCpDHxvsf8UmL5/UweCTnDnBoI5iLUAQ
-   XbDZ1WCDexmvtRzLBXLZKb8+xib2BM4QktJXCA6dA0QSbMDkhlCmSBSea
-   sKnN+O2CgXBK59OB2d4vnxzHuTHcJ24Sp/3t+uFQNz4Iz+/XXlR94qre3
-   z1b8rXH7aDe+pzgSYHrTG3Lie0l1qYNi3UoO3HickpdZDRSjNIXgG8UP4
-   1FJv4Mhr4pLeFIMLPkRL0674C5GdNU7OYznwe7sbb2Vqwx552zxzJ/PkM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4027933"
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="4027933"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 12:44:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="40118905"
-Received: from syakovle-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.51.3])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 12:44:15 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Hsin-Yi Wang <hsinyi@chromium.org>, Doug Anderson <dianders@chromium.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm_edid: Add a function to get EDID base block
-In-Reply-To: <CAJMQK-gKF+ZeAe4Hp8di83Zx8gp-BJ0vuj6uzi0hsaxeju8GyQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240223223958.3887423-1-hsinyi@chromium.org>
- <20240223223958.3887423-2-hsinyi@chromium.org> <87wmqqjmt9.fsf@intel.com>
- <CAJMQK-jSPg6vU3SLmRy7zwNHJ4yqO2hT6RaiYxA4ifZ7CzwD9Q@mail.gmail.com>
- <CAD=FV=WU-2yystd40e+g9VNDNTiv5c=nP0uQg-AR03o7UGMTdA@mail.gmail.com>
- <87bk7z6x1w.fsf@intel.com>
- <CAD=FV=Wzm9Y7m9Q6KqO7yWdnc1xToaRMb2f1s2TQMJqpqVYLOg@mail.gmail.com>
- <CAA8EJpqHJTbc+TCpkccjx_eQH36zaNgcQ9QssecNeQUQgfYApQ@mail.gmail.com>
- <CAD=FV=XyV=V-USfq8kp058=FzRQq=bPA5A4GDb1p0zO-KPbtwQ@mail.gmail.com>
- <CAJMQK-gKF+ZeAe4Hp8di83Zx8gp-BJ0vuj6uzi0hsaxeju8GyQ@mail.gmail.com>
-Date: Mon, 04 Mar 2024 22:44:04 +0200
-Message-ID: <877cih4tij.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="ltV3spUD"
+Received: from [10.112.121.202] (unknown [193.96.224.60])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id B4DE21652A8;
+	Mon,  4 Mar 2024 21:34:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1709584469;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xSv7FO4krn/1nTgTEYERV+QXlt7BH0RFzJSZuFaXIH4=;
+	b=ltV3spUDGBn42+xZXoIYafBljCSDJC2K28fWCCCYRrOmWMiKK2692i7fz3oxl2r/Eljlmd
+	c3f5iefcpgWLTBUZukSFXmGV9eafrZmRcv8jCBRvtrU5KZluCuLokn88bK0PTR0+w3Mgs1
+	wjek/fVt98R8czcQ3OLFsrDN1Kuv43M=
+Message-ID: <eb21360c-9a08-4cb7-a25d-83679aa87ead@ixit.cz>
+Date: Mon, 4 Mar 2024 21:34:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] dt-bindings: opp: switch inner and outer min/maxItems
+ rules for opp-hz
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Stephen Boyd <sboyd@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231229191038.247258-1-david@ixit.cz>
+ <2c9e91c7-8588-4260-8f5d-22c822019f62@linaro.org>
+ <20240102235815.GA3700567-robh@kernel.org>
+ <20240130170625.GA1847581-robh@kernel.org>
+From: David Heidelberg <david@ixit.cz>
+Autocrypt: addr=david@ixit.cz; keydata=
+ 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
+In-Reply-To: <20240130170625.GA1847581-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 04 Mar 2024, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> On Mon, Mar 4, 2024 at 8:17=E2=80=AFAM Doug Anderson <dianders@chromium.o=
-rg> wrote:
+On 30/01/2024 18:06, Rob Herring wrote:
+> On Tue, Jan 02, 2024 at 04:58:15PM -0700, Rob Herring wrote:
+>> On Sat, Dec 30, 2023 at 03:17:21PM +0100, Krzysztof Kozlowski wrote:
+>>> On 29/12/2023 20:10, David Heidelberg wrote:
+>>>> Fixes issue as:
+>>>> ```
+>>> Drop, it's not RST, but commit msg.
+>>>
+>>>> arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dtb: opp-table: opp-200000000:opp-hz:0: [200000000, 0, 0, 150000000, 0, 0, 0, 0, 300000000] is too long
+>>>> ```
+>>>>
+>>>> Fixes: 3cb16ad69bef ("dt-bindings: opp: accept array of frequencies")
+>>>>
+>>>> Signed-off-by: David Heidelberg <david@ixit.cz>
+>>>> ---
+>>>>   Documentation/devicetree/bindings/opp/opp-v2-base.yaml | 5 ++---
+>>>>   1 file changed, 2 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/opp/opp-v2-base.yaml b/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+>>>> index e2f8f7af3cf4..86d3aa0eb435 100644
+>>>> --- a/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+>>>> +++ b/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+>>>> @@ -55,10 +55,9 @@ patternProperties:
+>>>>             to relate the values to their clocks or the order in which the clocks
+>>>>             need to be configured and that is left for the implementation
+>>>>             specific binding.
+>>>> -        minItems: 1
+>>>> -        maxItems: 32
+>>>>           items:
+>>>> -          maxItems: 1
+>>>> +          minItems: 1
+>>>> +          maxItems: 32
+>>> This does not look like correct fix. The original code looked fine -
+>>> only one item is allowed in each sub-element (array).
+>> This one is special being 64-bit values so we have an exception in
+>> property-units.yaml. The constraints here don't get used in decoding the
+>> dtb and the default way of 1 outer element is used.
 >>
->> Hi,
+>> It doesn't look like opp-hz needs to be a matrix as it is really just an
+>> array. Perhaps it should just be changed to an array type.
+>> Alternatively, adding 'items: { maxItems: 1 }' to the definition in
+>> property-units.yaml fixes the issue as well.
 >>
->> On Sun, Mar 3, 2024 at 1:30=E2=80=AFPM Dmitry Baryshkov
->> <dmitry.baryshkov@linaro.org> wrote:
->> >
->> > > The problem is that Dmitry didn't like the idea of using a hash and =
-in
->> > > v2 Hsin-Yi has moved to using the name of the display. ...except of
->> > > course that eDP panels don't always properly specify
->> > > "EDID_DETAIL_MONITOR_NAME". See the discussion [1]. If you want to s=
-ee
->> > > some of the EDIDs involved, you can see Hsin-Yi's post [2]. The pane=
-ls
->> > > included stuff like this:
->> > >
->> > >     Alphanumeric Data String: 'AUO'
->> > >     Alphanumeric Data String: 'B116XAN04.0 '
->> > >
->> > > The fact that there is more than one string in there makes it hard to
->> > > just "return" the display name in a generic way. The way Hsin-Yi's
->> > > code was doing it was that it would consider it a match if the panel
->> > > name was in any of the strings...
->> > >
->> > > How about this as a solution: we change drm_edid_get_panel_id() to
->> > > return an opaque type (struct drm_edid_panel_id_blob) that's really
->> > > just the first block of the EDID but we can all pretend that it isn'=
-t.
->> > > Then we can add a function in drm_edid.c that takes this opaque blob,
->> > > a 32-bit integer (as per drm_edid_encode_panel_id()), and a string
->> > > name and it can tell us if the blob matches?
->> >
->> > Would it be easier to push drm_edid_match to drm_edid.c? It looks way
->> > more simpler than the opaque blob.
->>
->> Yeah, that sounds reasonable / cleaner to me. Good idea! Maybe Hsin-Yi
->> will be able to try this out and see if there's a reason it wouldn't
->> work.
->
-> Thanks for all the suggestions. I sent out v3, which still has a blob
-> type since we need
-> 1. get panel id
-> 2. do the string matching.
->
-> And I felt that packing these 2 steps into one function may make that
-> function do multiple tasks?
->
-> But let me know if it's preferred in this way.
->
-> v3: https://lore.kernel.org/lkml/20240304195214.14563-1-hsinyi@chromium.o=
-rg/
+>> Though we can fix this, I'm looking into if we have other cases where we
+>> need this to work as-is. There's probably some room for improvement in
+>> how matrix dimensions are handled.
+> I've made some improvements on matrix dimensions, but this one is still
+> an issue. Can you respin this dropping 'items: {maxItems: 1}'. I'm going
+> to change the definition in property-units.yaml to uint64-array.
 
-I still don't like it, but incorporating all the ideas here, and in the
-previous patches, I think I have a suggestion that covers all cases in a
-reasonable manner [1].
+Keeping the rest of my changes still generates warnings (today dt-schema 
+git) even with `maxItems` dropped.
 
-Sorry about being so inflexible about this. I've just put 140+ commits
-worth of effort in drm_edid.c in the past couple of years, and I'm keen
-on keeping it nice and tidy. :)
+The only working scenario is when I do only the dropping of `items: 
+{maxItems: 1}` from the original code.
 
+Is it the standalone change of just dropping this what did you desired? 
+If yes, I have the patch prepared.
 
-BR,
-Jani.
-
-
-[1] https://lore.kernel.org/r/87a5nd4tsg.fsf@intel.com
-
+David
 
 >
->>
->> -Doug
+> Rob
 
---=20
-Jani Nikula, Intel
+-- 
+David Heidelberg
+
