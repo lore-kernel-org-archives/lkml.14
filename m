@@ -1,81 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD53F224DF;
-	Mon,  4 Mar 2024 12:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0239224DF
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 12:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709554747; cv=none; b=K8mHw0/FufPHHSbg78UdXjGzYtRWcnxAW287/WOaRtDrDHGK/P6fqxwVwWZf3OfHjYNyDgbeN39kVWHGG7WfYpQKnKz8pdYNQhv3N5dL9TDZAUcFZxKXWaWqJ6UPb3R0gSO9qmqCHjW2m2H2wNayrOTcPlQaHEtzmebGNnUOw0o=
+	t=1709554865; cv=none; b=lhljh4MPN4618aq4cY/GwuRvNr4povFvra1/LzVgc+kU5bILdf7n2OoiioFQO7ApuBvGBmIHFvrxGBIHQx1wYC+sKVUvRO+80mj44vZ18zTZ53vwJxfFoR+jh7i79QB3VgwuebVoWekOx8rozNW5zS2HwSqtycxnZ2afIWcUdrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709554747; c=relaxed/simple;
-	bh=+Xw4yL/juL36M9CS5u3iiQJvhPaohn+valC9SCU0ybc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bCZjtbWkOfc08ddXx1otLXlvXvfeICVX4DZHCEcNETCWzUzG9iunftGbZ4oFmS8vq/KxosoIB948OcuN/4zStKcsSR0jiOzyzKz5pSE8MymXzqGKISiB7FyUnMzggvnol3n2TGwElX0X/8E1UmNoqtJ/g+FClHFwzV03tKYdTyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUI2hZ4O; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUI2hZ4O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36F2C433F1;
-	Mon,  4 Mar 2024 12:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709554747;
-	bh=+Xw4yL/juL36M9CS5u3iiQJvhPaohn+valC9SCU0ybc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZUI2hZ4OWyfYui0MJR/fJWyPYofxYOcvEJ5DI5z16+KtH7rdtSfHUvftD8pxYv3OS
-	 Jc7qJDmbS15d8t3ugJKe1V7YtWvL/oFLbb4Eqzu9vrZUmiuKwoJRwMdYkzT+pqv8xO
-	 h3lrVQ8b6Jm+hEQAHgS2R5Kgvody6lBsg1TewvwUIZ+HgyTSeOc6gyJkfLVwKfDxWF
-	 oW3YBP15Z1GMWhXHEecrhhiPIasG6UweQmh7JdpKv2x0EAdvAMLY5S4wy25I+nSG9+
-	 QOkTl8utddU4tV378UMm9IVrEcP9A7KhccuWtuPVxeUxs3WaRTAMwmLU14vshiHLGS
-	 +4IV2oFFV3X8A==
-Date: Mon, 4 Mar 2024 13:19:02 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: xingwei lee <xrivendell7@gmail.com>, linux-kernel@vger.kernel.org, 
-	samsun1006219@gmail.com, linux-fsdevel@vger.kernel.org, syzkaller@googlegroups.com, 
-	jack@suse.cz, viro@zeniv.linux.org.uk, Eric Van Hensbergen <ericvh@kernel.org>, 
-	v9fs@lists.linux.dev
-Subject: Re: WARNING in vfs_getxattr_alloc
-Message-ID: <20240304-essverhalten-wortlaut-d4cc40939a3c@brauner>
-References: <CABOYnLwY5Y499j=JgWtk9ksRneOzLoH_G9dYZTwXi=UvLbUsSg@mail.gmail.com>
- <20240304-stuhl-appetit-656a443d78a5@brauner>
- <ZeW6a1OK-lhCbAf0@codewreck.org>
+	s=arc-20240116; t=1709554865; c=relaxed/simple;
+	bh=ZocpjqRuppIq2fiN7AV4sPsN3gPAAmJwPELmQnF/MBA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nQZvrx/1KrdToKS0s8o150euvGTCsewKdU7SOsfrTldzKqpP1aIeUuQU74ajIcp96Vzya/9tCoKNwajM7GGRed3DBeQB7SzSc0BD9D9OLPweapY6kEto1es36KpnVE1VHB/1F8EF/xQvaLuTdWsQ0cUjYzScSNMTKeb7CUwxhCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D500F1FB;
+	Mon,  4 Mar 2024 04:21:39 -0800 (PST)
+Received: from [10.57.68.92] (unknown [10.57.68.92])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B0943F738;
+	Mon,  4 Mar 2024 04:21:00 -0800 (PST)
+Message-ID: <706b7129-85f6-4470-9fd9-f955a8e6bd7c@arm.com>
+Date: Mon, 4 Mar 2024 12:20:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZeW6a1OK-lhCbAf0@codewreck.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
+ large folio
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org
+Cc: david@redhat.com, chrisl@kernel.org, yuzhao@google.com,
+ hanchuanhua@oppo.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+ ying.huang@intel.com, xiang@kernel.org, mhocko@suse.com,
+ shy828301@gmail.com, wangkefeng.wang@huawei.com,
+ Barry Song <v-songbaohua@oppo.com>, Hugh Dickins <hughd@google.com>
+References: <20240304103757.235352-1-21cnbao@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240304103757.235352-1-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 04, 2024 at 09:11:23PM +0900, Dominique Martinet wrote:
-> Christian Brauner wrote on Mon, Mar 04, 2024 at 12:50:12PM +0100:
-> > > kernel: lastest linux 6.7.rc8 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-> > > kernel config: https://syzkaller.appspot.com/text?tag=KernelConfig&x=4a65fa9f077ead01
-> > > with KASAN enabled
-> > > compiler: gcc (GCC) 12.2.0
-> > > 
-> > > TITLE: WARNING in vfs_getxattr_alloc------------[ cut here ]------------
-> > 
-> > Very likely a bug in 9p. Report it on that mailing list. It seems that
-> > p9_client_xattrwalk() returns questionable values for attr_size:
-> > 748310584784038656
-> > That's obviously a rather problematic allocation request.
-> 
-> That's whatever the server requested -- in 9p we don't have the data at
-> allocation time (xattrwalk returns the size, then we "read" it out in a
-> subsequent request), so we cannot double-check that the size makes sense
-> based on a payload at this point.
-> 
-> We could obviously add a max (the current max of SSIZE_MAX is "a bit"
-> too generous), but I honestly have no idea what'd make sense for this
-> without breaking some weird usecase somewhere (given the content is
-> "read" we're not limited by the size of a single message; I've seen
-> someone return large content as synthetic xattrs so it's hard to put an
-> actual number for me).
-> If the linux VFS has a max hard-wired somewhere plase tell me and I'll
-> be glad to change the max.
+Hi Barry,
 
-Surprisingly we have a max limit that exists in a way because the whole
-xattr uapi is somewhat broken. So best to limit it at XATTR_SIZE_MAX.
-See fs/xattr.c for how it's used.
+On 04/03/2024 10:37, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
+> 
+> page_vma_mapped_walk() within try_to_unmap_one() races with other
+> PTEs modification such as break-before-make, while iterating PTEs
+> of a large folio, it will only begin to acquire PTL after it gets
+> a valid(present) PTE. break-before-make intermediately sets PTEs
+> to pte_none. Thus, a large folio's PTEs might be partially skipped
+> in try_to_unmap_one().
+
+I just want to check my understanding here - I think the problem occurs for
+PTE-mapped, PMD-sized folios as well as smaller-than-PMD-size large folios? Now
+that I've had a look at the code and have a better understanding, I think that
+must be the case? And therefore this problem exists independently of my work to
+support swap-out of mTHP? (From your previous report I was under the impression
+that it only affected mTHP).
+
+Its just that the problem is becoming more pronounced because with mTHP,
+PTE-mapped large folios are much more common?
+
+> For example, for an anon folio, after try_to_unmap_one(), we may
+> have PTE0 present, while PTE1 ~ PTE(nr_pages - 1) are swap entries.
+> So folio will be still mapped, the folio fails to be reclaimed.
+> What’s even more worrying is, its PTEs are no longer in a unified
+> state. This might lead to accident folio_split() afterwards. And
+> since a part of PTEs are now swap entries, accessing them will
+> incur page fault - do_swap_page.
+> It creates both anxiety and more expense. While we can't avoid
+> userspace's unmap to break up unified PTEs such as CONT-PTE for
+> a large folio, we can indeed keep away from kernel's breaking up
+> them due to its code design.
+> This patch is holding PTL from PTE0, thus, the folio will either
+> be entirely reclaimed or entirely kept. On the other hand, this
+> approach doesn't increase PTL contention. Even w/o the patch,
+> page_vma_mapped_walk() will always get PTL after it sometimes
+> skips one or two PTEs because intermediate break-before-makes
+> are short, according to test. Of course, even w/o this patch,
+> the vast majority of try_to_unmap_one still can get PTL from
+> PTE0. This patch makes the number 100%.
+> The other option is that we can give up in try_to_unmap_one
+> once we find PTE0 is not the first entry we get PTL, we call
+> page_vma_mapped_walk_done() to end the iteration at this case.
+> This will keep the unified PTEs while the folio isn't reclaimed.
+> The result is quite similar with small folios with one PTE -
+> either entirely reclaimed or entirely kept.
+> Reclaiming large folios by holding PTL from PTE0 seems a better
+> option comparing to giving up after detecting PTL begins from
+> non-PTE0.
+> 
+> Cc: Hugh Dickins <hughd@google.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+
+Do we need a Fixes tag?
+
+> ---
+>  mm/vmscan.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 0b888a2afa58..e4722fbbcd0c 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1270,6 +1270,17 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+>  
+>  			if (folio_test_pmd_mappable(folio))
+>  				flags |= TTU_SPLIT_HUGE_PMD;
+> +			/*
+> +			 * if page table lock is not held from the first PTE of
+> +			 * a large folio, some PTEs might be skipped because of
+> +			 * races with break-before-make, for example, PTEs can
+> +			 * be pte_none intermediately, thus one or more PTEs
+> +			 * might be skipped in try_to_unmap_one, we might result
+> +			 * in a large folio is partially mapped and partially
+> +			 * unmapped after try_to_unmap
+> +			 */
+> +			if (folio_test_large(folio))
+> +				flags |= TTU_SYNC;
+
+This looks sensible to me after thinking about it for a while. But I also have a
+gut feeling that there might be some more subtleties that are going over my
+head, since I'm not expert in this area. So will leave others to provide R-b :)
+
+Thanks,
+Ryan
+
+>  
+>  			try_to_unmap(folio, flags);
+>  			if (folio_mapped(folio)) {
+
