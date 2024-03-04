@@ -1,93 +1,72 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.119])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689BE1170A;
-	Mon,  4 Mar 2024 06:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFB3BA2B
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 06:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709534870; cv=none; b=HjCOnqo8pkDnGE9iY9BYxEGYyhjSY650B+xeuyA+PiShWZaJuO6YqNzBGPf5zKnDwgCA0rxPuHkig3ZLelAlvEJaaQ3qp1gtnAQflapIm8BhDFgd2IFEqjILcB8wk9xS+/Q5oSTs3nlURMKB8gaX6SxKYgVH9IavPb5OnViguFQ=
+	t=1709535065; cv=none; b=WNLiSJfgtP1Lx+BsoOzsfyFBmV9uQ+JEvOsvgIq2vTBDFB2MIRQI2Z69MguiBVyladt2gVKKxf6MooKpvMf23vmWDMuboJvyZRGCv3BCsn8eaHXWsbyliNSaTpXwF2ZafCsT4Ll+YvbSAUyHwR9QsyEmtMcQcubp342Felda5xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709534870; c=relaxed/simple;
-	bh=hQ6Jbd6lK1sLeGDCv6wXrJMCC6sO0zy1JnqZUvapV3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t7yjThxYVT5yrsysPnAAfIfmRw130viOMVnRN97fRY1z8HtJDI+wfbS84exrOSfmaHJGqklCD61/Ubb91PmlrZLJGu2IpNNcr9w4IN18/Q1/9n1R2qm5q+foyvzLeUPLpc5u7BfLFf+OifpD9YIjy2FKMaE/Zcr75iuVt5fdIFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=bnySA/Af; arc=none smtp.client-ip=212.42.244.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="bnySA/Af"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1709534499; bh=hQ6Jbd6lK1sLeGDCv6wXrJMCC6sO0zy1JnqZUvapV3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bnySA/AfsrQ0mFyJajhUib64TkUtodY0AzXmbSo84b0V/XPMByaqAqPeIXvEzwsQW
-	 KzqoIXFEufsGnLEaoiz0diXPFYWxFw0O7d1DLS4DHsAaw1qVPWLHBprWMs2QMSOSY0
-	 znssIervezbWe9xzCFTSDTMQx6RfBYcQJNi9UfzA=
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Mon,  4 Mar 2024 07:41:39 +0100 (CET)
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id 53AE280155;
-	Mon,  4 Mar 2024 07:41:39 +0100 (CET)
-Received: by buildd.core.avm.de (Postfix, from userid 1000)
-	id 484C018B3F5; Mon,  4 Mar 2024 07:41:39 +0100 (CET)
-Date: Mon, 4 Mar 2024 07:41:39 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2] kconfig: add some Kconfig env variables to make help
-Message-ID: <ZeVtIwua9T5prwUl@buildd.core.avm.de>
-Mail-Followup-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240222051621.GH11472@google.com>
- <20240228045652.GH11972@google.com>
- <CAK7LNAQ8OyNMeGzVoTRg-sHDZ4YK0EKY_eEWNepekaibO_ZKwg@mail.gmail.com>
- <20240229021010.GM11972@google.com>
- <CAK7LNASujf8m4PpMyoCC1cTN_YGeG1HVaOR+3pZx5=3OJp=85A@mail.gmail.com>
- <20240229034739.GN11972@google.com>
- <CAK7LNAS-mOxY884pLEMwWaX+wgzXdc6+=vqN=wfHBekuKL5ryA@mail.gmail.com>
- <20240301043316.GO11972@google.com>
- <ZeG2PRYmdO0r44kS@buildd.core.avm.de>
- <20240301142844.GP11972@google.com>
+	s=arc-20240116; t=1709535065; c=relaxed/simple;
+	bh=d4fOgR5twC91SSleQjMplgd75qjKsgjnqJVbubhsbpg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=TCzAJ2WnzYBUbOIvbWepMgYt+6gnOMM72UvmF3XdJ7cPw4VxKP4U6JHKfrUotldnj9MlqijsP3LszkRPkxT/fX+6EJFg2AG4qjvpZUAbFyztGABx83pddA6IDxCbiodIM0nOwmXpCq0uzSLWzBv2WoC0lnxfyn70gFFgrSzMHM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c784914db2so520116239f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 22:51:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709535063; x=1710139863;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DEojSSr1JJCCTe1f41k1uKfweP4Gib3cKMfjn2Bpapg=;
+        b=vNtpZsihIgwAyTwtKzJcdFyaFmv3NTwqUYDzQH1EdCWfkeDrt/dyGFaBVzV6E/UHms
+         rz9rQQwVRwp/F0lmKCv2H/HbU3RYb4LkZ+nUuTIYqE3wiluEkELGmnb66/rjS8UDXaxm
+         YEPPTMWcXuA6e1GYOieRXBkiQZDUdMHdi7A+Fy5IttCTxwz/25dcLn2lb4QVqzN+5hO5
+         3Xv1o04yhnfEU5PNmJGaNmXABEWcHgkdfTAJkafcBqcosOA7XRUCm+mB1q1xGOx9BxgP
+         ijx0enGYFHeu01NDBcIcR5Qub0Ydpxuo1Nl2LNe2I6v1kuBPAJZ5id6ji9bDO5H6HUJV
+         9XuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ8MZtqkk7GTNh1DEq6K9PAWkclIHBqAxWIj8REQc2cyPAXApJKXXENVdk1DoOZZCO2C2VO9gaFlgjUVRRCG47YPO3IB6G8YG/LZpm
+X-Gm-Message-State: AOJu0YyGJ/hvWfAywdRazgS3rrUhrwsqbfaQP8+abzHJJgD7zSjsOhf0
+	1p4NQqIGVXPp14pzBP3kFxBVy4ebr6lnacMU4kxjwxqNcRuEi0uOugnQ64Mm4tKoM9A+ZAjKSE6
+	FrJPdvwcT3K/xhsHxgFRVrVvetRZftTvJB40NRCKDTB0Zu0+SG/THH6E=
+X-Google-Smtp-Source: AGHT+IGmNUWUAUqGhO0qdcJQgLgYvG4EI9zj1Re8GV6F4C5VejF5vg4F5PoijEQqvolFbGzuu9fvyZsubMgsRSaj6BtsdKQSH+mp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240301142844.GP11972@google.com>
-Organization: AVM GmbH
-X-purgate-ID: 149429::1709534499-E2E59402-6B815460/0/0
-X-purgate-type: clean
-X-purgate-size: 895
-X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate: clean
+X-Received: by 2002:a05:6638:22c4:b0:474:bc7d:544b with SMTP id
+ j4-20020a05663822c400b00474bc7d544bmr241175jat.6.1709535063114; Sun, 03 Mar
+ 2024 22:51:03 -0800 (PST)
+Date: Sun, 03 Mar 2024 22:51:03 -0800
+In-Reply-To: <dfd05ad0-1dae-4121-abba-59b55ad22c99@linux.alibaba.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002b07fe0612d02607@google.com>
+Subject: Re: [syzbot] [erofs] KMSAN: uninit-value in ima_add_template_entry
+From: syzbot <syzbot+7bc44a489f0ef0670bd5@syzkaller.appspotmail.com>
+To: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp, 
+	roberto.sassu@huaweicloud.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 01, 2024 at 11:28:44PM +0900, Sergey Senozhatsky wrote:
-> On (24/03/01 12:04), Nicolas Schier wrote:
-> > Perhaps it might be a compromise to let 'make help' point to the
-> > kbuild/kconfig documentation?
-> 
-> Yes, I was thinking the same. A one-liner description per-env var
-> and point to documentation if one-liner is not enough
-> 
-> 	KCONFIG_BARREL_ROLL	- kconfig does a barrel roll
-> 	KCONFIG_FOO_BAR		- kconfig does foo and then bar (see
-> 	documentation for details)
+Hello,
 
-No, I thought about leaving out any concrete examples but just adding a
-sentence like:
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-  kconfig and kbuild allow tuning and checks by settings various
-  environment variables, cp. Documentation/kbuild/ for details.
+Reported-and-tested-by: syzbot+7bc44a489f0ef0670bd5@syzkaller.appspotmail.com
 
-Then there is no need to re-document each variable in 'make help' but
-those who are new are explicitly pointed to the maintained
-documentation.
+Tested on:
 
-Kind regards,
-Nicolas
+commit:         4288d8d1 erofs: fix uninitialized page cache reported ..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+console output: https://syzkaller.appspot.com/x/log.txt?x=10893754180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=db27810a659d0b3d
+dashboard link: https://syzkaller.appspot.com/bug?extid=7bc44a489f0ef0670bd5
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
