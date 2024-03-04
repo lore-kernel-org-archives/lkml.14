@@ -1,147 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B6C1B7E8;
-	Mon,  4 Mar 2024 09:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228EC1B27A
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709543574; cv=none; b=nYFjbR6dINV4hwe2oqqwUYtowcHU6+GgJ+NVD6ejRXpd+xf7XWDZnb9MvjzbfNH1dYYyN1EkIO5pxJ2uOYYsIkFwCn76NW0F9ePmkzsifPjlsNdYijy1rrKM/xLvsV73NKquZPN61qUiijEOsFk33UjrsKkQQfZ6A7/iOcB84y0=
+	t=1709543617; cv=none; b=MxChbHjipmEWjB/ju4n4FlNqbZp/rdeoLWAc27gdvkBR/ljjsJszy65vbHCXZKZfBoBaKes9JAAiJDHLZPB07ynahXNS9IE3Pjy+OJvKZOpAOq0CvLavi152Kl7aVY2lKd9JL9OAY3L2q4k/EggB5IxW3pFLxy5XJP7dKfyrha4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709543574; c=relaxed/simple;
-	bh=fYUc9MBfCK5M1i9aW28WCU7ziu1UFtyPbddQMGeFd2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e/RD3ogXrUDznDwGKtOVVbE9vLtoHWkeXIqoTwTNCstY30r2r19hrNHEj62eWA1h35KgZD45a6eakXOpn6tY2Qjbkm+4xFWnlJ0hrxfoyrSBNc7d0Y4tTCkZtk1HbbCQr1gyh16BFtHtO2zPbmyP5DTwI0CAiCDPJ8t7j4E7rWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B16j+h9G; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B16j+h9G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709543572; x=1741079572;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fYUc9MBfCK5M1i9aW28WCU7ziu1UFtyPbddQMGeFd2w=;
-  b=B16j+h9GsWu01gWbv8pxEX4znck67+f1QR942Aqb9MYKyg5Xs+um3uv8
-   o3OKT2yDiHHJ6zOPeBLKfh3gcX5HUI+H7cbMh2OW2fpGqtG0lbpHuGzMg
-   6EowJRv85TmN1xizGgeGGNPLqk7CYU+8pm9pda6DrGxDB7WmW4KWMeUno
-   JGJ4HpR+PyD0fuHAFlAROQQXRrfd9QRhA+iKI9ce8EVVjpFEwapolaxwg
-   Rd3/CQaGALy+Fq/otnxoZAGQnCJv6Es/fk4FJRKjUjivc3PBBSlRhkFGG
-   fYBY3N5+EXUD5C7p1OWqO52gjEfNxUFTBSQvZ1GFAgRjCCkDqBPjzBEbr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4188817"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="4188817"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 01:12:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="13589213"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 04 Mar 2024 01:12:49 -0800
-Date: Mon, 4 Mar 2024 17:08:38 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
-	michael.roth@amd.com, aik@amd.com
-Subject: Re: [PATCH v3 02/15] KVM: x86: use u64_to_user_addr()
-Message-ID: <ZeWPlvFAgtUOE7vm@yilunxu-OptiPlex-7050>
-References: <20240226190344.787149-1-pbonzini@redhat.com>
- <20240226190344.787149-3-pbonzini@redhat.com>
+	s=arc-20240116; t=1709543617; c=relaxed/simple;
+	bh=n4g6A/1gV2oAFkfciMKSmu9PWw+8nLkwQuD7vVTJDCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gmzmZMFF3rKFGNB2ZMtYJDTOXwz0Am6MvZgEPOTP6ICuUOeQV1wcP/QZZ11ygWvZlUoBRvlnE2Kvxg70RvvCU1rGheUeFec3XEKmOIMGBArO7Lq1hFFmG2c3ere1KxzN1WJ4p8JKD7cXHMTFUZWCRJPXvhMtBEgqPVlLqJjM2d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rh4O3-00036d-5I; Mon, 04 Mar 2024 10:13:31 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rh4O2-004K1A-4l; Mon, 04 Mar 2024 10:13:30 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rh4O2-00GVS1-0B;
+	Mon, 04 Mar 2024 10:13:30 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Richard Cochran <richardcochran@gmail.com>,
+	Min Li <min.li.xe@renesas.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ptp: fc3: Convert to platform remove callback returning void
+Date: Mon,  4 Mar 2024 10:13:25 +0100
+Message-ID: <20240304091325.717546-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226190344.787149-3-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1785; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=n4g6A/1gV2oAFkfciMKSmu9PWw+8nLkwQuD7vVTJDCk=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtSnE7YdyRIIWl+xzPDn90I2o7MZD72Eyp/eP7Zuj4j2m osb28PvdzIaszAwcjHIiimy2DeuybSqkovsXPvvMswgViaQKQxcnAIwEeFE9n9a9/6u+WFWXOQv +u1UEtvRaxeZOk68tGDxeyXPoPo5Q/lAou71GwKNnq+37bJt0g9Y73Z9xsE1fzUMVwrkSqzwuX6 7IvfErr8OZWmtLh7K8hvyX+22C/SQNys8/Kev9DXvhxzbNiXrLG2rOwIFsb8dXgSLBK2PLFual6 mQ3yEV6Wndt5aJt6R2Ru2VADfN5yLTnGOn+Bjsj6nzSjGbq27HUT9Nzv5zhlNKyESNaE6rO19es Xu8z41L0ZTN4X2sscLpSWO5/N9JGblzrkrGRzklLlHPSPip3ruR67ieUwn/rtNxhydJftq+6pTu MqB/ZrawPdQUPdsi2yATPDnXKL875/HFcrGF1cp7DwMA
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Mon, Feb 26, 2024 at 02:03:31PM -0500, Paolo Bonzini wrote:
-> There is no danger to the kernel if userspace provides a 64-bit value that
-> has the high bits set, but for whatever reason happ[ens to resolve to an
-                                                     ^
+The .remove() callback for a platform driver returns an int which makes
+many driver authors wrongly assume it's possible to do error handling by
+returning an error code. However the value returned is ignored (apart
+from emitting a warning) and this typically results in resource leaks.
 
-remove the messy char.
+To improve here there is a quest to make the remove callback return
+void. In the first step of this quest all drivers are converted to
+.remove_new(), which already returns void. Eventually after all drivers
+are converted, .remove_new() will be renamed to .remove().
 
-> address that has something mapped there.  KVM uses the checked version
-> of put_user() in kvm_x86_dev_get_attr().
+Trivially convert this driver from always returning zero in the remove
+callback to the void returning variant.
 
-See from the code change, not just kvm_x86_dev_get_attr().
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-Thanks,
-Yilun
+note this driver is currently only available in next.
 
-> 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 24 +++---------------------
->  1 file changed, 3 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f3f7405e0628..14c969782d73 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4791,25 +4791,13 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->  	return r;
->  }
->  
-> -static inline void __user *kvm_get_attr_addr(struct kvm_device_attr *attr)
-> -{
-> -	void __user *uaddr = (void __user*)(unsigned long)attr->addr;
-> -
-> -	if ((u64)(unsigned long)uaddr != attr->addr)
-> -		return ERR_PTR_USR(-EFAULT);
-> -	return uaddr;
-> -}
-> -
->  static int kvm_x86_dev_get_attr(struct kvm_device_attr *attr)
->  {
-> -	u64 __user *uaddr = kvm_get_attr_addr(attr);
-> +	u64 __user *uaddr = u64_to_user_ptr(attr->addr);
->  
->  	if (attr->group)
->  		return -ENXIO;
->  
-> -	if (IS_ERR(uaddr))
-> -		return PTR_ERR(uaddr);
-> -
->  	switch (attr->attr) {
->  	case KVM_X86_XCOMP_GUEST_SUPP:
->  		if (put_user(kvm_caps.supported_xcr0, uaddr))
-> @@ -5664,12 +5652,9 @@ static int kvm_arch_tsc_has_attr(struct kvm_vcpu *vcpu,
->  static int kvm_arch_tsc_get_attr(struct kvm_vcpu *vcpu,
->  				 struct kvm_device_attr *attr)
->  {
-> -	u64 __user *uaddr = kvm_get_attr_addr(attr);
-> +	u64 __user *uaddr = u64_to_user_ptr(attr->addr);
->  	int r;
->  
-> -	if (IS_ERR(uaddr))
-> -		return PTR_ERR(uaddr);
-> -
->  	switch (attr->attr) {
->  	case KVM_VCPU_TSC_OFFSET:
->  		r = -EFAULT;
-> @@ -5687,13 +5672,10 @@ static int kvm_arch_tsc_get_attr(struct kvm_vcpu *vcpu,
->  static int kvm_arch_tsc_set_attr(struct kvm_vcpu *vcpu,
->  				 struct kvm_device_attr *attr)
->  {
-> -	u64 __user *uaddr = kvm_get_attr_addr(attr);
-> +	u64 __user *uaddr = u64_to_user_ptr(attr->addr);
->  	struct kvm *kvm = vcpu->kvm;
->  	int r;
->  
-> -	if (IS_ERR(uaddr))
-> -		return PTR_ERR(uaddr);
-> -
->  	switch (attr->attr) {
->  	case KVM_VCPU_TSC_OFFSET: {
->  		u64 offset, tsc, ns;
-> -- 
-> 2.39.1
-> 
-> 
-> 
+Best regards
+Uwe
+
+ drivers/ptp/ptp_fc3.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/ptp/ptp_fc3.c b/drivers/ptp/ptp_fc3.c
+index 0e2286ba088a..6ef982862e27 100644
+--- a/drivers/ptp/ptp_fc3.c
++++ b/drivers/ptp/ptp_fc3.c
+@@ -996,13 +996,11 @@ static int idtfc3_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int idtfc3_remove(struct platform_device *pdev)
++static void idtfc3_remove(struct platform_device *pdev)
+ {
+ 	struct idtfc3 *idtfc3 = platform_get_drvdata(pdev);
+ 
+ 	ptp_clock_unregister(idtfc3->ptp_clock);
+-
+-	return 0;
+ }
+ 
+ static struct platform_driver idtfc3_driver = {
+@@ -1010,7 +1008,7 @@ static struct platform_driver idtfc3_driver = {
+ 		.name = "rc38xxx-phc",
+ 	},
+ 	.probe = idtfc3_probe,
+-	.remove	= idtfc3_remove,
++	.remove_new = idtfc3_remove,
+ };
+ 
+ module_platform_driver(idtfc3_driver);
+
+base-commit: 67908bf6954b7635d33760ff6dfc189fc26ccc89
+-- 
+2.43.0
+
