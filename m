@@ -1,87 +1,91 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.67.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87191225A6;
-	Mon,  4 Mar 2024 10:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F76225CB
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.67.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709547528; cv=none; b=qzobJnn3lYXqkOwZbaXMh+soH6z5LyoYN78iqjMLvEtBQlDVdukOBffEnUb0H1wLvf6/oZ6941ADnlH9KdkluNsA7LNCce1q2xZLLsKJGkxwz6DApCEPO6N/PO/8Juu41naTacq0tHa4ZypAynC6ibLstytBUFj4ES91Rwfq3kU=
+	t=1709547533; cv=none; b=iXtp+PNw0wJ1KFWuZAeFHY1C7RFaMVNqrImrpvcbuBXodaMGg08VQVsvj7dzE6SGToPyfXCwdhoEWP6ECMGrfM/1CxTEWbOwD6VLINlI8gq/jGqEBQU0ZIRGWRdl5YKKtEZ5qgkykkoqlWzklAR4LkOEZMlwPDhT9ImAfOAymqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709547528; c=relaxed/simple;
-	bh=PJtcCbs756j5oFqV8d7Qq7eKfaIJxwawRk/fSYxEiHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qYbbknxhqZ+7/RU0ucL1UadXorpDEz9wxd2VFG4Nstkoa7aI7WjzG6fF/itOTRTEs3RsxgsgMU9ZPK+zb1fAkP53Jw8Euk4hIE3E3Im83z1ZBSeP6LyccTNCD3ovdbcAGoPGROKa6edPDXgS5t+6rX1XnR5G0uZUv6vIsl1GDgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fy+hoh8u; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fy+hoh8u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709547524;
-	bh=PJtcCbs756j5oFqV8d7Qq7eKfaIJxwawRk/fSYxEiHM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fy+hoh8uZ7q58A/cmDJN4kWCBUlXzQ98FWQRHMfPBPX0SrMV77ruFj0BztpL4vZ1w
-	 hIBZTxwopsvzdNQzjUYlvBasvauZuIykcHJgD+yAgnsAXnvWnKcsTXGwFH9m1M2Ria
-	 1qez2bz8ULvhcxQ/K1ZZ7VqjmaGoxBt8zY6F2eTNSiPdAawtEsvTd9TA3zktMkdlvT
-	 eIPv8j6DTBAxGyrfMCCh1lkxXAxGP7RVFhd06Us07/mgPv4xsw86dDubcDJ7NtcGFf
-	 kshlX6Pppcd5porjPYRbfBbTfR+QmK4tFB7eBwss5ribf0iyfG1iGM/77Mw/vRasKf
-	 +UxC5YPpScNgg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id F02FD3781FE3;
-	Mon,  4 Mar 2024 10:18:43 +0000 (UTC)
-Message-ID: <1244daaf-4b02-4dd1-915d-0e50ef638b6a@collabora.com>
-Date: Mon, 4 Mar 2024 11:18:43 +0100
+	s=arc-20240116; t=1709547533; c=relaxed/simple;
+	bh=dpj4ufgifj7GIAYt7yGK4hK+qv6CPi//o/CWx5UlmNo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P1HRHfBYLeNcdVKlthrCHuG4kEyoDe10aIFRvbav3szshQOvXavYW1F05ZAzZTVvrw4+/FeH+PuA5QbooMlzHsaA++4CJ5PYpkqTnWt3J3tcApZQ0aQFjkQGev6j7XrDCQ68YKkIffnKRTQ4AlEti0KpMf9SoZgm3UKmtRAhGng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.67.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp62t1709547436tgx9g8d8
+X-QQ-Originating-IP: 5APuCEWtsWVVSMzxS98Vxt66O3rkkYqE//ZKcb3vJ+g=
+Received: from localhost ( [112.22.30.30])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 04 Mar 2024 18:17:15 +0800 (CST)
+X-QQ-SSF: 01400000000000505000000A0000000
+X-QQ-FEAT: K2/klV1qoGlTWfl/w1BagxXdSiRmYm4VevULtmbJrZ7m+uuFIYP55sr8PKkvE
+	LFZQXXHCr2EtSCCK5SmQK1O3CRe7068aVPwYQHDZCMfx7QBCLRqh9MtFSaXOyEVk4S+IfnL
+	2/c6rzZrUKUayJFC/T2TuxVOdQKJPK4MvcEOso17dcNqbz53yLtACjYbYOWZKrry9iwT4rK
+	XzDZJLmzJEfCUTJb7aJM8LZ5wN7nvXIEDScRqEYoc9zVus6PtEhY12m8BHXaIfrp3UvkIuq
+	UmrF6GqiRFa+hiBGw0LgRdJa9CPzsujyNW9C5ZPnUspyt0oTr42TjiB9UjisUspC6pYOJY+
+	VID4BefrRwRQu91VAot+KD4yuNquhwGHqQx/zo6dV5tqUydf5QcwodVxY4LKfdFhmVkUqnD
+	1lKiJBNLonDN+eqHPG21JpBfAZ4tTl0e
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 11784876487773860519
+From: Dawei Li <dawei.li@shingroup.cn>
+To: conor.dooley@microchip.com,
+	daire.mcnamara@microchip.com
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Dawei Li <dawei.li@shingroup.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v2] firmware: microchip: Fix over-requested allocation size
+Date: Mon,  4 Mar 2024 18:16:53 +0800
+Message-Id: <20240304101653.126570-1-dawei.li@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: lpfc: correct size for cmdwqe/rspwqe for memset
-Content-Language: en-US
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- James Smart <james.smart@broadcom.com>,
- Dick Kennedy <dick.kennedy@broadcom.com>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Justin Tee <justin.tee@broadcom.com>
-Cc: kernel@collabora.com, kernel-janitors@vger.kernel.org,
- James Smart <jsmart2021@gmail.com>, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240301144434.2809483-1-usama.anjum@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240301144434.2809483-1-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-Il 01/03/24 15:44, Muhammad Usama Anjum ha scritto:
-> The cmdwqe and rspwqe are of type lpfc_wqe128. They should be memset
-> with the same type.
-> 
-> Fixes: 61910d6a5243 ("scsi: lpfc: SLI path split: Refactor CT paths")
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
->   drivers/scsi/lpfc/lpfc_bsg.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
-> index d80e6e81053b0..8caf54aa20391 100644
-> --- a/drivers/scsi/lpfc/lpfc_bsg.c
-> +++ b/drivers/scsi/lpfc/lpfc_bsg.c
-> @@ -3169,10 +3169,10 @@ lpfc_bsg_diag_loopback_run(struct bsg_job *job)
->   	}
->   
->   	cmdwqe = &cmdiocbq->wqe;
-> -	memset(cmdwqe, 0, sizeof(union lpfc_wqe));
-> +	memset(cmdwqe, 0, sizeof(union lpfc_wqe128));
+cocci warnings: (new ones prefixed by >>)
+>> drivers/firmware/microchip/mpfs-auto-update.c:387:72-78:
+   ERROR: application of sizeof to pointer
+   drivers/firmware/microchip/mpfs-auto-update.c:170:72-78:
+   ERROR: application of sizeof to pointer
 
-memset(cmdwqe, 0, sizeof(*cmdwqe));
+response_msg is a pointer to u32, so the size of element it points to is
+supposed to be a multiple of sizeof(u32), rather than sizeof(u32 *).
 
-Cheers,
-Angelo
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202403040516.CYxoWTXw-lkp@intel.com/
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+---
+
+V1 -> V2:
+sizeof(u32)->sizeof(*response_msg) 
+
+V1:
+https://lore.kernel.org/lkml/20240304092532.125751-1-dawei.li@shingroup.cn/
+
+ drivers/firmware/microchip/mpfs-auto-update.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/microchip/mpfs-auto-update.c b/drivers/firmware/microchip/mpfs-auto-update.c
+index 682e417be5a3..fbeeaee4ac85 100644
+--- a/drivers/firmware/microchip/mpfs-auto-update.c
++++ b/drivers/firmware/microchip/mpfs-auto-update.c
+@@ -384,7 +384,8 @@ static int mpfs_auto_update_available(struct mpfs_auto_update_priv *priv)
+ 	u32 *response_msg;
+ 	int ret;
+ 
+-	response_msg = devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(response_msg),
++	response_msg = devm_kzalloc(priv->dev,
++				    AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(*response_msg),
+ 				    GFP_KERNEL);
+ 	if (!response_msg)
+ 		return -ENOMEM;
+-- 
+2.27.0
 
