@@ -1,162 +1,229 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4DF241E5
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E8825565;
+	Mon,  4 Mar 2024 10:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709546766; cv=none; b=JS8YswnWwLEvuObBGlEcKDdigXkuTzmqxKWhfp8C3ps+05LPxO8Zwltj/FNFsQhAjl1v/Xgm2oskyX1uwe+Di+6BVrLJRy5mj+xhsvwacW7PQKnjjOhW3Yn09xXJWk2/SWDvruO+fTDvBOaPnuRM3jW18RundGEPIhpfln5DvyY=
+	t=1709546768; cv=none; b=I1zQjUGqF8KZYIpz4gaTyLvHDOYCdydmwFAlZeYj+P8ePrEwP/DphhJ3zSEhxzt8RqKXyh80X7sL0rAoZs+ryXKLjYP3F+XAZyVXp7g/WNOZH5gorImC5Kg9WuK8titb+X8ttEN1pxtoSQ/BDB2YT3v0vX4qgN19YnBIzKu1xoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709546766; c=relaxed/simple;
-	bh=ISoQmi3oK6Vmoe0IMg783tBWT8NBk2AxOuF2EXXZsNA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d5d5ruQc4f1mJ5S0ZC8f+XtjHi+sL0rTqB0H/QnAdLlgTnF4gXqhJekKUNxH0oS2GmHM4ViZVMv6VDIsa0U7zSO7/+yvABxD1pbMlqFyVc2mE+wp/fC+lkdcxpu0h2exfGEXAypiP5IJrd+1EDV0hGhCCAvfg327CeBlJLxwWZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lxTIWQPg; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709546768; c=relaxed/simple;
+	bh=hlRpzVqnSHmRzJJVlGFLHLMImdZQbWe5afwYf33LiCQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OrDlGdt3Bwj1x7CbbHLQLdUNErPo9aNHPx1E/nl5JeHC9pz8SrJHV8SjIEqvFbmybl4LZ5PkrDI95/eVzLSElFfasOHdtK42iOG05JRUQEpAEzTuDeZyuoY9M1y+2M/j6djiY26gAk5TrLjnqAKxWKj++PEUvYKe7KYwZWC7XXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K6n5/S8J; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lxTIWQPg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709546762;
-	bh=ISoQmi3oK6Vmoe0IMg783tBWT8NBk2AxOuF2EXXZsNA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lxTIWQPgCtvn/08bqkNRUqmv9OYbsWXP25wg4KmMebFyq/31OukwBT07DglJTqM4e
-	 0Arch9pe+YnSg0aKI5MI1gh5oshiDmv3CrgCLCMs+n/v1ufC8+PDP0DZe8gDfGEAn2
-	 EmaXxlfcTIFeDXn6+LDuh4IsXgCf6G7/9QyYllXTE0Wz+b81wLDBkwS3tDhj5UMp/q
-	 B+OFHeP4cMFa5kYcUz3xPckKDcQrIgg0KrwoYDjg2QvBvGfPeKtiL6XBtUt3Ey2C6V
-	 f/b+mu89oMgzzbu3i1iuhPzJWJBYvMGNcFVSEaW6zgFubLlVviub4LwvmwuBzQk4Em
-	 GjUU5Hts4gi3g==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2739537820C3;
-	Mon,  4 Mar 2024 10:06:02 +0000 (UTC)
-Message-ID: <298c13ff-25a7-4d9c-ab51-4c22c07c245d@collabora.com>
-Date: Mon, 4 Mar 2024 11:06:02 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6n5/S8J"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-59fdcf8ebbcso2940406eaf.3;
+        Mon, 04 Mar 2024 02:06:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709546766; x=1710151566; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=npaHNykme7ADeourxyueSS27DGXv3jicYDGqKQjI2rM=;
+        b=K6n5/S8JkWJaDPidXAtiny+9pye7BXV66/yTmoVoCiQF8GUo+pa+3as1f/bKEKN3R2
+         c/5T/SoZqiXnk/xrWP04QbjqqD1wkRGoqT3fkogxBKT61cL+6oU26ijiJAq4Q6mGJ9/H
+         MJ613R5u6wWh01Uj62tkfTi2qUeF9pvfsSxGJVRzmpGotJnW9ZZHZgpV6KOLGYbphLgE
+         unT/LE5UFQKBNc4jPy2Cg35HSi0lMnRDVmtr26SzdXur//BImOmRXFnIdYbO0V3A+FUh
+         7P02ADkVTpnduvk49iJi4/cdQxgoaHH72xvfxgs/8lo6bat0oQbuA5+FObvtcL8lusy7
+         hUPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709546766; x=1710151566;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=npaHNykme7ADeourxyueSS27DGXv3jicYDGqKQjI2rM=;
+        b=dufuejh8vuGo1LYfIeq8BeU9PAjCMc/GEaY2YLhW+3LZKGGS3LB63Kzy6JpLHLXKlA
+         onX3srbTeb3+xNpCO/Y6lLLwkj6qNuoCfd0CJd4nH6g/s8ZIREKyPk6s0NCEUW5IK73R
+         FbPF+CSLXftRusKzq9Y9BWJha2GMHltK3xS0mMglq+KBX7zFU/LwGaw7RgVR5AGxpceN
+         b0QH33nWtu2bx+LPiF5sla9kAiGxvPjOS5rDi4jXd7VEwRRJsbssGfMdsBPkRYfVQYf0
+         599yvHLkgK9NSB14p+0EynYChSdf0Aooy60bOYrlmoaK3oIkPaUlHHbfxuGWNV7aaQng
+         2gaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcYUYTFeu5+4yOVkknyRY1b4Snk0u7pJbAtf365uUm7mQF2zjBSqkyFmc0FNQ6Lu1SlTHaCzy86VknN8NjOhTXQ3Zh78b57GYQ1KjhyfBQR0fC1ztkyODgV0vP6O1+UfrZrUiLV9tkmgyE5W3Q8GucRqyFyQ23FRUwed53o2orMR1cUx9qEFCwwV8=
+X-Gm-Message-State: AOJu0YxEW+yOQkAfzdB5aHNTf5S2AfGIvLRgvWeUJ8u/k0DMx9RQm4TL
+	QOcPGttvDrGGMisHp+qo6xxQJL/J7XtD2FHY/Wc0/Zcg0hfEILQZMo3CbURlrVfBFjPGQ9QyTtw
+	M/0BrQONDBX99PCpHRX2ORpy5xQk=
+X-Google-Smtp-Source: AGHT+IEZCHLXnTjPx8aXz5NWBb1J57G7Hm5GUiiKo1CYbLbZ4GqC25r3JSe+FSDjDau8uTsckG85pWvjqTt33klT3TQ=
+X-Received: by 2002:a4a:928c:0:b0:5a0:daf5:a5d0 with SMTP id
+ i12-20020a4a928c000000b005a0daf5a5d0mr6754352ooh.9.1709546765783; Mon, 04 Mar
+ 2024 02:06:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] mailbox: mtk-cmdq: Add support runtime get and set
- GCE event
-To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>,
- Jassi Brar <jassisinghbrar@gmail.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jason-ch Chen <jason-ch.chen@mediatek.com>,
- Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
- Shawn Sung <shawn.sung@mediatek.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20240301111126.22035-1-jason-jh.lin@mediatek.com>
- <20240301111126.22035-6-jason-jh.lin@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240301111126.22035-6-jason-jh.lin@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240301193831.3346-1-linux.amoon@gmail.com> <20240301193831.3346-2-linux.amoon@gmail.com>
+ <3d1c7682-d163-4bcf-bd41-d7db0c8f61d1@wanadoo.fr> <CANAwSgR0aQ7nt1y5xknvVjHSnfvTaC8JZMLWurb8z2D0Oxg6Rw@mail.gmail.com>
+ <ZeWR2VByrV1xWmYN@hovoldconsulting.com>
+In-Reply-To: <ZeWR2VByrV1xWmYN@hovoldconsulting.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Mon, 4 Mar 2024 15:35:53 +0530
+Message-ID: <CANAwSgTecdij9+eT7nY9C_xAxqbX8C9T_fL9TtGA=kZWLhfKnQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] usb: ehci-exynos: Use devm_clk_get_enabled() helpers
+To: Johan Hovold <johan@kernel.org>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Alan Stern <stern@rowland.harvard.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 01/03/24 12:11, Jason-JH.Lin ha scritto:
-> ISP drivers need to get and set GCE event in their runtime contorl flow.
-> So add these functions to support get and set GCE by CPU.
-> 
-> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-> Change-Id: I494c34ebc5ec26c82213f2bc03d2033d60652523
+Hi Johon, Christophe,
 
-Change-Id makes no sense upstream. Please drop.
+On Mon, 4 Mar 2024 at 14:48, Johan Hovold <johan@kernel.org> wrote:
+>
+> On Sat, Mar 02, 2024 at 10:05:46PM +0530, Anand Moon wrote:
+> > On Sat, 2 Mar 2024 at 21:19, Christophe JAILLET
+> > <christophe.jaillet@wanadoo.fr> wrote:
+> > > Le 01/03/2024 =C3=A0 20:38, Anand Moon a =C3=A9crit :
+>
+> > > > The devm_clk_get_enabled() helpers:
+> > > >      - call devm_clk_get()
+> > > >      - call clk_prepare_enable() and register what is needed in ord=
+er to
+> > > >       call clk_disable_unprepare() when needed, as a managed resour=
+ce.
+> > > >
+> > > > This simplifies the code and avoids the calls to clk_disable_unprep=
+are().
+> > > >
+> > > > While at it, use dev_err_probe consistently, and use its return val=
+ue
+> > > > to return the error code.
+>
+> > > > @@ -260,25 +248,17 @@ static int exynos_ehci_suspend(struct device =
+*dev)
+> > > >
+> > > >       exynos_ehci_phy_disable(dev);
+> > > >
+> > > > -     clk_disable_unprepare(exynos_ehci->clk);
+>
+> > > I don't think that removing clk_[en|dis]abble from the suspend and
+> > > resume function is correct.
+> > >
+> > > The goal is to stop some hardware when the system is suspended, in or=
+der
+> > > to save some power.
+> > Yes correct,
+> > >
+> > > Why did you removed it?
+>
+> > devm_clk_get_enabled  function register callback for clk_prepare_enable
+> > and clk_disable_unprepare, so when the clock resource is not used it sh=
+ould get
+> > disabled.
+> >
+> > [0] https://elixir.bootlin.com/linux/latest/source/drivers/clk/clk-devr=
+es.c#L75
+> >
+> > I have also tested with rtc suspend & resume and did not find any issue=
+.
+>
+> You seem to be totally confused about how devres works, and arguing back
+> after Christophe points this out to you instead of going back and doing
+> the homework you should have done before posting these patches is really
+> not OK (e.g. as you're wasting other people's time).
+>
+Ok, It seems to have fallen short in my understanding..
 
-> ---
->   drivers/mailbox/mtk-cmdq-mailbox.c       | 37 ++++++++++++++++++++++++
->   include/linux/mailbox/mtk-cmdq-mailbox.h |  2 ++
->   2 files changed, 39 insertions(+)
-> 
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index ead2200f39ba..d7c08249c898 100644
-> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -25,7 +25,11 @@
->   #define CMDQ_GCE_NUM_MAX		(2)
->   
->   #define CMDQ_CURR_IRQ_STATUS		0x10
-> +#define CMDQ_SYNC_TOKEN_ID		0x60
-> +#define CMDQ_SYNC_TOKEN_VALUE		0x64
-> +#define CMDQ_TOKEN_ID_MASK			GENMASK(9, 0)
->   #define CMDQ_SYNC_TOKEN_UPDATE		0x68
-> +#define CMDQ_TOKEN_UPDATE_VALUE			BIT(16)
->   #define CMDQ_THR_SLOT_CYCLES		0x30
->   #define CMDQ_THR_BASE			0x100
->   #define CMDQ_THR_SIZE			0x80
-> @@ -83,6 +87,7 @@ struct cmdq {
->   	struct cmdq_thread	*thread;
->   	struct clk_bulk_data	clocks[CMDQ_GCE_NUM_MAX];
->   	bool			suspended;
-> +	spinlock_t		event_lock; /* lock for gce event */
->   };
->   
->   struct gce_plat {
-> @@ -113,6 +118,38 @@ u8 cmdq_get_shift_pa(struct mbox_chan *chan)
->   }
->   EXPORT_SYMBOL(cmdq_get_shift_pa);
->   
-> +void cmdq_set_event(void *chan, u16 event_id)
-> +{
-> +	struct cmdq *cmdq = container_of(((struct mbox_chan *)chan)->mbox,
-> +		typeof(*cmdq), mbox);
+> And you clearly did not test these patches enough to confirm that you
+> didn't break the driver.
 
-struct mbox_chan *mbc = chan;
-struct cmdq *cmdq = container_of(mbc->mbox, ... etc); (and this fits in one line)
+Ok I missed the failure of the ehci driver. while testing.
 
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&cmdq->event_lock, flags);
+[root@archl-xu4 alarm]# echo no > /sys/module/printk/parameters/console_sus=
+pend
+[root@archl-xu4 alarm]#
+echo no > /sys/module/printk/parameters/console_suspend
+[root@archl-xu4 alarm]# echo no > /sys/module/printk/parameters/console_sus=
+pend
+[root@archl-xu4 alarm]# time rtcwake -s 30 -m mem
+rtcwake: assuming RTC uses UTC ...
+rtcwake: wakeup from "mem" using /dev/rtc0 at Mon Mar  4 09:44:25 2024
+[11969.792928] PM: suspend entry (deep)
+[11969.798423] Filesystems sync: 0.003 seconds
+[11969.819722] Freezing user space processes
+[11969.825818] Freezing user space processes completed (elapsed 0.003 secon=
+ds)
+[11969.831585] OOM killer disabled.
+[11969.834586] Freezing remaining freezable tasks
+[11969.841553] Freezing remaining freezable tasks completed (elapsed
+0.002 seconds)
+[11969.919178] sd 0:0:0:0: [sda] Synchronizing SCSI cache
+[11970.091681] wake enabled for irq 129 (gpx0-4)
+[11970.135766] wake enabled for irq 149 (gpx0-3)
+[11970.157943] samsung-pinctrl 13400000.pinctrl: Setting external
+wakeup interrupt mask: 0xffffffe7
+[11970.179304] Disabling non-boot CPUs ...
+[11970.276394] s3c2410-wdt 101d0000.watchdog: watchdog disabled
+[11970.281961] wake disabled for irq 149 (gpx0-3)
+[11970.288997] phy phy-12130000.phy.6: phy_power_on was called before phy_i=
+nit
+[11970.358899] exynos-ohci 12120000.usb: init err (00000000 0000)
+[11970.363298] exynos-ohci 12120000.usb: can't restart, -75
+[11970.368581] usb usb2: root hub lost power or was reset
+[11970.373819] wake disabled for irq 129 (gpx0-4)
+[11970.382641] xhci-hcd xhci-hcd.8.auto: xHC error in resume, USBSTS
+0x411, Reinit
+[11970.383237] s3c-rtc 101e0000.rtc: rtc disabled, re-enabling
+[11970.383355] xhci-hcd xhci-hcd.9.auto: xHC error in resume, USBSTS
+0x401, Reinit
+[11970.383376] usb usb5: root hub lost power or was reset
+[11970.383396] usb usb6: root hub lost power or was reset
+[11970.388471] usb usb3: root hub lost power or was reset
+[11970.416740] usb usb4: root hub lost power or was reset
+[11970.770122] usb 3-1: reset high-speed USB device number 2 using xhci-hcd
+[11971.100601] usb 4-1: reset SuperSpeed USB device number 3 using xhci-hcd
+[11971.569524] usb 3-1.2: reset high-speed USB device number 3 using xhci-h=
+cd
+[11974.575262] OOM killer enabled.
+[11974.576964] Restarting tasks ... done.
+[11974.580608] r8152-cfgselector 6-1: USB disconnect, device number 4
+[11974.589302] random: crng reseeded on system resumption
+[11974.596363] PM: suspend exit
 
-Why do you need irqsave/irqrestore? I think I know, but please explain.
+real    0m34.951s
+user    0m0.012s
+sys     0m0.259s
+[root@archl-xu4 alarm]# [11974.640778] mmc_host mmc0: Bus speed (slot
+0) =3D 50000000Hz (slot req 400000Hz, actual 396825HZ div =3D 63)
+[11975.180552] mmc_host mmc0: Bus speed (slot 0) =3D 50000000Hz (slot
+req 52000000Hz, actual 50000000HZ div =3D 0)
+[11975.192142] mmc_host mmc0: Bus speed (slot 0) =3D 200000000Hz (slot
+req 200000000Hz, actual 200000000HZ div =3D 0)
+[11975.282474] mmc_host mmc0: Bus speed (slot 0) =3D 50000000Hz (slot
+req 52000000Hz, actual 50000000HZ div =3D 0)
+[11975.296174] mmc_host mmc0: Bus speed (slot 0) =3D 400000000Hz (slot
+req 200000000Hz, actual 200000000HZ div =3D 1)
+[11975.569457] usb 6-1: new SuperSpeed USB device number 5 using xhci-hcd
+[11975.614390] usb 6-1: New USB device found, idVendor=3D0bda,
+idProduct=3D8153, bcdDevice=3D30.00
+[11975.622196] usb 6-1: New USB device strings: Mfr=3D1, Product=3D2, Seria=
+lNumber=3D6
+[11975.629284] usb 6-1: Product: USB 10/100/1000 LAN
+[11975.633352] usb 6-1: Manufacturer: Realtek
+[11975.637458] usb 6-1: SerialNumber: 000001000000
+[11975.871080] r8152-cfgselector 6-1: reset SuperSpeed USB device
+number 5 using xhci-hcd
+[11975.955112] r8152 6-1:1.0: load rtl8153a-3 v2 02/07/20 successfully
+[11976.032484] r8152 6-1:1.0 eth0: v1.12.13
+[11976.134078] r8152 6-1:1.0 enu1: renamed from eth0
 
-> +
-> +	writel(CMDQ_TOKEN_UPDATE_VALUE | event_id, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
-> +
-> +	spin_unlock_irqrestore(&cmdq->event_lock, flags);
-> +}
-> +EXPORT_SYMBOL(cmdq_set_event);
-> +
-> +u32 cmdq_get_event(void *chan, u16 event_id)
-> +{
-> +	struct cmdq *cmdq = container_of(((struct mbox_chan *)chan)->mbox,
-> +		typeof(*cmdq), mbox);
-> +	unsigned long flags;
-> +	u32 value = 0;
-> +
-> +	spin_lock_irqsave(&cmdq->event_lock, flags);
-> +
-> +	writel(CMDQ_TOKEN_ID_MASK & event_id, cmdq->base + CMDQ_SYNC_TOKEN_ID);
-> +	value = readl(cmdq->base + CMDQ_SYNC_TOKEN_VALUE);
-> +
-> +	spin_unlock_irqrestore(&cmdq->event_lock, flags);
-> +
-> +	return value;
-> +}
-> +EXPORT_SYMBOL(cmdq_get_event);
-> +
->   static int cmdq_thread_suspend(struct cmdq *cmdq, struct cmdq_thread *thread)
->   {
->   	u32 status;
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index a8f0070c7aa9..f05cabd230da 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -79,5 +79,7 @@ struct cmdq_pkt {
->   };
->   
->   u8 cmdq_get_shift_pa(struct mbox_chan *chan);
-> +void cmdq_set_event(void *chan, u16 event_id);
-> +u32 cmdq_get_event(void *chan, u16 event_id);
->   
->   #endif /* __MTK_CMDQ_MAILBOX_H__ */
+[root@archl-xu4 alarm]# [11981.522603] r8152 6-1:1.0 enu1: carrier on
 
+[root@archl-xu4 alarm]#
+>
 
+Ok, I will restore the clk changes in the suspend / resume functions
+in the next version and do thought testing.
 
+> Johan
+
+Thanks
+
+-Anand
