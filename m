@@ -1,99 +1,102 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D85481DE;
-	Mon,  4 Mar 2024 16:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23679482DD
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 16:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709568383; cv=none; b=D7wFpFnGJ20qdFAqEtlv7P+d9GsThZBiuhdmXnwD1WRp5EA+X6Mmlhn1LP3/EhmOEPOjfWPLOAHc+Z5Z3G8wZTemnm7R/TKIE4fKGpFRFQbB5OB5cwce3KXsTyr/ljUBk5RBAAztczyTuDpbh+AKkIevRcD+nYPtof/9cE7+54s=
+	t=1709568416; cv=none; b=DqrVKVF+N4w6oib+kUE9/+ko57615qKg8VT64y+t1rj3I9myNlge/257eNi9sLA6DtIL/c434R05aStTC99faCX9wFtArSb1izTJMVlMROzD786WSjweVzj7NRnYdllb7OLCan+RUupV4ryz3HerNZdQEfwdl5GRWZpT2fsnidA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709568383; c=relaxed/simple;
-	bh=AlNDwPISgBcM6OVPgM4WaoPIp68689qJHcWCy+OYqyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BpOvEWSpQPoe9/JzQY4AKNkVpmlAF8KFEY5FzVEFPtRw1H5QuLWewF8Qs0ogeiYrxQ3s6sqML9N9KYI4L3I6CWZjNy1RBSMNGCdStTcLAKl5hPAFLLLHWcWJTzdEylxlwS/A7ui3iGjO2Hv0R6EgmiInl3BoT1yhhbV/8VnKLBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mzHOxqSV; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1709568416; c=relaxed/simple;
+	bh=plzGzd4ql4UkHxCqU2wX/tIOWDt5L2wXbFIVFHz/b7c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NNH5R0tdYDBe0rZdWXHWoVp99VO1Dv5+wKBI6YPiRERu9tdVIRWf4fUd03kDWwkpJpaEBU5iL++h0DBmZi1hszazVBvI/Yu2ofhyKxna2Fi3Tgubg3KoTLxr2kKKjwshYcGbf+iXZ2Jh4/1hNOVOQvDbOV5QRRH9iq7mzPUBH78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2c44+gtB; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mzHOxqSV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=8ESWzfwNLBdRiQerL5+aFQnFwsh7Ey/Kqyb4OBW7amg=; b=mzHOxqSVyQhSjRX4F5gBr6b//K
-	Z13FzT+KYEs/6y4GhaVF3Cxf3GvoUDAwYIFi2bOvk03KYDyQnzQog1PBU94N/pl4HYEfz9hQ9GMFa
-	g8UhNBtV7mfJ7oeTgjJr/9+0RaPwlq+vn3lEdEe2qlfmBEK9SOggUO/STE6swk31S/5U=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rhApo-009LBC-Gj; Mon, 04 Mar 2024 17:06:36 +0100
-Date: Mon, 4 Mar 2024 17:06:36 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: =?iso-8859-1?Q?J=E9r=E9mie?= Dautheribes <jeremie.dautheribes@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, Andrew Davis <afd@ti.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2c44+gtB"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c1f582673bso257017b6e.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 08:06:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709568413; x=1710173213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pSnLoEFc3zi8rA7WG8Da+BT83RJ1sRrxJIuPYNavbyo=;
+        b=2c44+gtBLcNVdr1YFO7BuvfKiPMrE1YmbMK8ll3s0Tg/hV6t5Mt5nphH7iW7K9lneH
+         kGF30bpqf8X2/UnXRdMAC+vf2WsSoP2Uvm6cbpZVmLEPwxzmMpxr0n7csYim4cKPKXWe
+         klN7QAPXPLe4qvsGKLhVm/KRq1LJK3hc/Qy4F4f0MWTTyw1bf2bSNIcosRuhyGc7c2Gn
+         WEUSbu06pgsQd9iZOV9CaNiErTp5soW75SwpRkWfuj8WMW1E4czWJKiTnRY9vHCSbiZw
+         +DFQEpKOQ27g19DCcuOLkfGCeOhcfsL3c2JKRUHagCRYiUyTz3vD9K1AXNf5xr0ABsS8
+         BOhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709568413; x=1710173213;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pSnLoEFc3zi8rA7WG8Da+BT83RJ1sRrxJIuPYNavbyo=;
+        b=SaBoRz9P7eyH1A8n6lHCbDxl+vDaK58nbDv2SYcgYzVh97XOWbSvo6aC1vVdp9/ac9
+         YS+uGTOX08R7W4S27OV8ruRb3TYK5w8xAJvqHJMNSYhCcRxreOgZZmhg6hsnB2sN1nNv
+         zA9uib/GmF6759xTOuycYZQ0hUl9g3KNHzrbWA25Ve8b0OjgJteWn7DIs3nO1QyToazt
+         ZbuIhGPWop1w5/FrUdvug4j6NbZNTBNGtEez52x/+X+GVkY/ypQu/dCM+kW2hDL5JSvi
+         6hB34BbWYs5pgB8GS9ODqucR/vJSiUbUepjJBqyjCQmTMzqo+vku60yQUaN9+UtUJMwP
+         Z8Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+YXYaZga4VjMu3d1O3puLFRP2WMx22lY0rge3Ztnnj54zuzAlH6lJlzOdpN8ez2e00tDXTvtZdSHqHbYCqtqj9JAfyYNlpv2zXDUX
+X-Gm-Message-State: AOJu0Yy81cz9AmcD3majT6rFyuRaRYvRnusZ9cqQHJSs1enSLA39aK6d
+	Oys/gY3abSoJZcF6KG5HWp9x1BDZF8bP9mhqc0Wexjax5Ees0WcnTpLIe95Zhuc=
+X-Google-Smtp-Source: AGHT+IHXOFOEU8sb536X5lP+Lr6j5C3vnrJ4Q/x5YmVWctjjbF4G2PE1tSGomkUTlXXMEwivjXRpDA==
+X-Received: by 2002:a05:6870:e98b:b0:21f:9c60:dba8 with SMTP id r11-20020a056870e98b00b0021f9c60dba8mr10760372oao.4.1709568413352;
+        Mon, 04 Mar 2024 08:06:53 -0800 (PST)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id lu6-20020a056871314600b00221287ebd03sm83392oac.4.2024.03.04.08.06.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 08:06:52 -0800 (PST)
+From: David Lechner <dlechner@baylibre.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
-	Yen-Mei Goh <yen-mei.goh@keysight.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next 1/3] dt-bindings: net: dp83822: support
- configuring RMII master/slave mode
-Message-ID: <d994001c-dff2-402d-bd19-7ddb0c148805@lunn.ch>
-References: <20240222103117.526955-1-jeremie.dautheribes@bootlin.com>
- <20240222103117.526955-2-jeremie.dautheribes@bootlin.com>
- <d14ba685-dc7e-4f99-a21e-bae9f3e6bc79@lunn.ch>
- <860648fa-11f5-4e0d-ac4e-e81ea111ef31@bootlin.com>
- <68112ecb-532f-4799-912d-16d6ceb9a6f3@lunn.ch>
- <021dbe50-5eb9-4552-b2bb-80d58d3eb076@bootlin.com>
+	linux-hardening@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH v2 0/3] spi: axi-spi-engine: small cleanups
+Date: Mon,  4 Mar 2024 10:04:22 -0600
+Message-ID: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <021dbe50-5eb9-4552-b2bb-80d58d3eb076@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-> > We are normally interested in this 50Mhz reference clock. So i would
-> > drop all references to 25Mhz. It is not relevant to the binding, since
-> > it is nothing to do with connecting the PHY to the MAC, and it has a
-> > fixed value.
-> > 
-> > So you can simplify this down to:
-> > 
-> > RMII Master: Outputs a 50Mhz Reference clock which can be connected to the MAC.
-> > 
-> > RMII Slave: Expects a 50MHz Reference clock input, shared with the
-> > MAC.
-> > 
-> > > That said, would you like me to include this description (or some parts) in
-> > > the binding in addition to what I've already written? Or would you prefer me
-> > > to use a more meaningful property name?
-> > 
-> > We don't really have any vendor agnostic consistent naming. dp83867
-> > and dp83869 seems to call this ti,clk-output-sel. Since this is
-> > another dp83xxx device, it would be nice if there was consistency
-> > between all these TI devices. So could you check if the concept is the
-> > same, and if so, change dp83826 to follow what other TI devices do.
-> 
-> 
-> So I had a look at this ti,clk-output-sel property on the TI DP8386x
-> bindings, but unfortunately it does not correspond to our use case. In their
-> case, it is used to select one of the various internal clocks to output on
-> the CLK_OUT pin.
-> In our case, we would prefer to describe the direction of the clock (OUT in
-> master mode, IN in slave mode).
+This series contains a few small cleanups to the axi-spi-engine driver,
+mostly suggested from previous reviews.
 
-I would suggest we keep with the current property name, but simplify
-the description. Focus on the reference clock, and ignore the crystal.
+---
+Changes in v2:
+- Picked up the Reviewed-by trailers.
+- Modified second patch to reorder assignment of the length field.
+- Link to v1: https://lore.kernel.org/r/20240301-mainline-axi-spi-engine-small-cleanups-v1-0-241dfd2a79f7@baylibre.com
 
-    Andrew
+---
+David Lechner (3):
+      spi: axi-spi-engine: remove p from struct spi_engine_message_state
+      spi: axi-spi-engine: use __counted_by() attribute
+      spi: axi-spi-engine: use struct_size() macro
+
+ drivers/spi/spi-axi-spi-engine.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+---
+base-commit: bf790d87088a04d5f3a4659e04ff2a5a16eca294
+change-id: 20240301-mainline-axi-spi-engine-small-cleanups-cd08b51cb6d4
+
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
+
