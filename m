@@ -1,167 +1,122 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2B0405F8;
-	Mon,  4 Mar 2024 14:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1BE3FB8B;
+	Mon,  4 Mar 2024 14:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709562239; cv=none; b=V6B5grBMlkOnGL+sGT5IFmyxCi12IZiE0cRv1T2RgINV9FHzylUaHiNrNKKSSLkYJhnI6fiKXCVYEgdTZ00IjnzS9c9enQ+0di7rode0QhXidJDXXcmOA+bxRKBlgifXF6m1DO4XZLD1IvmbXdEFz9TgTSEQg2bjj7NwRBtw6Jg=
+	t=1709562284; cv=none; b=tCf8IPQrchVldnUxzU4+DFQM5guLABmbXhLA02wgRwzDrApgS5nbNyzh6b5kWOh0INVfZOc4DuQE+xbemAWgxgQrmjgtw45dx1VS3EukZrRZrM9c4C2Nnrw7vuy4m3ALiF1euyFgaJDamtIQBsnvElM2qR7+YBTDy/6dldr0M0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709562239; c=relaxed/simple;
-	bh=/Af1OqvaKj+Y/we0Ts7Sbh6sS0efeCNow+1SafjuFO4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B60+an3X6k8uA83v8vLjSTWYUqiMQUEAWExTPmHdDcIAfi+XMli0yDOAF1C9XWslqVKp/c5iqtW/ei85n8yzcel7XVd62jfedQOQO2rLSB6hXnwh2TLCAAF+QO9/c+AMrp6VQzz5BcoYe9Fl/Q6xk9tVKeItdLbAY5YCR2BE3nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eH4AwPmQ; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709562284; c=relaxed/simple;
+	bh=KITP09qisQQ4/2pZCbAvCnZGgo1XzhvdRiFLcmTHqb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RuHfJyOxT9t6whOLSevGq6jOqgoaP3CsnHFYWTLKRIs7+WRZm9squzOC6Q76+4LIcd2RyZpBqzplLDXg/LW24G52qpTM1xDDQV/bs3WEY80mkfjHx+l7HEMBeCMcBI9SxulgVAIAfer7ncmR+NtZpbXwxfKn6rPN/qtEyqnBPKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ehaq55tS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eH4AwPmQ"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-33d568fbf62so2364227f8f.3;
-        Mon, 04 Mar 2024 06:23:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709562236; x=1710167036; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=apaBpVQtA1STXfsjN2l+EhbnfJdRR6DZH9EsOTj0lX4=;
-        b=eH4AwPmQ3u+g/XndhdwZI8V7XWRMXhZNEHCh0ApkgeEaJ4e1xSq1a6Z2AeUSYmHKb8
-         KF28hAfNlg4tF2BkFg2od08mnYYW3Y4J5XqXxe3Dw/ytVBNraXNHyMNilmbO72TkoZGS
-         vBn6Xe4+ehDXM1jWfZaaEq8PqpCOIqkljpHlmWbZACWzUJYjMGd5NF03g75ECbHmlzu5
-         EwPKTo/n02iA87AyWQTbgVfuE1QbKilm43XWAA+WtYSvk1tYFhuieLXK6XQg8/ZuZkX2
-         FY/zJkWTbGDLIPpK2IsrzAA1b0JMfd5nvHqM7kUswN8NDyGSPKJdcetnuWWMoR4RxfzV
-         6Srw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709562236; x=1710167036;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=apaBpVQtA1STXfsjN2l+EhbnfJdRR6DZH9EsOTj0lX4=;
-        b=HhDZfIJWjXMRsywSDLwzZzIUyVp+C3irZcwgy2agzXMkrh0iV/5M3f25+Y2mhuoqEP
-         EHZfpVS78dq6GwXmFjoQZpt2Vs/Am3VxKvtisVyD6H2/hzWxFHJboOcUNtWCVg9+bf9i
-         qKrRGL0j/fww1ZtP3PjqRSAFLH63YDK3oSg95R7GQtFyRYb87vceXNQwZ6nsMDO7Ze7w
-         irXqWj7+p3R/rb7W2vKqecFocZmaTgeKNAs+6IDUOiqQjbUlNRu0k0Wkm2c1rR6+xL8C
-         jKrZokXLM6zJjS2IfqP4127RhXZuiKIuynrZ/jrND3i0kqDXUUmk4X0yJILbClpf1Zb/
-         P78w==
-X-Forwarded-Encrypted: i=1; AJvYcCXGbMFDW2mgGN8/LyGeTz2hOnG0DcAWXzIQOufMcxeUCDv2o5KM/cbx4oGHqUHegZwUiDfJNVv5Ym7FcjuL0uv6UarJC4SiQGMpWi3/bMSN1p8THNG/HWKDEb01xLkuzdkyFQOOWRETDA==
-X-Gm-Message-State: AOJu0YzFmdYjgINUmS1Hv2HTyVXcyRCk4tq00yAulR+JByugmp1z2gky
-	usU7VUzs0evlP4njtwWSxaYD7KOs1xa9VLXr3o1b220ujS7aKtS7
-X-Google-Smtp-Source: AGHT+IGg2MH7GT1C+UoWFBUBjsuKghbrFQ0VkykOdak4bcjOJxYr/eYANQGF+LIh5pxi2hOHce8Bmw==
-X-Received: by 2002:a05:6000:1249:b0:33d:2226:a28b with SMTP id j9-20020a056000124900b0033d2226a28bmr6152789wrx.37.1709562236222;
-        Mon, 04 Mar 2024 06:23:56 -0800 (PST)
-Received: from tuxserver.lan ([79.116.0.170])
-        by smtp.googlemail.com with ESMTPSA id bs19-20020a056000071300b0033daaef7afcsm12636594wrb.83.2024.03.04.06.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 06:23:55 -0800 (PST)
-From: =?UTF-8?q?Javier=20Garc=C3=ADa?= <javier.gar.tab@gmail.com>
-To: 
-Cc: javier.gar.tab@gmail.com,
-	daniel.baluta@nxp.com,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jack Yu <jack.yu@realtek.com>,
-	alsa-devel@alsa-project.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: dt-bindings: rt1015: Convert to dtschema
-Date: Mon,  4 Mar 2024 15:23:07 +0100
-Message-ID: <20240304142315.14522-1-javier.gar.tab@gmail.com>
-X-Mailer: git-send-email 2.41.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ehaq55tS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A25C433C7;
+	Mon,  4 Mar 2024 14:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709562283;
+	bh=KITP09qisQQ4/2pZCbAvCnZGgo1XzhvdRiFLcmTHqb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ehaq55tSG+2t9+StHrrqBipANU2b83k2yNcb1blrzEyGt4+jcqmbJN51d+wZP7VYI
+	 WjL780kUEccs2iD3JbCsxbUxOk/fIOJL24eDnlUwa/4tj9VjcX/Wt00Ygr4xkeR4BQ
+	 48mo7Af1s/UxBDHcU0OfM67z90hF/jhdsIRuTQEKwXzB3s9nMCaUPmQEpi8ZpflqbS
+	 sJw3BASxEWhmK6XUyPm9aCTyM2WiO6ufOpj2djBd9O3cJLc5U1AJwpNjDmfFROs9DU
+	 a+WRpD1q4ms9UY5U5DCQHf/gQ5Lxxq7wJjhvTc4nA4YwD2pxmEAfZJvbwT9u6baMCy
+	 tVWTyPR8PdQGQ==
+Date: Mon, 4 Mar 2024 08:24:42 -0600
+From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: Christian Brauner <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>,
+	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+	James Morris <jmorris@namei.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, audit@vger.kernel.org,
+	selinux@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH v2 06/25] capability: provide helpers for converting
+ between xattrs and vfs_caps
+Message-ID: <ZeXZqueCPTNzZtku@do-x1extreme>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+ <20240221-idmap-fscap-refactor-v2-6-3039364623bd@kernel.org>
+ <7633ab5d5359116a602cdc8f85afd2561047960e.camel@huaweicloud.com>
+ <ZeIlwkUx5lNBrdS9@do-x1extreme>
+ <be91c7158b1b9bed35aa9c3205e8f8e467778a5f.camel@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be91c7158b1b9bed35aa9c3205e8f8e467778a5f.camel@huaweicloud.com>
 
-Convert the RT1015 Mono Class D Audio Amplifier to DT schema.
+On Mon, Mar 04, 2024 at 09:33:06AM +0100, Roberto Sassu wrote:
+> On Fri, 2024-03-01 at 13:00 -0600, Seth Forshee (DigitalOcean) wrote:
+> > On Fri, Mar 01, 2024 at 05:30:55PM +0100, Roberto Sassu wrote:
+> > > > +/*
+> > > > + * Inner implementation of vfs_caps_to_xattr() which does not return an
+> > > > + * error if the rootid does not map into @dest_userns.
+> > > > + */
+> > > > +static ssize_t __vfs_caps_to_xattr(struct mnt_idmap *idmap,
+> > > > +				   struct user_namespace *dest_userns,
+> > > > +				   const struct vfs_caps *vfs_caps,
+> > > > +				   void *data, size_t size)
+> > > > +{
+> > > > +	struct vfs_ns_cap_data *ns_caps = data;
+> > > > +	struct vfs_cap_data *caps = (struct vfs_cap_data *)ns_caps;
+> > > > +	kuid_t rootkuid;
+> > > > +	uid_t rootid;
+> > > > +
+> > > > +	memset(ns_caps, 0, size);
+> > > 
+> > > size -> sizeof(*ns_caps) (or an equivalent change)
+> > 
+> > This is zeroing out the passed buffer, so it should use the size passed
+> > for the buffer. sizeof(*ns_caps) could potentially be more than the size
+> > of the buffer.
+> 
+> Uhm, then maybe the problem is that you are passing the wrong argument?
+> 
+> ssize_t
+> do_getxattr(struct mnt_idmap *idmap, struct dentry *d,
+> 	struct xattr_ctx *ctx)
+> {
+> 	ssize_t error;
+> 	char *kname = ctx->kname->name;
+> 
+> 	if (is_fscaps_xattr(kname)) {
+> 		struct vfs_caps caps;
+> 		struct vfs_ns_cap_data data;
+> 		int ret;
+> 
+> 		ret = vfs_get_fscaps(idmap, d, &caps);
+> 		if (ret)
+> 			return ret;
+> 		/*
+> 		 * rootid is already in the mount idmap, so pass nop_mnt_idmap
+> 		 * so that it won't be mapped.
+> 		 */
+> 		ret = vfs_caps_to_user_xattr(&nop_mnt_idmap, current_user_ns(),
+> 					     &caps, &data, ctx->size);
+> 
+> 
+> ctx->size in my case is 1024 bytes.
 
-Signed-off-by: Javier García <javier.gar.tab@gmail.com>
----
- .../bindings/sound/realtek,rt1015.yaml        | 41 +++++++++++++++++++
- .../devicetree/bindings/sound/rt1015.txt      | 23 -----------
- 2 files changed, 41 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/realtek,rt1015.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/rt1015.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/realtek,rt1015.yaml b/Documentation/devicetree/bindings/sound/realtek,rt1015.yaml
-new file mode 100644
-index 000000000000..880196081a60
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/realtek,rt1015.yaml
-@@ -0,0 +1,41 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/realtek,rt1015.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RT1015 Mono Class D Audio Amplifier
-+
-+maintainers:
-+  - Jack Yu <jack.yu@realtek.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - realtek,rt1015
-+
-+  reg:
-+    maxItems: 1
-+
-+  realtek,power-up-delay-ms:
-+    description: Set a delay time for flush work to be completed,
-+      this vlaue is adjustable depending on platform.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        codec@28 {
-+            compatible = "realtek,rt1015";
-+            reg = <0x28>;
-+            realtek,power-up-delay-ms = <50>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/rt1015.txt b/Documentation/devicetree/bindings/sound/rt1015.txt
-deleted file mode 100644
-index e498966d436f..000000000000
---- a/Documentation/devicetree/bindings/sound/rt1015.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--RT1015 Mono Class D Audio Amplifier
--
--This device supports I2C only.
--
--Required properties:
--
--- compatible : "realtek,rt1015".
--
--- reg : The I2C address of the device.
--
--Optional properties:
--
--- realtek,power-up-delay-ms
--  Set a delay time for flush work to be completed,
--  this value is adjustable depending on platform.
--
--Example:
--
--rt1015: codec@28 {
--	compatible = "realtek,rt1015";
--	reg = <0x28>;
--	realtek,power-up-delay-ms = <50>;
--};
--- 
-2.41.0
-
+Ah, yes that definitely isn't correct. I will fix it, thanks for finding
+it.
