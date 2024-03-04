@@ -1,109 +1,83 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7681224DE
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FE9381DF
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709544375; cv=none; b=Nia4YHlLVpjM+Yfl2eDrfbRPgOvtafLU+qbe5fPaIVJogIg4C1C7c19M6fC+j4xcv3LlF8yIoQ8rJa9YSDwmudfZcLiKk1PGbF7AAlzPI9LKZgexqxBHCjU4BAY6Jl3I/JtTgiqZ6310LdG5W18E/qpYQtzKISyc3mbDneiXGwg=
+	t=1709544392; cv=none; b=VEVGEVkinmGVC25B3424yNbAumbqqxmilZkc4pBJsQScZKYmXYNO0SGXQdt7ww7IR+URdsqlBIzv43ZnXlmm6DHloWsDnmBBLYTDHo7mfGGapjqt9arWrg97RrF5qCv0py8EWkthzdsDobKsI31NjBKBejTarABYDoSnCfRD1Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709544375; c=relaxed/simple;
-	bh=3gxdjgse67y7XYptiPwcIMmhTe7VR33lWUSVmELHwW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NlKfMryHRNP9zStI6z/V1eM4q61ilHvbOVEaAaUMK6Xh9es9qvsNbmv0MRtC50sIbCk2kNyVbjGHfFxWc3rMKzZAwKIvrRod+0v8JpeUAiKTZ7lKs2t7UGOqTaRQZOuWglVreFywNWBA32dvinWhA/mtlR0Pqcy7yXNkq3WTNfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ia5EcrpY; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ia5EcrpY"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-564fc495d83so5116548a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:26:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709544372; x=1710149172; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8SSs3DJIcxXw1e3lTxNpFOhqFCbXvsgZH5bFFnKMSII=;
-        b=ia5EcrpYg7XbBtD3ffpBfqzBmCi1xDMEE7dc3KPABWSYxPYZ8NPsAZkMp9NAS3jlcj
-         hEobOu2h+9/yTUWUWvwZEPmVS5TuRJEjZFE6eKrz/CIV0/lIkDrzrrWbpnKSPkhd63+j
-         TNgiDnOF0FMCAPY02GipW7qliYRL4DPV3vH1JbyMjZeQBxpb0uXbMcP7gkyT89rmPgU8
-         gvml6KrymT14ygeF++9n1dLolullIcLavvWD7m0WhPTkvGCRtFZ/K29PH3BZxO/JmodO
-         XjiWzTP9iXHU10tlFhY574X+acSveWPH3Fg2Wl6eSz9ob4qLg34tz7CWSw3gUISlp7dV
-         NQjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709544372; x=1710149172;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8SSs3DJIcxXw1e3lTxNpFOhqFCbXvsgZH5bFFnKMSII=;
-        b=fFnpLNb5JT7rcXhoD2C8ElZtB57OxE92pz/LlNa1WkKedTcXpkm013OwyQraT36CMW
-         ALZHBJXoA0YF06aKu+QT2iV9VYVdTa+ZLZ5Fy2zKofRkEChb7uCNx+7e8tCKY9IuQ2KU
-         kypKWPICa7LOleNWRbMlymPgUZ3JGdkbVbVb7XifoeHF4IV6qce1c5CR5sg6tZYbLGNC
-         4xbza/YJat4A9dsIuXgcwR7siZu/386PU2W6onODUpiMkeHEcCoOJuS28SzwnX6TAPte
-         iWCzVGN6ACCiTOLAb8z/YSZ7r89GRrXGIOFytVNWDu9VHNf2DOjUPPAQMnfgSok5whdx
-         TTtw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgXhv55H9BjdTuSNyCv/xI/6nyd2gw64PxRHclv2DnZOTcbKMSWTv6gAP/7ta8DEpi0lmqpqxA+JroUfjXTJ7H5oh7sILoyLN1Mea2
-X-Gm-Message-State: AOJu0Yy8PbOeORqRH2JBuzKWbsx5WMBmxARypCLuA7T+v6TKN19JYIhJ
-	aLmh6CGRuOjChK5rXPSIL3s8kDMjUubSvEU2yUdJwz5xRlXVPFLr
-X-Google-Smtp-Source: AGHT+IEHTgInl/w6XbkuesjYIuH/BxXxXppOU2Q/JnbcT1Odq96mkibfBODIzqdSlMF+vHcnxqQ6mw==
-X-Received: by 2002:aa7:d788:0:b0:566:ec94:5e48 with SMTP id s8-20020aa7d788000000b00566ec945e48mr4341503edq.32.1709544372293;
-        Mon, 04 Mar 2024 01:26:12 -0800 (PST)
-Received: from gmail.com (1F2EF13F.nat.pool.telekom.hu. [31.46.241.63])
-        by smtp.gmail.com with ESMTPSA id h26-20020aa7c95a000000b005663b0d7243sm4345636edt.83.2024.03.04.01.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 01:26:11 -0800 (PST)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Mon, 4 Mar 2024 10:26:09 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/7] sched/balancing: Change 'enum cpu_idle_type' to have
- more natural definitions
-Message-ID: <ZeWTsTcK+3uvKeju@gmail.com>
-References: <20240301110951.3707367-1-mingo@kernel.org>
- <20240301110951.3707367-3-mingo@kernel.org>
- <588d1af3-e619-414f-a26f-467ea51b4ab8@linux.ibm.com>
+	s=arc-20240116; t=1709544392; c=relaxed/simple;
+	bh=rA9xcrP1qRp2vmLyo1/NoCl09tOZioaFK+zMV5UQ+a0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Aq0A0T4YcNGEKnq0SC4EGZ24HW14zMrntVZs8OITP42lN/H/abIXuyQvNyLncEyXV+DPqA8/ZgtNqnskcDM19RFrhWztzXM2Jdh7PhcNHcJ/+PQJiCIBPaECLSeQHGbXAG88Ce6Dy/gouaCOC6o6cyZTsnw/65Bbtg4dRb6GY0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp77t1709544338tbvh7m0l
+X-QQ-Originating-IP: /8qetr6ORn/X+N+f2KO84Qws+LjhcD+YICaQ7LCYY1w=
+Received: from localhost ( [112.22.30.30])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 04 Mar 2024 17:25:37 +0800 (CST)
+X-QQ-SSF: 01400000000000505000000A0000000
+X-QQ-FEAT: qPPBrXN7Wh+uu+Oshg+pJH+InOcUFIlvm2eJlW3zNBPIzyTLwKQAunGD3FCwb
+	zwyMY7CdMV2tZ54TuJOawKbq57h5TE6z3bq9+dKiI2AsgkqwjjDfTVg5lIaoVkDLYq9zDYr
+	B+NC4YSSdaexh+v2RbdouhF0KG8MQkHwfvAV9dKQd2ZpKw6mCjxCjr+vxi4lVnO4DffIhy7
+	Bp8bES/XvFY32VFOiR49STQmxEgSBPeNzmBJpHKaqsWPOBFUfSoc6ImedCXlvonCQvw/XkC
+	ToAlhHse/0shw2Jkgra+fw3FaQQJiDxuxXp4XT6UWxSGLDZ60zcvXXmre+31R0+pdOe9C28
+	zxShzXKHft+hSESzzPFzcWabdAqyOZNshksj13TcTCY2nogMtqgP9uLM22wzb+VL3jwi//t
+	nBkaCl93UStK79lsqDOIhQ==
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 14106722739390484581
+From: Dawei Li <dawei.li@shingroup.cn>
+To: conor.dooley@microchip.com,
+	daire.mcnamara@microchip.com,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Dawei Li <dawei.li@shingroup.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] firmware: microchip: Fix over-requested allocation size
+Date: Mon,  4 Mar 2024 17:25:32 +0800
+Message-Id: <20240304092532.125751-1-dawei.li@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <588d1af3-e619-414f-a26f-467ea51b4ab8@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
+cocci warnings: (new ones prefixed by >>)
+>> drivers/firmware/microchip/mpfs-auto-update.c:387:72-78:
+   ERROR: application of sizeof to pointer
+   drivers/firmware/microchip/mpfs-auto-update.c:170:72-78:
+   ERROR: application of sizeof to pointer
 
-* Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+response_msg is a pointer to u32, so the size of element it points to is
+supposed to be a multiple of sizeof(u32), rather than sizeof(u32 *).
 
-> I think its all getting accounted. Just that its not being printed. With 
-> the below change, able to see all the three types, albeit not in right 
-> order as per schedstat documentation.
-> 
-> diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
-> index 857f837f52cb..f36b54bdd9fa 100644
-> --- a/kernel/sched/stats.c
-> +++ b/kernel/sched/stats.c
-> @@ -150,7 +150,7 @@ static int show_schedstat(struct seq_file *seq, void *v)
->  
->                         seq_printf(seq, "domain%d %*pb", dcount++,
->                                    cpumask_pr_args(sched_domain_span(sd)));
-> -                       for (itype = CPU_IDLE; itype < CPU_MAX_IDLE_TYPES;
-> +                       for (itype = 0; itype < CPU_MAX_IDLE_TYPES;
->                                         itype++) {
->                                 seq_printf(seq, " %u %u %u %u %u %u %u %u",
->                                     sd->lb_count[itype],
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202403040516.CYxoWTXw-lkp@intel.com/
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+---
+ drivers/firmware/microchip/mpfs-auto-update.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Indeed, good catch - there was an implicit reliance on CPU_IDLE's position 
-in the loop above that my patch didn't take into account.
+diff --git a/drivers/firmware/microchip/mpfs-auto-update.c b/drivers/firmware/microchip/mpfs-auto-update.c
+index 682e417be5a3..7ea3cdb917bc 100644
+--- a/drivers/firmware/microchip/mpfs-auto-update.c
++++ b/drivers/firmware/microchip/mpfs-auto-update.c
+@@ -384,7 +384,7 @@ static int mpfs_auto_update_available(struct mpfs_auto_update_priv *priv)
+ 	u32 *response_msg;
+ 	int ret;
+ 
+-	response_msg = devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(response_msg),
++	response_msg = devm_kzalloc(priv->dev, AUTO_UPDATE_FEATURE_RESP_SIZE * sizeof(u32),
+ 				    GFP_KERNEL);
+ 	if (!response_msg)
+ 		return -ENOMEM;
+-- 
+2.27.0
 
-Fixed.
-
-Thanks,
-
-	Ingo
