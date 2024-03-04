@@ -1,153 +1,316 @@
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E94638FA9;
-	Mon,  4 Mar 2024 09:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4631D224EE
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709544254; cv=none; b=TFAWsd3gB5LAesdcivlBcLoDnJV6MXlIaM6iI05BU4WlDlD1nVKf+/e7BPzqHQ7BYdCWWCLM3SH3fQZkHr021ucLvJmUelxMM050v0Xe7ykWgfEYuFnRxYSVu9utxhZTyZHOAFA/XRWgykwyWiZjbyM2XXwQsf+ChlajASAk7jw=
+	t=1709544252; cv=none; b=C0Lcn75tFh2gB0dHkDn/ALl2XRJRE6H4ZJDdDiwOlhuMqF4EHd6XSCaq0ndfIV4PsW8dAGpJLOEEr0tshuWlMcTGOyT2a7oT+T4Sw+eTH9vHYxXvL0MCwECNqyQ5vsJUnI+RHzhytGeMh7qujKySG7lsn8mX+qa35AgW2HKGFOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709544254; c=relaxed/simple;
-	bh=rvuKoEP4yvi36KEDnO6evJIdtxIuFtM35QGK4LO7PfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dm22VX56ieX+bqTAthm8ApWJP1TWFyhzZjOux6FopMQZFormKIfW5X1YB9gHloNz0VdQLRGl9Z++bdphyOWM+6qAXZ9dwCGy7xCQDUrm9RuWKWYAz2SVToNZv2VHZYNGrEFkBe45QGT85hbz2kNp+BAoMJWzR7OXKWlsCtIWVOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=E4e8vody; arc=none smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1709544252; c=relaxed/simple;
+	bh=xgOAPReEJUOUSBbq55ieo+WguRSIcL9ZHZoCKItajLk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aCPeU0eyjRCROtHC0VpKRbzvga1JGi3Nl+aVBTjYzrxIJieUS6Ihk3+HnvPFlJwhJn3YzpNX+AmpQvvpup55lwBgtTCkPECp7QSadwni0T1XHBgdrw7JKuA4wlBypiCHiHSKdtjY/gqiTwdFO2d4QKRn2ueLBtxdwe+eP+8GYL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lvx4ex0b; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="E4e8vody"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1709544252; x=1741080252;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rvuKoEP4yvi36KEDnO6evJIdtxIuFtM35QGK4LO7PfQ=;
-  b=E4e8vodyzi09EM/c/uK46F7oKL2ELUCd4OSHVKmci8zbfR9z4ooEZiv0
-   wbS7+FClZOAH8NznT2kamVU1GxO6v8BYmXp/Qe8xLZVoOmpv2NIWbTHl6
-   5qGGXdRRiT6WS8Gyel/TDf4oDuzAXKl2M8Q3estDStJWXueaFJ/6W8SzB
-   c0Y5ubYYKwoEhblp8UdgyOgYxC0Z18qcDisZ44fNegI2z5goNsQRLmZxJ
-   59c8o62rq4uJ3caM+eWTnzQ29RtYKoyq+pxh/sXFTPDJ+1o/bnetux/D6
-   lK4Zz1ZIMO57iGPsuMeUknZq19eweBNDuXMoLSBdl8ahryXmA4JpacyiQ
-   w==;
-X-CSE-ConnectionGUID: 4htDNPlJQZqA+LoBIyF+hw==
-X-CSE-MsgGUID: k7H3i8OwTwCGAaLpsW2/QQ==
-X-IronPort-AV: E=Sophos;i="6.06,203,1705334400"; 
-   d="scan'208";a="11326508"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Mar 2024 17:24:12 +0800
-IronPort-SDR: 5Xg3a2ij+09TTgaMaa4rnNSMEBTRSZIw6cC0vi6YpBtCuOV913JKIn2fC+JccB0EZh4ZTs75Wd
- W0uqFHQw/rtg==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Mar 2024 00:33:24 -0800
-IronPort-SDR: XXMV+Nhmr9kQDrdwmCPLrQyLL+6rB3imfJTvJmNkeVVEv3mEoI2CzNGR7w9veBWnnl7T/NXqF9
- 2cM/Db45xk6A==
-WDCIronportException: Internal
-Received: from bxygm33.ad.shared ([10.45.31.229])
-  by uls-op-cesaip02.wdc.com with ESMTP; 04 Mar 2024 01:24:10 -0800
-From: Avri Altman <avri.altman@wdc.com>
-To: "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Bean Huo <beanhuo@micron.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH 3/4] scsi: ufs: Re-use compose_dev_cmd
-Date: Mon,  4 Mar 2024 11:23:45 +0200
-Message-ID: <20240304092346.654-4-avri.altman@wdc.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240304092346.654-1-avri.altman@wdc.com>
-References: <20240304092346.654-1-avri.altman@wdc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lvx4ex0b"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dcc7f4717fso42534975ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:24:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709544248; x=1710149048; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TgFiBJufO6zwQVBrqTARojW9dQ2irJqXt9kXbZy5Siw=;
+        b=lvx4ex0bjswscxWv1yd+z9REWSJAwbdOW+KLAoUxHg7z/5QKbgP2WN6Hqw6Gqy8ZjX
+         ydwFmug8aAnc+DZLKteRTV8gMkGFfgo/UsxWmfM6XyrPM7XaKX3PpRiWawIXqtUtTA18
+         9XfkpIh1nZFhDiQy45sWVj82UGsNaPXHhSh5XCoJQg2Sd6z/XoOD2No2P90hTg6FiJUN
+         N7gEbXFP3jiAuhiZIpBh8a42NsteXtmdeiQuBybQ1wojQo6Neq55uOVnvnfYOuJFQMVz
+         F2QRjcw6GYQkW7MhRX4nV6L5RI0AJTLrNvUdW4SybHiizk1lH0kzGiS0sEmV1Dm32pYj
+         IiKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709544248; x=1710149048;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TgFiBJufO6zwQVBrqTARojW9dQ2irJqXt9kXbZy5Siw=;
+        b=EVRq9j5rWtinszZNlQhrHFL7w2ayiH9RSZLVfQXdT/rPV64Hrc/e8/Kt8MAT+zqRyW
+         ifv+63gnKzD9HK/9E025l0ioYvDYuB6JxxK4mzAzHIOWwpmndMq7d7wLk6EBhgQsSqbY
+         YHRR8gdsdUdRdxUeNiAZr9ReE5lZVD0Hr26H9ttP1L0RHDhxDfiX0W0L3oDGsimOTlf/
+         sMLDTOLSFAPPLAYZgE2ovilhCFc6wkKM4SplsZ0ijnRPxgvi5qLZNCXvsCfq3UarlG2T
+         lzIJf02L7fjouaWANaplCbzyH4ggHotbSsPi9eRGMOS0mPEhBpr3GJkb7jFbKTSHXmw8
+         vrtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyVBgUKGzoibNB49vDwvffe7ghtaeMcvmAZyi83RTT7P+rm2lxJ8Nz5gyv1ZOK4iG8N2zW7rMt4zj2C47FnOtbk6I1quZbnsL5ONA3
+X-Gm-Message-State: AOJu0YyZYG+QobmxNE9bHhuaR0WYdlZLaSEmHNLPqxhny2qjsuik/eLk
+	DHbKpSsYK3GtK5F00vquTzAG1INg7jAFx7kDbcHWnfd2qJIxC9qWcwmpdNZTdA==
+X-Google-Smtp-Source: AGHT+IFo5eebOeyugha7lOr8k0/CIeXIuboU6TDZf1rD6y0IgFPJt4NlY4gqHykbE2xn1NMzjbgGew==
+X-Received: by 2002:a17:902:d48b:b0:1dc:8790:6809 with SMTP id c11-20020a170902d48b00b001dc87906809mr11325571plg.8.1709544248627;
+        Mon, 04 Mar 2024 01:24:08 -0800 (PST)
+Received: from [127.0.1.1] ([117.202.187.165])
+        by smtp.gmail.com with ESMTPSA id c5-20020a170902c1c500b001dbb06b6138sm7996648plc.252.2024.03.04.01.23.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 01:24:08 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Mon, 04 Mar 2024 14:52:20 +0530
+Subject: [PATCH v9 08/10] PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown()
+ API to handle LINK_DOWN event
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240304-pci-dbi-rework-v9-8-29d433d99cda@linaro.org>
+References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
+In-Reply-To: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
+To: Jingoo Han <jingoohan1@gmail.com>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Kishon Vijay Abraham I <kishon@ti.com>, Vidya Sagar <vidyas@nvidia.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
+ Roy Zang <roy.zang@nxp.com>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Jesper Nilsson <jesper.nilsson@axis.com>, 
+ Srikanth Thokala <srikanth.thokala@intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@axis.com, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6608;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=xgOAPReEJUOUSBbq55ieo+WguRSIcL9ZHZoCKItajLk=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl5ZLYtskHlXQ3QZgExsN5RA1FP9N/GDLnjzUGH
+ kRLsANy4nOJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZeWS2AAKCRBVnxHm/pHO
+ 9VyMB/4yPbhV7BnfjQ7iJT41Ka8VybDCRRkNm0C7sKKBhcaHq1riRDs/JMnNLA2dQWxrkfZGT3d
+ R8CWA2JwwwfVZndAw/ZCieNB4niqKfzKoxLoY5kpj3zNSXkqa2tRrMIOjzrtlft8yyK0LoVHvk4
+ 8HMNKJK+Ke+eTMD1PENFMLWtRGEGQT518TSpUMu6C8RrLQgSIsE8Qxi1NsFSEXJRI1oGXZjUhYN
+ jo6eMu2S/mKrrQMt/hxHRxzc5TXfDPf0jfaQIAkrsDzGrvwRCw0/8X9ORAMr6d2NxPjUCWhVp7z
+ nhlCJDofqRlh4Hgs8DOSbg84xzb21K7cqgaPclQVLe+G+RlB
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-Move out some of the dev_cmd initializations so it can be used
-elsewhere.
+The PCIe link can go to LINK_DOWN state in one of the following scenarios:
 
-Signed-off-by: Avri Altman <avri.altman@wdc.com>
+1. Fundamental (PERST#)/hot/warm reset
+2. Link transition from L2/L3 to L0
+
+In those cases, LINK_DOWN causes some non-sticky DWC registers to loose the
+state (like REBAR, PTM_CAP etc...). So the drivers need to reinitialize
+them to function properly once the link comes back again.
+
+This is not a problem for drivers supporting PERST# IRQ, since they can
+reinitialize the registers in the PERST# IRQ callback. But for the drivers
+not supporting PERST#, there is no way they can reinitialize the registers
+other than relying on LINK_DOWN IRQ received when the link goes down. So
+let's add a DWC generic API dw_pcie_ep_linkdown() that reinitializes the
+non-sticky registers and also notifies the EPF drivers about link going
+down.
+
+This API can also be used by the drivers supporting PERST# to handle the
+scenario (2) mentioned above.
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/ufs/core/ufshcd.c | 33 +++++++++++++--------------------
- 1 file changed, 13 insertions(+), 20 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 111 ++++++++++++++----------
+ drivers/pci/controller/dwc/pcie-designware.h    |   5 ++
+ 2 files changed, 72 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 6661054e4872..a41cd7ed1e38 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -3061,15 +3061,21 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	return err;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 278bdc9b2269..fed4c2936c78 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -14,14 +14,6 @@
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
+ 
+-void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+-{
+-	struct pci_epc *epc = ep->epc;
+-
+-	pci_epc_linkup(epc);
+-}
+-EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
+-
+ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+ {
+ 	struct pci_epc *epc = ep->epc;
+@@ -603,19 +595,56 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+ 	return 0;
  }
  
--static int ufshcd_compose_dev_cmd(struct ufs_hba *hba,
--		struct ufshcd_lrb *lrbp, enum dev_cmd_type cmd_type, int tag)
-+static void __compose_dev_cmd(struct ufs_hba *hba, struct ufshcd_lrb *lrbp,
-+			     enum dev_cmd_type cmd_type, u8 lun, int tag)
- {
- 	lrbp->cmd = NULL;
- 	lrbp->task_tag = tag;
--	lrbp->lun = 0; /* device management cmd is not specific to any LUN */
-+	lrbp->lun = lun;
- 	lrbp->intr_cmd = true; /* No interrupt aggregation */
- 	ufshcd_prepare_lrbp_crypto(NULL, lrbp);
- 	hba->dev_cmd.type = cmd_type;
++static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
++{
++	unsigned int offset, ptm_cap_base;
++	unsigned int nbars;
++	u32 reg, i;
++
++	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
++	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
++
++	dw_pcie_dbi_ro_wr_en(pci);
++
++	if (offset) {
++		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
++		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
++			PCI_REBAR_CTRL_NBAR_SHIFT;
++
++		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
++			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
++	}
++
++	/*
++	 * PTM responder capability can be disabled only after disabling
++	 * PTM root capability.
++	 */
++	if (ptm_cap_base) {
++		dw_pcie_dbi_ro_wr_en(pci);
++		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
++		reg &= ~PCI_PTM_CAP_ROOT;
++		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
++
++		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
++		reg &= ~(PCI_PTM_CAP_RES | PCI_PTM_GRANULARITY_MASK);
++		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
++		dw_pcie_dbi_ro_wr_dis(pci);
++	}
++
++	dw_pcie_setup(pci);
++	dw_pcie_dbi_ro_wr_dis(pci);
 +}
 +
-+static int ufshcd_compose_dev_cmd(struct ufs_hba *hba,
-+		struct ufshcd_lrb *lrbp, enum dev_cmd_type cmd_type, int tag)
-+{
-+	__compose_dev_cmd(hba, lrbp, cmd_type, 0, tag);
- 
- 	return ufshcd_compose_devman_upiu(hba, lrbp);
- }
-@@ -7209,17 +7215,11 @@ static int ufshcd_issue_devman_upiu_cmd(struct ufs_hba *hba,
- 					enum query_opcode desc_op)
+ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
  {
- 	const u32 tag = hba->reserved_slot;
--	struct ufshcd_lrb *lrbp;
-+	struct ufshcd_lrb *lrbp = &hba->lrb[tag];
- 	int err = 0;
- 	u8 upiu_flags;
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	struct dw_pcie_ep_func *ep_func;
+ 	struct device *dev = pci->dev;
+ 	struct pci_epc *epc = ep->epc;
+-	unsigned int offset, ptm_cap_base;
+-	unsigned int nbars;
+ 	u8 hdr_type;
+ 	u8 func_no;
+-	int i, ret;
+ 	void *addr;
+-	u32 reg;
++	int ret;
  
--	lrbp = &hba->lrb[tag];
--	lrbp->cmd = NULL;
--	lrbp->task_tag = tag;
--	lrbp->lun = 0;
--	lrbp->intr_cmd = true;
--	ufshcd_prepare_lrbp_crypto(NULL, lrbp);
--	hba->dev_cmd.type = cmd_type;
-+	__compose_dev_cmd(hba, lrbp, cmd_type, 0, tag);
+ 	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
+ 		   PCI_HEADER_TYPE_MASK;
+@@ -678,38 +707,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+ 	if (ep->ops->init)
+ 		ep->ops->init(ep);
  
- 	if (hba->ufs_version <= ufshci_version(1, 1))
- 		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
-@@ -7365,7 +7365,7 @@ int ufshcd_advanced_rpmb_req_handler(struct ufs_hba *hba, struct utp_upiu_req *r
- 			 enum dma_data_direction dir)
- {
- 	const u32 tag = hba->reserved_slot;
--	struct ufshcd_lrb *lrbp;
-+	struct ufshcd_lrb *lrbp = &hba->lrb[tag];
- 	int err = 0;
- 	int result;
- 	u8 upiu_flags;
-@@ -7375,14 +7375,7 @@ int ufshcd_advanced_rpmb_req_handler(struct ufs_hba *hba, struct utp_upiu_req *r
- 	/* Protects use of hba->reserved_slot. */
- 	ufshcd_dev_man_lock(hba);
- 
--	lrbp = &hba->lrb[tag];
--	lrbp->cmd = NULL;
--	lrbp->task_tag = tag;
--	lrbp->lun = UFS_UPIU_RPMB_WLUN;
+-	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+-	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
 -
--	lrbp->intr_cmd = true;
--	ufshcd_prepare_lrbp_crypto(NULL, lrbp);
--	hba->dev_cmd.type = DEV_CMD_TYPE_RPMB;
-+	__compose_dev_cmd(hba, lrbp, DEV_CMD_TYPE_RPMB, UFS_UPIU_RPMB_WLUN, tag);
+-	dw_pcie_dbi_ro_wr_en(pci);
+-
+-	if (offset) {
+-		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+-			PCI_REBAR_CTRL_NBAR_SHIFT;
+-
+-		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+-			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+-	}
+-
+-	/*
+-	 * PTM responder capability can be disabled only after disabling
+-	 * PTM root capability.
+-	 */
+-	if (ptm_cap_base) {
+-		dw_pcie_dbi_ro_wr_en(pci);
+-		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
+-		reg &= ~PCI_PTM_CAP_ROOT;
+-		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
+-
+-		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
+-		reg &= ~(PCI_PTM_CAP_RES | PCI_PTM_GRANULARITY_MASK);
+-		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
+-		dw_pcie_dbi_ro_wr_dis(pci);
+-	}
+-
+-	dw_pcie_setup(pci);
+-	dw_pcie_dbi_ro_wr_dis(pci);
++	dw_pcie_ep_init_non_sticky_registers(pci);
  
- 	/* Advanced RPMB starts from UFS 4.0, so its command type is UTP_CMD_TYPE_UFS_STORAGE */
- 	lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
+ 	return 0;
+ 
+@@ -720,6 +718,31 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_registers);
+ 
++void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
++{
++	struct pci_epc *epc = ep->epc;
++
++	pci_epc_linkup(epc);
++}
++EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
++
++void dw_pcie_ep_linkdown(struct dw_pcie_ep *ep)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	struct pci_epc *epc = ep->epc;
++
++	/*
++	 * Initialize the non-sticky DWC registers as they would've reset post
++	 * LINK_DOWN. This is specifically needed for drivers not supporting
++	 * PERST# as they have no way to reinitialize the registers before the
++	 * link comes back again.
++	 */
++	dw_pcie_ep_init_non_sticky_registers(pci);
++
++	pci_epc_linkdown(epc);
++}
++EXPORT_SYMBOL_GPL(dw_pcie_ep_linkdown);
++
+ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ {
+ 	int ret;
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index f8e5431a207b..152969545b0a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -668,6 +668,7 @@ static inline void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus,
+ 
+ #ifdef CONFIG_PCIE_DW_EP
+ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
++void dw_pcie_ep_linkdown(struct dw_pcie_ep *ep);
+ int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep);
+ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
+@@ -688,6 +689,10 @@ static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+ {
+ }
+ 
++static inline void dw_pcie_ep_linkdown(struct dw_pcie_ep *ep)
++{
++}
++
+ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ {
+ 	return 0;
+
 -- 
-2.42.0
+2.25.1
 
