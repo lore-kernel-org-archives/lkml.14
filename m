@@ -1,201 +1,146 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3549E7BAE6;
-	Mon,  4 Mar 2024 21:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A6B7BAF0
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 21:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587866; cv=none; b=ISwFeL1Yrzzir7iq55gERGe+bHux5gbdwTZAXN3oUoLVsm2A5YYRn2H0Noh3ZxYVZ4nKnQLoBLiK21PvmoY0pPJCxRHnz5DsUsQBbk4ZTNsXQbqUNWXdK26SSBDI0F8Knf7U0o2FAFyaT+LWYER4UHEHpjVh6V+GSeegooLZAYw=
+	t=1709587943; cv=none; b=SKqwtJDR0y3khRByB1M1eTEnMsuKWBuTtVPoVJY8lCNwk2DJnRQvdI751NgHfqkU1Rrh/aUB6RXXGnhc4mhc719C2VxlcQRUBfofuJ1/OnctHZZucjK3RFuv07vh6/VjITSFcf99eISA0Y940zdf047Wx1/41DTW9LfCqSeWk+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587866; c=relaxed/simple;
-	bh=M9ya6bkKPebgsSfZTJFdkZYGyMKRaZjpH8OWyDkP1ug=;
+	s=arc-20240116; t=1709587943; c=relaxed/simple;
+	bh=Fid7qZAd/FJHN/tsMQvT21XJE1w7mAABpnaR9DnDguQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pjvmNQ0gbERrpDuDZG0jOl+IO1QH96kFe9lbpK/6Ajytrtu5oNMJCqa/Hxre+tO/QwvWzKdFmTTGupFp7ZPAvjGCzY4l+/NQRxdu526PuQAn7QaLq22IrV35TrTNVjwsaEWeBBRfxwrwmL2J6TLf5e8qqBSszXDKwP8ney2NqNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=shCCcZWF; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sm5IOpeklQJ5Q6v9YX7uaS1sznM1eoPeGw8dMXOMrHNJm99NUN2YlKO08mk1oj0PlXrWC2+DvjqQYouZn6yc7Ia/Mc8LRpzYhFlBHfq6lQJXjHcfrpBX/eJ+SiY4fmDaMCLVPHlf9EA2OKYY6gu6KDanKrQo9gK7tauSeAV4MLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LlxvZC8d; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="shCCcZWF"
-Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 916931FB2;
-	Mon,  4 Mar 2024 22:30:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1709587845;
-	bh=M9ya6bkKPebgsSfZTJFdkZYGyMKRaZjpH8OWyDkP1ug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=shCCcZWFR+XUgZA8RLUJFALUMKx4UaAhW9PSPCNCQhzKUcKtLEWW5qLOoxosFD0vn
-	 hqssrHbEpfQt6J03DbAnHCXDbL4rI6M+Q1nLaKpT82+KeJGCcGZLMVhwAicRD3jzYi
-	 UxxiJIcAmVkXWZ8A/1oHYX19q3L0XS4jJujLKVok=
-Date: Mon, 4 Mar 2024 23:31:03 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Jacopo Mondi <jacopo@jmondi.org>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v3 19/20] media: i2c: ov4689: Refactor ov4689_s_stream
-Message-ID: <20240304213103.GA3239@pendragon.ideasonboard.com>
-References: <20240229165333.227484-1-mike.rudenko@gmail.com>
- <20240229165333.227484-20-mike.rudenko@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LlxvZC8d"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e6381df003so204946b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 13:32:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709587941; x=1710192741; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5AAGBs1uayIPxzgb5qVJOa8HOKMdVNYp2rAU1bHGoGE=;
+        b=LlxvZC8dI4upTIvgiol1/vPFgKgj0eEt9Rlrekdddxoa1plFoW6paMLc2u/8Z0C98l
+         whP6lPQDQHBOBOXmn2tEdmakrisCM5AC4ZVF2ljUz2f9OnVkT4P3rs/eDlqB97Wjs7fl
+         oqLKO6CSdmej4UMCvQKeBtYiufJL65tLIY1aA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709587941; x=1710192741;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5AAGBs1uayIPxzgb5qVJOa8HOKMdVNYp2rAU1bHGoGE=;
+        b=dt5qmXS5lVgDjWeBvIJh4IHqOLx++EWdmelu59FxEJ3DsH8xz77eHizFNql1/rD2+R
+         X8ZEqr+usiSnzDjym8N6zzJIpuOJWrJ9LcmNYSYpYc4Sw1AU3tEREHegAeUijW6UhPib
+         zqVVo2icXpMVzCbmjydKHMn6dqj/IiD9KFshdYnbH2I6uxfbI9+EG55iTIXUsoNl/Jlm
+         igryJfSX8fpxMn+qKWtYHtlsGH2NIq82IGm3ri1cVkJ9RUBdDtyPWw0iNZexyBphlJ0S
+         q/CMPRCGNQF5XXmCalmW8mTvPeN27gcoDP46q3PAiRkp4Dui9ZX5fLJmGGVsnhA8aKA7
+         rG3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX9YWtJ6N+KSldeUr8r75szyRSa7VBZMlkfjcRsDBziVRlJOJePnMBQiWOWwedwBfkkV0zd6bDwvm+w+AeFRWDOZ94gcA0k0qGgK5qm
+X-Gm-Message-State: AOJu0Yw7Se0rI1Zs6aO4WsTfTUSjO2nJc0TEO6Q5nqPVaMwK5HL3Cxsl
+	1j/abUMFatH1gnxNjScvvn2QFG+MnUUG/n44xCqJ4TBfz4SB9IQ9SRhX1i7wfQ==
+X-Google-Smtp-Source: AGHT+IEEnu5o0IjVhO8m0c2U97SysmqAe9C51lQEBxAa+CLPJbohojNI1/SQD2+C0H93ZMSvh+9SMg==
+X-Received: by 2002:a05:6a20:3c8d:b0:1a1:2a5b:a6c3 with SMTP id b13-20020a056a203c8d00b001a12a5ba6c3mr12600656pzj.3.1709587941650;
+        Mon, 04 Mar 2024 13:32:21 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w62-20020a636241000000b005e485fbd455sm7872070pgb.45.2024.03.04.13.32.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 13:32:21 -0800 (PST)
+Date: Mon, 4 Mar 2024 13:32:20 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 3/4] xattr: Use dedicated slab buckets for setxattr()
+Message-ID: <202403041330.06842D397@keescook>
+References: <20240304184252.work.496-kees@kernel.org>
+ <20240304184933.3672759-3-keescook@chromium.org>
+ <ZeY6Lv4rfUyFHgOr@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240229165333.227484-20-mike.rudenko@gmail.com>
+In-Reply-To: <ZeY6Lv4rfUyFHgOr@dread.disaster.area>
 
-Hi Mikhail,
-
-Thank you for the patch.
-
-On Thu, Feb 29, 2024 at 07:53:32PM +0300, Mikhail Rudenko wrote:
-> Split ov4689_s_stream into __ov4689_stream_on and __ov4689_stream_off
-> functions. Also remove repetitive pm_runtime_put calls and call
-> pm_runtime_put once at the end of the __ov4689_stream_off function if
-> any error occurred.
+On Tue, Mar 05, 2024 at 08:16:30AM +1100, Dave Chinner wrote:
+> On Mon, Mar 04, 2024 at 10:49:31AM -0800, Kees Cook wrote:
+> > The setxattr() API can be used for exploiting[1][2][3] use-after-free
+> > type confusion flaws in the kernel. Avoid having a user-controlled size
+> > cache share the global kmalloc allocator by using a separate set of
+> > kmalloc buckets.
+> > 
+> > Link: https://duasynt.com/blog/linux-kernel-heap-spray [1]
+> > Link: https://etenal.me/archives/1336 [2]
+> > Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [3]
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > Cc: Christian Brauner <brauner@kernel.org>
+> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> > Cc: Jan Kara <jack@suse.cz>
+> > Cc: linux-fsdevel@vger.kernel.org
+> > ---
+> >  fs/xattr.c | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/xattr.c b/fs/xattr.c
+> > index 09d927603433..2b06316f1d1f 100644
+> > --- a/fs/xattr.c
+> > +++ b/fs/xattr.c
+> > @@ -821,6 +821,16 @@ SYSCALL_DEFINE4(fgetxattr, int, fd, const char __user *, name,
+> >  	return error;
+> >  }
+> >  
+> > +static struct kmem_buckets *xattr_buckets;
+> > +static int __init init_xattr_buckets(void)
+> > +{
+> > +	xattr_buckets = kmem_buckets_create("xattr", 0, 0, 0,
+> > +					    XATTR_LIST_MAX, NULL);
+> > +
+> > +	return 0;
+> > +}
+> > +subsys_initcall(init_xattr_buckets);
+> > +
+> >  /*
+> >   * Extended attribute LIST operations
+> >   */
+> > @@ -833,7 +843,7 @@ listxattr(struct dentry *d, char __user *list, size_t size)
+> >  	if (size) {
+> >  		if (size > XATTR_LIST_MAX)
+> >  			size = XATTR_LIST_MAX;
+> > -		klist = kvmalloc(size, GFP_KERNEL);
+> > +		klist = kmem_buckets_alloc(xattr_buckets, size, GFP_KERNEL);
 > 
-> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
-> ---
->  drivers/media/i2c/ov4689.c | 100 ++++++++++++++++++++-----------------
->  1 file changed, 53 insertions(+), 47 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-> index 2496067b90a0..5cea9b5ba201 100644
-> --- a/drivers/media/i2c/ov4689.c
-> +++ b/drivers/media/i2c/ov4689.c
-> @@ -537,61 +537,67 @@ static int ov4689_setup_blc_anchors(struct ov4689 *ov4689,
->  	return ret;
->  }
->  
-> +static int __ov4689_stream_on(struct ov4689 *ov4689,
+> There's a reason this uses kvmalloc() - allocations can be up to
+> 64kB in size and it's not uncommon for large slab allocation to
+> fail on long running machines. hence this needs to fall back to
+> vmalloc() to ensure that large xattrs can always be read.
 
-No need for the __ prefix. Same for __ov4689_stream_off().
+I can add a vmalloc fallback interface too. It looked like the larger
+xattr usage (8k-64k) was less common, but yeah, let's not remove the
+correct allocation fallback here. I'll fix this for v2.
 
-> +			      struct v4l2_subdev_state *sd_state)
-> +{
-> +	int ret;
-> +
-> +	ret = pm_runtime_resume_and_get(ov4689->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = cci_multi_reg_write(ov4689->regmap, ov4689_common_regs,
-> +				  ARRAY_SIZE(ov4689_common_regs), NULL);
-> +	if (ret)
-> +		goto cleanup_pm;
-> +
-> +	ret = ov4689_setup_timings(ov4689, sd_state);
-> +	if (ret)
-> +		goto cleanup_pm;
-> +
-> +	ret = ov4689_setup_blc_anchors(ov4689, sd_state);
-> +	if (ret)
-> +		goto cleanup_pm;
-> +
-> +	ret = __v4l2_ctrl_handler_setup(&ov4689->ctrl_handler);
-> +	if (ret)
-> +		goto cleanup_pm;
-> +
-> +	ret = cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
-> +			OV4689_MODE_STREAMING, NULL);
-> +	if (ret)
-> +		goto cleanup_pm;
-> +
-> +	return 0;
-> +
-> + cleanup_pm:
+Thanks!
 
-No space before the label. I would also name it just "error".
-
-With those small changes,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +	pm_runtime_put(ov4689->dev);
-> +	return ret;
-> +}
-> +
-> +static int __ov4689_stream_off(struct ov4689 *ov4689)
-> +{
-> +	cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE, OV4689_MODE_SW_STANDBY,
-> +		  NULL);
-> +	pm_runtime_mark_last_busy(ov4689->dev);
-> +	pm_runtime_put_autosuspend(ov4689->dev);
-> +
-> +	return 0;
-> +}
-> +
->  static int ov4689_s_stream(struct v4l2_subdev *sd, int on)
->  {
->  	struct ov4689 *ov4689 = to_ov4689(sd);
->  	struct v4l2_subdev_state *sd_state;
-> -	struct device *dev = ov4689->dev;
-> -	int ret = 0;
-> +	int ret;
->  
->  	sd_state = v4l2_subdev_lock_and_get_active_state(&ov4689->subdev);
->  
-> -	if (on) {
-> -		ret = pm_runtime_resume_and_get(dev);
-> -		if (ret < 0)
-> -			goto unlock_and_return;
-> -
-> -		ret = cci_multi_reg_write(ov4689->regmap,
-> -					  ov4689_common_regs,
-> -					  ARRAY_SIZE(ov4689_common_regs),
-> -					  NULL);
-> -		if (ret) {
-> -			pm_runtime_put(dev);
-> -			goto unlock_and_return;
-> -		}
-> -
-> -		ret = ov4689_setup_timings(ov4689, sd_state);
-> -		if (ret) {
-> -			pm_runtime_put(dev);
-> -			goto unlock_and_return;
-> -		}
-> -
-> -		ret = ov4689_setup_blc_anchors(ov4689, sd_state);
-> -		if (ret) {
-> -			pm_runtime_put(dev);
-> -			goto unlock_and_return;
-> -		}
-> -
-> -		ret = __v4l2_ctrl_handler_setup(&ov4689->ctrl_handler);
-> -		if (ret) {
-> -			pm_runtime_put(dev);
-> -			goto unlock_and_return;
-> -		}
-> -
-> -		ret = cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
-> -				OV4689_MODE_STREAMING, NULL);
-> -		if (ret) {
-> -			pm_runtime_put(dev);
-> -			goto unlock_and_return;
-> -		}
-> -	} else {
-> -		cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
-> -			  OV4689_MODE_SW_STANDBY, NULL);
-> -		pm_runtime_mark_last_busy(dev);
-> -		pm_runtime_put_autosuspend(dev);
-> -	}
-> +	if (on)
-> +		ret = __ov4689_stream_on(ov4689, sd_state);
-> +	else
-> +		ret = __ov4689_stream_off(ov4689);
->  
-> -unlock_and_return:
->  	v4l2_subdev_unlock_state(sd_state);
->  
->  	return ret;
+-Kees
 
 -- 
-Regards,
-
-Laurent Pinchart
+Kees Cook
