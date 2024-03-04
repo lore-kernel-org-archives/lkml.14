@@ -1,197 +1,193 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CE44D134;
-	Mon,  4 Mar 2024 15:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6D93B29A;
+	Mon,  4 Mar 2024 15:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709566375; cv=none; b=QxtWonXixoUtumE8D4fGUmiIEQYa+V8lZkTj8xOPotrUSCc4NB65upGYQdb3UMq+Fqznea/+mt8PhxNr+gwlvu6ugYusnsagj/XJfN9JdDrBlhIyRlKcCar6HpUFq+vsFV5HkepkEhERoL0nBoJLIjzmBIjM29imt9xoy4SjTFE=
+	t=1709566573; cv=none; b=ZWHKD5QxHf8Yr8IbkgEc0aC3r8z2h2Elmbv4VFYzV8Z+DWfS8kPqSXUV3RzYk4Qq01KMaVxKd+04mIL3f0Z06rGU2Nlh6SgSOAdBth+pn3sBnlf//sObVU7GAU/ID4KqSNBhX1oOFl8geR/JKMPaNxzeb67YZMjzRD9R+dpR+Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709566375; c=relaxed/simple;
-	bh=3EAj3xv1au4Q4TJ50vvjHAcAy5htc0pMEaTTLlfhjOQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=c98cGUrQvBOvqo7XGLOaGpPfH5Won6BS+xUeMfapek2/QjEAMNXeBY5Vq7e2x/HlVuBAgQy/I0KInGee8cimDa2ni52CWdxPZOuIH9yVHBG07mvIJsqqHn0FGCUPrdm0JkzMLhAq61UN0HDRPWGHLZdSBUHJysBrklaxldk8xwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IwV6aY0S; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709566573; c=relaxed/simple;
+	bh=ySdztOBYEF3jOLO27ENS3g67Z23SqhZ5bWmdZAqUDvE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oFJ0DuuQxuPOETYLomC1SEDrtmO+m8rVrQuQ1QcveU8rB1ouzDxAixzHsZL/qJjjb97ROcnFKmbtd3Kdyra70DZpdjzeb5l1r40gO9wueygruZJVAgHXiBeq9ehEgp8eK/BEvnNm3niHljeFLvZoxom1KkxTTva25CS1cssf90Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g6OJS6Jc; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwV6aY0S"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a441d7c6125so562907966b.2;
-        Mon, 04 Mar 2024 07:32:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709566372; x=1710171172; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bWvYOuCuRfEcVskjhEHNCFWud68WSGUgd2zUqGEpjT0=;
-        b=IwV6aY0Szpjtuexl28y/Bg5Dzx2rQ3Mf07TlyJbpZIvjp+rsxbH/TBcFmb4ZIDH/fz
-         Gj87MHiS5CIqUjlHg8SEBaMMrXu4nHnEHsj6kZGPGnp6CIMWlmPR97PGY6BovE2mzbGG
-         HyJ11E2ZFMD1YATGRNl6lrQi7QAZQoP7L9HIlOgeB5NWRYYbNq/TG7AgPACg86Gf/ciG
-         Ic+hQcmpI5eeI1Fce64wUA6uYMneuP93ybU/sTzgH5CF4kdvmTyOOC/4G5WKbdRKHEl6
-         vRke1BbVd8aj8lC6PPu+nNnElTg4CNe88THHmoWnchVq9k1d3B6oXIajB0uziDlLcOd1
-         EhSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709566372; x=1710171172;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bWvYOuCuRfEcVskjhEHNCFWud68WSGUgd2zUqGEpjT0=;
-        b=lOZ7VcF6w+F2OkX6kTWcdf+ENp9qJtfuNFPtOgkRKvIZPYfsLljPfXVwNFyp5jnRwE
-         RAFmh7+BB+FxgsPkU60dlkVKPVx4h6CHMGEYyRnhTsYRE5dFV3W6mmxIZDnYDhy3+nxX
-         xHJNXhVLoJnjGKh+alVsxac6NYT9zHHf2sUY0lQ+bPyveHNCGLAXAqza3b2O7ERTc54S
-         VxzUhuGrU14BA+Zsjk5SusMRQzNtzrEfBUdIKv1jIIb/yq12/Szblq1c9KR21nPVYyYb
-         +0andbAxj5BI70dx9npG5GYmGnza2UwZvcICdJCAvMhucF5yMNt+Wyzm3IfPdAlOMPlQ
-         PHtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWicphpRxCFdQB7ED0O3QBs3me51CHiGYNrpcFetXiooWpUSMcwLWlIYavv2zAIQxTjAN77ni2HeDqLiyvh8/LFdjpF0OnHl4ZFIYDidotF0/WmVdrSrKOkKUACzemj+f2QPk9rFHv0/EOtjYGwmco9vMkMpodfc6cW4n3dK/mhrg==
-X-Gm-Message-State: AOJu0YwvpwXMwv+fcjpluJv9wL4nohcO6ez0MeMeBM//WvO71hHkihHD
-	OY6EjwgoLD6FmRp4lAYZbndUgNcHShtxXz8wTemmPtxsf5V7ic/v
-X-Google-Smtp-Source: AGHT+IHKE7kIPPNrF2w6yyuuVMCu9i3ZIMUD02F9duWP7L1huDB65YHByUXUVOOjQ3Ls99sC0F1W4g==
-X-Received: by 2002:a17:906:f35b:b0:a43:fd9e:2d69 with SMTP id hg27-20020a170906f35b00b00a43fd9e2d69mr7096029ejb.6.1709566371768;
-        Mon, 04 Mar 2024 07:32:51 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
-        by smtp.gmail.com with ESMTPSA id wp1-20020a170907060100b00a44ce0671b1sm2937118ejb.108.2024.03.04.07.32.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 07:32:51 -0800 (PST)
-Message-ID: <93d0adf0ee6f3737af4d482dc206fe152f762482.camel@gmail.com>
-Subject: Re: [PATCH v3 2/2] of: overlay: Synchronize of_overlay_remove()
- with the devlink removals
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Frank Rowand <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
- Zhen <max.zhen@amd.com>,  Sonal Santan <sonal.santan@amd.com>, Stefano
- Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, stable@vger.kernel.org
-Date: Mon, 04 Mar 2024 16:36:15 +0100
-In-Reply-To: <20240304152202.GA222088-robh@kernel.org>
-References: <20240229105204.720717-1-herve.codina@bootlin.com>
-	 <20240229105204.720717-3-herve.codina@bootlin.com>
-	 <acb69aa8c1a4c4e9849123ef538b9646a71507a0.camel@gmail.com>
-	 <20240304152202.GA222088-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g6OJS6Jc"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A931A1BF208;
+	Mon,  4 Mar 2024 15:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709566569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+lEurNTi9qfX5Aes1xgUAal4TCh7q2x2RHJVUpm+ago=;
+	b=g6OJS6JcWBSuyXa2duBldoQwxnFxkLAjLb2nyWJ01g3sP0iT/twWMnjpd4Ale5OPqNpade
+	VN9c3epcrRf0GcA6VUQwEzLzmpv814Umny6bjsdNCxfBqHJtwWLFCteUIBXO1LUmJE2Xdk
+	+q3zvt42iJp0vcR7L+VQj6og4DhcA77MGz5SOxj9Ooin2+Xc5/mnjhrpJJBmGakMsbnJoE
+	EZ+z1A/zFgJPxBvFMuHI8PmmZWJ8lcpwHGcoDh1T8K/nHeBBrMAQfH1c+dTOTGrFmPCueo
+	hAgBIhAi3gHvSdmlznzIzQPCGIOlVwDkbwVDcfdSaikKRIZO9O2RNHhRWiHqIw==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v4 00/18] Add suspend to ram support for PCIe on J7200
+Date: Mon, 04 Mar 2024 16:35:43 +0100
+Message-Id: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAE/q5WUC/33NTQ7CIBAF4Ks0rMXAAGnrynsYF5QOFqOlgYZom
+ t5d6M4Yu3zz872FRAwOIzlVCwmYXHR+zEEeKmIGPd6Quj5nAgwk4wzovQbG6GQc0giBoum4bus
+ WhapJfup0RNoFPZqhvD11nDGUxRTQutfWdLnmPLg4+/DeihMv078diVNGG4lK9VrlE3buvJ8fb
+ jwa/yQFS7APQAFQ2roHaNDALyD2AZEBZQClFlYbbr+BdV0/jQXLw0kBAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Andy Shevchenko <andy.shevchenko@gmail.com>, 
+ Siddharth Vadapalli <s-vadapalli@ti.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Mon, 2024-03-04 at 09:22 -0600, Rob Herring wrote:
-> On Thu, Feb 29, 2024 at 12:18:49PM +0100, Nuno S=C3=A1 wrote:
-> > On Thu, 2024-02-29 at 11:52 +0100, Herve Codina wrote:
-> > > In the following sequence:
-> > > =C2=A0 1) of_platform_depopulate()
-> > > =C2=A0 2) of_overlay_remove()
-> > >=20
-> > > During the step 1, devices are destroyed and devlinks are removed.
-> > > During the step 2, OF nodes are destroyed but
-> > > __of_changeset_entry_destroy() can raise warnings related to missing
-> > > of_node_put():
-> > > =C2=A0 ERROR: memory leak, expected refcount 1 instead of 2 ...
-> > >=20
-> > > Indeed, during the devlink removals performed at step 1, the removal
-> > > itself releasing the device (and the attached of_node) is done by a j=
-ob
-> > > queued in a workqueue and so, it is done asynchronously with respect =
-to
-> > > function calls.
-> > > When the warning is present, of_node_put() will be called but wrongly
-> > > too late from the workqueue job.
-> > >=20
-> > > In order to be sure that any ongoing devlink removals are done before
-> > > the of_node destruction, synchronize the of_overlay_remove() with the
-> > > devlink removals.
-> > >=20
-> > > Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > > ---
-> > > =C2=A0drivers/of/overlay.c | 10 +++++++++-
-> > > =C2=A01 file changed, 9 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> > > index 2ae7e9d24a64..7a010a62b9d8 100644
-> > > --- a/drivers/of/overlay.c
-> > > +++ b/drivers/of/overlay.c
-> > > @@ -8,6 +8,7 @@
-> > > =C2=A0
-> > > =C2=A0#define pr_fmt(fmt)	"OF: overlay: " fmt
-> > > =C2=A0
-> > > +#include <linux/device.h>
-> >=20
-> > This is clearly up to the DT maintainers to decide but, IMHO, I would v=
-ery
-> > much
-> > prefer to see fwnode.h included in here rather than directly device.h (=
-so
-> > yeah,
-> > renaming the function to fwnode_*).
->=20
-> IMO, the DT code should know almost nothing about fwnode because that's=
-=20
-> the layer above it. But then overlay stuff is kind of a layer above the=
-=20
-> core DT code too.
+This add suspend to ram support for the PCIe (RC mode) on J7200 platform.
 
-Yeah, my reasoning is just that it may be better than knowing about device.=
-h
-code... But maybe I'm wrong :)
+In RC mode, the reset pin for endpoints is managed by a gpio expander on a
+i2c bus. This pin shall be managed in suspend_noirq() and resume_noirq().
+The suspend/resume has been moved to suspend_noirq()/resume_noirq() for
+pca953x (expander) and pinctrl-single.
 
->=20
-> > But yeah, I might be biased by own series :)
-> >=20
-> > > =C2=A0#include <linux/kernel.h>
-> > > =C2=A0#include <linux/module.h>
-> > > =C2=A0#include <linux/of.h>
-> > > @@ -853,6 +854,14 @@ static void free_overlay_changeset(struct
-> > > overlay_changeset *ovcs)
-> > > =C2=A0{
-> > > =C2=A0	int i;
-> > > =C2=A0
-> > > +	/*
-> > > +	 * Wait for any ongoing device link removals before removing some
-> > > of
-> > > +	 * nodes. Drop the global lock while waiting
-> > > +	 */
-> > > +	mutex_unlock(&of_mutex);
-> > > +	device_link_wait_removal();
-> > > +	mutex_lock(&of_mutex);
-> >=20
-> > I'm still not convinced we need to drop the lock. What happens if someo=
-ne
-> > else
-> > grabs the lock while we are in device_link_wait_removal()? Can we guara=
-ntee
-> > that
-> > we can't screw things badly?
->=20
-> It is also just ugly because it's the callers of=20
-> free_overlay_changeset() that hold the lock and now we're releasing it=
-=20
-> behind their back.
->=20
-> As device_link_wait_removal() is called before we touch anything, can't=
-=20
-> it be called before we take the lock? And do we need to call it if=20
-> applying the overlay fails?
->=20
+To do i2c accesses during suspend_noirq/resume_noirq, we need to force the
+wakeup of the i2c controller (which is autosuspended) during suspend
+callback. 
+It's the only way to wakeup the controller if it's autosuspended, as
+runtime pm is disabled in suspend_noirq and resume_noirq.
 
-My natural feeling was to put it right before checking the node refcount...=
- and
-I would like to still see proof that there's any potential deadlock. I did =
-not
-checked the code but the issue with calling it before we take the lock is t=
-hat
-likely the device links wont be removed because the overlay removal path (w=
-hich
-unbinds devices from drivers) needs to run under the lock?
+The main change in the v4 is that now mux_chip_resume() returns zero or on
+the first error.
+The 2 patches on the pinctrl-single driver were squashed.
+And the subject line for the PCI patches was fixed.
+Other changes are detailed below.
 
-- Nuno S=C3=A1
+Regards,
+
+Thomas
+
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v4:
+- all: use SoB/Co-developed-by for patches initially developed by Théo
+  Lebrun.
+- pinctrl-single: squash the two commits.
+- i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
+- mux: mux_chip_resume() return 0 or at the first error.
+- phy-j721e-wiz: clean code around dev_err_probe().
+- phy-j721e-wiz: use REF_CLK_100MHZ macros.
+- pci: fix subject line for all PCI patches.
+- pci-cadence: use fsleep() instead of usleep_range().
+- pci-cadence: remove cdns_torrent_clk_cleanup() call in
+  cdns_torrent_phy_resume_noirq().
+- pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in the probe().
+- pci-j721e: fix unordered header files.
+- pci-j721e: remove some log spammers.
+- pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
+- pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
+- Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com
+
+Changes in v3:
+- pinctrl-single: split patch in two parts, a first patch to remove the
+  dead code, a second to move suspend()/resume() callbacks to noirq.
+- i2c-omap: add a comments above the suspend_noirq() callback.
+- mux: now mux_chip_resume() try to restores all muxes, then return 0 if
+  all is ok or the first failure.
+- mmio: fix commit message.
+- phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() in
+  the wiz_clock_init() function.
+- phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
+  function to wiz_clock_probe(), extract hardware configuration part in a
+  new function wiz_clock_init().
+- phy-cadence-torrent: use dev_err_probe() and fix commit messages
+- pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
+  function and extract the link setup part in a new function
+  cdns_pcie_host_link_setup().
+- pcie-cadence-host: make cdns_pcie_host_init() global.
+- pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
+  functions in the resume_noirq() callback.
+- Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com
+
+Changes in v2:
+- all: fix commits messages.
+- all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+- all: remove useless #ifdef CONFIG_PM.
+- pinctrl-single: drop dead code
+- mux: add mux_chip_resume() function in mux core.
+- mmio: resume sequence is now a call to mux_chip_resume().
+- phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+  instead of reset_control_put()).
+- phy-cadence-torrent: use PHY instead of phy.
+- pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+  sequence.
+- pci-j721e: drop dead code.
+- Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com
+
+---
+Thomas Richard (15):
+      gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+      pinctrl: pinctrl-single: move suspend()/resume() callbacks to noirq
+      i2c: omap: wakeup the controller during suspend() callback
+      mux: add mux_chip_resume() function
+      phy: ti: phy-j721e-wiz: use dev_err_probe() instead of dev_err()
+      phy: ti: phy-j721e-wiz: split wiz_clock_init() function
+      phy: ti: phy-j721e-wiz: add resume support
+      phy: cadence-torrent: extract calls to clk_get from cdns_torrent_clk
+      phy: cadence-torrent: register resets even if the phy is already configured
+      phy: cadence-torrent: add already_configured to struct cdns_torrent_phy
+      phy: cadence-torrent: remove noop_ops phy operations
+      phy: cadence-torrent: add suspend and resume support
+      PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup()
+      PCI: cadence: Set cdns_pcie_host_init() global
+      PCI: j721e: Use dev_err_probe() in the probe() function
+
+Théo Lebrun (3):
+      mux: mmio: add resume support
+      PCI: j721e: Add reset GPIO to struct j721e_pcie
+      PCI: j721e: Add suspend and resume support
+
+ drivers/gpio/gpio-pca953x.c                        |   7 +-
+ drivers/i2c/busses/i2c-omap.c                      |  22 ++++
+ drivers/mux/core.c                                 |  29 +++++
+ drivers/mux/mmio.c                                 |  12 ++
+ drivers/pci/controller/cadence/pci-j721e.c         | 107 +++++++++++++++--
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  44 ++++---
+ drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
+ drivers/phy/cadence/phy-cadence-torrent.c          | 120 ++++++++++++++-----
+ drivers/phy/ti/phy-j721e-wiz.c                     | 132 +++++++++++++--------
+ drivers/pinctrl/pinctrl-single.c                   |  28 ++---
+ include/linux/mux/driver.h                         |   1 +
+ 11 files changed, 384 insertions(+), 130 deletions(-)
+---
+base-commit: e76807cc177efce5bdb253de3c673b13c08be013
+change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
+
