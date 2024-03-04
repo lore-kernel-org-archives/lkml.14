@@ -1,116 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2680F46AD
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A98B46AD;
+	Mon,  4 Mar 2024 11:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709550685; cv=none; b=AeECL+voHbTeq7SNG1QfI8qn5PlJ5de6BKOKdNXqIfwDLZX4bcJD4DB9TVGsbC5EmjkRTM9droxoIj44YD95NDYFQuc6QF9/C0G9OAZwfA5OhUaxMs7kyMwH23/7fKl53updO98m9Txc6MJgsQce7/lyCnVbt3Xae5So66yTTPQ=
+	t=1709550703; cv=none; b=rLWkQUI80yxuJKsEiqd4DeCKWgOqwAl8zGTtym++ttr6Ce7lILK48zGSyuwOx+bO1v/z12TrlkBIauRavK4YYT/LXvt9dR2x5QOGW0IKKcoVZLM2zLXfr0equ3hAgBSdFEWniy5qGou1Og2+DW8Kq6bi7qhpWSxb8wIVm2bwP9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709550685; c=relaxed/simple;
-	bh=0T0lhm8LzcAdzbLDuBp+ZTGZjesoCjhi5zU7O8aSCKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crIfbw9jak9Ki4YieEwmKU86MtDlD0DmrttFpY+wjFNbvRIYsxnik9/FM5+dIviwX0SnSbFe6eLRhTGyeAVWopopY2vHybu86W9tAEJIvF2kgUxAWsGzbep60oxCbvrK3rsGl3ky0TTC+zjHATxZWZGcAxxtH6lXksJSgJtudqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f9CripOA; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709550703; c=relaxed/simple;
+	bh=xVSkuAeo4D9ZElgt/IODeSW5ZINrq3fTsbkPSDyPGmc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yb+OvbtWbJRcZ3Nf41HH5F7ii6SAnMexh8NfzBLBPAeta6Yh7RgaAocgSipaLum9H+7tNjhRw14W70bYvX4Q8S+NkSSclMu/zV4tLvMIdZTs7wLu+QR0UP/JkT05F6emSxNZbdCarr1xpUMBSOLQ0RA87etTa2BlyM+Fl5KelW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NXenhUgW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f9CripOA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709550684; x=1741086684;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=0T0lhm8LzcAdzbLDuBp+ZTGZjesoCjhi5zU7O8aSCKI=;
-  b=f9CripOA53/9SXNGSz+zq2JlTMz1QpfLG06Rp8dFiiv6jRJJC3zGadXv
-   URNX0JDSLzzLF4LrHSbcuVRwVHrSPJ7/SP/6wkmRw4odyWRzODjmthBZB
-   er9wzOk5XBC8mIZFTyCFM83crmdnA9Ndfw5hijyTEFQlaeX5iPRvu0O2G
-   UMhW6hh5f3kHo6RFGmZRTpLi2eQe3iWu3yGMkUj0fngd/K7sQXQimppR/
-   A1v6DCvMTrOw8Yzhvu6kGXRnE7Y12n5bwgIO+xZ6Q11njjRPnLjVrfbuW
-   Q896JnC3KpaUZDtusRcL3O6D5nJughBec5rh9OuJVqO+PFv8gQViBGWkI
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4160900"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="4160900"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 03:11:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="827773138"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="827773138"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orsmga001.jf.intel.com with SMTP; 04 Mar 2024 03:11:18 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 04 Mar 2024 13:11:17 +0200
-Date: Mon, 4 Mar 2024 13:11:17 +0200
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Nikita Kiryushin <kiryushin@ancud.ru>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Manasi Navare <manasi.d.navare@intel.com>,
-	intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH] drm/i915: Remove unneeded double drm_rect_visible call
- in check_overlay_dst
-Message-ID: <ZeWsVXhj1AUD4q3G@intel.com>
-References: <>
- <79c92cfa-cf5a-4a23-8a93-11c1af7432fc@ancud.ru>
- <ZeB45WKv4lP8QQpv@intel.com>
- <ecfb0f31-a454-4a51-9fb8-9cd0aca3195c@ancud.ru>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NXenhUgW"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 424AsnYr019049;
+	Mon, 4 Mar 2024 11:11:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=250lxiVyVhWgGkynbsvy556K2WPzHaat5nPoNu3o7uI=; b=NX
+	enhUgWz8BXddC9wB3akbZsUu/sCKYGBo4ZvPuYtT2dgnp+RKp7J3YCgArmuBpMyN
+	FlqDYq8+U5O641XmzJZ9pXrrsHgL8SpYnAgzWYNxTK2k1RmJJUKHMA+wsh5nwDsy
+	U9CFeB2UTAjzhyfJVs1DJ0EcfNLn074DFeKTyCLRUMGAb8Iyu5EM2DS9moZlpyeg
+	nKnkn/Nfvxwau4DGVBinA4WtVqjTeXdshYl3AP3QOmrFuYCHtpiNDTGeBbZnqBeP
+	wrwhRRrV8H8ZItyy/nyDHhqkZ9GDkBOk7QycbceyaJHcgyczqf2UsYbFtT6xp89u
+	swbxvW+3vTgZm7Pd0U2Q==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wkvb739ed-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Mar 2024 11:11:31 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 424BBUT4007051
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 4 Mar 2024 11:11:30 GMT
+Received: from hu-nprakash-blr.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 4 Mar 2024 03:11:27 -0800
+From: Nikhil V <quic_nprakash@quicinc.com>
+To: 
+CC: Charan Teja Kalla <quic_charante@quicinc.com>,
+        Joerg Roedel
+	<joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy
+	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux.dev>, Nikhil V <quic_nprakash@quicinc.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH RESEND STABLE v6.1] iommu: Avoid races around default domain allocations
+Date: Mon, 4 Mar 2024 16:40:50 +0530
+Message-ID: <cbf1295589bd90083ad6f75a7fbced01f327c047.1708680521.git.quic_nprakash@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ecfb0f31-a454-4a51-9fb8-9cd0aca3195c@ancud.ru>
-X-Patchwork-Hint: comment
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yz3Nelq0fOTemW5jQPryH1pxnJWCrhqt
+X-Proofpoint-ORIG-GUID: yz3Nelq0fOTemW5jQPryH1pxnJWCrhqt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-04_06,2024-03-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 clxscore=1015 spamscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403040084
+Message-ID: <20240304111050.8lmf60HPC99M_toA9K4NvHCRefxjZ-6NTBCUU2wrvP0@z>
 
-On Fri, Mar 01, 2024 at 09:56:41PM +0300, Nikita Kiryushin wrote:
-> On 2/29/24 15:30, Ville Syrjälä wrote:
-> > I prefer the current way where we have no side effects in
-> > the if statement.
-> >
-> 
-> This seem like a valid concern from readability and maintainability 
-> standpoint. My patch was aimed mostly at performance and maintainability 
-> using tools: some more pedantic analyzers are sensitive to non-checked 
-> return values (as of now, drm_rect_intersect is ignored).
-> 
-> Would it be a better idea to make an update to the patch with second 
-> drm_rect_visible call changed to an appropriately named state flag set 
-> with drm_rect_intersect result?
+From: Charan Teja Kalla <quic_charante@quicinc.com>
 
-I was thinking of maybe removing that drm_rect_visible() from
-drm_rect_intersect() entirely, but looks like it's used fairly
-extensively, so would require a bunch of work.
+This fix is applicable for LTS kernel, 6.1.y. In latest kernels, this race
+issue is fixed by the patch series [1] and [2]. The right thing to do here
+would have been propagating these changes from latest kernel to the stable
+branch, 6.1.y. However, these changes seems too intrusive to be picked for
+stable branches. Hence, the fix proposed can be taken as an alternative
+instead of backporting the patch series.
+[1] https://lore.kernel.org/all/0-v8-81230027b2fa+9d-iommu_all_defdom_jgg@nvidia.com/
+[2] https://lore.kernel.org/all/0-v5-1b99ae392328+44574-iommu_err_unwind_jgg@nvidia.com/
 
-But now that I though about this I recalled that there was an earlier
-patch trying to do exactly what you suggested in this patch. And looks
-like there was a second version posted which I completely missed:
-https://patchwork.freedesktop.org/series/115605/
+Issue:
+A race condition is observed when arm_smmu_device_probe and
+modprobe of client devices happens in parallel. This results
+in the allocation of a new default domain for the iommu group
+even though it was previously allocated and the respective iova
+domain(iovad) was initialized. However, for this newly allocated
+default domain, iovad will not be initialized. As a result, for
+devices requesting dma allocations, this uninitialized iovad will
+be used, thereby causing NULL pointer dereference issue.
 
-While that does still have drm_rect_intersect() with its side effects
-inside the if() I don't find it quite as objectionable since it's the
-only thing in there. So it's a bit more obvious what is happening.
-I've gone and merged that one.
+Flow:
+- During arm_smmu_device_probe, bus_iommu_probe() will be called
+as part of iommu_device_register(). This results in the device probe,
+__iommu_probe_device().
 
-Thanks for the patch regardless. At least I reminded me to look at the
-earlier attempt ;)
+- When the modprobe of the client device happens in parallel, it
+sets up the DMA configuration for the device using of_dma_configure_id(),
+which inturn calls iommu_probe_device(). Later, default domain is
+allocated and attached using iommu_alloc_default_domain() and
+__iommu_attach_device() respectively. It then ends up initializing a
+mapping domain(IOVA domain) and rcaches for the device via
+arch_setup_dma_ops()->iommu_setup_dma_ops().
 
-> 
-> BTW, the original patch somehow got mangled while it made its way to the 
-> patchwork: source list line in patch got broken, which permits the patch 
-> from being applied (the original version did not have that line break). 
-> Any ideas how to prevent this happening with the second version of patch 
-> (in case the idea is viable)?
+- Now, in the bus_iommu_probe() path, it again tries to allocate
+a default domain via probe_alloc_default_domain(). This results in
+allocating a new default domain(along with IOVA domain) via
+__iommu_domain_alloc(). However, this newly allocated IOVA domain
+will not be initialized.
 
+- Now, when the same client device tries dma allocations via
+iommu_dma_alloc(), it ends up accessing the rcaches of the newly
+allocated IOVA domain, which is not initialized. This results
+into NULL pointer dereferencing.
+
+Fix this issue by adding a check in probe_alloc_default_domain()
+to see if the iommu_group already has a default domain allocated
+and initialized.
+
+Cc: <stable@vger.kernel.org> # see patch description, fix applicable only for 6.1.y
+Signed-off-by: Charan Teja Kalla <quic_charante@quicinc.com>
+Co-developed-by: Nikhil V <quic_nprakash@quicinc.com>
+Signed-off-by: Nikhil V <quic_nprakash@quicinc.com>
+---
+ drivers/iommu/iommu.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 8b3897239477..83736824f17d 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1741,6 +1741,9 @@ static void probe_alloc_default_domain(struct bus_type *bus,
+ {
+ 	struct __group_domain_type gtype;
+ 
++	if (group->default_domain)
++		return;
++
+ 	memset(&gtype, 0, sizeof(gtype));
+ 
+ 	/* Ask for default domain requirements of all devices in the group */
 -- 
-Ville Syrjälä
-Intel
+2.17.1
+
