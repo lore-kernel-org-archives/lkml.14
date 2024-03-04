@@ -1,205 +1,162 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8AC3E479;
-	Mon,  4 Mar 2024 13:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709557596; cv=fail; b=GJD8TYtoxwDQuf2sD/Q5ypcwU+IFXa9/2mJFLhM7VvKqRAIA0sr9UX++P6HpCwGc9Q3y5xYEyRjGMTN/lYpB0zO3RR3yDJ5Qm3XdRi18uNsR/lFF/y0EoK5sFcbk+rsYaMdTjiL8L0nrHX/Hy5G0DLtAa/Hom9hVDQWzvktiXno=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709557596; c=relaxed/simple;
-	bh=tBgXuR/8sAHQntFICvMGTRRv3wsqjgKBJ5Qh6WRnrjw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Q5JaSjM0rvu4NwDpVgR/zPWgyoh2brfkgu+VDn9RjZWKvzsugnYKPU0yghrlprq7biTu9s7G0tqyvH4gDNtrtCipIPOTLMHu1o1LqYz/KRhBfR6DUYehp6XEDf+3JrUFTa2+2fv2rpixgSuD0Q8kHQSxNpPKHZA2jTLmAgswRJY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=i1GJJDYh; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ATjYkODY; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EB93F8C8
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 13:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709557618; cv=none; b=GEsx9O+uxY3s2O6RHiw1mtaEhzJQIzKbFcqHuUSzx/MgmZqwVlWdmup3x+U4F+yMXU/Edf5I7uAeCGnGisrdd55Py891vuDsaPnnkAhLTCdtGGUZW0vtRu0XWTS1Ct/pY3jZKOxqRcfr+W4/AdiuQZeuffWHw54ZFpLy7AFGhBQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709557618; c=relaxed/simple;
+	bh=YVZkshAZhkcuNqrSOesTmaPiOfvAz8zAKAbFCPcnxsU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MrZsQJH96l3VYy1lwIM2XUDQDrBbagNpo+o6cQccvlJ7In7lj+vSKOlRzb8c10rsAYct3LVdg0B4IVlzHTWn/Q1DLM7v+wlAVUh19QcHqD8SJKq3j46AhtsguRpgYUEdQWzdqUpQdGxJ6dahQCPV4EXI0bGwbqq4MpIRSd1JN8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vTTCinR6; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i1GJJDYh";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ATjYkODY"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 424BTmf9028485;
-	Mon, 4 Mar 2024 13:05:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version;
- s=corp-2023-11-20; bh=zk4e0dToTTEsqQ87dpyQx5aKdhodoJj2t2vw4pr0zyU=;
- b=i1GJJDYhACtKHGcblepYn8z5Vxuz5FoFIYwUR/L8jYMzb8SRf/ho8P1xR9Hcwax0QO8h
- ZZbNf9AK5vCLe9dILWE52rADYOubQqgTT/buuzQ+xTF/MNr7Fmk6cIl/7elPNWeHA5qK
- I0EsmOExmu1xeRhTSJURKRoec7UsOXeb+yN+yusX+7EMxSPxwlOE61PDcb8z6YiFVfPW
- aXzT2upShFkVjPwUBONV/48IoGQDh7hL4gp3NdyhY7hjjEmW9HZJ9QCsUHKbrJlAhRVF
- HFwIMCAcapmJhLBkv1SouiVfPsffYNrJqCGno+9cQgQ8dJ7pT+rlXfd5+Ep+s7CW95nr CQ== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wkvnuufah-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 04 Mar 2024 13:05:22 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 424BYo4M033901;
-	Mon, 4 Mar 2024 13:05:21 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wktj63tnd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 04 Mar 2024 13:05:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B0WUtl6V9MtEEHJIhZRxqzWKw0swalljMigJ+iC8rTqLHIvj+QPKOuT4VcELM4kboRXYB3m/y4sjKGc/Vqm0cFvbSadHRl/BTjumQA3FblMKzNwaOdiZodXVrmL8llzJ2LGSIwoufg8y2wZFojxWIox1787WV2SMmWu2/LY3+5ASkfljP7SEsttpRg5wF3mGRtdLORHByXXhSPI9ncO0H+g/wEbkHYT9Mw/zinhNPNNmwo6qmvXPpgXow1J7b2LLUGhYS5qvlU/4E+6apfPjCzsLFQOeJ5Gl6mqr76n3yqVc/LzI4Ee7hIG1NI/5gjmjacin08rAymCA/+VPjXjmEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zk4e0dToTTEsqQ87dpyQx5aKdhodoJj2t2vw4pr0zyU=;
- b=OCf1QzbZ/VbjJK81GAEFafyMC9mB5pjM+h+59PpZEq4UVbTXvS2Zoz8WoQzusjIwsYxN+iF8Y03ZLgf7JGnLBZQDYny5u2gj8qv3zAtNDXbdj7lnjT+5MeQTKAd+V5bxBQszd3EbpJfWO4toEOvnbawXamoaWPDhIq6f7r1A5pek13GS7Un8PV8sItQqYBN1GNZQ7WwoyVchnQ8Mbp5E7Ci4OOcOk7O78ZwGsiOLQDMvy/fv2iha0N2kVe/GsZM5Gak4ELp2+iThFpEdvXATkC5MazEPnWrTWQ62MgVST223mhJb5s9B9TwySd6vu4acyF/BNJWn+CIh8qUOEOXtYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTTCinR6"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6093e067220so39863567b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 05:06:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zk4e0dToTTEsqQ87dpyQx5aKdhodoJj2t2vw4pr0zyU=;
- b=ATjYkODY+sCS1Wmj+JSTCp/TniW4Mtjz0bezqpm5xY2XKgdwGYw1a99xyC5vuqwh0TulvEGYupD/Lu9z/Nm2U2zjsuehMc9pZ2bk0AcWsh8WCMpVQgVbWkfggorhWuSEbY02mjuhZvlwJ/SFdG07g5ImErJ8Vv1JmTXNHxR7JB4=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by CH3PR10MB6860.namprd10.prod.outlook.com (2603:10b6:610:14d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
- 2024 13:05:19 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::97a0:a2a2:315e:7aff]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::97a0:a2a2:315e:7aff%4]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
- 13:05:19 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: djwong@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org,
-        jack@suse.cz, chandan.babu@oracle.com, david@fromorbit.com,
-        axboe@kernel.dk
-Cc: martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com,
-        ritesh.list@gmail.com, linux-block@vger.kernel.org,
-        John Garry <john.g.garry@oracle.com>
-Subject: [PATCH v2 10/14] fs: iomap: Atomic write support
-Date: Mon,  4 Mar 2024 13:04:24 +0000
-Message-Id: <20240304130428.13026-11-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240304130428.13026-1-john.g.garry@oracle.com>
-References: <20240304130428.13026-1-john.g.garry@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0293.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::28) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=linaro.org; s=google; t=1709557615; x=1710162415; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZF5EHPeguAlmw8pt+rnW85Aj9ppqfHEoGqFfoa9ov8U=;
+        b=vTTCinR6sMSysMwszdVZy8Undj9su1wcsF/qeq/rdZRXsPceEpao+/dCVJuHmQ4La/
+         O39teMI5RHBU0nNIzyoGFcVBe6MRhYKYo9d58fljvCGnxnzPf2Us1GRhxWX2TIMmZa3U
+         AgTtXFvmn122P65fKcvObIMlKVCtlL5aht/xek7q7yXZJg79RmdVJZ9pXVdYFTW86HJF
+         vne8uNGweGHgTJwybEdSwdwCyKI40jFzMsofI0mYyUDAZVHM708n9p/86AwbZ5Rx3733
+         M1UDEa9/0j8T+OAofOwsjU4CIY2zZCK+xF0k5stj0B1TuZ0ZvvHpRceN2i4Aa7Hw1ldH
+         UzUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709557615; x=1710162415;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZF5EHPeguAlmw8pt+rnW85Aj9ppqfHEoGqFfoa9ov8U=;
+        b=BgJcZFIZszl1ZvW6h7lkkI5nBvBX4uoVTsNkCI4hAxeSFC++ayKgBwOpR0UtG8X6x7
+         9ijN+PLOunOo63pek2h55HwCzX8mkTOn/pnmFPR5y5riXEjXnSnctAo0vzyv48x3Dnlf
+         J09Yqtyjn19/aTUnNqvtWNgjfHbq8iOo1Gokw/qUCOOvgkvAzWt7rp3Fw344CBGgGeeu
+         SESx/XFHEQnHEPrHCofna9/OYGVEfWS7C6SgiIEGjPv6WqmvQqOVgdekXhnimfeQojmm
+         0QQA771/62dR6MbI9hruFzj4BTdLsAHZ9IxlfQvw31tBU/WQSsFXUW5bkqV8y695t7q6
+         8CZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIWm1NFsbEH8scO9I2H7nsvfgPa9l+Sl772LafdKpYJJCC9yxp3vA96wJQVRQ94Mn9Rg57TSFVGuNUgc/KbFwh0Qpuo0SVVIuL/4uq
+X-Gm-Message-State: AOJu0YzQuOqcIoJ0xVhlbqomummpmard5Ng/jZtPu+GExa2RyN5ES2JP
+	8YpMWV1mKh3qwD1DPUrVHzHJ7QPpdsBBkwNvCr7p2QgeHsCF1wvuaFXNtuBkG0Fg5LLe/OH9C1O
+	t89zMGko9Y+jo4fYE60f1i86WEYjxYIxsLJPliA==
+X-Google-Smtp-Source: AGHT+IHDoyrZSgo3d0pdsvjs58WMMhEuCQvAoO7S/07i8igiKmULNd3ZGDbVm0+XF7UvoNRUriBuP/dHX1xzq05mxT0=
+X-Received: by 2002:a5b:b05:0:b0:dcd:13ba:cdd6 with SMTP id
+ z5-20020a5b0b05000000b00dcd13bacdd6mr6132325ybp.47.1709557615168; Mon, 04 Mar
+ 2024 05:06:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH3PR10MB6860:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a4c495d-046f-4c68-b901-08dc3c4bbe2d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	9LNi9gRVqT5iReJXEITjnLO1DXkyL940qWIzqpatrpJWZjGDrlnwaOHm9QbLBjV2+OOQEhwC5dKaQRJF5hUa0r0//IPvYYvUVTZ7CDnax1GgEfiFgR1CEPrmAIALhv8d2jVx312gyOMc8N8Fh1f4m9qqF84Aq//xQE3+2l6+Aiwqn35NpRs77C+fkoS5W2kHBUyySHQWBBjbxBsm37JAYIKb+vWm2SUAdq8vxIogoTFffGuracXqAwU8ylT1Iow/v5mOdA142aczYq+7CH2wQxX56dwAV3yC7nggbu3pFuH4eDuhCL9VakUEjLpvp0L7cXv/pPgSeBsB6YbAmYFB6u6dU9QFFVIdmPuhjxz3WhIKumZdSDsydnDvmBkzX8WgV/aYcxXqMDfEVIUj67aKe2a1rumvwSzBWof+uBkkP0bcAxzj56rP2nMLt+fGEaHAH4DGUZYKk6qRfA9hOUIR6QTU0bldJhLgIaWTKKjANQqtFgmfN5MqEVrc8vCiGgsRftTnUKcXAxat1G/ZdWynIJy5SbB3Qhvim+zqE+3Hw3Kdb0oq6OJ9OdRF0cTDWtO+Yws57N5N17McYd7RkN0V8aQdba0aJ/5wSX2AdEU9FQN8rBAzHt3JK6KjMU8FVF4ckiyTB9p4VhAMy0aApFWVSz7PsysmR7B9vKVosj994lY=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?YmrGQ53tnEzVfiBnNXduov1weHpWhXDyhuYMc9JOwM2zPwhe1hDavaggkdj5?=
- =?us-ascii?Q?aUHq5LQxNqVyXwsfEvuxNh7s+J8YG6SwNqigm0Uem1wfFgaTWp/l86OuGLi/?=
- =?us-ascii?Q?mmvqm0ZUTQNhzHeTzo4eWFk8sqBAzfTszMcFLnNCS/z2iHImIrLejB15+c5m?=
- =?us-ascii?Q?Fh6jI4OP71NY91eT0QcRgBWB3z69c4GIDwEGIi8tusTlql9uzQsqShd3j66u?=
- =?us-ascii?Q?NxO3AXZIxbxm3+cQ5l5Xkx4unDL4x99j5aMGAqMx+73hn0jUsL7dXgX9S+a9?=
- =?us-ascii?Q?/19qPPLsBFrJsburEtu3pfc7yNKmxzIPZnNI3XagNyKz4B7tQ6b8wslkdvdw?=
- =?us-ascii?Q?m2RqHu4alTxzuT5W3fCaNzorzpPiZjj6sxixxUaMUbdMRrfwXYetl0iPGCp4?=
- =?us-ascii?Q?8znY9K6tKGoPo92grxm8BsM3GWLKwzRiv0f2VZjU7Iy7Drn47pP2uF8e80uM?=
- =?us-ascii?Q?/rIZFBPBZxanUhpiKuWxuZYS2eOMr654q9hqIKGTKZcwONfwFSPTlW/l2Zfr?=
- =?us-ascii?Q?ghQ/PKq581WsDfAfpv/8pmRStW6MYmc1nJdpLcDU70n7BB6WgDomL6rVgWg+?=
- =?us-ascii?Q?7Xz5oVIfa84HMfrxYmvDYEgreaE8I+IQMVLQq2VNqx5xWIem26sxSFoFd2TG?=
- =?us-ascii?Q?VBYZGmpjEb5DZvBzhIRsPcHoqmru7Ovf/NbcwZt9oT0Gec3TpD7z0Faaic7W?=
- =?us-ascii?Q?vj1bTlPCbvmCevKtZ9jHLHD24Z1eGH1kAhe/12j+b5o1kkYN1TAaNiafACXT?=
- =?us-ascii?Q?XCfs+Z+Bi0ns+YtCH7pvphZ2P2HGWDnw4RVqvl40p5ez+jZhxft6pYikbfi2?=
- =?us-ascii?Q?jm3KVqz5VWxIBWXRPuar1kTVMY2DgBQTc+ns3P6/xsg5ogfh+4wHKW+9TRo2?=
- =?us-ascii?Q?/An5sPh7sSpFOpMRcUGxiX/LXnYyJ5y+HE0uYKVjm/ljphtYhFDWXDJt9rqy?=
- =?us-ascii?Q?uEGa+34Cenb6UtUcUuDeycadnIo79M2GMzIST7mBL/FckCPWKueRi5zVGp5X?=
- =?us-ascii?Q?WJsZd+08Vt2tpcj8lJA06BbTPRfB2jlus5ubn+EorP7UupFulm8HUmTPfnKc?=
- =?us-ascii?Q?DSeIYqg5/RX/CU852DMZ6Y89VYxsFaoCnxAX4+0QY5Qn4bqbOT7AbsLlFgKa?=
- =?us-ascii?Q?lxAFlVzUxl7Xx0OTHSkk2UkWQEGfwgGMtNEXlXwWblAvk343i5tlLYrDXfDc?=
- =?us-ascii?Q?GTHiYrBP/+UmLbUIUlqcFsbf5tGrpiaF23DOFGrfZP6NGTpHLk83GPgEG1cq?=
- =?us-ascii?Q?vOGHp3qh/9prPefLV/V4AUFbxZfi1Vb8C/4/HVnSoDlUaYevTdmdCAx2nEbl?=
- =?us-ascii?Q?6eOam/8Ev6aW7Xv9AJ7W+UCg1tX2DCC/Eq90QeJHuvpDB/fAB51VzVEbtpuJ?=
- =?us-ascii?Q?HRQ6pau5eq+SjBqo909wCi1fIjmHFDDL4nJbtFmHUApMSDnFN0hAkV6CioB4?=
- =?us-ascii?Q?6jHjOX/ezmI0vNTYywcSXmgiNOchXl++OoqD29XFlFwK/NbD7Vz9XCV+8KAg?=
- =?us-ascii?Q?aMZmdS6qqDtJ1y4JiUk6KP8ToaFY9MoBoqgMoqOkZtEsvVdDSCuz7egXWz/S?=
- =?us-ascii?Q?0slrt0/KyQj//VxyQZWdvtMz4FrocUnnQdqljF4yFIhCHw5c+2U0PiATL2ML?=
- =?us-ascii?Q?Dg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	OoL46PFoUo/h7NO1Fjr+QlQ50bT1M0zS/rDRoM6WAFjpwzkMyjk0hRLKziBvwZsnxgWqi9f1sBGuEcJ8gHM6YndAlX0o+PB+ewNcXqW7OdDQWXgOVAVsFOU8Nv1k8FIvmbbYWjKe2dzgRg2HV12fH6CSknVFoBW2GtOaU6DtGS1rb0dm/wKuiWOIZTpwY9ZQLvkcfCJBjjclQDd1C6K+HugkQNWsPVP0+ZsmrSog1yzkLmBD25RjXM9PiSe4++tYnsLDXxP+nqhlXX8M247+p+yK6RxOmIvBOJkve80Rh6PXko/p5dkj8kmAQVNX3PLcUaf0m/Q1iTN3N6135F6oIx61fkI5JD3SSnFtjWM6ToMG9cbAslN/o/2p/BCTQvcNyFYh6XlNAIQqmyVPakbea1h5n3KPgM6x3+UI5jcYSEtEjLo58+HPaOSBc/0xEaaEboGld66+gYUO0pF9j8g7xhVFhqZyRRdCzI0NIoL16nP2ooEkUugrpAMEhMmGcZIhqTAkjn+HVYi0hMK4gsq+j5dB+iQWMbVOyAeXpmrsMUuTM/Qlai9kBeDlTj460vtZoXAzB88/NCR6Ocgq+8bf3mb5YXKjpZrBI7plRJsP6is=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a4c495d-046f-4c68-b901-08dc3c4bbe2d
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 13:05:19.1779
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RPTE/GIsrSilqvAsnHC0yNxjHBpyt46xuT0ClxNDifGZgJae57k9rGDUH7JpFa7tONvqqhdcyp1agO4cu1lBcw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6860
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-04_09,2024-03-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403040098
-X-Proofpoint-ORIG-GUID: Wtt1xs-BUwvDnsC9Bj9DFpmTNnS5Wnsp
-X-Proofpoint-GUID: Wtt1xs-BUwvDnsC9Bj9DFpmTNnS5Wnsp
+References: <20240228194730.619204-1-quic_abhinavk@quicinc.com>
+In-Reply-To: <20240228194730.619204-1-quic_abhinavk@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 4 Mar 2024 15:06:43 +0200
+Message-ID: <CAA8EJppf0ebg+qnw7Z4P_6W4pgf0E4+KLGLEhU138f4k8+QxOw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/msm/dpu: drop unused dpu_kms from interface initialization
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	quic_parellan@quicinc.com, quic_jesszhan@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Support atomic writes by producing a single BIO with REQ_ATOMIC flag set.
+On Wed, 28 Feb 2024 at 21:47, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+>
+> dpu_kms seems unused while initializing DSI, HDMI and DP through
+> their respective _dpu_kms_initialize_* functions.
+>
+> Hence lets drop the parameter altogether.
+>
+> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index 2af62d8fa9a7..ab924ac78c9b 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -494,8 +494,7 @@ static void dpu_kms_wait_flush(struct msm_kms *kms, unsigned crtc_mask)
+>  }
+>
+>  static int _dpu_kms_initialize_dsi(struct drm_device *dev,
+> -                                   struct msm_drm_private *priv,
+> -                                   struct dpu_kms *dpu_kms)
+> +                                  struct msm_drm_private *priv)
+>  {
+>         struct drm_encoder *encoder = NULL;
+>         struct msm_display_info info;
+> @@ -558,8 +557,7 @@ static int _dpu_kms_initialize_dsi(struct drm_device *dev,
+>  }
+>
+>  static int _dpu_kms_initialize_displayport(struct drm_device *dev,
+> -                                           struct msm_drm_private *priv,
+> -                                           struct dpu_kms *dpu_kms)
+> +                                          struct msm_drm_private *priv)
 
-We rely on the FS to guarantee extent alignment, such that an atomic write
-should never straddle two or more extents. The FS should also check for
-validity of an atomic write length/alignment.
+This breaks now on top of YUV patchset:
 
-Signed-off-by: John Garry <john.g.garry@oracle.com>
----
- fs/iomap/direct-io.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c: In function
+'_dpu_kms_initialize_displayport':
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c:583:35: error: 'dpu_kms'
+undeclared (first use in this function)
+583 | yuv_supported = !!dpu_kms->catalog->cdm;
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 733f83f839b6..197f1bb6a261 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -275,6 +275,7 @@ static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
- static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
- 		struct iomap_dio *dio)
- {
-+	bool is_atomic = dio->iocb->ki_flags & IOCB_ATOMIC;
- 	const struct iomap *iomap = &iter->iomap;
- 	struct inode *inode = iter->inode;
- 	unsigned int zeroing_size, pad;
-@@ -383,6 +384,9 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
- 					  GFP_KERNEL);
- 		bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
- 		bio->bi_ioprio = dio->iocb->ki_ioprio;
-+		if (is_atomic)
-+			bio->bi_opf |= REQ_ATOMIC;
-+
- 		bio->bi_private = dio;
- 		bio->bi_end_io = iomap_dio_bio_end_io;
- 
-@@ -399,6 +403,12 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
- 		}
- 
- 		n = bio->bi_iter.bi_size;
-+		if (is_atomic && (n != orig_count)) {
-+			/* This bio should have covered the complete length */
-+			ret = -EINVAL;
-+			bio_put(bio);
-+			goto out;
-+		}
- 		if (dio->flags & IOMAP_DIO_WRITE) {
- 			task_io_account_write(n);
- 		} else {
--- 
-2.31.1
+As this requires adding of the yuv_supported argument, let's consider
+moving it backwards: for  _dpu_kms_initialize_writeback() we can get
+format_list and n_formats from the dpu_kms.
 
+
+>  {
+>         struct drm_encoder *encoder = NULL;
+>         struct msm_display_info info;
+> @@ -592,8 +590,7 @@ static int _dpu_kms_initialize_displayport(struct drm_device *dev,
+>  }
+>
+>  static int _dpu_kms_initialize_hdmi(struct drm_device *dev,
+> -                                   struct msm_drm_private *priv,
+> -                                   struct dpu_kms *dpu_kms)
+> +                                   struct msm_drm_private *priv)
+>  {
+>         struct drm_encoder *encoder = NULL;
+>         struct msm_display_info info;
+> @@ -671,19 +668,19 @@ static int _dpu_kms_setup_displays(struct drm_device *dev,
+>         int rc = 0;
+>         int i;
+>
+> -       rc = _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
+> +       rc = _dpu_kms_initialize_dsi(dev, priv);
+>         if (rc) {
+>                 DPU_ERROR("initialize_dsi failed, rc = %d\n", rc);
+>                 return rc;
+>         }
+>
+> -       rc = _dpu_kms_initialize_displayport(dev, priv, dpu_kms);
+> +       rc = _dpu_kms_initialize_displayport(dev, priv);
+>         if (rc) {
+>                 DPU_ERROR("initialize_DP failed, rc = %d\n", rc);
+>                 return rc;
+>         }
+>
+> -       rc = _dpu_kms_initialize_hdmi(dev, priv, dpu_kms);
+> +       rc = _dpu_kms_initialize_hdmi(dev, priv);
+>         if (rc) {
+>                 DPU_ERROR("initialize HDMI failed, rc = %d\n", rc);
+>                 return rc;
+> --
+> 2.34.1
+>
+
+
+--
+With best wishes
+Dmitry
