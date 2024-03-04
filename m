@@ -1,130 +1,168 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C9C2574F;
-	Mon,  4 Mar 2024 10:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E67C38FA0;
+	Mon,  4 Mar 2024 10:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709547596; cv=none; b=W3fjcLsQHId5tCY74vS9aFWq/UxSI7jH0W1Rm/LhhSeSOeqDck2eFhPPNtyTX7bGwzY76dxBfAwoAjtm+alLAMlC4AMZKzNj7EVxgkdIpSKTh4O6PlFeX1xKZniWDNv1ZxqN+GA1ioEV26TNsJvddY946M3t+2DnHu6HDrLiqA8=
+	t=1709547599; cv=none; b=qC9wb1EfPKYSryLsIxV65X7KV+fpopkh6XLmdaYPWxYrrgYM93fKEs82Dtf1BvViwCpJxR/7L3502W+f0ORD0AIZhA6vqSEDMt4iPrKq4l5OmqYpr9NA+eMJGUXl7zBOZqQpg6rCgRmwgZ5C+pr8upG9un5AhmfQB2XlCiOZBOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709547596; c=relaxed/simple;
-	bh=oAwVOvhNSYIJcvi3KYz9lODQVXjEBbjFSOCNDTXHkGU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p/GKxd+5BlGqmJ7xoAZE/BisF8EI2MDesMY3sxvlKYq+H53se571voHbuouyT5fNBPnmLKe5Yywv9PQAxO9vpuAFnmZTY2GL4IUrBeyDr7uxDJ/g38VC0PVJutpUJZ7V0QXq05Kugje+VZaHyVqYvJQ9FXMDCNerv2PhXlaeYJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Vshu1amp; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1709547599; c=relaxed/simple;
+	bh=NGSlH5LAcmLr4NWdQQqksxXC4KeXnJMqiaUMMa23O50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jAVAmuN0yW72g8bHi5cfef5jZjB8lA7+ZfKgi2ecblELDwYzE4zaaTfFfa/CWaAvwIYv+dEYY5P/GOxAC1Y62iM6L0k0hdHCIW98SEat62HBRH1To/4q/xPRQbuNgk7gE3eRmOwlm17UlH+ZOVzUzCdOl98htVHRjeUy0/ergsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRRI1ubY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Vshu1amp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709547594; x=1741083594;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oAwVOvhNSYIJcvi3KYz9lODQVXjEBbjFSOCNDTXHkGU=;
-  b=Vshu1ampPiqd+WHO3renK91BhvwSJfSxsz8kYUpG//zOWSqmjeL367A4
-   xHsaPSRGyF9KMMCKFbF5a5qpToHYwAfk5O6oRHotPapa98GaKnMJNLX3W
-   81ZyGFpOjCwIxd5tNoSgPh5qHRoHqmOVFR1A8NTuajd5u9i4hlKJuRdEr
-   A7++Jhy0yKosGnIkoSvevP1t2hd1ExipqbHbgcl0wgRW3dl07iDzBtgcQ
-   xZPZ5fi911h/uaI1JU5HcfhF88CXS8xZeZHDcZKXyYd4EAKx53YZbGwvd
-   iRK4RlT16fFxXOvKR4R7DD9doStSZvZKckK6iAH7FD1AxB2OPMeIWtopN
-   w==;
-X-CSE-ConnectionGUID: GTh8GKPTQM2QJHexAl2qug==
-X-CSE-MsgGUID: qt1xL4hmQbGjG2oZQGGyKQ==
-X-IronPort-AV: E=Sophos;i="6.06,203,1705388400"; 
-   d="asc'?scan'208";a="17693872"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Mar 2024 03:19:53 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 03:19:36 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Mon, 4 Mar 2024 03:19:34 -0700
-Date: Mon, 4 Mar 2024 10:18:50 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Yangyu Chen <cyy@cyyself.name>
-CC: <linux-riscv@lists.infradead.org>, Conor Dooley <conor@kernel.org>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/5] riscv: Kconfig.socs: Allow SOC_CANAAN with MMU for
- K230
-Message-ID: <20240304-henna-verbalize-c206ba771a9e@wendy>
-References: <tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com>
- <tencent_4F1B21F8A605B7B4091DBB70B5635442BE09@qq.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRRI1ubY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 242B6C433C7;
+	Mon,  4 Mar 2024 10:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709547598;
+	bh=NGSlH5LAcmLr4NWdQQqksxXC4KeXnJMqiaUMMa23O50=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bRRI1ubYB5JLR6RYkkFRyyWTMvUvIRQozW4dwLP5i/+wQZkTnCyPC95hsxQV4GZov
+	 goGHLSsYZaXSnpEV9fVjdZ8Ox43GHjb/dEkLdj5043G+vivYB2R6PaiTu1lHwxmh0O
+	 OiFLWRUpMj6f0APGq0FS30auKhGOixxDIthM4bh1UzJ8qF4Zgb0Iez6AMjdCvHNuWS
+	 pYvpreuSujRVYwFwDTg676pDmnKw0bBRM2Ctc16P9uXJYnZMZ9kk+hxbVIW86Nw7CR
+	 oW3xlkmxFjDuOwTQushm3mTvoYKTW7WwVtqalJDd2hwJBmfE8KqWiSQp6c8tjgWFo4
+	 EkMmUBkruKt9Q==
+Date: Mon, 4 Mar 2024 11:19:56 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, 
+	Guenter Roeck <groeck@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>, 
+	Nikolai Kondrashov <spbnick@gmail.com>, Helen Koike <helen.koike@collabora.com>, linuxtv-ci@linuxtv.org, 
+	dave.pigott@collabora.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kselftest@vger.kernel.org, gustavo.padovan@collabora.com, pawiecz@collabora.com, 
+	tales.aparecida@gmail.com, workflows@vger.kernel.org, kernelci@lists.linux.dev, 
+	skhan@linuxfoundation.org, kunit-dev@googlegroups.com, nfraprado@collabora.com, 
+	davidgow@google.com, cocci@inria.fr, Julia.Lawall@inria.fr, laura.nao@collabora.com, 
+	ricardo.canuelo@collabora.com, kernel@collabora.com, gregkh@linuxfoundation.org
+Subject: Re: [PATCH 1/3] kci-gitlab: Introducing GitLab-CI Pipeline for
+ Kernel Testing
+Message-ID: <20240304-dangerous-mastiff-of-fury-1fac5c@houat>
+References: <20240228225527.1052240-2-helen.koike@collabora.com>
+ <20240229-dancing-laughing-groundhog-d85161@houat>
+ <5d7ed81b-37f9-48e9-ab7e-484b74ca886c@gmail.com>
+ <CAHk-=wixVy3WYvjbt43ZSrCqPDsS76QJQSkXFbbPsAOs1MCSAQ@mail.gmail.com>
+ <CABXOdTeT2ip1uS2EG2w8pW7254Tnd=ZDNz-KC61-G-yqDTVgJA@mail.gmail.com>
+ <269232e6-41c9-4aa1-9320-662beabcd69b@infradead.org>
+ <CAMuHMdXuXV9WV3aANFTteuP8Q3JY6R5OWsVBedGOP7e_JguxqA@mail.gmail.com>
+ <CAMuHMdWi069YAvOoXe7sHJ_o702tY4tDQgL3sfApPR3aCnZboQ@mail.gmail.com>
+ <20240304-transparent-oriole-of-honeydew-f4174e@houat>
+ <CAMuHMdXyvcyXw8eXc2MONNaBYYGpVdnPh2h3T=QV38MEUzhu9A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jHXxCXVHqhS+kbK3"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ba2cnmoytyqarlnv"
 Content-Disposition: inline
-In-Reply-To: <tencent_4F1B21F8A605B7B4091DBB70B5635442BE09@qq.com>
+In-Reply-To: <CAMuHMdXyvcyXw8eXc2MONNaBYYGpVdnPh2h3T=QV38MEUzhu9A@mail.gmail.com>
 
---jHXxCXVHqhS+kbK3
-Content-Type: text/plain; charset=us-ascii
+
+--ba2cnmoytyqarlnv
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 03, 2024 at 09:26:25PM +0800, Yangyu Chen wrote:
-> Since K230 was released, SOC_CANAAN is no longer only referred to the K21=
-0.
-> Remove it depends on !MMU will allow building dts for K230 and remove the
-> K210 string from the help message.
+On Mon, Mar 04, 2024 at 11:07:22AM +0100, Geert Uytterhoeven wrote:
+> Hi Maxime,
 >=20
-> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
-> ---
->  arch/riscv/Kconfig.socs | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> On Mon, Mar 4, 2024 at 10:15=E2=80=AFAM Maxime Ripard <mripard@kernel.org=
+> wrote:
+> > On Mon, Mar 04, 2024 at 09:12:38AM +0100, Geert Uytterhoeven wrote:
+> > > On Sun, Mar 3, 2024 at 10:30=E2=80=AFAM Geert Uytterhoeven <geert@lin=
+ux-m68k.org> wrote:
+> > > > On Sun, Mar 3, 2024 at 3:30=E2=80=AFAM Randy Dunlap <rdunlap@infrad=
+ead.org> wrote:
+> > > > > On 3/2/24 14:10, Guenter Roeck wrote:
+> > > > > > While checkpatch is indeed of arguable value, I think it would =
+help a
+> > > > > > lot not having to bother about the persistent _build_ failures =
+on
+> > > > > > 32-bit systems. You mentioned the fancy drm CI system above, bu=
+t they
+> > > > > > don't run tests and not even test builds on 32-bit targets, whi=
+ch has
+> > > > > > repeatedly caused (and currently does cause) build failures in =
+drm
+> > > > > > code when trying to build, say, arm:allmodconfig in linux-next.=
+ Most
+> > > > > > trivial build failures in linux-next (and, yes, sometimes mainl=
+ine)
+> > > > > > could be prevented with a simple generic CI.
+> > > > >
+> > > > > Yes, definitely. Thanks for bringing that up.
+> > > >
+> > > > +1
+> > >
+> > > > Kisskb can send out email when builds get broken, and when they get
+> > > > fixed again.  I receive such emails for the m68k builds.
+> > >
+> > > Like this (yes, one more in DRM; sometimes I wonder if DRM is meant o=
+nly
+> > > for 64-bit little-endian platforms with +200 GiB/s memory bandwidth):
+> > >
+> > > ---8<----------------------------------------------------------------=
+---
+> > > Subject: kisskb: FAILED linux-next/m68k-allmodconfig/m68k-gcc8 Mon Ma=
+r 04, 06:35
+> > > To: geert@linux-m68k.org
+> > > Date: Mon, 04 Mar 2024 08:05:14 -0000
+> > >
+> > > FAILED linux-next/m68k-allmodconfig/m68k-gcc8 Mon Mar 04, 06:35
+> > >
+> > > http://kisskb.ellerman.id.au/kisskb/buildresult/15135537/
+> > >
+> > > Commit:   Add linux-next specific files for 20240304
+> > >           67908bf6954b7635d33760ff6dfc189fc26ccc89
+> > > Compiler: m68k-linux-gcc (GCC) 8.5.0 / GNU ld (GNU Binutils) 2.36.1
+> > >
+> > > Possible errors
+> > > ---------------
+> > >
+> > > ERROR: modpost: "__udivdi3" [drivers/gpu/drm/sun4i/sun4i-drm-hdmi.ko]=
+ undefined!
+> > > make[3]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 1
+> > > make[2]: *** [Makefile:1871: modpost] Error 2
+> > > make[1]: *** [Makefile:240: __sub-make] Error 2
+> > > make: *** [Makefile:240: __sub-make] Error 2
+> > >
+> > > No warnings found in log.
+> > > ------------------------------------------------------------------->8=
+---
+> >
+> > The driver is meant for a controller featured in an SoC with a Cortex-A8
+> > ARM CPU and less than a GiB/s memory bandwidth.
 >=20
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index 623de5f8a208..b4e9b7f75510 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -75,13 +75,12 @@ config ARCH_CANAAN
->  	def_bool SOC_CANAAN
-> =20
->  config SOC_CANAAN
-> -	bool "Canaan Kendryte K210 SoC"
-> -	depends on !MMU
-> +	bool "Canaan Kendryte SoC"
->  	select CLINT_TIMER if RISCV_M_MODE
->  	select ARCH_HAS_RESET_CONTROLLER
->  	select PINCTRL
->  	select COMMON_CLK
->  	help
-> -	  This enables support for Canaan Kendryte K210 SoC platform hardware.
-> +	  This enables support for Canaan Kendryte SoC platform hardware.
-> =20
->  endmenu # "SoC selection"
-> --=20
-> 2.43.0
->=20
+> Good, so the hardware cannot possibly need 64-bit pixel clock values ;-)
 
---jHXxCXVHqhS+kbK3
+This is an early patch to convert that function into a framework hook
+implementation. HDMI 2.1 has a max TMDS character rate of slightly less
+than 6GHz, so larger than 2^32 - 1.
+
+So yes, this driver doesn't need to. The framework does however.
+
+> BTW, doesn't the build fail on arm32, too?
+
+It seems like gcc vs clang plays a role too. I had the same defconfig
+building for arm with gcc and reporting the error above with clang. I
+didn't look further because there was something to fix indeed.
+
+Maxime
+
+--ba2cnmoytyqarlnv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeWgCgAKCRB4tDGHoIJi
-0vUCAQD0CoV1uSDQ7JiawSnX85ZEZiRg4TPZmr77Rl0SGLt59QD/f9B6sx7gnPhW
-rqAFj5vm3UQ/ZofMS/3ltXvO8/WkNA4=
-=vnEB
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZeWgSwAKCRDj7w1vZxhR
+xQndAP4hm7WKDSfvUr1OAuA+byAHKabfcMBOAmOIiPdzHz82XAEA7D2tFnMHWIHL
+IFc/+TOVt18ZzPG2ws1AqKPXOolwxA4=
+=Pk79
 -----END PGP SIGNATURE-----
 
---jHXxCXVHqhS+kbK3--
+--ba2cnmoytyqarlnv--
