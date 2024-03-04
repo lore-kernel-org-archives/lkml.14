@@ -1,61 +1,56 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689984CE1F;
-	Mon,  4 Mar 2024 17:53:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4825F26AE7;
+	Mon,  4 Mar 2024 17:54:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709574819; cv=none; b=rpubvf6aK4HF6p91e3oqnBay40ZNp08dUDGQ566UNAsIKqvIswlbl3LcP8eTBtFWyd85nb58XuuEjEdgumNRR3oq4y4myDyS8lULk1FliI1GJzGaZY0fH9Cebee0uZrvKZz6BSNFwehKuc87HBLDccYNYB2Ny58LzVLo88u5bR4=
+	t=1709574885; cv=none; b=kjcizTVSvD/hAoE4cM6CZgJHuGvXkMlul7odtfPjLWj9gh4WY1COnM8D1G+ckxBC6kfVSBSjgyWCJH6n9h8LqXZTZepnzKxH8ixumw3WWK4Lfacin6pfskvTTGsIc2hZb9n+LwWNe8+ev7NWroK+pYTkIHYdVH6gOChQ7BFxzxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709574819; c=relaxed/simple;
-	bh=VmPBQAo+O4pSeKZpfQTbNLjLkFoqxXjZB3tUorREFJA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kgnG/1qkkzYY4QCSLWJwCiNYW5TfBvB27d2JfhhBEWoX+kFN4QGkOMiWSPdKWyf2EmFKMD4IYTeR5d40lE+ky62JQK4iXj5PnMzy7QkBGR0B1Q2+AzlVbnkvkxIUgo14oaJNEJNr0ULzFaSl6s7eedqzI7TIvkKmWoGB9vMhMB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kf171TZ3; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1709574885; c=relaxed/simple;
+	bh=DAiHZRD/s/Dn2QzXEcQpRd8+jevafLQowuLlVAY2b0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=np1eOemoaKe3frs+7/urtCtDMfGRb6Q5BUfFJpUm5yqgxID6joBJErTUQOyf65EHtq1CL6Wqnl/hTOrkkHFoEPlMIbCm4jjxbOB25WBHeY1bJtZb3cpWSGTHZ9kIIEP73Z6Py5UcI5G4p4QlZFyWhHRWxCgmboga1D56vK5OSiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y6UOSYG4; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kf171TZ3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y6UOSYG4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709574818; x=1741110818;
+  t=1709574884; x=1741110884;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=VmPBQAo+O4pSeKZpfQTbNLjLkFoqxXjZB3tUorREFJA=;
-  b=kf171TZ3n9lVKgc4yM1cM4AvPdtv431CbBeG2+O/57ef2acykkmM00nB
-   Xm0CanldwkxaiUWBg0TJsh6vVHbiyokNvtdfZypZ8sKPdY6kdWKAf/HE3
-   Npv8YC35h/mHh02O56yKHEF8Ffe1vJnw2aEXBjWBK5Ea6tdAZtq7vUJyj
-   JRp+xTqPLo1B6Kns7YeIKa4TlFiA4whL8bNMnmoDsSAPxnHMAklBGpGBh
-   WM1uKSq3AweVBxk+tFYK2ZAdrmzE7Gs2G8ZbKuvlAyGwRnCyLNVvPSVEP
-   Gn+EJAMACMr/7iRxUtPZaRspFNH2yR2AYrzJsTYu93SzOJQD9haQXgiHY
+  bh=DAiHZRD/s/Dn2QzXEcQpRd8+jevafLQowuLlVAY2b0w=;
+  b=Y6UOSYG4dbYlspxKfNsJYXgJdJRYS7oXByW7dfca7N0cA419LCpbJt+G
+   6Q9iWBGMmPOFPKq+y6Ufzl8iK7NNRMzCaJe92DOU7yIwHapRSTSKoiXm+
+   OHZpAVYhZEmn1ZvtuCbYTvLDZs4dMH6uxTgSDzEcE0zh01lfthA9H1DUS
+   TaovM27C505hot60naoVo2wau2fBdbmHAhOgbpJGSzmeRwYxffyeFkx8p
+   DMQbNZ7u/5kgDCgPD5fFBJLxkS5WQg519YmjG7AIc/HVcKoyao3uRCwQl
+   GQ7meXQ5asqdm6FlYLhIViHnjGbd/WyZmQItacWItGNNdZ+DsV/4cXl54
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4210015"
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4210250"
 X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="4210015"
+   d="scan'208";a="4210250"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 09:53:25 -0800
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 09:54:43 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="937040906"
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="937040907"
 X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="937040906"
+   d="scan'208";a="937040907"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 09:53:22 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 09:54:41 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3C80915C; Mon,  4 Mar 2024 19:53:21 +0200 (EET)
+	id 51C3A15C; Mon,  4 Mar 2024 19:54:40 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-wpan@vger.kernel.org,
-	netdev@vger.kernel.org,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Stefan Schmidt <stefan@datenfreihafen.org>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH net-next v1 1/1] ieee802154: mcr20a: Remove unused of_gpio.h
-Date: Mon,  4 Mar 2024 19:53:20 +0200
-Message-ID: <20240304175320.1199496-1-andriy.shevchenko@linux.intel.com>
+Cc: John Crispin <john@phrozen.org>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH v1 1/1] MIPS: ralink: Remove unused of_gpio.h
+Date: Mon,  4 Mar 2024 19:54:39 +0200
+Message-ID: <20240304175439.1199865-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -70,21 +65,21 @@ The driver doesn't use it, simply remove the unused header.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/net/ieee802154/mcr20a.c | 1 -
+ arch/mips/ralink/timer.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
-index efb1be3c644e..433fb5839203 100644
---- a/drivers/net/ieee802154/mcr20a.c
-+++ b/drivers/net/ieee802154/mcr20a.c
-@@ -12,7 +12,6 @@
+diff --git a/arch/mips/ralink/timer.c b/arch/mips/ralink/timer.c
+index fc503679a93d..8b485cbe854e 100644
+--- a/arch/mips/ralink/timer.c
++++ b/arch/mips/ralink/timer.c
+@@ -9,7 +9,6 @@
+ #include <linux/platform_device.h>
  #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/skbuff.h>
+ #include <linux/timer.h>
 -#include <linux/of_gpio.h>
- #include <linux/regmap.h>
- #include <linux/ieee802154.h>
- #include <linux/debugfs.h>
+ #include <linux/clk.h>
+ 
+ #include <asm/mach-ralink/ralink_regs.h>
 -- 
 2.43.0.rc1.1.gbec44491f096
 
