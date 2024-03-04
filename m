@@ -1,160 +1,137 @@
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B453A1B4;
-	Mon,  4 Mar 2024 09:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D607024A1B
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 09:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709544259; cv=none; b=D9xP0qZTUpD4OftBEeHAwnQAo9QwXMc2ybPoxVzbJxE28dKc8U1AXv+1PdmCVE2eYMOhzdJ6w/WqD1VU9sKjs2jHIeMZPZUTRDNg+F64fhOUlWgupViadZgiOIhpF5AIawb6o9DGR8fvF1eLo8yrfi67hZ+Q41hOuViHvVyRT1U=
+	t=1709544262; cv=none; b=n5eQ1jSSLGx1Jy9s8jHwwr6quTjTrc1AvT+TmAI+Vumli/ycH+okkFOWwqBAaea55gd5uxp0An9MqKlxJ2FiCHLT6LprDScU/TDHLTsWTMa/Xt6BHwfLHzINLCuu8kXnKoJqPAwPykSretsZl7TyRjf3ZHzYRJykGQFi/lBXxvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709544259; c=relaxed/simple;
-	bh=ZNYJmH6JH98eqGuB5N4pR86eqdep53xLc9xBzuVhHUg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cb98yjOcx+35kE14Ekh/l/DhxayP5WGVruI2tUSm8TrPqJwKimI+tby4LFlAHnClZmN4bSUwZw1n20m+1dJsiXTfjXTPXhPlWqEdvM9PXtTidmCka6uKUUYHGJxebLayzt0t/aYib630CUqhB8+A0IJGfBsdE37mBmzf16We828=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=OCuSmq0j; arc=none smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1709544262; c=relaxed/simple;
+	bh=lMx8jaitSygvuxgneq9A64SvIefKCHyxvtG/ZW2Dw20=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RF2wRXMgnUs5hHPROWD2241Ra9+EikAnN9MFv0VJtLRgjv1GoDnx7GG2dCsqD2zX17iW/FLLNpOR6gj0c3yw3GXnI0mS9TTxmxQTIioysSIsOSpyez4IS1GHsyjsuYeqAltR0gIOyLS6QldcZXivD2nm6xSbiGhJ6yBYdgSPSXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hf4tPyb1; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="OCuSmq0j"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1709544257; x=1741080257;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZNYJmH6JH98eqGuB5N4pR86eqdep53xLc9xBzuVhHUg=;
-  b=OCuSmq0jYEkwFTH40z+9o0ATpEa5M2g+M2tF/1AxInTrlnoFzrx50GNA
-   CnDMAccG3gIPYAcwK/U723IxaVvdbltJB+FPtdTGxOL7UA47mE0snVgem
-   McQoV9gxFEH5EmUdBzCQ50bED91qM1o+++84qWuN8rcLoA6GYEBQaK58q
-   eK32t297Sy3I1UVCnjqgS82ZrinmmvudjHWK6BNFghQ8do3Q3lYUlA4Mf
-   EyyEv3zlyGQeLnLn+BtmOBGEyvT8oImKUXh12jlP6hViNpyJxYgU1gTh7
-   AxKiV9yaxgy7soCSYMrKg00xxiIbVHkIYeLXeNs4OkN3SctSuU1iPqpQy
-   g==;
-X-CSE-ConnectionGUID: V6yQldMlQCqlwEt5v/y4ZQ==
-X-CSE-MsgGUID: QWkrR/5IRbO7WHd5JPRA8w==
-X-IronPort-AV: E=Sophos;i="6.06,203,1705334400"; 
-   d="scan'208";a="11326514"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Mar 2024 17:24:17 +0800
-IronPort-SDR: qY8wHVNb1m4xRgMIvaJOmkjcq4K0DnJUeC6hP2yCCnpCTqWiuNtmEYEm9PnpF6elHjWZ/R1iHu
- l0oVa934JMNw==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Mar 2024 00:33:30 -0800
-IronPort-SDR: ZmtozU8xo0e5aX8zlT7rq3/aIRmOvhI0hLB7OQZ97i52rOky9cZ6JZ00LINFbOSHA491aAcqDi
- TMLjQHDYuQyw==
-WDCIronportException: Internal
-Received: from bxygm33.ad.shared ([10.45.31.229])
-  by uls-op-cesaip02.wdc.com with ESMTP; 04 Mar 2024 01:24:15 -0800
-From: Avri Altman <avri.altman@wdc.com>
-To: "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Bean Huo <beanhuo@micron.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH 4/4] scsi: ufs: Re-use compose_devman_upiu
-Date: Mon,  4 Mar 2024 11:23:46 +0200
-Message-ID: <20240304092346.654-5-avri.altman@wdc.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240304092346.654-1-avri.altman@wdc.com>
-References: <20240304092346.654-1-avri.altman@wdc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hf4tPyb1"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dd0d46ecc3so5473835ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 01:24:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709544260; x=1710149060; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EWp8V5CHI0uxSxSBbNBsR7PWeN0w7yn0quv2v4HN+ko=;
+        b=hf4tPyb1Tr9rDMxCfv3ID5HR3sS5o6BxkpW/b3Vbp4R4meLKml1D2C92O+pmUlIzmo
+         XsBT2lYB/bsvSVzLE2yqBcxfW4nut9nKRZlWji+0IXBk56Y8TJjUtmZAMYqaFuBA5V8z
+         t3r5GryXt8BZJVAFg+zh6qwxyCW5L5D/tFdUR32cw8yYIP2XX/B099XlWDFEIEY5RKFu
+         o4KHitOfqP0uPRRwi+Pay3UemzH4nPBlR3XRi356nu+6RoTXnVUugo/FIaAY8enRdvPs
+         SWKFoQGzggCR1JKNUt7Gm4LtU4+VH+J2lf34Awlx3hD22UK4qsvcycrfjSPATizZKxrH
+         7qnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709544260; x=1710149060;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EWp8V5CHI0uxSxSBbNBsR7PWeN0w7yn0quv2v4HN+ko=;
+        b=vYDDNu1bJlC76JC8mnXSUagiPw9yPUeKuHqZTIt1ULEvn1kb7yhY/Lov6XpBd2Flb+
+         90LOIl3/j+wGY+FCHP5niiKSXSky1apbSeu6iav3hb/SaArqyDIV/GB9RGfAV7Tztr22
+         1x+C3Toh84TxniPbUaPXW/5enL93G8P0vtEiqAA90ky83xHRYDIdtKiJuHWxavtAlBY+
+         iLHY3fx1ikZTuh1mbz84Y6PXK4IaBrxvToExY7tI6rLpOsyQV8ZilA4sH7eB9DUJ2BYw
+         gSZl5agqJQdJLPKSYhxVVIHKLxkrMfhdRnwEESESrc4dUxfNEIsfg8+vzCTOwGCfQzZZ
+         Pnmg==
+X-Forwarded-Encrypted: i=1; AJvYcCXti8wwRRsYxuZSq75FHgxVIcb+Eyd0DtTItGACigub+rsVCONe06wCATolBMMHZGNo1kKib1RTe5HB0FrDsVu6WlZC89MjbdwzzOKT
+X-Gm-Message-State: AOJu0YwqTwicdS5vmGzuAjRHehxx6TYYtFXrWV+S8ZkbnDjo4AJoSR4Z
+	F/EFQ/jRZcLiaS6noiXrwjyzmIScmKHJ9zlWy/0Vf5hnPpRoHkAS9A/RTx3wSg==
+X-Google-Smtp-Source: AGHT+IGd3RHrhG0REOqzg7vvID2C11PydWNUBtWjBBEsihn5ssXizL/KxkhroPZebfnkGcMR8XmjXg==
+X-Received: by 2002:a17:902:e843:b0:1db:cb54:5e77 with SMTP id t3-20020a170902e84300b001dbcb545e77mr13621075plg.22.1709544260163;
+        Mon, 04 Mar 2024 01:24:20 -0800 (PST)
+Received: from [127.0.1.1] ([117.202.187.165])
+        by smtp.gmail.com with ESMTPSA id c5-20020a170902c1c500b001dbb06b6138sm7996648plc.252.2024.03.04.01.24.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 01:24:19 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Mon, 04 Mar 2024 14:52:21 +0530
+Subject: [PATCH v9 09/10] PCI: qcom-ep: Use the generic
+ dw_pcie_ep_linkdown() API to handle LINK_DOWN event
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240304-pci-dbi-rework-v9-9-29d433d99cda@linaro.org>
+References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
+In-Reply-To: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
+To: Jingoo Han <jingoohan1@gmail.com>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Kishon Vijay Abraham I <kishon@ti.com>, Vidya Sagar <vidyas@nvidia.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
+ Roy Zang <roy.zang@nxp.com>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Jesper Nilsson <jesper.nilsson@axis.com>, 
+ Srikanth Thokala <srikanth.thokala@intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@axis.com, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1091;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=lMx8jaitSygvuxgneq9A64SvIefKCHyxvtG/ZW2Dw20=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl5ZLYM+2eiwjj5RRthnOv98Z7OtxGghplNJTiy
+ GQRM84GrQuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZeWS2AAKCRBVnxHm/pHO
+ 9dHhCACbE5J9y0XzNdYDaP9MkdaF6BTTU7Te5s2Rjsn1arZfo/PurJr7HKfWBVt8SR3xny3liv7
+ nQC+stRAzfGbP4hMtKJCWlEyC1QTHu35Bs2mp9IC55dlurHRZopufYF7QoqIhmAurClQ7/cq1nr
+ U8BnJkfY1ky5JMTrNAZtwWqc/E84ehS1gBQzNv1+kcyLll0rYCFsFcf0BNOkc8tq80FsWt+rVOY
+ wThHyO5DOD7cT5a/oLbwlIfMB4Xxlbw23ysjE2CIono3ovFtPNHCYRm85rgwGWS7CjCZcYY8zqa
+ op88X4U0dgv8mHlGG6mNc/DzL1Ri6woSmEUdN7cf0h1AosyE
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-Move out some code fragments so it can be used elsewhere.
+Now that the API is available, let's make use of it. It also handles the
+reinitialization of DWC non-sticky registers in addition to sending the
+notification to EPF drivers.
 
-Signed-off-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/ufs/core/ufshcd.c | 40 +++++++++++++++------------------------
- 1 file changed, 15 insertions(+), 25 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index a41cd7ed1e38..b6e27c6daf54 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -2840,6 +2840,17 @@ static inline void ufshcd_prepare_utp_nop_upiu(struct ufshcd_lrb *lrbp)
- 	memset(lrbp->ucd_rsp_ptr, 0, sizeof(struct utp_upiu_rsp));
- }
- 
-+static void __compose_devman_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp,
-+				  u8 *upiu_flags, int ehs_length)
-+{
-+	if (hba->ufs_version <= ufshci_version(1, 1))
-+		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
-+
-+	ufshcd_prepare_req_desc_hdr(lrbp, upiu_flags, DMA_NONE, ehs_length);
-+}
-+
- /**
-  * ufshcd_compose_devman_upiu - UFS Protocol Information Unit(UPIU)
-  *			     for Device Management Purposes
-@@ -2854,12 +2865,8 @@ static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
- 	u8 upiu_flags;
- 	int ret = 0;
- 
--	if (hba->ufs_version <= ufshci_version(1, 1))
--		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
--	else
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
-+	__compose_devman_upiu(hba, lrbp, &upiu_flags, 0);
- 
--	ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE, 0);
- 	if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY)
- 		ufshcd_prepare_utp_query_req_upiu(hba, lrbp, upiu_flags);
- 	else if (hba->dev_cmd.type == DEV_CMD_TYPE_NOP)
-@@ -7220,17 +7227,11 @@ static int ufshcd_issue_devman_upiu_cmd(struct ufs_hba *hba,
- 	u8 upiu_flags;
- 
- 	__compose_dev_cmd(hba, lrbp, cmd_type, 0, tag);
--
--	if (hba->ufs_version <= ufshci_version(1, 1))
--		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
--	else
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
-+	__compose_devman_upiu(hba, lrbp, &upiu_flags, 0);
- 
- 	/* update the task tag in the request upiu */
- 	req_upiu->header.task_tag = tag;
- 
--	ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE, 0);
--
- 	/* just copy the upiu request as it is */
- 	memcpy(lrbp->ucd_req_ptr, req_upiu, sizeof(*lrbp->ucd_req_ptr));
- 	if (desc_buff && desc_op == UPIU_QUERY_OPCODE_WRITE_DESC) {
-@@ -7371,24 +7372,13 @@ int ufshcd_advanced_rpmb_req_handler(struct ufs_hba *hba, struct utp_upiu_req *r
- 	u8 upiu_flags;
- 	u8 *ehs_data;
- 	u16 ehs_len;
-+	int ehs = (hba->capabilities & MASK_EHSLUTRD_SUPPORTED) ? 2 : 0;
- 
- 	/* Protects use of hba->reserved_slot. */
- 	ufshcd_dev_man_lock(hba);
- 
- 	__compose_dev_cmd(hba, lrbp, DEV_CMD_TYPE_RPMB, UFS_UPIU_RPMB_WLUN, tag);
--
--	/* Advanced RPMB starts from UFS 4.0, so its command type is UTP_CMD_TYPE_UFS_STORAGE */
--	lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--
--	/*
--	 * According to UFSHCI 4.0 specification page 24, if EHSLUTRDS is 0, host controller takes
--	 * EHS length from CMD UPIU, and SW driver use EHS Length field in CMD UPIU. if it is 1,
--	 * HW controller takes EHS length from UTRD.
--	 */
--	if (hba->capabilities & MASK_EHSLUTRD_SUPPORTED)
--		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, dir, 2);
--	else
--		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, dir, 0);
-+	__compose_devman_upiu(hba, lrbp, &upiu_flags, ehs);
- 
- 	/* update the task tag */
- 	req_upiu->header.task_tag = tag;
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 2fb8c15e7a91..4e45bc4bca45 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -640,7 +640,7 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+ 	if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
+ 		dev_dbg(dev, "Received Linkdown event\n");
+ 		pcie_ep->link_status = QCOM_PCIE_EP_LINK_DOWN;
+-		pci_epc_linkdown(pci->ep.epc);
++		dw_pcie_ep_linkdown(&pci->ep);
+ 	} else if (FIELD_GET(PARF_INT_ALL_BME, status)) {
+ 		dev_dbg(dev, "Received BME event. Link is enabled!\n");
+ 		pcie_ep->link_status = QCOM_PCIE_EP_LINK_ENABLED;
+
 -- 
-2.42.0
+2.25.1
 
