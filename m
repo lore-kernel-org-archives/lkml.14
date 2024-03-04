@@ -1,125 +1,106 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395C4482DA;
-	Mon,  4 Mar 2024 16:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28414E1C1;
+	Mon,  4 Mar 2024 16:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709568305; cv=none; b=o6JmfqDbaQgSyFaVVveLEC0yaip0GLH7KH2w++BEF9c+rwBA3L3RZngSSui3dotHQ40hDLYsaROYNGhJqPgy4AOPFwCNmr3rg/N03n6HjhAlMEZIzMCY+1chH7DE7pekBXtrTu1k16KXfxJ53oXQM9kN8xY2yST6as08wrukYOE=
+	t=1709568308; cv=none; b=TIjEl90S0ZEB+MQz1RZJRxrQ+L0f00STL7AOVjcJ0zHmnNyw3+HnlFe+NhdiC7GxrBUdKo7TBNG2eE+412oM7CKPF/IN6INnYFtNHFXFRmO9jRekBR9kBTsRau4Ma2HKkam9dDFdaGI2HCuJdbvvvwiettyrl9pyAFFEwpObHog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709568305; c=relaxed/simple;
-	bh=UqrS3L3ZfbwmChhjl8azT4mTToB0ZPmTuVA//e4Tm3c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ed9qnqvtDOt+Q85DvS0+92hp/BA6lWX6XrET1iRO6+gjbebRRt9wNNzT+0YRNxuomVO17mZB0lwBYXBYHBkqS3DpowHn1T+ZgZU+oazjyuk9C1KzFYLpedbR9mS0bBJFmC2/OMD77JfhL8R0StPHUAw40X/p6EzY5LSKemRFVZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hSIUVb6E; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709568308; c=relaxed/simple;
+	bh=IqKjf/V5VV8UE4R3lEGBliAPiP3FkHrOso1nqZ3aCuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MirgCImQVNPC81Hq32dR8sCRr1jD3Y3l3st8aKYw15ARW8Pz2ZX5dawiylQubQgNopaXll0c7bUtlWYqgsxwhS1efB9+O+iLjdjY3vkcNRSc2Rap1VlRmU66WmRt69sbYoGsh+xDC8Q3uzC7AONXf0kvJAoXBXZodjOdjZzfZws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPZUFFoI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hSIUVb6E"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 949B920004;
-	Mon,  4 Mar 2024 16:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709568301;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=02ddm9Xy6N7z/+neL8gzCb13I4/NT+KuYhzJAZBmiP4=;
-	b=hSIUVb6E9z+JSB3bVvrNY/dPAlfXj7zfaI3INTwE8Z2MqF10k09JJmTREEaB3DRgjsWAQj
-	YwzYwrwJKxnGbuvvtKJw9iaJxJvbXAzkzEXZeTUcF58cWnZDswtLxwJNXEVgAPkiSIgJtc
-	9lroxmwHSoB34Yz6fFszoK/HGENu8aOAhW+7unBeOQ2lIxYlqzYMgCqQwIYnS3ASG9W+mX
-	tixzkUi6qIOWAa+ekwBb2CBGStwPBvV/uqrjaRzm4I8BjtYxsd/8EjxtKvgcf8zQ1GRw7Y
-	tu1aM+ajydcauOYQjMoKO7iApTuYrnLSblJ2fCiJYBYBBnYiG5xrDw6qRSSo7A==
-From: =?UTF-8?q?J=C3=A9r=C3=A9mie=20Dautheribes?= <jeremie.dautheribes@bootlin.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Yen-Mei Goh <yen-mei.goh@keysight.com>,
-	=?UTF-8?q?J=C3=A9r=C3=A9mie=20Dautheribes?= <jeremie.dautheribes@bootlin.com>
-Subject: [PATCH v2 3/3] drm/panel: simple: add CMT430B19N00 LCD panel support
-Date: Mon,  4 Mar 2024 17:04:54 +0100
-Message-Id: <20240304160454.96977-4-jeremie.dautheribes@bootlin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240304160454.96977-1-jeremie.dautheribes@bootlin.com>
-References: <20240304160454.96977-1-jeremie.dautheribes@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPZUFFoI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10655C43390;
+	Mon,  4 Mar 2024 16:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709568308;
+	bh=IqKjf/V5VV8UE4R3lEGBliAPiP3FkHrOso1nqZ3aCuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hPZUFFoISF7hoNFdL4xnmd1M1+T9744bsa0ut//cI3GKpuvePacbzacYODEpQ1W5Y
+	 u8uGDRH9+VYz7Yjuz7BwP6ilvpq7SZZCEFpnrmpMuGisdmSPKQb7rHGkFb+Gk5KPAe
+	 TK6E2wMKN59TlYacTHf/3lGf/YRz4bOjxt8K9wPuFGLde3itcwuXOd7EVvbGuR6RHL
+	 f3DuH1pJ8n5cJtyk1kIRZJwMspexJsb9YlZ7gqCOIWWK/hAIzysux3q+Dtm+h36w9u
+	 zSr2MHI5200MBnykWbm823kjJdKxWD9muE7sg3HmLwFmVpBr/v0r89Sa9SW/vZ/elK
+	 shgUZUIvnzILg==
+Date: Mon, 4 Mar 2024 17:05:05 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Guenter Roeck <groeck@google.com>
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>, 
+	Nikolai Kondrashov <spbnick@gmail.com>, Helen Koike <helen.koike@collabora.com>, linuxtv-ci@linuxtv.org, 
+	dave.pigott@collabora.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kselftest@vger.kernel.org, gustavo.padovan@collabora.com, pawiecz@collabora.com, 
+	tales.aparecida@gmail.com, workflows@vger.kernel.org, kernelci@lists.linux.dev, 
+	skhan@linuxfoundation.org, kunit-dev@googlegroups.com, nfraprado@collabora.com, 
+	davidgow@google.com, cocci@inria.fr, Julia.Lawall@inria.fr, laura.nao@collabora.com, 
+	ricardo.canuelo@collabora.com, kernel@collabora.com, gregkh@linuxfoundation.org
+Subject: Re: [PATCH 1/3] kci-gitlab: Introducing GitLab-CI Pipeline for
+ Kernel Testing
+Message-ID: <20240304-ludicrous-grinning-goldfish-090aac@houat>
+References: <20240228225527.1052240-1-helen.koike@collabora.com>
+ <20240228225527.1052240-2-helen.koike@collabora.com>
+ <20240229-dancing-laughing-groundhog-d85161@houat>
+ <5d7ed81b-37f9-48e9-ab7e-484b74ca886c@gmail.com>
+ <CAHk-=wixVy3WYvjbt43ZSrCqPDsS76QJQSkXFbbPsAOs1MCSAQ@mail.gmail.com>
+ <CABXOdTeT2ip1uS2EG2w8pW7254Tnd=ZDNz-KC61-G-yqDTVgJA@mail.gmail.com>
+ <20240304-rigorous-silkworm-of-awe-4eee8f@houat>
+ <CABXOdTc4MXcjwgGuJb4_69-4OFELD37x0B6oMr=4z=nxZ2HPXQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: jeremie.dautheribes@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="thflmdlthwp7swbs"
+Content-Disposition: inline
+In-Reply-To: <CABXOdTc4MXcjwgGuJb4_69-4OFELD37x0B6oMr=4z=nxZ2HPXQ@mail.gmail.com>
 
-Add support for Crystal Clear Technology CMT430B19N00 4.3" 480x272
-TFT-LCD panel.
 
-Signed-off-by: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+--thflmdlthwp7swbs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 20e3df1c59d4..b940220f56e2 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1457,6 +1457,32 @@ static const struct panel_desc boe_hv070wsa = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
-+static const struct drm_display_mode cct_cmt430b19n00_mode = {
-+	.clock = 9000,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 43,
-+	.hsync_end = 480 + 43 + 8,
-+	.htotal = 480 + 43 + 8 + 4,
-+	.vdisplay = 272,
-+	.vsync_start = 272 + 12,
-+	.vsync_end = 272 + 12 + 8,
-+	.vtotal = 272 + 12 + 8 + 4,
-+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+};
-+
-+static const struct panel_desc cct_cmt430b19n00 = {
-+	.modes = &cct_cmt430b19n00_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 95,
-+		.height = 53,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
-+	.connector_type = DRM_MODE_CONNECTOR_DPI,
-+};
-+
- static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
- 	.clock = 9000,
- 	.hdisplay = 480,
-@@ -4402,6 +4428,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "boe,hv070wsa-100",
- 		.data = &boe_hv070wsa
-+	}, {
-+		.compatible = "cct,cmt430b19n00",
-+		.data = &cct_cmt430b19n00,
- 	}, {
- 		.compatible = "cdtech,s043wq26h-ct7",
- 		.data = &cdtech_s043wq26h_ct7,
--- 
-2.34.1
+On Mon, Mar 04, 2024 at 07:46:34AM -0800, Guenter Roeck wrote:
+> On Mon, Mar 4, 2024 at 1:24=E2=80=AFAM Maxime Ripard <mripard@kernel.org>=
+ wrote:
+> [ ... ]
+> >
+> > If anything, it's more of a side-effect to the push for COMPILE_TEST
+> > than anything.
+> >
+>=20
+> If the drm subsystem maintainers don't want people to build it with
+> COMPILE_TEST while at the same time not limiting it to platforms where
+> it doesn't even build, I'd suggest making it dependent on
+> !COMPILE_TEST.
 
+I don't think we want anything. My point was that you can't have an
+option that is meant to explore for bad practices and expose drivers
+that don't go through the proper abstraction, and at the same time
+complain that things gets broken. It's the whole point of it.
+
+> The same applies to all other subsystems where maintainers don't want
+> build tests to run but also don't want to add restrictions such as
+> "64-bit only". After all, this was just one example.
+
+We have drivers for some 32 bits platforms.
+
+Maxime
+
+--thflmdlthwp7swbs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZeXxMAAKCRDj7w1vZxhR
+xYlQAPwIi05mGTIAHwJKG4sBeZKb2fVtGkVhOtt6zHMKVCL4UgEA4a2ngKZUqIko
+YkvJr1Lsw7kRsL8JpjsPGMT6i86ACwY=
+=NUWE
+-----END PGP SIGNATURE-----
+
+--thflmdlthwp7swbs--
