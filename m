@@ -1,60 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BA23FB1D;
-	Mon,  4 Mar 2024 14:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EA33F9FC
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 14:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709561219; cv=none; b=UvGMPfHuiPh2nogQzJnrKChHpg+kTTFOuYQFWXwpto85eq/XkJceK8w7NQOMWMz5Y6TCfkl3E5TkDRhrEuWWwXaab6u6g7FIvVFWxcydMXfcA0WNc2x0c0sEx00woMY/LIGopY8Z/HG2q1nQgXY3MVmzC3+jdb8fsKVo0LBxdyw=
+	t=1709561287; cv=none; b=sPPOOw8XJlB4f5aq5IfzFyxdI2D2UemFhTJR+75va1MZBs4GcYyCb30lITl9cpAxLlNzmGJQg01VwT5yLJLO3dtSJZ/Va4FdRkMBFUVwARdzrcWke4uuKIqmbM5GuJvnrgonRnDJtDnL43mDerBQgxIHnTwkOzxe9qaonaWeXLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709561219; c=relaxed/simple;
-	bh=URTHF9Nl3Pd3iMTnwOfXWfyaLmcvXdfv/9NJcJXxRAY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DzvoHGkaz1sk6kx//PBFWydwnRkMir+N80xqDJZS8+hSCVhsd+ueCSoS8OJmXH1wQ8OMQ7O+SrXKQ3XfQZJprCE4+Cxm/y1nLGN5ruHYoQ2Z5dU8erb9jI4DoJ1EfywdnnQvu/nKEWuci3LzHiZL/uKhqpsu+tOStrvbuwF6u2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lg1G6v0T; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lg1G6v0T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709561217; x=1741097217;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=URTHF9Nl3Pd3iMTnwOfXWfyaLmcvXdfv/9NJcJXxRAY=;
-  b=Lg1G6v0Tz+y/h0v2tL3Pn4ONzeuaQVyOzvy72j1HXedqboaNjHfql6gi
-   jScng8tOOvYKEFO1MAqa0RF/W4o7oBaS8lsJNyu1CmIqs41G3ycqH3pZq
-   y3vrq670ZQeAer5Za0P+1rEz62scZpoPLlRfaMdH34ASGy+l9+oUvT6KB
-   NFX2XR3XmkkArDXvHPQqcTIVeLU9TsOn03Jf9F8cMOL53fv+6hl4SF8e8
-   sZRrWqmhW4AFonEsZbl/q5JeS2pn7/nukJr2n/NwMDh61Mss0+k3vyP8e
-   5msG/35GxII+02e0BIXp0EMExT7C5icsqYgG7kc0sD1YJsUFcf3ZY6tjb
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4214187"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="4214187"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 06:06:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="937040571"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="937040571"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 06:06:53 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3CED215C; Mon,  4 Mar 2024 16:06:52 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>
-Subject: [PATCH v1 1/2] iio: core: Leave private pointer NULL when no private data supplied
-Date: Mon,  4 Mar 2024 16:04:32 +0200
-Message-ID: <20240304140650.977784-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240304140650.977784-1-andriy.shevchenko@linux.intel.com>
-References: <20240304140650.977784-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1709561287; c=relaxed/simple;
+	bh=RTTjJrKbQGC+to+9CcT3Rjd8f3nh2/o7sz3wwy6ugbI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OFntVRDCBTmvSP5R4tnZOJt+pBjWjRp/WiwjR0c7miNT1WT/3hD8ZofgIem/3NacSEW4S9STn/oKF9h8T5j4LtevLizpXvMQUa5HeWkONBU/1KWunS7P1rbnbGi3U329+kV6e/FjRbv3+CP/X5PC/liIWesbE7k/CSx/zKQ9AMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.66.159])
+	by sina.com (10.75.12.45) with ESMTP
+	id 65E5D58D000033AD; Mon, 4 Mar 2024 22:07:15 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 4786531458218
+X-SMAIL-UIID: 51EAB7993DE54EFFBB1471E35B6BB18F-20240304-220715-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+b91eb2ed18f599dd3c31@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] KASAN: slab-use-after-free Read in sys_io_cancel
+Date: Mon,  4 Mar 2024 22:07:02 +0800
+Message-Id: <20240304140702.1457-1-hdanton@sina.com>
+In-Reply-To: <0000000000006945730612bc9173@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,33 +43,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In iio_device_alloc() when size of the private data is 0,
-the private pointer is calculated to point behind the valid data.
-Leave it NULL when no private data supplied.
+On Sat, 02 Mar 2024 23:29:23 -0800
+> syzbot found the following issue on:
+> 
+> HEAD commit:    5ad3cb0ed525 Merge tag 'for-v6.8-rc2' of git://git.kernel...
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13877412180000
 
-Fixes: 6d4ebd565d15 ("iio: core: wrap IIO device into an iio_dev_opaque object")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/iio/industrialio-core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 4302093b92c7..8684ba246969 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1654,8 +1654,10 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
- 		return NULL;
+--- x/fs/aio.c
++++ y/fs/aio.c
+@@ -2194,6 +2194,8 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
+ 	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
+ 		if (kiocb->ki_res.obj == obj) {
+ 			ret = kiocb->ki_cancel(&kiocb->rw);
++			if (ret == 0)
++				refcount_inc(&kiocb->ki_refcnt);
+ 			list_del_init(&kiocb->ki_list);
+ 			break;
+ 		}
+@@ -2204,8 +2206,11 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
+ 	 * The result argument is no longer used - the io_event is always
+ 	 * delivered via the ring buffer.
+ 	 */
+-	if (ret == 0 && kiocb->rw.ki_flags & IOCB_AIO_RW)
+-		aio_complete_rw(&kiocb->rw, -EINTR);
++	if (ret == 0)
++		if (kiocb->rw.ki_flags & IOCB_AIO_RW)
++			aio_complete_rw(&kiocb->rw, -EINTR);
++		else
++			iocb_put(kiocb);
  
- 	indio_dev = &iio_dev_opaque->indio_dev;
--	indio_dev->priv = (char *)iio_dev_opaque +
--		ALIGN(sizeof(struct iio_dev_opaque), IIO_DMA_MINALIGN);
-+
-+	if (sizeof_priv)
-+		indio_dev->priv = (char *)iio_dev_opaque +
-+			ALIGN(sizeof(*iio_dev_opaque), IIO_DMA_MINALIGN);
+ 	percpu_ref_put(&ctx->users);
  
- 	indio_dev->dev.parent = parent;
- 	indio_dev->dev.type = &iio_device_type;
--- 
-2.43.0.rc1.1.gbec44491f096
-
+--
