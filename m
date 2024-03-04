@@ -1,213 +1,99 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB5917C9
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 03:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558634409
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 03:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709521684; cv=none; b=kklfAn24y1K44zP69zjXkNbt5PxAQJP2HzYzWZSRLtW3CmOF801KkcNt7Q7y9ZcJ9R6QDKbBxFUxCGV6jH8ozDaucH/oN/MOPYwoGhEIr6ovF1N63qtfDnCTk3hc5XH8dfqld68f9xZvYQ/JCwgnj0/76lio+23KSfP/dp8lGrI=
+	t=1709521783; cv=none; b=P8hD3sExNGVaFjNRipdKAk8zJxJ2LL/HYt8S4yKUJANJmgffSR9fCru3CPzQA4iFzikpwE/Nguf71bB5pKJCHomxYnDTHcaSaN6wJO6n6F0nS7No+1q/lS5C8Dy7TylVSDan3mOOXCnGFoFLnUYqDERvD9kR+gxzvzn6dpacBw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709521684; c=relaxed/simple;
-	bh=yZYo83Z2W6CRyr8MaaAUL6vnyuB7o2l8XMnQn64c75s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S3kgyL/RgJZLZ49PytFwQw40Ylb1XfUjJh7mJEKP5AWZN9M63fvzsctakTn8nHpKQabUz4qOCma04eWDlswYVvdnB4XT9l4gQ1H4Kw9V7914rGfSEUxm4eelQWNtTn0mFkwY/XOAOTtZx+tfb79QupTAH2VMLZjmuIuW10h8ESc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=W3gYmJ5K; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1709521783; c=relaxed/simple;
+	bh=CYRgY/DN97Kc0KDDupR2bcXBj34QeHhtWH63gg8umAY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hhHVqJTgbe9JufWwbebvkr0KBJcialD8dweoUf/kmk+YmcggNMfZJH31T81fTRqt+BncVfkcm6zKiZk3nvUc75+5tzy24voC4oMhbnvgsLqA8D44d0eLct/qGfzTX3g0znj7CSAa1zgTzbiTj7uGBiPfjaAsNuqQZsxPQjul9qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=pass (2048-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=kdqTflJy; arc=none smtp.client-ip=60.251.196.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ite.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="W3gYmJ5K"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dca160163dso39040225ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 19:08:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="kdqTflJy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1709521682; x=1710126482; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aUDui+SoGtCzCcd28AP+HAZizOhj0wayhw6lwCsOegY=;
-        b=W3gYmJ5K5WHJM7Iylv36P60GH/1Q+gu/LoXWLpDAiJ2vz/S+G4e4A4uwoXsvUXjefG
-         pkM4veUAg+sPpFKmyZVMe9/ikXNsMSaiXT4sq6KJWF+E3hS85LQzu67DCnRzdM8JwpDp
-         TXAu/j4zNOMdo2U3INHc2k4aJlln4ZNDskYBo6zRBLcm/k7u6JtZzfcG4A4vJ/NHcO47
-         rT2+mQOgr/LqKkerNJTFso0d/r2YA3+jkOEaFK2SWrVl3APdSD3Fu5bvkKl1LNeAmeHy
-         YysgqZdFxpbb24P8VHTYnqwf0PurqYnmHpF+GtvWNZJ5DLf/AsXBp2RCScIgvbN9MyIA
-         2VTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709521682; x=1710126482;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aUDui+SoGtCzCcd28AP+HAZizOhj0wayhw6lwCsOegY=;
-        b=wfJuqwzv5c3Sihmlrz62+hGz4eWyfnsFuqPFS8cSEXuyV2jE+NKoPuRZZgclMBJyaM
-         n541FhEu7NJPfgX3jRlzdvSzGXqAeKuuW13s7fOmcU8XGQbLiNLKnPwiWCO1zhoIahXH
-         mpVzIi66QnwfTzYtJL8/ii9TsFx4YSsUXTaq1lW3d5geFjKPAnWtzsl2ghDdz1HYD4pq
-         DlC0C3oMxhIB8+ERew+TegYgaZUiU2zVmunHyGZkQwwnl7WA1CGFT7R8KUXb1Ht0xxoV
-         vHedSZq8chrucBZx6QRXADju50NhyqYzrJar2mcbFVk6+epC0Tmp1JOdFxwnkLquFLi1
-         iSxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuBhiI2v7CtvZAoxY/e7iR/bcFVdpPcyMzgF6Xk29fF8wojkgP/HgJOOemT03iVt1a39dxpFu4nFw5oIv3aPVlp/OLSHZ+poLPTgbR
-X-Gm-Message-State: AOJu0YzUcrQwCpudn5Ybqjsh4+5t2PcIYPFJwy65rKMXAyGLSPU7KLKw
-	5wfRzqtvoVagn0zgTMPstIBGnos5SQtXCWSbZPFzUu77UKuY7adqzFTn6wkPnKWMoQV4eVo/qbh
-	4UnJy2g==
-X-Google-Smtp-Source: AGHT+IE/3Ek7ES6ikbweqGG+hs+nFUt3rgE9AFYivwlVALodbm5ZqdkRdubMV12wGC7dAvhSijYv8A==
-X-Received: by 2002:a17:902:d3c4:b0:1db:ccd0:e77e with SMTP id w4-20020a170902d3c400b001dbccd0e77emr8078485plb.35.1709521682152;
-        Sun, 03 Mar 2024 19:08:02 -0800 (PST)
-Received: from [10.54.24.74] (static-ip-148-99-134-202.rev.dyxnet.com. [202.134.99.148])
-        by smtp.gmail.com with ESMTPSA id c7-20020a170902d48700b001db5079b705sm7289466plg.36.2024.03.03.19.07.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Mar 2024 19:08:01 -0800 (PST)
-Message-ID: <668d1f61-9111-4239-9766-f43bef3a9828@shopee.com>
-Date: Mon, 4 Mar 2024 11:07:57 +0800
+  d=ite.com.tw; s=dkim;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wDTq/D2hc/OJm7z52caZ+Fc3DqtMuNzZgV4Uj2VbYcU=;
+  b=kdqTflJyvp4GatjcXWJv1ijZSys5szMHMozkJrz1IzacHI2L0E/oRiAk
+   CccGIXk8ypHwXpoSxdFNvXh3qKG6QDaR7ip9RPJtXP89LjkRw7ZcpCVxF
+   BnZaNfS4ZQ4DcfnD7Zot9jJLJdOrZwnHmWfKbRv0CNVht8/vQ6UhwR+wS
+   JZtDX1O4gBo8ur5b23Le6IdIa5L1Nklv/WcenqFco5GX/N/fH7EKp2HOQ
+   AcWUAOBX5NnxSRX/PNWGtLb1vh1AHTaoDGtRsDi1M564Zo49Mxwlj1gfE
+   mvm4iN02ZlV631q2L7uV1o8kYdDsEnDo8vMuOB4b7d3DDg19ZdWZaGLqp
+   A==;
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 04 Mar 2024 11:08:29 +0800
+Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
+	by mse.ite.com.tw with ESMTP id 42438Rbj022561;
+	Mon, 4 Mar 2024 11:08:27 +0800 (GMT-8)
+	(envelope-from kuro.chung@ite.com.tw)
+Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 4 Mar 2024 11:08:26 +0800
+From: kuro <kuro.chung@ite.com.tw>
+To:
+CC: Allen Chen <allen.chen@ite.com.tw>, Pin-yen Lin <treapking@chromium.org>,
+        Kuro Chung <kuro.chung@ite.com.tw>,
+        Kenneth Haung <kenneth.hung@ite.com.tw>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Jernej Skrabec
+	<jernej.skrabec@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/1] drm/bridge: it6505: fix hibernate to resume no display issue patch v2
+Date: Mon, 4 Mar 2024 11:19:43 +0800
+Message-ID: <20240304031945.250763-1-kuro.chung@ite.com.tw>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] x86/resctrl: Add tracepoint for llc_occupancy
- tracking
-To: James Morse <james.morse@arm.com>, reinette.chatre@intel.com
-Cc: fenghua.yu@intel.com, babu.moger@amd.com, peternewman@google.com,
- x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20240229071125.100991-1-haifeng.xu@shopee.com>
- <20240229071125.100991-3-haifeng.xu@shopee.com>
- <4ddba36d-3c7d-4412-8b09-d55af493423e@arm.com>
-From: Haifeng Xu <haifeng.xu@shopee.com>
-In-Reply-To: <4ddba36d-3c7d-4412-8b09-d55af493423e@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58)
+X-TM-SNTS-SMTP:
+	7F0A6FCDE736CFB60C97BD189F2683B14FE28BD5CCD7DA3F713AB6A0ED3C61D12002:8
+X-MAIL:mse.ite.com.tw 42438Rbj022561
 
+From: kuro chung <kuro.chung@ite.com.tw>
 
+New patch description for v2 patch
 
-On 2024/3/2 01:47, James Morse wrote:
-> Hello!
-> 
-> On 29/02/2024 07:11, Haifeng Xu wrote:
->> In our production environment, after removing monitor groups, those unused
->> RMIDs get stuck in the limbo list forever because their llc_occupancy are
->> always larger than the threshold. But the unused RMIDs can be successfully
->> freed by turning up the threshold.
->>
->> In order to know how much the threshold should be, perf can be used to acquire
->> the llc_occupancy of RMIDs in each rdt domain.
->>
->> Instead of using perf tool to track llc_occupancy and filter the log manually,
->> it is more convenient for users to use tracepoint to do this work. So add a new
->> tracepoint that shows the llc_occupancy of busy RMIDs when scanning the limbo
->> list.
-> 
->> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
->> index c34a35ec0f03..ada392ca75b2 100644
->> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
->> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
->> @@ -362,6 +363,13 @@ void __check_limbo(struct rdt_domain *d, bool force_free)
-> 
-> [expanded the diff hunk for better context]
->>               entry = __rmid_entry(idx);
->>               if (resctrl_arch_rmid_read(r, d, entry->closid, entry->rmid,
->>                                          QOS_L3_OCCUP_EVENT_ID, &val,
->>                                          arch_mon_ctx)) {
->>                       rmid_dirty = true;
->>               } else {
->>                       rmid_dirty = (val >= resctrl_rmid_realloc_threshold);
->>               }
->>
->>               if (force_free || !rmid_dirty) {
->>                       clear_bit(idx, d->rmid_busy_llc);
->>                       if (!--entry->busy)
->>  				limbo_release_entry(entry);
->>  		}
-> 
->>  		cur_idx = idx + 1;
-> 
-> Ideally this would be the last line in the loop, its how the iterator advances to the next
-> bit in the bitmap.
-> 
-> 
->> +		/* x86's CLOSID and RMID are independent numbers, so the entry's
->> +		 * closid is a invalid CLOSID. But on arm64, the RMID value isn't
->> +		 * a unique number for each CLOSID. It's necessary to track both
->> +		 * CLOSID and RMID because there may be dependencies between each
->> +		 * other on some architectures */
->> +		trace_mon_llc_occupancy_limbo(entry->closid, entry->rmid, d->id, val);
-> 
-> I agree outputting both these values is the right thing to do.
-> 
-> resctrl_arch_rmid_read() could return an error, in which case val here is either
-> uninitialised, or the value of another RMID.
-> Could you put the tracepoint in the 'else' section of the if/else after
-> resctrl_arch_rmid_read()? This way it will only output a value to user-space if it is correct.
-> 
-> 
->> diff --git a/arch/x86/kernel/cpu/resctrl/trace.h b/arch/x86/kernel/cpu/resctrl/trace.h
->> index 495fb90c8572..35149a75c951 100644
->> --- a/arch/x86/kernel/cpu/resctrl/trace.h
->> +++ b/arch/x86/kernel/cpu/resctrl/trace.h
->> @@ -35,6 +35,21 @@ TRACE_EVENT(pseudo_lock_l3,
->>  	    TP_printk("hits=%llu miss=%llu",
->>  		      __entry->l3_hits, __entry->l3_miss));
->>  
->> +TRACE_EVENT(mon_llc_occupancy_limbo,
->> +	    TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int id, u64 occupancy),
->> +	    TP_ARGS(ctrl_hw_id, mon_hw_id, id, occupancy),
->> +	    TP_STRUCT__entry(__field(u32, ctrl_hw_id)
->> +			     __field(u32, mon_hw_id)
-> 
->> +			     __field(int, id)
-> 
-> Nit: Could we call this 'domain_id'? We've got two other ids already, so we should be
-> clear what each one is!
-> 
-> 
->> +			     __field(u64, occupancy)),
-> 
-> Nit: 'occupancy_bytes'? Just to avoid user-space thinking it needs to convert from the
-> hardware unit in Intel's SDM ... and just in case we ever have to add another parameter
-> that is sort of occupancy too.
-> 
-> 
->> +	    TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
->> +			   __entry->mon_hw_id = mon_hw_id;
->> +			   __entry->id = id;
->> +			   __entry->occupancy = occupancy;),
->> +	    TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain=%d llc_occupancy=%llu",
->> +		      __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->id, __entry->occupancy)
->> +	   );
->> +
-> 
-> Tracepoints always expose some implicit details of the kernel internals which can make
-> supporting them a headache. In this case - I've had some discussion with folk about future
-> work to defer the limbo work as late as possible - until a new control or monitor group is
-> allocated. This would be to avoid interrupting user-space tasks to update the limbo list
-> when the result isn't needed until alloc time.
-> 
-> In this case the tracepoint wouldn't be hit unless user-space made a mkdir() syscall to
-> force an update - I think this can just be a documentation problem.
-> 
-> I also don't think we should commit to this outputting values for all dirty RMID - which
-> it does today. If group creation were to fail because there weren't any free RMID you'd
-> get all the values, I think this is the only case where user-space would care.
+	Missing declaration for i variable in function it6505_irq_video_error_handler
+	, add it by this patch
 
-Yes. 
+Origianl description for v1 patch 
 
-> 
-> Could we document the properties of the the trace-point that can be relied on in
-> Documentation/arch/x86/resctrl.rst ?
-> 
-> Something like:
-> | This tracepoint gives you the precise occupancy values for a subset of RMID that are not
-> | immediately available for allocation. This can't be relied on to produce output every
-> | second, it may be necessary to attempt to create an empty monitor group to force an
-> | update. Output may only be produced if creation of a control or monitor group fails.
-> 
-> I think we'll always walk a list of dirty RMID before failing to allocate an RMID, so this
-> should be future proof.
-> 
-> 
-> With the val and documentation bits:
-> Reviewed-by: James Morse <james.morse@arm.com>
-> 
-> 
-> Thanks,
-> 
-> James
+	drm/bridge: it6505: fix hibernate to resume no display issue
 
-Thanks for your suggestions.
+	ITE added a FIFO reset bit for input video. When system power resume,
+	the TTL input of it6505 may get some noise before video signal stable
+	and the hardware function reset is required.
+	But the input FIFO reset will also trigger error interrupts of output module rising.
+	Thus, it6505 have to wait a period can clear those expected error interrupts
+	caused by manual hardware reset in one interrupt handler calling to avoid interrupt looping.
+
+	Signed-off-by: Allen Chen <allen.chen@ite.corp-partner.google.com>
+	(cherry picked from commit Iaa3cd9da92a625496f579d87d0ab74ca9c4937c4)
+
+allen (1):
+  UPSTREAM: drm/bridge: it6505: fix hibernate to resume no display issue
+
+ drivers/gpu/drm/bridge/ite-it6505.c | 54 ++++++++++++++++++++++++-----
+ 1 file changed, 45 insertions(+), 9 deletions(-)
+
+-- 
+2.25.1
+
