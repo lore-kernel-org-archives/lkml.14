@@ -1,90 +1,172 @@
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1A73D3BE
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 13:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.121.71.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115643D3B4;
+	Mon,  4 Mar 2024 13:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709557868; cv=none; b=CN+imdBjSj3Ju7pqwTdUjHzCdHAFngbG/ax5PT237TXRLNSxLzms5c7XSJlcsUOoaHVLIrFgH5KL/60mdIdtsPprtEtvm7tCcuhinwYfte2XYkRkfO++LD91GByDL9ysDtmYgioEvEs9Koht5iVkd/JzXL5xwAtG48jLo1exEJQ=
+	t=1709558101; cv=none; b=rZwvNlqaBogXGS+B16dcp2E515uD/BpXW+WQBjTPdxuYm1dnvcV+E/lNSq2ypj8CpzLULhLx2Ni1hFuzv/Uklg8+tTT1nueIS+xeXzGeRyzfEg0Oeye4jgiv3Xa7ZyWXr8BTKqDHmlkqjowG6LPrzUmsvHwsM3V5GZp7fWQ/3Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709557868; c=relaxed/simple;
-	bh=nooUNjf/FBwMwIpB0WjYml/LaIESHAu1Ci4s4v41dew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JRNxYs2MBhuiuWVbu64bVNIfhWfpX2eS6surhiHw6GWrj1gNYRzqx5qTIvFRL8zNn/09sqCadlDNMdbMRiF1uZZo5OtjzYIeeOVpzWDZtq07OU0WhwRXNhFQXjM8s0ScNehydGll6FdnGn/p6w7wb3e+ZHSEUtWaWEk49RuXUIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=1t2N5Uhd; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=dLqHKolL; arc=none smtp.client-ip=91.121.71.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1709558101; c=relaxed/simple;
+	bh=my4sJhUKSsXBtRhKes0rW4/YTKXdCpClyjKDr1rq0YE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GaBXAXmtbODLCG1Pjwzdn4yHvxLLitwyGd4SIWs0tVqR4EQLZSMXKpw/MLTFiGMmoo8BjdJpNWTcLfKvbCqx3pjuhO20lOCNAbfCiKPpdsfHadJD3CMSvk3ZmMTbzjbAHp/rsH8dvGiAGw7TiIxNv5qeLuyVCmLn5xPAHbDdx/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+OEh+t4; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="1t2N5Uhd";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="dLqHKolL"
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id 42776C01F; Mon,  4 Mar 2024 14:11:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1709557865; bh=r80fpE+N5xKfTcdTiGFnYd+7aOXoX0H9BY+QrwtefC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1t2N5UhdSJtkmCilLGLMEA2r+jzWWSifV1IlsO9gP0oPJMon7P2l5Rc+8vlf5VSlC
-	 PcH6c8TW3ROYl7y5uPaTdDDJOD+1iaboabBGOaECK3qMfcxzzlbfmEbq30pbSsJ91x
-	 ALPYfY/hDvT/e3duK4y9gSLVFDOj8X8ZrgYrSXv3SjqeUI1KzMhNsOM8R/Wo634ZIe
-	 HWiZKDJgkxts3g6QQoRAnOXdmuaWmVjMiuUKbwJ1TuWqH8odJQyGTdR6myK9/kNMdy
-	 L3Jvd9utU01QqRn3cpDyMHCVlaCjjrJ8xub9Spabpj+HkLQ+2DA6B0xsV/LxaOffpT
-	 d6WjLXOP57urA==
-X-Spam-Level: 
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id 9FFA6C01A;
-	Mon,  4 Mar 2024 14:11:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1709557864; bh=r80fpE+N5xKfTcdTiGFnYd+7aOXoX0H9BY+QrwtefC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dLqHKolLX5f+oq/CGD2+0Wpsg4QXmxIR6kNcS+EFf0B+4Awbwa9m6mVQO9AwJ8Rsh
-	 Wu5SiDJ66VwCjpTPhBZgyy1SsNHxaOIy1LctYWylD9qv4lUhiZktonJGJ8GuPem+MT
-	 hFdWT+5uzKQZ7litAv9eCFdr3L4dorwzFrJDXmMb6/sqJLUZ8guzYaJRUwlPqmeYvH
-	 lgTP1VUezOgbJKsA8wKjIMSmqxVejoeFTGUr57nJJjk4bPedhRaL5Gbgs68sxYsF2P
-	 veCQrarYufi93WhlOmA9ocNdzl7mXTj+BQFIjiuSoKgEdjvZ1my3FdDUUR6vfXU0LS
-	 TfPAtSJLctlYw==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 3354139c;
-	Mon, 4 Mar 2024 13:10:57 +0000 (UTC)
-Date: Mon, 4 Mar 2024 22:10:42 +0900
-From: asmadeus@codewreck.org
-To: Chengming Zhou <chengming.zhou@linux.dev>
-Cc: ericvh@kernel.org, lucho@ionkov.net, linux_oss@crudebyte.com,
-	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, vbabka@suse.cz,
-	roman.gushchin@linux.dev, Xiongwei.Song@windriver.com
-Subject: Re: [PATCH] 9p: remove SLAB_MEM_SPREAD flag usage
-Message-ID: <ZeXIUlqnp23qTxo2@codewreck.org>
-References: <20240224134617.829016-1-chengming.zhou@linux.dev>
- <2de0d872-0e05-4fbb-8291-0c60487ccd8d@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+OEh+t4"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-565ef8af2f5so5776632a12.3;
+        Mon, 04 Mar 2024 05:14:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709558098; x=1710162898; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qSY+0FJnRKGhhIo9ghINQ55bg6BnVBP3EupnZ+W3FO8=;
+        b=i+OEh+t4Dv14E31IrPnlpAbVMWnn/5lTuwCojMO9IGAYcA+XbFqpV5CZV/gnWS0L0O
+         IO54jTP+kXhuAMix+UfdwmThXIRdq3bzWDm/YyZfIfDkgjW1a44fUALQdUI1cjFAXA/O
+         Y3aCT2d0KFSBopyfPxFUoKwA+AsCeJE40Y8/DX2WxXSHzydAnYaptD6ehyDY1B38PTnO
+         XNs/twi2WTT89NhoqVXuNLgq03XgJNujE9JGT+xAn+PdK7s3urS1e2r2BFe7ErUfHpIA
+         Acfp/UlG2YLrOYDZEKHa9jPVa7jIXL2rdSiFhfOovUurK5UZUjTDvUS9N8coLjJoQ5RZ
+         s3mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709558098; x=1710162898;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qSY+0FJnRKGhhIo9ghINQ55bg6BnVBP3EupnZ+W3FO8=;
+        b=kdElYyX6zGBEbxjIaKfS830CF3wAk6dD1q+N3duV2dIPcK6eHHqmkfIrLvfXHh/aHo
+         PE9zwitEWucX/Q2GStIj/ryh7sPkQbRHTEKXtkx6PvX/zd5rtEq+TYzN/RWmFixun5hb
+         fGuPF0qevvqWSRg48vNQukVrkVbVkxKAI5NTUVm/bTGV2XJIghN/bUPq62TxYsSeAeZG
+         m/Dg7tNvLowQ0/8TMtnLFiHBUG/xIUZt7atBTy0o5ATrh5aYwe6786OGQUH4BPWpt8QH
+         RyQ42Du++tKlV6LT2663ccYS1v19XWrzP81Va9q8BgOQn7p5YGZ8y236eP2fNFVEGDMU
+         zKTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXf2vXIHWVR0UrVp+NlWeKzwhQEdJucy/0fDSqbjm9huBH0RLCpn044TSbkufqBkOKUVK2poQ3Sk68BEF6fUQg5YIUSwEdnOxRV2O9hAgTMZ15pMEjo5LNwWSZYqHH2wIyJOVwX
+X-Gm-Message-State: AOJu0YyYxQeixB/qnKGAhPyJGFYreHTougq13Vg3YUKLzGqhQlYJ6FpX
+	uOYpdMwSjQHUOVXIF859T8jUQtv+vUpFHIs7K3Hu10rIoKYL1/id
+X-Google-Smtp-Source: AGHT+IG/dHnH6tSConVbuE0bqMVDVg8iYE+f1uNWUntd0gl7R8U1AZk7sAWSJA91AKlGmuEixDIp1g==
+X-Received: by 2002:a05:6402:2152:b0:566:ef8:a81a with SMTP id bq18-20020a056402215200b005660ef8a81amr6732285edb.7.1709558098243;
+        Mon, 04 Mar 2024 05:14:58 -0800 (PST)
+Received: from [192.168.20.102] (57657817.catv.pool.telekom.hu. [87.101.120.23])
+        by smtp.googlemail.com with ESMTPSA id fj10-20020a0564022b8a00b00563f8233ba8sm4595285edb.7.2024.03.04.05.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 05:14:57 -0800 (PST)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Date: Mon, 04 Mar 2024 14:14:53 +0100
+Subject: [PATCH] firmware: qcom_scm: disable clocks if qcom_scm_bw_enable()
+ fails
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2de0d872-0e05-4fbb-8291-0c60487ccd8d@linux.dev>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240304-qcom-scm-disable-clk-v1-1-b36e51577ca1@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAEzJ5WUC/x3MSwqAMAwA0atI1gaqVRSvIi5qm2rw34AIxbtbX
+ L7FTAShwCTQZREC3Sx87AlFnoGdzT4RskuGUpWV0qrCyx4bit3QsZhxJbTrgqqlxri21t4UkNI
+ zkOfn3/bD+344dc1UZgAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Sibi Sankar <quic_sibis@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.12.3
 
-Chengming Zhou wrote on Mon, Feb 26, 2024 at 10:51:00AM +0800:
-> On 2024/2/24 21:46, chengming.zhou@linux.dev wrote:
-> > From: Chengming Zhou <zhouchengming@bytedance.com>
-> > 
-> > The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
-> > its usage so we can delete it from slab. No functional change.
-> 
-> Update changelog to make it clearer:
-> 
-> The SLAB_MEM_SPREAD flag used to be implemented in SLAB, which was
-> removed as of v6.8-rc1, so it became a dead flag since the commit
-> 16a1d968358a ("mm/slab: remove mm/slab.c and slab_def.h"). And the
-> series[1] went on to mark it obsolete to avoid confusion for users.
-> Here we can just remove all its users, which has no functional change.
-> 
-> [1] https://lore.kernel.org/all/20240223-slab-cleanup-flags-v2-1-02f1753e8303@suse.cz/
+There are several functions which are calling qcom_scm_bw_enable()
+then returns immediately if the call fails and leaves the clocks
+enabled.
 
-Thanks for the updated text, this is a bit better.
-I've updated your commit message with this and will push to Linus next
-merge window in a couple of weeks, as you said there's no change so no
-reason to submit a patch this late in the cycle.
+Change the code of these functions to disable clocks when the
+qcom_scm_bw_enable() call fails. This also fixes a possible dma
+buffer leak in the qcom_scm_pas_init_image() function.
 
+Compile tested only due to lack of hardware with interconnect
+support.
+
+Cc: stable@vger.kernel.org
+Fixes: 65b7ebda5028 ("firmware: qcom_scm: Add bw voting support to the SCM interface")
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Based on v6.8-rc7.
+
+Note: Removing the two empty lines from qcom_scm_pas_init_image()
+and fomr qcom_scm_pas_shutdown() functions is intentional to make
+those consistent with the other two functions.
+---
+ drivers/firmware/qcom/qcom_scm.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index 520de9b5633ab..e8460626fb0c4 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -569,13 +569,14 @@ int qcom_scm_pas_init_image(u32 peripheral, const void *metadata, size_t size,
+ 
+ 	ret = qcom_scm_bw_enable();
+ 	if (ret)
+-		return ret;
++		goto disable_clk;
+ 
+ 	desc.args[1] = mdata_phys;
+ 
+ 	ret = qcom_scm_call(__scm->dev, &desc, &res);
+-
+ 	qcom_scm_bw_disable();
++
++disable_clk:
+ 	qcom_scm_clk_disable();
+ 
+ out:
+@@ -637,10 +638,12 @@ int qcom_scm_pas_mem_setup(u32 peripheral, phys_addr_t addr, phys_addr_t size)
+ 
+ 	ret = qcom_scm_bw_enable();
+ 	if (ret)
+-		return ret;
++		goto disable_clk;
+ 
+ 	ret = qcom_scm_call(__scm->dev, &desc, &res);
+ 	qcom_scm_bw_disable();
++
++disable_clk:
+ 	qcom_scm_clk_disable();
+ 
+ 	return ret ? : res.result[0];
+@@ -672,10 +675,12 @@ int qcom_scm_pas_auth_and_reset(u32 peripheral)
+ 
+ 	ret = qcom_scm_bw_enable();
+ 	if (ret)
+-		return ret;
++		goto disable_clk;
+ 
+ 	ret = qcom_scm_call(__scm->dev, &desc, &res);
+ 	qcom_scm_bw_disable();
++
++disable_clk:
+ 	qcom_scm_clk_disable();
+ 
+ 	return ret ? : res.result[0];
+@@ -706,11 +711,12 @@ int qcom_scm_pas_shutdown(u32 peripheral)
+ 
+ 	ret = qcom_scm_bw_enable();
+ 	if (ret)
+-		return ret;
++		goto disable_clk;
+ 
+ 	ret = qcom_scm_call(__scm->dev, &desc, &res);
+-
+ 	qcom_scm_bw_disable();
++
++disable_clk:
+ 	qcom_scm_clk_disable();
+ 
+ 	return ret ? : res.result[0];
+
+---
+base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
+change-id: 20240304-qcom-scm-disable-clk-08e7ad853fa1
+
+Best regards,
 -- 
-Dominique Martinet | Asmadeus
+Gabor Juhos <j4g8y7@gmail.com>
+
