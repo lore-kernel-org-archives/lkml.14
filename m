@@ -1,67 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EE73DB9A;
-	Mon,  4 Mar 2024 13:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEA63F9C3;
+	Mon,  4 Mar 2024 13:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560410; cv=none; b=Mz5OnVoQy3zdSdrygKI+pvHPoW9pdB3jE5G5ad4+MuD/1stX3da8JAYQrkG+Az3OkCgBW5G2WBhq71e8buLvyeKMup3iUbfG6K0L4XXOV8PJGJYIsk1jV0Z7q0cs2babg6zZ+T1DMW1OqUl8SIrdPiNw4Um6jLkqnqHt3f27jfs=
+	t=1709560427; cv=none; b=MNY5rqruXzmBZ3ro7R69GhOtD63RaO9XdqB1Vx03Kpyzh3LN0k6SmUGP3n6eq4tk8ruicYBYrlpxwLKevHL3+m7DShPc6feNET/7zcmOm9OClbGAEHS9d9E01bTNVog7FaqXP1TDyHjfWizvv0IlM52qJ9nrabn9bd/aPGYlwn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560410; c=relaxed/simple;
-	bh=ct6yeXiMSgF37VG2k47ZlEma0v/nfDSkmTtol+8MQnI=;
+	s=arc-20240116; t=1709560427; c=relaxed/simple;
+	bh=c027nQXo6duzC3sChLkEYD+sefZ/bqJ5BjPU+eIda6k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BDz4PTlDkvN0PEbFjIz/IoLE1zl95kSqF66Wyjf5GjqyiDLcyX1H/u5+2UZJBupAisjFDlXm6V50iR+vHyKCBMfBivj8yr4Ucpjw8UUOOMPkSWbdrf77Qid/19PXnJKJnlBXx2YMXJ3rkIP9IC+IxdNUwAnIxAo9//UXj+HUtD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nIQXKEjQ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=P13QWWoqYTvxxRgtOVUhUmTKW1yVvyEF3PIWLvqOZgrfGIbSmUotwvB9Y68evEhsiVPZxHHKwaql2E3rmpeNOAe9gU4UKsvnPdNNekJATD5FmjUA49fqkt3n1nilIEfTHvZU3XS068a3Qsu7IHGAS7sVKVcpX18QdBYZrIB3NDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BlDLhXa7; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nIQXKEjQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709560409; x=1741096409;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ct6yeXiMSgF37VG2k47ZlEma0v/nfDSkmTtol+8MQnI=;
-  b=nIQXKEjQK/p9H+KmkyNSHPWuQFYnSAou8hozdJ65f/mmMbqOQuJ5rFJl
-   /5Le7PlL5pQhzUffB6bbW2jdKMP1qnBVSojFzHs+EGdt2EbrM5LrmZPzH
-   wX9KQZ6e4iKN/V6FF7cuJAP90lGFTCVjcvgMUF4/0G8nDRAXFNr9JpUCK
-   vzYA2sc31p4unfkSp7neA/+FsOXWHy8oQPZ9yT8U/CMJFiDUWrU+f6YiM
-   2yxrKIm2ZQCX9i4DEpVS0YnvulEHjAG7+o8lXsvxTUFQK0NJDxBNhwNDg
-   EfieTv+28Oc2g3wHjaiA1UuMKcrKlamsPadvSrwVbA2fLhkJvra1Rf98X
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="26515948"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="26515948"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:53:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="13661839"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 04 Mar 2024 05:53:25 -0800
-Date: Mon, 4 Mar 2024 21:49:12 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Marco Pagani <marpagan@redhat.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BlDLhXa7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=GrzTZEtZxWdDNRIjLiasY3q5ubsmD0i5rvI/Q95SnuI=; b=BlDLhXa70PeAxAiugcSnp0h4xR
+	05PZfZoSo/Zsk/Zr8GodcFkqaEqOehJStj+zh55wqWw5Ymb23Gi5XbvlxmjE5ebu6ZrCS/Xz2/fvm
+	vUT18KLPrHbEGyMmdnC+Vl3IkqSyUKKXw20LhwEFHQLGJB3siSpZ/w7hSNFmF6UU+xIg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rh8lO-009KSk-Nc; Mon, 04 Mar 2024 14:53:54 +0100
+Date: Mon, 4 Mar 2024 14:53:54 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: =?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Jonathan Corbet <corbet@lwn.net>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Tull <atull@opensource.altera.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fpga@vger.kernel.org
-Subject: Re: [RFC PATCH v5 1/1] fpga: add an owner and use it to take the
- low-level module's refcount
-Message-ID: <ZeXRWDGvd8P7KhxJ@yilunxu-OptiPlex-7050>
-References: <Zbh7iO9wlm9ekzB7@yilunxu-OptiPlex-7050>
- <0720eb91-72f9-4781-8558-8a1b0a3691c2@redhat.com>
- <Zb8dd9af0Ru/fzGi@yilunxu-OptiPlex-7050>
- <4aaa131a-4b64-4b86-9548-68aef63c87b3@redhat.com>
- <ZdHWaeU+/On6LmHX@yilunxu-OptiPlex-7050>
- <9a9d4018-fd65-49be-9e0a-1eecc9cbf15d@redhat.com>
- <ZdYKnZxdTCvu5THG@yilunxu-OptiPlex-7050>
- <ae3cd81b-82af-4977-91d7-fa809c6fc45a@redhat.com>
- <Zd7cff43ffbJOGNY@yilunxu-OptiPlex-7050>
- <08ba8bce-0ebf-4c8f-952d-a6665dc7fdf9@redhat.com>
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>
+Subject: Re: [PATCH net-next v5 13/17] net: pse-pd: Use regulator framework
+ within PSE framework
+Message-ID: <290c516e-6cf7-4db2-9b32-c9dc7200fe73@lunn.ch>
+References: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
+ <20240227-feature_poe-v5-13-28f0aa48246d@bootlin.com>
+ <ZeObuKHkPN3tiWz_@pengutronix.de>
+ <20240304102708.5bb5d95c@kmaincent-XPS-13-7390>
+ <84b300c7-8295-424b-9117-c604fb4cd73e@lunn.ch>
+ <ZeXO_NhXZQajGZPr@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,25 +66,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <08ba8bce-0ebf-4c8f-952d-a6665dc7fdf9@redhat.com>
+In-Reply-To: <ZeXO_NhXZQajGZPr@pengutronix.de>
 
-> Just to be sure that I understood correctly, you want to split the
-> changes into two patches, like:
+On Mon, Mar 04, 2024 at 02:39:08PM +0100, Oleksij Rempel wrote:
+> On Mon, Mar 04, 2024 at 02:32:50PM +0100, Andrew Lunn wrote:
+> > > > > +	psec = dev_find_pse_control(&phy->mdio.dev);
+> > > > > +	if (IS_ERR(psec)) {
+> > > > > +		rc = PTR_ERR(psec);
+> > > > > +		goto unregister_phy;
+> > > > > +	}
+> > > > > +  
+> > > > 
+> > > > I do not think it is a good idea to make PSE controller depend on
+> > > > phy->mdio.dev. The only reason why we have fwnode_find_pse_control()
+> > > > here was the missing port abstraction.
+> > > 
+> > > I totally agree that having port abstraction would be more convenient.
+> > > Maxime Chevallier is currently working on this and will post it after his
+> > > multi-phy series get merged.
+> > > Meanwhile, we still need a device pointer for getting the regulator. The
+> > > phy->mdio.dev is the only one I can think of as a regulator consumer.
+> > > Another idea?
+> > 
+> > Sorry, i've not been keeping up...
+> > 
+> > Doesn't the device tree binding determine this? Where is the consumer
+> > in the tree?
 > 
-> a) add module owner to the manager struct and take it in
-> __fpga_mgr_get(); move put_device() from __fpga_mgr_get() to
-> fpga_mgr_get() and of_fpga_mgr_get().
-> 
-> b) add the mutex and the unregistered flag for protection against races.
-> 
-> So that (b) can be reverted if try_module_get_safe() will be accepted?
+> The real consumer is outside of the system.
 
-Yes, that's what I mean.
+The device on the other end of the cable?
 
-> 
-> > [...]
-> 
-> Thanks,
-> Marco
-> 
-> 
+> Withing the system, it would be the RJ45 port, but we have no
+> abstraction for ports so far.
+
+A Linux regulator is generally used in a producer/consumer pair. If
+there is no consumer device, why have a producer? What is going to use
+the consumer API?
+
+When we have a port representor, do we expect it to have active
+elements? Something which will consume this regulator?
+
+	  Andrew
