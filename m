@@ -1,97 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0643FB1D;
-	Mon,  4 Mar 2024 14:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5EC224CF;
+	Mon,  4 Mar 2024 14:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709561210; cv=none; b=UymyO6BlxVAmrOYefayKuQsZFPaYumIp6ov87LCVNdQdNfoELLe48ClXYjm/HARc8Y3If+W6pdT/uniXOZ5bqjkIEBrfU9q0x0bynh/jcWUve+A+lRDSy1we8v3Pg718C/QD1aznE/75hBE0KvayvnEvTQ1AiJdMS+DcwRBMOak=
+	t=1709561217; cv=none; b=CP0skdvJApCn/jXBvK+zq9YzyscPTEO4N39sOJJQ910LNQ7XUS9f6L/7HF31e5soc3YVmQOUii89UUkA8bCRbqkf8tFEkvNhPiyDkqbAbAmgXbsTqBf8FtsoUxaoDuo7YgVl9Jv+u79O0jckZ780tNwpTr/Okhms2Letu9x9MWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709561210; c=relaxed/simple;
-	bh=xPL76FHS6HJ3s8ync8Ft9aXKhFA0XZzDoh4MMW7HTYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gzcfRM9/oFXnyUhJvEM87IrrnrbIZjnsbx2pPoKczUcuZOjycDT5sZZ7IKw1cBUP/fuasRwZDw7l3MVpAyP38YBXomEsbZIRU1WOlmS0JT5XbK1ajpKn7d7Fx/eM9vu+NWz3rKDzM3X37dtci+eCxR6XvuS1BAbXDG2sfc6iu6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaxBuQMZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709561217; c=relaxed/simple;
+	bh=oPgbP6Y7UWq3750QzKfWsGmdMlFfdlCl9robmFmEbdI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F17nPM/OZs/SbwQbIGxSYv/hW3hGgcyY9ghQiqLdkJnRM8ogfiJ8Sa4XVwibIUpJe8oLRYOm9PYLJox3QhB39Fb5fUMsJGiuPPazEuutpUInZJta11RMasTXkKcyCyKCWccpUhfculmh92izDmuaknRttY+UvH/52PQvsVmvs70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZbQz0mt2; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaxBuQMZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 240FCC43143;
-	Mon,  4 Mar 2024 14:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709561209;
-	bh=xPL76FHS6HJ3s8ync8Ft9aXKhFA0XZzDoh4MMW7HTYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iaxBuQMZPL708GUjbD43Ki86fiVubj9E5DaxUUAuIa+trp6r0+/5td1d5FOqNwcJv
-	 O2XhNtt/0b4+UhYXHEKzU9H1xnRu5WfIrimL5iDZ/OpgPS+rHIygqh0sKDWpf+OU/6
-	 cyVRdRpNqKYKdoBaN+No1tB+kHlBCLUu2l7FZ3s1su0gt7p/xzh6SeH1VQx+wVMwxh
-	 HqyhMw9DcRNjMm4Lvi732rPbwGScSPlvXVMf79su3xuHEt3JjiwId8zyjeaDCG+uwI
-	 7UEcTBVH7IRT84PO1G4+yvZDLSWfCHSD0zs7eGgxn7ObW9DVgeMnKX7e9M2ytZPgsR
-	 xHTxhadBnE7Zw==
-Date: Mon, 4 Mar 2024 08:06:47 -0600
-From: Rob Herring <robh@kernel.org>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZbQz0mt2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709561215; x=1741097215;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oPgbP6Y7UWq3750QzKfWsGmdMlFfdlCl9robmFmEbdI=;
+  b=ZbQz0mt28Xneu4vwNwCHhZ4EsYoDTAcR+03HZlbb6zi8VNdg4z863FR9
+   +q1JOvwY3i59iuGPE5VPR+zwrlwl9uZ4kkjYbmlxX4p9ecjW/t5lEKRXv
+   ohv896HbtXb1Bi4rm4cwFwgng2zLloWJodj9MUprtZwUe1Q01lr0m/59e
+   fWG0e5RgMzrZi4yGvZSGODWYbeqRV9W+ByRTuWsn32UQ2gyNyNwf4hc30
+   xCUSxXZbLs9XmFYaVHcyDOmxbT7RrwrsuovvjRdFkMh6jW4U44G2CU9/2
+   cYIwXCFO51PXK6AJBA6jxq10+WcMTlXqzPcs2xdk5PZTukqMDQ+Gd3O/D
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4214178"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="4214178"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 06:06:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="937040569"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="937040569"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 06:06:53 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 2A19931F; Mon,  4 Mar 2024 16:06:52 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] Add post-init-providers binding to improve
- suspend/resume stability
-Message-ID: <20240304140647.GA148861-robh@kernel.org>
-References: <20240222034624.2970024-1-saravanak@google.com>
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>
+Subject: [PATCH v1 0/2] iio: core: Fix and cleanup to iio_device_alloc()
+Date: Mon,  4 Mar 2024 16:04:31 +0200
+Message-ID: <20240304140650.977784-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222034624.2970024-1-saravanak@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 21, 2024 at 07:46:18PM -0800, Saravana Kannan wrote:
-> This patch series adds a "post-init-providers" device tree binding that
-> can be used to break dependency cycles in device tree and enforce a more
-> determinstic probe/suspend/resume order. This will also improve the
-> stability of global async probing and async suspend/resume and allow us
-> to enable them more easily. Yet another step away from playing initcall
-> chicken with probing and step towards fully async probing and
-> suspend/resume.
-> 
-> Patch 3 (the binding documentation) provides a lot more details and
-> examples.
-> 
-> v3->v4:
-> - Fixed MAINTAINERS file to go with the file rename.
-> 
-> v2->v3:
-> - Changes doc/code from "post-init-supplier" to "post-init-providers"
-> - Fixed some wording that was ambiguous for Conor.
-> - Fixed indentation, additionalProperies and white space issues in the
->   yaml syntax.
-> - Fixed syntax errors in the example.
-> 
-> v1->v2:
-> - Addressed Documentation/commit text errors pointed out by Rob
-> - Reordered MAINTAINERS chunk as pointed out by Krzysztof
-> 
-> Saravana Kannan (4):
->   driver core: Adds flags param to fwnode_link_add()
->   driver core: Add FWLINK_FLAG_IGNORE to completely ignore a fwnode link
->   dt-bindings: Add post-init-providers property
->   of: property: fw_devlink: Add support for "post-init-providers"
->     property
+This is an exctract of the two patches from 
+https://lore.kernel.org/r/20240228204919.3680786-1-andriy.shevchenko@linux.intel.com
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+In v1 (extract):
+- removed unneeded 'else' branch (David)
+- fixed typo in allocation cleanup (David)
 
-I'm assuming Greg takes this. You'll probably need to resend without the 
-binding. Submit it to dtschema please.
+Andy Shevchenko (2):
+  iio: core: Leave private pointer NULL when no private data supplied
+  iio: core: Calculate alloc_size only once in iio_device_alloc()
 
-Rob
+ drivers/iio/industrialio-core.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+-- 
+2.43.0.rc1.1.gbec44491f096
+
