@@ -1,197 +1,132 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2062.outbound.protection.outlook.com [40.107.249.62])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2075.outbound.protection.outlook.com [40.107.241.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070CD12E72;
-	Mon,  4 Mar 2024 07:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB047134A3;
+	Mon,  4 Mar 2024 07:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709536955; cv=fail; b=ulSEJFzMnGhw0UWODAvxdFoJ6EQ9G1EH0UUxTyVE4N0oG7dUK1go5F2ccs2XPOWa8gjXVo1dDzdfatnCyOJLYx2LaU+PE8m0lOpgiRkmge64d/GbmJDXTKL7j6DXNXmDh7J95aEgig/USgmYmuCoAcIh47OjzsZEY53vCCEXa68=
+	t=1709536957; cv=fail; b=PkGAcOvTIj818RdEHZLpL3XSTrixVA6OwouG7LAuSoynSPZ7Q8C6IJV9qVSZrUKyM/AfjTwTcnX+UkG+ZZKnS5VzXbtIBH1dXSjpjTGx0IYVZm7vT8gFTxnjdJZ4Pbll/oQbVtBIyQ16ZDPhMlgvyAshA7wPDePJxVOTptHE6cg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709536955; c=relaxed/simple;
-	bh=Gj2lRboKxBVdvixZvNzJ7QK/VGYERNSF4gHnW2JKNks=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=kvDcHPFuHHYtTuEIZ6tw2r0Uyzl098nlisvVNzKnn8AsnS8SQKxlNOXHLZ3WqkAlHsW0YBw9D3AIJxv8wPV5hurBicSCjjzjSgM6TrHgyDCb2lUTV1IO1fvcF8F9crFqYjls4e+z7LdgqGlZSw28VmVPL5ML+lIkAZ7M/8ZGFlU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=YNy33y7L; arc=fail smtp.client-ip=40.107.249.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1709536957; c=relaxed/simple;
+	bh=shH8ZWCgeHNzihz1VC0GbToJnf+nqHNbbLP4T2mvDdU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WmWZyLz7fpsFsJ80ZuCx7eXer1MwlRUgT4O2tpZbB+7LGFSo8MpwP6Db6BWSA43/VrqXXWvPDYM9R4rze3h0KHXLBVEp+bVFRGh1SbdkyD48hVJkONe1kBtFTUQEz/Xa6E8usFnNI23wSm7xeoUli8vZWCRJKjFWm49K7nKVF7E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=MO0qmrPk; arc=fail smtp.client-ip=40.107.241.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YNy33y7L"
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="MO0qmrPk"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C4aKZVWkEQD9X9rmta8e9f9jnmAY5qkOwtL62uRAyzDnzDCc3G8PAs13qTnWZ3IIoIv5xsmZRaZ0ifIKKYlMazqAo0Uf90Q/ORUP5RlFNjYPFt3RdKFDAVOF4d8PM0bUpqfgE/N9uWSScDg1LYFI6ZyEQXG/tDEsTdHJ27IcIhyRvXq678qjNlncIAuB4HRF/gUQ5mzawnxkKBhKlxpZ/kmqavMcMTos8rtaxtHO1wJPzBufAsapCpW7WRm6orB5pE8M/yjIwxZ6uTHzDQRrqQHtgs0HlVK1sd2yv6lrr8F93MDatw5hCB2utc0oQ2NniJYJrOrpF1YZz6LQLG9E/g==
+ b=cXZpG6LhjPY7MYGLTl3iZyfBpq8IU8rZMQ0YAC6SMyVmE3eBtT8BOU+pA5nfK4Xqpw5qIM+wof30gPsdTjITjQ/VCZpT/t0COfZUHYHzZwd2YdgAYu69tSfPNEWP7CSp3ZtpF/trnF1tIQq+zvmNAJwwKHUaBhKDREoBXa76gMyLFPZi3DNP8zyU53Utj3vUVqEuGQtBVgzs6sBRg2IwrtrAArGAusA6ilX5BINjr0fsVNCDFdsLPdefTSki3AfutABdy1PG11Z510NboRsaPejcGioPsQ+sL3T2LMw8bmYr7fl91JPcx54jesRFlub6Mj2A7xb7Y7UaC7zYVCL3Fg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wxbA7LKAydOccFW7Qng4AYrX+8yhLCrGfnXumGJeP8U=;
- b=flsvqEhIts4qf4UrM9FVtu7FOs/wgGv9NYhllrLOlvl4BQkjbMeWoDNP7chPN+6mFUvexf/E6Pn4gPoG8aatEWR3iW+io1HNkDOqIBDR3WFA7yQcZ5dV9oHFDCzDheNdnR+HUt01fE0vk0paHvqH78Qj2ek1MZOSA5DGknNdYYaPhj4I+XP9Rem3onEvGAMRCOnKYtmP8L7Y/VzEPz7xELKlqCOOV2x8IKAp253VGRpNDny9l7QgtyhyDLI248LIvzaZumhinSHT182/+t6KNHKqgIbzDGe2b6CvWHKzkNeuhJ5uErYzUVC4DaDuK9bugPBwA9GPDWd4+5xcRlDyVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=EDr7kQ7N4C5Fv9m+3hLfFosAE4soBb/1s0hyoD1rzvs=;
+ b=V2HaDl5Z99iO5VVQCVZCh6lDXnv1IJtzYVztcWovpa9anCSA7xv4FqhE3BdKz+o5RawCA/eWUvS0QEP8XDH7QMgyQFlEdlcCksj29FF5qKDZOfKq8/rtN2F/AccbdZJjLw9KQ83d12MVBUDjwU0RjmdAjjNQyoaTu02+cTlLaz4X3IvNOnZm2qjxSKVxW5ukn0rL74fXiml2P/qbajWsxDC/tp0AF5/5HsTQD8i5Ua1JBr6XQx3QOrRuw29Q0+VuwgkzGWs5o0LtpGX6IrD25Rbwyz+NnXFdzk2WG8rn5jml/KudnsxdCcrcefqXHWS2194gKh1cHZtxfrWL34VFKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.203) smtp.rcpttodomain=valentinobst.de smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxbA7LKAydOccFW7Qng4AYrX+8yhLCrGfnXumGJeP8U=;
- b=YNy33y7LGcB/q+EyoXn3ppiX3MZMsVM0/5x4JPs+bXJV5y96fl523lAP5lqNNxV5roi8WaqJTEVdTgtVd2qAIYVnh7K5+Ly0Ypw0O2qrNw97fY2ag4PllriVvX9ygAkEEJo3Xuqe30TtLUdxjacdRV6eWAzJGUbeMKMctcMxo7s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9498.eurprd04.prod.outlook.com (2603:10a6:10:360::21)
- by DBAPR04MB7350.eurprd04.prod.outlook.com (2603:10a6:10:1a9::17) with
+ bh=EDr7kQ7N4C5Fv9m+3hLfFosAE4soBb/1s0hyoD1rzvs=;
+ b=MO0qmrPkLNVeCxiE/Airkhiv4prVYVqM1NcmgTrMG5d/WA1jua7R1L3GCIfboJwUKvP/ELnRbvhORV8trLlKSFbOcjAjXOK+7Ckl+Wka3zH1ODx9d7aQ/pKkIfV2yIes1zRvuoKY329jIcypwVcjPsmwuzJc5IKkdelM8fgVRZUrSbPJJ5FWZJbg/ZLSSClu9GaQUqpkH2nRxAWHKSh1DaSX1u6gViS4056GBF2P1LaxJQ+HEXOS9z5UZZVYiYUHw4HN6RrwZmYYvyRpYP0owAacC48g66gyAHHRFvxPAAA0DT0U/FQumyAETsBZXROsW1yarhnIK/PRdy7eWH1AzQ==
+Received: from AS9P194CA0004.EURP194.PROD.OUTLOOK.COM (2603:10a6:20b:46d::32)
+ by DU2PR10MB7765.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:49a::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Mon, 4 Mar
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.37; Mon, 4 Mar
  2024 07:22:30 +0000
-Received: from DB9PR04MB9498.eurprd04.prod.outlook.com
- ([fe80::4bee:acb0:401a:3a01]) by DB9PR04MB9498.eurprd04.prod.outlook.com
- ([fe80::4bee:acb0:401a:3a01%7]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
- 07:22:30 +0000
-From: Chancel Liu <chancel.liu@nxp.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	kuninori.morimoto.gx@renesas.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org
-Cc: Chancel Liu <chancel.liu@nxp.com>
-Subject: [PATCH v3] ASoC: soc-core.c: Prefer to return dai->driver->name in snd_soc_dai_name_get()
-Date: Mon,  4 Mar 2024 16:21:28 +0900
-Message-ID: <20240304072128.2845432-1-chancel.liu@nxp.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0013.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::7) To DB9PR04MB9498.eurprd04.prod.outlook.com
- (2603:10a6:10:360::21)
+Received: from AM4PEPF00027A66.eurprd04.prod.outlook.com
+ (2603:10a6:20b:46d:cafe::da) by AS9P194CA0004.outlook.office365.com
+ (2603:10a6:20b:46d::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39 via Frontend
+ Transport; Mon, 4 Mar 2024 07:22:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.203)
+ smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.203 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.203; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.203) by
+ AM4PEPF00027A66.mail.protection.outlook.com (10.167.16.91) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7362.11 via Frontend Transport; Mon, 4 Mar 2024 07:22:30 +0000
+Received: from FE-EXCAS2001.de.bosch.com (10.139.217.200) by eop.bosch-org.com
+ (139.15.153.203) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 4 Mar
+ 2024 08:22:29 +0100
+Received: from [10.34.222.178] (10.139.217.196) by FE-EXCAS2001.de.bosch.com
+ (10.139.217.200) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 4 Mar
+ 2024 08:22:29 +0100
+Message-ID: <3f61c6f4-f058-46bc-a7b1-ce4a397a06dd@de.bosch.com>
+Date: Mon, 4 Mar 2024 08:22:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] kselftest: Add basic test for probing the rust sample
+ modules
+To: Valentin Obst <kernel@valentinobst.de>, <laura.nao@collabora.com>
+CC: <a.hindborg@samsung.com>, <alex.gaynor@gmail.com>, <aliceryhl@google.com>,
+	<benno.lossin@proton.me>, <bjorn3_gh@protonmail.com>, <boqun.feng@gmail.com>,
+	<gary@garyguo.net>, <kernel@collabora.com>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <ojeda@kernel.org>,
+	<rust-for-linux@vger.kernel.org>, <sergio.collado@gmail.com>,
+	<shuah@kernel.org>, <usama.anjum@collabora.com>, <wedsonaf@gmail.com>
+References: <20240229155235.263157-1-laura.nao@collabora.com>
+ <20240303144857.22733-1-kernel@valentinobst.de>
+Content-Language: en-US
+From: Dirk Behme <dirk.behme@de.bosch.com>
+In-Reply-To: <20240303144857.22733-1-kernel@valentinobst.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9498:EE_|DBAPR04MB7350:EE_
-X-MS-Office365-Filtering-Correlation-Id: d804e1f3-0176-4955-8241-08dc3c1bda2f
+X-MS-TrafficTypeDiagnostic: AM4PEPF00027A66:EE_|DU2PR10MB7765:EE_
+X-MS-Office365-Filtering-Correlation-Id: ee09fc0e-b23b-44d7-d7a5-08dc3c1bda82
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	1WgFbi0bLA9bm3MbpgFdeO/MTLjPElioZbQv5yorfhr4D48yOrYIJO51y5zgzYbWZB06YyjYSJyuh9Z7euXohbsnUv7/ioKgYraWuN99cbSPbTS0msSSmJR1wTD3NgDDMSD9o1wjU0y/R2qvJ+NKGMEDZr+ImC/xllZYSoqiym9VS5p2uGDSebftAnn3aC02tAuhEiIr+zk+lkbWyFWi+l0+Fb4HJSlNaNTz3zcZQUJBo1JXw9EdWe87abHza9FM+YjqrT15dk9VqCFHd1JvKy8Bex6FpJ0GBpCpEvt1IgctRHGB/3zMxPzUvDFytAdZeyMjNJtOOZJVOhAxi/plllluM5bCFUpyb9wQkgmgufnfCtkO66of1woS7GThUWfpH64re/t1weUnhKUh3dPpkYzoog3pL/Z3FySLkagbIUMa3HhXaMi2Lmujjc0GC2UPuYKUI1dTi13Hi6ZixeAsuygWx5Z5Nc98E7QMuMvdZ/d16r4106x+N0qs+4GKsigkFOGGKkn6GG6EcX2/RWJ5EGQTuKw36zhsW6G7dCAd8kKUK+dvtD+8gWfsA9UcSMZALob0ZLphQAiiq8N+jArxgPQy7kTtEu0Lz5Y5fIldTm6rm5F/qlU7YIjZ8L74lWfK2hGJzP4eQDma7JZ77DQIoIKKoazBvueLhLOSiyKWbBI9OqEBqHs3UXXYLIiOODKi8DRTPeOTQwWVQbkc52cs0L+k8hd+fTyfJcN9dU+FtIY=
+	0EgRfbgPmmAvdjTshyM2E49HYf40rEx1L4ynM+d+EgpO5Fdf4P+yippUQ4vxHXUyKQy/Hlo2/1JV0C7auSz/53UaZOezVJPF+MxdMqHNAds9fmJGfhRPukOFs+bYbZCvxXmWr0xBsRVXFKrhIPXmiNL18cHRori1HOAAg+0u5w7rV7vG8oKtdnFQB61g2/fOQeo9JWU/khj8O0oX568WYFJUTcWKO0B5WWSCo/eHb5p8vlOrXWotiGE44tjrIXyMMY2Pdzqc6Rrdq8MMv8kqBdDf4CQlREY66OC28BP53H99aa2MCIVELlZww7NAGTd3pqhs9PoAaS0KW5GBiUXkdgWYsIsC1mE2yYNB/jSEisoiDsNNrqh+jnVVH9tQXlTzRj4AadsalIq9aUOv4bsBL4Xg/mNEF1jaZ4GePfdStQM/Up8oeoX3sA5y5C0FoCMmuDKBXLroanvK1WCtXEbDrjjGfimxjBv/RMG62AJN3K3x8si77ZKkNcxX0NtzHvOeZTI7QhEGeafKgKCHNlWJ7NohbyaV+i9rR96x57BoVQkJD/BK3Wi3ZV8wzI8oRXwDKtV4TpvL11Y7KibJS9fkkiGGT6L8sAbrZHlc5tVXO2a9IZEqrTIYCzgd7dsPhVBDeekDV7TO2fYTqR64lvtdjYuq2jql/7kUpt4xCfCpS6PHffHEbPw0bgHCIL8h4xHj1L375Hda/AOnF4oJZFXNQA==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9498.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uizufDMDJAyGuauU8DFOtC86hKwju//grgkCDTPx/E3Nbk4ezfLVPi51rKy9?=
- =?us-ascii?Q?vDRG58X0VA1xmNMz9rPSD/P4ml8Y2ktEI5rwa+argI4DTIB2GH2iQZ5Csh44?=
- =?us-ascii?Q?efYPR/rMeehPDiJlp72NZE6SCPg04V70q30/SNcnwzF5CvYnEnJeY9KlYatC?=
- =?us-ascii?Q?s8Ly45IbutSy1b7ZIf1UYBHNzVgZHRnbyVIfCpPql9WtTaCuIcf3YsLfsvSQ?=
- =?us-ascii?Q?7+TSo96W6aNZga2dnbdf68VutuSdja9xoj2hs87o1uCnUaiQEV8vTmqi/h0c?=
- =?us-ascii?Q?V9t3+dveOdXwIigHonkuwn4M401gqKqxNmdYwqGL+cTbWBZLQwbk05Sx1ZX0?=
- =?us-ascii?Q?k2NcMOpvC5FTow58XKpnpO9bJLkMlqbSf+vI0IM42Sn5/XjJ7mQIDysOt+Mh?=
- =?us-ascii?Q?1x7jRV3OmoxYNti4NcvYfSgcc0xH4BSR4d2K/BnRR12Xi0kFMbtvwx5wIKcU?=
- =?us-ascii?Q?iWcmgXM9/sL1TXq0QoShneUMXKhgJ4zzNjEYlr5Jp9TE3h86rgQypjtC5oSe?=
- =?us-ascii?Q?ETLHED8sdsNx1eEJntIZPqwXdlR5LbPgmnrqLCcbxCY18AZPGDJLiMYp8T/O?=
- =?us-ascii?Q?/tr9JoWCt2Z/aNb5oDgtWRm4oDBB6I7AGdwXOlcecBk+xcgrw7RCAjc++byB?=
- =?us-ascii?Q?tE8td2WZtliblh33IjTbnInZVA5ul5X1zQEfxd63VkVBM1jAO1QADKhd6vqr?=
- =?us-ascii?Q?KFqTvUmDWFtDb1lHsV8T7sPdS2Gxe57c7QJY9mhsNN077Ift3B1HOy1pvxvv?=
- =?us-ascii?Q?3zHryE3oMC5+PpLvDIbAjqbFJCLH7iNIswduWWrWZJG8s7cv0iGRsEmVQjet?=
- =?us-ascii?Q?MIyiygP8W5u1R3KkXQnjAqO6HZDX9W1vlGrLDuX6VuhX9/44/bGYjtEvTiYs?=
- =?us-ascii?Q?TZTMkkCIgOIfSkMfODc3WZQpO7Jg6YEcMJU8RvDaFiUC1O0gp1SAjC/VYbul?=
- =?us-ascii?Q?4h0RTrb5MtU3IjZ+JL3L7AE7EpIg+0RHanz5aXG3kd6aYjPE8wy2sOh4Rqv3?=
- =?us-ascii?Q?O7Bc0IS2LqocjLh/ApLcfIcJc7ND5RisWuECEqT79+wEUFdqqgWg+SGpfMTq?=
- =?us-ascii?Q?aM3TNluztulzXf24L8HBNOFZdWd81nQFntahdnMnweNNVx94GEJdOafyl6MJ?=
- =?us-ascii?Q?U1o9biG7/32gpw+SNU+dLoRgoRt7Bb+XM8nLhb5EOTXtzMqs/IqLRzSKJBwC?=
- =?us-ascii?Q?Qog0Uq35i/NBd0sbFOKUNhoqoXaMm5bbEwpk51Sjuy2nrbT4MEVzisFjbBzg?=
- =?us-ascii?Q?56/f9NH6NlX4VM4PgTphNqsIuiMzPFYQTSfxVbZyvkPdZDpk0rqafGN3sMvZ?=
- =?us-ascii?Q?uv1BXnzlgMcxKxV7SqD2bMJkAc5aOg1bmPrlXGdqwO9gZ1aEn7PJ1RfRP7gC?=
- =?us-ascii?Q?0vP/ACwWJBuuTF8WCZiVTefpN6CYyFihEagWq3YTzQtsQprGgjTriOZULjKp?=
- =?us-ascii?Q?3T9w2cdoShqMJmbFFKiukFuf4d0lGGUIFkNua2xvueIs8oEhjoWA5NDS4wOG?=
- =?us-ascii?Q?vlHmVhGGRJ6CKxvVEF3omfGFpJ6OKUcAv1Mwju2zQ/HVwVY1h82rd/BYuTII?=
- =?us-ascii?Q?KS99m9pg+tpPre9aS0mzEEi/b2NNFWWxZqpf0PU9?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d804e1f3-0176-4955-8241-08dc3c1bda2f
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9498.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 07:22:30.3384
+	CIP:139.15.153.203;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 07:22:30.6621
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: etHJlhST9f7ARZqwDAwu7i70EkOQKjbep/SkyuNB6TLviOUm5sQgdsQQYxSZL89L/w17PFBK3CuWw9YS7nFcgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7350
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee09fc0e-b23b-44d7-d7a5-08dc3c1bda82
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.203];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM4PEPF00027A66.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR10MB7765
 
-ASoC machine driver can use snd_soc_{of_}get_dlc() (A) to get DAI name
-for dlc (snd_soc_dai_link_component). In this function call
-dlc->dai_name is parsed via snd_soc_dai_name_get() (B).
+On 03.03.2024 15:48, Valentin Obst wrote:
+> Perhaps we can also add a section about these tests to the new
+> `Documentation/rust/testing.rst` [1]. We could mention that they exist,
+> how to run them, and link to the kselftest documentation for further
+> information.
+> 
+> Not necessary to resend, perhaps we can do that in a separate patch when
+> this patch and the one by Dirk are merged.
 
-(A)	int snd_soc_get_dlc(...)
-	{
-		...
-(B)		dlc->dai_name = snd_soc_dai_name_get(dai);
-		...
-	}
+Yes, that sounds good :)
 
-(B) has a priority to return dai->name as dlc->dai_name. In most cases
-card can probe successfully. However it has an issue that ASoC tries to
-rebind card. Here is a simplified flow for example:
+Laura: If you like to write some basic intro as proposed by Valentin 
+please do it against
 
- |	a) Card probes successfully at first
- |	b) One of the component bound to this card is removed for some
- |	   reason the component->dev is released
- |	c) That component is re-registered
- v	d) ASoC calls snd_soc_try_rebind_card()
+https://github.com/Rust-for-Linux/linux/blob/rust-next/Documentation/rust/testing.rst
 
-a) points dlc->dai_name to dai->name. b) releases all resource of the
-old DAI. c) creates new DAI structure. In result d) can not use
-dlc->dai_name to add new created DAI.
+in a separate patch.
 
-So it's reasonable that prefer to return dai->driver->name in
-snd_soc_dai_name_get() because dai->driver is a pre-defined global
-variable. Also update snd_soc_is_matching_dai() for alignment.
+Best regards
 
-Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
----
-changes in v2:
-- update snd_soc_is_matching_dai() for alignment
-changes in v3:
-- resolve conflicts when applying patch, no others changed
-
- sound/soc/soc-core.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 507cd3015ff4..1e94edba12eb 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -283,13 +283,13 @@ static int snd_soc_is_matching_dai(const struct snd_soc_dai_link_component *dlc,
-
- 	/* see snd_soc_dai_name_get() */
-
--	if (strcmp(dlc->dai_name, dai->name) == 0)
--		return 1;
--
- 	if (dai->driver->name &&
- 	    strcmp(dlc->dai_name, dai->driver->name) == 0)
- 		return 1;
-
-+	if (strcmp(dlc->dai_name, dai->name) == 0)
-+		return 1;
-+
- 	if (dai->component->name &&
- 	    strcmp(dlc->dai_name, dai->component->name) == 0)
- 		return 1;
-@@ -300,12 +300,12 @@ static int snd_soc_is_matching_dai(const struct snd_soc_dai_link_component *dlc,
- const char *snd_soc_dai_name_get(struct snd_soc_dai *dai)
- {
- 	/* see snd_soc_is_matching_dai() */
--	if (dai->name)
--		return dai->name;
--
- 	if (dai->driver->name)
- 		return dai->driver->name;
-
-+	if (dai->name)
-+		return dai->name;
-+
- 	if (dai->component->name)
- 		return dai->component->name;
-
---
-2.43.0
+Dirk
 
