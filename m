@@ -1,96 +1,78 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DA83FE47;
-	Mon,  4 Mar 2024 14:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A611C4644E;
+	Mon,  4 Mar 2024 14:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709562287; cv=none; b=k9E750xZiULi464me+Y4vcpvBjn597G9Z7CSxcuC7ZU6AJhMG9jqQ39e/5p4t3jenDlhedPg28AwrCGdznRehzmGBZKRt3O58g72OdNekv21jWERi0zqvUsaWjxxWxpQlj9JjdU9t1b4RKx7MQq32BTsrWE/s38m9sTsh0fzGy4=
+	t=1709562289; cv=none; b=LIiP5xI2DmV2FMHhSK0zsV7xk5jFm/xH0VyAJoLfTBXvQBfXVrRG3CnX0KJclSTTakWPaB5VU6fTZNBqZDMDZA/SiZfWLBna+DZGg3+tWVJ2Xj+TWPiLt7DAEC6Jc2d03SBsPxrl3QNO88FmKHIQBpNKSWsibvnV9RpGK8Ks+PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709562287; c=relaxed/simple;
-	bh=mcKITX6v37iZwxRKJJBrkFjTf4ftbKe8/GBF0582cnc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=C87qesAFfNDTPiLqRbvwdgwP1X+igplvDmXNsHXPYryI4eh08PdbZ+XcBTMcsOnEvJ2XosYpDipdrjXx2j32Q3tUn8HkQf/GLlw5XimDKf7HmtncgrAHWQ/u9ESYNBFc8uxdDnNUKzzWg85G3FkFEYHOEOlBrm9/SYA4kq2xL04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Rq4HWVZv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I4SzUl53; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1709562289; c=relaxed/simple;
+	bh=6gCiVFXmpuEznUgKdT1gpn2oh/lHn5kfV0SnIxnZcus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f66/c5VX8hmJDLKnZkiGkQ1lpto+GYPe049qGjOauBLLKd6mjWrE9F58lbJ2SySqB0+0jXsgKHBf2IIHiWl4x2UWOQZZ6vqEurrnbS5iMe5Gm6yEeMmmUCE920ZNWH1yDBcuhWyRAIUoFw41CmjUcK/kXJZYXdLvd2heIhsCKqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLlpWI/p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Rq4HWVZv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I4SzUl53"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709562280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eHKSpmj3DHeQFSFdUlKh9foXfF7ZumMJ/fAU2N/1zwg=;
-	b=Rq4HWVZvvMHVESuVLtocY6NYdSEH/dE2Xp+N+TBjJXWY+OrV4fvA+rn/A7w0wJxyIjPIJf
-	QTa6R4Eb1wokypLG7dbaBsi5i8zhEDi9LU9bptZXEFvUbnDBg6gerU+lhPZyaHxNZkAOsS
-	mTzpDlnqKUJvNXA4L04jqwX3JzVkSU+ZGiPLJ/VCTxlTohnbPbe+z1CnQSRu+cce6LH9h0
-	Sa370W8eh0GbAfR9vmQvwZNst0eSpaxdW8ZouLeirMq3p8RKUQs7fQG3uvIt9pLE0Wq4zp
-	R3ZPirxAPzPASBf+TTa1N00LDKMiFM2cjj8a2CEL2UYtF0F7MnMFkxu8gmdXjQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709562280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eHKSpmj3DHeQFSFdUlKh9foXfF7ZumMJ/fAU2N/1zwg=;
-	b=I4SzUl53PxaS52fDo8iHgVdIzZ8oprWFwZxy69wJaPobECSxLSjV/QRnCr94seWE4mCgtZ
-	MoFnmWnDVT3IBKAw==
-To: Bitao Hu <yaoma@linux.alibaba.com>, Doug Anderson <dianders@chromium.org>
-Cc: liusong@linux.alibaba.com, akpm@linux-foundation.org, pmladek@suse.com,
- kernelfans@gmail.com, deller@gmx.de, npiggin@gmail.com,
- tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
- jan.kiszka@siemens.com, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, yaoma@linux.alibaba.com
-Subject: Re: [PATCHv11 2/4] genirq: Provide a snapshot mechanism for
- interrupt statistics
-In-Reply-To: <3a89fafb-f62e-472f-b40b-8bf97954e9e3@linux.alibaba.com>
-References: <20240228072216.95130-1-yaoma@linux.alibaba.com>
- <20240228072216.95130-3-yaoma@linux.alibaba.com>
- <CAD=FV=U1b+8atmju_w4eRmVKmSqjj6WCsy5EawYqj31fQ1kvrw@mail.gmail.com>
- <87plwdwycx.ffs@tglx>
- <3a89fafb-f62e-472f-b40b-8bf97954e9e3@linux.alibaba.com>
-Date: Mon, 04 Mar 2024 15:24:39 +0100
-Message-ID: <87wmqiulaw.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLlpWI/p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9ABEC433C7;
+	Mon,  4 Mar 2024 14:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709562289;
+	bh=6gCiVFXmpuEznUgKdT1gpn2oh/lHn5kfV0SnIxnZcus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LLlpWI/pBrzJtatXQW11HUwzKuXsVyGKKfBiSSowA2WXESzIhQfnBkrEpzBl7V0Nv
+	 q2pxS5bCEpGYLg32QR2Tm5c0LnIDmwpdSp+RMa19knG97b3bvgw3njuCgv/oyJ/o7b
+	 DrZg9BfvRaYfzndcxmrDqH9vjbU4TLg/WRLaaCjZdJbBFqHPbXZugIwDd9vBvMjvbU
+	 P9KOQfg3KdqyBgxq71VObOK7ZS3L1VvR8/nnIefqsB6aO+fOJclNQ6Z92TMMaa8rkx
+	 YDNZFqvAZ3wTH/Osq8uQvrg8WsfBXGn/PynwJKAjuPrNr+HL1SVCJiZniXKAZHOhPS
+	 LA1aR6hX2oBww==
+Date: Mon, 4 Mar 2024 08:24:46 -0600
+From: Rob Herring <robh@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: broonie@kernel.org, wenst@chromium.org, lgirdwood@gmail.com,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.com,
+	trevor.wu@mediatek.com, maso.huang@mediatek.com,
+	xiazhengqiao@huaqin.corp-partner.google.com, arnd@arndb.de,
+	kuninori.morimoto.gx@renesas.com, shraash@google.com,
+	amergnat@baylibre.com, nicolas.ferre@microchip.com,
+	u.kleine-koenig@pengutronix.de, dianders@chromium.org,
+	frank.li@vivo.com, allen-kh.cheng@mediatek.com,
+	eugen.hristev@collabora.com, claudiu.beznea@tuxon.dev,
+	jarkko.nikula@bitmer.com, jiaxin.yu@mediatek.com,
+	alpernebiyasak@gmail.com, ckeepax@opensource.cirrus.com,
+	zhourui@huaqin.corp-partner.google.com, nfraprado@collabora.com,
+	alsa-devel@alsa-project.org, shane.chien@mediatek.com,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH 20/22] ASoC: dt-bindings: mt8186: Document audio-routing
+ and dai-link subnode
+Message-ID: <20240304142446.GA171936-robh@kernel.org>
+References: <20240227120939.290143-1-angelogioacchino.delregno@collabora.com>
+ <20240227120939.290143-21-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227120939.290143-21-angelogioacchino.delregno@collabora.com>
 
-On Mon, Mar 04 2024 at 20:00, Bitao Hu wrote:
->> +# Snapshot for interrupt statistics
->> +config GENERIC_IRQ_STAT_SNAPSHOT
->> +	bool
->> +
->>   # Support forced irq threading
->>   config IRQ_FORCED_THREADING
->>          bool
->
-> I think we should follow Douglas's suggestion by making
-> "config GENERIC_IRQ_STAT_SNAPSHOT" automatically selectable by
-> "config SOFTLOCKUP_DETECTOR_INTR_STORM". This can prevent users
-> from inadvertently disabling "config GENERIC_IRQ_STAT_SNAPSHOT"
-> while enabling "config SOFTLOCKUP_DETECTOR_INTR_STORM".
+On Tue, Feb 27, 2024 at 01:09:37PM +0100, AngeloGioacchino Del Regno wrote:
+> Document the dai-link subnodes and the audio-routing property, allowing
+> to describe machine specific audio hardware and links in device tree.
+> 
+> While at it, also deprecate the old properties which were previously
+> used with the driver's partially hardcoded configuration.
 
-The above is not even configurable by the user. It's only selectable by
-some other config option.
+This can be combined with patch 19. Same comments apply.
 
-> +# Snapshot for interrupt statistics
-> +config GENERIC_IRQ_STAT_SNAPSHOT
-> +       bool
-> +       help
-> +
-> +         Say Y here to enable the kernel to provide a snapshot mechanism
-> +         for interrupt statistics.
-
-That makes is visible which is pointless because it's only relevant when
-there is an actual user.
-
-Thanks,
-
-        tglx
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>  .../sound/mt8186-mt6366-da7219-max98357.yaml  | 112 ++++++++++++++++--
+>  .../sound/mt8186-mt6366-rt1019-rt5682s.yaml   | 112 ++++++++++++++++--
+>  2 files changed, 210 insertions(+), 14 deletions(-)
