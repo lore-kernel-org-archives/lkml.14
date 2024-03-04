@@ -1,99 +1,209 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A34F4409
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 01:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6D12F30
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 01:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709515563; cv=none; b=QT+JL2X3Kj1q4FJ+eGE9/7BopFeigYCp5M32V5id69hVck2XyD6qz2ku4regMi0f/3zIXRKZbC1noD4ztKIQylZZ5eUYUwxf2GCRymKdzwxkaMTY4ZhnKsQ7qGJgaCv394I13S3LpTI2ysNVSZ1UpLiEkztJAjNv1cEjOnVP6hc=
+	t=1709515572; cv=none; b=eM0wF/4KJVHHFr8PBsBw0oqaG0KEiza5/zXx+N1tTuI2Y+McMcprIB/4Vqb0sBTI9caBLGkrZ0RziQCIKiuP4a/sSAACwZN+elB3q/vS63LZBe6WfuEdFgrF4zOKdJSl62bHkF4rv8gPlkWXNhg+Qr3Ob3dmZVUSgSWmqDL9xKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709515563; c=relaxed/simple;
-	bh=PKFdH2Ew/2KszJ2KLQdX6BpPURrzDiGAHTBUa4+sX2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UHPwEfOYa5vLpex3Nl2YAdZzx9ItvXZCHfB6syLNuH7TA0cWQ8/btegAFl2SLZo4b4pxAQYiFWxC+9/r9ibQBqeHZV7Z6EvlfvfYhFAB6oBqoYrPBAOqckUhcEygCqk7Yt5y2bnOw/LQ7XvM3M10oD8QmPg4YsCGrW3Kl+30Eec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HprEuGx4; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709515572; c=relaxed/simple;
+	bh=S07ID7UsiNh9WVeNT25TX3PVNmyMCqj6IzQIEg7TTlU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U8F1fcTLLQql/gDm43gh6sn4Bbrt8yoMkXbWPm+EGzgsEhKUko1dW57yJliiDXNKh6oeeao8Lk8BWm1oukfFYHXGY1AH/gZgMlQXQ4fWC3UxDor0TkBersqoyGNNU9n7Z0ZMzEwsK3jEb+DD1wCICdrCCjodJ2MAcxC3g03DUog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=asXt3tEc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HprEuGx4"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6e4ea4ffafbso95684a34.2
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 17:26:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709515560; x=1710120360; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5CrDoOfeKlQa5JlMUiuCz6fCgu6xAbvGI8jkfEQdCl4=;
-        b=HprEuGx4/7/Y3ZKJJtw3TYSxV7hEeLdkvZ4ZRESErYPzQtveP+u44j83NIAhSHu3YX
-         FoJ47i30F19a4bSsRmN5KfgMmCLBDoy9DMXfbif8OKoaEechlsIBMz4cgjnQgOWsleUn
-         AxpJkun7eFwRT326c8YBa/8fGWsbsyDfm3yjAxm1UgVy5OjOQ4A35VNlIdGimLceO5G2
-         m8v263LZJzXWdS2JFhPvPlLIvcXIBpTedB84vX/QsLr5cOQ2lYbLhsPjcn9K3+dunznz
-         S21ZGioawmY30RyqrwgR007FP1VWFIdab4QW2nXzZQdTwL0XVe9uHeWD2VqCorHUSPUL
-         jCdw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="asXt3tEc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709515569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CojaXQJJcZOQUU8jh0jnjeeaAVlOw1HZo2KWPjGs5yk=;
+	b=asXt3tEcIZYnU99hRJD+S65nfTxYqBpwM60Z6B0XRGoguMZS6IzzgT2PkFYakiUylg/Tsf
+	pgUc+wUrzdZKRHYerRzFIQX68iRcb7jO5QRftzUE38YPvRk+nZ28Ydxuc+ZMIuIFop58qh
+	aRZ8rsrd0QgJdPq6wOx6oJ0jg58x7k4=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-462-o0oAMIOENPeZfHGso_vZPQ-1; Sun, 03 Mar 2024 20:26:07 -0500
+X-MC-Unique: o0oAMIOENPeZfHGso_vZPQ-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-29a5f3804fbso2944151a91.1
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2024 17:26:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709515560; x=1710120360;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5CrDoOfeKlQa5JlMUiuCz6fCgu6xAbvGI8jkfEQdCl4=;
-        b=nCOEQaZXVn5UZxjS8F++UIwBP/OqrGKwzsnj5PICQc83+urdUR7ifeNatLtD4WG1SD
-         N/IfEBJkARaOBcYQ7knBbDlOJJ9YkxKTG4CdnrV4t8fUN1WVYhy6xpZ1ZifgfWynAs+P
-         IfD0HgT6jxIYgcg4Ymm4JsfvorH42ACVRM/Q17i17j6dZNvLCPv5xofeQt0EZg6loEnh
-         qRa49+3uAueT0H3qEq0rTlUWqTtIi2X2Q7BG4yqI44yVy6pKNA7Btoncf81v9arX65uy
-         91u5xQxxDwTM8ZqbhsQMwNCDTYLZbpRwCAKj5/FAYuC4qOFvhJha9nQ6XX3ThenBpPpi
-         Q1IA==
-X-Gm-Message-State: AOJu0Ywnyus9T9PhpnUJVOkmfPm/83H1NueoP6TcZ/fHVWPsENcHfwq7
-	cnhKceRkqHo+Ol7kmqEj+OMGgjWveQ8srhEl2LzCbQoJD1yfMvpooh+n1W54Mkg=
-X-Google-Smtp-Source: AGHT+IFZAhY+aHDoE4UmJ4YAzthSlrYX3qSCpjstZvsoP2lK4CgQ4aPMAZyXOMranELQKmYY9IwDFA==
-X-Received: by 2002:a4a:2b42:0:b0:5a1:2947:c4bd with SMTP id y2-20020a4a2b42000000b005a12947c4bdmr1367268ooe.0.1709515560427;
-        Sun, 03 Mar 2024 17:26:00 -0800 (PST)
-Received: from my-computer.uh.edu ([129.7.0.68])
-        by smtp.googlemail.com with ESMTPSA id c18-20020a4a9c52000000b005a056b5e37asm1815345ook.48.2024.03.03.17.25.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 17:26:00 -0800 (PST)
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: mcgrof@kernel.org,
-	Kuan-Ying.Lee@mediatek.com,
-	koudai@google.com,
-	p.raghav@samsung.com,
-	akpm@linux-foundation.org,
-	kbingham@kernel.org,
-	jan.kiszka@siemens.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Andrew Ballance <andrewjballance@gmail.com>
-Subject: [PATCH] scripts/gdb/symbols: fix invalid escape sequence warning
-Date: Sun,  3 Mar 2024 19:25:07 -0600
-Message-ID: <20240304012507.240380-1-andrewjballance@gmail.com>
-X-Mailer: git-send-email 2.44.0
+        d=1e100.net; s=20230601; t=1709515567; x=1710120367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CojaXQJJcZOQUU8jh0jnjeeaAVlOw1HZo2KWPjGs5yk=;
+        b=gQJRPFFTIFq38iWb1c0fyzR8H0E83Jy9T3mGD/oZBqJ57gdsa+6Z4qDy6mnqXvgoyB
+         cT5XrT+my+iLcUOXDQt0hQITVmaGB6KYLW+Fj+IPDrNCVNNZkJHmHbH55qezCTztjycg
+         5gWd/oFniWV7cqXvhldTd0mVCg0Xn8hKReLkbqotQxWHqikLP9hM1pgsAoRvOcb13s9T
+         1qXUVcK19jhm4Aqh474VeZefJxQojqVE3xlGbLLCXAwgk4jfyzGWSqlX/6RnpJhaG4F/
+         Bw1O0DxQ+miFEHhQ9AIk7t3m658ClXw1tWygNawNk3xlj8uC4Bpk2cRLoBDuMraChTV4
+         zE5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVTxnE8hwfJBpDs1s0/WTtwb8lVOtI92Lhf/ZYmsSu8M1Wwp6Rqf1bS7xLcYlmo8xvRCeUjzUr4xIQC5x8muZlzba/pdEnkK2nU3Ry6
+X-Gm-Message-State: AOJu0YwEf6v6ZxeozgPA0ImVijJjVKbnx0QNyLNW2ADyAsOfYUsvaw11
+	a2xITT6IGe/swi7aZqQqh58WPghoXhZg8WQDcvjch0QilTYh7gjJi1K3zJZMDi9kZkFPagwLPOn
+	9Aajg9Xc0WK75AZcRwUsde0OWOnriO/f+yy/7aQoY0xTkA08yp8e3XMcnzHHomFqzVtRKeowOS1
+	0HlmsQTNGmm+qKXY8ILhDntbcOq1re8DknB1H+
+X-Received: by 2002:a17:90a:a109:b0:29a:575c:7d90 with SMTP id s9-20020a17090aa10900b0029a575c7d90mr5074297pjp.9.1709515566790;
+        Sun, 03 Mar 2024 17:26:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE5wsVkFGvI0g3UiyyqsUZIaC7FJXgvH6hoNmoP+0JzLudAnmk7yvN1wiITDdpnn0NlTe5w6otoZQCYKLXa9Vc=
+X-Received: by 2002:a17:90a:a109:b0:29a:575c:7d90 with SMTP id
+ s9-20020a17090aa10900b0029a575c7d90mr5074285pjp.9.1709515566419; Sun, 03 Mar
+ 2024 17:26:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240301095657.662111-1-yukuai1@huaweicloud.com>
+ <CALTww2-GV-YBX1ey4juaVHjHz-wNS0xRBqBn=ucDXEb4WNbSOg@mail.gmail.com>
+ <0091f7d1-2273-16ff-8285-5fa3f7e2e0f7@huaweicloud.com> <35feaa54-db9e-f0d6-d5a5-a10a45bb90a5@huaweicloud.com>
+In-Reply-To: <35feaa54-db9e-f0d6-d5a5-a10a45bb90a5@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Mon, 4 Mar 2024 09:25:55 +0800
+Message-ID: <CALTww2-BmudurHbsbbqBMq+KgZs+hokqOJnovS5KDGEidHqZzA@mail.gmail.com>
+Subject: Re: [PATCH -next 0/9] dm-raid, md/raid: fix v6.7 regressions part2
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: zkabelac@redhat.com, agk@redhat.com, snitzer@kernel.org, 
+	mpatocka@redhat.com, dm-devel@lists.linux.dev, song@kernel.org, 
+	heinzm@redhat.com, neilb@suse.de, jbrassow@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With python 3.12, '\.' results in this warning
-    SyntaxWarning: invalid escape sequence '\.'
+On Mon, Mar 4, 2024 at 9:24=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> wr=
+ote:
+>
+> Hi,
+>
+> =E5=9C=A8 2024/03/04 9:07, Yu Kuai =E5=86=99=E9=81=93:
+> > Hi,
+> >
+> > =E5=9C=A8 2024/03/03 21:16, Xiao Ni =E5=86=99=E9=81=93:
+> >> Hi all
+> >>
+> >> There is a error report from lvm regression tests. The case is
+> >> lvconvert-raid-reshape-stripes-load-reload.sh. I saw this error when I
+> >> tried to fix dmraid regression problems too. In my patch set,  after
+> >> reverting ad39c08186f8a0f221337985036ba86731d6aafe (md: Don't register
+> >> sync_thread for reshape directly), this problem doesn't appear.
+> >
 
-Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
+Hi Kuai
+> > How often did you see this tes failed? I'm running the tests for over
+> > two days now, for 30+ rounds, and this test never fail in my VM.
+
+I ran 5 times and it failed 2 times just now.
+
+>
+> Take a quick look, there is still a path from raid10 that
+> MD_RECOVERY_FROZEN can be cleared, and in theroy this problem can be
+> triggered. Can you test the following patch on the top of this set?
+> I'll keep running the test myself.
+
+Sure, I'll give the result later.
+
+Regards
+Xiao
+>
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index a5f8419e2df1..7ca29469123a 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -4575,7 +4575,8 @@ static int raid10_start_reshape(struct mddev *mddev=
+)
+>          return 0;
+>
+>   abort:
+> -       mddev->recovery =3D 0;
+> +       if (mddev->gendisk)
+> +               mddev->recovery =3D 0;
+>          spin_lock_irq(&conf->device_lock);
+>          conf->geo =3D conf->prev;
+>          mddev->raid_disks =3D conf->geo.raid_disks;
+>
+> Thanks,
+> Kuai
+> >
+> > Thanks,
+> > Kuai
+> >
+> >>
+> >> I put the log in the attachment.
+> >>
+> >> On Fri, Mar 1, 2024 at 6:03=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.co=
+m> wrote:
+> >>>
+> >>> From: Yu Kuai <yukuai3@huawei.com>
+> >>>
+> >>> link to part1:
+> >>> https://lore.kernel.org/all/CAPhsuW7u1UKHCDOBDhD7DzOVtkGemDz_QnJ4DUq_=
+kSN-Q3G66Q@mail.gmail.com/
+> >>>
+> >>>
+> >>> part1 contains fixes for deadlocks for stopping sync_thread
+> >>>
+> >>> This set contains fixes:
+> >>>   - reshape can start unexpected, cause data corruption, patch 1,5,6;
+> >>>   - deadlocks that reshape concurrent with IO, patch 8;
+> >>>   - a lockdep warning, patch 9;
+> >>>
+> >>> I'm runing lvm2 tests with following scripts with a few rounds now,
+> >>>
+> >>> for t in `ls test/shell`; do
+> >>>          if cat test/shell/$t | grep raid &> /dev/null; then
+> >>>                  make check T=3Dshell/$t
+> >>>          fi
+> >>> done
+> >>>
+> >>> There are no deadlock and no fs corrupt now, however, there are still
+> >>> four
+> >>> failed tests:
+> >>>
+> >>> ###       failed: [ndev-vanilla] shell/lvchange-raid1-writemostly.sh
+> >>> ###       failed: [ndev-vanilla] shell/lvconvert-repair-raid.sh
+> >>> ###       failed: [ndev-vanilla] shell/lvcreate-large-raid.sh
+> >>> ###       failed: [ndev-vanilla] shell/lvextend-raid.sh
+> >>>
+> >>> And failed reasons are the same:
+> >>>
+> >>> ## ERROR: The test started dmeventd (147856) unexpectedly
+> >>>
+> >>> I have no clue yet, and it seems other folks doesn't have this issue.
+> >>>
+> >>> Yu Kuai (9):
+> >>>    md: don't clear MD_RECOVERY_FROZEN for new dm-raid until resume
+> >>>    md: export helpers to stop sync_thread
+> >>>    md: export helper md_is_rdwr()
+> >>>    md: add a new helper reshape_interrupted()
+> >>>    dm-raid: really frozen sync_thread during suspend
+> >>>    md/dm-raid: don't call md_reap_sync_thread() directly
+> >>>    dm-raid: add a new helper prepare_suspend() in md_personality
+> >>>    dm-raid456, md/raid456: fix a deadlock for dm-raid456 while io
+> >>>      concurrent with reshape
+> >>>    dm-raid: fix lockdep waring in "pers->hot_add_disk"
+> >>>
+> >>>   drivers/md/dm-raid.c | 93 ++++++++++++++++++++++++++++++++++-------=
 ---
- scripts/gdb/linux/symbols.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-index c8047f4441e6..e8316beb17a7 100644
---- a/scripts/gdb/linux/symbols.py
-+++ b/scripts/gdb/linux/symbols.py
-@@ -82,7 +82,7 @@ lx-symbols command."""
-         self.module_files_updated = True
- 
-     def _get_module_file(self, module_name):
--        module_pattern = ".*/{0}\.ko(?:.debug)?$".format(
-+        module_pattern = r".*/{0}\.ko(?:.debug)?$".format(
-             module_name.replace("_", r"[_\-]"))
-         for name in self.module_files:
-             if re.match(module_pattern, name) and os.path.exists(name):
--- 
-2.44.0
+> >>>   drivers/md/md.c      | 73 ++++++++++++++++++++++++++--------
+> >>>   drivers/md/md.h      | 38 +++++++++++++++++-
+> >>>   drivers/md/raid5.c   | 32 ++++++++++++++-
+> >>>   4 files changed, 196 insertions(+), 40 deletions(-)
+> >>>
+> >>> --
+> >>> 2.39.2
+> >>>
+> >
+> >
+> > .
+> >
+>
 
