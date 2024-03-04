@@ -1,85 +1,141 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9D94E1DB;
-	Mon,  4 Mar 2024 17:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from kanga.kvack.org (kanga.kvack.org [205.233.56.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D28265F578;
+	Mon,  4 Mar 2024 17:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.233.56.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571866; cv=none; b=HeQ6qL/JBuzyx+6gWhwI99maZOs6wLD6y9ntoW/ECzKdWqHSmSllhNHw9bLrCR3g3UgA177rmn0n+ZMBZFQtxMKWVUmR3HPh+XEZ/qjlF38Ax/4cvlfI8WABeRVqrXppyVC+qjJphYJaqHPpqByIw8qkfkInW/Q37xU3mCTNg58=
+	t=1709571905; cv=none; b=fsg8ueFK6BrQQ3cpW3jisO+MM46aIms3a924PgfVAyI8/XHo/7l22COPLzT/Y+9J98tlFRJFXIREy4BMqxW8l9RMutg5aM2fvr5ZjqJqpTdjaijr3Qs4y0huvDQle4Y0VfpV6tUhlIWDpl63yjQwMM5kS/xYW98uxZWPSQJV28g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571866; c=relaxed/simple;
-	bh=yJgY3Cxc7MpDJihQYRZQAp2N7ydObfo8yiyscDNAPrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R8K9hhNzTPqdWPAQ6eVfObiM5HrRkvtKHS7SAt89Q6jIzUkLzpXiB2ZII0oDGHFAptthvF193qcvyfRXlyFxkLXQBGMRGp7qX+xztrEUzmpl0LExUM7dQfVmihkEjGnsMzpnR0YyD1SFhIvBVi1nyBmwXcsEftE0GHqkfbtJi3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NXRPmS72; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NXRPmS72"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 824B440E01A2;
-	Mon,  4 Mar 2024 17:04:17 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6LBhdAGguSsq; Mon,  4 Mar 2024 17:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709571855; bh=ONdikGD1yGAPbm7O2SHjebFrROQeyHHdH3ZyyYX0F7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NXRPmS72i7Lm5nThrgFUY34DyXsEhgk/5EIcpLpXf1WfpAg/uV6UYTZbv/IHfNiBL
-	 75I0jfWrb+4iJpNWdKdRB7bD0UbJb7urw6mkLGPPs8q0VaTCE9gJu+31mZOjeLRk/t
-	 P4z1Mcwbd8t57MGlql2SJ72jK6FUR0T5snyxEXJwUXt5gNjjIUttCSThlbijjjdLYf
-	 rxl5ssVxEzZ6kggGbATuAZ2OqqbGBPAsmZQ8JAPFOMh+HHugZRVtT96SR7Y9mc7NDe
-	 JyfeKPtJprru9Y3X0nvaERGpx1AtU5sMjrgx8lLhdCnqbZy16dexk6A6wsLcffVKMP
-	 L74i+U+LjmWpUgdLIE0w18eSURnOrXO6ri6puQ6IWTJzO61J7eHYI+tMqP8HiHSdSy
-	 Xg3uGb81ocMGSwOJ/E8c48DxaVoaPNbhmMnOjRZlXm8CE4/SPEp2zMsjGt3GJRVb52
-	 Mnz1bcOhFtmcxWpC6Hc+wJKNafUFPc3DAbocXGRuPaiNpJozGdZj8wXIN/1Ptr28rS
-	 +MKkBxUgDG5qMXbyON6mpLWwoBgHbO4kYlWCU9352E8cb2qo05E74dFMUdztxJP06S
-	 wF+ZEBKZ2ZJP7SHoU1z2NFzros828NC7DO4iL6oigAzJ5joYDlfLoL9O6rtYSwCzuE
-	 D1AEKrfNAL6cYoreXIb8HvOY=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 28B6040E0185;
-	Mon,  4 Mar 2024 17:04:04 +0000 (UTC)
-Date: Mon, 4 Mar 2024 18:03:56 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Sam Sun <samsun1006219@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	"xrivendell7@gmail.com" <xrivendell7@gmail.com>,
-	syzkaller@googlegroups.com, linux-edac@vger.kernel.org,
-	hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
-	mingo@redhat.com, tglx@linutronix.de, tony.luck@intel.com
-Subject: Re: [Bug] WARNING: ODEBUG bug in __mcheck_cpu_init_timer
-Message-ID: <20240304170356.GBZeX-_IdRl9-eGKYb@fat_crate.local>
-References: <CAEkJfYNiENwQY8yV1LYJ9LjJs+x_-PqMv98gKig55=2vbzffRw@mail.gmail.com>
+	s=arc-20240116; t=1709571905; c=relaxed/simple;
+	bh=GykyLOySktTcdnN5xj9tScvKWkrbQcuU5PotoD4BMPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XoyPemB64Qv01PkzFcqBCOR+q0oBNeaiVO4RoVcm3ewPQTjvXbg6kf3mAdPCjjADvmQEgNcas4IWjw/IHIAQFFkHmxzOJVCm4Cs9RZMEv47T1AiykyZmhBBfEKiv1aAErnbe29VY1E/XnuH75ByPwq6OjWggnOlmuOuhW+zre48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=communityfibre.ca; spf=pass smtp.mailfrom=communityfibre.ca; arc=none smtp.client-ip=205.233.56.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=communityfibre.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=communityfibre.ca
+Received: by kanga.kvack.org (Postfix, from userid 63042)
+	id 09E296B0080; Mon,  4 Mar 2024 12:03:43 -0500 (EST)
+Date: Mon, 4 Mar 2024 12:03:43 -0500
+From: Benjamin LaHaise <ben@communityfibre.ca>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Edward Adam Davis <eadavis@qq.com>,
+	syzbot+b91eb2ed18f599dd3c31@syzkaller.appspotmail.com,
+	brauner@kernel.org, jack@suse.cz, linux-aio@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] fs/aio: fix uaf in sys_io_cancel
+Message-ID: <20240304170343.GO20455@kvack.org>
+References: <0000000000006945730612bc9173@google.com> <tencent_DC4C9767C786D2D2FDC64F099FAEFDEEC106@qq.com> <14f85d0c-8303-4710-b8b1-248ce27a6e1f@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEkJfYNiENwQY8yV1LYJ9LjJs+x_-PqMv98gKig55=2vbzffRw@mail.gmail.com>
+In-Reply-To: <14f85d0c-8303-4710-b8b1-248ce27a6e1f@acm.org>
+User-Agent: Mutt/1.4.2.2i
 
-On Mon, Mar 04, 2024 at 10:26:28PM +0800, Sam Sun wrote:
-> Dear developers and maintainers,
+On Mon, Mar 04, 2024 at 08:15:15AM -0800, Bart Van Assche wrote:
+> On 3/3/24 04:21, Edward Adam Davis wrote:
+> >The aio poll work aio_poll_complete_work() need to be synchronized with 
+> >syscall
+> >io_cancel(). Otherwise, when poll work executes first, syscall may access 
+> >the
+> >released aio_kiocb object.
+> >
+> >Fixes: 54cbc058d86b ("fs/aio: Make io_cancel() generate completions again")
+> >Reported-and-tested-by: 
+> >syzbot+b91eb2ed18f599dd3c31@syzkaller.appspotmail.com
+> >Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> >---
+> >  fs/aio.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> >diff --git a/fs/aio.c b/fs/aio.c
+> >index 28223f511931..0fed22ed9eb8 100644
+> >--- a/fs/aio.c
+> >+++ b/fs/aio.c
+> >@@ -1762,9 +1762,8 @@ static void aio_poll_complete_work(struct 
+> >work_struct *work)
+> >  	} /* else, POLLFREE has freed the waitqueue, so we must complete */
+> >  	list_del_init(&iocb->ki_list);
+> >  	iocb->ki_res.res = mangle_poll(mask);
+> >-	spin_unlock_irq(&ctx->ctx_lock);
+> >-
+> >  	iocb_put(iocb);
+> >+	spin_unlock_irq(&ctx->ctx_lock);
+> >  }
+> >  
+> >  /* assumes we are called with irqs disabled */
+> >@@ -2198,7 +2197,6 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, 
+> >struct iocb __user *, iocb,
+> >  			break;
+> >  		}
+> >  	}
+> >-	spin_unlock_irq(&ctx->ctx_lock);
+> >  
+> >  	/*
+> >  	 * The result argument is no longer used - the io_event is always
+> >@@ -2206,6 +2204,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, 
+> >struct iocb __user *, iocb,
+> >  	 */
+> >  	if (ret == 0 && kiocb->rw.ki_flags & IOCB_AIO_RW)
+> >  		aio_complete_rw(&kiocb->rw, -EINTR);
+> >+	spin_unlock_irq(&ctx->ctx_lock);
+> >  
+> >  	percpu_ref_put(&ctx->users);
+
+This is just so wrong there aren't even words to describe it.  I
+recommending reverting all of Bart's patches since they were not reviewed
+by anyone with a sufficient level of familiarity with fs/aio.c to get it
+right.
+
+		-ben
+
+> I'm not enthusiast about the above patch because it increases the amount
+> of code executed with the ctx_lock held. Wouldn't something like the
+> untested patch below be a better solution?
 > 
-> We encountered a kernel warning with our modified Syzkaller. It is
-> tested on kernel 6.8.0-rc7. C repro and kernel config are attached to
-> this email. Bug report is listed below.
-
-Thanks for the report - I started looking but am seeing more fail so
-it'll take a while before I get to fixing it properly.
-
-Thx.
+> Thanks,
+> 
+> Bart.
+> 
+> 
+> diff --git a/fs/aio.c b/fs/aio.c
+> index 28223f511931..c6fb10321e48 100644
+> --- a/fs/aio.c
+> +++ b/fs/aio.c
+> @@ -2177,6 +2177,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, 
+> struct iocb __user *, iocb,
+>  	struct kioctx *ctx;
+>  	struct aio_kiocb *kiocb;
+>  	int ret = -EINVAL;
+> +	bool is_cancelled_rw = false;
+>  	u32 key;
+>  	u64 obj = (u64)(unsigned long)iocb;
+> 
+> @@ -2193,6 +2194,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, 
+> struct iocb __user *, iocb,
+>  	/* TODO: use a hash or array, this sucks. */
+>  	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
+>  		if (kiocb->ki_res.obj == obj) {
+> +			is_cancelled_rw = kiocb->rw.ki_flags & IOCB_AIO_RW;
+>  			ret = kiocb->ki_cancel(&kiocb->rw);
+>  			list_del_init(&kiocb->ki_list);
+>  			break;
+> @@ -2204,7 +2206,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, 
+> struct iocb __user *, iocb,
+>  	 * The result argument is no longer used - the io_event is always
+>  	 * delivered via the ring buffer.
+>  	 */
+> -	if (ret == 0 && kiocb->rw.ki_flags & IOCB_AIO_RW)
+> +	if (ret == 0 && is_cancelled_rw)
+>  		aio_complete_rw(&kiocb->rw, -EINTR);
+> 
+>  	percpu_ref_put(&ctx->users);
+> 
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+"Thought is the essence of where you are now."
