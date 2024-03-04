@@ -1,151 +1,120 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A98B46AD;
-	Mon,  4 Mar 2024 11:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8891D37718
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709550703; cv=none; b=rLWkQUI80yxuJKsEiqd4DeCKWgOqwAl8zGTtym++ttr6Ce7lILK48zGSyuwOx+bO1v/z12TrlkBIauRavK4YYT/LXvt9dR2x5QOGW0IKKcoVZLM2zLXfr0equ3hAgBSdFEWniy5qGou1Og2+DW8Kq6bi7qhpWSxb8wIVm2bwP9A=
+	t=1709550705; cv=none; b=nsH+hRebWvU6Ct0vexXT2PX/3AS1DptPDysAfI8eoaJZucGeiSqh/Km0lE7NzM4nlOsRDA5etYGXZBVSK3o7di5AwF2cmgg4f+UoXqfsEMa91PiVcr3QXgrgC2OkD3eB04EislKlS/llg/6vIEGTLEqOuyE0mSQc9H2+sXiUzRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709550703; c=relaxed/simple;
-	bh=xVSkuAeo4D9ZElgt/IODeSW5ZINrq3fTsbkPSDyPGmc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yb+OvbtWbJRcZ3Nf41HH5F7ii6SAnMexh8NfzBLBPAeta6Yh7RgaAocgSipaLum9H+7tNjhRw14W70bYvX4Q8S+NkSSclMu/zV4tLvMIdZTs7wLu+QR0UP/JkT05F6emSxNZbdCarr1xpUMBSOLQ0RA87etTa2BlyM+Fl5KelW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NXenhUgW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709550705; c=relaxed/simple;
+	bh=TVGauwyeBR4AdfQsHXvgRjKRsr6eVvmQ6GDdnL5kg3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wmhejz/Oz9fiM6Zo1jJ96D3VTOEi760QPWfu785rKj2kfvmeY2f3NqTv16klh4gK5t6tztppwz2GxfjbRGUixWTM8BhBNM5hwP19q4yCAfPZwqMiAdHFbp5UGvOnTSSy51i6gFeCoCbdrh6uPE/0OIK1O7/vd6wzQfPIys7Y1tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aYeNFyF0; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NXenhUgW"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 424AsnYr019049;
-	Mon, 4 Mar 2024 11:11:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=250lxiVyVhWgGkynbsvy556K2WPzHaat5nPoNu3o7uI=; b=NX
-	enhUgWz8BXddC9wB3akbZsUu/sCKYGBo4ZvPuYtT2dgnp+RKp7J3YCgArmuBpMyN
-	FlqDYq8+U5O641XmzJZ9pXrrsHgL8SpYnAgzWYNxTK2k1RmJJUKHMA+wsh5nwDsy
-	U9CFeB2UTAjzhyfJVs1DJ0EcfNLn074DFeKTyCLRUMGAb8Iyu5EM2DS9moZlpyeg
-	nKnkn/Nfvxwau4DGVBinA4WtVqjTeXdshYl3AP3QOmrFuYCHtpiNDTGeBbZnqBeP
-	wrwhRRrV8H8ZItyy/nyDHhqkZ9GDkBOk7QycbceyaJHcgyczqf2UsYbFtT6xp89u
-	swbxvW+3vTgZm7Pd0U2Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wkvb739ed-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Mar 2024 11:11:31 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 424BBUT4007051
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 4 Mar 2024 11:11:30 GMT
-Received: from hu-nprakash-blr.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 4 Mar 2024 03:11:27 -0800
-From: Nikhil V <quic_nprakash@quicinc.com>
-To: 
-CC: Charan Teja Kalla <quic_charante@quicinc.com>,
-        Joerg Roedel
-	<joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy
-	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux.dev>, Nikhil V <quic_nprakash@quicinc.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH RESEND STABLE v6.1] iommu: Avoid races around default domain allocations
-Date: Mon, 4 Mar 2024 16:40:50 +0530
-Message-ID: <cbf1295589bd90083ad6f75a7fbced01f327c047.1708680521.git.quic_nprakash@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aYeNFyF0"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 21F1240E01A2;
+	Mon,  4 Mar 2024 11:11:40 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 8Tc4xTkS6DEL; Mon,  4 Mar 2024 11:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1709550698; bh=BZDhxNl8JTWBcRIoa6Vr2/iEajD+gZXg9rtceU6Dukk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aYeNFyF06TiGLHX8iz5HBkRDLQZNOzTLQ7+dK2Matf9/avlXsaoCW9WigEJP0cK/x
+	 kNGF8mRornpET98+oFZKuaf2InU/HMTpIu0bk9afLNDGYZW57yvmiWu5Jd+0ZKJEzU
+	 1q5q1lTc8NzGIFTDrqoNzT4AXmvE9fdOBADankEhgTUN1UlCCYCPqXwh0ObLs+7OAu
+	 MSG4T1GaUOuQYhZ0DIODwDl8ms9Q0AIxZA6e8jcUJJirtgSTdMsSgsLpEkPHpub5Zh
+	 SPh111R2VaNm4r42FALWTRQfTxgLzqdDsbLQKsyBg2FAYT6qr5mAqPoCpat8/WDek7
+	 evj8vENsv/ASD/n4t+8q/5arpVPGvxINSr+ZL3ufJCB4bRQ2gZqW/9gTjlfoBRoix/
+	 46tDMcL0ccbSzpAlMfCVhQU63YKdndGtuw8nRmyFavBx9TO3J1iBAMiNhEfVzG5gY2
+	 JfskYEamk5oZjkgP1VHlznQKB79eAIwhx0D1L39gjD6DuVrYEUcNfoFtc5eeV33hiU
+	 hm4McEyaM9RM0cCwTYsKZYnettZWG1vhgWQdx1TjTJkf4n9HL8BjFaKg/vU24Y9idQ
+	 EXdCwYnOGx19cA8wnb3TpjklyjUhADWK/1I+v3CaLYLvKhoGdpOlEqeKvaCMT0yieJ
+	 LXcKZoS5Z7pgM3orVyoFxvsM=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0B86040E0185;
+	Mon,  4 Mar 2024 11:11:34 +0000 (UTC)
+Date: Mon, 4 Mar 2024 12:11:27 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Baoquan He <bhe@redhat.com>
+Cc: X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	dyoung@redhat.com
+Subject: Re: [RFC PATCH 1/2] Revert "x86/kexec/64: Prevent kexec from 5-level
+ paging to a 4-level only kernel"
+Message-ID: <20240304111127.GAZeWsX3gBabiwrrVV@fat_crate.local>
+References: <20240301185618.19663-1-bp@alien8.de>
+ <20240301185618.19663-2-bp@alien8.de>
+ <ZeWnrhzU86pz7y5Z@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: yz3Nelq0fOTemW5jQPryH1pxnJWCrhqt
-X-Proofpoint-ORIG-GUID: yz3Nelq0fOTemW5jQPryH1pxnJWCrhqt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-04_06,2024-03-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 spamscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403040084
-Message-ID: <20240304111050.8lmf60HPC99M_toA9K4NvHCRefxjZ-6NTBCUU2wrvP0@z>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZeWnrhzU86pz7y5Z@MiWiFi-R3L-srv>
 
-From: Charan Teja Kalla <quic_charante@quicinc.com>
+On Mon, Mar 04, 2024 at 06:51:26PM +0800, Baoquan He wrote:
+> It's not true. Customer may want to try to load a different kernel if
 
-This fix is applicable for LTS kernel, 6.1.y. In latest kernels, this race
-issue is fixed by the patch series [1] and [2]. The right thing to do here
-would have been propagating these changes from latest kernel to the stable
-branch, 6.1.y. However, these changes seems too intrusive to be picked for
-stable branches. Hence, the fix proposed can be taken as an alternative
-instead of backporting the patch series.
-[1] https://lore.kernel.org/all/0-v8-81230027b2fa+9d-iommu_all_defdom_jgg@nvidia.com/
-[2] https://lore.kernel.org/all/0-v5-1b99ae392328+44574-iommu_err_unwind_jgg@nvidia.com/
+"may want" is one of those hypothetical things which we don't do. If we
+have to support everything a customer *may* want, then the kernel will
+be a madness.
 
-Issue:
-A race condition is observed when arm_smmu_device_probe and
-modprobe of client devices happens in parallel. This results
-in the allocation of a new default domain for the iommu group
-even though it was previously allocated and the respective iova
-domain(iovad) was initialized. However, for this newly allocated
-default domain, iovad will not be initialized. As a result, for
-devices requesting dma allocations, this uninitialized iovad will
-be used, thereby causing NULL pointer dereference issue.
+Also, you do realize that the kernel doesn't care about "customers",
+right?
 
-Flow:
-- During arm_smmu_device_probe, bus_iommu_probe() will be called
-as part of iommu_device_register(). This results in the device probe,
-__iommu_probe_device().
+And the question is, how *sensible* is such a use case?
 
-- When the modprobe of the client device happens in parallel, it
-sets up the DMA configuration for the device using of_dma_configure_id(),
-which inturn calls iommu_probe_device(). Later, default domain is
-allocated and attached using iommu_alloc_default_domain() and
-__iommu_attach_device() respectively. It then ends up initializing a
-mapping domain(IOVA domain) and rcaches for the device via
-arch_setup_dma_ops()->iommu_setup_dma_ops().
+In my experience, not at all. You simply take the same kernel or a very
+similar one and kexec it.
 
-- Now, in the bus_iommu_probe() path, it again tries to allocate
-a default domain via probe_alloc_default_domain(). This results in
-allocating a new default domain(along with IOVA domain) via
-__iommu_domain_alloc(). However, this newly allocated IOVA domain
-will not be initialized.
+> they have taken many testings and trust that kdump kernel, or for
+> debugging.
 
-- Now, when the same client device tries dma allocations via
-iommu_dma_alloc(), it ends up accessing the rcaches of the newly
-allocated IOVA domain, which is not initialized. This results
-into NULL pointer dereferencing.
+Yes, and those kernels will have 5level too. Practically, distros must
+enable 5level support in their kernels in order to support modern hw.
 
-Fix this issue by adding a check in probe_alloc_default_domain()
-to see if the iommu_group already has a default domain allocated
-and initialized.
+> The similar for kexec reboot into 2nd kernel. We don't enforce
+> kexec/kdump to work on the same kernel as the 1st kernel. With the
+> fail and message, user can take measure to avoid that. it's better the
+> failure is encountered when failing to jump to kexec/kdump kernel.
 
-Cc: <stable@vger.kernel.org> # see patch description, fix applicable only for 6.1.y
-Signed-off-by: Charan Teja Kalla <quic_charante@quicinc.com>
-Co-developed-by: Nikhil V <quic_nprakash@quicinc.com>
-Signed-off-by: Nikhil V <quic_nprakash@quicinc.com>
----
- drivers/iommu/iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+I can't parse that example.
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 8b3897239477..83736824f17d 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1741,6 +1741,9 @@ static void probe_alloc_default_domain(struct bus_type *bus,
- {
- 	struct __group_domain_type gtype;
- 
-+	if (group->default_domain)
-+		return;
-+
- 	memset(&gtype, 0, sizeof(gtype));
- 
- 	/* Ask for default domain requirements of all devices in the group */
+Btw, kexec tools don't use those XLF_5LEVEL* flags bits either. Which
+basically means we don't really need them.
+
+> I remmeber we have use case where customer used kdump kernel different
+> than the 1st kernel. While I don't remember why.
+
+See above.
+
+And that customer can still use the old distro kernels which have those
+flags.
+
+The point here is, going forward, 5level becomes ubiquitous and will be
+even more tightly integrated in the kernel so that it'll become just
+another default feature which is either there or not.
+
+So the distinction is going away and the flags can go too.
+
+Thx.
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
