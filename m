@@ -1,193 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AC9612F0;
-	Mon,  4 Mar 2024 17:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB26612D8
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 17:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709574083; cv=none; b=ZIr1lsi0q0c8YyLDab8/1RKFZ/gjOtgrIHL8S+ZdPgBtN/+HJHiuxxnloY83cht1dXAOuhiBCFGxyd2CH8aJe3ronEJc0OtH6NXg9L12DKfvBqC2BwiKW3aJmnfk2e1Dq13KFYnz/pCPA7LdS0rlI1/qqfX6esQWAWx4PSXGBXg=
+	t=1709574104; cv=none; b=aG+NGcnXDUQvZH4euRUBsmRKsuShoGi0vrEWudyuNmWOJZcNMUlQwAwo6k/rXcd+HAIu4NTk/f1sXV0Svh5XpqfNpgN5J1h20e5cMippnQT36CFhORqAwB2Wdbz0/GmfON0C/LDAOgkjOyI6nZw4NDfxRzgW9kq8rUwff3ZMowU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709574083; c=relaxed/simple;
-	bh=jhOZLqBkPD3zeVmeTDQUgpIO94j8OorF+PQ+rqZSOlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZqIqX+AOjcm5THh4Bfgh82UGJX43RdI4H+aqkSPTCWCmOxF7iCGL+AY1szBNGKiyLRfN4OP+MXQ0F7v7uJxKqrwC5A/utBS50UEaeeOApZYvWa+gaJc1k72xQNVK2M3dvnfjoLF1HbjQ6b9d1uUfKM5t2bWPj2KZNveq/inYR/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3cNLiH6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709574104; c=relaxed/simple;
+	bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IZclY7NpaESZ29u47FYQTtcfZxGU1rghhewr18m4AKnt/yRwviATFQrPPWD66X1YrKnvyVscCdoznCUdEXumWRKG6IsDxnGOl70TL7Fr/3M2YXS9Rp8u0Kw65pwzDVEUHjJ8kWQkqXg8lBgItmLWIJyyiXKprsDk4w8WEmcauGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JWAlWxKh; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3cNLiH6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9A1C433F1;
-	Mon,  4 Mar 2024 17:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709574082;
-	bh=jhOZLqBkPD3zeVmeTDQUgpIO94j8OorF+PQ+rqZSOlw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W3cNLiH6dm+MbhhR2gjsEO1M1MLbQJRV0E+ihS2eJeFUFn78AJ4Pvi3LFD8lYN9uj
-	 tL1LR5fKflqYF2cNQtkzF+S2l0jUo2bsn3fvY93v8266DCNsYl9ukxt57PR3xlCukP
-	 Wu8s5fAl2abOCYz2ergXBrizaMngC1tnMUN3GG//ZRCAS80t7vgyD1IuiLdjKDBgaJ
-	 F3Ug2FFmU38aO7AhMd3Xx77R1n7ziA9QP9Mx0alPO7XVArOmsp3dj0HdEJAH+AXgws
-	 belXPFXyRPvF+Z8oda97pshfIY44ck/LSfi+1Ehvr53e2aHjpqeZyemUqYnpDSy/7X
-	 QEgdv6lbiRX5Q==
-Date: Mon, 4 Mar 2024 23:11:11 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vireshk@kernel.org,
-	quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_parass@quicinc.com,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v8 3/7] PCI: qcom: Add ICC bandwidth vote for CPU to PCIe
- path
-Message-ID: <20240304174111.GB31079@thinkpad>
-References: <20240302-opp_support-v8-0-158285b86b10@quicinc.com>
- <20240302-opp_support-v8-3-158285b86b10@quicinc.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JWAlWxKh"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7882d713f6fso37341485a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 09:41:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709574101; x=1710178901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
+        b=JWAlWxKhQQqe6DVlZgMygQiOkn25ZUUpEnGBECt7yNdl0SSNMac2jbFKUlyX16uueu
+         6FZmJZH8Y8Pm2cjEuiO1TooTt1de/jWjSoJbsBaCJ4ucKWgRNpv1WWjZAUnRvZ4f2oy0
+         PNC7CwKJkQFG1fSbQhiEdroOPMwuKmsygoflo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709574101; x=1710178901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
+        b=YX01rBpcKtJw6OmUC5h5AiXOBgefYHMDSVtmIrIul3cP3TMFwi82fCZBkOH297kTrI
+         Up/d3Euhli89zkNxB8SQYgWLKactVJghyPgtPozSPpbfQ2Or0u/19lOC75zt6AQAFUj3
+         1qQczYk3XL5cBQ/OChaOtJGTBtAgqIjUzS727fiX9qMucVeQHgc1aImViFtMs4pGxydX
+         TCLM8XLgwxgn5HrX/WLSd38Jf511yvXccbAIilVgufafbPPMCJY65ZnUSEDunSC2f+Yk
+         dvGV4dxZZsyENb8VyMpCIq62ULpj0oE46frAkP+AkuJ/Kan1xJEF8r+50BCpU6fGTgTw
+         iGYw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7k3R0qx7UKiGOhLZD5VWcrCD7y4urHPUfvAtuI8RrkpxFEgVKTcfDuiU+etJMd402Q2OP9o/fNsNfnPPTDMPV6qHGFJPKXg6cSbTo
+X-Gm-Message-State: AOJu0YxbkjMLGgbbUNhjb/HQcvww7Q0qqY0vDe9Phd9rsAq2AKUiLScQ
+	7oYu05KWducHZ2cjADlpcMXXeeNkZet/UvNpZMx5ySPvE4K7LLOvrCJgYl3XTuMbCdM1haAG7q1
+	8SXBK
+X-Google-Smtp-Source: AGHT+IHh8RdTdgbReobl1pk1/aqOI9U6Q7tpR1zU/kPD1OZnUGo0RNVmE776cMFxS8a7mzvuKh0qZQ==
+X-Received: by 2002:a05:620a:810:b0:788:2a7d:c5a4 with SMTP id s16-20020a05620a081000b007882a7dc5a4mr2845269qks.78.1709574101376;
+        Mon, 04 Mar 2024 09:41:41 -0800 (PST)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id x16-20020a05620a0ed000b00787b95c91d3sm4589051qkm.62.2024.03.04.09.41.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 09:41:41 -0800 (PST)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-512fab8cc6aso8774e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 09:41:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXBHrTHLv/i4poJlp3hZ3K8oeBas/ju3wl7CtVO6BfTywGVfi58a+oiuNx2mBNdIjeXZN2Q0I/uE+GmvVsjO07nNsl6zBvaBtfsCNld
+X-Received: by 2002:a05:600c:4f07:b0:412:d6be:a32b with SMTP id
+ l7-20020a05600c4f0700b00412d6bea32bmr2093wmq.6.1709573676220; Mon, 04 Mar
+ 2024 09:34:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240302-opp_support-v8-3-158285b86b10@quicinc.com>
+References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
+ <CAD=FV=WtJCkdSY=HYDmBjn3hc4TYT7j0bMxGCV-=B3o3bm-kpQ@mail.gmail.com>
+ <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com> <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
+In-Reply-To: <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 4 Mar 2024 09:34:19 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XJhvVO7k0hhz_KPH4eSrJQdb+k2CJQeCAP40+PYAdDBg@mail.gmail.com>
+Message-ID: <CAD=FV=XJhvVO7k0hhz_KPH4eSrJQdb+k2CJQeCAP40+PYAdDBg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
+ should try non-NMI first
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Misono Tomohiro <misono.tomohiro@fujitsu.com>, 
+	Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <swboyd@chromium.org>, 
+	Daniel Thompson <daniel.thompson@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Tony Luck <tony.luck@intel.com>, Valentin Schneider <vschneid@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 02, 2024 at 09:29:57AM +0530, Krishna chaitanya chundru wrote:
-> To access PCIe registers, PCIe BAR space, config space the CPU-PCIe
-> ICC (interconnect consumers) path should be voted otherwise it may
-> lead to NoC (Network on chip) timeout. We are surviving because of
-> other driver vote for this path.
-> 
-> As there is less access on this path compared to PCIe to mem path
-> add minimum vote i.e 1KBps bandwidth always.
+Hi,
 
-Please add the info that 1KBps is what shared by the HW team.
+On Fri, Mar 1, 2024 at 8:06=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
+wrote:
+>
+> Hi Doug,
+>
+> On Tue, Feb 27, 2024 at 04:57:31PM -0800, Doug Anderson wrote:
+> > On Mon, Jan 8, 2024 at 4:54=E2=80=AFPM Doug Anderson <dianders@chromium=
+.org> wrote:
+> > > On Thu, Dec 7, 2023 at 5:03=E2=80=AFPM Douglas Anderson <dianders@chr=
+omium.org> wrote:
+>
+> > > The sound of crickets is overwhelming. ;-) Does anyone have any
+> > > comments here? Is this a terrible idea? Is this the best idea you've
+> > > heard all year (it's only been 8 days, so maybe)? Is this great but
+> > > the implementation is lacking (at best)? Do you hate that this waits
+> > > for 1 second and wish it waited for 1 ms? 10 ms? 100 ms? 8192 ms?
+> > >
+> > > Aside from the weirdness of a processor being killed while holding th=
+e
+> > > console lock, it does seem beneficial to give IRQs at least a little
+> > > time to finish before killing a processor. I don't have any other
+> > > explicit examples, but I could just imagine that things might be a
+> > > little more orderly in such a case...
+> >
+> > I'm still hoping to get some sort of feedback here. If people think
+> > this is a terrible idea then I'll shut up now and leave well enough
+> > alone, but it would be nice to actively decide and get the patch out
+> > of limbo.
+> >
+> > FWIW the serial console dumping issue that originally inspired me to
+> > track this down has been worked around at least well enough to not
+> > spew garbage in my console. See commit 9e957a155005 ("serial:
+> > qcom-geni: Don't cancel/abort if we can't get the port lock"). It's
+> > still a little awkward because we'll be running fully lockless during
+> > panic time, but it seems to work...
+>
+> This is on my list of things to look into, but I haven't had the chance t=
+o go
+> through it in detail.
+>
+> From a high level, I think this sounds reasonable; I just want to make su=
+re
+> this doesn't lead to any new surprises...
 
-> 
-> When suspending, disable this path after register space access
-> is done.
-> 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 10f2d0bb86be..a0266bfe71f1 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -240,6 +240,7 @@ struct qcom_pcie {
->  	struct phy *phy;
->  	struct gpio_desc *reset;
->  	struct icc_path *icc_mem;
-> +	struct icc_path *icc_cpu;
->  	const struct qcom_pcie_cfg *cfg;
->  	struct dentry *debugfs;
->  	bool suspended;
-> @@ -1372,6 +1373,9 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->  	if (IS_ERR(pcie->icc_mem))
->  		return PTR_ERR(pcie->icc_mem);
->  
-> +	pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
-> +	if (IS_ERR(pcie->icc_cpu))
-> +		return PTR_ERR(pcie->icc_cpu);
->  	/*
->  	 * Some Qualcomm platforms require interconnect bandwidth constraints
->  	 * to be set before enabling interconnect clocks.
-> @@ -1381,7 +1385,19 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->  	 */
->  	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
->  	if (ret) {
-> -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> +		dev_err(pci->dev, "failed to set interconnect bandwidth for pcie-mem: %d\n",
+Sounds good. For now I'll snooze this for another 2 months and if I
+haven't heard from you then I'll pester you again. There's no crazy
+hurry, I was just hoping for some sort of decision one way or the
+other. For now I'll hold off on changing things to match x86 exactly
+until I get your take on it too.
 
-"PCIe-MEM"
-
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * The config space, BAR space and registers goes through cpu-pcie path
-> +	 * Set peak bandwidth to 1KBps as recommended by HW team for this path
-> +	 * all the time.
-
-How about,
-
-	"Since the CPU-PCIe path is only used for activities like register
-	access, Config/BAR space access, HW team has recommended to use a
-	minimal bandwidth of 1KBps just to keep the link active."
-
-> +	 */
-> +	ret = icc_set_bw(pcie->icc_cpu, 0, kBps_to_icc(1));
-> +	if (ret) {
-> +		dev_err(pci->dev, "failed to set interconnect bandwidth for cpu-pcie: %d\n",
->  			ret);
->  		return ret;
->  	}
-> @@ -1573,7 +1589,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
->  	 */
->  	ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
->  	if (ret) {
-> -		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
-> +		dev_err(dev, "Failed to set interconnect bandwidth for pcie-mem: %d\n", ret);
-
-"PCIe-MEM"
-
->  		return ret;
->  	}
->  
-> @@ -1597,6 +1613,18 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
->  		pcie->suspended = true;
->  	}
->  
-> +	/* Remove CPU path vote after all the register access is done */
-
-"Remove the vote for CPU-PCIe path now, since at this point onwards, no register
-access will be done."
-
-> +	ret = icc_disable(pcie->icc_cpu);
-> +	if (ret) {
-> +		dev_err(dev, "failed to disable icc path of cpu-pcie: %d\n", ret);
-
-"CPU-PCIe"
-
-> +		if (pcie->suspended) {
-> +			qcom_pcie_host_init(&pcie->pci->pp);
-
-Interesting. So if icc_disable() fails, can the IP continue to function?
-
-> +			pcie->suspended = false;
-> +		}
-> +		qcom_pcie_icc_update(pcie);
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -1605,6 +1633,12 @@ static int qcom_pcie_resume_noirq(struct device *dev)
->  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
->  	int ret;
->  
-> +	ret = icc_enable(pcie->icc_cpu);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable icc path of cpu-pcie: %d\n", ret);
-
-"CPU-PCIe"
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+-Doug
