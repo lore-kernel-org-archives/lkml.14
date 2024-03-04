@@ -1,49 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A6F39AF1;
-	Mon,  4 Mar 2024 17:09:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F65A20;
+	Mon,  4 Mar 2024 17:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709572174; cv=none; b=Nq8DVVcMR/dD1o5V3HMG3z6oKSW7RvzhEfdD/sbqHKSHfDd2vHvpMVc0E/n4AEf7wvXM4O/m9abygI6HJia4Tp8RTfFs/esWkJuYKZcRTsKy2PJcQDZ8xekCe8FoqZeioPJ/TwzpXbuOHF/zsTTKqBPgKR6AbY/xLglnE2hha2g=
+	t=1709572226; cv=none; b=mqDRhyvdwbtv/v830P4lGbxUHp7SryDfhTDKvLflY3T1efrbTH0rEFnLbgoUp0rFRuwCOIcYYwf/T08YZYML67APpIttoSEWSb4aaPbym97oC6alr42spUIrg0rFTr1/R18F8bFKzfhHM+lKPGm7S4RwDKhbHcZ5V32rjintWdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709572174; c=relaxed/simple;
-	bh=tfmse9oyNlqgI6AiSd09oH+NFlRIxN1x6Z2RuuIvkJs=;
+	s=arc-20240116; t=1709572226; c=relaxed/simple;
+	bh=ir7CIMz84CsYxYaV1KjttiipiJKUuOcc6oUPRUzVK8c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ge0QC0LPJuSuz77yGJ3ApokEkym+WzFqyW45Zw7sXcOGc6bMvl7fGTPLI5o4L2XbYiU+sxyGfxx694FAWUnKJ8nZ870CAta8TkghjPIN+zq0DWwDRIZDoJF34QCExPm3iWSID49ZDK0SKelgIN614RA+AGIAqUIFUieu3zu2a0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soX6GgBT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYgQgWqiHgEnAbOZgrwg915fJxvbiei10kNzyaxOLnvGWfWEFAatT04JbNmh+jWqkKwfE2/QxQnhiCjlH6+gXR2Mg2dtujb3ZGRLc6R3JfirxtLEkQOYV7K4RMXUoGIDrOApsaiXmfNA7eLqXKyEcZhrJVxshz8nh/GDJEpGHQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WH2sUL65; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soX6GgBT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40226C43394;
-	Mon,  4 Mar 2024 17:09:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WH2sUL65"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65935C43394;
+	Mon,  4 Mar 2024 17:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709572174;
-	bh=tfmse9oyNlqgI6AiSd09oH+NFlRIxN1x6Z2RuuIvkJs=;
+	s=k20201202; t=1709572226;
+	bh=ir7CIMz84CsYxYaV1KjttiipiJKUuOcc6oUPRUzVK8c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=soX6GgBTFRn0lOQXRrK5UP+eWYLdnSfFrX3QatoCn7QWM7mdc/yW6Ut+6YLGvcclh
-	 j9i3rcu07+okBT+LA+7buYESrjxWgumdkSNx2cZfqD09nUJ/mvQET8gZxFj8Q+fSk+
-	 Jk+OYius5IXzHXACJ4oBiBlL4MFb6pcMcKe7aonL43HXQ7eAtQjO/PheqtLRLczcZc
-	 toH5tJ/+5bd559zsD5CWr3lRBW4sEoWj18n90DTdVLRAqXHQ00meZEMTs7REVtOjaA
-	 EB9dH+DjpB8WLpDpP1b2K0h6U7N5gOK+Dl6pZlsJMWBXZLCTsdQa0jviFzcOoujuYQ
-	 KxzCxAaIo2UoQ==
-Date: Mon, 4 Mar 2024 17:09:29 +0000
+	b=WH2sUL65uuJb1FXEFfxXJzD4xUHPjhvCwhuc35gH6m+oszK2XeEK2rKGEGOBTSU5O
+	 avnLI9H8cGiMutKCJejAb0cKvAq8K6OkeZNL5P/tfHQe0UQB0pygOhXyaAoMGQ633t
+	 AIpp8ylPvnwoogpRz4MBuhXhdLS4T5Gi41+vnZp/JeR7G53RL48S5Otmkl0IMe0HA8
+	 y4Dw/jRzqL3SChEXl96EhNH3Cmx7YTJZRTUdlxIm0lZVeKzCQyik3hetr6Ovpspkqp
+	 NcsSmFK7fayrZM/bqld5LhffOab2ecFDHZIzL2O2ymeeAn8ixhr5vbm8pd2MFLJqE0
+	 kgSYOOR6PPkoQ==
+Date: Mon, 4 Mar 2024 17:10:22 +0000
 From: Mark Brown <broonie@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Yang Yingliang <yangyingliang@huawei.com>, linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: arm64: Only save S1PIE registers when dirty
-Message-ID: <dfae9e6e-080b-4724-a660-39febc7ab1b9@sirena.org.uk>
-References: <20240301-kvm-arm64-defer-regs-v1-1-401e3de92e97@kernel.org>
- <ZeItTLQxdxxICw01@linux.dev>
- <562f5e62-c26c-41d9-9ab9-aac02c91c7ae@sirena.org.uk>
- <86zfvh0vy5.wl-maz@kernel.org>
- <50c5cdd2-fceb-44c4-aff1-dc98180161a1@sirena.org.uk>
- <86v86212p4.wl-maz@kernel.org>
+Subject: Re: [PATCH v1 1/1] spi: oc-tiny: Remove unused of_gpio.h
+Message-ID: <9ac09714-25e6-429f-8847-0ee6a34e0220@sirena.org.uk>
+References: <20240228193732.3605768-1-andriy.shevchenko@linux.intel.com>
+ <ZeXd7zrNZSTW3va0@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,78 +42,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Rwhc8ntAFC1zcQn8"
+	protocol="application/pgp-signature"; boundary="dPx+4uutjh+/sTt7"
 Content-Disposition: inline
-In-Reply-To: <86v86212p4.wl-maz@kernel.org>
+In-Reply-To: <ZeXd7zrNZSTW3va0@smile.fi.intel.com>
 X-Cookie: He who hesitates is last.
 
 
---Rwhc8ntAFC1zcQn8
+--dPx+4uutjh+/sTt7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 04, 2024 at 02:39:19PM +0000, Marc Zyngier wrote:
-> Mark Brown <broonie@kernel.org> wrote:
-> > On Sat, Mar 02, 2024 at 10:28:18AM +0000, Marc Zyngier wrote:
+On Mon, Mar 04, 2024 at 04:42:55PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 28, 2024 at 09:37:31PM +0200, Andy Shevchenko wrote:
+> > of_gpio.h is deprecated and subject to remove.
+> > The driver doesn't use it, simply remove the unused header.
 
-> > > Complains from whom? I can't see anything in my inbox, so it my
-> > > conclusion that these "issues" are not serious enough to be publicly
-> > > mentioned.
+> Hmm... did it fall through cracks or anything should I do?
 
-> > This was you saying that adding more registers to be context switched
-> > here needed special explanation, rather than just being the default and
-> > generally unremarkable place to put context switching of registers for
-> > EL0/1.
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-> What I remember saying is that it is wrong to add extra registers to
-> the context switch without gating them with the VM configuration.
-> Which is a very different thing.
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
 
-You said both things separately.  This is specifically addressing your
-comment:
-
-| For the benefit of the unsuspecting reviewers, and in the absence of a
-| public specification (which the XML drop isn't), it would be good to
-| have the commit message explaining the rationale of what gets saved
-| when.
-
-which did not seem obviously tied to your separate comments about using
-your at the time still in flight patches to add support for parsing
-features out of the ID registers, it seemed like a separate concern.
-
-> What I want to see explained in all cases is why a register has to be
-> eagerly switched and not deferred to the load/put phases, specially on
-> VHE. because that has a very visible impact on the overall performance.
-
-I'm confused here, the specific register save/restores that you were
-asking for an explanation of are as far as I can tell switched in
-load/put (eg, the specific complaint was attached to loads in
-__sysreg_restore_el1_state() which for VHE is called from=20
-
-	__vcpu_load_switch_sysregs()
-	kvm_vcpu_load_vhe()
-	kvm_arch_vcpu_load()
-
-which is to my understanding part of the load/put phase).  This should
-be true for all the GCS registers, the explanation would be something
-along the lines of "these are completely unremarkable EL0/1 registers
-and are switched in the default place where we switch all the other
-EL0/1 registers".
-
---Rwhc8ntAFC1zcQn8
+--dPx+4uutjh+/sTt7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXmAEgACgkQJNaLcl1U
-h9BJnQf9GzikoCtIUvJKBD40CKqUtV+C7nWo/dWWawV9xkNjDtFlpXhMxVi5UlDL
-6UnXNkN0QsYZK5DLUDzp3BH0G4eQifz6OLz4E59kyDsh05xGBPnfe4ypOSL6/SxH
-hfvk4bqe55sqkaxu0adUhQtNVUylPWzmcdNllm5blLz8et2KbEnCo7PCjjC9XJ5/
-bSpl+1SDgWhPslAblxLJtSwId8uJrM0I+u1QLQ5ogR9Mb/op9K2/6yLNmRSTPd/6
-dmcrgYD7xm0c26XU371QR/YN23HfBe8BeCWr2le79ixv+UA4Lf/ounlQhHutdX3m
-5RQ6vtPIHfESdaSFXm2PRfDym54b/g==
-=u/Yn
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXmAH0ACgkQJNaLcl1U
+h9CBJAf+KCmOyXbSHMSaUF7iM+zgyrhoXTfgVHjEVwpXQpfln6OE+3PioX6XmDNW
+LofkMmGBQf48vwR+e1n6orXYP+OvlzzupDHDvmHSrDP19fTcUs6KCtsDRn8nnnhu
+tBjUPdwyxM5v7AfUoyocY7PfZPPwflWjVX/Mx8RKl5BcXU/NULfqBy5EwEhvuI01
+2m3asHZn7+Rv8cFnz33FZYQ746RbwsYdBwTQ9j0Gz2s47BdMDI5P9RqUMyaWaQIy
+8G5AJu/AGoBdgeZTqPIA8FwE0j+TM5NY1I6bxriH4B7KPRyn9MrlYJnSfxb0EAKJ
+xJ0slGZ6RbNIFg0oEe4O+knZHp/j+g==
+=oZhH
 -----END PGP SIGNATURE-----
 
---Rwhc8ntAFC1zcQn8--
+--dPx+4uutjh+/sTt7--
