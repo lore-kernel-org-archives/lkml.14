@@ -1,133 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41ED379C4;
-	Mon,  4 Mar 2024 03:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D92AD51E
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 03:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709523680; cv=none; b=MXc7S87lSbWRSUAI1AcVlB50UbDgJE0gu+JRB1kdMTahrgn3Fk1AnaOhCTmrHbgWvyOmi7Yx2h5xq97lEdigHMYkaPsn3oVime0zCkUhT8XvFF0dE2Gn8+1+ry8LWlGLhjiLpSAmorX7pLaZstxwlh1npZPZBu2HQ/m5HLQfMsc=
+	t=1709523681; cv=none; b=MoQ8/xA1ZewKgXsXDBfBKq8Fe8XgkzZiVHXUOLtmAc3/IZJx5iztFlpfXPsarV8Kdj8gOE0frEOfCMFkHEGgfCvyw/2xCuFUZnc1qlGCWoNP9SixL6Cq2mizsWEJpfy8CLaDKFKAkz5fHjw7oGLCPiiwC8KkS61nylbkXpqXHsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709523680; c=relaxed/simple;
-	bh=8NW/FHEoLd4ENSKfrOd68QHgWBaHFO7j15Gs6Cdq4nQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qd1mL7jEb/JX3OZDTLyKqzPwUD9WZw1RGoQ20gzWwR4uv6TblPtcGOqS6T8FYvg3u9fCJPmIZqRrA0BX2RPO1zSfDwaQft0MiLyG3PyWBnJ6Ld5oOlA0QCARNxuoJawrbjLVdhUAgIG3vCiwJBiEFskMx5fq6jUuoqOtiSJOZMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hzCISer0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709523681; c=relaxed/simple;
+	bh=Rg+pzDNmbManVke3fIBOfJ8dG4UDF3YMZcF2cVJ/riE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VjqKDp3WABjbtmYxwl1XSFv2cwpPbQA4D8w4LIY6f1hf/lLnzqtkRxU5GqdSUavg6McQBRXdLyTNh4VnckUpjJdvF6fgayNI0+DzA70qQI21ug+96+MKVNEr7zohxSuYnhs6V5Pidp+HHr8FVi6Ooe1D5EDnKRSnNmpQl4Plgis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com; spf=pass smtp.mailfrom=linumiz.com; dkim=pass (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b=QL4UKo1j; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linumiz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hzCISer0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F012DC433C7;
-	Mon,  4 Mar 2024 03:41:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709523679;
-	bh=8NW/FHEoLd4ENSKfrOd68QHgWBaHFO7j15Gs6Cdq4nQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hzCISer0GtepWuozvz7cEKxavhp98EbeA8d4akEnw3vepELLur4Z1hMN9Z39CoUnK
-	 496ntpP5p6k1gpIOLrdnuP8C2WMpwYWKekw6xl7bTcy16UWDu1LBfNIx1t7b7r1s73
-	 BwHFbbggHa4Y9R5Hbw0Ad2glqztI+5YRT4PSLE8/lg76ztAJrzdL810fq8ApbDD44b
-	 wl1RJbQrs+QZo0/oQn9GYtOFk8djcN0ucTJZihfBCgZ1f8PZqW/ktUSdghp0L2p+zP
-	 ONnFkvJFXZopjUYq06DyNGywAdhoGoM4iOcEyG0yeonZ0dqNkWZUyRLPzEgkbBm5F1
-	 UJtylTioxrpsg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 8/8] Documentation: tracing: Add entry argument access at function exit
-Date: Mon,  4 Mar 2024 12:41:15 +0900
-Message-Id: <170952367549.229804.8843506960483577062.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <170952359657.229804.14867636035660590574.stgit@devnote2>
-References: <170952359657.229804.14867636035660590574.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="QL4UKo1j"
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by cmsmtp with ESMTPS
+	id gyYerAAEzl9dRgzCRrmmsP; Mon, 04 Mar 2024 03:41:11 +0000
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+	by cmsmtp with ESMTPS
+	id gzCOryowZwSfCgzCPrQLjJ; Mon, 04 Mar 2024 03:41:10 +0000
+X-Authority-Analysis: v=2.4 cv=Id+BW3qa c=1 sm=1 tr=0 ts=65e542d6
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=kofhyyBXuK/oEhdxNjf66Q==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=oz0wMknONp8A:10 a=vU9dKmh3AAAA:8
+ a=VwQbUJbxAAAA:8 a=MmOvKMSS5G6_t_hUHboA:9 a=QEXdDO2ut3YA:10
+ a=rsP06fVo5MYu2ilr0aT5:22 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Q52LpUpqR//h+pvDH+rpgnfhu416PeLSosuhD8x0a10=; b=QL4UKo1j8a2bTV/Th/8IJPwYPh
+	Y0dDmE0i9+G6kJqw4Xbxz4+qcsBlDPCt/gVjFpi6S/slpIugEyqy0GgnLbFPhrseBRylARLgB+tdr
+	uswktWCmVXt6l86+XOZEiKJCe1ER5fOZanJZJjLg9eibj2mixfLgq8Rq0QBZWmQxftDH8oyRn2x9h
+	eFCvLwB0dj89ie21PB/tybcZV5L3GLgAWe5AtY9ouQLyvaLMsGy2IzjDbFa7nbkdVVRERlCT0wnXN
+	RQqbcSUGszhZQCGs9x0ghznSM4/tp4dWYyromeoHQgA2EKIXMXNf9eKq2dn+RQTUnKsgYTnZRn1ce
+	iIslJ19g==;
+Received: from [122.165.245.213] (port=37602 helo=[192.168.1.4])
+	by md-in-79.webhostbox.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <parthiban@linumiz.com>)
+	id 1rgzCM-001eEe-2z;
+	Mon, 04 Mar 2024 09:11:06 +0530
+Message-ID: <0c89e7d1-39be-4776-8098-68307d397434@linumiz.com>
+Date: Mon, 4 Mar 2024 09:11:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add Seeed studio NPi based
+ boards
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: robh+dt@kernel.org, linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+ kernel@pengutronix.de, shawnguo@kernel.org, devicetree@vger.kernel.org,
+ festevam@gmail.com, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+ Parthiban <parthiban@linumiz.com>, sre@kernel.org
+References: <20240229082337.3090778-1-parthiban@linumiz.com>
+ <170921330970.3211978.15088255449645039046.robh@kernel.org>
+From: Parthiban <parthiban@linumiz.com>
+Organization: Linumiz
+In-Reply-To: <170921330970.3211978.15088255449645039046.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 122.165.245.213
+X-Source-L: No
+X-Exim-ID: 1rgzCM-001eEe-2z
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.4]) [122.165.245.213]:37602
+X-Source-Auth: parthiban@linumiz.com
+X-Email-Count: 13
+X-Org: HG=dishared_whb_net_legacy;ORG=directi;
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHk7sKXa29zP1+HfWqWOrzHGRoM4lKw7RJlUVtrfo/fhWZrsYCK1xKP4a8nMdBuMC707K253MKWA70OCzdRcSTc0L+lfGNTxLxR+p6ovlKdFfSjaK5v+
+ 6GoEgS1XI4233VIY/cRwWivmAehUjqY7M1U+eqSYgVPMJ7cCaC986vvSkXp0Mp+aqiCwAcvsLU8+7t9DLmEUP6S2GvrmQDbjWs8=
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Dear Rob,
 
-Add a notes about the entry argument access at function exit probes for
-kprobes and fprobe trace event.
+On 2/29/24 19:05, Rob Herring wrote:
+> 
+> On Thu, 29 Feb 2024 13:53:36 +0530, Parthiban Nallathambi wrote:
+>> NPi i.MX6ULL eMMC/NAND is Seed Studios SoM using i.MX6ULL.
+>> Development baords can be either based on NAND or eMMC
+>> SoM.
+>>
+>> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+>> ---
+>>  Documentation/devicetree/bindings/arm/fsl.yaml | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+> 
+> 
+> My bot found new DT warnings on the .dts files added or changed in this
+> series.
+> 
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v3:
-  - Add usage example in fprobetrace.rst.
----
- Documentation/trace/fprobetrace.rst |   31 +++++++++++++++++++++++++++++++
- Documentation/trace/kprobetrace.rst |    9 +++++++++
- 2 files changed, 40 insertions(+)
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=830038
+patch series which is fixing the bindings issues.
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index e35e6b18df40..0f187e3796e4 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -70,6 +70,14 @@ Synopsis of fprobe-events
- 
- For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_types>`.
- 
-+Function arguments at exit
-+--------------------------
-+Function arguments can be accessed at exit probe using $arg<N> fetcharg. This
-+is useful to record the function parameter and return value at once, and
-+trace the difference of structure fields (for debuging a function whether it
-+correctly updates the given data structure or not)
-+See the :ref:`sample<fprobetrace_exit_args_sample>` below for how it works.
-+
- BTF arguments
- -------------
- BTF (BPF Type Format) argument allows user to trace function and tracepoint
-@@ -218,3 +226,26 @@ traceprobe event, you can trace that field as below.
-            <idle>-0       [000] d..3.  5606.690317: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-       kworker/0:1-14      [000] d..3.  5606.690339: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-            <idle>-0       [000] d..3.  5606.692368: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-+
-+.. _fprobetrace_exit_args_sample:
-+
-+The return probe allows us to access the results of some functions, which returns
-+the error code and its results are passed via function parameter, such as an
-+structure-initialization function.
-+
-+For example, vfs_open() will link the file structure to the inode and update
-+mode. You can trace that changes with return probe.
-+::
-+
-+ # echo 'f vfs_open mode=file->f_mode:x32 inode=file->f_inode:x64' >> dynamic_events
-+ # echo 'f vfs_open%%return mode=file->f_mode:x32 inode=file->f_inode:x64' >> dynamic_events
-+ # echo 1 > events/fprobes/enable
-+ # cat trace
-+              sh-131     [006] ...1.  1945.714346: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x2 inode=0x0
-+              sh-131     [006] ...1.  1945.714358: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0x4d801e inode=0xffff888008470168
-+             cat-143     [007] ...1.  1945.717949: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
-+             cat-143     [007] ...1.  1945.717956: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0x4a801d inode=0xffff888005f78d28
-+             cat-143     [007] ...1.  1945.720616: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
-+             cat-143     [007] ...1.  1945.728263: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0xa800d inode=0xffff888004ada8d8
-+
-+You can see the `file::f_mode` and `file::f_inode` are upated in `vfs_open()`.
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index bf9cecb69fc9..a49662ccd53c 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -70,6 +70,15 @@ Synopsis of kprobe_events
-   (\*3) this is useful for fetching a field of data structures.
-   (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
- 
-+Function arguments at kretprobe
-+-------------------------------
-+Function arguments can be accessed at kretprobe using $arg<N> fetcharg. This
-+is useful to record the function parameter and return value at once, and
-+trace the difference of structure fields (for debuging a function whether it
-+correctly updates the given data structure or not).
-+See the :ref:`sample<fprobetrace_exit_args_sample>` in fprobe event for how
-+it works.
-+
- .. _kprobetrace_types:
- 
- Types
+Thanks,
+Parthiban N
 
+> maintainer whether these warnings are acceptable or not.
+> 
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
+> 
+>   pip3 install dtschema --upgrade
+> 
+> 
+> New warnings running 'make CHECK_DTBS=y nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dtb nxp/imx/imx6ull-seeed-npi-dev-board-nand.dtb' for 20240229082337.3090778-1-parthiban@linumiz.com:
+> 
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dtb: /soc/bus@2000000/touchscreen@2040000: failed to match any schema with compatible: ['fsl,imx6ul-tsc']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-nand.dtb: /soc/bus@2000000/touchscreen@2040000: failed to match any schema with compatible: ['fsl,imx6ul-tsc']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dtb: /soc/bus@2000000/anatop@20c8000: failed to match any schema with compatible: ['fsl,imx6ul-anatop', 'fsl,imx6q-anatop', 'syscon', 'simple-mfd']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dtb: /soc/bus@2000000/anatop@20c8000: failed to match any schema with compatible: ['fsl,imx6ul-anatop', 'fsl,imx6q-anatop', 'syscon', 'simple-mfd']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-nand.dtb: /soc/bus@2000000/anatop@20c8000: failed to match any schema with compatible: ['fsl,imx6ul-anatop', 'fsl,imx6q-anatop', 'syscon', 'simple-mfd']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-nand.dtb: /soc/bus@2000000/anatop@20c8000: failed to match any schema with compatible: ['fsl,imx6ul-anatop', 'fsl,imx6q-anatop', 'syscon', 'simple-mfd']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dtb: /soc/bus@2000000/pinctrl@20e0000: failed to match any schema with compatible: ['fsl,imx6ul-iomuxc']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-nand.dtb: /soc/bus@2000000/pinctrl@20e0000: failed to match any schema with compatible: ['fsl,imx6ul-iomuxc']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dtb: /soc/bus@2000000/iomuxc-gpr@20e4000: failed to match any schema with compatible: ['fsl,imx6ul-iomuxc-gpr', 'fsl,imx6q-iomuxc-gpr', 'syscon']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dtb: /soc/bus@2000000/iomuxc-gpr@20e4000: failed to match any schema with compatible: ['fsl,imx6ul-iomuxc-gpr', 'fsl,imx6q-iomuxc-gpr', 'syscon']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-nand.dtb: /soc/bus@2000000/iomuxc-gpr@20e4000: failed to match any schema with compatible: ['fsl,imx6ul-iomuxc-gpr', 'fsl,imx6q-iomuxc-gpr', 'syscon']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-nand.dtb: /soc/bus@2000000/iomuxc-gpr@20e4000: failed to match any schema with compatible: ['fsl,imx6ul-iomuxc-gpr', 'fsl,imx6q-iomuxc-gpr', 'syscon']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dtb: /soc/bus@2200000/pinctrl@2290000: failed to match any schema with compatible: ['fsl,imx6ull-iomuxc-snvs']
+> arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-nand.dtb: /soc/bus@2200000/pinctrl@2290000: failed to match any schema with compatible: ['fsl,imx6ull-iomuxc-snvs']
+> 
+> 
+> 
+> 
+> 
