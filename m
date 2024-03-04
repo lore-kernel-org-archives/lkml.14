@@ -1,150 +1,142 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA1A45BF6;
-	Mon,  4 Mar 2024 16:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500D0A20;
+	Mon,  4 Mar 2024 16:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571252; cv=none; b=HpX2qtYc2PPHD6ywqR5ZoG/XpXHOcSDCerexRaq8Qo2F263YhRamr4BsGWbky+jIsadEELfeTWhrdFqkSiLIW7ITsl5W9lWjESVolE6x4e/o1l5SEAX+eMN2lr6QGIi7EYT3DBqzwWbANpd52wpxFf3xwDRsggYL2DLNNKjDbMc=
+	t=1709571379; cv=none; b=lIidscSWDLYpbcWWFBQWTBw9W0FDFAEhCzzEle7YiqwQCXdhrbr+dR78YGPFu0Jviou64JpeBf28u/Za6pIqpcMZf8lMazkOY0NlMQbgIrMIuBmtZhRduQp0mxoERDq08rga1rHjL3fzt4vDU/dtXI4uV9vsORKa76w01uhtBzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571252; c=relaxed/simple;
-	bh=+R7oTg+kxjTKyaKYxZHYT42wyBy1AiS9hgSVvfLNDyo=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=dFz8L7TumJBUWy8iuShfrqNE6kbB7yeJQ8kwhzSY2xWtmQLttLBZZupIQ4ZKSPUcaKFlx/SkpjCYIoNiNhsl6tgjjlYJKwPv+BbDR/xKLCL3jF7/BLqJt+nAAWgPh95lbuyTvPFaJWOjZAriSoGxclDODpZbAFyJKPkl30x99rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SlltTY1l; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1709571379; c=relaxed/simple;
+	bh=Iw/1JU1TagbMrr1ftOYJ1zZMGOHfXtUQyWKwKKbthFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JiCZLKQrQgCzfRmPfCAVmYZ7H6r73vhgabDW4r/Y8oxRQhV635azFKdIDfInwlmLuPGQExi5uiR0OLWzaVm8O0BvxA1oinFHus9ifGB63GQ4PCrrrfvKG598upqK5SHeS2RxKn+9nkr5io4vo6dRWaUwIsoYykx2mECwLsmgGMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZ/pqmGe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SlltTY1l"
-Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 517FD3871;
-	Mon,  4 Mar 2024 17:53:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1709571232;
-	bh=+R7oTg+kxjTKyaKYxZHYT42wyBy1AiS9hgSVvfLNDyo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=SlltTY1lkILhpK1EXZ/YXpEMFb8cbBxwNoZkuDArAucNSaR1T/TRKkkC92Kt2ZMgM
-	 Y9fxl+n17THj3Pv8pwvbX3yoB+szb//puxlu6GjtAsvNrf6+c56BJO2j67/ocUT5jc
-	 2SIB5iJK5KtgHlVJZOySFlhlKvaBUO1R8f26jyrw=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZ/pqmGe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6E2C433C7;
+	Mon,  4 Mar 2024 16:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709571378;
+	bh=Iw/1JU1TagbMrr1ftOYJ1zZMGOHfXtUQyWKwKKbthFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EZ/pqmGek5fFsjKeUCHY0Z3TuGQv/4R64k5i0wi3azQ7z+ti/o9T+ZggO2c/i1aSe
+	 hWRhGtBQlZPOprsX9pAgX5YnlXV/qWfXT03T4Z4gZla+QlbZYNlDG6WKYgAOuAjfEr
+	 i2XWor6/AhbldPmjvS9MsCkf1hUeEwn+ghF9pVUFs1P1NE+eK0vMt8wui7m0Irv9hr
+	 VynKf3+pZzL/aSJf5Sl6y2NuGZ9vEbCsfmB9g+HvVViEiqhLGen80AkxXBhQMnrIjp
+	 QjYlfqXUcs57/aWMFblpa5G6Tnxgy5gRMHqbAfDtbVUGJRFX5To0MGB1folgF/Tosr
+	 BKSK8hxUxPWJA==
+Date: Mon, 4 Mar 2024 10:56:17 -0600
+From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: Christian Brauner <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>,
+	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+	James Morris <jmorris@namei.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, audit@vger.kernel.org,
+	selinux@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH v2 24/25] commoncap: use vfs fscaps interfaces
+Message-ID: <ZeX9MRhU/EGhHkCY@do-x1extreme>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+ <20240221-idmap-fscap-refactor-v2-24-3039364623bd@kernel.org>
+ <dcbd9e7869d2fcce69546b53851d694b8ebad54e.camel@huaweicloud.com>
+ <ZeXpbOsdRTbLsYe9@do-x1extreme>
+ <a7124afa6bed2fcadcb66efa08e256828cd6f8ab.camel@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240229165333.227484-13-mike.rudenko@gmail.com>
-References: <20240229165333.227484-1-mike.rudenko@gmail.com> <20240229165333.227484-13-mike.rudenko@gmail.com>
-Subject: Re: [PATCH v3 12/20] media: i2c: ov4689: Implement vflip/hflip controls
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Tommaso Merciai <tomm.merciai@gmail.com>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Dave Stevenson <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Date: Mon, 04 Mar 2024 16:54:05 +0000
-Message-ID: <170957124561.566498.576610873794356352@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7124afa6bed2fcadcb66efa08e256828cd6f8ab.camel@huaweicloud.com>
 
-Quoting Mikhail Rudenko (2024-02-29 16:53:25)
-> The OV4689 sensor supports horizontal and vertical flipping. Add
-> appropriate controls to the driver. Toggling both array flip and
-> digital flip bits allows to achieve flipping while maintaining output
-> Bayer order. Note that the default value of hflip control corresponds
-> to both bits set, as it was before this patch.
->=20
-> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
-> ---
->  drivers/media/i2c/ov4689.c | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-> index 8283a9ac86c9..01ee8cadb7c9 100644
-> --- a/drivers/media/i2c/ov4689.c
-> +++ b/drivers/media/i2c/ov4689.c
-> @@ -42,6 +42,14 @@
->  #define OV4689_REG_VTS                 CCI_REG16(0x380e)
->  #define OV4689_VTS_MAX                 0x7fff
-> =20
-> +#define OV4689_REG_TIMING_FORMAT1      CCI_REG8(0x3820)
-> +#define OV4689_REG_TIMING_FORMAT2      CCI_REG8(0x3821)
+On Mon, Mar 04, 2024 at 05:17:57PM +0100, Roberto Sassu wrote:
+> On Mon, 2024-03-04 at 09:31 -0600, Seth Forshee (DigitalOcean) wrote:
+> > On Mon, Mar 04, 2024 at 11:19:54AM +0100, Roberto Sassu wrote:
+> > > On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOcean) wrote:
+> > > > Use the vfs interfaces for fetching file capabilities for killpriv
+> > > > checks and from get_vfs_caps_from_disk(). While there, update the
+> > > > kerneldoc for get_vfs_caps_from_disk() to explain how it is different
+> > > > from vfs_get_fscaps_nosec().
+> > > > 
+> > > > Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
+> > > > ---
+> > > >  security/commoncap.c | 30 +++++++++++++-----------------
+> > > >  1 file changed, 13 insertions(+), 17 deletions(-)
+> > > > 
+> > > > diff --git a/security/commoncap.c b/security/commoncap.c
+> > > > index a0ff7e6092e0..751bb26a06a6 100644
+> > > > --- a/security/commoncap.c
+> > > > +++ b/security/commoncap.c
+> > > > @@ -296,11 +296,12 @@ int cap_capset(struct cred *new,
+> > > >   */
+> > > >  int cap_inode_need_killpriv(struct dentry *dentry)
+> > > >  {
+> > > > -	struct inode *inode = d_backing_inode(dentry);
+> > > > +	struct vfs_caps caps;
+> > > >  	int error;
+> > > >  
+> > > > -	error = __vfs_getxattr(dentry, inode, XATTR_NAME_CAPS, NULL, 0);
+> > > > -	return error > 0;
+> > > > +	/* Use nop_mnt_idmap for no mapping here as mapping is unimportant */
+> > > > +	error = vfs_get_fscaps_nosec(&nop_mnt_idmap, dentry, &caps);
+> > > > +	return error == 0;
+> > > >  }
+> > > >  
+> > > >  /**
+> > > > @@ -323,7 +324,7 @@ int cap_inode_killpriv(struct mnt_idmap *idmap, struct dentry *dentry)
+> > > >  {
+> > > >  	int error;
+> > > >  
+> > > > -	error = __vfs_removexattr(idmap, dentry, XATTR_NAME_CAPS);
+> > > > +	error = vfs_remove_fscaps_nosec(idmap, dentry);
+> > > 
+> > > Uhm, I see that the change is logically correct... but the original
+> > > code was not correct, since the EVM post hook is not called (thus the
+> > > HMAC is broken, or an xattr change is allowed on a portable signature
+> > > which should be not).
+> > > 
+> > > For completeness, the xattr change on a portable signature should not
+> > > happen in the first place, so cap_inode_killpriv() would not be called.
+> > > However, since EVM allows same value change, we are here.
+> > 
+> > I really don't understand EVM that well and am pretty hesitant to try an
+> > change any of the logic around it. But I'll hazard a thought: should EVM
+> > have a inode_need_killpriv hook which returns an error in this
+> > situation?
+> 
+> Uhm, I think it would not work without modifying
+> security_inode_need_killpriv() and the hook definition.
+> 
+> Since cap_inode_need_killpriv() returns 1, the loop stops and EVM would
+> not be invoked. We would need to continue the loop and let EVM know
+> what is the current return value. Then EVM can reject the change.
+> 
+> An alternative way would be to detect that actually we are setting the
+> same value for inode metadata, and maybe not returning 1 from
+> cap_inode_need_killpriv().
+> 
+> I would prefer the second, since EVM allows same value change and we
+> would have an exception if there are fscaps.
+> 
+> This solves only the case of portable signatures. We would need to
+> change cap_inode_need_killpriv() anyway to update the HMAC for mutable
+> files.
 
-I assume these registerse are called TIMING_FORMAT1 and TIMING_FORMAT2,
-and they don't have any named reference to H/V?
-
-It's a shame, but I might add /* Horizontal */ and /* Vertical */
-accordingly to these definitions, though not specifically required.
-
-
-Looks like a good breakdown of the control though.
-
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-
-> +#define OV4689_TIMING_FLIP_MASK                GENMASK(2, 1)
-> +#define OV4689_TIMING_FLIP_ARRAY       BIT(1)
-> +#define OV4689_TIMING_FLIP_DIGITAL     BIT(2)
-> +#define OV4689_TIMING_FLIP_BOTH                (OV4689_TIMING_FLIP_ARRAY=
- |\
-> +                                        OV4689_TIMING_FLIP_DIGITAL)
-> +
->  #define OV4689_REG_TEST_PATTERN                CCI_REG8(0x5040)
->  #define OV4689_TEST_PATTERN_ENABLE     0x80
->  #define OV4689_TEST_PATTERN_DISABLE    0x0
-> @@ -183,7 +191,6 @@ static const struct cci_reg_sequence ov4689_2688x1520=
-_regs[] =3D {
->         {CCI_REG8(0x3811), 0x08}, /* H_WIN_OFF_L h_win_off[7:0] =3D 0x08*/
->         {CCI_REG8(0x3813), 0x04}, /* V_WIN_OFF_L v_win_off[7:0] =3D 0x04 =
-*/
->         {CCI_REG8(0x3819), 0x01}, /* VSYNC_END_L vsync_end_point[7:0] =3D=
- 0x01 */
-> -       {CCI_REG8(0x3821), 0x06}, /* TIMING_FORMAT2 array_h_mirror =3D 1,=
- digital_h_mirror =3D 1 */
-> =20
->         /* OTP control */
->         {CCI_REG8(0x3d85), 0x36}, /* OTP_REG85 OTP_power_up_load_setting_=
-enable =3D 1,
-> @@ -607,6 +614,16 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->                           (ctrl->val + ov4689->cur_mode->width) /
->                           OV4689_HTS_DIVIDER, &ret);
->                 break;
-> +       case V4L2_CID_VFLIP:
-> +               cci_update_bits(regmap, OV4689_REG_TIMING_FORMAT1,
-> +                               OV4689_TIMING_FLIP_MASK,
-> +                               ctrl->val ? OV4689_TIMING_FLIP_BOTH : 0, =
-&ret);
-> +               break;
-> +       case V4L2_CID_HFLIP:
-> +               cci_update_bits(regmap, OV4689_REG_TIMING_FORMAT2,
-> +                               OV4689_TIMING_FLIP_MASK,
-> +                               ctrl->val ? 0 : OV4689_TIMING_FLIP_BOTH, =
-&ret);
-> +               break;
->         default:
->                 dev_warn(dev, "%s Unhandled id:0x%x, val:0x%x\n",
->                          __func__, ctrl->id, ctrl->val);
-> @@ -637,7 +654,7 @@ static int ov4689_initialize_controls(struct ov4689 *=
-ov4689)
-> =20
->         handler =3D &ov4689->ctrl_handler;
->         mode =3D ov4689->cur_mode;
-> -       ret =3D v4l2_ctrl_handler_init(handler, 10);
-> +       ret =3D v4l2_ctrl_handler_init(handler, 12);
->         if (ret)
->                 return ret;
-> =20
-> @@ -677,6 +694,9 @@ static int ov4689_initialize_controls(struct ov4689 *=
-ov4689)
->                                      ARRAY_SIZE(ov4689_test_pattern_menu)=
- - 1,
->                                      0, 0, ov4689_test_pattern_menu);
-> =20
-> +       v4l2_ctrl_new_std(handler, &ov4689_ctrl_ops, V4L2_CID_VFLIP, 0, 1=
-, 1, 0);
-> +       v4l2_ctrl_new_std(handler, &ov4689_ctrl_ops, V4L2_CID_HFLIP, 0, 1=
-, 1, 0);
-> +
->         if (handler->error) {
->                 ret =3D handler->error;
->                 dev_err(ov4689->dev, "Failed to init controls(%d)\n", ret=
-);
-> --=20
-> 2.43.0
->
+I see. In any case this sounds like a matter for a separate patch
+series.
