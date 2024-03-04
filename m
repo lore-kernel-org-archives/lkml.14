@@ -1,119 +1,68 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4609D18E2E;
-	Mon,  4 Mar 2024 14:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE07E573;
+	Mon,  4 Mar 2024 14:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560967; cv=none; b=Mun8DLWbNOp/0LEhOdmjuTnDrvqFgeTlbkl4Q8rHMZZtZnZDwQYeTyJ6WpIWKVJsrYdQbjmPiBqCb7zxVv1KdtsbYvmUtCaEe4pdbOP7lJFPZ7n2K1fNnw9A0XK9ilO6f2JgIc6xZpcuCD5Ankk/GTXifZIQzWkYfPghPaIGZOQ=
+	t=1709561051; cv=none; b=R5S8KXXsUq/q9vyR0sFaVYHo2Rkc4AwRUXlRzmXfPYk7wxJOTnkoY/o8+8BY4p/lqkQiAU/crTDuUfaDUUsHUBWT3mwKh+D+DeXwk2EWj47qrFbNo77GFdCPre+/ipt/lu8x1819CDf2tIoI9kS6Np+/hXo030MiFKYK0yhBYow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560967; c=relaxed/simple;
-	bh=oW3W6ISMlJ8Eg/hIHK1jMTGlAIWDK7R9bRS0g0+jPHo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=eoIV8yad0kMCSC0T5Vc7MSTemxdIA5jG+auaxARaKZ5hQVeUnhFslW6EzSYQuGlSKUcaWqC0ouazw0yexZPsml0jF40JOLDKLUArIuuDUhDAMQO0xfWclDnd8unJSVrkewesR1FNzvvtfgtaGIelr9/wsDlupYDtv2hzv5s5Ui8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=QGmT4hxL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fu/R4XyE; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709561051; c=relaxed/simple;
+	bh=BN1qJJlQBEneDE5OhSeQi8WrX1WlkPPOaXCeqBKB/Mw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OQGTo23gYaSGroxm7Gxp79ttZg9qfppXKeR7jetQXB7Zv16F+MZt3sm53obFf+Vp38/gk4kIF7Yw6ssorO9u8rG1hNDLC4bg1KecEvNstIjZShItwhXCazvdrS0kPqm8c5yR4e4U6XqPGHTOtpHkI8G515B4gZFdJyD96nARjTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=JeEeUmW6; arc=none smtp.client-ip=5.189.157.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="QGmT4hxL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fu/R4XyE"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 501D311400D5;
-	Mon,  4 Mar 2024 09:02:45 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 04 Mar 2024 09:02:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1709560965;
-	 x=1709647365; bh=Tyc3a0qlsGocDX90h5xGZM+hiCwDa28icbfjEtQ1zvk=; b=
-	QGmT4hxLNmXGRO4v8IvjfEmWtXchgSMU24haZAHL4NW4DDDMnfs8r+EyLQzXryfo
-	vX435XzUZWRrzWY+Gs1nqemCgJZDw0+xWhpxgAZDJZwaSDjmJyxoNgtO3fo0p10X
-	bPexUBHqFSEl8QL+wBysexQN6gN6vpoIlenx2XSyq7Ilv8ZhcO7yEQ43bVvHzilv
-	0atKdtofMbe8qwL+83Wyx/Z6KvcBdcKv7ojY7YNk8fBnFZngoGM8KNRRj0+fVzyd
-	Fd2WQfIQs1S9OWOUPVGQLPfmoIpSLWm6UzubajS7F5iRgNHqrRw50Q9kxMoLCYZm
-	4fXaZ6/JotwSFacA/5jGAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1709560965; x=
-	1709647365; bh=Tyc3a0qlsGocDX90h5xGZM+hiCwDa28icbfjEtQ1zvk=; b=f
-	u/R4XyE+vPN6RibXUKog+0xaHcTYuBNIdnDDkFXGO0/FunwE8VWyEpoMTF9L/5Nq
-	rlPmCRO5XLYgPbKv+5l7gbxnsZ0yxNLnNi5+oRcPp9mkuU6X+NXtHT+09Ox1NJ0r
-	5SlJohgOr80SI/6xbRLNy7MgluqY7v3BFcd8X8xPEoMDTzTdBqjEXbPnEzr2Ypy9
-	4t8gCtlcVsPMFMBAqBWxCeigDDCOxHrs/9HZ584RvkJmHFiRRntQ23eBL7BJefqC
-	wAzsp1nQ2pseaRQrIE2t9+JfW7iFJnXGj2lgUsdkSodgWVaZ1+c2BRPWclZZhsO7
-	undGJVuOVjeDDvX2jcmiA==
-X-ME-Sender: <xms:gtTlZd_NN9IfbcavqA02lUeQUK9glF1D8g-xgTj0OaukXht_pkakHQ>
-    <xme:gtTlZRseQxhD7o0mA4nFhRRRcpPWq8KhBzAwpQ_2WzOrgCU5NkOQyCsZa33N6O2bf
-    9X_uNVCUBiUVHA5Jm8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrheejgdehkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:g9TlZbBr5MPmIecoKgXRB13aymYfIbR3OS0v5gVDhe8tNomBgTTF6g>
-    <xmx:g9TlZRdmJcw66TEtr_syhGOZXx-B2IyBL4T2SmtwKwNSYbZVnoD4VA>
-    <xmx:g9TlZSPmHNHDWF6RgyJni1Z6Duznav77L3s-o12LBBBhHOrnnwZmTA>
-    <xmx:hdTlZXfZOkInKEEcYLMv1ZLDUfYNuEU81F-xLYkbSortVbCH-f64bQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id BB003B6008D; Mon,  4 Mar 2024 09:02:42 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-205-g4dbcac4545-fm-20240301.001-g4dbcac45
+	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="JeEeUmW6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Content-ID:Content-Description;
+	bh=BN1qJJlQBEneDE5OhSeQi8WrX1WlkPPOaXCeqBKB/Mw=; b=JeEeUmW6yS3b0M2jxbz5eX0Ptb
+	/S3Bg8Xr5m8qJrPNyfXb2/+bpar5mjnygP7r+7qfZuJZLSKr1Hat7PFq2yzTKYte/g5hvlHXgOCe1
+	dN63joAHhU0kvRcQchlR33vYaCQqOYinw+LFzrVo7O3jRo9c7x5YufTXSPs5mtWDtyquVwt0KcQmc
+	4bZWhn1CumKwZZBJnhp9XLikC4lU3k/uVwP/f5CpFD3tKhU/dGNnfkJ1OHT4dhdRY9VfwlCH93qfO
+	wYKYy+sRgG0/cyu+RAT/PCkdqN0yYKh9+pvwSC/Duity1vzTZ3IMZz0jgVm2CicOqtS71F9N9qLMQ
+	lWb8QQynwYE0Rin/fS5Q+1ocjvmAL7wPUX4KLjT9sb3p+BGXM3mthinULXMK8s66Kkid8+i5dBpxT
+	0TrytdotK0m6WwFo9wAUa2bsHHHJg6jfgkCiHIk71aJouwkVPGfjMhEzzMC4MWD/R5dsOj79e9JHq
+	hB63+kz5lJOPRWW0hCX3ZVaoQeYBcnuFG4bmrPt8CqxcvhnI7juKmKepRoUK7VtbVOeI8ey+39+Rr
+	/50anNLpIxMo5Q3vMOAS4fsiug4SCeAbuo2fVoSJbLlN663x7jEWdTOaeXF/yJQMjlvmnMeC7yC7M
+	UAfRpxgPQDYpa4rzZ2ObGYZrfIcy/72Y2dPTmvq0U=;
+From: Christian Schoenebeck <linux_oss@crudebyte.com>
+To: Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>
+Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Christian Brauner <brauner@kernel.org>, xingwei lee <xrivendell7@gmail.com>,
+ sam sun <samsun1006219@gmail.com>,
+ Dominique Martinet <asmadeus@codewreck.org>
+Subject: Re: [PATCH] 9p: cap xattr max size to XATTR_SIZE_MAX
+Date: Mon, 04 Mar 2024 14:35:07 +0100
+Message-ID: <4091309.WcpKHNDlqE@silver>
+In-Reply-To: <20240304-xattr_maxsize-v1-1-322357ec6bdf@codewreck.org>
+References: <20240304-xattr_maxsize-v1-1-322357ec6bdf@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a9063efe-1faf-4945-83ce-449a23d44fc5@app.fastmail.com>
-In-Reply-To: <36df8535-083f-4ce3-84c7-b8f652a9085b@notapiano>
-References: <20240212-coreboot-mod-defconfig-v4-0-d14172676f6d@collabora.com>
- <36df8535-083f-4ce3-84c7-b8f652a9085b@notapiano>
-Date: Mon, 04 Mar 2024 15:02:21 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Cc: "Brian Norris" <briannorris@chromium.org>,
- "Julius Werner" <jwerner@chromium.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas@fjasle.eu>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, kernel@collabora.com,
- chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- "Tzung-Bi Shih" <tzungbi@kernel.org>
-Subject: Re: [PATCH v4 0/4] Allow coreboot modules to autoload and enable cbmem in the
- arm64 defconfig
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Mar 4, 2024, at 14:56, N=C3=ADcolas F. R. A. Prado wrote:
-> On Mon, Feb 12, 2024 at 09:50:04AM -0500, N=C3=ADcolas F. R. A. Prado =
-wrote:
->> N=C3=ADcolas F. R. A. Prado (4):
->>       firmware: coreboot: Generate modalias uevent for devices
->>       firmware: coreboot: Generate aliases for coreboot modules
->>       firmware: coreboot: Replace tag with id table in driver struct
->>       arm64: defconfig: Enable support for cbmem entries in the coreb=
-oot table
->
-> is it ok for Tzung-Bi to merge this last patch for the defconfig throu=
-gh the
-> chrome-platform-firmware tree?
+On Monday, March 4, 2024 1:42:43 PM CET Dominique Martinet wrote:
+> We probably shouldn't ever get an xattr bigger than that, and the current check
+> of SSIZE_MAX is a bit too large.
 
-I would much prefer to see this patch get sent to soc@kernel.org
-so I can pick it up through the soc tree. I'm usually not worried
-about bisection issues with defconfig changes since most users
-have their own .config anyway, and in this case I don't see
-any strict dependency and would just merge the patch directly.
+Maybe, OTOH e.g. ACLs (dynamic size) are implemented by storing them as xattrs
+on 9p server as well, and this change somewhat expects server to run Linux as
+well. So maybe s/XATTR_SIZE_MAX/KMALLOC_MAX_SIZE/ might be more appropriate,
+considering that this patch is about fixing a potential kmalloc() warning?
 
-     Arnd
+Worth to mention in the commit log BTW what the issue was.
+
+/Christian
+
+
