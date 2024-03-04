@@ -1,144 +1,161 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC50F11199
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 06:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01B010A10;
+	Mon,  4 Mar 2024 06:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709533843; cv=none; b=bX8zmzYxDD+NoR4mBzH4wfbNq1TpJPVq08trhzJWg6/p1K9IHqlwfFteHF9bozCnTUjw0cO5RhCP3+CU+XdI7p77CTI492Dsx2K4H0UjUZDiHlqa0EfovbqcccHUhdKh0ffyuza6bUlF+VgcOwpCAyhpKku0DrDAWyUntZI6Q70=
+	t=1709534032; cv=none; b=ZefgRtUAWkUtuPJ5kjBqrVNreDERY8YtEOHyMVMyvS2q0ud2gQgFB/WvZ3B/9oMoyrzHEaQ6CLeH6OIiAidczmFd0FIx4i/ixG9flyG/PSbqdKgon33hpZLGNh70wXDBN8PbOBFwBOfmxlSP7NSROjUiU5mFw6BgaHA8mgR4vbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709533843; c=relaxed/simple;
-	bh=oRuL5E03NRBdlsCXDyKaHFjeY88RtCn+H3QpyLpZHgI=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=ZXcJN0tarQUozJpDZH0Ohe/mx+bvrhaYO8T2hH1psYvArZcztQRsriqSRecu+VZ+QtHwHyf6HPChSWqmFszNCpm2iH/4D4DIPMAmu6OhNVOicvwm5WQwirNH1S6byRgJA6gtiGLZIf+zEsAsnVUgsjjodsJNqJ7WCDpGp7y+xkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sPquiY6o; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sPquiY6o"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1709533833; h=Message-ID:Subject:Date:From:To;
-	bh=NGXjorvuk11qTskGv8WPgdXQ88lN94avzSL2JOcc1C8=;
-	b=sPquiY6or+egThxF2tTEh0EE8v8UOQUYiOseVtW3MzTvkr+XUFty0kSDja9xFMf8vJZY8S9k8JPaZF/498yq+a2iZzgR4V8e/KhistVE0i5Z5t6n2crtIttAAIF792c27zFv1VeVtegHgmlusCcU/TT8ABqWpPlhx6sjvoxrvXU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W1kG7dz_1709533832;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W1kG7dz_1709533832)
-          by smtp.aliyun-inc.com;
-          Mon, 04 Mar 2024 14:30:32 +0800
-Message-ID: <1709533720.5072534-2-xuanzhuo@linux.alibaba.com>
-Subject: Re: [RFC] dma-mapping: introduce dma_can_skip_unmap()
-Date: Mon, 4 Mar 2024 14:28:40 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-kernel@vger.kernel.org,
- Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>,
- Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- iommu@lists.linux.dev,
- Zelin Deng <zelin.deng@linux.alibaba.com>,
- "Michael S. Tsirkin" <mst@redhat.com>
-References: <20240301071918.64631-1-xuanzhuo@linux.alibaba.com>
- <64be2e23-c526-45d3-bb7b-29e31241bbef@arm.com>
- <20240301064632-mutt-send-email-mst@kernel.org>
- <a00f0b55-0681-4e9c-b75e-e7e3d4110471@arm.com>
- <20240301082703-mutt-send-email-mst@kernel.org>
- <d4f2f99c-b8bb-4ed9-8d91-ed0f5b418425@arm.com>
-In-Reply-To: <d4f2f99c-b8bb-4ed9-8d91-ed0f5b418425@arm.com>
+	s=arc-20240116; t=1709534032; c=relaxed/simple;
+	bh=WRrLMBUeGs4Z+7mBNZqfHwhqMfVZ1MqNODPVECCY+Qg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=m0vHIMiUt+1IeRdcunhJ6bBbpWKkYh/U0jqKTqOxw7ofPc0s7uSFB9Xl1S1mxaNMaKi/QEF+muW7xyjD8/Kjk/NZlk7FQ0DnAINxvZ8GZdNvLhqeHzwaNdYhT0GHnQV2uPkCavDE756SyIqo4mylCe5AJqrQdZUPCjCS9pwnTBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tp86B6DdKz4f3l2R;
+	Mon,  4 Mar 2024 14:33:38 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 3E0291A017A;
+	Mon,  4 Mar 2024 14:33:44 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP4 (Coremail) with SMTP id gCh0CgCH2GpFa+Vlc3zwFw--.11474S2;
+	Mon, 04 Mar 2024 14:33:42 +0800 (CST)
+Subject: Re: [PATCH v3 0/3] Fix crashes and warning in ext4 unit test
+To: Guenter Roeck <linux@roeck-us.net>, tytso@mit.edu,
+ adilger.kernel@dilger.ca
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ naresh.kamboju@linaro.org, daniel.diaz@linaro.org, brauner@kernel.org
+References: <20240302181755.9192-1-shikemeng@huaweicloud.com>
+ <77c5b612-83f1-40b6-95f2-f3962bb2de5c@roeck-us.net>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <c5f0f654-2eed-4900-c9ce-c668d77379bf@huaweicloud.com>
+Date: Mon, 4 Mar 2024 14:33:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
-On Fri, 1 Mar 2024 18:04:10 +0000, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 2024-03-01 1:41 pm, Michael S. Tsirkin wrote:
-> > On Fri, Mar 01, 2024 at 12:42:39PM +0000, Robin Murphy wrote:
-> >> On 2024-03-01 11:50 am, Michael S. Tsirkin wrote:
-> >>> On Fri, Mar 01, 2024 at 11:38:25AM +0000, Robin Murphy wrote:
-> >>>> Not only is this idea not viable, the entire premise seems flawed - the
-> >>>> reasons for virtio needing to use the DMA API at all are highly likely to be
-> >>>> the same reasons for it needing to use the DMA API *properly* anyway.
-> >>>
-> >>> The idea has nothing to do with virtio per se
-> >>
-> >> Sure, I can see that, but if virtio is presented as the justification for
-> >> doing this then it's the justification I'm going to look at first. And the
-> >> fact is that it *does* seem to have particular significance, since having up
-> >> to 19 DMA addresses involved in a single transfer is very much an outlier
-> >> compared to typical hardware drivers.
-> >
-> > That's a valid comment. Xuan Zhuo do other drivers do this too,
-> > could you check pls?
-> >
-> >> Furthermore the fact that DMA API
-> >> support was retrofitted to the established virtio design means I would
-> >> always expect it to run up against more challenges than a hardware driver
-> >> designed around the expectation that DMA buffers have DMA addresses.
-> >
-> >
-> > It seems virtio can't drive any DMA changes then it's forever tainted?
-> > Seems unfair - we retrofitted it years ago, enough refactoring happened
-> > since then.
->
-> No, I'm not saying we couldn't still do things to help virtio if and
-> when it does prove reasonable to do so; just that if anything it's
-> *because* that retrofit is mature and fairly well polished by now that
-> any remaining issues like this one are going to be found in the most
-> awkward corners and thus unlikely to generalise.
->
-> FWIW in my experience it seems more common for network drivers to
-> actually have the opposite problem, where knowing the DMA address of a
-> buffer is easy, but keeping track of the corresponding CPU address can
-> be more of a pain.
->
-> >>> - we are likely not the
-> >>> only driver that wastes a lot of memory (hot in cache, too) keeping DMA
-> >>> addresses around for the sole purpose of calling DMA unmap.  On a bunch
-> >>> of systems unmap is always a nop and we could save some memory if there
-> >>> was a way to find out. What is proposed is an API extension allowing
-> >>> that for anyone - not just virtio.
-> >>
-> >> And the point I'm making is that that "always" is a big assumption, and in
-> >> fact for the situations where it is robustly true we already have the
-> >> DEFINE_DMA_UNMAP_{ADDR,LEN} mechanism.
-> >> I'd consider it rare for DMA
-> >> addresses to be stored in isolation, as opposed to being part of some kind
-> >> of buffer descriptor (or indeed struct scatterlist, for an obvious example)
-> >> that a driver or subsystem still has to keep track of anyway, so in general
-> >> I believe the scope for saving decidedly small amounts of memory at runtime
-> >> is also considerably less than you might be imagining.
-> >>
-> >> Thanks,
-> >> Robin.
-> >
-> >
-> > Yes. DEFINE_DMA_UNMAP_ exits but that's only compile time.
-> > And I think the fact we have that mechanism is a hint that
-> > enough configurations could benefit from a runtime
-> > mechanism, too.
-> >
-> > E.g. since you mentioned scatterlist, it has a bunch of ifdefs
-> > in place.
->
-> But what could that benefit be in general? It's not like we can change
-> structure layouts on a per-DMA-mapping-call basis to save
-> already-allocated memory... :/
-
-We can put the memory together. If the unmap is not needed, then we do not
-allocate the memory. That is the way we are trying.
-
-Thanks.
+MIME-Version: 1.0
+In-Reply-To: <77c5b612-83f1-40b6-95f2-f3962bb2de5c@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCH2GpFa+Vlc3zwFw--.11474S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCryfCF4ftw4kCrWxuF48Zwb_yoWrZr1kpr
+	18tFW5KrWrJrn7J3W3Jw1UJry3ta1Iy3WUGrn7GF15CF1UGr1jvr1jqrWjgryDtr48Xw1j
+	q3srWw1j9w1UJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
 
 
->
-> Thanks,
-> Robin.
->
-> >
-> > Of course
-> > - finding more examples would be benefitial to help maintainers
-> >    do the cost/benefit analysis
-> > - a robust implementation is needed
-> >
-> >
+on 3/3/2024 11:33 PM, Guenter Roeck wrote:
+> On 3/2/24 10:17, Kemeng Shi wrote:
+>> v2->v3:
+>> -fix warning that sb->s_umount is still held when unit test finishs
+>> -fix warning that sbi->s_freeclusters_counter is used before
+>> initialization.
+>>
+>> v1->v2:
+>> -properly handle error from sget()
+>>
+>> Previously, the new mballoc unit tests are only tested by running
+>> "./tools/testing/kunit/kunit.py run ..." in which case only rare configs
+>> are enabled.
+>> This series fixes issues when more debug configs are enabled. Fixes are
+>> tested with and without kunit_tool [1].
+>>
+>> [1] https://docs.kernel.org/dev-tools/kunit/run_manual.html
+>>
+>> Kemeng Shi (3):
+>>    ext4: alloc test super block from sget
+>>    ext4: hold group lock in ext4 kunit test
+>>    ext4: initialize sbi->s_freeclusters_counter before use in kunit test
+>>
+>>   fs/ext4/mballoc-test.c | 77 ++++++++++++++++++++++++++++++++----------
+>>   1 file changed, 60 insertions(+), 17 deletions(-)
+>>
+> 
+> I still see crashes with this version. Some examples below.
+> 
+Thanks so much for the test and report. It's likely cuased by using
+sbi->s_dirtyclusters_counter uninitialized. Will fix it in next
+version.
+
+Kemeng
+> Guenter
+> 
+> ---
+> mips:
+> 
+>         KTAP version 1
+>         # Subtest: test_mark_diskspace_used
+> CPU 0 Unable to handle kernel paging request at virtual address 00780000, epc == 807a4b28, ra == 807a4c20
+> Oops[#1]:
+> CPU: 0 PID: 112 Comm: kunit_try_catch Tainted: G                 N 6.8.0-rc6-next-20240301-11397-g2cd922b7255b #1
+> Hardware name: mti,malta
+> $ 0   : 00000000 00000001 00780000 00000000
+> $ 4   : 811c6de0 00000000 00000001 00000000
+> $ 8   : 00000005 00000000 82f0cc00 00000001
+> $12   : ffffffff 00000002 00000000 fff80000
+> $16   : 82d99558 811c6de0 00000000 00000020
+> $20   : 811c0000 00000000 00000001 00000000
+> $24   : 00000000 80415884
+> $28   : 82f1c000 82f1f9f8 00000000 807a4c20
+> Hi    : 00000000
+> Lo    : 00002128
+> epc   : 807a4b28 percpu_counter_add_batch+0x7c/0x224
+> ra    : 807a4c20 percpu_counter_add_batch+0x174/0x224
+> Status: 1000a402    KERNEL EXL
+> Cause : 00800008 (ExcCode 02)
+> BadVA : 00780000
+> PrId  : 00019300 (MIPS 24Kc)
+> Modules linked in:
+> Process kunit_try_catch (pid: 112, threadinfo=82f1c000, task=82c2cec0, tls=00000000)
+> Stack : 82d99400 b332f3f3 00000000 b332f3f3 82f1fb20 811c0000 00000000 00000000
+>         811c0000 82d99400 82d63800 00000008 00000000 80414ac4 00000000 801a4aa4
+>         00000001 00000000 00000020 00000001 00000000 82f1fa70 00000000 00000023
+>         00000080 82f1fb20 82f1fb20 00000380 82c2cec0 00000000 00000000 b332f3f3
+>         82f1fae0 00000025 82d63800 821bbc08 00000001 00000001 821f12a8 82f0cc00
+>         ...
+> Call Trace:
+> [<807a4b28>] percpu_counter_add_batch+0x7c/0x224
+> [<80414ac4>] ext4_mb_mark_diskspace_used+0x25c/0x26c
+> [<80414ba4>] test_mark_diskspace_used+0xd0/0x308
+> [<806e8fe0>] kunit_try_run_case+0x70/0x204
+> [<806eb1dc>] kunit_generic_run_threadfn_adapter+0x1c/0x28
+> [<80162be0>] kthread+0x128/0x150
+> [<80103038>] ret_from_kernel_thread+0x14/0x1c
+> Code: 02242021  8c820000  00431021 <8c5e0000> 001e17c3  03d5a021  00523021  029e902b  02469021
+> ---[ end trace 0000000000000000 ]---
+> 
+> Various arm emulations:
+> [    6.617298]         # Subtest: test_mark_diskspace_used
+> [    6.620243]         ok 1 block_bits=10 cluster_bits=3 blocks_per_group=8192 group_count=4 desc_size=64
+> [    6.622190] 8<--- cut here ---
+> [    6.622374] Unable to handle kernel paging request at virtual address 0a3f6000 when read
+> [    6.622549] [0a3f6000] *pgd=00000000
+> [    6.622960] Internal error: Oops: 5 [#1] SMP ARM
+> [    6.623138] Modules linked in:
+> [    6.623342] CPU: 0 PID: 187 Comm: kunit_try_catch Tainted: G                 N 6.8.0-rc6-next-20240301-11397-g2cd922b7255b #1
+> [    6.623573] Hardware name: Freescale i.MX6 Ultralite (Device Tree)
+> [    6.623738] PC is at percpu_counter_add_batch+0x2c/0x110
+> [    6.624171] LR is at percpu_counter_add_batch+0xa8/0x110
+> 
+> 
+
