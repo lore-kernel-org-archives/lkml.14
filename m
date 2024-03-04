@@ -1,110 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEC63D97F
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 13:55:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C94E33CF;
+	Mon,  4 Mar 2024 13:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560535; cv=none; b=OHhb5zCdIkiJ/+fDNWNooXHKwK5RAamKPVisBjv6LR/UMgT+35lG9BAFyPhArlPQJa8K+am2u3T8VnFPnggiDcm1rzZTFgPUVk4+qmg/YQwCtBfyaedxlS8x+3rXn5ECuifxq8Fo+q/g9DfVfOl27EsPfAwukAFvfe60/0H8PO8=
+	t=1709560547; cv=none; b=Y3qWEE9D9fI+MROu1f9KiIEw508oTGmDqL6qRppBkyz5HholvjJnNGDq74fdsccguR5f3I9qvaL1s38sDT20PcOpG2yfg59vtAGwTmdw4jpfkpl7pF5DOSm4gsClBMuNFrPt546KeRxSeAfoPD29lORUfYwu+pf/1jmMMo+Stxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560535; c=relaxed/simple;
-	bh=3M+/bQX/v9G+J1KliPz9dmTJESbLCH9kKdvpsKmgcrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O3tYYJfpM5s8E+G+hDKGUiPUjUvWJgZbOi97g1JOJNSIuwl1XR+OFQBTjOQsA4TYS4KpKYPgIMgqmLh5uC785U4KdDufBN3Nb1C23t3ePWvmxXM5wz1Tr/9v1M2MjwR/7b7J1ZVzrz24BKuUGfwsRfCoLtE5a1iY+sxiscJAtnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLDRcz66; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709560547; c=relaxed/simple;
+	bh=M65u/Bkh6ZmhHusXFXrbiVOO75W05EtI/6MYBPjQTH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oNQwygqx6ZtRu9hmEMa6Ev1r3QmmRCTqrpXyR6DBTMvhEV2EFU+UFaHR62pRmGG8XBCftw5bDGHIUayYaJasO+q35Bg3poFKEoNnDT3H7odayo2ql7UH3+DeBzxIhkhk+9+NqH1sYVuxJHAL1SJLny4b7lZCEQb5reqy1qQfwk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9S+MQp1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLDRcz66"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E74CC433B1
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 13:55:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9S+MQp1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 433EEC433B1;
+	Mon,  4 Mar 2024 13:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709560535;
-	bh=3M+/bQX/v9G+J1KliPz9dmTJESbLCH9kKdvpsKmgcrk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FLDRcz66TGjYLfnsEHY5VDgqohIRmf+bAFveGtZvAn4+hJhHQg5WGAKNzH6bfQZj1
-	 DvUaUGLWWkVLOoN60YANjjy73WlQwO/99pLjH8+WE5mXTLX37FyOh9XsVBmJJE78GI
-	 DqHRBwU8SkM2SavBcA1NmPJhu4NoDzhTX+6aBztA5Wtmih3RlhDUnK+JJObdbfkxxf
-	 oKovzk568dFn9R0JpJNKFeioKvOuMC93Ut6XAG04Y9xRv7/EIr1dRRBJrmhlewHb7Y
-	 m8iiWKQxS6WxH9I4liCvcOi871N2fkBzIIefaou/q/d1nV/icVWgB/6+Xfm5xEDAF1
-	 Q60Sx8A5gJdZA==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d275e63590so63086041fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 05:55:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUJfkhUVVUoFCqWThcSb9A60fqplU5cRVAgUx7uDeUNabAV0wUpO0XF4zd3Ai2zyJ92IVA/+RTBqSI97u+AKXO6mo8hqbwnuHQKrbor
-X-Gm-Message-State: AOJu0Yw6cfsL5HOC1vUDBlb7U1dnBtC8RaZvmHjZLKzM29ZEjj2T33wY
-	r4jdmdctRkvkzvh71TboTQ9D9lPdOv69Dop6v5sckB0GvXUSyVAkL5mqtTbi2LZ4s0lfzm9ftcy
-	qIu9se9Cy6xwPNHBwgI1tyitvRgM=
-X-Google-Smtp-Source: AGHT+IE+QL1WO9hZcI0G8tB67Le8/FxkZDw1z5pNxBYepTDS5xo90I/CnZ68GGFy2mS2ROSGYg+VgnhJAIoCgfv6/Wk=
-X-Received: by 2002:a2e:a4ae:0:b0:2d3:4652:b2ff with SMTP id
- g14-20020a2ea4ae000000b002d34652b2ffmr5751566ljm.40.1709560533267; Mon, 04
- Mar 2024 05:55:33 -0800 (PST)
+	s=k20201202; t=1709560547;
+	bh=M65u/Bkh6ZmhHusXFXrbiVOO75W05EtI/6MYBPjQTH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o9S+MQp153uTYwq1SOWKQxG9XeP4hdEE4JH/PEBX6M4kUzitYz3d44cF74PlLlYzg
+	 OpHwMcCNmCyjVlTPeI6LlcQFkXvzss+GyaxJBqhpffL8YPkRWbj+uvmfpfnNovmFOQ
+	 VPqaifkcZTI3Z5vs75y+7z9L9VM0fLdlaaic4ewi2P5dK6mVUErYyl6tXBLMLBd2sK
+	 3MGZB29WsKmh14xpBHOmFCcllwAQR+4h9S+K4j+JFufUHs9SKkb63o/ArmJA5ftmnK
+	 6baGsxYH5lDdxCpC2tiMeeis6TnRzVLVfxrm3O9W04AY9EOYyEKr+cEGabBRF3ld/i
+	 BbXpPvOdHZnUQ==
+Date: Mon, 4 Mar 2024 14:55:43 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	Gregory Clement <gregory.clement@bootlin.com>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH v2 07/11] i2c: nomadik: replace jiffies by ktime for FIFO
+ flushing timeout
+Message-ID: <tuqu3wvuhtevu4hjll63yy7oeax26o4p5ylkvvygcmw4mkc3il@j3gyxqjcjnyg>
+References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
+ <20240229-mbly-i2c-v2-7-b32ed18c098c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYvG9KE15PGNoLu+SBVyShe+u5HBLQ81+kK9Zop6u=ywmw@mail.gmail.com>
- <338c89bb-a70b-4f35-b71b-f974e90e3383@app.fastmail.com> <20240304112441.707ded23@donnerap.manchester.arm.com>
- <1baf9a7f-b0e4-45d8-ac57-0727a213d82d@app.fastmail.com> <20240304114546.4e8e1e32@donnerap.manchester.arm.com>
- <badf279a-f1fa-4938-a5d2-492b89d7c27c@app.fastmail.com> <CAMj1kXENYqUx=esK9b_pGd4wpwE43fNaGRCUhJLK_4MQzrAQeg@mail.gmail.com>
- <61aa333f-aa13-4068-b73f-eeae615f4640@app.fastmail.com>
-In-Reply-To: <61aa333f-aa13-4068-b73f-eeae615f4640@app.fastmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 4 Mar 2024 14:55:21 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXF4biAW+FpxnkuTes5uK_G2h_pDj3kN-SMFCmLXqNCcug@mail.gmail.com>
-Message-ID: <CAMj1kXF4biAW+FpxnkuTes5uK_G2h_pDj3kN-SMFCmLXqNCcug@mail.gmail.com>
-Subject: Re: arm: ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/sun4i/sun4i-drm-hdmi.ko]
- undefined!
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andre Przywara <andre.przywara@arm.com>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-sunxi@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org, lkft-triage@lists.linaro.org, 
-	Maxime Ripard <mripard@kernel.org>, Dave Airlie <airlied@redhat.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240229-mbly-i2c-v2-7-b32ed18c098c@bootlin.com>
 
-On Mon, 4 Mar 2024 at 14:49, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Mar 4, 2024, at 14:01, Ard Biesheuvel wrote:
-> > On Mon, 4 Mar 2024 at 13:35, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> On Mon, Mar 4, 2024, at 12:45, Andre Przywara wrote:
-> >> It's not critical if this is called infrequently, and as Maxime
-> >> just replied, the 64-bit division is in fact required here.
-> >> Since we are dividing by a constant value (200), there is a good
-> >> chance that this will be get turned into fairly efficient
-> >> multiply/shift code.
-> >>
-> >
-> > Clang does not implement that optimization for 64-bit division. That
-> > is how we ended up with this error in the first place.
->
-> I meant it will use the optimization after the patch to convert
-> the plain '/' to div_u64().
->
+Hi Theo,
 
-Ah ok.
+On Thu, Feb 29, 2024 at 07:10:55PM +0100, Théo Lebrun wrote:
+> The FIFO flush function uses a jiffies amount to detect timeouts as the
+> flushing is async. Replace with ktime to get more accurate precision
+> and support short timeouts.
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 
-I did not realize we implement the same optimization in our code as
-the one that GCC will apply when encountering a compile-time constant
-divisor.
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 
-> > Perhaps it is worthwhile to make div_u64() check its divisor, e.g.,
-> >
-> > --- a/include/linux/math64.h
-> > +++ b/include/linux/math64.h
-> > @@ -127,6 +127,9 @@
-> >  static inline u64 div_u64(u64 dividend, u32 divisor)
-> >  {
-> >         u32 remainder;
-> > +
-> > +       if (IS_ENABLED(CONFIG_CC_IS_GCC) && __builtin_constant_p(divisor))
-> > +               return dividend / divisor;
-> >         return div_u64_rem(dividend, divisor, &remainder);
-> >  }
->
-> I think the div_u64()->do_div()->__div64_const32()->__arch_xprod_64()
-> optimization in asm-generic/div64.h already produces what we want
-> on both compilers. Is there something missing there?
->
-
-No, you are right. I thought we were relying on GCC for the optimization here.
+Thanks,
+Andi
