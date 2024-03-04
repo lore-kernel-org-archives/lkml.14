@@ -1,160 +1,107 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D03D381C6;
-	Mon,  4 Mar 2024 10:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF65820B27;
+	Mon,  4 Mar 2024 10:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709549570; cv=none; b=e3MM8wmILyXiDWhoNIyrpBBhIhNG3ldWehuAFMMMX7W7u3uPDLXdtUGHyUUdVAw7EMFVvxdKMxbyOWnaOJdnoTmGp4zmdej7zopa1Zaut79TnngEoFK1A+sBHR3dFqEV0zy52mFrMIXF9ID1pZFiI0lDJWdLRzWBS1qq3eqbLyY=
+	t=1709549712; cv=none; b=Ow9t3pdhcJi0umAm8Q80EWUzmKyKxjy14gyTo3U5wAezTFk7RAXYaaSXKJbF0CkFy3gJFxso5rxYkan37pX+CTajNLsRYzp3tI+9fqBdjNO2zyoArXRZHCFdM2HJ+O4H1s/toc/MPmEL7kgFLBlJ76YzNwzoCzlozkUUsXEGqiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709549570; c=relaxed/simple;
-	bh=FT2/g61YhYN+8ZCyUZxvx5hkU5J0uv6XGFwiX085tNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TbZ1rtmlDwD6nhyRaFw8w/ZcmhQnVNzIjYVlyrMRFpB429/2IGYYsTv0bTii9HQc8ZwzGew2C6u7t4BGRlWPZSa9ZMdDgGeMHZRxMkGf+BiSBVUqZjkdyHG92kiCxrBxdF85MkIO4TlHXNhYFagsnBObGz0U3C/tihs57rvbnvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=AT52U+Vm; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1709549712; c=relaxed/simple;
+	bh=2GTgWYPHRfiketuGiSZ+xc5gpJiISME1rqgrih8dSjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZWKJkAcEgJnHXbQ8qexrP8Ghn919PbjL49T+zRcq0bPAYRjqsoTP5ClhJCjY02BRymUrjUoYp7puV8DLfmRZsp1vh7sySccTwCoDpaXS26cG2tQSRRBeS5gNYduQPENblnlXf+U56PUDWi5b31LRfwobdusdrZwaDRyeMwUBJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1K40EewO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="AT52U+Vm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1709549544; x=1710154344; i=markus.elfring@web.de;
-	bh=FT2/g61YhYN+8ZCyUZxvx5hkU5J0uv6XGFwiX085tNo=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=AT52U+VmbJ70qVSrTjH+H0GvoqMl/7CcJIJ1vRPal+w7SxosWGmJM5kPW928O+bx
-	 OPQkeT0bJAMoeQKo4FoR1zznIfFeKJNWJobdHsDEOcdb2Rj/MXr6af564oJT8niwR
-	 xSp6u2UyKOtql/sNJ7HadZYgapeH0FoIEVPYjgkxoUdSuHGJ6s0Q5s9GtMexNRAev
-	 SDmABUlJyFFdLdy5s7wmdKURIb4YkhN5jBEUshdk6AWgamUQe3yK62IzRdgBIEOX/
-	 iagL/BaIC+Rl5hQQ7WGLVDeEsOrZJ/mrBhtrEsFsFEE4w+AizBNF4lCscFwBd/k8p
-	 IEGUB67rnDkDyXBgvA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MLifk-1rPZ2u0Vqi-00HlzH; Mon, 04
- Mar 2024 11:52:24 +0100
-Message-ID: <e8a2b63f-4f9a-463b-b419-c5f673191111@web.de>
-Date: Mon, 4 Mar 2024 11:52:23 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1K40EewO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E57DDC433F1;
+	Mon,  4 Mar 2024 10:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709549711;
+	bh=2GTgWYPHRfiketuGiSZ+xc5gpJiISME1rqgrih8dSjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1K40EewOqqKhMO09Pwg9iskE4Oi7gH1tdkIbeVGeSlXtJl3ceOsd1OuyfTSyTq3d+
+	 8ud6U5hnx518A+gXTwFftpTcUHBUMv4yOX1/gg2FPx3fBzJRAcbmPDRtJ32aY9Eujm
+	 9m/i6rtgzgFRQyAFOWVkdbjAgsqtUYEM7NHxiSJ0=
+Date: Mon, 4 Mar 2024 11:55:08 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Rui Qi <qirui.001@bytedance.com>
+Cc: bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, hpa@zytor.com,
+	jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
+	stable@vger.kernel.org, alexandre.chartre@oracle.com,
+	x86@kernel.org, linux-kernel@vger.kernel.org, yuanzhu@bytedance.com
+Subject: Re: [PATCH v2 0/3] Support intra-function call validation
+Message-ID: <2024030404-conjoined-unlined-05c0@gregkh>
+References: <20240228024535.79980-1-qirui.001@bytedance.com>
+ <2024030438-dropout-satisfy-b4c4@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2] Input: iqs626a - Use scope-based resource management in
- iqs626_parse_events()
-Content-Language: en-GB
-To: linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jeff LaBundy
- <jeff@labundy.com>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <8a7607f8-d634-415e-8269-e26dcc0f9fdc@web.de>
- <ZeU8ENmnPj3sKxAv@nixie71> <ZeVOPSt0L1D4BxuZ@google.com>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <ZeVOPSt0L1D4BxuZ@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:m7izMg7zQ3ujiwr/T4i1wuTtnimufvqygV+noYdyXIzz4uyU3Ux
- L835cGjttLcO9bgCu1XscCxc7HNEGmmIePrURFSlhdSpiAhmRKtLX3101jD1uJL5NPf07Qv
- adLg5KRP3ZvuVThOqJTZ1afINl5vL/xZby4A7aLjz3jerbu7aZHzM4j8ZVYX6CJqtUichfT
- x+TtclgWq9zv5jIh/Tm7Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:gKrgivznJd8=;bk83A06BJZnGktz9KrO1i65bIn2
- vcC/jQ+uRpGC7zokuV1sDwtqbBamNXzy2PzmncSdTmgurqMJ0wkBiJd/G6O0HNTpZqMOpBMn2
- 1EgPeSZEYkSkLLDsHJCZqE5sW1Fs3e3EQlYtM37YCUOLGQ3KT9TLR9BzTGHakZgywyFzL68zB
- oYFQbMDrySTlCCQcaW0jwbXXKQn5Vct4Gw22feSECIn/ARfdbhpzze3YH6aXxB54qHEPyyJhP
- v/QDMHcZFDKnalVCsbNjY5Oro/NlyMReBe4ZA/qj4YjptQYlD53+m77gMhH8qKF1I2VCaFoDB
- wtTcRSaYOBIl2KwOVSrlB6W2lLr/vMzQzWQzIdlLf1EXwibCOWT9gaN20D90fSkbE8bd3We+V
- 8UrOCIPQISzHaGozIC3pKJ6qlqJaRQp/6cBcy0rK2GWh/xQbP6odMQZ1eVVmnq2UsccS/Bye0
- zo707EsyjSorUCM64znysq2GSgaHdcYTaPhCpk4KhI5X2xMWuHZ+tne9aY2sz2Udjt24zGn+0
- iRnYnQXFGjfSkq8GWreoww6v/go+lfxMF9/ZbUK2dPa6++T5AiBXzlAUXS1NlEXd2Yx/l4Pd6
- dX1h9Iep1QZnMCDSA6lwpzkuDEHBk0VmGVffJEyvJ3KBpFahiai0bRacz1faG2m7IB+/0RQIr
- mFNjebGigpNaNc4xgxF8KUdULFEr5uWyKVpEfM/FjldJa16rzmZIFTCAZsjBcZ1Qkhim92EUo
- s4yASKjQ/z9amhHbctD+Ljk/Z0Kg3Z1ID3sd8asM//hfvENAcdAGvfMKmoUO+MLDH1iVgLIQw
- DuvLQFK1X55UHR2D+y2L3efP8h8qKOuf2Ngh/c2g9Fo94=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2024030438-dropout-satisfy-b4c4@gregkh>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 4 Mar 2024 11:40:04 +0100
+On Mon, Mar 04, 2024 at 11:41:46AM +0100, Greg KH wrote:
+> On Wed, Feb 28, 2024 at 10:45:32AM +0800, Rui Qi wrote:
+> > Since kernel version 5.4.217 LTS, there has been an issue with the kernel live patching feature becoming unavailable. 
+> > When compiling the sample code for kernel live patching, the following message is displayed when enabled:
+> > 
+> > livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
+> > 
+> > Reproduction steps:
+> > 1.git checkout v5.4.269 -b v5.4.269
+> > 2.make defconfig
+> > 3. Set CONFIG_LIVEPATCH=y、CONFIG_SAMPLE_LIVEPATCH=m
+> > 4. make -j bzImage
+> > 5. make samples/livepatch/livepatch-sample.ko
+> > 6. qemu-system-x86_64 -kernel arch/x86_64/boot/bzImage -nographic -append "console=ttyS0" -initrd initrd.img -m 1024M
+> > 7. insmod livepatch-sample.ko
+> > 
+> > Kernel live patch cannot complete successfully.
+> > 
+> > After some debugging, the immediate cause of the patch failure is an error in stack checking. The logs are as follows:
+> > [ 340.974853] livepatch: klp_check_stack: kworker/u256:0:23486 has an unreliable stack
+> > [ 340.974858] livepatch: klp_check_stack: kworker/u256:1:23487 has an unreliable stack
+> > [ 340.974863] livepatch: klp_check_stack: kworker/u256:2:23488 has an unreliable stack
+> > [ 340.974868] livepatch: klp_check_stack: kworker/u256:5:23489 has an unreliable stack
+> > [ 340.974872] livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
+> > ......
+> > 
+> > BTW,if you use the v5.4.217 tag for testing, make sure to set CONFIG_RETPOLINE = y and CONFIG_LIVEPATCH = y, and other steps are consistent with v5.4.269
+> > 
+> > After investigation, The problem is strongly related to the commit 8afd1c7da2b0 ("x86/speculation: Change FILL_RETURN_BUFFER to work with objtool"),
+> > which would cause incorrect ORC entries to be generated, and the v5.4.217 version can undo this commit to make kernel livepatch work normally. 
+> > It is a back-ported upstream patch with some code adjustments,from the git log, the author also mentioned no intra-function call validation support.
+> > 
+> > Based on commit 6e1f54a4985b63bc1b55a09e5e75a974c5d6719b (Linux 5.4.269), This patchset adds stack validation support for intra-function calls, 
+> > allowing the kernel live patching feature to work correctly.
+> > 
+> > Alexandre Chartre (2):
+> >   objtool: is_fentry_call() crashes if call has no destination
+> >   objtool: Add support for intra-function calls
+> > 
+> > Rui Qi (1):
+> >   x86/speculation: Support intra-function call validation
+> > 
+> >  arch/x86/include/asm/nospec-branch.h          |  7 ++
+> >  include/linux/frame.h                         | 11 ++++
+> >  .../Documentation/stack-validation.txt        |  8 +++
+> >  tools/objtool/arch/x86/decode.c               |  6 ++
+> >  tools/objtool/check.c                         | 64 +++++++++++++++++--
+> >  5 files changed, 91 insertions(+), 5 deletions(-)
+> 
+> All now queued up, thanks!
 
-Scope-based resource management became supported also for this software
-area by contributions of Jonathan Cameron on 2024-02-17.
+Nope, these break the build:
 
-device property: Add cleanup.h based fwnode_handle_put() scope based clean=
-up.
-https://lore.kernel.org/r/20240217164249.921878-3-jic23@kernel.org
+../arch/x86/include/asm/nospec-branch.h:313: Error: no such instruction: `unwind_hint_empty'
+../arch/x86/include/asm/nospec-branch.h:313: Error: no such instruction: `unwind_hint_empty'
 
+How did you test them?  I'll go drop them from the queue now, sorry.
+Please fix them up and resend when you have something that works.
 
-* Thus use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D.
-
-* Reduce the scope for the local variable =E2=80=9Cev_node=E2=80=9D into a=
- for loop.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
-
-v2:
-An other cleanup technique was applied as requested by Dmitry Torokhov
-and Jeff LaBundy.
-
-
- drivers/input/misc/iqs626a.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/input/misc/iqs626a.c b/drivers/input/misc/iqs626a.c
-index 0dab54d3a060..86fcb5134f45 100644
-=2D-- a/drivers/input/misc/iqs626a.c
-+++ b/drivers/input/misc/iqs626a.c
-@@ -462,7 +462,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
- {
- 	struct iqs626_sys_reg *sys_reg =3D &iqs626->sys_reg;
- 	struct i2c_client *client =3D iqs626->client;
--	struct fwnode_handle *ev_node;
- 	const char *ev_name;
- 	u8 *thresh, *hyst;
- 	unsigned int val;
-@@ -501,6 +500,8 @@ iqs626_parse_events(struct iqs626_private *iqs626,
- 		if (!iqs626_channels[ch_id].events[i])
- 			continue;
-
-+		struct fwnode_handle *ev_node __free(fwnode_handle);
-+
- 		if (ch_id =3D=3D IQS626_CH_TP_2 || ch_id =3D=3D IQS626_CH_TP_3) {
- 			/*
- 			 * Trackpad touch events are simply described under the
-@@ -530,7 +531,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
- 					dev_err(&client->dev,
- 						"Invalid input type: %u\n",
- 						val);
--					fwnode_handle_put(ev_node);
- 					return -EINVAL;
- 				}
-
-@@ -545,7 +545,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
- 				dev_err(&client->dev,
- 					"Invalid %s channel hysteresis: %u\n",
- 					fwnode_get_name(ch_node), val);
--				fwnode_handle_put(ev_node);
- 				return -EINVAL;
- 			}
-
-@@ -566,7 +565,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
- 				dev_err(&client->dev,
- 					"Invalid %s channel threshold: %u\n",
- 					fwnode_get_name(ch_node), val);
--				fwnode_handle_put(ev_node);
- 				return -EINVAL;
- 			}
-
-@@ -575,8 +573,6 @@ iqs626_parse_events(struct iqs626_private *iqs626,
- 			else
- 				*(thresh + iqs626_events[i].th_offs) =3D val;
- 		}
--
--		fwnode_handle_put(ev_node);
- 	}
-
- 	return 0;
-=2D-
-2.44.0
-
+greg k-h
