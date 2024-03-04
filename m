@@ -1,70 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225AB3FB01;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1322A3F9FE;
 	Mon,  4 Mar 2024 13:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560651; cv=none; b=sk8kF0Le9/bHNHqWxIZjHhSOqSejCEP9eIZbWmHZFgUYj5eB8wyFVSaEhz2Ch5iz837aC3kzbq5Kv6Jn58wvGS2cF1JQ1v0hDKQa8FvyweQphAfugPTabShxffstwoJ3mM4QOHqCnejLsp2ErPASz9qcrW6mEL932qOcVc54/3o=
+	t=1709560653; cv=none; b=mscVYHEYvyT9z43RnI6HgTCVQLRpyqUVKkrSuDEQqjgcP6/Hy820+YmbSvnjbgQyy78n/6/+DbeU9YMvf+a5BTOaTMeoRz+LpjNeGujMdf4qF02GE9tfm48cgh4QDXqW5aJ8JogXEz8XzoOKNipircKa9YNKU+de/Z0gQDqhFpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560651; c=relaxed/simple;
-	bh=nPq643HkA5q8IS3cp0c7XoxseUBXXwbf88gB9gSO2TA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TB1oaERL0KbReKkDwVl2LCCAjLWs3C5+a+KMWlw7NPhOLnnU2OePoUf3XJDMxcCdTq9csOn8jQf61jE7luVOzXiIEN5Syy+XKHvRyQJlBrVtca1GC+PQfx7vTvaJd1eVQU2mWtR+rtnKZlIFhK3ws9sc8bj7F9tbxGFxmvjhKBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZAXPqkO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709560653; c=relaxed/simple;
+	bh=GMWrlxz2sTYpPhx3ekf7oQgX2MpEth+T8xxra+NmSyw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MAKMCyYVosiQa81JEDoJFCISegkbSgl3ktTeEZN38Ig4RESbL7QnMUEDRj135VCqaDzkm4SZEXyhe5nfmonnAZ4s8wlUSBdubp5/vcNXEXE9h6+uisaPyGubbGZuunnb9QmIphMVAMlIxTXIJCPaOSN47Y8TLd53NmwHb2BaxOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YVlbScCm; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZAXPqkO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3B6C433F1;
-	Mon,  4 Mar 2024 13:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709560650;
-	bh=nPq643HkA5q8IS3cp0c7XoxseUBXXwbf88gB9gSO2TA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CZAXPqkOnvxXMyIw+Qlh/odp6y9XRorZ51xkb8K1XRbB6xsNXXU+McUll6KFmjjhM
-	 DDvxZA6rJ/EAKuFCceAYr4j6stSJ3C957x181HFSU1YLoH+wpk1Z1IWDJzsaCPAR8M
-	 ihUY4Rmz051bwneZm/fT58pkor+8f/aBt8kqwWJqKzM1wVxYp8cT66kaGVxPY3YS9+
-	 Wi5XSub7PP/Miyf+27DVP/J2twvETEaOkBS0LDFr+r19VvXEkgBwV0MWzJbngbitUL
-	 cJRVzoAx6rCmsYLq2UZ9WYjsiYfyd4bAQo6nnyBYbgbZwntGAraAyWtYK4/BIIg/35
-	 hYJw5j4gp7bZg==
-Date: Mon, 4 Mar 2024 14:57:26 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
-	Gregory Clement <gregory.clement@bootlin.com>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
-	Andi Shyti <andi.shyti@kernel.org>
-Subject: Re: [PATCH v2 08/11] i2c: nomadik: fetch i2c-transfer-timeout-us
- property from devicetree
-Message-ID: <euvozvodxwacw4tf2iifxs4zky7magyuc6nkraujwyb3766u33@iiifyt3nhb73>
-References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
- <20240229-mbly-i2c-v2-8-b32ed18c098c@bootlin.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YVlbScCm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709560651; x=1741096651;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GMWrlxz2sTYpPhx3ekf7oQgX2MpEth+T8xxra+NmSyw=;
+  b=YVlbScCmAvxz4oi6BTBX3pXYTURtNkh4+i/CUo0GQLMlKEnsSVTEny2U
+   XBecBBpUZ4H5W7SsaeKJUyoqDZJvk+Pmi0eARYaQxDvW4d0APvJ+jMpQb
+   jNAvOI0PkXd57/CyjCtetm1AqRb+v+kd+xHnjhM6YDmLpelrdzw/Pi6/h
+   IW5Zb4zClLW71qFOS1e5VWGYFcyRoIhaqIZ775AKgnqIW0itXv1GUD0hk
+   0VN93VoahueEcpqCexgBxVzaKLV09AYtN32+YrSzQG4Jp23B/6J4APwBH
+   VSp4mL+y0OAqKBRJm1G2BDIh0f5u9Sw65f6aN8vOOGk2tfQSP+TUrSdvg
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="3977533"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="3977533"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:57:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="46512380"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.125.242.247]) ([10.125.242.247])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:57:00 -0800
+Message-ID: <0059c183-eb4f-42f5-8f1e-7eef6b0a4bcd@linux.intel.com>
+Date: Mon, 4 Mar 2024 21:56:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240229-mbly-i2c-v2-8-b32ed18c098c@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v5 26/29] KVM: selftests: TDX: Add support for
+ TDG.VP.VEINFO.GET
+To: Sagi Shahar <sagis@google.com>
+Cc: linux-kselftest@vger.kernel.org, Ackerley Tng <ackerleytng@google.com>,
+ Ryan Afranji <afranji@google.com>, Erdem Aktas <erdemaktas@google.com>,
+ Isaku Yamahata <isaku.yamahata@intel.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Peter Gonda <pgonda@google.com>, Haibo Xu <haibo1.xu@intel.com>,
+ Chao Peng <chao.p.peng@linux.intel.com>,
+ Vishal Annapurve <vannapurve@google.com>, Roger Wang <runanwang@google.com>,
+ Vipin Sharma <vipinsh@google.com>, jmattson@google.com, dmatlack@google.com,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
+References: <20231212204647.2170650-1-sagis@google.com>
+ <20231212204647.2170650-27-sagis@google.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20231212204647.2170650-27-sagis@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Theo,
 
-On Thu, Feb 29, 2024 at 07:10:56PM +0100, Théo Lebrun wrote:
-> Allow overriding the default timeout value (200ms) from devicetree,
-> using the generic i2c-transfer-timeout-us property.
-> 
-> The i2c_adapter->timeout field is an unaccurate jiffies amount;
-> i2c-nomadik uses hrtimers for timeouts below one jiffy.
-> 
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+On 12/13/2023 4:46 AM, Sagi Shahar wrote:
+> From: Ackerley Tng <ackerleytng@google.com>
+>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> Signed-off-by: Ryan Afranji <afranji@google.com>
+> Signed-off-by: Sagi Shahar <sagis@google.com>
+> ---
+>   .../selftests/kvm/include/x86_64/tdx/tdx.h    | 21 +++++++++++++++++++
+>   .../selftests/kvm/lib/x86_64/tdx/tdx.c        | 19 +++++++++++++++++
+>   2 files changed, 40 insertions(+)
 
-Thanks,
-Andi
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+
+>
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
+> index b71bcea40b5c..12863a8beaae 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
+> @@ -6,6 +6,7 @@
+>   #include "kvm_util_base.h"
+>   
+>   #define TDG_VP_INFO 1
+> +#define TDG_VP_VEINFO_GET 3
+>   #define TDG_MEM_PAGE_ACCEPT 6
+>   
+>   #define TDG_VP_VMCALL_GET_TD_VM_CALL_INFO 0x10000
+> @@ -41,4 +42,24 @@ uint64_t tdg_vp_info(uint64_t *rcx, uint64_t *rdx,
+>   uint64_t tdg_vp_vmcall_map_gpa(uint64_t address, uint64_t size, uint64_t *data_out);
+>   uint64_t tdg_mem_page_accept(uint64_t gpa, uint8_t level);
+>   
+> +/*
+> + * Used by the #VE exception handler to gather the #VE exception
+> + * info from the TDX module. This is a software only structure
+> + * and not part of the TDX module/VMM ABI.
+> + *
+> + * Adapted from arch/x86/include/asm/tdx.h
+> + */
+> +struct ve_info {
+> +	uint64_t exit_reason;
+> +	uint64_t exit_qual;
+> +	/* Guest Linear (virtual) Address */
+> +	uint64_t gla;
+> +	/* Guest Physical Address */
+> +	uint64_t gpa;
+> +	uint32_t instr_len;
+> +	uint32_t instr_info;
+> +};
+> +
+> +uint64_t tdg_vp_veinfo_get(struct ve_info *ve);
+> +
+>   #endif // SELFTEST_TDX_TDX_H
+> diff --git a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
+> index d8c4ab635c06..71d9f55007f7 100644
+> --- a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
+> +++ b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
+> @@ -241,3 +241,22 @@ uint64_t tdg_mem_page_accept(uint64_t gpa, uint8_t level)
+>   {
+>   	return __tdx_module_call(TDG_MEM_PAGE_ACCEPT, gpa | level, 0, 0, 0, NULL);
+>   }
+> +
+> +uint64_t tdg_vp_veinfo_get(struct ve_info *ve)
+> +{
+> +	uint64_t ret;
+> +	struct tdx_module_output out;
+> +
+> +	memset(&out, 0, sizeof(struct tdx_module_output));
+> +
+> +	ret = __tdx_module_call(TDG_VP_VEINFO_GET, 0, 0, 0, 0, &out);
+> +
+> +	ve->exit_reason = out.rcx;
+> +	ve->exit_qual   = out.rdx;
+> +	ve->gla         = out.r8;
+> +	ve->gpa         = out.r9;
+> +	ve->instr_len   = out.r10 & 0xffffffff;
+> +	ve->instr_info  = out.r10 >> 32;
+> +
+> +	return ret;
+> +}
+
