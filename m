@@ -1,79 +1,291 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1F11DA5B;
-	Mon,  4 Mar 2024 08:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A901C2AE
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709541857; cv=none; b=Z/YOcVD7FlkLgfutSGPiyQaUfkf3BI5BkPihzBd/L/BELEmT0ASHDIjjDYbsKUX+qAxRMaMe+/sIcq3Gbs1/vMe8Q1ytbTbQdAqQZCShz4SoQgEdKhLrzCulX2jzgo/0x1NGbOYCm7EYqrsYhrHofOmVCOi0RuZ9+bSE5t+FQL8=
+	t=1709541859; cv=none; b=i4Nw+ojYalhOB/mJraWWkp2Xe21TqHOMXfpWUL8Gb8q90Xs6kZphQWAdHqPWq9cTQ+pOMs/UdlGUY4+f61nLX2bopb8nNxxKxdLIKG5aC02270HicdU0HPktw21ZGJj5EUCaDHupqHuxz6j9p3o/EcJg0/3MnoefrMMTevr9/rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709541857; c=relaxed/simple;
-	bh=m3btwuB1XUM+0/1Srhrmy8oBrwYrCSMk8C4cHIhZwpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h8//Pn/8aHczXdhdITMkbuoWyNbn3fJiFBrsNln9Ub4R1wkPgydhVBH0yQidmnROAm7SV3Boq0tDsLbjsr9Azd9mpMBVZIqBeHbORynRXi8OeMH7brpc5hc5VC4qz4Qlipdoh8Zevnr0kPc1wopNIoRkYoWgohR5ARRV+jdM668=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXE51NYD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709541859; c=relaxed/simple;
+	bh=3W1tGWYV3aFDXvrf37HRbAw1JRDsqeWSwvyhDoPXG2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dDIr5NlV65C9XVTKclQ4QSQUTWusd+JgEs09cRW/wgIhRVw/FVoPCuUgMWa/1/EsgEAMQDjSjbZFxrdOETk5NFAqTkV5rBkUqJjMMVVN/Cay+/8itjibKMlghBOdrXCUJ8eBN6JwD1BjZcLBZCpbGtsM25T86l7HgHC3XMEeafo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QFpPD3FQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXE51NYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E0C3C43399;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QFpPD3FQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709541856;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sw1mJ1KMDj2Xrl/dCIVrkP2L8ZbK2rHywBCTVXbbrs8=;
+	b=QFpPD3FQdpPwzm7TOR1JJQwVWMoi+qfUVqsFow1xYpCyLF3NT8OcnqWmryHJH0x364M0mq
+	/LSzspC1QcPYRrtLMZ18oDvNczQvJ1j6v0JN2dFh+XkB617Dp2N72tAgYUP9mk2/KTkwov
+	JpjhbOfLyvTEcT/IBxITuz6mhi+I2GM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-pU0f7eogM_qXfOc54oR9_A-1; Mon, 04 Mar 2024 03:44:11 -0500
+X-MC-Unique: pU0f7eogM_qXfOc54oR9_A-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 21881185A782;
 	Mon,  4 Mar 2024 08:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709541857;
-	bh=m3btwuB1XUM+0/1Srhrmy8oBrwYrCSMk8C4cHIhZwpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GXE51NYDqpQ6Rpt9NCI+I0KTgTxx8Ob9USgAHcXYvtmVdkGqv9AJOiPikODi/j8+J
-	 7JMubxXRMWEnVhoLTktK0+ZSoBnHvSbaG7TShTXMSmNd9wdyeXvcVBKx5E859ICTT4
-	 HBoz1rjslk7YRW72BGTovEg/P++8uW9LfQTYy3vhl5wn0yn/ioLGvJ/fW707WhVa78
-	 m216Hm24/eDT/aA9PiVuIvA2ukGsRri5g7nghmfQOMZv6wHhIPtASbOLZCoWVsjGHV
-	 N/uK6O2Dkz6XaukXb+Ik9dnu49PD3loVvBZsOhM/NIJ7CUuAonay1v5ra93D6LBqYR
-	 PKHtKW3BB9x3g==
-Date: Mon, 4 Mar 2024 09:44:09 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Frank Li <Frank.Li@nxp.com>, bhelgaas@google.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, festevam@gmail.com,
-	hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de,
-	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
-	kw@linux.com, l.stach@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	s.hauer@pengutronix.de, shawnguo@kernel.org,
-	Nathan Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH v10 03/14] PCI: imx6: Simplify reset handling by using by
- using *_FLAG_HAS_*_RESET
-Message-ID: <ZeWJ2Z5kKoqbeWYn@lpieralisi>
-References: <20240205173335.1120469-4-Frank.Li@nxp.com>
- <20240301190931.GA403500@bhelgaas>
+Received: from warthog.procyon.org.com (unknown [10.42.28.114])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5632D492BD7;
+	Mon,  4 Mar 2024 08:44:09 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-afs@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 19/21] rxrpc: Record probes after transmission and reduce number of time-gets
+Date: Mon,  4 Mar 2024 08:43:16 +0000
+Message-ID: <20240304084322.705539-20-dhowells@redhat.com>
+In-Reply-To: <20240304084322.705539-1-dhowells@redhat.com>
+References: <20240304084322.705539-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240301190931.GA403500@bhelgaas>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On Fri, Mar 01, 2024 at 01:09:31PM -0600, Bjorn Helgaas wrote:
-> [+cc Nathan]
-> 
-> On Mon, Feb 05, 2024 at 12:33:24PM -0500, Frank Li wrote:
-> > Refactors the reset handling logic in the imx6 PCI driver by adding
-> > IMX6_PCIE_FLAG_HAS_*_RESET bitmask define for drvdata::flags.
-> > 
-> > The drvdata::flags and a bitmask ensures a cleaner and more scalable
-> > switch-case structure for handling reset.
-> > 
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> 
-> Lorenzo, would you mind squashing in Nathan's fix from
-> https://lore.kernel.org/r/20240301-pci-imx6-fix-clang-implicit-fallthrough-v1-1-db78c7cbb384@kernel.org?
-> 
-> Also, the subject line has a repeated "by using by using".
+Move the recording of a successfully transmitted DATA or ACK packet that
+will provide RTT probing to after the transmission.  With the I/O thread
+model, this can be done because parsing of the responding ACK can no longer
+race with the post-transmission code.
 
-I will fix it up.
+Move the various timeout-settings done after successfully transmitting a
+DATA packet into rxrpc_tstamp_data_packets() and eliminate a number of
+calls to get the current time.
 
-Thanks,
-Lorenzo
+As a consequence we no longer need to cancel a proposed RTT probe on
+transmission failure.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: linux-afs@lists.infradead.org
+cc: netdev@vger.kernel.org
+---
+ net/rxrpc/output.c | 105 +++++++++++++++++----------------------------
+ 1 file changed, 40 insertions(+), 65 deletions(-)
+
+diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
+index ec82193e5681..5ea9601efd05 100644
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -63,7 +63,7 @@ static void rxrpc_tx_backoff(struct rxrpc_call *call, int ret)
+  * Receiving a response to the ping will prevent the ->expect_rx_by timer from
+  * expiring.
+  */
+-static void rxrpc_set_keepalive(struct rxrpc_call *call)
++static void rxrpc_set_keepalive(struct rxrpc_call *call, ktime_t now)
+ {
+ 	ktime_t delay = ms_to_ktime(READ_ONCE(call->next_rx_timo) / 6);
+ 
+@@ -147,8 +147,8 @@ static void rxrpc_fill_out_ack(struct rxrpc_call *call,
+ /*
+  * Record the beginning of an RTT probe.
+  */
+-static int rxrpc_begin_rtt_probe(struct rxrpc_call *call, rxrpc_serial_t serial,
+-				 enum rxrpc_rtt_tx_trace why)
++static void rxrpc_begin_rtt_probe(struct rxrpc_call *call, rxrpc_serial_t serial,
++				  ktime_t now, enum rxrpc_rtt_tx_trace why)
+ {
+ 	unsigned long avail = call->rtt_avail;
+ 	int rtt_slot = 9;
+@@ -161,30 +161,15 @@ static int rxrpc_begin_rtt_probe(struct rxrpc_call *call, rxrpc_serial_t serial,
+ 		goto no_slot;
+ 
+ 	call->rtt_serial[rtt_slot] = serial;
+-	call->rtt_sent_at[rtt_slot] = ktime_get_real();
++	call->rtt_sent_at[rtt_slot] = now;
+ 	smp_wmb(); /* Write data before avail bit */
+ 	set_bit(rtt_slot + RXRPC_CALL_RTT_PEND_SHIFT, &call->rtt_avail);
+ 
+ 	trace_rxrpc_rtt_tx(call, why, rtt_slot, serial);
+-	return rtt_slot;
++	return;
+ 
+ no_slot:
+ 	trace_rxrpc_rtt_tx(call, rxrpc_rtt_tx_no_slot, rtt_slot, serial);
+-	return -1;
+-}
+-
+-/*
+- * Cancel an RTT probe.
+- */
+-static void rxrpc_cancel_rtt_probe(struct rxrpc_call *call,
+-				   rxrpc_serial_t serial, int rtt_slot)
+-{
+-	if (rtt_slot != -1) {
+-		clear_bit(rtt_slot + RXRPC_CALL_RTT_PEND_SHIFT, &call->rtt_avail);
+-		smp_wmb(); /* Clear pending bit before setting slot */
+-		set_bit(rtt_slot, &call->rtt_avail);
+-		trace_rxrpc_rtt_tx(call, rxrpc_rtt_tx_cancel, rtt_slot, serial);
+-	}
+ }
+ 
+ /*
+@@ -196,7 +181,8 @@ static void rxrpc_send_ack_packet(struct rxrpc_call *call, struct rxrpc_txbuf *t
+ 	struct rxrpc_connection *conn;
+ 	struct rxrpc_ackpacket *ack = (struct rxrpc_ackpacket *)(whdr + 1);
+ 	struct msghdr msg;
+-	int ret, rtt_slot = -1;
++	ktime_t now;
++	int ret;
+ 
+ 	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		return;
+@@ -218,9 +204,6 @@ static void rxrpc_send_ack_packet(struct rxrpc_call *call, struct rxrpc_txbuf *t
+ 			   ntohl(ack->serial), ack->reason, ack->nAcks,
+ 			   txb->ack_rwind);
+ 
+-	if (ack->reason == RXRPC_ACK_PING)
+-		rtt_slot = rxrpc_begin_rtt_probe(call, txb->serial, rxrpc_rtt_tx_ping);
+-
+ 	rxrpc_inc_stat(call->rxnet, stat_tx_ack_send);
+ 
+ 	iov_iter_kvec(&msg.msg_iter, WRITE, txb->kvec, txb->nr_kvec, txb->len);
+@@ -233,16 +216,14 @@ static void rxrpc_send_ack_packet(struct rxrpc_call *call, struct rxrpc_txbuf *t
+ 	} else {
+ 		trace_rxrpc_tx_packet(call->debug_id, whdr,
+ 				      rxrpc_tx_point_call_ack);
++		now = ktime_get_real();
++		if (ack->reason == RXRPC_ACK_PING)
++			rxrpc_begin_rtt_probe(call, txb->serial, now, rxrpc_rtt_tx_ping);
+ 		if (txb->flags & RXRPC_REQUEST_ACK)
+-			call->peer->rtt_last_req = ktime_get_real();
++			call->peer->rtt_last_req = now;
++		rxrpc_set_keepalive(call, now);
+ 	}
+ 	rxrpc_tx_backoff(call, ret);
+-
+-	if (!__rxrpc_call_is_complete(call)) {
+-		if (ret < 0)
+-			rxrpc_cancel_rtt_probe(call, txb->serial, rtt_slot);
+-		rxrpc_set_keepalive(call);
+-	}
+ }
+ 
+ /*
+@@ -413,18 +394,36 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc_call *call, struct rxrpc_tx
+ }
+ 
+ /*
+- * Set the times on a packet before transmission
++ * Set timeouts after transmitting a packet.
+  */
+-static int rxrpc_tstamp_data_packets(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
++static void rxrpc_tstamp_data_packets(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
+ {
+-	ktime_t tstamp = ktime_get_real();
+-	int rtt_slot = -1;
++	ktime_t now = ktime_get_real();
++	bool ack_requested = txb->flags & RXRPC_REQUEST_ACK;
+ 
+-	txb->last_sent = tstamp;
+-	if (txb->flags & RXRPC_REQUEST_ACK)
+-		rtt_slot = rxrpc_begin_rtt_probe(call, txb->serial, rxrpc_rtt_tx_data);
++	call->tx_last_sent = now;
++	txb->last_sent = now;
++
++	if (ack_requested) {
++		rxrpc_begin_rtt_probe(call, txb->serial, now, rxrpc_rtt_tx_data);
++
++		call->peer->rtt_last_req = now;
++		if (call->peer->rtt_count > 1) {
++			ktime_t delay = rxrpc_get_rto_backoff(call->peer, false);
+ 
+-	return rtt_slot;
++			call->ack_lost_at = ktime_add(now, delay);
++			trace_rxrpc_timer_set(call, delay, rxrpc_timer_trace_lost_ack);
++		}
++	}
++
++	if (!test_and_set_bit(RXRPC_CALL_BEGAN_RX_TIMER, &call->flags)) {
++		ktime_t delay = ms_to_ktime(READ_ONCE(call->next_rx_timo));
++
++		call->expect_rx_by = ktime_add(now, delay);
++		trace_rxrpc_timer_set(call, delay, rxrpc_timer_trace_expect_rx);
++	}
++
++	rxrpc_set_keepalive(call, now);
+ }
+ 
+ /*
+@@ -437,7 +436,7 @@ static int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *t
+ 	enum rxrpc_tx_point frag;
+ 	struct msghdr msg;
+ 	size_t len;
+-	int ret, rtt_slot = -1;
++	int ret;
+ 
+ 	_enter("%x,{%d}", txb->seq, txb->len);
+ 
+@@ -479,8 +478,6 @@ static int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *t
+ 	}
+ 
+ retry:
+-	rtt_slot = rxrpc_tstamp_data_packets(call, txb);
+-
+ 	/* send the packet by UDP
+ 	 * - returns -EMSGSIZE if UDP would have to fragment the packet
+ 	 *   to go out of the interface
+@@ -493,7 +490,6 @@ static int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *t
+ 
+ 	if (ret < 0) {
+ 		rxrpc_inc_stat(call->rxnet, stat_tx_data_send_fail);
+-		rxrpc_cancel_rtt_probe(call, txb->serial, rtt_slot);
+ 		trace_rxrpc_tx_fail(call->debug_id, txb->serial, ret, frag);
+ 	} else {
+ 		trace_rxrpc_tx_packet(call->debug_id, whdr, frag);
+@@ -508,28 +504,7 @@ static int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *t
+ 
+ done:
+ 	if (ret >= 0) {
+-		call->tx_last_sent = txb->last_sent;
+-		if (txb->flags & RXRPC_REQUEST_ACK) {
+-			call->peer->rtt_last_req = txb->last_sent;
+-			if (call->peer->rtt_count > 1) {
+-				ktime_t delay = rxrpc_get_rto_backoff(call->peer, false);
+-				ktime_t now = ktime_get_real();
+-
+-				call->ack_lost_at = ktime_add(now, delay);
+-				trace_rxrpc_timer_set(call, delay, rxrpc_timer_trace_lost_ack);
+-			}
+-		}
+-
+-		if (txb->seq == 1 &&
+-		    !test_and_set_bit(RXRPC_CALL_BEGAN_RX_TIMER,
+-				      &call->flags)) {
+-			ktime_t delay = ms_to_ktime(READ_ONCE(call->next_rx_timo));
+-
+-			call->expect_rx_by = ktime_add(ktime_get_real(), delay);
+-			trace_rxrpc_timer_set(call, delay, rxrpc_timer_trace_expect_rx);
+-		}
+-
+-		rxrpc_set_keepalive(call);
++		rxrpc_tstamp_data_packets(call, txb);
+ 	} else {
+ 		/* Cancel the call if the initial transmission fails,
+ 		 * particularly if that's due to network routing issues that
+
