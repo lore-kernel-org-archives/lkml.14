@@ -1,119 +1,148 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F5A3BB5E;
-	Mon,  4 Mar 2024 11:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE763B189;
+	Mon,  4 Mar 2024 11:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709553186; cv=none; b=SKZ0gh3gVNyp+C1SJjtFJuPTIOyFQGXJyQbs9GqgbrM46YRCdqIBFB3HVAqp4igrajSXgvncC7+YpwnkpLGcaD/7RMerW0Yu8kRFAr4cjHYnZktsCYj3F/CC4rAPYKVLvu2Tb0YhruTDwT76j1Fl3KDzr+CGGi9/IEbPFqCGdfo=
+	t=1709553350; cv=none; b=m/3w7VOr0hW7FiTep1aDERzvhnuzxFTJ6nwF+8WO3gi8L672ss0QXDsu16fSd0ZkFBvkHol/ipWgSu2c2RhM21R+TVnT7ji8kSon10IF1PzI2onhOzt3RCl0Zi2cSn1W3xpA5H9e82PF7TJ/af3sjyvFecGeIipe1IRZFJDhJcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709553186; c=relaxed/simple;
-	bh=8Q0hpRNs1YcIFywA2qZbL+uykvSJlC+R25zWdO3lxgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=epyJMs7u91etIaYzGcbg9yAYZTMCNInmICNMrtDKxKOtJo/IT0hd90W9UjAdeRHE7561/Gp3xFDTwhIQRHfa9xZOqJbTOhp0cXXE5tORcO/VpGF4M43irnu1jBj7k2NJFdhTNgPnWrI8wynY8dQ4Tuoi78CWWZERCKj0yXtOv3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Vn9lOqZY; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709553350; c=relaxed/simple;
+	bh=C9l5GlIDwT57uW3nuT4SZmJxej662flcSTsn1taW6Yc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBc01izc2i/hpRqXyAqJuvFU1mJCb9/IVfiKFPwt9rY9arXgKYYObL36eGBAjNMkLam18neK2bddal9o+4y3Qki9XAtocx738ilFsd1oAj1bN1PnQSyabq/CGEXIeI1PSawgXgiWniKQbgAUZ/35z4N+WO4Oc3DsCEMUw+RuFVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzaGLWZZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Vn9lOqZY"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 424BqrOD100923;
-	Mon, 4 Mar 2024 05:52:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709553173;
-	bh=gBe33nm2iOAnPbCyUfzD2Hk51P4hdFpUREFEEjcPNzk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Vn9lOqZYtSBGFSxODoIrKX8g/KWj9EKUrnd6uGI0kcDhj5yYNbFhJlUQB0WrEuRN9
-	 S5hSrh6g14JhCpL1N7H34EHesCX5/Che8RFoMy+FCGARjC1u5sggeOx6RxKjo0Je1w
-	 w/X7otyWs4A+Jbb7kYIacuce1v+pqKZ7f7uCjldM=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 424BqrhG068851
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 4 Mar 2024 05:52:53 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 4
- Mar 2024 05:52:52 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 4 Mar 2024 05:52:53 -0600
-Received: from [172.24.227.68] (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 424Bqnu3025627;
-	Mon, 4 Mar 2024 05:52:50 -0600
-Message-ID: <f2dbd3ea-233a-4ce9-a483-92397462f87f@ti.com>
-Date: Mon, 4 Mar 2024 17:22:49 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzaGLWZZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F10D5C433C7;
+	Mon,  4 Mar 2024 11:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709553350;
+	bh=C9l5GlIDwT57uW3nuT4SZmJxej662flcSTsn1taW6Yc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BzaGLWZZeaomXtN8YrYSmmI70bToSfUpwLRoDuQ32TC4qFdcmEr3gC/CA4SwDVHes
+	 UtbioiU+g9iTbRLQXYCfS4gX8x4Bn3ukdFBnDO/ifdgd7J5D29VeEbHW/RTLP/PvcA
+	 rwdRZZ+vixU3EbjYGZT9X7zeFXn7KFjw9Z/vjksV74WpQTLoGWugXwboCmbLFuF+SZ
+	 mbEAGGuovjLS8sgROt5iIq2KlcZtHfmrxuveaTPt4WNhU+1G04a96/dvYLVsGwW+my
+	 bS97F7syfe4aCjxAiSXzDDxhoqMwYkynlwKjmtJxS6qOboJs+vMdIP6UXOoTw4dUCN
+	 skOsCFbc5uK5Q==
+Date: Mon, 4 Mar 2024 12:55:47 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: "Paul E . McKenney" <paulmck@kernel.org>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH v5 2/4] rcu: Reduce synchronize_rcu() latency
+Message-ID: <ZeW2w08WZo4yapQp@localhost.localdomain>
+References: <20240220183115.74124-1-urezki@gmail.com>
+ <20240220183115.74124-3-urezki@gmail.com>
+ <Zd0ZtNu+Rt0qXkfS@lothringen>
+ <Zd91pR0fjiCUZTtP@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] OPP: debugfs: Fix warning around icc_get_name()
-Content-Language: en-US
-To: Viresh Kumar <viresh.kumar@linaro.org>, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-CC: <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        kernel test robot <lkp@intel.com>, <linux-kernel@vger.kernel.org>
-References: <ab75239d2280e506e5b9386b8aeb9edf97cd3294.1709551295.git.viresh.kumar@linaro.org>
- <0275dc46489419f34765c6ed389c0e9d6245fd31.1709551295.git.viresh.kumar@linaro.org>
-From: Dhruva Gole <d-gole@ti.com>
-In-Reply-To: <0275dc46489419f34765c6ed389c0e9d6245fd31.1709551295.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zd91pR0fjiCUZTtP@pc636>
 
-Hi,
+Le Wed, Feb 28, 2024 at 07:04:21PM +0100, Uladzislau Rezki a écrit :
+> On Tue, Feb 27, 2024 at 12:07:32AM +0100, Frederic Weisbecker wrote:
+> > On Tue, Feb 20, 2024 at 07:31:13PM +0100, Uladzislau Rezki (Sony) wrote:
+> > > +static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+> > > +{
+> > > +	struct llist_node *done, *rcu, *next, *head;
+> > > +
+> > > +	/*
+> > > +	 * This work execution can potentially execute
+> > > +	 * while a new done tail is being updated by
+> > > +	 * grace period kthread in rcu_sr_normal_gp_cleanup().
+> > > +	 * So, read and updates of done tail need to
+> > > +	 * follow acq-rel semantics.
+> > > +	 *
+> > > +	 * Given that wq semantics guarantees that a single work
+> > > +	 * cannot execute concurrently by multiple kworkers,
+> > > +	 * the done tail list manipulations are protected here.
+> > > +	 */
+> > > +	done = smp_load_acquire(&rcu_state.srs_done_tail);
+> > > +	if (!done)
+> > > +		return;
+> > > +
+> > > +	WARN_ON_ONCE(!rcu_sr_is_wait_head(done));
+> > > +	head = done->next;
+> > > +	done->next = NULL;
+> > 
+> > Can the following race happen?
+> > 
+> > CPU 0                                                   CPU 1
+> > -----                                                   -----
+> > 
+> > // wait_tail == HEAD1
+> > rcu_sr_normal_gp_cleanup() {
+> >     // has passed SR_MAX_USERS_WAKE_FROM_GP
+> >     wait_tail->next = next;
+> >     // done_tail = HEAD1
+> >     smp_store_release(&rcu_state.srs_done_tail, wait_tail);
+> >     queue_work() {
+> >         test_and_set_bit(WORK_STRUCT_PENDING_BIT, work_data_bits(work)
+> >         __queue_work()
+> >     }
+> > }
+> > 
+> >                                                       set_work_pool_and_clear_pending()
+> >                                                       rcu_sr_normal_gp_cleanup_work() {
+> > // new GP, wait_tail == HEAD2
+> > rcu_sr_normal_gp_cleanup() {
+> >     // executes all completion, but stop at HEAD1
+> >     wait_tail->next = HEAD1;
+> >     // done_tail = HEAD2
+> >     smp_store_release(&rcu_state.srs_done_tail, wait_tail);
+> >     queue_work() {
+> >         test_and_set_bit(WORK_STRUCT_PENDING_BIT, work_data_bits(work)
+> >         __queue_work()
+> >     }
+> > }
+> >                                                           // done = HEAD2
+> >                                                           done = smp_load_acquire(&rcu_state.srs_done_tail);
+> >                                                           // head = HEAD1
+> >                                                           head = done->next;
+> >                                                           done->next = NULL;
+> >                                                           llist_for_each_safe() {
+> >                                                               // completes all callbacks, release HEAD1
+> >                                                           }
+> >                                                       }
+> >                                                       // Process second queue
+> >                                                       set_work_pool_and_clear_pending()
+> >                                                       rcu_sr_normal_gp_cleanup_work() {
+> >                                                           // done = HEAD2
+> >                                                           done = smp_load_acquire(&rcu_state.srs_done_tail);
+> > 
+> > // new GP, wait_tail == HEAD3
+> > rcu_sr_normal_gp_cleanup() {
+> >     // Finds HEAD2 with ->next == NULL at the end
+> >     rcu_sr_put_wait_head(HEAD2)
+> >     ...
+> > 
+> > // A few more GPs later
+> > rcu_sr_normal_gp_init() {
+> >      HEAD2 = rcu_sr_get_wait_head();
+> >      llist_add(HEAD2, &rcu_state.srs_next);
+> >                                                           // head == rcu_state.srs_next
+> >                                                           head = done->next;
+> >                                                           done->next = NULL;
+> >                                                           llist_for_each_safe() {
+> >                                                               // EXECUTE CALLBACKS TOO EARLY!!!
+> >                                                           }
+> >                                                       }
+> Looks like that. To address this, we should not release the head in the GP
+> > kthread.
 
-On 04/03/24 16:52, Viresh Kumar wrote:
-> If the kernel isn't built with interconnect support, icc_get_name()
-> returns NULL and we get following warning:
-> 
-> drivers/opp/debugfs.c: In function 'bw_name_read':
-> drivers/opp/debugfs.c:43:42: error: '%.62s' directive argument is null [-Werror=format-overflow=]
->           i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
-> 
-> Fix it.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202402141313.81ltVF5g-lkp@intel.com/
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-
-Do we not need this:
-
-Fixes: 0430b1d5704b0 ("opp: Expose bandwidth information via debugfs")
-
-?
-
->   drivers/opp/debugfs.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/opp/debugfs.c b/drivers/opp/debugfs.c
-> index 27c3748347af..a9ebfdf0b6a1 100644
-> --- a/drivers/opp/debugfs.c
-> +++ b/drivers/opp/debugfs.c
-> @@ -37,10 +37,12 @@ static ssize_t bw_name_read(struct file *fp, char __user *userbuf,
->   			    size_t count, loff_t *ppos)
->   {
->   	struct icc_path *path = fp->private_data;
-> +	const char *name = icc_get_name(path);
->   	char buf[64];
-> -	int i;
-> +	int i = 0;
->   
-> -	i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
-> +	if (name)
-> +		i = scnprintf(buf, sizeof(buf), "%.62s\n", name);
-
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
-
->   
->   	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
->   }
-
--- 
-Thanks and Regards,
-Dhruva Gole
+But then you have to unconditionally schedule the work, right? Otherwise the
+HEADs are not released. And that means dropping this patch (right now I don't
+have a better idea).
