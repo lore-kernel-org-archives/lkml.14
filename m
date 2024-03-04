@@ -1,107 +1,166 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5034959B4F;
-	Mon,  4 Mar 2024 16:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987B74D9FA;
+	Mon,  4 Mar 2024 16:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709570994; cv=none; b=gYTQLstDx4S40TtFckm0UI6QfvsaNZyg9vTt15URVb1XDD6coxO779EzeUMB2TsII0Jyr2VoXYeCTBzWCwCO3QfN4OpK+h12xc1GHw2t0wWGuBL8ILdkJIxty1JA0Sirvq1YA+3A0TlQpiCyVWCuShrCauDiG8rcPp+7f7aHEVs=
+	t=1709571083; cv=none; b=jcLubqYlpj8zIhHbCPHjKKW3x0qt0arg38gIErF7Owg4zCG27zN0vU5Ai+VXw5zDtAwrOwCrFMk9amib3+bAfa4I/9+9uwXtkSBg0V4Vg40xxrYZ9T3pKwgIM5Y+iknQceF+BhdUbkyl2iH22w3ZCRkUghL3sfUqd6rl+GJSa6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709570994; c=relaxed/simple;
-	bh=b+8s5dVi6mrt5wOGzTAd9u16HmjZOBeOaZElzRl9yEc=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=H8aXw+sPOTEWG+KsTpGJMNoMw14bunQNUgYGSFNEhN93JkRyNtolfHucwjFUXW3kQWtWlB9c4WoJvJXYn1IkLRPlYnNXZJs/ydkU9GHJ0BYbn1L6HhbbQRlanC/2silt9RlZx7+fMTc/k6fB3AcKlXoG/FXZqjp/Y40YwpgrJZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=K8oP5Z9E; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1709571083; c=relaxed/simple;
+	bh=zbedetWYI+wnqCi1nmRH++kTU2cA0anbJccqB868Fq4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=IMmKYe0tWsWkzL9NTh650heNeo4YDRVIYKQDDI0yPyIPrGfaQ0Ncn75rWPvd71/3grAjnLrActQN4RumaCbzUroP4mH252uW7EY3UiR/DFT1KQeot+4FvvHs+2qyUEiuUYhmLX+IKeem6b6mTzRHPzQ9UpLoJVWjySPJVVMLaEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EoFG5Vy1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p+YJXaBj; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="K8oP5Z9E"
-Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E43003871;
-	Mon,  4 Mar 2024 17:49:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1709570973;
-	bh=b+8s5dVi6mrt5wOGzTAd9u16HmjZOBeOaZElzRl9yEc=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=K8oP5Z9EbVRWPAZKyhAd1M77sg2MAZAaQsKh3VYgkdOMv3h0cv5qUZFnBScekdRT7
-	 Pdn+KpoB9mV61fXZHSy+zSfF7bKrHw0zm+EP6SlNcX/yBPBqqjfmrflcm35sS8SlPe
-	 zURgn290d6sXtDxe8RWUBKQpHOfbjkcAW0ECIut4=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EoFG5Vy1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p+YJXaBj"
+Date: Mon, 04 Mar 2024 16:51:12 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1709571074;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N/oxIPCp3dJtSzJIAQ62RazA/EZBb/7hLFyOpf5dOng=;
+	b=EoFG5Vy1B1SCUUKdEpjgyXybvUBJyOyIK0O6fZeNae9audmnfFr4tOxk1pjxXPBJKoUvAg
+	tUtFKSvkG4bJ2hUcUTPY34kKmimJMljIoKHliYv3J7Y7coDUjMSFgT4jOVs2pMzWtMy31S
+	6UgDpIZCnf/bSMDhvA3p1tPc2zdXeS856olNCAFatzKfKSLiqb1TEoIWRA3Dv3pPU0nGQk
+	pv1trdd+50/ROZAnN7dNyuu4NfBCNxAjTkpFm1jIzbaA5THjPIf0mgNxd+ldhOk9/GvMo4
+	PvqnpNAnJVI2dCb0GETXQiqlExGakGXpeJh0LxWoB1suc0gmlZtlaovdBHRelQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1709571074;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N/oxIPCp3dJtSzJIAQ62RazA/EZBb/7hLFyOpf5dOng=;
+	b=p+YJXaBj8embbcKurIyKwCVhaUSXwaHo3Zd8rUKZiQH4e1+Y8Jl5uSgCmTO+hgw4bf2fQr
+	KlaZzR4M8C/X8qCw==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/idle: Select idle routine only once
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <87edcu6vaq.ffs@tglx>
+References: <87edcu6vaq.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240229165333.227484-7-mike.rudenko@gmail.com>
-References: <20240229165333.227484-1-mike.rudenko@gmail.com> <20240229165333.227484-7-mike.rudenko@gmail.com>
-Subject: Re: [PATCH v3 06/20] media: i2c: ov4689: Refactor ov4689_set_ctrl
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Tommaso Merciai <tomm.merciai@gmail.com>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Dave Stevenson <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Date: Mon, 04 Mar 2024 16:49:46 +0000
-Message-ID: <170957098683.566498.5256791258269936446@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+Message-ID: <170957107241.398.4180780999750222432.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Mikhail,
+The following commit has been merged into the x86/core branch of tip:
 
-I love this series. ;-)
+Commit-ID:     35ce64922c8263448e58a2b9e8d15a64e11e9b2d
+Gitweb:        https://git.kernel.org/tip/35ce64922c8263448e58a2b9e8d15a64e11e9b2d
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 28 Feb 2024 23:20:32 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 04 Mar 2024 17:39:24 +01:00
 
-Quoting Mikhail Rudenko (2024-02-29 16:53:19)
-> Introduce local variable for regmap within the ov4689_set_ctrl
-> function. This adjustment eliminates repetition within the function.
->=20
-> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
+x86/idle: Select idle routine only once
 
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+The idle routine selection is done on every CPU bringup operation and
+has a guard in place which is effective after the first invocation,
+which is a pointless exercise.
 
-> ---
->  drivers/media/i2c/ov4689.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-> index 56bf1d964e43..1bc00404f3fb 100644
-> --- a/drivers/media/i2c/ov4689.c
-> +++ b/drivers/media/i2c/ov4689.c
-> @@ -580,10 +580,11 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->  {
->         struct ov4689 *ov4689 =3D
->                 container_of(ctrl->handler, struct ov4689, ctrl_handler);
-> +       struct regmap *regmap =3D ov4689->regmap;
->         struct device *dev =3D ov4689->dev;
->         int sensor_gain;
->         s64 max_expo;
-> -       int ret;
-> +       int ret =3D 0;
-> =20
->         /* Propagate change of current control to all related controls */
->         switch (ctrl->id) {
-> @@ -603,16 +604,15 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->         switch (ctrl->id) {
->         case V4L2_CID_EXPOSURE:
->                 /* 4 least significant bits of exposure are fractional pa=
-rt */
-> -               ret =3D cci_write(ov4689->regmap, OV4689_REG_EXPOSURE,
-> -                               ctrl->val << 4, NULL);
-> +               cci_write(regmap, OV4689_REG_EXPOSURE, ctrl->val << 4, &r=
-et);
->                 break;
->         case V4L2_CID_ANALOGUE_GAIN:
->                 ret =3D ov4689_map_gain(ov4689, ctrl->val, &sensor_gain);
-> -               cci_write(ov4689->regmap, OV4689_REG_GAIN, sensor_gain, &=
-ret);
-> +               cci_write(regmap, OV4689_REG_GAIN, sensor_gain, &ret);
->                 break;
->         case V4L2_CID_VBLANK:
-> -               ret =3D cci_write(ov4689->regmap, OV4689_REG_VTS,
-> -                               ctrl->val + ov4689->cur_mode->height, NUL=
-L);
-> +               cci_write(regmap, OV4689_REG_VTS,
-> +                         ctrl->val + ov4689->cur_mode->height, &ret);
->                 break;
->         case V4L2_CID_TEST_PATTERN:
->                 ret =3D ov4689_enable_test_pattern(ov4689, ctrl->val);
-> --=20
-> 2.43.0
->
+Invoke it once on the boot CPU and mark the related functions __init.
+The guard check has to stay as xen_set_default_idle() runs early.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/87edcu6vaq.ffs@tglx
+---
+ arch/x86/include/asm/processor.h | 2 +-
+ arch/x86/kernel/cpu/common.c     | 4 ++--
+ arch/x86/kernel/process.c        | 8 +++++---
+ 3 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 1188e8b..523c466 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -558,7 +558,7 @@ static inline void load_sp0(unsigned long sp0)
+ 
+ unsigned long __get_wchan(struct task_struct *p);
+ 
+-extern void select_idle_routine(const struct cpuinfo_x86 *c);
++extern void select_idle_routine(void);
+ extern void amd_e400_c1e_apic_setup(void);
+ 
+ extern unsigned long		boot_option_idle_override;
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 8f367d3..5c72af1 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1938,8 +1938,6 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 	/* Init Machine Check Exception if available. */
+ 	mcheck_cpu_init(c);
+ 
+-	select_idle_routine(c);
+-
+ #ifdef CONFIG_NUMA
+ 	numa_add_cpu(smp_processor_id());
+ #endif
+@@ -2344,6 +2342,8 @@ void __init arch_cpu_finalize_init(void)
+ {
+ 	identify_boot_cpu();
+ 
++	select_idle_routine();
++
+ 	/*
+ 	 * identify_boot_cpu() initialized SMT support information, let the
+ 	 * core code know.
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index ccaacc7..f0166b3 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -853,8 +853,9 @@ void __noreturn stop_this_cpu(void *dummy)
+  * Do not prefer MWAIT if MONITOR instruction has a bug or idle=nomwait
+  * is passed to kernel commandline parameter.
+  */
+-static bool prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
++static __init bool prefer_mwait_c1_over_halt(void)
+ {
++	const struct cpuinfo_x86 *c = &boot_cpu_data;
+ 	u32 eax, ebx, ecx, edx;
+ 
+ 	/* If override is enforced on the command line, fall back to HALT. */
+@@ -908,7 +909,7 @@ static __cpuidle void mwait_idle(void)
+ 	__current_clr_polling();
+ }
+ 
+-void select_idle_routine(const struct cpuinfo_x86 *c)
++void __init select_idle_routine(void)
+ {
+ 	if (boot_option_idle_override == IDLE_POLL) {
+ 		if (IS_ENABLED(CONFIG_SMP) && smp_num_siblings > 1)
+@@ -916,10 +917,11 @@ void select_idle_routine(const struct cpuinfo_x86 *c)
+ 		return;
+ 	}
+ 
++	/* Required to guard against xen_set_default_idle() */
+ 	if (x86_idle_set())
+ 		return;
+ 
+-	if (prefer_mwait_c1_over_halt(c)) {
++	if (prefer_mwait_c1_over_halt()) {
+ 		pr_info("using mwait in idle threads\n");
+ 		static_call_update(x86_idle, mwait_idle);
+ 	} else if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
