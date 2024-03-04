@@ -1,226 +1,145 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C487AE75
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 20:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9316F7A70C
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 20:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709583196; cv=none; b=WKycZxX+/fjM7MGRMQ1QVfLZN9inPXpifkRHq6qEehc826+jbFuhZcrLIC0Q4NwgwZfX1qOv44yoYk/ZmDoic8BWVfqIe1042Uf3QeoFUfvJvBNd9hCOERXjwvMz9NIjFTNQRR9PeyXWAB66fcIyJG/mpTza9ZaRwAE+jZ48EEg=
+	t=1709583222; cv=none; b=CAclWEepFgrTQJ/Ogjinhwgrh7bInqX0vDriXAiLDBKN4blmBugkyi+zGcrFOzeKNV14k1DeGiuhOCsFGsFNa/1c0yqahT0L6zXD0PwEpZpKt52UgNf/uL4d2pVCF/ITB1QJXZhBZRUoBbfmC+oLLgn3SGgpOzAWk6cb1qrOrH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709583196; c=relaxed/simple;
-	bh=97wLSRavPWpvj3qLgQpbHp3AjLHo4nR/4VmELoC2t0c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yw/dc2V/RBDONNSu5xfIlSxXVpm0Hl5chS6ynHbcE8g/69UYHoe5GEashPGVJCr+ywnitJKMRALKRjDrqR6bSQ4h/V7JpAKjNrh0ylke05JD058aZ3VJ7cBQwX7RM4uJcL+5RSgCv7+OHDi2mOs5wyu+gWc0AUY22NNj6XQjw98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=BlgCG/gT; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1709583222; c=relaxed/simple;
+	bh=bisGaUr7bGrhi6tF8dwD4I5KujdFuV9Ywekr6/YEiJU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GUohmTEHz+jFgsKn1ZAjz7nTPq0oPqGFVRkO4mK+UjnNnryFtD8huLgbvmS7FxLSrsS9wOgiIIzIUSrMj6pzY/UYBxTGKBNn1d/V1KyTlkZCs2uCqgZFPcWDm3qdfrpEF+g6CS09xlmkVkRV+o0aRpHHDkKV0A84hE27d9YWJ3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=F0HQNsxR; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BlgCG/gT"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c1e992f060so1005917b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 12:13:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="F0HQNsxR"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c1ec2c07ffso785953b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 12:13:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1709583194; x=1710187994; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I9hBziy42Zp0Bftc0h2FFnVy55qMVWSrsliZ52+smLE=;
-        b=BlgCG/gTvqw4iGJbudPTSE3U7tbRR4M+KR/PUIpEiz8y9jlQUGByqfXFSbQqctqTBj
-         AWS7daZofN1bxuuFR2wcGIzduf3Sfl9BCCks+rMgQCVhfFuqOo7CkHtK7drgAvIcdzcb
-         U1d3xK65FD+IvenvohCapMV+F0e3w8aW7QhJU=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709583219; x=1710188019; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tItt6el3MLTEP+Yh6ullzWEZp3tkdhHHbIbmhmeqN24=;
+        b=F0HQNsxR1RBOHhE63q5t1o33dAdoCc1rd7kPGC3ZULd3+dlIaKAadUyUIcvHQCTKLe
+         UULoE4JwDoUVXn8qgFpbfiCJ/tyY6U7NV1rJ4OlvABlsvxG6+aZTIEQ6fkw4XMZu09wu
+         gWc1UJZsB0P92UMnxvulI0+NRCCHcxcSlCuUNhQ2Bg0pMcMzmbI9ZgVgLQKzfhbxdW3I
+         Pmyg7pTD6JiFiv3vbl4XXh4WcSb72JUmjvMrqhQ91wdo3PmYh25xs45w1XMBcmL11Ma2
+         eDMSEIurPVSEiDyy2yaoQneUifPk1v235/E/9oe245EYWi9TzlbSv4U0h5h8EtSlPsVF
+         0/RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709583194; x=1710187994;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I9hBziy42Zp0Bftc0h2FFnVy55qMVWSrsliZ52+smLE=;
-        b=mgkwwGBHyMZn6y93pW4tDsmNDUrvMMLjyw5vCJUIZKWhHHQdnMgJ2pKeJZNwucZFEL
-         uQ77wiCCTGh0jaG0s55KlZOfZLWufL3Bjr7HTDl7fqqhiroa+mtyQPz+O7HW1hvcWKkk
-         j+aeq7Cq4Z+KmLYEXYS7JFnLByKPrmnMBQ7s+yfuF41e2je4tUO0DEvVQhNDS20fbZqI
-         80C7zFrsYYOT5sNQjJnyaIkThpLFf6Kv6yGRmrOnCMT3+EmxmqKmieCt6EeuDd1RKcwP
-         O9rovumsIMeUEU/qq9Rd8OC+ZhI5U2XXtwLxGIK2RS0kU9Afy3C0mQghVa1gufIDvM/K
-         wl0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVWFg5mJnrReYf3/RFlwIHJ4KrL2RtbYTobcZRkiL0PpWk9nRtVxDHCD8pAII2/kLdM9h+WZpEAN6o76ytqZBrZupaQI88BTMHDNiN9
-X-Gm-Message-State: AOJu0YxPieeCw8gm52OZaAZYM+dz7LpKami4DrvJkO52W633kqtnMT8h
-	Q/25fhPJ83S8hYW2GWaKtMk6uxpBN4PVAjSWHD/xJUscx7a4h/Giw7Wak4kfplFcLcexOzzP42P
-	U
-X-Google-Smtp-Source: AGHT+IGtQl9c1Evpp18ocZ5q/QQVhqE2/ZBbSr3U58j9PI2E4HefdEbETjVpINqcX9TcLPGz+COSDA==
-X-Received: by 2002:a05:6808:201f:b0:3c1:cb2a:b7e with SMTP id q31-20020a056808201f00b003c1cb2a0b7emr13146894oiw.5.1709583193677;
-        Mon, 04 Mar 2024 12:13:13 -0800 (PST)
-Received: from [10.5.0.2] ([91.196.69.189])
-        by smtp.gmail.com with ESMTPSA id w15-20020a05622a190f00b0042dce775a4bsm4729533qtc.3.2024.03.04.12.13.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 12:13:12 -0800 (PST)
-Message-ID: <51c4b25f-1cdc-4bcc-8b40-c98096bebacf@joelfernandes.org>
-Date: Mon, 4 Mar 2024 15:13:10 -0500
+        d=1e100.net; s=20230601; t=1709583219; x=1710188019;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tItt6el3MLTEP+Yh6ullzWEZp3tkdhHHbIbmhmeqN24=;
+        b=S7GYEDvm2ZU+awDfo70tVYAutobPJ2NY3/elWCNm6RomSSpqO7wQYR6m3x2GDMmRhk
+         Zi8BeRbTIsScMVHbIzW3iKKHmd9JaK7oI/t5kAqRqAOYTtBUcVKYl/GJ2oWAYLf548IT
+         LMatR7MVRWW0cWY1/9s6iP77iT4AyQJW/dVaYmYLxLkA2cv6MuqV/ZCLDsBVliiFtr/I
+         H7M2Q7MW7pyYpvq/0a8XAq677KpKnvqRDGVWibj0y5NOho7w92LWAg3dBP3jfnr8NDZl
+         EmNOCJtk49+WgVsEQjCWWoP8MTH1lEpO4u8I37Vt0jsIsj1a7QfdaPDINnhBDums2vNA
+         wsFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNCGxqgz5UqnHB2gBwfZ9dmVO6Onxis6FE92xROf9CfaXfEcQjk8rdugudWltQ8gcWwHGji5v15Nluttmg+0FYZcS1iqHpYimH7mwl
+X-Gm-Message-State: AOJu0Yy6jtq9YRR7ajf2brzYarL+6tMSB3cpPwfW7HXfER98YqLyBzgw
+	7qDqt+k5wVOd8+QD/zEsTs879gM/s0maQ/R2CMTAD3+0ErehezCinhZNaXZpX20=
+X-Google-Smtp-Source: AGHT+IG3qbUdBsUtr4e+UTqI1v3TwQ+s38kYpECdFS4DB34Uudzmakb+l9J2kT1RvThFW/wtMXohmQ==
+X-Received: by 2002:a05:6808:15a1:b0:3c1:e3fb:6c35 with SMTP id t33-20020a05680815a100b003c1e3fb6c35mr9947624oiw.31.1709583218760;
+        Mon, 04 Mar 2024 12:13:38 -0800 (PST)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id n30-20020a0568080a1e00b003c1973dbca6sm865748oij.2.2024.03.04.12.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 12:13:38 -0800 (PST)
+From: David Lechner <dlechner@baylibre.com>
+To: linux-iio@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 0/2] iio: adc: ad7944: new driver
+Date: Mon,  4 Mar 2024 13:48:45 -0600
+Message-ID: <20240304-ad7944-mainline-v5-0-f0a38cea8901@baylibre.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rcutorture: Fix
- rcu_torture_pipe_update_one()/rcu_torture_writer() data race and concurrency
- bug
-Content-Language: en-US
-To: paulmck@kernel.org
-Cc: linke li <lilinke99@qq.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Josh Triplett <josh@joshtriplett.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <quic_neeraju@quicinc.com>, Boqun Feng
- <boqun.feng@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
- linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-References: <tencent_B51A9DA220288A95A435E3435A0443BEB007@qq.com>
- <f3624f39-bbb1-451d-8161-8518e4108d8e@joelfernandes.org>
- <4857c5ef-bd8f-4670-87ac-0600a1699d05@paulmck-laptop>
- <a8e9c84f-c354-4536-b676-d38043913d09@joelfernandes.org>
- <a9ff4787-1b07-4d47-b2a0-5eb1336d3710@paulmck-laptop>
-From: Joel Fernandes <joel@joelfernandes.org>
-In-Reply-To: <a9ff4787-1b07-4d47-b2a0-5eb1336d3710@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
+This is a new driver for the Analog Devices AD7944/AD7985/AD7986 family
+of ADCs. These are fairly simple chips (e.g. no configuration registers)
+but do have some unusual SPI configurations. The initial driver is only
+supporting the normal (4-wire) SPI mode.
 
+This work is done on behalf of Analog Devices, Inc., hence the
+MAINTAINERS are @analog.com folks.
 
-On 3/4/2024 2:44 PM, Paul E. McKenney wrote:
-> On Mon, Mar 04, 2024 at 02:10:09PM -0500, Joel Fernandes wrote:
->>
->>
->> On 3/4/2024 12:14 PM, Paul E. McKenney wrote:
->>> On Mon, Mar 04, 2024 at 11:19:21AM -0500, Joel Fernandes wrote:
->>>>
->>>>
->>>> On 3/4/2024 5:54 AM, linke li wrote:
->>>>> Some changes are done to fix a data race in commit 202489101f2e ("rcutorture: Fix rcu_torture_one_read()/rcu_torture_writer() data race")
->>>>>
->>>>>  {
->>>>>  	int i;
->>>>>
->>>>> -	i = rp->rtort_pipe_count;
->>>>> +	i = READ_ONCE(rp->rtort_pipe_count);
->>>>>  	if (i > RCU_TORTURE_PIPE_LEN)
->>>>>  		i = RCU_TORTURE_PIPE_LEN;
->>>>>  	atomic_inc(&rcu_torture_wcount[i]);
->>>>> -	if (++rp->rtort_pipe_count >= RCU_TORTURE_PIPE_LEN) {
->>>>> +	WRITE_ONCE(rp->rtort_pipe_count, i + 1);
->>>>> +	if (rp->rtort_pipe_count >= RCU_TORTURE_PIPE_LEN) {
->>>>>  		rp->rtort_mbtest = 0;
->>>>>  		return true;
->>>>>  	}
->>>>>
->>>>> But ++rp->rtort_pipe_count is meant to add itself by 1, not give i+1 to
->>>>> rp->rtort_pipe_count, because rp->rtort_pipe_count may write by
->>>>> rcu_torture_writer() concurrently.
->>>>>
->>>>> Also, rp->rtort_pipe_count in the next line should be read using
->>>>> READ_ONCE() because of data race.
->>>>>
->>>>> Signed-off-by: linke li <lilinke99@qq.com>
->>>>> ---
->>>>>  kernel/rcu/rcutorture.c | 4 ++--
->>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
->>>>> index 7567ca8e743c..00059ace4fd5 100644
->>>>> --- a/kernel/rcu/rcutorture.c
->>>>> +++ b/kernel/rcu/rcutorture.c
->>>>> @@ -465,8 +465,8 @@ rcu_torture_pipe_update_one(struct rcu_torture *rp)
->>>>>  	if (i > RCU_TORTURE_PIPE_LEN)
->>>>>  		i = RCU_TORTURE_PIPE_LEN;
->>>>>  	atomic_inc(&rcu_torture_wcount[i]);
->>>>> -	WRITE_ONCE(rp->rtort_pipe_count, i + 1);
->>>>> -	if (rp->rtort_pipe_count >= RCU_TORTURE_PIPE_LEN) {
->>>>> +	WRITE_ONCE(rp->rtort_pipe_count, rp->rtort_pipe_count + 1);
->>>>> +	if (READ_ONCE(rp->rtort_pipe_count) >= RCU_TORTURE_PIPE_LEN) {
->>>>
->>>> I want to say, I am not convinced with the patch because what's wrong with
->>>> writing to an old index?
->>>>
->>>> You win/lose the race anyway, say the CPU executed the WRITE_ONCE() a bit too
->>>> early/late and another WRITE_ONCE() lost/won, regardless of whether you wrote
->>>> the "incremented i" or "the increment from the latest value of pipe_count".
->>>>
->>>> Anyway, a slightly related/different question:
->>>>
->>>> Should that:
->>>> WRITE_ONCE(rp->rtort_pipe_count, rp->rtort_pipe_count + 1);
->>>>
->>>> Be:
->>>> WRITE_ONCE(rp->rtort_pipe_count, READ_ONCE(rp->rtort_pipe_count) + 1);
->>>>
->>>> ?
->>>
->>> Thank you both!
->>>
->>> At first glance, I would argue for something like this:
->>>
->>> ------------------------------------------------------------------------
->>>
->>> static bool
->>> rcu_torture_pipe_update_one(struct rcu_torture *rp)
->>> {
->>> 	int i;
->>> 	struct rcu_torture_reader_check *rtrcp = READ_ONCE(rp->rtort_chkp);
->>>
->>> 	if (rtrcp) {
->>> 		WRITE_ONCE(rp->rtort_chkp, NULL);
->>> 		smp_store_release(&rtrcp->rtc_ready, 1); // Pair with smp_load_acquire().
->>> 	}
->>> 	i = READ_ONCE(rp->rtort_pipe_count) + 1;
->>> 	if (i > RCU_TORTURE_PIPE_LEN)
->>> 		i = RCU_TORTURE_PIPE_LEN;
->>> 	atomic_inc(&rcu_torture_wcount[i]);
->>> 	WRITE_ONCE(rp->rtort_pipe_count, i);
->>> 	if (i >= RCU_TORTURE_PIPE_LEN) {
->>> 		rp->rtort_mbtest = 0;
->>> 		return true;
->>> 	}
->>> 	return false;
->>> }
->>>
->>> ------------------------------------------------------------------------
->>>
->>> That is, move the increment to the read and replace the re-read with
->>> the value "i" that was just written.
->>
->> But that changes the original logic as well? It looks like with the above
->> change, you're now writing to rcu_torture_wcount[READ_ONCE(rp->rtort_pipe_count)
->> + 1] instead of rcu_torture_wcount[READ_ONCE(rp->rtort_pipe_count)].
->>
->> I think that might break rcutorture, because there is an increment outside of
->> the first 2 entries in rcu_torture_wcount but not sure (need to look more).
-> 
-> Good point on never incrementing the zeroth entry!  Clearly I should
-> have waited before replying.
-> 
-> How about the following?
-> 
-> ------------------------------------------------------------------------
-> 
-> static bool
-> rcu_torture_pipe_update_one(struct rcu_torture *rp)
-> {
-> 	int i;
-> 	struct rcu_torture_reader_check *rtrcp = READ_ONCE(rp->rtort_chkp);
-> 
-> 	if (rtrcp) {
-> 		WRITE_ONCE(rp->rtort_chkp, NULL);
-> 		smp_store_release(&rtrcp->rtc_ready, 1); // Pair with smp_load_acquire().
-> 	}
-> 	i = READ_ONCE(rp->rtort_pipe_count);
-> 	if (i > RCU_TORTURE_PIPE_LEN)
-> 		i = RCU_TORTURE_PIPE_LEN;
-> 	atomic_inc(&rcu_torture_wcount[i]);
-> 	WRITE_ONCE(rp->rtort_pipe_count, i + 1);
-> 	if (i + 1 >= RCU_TORTURE_PIPE_LEN) {
-> 		rp->rtort_mbtest = 0;
-> 		return true;
-> 	}
-> 	return false;
-> }
+---
+Changes in v5:
+- DT bindings:
+    - fixed typo
+    - picked up Rob's reviewed-by
+- Driver:
+    - Dropped "nanoseconds" from comments.
+    - Renamed "t" to "timing_spec"
+    - Replaced "&spi->dev" with "dev"
+    - Fixed logic on optional "ref" regulator
+    - Added comment explaining why "cnv" gpio is required
+    - Simplified always_turbo assignment
+- Link to v4: https://lore.kernel.org/r/20240229-ad7944-mainline-v4-0-f88b5ec4baed@baylibre.com
 
-Yes, this looks good to me. Thanks,
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Changes in v4:
+- Fixed broken DT patch due to misplaced changelog
+- Link to v3: https://lore.kernel.org/r/20240228-ad7944-mainline-v3-0-781b922334af@baylibre.com
 
+Changes in v3:
+- Removed 'multi' value from adi,spi-mode property in DT bindings
+- Modified driver for above change
+- Fixed spelling of 'conventional'
+- Added '#daisy-chained-devices' to DT bindings
+- Added comments explaining that '3-wire' mode is not related to
+  spi-3wire/SPI_3WIRE
+- Replaced _sign with _diff in chip info struct to properly handle
+  pseudo-differential vs. true differential chips
+- Link to v2: https://lore.kernel.org/r/20240216-ad7944-mainline-v2-0-7eb69651e592@baylibre.com
+
+Changes in v2:
+- Added limit to spi-max-frequency for chain mode in DT bindings
+- Added spi-cpol property to DT bindings
+- Renamed '3-wire' mode to 'single' mode (to avoid confusion with spi-3wire)
+- Renamed '4-wire' mode to 'multi' mode
+- Dropped adi,reference property - now using only ref-supply and 
+  refin-supply to determine the reference voltage source
+- Fixed spelling of TURBO
+- Renamed t_cnv to t_conv to match datasheet name and fixed comment
+- Fixed wrong timestamp pushed to buffer
+- Fixed scaling for chips with signed data
+- Make use of sysfs_match_string() function
+- Link to v1: https://lore.kernel.org/r/20240206-ad7944-mainline-v1-0-bf115fa9474f@baylibre.com
+
+---
+David Lechner (2):
+      dt-bindings: iio: adc: add ad7944 ADCs
+      iio: adc: ad7944: add driver for AD7944/AD7985/AD7986
+
+ .../devicetree/bindings/iio/adc/adi,ad7944.yaml    | 213 +++++++++++
+ MAINTAINERS                                        |   9 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/ad7944.c                           | 416 +++++++++++++++++++++
+ 5 files changed, 649 insertions(+)
+---
+base-commit: 74744b27ba8cb8c265263aa0ff0693350a8cbc19
+change-id: 20240206-ad7944-mainline-17c968aa0967
