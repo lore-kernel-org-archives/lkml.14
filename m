@@ -1,70 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9EDC4653A;
-	Mon,  4 Mar 2024 15:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788A814ABC
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 15:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709565891; cv=none; b=JNjEabveeNaHe4xMfnxjFgiphnAy7mTpp9Sp8Nt7sSARDJZ8pDXZHLcGfZA0VkO6OueMKyXkGc2iZhJFejZI492pLcddvPrUlKAJ7bzfZtFL+SSraTusiPS9p53GFjoE5t5Hr2dYn3XBRa38jcHSrL2lvxZwOifLz6M+8tRoVbA=
+	t=1709566117; cv=none; b=uGx7rchsiqgc4apLku870WuyoKsHs8zjJ2EYOlDGHx01h3ochNZfVg+qOKaNP+BXiXh+0xSmBFVi3a+PJLzMl7uUKfMcyUIddwfVpBV5tcA/e8yomuyrWjDDL8foGuABk9Whr6Jw+ypSjnkKGvBxUqJhJ358h4fC6vEKHz560VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709565891; c=relaxed/simple;
-	bh=N1JfdXgyaxSd4c/fdLzv44gAp2pZlsV4ZCg6XBxQnKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X0NY+yyJcwm1yxZzENcJeleVJVy/b1WxcqSrZOtYRiNAXzrhRvQNUnpPzbcjB9FKIO0KzXDLii/qx7atW97kSVDuei6kZJQTrGQGjG7eGPX2Ep4Ts4tneO790M8/kSOvkv8BSNeLqBUPtZJ0TteKOfgBfOeJd+yj/ZiZb9maTNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OX2NwF11; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709566117; c=relaxed/simple;
+	bh=JqPLe8KPWvpiqlSrIgQN5CjA/uLkeh0Hokz47hMRiiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TtSoewfPdErkm6VOrwLzI+fMT7qVikdUB6Oxd9CfHgeKLJmpknCU3tsyErLaOxRgeK4ZBj0xjVhjSNBRNhTMzd7p39Xn2R3SL5k5B+p6f7so9aYvfVXfbHP4LYqkkZ/16kzOisvnubyp93kzYZr1YZxU1o/IoVTU2oyABbmU6us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E/lDvTTl; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OX2NwF11"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCCCC433C7;
-	Mon,  4 Mar 2024 15:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709565891;
-	bh=N1JfdXgyaxSd4c/fdLzv44gAp2pZlsV4ZCg6XBxQnKI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OX2NwF114dP1vGv3xCFxgAvAJK2k/1x1RApKZFIsPAByq9z7xAhDsd29VNt9XzVIO
-	 4TbehB+V6LbEjw0Yf2tx0BDzE7pRMOej4x/4DB1ewe064WyFjF4xhUD6FDyF1v16LN
-	 rZ87eYQKNvFBQtWhLGmK+EzcJmE8VBZNCPsJEuw98y231hfBEZEdfkbyyI888kng2c
-	 B8SDOa8cDBSoIzP3MeNFTYzukgVel6/G9UFjpCOrq7WyL5Jw96IsoGqUEIfCGYu1LG
-	 daoe8ukCR3vsixhy66NkAUk1JmJgjG4P7GMYJl2ZELgkhmqmNRo1tGrx9i2iri7Gx0
-	 dwlQt5hEJoSLw==
-Date: Mon, 4 Mar 2024 07:24:49 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Eric Dumazet <edumazet@google.com>, Kees Cook <keescook@chromium.org>,
- "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, <netdev@vger.kernel.org>,
- <linux-hardening@vger.kernel.org>, Simon Horman <horms@kernel.org>, "Jiri
- Pirko" <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, Coco Li
- <lixiaoyan@google.com>, Amritha Nambiar <amritha.nambiar@intel.com>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
-Message-ID: <20240304072449.0c10b397@kernel.org>
-In-Reply-To: <ae6b1114-1c71-46f0-82e5-23b9f05df1bf@intel.com>
-References: <20240229213018.work.556-kees@kernel.org>
-	<20240229225910.79e224cf@kernel.org>
-	<CANn89iKeJGvhY0K=kLhhR39NVbaizP2UBk0Vk0r_XCe2XMBZHg@mail.gmail.com>
-	<9050bdec-b34a-4133-8ba5-021dfd4b1c75@intel.com>
-	<CANn89iLSLPn5PyXNQcA2HO0e5jGYvHKhTh_9_EMmfbTJKZPfbg@mail.gmail.com>
-	<77d3f074-8cb6-466b-ab31-a7b0bac659d0@intel.com>
-	<20240301093517.428e5b5d@kernel.org>
-	<ae6b1114-1c71-46f0-82e5-23b9f05df1bf@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E/lDvTTl"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2EC981BF204;
+	Mon,  4 Mar 2024 15:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709566113;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T4Zv8m/UXPDGpZewLmyg0pl/W4ahyJ8xUUUXXUY66xc=;
+	b=E/lDvTTl8F84vRyAi+hKvmn0JWisQyYP1UEdCQd8fmO5ZjfWdtsuTORqExmXL6CuAOdsMp
+	c56yDlg9yPH2s9fjLX0tz+vskbRBb0YDxKZszPXSuQCaAahyj7F6HC8laaThNCxF7iISjZ
+	f2zqQba8qhfnTAkTwIzCM2X+PN0kf585lLXnoifMQQprJI2xPQgAzG2J3kStq7bVMMB2tk
+	Wd7+fpOxIXImnLYR5tNlniuE+On92t538kBDTwrmgZ86QgYLx5mab3C0nlNnCTEilpDPgH
+	VytIyaCLrwV7hZ/hrqG5vFNUV3edyPiUvuaTHDyJNpPjdZj3bZlH6ffFdn0rag==
+Date: Mon, 4 Mar 2024 16:28:30 +0100
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Pekka Paalanen <pekka.paalanen@collabora.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH v2 3/9] drm/vkms: write/update the documentation for
+ pixel conversion and pixel write functions
+Message-ID: <ZeXonl-jZq4xHnBK@localhost.localdomain>
+Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com
+References: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
+ <20240223-yuv-v2-3-aa6be2827bb7@bootlin.com>
+ <20240226133700.3fef91d9.pekka.paalanen@collabora.com>
+ <Zd35cimh8BLICUuY@localhost.localdomain>
+ <20240229104833.2a404d6b.pekka.paalanen@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240229104833.2a404d6b.pekka.paalanen@collabora.com>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Mon, 4 Mar 2024 15:32:51 +0100 Alexander Lobakin wrote:
-> > 100% I should have linked to the thread that led to Kees's work.
-> > Adding directly to net_device would be way better but there's
-> > a handful of drivers which embed the struct.  
+Le 29/02/24 - 10:48, Pekka Paalanen a écrit :
+> On Tue, 27 Feb 2024 16:02:10 +0100
+> Louis Chauvet <louis.chauvet@bootlin.com> wrote:
 > 
-> I think it's okay to embed a struct with flex array at the end as long
-> as it's not used? Or the compiler will say that the flex array is not at
-> the end of the structure?
+> > [...]
+> > 
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> > > > index 172830a3936a..cb7a49b7c8e7 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> > > > @@ -9,6 +9,17 @@
+> > > >  
+> > > >  #include "vkms_formats.h"
+> > > >  
+> > > > +/**
+> > > > + * packed_pixels_offset() - Get the offset of the block containing the pixel at coordinates x/y
+> > > > + * in the first plane
+> > > > + *
+> > > > + * @frame_info: Buffer metadata
+> > > > + * @x: The x coordinate of the wanted pixel in the buffer
+> > > > + * @y: The y coordinate of the wanted pixel in the buffer
+> > > > + *
+> > > > + * The caller must be aware that this offset is not always a pointer to a pixel. If individual
+> > > > + * pixel values are needed, they have to be extracted from the resulting block.  
+> > > 
+> > > Just wondering how the caller will be able to extract the right pixel
+> > > from the block without re-using the knowledge already used in this
+> > > function. I'd also expect the function to round down x,y to be
+> > > divisible by block dimensions, but that's not visible in this email.
+> > > Then the caller needs the remainder from the round-down, too?  
+> > 
+> > You are right, the current implementation is only working when block_h == 
+> > block_w == 1. I think I wrote the documentation for PATCHv2 5/9, but when 
+> > backporting this comment for PATCHv2 3/9 I forgot to update it.
+> > The new comment will be:
+> > 
+> >  * pixels_offset() - Get the offset of a given pixel data at coordinate 
+> >  * x/y in the first plane
+> >    [...]
+> >  * The caller must ensure that the framebuffer associated with this 
+> >  * request uses a pixel format where block_h == block_w == 1.
+> >  * If this requirement is not fulfilled, the resulting offset can be 
+> >  * completly wrong.
+> 
+> Hi Louis,
 
-Technically, yes. Practically it ties the lifetime of a refcounted
-object to something semi-related with different lifetime rules :(
+Hi Pekka,
+
+> if there is no plan for how non-1x1 blocks would work yet, then I think
+> the above wording is fine. In my mind, the below wording would
+> encourage callers to seek out and try arbitrary tricks to make things
+> work for non-1x1 without rewriting the function to actually work.
+>
+> I believe something would need to change in the function signature to
+> make it properly usable for non-1x1 blocks, but I too cannot suggest
+> anything off-hand.
+
+I already made the change to support non-1x1 blocks in Patchv2 5/9 
+(I will extract this modification in "drm/vkms: Update pixels accessor to 
+support packed and multi-plane formats"), this function is now able 
+to extract the pointer to the start of a block. But as stated in the 
+comment, the caller must manually extract the correct pixel values (if the 
+format is 2x2, the pointer will point to the first byte of this block, the 
+caller must do some computation to access the bottom-right value).
+ 
+> > 
+> > And yes, even after PATCHv2 5/9 it is not clear what is the offset. Is 
+> > this better to replace the last sentence? (I will do the same update for 
+> > the last sentence of packed_pixels_addr)
+> > 
+> >    [...]
+> >  * The returned offset correspond to the offset of the block containing the pixel at coordinates 
+> >  * x/y.
+> >  * The caller must use this offset with care, as for formats with block_h != 1 or block_w != 1 
+> >  * the requested pixel value may have to be extracted from the block, even if they are 
+> >  * individually adressable.
+> >  
+> > > > + */
+> > > >  static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
+> > > >  {
+> > > >  	struct drm_framebuffer *fb = frame_info->fb;
+> > > > @@ -17,12 +28,13 @@ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int
+> > > >  			      + (x * fb->format->cpp[0]);
+> > > >  }
+> > > >    
+> > 
+> > [...]
+> > 
+> > > > +/**
+> > > > + * Retrieve the correct read_pixel function for a specific format.
+> > > > + * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
+> > > > + * pointer is valid before using it in a vkms_plane_state.
+> > > > + *
+> > > > + * @format: 4cc of the format  
+> > > 
+> > > Since there are many different 4cc style pixel format definition tables
+> > > in existence with conflicting definitions, it would not hurt to be more
+> > > specific that this is about DRM_FORMAT_* or drm_fourcc.h.  
+> > 
+> > Is this better?
+> > 
+> >    @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
+> 
+> Much better!
+> 
+> 
+> Thanks,
+> pq
+
+[...]
+
+Kind regards,
+Louis Chauvet
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
