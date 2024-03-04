@@ -1,94 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC90278B68;
-	Mon,  4 Mar 2024 19:27:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B5578B68;
+	Mon,  4 Mar 2024 19:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709580430; cv=none; b=h97Xu3bfY69A8CTkdme+816SPGTXatDRlPkkICSFPPVB3sH3mqrFVn3MsT3EkfBgLT5pp+haY8hoGqMUxV4OixvjbSqWj+HAe6EU0D6/whYmkAllDGgaZseY8S8tkA8XQL7Wl0r/Q78ZgGsdf4JDGjYojiylfDsnXsDghhpHDhU=
+	t=1709580448; cv=none; b=pSyCzfFTErKGdDOwIJHdzM20T24yVJ6NYqmgt1M/X84ElEGT5FGog9U7ly0MJXy38SQmg1A5eA4+YB8kinHSMSSgKo5bf3SDiSf0ZP6W1s+d5cIe7CEhWezo9h6ePom1CLANOwPzp08AtNN2Tv1LIDxAYs0WaGmS6chcgayn0JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709580430; c=relaxed/simple;
-	bh=NRGBFSK4UAvrZUKX4v3ipPB7T87gQNkUmQIBQgtrHhw=;
+	s=arc-20240116; t=1709580448; c=relaxed/simple;
+	bh=Q/qmBaGLFXD+OqwG0cV6Sxh9sh+SNUs2jlMlo+ZO0EY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THBdhEOc4ev2iZxY1pWTRhw8FqlFqIGk2+DHCsQZwsoh3tw+Ux1Gbs3vjuh0QVe1o58/xdTiswiowkbwOIsjxIBAsCr6DZ4yWw8tkx6n15JEW1onvqV/0jwFfOvN/uxqBZoWeGd+4QPNvQsHtVNqT6AzAskJv8PCE80yGkKaunc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g07YAk8C; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HTm95d348MjuYvG+Jxhh6cKgB0jWvibZj4CNf/47IR4CMYznUcXa2Xd9546UmXwrPuAfyXLUZza/Xv5E4/2Bbwoks8t2VwVK8kufwqGbsy+7GrmZYEuAqt8xXoGTR5GYQe+3dAb+fsM3Q47k2aqH6jkvulqEwaw2rIMp8gLOJmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBJ/0MAW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g07YAk8C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40826C433F1;
-	Mon,  4 Mar 2024 19:27:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBJ/0MAW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECDE7C43399;
+	Mon,  4 Mar 2024 19:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709580430;
-	bh=NRGBFSK4UAvrZUKX4v3ipPB7T87gQNkUmQIBQgtrHhw=;
+	s=k20201202; t=1709580448;
+	bh=Q/qmBaGLFXD+OqwG0cV6Sxh9sh+SNUs2jlMlo+ZO0EY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g07YAk8CLZHQ43AdB8ZPf6pYoLYryNyswI6epfxNEN0+JvDkWygaKsd2i/tEN5Q+p
-	 QGjHCr06rpUacf6XFj7+6t6FRGCCYrnme332ZfXtzeIJdPyJA+B2WPhSJzp8NRTj2r
-	 pfTFb4CiC9hCzYzEsvBBoXtuI6vbmSIuHCYXcRj/Ocp0iA9XDh53h8W/WVq7z0yPK8
-	 3M9+2zjE5oxnmj/zWgfUVE0m4aHThHS9SryjJ+q2360QcRuAyBclpGVISvf1ua88t+
-	 1xjL5HassavRpM9UTiIfZLsusZfJbl6ZujRp0KZaZ8HEoU5cfxXvDlPKstVS3LA/oQ
-	 xmU2IRo8La7kg==
-Date: Mon, 4 Mar 2024 19:27:04 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrea Parri <andrea@rivosinc.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Andrea Parri <parri.andrea@gmail.com>
-Subject: Re: [PATCH v3 2/2] riscv: Fix text patching when IPI are used
-Message-ID: <20240304-makeshift-bakeshop-26c9611de1a3@spud>
-References: <20240229121056.203419-1-alexghiti@rivosinc.com>
- <20240229121056.203419-3-alexghiti@rivosinc.com>
+	b=fBJ/0MAW2FzsYC2u6AUYvioejIJRUAdJ8tnZKSuoF2AH/tRk0VRjLsAap2eEdg96A
+	 KAofJu2kRiJRSnsS6kl4y52rJmieLfbl/3u0lQ/zdCw+pbZALn0SLSyW+szuBtUg5B
+	 hDwCSvCzRk4er7mOUt3VTzkqEBxsr2Dg4jwdHkclZOrh2m5Q1mkFTKiQiFwDj/n2tp
+	 3LgF4VF/6b8WCiqN+TtgzrH8a0caPmYeZl5ijUsEDuJJfRuttUWirgBv1wUzC/lGHh
+	 W28XF7VCBr/iiEwanDvrb9lSgEJ8g/vDvrTpJ0pEqJfEihPFuC6M5oGzR/wiQ97Rov
+	 1szd+L6+63fXw==
+Date: Mon, 4 Mar 2024 13:27:26 -0600
+From: Rob Herring <robh@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] of: make for_each_property_of_node() available to to !OF
+Message-ID: <170958044459.929757.7231203467292560186.robh@kernel.org>
+References: <20240303104853.31511-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CGU1t6lbMj/vUiqU"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240229121056.203419-3-alexghiti@rivosinc.com>
+In-Reply-To: <20240303104853.31511-1-brgl@bgdev.pl>
 
 
---CGU1t6lbMj/vUiqU
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, 03 Mar 2024 11:48:53 +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> for_each_property_of_node() is a macro and so doesn't have a stub inline
+> function for !OF. Move it out of the relevant #ifdef to make it available
+> to all users.
+> 
+> Fixes: 611cad720148 ("dt: add of_alias_scan and of_alias_get_id")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> I have an upcoming driver that will use this but which can also be built
+> on non-DT systems. I'd like to get that in as a fix to avoid inter-tree
+> dependencies later.
+> 
+>  include/linux/of.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
 
-On Thu, Feb 29, 2024 at 01:10:56PM +0100, Alexandre Ghiti wrote:
-> For now, we use stop_machine() to patch the text and when we use IPIs for
-> remote icache flushes (which is emitted in patch_text_nosync()), the syst=
-em
-> hangs.
->=20
-> So instead, make sure every CPU executes the stop_machine() patching
-> function and emit a local icache flush there.
->=20
-> Co-developed-by: Bj=F6rn T=F6pel <bjorn@rivosinc.com>
-> Signed-off-by: Bj=F6rn T=F6pel <bjorn@rivosinc.com>
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+Applied, thanks!
 
-What commit does this fix?
-
-
---CGU1t6lbMj/vUiqU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeYgiAAKCRB4tDGHoIJi
-0qjkAQDn1f/dT64PtnCiJNs8Qio3UgBL19K4uIcjx/5UwnIPSgEAwwKcIIoDYm3r
-ATY6C+CwtQiaTrYXHsoo0LaLIsGgCQ4=
-=Ko4a
------END PGP SIGNATURE-----
-
---CGU1t6lbMj/vUiqU--
