@@ -1,146 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA451B5BB;
-	Mon,  4 Mar 2024 09:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7309917748;
+	Mon,  4 Mar 2024 09:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709543314; cv=none; b=n2Fl60uPaBhIYmpqZ6yV3iBJDyFtdFyJN3C3d1PmPOqoH1NhlJbXi/ibPPACbW8V+UhldrmuIJrf+LhKG0JAJdIdBejATwIA0VJ31+O4EgJ1jsAhXBD1Oskkv8Hp7njKv096XFLDoHfOmCajbSvASP1qH1lkuoS+oprfHS03rso=
+	t=1709543369; cv=none; b=Fher7wAfTyCtnwSRtfZHZvmIGw5rxOF3/TlXyaE5oVciwrKhL1mfR9iJJM2BOOPZP7vH2M+MdkPrRRYyz0Cq+CO23uGr1FP5/xCbBU5FUO+P02QQ+WJt0ZpK4wsUsua7Emtmkp0SFrcqemxDbiYR/0e1pSBeRK82SKKz2tFiMcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709543314; c=relaxed/simple;
-	bh=EA6ZR3Erkc94kHJhtNv8APoWSvKBml3K5BTGuia7NoM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gl4Qv1m2hWK0PHwer3kJkSIgSMOpk19o6M3sNHT5ADChTwO7TSUkw3SONpf/njV3eovOHLCv8TRCltTfaYWmwWyftAcrY395ksnoyBKihR5ou4MDxoMgoWCn4z40nklQB8OchGpxqWVAaYGmy93lI1C6lPofLnJcEoRYC2vz54s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BfJ+oBzf; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709543369; c=relaxed/simple;
+	bh=NTeM1KJ3g7QyFyVSvupqryocHsXHyWEGZB+Y/y8Wfzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OZouDm+aHI/Hps+vLjQ32jwSlzc7fFdpx36k+NkNGO+nLz0JelmmGsq8W/YbJUU+Rt/8zVUkOpJum+ic2CIEt/3dJoZZxm9pCalUvAcYCz264iolie7taCKsb2bNQ2Q1FrvnIOnlQywpMnaviPv6bWCtOFVrrC47LHVdn1H4ngY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=m41JRwtT; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BfJ+oBzf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709543313; x=1741079313;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=EA6ZR3Erkc94kHJhtNv8APoWSvKBml3K5BTGuia7NoM=;
-  b=BfJ+oBzfv5oTzDpbOtO9Z9DDf3ymd/FnmZ73kiU5349Y8zSne3dQSgp3
-   NV/W5IRzenSiYAa+n6eGT/2epNdhvO666c+8MBgFOxbE4FzQ2mW+z4knq
-   gjbEXLz1b8S0JmWEYR9kaxEeSVXNHt4SgeT6bSn7iZMz6YVqe9KbCLgJH
-   EDFqOaPrT9/dS+A+regZgZObVuTKou837101/dPF8wONqv3vvqnbRPiqz
-   8vb7Xc+ZfQJXWWdAzZzk7Bh3WHHGCQd6+pvbkxTRLVX/KjLy+77PcTSQr
-   VCuVCrDlKRzLElChvZGM+dX58MiLUo0qp8JoD6/lV8OXnOfWsilexBnjr
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="7840688"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="7840688"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 01:08:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="32092854"
-Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
-  by fmviesa002.fm.intel.com with ESMTP; 04 Mar 2024 01:08:27 -0800
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-To: bhelgaas@google.com,
-	lukas@wunner.de
-Cc: Smita.KoralahalliChannabasappa@amd.com,
-	ilpo.jarvinen@linux.intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kbusch@kernel.org,
-	Ethan Zhao <haifeng.zhao@linux.intel.com>
-Subject: [PATCH pci-next] pci/edr: Ignore Surprise Down error on hot removal
-Date: Mon,  4 Mar 2024 04:08:19 -0500
-Message-Id: <20240304090819.3812465-1-haifeng.zhao@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="m41JRwtT"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4247gAFC026675;
+	Mon, 4 Mar 2024 09:41:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=bJnRc0D0H74QihxsMJduhmW8GQyOwkO9RFjU12y0p4M=; b=m4
+	1JRwtTlXG3PcefLldIGEl77X0tUzuX+IDQXBAmHPBC+tOYP8w+XPQ9oqzVVDSJ8p
+	dG9F5BbzPgdp6eHuOSyBrgE3B9oIFZA8U5rdki+EXke2aT4mQyO0sXWsUVt5bXFA
+	3+dO8XJm8hfWyt1RSiRnQHT1angHmSEvKMivYax6ZkCoeHnWxSFAFjjtvH/a3WM4
+	/RFWp74L8NlLfmaFny43+2JvSpVzbB2HVogeui34sDQhYfT95ZMLKZ1MC4KqyuYO
+	EB++E08T+M3PlmY8fjXumYfQd0qtjfj/Du80U34MqRTLapNdflV0p6DblR6KSDWa
+	smqORLvSC+TfwCrRRMnA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wktdkxss1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Mar 2024 09:41:56 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7E2584002D;
+	Mon,  4 Mar 2024 09:41:51 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C3E60255E46;
+	Mon,  4 Mar 2024 09:41:16 +0100 (CET)
+Received: from [10.252.5.201] (10.252.5.201) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 4 Mar
+ 2024 09:41:15 +0100
+Message-ID: <562cdbfe-9353-4f5d-a804-34e158a190a7@foss.st.com>
+Date: Mon, 4 Mar 2024 09:41:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] counter: Introduce the COUNTER_COMP_FREQUENCY() macro
+To: William Breathitt Gray <william.gray@linaro.org>
+CC: <syednwaris@gmail.com>, <vigneshr@ti.com>, <jpanis@baylibre.com>,
+        <alexandre.torgue@foss.st.com>, <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240301102505.591918-1-fabrice.gasnier@foss.st.com>
+ <ZeH6e02zzfAjw-sd@ishi>
+Content-Language: en-US
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <ZeH6e02zzfAjw-sd@ishi>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-04_04,2024-03-01_03,2023-05-22_02
 
-Per PCI firmware spec r3.3 sec 4.6.12, for firmware first mode DPC
-handling path, FW should clear UC errors logged by port and bring link
-out of DPC, but because of ambiguity of wording in the spec, some BIOSes
-doesn't clear the surprise down error and the error bits in pci status,
-still notify OS to handle it. thus following trick is needed in EDR when
-double reporting (hot removal interrupt && dpc notification) is hit.
+On 3/1/24 16:55, William Breathitt Gray wrote:
+> On Fri, Mar 01, 2024 at 11:25:05AM +0100, Fabrice Gasnier wrote:
+>> Now that there are two users for the "frequency" extension, introduce a
+>> new COUNTER_COMP_FREQUENCY() macro.
+>> This extension is intended to be a read-only signal attribute.
+>>
+>> Suggested-by: William Breathitt Gray <william.gray@linaro.org>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+>> ---
+>> Changes in v5
+>> - "frequency" extension is read-only, so there's no need to provide
+>>   a write parameter.
+>> - patch sent separately from "counter: Add stm32 timer events support" [1]
+>> [1] https://lore.kernel.org/lkml/20240227173803.53906-2-fabrice.gasnier@foss.st.com/
+>> ---
+>>  include/linux/counter.h | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/include/linux/counter.h b/include/linux/counter.h
+>> index 702e9108bbb4..0ac36f815b7d 100644
+>> --- a/include/linux/counter.h
+>> +++ b/include/linux/counter.h
+>> @@ -602,6 +602,13 @@ struct counter_array {
+>>  #define COUNTER_COMP_FLOOR(_read, _write) \
+>>  	COUNTER_COMP_COUNT_U64("floor", _read, _write)
+>>  
+>> +#define COUNTER_COMP_FREQUENCY(_read) \
+>> +{ \
+>> +	.type = COUNTER_COMP_U64, \
+>> +	.name = "frequency", \
+>> +	.signal_u64_read = (_read), \
+>> +}
+>> +
+>>  #define COUNTER_COMP_POLARITY(_read, _write, _available) \
+>>  { \
+>>  	.type = COUNTER_COMP_SIGNAL_POLARITY, \
+>> -- 
+>> 2.25.1
+> 
+> Hi Fabrice,
+> 
+> Setting the structure members directly works, but why not use
+> COUNTER_COMP_SIGNAL_U64("frequency", _read, NULL) instead to keep the
+> code more succinct?
 
-https://patchwork.kernel.org/project/linux-pci/patch/20240207181854.
-121335-1-Smita.KoralahalliChannabasappa@amd.com/
+Hi William,
 
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
----
- drivers/pci/pci.h      | 1 +
- drivers/pci/pcie/dpc.c | 9 +++++----
- drivers/pci/pcie/edr.c | 3 +++
- 3 files changed, 9 insertions(+), 4 deletions(-)
+I originally wrote it this way, but I had a doubt since some macros use
+the structure members directly.
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 50134b5e3235..3787bb32e724 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -443,6 +443,7 @@ void pci_save_dpc_state(struct pci_dev *dev);
- void pci_restore_dpc_state(struct pci_dev *dev);
- void pci_dpc_init(struct pci_dev *pdev);
- void dpc_process_error(struct pci_dev *pdev);
-+bool dpc_handle_surprise_removal(struct pci_dev *pdev);
- pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
- bool pci_dpc_recovered(struct pci_dev *pdev);
- #else
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 98b42e425bb9..be79f205e04c 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -319,8 +319,10 @@ static void pci_clear_surpdn_errors(struct pci_dev *pdev)
- 	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
- }
- 
--static void dpc_handle_surprise_removal(struct pci_dev *pdev)
-+bool  dpc_handle_surprise_removal(struct pci_dev *pdev)
- {
-+	if (!dpc_is_surprise_removal(pdev))
-+		return false;
- 	if (!pcie_wait_for_link(pdev, false)) {
- 		pci_info(pdev, "Data Link Layer Link Active not cleared in 1000 msec\n");
- 		goto out;
-@@ -338,6 +340,7 @@ static void dpc_handle_surprise_removal(struct pci_dev *pdev)
- out:
- 	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
- 	wake_up_all(&dpc_completed_waitqueue);
-+	return true;
- }
- 
- static bool dpc_is_surprise_removal(struct pci_dev *pdev)
-@@ -362,10 +365,8 @@ static irqreturn_t dpc_handler(int irq, void *context)
- 	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
- 	 * of async removal and should be ignored by software.
- 	 */
--	if (dpc_is_surprise_removal(pdev)) {
--		dpc_handle_surprise_removal(pdev);
-+	if (dpc_handle_surprise_removal(pdev))
- 		return IRQ_HANDLED;
--	}
- 
- 	dpc_process_error(pdev);
- 
-diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
-index 5f4914d313a1..556edfb2696a 100644
---- a/drivers/pci/pcie/edr.c
-+++ b/drivers/pci/pcie/edr.c
-@@ -184,6 +184,9 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
- 		goto send_ost;
- 	}
- 
-+	if (dpc_handle_surprise_removal(edev))
-+		goto send_ost;
-+
- 	dpc_process_error(edev);
- 	pci_aer_raw_clear_status(edev);
- 
+I can update to use COUNTER_COMP_SIGNAL_U64() instead, that will spare
+few lines.
 
-base-commit: a66f2b4a4d365dc4bac35576f3a9d4f5982f1d63
--- 
-2.31.1
+Please let me know what you prefer (I guess your proposal above ?).
 
+Best Regards,
+Thanks,
+Fabrice
+
+> 
+> William Breathitt Gray
