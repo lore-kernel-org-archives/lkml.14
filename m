@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAD820300
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598FF224E6
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709541821; cv=none; b=QvavfOIlx9bch9+iOb78IQ8ZSdUn9zPQvT2RD3myQS8XbLyiysxn0aYEoliLiCrXzoybmgCwYSe5qQd8kctblkHY+wFjqzVWFhsSLIgmvGe+W3EkwDPj8gthtJh93H/B6IsmI1cg3bgKbTH4KJO6HWZ3ifBI9UaO73ptVghSOnE=
+	t=1709541824; cv=none; b=ua5WKHT9Rtl5kN8GDUg9uqL34BFdJAjHpncZsaijnW2d8vDFlS6bm6BZVGRHeFDf8lDSDjJXAy+1hFf8fTliPXFsnYJCi4W1LWrRidqkp5oNbT/xGrNwZgECsegctsRkiVH3Q1I4yE17hhxZSOjaWm8C2nFSpf2CRLS5xYYumlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709541821; c=relaxed/simple;
-	bh=i3aV9zJdURdXtYV6Ok20ZUsYSMXKtbojlDZd884F27M=;
+	s=arc-20240116; t=1709541824; c=relaxed/simple;
+	bh=0raf8PRlraWnPhbn6SRbKPcBod2VJHcvfxva3reVfio=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kVR8u8WGckytXcOAUqazVOxph+b0/677SI3XKrILLFf7RizLl9C9givE3WF+TEzXwYTGWACDMrkEzCZYuvJg4YBmbRg0UQiE/sRs5BWXMRnyBiEYfTWNsQtolcoxjVX1UEfYCS/VWS1yeoe7SOVKS8Amg5t3rzcmgBUA12Owq1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RHDvZbEh; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=o3ac5LIEqkV9TKtf1PpRI83rfkM/0lmBes6Zl1zF+n3PE9645G79d7GiFYQ+ibR8PNmxxRLlGb6FFsHX60SmMgxgzlk2pnKphX1j6LQgaouuYjeYl5yY9B4jrNGOxSa3Sh0B2XMbTru7jporQghUmullTLz0aq1oRAMHdkvf8gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ac+vlo2M; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RHDvZbEh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ac+vlo2M"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709541816;
+	s=mimecast20190719; t=1709541821;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J5CCiqcXzsrLEjGrVegk9RIULtgWof6gfdvznJIRmrE=;
-	b=RHDvZbEhzne6dzMKfEr6MigFk8atmsSdinsJMElVr2DxcDpo3DhOD4AV7Eu3mJaN6AkEsz
-	fn5KJrQ5f7prLkBmahdUSPhcAb4b5DiP7adV59SorDI7RY0ZUGsV5k5UKyBE5QvMAcC9FW
-	MT+1I5Ju0AyrlwNWR21LFo+1JQsi4CM=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-57-stjnI-hNNcKMMCxeT0AhGw-1; Mon,
- 04 Mar 2024 03:43:33 -0500
-X-MC-Unique: stjnI-hNNcKMMCxeT0AhGw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	bh=Ol9Zm5BaokJG1LA5SA9PnxgRsE5CFPeI5pD0RB5to08=;
+	b=ac+vlo2MKfzoe/Q7ZnTtAUGADSrT54eIhC9T8NXDajgCRiWXsg3P+81kJKqY1dyj2T9h95
+	8If2klLgayNW3SMgj7KzL4sZ4mZGDGQeklY8QxUw8igfYD7UCrW0wZtibL1RuMIoP6q1SW
+	fZujmyYctpGHfazIVRm2cuxstG6cwo0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-138-Lx9SgLAkNySWxjizXIlCoQ-1; Mon, 04 Mar 2024 03:43:37 -0500
+X-MC-Unique: Lx9SgLAkNySWxjizXIlCoQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 565BD38212C7;
-	Mon,  4 Mar 2024 08:43:33 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E1BC78489A0;
+	Mon,  4 Mar 2024 08:43:36 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 385A8422A9;
-	Mon,  4 Mar 2024 08:43:32 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C271120229A4;
+	Mon,  4 Mar 2024 08:43:35 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: netdev@vger.kernel.org
 Cc: David Howells <dhowells@redhat.com>,
@@ -50,9 +50,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	Paolo Abeni <pabeni@redhat.com>,
 	linux-afs@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 04/21] rxrpc: Fix the names of the fields in the ACK trailer struct
-Date: Mon,  4 Mar 2024 08:43:01 +0000
-Message-ID: <20240304084322.705539-5-dhowells@redhat.com>
+Subject: [PATCH net-next v2 06/21] rxrpc: Remove atomic handling on some fields only used in I/O thread
+Date: Mon,  4 Mar 2024 08:43:03 +0000
+Message-ID: <20240304084322.705539-7-dhowells@redhat.com>
 In-Reply-To: <20240304084322.705539-1-dhowells@redhat.com>
 References: <20240304084322.705539-1-dhowells@redhat.com>
 Precedence: bulk
@@ -62,13 +62,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-From AFS-3.3 a trailer containing extra info was added to the ACK packet
-format - but AF_RXRPC has the names of some of the fields mixed up compared
-to other AFS implementations.
-
-Rename the struct and the fields to make them match.
+call->tx_transmitted and call->acks_prev_seq don't need to be managed with
+cmpxchg() and barriers as it's only used within the singular I/O thread.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
@@ -79,188 +76,61 @@ cc: Paolo Abeni <pabeni@redhat.com>
 cc: linux-afs@lists.infradead.org
 cc: netdev@vger.kernel.org
 ---
- include/trace/events/rxrpc.h |  2 +-
- net/rxrpc/conn_event.c       | 16 ++++++++--------
- net/rxrpc/input.c            | 22 +++++++++++-----------
- net/rxrpc/output.c           | 14 +++++++-------
- net/rxrpc/protocol.h         |  6 +++---
- 5 files changed, 30 insertions(+), 30 deletions(-)
+ net/rxrpc/call_event.c | 10 ++++------
+ net/rxrpc/output.c     |  8 +++-----
+ 2 files changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 33888f688325..c730cd732348 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -83,7 +83,7 @@
- 	EM(rxrpc_badmsg_bad_abort,		"bad-abort")		\
- 	EM(rxrpc_badmsg_bad_jumbo,		"bad-jumbo")		\
- 	EM(rxrpc_badmsg_short_ack,		"short-ack")		\
--	EM(rxrpc_badmsg_short_ack_info,		"short-ack-info")	\
-+	EM(rxrpc_badmsg_short_ack_trailer,	"short-ack-trailer")	\
- 	EM(rxrpc_badmsg_short_hdr,		"short-hdr")		\
- 	EM(rxrpc_badmsg_unsupported_packet,	"unsup-pkt")		\
- 	EM(rxrpc_badmsg_zero_call,		"zero-call")		\
-diff --git a/net/rxrpc/conn_event.c b/net/rxrpc/conn_event.c
-index 1f251d758cb9..598b4ee389fc 100644
---- a/net/rxrpc/conn_event.c
-+++ b/net/rxrpc/conn_event.c
-@@ -88,7 +88,7 @@ void rxrpc_conn_retransmit_call(struct rxrpc_connection *conn,
- 			struct rxrpc_ackpacket ack;
- 		};
- 	} __attribute__((packed)) pkt;
--	struct rxrpc_ackinfo ack_info;
-+	struct rxrpc_acktrailer trailer;
- 	size_t len;
- 	int ret, ioc;
- 	u32 serial, mtu, call_id, padding;
-@@ -122,8 +122,8 @@ void rxrpc_conn_retransmit_call(struct rxrpc_connection *conn,
- 	iov[0].iov_len	= sizeof(pkt.whdr);
- 	iov[1].iov_base	= &padding;
- 	iov[1].iov_len	= 3;
--	iov[2].iov_base	= &ack_info;
--	iov[2].iov_len	= sizeof(ack_info);
-+	iov[2].iov_base	= &trailer;
-+	iov[2].iov_len	= sizeof(trailer);
+diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
+index 84eedbb49fcb..1184518dcdb8 100644
+--- a/net/rxrpc/call_event.c
++++ b/net/rxrpc/call_event.c
+@@ -115,7 +115,7 @@ void rxrpc_resend(struct rxrpc_call *call, struct sk_buff *ack_skb)
+ 	struct rxrpc_skb_priv *sp;
+ 	struct rxrpc_txbuf *txb;
+ 	unsigned long resend_at;
+-	rxrpc_seq_t transmitted = READ_ONCE(call->tx_transmitted);
++	rxrpc_seq_t transmitted = call->tx_transmitted;
+ 	ktime_t now, max_age, oldest, ack_ts;
+ 	bool unacked = false;
+ 	unsigned int i;
+@@ -184,16 +184,14 @@ void rxrpc_resend(struct rxrpc_call *call, struct sk_buff *ack_skb)
+ 	 * seen.  Anything between the soft-ACK table and that point will get
+ 	 * ACK'd or NACK'd in due course, so don't worry about it here; here we
+ 	 * need to consider retransmitting anything beyond that point.
+-	 *
+-	 * Note that ACK for a packet can beat the update of tx_transmitted.
+ 	 */
+-	if (after_eq(READ_ONCE(call->acks_prev_seq), READ_ONCE(call->tx_transmitted)))
++	if (after_eq(call->acks_prev_seq, call->tx_transmitted))
+ 		goto no_further_resend;
  
- 	serial = rxrpc_get_next_serial(conn);
+ 	list_for_each_entry_from(txb, &call->tx_buffer, call_link) {
+-		if (before_eq(txb->seq, READ_ONCE(call->acks_prev_seq)))
++		if (before_eq(txb->seq, call->acks_prev_seq))
+ 			continue;
+-		if (after(txb->seq, READ_ONCE(call->tx_transmitted)))
++		if (after(txb->seq, call->tx_transmitted))
+ 			break; /* Not transmitted yet */
  
-@@ -158,14 +158,14 @@ void rxrpc_conn_retransmit_call(struct rxrpc_connection *conn,
- 		pkt.ack.serial		= htonl(skb ? sp->hdr.serial : 0);
- 		pkt.ack.reason		= skb ? RXRPC_ACK_DUPLICATE : RXRPC_ACK_IDLE;
- 		pkt.ack.nAcks		= 0;
--		ack_info.rxMTU		= htonl(rxrpc_rx_mtu);
--		ack_info.maxMTU		= htonl(mtu);
--		ack_info.rwind		= htonl(rxrpc_rx_window_size);
--		ack_info.jumbo_max	= htonl(rxrpc_rx_jumbo_max);
-+		trailer.maxMTU		= htonl(rxrpc_rx_mtu);
-+		trailer.ifMTU		= htonl(mtu);
-+		trailer.rwind		= htonl(rxrpc_rx_window_size);
-+		trailer.jumbo_max	= htonl(rxrpc_rx_jumbo_max);
- 		pkt.whdr.flags		|= RXRPC_SLOW_START_OK;
- 		padding			= 0;
- 		iov[0].iov_len += sizeof(pkt.ack);
--		len += sizeof(pkt.ack) + 3 + sizeof(ack_info);
-+		len += sizeof(pkt.ack) + 3 + sizeof(trailer);
- 		ioc = 3;
- 
- 		trace_rxrpc_tx_ack(chan->call_debug_id, serial,
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index c435b50c33f4..ea2df62e05e7 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -670,14 +670,14 @@ static void rxrpc_complete_rtt_probe(struct rxrpc_call *call,
- /*
-  * Process the extra information that may be appended to an ACK packet
-  */
--static void rxrpc_input_ackinfo(struct rxrpc_call *call, struct sk_buff *skb,
--				struct rxrpc_ackinfo *ackinfo)
-+static void rxrpc_input_ack_trailer(struct rxrpc_call *call, struct sk_buff *skb,
-+				    struct rxrpc_acktrailer *trailer)
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
- 	struct rxrpc_peer *peer;
- 	unsigned int mtu;
- 	bool wake = false;
--	u32 rwind = ntohl(ackinfo->rwind);
-+	u32 rwind = ntohl(trailer->rwind);
- 
- 	if (rwind > RXRPC_TX_MAX_WINDOW)
- 		rwind = RXRPC_TX_MAX_WINDOW;
-@@ -691,7 +691,7 @@ static void rxrpc_input_ackinfo(struct rxrpc_call *call, struct sk_buff *skb,
- 	if (call->cong_ssthresh > rwind)
- 		call->cong_ssthresh = rwind;
- 
--	mtu = min(ntohl(ackinfo->rxMTU), ntohl(ackinfo->maxMTU));
-+	mtu = min(ntohl(trailer->maxMTU), ntohl(trailer->ifMTU));
- 
- 	peer = call->peer;
- 	if (mtu < peer->maxdata) {
-@@ -837,7 +837,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	struct rxrpc_ack_summary summary = { 0 };
- 	struct rxrpc_ackpacket ack;
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
--	struct rxrpc_ackinfo info;
-+	struct rxrpc_acktrailer trailer;
- 	rxrpc_serial_t ack_serial, acked_serial;
- 	rxrpc_seq_t first_soft_ack, hard_ack, prev_pkt, since;
- 	int nr_acks, offset, ioffset;
-@@ -917,11 +917,11 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 		goto send_response;
- 	}
- 
--	info.rxMTU = 0;
-+	trailer.maxMTU = 0;
- 	ioffset = offset + nr_acks + 3;
--	if (skb->len >= ioffset + sizeof(info) &&
--	    skb_copy_bits(skb, ioffset, &info, sizeof(info)) < 0)
--		return rxrpc_proto_abort(call, 0, rxrpc_badmsg_short_ack_info);
-+	if (skb->len >= ioffset + sizeof(trailer) &&
-+	    skb_copy_bits(skb, ioffset, &trailer, sizeof(trailer)) < 0)
-+		return rxrpc_proto_abort(call, 0, rxrpc_badmsg_short_ack_trailer);
- 
- 	if (nr_acks > 0)
- 		skb_condense(skb);
-@@ -950,8 +950,8 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	}
- 
- 	/* Parse rwind and mtu sizes if provided. */
--	if (info.rxMTU)
--		rxrpc_input_ackinfo(call, skb, &info);
-+	if (trailer.maxMTU)
-+		rxrpc_input_ack_trailer(call, skb, &trailer);
- 
- 	if (first_soft_ack == 0)
- 		return rxrpc_proto_abort(call, 0, rxrpc_eproto_ackr_zero);
+ 		if (ack && ack->reason == RXRPC_ACK_PING_RESPONSE &&
 diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-index 828b145edc56..3803bf900a46 100644
+index 2386b01b2231..1e039b6f4494 100644
 --- a/net/rxrpc/output.c
 +++ b/net/rxrpc/output.c
-@@ -83,7 +83,7 @@ static size_t rxrpc_fill_out_ack(struct rxrpc_connection *conn,
- 				 struct rxrpc_txbuf *txb,
- 				 u16 *_rwind)
- {
--	struct rxrpc_ackinfo ackinfo;
-+	struct rxrpc_acktrailer trailer;
- 	unsigned int qsize, sack, wrap, to;
- 	rxrpc_seq_t window, wtop;
- 	int rsize;
-@@ -126,16 +126,16 @@ static size_t rxrpc_fill_out_ack(struct rxrpc_connection *conn,
- 	qsize = (window - 1) - call->rx_consumed;
- 	rsize = max_t(int, call->rx_winsize - qsize, 0);
- 	*_rwind = rsize;
--	ackinfo.rxMTU		= htonl(rxrpc_rx_mtu);
--	ackinfo.maxMTU		= htonl(mtu);
--	ackinfo.rwind		= htonl(rsize);
--	ackinfo.jumbo_max	= htonl(jmax);
-+	trailer.maxMTU		= htonl(rxrpc_rx_mtu);
-+	trailer.ifMTU		= htonl(mtu);
-+	trailer.rwind		= htonl(rsize);
-+	trailer.jumbo_max	= htonl(jmax);
+@@ -397,12 +397,10 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
  
- 	*ackp++ = 0;
- 	*ackp++ = 0;
- 	*ackp++ = 0;
--	memcpy(ackp, &ackinfo, sizeof(ackinfo));
--	return txb->ack.nAcks + 3 + sizeof(ackinfo);
-+	memcpy(ackp, &trailer, sizeof(trailer));
-+	return txb->ack.nAcks + 3 + sizeof(trailer);
- }
+ 	/* Track what we've attempted to transmit at least once so that the
+ 	 * retransmission algorithm doesn't try to resend what we haven't sent
+-	 * yet.  However, this can race as we can receive an ACK before we get
+-	 * to this point.  But, OTOH, if we won't get an ACK mentioning this
+-	 * packet unless the far side received it (though it could have
+-	 * discarded it anyway and NAK'd it).
++	 * yet.
+ 	 */
+-	cmpxchg(&call->tx_transmitted, txb->seq - 1, txb->seq);
++	if (txb->seq == call->tx_transmitted + 1)
++		call->tx_transmitted = txb->seq;
  
- /*
-diff --git a/net/rxrpc/protocol.h b/net/rxrpc/protocol.h
-index e8ee4af43ca8..4fe6b4d20ada 100644
---- a/net/rxrpc/protocol.h
-+++ b/net/rxrpc/protocol.h
-@@ -135,9 +135,9 @@ struct rxrpc_ackpacket {
- /*
-  * ACK packets can have a further piece of information tagged on the end
-  */
--struct rxrpc_ackinfo {
--	__be32		rxMTU;		/* maximum Rx MTU size (bytes) [AFS 3.3] */
--	__be32		maxMTU;		/* maximum interface MTU size (bytes) [AFS 3.3] */
-+struct rxrpc_acktrailer {
-+	__be32		maxMTU;		/* maximum Rx MTU size (bytes) [AFS 3.3] */
-+	__be32		ifMTU;		/* maximum interface MTU size (bytes) [AFS 3.3] */
- 	__be32		rwind;		/* Rx window size (packets) [AFS 3.4] */
- 	__be32		jumbo_max;	/* max packets to stick into a jumbo packet [AFS 3.5] */
- };
+ 	/* send the packet with the don't fragment bit set if we currently
+ 	 * think it's small enough */
 
