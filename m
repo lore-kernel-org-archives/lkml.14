@@ -1,186 +1,231 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA90376F3
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709542192; cv=fail; b=OECI0N3Xift/r5uCSu5s7sq6cC5PdjZ/hjr772wCERBbG4r4FkZXEjUqgnfM8bWhQbGpvDoXa4iFUhlMTLChKz+WGZWzxq5XtLULmYA7YySJmokGjmxYdoGwmBHnpzb9zvDibiX71iN2Qrf9MbRtqxzfTHz4J0EvElTpXX7T9P8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709542192; c=relaxed/simple;
-	bh=uN/rqHkTjUmS6snCiPZXDsNLDRCdRIxQocEHOPsAF6c=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IDUlrdhI6hmjUHoLEvFt89kc4qzOLFpqQlqJiYTKqad1I2PXzTZdtdy+7MwfY+jB7SdzlVG4SONQd4w1SxVBg88zf/coVWsQsRGh7joN1fouUO4/SdjD0+6e+wifDQMvDXfHFAkxGAKJt65ylzs3kDoJcz95fEDxqGz03bfghx4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h8UUb8rv; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD23820323;
+	Mon,  4 Mar 2024 08:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709542287; cv=none; b=Y4ny3QQgeB/CjjJ2j81Y17ZdHVvX8shIy2s/4zPWHUxXmqdUeTBmjIwsz0APWsvQWT5z1YY/tE/Iehu0CDSoVvZ/CRU3V/1vKK5EdRXz0nedqglHaYZq1Ut7Xf5z3UYsce5ODuICglkRYbq1DMpmcKoK04sQzmRQqyEZVJAhdsM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709542287; c=relaxed/simple;
+	bh=w2eZsthnjoEvUHMk1iP4V1pVzzXUa40FNFENGYsiBmI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=j/Fk5zc/A9KIMmUZFyJCTWmWhTauB8slt9ptMMxaV2wo5HIWK5LKVRTjeXIxr2f+sLJ9jAstLAT53YTNs6xkgTWJwhHqHD9Bfh+Jhw8FoHdEs5gPuMXGVtGAke5jWG6Iv7mXKifuc4mScMRyx5tTGXZ3hWnvrLsHyU0z0N+cc4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j21QXRRR; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h8UUb8rv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709542191; x=1741078191;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=uN/rqHkTjUmS6snCiPZXDsNLDRCdRIxQocEHOPsAF6c=;
-  b=h8UUb8rv/ztrTPFGF4ifxUzR/N/GrwYHWaHH1wSsZDzpqBeKg81vdBQ5
-   bwtVTQZMBRv1O6B817ygEONY2C0T57alqLkltCMLydDIn6/NZWbjpXvg3
-   PLRr9IKvQx9rCwvVWMYTC67G4jdhW4Fh3KpHjEuQl0wu5Q3Mrf1Sh4sMP
-   IR9VYpvuGAxPNFPIBVR8OAa6CkmphTen0x9EuPR4wf7dODiHadvb1diqC
-   zBu47Q0d87bfJzD0KjVTtdomuWDdJYYSp+kpG3wrNK4GM2W6fKYjHggnw
-   68xx4uJqSDLZ3DektrF5YTSQePc4lYShU6VSnVTrPVxrYy3rlsMXDJEba
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="14601276"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="14601276"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 00:49:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="13426288"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Mar 2024 00:49:48 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 00:49:48 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 00:49:47 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 4 Mar 2024 00:49:47 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 4 Mar 2024 00:49:47 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W4/v2+xGnFvExN/Fy5n5h13uIEAyK9uS55VvJ+P/DCMcomfj00PpCjp5CUXQ9gZ6bN5HqaThJ7hLnXfN91892PzlQILL7VeN6KLZ9Oxcp82oAo+wZqdDuCDUiGsGs/8fnB8gzFDrVJuT1cbsjeUC0e6umL8cUobl6N41/pn8MkI/axu79XzlWdWZPpFZXHyu7DMBKcARw2NThcDKFBEedUDmOEbvQ6wwoOorloQ9gnxAAjVkT5f1G93Wv+SJ7fOvhp+lCy54qtaNjxg/f+upNJ8gnRkAgWdVPvdUY+FDyP7ZJuTluXE2l+kYdIUiHv6pcCUKmte8XQGax8PwdF1qWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZXcypMIXm/1b1C0vzUjo3DSl8azp/StMnkpOE9ib3x0=;
- b=hy3mSndfp+dvCQi/N6n5Y2bR1dEoHgzID2NPTW789dF3MjK6qtudvU1omGn4L9L8TPcc9qhlkSGX871lMixDW1zlPk8iPvFibmnJxKFnFoLxzJnkSmyOSSU74ens9yDt2zhcQusem8R25kpXk39JzqOlPIo9CK8XSvE0Y+8dIn23KAa3pRL8faWc/nvvGWQAR98o2e2nMSlBGLxZ/3aQCVGZFSf+fzjlVfxrHlyxa+oU80UQ3TZ13sAHHWYIy/oOCTbEBDzufHIbFS/ccpq6qJyp9mxMzLjTqXkCiyXb7yvFDJi3oW95NuXxK9kOFLKv2PlNgtr32vGHlHiPG8MhMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5469.namprd11.prod.outlook.com (2603:10b6:5:399::13)
- by DS7PR11MB7835.namprd11.prod.outlook.com (2603:10b6:8:db::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.23; Mon, 4 Mar
- 2024 08:49:45 +0000
-Received: from DM4PR11MB5469.namprd11.prod.outlook.com
- ([fe80::f2:3082:c15c:929]) by DM4PR11MB5469.namprd11.prod.outlook.com
- ([fe80::f2:3082:c15c:929%5]) with mapi id 15.20.7362.019; Mon, 4 Mar 2024
- 08:49:45 +0000
-Message-ID: <5a9d5ce2-605d-4c67-a409-f97d0da5829f@intel.com>
-Date: Mon, 4 Mar 2024 16:49:32 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PACTH v3] Documentation: iommu/vt-d: Add the document for Intel
- IOMMU debugfs
-Content-Language: en-US
-To: Baolu Lu <baolu.lu@linux.intel.com>, <iommu@lists.linux.dev>, Tian Kevin
-	<kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
-	<will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-CC: <linux-kernel@vger.kernel.org>
-References: <20240207090742.23857-1-Jingqi.liu@intel.com>
- <0b30b737-65b3-415e-a3a6-d18393873e22@linux.intel.com>
-From: "Liu, Jingqi" <jingqi.liu@intel.com>
-In-Reply-To: <0b30b737-65b3-415e-a3a6-d18393873e22@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2P153CA0008.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::19) To DM4PR11MB5469.namprd11.prod.outlook.com
- (2603:10b6:5:399::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j21QXRRR"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5ce2aada130so3762066a12.1;
+        Mon, 04 Mar 2024 00:51:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709542285; x=1710147085; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2+UgTHUCsIErlBv9OhJxPkdYfmt79DFlNGrnlohbh1E=;
+        b=j21QXRRRIRKqfQ4uwrOw6gdGtlR1imHhGwthlXHmajmoW9glRmhBXusWbldqCWTsUP
+         iwsXuWHM7wEH025EYWGdexND9x5pjSAN4d0C9JHenxcymWiN8Iygm7mi89J0jf1I26D4
+         9PaIsxzMFHN8bUdB/svVBMCPIyrIb+OFhaglUCA6mgjTmloIZzrcAxyAi4UaLtEwOpCm
+         3N/rY5nOiopdyGIFVomMMGnVKWYRhvCHJoWIbBYbvPhNbnpfpnMY7ItHW2X+lLt02Omj
+         d3gV57b38AhzKP3qO7PvxiebucA26rOXX1HiXjsYWwCvoCpyL2rMGaUea6VF9XOjE453
+         fGMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709542285; x=1710147085;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2+UgTHUCsIErlBv9OhJxPkdYfmt79DFlNGrnlohbh1E=;
+        b=kzt6C76OmhQkdHa2iDkKPxmfj7LqVpdiP8/taI7ctlHxzLWhyk3ezCnUDNd7/boaNJ
+         MLy44ZmCrChWJn1uwpS2KgJ15hVa1yA33tUM1THiCwKj8V4I8a+psFea/5qtro50/fXD
+         vPT3+eHnHLQtj9KIhH9K+NPZIXJkakr7AJkUXZisBz8n8mg4EaEdDeGgRN14IsT8uEha
+         tQpKsqy8tRFOQR0OXSq3n7cycLuERayZlDWhVtta9kVyA/MQf1te8p4a+JrLurfmfb37
+         iLE+PyGSDejmod/qu3J7M5ULuV4r8g1t7HtxUTGpfxc7nYCmXI8FHa6oVUi1psU4F4yi
+         7qFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRcnWId7Ft+2ztah0t91APCpW1eMmYW3OCu2UdlFjcpf2vI3yHcJt6UXL0M6HHtZbsOifWk2Tg2KIGrfki4PVebhEjyvgzM//pUPGZ7w==
+X-Gm-Message-State: AOJu0YzyYjf2QwKctOFKJvv3CRZOctydH2Q+22ks/AyRrlhkRlnBEJnT
+	X37/wtr/etstFzJuDv8/RKYLA0zgg+bWYY9yhqpRe/1MEGjPSPgZl4PKrRGN9chwafdYMHOh2N9
+	jJu2FK+bTmctcgkdc993Miyqn8kY59x0F+IhENA==
+X-Google-Smtp-Source: AGHT+IG/WHORUUKN6bktKirGMjGC09OenzoX8zsU5V+2b+6/aCuHyh5YJtOO2VVGbPqSJC53qZUoIqYUxrIsERw0UbM=
+X-Received: by 2002:a17:90a:d258:b0:299:14c9:94f0 with SMTP id
+ o24-20020a17090ad25800b0029914c994f0mr5409755pjw.11.1709542284844; Mon, 04
+ Mar 2024 00:51:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5469:EE_|DS7PR11MB7835:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b7c3c68-8f8a-4459-33a1-08dc3c280a42
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6zhwYmMJP2RHF8evaig5Kj2yl87XE8tClZa55oKnaB+PpS2qeFuQDx4XZ+K/ebbmKnPdXnGIiefVm5N5d7DS9sv3DUrwJ9sv6VRoZCWGjBnDnhomRZi7QbW+gEHlHp6Ihho732/jOiVMJa+3I5NS7S/cTgXKoNtmXhlFBMLje4NSuLduyd5gOM18uDo3LlUQOd3h0VMDD17V2G+FF4bvdiQmSi7DG1Ik7wl9BfjQiWI12aFcG5DpVbKHLh8XVKdsUQETZxyKK7Nt/E3hXfj7Mw9xcL9ZD7eE0yWqRp3+tZpWQm9QAW25z3ozfvxyqdRWhAv6p8fKwZNVjIBnTVg23kWkO2sLhibIOKC2YdnKKNNRPigUkJeRhijvtGhkNwD1iriQxrugfW4fIT7LmbdM6153Pq02uvV0wtx6jM56cUfcfSWJ2MRYjbg5banR9BggZ8E8feYLyAdur6qvdzqw+JRlKs3569JXkBlO5KYhw6Ul/Sp9qDWskOV1IRqJAb0HJZyFWOvCi7/LapNWbja0ehieIDJ58XxopBSkI9I0tI0HRzNheQKRg9cN/waVC7hMzz2yTiB/3JK/jo3E5El6Qgl2tWEfQXL4ho3BqL55ebqdJGI5vFFio8LL3B7Q5r26
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5469.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YjFWa2RkdmRjaTJEeE83dytZK2VzNlRWQjVGOFZZZ2FwY1JkZHhQRktWK2RN?=
- =?utf-8?B?UHdnZGUwZzk1NjgvSnRVdjJJKzdyVk1rSzFSaDZRcUxVZTQrYzVoMGJyMjRH?=
- =?utf-8?B?ak9FUGRmZEtNS0FVUXhPNlpxd1ZYM3BVVnBlc3dkdzcrRmZmV0xMSEE5NEd3?=
- =?utf-8?B?RVpZcGhWMDA1NzVkNnJBSm5zWkZWZUZ6NkdVaWpzYkV3alplMk5TYVA0RC83?=
- =?utf-8?B?TDFkSU5aVFpNYllkenIxeWxVL2QxNHZISURwQWE1NlZ5eXltNHVoOXVHVkNW?=
- =?utf-8?B?TjEvaytsRzRnYngvbWo3Rk1CL2NsaFJIYjJBNzkyTU12elBkcFhUMjU2SWMx?=
- =?utf-8?B?cExTZ2FoU2QyNUkwaWFYUEFyS2c2cWhmOXAxL3NidCsxMDBGNXpSWFB2Y1NS?=
- =?utf-8?B?V3A1Sk92QzJabHZ1dXZlOXQ1eFdESGF1U2N2a1FmZWNnWVFVSy9kUjJmVWlk?=
- =?utf-8?B?NWFOZzdTWVBvZldGcFdFa2Zrb0N4YkxrYW5iTDQ5c2pscTk5WWd0SHV0bjZs?=
- =?utf-8?B?S0svYlJWQ1VSci9FeE9IVXdERk5hTU40M2c1UFVNWmppbUlVb2FUck5IVVo3?=
- =?utf-8?B?M2dlVElOKzI3dXNXUWoxK3loMnk0THJzMW9PZnBNL0p0TEo3RmE0bWF2Rk1D?=
- =?utf-8?B?dDBzOXI1ZUxrYWpQY0pSL2plcEN2S3JtejNwbm4wWHh5L1Q0MEFLVlhiWHVk?=
- =?utf-8?B?V0pLc1BMamJvbXVrV0NhWEUraThzL1RhMFNXOTlveEZIa3F3TXVmMDBpQ1BJ?=
- =?utf-8?B?dVAwS25aaVNYbW9NVGMxdUZRMnl2Q0MwdVNYdWUrdWRZQ3ZZV1Z6RGNVcUJU?=
- =?utf-8?B?cktwSEp1WVg5dHZVOHNxOHYvcitVM2VYelJqeEtWM0JTS3NLejJrR1ZoU293?=
- =?utf-8?B?dldITGNoZDIrc21uOEU3MTZ4d0RMekRSSis4SmJVSFROTUZ4V2pSa25nRGVt?=
- =?utf-8?B?MDVDWk1wMng4enhtTHVQT2xpUk9FWHFlbTBuaXZoNUJmU001OUJ1U1hWclo5?=
- =?utf-8?B?VGw0UWlWTWpLR3FFdkhoQUh0MUFBTjY0dllZSnlxVExVTm9GcWw5YlVoVUo2?=
- =?utf-8?B?UVlVSjNSVjE2NFllWVBOQ3E4SEdlTUdIMFR3ekNYZjNvR1k0dUtzMW5PTTNF?=
- =?utf-8?B?ZmgvZkRvcWV4b3pJRnFrUm1aQnBweXltSHFHQXZqZnhTbHVTYy9uK09jWkh2?=
- =?utf-8?B?TVdSTTBNQ1UwQXFWTkg0WGVqRGNmckhSRVpkaUVCQ3JqWUJpZkVkUlk3c1hR?=
- =?utf-8?B?RGFrSTZBcW5pT3pDbUVJZzZremV1OGQzVWhLSGhRN01Db0l1d3pTblRpNDJR?=
- =?utf-8?B?cjdCNHYrSFpXYU15RUg4MkQyUWZWV1B1bndvYmQ1MmwvUnI1WXBFRGVNeVg5?=
- =?utf-8?B?MDMzcm9PYTRoVzZyNTBRUU5Gb3IvQ2Q0QXpkMHBqMEZHTkQzcFE0eHdpVHBG?=
- =?utf-8?B?cm9ndUNIWXdxVDhhTnVEOVA1TUwzQmlIdXFUSTdVVi9vaDJiaTlITFl4MmpB?=
- =?utf-8?B?ZkRveEQxbHFHSDVFcWVUS1kvdzZ1VXBMVldXODV5Ymx6UThncVBONFlPaWk1?=
- =?utf-8?B?SXh1c2ZQN2FFSjNvYWQ4ZC9xVlV5WVE1TUhER1pJY3VhQnlVT1N4V3VTZzNn?=
- =?utf-8?B?UVI1T2dCZW90djU0ck02cythZEIrVHByUDU0VzdnN1BQUEFjaG1vMmNhaXdP?=
- =?utf-8?B?Mm9tMUQydE9EWkhCak44VXcyRlVTY0V6YXc3TXF0UXNZd2VJeVEweWtIenpQ?=
- =?utf-8?B?bUlSV1lyUU84WEgzUVYwQVNmcDlXVmN6NjcvdHE2bHUzUzNFV3FwR0JpU2oz?=
- =?utf-8?B?eFpmV0hSVURqMGdXU2lCL1VhZE5FbTVJdXhQRzZPeURqWkZsdXJnWG50OGxZ?=
- =?utf-8?B?ZnlwdEl2UG5Tb29BbnN6a1RuK2xYMU9oR3JWS0pvSS9jWGozbkFaUWFxUHRu?=
- =?utf-8?B?NTU3K0M1M3NDRHEraG0rZ01pN2tXakI0TVNwK2NIRFEwRllVc1ZCdlhVWlls?=
- =?utf-8?B?RGowS0RNYUhhTFJZVnFsenZ0RUZrRXovSTRKTDU2a3Nub085c0pnRWMwai9x?=
- =?utf-8?B?akRpZVdJV1dJQi8wWGdRbStrTlZOTzNYSmdyY3ptRFg2SUpYcWh3WFRuSFg2?=
- =?utf-8?Q?lnQczkpjevP69Qptr+rk0zZXG?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b7c3c68-8f8a-4459-33a1-08dc3c280a42
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5469.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 08:49:45.1177
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v/ThcsyYU3tdkuNRedUJxpyB36GQbaucWTJwOhC12Mt1g/zXoBLaSRZ9znZ5uYWV2cOKXu8Ugw4VZs86PDL6UQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7835
-X-OriginatorOrg: intel.com
+From: xingwei lee <xrivendell7@gmail.com>
+Date: Mon, 4 Mar 2024 16:51:13 +0800
+Message-ID: <CABOYnLwY5Y499j=JgWtk9ksRneOzLoH_G9dYZTwXi=UvLbUsSg@mail.gmail.com>
+Subject: WARNING in vfs_getxattr_alloc
+To: linux-kernel@vger.kernel.org
+Cc: samsun1006219@gmail.com, linux-fsdevel@vger.kernel.org, 
+	syzkaller@googlegroups.com, jack@suse.cz, viro@zeniv.linux.org.uk, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/26/2024 2:10 PM, Baolu Lu wrote:
-> On 2/7/24 5:07 PM, Jingqi Liu wrote:
->> This document guides users to dump the Intel IOMMU internals by debugfs.
->>
->> Signed-off-by: Jingqi Liu<Jingqi.liu@intel.com>
->> ---
->> Change log:
->>   v3:
->>    - Add this change log per Baolu's comments.
->>   
->> v2:http://lore.kernel.org/lkml/20240126064704.14292-1-Jingqi.liu@intel.com
->>    - Remove the use of private data field according to VT-d specification
->>      changes in v4.0.
->>   
->> v1:http://lore.kernel.org/lkml/20231220132519.11077-1-Jingqi.liu@intel.com
->> ---
->>   Documentation/ABI/testing/debugfs-intel-iommu | 276 ++++++++++++++++++
->>   1 file changed, 276 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/debugfs-intel-iommu
-> 
-> I have queued this patch for v6.9.
-It's great!
-Thanks for your review.
+Hello I found a issue in latest linux 6.7.rc8 titled "WARNING in
+vfs_getxattr_alloc".
 
-Thanks,
-Jingqi
+If you fix this issue, please add the following tag to the commit:
+Reported-by: xingwei lee <xrivendell7@gmail.com>
+Reported-by: sam sun <samsun1006219@gmail.com>
+
+kernel: lastest linux 6.7.rc8 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
+kernel config: https://syzkaller.appspot.com/text?tag=KernelConfig&x=4a65fa9f077ead01
+with KASAN enabled
+compiler: gcc (GCC) 12.2.0
+
+TITLE: WARNING in vfs_getxattr_alloc------------[ cut here ]------------
+WARNING: CPU: 1 PID: 8212 at mm/page_alloc.c:4543
+__alloc_pages+0x3ab/0x4a0 mm/page_alloc.c:4543
+Modules linked in:
+CPU: 1 PID: 8212 Comm: 586 Not tainted 6.8.0-rc7 #18
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+1.16.2-1.fc38 04/01/2014
+RIP: 0010:__alloc_pages+0x3ab/0x4a0 mm/page_alloc.c:4543
+Code: ff ff 00 0f 84 2f fe ff ff 80 ce 01 e9 27 fe ff ff 83 fe 0a 0f
+86 3a fd ff ff 80 3d 66 9d 73 0c 00 75 09 cf
+RSP: 0018:ffffc90010f7f7f0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000040c40 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000011 RDI: 0000000000040c40
+RBP: 1ffff920021efeff R08: 0000000000000001 R09: ffffed100376f8a4
+R10: ffffc90010f7f9b0 R11: 0000000000000000 R12: 0000000000000011
+R13: 0000000000000000 R14: 0000000000000c40 R15: 00000000ffffffff
+FS: 0000000000cbc380(0000) GS:ffff88823bc00000(0000) knlGS:0000000000000000
+CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200012c0 CR3: 0000000016f84000 CR4: 0000000000750ef0
+PKRU: 55555554
+Call Trace:
+<TASK>
+__alloc_pages_node include/linux/gfp.h:238 [inline]
+alloc_pages_node include/linux/gfp.h:261 [inline]
+__kmalloc_large_node+0x7f/0x1a0 mm/slub.c:3926
+__do_kmalloc_node mm/slub.c:3969 [inline]
+__kmalloc_node_track_caller.cold+0x5/0xe2 mm/slub.c:4001
+__do_krealloc mm/slab_common.c:1187 [inline]
+krealloc+0x5d/0x100 mm/slab_common.c:1220
+vfs_getxattr_alloc+0x1d1/0x300 fs/xattr.c:399
+cap_inode_getsecurity+0xc8/0x700 security/commoncap.c:402
+security_inode_getsecurity+0xaa/0x100 security/security.c:2502
+xattr_getsecurity fs/xattr.c:346 [inline]
+vfs_getxattr+0x170/0x1b0 fs/xattr.c:446
+do_getxattr+0x1a7/0x330 fs/xattr.c:739
+getxattr+0xeb/0x150 fs/xattr.c:772
+path_getxattr+0xd2/0x150 fs/xattr.c:788
+do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+do_syscall_64+0x78/0x1c0 arch/x86/entry/common.c:83
+entry_SYSCALL_64_after_hwframe+0x63/0x6b
+RIP: 0033:0x431869
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 48
+RSP: 002b:00007fff81cc9318 EFLAGS: 00000246 ORIG_RAX: 00000000000000c0
+RAX: ffffffffffffffda RBX: 00007fff81cc9508 RCX: 0000000000431869
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000020000000
+RBP: 00007fff81cc9330 R08: 0000000000003928 R09: 0000000000003928
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff81cc94f8 R14: 0000000000000001 R15: 0000000000000001
+</TASK>
+
+
+=* repro.c =*
+#define _GNU_SOURCE
+
+#include <endian.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+uint64_t r[4] = {0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff,
+                 0xffffffffffffffff};
+
+int main(void) {
+  syscall(__NR_mmap, /*addr=*/0x1ffff000ul, /*len=*/0x1000ul, /*prot=*/0ul,
+          /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
+  syscall(__NR_mmap, /*addr=*/0x20000000ul, /*len=*/0x1000000ul, /*prot=*/7ul,
+          /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
+  syscall(__NR_mmap, /*addr=*/0x21000000ul, /*len=*/0x1000ul, /*prot=*/0ul,
+          /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
+  intptr_t res = 0;
+  memcpy((void*)0x200002c0, "./file0\000", 8);
+  syscall(__NR_mkdir, /*path=*/0x200002c0ul, /*mode=*/0ul);
+  memcpy((void*)0x20000280, "security.capability\000", 20);
+  syscall(__NR_setxattr, /*path=*/0ul, /*name=*/0x20000280ul, /*val=*/0ul,
+          /*size=*/0ul, /*flags=*/0ul);
+  res = syscall(__NR_pipe2, /*pipefd=*/0x20000240ul, /*flags=*/0ul);
+  if (res != -1) {
+    r[0] = *(uint32_t*)0x20000240;
+    r[1] = *(uint32_t*)0x20000244;
+  }
+  memcpy((void*)0x20000080,
+         "\x15\x00\x00\x00\x65\xff\xff\x09\x7b\x00\x00\x08\x00\x39\x50\x32\x30"
+         "\x30\x30\x2e\x4c",
+         21);
+  syscall(__NR_write, /*fd=*/r[1], /*data=*/0x20000080ul, /*size=*/0x15ul);
+  res = syscall(__NR_dup, /*oldfd=*/r[1]);
+  if (res != -1)
+    r[2] = res;
+  *(uint32_t*)0x20000100 = 0x18;
+  *(uint32_t*)0x20000104 = 0;
+  *(uint64_t*)0x20000108 = 0;
+  *(uint64_t*)0x20000110 = 0;
+  syscall(__NR_write, /*fd=*/r[2], /*arg=*/0x20000100ul, /*len=*/0x18ul);
+  memset((void*)0x200012c0, 176, 1);
+  syscall(__NR_write, /*fd=*/r[2], /*arg=*/0x200012c0ul, /*len=*/0xb0ul);
+  res = syscall(__NR_getresuid, /*ruid=*/0x20000440ul, /*euid=*/0x20000480ul,
+                /*suid=*/0x200004c0ul);
+  if (res != -1)
+    r[3] = *(uint32_t*)0x200004c0;
+  memcpy((void*)0x200000c0,
+         "\x10\x00\x00\x00\x00\x00\x00\x00\xab\xb7\x1b\x83\x88\x62\x0a\xa1\x53"
+         "\xa4\xcb\x6d\x9e\x9e\xb0\x4d\x13\x52\xf4\x1b\xf1\x2c\x22\x04\x9a\xd4"
+         "\x34\xcb\x2d\xb6\x63\x7e\x0c\x13",
+         42);
+  *(uint64_t*)0x200000ea = 0;
+  syscall(__NR_write, /*fd=*/r[2], /*arg=*/0x200000c0ul, /*len=*/0x10ul);
+  memcpy((void*)0x20000040, "./file0\000", 8);
+  memcpy((void*)0x20000b80, "9p\000", 3);
+  memcpy((void*)0x20000580, "trans=fd,rfdno=", 15);
+  sprintf((char*)0x2000058f, "0x%016llx", (long long)r[0]);
+  memcpy((void*)0x200005a1, ",wfdno=", 7);
+  sprintf((char*)0x200005a8, "0x%016llx", (long long)r[2]);
+  memcpy((void*)0x200005ba, ",privport,access=", 17);
+  sprintf((char*)0x200005cb, "%020llu", (long long)r[3]);
+  syscall(__NR_mount, /*src=*/0ul, /*dst=*/0x20000040ul, /*type=*/0x20000b80ul,
+          /*flags=*/0ul, /*opts=*/0x20000580ul);
+  memcpy((void*)0x20000000, "./file0\000", 8);
+  syscall(__NR_lgetxattr, /*path=*/0x20000000ul, /*name=*/0x20000280ul,
+          /*val=*/0ul, /*size=*/0ul);
+  return 0;
+}
+
+
+=* repro.txt =*
+mkdir(&(0x7f00000002c0)='./file0\x00', 0x0)
+setxattr$security_capability(0x0, &(0x7f0000000280), 0x0, 0x0, 0x0)
+pipe2$9p(&(0x7f0000000240)={<r0=>0xffffffffffffffff,
+<r1=>0xffffffffffffffff}, 0x0)
+write$P9_RVERSION(r1,
+&(0x7f0000000080)=ANY=[@ANYBLOB="1500000065ffff097b000008003950323030302e4c"],
+0x15)
+r2 = dup(r1)
+write$FUSE_BMAP(r2, &(0x7f0000000100)={0x18}, 0x18)
+write$FUSE_DIRENTPLUS(r2, &(0x7f00000012c0)=ANY=[@ANYBLOB="b0"], 0xb0)
+getresuid(&(0x7f0000000440), &(0x7f0000000480), &(0x7f00000004c0)=<r3=>0x0)
+write$FUSE_DIRENTPLUS(r2,
+&(0x7f00000000c0)=ANY=[@ANYBLOB="1000000000000000abb71b8388620aa153a4cb6d9e9eb04d1352f41bf12c22049ad434cb2db6637e0c13",
+@ANYRES64=0x0], 0x10)
+mount$9p_fd(0x0, &(0x7f0000000040)='./file0\x00', &(0x7f0000000b80),
+0x0, &(0x7f0000000580)=ANY=[@ANYBLOB='trans=fd,rfdno=', @ANYRESHEX=r0,
+@ANYBLOB=',wfdno=', @ANYRESHEX=r2, @ANYBLOB=',privport,access=',
+@ANYRESDEC=r3])
+lgetxattr(&(0x7f0000000000)='./file0\x00', &(0x7f0000000280)=ANY=[], 0x0, 0x0)
+
+Aslo see https://gist.github.com/xrivendell7/1487d0ffb0bc3836c9202da1dd7cff06.
+
+I hope it helps.
+Best regards.
+xingwei Lee
