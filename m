@@ -1,114 +1,102 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9053EA94
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 13:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC4C3E494;
+	Mon,  4 Mar 2024 13:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709559541; cv=none; b=AfTaBmiOfDFP9+iDmH4h5mP/H4bMOz377By+sFTgCM/TNUoeeHSsxTKFa2dTR5+lk0qAz8sHgZeehZKy2bH+7iqpkeCYEydg5kk9wFMkSK4Xr/kMfZllxiWSn7C3p+K93e4hW7fW0eWyY49Z5dcMr8tccqUGkP9HtfokyrqJkuM=
+	t=1709559570; cv=none; b=Q42uBL73TQ6nXlvbmeC+PO4Bb/HxJxsBe7Vt/XnecDZ+7Q0F8pQMK4hMlspR00HU0yOLqmya/+tkAC5J/Z/Anh6RvRBjtibIC8lKHwodQmmQs08sxXx8jl5bOlKJsp2k0QfvMj5dw/t2dRwzA4K6VgGIHmCci3ZQeI8AvcwmkCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709559541; c=relaxed/simple;
-	bh=eRJqtxF/hnl40Ku/oGPxOBYU8XPkZX8uhlixcF9S1Ug=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qd0DPaKyNRBcvGdNv1sgZm/b4TNoNk9lHFwCjVqWa2H5dycpsg4T5to5iRwwsd6IUFL3TMMfvzYvJFL2gYd1JDVTIC05k8Knvm4+Pz+jhT6FFcy58X/X+EJBYaygpihFSne91rBWMPAmc2bHwNeW6ZxHW6qlXgfYsbj9o29ipTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=b/bY7CxO; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709559570; c=relaxed/simple;
+	bh=lMEQDj4wA9CSoQcPHMZJJYk/61VCQ5aWH38lX7E2mnM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IHuPoDAkPe+WIQIGdPwYiHPIWAxrsyukjVUcWSx5MhcTAspkXmptZZsXFyKyxRq0pCkTANweuSg/jNhWOk3rYxEKoks8wyiyb45sJymOBWxpaZyYccVkx5MNcm2Sa9F0y52iYI7pyAwdfjrteLq7JtIBCEqZqStFZivMz8yIjoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=KF1Y+MPC; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b/bY7CxO"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 424DchRg000574;
-	Mon, 4 Mar 2024 07:38:43 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709559523;
-	bh=kKqIu5RN4fHPUy9UGlC6mcF827/TZjj39JVabv7mJP0=;
-	h=Date:From:To:CC:Subject;
-	b=b/bY7CxO+ZxhPJnV1G5vkg+5DNb4zTgF4TD3mz+lMPL5f/bWII9znMJNns2TxvXRG
-	 g4hv+C3wkGeWMWCOJX7DuWTo9ft3qMN5UFSHsTEKPisHeisz9fNnw7WOqL8NS97wwe
-	 gzYDdvEIowm4V4ITWanZDH5Ehh9qvdaD5MFsJfM4=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 424DchEq013635
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 4 Mar 2024 07:38:43 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 4
- Mar 2024 07:38:43 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 4 Mar 2024 07:38:43 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 424Dchvu044462;
-	Mon, 4 Mar 2024 07:38:43 -0600
-Date: Mon, 4 Mar 2024 07:38:43 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Arnd <arnd@arndb.de>, Olof <olof@lixom.net>, SoC <soc@kernel.org>
-CC: <arm@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tony
- Lindgren <tony@atomide.com>
-Subject: [GIT PULL] ARM: dts: ti: keystone: Updates for v6.9
-Message-ID: <20240304133843.e6rm5va6w4oavgoy@posted>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="KF1Y+MPC"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 95400418BA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1709559567; bh=g/HLnVv992UFJH8TinGv51zquGqHoXPwXe5EaET4ry8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=KF1Y+MPCWxeBr/CzWgXbVtwk+PHp4e2ll2QZXoK9uugY79bxprrAudOWkYvGcHcZc
+	 gldJYfNEIgTvFUsYXWS2A/9xqxIPSinfIppWBNwfyqd/mK8SPX+gNvPxlFjmmZKhoJ
+	 Sns6MArjjkc+oUP+J8nYzgkUncB5ozJSdOFely+kgk6BP8JnsmBuybujrK1Hqq3tuN
+	 StUWiR4BCDTUGF2DghM1RiCR2VMHMl5d6yINwaiFLq9iUqOS9ESZpTPew3tMqm5zAy
+	 77EXkhBHZQPn/NZlRBiBXG6okfowFNwHCU+RHYQ5U6hQ+AG1a0N+NZkO8Z2lly3tvT
+	 j35uFqcnTcigQ==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 95400418BA;
+	Mon,  4 Mar 2024 13:39:27 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Salvatore Bonaccorso <carnil@debian.org>, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ben Hutchings
+ <ben@decadent.org.uk>, Kees Cook <keescook@chromium.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Aditya Srivastava
+ <yashsri421@gmail.com>, 1064035@bugs.debian.org
+Subject: Re: [regression 5.10.y] linux-doc builds: Global symbol "$args"
+ requires explicit package name (did you forget to declare "my $args"?) at
+ ./scripts/kernel-doc line 1236.
+In-Reply-To: <ZeHKjjPGoyv_b2Tg@eldamar.lan>
+References: <ZeHKjjPGoyv_b2Tg@eldamar.lan>
+Date: Mon, 04 Mar 2024 06:39:26 -0700
+Message-ID: <877ciiw1yp.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 
-Hi Arnd, SoC team,
+Salvatore Bonaccorso <carnil@debian.org> writes:
 
-Apologies on a extremely late PR due to unavoidable personal
-circumstances. This is very minor change, and would be nice to have in
-v6.9. If it is too late, I can carry this forward for 6.10.
+> Hi,
+>
+> Ben Hutchings reported in https://bugs.debian.org/1064035 a problem
+> with the kernel-doc builds once 3080ea5553cc ("stddef: Introduce
+> DECLARE_FLEX_ARRAY() helper") got applied in 5.10.210 (as
+> prerequisite of another fix in 5.10.y):
+>
+>> The backport of commit 3080ea5553cc "stddef: Introduce
+>> DECLARE_FLEX_ARRAY() helper" modified scripts/kernel-doc and
+>> introduced a syntax error:
+>> 
+>> Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
+>> Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
+>> Execution of ./scripts/kernel-doc aborted due to compilation errors.
+>> 
+>> This doesn't stop the documentation build process, but causes the
+>> documentation that should be extracted by kernel-doc to be missing
+>> from linux-doc-5.10.
+>> 
+>> We should be able to fix this by eithering backport commit
+>> e86bdb24375a "scripts: kernel-doc: reduce repeated regex expressions
+>> into variables" or replacing /$args/ with /([^,)]+)/.
+>> 
+>> Ben.
+>
+> What would be prefered here from stable maintainers point of view?
+> AFAICS e86bdb24375a ("scripts: kernel-doc: reduce repeated regex
+> expressions into variables") won't apply cleanly and needs some
+> refactoring. The alternative pointed out by Ben would be to replace
+> the /$args/ with  /([^,)]+)/.
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+Hmm...this is the first I see of any of this...
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+The latter fix seems like the more straightforward of the two.  The only
+concern might be if there are other kernel-doc backports that might run
+afoul of the same problem, hopefully not.
 
-are available in the Git repository at:
+But this makes me wonder if there are other stable kernels that are
+affected as well.  I guess that, despite all of the testing being done
+on stable updates, nobody is testing the docs build?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git tags/ti-keystone-dt-for-v6.9
+Thanks,
 
-for you to fetch changes up to 11621bedc016578e0b025b6f23458e9fe3f3caad:
-
-  ARM: dts: keystone: Replace http urls with https (2024-02-05 08:50:55 -0600)
-
-----------------------------------------------------------------
-Keystone2 device tree updates for v6.9
-
-Cosmetic cleanups:
-* Replace http urls with https.
-
-----------------------------------------------------------------
-Nishanth Menon (1):
-      ARM: dts: keystone: Replace http urls with https
-
- arch/arm/boot/dts/ti/keystone/keystone-clocks.dtsi      | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2e-clocks.dtsi  | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2e-evm.dts      | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2e-netcp.dtsi   | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2e.dtsi         | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2g-evm.dts      | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2g-ice.dts      | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2g-netcp.dtsi   | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2g.dtsi         | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2hk-clocks.dtsi | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2hk-evm.dts     | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2hk-netcp.dtsi  | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2hk.dtsi        | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2l-clocks.dtsi  | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2l-evm.dts      | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2l-netcp.dtsi   | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone-k2l.dtsi         | 2 +-
- arch/arm/boot/dts/ti/keystone/keystone.dtsi             | 2 +-
- 18 files changed, 18 insertions(+), 18 deletions(-)
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+jon
