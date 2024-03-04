@@ -1,138 +1,166 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8737DBA27;
-	Mon,  4 Mar 2024 05:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357D4AD5E;
+	Mon,  4 Mar 2024 05:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709530781; cv=none; b=kEN9+/xpoDq1rShHozMQXhnvaR832UmMjE41ebpGTRIJNlWgFsP+7OPg8XvE4WJFc9o6UoIpA91CmVyVMqUgpqw4wOKeTEY7PStzNzSaJFMtLcZehoqwoiTNKRnwL/OdSUyrYv5XBZ82OM4L5TRngXO5hOH6XMexPGTARx2I3EM=
+	t=1709530883; cv=none; b=JhRjmk4D5luw1+tT7MkGFgblZKHzaveThTLssSi2F+00HsIeRLpJlomjX2IckXb3JLHcL1XtEgmN9bhp9ZI7B4iosX1tDP6Ew1pbxlWIddmdDYjtBc/4bas9SevutVRXN9KYUwZYroNwfS7enk4pHvgH8BY0A/NFmgJHBSgkVW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709530781; c=relaxed/simple;
-	bh=Tpaq8N4Av+5b7UEGdG8PwgpDYuzB6CY0twmRaDGvc9c=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=bcAL1+6dHxErXmOt3PASSj1RMxgK4wS0ado+BnrKNNydahuJXRE3ZrIKzMMZbfvQEIMwuy/s3tYJJYk6Gys4zifE0f/F0D56jQS7FUWfXTPN0MScwX0102G4Rp5iZUUakZhgAib6PL4ot3LfwOT0hO83uzwnpvmKanPValfcXs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=NQm3wyKg; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709530883; c=relaxed/simple;
+	bh=r86wOO+DCKm7iBUKQXQCDVfjbm5Vx1zUufgM+XeeASw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=igf3JTYkiERvWZkm6zpxbtpmGp/iJ2qAp4IbJ/scGR3JY39XXm6Wip0bdmMerds8cK7N6uUMgyb6LEFDSSkycPpyIaXG3lna3bvQ7eSaAs5MM9+Qr7l+5O3OjJTCaF1Mj/fBpGz0Pv4dMUZDbrWd1CMJorg9Dn9rNhdPNIfU+JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lMBGTcRo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="NQm3wyKg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709530768; bh=9uK2GXZq/8xku+2xavhS19lwiemprvBmG1eFe+2OCLs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=NQm3wyKgm5Aqp3NDC8DWg2gOSmyDwHzkhFJ1bXea7QCGni4yID8HjoSwByoaoyrb1
-	 2vhD1VGFS1xV+4UvgAz5bDPTY/2NuuhnAZpWWSGHhYK/U9mzO34vnBab/nyynkULzN
-	 F5gKA0r+uyXZItFICYRo8Rv9Hc+Kx39VA4JUPLmc=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id 8519C245; Mon, 04 Mar 2024 13:33:17 +0800
-X-QQ-mid: xmsmtpt1709530397t95cf53rs
-Message-ID: <tencent_55ACA4583763B77466C5B36C637569638305@qq.com>
-X-QQ-XMAILINFO: MCBt/x1q9XETxrFVo/g+iR8gh3Ugc6QxMk3Dka791CH3s4c66cR8rXCdzN/7lV
-	 PRCDITTWKfntfxPgWWTm+nbPDap91lTwj+SFBL+zISZ/50EgeaoENMj5tPNHpE5r6slE92H3dsb7
-	 rmx5P3zIDMXPyRENfZqcVqpJeR9qIXQJMIDGnaQaBqSACVASAO1+ik9TeNRitDfbEWcZ1K2e2q+2
-	 43hTcsnzypTVNZcFvHUFoa1kpDNYup50rIQeuj3ew7EvcAM/GDLB9aRWwUEqIMrFamKq97X/fl4o
-	 shJPC1F+VFP+t33gsLOt6sVogYDL+SnWB6/W43BUtqDtFzhCgoGC+m8Pu6iVs5Bl6x6UhKZD/ZXs
-	 KGEqw8+u0+jKpm7/98PEyfigpGhkDw2zjF+WqU71CcI7Kl93OHqZpS1JWkUIU2XgA6yAnNVPUj0H
-	 aafEJp9virIkmuih3E1hJimKl4y2OQQft9fbYRwsuWoYKSWvt7p6IaWIN+V/d8vmjVs7sKByAQv6
-	 lYW5+L3Q5ba9F+ZqknLINOdYw/UQVeLtYMYEjVAzKRe2zt3ZFy13f0E+HS3oAbg/lpRP7+8UFUED
-	 kyhOePvnWgpKRgTOJ2pgtKrGUIo8AfByIrEButrSVvxAi7nDFZa7uYo9piBxS3sE+MmQFcEcHDpL
-	 62NiFz8PN2Jr0PPE+BoQBOaDb1krpKD4YyOB6s7oJOSW1+VIX6p0k9px2ykYqd9yoBM2EgWaRzHv
-	 jH3Nw5oxJzBlx5d0C9wVBcRy0010yJUyk6LWS6y0g9uG3YK3dwfqg1/zmMb2NgMw0jYfDvspkWBL
-	 WmLctm5RgXynGVFQ/Jmps3RKlQlHZ74nl3iK9ILrjMk0RcoXrzDiSjQOHnVPnrY/W5ogObURLRfm
-	 G5DcYm9VR9TbGKmDalVuXOj6orEKdG22Pa09MXrD8DUMgBw0QRNHevFeS43CBy+90I/dX4/Gpp
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+c6d8e1bffb0970780d5c@syzkaller.appspotmail.com
-Cc: glider@google.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] hfsplus: fix uninit-value in hfsplus_attr_bin_cmp_key
-Date: Mon,  4 Mar 2024 13:33:18 +0800
-X-OQ-MSGID: <20240304053317.1237946-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000037444e0612c39434@google.com>
-References: <00000000000037444e0612c39434@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lMBGTcRo"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4245UWt3020204;
+	Mon, 4 Mar 2024 05:41:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=bC9iBVAChzkURz7MLks8bBE/LC2FqLowzHb6mhD5U0o=; b=lM
+	BGTcRoXHMqdpzQPdX2Io7bk648S4aWe/69Zac7oZIVliB3SpxgmZEUWDdo9NCQL1
+	c56ycjqcpwR72Lv7LMP+lEGN1fBbgsbVZvaX4LW4v8+LX2zqFZE0g+VLiHxx0lUu
+	Hkj6ZwMx0Z3kxEj06sZVS5r/xo6sXZ/iyUX1slZfQNcba/PdTKD7dP6gpoFBp3W2
+	2ypvOaw+ssWuUs6mi31n9oyxq6B76+AhKZIrXFuxbdeAiJCoj10xfpLzLG5Vcyf4
+	ZlfqZVIrXFIMhqPDt/sMpz1RyxAEtXLOKmBqwI+lnFtqtV+oIYGJSEup2xS6nrIv
+	9eVlGE8yAwZN4LwlVXIg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wmsqnrxmg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Mar 2024 05:41:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4245f86v002787
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 4 Mar 2024 05:41:08 GMT
+Received: from [10.50.22.179] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sun, 3 Mar
+ 2024 21:41:03 -0800
+Message-ID: <5e0656ac-badf-dd37-b598-8e4a6f23d2c2@quicinc.com>
+Date: Mon, 4 Mar 2024 11:10:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 05/20] media: venus: pm_helpers: Kill dead code
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Andy Gross
+	<agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Mauro Carvalho
+ Chehab" <mchehab@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: Marijn Suijten <marijn.suijten@somainline.org>,
+        Stanimir Varbanov
+	<stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab+huawei@kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230911-topic-mars-v2-0-3dac84b88c4b@linaro.org>
+ <20230911-topic-mars-v2-5-3dac84b88c4b@linaro.org>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20230911-topic-mars-v2-5-3dac84b88c4b@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: gk1jUqsTBhi5fYHR-XLQcXI0DNaTXove
+X-Proofpoint-GUID: gk1jUqsTBhi5fYHR-XLQcXI0DNaTXove
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-04_02,2024-03-01_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0
+ impostorscore=0 clxscore=1011 mlxlogscore=999 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403040040
 
-[Syzbot reported]
-BUG: KMSAN: uninit-value in hfsplus_attr_bin_cmp_key+0xf1/0x190 fs/hfsplus/attributes.c:42
- hfsplus_attr_bin_cmp_key+0xf1/0x190 fs/hfsplus/attributes.c:42
- hfs_find_rec_by_key+0xb0/0x240 fs/hfsplus/bfind.c:100
- __hfsplus_brec_find+0x26b/0x7b0 fs/hfsplus/bfind.c:135
- hfsplus_brec_find+0x445/0x970 fs/hfsplus/bfind.c:195
- hfsplus_find_attr+0x30c/0x390
- hfsplus_attr_exists+0x1c6/0x260 fs/hfsplus/attributes.c:182
- __hfsplus_setxattr+0x510/0x3580 fs/hfsplus/xattr.c:336
- hfsplus_setxattr+0x129/0x1e0 fs/hfsplus/xattr.c:434
- hfsplus_trusted_setxattr+0x55/0x70 fs/hfsplus/xattr_trusted.c:30
- __vfs_setxattr+0x7aa/0x8b0 fs/xattr.c:201
- __vfs_setxattr_noperm+0x24f/0xa30 fs/xattr.c:235
- __vfs_setxattr_locked+0x441/0x480 fs/xattr.c:296
- vfs_setxattr+0x294/0x650 fs/xattr.c:322
- do_setxattr fs/xattr.c:630 [inline]
- setxattr+0x45f/0x540 fs/xattr.c:653
- path_setxattr+0x1f5/0x3c0 fs/xattr.c:672
- __do_sys_setxattr fs/xattr.c:688 [inline]
- __se_sys_setxattr fs/xattr.c:684 [inline]
- __x64_sys_setxattr+0xf7/0x180 fs/xattr.c:684
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:3819 [inline]
- slab_alloc_node mm/slub.c:3860 [inline]
- __do_kmalloc_node mm/slub.c:3980 [inline]
- __kmalloc+0x919/0xf80 mm/slub.c:3994
- kmalloc include/linux/slab.h:594 [inline]
- hfsplus_find_init+0x91/0x250 fs/hfsplus/bfind.c:21
- hfsplus_attr_exists+0xde/0x260 fs/hfsplus/attributes.c:178
- __hfsplus_setxattr+0x510/0x3580 fs/hfsplus/xattr.c:336
- hfsplus_setxattr+0x129/0x1e0 fs/hfsplus/xattr.c:434
- hfsplus_trusted_setxattr+0x55/0x70 fs/hfsplus/xattr_trusted.c:30
- __vfs_setxattr+0x7aa/0x8b0 fs/xattr.c:201
- __vfs_setxattr_noperm+0x24f/0xa30 fs/xattr.c:235
- __vfs_setxattr_locked+0x441/0x480 fs/xattr.c:296
- vfs_setxattr+0x294/0x650 fs/xattr.c:322
- do_setxattr fs/xattr.c:630 [inline]
- setxattr+0x45f/0x540 fs/xattr.c:653
- path_setxattr+0x1f5/0x3c0 fs/xattr.c:672
- __do_sys_setxattr fs/xattr.c:688 [inline]
- __se_sys_setxattr fs/xattr.c:684 [inline]
- __x64_sys_setxattr+0xf7/0x180 fs/xattr.c:684
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-[Fix]
-Let's clear all search_key fields at alloc time.
-
-Reported-and-tested-by: syzbot+c6d8e1bffb0970780d5c@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/hfsplus/bfind.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
-index ca2ba8c9f82e..b939dc879dac 100644
---- a/fs/hfsplus/bfind.c
-+++ b/fs/hfsplus/bfind.c
-@@ -18,7 +18,7 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
- 
- 	fd->tree = tree;
- 	fd->bnode = NULL;
--	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
-+	ptr = kzalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
- 	fd->search_key = ptr;
--- 
-2.43.0
-
+On 2/10/2024 2:39 AM, Konrad Dybcio wrote:
+> A situation like:
+> 
+> if (!foo)
+> 	goto bar;
+> 
+> for (i = 0; i < foo; i++)
+> 	...1...
+> 
+> bar:
+> 	...2...
+> 
+> is totally identical to:
+> 
+> for (i = 0; i < 0; i++) // === if (0)
+> 	...1...
+> 
+> ...2...
+> 
+> Get rid of such boilerplate.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+> index 1ba65345a5e2..7193075e8c04 100644
+> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+> @@ -878,14 +878,10 @@ static int vcodec_domains_get(struct venus_core *core)
+>  		.pd_flags = PD_FLAG_NO_DEV_LINK,
+>  	};
+>  
+> -	if (!res->vcodec_pmdomains_num)
+> -		goto skip_pmdomains;
+> -
+Removing the if check and relying only on for loop is good.
+but I don't see the for loop here.
+>  	ret = dev_pm_domain_attach_list(dev, &vcodec_data, &core->pmdomains);
+>  	if (ret < 0)
+>  		return ret;
+>  
+Also, what's the base of this change? I don't see above API in the code
+anywhere.
+> -skip_pmdomains:
+>  	if (!core->res->opp_pmdomain)
+>  		return 0;
+>  
+> @@ -928,9 +924,6 @@ static int core_resets_reset(struct venus_core *core)
+>  	unsigned int i;
+>  	int ret;
+>  
+> -	if (!res->resets_num)
+> -		return 0;
+> -
+>  	for (i = 0; i < res->resets_num; i++) {
+>  		ret = reset_control_assert(core->resets[i]);
+>  		if (ret)
+> @@ -953,9 +946,6 @@ static int core_resets_get(struct venus_core *core)
+>  	unsigned int i;
+>  	int ret;
+>  
+> -	if (!res->resets_num)
+> -		return 0;
+> -
+>  	for (i = 0; i < res->resets_num; i++) {
+>  		core->resets[i] =
+>  			devm_reset_control_get_exclusive(dev, res->resets[i]);
+> 
