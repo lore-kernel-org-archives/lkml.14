@@ -1,206 +1,95 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2040.outbound.protection.outlook.com [40.107.20.40])
+Received: from e2i652.smtp2go.com (e2i652.smtp2go.com [103.2.142.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348BFB654;
-	Mon,  4 Mar 2024 11:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709550082; cv=fail; b=eGYAtyGGcMu8fm7lQ9bUmjvBim3YYEdHvOic2rCNrfHdT9nl6a2gj70xTek0IPGl35RNenaIsZSu2pCmx4gOg9MRs3VRh0mo+NJhWdmpFgZuJzE/25poPXdL+SKFzz0eQRCLeSJrvbt/K7c5rDpntt9XF1qDf05gxNDoU/xsuLs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709550082; c=relaxed/simple;
-	bh=taEDUYVo0Xd2CqGzoJOj2Ho325kV+SsKkReUpIS++rs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=d/ELFtL3ZtZzC76SfpMoOg8K4RDUHKqu64WkWUvfwu5xGyoOHFgQJA/aC5PXA827QdG5cZ+50Iu0CBiQ+N090iVhxUkYirec/BrAqM5pOj2SjgG3KBYcXutGuy+qZp4VOMtZFyBFm/aqVIiPzXDazIHtobTHPAXH5++WSSLQaYg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=Mo6hwwvp; arc=fail smtp.client-ip=40.107.20.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBDD39AD4
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 11:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.140
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709550086; cv=none; b=nyZcZiGTZaFJVyrkQhqFXHwDQpXTLPZlfP31bThwj1aIjrfFaFsUcO56iA1svjkwdQ7WRYoVUkMO6UbM2MVjzwN13p1Z5Gs0tZ2OANt+dPuKYkmaUz2M9MLzWi4o7Qnc8RRxQIBHMSjseJAfPePql7Loyctp5S/8ESgtxjg9oZk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709550086; c=relaxed/simple;
+	bh=rBFiQEB8z/lHUfa+VHj4uIsM/ByrCz1KLthEmNo8hYw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jY5CCELUgCd4TYwlEf6jFT61FvmFYfQ1EqwEYKCkKNY7EIhiOCBP6AclIZ0DfiLJmcQWIhdY18NEqs7PwLtw6b16HSMddvZVl2b2PdkKTiovfX24/zDy9+sYF0W+IQSTlBgdvimeRiARYgZFP0CNp7SDsa1Bs/ENS+Czl+RdX74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=em1174574.asem.it; dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b=rTPB3rgx; dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b=meAzQJQs; arc=none smtp.client-ip=103.2.142.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174574.asem.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="Mo6hwwvp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IiURKwBBLcGrdvOT8wnppYEl9Z4QJj+wvtEHWPp227kmcvK1WsodMYyvVKsaXEB5IjN0YvFypBLPeYIz4OxAjLwJ0iXbIfzENZNLBA8iC9PQmWJh16mIZzcK5eKkXBGKvJEmBXisAGQIpveUgmxYO38B3QXOV32YmqCgsg1CKrTCPQHhrnILKw+eHD+ZoWefbWY2Pca7WnpZ0Hp0Q3ZyVcUnhWDDgRS7jvP13ILPowqphYfGawDha7iNsm4gEITcsgD1YfWWbEAdEalJYe4KNh4Djmdt/hgwkN9HLl7ECdEcGqYO0vSvZy80S+bJrAKITsnl3cpc8lAPDNBjCSBFCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v+ZZbnIdkoGNUj57jIAS8nVuE1fh9JoC9AwLIvDdNmc=;
- b=Es3PyzAKGYwGLdJd2MdAwg64+4sL5P6sUIunqBckA/E3aZIfgXu2VW4WSYljPhP9K/rXI4M3uZlxT+LcvXIOVZNrY5ZH3B47pVacvpMn+CPrwjClCPAncOasWRJdUQFcBGx8FRmiqxqp6caQFroiWp8knxm9AhMztX81HRvh2qomIcc+JJyMwIxuQzwlRE96NmuVwl3Qna4PTyQ/h0M0AZ1/Mbt3zEbnarLmRrv42pIVSYEO0/P4uydTCVDkiYgJqe1/BFnWI9B/79xJvUC9HaprY3y7a16OYiao0yjwM/RYhz12+ER3SjxcPKNp7naMYHkz771crDZzSB1GxP+dBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 195.60.68.100) smtp.rcpttodomain=kernel.org smtp.mailfrom=axis.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v+ZZbnIdkoGNUj57jIAS8nVuE1fh9JoC9AwLIvDdNmc=;
- b=Mo6hwwvpqCngHVXfCi1Z3ew7Hm+83uvauoguNs9lpouu8inPtk05ihKzYU3v3cOOR3sKNgkrH7xRkM0ijNzxibPZZMkRFPjSkEHe26N3wynCbKHfTUSHreJ1ueUqvj9yhUMU09zBQrxGb9UPcMN3l9Gz1BFAgcyfOFBEdXYSktc=
-Received: from DU6P191CA0024.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:540::14)
- by AM9PR02MB7108.eurprd02.prod.outlook.com (2603:10a6:20b:266::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Mon, 4 Mar
- 2024 11:01:16 +0000
-Received: from DB1PEPF000509FD.eurprd03.prod.outlook.com
- (2603:10a6:10:540:cafe::b0) by DU6P191CA0024.outlook.office365.com
- (2603:10a6:10:540::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39 via Frontend
- Transport; Mon, 4 Mar 2024 11:01:16 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=axis.com;
-Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
- designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com;
-Received: from mail.axis.com (195.60.68.100) by
- DB1PEPF000509FD.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Mon, 4 Mar 2024 11:01:16 +0000
-Received: from SE-MAIL21W.axis.com (10.20.40.16) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 4 Mar
- 2024 12:01:15 +0100
-Received: from se-mail02w.axis.com (10.20.40.8) by SE-MAIL21W.axis.com
- (10.20.40.16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 4 Mar
- 2024 12:01:15 +0100
-Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail02w.axis.com
- (10.20.40.8) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Mon, 4 Mar 2024 12:01:15 +0100
-Received: from pc55637-2337.se.axis.com (pc55637-2337.se.axis.com [10.88.4.11])
-	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 79B30159B0;
-	Mon,  4 Mar 2024 12:01:15 +0100 (CET)
-Received: by pc55637-2337.se.axis.com (Postfix, from userid 363)
-	id 7CE00209F3C1; Mon,  4 Mar 2024 12:01:15 +0100 (CET)
-From: Jesper Nilsson <jesper.nilsson@axis.com>
-Date: Mon, 4 Mar 2024 12:01:14 +0100
-Subject: [PATCH] i2c: exynos5: Init data before registering interrupt
- handler
+	dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b="rTPB3rgx";
+	dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b="meAzQJQs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpcorp.com; s=a1-4; h=Feedback-ID:X-Smtpcorp-Track:Message-Id:Date:
+	Subject:To:From:Reply-To:Sender:List-Unsubscribe;
+	bh=pxSNbisWh19U3rdQiiYOgslG+MwHDfuy5ghPqFpWc4E=; b=rTPB3rgxufVjq8U6sKvdzd2T8+
+	UaqXqayzFoQcWOwRqoB+vzT2o3pMcjx/4epyKXLA4fMvVLrRq4zudpI/Ycr2c7zyvoYrSEFDig9HD
+	R4Fy1PI5mEpsMBdTxNtjPWhdcPkZdkJUcoF7+bLKbRtuSCjAohODPSXomkWv/tjNcwb6uK6cBOK8h
+	r1hz4MPmxAEpjyPekW74reqwxklOUz65LKUBpYAPuK+qyCN4UCHJ7h9YPFDk7jT+jJRyrp6ju3RGa
+	VSBIEMlhXrVSxLkVl9e2l7Ttjh2nempMJvM+nnnGxCV5gCR2/rXH+PmzOLgUCA0/z8vJzPOQRWuHe
+	F3pzpNMg==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it;
+ i=@asem.it; q=dns/txt; s=s1174574; t=1709550083; h=from : subject : to
+ : message-id : date; bh=pxSNbisWh19U3rdQiiYOgslG+MwHDfuy5ghPqFpWc4E=;
+ b=meAzQJQscpSkaY8hjwk4U4XszqMW+ttDZYguZnneF4iwEJGj2+gwSXTEawsRRVD40TqQd
+ WJmAsOadsTnCgot5th0wZiYX5pIq5ltebiFZ3zFrvm//3z68HDohPZIbj+PcucVeLZ7J6zF
+ SwRxF2Com//sSyDNL6BCAS1pyKpv52sYv4v9DuSp2S4w4buisJaZarJhB348V91nPY36w7v
+ djDxpC1v26CvTXfr5xNPgcMxtmGCuQS4Gl9jH0Bi4nNXd6NtHBsojnKwCqEUsijk4ZhkcE9
+ WTPCzBODQrSLrEY7Y8rB1uNys6qSD01zHlz/UVPqVUtIzk6kVt+7YgimqJFQ==
+Received: from [10.45.79.71] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <f.suligoi@asem.it>)
+ id 1rh64J-qt4GTh-Gc; Mon, 04 Mar 2024 11:01:15 +0000
+Received: from [10.86.249.198] (helo=asas054.asem.intra)
+ by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
+ (envelope-from <f.suligoi@asem.it>) id 1rh64I-Dv15V4-0A;
+ Mon, 04 Mar 2024 11:01:14 +0000
+Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with
+ Microsoft SMTPSVC(10.0.14393.4169); Mon, 4 Mar 2024 12:01:12 +0100
+From: Flavio Suligoi <f.suligoi@asem.it>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH] thermal: core: remove superfluous line in comment
+Date: Mon,  4 Mar 2024 12:00:22 +0100
+Message-Id: <20240304110022.2421632-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240304-i2c_exynos5-v1-1-e91c889d2025@axis.com>
-X-B4-Tracking: v=1; b=H4sIAPmp5WUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDIyML3Uyj5PjUisq8/GJT3ZQkQ+NEc6PU1GSLJCWgjoKi1LTMCrBp0bG
- 1tQAgdi6bXQAAAA==
-To: Andi Shyti <andi.shyti@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>
-CC: <linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kernel@axis.com>, Jesper Nilsson <jesper.nilsson@axis.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709550075; l=2710;
- i=jesper.nilsson@axis.com; s=20240216; h=from:subject:message-id;
- bh=taEDUYVo0Xd2CqGzoJOj2Ho325kV+SsKkReUpIS++rs=;
- b=42Xz07/u1gESiLkkx8zkvVy0spBZP95p3aFkIH9BUSDtZ4eERc12NHYCw1maC1j0y6Q/qteJt
- 5pAMd0Uh6bCB0kaO75nQwB1Ip1v2AkpTndpB5nn28qz/CvUhxiHUMyH
-X-Developer-Key: i=jesper.nilsson@axis.com; a=ed25519;
- pk=RDobTFVrTaE8iMP112Wk0CDiLdcV7I+OkaCECzhr/bI=
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509FD:EE_|AM9PR02MB7108:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd92e749-2c52-4bbb-d358-08dc3c3a69f9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	6rF2IcZicHZYAIAjju7qPxXL7AP5Q6m5A/pDVQqhmnm/UVzxQ8DGdH4QhS6kKu3PBkbJTR3se2C3RaSNF9oa8Sh0CqkttpMwGo0S3DLRVbn/iaq3kSp2SPXvMqIeThvNdctAiP3oQED0iiVp2w1iuSjPecNIjAdJ8AkPrgnw+YYOzess9q/3TQKxo1AYjNrJJMdD1mot2wvL31SPE3yKO3lhXwKDTxrt1Hq5IC4RfO8apjnddNqxylUR43DZSWspJSdGRoePFp5tAZLr2UM4PrvAQUHCa1V/xeLtwjloOKPYTkkj6UiUUYx7z/ZlJIuUzUQQrAjz8rPJrrGwu4SWjwdOSJV9uw11BgD6lWdc0g6NIv5OVuzK327PEAYZGvSzLpBG/fax7M6ztbbg0g+9uGTYAcIaKaXiKQdS0Oyvnu98kfBelZBU1gfAenMB7IAJ45M9tAt5yutWIcQ3JwhNaez0Fm97n0olJeivRVXBT6ZumssfmvF6pfxpLDMeAtiG03EntsDlFFrp09Qtiao5VoAb2h2Js8iIsc97hHsSeXtDfOOnTtxxxZb7O8xXgJNKIMRXBxaX6J2hLifvqjgm7OIhSZir2aXlk88X0N3OmAYpjQFENly1+NjD2H/ZP4qszkPCwYrkwHhiMdL7wbaWB07tGPQH7sA398sncnoNlqBU1ecZ+ChO2Uo2ArgYuSAHjNzhDBVSBFlOmc9ZSCFiGnFC84OfuBXIdSO9jgJwi0vfo2sCr+rqb5gMzgKCTV7O
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 11:01:16.2736
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd92e749-2c52-4bbb-d358-08dc3c3a69f9
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509FD.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR02MB7108
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 04 Mar 2024 11:01:12.0413 (UTC)
+ FILETIME=[4529D0D0:01DA6E23]
+X-Smtpcorp-Track: 1rh64mDv15V40j.5bn49EblaxtBw
+Feedback-ID: 1174574m:1174574aXfMg4B:1174574sD5JYLEGfq
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-devm_request_irq() is called before we initialize the "variant"
-member variable from of_device_get_match_data(), so if an interrupt
-is triggered inbetween, we can end up following a NULL pointer
-in the interrupt handler.
+The first and the third lines of the comment of function:
 
-This problem was exposed when the I2C controller in question was
-(mis)configured to be used in both secure world and Linux.
+thermal_zone_device_set_polling()
 
-That this can happen is also reflected by the existing code that
-clears any pending interrupts from "u-boot or misc causes".
+belong to the same sentences, so they have to be joined together.
 
-Move the clearing of pending interrupts and the call to
-devm_request_irq() to the end of probe.
-Additionally, return failure if we can't find a match in devicetree.
-
-Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 ---
- drivers/i2c/busses/i2c-exynos5.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ drivers/thermal/thermal_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
-index 385ef9d9e4d4..eba717e5cad7 100644
---- a/drivers/i2c/busses/i2c-exynos5.c
-+++ b/drivers/i2c/busses/i2c-exynos5.c
-@@ -906,24 +906,14 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
- 	i2c->adap.algo_data = i2c;
- 	i2c->adap.dev.parent = &pdev->dev;
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index f7a7d43809e7..34a31bc72023 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -273,7 +273,6 @@ static int __init thermal_register_governors(void)
  
--	/* Clear pending interrupts from u-boot or misc causes */
--	exynos5_i2c_clr_pend_irq(i2c);
--
- 	spin_lock_init(&i2c->lock);
- 	init_completion(&i2c->msg_complete);
- 
--	i2c->irq = ret = platform_get_irq(pdev, 0);
--	if (ret < 0)
--		goto err_clk;
--
--	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
--			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
--	if (ret != 0) {
--		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
--		goto err_clk;
--	}
--
- 	i2c->variant = of_device_get_match_data(&pdev->dev);
-+	if (!i2c->variant) {
-+		dev_err(&pdev->dev, "can't match device variant\n");
-+		return -ENODEV;
-+	}
- 
- 	ret = exynos5_hsi2c_clock_setup(i2c);
- 	if (ret)
-@@ -940,6 +930,20 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
- 	clk_disable(i2c->clk);
- 	clk_disable(i2c->pclk);
- 
-+	/* Clear pending interrupts from u-boot or misc causes */
-+	exynos5_i2c_clr_pend_irq(i2c);
-+
-+	i2c->irq = ret = platform_get_irq(pdev, 0);
-+	if (ret < 0)
-+		goto err_clk;
-+
-+	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
-+			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
-+	if (ret != 0) {
-+		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
-+		goto err_clk;
-+	}
-+
- 	return 0;
- 
-  err_clk:
-
----
-base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
-change-id: 20240228-i2c_exynos5-db13a72eec8b
-
-Best regards,
+ /*
+  * Zone update section: main control loop applied to each zone while monitoring
+- *
+  * in polling mode. The monitoring is done using a workqueue.
+  * Same update may be done on a zone by calling thermal_zone_device_update().
+  *
 -- 
-
-/^JN - Jesper Nilsson
--- 
-               Jesper Nilsson -- jesper.nilsson@axis.com
+2.34.1
 
