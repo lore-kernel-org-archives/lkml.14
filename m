@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86EC224C2
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609DC241E5
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 10:05:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709546756; cv=none; b=spq0uM9qxqG38WtDFFIaYWk6qXXu03HQ1KJdQde8AiIIdXsWe9/Z2yi3IigNB4AVF2XZP6JNCDhKr3mY67Ket2BjkWj86v44qo1qZtun9jMJ3NmkbqUYJu0x8yXxlOCk+U5oe5W2RbBZfs5TyqsrXKKfBCK5uNrO96exaNNDTkA=
+	t=1709546761; cv=none; b=m/3HRYL7o5f20XCLAWe9efT51bTakuSDfftdXdjKwauaV0Ljt1WJPxBQkYA0GY/YZJVvcm8e8zwicD9ft7qYafipCts2aNKLGrhfXN1V7AXi94EJmW6o1EA6UrOdaztzibYLoON1+RyipcgxYqbbISYYRJ4oIQ/ODE2jUUooWx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709546756; c=relaxed/simple;
-	bh=QJ5+SoxWttbnb16KupyBcA6ZTzZC4TcWNM2sYRBjKag=;
+	s=arc-20240116; t=1709546761; c=relaxed/simple;
+	bh=RWN2Ea3qOUjs6zLtAAXLBFQstrOSR//0aV6xqRJRRoM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KFjwAzPq7ZGaujlQ36hnZpAMct70CSegIG/IZm50a/oXg4k5lfVug3OqcYnnLs2750FL2UJPDHjQLCLwU09/K1xSOLjT7gd+vn4b9lst7sF/IkCzESzolSnjeIiiBFpPh10iil6NFUY4xYhCvwaWbjyDG2avHQWGovu2giaOUfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KrlkVNX2; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=m6LesYSu4wNaajNrMf+PgdJf6P13tL19i4OAkt/DNzCsWnm7q1BDgle2L/ertudmVH7EEgbU4a2zaZPNo7JbhCQ8BVmJ1wfsmbtXnB/gE5eXZG3K/oOcm1O96LYEhDpzIH55nig870mY0N0HeZJejFQB6iGt8wNPIply2HZa76s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GqrZRx2u; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KrlkVNX2"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GqrZRx2u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709546753;
-	bh=QJ5+SoxWttbnb16KupyBcA6ZTzZC4TcWNM2sYRBjKag=;
+	s=mail; t=1709546757;
+	bh=RWN2Ea3qOUjs6zLtAAXLBFQstrOSR//0aV6xqRJRRoM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KrlkVNX2Rc1kdAXsmHjZW0RqaTh9b+YFw34X3qprKnK9tZtD7kQyBnBLTdpedF/jT
-	 2Qur/N4BwFqfF3AEkwXecVLzZpObe6tPPq99vIvMTGSQo3+czZePyCfMw6YxBMl2mx
-	 iKtXzybxxoZIjCawuk5CmpGm5anI5w27jLihsDW5LtDC+dNZcOHbeGI2btXk/CddBI
-	 PLMq7I2ZUJ1G85q6WwodIIMOlhlpHSWRQ8+9S6cV2/cfYZn7ILyqO+df0AwYY1HqUV
-	 TQ64U1+jG4zzqLlkBdGnrgif9jMo6IukPanyaSnfb/VsjKsp2XWrfO2Wdljb9mkycc
-	 63ezv8284fw9w==
+	b=GqrZRx2uqquFaYJnQ+ZQZ4Z5duNI4garPorJYbWGIcwBXVtikqwGmsSv+TSPAg24/
+	 RXtRy6utMLXjpXYUgoqYIi3/d9O+yDEDdapjK8iyOOQWm95lkCw9vP+pqVAYSvaQD8
+	 2MeMrgwT075yFyFqbgrhlhUourXnkm0DYcWti2SKsj7qwmwpzr5NkdzCU723O1qGkl
+	 hsm+FVUUP+eKRI3nVfLaQw+qnAQ2d+V7KV28h+QT9kSsPpO37FbQ9Z+39g4eJeebS6
+	 BZl01pEvqkNz72VepmGyH3Z82Mge3rfc4KlUMUxuOyG3FMtsearuwQFdR9Dq5xmou0
+	 Zf8TRylfj2Qtw==
 Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 59B5A378143B;
-	Mon,  4 Mar 2024 10:05:52 +0000 (UTC)
-Message-ID: <e0843692-d317-43ec-b8c8-1bdea37447dc@collabora.com>
-Date: Mon, 4 Mar 2024 11:05:52 +0100
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D61573782091;
+	Mon,  4 Mar 2024 10:05:56 +0000 (UTC)
+Message-ID: <3dab3afd-7d0c-4bf1-b4f6-984f8d5d2d02@collabora.com>
+Date: Mon, 4 Mar 2024 11:05:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] soc: mediatek: mtk-cmdq: Add cmdq_pkt_poll_addr()
+Subject: Re: [PATCH 4/5] soc: mediatek: mtk-cmdq: Add cmdq_pkt_acquire_event()
  function
 Content-Language: en-US
 To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>,
@@ -55,156 +55,78 @@ Cc: Jason-ch Chen <jason-ch.chen@mediatek.com>,
  linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
  Project_Global_Chrome_Upstream_Group@mediatek.com
 References: <20240301111126.22035-1-jason-jh.lin@mediatek.com>
- <20240301111126.22035-4-jason-jh.lin@mediatek.com>
+ <20240301111126.22035-5-jason-jh.lin@mediatek.com>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240301111126.22035-4-jason-jh.lin@mediatek.com>
+In-Reply-To: <20240301111126.22035-5-jason-jh.lin@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Il 01/03/24 12:11, Jason-JH.Lin ha scritto:
-> Add cmdq_pkt_poll_addr function to support CMDQ user making
-> an instruction for polling a specific address of hardware rigster
-> to check the value with or without mask.
+> Add cmdq_pkt_acquire_event() function to support CMDQ user making
+> an instruction for acquiring event.
 > 
-> POLL is an old operation in GCE, so it does not support SPR and
-
-POLL is a legacy operation in GCE, so it does not support .....
-
-> CMDQ_CODE_LOGIC. CMDQ users need to use GPR and CMDQ_CODE_MASK
-> to move polling register address to GPR to make an instruction.
-> This will be done in cmdq_pkt_poll_addr().
+> CMDQ users can use cmdq_pkt_acquire_event() and cmdq_pkt_clear_event()
+> to acquire GCE event and release GCE event and achieve the MUTEX_LOCK
+> protection between GCE threads.
 > 
 > Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-> Change-Id: I91ff98e06570dc4501187eb29de64aaa65b1cf13
+> Change-Id: Icdae6b60345c7ec1d7541ac76d1f06da56959cde
+
+Drop Change-Id please.
+
 > ---
->   drivers/soc/mediatek/mtk-cmdq-helper.c | 38 ++++++++++++++++++++++++++
->   include/linux/soc/mediatek/mtk-cmdq.h  | 16 +++++++++++
->   2 files changed, 54 insertions(+)
+>   drivers/soc/mediatek/mtk-cmdq-helper.c | 15 +++++++++++++++
+>   include/linux/soc/mediatek/mtk-cmdq.h  |  9 +++++++++
+>   2 files changed, 24 insertions(+)
 > 
 > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 3a1e47ad8a41..2e9fc9bb1183 100644
+> index 2e9fc9bb1183..0183b40a0eff 100644
 > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -12,6 +12,7 @@
->   
->   #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
->   #define CMDQ_POLL_ENABLE_MASK	BIT(0)
-> +#define CMDQ_POLL_HIGH_ADDR_GPR	(14)
->   #define CMDQ_EOC_IRQ_EN		BIT(0)
->   #define CMDQ_REG_TYPE		1
->   #define CMDQ_JUMP_RELATIVE	1
-> @@ -406,6 +407,43 @@ int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
+> @@ -342,6 +342,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event, bool clear)
 >   }
->   EXPORT_SYMBOL(cmdq_pkt_poll_mask);
+>   EXPORT_SYMBOL(cmdq_pkt_wfe);
 >   
-> +int cmdq_pkt_poll_addr(struct cmdq_pkt *pkt, dma_addr_t addr, u32 value, u32 mask)
+> +int cmdq_pkt_acquire_event(struct cmdq_pkt *pkt, u16 event)
 > +{
-> +	struct cmdq_instruction inst = { {0} };
-> +	int err;
-> +	u8 use_mask = 0;
+> +	struct cmdq_instruction inst = {};
 > +
-> +	if (mask != U32_MAX) {
-
-inst.op = CMDQ_CODE_MASK;
-
-/* Describe what you're doing here as a comment please */
-if (mask < GENMASK(31, 0)) {
-	inst.mask = ~mask;
-	err = cmdq_pkt_append_command ...
-	use_mask ...
-}
-
-/* POLL is a legacy operation in GCE and ... etc etc */
-inst.mask = addr;
-inst.dst_t = ...
-inst.sop = ...
-err = cmdq_pkt_append... etc etc etc
-
-
-> +		inst.op = CMDQ_CODE_MASK;
-> +		inst.mask = ~mask;
-> +		err = cmdq_pkt_append_command(pkt, inst);
-> +		if (err != 0)
-> +			return err;
-> +		use_mask = CMDQ_POLL_ENABLE_MASK;
-> +	}
+> +	if (event >= CMDQ_MAX_EVENT)
+> +		return -EINVAL;
 > +
-> +	/*
-> +	 * POLL is an old operation in GCE and it does not support SPR and CMDQ_CODE_LOGIC,
-> +	 * so it can not use cmdq_pkt_assign to keep polling register address to SPR.
-> +	 * It needs to use GPR and CMDQ_CODE_MASK to move polling register address to GPR.
-> +	 */
-> +	inst.op = CMDQ_CODE_MASK;
-> +	inst.dst_t = CMDQ_REG_TYPE;
-> +	inst.sop = CMDQ_POLL_HIGH_ADDR_GPR;
-> +	inst.mask = addr;
-> +	err = cmdq_pkt_append_command(pkt, inst);
-> +	if (err < 0)
-> +		return err;
+> +	inst.op = CMDQ_CODE_WFE;
+> +	inst.value = CMDQ_WFE_UPDATE | CMDQ_WFE_UPDATE_VALUE | CMDQ_WFE_WAIT;
+> +	inst.event = event;
 > +
-> +	inst.op = CMDQ_CODE_POLL;
-> +	inst.dst_t = CMDQ_REG_TYPE;
-> +	inst.sop = CMDQ_POLL_HIGH_ADDR_GPR;
-
-This is a reassignment of the same value. You can do it like
-
-/* dst_t and sop must be CMDQ_REG_TYPE, CMDQ_POLL_HIGH_ADDR_GPR */
-inst.op = CMDQ_CODE_POLL;
-inst.offset ...
-inst.value ....
-
-(but you're also inheriting the same `inst.mask`, was that intended?)
-
-err = cmdq_pkt_append ....
-if (err < 0)
-	return err;
-
-return 0
-}
-
-> +	inst.offset = use_mask;
-> +	inst.value = value;
 > +	return cmdq_pkt_append_command(pkt, inst);
 > +}
-> +EXPORT_SYMBOL(cmdq_pkt_poll_addr);
+> +EXPORT_SYMBOL(cmdq_pkt_acquire_event);
 > +
->   int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value)
+>   int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
 >   {
->   	struct cmdq_instruction inst = {};
+>   	struct cmdq_instruction inst = { {0} };
 > diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index b6dbe2d8f16a..2fe9be240fbc 100644
+> index 2fe9be240fbc..de93c0a8e8a9 100644
 > --- a/include/linux/soc/mediatek/mtk-cmdq.h
 > +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -253,6 +253,22 @@ int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
->   int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
->   		       u16 offset, u32 value, u32 mask);
+> @@ -202,6 +202,15 @@ int cmdq_pkt_mem_move(struct cmdq_pkt *pkt, dma_addr_t src_addr, dma_addr_t dst_
+>    */
+>   int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event, bool clear);
 >   
 > +/**
-> + * cmdq_pkt_poll_addr() - Append polling command to the CMDQ packet, ask GCE to
-> + *			 execute an instruction that wait for a specified
-> + *			 address of hardware register to check for the value
-> + *			 w/ or w/o mask.
-> + *			 All GCE hardware threads will be blocked by this
-> + *			 instruction.
+> + * cmdq_pkt_acquire_event() - append acquire event command to the CMDQ packet
+> + * @pkt:	the CMDQ packet
+> + * @event:	the desired event to be acquired
 
-/**
-  * cmdq_pkt_poll_addr() - Append blocking POLL command to CMDQ packet
-  * @pkt:	the CMDQ packet
-  * @addr:	the hardware register address
-  * @value:	the specified target register value
-  * @mask:	the specified target register mask
-  *
-  * Appends a polling (POLL) command to the CMDQ packet and asks the GCE
-  * to execute an instruction that checks for the specified `value` (with
-  * or without `mask`) to appear in the specified hardware register `addr`.
-  * All GCE threads will be blocked by this instruction.
-  *
-  * Return: 0 for success or negative error code
-  */
+What you wrote in the commit message is good documentation for this function,
+please also put it here in kerneldoc format as a documentation paragraph.
 
-That's better, isn't it? :-)
-
-Cheers,
-Angelo
-
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + */
+> +int cmdq_pkt_acquire_event(struct cmdq_pkt *pkt, u16 event);
+> +
+>   /**
+>    * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+>    * @pkt:	the CMDQ packet
 
