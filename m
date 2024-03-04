@@ -1,147 +1,80 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12A82E636;
-	Mon,  4 Mar 2024 20:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4497BAF7;
+	Mon,  4 Mar 2024 20:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709583548; cv=none; b=HoUqS3WZIH/IlVKQEPuJbqU3/TDDtFlTVi6Z4KpmK74qmnNmOPM5znjFl7DT925uUDyXWHjVutwUy5Cju8vOQF0id+YSdtk38S3/5I/ibb3r1HJhp2L8hOHwl8wd4gsLIj2Nga+x2KwXgAb2unuOLf7OPZrKGw3WURw/1GpMVN8=
+	t=1709583562; cv=none; b=UGplq1fpAXPwOlicdzmyAxP2Y0zXBRWyL+kg8COlxPW111SE7+ZlTttSZH8/wCoINBrNn1hFvncdmncUr7IESWqoGUc1x54DD3SG2z+dDo6MRqG9FL7GMTEESYqH0+DF0Zi6Uc/8h4KDZ8uTD4W3ji4fpnmRWH4Ki/xpXZ2jhXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709583548; c=relaxed/simple;
-	bh=M+/xdlz1QvqpEWGoIZLkPz4ZJeD4ax74ffb0kjZ9s/Q=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=S5sGFpBch7piDrM9SfCW3E0VFRPrUTk19xE70/1r/9eRlipveJRfWd5N5Wf4Mbt6JDbVhBBnWuPMwog2ojSfVoByYja4wtse20oWpskC+Wz9Ps9C9Ml/GZ/4HKM4oq/fW1OVO4EVSGSTOxsOq5/R8H79UOR4DpauCuO9JzhJ1MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=darkKDg7; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1709583562; c=relaxed/simple;
+	bh=cZLqTYaiOu2bk9deA+g54OjJ2LadNtfU7hA7K/nKNM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CChWoGlY66+0/mzb1lBThXp0UBVvFpAALBpGEuf92kR0F8Wo0Hij+Yu9dA9JRDQvV8djP5zkTOg9GxG/mEw4farn/CCD8WIm0wZ5b9fFij8iNam4sSdKXMSGbDfEc0pp/SZfbJ7EOvsEr375Z0wMSDUwm9lUFQrxDznaGN264Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="darkKDg7"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51336ab1fb7so3251246e87.1;
-        Mon, 04 Mar 2024 12:19:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709583545; x=1710188345; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=6pv+kY8whLJz4MmGOfFA47yW+Q8l6/NhyCVwVLlKeGI=;
-        b=darkKDg7/IObHgJbP8vwHKvXgeaIPh3i4iI4o4sSHD5dib1kgKW8B3e+Qk46LSoVJ5
-         RulbDzdMGYi3N3SNbe5hvzd05phaHWtrxO3z5t/deZW1Z/S/JEj+d+UHHpxct+jipUWG
-         CB4Pc0y3q+QoYR8xMQsY1ELwADznppkrMQrgE7Nmo6zTjXODWEK0BMQXAl7Op4NjU4jB
-         01eFuTGprYWWF24T/SLji0Omt8N2QptaDJ09qc51iH98bx4f5eaP1Plwtn11eZ6Uh/5k
-         pzRgB+UHHqjwJQ9B7CIAQ3B9X0D6PBkunIZC67/ju6mfR+NReCRDQhx+T/u7N9SzZYI1
-         wIMw==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a456ab934eeso163486466b.0;
+        Mon, 04 Mar 2024 12:19:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709583545; x=1710188345;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1709583559; x=1710188359;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6pv+kY8whLJz4MmGOfFA47yW+Q8l6/NhyCVwVLlKeGI=;
-        b=FZ6UkSj+kDZH040+JvN35h65VmCkMS/XTOJ/qdbehSPDp+e6qkDVfAN0YnuygJieIK
-         oKZi5No+WOtkC+91A703d6UNeCYFcY72n+u2G3mponFFeA7S7fr58dbGqC5PhtkH1rZq
-         BqNQaOsPmXlq0KyygdfZhhmVNYN+nweXANAkH1J1+shQo0ARyPpzw/BnKpquzOYj/pAQ
-         ijuR3o6oizEH8Bmkk31k83PiCRYqM9N94JgB+wlAF6TrpWBa/060jl4c4lWOhYMVE9eB
-         JquCFpwlv/zDNk4l4g+3NNNjr1DMO1h0fLd0wjM+T38e0SHV/DNzxwovWbuQCfVyMEKz
-         Qe1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXRmu+P1YZljd4wDQAtZ0A/JVVTxoojhAwrl4nsrW+5VloqqPtrroVdtjg3e+9ZBTn3se9Ar4gv7WArjP2WIWp4wG+uChvzXBMf2lY=
-X-Gm-Message-State: AOJu0Yz5PqSPbhjQHWxswjhXeffMtJ0n/pIi3vsZXW5BoPqUBj0VJyRw
-	VamMw1UCnQyhN9jHNwWTiUzbcvMPOx8y0ySebnIrDqW9D0qgLXaZ
-X-Google-Smtp-Source: AGHT+IGsTnaWlja6vmBn9D40KwtWWwwyFRSUL8wYXJjqhn5b3Kql6hYAYTxHXCaCeXVGsnLuR6EOpw==
-X-Received: by 2002:ac2:599b:0:b0:512:f6d3:9998 with SMTP id w27-20020ac2599b000000b00512f6d39998mr6359192lfn.17.1709583544520;
-        Mon, 04 Mar 2024 12:19:04 -0800 (PST)
-Received: from razdolb ([89.208.103.172])
-        by smtp.gmail.com with ESMTPSA id h5-20020a056512350500b00513342ba90csm1351993lfs.22.2024.03.04.12.19.01
+        bh=bLBb+T9z5q+g5UgFeOXXQ/ZVAkRZaqhWpyHrBugMSCI=;
+        b=Z4jyjFiAfHgKHgY4BJhuZV6Yv8swM6d00bws7ZocepP9MaLGbb4O6lm4xoBC+nmdkK
+         wFK4+VzFBJs8PoU5EKJHzkHDOrneG9fAzFM1s5P7vTbLPpDAq/1abUYswYj0aWwPqZc2
+         ZTtb4cWNnqdqZ4gBxapXrDCMQ81vot1+qrIMX9WRS/iKTXzrO/suu5Ef4DnuDlKOxjcU
+         fqNNpL5DcDZZBDPCNGKqYQVRUC7qfFPXilL+cW0Gi6c68mg0VFXHVQEGWj7eouS25Z7h
+         1vB37qVtFohC1txvy9yqJm1Ibf+xbLQ3M4j6PHa/KVeEG+M/g0V4Rn5jAAe6cT6i+4bZ
+         VC1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXVp2S3rwTK0nbYqopKYuuSt89rjV1aPi1eq2dWvtgV7qaCUK7ofV9yLweVPPwC8hkD4F2JUgst2ZUSSXKXusToruxAe5uBTLudtgE8UTfT3rm/ma9xRvfH0x1pg/obuAL1j0Lvs+Hu6lMGRtI9C08WHbmo+BStM2S41UdySKk9
+X-Gm-Message-State: AOJu0YzJgs7qSr6kFKtOn7TJFElhsovZM983J86Fn8fWzJdDdqWw9a0e
+	rqUV+th6wLkIAKLrNYE3Zfc9q0qXxVoKL1BNVddsVcmSiLJR1xGM
+X-Google-Smtp-Source: AGHT+IHVh3TH5B0Fu/qX11N+HGXIGYiif+MCCFo90LFmFwuCKns4eQHrYi06IzUsH8sLH9WcZ2o1GQ==
+X-Received: by 2002:a17:906:a89a:b0:a45:5b6c:e524 with SMTP id ha26-20020a170906a89a00b00a455b6ce524mr2134919ejb.65.1709583558999;
+        Mon, 04 Mar 2024 12:19:18 -0800 (PST)
+Received: from gmail.com (fwdproxy-lla-005.fbsv.net. [2a03:2880:30ff:5::face:b00c])
+        by smtp.gmail.com with ESMTPSA id f17-20020a170906049100b00a40f7ed6cb9sm5239682eja.4.2024.03.04.12.19.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 12:19:04 -0800 (PST)
-References: <20240229165333.227484-1-mike.rudenko@gmail.com>
- <20240229165333.227484-7-mike.rudenko@gmail.com>
- <170957098683.566498.5256791258269936446@ping.linuxembedded.co.uk>
-User-agent: mu4e 1.10.8; emacs 29.2.50
-From: Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>,
- Tommaso Merciai <tomm.merciai@gmail.com>, Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>
-Subject: Re: [PATCH v3 06/20] media: i2c: ov4689: Refactor ov4689_set_ctrl
-Date: Mon, 04 Mar 2024 23:17:34 +0300
-In-reply-to: <170957098683.566498.5256791258269936446@ping.linuxembedded.co.uk>
-Message-ID: <875xy1hhsc.fsf@gmail.com>
+        Mon, 04 Mar 2024 12:19:18 -0800 (PST)
+Date: Mon, 4 Mar 2024 12:19:16 -0800
+From: Breno Leitao <leitao@debian.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Loic Poulain <loic.poulain@linaro.org>,
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-ppp@vger.kernel.org
+Subject: Re: [PATCH net-next 6/6] nfc: core: make nfc_class constant
+Message-ID: <ZeYsxHCK43NAx3UY@gmail.com>
+References: <20240302-class_cleanup-net-next-v1-0-8fa378595b93@marliere.net>
+ <20240302-class_cleanup-net-next-v1-6-8fa378595b93@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240302-class_cleanup-net-next-v1-6-8fa378595b93@marliere.net>
 
-
-Hi Kieran,
-
-On 2024-03-04 at 16:49 GMT, Kieran Bingham <kieran.bingham@ideasonboard.com> wrote:
-
-> Hi Mikhail,
->
-> I love this series. ;-)
-
-Thanks! :)
-
-> Quoting Mikhail Rudenko (2024-02-29 16:53:19)
->> Introduce local variable for regmap within the ov4689_set_ctrl
->> function. This adjustment eliminates repetition within the function.
->>
->> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
->
-> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
->
->> ---
->>  drivers/media/i2c/ov4689.c | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
->> index 56bf1d964e43..1bc00404f3fb 100644
->> --- a/drivers/media/i2c/ov4689.c
->> +++ b/drivers/media/i2c/ov4689.c
->> @@ -580,10 +580,11 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->>  {
->>         struct ov4689 *ov4689 =
->>                 container_of(ctrl->handler, struct ov4689, ctrl_handler);
->> +       struct regmap *regmap = ov4689->regmap;
->>         struct device *dev = ov4689->dev;
->>         int sensor_gain;
->>         s64 max_expo;
->> -       int ret;
->> +       int ret = 0;
->>
->>         /* Propagate change of current control to all related controls */
->>         switch (ctrl->id) {
->> @@ -603,16 +604,15 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->>         switch (ctrl->id) {
->>         case V4L2_CID_EXPOSURE:
->>                 /* 4 least significant bits of exposure are fractional part */
->> -               ret = cci_write(ov4689->regmap, OV4689_REG_EXPOSURE,
->> -                               ctrl->val << 4, NULL);
->> +               cci_write(regmap, OV4689_REG_EXPOSURE, ctrl->val << 4, &ret);
->>                 break;
->>         case V4L2_CID_ANALOGUE_GAIN:
->>                 ret = ov4689_map_gain(ov4689, ctrl->val, &sensor_gain);
->> -               cci_write(ov4689->regmap, OV4689_REG_GAIN, sensor_gain, &ret);
->> +               cci_write(regmap, OV4689_REG_GAIN, sensor_gain, &ret);
->>                 break;
->>         case V4L2_CID_VBLANK:
->> -               ret = cci_write(ov4689->regmap, OV4689_REG_VTS,
->> -                               ctrl->val + ov4689->cur_mode->height, NULL);
->> +               cci_write(regmap, OV4689_REG_VTS,
->> +                         ctrl->val + ov4689->cur_mode->height, &ret);
->>                 break;
->>         case V4L2_CID_TEST_PATTERN:
->>                 ret = ov4689_enable_test_pattern(ov4689, ctrl->val);
->> --
->> 2.43.0
->>
-
-
---
-Best regards,
-Mikhail Rudenko
+On Sat, Mar 02, 2024 at 02:06:02PM -0300, Ricardo B. Marliere wrote:
+> Since commit 43a7206b0963 ("driver core: class: make class_register() take
+> a const *"), the driver core allows for struct class to be in read-only
+> memory, so move the nfc_class structure to be declared at build time
+> placing it into read-only memory, instead of having to be dynamically
+> allocated at boot time.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+Reviwed-by: Breno Leitao <leitao@debian.org>
