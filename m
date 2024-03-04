@@ -1,151 +1,137 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3976216C
-	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 18:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079D578B44;
+	Mon,  4 Mar 2024 18:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709578183; cv=none; b=Yaw8s1CuhfAg+e+M86q1H7CwlzmP2FlIeN2MO/07buj2gNdoKNUeMKDfeYntDGLQ5LtQMKCUoU7+SlGXv1YCedn2s87sYqQpqG0C5D0pKPvnw5cA1FaDQO+WGMbSKnNw8R4H2TARV57GUF2M9DXGn6VC9j3kwx7Xl5QTJh+52GE=
+	t=1709578223; cv=none; b=um8kTWZGvQhitCp5MzEPDl2EoNEyGK8XgrWPfsJ7LMd0rlezIRj85lA31YN0plbLP9KXSosPh706254LkSCNO6Dxei5sE19ZE5B/5srAWAcph3/EWPHmP8XoBaVhwLp0IjhQN/6+CPuxu+SjmSm6o9PMfPcYcRD52FhAufEWkmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709578183; c=relaxed/simple;
-	bh=IcLElAry6DIoRKKwJQmpd7ju+FKDVUugrCBgj64Jc1w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ImBB4YNRu1p97mxNsTqfpkocURGlbKtIHVSaSXhYDuY59MEIs+WpFIXYJc+fQUF7QE6PSSFplKDxDFpOwx/xJFXBypBktO0q4d4g1e0dTXvfx8GVVy+/CyVqs4noYROHVdj+f5z2QUXOq1U5v2m1KOydVCRWQ2hGqvAXKgQepsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FjOMYjnR; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709578223; c=relaxed/simple;
+	bh=7eDOCTzxgjXTz40cs4/kG1usCYFXG1biUAupDWGxh4g=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnYjcfx6bX6awtnA7RuiNUzArSAge7o4GhQjtjPiXh8q5vU561/u1G5lIZkrK4P3RA1ZvkRa0yWajmzg5A1hxtqTQA6CsdUVgVYGU5eMMFt10GiqxMSwX0ZyOaE5yFdljpR/cJYAFPkVUZFx5vSa+6MNd+wI6+VO+tejzTzagmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYZ4uoSn; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FjOMYjnR"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e5eb3dd2f8so1489574b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 10:49:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYZ4uoSn"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a36126ee41eso734387866b.2;
+        Mon, 04 Mar 2024 10:50:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709578179; x=1710182979; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2QOKxvJdszgSExOijEeIBqvAxDpXCtl9o7KCQ12P01Y=;
-        b=FjOMYjnRMCw8a5h5ArmSEPQ6udrpaxW+1c0RexEdjfVm9cpDln9PewKj+qmiD09/rq
-         jbSGrBJ9sZAN6kkLxylO+qxRHMFx0vrQQZyEoWwU3VHNHvjNflgYvjbKKAz2C2Lc5c9N
-         Mn/XvuCQamq9Qf/t1fVTySzbuf+Sr8pTRa+CE=
+        d=gmail.com; s=20230601; t=1709578220; x=1710183020; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eWFpKyxy2sK/uWQlofpzOWO2CjJJHb7rOXZzYRW1nfs=;
+        b=OYZ4uoSnTZAv3stWqenFrq7Vs5gh9PNqk58IAmbc+51Y+BaExrnrV4IuaPijoZOsfu
+         /CAIKsONkeb9/KlLmMQpHTQD0780Ef23ehZE+KALKCEKRfG+tgAk2dxN9/42XojvDyPD
+         caKKtwHTwQ65kxo+ERkSRe5kWMGxp3jEB0gBK0NfdhGsMhhZCC67oLZq4DZ/MogViBoZ
+         xvPM13M8aZnIyEhFK3hxzCYjfeCxBmYwoCXNocxyDir2/2Tx3X4OjEAnL+HxwMPAcaAd
+         3v1unZf1cDti+uof1gFWQB7SBD1VAtP0axWS0AfDKiXd1pq949iwhH8SfqIYcZPbN61Y
+         Wntg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709578179; x=1710182979;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2QOKxvJdszgSExOijEeIBqvAxDpXCtl9o7KCQ12P01Y=;
-        b=OcgFWE3N1FsLN5NyPm+AAaG0odph5ITEzHVObVwxrt9Ka/TophaD0gEglM9Xdl0eyC
-         fNiUChyfGKukOjepSS7g87mz/yhUhPm7E7CrDdNdYDoZ1z9JmJY75OHHHCLcZ+Zub5KE
-         +4Ehjsa/591AuVuZ4feKId0Yj4gTFWLZ2ScKBZZfHv29BgYfJJQ52XpX9v60/gmaMVl9
-         g/tmNiIAAwsG+IdvSwmcev2GQk5q7jKR92dNyrSuOZtgJD/F+n5fVJHbr3HLhcpeEtwi
-         tmBC3CeYDaB3z1Z/hXK6CiL7lNOc1MNsskmSFeJksPq+gqVs+QcHU6E6qnAXEo0iMjaH
-         QmXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLBZjm+ljIv49MfgKGEZlexmhFolclDlwpuVDY1vLjz3D5fBbeYEmu2bKxcVrJHDEt/xzs7K340ZCKA6ZnAUSTQS8qyGBpdjdu/dO6
-X-Gm-Message-State: AOJu0YyBAejICpSzcwRQRrMuwYhWlZK8KufY6qQpyKVZHU4eahEF6p4x
-	Vk8yMx6MFT4eR8SCy7ZS/uc5nO95EoNv6xKvsFvVI+eRaIK73zY+pObEtoYQEw==
-X-Google-Smtp-Source: AGHT+IGILIudDoOhkhQCWTyG9z0DMQjNf1OD2uCgU2558fLWKJP3m4244pk1XqBrh1eKa3auyU02eA==
-X-Received: by 2002:aa7:88c1:0:b0:6e5:5425:d914 with SMTP id k1-20020aa788c1000000b006e55425d914mr10540158pff.2.1709578179470;
-        Mon, 04 Mar 2024 10:49:39 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r27-20020aa79edb000000b006e60c08cbcasm2881132pfq.50.2024.03.04.10.49.34
+        d=1e100.net; s=20230601; t=1709578220; x=1710183020;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eWFpKyxy2sK/uWQlofpzOWO2CjJJHb7rOXZzYRW1nfs=;
+        b=AGfX25Np8A1uW34UKgOaup+qJwdY2hcbx4tmfP8j8iV8u6EZOMSfxxAVg2II6DABgv
+         PHq0EyugKmrmfFDZj5HZTyPxBHumqBoBxROwXgPr683sIyQ3EglrzPLXR4E5AkzNYcka
+         LRsfuiGgpV6VNO+cnffjo/tfcVQyw55L+4FAn+7Cih2xPOd4j4gmiNaPL0CV8edmZzrL
+         WSPmBB4kxltqdXKOXFHPCIwzLgcRO5VoTwCFxBCoXiJ/kA4pd2+JjoTKXccjyO+Grry9
+         NtIyBhaTx3dKfXkzv7L8AT78dSgYsvFXIqjhYsFBEiCHCqEZ3fGtbqHJxxTe1s5iCKOC
+         qSAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaeOLe8iJHoAcVdvJDeb8M31l48pUj/MvT6ipRyk4LVJC/97tgxKMOJkWtuE6vhhFnneDydmtVJlyUAAKCt5o3Ziu+OhIN3SYnACSlECuWTz0vLIKwDD3BKqAXwBwt+A221gg7u9YE
+X-Gm-Message-State: AOJu0YzoqILskILxMZEKdAbFIb2CkAnUfQrkJxRSsh0VmImytMIjHvHu
+	E0ws5Je1InNEitCT+wlYRsLEbfSAeDFFfNVBWzjqkjKQxsg38loC
+X-Google-Smtp-Source: AGHT+IHm8GJoX6TNzaQwnr9sHfpUcgpcdudEaQyQa9XAN5AOYVBbefyqIcFs86MI0jUuUqg3DhSGqQ==
+X-Received: by 2002:a17:906:c352:b0:a45:5c4a:2db5 with SMTP id ci18-20020a170906c35200b00a455c4a2db5mr1862119ejb.48.1709578220106;
+        Mon, 04 Mar 2024 10:50:20 -0800 (PST)
+Received: from vamoiridPC ([2a04:ee41:82:7577:d458:fb5d:c4e5:fb19])
+        by smtp.gmail.com with ESMTPSA id ag3-20020a1709069a8300b00a44790d06d3sm4243212ejc.71.2024.03.04.10.50.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 10:49:34 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Kees Cook <keescook@chromium.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 3/4] xattr: Use dedicated slab buckets for setxattr()
-Date: Mon,  4 Mar 2024 10:49:31 -0800
-Message-Id: <20240304184933.3672759-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240304184252.work.496-kees@kernel.org>
-References: <20240304184252.work.496-kees@kernel.org>
+        Mon, 04 Mar 2024 10:50:19 -0800 (PST)
+From: Vasileios Amoiridis <vassilisamir@gmail.com>
+X-Google-Original-From: Vasileios Amoiridis <vamoirid@vamoiridPC>
+Date: Mon, 4 Mar 2024 19:50:17 +0100
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Vasileios Amoiridis <vassilisamir@gmail.com>, jic23@kernel.org,
+	lars@metafoo.de, ang.iglesiasg@gmail.com, mazziesaccount@gmail.com,
+	ak@it-klinger.de, petre.rodan@subdimension.ro, phil@raspberrypi.com,
+	579lpy@gmail.com, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] iio: pressure: Add timestamp and scan_masks for
+ BMP280 driver
+Message-ID: <20240304185017.GA3955@vamoiridPC>
+References: <20240303165300.468011-1-vassilisamir@gmail.com>
+ <20240303165300.468011-4-vassilisamir@gmail.com>
+ <ZeW048EyOAze7oZR@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1560; i=keescook@chromium.org;
- h=from:subject; bh=IcLElAry6DIoRKKwJQmpd7ju+FKDVUugrCBgj64Jc1w=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5he8RUV3Nml6+beLYoX/gI6MaxpEQEieiV1Pk
- LAMHZWkh1eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeYXvAAKCRCJcvTf3G3A
- JgarD/9HvGby2B7eoqRlayCbyDlLBOSIiVV2Bq+vUUsC8Ne0FV1zyqgFRQrXbQ2G6VGoWXimSlm
- M1jvsW/Y99i2kQDWqeDEZeZf+LehlADDm5Vd8pmJfMMgX19BF898FQYPT7s7OKOxOJ4T/GuE1Kf
- f8BRgEGLrWxyrMYUyG5/wFYfmfEzazDwiU+A/d2eMxhnYFT6e1elFQ0FweaUabd1+ZCJwV5UdWh
- HIyGFxL/YTavdVnf68HYBNALeF2lzUERVyzafZOv6WzhMzem7sDreYdkBpWwU4Nvafa5vCB+mCZ
- kz+tSe+uPkTDLUvM18O8w9hPQ0ywaf1CFBDkCciseVfUKVnH06WlWb84AbCwLv1KSDl6ipWRLxU
- 84NhknBpAY4fgIguhU0kDs83NhdIl/kn10T/oubIkmY5wdavroHRaFjSlkw/VAeVdJCOOH+U3b9
- AJDGgUmwEUlmq7b731/mixhLBrz0CTKq8Aa59nDba3ji+Utrd7I1HKHwMPTcsPrBIVtK2QspH+t
- pcBzTrTkEuaW7vRD41WXoqxhSJ+mUK3+SKCFafsj0ZaMq2qMA977BazfKFPlNrWRRWzRrteGmk1
- Q8c9m2anBqS3EOtpP7bZ2OHyh5VlDQiLJP6Mo78p0Tkgsf+LU7XH1gWUSibuhbnTREFTie5DhAK x63js6NDKJKKoCA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZeW048EyOAze7oZR@smile.fi.intel.com>
 
-The setxattr() API can be used for exploiting[1][2][3] use-after-free
-type confusion flaws in the kernel. Avoid having a user-controlled size
-cache share the global kmalloc allocator by using a separate set of
-kmalloc buckets.
+On Mon, Mar 04, 2024 at 01:47:47PM +0200, Andy Shevchenko wrote:
+> On Sun, Mar 03, 2024 at 05:52:59PM +0100, Vasileios Amoiridis wrote:
+> > The scan mask for the BME280 device which contains humidity
+> > measurement needs to become different in order for the timestamp
+> > to be able to work. Scan masks are added for different combinations
+> > of measurements. The temperature measurement is needed for either
+> > pressure or humidity measurements.
+> 
+> ...
+> 
+> > +enum bmp280_scan {
+> > +	BMP280_TEMP,
+> > +	BMP280_PRESS,
+> > +	BME280_HUMID,
+> > +};
+> 
+> Hmm... Why do we need to actually copy the IIO ones? Can't we use IIO ones
+> directly (or in some way)?
+> 
 
-Link: https://duasynt.com/blog/linux-kernel-heap-spray [1]
-Link: https://etenal.me/archives/1336 [2]
-Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [3]
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org
----
- fs/xattr.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 09d927603433..2b06316f1d1f 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -821,6 +821,16 @@ SYSCALL_DEFINE4(fgetxattr, int, fd, const char __user *, name,
- 	return error;
- }
- 
-+static struct kmem_buckets *xattr_buckets;
-+static int __init init_xattr_buckets(void)
-+{
-+	xattr_buckets = kmem_buckets_create("xattr", 0, 0, 0,
-+					    XATTR_LIST_MAX, NULL);
-+
-+	return 0;
-+}
-+subsys_initcall(init_xattr_buckets);
-+
- /*
-  * Extended attribute LIST operations
-  */
-@@ -833,7 +843,7 @@ listxattr(struct dentry *d, char __user *list, size_t size)
- 	if (size) {
- 		if (size > XATTR_LIST_MAX)
- 			size = XATTR_LIST_MAX;
--		klist = kvmalloc(size, GFP_KERNEL);
-+		klist = kmem_buckets_alloc(xattr_buckets, size, GFP_KERNEL);
- 		if (!klist)
- 			return -ENOMEM;
- 	}
--- 
-2.34.1
-
+What do you mean exactly by copying the IIO ones? These values are used as
+indexes to enable channels in the avail_scan_masks below. 
+> ...
+> 
+> > +static const unsigned long bmp280_avail_scan_masks[] = {
+> > +	BIT(BMP280_TEMP),
+> > +	BIT(BMP280_PRESS) | BIT(BMP280_TEMP),
+> > +	0,
+> 
+> No comma for the terminator line.
+> 
+> > +};
+> 
+> > +static const unsigned long bme280_avail_scan_masks[] = {
+> > +	BIT(BMP280_TEMP),
+> > +	BIT(BMP280_PRESS) | BIT(BMP280_TEMP),
+> > +	BIT(BME280_HUMID) | BIT(BMP280_TEMP),
+> > +	BIT(BME280_HUMID) | BIT(BMP280_PRESS) | BIT(BMP280_TEMP),
+> > +	0,
+> 
+> Ditto.
+> 
+> > +};
+> 
+> ...
+> 
+> >  	const struct iio_chan_spec *channels;
+> >  	int num_channels;
+> > +	const unsigned long *avail_scan_masks;
+> >  	unsigned int start_up_time;
+> 
+> Please, run `pahole` every time you are changing data structure layout.
+> Here you efficiently wasted 8 bytes of memory AFAICS.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
