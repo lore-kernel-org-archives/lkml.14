@@ -1,78 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C753A287;
-	Mon,  4 Mar 2024 10:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1224224B26;
+	Mon,  4 Mar 2024 10:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709547645; cv=none; b=eqjP4r7i3t76GOpB9vzMMQCIxnbhqNOTbCYYgDLL9OR7/Jdf4iNLYNyh+3HP+nRr32pR8NDLhUjBiUh8RUQsTbRKaBLNTsp0fkL5oVe/rKlyI3RSpa90wJI3i0Izc8wuKuxykEgQlmtcxDTBWv28MnTCKbLsooj8xjAcLgwXv5g=
+	t=1709547705; cv=none; b=tjllv7+B+Y9lH+2mTIRFbLllQBJQHxMKxPHpKK8LYsIsgAuJQDhN/d8Iz8szUc6G5GFayV4zZROloCYo4oPGAkEaqnWvk0Sdqfp/J6CH5Z457GMyLstCMceLbBgHNi/5ZcGuNe05cxEzq/z97AMy6Oz0skztmj3vv602YEKbxYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709547645; c=relaxed/simple;
-	bh=RnyaXHp34/XBiZ9fQ0M6N8Mmtv7MxUyjtJdBo/8gix8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=RcF3jRPBSFQ3lKk0ObpFtwOhFaFj1cQ/B0Bn2u8XFzcoWgDu3wFoSxy9YbmDMMbL+YRFeavH6H/JP+f4d7Hj8H4W/3ZtV924eVUdCOiGVCrtQUPck12dnHu1kRANNAIioLfnxITRj8j8qOvkjo+ixmmbJTQRP+T1vy06cWwHwNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDBqoGVS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709547705; c=relaxed/simple;
+	bh=CdqsZgMWba5+4/38tOJ0rHa2CTmblAVjgPmyX2jcBAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hKJp0UnV2AQsQf48Hw0VMntiaqtfb10+Lg05cJshNnd2Lf/j5+3r0anySpmV+85XGj/9PTYdjhJMyluuCi4DQ1BwjvUSuyrO3DLn93Sl04mbYOSyuuR8zzrRsMvKpk/WrRWetObWkh0k+FD3+iMczSYEiVvwuHyYxzshB9nk9XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hmxqRTZH; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDBqoGVS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DA596C433F1;
-	Mon,  4 Mar 2024 10:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709547644;
-	bh=RnyaXHp34/XBiZ9fQ0M6N8Mmtv7MxUyjtJdBo/8gix8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UDBqoGVSVUsHD0E4nxPm9X4Im4TYQdH37AMFUJJ6Otf5CRz+B6ZubqaeARqVvUf+q
-	 oYduAvZhNS1vD26ETK7cebs3bpT+g0zxPHccyi/DML3EHRVo2AkP21XRt0Y0xS/FGo
-	 +xsI+fXNZr3m14WEJhyI89D5ctkYSpLNzAviFIKFsJztF/VmJ/RUAzboNA0ui2P49V
-	 BrjgDl6harpyQNOGH8TS7xd6VDFWK2T4aIymq7D6MjmSUVoSygc4HlsvlwuR9s7KDN
-	 Pma8M5+YQJYwIPr+SuW/JJlJY2SuRZg2Z1l/2bBXn8Tg4hGgSaRtORJuNTbK3PrbO2
-	 5wVrtDrWOIa2w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C80C6D9A4B9;
-	Mon,  4 Mar 2024 10:20:44 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hmxqRTZH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709547702;
+	bh=CdqsZgMWba5+4/38tOJ0rHa2CTmblAVjgPmyX2jcBAQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hmxqRTZHaFH0EmwDUqjKD9B2YwFeSsIN/Sv9G9R8MUAarAtX2CpV6WXAVo3j03DJZ
+	 6vtWlYiV9WgPT41PzE6h8UvM67wx+aYuxtN5FD6Z5ySrC0TSYmZWVDzObsJNaEEq19
+	 2F5mvVJ+sQerOh7Oec65NMyNutREUl9jXMX76RXUcTYj+60Jola5sSeKiapp7c3csh
+	 DrnyU2GY34R8J3dVvpY3sTjr9zMAhT+l4KSSlIpa2KFcJtnKaqdo5tN6OKykJmv9wh
+	 GlRMMxNol9Qj3uXcyXs/AHzksKgEVfi4mYlgmPapw+/Iel+AITOCchRhf27ktJFVQB
+	 DDXKQJZ5gzz6A==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7C77137813CB;
+	Mon,  4 Mar 2024 10:21:41 +0000 (UTC)
+Message-ID: <02738700-6328-460b-8a5f-fb531756dd55@collabora.com>
+Date: Mon, 4 Mar 2024 11:21:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next] Octeontx2-af: Fix an issue in firmware shared data
- reserved space
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170954764481.3200.8588355582535112124.git-patchwork-notify@kernel.org>
-Date: Mon, 04 Mar 2024 10:20:44 +0000
-References: <20240301110314.29800-1-hkelam@marvell.com>
-In-Reply-To: <20240301110314.29800-1-hkelam@marvell.com>
-To: Hariprasad Kelam <hkelam@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kuba@kernel.org,
- davem@davemloft.net, sgoutham@marvell.com, gakula@marvell.com,
- jerinj@marvell.com, lcherian@marvell.com, sbhatta@marvell.com,
- naveenm@marvell.com, edumazet@google.com, pabeni@redhat.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mtd: spi-nor: core: correct type of i to be signed
+Content-Language: en-US
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Takahiro Kuwano <Takahiro.Kuwano@infineon.com>
+Cc: kernel@collabora.com, kernel-janitors@vger.kernel.org,
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240301144517.2811370-1-usama.anjum@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240301144517.2811370-1-usama.anjum@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Fri, 1 Mar 2024 16:33:14 +0530 you wrote:
-> The last patch which added support to extend the firmware shared
-> data to add channel data information has introduced a bug due to
-> the reserved space not adjusted accordingly.
+Il 01/03/24 15:45, Muhammad Usama Anjum ha scritto:
+> The i should be signed to find out the end of the loop. Otherwise,
+> i >= 0 is always true and loop becomes infinite.
 > 
-> This patch fixes the issue and also adds BUILD_BUG to avoid this
-> regression error.
-> 
-> [...]
+> Fixes: 6a9eda34418f ("mtd: spi-nor: core: set mtd->eraseregions for non-uniform erase map")
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-Here is the summary with links:
-  - [net-next] Octeontx2-af: Fix an issue in firmware shared data reserved space
-    https://git.kernel.org/netdev/net-next/c/b8b85d048936
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
