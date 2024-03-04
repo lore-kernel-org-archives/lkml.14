@@ -1,420 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A311C6AB;
-	Mon,  4 Mar 2024 21:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCAB71C6AB
+	for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2024 21:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709589215; cv=none; b=B9ggAXfssvfsfCJZtDzpvw3GEbFzEr0efN23IOm+2zjLiz1MsMtLh9xRsYVQJ0wbS5x7q7404clyyIXAOWvKIjMyELEg+8aV/Vb0iZsFbfZjMbrjrYBWmMWg5jTTRuXyyW5BH1vtydEosbNkYWNHHhhuwBntVZSdu23D3HSPQ/o=
+	t=1709589337; cv=none; b=bUFMed9bZw52978cI0gVvVMtkuJYf47iSx3Pnnxx2lZFUmfTHLIeXuukqp4poGmuR5Pf/HHTHDSTwJLROtg971jR7wKaFmwy9iBdn6phtbb3QHANShEIJV2YyrVlWTi2s8XhiXeKeC4NIfz907rqKkgXpOv4+XznlHG4mLI3gfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709589215; c=relaxed/simple;
-	bh=bcFGcn/7wASYM0Bt2yGKIfKcLYHWUytcLvEknlx+63Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sHgpRzR2/lB9CXp6o/8s7yByYmYhqmKHU1BAtorx5S5pCUKr3z+mV147W+/M6EARd0pDqXN0HnFGyoZ3Rxd+S1/TqEaXjxgmJbsuPQTzP+wB+LLpmzqvJHJVzmkvdxbRminSgJbYrAzmNAKVtP/AJgZm2YQ5eZzsJdF/BO2d0o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eTA5GrOm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eTA5GrOm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8F2DC433F1;
-	Mon,  4 Mar 2024 21:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709589215;
-	bh=bcFGcn/7wASYM0Bt2yGKIfKcLYHWUytcLvEknlx+63Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eTA5GrOmCbMeUhWaaCKzUjy/4Tvz0NAJFbb5RAxJZ8O5e4sxsy/WHijXnyt3VN8yo
-	 86DMFDdV67UEcrM9SWn36fVaEjSH5kcapptgVWhHonPX0gaW3dDRzxtC9NI03jJCUk
-	 mcW9lsBSP5OT8DQMGxSzwYFSboLnmTYuMwjFdBko=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: [PATCH 5.15 00/84] 5.15.151-rc1 review
-Date: Mon,  4 Mar 2024 21:23:33 +0000
-Message-ID: <20240304211542.332206551@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1709589337; c=relaxed/simple;
+	bh=zzxnjcPWqYVHLpSydgzNKYkbJMrP+/KrDyhCMMneXU0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RQvaHBvlaG7rbG8flIdFC8YRQhINWjenhtmP9MD8vIkXBqngglfsTWnE3FCMfPKvaB1MBIjmLgZFgrtGpVGOhPhI2Elanm/L0qxgG1HYMAqFqTv+SV8+bfCrKy8IkBs96Sgu4OFxfg++iYMZCppdT6maWqESwhOVAJ2SSKwNssk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77E3D2F4;
+	Mon,  4 Mar 2024 13:56:05 -0800 (PST)
+Received: from [10.57.68.92] (unknown [10.57.68.92])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0147B3F73F;
+	Mon,  4 Mar 2024 13:55:25 -0800 (PST)
+Message-ID: <6cfc022a-0c7a-4fe6-aaa4-3d28aeacc982@arm.com>
+Date: Mon, 4 Mar 2024 21:55:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.151-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.15.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.15.151-rc1
-X-KernelTest-Deadline: 2024-03-06T21:15+00:00
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] mm: swap: Remove CLUSTER_FLAG_HUGE from
+ swap_cluster_info:flags
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>,
+ Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20231025144546.577640-1-ryan.roberts@arm.com>
+ <20231025144546.577640-2-ryan.roberts@arm.com>
+ <d108bd79-086b-4564-838b-d41afa055137@redhat.com>
+ <6541e29b-f25a-48b8-a553-fd8febe85e5a@redhat.com>
+ <ee760679-7e3c-4a35-ad53-ca98b598ead5@arm.com>
+ <ba9101ae-a618-4afc-9515-a61f25376390@arm.com>
+ <2934125a-f2e2-417c-a9f9-3cb1e074a44f@redhat.com>
+ <049818ca-e656-44e4-b336-934992c16028@arm.com>
+ <d2fbfdd0-ad61-4fe2-a976-4dac7427bfc9@redhat.com>
+ <b642c7ff-c452-4066-ac12-dbf05e215cb9@arm.com>
+ <949b6c22-d737-4060-9ca1-a69d8e986d90@redhat.com>
+ <9ed743a7-0c5d-49d9-b8b2-d58364df1f5f@arm.com>
+ <65a66eb9-41f8-4790-8db2-0c70ea15979f@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <65a66eb9-41f8-4790-8db2-0c70ea15979f@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This is the start of the stable review cycle for the 5.15.151 release.
-There are 84 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Wed, 06 Mar 2024 21:15:26 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.151-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.15.151-rc1
-
-Davide Caratti <dcaratti@redhat.com>
-    mptcp: fix double-free on socket dismantle
-
-Gal Pressman <gal@nvidia.com>
-    Revert "tls: rx: move counting TlsDecryptErrors for sync"
-
-Jakub Kicinski <kuba@kernel.org>
-    net: tls: fix async vs NIC crypto offload
-
-Martynas Pumputis <m@lambda.lt>
-    bpf: Derive source IP addr via bpf_*_fib_lookup()
-
-Louis DeLosSantos <louis.delos.devel@gmail.com>
-    bpf: Add table ID to bpf_fib_lookup BPF helper
-
-Martin KaFai Lau <martin.lau@kernel.org>
-    bpf: Add BPF_FIB_LOOKUP_SKIP_NEIGH for bpf_fib_lookup
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "interconnect: Teach lockdep about icc_bw_lock order"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "interconnect: Fix locking for runpm vs reclaim"
-
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-    gpio: fix resource unwinding order in error path
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    gpiolib: Fix the error path order in gpiochip_add_data_with_key()
-
-Arturas Moskvinas <arturas.moskvinas@gmail.com>
-    gpio: 74x164: Enable output pins after registers are reset
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    af_unix: Drop oob_skb ref before purging queue in GC.
-
-Max Krummenacher <max.krummenacher@toradex.com>
-    Revert "drm/bridge: lt8912b: Register and attach our DSI device at probe"
-
-Oscar Salvador <osalvador@suse.de>
-    fs,hugetlb: fix NULL pointer dereference in hugetlbs_fill_super
-
-Baokun Li <libaokun1@huawei.com>
-    cachefiles: fix memory leak in cachefiles_add_cache()
-
-Paolo Abeni <pabeni@redhat.com>
-    mptcp: fix possible deadlock in subflow diag
-
-Paolo Abeni <pabeni@redhat.com>
-    mptcp: push at DSS boundaries
-
-Geliang Tang <tanggeliang@kylinos.cn>
-    mptcp: add needs_id for netlink appending addr
-
-Jean Sacren <sakiwit@gmail.com>
-    mptcp: clean up harmless false expressions
-
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-    selftests: mptcp: add missing kconfig for NF Filter in v6
-
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-    selftests: mptcp: add missing kconfig for NF Filter
-
-Paolo Abeni <pabeni@redhat.com>
-    mptcp: rename timer related helper to less confusing names
-
-Paolo Abeni <pabeni@redhat.com>
-    mptcp: process pending subflow error on close
-
-Paolo Abeni <pabeni@redhat.com>
-    mptcp: move __mptcp_error_report in protocol.c
-
-Paolo Bonzini <pbonzini@redhat.com>
-    x86/cpu/intel: Detect TME keyid bits before setting MTRR mask registers
-
-Bjorn Andersson <quic_bjorande@quicinc.com>
-    pmdomain: qcom: rpmhpd: Fix enabled_corner aggregation
-
-Zong Li <zong.li@sifive.com>
-    riscv: add CALLER_ADDRx support
-
-Elad Nachman <enachman@marvell.com>
-    mmc: sdhci-xenon: fix PHY init clock stability
-
-Elad Nachman <enachman@marvell.com>
-    mmc: sdhci-xenon: add timeout for PHY init complete
-
-Ivan Semenov <ivan@semenov.dev>
-    mmc: core: Fix eMMC initialization with 1-bit bus connection
-
-Curtis Klein <curtis.klein@hpe.com>
-    dmaengine: fsl-qdma: init irq after reg initialization
-
-Tadeusz Struk <tstruk@gigaio.com>
-    dmaengine: ptdma: use consistent DMA masks
-
-Peng Ma <peng.ma@nxp.com>
-    dmaengine: fsl-qdma: fix SoC may hang on 16 byte unaligned read
-
-David Sterba <dsterba@suse.com>
-    btrfs: dev-replace: properly validate device names
-
-Johannes Berg <johannes.berg@intel.com>
-    wifi: nl80211: reject iftype change with mesh ID change
-
-Alexander Ofitserov <oficerovas@altlinux.org>
-    gtp: fix use-after-free and null-ptr-deref in gtp_newlink()
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    ALSA: firewire-lib: fix to check cycle continuity
-
-Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    tomoyo: fix UAF write bug in tomoyo_write_control()
-
-Dimitris Vlachos <dvlachos@ics.forth.gr>
-    riscv: Sparse-Memory/vmemmap out-of-bounds fix
-
-David Howells <dhowells@redhat.com>
-    afs: Fix endless loop in directory parsing
-
-Jiri Slaby (SUSE) <jirislaby@kernel.org>
-    fbcon: always restore the old font data in fbcon_do_set_font()
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: Drop leftover snd-rtctimer stuff from Makefile
-
-Hans de Goede <hdegoede@redhat.com>
-    power: supply: bq27xxx-i2c: Do not free non existing IRQ
-
-Arnd Bergmann <arnd@arndb.de>
-    efi/capsule-loader: fix incorrect allocation size
-
-Sabrina Dubroca <sd@queasysnail.net>
-    tls: decrement decrypt_pending if no async completion will be called
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: use async as an in-out argument
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: assume crypto always calls our callback
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: move counting TlsDecryptErrors for sync
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: don't track the async count
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: factor out writing ContentType to cmsg
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: wrap decryption arguments in a structure
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: don't report text length from the bowels of decrypt
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: drop unnecessary arguments from tls_setup_from_iter()
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: hw: rx: use return value of tls_device_decrypted() to carry status
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: refactor decrypt_skb_update()
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: don't issue wake ups when data is decrypted
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: don't store the decryption status in socket context
-
-Jakub Kicinski <kuba@kernel.org>
-    tls: rx: don't store the record type in socket context
-
-Oleksij Rempel <linux@rempel-privat.de>
-    igb: extend PTP timestamp adjustments to i211
-
-Lin Ma <linma@zju.edu.cn>
-    rtnetlink: fix error logic of IFLA_BRIDGE_FLAGS writing back
-
-Florian Westphal <fw@strlen.de>
-    netfilter: bridge: confirm multicast packets before passing them up the stack
-
-Florian Westphal <fw@strlen.de>
-    netfilter: let reset rules clean out conntrack entries
-
-Florian Westphal <fw@strlen.de>
-    netfilter: make function op structures const
-
-Florian Westphal <fw@strlen.de>
-    netfilter: core: move ip_ct_attach indirection to struct nf_ct_hook
-
-Florian Westphal <fw@strlen.de>
-    netfilter: nfnetlink_queue: silence bogus compiler warning
-
-Ignat Korchagin <ignat@cloudflare.com>
-    netfilter: nf_tables: allow NFPROTO_INET in nft_(match/target)_validate()
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    Bluetooth: Enforce validation on max value of connection interval
-
-Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-    Bluetooth: hci_event: Fix handling of HCI_EV_IO_CAPA_REQUEST
-
-Zijun Hu <quic_zijuhu@quicinc.com>
-    Bluetooth: hci_event: Fix wrongly recorded wakeup BD_ADDR
-
-Ying Hsu <yinghsu@chromium.org>
-    Bluetooth: Avoid potential use-after-free in hci_error_reset
-
-Jakub Raczynski <j.raczynski@samsung.com>
-    stmmac: Clear variable when destroying workqueue
-
-Justin Iurman <justin.iurman@uliege.be>
-    uapi: in6: replace temporary label with rfc9486
-
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-    net: usb: dm9601: fix wrong return value in dm9601_mdio_read
-
-Jakub Kicinski <kuba@kernel.org>
-    veth: try harder when allocating queue memory
-
-Vasily Averin <vvs@openvz.org>
-    net: enable memcg accounting for veth queues
-
-Oleksij Rempel <linux@rempel-privat.de>
-    lan78xx: enable auto speed configuration for LAN7850 if no EEPROM is detected
-
-Eric Dumazet <edumazet@google.com>
-    ipv6: fix potential "struct net" leak in inet6_rtm_getaddr()
-
-Jakub Kicinski <kuba@kernel.org>
-    net: veth: clear GRO when clearing XDP even when down
-
-Doug Smythies <dsmythies@telus.net>
-    cpufreq: intel_pstate: fix pstate limits enforcement for adjust_perf call back
-
-Yunjian Wang <wangyunjian@huawei.com>
-    tun: Fix xdp_rxq_info's queue_index when detaching
-
-Florian Westphal <fw@strlen.de>
-    net: ip_tunnel: prevent perpetual headroom growth
-
-Ryosuke Yasuoka <ryasuoka@redhat.com>
-    netlink: Fix kernel-infoleak-after-free in __skb_datagram_iter
-
-Han Xu <han.xu@nxp.com>
-    mtd: spinand: gigadevice: Fix the get ecc status issue
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: disallow timeout for anonymous sets
-
-
--------------
-
-Diffstat:
-
- Makefile                                          |   4 +-
- arch/riscv/include/asm/ftrace.h                   |   5 +
- arch/riscv/include/asm/pgtable.h                  |   2 +-
- arch/riscv/kernel/Makefile                        |   2 +
- arch/riscv/kernel/return_address.c                |  48 ++++
- arch/x86/kernel/cpu/intel.c                       | 178 ++++++------
- drivers/cpufreq/intel_pstate.c                    |   3 +
- drivers/dma/fsl-qdma.c                            |  25 +-
- drivers/dma/ptdma/ptdma-dmaengine.c               |   2 -
- drivers/firmware/efi/capsule-loader.c             |   2 +-
- drivers/gpio/gpio-74x164.c                        |   4 +-
- drivers/gpio/gpiolib.c                            |  12 +-
- drivers/gpu/drm/bridge/lontium-lt8912b.c          |  11 +-
- drivers/interconnect/core.c                       |  18 +-
- drivers/mmc/core/mmc.c                            |   2 +
- drivers/mmc/host/sdhci-xenon-phy.c                |  48 +++-
- drivers/mtd/nand/spi/gigadevice.c                 |   6 +-
- drivers/net/ethernet/intel/igb/igb_ptp.c          |   5 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   4 +-
- drivers/net/gtp.c                                 |  12 +-
- drivers/net/tun.c                                 |   1 +
- drivers/net/usb/dm9601.c                          |   2 +-
- drivers/net/usb/lan78xx.c                         |   3 +-
- drivers/net/veth.c                                |  40 +--
- drivers/power/supply/bq27xxx_battery_i2c.c        |   4 +-
- drivers/soc/qcom/rpmhpd.c                         |   7 +-
- drivers/video/fbdev/core/fbcon.c                  |   8 +-
- fs/afs/dir.c                                      |   4 +-
- fs/btrfs/dev-replace.c                            |  24 +-
- fs/cachefiles/bind.c                              |   3 +
- fs/hugetlbfs/inode.c                              |   6 +-
- include/linux/netfilter.h                         |  14 +-
- include/net/ipv6_stubs.h                          |   5 +
- include/net/netfilter/nf_conntrack.h              |   8 +
- include/net/strparser.h                           |   4 +
- include/net/tls.h                                 |  11 +-
- include/uapi/linux/bpf.h                          |  37 ++-
- include/uapi/linux/in6.h                          |   2 +-
- net/bluetooth/hci_core.c                          |   7 +-
- net/bluetooth/hci_event.c                         |  13 +-
- net/bluetooth/l2cap_core.c                        |   8 +-
- net/bridge/br_netfilter_hooks.c                   |  96 +++++++
- net/bridge/netfilter/nf_conntrack_bridge.c        |  30 ++
- net/core/filter.c                                 |  67 ++++-
- net/core/rtnetlink.c                              |  11 +-
- net/ipv4/ip_tunnel.c                              |  28 +-
- net/ipv4/netfilter/nf_reject_ipv4.c               |   1 +
- net/ipv6/addrconf.c                               |   7 +-
- net/ipv6/af_inet6.c                               |   1 +
- net/ipv6/netfilter/nf_reject_ipv6.c               |   1 +
- net/mptcp/diag.c                                  |   3 +
- net/mptcp/pm_netlink.c                            |  30 +-
- net/mptcp/protocol.c                              | 123 +++++++--
- net/mptcp/subflow.c                               |  36 ---
- net/netfilter/core.c                              |  45 +--
- net/netfilter/nf_conntrack_core.c                 |  21 +-
- net/netfilter/nf_conntrack_netlink.c              |   4 +-
- net/netfilter/nf_conntrack_proto_tcp.c            |  35 +++
- net/netfilter/nf_nat_core.c                       |   2 +-
- net/netfilter/nf_tables_api.c                     |   7 +
- net/netfilter/nfnetlink_queue.c                   |  10 +-
- net/netfilter/nft_compat.c                        |  20 ++
- net/netlink/af_netlink.c                          |   2 +-
- net/tls/tls_device.c                              |   6 +-
- net/tls/tls_sw.c                                  | 316 ++++++++++------------
- net/unix/garbage.c                                |  22 +-
- net/wireless/nl80211.c                            |   2 +
- security/tomoyo/common.c                          |   3 +-
- sound/core/Makefile                               |   1 -
- sound/firewire/amdtp-stream.c                     |   2 +-
- tools/include/uapi/linux/bpf.h                    |  37 ++-
- tools/testing/selftests/net/mptcp/config          |   2 +
- 72 files changed, 1046 insertions(+), 529 deletions(-)
-
+On 04/03/2024 20:50, David Hildenbrand wrote:
+>>>>
+>>>> This is the existing free_swap_and_cache(). I think _swap_info_get() would
+>>>> break
+>>>> if this could race with swapoff(), and __swap_entry_free() looks up the cluster
+>>>> from an array, which would also be freed by swapoff if racing:
+>>>>
+>>>> int free_swap_and_cache(swp_entry_t entry)
+>>>> {
+>>>>      struct swap_info_struct *p;
+>>>>      unsigned char count;
+>>>>
+>>>>      if (non_swap_entry(entry))
+>>>>          return 1;
+>>>>
+>>>>      p = _swap_info_get(entry);
+>>>>      if (p) {
+>>>>          count = __swap_entry_free(p, entry);
+>>>
+>>> If count dropped to 0 and
+>>>
+>>>>          if (count == SWAP_HAS_CACHE)
+>>>
+>>>
+>>> count is now SWAP_HAS_CACHE, there is in fact no swap entry anymore. We removed
+>>> it. That one would have to be reclaimed asynchronously.
+>>>
+>>> The existing code we would call swap_page_trans_huge_swapped() with the SI it
+>>> obtained via _swap_info_get().
+>>>
+>>> I also don't see what should be left protecting the SI. It's not locked anymore,
+>>> the swapcounts are at 0. We don't hold the folio lock.
+>>>
+>>> try_to_unuse() will stop as soon as si->inuse_pages is at 0. Hm ...
+>>
+>> But, assuming the caller of free_swap_and_cache() acquires the PTL first, I
+>> think this all works out ok? While free_swap_and_cache() is running,
+>> try_to_unuse() will wait for the PTL. Or if try_to_unuse() runs first, then
+>> free_swap_and_cache() will never be called because the swap entry will have been
+>> removed from the PTE?
+> 
+> But can't try_to_unuse() run, detect !si->inuse_pages and not even bother about
+> scanning any further page tables?
+> 
+> But my head hurts from digging through that code.
+
+Yep, glad I'm not the only one that gets headaches from swapfile.c.
+
+> 
+> Let me try again:
+> 
+> __swap_entry_free() might be the last user and result in "count == SWAP_HAS_CACHE".
+> 
+> swapoff->try_to_unuse() will stop as soon as soon as si->inuse_pages==0.
+> 
+> 
+> So the question is: could someone reclaim the folio and turn si->inuse_pages==0,
+> before we completed swap_page_trans_huge_swapped().
+> 
+> Imagine the following: 2 MiB folio in the swapcache. Only 2 subpages are still
+> references by swap entries.
+> 
+> Process 1 still references subpage 0 via swap entry.
+> Process 2 still references subpage 1 via swap entry.
+> 
+> Process 1 quits. Calls free_swap_and_cache().
+> -> count == SWAP_HAS_CACHE
+> [then, preempted in the hypervisor etc.]
+> 
+> Process 2 quits. Calls free_swap_and_cache().
+> -> count == SWAP_HAS_CACHE
+> 
+> Process 2 goes ahead, passes swap_page_trans_huge_swapped(), and calls
+> __try_to_reclaim_swap().
+> 
+> __try_to_reclaim_swap()->folio_free_swap()->delete_from_swap_cache()->put_swap_folio()->
+> free_swap_slot()->swapcache_free_entries()->swap_entry_free()->swap_range_free()->
+> ...
+> WRITE_ONCE(si->inuse_pages, si->inuse_pages - nr_entries);
+> 
+> 
+> What stops swapoff to succeed after process 2 reclaimed the swap cache but
+> before process 1 finished its call to swap_page_trans_huge_swapped()?
+
+Assuming you are talking about anonymous memory, process 1 has the PTL while
+it's executing free_swap_and_cache(). try_to_unuse() iterates over every vma in
+every mm, and it swaps-in a page for every PTE that holds a swap entry for the
+device being swapoff'ed. It takes the PTL while converting the swap entry to
+present PTE - see unuse_pte(). Process 1 must have beaten try_to_unuse() to the
+particular pte, because if try_to_unuse() got there first, it would have
+converted it from a swap entry to present pte and process 1 would never even
+have called free_swap_and_cache(). So try_to_unuse() will eventually wait on the
+PTL until process 1 has released it after free_swap_and_cache() completes. Am I
+missing something? Because that part feels pretty clear to me.
+
+Its the shmem case that I'm struggling to explain.
+
+> 
+> 
+> 
+>>
+>> That just leaves shmem... I suspected there might be some serialization between
+>> shmem_unuse() (called from try_to_unuse()) and the shmem free_swap_and_cache()
+>> callsites, but I can't see it. Hmm...
+>>
+>>>
+>>> Would performing the overall operation under lock_cluster_or_swap_info help? Not
+>>> so sure :(
+>>
+>> No - that function relies on being able to access the cluster from the array in
+>> the swap_info and lock it. And I think that array has the same lifetime as
+>> swap_map, so same problem. You'd need get_swap_device()/put_swap_device() and a
+>> bunch of refactoring for the internals not to take the locks, I guess. I think
+>> its doable, just not sure if neccessary...
+> 
+> Agreed.
+> 
 
