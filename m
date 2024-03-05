@@ -1,35 +1,39 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA2D86AE2;
-	Tue,  5 Mar 2024 14:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE2685927;
+	Tue,  5 Mar 2024 14:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709648230; cv=none; b=JYFnPmCAH7wGmbWlexgdCdzMP7zIHAt0EjW6GaM9kkTaFSp7GmgYtOkCUr8mfsHULfkD8zKmHEPJTUZVpF0sFgDj0DSHQhWwmCWDIMSN0bdY5U+p2uBh7lLo61/flq8kHfOxpOp+YMz3ULXsWCdmzSQT5ONvgnmtwR5AnI3rCFE=
+	t=1709648406; cv=none; b=AdHPU/r50gThCnofM/5Wvk9eYrXkNgiGpnqrs6StKQEieXqVfHCRPZklsUJ4AgB031jc8XDrRstt2cp3Wkz2upL9eR+EsYeikCc55mBogfasH1l6Xg90Q3fWOf5vqfUgCueHkGHDJzTfDqFVmZsw3PGiEu6YOZHh/J1bBMIixKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709648230; c=relaxed/simple;
-	bh=xdgJ9F0RgLJwUJcHzE4T9iGwZ+MjZxy0ntiV1D3KzPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WpNFxTLMR+6fR9SqcYDJZtcHVGaM3GfJadzz6BYlnXaU0Ubr8I20E8EMbKTIgI75L1u1auszHlzGrlyZDg3c3E6kwPJ60qCrgpv1d0wiFz7g33b90cplJCu6+Emp5h1E/TRcPMKjVgOxZTdfi0nXmbrd40SrE/+z427XyEeUmZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpipv601t1709648175tbrp
-X-QQ-Originating-IP: IxHRVeKC2DXxxEzD41W84GxArjINfZ7NsUKKWFqZL8M=
-Received: from [IPV6:2409:8a20:4c7e:d580:7d3e: ( [255.60.145.1])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 05 Mar 2024 22:16:14 +0800 (CST)
-X-QQ-SSF: 00400000000000B0B000000A0000000
-X-QQ-FEAT: 5q30pvLz2ieD1BXimzetlg/X9OUaHwAyX7KTsn77LnG4/z95p50VPgubGk+5F
-	2tMN+NEyRVscQKADQvL7xK9CqtDBV/ooigKYQ1Ic880MI/rtoRlNFeN0iieYzSG/ocVad47
-	xMJ8QJZGW1EDPMraDTHwKKuzVG4zt+syw1OtUKvOMBYv7vG/+Qofy422cKNn/NtyUnEqKS9
-	GH5bik3IoVwEsWS7kltTZn2DbbAXJVTVzr9ADZ+O4leGf/Ns7BSyvH/93oxmiRkJcQq50n3
-	UPbphRskeBRV5y/OkwOWGDhr8JIruXokjGb5oE/dr8Ap4XwI6azKpf7LC1h5BiehL+kkRUR
-	Aml0I0aaoFFMgfLfu48rYzH8+ot4ZC7iUh5um//k3aOwbLXmLjway4QJZUuY0zBZVsl+tlu
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 18177786939764390676
-Message-ID: <C179F8ADAF657FB4+0d190e88-02b6-49a4-96bd-844e470b4605@shingroup.cn>
-Date: Tue, 5 Mar 2024 22:16:13 +0800
+	s=arc-20240116; t=1709648406; c=relaxed/simple;
+	bh=LjkGagwDQUYxBS8Ly5tIPDH+f57B7v3rXKFuRJpeBTM=;
+	h=Message-ID:Date:MIME-Version:Cc:To:From:Subject:Content-Type; b=gq+4EbSaX17LP87/bgUDxZV2bPsW2K2YZPtM+jKhao6Q06SeWFVFahELV2G72xk7i5SaxAXFC/T+LSy6oI+/4Seuv0XXQTDafUGQaRmJrAZlVI6lRkAioK4Nf31R4TPqHb3xCxmUX/SBr/se04SsDX7pktNgtgtQwL9wAfYpBqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oiujlpEd; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oiujlpEd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709648403;
+	bh=LjkGagwDQUYxBS8Ly5tIPDH+f57B7v3rXKFuRJpeBTM=;
+	h=Date:Cc:To:From:Subject:From;
+	b=oiujlpEdKyN7b7vY1xSeM3scqEksLwiy67ChQxVTN5fiGKHkWz1LE+6h63aCcDHSH
+	 Tc8Z0aCzyxyqSIe3hxuaATKJmMv/vExKML8VdOO65FNUgmVP/oKAlYjaPph1MQrzy0
+	 2Wa/m7pQKdMPjlcpmuQ0MBOwbrs5361IQvXvusQ+DUsplqUZWDAALxBi7GH/aKbdf8
+	 bbLqPe+4WUJ2NJUfhorq1dyl2ZqU+HwjVbJr+A5wU+sneQag+SRpfp33jcFmVUp309
+	 x0MguzNvlG+VR5XaAILTYSp+VJfFmst85qpUmTMOeLJmoG9SCGMGy16XYoNNjvFFyr
+	 cCKqeiDmtnhWQ==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2166B3780627;
+	Tue,  5 Mar 2024 14:19:59 +0000 (UTC)
+Message-ID: <02c8bf8e-1934-44ab-a886-e065b37366a7@collabora.com>
+Date: Tue, 5 Mar 2024 19:20:27 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,65 +41,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arch/s390/perf: Register cpumf_pmu with type =
- PERF_TYPE_RAW
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240304022701.7362-1-jialong.yang@shingroup.cn>
- <ZeWVi6pua5QVqz_y@FVFF77S0Q05N>
- <ACE696AA8DB8D91B+458ebdd8-6951-4f72-a188-b21dc9863b90@shingroup.cn>
- <ZecStMBA4YgQaBEZ@FVFF77S0Q05N>
-From: Jialong Yang <jialong.yang@shingroup.cn>
-In-Reply-To: <ZecStMBA4YgQaBEZ@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpipv:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ "kernel@collabora.com" <kernel@collabora.com>
+Content-Language: en-US
+To: Eric Biederman <ebiederm@xmission.com>, Kees Cook
+ <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>,
+ Mark Brown <broonie@kernel.org>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Subject: [Test Failure Report] exec: Test failures in execveat
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hello,
 
-在 2024/3/5 20:40, Mark Rutland 写道:
-> On Tue, Mar 05, 2024 at 09:43:16AM +0800, Yang Jialong 杨佳龙 wrote:
->> 在 2024/3/4 17:34, Mark Rutland 写道:
->>> On Mon, Mar 04, 2024 at 10:27:01AM +0800, JiaLong.Yang wrote:
->>>> The struct pmu cpumf_pmu has handled generic events. So it need some
->>>> flags to tell core this thing.
->>> It's not necessary to register as PERF_TYPE_RAW in order to handle raw events,
->>> and PERF_TYPE_RAW is not a flag.
->>>
->>> Have you encountered a functional problem, or was this found by inspection?
->> As you expected, I'm trying to confirm which one pmu has the capability to
->> handle generic events in registering pmus instead of test generic events in
->> each pmus when opening.
-> If we want to do that, then we need a new flag on struct pmu to restrict which
-> events we try to open on a PMU.
->
-> If you want to do that, you need to Cc the perf maintainers and discuss that
-> rather than point-hacking individual drivers.
->
->> We can confirm that before using. We have pay more in handling them when
->> opening.
->> So most driver developers use PERF_TYPE_RAW. x86 and arm use
->> PERF_PMU_CAP_EXTENDED_HW_TYPE. Others use struct pmu::task_ctx_nr =
->> perf_hw_context.
->> I think PERF_TYPE_RAW will be a easily accepted way. So ...
-> No, this is a hack, and it doesn't solve the problem you describe above.
->
-> If we want to remove the need for most PMUs to look at perf_event_attr::type,
-> then we should have a new PERF_PMU_CAP_ flag on the PMU to say "this PMU
-> supports generic events" (or separate flags for the generic RAW/HW/CACHE
-> types), and update all relevant PMUs accordingly.
->
-> Please do not try to overload pmu::type with additional semantics; it's messy
-> enough as-is.
+I've been running execveat (execveat.c) locally on v6.1 and next-20240228.
+It has flaky test case. There are some test cases which fail consistently.
+The comment (not very clear) on top of failing cases is as following:
 
-OK. Thanks for guiding.
+/*
+ * Execute as a long pathname relative to "/".  If this is a script,
+ * the interpreter will launch but fail to open the script because its
+ * name ("/dev/fd/5/xxx....") is bigger than PATH_MAX.
+ *
+ * The failure code is usually 127 (POSIX: "If a command is not found,
+ * the exit status shall be 127."), but some systems give 126 (POSIX:
+ * "If the command name is found, but it is not an executable utility,
+ * the exit status shall be 126."), so allow either.
+ */
+The file name is just less than PATH_MAX (4096) and we are expecting the
+execveat() to fail with particular 99 or 127/128 error code. But kernel is
+returning 1 error code. Snippet from full output:
 
+# child 3493092 exited with 1 not 99 nor 99
+# child 3493094 exited with 1 not 127 nor 126
 
->
-> Mark.
->
+I'm not sure if test is wrong or the kernel has changed the return error codes.
 
+Full test run output:
+./execveat
+TAP version 13
+1..51
+ok 1 Check success of execveat(3, '../execveat', 0)...
+ok 2 Check success of execveat(5, 'execveat', 0)...
+ok 3 Check success of execveat(7, 'execveat', 0)...
+ok 4 Check success of execveat(-100,
+'/home/usama/repos/ke...ftests/exec/execveat', 0)...
+ok 5 Check success of execveat(99,
+'/home/usama/repos/ke...ftests/exec/execveat', 0)...
+ok 6 Check success of execveat(9, '', 4096)...
+ok 7 Check success of execveat(18, '', 4096)...
+ok 8 Check success of execveat(10, '', 4096)...
+ok 9 Check success of execveat(15, '', 4096)...
+ok 10 Check success of execveat(15, '', 4096)...
+ok 11 Check success of execveat(16, '', 4096)...
+ok 12 Check failure of execveat(9, '', 0) with ENOENT
+ok 13 Check failure of execveat(9, '(null)', 4096) with EFAULT
+ok 14 Check success of execveat(5, 'execveat.symlink', 0)...
+ok 15 Check success of execveat(7, 'execveat.symlink', 0)...
+ok 16 Check success of execveat(-100,
+'/home/usama/repos/ke...xec/execveat.symlink', 0)...
+ok 17 Check success of execveat(11, '', 4096)...
+ok 18 Check success of execveat(11, '', 4352)...
+ok 19 Check failure of execveat(5, 'execveat.symlink', 256) with ELOOP
+ok 20 Check failure of execveat(7, 'execveat.symlink', 256) with ELOOP
+ok 21 Check failure of execveat(-100,
+'/home/usama/repos/kernel/linux_mainline/tools/testing/selftests/exec/execveat.symlink',
+256) with ELOOP
+ok 22 Check failure of execveat(5, 'pipe', 0) with EACCES
+ok 23 Check success of execveat(3, '../script', 0)...
+ok 24 Check success of execveat(5, 'script', 0)...
+ok 25 Check success of execveat(7, 'script', 0)...
+ok 26 Check success of execveat(-100,
+'/home/usama/repos/ke...elftests/exec/script', 0)...
+ok 27 Check success of execveat(14, '', 4096)...
+ok 28 Check success of execveat(14, '', 4352)...
+ok 29 Check failure of execveat(19, '', 4096) with ENOENT
+ok 30 Check failure of execveat(8, 'script', 0) with ENOENT
+ok 31 Check success of execveat(17, '', 4096)...
+ok 32 Check success of execveat(17, '', 4096)...
+ok 33 Check success of execveat(4, '../script', 0)...
+ok 34 Check success of execveat(4, 'script', 0)...
+ok 35 Check success of execveat(4, '../script', 0)...
+ok 36 Check failure of execveat(4, 'script', 0) with ENOENT
+ok 37 Check failure of execveat(5, 'execveat', 65535) with EINVAL
+ok 38 Check failure of execveat(5, 'no-such-file', 0) with ENOENT
+ok 39 Check failure of execveat(7, 'no-such-file', 0) with ENOENT
+ok 40 Check failure of execveat(-100, 'no-such-file', 0) with ENOENT
+ok 41 Check failure of execveat(5, '', 4096) with EACCES
+ok 42 Check failure of execveat(5, 'Makefile', 0) with EACCES
+ok 43 Check failure of execveat(12, '', 4096) with EACCES
+ok 44 Check failure of execveat(13, '', 4096) with EACCES
+ok 45 Check failure of execveat(99, '', 4096) with EBADF
+ok 46 Check failure of execveat(99, 'execveat', 0) with EBADF
+ok 47 Check failure of execveat(9, 'execveat', 0) with ENOTDIR
+# Invoke copy of 'execveat' via filename of length 4094:
+ok 48 Check success of execveat(20, '', 4096)...
+# execveat() failed, rc=-1 errno=2 (No such file or directory)
+not ok 49 Check success of execveat(6,
+'home/usama/repos/ker...yyyyyyyyyyyyyyyyyyyy', 0)...
+# child 3493092 exited with 1 not 99 nor 99
+not ok 49 Check success of execveat(6,
+'home/usama/repos/ker...yyyyyyyyyyyyyyyyyyyy', 0)...
+# Invoke copy of 'script' via filename of length 4094:
+ok 50 Check success of execveat(21, '', 4096)...
+# execveat() failed, rc=-1 errno=2 (No such file or directory)
+not ok 51 Check success of execveat(6,
+'home/usama/repos/ker...yyyyyyyyyyyyyyyyyyyy', 0)...
+# child 3493094 exited with 1 not 127 nor 126
+not ok 51 Check success of execveat(6,
+'home/usama/repos/ker...yyyyyyyyyyyyyyyyyyyy', 0)...
+2 tests failed
+# Totals: pass:49 fail:2 xfail:0 xpass:0 skip:0 error:0
+
+-- 
+BR,
+Muhammad Usama Anjum
