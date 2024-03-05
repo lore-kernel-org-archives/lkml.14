@@ -1,171 +1,95 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389AC524BC
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59DF50272
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709630798; cv=none; b=tjnt0RTCovrlw8u3XMspU07GCuFYXQuyB8Gt2eRx7f61fEmaXIOFH8XvLvQsgXOYuY9JH472srPTs7gckcqEuSvmBsTuuH9GYkp1AehyqSbjVbfH7dFz6n2MMx0sFP4xVPJFzrKXamQ+gRHAsHJvsSk8W7eAb5We6p3mkrDIE10=
+	t=1709630821; cv=none; b=qmBWKxf6hai4wB4rZcUtjl8mYvWmIFb9TFhf7ZESjZ1l7/mjEI5hVIQrnMUGtzpcrcxdnODwzJfdyLZIUqV8M0WXp50q03qTdQe+U3gQLDPOsGvgvr4/4+c+H8sqX5foQMzrOW3DzXFpQg3r8apXpVU4L7H14lj2HqVXMKqUqAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709630798; c=relaxed/simple;
-	bh=1GJ4pLEJiBySr2ubLiSDXv0LJGp0y8MnW0BrFhpcjXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qOSxffOC+g2FlPyHih5CG4Njp9m3RmGtWTdvWSjCp+IL1wsEXCjCfwcvLhDaYGX3mCPkGFd/9OggMc8ztaz8MM89H22xfWbvG/ivvzlEBKw0yZiz/cRlD016OxpjiYoxQ16lGzUhthSG/tZljqcjG/MsOMOwyk0Bl4KwioIkwjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZWlVZcGN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jOQ63t/G; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZWlVZcGN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jOQ63t/G; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZWlVZcGN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jOQ63t/G";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZWlVZcGN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jOQ63t/G"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 24BDA6A9DE;
-	Tue,  5 Mar 2024 09:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709630795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ykjUprM07ZrUOHmFkq+k2cT/hagJHglpYa3jkqSqAAE=;
-	b=ZWlVZcGNQw6+JjdmEp1eJLTz2bNCcCtRbE9tOeN8xnxRyMX8iqeePb8m+Szsp7h6g03V1t
-	oLlylabBYPbAS0ogh24jQu8RDLwBs5fQRqNETkhAIIXAt6o8mcHbwDi40EllF64Jth39FX
-	YBvIuBYYtjDyG9CES7FGjsO2wxcbnLY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709630795;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ykjUprM07ZrUOHmFkq+k2cT/hagJHglpYa3jkqSqAAE=;
-	b=jOQ63t/Ge+ynva2BjFrpcgVtN6N4O5S23iUgkhiJhwtLUI38w0WT3tx4wggXqloVp0GvOv
-	LxFUYpgusmlv9xDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709630795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ykjUprM07ZrUOHmFkq+k2cT/hagJHglpYa3jkqSqAAE=;
-	b=ZWlVZcGNQw6+JjdmEp1eJLTz2bNCcCtRbE9tOeN8xnxRyMX8iqeePb8m+Szsp7h6g03V1t
-	oLlylabBYPbAS0ogh24jQu8RDLwBs5fQRqNETkhAIIXAt6o8mcHbwDi40EllF64Jth39FX
-	YBvIuBYYtjDyG9CES7FGjsO2wxcbnLY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709630795;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ykjUprM07ZrUOHmFkq+k2cT/hagJHglpYa3jkqSqAAE=;
-	b=jOQ63t/Ge+ynva2BjFrpcgVtN6N4O5S23iUgkhiJhwtLUI38w0WT3tx4wggXqloVp0GvOv
-	LxFUYpgusmlv9xDA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6692D13466;
-	Tue,  5 Mar 2024 09:26:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id EwchFUrl5mVsZgAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Tue, 05 Mar 2024 09:26:34 +0000
-Date: Tue, 5 Mar 2024 10:27:52 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [linux-next:master] [mm,page_owner]  4bedfb314b:
- BUG:KASAN:null-ptr-deref_in_init_page_owner
-Message-ID: <ZeblmHyVlxl_6HGC@localhost.localdomain>
-References: <202403051032.e2f865a-lkp@intel.com>
+	s=arc-20240116; t=1709630821; c=relaxed/simple;
+	bh=LrRp2oHJmVrObhpCmaCXYk8T8eMjQU7jJNMaJrEo3c0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=SP3xKz6/tqEBjGNzK/SNbV878yp5WgXNJVkRGpH9Llvq3zVwCSOL2YdsQWjEUGt/Vgxr2v22vZPK59W8pT8agL1BIJppVHp8Q7fYRm0J9rCmigUJFmdnjoo6hCOvUsoq69SHmaSXdNC3eSi/dETtHgbsz8BEc56iu0LLA2+OKGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-312-sCqIcKGYOf6ZeDr-o4ocrw-1; Tue, 05 Mar 2024 09:26:51 +0000
+X-MC-Unique: sCqIcKGYOf6ZeDr-o4ocrw-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 5 Mar
+ 2024 09:27:22 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Tue, 5 Mar 2024 09:27:22 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Arnd Bergmann' <arnd@arndb.de>, Christophe Leroy
+	<christophe.leroy@csgroup.eu>, Guenter Roeck <linux@roeck-us.net>, "Russell
+ King" <linux@armlinux.org.uk>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Palmer
+ Dabbelt" <palmer@dabbelt.com>, Charlie Jenkins <charlie@rivosinc.com>, "James
+ E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller
+	<deller@gmx.de>, Palmer Dabbelt <palmer@rivosinc.com>, Geert Uytterhoeven
+	<geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, "Parisc
+ List" <linux-parisc@vger.kernel.org>, Linux ARM
+	<linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v11] lib: checksum: Use aligned accesses for ip_fast_csum
+ and csum_ipv6_magic tests
+Thread-Topic: [PATCH v11] lib: checksum: Use aligned accesses for ip_fast_csum
+ and csum_ipv6_magic tests
+Thread-Index: AQHabjlz2G6zh0QEYUOonhCQoX0NCrEo3thA
+Date: Tue, 5 Mar 2024 09:27:22 +0000
+Message-ID: <55a6df07d26849e89c839f80ca5996b9@AcuMS.aculab.com>
+References: <20240229-fix_sparse_errors_checksum_tests-v11-1-f608d9ec7574@rivosinc.com>
+ <62b69aaf-7633-4bd8-aefe-5ba47147dba7@roeck-us.net>
+ <f422742a-4c86-4cb0-a4f7-a62f0310eb23@csgroup.eu>
+ <6df98c91-26b1-497a-9202-18bf86c0130d@roeck-us.net>
+ <4e227412-ccac-4771-8aa6-a716e7c07090@csgroup.eu>
+ <a254a52c-340d-47ba-9a69-b5144dc75e4e@app.fastmail.com>
+In-Reply-To: <a254a52c-340d-47ba-9a69-b5144dc75e4e@app.fastmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202403051032.e2f865a-lkp@intel.com>
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZWlVZcGN;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="jOQ63t/G"
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.63 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-0.984];
-	 FREEMAIL_CC(0.00)[lists.linux.dev,intel.com,kvack.org,linux-foundation.org,suse.cz,google.com,gmail.com,suse.com,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.12)[67.19%]
-X-Spam-Score: -1.63
-X-Rspamd-Queue-Id: 24BDA6A9DE
-X-Spam-Flag: NO
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Tue, Mar 05, 2024 at 02:08:23PM +0800, kernel test robot wrote:
-> 
-> [    6.582562][    T0] Node 0, zone    DMA32: page owner found early allocated 0 pages
-> [    6.612136][    T0] Node 0, zone   Normal: page owner found early allocated 73871 pages
-> [    6.612762][    T0] ==================================================================
-> [ 6.613351][ T0] BUG: KASAN: null-ptr-deref in init_page_owner (arch/x86/include/asm/atomic.h:28) 
-> [    6.613893][    T0] Write of size 4 at addr 000000000000001c by task swapper/0
-> [    6.614434][    T0]
-> [    6.614600][    T0] CPU: 0 PID: 0 Comm: swapper Tainted: G                T  6.8.0-rc5-00256-g4bedfb314bdd #1 29e70169ace75ef72d53825e983f3dcb1d5756d9
-> [    6.615605][    T0] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> [    6.616367][    T0] Call Trace:
-> [    6.616604][    T0]  <TASK>
-> [ 6.616816][ T0] ? dump_stack_lvl (lib/dump_stack.c:?) 
-> [ 6.617161][ T0] ? print_report (mm/kasan/report.c:?) 
-> [ 6.617499][ T0] ? init_page_owner (arch/x86/include/asm/atomic.h:28) 
+RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAwNCBNYXJjaCAyMDI0IDEzOjQwDQouLi4NCj4g
+PiBJZiBub3QsIHRoZW4gdGhlIHRlc3QgaGFzIHRvIGJlIGZpeGVkIHRvIG9ubHkgdXNlIHdvcmQt
+YWxpZ25lZCBJUHY2DQo+ID4gYWRkcmVzc2VzLg0KPiANCj4gQmVjYXVzZSBvZiB0aGUgZ2NjIGlz
+c3VlIEkgbWVudGlvbmVkLCBuZXQvaXB2Ni9pcDZfY2hlY2tzdW0uYw0KPiBhbmQgYW55dGhpbmcg
+ZWxzZSB0aGF0IGFjY2Vzc2VzIG1pc2FsaWduZWQgaXB2NiBoZWFkZXJzIG1heSBuZWVkDQo+IHRv
+IGJlIGNoYW5nZWQgYXMgd2VsbC4gTWFya2luZyBpbjZfYWRkciBhcyAnX19wYWNrZWQgX19hbGln
+bmVkKDIpJw0KPiBzaG91bGQgYmUgc3VmZmljaWVudCBmb3IgdGhhdC4gVGhpcyB3aWxsIHByZXZl
+bnQgZ2NjIGZyb20gaXNzdWluZw0KPiBsZG0gb3IgbGRyZCBvbiBBUk12NisgYXMgd2VsbCBhcyBt
+YWtpbmcgb3B0aW1pemF0aW9uIGJhc2VkIG9uDQo+IHRoZSB0d28gbG93ZXIgYml0cyBvZiB0aGUg
+YWRkcmVzcyBiZWluZyB6ZXJvIG9uIHg4NiBhbmQgb3RoZXJzLg0KDQpFaD8geDg2IHByZXR0eSBt
+dWNoIGRvZXNuJ3QgY2FyZSB1bmxlc3MgeW91IGFyZSB1c2luZyBBVlguDQoNCj4gVGhlIGRvd25z
+aWRlIGlzIHRoYXQgaXQgZm9yY2VzIDE2LWJpdCBsb2FkcyBhbmQgc3RvcmVzIHRvIGJlDQo+IHVz
+ZWQgb24gYXJjaGl0ZWN0dXJlcyB0aGF0IGRvbid0IGhhdmUgZWZmaWNpZW50IHVuYWxpZ25lZA0K
+PiBhY2Nlc3MgKGFybXY1LCBhbHBoYSwgbWlwcywgc3BhcmMgYW5kIHh0ZW5zYSBhbW9uZyBvdGhl
+cnMpDQo+IGV2ZW4gd2hlbiB0aGUgSVAgaGVhZGVycyBhcmUgZnVsbHkgYWxpZ25lZC4NCg0KQXJl
+bid0IHRoZSBsYXRlciBhY2Nlc3NlcyB0byB0aGUgaGVhZGVyIGFsc28gZ29pbmcgdG8gZmF1bHQ/
+DQpJSVJDIHRoZXJlIGlzIGFuIHNrYl9wdWxsKCkgY2FsbCB0byBlbnN1cmUgYWxsIHRoZSBJUCBo
+ZWFkZXINCmlzIGluIHRoZSBsaW5lYXIgc2tiIGZyYWdtZW50Pw0KUGVyaGFwcyB0aGVyZSBzaG91
+bGQgYmUgYW4gc2tiX3B1bGxfYWxpZ25lZCgpIHRoYXQgd2lsbCBlbnN1cmUNCnRoZSBkYXRhIGlz
+IDMyYml0IGFsaWduZWQgb24gc3lzdGVtcyB3aGVyZSB0aGUgbWlzYWxpZ25lZCBhY2Nlc3Nlcw0K
+ZmF1bHQ/DQoNClRoZXJlIG1pZ2h0IHN0aWxsIG5lZWQgdG8gYmUgc29tZXRoaW5nIHRvIHN0b3Ag
+Z2NjIGdlbmVyYXRpbmcNCmxkbS9sZHJkIHdoaWNoIGNhbiBmYXVsdCBvbiBzeXN0ZW1zIHdoZXJl
+IGEgbm9ybWFsIHJlZ2lzdGVyDQpyZWFkIHdvdWxkbid0Lg0KDQpEbyBhbnkgcmVjZW50IGFybSBj
+cHUgaGF2ZSB0aGUgc3Ryb25nYXJtICdmZWF0dXJlJyB0aGFuIGxkbQ0KYWx3YXlzIHRvb2sgMTYg
+Y2xvY2tzPw0KDQoJRGF2aWQNCiANCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBC
+cmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdp
+c3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-So, we are crashing here:
-
-        /* Initialize dummy and failure stacks and link them to stack_list */
-        dummy_stack.stack_record = __stack_depot_get_stack_record(dummy_handle);
-        failure_stack.stack_record = __stack_depot_get_stack_record(failure_handle);
-        refcount_set(&dummy_stack.stack_record->count, 1);
-        refcount_set(&failure_stack.stack_record->count, 1);
-
-when trying to set the refcount. Allegedly, because dummy_handle is 0.
-I thought we fixed that with 
-
-commit 3ee34eabac2abb6b1b6fcdebffe18870719ad000
-Author: Oscar Salvador <osalvador@suse.de>
-Date:   Thu Feb 15 22:59:01 2024 +0100
-
-    lib/stackdepot: fix first entry having a 0-handle
-
-
-But I guess this is different.
-The obvious way out is to only set the refcount and link the stacks
-if their handles are not 0.
-
-Marco, could it be that stackdepot was too overloaded, that by the time
-page_owner gets initialized, there are no more space for its stacks, and
-hence return 0-handles?.
-
-
--- 
-Oscar Salvador
-SUSE Labs
