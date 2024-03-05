@@ -1,171 +1,123 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8383C5A7BF;
-	Tue,  5 Mar 2024 12:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D4F59B5E
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 12:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709641291; cv=none; b=AQ6UYvHYU1yQ29T/5Ai6cuadjhDanItvaWSf20XXrhEfOL0DWx5+XerFoyPnqc/eF/ZyIAV0m6LiucFtKQrMrNP39IyHif4+4xdM8/5woQXlgh4YLmKyB7pIbl7CVxWjE1RRQy/0rvlMLJ7dwrbOsylmT4ZldxCixW1uHAthK5A=
+	t=1709641457; cv=none; b=fcxviiCijrmKK7aZs3WFaPuCxHAw6RgO3z0aHSVMnrb/aLi2bxUjWCTp4Z61RPdHlJ26h6yyC1ov8346QYiD/T8TpUycHmxRu17MMwLy5K6NKtegkci3TkYOsKQZEHF2w5JPVLey923InVWjmtHZ5VkG8Ss3jobXbiXk6Ap852o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709641291; c=relaxed/simple;
-	bh=zA1QI3pTmF4PVrGfMGQ4T6AJuBZkkUOxdUv7rVLqvq8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nz7kYky820fdOILkwplylmQZQEPVjALFx5LnVgQRREigF+HI0r3cB9MUyg0cOtcWT5k49u7n/3IN99pEjtrpixDgmlYYzFjw8C/ZktHVeafr2I/ys+vyJUBXqzCv1gdrXEwWWQ5WfdTrlcdrDoj1kWITc6RJDQAI1e1/IqnBsv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=YgK6NkcV; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709641457; c=relaxed/simple;
+	bh=CS3p1MBudwYKblcteI/2NOPXI4ddkTXb99n7xdy/Gb4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jHvno4eZwRVUp9bORdfsi1q6dzitaWSAGSBA2aCMub6flNjHCc7HkcNJdS7/ZfaOoZwI8mlsZoLEQPPIpJPVH8NvZ/2498cri36hRIpp9dapNAOZxk/PK/MMN8Xr5jLBztVx82qWOwDeTuk4+Uz3emPVhWjpqbDA8QhGE/t3PKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XQJHsty3; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="YgK6NkcV"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso4594423a12.1;
-        Tue, 05 Mar 2024 04:21:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XQJHsty3"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-60978479651so51357137b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 04:24:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709641454; x=1710246254; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CgWnngIT/gJ2CN/6Q6lG/bumlZMowmI03npuEMQCBAM=;
+        b=XQJHsty32one0Z/DC+DOsBj888PoIR9MgaSaINszUAU6nMN/yoYHrQZJ0BUbKiJO2+
+         hMycc3VXUJsXbYnmIenlWBjNLs7UmNNcP5yOkcu/+4347xOz1bdwiEuJZZqmFdUAAQV3
+         A3xE0EPQWIqki7bGqVUlzV65K3RrC7BZAAYvn1Hpk4RhX5Z20Z3RKL5AZcMdU++uuqdF
+         GQ1O/ERZnoA2J70Z5231Hvh9GpBgLWFgEXgngK/xbXJ7z7TA1M7OaVOb7vKQKQ+UegeY
+         9AJxiHMIa2FRToAF9RZFM6rONYsELFxPUtHehJqEqGLT18+c24vkuI1J1vCnsJnN75eM
+         vQdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709641289; x=1710246089;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:dkim-signature:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SEx+zb9TSgK4yB6p6tHYNUfZEDI6oNw+ZcHBjx9ShfU=;
-        b=RHwX4XeTzRqIcVDP0sPxA97P9Ic5w7V54Mn8E09KDaANsj/VogTaqWz7st6k+LcbUR
-         RHI1M6stmE7hcQEZOvjeA68717rxWOtTSK8NZwu93UUnJP/uAU0xCOl5F12753hkhG+g
-         oXYhl6M+QExS7/bHEhnL1iEMpW0y8DwnE3vEWmZ/6OHAjuj/J7LLi/mA/xfoqJY1ffuc
-         lCCyLYxe8ByPEZj5w9rpZK/CbUmZBVlTRw4sz8GNXM/a4X9nPE22vY/mLKW9K8vhK6Ch
-         W67Ql98EuBKHkiyM3P55WjEQP1jx0bkgCckMFC+fNGO7/IzlqoeNyRRkYf+8PLpHDy8b
-         br7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWXs82xVYHmp2/rczeBddjTQskHqk3OoqnH4DEEBK7Y5Nc1kJFqZKyn0Lbo7haY0VfmezYfpNa/i+wGf0LuuCfRCcIo43vFp7GjwBZgNy/hOBfuyCWpjZB9V78FCR9VssKTT3THRsBFrUc=
-X-Gm-Message-State: AOJu0Yz3Z8Y2i7DkKpf5sODPIJXBl8qIGI4NzHfqx6BZmtsBc/GMxJ9p
-	iakhNyzc9wEdbG7eF8Z+4CAq33mXahxXPNxZgJ+EitP9XQxKX1kA
-X-Google-Smtp-Source: AGHT+IGmOCmr/nPchd/IbKo+mLmdiGP2sn/dFWTak1HHJNlB1jMqv56PTesOXkry/3ewNFEhPLEIng==
-X-Received: by 2002:a17:902:da86:b0:1dd:2bc2:ed25 with SMTP id j6-20020a170902da8600b001dd2bc2ed25mr1645988plx.42.1709641288888;
-        Tue, 05 Mar 2024 04:21:28 -0800 (PST)
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id 4-20020a170902e9c400b001d7252fef6bsm10369231plk.299.2024.03.05.04.21.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 04:21:28 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1709641287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SEx+zb9TSgK4yB6p6tHYNUfZEDI6oNw+ZcHBjx9ShfU=;
-	b=YgK6NkcV2HDpRzMn7ctoup6zYb4x8csJ7THtUKcJzzjJ8RcVsmDRAsPh4Yfvkh2QaPSsaE
-	JzOn9WH/glkdghz21tc3GPWUrUDeE7BnH2ybn4ms06a+w72XsjUDASvRLOFLWL+rBPg9ef
-	fh+GPzYNlr3V+Kl7meY8aFAlHLT3PrDL8yPha+WydzDgR8udWGjKKBvVsABH45S0HIts00
-	m6unjkmPUmZbjwEqDDOro6CmzU3Rso4OEfHdrv0WfT9loTGwFFs4J+EM4O6PhKpTylotpa
-	qLFXuvR0MWsh/pmh7Zl048oqbcMUfKrzja8mzI0FWCoq/M7E5Gq0UxYlMJ+c/Q==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Tue, 05 Mar 2024 09:21:18 -0300
-Subject: [PATCH 2/2] video: backlight: lcd: make lcd_class constant
+        d=1e100.net; s=20230601; t=1709641454; x=1710246254;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CgWnngIT/gJ2CN/6Q6lG/bumlZMowmI03npuEMQCBAM=;
+        b=JpYSkP2mRqzYcZ8hycIb4nbMtArfaNEy5znQHotNAzvKcv6lh65MRRM6ez422L68rB
+         JddoDK5VHvHsnGsesDeMDv7KUtjpQAH7FG7OeEKbCGj9haTcTna64EXT6ADku3hO2ZsZ
+         uan98D+/zxg4zhnbEW5klGfXlEs7q95Y2Gc64RDUYHXKRApTMlL1YdkQ4g2ewTNEL/Oa
+         WiGnB0CzPN0VWdjauIHx0VeignkwzMn3NZx/VqJlZeeFAyV/teO+uW1gj3Xth5r3rZcs
+         7K9qjEpsNJMFShyd50X4QZqsNpxR4rm6g86lu6h6opLNJNV/0u7p37fijN2ZqhYGJmn9
+         GPsg==
+X-Gm-Message-State: AOJu0Yy5VG75l0dc0ZTtrFQon4JrujDUX7letK5btE1dZjHf+6GcQ3fR
+	wqcFTB9ItkSKVD23nZWyz6/+Olg2/9KFct/4u/wy3UXAYcBP3DGXDRv++gEScAedqoQXsns7fbs
+	X8EFKj/aS/qsEeKc6ZZb4bFIwZA1iJvsdNUoSBw==
+X-Google-Smtp-Source: AGHT+IHUBgwcmPr3wx5OxoHWv1ZUZdP1ZVL1rLQBhjwJNL8fZY5l0lFsxJWNgG2Iv1hIDyeVJFsQ1t3tYOxVyeL6KpA=
+X-Received: by 2002:a81:720a:0:b0:609:2104:3cf8 with SMTP id
+ n10-20020a81720a000000b0060921043cf8mr12997879ywc.41.1709641454552; Tue, 05
+ Mar 2024 04:24:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240305-class_cleanup-backlight-v1-2-c0e15cc25be1@marliere.net>
-References: <20240305-class_cleanup-backlight-v1-0-c0e15cc25be1@marliere.net>
-In-Reply-To: <20240305-class_cleanup-backlight-v1-0-c0e15cc25be1@marliere.net>
-To: Lee Jones <lee@kernel.org>, 
- Daniel Thompson <daniel.thompson@linaro.org>, 
- Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Ricardo B. Marliere" <ricardo@marliere.net>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2445; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=zA1QI3pTmF4PVrGfMGQ4T6AJuBZkkUOxdUv7rVLqvq8=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl5w4+iSyNLDZC3tRX7TPpVThd4AQXUWdlE0ijV
- xMPTkgRv36JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZecOPgAKCRDJC4p8Y4ZY
- pobYD/4jQPHj7hJi/so8GQHNZhM9h2mU0OKK45lxlhm1Q3dv8hDKlVyL9rq7nXJl4ST4ztys0VI
- trz7QE3BfAjjJqPjqFyxGRXNNGG9DCAjc5iYeMao8xiYOIDrXQWikf81wWNtJJ2jPWmBVIfQgQ3
- qksMZFWx5vVy7oITR3JGVurioxGUV8/MkG7CbiaLqyboIRMseZ5K+I9PIK1QIQ+u26knlbcsIEC
- WC0fckurcLyEnqXEd+ILPgiXzMpm6RpdvZQB058YL9sSkgkFEzg53EtaoeyM2f4yyLv4p/j9tUG
- sybiXdf+j9AXLbKebqkgrJ1oy3k+2F/9CpqO3GfOOfDTqhkheUhALj1B6cpiuMdyxuQe9KoLeAU
- VPXSNHC+Hz4hx2irj88cHO2aYFFRQXIUSYO4Di4Q0b4xYNTGMnV5M8iDAQ1WMFRYVpRMJoD4vcl
- 7j3OyKLoRjiF2tUzyc7cK3UsOEEvmv5qD+u45T6y+Gv1nZ6KKfytun2qzJYjm/w7m5wIFjH/EER
- uf6f/GhL3OcKs/MLSRkBETzFm4hPdZJrc9fmZCfV+Pes0dEfGYYlvEIrQRL4bL/SNeZ33AN3OVp
- Ti8gaoYCLznvyG71OlDEdm9Sor7/Tr0kwK8fA1Sco+2c1XHKdYjlrv2ko835i16JDo5RFgu6F+8
- CCmkHoOql2/vOgw==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+References: <20240227153132.2611499-1-jens.wiklander@linaro.org> <20240227153132.2611499-2-jens.wiklander@linaro.org>
+In-Reply-To: <20240227153132.2611499-2-jens.wiklander@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 5 Mar 2024 13:24:02 +0100
+Message-ID: <CACRpkdZBWBio8kvKuVzj2CknCb4eS=VB2EqUsAK-vf4e328icg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] rpmb: add Replay Protected Memory Block (RPMB) subsystem
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	op-tee@lists.trustedfirmware.org, 
+	Shyam Saini <shyamsaini@linux.microsoft.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Jerome Forissier <jerome.forissier@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Bart Van Assche <bvanassche@acm.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomas Winkler <tomas.winkler@intel.com>, 
+	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since commit 43a7206b0963 ("driver core: class: make class_register() take
-a const *"), the driver core allows for struct class to be in read-only
-memory, so move the lcd_class structure to be declared at build time
-placing it into read-only memory, instead of having to be dynamically
-allocated at boot time.
+Hi Jens,
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/video/backlight/lcd.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+thanks for your patch!
 
-diff --git a/drivers/video/backlight/lcd.c b/drivers/video/backlight/lcd.c
-index 77c5cb2a44e2..ba4771cbd781 100644
---- a/drivers/video/backlight/lcd.c
-+++ b/drivers/video/backlight/lcd.c
-@@ -159,8 +159,6 @@ static ssize_t max_contrast_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(max_contrast);
- 
--static struct class *lcd_class;
--
- static void lcd_device_release(struct device *dev)
- {
- 	struct lcd_device *ld = to_lcd_device(dev);
-@@ -175,6 +173,11 @@ static struct attribute *lcd_device_attrs[] = {
- };
- ATTRIBUTE_GROUPS(lcd_device);
- 
-+static const struct class lcd_class = {
-+	.name = "lcd",
-+	.dev_groups = lcd_device_groups,
-+};
-+
- /**
-  * lcd_device_register - register a new object of lcd_device class.
-  * @name: the name of the new object(must be the same as the name of the
-@@ -202,7 +205,7 @@ struct lcd_device *lcd_device_register(const char *name, struct device *parent,
- 	mutex_init(&new_ld->ops_lock);
- 	mutex_init(&new_ld->update_lock);
- 
--	new_ld->dev.class = lcd_class;
-+	new_ld->dev.class = &lcd_class;
- 	new_ld->dev.parent = parent;
- 	new_ld->dev.release = lcd_device_release;
- 	dev_set_name(&new_ld->dev, "%s", name);
-@@ -318,19 +321,19 @@ EXPORT_SYMBOL(devm_lcd_device_unregister);
- 
- static void __exit lcd_class_exit(void)
- {
--	class_destroy(lcd_class);
-+	class_unregister(&lcd_class);
- }
- 
- static int __init lcd_class_init(void)
- {
--	lcd_class = class_create("lcd");
--	if (IS_ERR(lcd_class)) {
--		pr_warn("Unable to create backlight class; errno = %ld\n",
--			PTR_ERR(lcd_class));
--		return PTR_ERR(lcd_class);
-+	int ret;
-+
-+	ret = class_register(&lcd_class);
-+	if (ret) {
-+		pr_warn("Unable to create backlight class; errno = %d\n", ret);
-+		return ret;
- 	}
- 
--	lcd_class->dev_groups = lcd_device_groups;
- 	return 0;
- }
- 
+On Tue, Feb 27, 2024 at 4:31=E2=80=AFPM Jens Wiklander
+<jens.wiklander@linaro.org> wrote:
 
--- 
-2.43.0
+> A number of storage technologies support a specialised hardware
+> partition designed to be resistant to replay attacks. The underlying
+> HW protocols differ but the operations are common. The RPMB partition
+> cannot be accessed via standard block layer, but by a set of specific
+> RPMB commands: WRITE, READ, GET_WRITE_COUNTER, and PROGRAM_KEY. Such a
+> partition provides authenticated and replay protected access, hence
+> suitable as a secure storage.
+>
+> The initial aim of this patch is to provide a simple RPMB driver
+> interface which can be accessed by the optee driver to facilitate early
+> RPMB access to OP-TEE OS (secure OS) during the boot time.
+>
+> A TEE device driver can claim the RPMB interface, for example, via
+> rpmb_interface_register() or rpmb_dev_find_device(). The RPMB driver
+> provides a callback to route RPMB frames to the RPMB device accessible
+> via rpmb_route_frames().
+>
+> The detailed operation of implementing the access is left to the TEE
+> device driver itself.
+>
+> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> Signed-off-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
+> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 
+I would mention in the commit that the subsystem is currently
+only used with eMMC but is designed to be used also by UFS
+and NVME. Nevertheless, no big deal so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+> +config RPMB
+> +       tristate "RPMB partition interface"
+> +       depends on MMC
+
+depends on MMC || SCSI_UFSHCD || NVME_CORE
+?
+
+Or do we want to hold it off until we implement the backends?
+
+Yours,
+Linus Walleij
