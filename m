@@ -1,224 +1,198 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2E87E563
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 04:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4162AE95
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 04:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709613561; cv=none; b=aTbq8ucDRTVwEpZ44hfzTc1KpiOCQI+dR5gj3VpTWeII1FCLXOJQYssSIhgsR+AwZcE9p/bojJ1OmSeTVlWob3oxGP0YGcznz+dv/hEYGz8tp3SRKMA1Sn9MjxrpMujj0to3Wb2U5K/Otmkptxp2WUcRUt8tfmHdwQRyJe+4tr4=
+	t=1709613732; cv=none; b=DG7aDC1rBs8Ohg3WpAGq10by9Iaz32q7sPb3pcl4FWtviH5tEAvAwpcqxDBar9c4zI0BSXqKM5l7WS2H2bD9iBLCEYFTAxkwuiipfdRDxsZD2uaUu9derGSmETG15Xs3vas9SIpQaSpHQvsSLmLaUQBUhcjbHWLnMIgsCuFCkME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709613561; c=relaxed/simple;
-	bh=JJwF0uimiVgK6AKyNaDALob98YEJRP85dZqZyruT1so=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wnz6dTWvgqlDzAF4mLqal0OmYHTmBcwj7M4EnF+18aLURElNV67/pH+XsbLwgE12TC5P4UGZ7Z6uampK7HC5NowpxbHDNF4XWliTzdxM+TKv5wCiu/rgLgChYo5wzB7JiBZqKifO7/rKNsMzViZi/kXvIhrhsh3D245ibRbaoXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KRc3sPI1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709613732; c=relaxed/simple;
+	bh=ofKGUMTvxn3SKlpz50MdrEeThbOSHyLZrTEsteB2xT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V/YtMlJH0v/fQ5Q1o7U14FZxaCxBD8LXWK4yYq26uNODLkq/28kYEgw33Aw0n4fk1XTsCcDu4VuTnU1WsFZoWYZJyhWh0Rt0aH6dFJAn0xZOYZnZeKRlWn0N1B6ytQqiCoL1qefgHIuKG0Qi2ImVBlmcTydLdmIc8bkmemzKXH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Ez0zoYlh; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KRc3sPI1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709613558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LjhEXhItmtgWJcOdZcIsr7lX1LpUjnzN2RuMZC/FUxw=;
-	b=KRc3sPI1cAWzYJmg+DmilETfghE62dfGBcGC/LpzUCSztD5V+DjrR2g8ntRNKHSyZ1A0CB
-	OiTRhsQNrW/ws6oOKRTAvNnLK/1LZ5Z+BMYjdIPCk2GeRI3po72d65JTMW5lwF8XNRtdXf
-	T8GL3AeKTWmfUSv4mESTeSndZ5jHbpw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-SJW2FwMcNIWT4KdeDhGtsQ-1; Mon,
- 04 Mar 2024 23:39:13 -0500
-X-MC-Unique: SJW2FwMcNIWT4KdeDhGtsQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 790DC29AB3F0;
-	Tue,  5 Mar 2024 04:39:12 +0000 (UTC)
-Received: from x1n.redhat.com (unknown [10.72.116.31])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0CE65C1F090;
-	Tue,  5 Mar 2024 04:39:06 +0000 (UTC)
-From: peterx@redhat.com
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	x86@kernel.org,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Yang Shi <shy828301@gmail.com>,
-	peterx@redhat.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	Muchun Song <muchun.song@linux.dev>
-Subject: [PATCH v3 10/10] mm/treewide: Align up pXd_leaf() retval across archs
-Date: Tue,  5 Mar 2024 12:37:50 +0800
-Message-ID: <20240305043750.93762-11-peterx@redhat.com>
-In-Reply-To: <20240305043750.93762-1-peterx@redhat.com>
-References: <20240305043750.93762-1-peterx@redhat.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Ez0zoYlh"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e622b46f45so1388759b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 20:42:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1709613730; x=1710218530; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yF4EwQqzBVk7XgdJQilAun1918XSEfc6vUXCeQtX3Tw=;
+        b=Ez0zoYlh05rjjLfw90z4mna/4PFMsJgIdqBpszhrmzTMPT3vm42k+cfrARCIQ4Kq53
+         NQxVUilkcC5bCW+B0DJ/6yjH7m4LeP04FAM8MH/mOSY8KUA9Bj9ZRKMfmod79VSbpmh2
+         sYwIXIC2abrXjWOCC2pa/JA+kp+UfRqW3fyWQC9omouNKLKCw5XfAzmMiPxbq7pyAHx6
+         EDqFeUyl656x7lHU/b3UlafF7sdY6pbfQCWnLdU5ATCVicV8TgUutLPP26tluheFcfX7
+         HSOUwcjj+WCTOyOhSmUCPC28tdM6wmW4tEgMN8NPr9oVVpZajRu9C/jZRlomCuWX77Xw
+         nZlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709613730; x=1710218530;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yF4EwQqzBVk7XgdJQilAun1918XSEfc6vUXCeQtX3Tw=;
+        b=FWLCCWG8dHg7ke27P7gxbRcoKBM6pS+FrAWqDHWHt1tiJJwNBj4AQf9Ouc+HNRldmh
+         7gLeiYFsip8GJbsqAhv2WJmAzFRE8oMEVZGx6Ttb1M/EN8qaPgSdAr6HYDBNetNHlHV6
+         uFP3W1cG73GIZFQTqIDShEXwZTVQdRt+n69sQrcRfxyDYHcdkE6qf6jgD9KnNhmPjOy4
+         QsCoHjvp6H0kV6PdohwM8VEUCnT8cLkBOSjvkvCWFFcxl8/wQPYU+fuzZY1Jl6aBaX9S
+         gNIm0//QbNJ+gUGMs9WzgjGhxrRSfRshszdcATsJBql0EjXKyvMFCfEOw5dXrR/dth3d
+         27jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWc+g4gmyu6ilKtX/nfF2S1roDLArn+7S7v/aEJIWtDyxiy94VtZEkEvy6oRZe9MQC39hDhr2Ik7hD18kTEAyuNmDTz8JAfIdfSI6no
+X-Gm-Message-State: AOJu0YxoRWTfbZCuQESvB7rKknQ/uX6F0vJ2aNdupIc/7ssO+rbNc80W
+	nog0KWH3h782Jcnatao5u+WSuFncnTjWxCXs+ZGJFfmCFRJPaRU8C+2rQTLI9Gs=
+X-Google-Smtp-Source: AGHT+IHFeTjXThPCXKLo9RHXN66EbeSFne7ZcgdAIqKXetKAR8c1ZOC18G/a37FUmZWnIib779ErWA==
+X-Received: by 2002:aa7:8714:0:b0:6e6:136b:cfc with SMTP id b20-20020aa78714000000b006e6136b0cfcmr4986620pfo.4.1709613730220;
+        Mon, 04 Mar 2024 20:42:10 -0800 (PST)
+Received: from sunil-laptop ([106.51.184.12])
+        by smtp.gmail.com with ESMTPSA id x19-20020a63f713000000b005dbf22d6e1asm8416760pgh.56.2024.03.04.20.41.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 20:42:09 -0800 (PST)
+Date: Tue, 5 Mar 2024 10:11:56 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Haibo Xu <haibo1.xu@intel.com>
+Cc: xiaobo55x@gmail.com, ajones@ventanamicro.com,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Guo Ren <guoren@kernel.org>, Anup Patel <apatel@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Greentime Hu <greentime.hu@sifive.com>, Baoquan He <bhe@redhat.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	James Morse <james.morse@arm.com>, Evan Green <evan@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev
+Subject: Re: [PATCH 2/4] ACPI: NUMA: Add handler for SRAT RINTC affinity
+ structure
+Message-ID: <ZeailF+UYf/+4NQq@sunil-laptop>
+References: <cover.1706603678.git.haibo1.xu@intel.com>
+ <a1e20de53156f50385c7609507982f08866e859b.1706603678.git.haibo1.xu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1e20de53156f50385c7609507982f08866e859b.1706603678.git.haibo1.xu@intel.com>
 
-From: Peter Xu <peterx@redhat.com>
+Hi Haibo,
 
-Even if pXd_leaf() API is defined globally, it's not clear on the retval,
-and there are three types used (bool, int, unsigned log).
+On Wed, Jan 31, 2024 at 10:31:59AM +0800, Haibo Xu wrote:
+> Add RINTC affinity structure handler during parsing SRAT table.
+> The ARCH specific implementation will be added in next patch.
+> 
+> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+> ---
+>  drivers/acpi/numa/srat.c | 32 +++++++++++++++++++++++++++++++-
+>  include/linux/acpi.h     |  3 +++
+>  2 files changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 0214518fc582..503abcf6125d 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -165,6 +165,19 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+>  		}
+>  	}
+>  	break;
+> +
+> +	case ACPI_SRAT_TYPE_RINTC_AFFINITY:
+> +		{
+> +			struct acpi_srat_rintc_affinity *p =
+> +			    (struct acpi_srat_rintc_affinity *)header;
+> +			pr_debug("SRAT Processor (acpi id[0x%04x]) in proximity domain %d %s\n",
+> +				 p->acpi_processor_uid,
+> +				 p->proximity_domain,
+> +				 (p->flags & ACPI_SRAT_RINTC_ENABLED) ?
+> +				 "enabled" : "disabled");
+> +		}
+> +		break;
+> +
+>  	default:
+>  		pr_warn("Found unsupported SRAT entry (type = 0x%x)\n",
+>  			header->type);
+> @@ -448,6 +461,21 @@ acpi_parse_gi_affinity(union acpi_subtable_headers *header,
+>  }
+>  #endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
+>  
+> +static int __init
+> +acpi_parse_rintc_affinity(union acpi_subtable_headers *header,
+> +			 const unsigned long end)
+Alignment doesn't look right. Could you please run checkpatch on all
+the patches?
 
-Always return a boolean for pXd_leaf() APIs.
+> +{
+> +	struct acpi_srat_rintc_affinity *rintc_affinity;
+> +
+> +	rintc_affinity = (struct acpi_srat_rintc_affinity *)header;
+> +	acpi_table_print_srat_entry(&header->common);
+> +
+> +	/* let architecture-dependent part to do it */
+> +	acpi_numa_rintc_affinity_init(rintc_affinity);
+> +
+Is it required to have this commit first prior to architecture
+functionality? I am wondering whether it is logically better to
+implement the function first and then consume in next commit?
 
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/riscv/include/asm/pgtable-64.h | 2 +-
- arch/riscv/include/asm/pgtable.h    | 2 +-
- arch/s390/include/asm/pgtable.h     | 4 ++--
- arch/sparc/include/asm/pgtable_64.h | 4 ++--
- arch/x86/include/asm/pgtable.h      | 8 ++++----
- include/linux/pgtable.h             | 8 ++++----
- 6 files changed, 14 insertions(+), 14 deletions(-)
+> +	return 0;
+> +}
+> +
+>  static int __initdata parsed_numa_memblks;
+>  
+>  static int __init
+> @@ -501,7 +529,7 @@ int __init acpi_numa_init(void)
+>  
+>  	/* SRAT: System Resource Affinity Table */
+>  	if (!acpi_table_parse(ACPI_SIG_SRAT, acpi_parse_srat)) {
+> -		struct acpi_subtable_proc srat_proc[4];
+> +		struct acpi_subtable_proc srat_proc[5];
+>  
+>  		memset(srat_proc, 0, sizeof(srat_proc));
+>  		srat_proc[0].id = ACPI_SRAT_TYPE_CPU_AFFINITY;
+> @@ -512,6 +540,8 @@ int __init acpi_numa_init(void)
+>  		srat_proc[2].handler = acpi_parse_gicc_affinity;
+>  		srat_proc[3].id = ACPI_SRAT_TYPE_GENERIC_AFFINITY;
+>  		srat_proc[3].handler = acpi_parse_gi_affinity;
+> +		srat_proc[4].id = ACPI_SRAT_TYPE_RINTC_AFFINITY;
+> +		srat_proc[4].handler = acpi_parse_rintc_affinity;
+>  
+>  		acpi_table_parse_entries_array(ACPI_SIG_SRAT,
+>  					sizeof(struct acpi_table_srat),
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index b7165e52b3c6..a65273db55c6 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -269,6 +269,9 @@ acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+>  
+>  int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
+>  
+> +static inline void
+> +acpi_numa_rintc_affinity_init(struct acpi_srat_rintc_affinity *pa) { }
+> +
+I think this can be fit in single like as we can have upto 100
+characters.
 
-diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-index b42017d76924..2c7e1661db01 100644
---- a/arch/riscv/include/asm/pgtable-64.h
-+++ b/arch/riscv/include/asm/pgtable-64.h
-@@ -190,7 +190,7 @@ static inline int pud_bad(pud_t pud)
- }
- 
- #define pud_leaf	pud_leaf
--static inline int pud_leaf(pud_t pud)
-+static inline bool pud_leaf(pud_t pud)
- {
- 	return pud_present(pud) && (pud_val(pud) & _PAGE_LEAF);
- }
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index add5cd30ab34..6839520dbcb1 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -241,7 +241,7 @@ static inline int pmd_bad(pmd_t pmd)
- }
- 
- #define pmd_leaf	pmd_leaf
--static inline int pmd_leaf(pmd_t pmd)
-+static inline bool pmd_leaf(pmd_t pmd)
- {
- 	return pmd_present(pmd) && (pmd_val(pmd) & _PAGE_LEAF);
- }
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 9e08af5b9247..60950e7a25f5 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -706,7 +706,7 @@ static inline int pud_none(pud_t pud)
- }
- 
- #define pud_leaf pud_leaf
--static inline int pud_leaf(pud_t pud)
-+static inline bool pud_leaf(pud_t pud)
- {
- 	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
- 		return 0;
-@@ -714,7 +714,7 @@ static inline int pud_leaf(pud_t pud)
- }
- 
- #define pmd_leaf pmd_leaf
--static inline int pmd_leaf(pmd_t pmd)
-+static inline bool pmd_leaf(pmd_t pmd)
- {
- 	return (pmd_val(pmd) & _SEGMENT_ENTRY_LARGE) != 0;
- }
-diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-index 6ff0a28d5fd1..4d1bafaba942 100644
---- a/arch/sparc/include/asm/pgtable_64.h
-+++ b/arch/sparc/include/asm/pgtable_64.h
-@@ -681,7 +681,7 @@ static inline unsigned long pte_special(pte_t pte)
- }
- 
- #define pmd_leaf pmd_leaf
--static inline unsigned long pmd_leaf(pmd_t pmd)
-+static inline bool pmd_leaf(pmd_t pmd)
- {
- 	pte_t pte = __pte(pmd_val(pmd));
- 
-@@ -868,7 +868,7 @@ static inline pmd_t *pud_pgtable(pud_t pud)
- #define p4d_page(p4d)			NULL
- 
- #define pud_leaf pud_leaf
--static inline unsigned long pud_leaf(pud_t pud)
-+static inline bool pud_leaf(pud_t pud)
- {
- 	pte_t pte = __pte(pud_val(pud));
- 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index cfc84c55d0e6..7621a5acb13e 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -252,7 +252,7 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
- }
- 
- #define p4d_leaf p4d_leaf
--static inline int p4d_leaf(p4d_t p4d)
-+static inline bool p4d_leaf(p4d_t p4d)
- {
- 	/* No 512 GiB pages yet */
- 	return 0;
-@@ -261,7 +261,7 @@ static inline int p4d_leaf(p4d_t p4d)
- #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
- 
- #define pmd_leaf pmd_leaf
--static inline int pmd_leaf(pmd_t pte)
-+static inline bool pmd_leaf(pmd_t pte)
- {
- 	return pmd_flags(pte) & _PAGE_PSE;
- }
-@@ -1086,7 +1086,7 @@ static inline pmd_t *pud_pgtable(pud_t pud)
- #define pud_page(pud)	pfn_to_page(pud_pfn(pud))
- 
- #define pud_leaf pud_leaf
--static inline int pud_leaf(pud_t pud)
-+static inline bool pud_leaf(pud_t pud)
- {
- 	return (pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
- 		(_PAGE_PSE | _PAGE_PRESENT);
-@@ -1413,7 +1413,7 @@ static inline bool pgdp_maps_userspace(void *__ptr)
- }
- 
- #define pgd_leaf	pgd_leaf
--static inline int pgd_leaf(pgd_t pgd) { return 0; }
-+static inline bool pgd_leaf(pgd_t pgd) { return false; }
- 
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
- /*
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index a36cf4e124b0..85fc7554cd52 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1777,16 +1777,16 @@ typedef unsigned int pgtbl_mod_mask;
-  * Only meaningful when called on a valid entry.
-  */
- #ifndef pgd_leaf
--#define pgd_leaf(x)	0
-+#define pgd_leaf(x)	false
- #endif
- #ifndef p4d_leaf
--#define p4d_leaf(x)	0
-+#define p4d_leaf(x)	false
- #endif
- #ifndef pud_leaf
--#define pud_leaf(x)	0
-+#define pud_leaf(x)	false
- #endif
- #ifndef pmd_leaf
--#define pmd_leaf(x)	0
-+#define pmd_leaf(x)	false
- #endif
- 
- #ifndef pgd_leaf_size
--- 
-2.44.0
-
+>  #ifndef PHYS_CPUID_INVALID
+>  typedef u32 phys_cpuid_t;
+>  #define PHYS_CPUID_INVALID (phys_cpuid_t)(-1)
+> -- 
+> 2.34.1
+> 
