@@ -1,80 +1,62 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89F43EA97;
-	Tue,  5 Mar 2024 04:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C063C087;
+	Tue,  5 Mar 2024 04:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709612514; cv=none; b=V00pQ729nVOXLaB1SyLgtBeWC7YmJHnKJypNwCySttCKXrBLR/bCtqV6Wd3hhAgflv4lwzdESwrHb3zXuPbBmlMh0dz2j1Gf1KrH9RFd1H4ruDmz/u0YX/Tfaee1nfWLLeNagtVrc4HyJGPsove+tIVgrOaLBvWQpo+X7ixQiR8=
+	t=1709612540; cv=none; b=Q1v1DjS/1dv+FHsEYhdgUBenupCG+YVTa+stV2GnlK5c37wTaG7zkblFo38u6ioynIJApKpH3/uN9ae6L4aw87Wma8dEHQ+R+vG/Hso5kpPkZKIxuQFq9hCkpmQoBLyXJdQlIS4o2M+5kNHeWZxIfOi8bme+c2cuDMO0aPDfauo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709612514; c=relaxed/simple;
-	bh=VrFvBwu+5djTZZLND1/oU7zR1xwqzdQA86ryoXYNbCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QkV/SjHkIvHb+34ExSpjH+X3sO0Mocy5GBlNs0nNT8FV1jv+A1gF25Kvu4WL/hNVq+WSz8lXwjnLFJnN2rSkknoIOP3CXqBnzd/u+HF7qty5lwD+uR7C9VSbE4AV00sPxPCMf3o0Rz3M1dLpZhztPyN49yE4pheCpzTe6Zd4JKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/lwv9fH; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709612540; c=relaxed/simple;
+	bh=0xM7NyL1pkdybHyg/1YdZzaZV2WQ7gK69y2nSqCZkKI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HwZdXQ3SqKaOT5j+NJf7wmofdgdCpybdCOjGJ2MThRh5DjEJDy/LC8WOq1qoY6sji+se9euinZwsCDYcTzDDAhk8GT5/32xlSWMlrV+Qx0vhogz3Ck7L9pBJU6zaWvMDlXUbNhZQsKdaBWcGDsMgVC+XjWT/FB4+m+4GlCNhhfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oDMFf3Xb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/lwv9fH"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-787edfea5adso292994585a.2;
-        Mon, 04 Mar 2024 20:21:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709612512; x=1710217312; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qkhhOr0jhiPqNL9CDfmLZNCV0k7XRJt648UCT9HAdYg=;
-        b=P/lwv9fHFHiBZXVrnUWVP+YjCvSj+5L28MTuW4sHyCDqRpn+77oTqjDA2U3+SOngaA
-         w5uOaOQaupyzXgSIncTE01OORMELgm0dw4BWTwjc8muUjC1v0FurWSTea4v6OZxydqoS
-         GRKwk7vk9p+sPe1yDtInBxTYMhHZ05BUcopOgAYjRbTtXDO0iduo00uMllgNhrfdx5vB
-         3FgW/YQkc5TqlJZHs1PNMU8fdqqRj7EInwIvXnaLJZp4WPuYlHW3HFO9/uV4K3BEk5oh
-         0vdCfraP7wHGWnIAs1dl1RfXwOyyPclemCTp8moO9YQ0XjuOj06khnfXXak4iPi0BQti
-         8c6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709612512; x=1710217312;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qkhhOr0jhiPqNL9CDfmLZNCV0k7XRJt648UCT9HAdYg=;
-        b=aaGFYGsdIStu3glh1IzKPrUYCIKU+Qf1ckfCXWjsikk2UjzUHXR3WhGDV4ysDQ3Aos
-         2LlMWq84BEBaa3kQFKOniWhHERlKKsYUF1MfAXfaFIpFhzyoSKbwfjwh1DKqoATtrEzX
-         f3ysZM+g9q513ZMEhnnzGa6pmN4DddSnayTnMd4K7r0jhFfYz1CjFb/A88QhcTtZUoho
-         8PgcidTqtBuiSgSXq9HnrY3N8qSudiB7J4baRqho9gvIUAKq+4+R4ducKOEOhEmA9B8u
-         C1tX/NhrXNLo1mk6SlMiaFFqKR/TVFs/2XeA3q4VSqNeHtVPaGz7dHA0V2ptv5EufUJV
-         VSSw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4NAvQthmOwzx3RFYVhqiibLt0CgYsG6jJ8Sl39nw6t/mCRnRm90rXerveOJaVKmG4GX65xPZAn0JoEDBVsbru103QDsKh+6rbb5il/lqF1QctKGAiBvuYEPcOGVHr/rAxZ2lhTiehHQ==
-X-Gm-Message-State: AOJu0YxqeYTfqQ5Obz9qm17m+Ap53b5uj7BW7SbCNOG2Iy5Ha09l2kuT
-	NQvIJF81mnSD92sdsZKTlcTq2ArEALTRbKhlqp6iDrWj2d50P7D5
-X-Google-Smtp-Source: AGHT+IGhO22JvWuoDe0r6n8miIUizZ7mK73dWrZ8B5AIFLBNspZ1UaGqokezG9iRzMWvkAu3ugRVzA==
-X-Received: by 2002:a0c:f90d:0:b0:690:5447:753a with SMTP id v13-20020a0cf90d000000b006905447753amr869646qvn.31.1709612511729;
-        Mon, 04 Mar 2024 20:21:51 -0800 (PST)
-Received: from localhost.localdomain ([174.95.13.129])
-        by smtp.gmail.com with ESMTPSA id mw10-20020a05621433ca00b0068f2b1d9415sm5796018qvb.23.2024.03.04.20.21.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 20:21:51 -0800 (PST)
-From: Abdel Alkuor <alkuor@gmail.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alice Chen <alice_chen@richtek.com>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	Abdel Alkuor <alkuor@gmail.com>,
-	ChiYuan Huang <cy_huang@richtek.com>,
-	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
-	ChiaEn Wu <chiaen_wu@richtek.com>
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] leds: Add NCP5623 multi-led driver
-Date: Mon,  4 Mar 2024 23:20:29 -0500
-Message-Id: <20240305042049.1533279-2-alkuor@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oDMFf3Xb"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4253nSmx015123;
+	Tue, 5 Mar 2024 04:22:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=n9v/xZ+
+	yKjOqjVGGE3FNCkbRvvYOjln8Xvl7+jR9/uE=; b=oDMFf3XbGv+Eg1ZKayepFpj
+	YE7rN2wAPsl7FLXDxZmrnz3DiwuBLHloyZNJmxSkCe8hfWOnJ+a02s2BuGRMJEsd
+	IjYOQey+PJOAPo1m8XMiW5eb9mv7fyfUMk5DWRC6536xyaiuFy1q1CKIEdIoF4Ja
+	Uc4tkLWlWPM6HC7ymDZTO5JlJA3pubLhWomLF9PyRDTUXvBsakX1xj3lGUol8eFP
+	mse4i1Hb8grD+kh9voEtYt9XjvufGPLmqJA7Z7N6HS1BZyoCmAyNCqW+O6ScDXUe
+	UuOHHUqvqeZ5MIGdvv2ljeVyUaYDSkiIJLv7hPJEHNwBkpLo85xmhHN3fTq9SEA=
+	=
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wndaj1xu0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Mar 2024 04:22:10 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4254Lxk0014117
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 5 Mar 2024 04:21:59 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 4 Mar 2024 20:21:55 -0800
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Wesley Cheng
+	<quic_wcheng@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Thinh Nguyen
+	<Thinh.Nguyen@synopsys.com>,
+        Johan Hovold <johan@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_ppratap@quicinc.com>,
+        <quic_jackp@quicinc.com>, Krishna Kurapati <quic_kriskura@quicinc.com>
+Subject: [PATCH] usb: dwc3: qcom: Remove ACPI support from glue driver
+Date: Tue, 5 Mar 2024 09:51:43 +0530
+Message-ID: <20240305042143.3455101-1-quic_kriskura@quicinc.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240305042049.1533279-1-alkuor@gmail.com>
-References: <20240305042049.1533279-1-alkuor@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,349 +64,470 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: SjmvAjr0TfjVOwCri3R7ZTgQdRanphCJ
+X-Proofpoint-GUID: SjmvAjr0TfjVOwCri3R7ZTgQdRanphCJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-05_01,2024-03-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=682 mlxscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403050031
 
-NCP5623 is DC-DC multi-LEDs driver which has three PWMs that can be
-programmed up to 32 steps giving 32768 colors hue.
+Minimal ACPI support was added to the Qualcomm DWC3 glue driver in order to
+enable USB on SDM850 and SC8180X compute platforms. The support is still
+functional, but unnoticed regressions in other drivers indicates that no
+one actually booting any of platforms dependent on this implementation.
 
-NCP5623 driver supports gradual dimming upward/downward with programmable
-delays. Also, the driver supports driving a single LED or multi-LED
-like RGB.
+The functionality provides is the bare minimum and is not expected to aid
+in the effort of bringing full ACPI support to the driver in the future.
 
-Signed-off-by: Abdel Alkuor <alkuor@gmail.com>
+Remove the ACPI code from the Qualcomm DWC3 glue driver to aid in the
+implementation of improvements that are actually used like multiport and
+flattening device tree.
+
+Commit message by Bjorn Andersson.
+
+Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
 ---
-Changes in v3:
- - Add defines for magic numbers
- - Fix code style
- - Add a comment how ncp->delay is calculated
- - Don't free mc_node when probe is successful
- - Link to v2: https://lore.kernel.org/all/20240217230956.630522-2-alkuor@gmail.com/
+ drivers/usb/dwc3/dwc3-qcom.c | 273 ++---------------------------------
+ 1 file changed, 11 insertions(+), 262 deletions(-)
 
-Changes in v2:
- - Remove all custom attributes and use hw pattern instead
- - Remove filename from the driver description
- - Fix coding style
- - Destroy the muttex in shutdown callback
- - Register mcled device using none devm version as unregistering mcled device
-   calls ncp5632_set_led which uses mutex hence we need to make sure the
-   mutex is still available during the unregistering process.
- - Link to v1: https://lore.kernel.org/linux-kernel/20240208130115.GM689448@google.com/T/
- drivers/leds/rgb/Kconfig        |  11 ++
- drivers/leds/rgb/Makefile       |   1 +
- drivers/leds/rgb/leds-ncp5623.c | 271 ++++++++++++++++++++++++++++++++
- 3 files changed, 283 insertions(+)
- create mode 100644 drivers/leds/rgb/leds-ncp5623.c
-
-diff --git a/drivers/leds/rgb/Kconfig b/drivers/leds/rgb/Kconfig
-index a6a21f564673..81ab6a526a78 100644
---- a/drivers/leds/rgb/Kconfig
-+++ b/drivers/leds/rgb/Kconfig
-@@ -27,6 +27,17 @@ config LEDS_KTD202X
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-ktd202x.
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index dbd6a5b2b289..a0879f224d96 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -4,7 +4,6 @@
+  * Inspired by dwc3-of-simple.c
+  */
  
-+config LEDS_NCP5623
-+	tristate "LED support for NCP5623"
-+	depends on I2C
-+	depends on OF
-+	help
-+	  This option enables support for ON semiconductor NCP5623
-+	  Triple Output I2C Controlled RGB LED Driver.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-ncp5623.
-+
- config LEDS_PWM_MULTICOLOR
- 	tristate "PWM driven multi-color LED Support"
- 	depends on PWM
-diff --git a/drivers/leds/rgb/Makefile b/drivers/leds/rgb/Makefile
-index 243f31e4d70d..a501fd27f179 100644
---- a/drivers/leds/rgb/Makefile
-+++ b/drivers/leds/rgb/Makefile
-@@ -2,6 +2,7 @@
+-#include <linux/acpi.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
+@@ -53,22 +52,10 @@
+ #define APPS_USB_AVG_BW 0
+ #define APPS_USB_PEAK_BW MBps_to_icc(40)
  
- obj-$(CONFIG_LEDS_GROUP_MULTICOLOR)	+= leds-group-multicolor.o
- obj-$(CONFIG_LEDS_KTD202X)		+= leds-ktd202x.o
-+obj-$(CONFIG_LEDS_NCP5623)		+= leds-ncp5623.o
- obj-$(CONFIG_LEDS_PWM_MULTICOLOR)	+= leds-pwm-multicolor.o
- obj-$(CONFIG_LEDS_QCOM_LPG)		+= leds-qcom-lpg.o
- obj-$(CONFIG_LEDS_MT6370_RGB)		+= leds-mt6370-rgb.o
-diff --git a/drivers/leds/rgb/leds-ncp5623.c b/drivers/leds/rgb/leds-ncp5623.c
-new file mode 100644
-index 000000000000..b669c55c5483
---- /dev/null
-+++ b/drivers/leds/rgb/leds-ncp5623.c
-@@ -0,0 +1,271 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * NCP5623 Multi-LED Driver
-+ *
-+ * Author: Abdel Alkuor <alkuor@gmail.com>
-+ * Datasheet: https://www.onsemi.com/pdf/datasheet/ncp5623-d.pdf
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+
-+#include <linux/led-class-multicolor.h>
-+
-+#define NCP5623_FUNCTION_OFFSET		0x5
-+#define NCP5623_REG(x)			((x) << NCP5623_FUNCTION_OFFSET)
-+
-+#define NCP5623_SHUTDOWN_REG		NCP5623_REG(0x0)
-+#define NCP5623_ILED_REG		NCP5623_REG(0x1)
-+#define NCP5623_PWM_REG(index)		NCP5623_REG(0x2 + (index))
-+#define NCP5623_UPWARD_STEP_REG		NCP5623_REG(0x5)
-+#define NCP5623_DOWNWARD_STEP_REG	NCP5623_REG(0x6)
-+#define NCP5623_DIMMING_TIME_REG	NCP5623_REG(0x7)
-+
-+#define NCP5623_MAX_BRIGHTNESS		0x1f
-+#define NCP5623_MAX_DIM_TIME		240 /* ms */
-+#define NCP5623_DIM_STEP		8   /* ms */
-+
-+struct ncp5623 {
-+	struct i2c_client *client;
-+	struct led_classdev_mc mc_dev;
-+	struct mutex lock;
-+
-+	int current_brightness;
-+	unsigned long delay;
-+};
-+
-+static int ncp5623_write(struct i2c_client *client, u8 reg, u8 data)
-+{
-+	return i2c_smbus_write_byte_data(client, reg | data, 0);
-+}
-+
-+static int ncp5623_brightness_set(struct led_classdev *cdev,
-+				  enum led_brightness brightness)
-+{
-+	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
-+	struct ncp5623 *ncp = container_of(mc_cdev, struct ncp5623, mc_dev);
-+	int ret;
-+
-+	guard(mutex)(&ncp->lock);
-+
-+	if (ncp->delay && time_is_after_jiffies(ncp->delay))
-+		return -EBUSY;
-+
-+	ncp->delay = 0;
-+
-+	for (int i = 0; i < mc_cdev->num_colors; i++) {
-+		ret = ncp5623_write(ncp->client,
-+				    NCP5623_PWM_REG(mc_cdev->subled_info[i].channel),
-+				    min(mc_cdev->subled_info[i].intensity,
-+					NCP5623_MAX_BRIGHTNESS));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = ncp5623_write(ncp->client, NCP5623_DIMMING_TIME_REG, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = ncp5623_write(ncp->client, NCP5623_ILED_REG, brightness);
-+	if (ret)
-+		return ret;
-+
-+	ncp->current_brightness = brightness;
-+
-+	return 0;
-+}
-+
-+static int ncp5623_pattern_set(struct led_classdev *cdev,
-+			       struct led_pattern *pattern,
-+			       u32 len, int repeat)
-+{
-+	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
-+	struct ncp5623 *ncp = container_of(mc_cdev, struct ncp5623, mc_dev);
-+	int brightness_diff;
-+	u8 reg;
-+	int ret;
-+
-+	guard(mutex)(&ncp->lock);
-+
-+	if (ncp->delay && time_is_after_jiffies(ncp->delay))
-+		return -EBUSY;
-+
-+	ncp->delay = 0;
-+
-+	if (pattern[0].delta_t > NCP5623_MAX_DIM_TIME ||
-+	   (pattern[0].delta_t % NCP5623_DIM_STEP) != 0)
-+		return -EINVAL;
-+
-+	brightness_diff = pattern[0].brightness - ncp->current_brightness;
-+
-+	if (brightness_diff == 0)
-+		return 0;
-+
-+	if (pattern[0].delta_t) {
-+		if (brightness_diff > 0)
-+			reg = NCP5623_UPWARD_STEP_REG;
-+		else
-+			reg = NCP5623_DOWNWARD_STEP_REG;
-+	} else {
-+		reg = NCP5623_ILED_REG;
-+	}
-+
-+	ret = ncp5623_write(ncp->client, reg,
-+			    min(pattern[0].brightness, NCP5623_MAX_BRIGHTNESS));
-+	if (ret)
-+		return ret;
-+
-+	ret = ncp5623_write(ncp->client,
-+			    NCP5623_DIMMING_TIME_REG,
-+			    pattern[0].delta_t / NCP5623_DIM_STEP);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * During testing, when the brightness difference is 1, for some
-+	 * unknown reason, the time factor it takes to change to the new
-+	 * value is the longest time possible. Otherwise, the time factor
-+	 * is simply the brightness difference.
-+	 *
-+	 * For example:
-+	 * current_brightness = 20 and new_brightness = 21 then the time it
-+	 * takes to set the new brightness increments to the maximum possible
-+	 * brightness from 20 then from 0 to 21.
-+	 * time_factor = max_brightness - 20 + 21
-+	 */
-+	if (abs(brightness_diff) == 1)
-+		ncp->delay = NCP5623_MAX_BRIGHTNESS + brightness_diff;
-+	else
-+		ncp->delay = abs(brightness_diff);
-+
-+	ncp->delay = msecs_to_jiffies(ncp->delay * pattern[0].delta_t) + jiffies;
-+
-+	ncp->current_brightness = pattern[0].brightness;
-+
-+	return 0;
-+}
-+
-+static int ncp5623_pattern_clear(struct led_classdev *led_cdev)
-+{
-+	return 0;
-+}
-+
-+static int ncp5623_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct fwnode_handle *mc_node, *led_node;
-+	struct led_init_data init_data = { };
-+	int num_subleds = 0;
-+	struct ncp5623 *ncp;
-+	struct mc_subled *subled_info;
-+	u32 color_index;
-+	u32 reg;
-+	int ret;
-+
-+	ncp = devm_kzalloc(dev, sizeof(*ncp), GFP_KERNEL);
-+	if (!ncp)
-+		return -ENOMEM;
-+
-+	ncp->client = client;
-+
-+	mc_node = device_get_named_child_node(dev, "multi-led");
-+	if (!mc_node)
-+		return -EINVAL;
-+
-+	fwnode_for_each_child_node(mc_node, led_node)
-+		num_subleds++;
-+
-+	subled_info = devm_kcalloc(dev, num_subleds, sizeof(*subled_info), GFP_KERNEL);
-+	if (!subled_info) {
-+		ret = -ENOMEM;
-+		goto release_mc_node;
-+	}
-+
-+	fwnode_for_each_available_child_node(mc_node, led_node) {
-+		ret = fwnode_property_read_u32(led_node, "color", &color_index);
-+		if (ret) {
-+			fwnode_handle_put(led_node);
-+			goto release_mc_node;
-+		}
-+
-+		ret = fwnode_property_read_u32(led_node, "reg", &reg);
-+		if (ret) {
-+			fwnode_handle_put(led_node);
-+			goto release_mc_node;
-+		}
-+
-+		subled_info[ncp->mc_dev.num_colors].channel = reg;
-+		subled_info[ncp->mc_dev.num_colors++].color_index = color_index;
-+	}
-+
-+	init_data.fwnode = mc_node;
-+
-+	ncp->mc_dev.led_cdev.max_brightness = NCP5623_MAX_BRIGHTNESS;
-+	ncp->mc_dev.subled_info = subled_info;
-+	ncp->mc_dev.led_cdev.brightness_set_blocking = ncp5623_brightness_set;
-+	ncp->mc_dev.led_cdev.pattern_set = ncp5623_pattern_set;
-+	ncp->mc_dev.led_cdev.pattern_clear = ncp5623_pattern_clear;
-+	ncp->mc_dev.led_cdev.default_trigger = "pattern";
-+
-+	mutex_init(&ncp->lock);
-+	i2c_set_clientdata(client, ncp);
-+
-+	ret = led_classdev_multicolor_register_ext(dev, &ncp->mc_dev, &init_data);
-+	if (ret)
-+		goto destroy_lock;
-+
-+	return 0;
-+
-+destroy_lock:
-+	mutex_destroy(&ncp->lock);
-+
-+release_mc_node:
-+	fwnode_handle_put(mc_node);
-+
-+	return ret;
-+}
-+
-+static void ncp5623_remove(struct i2c_client *client)
-+{
-+	struct ncp5623 *ncp = i2c_get_clientdata(client);
-+
-+	mutex_lock(&ncp->lock);
-+	ncp->delay = 0;
-+	mutex_unlock(&ncp->lock);
-+
-+	ncp5623_write(client, NCP5623_DIMMING_TIME_REG, 0);
-+	led_classdev_multicolor_unregister(&ncp->mc_dev);
-+	mutex_destroy(&ncp->lock);
-+}
-+
-+static void ncp5623_shutdown(struct i2c_client *client)
-+{
-+	struct ncp5623 *ncp = i2c_get_clientdata(client);
-+
-+	if (!(ncp->mc_dev.led_cdev.flags & LED_RETAIN_AT_SHUTDOWN))
-+		ncp5623_write(client, NCP5623_SHUTDOWN_REG, 0);
-+
-+	mutex_destroy(&ncp->lock);
-+}
-+
-+static const struct of_device_id ncp5623_id[] = {
-+	{ .compatible = "onnn,ncp5623" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ncp5623_id);
-+
-+static struct i2c_driver ncp5623_i2c_driver = {
-+	.driver	= {
-+		.name = "ncp5623",
-+		.of_match_table = ncp5623_id,
-+	},
-+	.probe = ncp5623_probe,
-+	.remove = ncp5623_remove,
-+	.shutdown = ncp5623_shutdown,
-+};
-+
-+module_i2c_driver(ncp5623_i2c_driver);
-+
-+MODULE_AUTHOR("Abdel Alkuor <alkuor@gmail.com>");
-+MODULE_DESCRIPTION("NCP5623 Multi-LED driver");
-+MODULE_LICENSE("GPL");
+-struct dwc3_acpi_pdata {
+-	u32			qscratch_base_offset;
+-	u32			qscratch_base_size;
+-	u32			dwc3_core_base_size;
+-	int			qusb2_phy_irq_index;
+-	int			dp_hs_phy_irq_index;
+-	int			dm_hs_phy_irq_index;
+-	int			ss_phy_irq_index;
+-	bool			is_urs;
+-};
+-
+ struct dwc3_qcom {
+ 	struct device		*dev;
+ 	void __iomem		*qscratch_base;
+ 	struct platform_device	*dwc3;
+-	struct platform_device	*urs_usb;
+ 	struct clk		**clks;
+ 	int			num_clocks;
+ 	struct reset_control	*resets;
+@@ -84,8 +71,6 @@ struct dwc3_qcom {
+ 	struct notifier_block	vbus_nb;
+ 	struct notifier_block	host_nb;
+ 
+-	const struct dwc3_acpi_pdata *acpi_pdata;
+-
+ 	enum usb_dr_mode	mode;
+ 	bool			is_suspended;
+ 	bool			pm_suspended;
+@@ -248,9 +233,6 @@ static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+ 	struct device *dev = qcom->dev;
+ 	int ret;
+ 
+-	if (has_acpi_companion(dev))
+-		return 0;
+-
+ 	qcom->icc_path_ddr = of_icc_get(dev, "usb-ddr");
+ 	if (IS_ERR(qcom->icc_path_ddr)) {
+ 		return dev_err_probe(dev, PTR_ERR(qcom->icc_path_ddr),
+@@ -519,31 +501,13 @@ static void dwc3_qcom_select_utmi_clk(struct dwc3_qcom *qcom)
+ 			  PIPE_UTMI_CLK_DIS);
+ }
+ 
+-static int dwc3_qcom_get_irq(struct platform_device *pdev,
+-			     const char *name, int num)
+-{
+-	struct dwc3_qcom *qcom = platform_get_drvdata(pdev);
+-	struct platform_device *pdev_irq = qcom->urs_usb ? qcom->urs_usb : pdev;
+-	struct device_node *np = pdev->dev.of_node;
+-	int ret;
+-
+-	if (np)
+-		ret = platform_get_irq_byname_optional(pdev_irq, name);
+-	else
+-		ret = platform_get_irq_optional(pdev_irq, num);
+-
+-	return ret;
+-}
+-
+ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
+ {
+ 	struct dwc3_qcom *qcom = platform_get_drvdata(pdev);
+-	const struct dwc3_acpi_pdata *pdata = qcom->acpi_pdata;
+ 	int irq;
+ 	int ret;
+ 
+-	irq = dwc3_qcom_get_irq(pdev, "qusb2_phy",
+-				pdata ? pdata->qusb2_phy_irq_index : -1);
++	irq = platform_get_irq_byname_optional(pdev, "qusb2_phy");
+ 	if (irq > 0) {
+ 		/* Keep wakeup interrupts disabled until suspend */
+ 		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
+@@ -557,8 +521,7 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
+ 		qcom->qusb2_phy_irq = irq;
+ 	}
+ 
+-	irq = dwc3_qcom_get_irq(pdev, "dp_hs_phy_irq",
+-				pdata ? pdata->dp_hs_phy_irq_index : -1);
++	irq = platform_get_irq_byname_optional(pdev, "dp_hs_phy_irq");
+ 	if (irq > 0) {
+ 		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
+ 					qcom_dwc3_resume_irq,
+@@ -571,8 +534,7 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
+ 		qcom->dp_hs_phy_irq = irq;
+ 	}
+ 
+-	irq = dwc3_qcom_get_irq(pdev, "dm_hs_phy_irq",
+-				pdata ? pdata->dm_hs_phy_irq_index : -1);
++	irq = platform_get_irq_byname_optional(pdev, "dm_hs_phy_irq");
+ 	if (irq > 0) {
+ 		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
+ 					qcom_dwc3_resume_irq,
+@@ -585,8 +547,7 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
+ 		qcom->dm_hs_phy_irq = irq;
+ 	}
+ 
+-	irq = dwc3_qcom_get_irq(pdev, "ss_phy_irq",
+-				pdata ? pdata->ss_phy_irq_index : -1);
++	irq = platform_get_irq_byname_optional(pdev, "ss_phy_irq");
+ 	if (irq > 0) {
+ 		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
+ 					qcom_dwc3_resume_irq,
+@@ -649,88 +610,6 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
+ 	return 0;
+ }
+ 
+-static const struct property_entry dwc3_qcom_acpi_properties[] = {
+-	PROPERTY_ENTRY_STRING("dr_mode", "host"),
+-	{}
+-};
+-
+-static const struct software_node dwc3_qcom_swnode = {
+-	.properties = dwc3_qcom_acpi_properties,
+-};
+-
+-static int dwc3_qcom_acpi_register_core(struct platform_device *pdev)
+-{
+-	struct dwc3_qcom	*qcom = platform_get_drvdata(pdev);
+-	struct device		*dev = &pdev->dev;
+-	struct resource		*res, *child_res = NULL;
+-	struct platform_device	*pdev_irq = qcom->urs_usb ? qcom->urs_usb :
+-							    pdev;
+-	int			irq;
+-	int			ret;
+-
+-	qcom->dwc3 = platform_device_alloc("dwc3", PLATFORM_DEVID_AUTO);
+-	if (!qcom->dwc3)
+-		return -ENOMEM;
+-
+-	qcom->dwc3->dev.parent = dev;
+-	qcom->dwc3->dev.type = dev->type;
+-	qcom->dwc3->dev.dma_mask = dev->dma_mask;
+-	qcom->dwc3->dev.dma_parms = dev->dma_parms;
+-	qcom->dwc3->dev.coherent_dma_mask = dev->coherent_dma_mask;
+-
+-	child_res = kcalloc(2, sizeof(*child_res), GFP_KERNEL);
+-	if (!child_res) {
+-		platform_device_put(qcom->dwc3);
+-		return -ENOMEM;
+-	}
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(&pdev->dev, "failed to get memory resource\n");
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+-	child_res[0].flags = res->flags;
+-	child_res[0].start = res->start;
+-	child_res[0].end = child_res[0].start +
+-		qcom->acpi_pdata->dwc3_core_base_size;
+-
+-	irq = platform_get_irq(pdev_irq, 0);
+-	if (irq < 0) {
+-		ret = irq;
+-		goto out;
+-	}
+-	child_res[1].flags = IORESOURCE_IRQ;
+-	child_res[1].start = child_res[1].end = irq;
+-
+-	ret = platform_device_add_resources(qcom->dwc3, child_res, 2);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to add resources\n");
+-		goto out;
+-	}
+-
+-	ret = device_add_software_node(&qcom->dwc3->dev, &dwc3_qcom_swnode);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "failed to add properties\n");
+-		goto out;
+-	}
+-
+-	ret = platform_device_add(qcom->dwc3);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to add device\n");
+-		device_remove_software_node(&qcom->dwc3->dev);
+-		goto out;
+-	}
+-	kfree(child_res);
+-	return 0;
+-
+-out:
+-	platform_device_put(qcom->dwc3);
+-	kfree(child_res);
+-	return ret;
+-}
+-
+ static int dwc3_qcom_of_register_core(struct platform_device *pdev)
+ {
+ 	struct dwc3_qcom	*qcom = platform_get_drvdata(pdev);
+@@ -763,57 +642,12 @@ static int dwc3_qcom_of_register_core(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
+-static struct platform_device *dwc3_qcom_create_urs_usb_platdev(struct device *dev)
+-{
+-	struct platform_device *urs_usb = NULL;
+-	struct fwnode_handle *fwh;
+-	struct acpi_device *adev;
+-	char name[8];
+-	int ret;
+-	int id;
+-
+-	/* Figure out device id */
+-	ret = sscanf(fwnode_get_name(dev->fwnode), "URS%d", &id);
+-	if (!ret)
+-		return NULL;
+-
+-	/* Find the child using name */
+-	snprintf(name, sizeof(name), "USB%d", id);
+-	fwh = fwnode_get_named_child_node(dev->fwnode, name);
+-	if (!fwh)
+-		return NULL;
+-
+-	adev = to_acpi_device_node(fwh);
+-	if (!adev)
+-		goto err_put_handle;
+-
+-	urs_usb = acpi_create_platform_device(adev, NULL);
+-	if (IS_ERR_OR_NULL(urs_usb))
+-		goto err_put_handle;
+-
+-	return urs_usb;
+-
+-err_put_handle:
+-	fwnode_handle_put(fwh);
+-
+-	return urs_usb;
+-}
+-
+-static void dwc3_qcom_destroy_urs_usb_platdev(struct platform_device *urs_usb)
+-{
+-	struct fwnode_handle *fwh = urs_usb->dev.fwnode;
+-
+-	platform_device_unregister(urs_usb);
+-	fwnode_handle_put(fwh);
+-}
+-
+ static int dwc3_qcom_probe(struct platform_device *pdev)
+ {
+ 	struct device_node	*np = pdev->dev.of_node;
+ 	struct device		*dev = &pdev->dev;
+ 	struct dwc3_qcom	*qcom;
+ 	struct resource		*res, *parent_res = NULL;
+-	struct resource		local_res;
+ 	int			ret, i;
+ 	bool			ignore_pipe_clk;
+ 	bool			wakeup_source;
+@@ -825,14 +659,6 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, qcom);
+ 	qcom->dev = &pdev->dev;
+ 
+-	if (has_acpi_companion(dev)) {
+-		qcom->acpi_pdata = acpi_device_get_match_data(dev);
+-		if (!qcom->acpi_pdata) {
+-			dev_err(&pdev->dev, "no supporting ACPI device data\n");
+-			return -EINVAL;
+-		}
+-	}
+-
+ 	qcom->resets = devm_reset_control_array_get_optional_exclusive(dev);
+ 	if (IS_ERR(qcom->resets)) {
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(qcom->resets),
+@@ -860,41 +686,18 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-
+-	if (np) {
+-		parent_res = res;
+-	} else {
+-		memcpy(&local_res, res, sizeof(struct resource));
+-		parent_res = &local_res;
+-
+-		parent_res->start = res->start +
+-			qcom->acpi_pdata->qscratch_base_offset;
+-		parent_res->end = parent_res->start +
+-			qcom->acpi_pdata->qscratch_base_size;
+-
+-		if (qcom->acpi_pdata->is_urs) {
+-			qcom->urs_usb = dwc3_qcom_create_urs_usb_platdev(dev);
+-			if (IS_ERR_OR_NULL(qcom->urs_usb)) {
+-				dev_err(dev, "failed to create URS USB platdev\n");
+-				if (!qcom->urs_usb)
+-					ret = -ENODEV;
+-				else
+-					ret = PTR_ERR(qcom->urs_usb);
+-				goto clk_disable;
+-			}
+-		}
+-	}
++	parent_res = res;
+ 
+ 	qcom->qscratch_base = devm_ioremap_resource(dev, parent_res);
+ 	if (IS_ERR(qcom->qscratch_base)) {
+ 		ret = PTR_ERR(qcom->qscratch_base);
+-		goto free_urs;
++		goto clk_disable;
+ 	}
+ 
+ 	ret = dwc3_qcom_setup_irq(pdev);
+ 	if (ret) {
+ 		dev_err(dev, "failed to setup IRQs, err=%d\n", ret);
+-		goto free_urs;
++		goto clk_disable;
+ 	}
+ 
+ 	/*
+@@ -906,14 +709,10 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 	if (ignore_pipe_clk)
+ 		dwc3_qcom_select_utmi_clk(qcom);
+ 
+-	if (np)
+-		ret = dwc3_qcom_of_register_core(pdev);
+-	else
+-		ret = dwc3_qcom_acpi_register_core(pdev);
+-
++	ret = dwc3_qcom_of_register_core(pdev);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+-		goto free_urs;
++		goto clk_disable;
+ 	}
+ 
+ 	ret = dwc3_qcom_interconnect_init(qcom);
+@@ -945,16 +744,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ interconnect_exit:
+ 	dwc3_qcom_interconnect_exit(qcom);
+ depopulate:
+-	if (np) {
+-		of_platform_depopulate(&pdev->dev);
+-	} else {
+-		device_remove_software_node(&qcom->dwc3->dev);
+-		platform_device_del(qcom->dwc3);
+-	}
++	of_platform_depopulate(&pdev->dev);
+ 	platform_device_put(qcom->dwc3);
+-free_urs:
+-	if (qcom->urs_usb)
+-		dwc3_qcom_destroy_urs_usb_platdev(qcom->urs_usb);
+ clk_disable:
+ 	for (i = qcom->num_clocks - 1; i >= 0; i--) {
+ 		clk_disable_unprepare(qcom->clks[i]);
+@@ -969,21 +760,12 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ static void dwc3_qcom_remove(struct platform_device *pdev)
+ {
+ 	struct dwc3_qcom *qcom = platform_get_drvdata(pdev);
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+ 	int i;
+ 
+-	if (np) {
+-		of_platform_depopulate(&pdev->dev);
+-	} else {
+-		device_remove_software_node(&qcom->dwc3->dev);
+-		platform_device_del(qcom->dwc3);
+-	}
++	of_platform_depopulate(&pdev->dev);
+ 	platform_device_put(qcom->dwc3);
+ 
+-	if (qcom->urs_usb)
+-		dwc3_qcom_destroy_urs_usb_platdev(qcom->urs_usb);
+-
+ 	for (i = qcom->num_clocks - 1; i >= 0; i--) {
+ 		clk_disable_unprepare(qcom->clks[i]);
+ 		clk_put(qcom->clks[i]);
+@@ -1053,38 +835,6 @@ static const struct of_device_id dwc3_qcom_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, dwc3_qcom_of_match);
+ 
+-#ifdef CONFIG_ACPI
+-static const struct dwc3_acpi_pdata sdm845_acpi_pdata = {
+-	.qscratch_base_offset = SDM845_QSCRATCH_BASE_OFFSET,
+-	.qscratch_base_size = SDM845_QSCRATCH_SIZE,
+-	.dwc3_core_base_size = SDM845_DWC3_CORE_SIZE,
+-	.qusb2_phy_irq_index = 1,
+-	.dp_hs_phy_irq_index = 4,
+-	.dm_hs_phy_irq_index = 3,
+-	.ss_phy_irq_index = 2
+-};
+-
+-static const struct dwc3_acpi_pdata sdm845_acpi_urs_pdata = {
+-	.qscratch_base_offset = SDM845_QSCRATCH_BASE_OFFSET,
+-	.qscratch_base_size = SDM845_QSCRATCH_SIZE,
+-	.dwc3_core_base_size = SDM845_DWC3_CORE_SIZE,
+-	.qusb2_phy_irq_index = 1,
+-	.dp_hs_phy_irq_index = 4,
+-	.dm_hs_phy_irq_index = 3,
+-	.ss_phy_irq_index = 2,
+-	.is_urs = true,
+-};
+-
+-static const struct acpi_device_id dwc3_qcom_acpi_match[] = {
+-	{ "QCOM2430", (unsigned long)&sdm845_acpi_pdata },
+-	{ "QCOM0304", (unsigned long)&sdm845_acpi_urs_pdata },
+-	{ "QCOM0497", (unsigned long)&sdm845_acpi_urs_pdata },
+-	{ "QCOM04A6", (unsigned long)&sdm845_acpi_pdata },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(acpi, dwc3_qcom_acpi_match);
+-#endif
+-
+ static struct platform_driver dwc3_qcom_driver = {
+ 	.probe		= dwc3_qcom_probe,
+ 	.remove_new	= dwc3_qcom_remove,
+@@ -1092,7 +842,6 @@ static struct platform_driver dwc3_qcom_driver = {
+ 		.name	= "dwc3-qcom",
+ 		.pm	= &dwc3_qcom_dev_pm_ops,
+ 		.of_match_table	= dwc3_qcom_of_match,
+-		.acpi_match_table = ACPI_PTR(dwc3_qcom_acpi_match),
+ 	},
+ };
+ 
 -- 
 2.34.1
 
