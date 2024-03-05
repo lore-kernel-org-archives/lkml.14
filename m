@@ -1,180 +1,70 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D35E1272CC
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 14:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032F91272CC;
+	Tue,  5 Mar 2024 14:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709650729; cv=none; b=tmsPNu4ufr9zPO83lUCKyzre+FAEjw0abj1B3hOCDdSht8HDmpBMq07a6wT0UtK1SfjYdChmdEPTObnqoqvdbB4uiUNP62TTPlLwylMrnyldTmNYlcMajsNygqyKWKyIPxU1Oi5GKN3PJKuZqH+ZG7hfTSCx47OTxvxqPEzBuZQ=
+	t=1709650733; cv=none; b=FvvGfCMYWJQG1XWmGKLpdtJD8IaEcoy4ulQXCfCKvtRJTEBHHnpROt4NuAimP8UOUQ+zXTaLrCQSaf6WIZnYFBp5wm8DqT9Vn04L5i4HLVDdP5CswtBAHLKTc1pGHMZDFqFBRT1fqHBf6N7cojx7paJY4i3ghIIzfeA+lM97a5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709650729; c=relaxed/simple;
-	bh=SEJR+owDaVd26AN4IDt/UWU4WTVRoD/qoP6NAHHjN6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fc+i/NjBoYm1XOB7LziUnUtC1OMnOfdYuE9fuP9uEsBocekp4dFQee+k/0ScY2Iga+GNhWKn8mgNjsu3gJ7kTq76WfZi6s96s74PHJ4kkfmhnj7NsJW6EJtAjrXw4Ew41xmN9f5z2vPbz3/3TkheF7ExYQa5FjG5dGEHqTntwtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QIBNQ7Xv; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709650733; c=relaxed/simple;
+	bh=J04pRpfBn/6vgApXzTjxcOt28fu5ycMkjiryDRSouFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7pE3UzTLbW/8sQ/9BQ2K1ryDsGffUFL61YpjeT4t1WsFyLBN7uTUdt9F1rJqJdKpawnZMJHpaSbRS4E7n4EaqLM2wQRkdD3DGTbFCrZL53Rij2YVUAocCLdyxyM+jrkAZSj7xYdQzYdBwYaRwiEjiBcpkWy6MDlXZ5wMBzBfgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qnl2KG4H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QIBNQ7Xv"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 425EwN7O029262;
-	Tue, 5 Mar 2024 14:58:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=gF8G3ruhGegqq982W60tv+nSJXALi85T8YtQmLiRDC0=;
- b=QIBNQ7XvN8EpUp9x+tE5jj6jC5LgivULSjwTU6KYimxMDlp02np1QnjHxoBnMH9LnSJs
- ina8p94YUFP5TiZLnjT+fuDe7U+t7gDOpbYCJ7ivOvNWLFKSoTAsZ3cDYq2fSMX6faLF
- /mvzayJOClT53ZxDtIQu+V2eUkpj75k16u3K8cyzp94U2l6KgPaMUYLZXpKKJGMfGb1w
- tiyqGSaSc/6PqCU7L4ATqowc3e6oaay1w0lx0+AJ3vFgZPpxkUIOlqKSenTYEiMz8xaY
- oGJU5cmm1NqbHE7xZE+12SJH51Tezvwxy5BOGO2TyV5Sv2Amh0rA88olcDsL4AWyMu8J +w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wp560grue-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 14:58:30 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 425EfN1a004632;
-	Tue, 5 Mar 2024 14:58:27 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wp560grpf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 14:58:25 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 425E38DZ020667;
-	Tue, 5 Mar 2024 14:56:58 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmfxkr36b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 14:56:58 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 425Eut6050725196
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Mar 2024 14:56:57 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 397F558059;
-	Tue,  5 Mar 2024 14:56:55 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E08CF58058;
-	Tue,  5 Mar 2024 14:56:50 +0000 (GMT)
-Received: from [9.43.117.244] (unknown [9.43.117.244])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  5 Mar 2024 14:56:50 +0000 (GMT)
-Message-ID: <6ccd425f-7c02-4ede-9321-1e8154d5d470@linux.ibm.com>
-Date: Tue, 5 Mar 2024 20:26:49 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qnl2KG4H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FBBC43394;
+	Tue,  5 Mar 2024 14:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709650732;
+	bh=J04pRpfBn/6vgApXzTjxcOt28fu5ycMkjiryDRSouFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qnl2KG4HWtYmUl6RC1v+6GncfSZCWD3x6+yA9haciL4fuO9OQqLIV5knq3SuWQ1e4
+	 ughBIbako6VNi3nzSu/qgFc+Ei8VsJJcyauRNcTBDHmUU+rnvasNNyv0xww8vUYCrz
+	 7GtjbZfr9rm1MRfbo3JiW0A9Vm+CJaHoKswvBlB2QuqN0E48aHJoUK2fQNj1Hd+N9h
+	 N6eiZlnUo/4ZhFX1WCTt/q325jfWv2fTbq6V3EfpuPRQiysMMs2FkM65IIYAMjkCQh
+	 FILW3VSWrLHIcfatr/NvaPVdllKKkjyT2xlDqfm0PjS1lO2LpaN/g/RgN6SkqBDu7I
+	 JcEBwnklyQMAg==
+Date: Tue, 5 Mar 2024 08:58:50 -0600
+From: Rob Herring <robh@kernel.org>
+To: Yang Xiwen <forbidden405@outlook.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	David Yang <mmyangfl@gmail.com>,
+	Kishon Vijay Abraham I <kishon@ti.com>,
+	linux-phy@lists.infradead.org, Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Jiancheng Xue <xuejiancheng@hisilicon.com>,
+	Shawn Guo <shawn.guo@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Subject: Re: [PATCH v4 4/5] dt-bindings: phy: hisi-inno-usb2: add compatible
+ of hisilicon,hi3798mv200-usb2-phy
+Message-ID: <170965072885.3344208.7195492638472513221.robh@kernel.org>
+References: <20240305-inno-phy-v4-0-a03204c9cf1c@outlook.com>
+ <20240305-inno-phy-v4-4-a03204c9cf1c@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] sched/fair: Add EAS checks before updating
- overutilized
-Content-Language: en-US
-To: Qais Yousef <qyousef@layalina.io>
-Cc: dietmar.eggemann@arm.com, pierre.gondois@arm.com, mingo@kernel.org,
-        peterz@infradead.org, vincent.guittot@linaro.org, yu.c.chen@intel.com,
-        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
-        aboorvad@linux.ibm.com, srikar@linux.ibm.com, vschneid@redhat.com,
-        morten.rasmussen@arm.com
-References: <20240301151725.874604-1-sshegde@linux.ibm.com>
- <20240301151725.874604-2-sshegde@linux.ibm.com>
- <20240303185059.wvjkrrn7liwl4wtv@airbuntu>
- <5c6259a2-fadd-41c6-aa41-91f3af01272c@linux.ibm.com>
- <20240305102318.6qfib44f2ciffomw@airbuntu>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-In-Reply-To: <20240305102318.6qfib44f2ciffomw@airbuntu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Tpq11kbzyt4YjhiQAIvXN8aHQH6weq5e
-X-Proofpoint-ORIG-GUID: M2-t9Hh1ljZXV3XH9BxYEKV_xVOhCshl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-05_12,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- impostorscore=0 mlxscore=0 phishscore=0 spamscore=0 malwarescore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403050119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305-inno-phy-v4-4-a03204c9cf1c@outlook.com>
 
 
-
-On 3/5/24 3:53 PM, Qais Yousef wrote:
-> On 03/04/24 13:54, Shrikanth Hegde wrote:
->>
->>
->> On 3/4/24 12:20 AM, Qais Yousef wrote:
->>> On 03/01/24 20:47, Shrikanth Hegde wrote:
->>>> Overutilized field of root domain is only used for EAS(energy aware scheduler)
->>
->> [...]
->>
->>
->> Hi Qais, Thanks for taking a look. 
->>
->>>> ---
->>>>  kernel/sched/fair.c | 49 +++++++++++++++++++++++++++------------------
->>>>  1 file changed, 30 insertions(+), 19 deletions(-)
->>>>
->>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>> index 6a16129f9a5c..a71f8a1506e4 100644
->>>> --- a/kernel/sched/fair.c
->>>> +++ b/kernel/sched/fair.c
->>>> @@ -6670,15 +6670,29 @@ static inline bool cpu_overutilized(int cpu)
->>>>  	return !util_fits_cpu(cpu_util_cfs(cpu), rq_util_min, rq_util_max, cpu);
->>>>  }
->>>>
->>>> -static inline void update_overutilized_status(struct rq *rq)
->>>> +static inline void set_rd_overutilized_status(struct root_domain *rd,
->>>> +					      unsigned int status)
->>>>  {
->>>> -	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
->>>> -		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
->>>> -		trace_sched_overutilized_tp(rq->rd, SG_OVERUTILIZED);
->>>> -	}
->>>
->>> Can we add
->>>
->>> 	if (!sched_energy_enabled())
->>> 		return;
->>
->> This is very close to what i had till v2. But it was pointed out that, it 
->> would end up calling sched_energy_enabled twice in  check_update_overutilized_status. 
+On Tue, 05 Mar 2024 10:19:49 +0800, Yang Xiwen wrote:
+> Hi3798MV200 INNO USB2 PHY is attached directly to system bus. Add
+> compatible "hisilicon,hi3798mv200-usb2-phy" for it. The ports of
+> Hi3798MV200 INNO PHY has its own address space, so
 > 
-> It's a static key. It will either patch the code to be a NOP and return, or
-> work normally. I don't see a problem.
-
-
-Yes. That's what i thought initially as well. It does make the code simpler. 
-I will change it to use similar to what i had in v2 in next version. I will wait for a while 
-to hear any issues with that. 
-
-
-> 
->> In check_update_overutilized_status, it would be better to avoid access to 
->> overutilized and computing cpu_overutilized if EAS is not enabled. 
-> 
-> cpu_overutilized() could gain a protection with sched_energy_enabled() too.
-> I think it's better to encapsulate the deps within the function.
+> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+> ---
+>  .../bindings/phy/hisilicon,inno-usb2-phy.yaml      | 31 ++++++++++++++++++++--
+>  1 file changed, 29 insertions(+), 2 deletions(-)
 > 
 
-ok. let me try to incorporate that. 
+Reviewed-by: Rob Herring <robh@kernel.org>
 
->>
->> I am okay with either code. keeping sched_energy_enabled in set_rd_overutilized_status
->> would be less code and more readable. But would call sched_energy_enabled twice. 
->>
->> Dietmar, Pierre, 
->> Could you please provide your inputs here? 
-> 
-> I prefer not sprinkling sched_energy_enabled() for every user. But FWIW the
-> code looks correct to me and these stylistic issues are not a blocker for me
-> 
-> Reviewed-by: Qais Yousef <qyousef@layalina.io>
-> 
->>
-
-Thank you. 
-
->>
