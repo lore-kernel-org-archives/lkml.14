@@ -1,230 +1,138 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3F47EEE1
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1B17E112;
+	Tue,  5 Mar 2024 08:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709625614; cv=none; b=RTOa+vd/xkQREXBIacj2P9gaP4ALWnSAOj7d3ubPlWlTcgrIPDt60Ca0fvIVVk3qwJkw8ZJFVflRwXHz8tIDzDzCBWHc7K91T2iItywgOM62oVXIWNQzqiT3BNsUM3/3COFsolboU01qrK5MAJ/Q+7q+dipPy4uM5zM3JO01kRo=
+	t=1709625644; cv=none; b=U4rC/ACO2n9DYvPZ4yhnkL0RPfEzGiQL8LlO/r25hHs5026kg6viKi4NtEII2qD0wnpmDZ1OSyUsCVEuaP4zft/Exj+OLusugU8EOJ7w5qtVnthaeZretryR7LKqMYSG0WyGI0oYhoakHybKpZo1km2gIVgkP+EPdRh/In45DSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709625614; c=relaxed/simple;
-	bh=PVxbVRk2+mSQpOJTMvmtA65i2LHzZwKHJSKjVRductU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QudB8CortwzXOvUYKDzA3UQY7U3nm04YMZRsXERLqgspfRfq80I4wb0hC2Bf70kqYT4k6C72mVm16zy2MY6oNbKwmIa/aVnMLzIeeHPOqzwajoJ+Zrb9/f310HcrBe5TYEoDjQjeTK8kejgcX68STvi3/D+7hUeommZghSMLU98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jbGKePyW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=evDEjHZd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jbGKePyW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=evDEjHZd; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709625644; c=relaxed/simple;
+	bh=gWFAJuQry3gzF9uH7O4D0aDTDmuwfZxjmqEXA+RPFLQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tHIYPS4rxGfLf7JWMXIlQ/Wer4AP6eT0VStuz81scm2X7BgVUWRY4beyPZxcjCs4Arzw2QouIboifsr2HyT6d2n0V/R9mTBGdaA2JgRKpfcbIXgcbXIi26TsKPVpsYyYMkHr8trYuySSMlFXBwnRSeaOxSNpKntaXv24S0+ScPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=opMY1aLN; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jbGKePyW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="evDEjHZd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jbGKePyW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="evDEjHZd"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A28FD3EF54;
-	Tue,  5 Mar 2024 08:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709625610; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x8SDUAfZLL1l5Swi9EWeTRuwIdoWMK6iXaBQ2RtTafI=;
-	b=jbGKePyWcl+lg8tn5rAEL/KTxOy5W7B5RQ3X92HLGyJdnb/zEaca/ULTY8PDHt5kddUquJ
-	0Z+Ad+ylsk5B7S6JbjbdfZwkdTYcKb+CueixSE7IymoPDJT6BOJWvNWsIA4Wp3fVKPw0XO
-	txpzDK/QdFS1gpZn0sUG/b47y92eAgg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709625610;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x8SDUAfZLL1l5Swi9EWeTRuwIdoWMK6iXaBQ2RtTafI=;
-	b=evDEjHZdoSV9zCNfQfz3WIAheL4StVrJafQRaSnp21kKmA/7XfIhWfrkKOXLAR3MdqKCKI
-	TzRgbo6cd3XkUtAQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709625610; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x8SDUAfZLL1l5Swi9EWeTRuwIdoWMK6iXaBQ2RtTafI=;
-	b=jbGKePyWcl+lg8tn5rAEL/KTxOy5W7B5RQ3X92HLGyJdnb/zEaca/ULTY8PDHt5kddUquJ
-	0Z+Ad+ylsk5B7S6JbjbdfZwkdTYcKb+CueixSE7IymoPDJT6BOJWvNWsIA4Wp3fVKPw0XO
-	txpzDK/QdFS1gpZn0sUG/b47y92eAgg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709625610;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x8SDUAfZLL1l5Swi9EWeTRuwIdoWMK6iXaBQ2RtTafI=;
-	b=evDEjHZdoSV9zCNfQfz3WIAheL4StVrJafQRaSnp21kKmA/7XfIhWfrkKOXLAR3MdqKCKI
-	TzRgbo6cd3XkUtAQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 8B87213A5D;
-	Tue,  5 Mar 2024 08:00:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id M+6iIArR5mXBUQAAn2gu4w
-	(envelope-from <dwagner@suse.de>); Tue, 05 Mar 2024 08:00:10 +0000
-From: Daniel Wagner <dwagner@suse.de>
-To: James Smart <james.smart@broadcom.com>
-Cc: Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Hannes Reinecke <hare@suse.de>,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v3 2/2] nvme-rdma: short-circuit reconnect retries
-Date: Tue,  5 Mar 2024 09:00:05 +0100
-Message-ID: <20240305080005.3638-3-dwagner@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240305080005.3638-1-dwagner@suse.de>
-References: <20240305080005.3638-1-dwagner@suse.de>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="opMY1aLN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709625642; x=1741161642;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gWFAJuQry3gzF9uH7O4D0aDTDmuwfZxjmqEXA+RPFLQ=;
+  b=opMY1aLNw84azCOOm8MEYFUR9SZu+S3Jh4uNPHhqXfHjqtH6yEWmcEiw
+   LBsMzMo0zZKVjq+OUSalP0h/X9mgVnfNAgD7wDQIGHa2SziI95xhErfmW
+   C7x6BnkI+nLz+BQ5gP60ekZ7zbmAZIfytiJhYHLhFQInuwhBkqALjjiYA
+   XF3kYa+PsSLH8I4+5h6fx4YgRPlcEfOG45yXzTacO8JyNDyAxA7f02nuZ
+   WTnDx/YHog+JOukD9Btfi5PjFvtwPCBuhejL88FEnzCeK4jXHIlv9+T6O
+   SYoUHg7qbMx8XHjjOYsKuenwHHDZ8xoIbsbOxm49eC45cyU8dnkEm2XBI
+   w==;
+X-CSE-ConnectionGUID: aFDr3hW/QMqfVKlnMUlmNA==
+X-CSE-MsgGUID: 6fJ54n74SV+WjGmrURhuaQ==
+X-IronPort-AV: E=Sophos;i="6.06,205,1705388400"; 
+   d="asc'?scan'208";a="18837278"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Mar 2024 01:00:35 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 5 Mar 2024 01:00:24 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Tue, 5 Mar 2024 01:00:21 -0700
+Date: Tue, 5 Mar 2024 07:59:37 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Anup Patel <apatel@ventanamicro.com>
+CC: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>, Conor Dooley
+	<conor@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>, Anup Patel
+	<anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Andrea Parri
+	<andrea@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>, Andrea Parri
+	<parri.andrea@gmail.com>
+Subject: Re: [PATCH v3 2/2] riscv: Fix text patching when IPI are used
+Message-ID: <20240305-sarcasm-ending-0f7946490aea@wendy>
+References: <20240229121056.203419-1-alexghiti@rivosinc.com>
+ <20240229121056.203419-3-alexghiti@rivosinc.com>
+ <20240304-makeshift-bakeshop-26c9611de1a3@spud>
+ <87msrdzqxi.fsf@all.your.base.are.belong.to.us>
+ <CAK9=C2Xjgr9_H-sHkmAAc95dAm2jd+_dxLUxSM3RM3NrQJFKGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-2.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.10
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ofyVMJD7bERZqUGb"
+Content-Disposition: inline
+In-Reply-To: <CAK9=C2Xjgr9_H-sHkmAAc95dAm2jd+_dxLUxSM3RM3NrQJFKGQ@mail.gmail.com>
 
-From: Hannes Reinecke <hare@suse.de>
+--ofyVMJD7bERZqUGb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Returning an nvme status from nvme_rdma_setup_ctrl() indicates
-that the association was established and we have received a status
-from the controller; consequently we should honour the DNR bit.
-If not any future reconnect attempts will just return the same error, so
-we can short-circuit the reconnect attempts and fail the connection
-directly.
+On Tue, Mar 05, 2024 at 08:33:30AM +0530, Anup Patel wrote:
+> On Tue, Mar 5, 2024 at 1:54=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kerne=
+l.org> wrote:
+> >
+> > Conor Dooley <conor@kernel.org> writes:
+> >
+> > > On Thu, Feb 29, 2024 at 01:10:56PM +0100, Alexandre Ghiti wrote:
+> > >> For now, we use stop_machine() to patch the text and when we use IPI=
+s for
+> > >> remote icache flushes (which is emitted in patch_text_nosync()), the=
+ system
+> > >> hangs.
+> > >>
+> > >> So instead, make sure every CPU executes the stop_machine() patching
+> > >> function and emit a local icache flush there.
+> > >>
+> > >> Co-developed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> > >> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> > >> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > >> Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+> > >
+> > > What commit does this fix?
+> >
+> > Hmm. The bug is exposed when the AIA IPI are introduced, and used
+> > (instead of the firmware-based).
+> >
+> > I'm not sure this is something we'd like backported, but rather a
+> > prerequisite to AIA.
+> >
+> > @Anup @Alex WDYT?
+> >
+>=20
+> The current text patching never considered IPIs being injected
+> directly in S-mode from hart to another so we are seeing this
+> issue now with AIA IPIs.
+>=20
+> We certainly don't need to backport this fix since it's more
+> of a preparatory fix for AIA IPIs.
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- drivers/nvme/host/rdma.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+Whether or not this is backportable, if it fixes a bug, it should get
+a Fixes: tag for the commit that it fixes. Fixes: isn't "the backport"
+tag, cc: stable is.
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index d3747795ad80..7e556e10caba 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -982,9 +982,11 @@ static void nvme_rdma_free_ctrl(struct nvme_ctrl *nctrl)
- 	kfree(ctrl);
- }
- 
--static void nvme_rdma_reconnect_or_remove(struct nvme_rdma_ctrl *ctrl)
-+static void nvme_rdma_reconnect_or_remove(struct nvme_rdma_ctrl *ctrl,
-+		int status)
- {
- 	enum nvme_ctrl_state state = nvme_ctrl_state(&ctrl->ctrl);
-+	bool recon = status > 0 && (status & NVME_SC_DNR) ? false : true;
- 
- 	/* If we are resetting/deleting then do nothing */
- 	if (state != NVME_CTRL_CONNECTING) {
-@@ -992,12 +994,14 @@ static void nvme_rdma_reconnect_or_remove(struct nvme_rdma_ctrl *ctrl)
- 		return;
- 	}
- 
--	if (nvmf_should_reconnect(&ctrl->ctrl)) {
-+	if (recon && nvmf_should_reconnect(&ctrl->ctrl)) {
- 		dev_info(ctrl->ctrl.device, "Reconnecting in %d seconds...\n",
- 			ctrl->ctrl.opts->reconnect_delay);
- 		queue_delayed_work(nvme_wq, &ctrl->reconnect_work,
- 				ctrl->ctrl.opts->reconnect_delay * HZ);
- 	} else {
-+		dev_info(ctrl->ctrl.device, "Removing controller (%d)...\n",
-+			 status);
- 		nvme_delete_ctrl(&ctrl->ctrl);
- 	}
- }
-@@ -1098,10 +1102,12 @@ static void nvme_rdma_reconnect_ctrl_work(struct work_struct *work)
- {
- 	struct nvme_rdma_ctrl *ctrl = container_of(to_delayed_work(work),
- 			struct nvme_rdma_ctrl, reconnect_work);
-+	int ret;
- 
- 	++ctrl->ctrl.nr_reconnects;
- 
--	if (nvme_rdma_setup_ctrl(ctrl, false))
-+	ret = nvme_rdma_setup_ctrl(ctrl, false);
-+	if (ret)
- 		goto requeue;
- 
- 	dev_info(ctrl->ctrl.device, "Successfully reconnected (%d attempts)\n",
-@@ -1114,7 +1120,7 @@ static void nvme_rdma_reconnect_ctrl_work(struct work_struct *work)
- requeue:
- 	dev_info(ctrl->ctrl.device, "Failed reconnect attempt %d\n",
- 			ctrl->ctrl.nr_reconnects);
--	nvme_rdma_reconnect_or_remove(ctrl);
-+	nvme_rdma_reconnect_or_remove(ctrl, ret);
- }
- 
- static void nvme_rdma_error_recovery_work(struct work_struct *work)
-@@ -1139,7 +1145,7 @@ static void nvme_rdma_error_recovery_work(struct work_struct *work)
- 		return;
- 	}
- 
--	nvme_rdma_reconnect_or_remove(ctrl);
-+	nvme_rdma_reconnect_or_remove(ctrl, -ENOTCONN);
- }
- 
- static void nvme_rdma_error_recovery(struct nvme_rdma_ctrl *ctrl)
-@@ -2163,6 +2169,7 @@ static void nvme_rdma_reset_ctrl_work(struct work_struct *work)
- {
- 	struct nvme_rdma_ctrl *ctrl =
- 		container_of(work, struct nvme_rdma_ctrl, ctrl.reset_work);
-+	int ret;
- 
- 	nvme_stop_ctrl(&ctrl->ctrl);
- 	nvme_rdma_shutdown_ctrl(ctrl, false);
-@@ -2173,14 +2180,15 @@ static void nvme_rdma_reset_ctrl_work(struct work_struct *work)
- 		return;
- 	}
- 
--	if (nvme_rdma_setup_ctrl(ctrl, false))
-+	ret = nvme_rdma_setup_ctrl(ctrl, false);
-+	if (ret)
- 		goto out_fail;
- 
- 	return;
- 
- out_fail:
- 	++ctrl->ctrl.nr_reconnects;
--	nvme_rdma_reconnect_or_remove(ctrl);
-+	nvme_rdma_reconnect_or_remove(ctrl, ret);
- }
- 
- static const struct nvme_ctrl_ops nvme_rdma_ctrl_ops = {
--- 
-2.44.0
+--ofyVMJD7bERZqUGb
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZebQ6QAKCRB4tDGHoIJi
+0qg3AQD+yvdHglvWYh8y5lWj9K/+QDa9GdWm0cjqVDuvHYScUgD9FI61pKq1ci91
+LXvSARs1oJvF0xK/zbm2iRwaXt4gCAw=
+=F+Fw
+-----END PGP SIGNATURE-----
+
+--ofyVMJD7bERZqUGb--
