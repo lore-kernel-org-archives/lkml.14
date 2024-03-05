@@ -1,111 +1,97 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501855B053;
-	Tue,  5 Mar 2024 12:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9600059B5E
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 12:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709641561; cv=none; b=oXTx7SivqZHRL7KJT13Sy0KN2fO9p9GLh7XYVmT8UvLVYcIZRu6kvCoDY+DF/xXIRXsOXDzn3PQ3QHD0zDWzZY6lbUEgk8aIk6TYs2vNEOLQmYxxyKQLazz1iFDa2N+AUBSBAo8OR9mmQsPKN5rRJcgxsshTSVUbYKO1VSdLviM=
+	t=1709641648; cv=none; b=t2hzj/zEG+plgXd3mHebz5fFoCGUuoNXf4CkMKpWmbOMZ3Q3liCL3FR5W8bXZmz9nJMwwl/WCzaZPJsIYI+VD0wglgpKneBoIfedaqzOsBNBPXjmj+5S/c8mMm8NulAMNWNoZCf2luMI6lThCSQvLmLNpz5cUucnKIXNIGbk3FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709641561; c=relaxed/simple;
-	bh=r9yzeQ1USF9QiKB2zh8B9hSiTL8C5a3FM3pSiSj1CZw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gm6x2YjCuOds/u+mnBe/A9JmBJnovhaoG4ejZORaNYK4br9nbhIBCw70lBarf4LGChPRojQIKhinty8UzVxjkOIA4NVKfIdWGCBCe/7nHupbdjXUs2TOSuZ+6PbY4VX0klv/6ycjQbQrswEzjNk0LAs0V0qs9Hn8+0kOJMQ3gnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-21f10aae252so471320fac.0;
-        Tue, 05 Mar 2024 04:26:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709641559; x=1710246359;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p1ex7KlGqEzuj1DMQ9WhCdaRqB3PF9Cp1RLgsDYAOWc=;
-        b=JwGIKVAd/+ApRA9P29dEaNRymKxdG6ccWkkJFiNDOB5/WpaQMJfevJs7Lwp2+xr43Y
-         k/64NXL7cXWN28rI5aaTNzWwx3zg+pEt1Wdq6ylVkPkQ/m6BN/jd/aajtashMbS38Fxu
-         6uYJqgZVeiWt0PRT4XGE8+SY2WPw7s64R33FqMmFSWimvh4qQlzAR5giITHqlydInlgf
-         Z7+UsH2f1T7M4azt0EB/YR3QOFL0JZNtGe3994S6wUrD2l8o79CXV8v/hrTuys1eEA9c
-         KXarxU36m+iauV6SNlYavEu6DIGNSzjZqtiK2/rmxfs9pxtLJNzM28qjjsPrjSkhmYQh
-         U6ZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXu28yhVrYYQTP5GkWqYqdCDvyNLCbLICjkWkw6pcHoO/9IDpRfLZP1+Zt3CUVeHlTC61yBFCm8wbdA07zHlEXJMDLduNVlFRls9L7xSXMWTT2U58hsqcaiLUJDNHpnBZgcbP21KUQ=
-X-Gm-Message-State: AOJu0YxwZw1df/CFIbWI2/G+jFEDGy9uB/C+gKhV0WD5MNDrGnwXDW9r
-	1y6SNmUfQNr0y+XFpXxwbHvCEuXfW0T978YhuB9x6QJUG2b/wFWTN5kT6kHChOpA6u2pK2VgXOM
-	s8u9cIxMiMx1Wp9pGe0y848D+zfM=
-X-Google-Smtp-Source: AGHT+IHo6jW6k0S3DUQfUvUpe9zUXvuTpA56xV5/ZEgm1a3EKZdJJZ9qX9l5rv20RoOGU/w8kayiFC8d1MJ7vo5+HC8=
-X-Received: by 2002:a05:6870:b507:b0:21f:cd7d:9904 with SMTP id
- v7-20020a056870b50700b0021fcd7d9904mr117969oap.4.1709641558407; Tue, 05 Mar
- 2024 04:25:58 -0800 (PST)
+	s=arc-20240116; t=1709641648; c=relaxed/simple;
+	bh=tHGSzpNgFAnQLpcHyJJSFp9ntY6zZ4loKg8cLSXThnw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jO13lUPfA3q2aEHmAyV4JTLVxex0Qy2oUguyOmnp7yY3aye1UePv2aKTcH41YJtWu26Q301QhT/g8j/lq0cfKR9XiYKH/sG+iUKUHMn+b18k7YdV1Ij/Ykzl4hbxVUHEuUQ9NTXL6q47yV6/cuMhgdt3fkpEj4yonReg0k7YcqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iMEw791Q; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iMEw791Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709641646; x=1741177646;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tHGSzpNgFAnQLpcHyJJSFp9ntY6zZ4loKg8cLSXThnw=;
+  b=iMEw791Q9WQrHTMuhD7chskcVVkAe+XTF0qJKHrsB+UoxvywBcfc2tNJ
+   ICTb+SWd2Pj08CKDpCFcopYLatY0uKbBzEeJCH65X2whwWmu2WGX/xlYM
+   wdpilx7UHij+E/Herfb51nQKuFiOvOCR1iCLcZpFnw48v2WWnDlg/Zuue
+   ghR7XhejbsVFiX83dWTIi5m9Q2e9odv7jGnJpj/xuKNNNCsJsr+kDd2kd
+   uac8lduwH8V1yXEJ/iQDZhCtVn3YXQYBtZ42pKrumelVQWgy+BQVbPTE3
+   pr6yBryM3hNx5N+i4X+oytmxQeNBuFOFovA+OO2tM+1rnfybXQ3nji15T
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="21648428"
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="21648428"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 04:27:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="9330063"
+Received: from allen-box.sh.intel.com ([10.239.159.127])
+  by orviesa010.jf.intel.com with ESMTP; 05 Mar 2024 04:27:24 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
+	Eric Badger <ebadger@purestorage.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/8] [PULL REQUEST] iommu/vt-d: Fixes for iommu next
+Date: Tue,  5 Mar 2024 20:21:13 +0800
+Message-Id: <20240305122121.211482-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1707363758.git.perry.yuan@amd.com> <f6ace4124c45e523e984b4eeab3760b95a70b72d.1707363758.git.perry.yuan@amd.com>
- <ZcRs7Ki8dhxCfCM9@BLR-5CG11610CF.amd.com>
-In-Reply-To: <ZcRs7Ki8dhxCfCM9@BLR-5CG11610CF.amd.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 5 Mar 2024 13:25:47 +0100
-Message-ID: <CAJZ5v0iqhvi7tkrLw7FnG2PQh8oXbn=XF7meHU06cbTQJ0=Gaw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/6] ACPI: CPPC: enable AMD CPPC V2 support for family
- 17h processors
-To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Perry Yuan <perry.yuan@amd.com>
-Cc: rafael.j.wysocki@intel.com, Mario.Limonciello@amd.com, 
-	viresh.kumar@linaro.org, Ray.Huang@amd.com, Borislav.Petkov@amd.com, 
-	Alexander.Deucher@amd.com, Xinmei.Huang@amd.com, Xiaojian.Du@amd.com, 
-	Li.Meng@amd.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 8, 2024 at 6:56=E2=80=AFAM Gautham R. Shenoy <gautham.shenoy@am=
-d.com> wrote:
->
-> Hello Perry,
->
-> On Thu, Feb 08, 2024 at 11:46:28AM +0800, Perry Yuan wrote:
-> > As there are some AMD processors which only support CPPC V2 firmware an=
-d
-> > BIOS implementation, the amd_pstate driver will be failed to load when
-> > system booting with below kernel warning message:
-> >
-> > [    0.477523] amd_pstate: the _CPC object is not present in SBIOS or A=
-CPI disabled
-> >
-> > To make the amd_pstate driver can be loaded on those TR40 processors, i=
-t
-> > needs to match x86_model from 0x30 to 0x7F for family 17H.
-> > With the change, the system can load amd_pstate driver as expected.
-> >
-> > Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> > Reported-by: Gino Badouri <badouri.g@gmail.com>
-> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218171
-> > Fixes: fbd74d1689 ("ACPI: CPPC: Fix enabling CPPC on AMD systems with s=
-hared memory")
-> > Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-> > ---
-> >  arch/x86/kernel/acpi/cppc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/kernel/acpi/cppc.c b/arch/x86/kernel/acpi/cppc.c
-> > index 8d8752b44f11..ff8f25faca3d 100644
-> > --- a/arch/x86/kernel/acpi/cppc.c
-> > +++ b/arch/x86/kernel/acpi/cppc.c
-> > @@ -20,7 +20,7 @@ bool cpc_supported_by_cpu(void)
-> >                   (boot_cpu_data.x86_model >=3D 0x20 && boot_cpu_data.x=
-86_model <=3D 0x2f)))
-> >                       return true;
-> >               else if (boot_cpu_data.x86 =3D=3D 0x17 &&
-> > -                      boot_cpu_data.x86_model >=3D 0x70 && boot_cpu_da=
-ta.x86_model <=3D 0x7f)
-> > +                      boot_cpu_data.x86_model >=3D 0x30 && boot_cpu_da=
-ta.x86_model <=3D 0x7f)
->
-> This looks ok to me.
-> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+Hi Joerg,
 
-Applied as 6.9 material, thanks!
+The following fixes have been queued for iommu next:
 
-However, I'm not sure what to do with the rest of the series.  It
-doesn't appear to be ready yet as they are comments that need
-addressing AFAICS.
+ - Fix hard lockup on hotplug of an ATS-capable device
+ - Fix NULL domain pointer dereference on device release
+
+These changes are not critical for v6.8, so can you please consider them
+for iommu next?
+
+Best regards,
+baolu
+
+Ethan Zhao (3):
+  PCI: Make pci_dev_is_disconnected() helper public for other drivers
+  iommu/vt-d: Don't issue ATS Invalidation request when device is
+    disconnected
+  iommu/vt-d: Improve ITE fault handling if target device isn't present
+
+Lu Baolu (5):
+  iommu: Add static iommu_ops->release_domain
+  iommu/vt-d: Fix NULL domain on device release
+  iommu/vt-d: Setup scalable mode context entry in probe path
+  iommu/vt-d: Remove scalable mode context entry setup from attach_dev
+  iommu/vt-d: Remove scalabe mode in domain_context_clear_one()
+
+ include/linux/iommu.h       |   1 +
+ include/linux/pci.h         |   5 +
+ drivers/iommu/intel/pasid.h |   2 +
+ drivers/pci/pci.h           |   5 -
+ drivers/iommu/intel/dmar.c  |  22 ++++
+ drivers/iommu/intel/iommu.c | 214 +++++++++++-------------------------
+ drivers/iommu/intel/pasid.c | 205 ++++++++++++++++++++++++++++++++++
+ drivers/iommu/iommu.c       |  19 +++-
+ 8 files changed, 313 insertions(+), 160 deletions(-)
+
+-- 
+2.34.1
+
