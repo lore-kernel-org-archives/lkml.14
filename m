@@ -1,99 +1,212 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
+Received: from bee.tesarici.cz (unknown [77.93.223.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244734683;
-	Tue,  5 Mar 2024 15:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF4E126F38
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 15:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709651718; cv=none; b=bQL+A3dB2vZibYGqW2DvJMDOMJqn847H4Zjx7cD4wzBtl6m/b0nvDgH5sbgFQcRBlRI29KSz7aR8j4JjhG0WcXJhAnDtzcXQ1Pjzt1nC+iYo9yiLSd/wynP3el2GLl68HmuSKy9DnCzWEFTt+yTDQfOaa2Ch9HiulvSV0kPkLDY=
+	t=1709651768; cv=none; b=IaVauuounAfBH3V7QVaivANCsqV7cp8IS0zu5Dy5hQWCGWISchAt216RUI2AUnsEbmnSL8pp8buB/KnSQBPoLs48InD7yokwkLaYvK9SOFvNuix2RdlgHhvzzygtl1+yOIjTpNhuffLnUcQykCdbwx0eiLRwtFfn5WDetBd4rNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709651718; c=relaxed/simple;
-	bh=ErqQUkJuZVCDN+rlTHGkow9sEbDhSyeI9kVCG07KoLU=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=MeuccMTn5x2HuCqtswFfTy/p+v3OjXMu0toqLhhDNSylQ1MXCzcHhkCL62VJqaag7hv2mhwxDbASZwqX0IUHZ2YEXP1yD3495e0keJa3z6EDzOMDDZkcoIIzV9oP/2V+8pZ3quAVJc1r6QZMT8WPkCErmB/a4tCxiBBq8buoG9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=5808ba57af=ms@dev.tdt.de>)
-	id 1rhWCG-00CvxE-IF; Tue, 05 Mar 2024 15:55:12 +0100
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1rhWCF-00Cvwq-Fi; Tue, 05 Mar 2024 15:55:11 +0100
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id 140A3240049;
-	Tue,  5 Mar 2024 15:55:11 +0100 (CET)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 752F9240040;
-	Tue,  5 Mar 2024 15:55:10 +0100 (CET)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id B9DE1363BE;
-	Tue,  5 Mar 2024 15:55:09 +0100 (CET)
+	s=arc-20240116; t=1709651768; c=relaxed/simple;
+	bh=gcLuym4tORjlH5EIM/roVTuZMRa/La7PuANUj3Vlrdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QgRGrEfm1cROtNtqn0/NJYvYxLNMNsMKUjM/4qqqdVBsIXTkyWUpjo3I4/tzPYwDOYUKJ8X+oRtW/smUdg09Ue9wQgka/eSYSNVHILk5mMUs/dspMjwYnM8FoAxTdO4tt3rVnTNYA93xBDVKEMyO1y+kvEE+SF+Xap+BGMIDR38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=tbaTYFD4; arc=none smtp.client-ip=77.93.223.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="tbaTYFD4"
+Received: from meshulam.tesarici.cz (unknown [213.235.133.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 4351F1C8F14;
+	Tue,  5 Mar 2024 16:15:50 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1709651755; bh=y/6VHNYbM2dXn3PZSaRABe1IKBrYRIArcEvPm87Sib0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tbaTYFD4/j/2AsvvEEy0V7hmQraCBh0oPW8S3bg9ao+U0sxxiUVzx2qROocYHuEll
+	 MUtixg6f/o4+5552CX0vF4BXq08ZxDF9np97Cp96vhm5XT9/+Eg8xBlZGLEkSkQwCb
+	 C9P59wKcFnPcNRdum+Jp9h3/Pp7u8FFVSoaHmOGOYCQePv8cn//7twrNZnbpTOAh1f
+	 20n37jIrYUWkmwQn+Z+gkPMwpNks00ryWscUju6o0wZ+gNy50wYxIgDMQUhQ5IASYf
+	 qyKp4nyjGA1TE4bFoJKV6N9NljCp6Z01AqNXFQuEPvvd52WtJ75jegLNbgrFpsOcuR
+	 cOEwoTek0Csjg==
+Date: Tue, 5 Mar 2024 16:15:41 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Michael Kelley <mhklinux@outlook.com>, Will Deacon <will@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Petr Tesarik
+ <petr.tesarik1@huawei-partners.com>, "kernel-team@android.com"
+ <kernel-team@android.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Dexuan Cui
+ <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>
+Subject: Re: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
+ allocations >= PAGE_SIZE
+Message-ID: <20240305161541.5cb83203@meshulam.tesarici.cz>
+In-Reply-To: <555d0e55-a8f8-446d-ab1a-f05e50b33477@arm.com>
+References: <SN6PR02MB4157314F142D05E279B7991ED45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<20240229154756.GA10137@lst.de>
+	<20240301163927.18358ee2@meshulam.tesarici.cz>
+	<20240301180853.5ac20b27@meshulam.tesarici.cz>
+	<8869c8b2-29c3-41e4-8f8a-5bcf9c0d22bb@arm.com>
+	<20240301194212.3c64c9b2@meshulam.tesarici.cz>
+	<SN6PR02MB41571DA1EE99BFAA65869024D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<20240304120055.56035c21@meshulam.tesarici.cz>
+	<ffd7646b-37b1-4cd2-822a-848b36b076c9@arm.com>
+	<20240304165506.49e3b2d3@meshulam.tesarici.cz>
+	<20240304160210.GB21077@willie-the-truck>
+	<SN6PR02MB41571F68F8F9E003C4359948D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<b63d4332-b659-4897-83c7-04e5ad397a69@arm.com>
+	<SN6PR02MB41574A920D7511D4E5DCE813D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<555d0e55-a8f8-446d-ab1a-f05e50b33477@arm.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Tue, 05 Mar 2024 15:55:09 +0100
-From: Martin Schiller <ms@dev.tdt.de>
-To: Justin Swartz <justin.swartz@risingedge.co.za>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, linux-x25@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: x25: remove dead links from Kconfig
-Organization: TDT AG
-In-Reply-To: <20240305133139.29236-1-justin.swartz@risingedge.co.za>
-References: <20240305133139.29236-1-justin.swartz@risingedge.co.za>
-Message-ID: <18c63e9cba846c65b83532e3d73b9f42@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-X-purgate: clean
-X-purgate-ID: 151534::1709650512-7D69FAEB-CF5D0AE6/0/0
-X-purgate-type: clean
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-03-05 14:31, Justin Swartz wrote:
-> Remove the "You can read more about X.25 at" links provided in
-> Kconfig as they have not pointed at any relevant pages for quite
-> a while.
-> 
-> An old copy of https://www.sangoma.com/tutorials/x25/ can be
-> retrieved via https://archive.org/web/ but nothing useful seems
-> to have been preserved for http://docwiki.cisco.com/wiki/X.25
-> 
-> For the sake of necromancy and those who really did want to
-> read more about X.25, a previous incarnation of Kconfig included
-> a link to:
-> http://www.cisco.com/univercd/cc/td/doc/product/software/ios11/cbook/cx25.htm
-> 
-> Which can still be read at:
-> https://web.archive.org/web/20071013101232/http://cisco.com/en/US/docs/ios/11_0/router/configuration/guide/cx25.html
-> 
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-> ---
->  net/x25/Kconfig | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/net/x25/Kconfig b/net/x25/Kconfig
-> index 68729aa3a..dc72302cb 100644
-> --- a/net/x25/Kconfig
-> +++ b/net/x25/Kconfig
-> @@ -17,8 +17,6 @@ config X25
->  	  if you want that) and the lower level data link layer protocol LAPB
->  	  (say Y to "LAPB Data Link Driver" below if you want that).
-> 
-> -	  You can read more about X.25 at 
-> <https://www.sangoma.com/tutorials/x25/> and
-> -	  <http://docwiki.cisco.com/wiki/X.25>.
->  	  Information about X.25 for Linux is contained in the files
->  	  <file:Documentation/networking/x25.rst> and
->  	  <file:Documentation/networking/x25-iface.rst>.
+On Tue, 5 Mar 2024 11:20:13 +0000
+Robin Murphy <robin.murphy@arm.com> wrote:
 
-Acked-by: Martin Schiller <ms@dev.tdt.de>
+> On 2024-03-04 6:22 pm, Michael Kelley wrote:
+> > From: Robin Murphy <robin.murphy@arm.com> Sent: Monday, March 4, 2024 8=
+:54 AM =20
+> >>
+> >> On 04/03/2024 4:10 pm, Michael Kelley wrote: =20
+> >>> From: Will Deacon <will@kernel.org> Sent: Monday, March 4, 2024 8:02 =
+AM =20
+> >>>>
+> >>>> Hi folks,
+> >>>>
+> >>>> On Mon, Mar 04, 2024 at 04:55:06PM +0100, Petr Tesa=C5=99=C3=ADk wro=
+te: =20
+> >>>>> On Mon, 4 Mar 2024 13:37:56 +0000
+> >>>>> Robin Murphy <robin.murphy@arm.com> wrote: =20
+> >>>>>> On 04/03/2024 11:00 am, Petr Tesa=C5=99=C3=ADk wrote:
+> >>>>>> [...] =20
+> >>>>>>>> Here's my take on tying all the threads together. There are
+> >>>>>>>> four alignment combinations:
+> >>>>>>>>
+> >>>>>>>> 1. alloc_align_mask: zero; min_align_mask: zero =20
+> >>>>
+> >>>> Based on this ^^^ ...
+> >>>> =20
+> >>>>>>>> xen_swiotlb_map_page() and dma_direct_map_page() are #1 or #2
+> >>>>>>>> via swiotlb_map() and swiotlb_tbl_map_single()
+> >>>>>>>>
+> >>>>>>>> iommu_dma_map_page() is #3 and #4 via swiotlb_tbl_map_single()
+> >>>>>>>>
+> >>>>>>>> swiotlb_alloc() is #3, directly to swiotlb_find_slots()
+> >>>>>>>>
+> >>>>>>>> For #1, the returned physical address has no constraints if
+> >>>>>>>> the requested size is less than a page. For page size or
+> >>>>>>>> greater, the discussed historical requirement for page
+> >>>>>>>> alignment applies. =20
+> >>>>
+> >>>> ... and this ^^^ ...
+> >>>>
+> >>>> =20
+> >>>>> I believe this patch series is now good as is, except the commit
+> >>>>> message should make it clear that alloc_align_mask and min_align_ma=
+sk
+> >>>>> can both be zero, but that simply means no alignment constraints. =
+=20
+> >>>>
+> >>>> ... my (possibly incorrect!) reading of the thread so far is that we
+> >>>> should preserve page-aligned allocation in this case if the allocati=
+on
+> >>>> size is >=3D PAGE_SIZE.
+> >>>>
+> >>>> Something like the diff below, to replace this final patch?
+> >>>>
+> >>>> Will
+> >>>> =20
+> >>>> --->8 =20
+> >>>>
+> >>>> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> >>>> index c381a7ed718f..67eac05728c0 100644
+> >>>> --- a/kernel/dma/swiotlb.c
+> >>>> +++ b/kernel/dma/swiotlb.c
+> >>>> @@ -992,6 +992,14 @@ static int swiotlb_search_pool_area(struct devi=
+ce
+> >>>> *dev, struct io_tlb_pool *pool
+> >>>>           BUG_ON(!nslots);
+> >>>>           BUG_ON(area_index >=3D pool->nareas);
+> >>>>
+> >>>> +       /*
+> >>>> +        * Historically, allocations >=3D PAGE_SIZE were guaranteed =
+to be
+> >>>> +        * page-aligned in the absence of any other alignment requir=
+ements.
+> >>>> +        * Since drivers may be relying on this, preserve the old be=
+haviour.
+> >>>> +        */
+> >>>> +       if (!alloc_align_mask && !iotlb_align_mask && alloc_size >=
+=3D PAGE_SIZE)
+> >>>> +               alloc_align_mask =3D PAGE_SIZE - 1;
+> >>>> + =20
+> >>>
+> >>> Yes, I think that should do it. =20
+> >>
+> >> In principle it might be more logical to fudge this into
+> >> iotlb_align_mask rather than alloc_align_mask =20
+> >=20
+> > I'm not understanding what you are getting at, but maybe we are
+> > interpreting the historical page alignment requirement differently.
+> > I think of the page alignment requirement as independent of the
+> > orig_addr -- the returned physical address should always be exactly
+> > page aligned, and not offset to match bits in orig_addr.  If that's
+> > the case, then implementing the page alignment via
+> > alloc_align_mask is logically the right place. Fudging into
+> > iotlb_align_mask would do matching of bits in orig_addr.
+> >=20
+> > Or is there something else I'm not considering? =20
+>=20
+> In short, it's that alloc_align_mask is concerned with how slots are=20
+> allocated, while min_align_mask is concerned with where the data itself=20
+> is bounced (which may also place certain constraints on allocation).
+>=20
+> The reason this page-alignment was here in the first place was seemingly=
+=20
+> to serve the original swiotlb_alloc() path, and thus it could be=20
+> considered functionally equivalent to what is now alloc_align_mask.=20
+> However the side-effect it happened to also have for streaming mappings=20
+> was to prevent sufficiently large page-aligned buffers being bounced to=20
+> a non-page-aligned address, which apparently managed to work well enough=
+=20
+> for NVMe until 64K pages became more common and ruined things by being=20
+> too big, and we formalised *that* desired effect into min_align_mask.
+>=20
+> I get that forcing io_tlb_align mask here would introduce a stronger=20
+> constraint which affects non-page-aligned buffers as well, and wanting=20
+> to avoid that is perhaps a reasonable concern, so once again I'm really=20
+> just arguing semantics. Given the head-scratching we've been through=20
+> over this already, I think it would be valuable to at least be clearer=20
+> that a significant part of the "old behaviour" is to do the right thing=20
+> for swiotlb_alloc(), which is very much still current and necessary, but=
+=20
+> the reason we're not setting alloc_align_mask there is because doing it=20
+> here also preserves this legacy side-effect which acts as a limited=20
+> version of min_align_mask to preserve page alignment when bouncing.
+
+I'm confused. Doesn't PATCH 3/6 of this series change swiotlb_alloc()
+to use alloc_align_mask (and finally do it properly for sizes greater
+than page size)?
+
+Anyway, the placement of streaming DMA buffers is not under control of
+the device driver IIUC. These buffers may have been allocated without
+even knowing that they would be once used for I/O. I cannot imagine how
+a device driver could rely on its physical address beyond offfset
+within a page. And even then it's subtly broken, because the size of
+the mapping may be less than PAGE_SIZE (e.g. 512 bytes as traditional
+sector size under direct I/O). Even if we keep the alignment based on
+mapping size for now, it should probably be deprecated in favour of
+min_align_mask.
+
+Petr T
