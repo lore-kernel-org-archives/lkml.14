@@ -1,138 +1,157 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850D1C01
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 19:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8330C8563F
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 19:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709667511; cv=none; b=ChzladgKrOO05n0sQNlBY6/BVgHqJS4EhV5bruMIz4HqXYXYhIxKpBYP0Psr1O0OfPxzfjqGAcuWu6oKaltU3HJ8WZvErkFextXLwxgSykZXRJa9Y0a5ipEsOUuhh65FjDO511yqnILnze6oJ48IQZgLfdLAQcj8/RFBEaPwZFc=
+	t=1709667532; cv=none; b=V+LFEEztmFB2CgP0V16FBxI/E5kll04dXWrLJ2Nj0GYoL0u1UJS8EXT+G32iWTGQ3t7LThqXyxTa1O44iOoGj83YPvqH9kDGpGnU6V/XxZUZafCvbGvuORMxCcG78HxLYiwAQr3YLQ7y1wOGiUweRmMbYETO6yip1oL3BIuhptQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709667511; c=relaxed/simple;
-	bh=P/X134+zoyg4s2Jot2r3ay2hXJWBr990/o9hJjnwWHg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kOorzsObCfc3EHDCZx81lq08H79yauQRtsE7Y7ZBhem8waovFC1Gd3gZ4hS3PV0lHT1Q5+8bPXSnSq610nHNYnSqPiDt0ro591OLy/25xW4UAlKHwGKOHqsyZdpmIz77e6uc+TvA5F7qur/Yq/rAK0bWDDNtA1VkZNDek6gkL2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=Bm6Put7D; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709667532; c=relaxed/simple;
+	bh=dbu7jPJNusoAIuT8pNXSfufXvY1iYoRgBC5JcoUfIfk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NwQ0N66lm4QgssVdgh0xQKR5NlZB0MwRwg4F7EDawC4G1bNKayUwp+Ykv8ghYz77XpOge9FDjvwmFInBu/oeke6RohmvBve6Nt2B8j6QAC/hRr+kpVyQCOoiCuyv/heZae+7fKC5W9o2iHbLAjJdChXUDvCUjrIWbK5UxoC6PRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FRcoz8Mb; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="Bm6Put7D"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5dc949f998fso925401a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 11:38:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709667509; x=1710272309;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FRcoz8Mb"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a45b25f6f84so38478266b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 11:38:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709667529; x=1710272329; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AXfr5UMOCR8axjFfy2MwIX+Lu8p2xjOpYgSyxav7TR4=;
-        b=n7MIobCAZi3HUtBUouoxKEpMfdjARMRyoudG+Mqiw3G1yDpbgJRRqKGP7TNkcCWOQt
-         qz+0Vjq2jOZJT9UwIjpZfi9IMmYrYBFMpKMQkMUUVLyqubR+vBXgzFn5JQ3O+GNZbBrA
-         drnIydS4Kv2JU3EhGY1i/Ja2hSrUAdtS38/7z67L3WmRzBcb7UMDctFXKOXezNkUiWVx
-         61yk8DUjsL6L/rnSeAH1ZjBSMFs+BQyuJXgFaMLELfEPFV37tYdYwvbWcK1FsaS9FJOn
-         5qjC8eGFdZ9iRNq1UFSB4QUX7iknbgFFzIghmEclzb/dXZHa/sPlMbZZpLFq1TEbXzWm
-         2VQw==
-X-Gm-Message-State: AOJu0YwcMq8Zs4Ny4gf58e7xNn4t93bnJbpzyFuZaK6drHXdiOshdwvP
-	KLeK/Bs14UJMo7DcVjoE+7PtJK/FS3Dje/GmiWLML5ufbcF5ZvyKN1jzYDuSDqpcyw==
-X-Google-Smtp-Source: AGHT+IGANiNPnKLY5iyZLa/wKEafOGgKGJRk1y7HKsI81neSolD6PcsxMI6uPGL7vdzCegINIrcrLA==
-X-Received: by 2002:a17:90a:d315:b0:299:8ff:40c0 with SMTP id p21-20020a17090ad31500b0029908ff40c0mr9832092pju.28.1709667508954;
-        Tue, 05 Mar 2024 11:38:28 -0800 (PST)
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id l22-20020a17090b079600b0029a8e5355fcsm10026978pjz.53.2024.03.05.11.38.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 11:38:28 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1709667507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=AXfr5UMOCR8axjFfy2MwIX+Lu8p2xjOpYgSyxav7TR4=;
-	b=Bm6Put7DwFpne8ftq8M9r7dESg4K8ewJy8R44hkVAqa4+CysF42OJxSBUNp4+DfsnTs5Hc
-	Bk2hkqBEvYxk57ky2DD9nZMOC1aLbMvttbDPgJypksIWtC+2+wub6T1hUrvso3kWKn2X5j
-	dS7Mq1lDRF1G/msObNq4IuqJKx7TSTnJUGFSQ9MsLPkmbvO1aXhSvt9md1j29EaW8gqino
-	5rYqYk7mWVwi1kV59p7aDBSWQIN8oXh1a/ruYAW+BTgLSqg8oe4KM5LBQnEqNwodwzibP/
-	Nx1k/AlO3oMP79HmAZeHNIk7s8U5I/9jJSH2HabpVBbiLBNZ7hTekYOG4rTuuw==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Tue, 05 Mar 2024 16:38:25 -0300
-Subject: [PATCH] pcmcia: cs: make pcmcia_socket_class constant
+        bh=dbu7jPJNusoAIuT8pNXSfufXvY1iYoRgBC5JcoUfIfk=;
+        b=FRcoz8MbQeQDcV4GpXollhLmuyqntrRmwucMFDu5EmYMZ8nbOuOfvmIlvlgmVq1Qf4
+         c8lJN6BtQ/2TfFGDTo4HPiEpJzTWViGGaRilIyIcv/YXc0UkVYjdNrq+GnwgnSNZswFB
+         Pwg6nffta5e0uvgM3W0mPp9zxsYyvJlniRkpeGoe5zpcYBAQopGXC4Z+BTDR8JLdoEOD
+         V88jb3Ko2M9as9eI9Qr0iuz9SzXWQw5AjNC7hFnkfWYJw4EM1fEvnQS2lXdYIEDXZQnA
+         nY7tNeKRoWpelHmLrOxuSUqt3/up1X9b9cwQdhDzb5wYSPQ3D/F4hmnXwL7TSHyC3s1t
+         oqmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709667529; x=1710272329;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dbu7jPJNusoAIuT8pNXSfufXvY1iYoRgBC5JcoUfIfk=;
+        b=aLnDAuexCs3cgVKkG7ZAcK17MLEv755vOukCM6mWFFIs4JvVvdsdJriGjaOfht4krg
+         0OSnUkLHU2H8eigPpM8Dmswb4JijcVl+j3pEPsodXeItTDHQtlok9hGIE/LwIaDcZwPH
+         4fZuPWT5VDrQUTpGoFtPDpXZbWG3Q4HcH2AO6JWdPpW6/2YzFbht8CKoxvAmuSzcP1Uc
+         SDx3qwQ/Vv0okhJI/Pfzbt6PTHa/yVWCTCL0XjnLq5uXJmjqxg9lsT7SAGjnOMtfwuWd
+         rRb5tV2ryboX7ZID+fI5QcrEbk4wMoM5aWPsQ1o22ZrWy+9j34vYTBuLKXElbnmyHWqf
+         U5KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGMxBGk7QOFjDsQ5/WJntPYtww2iR28wy5Ywlvi/jK8eqfkuLsQTPWRVH8WRdQp++YMrIL6cJqbuQX5JGV8x6o6e8S3vU0E0/SzVP+
+X-Gm-Message-State: AOJu0Yzn8Z+zWcORyh8k/khXjgEf3R996LmjfwQHTZSNGSnPpAUEyFUM
+	5taqd1fapAKwpzc41RQy9keHWZ2Pzng6Vt++43QIiATQSH8POF9eqNpPokZQNZYUzNGMrUWE7Xz
+	Z/W1zNuZeUYXC765rOkJrtz56qCDJMi5/+vRj
+X-Google-Smtp-Source: AGHT+IE9+/I3bSukMGSV69NWucyK49DrCDskm5u3bRNu62YrXsb5GYolXDQb6+2mnF70pbKLSkXCgPSxIq5NsfN3srs=
+X-Received: by 2002:a17:906:b790:b0:a45:b36c:55c7 with SMTP id
+ dt16-20020a170906b79000b00a45b36c55c7mr421516ejb.63.1709667528752; Tue, 05
+ Mar 2024 11:38:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240305-class_cleanup-brodo-v1-1-9bac7b015641@marliere.net>
-X-B4-Tracking: v=1; b=H4sIALB052UC/x3MQQqAIBBA0avIrBPMCqqrRITpVAOh4lAE4d2Tl
- m/x/wuMiZBhFC8kvIkp+IK6EmAP43eU5IpBK92qRnXSnoZ5sScaf0W5puCCbLpNm6Eeer0qKGV
- MuNHzX6c55w+laSEGZQAAAA==
-To: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1858; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=P/X134+zoyg4s2Jot2r3ay2hXJWBr990/o9hJjnwWHg=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl53Swm6kHlOSIPs1UhLtSg+MdfWuMcywtuuEkJ
- KuJv1brarGJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZed0sAAKCRDJC4p8Y4ZY
- pl4aEACnZBgAW55z5Y4KPR71YvKK3gWZjKqPpvdj46dCyDV78AEV38YH9b7+Z1yu0xUNHFpatew
- xJ19stvaBgbq2aAWkqBDcNVIbxpGhFX2ffAL0m6YD9tyDbX4d6KwUE+I0WZojTfvfjQEUwhpmCd
- DZXg5MvqvQdk59Y2KhUoOKmhJ6XmJ5vZGHygo6zb84xsyPBkul5TWYiuAGbdUOgtAxw/7XyulQa
- JQsJXLO+3KCo01yKGz+Sja7yOBqUSAkmRz4D4jwrMmxBVxkbtVus6JJG27TWHe4l300lJTa1foC
- qtvDLi9NiTsCzzf4g6Vu4nZaVqJ+qPE47d/fK4869yRt+5HcZ0N/TnpbtkB+fdceRP1vWGeLxPG
- jQmLyJcwV5VWoUjOfXHZ3ma1adFXpEoFs/nbIwD+ZjHUL/FSqOCtDanpYhDSEk6DPF4tnDZXtZJ
- NJOLi3NYcjnQI8Aos7W1n1X6bbL00ftDm5heNziMAR+lThvbG+LL/2+y1TwqFSILSYy557yGcLm
- YbHTsnqNFQVCG5mWH/iz/Gc2OI/MEDo+mzDGfuq96GwZOvG1TfVii2Ra7IOnC0mu52r8TL4X/3y
- Zws4jXP6F9bXYyijs+gG/GGHAM7JYuAr3orFCFU4uq7CrZQ4IjY+wXl4U0orCl9/2hz8yN9/9qg
- pR8H/1cHpAw4lVA==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+References: <20240305020153.2787423-1-almasrymina@google.com> <6208950d-6453-e797-7fc3-1dcf15b49dbe@huawei.com>
+In-Reply-To: <6208950d-6453-e797-7fc3-1dcf15b49dbe@huawei.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 5 Mar 2024 11:38:37 -0800
+Message-ID: <CAHS8izMwTRyqUS0iRtErfAqDVsXRia5Ajx9PRK3vcfo8utJoUA@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v6 00/15] Device Memory TCP
+To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeelb@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since commit 43a7206b0963 ("driver core: class: make class_register() take
-a const *"), the driver core allows for struct class to be in read-only
-memory, so move the pcmcia_socket_class structure to be declared at build
-time placing it into read-only memory, instead of having to be dynamically
-allocated at boot time.
+On Tue, Mar 5, 2024 at 4:54=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei.com=
+> wrote:
+>
+> On 2024/3/5 10:01, Mina Almasry wrote:
+>
+> ...
+>
+> >
+> > Perf - page-pool benchmark:
+> > ---------------------------
+> >
+> > bench_page_pool_simple.ko tests with and without these changes:
+> > https://pastebin.com/raw/ncHDwAbn
+> >
+> > AFAIK the number that really matters in the perf tests is the
+> > 'tasklet_page_pool01_fast_path Per elem'. This one measures at about 8
+> > cycles without the changes but there is some 1 cycle noise in some
+> > results.
+> >
+> > With the patches this regresses to 9 cycles with the changes but there
+> > is 1 cycle noise occasionally running this test repeatedly.
+> >
+> > Lastly I tried disable the static_branch_unlikely() in
+> > netmem_is_net_iov() check. To my surprise disabling the
+> > static_branch_unlikely() check reduces the fast path back to 8 cycles,
+> > but the 1 cycle noise remains.
+> >
+>
+> The last sentence seems to be suggesting the above 1 ns regresses is caus=
+ed
+> by the static_branch_unlikely() checking?
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/pcmcia/cs.c          | 2 +-
- drivers/pcmcia/cs_internal.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Note it's not a 1ns regression, it's looks like maybe a 1 cycle
+regression (slightly less than 1ns if I'm reading the output of the
+test correctly):
 
-diff --git a/drivers/pcmcia/cs.c b/drivers/pcmcia/cs.c
-index b33be1e63c98..c75f55e1250a 100644
---- a/drivers/pcmcia/cs.c
-+++ b/drivers/pcmcia/cs.c
-@@ -892,7 +892,7 @@ static const struct dev_pm_ops pcmcia_socket_pm_ops = {
- 
- #endif /* CONFIG_PM */
- 
--struct class pcmcia_socket_class = {
-+const struct class pcmcia_socket_class = {
- 	.name = "pcmcia_socket",
- 	.dev_uevent = pcmcia_socket_uevent,
- 	.dev_release = pcmcia_release_socket,
-diff --git a/drivers/pcmcia/cs_internal.h b/drivers/pcmcia/cs_internal.h
-index 999332bc4378..02a83ca44e77 100644
---- a/drivers/pcmcia/cs_internal.h
-+++ b/drivers/pcmcia/cs_internal.h
-@@ -113,7 +113,7 @@ struct pcmcia_callback{
- /* cs.c */
- extern struct rw_semaphore pcmcia_socket_list_rwsem;
- extern struct list_head pcmcia_socket_list;
--extern struct class pcmcia_socket_class;
-+extern const struct class pcmcia_socket_class;
- 
- int pccard_register_pcmcia(struct pcmcia_socket *s, struct pcmcia_callback *c);
- struct pcmcia_socket *pcmcia_get_socket_by_nr(unsigned int nr);
+# clean net-next
+time_bench: Type:tasklet_page_pool01_fast_path Per elem: 8 cycles(tsc)
+2.993 ns (step:0)
 
----
-base-commit: 1bec7691b32710ea27741f0f8b00c1dc98d92930
-change-id: 20240305-class_cleanup-brodo-35f2a91982b0
+# with patches
+time_bench: Type:tasklet_page_pool01_fast_path Per elem: 9 cycles(tsc)
+3.679 ns (step:0)
 
-Best regards,
--- 
-Ricardo B. Marliere <ricardo@marliere.net>
+# with patches and with diff that disables static branching:
+time_bench: Type:tasklet_page_pool01_fast_path Per elem: 8 cycles(tsc)
+3.248 ns (step:0)
 
+I do see noise in the test results between run and run, and any
+regression (if any) is slightly obfuscated by the noise, so it's a bit
+hard to make confident statements. So far it looks like a ~0.25ns
+regression without static branch and about ~0.65ns with static branch.
+
+Honestly when I saw all 3 results were within some noise I did not
+investigate more, but if this looks concerning to you I can dig
+further. I likely need to gather a few test runs to filter out the
+noise and maybe investigate the assembly my compiler is generating to
+maybe narrow down what changes there.
+
+--=20
+Thanks,
+Mina
