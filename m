@@ -1,48 +1,35 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA4A1AAAE;
-	Tue,  5 Mar 2024 18:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2ED118AEA;
+	Tue,  5 Mar 2024 18:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709663132; cv=none; b=S0cIfbt8KMJC+0mIJMR0PcaglxAXg76lqL23c5lDo2gvZerQTmpdHI4Ff2cRfoctLqfjZsQ9RqAeDJk7SyeNMz5t5o3m/HIJKSnF2K1EV+2HAqrsmYA4gtK1G9RYvhktfpqER2R2/LOHwQvB6fDVK+ssouhQfeW3m1TjUF9BzEk=
+	t=1709663182; cv=none; b=teyp7BtbfllPj8SefF/4qgWQaIVV5fNPBr3yGkcPVet0jGTZZXG6Bti0QlWad04OSpF/DVwOVACafMVaEfB5L70ppw6YLl0rXQiWYEjguf+NJ90GZQwu4PhaO0Vb/8VmDrAzL9RejcEzb/jI3F8cBgQtNnAwpfOFWcL25UCiYYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709663132; c=relaxed/simple;
-	bh=f5eWXg8q9+04983HKC25i0B2Cij6OAJzv1WgCCfc3eo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=HVfjWBm/VjDfUeHaXI5kB21YVbDA00c8vmTg9l0gJh5m8ZPxAEpYADhgZI1RRhFk/Ywwr/MzvhgZzYvEmj4OpYZRt9F+LSGfH0N3pncsSj1hPE8f9I12UVf+gB0P2RwmsIPdw1jRYC+4+AKyvEyYo45HWWCfRItrkqduZR2q3dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pix2Nnie; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709663182; c=relaxed/simple;
+	bh=WNffBT41r5F0XyJ7MFk8QsD65CMScBYk1QPLYhExK8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LZAQUSriV5cSFz+r3lkXmW3xSjebiZNwYVgirgzvdMcT3skEcE4PRzs8yxJ/KY5uulLfCEQeywHCcuU80H767aTVPC6ont3xRarm1tF3Iqs7x+TNjAYEcYZxZupH/rjVTIewTFi70IRPGd4NLKjHHtF144cnMq374GBufNoLWHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=Gj3rJTE4; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pix2Nnie"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 425Fm2T2030069;
-	Tue, 5 Mar 2024 18:25:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=2kl5tMFEKrj+g3qzJ7Yn8a+ESpyaPJUxELxULpjiqso=; b=pi
-	x2NniezncgxxR80ZzKSp058LQQKAD4JPUS2xx8OeytsP9oRnA3vOLAcFttNHaQfO
-	newmEnUbCBHrZVR3+aCdbeGFXeY9dd+rpuju75EkGWYWRyOGfq5PbuoqQ4Vnp5/l
-	s50wej/d7nt0mOw53pXJkZ/x/wNEZVJbhrKV866EXYlj+QpCzNh1kXlowe1U1U2c
-	zPje5nmBIb2MBftKHDwlOHhgDmJp4cDhBD6oySJHZIp1sgDFkj9LONTEdpWx7K2w
-	oRFwV9UB14ZTtWIx1R55e+qGb0VneRlBqZC9taPwsAlMTSs0hfc732B/AnCVEZEj
-	svPMN2CNW9c4x0KN3L2A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wp6bv8cps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 18:25:16 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 425IPFLH009942
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Mar 2024 18:25:15 GMT
-Received: from [10.216.51.173] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 5 Mar
- 2024 10:25:08 -0800
-Message-ID: <a2e863e2-9c8b-47c2-b4d8-5664d954cd49@quicinc.com>
-Date: Tue, 5 Mar 2024 23:55:04 +0530
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="Gj3rJTE4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1709663171; bh=WNffBT41r5F0XyJ7MFk8QsD65CMScBYk1QPLYhExK8U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Gj3rJTE4Xx3wNJQce3qkYCM6NYncvK5hc0F86WWBKwv2x62hB2XsL2VccgAK0xs5s
+	 BG6+or8HD2sQlbxrbymoHoO5rdAmQfh8Ece349RdQGaJ5L0xKiGew2G03DpbzwAJEh
+	 dKrY3/3xm5Olljr7p+9afGsitGUuwP7AGyt9U0AE=
+Received: from [IPV6:240e:388:8d00:6500:3d21:65e4:41f4:2696] (unknown [IPv6:240e:388:8d00:6500:3d21:65e4:41f4:2696])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 18FFE60106;
+	Wed,  6 Mar 2024 02:26:11 +0800 (CST)
+Message-ID: <ec871702-388d-4a29-aec1-5cd6d1de6d0a@xen0n.name>
+Date: Wed, 6 Mar 2024 02:26:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,95 +37,217 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 3/3] arm64: dts: qcom: sa8775p-ride: Enable support for
- firmware managed resources
+Subject: Re: [PATCH v6 7/7] Documentation: KVM: Add hypercall for LoongArch
 Content-Language: en-US
-From: Sriram Dash <quic_sriramd@quicinc.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <gregkh@linuxfoundation.org>, <quic_wcheng@quicinc.com>,
-        <Thinh.Nguyen@synopsys.com>, <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <quic_psodagud@quicinc.com>, <quic_nkela@quicinc.com>,
-        <manivannan.sadhasivam@linaro.org>, <ulf.hansson@linaro.org>,
-        <sudeep.holla@arm.com>, <quic_shazhuss@quicinc.com>,
-        <devicetree@vger.kernel.org>
-References: <1709657858-8563-1-git-send-email-quic_sriramd@quicinc.com>
- <1709657858-8563-4-git-send-email-quic_sriramd@quicinc.com>
- <b9142874-0afb-40a6-9008-b33bd8f56840@linaro.org>
- <399555e8-d8fa-46b7-8b15-3d3a4a30809b@quicinc.com>
-In-Reply-To: <399555e8-d8fa-46b7-8b15-3d3a4a30809b@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: maobibo <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org
+References: <20240302082532.1415200-1-maobibo@loongson.cn>
+ <20240302084724.1415344-1-maobibo@loongson.cn>
+ <846a5e46-4e8f-4f73-ac5b-323e78ec1bb1@xen0n.name>
+ <853f2909-e455-bd1c-c6a4-6a13beb37125@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <853f2909-e455-bd1c-c6a4-6a13beb37125@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Fg58HcmEETQqSWqLAm75O0fTg6deT8lC
-X-Proofpoint-ORIG-GUID: Fg58HcmEETQqSWqLAm75O0fTg6deT8lC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-05_15,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
- adultscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403050147
 
-On 3/5/2024 11:33 PM, Sriram Dash wrote:
-> On 3/5/2024 10:38 PM, Krzysztof Kozlowski wrote:
->> On 05/03/2024 17:57, Sriram Dash wrote:
->>> Establish the channel and domain mapping for the power domains to 
->>> connect
->>> with firmware, enabling the firmware to handle the assigned resources.
->>> Since these delegated resources will remain invisible to the operating
->>> system, ensure that any references to them are removed.
->>>
->>> Signed-off-by: Sriram Dash <quic_sriramd@quicinc.com>
->>> ---
->>>   arch/arm64/boot/dts/qcom/sa8775p-ride.dts | 96 
->>> +++++++++++++++++++++++++------
->>>   1 file changed, 77 insertions(+), 19 deletions(-)
->>
->> Do not mix DTS patches with submissions to netdev or USB.
->>
->> Please put it inside your internal guides, so you will not be repeating
->> this over and over.
->>
-> 
-> Sure. Will take care. Thanks.
-> 
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts 
->>> b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
->>> index 26ad05b..b6c9cac 100644
->>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
->>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
->>> @@ -764,8 +764,18 @@
->>>   };
->>>   &usb_0 {
->>> -    pinctrl-names = "default";
->>> -    pinctrl-0 = <&usb0_en_state>;
->>> +    /delete-property/ clocks;
->>> +    /delete-property/ clock-names;
->>> +    /delete-property/ assigned-clocks;
->>> +    /delete-property/ assigned-clock-rates;
->>> +    /delete-property/ required-opps;
->>> +    /delete-property/ resets;
->>> +    /delete-property/ interconnects;
->>> +    /delete-property/ interconnect-names;
+On 3/4/24 17:10, maobibo wrote:
+> On 2024/3/2 下午5:41, WANG Xuerui wrote:
+>> On 3/2/24 16:47, Bibo Mao wrote:
+>>> [snip]
+>>> +Querying for existence
+>>> +======================
 >>> +
->>> +    power-domains = <TODO>, <TODO>;
+>>> +To find out if we're running on KVM or not, cpucfg can be used with 
+>>> index
+>>> +CPUCFG_KVM_BASE (0x40000000), cpucfg range between 0x40000000 - 
+>>> 0x400000FF
+>>> +is marked as a specially reserved range. All existing and future 
+>>> processors
+>>> +will not implement any features in this range.
+>>> +
+>>> +When Linux is running on KVM, cpucfg with index CPUCFG_KVM_BASE 
+>>> (0x40000000)
+>>> +returns magic string "KVM\0"
+>>> +
+>>> +Once you determined you're running under a PV capable KVM, you can 
+>>> now use
+>>> +hypercalls as described below.
 >>
->> This wasn't even tested.
+>> So this is still the approach similar to the x86 CPUID-based 
+>> implementation. But here the non-privileged behavior isn't specified 
+>> -- I see there is PLV checking in Patch 3 but it's safer to have the 
+>> requirement spelled out here too.
 >>
+>> But I still think this approach touches more places than strictly 
+>> needed. As it is currently the case in 
+>> arch/loongarch/kernel/cpu-probe.c, the FEATURES IOCSR is checked for a 
+>> bit IOCSRF_VM that already signifies presence of a hypervisor; if this 
+>> information can be interpreted as availability of the HVCL instruction 
+>> (which I suppose is the case -- a hypervisor can always 
+>> trap-and-emulate in case HVCL isn't provided by hardware), here we can 
+>> already start making calls with HVCL.
+>>
+>> We can and should define a uniform interface for probing the 
+>> hypervisor kind, similar to the centrally-managed RISC-V SBI 
+>> implementation ID registry [1]: otherwise future non-KVM hypervisors 
+>> would have to
+>>
+>> 1. somehow pretend they are KVM and eventually fail to do so, leading 
+>> to subtle incompatibilities,
+>> 2. invent another way of probing for their existence,
+>> 3. piggy-back on the current KVM definition, which is inelegant 
+>> (reading the LoongArch-KVM-defined CPUCFG leaf only to find it's not 
+>> KVM) and utterly makes the definition here *not* KVM-specific.
+>>
+>> [1]: 
+>> https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0/src/ext-base.adoc
+>>
+> Sorry, I know nothing about riscv. Can you describe how sbi_get_mimpid() 
+> is implemented in detailed? Is it a simple library or need trap into 
+> secure mode or need trap into hypervisor mode?
+
+For these simple interfaces you can expect trivial implementation. See 
+for example [OpenSBI]'s respective code.
+
+[OpenSBI]: 
+https://github.com/riscv-software-src/opensbi/blob/v1.4/lib/sbi/sbi_ecall.c#L29-L34
+
+>> My take on this:
+>>
+>> To check if we are running on Linux KVM or not, first check IOCSR 0x8 
+>> (``LOONGARCH_IOCSR_FEATURES``) for bit 11 (``IOCSRF_VM``); we are 
+>> running under a hypervisor if the bit is set. Then invoke ``HVCL 0`` 
+>> to find out the hypervisor implementation ID; a return value in 
+>> ``$a0`` of 0x004d564b (``KVM\0``) means Linux KVM, in which case the 
+>> rest of the convention applies.
+>>
+> I do not think so. `HVCL 0` requires that hypercall ABIs need be unified 
+> for all hypervisors. Instead it is not necessary, each hypervisor can 
+> has its own hypercall ABI.
+
+I don't think agreeing upon the ABI of HVCL 0 is going to affect ABI of 
+other hypercalls. Plus, as long as people don't invent something that 
+they think is smart and deviate from the platform calling convention, 
+I'd expect every hypervisor to have identical ABI apart from the exact 
+HVCL operation ID chosen.
+
+>>> +
+>>> +KVM hypercall ABI
+>>> +=================
+>>> +
+>>> +Hypercall ABI on KVM is simple, only one scratch register a0 (v0) 
+>>> and at most
+>>> +five generic registers used as input parameter. FP register and 
+>>> vector register
+>>> +is not used for input register and should not be modified during 
+>>> hypercall.
+>>> +Hypercall function can be inlined since there is only one scratch 
+>>> register.
+>>
+>> It should be pointed out explicitly that on hypercall return all 
+> Well, return value description will added. What do think about the 
+> meaning of return value for KVM_HCALL_FUNC_PV_IPI hypercall?  The number 
+> of CPUs with IPI delivered successfully like kvm x86 or simply 
+> success/failure?
+>> architectural state except ``$a0`` is preserved. Or is the whole ``$a0 
+>> - $t8`` range clobbered, just like with Linux syscalls?
+>>
+> what is advantage with $a0 - > $t8 clobbered?
+
+Because then a hypercall is going to behave identical as an ordinary C 
+function call, which is easy for people and compilers to understand.
+
+> It seems that with linux Loongarch syscall, t0--t8 are clobber rather 
+> than a0-t8. Am I wrong?
+
+You're right, my memory has faded a bit. But I think my reasoning still 
+holds.
+
+>>> +
+>>> +The parameters are as follows:
+>>> +
+>>> +        ========    ================    ================
+>>> +    Register    IN            OUT
+>>> +        ========    ================    ================
+>>> +    a0        function number        Return code
+>>> +    a1        1st parameter        -
+>>> +    a2        2nd parameter        -
+>>> +    a3        3rd parameter        -
+>>> +    a4        4th parameter        -
+>>> +    a5        5th parameter        -
+>>> +        ========    ================    ================
+>>> +
+>>> +Return codes can be as follows:
+>>> +
+>>> +    ====        =========================
+>>> +    Code        Meaning
+>>> +    ====        =========================
+>>> +    0        Success
+>>> +    -1        Hypercall not implemented
+>>> +    -2        Hypercall parameter error
+>>
+>> What about re-using well-known errno's, like -ENOSYS for "hypercall 
+>> not implemented" and -EINVAL for "invalid parameter"? This could save 
+>> people some hair when more error codes are added in the future.
+>>
+> No, I do not think so. Here is hypercall return value, some OS need see 
+> it. -ENOSYS/-EINVAL may be not understandable for non-Linux OS.
+
+As long as you accept the associated costs (documentation, potential 
+mapping back-and-forth, proper conveyance of information etc.) I have no 
+problem with that either.
+
+>>> +    ====        =========================
+>>> +
+>>> +KVM Hypercalls Documentation
+>>> +============================
+>>> +
+>>> +The template for each hypercall is:
+>>> +1. Hypercall name
+>>> +2. Purpose
+>>> +
+>>> +1. KVM_HCALL_FUNC_PV_IPI
+>>> +------------------------
+>>> +
+>>> +:Purpose: Send IPIs to multiple vCPUs.
+>>> +
+>>> +- a0: KVM_HCALL_FUNC_PV_IPI
+>>> +- a1: lower part of the bitmap of destination physical CPUIDs
+>>> +- a2: higher part of the bitmap of destination physical CPUIDs
+>>> +- a3: the lowest physical CPUID in bitmap
+>>
+>> "CPU ID", instead of "CPUID" for clarity: I suppose most people 
+>> reading this also know about x86, so "CPUID" could evoke the wrong 
+>> intuition.
+>>
+> Both "CPU core id" or "CPUID" are ok for me since there is csr register 
+> named LOONGARCH_CSR_CPUID already.
+
+I was suggesting to minimize confusion even at theoretical level, 
+because you cannot assume anything about your readers. Feel free to 
+provide extra info (e.g. the "CPU core ID" you suggested) as long as it 
+helps to resolve any potential ambiguity / confusion.
+
+>> This function is equivalent to the C signature "void hypcall(int func, 
+>> u128 mask, int lowest_cpu_id)", which I think is fine, but one can 
+>> also see that the return value description is missing.
+>>
+> Sure, the return value description will added.
 > 
-> This is tested with the specific power domains in place
-> of <TODO>. SCMI interface is used for the power domains.
-> 
->> Best regards,
->> Krzysztof
->>
+> And it is not equivalent to the C signature "void hypcall(int func, u128 
+> mask, int lowest_cpu_id)". int/u128/stucture is not permitted with 
+> hypercall ABI, all parameter is "unsigned long".
+
+I was talking about the ABI in a C perspective, and the register usage 
+is identical. You can define the KVM hypercall ABI however you want but 
+having some nice analogy/equivalence would help a lot, especially for 
+people not already familiar with all the details.
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
