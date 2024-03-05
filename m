@@ -1,181 +1,132 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAC61F95E;
-	Tue,  5 Mar 2024 14:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF028595C;
+	Tue,  5 Mar 2024 14:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709650195; cv=none; b=UJ9JVrSYY3mTB8uCJf1m/0WhHNNxIMACURxHrJ2t+7fOL1HFJVBeTvpmCCY+a7Uk1AoxutsAeAmHlms5uBVrBt2ln0zaVqgL/wfE3U5ZAi6ydBXET8M859oDWl0mrGnJOCxj4WomJ2GFP+gmFx+6Rnkfqwz4SKGKk/y4AvK2B88=
+	t=1709650218; cv=none; b=rbpqJi+e8BYP4wm7cp+ndUxQdtJz6ewDWEgzSanI+VnwBhKG22ibZgj5qb+9veaHxKvof/G5zoPLPgu1ISxDS/U1OWsriTw19I0sUJJJQyW9kuzLZs0EC++teCUyTl5LYAXZ7Le8PiRGkh0v3wggyqVg8jlDOOqpH2SKpAEJ0C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709650195; c=relaxed/simple;
-	bh=JrCH6EgXFgvmU54XTv3OGayoRVJM9AhD1jxlXOStzVg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i2JN4QmpyuocRYHMfYPzLgRA/dorJe0atwUTzV/WfbjZ/SZCmaE10QCH5cw23Yg0KzE2V6ptt3d8DYpqYoWi4bVg5jMNMaac1C3HhZrvMUnXiia/wqL2kj7supMW3IkmMQ577hYbzIoAHaRC6QQNeqit+I9K18B+BCfYFAYpcRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875a9e.versanet.de ([83.135.90.158] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rhVVj-0006jN-HS; Tue, 05 Mar 2024 15:11:15 +0100
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: mchehab@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
- p.zabel@pengutronix.de, jose.abreu@synopsys.com, nelson.costa@synopsys.com,
- dmitry.osipenko@collabora.com, sebastian.reichel@collabora.com,
- shawn.wen@rock-chips.com, nicolas.dufresne@collabora.com, hverkuil@xs4all.nl,
- hverkuil-cisco@xs4all.nl, Shreeya Patel <shreeya.patel@collabora.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-arm@lists.infradead.org,
- Shreeya Patel <shreeya.patel@collabora.com>
-Subject:
- Re: [PATCH v2 4/6] arm64: dts: rockchip: Add device tree support for HDMI RX
- Controller
-Date: Tue, 05 Mar 2024 15:11:14 +0100
-Message-ID: <7657358.31r3eYUQgx@diego>
-In-Reply-To: <20240305123648.8847-5-shreeya.patel@collabora.com>
-References:
- <20240305123648.8847-1-shreeya.patel@collabora.com>
- <20240305123648.8847-5-shreeya.patel@collabora.com>
+	s=arc-20240116; t=1709650218; c=relaxed/simple;
+	bh=qNvP0MHUDhq5uKeC1lWkHuAKP+QAc5+WTwtcRR/JpYM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SJgTKaAHZXpID/rQj8ECTfK5jrG7xFDlkR/bTF+/skqexIdgRLmf3yyBkroWdgomFaRrCuKdLc4f7Mi+JsCzlkjBgc+9mc+CXEPTv3555ead57mgZs1Ob5aBgZTdjB3ngdP534wniOUIcFpqLj5/JN9wFljjMjnlt+EzHS1QAPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=k4QbrGxe; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="k4QbrGxe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=eHhl2jHhjVxxGJR4b9ILlAb7oyvlwVpJjsN5ZgneT1I=;
+	t=1709650216; x=1710082216; b=k4QbrGxe9YUkQ61IFAr4rLn1eXPIuPtzoYWWr3/ehpdcRBK
+	0/2pakh7LjB1WAR35C62c3ZsovuWR7LcgCAw4TYxH4LFf/U1GH5rQdWH/wdR9Ya69aqUsP4bBBYNn
+	Hwfokd0yYRWqBsvmhlGVv77hs6zMbpAFLB44WWk5epRB+j23R6uOrfkxjvLu3XWorFqWYzwhAHmKW
+	gOpz2sj2EgS0ZcFbxQ7tnqkjkKciSz2VeAXcxflol6zGKLg/3TJ0zbhvBXwZusS1Q1BPS3+ljxHPo
+	1N1TM40QdA9HuljVWxa6HtVmAwWVm2O7LV+X+RmmGlm01lw1VZmLPcghSsfoG0Dw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rhW7R-0003md-KW; Tue, 05 Mar 2024 15:50:13 +0100
+Message-ID: <1726bbb2-2cdc-4cad-b6b1-295f6338e771@leemhuis.info>
+Date: Tue, 5 Mar 2024 15:50:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Lenovo ThinkPad X13s regerssions (was Re: Linux regressions
+ report for mainline [2024-02-25])
+Content-Language: en-US, de-DE
+To: Johan Hovold <johan@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, Vinod Koul <vinod.koul@linaro.org>,
+ Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>
+References: <170886726066.1516351.14377022830495300698@leemhuis.info>
+ <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
+ <83c6019f-9c6f-4ad1-87d5-e4f1bdaca93c@leemhuis.info>
+ <ZecjcApvdZSGRysT@hovoldconsulting.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZecjcApvdZSGRysT@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709650216;b8afcc65;
+X-HE-SMSGID: 1rhW7R-0003md-KW
 
-Hi,
+On 05.03.24 14:51, Johan Hovold wrote:
+> [ +CC: Vinod, Bjorn, Abhinav ]
+> 
+> On Tue, Mar 05, 2024 at 10:33:39AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [dropping Linus from CC, we can add him back later when needed]
+>>
+>> On 27.02.24 11:20, Johan Hovold wrote:
+>>> On Sun, Feb 25, 2024 at 01:21:46PM +0000, Regzbot (on behalf of Thorsten Leemhuis) wrote:
+>>>
+>>>> Johan Hovold also deals with multiple issues affecting Lenovo ThinkPad
+>>>> X13s, but he send out patch series to fix some or all of those[1], so
+>>>> with a bit of luck those issues will soon be fixed as well.
+>>>> https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
+>> As 6.8 final might be just five days away, could you please help me out
+>> with a short status update wrt. unresolved regressions from your side if
+>> you have a minute? It's easy to get lost in all those issues. :-/ :-D
+> Heh. Indeed. It's been a rough cycle. :)
 
+:D
 
-Am Dienstag, 5. M=E4rz 2024, 13:36:46 CET schrieb Shreeya Patel:
-> Add device tree support for Synopsys DesignWare HDMI RX
-> Controller.
->=20
-> Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
-> Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
-> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
-> ---
-> Changes in v2 :-
->   - Fix some of the checkpatch errors and warnings
->   - Rename resets, vo1-grf and HPD
->   - Move hdmirx_cma node to the rk3588.dtsi file
->=20
->  .../boot/dts/rockchip/rk3588-pinctrl.dtsi     | 41 ++++++++++++++
->  arch/arm64/boot/dts/rockchip/rk3588.dtsi      | 55 +++++++++++++++++++
->  2 files changed, 96 insertions(+)
+>>>> [1]
+>>>> https://lore.kernel.org/lkml/20240217150228.5788-1-johan+linaro@kernel.org/
+>>>
+>>> This series addresses a use-after-free in the PMIC glink driver caused
+>>> by DRM bridge changes in rc1 and which can result in the internal
+>>> display not showing up on boot.
+>>> The DRM/SoC fixes here have now been merged to drm-misc for 6.8.
+>> What about the others from that series? Can they wait till 6.9? Or are
+>> they on track for 6.8?
+> Vinod, the PHY maintainer, just told me he will try to get them into
+> 6.8.
 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/d=
-ts/rockchip/rk3588.dtsi
-> index 5519c1430cb7..8adb98b99701 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> @@ -7,6 +7,24 @@
->  #include "rk3588-pinctrl.dtsi"
-> =20
->  / {
-> +	reserved-memory {
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-> +		ranges;
+Ahh, good.
 
-add blank line here
+>>> But also with these fixes, there are still a couple of regressions
+>>> related to the Qualcomm DRM runtime PM rework in 6.8-rc1. I'll send
+>>> separate reports to track those.
+>
+>> Any decision yet if they are going to be reverted for now?
+>>
+>> Am I right assuming those would fix
+>> https://lore.kernel.org/lkml/Zd3kvD02Qvsh2Sid@hovoldconsulting.com/
+>> which did not get even a single reply?
+> 
+> That was the hope, but I've managed to trigger a reset on disconnect
+> once also with the runtime PM series reverted.
 
-> +		/*
-> +		 * The 4k HDMI capture controller works only with 32bit
-> +		 * phys addresses and doesn't support IOMMU. HDMI RX CMA
-> +		 * must be reserved below 4GB.
-> +		 */
-> +		hdmirx_cma: hdmirx_cma {
+Ohh. So did the PM series increase the chance of hitting this? Because
+if not, then...
 
-phandles use "_", but node-names "-"
+> One of the patches from that series has already been reverted (to fix
+> the VT console hotplug regression) and there is some indication that
+> that was sufficient to address the issue with hotplug not being detected
+> in X/Wayland too. I'm waiting for confirmation from some users that have
+> not been able to use their external displays at all since 6.8-rc1, but
+> it does seem to fix the X/Wayland issues I could reproduce here.
+> 
+> But either way, the reset on disconnect is still there, and have since
+> been reproduced by Bjorn also on another Qualcomm platform without a
+> hypervisor so that we've now got a call stack. I've heard that Abhinav
+> is looking into that, but I don't know if there's any chance to have a
+> fix ready this week.
 
-> +			compatible =3D "shared-dma-pool";
-> +			alloc-ranges =3D <0x0 0x0 0x0 0xffffffff>;
-> +			size =3D <0x0 (160 * 0x100000)>; /* 160MiB */
+...this sounds (please correct me if I'm wrong) like on Sunday the
+situation likely will be "the problem is basically in 6.7.y already, so
+there is not much we can do for 6.8 and reverting or delaying the
+release is unneeded" -- unless of course a fix comes in reach during
+this week.
 
-The comment above that node, could elaborate where the value of 160MB
-originates from. I assume it is to hold n-times of 4K frames or whatever,
-but it would be helpful for people to be able to read that.
-
-
-> +			no-map;
-> +			status =3D "disabled";
-> +		};
-> +	};
-> +
->  	pcie30_phy_grf: syscon@fd5b8000 {
->  		compatible =3D "rockchip,rk3588-pcie3-phy-grf", "syscon";
->  		reg =3D <0x0 0xfd5b8000 0x0 0x10000>;
-> @@ -85,6 +103,38 @@ i2s10_8ch: i2s@fde00000 {
->  		status =3D "disabled";
->  	};
-> =20
-> +	hdmi_receiver: hdmi-receiver@fdee0000 {
-
-Maybe rename the label to "hdmirx:" ... that way in a board enabling the
-cma region, both nodes would stay close to each other?
-
-
-> +		compatible =3D "rockchip,rk3588-hdmirx-ctrler", "snps,dw-hdmi-rx";
-> +		reg =3D <0x0 0xfdee0000 0x0 0x6000>;
-> +		power-domains =3D <&power RK3588_PD_VO1>;
-> +		rockchip,grf =3D <&sys_grf>;
-> +		rockchip,vo1-grf =3D <&vo1_grf>;
-> +		interrupts =3D <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		interrupt-names =3D "cec", "hdmi", "dma";
-> +		clocks =3D <&cru ACLK_HDMIRX>,
-> +			 <&cru CLK_HDMIRX_AUD>,
-> +			 <&cru CLK_CR_PARA>,
-> +			 <&cru PCLK_HDMIRX>,
-> +			 <&cru CLK_HDMIRX_REF>,
-> +			 <&cru PCLK_S_HDMIRX>,
-> +			 <&cru HCLK_VO1>;
-> +		clock-names =3D "aclk",
-> +			      "audio",
-> +			      "cr_para",
-> +			      "pclk",
-> +			      "ref",
-> +			      "hclk_s_hdmirx",
-> +			      "hclk_vo1";
-
-the driver uses of_reserved_mem_device_init(), so doesn't this node need
-a "memory-region =3D <&hdmirx_cma>; or similar?
-
-
-> +		resets =3D <&cru SRST_A_HDMIRX>, <&cru SRST_P_HDMIRX>,
-> +			 <&cru SRST_HDMIRX_REF>, <&cru SRST_A_HDMIRX_BIU>;
-> +		reset-names =3D "axi", "apb", "ref", "biu";
-> +		pinctrl-0 =3D <&hdmim1_rx>;
-> +		pinctrl-names =3D "default";
-> +		status =3D "disabled";
-> +	};
-> +
->  	pcie3x4: pcie@fe150000 {
->  		compatible =3D "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
->  		#address-cells =3D <3>;
-> @@ -339,3 +389,8 @@ pcie30phy: phy@fee80000 {
->  		status =3D "disabled";
->  	};
->  };
-> +
-> +&hdmirx_cma {
-> +	status =3D "okay";
-> +};
-
-I'd assume a board that enables &hdmi_receiver would also enable hdmirx_cma
-and not the soc dtsi for _all_ boards?
-
-
-Thanks
-Heiko
-
-
+Ciao, Thorsten
