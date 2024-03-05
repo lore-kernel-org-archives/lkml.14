@@ -1,112 +1,185 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from thorn.bewilderbeest.net (thorn.bewilderbeest.net [71.19.156.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB338F;
-	Tue,  5 Mar 2024 00:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6BD647;
+	Tue,  5 Mar 2024 00:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=71.19.156.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709598009; cv=none; b=dmtf132D2qTG54L2rbJ1MWcKAcfIFN+rRH9jRcfMefnAQ1QbGA9UrmpFpVKxhYfMgHXPocxsF3GFwHFLsRrw/ncQCDHfRbRz/94raECYTQDAXpslzQb9ZozgRwdPSS9Q56Jb1rxGj1g02k79o0NLZVE5dDwcR/FVLb2p68mn42s=
+	t=1709598179; cv=none; b=rkNC3xlGGypEThAjytuhqh6jjOmO1JsFJdj+BVpBOf5+yQ7zaKrdBYLyYRWSJanVHCMdk0UIKqetlfdFzd+Ok+JJeKAG6AHCKz+uSjsd73CesGmAs7zjA1khrjnQv0xJkeP0aCT+yTdf/sleCEi9HcDWCBYSWHtSPAX0BrhjIXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709598009; c=relaxed/simple;
-	bh=n2iJRsp0wDisq9D8A56Nk0XQND53SVEzey0fC0b0eoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TfyIH01cLm9EnldVxllm24xxqtzdl/FJV0C1WdP71Lgyj9wdSCustdc1UYZZIMs1xfGFT4Hlm5udhfx9K64mRqrPB23BtQa0Y2wTtpD/imqUKhLbwjajjOVPh80Ht3r4tiinLH86FUYt5Srw1lpBhP6cQIMNE/eyF2lBtfGhlVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d944e8f367so34723125ad.0;
-        Mon, 04 Mar 2024 16:20:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709598007; x=1710202807;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cThLIQ7kVxrLe0hSQIUMvSBEyZArR8R8aoZjQ4ZGD9Y=;
-        b=was2wiNeEz3ikHkDbBksGf5yMmRdYmVqVM4mu7xJlO4oPr6IefrML0XBo3xdlJ8hD/
-         lFTMEU3VQV+fKnr+MDM3Ne4aWsf7O1s6TfH8A4jKZzHr/ZDSDKH2zpr9emaFNqkNUxe2
-         fTFIBa6SuCPQ8ZDxBtds1LuOACLJZeeqMxNKL8d9KkY1AwYkgNkVxDB1H1MO5snhknb7
-         zGwoUtCcvXFt3G0WGoPRZ6P25fnNZ4TGp4GG4SEUtGJZxi58fAryhDEf5QctkvFuklxY
-         LYRJCp9TdjfvV1t71viqA96ZSc9NuJpKxbPnd/S3VSY4P1OAwUy8n13H9OdiucA2l3Dx
-         Y03Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWo5yZ2rqTsNvmWjDrXOE3bp+6qWFBFUTDTKCLUG6dJlKUyKPPodDg6g1fcFEfFnpMM106QVBNdsDFPnBTdB5EVLf3xhNZszHhjCXhQHaeyqRyGRpjCBGLb6izavl/+fj4i7clEkrYqhulxSvJVSsr3+W9shsUYR0N4SoJBZGZBAzpluy9JT06UJ9n2ucHlCQKMRXhJjBRajvSGMyNl
-X-Gm-Message-State: AOJu0YxWKbf4rfs9qmSbZJ8rwm7NLQwvIB/HkbPYbpK4ApFE1eLM3c5+
-	I0raVJn8zAHcuJTOlSObgFuoY7k5P2/tacZqqlfsly/2sVb0/MzVKslNXvLk
-X-Google-Smtp-Source: AGHT+IGBK4qsXJ6u6xsgg6YtuRQ4ARl1MW9KjGEbxUYd3grb5H4MLJb1AFN9dYWTVfSXWKh/RmLRuw==
-X-Received: by 2002:a17:902:d50b:b0:1dc:d773:ac with SMTP id b11-20020a170902d50b00b001dcd77300acmr381569plg.7.1709598006843;
-        Mon, 04 Mar 2024 16:20:06 -0800 (PST)
-Received: from ?IPV6:2620:0:1000:8411:9ba8:35e8:4ec5:44d1? ([2620:0:1000:8411:9ba8:35e8:4ec5:44d1])
-        by smtp.gmail.com with ESMTPSA id b6-20020a170902d50600b001dd0d07b3d8sm3298602plg.201.2024.03.04.16.20.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 16:20:06 -0800 (PST)
-Message-ID: <86f0af00-8765-4481-9245-1819fb2c6379@acm.org>
-Date: Mon, 4 Mar 2024 16:20:03 -0800
+	s=arc-20240116; t=1709598179; c=relaxed/simple;
+	bh=PbPf8iVhZgCvtTgBgmwshmfHi11z8JKWC1tSyaO6mfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o+6TLILOrBivmD/JS33M2z3WniInwvJnvteDKpNjwCzTmHhnlq9f3DNaCXu7RTeEeKsqfxudhFl42aq1TPSaWna3DHSLkAnXeZVvkjlvtDXZvKc21n0BKkoLgBDpZ1KLoqDVND2+MHfGa7yTGl1QLuRU261tT/uWGHNckbqvQDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bewilderbeest.net; spf=pass smtp.mailfrom=bewilderbeest.net; dkim=pass (1024-bit key) header.d=bewilderbeest.net header.i=@bewilderbeest.net header.b=GAbZ7jfk; arc=none smtp.client-ip=71.19.156.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bewilderbeest.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bewilderbeest.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=bewilderbeest.net header.i=@bewilderbeest.net header.b="GAbZ7jfk"
+Received: from hatter.bewilderbeest.net (unknown [IPv6:2602:61:712b:6300::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: zev)
+	by thorn.bewilderbeest.net (Postfix) with ESMTPSA id 69C4FA10;
+	Mon,  4 Mar 2024 16:22:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bewilderbeest.net;
+	s=thorn; t=1709598170;
+	bh=Hp1IA638kbZr0ad+eDcqEs+oUJWCsqexDOh7fw0VWOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GAbZ7jfkt8p4Wx1NZoOTD6k2ehRMXklDayuIPryAHzKjIITfW/5zV8RgIM9nd6hA/
+	 i09uyDhkFAqN7mechLbiyyH0EqwsDOcd5hntFwxDAgUyKY1FeZENGGlz6uAkm3nFQp
+	 f03Luow+FWEAEPgbr4TzKPmRvBlSNMtzacji3YaQ=
+Date: Mon, 4 Mar 2024 16:22:49 -0800
+From: Zev Weiss <zev@bewilderbeest.net>
+To: baneric926@gmail.com
+Cc: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	corbet@lwn.net, linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org, kcfeng0@nuvoton.com, kwliu@nuvoton.com,
+	openbmc@lists.ozlabs.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, DELPHINE_CHIU@wiwynn.com,
+	naresh.solanki@9elements.com, billy_tsai@aspeedtech.com,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: fan: Add fan binding to schema
+Message-ID: <1cf69d3e-a8b4-49f6-ac4d-550b525e45e2@hatter.bewilderbeest.net>
+References: <20240227005606.1107203-1-kcfeng0@nuvoton.com>
+ <20240227005606.1107203-2-kcfeng0@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
-Content-Language: en-US
-To: Christian Loehle <christian.loehle@arm.com>, linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org, juri.lelli@redhat.com, mingo@redhat.com,
- rafael@kernel.org, dietmar.eggemann@arm.com, vschneid@redhat.com,
- vincent.guittot@linaro.org, Johannes.Thumshirn@wdc.com,
- adrian.hunter@intel.com, ulf.hansson@linaro.org, andres@anarazel.de,
- asml.silence@gmail.com, linux-pm@vger.kernel.org,
- linux-block@vger.kernel.org, io-uring@vger.kernel.org,
- Qais Yousef <qyousef@layalina.io>
-References: <20240304201625.100619-1-christian.loehle@arm.com>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240304201625.100619-1-christian.loehle@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240227005606.1107203-2-kcfeng0@nuvoton.com>
 
-On 3/4/24 12:16, Christian Loehle wrote:
-> Pixel 6 ufs Android 14 (7 runs for because device showed some variance)
-> [6605, 6622, 6633, 6652, 6690, 6697, 6754] sugov mainline
-> [7141, 7173, 7198, 7220, 7280, 7427, 7452] per-task tracking
-> [2390, 2392, 2406, 2437, 2464, 2487, 2813] sugov no iowait boost
-> [7812, 7837, 7837, 7851, 7900, 7959, 7980] performance governor
+On Mon, Feb 26, 2024 at 04:56:04PM PST, baneric926@gmail.com wrote:
+>From: Naresh Solanki <naresh.solanki@9elements.com>
+>
+>Add common fan properties bindings to a schema.
+>
+>Bindings for fan controllers can reference the common schema for the
+>fan
+>
+>child nodes:
+>
+>  patternProperties:
+>    "^fan@[0-2]":
+>      type: object
+>      $ref: fan-common.yaml#
+>      unevaluatedProperties: false
+>
+>Reviewed-by: Rob Herring <robh@kernel.org>
+>Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+>Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+>Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
+>---
+> .../devicetree/bindings/hwmon/fan-common.yaml | 78 +++++++++++++++++++
+> 1 file changed, 78 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/hwmon/fan-common.yaml
+>
+>diff --git a/Documentation/devicetree/bindings/hwmon/fan-common.yaml b/Documentation/devicetree/bindings/hwmon/fan-common.yaml
+>new file mode 100644
+>index 000000000000..15c591c74545
+>--- /dev/null
+>+++ b/Documentation/devicetree/bindings/hwmon/fan-common.yaml
+>@@ -0,0 +1,78 @@
+>+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>+%YAML 1.2
+>+---
+>+$id: http://devicetree.org/schemas/hwmon/fan-common.yaml#
+>+$schema: http://devicetree.org/meta-schemas/core.yaml#
+>+
+>+title: Common Fan Properties
+>+
+>+maintainers:
+>+  - Naresh Solanki <naresh.solanki@9elements.com>
+>+  - Billy Tsai <billy_tsai@aspeedtech.com>
+>+
+>+properties:
+>+  max-rpm:
+>+    description:
+>+      Max RPM supported by fan.
+>+    $ref: /schemas/types.yaml#/definitions/uint32
+>+    maximum: 100000
+>+
+>+  min-rpm:
+>+    description:
+>+      Min RPM supported by fan.
+>+    $ref: /schemas/types.yaml#/definitions/uint32
+>+    maximum: 1000
 
-Variance of performance results for Pixel devices can be reduced greatly
-by disabling devfreq scaling, e.g. as follows (this may cause thermal
-issues if the system load is high enough):
+I can't say with certainty that it's not, but are we sure 1000 is low 
+enough?  Looking at just what I've got on hand, an 80mm fan I have will 
+run steadily at about 1500RPM, and I'd assume larger ones (e.g. 120mm) 
+could potentially go significantly lower...
 
-      for d in $(adb shell echo /sys/class/devfreq/*); do
-	adb shell "cat $d/available_frequencies |
-		tr ' ' '\n' |
-		sort -n |
-		case $devfreq in
-			min) head -n1;;
-			max) tail -n1;;
-		esac > $d/min_freq"
-     done
+>+
+>+  pulses-per-revolution:
+>+    description:
+>+      The number of pulse from fan sensor per revolution.
+>+    $ref: /schemas/types.yaml#/definitions/uint32
+>+    maximum: 4
 
-> Showcasing some different IO scenarios, again all random read,
-> median out of 5 runs, all on rk3399 with NVMe.
-> e.g. io_uring6x4 means 6 threads with 4 iodepth each, results can be
-> obtained using:
-> fio --minimal --time_based --name=test --filename=/dev/nvme0n1 --runtime=30 --rw=randread --bs=4k --ioengine=io_uring --iodepth=4 --numjobs=6 --group_reporting | cut -d \; -f 8
+Might we want 'default: 2' here?
 
-So buffered I/O was used during this test? Shouldn't direct I/O be used
-for this kind of tests (--buffered=0)? Additionally, which I/O scheduler
-was configured? I recommend --ioscheduler=none for this kind of tests.
+>+
+>+  tach-div:
+>+    description:
+>+      Divisor for the tach sampling clock, which determines the sensitivity of the tach pin.
+>+    $ref: /schemas/types.yaml#/definitions/uint32
+>+
+>+  target-rpm:
+>+    description:
+>+      The default desired fan speed in RPM.
+>+    $ref: /schemas/types.yaml#/definitions/uint32
+>+
+>+  fan-driving-mode:
+>+    description:
+>+      Select the driving mode of the fan.(DC, PWM and so on)
 
-> - Higher cap is not always beneficial, we might place the task away
-> from the CPU where the interrupt handler is running, making it run
-> on an unboosted CPU which may have a bigger impact than the difference
-> between the CPU's capacity the task moved to. (Of course the boost will
-> then be reverted again, but a ping-pong every interval is possible).
+Nit: could use a space before the parenthetical.
 
-In the above I see "the interrupt handler". Does this mean that the NVMe
-controller in the test setup only supports one completion interrupt for
-all completion queues instead of one completion interrupt per completion
-queue? There are already Android phones and developer boards available
-that support the latter, namely the boards equipped with a UFSHCI 4.0 
-controller.
+>+    $ref: /schemas/types.yaml#/definitions/string
+>+    enum: [ dc, pwm ]
+>+
+>+  pwms:
+>+    description:
+>+      PWM provider.
+>+    maxItems: 1
+>+
+>+  "#cooling-cells":
+>+    const: 2
+>+
+>+  cooling-levels:
+>+    description:
+>+      The control value which correspond to thermal cooling states.
+>+    $ref: /schemas/types.yaml#/definitions/uint32-array
+>+
+>+  tach-ch:
+>+    description:
+>+      The tach channel used for the fan.
+>+    $ref: /schemas/types.yaml#/definitions/uint8-array
 
-Thanks,
+Nit: s/channel/channels/ given that it's an array?
 
-Bart.
+>+
+>+  label:
+>+    description:
+>+      Optional fan label
+>+
+>+  fan-supply:
+>+    description:
+>+      Power supply for fan.
+>+
+>+  reg:
+>+    maxItems: 1
+>+
+>+additionalProperties: true
+>+
+>-- 
+>2.34.1
+>
+>
