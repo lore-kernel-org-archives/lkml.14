@@ -1,100 +1,139 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CEE7F46B
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5507F46B;
+	Tue,  5 Mar 2024 08:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709626222; cv=none; b=f/u/876e5vWlPeyv9F3TZhRc60NGk2Dw1XabvrlE20nn1oCYY7kou5iB6vOFoEj0yuZGgsWs5Yqu8GW7wdKB3DssURaAjNmrGxfyUTndp/p9cP5QIEC1xZ5XnJiqnKosI963LA1WIKZSMsuS+yoBOz5B54ROSL8jCBq0SjT08Uc=
+	t=1709626229; cv=none; b=X2OdA5lzHRWvtEq0DpxIPRUMOuIeMT/01Ep6y/jwEj9k7EUiLqkCjEziC1zap4UHfE7nj16GUO4iYlnEXbxsx8NcJK+ErO+RHREP/1hLxK2iSnJ4KaVRVgCrTEj4SO5Ewq2HyI/9JTe+uBpTU0RUvm0LytPjF6dqIzAOaG3Em8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709626222; c=relaxed/simple;
-	bh=MFPOX5W0KpeQ4hbxT4c8+pC/ewoeFCjUJSuVSnBF+1Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jvx07wHyu6ugkQeRlmK4381obB6jrOXvO+kj3PBjhstCzFv9LMIrhfKMSeAO0giQVuoo+ZUCI5plndzfmhtHgeYG/iBphKBU7/l0w32uWxSH2qjXh4ISAvzxBea/3kaTs2uoqD17NQaihTuzFfEhjpm4ngh5ZQdOMSfwBT5HebQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (78.37.41.175) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 5 Mar
- 2024 11:10:02 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Karina Yankevich <k.yankevich@omp.ru>,
-	<linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH] f2fs: Cast expression type to unsigned long in __count_extent_cache()
-Date: Tue, 5 Mar 2024 11:09:43 +0300
-Message-ID: <20240305080943.6922-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709626229; c=relaxed/simple;
+	bh=iAFz1Dwqp2+si5SzlNkTHCdkyeUK8/aZtCcMKnD2piU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pciLBrpHXdQPtRPa9K+oThiL2y8JV1Fy/pHyGuSZKBRw/N+jdgOgxm/Q2w1zkso7qQr5y1oQOs9SYeBCYtq/b5QV/+n6eOKIhfGXZvZ2UZLUnQy8DOBN3ZkYY/wr97e7zIUYLjVRG4TGgXNHl3M2wBzn0T676oGyWyDtTeYx1Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.12.27] (g027.RadioFreeInternet.molgen.mpg.de [141.14.12.27])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6C11361E5FE01;
+	Tue,  5 Mar 2024 09:08:30 +0100 (CET)
+Message-ID: <c0e648ea-d73e-4805-a2bb-b02ddd3ca4e2@molgen.mpg.de>
+Date: Tue, 5 Mar 2024 09:08:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/05/2024 07:39:20
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 183946 [Mar 05 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 8 0.3.8 4a99897b35b48c45ee5c877607d26a2d9f419920
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;78.37.41.175:7.4.1,7.7.3;127.0.0.199:7.1.2;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: {cloud_iprep_silent}
-X-KSE-AntiSpam-Info: ApMailHostAddress: 78.37.41.175
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/05/2024 07:45:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/5/2024 3:38:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH md-6.8 v2 2/9] md: export helpers to stop sync_thread
+Content-Language: en-US
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, zkabelac@redhat.com, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, dm-devel@lists.linux.dev, song@kernel.org,
+ yukuai3@huawei.com, heinzm@redhat.com, jbrassow@redhat.com, neilb@suse.de,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com
+References: <20240305072306.2562024-1-yukuai1@huaweicloud.com>
+ <20240305072306.2562024-3-yukuai1@huaweicloud.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20240305072306.2562024-3-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Cast expression type to unsigned long in __count_extent_cache()
-to prevent integer overflow.
+Dear Kuai,
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
 
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
----
- fs/f2fs/shrinker.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for your patch.
 
-diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
-index 83d6fb97dcae..bb86a06c5d5e 100644
---- a/fs/f2fs/shrinker.c
-+++ b/fs/f2fs/shrinker.c
-@@ -33,7 +33,7 @@ static unsigned long __count_extent_cache(struct f2fs_sb_info *sbi,
- {
- 	struct extent_tree_info *eti = &sbi->extent_tree[type];
- 
--	return atomic_read(&eti->total_zombie_tree) +
-+	return (unsigned long)atomic_read(&eti->total_zombie_tree) +
- 				atomic_read(&eti->total_ext_node);
- }
- 
--- 
-2.34.1
+Am 05.03.24 um 08:22 schrieb Yu Kuai:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> The new heleprs will be used in dm-raid in later patches to fix
 
+hel*pe*rs
+
+> regressions and prevent calling md_reap_sync_thread() directly.
+
+Please list the new functions.
+
+1.  md_idle_sync_thread(struct mddev *mddev);
+2.  md_frozen_sync_thread(struct mddev *mddev);
+3.  md_unfrozen_sync_thread(struct mddev *mddev);
+
+I do not like the naming so much. `md_reap_sync_thread()` has the verb 
+in imperative mood. At least myself, I would not know what the functions 
+do exactly without looking at the implementation.
+
+
+Kind regards,
+
+Paul
+
+
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> Signed-off-by: Xiao Ni <xni@redhat.com>
+> Acked-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+>   drivers/md/md.c | 29 +++++++++++++++++++++++++++++
+>   drivers/md/md.h |  3 +++
+>   2 files changed, 32 insertions(+)
+> 
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 23f31fd1d024..22e7512a5b1e 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -4919,6 +4919,35 @@ static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
+>   		mddev_lock_nointr(mddev);
+>   }
+>   
+> +void md_idle_sync_thread(struct mddev *mddev)
+> +{
+> +	lockdep_assert_held(&mddev->reconfig_mutex);
+> +
+> +	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+> +	stop_sync_thread(mddev, true, true);
+> +}
+> +EXPORT_SYMBOL_GPL(md_idle_sync_thread);
+> +
+> +void md_frozen_sync_thread(struct mddev *mddev)
+> +{
+> +	lockdep_assert_held(&mddev->reconfig_mutex);
+> +
+> +	set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+> +	stop_sync_thread(mddev, true, false);
+> +}
+> +EXPORT_SYMBOL_GPL(md_frozen_sync_thread);
+> +
+> +void md_unfrozen_sync_thread(struct mddev *mddev)
+> +{
+> +	lockdep_assert_held(&mddev->reconfig_mutex);
+> +
+> +	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+> +	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+> +	md_wakeup_thread(mddev->thread);
+> +	sysfs_notify_dirent_safe(mddev->sysfs_action);
+> +}
+> +EXPORT_SYMBOL_GPL(md_unfrozen_sync_thread);
+> +
+>   static void idle_sync_thread(struct mddev *mddev)
+>   {
+>   	mutex_lock(&mddev->sync_mutex);
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 8d881cc59799..437ab70ce79b 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -781,6 +781,9 @@ extern void md_rdev_clear(struct md_rdev *rdev);
+>   extern void md_handle_request(struct mddev *mddev, struct bio *bio);
+>   extern int mddev_suspend(struct mddev *mddev, bool interruptible);
+>   extern void mddev_resume(struct mddev *mddev);
+> +extern void md_idle_sync_thread(struct mddev *mddev);
+> +extern void md_frozen_sync_thread(struct mddev *mddev);
+> +extern void md_unfrozen_sync_thread(struct mddev *mddev);
+>   
+>   extern void md_reload_sb(struct mddev *mddev, int raid_disk);
+>   extern void md_update_sb(struct mddev *mddev, int force);
