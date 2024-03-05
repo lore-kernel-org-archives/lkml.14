@@ -1,103 +1,76 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BD985642;
-	Tue,  5 Mar 2024 13:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27175102B;
+	Tue,  5 Mar 2024 13:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709646781; cv=none; b=SkjhR40/3fmfNdNjwy1QOAeRrHOZtVDzQFXiCkQekA1BRDF/Wh/TCby1UN0Vg6ySxPzuc53BS4zJ8frF4ABhhgs01yYNr73Fvp56gHXNHatf+ln4vdv1ZeTLK61h0m9FJnUhIeyWPo9fMGFdAhHw3HNyLqiiPhBZkTIUoABG3hg=
+	t=1709646872; cv=none; b=VsP6WDYRoU3BzM2IkZhW2Q51QjxwdT7L77KKdGdcsZOJ6AnujLLRrtdgwcDIsEO7ZE9dCckdUgUbUJ/Lb4PoY+CmaExGGlTrBZP1I86vp9PkwZOYkSvclsFEDNa7zkRTxFdRYJSPBZkUNlK+IVU8EByz/SpdjdmTDnJo36X54ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709646781; c=relaxed/simple;
-	bh=L3FX6+fcZtzC0muuqsZRNP8m7eFA9OdDLL1jdvq6ldM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GJozrvTNfdG9IIHmCr/BoMGFVGDQzfG7dekC+sLKV2gH1GC2losMKmf/RVq/k10x43QuuEb+h8//M+ALlJ1/kl8Z6WGtWDqJK76gz57qV6pt1nANnYKoMakQS3Si8rBsLp6CD/7bmi73cR2o+UMYnFlW/VsLCQq3UWlbOfeZ1Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (78.37.41.175) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 5 Mar
- 2024 16:52:48 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Daniel Vetter <daniel@ffwll.ch>, Helge Deller <deller@gmx.de>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Thomas Zimmermann <tzimmermann@suse.de>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>, Karina Yankevich <k.yankevich@omp.ru>,
-	<linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH v2] fbmon: prevent division by zero in fb_videomode_from_videomode()
-Date: Tue, 5 Mar 2024 16:51:50 +0300
-Message-ID: <20240305135150.23240-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709646872; c=relaxed/simple;
+	bh=Xf/WkyLcOoDaBKyCJpBWytcGIZe+Me8rFxC8lKkr05I=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Zauh6TgxbD2ed8NhmWBFS4DlESKn6dBhaqBHJnOeUhJ83ups4q+tklDBXUB4rlBfcfOpcz6QIKGVYIACWucold6tpH2jEpSx3pV1hyjQQpNFWLCnTwsRUu5gAavdCsm7DmttatuEh30jTdZYDastfT3BkqKBHb0V7Vbp57L1ElY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TpxrD35wHz1FLfp;
+	Tue,  5 Mar 2024 21:54:20 +0800 (CST)
+Received: from canpemm100008.china.huawei.com (unknown [7.192.104.152])
+	by mail.maildlp.com (Postfix) with ESMTPS id 977651A016C;
+	Tue,  5 Mar 2024 21:54:27 +0800 (CST)
+Received: from canpemm500004.china.huawei.com (7.192.104.92) by
+ canpemm100008.china.huawei.com (7.192.104.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 5 Mar 2024 21:54:27 +0800
+Received: from [10.174.179.14] (10.174.179.14) by
+ canpemm500004.china.huawei.com (7.192.104.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 5 Mar 2024 21:54:26 +0800
+Subject: Re: [PATCH 6/6] scsi: isci: Use LIBSAS_SHT_BASE
+To: John Garry <john.g.garry@oracle.com>, <jejb@linux.ibm.com>,
+	<martin.petersen@oracle.com>, <chenxiang66@hisilicon.com>,
+	<jinpu.wang@cloud.ionos.com>, <artur.paszkiewicz@intel.com>,
+	<dlemoal@kernel.org>, <ipylypiv@google.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240305122452.340471-1-john.g.garry@oracle.com>
+ <20240305122452.340471-7-john.g.garry@oracle.com>
+ <e3fcc620-d803-c8e3-651b-9781ecd8e87a@huawei.com>
+ <99e4e3aa-8b8c-44ff-8dae-320c90c471ee@oracle.com>
+From: Jason Yan <yanaijie@huawei.com>
+Message-ID: <4396ae3e-db08-ea35-6d27-6585c88befac@huawei.com>
+Date: Tue, 5 Mar 2024 21:54:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <99e4e3aa-8b8c-44ff-8dae-320c90c471ee@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/05/2024 13:15:25
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 183964 [Mar 05 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 8 0.3.8 4a99897b35b48c45ee5c877607d26a2d9f419920
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 78.37.41.175 in (user) dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 78.37.41.175
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/05/2024 13:20:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/5/2024 11:10:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500004.china.huawei.com (7.192.104.92)
 
-The expression htotal * vtotal can have a zero value on
-overflow. It is necessary to prevent division by zero like in
-fb_var_to_videomode().
+On 2024/3/5 21:27, John Garry wrote:
+> On 05/03/2024 13:21, Jason Yan wrote:
+>>>       .sg_tablesize            = SG_ALL,
+>>> -    .max_sectors            = SCSI_DEFAULT_MAX_SECTORS,
+>>
+>> .max_sectors is not defined in LIBSAS_SHT_BASE.
+> 
+> Sure, but when not set, scsi_host_alloc() will default to 
+> SCSI_DEFAULT_MAX_SECTORS automatically
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
+OK, so it's fine to let it uninitialized.
 
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
----
- V1 -> V2: Replaced the code of the first version with a check.
+Reviewed-by: Jason Yan <yanaijie@huawei.com>
 
- drivers/video/fbdev/core/fbmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core/fbmon.c
-index 79e5bfbdd34c..b137590386da 100644
---- a/drivers/video/fbdev/core/fbmon.c
-+++ b/drivers/video/fbdev/core/fbmon.c
-@@ -1344,7 +1344,7 @@ int fb_videomode_from_videomode(const struct videomode *vm,
- 	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
- 		 vm->vsync_len;
- 	/* prevent division by zero */
--	if (htotal && vtotal) {
-+	if (htotal && vtotal && (vm->pixelclock / htotal >= vtotal)) {
- 		fbmode->refresh = vm->pixelclock / (htotal * vtotal);
- 	/* a mode must have htotal and vtotal != 0 or it is invalid */
- 	} else {
--- 
-2.34.1
-
+> 
+> Thanks,
+> John
+> .
