@@ -1,98 +1,125 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52364548EE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE4B52F68
 	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 11:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709636966; cv=none; b=peAj7gvvSJbWxMyXR0j0SAzjzNeLWVzSyFNf2oTDNc38TOEZO6zOWzqo4ea9wqnx4ax+vrOw1z9CqQSk3QrCRqkOkEkFq/suEhO7roWS3L0jOrI4hnCLK2JuVPb5B27qp36Ho6Y78D71pBb3J3upnol4Nb3I90PG9acV92G6pmc=
+	t=1709636967; cv=none; b=L1zzij3Q2d529HAZ7HKwone2N6poq3HSGsyYGgbyYE/tGcogvf8iUf5wEWf7dbNSQYBSMCPLqtCqvIrt4ZY5w3cGOB7oS0S9jxGfPtb9TEMP8L0TabXyDBRtiSvjBktSn0DsyZC6+gix0zWjodAKAdMT24n/fPhWeZxA1M+kyeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709636966; c=relaxed/simple;
-	bh=YGFkNFR6BVT4HzZEwFfHVNLmz3rtTFWjnXbYP88kSxk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qgODXqfy8J+suO2oWbmrxnYG/C+4Hta+bFAOZGZE62KXzSYW/JsImTcpAc4byaEyrMDYLzv/XAzEvC6Rlh4E9GUIPXl/llG8eUbYdRhpDKUqcYVrtvG+Vj37W5J8xGL4A6boq7vQIcvLhlYdwnUoA+pV4DUkF9PRbETEMPu40bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7c49d118546so438761839f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 03:09:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709636964; x=1710241764;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NINenztmi1JIDOL7+T+uX7S56DXuTaxMwu0U9sYeZh8=;
-        b=hruYg1RJPpM2a7bWaU6CHr0AEupHTFZKVlM6mt6xwFxR+afXSTIeC7Op/ZuDh8un+O
-         T538V0jbi1NpO459+9n7F8ey2d3SRTZBw4TM7O0AlMgNnYOwvThvX1I/YMgLZ7RZrLR/
-         0vXT8QB18mSb31RdbAZidym2QzLbynpPCnU4HfLL6/BomIqhBHH8r731fVnTdVSLl0Pz
-         Swpe4PvFerIMEPUsYqfz8+k9C6vXy+V8GbcHKwSHZVICJtmwL/3/1pnN/wmLIJs17TYR
-         20U9RqzR3OuHT9GkYdp09pkITjHPYlLTZng91NLgHZK6AAq7EwmJKB7kVQYzbo16zwrj
-         P5nw==
-X-Forwarded-Encrypted: i=1; AJvYcCVoErv6TN6R5l9FI6IX+8iY4T4QJM84Y5Faz1o7GaCKOzt8BTMKc3SzgsFOp8FxiRWToN/Ojz/MaTI4kd8Pp7kijQjZFwxEgQu2yENl
-X-Gm-Message-State: AOJu0Yzpl5EyxB/ouqySDw3ALM5oZvSsLSi3Pjd5dtJ8wFIhEXOxJQaz
-	9h683MPep82brcEh3IhOGvQIrcvh3J44L2uVY9KnXSeYjBIUGCypkEf8TsG75iiXehPMjWJQ6Jw
-	LrjiiH/qq3dzpJMUBWJY6/AFECkUfT4jQstoLkgJc6EbG4Vu8pJYtlPs=
-X-Google-Smtp-Source: AGHT+IE8tLV4V8t6SSMxemP9bmpaV+de9LW7kK6fYoUBrxgLrKYcz39WotJL8USLPdsfzWA0LRuRhuqaoYh+S/SiAs0RcNxheZBZ
+	s=arc-20240116; t=1709636967; c=relaxed/simple;
+	bh=sI+zC116lrLUDgrVYIDFht2kB+ywpJ+il0as5t/Gyt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ld89qjREj0W8Y0z/Mxob1+STOvT1HUPRJxhygZbypwywFOjRF6fgT/P+eVfnFR8LjaWJQp0qh7N/orIFF7Knx11QYE7anvYvozf2k52FarZSxEQG/J1nfROQLA9MHqx7qNOgKkFHSTdOZkV7y/ZLOQVn2oKx5R5YkmhhdyxsGqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H6rIbuZC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H6rIbuZC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709636964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FOj+CTG3SczYt5053rYyt+wNtrjSgCNxcupvIafBB1I=;
+	b=H6rIbuZCk7vWJFMn6g8yeMNivjGwiVSU1S/bEsieLCt+BpiUGO/zgmXj02rrmdSrMckGRJ
+	L2MnG7Kr8kj5BSNf0jLR0O6948e85R3HRNNYmlCBAjIz2C/TfzowmV46YgEgmgI/3pMmyc
+	NSxwRr4K+7n4NvOH7Pv4Yco104zNEvo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-73-4IfDmY3WOjWRA8jzMbgPeA-1; Tue,
+ 05 Mar 2024 06:09:21 -0500
+X-MC-Unique: 4IfDmY3WOjWRA8jzMbgPeA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2308A3C025B8;
+	Tue,  5 Mar 2024 11:09:21 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.113])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DAE6640735E9;
+	Tue,  5 Mar 2024 11:09:18 +0000 (UTC)
+From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas@fjasle.eu,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+Subject: [PATCH] kbuild: rpm-pkg: add dtb files in kernel rpm
+Date: Tue,  5 Mar 2024 12:09:12 +0100
+Message-ID: <20240305110915.184868-1-jtornosm@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:35a7:b0:474:d2f6:f0d1 with SMTP id
- v39-20020a05663835a700b00474d2f6f0d1mr71197jal.1.1709636964623; Tue, 05 Mar
- 2024 03:09:24 -0800 (PST)
-Date: Tue, 05 Mar 2024 03:09:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f8b0ab0612e7dffa@google.com>
-Subject: [syzbot] Monthly ntfs3 report (Mar 2024)
-From: syzbot <syzbot+list6abea8b8591745b4404a@syzkaller.appspotmail.com>
-To: almaz.alexandrovich@paragon-software.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Hello ntfs3 maintainers/developers,
+Some architectures, like aarch64 ones, need a dtb file to configure the
+hardware. The default dtb file can be preloaded from u-boot, but the final
+and/or more complete dtb file needs to be able to be loaded later from
+rootfs.
 
-This is a 31-day syzbot report for the ntfs3 subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/ntfs3
+Add the possible dtb files to the kernel rpm and mimic Fedora shipping
+process, storing the dtb files in the module directory. These dtb files
+will be copied to /boot directory by the install scripts, but add fallback
+just in case, checking if the content in /boot directory is correct.
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 47 issues are still open and 41 have been fixed so far.
+Mark the files installed to /boot as %ghost to make sure they will be
+removed when the package is uninstalled.
 
-Some of the still happening issues:
+Tested with Fedora Rawhide (x86_64 and aarch64) with dnf and rpm tools.
+In addition, fallback was also tested after modifying the install scripts.
 
-Ref  Crashes Repro Title
-<1>  11885   Yes   VFS: Busy inodes after unmount (use-after-free)
-                   https://syzkaller.appspot.com/bug?extid=0af00f6a2cba2058b5db
-<2>  3848    Yes   kernel BUG at fs/ntfs/aops.c:LINE!
-                   https://syzkaller.appspot.com/bug?extid=6a5a7672f663cce8b156
-<3>  2589    Yes   possible deadlock in ni_fiemap
-                   https://syzkaller.appspot.com/bug?extid=c300ab283ba3bc072439
-<4>  2164    Yes   KASAN: out-of-bounds Write in end_buffer_read_sync
-                   https://syzkaller.appspot.com/bug?extid=3f7f291a3d327486073c
-<5>  2136    Yes   KMSAN: uninit-value in longest_match_std (2)
-                   https://syzkaller.appspot.com/bug?extid=08d8956768c96a2c52cf
-<6>  1940    Yes   kernel BUG in __ntfs_grab_cache_pages
-                   https://syzkaller.appspot.com/bug?extid=01b3ade7c86f7dd584d7
-<7>  1785    Yes   possible deadlock in attr_data_get_block
-                   https://syzkaller.appspot.com/bug?extid=36bb70085ef6edc2ebb9
-<8>  1003    Yes   possible deadlock in mi_read
-                   https://syzkaller.appspot.com/bug?extid=bc7ca0ae4591cb2550f9
-<9>  672     Yes   possible deadlock in ntfs_fiemap
-                   https://syzkaller.appspot.com/bug?extid=96cee7d33ca3f87eee86
-<10> 645     Yes   possible deadlock in filemap_fault
-                   https://syzkaller.appspot.com/bug?extid=7736960b837908f3a81d
-
+Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ scripts/package/kernel.spec | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
+index c256b73cca3e..5c4c1ffcba6c 100644
+--- a/scripts/package/kernel.spec
++++ b/scripts/package/kernel.spec
+@@ -61,6 +61,9 @@ cp $(%{make} %{makeflags} -s image_name) %{buildroot}/lib/modules/%{KERNELRELEAS
+ %{make} %{makeflags} INSTALL_HDR_PATH=%{buildroot}/usr headers_install
+ cp System.map %{buildroot}/lib/modules/%{KERNELRELEASE}
+ cp .config %{buildroot}/lib/modules/%{KERNELRELEASE}/config
++if [ -d "${srctree}/arch/${SRCARCH}/boot/dts" ];then
++	%{make} %{makeflags} INSTALL_DTBS_PATH=%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb dtbs_install
++fi
+ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEASE}/build
+ %if %{with_devel}
+ %{make} %{makeflags} run-command KBUILD_RUN_COMMAND='${srctree}/scripts/package/install-extmod-build %{buildroot}/usr/src/kernels/%{KERNELRELEASE}'
+@@ -81,6 +84,14 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEA
+ 		echo "%ghost /boot/${x}-%{KERNELRELEASE}"
+ 	done
+ 
++	if [ -d "%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb" ];then
++		echo "/lib/modules/%{KERNELRELEASE}/dtb"
++		for x in $(find "%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb" -name "*" \
++				-exec realpath --relative-to "%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb" {} \;); do
++			echo "%ghost /boot/dtb-%{KERNELRELEASE}/${x}"
++		done
++	fi
++
+ 	echo "%exclude /lib/modules/%{KERNELRELEASE}/build"
+ } > %{buildroot}/kernel.list
+ 
+@@ -96,6 +107,12 @@ for file in vmlinuz System.map config; do
+ 		cp "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"
+ 	fi
+ done
++if [ -d "/lib/modules/%{KERNELRELEASE}/dtb" ]; then
++	if ! diff -rq "/lib/modules/%{KERNELRELEASE}/dtb" "/boot/dtb-%{KERNELRELEASE}" &>/dev/null; then
++		rm -rf "/boot/dtb-%{KERNELRELEASE}"
++		cp -r "/lib/modules/%{KERNELRELEASE}/dtb" "/boot/dtb-%{KERNELRELEASE}"
++	fi
++fi
+ if [ ! -e "/lib/modules/%{KERNELRELEASE}/modules.dep" ]; then
+ 	/usr/sbin/depmod %{KERNELRELEASE}
+ fi
+-- 
+2.43.2
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
