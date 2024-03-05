@@ -1,208 +1,137 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A115F537E5;
-	Tue,  5 Mar 2024 09:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 031924DA1F
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709629765; cv=none; b=Nh6pw13lPFhsvdlO0/y4eyOHMNzeSPRgVIZzt8ynLeCpgCsSShKlaGew1Kwk73SqAd5I1Y/yxzDbcya6D5Hb2gaNFWBBB73znDt1tyZHmCpz2Sp1NG3ktGOwgNCI0ScPcMW8nIx1OjzwI66s/8ETDCEhUFl8QK9ikL+5NLMDkn0=
+	t=1709629876; cv=none; b=sdY0l84D9667+2vvQTcpRnjXlMmEMz2zM8Z4/P/Dvd+eryl8T4n8wJt8xUUmJFx57+X1dAbczrt3oC9HdxpbrR9VA4nXSTA4pfqNefxk4vThZ5ydxTDPKzfy4dL3IzA9CSTDTlIkDBmVJggbtK63pwRduA3OuFnzpn3Xs2RrPBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709629765; c=relaxed/simple;
-	bh=dD6oJ1tw3lJemOCAeta+UGXBZxmMDo2ATIvfTasxZ5k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hLsjhAEtoIPPNK8g2LupT9WIdsLgtI2RmvM7IyFS31e0uRNrPSdHktLQKjvHmDenrGqOG3I7Vy7MbfPfLxUeAod2yP4LOSpIpx9K/nKZKqDF4zX9w52KbjqZ9xTkgUxapny+DW77oXKmrubTh2x2VCZb5XmIjX+i4IseLSvoA7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lML4VmjS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wbL9187w; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lML4VmjS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wbL9187w; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lML4VmjS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wbL9187w";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lML4VmjS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wbL9187w"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A62276AA36;
-	Tue,  5 Mar 2024 09:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709629755; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ExrC55p7rOd+2RKId8GNbrv3KOFKzMlHTaFnRAZmg9s=;
-	b=lML4VmjST9+3hxiLPBDz8P5qe3cSbT+7Wrh+jyjuLhNKhgYkDfSYgKvYk26pTa5At17JpF
-	NC7EJiIyORuV7LKsT/fIwnR9jhsp5+kDor2EwKEXkdOWpPPwnSh+alfHOCRJKEw6+nH+Og
-	pjLdSE8EndYAyNFsJmdEPZLil99VEcY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709629755;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ExrC55p7rOd+2RKId8GNbrv3KOFKzMlHTaFnRAZmg9s=;
-	b=wbL9187we++oFbQu3wEAlU8s2ABcoSkG8zDGreff30y6L8pG+rgdUnbhXrmlLIYPFNrIkB
-	0Hlk5m7beOUOiABg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709629755; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ExrC55p7rOd+2RKId8GNbrv3KOFKzMlHTaFnRAZmg9s=;
-	b=lML4VmjST9+3hxiLPBDz8P5qe3cSbT+7Wrh+jyjuLhNKhgYkDfSYgKvYk26pTa5At17JpF
-	NC7EJiIyORuV7LKsT/fIwnR9jhsp5+kDor2EwKEXkdOWpPPwnSh+alfHOCRJKEw6+nH+Og
-	pjLdSE8EndYAyNFsJmdEPZLil99VEcY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709629755;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ExrC55p7rOd+2RKId8GNbrv3KOFKzMlHTaFnRAZmg9s=;
-	b=wbL9187we++oFbQu3wEAlU8s2ABcoSkG8zDGreff30y6L8pG+rgdUnbhXrmlLIYPFNrIkB
-	0Hlk5m7beOUOiABg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id D2A4713A8A;
-	Tue,  5 Mar 2024 09:09:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id UBmdMDrh5mUSYgAAn2gu4w
-	(envelope-from <tzimmermann@suse.de>); Tue, 05 Mar 2024 09:09:14 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: mpe@ellerman.id.au,
-	jani.nikula@intel.com,
-	naresh.kamboju@linaro.org,
-	deller@gmx.de,
-	npiggin@gmail.com,
-	christophe.leroy@csgroup.eu,
-	aneesh.kumar@kernel.org,
-	naveen.n.rao@linux.ibm.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	lkft-triage@lists.linaro.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v2 3/3] arch/powerpc: Remove <linux/fb.h> from backlight code
-Date: Tue,  5 Mar 2024 10:01:00 +0100
-Message-ID: <20240305090910.26742-4-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240305090910.26742-1-tzimmermann@suse.de>
-References: <20240305090910.26742-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1709629876; c=relaxed/simple;
+	bh=LWb4xFlvZM/PMrK9B+lfdajQrEyZarnZ/3xa3Zq4WPA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qtwNXUMhoyV1avLXJ6cfU0GrtY4LaSFkVskCTsfOnmONoH3H+gJBPqHuk4/uT+nXHmI97zuBQD8uVUhSfRzRxKT6ILtDBBPxsCfj6uBTbXUtoifvq7O715BjEAsutMQnX5twmwpNgdbUOaAPvvVMKd8Eoc3EcLs6HyXG1WkV1pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D70E51FB;
+	Tue,  5 Mar 2024 01:11:50 -0800 (PST)
+Received: from [10.57.68.162] (unknown [10.57.68.162])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E45F63F762;
+	Tue,  5 Mar 2024 01:11:11 -0800 (PST)
+Message-ID: <0a644230-f7a8-4091-9d00-ded6c8c3fc19@arm.com>
+Date: Tue, 5 Mar 2024 09:11:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
+ large folio
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, david@redhat.com,
+ chrisl@kernel.org, yuzhao@google.com, hanchuanhua@oppo.com,
+ linux-kernel@vger.kernel.org, willy@infradead.org, ying.huang@intel.com,
+ xiang@kernel.org, mhocko@suse.com, shy828301@gmail.com,
+ wangkefeng.wang@huawei.com, Barry Song <v-songbaohua@oppo.com>,
+ Hugh Dickins <hughd@google.com>
+References: <20240304103757.235352-1-21cnbao@gmail.com>
+ <706b7129-85f6-4470-9fd9-f955a8e6bd7c@arm.com>
+ <CAGsJ_4wx7oSzt4vn6B+LRoZetMhH-fDXRFrCFRyoqVOakLidjg@mail.gmail.com>
+ <e5e14ef9-1bd2-45a8-818d-e92910e97f8f@arm.com>
+ <CAGsJ_4xtVhka9J3c6zDySBEJ34+mn9OLiuP0JJ+Ag+p9n9K5EA@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAGsJ_4xtVhka9J3c6zDySBEJ34+mn9OLiuP0JJ+Ag+p9n9K5EA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [4.90 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	 R_MISSING_CHARSET(2.50)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RL9wq65f3r6cge75md5ma8xy98)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FREEMAIL_TO(0.00)[ellerman.id.au,intel.com,linaro.org,gmx.de,gmail.com,csgroup.eu,kernel.org,linux.ibm.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: ****
-X-Spam-Score: 4.90
-X-Spam-Flag: NO
 
-Replace <linux/fb.h> with a forward declaration in <asm/backlight.h> to
-resolves an unnecessary dependency. Remove pmac_backlight_curve_lookup()
-and struct fb_info from source and header files. The function and the
-framebuffer struct is unused. No functional changes.
+On 05/03/2024 09:08, Barry Song wrote:
+> On Tue, Mar 5, 2024 at 9:54 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 04/03/2024 21:57, Barry Song wrote:
+>>> On Tue, Mar 5, 2024 at 1:21 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> Hi Barry,
+>>>>
+>>>> On 04/03/2024 10:37, Barry Song wrote:
+>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>
+>>>>> page_vma_mapped_walk() within try_to_unmap_one() races with other
+>>>>> PTEs modification such as break-before-make, while iterating PTEs
+>>>>> of a large folio, it will only begin to acquire PTL after it gets
+>>>>> a valid(present) PTE. break-before-make intermediately sets PTEs
+>>>>> to pte_none. Thus, a large folio's PTEs might be partially skipped
+>>>>> in try_to_unmap_one().
+>>>>
+>>>> I just want to check my understanding here - I think the problem occurs for
+>>>> PTE-mapped, PMD-sized folios as well as smaller-than-PMD-size large folios? Now
+>>>> that I've had a look at the code and have a better understanding, I think that
+>>>> must be the case? And therefore this problem exists independently of my work to
+>>>> support swap-out of mTHP? (From your previous report I was under the impression
+>>>> that it only affected mTHP).
+>>>
+>>> I think this affects all large folios with PTEs entries more than 1. but hugeTLB
+>>> is handled as a whole in try_to_unmap_one and its rmap is removed all
+>>> together, i feel hugeTLB doesn't have this problem.
+>>>
+>>>>
+>>>> Its just that the problem is becoming more pronounced because with mTHP,
+>>>> PTE-mapped large folios are much more common?
+>>>
+>>> right. as now large folios become a more common case, and it is my case
+>>> running in millions of phones.
+>>>
+>>> BTW, I feel we can somehow learn from hugeTLB, for example, we can reclaim
+>>> all PTEs all together rather than iterating PTEs one by one. This will improve
+>>> performance. for example, a batched
+>>> set_ptes_to_swap_entries()
+>>> {
+>>> }
+>>> then we only need to loop once for a large folio, right now we are looping
+>>> nr_pages times.
+>>
+>> You still need a pte-pte loop somewhere. In hugetlb's case it's in the arch
+>> implementation. HugeTLB ptes are all a fixed size for a given VMA, which makes
+>> things a bit easier too, whereas in the regular mm, they are now a variable size.
+>>
+>> David and I introduced folio_pte_batch() to help gather batches of ptes, and it
+>> uses the contpte bit to avoid iterating over intermediate ptes. And I'm adding
+>> swap_pte_batch() which does a similar thing for swap entry batching in v4 of my
+>> swap-out series.
+>>
+>> For your set_ptes_to_swap_entries() example, I'm not sure what it would do other
+>> than loop over the PTEs setting an incremented swap entry to each one? How is
+>> that more performant?
+> 
+> right now, while (page_vma_mapped_walk(&pvmw)) will loop nr_pages for each
+> PTE, if each PTE, we do lots of checks within the loop.
+> 
+> by implementing set_ptes_to_swap_entries(), we can iterate once for
+> page_vma_mapped_walk(), after folio_pte_batch() has confirmed
+> the large folio is completely mapped, we set nr_pages swap entries
+> all together.
+> 
+> we are replacing
+> 
+> for(i=0;i<nr_pages;i++)     /* page_vma_mapped_walk */
+> {
+>         lots of checks;
+>         clear PTEn
+>         set PTEn to swap
+> }
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- arch/powerpc/include/asm/backlight.h        |  5 ++--
- arch/powerpc/platforms/powermac/backlight.c | 26 ---------------------
- 2 files changed, 2 insertions(+), 29 deletions(-)
+OK so you are effectively hoisting "lots of checks" out of the loop?
 
-diff --git a/arch/powerpc/include/asm/backlight.h b/arch/powerpc/include/asm/backlight.h
-index 1b5eab62ed047..061a910d74929 100644
---- a/arch/powerpc/include/asm/backlight.h
-+++ b/arch/powerpc/include/asm/backlight.h
-@@ -10,15 +10,14 @@
- #define __ASM_POWERPC_BACKLIGHT_H
- #ifdef __KERNEL__
- 
--#include <linux/fb.h>
- #include <linux/mutex.h>
- 
-+struct backlight_device;
-+
- /* For locking instructions, see the implementation file */
- extern struct backlight_device *pmac_backlight;
- extern struct mutex pmac_backlight_mutex;
- 
--extern int pmac_backlight_curve_lookup(struct fb_info *info, int value);
--
- extern int pmac_has_backlight_type(const char *type);
- 
- extern void pmac_backlight_key(int direction);
-diff --git a/arch/powerpc/platforms/powermac/backlight.c b/arch/powerpc/platforms/powermac/backlight.c
-index aeb79a8b3e109..12bc01353bd3c 100644
---- a/arch/powerpc/platforms/powermac/backlight.c
-+++ b/arch/powerpc/platforms/powermac/backlight.c
-@@ -9,7 +9,6 @@
-  */
- 
- #include <linux/kernel.h>
--#include <linux/fb.h>
- #include <linux/backlight.h>
- #include <linux/adb.h>
- #include <linux/pmu.h>
-@@ -72,31 +71,6 @@ int pmac_has_backlight_type(const char *type)
- 	return 0;
- }
- 
--int pmac_backlight_curve_lookup(struct fb_info *info, int value)
--{
--	int level = (FB_BACKLIGHT_LEVELS - 1);
--
--	if (info && info->bl_dev) {
--		int i, max = 0;
--
--		/* Look for biggest value */
--		for (i = 0; i < FB_BACKLIGHT_LEVELS; i++)
--			max = max((int)info->bl_curve[i], max);
--
--		/* Look for nearest value */
--		for (i = 0; i < FB_BACKLIGHT_LEVELS; i++) {
--			int diff = abs(info->bl_curve[i] - value);
--			if (diff < max) {
--				max = diff;
--				level = i;
--			}
--		}
--
--	}
--
--	return level;
--}
--
- static void pmac_backlight_key_worker(struct work_struct *work)
- {
- 	if (atomic_read(&kernel_backlight_disabled))
--- 
-2.44.0
+> 
+> by
+> 
+> if (large folio && folio_pte_batch() == nr_pages)
+>     set_ptes_to_swap_entries().
+> 
+>>
+> 
+> Thanks,
+> Ryan
 
