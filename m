@@ -1,259 +1,278 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2049.outbound.protection.outlook.com [40.107.15.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0157E0FB
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709623357; cv=none; b=KMoHRenoDyxmqqrnC2gYwxasxIfFCAbai6MrRoot1023spdJUbTUPWRs1UXtSrggpzsLdoLwfYxmkXT0NDhkYzUW80oflnqO6Qww+XE9mBX24I615DcNa44VQK7L1eTVNTPJuYCfTrw26E42q9/1ltGW2kQrSQbNeSjY6xRD6No=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709623357; c=relaxed/simple;
-	bh=gSuopT+UB64ZbJzax2PN0GsH0wUwb3D2jXENMYp09LU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Se/mpOUfJtYWakqFz67aUvCEqerTgXcvJjeHwsNiArtHZXmK9yDszODdSvAOy/pJa62GfP2ZihrlqwG/sjMz0tFfEey3yFtm6xUNFOpeU8met622i3gkL67EgGY+yGHIRnr3LoZI5hpx+Kb5AFRZTC6gLGYKVHdbhjlXfg4SmW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Onh6yRcU; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A087E110;
+	Tue,  5 Mar 2024 07:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709623561; cv=fail; b=iHkxqgAUABCoEdhk8U0cuKCzEWdpyyHvgpxcDVSGSU4Oc15GrQ0khNnQWUSJXAxI2MDuMUGQf1TxYFQJn3sTDs+Nux5Q6/drf1GbwlWMEnIoVZ5CEdCZN4/Ec6+9o5IkfF9pMUpyNThcaiQvoksYC31b1lGRlOSzBQ6knKomHyg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709623561; c=relaxed/simple;
+	bh=RGgT2vCIkgAAMJRxbVz+tFpNgjoJsuzOYds/JFsDuLg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SRHkr03xQ2vXIa94TLTIbCgEH+ggtIF97XsGHks1LoZNH46+LRjmFB9FgK8/J2Ug2Y/6J5D6j2PvZ8Lt8JUr9zmWjaRkUjQeb8T1CGyKOqPZwR0PLuw0lf50aIXQ04VZB3zsHhuKXkN12nnx68rvhFG37U72aeqREQhd9nfPwW4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=pYGFa3J9; arc=fail smtp.client-ip=40.107.15.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Onh6yRcU"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dcf0d7dc8bso2566985ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 23:22:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709623355; x=1710228155; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o+H7ANhw43eaevV4VQX7czsRSYarXOXymV+NcuYFHLY=;
-        b=Onh6yRcUv6IOazRJvTWwpV4gW0sikRuvL0lJjqRfAm2ZaqnayJoHfHWPBt+BQrR5tL
-         XDccCueNCQ3f1+qQNXViGXpdMo/Jd1WbmpjUmKsu4wCfqMPYoUk44SJqUi7bPLuJ+fIu
-         Z/TvqZ0LYs+ZP6/xCngDeTGYqjpx6gN0LnV7DuXtUpuuh0UXNxWxZuU8V8GNsf12ZEXh
-         1/dRS2j+r/A8iYre9ne6OpgWsHgIJIYo4pfb/9gTC9FyVQ+U8QWQrCyMD77mS5/oc3f0
-         y2MFkfPO6oELk92Y0Y0zMkLy+fiiullZgVdR0Wr605qyEsVmSsjl5N/eujBQiu76UmV4
-         WLuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709623355; x=1710228155;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o+H7ANhw43eaevV4VQX7czsRSYarXOXymV+NcuYFHLY=;
-        b=Hk0Pu6a3bn3UfMh5TyLZ5OC6B/ueNjZEXjnGApONnpu7pZASXJyTvwPDBPX/BepyU3
-         A3ezLGJ88StW9vZyCcsI9/gLaAWjXaYNpZlLdrKAYPsKgxAYIY8R7dLabvgKURfHf4TQ
-         pCXozMZb/EPQR9tpoeUlraUgqs+cx00+8vG5a6SDUg3+4JY5s/uDJKVs/J+8l+utyCtF
-         CZjHbeJ1FUYy1Dy2RNnrJJIXWSTGLHABnI9x+iZ+JsG6wVTQlGR84sfBgg+jg/OkvOBA
-         Q8diSlal/2x4qYg/4ARrziZ0jHeaOJTnY/4c5zGixmhJkrh5tQIFoNvqP78blexVCNkB
-         XsUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVR1FpaiuvWOhSrOsHX4kqwC4M437xHq9PgYxhVwKkbKgbS7p9UfiE8k3MILgj2vYJgQB+Qtd803QtBBaV9NfczSx6LVkggJupS8V+u
-X-Gm-Message-State: AOJu0YwVxypt8ZJihLeqqSp0iyKbyR0z6133JVSI0ryxsOzBxjGxGJBY
-	isIJzAEJKy98L8c2qdPGxJ+i1AJQjr3oR9wB2EcO9Dty3bD/P+cOp1zxVJbEomM=
-X-Google-Smtp-Source: AGHT+IFhfT/2Pzoa8WqwNZ6N0I6kfte1nwbY/CAra5+bDDaMFCyRo5L5BBcrLvPLzeLCAHKbSkJItg==
-X-Received: by 2002:a17:902:d5cb:b0:1dc:51ac:88ef with SMTP id g11-20020a170902d5cb00b001dc51ac88efmr11752027plh.6.1709623355494;
-        Mon, 04 Mar 2024 23:22:35 -0800 (PST)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.155])
-        by smtp.gmail.com with ESMTPSA id i11-20020a170902c94b00b001dcdf24e336sm8994818pla.47.2024.03.04.23.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 23:22:35 -0800 (PST)
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-To: akpm@linux-foundation.org,
-	vishal.moola@gmail.com,
-	hughd@google.com,
-	david@redhat.com,
-	rppt@kernel.org,
-	willy@infradead.org,
-	muchun.song@linux.dev
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH v2 3/3] s390: supplement for ptdesc conversion
-Date: Tue,  5 Mar 2024 15:21:54 +0800
-Message-Id: <20240305072154.26168-1-zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <04beaf3255056ffe131a5ea595736066c1e84756.1709541697.git.zhengqi.arch@bytedance.com>
-References: <04beaf3255056ffe131a5ea595736066c1e84756.1709541697.git.zhengqi.arch@bytedance.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pYGFa3J9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S5T8bkwP/JdJY5Rgr/srJ57D2xYPBmeAcszpz2LSM9fLrZIc0JM7qO6itX8cdXwoGCr83E0NxfzFwPrhv72V/eTqYCnTLFy40XTuhlR/7GESQ9MBfg7wRmaIwg5Kwqpux+y83s02X8p+EtCWDN6BVPDUfVSotZtCh9GJscZchE1LXMXR6A6OXwujhyMAsCXG5/PYmHM74HdxJKRRaHqCTPTP50WiCUZBJsUSiqANAukDKtIXYnAd+CwXkAukjfrWroCckFvsPVt+hU7CJUZFOLbzSdq44t6za6nFQVyJFD0kD/BBi8Lk6mjs8NR26YtOO7NeZdvvW3cqYBL3E11h3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KxEw0RfgpE3v3Dm2TsnKHf1qUoxEJonLY7AwDzUV35w=;
+ b=aHhFuVRK6+Vq30SMRBVIlsXAU4WNE1zubzjuvi3XG5aHLop3XCmHXbeQVwEK7H7CNDxe1QM3SIiZbyTD/wfAqHfGwDJhYcUdSF2728eejpoE5FdkB5kn24MgBzL/43BGVBJyZWiuoqDdjB3TIYYbIe5zlkAMhKNqJByfs7h2TdaNirCPkyHFg6fEX0cdI5zj7myOECAQGpjlFSTJYGdr3BBff7bOpBpX3EP35dGCORK6+wp7eWrHzZYmLN/yub4pJPSyKkLyPZiUVEGnzWo8eEGjharre/Bf2XrhecOVV4sOoEn13VZhJ1ZZz7EkXN3QA6R9hPaPXVk71CiHwUYW5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KxEw0RfgpE3v3Dm2TsnKHf1qUoxEJonLY7AwDzUV35w=;
+ b=pYGFa3J9J+AZMqFmbrC9aEg093QfPat2sSRjIJTjV7gk/J0oWbXvfmJPwh1aXjUKohEDVs9AXY69j+EWy1163Wfz4Nj9QBEH9kvw/mUq5u+5rQs9XJBnIh/lHLmp5f52iRupjjMbz6LbB89ufho6q1Qw36hlFQNI+E36c37Kk9o=
+Received: from PA4PR04MB9638.eurprd04.prod.outlook.com (2603:10a6:102:273::20)
+ by GVXPR04MB10246.eurprd04.prod.outlook.com (2603:10a6:150:1be::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Tue, 5 Mar
+ 2024 07:25:56 +0000
+Received: from PA4PR04MB9638.eurprd04.prod.outlook.com
+ ([fe80::4a4b:c89a:2ee2:ffb3]) by PA4PR04MB9638.eurprd04.prod.outlook.com
+ ([fe80::4a4b:c89a:2ee2:ffb3%5]) with mapi id 15.20.7339.035; Tue, 5 Mar 2024
+ 07:25:56 +0000
+From: David Lin <yu-hao.lin@nxp.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"briannorris@chromium.org" <briannorris@chromium.org>, "kvalo@kernel.org"
+	<kvalo@kernel.org>, Pete Hsieh <tsung-hsien.hsieh@nxp.com>
+Subject: RE: [EXT] Re: [PATCH v8 1/2] wifi: mwifiex: add host mlme for client
+ mode
+Thread-Topic: [EXT] Re: [PATCH v8 1/2] wifi: mwifiex: add host mlme for client
+ mode
+Thread-Index: AQHaNIYDXGT+ith2YUesnsIyMnIG77Ee4pYAgAI47lCACBeDgA==
+Date: Tue, 5 Mar 2024 07:25:56 +0000
+Message-ID:
+ <PA4PR04MB9638983EBD1DB4D3E8FB5474D1222@PA4PR04MB9638.eurprd04.prod.outlook.com>
+References: <20231222032123.1036277-1-yu-hao.lin@nxp.com>
+ <20231222032123.1036277-2-yu-hao.lin@nxp.com>
+ <20240227175306.GB11034@francesco-nb>
+ <PA4PR04MB96383C684AAA40C14DDB4B79D15F2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+In-Reply-To:
+ <PA4PR04MB96383C684AAA40C14DDB4B79D15F2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB9638:EE_|GVXPR04MB10246:EE_
+x-ms-office365-filtering-correlation-id: 54ebe539-c214-4455-cb5f-08dc3ce57fae
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ w5d0kez0hvvV55r3K4qIaniQq3oLapq3xXbhAYK0kKgrcLH31PffeeKECDfECThzw7aSRX5cdmiZtqj1EmmRvezrz0dkITROJmr3kGS4WW7BxLNibPvG3stt8zqGmx4VGvQd0LYnznIZJIjZKvsmtc7KZQBCiXh2FCz/0EyreBMq7Ji7fgbHz30KzvWfgZm3CLO09tDiPbXacxP0LYjrhvWpRK4jWPXZ0yEJl+5z41H0w8x/RvPzDhJsVJIf9gLZ9L1MlIJ2vB+VMFzvnjMCrbia9nvilsswXCwDupqTN2RjCp7wZKSFlu9KPGQM+OEkWKpKpWZc6hLHDyBMjaQowgzGw2iozFwTczmXK8CDhJKrOA1dfwKJIUADyrHzaCAlOkRxDa7Wlc5beMWN4kDC57IYPXgwjga9KSIrznWHo7AlQIzvPR2/Gc3a1hOn9pWMs82DPRkTUHVLvHF5T7b7x1z43EMofNdw67HmYDwVhz3LKfMp1H1JlZJ3cBUFe3bDGzR7xJuIb5kADBsx1SeEJ+KeYC9BVCP9yvA/StpXs93+OorZR9lN7OrBXkH1YjjbH42f7CIxwa6g1dG42SUw25yteK9E3OaDAUbBPT/NsqMnP0Jau6qV9cYlzc8FpOqLB2t82uDCvlakDlZBCejJP9dvjaR4URjqpKm+ko92G7b4srP/q0S9K6Fw0Rac28WIryzyC6IBUfZ5yBAfcXDUO59f/sG36b+TZzMAA+Wk3lg=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ljXJdNQnjhb2463+fmvthvJHp04lT4mNhKzLLrd3FfbroGETs/nHp2/cF3mU?=
+ =?us-ascii?Q?9AkMpYiRukFakYh8ivvGVO7m3BKa2ry8VA1O/Vm5iZSIZTpKOAaup1PJFQ+i?=
+ =?us-ascii?Q?FpwszqiyNTJCXCjsuDYJGlMwVSOP+qqmxYnBpK5JzsuzFAHGpUtSN8idI7Ql?=
+ =?us-ascii?Q?G3AXR/SdItSqKZGZGJQPaNI+1fFu3mwEFUBa/sXb2Kl/ci1mElYkLG45wEGU?=
+ =?us-ascii?Q?ndLsQVgTUk3U19U9qi2b7U4AAhEbnH5vyHr4iG0B8zuuIHL56ZYA3ZSgmwUE?=
+ =?us-ascii?Q?HTHAo0GcAK7GymY/4qK4QOCtFvsS2xJYl8YFBBBDKuSs0TkIHhQdn93lZGGD?=
+ =?us-ascii?Q?v+6SlCqoetxVEsNra4JVlqqydi7WqHEkSL8UTWa35lfLbAnajNLYHvylAH5Y?=
+ =?us-ascii?Q?tb7gzNenxO86UQSKmQI2Yd5vfTaLmXCHdT9d55RCgG3h2JpH/ghkcDDLfDeo?=
+ =?us-ascii?Q?8Aiiv8CIx97C/rNkMB/I5cmLY1qY59nGK5ioO46U3baxD1dUP/ye7SVqW9M0?=
+ =?us-ascii?Q?brB4ZWdxvl/cJQ1K2JOe8bjwys0m41argioW5IdjUhF2ckjQqGF3VKUXm6Pa?=
+ =?us-ascii?Q?/reuet8eHo6cEu9Pca2Qoj1qFLutI8GBwRUI0Z0YVTNQOZJ92Os3A9iDZu9s?=
+ =?us-ascii?Q?CGiNUKtGk/onbj7sWN6sYTE/FrIAp1YVvDLoLOKOJLRCWPDeR15Kggs8hpHs?=
+ =?us-ascii?Q?LH0PiMmLSZq6JYtohB+Gkkvsnh3/sZ8cExDv7haHqTVJIgKfSahFYr/A99fH?=
+ =?us-ascii?Q?txA4pI0ljX10jnhiaQYEeJ3JkayxPWZ0dz7NfRaJdfZjzUZ4OOuZmcxFBGx/?=
+ =?us-ascii?Q?/SVgooHsUbofvNiYffF9I9288jlm2GYyysIPKUMNy7ze2IFqotp++gfKS4TV?=
+ =?us-ascii?Q?EAIdM9IGYCSVPy+XCiZKvQW5zR5QYE7LSqOdbpYQgFMeh/ylZGV2xkT+uzN+?=
+ =?us-ascii?Q?tHXqtrbFPwviGWrAFTWdLSHQGSrTzieqXG5vcsNdc8yBLpzWOK99AfeJfNPo?=
+ =?us-ascii?Q?q5OhLuhAdaxPhOnt+9WaRInapk1ST7lXfeZH6ZJFHzRPIXFb36W57xOwzBRy?=
+ =?us-ascii?Q?7toKPfEK4+j8uaiO7TyvkwR7dCJGEkn+WIlvV1QDf4wQT1SSyN9SMbCzHMkq?=
+ =?us-ascii?Q?TGz/11BKa9DF7mnHmYKFtdu9WB3OYoFePmt3iONfxbikEnuNm1flqBqYzCOg?=
+ =?us-ascii?Q?ZfHq+M9rIHgyjCxweFui0aBt1FlLWbr7+Q/eStc4PzngVreCzqWg4sruvONy?=
+ =?us-ascii?Q?+mdmfSaCnN4PcYuI0lbobXB6U2hp9B+j3PHvwUO0puCrS1WYjrEsNdzAf4GW?=
+ =?us-ascii?Q?jSK/zFs00FC8UX3nEOV5NvpdlMuyXokomhJpf4y+glMl82R46EH7l7O9isyZ?=
+ =?us-ascii?Q?OnJGxmoEIvUQ2AiMRPN6VyiKoksDTx3e/JS7X6GxUzdMqck/MykLj2ZRp0jj?=
+ =?us-ascii?Q?5/C7yZyElq/VOxJfRVhLHP0W3VeywtvGuc/PoNRaMejaWWEAjewSc2Bg7dzu?=
+ =?us-ascii?Q?DOnqP/P6kQwoY5TbFHH4oBn/J9hFEG4nEI5x3MT36cAJkB8YXguDTkmm+6Dx?=
+ =?us-ascii?Q?ZyvUebkWEU3wMP7qwqylEKyeTgFRYRsL7LpYKlKI?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54ebe539-c214-4455-cb5f-08dc3ce57fae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2024 07:25:56.6749
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oAVs6gfzK9NUjWD5DLeVBuXerMIBFuuVUZvdlPuo9qhNvFggSGTW4WoFgTlGwmoBXzoOTreOxZrnGjWRrNbXgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10246
 
-After commit 6326c26c1514 ("s390: convert various pgalloc functions to use
-ptdescs"), there are still some positions that use page->{lru, index}
-instead of ptdesc->{pt_list, pt_index}. In order to make the use of
-ptdesc->{pt_list, pt_index} clearer, it would be better to convert them
-as well.
+> From: David Lin
+> Sent: Thursday, February 29, 2024 11:53 AM
+> To: 'Francesco Dolcini' <francesco@dolcini.it>
+> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+> briannorris@chromium.org; kvalo@kernel.org; Pete Hsieh
+> <tsung-hsien.hsieh@nxp.com>
+> Subject: RE: [EXT] Re: [PATCH v8 1/2] wifi: mwifiex: add host mlme for cl=
+ient
+> mode
+>=20
+> > From: Francesco Dolcini <francesco@dolcini.it>
+> > Sent: Wednesday, February 28, 2024 1:53 AM
+> > To: David Lin <yu-hao.lin@nxp.com>
+> > Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > briannorris@chromium.org; kvalo@kernel.org; francesco@dolcini.it; Pete
+> > Hsieh <tsung-hsien.hsieh@nxp.com>
+> > Subject: [EXT] Re: [PATCH v8 1/2] wifi: mwifiex: add host mlme for
+> > client mode
+> >
+> > Caution: This is an external email. Please take care when clicking
+> > links or opening attachments. When in doubt, report the message using
+> > the 'Report this email' button
+> >
+> >
+> > On Fri, Dec 22, 2023 at 11:21:22AM +0800, David Lin wrote:
+> > > Add host based MLME to enable WPA3 functionalities in client mode.
+> > > This feature required a firmware with the corresponding V2 Key API
+> > > support. The feature (WPA3) is currently enabled and verified only
+> > > on IW416. Also, verified no regression with change when host MLME is
+> > > disabled.
+> > >
+> > > Signed-off-by: David Lin <yu-hao.lin@nxp.com>
+> >
+> > Currently this do not apply cleanly on wireless-next/main git tree, it
+> > should be rebased to that branch as v9 (the reason is your addition of
+> > fw_ready_extra_delay from a previous, now merged, patch).
+> >
+> > In general the patch looks good to me, however I am no expert on
+> > wireless driver or the related linux subsystem. I just have a couple
+> > of small comments that I would suggest address in v9 (given that you
+> > need to do it as a minimum to rebase your code).
+> >
+>=20
+> Yes. Will rebase and create patch v9.
+>=20
+> >
+> > > ---
+> > >  .../net/wireless/marvell/mwifiex/cfg80211.c   | 315
+> > ++++++++++++++++++
+> > >  drivers/net/wireless/marvell/mwifiex/cmdevt.c |  25 ++
+> > >  drivers/net/wireless/marvell/mwifiex/decl.h   |  22 ++
+> > >  drivers/net/wireless/marvell/mwifiex/fw.h     |  33 ++
+> > >  drivers/net/wireless/marvell/mwifiex/init.c   |   6 +
+> > >  drivers/net/wireless/marvell/mwifiex/join.c   |  66 +++-
+> > >  drivers/net/wireless/marvell/mwifiex/main.c   |  54 +++
+> > >  drivers/net/wireless/marvell/mwifiex/main.h   |  17 +
+> > >  drivers/net/wireless/marvell/mwifiex/scan.c   |   6 +
+> > >  drivers/net/wireless/marvell/mwifiex/sdio.c   |  13 +
+> > >  drivers/net/wireless/marvell/mwifiex/sdio.h   |   2 +
+> > >  .../net/wireless/marvell/mwifiex/sta_event.c  |  36 +-
+> > >  .../net/wireless/marvell/mwifiex/sta_ioctl.c  |   3 +-
+> > >  drivers/net/wireless/marvell/mwifiex/sta_tx.c |   9 +-
+> > >  drivers/net/wireless/marvell/mwifiex/util.c   |  80 +++++
+> > >  15 files changed, 673 insertions(+), 14 deletions(-)
+> > >
+> > > diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+> > > b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+> > > index 7a15ea8072e6..3cee1b58465e 100644
+> > > --- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+> > > +++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+> > > @@ -4202,6 +4208,302 @@ mwifiex_cfg80211_change_station(struct
+> > wiphy
+> > > *wiphy, struct net_device *dev,
+> >
+> > ...
+> >
+> > > +static int
+> > > +mwifiex_cfg80211_probe_client(struct wiphy *wiphy,
+> > > +                           struct net_device *dev, const u8 *peer,
+> > > +                           u64 *cookie) {
+> > > +     return -1;
+> >
+> > See my following comment on this
+> >
+> > > +}
+> > > +
+> > >  /* station cfg80211 operations */
+> > >  static struct cfg80211_ops mwifiex_cfg80211_ops =3D {
+> > >       .add_virtual_intf =3D mwifiex_add_virtual_intf, @@ -4347,6
+> > > +4649,16 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter
+> > *adapter)
+> > >                           "%s: creating new wiphy\n", __func__);
+> > >               return -ENOMEM;
+> > >       }
+> > > +     if (adapter->host_mlme_enabled) {
+> > > +             mwifiex_cfg80211_ops.auth =3D
+> > mwifiex_cfg80211_authenticate;
+> > > +             mwifiex_cfg80211_ops.assoc =3D
+> > mwifiex_cfg80211_associate;
+> > > +             mwifiex_cfg80211_ops.deauth =3D
+> > mwifiex_cfg80211_deauthenticate;
+> > > +             mwifiex_cfg80211_ops.disassoc =3D
+> > mwifiex_cfg80211_disassociate;
+> > > +             mwifiex_cfg80211_ops.disconnect =3D NULL;
+> > > +             mwifiex_cfg80211_ops.connect =3D NULL;
+> > > +             mwifiex_cfg80211_ops.probe_client =3D
+> > > +                     mwifiex_cfg80211_probe_client;
+> >
+> > Can you omit this one? You should get `-EOPNOTSUPP` for free with
+> > probe_client set to NULL. Am I wrong?
+> >
+>=20
+> Yes. You are right. Remove in patch v9.
+>=20
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
----
-v1 -> v2: fix build failure (cross compilation successful)
+This function must be hooked, otherwise AP mode can't work. I will hook thi=
+s function as before but return -EOPNOTSUPP instead.
+Patch v9 is almost done and will be submitted later. Thanks for your sugges=
+tion.
 
- arch/s390/include/asm/pgalloc.h |  4 ++--
- arch/s390/mm/gmap.c             | 38 +++++++++++++++++----------------
- arch/s390/mm/pgalloc.c          |  8 +++----
- 3 files changed, 26 insertions(+), 24 deletions(-)
-
-diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
-index 502d655fe6ae..7b84ef6dc4b6 100644
---- a/arch/s390/include/asm/pgalloc.h
-+++ b/arch/s390/include/asm/pgalloc.h
-@@ -23,9 +23,9 @@ unsigned long *crst_table_alloc(struct mm_struct *);
- void crst_table_free(struct mm_struct *, unsigned long *);
- 
- unsigned long *page_table_alloc(struct mm_struct *);
--struct page *page_table_alloc_pgste(struct mm_struct *mm);
-+struct ptdesc *page_table_alloc_pgste(struct mm_struct *mm);
- void page_table_free(struct mm_struct *, unsigned long *);
--void page_table_free_pgste(struct page *page);
-+void page_table_free_pgste(struct ptdesc *ptdesc);
- extern int page_table_allocate_pgste;
- 
- static inline void crst_table_init(unsigned long *crst, unsigned long entry)
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 8da39deb56ca..e43a5a3befd4 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -206,9 +206,11 @@ static void gmap_free(struct gmap *gmap)
- 
- 	/* Free additional data for a shadow gmap */
- 	if (gmap_is_shadow(gmap)) {
-+		struct ptdesc *ptdesc, *n;
-+
- 		/* Free all page tables. */
--		list_for_each_entry_safe(page, next, &gmap->pt_list, lru)
--			page_table_free_pgste(page);
-+		list_for_each_entry_safe(ptdesc, n, &gmap->pt_list, pt_list)
-+			page_table_free_pgste(ptdesc);
- 		gmap_rmap_radix_tree_free(&gmap->host_to_rmap);
- 		/* Release reference to the parent */
- 		gmap_put(gmap->parent);
-@@ -1348,7 +1350,7 @@ static void gmap_unshadow_pgt(struct gmap *sg, unsigned long raddr)
- {
- 	unsigned long *ste;
- 	phys_addr_t sto, pgt;
--	struct page *page;
-+	struct ptdesc *ptdesc;
- 
- 	BUG_ON(!gmap_is_shadow(sg));
- 	ste = gmap_table_walk(sg, raddr, 1); /* get segment pointer */
-@@ -1361,9 +1363,9 @@ static void gmap_unshadow_pgt(struct gmap *sg, unsigned long raddr)
- 	*ste = _SEGMENT_ENTRY_EMPTY;
- 	__gmap_unshadow_pgt(sg, raddr, __va(pgt));
- 	/* Free page table */
--	page = phys_to_page(pgt);
--	list_del(&page->lru);
--	page_table_free_pgste(page);
-+	ptdesc = page_ptdesc(phys_to_page(pgt));
-+	list_del(&ptdesc->pt_list);
-+	page_table_free_pgste(ptdesc);
- }
- 
- /**
-@@ -1377,7 +1379,7 @@ static void gmap_unshadow_pgt(struct gmap *sg, unsigned long raddr)
- static void __gmap_unshadow_sgt(struct gmap *sg, unsigned long raddr,
- 				unsigned long *sgt)
- {
--	struct page *page;
-+	struct ptdesc *ptdesc;
- 	phys_addr_t pgt;
- 	int i;
- 
-@@ -1389,9 +1391,9 @@ static void __gmap_unshadow_sgt(struct gmap *sg, unsigned long raddr,
- 		sgt[i] = _SEGMENT_ENTRY_EMPTY;
- 		__gmap_unshadow_pgt(sg, raddr, __va(pgt));
- 		/* Free page table */
--		page = phys_to_page(pgt);
--		list_del(&page->lru);
--		page_table_free_pgste(page);
-+		ptdesc = page_ptdesc(phys_to_page(pgt));
-+		list_del(&ptdesc->pt_list);
-+		page_table_free_pgste(ptdesc);
- 	}
- }
- 
-@@ -2058,19 +2060,19 @@ int gmap_shadow_pgt(struct gmap *sg, unsigned long saddr, unsigned long pgt,
- {
- 	unsigned long raddr, origin;
- 	unsigned long *table;
--	struct page *page;
-+	struct ptdesc *ptdesc;
- 	phys_addr_t s_pgt;
- 	int rc;
- 
- 	BUG_ON(!gmap_is_shadow(sg) || (pgt & _SEGMENT_ENTRY_LARGE));
- 	/* Allocate a shadow page table */
--	page = page_table_alloc_pgste(sg->mm);
--	if (!page)
-+	ptdesc = page_table_alloc_pgste(sg->mm);
-+	if (!ptdesc)
- 		return -ENOMEM;
--	page->index = pgt & _SEGMENT_ENTRY_ORIGIN;
-+	ptdesc->pt_index = pgt & _SEGMENT_ENTRY_ORIGIN;
- 	if (fake)
--		page->index |= GMAP_SHADOW_FAKE_TABLE;
--	s_pgt = page_to_phys(page);
-+		ptdesc->pt_index |= GMAP_SHADOW_FAKE_TABLE;
-+	s_pgt = page_to_phys(ptdesc_page(ptdesc));
- 	/* Install shadow page table */
- 	spin_lock(&sg->guest_table_lock);
- 	table = gmap_table_walk(sg, saddr, 1); /* get segment pointer */
-@@ -2088,7 +2090,7 @@ int gmap_shadow_pgt(struct gmap *sg, unsigned long saddr, unsigned long pgt,
- 	/* mark as invalid as long as the parent table is not protected */
- 	*table = (unsigned long) s_pgt | _SEGMENT_ENTRY |
- 		 (pgt & _SEGMENT_ENTRY_PROTECT) | _SEGMENT_ENTRY_INVALID;
--	list_add(&page->lru, &sg->pt_list);
-+	list_add(&ptdesc->pt_list, &sg->pt_list);
- 	if (fake) {
- 		/* nothing to protect for fake tables */
- 		*table &= ~_SEGMENT_ENTRY_INVALID;
-@@ -2114,7 +2116,7 @@ int gmap_shadow_pgt(struct gmap *sg, unsigned long saddr, unsigned long pgt,
- 	return rc;
- out_free:
- 	spin_unlock(&sg->guest_table_lock);
--	page_table_free_pgste(page);
-+	page_table_free_pgste(ptdesc);
- 	return rc;
- 
- }
-diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
-index 008e487c94a6..abb629d7e131 100644
---- a/arch/s390/mm/pgalloc.c
-+++ b/arch/s390/mm/pgalloc.c
-@@ -135,7 +135,7 @@ int crst_table_upgrade(struct mm_struct *mm, unsigned long end)
- 
- #ifdef CONFIG_PGSTE
- 
--struct page *page_table_alloc_pgste(struct mm_struct *mm)
-+struct ptdesc *page_table_alloc_pgste(struct mm_struct *mm)
- {
- 	struct ptdesc *ptdesc;
- 	u64 *table;
-@@ -147,12 +147,12 @@ struct page *page_table_alloc_pgste(struct mm_struct *mm)
- 		memset64(table, _PAGE_INVALID, PTRS_PER_PTE);
- 		memset64(table + PTRS_PER_PTE, 0, PTRS_PER_PTE);
- 	}
--	return ptdesc_page(ptdesc);
-+	return ptdesc;
- }
- 
--void page_table_free_pgste(struct page *page)
-+void page_table_free_pgste(struct ptdesc *ptdesc)
- {
--	pagetable_free(page_ptdesc(page));
-+	pagetable_free(ptdesc);
- }
- 
- #endif /* CONFIG_PGSTE */
--- 
-2.30.2
-
+> > > +     }
+> > >       wiphy->max_scan_ssids =3D MWIFIEX_MAX_SSID_LIST_LENGTH;
+> > >       wiphy->max_scan_ie_len =3D MWIFIEX_MAX_VSIE_LEN;
+> > >       wiphy->mgmt_stypes =3D mwifiex_mgmt_stypes;
+> >
+> > ...
+> >
+> > > diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+> > > b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+> > > index a2ad2b53f016..23639aacf092 100644
+> > > --- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+> > > +++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+> > > @@ -136,6 +136,7 @@ int mwifiex_fill_new_bss_desc(struct
+> > mwifiex_private *priv,
+> > >       const struct cfg80211_bss_ies *ies;
+> > >
+> > >       rcu_read_lock();
+> > > +     bss_desc->bss =3D bss;
+> > what is this change for? I was not able to understand it, nor to find
+> > any user of this bss parameter. This looks like an unrelated fix, but
+> > no code seems to be affected.
+> >
+> Yes. It will be removed in patch v9.
+>=20
+> >
+> > With these 2 comments addressed, please feel free to add to v9
+> >
+> > Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> >
+> >
+> > And thanks for this work!
+> > Francesco
