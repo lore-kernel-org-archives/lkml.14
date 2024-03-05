@@ -1,163 +1,138 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9430F18639
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 19:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850D1C01
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 19:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709667497; cv=none; b=RjmVFwcypKR5GG+nhmSy4LWTql2Y6bSpvlX3qnSU+drYE6O7Yh8VgXmMZTSxP+6L5POEwhbzz8y+NdIL2T9OiaPLicrZLnKf43ITUAUlFbkztC3alhYeqlps+hKCzW+rEA5E+BVgXRW3x+Z95blpWova1oaiZWzsvnyhMP8yA8A=
+	t=1709667511; cv=none; b=ChzladgKrOO05n0sQNlBY6/BVgHqJS4EhV5bruMIz4HqXYXYhIxKpBYP0Psr1O0OfPxzfjqGAcuWu6oKaltU3HJ8WZvErkFextXLwxgSykZXRJa9Y0a5ipEsOUuhh65FjDO511yqnILnze6oJ48IQZgLfdLAQcj8/RFBEaPwZFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709667497; c=relaxed/simple;
-	bh=yjCr221DADkA5bNqdiY3x3UI306XYd+UggCeyz1yRHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T5OvWFIrnmUbqjGQ/No8Uh1ToIK8YGh/xgbMmL8p3rps38uXHynFYbh05EDzTNboidT40AlQAVFdBE3TzQ4oMHTMfNB4+AEXoMs6ozAQapFY6vdHFZn32TEXRxcgH0p3hujUEZbI4fle9riAGThecblmL03vLn0XAVb6cBiuV1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dRdSLyFL; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709667511; c=relaxed/simple;
+	bh=P/X134+zoyg4s2Jot2r3ay2hXJWBr990/o9hJjnwWHg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kOorzsObCfc3EHDCZx81lq08H79yauQRtsE7Y7ZBhem8waovFC1Gd3gZ4hS3PV0lHT1Q5+8bPXSnSq610nHNYnSqPiDt0ro591OLy/25xW4UAlKHwGKOHqsyZdpmIz77e6uc+TvA5F7qur/Yq/rAK0bWDDNtA1VkZNDek6gkL2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=Bm6Put7D; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dRdSLyFL"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e622b46f45so2135347b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 11:38:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709667495; x=1710272295; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HA7mlV83NfUZx2uZSPlTtkihc76ZZ9iwfT6eqOr1MbM=;
-        b=dRdSLyFLWUwFE7SkDpzX3lGrbbKJCXv7b25F3N1BSaoWCN4AMTYspJp8sArHg3f5/f
-         WEbQVWXoqKTUVQH5c8n+pQ+q4NY4tjOaLmXs9wCNZ+6wP/3zNegJnX6qwfjukMtDfwb1
-         Qa4yKG0JnV+CBMpQeyUVWCkjnij8/Jwo/AqC4=
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="Bm6Put7D"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5dc949f998fso925401a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 11:38:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709667495; x=1710272295;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1709667509; x=1710272309;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HA7mlV83NfUZx2uZSPlTtkihc76ZZ9iwfT6eqOr1MbM=;
-        b=svmwkFuHl5FqaRBtPtKB06vcxblN6wNxrahKEydPs/j+4ub/0ykug0XDUlJl4rKIOO
-         8npVFWOPIOglKAmlcASdEDY9gRsfkmCa6bYPY1ivIdmixPmwkrqDxtHXoYk+r1ASapM6
-         q8EG0xTHD5e6dG/4uTOVUtvt61z0v+LnJ2PGyYMyLGx2HvI6Cgc1wUsi5FkKF17J9mTV
-         +C0oUkeq2R6Ov/boUrWD60vIHY8/ICQKTT4oLiFBEJbL6WHkIN7jIno/upQlSXCqFBCt
-         LZDLBEIwcT8GJWkfcLw9uGAh8Fbrpgr0CLlwQohhahxBrJPXkKCXxvXJf4ffkK1zzkxK
-         U1Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWu40TRc4pXgo+hW7bW8XNUamUKfMZjKjdc9Ar9Zh00WtmxNObM/WeHHhreSMfrq94xMvYcyExFw094//FbWrbiuh4RQf8d3ByPodf8
-X-Gm-Message-State: AOJu0YwXlrxglB5R+hOuruX3HXZmO47y+afbiLi9F+K4ZftKMV8Vfd6Y
-	6SMiAz9iDpGqYEOksnK9/TS7qZDtsIUI/78Wbfolxl+uwO/+LP0hunR/4Q+dEA==
-X-Google-Smtp-Source: AGHT+IHmm9bDdwsC5X6VFNK7Wqa2G5+ysPfNvANktTS1n2VdscWFowLK6SOVTNL9odXB+HtrCQCV2w==
-X-Received: by 2002:a05:6a20:d04e:b0:1a1:e41:979b with SMTP id hv14-20020a056a20d04e00b001a10e41979bmr3227567pzb.41.1709667494966;
-        Tue, 05 Mar 2024 11:38:14 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 11-20020a63104b000000b005d8e30897e4sm9348461pgq.69.2024.03.05.11.38.14
+        bh=AXfr5UMOCR8axjFfy2MwIX+Lu8p2xjOpYgSyxav7TR4=;
+        b=n7MIobCAZi3HUtBUouoxKEpMfdjARMRyoudG+Mqiw3G1yDpbgJRRqKGP7TNkcCWOQt
+         qz+0Vjq2jOZJT9UwIjpZfi9IMmYrYBFMpKMQkMUUVLyqubR+vBXgzFn5JQ3O+GNZbBrA
+         drnIydS4Kv2JU3EhGY1i/Ja2hSrUAdtS38/7z67L3WmRzBcb7UMDctFXKOXezNkUiWVx
+         61yk8DUjsL6L/rnSeAH1ZjBSMFs+BQyuJXgFaMLELfEPFV37tYdYwvbWcK1FsaS9FJOn
+         5qjC8eGFdZ9iRNq1UFSB4QUX7iknbgFFzIghmEclzb/dXZHa/sPlMbZZpLFq1TEbXzWm
+         2VQw==
+X-Gm-Message-State: AOJu0YwcMq8Zs4Ny4gf58e7xNn4t93bnJbpzyFuZaK6drHXdiOshdwvP
+	KLeK/Bs14UJMo7DcVjoE+7PtJK/FS3Dje/GmiWLML5ufbcF5ZvyKN1jzYDuSDqpcyw==
+X-Google-Smtp-Source: AGHT+IGANiNPnKLY5iyZLa/wKEafOGgKGJRk1y7HKsI81neSolD6PcsxMI6uPGL7vdzCegINIrcrLA==
+X-Received: by 2002:a17:90a:d315:b0:299:8ff:40c0 with SMTP id p21-20020a17090ad31500b0029908ff40c0mr9832092pju.28.1709667508954;
+        Tue, 05 Mar 2024 11:38:28 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id l22-20020a17090b079600b0029a8e5355fcsm10026978pjz.53.2024.03.05.11.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 11:38:14 -0800 (PST)
-Date: Tue, 5 Mar 2024 11:38:13 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
-	kernel@collabora.com, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Guenter Roeck <groeck@chromium.org>,
-	Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Mike Frysinger <vapier@chromium.org>
-Subject: Re: [PATCH v2] proc: allow restricting /proc/pid/mem writes
-Message-ID: <202403051135.708135A8@keescook>
-References: <20240301213442.198443-1-adrian.ratiu@collabora.com>
- <20240304-zugute-abtragen-d499556390b3@brauner>
- <202403040943.9545EBE5@keescook>
- <20240305-attentat-robust-b0da8137b7df@brauner>
- <202403050134.784D787337@keescook>
- <20240305-kontakt-ticken-77fc8f02be1d@brauner>
- <202403050211.86A44769@keescook>
- <20240305-brotkrumen-vorbild-9709ce924d25@brauner>
- <202403051033.9527DD75@keescook>
- <45d98-65e77400-5-31aa8000@248840925>
+        Tue, 05 Mar 2024 11:38:28 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1709667507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AXfr5UMOCR8axjFfy2MwIX+Lu8p2xjOpYgSyxav7TR4=;
+	b=Bm6Put7DwFpne8ftq8M9r7dESg4K8ewJy8R44hkVAqa4+CysF42OJxSBUNp4+DfsnTs5Hc
+	Bk2hkqBEvYxk57ky2DD9nZMOC1aLbMvttbDPgJypksIWtC+2+wub6T1hUrvso3kWKn2X5j
+	dS7Mq1lDRF1G/msObNq4IuqJKx7TSTnJUGFSQ9MsLPkmbvO1aXhSvt9md1j29EaW8gqino
+	5rYqYk7mWVwi1kV59p7aDBSWQIN8oXh1a/ruYAW+BTgLSqg8oe4KM5LBQnEqNwodwzibP/
+	Nx1k/AlO3oMP79HmAZeHNIk7s8U5I/9jJSH2HabpVBbiLBNZ7hTekYOG4rTuuw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Tue, 05 Mar 2024 16:38:25 -0300
+Subject: [PATCH] pcmcia: cs: make pcmcia_socket_class constant
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45d98-65e77400-5-31aa8000@248840925>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240305-class_cleanup-brodo-v1-1-9bac7b015641@marliere.net>
+X-B4-Tracking: v=1; b=H4sIALB052UC/x3MQQqAIBBA0avIrBPMCqqrRITpVAOh4lAE4d2Tl
+ m/x/wuMiZBhFC8kvIkp+IK6EmAP43eU5IpBK92qRnXSnoZ5sScaf0W5puCCbLpNm6Eeer0qKGV
+ MuNHzX6c55w+laSEGZQAAAA==
+To: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1858; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=P/X134+zoyg4s2Jot2r3ay2hXJWBr990/o9hJjnwWHg=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl53Swm6kHlOSIPs1UhLtSg+MdfWuMcywtuuEkJ
+ KuJv1brarGJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZed0sAAKCRDJC4p8Y4ZY
+ pl4aEACnZBgAW55z5Y4KPR71YvKK3gWZjKqPpvdj46dCyDV78AEV38YH9b7+Z1yu0xUNHFpatew
+ xJ19stvaBgbq2aAWkqBDcNVIbxpGhFX2ffAL0m6YD9tyDbX4d6KwUE+I0WZojTfvfjQEUwhpmCd
+ DZXg5MvqvQdk59Y2KhUoOKmhJ6XmJ5vZGHygo6zb84xsyPBkul5TWYiuAGbdUOgtAxw/7XyulQa
+ JQsJXLO+3KCo01yKGz+Sja7yOBqUSAkmRz4D4jwrMmxBVxkbtVus6JJG27TWHe4l300lJTa1foC
+ qtvDLi9NiTsCzzf4g6Vu4nZaVqJ+qPE47d/fK4869yRt+5HcZ0N/TnpbtkB+fdceRP1vWGeLxPG
+ jQmLyJcwV5VWoUjOfXHZ3ma1adFXpEoFs/nbIwD+ZjHUL/FSqOCtDanpYhDSEk6DPF4tnDZXtZJ
+ NJOLi3NYcjnQI8Aos7W1n1X6bbL00ftDm5heNziMAR+lThvbG+LL/2+y1TwqFSILSYy557yGcLm
+ YbHTsnqNFQVCG5mWH/iz/Gc2OI/MEDo+mzDGfuq96GwZOvG1TfVii2Ra7IOnC0mu52r8TL4X/3y
+ Zws4jXP6F9bXYyijs+gG/GGHAM7JYuAr3orFCFU4uq7CrZQ4IjY+wXl4U0orCl9/2hz8yN9/9qg
+ pR8H/1cHpAw4lVA==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Tue, Mar 05, 2024 at 07:34:34PM +0000, Adrian Ratiu wrote:
-> On Tuesday, March 05, 2024 20:37 EET, Kees Cook <keescook@chromium.org> wrote:
-> 
-> > On Tue, Mar 05, 2024 at 11:32:04AM +0100, Christian Brauner wrote:
-> > > On Tue, Mar 05, 2024 at 02:12:26AM -0800, Kees Cook wrote:
-> > > > On Tue, Mar 05, 2024 at 10:58:25AM +0100, Christian Brauner wrote:
-> > > > > Since the write handler for /proc/<pid>/mem does raise FOLL_FORCE
-> > > > > unconditionally it likely would implicitly. But I'm not familiar enough
-> > > > > with FOLL_FORCE to say for sure.
-> > > > 
-> > > > I should phrase the question better. :) Is the supervisor writing into
-> > > > read-only regions of the child process?
-> > > 
-> > > Hm... I suspect we don't. Let's take two concrete examples so you can
-> > > tell me.
-> > > 
-> > > Incus intercepts the sysinfo() syscall. It prepares a struct sysinfo
-> > > with cgroup aware values for the supervised process and then does:
-> > > 
-> > > unix.Pwrite(siov.memFd, &sysinfo, sizeof(struct sysinfo), seccomp_data.args[0]))
-> > > 
-> > > It also intercepts some bpf system calls attaching bpf programs for the
-> > > caller. If that fails we update the log buffer for the supervised
-> > > process:
-> > > 
-> > > union bpf_attr attr = {}, new_attr = {};
-> > > 
-> > > // read struct bpf_attr from mem_fd
-> > > ret = pread(mem_fd, &attr, attr_len, req->data.args[1]);
-> > > if (ret < 0)
-> > >         return -errno;
-> > > 
-> > > // Do stuff with attr. Stuff fails. Update log buffer for supervised process:
-> > > if ((new_attr.log_size) > 0 && (pwrite(mem_fd, new_attr.log_buf, new_attr.log_size, attr.log_buf) != new_attr.log_size))
-> > 
-> > This is almost certainly in writable memory (either stack or .data).
-> 
-> Mostly yes, but we can't be certain where it comes from, because
-> SECCOMP_IOCTL_NOTIF_RECV passes any addresses set by the
-> caller to the supervisor process.
-> 
-> It is a kind of "implementation defined" behavior, just like we
-> can't predict what the supervisor will do with the caller mem :)
-> 
-> > 
-> > > But I'm not sure if there are other use-cases that would require this.
-> > 
-> > Maybe this option needs to be per-process (like no_new_privs), and with
-> > a few access levels:
-> > 
-> > - as things are now
-> > - no FOLL_FORCE unless by ptracer
-> > - no writes unless by ptracer
-> > - no FOLL_FORCE ever
-> > - no writes ever
-> > - no reads unless by ptracer
-> > - no reads ever
-> > 
-> > Which feels more like 3 toggles: read, write, FOLL_FORCE. Each set to
-> > "DAC", "ptracer", and "none"?
-> 
-> I really like this approach because it provides a  mechanism
-> with maximum flexibility without imposing a specific policy.
-> 
-> What does DAC mean in this context? My mind jumps to
-> Digital to Analog Converter :)
+Since commit 43a7206b0963 ("driver core: class: make class_register() take
+a const *"), the driver core allows for struct class to be in read-only
+memory, so move the pcmcia_socket_class structure to be declared at build
+time placing it into read-only memory, instead of having to be dynamically
+allocated at boot time.
 
-Ah yes, sorry, this is Discretionary Access Control (which is my
-short-hand for saying "basic file permissions"). But I guess that's kind
-of not really true since the open() access checks are doing a
-"ptrace-able" check in addition to the file perms check.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/pcmcia/cs.c          | 2 +-
+ drivers/pcmcia/cs_internal.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> Shall I give it a try in v3?
+diff --git a/drivers/pcmcia/cs.c b/drivers/pcmcia/cs.c
+index b33be1e63c98..c75f55e1250a 100644
+--- a/drivers/pcmcia/cs.c
++++ b/drivers/pcmcia/cs.c
+@@ -892,7 +892,7 @@ static const struct dev_pm_ops pcmcia_socket_pm_ops = {
+ 
+ #endif /* CONFIG_PM */
+ 
+-struct class pcmcia_socket_class = {
++const struct class pcmcia_socket_class = {
+ 	.name = "pcmcia_socket",
+ 	.dev_uevent = pcmcia_socket_uevent,
+ 	.dev_release = pcmcia_release_socket,
+diff --git a/drivers/pcmcia/cs_internal.h b/drivers/pcmcia/cs_internal.h
+index 999332bc4378..02a83ca44e77 100644
+--- a/drivers/pcmcia/cs_internal.h
++++ b/drivers/pcmcia/cs_internal.h
+@@ -113,7 +113,7 @@ struct pcmcia_callback{
+ /* cs.c */
+ extern struct rw_semaphore pcmcia_socket_list_rwsem;
+ extern struct list_head pcmcia_socket_list;
+-extern struct class pcmcia_socket_class;
++extern const struct class pcmcia_socket_class;
+ 
+ int pccard_register_pcmcia(struct pcmcia_socket *s, struct pcmcia_callback *c);
+ struct pcmcia_socket *pcmcia_get_socket_by_nr(unsigned int nr);
 
-Yeah, though maybe see if Mike or Jann chime in over the next few days?
+---
+base-commit: 1bec7691b32710ea27741f0f8b00c1dc98d92930
+change-id: 20240305-class_cleanup-brodo-35f2a91982b0
 
--Kees
-
+Best regards,
 -- 
-Kees Cook
+Ricardo B. Marliere <ricardo@marliere.net>
+
