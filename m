@@ -1,170 +1,155 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1320E45005;
-	Tue,  5 Mar 2024 07:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37D845005;
+	Tue,  5 Mar 2024 07:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709622457; cv=none; b=gCQTGAtSIWQmbTeQz59z/gHRVqjeSdkkR8qrs8yh8LoWaBClwV32tFe5AFfGDZKxKp/uh0SCHFxkuCKLEOXB9A9MSR4sy4fFWxwPHv4PBcLh06bVJM717+/KqfF36FcwDU30Q3oCFRFcJA+kM6jcaXggt+36fn0hBZRlyJr0L9s=
+	t=1709622565; cv=none; b=gOzRmBZ7raIUvDMsBPGRspOmtZMeaISA6F8CWsaHj++liyY0nmAjKbnT2Kcdznz3LKV32UMTVG4+/rg7/SVAzDQczMRLwVY/YwFQvPKOtHdf94QH5HjDr3Uj/G7aSqJh57CE98zlXrwR50VzS9DUnx7hke7wB6C6qaERastk/YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709622457; c=relaxed/simple;
-	bh=DXNf5QUK3RsSzXyDuaAMlqnL7FiXPA4FMKLeC4mq8Kk=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ebkjlHe5fnD61SgKhg3M8ilzTcE4LIOYm80R+RCtZoasSdaUbPmVOpAorropgQHcZlQfKFrasmg/IFZGLuMuqgdGUlXW7Cv2htHZfIy/f8Yzk7f4pE1gBEqbPeBrbt42irz2+QYAz64yeAynwhjU3wSuJU644Uq9Td52embsj8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Tpmm70PXPz1Q9sl;
-	Tue,  5 Mar 2024 15:05:11 +0800 (CST)
-Received: from dggpemd200004.china.huawei.com (unknown [7.185.36.141])
-	by mail.maildlp.com (Postfix) with ESMTPS id 808D61402CE;
-	Tue,  5 Mar 2024 15:07:31 +0800 (CST)
-Received: from [10.174.179.24] (10.174.179.24) by
- dggpemd200004.china.huawei.com (7.185.36.141) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 5 Mar 2024 15:07:30 +0800
-Subject: Re: [PATCH 2/2] mm/readahead: limit sync readahead while too many
- active refault
-To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
-	<brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox
-	<willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
-References: <20240201100835.1626685-1-liushixin2@huawei.com>
- <20240201100835.1626685-3-liushixin2@huawei.com>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-From: Liu Shixin <liushixin2@huawei.com>
-Message-ID: <09e871aa-bbe6-47a8-4aea-e2a1674366a1@huawei.com>
-Date: Tue, 5 Mar 2024 15:07:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	s=arc-20240116; t=1709622565; c=relaxed/simple;
+	bh=iLJtfJRG3AykwJvs44aX4uKsd63Qlq1YiC9OCMcC31U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fOsAmeABDx/TZ9DfbtNODYS0Un2SuLv+rOvc80l/b696z3jk+HiI+HxtcVOQNHlO8/AOjb7p56Lmhu8bgX9FcQwrZabBaqxEbxRMx/6GtpC7ZBEMLRk94GPeJYh1IWRU2gfl8qsyjDy51B1E5TGaC3x1cA14JtmZSA1BcB9GIYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZZKx7aq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZZKx7aq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2FF9C433F1;
+	Tue,  5 Mar 2024 07:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709622564;
+	bh=iLJtfJRG3AykwJvs44aX4uKsd63Qlq1YiC9OCMcC31U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VZZKx7aqHcP6Ly6lUphCoXqjWxAvksTF4ak3Y8fCg05LhRVZROMttCjmSkrJcPcnJ
+	 okAGM0RW/vHxwON1IvSMvVooywP0aEW/hsroPF4j6lU3rps8BnLdky865zVkUtzR5t
+	 QrVzxGgVK9ZQotLuqbUiFf69AvuQBaFj4NmeQdfLi8nEZkOH7UQS9EFNia1cA2FCpK
+	 uZca0/iiOLhTvkxsdGHf5B7BA1UAE6Vu5YEemVMlLa72Lb1U959dPH1lpuRdX6i2Ta
+	 JPKXxsTxF9ua9qzQ5Mb4qhJrJ2TEH9H5uEC5JHX/BRYvIYz7klwHNcIggsxcLO78y9
+	 afRcy0E/4hghA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rhOva-000000002G7-0EMj;
+	Tue, 05 Mar 2024 08:09:30 +0100
+Date: Tue, 5 Mar 2024 08:09:30 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
+	quic_jackp@quicinc.com
+Subject: Re: [PATCH] usb: dwc3: qcom: Remove ACPI support from glue driver
+Message-ID: <ZebFKlae0a-deBKl@hovoldconsulting.com>
+References: <20240305042143.3455101-1-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240201100835.1626685-3-liushixin2@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemd200004.china.huawei.com (7.185.36.141)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305042143.3455101-1-quic_kriskura@quicinc.com>
 
-Hi, Jan, All,
+On Tue, Mar 05, 2024 at 09:51:43AM +0530, Krishna Kurapati wrote:
+> Minimal ACPI support was added to the Qualcomm DWC3 glue driver in order to
+> enable USB on SDM850 and SC8180X compute platforms. The support is still
+> functional, but unnoticed regressions in other drivers indicates that no
+> one actually booting any of platforms dependent on this implementation.
+> 
+> The functionality provides is the bare minimum and is not expected to aid
+> in the effort of bringing full ACPI support to the driver in the future.
+> 
+> Remove the ACPI code from the Qualcomm DWC3 glue driver to aid in the
+> implementation of improvements that are actually used like multiport and
+> flattening device tree.
 
-Please take a look at this patch again. Although this may not be a graceful way.
-
-I can't think any other way to fix the problem except using workingset.
-
-
-Thanks,
-
-On 2024/2/1 18:08, Liu Shixin wrote:
-> When the pagefault is not for write and the refault distance is close,
-> the page will be activated directly. If there are too many such pages in
-> a file, that means the pages may be reclaimed immediately.
-> In such situation, there is no positive effect to read-ahead since it will
-> only waste IO. So collect the number of such pages and when the number is
-> too large, stop bothering with read-ahead for a while until it decreased
-> automatically.
->
-> Define 'too large' as 10000 experientially, which can solves the problem
-> and does not affect by the occasional active refault.
->
-> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+With a simple lookup function that returns the ACPI index based on name
+this shouldn't be required to add multiport support even if it may
+simplify it slightly. But IIRC it would help more with the devicetree
+binding rework.
+ 
+> Commit message by Bjorn Andersson.
+> 
+> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
 > ---
->  include/linux/fs.h      |  2 ++
->  include/linux/pagemap.h |  1 +
->  mm/filemap.c            | 16 ++++++++++++++++
->  mm/readahead.c          |  4 ++++
->  4 files changed, 23 insertions(+)
->
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index ed5966a704951..f2a1825442f5a 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -960,6 +960,7 @@ struct fown_struct {
->   *      the first of these pages is accessed.
->   * @ra_pages: Maximum size of a readahead request, copied from the bdi.
->   * @mmap_miss: How many mmap accesses missed in the page cache.
-> + * @active_refault: Number of active page refault.
->   * @prev_pos: The last byte in the most recent read request.
->   *
->   * When this structure is passed to ->readahead(), the "most recent"
-> @@ -971,6 +972,7 @@ struct file_ra_state {
->  	unsigned int async_size;
->  	unsigned int ra_pages;
->  	unsigned int mmap_miss;
-> +	unsigned int active_refault;
->  	loff_t prev_pos;
->  };
+>  drivers/usb/dwc3/dwc3-qcom.c | 273 ++---------------------------------
+>  1 file changed, 11 insertions(+), 262 deletions(-)
+
+You should update the Kconfig entry for USB_DWC3_QCOM as well and drop
+the ACPI dependency.
+
+>  static int dwc3_qcom_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node	*np = pdev->dev.of_node;
+>  	struct device		*dev = &pdev->dev;
+>  	struct dwc3_qcom	*qcom;
+>  	struct resource		*res, *parent_res = NULL;
+
+You should drop parent_res as well.
+
+> -	struct resource		local_res;
+>  	int			ret, i;
+>  	bool			ignore_pipe_clk;
+>  	bool			wakeup_source;
+> @@ -825,14 +659,6 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, qcom);
+>  	qcom->dev = &pdev->dev;
 >  
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 2df35e65557d2..da9eaf985dec4 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -1256,6 +1256,7 @@ struct readahead_control {
->  	pgoff_t _index;
->  	unsigned int _nr_pages;
->  	unsigned int _batch_count;
-> +	unsigned int _active_refault;
->  	bool _workingset;
->  	unsigned long _pflags;
->  };
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 750e779c23db7..4de80592ab270 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3037,6 +3037,7 @@ loff_t mapping_seek_hole_data(struct address_space *mapping, loff_t start,
->  
->  #ifdef CONFIG_MMU
->  #define MMAP_LOTSAMISS  (100)
-> +#define ACTIVE_REFAULT_LIMIT	(10000)
->  /*
->   * lock_folio_maybe_drop_mmap - lock the page, possibly dropping the mmap_lock
->   * @vmf - the vm_fault for this fault.
-> @@ -3142,6 +3143,18 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  	if (mmap_miss > MMAP_LOTSAMISS)
->  		return fpin;
->  
-> +	ractl._active_refault = READ_ONCE(ra->active_refault);
-> +	if (ractl._active_refault)
-> +		WRITE_ONCE(ra->active_refault, --ractl._active_refault);
-> +
-> +	/*
-> +	 * If there are a lot of refault of active pages in this file,
-> +	 * that means the memory reclaim is ongoing. Stop bothering with
-> +	 * read-ahead since it will only waste IO.
-> +	 */
-> +	if (ractl._active_refault >= ACTIVE_REFAULT_LIMIT)
-> +		return fpin;
-> +
->  	/*
->  	 * mmap read-around
->  	 */
-> @@ -3151,6 +3164,9 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  	ra->async_size = ra->ra_pages / 4;
->  	ractl._index = ra->start;
->  	page_cache_ra_order(&ractl, ra, 0);
-> +
-> +	WRITE_ONCE(ra->active_refault, ractl._active_refault);
-> +
->  	return fpin;
->  }
->  
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index cc4abb67eb223..d79bb70a232c4 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -263,6 +263,10 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
->  			folio_set_readahead(folio);
->  		ractl->_workingset |= folio_test_workingset(folio);
->  		ractl->_nr_pages++;
-> +		if (unlikely(folio_test_workingset(folio)))
-> +			ractl->_active_refault++;
-> +		else if (unlikely(ractl->_active_refault))
-> +			ractl->_active_refault--;
+> -	if (has_acpi_companion(dev)) {
+> -		qcom->acpi_pdata = acpi_device_get_match_data(dev);
+> -		if (!qcom->acpi_pdata) {
+> -			dev_err(&pdev->dev, "no supporting ACPI device data\n");
+> -			return -EINVAL;
+> -		}
+> -	}
+> -
+>  	qcom->resets = devm_reset_control_array_get_optional_exclusive(dev);
+>  	if (IS_ERR(qcom->resets)) {
+>  		return dev_err_probe(&pdev->dev, PTR_ERR(qcom->resets),
+> @@ -860,41 +686,18 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 >  	}
 >  
->  	/*
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -
+> -	if (np) {
+> -		parent_res = res;
+> -	} else {
+> -		memcpy(&local_res, res, sizeof(struct resource));
+> -		parent_res = &local_res;
+> -
+> -		parent_res->start = res->start +
+> -			qcom->acpi_pdata->qscratch_base_offset;
+> -		parent_res->end = parent_res->start +
+> -			qcom->acpi_pdata->qscratch_base_size;
+> -
+> -		if (qcom->acpi_pdata->is_urs) {
+> -			qcom->urs_usb = dwc3_qcom_create_urs_usb_platdev(dev);
+> -			if (IS_ERR_OR_NULL(qcom->urs_usb)) {
+> -				dev_err(dev, "failed to create URS USB platdev\n");
+> -				if (!qcom->urs_usb)
+> -					ret = -ENODEV;
+> -				else
+> -					ret = PTR_ERR(qcom->urs_usb);
+> -				goto clk_disable;
+> -			}
+> -		}
+> -	}
+> +	parent_res = res;
+>  
+>  	qcom->qscratch_base = devm_ioremap_resource(dev, parent_res);
 
+And just use res here.
+
+>  	if (IS_ERR(qcom->qscratch_base)) {
+>  		ret = PTR_ERR(qcom->qscratch_base);
+> -		goto free_urs;
+> +		goto clk_disable;
+> }
+
+Looks good to me otherwise.
+
+Johan
