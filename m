@@ -1,164 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A854DA1F
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643B14DA1F;
+	Tue,  5 Mar 2024 09:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709629954; cv=none; b=omnY+3wgvX9pvnuuuoBMsQUY10M2JuFFzLiQf1g1v+vudyMF+8wvtdgMerUAn/OqtHPw1j4eBJ4zTdzwfbAi20kYWD4ZAzl3TdqWmMbQGc7NRXaQoVM4bNUTz4HicuGCuDAL3LurUoDCsbu7KlpwHim1q4X2U7GqiDUe/QnQiUQ=
+	t=1709630001; cv=none; b=ffZ7JDtOXu9dTItT/cYgUvBUdkuh5zHRTYpS9Zw/hfoLRaD+ikZBhv5j8LbzD/Jvmpeo6K2CuqLEwfPBKKgoiUHWZtzR1PREapbLDSSk7x1k6voAJ65J1RWNJNF94BuKWQnUTA0wi5WOQ1zqzGvw80q4akE3JSQwHz4lXGwB/j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709629954; c=relaxed/simple;
-	bh=/vl/qJEZLoUxWdvNHrOtVCRv+3oHUYGP/ZAyTG3DH9w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ipcbLNFncQKCP6JAiv6/oN9VeRprKoWHT1thHSDoI1FNdcqmogmgzd8iZShdveqkVwXW8hfVcS15PV65woAQHB5jZY7Ig73OV9sIS6iS8QqhngmfIHWenv5jaABsDcJsYAokUE9aO3NzSiNYnyMQ0/52ctAS2bauvHd3R9Y6kAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDnC6MM3; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDnC6MM3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709629952; x=1741165952;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=/vl/qJEZLoUxWdvNHrOtVCRv+3oHUYGP/ZAyTG3DH9w=;
-  b=KDnC6MM3C7XByxIUfjdSSk5GQCHm5ZJXsraBsUgVbZ/YehLj7n/Nn4v4
-   vxC+gzvrT9egXFflkeJczx9eUudOWnK4902zuFt+ErGdlO6jmlcfleyD5
-   1ddWukrtY4/q8J5N06r2omQLpvBn+b1T8wMIXE2xEiaYnvVG1atHlSMqe
-   FiQeguIj+d+c82m5jJNZKBSKjcaYxKQMBCoZMgk9v/tNt2JJ1VqjWIxWf
-   ZDOAIjegXVuYVxlpNc2ztuayTt5l3CvfGW9q2PyRdnUmqIQl9JPISrleL
-   F/n1lCDDaYb18Q8hAbx5Mug+6A/oLBlDk0g9/NPA0+6L6ABFVKVJzYmyb
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="14885726"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="14885726"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:12:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="9723387"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:12:27 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: David Hildenbrand <david@redhat.com>,  Ryan Roberts
- <ryan.roberts@arm.com>,  akpm@linux-foundation.org,  linux-mm@kvack.org,
-  chrisl@kernel.org,  yuzhao@google.com,  hanchuanhua@oppo.com,
-  linux-kernel@vger.kernel.org,  willy@infradead.org,  xiang@kernel.org,
-  mhocko@suse.com,  shy828301@gmail.com,  wangkefeng.wang@huawei.com,
-  Barry Song <v-songbaohua@oppo.com>,  Hugh Dickins <hughd@google.com>
-Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
- large folio
-In-Reply-To: <CAGsJ_4xUdqpWaYDrNV3Fbh=3cWyoDJz3AbWa=mfsKbka+MAVag@mail.gmail.com>
-	(Barry Song's message of "Tue, 5 Mar 2024 22:02:18 +1300")
-References: <20240304103757.235352-1-21cnbao@gmail.com>
-	<706b7129-85f6-4470-9fd9-f955a8e6bd7c@arm.com>
-	<37f1e6da-412b-4bb4-88b7-4c49f21f5fe9@redhat.com>
-	<CAGsJ_4yJ3yCyN_KgBO8W+jFx8RN6_JhS9OwX3FH6X_gpU7g62w@mail.gmail.com>
-	<804524c8-772c-42d0-93a5-90d77f13f304@redhat.com>
-	<CAGsJ_4yqUW46xyDtZ4X1wQZ2_0bLM85Euz2BufERa75Rg+gVyw@mail.gmail.com>
-	<87r0gp868d.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4xUdqpWaYDrNV3Fbh=3cWyoDJz3AbWa=mfsKbka+MAVag@mail.gmail.com>
-Date: Tue, 05 Mar 2024 17:10:32 +0800
-Message-ID: <87il2182nr.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1709630001; c=relaxed/simple;
+	bh=8yEMbLlsXSdgz1MHS6KtgJSRcTWMl7TRJdDzd5wFNtg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2OZvQAWZvdOwDOSCllBw2kXH6FK5Jg8rDrAPzGMOzoT6PvEn4qC07gvJI72kYVFbMM4sCQWXC5l4jmoBqT+Z3T8FmQpjTV7/k9fBiU2g1xDcxbADSmWz/9t2K34AVc70HjcnOljatjhU5cDuCIf4t7Tbs4N9fbLISVeMtkL+4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DD8BDA7;
+	Tue,  5 Mar 2024 01:13:55 -0800 (PST)
+Received: from [10.1.29.29] (e133047.arm.com [10.1.29.29])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 305C03F762;
+	Tue,  5 Mar 2024 01:13:16 -0800 (PST)
+Message-ID: <0dc6a839-2922-40ac-8854-2884196da9b9@arm.com>
+Date: Tue, 5 Mar 2024 09:13:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
+To: Bart Van Assche <bvanassche@acm.org>, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, juri.lelli@redhat.com, mingo@redhat.com,
+ rafael@kernel.org, dietmar.eggemann@arm.com, vschneid@redhat.com,
+ vincent.guittot@linaro.org, Johannes.Thumshirn@wdc.com,
+ adrian.hunter@intel.com, ulf.hansson@linaro.org, andres@anarazel.de,
+ asml.silence@gmail.com, linux-pm@vger.kernel.org,
+ linux-block@vger.kernel.org, io-uring@vger.kernel.org,
+ Qais Yousef <qyousef@layalina.io>
+References: <20240304201625.100619-1-christian.loehle@arm.com>
+ <86f0af00-8765-4481-9245-1819fb2c6379@acm.org>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <86f0af00-8765-4481-9245-1819fb2c6379@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Barry Song <21cnbao@gmail.com> writes:
+Hi Bart,
 
-> On Tue, Mar 5, 2024 at 8:55=E2=80=AFPM Huang, Ying <ying.huang@intel.com>=
- wrote:
->>
->> Barry Song <21cnbao@gmail.com> writes:
->>
->> > On Tue, Mar 5, 2024 at 10:15=E2=80=AFAM David Hildenbrand <david@redha=
-t.com> wrote:
->> >> > But we did "resolve" those bugs by entirely untouching all PTEs if =
-we
->> >> > found some PTEs were skipped in try_to_unmap_one [1].
->> >> >
->> >> > While we find we only get the PTL from 2nd, 3rd but not
->> >> > 1st PTE, we entirely give up on try_to_unmap_one, and leave
->> >> > all PTEs untouched.
->> >> >
->> >> > /* we are not starting from head */
->> >> > if (!IS_ALIGNED((unsigned long)pvmw.pte, CONT_PTES * sizeof(*pvmw.p=
-te))) {
->> >> >                     ret =3D false;
->> >> >                     atomic64_inc(&perf_stat.mapped_walk_start_from_=
-non_head);
->> >> >                     set_pte_at(mm, address, pvmw.pte, pteval);
->> >> >                     page_vma_mapped_walk_done(&pvmw);
->> >> >                     break;
->> >> > }
->> >> > This will ensure all PTEs still have a unified state such as CONT-P=
-TE
->> >> > after try_to_unmap fails.
->> >> > I feel this could have some false postive because when racing
->> >> > with unmap, 1st PTE might really become pte_none. So explicitly
->> >> > holding PTL from 1st PTE seems a better way.
->> >>
->> >> Can we estimate the "cost" of holding the PTL?
->> >>
->> >
->> > This is just moving PTL acquisition one or two PTE earlier in those co=
-rner
->> > cases. In normal cases, it doesn't affect when PTL is held.
->>
->> The mTHP may be mapped at the end of page table.  In that case, the PTL
->> will be held longer.  Or am I missing something?
->
-> no. this patch doesn't change when we release PTL but change when we
-> get PTL.
->
-> when the original code iterates nr_pages PTEs in a large folio, it will s=
-kip
-> invalid PTEs, when it meets a valid one, it will acquire PTL. so if it ge=
-ts
-> intermediate PTE values some other threads are modifying, it might
-> skip PTE0, or sometimes PTE0 and PTE1 according to my test. but
-> arriving at PTE2, likely other threads have written a new value, so we
-> will begin to hold PTL and iterate till the end of the large folio.
+On 05/03/2024 00:20, Bart Van Assche wrote:
+> On 3/4/24 12:16, Christian Loehle wrote:
+>> Pixel 6 ufs Android 14 (7 runs for because device showed some variance)
+>> [6605, 6622, 6633, 6652, 6690, 6697, 6754] sugov mainline
+>> [7141, 7173, 7198, 7220, 7280, 7427, 7452] per-task tracking
+>> [2390, 2392, 2406, 2437, 2464, 2487, 2813] sugov no iowait boost
+>> [7812, 7837, 7837, 7851, 7900, 7959, 7980] performance governor
+> 
+> Variance of performance results for Pixel devices can be reduced greatly
+> by disabling devfreq scaling, e.g. as follows (this may cause thermal
+> issues if the system load is high enough):
+> 
+>      for d in $(adb shell echo /sys/class/devfreq/*); do
+>     adb shell "cat $d/available_frequencies |
+>         tr ' ' '\n' |
+>         sort -n |
+>         case $devfreq in
+>             min) head -n1;;
+>             max) tail -n1;;
+>         esac > $d/min_freq"
+>     done
+> 
 
-Is there any guarantee that the mTHP will always be mapped at the
-beginning of the page table (PTE0)?  IIUC, mTHP can be mapped at PTE496.
-If so, with your patch, PTL will be held from PTE0 instead of PTE496 in
-some cases.
+Thanks for the hint!
 
---
+>> Showcasing some different IO scenarios, again all random read,
+>> median out of 5 runs, all on rk3399 with NVMe.
+>> e.g. io_uring6x4 means 6 threads with 4 iodepth each, results can be
+>> obtained using:
+>> fio --minimal --time_based --name=test --filename=/dev/nvme0n1 --runtime=30 --rw=randread --bs=4k --ioengine=io_uring --iodepth=4 --numjobs=6 --group_reporting | cut -d \; -f 8
+> 
+> So buffered I/O was used during this test? Shouldn't direct I/O be used
+> for this kind of tests (--buffered=0)? Additionally, which I/O scheduler
+> was configured? I recommend --ioscheduler=none for this kind of tests.
+
+Yes I opted for buffered I/O, I guess it's the eternal question if you
+should benchmark the device/stack (O_DIRECT) or be more realistic to actual
+use cases (probably). I opted for the latter, but since it's 4K randread
+on significantly large devices the results don't differ too much.
+
+
+>> - Higher cap is not always beneficial, we might place the task away
+>> from the CPU where the interrupt handler is running, making it run
+>> on an unboosted CPU which may have a bigger impact than the difference
+>> between the CPU's capacity the task moved to. (Of course the boost will
+>> then be reverted again, but a ping-pong every interval is possible).
+> 
+> In the above I see "the interrupt handler". Does this mean that the NVMe
+> controller in the test setup only supports one completion interrupt for
+> all completion queues instead of one completion interrupt per completion
+> queue? There are already Android phones and developer boards available
+> that support the latter, namely the boards equipped with a UFSHCI 4.0 controller.
+
+No, both NVMe test setups have one completion interrupt per completion queue,
+so this caveat doesn't affect them, higher capacity CPU is strictly better.
+The UFS and both mmc setups (eMMC with CQE and sdcard) only have one completion
+interrupt (on CPU0 on my setup).
+The difference between the CPU capacities on the Pixel6 is able to make up for this.
+The big CPU is still the best to run these single-threaded fio benchmarks on in terms
+of throughput.
+FWIW you do gain an additional ~20% (in my specific setup) if you move the ufshcd
+interrupt to a big CPU, too. Similarly for the mmc.
+Unfortunately the infrastructure is far from being there for the scheduler to move the
+interrupt to the same performance domain as the task, which is often optimal both in
+terms of throughput and in terms of power.
+I'll go looking for a stable testing platform with UFS as you mentioned, benefits of this
+patch will of course be greatly increased.
+Thanks!
+
 Best Regards,
-Huang, Ying
-
-> The proposal is that we directly get PTL from PTE0, thus we don't get
-> intermediate values for the head of nr_pages PTEs. this will ensure
-> a large folio is either completely unmapped or completely mapped.
-> but not partially mapped and partially unmapped.
->
->>
->> --
->> Best Regards,
->> Huang, Ying
->>
->>
->> > In normal cases, page_vma_mapped_walk will find PTE0 is present, thus =
-hold
->> > PTL immediately. in corner cases, page_vma_mapped_walk races with brea=
-k-
->> > before-make, after skipping one or two PTEs whose states are transferr=
-ing,
->> > it will find a present pte then acquire lock.
->> >
->> >> --
->> >> Cheers,
->> >>
->> >> David / dhildenb
->> >
-> Thanks
-> Barry
+Christian
