@@ -1,112 +1,113 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9310D5C5FD
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 12:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A165C602;
+	Tue,  5 Mar 2024 12:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709640928; cv=none; b=WQGfXMcwOYp1bwcmvR8wdaofVYSEB68H13r8T56V9eDYio5nz9UWovvkuj8G02Gz2lYqSHwEgF3rHxbl/iIBC0MAOUpemggGY6D6GLin/Dzkl+EW6mnwv3RbvNuJ5urNhRh85PxPGwjhAxaXMZ0bv08SLziUlBwbt+LKmK4N/KE=
+	t=1709640929; cv=none; b=gEim7u3C+F/+ublZrm1ZwFSZ2H+ILpOBF1A5zM+TenxqzcI8NuEP1Odj7a68ka++LDd/f+pKkDHqtHPc2CyUvcPKkiifC8twTnXDpuSgtmkonSYsHF98+id52mbsnzIHnaYD/o0PMqU4+cK3bgnFXs/+pFfkmCLBxJg0DZy2p3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709640928; c=relaxed/simple;
-	bh=DcnzC15jjmF1MCyU9zIkSIhTwgFm9vccBcmaQItPkJE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sIZGXaHRBypyYmuwgdnL8ERPMZUADW/G6snqb0axkkptlDi+Ka72RbxXtxiort7kESSdTMUzc7Sg2DnnyOw8t+RBJ6iQKBRsnIZ+swUtkAy5catculwPN3A673ksxMidS/hZXtNL2Ic76GHyhYw98vUx9A/ve4jUiqr0cSzO7Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZMb+mZMy; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709640929; c=relaxed/simple;
+	bh=8XVY4yDvTbI92l/7aGIsmQNytdvsX7b8EhXWeJNDsv8=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=bS7R6XMt7+spS6USlYWcRIQNALP1nVgMtlc4fjuU2PKjTqEmpR/ceKkUYvtfunfvW21PlL+knGAKRD3uYi9yYj/MKQXK5oEfHh1d+2Ifa69ccuCoBZtttmV/X6rQFxrYBZwCm3fnLb20YOZFmUmA3TBjfGFj1lKYAjekL+4nHAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qvDZjgOt; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZMb+mZMy"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso5609588276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 04:15:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709640923; x=1710245723; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZ5xx2edHD5FMmLecpHNeUGAP2uUzcBfz2t1dwA+19A=;
-        b=ZMb+mZMye31AX8BUxTkQi0P/LOw3S6FuUIQ7H0+F39vTNu2l7MQIO85lr2HMZjtB7q
-         shpCenLHdBUqe5PMUd8gUAVet5XkbHyovNHZAiRk4tGiJETpKxjNV5DkOHpILzwfC2jc
-         X1XQtgUKLgDjmUpDtTtRxmxY9cDxF8nIq1IlzKZGVJ2CLHU4GB0lhNRz0qmKD32llPXg
-         MoqBMRQSJywPXHJL+OVSkjVe8hSl537PvR1543TVNgfA3SP+zqSXpJvxuZHLgp1F0Ei+
-         nl6JNXv3eesRUmXBx231qvY2wgSZiHX5SKiLiPrJDYf8QQQ8PTpY5NytVWottJ+AofR2
-         qZCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709640923; x=1710245723;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jZ5xx2edHD5FMmLecpHNeUGAP2uUzcBfz2t1dwA+19A=;
-        b=jLVbN2h2mfiKdqvMh6FI5JLhflL4uFUwJX6ysLxoEya3Ief+zj9sMv24B3MrwikpDe
-         9PJYIxlo0ZC5iyt++tVvyFUs/hf6Z6xW96LjAsdM1HF++p0SR5iumPs2WvHrqP2eRIqV
-         rQWMDE+FFwpyYUYMYb6NK2HgGvqaDqy1vxMQjzqHTiACmLVcuEduj5cbe76Cs7KiNQPA
-         1DX8MQQkOHpi1mNvdDJ4PuJ17aZki+nhXlgGAPe4Erwz5H0xHmyQe86Ovlx5bxusqZ8g
-         +j1RgI8Sh0xjKOa3HSRkQZLCpODyBhFpkHePB6YKLJC19+sVO5eVwxiMHhZJNncSDbOT
-         kdUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVktjtl2Wm+flGDmduYW6WUeKYvdXJrR8GYGdAarGoKZrIiVVWFHF2N6HkD1DglTHEvu6ejWPewgEaXfPaCWgx1pXzaM5qIyUIi29yP
-X-Gm-Message-State: AOJu0YyAe5Ju8UCklxEGCXBk/cwFf0T2KHpcHB9uvOotz8eUzU5Y4jpF
-	qKb4NnTVlp9pmPTY6BNiMEkCYhAbfoIWh7SWc3488CL1srOCicduH52z+qozryipGwwtzrPCbvI
-	XvNn0/MpKw2AaWH3QktrapfDkmeet+uSsoiaijQ==
-X-Google-Smtp-Source: AGHT+IFRHrlt93okZ8pF8wCozXRKOrxXQZtOR31rF4Oxv2ktk0VBMY0lfxSqY9Tg9+i8KGWI6harXSX+rrTSNtu1DrM=
-X-Received: by 2002:a25:b91:0:b0:dc7:46b7:6d67 with SMTP id
- 139-20020a250b91000000b00dc746b76d67mr9606155ybl.33.1709640923661; Tue, 05
- Mar 2024 04:15:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qvDZjgOt"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 425C2x3L007898;
+	Tue, 5 Mar 2024 12:15:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : content-type : content-transfer-encoding :
+ mime-version; s=pp1; bh=2B5vC5/EsMpHo+R4RtClTfGr+IYp86B+aXqVoME+TRQ=;
+ b=qvDZjgOtR446fZ6q9smD4Dwrtw7aCimSQGxIHRYO354t2Al9/a3Gt/Mg+dRYf9rtyqVO
+ Kw8HyzWZTWSh9BKetx2ukrDddo/YDgOfx7yLPw4Bfa/PknXJwgu72xqe+lChPQ9zEFjl
+ YyCxxLW0AH0ExkRJCKhw4AackBSvesQqKxGXt0kwoBiv4s7NMnqMXKf7P6BRqcpaqY89
+ dsa2cVdfdJmMQ2ZHgPjnMLMe69TOW0N2zlm0C4U20kkDqzdYE7EEN/Cc/p/23nT+y3Pj
+ RZEePT3QCUEBVFQ2I4ecXYOrgNAW4bav1kRWKuMRydZKSj1LKAWB+E7w9HrUguuqKFDj hw== 
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wp3248dr4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Mar 2024 12:15:19 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 425A5gF4025387;
+	Tue, 5 Mar 2024 12:15:19 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmetyfhr4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Mar 2024 12:15:19 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 425CFGat30998952
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 5 Mar 2024 12:15:18 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 864A95806F;
+	Tue,  5 Mar 2024 12:15:16 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B9E458051;
+	Tue,  5 Mar 2024 12:15:16 +0000 (GMT)
+Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.160.159])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  5 Mar 2024 12:15:16 +0000 (GMT)
+Message-ID: <987924a8c1e3e4e99a483e432f1418518af0b7aa.camel@linux.ibm.com>
+Subject: [GIT PULL] integrity: subsystem update for v6.8-rcX
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel
+	 <linux-kernel@vger.kernel.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Date: Tue, 05 Mar 2024 07:15:15 -0500
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: z5zaDE47WWQw6Y0qibrKsr02IJuVICjp
+X-Proofpoint-ORIG-GUID: z5zaDE47WWQw6Y0qibrKsr02IJuVICjp
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305105623.3379-2-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20240305105623.3379-2-wsa+renesas@sang-engineering.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 5 Mar 2024 13:14:48 +0100
-Message-ID: <CAPDyKFr_GyWVXPbaeLf5hp_SKuRpr9sixhDQxoYBbFEU2qiJ-Q@mail.gmail.com>
-Subject: Re: [PATCH] mmc: tmio: comment the ERR_PTR usage in this driver
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>, 
-	linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-05_08,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
+ spamscore=0 phishscore=0 priorityscore=1501 clxscore=1015 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403050098
 
-On Tue, 5 Mar 2024 at 11:56, Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> It is not super obvious why the driver sometimes uses an ERR_PTR for the
-> current mrq. Explain why in comments.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Hi Linus,
 
-Applied for next, thanks!
+Here's a single fix to eliminate an unnecessary msg.
 
-Kind regards
-Uffe
+thanks,
 
+Mimi
 
-> ---
->  drivers/mmc/host/tmio_mmc_core.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
-> index c253d176db69..93e912afd3ae 100644
-> --- a/drivers/mmc/host/tmio_mmc_core.c
-> +++ b/drivers/mmc/host/tmio_mmc_core.c
-> @@ -972,6 +972,7 @@ static void tmio_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->                 return;
->         }
->
-> +       /* Disallow new mrqs and work handlers to run */
->         host->mrq = ERR_PTR(-EBUSY);
->
->         spin_unlock_irqrestore(&host->lock, flags);
-> @@ -1006,8 +1007,9 @@ static void tmio_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->                         "%s.%d: IOS interrupted: clk %u, mode %u",
->                         current->comm, task_pid_nr(current),
->                         ios->clock, ios->power_mode);
-> -       host->mrq = NULL;
->
-> +       /* Ready for new mrqs */
-> +       host->mrq = NULL;
->         host->clk_cache = ios->clock;
->
->         mutex_unlock(&host->ios_lock);
-> --
-> 2.43.0
->
+The following changes since commit 841c35169323cd833294798e58b9bf63fa4fa1de:
+
+  Linux 6.8-rc4 (2024-02-11 12:18:13 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/ tags/integrity-v6.8-fix
+
+for you to fetch changes up to 85445b96429057d87446bcb24ec0cac9ea9c7fdf:
+
+  integrity: eliminate unnecessary "Problem loading X.509 certificate" msg (2024-02-16 08:04:17 -0500)
+
+----------------------------------------------------------------
+integrity-v6.8-fix
+
+----------------------------------------------------------------
+Coiby Xu (1):
+      integrity: eliminate unnecessary "Problem loading X.509 certificate" msg
+
+ security/integrity/digsig.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
