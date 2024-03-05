@@ -1,110 +1,109 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E6F5CBD;
-	Tue,  5 Mar 2024 01:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FB617C6A
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 01:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709602584; cv=none; b=cmJysd9dK7SsDWxtkX4oQrK4g8VImgOV6cFhNVTAQ4nL4nP1nOKi7LRU0RskaleZvm/RmAkFA6wbwJ8wZ+yJ7/8dtOsN9YT/itbJiH/ISZ/ew5LxnWqoToef82NtLWyJj/LtNUqxki6YYK3sy2egjEFskL/7P19RvvVDWMmMouU=
+	t=1709602759; cv=none; b=jEMMnIVkMv4aCozcuodnQ/ezYMLxBtTtbDrB2D2qZFZodxQFyP3Eq+8Of70OyeUV8FIWyqIxrTZh/CMG8ws/9cywzs3zBZgyQys6JvalOqVfrS0Zcp8jIa2FYTJVohDN+iBLohw41HPMeNgrsGWfeeJW3j1FXDHUGe2m8Wtsxjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709602584; c=relaxed/simple;
-	bh=odJVN7Fd1V/o7yKree4ELR1BZzJe5u+sfi1HbW0lKdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R7fUszmFGLfXwrL2/+SWDO1WO8NetavJMiCJA59rJ7gkp07Z1S090AZ7wfgcpFCCa5jKFmV7ZHmwfFIyqbA1J6BLHetPzhz1unVrQBwApNHxLbuZrXv9M3zEFtG0HQ7/0tEbJgKfz7mjoAkH2aU1yl2g3if6d5PBY/hQ9LNVKbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=tioNCMft; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1709602759; c=relaxed/simple;
+	bh=eiU/1NcIOJEtkEHiA5OyoXSA8xSvI1Z67moJ09F+JIc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BgmXDjgLj5y2ExVvGKWm6jRUIsVlt3wlpFW3TeO4KrS7aRa1d77NBuKr+M+rPG+n3ozK0LGj90Bsq28jgZoq3L2WsRuvrFEkwvRqHhIek5xAd1P9WpUVy4vPA/v8lHRT4X/a6/R/jaPfA0b3QQFfpPZdtT0VS+hlXTL46DYJt4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PerJ+l1z; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="tioNCMft"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1709602581;
-	bh=odJVN7Fd1V/o7yKree4ELR1BZzJe5u+sfi1HbW0lKdE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tioNCMftE22BP1mKy8N0niZY1paXJTU+y0yjgGXs1ophlJZILlWKMRKqMsyWhGpdn
-	 YQP/B4wm3SMIlWrSdRW0zTioJt7atDkAbE1t/8MiYlpxo01EgEYHDPe34R67zTfoJB
-	 MWA8C2mDBKZnkCygzLjYpcvWsLD3pXMi70Z62nK8zWZX/5HJU6bpX+Un+YzISx1PkA
-	 w3MOA4WwS8Vb4TsCgLuRYWCT3ZIwEXHULg/OAl8VU8y5r0QauU7CS0MqBNg1hTxwnh
-	 GC97/wQSasSjxFdWltIdpDm7s4mqqmlE4hSbaqX7Ef9V6CneR3jn71ULHAZkPWnH+Y
-	 fe9+ra70aB/rw==
-Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TpdSj1hxlzfcV;
-	Mon,  4 Mar 2024 20:36:21 -0500 (EST)
-Message-ID: <e34628b6-fdb3-420f-8563-4cf91ad3a04b@efficios.com>
-Date: Mon, 4 Mar 2024 20:36:28 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PerJ+l1z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709602758; x=1741138758;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eiU/1NcIOJEtkEHiA5OyoXSA8xSvI1Z67moJ09F+JIc=;
+  b=PerJ+l1zz/QQE0AO1UB9d2Vxtvmd910J279dlUWvvcQNOP5iR9prdAPx
+   J+C3SG2IJpoYGCtG2W4VVypmUWtoR5uLf20O05bmeQisVMPVUw4wmDJJG
+   nyRuq7jZyzO8UQ5rZmWN2+OwZSHcD72mB8/rFOfJH9P/OU3WJI8/wgUn7
+   F7+2ZCAxvuzzGcaINvujXcvGTeASLMHlaLJiYyZyrzgTDgluBo/E1ht2m
+   mpVUokH+GLapC+C8IIVFZC1o2fyspZXcFaNSshs965L7nY9esES0OE4zW
+   Cso/NUbPn7rWG1WT/ZeXODQbeOKLYU3PPGPPUJGGdTAtkRtnRzFTx62re
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4286682"
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="4286682"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 17:39:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="13865421"
+Received: from allen-box.sh.intel.com ([10.239.159.127])
+  by orviesa004.jf.intel.com with ESMTP; 04 Mar 2024 17:39:14 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Eric Badger <ebadger@purestorage.com>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v3 0/5] iommu: Fix domain check on release
+Date: Tue,  5 Mar 2024 09:33:00 +0800
+Message-Id: <20240305013305.204605-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: Have trace_marker writes be just half of
- TRACE_SEQ_SIZE
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Sachin Sant <sachinp@linux.ibm.com>
-References: <20240304192710.4c99677c@gandalf.local.home>
- <469d31a7-f358-4547-bb17-0979b3515924@efficios.com>
- <20240304203516.45b7a551@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <20240304203516.45b7a551@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024-03-04 20:35, Steven Rostedt wrote:
-> On Mon, 4 Mar 2024 20:15:57 -0500
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> 
->> On 2024-03-04 19:27, Steven Rostedt wrote:
->>> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->>>
->>> Since the size of trace_seq's buffer is the max an event can output, have
->>> the trace_marker be half of the entire TRACE_SEQ_SIZE, which is 4K. That
->>> will keep writes that has meta data written from being dropped (but
->>> reported), because the total output of the print event is greater than
->>> what the trace_seq can hold.
->>
->> Defining the trace_mark limit in terms of "TRACE_SEQ_SIZE / 2"
->> seems backwards. It's basically using a define of the maximum
->> buffer size for the pretty-printing output and defining the maximum
->> input size of a system call to half of that.
->>
->> I'd rather see, in a header file shared between tracing mark
->> write implementation and output implementation:
->>
->> #define TRACING_MARK_MAX_SIZE	4096
->>
->> and then a static validation that this input fits within your
->> pretty printing output in the output implementation file:
->>
->> BUILD_BUG_ON(TRACING_MARK_MAX_SIZE + sizeof(meta data stuff...) > TRACE_SEQ_SIZE);
-> 
-> That's not the meta size I'm worried about. The sizeof(meta data) is the
-> raw event binary data, which is not related to the size of the event output.
-> 
->   # cd /sys/kernel/tracing
->   # echo hello > trace_marker
->   # cat trace
-> [..]
->             <...>-999     [001] .....  2296.140373: tracing_mark_write: hello
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->     This is the meta data that is added to trace_seq
+This is a follow-up to the discussion thread here:
 
-If this header has a known well-defined upper-limit length, then use
-that in the BUILD_BUG_ON().
+https://lore.kernel.org/linux-iommu/20240221154012.GC13491@ziepe.ca/
 
-Thanks,
+It fixes a NULL pointer dereference issue in the Intel iommu driver and
+strengthens the iommu core to possibly prevent similar failures in other
+iommu drivers.
 
-Mathieu
+There are two parts of this topic:
+[x] Introduce release_domain and fix a kernel NULL pointer dereference
+    issue in the intel iommu driver.
+[x] Follow-up patches to cleanup intel iommu driver.
 
-> 
-> -- Steve
-> -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+Best regards,
+baolu
+
+Change log:
+v3:
+ - Avoid global IOTLB and PASID cache invalidation in normal release
+   path to mitigate the impact on other devices.
+ - Comment and code refinements.
+
+v2:
+ - https://lore.kernel.org/linux-iommu/20240229094613.121575-1-baolu.lu@linux.intel.com/
+ - https://lore.kernel.org/linux-iommu/20240229094804.121610-1-baolu.lu@linux.intel.com/
+ - The scalable mode context entry should be removed in the release path
+   as it's not part of the blocking domain.
+
+v1: https://lore.kernel.org/linux-iommu/20240223051302.177596-1-baolu.lu@linux.intel.com/
+
+Lu Baolu (5):
+  iommu: Add static iommu_ops->release_domain
+  iommu/vt-d: Fix NULL domain on device release
+  iommu/vt-d: Setup scalable mode context entry in probe path
+  iommu/vt-d: Remove scalable mode context entry setup from attach_dev
+  iommu/vt-d: Remove scalabe mode in domain_context_clear_one()
+
+ include/linux/iommu.h       |   1 +
+ drivers/iommu/intel/pasid.h |   2 +
+ drivers/iommu/intel/iommu.c | 214 +++++++++++-------------------------
+ drivers/iommu/intel/pasid.c | 202 ++++++++++++++++++++++++++++++++++
+ drivers/iommu/iommu.c       |  19 +++-
+ 5 files changed, 283 insertions(+), 155 deletions(-)
+
+-- 
+2.34.1
 
