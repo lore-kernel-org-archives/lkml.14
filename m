@@ -1,170 +1,92 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3796356460
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923715813A;
+	Tue,  5 Mar 2024 08:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709629192; cv=none; b=Ruk+fTGnDPsGaKZojg1r5x3MEJEpCmtWSZ9vy9K9Wt+bLlBTl9+dEwRACEKIWE/c81CnIPkUr4txWiDTu0wKMZhRs9Ndszq0EtWTqpqD+f9SnogEIoxp7qsmZDXhz4DF5ltyPNhIm33m7l0zlX+20fCmTNTL4HvfYw++dZuV1SI=
+	t=1709629194; cv=none; b=awtfFBMxUBQO8ScHkfpy2jQV1uzgUUfMzI9VoDmRM4eaKgRYi2PdtBoAqz6SfEMdDYYh1Vep+M/bz9tfjZmNxyb6j88/u6wrdrauoraO5aWsoUfI8DTBghH5tW4JIgwOMndqEZmMG7nFfedXfIh5Qel2zKT456281iIcfFDzPzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709629192; c=relaxed/simple;
-	bh=1xnF40lCeTl2Fq3HZQkpBaNZnb2sADMKOS6Vo+/oJd8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TzI5VE+6V/LwXMLcNTnzotTR3ywe9AEZrgsfHuyD/zZfxtmZPlKq4AAYKQLH7EGJKnYhYs/A/SRL6GFzPvBisRhZ0L8oSUbTKtrypfCvFo3VcvfKYbQyax5APfGHarOWTRDQIZj7NeUoGYnZ2iEfQ3rYhlPnvMBR2U51rxpK9U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=aqs8qV37; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1709629194; c=relaxed/simple;
+	bh=XbombLgpeTpgZvWPzyytQgy9Bb7OJQiVvwNOlRi2GNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HSbIftkiwDV5uBca/P3IEKlZXN0Pz/APEcj+sshdsN3YFTz0lqXJtNFCJ5ld0Ljp/szqRyF5CA5k4WP3Nk+oT7eqfUf6VEhtoorFQzMhjR69pxmJ9kHh+BDgrpJIO1nySu/28s7+t3r1q8XSXh+6TBTnH+WEcWOlYNTlnzCc/+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IME+OWbY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="aqs8qV37"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4515f8e13cso257818266b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 00:59:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1709629188; x=1710233988; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ATfCxZ0IifVoQF3dNCoyZLQIGDsbM/UfOW1XioKp6uI=;
-        b=aqs8qV37FpCFMqI/Pldi5QH437/ldcX2Komg1hjfA3+ZQscJ9XQ1sxFEqlPVPR2WDh
-         cXEqJbnlWT9gTuXPeiMVtx97lqk/G8XxA3R/SSr8k0zZa84RCByLDoOfNKXfabLtL08y
-         j3KamnTueYRx7xvWT0I29Kf7Y2RFxBr50djrkMtDU1AteUDFD3TTNj0Ea2g/vnKq3q4B
-         j4rzZKsQb6gfK7iBRqt0pcVMDdq77irrlWcwqNu1wyRsCQ5HxVoN/VXdeirdWmSzarqT
-         HbNOrdse409ai15OsqNll40J2b1EdjQo8T1cj5N9pTmQu5AQxw0l7XLV0qi1gmX1HxTf
-         90Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709629188; x=1710233988;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ATfCxZ0IifVoQF3dNCoyZLQIGDsbM/UfOW1XioKp6uI=;
-        b=nd/pdMWBgjiemT1+GmpbbNFs1rnvByCY1UiBNrhr0UcDbsfkwMmWdoPBCThfRiGloH
-         NVtUrYql0X4tcTBZQZ3FAkgcpkxqzlqBpgGhuV6PzLqd0TanxB8U+UBcF0YI/4CpOhSU
-         paIaRTbs8lPLlqmX316nMzpDG03uRRM7RsugR/qTsf/sjyZxt3YNxy7hOOHPNavcGNOp
-         KEGbxmJEQ+Lfe+YncZPJFnUvokV4D/1r59sp6Jnh56z3KiuArzwEjWBM6xRMcGRi4X+3
-         Ef7FwXbpfo0IhAVnYTr+I2mTUm87KqV/D14AkL3P/k77n3nXaLBGUXNIcmViAHzTkmdP
-         q1gA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNEj2BQPyhTmex4NDQnThi907nvGgnlEnHlNX3YohuXMBSzfqhtX6wmtTt5vD4uZRl42p2z5O849let6owaeAgSWiOWNtURq9jSJ+A
-X-Gm-Message-State: AOJu0YyS26vTqvH+4lOem2B7WDphYYGwtQKH84hYaFIBpfgqbnCdfVG0
-	oWJXs57sFxupND9UuUU6COfa+IqBvVb88S9aX+zyZ7+2L+UTsLtzuxlBglwM2rs=
-X-Google-Smtp-Source: AGHT+IGDWjdTWBhp9yoamhZMNLezFfIn6Lq1nEJWjHZkb5MGsCgGfbPtzgnfRK1QoTBK5gAAf0Xdmg==
-X-Received: by 2002:a17:907:20d9:b0:a44:1b98:1829 with SMTP id qq25-20020a17090720d900b00a441b981829mr8277971ejb.57.1709629188722;
-        Tue, 05 Mar 2024 00:59:48 -0800 (PST)
-Received: from raven.blarg.de (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id gs4-20020a170906f18400b00a449d12cdc5sm4453005ejb.119.2024.03.05.00.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 00:59:47 -0800 (PST)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: willy@infradead.org,
-	sfr@canb.auug.org.au,
-	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v3 12/14] linux/mm.h: move is_vmalloc_addr() to mm/vmalloc_addr.h
-Date: Tue,  5 Mar 2024 09:59:17 +0100
-Message-Id: <20240305085919.1601395-13-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240305085919.1601395-1-max.kellermann@ionos.com>
-References: <20240305085919.1601395-1-max.kellermann@ionos.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IME+OWbY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2422C433F1;
+	Tue,  5 Mar 2024 08:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709629194;
+	bh=XbombLgpeTpgZvWPzyytQgy9Bb7OJQiVvwNOlRi2GNs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IME+OWbYznnhkduaofNgN4kH47icMXWIV0vPIFW9ILLoVZ4mokj3av1HVzKc0IvOS
+	 RJA0HnJpq9HZBriwt7croKiHx9Whw8HUbkSD1M5zKNc/ZlZ/u9/XqYLQ3gsOPiaEpy
+	 dom/JavO+Oh38iTKYwOANeEbdqoow8ORCJGy/GgzHLjLbuKl4w16AF0nrIgspbfjMU
+	 XaKFv/TORv2kaiUAw2eUTjCxJSyosOnfUG0byxI48blOrVZM0hRt0IWo7Mo7C96oAz
+	 lx/EkJQdf7coy39v66B0LaSHLxnA/esEaO/hV5YNBHsRbESLIb8M99d3kBbpxt9JxE
+	 YbZA/JUoIrKxQ==
+Date: Tue, 5 Mar 2024 09:59:47 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Adrian Ratiu <adrian.ratiu@collabora.com>, 
+	linux-fsdevel@vger.kernel.org, kernel@collabora.com, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Guenter Roeck <groeck@chromium.org>, 
+	Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Mike Frysinger <vapier@chromium.org>
+Subject: Re: [PATCH v2] proc: allow restricting /proc/pid/mem writes
+Message-ID: <20240305-attentat-robust-b0da8137b7df@brauner>
+References: <20240301213442.198443-1-adrian.ratiu@collabora.com>
+ <20240304-zugute-abtragen-d499556390b3@brauner>
+ <202403040943.9545EBE5@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202403040943.9545EBE5@keescook>
 
-This is needed to eliminate linux/dma-mapping.h's dependency on
-linux/mm.h.
+> > Uhm, this will break the seccomp notifier, no? So you can't turn on
+> > SECURITY_PROC_MEM_RESTRICT_WRITE when you want to use the seccomp
+> > notifier to do system call interception and rewrite memory locations of
+> > the calling task, no? Which is very much relied upon in various
+> > container managers and possibly other security tools.
+> > 
+> > Which means that you can't turn this on in any of the regular distros.
+> 
+> FWIW, it's a run-time toggle, but yes, let's make sure this works
+> correctly.
+> 
+> > So you need to either account for the calling task being a seccomp
+> > supervisor for the task whose memory it is trying to access or you need
+> > to provide a migration path by adding an api that let's caller's perform
+> > these writes through the seccomp notifier.
+> 
+> How do seccomp supervisors that use USER_NOTIF do those kinds of
+> memory writes currently? I thought they were actually using ptrace?
+> Everything I'm familiar with is just using SECCOMP_IOCTL_NOTIF_ADDFD,
+> and not doing fancy memory pokes.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- include/linux/mm.h              | 25 +------------------------
- include/linux/mm/vmalloc_addr.h | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 24 deletions(-)
- create mode 100644 include/linux/mm/vmalloc_addr.h
+For example, incus has a seccomp supervisor such that each container
+gets it's own goroutine that is responsible for handling system call
+interception.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 07262ae43c5d..80fc7df2856a 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -9,6 +9,7 @@
- #include <linux/mm/page_address.h>
- #include <linux/mm/page_section.h>
- #include <linux/mm/pfmemalloc.h>
-+#include <linux/mm/vmalloc_addr.h>
- #include <linux/errno.h>
- #include <linux/mmdebug.h>
- #include <linux/gfp.h>
-@@ -1086,30 +1087,6 @@ enum {
- int region_intersects(resource_size_t offset, size_t size, unsigned long flags,
- 		      unsigned long desc);
- 
--/* Support for virtually mapped pages */
--struct page *vmalloc_to_page(const void *addr);
--unsigned long vmalloc_to_pfn(const void *addr);
--
--/*
-- * Determine if an address is within the vmalloc range
-- *
-- * On nommu, vmalloc/vfree wrap through kmalloc/kfree directly, so there
-- * is no special casing required.
-- */
--#ifdef CONFIG_MMU
--extern bool is_vmalloc_addr(const void *x);
--extern int is_vmalloc_or_module_addr(const void *x);
--#else
--static inline bool is_vmalloc_addr(const void *x)
--{
--	return false;
--}
--static inline int is_vmalloc_or_module_addr(const void *x)
--{
--	return 0;
--}
--#endif
--
- /*
-  * How many times the entire folio is mapped as a single unit (eg by a
-  * PMD or PUD entry).  This is probably not what you want, except for
-diff --git a/include/linux/mm/vmalloc_addr.h b/include/linux/mm/vmalloc_addr.h
-new file mode 100644
-index 000000000000..86ad2dc94960
---- /dev/null
-+++ b/include/linux/mm/vmalloc_addr.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MM_VMALLOC_ADDR_H
-+#define _LINUX_MM_VMALLOC_ADDR_H
-+
-+#include <linux/types.h> // for bool
-+
-+struct page;
-+
-+/* Support for virtually mapped pages */
-+struct page *vmalloc_to_page(const void *addr);
-+unsigned long vmalloc_to_pfn(const void *addr);
-+
-+/*
-+ * Determine if an address is within the vmalloc range
-+ *
-+ * On nommu, vmalloc/vfree wrap through kmalloc/kfree directly, so there
-+ * is no special casing required.
-+ */
-+#ifdef CONFIG_MMU
-+extern bool is_vmalloc_addr(const void *x);
-+extern int is_vmalloc_or_module_addr(const void *x);
-+#else
-+static inline bool is_vmalloc_addr(const void *x)
-+{
-+	return false;
-+}
-+static inline int is_vmalloc_or_module_addr(const void *x)
-+{
-+	return 0;
-+}
-+#endif
-+
-+#endif /* _LINUX_MM_VMALLOC_ADDR_H */
--- 
-2.39.2
+If a container is started the container runtime connects to an AF_UNIX
+socket to register with the seccomp supervisor. It stays connected until
+it stops. Everytime a system call is performed that is registered in the
+seccomp notifier filter the container runtime will send a AF_UNIX
+message to the seccomp supervisor. This will include the following fds:
 
+- the pidfd of the task that performed the system call (we should
+  actually replace this with SO_PEERPIDFD now that we have that)
+- the fd of the task's memory to /proc/<pid>/mem
+
+The seccomp supervisor will then perform the system call interception
+including the required memory reads and writes.
+
+There's no ptrace involved. That was the whole point of the seccomp
+notifier. :)
