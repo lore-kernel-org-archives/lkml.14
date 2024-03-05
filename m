@@ -1,96 +1,126 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E6E29CF3;
-	Tue,  5 Mar 2024 03:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A6F405DC
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 03:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709611101; cv=none; b=trEPgd9+Im1QcGc4bdXjyGXfh7MRrrcvAyGrk4GGQ1mHI/Dl6AaDn54KPfmw0ZV3/SK1CXV0lfQId4rVGH2VdGZjUqKCKUUQW/wSKPiosIpVoKvm6VOVQ9gVhUdb5A9B48SJOa7wJVPiqfaNUIOU5PNhMXxk5YOekFAkXckZrAQ=
+	t=1709611142; cv=none; b=Apa8xRCbwPQumJJpwvq6/x9KbZ5RVIag/i5Tk95+gqiN7sH6p3mN0POcDmmmdizovgDWF832QQb8zuc8tbgE409tLPRkZYJWj31bNofk1KZFlgSjA0fl6W5dzcex3k9pjUoyZzntSGQPbDzEzWpOKV3zNABEPBl+80nnijCw4jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709611101; c=relaxed/simple;
-	bh=/ewHYUJ3YLGaIZEIYqXd2+CArmnmPZOCHS4dCKsHWxA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FBMRxa/2nn8xAEJn+XI8NGshEdyEleA9/nOBx9Q6uUFpfFCar79dWE7qifKJd/+UK1jxLd9uBpt2dhpqx0W5eDCTBaILmD6erMb9lRwfjluOXH/B0eTqaPOpy3XY4GOOrn33NOqip3hoCoiAgRCaB9W8hJxx2FFXY/drhD1SnLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RetoxQ3P; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709611142; c=relaxed/simple;
+	bh=+cOgSZtXjjMtnKVw1LPuAiZ6Mn8UevCnRyLJXg+DB5E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pkRd5Lq+hbtxAmQl2MwD9bqPVcnjTNPA74eExNBMv77o0esUYJaJC4kqGIqyqpoEyFPkMBvDJRU/UgOzSaelK5R9GKiC6Gny6MPmXEFDH1aRXd0c4pcGmPz+lkxw3TUyxndV9Eo7YCzOG+/ZrIMNKQUJ0AvPaOw9ExhmCOvQuZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=JZ+sQf8I; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RetoxQ3P"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c8060a8489so230155339f.0;
-        Mon, 04 Mar 2024 19:58:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709611098; x=1710215898; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvpUYcfwUzbBslhqAs1XVtkNLO8M/CQ6n2J0d2KVjvM=;
-        b=RetoxQ3PibEwyar/La/QnApCxczHP4MD1wgnZoaiIjyG4eLZDdx3tRHLQ0bUMvXfi1
-         EUQquD4VGH3rBiafaTLGADej27GJpatDtYm2EPnNkTZYuhJtgZqLt5gkqm60bqeNhJks
-         rzM6ZjHp/iU3RfJgmZgbPGeGzCgUoEE16aqTXlDMbi8aj9lnEj5Ogjx/c+fDCwA2ELOs
-         jhdyxEdEUlX+z/QfOSLH4ubaomhalwMuIOGJBek7NkIKaYBtJIU33SWBPz9W9gM3whwO
-         Unp9ouzgglvjfzq5na+Xn9x+miVMgYds/haRH7X9+G9sRSbL9c5qyv8w7fBNXNMrOrP7
-         EofQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709611098; x=1710215898;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IvpUYcfwUzbBslhqAs1XVtkNLO8M/CQ6n2J0d2KVjvM=;
-        b=ezyJuagE984mpNcXA6Y3eDFnyg8qWT/xTIaQCVDY6rIYeS5ogmVYDzvx9vy2qTIE8h
-         G4CT7uIhEgnPk0SIjnVI+Nk4aMEDk8P4jBDPEm6ijCMQwtSNcsRyfWgXay4YCfF7hWHy
-         MgiX/x5Y7xsHpc3MgXRg/87y+kJSN3ZrgEqBWZxBsRZJ/5YH0lNCgtQNAKVzpugxQBGu
-         wUNNeM0oflBF8l4beEgM8k4AB7nLb6RHERFea3r3My+ZLGoqNxeRJpXzoXbdE6x2gYZI
-         z5LM22xjMhLidfPCyYSUQVGSCKRXPel3/QbqGhEkFxGMHmEwwZevTvJv+FdDySgKinhs
-         4NKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUH9PPZecHlMc44qYZLxQOTS9ApQCvvQLbyTPUbKa4OMOIu3Yvvi/gX/dgSXfofoaTX52FIWGpMMKrF0WebA2CwOC+FNjifDRUUpcT3
-X-Gm-Message-State: AOJu0YyQpooZmPha4UT/+H+HBhaFHyZdgWDczN7hU/F6Eorwz65WDdm+
-	uS6UltqOxghMH3EFQ/kR29BQujUxEv7IkZr9FnUFaMcCVCnf/Awgfre8yrtWFLy9wg==
-X-Google-Smtp-Source: AGHT+IEJKLF/uQABIS0lxPXhnRg7SYmxuoAzCktXTURapooOv57T1rsw6Y9kbqx9mjd8ZoE5enI2cA==
-X-Received: by 2002:a05:6602:97:b0:7c8:30cb:10a4 with SMTP id h23-20020a056602009700b007c830cb10a4mr8789320iob.1.1709611098549;
-        Mon, 04 Mar 2024 19:58:18 -0800 (PST)
-Received: from aford-System-Version.lan ([2601:447:d002:5be:5872:22b6:b680:a683])
-        by smtp.gmail.com with ESMTPSA id g10-20020a056638060a00b004748293c1fasm2639496jar.70.2024.03.04.19.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 19:58:18 -0800 (PST)
-From: Adam Ford <aford173@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: aford@beaconembedded.com,
-	Adam Ford <aford173@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: interrupt-controller: fsl,irqsteer: Allow Power Domains
-Date: Mon,  4 Mar 2024 21:58:13 -0600
-Message-ID: <20240305035814.74087-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="JZ+sQf8I"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id EBFB12C0191;
+	Tue,  5 Mar 2024 16:58:57 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1709611137;
+	bh=jv/qZKUBNtFx0wjDYe7udNJ1VJ7C8qUMETi24rpmi5U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JZ+sQf8IkMImYFNUjBSxpyFSJcv5YsSMABU8wqRukBTLo+A6R0N1YlLEzmIxXMH+w
+	 ibkIgUjRV9QwgjlrZ9kce/UECwwt6pz9X7GZsbaPu1wcPBLa49r+c+3G9VhkfJ77Q8
+	 uHeyQqJMoW/qmILnVhpChGuYmNMocXQcbHgOIyy16vRkZnz12RHIve3Go6mBVFaheS
+	 ktLaXlxNPOUCbuetk0L/UMWh1g2xsMvLpgvbTXEfttv+aCl5J0LQb53akg3okF5i28
+	 OVhzlw6YPRcO47qHgM1I2vkPRNRzzzaQKdLjtWBMcPlE6iqoBFQLyZ518SK66ik7DM
+	 +U1FEKQQta5zw==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B65e698810003>; Tue, 05 Mar 2024 16:58:57 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id B376513EE85;
+	Tue,  5 Mar 2024 16:58:57 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+	id AFB3728084D; Tue,  5 Mar 2024 16:58:57 +1300 (NZDT)
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: andy@kernel.org,
+	geert@linux-m68k.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	andrew@lunn.ch,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	lee@kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-leds@vger.kernel.org,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v4 3/3] ARM: dts: marvell: Add 7-segment LED display on x530
+Date: Tue,  5 Mar 2024 16:58:52 +1300
+Message-ID: <20240305035853.916430-4-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240305035853.916430-1-chris.packham@alliedtelesis.co.nz>
+References: <20240305035853.916430-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65e69881 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=K6JAEmCyrfEA:10 a=Eze4_Z_RUzIZFoL9sA8A:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-The i.MX8MP HDMI irqsteer depends on the HDMI power domain, so add
-power-domains to the list of items which may be in the device tree.
+The Allied Telesis x530 products have a 7-segment LED display which is
+used for node identification when the devices are stacked. Represent
+this as a gpio-7-segment device.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-index 20ad4ad82ad6..7ccbb96434a4 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-@@ -59,6 +59,9 @@ properties:
-       u32 value representing the number of input interrupts of this channel,
-       should be multiple of 32 input interrupts and up to 512 interrupts.
- 
-+  power-domains:
-+    maxItems: 1
+Notes:
+    Changes in v4:
+    - Use correct compatible name in commit message
+    Changes in v3:
+    - Use compatible =3D "gpio-7-segment" as suggested by Rob
+    Changes in v2:
+    - Use compatible =3D "generic-gpio-7seg" to keep checkpatch.pl happy
+
+ arch/arm/boot/dts/marvell/armada-385-atl-x530.dts | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/marvell/armada-385-atl-x530.dts b/arch/arm=
+/boot/dts/marvell/armada-385-atl-x530.dts
+index 5a9ab8410b7b..60c2abf572b6 100644
+--- a/arch/arm/boot/dts/marvell/armada-385-atl-x530.dts
++++ b/arch/arm/boot/dts/marvell/armada-385-atl-x530.dts
+@@ -43,6 +43,17 @@ uart0: serial@12000 {
+ 			};
+ 		};
+ 	};
 +
- required:
-   - compatible
-   - reg
--- 
-2.43.0
++	led-7seg {
++		compatible =3D "gpio-7-segment";
++		segment-gpios =3D <&led_7seg_gpio 0 GPIO_ACTIVE_LOW
++				 &led_7seg_gpio 1 GPIO_ACTIVE_LOW
++				 &led_7seg_gpio 2 GPIO_ACTIVE_LOW
++				 &led_7seg_gpio 3 GPIO_ACTIVE_LOW
++				 &led_7seg_gpio 4 GPIO_ACTIVE_LOW
++				 &led_7seg_gpio 5 GPIO_ACTIVE_LOW
++				 &led_7seg_gpio 6 GPIO_ACTIVE_LOW>;
++	};
+ };
+=20
+ &pciec {
+@@ -149,7 +160,7 @@ i2c@3 {
+ 			#size-cells =3D <0>;
+ 			reg =3D <3>;
+=20
+-			gpio@20 {
++			led_7seg_gpio: gpio@20 {
+ 				compatible =3D "nxp,pca9554";
+ 				gpio-controller;
+ 				#gpio-cells =3D <2>;
+--=20
+2.43.2
 
