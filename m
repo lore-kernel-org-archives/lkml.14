@@ -1,179 +1,186 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786ED1EF1A
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEFA38DD1
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709628977; cv=none; b=TYSCVF6vkjVB0nC9NLFD48jnPapDx+sy1NuW79Q5/HiHriVU+1RkWkUvEOJIoc0MkIB+ZyrQpp3rdjLmHKbmkschnOUDwpft2eeKBO+9fbM+/wxgx+QH8XMj+xAleNF21IrAy5Yfu4sjwHwnJ8yhx/pKAP62ZbZWjIYvQhWtsJ8=
+	t=1709629178; cv=none; b=p1BYaSXF8AcIZ9+hQiKb6s9ZXtdMOu6UhdFPl0rLqFvz7GbHGM6wPdyALIg/9Z0FPxdQkjgRWaGPdJJgy6PWllMMeBpaoNgo9gm34JDBBn8wYxe7PQfenfqp23dfNPCXKCYnJCYqhxik31CtvKKryr8ox0tjpsItQLb0McPyKtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709628977; c=relaxed/simple;
-	bh=j5+9JzPeNa+J8GdabbLupRfk09uumrzdco525tHsul4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LtGrrYYyXuKpsmh/VI/hOHNB+Va0o9nYbEOSdHqT5dP95HLps5tCP5ZgZu48aDZAW5AMCjmnrIsiD06+s/zsz6GXUXzyzzOzU0iepg/DuKyB9Gca0ac6kiN5sU0z3CueM9zZOVlmNjbdZhf6MigmwNXiqp76Qd/fj7Nbb56rO24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jOJPeEmp; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709629178; c=relaxed/simple;
+	bh=lu6SC+k07tAHlJfTt2dX9rhf8AqwN3jW2sUFbWLwSCc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=gUCjupxGqh6EN8Eo6W5EBpgbtw7kciwD9MTfd2M2gW93NJpXn4mf+iwR1KHLzJaQQI3+tJqkMSI1l+FrQ+66LHI+1HDRpyv4XAdyeanYViw1eUt8FHmoc12Vw3p/2vTpPx1qgcQ7nliCX+W6gXD2qTrFi/P5eKhb+mcBSMRsKss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Judfmg48; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOJPeEmp"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7dacc916452so1617884241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 00:56:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Judfmg48"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5649c25369aso7612917a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 00:59:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709628974; x=1710233774; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xf7eeKiUo+Z6E3AtxwZ6h2eHT+M9RMwHIVhw9daL31I=;
-        b=jOJPeEmpL4aN0jpsxqJnQfnUIQ3Wd2mnGMJJ5x0ACFEMde1sCO45UU5GT+/05EME8Q
-         PzFQFe25HpFkyPAgupa1hA5JlGTn9JPYLC9r1azrJfYYtIeS0QJXsLUYAUQTs7AmjVfp
-         65yr1kXEuI4xCe9cMqL9vJU48KvVqZ63z0CrFQjbUM8sW3vDKljC/pieuOl+qxV1sE4H
-         DTzCmy2Z9quzpeRx9X0OVXxeC9xDA6JG4DDhqX/niUT9++YPcewmFwJzMrGOGmr9dy/c
-         6rJoX+towulnDSoQgO3PS3EDWw/Sg496xNUZe05n+Or6MXqTxFiwgzH7D8Imk5hq+bP8
-         Ne8g==
+        d=ionos.com; s=google; t=1709629174; x=1710233974; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M6C3Skxl3JZ6I3Bn9M0Rkt7P+AkMJ9BXocPtViO8HyA=;
+        b=Judfmg484Fzv/n8WKJ7UiUZgOqJ4NP6TqtSMngqjLTuJGWQRkCcOpxfGXsP9J2kSzu
+         kgybaO39VgeBqOg+DG8rDn13qDE9DQMYBCYPr0P/4UDVGHsP7UI7l3Qguds8IALo2FEn
+         /163HnkeQsrikbmuaq19nVjgdTopRkZF/ZMpCCS3fbtqFycBde8aRlOAdoUcP28e8bcN
+         wOa8mI9GqxD7kjeJEN0jvzKmODxx4dkpryCgJpgXb8/SWQ8kQHbhzpJ4nBeebNECUzYu
+         cjx6nwUpLpqiUfOl7nN7+ZRPdNf3fTvYiFzGpAD3TgHkJM77NDPDrwdl6ljV53ENyIyJ
+         YpGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709628974; x=1710233774;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xf7eeKiUo+Z6E3AtxwZ6h2eHT+M9RMwHIVhw9daL31I=;
-        b=K6qFhtbsaiYd75sTkHXEMHsKDhtRUCNxd8F5GrwnqEoEwtoC1Ry8+ktBmlFVwIhHYM
-         8Pi7K8IlWrtVdKS+Kb/OUm2kVtc6QheptJu84f54lwKcLI8uquTZ3DLWmpy/IwEVqgXk
-         98dzH7hDMdk2vVl/64qNNoSjRwChNJifdFfoWxW3JyRnMLolJ6GSHhll0q4/An0ajUfd
-         kskUN9BoPvTBKdDhfNLA4A6tIP6wR0637R2kbP/qwj7lajkWVxuGIwr55dtp/iBxoKiX
-         MvMEZLQbUaDrshHn00yiRFRimbbzju49aZLvmH1H8/3Kllz9X71ecMAH/BgIk9VOY2tZ
-         i0SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULmpVekht7jpISNgHDDLOO/RxrhyQTzCaPjXr/X6Vs0E5vEa9tiIIUVqHkSEr8bdK9yA2jY2SPyUBLSHwYOPE3R8V5nqmz5yj9Flnr
-X-Gm-Message-State: AOJu0Yw1jZUcdkasonRTLS9WjaPHIrb2Wfn7dpOLxX3zM958ZPgqgAmN
-	0hIzwTN0AFC8w6FiR6yfACYHt/jJM3c/QZ8TBj2+IkyhZYnvCS0GTl/h7qQwMKv0UvOgPywFSWH
-	Qmp5Vcw9P5Gl+ILOgi33Rk39GFfw=
-X-Google-Smtp-Source: AGHT+IH27VErZkiLtO2IdHog333rbZI3ycr1XH26aXwrNf1p+sK4n3gGZBqRc/BxEFNaQi/YkEnS/mfqo1Q98C8D+GE=
-X-Received: by 2002:ac5:ce02:0:b0:4cd:20ea:35b1 with SMTP id
- j2-20020ac5ce02000000b004cd20ea35b1mr874707vki.2.1709628974288; Tue, 05 Mar
- 2024 00:56:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709629174; x=1710233974;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M6C3Skxl3JZ6I3Bn9M0Rkt7P+AkMJ9BXocPtViO8HyA=;
+        b=cW5EOgkPChMC7X90Bv6B/DNCqsOM4G5Jbo7QKd/sA0TSdZSjDoEme34YrGxrrK8Kgd
+         Yqez9s/N0waJoS/m89xziN2Q4XLj4K8mGcZ52jyjsSDkZaplERUFK8Mv43XR8Z0Yezzr
+         v6bsZSp79ayua3NKln/IitSQH8kcMiBQSEppa5WoYVKXQkdI5i2lB5IUu4wA0sQrchUq
+         49cAzfF8VKaWbSdlnHE35hMvOWPRn9/CjoGDbIZwAcYU+jd3Kb+aGhyZG91sbq/CIzDA
+         tBkWTpU2wYUH0D/fjLbQ0VVqlgji0dIXyGJ8yHOz0d0vRSM+fffJeZrNtKKSvMwcgKvJ
+         YS6A==
+X-Forwarded-Encrypted: i=1; AJvYcCX1b8UuBZixYwRzbtLMNdIg7RHl9DUwH4zGPRGirdc9uw/vYGcjkQI131IAB/WEeKHdJQ+aG8yLwTk46bGtHgrFT/WJFukdkvztJphC
+X-Gm-Message-State: AOJu0YxpULwLeuwHrNnkos/7u4M+k1b+uejC4fwpwTbmzL7LBg2ncV0k
+	uDtqG2IRF7bKmMAknMK74sSoN3I7VRaIwmCbywFlrvTklF4exN9wfIeA1ajDjhTMgQ/DTWenBXv
+	m
+X-Google-Smtp-Source: AGHT+IFMPVTm56Kq7yCVlQCGm8leuaxurrmwoBlFPKo/035wjfo25tHyRCTnVjULXBx8bQ19QGpKYw==
+X-Received: by 2002:a17:906:eb16:b0:a45:3ad3:1f93 with SMTP id mb22-20020a170906eb1600b00a453ad31f93mr3324672ejb.44.1709629173710;
+        Tue, 05 Mar 2024 00:59:33 -0800 (PST)
+Received: from raven.blarg.de (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id gs4-20020a170906f18400b00a449d12cdc5sm4453005ejb.119.2024.03.05.00.59.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 00:59:33 -0800 (PST)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: willy@infradead.org,
+	sfr@canb.auug.org.au,
+	Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH v3 00/14] Fast kernel headers: split linux/mm.h
+Date: Tue,  5 Mar 2024 09:59:05 +0100
+Message-Id: <20240305085919.1601395-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304103757.235352-1-21cnbao@gmail.com> <878r2x9ly3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <878r2x9ly3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 5 Mar 2024 21:56:02 +1300
-Message-ID: <CAGsJ_4yKhoztyA1cuSjGEeVwJfNdhNPNidrX-D_dRazRL7D5hg@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
- large folio
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, david@redhat.com, 
-	ryan.roberts@arm.com, chrisl@kernel.org, yuzhao@google.com, 
-	hanchuanhua@oppo.com, linux-kernel@vger.kernel.org, willy@infradead.org, 
-	xiang@kernel.org, mhocko@suse.com, shy828301@gmail.com, 
-	wangkefeng.wang@huawei.com, Barry Song <v-songbaohua@oppo.com>, 
-	Hugh Dickins <hughd@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 5, 2024 at 8:30=E2=80=AFPM Huang, Ying <ying.huang@intel.com> w=
-rote:
->
-> Barry Song <21cnbao@gmail.com> writes:
->
-> > From: Barry Song <v-songbaohua@oppo.com>
-> >
-> > page_vma_mapped_walk() within try_to_unmap_one() races with other
-> > PTEs modification such as break-before-make, while iterating PTEs
->
-> Sorry, I don't know what is "break-before-make", can you elaborate?
-> IIUC, ptep_modify_prot_start()/ptep_modify_prot_commit() can clear PTE
-> temporarily, which may cause race with page_vma_mapped_walk().  Is that
-> the issue that you try to fix?
+This patch set aims to clean up the linux/mm.h header and reduce
+dependencies on it by moving parts out.
 
-we are writing pte to zero(break) before writing a new value(make). while
-this behavior is within PTL in another thread,  page_vma_mapped_walk()
-of try_to_unmap_one thread won't take PTL till it meets a present PTE.
-for example, if another threads are modifying nr_pages PTEs under PTL,
-but we don't hold PTL, we might skip one or two PTEs at the beginning of
-a large folio.
-For a large folio, after try_to_unmap_one(), we may result in PTE0 and PTE1
-untouched but PTE2~nr_pages-1 are set to swap entries.
+The goal was to eliminate dependencies on linux/mm.h from other
+popular headers such as highmem.h and dma-mapping.h, and I started by
+checking which symbols were really used and moved those declarations
+to separate slim headers.
 
-by holding PTL from PTE0 for large folios, we won't get these intermediate
-values. At the moment we get PTL, other threads have done.
+---
+v1 -> v2: added more explanations to commit messages; renamed several
+  new headers from page_*.h to folio_*.h as suggested by Matthew
+  Wilcox; rebase on linux-next; fix build failures on architectures
+  um,nios2,hexagon by adding more missing includes
+v2 -> v3: rebase on linux-next
 
->
-> --
-> Best Regards,
-> Huang, Ying
->
-> > of a large folio, it will only begin to acquire PTL after it gets
-> > a valid(present) PTE. break-before-make intermediately sets PTEs
-> > to pte_none. Thus, a large folio's PTEs might be partially skipped
-> > in try_to_unmap_one().
-> > For example, for an anon folio, after try_to_unmap_one(), we may
-> > have PTE0 present, while PTE1 ~ PTE(nr_pages - 1) are swap entries.
-> > So folio will be still mapped, the folio fails to be reclaimed.
-> > What=E2=80=99s even more worrying is, its PTEs are no longer in a unifi=
-ed
-> > state. This might lead to accident folio_split() afterwards. And
-> > since a part of PTEs are now swap entries, accessing them will
-> > incur page fault - do_swap_page.
-> > It creates both anxiety and more expense. While we can't avoid
-> > userspace's unmap to break up unified PTEs such as CONT-PTE for
-> > a large folio, we can indeed keep away from kernel's breaking up
-> > them due to its code design.
-> > This patch is holding PTL from PTE0, thus, the folio will either
-> > be entirely reclaimed or entirely kept. On the other hand, this
-> > approach doesn't increase PTL contention. Even w/o the patch,
-> > page_vma_mapped_walk() will always get PTL after it sometimes
-> > skips one or two PTEs because intermediate break-before-makes
-> > are short, according to test. Of course, even w/o this patch,
-> > the vast majority of try_to_unmap_one still can get PTL from
-> > PTE0. This patch makes the number 100%.
-> > The other option is that we can give up in try_to_unmap_one
-> > once we find PTE0 is not the first entry we get PTL, we call
-> > page_vma_mapped_walk_done() to end the iteration at this case.
-> > This will keep the unified PTEs while the folio isn't reclaimed.
-> > The result is quite similar with small folios with one PTE -
-> > either entirely reclaimed or entirely kept.
-> > Reclaiming large folios by holding PTL from PTE0 seems a better
-> > option comparing to giving up after detecting PTL begins from
-> > non-PTE0.
-> >
-> > Cc: Hugh Dickins <hughd@google.com>
-> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> > ---
-> >  mm/vmscan.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index 0b888a2afa58..e4722fbbcd0c 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -1270,6 +1270,17 @@ static unsigned int shrink_folio_list(struct lis=
-t_head *folio_list,
-> >
-> >                       if (folio_test_pmd_mappable(folio))
-> >                               flags |=3D TTU_SPLIT_HUGE_PMD;
-> > +                     /*
-> > +                      * if page table lock is not held from the first =
-PTE of
-> > +                      * a large folio, some PTEs might be skipped beca=
-use of
-> > +                      * races with break-before-make, for example, PTE=
-s can
-> > +                      * be pte_none intermediately, thus one or more P=
-TEs
-> > +                      * might be skipped in try_to_unmap_one, we might=
- result
-> > +                      * in a large folio is partially mapped and parti=
-ally
-> > +                      * unmapped after try_to_unmap
-> > +                      */
-> > +                     if (folio_test_large(folio))
-> > +                             flags |=3D TTU_SYNC;
-> >
-> >                       try_to_unmap(folio, flags);
-> >                       if (folio_mapped(folio)) {
+Max Kellermann (14):
+  drivers: add missing includes on linux/mm.h (and others)
+  include/drm/drm_gem.h: add poll_table_struct forward declaration
+  linux/mm.h: move page_kasan_tag() to mm/page_kasan_tag.h
+  linux/mm.h: move section functions to mm/page_section.h
+  linux/mm.h: move page_address() and others to mm/page_address.h
+  linux/mm.h: move folio_size(), ... to mm/folio_size.h
+  linux/mm.h: move folio_next() to mm/folio_next.h
+  linux/mm.h: move devmap-related declarations to mm/devmap_managed.h
+  linux/mm.h: move usage count functions to mm/folio_usage.h
+  linux/mm.h: move page_zone_id() and more to mm/folio_zone.h
+  linux/mm.h: move pfmemalloc-related functions to pfmemalloc.h
+  linux/mm.h: move is_vmalloc_addr() to mm/vmalloc_addr.h
+  linux/mm.h: move high_memory to mm/high_memory.h
+  include: reduce dependencies on linux/mm.h
 
-Thanks
-Barry
+ MAINTAINERS                                   |   1 +
+ arch/arm/include/asm/memory.h                 |   4 +
+ arch/arm/include/asm/pgtable.h                |   2 +
+ arch/arm/mm/iomap.c                           |   3 +
+ arch/csky/include/asm/page.h                  |   1 +
+ arch/hexagon/include/asm/mem-layout.h         |   4 +
+ arch/m68k/include/asm/page_mm.h               |   1 +
+ arch/m68k/include/asm/pgtable_mm.h            |   1 +
+ arch/parisc/include/asm/floppy.h              |   1 +
+ arch/powerpc/include/asm/book3s/32/pgtable.h  |   4 +
+ arch/powerpc/include/asm/nohash/32/pgtable.h  |   1 +
+ arch/powerpc/include/asm/page.h               |   1 +
+ arch/x86/include/asm/floppy.h                 |   1 +
+ arch/x86/include/asm/pgtable_32_areas.h       |   4 +
+ drivers/comedi/comedi_buf.c                   |   1 +
+ .../qat/qat_common/adf_gen4_pm_debugfs.c      |   1 +
+ drivers/dma/dma-axi-dmac.c                    |   1 +
+ drivers/dma/sh/rcar-dmac.c                    |   1 +
+ drivers/firmware/qcom/qcom_scm-legacy.c       |   1 +
+ drivers/firmware/qcom/qcom_scm-smc.c          |   1 +
+ drivers/firmware/raspberrypi.c                |   1 +
+ drivers/iio/buffer/industrialio-buffer-dma.c  |   1 +
+ drivers/iommu/iommufd/ioas.c                  |   2 +
+ drivers/iommu/iommufd/selftest.c              |   1 +
+ drivers/media/platform/mediatek/vpu/mtk_vpu.c |   1 +
+ drivers/media/platform/ti/omap/omap_voutlib.c |   1 +
+ drivers/misc/bcm-vk/bcm_vk_dev.c              |   1 +
+ drivers/misc/fastrpc.c                        |   1 +
+ drivers/misc/genwqe/card_dev.c                |   1 +
+ drivers/misc/uacce/uacce.c                    |   1 +
+ drivers/mtd/nand/onenand/onenand_samsung.c    |   1 +
+ drivers/mtd/spi-nor/core.h                    |   2 +
+ drivers/pci/p2pdma.c                          |   1 +
+ drivers/pci/pci.c                             |   1 +
+ drivers/remoteproc/remoteproc_core.c          |   1 +
+ drivers/soc/qcom/rmtfs_mem.c                  |   1 +
+ drivers/spi/spi-aspeed-smc.c                  |   1 +
+ drivers/spi/spi-bcm2835.c                     |   2 +
+ drivers/spi/spi-intel.c                       |   1 +
+ drivers/virtio/virtio_ring.c                  |   1 +
+ include/drm/drm_file.h                        |   1 +
+ include/linux/bio.h                           |   2 +
+ include/linux/dma-mapping.h                   |   1 +
+ include/linux/highmem-internal.h              |   2 +
+ include/linux/highmem.h                       |   4 +-
+ include/linux/huge_mm.h                       |   2 +
+ include/linux/iommu.h                         |   1 +
+ include/linux/mm.h                            | 583 +-----------------
+ include/linux/mm/devmap_managed.h             |  37 ++
+ include/linux/mm/folio_next.h                 |  27 +
+ include/linux/mm/folio_size.h                 | 150 +++++
+ include/linux/mm/folio_usage.h                | 182 ++++++
+ include/linux/mm/folio_zone.h                 |  36 ++
+ include/linux/mm/high_memory.h                |   7 +
+ include/linux/mm/page_address.h               |  71 +++
+ include/linux/mm/page_kasan_tag.h             |  66 ++
+ include/linux/mm/page_section.h               |  23 +
+ include/linux/mm/pfmemalloc.h                 |  52 ++
+ include/linux/mm/vmalloc_addr.h               |  33 +
+ include/linux/nvme-keyring.h                  |   2 +
+ include/linux/scatterlist.h                   |   8 +-
+ include/linux/skbuff.h                        |   4 +
+ kernel/dma/ops_helpers.c                      |   1 +
+ kernel/dma/remap.c                            |   1 +
+ lib/scatterlist.c                             |   1 +
+ mm/dmapool.c                                  |   1 +
+ 66 files changed, 780 insertions(+), 576 deletions(-)
+ create mode 100644 include/linux/mm/devmap_managed.h
+ create mode 100644 include/linux/mm/folio_next.h
+ create mode 100644 include/linux/mm/folio_size.h
+ create mode 100644 include/linux/mm/folio_usage.h
+ create mode 100644 include/linux/mm/folio_zone.h
+ create mode 100644 include/linux/mm/high_memory.h
+ create mode 100644 include/linux/mm/page_address.h
+ create mode 100644 include/linux/mm/page_kasan_tag.h
+ create mode 100644 include/linux/mm/page_section.h
+ create mode 100644 include/linux/mm/pfmemalloc.h
+ create mode 100644 include/linux/mm/vmalloc_addr.h
+
+-- 
+2.39.2
+
