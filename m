@@ -1,86 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CBE85645;
-	Tue,  5 Mar 2024 13:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B3185953;
+	Tue,  5 Mar 2024 13:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709645160; cv=none; b=k7yICnulDX26Woku98Xrk5NiSLZQ4yPCXd5v5BOociKSA6fHGIrXXt/SXrqNgJbsj6o6X9pZnjgMohjL3KzhoRsU8XHkAkAeeEhzQFGECSD5RlrotARBLZhjNo3mZB3ir9+PG9bT+rH2jMHe4KIn5Xk146tQAl1jxg8x5lFjaT0=
+	t=1709645195; cv=none; b=q/C7EiaESYH0/XozHCkqdznBNZsWCPEw5h1VvjXmboKt/DsRhaOiB8AfS9QQOREjFloc6GGC6Q570kFlo5krS5EZJuaoFnyKqW/lEVuYrZuS0oL0ldXpmfonWH//czgyHtlO3Rpx9H6qb8Zux6UkyergAbOdnGBhlx9euEwlKHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709645160; c=relaxed/simple;
-	bh=qGUY1dxiZirRGSYHab1JAkhMGDJpARkMldpVYyOZWJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PIjqGekwug37oM/1HuUJxaMzn+Jg5ajUdh7WFz6YD/E8+ZlT/SBLJR/t/HdQwcUnreKQlinSqSpRN3tG2rrNcJRqvyW4+cMB5Rr933e/VsW/E6t4ju80AeZHROTZL6GsCHCutBvOmP/dixnpteVKgPHCYK1fSzl37xvX1v8mKKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Mv/7ew43; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709645195; c=relaxed/simple;
+	bh=FoEk45ceFiqKQNtaPUFaNdU0fgwbZR9BlNv6CwAZiPc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=itBRCjBBY+XwWG97sSBE3nafQTZ+AqRoyb8B8SHS6D4f80yaLrx2n1SRUzouKngsioX4+UloprVHSlLMz8wow4gRxK5ikusUBlasaYJGMtzKdBxRceEDlgVl0pQN/OEEcwCbdhUB59Yo3a8SrTQH1Vzjs7Wqt18z5J96y8xwYVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=eVt2T5xM; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Mv/7ew43"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61595C433C7;
-	Tue,  5 Mar 2024 13:25:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709645159;
-	bh=qGUY1dxiZirRGSYHab1JAkhMGDJpARkMldpVYyOZWJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mv/7ew43kGKZfV6Z49esHWEbBa1oKgnsWW1B4+H2IITQG67n7G6Ij+is7AO4J7SqU
-	 FQV680h4TdMx7AP/lBCrzLDXMVWnguNQP+HKRtqJZnds1ZYSrVyQlb18wwqQ8vsn+p
-	 C1qdeOzt+sbS6Zj8dDEOZK8SwXR9CDnuLD1GCYCs=
-Date: Tue, 5 Mar 2024 13:25:55 +0000
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Weitao Wang <WeitaoWang-oc@zhaoxin.com>
-Cc: oneukum@suse.com, stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-	usb-storage@lists.one-eyed-alien.net, WeitaoWang@zhaoxin.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v3] USB:UAS:return ENODEV when submit urbs fail with
- device not attached
-Message-ID: <2024030530-trinity-triangle-c334@gregkh>
-References: <20240229193349.5407-1-WeitaoWang-oc@zhaoxin.com>
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="eVt2T5xM"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e58d259601so3588970b3a.3;
+        Tue, 05 Mar 2024 05:26:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709645193; x=1710249993;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:dkim-signature:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7vv6ZrTKPXVMDA5O97eXfvb/0f70NPtfMZMwVWIvNLQ=;
+        b=i6MKShb1UjniDLbc4+m2d2jtFYuM7dtXuB8AcCBF/6/PcCwShRnT70JRpJEZeeGf5p
+         12RYkyt0p4mijRMsf+N87Lkm22LPrS9osERNCBWryI/2vNaxR5tIg3oyvzSVpEhmZefb
+         SwoZQHqZWxk/HROXto+q3/SOK53GxZzhkiDV2DNxCNhFOAifFSz7UMOFfRjqiLwtRJTL
+         hhidrX3X8ubFkraRQEQ3kzM37qBm1ykC0jgBNE/c8pyuDGdD1wVPXWrwI6WOq0+zjXkq
+         NVj7XVqUI6tUCQ6SVLG4/zFUyTZX4QjoK9jM0HNG3BqxabCe6ljdb5UCf+jo/+m7cBQO
+         KuDw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9OzPUbnbD9cehiXmKMuaQ4PjmSfNtebBrn8QhURv4rQD5V1+UgCYynteumwLcctmAqWikKCrL0AVMgavofRc7lD2z4ORvjHjlSkOsF/b4caeIab0ITifCawUYoigd3nxpITFwmO2C3y8=
+X-Gm-Message-State: AOJu0YxijVTe9tRo5HL0pgTh6GRRSZv7/7AQF2hcsolESCEcMuxHYGb5
+	smx6nZeSXR3co5kWDN9rEHF7fhzjHZgOM1gnSQJQf/Uu0sX+XHiZ
+X-Google-Smtp-Source: AGHT+IH//H+Sctm5ByVdm9O1Jwl8BgiUNB0Tn6WvkraAC9/mKC2LC6EnH2y9uejrjW06w7f9HHc7Dw==
+X-Received: by 2002:a05:6a20:9151:b0:1a1:511b:edb2 with SMTP id x17-20020a056a20915100b001a1511bedb2mr1978657pzc.29.1709645192710;
+        Tue, 05 Mar 2024 05:26:32 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006e4432027d1sm9170385pfh.142.2024.03.05.05.26.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 05:26:32 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1709645190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7vv6ZrTKPXVMDA5O97eXfvb/0f70NPtfMZMwVWIvNLQ=;
+	b=eVt2T5xMIHkkDiSvCvtphWe2I/JeEsrga9skQZxxhcNt2NEQZPLtx6AsZQhzHPk1yh1Hz+
+	+hIZaBg6B4G2W8Cn68lGOns2cJULpA1JbjmbybF1RLf320wUZ7sP41M+q1nU5p11Dx30UJ
+	cUcsplciZiqDb+N/1UtyEq5jE1ER53NOKidKCYyZ9h2CTPtEYHRuEPhtZEHZ/3+1IYOYgR
+	NrepAPSGy816eW0yHyEcS6jFT/MgHPU3GRQeEoxvjnQVCSDHX1LoKl9IvMyq/cjjzmd+vP
+	KdHeS6Rri2Uuy1FG3Dgv1MP/in6wwLUEv/+21TxTFUjJ43H9f+771qLgu1dUCw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Subject: [PATCH 0/2] media: constify struct class usage
+Date: Tue, 05 Mar 2024 10:26:24 -0300
+Message-Id: <20240305-class_cleanup-media-v1-0-53e1538973cd@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240229193349.5407-1-WeitaoWang-oc@zhaoxin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIAd52UC/x3MQQqAIBBA0avErBNMLaKrRITpVANl4lAE0d2Tl
+ m/x/wOMiZChKx5IeBHTETKqsgC32rCgIJ8NSiojtayF2yzz6Da04YxiR09WGDnpxqBWbTtBLmP
+ Cme7/2g/v+wEaaJOMZQAAAA==
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Sean Young <sean@mess.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=773; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=FoEk45ceFiqKQNtaPUFaNdU0fgwbZR9BlNv6CwAZiPc=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl5x2DMB1pifgg/IzA/MaErvw+tt3MyZiPU6rGh
+ pebqyh1u4KJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZecdgwAKCRDJC4p8Y4ZY
+ pjQmEACeW8pJfLenjzpsCW9LbQK7sAmwcGmnrg6NFevBc/ksThhD9+4GlrjKUNMC4dMWwRqWh7c
+ wpVzbb5VDDiVa2WmvgGsE0OYFlZC8Sy9PFLVfzNKNpKq9CAxLMApNdrI8MB9W1oUxN5k/TzXJa5
+ +GyGEy7kFE43dRX0imOHcQ9zDQF68X+v+IO/N0Ty5PhADMgt5t5YyIafKhmhuBgqS6u8RPNqz+X
+ ocyK7ULVg+8lKq4eTnIG4AZe5NtQnHLZDmSElM5VFEOtdx7PXBOEM7iNdhqSBCOi/MP56Q60cWW
+ YDdVFuZ+LaPfZk2+fX7z56dFYn/Pe4tggNBBAQ0zrAFqxr+VDjNG7HX7SDheF9csD9ghzYReA2H
+ VtlFRLWa/4ZvrRcRKQdo4BZm7A7WzqVFVhBKeC0eDWxT15KXhMo/dRostO0dyIiNIciCdKEYDhN
+ ktgtkW+Y8TVbCR6sSLi4D7uxYwWEDNy8VjNB/Irt5Vxrrc8wkMph3LmJ0o5J4qVX1mvm0fd/5Cb
+ C2uUaMaiVpsiL6j+1whtRAi6624Z7bjXjZu7x5XirCL7R6sI1/Gx8bw6+LthBKtm/mBBA/Cl0As
+ aJdBiUju2jhtdBZUOydmUm8yA1uf/J1fruXQx8O60Lc6acqr2iDed2B70P+wSdGgarrhauXTww6
+ rImjVfj1yk9RQ0w==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Fri, Mar 01, 2024 at 03:33:49AM +0800, Weitao Wang wrote:
-> In the scenario of entering hibernation with udisk in the system, if the
-> udisk was gone or resume fail in the thaw phase of hibernation. Its state
-> will be set to NOTATTACHED. At this point, usb_hub_wq was already freezed
-> and can't not handle disconnect event. Next, in the poweroff phase of
-> hibernation, SYNCHRONIZE_CACHE SCSI command will be sent to this udisk
-> when poweroff this scsi device, which will cause uas_submit_urbs to be
-> called to submit URB for sense/data/cmd pipe. However, these URBs will
-> submit fail as device was set to NOTATTACHED state. Then, uas_submit_urbs
-> will return a value SCSI_MLQUEUE_DEVICE_BUSY to the caller. That will lead
-> the SCSI layer go into an ugly loop and system fail to go into hibernation.
-> 
-> On the other hand, when we specially check for -ENODEV in function
-> uas_queuecommand_lck, returning DID_ERROR to SCSI layer will cause device
-> poweroff fail and system shutdown instead of entering hibernation.
-> 
-> To fix this issue, let uas_submit_urbs to return original generic error
-> when submitting URB failed. At the same time, we need to translate -ENODEV
-> to DID_NOT_CONNECT for the SCSI layer.
-> 
-> Suggested-by: Oliver Neukum <oneukum@suse.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Weitao Wang <WeitaoWang-oc@zhaoxin.com>
-> ---
-> v2->v3
->  - Modify the description of this patch.
->  - An error is returned directly when submitting URB fails.
+This is a simple and straight forward cleanup series that aims to make the
+class structures in media constant. This has been possible since 2023 [1].
 
-This change breaks the build, please be more careful:
+[1]: https://lore.kernel.org/all/2023040248-customary-release-4aec@gregkh/
 
-drivers/usb/storage/uas.c: In function ‘uas_submit_urbs’:
-drivers/usb/storage/uas.c:559:21: error: unused variable ‘urb’ [-Werror=unused-variable]
-  559 |         struct urb *urb;
-      |                     ^~~
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+Ricardo B. Marliere (2):
+      media: dvbdev: make dvb_class constant
+      media: lirc_dev: make lirc_class constant
 
+ drivers/media/dvb-core/dvbdev.c | 23 +++++++++++++----------
+ drivers/media/rc/lirc_dev.c     | 18 +++++++++---------
+ 2 files changed, 22 insertions(+), 19 deletions(-)
+---
+base-commit: 8c64f4cdf4e6cc5682c52523713af8c39c94e6d5
+change-id: 20240305-class_cleanup-media-40b364e3288b
 
-thanks,
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
-greg k-h
