@@ -1,149 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCC095B5DB;
-	Tue,  5 Mar 2024 10:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1602254907
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 10:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633966; cv=none; b=NIbBctASxeBuxcXgG70+CPLdZieJ1ERd8OkFQnERZ8deCqcqtOiQu3YT2/uwmCBAO5vrPclcBSnRnLMlvhdJO/Yw1Hq02kKTrYf89gPJdBEZ3pzYWLMHBTdRJ8yECYXUCBeljy+k24nHquZSO6reeq78rRe4uSLku3aGFs8grgE=
+	t=1709633990; cv=none; b=Z/WVAij3Ddz+rPIDrqC1e5NmovEVhitLLM8i8NBTPWXICFbe3u1z2fMMOo4QY/tG/+P3qD+al6LCWgpMip2tlvgJTpD3l/QUlmv5vRQhBZxv3qoHc6yN+X32tjhrKp2iByZ4+bXcuVuWLmP5pus7u8l50uXTKaZTUWOnLqxYjZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633966; c=relaxed/simple;
-	bh=3YtXl3SwSx1/FYXZSyiwHqr8gW8g1qshOyLhg7cFdXI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Hh1K7PG6ZaDxMFdt9dMU1BmX4ZjO9Ji9LWcInEHUl1oBFlmJ9Yqpn5fSxTXBAHsDWjd1xLJIv94RsovtyudALz483oXQfEdjfbwP/8uwsCD0IBLXL7ykVZjBMnfnKZOED7mbQ7d7SZEMyzSctG3AB+vMEn3PlX3WIkpmML+ewrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F13D3C15;
-	Tue,  5 Mar 2024 02:19:59 -0800 (PST)
-Received: from mango.localdomain (unknown [10.57.11.67])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3C69B3F762;
-	Tue,  5 Mar 2024 02:19:21 -0800 (PST)
-From: Balint Dobszay <balint.dobszay@arm.com>
-To: op-tee@lists.trustedfirmware.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: jens.wiklander@linaro.org,
-	sumit.garg@linaro.org,
-	corbet@lwn.net,
-	balint.dobszay@arm.com,
-	sudeep.holla@arm.com,
-	rdunlap@infradead.org,
-	krzk@kernel.org,
-	gyorgy.szing@arm.com
-Subject: [PATCH v3 4/4] Documentation: tee: Add TS-TEE driver
-Date: Tue,  5 Mar 2024 11:17:46 +0100
-Message-Id: <20240305101745.213933-5-balint.dobszay@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240305101745.213933-1-balint.dobszay@arm.com>
-References: <20240305101745.213933-1-balint.dobszay@arm.com>
+	s=arc-20240116; t=1709633990; c=relaxed/simple;
+	bh=WPYjAo35ueTIaoUFIBDZ9jCMG4Vux8IKHZr4s0+HkKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tvbjUqVGNiYYHcKIjCHsEbUOYYUGu1ZJn+suRO1ZsmvNIAQd4moBgAX5KcKlFL3NDvOy+7QJifm/EjTfokLBaMszcbgtvv0C9oRu3Zvceffmg2MUaUi+kQp2T0FJ23ymZ4yfvAIRdWi4O/HbBNcgYOu03/iEgprwWRUS7QwcPGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=Z/JaDtsj; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="Z/JaDtsj"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33e2268ed96so3427489f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 02:19:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1709633986; x=1710238786; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H6OcsG3MUfMZHlFyq7Y4+mYfeDO+WAVX0fDPYMZUXpU=;
+        b=Z/JaDtsjgXeS8rE48iuKi92W+nmsXYOlLKsk2clwBw78pHpLaIVw+5E7uMDHt6AuOh
+         ePCusj2ys5+XYGg9JBtn6pjSgpoy3tuqAeucZywRcqcJghbeYI4tkIBHaysEB8TLmw3G
+         sJHsxN5sAhRYX1Fe/pEyKoOa6dkBoLSSm+dj54KSxHo7R+vuOzRktpFembYkanVWtIyR
+         st9DsI5GwCXu6xQ1d7VFwO+QdGBTPdmKsqIrk3JZABpqPuSXHBR38JcFIwH/DD8Q+7yE
+         3vI5FJaMTGtZxHJ3OKllIl5/BamM5zT9ramotSbNRqRnO/cQvLM+cg5Ggn6ETBqBw23b
+         fkDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709633986; x=1710238786;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H6OcsG3MUfMZHlFyq7Y4+mYfeDO+WAVX0fDPYMZUXpU=;
+        b=kfBjcyH+I2SOiS6yUDdevnLUjUHlRprUdtGSRNVhsjtRkWv7asLsSSvBcEKWi/N9c+
+         YFcrcWoEMmbqYXsKaParZIzrBqBpZ2RhKUWi3N4iGZI5WnoscZM93UPfBGpWsdQfjTgk
+         AoE+EjM923CdqqSiC8v4KYwDmNbANRXRY5CqAjhvWZZCoRftNE0EFmuRDFfCDWI/Y3C6
+         mD06MUibq44W54AGarSlvCh5/muj+g1cnIC2DvfZCv4Am+jmRzrEYZa2De3FMMDti8Am
+         xBtMNo/2RyYICNPjiAi1ZfkRw6YWscNn8cOcAiETR4cCMPxDUcPIbej70r3Ii4JtRjWX
+         xIGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeff9P30tU6f55dh35T5KFzeLe9gkZvqVdxdgIqd7fkGJjjbRP13EeWzK4LxbyBWKmZlH6pcNexQHouG/xKdcGddXqIEKXIdtZPPvE
+X-Gm-Message-State: AOJu0YyiisJzWHdVxLBnxPQnJR9ClIs4b8107z3Z6wF8oLZUx24kSxqN
+	d/dApVubSjWkQIJYw89RJQbRtcKeWTr76ex421toP6cuJgfsXldeFW5hCmT7IZw=
+X-Google-Smtp-Source: AGHT+IH/77zfXrO7ZIqGIgGa0F4+3NcxV6NtMMOieHxgw97x0APZizQxin7XgKQgimZtxUGjPwKeLw==
+X-Received: by 2002:a05:6000:1cd2:b0:33d:ab46:22d1 with SMTP id bf18-20020a0560001cd200b0033dab4622d1mr7739526wrb.29.1709633986091;
+        Tue, 05 Mar 2024 02:19:46 -0800 (PST)
+Received: from airbuntu (92.40.185.97.threembb.co.uk. [92.40.185.97])
+        by smtp.gmail.com with ESMTPSA id i10-20020adff30a000000b0033b6e26f0f9sm14577292wro.42.2024.03.05.02.19.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 02:19:45 -0800 (PST)
+Date: Tue, 5 Mar 2024 10:19:41 +0000
+From: Qais Yousef <qyousef@layalina.io>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+	yu.c.chen@intel.com, dietmar.eggemann@arm.com,
+	linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
+	aboorvad@linux.ibm.com, srikar@linux.ibm.com, vschneid@redhat.com,
+	pierre.gondois@arm.com, morten.rasmussen@arm.com
+Subject: Re: [PATCH v4 2/2] sched/fair: Use helper function to access
+ rd->overutilized
+Message-ID: <20240305101941.c5foq7v43xwohrzp@airbuntu>
+References: <20240301151725.874604-1-sshegde@linux.ibm.com>
+ <20240301151725.874604-3-sshegde@linux.ibm.com>
+ <20240303185441.km7c4u7yui3b5nl2@airbuntu>
+ <5e5c0a81-3c60-437c-b164-e1245222d964@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5e5c0a81-3c60-437c-b164-e1245222d964@linux.ibm.com>
 
-Add documentation for the Trusted Services TEE driver.
+On 03/04/24 13:58, Shrikanth Hegde wrote:
+> 
+> 
+> On 3/4/24 12:24 AM, Qais Yousef wrote:
+> > On 03/01/24 20:47, Shrikanth Hegde wrote:
+> >> Overutilized field is accessed directly in multiple places.
+> >> So it could use a helper function. That way one might be more
+> >> informed that it needs to be used only in case of EAS.
+> >>
+> >> No change in functionality intended.
+> >>
+> >> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+> > 
+> > Can we do the same for rd->overload too? A set_rd_overload_status() would be
+> > a nice addition too. Anyway.
+> 
+> 
+> We have some more experiments going around overload. 
+> For example, currently it is writing sg_status & SG_OVERLOAD without checking if it has 
+> changed first. On large systems that are not overloaded, that may help by reducing the 
+> bus traffic. 
+> 
+> I will pick up this after we have some more data on the above. 
 
-Acked-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
----
- Documentation/tee/index.rst  |  1 +
- Documentation/tee/ts-tee.rst | 71 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+)
- create mode 100644 Documentation/tee/ts-tee.rst
+*thumps up*
 
-diff --git a/Documentation/tee/index.rst b/Documentation/tee/index.rst
-index a23bd08847e5..4be6e69d7837 100644
---- a/Documentation/tee/index.rst
-+++ b/Documentation/tee/index.rst
-@@ -10,6 +10,7 @@ TEE Subsystem
-    tee
-    op-tee
-    amd-tee
-+   ts-tee
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/tee/ts-tee.rst b/Documentation/tee/ts-tee.rst
-new file mode 100644
-index 000000000000..843e34422648
---- /dev/null
-+++ b/Documentation/tee/ts-tee.rst
-@@ -0,0 +1,71 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================================
-+TS-TEE (Trusted Services project)
-+=================================
-+
-+This driver provides access to secure services implemented by Trusted Services.
-+
-+Trusted Services [1] is a TrustedFirmware.org project that provides a framework
-+for developing and deploying device Root of Trust services in FF-A [2] S-EL0
-+Secure Partitions. The project hosts the reference implementation of the Arm
-+Platform Security Architecture [3] for Arm A-profile devices.
-+
-+The FF-A Secure Partitions (SP) are accessible through the FF-A driver [4] which
-+provides the low level communication for this driver. On top of that the Trusted
-+Services RPC protocol is used [5]. To use the driver from user space a reference
-+implementation is provided at [6], which is part of the Trusted Services client
-+library called libts [7].
-+
-+All Trusted Services (TS) SPs have the same FF-A UUID; it identifies the TS RPC
-+protocol. A TS SP can host one or more services (e.g. PSA Crypto, PSA ITS, etc).
-+A service is identified by its service UUID; the same type of service cannot be
-+present twice in the same SP. During SP boot each service in the SP is assigned
-+an "interface ID". This is just a short ID to simplify message addressing.
-+
-+The generic TEE design is to share memory at once with the Trusted OS, which can
-+then be reused to communicate with multiple applications running on the Trusted
-+OS. However, in case of FF-A, memory sharing works on an endpoint level, i.e.
-+memory is shared with a specific SP. User space has to be able to separately
-+share memory with each SP based on its endpoint ID; therefore a separate TEE
-+device is registered for each discovered TS SP. Opening the SP corresponds to
-+opening the TEE device and creating a TEE context. A TS SP hosts one or more
-+services. Opening a service corresponds to opening a session in the given
-+tee_context.
-+
-+Overview of a system with Trusted Services components::
-+
-+   User space                  Kernel space                   Secure world
-+   ~~~~~~~~~~                  ~~~~~~~~~~~~                   ~~~~~~~~~~~~
-+   +--------+                                               +-------------+
-+   | Client |                                               | Trusted     |
-+   +--------+                                               | Services SP |
-+      /\                                                    +-------------+
-+      ||                                                          /\
-+      ||                                                          ||
-+      ||                                                          ||
-+      \/                                                          \/
-+   +-------+                +----------+--------+           +-------------+
-+   | libts |                |  TEE     | TS-TEE |           |  FF-A SPMC  |
-+   |       |                |  subsys  | driver |           |   + SPMD    |
-+   +-------+----------------+----+-----+--------+-----------+-------------+
-+   |      Generic TEE API        |     |  FF-A  |     TS RPC protocol     |
-+   |      IOCTL (TEE_IOC_*)      |     | driver |        over FF-A        |
-+   +-----------------------------+     +--------+-------------------------+
-+
-+References
-+==========
-+
-+[1] https://www.trustedfirmware.org/projects/trusted-services/
-+
-+[2] https://developer.arm.com/documentation/den0077/
-+
-+[3] https://www.arm.com/architecture/security-features/platform-security
-+
-+[4] drivers/firmware/arm_ffa/
-+
-+[5] https://trusted-services.readthedocs.io/en/v1.0.0/developer/service-access-protocols.html#abi
-+
-+[6] https://git.trustedfirmware.org/TS/trusted-services.git/tree/components/rpc/ts_rpc/caller/linux/ts_rpc_caller_linux.c?h=v1.0.0
-+
-+[7] https://git.trustedfirmware.org/TS/trusted-services.git/tree/deployments/libts/arm-linux/CMakeLists.txt?h=v1.0.0
--- 
-2.34.1
-
+> 
+> > 
+> > Reviewed-by: Qais Yousef <qyousef@layalina.io>
+> > 
+> 
+> Thank you.
+> 
+> > 
+> > Thanks!
