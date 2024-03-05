@@ -1,145 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E162F43;
-	Tue,  5 Mar 2024 01:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D9A2F43;
+	Tue,  5 Mar 2024 01:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709603566; cv=none; b=fiyyAG7Gyqizo9cc8QXKhnTqmC9Qj59eS9jGDrdoiK3y3+YbT5HkqxboGdQx45Vv2Nv5EBukpa1Y6vK8Gby+xq1uduV2JAk2LN2M5BTVX+DEyv1hP2gvyhnMSnf1lnhxF9VKsOks9xr66+ixYY9OhXdkNkEWg+FLYSKcmDhObHU=
+	t=1709603743; cv=none; b=fHvNDS28MuMgf50uSd1LNMSPZkY8QsVPmixA2jO+wRR6ronxNEz5X4UXbasirr0NRLGzxdXjBUb6myvHymaWDYITaqrnlbDZyzLBIYikijZ3domNcGdox+K6L/elVOpXN0TW8iO6Qzsp30Q92+FGZGEbFf/qgCH+dQgvJxIsvpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709603566; c=relaxed/simple;
-	bh=GRusyfa8TF2Nxs4bQB9i2a/gKinpT0tnMyNb3mj5cYE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=EQGXcWBwrLlj5jHMPssAc/2tCAX5WQYRy3DwATWg2T9PFF7nsiEDnoDW1VKzkI3pkNoXg0bn+jEKx8t/hDgagvRQfdZRRvCGoo/BrnAQSLwjD5vVWNggRxXDM2b1wRmDlZUGONSapA0NxlqC8EhN/1TlfCRQ0a0Yz89shS9cKlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSzLJu53; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSzLJu53"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2BEDC433F1;
-	Tue,  5 Mar 2024 01:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709603566;
-	bh=GRusyfa8TF2Nxs4bQB9i2a/gKinpT0tnMyNb3mj5cYE=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=nSzLJu53wk1f1qMdYraehDndWs5Mo7yDzC6+kuwoc2efv4CimLQg4plE4s9+yR4gb
-	 jTpE1cOz9iKYGdYFkDi1JdfOObk2dJ4OwfIYNsQzkpk7sdzVrwUYNzaZD4CA301ShZ
-	 05MzEAFbN3DeADUIRitKnOvf8Hg5zw4Ax3zkCL9pmKZqWX92h7RT122GoQ8vJY3YyL
-	 C/73Y1D7B+lk5vHgm1Z8IK8SnTidEQJprV46M/7RQsq8i4/DjzBIOPHWuA7MCWD7gq
-	 aVAXBuf08xk+mlp+IzF4QrMVsZ2SkR7FMMbAwmV+x8zakfguT/xcQQ4TwW7GnPiifb
-	 tPhSJOgArc0Ag==
+	s=arc-20240116; t=1709603743; c=relaxed/simple;
+	bh=FlXtlSeO6cB/ZUPdjYZmayDOEDubCs5O53bxkF5XlEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AIt1I8okxX0haWkpoRKPr+Okyvu2611D329v/40cx6EIpfAssTpPwq0Eyg2lP++oKxW1LfAz9X9wV10uF4YEBgBI7b1wKvYGFoQDd6aqA53F14gGf6s+jOjjUHMvNPMZgqjiemMQOyy5pUf+HrgiPYupAd3sDV6yLvhNIdSujh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE76BC433F1;
+	Tue,  5 Mar 2024 01:55:41 +0000 (UTC)
+Date: Mon, 4 Mar 2024 20:57:30 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>,
+ Sachin Sant <sachinp@linux.ibm.com>
+Subject: Re: [PATCH] tracing: Have trace_marker writes be just half of
+ TRACE_SEQ_SIZE
+Message-ID: <20240304205730.53328530@gandalf.local.home>
+In-Reply-To: <e34628b6-fdb3-420f-8563-4cf91ad3a04b@efficios.com>
+References: <20240304192710.4c99677c@gandalf.local.home>
+	<469d31a7-f358-4547-bb17-0979b3515924@efficios.com>
+	<20240304203516.45b7a551@gandalf.local.home>
+	<e34628b6-fdb3-420f-8563-4cf91ad3a04b@efficios.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 05 Mar 2024 03:52:41 +0200
-Message-Id: <CZLFVTVPBFB4.3IIZULN3LKZGI@kernel.org>
-Subject: Re: [PATCH] Documentation: tpm_tis
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Randy Dunlap" <rdunlap@infradead.org>, <linux-doc@vger.kernel.org>
-Cc: "Jonathan Corbet" <corbet@lwn.net>, "Daniel P . Smith"
- <dpsmith@apertussolutions.com>, "Lino Sanfilippo"
- <l.sanfilippo@kunbus.com>, "Jason Gunthorpe" <jgg@ziepe.ca>, "Peter Huewe"
- <peterhuewe@gmx.de>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Alexander Steffen"
- <Alexander.Steffen@infineon.com>, <keyrings@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240304212734.43213-1-jarkko@kernel.org>
- <aed28265-d677-491a-a045-24b351854b24@infradead.org>
-In-Reply-To: <aed28265-d677-491a-a045-24b351854b24@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue Mar 5, 2024 at 12:53 AM EET, Randy Dunlap wrote:
->
->
-> On 3/4/24 13:27, Jarkko Sakkinen wrote:
-> > Based recent discussions on LKML, provide preliminary bits of tpm_tis_c=
-ore
-> > dependent drivers. Includes only bare essentials but can be extended la=
-ter
-> > on case by case. This way some people may even want to read it later on=
-.
-> >=20
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > CC: Daniel P. Smith <dpsmith@apertussolutions.com>
-> > Cc: Lino Sanfilippo <l.sanfilippo@kunbus.com>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-> > Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> > Cc: keyrings@vger.kernel.org
-> > Cc: linux-doc@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-integrity@vger.kernel.org
-> > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > ---
-> >  Documentation/security/tpm/index.rst   |  1 +
-> >  Documentation/security/tpm/tpm_tis.rst | 30 ++++++++++++++++++++++++++
-> >  2 files changed, 31 insertions(+)
-> >  create mode 100644 Documentation/security/tpm/tpm_tis.rst
-> >=20
->
-> > diff --git a/Documentation/security/tpm/tpm_tis.rst b/Documentation/sec=
-urity/tpm/tpm_tis.rst
-> > new file mode 100644
-> > index 000000000000..3cec0216a169
-> > --- /dev/null
-> > +++ b/Documentation/security/tpm/tpm_tis.rst
-> > @@ -0,0 +1,30 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> > +TPM FIFO interface Driver
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> > +
-> > +FIFO (First-In-First-Out) is the name of the hardware interface used b=
-y the
-> > +`tpm_tis_core` dependent drivers. The prefix "tis" is named after TPM
-> > +Interface Specification, which is the hardware interface specification=
- for
-> > +TPM 1.x chips.
-> > +
-> > +Communication is based on a 5 KiB buffer shared by the TPM chip throug=
-h a
-> > +hardware bus or memory map. The buffer is further split to five equal =
-size
-> > +buffers, which provide equivalent sets of registers for communication
-> > +between CPU and TPM. The communication end points are called *localiti=
-es*
-> > +in the TCG terminology.
-> > +
-> > +When a kernel wants to send a commands to the TPM chip, it first reser=
-ves
-> > +locality 0 by setting `requestUse` bit in `TPM_ACCESS` register. The b=
-it is
-> > +cleared by the chip when the access is granted. Once completed its
-> > +communication, it sets `activeLocity` bit in the same register.
->
->       Is that              activeLocality ?
+On Mon, 4 Mar 2024 20:36:28 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Yes.
+> >             <...>-999     [001] .....  2296.140373: tracing_mark_write: hello
+> > ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> >     This is the meta data that is added to trace_seq  
+> 
+> If this header has a known well-defined upper-limit length, then use
+> that in the BUILD_BUG_ON().
 
->
-> > +
-> > +Pending localities are served in order by the chip descending orderm a=
-nd
-> > +one at a time:
-> > +
-> > +- Locality 0 has the lowest priority.
-> > +- Locality 5 has the highest priotiy.
->
->                                 priority.
->
-> > +
-> > +Further information on purpose and meaning of the localities can be fo=
-und
-> > +from section 3.2 of TCG PC Client Platform TPM Profile Specification.
+Unfortunately there's no set limit. It's built up by different callbacks
+and such. The output can be changed by options set by the user and even by
+tracers, like the function graph tracer:
 
-Thanks for the remarks. Too many typos but at least I think the story is
-is understandable and describes pretty well key elements of tpm_tis_core.
+# tracer: function_graph
+#
+# CPU  DURATION                  FUNCTION CALLS
+# |     |   |                     |   |   |   |
+ 1)               |  /* hello */
 
-BR, Jarkko
+
+But the worse that will happen if it overflows is that the event is
+replaced with:
+
+             <...>-999     [001] .....  2296.140373: [LINE TOO BIG]
+
+But this has never happened outside of development. I guess you could
+trigger it if you add a trace_printk() that has a string bigger than
+TRACE_SEQ_BUFFER_SIZE. But as Linus says, "Don't do stupid things" ;-)
+
+But in reality, with all the options and everything, I've never seen the
+appended text more than 80 bytes (and probably much less).
+
+-- Steve
