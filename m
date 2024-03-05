@@ -1,318 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC4977635;
-	Tue,  5 Mar 2024 10:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3248655761
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 10:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709634210; cv=none; b=B6a6LdKmfkPlsOweNm3B4FKmQ0ivjJ1WJ4fNDXVnmAO87Dxr62MJm73pDoqrnv32YCUVSndUT/Gg4IfBH+EgeXfkoh4x8m3ulgci9IbYIL6e7OgfnpK3gSC4E1WLA9zGhuc//ItC9kFvX5nWQiKYiDoP+oIBEOUhxu+ryp19cOM=
+	t=1709634239; cv=none; b=uUiXMOfseQEATEU5lWCVBa3uR0J4s1wRv4SyhEJle2zfBcyTE4KJ4DcIK4zB/Szg9fw/Ko50HMOqCc6Siie4PLeez0MUQNou+ceArkssIWxTHW7MWlI2XOrjl8fpi4CRysRnm08ZWOEZw1AY6i0wPQ1Ahvd8FeC7Hy/OlIYqJ1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709634210; c=relaxed/simple;
-	bh=LoE4Mk2h+x4QygNOYAaQkErlcP1J9OkI1WKvPNtdRq4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pB5CQr+GBatLyIs1t7pRoiwFmYGxWskQr1NvgNxWprlbjtpE2WKnuBfiN3ynVaKLKY/r/Bfxfs+xbutY9erz48RBrnMwZNGcIZxxDFSnHPpXI1W8N9K/+RvurV+iLJFP1PxFlogpqliYwQ7T7SlgIvdUdvcEMZnaxAP6ruHEKMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuybAGSs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709634239; c=relaxed/simple;
+	bh=PqHa9jZYY6n6dlsBNRS5MBKuLT4wieT6fvPpCzLLJ7E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e8JaJMGeW15aj1g3d+YobBtNhNnf8akYXKZyMcDl7s+GGSXy4iZmzvVJEfZLozxJkS9zjw4JvYpZUVfgeaimBHayLSoXr4SCubtP1BqRHK6sCVaRPOIu2UAFqhvMQyAaWwnoFohSeoi1HHTcCPt2fqP+cKmtrtMrVBRw8ZRFQK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jHM0j6zL; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuybAGSs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500F6C433C7;
-	Tue,  5 Mar 2024 10:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709634210;
-	bh=LoE4Mk2h+x4QygNOYAaQkErlcP1J9OkI1WKvPNtdRq4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HuybAGSshurhhBSkZ/UzE2+JHtSdHCuONHvu/sjgovbmRc9E4Ia7yRyDtvI9/9bwn
-	 uAp1lDjmK72VGBkOx6cA9srIhHq+S6eNxUnUuwsXOxQj6vdxcjzI0ZODdahoiZArAg
-	 hjfcB88M9d8CtxW6BY4oIaheQYNhWxd7FW7JdyNQvqwtYCf33qaA+ry3klVir8cxCE
-	 l/AHA+dfZRQvykuGu3yFiRyRMengOapKLC9ciWCsCD+4Cu/r4EonZNQOMGxJoDfYt2
-	 vu10cD0Xn9ynq+M8Ju1yF3LAP2LmXVABwOWPuoNHgyW8hWehVo0jvsa7qmEW01was0
-	 UXKCOTnvSsq5g==
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Chaitanya Kulkarni <kch@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: [RFC 15/16] block: add dma_link_range() based API
-Date: Tue,  5 Mar 2024 12:22:16 +0200
-Message-ID: <1e52aa392b9c434f55203c9d630dd06fcdb75c32.1709631413.git.leon@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1709631800.git.leon@kernel.org>
-References: <cover.1709631800.git.leon@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jHM0j6zL"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so8037081a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 02:23:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709634235; x=1710239035; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PlspS2X5YJwHI6bCWiB2Kxx+bO+ABr/mcVKBji0Oxwk=;
+        b=jHM0j6zLffqO/iNaKwTcxS1Va63ExTB+Y4QXrkQtiDryTRnuvDCMQW/avXwY6t2Gau
+         cXWpkE1cRfd2XUn8l+5N58f3fVBrjKJ5KwmE6UWaTe5myvMtfsfxNVnMmft6eDmtaXZr
+         Xk6FhiYn2Nufm046n+nzQU/nSm5N/C0gnxWEF0sJX7taXNKGwCxidr6VUnqwMkiMeod6
+         exOO3t2yrOJ/Q7+gF7C42J6lFTr6s/mZ5ZWai0NJkUWKWxvA0BWBvyJOycF+WIRV9XBJ
+         w/OZD+6PWQHAoYj7DoaJiEKcxd9PvD+2bMKujic4jnxvAiR0wYHm8mYUFh6MFiU0IJZt
+         lnOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709634235; x=1710239035;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PlspS2X5YJwHI6bCWiB2Kxx+bO+ABr/mcVKBji0Oxwk=;
+        b=PjHWLD+MmdLxyQW456KLqAgVfkQEs05RsB5k6xtNSaoZcgBQ5qShKNbOtu2bL0uDod
+         RkKfVxjxCWwIJXAOyy3tO7pqzPXtfnzIunZFlEFQ9/CXXrF816tWtw2HB4O+9ENUPtMG
+         sXw24fR50M4Yv/4cgh0ifHg9VP0U+ZC7CPJPZm+d5/LXuTD5QZcbtH2X5ybwV94MsuFo
+         7r3v2QzzbewGGmCbQmMQDWsJQx00AHcRp8JfWtVxyzdWF2BgMT+fpB1hcmWrSV97E2JR
+         8O7CZai/loogvu/DccTDm9/SFe2UtkcKbGVAUN2g7FF8PQmuVstEFVLWl/DWtpEtUzZ4
+         F73A==
+X-Forwarded-Encrypted: i=1; AJvYcCW7g/F+NOypruCiZ7FSrA7UcDHlPWaqx1zAEUvUXd1igMSfafwyF/U/tWa2JZkK0q6butT41ZkootwvOAiCx/JJjjFLe3Jwh3POqLTJ
+X-Gm-Message-State: AOJu0YxHzRlgtOXsXlozKcy4bMF6Z1O5Z2ttaKUvUg/gemirYxNoaGzM
+	2VDbQqVd8aRXyqP4Kg0eHFHQOWzm2Fs3bGf9v2RbuO+fdOJtKBrTECjriYQisjaH8dcw4J1Xra6
+	OOB0s+Ad2x7ACNB0HlQdlRHHwUtyiuZeC5EtPVQ==
+X-Google-Smtp-Source: AGHT+IGUwEp/+WhHA0uQ0uW2uvX6Vp5aF/NLRg8+micGN3CEaNubXYVANAb9auNn0QNapfA8iEZ3XcUbSMqmSS5KIi8=
+X-Received: by 2002:a05:6402:40cc:b0:567:1458:caa with SMTP id
+ z12-20020a05640240cc00b0056714580caamr5847164edb.40.1709634235386; Tue, 05
+ Mar 2024 02:23:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <20240305102216.bttjGxsOGflBQcmmJsatTfcK4RCu_Gz3obdkTa1fov4@z>
+References: <20240304211537.631764077@linuxfoundation.org>
+In-Reply-To: <20240304211537.631764077@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 5 Mar 2024 15:53:42 +0530
+Message-ID: <CA+G9fYsFuQDfvRGyUhLNuFXQc0yfu_eE3pnRYbUD7p9U7GEa9g@mail.gmail.com>
+Subject: Re: [PATCH 5.10 00/42] 5.10.212-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Chaitanya Kulkarni <kch@nvidia.com>
+On Tue, 5 Mar 2024 at 03:05, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.10.212 release.
+> There are 42 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 06 Mar 2024 21:15:26 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.212-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Add two helper functions that are needed to calculate the total DMA
-length of the request blk_rq_get_dma_length() and to create DMA
-mapping blk_rq_dma_map().
+Following build failures noticed on riscv.
 
-blk_rq_get_dma_length() is used to get the total length of the request,
-when driver is allocating IOVA space for this request with the call to
-dma_alloc_iova(). This length is then initialized to the iova->size and
-passed to allocate iova call chain :-
-dma_map_ops->allov_iova()
-        iommu_dma_alloc_iova()
-                alloc_iova_fast()
-                        iova_rcache_get()
-                                OR
-                        alloc_iova()
+The riscv defconfig, tinyconfig and allnoconfig builds on 5.10.
+The riscv tinyconfig and allnoconfig builds on 5.15.
 
-blk_rq_dma_map() iterates through bvec list and creates DMA mapping
-for each page using iova parameter with the help of dma_link_range().
-Note that @iova is allocated & pre-initialized using dma_alloc_iova()
-by the caller. After creating a mapping for each page, call into the
-callback function @cb provided by the drive with a mapped DMA address
-for this page, offset into the iova space (needed at the time of
-unlink), length of the mapped page, and page number that is mapped in
-this request. Driver is responsible for using this DMA address to
-complete the mapping of underlying protocol-specific data structures,
-such as NVMe PRPs or NVMe SGLs. This callback approach allows us to
-iterate bvec list only once to create bvec to DMA mapping and use that
-DMA address in driver to build the protocol-specific data structure,
-essentially mapping one bvec page at a time to DMA address and using
-that DMA address to create underlying protocol-specific data structures.
-Finally, returning the number of linked count.
+linux.5.10.y build failures on riscv.
+riscv:
 
-Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+  * gcc-8-defconfig
+  * clang-17-allnoconfig
+  * gcc-12-tinyconfig
+  * gcc-8-allnoconfig
+  * gcc-8-allmodconfig
+  * clang-17-defconfig
+  * gcc-12-defconfig
+  * clang-17-tinyconfig
+  * gcc-12-allmodconfig
+  * gcc-8-tinyconfig
+  * gcc-12-allnoconfig
+
+linux.5.15.y build failures on riscv.
+riscv:
+  build:
+    * gcc-12-tinyconfig
+    * gcc-8-allnoconfig
+    * clang-17-tinyconfig
+    * gcc-8-tinyconfig
+    * gcc-12-allnoconfig
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+arch/riscv/kernel/return_address.c:39:9: error: implicit declaration
+of function 'arch_stack_walk' [-Werror=implicit-function-declaration]
+   39 |         arch_stack_walk(save_return_addr, &data, current, NULL);
+      |         ^~~~~~~~~~~~~~~
+cc1: some warnings being treated as errors
+
+Suspecting patch,
+
+riscv: add CALLER_ADDRx support
+commit 680341382da56bd192ebfa4e58eaf4fec2e5bca7 upstream.
+
+steps to reproduce:
 ---
- block/blk-merge.c      | 156 +++++++++++++++++++++++++++++++++++++++++
- include/linux/blk-mq.h |   9 +++
- 2 files changed, 165 insertions(+)
+# tuxmake --runtime podman --target-arch riscv --toolchain gcc-12
+--kconfig defconfig
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 2d470cf2173e..63effc8ac1db 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -583,6 +583,162 @@ int __blk_rq_map_sg(struct request_queue *q, struct request *rq,
- }
- EXPORT_SYMBOL(__blk_rq_map_sg);
- 
-+static dma_addr_t blk_dma_link_page(struct page *page, unsigned int page_offset,
-+				    struct dma_iova_attrs *iova,
-+				    dma_addr_t dma_offset)
-+{
-+	dma_addr_t dma_addr;
-+	int ret;
-+
-+	dma_addr = dma_link_range(page, page_offset, iova, dma_offset);
-+	ret = dma_mapping_error(iova->dev, dma_addr);
-+	if (ret) {
-+		pr_err("dma_mapping_err %d dma_addr 0x%llx dma_offset %llu\n",
-+			ret, dma_addr, dma_offset);
-+		/* better way ? */
-+		dma_addr = 0;
-+	}
-+	return dma_addr;
-+}
-+
-+/**
-+ * blk_rq_dma_map: block layer request to DMA mapping helper.
-+ *
-+ * @req         : [in] request to be mapped
-+ * @cb          : [in] callback to be called for each bvec mapped bvec into
-+ *                     underlaying driver.
-+ * @cb_data     : [in] callback data to be passed, privete to the underlaying
-+ *                     driver.
-+ * @iova        : [in] iova to be used to create DMA mapping for this request's
-+ *                     bvecs.
-+ * Description:
-+ * Iterates through bvec list and create dma mapping between each bvec page
-+ * using @iova with dma_link_range(). Note that @iova needs to be allocated and
-+ * pre-initialized using dma_alloc_iova() by the caller. After creating
-+ * a mapping for each page, call into the callback function @cb provided by
-+ * driver with mapped dma address for this bvec, offset into iova space, length
-+ * of the mapped page, and bvec number that is mapped in this requets. Driver is
-+ * responsible for using this dma address to complete the mapping of underlaying
-+ * protocol specific data structure, such as NVMe PRPs or NVMe SGLs. This
-+ * callback approach allows us to iterate bvec list only once to create bvec to
-+ * DMA mapping & use that dma address in the driver to build the protocol
-+ * specific data structure, essentially mapping one bvec page at a time to DMA
-+ * address and use that DMA address to create underlaying protocol specific
-+ * data structure.
-+ *
-+ * Caller needs to ensure @iova is initialized & allovated with using
-+ * dma_alloc_iova().
-+ */
-+int blk_rq_dma_map(struct request *req, driver_map_cb cb, void *cb_data,
-+		   struct dma_iova_attrs *iova)
-+{
-+	dma_addr_t curr_dma_offset = 0;
-+	dma_addr_t prev_dma_addr = 0;
-+	dma_addr_t dma_addr;
-+	size_t prev_dma_len = 0;
-+	struct req_iterator iter;
-+	struct bio_vec bv;
-+	int linked_cnt = 0;
-+
-+	rq_for_each_bvec(bv, req, iter) {
-+		if (bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
-+			curr_dma_offset = prev_dma_addr + prev_dma_len;
-+
-+			dma_addr = blk_dma_link_page(bv.bv_page, bv.bv_offset,
-+						     iova, curr_dma_offset);
-+			if (!dma_addr)
-+				break;
-+
-+			cb(cb_data, linked_cnt, dma_addr, curr_dma_offset,
-+			   bv.bv_len);
-+
-+			prev_dma_len = bv.bv_len;
-+			prev_dma_addr = dma_addr;
-+			linked_cnt++;
-+		} else {
-+			unsigned nbytes = bv.bv_len;
-+			unsigned total = 0;
-+			unsigned offset, len;
-+
-+			while (nbytes > 0) {
-+				struct page *page = bv.bv_page;
-+
-+				offset = bv.bv_offset + total;
-+				len = min(get_max_segment_size(&req->q->limits,
-+							       page, offset),
-+							       nbytes);
-+
-+				page += (offset >> PAGE_SHIFT);
-+				offset &= ~PAGE_MASK;
-+
-+				curr_dma_offset = prev_dma_addr + prev_dma_len;
-+
-+				dma_addr = blk_dma_link_page(page, offset,
-+							     iova,
-+							     curr_dma_offset);
-+				if (!dma_addr)
-+					break;
-+
-+				cb(cb_data, linked_cnt, dma_addr,
-+				   curr_dma_offset, len);
-+
-+				total += len;
-+				nbytes -= len;
-+
-+				prev_dma_len = len;
-+				prev_dma_addr = dma_addr;
-+				linked_cnt++;
-+			}
-+		}
-+	}
-+	return linked_cnt;
-+}
-+EXPORT_SYMBOL_GPL(blk_rq_dma_map);
-+
-+/*
-+ * Calculate total DMA length needed to satisfy this request.
-+ */
-+size_t blk_rq_get_dma_length(struct request *rq)
-+{
-+	struct request_queue *q = rq->q;
-+	struct bio *bio = rq->bio;
-+	unsigned int offset, len;
-+	struct bvec_iter iter;
-+	size_t dma_length = 0;
-+	struct bio_vec bvec;
-+
-+	if (rq->rq_flags & RQF_SPECIAL_PAYLOAD)
-+		return rq->special_vec.bv_len;
-+
-+	if (!rq->bio)
-+		return 0;
-+
-+	for_each_bio(bio) {
-+		bio_for_each_bvec(bvec, bio, iter) {
-+			unsigned int nbytes = bvec.bv_len;
-+			unsigned int total = 0;
-+
-+			if (bvec.bv_offset + bvec.bv_len <= PAGE_SIZE) {
-+				dma_length += bvec.bv_len;
-+				continue;
-+			}
-+
-+			while (nbytes > 0) {
-+				offset = bvec.bv_offset + total;
-+				len = min(get_max_segment_size(&q->limits,
-+							       bvec.bv_page,
-+							       offset), nbytes);
-+				total += len;
-+				nbytes -= len;
-+				dma_length += len;
-+			}
-+		}
-+	}
-+
-+	return dma_length;
-+}
-+EXPORT_SYMBOL(blk_rq_get_dma_length);
-+
- static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
- 						  sector_t offset)
- {
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 7a8150a5f051..80b9c7f2c3a0 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -8,6 +8,7 @@
- #include <linux/scatterlist.h>
- #include <linux/prefetch.h>
- #include <linux/srcu.h>
-+#include <linux/dma-mapping.h>
- 
- struct blk_mq_tags;
- struct blk_flush_queue;
-@@ -1144,7 +1145,15 @@ static inline int blk_rq_map_sg(struct request_queue *q, struct request *rq,
- 
- 	return __blk_rq_map_sg(q, rq, sglist, &last_sg);
- }
-+
-+typedef void (*driver_map_cb)(void *cb_data, u32 cnt, dma_addr_t dma_addr,
-+			      dma_addr_t offset, u32 len);
-+
-+int blk_rq_dma_map(struct request *req, driver_map_cb cb, void *cb_data,
-+		   struct dma_iova_attrs *iova);
-+
- void blk_dump_rq_flags(struct request *, char *);
-+size_t blk_rq_get_dma_length(struct request *rq);
- 
- #ifdef CONFIG_BLK_DEV_ZONED
- static inline unsigned int blk_rq_zone_no(struct request *rq)
--- 
-2.44.0
 
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/v5.10.210-166-g4b0abedc88b0/testrun/22941782/suite/test/gcc-12-defconfig/details/
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/v5.10.210-166-g4b0abedc88b0/testrun/22941144/suite/test/gcc-12-defconfig/history/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2dF5ke88GqtfanduGie1JGLUbVa/
+
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/v5.15.149-332-ge7cbbec10c6e/testrun/22942335/suite/test/gcc-12-allnoconfig/history/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2dF68wn0dXbU2xGLRyzsxGdXTyB/
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
