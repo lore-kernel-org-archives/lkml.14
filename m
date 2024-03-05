@@ -1,163 +1,171 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1819718EAB
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 18:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D6718EA2;
+	Tue,  5 Mar 2024 18:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709661865; cv=none; b=FxbSKn2rY6anNliwwaCoZV1VmMoou2Wgrcz5sLsgaoaoi8/EsuXQTStai4p7wJ63GebW+scgjuGEhzWqENrqAI1GkI6dQxzEGDQy3hYqbiMYXfZ0efUG04s028meA0h0kl4B2zZyNK/CWR2WD39QteA2gmFdISmDjp7y0exgPzs=
+	t=1709661865; cv=none; b=UVOlbHVbDWA1S0GvcU8lTjHG0Bel52/TbGcFr/zPdIlLcp8uUIf90ivv8LHt/e4l1lJXSWMIXPKEw90qY8bFrQdfvZ/f0uBW/jIqI5yT/fOghq7AAQHyfJZbCnRq1RC+witBILOKOC9HvQ9R+z/crYIhwVoe3Uc+mq/p5+tUeJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709661865; c=relaxed/simple;
-	bh=KlteQmYHydWNBOpxdpzf+ptjubVxDcE/oTAcS8ClTCY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YM5V+I+4UydtpHhwp0L5hcVZQhWwURs5V+H8SDmSksVprad8VkFP3wnRQ9LYFecBoubPuU0lK/AbJn4g9QPX2LGqEqS6vDw9zXVBVzEK3LaxI5aHkXTMIINKZxDkVis9NCZ3Mfda4JGOqtqdB4HX6RhZv32p4axprLvQ7NvGM4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lx/uVdSM; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	bh=CzoUQeUuD/Op4J/bIDyyH8d27EUxkN3m+tfcHhz4KTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pbXXacpNJDJpfAFQepFIA9Bb+JRRTwBnxpMI39PB6/TeHd0z55AIOdOd7Tm4r+s0PDm8IBW9NO0NNZpNASF7gD6247raFr13Xr90NfOxx486ogdhmV1DPtrJbsPGsgJnKWp15TqNVGwyE6133I/LuRiW+xddT7IL1TIKlsfdyDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=invisiblethingslab.com; spf=none smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=UX6+wXCy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=da+EPSJG; arc=none smtp.client-ip=64.147.123.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lx/uVdSM"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-609ce331defso12884257b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 10:04:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709661863; x=1710266663; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pEbrJLbsSQI/fw5oAKGC5MieHsStoqch1a0BdEdHBlY=;
-        b=Lx/uVdSMQf992dTYkIderi7voShRPjzxBfQcJleun8akA1s316Flk0UoDnRtcO4ujY
-         fQZ5op5ngmWIv2bWeSdXOXGtl4JXj9Kpdr3Y8zgWYcxSX2rlwpsGCaXqWcDuovjIlpXw
-         PLNAq3TtOamsHeLPsc2fwpSkQpStyv9N11mTrutYPZ+91/FZOohLvHFHGAQxXasM48Jj
-         6VEWFbuPEcTcMy5MwqTnLhq59/p/71Y2HA87+mTgy51kvGXXmwwr5LEJEf7s0DxscZVo
-         qv4AoFzFE6xGIV4x1yogkHo9XQpCg6GwADtYrnDqHBvOr97T1KeA8N2tt4X9js+fMvZ2
-         ySQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709661863; x=1710266663;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pEbrJLbsSQI/fw5oAKGC5MieHsStoqch1a0BdEdHBlY=;
-        b=WHpzM3+JHEguska1fm80aT09XOvFwqs9HdAQ/nP/er//bi4beSZ3VOceqI++VHv2cH
-         11VUpAB25HCeCUNtcJngq4ZkbjmcvEz3/mtzRgZp2cL5z8/DTjv5WIgTz7JJld4C9Fka
-         CNHUnloHgR6ovHmEl9LWLJl0h5cHb8CvqJg+DEVmKUJuFzCaZMDiqzC8zsM67uD5HNAS
-         RnyC/I9BOnDkYXcwKmjodh51rMDwd/tdMNlTEobETz6gG0L6Igm9RmxzDUnKnL5wN6Dd
-         bVPg31GkhkRn7izIu8fdGluq3nDNq72S7QUIy6kbKO9u/Mkdx1NcH6GQm68n/KX76vNb
-         d2bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8H2zFmgrMX873ZpeEsJaH1k1pJ0bVO0L56Dmjg2KnmnYgGTZHsCkkX3RyjxGaFeuGwCgVlMApMkWZYzIBzzNkvoqGh9GshhKVaOMx
-X-Gm-Message-State: AOJu0Yy+ixZSjtiGfkug9G50U6AJ0xk38XNzaIIhlTr5onnsrqYO3Ce1
-	5l7h1RQHeoJRTa60+1URMWi6M4zawUX7UqB1iPVGa9QWveuZnl536K3jdXGTT8NfsAKJOpMA/64
-	4Kw==
-X-Google-Smtp-Source: AGHT+IHQ9UsEAu7P7/CrKaWcVqX4oXUziFtlmyRIzxiyJyrSWM03oEu21H2c1A1L24BxK1ATy8oHmtOSpnM=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:3507:b0:609:3c79:dbf1 with SMTP id
- fq7-20020a05690c350700b006093c79dbf1mr3570872ywb.8.1709661863151; Tue, 05 Mar
- 2024 10:04:23 -0800 (PST)
-Date: Tue, 5 Mar 2024 10:04:21 -0800
-In-Reply-To: <ZedUwKWW7PNkvUH1@google.com>
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="UX6+wXCy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="da+EPSJG"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 212DB18000C2;
+	Tue,  5 Mar 2024 13:04:22 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 05 Mar 2024 13:04:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1709661861;
+	 x=1709748261; bh=oJ89TjWV3yERdS8ie8KDxuv0wN9Nxj1Idl407UIe0hY=; b=
+	UX6+wXCyZgBfan+tiWIpzBz+pvCq2lZN6iT9Z87C13u6N26sZoeSxnONc7Zf0yyi
+	daxVe0o3UopEDWaWpjNeXEFYBQCXW0mRYxEJQfwMP0Fnsq+Ug3Up2Re/kRduxnjp
+	7X3PkT0vTUMQqBej4OTZ/YsT4aPGN64QEU24r6yxuMLdrkUjFThAzZVibLZQaFyQ
+	8yK+xCjEB9g5ASQTJfYweECGBSMO+9t14mxZHIz2PYVHreViDONTnPJ3X5pSV0Hn
+	cmMimkAH5pJI7zTunPndg89mmJEWI3Y4DDZEOrzQBmCaXUot9givnZJ0eTKz2f28
+	zpxumfNs3aJEaCvGniknPQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1709661861; x=1709748261; bh=oJ89TjWV3yERdS8ie8KDxuv0wN9N
+	xj1Idl407UIe0hY=; b=da+EPSJG5b9L2XMcD4+uIitqJst5ZjGiI41WKSjNrV8Q
+	N8Gpp4OvgzWm5yrNwwgJVLDzqsqt8MD8h1bsJLYZCCPuZ4UqScZH8N6Ix35sNsMP
+	y3Fo667ZgB8CN5v4tq7ReNNwBzgapDqxx0jmhnlQBpU6Ii6t7AEpLvBn+rP+IXaO
+	MKVNT8xtd0ACJEaZ3ynLbEzA7N/deNAvf+jdoxDQ0ltrUR7PH8erjxy91CvTpnIe
+	VSwMWZGvHdGg8JpOxt9zOy0AF1aJZ/EnNoDz5K+nmaeUfYoDhfTNPn3oeak2wHLM
+	khwy9ssym4YzEL2ffkoDmhflO/m9wClF9fa9FC1B1g==
+X-ME-Sender: <xms:pV7nZRuMSQtIl0PczRH4I2zhK3iS8aStvc05xtiUan7bLNrtmOaxFQ>
+    <xme:pV7nZacFC70dexq4M9wW4lXV-jKPn0hTbzVJaimyYU-Lni5GRiQy2p6X7_bFfgYUj
+    1vPCDUP6u2lwBE>
+X-ME-Received: <xmr:pV7nZUzKGWTde2ggxcnsWcd08b_1lYMf-zcaz_pfGrFzRlPRt0B12Dup9Nmrxqe1is-O6DzaaWx7MchYsC2mJ-XS5D-_PUKsuqUe1dVUT1fI4YFf>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrheelgddutdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepffgvmhhi
+    ucforghrihgvucfqsggvnhhouhhruceouggvmhhisehinhhvihhsihgslhgvthhhihhngh
+    hslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepvdejteegkefhteduhffgteffgeff
+    gfduvdfghfffieefieekkedtheegteehffelnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhs
+    lhgrsgdrtghomh
+X-ME-Proxy: <xmx:pV7nZYPWrnXxf_RQCTcWZVh4P9kf1OhLUL4wHxDt1bXRlVjOAgeLQQ>
+    <xmx:pV7nZR_MMscUfmwySVA-h-0C_Jrk1t3ZOwXbf1LACQy9LfIZN0XGAA>
+    <xmx:pV7nZYVffwPhCHvQbc2GbEqu5BH9wDCzkfGMw1RC3qZ-YtWgUc7lOw>
+    <xmx:pV7nZdbn79XA8CEDP7VzPtXbXacmnzHJLNEa7Px2Tm4rB-xffzy8MXehdL4>
+Feedback-ID: iac594737:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 5 Mar 2024 13:04:20 -0500 (EST)
+Date: Tue, 5 Mar 2024 13:03:40 -0500
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: Alan Stern <stern@rowland.harvard.edu>,
+	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: usbip doesn't work with userspace code that accesses USB devices
+Message-ID: <Zedeo6_4ZwuHiT3T@itl-email>
+References: <ZeYov0k8njwcZzGX@itl-email>
+ <2024030406-kilogram-raving-33c5@gregkh>
+ <ZeZPLX6z5pyn2Eh_@mail-itl>
+ <ZeZetkR-i1bCDr9v@mail-itl>
+ <a95c7e71-a720-49ba-b503-6f20a86be38e@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301075007.644152-1-sandipan.das@amd.com> <06061a28-88c0-404b-98a6-83cc6cc8c796@gmail.com>
- <cc8699be-3aae-42aa-9c70-f8b6a9728ee3@amd.com> <f5bbe9ac-ca35-4c3e-8cd7-249839fbb8b8@linux.intel.com>
- <ZeYlEGORqeTPLK2_@google.com> <8a846ba5-d346-422e-817b-e00ab9701f19@gmail.com>
- <ZedUwKWW7PNkvUH1@google.com>
-Message-ID: <ZedepdnKSl6oFNUq@google.com>
-Subject: Re: [PATCH] KVM: x86/svm/pmu: Set PerfMonV2 global control bits correctly
-From: Sean Christopherson <seanjc@google.com>
-To: Like Xu <like.xu.linux@gmail.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	pbonzini@redhat.com, mizhang@google.com, jmattson@google.com, 
-	ravi.bangoria@amd.com, nikunj.dadhania@amd.com, santosh.shukla@amd.com, 
-	manali.shukla@amd.com, babu.moger@amd.com, kvm list <kvm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-
-On Tue, Mar 05, 2024, Sean Christopherson wrote:
-> On Tue, Mar 05, 2024, Like Xu wrote:
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 87cc6c8809ad..f61ce26aeb90 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -741,6 +741,8 @@ static void kvm_pmu_reset(struct kvm_vcpu *vcpu)
->   */
->  void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
->  	if (KVM_BUG_ON(kvm_vcpu_has_run(vcpu), vcpu->kvm))
->  		return;
->  
-> @@ -750,8 +752,18 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
->  	 */
->  	kvm_pmu_reset(vcpu);
->  
-> -	bitmap_zero(vcpu_to_pmu(vcpu)->all_valid_pmc_idx, X86_PMC_IDX_MAX);
-> +	bitmap_zero(pmu->all_valid_pmc_idx, X86_PMC_IDX_MAX);
->  	static_call(kvm_x86_pmu_refresh)(vcpu);
-> +
-> +	/*
-> +	 * At RESET, both Intel and AMD CPUs set all enable bits for general
-> +	 * purpose counters in IA32_PERF_GLOBAL_CTRL (so that software that
-> +	 * was written for v1 PMUs don't unknowingly leave GP counters disabled
-> +	 * in the global controls).  Emulate that behavior when refreshing the
-> +	 * PMU so that userspace doesn't need to manually set PERF_GLOBAL_CTRL.
-> +	 */
-> +	if (kvm_pmu_has_perf_global_ctrl(pmu))
-> +		pmu->global_ctrl = GENMASK_ULL(pmu->nr_arch_gp_counters - 1, 0);
->  }
-
-Doh, this is based on kvm/kvm-uapi, I'll rebase to kvm-x86/next before posting.
-
-I'll also update the changelog to call out that KVM has always clobbered global_ctrl
-during PMU refresh, i.e. there is no danger of breaking existing setups by
-clobbering a value set by userspace, e.g. during live migration.
-
-Lastly, I'll also update the changelog to call out that KVM *did* actually set
-the general purpose counter enable bits in global_ctrl at "RESET" until v6.0,
-and that KVM intentionally removed that behavior because of what appears to be
-an Intel SDM bug.
-
-Of course, in typical KVM fashion, that old code was also broken in its own way
-(the history of this code is a comedy of errors).  Initial vPMU support in commit
-f5132b01386b ("KVM: Expose a version 2 architectural PMU to a guests") *almost*
-got it right, but for some reason only set the bits if the guest PMU was
-advertised as v1:
-
-        if (pmu->version == 1) {
-                pmu->global_ctrl = (1 << pmu->nr_arch_gp_counters) - 1;
-                return;
-        }
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="WuauqmvHY1lzItxJ"
+Content-Disposition: inline
+In-Reply-To: <a95c7e71-a720-49ba-b503-6f20a86be38e@rowland.harvard.edu>
 
 
-Commit f19a0c2c2e6a ("KVM: PMU emulation: GLOBAL_CTRL MSR should be enabled on
-reset") then tried to remedy that goof, but botched things and also enabled the
-fixed counters:
+--WuauqmvHY1lzItxJ
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 5 Mar 2024 13:03:40 -0500
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: Alan Stern <stern@rowland.harvard.edu>,
+	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: usbip doesn't work with userspace code that accesses USB devices
 
-        pmu->global_ctrl = ((1 << pmu->nr_arch_gp_counters) - 1) |
-                (((1ull << pmu->nr_arch_fixed_counters) - 1) << X86_PMC_IDX_FIXED);
-        pmu->global_ctrl_mask = ~pmu->global_ctrl;
+On Mon, Mar 04, 2024 at 10:19:24PM -0500, Alan Stern wrote:
+> On Tue, Mar 05, 2024 at 12:52:22AM +0100, Marek Marczykowski-G=C3=B3recki=
+ wrote:
+> > On Mon, Mar 04, 2024 at 11:46:04PM +0100, Marek Marczykowski-G=C3=B3rec=
+ki wrote:
+> > > Terminology:
+> > > 1. sys-usb - a VM where USB controller (a PCI device) lives; here
+> > > usbip-host is attached to the device
+> > > 2. testvm - target VM where usbip is connected; here vhci-hcd is used
+> > > 3. qvm-usb - tool that connects the above two (equivalent of
+> > > userspace part of standard usbip)
+> > >=20
+> > > Specific steps:
+> > > 1. Connect android phone - at this point it's only in sys-usb
+> > > 2. Switch its mode to file transfer - observe reconnect in sys-usb
+> > > 3. Use qvm-usb to attach it to the testvm
+> > > 4. Call jmtpfs -d /mnt in testvm
+> >=20
+> > Or maybe reset or something is involved here too?
+> >=20
+> > After using qvm-usb to attach _and detach_ the device, it stays bound to
+> > usbip-host driver (that's intentional). But then, even after re-binding
+> > back to the "usb" driver, jmtpfs called in sys-usb directly fails the
+> > same way, including failure to reset.
+> >=20
+> > In fact, even without usbip involved at all, jmtpfs directly in sys-usb
+> > works only once. The second attempt (without either physically reconnec=
+ting
+> > the phone, or changing its more to "no data transfer" and back to "file
+> > transfer") fails the same way. After terminating the first instance, I
+> > see just this logged:
+> >=20
+> >     [921332.525210] usb 2-1: reset high-speed USB device number 22 usin=
+g xhci_hcd
+>=20
+> If something doesn't work when usbip isn't involved, you definitely=20
+> shouldn't expect it to work when usbip _is_ involved.
 
-Which was KVM's behavior up until commit c49467a45fe0 ("KVM: x86/pmu: Don't overwrite
-the pmu->global_ctrl when refreshing") incorrectly removed *everything*.  Very
-ironically, that commit came from Like.
+With usbip, jmtpfs fails the _first_ time, instead of only the _second_
+time.  This might be related: maybe the attachment of usbip acts like
+the first attach?
+--=20
+Sincerely,
+Demi Marie Obenour (she/her/hers)
+Invisible Things Lab
 
-Author: Like Xu <likexu@tencent.com>
-Date:   Tue May 10 12:44:07 2022 +0800
+--WuauqmvHY1lzItxJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    KVM: x86/pmu: Don't overwrite the pmu->global_ctrl when refreshing
-    
-    Assigning a value to pmu->global_ctrl just to set the value of
-    pmu->global_ctrl_mask is more readable but does not conform to the
-    specification. The value is reset to zero on Power up and Reset but
-    stays unchanged on INIT, like most other MSRs.
+-----BEGIN PGP SIGNATURE-----
 
-But wait, it gets even better.  Like wasn't making up that behavior, Intel's SDM
-circa December 2022 states that "Global Perf Counter Controls" is '0' at Power-Up
-and RESET.  But then the March 2023 SDM rolls out and says
+iQIzBAEBCgAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmXnXqIACgkQsoi1X/+c
+IsEpUBAA127He3YTnKqeYWZB6BxzbpxCSINki6Do6SVOuC/ndGalKTj0bbDdwvDp
+jNjDudUSCdqqF8J30g9Ey4IEMtmbncLW0MJrOq9lErLdvu7W39w8DWANwdhtex43
+IeayIECk6A9IV8M0aJOp6RDXHyxDBDMqkCfLPYQZkczIxAHd5Wvg2Nav0w4C2QBp
+lwNWrQ2OaieLgYkYCwsziUu6JF94KyvvEguQqRlR3uSEdvb/JSbeVKladc3FZZ6s
+uFM1qdILr21unwQ8OC/CxfN4e8ZIcoOfRfBddPJPl7EsaPG+rI4ydgCEmCXxEUXS
+b+80iYTpCcCq+8FIcLjuFT4isaxxy5rllF+Jc21eMXTVXqOWvcjd9lY2wPwbp2mp
+Za1QbjyXyI/csuEUIOeBWRl4TXZYPQCBGebyHAxjw/JEicmdcc+YiLI4+lsFUDJ9
+rjkAF8nMcqrQtVD+bXUnGaURmd2nHvxNdWRX5BAV2+DX4GMSSl+0ihh/Gx+fDGpZ
+bmdRraVID6vtqM0GfzfS5b+rAMBRrhItbgH+UobxoGfhf22yBmUfIXR1kUx/YYia
+FZ9x6svH37F/6czpwpdKJFQHrrPO7wQYNsEhQMMJHEaqSvC6fhBK2mCxKtyIodmA
+b4ugE/zCnk+LLlloDMui4jlmYhOycnhccuyr0daRquzduKKo+bc=
+=x6n7
+-----END PGP SIGNATURE-----
 
-  IA32_PERF_GLOBAL_CTRL: Sets bits n-1:0 and clears the upper bits.
-
-So presumably someone at Intel noticed that what their CPUs do and what the
-documentation says didn't match.
-
-*sigh*
+--WuauqmvHY1lzItxJ--
