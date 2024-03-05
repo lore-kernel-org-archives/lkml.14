@@ -1,137 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0620218030;
-	Tue,  5 Mar 2024 02:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D831F18032;
+	Tue,  5 Mar 2024 02:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709605167; cv=none; b=ZddwWYn3UAgPPkXqh8dNy5goay3U6giLmimqtpMX2UC7tQFG+oNUm2pnBsvWA0r1qp1P8Bu0Hv+rl5rDMC3gKzdx/KEt1zhvsCriayyN7WiGiJcb2BnjeMOmvE0rPmk3dsIqWxUHdr1MnUmkBbfUDYndNtdKToCM/WxTiokyeBk=
+	t=1709605196; cv=none; b=NnXgTOMntu8WQzEXiA9RBCespfMiqdLrNrZGZPNihXjpHhWBd7b/Lh7y+eogmFxhvtPWjKRUroUs/w306YvLGPRB06lOjyLaK2nmWcudKzW1jh8sOty9zQN4HTBzhwK6Ikc6eFbBuZl1FBXUZyQUxFMICRTZr7bfsoH5CQhjAIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709605167; c=relaxed/simple;
-	bh=b1vg0e17e6fTT1a+wPfrKj9tx2VdWRx7fF7BtQL5Qfw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R12+ByndsLWkuBMuA34/JYcjq1XEBX5BSnBMWTsyF8nDmnnGe8ASsqjsMGX+L4X5KWYsZfhffK83nR3QHjVSgBMhtJtV1XCTQ1kqQPrjrvA8zL40lf9AsIdk9sWMyKGTgDB7V3sSGl/RkDcK6DbIT6x/X9qQX11+OAMtjD5COl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ULEtZplt; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709605196; c=relaxed/simple;
+	bh=esSfqR/EN2uGgQJhZInB3gQ5IgggyIpQkCwvAPI4KIE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=i1g3qAO0z0uk1C3b5k5BtulJW2ByRMWEAr6tEtb6lc7FOn5xRgkdPTOc0R//WwQzDwWeRHWYtyUm5jsS2Cxf31Y6IGQ5aAX4BE2NiwiDCzxCHhrxtYSj71QkWZIHTnkhorevtA1AzXqUuOeQeN2t1j25FnQntX9JnK+ptYhjiis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6jPmrlv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ULEtZplt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709605166; x=1741141166;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=b1vg0e17e6fTT1a+wPfrKj9tx2VdWRx7fF7BtQL5Qfw=;
-  b=ULEtZpltGSwESuuAmbl8bWaGUVETpLXAT7FRnxXVawTvDWAYZPwV5mlW
-   gNNzo2BrNB6AbZbPs3TDpTk93wxuTD4vCCKiLKM6wX7nBFpcY1e1K9lAp
-   WfzApBgK9MM3sUTNfJRwnZgKORlDghKt0h6uqtvm36n/Zb3dv7mfs5fSw
-   ZrDo8v1Jfo8N1bDJv45BQKKwU9uPzRwXOaahY8HbGsdcJDWj3SfoY8rX3
-   WHx++q8D9u+zvRx67nVK9TOwj9U25PikOC5Tbw8y8ytUCXJY9WOVYSDpV
-   67Nr6IrKKf0BBLg7knwup7MSZPp4AS+XPG/W5rFydOTGJban6+9vhwfZY
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4014688"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4014688"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 18:19:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="13876766"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 18:19:23 -0800
-Message-ID: <0c17c2d4-9834-4451-8c6b-8eaa0b66dabe@linux.intel.com>
-Date: Tue, 5 Mar 2024 10:19:20 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6jPmrlv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B46BC43390;
+	Tue,  5 Mar 2024 02:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709605196;
+	bh=esSfqR/EN2uGgQJhZInB3gQ5IgggyIpQkCwvAPI4KIE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=B6jPmrlv0e63tN91R5wSQHmgw+HQjbhM+GG7rMi69/VzxSGNHYI8JsY92W73+sspe
+	 VPOmRDq6g583Pl66liY77KWE2eXAp1HBwgLQgZhjG3oDXK7UV5HapmzqTmWlimU9z5
+	 kBkc+FjWH//O3zJYm4Q5EEpdBezCIuLukoNMpVAiTwQIFDa20xLXE629BYqJ47GgGb
+	 9PIDySWaGiLn/jiF3UCLo7qFJ1WLrRpF1Pk9joaysLHoti93f2bmagGGt39g0Q3UEt
+	 5KSBre2Ly+wCviatpTAMvOGk6Hpgbte9ZsGR8DA5u7GOjQVN6KO0PG7MNYCToZ71fi
+	 g2Oz2ymQPQj2A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646D3C54E49;
+	Tue,  5 Mar 2024 02:19:56 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Tue, 05 Mar 2024 10:19:46 +0800
+Subject: [PATCH v4 1/5] phy: hisilicon: hisi-inno-phy: enable clocks for
+ every ports
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH pci-next] pci/edr: Ignore Surprise Down error on hot
- removal
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- Lukas Wunner <lukas@wunner.de>
-Cc: bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, kbusch@kernel.org
-References: <20240304090819.3812465-1-haifeng.zhao@linux.intel.com>
- <20240304115844.GA3541@wunner.de>
- <ff3918bc-ebd2-60e2-971f-5b48ba929335@amd.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <ff3918bc-ebd2-60e2-971f-5b48ba929335@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240305-inno-phy-v4-1-a03204c9cf1c@outlook.com>
+References: <20240305-inno-phy-v4-0-a03204c9cf1c@outlook.com>
+In-Reply-To: <20240305-inno-phy-v4-0-a03204c9cf1c@outlook.com>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Jiancheng Xue <xuejiancheng@hisilicon.com>, 
+ Shawn Guo <shawn.guo@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, 
+ David Yang <mmyangfl@gmail.com>, Yang Xiwen <forbidden405@outlook.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709605195; l=971;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=jGUbESXsyAvU27nkXjLoTOKtwqcjOT068eM8RNJCWfs=;
+ b=mZkELQxdOeb+Ne66xgMMDdr9MMJtJvx7d4OtBV0cy5nnZX+tkpCKswo6gT9KRCqANjgeZjyPA
+ wGNJRUlf08VDaB8fXHvmiAChKRXphX48gM5i0Dmi7bKCDr/iQX04WzJ
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-On 3/5/2024 3:33 AM, Smita Koralahalli wrote:
-> Hi Ethan,
->
-> On 3/4/2024 3:58 AM, Lukas Wunner wrote:
->> On Mon, Mar 04, 2024 at 04:08:19AM -0500, Ethan Zhao wrote:
->>> Per PCI firmware spec r3.3 sec 4.6.12, for firmware first mode DPC
->>> handling path, FW should clear UC errors logged by port and bring link
->>> out of DPC, but because of ambiguity of wording in the spec, some 
->>> BIOSes
->>> doesn't clear the surprise down error and the error bits in pci status,
->>> still notify OS to handle it. thus following trick is needed in EDR 
->>> when
->>> double reporting (hot removal interrupt && dpc notification) is hit.
->
-> Please correct me if I'm wrong.
->
-> When there is double reporting (hot removal interrupt && dpc 
-> notification), won't the DPC handler be called always which takes care 
-> of clearing the surprise down errors? Do we need it again from EDR 
-> handler?
+From: Yang Xiwen <forbidden405@outlook.com>
 
-My understanding, if firmware first mode is enabled, DPC driver wouldn't
-be enabled, EDR is notified instead, though some of the common functions
-are used in EDR, such as dpc_process_error() is called in edr_handle_event(),
-but dpc_handler() isn't called, so does the dpc_handle_surprise_removal().
+This is needed for port1 to work.
 
-Thanks,
-Ethan
+Fixes: ba8b0ee81fbb ("phy: add inno-usb2-phy driver for hi3798cv200 SoC")
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+---
+ drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->
-> Thanks
-> Smita
->
->>
->> Please provide more detailed information about the hardware and BIOS
->> affected by this.
->>
->>
->>> -static void dpc_handle_surprise_removal(struct pci_dev *pdev)
->>> +bool  dpc_handle_surprise_removal(struct pci_dev *pdev)
->>>   {
->>> +    if (!dpc_is_surprise_removal(pdev))
->>> +        return false;
->>
->> This change of moving dpc_is_surprise_removal() into
->> dpc_handle_surprise_removal() seems unrelated to the problem at hand.
->>
->> Please drop it if it's unnecessary to fix the issue.
->>
->>
->>> --- a/drivers/pci/pcie/edr.c
->>> +++ b/drivers/pci/pcie/edr.c
->>> @@ -184,6 +184,9 @@ static void edr_handle_event(acpi_handle handle, 
->>> u32 event, void *data)
->>>           goto send_ost;
->>>       }
->>>   +    if (dpc_handle_surprise_removal(edev))
->>> +        goto send_ost;
->>> +
->>>       dpc_process_error(edev);
->>>       pci_aer_raw_clear_status(edev);
->>
->> This seems to be the only necessary change.  Please reduce the
->> patch to contain only it and no other refactoring.
->>
->> Please capitalize the "PCI/EDR: " prefix in the subject and add
->> a Fixes tag.
->>
->> Thanks,
->>
->> Lukas
->>
+diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+index c138cd4807d6..b7e740eb4752 100644
+--- a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
++++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+@@ -86,8 +86,10 @@ static void hisi_inno_phy_write_reg(struct hisi_inno_phy_priv *priv,
+ 
+ static void hisi_inno_phy_setup(struct hisi_inno_phy_priv *priv)
+ {
++	int i;
+ 	/* The phy clk is controlled by the port0 register 0x06. */
+-	hisi_inno_phy_write_reg(priv, 0, 0x06, PHY_CLK_ENABLE);
++	for (i = 0; i < INNO_PHY_PORT_NUM; i++)
++		hisi_inno_phy_write_reg(priv, i, 0x06, PHY_CLK_ENABLE);
+ 	msleep(PHY_CLK_STABLE_TIME);
+ }
+ 
+
+-- 
+2.43.0
+
