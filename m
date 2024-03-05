@@ -1,25 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 372F454918
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 11:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493FC54BFA;
+	Tue,  5 Mar 2024 11:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709637619; cv=none; b=Q8WG800cMFDiYUkbOPNeaW4xoXwvDUyc79hDXz4TSLAWJZh8L4RH62zKA8jVV48DYSIJOuLjbmsHCq1ZjssozvVMC4Y3QTg2xtDFzTc7HG0nT4Ycw3qRPRjn8rKlURFCvBPrWKHrZH6CjaWQvwxMRRe+UtJlftk0CRdflRYdpZU=
+	t=1709637628; cv=none; b=ipIaA2msvDAoOn5YHpVeMgORd9OQuC0pQWvqDy5oqQHEyXb6XV7K2zJORqLIT7GwWvQwz9w3dQmk8DCqeBl/P5agkeDiwGCeQUVzB6RcJaP1IQAO5SJTBDdxoNhsS0hjPixco4a7pdGwyomWhzbAwY/GnlIROqNb6TaVAl2i58g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709637619; c=relaxed/simple;
-	bh=/ZfpEY76n3lIZzpkENlmf3Rerv3oBoFvdkikaHqkrtI=;
+	s=arc-20240116; t=1709637628; c=relaxed/simple;
+	bh=GXsOiAtv6TjNhMlnQXhWlrYVpj/iqWoURTS8NBhzIFs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LIPn4FwXngkkXUG0dM+LgtiD+/V2omaOIXhpoo+HnXAaT0Ux4AmoiE+4hGLG6Ztg8CVixQ7YwKe5K5J/BtxGEosW/h14l1ZqBuWB2sd8+6un+k7QiPs61w12rS+KyWqueZor6cWz4Zh/sBb5n0eLeecSAX47L4LoVAt03Ii2E2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 204351FB;
-	Tue,  5 Mar 2024 03:20:53 -0800 (PST)
-Received: from [10.57.67.228] (unknown [10.57.67.228])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A47D23F762;
-	Tue,  5 Mar 2024 03:20:14 -0800 (PST)
-Message-ID: <555d0e55-a8f8-446d-ab1a-f05e50b33477@arm.com>
-Date: Tue, 5 Mar 2024 11:20:13 +0000
+	 In-Reply-To:Content-Type; b=OzBof1bd+j5FibgCVrAaVBV60RKQbYGKlFw5jltShdWd/mPihIPjZ8358W0w2Wc400IMfr6DIUjimlXJLO5OLntbKJfwBzFQw9zE+WVS/WCBdpnk0/+K2Gz6xnPG/zxJM2DmYMmGPoQXp3Gg9mt9RnmIow6s7RUiAV7sntPZjdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TnYwIv7J; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TnYwIv7J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709637624;
+	bh=GXsOiAtv6TjNhMlnQXhWlrYVpj/iqWoURTS8NBhzIFs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TnYwIv7JyXG+1tKJY1L6QFhBK6hLNXIqXnVmCOWEAOQdyPpnpkH5LPB+kuT2LVCG/
+	 Fj5f7vQbFC94/wLeTSHyQ3BNyuNUJQ8SHB1e5B7Uezm00IVPVQTOJr11SGWf4HqtzB
+	 EYUbJxHjOQgVEGBpkDYQRtw08lcQvjiG8H1BAu5Px3MK3YNUxGvdqwQGUPtac5/l7P
+	 aX9+cqGioGIisgyXez/GeONzviu8jgT1hqL6+wy0j9M3x4lpyfZYoTUlyh49nfc9mj
+	 LkY/NUiCWcQ5e+Ljb4uHWVVR7xNtq1rkq/51wjcy2bq6zTvIahX2HEu+a2BYIIqyzs
+	 /S9Y+DAD6lG+A==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E69093780029;
+	Tue,  5 Mar 2024 11:20:21 +0000 (UTC)
+Message-ID: <0aa3dc07-67c8-40a4-9e83-f702979765c5@collabora.com>
+Date: Tue, 5 Mar 2024 12:20:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,143 +42,244 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
- allocations >= PAGE_SIZE
-Content-Language: en-GB
-To: Michael Kelley <mhklinux@outlook.com>, Will Deacon <will@kernel.org>,
- =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
-Cc: Christoph Hellwig <hch@lst.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Petr Tesarik <petr.tesarik1@huawei-partners.com>,
- "kernel-team@android.com" <kernel-team@android.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Dexuan Cui
- <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>
-References: <SN6PR02MB4157314F142D05E279B7991ED45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240229154756.GA10137@lst.de>
- <20240301163927.18358ee2@meshulam.tesarici.cz>
- <20240301180853.5ac20b27@meshulam.tesarici.cz>
- <8869c8b2-29c3-41e4-8f8a-5bcf9c0d22bb@arm.com>
- <20240301194212.3c64c9b2@meshulam.tesarici.cz>
- <SN6PR02MB41571DA1EE99BFAA65869024D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240304120055.56035c21@meshulam.tesarici.cz>
- <ffd7646b-37b1-4cd2-822a-848b36b076c9@arm.com>
- <20240304165506.49e3b2d3@meshulam.tesarici.cz>
- <20240304160210.GB21077@willie-the-truck>
- <SN6PR02MB41571F68F8F9E003C4359948D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
- <b63d4332-b659-4897-83c7-04e5ad397a69@arm.com>
- <SN6PR02MB41574A920D7511D4E5DCE813D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <SN6PR02MB41574A920D7511D4E5DCE813D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: Re: [PATCH 19/22] ASoC: dt-bindings: mt8192: Document audio-routing
+ and dai-link subnode
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: broonie@kernel.org, wenst@chromium.org, lgirdwood@gmail.com,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.com,
+ trevor.wu@mediatek.com, maso.huang@mediatek.com,
+ xiazhengqiao@huaqin.corp-partner.google.com, arnd@arndb.de,
+ kuninori.morimoto.gx@renesas.com, shraash@google.com, amergnat@baylibre.com,
+ nicolas.ferre@microchip.com, u.kleine-koenig@pengutronix.de,
+ dianders@chromium.org, frank.li@vivo.com, allen-kh.cheng@mediatek.com,
+ eugen.hristev@collabora.com, claudiu.beznea@tuxon.dev,
+ jarkko.nikula@bitmer.com, jiaxin.yu@mediatek.com, alpernebiyasak@gmail.com,
+ ckeepax@opensource.cirrus.com, zhourui@huaqin.corp-partner.google.com,
+ nfraprado@collabora.com, alsa-devel@alsa-project.org,
+ shane.chien@mediatek.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20240227120939.290143-1-angelogioacchino.delregno@collabora.com>
+ <20240227120939.290143-20-angelogioacchino.delregno@collabora.com>
+ <20240304142341.GA156846-robh@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240304142341.GA156846-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2024-03-04 6:22 pm, Michael Kelley wrote:
-> From: Robin Murphy <robin.murphy@arm.com> Sent: Monday, March 4, 2024 8:54 AM
+Il 04/03/24 15:23, Rob Herring ha scritto:
+> On Tue, Feb 27, 2024 at 01:09:36PM +0100, AngeloGioacchino Del Regno wrote:
+>> Document the dai-link subnodes and the audio-routing property, allowing
+>> to describe machine specific audio hardware and links in device tree.
 >>
->> On 04/03/2024 4:10 pm, Michael Kelley wrote:
->>> From: Will Deacon <will@kernel.org> Sent: Monday, March 4, 2024 8:02 AM
->>>>
->>>> Hi folks,
->>>>
->>>> On Mon, Mar 04, 2024 at 04:55:06PM +0100, Petr Tesařík wrote:
->>>>> On Mon, 4 Mar 2024 13:37:56 +0000
->>>>> Robin Murphy <robin.murphy@arm.com> wrote:
->>>>>> On 04/03/2024 11:00 am, Petr Tesařík wrote:
->>>>>> [...]
->>>>>>>> Here's my take on tying all the threads together. There are
->>>>>>>> four alignment combinations:
->>>>>>>>
->>>>>>>> 1. alloc_align_mask: zero; min_align_mask: zero
->>>>
->>>> Based on this ^^^ ...
->>>>
->>>>>>>> xen_swiotlb_map_page() and dma_direct_map_page() are #1 or #2
->>>>>>>> via swiotlb_map() and swiotlb_tbl_map_single()
->>>>>>>>
->>>>>>>> iommu_dma_map_page() is #3 and #4 via swiotlb_tbl_map_single()
->>>>>>>>
->>>>>>>> swiotlb_alloc() is #3, directly to swiotlb_find_slots()
->>>>>>>>
->>>>>>>> For #1, the returned physical address has no constraints if
->>>>>>>> the requested size is less than a page. For page size or
->>>>>>>> greater, the discussed historical requirement for page
->>>>>>>> alignment applies.
->>>>
->>>> ... and this ^^^ ...
->>>>
->>>>
->>>>> I believe this patch series is now good as is, except the commit
->>>>> message should make it clear that alloc_align_mask and min_align_mask
->>>>> can both be zero, but that simply means no alignment constraints.
->>>>
->>>> ... my (possibly incorrect!) reading of the thread so far is that we
->>>> should preserve page-aligned allocation in this case if the allocation
->>>> size is >= PAGE_SIZE.
->>>>
->>>> Something like the diff below, to replace this final patch?
->>>>
->>>> Will
->>>>
->>>> --->8
->>>>
->>>> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
->>>> index c381a7ed718f..67eac05728c0 100644
->>>> --- a/kernel/dma/swiotlb.c
->>>> +++ b/kernel/dma/swiotlb.c
->>>> @@ -992,6 +992,14 @@ static int swiotlb_search_pool_area(struct device
->>>> *dev, struct io_tlb_pool *pool
->>>>           BUG_ON(!nslots);
->>>>           BUG_ON(area_index >= pool->nareas);
->>>>
->>>> +       /*
->>>> +        * Historically, allocations >= PAGE_SIZE were guaranteed to be
->>>> +        * page-aligned in the absence of any other alignment requirements.
->>>> +        * Since drivers may be relying on this, preserve the old behaviour.
->>>> +        */
->>>> +       if (!alloc_align_mask && !iotlb_align_mask && alloc_size >= PAGE_SIZE)
->>>> +               alloc_align_mask = PAGE_SIZE - 1;
->>>> +
->>>
->>> Yes, I think that should do it.
+>> While at it, also deprecate the old properties which were previously
+>> used with the driver's partially hardcoded configuration.
 >>
->> In principle it might be more logical to fudge this into
->> iotlb_align_mask rather than alloc_align_mask
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../sound/mt8192-mt6359-rt1015-rt5682.yaml    | 129 ++++++++++++++++--
+>>   1 file changed, 121 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml b/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
+>> index 7e50f5d65c8f..78e221003750 100644
+>> --- a/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
+>> +++ b/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
+>> @@ -20,6 +20,15 @@ properties:
+>>         - mediatek,mt8192_mt6359_rt1015p_rt5682
+>>         - mediatek,mt8192_mt6359_rt1015p_rt5682s
+>>   
+>> +  audio-routing:
+>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
 > 
-> I'm not understanding what you are getting at, but maybe we are
-> interpreting the historical page alignment requirement differently.
-> I think of the page alignment requirement as independent of the
-> orig_addr -- the returned physical address should always be exactly
-> page aligned, and not offset to match bits in orig_addr.  If that's
-> the case, then implementing the page alignment via
-> alloc_align_mask is logically the right place. Fudging into
-> iotlb_align_mask would do matching of bits in orig_addr.
+> Already defined in sound-card-common.yaml. Add a $ref.
 > 
-> Or is there something else I'm not considering?
 
-In short, it's that alloc_align_mask is concerned with how slots are 
-allocated, while min_align_mask is concerned with where the data itself 
-is bounced (which may also place certain constraints on allocation).
+Right. Done for v2.
 
-The reason this page-alignment was here in the first place was seemingly 
-to serve the original swiotlb_alloc() path, and thus it could be 
-considered functionally equivalent to what is now alloc_align_mask. 
-However the side-effect it happened to also have for streaming mappings 
-was to prevent sufficiently large page-aligned buffers being bounced to 
-a non-page-aligned address, which apparently managed to work well enough 
-for NVMe until 64K pages became more common and ruined things by being 
-too big, and we formalised *that* desired effect into min_align_mask.
+>> +    description:
+>> +      A list of the connections between audio components. Each entry is a
+>> +      pair of strings, the first being the connection's sink, the second
+>> +      being the connection's source.
+>> +      Valid names could be the input or output widgets of audio components,
+>> +      power supplies, MicBias of codec and the software switch.
+> 
+> Generally the names are defined here.
+> 
 
-I get that forcing io_tlb_align mask here would introduce a stronger 
-constraint which affects non-page-aligned buffers as well, and wanting 
-to avoid that is perhaps a reasonable concern, so once again I'm really 
-just arguing semantics. Given the head-scratching we've been through 
-over this already, I think it would be valuable to at least be clearer 
-that a significant part of the "old behaviour" is to do the right thing 
-for swiotlb_alloc(), which is very much still current and necessary, but 
-the reason we're not setting alloc_align_mask there is because doing it 
-here also preserves this legacy side-effect which acts as a limited 
-version of min_align_mask to preserve page alignment when bouncing.
+...but those drivers want to support multiple codecs and multiple boards, so
+for each board we would maybe have to add (software defined) names in here
+which don't always correspond to a HW pin name (but that's not really a problem).
+
+Sure a subset of the names can't change but, on the other hand, some others
+can (as in, may be added).
+
+Hence the question:
+
+Is it mandatory to define the names in an enum here, or can that be avoided?
+If it is, I can add them no problem.
+
+>> +
+>>     mediatek,platform:
+>>       $ref: /schemas/types.yaml#/definitions/phandle
+>>       description: The phandle of MT8192 ASoC platform.
+>> @@ -27,10 +36,12 @@ properties:
+>>     mediatek,hdmi-codec:
+>>       $ref: /schemas/types.yaml#/definitions/phandle
+>>       description: The phandle of HDMI codec.
+>> +    deprecated: true
+>>   
+>>     headset-codec:
+>>       type: object
+>>       additionalProperties: false
+>> +    deprecated: true
+>>   
+>>       properties:
+>>         sound-dai:
+>> @@ -41,6 +52,7 @@ properties:
+>>     speaker-codecs:
+>>       type: object
+>>       additionalProperties: false
+>> +    deprecated: true
+>>   
+>>       properties:
+>>         sound-dai:
+>> @@ -51,13 +63,83 @@ properties:
+>>       required:
+>>         - sound-dai
+>>   
+>> +patternProperties:
+>> +  ".*-dai-link$":
+>> +    type: object
+>> +    description:
+>> +      Container for dai-link level properties and CODEC sub-nodes.
+>> +
+>> +    properties:
+>> +      link-name:
+>> +        description: Indicates dai-link name and PCM stream name
+>> +        items:
+>> +          enum:
+>> +            - I2S0
+>> +            - I2S1
+>> +            - I2S2
+>> +            - I2S3
+>> +            - I2S4
+>> +            - I2S5
+>> +            - I2S6
+>> +            - I2S7
+>> +            - I2S8
+>> +            - I2S9
+>> +            - TDM
+>> +
+>> +      codec:
+>> +        description: Holds subnode which indicates codec dai.
+>> +        type: object
+>> +        additionalProperties: false
+>> +        properties:
+>> +          sound-dai:
+>> +            minItems: 1
+>> +            maxItems: 2
+>> +        required:
+>> +          - sound-dai
+>> +
+>> +      dai-format:
+>> +        description: audio format
+>> +        items:
+>> +          enum:
+>> +            - i2s
+>> +            - right_j
+>> +            - left_j
+>> +            - dsp_a
+>> +            - dsp_b
+>> +
+>> +      mediatek,clk-provider:
+>> +        $ref: /schemas/types.yaml#/definitions/string
+>> +        description: Indicates dai-link clock master.
+>> +        items:
+>> +          enum:
+>> +            - cpu
+>> +            - codec
+>> +
+>> +    additionalProperties: false
+> 
+> Move this before properties.
+> 
+
+Done for v2.
+
+>> +
+>> +    required:
+>> +      - link-name
+>> +
+>>   additionalProperties: false
+>>   
+>>   required:
+>>     - compatible
+>>     - mediatek,platform
+>> -  - headset-codec
+>> -  - speaker-codecs
+>> +
+>> +allOf:
+>> +  # Disallow dai-link-xxx nodes if the legacy properties are specified
+> 
+> xxx-dai-link?
+> 
+
+Oh! Yes, thanks for catching this.
+
+That's what I initially wanted to do, but then I opted for xxx-dai-link and
+forgot to update this comment.
+
+Fixed for v2.
+
+>> +  - if:
+>> +      patternProperties:
+>> +        ".*-dai-link$": false
+>> +    then:
+>> +      required:
+>> +        - headset-codec
+>> +        - speaker-codecs
+>> +    else:
+>> +      properties:
+>> +        headset-codec: false
+>> +        speaker-codecs: false
+>> +        mediatek,hdmi-codec: false
+> 
+> Allowing both would preserve compatibility. That's not needed? If so,
+> say why in the commit msg.
+> 
+
+I'm thinking of writing:
+
+"Since describing machine specific audio hardware and links replaces the
+now deprecated old logic doing the same in a driver hardcoded fashion,
+it is not allowed to have both the old and new properties together."
+
+...but in short - both the old and the new can do exactly the same, but
+imo it doesn't make any sense to actually rely on both as:
+  1. It's redundant (and one set of them makes the other useless);
+  2. I want to avoid confusion (as the other set won't be parsed);
+  3. I'm trying to *enforce* consistency as MTK cards have different
+     bindings for .. really, no good reason;
+  4. I want to see custom stuff disappear completely (and/or as much as
+     possible anyway) and use something that is (at least somewhat) common
+     between all MTK and non-MTK or anyway as a start at least consistent
+     between MTK cards.
+
+In theory, though, speaking of the driver side, there's nothing preventing
+you from specifying both audio-routing xxx-dai-link and mediatek,hdmi-codec,
+as the drivers' action will be, in short
+    if (new_bindings)
+      forget_about_old_bindings_use_the_new_ones();
+    else
+      use_old_hardcoded_stuff(); /* and be sad */
+
+
+For that, I really don't want to allow both sets of properties - please, please,
+tell me that I don't *have to* remove this block :-)
 
 Cheers,
-Robin.
+Angelo
+
