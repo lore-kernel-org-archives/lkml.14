@@ -1,215 +1,309 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D866DF5B;
-	Tue,  5 Mar 2024 17:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709658735; cv=none; b=bWt8wFKjyzzbGaoyXoEBlPyDp4fNacDpOb+NFQTd5az0J/H3iyusKyQ9sjmdKgNUgdXmIApCXWvC+LBQxZzFF15qKh6GOHBGKbH9VJeK1kafVyrul3UOBiEskEEQc5h9zR4fwS3HK4iZTsy6WviGDVuJmXDZjZ6d0ftpD7haOr0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ECED2E6;
+	Tue,  5 Mar 2024 17:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709658735; cv=fail; b=YRu17G231j10HLrbs8HWZ28UNNQQkAevT752FdIfi6sSaFqIzuZIqxKHImowtWAm9P5nQUbdlhTJo81yOF9WV9z9sOIakC1A5XpsuPVJZxggeygIcCDN8DQqv6hU+Q2xoYgTrvV16EE0FBMR8ahXBGxe7ddckWY2EDLQ9PEKatA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709658735; c=relaxed/simple;
-	bh=Q8PaurBFrppbrqEEOgrIENl2HwLshHsmzS0Oq1dK20k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DZ5fZMNnabvamCgpSVjl73kvv8+Bpu8w0+0qiiMOjEcN4QZ6ckwITMiKqQWBSyrEWqIwrS26HvvjRl/bM1pZiDhpLHGnXtewhiwiQldVLt+xj1SQxyHnv7+gYIH4kQB2KGwisbdhyVKm1WHgqvHrCd4ehADYXuhBw8K2Dg/Dq4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Tq1tR1BFrz9yMLR;
-	Wed,  6 Mar 2024 00:56:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id CE1D914066A;
-	Wed,  6 Mar 2024 01:12:03 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwCHehNTUudld77FAw--.63538S2;
-	Tue, 05 Mar 2024 18:12:03 +0100 (CET)
-Message-ID: <7058e2f93d16f910336a5380877b14a2e069ee9d.camel@huaweicloud.com>
-Subject: Re: [PATCH v2 24/25] commoncap: use vfs fscaps interfaces
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Christian Brauner <brauner@kernel.org>, "Seth Forshee (DigitalOcean)"
-	 <sforshee@kernel.org>
-Cc: Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, Eric
- Paris <eparis@redhat.com>, James Morris <jmorris@namei.org>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Stephen Smalley
- <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
- Casey Schaufler <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.ibm.com>,
- Roberto Sassu <roberto.sassu@huawei.com>,  Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jonathan Corbet
- <corbet@lwn.net>, Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein
- <amir73il@gmail.com>,  linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org,  linux-security-module@vger.kernel.org,
- audit@vger.kernel.org,  selinux@vger.kernel.org,
- linux-integrity@vger.kernel.org,  linux-doc@vger.kernel.org,
- linux-unionfs@vger.kernel.org
-Date: Tue, 05 Mar 2024 18:11:45 +0100
-In-Reply-To: <3098aef3e5f924e5717b4ba4a34817d9f22ec479.camel@huaweicloud.com>
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
-	 <20240221-idmap-fscap-refactor-v2-24-3039364623bd@kernel.org>
-	 <dcbd9e7869d2fcce69546b53851d694b8ebad54e.camel@huaweicloud.com>
-	 <ZeXpbOsdRTbLsYe9@do-x1extreme>
-	 <a7124afa6bed2fcadcb66efa08e256828cd6f8ab.camel@huaweicloud.com>
-	 <ZeX9MRhU/EGhHkCY@do-x1extreme>
-	 <20240305-fachjargon-abmontieren-75b1d6c67a83@brauner>
-	 <3098aef3e5f924e5717b4ba4a34817d9f22ec479.camel@huaweicloud.com>
+	bh=ll4jxBU8WTvK9j2G+oR+9zBelEl2IiUZtazNMWYmduY=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hqyHZSWLadmDr0C82F00LeDVZmc6rKg8SByER2eRbxCpWOQZ6iERUigN+41jAQVQHhxXVXWLF2zUCzyO94OXorVLma8elk6UWQl31UiZ5smhw6gpqWFwBVMw3GGMHzEzGDSMX0PiYJrmf+ewFXhZzqDfXB32729LClLwUc6nop4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VX1+bZt4; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VX1+bZt4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709658734; x=1741194734;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=ll4jxBU8WTvK9j2G+oR+9zBelEl2IiUZtazNMWYmduY=;
+  b=VX1+bZt4x8F7eR3FuZHCuMTqqtzjo06UZumKL2kGlq975lfg0p2WWstb
+   c9kOEkyFtI0V4TWQayr0yR1l0B9+z3U5JrvBWzm+EDuzVKCFcdPSKUSXn
+   H13ExD22bPXsGTiV20m+HxPWvRptw8n96JidUlewDWDMpi3nMYDkD4sV+
+   IPnmN9N2OHuV/RjTtl9ZnoWBeb9mIVqvMjIIYHBJTjnzlhU99KlrfSpxy
+   +fIM2+iaGL342jZ7F8C2BkZoYuV4JpcNmVsEjZ4CR7yLpSBPMSsbyuS70
+   JgD33B+w9VNl+TE+3UOR5lWmr+lywyVQtcr0P63hy9dmSbaQQ9NlqC52f
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="26683895"
+X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
+   d="scan'208";a="26683895"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 09:12:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
+   d="scan'208";a="9863341"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Mar 2024 09:12:12 -0800
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 5 Mar 2024 09:12:10 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 5 Mar 2024 09:12:10 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 5 Mar 2024 09:12:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=brTRsv00b98JsTa1s47sTNiP9SViOi6l1hSzx64lRBQ5CrTDfTbf7mv8ilFfD+1wp9EL2qxT5lSdZ9TMtiDLMH8fZjQBroYqqs1ncDkhyHQHfDeXMDonmvH7EuXclUPH2u92PnTFNY3XFKiV18QTR+JzRolotEx4QdPW9NACTKUEHvgOMF120argprCwNI0U80ZrApbn3tLg6CiaFQaG1GhbqK1K38RTqN/z9MMWWMEqfVDLw9NTSB0h7RZ25HI0cZ3VTGYWLx3sBysDD2YBDqX+BaNtIc5w7cN7Bh6Uf2sAbaKxm5X5lk7ikJ0ENVmrzdU5cXJGlRWmpy6AaepuFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rHbRpAGciEE57w01xlnW0KmaKHUfSXsMbemONTFE5Mo=;
+ b=Q4jY2CzeP8KW9zGqAG85OaoJnJfVHYPwuo5o2XCVKSHezfD80RLgYNHEfXkLiLmKeYJwZebT7QOXulwKzV1KDdZrTBot2qmOik2BN87mj6xVJqw39gHg28ajKuevXUv06qadtQI4k3Vd+Fmj7RJ9/jOnYJ8ZTkVZTJ/WJwPBnMpZ/TU34lUupCVQ7mYDOlvfrJG4yI6dQA3RbCjAW33vJrSXlcENVKtLNNGSPnbVk+YkxCV3KH9GKNm3umQJ8tovfhw2PQ6LhPIRVLEM3ZT05T/4s+oSxd6S4ePa3xELjFYhUrGJb3b5tgX6TxxDl+MVztVL8pTCbqg5qyNDBNEE7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by IA1PR11MB6123.namprd11.prod.outlook.com (2603:10b6:208:3ed::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Tue, 5 Mar
+ 2024 17:12:07 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::d610:9c43:6085:9e68]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::d610:9c43:6085:9e68%7]) with mapi id 15.20.7362.019; Tue, 5 Mar 2024
+ 17:12:07 +0000
+Message-ID: <d29a28c8-1180-45ec-bd87-d2e8a8124c42@intel.com>
+Date: Tue, 5 Mar 2024 09:12:03 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/17] x86/resctrl : Support AMD Assignable Bandwidth
+ Monitoring Counters (ABMC)
+Content-Language: en-US
+To: <babu.moger@amd.com>, James Morse <james.morse@arm.com>, <corbet@lwn.net>,
+	<fenghua.yu@intel.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, Peter Newman
+	<peternewman@google.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
+	<rdunlap@infradead.org>, <tj@kernel.org>, <peterz@infradead.org>,
+	<yanjiewtw@gmail.com>, <kim.phillips@amd.com>, <lukas.bulwahn@gmail.com>,
+	<seanjc@google.com>, <jmattson@google.com>, <leitao@debian.org>,
+	<jpoimboe@kernel.org>, <rick.p.edgecombe@intel.com>,
+	<kirill.shutemov@linux.intel.com>, <jithu.joseph@intel.com>,
+	<kai.huang@intel.com>, <kan.liang@linux.intel.com>,
+	<daniel.sneddon@linux.intel.com>, <pbonzini@redhat.com>,
+	<sandipan.das@amd.com>, <ilpo.jarvinen@linux.intel.com>,
+	<maciej.wieczor-retman@intel.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <eranian@google.com>
+References: <20231201005720.235639-1-babu.moger@amd.com>
+ <cover.1705688538.git.babu.moger@amd.com>
+ <2f373abf-f0c0-4f5d-9e22-1039a40a57f0@arm.com>
+ <474ebe02-2d24-4ce3-b26a-46c520efd453@amd.com>
+ <b6bb6a59-67c2-47bc-b8d3-04cf8fd21219@intel.com>
+ <3fe3f235-d8a6-453b-b69d-6b7f81c07ae1@amd.com>
+ <9b94b97e-4a8c-415e-af7a-d3f832592cf9@intel.com>
+ <1ae73c9a-cec4-4496-86c6-3ffcef7940d6@amd.com>
+ <32a588e2-7b09-4257-b838-4268583a724d@intel.com>
+ <088878bd-7533-492d-838c-6b39a93aad4d@amd.com>
+ <9b20589b-6220-4ae7-bfc4-4a826b7114b1@intel.com>
+ <5ddb7031-a828-4001-bfdf-5477cb85e9ed@amd.com>
+ <1738493b-3248-4c9e-82a8-1599a033440d@intel.com>
+ <369ab28a-f3fa-4359-8e73-4dcf214c9b6e@amd.com>
+ <54687d59-d0e4-4fe7-b25f-dc1fead01ea1@intel.com>
+ <11487a31-908e-d474-50c6-65617d417deb@amd.com>
+ <c73f444b-83a1-4e9a-95d3-54c5165ee782@intel.com>
+ <55b545fd-2851-0d0f-ac37-ec59838fb4b4@amd.com>
+ <1f366890-d9ff-4ac4-9af9-1ea3128a87fc@intel.com>
+ <41ca7504-c3fb-ddb6-e149-4ff82019d678@amd.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <41ca7504-c3fb-ddb6-e149-4ff82019d678@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MW4PR04CA0247.namprd04.prod.outlook.com
+ (2603:10b6:303:88::12) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwCHehNTUudld77FAw--.63538S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWrWrGF4xWw15JFyxWr1UAwb_yoWrtr47pF
-	W5GFn8Krs5Xr17Jrn7tr1DX3WFy3yfJF4UXrykG3y0vr1qyr1fKr4Skr17uF98ur1xJr1Y
-	vF1jya43Wrn8AwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkCb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
-	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkvb40E47kJMIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F
-	4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUg7GYDU
-	UUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQANBF1jj5sCpAAAsE
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|IA1PR11MB6123:EE_
+X-MS-Office365-Filtering-Correlation-Id: 968cbdc8-5857-43a4-be16-08dc3d3762d9
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sFj46QRT37FdbEmRrzJ7NvWvXWwPNmdA//U6u1cCQMKTQOdr2+31+JnHK9Yr8U+52dUrL3tP9ytO73kvlzkmzCNr3TCzLRh1GWjbzydib0DcdCxpc/eq4+YMKnt9HNevG4hEEkpi7tvQ8NrBc8/AWlrwjWRjW3QA2y8rkgGmYzuVBQms8h5ZdEOdkL1kIqG0KUKo4dDbBe0J2dlRuecys3nb/TFcuJpkuTt/OqzQ0XitKRHt7+3tCZxKX2YJQNJxAWe+lmizLpljaLjJkxcPy4Ex7xXGIPkaxXkQ5nmvenpsWAnBH0/b7PpYIulT5z+w+DkCvRTrmHyHWxTkA/X1LyzNDB+ATWrpRKD6akzo/8oaH3AtU6pZwVj4W0NezZ8LXvhylrOyrtllKvnAaUCnhQiMB9sBUSa0+lD2DYgMnoshet7580f75f/T7bOuVNUOamhf6ltk7SrD3+utlZyKHhOF3GqNYYnB1st7EuHv/EEYz7m2nBDbKfhidFCFg+Ryvn+Gx25B675qTcS0Xb7mojfpKtH/Busq+eT0ILq2zpx8OCQCieCjV7kWYx9323Ro/xCTUii9XCYkOBhcoli3zKCPFk9+y2tKoRlz3qEti6ZU+vOrC0J9dl2ru6ehwej0mK5pwiZyHh7kKzPgb3SZqQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VjhYa1FCUGNSekFIYW5aOW9TTDZEYjNoM3J4akhpeUFjNTE5TWR0Y0RGeEJt?=
+ =?utf-8?B?MCt6TURkVzYyeGNmZUtGWEtESVBVMmljYU5ZRzEvQ1J6NFFyRnF2aU5iREEx?=
+ =?utf-8?B?cTdsNGNRTUpiUjZyNzBDV0xtVDF6RDBPa1ppNlN6b3pud0lsc3pRLzhPUjBC?=
+ =?utf-8?B?MmRFZ1UveFdBb1lpbkNXQk9YT21NUGFHNGhocXYyN25jUTRxRXVsMTBhNzJs?=
+ =?utf-8?B?Smw5SCtpNTZIaWFVRXQ5OXFRNHp1dU56Mm5NRDl3Z1o5ZU1YQ2ZWYlJrWUVt?=
+ =?utf-8?B?eEd1dmIzWjk4R0tvS3NrdzQvYmZnaE1QWFhQYjVXU2pWUDRJQXRkTXI0WjZE?=
+ =?utf-8?B?ak1iNlpMNnFTZ2hLNERiYnZHZmpYbEFPcjV3a1lYTWVpODUvYmFLeGZzMlpj?=
+ =?utf-8?B?OHFpMVJHZUNtY0NXOUJOT0pnQ1QrL1FJQnRrWGcyM2liVjYwUGVzTXphVlp2?=
+ =?utf-8?B?U3NhWS90Skp3QTVCSXJ6Tko1Z1RDUVpOWjJpa3ZRek45RHVNelJLZDJ6aG5D?=
+ =?utf-8?B?VU9BZUFwY29RZlB2N2RLM1Y4b1o3U0hOUGFCMFlVNlhtVXlwZ3hyRU9rSGR5?=
+ =?utf-8?B?M0RocFdUNkNBRUNzOW1wbCtTdW00OHprL2Y3YkQ0eTgrRHJ2VGtSUStYbUgx?=
+ =?utf-8?B?S1hEcHBvdkU2TVd0VmFjYy95eG5zQnN5Mmt0RURUV2ViVU01MXIvTnBidU5i?=
+ =?utf-8?B?aW5WdWtUTWZVNWZuR0ZocFd3L2Iwbms3aXFkekdRcGluZXdDV1ppVkNYdXpF?=
+ =?utf-8?B?YjFJa1ZJNXRPNXhGL2xMNFFoYldmN0dKcko1dFdnMTZwamtOSTcwZjh3Wml1?=
+ =?utf-8?B?cloxY1lhZWNQMVgxODdSdFYrdWtGMjMxMGlyeklXaVVLb1Q5Z0dJVTIvNTdF?=
+ =?utf-8?B?OXhLZU8rYW5oaE14ckZIWjRYNTd2MENUYTAvcThSc2FPZlNyK1MzeXBxNGg4?=
+ =?utf-8?B?bWRycjl6NWMxOTdWeTNoM2hNTlNyclo4TDY5eVE2dkV2d3p1bWxHS2ZOZkcz?=
+ =?utf-8?B?Q2V2amptWmdwbDgyRi84dFhNdGl0by9XTlltYUFSVTNld0lCUE9SUXNGYzJU?=
+ =?utf-8?B?M2l6dXpHUE54VlpCRklIT2xNeVMxeTUvYkdzdjY3allENm90YnpleGhxanN4?=
+ =?utf-8?B?YVlONktyRTZZeHVXOFBPbGNHd015Rk54dEtzNkNpdmNzSzNhOE50TlQ3RHFC?=
+ =?utf-8?B?bTdUY1lhUnRHRzVUZ0xsMndIVUwyZlVnZThnMlpIV1ZRMmJsa3E0WW5SWGhJ?=
+ =?utf-8?B?eGZLVm85MWJDY1JRYXRvbzBzejVCSEdIcGN5WE05RERzWG0yY3krSTUrd20z?=
+ =?utf-8?B?c2g3VklVT2hYazYzMUlDby8zakdhb1ZJV2pkMjdrRFBjTitaNUVUZkR5Snph?=
+ =?utf-8?B?OFkxbERkT1YxeTBLaVRzTnh2MWxUUC9FWEJDMERJc3JVYnBIN01meFZJWVo2?=
+ =?utf-8?B?b3hpTU5lQk0vV252OTBieHNWTmNRcjdpV2FabDd3bEdCS2Z3YXB4Z1drTVFY?=
+ =?utf-8?B?d1hjNVV2VWFUTVJKUVVpNVVpSVh2eUVCRVJNYXNOclpqSW5raTUxTnk1eTc5?=
+ =?utf-8?B?a3kwSzlLUjVFdHdHcGZoNmp3U1U4TnlWVUluZU40ejdoR2FvSEd2alZUUzRp?=
+ =?utf-8?B?aWN2S0Zkci8yUG9seE45elNtWVRjMEZPVzkzSHpYZnJrQlR4SUFzV1lmKzJk?=
+ =?utf-8?B?RUZqRm5jekVqNjF4L2cxWEZMeXJUTmVKdjFtZUtyNHJnV2dZVGFhWEQwYXpa?=
+ =?utf-8?B?Ylp5VE5UVk1TQ2Y5MXFCSERFSHlDMnYxRFRyVHFHRDFwQUlFOUNZZ3EwWVNw?=
+ =?utf-8?B?VlJsSU9BK0NKdGtJWGRhQXhvY2c0SnJiMCthdzN0M3BSTVpwYmlUbUZHZkxZ?=
+ =?utf-8?B?YWMwRW9seTdJS1Y5aGVoKzR6L0dFWFJMNVh6TUphUFR5aWt2MGtlWi96S0tj?=
+ =?utf-8?B?S3NaM1ZVYkxHWjZkVlVaS2I0QWxmNjRjeHpzNWRTbUVpbzFRT2JlRUQwanJh?=
+ =?utf-8?B?Q1JIMkpyWHJxNWVGTFE1Tm95bkZwVUlKcDNndXRlTE5JSzh3NTR0aEtJeEh1?=
+ =?utf-8?B?cU9GWTJRYm5QbE00RTRMVzhPejRWblpiNmlEMnNRaTRmVzZGc0ZwZTN6YzNv?=
+ =?utf-8?B?MjhUVC9KbDdzVTU2NXpFcDJrZ1JrY1hjZjZsSmNocGJCc05Gcm4yWWx1THYx?=
+ =?utf-8?B?VXc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 968cbdc8-5857-43a4-be16-08dc3d3762d9
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 17:12:07.2318
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bpy23jjmjM5ZXrkfSgTUA4DUFQNXTBmNNmoRzGMerHlwqYs1zEqV6eqPq3leOh1uprP66sMYQvidTUMFK2C/5ez46PThGPOyDPFPVgAI7Dc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6123
+X-OriginatorOrg: intel.com
 
-On Tue, 2024-03-05 at 13:46 +0100, Roberto Sassu wrote:
-> On Tue, 2024-03-05 at 10:12 +0100, Christian Brauner wrote:
-> > On Mon, Mar 04, 2024 at 10:56:17AM -0600, Seth Forshee (DigitalOcean) w=
-rote:
-> > > On Mon, Mar 04, 2024 at 05:17:57PM +0100, Roberto Sassu wrote:
-> > > > On Mon, 2024-03-04 at 09:31 -0600, Seth Forshee (DigitalOcean) wrot=
-e:
-> > > > > On Mon, Mar 04, 2024 at 11:19:54AM +0100, Roberto Sassu wrote:
-> > > > > > On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOcean) =
-wrote:
-> > > > > > > Use the vfs interfaces for fetching file capabilities for kil=
-lpriv
-> > > > > > > checks and from get_vfs_caps_from_disk(). While there, update=
- the
-> > > > > > > kerneldoc for get_vfs_caps_from_disk() to explain how it is d=
-ifferent
-> > > > > > > from vfs_get_fscaps_nosec().
-> > > > > > >=20
-> > > > > > > Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.o=
-rg>
-> > > > > > > ---
-> > > > > > >  security/commoncap.c | 30 +++++++++++++-----------------
-> > > > > > >  1 file changed, 13 insertions(+), 17 deletions(-)
-> > > > > > >=20
-> > > > > > > diff --git a/security/commoncap.c b/security/commoncap.c
-> > > > > > > index a0ff7e6092e0..751bb26a06a6 100644
-> > > > > > > --- a/security/commoncap.c
-> > > > > > > +++ b/security/commoncap.c
-> > > > > > > @@ -296,11 +296,12 @@ int cap_capset(struct cred *new,
-> > > > > > >   */
-> > > > > > >  int cap_inode_need_killpriv(struct dentry *dentry)
-> > > > > > >  {
-> > > > > > > -	struct inode *inode =3D d_backing_inode(dentry);
-> > > > > > > +	struct vfs_caps caps;
-> > > > > > >  	int error;
-> > > > > > > =20
-> > > > > > > -	error =3D __vfs_getxattr(dentry, inode, XATTR_NAME_CAPS, NU=
-LL, 0);
-> > > > > > > -	return error > 0;
-> > > > > > > +	/* Use nop_mnt_idmap for no mapping here as mapping is unim=
-portant */
-> > > > > > > +	error =3D vfs_get_fscaps_nosec(&nop_mnt_idmap, dentry, &cap=
-s);
-> > > > > > > +	return error =3D=3D 0;
-> > > > > > >  }
-> > > > > > > =20
-> > > > > > >  /**
-> > > > > > > @@ -323,7 +324,7 @@ int cap_inode_killpriv(struct mnt_idmap *=
-idmap, struct dentry *dentry)
-> > > > > > >  {
-> > > > > > >  	int error;
-> > > > > > > =20
-> > > > > > > -	error =3D __vfs_removexattr(idmap, dentry, XATTR_NAME_CAPS)=
-;
-> > > > > > > +	error =3D vfs_remove_fscaps_nosec(idmap, dentry);
-> > > > > >=20
-> > > > > > Uhm, I see that the change is logically correct... but the orig=
-inal
-> > > > > > code was not correct, since the EVM post hook is not called (th=
-us the
-> > > > > > HMAC is broken, or an xattr change is allowed on a portable sig=
-nature
-> > > > > > which should be not).
-> > > > > >=20
-> > > > > > For completeness, the xattr change on a portable signature shou=
-ld not
-> > > > > > happen in the first place, so cap_inode_killpriv() would not be=
- called.
-> > > > > > However, since EVM allows same value change, we are here.
-> > > > >=20
-> > > > > I really don't understand EVM that well and am pretty hesitant to=
- try an
-> > > > > change any of the logic around it. But I'll hazard a thought: sho=
-uld EVM
-> > > > > have a inode_need_killpriv hook which returns an error in this
-> > > > > situation?
-> > > >=20
-> > > > Uhm, I think it would not work without modifying
-> > > > security_inode_need_killpriv() and the hook definition.
-> > > >=20
-> > > > Since cap_inode_need_killpriv() returns 1, the loop stops and EVM w=
-ould
-> > > > not be invoked. We would need to continue the loop and let EVM know
-> > > > what is the current return value. Then EVM can reject the change.
-> > > >=20
-> > > > An alternative way would be to detect that actually we are setting =
-the
-> > > > same value for inode metadata, and maybe not returning 1 from
-> > > > cap_inode_need_killpriv().
-> > > >=20
-> > > > I would prefer the second, since EVM allows same value change and w=
-e
-> > > > would have an exception if there are fscaps.
-> > > >=20
-> > > > This solves only the case of portable signatures. We would need to
-> > > > change cap_inode_need_killpriv() anyway to update the HMAC for muta=
-ble
-> > > > files.
-> > >=20
-> > > I see. In any case this sounds like a matter for a separate patch
-> > > series.
-> >=20
-> > Agreed.
->=20
-> Christian, how realistic is that we don't kill priv if we are setting
-> the same owner?
->=20
-> Serge, would we be able to replace __vfs_removexattr() (or now
-> vfs_get_fscaps_nosec()) with a security-equivalent alternative?
+Hi Babu,
 
-It seems it is not necessary.
+On 3/4/2024 2:24 PM, Moger, Babu wrote:
 
-security.capability removal occurs between evm_inode_setattr() and
-evm_inode_post_setattr(), after the HMAC has been verified and before
-the new HMAC is recalculated (without security.capability).
+> Based on our discussion, I am listing few examples here. Let me know if I missed something.
+> 
+>   mount  -t resctrl resctrl /sys/fs/resctrl/
 
-So, all good.
+When creating examples it may help to accompany it with an overview of
+which groups exist.
 
-Christian, Seth, I pushed the kernel and the updated tests (all patches
-are WIP):
+> 
+> 1. Assign both local and total counters to default group on domain 0 and 1.
+>    $echo "//00=lt;01=lt" > /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+> 
+>    $cat /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+>    //00=lt;01=lt
 
-https://github.com/robertosassu/linux/commits/evm-fscaps-v2/
+I also think it will be useful to always print a small header that guides
+the interpretation. For example,
 
-https://github.com/robertosassu/ima-evm-utils/commits/evm-fscaps-v2/
+$ cat mbm_assign_control 
+#control_group/monitor_group/flags
+...
 
+> 
+> 2. Assign a total event to mon group inside the default group for both domain 0 and 1.
+> 
+>    $mkdir /sys/fs/resctrl/mon_groups/mon_a
+>    $echo "/mon_a/00+t;01+t" > /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+> 
+>    $cat /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+>    //00=lt;01=lt
+>    /mon_a/00=t;01=t
 
-The tests are passing:
+For an example of "+" I think understanding the output will be easier if the "before" view with
+existing flags is available. For example,
+if it was
+   $cat /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+   #control_group/monitor_group/flags
+   /mon_a/00=l;01=l
 
-https://github.com/robertosassu/ima-evm-utils/actions/runs/8159877004/job/2=
-2305521359
+then
+   $echo "/mon_a/00+t;01+t" > /sys/fs/resctrl/info/L3_MON/mbm_assign_control
 
-Roberto
+would result in:
+   $cat /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+   #control_group/monitor_group/flags
+   /mon_a/00=lt;01=lt
+
+An example like above would make it easier to understand how it is different
+from using "=" like in example 1.
+
+> 
+> 3. Assign a local event to non-default control mon group both domain 0 and 1.
+>    $mkdir /sys/fs/resctrl/ctrl_a
+>    $echo "/ctrl_a/00=l;01=l"  > /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+
+I think this should be:
+	$echo "ctrl_a//00=l;01=l"  > /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+
+> 
+>    $cat /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+>    //00=lt;01=lt
+>    /mon_a/00=t;01=t
+>    /ctrl_a/00=l;01=l
+
+     ctrl_a//00=l;01=l
+
+> 
+> 4. Assign a both counters to mon group inside another control group(non-default).
+>    $mkdir /sys/fs/resctrl/ctrl_a/mon_ab/
+
+Above will not work.
+
+     $ mkdir /sys/fs/resctrl/ctrl_a
+     $ mkdir /sys/fs/resctrl/ctrl_a/mon_groups/mon_ab
+
+>    $echo "ctrl_a/mon_ab/00=lt;01=lt" > /sys/fs/resctrl/nfo/L3_MON/mbm_assign_contro
+
+(watch out for typos in examples)
+
+> 
+>    $cat /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+>    //00=lt;01=lt
+>    /mon_a/00=t;01=t
+>    /ctrl_a/00=l;01=l
+>    ctrl_a/mon_ab/00=lt;01=lt
+> 
+> 5. Unassign a counter to mon group inside another control group(non-default).
+>    $echo "ctrl_a/mon_ab/00-l;01-l" > /sys/fs/resctrl/nfo/L3_MON/mbm_assign_control
+> 
+>   $cat /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+>   //00=lt;01=lt
+>   /mon_a/00=t;01=t
+>   /ctrl_a/00=l;01=l
+>   ctrl_a/mon_ab/00=t;01=t
+
+ack.
+
+> 
+> 6. Unassign all the counters on a specific group.
+>    $echo "ctrl_a/mon_ab/00=_" > /sys/fs/resctrl/nfo/L3_MON/mbm_assign_control
+
+(watch for typos)
+
+Note that this only did unassign on domain 0.
+
+> 
+>    $cat /sys/fs/resctrl/info/L3_MON/mbm_assign_control
+>    //00=lt;01=lt
+>    /mon_a/00=t;01=t
+>    /ctrl_a/00=l;01=l
+>    ctrl_a/mon_ab/00=_;01=_
+
+     ctrl_a/mon_ab/00=_;01=t
+
+To address some earlier requirements I think it will be helpful to also
+show an example of multiple groups changed with a single write.
+
+Reinette
 
