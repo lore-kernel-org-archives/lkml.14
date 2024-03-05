@@ -1,74 +1,125 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A167C5917C;
-	Tue,  5 Mar 2024 12:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31DD5A118
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 12:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709640896; cv=none; b=kP1zfkbxi4BmK7W8eNj0aCNQysWNHit++BJZOiiokZyYA4yFQgJTKF0iL2Yxzgqi6ieFyj1MY6Vnp8nAoo7+3LmyjIjAXBgCseAHcr3NF8vJjRYntl/VaHGiix7lSgt1EHrjedFtTV6csC/yNTQ1GblMlwErGh+OVhkliB3CPVA=
+	t=1709640911; cv=none; b=b+BhitpfpXfXvLllLcq9mrU2L0V37RmA+/8l3xRA3kOEWsCWPcTvY2ziUCHFltj55i3SEjXxufMQK68OOp0Rljx5UnQEbWkxf1DCB5phk57ECdl4yFF5K+bIJdQKbPMFWSVYBPtcdADA/3spUBy8CE73V6Cwp+TwvCD/vYjKUwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709640896; c=relaxed/simple;
-	bh=nB8UHD/mOQx9Sfo+EICVGTqA+L3BRilRmav32T6/HAk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VBitB6IqrwsD0aaeUOZ69opQZpssFYKNVj3Hz7hdZTZ+VvrJjFOK0g4bPOjYiDIn5LB4/2UiVXUPghA0rfVVYwGtO8Uclpim/CuzPxVBpWmO2BldA6tGWKF2zbC4ND2jSGtJm+PAG8k0Jp3ZNR3TeXdULjxEGaRi02hGkll6/Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TpvZk5W2Qz2BfKf;
-	Tue,  5 Mar 2024 20:12:30 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1C9B61404F3;
-	Tue,  5 Mar 2024 20:14:36 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 5 Mar 2024 20:14:30 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <will@kernel.org>, <sfr@canb.auug.org.au>, <linux-kernel@vger.kernel.org>,
-	<linux-next@vger.kernel.org>
-CC: <hejunhao3@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH -next] drivers/perf: hisi: Fix build warning of hisi-pcie-pmu.rst
-Date: Tue, 5 Mar 2024 20:10:03 +0800
-Message-ID: <20240305121003.4497-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+	s=arc-20240116; t=1709640911; c=relaxed/simple;
+	bh=RCaP4GDWT87Zd9IUZzQQpBKEXe+s1x2lF2pIn4GuNXU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YzSLCwHUfaYxwT4wrUewS+CxMaRP6z6Gebnle085z1Z9Ello+rHS6ASU0cQSkntLKAtY1rDBulm0VpQhCyRebWGzjdKv5fxTijWznNruYHRUKR+1WPbkrm/c49wix2F9cmWcplbUlhOU8CqvWygSkIyEpUvjxphDgyowy2+k+Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UlXlibw3; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UlXlibw3"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dd045349d42so625367276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 04:15:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709640908; x=1710245708; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZVW/PXVs5nzy5Gr+BEyjbP8Shu9TAluG0kZZRSGaf1s=;
+        b=UlXlibw3caQYA57kMfjNtfV6yf5J+oylhS9K4ZXt73FtLQhoSMTyKVWUDyiZYM9FlO
+         EpBnaNdd20YdCCHFYLDfAnnK92S9dPpJ2Y9GVPA05wQI9IcIc2O1F8zGjuqEbuf3blQA
+         Xj9Fvt86ML6cxLIoamGCj1otdU1z5qe1RbQvrj8ausuGUyRf1TBAKvzTjczJAhCmix1s
+         qTtYnakLOvJnfliFe+S++misrWDWyrDGTwvbUAKHi7KiM62Jz34pKCbGwLnoWqAzuB2h
+         cHAWIhmJRSiprowLH6F341m3oIAjgIg4nZXuKHrW/AA6Caed9MyL3loyZrer3w39SvHg
+         fi6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709640908; x=1710245708;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZVW/PXVs5nzy5Gr+BEyjbP8Shu9TAluG0kZZRSGaf1s=;
+        b=loRo7rAKWMe9ULNqshva9BbFuLOMjD6m7ujL40WCxe0cYMPOnsBuxHXPE36z4uBZx6
+         wtPL3TGYGpVGFs1q+2Hxp3wOkmQGaSjmuuq7X2qJsxvUNQa1DmZFUb55gQj48ehvFVsv
+         e6Alvqbu8qBHhjpJQARTTCDrKL81bQZ4ZZDvAG2tS6ZzFPPJ0NXof0hJ+efzMYTrjnz6
+         LEUxm+SBqzT6giVP9GVRccNX6MSSXqa1LvQOJ8CWMNZr3Gw2PzD/VJcd3PNADb2NZOCC
+         levWLVl2YVAryMUQvVRsMcBzJUwhDZoq896ltzZ72gStq80C6XqmVp6txIsjuZA+oWuH
+         nM7g==
+X-Forwarded-Encrypted: i=1; AJvYcCU9K+tBwkDh367d3V3qc4yEzpfe3SbeXVWwGDqGdrBnGultDt31QAlxp1Red6UDPdn063CwuKp5uxyA7xALlsn4FnFijT3vsFNCIILL
+X-Gm-Message-State: AOJu0Yz/+gO7ZzUQxprx+u41SU/CQrxl8tWH52h5pMw3ECHwi78uvAKp
+	Kcw6YQeESr7tUAdUn0AqEfraytCyRbI8uOQYg8xZXTbnRmM0run/n2hiHhAd2MzY4B4ooRc6h5P
+	jkNcqG8PWsRC+WCz4cvmZMUFqckI+WyX/PjzBVA==
+X-Google-Smtp-Source: AGHT+IE2Y4cAajm9+l0CPilDWB96P4S9WhAwezHUZMdrZBUawlG/ZjtdnYQewd1l4phaxcPiQSTerAEAXTI4XU4tz+w=
+X-Received: by 2002:a25:660c:0:b0:dd0:c2a:26f9 with SMTP id
+ a12-20020a25660c000000b00dd00c2a26f9mr6859439ybc.27.1709640907662; Tue, 05
+ Mar 2024 04:15:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
+References: <20240305104423.3177-2-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240305104423.3177-2-wsa+renesas@sang-engineering.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 5 Mar 2024 13:14:31 +0100
+Message-ID: <CAPDyKFryGhRju5CohRipXk9E_G3kob2g8=VztjtPBZ_i6D9Ugw@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: tmio: avoid concurrent runs of mmc_request_done()
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>, 
+	stable@vger.kernel.org, Chris Ball <cjb@laptop.org>, 
+	Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On Tue, 5 Mar 2024 at 11:44, Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> With the to-be-fixed commit, the reset_work handler cleared 'host->mrq'
+> outside of the spinlock protected critical section. That leaves a small
+> race window during execution of 'tmio_mmc_reset()' where the done_work
+> handler could grab a pointer to the now invalid 'host->mrq'. Both would
+> use it to call mmc_request_done() causing problems (see link below).
+>
+> However, 'host->mrq' cannot simply be cleared earlier inside the
+> critical section. That would allow new mrqs to come in asynchronously
+> while the actual reset of the controller still needs to be done. So,
+> like 'tmio_mmc_set_ios()', an ERR_PTR is used to prevent new mrqs from
+> coming in but still avoiding concurrency between work handlers.
+>
+> Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
+> Closes: https://lore.kernel.org/all/20240220061356.3001761-1-dirk.behme@de.bosch.com/
+> Fixes: df3ef2d3c92c ("mmc: protect the tmio_mmc driver against a theoretical race")
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
+> Reviewed-by: Dirk Behme <dirk.behme@de.bosch.com>
+> Cc: stable@vger.kernel.org # 3.0+
 
-`make htmldocs SPHINXDIRS="admin-guide"` shows below warnings:
-Documentation/admin-guide/perf/hisi-pcie-pmu.rst:48: ERROR: Unexpected indentation.
-Documentation/admin-guide/perf/hisi-pcie-pmu.rst:49: WARNING: Block quote ends without a blank line; unexpected unindent.
+Applied for fixes, thanks!
 
-Fix this.
+Kind regards
+Uffe
 
-Closes: https://lore.kernel.org/lkml/20231011172250.5a6498e5@canb.auug.org.au/
-Fixes: 89a032923d4b ("docs: perf: Update usage for target filter of hisi-pcie-pmu")
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- Documentation/admin-guide/perf/hisi-pcie-pmu.rst | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/admin-guide/perf/hisi-pcie-pmu.rst b/Documentation/admin-guide/perf/hisi-pcie-pmu.rst
-index 678d3865560c..5541ff40e06a 100644
---- a/Documentation/admin-guide/perf/hisi-pcie-pmu.rst
-+++ b/Documentation/admin-guide/perf/hisi-pcie-pmu.rst
-@@ -44,6 +44,7 @@ The related events usually used to calculate the bandwidth, latency or others.
- They need to start and end counting at the same time, therefore related events
- are best used in the same event group to get the expected value. There are two
- ways to know if they are related events:
-+
- a) By event name, such as the latency events "xxx_latency, xxx_cnt" or
-    bandwidth events "xxx_flux, xxx_time".
- b) By event type, such as "event=0xXXXX, event=0x1XXXX".
--- 
-2.24.0
-
+> ---
+>
+> Change since v1/RFT: added Dirk's tags and stable tag
+>
+> @Ulf: this is nasty, subtle stuff. Would be awesome to have it in 6.8
+> already!
+>
+>  drivers/mmc/host/tmio_mmc_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+> index be7f18fd4836..c253d176db69 100644
+> --- a/drivers/mmc/host/tmio_mmc_core.c
+> +++ b/drivers/mmc/host/tmio_mmc_core.c
+> @@ -259,6 +259,8 @@ static void tmio_mmc_reset_work(struct work_struct *work)
+>         else
+>                 mrq->cmd->error = -ETIMEDOUT;
+>
+> +       /* No new calls yet, but disallow concurrent tmio_mmc_done_work() */
+> +       host->mrq = ERR_PTR(-EBUSY);
+>         host->cmd = NULL;
+>         host->data = NULL;
+>
+> --
+> 2.43.0
+>
