@@ -1,118 +1,116 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC7A10E4;
-	Tue,  5 Mar 2024 00:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A8A10E4;
+	Tue,  5 Mar 2024 00:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709598362; cv=none; b=BSAXENNz7pYdpcIy8eKJcufteAM9w6+c0LUzilmRt67isSoDb8fDe4QJDDjesTF5MsYOcO10vSVm28zbBfSFmev0tdArUrRt8lq9QzsUb6keEXf17AmFQ77SnJ/mZbjAqMXg1crSsKTYi3SxkuSJfU85sSbiBGn89UlOzE5HEwY=
+	t=1709598407; cv=none; b=Akv8V+9xILZ1MKChGNRFk4VqCbUBgRnpjsOzwMKSQaThitccmHEtxbFkaiv2uvn76dp56SUqExjwC01ezydmQ6RWUBmHa74fSmAn71Wlbd4bxbGxxigPA20PUnrlbG8oPLwjl93pFbTrFK7RxObovH0RcHD12Fbhl5R3XeSrefA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709598362; c=relaxed/simple;
-	bh=Vic1yyYZkTyBkcHMN/DlotFLffO5adzTXya6pqwwL2Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t5hl7z9WtrVYOne6Jm2mKf4uoPYsdRc+RnEySX8Kg9c3HwrW50Nd32aPlAPOFF+8HRUGexsP6yyCfxGfRrzZpyw5VEoalJmrG2aTDEgWTNHNvnAEJN3N2q8OCMaN5X16u6sYRDTvV0+HpSgeAUUd5oqYBaGace6HMzGhuuPC0MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f5FM0iLZ; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709598407; c=relaxed/simple;
+	bh=krO1kIHKX/xI7ueJfFd6M5pkrZWuBiDhL+7b5CCcB2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=o5AVCEeD9G7XfD0SDbqQxMkAUV35D5ljUjKVUFlsaDV+H9wLhlrd6sNMPZ+HBTDPtG9JSqUTud5oAwfGUO1EgUhaICbKkIX9tOo7LgMk5fhb1cH2EaOsnkie9IFxM+azwlWP+UVKJqHH0DpTDn1kZhnHV4sURWYq5YLRBmdz6kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FrAXEqr1; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5FM0iLZ"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dc13fb0133so37902165ad.3;
-        Mon, 04 Mar 2024 16:26:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709598360; x=1710203160; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=apgfPOyBm8fjbNIlIAw478BrY43o1tnAskOyysD67Fs=;
-        b=f5FM0iLZMtFLWqAXPmIYuqfgTfYvkxU8c2SuIuRe3oooH5rvzDqHERIqfsgMRKoUvQ
-         Y20Qt1W1IDXa3tVR0mYYtucGqYA9Rk87vdEnuYtzcNrGlOQ2yV1uHak+emlouhiTSHnc
-         pGMWbrn5CLTZr6RLwPzYYsbkQ5kWPkLR0nsmr69am2mils40r5mJjNISJdG3oq62ec2A
-         3O9QolBPLETtG5WRX+jMhlkDr+qY/awh7K9auB5cwPv1ML48BgSpUxdA0Lm0yZosskm5
-         n/MgrtsMxKmHoo5bUaAEdIyDLvE/CMDYbzQKlGjJgYsDTkn4yj3z13756/T1Ii2/fjxq
-         DoRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709598360; x=1710203160;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=apgfPOyBm8fjbNIlIAw478BrY43o1tnAskOyysD67Fs=;
-        b=m+OlDuOMU69Bhkhjm8R8gcpKUEkICYm3tPX8x1OYSoX5goosst81jjZn5B+t2YRfsB
-         b3+V2z/fqWdu+RaklY7iLOxuzSzF9vT+he/MsDDxvT8I4uLgkW3RprAof1Mcz0TLW325
-         QjvMie4+G+xa0CA6RrgfXujYPIpalF/CMApRzisiOspdOgx8Z4iBj57BIsJCBcBYfzEd
-         3UTq2bsKPdjYjVyFAh48cLIH7KRQG3ukjH3RAmvjJy3tRnIzISsrnH/9see93ZDJljGc
-         Layxq5zk5e0MnQibLKQ97NDHiXjg+OVjKvP7CSeS3xdG9vNlSjyaAqTEfQaJ8WnuSb8j
-         2AxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpshuTl4l8jwWt4OxAWil3Cm5inYBqcoBZeXwrT+yJuwVhqvZJ4umWvv/buylcVXfdVEH3sNu1fqLWbcYf+tWLdTxMw3cnaSGmAaZXH4DgabTByz2c6VzxhS0IhhV720nOO+jI4Iy/TvZj/w==
-X-Gm-Message-State: AOJu0YwjZpgybyE0W6/clV/A8Z5KN6Fso4SD3oe90GkEqT2F9wCOF2Iu
-	EcPPh+NZ0EVmqO51g3KjE7CkNDRqnNWECQb1RTwwyzm8WXIxv6asqM+GrDNb
-X-Google-Smtp-Source: AGHT+IH8VISteBQwVu/ywVhok1br8asTz3CWnUenMckIjlocnVPMmLNsv+ZYwZwB+41xt68s6nRvRg==
-X-Received: by 2002:a17:903:1104:b0:1dc:1c81:1b19 with SMTP id n4-20020a170903110400b001dc1c811b19mr404186plh.3.1709598359824;
-        Mon, 04 Mar 2024 16:25:59 -0800 (PST)
-Received: from rigel.home.arpa ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id mm12-20020a1709030a0c00b001dc96d1a662sm9131940plb.197.2024.03.04.16.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 16:25:59 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	bartosz.golaszewski@linaro.org,
-	andriy.shevchenko@linux.intel.com,
-	christophe.leroy@csgroup.eu,
-	shuah@kernel.org,
-	bamv2005@gmail.com
-Cc: Kent Gibson <warthog618@gmail.com>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Yi Lai <yi1.lai@intel.com>
-Subject: [PATCH] selftest: gpio: remove obsolete gpio-mockup test
-Date: Tue,  5 Mar 2024 08:21:24 +0800
-Message-Id: <20240305002124.7552-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FrAXEqr1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1709598403;
+	bh=8JmmGRblLviPY3vGl6YRexBFOxlOArzv6ntkM8GxRqc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FrAXEqr1y3lgVK8CRgIMB8SgzBwMWHgRHFOlbs/aqI3dbXyRoovqzQVwlpc9PsoVU
+	 EJKT0fXE86FUfkW21w8YXrCjU/2lwOaPhX5blmggR1lx9w6PJMPhng0PonqXj9GD5E
+	 EmcNThUxuCe31glvD74s68nzTlOzbTykRSOJh+DIMZq+pVWwsx+jbCXEPlyamzT6WH
+	 8yk2sMMnhcsnLsy45R2X/jlmEbrYwhJh1IJTWDQZJyxkTRPVeH83VvM6EIDLV25JFG
+	 wt5n8ho76YG0D2N838r1ZrKxf7TxftwMiahfhE3VuDlcW5Jl5ZB659L9Xs1Nt3gVp3
+	 5JRviHuy7Dj4Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TpbwL0Y5Cz4wc8;
+	Tue,  5 Mar 2024 11:26:42 +1100 (AEDT)
+Date: Tue, 5 Mar 2024 11:26:41 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Networking <netdev@vger.kernel.org>, Alex Elder <elder@linaro.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: linux-next: manual merge of the net-next tree with the pm tree
+Message-ID: <20240305112641.6248c6fd@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/PtrpKQJkd6+R8z.2d0yv6Mo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-With the removal of the ARCH_NR_GPIOS, the number of available GPIOs
-is effectively unlimited, causing the gpio-mockup module load failure
-test that overflowed the number of GPIOs to unexpectedly succeed, and
-so fail.
+--Sig_/PtrpKQJkd6+R8z.2d0yv6Mo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The test is no longer relevant so remove it.
-Promote the "no lines defined" test so there is still one load
-failure test in the basic set.
+Hi all,
 
-Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
-Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-Reported-by: Yi Lai <yi1.lai@intel.com>
-Closes: https://lore.kernel.org/linux-gpio/ZC6OHBjdwBdT4sSb@xpf.sh.intel.com/
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/testing/selftests/gpio/gpio-mockup.sh | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Today's linux-next merge of the net-next tree got a conflict in:
 
-diff --git a/tools/testing/selftests/gpio/gpio-mockup.sh b/tools/testing/selftests/gpio/gpio-mockup.sh
-index 0d6c5f7f95d2..fc2dd4c24d06 100755
---- a/tools/testing/selftests/gpio/gpio-mockup.sh
-+++ b/tools/testing/selftests/gpio/gpio-mockup.sh
-@@ -377,13 +377,10 @@ if [ "$full_test" ]; then
- 	insmod_test "0,32,32,44,-1,22,-1,31" 32 12 22 31
- fi
- echo "2.  Module load error tests"
--echo "2.1 gpio overflow"
--# Currently: The max number of gpio(1024) is defined in arm architecture.
--insmod_test "-1,1024"
-+echo "2.1 no lines defined"
-+insmod_test "0,0"
- if [ "$full_test" ]; then
--	echo "2.2 no lines defined"
--	insmod_test "0,0"
--	echo "2.3 ignore range overlap"
-+	echo "2.2 ignore range overlap"
- 	insmod_test "0,32,0,1" 32
- 	insmod_test "0,32,1,5" 32
- 	insmod_test "0,32,30,35" 32
--- 
-2.39.2
+  drivers/net/ipa/ipa_smp2p.c
 
+between commit:
+
+  c0ef3df8dbae ("PM: runtime: Simplify pm_runtime_get_if_active() usage")
+
+from the pm tree and commit:
+
+  5245f4fd28d1 ("net: ipa: don't save the platform device")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ipa/ipa_smp2p.c
+index cbf3d4761ce3,aeccce9fab72..000000000000
+--- a/drivers/net/ipa/ipa_smp2p.c
++++ b/drivers/net/ipa/ipa_smp2p.c
+@@@ -91,8 -90,7 +90,7 @@@ static void ipa_smp2p_notify(struct ipa
+  	if (smp2p->notified)
+  		return;
+ =20
+- 	dev =3D &smp2p->ipa->pdev->dev;
+- 	smp2p->power_on =3D pm_runtime_get_if_active(dev) > 0;
+ -	smp2p->power_on =3D pm_runtime_get_if_active(smp2p->ipa->dev, true) > 0;
+++	smp2p->power_on =3D pm_runtime_get_if_active(smp2p->ipa->dev) > 0;
+ =20
+  	/* Signal whether the IPA power is enabled */
+  	mask =3D BIT(smp2p->enabled_bit);
+
+--Sig_/PtrpKQJkd6+R8z.2d0yv6Mo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXmZsEACgkQAVBC80lX
+0GwcJAf+MoMxPVMBLY5erdgoXg5CFIShShkpA/chIJDy+ImTgnd+nOBIUQjP9EdW
+jJNjU1Xq6cZDeJ2I8k3O0haW041BgGVQkvcstwmYxt5/YwNuo7KvZdCzioWpgTRz
+qv825HrFgYJQANqcTKdQvAhz7A943WjWjU2ByorbGFKyhyBASLZRCT1swQriDMzq
+8dND96qPyqXdwImNgQSPN/eFJqHDl5ljfwKYgd6xBQOhAx+o2BP74XrHKjNPVXI8
+CdNT/ePNfmh6VNmiTcaoCYBdYcSQsbhztrbEiXokIC6d+HXsYbfB60ipcfF1PIDD
+YQQz40PTkEc/zz17cA0CgTPrnmUbjg==
+=9lTA
+-----END PGP SIGNATURE-----
+
+--Sig_/PtrpKQJkd6+R8z.2d0yv6Mo--
