@@ -1,170 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2074.outbound.protection.outlook.com [40.107.7.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F39F3EA90;
-	Tue,  5 Mar 2024 10:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709635610; cv=none; b=d+04TYHeqX2Dv43v1gxclOPvbXwCdXFBzkAeOfOzIG6owYzZHf49SMNtLjYmdtq3nIPKgqSkzaNeD8qxRF2+9mIY2Et6BwQItLPHTsUco3XqoeBOjnhVkRY8zrs9KUnjnchgoe0zYoYt8MzwjYqgzblW0IHCHxeSYGXUvRgO2uc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709635610; c=relaxed/simple;
-	bh=mjAuyuvA9ZdWxFTUqAfiA34ElW/sURoOH878JjpXRBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ose7VtxIfxH51OBVoPY/4h1h244y94v5bE097234Wr+xfFicnyTd+lbrS+VDAqTg/o8NtiAKSGJQmq/DnYmwfTb2ucjh6+6f1YgOCGuprBC1PmQcZW1ImEFID1a01z0GDo8R+/KRMJs8Y83PuJ1m80SKY/d7oBjXqO3una2pQtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aD1aIHIY; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70704433CA;
+	Tue,  5 Mar 2024 10:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709635809; cv=fail; b=hTLPDvVfYgMpkB8t/p+FpctKfo9N9NjTsmMDIeA6A7S3yGD6RPahR+zctnid+8K8vOB1AZnNbmjh8mAqlwp97HrsSGoImFvtokrm8cO3yxfaIka4RrGhROHxwiq9ZL1xgvLR51M2jxzNNFUZOSLlWD1CM+Qvsge4Fi/20d2GSG8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709635809; c=relaxed/simple;
+	bh=FPiLeRazbLSihMpqoonG41u3TVb7xxjEVkv2Lf2P/8k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=CAmrh42QeG8kddYe0EcGRjfP9Xhfr9zhngtm+MzjlUW7enINEo14cx2Ldp/BH/Toi22tgaiEeAlkmaTNdu+FCDdGrFdKko65DXBhwwkpzsAtayRjZb4R9hu3/xvPGUBbeJpZMVw2WZ8kDnh+E8cJKUhKCRayqkYBEEyfet9oGWk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=l644s7N0; arc=fail smtp.client-ip=40.107.7.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aD1aIHIY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC16C433C7;
-	Tue,  5 Mar 2024 10:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709635609;
-	bh=mjAuyuvA9ZdWxFTUqAfiA34ElW/sURoOH878JjpXRBI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aD1aIHIYiKzuX8QL9/005A26ktUHANdjd2kNLmArfp4csJ7dlQm+MFXbX12UbYit3
-	 Ec9GachpHAngTpeJuqaoV9yAzwWK92JAotuPrWxLny3S+/OEwI63aIt0k74chDuHEt
-	 HkuZF2iGvi5/GZmRt2dN6Y+8/sCi9OQ/6m6cyFvSZYkea1g1xP+yimNFZf3U5EtyMW
-	 0NJM6nfiAmJg3gyLKgopAkgYDTCyTTnzHoUK1f5+4Kyd5c1orm29vcjATct85e/okC
-	 FmVbn3nJvz7VciTEdAUrEyxybcQ0n2U9DytQnDE7TyT6c4DyI4s5rssByOSVQ5t3KW
-	 uG561wm+GjQLw==
-Date: Tue, 5 Mar 2024 11:46:46 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>, ying.huang@intel.com,
-	feng.tang@intel.com, fengwei.yin@intel.com
-Subject: Re: [tip:timers/core] [timers]  7ee9887703:  netperf.Throughput_Mbps
- -1.2% regression
-Message-ID: <Zeb4FpYEs/ocJMji@lothringen>
-References: <202403011511.24defbbd-oliver.sang@intel.com>
- <ZeUWreWcp4UWQ081@pavilion.home>
- <ZeUuLPXfLCmB39qq@xsang-OptiPlex-9020>
- <ZeWwYUY56IG0yzzQ@localhost.localdomain>
- <ZeaAx662HfbpMLdg@xsang-OptiPlex-9020>
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="l644s7N0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LRs6PUDHss/QJyMenXp/ziWteCu3LaBb+cQFDoh0/Z+r7X/7fCiW1nzaYI44+rmx9gSS2By9b9ohHBNaP/REkCUC02VHjeXbmZIiWPbjBx8u6tTrKN5YPflbZCR5rluaXJgmwuEZi7DyG6NMWVWZGUG4mp6o982u/AUD23cD67znM9c+Vz/W4bcaVhBUKhP7Mh2DjsfTpgr8ocW/nqxAei7+ZA194sC8XsI6KnLCC782llD7PqNf3YiE1LdDbwejzVSyRMygmSv1xAFv9TrS3wHE+CeZ1nFsmr3J8GnW2+q9PRB41ZOSf9q0e6hd70Jmq8qr/bGHJTAnYtUo6dEMxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K/eMC7j4cmsJpQlzTARDHBzwdUV+VgkTCQ6FRC8mNdQ=;
+ b=Cg3BsCuSsZ18n3AUrBfRbVzdv6KR+zYX2nGSNKE4fWftaaWonoCoqwchxC7uzNofLGs0w+TyPizzeymmZJvW+iV8qBgfIqt2sHKLkW3IvzvCicCUKa9XyYt4WNq+6K1xdeuDnXUTQQjKE6gPVoOa4vX96sY2J+aeJMXBjw4CyNSpS2ILjNLaXXxzJRSx0RK8d9iaHBOXDQGDN2yIWeJV6cCyZY1X7ersB6uPSb8pR+9fw6jSo4dES3qFuWcQilRf0BFNWVZQwyGWJS8uc2+H3zMGt5i2cPfW+sJGaqjYdegSK0jmjRci7tqc/L5dDkBklewo21oneph1N0Cnp/sH8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=kernel.org smtp.mailfrom=axis.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K/eMC7j4cmsJpQlzTARDHBzwdUV+VgkTCQ6FRC8mNdQ=;
+ b=l644s7N0vwY0HNAsKrlk/bQWvdkYX6BKxPfanUBWThPgZ+CRXmejIEO3XHFLNRmv3uYxoGtCgzjcpJa7HlR5Vydubqip4u3U0j1Ykg96LOzj2WZmoBAESs9KZU7KV9ZdS5xG+wm6Cx+O2TU3/o9wF+u+PcxnVuUKPo7AWS0/THg=
+Received: from AM6PR04CA0064.eurprd04.prod.outlook.com (2603:10a6:20b:f0::41)
+ by AM0PR02MB5906.eurprd02.prod.outlook.com (2603:10a6:208:17f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Tue, 5 Mar
+ 2024 10:50:04 +0000
+Received: from AM1PEPF000252DA.eurprd07.prod.outlook.com
+ (2603:10a6:20b:f0:cafe::cc) by AM6PR04CA0064.outlook.office365.com
+ (2603:10a6:20b:f0::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39 via Frontend
+ Transport; Tue, 5 Mar 2024 10:50:04 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=axis.com;
+Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
+ designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com;
+Received: from mail.axis.com (195.60.68.100) by
+ AM1PEPF000252DA.mail.protection.outlook.com (10.167.16.52) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7362.11 via Frontend Transport; Tue, 5 Mar 2024 10:50:04 +0000
+Received: from se-mail02w.axis.com (10.20.40.8) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 5 Mar
+ 2024 11:50:03 +0100
+Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Tue, 5 Mar 2024 11:50:03 +0100
+Received: from pc55637-2337.se.axis.com (pc55637-2337.se.axis.com [10.88.4.11])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 94D5715AC9;
+	Tue,  5 Mar 2024 11:50:03 +0100 (CET)
+Received: by pc55637-2337.se.axis.com (Postfix, from userid 363)
+	id 89E202369676; Tue,  5 Mar 2024 11:50:03 +0100 (CET)
+From: Jesper Nilsson <jesper.nilsson@axis.com>
+Date: Tue, 5 Mar 2024 11:50:00 +0100
+Subject: [PATCH v3] i2c: exynos5: Init data before registering interrupt
+ handler
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZeaAx662HfbpMLdg@xsang-OptiPlex-9020>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240305-i2c_exynos5-v3-1-17a749688806@axis.com>
+X-B4-Tracking: v=1; b=H4sIANf45mUC/32MQQ6CMBBFr0JmbQ2dQmhdeQ9jDC2jzEJKWtNAC
+ He34EY3Lt/Pf2+BSIEpwqlYIFDiyH7IoA4FuL4dHiS4ywxYYlUiasHobjTNg4+16KxUbYNETlv
+ IxhjoztNeu1wz9xxfPsx7PMlt/XRUWf10khRSkJFOa9PlR31uJ45H55+wZRL+UTGrjTVOSbTUS
+ POlruv6Br/t07fgAAAA
+To: Andi Shyti <andi.shyti@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>
+CC: Naveen Krishna Ch <ch.naveen@samsung.com>, <linux-i2c@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kernel@axis.com>, Jesper Nilsson
+	<jesper.nilsson@axis.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709635803; l=3018;
+ i=jesper.nilsson@axis.com; s=20240216; h=from:subject:message-id;
+ bh=FPiLeRazbLSihMpqoonG41u3TVb7xxjEVkv2Lf2P/8k=;
+ b=XuZHy/O4GxauAUBlVV0CFqNLxn6OQI65ZN7Y3rMHUj7WfHCBjMv0xwjicSxxWR2tMozxSx0c8
+ k2WMuBuleOVAnf3hHOWpFqvXHob17WLVhnRD+K0KLSSHt2PdyqCIx1f
+X-Developer-Key: i=jesper.nilsson@axis.com; a=ed25519;
+ pk=RDobTFVrTaE8iMP112Wk0CDiLdcV7I+OkaCECzhr/bI=
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM1PEPF000252DA:EE_|AM0PR02MB5906:EE_
+X-MS-Office365-Filtering-Correlation-Id: 208aef2f-2c00-40ae-b652-08dc3d0203f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	EsZzpRbuWVBB6hE76/RKkSgTK1nqbth7K0oCA4hq5wZyKRcHQXVmqilfEGq1OeI2oBVc6THU+9vMWLLQLi46VXgiqAAvyVmUFMyiPCX0um6nOoAMWhb9wJ1nuZ911DuMNCmr5MEbDGjzam8kRbSFggiOJs44GqiRd6Ss9DHxYcz6ULkM7nQGVsE07iUjI0ZusmDWsBWnKoUY7roSIzxXUs2U1edYIe/Q392HIzrFESp/DaEDTOmEHR/LnRc9wN5AXNIhL0RbNjw8V3AdEmAm747TwnLWfiHfXrDD4L7z6JtoUOR//0ujoehq54OxYLebsZxGqSe5JfawqsE8gErjan8r4cByeirmfmHsnwBThcVxOfX/y8kluFSjSv7PENxZq42D1wUo8ZJDbSlBl3sneW8lCgKnJ4NoDn4yNqR6RVEA3jie68LDD4hYJSQ4ct+Y9RSP/sQvhcWWF/dxsLpd3Bi4yQKAG+YOrLfBagym80omtFRyZq4CjX4FGzu1n9gB/KDpFvxdfU552qtryx7a5mjNnb8HqcXjPrqBnobU/4iec6TwSPWxlOvQXjk+S2GyPtcR+GGKPQQ2nJTFD7RcRYuN2dIFKqkO/Nr0e6qWvSyZ4gGQZ+h0sQx7S3yyhOS/hj7PmFe0gUFBVY0caZknTXL6p5jQonHePR4BaiXRiC2Upx7kosHfXUYNku5vaIgTR18xPm2ORMohh7sE45cN1g==
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 10:50:04.4987
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 208aef2f-2c00-40ae-b652-08dc3d0203f3
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM1PEPF000252DA.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB5906
 
-On Tue, Mar 05, 2024 at 10:17:43AM +0800, Oliver Sang wrote:
-> hi, Frederic Weisbecker,
-> 
-> On Mon, Mar 04, 2024 at 12:28:33PM +0100, Frederic Weisbecker wrote:
-> > Le Mon, Mar 04, 2024 at 10:13:00AM +0800, Oliver Sang a écrit :
-> > > On Mon, Mar 04, 2024 at 01:32:45AM +0100, Frederic Weisbecker wrote:
-> > > > Le Fri, Mar 01, 2024 at 04:09:24PM +0800, kernel test robot a écrit :
-> > > > > commit: 
-> > > > >   57e95a5c41 ("timers: Introduce function to check timer base is_idle flag")
-> > > > >   7ee9887703 ("timers: Implement the hierarchical pull model")
-> > > > 
-> > > > Is this something that is observed also with the commits that follow in this
-> > > > branch?
-> > > 
-> > > when this bisect done, we also tested the tip of timers/core branch at that time
-> > > 8b3843ae3634b vdso/datapage: Quick fix - use asm/page-def.h for ARM64
-> > > 
-> > > the regression still exists on it:
-> > > 
-> > > 57e95a5c4117dc6a 7ee988770326fca440472200c3e 8b3843ae3634b472530fb69c386
-> > > ---------------- --------------------------- ---------------------------
-> > >          %stddev     %change         %stddev     %change         %stddev
-> > >              \          |                \          |                \
-> > >       4.10            -1.2%       4.05            -1.2%       4.05        netperf.ThroughputBoth_Mbps
-> > >       1049            -1.2%       1037            -1.2%       1036        netperf.ThroughputBoth_total_Mbps
-> > >       4.10            -1.2%       4.05            -1.2%       4.05        netperf.Throughput_Mbps
-> > >       1049            -1.2%       1037            -1.2%       1036        netperf.Throughput_total_Mbps
-> > 
-> > Oh, I see... :-/
-> > 
-> > > > Ie: would it be possible to compare instead:
-> > > > 
-> > > >     57e95a5c4117 (timers: Introduce function to check timer base is_idle flag)
-> > > > VS
-> > > >     b2cf7507e186 (timers: Always queue timers on the local CPU)
-> > > > 
-> > > > Because the improvements introduced by 7ee9887703 are mostly relevant after
-> > > > b2cf7507e186.
-> > > 
-> > > got it. will test.
-> > > 
-> > > at the same time, we noticed current tip of timers/core is
-> > > a184d9835a0a6 (tip/timers/core) tick/sched: Fix build failure for
-> > > CONFIG_NO_HZ_COMMON=n
-> > 
-> > Shouldn't be a problem as it fixes an issue introduced after:
-> > 
-> > 	  b2cf7507e186 (timers: Always queue timers on the local CPU)
-> > 
-> > > 
-> > > though it seems irelevant, we will still get data for it.
-> > 
-> > Thanks a lot, this will be very helpful. Especially with all the perf diff
-> > details like in the initial email report.
-> 
-> the regression still exists on b2cf7507e186 and current tip of the branch:
-> 
-> =========================================================================================
-> cluster/compiler/cpufreq_governor/ip/kconfig/nr_threads/rootfs/runtime/tbox_group/test/testcase:
->   cs-localhost/gcc-12/performance/ipv4/x86_64-rhel-8.3/200%/debian-12-x86_64-20240206.cgz/300s/lkp-icl-2sp2/SCTP_STREAM/netperf
-> 
-> commit:
->   57e95a5c4117 (timers: Introduce function to check timer base is_idle flag)
->   b2cf7507e186 (timers: Always queue timers on the local CPU)
->   a184d9835a0a (tick/sched: Fix build failure for CONFIG_NO_HZ_COMMON=n)
->   
->   a184d9835a0a689261ea6a4a8dbc18173a031b77
-> 
-> 57e95a5c4117dc6a b2cf7507e18649a30512515ec0c a184d9835a0a689261ea6a4a8db
-> ---------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \
->       4.10            -1.4%       4.04            -1.5%       4.04        netperf.ThroughputBoth_Mbps
->       1049            -1.4%       1034            -1.5%       1033        netperf.ThroughputBoth_total_Mbps
->       4.10            -1.4%       4.04            -1.5%       4.04        netperf.Throughput_Mbps
->       1049            -1.4%       1034            -1.5%       1033        netperf.Throughput_total_Mbps
-> 
-> details are in below [1]
+devm_request_irq() is called before we initialize the "variant"
+member variable from of_device_get_match_data(), so if an interrupt
+is triggered inbetween, we can end up following a NULL pointer
+in the interrupt handler.
 
-Thanks a lot!
+This problem was exposed when the I2C controller in question was
+(mis)configured to be used in both secure world and Linux.
 
-> 
-> > Because I'm having some troubles
-> > running those lkp tests. How is it working BTW? I've seen it downloading
-> > two kernel trees but I haven't noticed a kernel build.
-> 
-> you need build 7ee9887703 and its parent kernel with config in
-> https://download.01.org/0day-ci/archive/20240301/202403011511.24defbbd-oliver.sang@intel.com
-> then boot into kernel.
-> 
-> after that, you could run netperf in each kernel by following
-> https://download.01.org/0day-ci/archive/20240301/202403011511.24defbbd-oliver.sang@intel.com/reproduce
-> to get data.
-> 
-> the results will store in different path according the kernel commit, then you
-> could compare the results from both kernels.
+That this can happen is also reflected by the existing code that
+clears any pending interrupts from "u-boot or misc causes".
 
-Oh I see now.
+Move the clearing of pending interrupts and the call to
+devm_request_irq() to the end of probe.
 
-> 
-> what's your OS BTW? we cannot support all distributions so far...
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+Fixes: 218e1496135e ("i2c: exynos5: add support for HSI2C on Exynos5260 SoC")
+Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
+---
+Changes in v3:
+- Avoid multiple assignment
+- Link to v2: https://lore.kernel.org/r/20240304-i2c_exynos5-v2-1-7b9c312be719@axis.com
 
-Opensuse, but it failed to find a lot of equivalent packages.
-Then I tried Ubuntu 22.04.4 LTS but it failed saying perf didn't have the
-"sched" subcommand. Which distro do you recommand using?
+Changes in v2:
+- Use dev_err_probe() instead of open coding it
+- Dropped the return failure if we can't find a match in devicetree
+- Link to v1: https://lore.kernel.org/r/20240304-i2c_exynos5-v1-1-e91c889d2025@axis.com
+---
+ drivers/i2c/busses/i2c-exynos5.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-> 
-> > Are the two compared
-> > instances running through kvm?
-> 
-> we run performance tests on bare mental. for netperf, we just test on one
-> machine so the test is really upon local net.
+diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
+index 385ef9d9e4d4..8458e22313a7 100644
+--- a/drivers/i2c/busses/i2c-exynos5.c
++++ b/drivers/i2c/busses/i2c-exynos5.c
+@@ -906,23 +906,9 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
+ 	i2c->adap.algo_data = i2c;
+ 	i2c->adap.dev.parent = &pdev->dev;
+ 
+-	/* Clear pending interrupts from u-boot or misc causes */
+-	exynos5_i2c_clr_pend_irq(i2c);
+-
+ 	spin_lock_init(&i2c->lock);
+ 	init_completion(&i2c->msg_complete);
+ 
+-	i2c->irq = ret = platform_get_irq(pdev, 0);
+-	if (ret < 0)
+-		goto err_clk;
+-
+-	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
+-			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
+-	if (ret != 0) {
+-		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
+-		goto err_clk;
+-	}
+-
+ 	i2c->variant = of_device_get_match_data(&pdev->dev);
+ 
+ 	ret = exynos5_hsi2c_clock_setup(i2c);
+@@ -940,6 +926,21 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
+ 	clk_disable(i2c->clk);
+ 	clk_disable(i2c->pclk);
+ 
++	/* Clear pending interrupts from u-boot or misc causes */
++	exynos5_i2c_clr_pend_irq(i2c);
++
++	ret = platform_get_irq(pdev, 0);
++	if (ret < 0)
++		goto err_clk;
++	i2c->irq = ret;
++
++	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
++			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
++	if (ret != 0) {
++		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
++		goto err_clk;
++	}
++
+ 	return 0;
+ 
+  err_clk:
 
-Ok.
+---
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+change-id: 20240228-i2c_exynos5-db13a72eec8b
 
-Thanks!
+Best regards,
+-- 
+
+/^JN - Jesper Nilsson
+-- 
+               Jesper Nilsson -- jesper.nilsson@axis.com
+
