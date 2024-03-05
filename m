@@ -1,125 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE4B52F68
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 11:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F78352F68;
+	Tue,  5 Mar 2024 11:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709636967; cv=none; b=L1zzij3Q2d529HAZ7HKwone2N6poq3HSGsyYGgbyYE/tGcogvf8iUf5wEWf7dbNSQYBSMCPLqtCqvIrt4ZY5w3cGOB7oS0S9jxGfPtb9TEMP8L0TabXyDBRtiSvjBktSn0DsyZC6+gix0zWjodAKAdMT24n/fPhWeZxA1M+kyeY=
+	t=1709637026; cv=none; b=djY4dQree1sAVpjIpD9D/Ic93zyEVzz6sk34S+WqIkGjN4k3YjEadohA/uhbc0aQjBidsHa2EOnzfD4lxJC5TKAwoCH8O1hNQMyIuPCpHtnsK6z1l5OXDVaqSC/fESeHgstZC3pjLP20LjgFzhC7kCUQtts7RCGrwf5LHoHuVfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709636967; c=relaxed/simple;
-	bh=sI+zC116lrLUDgrVYIDFht2kB+ywpJ+il0as5t/Gyt8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ld89qjREj0W8Y0z/Mxob1+STOvT1HUPRJxhygZbypwywFOjRF6fgT/P+eVfnFR8LjaWJQp0qh7N/orIFF7Knx11QYE7anvYvozf2k52FarZSxEQG/J1nfROQLA9MHqx7qNOgKkFHSTdOZkV7y/ZLOQVn2oKx5R5YkmhhdyxsGqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H6rIbuZC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H6rIbuZC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709636964;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FOj+CTG3SczYt5053rYyt+wNtrjSgCNxcupvIafBB1I=;
-	b=H6rIbuZCk7vWJFMn6g8yeMNivjGwiVSU1S/bEsieLCt+BpiUGO/zgmXj02rrmdSrMckGRJ
-	L2MnG7Kr8kj5BSNf0jLR0O6948e85R3HRNNYmlCBAjIz2C/TfzowmV46YgEgmgI/3pMmyc
-	NSxwRr4K+7n4NvOH7Pv4Yco104zNEvo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-73-4IfDmY3WOjWRA8jzMbgPeA-1; Tue,
- 05 Mar 2024 06:09:21 -0500
-X-MC-Unique: 4IfDmY3WOjWRA8jzMbgPeA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2308A3C025B8;
-	Tue,  5 Mar 2024 11:09:21 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.113])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DAE6640735E9;
-	Tue,  5 Mar 2024 11:09:18 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas@fjasle.eu,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-Subject: [PATCH] kbuild: rpm-pkg: add dtb files in kernel rpm
-Date: Tue,  5 Mar 2024 12:09:12 +0100
-Message-ID: <20240305110915.184868-1-jtornosm@redhat.com>
+	s=arc-20240116; t=1709637026; c=relaxed/simple;
+	bh=u8BWNCh08meOM1OtGC+9EsEpkY4nW8/MgqKpE/dlJEE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4k4VtVrcKiqP80T0EwBAiEZ4anlHwDOBD8qp/jgB6t7/L6UQ/lUA++xB9RV1L1KZqxZo1yNiDW6hoBhjYwrTRyKXUv8iJdd30HD1aKrk+9R2C1RuoeycrOiE5mQJQBRfREit47Gqh3Ky6NScxE50tnM9J2QWNOIKkiny/YL4qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d109e82bd0so66704031fa.3;
+        Tue, 05 Mar 2024 03:10:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709637023; x=1710241823;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xtISm0Z5C5GSK3a8VloumZ4aA+1uD6WNJU+it6M3HPw=;
+        b=W1mlUpH3P4rmcNZMHUguYG04uBOUVySTJxe2/Sy6v/VcKflRmEtaL471JQcQacRE6N
+         6+8dVnbHGaQWyfNaW4D6JLk8bJAaiBL1lgXBnNU49AUwaZr2lWa7Pdfxaompo1IT3Ti8
+         rDDEdL4t+G9A5+aSt/eZEF0hFN88AXPb2dd4+iJwjZwft6aaamMvylSbpghjtugsa57w
+         GjnVFXjAEcOst9E1TFBNT8a/6MhKhHOP2BEZL+hCVlosx9rihLWrIWqN5cRvopIHQKCZ
+         FT+4D/4CSIR6wvFFBMyBhHx7FIxgDem/gpLAJsplx1ykDbgdzPccEqbBMSLRsY6wduFl
+         btOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTQAa2zpB4HVy8BJPN+3F8kGlZt5kFjbRVoKC2Nz8DXNijN4AzIvWgT65NyKfvod9csZVty5d6F2p+eipRhfWgFmxsPOH9wYF0qQ5JxCsFbgm2IdzToo3p/EeqUFZycF9vdLjNPMXZLtpeFujDFhDv8qiissJKA3T0ZZRErTOY
+X-Gm-Message-State: AOJu0YyEsS7qnWmgjvD2vAyrUclnXuuNDGo9ZoornJXNPQwwpLOAv8Hw
+	Sw9s0FiLOspvX2yItydf8EyVVxCZOhnXBW4KiS12yfHTDTR6eOMd
+X-Google-Smtp-Source: AGHT+IH5VCvu7H5OMAWLBGBYxoUjNSI28uMv6IKIpi5MkPKL0LtsEK8KgyNYwVWHWaEKr+h4MR8kJg==
+X-Received: by 2002:a2e:980c:0:b0:2d2:c82c:b822 with SMTP id a12-20020a2e980c000000b002d2c82cb822mr981535ljj.22.1709637023131;
+        Tue, 05 Mar 2024 03:10:23 -0800 (PST)
+Received: from gmail.com (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id i17-20020aa7c9d1000000b00567566227a5sm2016306edt.18.2024.03.05.03.10.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 03:10:22 -0800 (PST)
+Date: Tue, 5 Mar 2024 03:10:20 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Akira Yokosawa <akiyks@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH] docs: Makefile: Add dependency to $(YNL_INDEX) for
+ targets other than htmldocs
+Message-ID: <Zeb9nEgZHJvoyw7o@gmail.com>
+References: <e876e3c8-109d-4bc8-9916-05a4bc4ee9ac@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e876e3c8-109d-4bc8-9916-05a4bc4ee9ac@gmail.com>
 
-Some architectures, like aarch64 ones, need a dtb file to configure the
-hardware. The default dtb file can be preloaded from u-boot, but the final
-and/or more complete dtb file needs to be able to be loaded later from
-rootfs.
+On Tue, Mar 05, 2024 at 01:23:00PM +0900, Akira Yokosawa wrote:
+> Commit f061c9f7d058 ("Documentation: Document each netlink family")
+> added recipes for YAML -> RST conversion.
+> Then commit 7da8bdbf8f5d ("docs: Makefile: Fix make cleandocs by
+> deleting generated .rst files") made sure those converted .rst files
+> are cleaned by "make cleandocs".
+> 
+> However, they took care of htmldocs build only.
+> 
+> If one of other targets such as latexdocs or epubdocs is built
+> without building htmldocs, missing .rst files can cause additional
+> WARNINGs from sphinx-build as follow:
+> 
+>     ./Documentation/userspace-api/netlink/specs.rst:18: WARNING: undefined label: 'specs'
+>     ./Documentation/userspace-api/netlink/netlink-raw.rst:64: WARNING: unknown document: '../../networking/netlink_spec/rt_link'
+>     ./Documentation/userspace-api/netlink/netlink-raw.rst:64: WARNING: unknown document: '../../networking/netlink_spec/tc'
+>     ./Documentation/userspace-api/netlink/index.rst:21: WARNING: undefined label: 'specs'
+> 
+> Add dependency to $(YNL_INDEX) for other targets and allow any targets
+> to be built cleanly right after "make cleandocs".
+> 
+> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
 
-Add the possible dtb files to the kernel rpm and mimic Fedora shipping
-process, storing the dtb files in the module directory. These dtb files
-will be copied to /boot directory by the install scripts, but add fallback
-just in case, checking if the content in /boot directory is correct.
-
-Mark the files installed to /boot as %ghost to make sure they will be
-removed when the package is uninstalled.
-
-Tested with Fedora Rawhide (x86_64 and aarch64) with dnf and rpm tools.
-In addition, fallback was also tested after modifying the install scripts.
-
-Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
----
- scripts/package/kernel.spec | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
-index c256b73cca3e..5c4c1ffcba6c 100644
---- a/scripts/package/kernel.spec
-+++ b/scripts/package/kernel.spec
-@@ -61,6 +61,9 @@ cp $(%{make} %{makeflags} -s image_name) %{buildroot}/lib/modules/%{KERNELRELEAS
- %{make} %{makeflags} INSTALL_HDR_PATH=%{buildroot}/usr headers_install
- cp System.map %{buildroot}/lib/modules/%{KERNELRELEASE}
- cp .config %{buildroot}/lib/modules/%{KERNELRELEASE}/config
-+if [ -d "${srctree}/arch/${SRCARCH}/boot/dts" ];then
-+	%{make} %{makeflags} INSTALL_DTBS_PATH=%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb dtbs_install
-+fi
- ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEASE}/build
- %if %{with_devel}
- %{make} %{makeflags} run-command KBUILD_RUN_COMMAND='${srctree}/scripts/package/install-extmod-build %{buildroot}/usr/src/kernels/%{KERNELRELEASE}'
-@@ -81,6 +84,14 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEA
- 		echo "%ghost /boot/${x}-%{KERNELRELEASE}"
- 	done
- 
-+	if [ -d "%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb" ];then
-+		echo "/lib/modules/%{KERNELRELEASE}/dtb"
-+		for x in $(find "%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb" -name "*" \
-+				-exec realpath --relative-to "%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb" {} \;); do
-+			echo "%ghost /boot/dtb-%{KERNELRELEASE}/${x}"
-+		done
-+	fi
-+
- 	echo "%exclude /lib/modules/%{KERNELRELEASE}/build"
- } > %{buildroot}/kernel.list
- 
-@@ -96,6 +107,12 @@ for file in vmlinuz System.map config; do
- 		cp "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"
- 	fi
- done
-+if [ -d "/lib/modules/%{KERNELRELEASE}/dtb" ]; then
-+	if ! diff -rq "/lib/modules/%{KERNELRELEASE}/dtb" "/boot/dtb-%{KERNELRELEASE}" &>/dev/null; then
-+		rm -rf "/boot/dtb-%{KERNELRELEASE}"
-+		cp -r "/lib/modules/%{KERNELRELEASE}/dtb" "/boot/dtb-%{KERNELRELEASE}"
-+	fi
-+fi
- if [ ! -e "/lib/modules/%{KERNELRELEASE}/modules.dep" ]; then
- 	/usr/sbin/depmod %{KERNELRELEASE}
- fi
--- 
-2.43.2
-
+Reviwed-by: Breno Leitao <leitao@debian.org>
