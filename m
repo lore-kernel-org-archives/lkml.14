@@ -1,92 +1,96 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CF91643A;
-	Tue,  5 Mar 2024 17:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EACE17582;
+	Tue,  5 Mar 2024 17:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709659813; cv=none; b=lKaGiZv+JI8j1fWpm9jBVSWLMZts2F1GI6PMICfp0VZVgwfoVk4ptqHhMCGgP8bQG6rWnglInEBQ8eV1sskqyMqCkgQJu8/KRuk31zm5iPrA8LVSldAOt97aDYO7HozVFh9OVeTwbvBIVcTybfMFd+YrQaNw4q89a13Q7e/Ysn4=
+	t=1709659852; cv=none; b=Pu9kf2OmjvtkuWhHvBx3OCD6jhGmPvurzeLLlb+MimkbZgJKKUEdNKMmeo4yDU4wRaRXAygxHchg3yVy21zlKyuXZ0NCA1pZMHR9OiyS4JKijN+ic3r+zmnCu7hhrM1RoW61LTmYAixY1tneT02WP96W/X0qpZnxz/k+H3D54O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709659813; c=relaxed/simple;
-	bh=ludxbi9ALL5K0z1E3t3o/BEQhQJGn/ohaY9vv2ZVk/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ScLYFmALY3+secfvNqFHA1EeN2a2RJvW8L/NMPcHyoCmiknWL0lWQXYECKwrm43R19Qr8BqqQoyLrw9fQmjT3C7vrbzbGw1Ts81AKug9Zhh1rLL752ed4QQaZ4TMXL6stQerxXSt0YbY2QXHX3b9S0SXxLP/dxHymPIr5u54DO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1709659852; c=relaxed/simple;
+	bh=PvctEXlGZ7nrrcmY9vxGBvaQwelTdL5Q2ErosCz7WL0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E1biqzExv9TEUDJiD0jDpH/RJM6sTmfiQmG6OMmCt535GHMCbI9U6+I8ddn0Pa84MlEC10LLDCiQOTEztQm9fVFenSkHIdIm6FfYAbaff9QBhrvwXQ6vAb5QAdy7HANYoptHjRqnQpaUQC6K2JpmdE7RSLkm1KC2dc3XEUWgqtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFGN7vYx; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3ed9cae56fso1294564866b.1;
-        Tue, 05 Mar 2024 09:30:11 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFGN7vYx"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dd1d9daf02so15218665ad.1;
+        Tue, 05 Mar 2024 09:30:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709659850; x=1710264650; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iFSazZv9KuKOFOd0EloyZ1kxaTz5xQ+zm2q9EjRUfYg=;
+        b=LFGN7vYxyfT6Jyw6RCQ11iG3vow7sV8gNtrpwkxwtjHVn2dWwgxHsaq0NXKdGNjN+f
+         FETwUlWmK2a5BQikf2ULEqCksvU/dMgX+UtE7E5tyFkOodgN9mknop6zweIzYXxtCTqG
+         HCJLMio6ZNfmPhaXVeZ2M05LWygYjH5tb+MMgKBkAP1pDWZauQx3PkAy89y0mgwI2JCH
+         mPfNzvkH6QKI+4oQviBwpoYXU6lCVGc8Shb/3xn2j795kV5P4RxFhdxSdVdB8e/Czuwp
+         hRmPLhfZAF6oOEJJSbYIvwbpjaPBmnGSuLEWmeIjkC0B+KoCiS12ofC6vY5deuE2CWo4
+         aneg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709659810; x=1710264610;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I5TkMqojTLZpA5UqkaoAVqcHhIBmGns3HqgAQY26vLc=;
-        b=tDnuUhcUTKzUYr4n4ePy9ajhrAN4lT21m/cvFjzVPE71b0lGMhHr0CUAWWzGM26xpv
-         42nL8dZeHCd0vCNSbr5q8Zrjg8U5l5X/aLjCT/B6XeJGNIdJGQ+HChUBGyNfqknn19ns
-         xhJjwQH7zuASTAUzsJ14MJXdX/1SHYDdeRTtQP6yfO7KhxrA+gXPmobSmWThvjHNL/rD
-         mX9/BqA7uA6f7W8Xg/GZEmp+12rFThiyxj5KFxkCWf81ugRKwt0a6q3/+RaQT29LYOoX
-         myWcPeqxe5rxYH2CMVCgF4oBSBdwZSTW26W++CeTxNt6V0SDAoKaQOVLNmwLC4X8ve+Y
-         4wPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkTz8EDN2yYXsYNVQbJsbLHsYNHt/KIkSMV6Q0QedfiqEbzfKtdZwQ1KwUEh9DjUFwLE5bkjlOQ0/xefkeXr2XYkwe6rSxVNtQItHX
-X-Gm-Message-State: AOJu0Yw1NtKCN4azrxw2UANTbgTJ31Py9Y+oFhX+eZjZ8sspfMn0ce16
-	crgaAN9aRKDm+g2SlC3bvXaUTGUt9EeyLGGdxwUFY3SvfoZVpyPf
-X-Google-Smtp-Source: AGHT+IG1Nnz+0eMzPKg51FULw5QqhNSE/Hvg2wjIjit4ehtBwKGdOJ+xLJVjAay11UktcF1a2kbRlw==
-X-Received: by 2002:a17:906:2358:b0:a44:2cc3:2ba8 with SMTP id m24-20020a170906235800b00a442cc32ba8mr3705208eja.27.1709659810092;
-        Tue, 05 Mar 2024 09:30:10 -0800 (PST)
-Received: from localhost (fwdproxy-lla-116.fbsv.net. [2a03:2880:30ff:74::face:b00c])
-        by smtp.gmail.com with ESMTPSA id ld13-20020a170906f94d00b00a451ab833c5sm3129280ejb.21.2024.03.05.09.30.09
+        d=1e100.net; s=20230601; t=1709659850; x=1710264650;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iFSazZv9KuKOFOd0EloyZ1kxaTz5xQ+zm2q9EjRUfYg=;
+        b=VEZvIdsD0fwBfiVTLaya0mtGztnxsgIB42xPpz4hkMJSiGUjuE02r5UZqMzMGv3YMA
+         w/H0Pkpva8a6WkEYbxKZJ+Py1bZV2OA0ZtX3mfGC+BJ0sejO1D/0ZRx1U7Q93veDCpSG
+         S0dTrKiTFQs7IiXu+zq+EGZH5ZFUgDZQrL+sRs5KY9/fguMTQ4smRwdaC3pm9WiS7Rnc
+         Ch3XL97l2ohCQiQXmq3g34eY2KUIWYD1+GbGc9d5K6zpIYf/XQhzLlkuFb00SRY2co6N
+         aaMhHhTZbF5OFd2X3I3Z4nbw87ijxr63FcmowRR//AEOIBpoKKVyAEmT4RRdLjc4SQTJ
+         iFHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWFPe0CMOQX837zVwokQtU9FbCJv3UOaV3eovy0J1hQLP4mwl1PB3jmNIpQdKuZh384tQ6wk6Hx3mSQq3iTt3vb7EKdfq943O7dZcLR9HtIm1k3PpKWTTqETcMKTk7LSktyt7P5VOo9VA==
+X-Gm-Message-State: AOJu0Yyb+0g/q2aiPRZHZJsy0aA9Pw36iDwkSGBfgfbJVIXDuFLynj1U
+	JlTVep5yVBYUqBT1Vpxy+k4xrA9lzC/yWvTKxxYgOvbBy4/+vZHD
+X-Google-Smtp-Source: AGHT+IHcbyuVE9cmFQz6s2dkLwDRoCBdnXVosptuYoHArpLCCEckbFHHjUKlL0lQFySh9483/CNm/Q==
+X-Received: by 2002:a17:902:cece:b0:1dc:8f8e:63e2 with SMTP id d14-20020a170902cece00b001dc8f8e63e2mr2842097plg.46.1709659850418;
+        Tue, 05 Mar 2024 09:30:50 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:a5d5:fe74:fba8:86b5])
+        by smtp.gmail.com with ESMTPSA id l13-20020a170903244d00b001dcc28544dbsm10821459pls.78.2024.03.05.09.30.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 09:30:09 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	horms@kernel.org,
-	dsahern@kernel.org
-Subject: [PATCH net-next 2/2] net: geneve: Remove generic .ndo_get_stats64
-Date: Tue,  5 Mar 2024 09:29:10 -0800
-Message-ID: <20240305172911.502058-2-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240305172911.502058-1-leitao@debian.org>
-References: <20240305172911.502058-1-leitao@debian.org>
+        Tue, 05 Mar 2024 09:30:50 -0800 (PST)
+Date: Tue, 5 Mar 2024 09:30:47 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/6] dt-bindings: input: touchscreen: fsl,imx6ul-tsc
+ convert to YAML
+Message-ID: <ZedWx79qP7QXc3Om@google.com>
+References: <20240226212740.2019837-1-sre@kernel.org>
+ <20240226212740.2019837-3-sre@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226212740.2019837-3-sre@kernel.org>
 
-Commit 3e2f544dd8a33 ("net: get stats64 if device if driver is
-configured") moved the callback to dev_get_tstats64() to net core, so,
-unless the driver is doing some custom stats collection, it does not
-need to set .ndo_get_stats64.
+On Mon, Feb 26, 2024 at 10:26:24PM +0100, Sebastian Reichel wrote:
+> Convert the i.MX6UL touchscreen DT binding to YAML.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
 
-Since this driver is now relying in NETDEV_PCPU_STAT_TSTATS, then, it
-doesn't need to set the dev_get_tstats64() generic .ndo_get_stats64
-function pointer.
+Should I pick it though my tree or you'll push the whole bunch through
+some other tree? If the latter:
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/geneve.c | 1 -
- 1 file changed, 1 deletion(-)
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index dc88d5600e2d..ff0d7bdaa4ee 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -1114,7 +1114,6 @@ static const struct net_device_ops geneve_netdev_ops = {
- 	.ndo_open		= geneve_open,
- 	.ndo_stop		= geneve_stop,
- 	.ndo_start_xmit		= geneve_xmit,
--	.ndo_get_stats64	= dev_get_tstats64,
- 	.ndo_change_mtu		= geneve_change_mtu,
- 	.ndo_validate_addr	= eth_validate_addr,
- 	.ndo_set_mac_address	= eth_mac_addr,
+Thanks.
+
 -- 
-2.43.0
-
+Dmitry
