@@ -1,224 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2126.outbound.protection.partner.outlook.cn [139.219.17.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1477D3F6;
-	Tue,  5 Mar 2024 07:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709622596; cv=none; b=cChpQeeprB0e6BoRvlYlSseXbQaTtlHq1bWYOQLI8b4p2/Yqzn0CLY+E04FfK2cCo/2tJ6KU6CmyNQpcc2GdG2n7d3exc/G7jJTUQpcjIgaWbadcnOb+5xOmCOLtcwRRYEg2vTuTTQKDjwlnx2b9Yu/vBJGrAlRgz8HF/05B0CQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709622596; c=relaxed/simple;
-	bh=MnBtUSdZcoCoste9RSTFcwDFvJSGAo578I2Y/4w+c2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bUtvq6J9utfkCP6w7IcerJDgIw0h1OMH57XkPCC/xKppd7+JZn+OvVHesZLYVcqSS2KYh5UzVCYfsbzjmGOp8NNBv372xImg3pd+2gm6N6siW9bdMBymJ6oLxtB0M+1j1v1kX0vd5ih9DCa56zQ2UFOuU1zYl9/4N9CCrHFE9rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C1WFQn7u; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C1WFQn7u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709622595; x=1741158595;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MnBtUSdZcoCoste9RSTFcwDFvJSGAo578I2Y/4w+c2w=;
-  b=C1WFQn7ubABGdJE0gw2ql+z/MA01FZXfKvgK7qiyRDVNS6hnJ2DcknbS
-   LE3uvlznpZgvtIrvtXkFvoilifajmY1jTneBRgJQhRG0VLkU17jZ+TYHD
-   DcpRgQTcdNs4avs5BoLk2VwD0hnvXQtVO/+q0nuT/cwv6rJxMzZH9d+ge
-   ipFBZ2g9tUXaC1tnVtrenKhoFKsPigqyuESa6Je8Guxwnu7VUSWxtMbeZ
-   dXqio2XM4iMLHU9y+KCQ0ACBY90qGaQJcPZz5qOJFNZDKbyj3K6LRcWoa
-   kyZcbEw+fo6sQC+DEJ7WWiC2/zCaFy2kBfUWu9EEHtEyaw+AHPlAZVekK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4019210"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4019210"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 23:09:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="13773274"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.8.218]) ([10.238.8.218])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 23:09:51 -0800
-Message-ID: <24bd2571-852e-47e6-a08b-17e808d14fd5@linux.intel.com>
-Date: Tue, 5 Mar 2024 15:09:48 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B466445005;
+	Tue,  5 Mar 2024 07:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.126
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709622633; cv=fail; b=uNj+KiO2lcTwKzkfhLHg5CzL4j9D7G0fCuMuz2yueec/6P+funzx4Y+rZqfIDhqcBw1ReYcJUGozgNtdu40ddjUd+mpx69kqQ+pUgBrlup4cgEHfvuyGWEJHsjtryRpCSSLbNtcsyCle6nptg2ebiAw99a6nsIzpN/rbYxc+D24=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709622633; c=relaxed/simple;
+	bh=lCUd9sY4DiRxf5QwG7u31+btY1ga9PJzd8YghrHSDX0=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=i4Vftp7ABIGx7Rs+WYJ+fxa29Oyxm8SsD/4/7QFKZRAK5FvKnjFH4g+B12AIW5KfItM6Yj0HWqbibS07UIW9ADpMLXzF79gL+Uf/bfWJs2cKkrdxhYZNXfpi24FIpeE8GKea7nWWHUPf4csgtka0JCpU61ygtmf4Mg0vH5jQPa0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LvIT1v9WybX863TpqX5plfNAlCO0OJ+QcdjGuLunzOyKG7q/W2Noof5PvwurpFbvBeJmsCC8Zzw5/fFImQsIlGpC7UXunZkXMxY3taZG9clWNwoonqxxYFl+L8LDvKrmDgiT5N6rN4IDpwRV2xvk5JhRT47S8BZVxuykjNMjynZLkERsRyTaE8i4VGbiPamarJaINqLSLC3rU8g9qEt0OXcPEoI7+raiIN92SAVCh0nJ6oPUkLDX+Ba4K3SWzhk/6l+xH1CW9pAE+WJkjO/I9pPjTBDooklO49sFX8sU3a2qy+3rAJjdWk24RjM9PBI1m/WU6fVeXRYjzlFJvgyhzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yCpmkM+i2ozDhf4c8Fe7JodACJFOXykq9RVlJpCOavw=;
+ b=hYDzHblEtdNKdOF5VuHZot+Q/v57daeYjdYMrbMB90MCQxQUG1b12xunL3280osICyjDzv0u6fOrFS9d96hPuWFLYfvyUi0ukt2s70S6vmwg1tRi2SA3hmHSbPL4Uf3kyd+BdTmkUbhWtjvEAKjdsfp3IniwEtkhpmLaTWNWXaCkyKQ6zE7AM+iUTVZPOwmLxkvAqgl0JuTwl30JeTVeu6fWhXlChwJZe7yUX6UMRVlWfnkUlcgsjMndpYbNtsW+Wv1+59sWRRSITV6NCDJlX037YMts1r+26xdDTBdtus++Ps2at7PQi3HCEzFcMl6WfAZ74P4hTYgVRTFNkCdDqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:26::16) by SHXPR01MB0462.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1e::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.51; Tue, 5 Mar
+ 2024 07:10:18 +0000
+Received: from SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+ ([fe80::9ffd:1956:b45a:4a5d]) by
+ SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn ([fe80::9ffd:1956:b45a:4a5d%6])
+ with mapi id 15.20.7249.041; Tue, 5 Mar 2024 07:10:18 +0000
+From: Jia Jie Ho <jiajie.ho@starfivetech.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org
+Subject: [PATCH v4 0/7] crypto: starfive: Add support for JH8100
+Date: Tue,  5 Mar 2024 15:09:59 +0800
+Message-Id: <20240305071006.2181158-1-jiajie.ho@starfivetech.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0019.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:c::22) To SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:26::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/21] KVM: x86/mmu: Replace hardcoded value 0 for the
- initial value for SPTE
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
- michael.roth@amd.com, isaku.yamahata@intel.com, thomas.lendacky@amd.com
-References: <20240227232100.478238-1-pbonzini@redhat.com>
- <20240227232100.478238-4-pbonzini@redhat.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20240227232100.478238-4-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0670:EE_|SHXPR01MB0462:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f403a54-41f4-4231-68e9-08dc3ce35074
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Ryrcbg1ITEZrLmo0d1tmXV9n4ey29Whb9xf37D62//2EEE4us6i58OhkbPlWD3kaECmn8N/wKjZGIG/UYaYXRGF8TgDYMHAxd15MZYzc+8HxEn8znTjm/WslDPO6z0Jadh1MEJBANThXSlH0WSZxvExR90fHjAnjqx2ZTFjOFeK38qKqWW5dsJan3PMK0EDLuf4evyFoSIy/LuDN9C6vzfPfgFLes5khi/GnWhX+AeqKGihxGnJgOrcgY3IWcH6eqJCBSyzwPpxde1Sy0IIWoLPXOoGRgHBIXAWJd0VUOUdlxCn3bedRo9L1jERb8C0zL5RmXfdhPdbaHL9gHZzt0gldXDLEgmpo14iBYyacDUgaIuPWzCGdWr50r2H+TBtYjvFgqiQ+R20SvlK9XSwqfz+/BeNjgn8Pfa64wjp9g9r6j3G4ATgh3X5NoguxxbjNW1Uwe6YCTAUedfHmFWswfSEO+u4jN92rkHxxaPCkbXS3gQ8Eh8goeNIGYlhBOT/ieA/oIGAp29YbyupaDawFGlBOR//2eijz+x7v/3ZEJZkDB1oEZBAuU13tkbZdmgtu3XESEwGHnHkp6svjBLZGFqaO+XYcn1ybOXyI4/iqFx8RBNS+CZmOrCKiELl14T0ihJJpETw6AcjXCnIpN7C1Kg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(38350700005)(921011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?QCCYxNstuKTxnXd746rcA6fCdiosnwdK+SEvCaPe6S9GyG5UAiFxg6ikQNdQ?=
+ =?us-ascii?Q?jYCUWWqcgxMbwQt+hBnYKPQhv7GbYL3q9JTzX0yZBhVD4rbQHhvrakEEgknj?=
+ =?us-ascii?Q?rYSyIVDOZKh90BXszqq/BQTb2wUtBorE4VuXCMxwfVT+ytcvQCUWHQuVjElv?=
+ =?us-ascii?Q?XZMAlyXXH/pWXM6/QyUJNq24hnTO8UNfdYZ4eL3yvBWQWQPSE76xLuhGc2U2?=
+ =?us-ascii?Q?q8n0x44tpDRg6OenDHiRfW2oVuAumqY+VZGdk/8voI2BC676I9tSUiAPfBR6?=
+ =?us-ascii?Q?OMNxJaELpl9ZRIB8X+4ZeHL4NL6Lp+lzOPsPgLJIHf3CsGxGdt+a6abXdpz1?=
+ =?us-ascii?Q?4YqP9QJNXzmOLlP5sH+NAg+Qe0ybS60BSPoe+3hPj3Wf4rLQQv6b6ER2skHq?=
+ =?us-ascii?Q?EYly8DFxdbhlymNH/70q+rzAPxY+AQ/evPgrLGU32k+ldfl4LkANhDB49rLp?=
+ =?us-ascii?Q?ne5HCxYhePDjDAawTpnuDaYb4t/rXZA5qJ8zzaxwjCXXo4jQ+vSc2UcjvMEn?=
+ =?us-ascii?Q?DsFG4q+ixEB42AW0fCOP9VqJpu++caysdxq+9CCvx8yeTz9Vu3VgCbPUpBQ2?=
+ =?us-ascii?Q?+YvKbqD9n4C5S0/1QnCj7LLVMriSTOz9HlD+fOo2Fbdy0IGAGEbu+6fTDesP?=
+ =?us-ascii?Q?FjiOdIepfSPqnTtZUIjfLeG6t++Vb8s/alk2f+Sh+Q64ng8WWNg/XgD+81Mx?=
+ =?us-ascii?Q?vcoN5520asIu7ibi80vsTE1bILBOwgetdvuWWE15+VJmZnS4r5B1k12VasKa?=
+ =?us-ascii?Q?J+ECwnB8/3MFujn6ccuS3rtcjWMbc4rBRibSbnXh1N6p62bdIyVcGNCn5Uqb?=
+ =?us-ascii?Q?uS6hazwS35b23VqeGRShU6pFvOgodhM4UZ754OWRJxHp1keN1z/Zo3yft9h8?=
+ =?us-ascii?Q?fshYNkjcUva+wrxPTD0jZ0MS+MfFf6LAvMSOutAaB+tpU0xQ3Eple9QyzzfI?=
+ =?us-ascii?Q?d1iWvAZqFa8P36zh0TeEYlfdSMVC9ildcNIKqf4O31/r3i2lQhGXPlQUJkCR?=
+ =?us-ascii?Q?ne3OSR0MRRmRCoA0yRVVBWQPB8uyUhVgauIxE9NKO6cir+Jwoz3wRVzDlIjc?=
+ =?us-ascii?Q?39IO1ruZi5o9WJmDaVuf3zaJpqCBr3rJdiRxcuuCvm4NtkpoRbCayG462shx?=
+ =?us-ascii?Q?IUWKche/yQ3jkSTK9mT40GPFqjsnB8LDO73FeFM7H/PxYvMnsJlURfgOv11B?=
+ =?us-ascii?Q?G/eW1ZK90NTw8M/c8D8vy1+VCM6SNlfi5JoytVmae3WccHCRzocG6EHoaRXa?=
+ =?us-ascii?Q?wppnNrj41sjZMMLWcnCZIW+2bAS35Gmrk5tEgJb0SwEeVlJQTOHiqJFmdcbd?=
+ =?us-ascii?Q?mqbH0jbpZj4oSt7bR8slwbyFBtS8PZknaI6Rl076L5IWz1jYsfVApu2jqH11?=
+ =?us-ascii?Q?Bdj5c/a54V7pMtTDEF1Vm5BAUwNJQnAKkmSKbT7ssviAdHfJ+ihmN7sryrMl?=
+ =?us-ascii?Q?OZ9KuD+oHPHmTeZFGoNKV9hYhUayw++iHSrjjrxoXDFl2irklR7eJZ+vEj6+?=
+ =?us-ascii?Q?esd3Zzsc01q65xUTH7y8Ato9ECy/ll3HJcygblSD94aEKuSaJ1/RWBJAh2cy?=
+ =?us-ascii?Q?7m313lt48pDSeSo2BMPXRZCXI/WFaJq5ZgSJIXt5sU2tWyqwdS3i8ElXC/YP?=
+ =?us-ascii?Q?Aw=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f403a54-41f4-4231-68e9-08dc3ce35074
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 07:10:18.5662
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lhM/nDK+X0+9MgkrHB9/PYdvQA7JPk7qrrwUmprSCL8dXmHaB2gwb5BO1mDSMdjez7abdvrgYAxy4AQgjN7iuZ5dWQ8DKbfkqUwvnJnZcCk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0462
 
+This patch series add driver support for StarFive JH8100 SoC crypto
+engine. Patch 1 adds compatible string and update irq descriptions for
+JH8100 device. Subsequent patches update current driver implementations
+to support both 7110 and 8100 variants.
 
+v3->v4:
+- Updated interrupts descriptions for jh8100-crypto compatible. (Rob)
+- Added patch 3 to skip unneeded key freeing for RSA module.
 
-On 2/28/2024 7:20 AM, Paolo Bonzini wrote:
-> From: Sean Christopherson <seanjc@google.com>
->
-> The TDX support will need the "suppress #VE" bit (bit 63) set as the
-> initial value for SPTE.  To reduce code change size, introduce a new macro
-> SHADOW_NONPRESENT_VALUE for the initial value for the shadow page table
-> entry (SPTE) and replace hard-coded value 0 for it.  Initialize shadow page
-> tables with their value.
->
-> The plan is to unconditionally set the "suppress #VE" bit for both AMD and
-> Intel as: 1) AMD hardware uses the bit 63 as NX for present SPTE and
-> ignored for non-present SPTE; 2) for conventional VMX guests, KVM never
-> enables the "EPT-violation #VE" in VMCS control and "suppress #VE" bit is
-> ignored by hardware.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> Message-Id: <acdf09bf60cad12c495005bf3495c54f6b3069c9.1705965635.git.isaku.yamahata@intel.com>
-> [Remove unnecessary CONFIG_X86_64 check. - Paolo]
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/kvm/mmu/mmu.c         | 14 +++++++++-----
->   arch/x86/kvm/mmu/paging_tmpl.h |  2 +-
->   arch/x86/kvm/mmu/spte.h        |  2 ++
->   arch/x86/kvm/mmu/tdp_mmu.c     | 14 +++++++-------
->   4 files changed, 19 insertions(+), 13 deletions(-)
+v2->v3:
+- Use of device data instead of #ifdef CONFIG_ for different device
+  variants.
+- Updated dt bindings compatible and interrupts descriptions.
+- Added patch 4 to support hardware quirks for dw-axi-dmac driver.
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+v1->v2:
+- Resolved build warnings reported by kernel test robot
+  https://lore.kernel.org/oe-kbuild-all/202312170614.24rtwf9x-lkp@intel.com/
 
-BTW, does it prefer to add "No functional change intended." in changelog for
-a patch like this?
+Jia Jie Ho (7):
+  dt-bindings: crypto: starfive: Add jh8100 support
+  crypto: starfive: Update hash dma usage
+  crypto: starfive: Skip unneeded key free
+  crypto: starfive: Use dma for aes requests
+  dmaengine: dw-axi-dmac: Support hardware quirks
+  crypto: starfive: Add sm3 support for JH8100
+  crypto: starfive: Add sm4 support for JH8100
 
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index e4cc7f764980..b5baf11359ad 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -567,9 +567,9 @@ static u64 mmu_spte_clear_track_bits(struct kvm *kvm, u64 *sptep)
->   
->   	if (!is_shadow_present_pte(old_spte) ||
->   	    !spte_has_volatile_bits(old_spte))
-> -		__update_clear_spte_fast(sptep, 0ull);
-> +		__update_clear_spte_fast(sptep, SHADOW_NONPRESENT_VALUE);
->   	else
-> -		old_spte = __update_clear_spte_slow(sptep, 0ull);
-> +		old_spte = __update_clear_spte_slow(sptep, SHADOW_NONPRESENT_VALUE);
->   
->   	if (!is_shadow_present_pte(old_spte))
->   		return old_spte;
-> @@ -603,7 +603,7 @@ static u64 mmu_spte_clear_track_bits(struct kvm *kvm, u64 *sptep)
->    */
->   static void mmu_spte_clear_no_track(u64 *sptep)
->   {
-> -	__update_clear_spte_fast(sptep, 0ull);
-> +	__update_clear_spte_fast(sptep, SHADOW_NONPRESENT_VALUE);
->   }
->   
->   static u64 mmu_spte_get_lockless(u64 *sptep)
-> @@ -1950,7 +1950,8 @@ static bool kvm_sync_page_check(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
->   
->   static int kvm_sync_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp, int i)
->   {
-> -	if (!sp->spt[i])
-> +	/* sp->spt[i] has initial value of shadow page table allocation */
-> +	if (sp->spt[i] == SHADOW_NONPRESENT_VALUE)
->   		return 0;
->   
->   	return vcpu->arch.mmu->sync_spte(vcpu, sp, i);
-> @@ -6173,7 +6174,10 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
->   	vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
->   	vcpu->arch.mmu_page_header_cache.gfp_zero = __GFP_ZERO;
->   
-> -	vcpu->arch.mmu_shadow_page_cache.gfp_zero = __GFP_ZERO;
-> +	vcpu->arch.mmu_shadow_page_cache.init_value =
-> +		SHADOW_NONPRESENT_VALUE;
-> +	if (!vcpu->arch.mmu_shadow_page_cache.init_value)
-> +		vcpu->arch.mmu_shadow_page_cache.gfp_zero = __GFP_ZERO;
->   
->   	vcpu->arch.mmu = &vcpu->arch.root_mmu;
->   	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
-> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-> index 4d4e98fe4f35..bebd73cd61bb 100644
-> --- a/arch/x86/kvm/mmu/paging_tmpl.h
-> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
-> @@ -911,7 +911,7 @@ static int FNAME(sync_spte)(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp, int
->   	gpa_t pte_gpa;
->   	gfn_t gfn;
->   
-> -	if (WARN_ON_ONCE(!sp->spt[i]))
-> +	if (WARN_ON_ONCE(sp->spt[i] == SHADOW_NONPRESENT_VALUE))
->   		return 0;
->   
->   	first_pte_gpa = FNAME(get_level1_sp_gpa)(sp);
-> diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
-> index a129951c9a88..4d1799ba2bf8 100644
-> --- a/arch/x86/kvm/mmu/spte.h
-> +++ b/arch/x86/kvm/mmu/spte.h
-> @@ -149,6 +149,8 @@ static_assert(MMIO_SPTE_GEN_LOW_BITS == 8 && MMIO_SPTE_GEN_HIGH_BITS == 11);
->   
->   #define MMIO_SPTE_GEN_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_BITS + MMIO_SPTE_GEN_HIGH_BITS - 1, 0)
->   
-> +#define SHADOW_NONPRESENT_VALUE	0ULL
-> +
->   extern u64 __read_mostly shadow_host_writable_mask;
->   extern u64 __read_mostly shadow_mmu_writable_mask;
->   extern u64 __read_mostly shadow_nx_mask;
-> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> index d078157e62aa..c8a4d92497b4 100644
-> --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> @@ -603,7 +603,7 @@ static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
->   	 * here since the SPTE is going from non-present to non-present.  Use
->   	 * the raw write helper to avoid an unnecessary check on volatile bits.
->   	 */
-> -	__kvm_tdp_mmu_write_spte(iter->sptep, 0);
-> +	__kvm_tdp_mmu_write_spte(iter->sptep, SHADOW_NONPRESENT_VALUE);
->   
->   	return 0;
->   }
-> @@ -740,8 +740,8 @@ static void __tdp_mmu_zap_root(struct kvm *kvm, struct kvm_mmu_page *root,
->   			continue;
->   
->   		if (!shared)
-> -			tdp_mmu_iter_set_spte(kvm, &iter, 0);
-> -		else if (tdp_mmu_set_spte_atomic(kvm, &iter, 0))
-> +			tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
-> +		else if (tdp_mmu_set_spte_atomic(kvm, &iter, SHADOW_NONPRESENT_VALUE))
->   			goto retry;
->   	}
->   }
-> @@ -808,8 +808,8 @@ bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp)
->   	if (WARN_ON_ONCE(!is_shadow_present_pte(old_spte)))
->   		return false;
->   
-> -	tdp_mmu_set_spte(kvm, kvm_mmu_page_as_id(sp), sp->ptep, old_spte, 0,
-> -			 sp->gfn, sp->role.level + 1);
-> +	tdp_mmu_set_spte(kvm, kvm_mmu_page_as_id(sp), sp->ptep, old_spte,
-> +			 SHADOW_NONPRESENT_VALUE, sp->gfn, sp->role.level + 1);
->   
->   	return true;
->   }
-> @@ -843,7 +843,7 @@ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
->   		    !is_last_spte(iter.old_spte, iter.level))
->   			continue;
->   
-> -		tdp_mmu_iter_set_spte(kvm, &iter, 0);
-> +		tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
->   
->   		/*
->   		 * Zappings SPTEs in invalid roots doesn't require a TLB flush,
-> @@ -1276,7 +1276,7 @@ static bool set_spte_gfn(struct kvm *kvm, struct tdp_iter *iter,
->   	 * invariant that the PFN of a present * leaf SPTE can never change.
->   	 * See handle_changed_spte().
->   	 */
-> -	tdp_mmu_iter_set_spte(kvm, iter, 0);
-> +	tdp_mmu_iter_set_spte(kvm, iter, SHADOW_NONPRESENT_VALUE);
->   
->   	if (!pte_write(range->arg.pte)) {
->   		new_spte = kvm_mmu_changed_pte_notifier_make_spte(iter->old_spte,
+ .../crypto/starfive,jh7110-crypto.yaml        |   30 +-
+ drivers/crypto/starfive/Kconfig               |   30 +-
+ drivers/crypto/starfive/Makefile              |    5 +-
+ drivers/crypto/starfive/jh7110-aes.c          |  592 ++++++---
+ drivers/crypto/starfive/jh7110-cryp.c         |   77 +-
+ drivers/crypto/starfive/jh7110-cryp.h         |  114 +-
+ drivers/crypto/starfive/jh7110-hash.c         |  316 +++--
+ drivers/crypto/starfive/jh7110-rsa.c          |    3 +
+ drivers/crypto/starfive/jh8100-sm3.c          |  544 ++++++++
+ drivers/crypto/starfive/jh8100-sm4.c          | 1119 +++++++++++++++++
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    |   32 +-
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |    2 +
+ include/linux/dma/dw_axi.h                    |   11 +
+ 13 files changed, 2437 insertions(+), 438 deletions(-)
+ create mode 100644 drivers/crypto/starfive/jh8100-sm3.c
+ create mode 100644 drivers/crypto/starfive/jh8100-sm4.c
+ create mode 100644 include/linux/dma/dw_axi.h
+
+-- 
+2.34.1
 
