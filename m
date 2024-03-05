@@ -1,46 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E30B1758F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F25175AE;
 	Tue,  5 Mar 2024 17:49:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709660981; cv=none; b=VYgz6fJaDR9DBFX5bogCL4wex5wJOu2KATj/8skZHHjhHGnUlJbjU0khphdpjFXnvCwu079DobooKExFUR7XUu4svzsWsxwioLamIIIK59Afw8ebRKL05xetj2j9ec/Qb2HTcsIvoX9iQW6RKlzGhMH+Y1Vgxr7TwY/toGSanoQ=
+	t=1709660982; cv=none; b=hh/xKYWGmB5i4+AWJr1RTtLrDR7Upkul6wpo/dQPuDDW2R43SpmIpufqoDCSzBEhKiTakw5xdS6c/OdiMtj30Cbn9JGEa2ifjMsxzSKgKAZAERXwW2qRqvUD7WCKujQkvRgVovoHGEi21Nylgr9J6QGxrJLax/xlYE4Hh+3YPuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709660981; c=relaxed/simple;
-	bh=iKadSd4SrCoNOWp4+Qlp5ExVXQgLzONe/kqzElpRJjI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=do/8tfkOmZehBdW9N048+bFcJcTHYvmCALISJMZOnI7EXo0sy7a0ryLF0b9SUR0V640+oDKoopinnMcaO8LLkP1qi3cGEQo0JLnMksYioQHngv7SSNhjKnv9fLZHwjzNIXyB6SeWJeoze8ztSfDdMTalsQ5p5EV06h2zLAYOCx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IUyj5Xr1; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1709660982; c=relaxed/simple;
+	bh=SGAjMyyUJKvoSZpDLONlB+1giYVnwmizKPUz/44JYUM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NomFU76J46b+xPnSpV4ZD0O5oHqLQ2GP/mu8MURG7BDH/9Y60nJ+Zi39rqZWA3W/zMnm9mvaRoByOUULiwkJLsFbhjR7pakYby05kQcTXlsDRqPcKIWeyxaSgkorQJbqHftbUxl3BXXJANKBZIcRIkjHPbxaA+Htm1M7bzi59bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G0LgqDzg; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IUyj5Xr1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G0LgqDzg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709660980; x=1741196980;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iKadSd4SrCoNOWp4+Qlp5ExVXQgLzONe/kqzElpRJjI=;
-  b=IUyj5Xr1+YmZVw0p2CDjWdH6pvGysgPsDcBEty0rkGFQm24kg5fjYFwB
-   j0FdE+LOAAsl/HnvhkXHyiQ1CxVsXNEDg+XD6JlHEotVZdCju+susIevT
-   9TLJv97yZTyTvTtu88vl61sqwLAU/Kbo2gixV3XXUodOKrlFGdaxaddQX
-   AGiW3aaypBY0nQOqj1Mouw8Rswja1XDRc+4GBa1bsI1LD0hKOkWxTrwgU
-   5o/4fTN/yLeQUhbbjxNmWdZ9wVYgdy5qq0ioVrPTdQqK3zbUnIZstwoxX
-   Q2eGfR0M1gwCu4w6cxmfXYP9jvvS464ZLcZ0Pqcfr/oCZy/qc4lGU6Sy/
+  t=1709660981; x=1741196981;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=SGAjMyyUJKvoSZpDLONlB+1giYVnwmizKPUz/44JYUM=;
+  b=G0LgqDzgLsfMQilcd1r7ebr5PwoAI2nduAX4Pxq/D3EOzpYAiQGTeSng
+   o3mNvQvaRe4QgzcJh1q3zju02kY5IQNhMwj0GUx1C/gZz3TiUEp6m48Oa
+   B6aTVEYauU5owb3K/ZV6soohHv85dABpwjdx3l7XSXjO9rTu0Csyg6m5J
+   qi59ZIYW5eRpqr5EuT33iLljW9Dlt4rHYEXlvHbQ3RfaBh1kafPTdGUVB
+   deeAYMQl54TRGSVShTtejIT4R95mRKWxRKm0h/UhE2mW/RxZe7y8DCSpF
+   CT2Y9f+pBSoRpZWyUPFE2uz1aNx/0RMlquav9DRPSSvmbNPljb23nnItN
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4092434"
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4092438"
 X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
-   d="scan'208";a="4092434"
+   d="scan'208";a="4092438"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 09:49:38 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="937042794"
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="937042793"
 X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
-   d="scan'208";a="937042794"
+   d="scan'208";a="937042793"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2024 09:49:36 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 236545BB; Tue,  5 Mar 2024 19:49:34 +0200 (EET)
+	id 48069697; Tue,  5 Mar 2024 19:49:35 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-media@vger.kernel.org,
@@ -48,10 +49,12 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 Cc: Sean Young <sean@mess.org>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Andi Shyti <andi.shyti@kernel.org>
-Subject: [PATCH v1 0/5] media: ir-spi: A few cleanups
-Date: Tue,  5 Mar 2024 19:48:25 +0200
-Message-ID: <20240305174933.1370708-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/5] media: ir-spi: Utilise temporary variable for struct device
+Date: Tue,  5 Mar 2024 19:48:28 +0200
+Message-ID: <20240305174933.1370708-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240305174933.1370708-1-andriy.shevchenko@linux.intel.com>
+References: <20240305174933.1370708-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,19 +63,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While removing of_gpio.h where it's being unused, this driver seems to 
-deserve more love. Hence this series.
+We have a temporary variable to keep pointer to struct device.
+Utilise it inside the ->probe() implementation.
 
-Andy Shevchenko (5):
-  media: ir-spi: Don't use "proxy" headers
-  media: ir-spi: Make use of device properties
-  media: ir-spi: Utilise temporary variable for struct device
-  media: ir-spi: Remove trailing comma in the terminator entry
-  media: ir-spi: Unify indentation and comment style
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/media/rc/ir-spi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- drivers/media/rc/ir-spi.c | 41 +++++++++++++++++++++------------------
- 1 file changed, 22 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
+index 846d407a1f7e..19102bdcfd6f 100644
+--- a/drivers/media/rc/ir-spi.c
++++ b/drivers/media/rc/ir-spi.c
+@@ -121,11 +121,11 @@ static int ir_spi_probe(struct spi_device *spi)
+ 	u8 dc;
+ 	struct ir_spi_data *idata;
+ 
+-	idata = devm_kzalloc(&spi->dev, sizeof(*idata), GFP_KERNEL);
++	idata = devm_kzalloc(dev, sizeof(*idata), GFP_KERNEL);
+ 	if (!idata)
+ 		return -ENOMEM;
+ 
+-	idata->regulator = devm_regulator_get(&spi->dev, "irda_regulator");
++	idata->regulator = devm_regulator_get(dev, "irda_regulator");
+ 	if (IS_ERR(idata->regulator))
+ 		return PTR_ERR(idata->regulator);
+ 
+@@ -154,7 +154,7 @@ static int ir_spi_probe(struct spi_device *spi)
+ 
+ 	idata->freq = IR_SPI_DEFAULT_FREQUENCY;
+ 
+-	return devm_rc_register_device(&spi->dev, idata->rc);
++	return devm_rc_register_device(dev, idata->rc);
+ }
+ 
+ static const struct of_device_id ir_spi_of_match[] = {
 -- 
 2.43.0.rc1.1.gbec44491f096
 
