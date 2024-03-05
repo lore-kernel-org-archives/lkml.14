@@ -1,49 +1,59 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD91E7E59A
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F7C7FBD5
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709625148; cv=none; b=kCPAF54tnWmCRP5vsEwklElyLMgQwgqCpsCl+Q3pa/Kq+EfTDBd6SRVvWc6en0rnvg1vCkvaaMPPuyw7pjyRQTo+miacXR+UpUpXK0lyW8oSP9q8FD5rl/TkfK915id8VAPP/yHgWB7DE3BHX7s62PPP68YxdzzHoNqf3s7oORA=
+	t=1709625216; cv=none; b=o/r6KOHpX7HAdXUpgog6RWJg518UpCEvuZ3JHzMN5k0WOjfpNY28tUAT3wXhp2V/cldJS+cArKcZOru/pOd5kpZTz6a/4/b7/3668S3r2HntNCs1IiSlEHM+93sIBG5z5ooiEbM7sHZh63HXDfi+5hqmiIDf1p0a5I0jqrIkPTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709625148; c=relaxed/simple;
-	bh=+AQlQK0Lza0f5cu21CkeCnxElnTqhZNcxRlem6VN6L0=;
+	s=arc-20240116; t=1709625216; c=relaxed/simple;
+	bh=1hV0cF3diU48Z52x1dKAUOMlikMJbhSfandp1VEQFt0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xl3Y0vheXZw5/wxP1qULyJupZ2Vai80XA+7Od8CaqeCsQ3gwalIZS4OaK0QqH1hY4XuH1Bs9VlYq7SrCrwLEBSgcvNB1tTvAxPcxTRx4QtGS1XgAFqVR13xKyFHNKR7qtXYqw5D6ajR/qDAoMVIAEWUUmc0KWGe6MA3D5Xcxz/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=LCDGbDCw; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	 In-Reply-To:Content-Type; b=ZJylqCre4PcXAIS6nhhQ4FcucZrPhzpNwYx1TL3F/ZGgzXGNva+p1eUMR2m953n8Zh3bSwtJLeWs8AKOtkCRxeXnWQco4sCEwNZpCIjjL27dZZit1FXR/3Gx+YxiXDBuCANHUOrAVk2Zny/DuZ7wN9xFm8oef/OHx9vcox2rPWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lHrRPUVQ; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="LCDGbDCw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709624839; bh=g5kgWxn1NIxh/U33f+1njLKEvQkBSk5gIYUqK8r5evU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LCDGbDCwYGUQi+o2l4zqRcEZaCrkX297/Y6vTVxmHzBk4eepQgpJx2YPZgJkb+d0T
-	 z55wijeuGIrkDXeRIk38CZ9/FufV354Ql58pax6cLzTv+Y7Jaka7yJKN0W8SI13wyt
-	 NAe3FZK4vqAzxBNDf38xUfUetxUzxGId+P2i/OFU=
-Received: from [IPV6:2001:da8:c800:d084:f0c8:5d03:8100:4abe] ([2001:da8:c800:d084:f0c8:5d03:8100:4abe])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id BCFB4E35; Tue, 05 Mar 2024 15:47:15 +0800
-X-QQ-mid: xmsmtpt1709624835t312y5jks
-Message-ID: <tencent_E56A833916E00EC7B4840C34FAF1250ADE0A@qq.com>
-X-QQ-XMAILINFO: MRMtjO3A6C9Xa8SSBDSIszojUPOQR3Pu/YiSKnZ9CLUlp33j5I4BOid6UBpNni
-	 k0FZVOccwXNfc6U3Gk2ep4umWe2WreSNJpgnico/BladWbJulFvtIJ640xgIS6L++jcew4UWTlR3
-	 V2udqtjWFqXUEm9nO4o3JHRxrm1mluMwBFtOY4M5WX7+8f8lKJdebMzqlKAy7X36UnyoTyCvhKN5
-	 33mfbM1t2mzcDPa1IX8cuJDiE9h2pwMBYQJHFyMjXIJTpq2RxmIG1Neq4hjT9Y5L0tMBo5d3aOCx
-	 xFYL/rarWRKEZv46xrrJRt1ZGxUxXT5Jses+xQWME63PA8pp7wS9Px6RFi7KzY3YBt3rH7qTwa82
-	 UCV/zNu89FpSV6notQosadR8xoHVIfjjVBoNcyDHdtehGS46YrMmS+xsRqcVpOtASGLJBbquX/2O
-	 xDjp64aZmsiaX++BnbZ2jwdFBY6lQmGEysXk+PuvBcMWHdNpA91T5phc6DofwzNz8TAaHxEllH0w
-	 B1IaCKoPS0kRkQvXNQuEnWfoX30Yo+wZ4WXFK0/RNi0MrahUmAdDGpzpoGjY0Dai9aPKuxDiZR7w
-	 bZ+ZblwIu91JhbF/9yHCjYiiCWDC20A+6DKuVSj/+aKUzRkGJFTyiTX8Nx4KXlW4DCsf1P3eRSNn
-	 IZ1GXAimu3gC4vA624z8JqOhJMzOUvefatPu8x5alvcYp2rnl4fklz+Mp4SIRSonX+85Zl/V9n0y
-	 N7QEO0tGlzjCy+fu64bi39/zRM4nnzKrUdnr6LoeOO3FQkUJw5YwAEy5+c/YjuCDEDN8rsNgN5EF
-	 X5eKadoM9zjR7g2sGtWApTsOVwcYXiwEBZzUcrE0V8TbVgm0JBxO+xa4yxeb0FKUyIOQcMkWJUa6
-	 6cPUPjSOePfkVTLQdM5//+UipMwTU8uVv0mr3y8BQY/yn2Bni+o2SfWIt/4oyOB+jCwGwEzGH7zG
-	 rQqUipDJK2veb7DniAdVVtPRM1MTQhkYXalaxZLVKUcV22g8Y+DQ==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-OQ-MSGID: <cd8da084-4021-4bcb-86da-e7295589c8f1@cyyself.name>
-Date: Tue, 5 Mar 2024 15:47:15 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lHrRPUVQ"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5640fef9fa6so6535804a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 23:53:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709625212; x=1710230012; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qm7d8B+DkbJ7Jgiy9fqEkUg8rwERrs7SAxsLTaBklGw=;
+        b=lHrRPUVQOL03SU/ToEOdvsF7lHlYkSGJOcCwCY+uvPr024CB5Bc9E81Xn0ogP9aCxj
+         FDt+1ZLTv1o2Zyktjp/DXYHgfZTLUaoOfyi0a4M+nfkvJQNJpTQfm4yBFUh4ONQ2+muS
+         6pmndhIduxbhMBL3iBcJme5F6AsHo4YgwHvpEi8IyLoyNy0Y2VSTVELyB/wPPOVNnf7A
+         t0aJyWjIHqo/4kY6nRlimfiwNjDWRJVw8KFJYelk4U1K2/+wWi6LxVyzlWT4hZa6FcBW
+         nAN2YjqTwUZTUBTKZiVxAvqIS+wvBuq4XVCMZU40HDFBgpPK+qAJcWx2voExga/X6lVd
+         Q4mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709625212; x=1710230012;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qm7d8B+DkbJ7Jgiy9fqEkUg8rwERrs7SAxsLTaBklGw=;
+        b=OJgeueXUeUlcxhCdEF1mZ8jHYRaflHI7GaDuYxlYKw/20qnzkQJnGTgR9nx6ZsVucG
+         5tIlJuL/QqYBT+LwChZiTfGjhwOmhPvLHo6MXYU+89G1p82JLkkEm5EePSCheBG9kyIm
+         /uetYYYHAtlAQZeg2NKc+j3BQ1+efA51PsAyFwfQvXC7aqHBIMBa+dHSpBhxxZIi70Z6
+         9c8NJKOkF/9VJ+2qZukGxNrQPd+OSqdh2VscG3zHD6VR9LGWqVWxy8hMQ0waJRQOFhbd
+         UDjVT0tADPCypdnZzKvyi7swYR/RfaE8aCq5HVNXgf+e8jEAVk3FWTVkUIWwj6ESAHjM
+         BeUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUss/kIbM9X2MQWf5ipe9oJm00fvDqdguLoB2UvupPMBF5OE3xAPk9xk/0z88ePoc/2f1vh8yVyoGv579mRikMsokSL7crYiXxxbhN1
+X-Gm-Message-State: AOJu0YxW8MqA4pJ2GHoOZkUIyo2A1XzWu1sJI8mjJkJzvmi7EgR9aLTX
+	UmyX43mR7iCGp62zjpTcaX3uYHhlk5/g7hmp+SZ9dxcmZkWgfCYTbV4y+Z7eQfY=
+X-Google-Smtp-Source: AGHT+IEZ32OL5p3C/MNK75XGVpZbYBiG1XrQrcwjKmRbziO++5eFN+96jWxkKt5NXDnk5V1IvRU1dA==
+X-Received: by 2002:a17:906:cd03:b0:a44:511d:630b with SMTP id oz3-20020a170906cd0300b00a44511d630bmr7360893ejb.24.1709625211623;
+        Mon, 04 Mar 2024 23:53:31 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id tj10-20020a170907c24a00b00a4452ed413asm5538593ejc.16.2024.03.04.23.53.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 23:53:31 -0800 (PST)
+Message-ID: <55e5af68-bceb-4256-89f1-e0902821d6eb@linaro.org>
+Date: Tue, 5 Mar 2024 08:53:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,71 +61,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/7] riscv: Kconfig.socs: Allow SOC_CANAAN with MMU for
- K230
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add Crystal Clear Technology vendor
+ prefix
 Content-Language: en-US
-To: Damien Le Moal <dlemoal@kernel.org>, linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+To: =?UTF-8?B?SsOpcsOpbWllIERhdXRoZXJpYmVz?=
+ <jeremie.dautheribes@bootlin.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
-References: <tencent_BB2364BBF1812F4E304F7BDDD11E57356605@qq.com>
- <tencent_0432DA968E39B81431F921F38D747C008208@qq.com>
- <ef8df22f-dac8-4652-bf17-d10254e6abfb@kernel.org>
-From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <ef8df22f-dac8-4652-bf17-d10254e6abfb@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Yen-Mei Goh <yen-mei.goh@keysight.com>
+References: <20240304160454.96977-1-jeremie.dautheribes@bootlin.com>
+ <20240304160454.96977-2-jeremie.dautheribes@bootlin.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240304160454.96977-2-jeremie.dautheribes@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2024/3/5 07:46, Damien Le Moal wrote:
-> On 3/5/24 06:05, Yangyu Chen wrote:
->> Since K230 was released, SOC_CANAAN is no longer only referred to the K210.
->> Remove it depends on !MMU will allow building dts for K230 and remove the
->> K210 string from the help message.
->>
->> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
->> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
->> ---
->>   arch/riscv/Kconfig.socs | 5 ++---
->>   1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
->> index 623de5f8a208..b4e9b7f75510 100644
->> --- a/arch/riscv/Kconfig.socs
->> +++ b/arch/riscv/Kconfig.socs
->> @@ -75,13 +75,12 @@ config ARCH_CANAAN
->>   	def_bool SOC_CANAAN
->>   
->>   config SOC_CANAAN
->> -	bool "Canaan Kendryte K210 SoC"
->> -	depends on !MMU
+On 04/03/2024 17:04, Jérémie Dautheribes wrote:
+> Update Documentation/devicetree/bindings/vendor-prefixes.yaml to
+> include "cct" as a vendor prefix for "Crystal Clear Technology". CCT is
+> the vendor of the CMT430B19N00 TFT-LCD panel.
 > 
-> This seems wrong to me. The k210 support does require no-mmu. So why remove
-> this ?
+> Link: http://www.cct.com.my/
+> Signed-off-by: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
+> ---
 
-It just allows SOC_CANAAN to be selected when MMU=y. With this patch, 
-nommu_k210_defconfig still works.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> Does the k230 have MMU support ? If yes, then I do not think these 2 can
-> fall under the same SOC_CANAAN.
-> 
-
-Yes, K230 has MMU, you can see the bootlog from the cover letter and the 
-dts patch [6/7]. Could you provide some reasons why it can fall? I 
-didn't see any differences in .config after this change after executing 
-'make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- nommu_k210_defconfig'.
-
->> +	bool "Canaan Kendryte SoC"
->>   	select CLINT_TIMER if RISCV_M_MODE
->>   	select ARCH_HAS_RESET_CONTROLLER
->>   	select PINCTRL
->>   	select COMMON_CLK
->>   	help
->> -	  This enables support for Canaan Kendryte K210 SoC platform hardware.
->> +	  This enables support for Canaan Kendryte SoC platform hardware.
->>   
->>   endmenu # "SoC selection"
-> 
+Best regards,
+Krzysztof
 
