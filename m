@@ -1,173 +1,105 @@
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5595A4CD
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 11:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709636658; cv=pass; b=fn/M4z9Le10/uhQj4tAhE2J5055ixDtKkn0j6jmYgaVyBHL4nhgwgLV1sh5DtD1kHgYmNO8Ps/LiHXvXEo9I/c0V862xWgoql8Wg48Ka7VyOCI81jTlWO+F8nkSn/hlnD4qHdLkIjQVoqoIg7hsVSuoE6JiF8wk0b9/EqJxjEHI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709636658; c=relaxed/simple;
-	bh=bitf7vn1Tko3UcXW/HZcpK72mOMCQnHhPpBoHkJzFe0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R+oLMIhX6UnkFgxPCZvR5oZc+iIRuIk9RNatL26umKQnN0McKptwhgq9/E0D8TtLKiM5kK78m6WCXgV8Jp3cSQEwhWNTSKVShXhbHqGP/ZTRe/ZXDoXNDp6mEhf6DQW2iKDS/JwZuGS9Vh1BQTNBvn/xCPt57tqLIMdGB5ltHic=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=eqlcWOwT; arc=pass smtp.client-ip=195.140.195.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E083D5B5A5;
+	Tue,  5 Mar 2024 11:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709636680; cv=none; b=E0+vjinZkyeh1NRLtASY9huQ60pfxf/gqfh+SHXrO9LxEcWrHJsk92ww8g5SUH3MAxpjT3Tc6uevUquniVMoozuSfxln3l5+6G/1PEOtGuNZ8nObbOBlAQnB88PuuxQszIEu2vUWFIJy7kTGWNVOOnwpDbI67MZ5kuT093Vc6cs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709636680; c=relaxed/simple;
+	bh=aKmI+W1f1KopupyDZ900tVuISdnIElNXqW6osHOWD+Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ECnTHk+Q1qTHvp3GokXlfooYttcjTFI5AkAlhAoEPI/PF/EwfDBtRd8FAgJdbCcORs5vflq3RRJxd6axqHWGaVrwRAP1JFsZFXGzgOrBP85En6UJ3R3RI76rfVk0l0+CaKj0Hq6Z28cnAUH0x5lumvG4yP3vz1lXim43Q3NZ5ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVrDyMAz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="eqlcWOwT"
-Received: from darkstar.musicnaut.iki.fi (85-76-8-182-nat.elisa-mobile.fi [85.76.8.182])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: aaro.koskinen)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4Tpt3m2K5RzyTd;
-	Tue,  5 Mar 2024 13:04:04 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1709636646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/+Tidk3xtKcnpQFfsXE2bzouU7P/cVDfr0RoP0AGszI=;
-	b=eqlcWOwTRRK1xnhIU+EddEbelmnDCJTMlo1y4c/BF7xkeErjP+gyPn/88KXEjNvz99nVyc
-	jfTIWi29M9V1Om92+y7UxD11a0vIP6EeGZe0cy04Fba0H5SQM/dCbgX5Cay3yrBtJOBpPU
-	+FgLMv22VwwneOfp9fWakw1TUi6319w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1709636646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/+Tidk3xtKcnpQFfsXE2bzouU7P/cVDfr0RoP0AGszI=;
-	b=w9VzYE4R8eMwXxVdDDXCDdCKWmTO66sy8E69lEzL/SuDFz9DfSDlO3/nPPnYmwhPclyd48
-	TtVxVvQOdqTfXNL8FozpvVFrnrJADgI4bAgc1B3+ZJ2rhz8as63MCUyOwj7L9yUsClq6D+
-	NzjDBh+R5XhblkdnZplsT9Ot98yOtwQ=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=aaro.koskinen smtp.mailfrom=aaro.koskinen@iki.fi
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1709636646; a=rsa-sha256; cv=none;
-	b=BKB1xcOCM0OiTWDnxAWrHGFNzLsJMmDv5KqI0ATzzrBFld3gg+t3zxerLY4turETvnpU7d
-	4bMOFnxY5D8pr15Zj6U1Kohthpa4KKA6cWAWYiSM6/riGeKgUPAcMBgQbruQ9fFJ15E/nb
-	qn5YklhOKfzjynMJy/eUK00Bw7Xj51o=
-Date: Tue, 5 Mar 2024 13:04:02 +0200
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-To: Mukesh Ojha <quic_mojha@quicinc.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, will@kernel.org, longman@redhat.com,
-	boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
-	Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
-Subject: Re: [PATCH v2] locking/rwsem: Disable preemption while trying for
- rwsem lock
-Message-ID: <20240305110402.GA72649@darkstar.musicnaut.iki.fi>
-References: <1662661467-24203-1-git-send-email-quic_mojha@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVrDyMAz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7C67C433C7;
+	Tue,  5 Mar 2024 11:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709636679;
+	bh=aKmI+W1f1KopupyDZ900tVuISdnIElNXqW6osHOWD+Q=;
+	h=From:Subject:Date:To:Cc:From;
+	b=OVrDyMAz8Hkx/q4ZDdCZ+zwlGNDwxrdWQ4au4LwFVTt0MskDkdb0SQh8wyiCMmJ+k
+	 0P9gFhstbekIdzm3LY0JsSgfx0ajUfAuNfMaaszEgoOdNQ98g3uAQ4gkY1T25Le/KQ
+	 +xT/XFi6XZoO1audkiH60R/2gMlr/mJpL6P/wZMOqd0sKWSo+7zKTlYSw6eNiyaFED
+	 Zb/DpCeYnNDthBe7/NjwjfTpXLjLbrJ1nIfJXV2Hn5iQwM2krjsrzZ4PrjupCY903Y
+	 rOSXngzRDDV2DUef5ZFg02qwH0mGHVLxIVAOsC9hVpVKEinLyt7NdEjFqk5Av2Zud4
+	 kXICzeyigyC6A==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/4] mptcp: some clean-up patches
+Date: Tue, 05 Mar 2024 12:04:29 +0100
+Message-Id: <20240305-upstream-net-next-20240304-mptcp-misc-cleanup-v1-0-c436ba5e569b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1662661467-24203-1-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD385mUC/z2NQQrCMBBFr1Jm7UDSNoheRVyk6UQHTBwyaSmU3
+ t0g6OIvHh/e20GpMClcux0Kraz8zg3sqYPw9PlByHNj6E0/msGMuIjWQj5hptq2VfxfSWoQTKw
+ Bw4t8XgTtZY4u+vNknYPmlEKRt2/vBj8D3I/jA6gDI5SJAAAA
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1337; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=aKmI+W1f1KopupyDZ900tVuISdnIElNXqW6osHOWD+Q=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl5vxDgH6Oh0C4/wsnEzq7FnApRlcboeVNm0Bas
+ Bx7+Cv/54eJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeb8QwAKCRD2t4JPQmmg
+ cyDuEADKoTN39Jvuz2XxiXa/ch01AetVgiX4fbl+jEIlzbFTFd8p5EvWhVmHyj5by8MXAnlzuZT
+ 0cHFbSRmWoiO2j3ZXaZKRNFlhHa81s4vog7ouxArVRESpNCj24jZGUrUXBJ+JziLzAfOfipZJGR
+ wrYOZ9y0M4Yd5CBpBoDWimnklAC2APPbrFCp5C0RJCribydklxk+KfEijDNCyEHaMy/86pbB8ro
+ q8H3osWITapoieuey4Qh7sV0PIQh6uJ2JGhuEjOAYwcdaPZQXRW8DjUD62qFdhNGT/CPJyl5P8o
+ XrvvpZjHfEPajxbxROc4kGVDp/ykpc4MzvkcmsegXPPrHktDlQdmVUaBByxnr91Ekjuvb4Ou2ho
+ wWEdfIQNY9mO+FtxilTH6Q01d0H3uUdHZHcuH1OU1dVSaCJT0n3DLl+ueVIw02ORlUqEWaScV5i
+ QDvKUmTXdvr3hI0bnUl3tb0tCWJGOea9d3zuRR7uLe2dja4kfVePik0IAvoVJYopU1s2mYh/FX/
+ VDUp/LrPt+RuPqMcfQn3XMjk18MU6C22LvT8PLUggyybr1/NbSedYvjwppgq5dE6AvOs6lV3hZm
+ ec9HpJeoJcERSvTWoN1PcYmq8B/eKkDHD5/AifGAfigBSHKDmPjAXek5GTlQ2xNTspcVoim9tnj
+ HFK3tvGa6TM+gxA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi,
+Here are some clean-up patches for MPTCP:
 
-It seems this patch (commit 48dfb5d2560d) is missing from
-at least 5.15 stable tree.
+- Patch 1 drops duplicated header inclusions.
 
-Based on quick test, it seems to fix an issue where system locks up
-easily when RT throttling is disabled, and also it applies cleanly, so
-I think it should be good to have it 5.15?
+- Patch 2 updates PM 'set_flags' interface, to make it more similar to
+  others.
 
-A.
+- Patch 3 adds some error messages for the PM 'set_flags' command to
+  help the userspace understanding what's wrong in case of error.
 
-On Thu, Sep 08, 2022 at 11:54:27PM +0530, Mukesh Ojha wrote:
-> From: Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
-> 
-> Make the region inside the rwsem_write_trylock non preemptible.
-> 
-> We observe RT task is hogging CPU when trying to acquire rwsem lock
-> which was acquired by a kworker task but before the rwsem owner was set.
-> 
-> Here is the scenario:
-> 1. CFS task (affined to a particular CPU) takes rwsem lock.
-> 
-> 2. CFS task gets preempted by a RT task before setting owner.
-> 
-> 3. RT task (FIFO) is trying to acquire the lock, but spinning until
-> RT throttling happens for the lock as the lock was taken by CFS task.
-> 
-> This patch attempts to fix the above issue by disabling preemption
-> until owner is set for the lock. While at it also fix the issues
-> at the places where rwsem_{set,clear}_owner() are called.
-> 
-> This also adds lockdep annotation of preemption disable in
-> rwsem_{set,clear}_owner() on Peter Z. suggestion.
-> 
-> Signed-off-by: Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
-> Changes in v2:
->  - Remove preempt disable code in rwsem_try_write_lock_unqueued()
->  - Addressed suggestion from Peter Z.
->  - Modified commit text
->  kernel/locking/rwsem.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-> index 65f0262..4487359 100644
-> --- a/kernel/locking/rwsem.c
-> +++ b/kernel/locking/rwsem.c
-> @@ -133,14 +133,19 @@
->   * the owner value concurrently without lock. Read from owner, however,
->   * may not need READ_ONCE() as long as the pointer value is only used
->   * for comparison and isn't being dereferenced.
-> + *
-> + * Both rwsem_{set,clear}_owner() functions should be in the same
-> + * preempt disable section as the atomic op that changes sem->count.
->   */
->  static inline void rwsem_set_owner(struct rw_semaphore *sem)
->  {
-> +	lockdep_assert_preemption_disabled();
->  	atomic_long_set(&sem->owner, (long)current);
->  }
->  
->  static inline void rwsem_clear_owner(struct rw_semaphore *sem)
->  {
-> +	lockdep_assert_preemption_disabled();
->  	atomic_long_set(&sem->owner, 0);
->  }
->  
-> @@ -251,13 +256,16 @@ static inline bool rwsem_read_trylock(struct rw_semaphore *sem, long *cntp)
->  static inline bool rwsem_write_trylock(struct rw_semaphore *sem)
->  {
->  	long tmp = RWSEM_UNLOCKED_VALUE;
-> +	bool ret = false;
->  
-> +	preempt_disable();
->  	if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp, RWSEM_WRITER_LOCKED)) {
->  		rwsem_set_owner(sem);
-> -		return true;
-> +		ret = true;
->  	}
->  
-> -	return false;
-> +	preempt_enable();
-> +	return ret;
->  }
->  
->  /*
-> @@ -1352,8 +1360,10 @@ static inline void __up_write(struct rw_semaphore *sem)
->  	DEBUG_RWSEMS_WARN_ON((rwsem_owner(sem) != current) &&
->  			    !rwsem_test_oflags(sem, RWSEM_NONSPINNABLE), sem);
->  
-> +	preempt_disable();
->  	rwsem_clear_owner(sem);
->  	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
-> +	preempt_enable();
->  	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
->  		rwsem_wake(sem);
->  }
-> -- 
-> 2.7.4
-> 
-> 
+- Patch 4 simplifies __lookup_addr() function from pm_netlink.c.
+
+Except for the 3rd patch, the behaviour is not supposed to be modified.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (4):
+      mptcp: drop duplicate header inclusions
+      mptcp: update set_flags interfaces
+      mptcp: set error messages for set_flags
+      mptcp: drop lookup_by_id in lookup_addr
+
+ net/mptcp/diag.c         |  1 -
+ net/mptcp/mptcp_diag.c   |  1 -
+ net/mptcp/pm.c           | 11 ++----
+ net/mptcp/pm_netlink.c   | 97 ++++++++++++++++++++++--------------------------
+ net/mptcp/pm_userspace.c | 41 ++++++++++++++++----
+ net/mptcp/protocol.c     |  1 -
+ net/mptcp/protocol.h     | 10 ++---
+ net/mptcp/subflow.c      |  2 -
+ 8 files changed, 84 insertions(+), 80 deletions(-)
+---
+base-commit: 09fcde54776180a76e99cae7f6d51b33c4a06525
+change-id: 20240304-upstream-net-next-20240304-mptcp-misc-cleanup-19df5fa7b155
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
