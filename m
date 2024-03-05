@@ -1,153 +1,137 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF837EF02;
-	Tue,  5 Mar 2024 07:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD39D18E1D;
+	Tue,  5 Mar 2024 07:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709624826; cv=none; b=XqYoDY9s4nAqcY/ADzYcnujI6wiwH/NDMsVwEQqSFbqJp93XVfEDVYGX8XTvIM+fmybpUIgr/RP2nQWqGg8KBjwABmyhBG3XvpDCbSnI7ITNGFAf8ZV1gGA/GMd22+Roqg6YiBCvaBqOcIYj0QQfGhlDBV7b/YliLW1DgcMDf1U=
+	t=1709624869; cv=none; b=tarK3MOLWkCyAKe3KswvvT4+BSMaQuAxJJ77zml4blp8xGhfOllXFvw9tywB9sQLvzVm37iWQeX9Mm471X8LZmyK48S163ea7Ez4BOic5acHZ3G81IMqWLgA5tP8las/qRmGkrL2JoqTWxvr2aPJ4M+ZCzmAenlALWL6O0hvgm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709624826; c=relaxed/simple;
-	bh=/qasr9z7u/T737mrrPguBWimHiwHsXToDQCi1g3Jtec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IDRjM3C/KwEs8WYM9kTQsBBwOZUo3ZPTNC+p1b1FKQE8ATJcE+l7+xa813fCZvBX+sBxw6LtRmcKBiBwcuulmrRDOSO02FNYK+29FiPnBqUsx5usuKPPlLGJ4+joizP9udL9auTO6mip6wMiGLFoQ3RLYoBuKfwziXnWbjg/OJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ADTQ14US; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709624869; c=relaxed/simple;
+	bh=U89uh1DhfOTDkyC8oDCYbLAchYtQuvP7pwEZtO/ui6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FDB+T2Z4jti8+a69aani5g1AyU+u/atlVVj4TV2eamLjdmuPm/BIotnkRxbjN+R+ejfk2MfKabiq/b/vFQeiVK+/PA/jFZkH2kOfBq+qYqi0ZQxsvdaL0SLYi8DgGQwdIY0A27mkKyNnk3/wVVwyXfnGMDBhtdxSYQVewZZzK/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZXSQS7ZW; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ADTQ14US"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4255SlbA005013;
-	Tue, 5 Mar 2024 07:46:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=sZ6PvWjS312K7oq9+4hnndIA20U/xzpROGr6fX1/dbY=; b=AD
-	TQ14USASNroSIQ+PxwbYqop19YeVwJPO+i+P67JJmBKbeFfNaaU28OZ7dApNAQrG
-	t/NVlZ59EI2U0X3JwH+Cb15fQIKknP5pFX3ViqwMM9pTTi4gT4xaeE5S1li7FnNF
-	BtiDgnDDXbmh64C3jMaS63xU3MZi3bWOk7OjL9y45vnRaPXKxHtqfE0osrlavjP9
-	4g6QZa9DZqJaTZB65sB0LT3RDB51R8uXrEgE1/3bP+vj+y2Ri4yZB/yaj18VAgg3
-	DUIxW64H3eFnE1VmAHgSgXFjM833qKBVnRhLhmy20x3aRcaGUmursAf1Gws/IZS9
-	2TDBkPsyvw08lGNcavVQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wnu470f4n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 07:46:56 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4257ktE2017094
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Mar 2024 07:46:55 GMT
-Received: from [10.253.74.128] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 4 Mar
- 2024 23:46:53 -0800
-Message-ID: <c7c939c9-50e0-4d86-bd44-d8b4b90ca14d@quicinc.com>
-Date: Tue, 5 Mar 2024 15:46:50 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXSQS7ZW"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso5167699276.0;
+        Mon, 04 Mar 2024 23:47:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709624867; x=1710229667; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UppqAarfwY+zIiaC2kTHlfDrH6S8pSlvdHIG4B7CkdE=;
+        b=ZXSQS7ZWKHbwxvvupsNVsEDIJoumAiBNJ49ReKGeHOLI9Zc0Fp5QdJytYWcm+wEQMu
+         tbpGFQAS27gfqpSsB/2Q2E8EwEPuSFbTiQ4G8sBqnKkpgCU1TTSDBtkR37mNH4+tdF2X
+         bIRaAjOTXIkssYHOh5LHe0ckTPVQFM0PhvMBnN4x7Cb5EJ5vw5utKrsecqd0+iwVqoNy
+         G8vAMeGFmfXg3abJ/YvMGWLfr4myrfhK5MaEfqL0cRmd4yXavQADbawNYpWppBr5EG7o
+         gbEvoQY8BF2Jj4jr7R+9LRQgYsp10RryQtRtjsI8Wl4JaUMQHx2YXaQOrYjNSHDErnAp
+         AXWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709624867; x=1710229667;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UppqAarfwY+zIiaC2kTHlfDrH6S8pSlvdHIG4B7CkdE=;
+        b=pwi9AzhvjSRksEE7j65gCUj9L+xtkPe/XY4wBQArTJuA+lvHSYD2m8lrrRgV1k9F58
+         +cqaXs2M+OpZ359llvdV3UNWxk/wPTD2azb/H8P7Ev2ukwbZ67QfJsbn6q2Jh2IwTX9w
+         aP1TEc+oWcDZdPfCny8/Oo2fljtgLufn1B/toCcZIQpI+IsCB0pYabMhyU7rUKp8R5uq
+         8CWiBdgjYk25gUyJpVOTTVlN3KUmsUoEfMelpIjEruZyyoezdxQXfz8d7apZq+BocnqK
+         ouIheTTI3LI/dMfPZ7+bPHWilP+zXJpiMOJ4CBmHK/yc6UL7nElbTUUlkzIHRqI9OwDc
+         0ZIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBOHHVeSWm+Xgzmkb44m+RAplK3MpLOOc7ee5Ptd3fpqoWAV1iYFy8omnXKmqXdMY4XcPhbB4O8dMvs7+jGw7SXM+EToZy0bSTsMCyYLIa89hx4pYJAKD6QMqj56keqo3s0t5yOSELEWKQrT/eUItm+ctze3B/Lje93tqU6tg1
+X-Gm-Message-State: AOJu0YwNmoqsZ7Ls5inf4CTZkCKRMmZGY9F8jmR+vmSzwo+p7vWfOLYB
+	SL8Q/Fz6TQXaO8MM3xmHYZWX0buUhXphDJyOqQI0bZ1Jtv/XoAEYRjp1jZUE4Ne/DBTaxYsA17n
+	1j/EOOr/blROp/TaZt5Zlp78Bzlk=
+X-Google-Smtp-Source: AGHT+IHfZSuQQsq0Y6qpFsVyqy6sZNeaHlt0da7iEaRL5PP45J0iq/yS5BKZvfCWvC85In5QPT2Hm95+UNnJE//HDXM=
+X-Received: by 2002:a25:4a06:0:b0:dcf:2b44:f38d with SMTP id
+ x6-20020a254a06000000b00dcf2b44f38dmr9182681yba.49.1709624866673; Mon, 04 Mar
+ 2024 23:47:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [virtio-dev] Re: [RFC PATCH v3 3/3] SPI: Add virtio SPI driver.
-Content-Language: en-US
-To: Harald Mommer <harald.mommer@opensynergy.com>
-CC: <quic_ztu@quicinc.com>, Matti Moell <Matti.Moell@opensynergy.com>,
-        "Mikhail Golubev" <Mikhail.Golubev@opensynergy.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Viresh Kumar
-	<viresh.kumar@linaro.org>,
-        "Mark Brown" <broonie@kernel.org>
-References: <20240213135350.5878-1-Harald.Mommer@opensynergy.com>
- <20240213135350.5878-4-Harald.Mommer@opensynergy.com>
- <e2e5a7a0-7a2b-40d3-acf7-6f0b91bd5d40@quicinc.com>
- <2a911f96-eed9-4adc-9043-27fd1d3a7ca2@opensynergy.com>
-From: Haixu Cui <quic_haixcui@quicinc.com>
-In-Reply-To: <2a911f96-eed9-4adc-9043-27fd1d3a7ca2@opensynergy.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: u4LG9Zb497TrCeLj3ufGMa5CefhS5TjC
-X-Proofpoint-GUID: u4LG9Zb497TrCeLj3ufGMa5CefhS5TjC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-05_05,2024-03-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 impostorscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 phishscore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403050060
+References: <20240212020403.1639030-1-hayatake396@gmail.com>
+ <CYYPR11MB8429FCD568EE2AF90AEE2CABBD5E2@CYYPR11MB8429.namprd11.prod.outlook.com>
+ <CADFiAc++edOb7-O6yCUgpAaonZ1sQdkrwwH8432D=e40g1CwoQ@mail.gmail.com> <CYYPR11MB84290126F884C2AB4F9AA5FBBD222@CYYPR11MB8429.namprd11.prod.outlook.com>
+In-Reply-To: <CYYPR11MB84290126F884C2AB4F9AA5FBBD222@CYYPR11MB8429.namprd11.prod.outlook.com>
+From: Takeru Hayasaka <hayatake396@gmail.com>
+Date: Tue, 5 Mar 2024 16:47:35 +0900
+Message-ID: <CADFiAcJtJWMqeiVRLyZQivYw2J5EBeMVjP+qeJfS9YeWokdX+Q@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH net-next v8 1/2] ethtool: Add GTP RSS
+ hash options to ethtool.h
+To: "Pucha, HimasekharX Reddy" <himasekharx.reddy.pucha@intel.com>
+Cc: "Brandeburg, Jesse" <jesse.brandeburg@intel.com>, 
+	"Nguyen, Anthony L" <anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"vladimir.oltean@nxp.com" <vladimir.oltean@nxp.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"laforge@gnumonks.org" <laforge@gnumonks.org>, Marcin Szycik <marcin.szycik@linux.intel.com>, 
+	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"mailhol.vincent@wanadoo.fr" <mailhol.vincent@wanadoo.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Harald,
+Hi Himasekhar Reddy-san
 
-Thank you for your detailed expatiation. To my knowledge, you took 
-Vanilla as the front-end, and VMM is QEMU. Can you please explain 
-further how do you test the SPI transfer without the Vanilla userspace 
-interface? Thanks again.
+> After added the above v4 patch able to to see tab completion for flow-typ=
+e but not rx-flow-hash. Please find below logs.
 
-Haixu Cui
+Sorry. I submitted a code with the conditions reversed. I have
+resubmitted it, so could you please check it again?
+https://lore.kernel.org/all/20240305074350.533622-1-hayatake396@gmail.com/
 
-On 3/4/2024 6:52 PM, Harald Mommer wrote:
-> Hello Haixu,
-> 
-> no, I've not touched spidev.c. Nowhere. I took Vanilla next/stable and 
-> applied the patches I sent.
-> 
-> Run the driver as a (somewhat different but comparable) module on 6.5 on 
-> hardware over virtio-MMIO. Probes and goes live.
-> 
-> Tested on next/stable using a specially adapted QEMU version which 
-> allows the usage of our proprietary virtio SPI device over PCI in qemu. 
-> Probes and goes live.
-> 
-> There may be other patches in the setup we're using I'm not aware of but 
-> not this one.
-> 
-> Only in case you're using some locally developed virtio SPI device on 
-> qemu which uses PCI transport:
-> 
-> SPI has ID 45. Means 0x2d.
-> 
-> https://www.qemu.org/docs/master/specs/pci-ids.html
-> 
-> 1af4:1040 to 1af4:10ef
-> 
->     ID range for modern virtio devices. The PCI device ID is calculated
->     from the virtio device ID by adding the 0x1040 offset. ...
-> 
-> lspci on qemu:
-> 
-> / # lspci
-> ...
-> 00:03.0 Class 00ff: 1af4:106d
-> ...
-> 
-> / #
-> 
-> You see something like this?
-> 
-> Regards
-> Harald
-> 
-> On 04.03.24 08:11, Haixu Cui wrote:
->>
->>
->> On 2/13/2024 9:53 PM, Harald Mommer wrote:
->>> +static struct spi_board_info board_info = {
->>> +    .modalias = "spi-virtio",
->>> +};
->>
->> Hi Harald,
->>     Do you add "spi-virtio" in spidev_spi_ids in spidev.c when you 
->> doing the tests, to probe spidev driver?
->>
->> Thanks
->>
->> ---------------------------------------------------------------------
->> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
->> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
->>
+Takeru
+
+2024=E5=B9=B43=E6=9C=885=E6=97=A5(=E7=81=AB) 13:28 Pucha, HimasekharX Reddy=
+ <himasekharx.reddy.pucha@intel.com>:
+>
+> >-----Original Message-----
+> > From: Takeru Hayasaka <hayatake396@gmail.com>
+> > Sent: Tuesday, March 5, 2024 9:12 AM
+> > To: Pucha, HimasekharX Reddy <himasekharx.reddy.pucha@intel.com>
+> > Cc: Brandeburg, Jesse <jesse.brandeburg@intel.com>; Nguyen, Anthony L <=
+anthony.l.nguyen@intel.com>; David S. Miller <davem@davemloft.net>; Eric Du=
+mazet <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni =
+<pabeni@redhat.com>; Jonathan Corbet <corbet@lwn.net>; linux-doc@vger.kerne=
+l.org; vladimir.oltean@nxp.com; linux-kernel@vger.kernel.org; laforge@gnumo=
+nks.org; Marcin Szycik <marcin.szycik@linux.intel.com>; intel-wired-lan@lis=
+ts.osuosl.org; netdev@vger.kernel.org; mailhol.vincent@wanadoo.fr
+> > Subject: Re: [Intel-wired-lan] [PATCH net-next v8 1/2] ethtool: Add GTP=
+ RSS hash options to ethtool.h
+> >
+> > Hi Himasekhar Reddy-san
+> >
+> > > Functionality wise its working fine. But the ethtool part (tab comple=
+te doesn't show GTP)
+> >
+> > I forgot to add the tab completion feature! Thank you for the good
+> > points. I've added it again in this version's patch.
+> > https://lore.kernel.org/all/20240305033555.524741-1-hayatake396@gmail.c=
+om/
+> >
+> > Takeru
+> >
+>
+> After added the above v4 patch able to to see tab completion for flow-typ=
+e but not rx-flow-hash. Please find below logs.
+>
+> # ethtool -N eth4 rx-flow-hash
+> ah4    ah6    esp4   esp6   ether  sctp4  sctp6  tcp4   tcp6   udp4   udp=
+6
+> # ethtool -N eth4 rx-flow-hash
+> ah4    ah6    esp4   esp6   ether  sctp4  sctp6  tcp4   tcp6   udp4   udp=
+6
+> # ethtool -N eth4 flow-type
+> ah4     esp4    ether   gtpc4t  gtpc6t  gtpu4d  gtpu4u  gtpu6d  gtpu6u  i=
+p6     sctp6   tcp6    udp6
+> ah6     esp6    gtpc4   gtpc6   gtpu4   gtpu4e  gtpu6   gtpu6e  ip4     s=
+ctp4   tcp4    udp4
+>
