@@ -1,112 +1,108 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272F57F7FC;
-	Tue,  5 Mar 2024 08:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA337F7FF;
+	Tue,  5 Mar 2024 08:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709626867; cv=none; b=FAvWVmu5bWTTAH7cAGR32qZbOMO1mUghzyMwmoJ9FXcRqN8F6kBP/VhOp+xPyi5doWJxPsvgsdhIdrPkyfbNYZYQkG8P4f60JjD/8QPUcs0FVOCcin3BUzZ8lVztGR+lrbNLqwqUM6tJb9RNyewtWjHmnlzUVmZL+khdnT33G2Q=
+	t=1709626871; cv=none; b=OcfJncda3fRnp+6YNpKj4yMnwZNN3a+K7+1r5YBA83guGtH/cB4z9B3nPVbE8GiZ3OGBLQadVbono2/5MsEex5gZVj2G+2tCUyHYRA0mTbznMl9hc5T9rAec8rK6Yem+PvNvaVpTCxZ+mBJ72qu6J0BH2Z/SQPbNItGrd9DHuXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709626867; c=relaxed/simple;
-	bh=96liCdQ/6gUqP6tRhpRaW4I5SFxA+uBNhElug/7lyAc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rQXp458Nu8oPKATZh73P5TTC69UcH3MAQ7QikM7PDY2PKLMJzZKwi6ffJSIUxMuSEQ87cNKJTqCxPhmcpRP8y8g/HM/vJFjwtS/w/q6Q4FidI+W5ElXzur4wDhyxKssEhWL4AAAMXHrYHL0dQEZ+S+yNwNXeLqFpCIQEyFTHum4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (78.37.41.175) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 5 Mar
- 2024 11:20:55 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Daniel Vetter <daniel@ffwll.ch>, Helge Deller <deller@gmx.de>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Karina Yankevich <k.yankevich@omp.ru>, <linux-fbdev@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH] fbmon: prevent division by zero in fb_videomode_from_videomode()
-Date: Tue, 5 Mar 2024 11:20:40 +0300
-Message-ID: <20240305082040.7445-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709626871; c=relaxed/simple;
+	bh=WFgIUqss9TAdO9AjaUlgXXkzHAVPaeaf3euW2nSz/wM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qbbkvcExg2WpiJY+AHXlW9JoeRd4MojeWkJPMiKXAxrRlfjRRfFgr41CMJxJqx4Xi6/aN8cv2oX44kd+F7O/tPnMoplspKKH1NRnWdfEWYKZOYDTaupKUUHqjGM0QRzEX3o9oLl0XvaSImxfrofSJGetYWGH3oz0OqAt5l+tcbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOPPu2Rv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOPPu2Rv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4607CC433F1;
+	Tue,  5 Mar 2024 08:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709626870;
+	bh=WFgIUqss9TAdO9AjaUlgXXkzHAVPaeaf3euW2nSz/wM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=HOPPu2Rv+RdmcOkgyYlgmMrXFdBSqx6Lvib1K4Tvnhn3J67hqN2RcG18v/LlVUFFh
+	 jpaJpRl+uuBbX9T2FNShyS6KtAkgkO8S7CyG4SY+uWlvHPbo2HFl6mGAW0LTKHqZ0F
+	 SWQ4zlsNDWXzN33UMPiKoKQdEJVlFhU2GYr2UmYwOAklK+kq1aaf+/7o6ER9xBqsLx
+	 fedo6DW/bucOVcaw5pOch3Pwrw7BRAQlPK//XqKgfh87mc0kD/3xjS2ezlOWPYjcrq
+	 bUca/5InbS+0ycCLRscWpkgSe1MY74qpIj8J6wVZmbTMRFn1LEJuttlgXICziEBbd2
+	 RXDwoQ2B7A0ww==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Conor Dooley <conor.dooley@microchip.com>, Anup Patel
+ <apatel@ventanamicro.com>
+Cc: Conor Dooley <conor@kernel.org>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Andrea
+ Parri <andrea@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>,
+ Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, Andrea Parri
+ <parri.andrea@gmail.com>
+Subject: Re: [PATCH v3 2/2] riscv: Fix text patching when IPI are used
+In-Reply-To: <20240305-sarcasm-ending-0f7946490aea@wendy>
+References: <20240229121056.203419-1-alexghiti@rivosinc.com>
+ <20240229121056.203419-3-alexghiti@rivosinc.com>
+ <20240304-makeshift-bakeshop-26c9611de1a3@spud>
+ <87msrdzqxi.fsf@all.your.base.are.belong.to.us>
+ <CAK9=C2Xjgr9_H-sHkmAAc95dAm2jd+_dxLUxSM3RM3NrQJFKGQ@mail.gmail.com>
+ <20240305-sarcasm-ending-0f7946490aea@wendy>
+Date: Tue, 05 Mar 2024 09:21:07 +0100
+Message-ID: <87frx5ozrg.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/05/2024 08:01:11
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 183947 [Mar 05 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 8 0.3.8 4a99897b35b48c45ee5c877607d26a2d9f419920
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 78.37.41.175 in (user) dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;78.37.41.175:7.4.1,7.7.3;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: {cloud_iprep_silent}
-X-KSE-AntiSpam-Info: ApMailHostAddress: 78.37.41.175
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/05/2024 08:07:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/5/2024 3:38:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The expression htotal * vtotal can have a zero value 
-on overflow. It is necessary to prevent division by
-zero like in fb_var_to_videomode().
+Conor Dooley <conor.dooley@microchip.com> writes:
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
+> On Tue, Mar 05, 2024 at 08:33:30AM +0530, Anup Patel wrote:
+>> On Tue, Mar 5, 2024 at 1:54=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kern=
+el.org> wrote:
+>> >
+>> > Conor Dooley <conor@kernel.org> writes:
+>> >
+>> > > On Thu, Feb 29, 2024 at 01:10:56PM +0100, Alexandre Ghiti wrote:
+>> > >> For now, we use stop_machine() to patch the text and when we use IP=
+Is for
+>> > >> remote icache flushes (which is emitted in patch_text_nosync()), th=
+e system
+>> > >> hangs.
+>> > >>
+>> > >> So instead, make sure every CPU executes the stop_machine() patching
+>> > >> function and emit a local icache flush there.
+>> > >>
+>> > >> Co-developed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+>> > >> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+>> > >> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>> > >> Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+>> > >
+>> > > What commit does this fix?
+>> >
+>> > Hmm. The bug is exposed when the AIA IPI are introduced, and used
+>> > (instead of the firmware-based).
+>> >
+>> > I'm not sure this is something we'd like backported, but rather a
+>> > prerequisite to AIA.
+>> >
+>> > @Anup @Alex WDYT?
+>> >
+>>=20
+>> The current text patching never considered IPIs being injected
+>> directly in S-mode from hart to another so we are seeing this
+>> issue now with AIA IPIs.
+>>=20
+>> We certainly don't need to backport this fix since it's more
+>> of a preparatory fix for AIA IPIs.
+>
+> Whether or not this is backportable, if it fixes a bug, it should get
+> a Fixes: tag for the commit that it fixes. Fixes: isn't "the backport"
+> tag, cc: stable is.
 
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
----
- drivers/video/fbdev/core/fbmon.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core/fbmon.c
-index 79e5bfbdd34c..bd98b138da6a 100644
---- a/drivers/video/fbdev/core/fbmon.c
-+++ b/drivers/video/fbdev/core/fbmon.c
-@@ -1311,7 +1311,7 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
- int fb_videomode_from_videomode(const struct videomode *vm,
- 				struct fb_videomode *fbmode)
- {
--	unsigned int htotal, vtotal;
-+	unsigned int htotal, vtotal, hfreq;
- 
- 	fbmode->xres = vm->hactive;
- 	fbmode->left_margin = vm->hback_porch;
-@@ -1345,7 +1345,8 @@ int fb_videomode_from_videomode(const struct videomode *vm,
- 		 vm->vsync_len;
- 	/* prevent division by zero */
- 	if (htotal && vtotal) {
--		fbmode->refresh = vm->pixelclock / (htotal * vtotal);
-+		hfreq = vm->pixelclock / htotal;
-+		fbmode->refresh = hfreq / vtotal;
- 	/* a mode must have htotal and vtotal != 0 or it is invalid */
- 	} else {
- 		fbmode->refresh = 0;
--- 
-2.34.1
-
+I guess the question is if this *is* a fix, or rather a change required
+for AIA (not a fix).
