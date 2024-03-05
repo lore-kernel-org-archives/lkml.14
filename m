@@ -1,139 +1,131 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5507F46B;
-	Tue,  5 Mar 2024 08:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988FB7EEE1
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709626229; cv=none; b=X2OdA5lzHRWvtEq0DpxIPRUMOuIeMT/01Ep6y/jwEj9k7EUiLqkCjEziC1zap4UHfE7nj16GUO4iYlnEXbxsx8NcJK+ErO+RHREP/1hLxK2iSnJ4KaVRVgCrTEj4SO5Ewq2HyI/9JTe+uBpTU0RUvm0LytPjF6dqIzAOaG3Em8s=
+	t=1709626337; cv=none; b=OJStRsNmh1bwgPS2d9AogmpgkM3tuxP4NbJXuh0VZp500vqfNEAGPxMgBfwvS4mlq0aGuupwfOLVGoPHaFrs7xGKLLp9czrKC+LLQ3fqHQTP2SzVXfn2fCS5X27uisKTjwiD7KrxwxPBK9SNmauMej6yfZ2W7d/iy3cQdheehyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709626229; c=relaxed/simple;
-	bh=iAFz1Dwqp2+si5SzlNkTHCdkyeUK8/aZtCcMKnD2piU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pciLBrpHXdQPtRPa9K+oThiL2y8JV1Fy/pHyGuSZKBRw/N+jdgOgxm/Q2w1zkso7qQr5y1oQOs9SYeBCYtq/b5QV/+n6eOKIhfGXZvZ2UZLUnQy8DOBN3ZkYY/wr97e7zIUYLjVRG4TGgXNHl3M2wBzn0T676oGyWyDtTeYx1Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.12.27] (g027.RadioFreeInternet.molgen.mpg.de [141.14.12.27])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6C11361E5FE01;
-	Tue,  5 Mar 2024 09:08:30 +0100 (CET)
-Message-ID: <c0e648ea-d73e-4805-a2bb-b02ddd3ca4e2@molgen.mpg.de>
-Date: Tue, 5 Mar 2024 09:08:29 +0100
+	s=arc-20240116; t=1709626337; c=relaxed/simple;
+	bh=NA41xUYJ0YMoD6hYkBcTSkjWUaJcxDDJPXNtIoNlDEk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o9H9LuC0nNvs489QNrWJYkEUKHp2Ak4s4yMAut+nKyA8lfxfamffTlQwsrHXB9ipBitCboZvjO5J8AD1LbpwAM4RNQRtoXyGIFHubzrCwmjnyhr8SedOn5aIyJh91CbaTotgTTdhuF7Gw/fgjqwzPp70TIhVMISpz3pSnqOkMeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AgZWEaVD; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AgZWEaVD"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so7835144a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 00:12:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709626334; x=1710231134; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O3A/EAinpsgQWxTIMJ6yuX1WTjY1XiN+9FGOszAcRco=;
+        b=AgZWEaVDMknjAsMuv1FKcN7RWKnMDWuyN4lpewxytVPw5vx3MserZdKrWamPD9Mamb
+         YTlEUZGnfIetyTIGbtiyxRuwZ33aW2RL9IQIIU8HjgueypcJjFOwpGAEbW93x1MFrFq0
+         4AbWTBRRO4cPA4U1prnPv9pgpttckLxgz1xsSx95yzhKkoN++khFz3E/cxzxYdkZynUk
+         Lsvw8iW/SNUipyiCs+IjrIivYTIN59X1UBox7mCgyRNW20QMCPzJdjHvQcZ2+NYXZ9V9
+         mqa5DtriRU92xGBiIduzy883zJL+gVyIT7EDFIW/424YaNhjFwENKCEf+CJVsI6TEXrH
+         yrFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709626334; x=1710231134;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O3A/EAinpsgQWxTIMJ6yuX1WTjY1XiN+9FGOszAcRco=;
+        b=GvSKzP2L73umSX2/v8m0GUmuBiQ8R+Itrk6Iyvg3g6pVsHu3vt69yz4VG4ruzOu2d8
+         REIacZjZ0t88UQlO6eWeaoyNcn7jq86l+Fz8aSNaj7J2ja5vgFBkOg2tAfhga5VRYnkD
+         fXq+mTKGouSEPKgufouNZ7f+/kkN5PpwDvf/luo28OAO9XmiWWgH+GICGg/VKm4zqjey
+         yXJFDGRUQzueAZlqSf6WWz2HAlhdcxXmtFh+BBadJ24OY7drfRHSLkGpRJJi4K6u+hn7
+         oHZvUtGQLlc6VU63vyzGWuV15xHsf7Hz2LCOju2gHRfi80/pY773QDFEJm/lT7tnVzlB
+         8mpw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcnUxcB9P2X7KnfIbkdrHQ2PC1VUzKXpviR/Ur2hoszvg/a2swgOXV2s7oQjeHLWHqciF3vKQ7JN2bWOf1lyNoGacLILW6ua3RDwAm
+X-Gm-Message-State: AOJu0YwR9qHGMqW3htdyHcAj8i6Wc+tCwx/bpwyo7OwNiyWZSpk8EJ7J
+	8DMBWHIbQ14Ena506NnpLemESvEwTvL/vIKh2f9rY6WD0D/TIuiwl1qE8gfRq0i6xNdmV+C0ogq
+	8
+X-Google-Smtp-Source: AGHT+IHvfrycnRsoZbXowUc2gzxlYIB4odgKPVGzXcP83qjOfADAzdEhMwsO4VKb1yKnJHztwRB7jQ==
+X-Received: by 2002:a05:6402:17db:b0:566:41f4:a0ea with SMTP id s27-20020a05640217db00b0056641f4a0eamr7342577edy.37.1709626333890;
+        Tue, 05 Mar 2024 00:12:13 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id cq16-20020a056402221000b005672a346a8fsm2761557edb.57.2024.03.05.00.12.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 00:12:13 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 0/7] backlight: Simplify probe in few drivers
+Date: Tue, 05 Mar 2024 09:11:55 +0100
+Message-Id: <20240305-backlight-probe-v2-0-609b0cf24bde@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH md-6.8 v2 2/9] md: export helpers to stop sync_thread
-Content-Language: en-US
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, zkabelac@redhat.com, agk@redhat.com, snitzer@kernel.org,
- mpatocka@redhat.com, dm-devel@lists.linux.dev, song@kernel.org,
- yukuai3@huawei.com, heinzm@redhat.com, jbrassow@redhat.com, neilb@suse.de,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com
-References: <20240305072306.2562024-1-yukuai1@huaweicloud.com>
- <20240305072306.2562024-3-yukuai1@huaweicloud.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240305072306.2562024-3-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMvT5mUC/3WNQQqDMBBFryKz7pQkagpd9R7FhZqJDhUjEwktk
+ rs3dd/le/DfPyCSMEW4VwcIJY4c1gLmUsE49+tEyK4wGGUaVasGh358LTzNO24SBsJaOyJNnqw
+ 1UFabkOf3WXx2hWeOe5DPeZD0z/5vJY0KqfXtzSnnLdnHwmsv4Rpkgi7n/AXzJuZ7rwAAAA==
+To: Lee Jones <lee@kernel.org>, 
+ Daniel Thompson <daniel.thompson@linaro.org>, 
+ Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
+Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1302;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=NA41xUYJ0YMoD6hYkBcTSkjWUaJcxDDJPXNtIoNlDEk=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBl5tPVGtrbAtNymcJcqPS8RdWTQCnBB6XqA2oyK
+ IoVP3o+JlKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZebT1QAKCRDBN2bmhouD
+ 11a6D/oCkJmOBb/REyIVR7/UoJl+wJNV70fc2JUAMC0ZNw7J+WJtbOaaolizi7a0aFCspcu5QSu
+ ZzsvcpbIm7Bgm8E5aS88V+d/AqEajMyuumKROdHfiPc9aUCTmp1KRMfAxQjHFc+O4xfW7Aim/Z8
+ qxfjRRGfXd+kVUDToItIu3ohS0jqWW3ScElQXK8RtdJL9SHWES5YTCTvjNhIplx0qY2VGm/UnUA
+ Gm0XlD5kZMJi23Ezx1m3TSec3xnNokZdu7EGvHYpe3vxYtOb4cFAAMGLsBGVCtKhIUB7aC8cKid
+ fF6NC4AOocPNHMqKCfDObUlpypdfodV91i24C05ejcw0vaG7q73kU6AbNIrBmjLJy5zOl7f/lhH
+ rl6Aruyw1dsg+92+R9r4AEY5H/7VEtaMoUh4HJ9ytDEnATk3amNzSJehfbA9N7h+TbgRyTmc8ut
+ l4xgRvpB+fVGn5HTGassKARss52v7pKqE9tCjMtcLpAJhHT8BbbyOWgv5kc0EYYX0AC1MHc0F+V
+ iiX1wUxNqTvFxBczhG/YF/omVLKWQGDD/i5LzVwhRna323AizMD4ghANLXaTkEJFKEaHbkHXsAa
+ N/yAVP3KnJYG1ncyn5VQ9xWsCtFdbcy9ucDwdSiUE2MrrunER7MRqFJSjA/6lHznwH8JBvUNF27
+ eE6fCO3SwnquZzQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Dear Kuai,
+Hi,
 
+Simplify old code in few backlight drivers.
 
-Thank you for your patch.
+Changes in v2
+=============
+1. Patch #1: Drop "Error :" msg.
+2. Add Rb tags.
+Link to v1: https://lore.kernel.org/r/20240304-backlight-probe-v1-0-e5f57d0df6e6@linaro.org
 
-Am 05.03.24 um 08:22 schrieb Yu Kuai:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> The new heleprs will be used in dm-raid in later patches to fix
+Best regards,
+Krzysztof
 
-hel*pe*rs
+---
+Krzysztof Kozlowski (7):
+      backlight: gpio: Simplify with dev_err_probe()
+      backlight: l4f00242t03: Simplify with dev_err_probe()
+      backlight: bd6107: Handle deferred probe
+      backlight: as3711_bl: Handle deferred probe
+      backlight: lm3630a_bl: Handle deferred probe
+      backlight: lm3630a_bl: Simplify probe return on gpio request error
+      backlight: pandora_bl: Drop unneeded ENOMEM error message
 
-> regressions and prevent calling md_reap_sync_thread() directly.
+ drivers/video/backlight/as3711_bl.c      |  6 ++----
+ drivers/video/backlight/bd6107.c         |  9 +++------
+ drivers/video/backlight/gpio_backlight.c | 10 +++-------
+ drivers/video/backlight/l4f00242t03.c    | 34 +++++++++++++-------------------
+ drivers/video/backlight/lm3630a_bl.c     | 13 +++++-------
+ drivers/video/backlight/pandora_bl.c     |  4 +---
+ 6 files changed, 28 insertions(+), 48 deletions(-)
+---
+base-commit: 1870cdc0e8dee32e3c221704a2977898ba4c10e8
+change-id: 20240304-backlight-probe-31dee1efe662
 
-Please list the new functions.
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-1.  md_idle_sync_thread(struct mddev *mddev);
-2.  md_frozen_sync_thread(struct mddev *mddev);
-3.  md_unfrozen_sync_thread(struct mddev *mddev);
-
-I do not like the naming so much. `md_reap_sync_thread()` has the verb 
-in imperative mood. At least myself, I would not know what the functions 
-do exactly without looking at the implementation.
-
-
-Kind regards,
-
-Paul
-
-
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> Signed-off-by: Xiao Ni <xni@redhat.com>
-> Acked-by: Mike Snitzer <snitzer@kernel.org>
-> ---
->   drivers/md/md.c | 29 +++++++++++++++++++++++++++++
->   drivers/md/md.h |  3 +++
->   2 files changed, 32 insertions(+)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 23f31fd1d024..22e7512a5b1e 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -4919,6 +4919,35 @@ static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
->   		mddev_lock_nointr(mddev);
->   }
->   
-> +void md_idle_sync_thread(struct mddev *mddev)
-> +{
-> +	lockdep_assert_held(&mddev->reconfig_mutex);
-> +
-> +	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
-> +	stop_sync_thread(mddev, true, true);
-> +}
-> +EXPORT_SYMBOL_GPL(md_idle_sync_thread);
-> +
-> +void md_frozen_sync_thread(struct mddev *mddev)
-> +{
-> +	lockdep_assert_held(&mddev->reconfig_mutex);
-> +
-> +	set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
-> +	stop_sync_thread(mddev, true, false);
-> +}
-> +EXPORT_SYMBOL_GPL(md_frozen_sync_thread);
-> +
-> +void md_unfrozen_sync_thread(struct mddev *mddev)
-> +{
-> +	lockdep_assert_held(&mddev->reconfig_mutex);
-> +
-> +	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
-> +	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
-> +	md_wakeup_thread(mddev->thread);
-> +	sysfs_notify_dirent_safe(mddev->sysfs_action);
-> +}
-> +EXPORT_SYMBOL_GPL(md_unfrozen_sync_thread);
-> +
->   static void idle_sync_thread(struct mddev *mddev)
->   {
->   	mutex_lock(&mddev->sync_mutex);
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 8d881cc59799..437ab70ce79b 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -781,6 +781,9 @@ extern void md_rdev_clear(struct md_rdev *rdev);
->   extern void md_handle_request(struct mddev *mddev, struct bio *bio);
->   extern int mddev_suspend(struct mddev *mddev, bool interruptible);
->   extern void mddev_resume(struct mddev *mddev);
-> +extern void md_idle_sync_thread(struct mddev *mddev);
-> +extern void md_frozen_sync_thread(struct mddev *mddev);
-> +extern void md_unfrozen_sync_thread(struct mddev *mddev);
->   
->   extern void md_reload_sb(struct mddev *mddev, int raid_disk);
->   extern void md_update_sb(struct mddev *mddev, int force);
