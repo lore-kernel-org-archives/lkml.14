@@ -1,108 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340BC4F207
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093185102B
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709628404; cv=none; b=trT5DASAPpHxKOQUWH6v2DG2c6PwCIeyACBHFLlW5Joz+FeA0JFEjTpH40zYo95DlihSX6sZGATf4DmwOi+DwhzauTxtt2AE9PMVpX5DjUaucQfEOgzqvO+u/seUXOPmrYA02S+dDTzgM4zTFCPfIW3wwEoCEg0i/v1DdmNwdUM=
+	t=1709628421; cv=none; b=Yjgr7U2DeyG/DGSVSFT0YWExoXDf+i9ed2nEe/ma9Bh74QU5ptArGTTTiSCWDjyOBEyaL+0536cDSm6/2NTUaUKVBc8ikKUzHTlIWP/nE3ETlu8mBZU6POCjqzOfEg0KRfBUe9Q8q/VguPj8zSmd6Yx8LYjSBOGIwfzWZIFXqFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709628404; c=relaxed/simple;
-	bh=ACsKrMA09PUjUMvCgOJSi9nrek+2aX3HxwzXtRSHH44=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=unx5oHZ77RdmhJCrhOZX+6kki7WbbwMDpVyPy2vhV3FWDaaY49l4NT7RUDs97IuqoePM/xihOYnupksLFT8SWgE7S2U0VY4OuWD1wTKB2f+G+EUED1RmuQI2aAdlrwViqQ2CPcwyUWDpbhWi3Kf3PARzdWAqqeJGgDspXQUWGFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J0TroF50; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709628421; c=relaxed/simple;
+	bh=ypBAMq1xD122eQYCVVu/e4bhCUfHMyxBwy6PiUei7ls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FkI+d57CiEKAzUfCcEGCozjr2xWy18jZRiJ241SzbpiPgnpbgrEsNfv8Tds+x2+4XyHXvYsi0Ro92OZlqzmQkYXJxZvw0YjeABCYJKOuDOyGORYpbKyN2XXjQATo8RXjS9eOjVy5pCedNJnY9Y17XEJtkkeW1gzjlJIqPtcNfjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=exzf0ZN0; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0TroF50"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B17AC43390
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 08:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709628403;
-	bh=ACsKrMA09PUjUMvCgOJSi9nrek+2aX3HxwzXtRSHH44=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=J0TroF50rN1LKLAwhhj+Ru4NJ+V9qhaqERzNZ+5PN3nasWgWmEL0PmiNaRrGwFReW
-	 dzk68Qtlo/H2zPSiDyUrL5UCuN1yMGP69cbfHx+Z5z2DQ3TWabxti//zaxjNxYMnnu
-	 JwyNcd9cZFP85orq6GY67A7A3n1HPunuWEYpz15tdIKO+iPF7NwxmUszb14LSrdzgo
-	 ebmXQaqzK9Pe7kuqb17nz7fnoCkds8wj37HVafslPqqZA/a1AT58f8xwl7Z3DPAZl/
-	 nPMARBnEO2Kh38eMYtlCsXwpz6ihgRPzybMFspvsG2DQuHZHfy1RB/FF66m58YtQu6
-	 9BvYHVZddrsVw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51340e89df1so2648429e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 00:46:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUufl4THWK+ddEd85fV/GVyUdCq5J5+xgZDTSACOzlds8rL3e9MMqyjV1wk/4KS56Ga7c4oOu0c44gfr+G7iK2iPsElR91y0BTwXT4E
-X-Gm-Message-State: AOJu0YyFBVFO4NXghrnjaQw9fwuFv2WJu+u1nc2s1QVELqF+0v0Pie+W
-	T2AXwVO6ytbQ3kspe0W/ywLrtNwQvzr7kCI6YR/kgeIAoQ9yf9+sbiUd5V/JOfUexMwC9YP93m2
-	zewO5ZuE6RQfdL/W8OUvzoAHSoCU=
-X-Google-Smtp-Source: AGHT+IF0MQwV5y4P9mqykzEKCfwao701q6Hj8pGvOieWkxsFb0NCYF9NGDXwTCs3gYB5DJWrnxC4U6lxdrrkPM9h/+A=
-X-Received: by 2002:a19:3846:0:b0:513:3e1a:75af with SMTP id
- d6-20020a193846000000b005133e1a75afmr680525lfj.16.1709628401830; Tue, 05 Mar
- 2024 00:46:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="exzf0ZN0"
+Date: Tue, 5 Mar 2024 08:46:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1709628415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFrbfdZsWF6FXVs3YMWczDqjRAtMwJZL7VFOKOOlg+8=;
+	b=exzf0ZN0e5j8rMXz84wObFPRDcs6l2hsX6ODjXb4yQ9XbrZ5cOhDSPVnhoEilxaX/AXwaG
+	JuKcJjNVUN2eFnRsS3Vdg+kvZKp8irQlGJQSsKMKZ971NA5s7tOzMQ1dEcqFM7GC1gBe9M
+	rYwzzXADn1SJ13vRZk4LoTRzQpZZNfE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Cc: kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	maz@kernel.org, darren@os.amperecomputing.com,
+	d.scott.phillips@amperecomputing.com,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [RFC PATCH] kvm: nv: Optimize the unmapping of shadow S2-MMU
+ tables.
+Message-ID: <Zebb9CyihqC4JqnK@linux.dev>
+References: <20240305054606.13261-1-gankulkarni@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227151907.387873-11-ardb+git@google.com> <8b412f69-a08a-51cb-8223-ed1933031d5e@amd.com>
- <CAMj1kXFgUNDusUzVKh=2Mn802+x+0iop7O-aEZH0iuQtdOAFcw@mail.gmail.com> <1e40efa3-3d16-4fc6-8686-2bcb254c7c5e@amd.com>
-In-Reply-To: <1e40efa3-3d16-4fc6-8686-2bcb254c7c5e@amd.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 5 Mar 2024 09:46:30 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH9um-r09AGk7E4h+OHGUYWxvmqGM4QBUOhAnTg3T8yOw@mail.gmail.com>
-Message-ID: <CAMj1kXH9um-r09AGk7E4h+OHGUYWxvmqGM4QBUOhAnTg3T8yOw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/9] x86: Confine early 1:1 mapped startup code
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	Kevin Loughlin <kevinloughlin@google.com>, Dionna Glaze <dionnaglaze@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Brian Gerst <brgerst@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305054606.13261-1-gankulkarni@os.amperecomputing.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 4 Mar 2024 at 23:41, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->
-> On 3/4/24 13:13, Ard Biesheuvel wrote:
-> > On Mon, 4 Mar 2024 at 18:07, Tom Lendacky <thomas.lendacky@amd.com> wrote:
-> >>
-> >> On 2/27/24 09:19, Ard Biesheuvel wrote:
-> >>> From: Ard Biesheuvel <ardb@kernel.org>
-> >>>
-> >>> This is resend #2 of v5 [0] with some touchups applied.
-> >>>
-> >>> Changes since v6:
-> >>> - Drop flawed patch to move some SME/SEV related calls out of the early
-> >>>     boot path to avoid the potential need for backporting patches #6/#7
-> >>>     to kernels where SEV support may not be crucial. This problem will be
-> >>>     dealt with if/when it arises while doing those backports.
-> >>>
-> >>> Changes since v5:
-> >>> - drop patches that have been merged
-> >>> - rebase onto latest tip/x86/boot
-> >>> - fix comment regarding CR4.PGE wrt flushing of global TLB entries
-> >>> - avoid adding startup code to .noinstr.text as it triggers objtool
-> >>>     warnings
-> >>>
-> >>> [0] https://lore.kernel.org/all/20240221113506.2565718-18-ardb+git@google.com/
-> >>>
-> >>> Cc: Kevin Loughlin <kevinloughlin@google.com>
-> >>> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> >>> Cc: Dionna Glaze <dionnaglaze@google.com>
-> >>> Cc: Thomas Gleixner <tglx@linutronix.de>
-> >>> Cc: Ingo Molnar <mingo@redhat.com>
-> >>> Cc: Borislav Petkov <bp@alien8.de>
-> >>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> >>> Cc: Andy Lutomirski <luto@kernel.org>
-> >>> Cc: Brian Gerst <brgerst@gmail.com>
-> >>
-> >> For the series, tested bare metal boots with mem_encrypt=on /
-> >> mem_encrypt=off and boots of SVM, SEV, SEV-ES and SEV-SNP guests.
-> >>
-> >> Tested-by: Tom Lendacky <thomas.lendacky@amd.com>
-> >>
-> >
-> > Thanks a lot! I take it this was a kernel built with GCC?
->
-> Yes, it was a GCC build, so I went back and rebuilt with Clang-14 and
-> everything was fine there, too.
->
+-cc old kvmarm list
++cc new kvmarm list, reviewers
 
-OK, thanks again.
+Please run scripts/get_maintainer.pl next time around so we get the
+right people looking at a patch.
+
+On Mon, Mar 04, 2024 at 09:46:06PM -0800, Ganapatrao Kulkarni wrote:
+> @@ -216,6 +223,13 @@ struct kvm_s2_mmu {
+>  	 * >0: Somebody is actively using this.
+>  	 */
+>  	atomic_t refcnt;
+> +
+> +	/*
+> +	 * For a Canonical IPA to Shadow IPA mapping.
+> +	 */
+> +	struct rb_root nested_mapipa_root;
+
+There isn't any benefit to tracking the canonical IPA -> shadow IPA(s)
+mapping on a per-S2 basis, as there already exists a one-to-many problem
+(more below). Maintaining a per-VM data structure (since this is keyed
+by canonical IPA) makes a bit more sense.
+
+> +	rwlock_t mmu_lock;
+> +
+
+Err, is there any reason the existing mmu_lock is insufficient here?
+Surely taking a new reference on a canonical IPA for a shadow S2 must be
+done behind the MMU lock for it to be safe against MMU notifiers...
+
+Also, Reusing the exact same name for it is sure to produce some lock
+imbalance funnies.
+
+>  };
+>  
+>  static inline bool kvm_s2_mmu_valid(struct kvm_s2_mmu *mmu)
+> diff --git a/arch/arm64/include/asm/kvm_nested.h b/arch/arm64/include/asm/kvm_nested.h
+> index da7ebd2f6e24..c31a59a1fdc6 100644
+> --- a/arch/arm64/include/asm/kvm_nested.h
+> +++ b/arch/arm64/include/asm/kvm_nested.h
+> @@ -65,6 +65,9 @@ extern void kvm_init_nested(struct kvm *kvm);
+>  extern int kvm_vcpu_init_nested(struct kvm_vcpu *vcpu);
+>  extern void kvm_init_nested_s2_mmu(struct kvm_s2_mmu *mmu);
+>  extern struct kvm_s2_mmu *lookup_s2_mmu(struct kvm_vcpu *vcpu);
+> +extern void add_shadow_ipa_map_node(
+> +		struct kvm_s2_mmu *mmu,
+> +		phys_addr_t ipa, phys_addr_t shadow_ipa, long size);
+
+style nitpick: no newline between the open bracket and first parameter.
+Wrap as needed at 80 (or a bit more) columns.
+
+> +/*
+> + * Create a node and add to lookup table, when a page is mapped to
+> + * Canonical IPA and also mapped to Shadow IPA.
+> + */
+> +void add_shadow_ipa_map_node(struct kvm_s2_mmu *mmu,
+> +			phys_addr_t ipa,
+> +			phys_addr_t shadow_ipa, long size)
+> +{
+> +	struct rb_root *ipa_root = &(mmu->nested_mapipa_root);
+> +	struct rb_node **node = &(ipa_root->rb_node), *parent = NULL;
+> +	struct mapipa_node *new;
+> +
+> +	new = kzalloc(sizeof(struct mapipa_node), GFP_KERNEL);
+> +	if (!new)
+> +		return;
+
+Should be GFP_KERNEL_ACCOUNT, you want to charge this to the user.
+
+> +
+> +	new->shadow_ipa = shadow_ipa;
+> +	new->ipa = ipa;
+> +	new->size = size;
+
+What about aliasing? You could have multiple shadow IPAs that point to
+the same canonical IPA, even within a single MMU.
+
+> +	write_lock(&mmu->mmu_lock);
+> +
+> +	while (*node) {
+> +		struct mapipa_node *tmp;
+> +
+> +		tmp = container_of(*node, struct mapipa_node, node);
+> +		parent = *node;
+> +		if (new->ipa < tmp->ipa) {
+> +			node = &(*node)->rb_left;
+> +		} else if (new->ipa > tmp->ipa) {
+> +			node = &(*node)->rb_right;
+> +		} else {
+> +			write_unlock(&mmu->mmu_lock);
+> +			kfree(new);
+> +			return;
+> +		}
+> +	}
+> +
+> +	rb_link_node(&new->node, parent, node);
+> +	rb_insert_color(&new->node, ipa_root);
+> +	write_unlock(&mmu->mmu_lock);
+
+Meh, one of the annoying things with rbtree is you have to build your
+own search functions...
+
+It would appear that the rbtree intends to express intervals (i.e. GPA +
+size), but the search implementation treats GPA as an index. So I don't
+think this works as intended.
+
+Have you considered other abstract data types (e.g. xarray, maple tree)
+and how they might apply here?
+
+> +bool get_shadow_ipa(struct kvm_s2_mmu *mmu, phys_addr_t ipa, phys_addr_t *shadow_ipa, long *size)
+> +{
+> +	struct rb_node *node;
+> +	struct mapipa_node *tmp = NULL;
+> +
+> +	read_lock(&mmu->mmu_lock);
+> +	node = mmu->nested_mapipa_root.rb_node;
+> +
+> +	while (node) {
+> +		tmp = container_of(node, struct mapipa_node, node);
+> +
+> +		if (tmp->ipa == ipa)
+> +			break;
+> +		else if (ipa > tmp->ipa)
+> +			node = node->rb_right;
+> +		else
+> +			node = node->rb_left;
+> +	}
+> +
+> +	read_unlock(&mmu->mmu_lock);
+> +
+> +	if (tmp && tmp->ipa == ipa) {
+> +		*shadow_ipa = tmp->shadow_ipa;
+> +		*size = tmp->size;
+> +		write_lock(&mmu->mmu_lock);
+> +		rb_erase(&tmp->node, &mmu->nested_mapipa_root);
+> +		write_unlock(&mmu->mmu_lock);
+> +		kfree(tmp);
+> +		return true;
+> +	}
+
+Implicitly evicting the entry isn't going to work if we want to use it
+for updates to a stage-2 that do not evict the mapping, like write
+protection or access flag updates.
+
+-- 
+Thanks,
+Oliver
