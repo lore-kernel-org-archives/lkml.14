@@ -1,115 +1,115 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3807C4CB2E
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D52F10A1B
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709631712; cv=none; b=Er3EDIpJTFlZgdJdBcfeDkfh8AsLzOFvVH9KPovdDKcL4zFPMwA6LPTdfKolihg8vhHLz/B9v+SJ9Q/lSXDMMAbcw5VVt377PVa6Zpay7xgWFuHw5KCPUmmqYDfwuEuUILKb3ZnA2PR5DTz+2eEiX0saLrpnG/L/aL0rmXk2pI0=
+	t=1709631992; cv=none; b=SoBh/ovNTVUkC332CPCeLV6ZltQYm7ahloG+hQp40PzPX4umiDHftgdhA16f4kOJdm0eu0fc/jB/ErUPJb+dVVe0g4VxPvAtcXP1FDVwy7MM08pEh3Wb7YNUG+DHOCW2X7BA8Lt9WwkcJ54rruMfyRFB5p7e40BAphB4aFGd7ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709631712; c=relaxed/simple;
-	bh=Z2qwct6XTybj5nj/8GILqcSdKhOgcrszVOS6anSnpTM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sMsp1x3a2NB0qrh8rKucN9UZVFF6EepDl68Ij1e0vvmAgPU1rlU3thFrK74r6lCshLSWOTZTKQuDGlCF3YE/wQfYQE8Fwqo358oOmzpbE0nSdnISZx13MLlU9RxM3JrmVjXiVoEEbekFxnsh/BI1fCuF+yMKsmeJWSnh9i42CyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.216.46])
-	by gateway (Coremail) with SMTP id _____8AxeejU6OZlmbIUAA--.32398S3;
-	Tue, 05 Mar 2024 17:41:42 +0800 (CST)
-Received: from mail-pj1-f46.google.com (unknown [209.85.216.46])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPs_S6OZlEXVOAA--.11212S3;
-	Tue, 05 Mar 2024 17:41:39 +0800 (CST)
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-29a5f100c1aso3194785a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 01:41:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWTYfN4lRfVB4cGEfQqPWjUWTvcgLoge/ads7W8ZPXQMkoRqpW9vB6iLdq5YK++kHSdp04ZGk0I8jvW4jBwA+w/6ohslQQiMtyQAXTl
-X-Gm-Message-State: AOJu0YySYoyF5yIVDt2G9yRxFsyHw7ut5cr0WLcDeLvuYtvlHE0ISUiE
-	IavWi2beyLsHEKwWq9tiuclMrbesQQOH8Yp2rJghMrigmE+CK7GA+9JIZqQRb0C/jilhTFBibCF
-	Qo9CtFXA5zEMziZRAp+u9wFgrVnWf2u2ehD3NWQ==
-X-Google-Smtp-Source: AGHT+IFCOgUQy6Yrg/hGm/YPDL5pf6cIPrfQwg8VzhOdB0PFiQXbjuVLpWWugLmSn2Wclxftxj3A7UzLgXYKuu6Ie90=
-X-Received: by 2002:a25:1803:0:b0:dc6:aebb:168e with SMTP id
- 3-20020a251803000000b00dc6aebb168emr8119664yby.26.1709622525779; Mon, 04 Mar
- 2024 23:08:45 -0800 (PST)
+	s=arc-20240116; t=1709631992; c=relaxed/simple;
+	bh=j5Pt77CTd32TV8V7ZreeJ0uz8eAWYRbZtaIoc5KmXBY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QNEVmcO+yWdY7cE4Ij7H0Mof9T5fD/Ic1TVnQwk2mD7ow1Nys1gZxNc5Rnxsd8GeywtUI+oJmvNfu4JsJLR5PiMlNnE+tG2fq/ZXB24BT45nOMQz8eUig6aLKGt71CA4pUyU4mSv/5NArRLLkK1FJ2hzFWWtD/vSEsvwhpR/hB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GLYhEu1+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GLYhEu1+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709631989;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qlPaL+1qbcMigBEz3qx7ZtCPheah+YYYXpFOCWieYr8=;
+	b=GLYhEu1+hME+iqok95p+rtcKGdoOo1Irig4gUSqYV02/yb8r0EBnoHBVbS/knD3nndbDdH
+	txk6p6XL8JVxXhTXOco3ZgxULty7z9FkMEyXPLOF3Ol8HplwFo6ZtB8cRaEU0IJN77Ad+c
+	a85YvFfsH/4ED56hezk2fcwTcHoCyE4=
+Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com
+ [209.85.221.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-26-g4k60Z-VPdyANI5Uv64S9A-1; Tue, 05 Mar 2024 04:46:28 -0500
+X-MC-Unique: g4k60Z-VPdyANI5Uv64S9A-1
+Received: by mail-vk1-f197.google.com with SMTP id 71dfb90a1353d-4d378b792ebso2342891e0c.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 01:46:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709631987; x=1710236787;
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qlPaL+1qbcMigBEz3qx7ZtCPheah+YYYXpFOCWieYr8=;
+        b=SVJELeyy+eRq30T2Z1w7Ewng6V+DKaxywZNAeG01Jjwh5kpscUwPCcbK9e7wnmJRpT
+         2u6WnNyA0orKSbjtWpF5jO1tnM4a9qNQi0K3wfULZCZb3wUrtJWGddNK39pQ1vRK4wwy
+         rpYPAp5xmalphRk/aYxfIdoX1z39Wp2W/JmRD4wmwMw+MvCIv+rlPpDG6wiKsNW3pEBa
+         B4kTy7qs33p01xLnSMvj9xeQtvknQfy7cygP1BoTI+kvPcQvq01zppFbiH44iGyXVJnn
+         F/mts6DlkbQPHl8eRaAD7zk5RwJcdWzACeSwkDAlSn3WbEeyi1Sgb/4vz8ZXXV+v7Ref
+         jPUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrWVOfc6zkEarW0dnH6ZJkWoMIygQPIDRsRpqRUZh2/B46/GKQ7UJSNg+l5w2TU9TP+IJUID2BSFkaojF/1lF9tVca7ycEVTzlQPsL
+X-Gm-Message-State: AOJu0YyHTRQWnx5YHHdX04jA3uzpBWl+017Y/kgugq89172nCmrrC/5x
+	qAcrlSP7rtMPkmP5eK9zkxM8nMk9TsGLtsJUFfB3zoBl4A73RZV6q0qv+qSxlWxHkl/LVWEoCP1
+	NkiXklyxPUWatPGd+wx01l/eaxif10zcGeOVJAAIlz86IdlbaXUEmhbmco+22rQ+f52ztkA==
+X-Received: by 2002:a05:620a:5e13:b0:788:33ec:d8a8 with SMTP id xz19-20020a05620a5e1300b0078833ecd8a8mr2119013qkn.19.1709630320804;
+        Tue, 05 Mar 2024 01:18:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFL7ZlquCoZ60Snk3iqt0FcWv+4rmgyNgIzTovW4+l2TWmVx4HZr2FQyZGXyzR6Vzz7p4retg==
+X-Received: by 2002:a05:620a:5e13:b0:788:33ec:d8a8 with SMTP id xz19-20020a05620a5e1300b0078833ecd8a8mr2119001qkn.19.1709630320559;
+        Tue, 05 Mar 2024 01:18:40 -0800 (PST)
+Received: from [10.32.64.131] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id bp9-20020a05620a458900b0078812f8a042sm3635157qkb.90.2024.03.05.01.18.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Mar 2024 01:18:40 -0800 (PST)
+Message-ID: <deaeaceb-bfb0-4dbf-b800-b0debfd3bac9@redhat.com>
+Date: Tue, 5 Mar 2024 10:18:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304141426.163517-1-wangrui@loongson.cn> <CANiq72mvdVrzN19PC8pNrvuBLkOEEQ3yX0WG6JcWc+RVaSM2nA@mail.gmail.com>
-In-Reply-To: <CANiq72mvdVrzN19PC8pNrvuBLkOEEQ3yX0WG6JcWc+RVaSM2nA@mail.gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Tue, 5 Mar 2024 15:08:35 +0800
-X-Gmail-Original-Message-ID: <CAHirt9iNPjHfMRS792E1MHbCQk1v6GnNVcb6LAvhskyyVg8bPw@mail.gmail.com>
-Message-ID: <CAHirt9iNPjHfMRS792E1MHbCQk1v6GnNVcb6LAvhskyyVg8bPw@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: rust: Switch to use built-in rustc target
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8CxPs_S6OZlEXVOAA--.11212S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrtryxWrWkCF48Cw13Gw17urX_yoWkXrb_X3
-	W7Cr1kGF1UuFs7Za48JrWruFn0q345tay3Z3ykXFsrXr95Zan8WFyDGa4av3Zay3yxWFs3
-	Kr1Fvwn8uw12gosvyTuYvTs0mTUanT9S1TB71UUUU8UqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbf8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Cr1j6rxdM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	kF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
-	MxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-	0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
-	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8
-	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Mq2tUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] drm/nouveau: fix stale locked mutex in
+ nouveau_gem_ioctl_pushbuf
+Content-Language: en-US
+To: Karol Herbst <kherbst@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org
+References: <20240304183157.1587152-1-kherbst@redhat.com>
+From: Danilo Krummrich <dakr@redhat.com>
+Organization: RedHat
+In-Reply-To: <20240304183157.1587152-1-kherbst@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 5, 2024 at 12:09=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Mon, Mar 4, 2024 at 3:14=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wro=
-te:
-> >
-> > This commit switches to using the built-in rustc
-> > loongarch64-unknown-none-softfloat target for LoongArch.
-> >
-> > The Rust samples have been tested with this commit.
-> >
-> > Signed-off-by: WANG Rui <wangrui@loongson.cn>
-> > ---
-> > base-commit: ("rust: Refactor the build target to allow the use of buil=
-tin targets")
->
-> I couldn't apply it on top of commit f82811e22b48 in arm64's tree
-> (which is the base? -- the offset differs significantly in the arch
-> Makefile), but I nevertheless applied it manually on top of that one,
-> build-tested it for loongarch64 and boot-tested it for x86_64:
->
-> Acked-by: Miguel Ojeda <ojeda@kernel.org>
-> Tested-by: Miguel Ojeda <ojeda@kernel.org>
+On 3/4/24 19:31, Karol Herbst wrote:
+> If VM_BIND is enabled on the client the legacy submission ioctl can't be
+> used, however if a client tries to do so regardless it will return an
+> error. In this case the clients mutex remained unlocked leading to a
+> deadlock inside nouveau_drm_postclose or any other nouveau ioctl call.
+> 
+> Fixes: b88baab82871 ("drm/nouveau: implement new VM_BIND uAPI")
+> Cc: Danilo Krummrich <dakr@redhat.com>
+> Signed-off-by: Karol Herbst <kherbst@redhat.com>
 
-Oops. The actual base is tag next-20240228. I just want to make it
-clear that this patch needs to be based on ("rust: Refactor the build
-target to allow the use of builtin targets").
+Should add a stable tag for that one, otherwise:
 
-Thanks!
+Reviewed-by: Danilo Krummrich <dakr@redhat.com>
 
-Regards,
-Rui
-
->
-> Thanks!
->
-> Cheers,
-> Miguel
->
+> ---
+>   drivers/gpu/drm/nouveau/nouveau_gem.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+> index 49c2bcbef1299..5a887d67dc0e8 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_gem.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+> @@ -764,7 +764,7 @@ nouveau_gem_ioctl_pushbuf(struct drm_device *dev, void *data,
+>   		return -ENOMEM;
+>   
+>   	if (unlikely(nouveau_cli_uvmm(cli)))
+> -		return -ENOSYS;
+> +		return nouveau_abi16_put(abi16, -ENOSYS);
+>   
+>   	list_for_each_entry(temp, &abi16->channels, head) {
+>   		if (temp->chan->chid == req->channel) {
 
