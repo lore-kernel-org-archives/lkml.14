@@ -1,224 +1,192 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554C17D3FE
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8817D3FE;
+	Tue,  5 Mar 2024 07:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709622839; cv=none; b=jTxOFnHAKa4SontxcGci8ANMr2TsyDsoci51WHBNIIRzKn+5HDNN8JAFEAcVWns4P+rlIWDXYEMJ8edFSsORLoIq16iFvbXdW8WXbi/o5r0l//XwG3ygBNE/eJpMkj13/E1mfhsPYI/fIPTBotah2vKl4zFjREoIjo3KqS6OqKc=
+	t=1709622857; cv=none; b=E9gP+bgxV4SlUWdETaDzK+MCc7oLJR4+mzLpe5X699Gk9KKd0iCQQVEr+rByQEVZX62OXbRobDTDufkbPxxmPeOURD36QDVHD1tzAR1XIDvXC25dZSFykA1kW9uK1st6cg83gKDGL8o4lIQR4ReH7L/+YMSBOR5VIDCilPdxkk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709622839; c=relaxed/simple;
-	bh=qjn1MClIVlhpCS2WnOAUFuK98tnfyfZqG2al78vw7V0=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=ZnOwmwjXn9kIg3X55owsKcveGZheKqdUE6zI65PE5dVt6oxcHnkmha3NJTvPFAf9BdCMAUPuSdN+JUtkFIAnB7bjH+XvJBRUOnelnAtYIONzuCtlUDozERIsMpAt8etPOEr7dpMI8Z8x7oC86et6zB8HOACFPm/ANTe8r5fQBSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WD3c54wF; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1709622857; c=relaxed/simple;
+	bh=SIYTczHVdxaeGArMm3hbe+IIsqq3i7S0WVZ3zb5Tdpk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VmTg2XtLjcBWnavXudby+s+mGqGWDdUTyowmpIx9UkJUCT9xI9RKjuciK3KeOcD3MdG/3akjoo9Qh6iZELxKx+hmeLDFPiNIyzOXHkLmPaB3zjArFh3620oOyKMieaCmG9fo7zt/hT0ZGXG9WNOstYUERcco1YVPzkEKSLDpaas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RcYPXvoe; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WD3c54wF"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240305071354epoutp03df26a0ac99118a0fe226d164e466a955~5zOjm-JzF3198631986epoutp03Z
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:13:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240305071354epoutp03df26a0ac99118a0fe226d164e466a955~5zOjm-JzF3198631986epoutp03Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1709622834;
-	bh=i0/7wU6maBox3QHG8eiO+M+gy+7QDGcXbrlsWy7wG+M=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=WD3c54wFcGAfwInqvBVUAAi0ILHfepVpx6aey81v8G5lwbhvwDYaWAvrdd+w+XEfB
-	 6RvgnL9qQpvWyJJTnVCv63gUjZTUKQfYTz+XfEKLgwAxIFHOwh+F22w1/lmHO6gpVp
-	 gM/vF3ZAbulylHFXO8vc6eAoJjWavBgQKpyKvebg=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240305071353epcas2p23815bcdcce2643b6616dec4e5d6a5933~5zOjYHsSa3266232662epcas2p2V;
-	Tue,  5 Mar 2024 07:13:53 +0000 (GMT)
-Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.88]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Tpmy93G8Gz4x9Q0; Tue,  5 Mar
-	2024 07:13:53 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BB.C5.18994.136C6E56; Tue,  5 Mar 2024 16:13:53 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240305071353epcas2p4187f5e0311d9bd706c863f38ccf13869~5zOifERbV0955809558epcas2p4-;
-	Tue,  5 Mar 2024 07:13:53 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240305071353epsmtrp2ef2112899a60ebcf642de0a5583771c0~5zOiefrY_2507325073epsmtrp2x;
-	Tue,  5 Mar 2024 07:13:53 +0000 (GMT)
-X-AuditID: b6c32a4d-743ff70000004a32-c7-65e6c6311a3f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	CE.34.07368.036C6E56; Tue,  5 Mar 2024 16:13:52 +0900 (KST)
-Received: from KORCO121695 (unknown [10.229.18.202]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240305071352epsmtip2ea348fecbfe8206b300dec36946eac23~5zOiUQ4SZ3111131111epsmtip2Z;
-	Tue,  5 Mar 2024 07:13:52 +0000 (GMT)
-From: "bumyong.lee" <bumyong.lee@samsung.com>
-To: "'karthikeyan'" <karthikeyan@linumiz.com>, <vkoul@kernel.org>
-Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<parthiban@linumiz.com>, <saravanan@linumiz.com>
-In-Reply-To: <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
-Subject: RE: dmaengine: CPU stalls while loading bluetooth module
-Date: Tue, 5 Mar 2024 16:13:52 +0900
-Message-ID: <000001da6ecc$adb25420$0916fc60$@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcYPXvoe"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5658082d2c4so7267237a12.1;
+        Mon, 04 Mar 2024 23:14:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709622854; x=1710227654; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SIYTczHVdxaeGArMm3hbe+IIsqq3i7S0WVZ3zb5Tdpk=;
+        b=RcYPXvoecgP7AKGs75WELWboEyeAfCL5PsVBnVAqmUa7CBbgtg+soUdvC5+oQaGmRF
+         870+T6Wznka/SqNdmD8TbqXh/wMnNchQH0Ri+Xf9M5d66RVMFKhbxoMuwswXmg/0WX53
+         7J9sbPj0Ze3fuRY6haBdWdE8835vOZBvjFkQ4sqocWRk6ohiFqneTd5sdNFhDwqo38wt
+         80qi/S4QQcxOZmhIaBg/KK0qCEstcUbK4s4PwVpaUTMQ/EuJStdVCe3oakkOP1R5i5XM
+         uIlDQVbqH7jnkXApA24J4Se1zX5S/kP6s2jV8PpZyW5uijOgyM9hqfJkc984bMb9aI1+
+         W9IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709622854; x=1710227654;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SIYTczHVdxaeGArMm3hbe+IIsqq3i7S0WVZ3zb5Tdpk=;
+        b=w2w7tSz+K0IOuaoyCg+D+FaccYeXpbWZglvezNug/FEPZ0gpdYqf8ihne1iHTqvvai
+         ZThAlh56iSBvZSA2opLDBvkkzvOAoC3FfFSy6EC1SxHGerOwJs4o5OFFicv+yam+69Vs
+         n3ABZKwBN1FrptQu5RUDCmYWexfygBxTNBLcQ+Gi72pu0a22KqKMhm5iGe9o8ud9/SQG
+         74WRmELELluHzPmvTRQEFiblLH2rb7b0X+e0MGuyGSioe8SgKWin/NrPcFa17cGU00VQ
+         qdBh1Xxb19T6GTt2WsemyZ55ItSggWhBRH1uZ6rBRCghuXjrjAcSfIpdCzsYxnpMwLs3
+         aRqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWD7rPzGGH9Oc4Z4nCTA2f9EHbc/OvSNttn4Il+TWHA1Qh7kEwJkGG7/gAenRuwLd766wkyxrZ3f/Aqh4SKo2VNQrkC/UBpRIlV94rNwl8aORHjpNOeVBAoMtC/DMQjZm5L7jKgNY6VoQ==
+X-Gm-Message-State: AOJu0YyHjjquVV2t3nw9olRnR3LfdzvwW7soKWAIQfr502ChALQGfW/b
+	063LPd3Qt6zERbS0+7pMgLtD78Z1JxR2zGyHjQKf2Q3Inh8BxQCY
+X-Google-Smtp-Source: AGHT+IEpIQj0ZZ8kz+w9e760n/zFqI6d6t5uOCxp1QwEmIpJPs/iv4eB0RULE9ITJoF1PMPtB/aYOw==
+X-Received: by 2002:a50:8dc7:0:b0:566:131a:26ee with SMTP id s7-20020a508dc7000000b00566131a26eemr7127162edh.35.1709622853937;
+        Mon, 04 Mar 2024 23:14:13 -0800 (PST)
+Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
+        by smtp.gmail.com with ESMTPSA id h26-20020aa7c95a000000b005663b0d7243sm5455225edt.83.2024.03.04.23.14.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 23:14:13 -0800 (PST)
+Message-ID: <ca0e141e624edb4f9977ea9f805f74645654bca7.camel@gmail.com>
+Subject: Re: [PATCH v3 0/2] Synchronize DT overlay removal with devlink
+ removals
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh@kernel.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Frank Rowand <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
+ Zhen <max.zhen@amd.com>,  Sonal Santan <sonal.santan@amd.com>, Stefano
+ Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Date: Tue, 05 Mar 2024 08:17:38 +0100
+In-Reply-To: <CAGETcx96Nj1RnR2wFOZYJRr=kyBLkcobY0crxBFSLGWmNaXT4A@mail.gmail.com>
+References: <20240229105204.720717-1-herve.codina@bootlin.com>
+	 <20240304150248.GA211460-robh@kernel.org>
+	 <CAGETcx96Nj1RnR2wFOZYJRr=kyBLkcobY0crxBFSLGWmNaXT4A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMwipOl/cAOi38P2p1VCUOGtvzp0QMWgtoHrmPNqBA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgk+LIzCtJLcpLzFFi42LZdljTQtfw2LNUg0u3hS1WT/3LarFjtabF
-	5V1z2Cx23/7DavFuj6LFzjsnmB3YPDat6mTz2P75FLvH501yAcxR2TYZqYkpqUUKqXnJ+SmZ
-	eem2St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QFuVFMoSc0qBQgGJxcVK+nY2Rfml
-	JakKGfnFJbZKqQUpOQXmBXrFibnFpXnpenmpJVaGBgZGpkCFCdkZVz8HFPyXr5j94RhzA+M8
-	yS5GTg4JAROJzpPTGbsYuTiEBPYwSvRu2M8M4XxilPh9/g8rhPONUeLizg5GmJavr95AJfYy
-	SnR82s8C4bxklDi9v48NpIpNQFdi5suDLCC2iICjxIzPl1hBbGaBYolHTYfAJnEK2Ess6lvE
-	DmILA9X0TpoAVsMioCJx/OZCZhCbV8BSovn0eiYIW1Di5MwnLBBztCWWLXzNDHGRgsTPp8tY
-	IXZZSRy7u4UdokZEYnZnG9g/EgI/2SUWdy1hh2hwkTjw/wIrhC0s8er4Fqi4lMTnd3vZIOx8
-	iZlzbrBA2DUSX+/9g4oDHX3mJ1A9B9ACTYn1u/RBTAkBZYkjt6BO45PoOPyXHSLMK9HRJgRh
-	qko03ayHmCEtsezMDNYJjEqzkPw1C8lfs5DcPwth1QJGllWMUqkFxbnpqclGBYa6eanl8OhO
-	zs/dxAhOklq+Oxhfr/+rd4iRiYPxEKMEB7OSCG/NryepQrwpiZVVqUX58UWlOanFhxhNgaE9
-	kVlKNDkfmKbzSuINTSwNTMzMDM2NTA3MlcR577XOTRESSE8sSc1OTS1ILYLpY+LglGpgYnzo
-	ws+c8fZEWeTth4z3Ilx9TDLrZ767Icb24kZ+o2zbRe3Dp5f+b1x8mrfgpApXVK2K8zP/7Bih
-	s02X3s6XWMP/U/Uzz/uconOrdAM73e7za2Y/jbx54su6HKltlmZSjJqrHUpvPMy+IrjPTSos
-	Z7XCM9nHKhtaLR0/X9i+hfNh4rv7SgvZuYI1N/B9mD57R0t1G2+UKNff5k8e7Q+K5y9+YaN2
-	81l8nl3ve79pvoycL87+qj3ysfp3kEeL/eywLWlxnqciZz1cu+/IH4OKvxVT3+wUUXhQuHvO
-	xdkZKecN705a2RimrXmtyENLQZlx2RTnlnbvrepPWjouxd26ZOb03df88qnf0Xx9S3mMlFiK
-	MxINtZiLihMBXnZzaRsEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrELMWRmVeSWpSXmKPExsWy7bCSvK7BsWepBm9OW1msnvqX1WLHak2L
-	y7vmsFnsvv2H1eLdHkWLnXdOMDuweWxa1cnmsf3zKXaPz5vkApijuGxSUnMyy1KL9O0SuDKW
-	NVxhK/ghV3Hk2VzGBsapEl2MnBwSAiYSX1+9Ye1i5OIQEtjNKHFgySd2iIS0xIvWb6wQtrDE
-	/ZYjUEXPGSXe9yxhAUmwCehKzHx5EMjm4BARcJaYey8LJMwsUC5x7cBtJoj6CYwSrXfugQ3i
-	FLCXWNS3CGyBsICjRO+kCWBxFgEVieM3FzKD2LwClhLNp9czQdiCEidnPmGBGKot8fTmUzh7
-	2cLXzBDHKUj8fLoMbI6IgJXEsbtb2CFqRCRmd7YxT2AUnoVk1Cwko2YhGTULScsCRpZVjJKp
-	BcW56bnJhgWGeanlesWJucWleel6yfm5mxjB0aKlsYPx3vx/eocYmTgYDzFKcDArifDW/HqS
-	KsSbklhZlVqUH19UmpNafIhRmoNFSZzXcMbsFCGB9MSS1OzU1ILUIpgsEwenVAOTw39Nhlti
-	5Td/Rp3Jfd7p0ea27LmV6e22iVKGOy03/zgg7BgbzZEWzMy44n+2xLa539S5jM6dS5DxUprT
-	1ijCY3aIN31pDY8b/4qr54MS/io9tl+kF8s4yV3m8MVnrrtL+NR0Ou7t/rP6xy9Dw+wPDFeZ
-	NsyKe7hcfpGjxBfJbMUfEa7rEr59uSt0tipx650frObOe15KP+dLkxD+2Rt7zVaDvWCySN6X
-	OfZsWX6nHZ2/77ghxvSkJ/JD+Ea+l6mlWVffnD9vImA09Z7r3jtRYn+rRZfyvjZ8VLTw6eTJ
-	x1Uf9e/gfjtlX0KTnvXf6+G/9eZxndu2fUrCLK1Haw45L/hi8/3Mz8ycgOmba7JvKrEUZyQa
-	ajEXFScCAJau2D8FAwAA
-X-CMS-MailID: 20240305071353epcas2p4187f5e0311d9bd706c863f38ccf13869
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb
-References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
-	<1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
 
-Hello.
+On Mon, 2024-03-04 at 22:17 -0800, Saravana Kannan wrote:
+> On Mon, Mar 4, 2024 at 7:02=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
+e:
+> >=20
+> > On Thu, Feb 29, 2024 at 11:52:01AM +0100, Herve Codina wrote:
+> > > Hi,
+> >=20
+> > Please CC Saravana on this.
+>=20
+> Nuno, this is why I was replying to the older series. I didn't even
+> get this one.
 
-> we have encountered CPU stalls in mainline kernel while loading the
-> bluetooth module. We have custom board based on rockchip rv1109 soc and
-> there is bluetooth chipset of relatek 8821cs. CPU is stalls  while realte=
-k
-> 8821cs module.
->=20
-> Bug/Regression:
-> In current mainline, we found CPU is stalls when we load bluetooth module=
-.
-> git bisect shows commit 22a9d9585812440211b0b34a6bc02ade62314be4
-> as a bad, which produce CPU stalls.
->=20
-> git show 22a9d9585812440211b0b34a6bc02ade62314be4
-> commit 22a9d9585812440211b0b34a6bc02ade62314be4
-> Author: Bumyong Lee <bumyong.lee=40samsung.com>
-> Date:   Tue Dec 19 14:50:26 2023 +0900
->=20
->      dmaengine: pl330: issue_pending waits until WFP state
->=20
->      According to DMA-330 errata notice=5B1=5D 71930, DMAKILL
->      cannot clear internal signal, named pipeline_req_active.
->      it makes that pl330 would wait forever in WFP state
->      although dma already send dma request if pl330 gets
->      dma request before entering WFP state.
->=20
->      The errata suggests that polling until entering WFP state
->      as workaround and then peripherals allows to issue dma request.
->=20
->      =5B1=5D: https://developer.arm.com/documentation/genc008428/latest
->=20
->      Signed-off-by: Bumyong Lee <bumyong.lee=40samsung.com>
->      Link:
-> https://lore.kernel.org/r/20231219055026.118695-1-bumyong.lee=40samsung.c=
-om
->      Signed-off-by: Vinod Koul <vkoul=40kernel.org>
->=20
-> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c index
-> 3cf0b38387ae..c29744bfdf2c 100644
-> --- a/drivers/dma/pl330.c
-> +++ b/drivers/dma/pl330.c
-> =40=40 -1053,6 +1053,9 =40=40 static bool _trigger(struct pl330_thread *t=
-hrd)
->=20
->          thrd->req_running =3D idx;
->=20
-> +       if (desc->rqtype =3D=3D DMA_MEM_TO_DEV =7C=7C desc->rqtype =3D=3D
-> DMA_DEV_TO_MEM)
-> +               UNTIL(thrd, PL330_STATE_WFP);
-> +
->          return true;
->   =7D
->=20
-> By reverting this commit, we have success in loading of bluetooth module.
->=20
->=20
+Arghh, I see... In lot's of replies I was mentioning you :)
 
-> Output of CPU stalls:
-> =23 modprobe hci_uart
-> =5B   27.024749=5D Bluetooth: HCI UART driver ver 2.3
-> =5B   27.025284=5D Bluetooth: HCI UART protocol Three-wire (H5) registere=
-d
-> =23 =5B   28.125338=5D dwmmc_rockchip ffc70000.mmc: Unexpected interrupt =
-latency
-> =5B   33.245339=5D dwmmc_rockchip ffc50000.mmc: Unexpected interrupt late=
-ncy
-> =5B  326.195321=5D rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> =5B  326.195880=5D rcu:     0-...0: (3 ticks this GP) idle=3De5f4/1/0x400=
-00000
-> softirq=3D551/552 fqs=3D420
-> =5B  326.196621=5D rcu:              hardirqs   softirqs   csw/system
-> =5B  326.197115=5D rcu:      number:        0          0            0
-> =5B  326.197612=5D rcu:     cputime:        0          0            0   =
-=3D=3D>
-> 10500(ms)
-> =5B  326.198231=5D rcu:     (detected by 1, t=3D2105 jiffies, g=3D-455, q=
-=3D17
-> ncpus=3D2)
-> =5B  326.198823=5D Sending NMI from CPU 1 to CPUs 0:
+- Nuno S=C3=A1
+
 >=20
-> Expected Output:
-> =23 modprobe hci_uart
-> =5B   30.690321=5D Bluetooth: HCI UART driver ver 2.3
-> =5B   30.690852=5D Bluetooth: HCI UART protocol Three-wire (H5) registere=
-d
-> =23 =5B   31.453586=5D Bluetooth: hci0: RTL: examining hci_ver=3D08 hci_r=
-ev=3D000c
-> lmp_ver=3D08 lmp_subver=3D8821
-> =5B   31.458061=5D Bluetooth: hci0: RTL: rom_version status=3D0 version=
-=3D1
-> =5B   31.458608=5D Bluetooth: hci0: RTL: loading rtl_bt/rtl8821cs_fw.bin
-> =5B   31.465029=5D Bluetooth: hci0: RTL: loading rtl_bt/rtl8821cs_config.=
-bin
-> =5B   31.483926=5D Bluetooth: hci0: RTL: cfg_sz 25, total sz 36953
-> =5B   32.213105=5D Bluetooth: hci0: RTL: fw version 0x75b8f098
-> =5B   32.274216=5D Bluetooth: MGMT ver 1.22
-> =5B   32.285376=5D NET: Registered PF_ALG protocol family
-
-I discussed this issue. Could you refer to this=5B1=5D?
-I haven't received anymore reply from him after that.
-If you have any more opinion, please let me know.
-
-=5B1=5D: https://lore.kernel.org/lkml/000001da3869=24ca643fa0=245f2cbee0=24=
-=40samsung.com/T/
-
-Best Regards
+> >=20
+> > >=20
+> > > In the following sequence:
+> > > =C2=A0 of_platform_depopulate(); /* Remove devices from a DT overlay =
+node */
+> > > =C2=A0 of_overlay_remove(); /* Remove the DT overlay node itself */
+> > >=20
+> > > Some warnings are raised by __of_changeset_entry_destroy() which=C2=
+=A0 was
+> > > called from of_overlay_remove():
+> > > =C2=A0 ERROR: memory leak, expected refcount 1 instead of 2 ...
+> > >=20
+> > > The issue is that, during the device devlink removals triggered from =
+the
+> > > of_platform_depopulate(), jobs are put in a workqueue.
+> > > These jobs drop the reference to the devices. When a device is no mor=
+e
+> > > referenced (refcount =3D=3D 0), it is released and the reference to i=
+ts
+> > > of_node is dropped by a call to of_node_put().
+> > > These operations are fully correct except that, because of the
+> > > workqueue, they are done asynchronously with respect to function call=
+s.
+> > >=20
+> > > In the sequence provided, the jobs are run too late, after the call t=
+o
+> > > __of_changeset_entry_destroy() and so a missing of_node_put() call is
+> > > detected by __of_changeset_entry_destroy().
+> > >=20
+> > > This series fixes this issue introducing device_link_wait_removal() i=
+n
+> > > order to wait for the end of jobs execution (patch 1) and using this
+> > > function to synchronize the overlay removal with the end of jobs
+> > > execution (patch 2).
+> > >=20
+> > > Compared to the previous iteration:
+> > > =C2=A0
+> > > https://lore.kernel.org/linux-kernel/20231130174126.688486-1-herve.co=
+dina@bootlin.com/
+> > > this v3 series:
+> > > - add the missing device.h
+> > >=20
+> > > This series handles cases reported by Luca [1] and Nuno [2].
+> > > =C2=A0 [1]: https://lore.kernel.org/all/20231220181627.341e8789@booty=
+/
+> > > =C2=A0 [2]:
+> > > https://lore.kernel.org/all/20240205-fix-device-links-overlays-v2-2-5=
+344f8c79d57@analog.com/
+> > >=20
+> > > Best regards,
+> > > Herv=C3=A9
+> > >=20
+> > > Changes v2 -> v3
+> > > =C2=A0 - Patch 1
+> > > =C2=A0=C2=A0=C2=A0 No changes
+> > >=20
+> > > =C2=A0 - Patch 2
+> > > =C2=A0=C2=A0=C2=A0 Add missing device.h
+> > >=20
+> > > Changes v1 -> v2
+> > > =C2=A0 - Patch 1
+> > > =C2=A0=C2=A0=C2=A0 Rename the workqueue to 'device_link_wq'
+> > > =C2=A0=C2=A0=C2=A0 Add 'Fixes' tag and Cc stable
+> > >=20
+> > > =C2=A0 - Patch 2
+> > > =C2=A0=C2=A0=C2=A0 Add device.h inclusion.
+> > > =C2=A0=C2=A0=C2=A0 Call device_link_wait_removal() later in the overl=
+ay removal
+> > > =C2=A0=C2=A0=C2=A0 sequence (i.e. in free_overlay_changeset() functio=
+n).
+> > > =C2=A0=C2=A0=C2=A0 Drop of_mutex lock while calling device_link_wait_=
+removal().
+> > > =C2=A0=C2=A0=C2=A0 Add=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 'Fixes' ta=
+g and Cc stable
+> > >=20
+> > > Herve Codina (2):
+> > > =C2=A0 driver core: Introduce device_link_wait_removal()
+> > > =C2=A0 of: overlay: Synchronize of_overlay_remove() with the devlink =
+removals
+> > >=20
+> > > =C2=A0drivers/base/core.c=C2=A0=C2=A0=C2=A0 | 26 ++++++++++++++++++++=
++++---
+> > > =C2=A0drivers/of/overlay.c=C2=A0=C2=A0 | 10 +++++++++-
+> > > =C2=A0include/linux/device.h |=C2=A0 1 +
+> > > =C2=A03 files changed, 33 insertions(+), 4 deletions(-)
+> > >=20
+> > > --
+> > > 2.43.0
+> > >=20
 
