@@ -1,73 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C1E612CE;
-	Tue,  5 Mar 2024 10:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0811F62800;
+	Tue,  5 Mar 2024 10:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633787; cv=none; b=lcMmmw4AwKBCVhINWy8mrqL0Xq4b23A985fVzfC2Y1HegCcY9R4o9Su77ejkPh+e7LQJLu9T2H+G0ou4+Kqy+ZwZB8erm8q4WXRZoy4B6aa9h28LLBUszG8aeTL2wXsv4a9mcqyafgnfChZ6EI1eWB3BCdXx21HGAH4Rl4qtMO4=
+	t=1709633790; cv=none; b=TF5zs+EXphZ5H/MkJnDR8zwxmETUE6fYsnmKMmXLeN2xSCz76jeMVFYRmNmFAwrMXbo4jkbsSQietqlvzPM1eX0RZIXAWnNvg67r6pPpm2vBRVBj+1dS4fLoTnuO+aHKdzJ7sOdiBV8PZz54guujSex3WXAZt0ZUW2T1Qb/iz1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633787; c=relaxed/simple;
-	bh=WBfM8ZvY1JfgPv87VMT5XwFqFK1pOKYXqtZNVa4/Kmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kBGMRCC1SvF6QFlNSKno6GlYTnmoJlKsjihuL0L98u71Ua4Bo3K3dBF+yI1FP9eBkEWuRelXdHwlULAeBkCiTawiKLoQEXHsGj4ZAftExSEUSR0eZJnXvJA+K5Nymkefd+HGBJA23sdYu9IN3cJt7Dy4IVk7rrUhpJrENWW6eSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkRk/fb0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709633790; c=relaxed/simple;
+	bh=sSDn7Wfq2OSR5HgXKxsXhUQl5lGRaJDd9ojoG3UQPDU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CR2ZSMX8J2nUB/8d59Y+/nEOb4PYV2Gp5+7oJye/Q6lF9dKCnb2vy4lWQHAl18BJzx/tz0TA1qL614ask8PdZVoan7Kb0OkntyUB2P7LnrPA8/HJ2tMU2gBtKpxrS/kaUY/u+Qmk5hQarbZZl5O1x5HlmlUGIZ9FhP/xayJAzDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=tKzO9aAm; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkRk/fb0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03941C43394;
-	Tue,  5 Mar 2024 10:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709633787;
-	bh=WBfM8ZvY1JfgPv87VMT5XwFqFK1pOKYXqtZNVa4/Kmg=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="tKzO9aAm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709633787;
+	bh=sSDn7Wfq2OSR5HgXKxsXhUQl5lGRaJDd9ojoG3UQPDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IkRk/fb09cNpaq1ao/YIjVQRUd7549ASV5vUrE0loQ3I40W0g4lHqMa2RnlPOC+SL
-	 7O47LLrDs24FE154PCpzD9gxTzqQT73wARI+zqa5pCclRYy+mfUAb3VXN5E67rLGEq
-	 3FJ29W4o1dvJg1oBPDj9nWxWk+GDyXcjXC0TwrN0jPCHmoAcRi2VmERQ0yOXxC4y76
-	 SQTUfIFSI98tR0AmIVTshw3fDy/384A966eKFUmESBoo+LVwjOUtuC+rAvhyqDK1EM
-	 ycf5A5dNTFKwMwlUDywAbqNnUHwzdQvu0BxoWJduZUbSgbO83ABzuBc7P68A9/gK4g
-	 OYyahJ7w7P7Rw==
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: [RFC 13/16] vfio/mlx5: Explicitly store page list
-Date: Tue,  5 Mar 2024 12:15:23 +0200
-Message-ID: <1d0ca7408af6e5f0bb09baffd021bc72287e5ed8.1709631413.git.leon@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <a77609c9c9a09214e38b04133e44eee67fe50ab0.1709631413.git.leon@kernel.org>
-References: <a77609c9c9a09214e38b04133e44eee67fe50ab0.1709631413.git.leon@kernel.org>
+	b=tKzO9aAmXe2W8tesxXyykVy9Qy2TKHRAkUKJrKobX/qj2SsZdFprznId3QVi7DcfS
+	 8FDM3h2rDuSJxGzwMiLxIwN6TA28a1gxLbOJSqZTTbdxAqNtJY69JBQJ/L2qe12BVS
+	 TqJde6Knx7QDURNcI9i0Cw6MI7JGpRZTo+f43xV4wqMyTNfduwqVNz2tgR8cjba+NN
+	 x1U4+hNuIaZlJaEPiNURhvFB0sQlVIEM4WyBVRyxVC8um6OcNoeWwh+IwnB14aSR8t
+	 V6gLfZXSABn8iyhB2WSd1MknZS5X8HliXYgCd047At6HuN7AZOy+4NqPTO/2fdmGQt
+	 nHoNGrFYp/vnw==
+Received: from eugen-station.domain.com (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ehristev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 01DF33780F7F;
+	Tue,  5 Mar 2024 10:16:23 +0000 (UTC)
+From: Eugen Hristev <eugen.hristev@collabora.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	jaegeuk@kernel.org,
+	chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	eugen.hristev@collabora.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	krisman@suse.de,
+	Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: [PATCH v13 1/9] ext4: Simplify the handling of cached insensitive names
+Date: Tue,  5 Mar 2024 12:16:00 +0200
+Message-Id: <20240305101608.67943-2-eugen.hristev@collabora.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240305101608.67943-1-eugen.hristev@collabora.com>
+References: <20240305101608.67943-1-eugen.hristev@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,108 +63,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Leon Romanovsky <leonro@nvidia.com>
+From: Gabriel Krisman Bertazi <krisman@collabora.com>
 
-As a preparation to removal scatter-gather table and unifying
-receive and send list, explicitly store page list.
+Keeping it as qstr avoids the unnecessary conversion in ext4_match
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+[eugen.hristev@collabora.com: port to 6.8-rc3]
+Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
 ---
- drivers/vfio/pci/mlx5/cmd.c  |  1 +
- drivers/vfio/pci/mlx5/cmd.h  |  1 +
- drivers/vfio/pci/mlx5/main.c | 35 +++++++++++++++++------------------
- 3 files changed, 19 insertions(+), 18 deletions(-)
+ fs/ext4/ext4.h  |  2 +-
+ fs/ext4/namei.c | 23 +++++++++++------------
+ 2 files changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
-index 44762980fcb9..5e2103042d9b 100644
---- a/drivers/vfio/pci/mlx5/cmd.c
-+++ b/drivers/vfio/pci/mlx5/cmd.c
-@@ -411,6 +411,7 @@ void mlx5vf_free_data_buffer(struct mlx5_vhca_data_buffer *buf)
- 	for_each_sgtable_page(&buf->table.sgt, &sg_iter, 0)
- 		__free_page(sg_page_iter_page(&sg_iter));
- 	sg_free_append_table(&buf->table);
-+	kvfree(buf->page_list);
- 	kfree(buf);
- }
- 
-diff --git a/drivers/vfio/pci/mlx5/cmd.h b/drivers/vfio/pci/mlx5/cmd.h
-index 83728c0669e7..815fcb54494d 100644
---- a/drivers/vfio/pci/mlx5/cmd.h
-+++ b/drivers/vfio/pci/mlx5/cmd.h
-@@ -57,6 +57,7 @@ struct mlx5_vf_migration_header {
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index a5d784872303..4061d11b9763 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2506,7 +2506,7 @@ struct ext4_filename {
+ 	struct fscrypt_str crypto_buf;
+ #endif
+ #if IS_ENABLED(CONFIG_UNICODE)
+-	struct fscrypt_str cf_name;
++	struct qstr cf_name;
+ #endif
  };
  
- struct mlx5_vhca_data_buffer {
-+	struct page **page_list;
- 	struct sg_append_table table;
- 	loff_t start_pos;
- 	u64 length;
-diff --git a/drivers/vfio/pci/mlx5/main.c b/drivers/vfio/pci/mlx5/main.c
-index b11b1c27d284..7ffe24693a55 100644
---- a/drivers/vfio/pci/mlx5/main.c
-+++ b/drivers/vfio/pci/mlx5/main.c
-@@ -69,44 +69,43 @@ int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
- 			       unsigned int npages)
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index 5e4f65c14dfb..b96983a4c185 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1445,7 +1445,8 @@ static int ext4_ci_compare(const struct inode *parent, const struct qstr *name,
+ int ext4_fname_setup_ci_filename(struct inode *dir, const struct qstr *iname,
+ 				  struct ext4_filename *name)
  {
- 	unsigned int to_alloc = npages;
-+	size_t old_size, new_size;
- 	struct page **page_list;
- 	unsigned long filled;
- 	unsigned int to_fill;
- 	int ret;
+-	struct fscrypt_str *cf_name = &name->cf_name;
++	struct qstr *cf_name = &name->cf_name;
++	unsigned char *buf;
+ 	struct dx_hash_info *hinfo = &name->hinfo;
+ 	int len;
  
--	to_fill = min_t(unsigned int, npages, PAGE_SIZE / sizeof(*page_list));
--	page_list = kvzalloc(to_fill * sizeof(*page_list), GFP_KERNEL_ACCOUNT);
-+	to_fill = min_t(unsigned int, npages,
-+			PAGE_SIZE / sizeof(*buf->page_list));
-+	old_size = buf->npages * sizeof(*buf->page_list);
-+	new_size = old_size + to_fill * sizeof(*buf->page_list);
-+	page_list = kvrealloc(buf->page_list, old_size, new_size,
-+			      GFP_KERNEL_ACCOUNT | __GFP_ZERO);
- 	if (!page_list)
+@@ -1455,18 +1456,18 @@ int ext4_fname_setup_ci_filename(struct inode *dir, const struct qstr *iname,
+ 		return 0;
+ 	}
+ 
+-	cf_name->name = kmalloc(EXT4_NAME_LEN, GFP_NOFS);
+-	if (!cf_name->name)
++	buf = kmalloc(EXT4_NAME_LEN, GFP_NOFS);
++	if (!buf)
  		return -ENOMEM;
  
-+	buf->page_list = page_list;
+-	len = utf8_casefold(dir->i_sb->s_encoding,
+-			    iname, cf_name->name,
+-			    EXT4_NAME_LEN);
++	len = utf8_casefold(dir->i_sb->s_encoding, iname, buf, EXT4_NAME_LEN);
+ 	if (len <= 0) {
+-		kfree(cf_name->name);
+-		cf_name->name = NULL;
++		kfree(buf);
++		buf = NULL;
+ 	}
++	cf_name->name = buf;
+ 	cf_name->len = (unsigned) len;
 +
- 	do {
- 		filled = alloc_pages_bulk_array(GFP_KERNEL_ACCOUNT, to_fill,
--						page_list);
--		if (!filled) {
--			ret = -ENOMEM;
--			goto err;
--		}
-+						buf->page_list + buf->npages);
-+		if (!filled)
-+			return -ENOMEM;
-+
- 		to_alloc -= filled;
- 		ret = sg_alloc_append_table_from_pages(
--			&buf->table, page_list, filled, 0,
-+			&buf->table, buf->page_list + buf->npages, filled, 0,
- 			filled << PAGE_SHIFT, UINT_MAX, SG_MAX_SINGLE_ALLOC,
- 			GFP_KERNEL_ACCOUNT);
--
- 		if (ret)
--			goto err;
-+			return ret;
-+
- 		buf->npages += filled;
--		/* clean input for another bulk allocation */
--		memset(page_list, 0, filled * sizeof(*page_list));
- 		to_fill = min_t(unsigned int, to_alloc,
--				PAGE_SIZE / sizeof(*page_list));
-+				PAGE_SIZE / sizeof(*buf->page_list));
- 	} while (to_alloc > 0);
+ 	if (!IS_ENCRYPTED(dir))
+ 		return 0;
  
--	kvfree(page_list);
- 	return 0;
--
--err:
--	kvfree(page_list);
--	return ret;
- }
- 
- static void mlx5vf_disable_fd(struct mlx5_vf_migration_file *migf)
+@@ -1503,8 +1504,6 @@ static bool ext4_match(struct inode *parent,
+ 	if (IS_CASEFOLDED(parent) &&
+ 	    (!IS_ENCRYPTED(parent) || fscrypt_has_encryption_key(parent))) {
+ 		if (fname->cf_name.name) {
+-			struct qstr cf = {.name = fname->cf_name.name,
+-					  .len = fname->cf_name.len};
+ 			if (IS_ENCRYPTED(parent)) {
+ 				if (fname->hinfo.hash != EXT4_DIRENT_HASH(de) ||
+ 					fname->hinfo.minor_hash !=
+@@ -1513,8 +1512,8 @@ static bool ext4_match(struct inode *parent,
+ 					return false;
+ 				}
+ 			}
+-			return !ext4_ci_compare(parent, &cf, de->name,
+-							de->name_len, true);
++			return !ext4_ci_compare(parent, &fname->cf_name,
++						de->name, de->name_len, true);
+ 		}
+ 		return !ext4_ci_compare(parent, fname->usr_fname, de->name,
+ 						de->name_len, false);
 -- 
-2.44.0
+2.34.1
 
