@@ -1,104 +1,81 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4909D27E;
-	Tue,  5 Mar 2024 20:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B5B127B7D
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 20:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709670007; cv=none; b=sGCt0v+F3Utg3i2a0LZCUFyTSxHbT1kr6rKJj3V858cRoxnr9KHrPOqC9Ij1q8N75ZqZRdfJW4HWeuJTIDpn9pvt0ghG1bo1TQJtI+5V3pcA9YaijI6d5FgcHaI5eSIESM62HvpNVdRsJfmEZFza3VOkYXtQxyoN4qatogYBDg8=
+	t=1709670064; cv=none; b=SH1Spce4CJ/Jc3hiyyncLKsNu3GVuS/EoiAYEWIsGWrvnVi/7L+rEjul6Y8EYVincrPjKmQHOawQ01bdGsvMSGXIV3IieVotq4VDyXOUMEYn98F6c7Y3Vkxce1WkMWaWMsZBnxW1aAkx2sX842b0J75IScXuJUKUOMxYJfBZTY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709670007; c=relaxed/simple;
-	bh=2yEo52nUqEosalh8acVmH3pa4TOwG+VL1d7ZfEeFLx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GlicSfwrlOpBQ2/GybprJvwkWCMBXunQoBRUNCG3Ts96kgZxX+NGNFrYSimcTATjPT6FiwGVwd99EqlA1lj4e4O6PZ+mUdRMOkWyDqkjUe4LDllv1wja79sIRQ1d0SzV2VjxUlJX+Wt+LPjpKEuSeXjM0MW69B9j+qZgrsYaENk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iq5eAfUR; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iq5eAfUR"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-68ee2c0a237so1164966d6.1;
-        Tue, 05 Mar 2024 12:20:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709670005; x=1710274805; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TcL6wAeqVuoZZD/5WSQ4uqaLPsMl9CXzbiG1AkNovjo=;
-        b=iq5eAfURBuaMPN/0AS2/GjzX3e0u1jT4f4n1/A96Xt9qIYuVrNe5S24bTDBBUm3UrH
-         jZ55zwcdd9CXkYkDhhWle3Pg6+S+XIqrziH1XRXMNbiKD6E5bbn/wg6Gjzy/Ne7lyMTq
-         OEZusdNq1fRhOfu3/Be5T2JOXUGfWgDskJpG/JLqodvRChgxnc/WwL4Qr9BuMdOIn5ka
-         zKd4rm6344r1HICQ4RWzDlca911fTSzXekfb2ErYI6xfvW65xqV8r22E11P6Fz0D5Ufx
-         u9JOIRV7zUskNDIgCvC0gYGg3yssmVBuJx5AFTm1i/FXRO0N6kAFyxYRkZ6+0GHbbSEu
-         SJrw==
+	s=arc-20240116; t=1709670064; c=relaxed/simple;
+	bh=6/AYUfzDqzkrxKkZjplJh9OD3V2IdKBUYScD8zp5YJg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=NFlbHmoKP10pTIu7Xny3qH5v0wsoXwEZ/TtbkLappUpXVCCIlI5NBZgM1pme6SSSHBitoOYS0G/Cg5lfLsdnqypBaewk7SJi8XZ4UR5HhdjM3Vj4ytdUQeCxPAIXmU84yTFfz1937iTifn2uEm3tVesNBB8e50G4M5EnJuS3OGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36576ec006aso56635045ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 12:21:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709670005; x=1710274805;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1709670062; x=1710274862;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TcL6wAeqVuoZZD/5WSQ4uqaLPsMl9CXzbiG1AkNovjo=;
-        b=hmrTfWqYy4sus8uaduesfPOk4Ub9DJ8ZfZA1mTGvRwj5aufpVCri3onbqau4vp9aAO
-         9/eeX51sS+N2s9oElmYTuKGZAFryh08F6MNLFRUgtwOhw6oHGgoUCeCi//S+7FuYVkoe
-         lHTSclq+LtWwEWOLWtK5xqiVtfHTTyWn+BcZ9EkaY5cvwhH+nHXm158XJAWdfs5jEaDj
-         i2FaBkGgkHDYICtvmPYDi1FGrkGYL3MJ41+lT3EzDfm7V4bvrr8PDS86KIH8S5SP+H4n
-         hcgyIb8LPwWpjBC2suVGAPmq9DJc6W0c6WN2xkZ4HSLOUpg6+JgDqapmndL07NJbMYvf
-         IBTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeMShmLvpfyR/nockxukKynNvE4EP1+0NTBHI9zzjBUAUFPGa22G+ezGhVW015DZLmo+DZ1cdmjLWRlhk6nKV97/BjkxxTghTy3w3XJA3rmgpCiVzduymxQ6P6kJ5qM2bbo5B5
-X-Gm-Message-State: AOJu0YwCozVFN6I7KwpDCaJDIOyp5twLyg/FnKKLscRrk9Woz3IwGMTq
-	TifkEWtNgC5475EVg4CQV/23ZUSmP5FaA47h/Bc3YQSwqWNvc/cs
-X-Google-Smtp-Source: AGHT+IGtZnMYmjNXy7Q24MFgCNySt6n03fjiEkX7ZqjtXEWZZ8Lyan3TNq/IbL+j0zffMjdL1p4W6g==
-X-Received: by 2002:ad4:4f4a:0:b0:690:8f66:5d3a with SMTP id eu10-20020ad44f4a000000b006908f665d3amr2781140qvb.7.1709670004785;
-        Tue, 05 Mar 2024 12:20:04 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id ld8-20020a056214418800b0068fef1264f6sm6529329qvb.101.2024.03.05.12.20.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Mar 2024 12:20:03 -0800 (PST)
-Message-ID: <70b66780-0f63-4192-b5c9-ab3ddb08b330@gmail.com>
-Date: Tue, 5 Mar 2024 12:19:56 -0800
+        bh=yUtUYHZsCEOa7X6Z+H+o0TaVUl7jsvxTuXTfFKtx4Og=;
+        b=XE+jiUfC8ngrVrKwCdhdhf8f+VMyFakNBFMuQtacLu3zPkr6OgftNJkYGmwGbmIbYe
+         /oR1nkjHh9wchHPHVkRrA389QEQBHhUTSKHIEJVtEXxMBEm6TLScuQOaTMrUwMThp9zJ
+         PO1tKlMFRmhPQbKdpou2nUxGZSRSXkJOT+iNjmsiKZ3iJEWXgT9KRaS7ZszznvD1xlGO
+         r2fIqQwgb1MSn4I2d1qERXRzckP0Uz0s0scRV/niODS/Rv7lMDsNLy9raGVFDNDHOr3Z
+         YURHT3pYi8hOKfaD0aLqRfjKrs9o/5MvgFMc03wEKVC4bwBI70IDDyck58tYLqUiFN3z
+         1W4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXoVstgqu6XA3bBTPBBQ6b+e3vYlh0OjO5LvgW4bIJ8s3D8zspJmK/jnnfjmG9qaYPpJhbC/pfNm0PpXOOBmFbjENQp3do5iTD4UvBq
+X-Gm-Message-State: AOJu0YxUXFMnaEYdjtdqzW5HmUeclM5b71wrHQr1AvtbUH4riHFm62a6
+	wQIPCdrDj6dHmTD0QIBf1UbaeXUnuul9owQ2kaXiS/Tyst2Axah71M82CjPA0SqqRFzoXOR4U0i
+	hF4ZuV61WBMVzWDmG2TfQP4rZU1N6cLoinkZdmhW2x2B4uPZHmmlwkls=
+X-Google-Smtp-Source: AGHT+IG0HrTjf9tSzpW5mhEYahI6I+CdKvynp0WSCF6pQbzs6aTIrDo95uQZixM6D1ufLCf+gnTifAlBvx8apq0D07TCgFJ6wpLj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.4 00/25] 5.4.271-rc1 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com
-References: <20240304211535.741936181@linuxfoundation.org>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240304211535.741936181@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:6f0b:0:b0:365:fe09:6450 with SMTP id
+ k11-20020a926f0b000000b00365fe096450mr104480ilc.4.1709670062725; Tue, 05 Mar
+ 2024 12:21:02 -0800 (PST)
+Date: Tue, 05 Mar 2024 12:21:02 -0800
+In-Reply-To: <0000000000000424f205fcf9a132@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c5b2ae0612ef94a9@google.com>
+Subject: Re: [syzbot] [ntfs3?] UBSAN: shift-out-of-bounds in ntfs_iget
+From: syzbot <syzbot+4768a8f039aa677897d0@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, anton@tuxera.com, 
+	axboe@kernel.dk, brauner@kernel.org, ghandatmanas@gmail.com, 
+	gregkh@linuxfoundation.org, jack@suse.cz, linkinjeon@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, 
+	lkp@intel.com, llvm@lists.linux.dev, ntfs3@lists.linux.dev, 
+	oe-kbuild-all@lists.linux.dev, syzkaller-bugs@googlegroups.com, 
+	syzkaller@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/4/24 13:23, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.271 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 06 Mar 2024 21:15:26 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.271-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+syzbot suspects this issue was fixed by commit:
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+    fs: Block writes to mounted block devices
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12be09f2180000
+start commit:   afead42fdfca Merge tag 'perf-tools-fixes-for-v6.4-2-2023-0..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=162cf2103e4a7453
+dashboard link: https://syzkaller.appspot.com/bug?extid=4768a8f039aa677897d0
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12da9bbd280000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=174e8115280000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: fs: Block writes to mounted block devices
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
