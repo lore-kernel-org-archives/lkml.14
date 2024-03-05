@@ -1,189 +1,150 @@
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E9F12C80B;
-	Tue,  5 Mar 2024 21:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C5712839C
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 21:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709672501; cv=none; b=ZaygO/I2I/iLDJdAk9PeQQgLXRPmmKG6qm4wZYCZd1o6J2FE2PhG87g/BkW+QsRXaTcN63E8uNBeJowty2Ug5ZU1arsFy00c9SAx8hcbq5SzYMHKyIdX+iSNFIV/ISlFSBDZQH+LOoiN6e4x4/fXJO0y7MRKUMUHLdcE6p5BSZQ=
+	t=1709672874; cv=none; b=cYlbt7Xe5kluzPeu3D3rAFIzeTJ3wTxmXt2eVRZVQt7JAOfEbm+/SPk+kmygG+28vhpqcFz1SwXNMCJlTxipzs6KnSkjoXS2Nq8Aw9QWzLouSRiXYuEgo2aDDYeKHrn0jID6BFUNcFOBYf3PGKMRl1lk1VGxz5j6gclIODGsh+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709672501; c=relaxed/simple;
-	bh=29ejzVaI8kO5HhUl/tLZDpgSk6p3AVFcVgn82c34VcY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DAL/I4PWYCndMmzijGjDgMRCtQDEZDQNDeUijQgeAZvpbAKDc7GeMo1G3g6qA35TpQ7QN0GlHy2iDv22v9c5ckSXz0lgy9w4NnfGETgda50HNqScuPXQEglL6rv40Q58GYoJPSnLrQydSmZZTb6IjnoYL5VT06RounDDcJbY0RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=dxFeOtPi; arc=none smtp.client-ip=216.71.153.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1709672874; c=relaxed/simple;
+	bh=HSIlCnw1qMgu44wxMsObqpARuyB4m2pEpfiWpv5vzoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I+u0+5yRotSf8qdHqI2SfFko3U5nR7nKc4dQa6Wy3YG4mRwPm/ddEhMgWBFCmIPRf1FC+v9XvTVWFCTepyWEIynY4uv+sBa7HBAcoqZ7vdia+OnHTReRZKRjJdPWmj78/3l5Qn07PCr4Rsm5mLGeB85aN/zatVCEitbENKTtg/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=dPWtEVu7; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dxFeOtPi"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1709672500; x=1741208500;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=29ejzVaI8kO5HhUl/tLZDpgSk6p3AVFcVgn82c34VcY=;
-  b=dxFeOtPi7DXKf94ZAnyqO4bM6ccwqB2w4e6iZxMF8HVWwezhb9Oo98EZ
-   wC+2nB0k1YO9D+dQRAgZHgewxR4oXOwk0uHWsh4RDoIwtm07b26088N6K
-   vIGrzC9VsJhvkZd6Dek9tdIpUTpUSMozfRtL6GYV1Mb5OyJjHOPdrgaWP
-   5XTyLL3nriu8GAA39x4y1KuuL4rYLZGbqxVZ9culFvLitJ5xZYy0zMvon
-   rZQQUvmSpJmzMFCak/HWBF6dK3crKEtYt3C7sWRIIp1FOcA0HreOd6ppl
-   RpVKfJno8NEUMpZXSYeSydybAULVWmAP7UTYjgWrFgQJ38VESW6MGYQT9
-   Q==;
-X-CSE-ConnectionGUID: eaFc0iNzRRmZW7Lc5gc4Jg==
-X-CSE-MsgGUID: 19Uu2znaQsWkG42YPrKImA==
-X-IronPort-AV: E=Sophos;i="6.06,206,1705334400"; 
-   d="scan'208";a="10728671"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Mar 2024 05:01:38 +0800
-IronPort-SDR: sHqXVOknCW2wtQy/7Lq6IElgd9J50U1RFsrfxBqO+U+8NJJ/y0WzsE83bWOgAHuz95zTHnfZES
- elSsjh9CVOvw==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Mar 2024 12:05:07 -0800
-IronPort-SDR: USV0O+qG8QEIyQNqETbVoFM6BwvoRpVli1KcCHpk7tHiRsAtvGtIxrV1WeEzf7VvhyNKxUuSQP
- fs2N8+bSNd3g==
-WDCIronportException: Internal
-Received: from 87h6l33.ad.shared (HELO BXYGM33.ad.shared) ([10.225.32.8])
-  by uls-op-cesaip01.wdc.com with ESMTP; 05 Mar 2024 13:01:35 -0800
-From: Avri Altman <avri.altman@wdc.com>
-To: "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Bean Huo <beanhuo@micron.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH v2 4/4] scsi: ufs: Re-use compose_devman_upiu
-Date: Tue,  5 Mar 2024 23:00:49 +0200
-Message-ID: <20240305210051.10847-5-avri.altman@wdc.com>
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="dPWtEVu7"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-412e4619e5eso18425025e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 13:07:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1709672871; x=1710277671; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KUZlwMdx9trvWwV1CHNIcS1af0QbtpnuHqxTxJgHydg=;
+        b=dPWtEVu7LDz30cZHEDpQ36ACeaPWy+HkcfeL7yDuAgehPxPmgcm5q1vghdwRjBDQXo
+         qq/Dk94ynfXWc/z9M38U6k+NAi6DoPGaXcL8i8H4JStdxl7VhjiEStekNXAHlK2zttHE
+         /iLVI03vKFaOr+sW7nSfQoc3OPBBFtLYOSw+wxVIAoo7Hor31qofc87K7jFbtTC2M7DT
+         Ewd3lBdg36ETZOzb97dtbRme8ASGwsCqqTHtW/LyS29jMs/FSv9TZB+O1sLPzya5ROtw
+         mUaqla268NalaZ4eRAmZAglo8z4nCDOhzXfFRp0AMwb43BZjiGIZiYNcMUgXVSdcjsv9
+         RDGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709672871; x=1710277671;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KUZlwMdx9trvWwV1CHNIcS1af0QbtpnuHqxTxJgHydg=;
+        b=WB4hImHdR7BTuocGSVa+F2rCtxL9cGuNLEQkudw2nj7SyMjg44zCkQdHset91SeAmf
+         eBRD1kSStGA2EgXBkeHq5sfNUiJ9LEEMS9b8uSo8Ly1N/b8ovlbv5Dmy7+AG0GKoLkHk
+         KufysDWS3flCKLHaY8BvZ4J4BknKDGqm9xYHP62e/XxAbclhsL2WHt6qTcQG3UTjpLxR
+         HHf9HPxWlkGZ9Fta8JQAwgvJmsdlaOxiKtjOojyD+tlA6bGhHuLWFqEcDMvrUMw8HWCY
+         GM+HWxCn31XyA821FuW3OJlbEihD2I4ES9ewVdpX8nIgqmwB4ScK0MZkh+Eaho2XvzMC
+         Y6Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUGXH3alRiCBo4eC5tMl7ydV+IytMH0EsvLCaoOokNjh28TBNN0ZDco3+3ZoZxztOJLQz2q3eDfRq3jfyPUK84uO00lFaJ3ElB5ThFs
+X-Gm-Message-State: AOJu0YxZ3PVBuw3VTTpQeIGzAm4g+yhM+fs7H1ZT8b6wpl9Qcm+ERvhC
+	R615gxoSK/ZXeQCSnU/H9qoXRk8YeQCxJyHPUi/zcYxWFnXSCrJ1RjYYrNmyi+w=
+X-Google-Smtp-Source: AGHT+IEfDsoa7C4IQErRpmZhXBkz4dEb+SR6QUtROnF1ttdcOCL4FggRjCi1sjsm4AP2ez8teSczag==
+X-Received: by 2002:a05:600c:4f4f:b0:412:b62f:2c3 with SMTP id m15-20020a05600c4f4f00b00412b62f02c3mr11487950wmq.21.1709672870672;
+        Tue, 05 Mar 2024 13:07:50 -0800 (PST)
+Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
+        by smtp.gmail.com with ESMTPSA id f12-20020a05600c4e8c00b00412ad64cc69sm18811777wmq.29.2024.03.05.13.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 13:07:50 -0800 (PST)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Naresh Solanki <naresh.solanki@9elements.com>
+Cc: mazziesaccount@gmail.com,
+	linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] dt-bindings: hwmon: tda38640: Add interrupt & regulator properties
+Date: Wed,  6 Mar 2024 02:37:46 +0530
+Message-ID: <20240305210747.1377506-1-naresh.solanki@9elements.com>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240305210051.10847-1-avri.altman@wdc.com>
-References: <20240305210051.10847-1-avri.altman@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Move some code fragments into ufshcd_prepare_req_desc_hdr so it can
-be used throughout.
+Add properties for interrupt & regulator.
+Also update example.
 
-Signed-off-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+
 ---
- drivers/ufs/core/ufshcd.c | 49 ++++++++++++++-------------------------
- 1 file changed, 17 insertions(+), 32 deletions(-)
+Changes in V3:
+1. Update regulator node from vout0 to vout.
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index c9c2b7f99758..a39a2b34ee2b 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -2710,18 +2710,27 @@ static void ufshcd_disable_intr(struct ufs_hba *hba, u32 intrs)
- /**
-  * ufshcd_prepare_req_desc_hdr - Fill UTP Transfer request descriptor header according to request
-  * descriptor according to request
-+ * @hba: per adapter instance
-  * @lrbp: pointer to local reference block
-  * @upiu_flags: flags required in the header
-  * @cmd_dir: requests data direction
-  * @ehs_length: Total EHS Length (in 32‐bytes units of all Extra Header Segments)
-+ * @scsi: scsi or device management`
-  */
--static void ufshcd_prepare_req_desc_hdr(struct ufshcd_lrb *lrbp, u8 *upiu_flags,
--					enum dma_data_direction cmd_dir, int ehs_length)
-+static void
-+ufshcd_prepare_req_desc_hdr(struct ufs_hba *hba, struct ufshcd_lrb *lrbp,
-+			    u8 *upiu_flags, enum dma_data_direction cmd_dir,
-+			    int ehs_length, bool scsi)
- {
- 	struct utp_transfer_req_desc *req_desc = lrbp->utr_descriptor_ptr;
- 	struct request_desc_header *h = &req_desc->header;
- 	enum utp_data_direction data_direction;
+Changes in V2:
+1. Remove TEST=..
+2. Update regulator subnode property as vout0
+3. Restore commented line in example
+4. blank line after interrupts property in example.
+---
+ .../hwmon/pmbus/infineon,tda38640.yaml        | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/infineon,tda38640.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,tda38640.yaml
+index ded1c115764b..5c4e52b472ad 100644
+--- a/Documentation/devicetree/bindings/hwmon/pmbus/infineon,tda38640.yaml
++++ b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,tda38640.yaml
+@@ -30,6 +30,23 @@ properties:
+       unconnected(has internal pull-down).
+     type: boolean
  
-+	if (hba->ufs_version <= ufshci_version(1, 1))
-+		lrbp->command_type = scsi ? UTP_CMD_TYPE_SCSI : UTP_CMD_TYPE_DEV_MANAGE;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
++  interrupts:
++    maxItems: 1
 +
- 	*h = (typeof(*h)){ };
++  regulators:
++    type: object
++    description:
++      list of regulators provided by this controller.
++
++    properties:
++      vout:
++        $ref: /schemas/regulator/regulator.yaml#
++        type: object
++
++        unevaluatedProperties: false
++
++    additionalProperties: false
++
+ required:
+   - compatible
+   - reg
+@@ -38,6 +55,7 @@ additionalProperties: false
  
- 	if (cmd_dir == DMA_FROM_DEVICE) {
-@@ -2854,12 +2863,8 @@ static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
- 	u8 upiu_flags;
- 	int ret = 0;
- 
--	if (hba->ufs_version <= ufshci_version(1, 1))
--		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
--	else
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
-+	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0, false);
- 
--	ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE, 0);
- 	if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY)
- 		ufshcd_prepare_utp_query_req_upiu(hba, lrbp, upiu_flags);
- 	else if (hba->dev_cmd.type == DEV_CMD_TYPE_NOP)
-@@ -2882,13 +2887,8 @@ static void ufshcd_comp_scsi_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 	unsigned int ioprio_class = IOPRIO_PRIO_CLASS(req_get_ioprio(rq));
- 	u8 upiu_flags;
- 
--	if (hba->ufs_version <= ufshci_version(1, 1))
--		lrbp->command_type = UTP_CMD_TYPE_SCSI;
--	else
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--
--	ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags,
--				    lrbp->cmd->sc_data_direction, 0);
-+	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags,
-+				    lrbp->cmd->sc_data_direction, 0, true);
- 	if (ioprio_class == IOPRIO_CLASS_RT)
- 		upiu_flags |= UPIU_CMD_FLAGS_CP;
- 	ufshcd_prepare_utp_scsi_cmd_upiu(lrbp, upiu_flags);
-@@ -7228,16 +7228,11 @@ static int ufshcd_issue_devman_upiu_cmd(struct ufs_hba *hba,
- 
- 	ufshcd_setup_dev_cmd(hba, lrbp, cmd_type, 0, tag);
- 
--	if (hba->ufs_version <= ufshci_version(1, 1))
--		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
--	else
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
-+	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0, false);
- 
- 	/* update the task tag in the request upiu */
- 	req_upiu->header.task_tag = tag;
- 
--	ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE, 0);
--
- 	/* just copy the upiu request as it is */
- 	memcpy(lrbp->ucd_req_ptr, req_upiu, sizeof(*lrbp->ucd_req_ptr));
- 	if (desc_buff && desc_op == UPIU_QUERY_OPCODE_WRITE_DESC) {
-@@ -7378,24 +7373,14 @@ int ufshcd_advanced_rpmb_req_handler(struct ufs_hba *hba, struct utp_upiu_req *r
- 	u8 upiu_flags;
- 	u8 *ehs_data;
- 	u16 ehs_len;
-+	int ehs = (hba->capabilities & MASK_EHSLUTRD_SUPPORTED) ? 2 : 0;
- 
- 	/* Protects use of hba->reserved_slot. */
- 	ufshcd_dev_man_lock(hba);
- 
- 	ufshcd_setup_dev_cmd(hba, lrbp, DEV_CMD_TYPE_RPMB, UFS_UPIU_RPMB_WLUN, tag);
- 
--	/* Advanced RPMB starts from UFS 4.0, so its command type is UTP_CMD_TYPE_UFS_STORAGE */
--	lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--
--	/*
--	 * According to UFSHCI 4.0 specification page 24, if EHSLUTRDS is 0, host controller takes
--	 * EHS length from CMD UPIU, and SW driver use EHS Length field in CMD UPIU. if it is 1,
--	 * HW controller takes EHS length from UTRD.
--	 */
--	if (hba->capabilities & MASK_EHSLUTRD_SUPPORTED)
--		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, dir, 2);
--	else
--		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, dir, 0);
-+	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, ehs, false);
- 
- 	/* update the task tag */
- 	req_upiu->header.task_tag = tag;
+ examples:
+   - |
++    #include <dt-bindings/interrupt-controller/irq.h>
+     i2c {
+         #address-cells = <1>;
+         #size-cells = <0>;
+@@ -45,5 +63,15 @@ examples:
+         tda38640@40 {
+             compatible = "infineon,tda38640";
+             reg = <0x40>;
++
++            interrupt-parent = <&smb_pex_cpu0_event>;
++            interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
++
++            regulators {
++                pvnn_main_cpu0: vout {
++                    regulator-name = "pvnn_main_cpu0";
++                    regulator-enable-ramp-delay = <200>;
++                };
++            };
+         };
+     };
+
+base-commit: 78cc80d834ed3b792605bc9c2215ed9e63825459
 -- 
 2.42.0
 
