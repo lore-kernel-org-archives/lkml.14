@@ -1,184 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8724C637;
-	Tue,  5 Mar 2024 07:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28017E11E;
+	Tue,  5 Mar 2024 07:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709623724; cv=none; b=px9uVeSPDHWnGslzQm0Z60CVuJVJAWus07E7ZUw4jKBrY5lBU+VkWTyvEzZeBC6YDtV+9G8wEjmwXpZ4k40nT6Fg/bRDpQxRuTU+B8b51RGoh72VCv1BTk1fbwVfdLlPRybkqlYbwoFfazG2t92FyL861AeeEyDtqIzpriluGQY=
+	t=1709623772; cv=none; b=TR4sERAH/0IrKUWBF2GznOT6BBjoZBjcqWCqwTRDWFimC25plZMgHcLRJfv/CYckW2LWru8fkxjBeHCJHf4GKDzVHyIAXFDsfNVv3T7G/1JXYQHBQbojw9bQMRSypmO3kULk7oiM9I3Emsg3IsCfDDFjYuyZjT+xjHFCvhpw3gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709623724; c=relaxed/simple;
-	bh=0CSkO4V5DXVEFBREqHoKNNDYXRtYsWIaR34aGSPoS2E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NumHkZvafMGAJe5u0FdmfMreBzLC34wKBgIoe9z1j969leRbwX6YtpWSY+IuWf2wQKlPwWluVhKygoTUW3q8+RuTiZpytj9J/Fug06vuj+6rlwalXdyFMV+ztizQg6sNNSDcoBv4UQ9+qGkyW1ny13emQ5vzuVcizoutY2CulIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MMG+DDAL; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MMG+DDAL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709623723; x=1741159723;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0CSkO4V5DXVEFBREqHoKNNDYXRtYsWIaR34aGSPoS2E=;
-  b=MMG+DDAL4fU9Tt78ThCfvcslTxakcTS97uFkQ/pN9HR7oueeLdAB+2ig
-   8ROLH6aoF3qKF7CICnUhwGTlw5b11TUkF/EIMo2KGdxTSBHvhyklKaCr+
-   u2ORCHyJfPVlyB7waLYj7l32PBp0g321T04HEMEF8OisT1ui52wUZt1dt
-   RrqfbeehIBk7v1XhuLwZ4cDbSCsiNGQS+BMC4qo+BjPHgH6fofmWu+8MR
-   ajgpr48yx5ySJbNyvbS9tQePe3H92XaFdmxjdlAhToJXHyAY+J8aNu2/K
-   eXixJ+/fzYQR/WZYZl62Ly7VYp3pRZq67BA0hXs0U6ShRsR3Yoy3tgXob
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="15585538"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="15585538"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 23:28:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="9354222"
-Received: from agoll-mobl.ger.corp.intel.com (HELO [10.245.176.64]) ([10.245.176.64])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 23:28:37 -0800
-Message-ID: <76621a84-d5c5-40c2-ac51-db0ec57be472@linux.intel.com>
-Date: Tue, 5 Mar 2024 09:28:34 +0200
+	s=arc-20240116; t=1709623772; c=relaxed/simple;
+	bh=LOAAo12TmpeMqfRlxKgrGSwC8uen4zm5weoQ2qlrzpg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Q6fdH0+dn/rw3q6oSKC0ukbqwu5s4zXRvfVZ8EEFyG65l9+tHJ+sc+SUGUdeA/rf42O0cH8aO3gqlQUfOtNwVfbfUGFsneh3yjQmnnN01B4xlopHtCDNZmZwsmINyp/fwCCoLtrHXnlesaoa/KOaemERkIsxhDDxhcpunIBgS9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TpnJ26hfqz4f3k5b;
+	Tue,  5 Mar 2024 15:29:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 6B2081A0C15;
+	Tue,  5 Mar 2024 15:29:26 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBHRyeZlGnf+Fw--.17927S5;
+	Tue, 05 Mar 2024 15:29:26 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: xni@redhat.com,
+	zkabelac@redhat.com,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	mpatocka@redhat.com,
+	dm-devel@lists.linux.dev,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	heinzm@redhat.com,
+	jbrassow@redhat.com,
+	neilb@suse.de
+Cc: linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH md-6.8 v2 1/9] md: don't clear MD_RECOVERY_FROZEN for new dm-raid until resume
+Date: Tue,  5 Mar 2024 15:22:58 +0800
+Message-Id: <20240305072306.2562024-2-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240305072306.2562024-1-yukuai1@huaweicloud.com>
+References: <20240305072306.2562024-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH net 1/1] igc: avoid returning frame
- twice in XDP_REDIRECT
-To: Florian Kauer <florian.kauer@linutronix.de>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Jithu Joseph <jithu.joseph@intel.com>, Andre Guedes
- <andre.guedes@intel.com>, Vedang Patel <vedang.patel@intel.com>
-Cc: netdev@vger.kernel.org, kurt@linutronix.de, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, bpf@vger.kernel.org
-References: <20240219090843.9307-1-florian.kauer@linutronix.de>
-Content-Language: en-US
-From: "naamax.meir" <naamax.meir@linux.intel.com>
-In-Reply-To: <20240219090843.9307-1-florian.kauer@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHGBHRyeZlGnf+Fw--.17927S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw4ktrW3uryDCrW7CryxAFb_yoW8Gw47pa
+	n7Gr1rurWkJrW2kF4DJa4v9a45tasxJrW0yryfu3y5Xr13Xr1kK34YgwnxZryqkF1aga45
+	AF1UAryrC3WrKw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2
+	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
+	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU4T5dUUUUU
+	=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 2/19/2024 11:08, Florian Kauer wrote:
-> When a frame can not be transmitted in XDP_REDIRECT
-> (e.g. due to a full queue), it is necessary to free
-> it by calling xdp_return_frame_rx_napi.
-> 
-> However, this is the reponsibility of the caller of
-> the ndo_xdp_xmit (see for example bq_xmit_all in
-> kernel/bpf/devmap.c) and thus calling it inside
-> igc_xdp_xmit (which is the ndo_xdp_xmit of the igc
-> driver) as well will lead to memory corruption.
-> 
-> In fact, bq_xmit_all expects that it can return all
-> frames after the last successfully transmitted one.
-> Therefore, break for the first not transmitted frame,
-> but do not call xdp_return_frame_rx_napi in igc_xdp_xmit.
-> This is equally implemented in other Intel drivers
-> such as the igb.
-> 
-> There are two alternatives to this that were rejected:
-> 1. Return num_frames as all the frames would have been
->     transmitted and release them inside igc_xdp_xmit.
->     While it might work technically, it is not what
->     the return value is meant to repesent (i.e. the
->     number of SUCCESSFULLY transmitted packets).
-> 2. Rework kernel/bpf/devmap.c and all drivers to
->     support non-consecutively dropped packets.
->     Besides being complex, it likely has a negative
->     performance impact without a significant gain
->     since it is anyway unlikely that the next frame
->     can be transmitted if the previous one was dropped.
-> 
-> The memory corruption can be reproduced with
-> the following script which leads to a kernel panic
-> after a few seconds.  It basically generates more
-> traffic than a i225 NIC can transmit and pushes it
-> via XDP_REDIRECT from a virtual interface to the
-> physical interface where frames get dropped.
-> 
->     #!/bin/bash
->     INTERFACE=enp4s0
->     INTERFACE_IDX=`cat /sys/class/net/$INTERFACE/ifindex`
-> 
->     sudo ip link add dev veth1 type veth peer name veth2
->     sudo ip link set up $INTERFACE
->     sudo ip link set up veth1
->     sudo ip link set up veth2
-> 
->     cat << EOF > redirect.bpf.c
-> 
->     SEC("prog")
->     int redirect(struct xdp_md *ctx)
->     {
->         return bpf_redirect($INTERFACE_IDX, 0);
->     }
-> 
->     char _license[] SEC("license") = "GPL";
->     EOF
->     clang -O2 -g -Wall -target bpf -c redirect.bpf.c -o redirect.bpf.o
->     sudo ip link set veth2 xdp obj redirect.bpf.o
-> 
->     cat << EOF > pass.bpf.c
-> 
->     SEC("prog")
->     int pass(struct xdp_md *ctx)
->     {
->         return XDP_PASS;
->     }
-> 
->     char _license[] SEC("license") = "GPL";
->     EOF
->     clang -O2 -g -Wall -target bpf -c pass.bpf.c -o pass.bpf.o
->     sudo ip link set $INTERFACE xdp obj pass.bpf.o
-> 
->     cat << EOF > trafgen.cfg
-> 
->     {
->       /* Ethernet Header */
->       0xe8, 0x6a, 0x64, 0x41, 0xbf, 0x46,
->       0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
->       const16(ETH_P_IP),
-> 
->       /* IPv4 Header */
->       0b01000101, 0,   # IPv4 version, IHL, TOS
->       const16(1028),   # IPv4 total length (UDP length + 20 bytes (IP header))
->       const16(2),      # IPv4 ident
->       0b01000000, 0,   # IPv4 flags, fragmentation off
->       64,              # IPv4 TTL
->       17,              # Protocol UDP
->       csumip(14, 33),  # IPv4 checksum
-> 
->       /* UDP Header */
->       10,  0, 1, 1,    # IP Src - adapt as needed
->       10,  0, 1, 2,    # IP Dest - adapt as needed
->       const16(6666),   # UDP Src Port
->       const16(6666),   # UDP Dest Port
->       const16(1008),   # UDP length (UDP header 8 bytes + payload length)
->       csumudp(14, 34), # UDP checksum
-> 
->       /* Payload */
->       fill('W', 1000),
->     }
->     EOF
-> 
->     sudo trafgen -i trafgen.cfg -b3000MB -o veth1 --cpp
-> 
-> Fixes: 4ff320361092 ("igc: Add support for XDP_REDIRECT action")
-> Signed-off-by: Florian Kauer <florian.kauer@linutronix.de>
-> ---
->   drivers/net/ethernet/intel/igc/igc_main.c | 13 ++++++-------
->   1 file changed, 6 insertions(+), 7 deletions(-)
+From: Yu Kuai <yukuai3@huawei.com>
 
-Tested-by: Naama Meir <naamax.meir@linux.intel.com>
+After commit 9dbd1aa3a81c ("dm raid: add reshaping support to the
+target") raid_ctr() will set MD_RECOVERY_FROZEN before md_run() and
+expect to keep array frozen until resume. However, md_run() will clear
+the flag by setting mddev->recovery to 0.
+
+Before commit 1baae052cccd ("md: Don't ignore suspended array in
+md_check_recovery()"), dm-raid actually relied on suspending to prevent
+starting new sync_thread.
+
+Fix this problem by keeping 'MD_RECOVERY_FROZEN' for dm-raid in
+md_run().
+
+Fixes: 1baae052cccd ("md: Don't ignore suspended array in md_check_recovery()")
+Fixes: 9dbd1aa3a81c ("dm raid: add reshaping support to the target")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Xiao Ni <xni@redhat.com>
+Acked-by: Mike Snitzer <snitzer@kernel.org>
+---
+ drivers/md/md.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 9e41a9aaba8b..23f31fd1d024 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6038,7 +6038,10 @@ int md_run(struct mddev *mddev)
+ 			pr_warn("True protection against single-disk failure might be compromised.\n");
+ 	}
+ 
+-	mddev->recovery = 0;
++	/* dm-raid expect sync_thread to be frozen until resume */
++	if (mddev->gendisk)
++		mddev->recovery = 0;
++
+ 	/* may be over-ridden by personality */
+ 	mddev->resync_max_sectors = mddev->dev_sectors;
+ 
+-- 
+2.39.2
+
