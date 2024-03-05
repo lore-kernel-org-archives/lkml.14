@@ -1,77 +1,123 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E919460;
-	Tue,  5 Mar 2024 20:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACDF12A144
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 20:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709670572; cv=none; b=dkmgrFpjgKz4BieHfhuZfXrnjV5lQetWri6Tr0pBAFVOgcTG78FQWnxgbkK0Q/NS20AOVnImWcGj0yecNbagx+2cg6Qu6xeAA1gsp2tatCvJfG5gvyHKO4FX92MdyXfiX7pyK8IvR53741yE7eCPSxgFQi2gTLuW1id6MoQqeJs=
+	t=1709670711; cv=none; b=CQm+bF3OreaQglRDJnEWL7lWxQPrYtHI01pWCIW81vlzxL5wBpV1IOoYetoRBy8xbJ9jOnMkcLnYwnhsGxFk7G1jTSSbx1MNQoMq6EDtGVnQvZ7B737u6Yn8DUUI8h/rBT5SNouMuHgKW5VDueSYaxETQqMcNtoCSOcfw/k6UPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709670572; c=relaxed/simple;
-	bh=brvODVjEdn52eqWJ/v1JIz12UyK9u+bcrt/sT4hHvuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KVwLMjK2QYYA3td9jUEq+SCwk12ywgz5KGRWjqhrkulqzK0nAlIXtumaFqzpGGoKC4bX9/3OZ8C4+lNKBdUj4nr5KHn2HK7pPNsC+7Yy1+KNR9pA4DBGwUy9PnwNoO+7F0vKEA1aDoeoK3T7phLbavJdORAMiI05V++JxoHXMmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-220ce420472so983701fac.1;
-        Tue, 05 Mar 2024 12:29:31 -0800 (PST)
+	s=arc-20240116; t=1709670711; c=relaxed/simple;
+	bh=pw3G19sacPvgxxjDa+F7GfDDZnTry5voAGRccl7XUhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qaDAagCTorUU5LoIqS8dtVMru9MCKELcjZtUkrlKXMuZJMWBYTV4gpp8Ihq/7WqIE3vmbBwjZPyPpG+Hw1+n4rk/DCYImTbh0ffcffiznu6sDVQI4UJjMAudXt21q2D6u+BaIQTHz7VCHvCh8nJoLW6EaLFjxdXIQaNA3kWpAx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JhjhrrLe; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JhjhrrLe"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e5760eeb7aso149731b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 12:31:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709670709; x=1710275509; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4EwXdmdUlhrJr7UjQPFyD/UJ5/e0VwSFBZlmIPUM/vk=;
+        b=JhjhrrLekNSFp/aKxTSWqR/6QpEKkt+GqwB7duR/KKTqfD2CKo5HNLMkIlR8zas4Td
+         m/DhF3HpVAomF5iWm/eIqwxxKv9ew5oSSBW7BtIsgNz7ed5K4j4S9Qix1IyJofElVw1z
+         fH0C8lejeJK2S98fleJvSV4GvXSbtElR4jpOw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709670570; x=1710275370;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=brvODVjEdn52eqWJ/v1JIz12UyK9u+bcrt/sT4hHvuY=;
-        b=Neuz0n5JvgWquBXnYC4+sK7P2GBxmRaQKgJQ3DQn8du1j2sFG6jvwW7xyKzNfifFk/
-         IK6JELoQyGzIUgtnaJW6YfI4/viJYKwWIAS2+N1Y4C1FSQLp5+PHJ4oPfrx5aj9Vmhic
-         Xj0iC87eJerUpzFbJvV62rrBp6MLf/OLULlpmVG9hVrc2OMX/RBZqJnZSqQIkaZJZENg
-         XUfElU1LHPxS2kaANMQWjNT6KsNCvN5VEavUdo2+cwoq+VslsAs0TOjkrZyE2sWoXcHr
-         /rWQhjVdiZamPbfb43VHoDGpB5cG9wbSfEcmYKUc5qTSBYGp2sUxPb9jJSnmtAH9fK+Z
-         0SqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXF9ScsZYJfa//Sv3IGHkcrbn482546dqa/rECnPXoEXdEUszv3WGOfH4dQHqlAgAr/gyxzc8S7uutB1qc6MUOp6w5QgaNd8FYEUsjm1meWCHpJlLaRdyAo31sOGPhvUpwbMKUw0CSocgAd31qUt50tr8UixuxKIOH7oEktBjrSrQ==
-X-Gm-Message-State: AOJu0YyYM8MnFmP92NGuAtK75hJYSb+qbG1EuLP64p1NMR17ipPlJJ0P
-	cbHgpoWB+pW65TzmZ2olcWAFu0ABKeJE/+EXA+SjvY7iXMVCmT/viQRCCHYwY6UtE+cCtZL6+o2
-	1q0ag+osuUmdWiTKskF4MZtIYWIQ=
-X-Google-Smtp-Source: AGHT+IGmKFCKHu18eVUen1zEspsGJ1M3dG2mdYaT4Jy1mAiZvNyLnluyaZR18TRRqouw19nNwzybIEzP14gA+7Pr5Vs=
-X-Received: by 2002:a05:6870:d681:b0:21e:ad52:3029 with SMTP id
- z1-20020a056870d68100b0021ead523029mr1568208oap.0.1709670570363; Tue, 05 Mar
- 2024 12:29:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709670709; x=1710275509;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4EwXdmdUlhrJr7UjQPFyD/UJ5/e0VwSFBZlmIPUM/vk=;
+        b=E3K3huXFUR2zfgRf7WnKwfueMBwjik1JmtZI8WlIpPmuaRoqerQhoh4T0s/vDqbaFH
+         kJ3kNr4NJWogU3OpzSXGb5sGCdLMko8roOHYFXrPgcpMZGoHLZXQP2puV/Nu01Y19oTd
+         XXVbRcIT0nrCwgGCSOw9yvEfMB1o6LpPG875QgShpbZDofL7Qcmy2LifiACSZM+JFBnJ
+         /DsRVemFk09T8C6ihFZDasfJGPBJ4oVAUQu44aJr8Lj5hEu2R6wf3Qax9Z5T6iFyZT7/
+         8sToyM2hwYzoSmBojLTaBX4yWMOQtTvIdoW4+m/uwhlqt9KY7n65YkE5ofTVo6/yivBV
+         Nrdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUu+LW7NCKqSW5LLF7MJXQJA+jzAMi9IxPi3p/q+PzJN4sfNZOPwWpC1iSl6MonV0Fy/7RLHuuVTz4Wa/q0uBAD5/nOTstzWfW+NPLh
+X-Gm-Message-State: AOJu0YzR8QIe7Ikxw+SWeCkPGpSETQV8M6U/oytXG0uLouo0NbvYo5Tj
+	J3L291A+HPSS3NSPAoUQMpFR4CvjDI8j35X1e/A++vmFPOYCtoad8D6skAhERQ==
+X-Google-Smtp-Source: AGHT+IEWfc2imOj+NVA7L8pf1cvVI2z/GXhu88fbePla33Jy8RW0G93koevb4py4GfPpafR7599Vlw==
+X-Received: by 2002:a05:6a20:85a7:b0:1a0:e1b6:4306 with SMTP id s39-20020a056a2085a700b001a0e1b64306mr2544108pzd.57.1709670708732;
+        Tue, 05 Mar 2024 12:31:48 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p20-20020a62ab14000000b006e47e57d976sm9354568pff.166.2024.03.05.12.31.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 12:31:48 -0800 (PST)
+Date: Tue, 5 Mar 2024 12:31:47 -0800
+From: Kees Cook <keescook@chromium.org>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Will Drewry <wad@chromium.org>, edumazet@google.com,
+	jakub@cloudflare.com, pabeni@redhat.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] selftests/harness: Fix TEST_F()'s vfork handling
+Message-ID: <202403051225.B2ABAC80A@keescook>
+References: <20240305.sheeF9yain1O@digikod.net>
+ <20240305201029.1331333-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301192600.2568-1-jarredwhite@linux.microsoft.com>
- <CAJZ5v0hTmkB_rrFgxUYbrxbs_JC-vM1oYdH27D-QvVaVuovNXg@mail.gmail.com> <5cd020bf-35a1-4ffc-bb32-167ac311d5d3@linux.microsoft.com>
-In-Reply-To: <5cd020bf-35a1-4ffc-bb32-167ac311d5d3@linux.microsoft.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 5 Mar 2024 21:29:18 +0100
-Message-ID: <CAJZ5v0j8hsp0XAWfgXRZwHAk+rRDRQwMGrureFRZgwHa3USbug@mail.gmail.com>
-Subject: Re: [PATCH v3] acpi: Use access_width over bit_width for system
- memory accesses
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Jarred White <jarredwhite@linux.microsoft.com>, 
-	Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, srivatsabhat@linux.microsoft.com, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240305201029.1331333-1-mic@digikod.net>
 
-On Tue, Mar 5, 2024 at 9:19=E2=80=AFPM Easwar Hariharan
-<eahariha@linux.microsoft.com> wrote:
->
-> On 3/5/2024 12:15 PM, Rafael J. Wysocki wrote:
->
-> <snip>
-> >
-> > Applied as 6.9 material with some edits in the subject and changelog
-> > and some adjustments of the new comments (one edited and one dropped).
-> >
-> > Thanks!
->
-> Thank you, Rafael! Could you please add as well:
->
-> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+On Tue, Mar 05, 2024 at 09:10:29PM +0100, Mickaël Salaün wrote:
+> Always run fixture setup in the grandchild process, and by default also
+> run the teardown in the same process.  However, this change makes it
+> possible to run the teardown in a parent process when
+> _metadata->teardown_parent is set to true (e.g. in fixture setup).
+> 
+> Fix TEST_SIGNAL() by forwarding grandchild's signal to its parent.  Fix
+> seccomp tests by running the test setup in the parent of the test
+> thread, as expected by the related test code.  Fix Landlock tests by
+> waiting for the grandchild before processing _metadata.
+> 
+> Use of exit(3) in tests should be OK because the environment in which
+> the vfork(2) call happen is already dedicated to the running test (with
+> flushed stdio, setpgrp() call), see __run_test() and the call to fork(2)
+> just before running the setup/test/teardown.  Even if the test
+> configures its own exit handlers, they will not be run by the parent
+> because it never calls exit(3), and the test function either ends with a
+> call to _exit(2) or a signal.
+> 
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Günther Noack <gnoack@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Will Drewry <wad@chromium.org>
+> Fixes: 0710a1a73fb4 ("selftests/harness: Merge TEST_F_FORK() into TEST_F()")
+> Link: https://lore.kernel.org/r/20240305201029.1331333-1-mic@digikod.net
 
-Added, thanks!
+Sanity-check run of seccomp tests before:
+
+# # Totals: pass:70 fail:21 xfail:0 xpass:0 skip:5 error:0
+
+After:
+
+# # Totals: pass:91 fail:0 xfail:0 xpass:0 skip:5 error:0
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Kees Cook <keescook@chromium.org>
+
+Thanks for a quick fix!
+
+-Kees
+
+-- 
+Kees Cook
