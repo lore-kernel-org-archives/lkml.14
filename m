@@ -1,98 +1,85 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336DA38FA7
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 03:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id DD9772942C
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 03:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709608585; cv=none; b=fZMSKiZ3TujsrAVgsrqlaPsI50550EcEhVmhhRrwikd1QD9GM4KXLZIGsPoebrqaet9dzURiX3yfWhxv2ylGyWJphvOgRcguoKg4LuLivNrbDlJAadD9I2LOqSbuuKG3GBe1u2Qh2RPOLRN8HfklMNegeR7WeiTs1sHiewm8EXs=
+	t=1709608767; cv=none; b=Bji8KT/nDXTTMCmZfI/VsXjVm5qfiuCYPCO8ms3WobCRVfBVAmHz6SGX17EGoIo3ZmD1mjX8xINgHBGQMRH2r9JSMlaA2i02w+SsM+b4ycri3JE3uA/r6EExt/UEzdbi/8TptRZFZU3J12UmhN3nFrpl4gWA1Ogxdf7kI5HvS9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709608585; c=relaxed/simple;
-	bh=tiEDYnc/wAhfPPZQ9V/0HNeQiahhRnw7cSW6jaWgbv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YdtBLOqj+yG5i/ppEMQ8Ry3EuvsKqFS6bgoeFOSrs4AukC56RSNV0kSRGwQezuwkonnwQw36YRDOC+199Ww0o4UhERMb0jWRh4tYN2RZlRRaG36p8G3VO7Z+sS/36cdEp7CZMzKAnErwmSR8F5urcXTV8WmIYk//bMEMDsG7hNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=S8VPX6tG; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="S8VPX6tG"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e6092a84f4so1608043b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 19:16:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709608582; x=1710213382; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BI+L2texUlWaaIlUkdZ7hdiC5rznyELVG+l55NF0jTM=;
-        b=S8VPX6tGcCNDKg9uT1JBiTcsWAZOe5X6mrmRZgojynLopdnqdcm/RVUM0Wf369vLrR
-         hrOEoSXj0Xd3Mu7+XEc6YqLSEpxXJkfl7IqI/3IptbVGhJwvvNJMg7Gk0QjbHwlZHvPw
-         95OCHCQJVtDFTf1GsuFtHhdbHuYlaMTyJ2Rv/2uH0hi/laY5ckleLGsZAEeJ7MZhyHFx
-         6RyHKc7oFQaPQX3E78drHJNgFCgWgQG/Rd3wJPccWAvSKMLlpnlc7R7YikmuIU/sqqZK
-         U8lWBuU8BIxjLPDqH38oQbKflM8kUGNmwlu3aNu8KiH71c2QtNsWO1OSy61YulbKb/YH
-         Bw5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709608582; x=1710213382;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BI+L2texUlWaaIlUkdZ7hdiC5rznyELVG+l55NF0jTM=;
-        b=DuGUX5ZB28gc2GtMcbXHMVM1HCGqZFfyABk2AB3Pyy7u90RMGCb/jiTwLi9icHiS2e
-         HcdfmpGbIxNC9UwMprE0LAqES26hDjOqVnPHk92lDkBEWYYw5iAhlZrDGxcy2PFFEeEz
-         cu2pMN+GszWlq9kOqGwM0fWmLRIWW6JSMDGdLYc9sY7h1UGb1u4+Cho1dV6fG1VJQkc0
-         OK0613FO6BeQMhfh4QTKJObPySAJY5p5jzISDjg32xll40GdtpsRJ4gy19GeFzPPh9K6
-         s8QHmYu3dwTDQNXb9o/dZXuBA9qVnE+/qBLtKsc3ADIkiYQnw4P5kb69dxg+iwvkOPmr
-         sJ3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXk5h+OjXKwwBFAkE9hGoqeiesZKRwLg1hgpRGnidwV8IxAMs/5P42mERdjdgs2JWnnlIUHFuOPoOW/rtswef9fSEYTK4YSsCurMEXD
-X-Gm-Message-State: AOJu0YxAK5Db+Cbnze4czLJ3owDa+WCWcuPJ0+HLpWexKzhn5Aw5IjT8
-	RFtwA1Wvs+4U+2abOztCRuILro7Vsn53gjcd4ABQ+ACOuQ70qoBVZA16S0MnNBFXRjugjrlA6ZG
-	a
-X-Google-Smtp-Source: AGHT+IF7MEpkETHIp1R28gFULtHGc7xIrq8HH3TAtBvHh3odOsN25timUMLh+B42xnOo7p3npn/lyg==
-X-Received: by 2002:a05:6a20:160e:b0:1a1:e2b:d26f with SMTP id l14-20020a056a20160e00b001a10e2bd26fmr668719pzj.7.1709608582456;
-        Mon, 04 Mar 2024 19:16:22 -0800 (PST)
-Received: from [10.84.154.116] ([203.208.167.155])
-        by smtp.gmail.com with ESMTPSA id e11-20020a056a0000cb00b006e6215bfcf4sm2603667pfj.194.2024.03.04.19.16.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 19:16:22 -0800 (PST)
-Message-ID: <4ab8d0aa-7c03-4160-a2bf-39351c394a6e@bytedance.com>
-Date: Tue, 5 Mar 2024 11:15:00 +0800
+	s=arc-20240116; t=1709608767; c=relaxed/simple;
+	bh=Ck4ZctKVOXdlbvUJ8DoMXK80YN5zrcPcWCl0t3M5bwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZTsvF+M+AtVQDCF8OToNV1/tVhsFMtDb0Dm03559sNQUUPvYE/3ocNV0da0yJMbNW+F+nusJ7nQHNG3PXE+6xuw4X2vTrsMxvyOoklLUQSBmIkcIrHKnSkKUKpy9CqjZDtqQHrA886jiWGi4hZlLp2N19xX6WDZdf3KzzlBL+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 143883 invoked by uid 1000); 4 Mar 2024 22:19:24 -0500
+Date: Mon, 4 Mar 2024 22:19:24 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+  Demi Marie Obenour <demi@invisiblethingslab.com>, linux-usb@vger.kernel.org,
+  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: usbip doesn't work with userspace code that accesses USB devices
+Message-ID: <a95c7e71-a720-49ba-b503-6f20a86be38e@rowland.harvard.edu>
+References: <ZeYov0k8njwcZzGX@itl-email>
+ <2024030406-kilogram-raving-33c5@gregkh>
+ <ZeZPLX6z5pyn2Eh_@mail-itl>
+ <ZeZetkR-i1bCDr9v@mail-itl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH 1/2] sched/eevdf: Always update V if se->on_rq when
- reweighting
-Content-Language: en-US
-To: Tianchen Ding <dtcccc@linux.alibaba.com>, linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
-References: <20240304030042.2690-1-dtcccc@linux.alibaba.com>
- <20240304030042.2690-2-dtcccc@linux.alibaba.com>
- <ad801d18-6243-47c5-8e37-ce712ca5d0c5@bytedance.com>
- <5b863dfe-bb97-4bc9-a117-153b1ba087f0@linux.alibaba.com>
-From: Abel Wu <wuyun.abel@bytedance.com>
-In-Reply-To: <5b863dfe-bb97-4bc9-a117-153b1ba087f0@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZeZetkR-i1bCDr9v@mail-itl>
 
-On 3/5/24 10:13 AM, Tianchen Ding Wrote:
-> On 2024/3/4 20:06, Abel Wu wrote:
->> On 3/4/24 11:00 AM, Tianchen Ding Wrote:
->>> reweight_eevdf() needs the latest V to do accurate calculation for new
->>> ve and vd. So update V unconditionally when se is runnable.
->>
->> As this should come along with commit eab03c23c2a1, I think it would
->> be better add a Fixes tag?
->>
+On Tue, Mar 05, 2024 at 12:52:22AM +0100, Marek Marczykowski-Górecki wrote:
+> On Mon, Mar 04, 2024 at 11:46:04PM +0100, Marek Marczykowski-Górecki wrote:
+> > Terminology:
+> > 1. sys-usb - a VM where USB controller (a PCI device) lives; here
+> > usbip-host is attached to the device
+> > 2. testvm - target VM where usbip is connected; here vhci-hcd is used
+> > 3. qvm-usb - tool that connects the above two (equivalent of
+> > userspace part of standard usbip)
+> > 
+> > Specific steps:
+> > 1. Connect android phone - at this point it's only in sys-usb
+> > 2. Switch its mode to file transfer - observe reconnect in sys-usb
+> > 3. Use qvm-usb to attach it to the testvm
+> > 4. Call jmtpfs -d /mnt in testvm
 > 
-> I'm not sure. In fact avg_vruntime_sub() in reweight_entity() was first introduced by af4cf40470c2, and at that time the algorithm about reweight was not completed...
+> Or maybe reset or something is involved here too?
 > 
+> After using qvm-usb to attach _and detach_ the device, it stays bound to
+> usbip-host driver (that's intentional). But then, even after re-binding
+> back to the "usb" driver, jmtpfs called in sys-usb directly fails the
+> same way, including failure to reset.
+> 
+> In fact, even without usbip involved at all, jmtpfs directly in sys-usb
+> works only once. The second attempt (without either physically reconnecting
+> the phone, or changing its more to "no data transfer" and back to "file
+> transfer") fails the same way. After terminating the first instance, I
+> see just this logged:
+> 
+>     [921332.525210] usb 2-1: reset high-speed USB device number 22 using xhci_hcd
 
-It is because before commit eab03c23c2a1, reweight didn't rely on V.
+If something doesn't work when usbip isn't involved, you definitely 
+shouldn't expect it to work when usbip _is_ involved.
+
+It sounds like you're facing more than one type of problem.  The best 
+approach is to attack them separately.
+
+I'd start with problems that exist only on sys-usb first -- keeping 
+usbip out of the picture will make everything much simpler.  You can try 
+capturing a usbmon trace, starting from before the phone is attached, 
+and continuing on through the mode changes and failures.  In fact, break 
+it up into several traces, each starting just before one of the major 
+events (initial plug-in, mode change, whatever).
+
+Once that's under control, I suggest using usbmon on both sides (sys-usb 
+and testvm) of the usbip connection.  But start without usbip.
+
+Alan Stern
