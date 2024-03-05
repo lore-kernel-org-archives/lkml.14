@@ -1,53 +1,53 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822925B670
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 12:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048445B68A
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 12:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709641653; cv=none; b=jirj0af8IYCznWGEZlAjshlYwcIu455IDho22IAJFWvStlbz1S1d0Wb0CPExe9FyOmfWMfCtLAZquPaF6DZnh8AqVekI3NbSMES6OydoJk2EJSDuX6+nUtcMx7sPi1w5i+F4WQdU+klDps5+cHJ77D+X8Yuvi5MIgCR5CyeAC/0=
+	t=1709641655; cv=none; b=YiYyKpr3mA7Z3C5tPH32+OS0uN1K2Yt3dZZqyQOl5BWkjGXoA5dYJ4BDzhIYaXk6dof9NCkmwzE0ffu4VJbmghOZ0WDJk6yswhwzXchBnEzXYdVxvpFVjiP7kzaMonIH8VMuI4ZC1rm24nso4r56EKVi4MAYhc+OLEL0c67HhuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709641653; c=relaxed/simple;
-	bh=Do5Qmt0LUVcZ/D/yMwhEMx258cx50GlNIapQbJzYE4s=;
+	s=arc-20240116; t=1709641655; c=relaxed/simple;
+	bh=maKNjl3/k7YtNAhNUBytDuUXRmMI86juobu03Z7Ayi0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LOqspEiT1X3qyULYA2PyxLW/qGlco17RAvbdwoAhr6gzIv+JNvsaEe9PDV74b1Ru0ASC0cxHlSkRvsBTECUsu4t96M1wibmWrzDxWB4VnOextObRp36HZbFHuMvvEoyQypVc675NA82i5eq2LZhOzFxR12SkNZJ7ydHmZpdGaJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PLFm3Ren; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=Hf687CcAs0ZYyoe7/czp7khVhwjYFglPpiz/VooRmvl5hY8NPqNbemoz6oNNdlFgnlJ3R5OPnadOru5YHbMGmfudMWNxVjPeNUp/A1tFiPQQ3+U7L++4/4MJjgC+v/zQguNm7JSK57Y6YBf7Ni2utEAP2hPs9/TEpsrCBuDIF48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iKlym7RD; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PLFm3Ren"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iKlym7RD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709641651; x=1741177651;
+  t=1709641654; x=1741177654;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Do5Qmt0LUVcZ/D/yMwhEMx258cx50GlNIapQbJzYE4s=;
-  b=PLFm3Renh6VR0nS3ubOK6nAuNSmRm89LKcd5lJvTbt3BjM7UKq0skngw
-   wyGLHxzAFl6AKHTW1fnWWBY3GTbIOmQFYN+OpPG4UGUdTiiSNUgdFT2C8
-   UR9zwbmuW3GsTCuKcLxQgK/sRjBrnNgyGm1YfD6W5xLt+C/ouX2EcoZuJ
-   KS6LOrIPBd89IQuFVxqUHuRfBw5Xpy+uxurnawUK5jCTe05b2ijWCQno4
-   yhH6elAlfGPMkjuoDthcs7UUcnYrkh/e831MXV1tSfPwTt1lmCNBqpqsy
-   WFvyId7RCFiwaiHwJHdsSIcCP+DCEn/SxkUdcHhN5BqtcOGeW2bLiobq8
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="21648451"
+  bh=maKNjl3/k7YtNAhNUBytDuUXRmMI86juobu03Z7Ayi0=;
+  b=iKlym7RD50XrfGRApYpZBGTUV3HfJacix0vQ7aB8yTRhDpc2rw2BUXGy
+   znYnFtz9OtQVRj8ZYMxa0ZACvGC8tuMVxni5CfH8SPcWYEdbH9HIRvpVh
+   tYkpFeWuVrfCVP5Fi4w2nqrmuqLA/Pz13XyrW70gvSrL/7YFaaWMstPL1
+   1Cq/A8G4zexvmt+RisrrCyO9Xqea9NiLW7BgPjVHwARwTJWFqm1qRSBtq
+   xDJMzDQJ6jrazzw/cASTiFwG5vR9UDPMJzaqHF/7QACf8WkZ60fCbHzlH
+   Wd+iU5Kxw5dWfcyUoQ9ClXFvUrNSsnbwmReow48a9X51M9j5QPaiz73qa
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="21648471"
 X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="21648451"
+   d="scan'208";a="21648471"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 04:27:30 -0800
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 04:27:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="9330088"
+   d="scan'208";a="9330112"
 Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by orviesa010.jf.intel.com with ESMTP; 05 Mar 2024 04:27:28 -0800
+  by orviesa010.jf.intel.com with ESMTP; 05 Mar 2024 04:27:32 -0800
 From: Lu Baolu <baolu.lu@linux.intel.com>
 To: Joerg Roedel <joro@8bytes.org>
 Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
 	Eric Badger <ebadger@purestorage.com>,
 	iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] iommu/vt-d: Don't issue ATS Invalidation request when device is disconnected
-Date: Tue,  5 Mar 2024 20:21:15 +0800
-Message-Id: <20240305122121.211482-3-baolu.lu@linux.intel.com>
+Subject: [PATCH 4/8] iommu: Add static iommu_ops->release_domain
+Date: Tue,  5 Mar 2024 20:21:17 +0800
+Message-Id: <20240305122121.211482-5-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240305122121.211482-1-baolu.lu@linux.intel.com>
 References: <20240305122121.211482-1-baolu.lu@linux.intel.com>
@@ -59,196 +59,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+The current device_release callback for individual iommu drivers does the
+following:
 
-For those endpoint devices connect to system via hotplug capable ports,
-users could request a hot reset to the device by flapping device's link
-through setting the slot's link control register, as pciehp_ist() DLLSC
-interrupt sequence response, pciehp will unload the device driver and
-then power it off. thus cause an IOMMU device-TLB invalidation (Intel
-VT-d spec, or ATS Invalidation in PCIe spec r6.1) request for non-existence
-target device to be sent and deadly loop to retry that request after ITE
-fault triggered in interrupt context.
+1) Silent IOMMU DMA translation: It detaches any existing domain from the
+   device and puts it into a blocking state (some drivers might use the
+   identity state).
+2) Resource release: It releases resources allocated during the
+   device_probe callback and restores the device to its pre-probe state.
 
-That would cause following continuous hard lockup warning and system hang
+Step 1 is challenging for individual iommu drivers because each must check
+if a domain is already attached to the device. Additionally, if a deferred
+attach never occurred, the device_release should avoid modifying hardware
+configuration regardless of the reason for its call.
 
-[ 4211.433662] pcieport 0000:17:01.0: pciehp: Slot(108): Link Down
-[ 4211.433664] pcieport 0000:17:01.0: pciehp: Slot(108): Card not present
-[ 4223.822591] NMI watchdog: Watchdog detected hard LOCKUP on cpu 144
-[ 4223.822622] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
-         OE    kernel version xxxx
-[ 4223.822623] Hardware name: vendorname xxxx 666-106,
-BIOS 01.01.02.03.01 05/15/2023
-[ 4223.822623] RIP: 0010:qi_submit_sync+0x2c0/0x490
-[ 4223.822624] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
- 57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 1
-0 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
-[ 4223.822624] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
-[ 4223.822625] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
-[ 4223.822625] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
-[ 4223.822625] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
-[ 4223.822626] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
-[ 4223.822626] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
-[ 4223.822626] FS:  0000000000000000(0000) GS:ffffa237ae400000(0000)
-knlGS:0000000000000000
-[ 4223.822627] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4223.822627] CR2: 00007ffe86515d80 CR3: 000002fd3000a001 CR4: 0000000000770ee0
-[ 4223.822627] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 4223.822628] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-[ 4223.822628] PKRU: 55555554
-[ 4223.822628] Call Trace:
-[ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
-[ 4223.822628]  __dmar_remove_one_dev_info+0x224/0x250
-[ 4223.822629]  dmar_remove_one_dev_info+0x3e/0x50
-[ 4223.822629]  intel_iommu_release_device+0x1f/0x30
-[ 4223.822629]  iommu_release_device+0x33/0x60
-[ 4223.822629]  iommu_bus_notifier+0x7f/0x90
-[ 4223.822630]  blocking_notifier_call_chain+0x60/0x90
-[ 4223.822630]  device_del+0x2e5/0x420
-[ 4223.822630]  pci_remove_bus_device+0x70/0x110
-[ 4223.822630]  pciehp_unconfigure_device+0x7c/0x130
-[ 4223.822631]  pciehp_disable_slot+0x6b/0x100
-[ 4223.822631]  pciehp_handle_presence_or_link_change+0xd8/0x320
-[ 4223.822631]  pciehp_ist+0x176/0x180
-[ 4223.822631]  ? irq_finalize_oneshot.part.50+0x110/0x110
-[ 4223.822632]  irq_thread_fn+0x19/0x50
-[ 4223.822632]  irq_thread+0x104/0x190
-[ 4223.822632]  ? irq_forced_thread_fn+0x90/0x90
-[ 4223.822632]  ? irq_thread_check_affinity+0xe0/0xe0
-[ 4223.822633]  kthread+0x114/0x130
-[ 4223.822633]  ? __kthread_cancel_work+0x40/0x40
-[ 4223.822633]  ret_from_fork+0x1f/0x30
-[ 4223.822633] Kernel panic - not syncing: Hard LOCKUP
-[ 4223.822634] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
-         OE     kernel version xxxx
-[ 4223.822634] Hardware name: vendorname xxxx 666-106,
-BIOS 01.01.02.03.01 05/15/2023
-[ 4223.822634] Call Trace:
-[ 4223.822634]  <NMI>
-[ 4223.822635]  dump_stack+0x6d/0x88
-[ 4223.822635]  panic+0x101/0x2d0
-[ 4223.822635]  ? ret_from_fork+0x11/0x30
-[ 4223.822635]  nmi_panic.cold.14+0xc/0xc
-[ 4223.822636]  watchdog_overflow_callback.cold.8+0x6d/0x81
-[ 4223.822636]  __perf_event_overflow+0x4f/0xf0
-[ 4223.822636]  handle_pmi_common+0x1ef/0x290
-[ 4223.822636]  ? __set_pte_vaddr+0x28/0x40
-[ 4223.822637]  ? flush_tlb_one_kernel+0xa/0x20
-[ 4223.822637]  ? __native_set_fixmap+0x24/0x30
-[ 4223.822637]  ? ghes_copy_tofrom_phys+0x70/0x100
-[ 4223.822637]  ? __ghes_peek_estatus.isra.16+0x49/0xa0
-[ 4223.822637]  intel_pmu_handle_irq+0xba/0x2b0
-[ 4223.822638]  perf_event_nmi_handler+0x24/0x40
-[ 4223.822638]  nmi_handle+0x4d/0xf0
-[ 4223.822638]  default_do_nmi+0x49/0x100
-[ 4223.822638]  exc_nmi+0x134/0x180
-[ 4223.822639]  end_repeat_nmi+0x16/0x67
-[ 4223.822639] RIP: 0010:qi_submit_sync+0x2c0/0x490
-[ 4223.822639] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
- 57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 10
- 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
-[ 4223.822640] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
-[ 4223.822640] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
-[ 4223.822640] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
-[ 4223.822641] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
-[ 4223.822641] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
-[ 4223.822641] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
-[ 4223.822641]  ? qi_submit_sync+0x2c0/0x490
-[ 4223.822642]  ? qi_submit_sync+0x2c0/0x490
-[ 4223.822642]  </NMI>
-[ 4223.822642]  qi_flush_dev_iotlb+0xb1/0xd0
-[ 4223.822642]  __dmar_remove_one_dev_info+0x224/0x250
-[ 4223.822643]  dmar_remove_one_dev_info+0x3e/0x50
-[ 4223.822643]  intel_iommu_release_device+0x1f/0x30
-[ 4223.822643]  iommu_release_device+0x33/0x60
-[ 4223.822643]  iommu_bus_notifier+0x7f/0x90
-[ 4223.822644]  blocking_notifier_call_chain+0x60/0x90
-[ 4223.822644]  device_del+0x2e5/0x420
-[ 4223.822644]  pci_remove_bus_device+0x70/0x110
-[ 4223.822644]  pciehp_unconfigure_device+0x7c/0x130
-[ 4223.822644]  pciehp_disable_slot+0x6b/0x100
-[ 4223.822645]  pciehp_handle_presence_or_link_change+0xd8/0x320
-[ 4223.822645]  pciehp_ist+0x176/0x180
-[ 4223.822645]  ? irq_finalize_oneshot.part.50+0x110/0x110
-[ 4223.822645]  irq_thread_fn+0x19/0x50
-[ 4223.822646]  irq_thread+0x104/0x190
-[ 4223.822646]  ? irq_forced_thread_fn+0x90/0x90
-[ 4223.822646]  ? irq_thread_check_affinity+0xe0/0xe0
-[ 4223.822646]  kthread+0x114/0x130
-[ 4223.822647]  ? __kthread_cancel_work+0x40/0x40
-[ 4223.822647]  ret_from_fork+0x1f/0x30
-[ 4223.822647] Kernel Offset: 0x6400000 from 0xffffffff81000000 (relocation
-range: 0xffffffff80000000-0xffffffffbfffffff)
+To simplify this process, introduce a static release_domain within the
+iommu_ops structure. It can be either a blocking or identity domain
+depending on the iommu hardware. The iommu core will decide whether to
+attach this domain before the device_release callback, eliminating the
+need for repetitive code in various drivers.
 
-Such issue could be triggered by all kinds of regular surprise removal
-hotplug operation. like:
+Consequently, the device_release callback can focus solely on the opposite
+operations of device_probe, including releasing all resources allocated
+during that callback.
 
-1. pull EP(endpoint device) out directly.
-2. turn off EP's power.
-3. bring the link down.
-etc.
-
-this patch aims to work for regular safe removal and surprise removal
-unplug. these hot unplug handling process could be optimized for fix the
-ATS Invalidation hang issue by calling pci_dev_is_disconnected() in
-function devtlb_invalidation_with_pasid() to check target device state to
-avoid sending meaningless ATS Invalidation request to iommu when device is
-gone. (see IMPLEMENTATION NOTE in PCIe spec r6.1 section 10.3.1)
-
-For safe removal, device wouldn't be removed until the whole software
-handling process is done, it wouldn't trigger the hard lock up issue
-caused by too long ATS Invalidation timeout wait. In safe removal path,
-device state isn't set to pci_channel_io_perm_failure in
-pciehp_unconfigure_device() by checking 'presence' parameter, calling
-pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will return
-false there, wouldn't break the function.
-
-For surprise removal, device state is set to pci_channel_io_perm_failure in
-pciehp_unconfigure_device(), means device is already gone (disconnected)
-call pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will
-return true to break the function not to send ATS Invalidation request to
-the disconnected device blindly, thus avoid to trigger further ITE fault,
-and ITE fault will block all invalidation request to be handled.
-furthermore retry the timeout request could trigger hard lockup.
-
-safe removal (present) & surprise removal (not present)
-
-pciehp_ist()
-   pciehp_handle_presence_or_link_change()
-     pciehp_disable_slot()
-       remove_board()
-         pciehp_unconfigure_device(presence) {
-           if (!presence)
-                pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
-           }
-
-this patch works for regular safe removal and surprise removal of ATS
-capable endpoint on PCIe switch downstream ports.
-
-Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table interface")
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-Tested-by: Haorong Ye <yehaorong@bytedance.com>
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Link: https://lore.kernel.org/r/20240301080727.3529832-3-haifeng.zhao@linux.intel.com
+Co-developed-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Link: https://lore.kernel.org/r/20240305013305.204605-2-baolu.lu@linux.intel.com
 ---
- drivers/iommu/intel/pasid.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/iommu.h |  1 +
+ drivers/iommu/iommu.c | 19 +++++++++++++++----
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index 108158e2b907..746c7abe2237 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -214,6 +214,9 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
- 	if (!info || !info->ats_enabled)
- 		return;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index af6c367ed673..2e925b5eba53 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -585,6 +585,7 @@ struct iommu_ops {
+ 	struct module *owner;
+ 	struct iommu_domain *identity_domain;
+ 	struct iommu_domain *blocked_domain;
++	struct iommu_domain *release_domain;
+ 	struct iommu_domain *default_domain;
+ };
  
-+	if (pci_dev_is_disconnected(to_pci_dev(dev)))
-+		return;
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index eb50543bf956..098869007c69 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -462,13 +462,24 @@ static void iommu_deinit_device(struct device *dev)
+ 
+ 	/*
+ 	 * release_device() must stop using any attached domain on the device.
+-	 * If there are still other devices in the group they are not effected
++	 * If there are still other devices in the group, they are not affected
+ 	 * by this callback.
+ 	 *
+-	 * The IOMMU driver must set the device to either an identity or
+-	 * blocking translation and stop using any domain pointer, as it is
+-	 * going to be freed.
++	 * If the iommu driver provides release_domain, the core code ensures
++	 * that domain is attached prior to calling release_device. Drivers can
++	 * use this to enforce a translation on the idle iommu. Typically, the
++	 * global static blocked_domain is a good choice.
++	 *
++	 * Otherwise, the iommu driver must set the device to either an identity
++	 * or a blocking translation in release_device() and stop using any
++	 * domain pointer, as it is going to be freed.
++	 *
++	 * Regardless, if a delayed attach never occurred, then the release
++	 * should still avoid touching any hardware configuration either.
+ 	 */
++	if (!dev->iommu->attach_deferred && ops->release_domain)
++		ops->release_domain->ops->attach_dev(ops->release_domain, dev);
 +
- 	sid = info->bus << 8 | info->devfn;
- 	qdep = info->ats_qdep;
- 	pfsid = info->pfsid;
+ 	if (ops->release_device)
+ 		ops->release_device(dev);
+ 
 -- 
 2.34.1
 
