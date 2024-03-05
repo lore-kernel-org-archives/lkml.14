@@ -1,91 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp238.sjtu.edu.cn (smtp238.sjtu.edu.cn [202.120.2.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D830126F07;
-	Tue,  5 Mar 2024 14:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E89126F1D;
+	Tue,  5 Mar 2024 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709650561; cv=none; b=bShhxNPh4A6ggZJQuxusFQk3vhQUq1dgkRP/GeU5EE1RA9uCD/5ebT0+NEB4PuddLv2BIJv1NISyuOpYvDhD1p3hU2DLccT+aAr1HZFgNflSFkmehOjycAe472ZUAqFaMf1Tgbz3aluVwB8AdmJcQkz3lJH9G+p7SF/ToSejffo=
+	t=1709650637; cv=none; b=HFOg0PGkxeRAtYq08SkhPdQYqxrmTHDzOMX71zfCDYmyG0UqWrkX/b/SGbwsIT7L0ycMoj9dB5oN1SxDJ1jx25iqZQvmnREJ1jpCDlZjHWp0RiqZRW81+7ZxeS6nGCgX5oQpdlGypjKjdyBeOvdUN9mDO/SUdk86GHoEo+MbnZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709650561; c=relaxed/simple;
-	bh=HziwUH5sW0NWbkfvO4gvMNkhVHphWUEl9FgSM+AIM/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cFuTzuW+WUtfwTJQUXzZLLVXz5Jf3fVjz4BnV6iYG7r/y4qk10mnLpEVwoNwtnaQBEQyfp9KRehHvb0wbPxRZJqRZnOgQRkE7PBnWGaZqN/1b2G7ec/wwiU0vbIZ5TKWtKMaUJaJtZAl1M8xwhPWvRWbi7+NMmkJUiZ+YJA4T0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vf3JfgX+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vf3JfgX+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7C5FC433C7;
-	Tue,  5 Mar 2024 14:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709650561;
-	bh=HziwUH5sW0NWbkfvO4gvMNkhVHphWUEl9FgSM+AIM/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vf3JfgX+5vuDM/TQz5RfdFAJ8XIQE/47D7O5EC4bSsewRcUA1qrpRQELmpFNQHDID
-	 8IUU4mvdqCdAZnKc8H7x+L6HzvR11P+E8J4GM6+euTCUD5bB1ccvzfRwT4rCUeLLu2
-	 YqWntEK0/7RuPzULk4zIknYyGy58JO7nsErrYTSG/3If6PWos9q/57wRjw2EjNXig9
-	 M1Smsl3TeZSho0Ldxkra9hIS8N46r+FWgf9dvZ9i1/yiquz7cujdOu5bIYDAMuWTMO
-	 vxEkvvHnEOmSK3biusXbFykVfPPT7J6+OlzUdJBgBhFKsxLZRSZjQ14qW/udm+SMu9
-	 RvK3S2Nq3UPLg==
-Date: Tue, 5 Mar 2024 08:55:58 -0600
-From: Rob Herring <robh@kernel.org>
-To: Yang Xiwen <forbidden405@outlook.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jiancheng Xue <xuejiancheng@hisilicon.com>,
-	Shawn Guo <shawn.guo@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	David Yang <mmyangfl@gmail.com>
-Subject: Re: [PATCH v4 2/5] dt-bindings: phy: hisi-inno-usb2: convert to YAML
-Message-ID: <20240305145558.GA3339636-robh@kernel.org>
-References: <20240305-inno-phy-v4-0-a03204c9cf1c@outlook.com>
- <20240305-inno-phy-v4-2-a03204c9cf1c@outlook.com>
+	s=arc-20240116; t=1709650637; c=relaxed/simple;
+	bh=MCI8FrWoh73Sxz96+HLoOzEC8uhjSDDNbG870C/UW8w=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=qOxc/J7maV/xVdzokK6tBOhxOlO8kKStS4+ulcyjoq+R73p/SGi/cO7qwkcoszHIgQtOmDcv6iDdqVktaqnE0bbzhWavtvRNB83jyQfqVh5jbMjshxYMxEAPQiu1lHooXjPuOY3I8IDtNDHj1XuA0Ezsv7+yo+uiNfPzGuhrlL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; arc=none smtp.client-ip=202.120.2.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
+Received: from mta90.sjtu.edu.cn (unknown [10.118.0.90])
+	by smtp238.sjtu.edu.cn (Postfix) with ESMTPS id 9E76BBEDE;
+	Tue,  5 Mar 2024 22:57:03 +0800 (CST)
+Received: from mstore135.sjtu.edu.cn (unknown [10.118.0.135])
+	by mta90.sjtu.edu.cn (Postfix) with ESMTP id 62D5837C878;
+	Tue,  5 Mar 2024 22:57:03 +0800 (CST)
+Date: Tue, 5 Mar 2024 22:57:03 +0800 (CST)
+From: Zheyun Shen <szy0127@sjtu.edu.cn>
+To: Sean Christopherson <seanjc@google.com>
+Cc: pbonzini <pbonzini@redhat.com>, tglx <tglx@linutronix.de>, 
+	thomas lendacky <thomas.lendacky@amd.com>, kvm <kvm@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <722904540.5000784.1709650623262.JavaMail.zimbra@sjtu.edu.cn>
+Subject: Re: [PATCH] KVM:SVM: Flush cache only on CPUs running SEV guest
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305-inno-phy-v4-2-a03204c9cf1c@outlook.com>
+Content-Type: text/plain; charset=GB2312
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 10.0.6_GA_4585 (ZimbraWebClient - GC122 (Win)/10.0.6_GA_4585)
+Thread-Index: MUWiCXlfMum3WwlzB2dt/UpqVaVaDA==
+Thread-Topic: Flush cache only on CPUs running SEV guest
 
-On Tue, Mar 05, 2024 at 10:19:47AM +0800, Yang Xiwen wrote:
-> convert the legacy text binding to YAML. While at it, remove
-> "hisilicon,inno-usb2-phy" fallback compatible.
-> 
-> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
-> ---
->  .../bindings/phy/hisilicon,inno-usb2-phy.yaml      | 91 ++++++++++++++++++++++
->  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 71 -----------------
->  2 files changed, 91 insertions(+), 71 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
-> new file mode 100644
-> index 000000000000..ba82405ddf51
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/hisilicon,inno-usb2-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HiSilicon HiSTB SoCs INNO USB2 PHY device
-> +
-> +maintainers:
-> +  - Yang Xiwen <forbidden405@outlook.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
+On Mon, Mar 04, 2024, Sean Christopherson wrote:
+> Instead of copy+paste WBINVD+cpumask_clear() everywhere, add a prep patch to
+> replace relevant open coded calls to wbinvd_on_all_cpus() with calls to
+> sev_guest_memory_reclaimed().  Then only sev_guest_memory_reclaimed() needs to
+> updated, and IMO it helps document why KVM is blasting WBINVD.
 
-If there's another version, you can drop 'items' (and its '-' below).
+> I'm also pretty sure this should be a cpumask_var_t, and dynamically allocated
+> as appropriate.  And at that point, it should be allocated and filled if and only
+> if the CPU doesn't have X86_FEATURE_SME_COHERENT
 
-> +      - enum:
-> +          - hisilicon,hi3798cv200-usb2-phy
+I notice that several callers of wbinvd_on_all_cpus() must use wbinvd to flush cache
+instead of using clflush or just doing nothing if the CPU has X86_FEATURE_SME_COHERENT,
+according to https://github.com/AMDESE/linux/commit/2e2409afe5f0c284c7dfe5504058e8d115806a7d
+Therefore, I think the flush operation should be divided into two functions. One is the 
+optimized wbinvd, which does not consider X86_FEATURE_SME_COHERENT, and the other is 
+sev_guest_memory_reclaimed(), which should use clflush instead of wbinvd in case of 
+X86_FEATURE_SME_COHERENT. Thus the cpumask struct should be exist whether the CPU has
+X86_FEATURE_SME_COHERENT or not.
+
+Besides, if we consider X86_FEATURE_SME_COHERENT to get rid of wbinvd in sev_guest_memory_reclaimed(),
+we should ensure the clflush is called on corresponding addresses, as mentioned in  
+https://github.com/AMDESE/linux/commit/d45829b351ee6ec5f54dd55e6aca1f44fe239fe6 
+However, caller of sev_guest_memory_reclaimed() (e.g., kvm_mmu_notifier_invalidate_range_start()) 
+only get HVA belongs to userspace(e.g., qemu), so calling clflush with this HVA may 
+lead to a page fault in kernel. I was wondering if notifying userspace applications to 
+do clflush themselves is the only solution here. But for the sake of safety, maybe KVM 
+cannot left the work for untrusted userspace applications?
+
+Or should I just temporarily ignore the X86_FEATURE_SME_COHERENT scenario which is hard to implement, 
+and just refine the patch only for wbinvd_on_all_cpus() ?
+
+Best regards,
+Zheyun Shen
