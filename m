@@ -1,95 +1,105 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6467610B;
-	Tue,  5 Mar 2024 00:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE49EC2
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 00:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709598418; cv=none; b=empGyCVo+FkeOzubyl0Jca1/jbhx2zbWc7PzcxRPf17QDDUKiFruMz3o43xpzJZHCnmxkoxKtggGlaGg4rkjJ7NIGzUJQ8UeB29oBEbybSSxVCtNXh8jN1NX5znoqh1KyfSAUBPU8uyA1NCUcCaR2G1NCzRr/pSR4RFCfnlPqYg=
+	t=1709598494; cv=none; b=dD+MOorTuJfmJJMlSWdASCnB9q+rx7is8BaQPCxNRlbqydJeMkJqsq69yfZB+GMKCZ7whr4tlBU4YcCQ+g0v584P8HvgN/2sNS/6EKVDCjuFqbv6sdUrZ13TmOZNDluhR9BsCZkLNJqfgb20KR5ECbvdHeGpxYybvVOCkhkojNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709598418; c=relaxed/simple;
-	bh=I/fv5QjfcioRRSvSneTM+YmY+iE+AQw5ADJfDWecOEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJkipVZbtBeM5LaS7skFXVYgQ7HRgF7oPWm1Ldlfqf5okrGwsiPR4gOJhLkIqo5GTVOW1H+FIgjHEKZQFEsn7t0xHd6Cgd3EJhJup4f0KKr+PGcaYjTjw67il8vKAcDx77h22oey+d5A+6Hnm8LxC+QmtIBsOjlC65lJOkciJpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dc9222b337so50674315ad.2;
-        Mon, 04 Mar 2024 16:26:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709598416; x=1710203216;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	s=arc-20240116; t=1709598494; c=relaxed/simple;
+	bh=4AjwDlHx3YycEF4tI7pNTUo4oAM3+zIFAtp1wah21RI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yil5OPhtwmWs+CULuAqHZaQOTfcE18SBOS0o37C/peqVb0jQ0gTX5XdwdsPYBFuV8yKEBJGBhgsWLrB2X1dyXt7VxB1hGXpyLo/LTl4A8764lSAp6iylykE8Pyql3gVs1PN1qXhhJiXo+Q8QK18gzHJghnq7BAE7gftq7DOljuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lvyPTQ5Z; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lvyPTQ5Z"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d2505352e6so64892041fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 16:28:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709598491; x=1710203291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4vaTAt59v6hDHMmG33vSBdoXtjWvwKkVZnRYvNr3jeI=;
-        b=O5b2dW7O34e8v8/0lfD6zSviNVlNiFRoUY787x5WhE5HKD5iL4Q4cyPB9OuHDqR3jk
-         iftD5WwUL7vvOLSSc1n4wd3flO6jGYRNeIX4PIu4oDPTv0KGJDblRBmVZJBMq3Llz1gc
-         l9iKudufJmdf4P2l1z1/+FLm98r5MlSbqgHiYEQOSdoHag+2FChxVvmS7WKWBeKFHbWv
-         QvpzIwx/ngGrkbpaXd15wwvaDFyLXVICOiV8RKM6NN3ur5BBVeB8GOzuWIhgdc021m0C
-         kgcwdviH4oyOera9xrPC2SB4WKteXKV9ZvUJ9Ex406hgdwGden8R2UVbUIsOomcam0rI
-         GGQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOnXeH+xoY9beof323mBTPFyHM05wGiwrUB0dr0xz7Rjr2dWYpQxopZlr7W6A+HnJXH8b830FLd8VtBjchdOUCw+JlM592ISkqC2E+sFfs5/8opX3fO8FRi45rLHwsne6VlvTnLR2VyW1k
-X-Gm-Message-State: AOJu0YywuF+O/kOfPOrjxKUnsRl3hc7HuuRoOYvUF5eqTyqTXhv/iaZn
-	izEZu6NHLffz8a9bCFYVgvM/MDn6gFQjW1HNGi0QoG3/ocOni80D
-X-Google-Smtp-Source: AGHT+IH/HzcC8hXY5G/8U2V3qKMMaRE7IT9QPLDcKWvYWsE8385LzOpr7tcmDHfDgo/jbVNyIvIVzA==
-X-Received: by 2002:a17:902:e744:b0:1dc:d722:4c08 with SMTP id p4-20020a170902e74400b001dcd7224c08mr533863plf.5.1709598415935;
-        Mon, 04 Mar 2024 16:26:55 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170902c3cc00b001dca9a6fdf1sm9141431plj.183.2024.03.04.16.26.54
+        bh=UgihA/j9MMe4W3y4lHJTNEdOriPRYiwOGRsjM+J9mKU=;
+        b=lvyPTQ5ZbZXaGZvDLqAFKF0spichesYx7frXozgQSKM88zU+21JFcLVq0zxJhnBlKO
+         d4bCn/kOhn7bKCL/oUm975hzFBf9V3JcxG56HUVl+7vnUUCPtua2aYy7K6g0+Z/x1vst
+         MPPhPclxXnHqxvUkMtHKaz5qZKFxbz3vxeCbGqpLII0E6Zdd7+0/3Nq06XSrMMmPypW5
+         yBrzmRPIS9ZlC0aEvkIrmuBo3o3uzL7TeqiyRSQT8CfUOYjgm+spU2NDH/JPTg6MHk/X
+         xN6ulElgzibyMjNn0kkTSI6FvNLdy8W7CF+w6HnSvm2FxIN4w+m1Hpz07a9p7ysmcIQO
+         L92g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709598491; x=1710203291;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UgihA/j9MMe4W3y4lHJTNEdOriPRYiwOGRsjM+J9mKU=;
+        b=RSTW8wuzGhZqGgvqTBVtZ1+lgICHVrhIeUL0USTRO9ffrI3bSrp60HRmE8YKmheCfK
+         L4VgcdBMCMlH2+4hc3ViYlTlbfv3OESHs28HEZuvN9do09hzUszcaqEiyBQBhw9aQ312
+         2LY/0ZRYLZJhDY41LOieuG5DNc8vO52n+qWJNHYqSDTzwZmRsxqBvyK+jrvO35PC4PZt
+         7dtUN5EpYP9DuTfSzUQMI+IiRAijaPEJEqx3483bQTngwd8Zd5Q2i1cWv+m0gXhaR6R9
+         8aRx7ozpCSfvAD4ymhj0kWnEzzpUDjBOllP0Hh/F2kUCjTfJD0Dfgs4OJDlUZ5MDIokW
+         ZTnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3eDzaVwbvds8xy8Bp1V9GC5syce3Hv8wCJMrfzatqMPt4tBAMeP21p77/QaeOJGpRrMe4JzTXPE+1lLtmWd+R/jIh6MkEob0ognH7
+X-Gm-Message-State: AOJu0YzsE0c/TbMu+0199TnYza4EdWofGpMA/rC1d2x3ZeqIXQIkI142
+	QOaqdvCxtYkD/RgkSDZDeVQ/DcOOgCMEOesrLSaAr9/yHKMJj2hbesyaF34gG3s=
+X-Google-Smtp-Source: AGHT+IFDZK6sfIEdXRUKSjRI7ZdugsypJRMtPgYmqMfgXbm1nTdG+dB8phMOK0N67CVLvFXHeQOFIw==
+X-Received: by 2002:a05:6512:282c:b0:513:2c50:9644 with SMTP id cf44-20020a056512282c00b005132c509644mr257056lfb.12.1709598490724;
+        Mon, 04 Mar 2024 16:28:10 -0800 (PST)
+Received: from umbar.lan (dzyjmhybhls-s--zn36gy-3.rev.dnainternet.fi. [2001:14ba:a00e:a300:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id s15-20020ac2464f000000b005133d11b261sm1149416lfo.92.2024.03.04.16.28.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 16:26:54 -0800 (PST)
-Date: Tue, 5 Mar 2024 00:26:50 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>, kys@microsoft.com, haiyangz@microsoft.com,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, dwmw@amazon.co.uk, peterz@infradead.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ssengar@microsoft.com, mhklinux@outlook.com
-Subject: Re: [PATCH v3] x86/hyperv: Use per cpu initial stack for vtl context
-Message-ID: <ZeZmysa1x4dogjQs@liuwe-devbox-debian-v2>
-References: <1709452896-13342-1-git-send-email-ssengar@linux.microsoft.com>
- <ZeVpG07p9ayjk7yb@liuwe-devbox-debian-v2>
- <20240304070817.GA501@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+        Mon, 04 Mar 2024 16:28:10 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Steev Klimaszewski <steev@kali.org>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] drm/msm/dpu: debug commit_done timeouts
+Date: Tue,  5 Mar 2024 02:28:08 +0200
+Message-Id: <170959846405.1203069.5519628464509979288.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240226-fd-dpu-debug-timeout-v4-0-51eec83dde23@linaro.org>
+References: <20240226-fd-dpu-debug-timeout-v4-0-51eec83dde23@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240304070817.GA501@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 03, 2024 at 11:08:17PM -0800, Saurabh Singh Sengar wrote:
-> On Mon, Mar 04, 2024 at 06:24:27AM +0000, Wei Liu wrote:
-> > On Sun, Mar 03, 2024 at 12:01:36AM -0800, Saurabh Sengar wrote:
-> > > Currently, the secondary CPUs in Hyper-V VTL context lack support for
-> > > parallel startup. Therefore, relying on the single initial_stack fetched
-> > > from the current task structure suffices for all vCPUs.
-> > > 
-> > > However, common initial_stack risks stack corruption when parallel startup
-> > > is enabled. In order to facilitate parallel startup, use the initial_stack
-> > > from the per CPU idle thread instead of the current task.
-> > > 
-> > > Fixes: 18415f33e2ac ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE")
-> > 
-> > I don't think this patch is buggy. Instead, it exposes an assumption in
-> > the VTL code. So this either should be dropped or point to the patch
-> > which introduces the assumption.
-> > 
-> > Let me know what you would prefer.
-> 
-> The VTL code will crash if this fix is not present post above mentioned patch:
-> 18415f33e2ac ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE").
-> So I would prefer a fixes which added the assumption in VTL:
-> 
-> Fixes: 3be1bc2fe9d2 ("x86/hyperv: VTL support for Hyper-V")
-> 
-> Please let me know if you need V4 for it.
 
-No need to repost. I can change the commit message.
+On Mon, 26 Feb 2024 04:27:58 +0200, Dmitry Baryshkov wrote:
+> In order to debug commit_done timeouts ([1]) display the sticky bits of
+> the CTL_FLUSH register and capture the devcore dump when the first such
+> timeout occurs.
+> 
+> [1] https://gitlab.freedesktop.org/drm/msm/-/issues/33
+> 
+> 
+> [...]
 
-Thanks,
-Wei.
+Applied, thanks!
+
+[1/3] drm/msm/dpu: make "vblank timeout" more useful
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/f1d0b196ff2e
+[2/3] drm/msm/dpu: split dpu_encoder_wait_for_event into two functions
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/d72a3d35b7ef
+[3/3] drm/msm/dpu: capture snapshot on the first commit_done timeout
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/4be445f5b6b6
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
