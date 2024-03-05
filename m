@@ -1,281 +1,153 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3638E8663A;
-	Tue,  5 Mar 2024 14:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACD28663A;
+	Tue,  5 Mar 2024 14:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709649791; cv=none; b=ClpreLiwP85FjMzPKmCMP/Gr76XpbmPymvJVJB+13gj/3ldXwSJg5Ntk28z9wv2rYhrIa+whx1BOVUuIwMLlCbDtVcw7+PIu/v/jbsCzdDg7+t9hWhHMjHST5+8ssBZQ9KXs7M+CKpEqWNDwX9gGxUzRgmlrCYQpiGllTUhYnNE=
+	t=1709649916; cv=none; b=W6rU1OV/9xTf4vWoynKus+vDYGJEWZnCCbAt+Xu1QBVBY7Uu+2G5K6cyGZNCNlyhQJLNwWzvogx7GhZFbEvKWdgyyqeLdrSif0csCz9OmEHlrKrmqzvqbEWX+arIcb+/ogIPo7GxjH3ZBxO+rMNpOOjoiPSTKFSMPnCSB5LLgF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709649791; c=relaxed/simple;
-	bh=/PhlOnmbeHoBdA1OxTwHCaySbDcZFamjy5RrHUoJbVI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QhngjWsT1TsU9p3JKoPFXSsooA5JTYOzJDfrUri78XaY7YeTRy7qyph6j6Qz0loxbqorKSz64l5W11xz+aLyI53BG1MFLgbR1uiQGqiGwUQwoMBuj+f3/hajDF68O0YOJbECl8Ir+rGyTbuPYkILcQ9wOAEPpZ7Pk94cHVJoikk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=R99UqG6Q; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R99UqG6Q"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 425EgwqH115585;
-	Tue, 5 Mar 2024 08:42:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709649778;
-	bh=AKhuDWIm1BPr27gwl174Fb5zsGzliY8/tG4oNFZpEp4=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=R99UqG6Qxvk50QEyvsofdsFZevatbPcW6izpcrVAl2VcTwxxh8UcAkJwxHvZ8NcK3
-	 Hlf87106eRLLHe0EzaNtxRIUEqUQqu/c+za1LkyGPpG/Q8P/FvoVB4tI/jSIftar3q
-	 A6K6ojr+ZxsFPWYSj0i3UOlMuZgsCFslgnjjdCp0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 425EgwjP030270
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 5 Mar 2024 08:42:58 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 5
- Mar 2024 08:42:57 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 5 Mar 2024 08:42:57 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 425Egv2K130222;
-	Tue, 5 Mar 2024 08:42:57 -0600
-Message-ID: <1fe44306-b507-4017-8f47-598a76d9dbee@ti.com>
-Date: Tue, 5 Mar 2024 08:42:57 -0600
+	s=arc-20240116; t=1709649916; c=relaxed/simple;
+	bh=tetQCxG8iPLLeYy5u22XyaGe6rMdgCMO7OFx8pAFHyU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LXV2Ozq+aQ4m2aJWRAamDLOngCH3SJvvnJhA1Ik7TFNhMIhhhRlcNDfB+HGDpxm/IedHGGFkP9Dqa/nWZb4SAWiBI0fhA2SZnKzVFoS/hAmHJXLRtQauNnyf03h+Gc/A4HDx+kXdErOxKu3MK0OpWdEufsdOeqVK9WGUeZLEKN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6087396e405so55074917b3.0;
+        Tue, 05 Mar 2024 06:45:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709649913; x=1710254713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9i6CwydHdc4za10aM3u8vcYxRtgXXdjZlKPLkkrrifs=;
+        b=HVBTgNVQjDsv+3ITkjy19c329XBPsWSIANZajwn988IwbqmKlusOmr7LDBTLwCzDDH
+         ptJtyiOZC96plA+gKvbU/jerszX79EzJzcv9YrfBmwwn2V+LlT8NmBKYSIMFGXactFIH
+         d0KebV4ZNuyKvr1moeqdPbRQw+D4v85jKvdcrepjdrmBtotlmyywZN4DFWotOTERII5P
+         HhITtxDYcNlpxBHtXD77voG1lA3vS0UJLv4heMhXyyEtobV3p8J1XjnYCcq3hmga/t/r
+         rppb2MHnPz9EdsdnOPmjVmbR348ZNk6sU7LJ2zS7Urls2RIpyzd5zMmukROKVrWoX2W5
+         MCaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyHTe3E/mlUTXb5OgWrTNx22vfmCa7r4xRqcKJMxBZAyht1gJhATPYrpmHjmeqh9NDmLlbMhJRD7M1QJl1XK0g4i/XXXDC884MQF4A+sXmgjFh72+QTOgN0O19YCHlWEApL7LmT0IytZ7LFWWxVy/z5BD2aK0XqEDXzd3YXk11vppqfw==
+X-Gm-Message-State: AOJu0Ywiy9epuI16FWLtYrl2Sh9Cj7s20jq81vqEY5rQQrP1sECw9T7V
+	cE2lUG7lr81cVP4d0p4SieAkNTPnwdKQLeeR1DpYzxyhRpH0PUCL6AF47rW/pkQ=
+X-Google-Smtp-Source: AGHT+IH2uJ0PB5iGWa3Pxy8t4zIKB0Bssu9oR5KhruM+s+08ReQDS50EYAC9a8nhanR2J7oB4pzi6g==
+X-Received: by 2002:a25:bfd0:0:b0:dcd:9a9b:8d7e with SMTP id q16-20020a25bfd0000000b00dcd9a9b8d7emr1907695ybm.9.1709649913115;
+        Tue, 05 Mar 2024 06:45:13 -0800 (PST)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id e72-20020a25694b000000b00dc701e0bdbcsm2755061ybc.44.2024.03.05.06.45.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Mar 2024 06:45:11 -0800 (PST)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6087396e405so55074577b3.0;
+        Tue, 05 Mar 2024 06:45:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVRL+SNdr8xdyNvwp7D+nFHxRex0CEYwGjXqoLdnxqRAXkmlheqVB3h10ThpVzorTNOL2VPd+cBbalXyTarhCg+wuoaRujQRZu6qpGc4DWVCi4umleTO9Rog0/xEjcsTMMCGC1ndpIFOcTj5fHYs3ZaLlX7jSK+QWrMoD9ZAGTWCtFWoQ==
+X-Received: by 2002:a25:aa85:0:b0:dc6:cf8e:8f97 with SMTP id
+ t5-20020a25aa85000000b00dc6cf8e8f97mr2212248ybi.27.1709649911607; Tue, 05 Mar
+ 2024 06:45:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: hwinfo: ti,k3-socinfo: Add nvmem-cells
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Markus
- Schneider-Pargmann <msp@baylibre.com>
-CC: Rob Herring <robh@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240206143711.2410135-1-msp@baylibre.com>
- <20240206143711.2410135-3-msp@baylibre.com>
- <20240206184305.GA1875492-robh@kernel.org>
- <z56fiu2jpokp57sjvnrdcbfy7brpq2ag4yxpektqlhtidecx4n@vc7dsurhxorb>
- <cb75c098-521e-4eed-bc3e-7237f8a6498f@linaro.org>
- <ut63wrhsewkpfdgaatd6hqmj5upvyamjhf2rsecju2v2o3hdod@kyi5sezcggl7>
- <48902771-5d3b-448a-8a74-ac18fb4f1a86@linaro.org>
- <sowpixx2u4d5alj4udzr3qt47zevylukhpwkw3pfwnogqjse5w@xrxcozzvog6v>
- <620a2dca-1901-43d4-8b2b-7ae823705a6e@linaro.org>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <620a2dca-1901-43d4-8b2b-7ae823705a6e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240213144638.341509-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240213144638.341509-1-krzysztof.kozlowski@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 5 Mar 2024 15:44:59 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWw0dteXO2jw4cwGvzKcL6vmnb96C=qgPgUqNDMtF6X0Q@mail.gmail.com>
+Message-ID: <CAMuHMdWw0dteXO2jw4cwGvzKcL6vmnb96C=qgPgUqNDMtF6X0Q@mail.gmail.com>
+Subject: Re: [PATCH] riscv: dts: starfive: replace underscores in node names
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/5/24 8:11 AM, Krzysztof Kozlowski wrote:
-> On 05/03/2024 12:17, Markus Schneider-Pargmann wrote:
->> Hi Krzysztof,
->>
->> On Tue, Mar 05, 2024 at 08:43:03AM +0100, Krzysztof Kozlowski wrote:
->>> On 04/03/2024 11:36, Markus Schneider-Pargmann wrote:
->>>> Hi,
->>>>
->>>> On Sat, Feb 17, 2024 at 03:25:30PM +0100, Krzysztof Kozlowski wrote:
->>>>> On 14/02/2024 10:31, Markus Schneider-Pargmann wrote:
->>>>>> Hi Rob,
->>>>>>
->>>>>> On Tue, Feb 06, 2024 at 06:43:05PM +0000, Rob Herring wrote:
->>>>>>> On Tue, Feb 06, 2024 at 03:37:09PM +0100, Markus Schneider-Pargmann wrote:
->>>>>>>> The information k3-socinfo requires is stored in an efuse area. This
->>>>>>>> area is required by other devices/drivers as well, so using nvmem-cells
->>>>>>>> can be a cleaner way to describe which information are used.
->>>>>>>>
->>>>>>>> If nvmem-cells are supplied, the address range is not required.
->>>>>>>> Cells chipvariant, chippartno and chipmanufacturer are introduced to
->>>>>>>> cover all required information.
->>>>>>>>
->>>>>>>> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
->>>>>>>> Reviewed-by: Andrew Davis <afd@ti.com>
->>>>>>>> ---
->>>>>>>>   .../bindings/hwinfo/ti,k3-socinfo.yaml        | 23 ++++++++++++++++++-
->>>>>>>>   1 file changed, 22 insertions(+), 1 deletion(-)
->>>>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/hwinfo/ti,k3-socinfo.yaml b/Documentation/devicetree/bindings/hwinfo/ti,k3-socinfo.yaml
->>>>>>>> index dada28b47ea0..f085b7275b7d 100644
->>>>>>>> --- a/Documentation/devicetree/bindings/hwinfo/ti,k3-socinfo.yaml
->>>>>>>> +++ b/Documentation/devicetree/bindings/hwinfo/ti,k3-socinfo.yaml
->>>>>>>> @@ -26,9 +26,24 @@ properties:
->>>>>>>>     reg:
->>>>>>>>       maxItems: 1
->>>>>>>>   
->>>>>>>> +  nvmem-cells:
->>>>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>>>>>>> +
->>>>>>>> +  nvmem-cell-names:
->>>>>>>> +    items:
->>>>>>>> +      - const: chipvariant
->>>>>>>> +      - const: chippartno
->>>>>>>> +      - const: chipmanufacturer
->>>>>>>> +
->>>>>>>>   required:
->>>>>>>>     - compatible
->>>>>>>> -  - reg
->>>>>>>> +
->>>>>>>> +oneOf:
->>>>>>>> +  - required:
->>>>>>>> +      - reg
->>>>>>>> +  - required:
->>>>>>>> +      - nvmem-cells
->>>>>>>> +      - nvmem-cell-names
->>>>>>>>   
->>>>>>>>   additionalProperties: false
->>>>>>>>   
->>>>>>>> @@ -38,3 +53,9 @@ examples:
->>>>>>>>           compatible = "ti,am654-chipid";
->>>>>>>>           reg = <0x43000014 0x4>;
->>>>>>>>       };
->>>>>>>> +  - |
->>>>>>>> +    chipid: chipid@14 {
->>>>>>>> +        compatible = "ti,am654-chipid";
->>>>>>>
->>>>>>> This isn't compatible if you have a completely different way to access
->>>>>>> it.
->>>>>>
->>>>>> Thanks, it is not entirely clear to me how I could go forward with this?
->>>>>> Are you suggesting to use a different compatible? Or is it something
->>>>>> else I could do to proceed with this conversion?
->>>>>
->>>>> What you claim now, is that you have one device with entirely different
->>>>> interfaces and programming model. So either this is not the same device
->>>>> or you just wrote bindings to whatever you have in driver.
->>>>>
->>>>> Nothing in commit msg explains this.
->>>>>
->>>>> What you should do? Depends. If you just write bindings for driver, then
->>>>> stop. It's a NAK. Instead write bindings for hardware.
->>>>>
->>>>> If the first choice, just the hardware is somehow like this, then
->>>>> explain in commit msg and device description, how this device can be
->>>>> connected over other bus, not MMIO. You can draw some schematics in
->>>>> commit msg explaining architecture etc.
->>>>
->>>> Sorry the information provided in the commit message is not very clear.
->>>>
->>>> The basic access to the registes is still MMIO. nvmem is used to have a
->>>> better abstraction and cleaner description of the hardware.
->>>>
->>>> Currently most of the data is exported using the parent syscon device.
->>>> The relevant data is read-only and contained in a single register with
->>>> offset 0x14:
->>>>    - Chip variant
->>>>    - Chip part number
->>>>    - Chip manufacturer
->>>>
->>>> There are more read-only registers in this section of address space.
->>>> These are relevant to other components as they define the operating
->>>> points for example. For the OPP table relevant are chip variant and chip
->>>> speed (which is in a different register).
->>>>
->>>> Instead of devices refering to this whole register range of 0x20000 in
->>>
->>> Whaaaaat?
->>>
->>>> size, I would like to introduce this nvmem abstraction in between that
->>>> describes the information and can directly be referenced by the devices
->>>> that depend on it. In this case the above mentioned register with offset
->>>> 0x14 is instead described as nvmem-layout like this:
->>>>
->>>> 	nvmem-layout {
->>>> 		compatible = "fixed-layout";
->>>> 		#address-cells = <1>;
->>>> 		#size-cells = <1>;
->>>>
->>>> 		chip_manufacturer: jtagidmfg@14 {
->>>> 			reg = <0x14 0x2>;
->>>> 			bits = <1 11>;
->>>> 		};
->>>>
->>>> 		chip_partno: jtagidpartno@15 {
->>>> 			reg = <0x15 0x3>;
->>>> 			bits = <4 16>;
->>>> 		};
->>>>
->>>> 		chip_variant: jtagidvariant@17 {
->>>> 			reg = <0x17 0x1>;
->>>> 			bits = <4 4>;
->>>> 		};
->>>>
->>>> 		chip_speed: jtaguseridspeed@18 {
->>>> 			reg = <0x18 0x4>;
->>>> 			bits = <6 5>;
->>>> 		};
->>>>
->>>> The underlying registers are still the same but they are not hidden
->>>> by the syscon phandles anymore.
->>>>
->>>> The device that consumes this data would now use
->>>>
->>>> 	nvmem-cells = <&chip_variant>, <&chip_speed>;
->>>> 	nvmem-cell-names = "chipvariant", "chipspeed";
->>>>
->>>> instead of
->>>>
->>>> 	syscon = <&wkup_conf>;
->>>
->>> syscon allows you this as well - via phandle arguments.
->>>
->>> nvmem is for non-volatile memory, like OCOTP and eFUSE. This is not for
->>> accessing regular MMIO registers of system-controller, regardless
->>> whether they are read-only or not (regmap handles this nicely, BTW).
->>> Although probably Apple efuses and few others can confuse here. It still
->>> looks like you convert regular system-controller block into nvmem,
->>> because you prefer that Linux driver abstraction...
->>
->> The above mentioned data is set in the factory. There is other
->> non-volatile data, like device feature registers, in the same address
->> region, as well as OTP data like MAC and USB IDs. But it is not a pure
->> non-volatile memory region. The data is copied into these registers by
->> the ROM at boot.
-> 
-> Still entire block is MMIO IP in your SoC, not a efuse/OTP hardware.
-> nvmem is not for regular MMIO registers which are sometimes R, sometimes RW.
+Hi Krzysztof
 
-Most eFuse/OTP hardware is accessed via MMIO, not sure what that changes.
+On Tue, Feb 13, 2024 at 3:48=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> Underscores should not be used in node names (dtc with W=3D2 warns about
+> them), so replace them with hyphens.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-This "block" is a whole bunch of smaller logical chunks of registers,
-some are actually mapped to eFuses like our MAC addresses. Regions
-like factory fused MAC addresses are exactly what nvmem does well[0].
+Thanks for your patch, which is now commit f03606470886e781 ("riscv:
+dts: starfive: replace underscores in node names") in v6.8-rc6.
 
-Yes, we *could* just have this whole area be one massive blanked syscon
-region that every driver just manually pokes into with syscon phandles
-everywhere. But that is hacky and hides details, it is not how DT normally
-looks. We would like to correctly model our device now with nodes for each
-"reg" region. We took the syscon shortcut before, and we want to correct
-that mistake.
+This causes e.g. BeagleV Starlight to hang during boot without any
+output.  Booting with "earlycon" reveals:
 
-So what are our options? Is the objection here that this is a new nvmem
-way of modeling this region changes the compatible "ti,am654-chipid"? If
-so then would you be open to us adding a new compatible that uses the
-nvmem nodes? We could then convert over one by one and keeping full
-backwards compatibility while we do it.
+    dw-apb-uart 12440000.serial: error -EINVAL: clock rate not defined
+    dw-apb-uart: probe of 12440000.serial failed with error -22
 
-Thanks,
-Andrew
+and indeed, p->uartclk =3D 0.
 
-[0] https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml#L16
+> --- a/arch/riscv/boot/dts/starfive/jh7100.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7100.dtsi
+> @@ -113,28 +113,28 @@ cpu_crit {
+>                 };
+>         };
+>
+> -       osc_sys: osc_sys {
+> +       osc_sys: osc-sys {
+>                 compatible =3D "fixed-clock";
+>                 #clock-cells =3D <0>;
+>                 /* This value must be overridden by the board */
+>                 clock-frequency =3D <0>;
+>         };
+>
+> -       osc_aud: osc_aud {
+> +       osc_aud: osc-aud {
+>                 compatible =3D "fixed-clock";
+>                 #clock-cells =3D <0>;
+>                 /* This value must be overridden by the board */
+>                 clock-frequency =3D <0>;
+>         };
+>
+> -       gmac_rmii_ref: gmac_rmii_ref {
+> +       gmac_rmii_ref: gmac-rmii-ref {
+>                 compatible =3D "fixed-clock";
+>                 #clock-cells =3D <0>;
+>                 /* Should be overridden by the board when needed */
+>                 clock-frequency =3D <0>;
+>         };
+>
+> -       gmac_gr_mii_rxclk: gmac_gr_mii_rxclk {
+> +       gmac_gr_mii_rxclk: gmac-gr-mii-rxclk {
+>                 compatible =3D "fixed-clock";
+>                 #clock-cells =3D <0>;
+>                 /* Should be overridden by the board when needed */
 
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+The clock driver relies on the clock names, which are (in the absence
+of clock-output-names properties) identical to the actual node names:
+
+drivers/clk/starfive/clk-starfive-jh7100.c:    parents[i].fw_name =3D "osc_=
+sys";
+drivers/clk/starfive/clk-starfive-jh7100.c:    parents[i].fw_name =3D "osc_=
+aud";
+drivers/clk/starfive/clk-starfive-jh7100.c:    parents[i].fw_name =3D
+"gmac_rmii_ref";
+drivers/clk/starfive/clk-starfive-jh7100.c:    parents[i].fw_name =3D
+"gmac_gr_mii_rxclk";
+
+Hence these clocks can no longer be found, and all children have a
+zero clock rate, causing the breakage.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
