@@ -1,246 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71BB5A4ED;
-	Tue,  5 Mar 2024 11:19:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B27B5B5A1;
+	Tue,  5 Mar 2024 11:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709637546; cv=none; b=n0CkIn7HjHa4kw6HS8aK3x0hjVvneAhmLQceiXCqTIxrPBaC40L9PLv0SBBwPvRmTmy6v7UvJXMWp/xWM8R8Q1Ej7r1dR6OEWZ+l6lw0MMfJkywEEsqcqlnqFxCAc/T4lT5RXj5GqRGLMbogUjns95rR1iDBEwZJH0G5iwThj1c=
+	t=1709637550; cv=none; b=Hytz62khZs/NrlEss5IlDYw67Elhl4NqWB/xx/+LOqIucEZyEjK0t1s9sT92hi5O/t1bh2l2yrG5p2ym7UJ4/Ue0z0JJ5RuGitsQ+WYCQnq+SGyyh4fU6Tj6IXvdmyP+p+5hnYLoJj+3u3oPws8qehsS1Ev7RY2ettuVKK1lj2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709637546; c=relaxed/simple;
-	bh=qAJEud8zSEtY+UaYfguXl0FuNLhyjwr4jvzS2H85FiM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uOFeUVCht3moNhOjMhjE0hQfOV+6Uhhv2s9qdqzWtRg0lidkv1t2WSBq0OaeDS7bT3Uc752Y/DuC4XLCFEV87EqRp4Nl4go9mVE4Ocagu+FiXG89dvOODXxaZBy8VJm49ZGEzj+Fz8fU7iB6+VmJa5uensB3NAiPbxaLWAWUlb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KjAV+KIv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709637550; c=relaxed/simple;
+	bh=Z4IBEZRKAlbU/N0SOY+SwMF12pQcVJDXcB7KTmyw/KA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hy9OALHH8kvwnerbpSoYj9Dq58dinXM15VDCD+8coB7bz548fr9f7vfDn60jK7FUoTCFFLLRJciUBGUSASJS0RprFS8hpGtm9GgkPETE242MIW0htDrqSYGqgvPC84TDySy8yDSBpExZYyNEUiGgz1+t9cnU66WMbJel3ePHWCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTnLPty5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KjAV+KIv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7A1EC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTnLPty5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D602C43390;
 	Tue,  5 Mar 2024 11:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709637546;
-	bh=qAJEud8zSEtY+UaYfguXl0FuNLhyjwr4jvzS2H85FiM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KjAV+KIvzMLMIdyG6JQAPl5ekfey4SRoKdyMLevM5fk4VwjTRfuycwOlywUkEPDcy
-	 0DlyyyZ/zaORCQOgnjFjU8rjSTbdyLBgVk6eAf8U/7rgufjmCZV0Se7mNNWv57XAwW
-	 3kcOXGxfOWDGLKRTmHc39BKEs25lC2ncwvbVWh9JRe7ynug0LMSFdUR51UNihoDebH
-	 7Rp6XPyJK6e/PYCkYMmdP+NsRMPF6nlrrpQ8zDLr4mpVlJhfrPCf1T4vHDBeatDyJP
-	 OIIkQ912eZthQoJoEx5LjrRYDUM2DluK9KVVx2lxW+TXlMzYxT1ExRjxvcAi/tEEWs
-	 yPGH84ns91w6w==
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: [RFC RESEND 03/16] dma-mapping: provide callbacks to link/unlink pages to specific IOVA
-Date: Tue,  5 Mar 2024 13:18:34 +0200
-Message-ID: <f1049f0fc280288ae2f0c1e02388cde91b0f7876.1709635535.git.leon@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1709635535.git.leon@kernel.org>
-References: <cover.1709635535.git.leon@kernel.org>
+	s=k20201202; t=1709637548;
+	bh=Z4IBEZRKAlbU/N0SOY+SwMF12pQcVJDXcB7KTmyw/KA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oTnLPty5a1khzX8k8vdcade5csRGX487/YQggUreaqE4IdZBeSaK3/ZvxwI1dTXfY
+	 lMCij9GosSsZMianJnpoWlYpCViw6WJZTjlUet4Ca+E3mgmkbwImI9GnRqPIWzlcTn
+	 mJfKB3/cpYijbm/fOV4D6Rn9tKBFWefpvoXj8kImn8ADD2SoSiRoZHSarq2wOTn/6s
+	 hVhlKMoCBEVpWFc+HSni3gip/Ec9K+oeeWJHVyFg0eBoJ2tZnXNKqt9jOcCpRtYba7
+	 dUB1E9idDfn7Nc7PfXqLo+XIGEs1AfAe0N54Mz5T+RctqVO8WWhhy/an1Tsgnx+s8r
+	 Rx6Un/4ujM1Kg==
+Message-ID: <8b2b6492-d460-4981-8624-068dd766d3ac@kernel.org>
+Date: Tue, 5 Mar 2024 12:19:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 03/13] selftests: mptcp: add
+ mptcp_lib_check_output helper
+Content-Language: en-GB, fr-BE
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>
+References: <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-0-66618ea5504e@kernel.org>
+ <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-3-66618ea5504e@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-3-66618ea5504e@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Leon Romanovsky <leonro@nvidia.com>
+Hello,
 
-Introduce new DMA link/unlink API to provide a way for advanced users
-to directly map/unmap pages without ned to allocate IOVA on every map
-call.
+On 05/03/2024 11:42, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Extract the main part of check() in pm_netlink.sh into a new helper
+> named mptcp_lib_check_output in mptcp_lib.sh.
+> 
+> This helper will be used for userspace dump addresses tests.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- include/linux/dma-map-ops.h | 10 +++++++
- include/linux/dma-mapping.h | 13 +++++++++
- kernel/dma/debug.h          |  2 ++
- kernel/dma/direct.h         |  3 ++
- kernel/dma/mapping.c        | 57 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 85 insertions(+)
+Arf, I just noticed that when the MPTCP tree got rebased on top of
+net-next, Git didn't drop this patch, but resolved the conflicts by
+duplicating mptcp_lib_check_output() function. Of course, redefining the
+function is OK in Bash, and I didn't notice the issue when running the
+tests...
 
-diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
-index bd605b44bb57..fd03a080df1e 100644
---- a/include/linux/dma-map-ops.h
-+++ b/include/linux/dma-map-ops.h
-@@ -86,6 +86,13 @@ struct dma_map_ops {
- 
- 	dma_addr_t (*alloc_iova)(struct device *dev, size_t size);
- 	void (*free_iova)(struct device *dev, dma_addr_t dma_addr, size_t size);
-+	dma_addr_t (*link_range)(struct device *dev, struct page *page,
-+				 unsigned long offset, dma_addr_t addr,
-+				 size_t size, enum dma_data_direction dir,
-+				 unsigned long attrs);
-+	void (*unlink_range)(struct device *dev, dma_addr_t dma_handle,
-+			     size_t size, enum dma_data_direction dir,
-+			     unsigned long attrs);
- };
- 
- #ifdef CONFIG_DMA_OPS
-@@ -428,6 +435,9 @@ bool arch_dma_unmap_sg_direct(struct device *dev, struct scatterlist *sg,
- #define arch_dma_unmap_sg_direct(d, s, n)	(false)
- #endif
- 
-+#define arch_dma_link_range_direct arch_dma_map_page_direct
-+#define arch_dma_unlink_range_direct arch_dma_unmap_page_direct
-+
- #ifdef CONFIG_ARCH_HAS_SETUP_DMA_OPS
- void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
- 		bool coherent);
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 176fb8a86d63..91cc084adb53 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -113,6 +113,9 @@ static inline int dma_mapping_error(struct device *dev, dma_addr_t dma_addr)
- 
- int dma_alloc_iova(struct dma_iova_attrs *iova);
- void dma_free_iova(struct dma_iova_attrs *iova);
-+dma_addr_t dma_link_range(struct page *page, unsigned long offset,
-+			  struct dma_iova_attrs *iova, dma_addr_t dma_offset);
-+void dma_unlink_range(struct dma_iova_attrs *iova, dma_addr_t dma_offset);
- 
- dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
- 		size_t offset, size_t size, enum dma_data_direction dir,
-@@ -179,6 +182,16 @@ static inline int dma_alloc_iova(struct dma_iova_attrs *iova)
- static inline void dma_free_iova(struct dma_iova_attrs *iova)
- {
- }
-+static inline dma_addr_t dma_link_range(struct page *page, unsigned long offset,
-+					struct dma_iova_attrs *iova,
-+					dma_addr_t dma_offset)
-+{
-+	return DMA_MAPPING_ERROR;
-+}
-+static inline void dma_unlink_range(struct dma_iova_attrs *iova,
-+				    dma_addr_t dma_offset)
-+{
-+}
- static inline dma_addr_t dma_map_page_attrs(struct device *dev,
- 		struct page *page, size_t offset, size_t size,
- 		enum dma_data_direction dir, unsigned long attrs)
-diff --git a/kernel/dma/debug.h b/kernel/dma/debug.h
-index f525197d3cae..3d529f355c6d 100644
---- a/kernel/dma/debug.h
-+++ b/kernel/dma/debug.h
-@@ -127,4 +127,6 @@ static inline void debug_dma_sync_sg_for_device(struct device *dev,
- {
- }
- #endif /* CONFIG_DMA_API_DEBUG */
-+#define debug_dma_link_range debug_dma_map_page
-+#define debug_dma_unlink_range debug_dma_unmap_page
- #endif /* _KERNEL_DMA_DEBUG_H */
-diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
-index 18d346118fe8..1c30e1cd607a 100644
---- a/kernel/dma/direct.h
-+++ b/kernel/dma/direct.h
-@@ -125,4 +125,7 @@ static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
- 		swiotlb_tbl_unmap_single(dev, phys, size, dir,
- 					 attrs | DMA_ATTR_SKIP_CPU_SYNC);
- }
-+
-+#define dma_direct_link_range dma_direct_map_page
-+#define dma_direct_unlink_range dma_direct_unmap_page
- #endif /* _KERNEL_DMA_DIRECT_H */
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index b6b27bab90f3..f989c64622c2 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -213,6 +213,63 @@ void dma_free_iova(struct dma_iova_attrs *iova)
- }
- EXPORT_SYMBOL(dma_free_iova);
- 
-+/**
-+ * dma_link_range - Link a physical page to DMA address
-+ * @page: The page to be mapped
-+ * @offset: The offset within the page
-+ * @iova: Preallocated IOVA attributes
-+ * @dma_offset: DMA offset form which this page needs to be linked
-+ *
-+ * dma_alloc_iova() allocates IOVA based on the size specified by ther user in
-+ * iova->size. Call this function after IOVA allocation to link @page from
-+ * @offset to get the DMA address. Note that very first call to this function
-+ * will have @dma_offset set to 0 in the IOVA space allocated from
-+ * dma_alloc_iova(). For subsequent calls to this function on same @iova,
-+ * @dma_offset needs to be advanced by the caller with the size of previous
-+ * page that was linked + DMA address returned for the previous page that was
-+ * linked by this function.
-+ */
-+dma_addr_t dma_link_range(struct page *page, unsigned long offset,
-+			  struct dma_iova_attrs *iova, dma_addr_t dma_offset)
-+{
-+	struct device *dev = iova->dev;
-+	size_t size = iova->size;
-+	enum dma_data_direction dir = iova->dir;
-+	unsigned long attrs = iova->attrs;
-+	dma_addr_t addr = iova->addr + dma_offset;
-+	const struct dma_map_ops *ops = get_dma_ops(dev);
-+
-+	if (dma_map_direct(dev, ops) ||
-+	    arch_dma_link_range_direct(dev, page_to_phys(page) + offset + size))
-+		addr = dma_direct_link_range(dev, page, offset, size, dir, attrs);
-+	else if (ops->link_range)
-+		addr = ops->link_range(dev, page, offset, addr, size, dir, attrs);
-+
-+	kmsan_handle_dma(page, offset, size, dir);
-+	debug_dma_link_range(dev, page, offset, size, dir, addr, attrs);
-+	return addr;
-+}
-+EXPORT_SYMBOL(dma_link_range);
-+
-+void dma_unlink_range(struct dma_iova_attrs *iova, dma_addr_t dma_offset)
-+{
-+	struct device *dev = iova->dev;
-+	size_t size = iova->size;
-+	enum dma_data_direction dir = iova->dir;
-+	unsigned long attrs = iova->attrs;
-+	dma_addr_t addr = iova->addr + dma_offset;
-+	const struct dma_map_ops *ops = get_dma_ops(dev);
-+
-+	if (dma_map_direct(dev, ops) ||
-+	    arch_dma_unlink_range_direct(dev, addr + size))
-+		dma_direct_unlink_range(dev, addr, size, dir, attrs);
-+	else if (ops->unlink_range)
-+		ops->unlink_range(dev, addr, size, dir, attrs);
-+
-+	debug_dma_unlink_range(dev, addr, size, dir);
-+}
-+EXPORT_SYMBOL(dma_unlink_range);
-+
- static int __dma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
- 	 int nents, enum dma_data_direction dir, unsigned long attrs)
- {
+I will resend this series without this patch tomorrow.
+
+Sorry for the noise :-/
+
+pw-bot: changes-requested
+
+Cheers,
+Matt
 -- 
-2.44.0
-
+Sponsored by the NGI0 Core fund.
