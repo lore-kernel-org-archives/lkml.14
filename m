@@ -1,73 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A645C63106;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1C3633ED;
 	Tue,  5 Mar 2024 10:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633792; cv=none; b=jg59iN0F5nu4sOloPdWAahtzrdN5q39Fm2P41l5Sn9umbuN/nIsT6X51khXUf6KTGFAKeJt7uk8WaIl+pd0FpRDkQXWk2draPzI+AW100Vbe6GA/C672RGWmz2NtHdvS1kHKt7/jc3w4r5pbtqLn+QYBytp2feQmBpKBBSfX3AE=
+	t=1709633795; cv=none; b=A+NuPCvPC/LmIIWYKypD8vLLMwEZOK3mX127253DAEHBaS4xOvlQdnOZ1Xw9YxjOiiJfQ4CWCU9me/dJPlGkPA4hDgOf5lK9QS7H27n2Q7SVoV3GiSi84Hljtao/a1VnN+7fzypvLcbqBRPoXs15ed56fiZqd2nSWkLjY5PRLko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633792; c=relaxed/simple;
-	bh=4IocgUHLj9eV065W5P3anYxI4nhTW2naxln23AtMtis=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aQYEvOfgSg2qvxEVU2GMoZzwNhVW40tuZcwl+m24404d+1PLRweTzGd8nwfLLcHJytESuc56ilTl77uSkQyVEewaYpsBlseMuRKet1h08GAXK6aaik7t///BWkA+vz8PGUbq15iFnYylp120wE+Ft+ozbbGZnku96sz9AHcDhoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME6sTK28; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709633795; c=relaxed/simple;
+	bh=a7kWb5e0su0761d+6CdvJvWCOKmDe94YCWGARHADOUc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CskgPcFaWzP2VflIElDJqLQ2uBYro3OdeHxXhzIfyjnaTNVeg8mRXC/ZXnCPsbjMTyGt4JmXrAzEJRQ/yhMZDFTv8ke9G37PiqOP6bg7iwpQyzTmThGXTujeRDpDHI5wBdYRGSEjZBxK/W3V1spVWMXSptZKfvQYQCKzZBkW8B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=yHfXeb9v; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME6sTK28"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3995DC433C7;
-	Tue,  5 Mar 2024 10:16:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709633792;
-	bh=4IocgUHLj9eV065W5P3anYxI4nhTW2naxln23AtMtis=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="yHfXeb9v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709633791;
+	bh=a7kWb5e0su0761d+6CdvJvWCOKmDe94YCWGARHADOUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ME6sTK286uwoXoz+IpcdDC5iiCveCz60c3QC6e2Qoo6RT1vn1QMiK79xbl2Z0iJEQ
-	 lF+WIuufy46vobE2X5BkxN4zFsuEFfqCY7nNLgqtqaGEzXhdvxV79SceqYL9IBcm1m
-	 TvpaFHgFXCBfyApy9K0LVj6Gp960SddtGc3bQwTBI9C4yeb0N89NQ9nYnZIjPV3lud
-	 HWI1R9l5KpNKb/eOURGHv33QqpDtRBoDV6zIP7rZo4UIRb0nFH+r1oENLRXAryoJBH
-	 l4+GOIMyR7QDazy9mrVtajxBlb0ezE2lg1MG7ckSp0k65UFJTLImRNCeq2jbANxI8Z
-	 7hpa9NbeUdkHw==
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: [RFC 14/16] vfio/mlx5: Convert vfio to use DMA link API
-Date: Tue,  5 Mar 2024 12:15:24 +0200
-Message-ID: <e42ea94ec4de8569f5a4c418b6f44c2a8730ceda.1709631413.git.leon@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <a77609c9c9a09214e38b04133e44eee67fe50ab0.1709631413.git.leon@kernel.org>
-References: <a77609c9c9a09214e38b04133e44eee67fe50ab0.1709631413.git.leon@kernel.org>
+	b=yHfXeb9vM1uwBAPt120Ay9uAEm5rAxd+qoxfWi7QzUO1oU7vjyWoA2SmtIpEXJg2W
+	 5KOj2C3xP64hAf5ceUCRS6N+BnZNCiX7abF9Tg2TYqelrQaMNZk0/oZjl7sTQ+nQtr
+	 Rxr8e7J/6763SVa2ZjhRc7OpYGMmK4JKg+QYZEMTYUHuCmdi+TvTMHjFvkedWhzpR9
+	 kKIYT6HIc4DTvhUClDLn7o6cg7/I1y2CHGOhlZ5vXGHMXm/n8hdC9kLQP5hxiw4HPf
+	 VIIgN/ASQH+sKMLMYb/zUyZyPJOFJdrZZgLx063ujD85/AU3B81XSDshQJn75EO88h
+	 Re6JA9i61UUXg==
+Received: from eugen-station.domain.com (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ehristev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B6E6C37820AF;
+	Tue,  5 Mar 2024 10:16:27 +0000 (UTC)
+From: Eugen Hristev <eugen.hristev@collabora.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	jaegeuk@kernel.org,
+	chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	eugen.hristev@collabora.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	krisman@suse.de,
+	Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: [PATCH v13 2/9] f2fs: Simplify the handling of cached insensitive names
+Date: Tue,  5 Mar 2024 12:16:01 +0200
+Message-Id: <20240305101608.67943-3-eugen.hristev@collabora.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240305101608.67943-1-eugen.hristev@collabora.com>
+References: <20240305101608.67943-1-eugen.hristev@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,427 +63,165 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Leon Romanovsky <leonro@nvidia.com>
+From: Gabriel Krisman Bertazi <krisman@collabora.com>
 
-Remove intermediate scatter-gather table as it is not needed
-if DMA link API is used. This conversion reduces drastically
-the memory used to manage that table.
+Keeping it as qstr avoids the unnecessary conversion in f2fs_match
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+[eugen.hristev@collabora.com: port to 6.8-rc3 and minor changes]
+Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
 ---
- drivers/vfio/pci/mlx5/cmd.c  | 177 ++++++++++++++++-------------------
- drivers/vfio/pci/mlx5/cmd.h  |   8 +-
- drivers/vfio/pci/mlx5/main.c |  50 ++--------
- 3 files changed, 91 insertions(+), 144 deletions(-)
+ fs/f2fs/dir.c      | 51 +++++++++++++++++++++++++---------------------
+ fs/f2fs/f2fs.h     | 16 ++++++++++++++-
+ fs/f2fs/recovery.c |  5 +----
+ 3 files changed, 44 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
-index 5e2103042d9b..cfae03f7b7da 100644
---- a/drivers/vfio/pci/mlx5/cmd.c
-+++ b/drivers/vfio/pci/mlx5/cmd.c
-@@ -332,26 +332,60 @@ static u32 *alloc_mkey_in(u32 npages, u32 pdn)
- 	return in;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 042593aed1ec..266279b82afc 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -42,35 +42,47 @@ static unsigned int bucket_blocks(unsigned int level)
+ 		return 4;
  }
  
--static int create_mkey(struct mlx5_core_dev *mdev, u32 npages,
--		       struct mlx5_vhca_data_buffer *buf, u32 *mkey_in,
-+static int create_mkey(struct mlx5_core_dev *mdev, u32 npages, u32 *mkey_in,
- 		       u32 *mkey)
++#if IS_ENABLED(CONFIG_UNICODE)
+ /* If @dir is casefolded, initialize @fname->cf_name from @fname->usr_fname. */
+ int f2fs_init_casefolded_name(const struct inode *dir,
+ 			      struct f2fs_filename *fname)
  {
-+	int inlen = MLX5_ST_SZ_BYTES(create_mkey_in) +
-+		    sizeof(__be64) * round_up(npages, 2);
-+
-+	return mlx5_core_create_mkey(mdev, mkey, mkey_in, inlen);
-+}
-+
-+static void unregister_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
-+				 u32 *mkey_in, struct dma_iova_attrs *iova)
-+{
-+	dma_addr_t addr;
- 	__be64 *mtt;
--	int inlen;
-+	int i;
+-#if IS_ENABLED(CONFIG_UNICODE)
+ 	struct super_block *sb = dir->i_sb;
++	unsigned char *buf;
++	int len;
  
- 	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
- 
--	if (buf) {
--		struct sg_dma_page_iter dma_iter;
-+	for (i = npages - 1; i >= 0; i--) {
-+		addr = be64_to_cpu(mtt[i]);
-+		dma_unlink_range(iova, addr);
-+	}
-+	dma_free_iova(iova);
-+}
-+
-+static int register_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
-+			      struct page **page_list, u32 *mkey_in,
-+			      struct dma_iova_attrs *iova)
-+{
-+	dma_addr_t addr;
-+	__be64 *mtt;
-+	int i, err;
-+
-+	iova->dev = mdev->device;
-+	iova->size = npages * PAGE_SIZE;
-+	err = dma_alloc_iova(iova);
-+	if (err)
-+		return err;
-+
-+	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
-+
-+	for (i = 0; i < npages; i++) {
-+		addr = dma_link_range(page_list[i], 0, iova, i * PAGE_SIZE);
-+		if (dma_mapping_error(mdev->device, addr))
-+			goto error;
- 
--		for_each_sgtable_dma_page(&buf->table.sgt, &dma_iter, 0)
--			*mtt++ = cpu_to_be64(sg_page_iter_dma_address(&dma_iter));
-+		*mtt++ = cpu_to_be64(addr);
- 	}
- 
--	inlen = MLX5_ST_SZ_BYTES(create_mkey_in) +
--		sizeof(__be64) * round_up(npages, 2);
-+	return 0;
- 
--	return mlx5_core_create_mkey(mdev, mkey, mkey_in, inlen);
-+error:
-+	unregister_dma_pages(mdev, i, mkey_in, iova);
-+	return -ENOMEM;
- }
- 
- static int mlx5vf_dma_data_buffer(struct mlx5_vhca_data_buffer *buf)
-@@ -367,17 +401,16 @@ static int mlx5vf_dma_data_buffer(struct mlx5_vhca_data_buffer *buf)
- 	if (buf->dmaed || !buf->npages)
- 		return -EINVAL;
- 
--	ret = dma_map_sgtable(mdev->device, &buf->table.sgt, buf->dma_dir, 0);
--	if (ret)
--		return ret;
--
- 	buf->mkey_in = alloc_mkey_in(buf->npages, buf->migf->pdn);
--	if (!buf->mkey_in) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!buf->mkey_in)
-+		return -ENOMEM;
-+
-+	ret = register_dma_pages(mdev, buf->npages, buf->page_list,
-+				 buf->mkey_in, &buf->iova);
-+	if (ret)
-+		goto err_register_dma;
- 
--	ret = create_mkey(mdev, buf->npages, buf, buf->mkey_in, &buf->mkey);
-+	ret = create_mkey(mdev, buf->npages, buf->mkey_in, &buf->mkey);
- 	if (ret)
- 		goto err_create_mkey;
- 
-@@ -386,32 +419,39 @@ static int mlx5vf_dma_data_buffer(struct mlx5_vhca_data_buffer *buf)
- 	return 0;
- 
- err_create_mkey:
-+	unregister_dma_pages(mdev, buf->npages, buf->mkey_in, &buf->iova);
-+err_register_dma:
- 	kvfree(buf->mkey_in);
--err:
--	dma_unmap_sgtable(mdev->device, &buf->table.sgt, buf->dma_dir, 0);
- 	return ret;
- }
- 
-+static void free_page_list(u32 npages, struct page **page_list)
-+{
-+	int i;
-+
-+	/* Undo alloc_pages_bulk_array() */
-+	for (i = npages - 1; i >= 0; i--)
-+		__free_page(page_list[i]);
-+
-+	kvfree(page_list);
-+}
-+
- void mlx5vf_free_data_buffer(struct mlx5_vhca_data_buffer *buf)
- {
--	struct mlx5_vf_migration_file *migf = buf->migf;
--	struct sg_page_iter sg_iter;
-+	struct mlx5vf_pci_core_device *mvdev = buf->migf->mvdev;
-+	struct mlx5_core_dev *mdev = mvdev->mdev;
- 
--	lockdep_assert_held(&migf->mvdev->state_mutex);
--	WARN_ON(migf->mvdev->mdev_detach);
-+	lockdep_assert_held(&mvdev->state_mutex);
-+	WARN_ON(mvdev->mdev_detach);
- 
- 	if (buf->dmaed) {
--		mlx5_core_destroy_mkey(migf->mvdev->mdev, buf->mkey);
-+		mlx5_core_destroy_mkey(mdev, buf->mkey);
-+		unregister_dma_pages(mdev, buf->npages, buf->mkey_in,
-+				     &buf->iova);
- 		kvfree(buf->mkey_in);
--		dma_unmap_sgtable(migf->mvdev->mdev->device, &buf->table.sgt,
--				  buf->dma_dir, 0);
- 	}
- 
--	/* Undo alloc_pages_bulk_array() */
--	for_each_sgtable_page(&buf->table.sgt, &sg_iter, 0)
--		__free_page(sg_page_iter_page(&sg_iter));
--	sg_free_append_table(&buf->table);
--	kvfree(buf->page_list);
-+	free_page_list(buf->npages, buf->page_list);
- 	kfree(buf);
- }
- 
-@@ -426,7 +466,7 @@ mlx5vf_alloc_data_buffer(struct mlx5_vf_migration_file *migf, u32 npages,
- 	if (!buf)
- 		return ERR_PTR(-ENOMEM);
- 
--	buf->dma_dir = dma_dir;
-+	buf->iova.dir = dma_dir;
- 	buf->migf = migf;
- 	if (npages) {
- 		ret = mlx5vf_add_migration_pages(buf, npages);
-@@ -469,7 +509,7 @@ mlx5vf_get_data_buffer(struct mlx5_vf_migration_file *migf, u32 npages,
- 
- 	spin_lock_irq(&migf->list_lock);
- 	list_for_each_entry_safe(buf, temp_buf, &migf->avail_list, buf_elm) {
--		if (buf->dma_dir == dma_dir) {
-+		if (buf->iova.dir == dma_dir) {
- 			list_del_init(&buf->buf_elm);
- 			if (buf->npages >= npages) {
- 				spin_unlock_irq(&migf->list_lock);
-@@ -1253,17 +1293,6 @@ static void mlx5vf_destroy_qp(struct mlx5_core_dev *mdev,
- 	kfree(qp);
- }
- 
--static void free_recv_pages(struct mlx5_vhca_recv_buf *recv_buf)
--{
--	int i;
--
--	/* Undo alloc_pages_bulk_array() */
--	for (i = 0; i < recv_buf->npages; i++)
--		__free_page(recv_buf->page_list[i]);
--
--	kvfree(recv_buf->page_list);
--}
--
- static int alloc_recv_pages(struct mlx5_vhca_recv_buf *recv_buf,
- 			    unsigned int npages)
- {
-@@ -1300,56 +1329,16 @@ static int alloc_recv_pages(struct mlx5_vhca_recv_buf *recv_buf,
- 	return -ENOMEM;
- }
- 
--static void unregister_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
--				 u32 *mkey_in)
--{
--	dma_addr_t addr;
--	__be64 *mtt;
--	int i;
--
--	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
--
--	for (i = npages - 1; i >= 0; i--) {
--		addr = be64_to_cpu(mtt[i]);
--		dma_unmap_single(mdev->device, addr, PAGE_SIZE,
--				 DMA_FROM_DEVICE);
--	}
--}
--
--static int register_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
--			      struct page **page_list, u32 *mkey_in)
--{
--	dma_addr_t addr;
--	__be64 *mtt;
--	int i;
--
--	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
--
--	for (i = 0; i < npages; i++) {
--		addr = dma_map_page(mdev->device, page_list[i], 0, PAGE_SIZE,
--				    DMA_FROM_DEVICE);
--		if (dma_mapping_error(mdev->device, addr))
--			goto error;
--
--		*mtt++ = cpu_to_be64(addr);
--	}
--
--	return 0;
--
--error:
--	unregister_dma_pages(mdev, i, mkey_in);
--	return -ENOMEM;
--}
--
- static void mlx5vf_free_qp_recv_resources(struct mlx5_core_dev *mdev,
- 					  struct mlx5_vhca_qp *qp)
- {
- 	struct mlx5_vhca_recv_buf *recv_buf = &qp->recv_buf;
- 
- 	mlx5_core_destroy_mkey(mdev, recv_buf->mkey);
--	unregister_dma_pages(mdev, recv_buf->npages, recv_buf->mkey_in);
-+	unregister_dma_pages(mdev, recv_buf->npages, recv_buf->mkey_in,
-+			     &recv_buf->iova);
- 	kvfree(recv_buf->mkey_in);
--	free_recv_pages(&qp->recv_buf);
-+	free_page_list(recv_buf->npages, recv_buf->page_list);
- }
- 
- static int mlx5vf_alloc_qp_recv_resources(struct mlx5_core_dev *mdev,
-@@ -1370,24 +1359,24 @@ static int mlx5vf_alloc_qp_recv_resources(struct mlx5_core_dev *mdev,
- 		goto end;
- 	}
- 
-+	recv_buf->iova.dir = DMA_FROM_DEVICE;
- 	err = register_dma_pages(mdev, npages, recv_buf->page_list,
--				 recv_buf->mkey_in);
-+				 recv_buf->mkey_in, &recv_buf->iova);
- 	if (err)
- 		goto err_register_dma;
- 
--	err = create_mkey(mdev, npages, NULL, recv_buf->mkey_in,
--			  &recv_buf->mkey);
-+	err = create_mkey(mdev, npages, recv_buf->mkey_in, &recv_buf->mkey);
- 	if (err)
- 		goto err_create_mkey;
- 
- 	return 0;
- 
- err_create_mkey:
--	unregister_dma_pages(mdev, npages, recv_buf->mkey_in);
-+	unregister_dma_pages(mdev, npages, recv_buf->mkey_in, &recv_buf->iova);
- err_register_dma:
- 	kvfree(recv_buf->mkey_in);
- end:
--	free_recv_pages(recv_buf);
-+	free_page_list(npages, recv_buf->page_list);
- 	return err;
- }
- 
-diff --git a/drivers/vfio/pci/mlx5/cmd.h b/drivers/vfio/pci/mlx5/cmd.h
-index 815fcb54494d..3a046166d9f2 100644
---- a/drivers/vfio/pci/mlx5/cmd.h
-+++ b/drivers/vfio/pci/mlx5/cmd.h
-@@ -57,22 +57,17 @@ struct mlx5_vf_migration_header {
- };
- 
- struct mlx5_vhca_data_buffer {
-+	struct dma_iova_attrs iova;
- 	struct page **page_list;
--	struct sg_append_table table;
- 	loff_t start_pos;
- 	u64 length;
- 	u32 npages;
- 	u32 mkey;
- 	u32 *mkey_in;
--	enum dma_data_direction dma_dir;
- 	u8 dmaed:1;
- 	u8 stop_copy_chunk_num;
- 	struct list_head buf_elm;
- 	struct mlx5_vf_migration_file *migf;
--	/* Optimize mlx5vf_get_migration_page() for sequential access */
--	struct scatterlist *last_offset_sg;
--	unsigned int sg_last_entry;
--	unsigned long last_offset;
- };
- 
- struct mlx5vf_async_data {
-@@ -137,6 +132,7 @@ struct mlx5_vhca_cq {
- };
- 
- struct mlx5_vhca_recv_buf {
-+	struct dma_iova_attrs iova;
- 	u32 npages;
- 	struct page **page_list;
- 	u32 next_rq_offset;
-diff --git a/drivers/vfio/pci/mlx5/main.c b/drivers/vfio/pci/mlx5/main.c
-index 7ffe24693a55..668c28bc429c 100644
---- a/drivers/vfio/pci/mlx5/main.c
-+++ b/drivers/vfio/pci/mlx5/main.c
-@@ -34,35 +34,10 @@ static struct mlx5vf_pci_core_device *mlx5vf_drvdata(struct pci_dev *pdev)
- 			    core_device);
- }
- 
--struct page *
--mlx5vf_get_migration_page(struct mlx5_vhca_data_buffer *buf,
--			  unsigned long offset)
-+struct page *mlx5vf_get_migration_page(struct mlx5_vhca_data_buffer *buf,
-+				       unsigned long offset)
- {
--	unsigned long cur_offset = 0;
--	struct scatterlist *sg;
--	unsigned int i;
--
--	/* All accesses are sequential */
--	if (offset < buf->last_offset || !buf->last_offset_sg) {
--		buf->last_offset = 0;
--		buf->last_offset_sg = buf->table.sgt.sgl;
--		buf->sg_last_entry = 0;
--	}
--
--	cur_offset = buf->last_offset;
--
--	for_each_sg(buf->last_offset_sg, sg,
--			buf->table.sgt.orig_nents - buf->sg_last_entry, i) {
--		if (offset < sg->length + cur_offset) {
--			buf->last_offset_sg = sg;
--			buf->sg_last_entry += i;
--			buf->last_offset = cur_offset;
--			return nth_page(sg_page(sg),
--					(offset - cur_offset) / PAGE_SIZE);
--		}
--		cur_offset += sg->length;
--	}
--	return NULL;
-+	return buf->page_list[offset / PAGE_SIZE];
- }
- 
- int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
-@@ -72,13 +47,9 @@ int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
- 	size_t old_size, new_size;
- 	struct page **page_list;
- 	unsigned long filled;
--	unsigned int to_fill;
--	int ret;
- 
--	to_fill = min_t(unsigned int, npages,
--			PAGE_SIZE / sizeof(*buf->page_list));
- 	old_size = buf->npages * sizeof(*buf->page_list);
--	new_size = old_size + to_fill * sizeof(*buf->page_list);
-+	new_size = old_size + to_alloc * sizeof(*buf->page_list);
- 	page_list = kvrealloc(buf->page_list, old_size, new_size,
- 			      GFP_KERNEL_ACCOUNT | __GFP_ZERO);
- 	if (!page_list)
-@@ -87,22 +58,13 @@ int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
- 	buf->page_list = page_list;
- 
- 	do {
--		filled = alloc_pages_bulk_array(GFP_KERNEL_ACCOUNT, to_fill,
-+		filled = alloc_pages_bulk_array(GFP_KERNEL_ACCOUNT, to_alloc,
- 						buf->page_list + buf->npages);
- 		if (!filled)
+ 	if (IS_CASEFOLDED(dir) &&
+ 	    !is_dot_dotdot(fname->usr_fname->name, fname->usr_fname->len)) {
+-		fname->cf_name.name = f2fs_kmem_cache_alloc(f2fs_cf_name_slab,
+-					GFP_NOFS, false, F2FS_SB(sb));
+-		if (!fname->cf_name.name)
++		buf = f2fs_kmem_cache_alloc(f2fs_cf_name_slab,
++					    GFP_NOFS, false, F2FS_SB(sb));
++		if (!buf)
  			return -ENOMEM;
- 
- 		to_alloc -= filled;
--		ret = sg_alloc_append_table_from_pages(
--			&buf->table, buf->page_list + buf->npages, filled, 0,
--			filled << PAGE_SHIFT, UINT_MAX, SG_MAX_SINGLE_ALLOC,
--			GFP_KERNEL_ACCOUNT);
--		if (ret)
--			return ret;
--
- 		buf->npages += filled;
--		to_fill = min_t(unsigned int, to_alloc,
--				PAGE_SIZE / sizeof(*buf->page_list));
- 	} while (to_alloc > 0);
- 
+-		fname->cf_name.len = utf8_casefold(sb->s_encoding,
+-						   fname->usr_fname,
+-						   fname->cf_name.name,
+-						   F2FS_NAME_LEN);
+-		if ((int)fname->cf_name.len <= 0) {
+-			kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
+-			fname->cf_name.name = NULL;
++
++		len = utf8_casefold(sb->s_encoding, fname->usr_fname,
++				    buf, F2FS_NAME_LEN);
++		if (len <= 0) {
++			kmem_cache_free(f2fs_cf_name_slab, buf);
+ 			if (sb_has_strict_encoding(sb))
+ 				return -EINVAL;
+ 			/* fall back to treating name as opaque byte sequence */
++			return 0;
+ 		}
++		fname->cf_name.name = buf;
++		fname->cf_name.len = len;
+ 	}
+-#endif
++
  	return 0;
-@@ -164,7 +126,7 @@ static void mlx5vf_buf_read_done(struct mlx5_vhca_data_buffer *vhca_buf)
- 	struct mlx5_vf_migration_file *migf = vhca_buf->migf;
+ }
  
- 	if (vhca_buf->stop_copy_chunk_num) {
--		bool is_header = vhca_buf->dma_dir == DMA_NONE;
-+		bool is_header = vhca_buf->iova.dir == DMA_NONE;
- 		u8 chunk_num = vhca_buf->stop_copy_chunk_num;
- 		size_t next_required_umem_size = 0;
++void f2fs_free_casefolded_name(struct f2fs_filename *fname)
++{
++	unsigned char *buf = (unsigned char *)fname->cf_name.name;
++
++	kmem_cache_free(f2fs_cf_name_slab, buf);
++	fname->cf_name.name = NULL;
++}
++#endif /* CONFIG_UNICODE */
++
+ static int __f2fs_setup_filename(const struct inode *dir,
+ 				 const struct fscrypt_name *crypt_name,
+ 				 struct f2fs_filename *fname)
+@@ -142,12 +154,7 @@ void f2fs_free_filename(struct f2fs_filename *fname)
+ 	kfree(fname->crypto_buf.name);
+ 	fname->crypto_buf.name = NULL;
+ #endif
+-#if IS_ENABLED(CONFIG_UNICODE)
+-	if (fname->cf_name.name) {
+-		kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
+-		fname->cf_name.name = NULL;
+-	}
+-#endif
++	f2fs_free_casefolded_name(fname);
+ }
  
+ static unsigned long dir_block_index(unsigned int level,
+@@ -235,11 +242,9 @@ static inline int f2fs_match_name(const struct inode *dir,
+ 	struct fscrypt_name f;
+ 
+ #if IS_ENABLED(CONFIG_UNICODE)
+-	if (fname->cf_name.name) {
+-		struct qstr cf = FSTR_TO_QSTR(&fname->cf_name);
+-
+-		return f2fs_match_ci_name(dir, &cf, de_name, de_name_len);
+-	}
++	if (fname->cf_name.name)
++		return f2fs_match_ci_name(dir, &fname->cf_name,
++					  de_name, de_name_len);
+ #endif
+ 	f.usr_fname = fname->usr_fname;
+ 	f.disk_name = fname->disk_name;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 65294e3b0bef..4f68c58718fb 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -524,7 +524,7 @@ struct f2fs_filename {
+ 	 * internal operation where usr_fname is also NULL.  In all these cases
+ 	 * we fall back to treating the name as an opaque byte sequence.
+ 	 */
+-	struct fscrypt_str cf_name;
++	struct qstr cf_name;
+ #endif
+ };
+ 
+@@ -3528,8 +3528,22 @@ int f2fs_get_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ /*
+  * dir.c
+  */
++#if IS_ENABLED(CONFIG_UNICODE)
+ int f2fs_init_casefolded_name(const struct inode *dir,
+ 			      struct f2fs_filename *fname);
++void f2fs_free_casefolded_name(struct f2fs_filename *fname);
++#else
++static inline int f2fs_init_casefolded_name(const struct inode *dir,
++					    struct f2fs_filename *fname)
++{
++	return 0;
++}
++
++static inline void f2fs_free_casefolded_name(struct f2fs_filename *fname)
++{
++}
++#endif /* CONFIG_UNICODE */
++
+ int f2fs_setup_filename(struct inode *dir, const struct qstr *iname,
+ 			int lookup, struct f2fs_filename *fname);
+ int f2fs_prepare_lookup(struct inode *dir, struct dentry *dentry,
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index d0f24ccbd1ac..7e53abf6d216 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -153,11 +153,8 @@ static int init_recovered_filename(const struct inode *dir,
+ 		if (err)
+ 			return err;
+ 		f2fs_hash_filename(dir, fname);
+-#if IS_ENABLED(CONFIG_UNICODE)
+ 		/* Case-sensitive match is fine for recovery */
+-		kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
+-		fname->cf_name.name = NULL;
+-#endif
++		f2fs_free_casefolded_name(fname);
+ 	} else {
+ 		f2fs_hash_filename(dir, fname);
+ 	}
 -- 
-2.44.0
+2.34.1
 
