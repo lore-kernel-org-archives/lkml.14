@@ -1,126 +1,85 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9257512E7E;
-	Tue,  5 Mar 2024 18:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67108175A6;
+	Tue,  5 Mar 2024 18:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709661876; cv=none; b=KdRIOqf1XbBU2ZLuCCWOMk/GZASYulKAMNscxlBTU4IH18Yp+5Lw4bFMxCGb01waJYwvSi4/Trr8q8mO5XptWUGl03/vDLiG9+HGq5FOw7zi4pm2Lf4xmg59yCcVRIz78LaEx6Qm69gkBBkez+8AjSebXu1sI3/+eQmksllU2J0=
+	t=1709661980; cv=none; b=mKHTPzPN3SGcdta2BN8GB/DhFYmR7i2STqUmN+e0gOhO92RtPtTejpUU+pLkHULyTO7TTUC+dqB8dAScSMk7WYOYhOys/GWPM2Ba83TpV3IrhIFWqpF1EE7yZVppeAbDDESS9T/roYL2tNTtWCGyDLxoSZbCvzYiST8mcxpEHF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709661876; c=relaxed/simple;
-	bh=KKaXc5Gf1bPywyMA3vROKr+bIO/DG51ozDBuV4FN71I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=k+449tUPePaZkParDF6rvegoExwy/ijd25BJyaZTJpgzleDExf6so2zv2AeBRGBRNzV0/bltX2RS2yme0k0vUJNLXFH+tjstKPc+oCtOh18sOpg52rDpgz7tLFKfN49B16AymxNpuwQItGoLMWOaiCwsoKcOxFh9DfOhFJmHLlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nmiYXkXB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709661980; c=relaxed/simple;
+	bh=2SDHv/6MK1rRoV3gdSoYW4yOT+A2jIAcePxtHgcL22I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=BJXob/mSFifG0HIs5vm6XfFdMde0RcXgJVinEX4blQhZq4BaOP4GobTIrT/z+BNv9tBPrbmnu3k5lZ/w3XurL9eerPKg9Vbmesqg5Pa3KgGDUUC30jsgypP2DRHTjpMWjyVYj0WIC1/qghEItS2x9lUEUqI1J934yQHcbr2gkbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGYA701B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nmiYXkXB"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 425ER8Pb032429;
-	Tue, 5 Mar 2024 18:04:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=sghqC+om+7KfQnUHnhcBPIALJGyNo7LhaapE291B5b0=; b=nm
-	iYXkXBm7jZSjeA42OzytxgY+zrHhWjnWN5eYlP17xcH70zIVD87ELqKuqWpUUr3Q
-	RRLsAwgkD4FrsojfOb2VkUNll1GKNIufLtc2xmAxZNxmh18QpxWZf/L093ZQxauc
-	Ea4f9NdoHLamn6Tb8A/aa1KLsXKzNQTGNaRJ2kIFu5jUXymDxIQmomUQfWXZnn+9
-	QqMUTbrCd9TeppRhfpwiSv/p8Fij5fM+3/5BbCFkxnmWptAMRGsHl8NiT17vIwMM
-	kL/8oeBxbiFr40fhPxOna3hxI5lDpiwaEjVdDHivHEST4xOdMhs5CwXI35KTT6FS
-	Y7eJLPsZR2VoJMANmJCQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wp02898bh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 18:04:20 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 425I4Kqj010381
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Mar 2024 18:04:20 GMT
-Received: from [10.216.51.173] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 5 Mar
- 2024 10:04:12 -0800
-Message-ID: <1a47c20a-abda-4493-a8f0-ff7b4e144d9c@quicinc.com>
-Date: Tue, 5 Mar 2024 23:34:12 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGYA701B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05BE9C433C7;
+	Tue,  5 Mar 2024 18:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709661980;
+	bh=2SDHv/6MK1rRoV3gdSoYW4yOT+A2jIAcePxtHgcL22I=;
+	h=References:In-Reply-To:From:Date:Subject:To:From;
+	b=oGYA701BbkeJVy6WDd1Dok6gueir4mrCJgyRmrI5q8V5NAwhAtJ6rKxBonjk+JAi6
+	 H6MgFztln7d1jpo1HqW66ZLUjoBqB5MDG47f2qzn446SLBHl+wAstxzhlW1EcUZS1S
+	 PCFdx93Qx8R4dEIIMzaycGodcz6ZNcOU2PBVG9kv0Z9o/N7yRwsB9uQIXt4bkE2dGB
+	 cS7F0s72tskoUm80++99jaQb2UKaZWzyZt1rS1TxiOtlDCWGLU5xaHBA6dxe+JCg1V
+	 H4vgkZWbvPzYahl3s6XeYAHRp6QMEFDw79V5+pUxlZ6O8lqCFmBs1BWoQffk272cHu
+	 YD+xyZDltUCwg==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d3ee1c9ea9so15157451fa.3;
+        Tue, 05 Mar 2024 10:06:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW8kWlXwWnMyuP/IW70BKK7c2jgMlsPVRgmvwRAXJc7Y89Bhi62wQl90F67Ntf1Kw9zy3Tm2lcb9+LSf14tSPAlS5L9v9KGNAc9zQ7YryQYhRhKBkf2JseowtrqQbQJy17Desn9oHzfjMcLQvfXxECjANyXdEqPaZGPeVdfWNRjCmZZkQ==
+X-Gm-Message-State: AOJu0YxMq1f/oLQYd6CcO2UYy7RdMx8SEtwithgZJjmTwPShWazgTtMP
+	1OhM4hbuEaFNi8cyINr2NCF1OhIR3/Dkd1o3NcFZsQejSMlLymC6JSBqPJWPXguksvXc9Cfj6Wl
+	lfa9EZOF6l3clbcZN2IkePt0IhQ==
+X-Google-Smtp-Source: AGHT+IEFUbz0C8IzXKCEG0xPmqtSc7rWmrnUWonn1WU+SACvNCJUkl4MMM0KR1729CFmdhBDeKny5et1+AhpsahMuNo=
+X-Received: by 2002:a05:651c:2111:b0:2d3:17e6:3b3f with SMTP id
+ a17-20020a05651c211100b002d317e63b3fmr2426564ljq.39.1709661978150; Tue, 05
+ Mar 2024 10:06:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 0/3] Enable firmware-managed USB resources on Qcom targets
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <gregkh@linuxfoundation.org>, <quic_wcheng@quicinc.com>,
-        <Thinh.Nguyen@synopsys.com>, <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <quic_psodagud@quicinc.com>,
-        <quic_nkela@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
-        <ulf.hansson@linaro.org>, <sudeep.holla@arm.com>,
-        <quic_shazhuss@quicinc.com>
-References: <1709657858-8563-1-git-send-email-quic_sriramd@quicinc.com>
- <4d2501a7-d56d-4736-95d7-41556166859b@linaro.org>
-From: Sriram Dash <quic_sriramd@quicinc.com>
-In-Reply-To: <4d2501a7-d56d-4736-95d7-41556166859b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 2IOJRVrWpQ7_YUUjAOmM_nf0gKuKdET4
-X-Proofpoint-ORIG-GUID: 2IOJRVrWpQ7_YUUjAOmM_nf0gKuKdET4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-05_15,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=951 suspectscore=0 phishscore=0 spamscore=0
- malwarescore=0 mlxscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403050144
+References: <20240124190552.1551929-1-robh@kernel.org> <Zb6nBYTkZmXZ0G2X@shikoro>
+ <Zdxq4GnRyjC07EH8@shikoro>
+In-Reply-To: <Zdxq4GnRyjC07EH8@shikoro>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 5 Mar 2024 12:06:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLnCzXMsyeAHZUx2_oF5dqvLOWBvoj2Bb_Go6VimCxCoA@mail.gmail.com>
+Message-ID: <CAL_JsqLnCzXMsyeAHZUx2_oF5dqvLOWBvoj2Bb_Go6VimCxCoA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: mux: i2c-demux-pinctrl: Drop
+ i2c-mux.yaml reference
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/5/2024 10:42 PM, Krzysztof Kozlowski wrote:
-> On 05/03/2024 17:57, Sriram Dash wrote:
->> Some target systems allow multiple resources to be managed by firmware.
-> 
-> Which? Why this is so vague...
-> 
+On Mon, Feb 26, 2024 at 4:48=E2=80=AFAM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> On Sat, Feb 03, 2024 at 09:50:13PM +0100, Wolfram Sang wrote:
+> > On Wed, Jan 24, 2024 at 01:05:50PM -0600, Rob Herring wrote:
+> > > The I2C de-mux is different than an I2C mux, so i2c-mux.yaml is not
+> > > relevant and shouldn't be referenced.
+> > >
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> >
+> > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> Andi, can you pick these up?
 
-SA8775 will be using it as pilot. Will include the target name.
+I already did since you gave your reviewed-by and they hadn't
+otherwise been picked up.
 
->> On these targets, tasks related to clocks, regulators, resets, and
->> interconnects can be delegated to the firmware, while the remaining
->> responsibilities are handled by Linux.
->>
->> To support the management of partial resources in Linux and leave the rest
->> to firmware, multiple power domains are introduced. Each power domain can
->> manage one or more resources, depending on the specific use case.
->>
->> These power domains handle SCMI calls to the firmware, enabling the
->> activation and deactivation of firmware-managed resources.
->>
->> The driver is responsible for managing multiple power domains and
->> linking them to consumers as needed. Incase there is only single
->> power domain, it is considered to be a standard GDSC hooked on to
->> the qcom dt node which is read and assigned to device structure
->> (by genpd framework) before the driver probe even begins.
-> 
-> This will break the ABI. Sorry, come with an ABI stable solution.
-> 
+> Or you negotiate with Rob how you want to handle I2C DT patches. I
+> agreed with him that I usually take them. Except for generic cleanups or
+> so.
 
-The plan is to include multiple power-domains and fw-managed
-property or similar in the device tree and fw-managed property
-will be deciding if we need some resource management offloaded
-to firmware. So, OS is always in control here. The decision
-making will be done in the drivers. Also, there will be no
-separate vendor hooks.
+Yes, that is my preference. And how most subsystems work for bindings.
 
-> Best regards,
-> Krzysztof
-> 
+Rob
