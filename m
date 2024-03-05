@@ -1,75 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D9A2F43;
-	Tue,  5 Mar 2024 01:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E5C18021
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 01:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709603743; cv=none; b=fHvNDS28MuMgf50uSd1LNMSPZkY8QsVPmixA2jO+wRR6ronxNEz5X4UXbasirr0NRLGzxdXjBUb6myvHymaWDYITaqrnlbDZyzLBIYikijZ3domNcGdox+K6L/elVOpXN0TW8iO6Qzsp30Q92+FGZGEbFf/qgCH+dQgvJxIsvpc=
+	t=1709603778; cv=none; b=r9mY0EJ7P+XsZP7nDDEEdi48juiduUCQ3hFWunMMnx/WEtZAHgBX89d0mAwk/J4blm6Ujpg4UCy71/Ghp911QAW0+CzTBO/AL40ZGgAp2mCKoOGyENv3uKxWO+S+H5lS/pyeFTYMkhGzly4WezEH4zHx9DkpkefXTKn2ijfRinw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709603743; c=relaxed/simple;
-	bh=FlXtlSeO6cB/ZUPdjYZmayDOEDubCs5O53bxkF5XlEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AIt1I8okxX0haWkpoRKPr+Okyvu2611D329v/40cx6EIpfAssTpPwq0Eyg2lP++oKxW1LfAz9X9wV10uF4YEBgBI7b1wKvYGFoQDd6aqA53F14gGf6s+jOjjUHMvNPMZgqjiemMQOyy5pUf+HrgiPYupAd3sDV6yLvhNIdSujh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE76BC433F1;
-	Tue,  5 Mar 2024 01:55:41 +0000 (UTC)
-Date: Mon, 4 Mar 2024 20:57:30 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>,
- Sachin Sant <sachinp@linux.ibm.com>
-Subject: Re: [PATCH] tracing: Have trace_marker writes be just half of
- TRACE_SEQ_SIZE
-Message-ID: <20240304205730.53328530@gandalf.local.home>
-In-Reply-To: <e34628b6-fdb3-420f-8563-4cf91ad3a04b@efficios.com>
-References: <20240304192710.4c99677c@gandalf.local.home>
-	<469d31a7-f358-4547-bb17-0979b3515924@efficios.com>
-	<20240304203516.45b7a551@gandalf.local.home>
-	<e34628b6-fdb3-420f-8563-4cf91ad3a04b@efficios.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709603778; c=relaxed/simple;
+	bh=zt0N50zHKPJXVNvVG81euXstggimzNKVFAU/zxBLFJ8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=R2r3zLz5U28B6sL2FNubJDPusey5MNUpNGnNf/Rps67uxA1tlQhZwqobOrPCelgznZMr+iMg+wyhX4BRwRAw+PXTjnsHfBILo3sCLcRvnOimuNOCrZkcaJQFnOLNqAryxTDJdPS44OGqg4yALdiLh1zlW8bPZZVqnHQ0j3S44uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dWkJhmcx; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dWkJhmcx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709603776; x=1741139776;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=zt0N50zHKPJXVNvVG81euXstggimzNKVFAU/zxBLFJ8=;
+  b=dWkJhmcxVKUW+oj2hAZ1EGqUDU8GGFv6mASwxXnqJAbmPGhbC8/JVMWT
+   hEualTYlt6JsU1Wf3n1BtfnfzfhaNL2Dwub0wPUvSkU15eoOPH0lyQ12X
+   aQRCaLypCKsSryswttyKPSXKO++yvW+jTHvqu0wf/RjUEWZS/TaKSmH4L
+   AOhXfRhHgntC2la/QdN69ZESkWsXCCIlz7Q08i1Twlp66wdMFMCn4P6Sg
+   4k6A7ph0GmUdHOFmUM/jJ2xts8Jyyerolrj6/siriUefQ0WQpDQClF5MJ
+   LGzjmo/Gt2AV63xBVeMLD8wfw4Pqu+zG/ReqP0v3z320ZwwX3hhB171+E
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="14773926"
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="14773926"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 17:56:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="9377584"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 17:56:13 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Byungchul Park <byungchul@sk.com>
+Cc: <akpm@linux-foundation.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-mm@kvack.org>,  <kernel_team@skhynix.com>,  <yuzhao@google.com>,
+  <hannes@cmpxchg.org>
+Subject: Re: [PATCH v6] mm, vmscan: retry kswapd's priority loop with
+ cache_trim_mode off on failure
+In-Reply-To: <20240304082118.20499-1-byungchul@sk.com> (Byungchul Park's
+	message of "Mon, 4 Mar 2024 17:21:18 +0900")
+References: <20240304033611.GD13332@system.software.com>
+	<20240304082118.20499-1-byungchul@sk.com>
+Date: Tue, 05 Mar 2024 09:54:19 +0800
+Message-ID: <87zfvda1f8.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-On Mon, 4 Mar 2024 20:36:28 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+Byungchul Park <byungchul@sk.com> writes:
 
-> >             <...>-999     [001] .....  2296.140373: tracing_mark_write: hello
-> > ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> >     This is the meta data that is added to trace_seq  
-> 
-> If this header has a known well-defined upper-limit length, then use
-> that in the BUILD_BUG_ON().
+> Changes from v5:
+> 	1. Make it retry the kswapd's scan priority loop with
+> 	   cache_trim_mode off *only if* the mode didn't work in the
+> 	   previous loop. (feedbacked by Huang Ying)
+> 	2. Take into account 'break's from the priority loop when making
+> 	   the decision whether to retry. (feedbacked by Huang Ying)
+> 	3. Update the test result in the commit message.
+>
+> Changes from v4:
+> 	1. Make other scans start with may_cache_trim_mode = 1.
+>
+> Changes from v3:
+> 	1. Update the test result in the commit message with v4.
+> 	2. Retry the whole priority loop with cache_trim_mode off again,
+> 	   rather than forcing the mode off at the highest priority,
+> 	   when the mode doesn't work. (feedbacked by Johannes Weiner)
+>
+> Changes from v2:
+> 	1. Change the condition to stop cache_trim_mode.
+>
+> 	   From - Stop it if it's at high scan priorities, 0 or 1.
+> 	   To   - Stop it if it's at high scan priorities, 0 or 1, and
+> 	          the mode didn't work in the previous turn.
+>
+> 	   (feedbacked by Huang Ying)
+>
+> 	2. Change the test result in the commit message after testing
+> 	   with the new logic.
+>
+> Changes from v1:
+> 	1. Add a comment describing why this change is necessary in code
+> 	   and rewrite the commit message with how to reproduce and what
+> 	   the result is using vmstat. (feedbacked by Andrew Morton and
+> 	   Yu Zhao)
+> 	2. Change the condition to avoid cache_trim_mode from
+> 	   'sc->priority != 1' to 'sc->priority > 1' to reflect cases
+> 	   where the priority goes to zero all the way. (feedbacked by
+> 	   Yu Zhao)
+>
+> --->8---
+> From f811ee583158fd53d0e94d32ce5948fac4b17cfe Mon Sep 17 00:00:00 2001
+> From: Byungchul Park <byungchul@sk.com>
+> Date: Mon, 4 Mar 2024 15:27:37 +0900
+> Subject: [PATCH v6] mm, vmscan: retry kswapd's priority loop with cache_trim_mode off on failure
+>
+> With cache_trim_mode on, reclaim logic doesn't bother reclaiming anon
+> pages.  However, it should be more careful to use the mode because it's
+> going to prevent anon pages from being reclaimed even if there are a
+> huge number of anon pages that are cold and should be reclaimed.  Even
+> worse, that leads kswapd_failures to reach MAX_RECLAIM_RETRIES and
+> stopping kswapd from functioning until direct reclaim eventually works
+> to resume kswapd.
+>
+> So kswapd needs to retry its scan priority loop with cache_trim_mode
+> off again if the mode doesn't work for reclaim.
+>
+> The problematic behavior can be reproduced by:
+>
+>    CONFIG_NUMA_BALANCING enabled
+>    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
+>    numa node0 (8GB local memory, 16 CPUs)
+>    numa node1 (8GB slow tier memory, no CPUs)
+>
+>    Sequence:
+>
+>    1) echo 3 > /proc/sys/vm/drop_caches
+>    2) To emulate the system with full of cold memory in local DRAM, run
+>       the following dummy program and never touch the region:
+>
+>          mmap(0, 8 * 1024 * 1024 * 1024, PROT_READ | PROT_WRITE,
+>               MAP_ANONYMOUS | MAP_PRIVATE | MAP_POPULATE, -1, 0);
+>
+>    3) Run any memory intensive work e.g. XSBench.
+>    4) Check if numa balancing is working e.i. promotion/demotion.
+>    5) Iterate 1) ~ 4) until numa balancing stops.
+>
+> With this, you could see that promotion/demotion are not working because
+> kswapd has stopped due to ->kswapd_failures >= MAX_RECLAIM_RETRIES.
+>
+> Interesting vmstat delta's differences between before and after are like:
+>
+>    +-----------------------+-------------------------------+
+>    | interesting vmstat    | before        | after         |
+>    +-----------------------+-------------------------------+
+>    | nr_inactive_anon      | 321935        | 1664772       |
+>    | nr_active_anon        | 1780700       | 437834        |
+>    | nr_inactive_file      | 30425         | 40882         |
+>    | nr_active_file        | 14961         | 3012          |
+>    | pgpromote_success     | 356           | 1293122       |
+>    | pgpromote_candidate   | 21953245      | 1824148       |
+>    | pgactivate            | 1844523       | 3311907       |
+>    | pgdeactivate          | 50634         | 1554069       |
+>    | pgfault               | 31100294      | 6518806       |
+>    | pgdemote_kswapd       | 30856         | 2230821       |
+>    | pgscan_kswapd         | 1861981       | 7667629       |
+>    | pgscan_anon           | 1822930       | 7610583       |
+>    | pgscan_file           | 39051         | 57046         |
+>    | pgsteal_anon          | 386           | 2192033       |
+>    | pgsteal_file          | 30470         | 38788         |
+>    | pageoutrun            | 30            | 412           |
+>    | numa_hint_faults      | 27418279      | 2875955       |
+>    | numa_pages_migrated   | 356           | 1293122       |
+>    +-----------------------+-------------------------------+
+>
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> ---
+>  mm/vmscan.c | 21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index bba207f41b14..6fe45eca7766 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -108,6 +108,12 @@ struct scan_control {
+>  	/* Can folios be swapped as part of reclaim? */
+>  	unsigned int may_swap:1;
+>  
+> +	/* Not allow cache_trim_mode to be turned on as part of reclaim? */
+> +	unsigned int no_cache_trim_mode:1;
+> +
+> +	/* Has cache_trim_mode failed at least once? */
+> +	unsigned int cache_trim_mode_failed:1;
+> +
+>  	/* Proactive reclaim invoked by userspace through memory.reclaim */
+>  	unsigned int proactive:1;
+>  
+> @@ -2268,7 +2274,8 @@ static void prepare_scan_control(pg_data_t *pgdat, struct scan_control *sc)
+>  	 * anonymous pages.
+>  	 */
+>  	file = lruvec_page_state(target_lruvec, NR_INACTIVE_FILE);
+> -	if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FILE))
+> +	if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FILE) &&
+> +	    !sc->no_cache_trim_mode)
+>  		sc->cache_trim_mode = 1;
+>  	else
+>  		sc->cache_trim_mode = 0;
+> @@ -5967,6 +5974,8 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>  	 */
+>  	if (reclaimable)
+>  		pgdat->kswapd_failures = 0;
+> +	else if (sc->cache_trim_mode)
+> +		sc->cache_trim_mode_failed = 1;
+>  }
+>  
+>  /*
+> @@ -6898,6 +6907,16 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
+>  			sc.priority--;
+>  	} while (sc.priority >= 1);
+>  
+> +	/*
+> +	 * Restart only if it went through the priority loop all the way,
+> +	 * but cache_trim_mode didn't work.
+> +	 */
+> +	if (!sc.nr_reclaimed && sc.priority < 1 &&
+> +	    !sc.no_cache_trim_mode && sc.cache_trim_mode_failed) {
 
-Unfortunately there's no set limit. It's built up by different callbacks
-and such. The output can be changed by options set by the user and even by
-tracers, like the function graph tracer:
+Can we just use sc.cache_trim_mode (instead of
+sc.cache_trim_mode_failed) here?  That is, if cache_trim_mode is enabled
+for priority == 1 and failed to reclaim, we will restart.  If this
+works, we can avoid to add another flag.
 
-# tracer: function_graph
-#
-# CPU  DURATION                  FUNCTION CALLS
-# |     |   |                     |   |   |   |
- 1)               |  /* hello */
+> +		sc.no_cache_trim_mode = 1;
+> +		goto restart;
+> +	}
+> +
+>  	if (!sc.nr_reclaimed)
+>  		pgdat->kswapd_failures++;
 
-
-But the worse that will happen if it overflows is that the event is
-replaced with:
-
-             <...>-999     [001] .....  2296.140373: [LINE TOO BIG]
-
-But this has never happened outside of development. I guess you could
-trigger it if you add a trace_printk() that has a string bigger than
-TRACE_SEQ_BUFFER_SIZE. But as Linus says, "Don't do stupid things" ;-)
-
-But in reality, with all the options and everything, I've never seen the
-appended text more than 80 bytes (and probably much less).
-
--- Steve
+--
+Best Regards,
+Huang, Ying
