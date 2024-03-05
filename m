@@ -1,98 +1,151 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D350B548F4;
-	Tue,  5 Mar 2024 10:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB6F5490B
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 10:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633427; cv=none; b=ZgWU2E/XB2gxbXAMa3Whqkz2XYqrfcLRPma+MCCOYaCKIxFksspdPZol6BbqrtSO1F4Nyblh79Kn42qSM9ZWQ+Kh7dKN10T8a4zO1GU5CCuQ9r4PtWUrQ3yBQ7NDOfbR95qHJ12EOCx4fB6Gn8CS3r/ogv/YS41vHmzLXfM7K0Q=
+	t=1709633430; cv=none; b=Cdhm/UxbgOgkWAStbKoFYtzLCv/QEK9jy06U+rpJNL0bM3J4lhola/oKBAQgrN2zoSCJZWut55W5B+KmCrBtLQyPYkrFBOhAs/HPhvdnYPQLxO6hsNpRU7xLUyMk1CkmSPAqh0k62UBjpSHzp06D9+pS3u9RuDdfcaISGEWxc4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633427; c=relaxed/simple;
-	bh=gmAtaa2N2nE82MXltIXk8UaUAv8zL+yzOdz4Dk+oass=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k2XBKr5XijLgPg8hNphdnA1oTI6PEGc82k8Ykbg4zTmpqnsZ2rnweeSGj3UXe6qiZ7nQwwo+AH8TfOocbeqwK5PyXVv6K/ptmuJbzryMkSaQAyebf5P79ocMDTXPGliVPr3C1UGQXp93l/0mIhpEtRuWsX+b1OMSC0tF4WZ27pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CsPcULCM; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709633430; c=relaxed/simple;
+	bh=Wyo8wzm4MTDz4JStiYyO080jO0R+E8V6S6bv9ZTR4iA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=geCDlgPACiAHPxeHdBAgCbqRX6CGHA3URgC4UZ/nxjuSWDI4k2NM/1YnQ36S2X7HIv8+2cA3NV2NwlzE02OMsVkE9/bDB293Xnglm+96NuNLgMetdLuNFoRrq9C5lHmbsfyj/IyrluZZOEhged9o4jpF44POgJ925p6uNJOayGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VnyWQvGo; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsPcULCM"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-29b1ee96191so2891149a91.0;
-        Tue, 05 Mar 2024 02:10:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VnyWQvGo"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c1ec2d05feso961355b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 02:10:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709633425; x=1710238225; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1709633428; x=1710238228; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gmAtaa2N2nE82MXltIXk8UaUAv8zL+yzOdz4Dk+oass=;
-        b=CsPcULCMQhRYeSUO5cdzJFv0SrpD3ggfiLZ2DlMJAR5BeNDBa1RYrfXESTM5r8xUHu
-         Ay4m56AG1Mt7tsu2mAHprbywLg/Wmqlx/n2AKka4ee0FQvBlSCHlIN8z4X2ol83wpMcH
-         qLhhQ634m069VpYnq8xmWeHDipiSPAhxzLUo3Y6eKSGMnnScOIobG3BTUGAxDAwmzUsO
-         7MxqSVVd6zcOjvDNIr7bBU0SDtSC0m+FtSeOW7tTFrJjzQapI7WpwZ0YmzZ18iifdIQD
-         UwnyfvVdnTMjLRgjHj5z/Og7NaRtlrNiSiExyqKwAJ5d39hsyOb48ABavXAZdRcHl6AD
-         XD+Q==
+        bh=D8rMBFW0tg47V1vhR+hT7ZAeuwLlaibSycxaH+YicYQ=;
+        b=VnyWQvGoaTrXEWac3DWanC0wt1NS9T9vvxs3BxvbDsM5KF/8Nfn8o/Pz4snNDmj72v
+         eby0QoOYbUA1lQlEnKfMK97JUMbps0xP5dJmqaBY/2xaND9S+Z1wBBqRFkZqlI6eWpmp
+         jPmLVRClTxt2ovLmsrd1pTzTPL0ayxxcTBz3M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709633425; x=1710238225;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709633428; x=1710238228;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gmAtaa2N2nE82MXltIXk8UaUAv8zL+yzOdz4Dk+oass=;
-        b=t+oJVD2QYuZkXAUvS1Vj/RNQ/1/76YNRTz/ohMGi/SnvL/DQq48y7sGim4sT8jNkU0
-         9p1KpyygjGFezojC0nEu3wstHblOjfLz0pqyRSkBdflpcho5wYjfKgATUK/2GCiyfz9q
-         L6lhboGacT1Ah7inU2g2hzO0B465THvhia0NC/drJcJrMpxUuOHBHIKpoeRNH6twPztz
-         75sXhW958ZCUCoKLPA+W7HOvBfMPJU8SFj7oB0WHhOR/gZuaAKkSadidV3smJUED3bH7
-         y3c+O6P3UBQU4JzdwZDj26+CQaBP2XraunXFhyRjM7s43V49X8CFSiWFbIgbfsdi/g3R
-         CdTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWG4UYGnnlSeq5SEj1bI5I3dIB3LbQb9ajZrS7uSi0L+1xSJaC17oE0cKcjJeBYbL9XfPZGha0uLMmPt8c5kqhvIYIWyiSBJFvIXzr85T/1T25s1G8TZVOgUUY17Dyt+7Z7IvAkvNwH1hmUl+U=
-X-Gm-Message-State: AOJu0YxWYyLw9Rz+4Wt7vvk0PEcb5cXCdeTUoMbcD4MTAIvFWeeoBmiY
-	7KAhsXBu75vijYSEa5XZ/WGaMYGvsr+SlHrVA7aJ5Wsw+gC8OHh2C7+FeOq7h8CZhXLmcrp4Z5A
-	sv31XzZQYd1v53kUCVhMVj4pCUfA=
-X-Google-Smtp-Source: AGHT+IFvN55XESn+MGAPLMObN5HMTDIRSYbY4oFEzsZN3jCgHw7bjMfXlZewHZ79chco8tXX7+zcKmmxLZaIv3JU4ik=
-X-Received: by 2002:a17:90b:192:b0:29a:67fa:7bb7 with SMTP id
- t18-20020a17090b019200b0029a67fa7bb7mr7859867pjs.47.1709633425130; Tue, 05
- Mar 2024 02:10:25 -0800 (PST)
+        bh=D8rMBFW0tg47V1vhR+hT7ZAeuwLlaibSycxaH+YicYQ=;
+        b=EANnZvQfB8GgmqbVsCsrt0J5w7hWUkFQR2+IXdJvayfOYo4buIcJ3CCagItz81SeKg
+         HuvBL4YY0mKyJNqsvRCRM8gJ3qzivTWSLe1qcystKyuh5eiWnhX2t8tGYf7F+WELfdiZ
+         lZ/pFF9FIn2u7kbRYBZo+gDjkS9LIl36b168nDIJW15hBWWJEEvwMCphF3gHggqefZSs
+         XePT6WWZYwClSgXs+9qQSgTBogi6b7eAdUaAc7lj9kyI9dR/8K/8BdvwIvbZIyk/WezY
+         zxbLwsMaNYFehcv+LnRp3WvqnwGdN2rxOkK2QevaRURJ4wHFBmEAiP+Gn5ZR/mXoKJr6
+         xqVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWD55LaSCjUvdGJprqdnOibGYQx+gLJsa8TwtlMOEGpMhoC2hjVd2odLMqXzIBCJxHdy9+/Xj01IA0J5ODhLu5MWHPtqrlFxZ5cChA1
+X-Gm-Message-State: AOJu0YwK2PmsFpd1ijGErvPIEr516+PbdIwSjVIPnCALu9c8pbLZey5g
+	b0JAL3Umw9dnJqRHIzxfLHQ85rupAwkycR812NJaDCQcmFp0WGWDFfCnOPgbGA==
+X-Google-Smtp-Source: AGHT+IGYfAbScDqt9gSvtMMgpvMOmJMAT2r+uZEpZv8yZZyNk7NeKQx1h1ByxW1TZ8pqZAe02uLOcw==
+X-Received: by 2002:a05:6808:607:b0:3c1:559b:4290 with SMTP id y7-20020a056808060700b003c1559b4290mr1272920oih.42.1709633427854;
+        Tue, 05 Mar 2024 02:10:27 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id y185-20020a638ac2000000b005df41b00ee9sm8692546pgd.68.2024.03.05.02.10.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 02:10:27 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <keescook@chromium.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	linux-mm@kvack.org,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 1/9] slab: Introduce kmem_buckets typedef
+Date: Tue,  5 Mar 2024 02:10:17 -0800
+Message-Id: <20240305101026.694758-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240305100933.it.923-kees@kernel.org>
+References: <20240305100933.it.923-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304141426.163517-1-wangrui@loongson.cn> <CANiq72mvdVrzN19PC8pNrvuBLkOEEQ3yX0WG6JcWc+RVaSM2nA@mail.gmail.com>
- <CAAhV-H666zsMadZuzvcRxxkUxSpkka1tt9AJO_WctHDL8j_HNg@mail.gmail.com>
-In-Reply-To: <CAAhV-H666zsMadZuzvcRxxkUxSpkka1tt9AJO_WctHDL8j_HNg@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 5 Mar 2024 11:10:12 +0100
-Message-ID: <CANiq72mHCNU2wGpELBbgOA8LKQhm_-RyG8+9bP9miYJOkUw2Uw@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: rust: Switch to use built-in rustc target
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Rui <wangrui@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1794; i=keescook@chromium.org;
+ h=from:subject; bh=Wyo8wzm4MTDz4JStiYyO080jO0R+E8V6S6bv9ZTR4iA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5u+QdzwZRrBHJ6q6tZF3ljbnIROOFCv0Jfi5y
+ dLhu0dVnMWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZebvkAAKCRCJcvTf3G3A
+ JhRGEACXqOYvigduxdiLg5s3NKoZ5sAGZvlIOApR3AAy5NlVdVm3El7+ClqD7kAsaRASlCZzfCE
+ SnrdJUJTmH8pIf9m0+2frgqPwuRmMlb09607iDkUQPLPN1YxJMR27tBwJWq9BgA3ubUWo+QsdgT
+ YXE7VP7nPQdqREOzraeyi2MHH+U3DNUaP61lbMW6KxmdVKDTNvRohGXZ4t+fDkAx3qPc5WUijJu
+ +T0ZdLwbHIqRgXmTleQTynxNAt+ias93uGlGLgEDjoQZXs3asvnUvukRlD4dRoL8Jw9iQijFq1Q
+ Dt4OD7yUPU+PD4XJr3GZIJhcJtIYM4IVHGlAVfYnKDclM8zlcITotaYHXQpXMql4PslEEE4eao3
+ 2lj3oguta9XJ6ZA8lMy1oJUDczWNwOLRtiE4ocEojO7GA2/sMkSDKFBWiQoXoqqozQ72/GOfjya
+ z0P7wyB5UCUQt13UQzDHMpYOQ/D5+iqge17qSf3KrlYD3bDZTO0UxJ6zzyDqVGApKdVJXmzv1nS
+ 5BCsV9JIyHRHMs1bxaWyexVgrO27nMe+VW7LxuZWBm53lHjxxXQXT0bPu26dEUkeQrRMBN6BrfR
+ Hi8QkUDZmoqSL/wiOIGv/c+qZfMpokFWp+beQoz6lhK2cuoYx+8nFdtG2JAcDlfnXKJ5RU+DLD4 BUBdZTAp9dA4F9w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 5, 2024 at 10:58=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> The base of the loongarch tree doesn't contain the arm64 modifications
-> now, so this patch is better to be applied on the rust tree with my
-> Acked-by. But if you have some trouble doing that, I can also manually
-> merge the arm64 parts to the loongarch tree, and then apply this
-> patch. Thanks.
+Encapsulate the concept of a single set of kmem_caches that are used
+for the kmalloc size buckets. Redefine kmalloc_caches as an array
+of these buckets (for the different global cache buckets).
 
-The rust tree doesn't have the arm64 changes either (i.e. they are in
-the arm64 tree), so we would have the same issue.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: linux-mm@kvack.org
+---
+ include/linux/slab.h | 5 +++--
+ mm/slab_common.c     | 3 +--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Since it is quite late and there is no rush for this, I would suggest
-applying it after the merge window in loongarch64 and thus avoiding a
-merge. But, of course, up to you!
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index b5f5ee8308d0..55059faf166c 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -375,8 +375,9 @@ enum kmalloc_cache_type {
+ 	NR_KMALLOC_TYPES
+ };
+ 
+-extern struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
++typedef struct kmem_cache * kmem_buckets[KMALLOC_SHIFT_HIGH + 1];
++
++extern kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES];
+ 
+ /*
+  * Define gfp bits that should not be set for KMALLOC_NORMAL.
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 238293b1dbe1..8787cf17d6e4 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -649,8 +649,7 @@ static struct kmem_cache *__init create_kmalloc_cache(const char *name,
+ 	return s;
+ }
+ 
+-struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
++kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES] __ro_after_init =
+ { /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
+ EXPORT_SYMBOL(kmalloc_caches);
+ 
+-- 
+2.34.1
 
-Thanks!
-
-Cheers,
-Miguel
