@@ -1,194 +1,92 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762C15FEE3
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 22:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18551DFC6
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 22:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709678238; cv=none; b=ufZWqR0FRNyaJNtkt0vX12w4Qld0t+ZycoZVa+DDMSoQ463iuCdijKiqxRpoMD9u5ERjnFgaU2eGTChII3kN6VNREOVFYfiqQXtgEFjwBa2Cgx+knbwBrpid55o8BW8D6BW6//s9rNKnrzGB06+u3nbqQlupai2Yh2nMlzSwSrM=
+	t=1709678547; cv=none; b=TxBPvod0JTfWnfw/i67eSDXp9C+3pJUuqW74pBM+EbCZ/vKRbBefD+Ie41ziJoAvIS75yXR8OffmxaHKbnVgQ6K68qDYaTPmgx4P95oIUUsVYBUFyyl/klQ7XdfY54+ILG4XT7A6P1VqmcRG5UfHa10heP63Frziay0JxQ+BJKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709678238; c=relaxed/simple;
-	bh=W3IhtgptIwJIGVaoRpBisgGELa47nlYnsK3KwD/Ht34=;
+	s=arc-20240116; t=1709678547; c=relaxed/simple;
+	bh=Kla2R5bcfkPkylWdIGVABjeBtsnshT/GLsxGridt7Qg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cz5YeGjDHoHpYz9sYg86TiANkZELuTQoBzz0WSyNcy5P7Vd1NFjzH5HhF+ouGHM0SuOsPpcVgGEvGvQqzTfqdkIpLpdQWuWIkLk6yy73N42Zun61+7tSQtT9iTKaSBRH233eqBDxlyeohZ/pV8apdGrezeVHRe1CljydRLCZb2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=30Twuya/; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=SaQRJVqTCtXz8sKKTbyeOmaiMSQ5capVoWWVdp70X6AevAOU9enSWycr8kXJ6JL67LFr+F7IPhkxcVa656IUiXTZtJ00rNNTc/yO+4LMO/Uu/+H4bltNd5kp5dcx3SMq5T6+jkUJIjgGcKmXzEQZUfOKkMvptJwMnxazBrJYNpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Uz30EHnX; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="30Twuya/"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56657bcd555so7789850a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 14:37:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uz30EHnX"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so5676244276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 14:42:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709678234; x=1710283034; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709678545; x=1710283345; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kopREHbBAUxVzUnXNQm6/nygDAEnIt8EnnHpLnLXzJA=;
-        b=30Twuya/BSHODuDkMDJEZEMbRXYmIHHa/qYjsFkAi9XDF5R3UDSmSWMJEIRO15caX7
-         X/dWlhJ0Y/oiDZJgoYyJGgY5e3Zp5nDoicPdRwUbc2XwjFWFu1H541RIEpXdYcNdgYGj
-         jmX+BiOBPJ2WKufQPXUYEByMr4K391+BAT43iatSzWfESjgkOkCcgW2epMxAivv0QBfQ
-         ELNrmKklOR+mGavcCIFFsQ15vJ8BIR19gSz/9uS0Fpjpu27h8KsxZTb+sYuI2OgCAz8q
-         VLRH+MbnZzQn/5n5sJJPavlH4wd7rqiTu6aLCkHToLcorc59tRZOMixZaw5aTnpb+iC4
-         Ga3w==
+        bh=Kla2R5bcfkPkylWdIGVABjeBtsnshT/GLsxGridt7Qg=;
+        b=Uz30EHnXgL4NUZASHqK/PqkK5NhT//dXPGTvlHs7BxPo7ZOaCovK3EzbxEDFbuZJjm
+         S5ty8ErsqAnztmN482V87In5Erc6Hw+UalRdKuoI9Kg92qUzSsnCgPIU28qsBiPl2++a
+         SG1Dtcjzk6ZGRdPauq1AziXSfAUHaIX9/Q3508lPGUEp66+RS0uzLYkUzqmDMQV8QN7Q
+         BjK95qtF1S6phqRoqx6qbmldzN8/MVxnCbmm838W+xPKh/gwkIKWRY3/l/HprpGQ1SFa
+         PbAkqzarbWLbSG9JPkjiGe+ovVPCYP8fPYaE4vDYqbqE4sRJ8DyEt4WEIT07NOmrUz0C
+         nW9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709678234; x=1710283034;
+        d=1e100.net; s=20230601; t=1709678545; x=1710283345;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kopREHbBAUxVzUnXNQm6/nygDAEnIt8EnnHpLnLXzJA=;
-        b=YF0xeZb5NtFtY73r5tRf09Cr3s9QJ5o4YuZfkl80vMF2nSbz9iGDpxoIbSuQQiuIwr
-         J+iBnGpNnBLJiGQba4KR1hbfb+EJ9crA4LK0+B0B3zO6SIIOcn58BL6uwXolgyO+vMS/
-         JOf/X55uIf2a618hMxNzjSpU8pYeUVNaKh4GWGSciEsbPw3DPmLIGh0soNmRJDC74dtN
-         AhVoxBKLPi3UDMPtEryJKF6ndq75K+hx8CbzGThPvqVswx92cICHe8MVleha8tzd5f0j
-         v8liz79NEYyqS2Fr2TPQOOr1ArOgiMJy90PWfuPvSwio1jm2ceKz5HMzYi3Nva0w1GN3
-         uOJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWsKyjGrYYtSx6O+NgJw+sGHbT2pLLHk+DQy4YnC2tFeJVC3PWXJHTGBREJ4dvwSaqy6aqLaFnktJclguwnKxVUncOBkPQSmov0/d5V
-X-Gm-Message-State: AOJu0YwNmerQ33FzDNKqfrCfaQ98CN8F+4EBFdqugM0bHz9GB/nlGRkh
-	W+/k/CyCm7jEbyoExF4xHYbkczuKyGgPMtOHnmcE4Ll0LRfm1qFMSjTkqgr1N12UzCSGzndPF81
-	pIxq5JITBqMWYFX11Nb7FemFkX+nL7S5qS24m
-X-Google-Smtp-Source: AGHT+IGTQdxh2CmAxYK7k5VXoEK42Hgk/ratOcoNOmaK6LyLSJdLrHbaSwb0N2rAMctN/RrhHCuSioRcZyfCDLP2rf8=
-X-Received: by 2002:a17:906:ad8d:b0:a44:a5a:30c5 with SMTP id
- la13-20020a170906ad8d00b00a440a5a30c5mr9648703ejb.41.1709678233378; Tue, 05
- Mar 2024 14:37:13 -0800 (PST)
+        bh=Kla2R5bcfkPkylWdIGVABjeBtsnshT/GLsxGridt7Qg=;
+        b=V3IuEsnTgQ4F/XFm7/s+MNWEKBZ5EXlpMn8xjtBC2j7t+WG8fz58LztnixVqsHehpw
+         NCTZt+wN//9VLZFNypKEa+BbaTORhr9/h9q9WpWDPxHLX1e2nwPiaXF0yEBNysUm4EVt
+         kmBegp+NzTHNoB3Z9ZRAIoH11R/P40a/mehCreAEM+E+tTQDfhCX9sjDlMQqtCoS/ERs
+         HWwAGvzT1+t+K+Wg7+wDci+WVV3II0gV1X2MWuCPV8C1nNBZHJ7u94t7wPi8no7GLQqr
+         3pkmSH2DrK2krWkTfWrwZYJXJvVWQB46FI+SxWA3RhfK6autMTHBvNtd6G9k90e/eZjm
+         EjzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMO9kfiUCdvgM55DIT7qli62WW49fB0ITvt/oW3T6IghiIbEz+9MipzWDm/Glh01R7emO3x0rpRIINs05NXktGYxTpxjqqeLLCKk4V
+X-Gm-Message-State: AOJu0Yz0KKcwmTuqdiD/MxzrC2k20Fv1SjmNiCq729W1I2KtgAHAM0Z5
+	o/FiWZHg6dgVpoSeL9ozoIRWAFU2gEj6xJOr8PXHQFADNBUw4ECEuf8rPJeJ59vjKqW3IyQFx/1
+	oSYtSjiybJAdl8NZrQZQHnOkH/33SDerSP0AX3Q==
+X-Google-Smtp-Source: AGHT+IH4N2Owa4TsElQeWkLDp0eXqWO7MZkEd6Rq0/nmWb7dSWHk/5oMtnM56ZClu8pvW+FdTVEgJ+wxMYTmVHVRzAc=
+X-Received: by 2002:a25:9845:0:b0:dcd:df0:e672 with SMTP id
+ k5-20020a259845000000b00dcd0df0e672mr9528207ybo.47.1709678544834; Tue, 05 Mar
+ 2024 14:42:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com> <1b57dac2-4b04-4bec-b2d7-d0edb4fcabbc@davidwei.uk>
-In-Reply-To: <1b57dac2-4b04-4bec-b2d7-d0edb4fcabbc@davidwei.uk>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 5 Mar 2024 14:36:59 -0800
-Message-ID: <CAHS8izM5O39mnTQ8mhcQE75amDT4G-3vcgozzjcYsAdd_-he1g@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-To: David Wei <dw@davidwei.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, shakeel.butt@linux.dev
+References: <20240301221641.159542-1-paweldembicki@gmail.com> <20240301221641.159542-7-paweldembicki@gmail.com>
+In-Reply-To: <20240301221641.159542-7-paweldembicki@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 5 Mar 2024 23:42:14 +0100
+Message-ID: <CACRpkda18OgXdbVvUVvq-un4cpi-EEfxyfjqoQas+=BScSB6OQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 06/16] net: dsa: vsc73xx: add
+ port_stp_state_set function
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 5, 2024 at 1:55=E2=80=AFPM David Wei <dw@davidwei.uk> wrote:
+On Fri, Mar 1, 2024 at 11:17=E2=80=AFPM Pawel Dembicki <paweldembicki@gmail=
+.com> wrote:
+
+> This isn't a fully functional implementation of 802.1D, but
+> port_stp_state_set is required for a future tag8021q operations.
 >
-> On 2024-03-04 18:01, Mina Almasry wrote:
-> > +struct memory_provider_ops {
-> > +     int (*init)(struct page_pool *pool);
-> > +     void (*destroy)(struct page_pool *pool);
-> > +     struct page *(*alloc_pages)(struct page_pool *pool, gfp_t gfp);
-> > +     bool (*release_page)(struct page_pool *pool, struct page *page);
+> This implementation handles properly all states, but vsc73xx doesn't
+> forward STP packets.
 >
-> For ZC Rx we added a scrub() function to memory_provider_ops that is
-> called from page_pool_scrub(). Does TCP devmem not custom behaviour
-> waiting for all netmem_refs to return before destroying the page pool?
-> What happens if e.g. application crashes?
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-(sorry for the long reply, but he refcounting is pretty complicated to
-explain and I feel like we need to agree on how things currently work)
+This looks like the best effort to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Yeah, the addition of the page_pool_scrub() function is a bit of a
-head scratcher for me. Here is how the (complicated) refcounting works
-for devmem TCP (assuming the driver is not doing its own recycling
-logic which complicates things further):
-
-1. When a netmem_ref is allocated by the page_pool (from dmabuf or
-page), the netmem_get_pp_ref_count_ref()=3D=3D1 and belongs to the page
-pool as long as the netmem is waiting in the pool for driver
-allocation.
-
-2. When a netmem is allocated by the driver, no refcounting is
-changed, but the ownership of the netmem_get_pp_ref_count_ref() is
-implicitly transferred from the page pool to the driver. i.e. the ref
-now belongs to the driver until an skb is formed.
-
-3. When the driver forms an skb using skb_rx_add_frag_netmem(), no
-refcounting is changed, but the ownership of the
-netmem_get_pp_ref_count_ref() is transferred from the driver to the
-TCP stack.
-
-4. When the TCP stack hands the skb to the application, the TCP stack
-obtains an additional refcount, so netmem_get_pp_ref_count_ref()=3D=3D2,
-and frees the skb using skb_frag_unref(), which drops the
-netmem_get_pp_ref_count_ref()=3D=3D1.
-
-5. When the user is done with the skb, the user calls the
-DEVMEM_DONTNEED setsockopt which calls napi_pp_put_netmem() which
-recycles the netmem back to the page pool. This doesn't modify any
-refcounting, but the refcount ownership transfers from the userspace
-back to the page pool, and we're back at step 1.
-
-So all in all netmem can belong either to (a) the page pool, or (b)
-the driver, or (c) the TCP stack, or (d) the application depending on
-where exactly it is in the RX path.
-
-When an application running devmem TCP crashes, the netmem that belong
-to the page pool or driver are not touched, because the page pool is
-not tied to the application in our case really. However, the TCP stack
-notices the devmem socket of the application close, and when it does,
-the TCP stack will:
-
-1. Free all the skbs in the sockets receive queue. This is not custom
-behavior for devmem TCP, it's just standard for TCP to free all skbs
-waiting to be received by the application.
-2. The TCP stack will free references that belong to the application.
-Since the application crashed, it will not call the DEVMEM_DONTNEED
-setsockopt, so we need to free those on behalf of the application.
-This is done in this diff:
-
-@@ -2498,6 +2498,15 @@ static void tcp_md5sig_info_free_rcu(struct
-rcu_head *head)
- void tcp_v4_destroy_sock(struct sock *sk)
- {
-  struct tcp_sock *tp =3D tcp_sk(sk);
-+ __maybe_unused unsigned long index;
-+ __maybe_unused void *netmem;
-+
-+#ifdef CONFIG_PAGE_POOL
-+ xa_for_each(&sk->sk_user_frags, index, netmem)
-+ WARN_ON_ONCE(!napi_pp_put_page((__force netmem_ref)netmem, false));
-+#endif
-+
-+ xa_destroy(&sk->sk_user_frags);
-
-  trace_tcp_destroy_sock(sk);
-
-To be honest, I think it makes sense for the TCP stack to be
-responsible for putting the references that belong to it and the
-application. To me, it does not make much sense for the page pool to
-be responsible for putting the reference that belongs to the TCP stack
-or driver via a page_pool_scrub() function, as those references do not
-belong to the page pool really. I'm not sure why there is a diff
-between our use cases here because I'm not an io_uring expert. Why do
-you need to scrub all the references on page pool destruction? Don't
-these belong to non-page pool components like io_uring stack or TCP
-stack ol otherwise?
-
---=20
-Thanks,
-Mina
+Yours,
+Linus Walleij
