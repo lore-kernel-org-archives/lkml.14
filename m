@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98847EF14;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97A97EF0D;
 	Tue,  5 Mar 2024 07:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709625073; cv=none; b=uhgZasJXeXwHRr9RY2ZwpW2VHkA8uQTygaOh3jQnATxNxp2l/o1gupscH1JO4oOpvk7AGLfHWKwZItXrdPg5MWcDVnw4KjqVVB+YqSStElW47CKo8l1RQ2qBFgjvqZWfKQg3GLJhkWMwkJC0tmCuHwZEVhOwQJ6ob8eMwS49Y+Q=
+	t=1709625073; cv=none; b=SdSvFKtU2FVdX6Je/W87ur7dGaUfgOyq5MdS541nUKJGnhpT1BO5SkoVz4rCGJxkHLCP/wfjEQOR0Winf5NVgR9BrPomIBwHZ/GoleHL7PeU/FaF5lJsRkBm/G8/sDr7Ao+/rgIkgoZ8XfFHTCy2yo1Cy/3223qLlnf2GFR2+zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709625073; c=relaxed/simple;
-	bh=9Khh/08IFLqiyY4llHeSF9dpSr+y2mbDaYQQexylJdQ=;
+	bh=KBkbSBUYWsrzUyqKx9vXlQcN5p5QtPpYZGQe08xtkko=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k04WKjelqdd5cjwbCWrNDZrAH6fI/2LQB71Zts5jdpYmLF5Io7IZGmtP/8VbC6xqtMdx00CYoU5gCYFt77sWbNTId2IuN++uk4rgJFwwm1MhEutJDQXMsNMtR9sK6n01C/olHwRN7wsPGxqwdxrF/WozAakWoM69awx/+zCbPuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTGjPqr7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=AGPkMkaQxfTUsoLkZz7AoTRnBfXqL1+cKmseExyZ7U+nkFWn6I3DDX5ytWAcs+wwfTNc6o7QHJIfGEJ+IvSnuFkf7gudHT6I4FcUuxrpOUc21QZlKWWsqEx+C+cdOdQngohJdDuXph+a5bLKFm3hC91GRVMHpm4fJmD/Dcx8pwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSmLJ0x2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTGjPqr7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 904D0C41613;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSmLJ0x2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D8E2C43330;
 	Tue,  5 Mar 2024 07:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709625072;
-	bh=9Khh/08IFLqiyY4llHeSF9dpSr+y2mbDaYQQexylJdQ=;
+	bh=KBkbSBUYWsrzUyqKx9vXlQcN5p5QtPpYZGQe08xtkko=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BTGjPqr7Jt3wu8tr5nCeqHVu9ii1ohkz/vocm8RCYU4G0zuuk2vgsOPFK7RX6eE8C
-	 wOcZzSi07snQNwJFidVUaHe/qeV5sh/3tzVOd5xBICaaT9SucDJh8IYlMh0ZqqyR/M
-	 8nuIpWVXxxXhwIa68zMlAiOQrDqpRgTc0AE47k5GtcNwCwxA0Ec0Xto9USnHyQA+TB
-	 SzMf+OL0GbpOw8cSf5LJGwX5AxdMdIQZmnW8QhAvI/gHe5/YCOtRFevO1rFkgpbMok
-	 HqAZ9nt/Q/SbWoEeq/qFVjLdKUB9/cVovJ2ZKpYmKG2fHCR1zGrnZYnItkWhhPmMo/
-	 JNC5MMU1rNaqA==
+	b=dSmLJ0x2jw/a8G5bOS9gRrUXubX3Js+M+nLXCqI++/e3HToMlw2O1KlD7NwBFnCfc
+	 rjwjwRsXfLdvZyROHZ170flTpA8IEbvnmi7LGPye3osyvUSKz2BlQgNc+dQXRCY0Cc
+	 hyNIRWoswYgN58n7ukSRrzQx0xyzgnQIW2o/vTcY9krDgJs8dXgQpugq0ibcuwy95O
+	 SAOSNHkb7ZXz87vxCR67w/2qLWsEjcb9A616/GwVwfLpo3JTWeIF6ea8BZDdPtrUBe
+	 R+XCI68D6rvwswqUrNblG9ZnelgcxLlmXNNOfMDOc8t9ZNN4VZtax4LyjEfI1nAr8o
+	 jO5bU8DnIlwVA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D958C54E5D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586F6C54E58;
 	Tue,  5 Mar 2024 07:51:12 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Tue, 05 Mar 2024 15:51:16 +0800
-Subject: [PATCH net-next v8 7/9] net: hisi_femac: remove unused compatible
- strings
+Date: Tue, 05 Mar 2024 15:51:14 +0800
+Subject: [PATCH net-next v8 5/9] dt-bindings: net: hisi-femac: add
+ mandatory MDIO bus subnode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240305-net-v8-7-166aaeea2107@outlook.com>
+Message-Id: <20240305-net-v8-5-166aaeea2107@outlook.com>
 References: <20240305-net-v8-0-166aaeea2107@outlook.com>
 In-Reply-To: <20240305-net-v8-0-166aaeea2107@outlook.com>
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
@@ -54,13 +54,14 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
  Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709625070; l=937;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709625070; l=2313;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=aaQRrOl6ezTfgk2jYZxmgPEEzwU/YKquwXnutXaPBpI=;
- b=1vU1xw9mdYje6iKA4xX4QXA1ULcHxrhm/Sh+Trhc/gkCzGQm6p8f/h2Pi+1PBI65CySzmDN9Q
- hytHwzB2j4SDMdZ4sb7Gx/hp8ZCTHYCASnc8XS8hwGzHsuJQiVjjn6U
+ bh=S6obhoBKcsATY4ri5n0BubHFcd7WZY9xaY4+Ts8DAWM=;
+ b=slQY/8XIF3Ek9MZs/Xbnyg3WHsVOtruFWskH0YxEQvGj0R5Ay7isYcUAFiGhPU0SpPY7svZmm
+ eMsI1UC5fv5AmxsePl1JfvpD8OmlakH4tjAXUgkNIubTl+rJ3VLhWDw
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -70,29 +71,79 @@ Reply-To: <forbidden405@outlook.com>
 
 From: Yang Xiwen <forbidden405@outlook.com>
 
-It's hard to get the version number for each FEMAC core and it's unknown
-how the version can be used. Remove them until it's really needed.
+FEMAC core always has an integrated MDIO bus mapped in its address
+space. Add required properties '#address-cells', 'size-cells', 'ranges'
+and MDIO bus subnode.
 
-While at it, remove fallback compatibles and only use SoC compatible.
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/net/ethernet/hisilicon/hisi_femac.c | 2 --
- 1 file changed, 2 deletions(-)
+ .../bindings/net/hisilicon,hisi-femac.yaml         | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
-index 2406263c9dd3..9bf4beba7987 100644
---- a/drivers/net/ethernet/hisilicon/hisi_femac.c
-+++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
-@@ -945,8 +945,6 @@ static int hisi_femac_drv_resume(struct platform_device *pdev)
- #endif
+diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+index ba207f2c9ae4..ff6b090ed34e 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
++++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+@@ -24,6 +24,15 @@ properties:
+       - description: The first region is the MAC core register base and size.
+       - description: The second region is the global MAC control register.
  
- static const struct of_device_id hisi_femac_match[] = {
--	{.compatible = "hisilicon,hisi-femac-v1",},
--	{.compatible = "hisilicon,hisi-femac-v2",},
- 	{.compatible = "hisilicon,hi3516cv300-femac",},
- 	{},
- };
++  ranges:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 1
++
+   interrupts:
+     maxItems: 1
+ 
+@@ -59,9 +68,16 @@ properties:
+       - description: reset pulse for PHY
+       - description: post-reset delay for PHY
+ 
++patternProperties:
++  'mdio@[0-9a-f]+':
++    $ref: hisilicon,hisi-femac-mdio.yaml#
++
+ required:
+   - compatible
+   - reg
++  - ranges
++  - '#address-cells'
++  - '#size-cells'
+   - interrupts
+   - clocks
+   - resets
+@@ -77,6 +93,9 @@ examples:
+     ethernet@10090000 {
+         compatible = "hisilicon,hi3516cv300-femac", "hisilicon,hisi-femac";
+         reg = <0x10090000 0x1000>, <0x10091300 0x200>;
++        ranges = <0x0 0x10090000 0x10000>;
++        #address-cells = <1>;
++        #size-cells = <1>;
+         interrupts = <12>;
+         clocks = <&clk_femac>, <&clk_femacif>, <&clk_fephy>;
+         clock-names = "mac", "macif", "phy";
+@@ -86,4 +105,15 @@ examples:
+         phy-mode = "mii";
+         phy-handle = <&fephy>;
+         hisilicon,phy-reset-delays-us = <10000 20000 20000>;
++
++        mdio@1100 {
++            compatible = "hisilicon,hisi-femac-mdio";
++            reg = <0x1100 0x20>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            phy@1 {
++                reg = <1>;
++            };
++        };
+     };
 
 -- 
 2.43.0
