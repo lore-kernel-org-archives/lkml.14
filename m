@@ -1,108 +1,78 @@
-Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD775102B
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 13:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2400986122
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 13:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709647071; cv=none; b=tXFMMihkjJaT0vMDH3YnSNgtAebgzbpohRkrzan7YI2asvtJx4Jdk+fUqK3HOOZAH5Z/Dqyvz9kZhiAVcWzrClLr5VeO1c0pxFVaI/naQXaeq86kfYtSe7BwtC0Qql/Ntx1KslWfQV33nQI+iS2HYqewQJ5sxtM/0FaotRr1UoQ=
+	t=1709647144; cv=none; b=ofl2llH0gYYA3B/pqfzUAz8eAYSQnfHQKIEeblP4sKQT4llmmPljoW5u206vZ4/J485kr+jm7U6FJTVnbXCO5LNcSQf4FnX65L9ciBAaOLSPUAcrg3Ufwu+VaNAAmT1nBcLN0A9KLLyan5PRG7k4ZZql6G8SNP6cXiIdayT+Nks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709647071; c=relaxed/simple;
-	bh=SgB4glX/R4uwKlTXq+i1mt48b4uCheTTh3gIApGe16w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oX1OOR7xIcMJiJN/EIouYFBa7V3Uq3ML6x6Sl/vR8Zab3O6joFpz5WuJzYbtB9O6tmBYUPLQmOpuNaubdVPL7K7engA3qlpkHhVHU7+zX1SUUUQAxx/d0WnB5M5YHRlaxr8rFrcUp8MZr376cQr/k1QMwj6x+1tf1xxTaVE8uxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
-Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 425Dve6o3162904;
-	Tue, 5 Mar 2024 19:27:40 +0530
-Received: (from sunil@localhost)
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 425DvegI3162903;
-	Tue, 5 Mar 2024 19:27:40 +0530
-From: Sunil Khatri <sunil.khatri@amd.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Shashank Sharma <shashank.sharma@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, Pan@rtg-sunil-navi33.amd.com,
-        Xinhui <Xinhui.Pan@amd.com>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Sunil Khatri <sunil.khatri@amd.com>
-Subject: [PATCH v3] drm/amdgpu: add ring timeout information in devcoredump
-Date: Tue,  5 Mar 2024 19:27:38 +0530
-Message-Id: <20240305135738.3162878-1-sunil.khatri@amd.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709647144; c=relaxed/simple;
+	bh=7l33o63t817PVAJxkpl+CDCljilBzWublR/7OYtNxNM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=a0cF9OKjvy/aRUxJEj//37QVG70f7p63NCLZcEgcaf4qC3EcESK0gwUhxRnQPYyP/pOxqwVBDiV2nVF7y6KuEHrexiRPiXGDkCc3bOXXiJweN21cJtPAl1cXmU5a2rccmPwSrKqLDagL9It4MlTWgh7GxHE5Z31RNOLOFA3RG2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c49d118546so449465939f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 05:59:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709647142; x=1710251942;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ozqm1QJ84yI8HdJqurYAliOOcrvYW5cx3nOSejB731o=;
+        b=gXCzvSTbR4ONql/4VHczYggVBsNsmw1yl7exbi91Z7A001e2nk/CyKQ6glNgwUpBbg
+         IFACbRDEUlLvJrUkXLhyPkgec1GUsNscohHCF3X8Xbtuir23vkSImQlvb63QX5GXJDli
+         KvMglPEoCYt9ghrxo2I5REyObWrJcyF5F+k3Mp6LJP51MGNdkN+o5yyozhLHJ8egNb7X
+         Aur3N4Zn69D2Cf5Xkl1wHwVoRFy9VDoq19Xz3UeToYU8XGLM8s8vsBBcVMlLAhgWNDBX
+         cE1G0pK8I94eMMRo943pA4P+so2Yo3XfDpbU0s3xJ+wilzSu4I2V4nCvLJxU8B8G51Dc
+         T88A==
+X-Forwarded-Encrypted: i=1; AJvYcCWoILZIMfyLZl+XZjmMErjmYIyADMd+iZ0N5fVtT2lX1KgYN3l7ADAQ1Qhd3Awmydo/dFC1o9PjveevzT/pWOaZ8uHi2Al0JHOQf+S9
+X-Gm-Message-State: AOJu0YzrOE3kB0q3wO5KfsUd7tAg3knfDZHy4op8yVH1UiazF+eMfPkO
+	S7sdT+D2x4kXqDhwq1tMvyTMRK1jcQhoQ71QNRlQvBenJskv1JlZAjasT4YR/D0+U72P34uMHFo
+	K9IoLh8+DC03Epuh+YTvzq0/UezFPT6EYyl1RjjI79xdl2wCLOmxxBLY=
+X-Google-Smtp-Source: AGHT+IEP8n8qSf96nLlSO2rFxSJmbyVVUTknjVpsBlFop11mtXH7lx6mogLF/UQM1fodPwn/6hIAi5kpU8HrhUOEGbHhzUj7aJDi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:35a7:b0:474:d2f6:f0d1 with SMTP id
+ v39-20020a05663835a700b00474d2f6f0d1mr81402jal.1.1709647142220; Tue, 05 Mar
+ 2024 05:59:02 -0800 (PST)
+Date: Tue, 05 Mar 2024 05:59:02 -0800
+In-Reply-To: <000000000000376d93060a5207ed@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009a8bce0612ea3e3c@google.com>
+Subject: Re: [syzbot] [kvm?] WARNING in kvm_mmu_notifier_invalidate_range_start
+ (3)
+From: syzbot <syzbot+c74f40907a9c0479af10@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, pbonzini@redhat.com, seanjc@google.com, 
+	syzkaller-bugs@googlegroups.com, tintinm2017@gmail.com, 
+	usama.anjum@collabora.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add ring timeout related information in the amdgpu
-devcoredump file for debugging purposes.
+syzbot suspects this issue was fixed by commit:
 
-During the gpu recovery process the registered call
-is triggered and add the debug information in data
-file created by devcoredump framework under the
-directory /sys/class/devcoredump/devcdx/
+commit 4cccb6221cae6d020270606b9e52b1678fc8b71a
+Author: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Date:   Tue Jan 9 11:24:42 2024 +0000
 
-Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c | 14 ++++++++++++++
- drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h |  1 +
- 2 files changed, 15 insertions(+)
+    fs/proc/task_mmu: move mmu notification mechanism inside mm lock
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-index a59364e9b6ed..b5fd93cc5731 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-@@ -196,6 +196,13 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
- 			   coredump->reset_task_info.process_name,
- 			   coredump->reset_task_info.pid);
- 
-+	if (coredump->ring) {
-+		drm_printf(&p, "\nRing timed out details\n");
-+		drm_printf(&p, "IP Type: %d Ring Name: %s \n",
-+				coredump->ring->funcs->type,
-+				coredump->ring->name);
-+	}
-+
- 	if (coredump->reset_vram_lost)
- 		drm_printf(&p, "VRAM is lost due to GPU reset!\n");
- 	if (coredump->adev->reset_info.num_regs) {
-@@ -220,6 +227,8 @@ void amdgpu_coredump(struct amdgpu_device *adev, bool vram_lost,
- {
- 	struct amdgpu_coredump_info *coredump;
- 	struct drm_device *dev = adev_to_drm(adev);
-+	struct amdgpu_job *job = reset_context->job;
-+	struct drm_sched_job *s_job;
- 
- 	coredump = kzalloc(sizeof(*coredump), GFP_NOWAIT);
- 
-@@ -241,6 +250,11 @@ void amdgpu_coredump(struct amdgpu_device *adev, bool vram_lost,
- 		}
- 	}
- 
-+	if (job) {
-+		s_job = &job->base;
-+		coredump->ring = to_amdgpu_ring(s_job->sched);
-+	}
-+
- 	coredump->adev = adev;
- 
- 	ktime_get_ts64(&coredump->reset_time);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h
-index 19899f6b9b2b..60522963aaca 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h
-@@ -97,6 +97,7 @@ struct amdgpu_coredump_info {
- 	struct amdgpu_task_info         reset_task_info;
- 	struct timespec64               reset_time;
- 	bool                            reset_vram_lost;
-+	struct amdgpu_ring			*ring;
- };
- #endif
- 
--- 
-2.34.1
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1638c66c180000
+start commit:   b57b17e88bf5 Merge tag 'parisc-for-6.7-rc1-2' of git://git..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d950a2e2e34359e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=c74f40907a9c0479af10
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15785fc4e80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1469c9a8e80000
 
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: fs/proc/task_mmu: move mmu notification mechanism inside mm lock
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
