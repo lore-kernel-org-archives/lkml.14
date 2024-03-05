@@ -1,109 +1,85 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5EC38F
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 00:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABCF2CA9;
+	Tue,  5 Mar 2024 00:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709598320; cv=none; b=MQkQYjbNwGqrP9bPMJYHTYMyVNxeqInFeMxm/vrJ4o8QtJkHfJ6S6js+RIBMKvd19R9D3MqLaUz5o8ngb1StbFfIx9E503QhSk0k1/d8CxiwhEz12ipoyqUnOMTdUeV/Y/pFL99qg/1o+otv0L/0ptdKd2whFYrKvMkE8M89Wsk=
+	t=1709598323; cv=none; b=hIZzVG7fp0oBHVMzeLfXCSadXkI7K2ZjNPOGJManAFLsXrD8ipgBRq8Nna0lOxYKn+g4SdnVt/74tYRT/sbKQoY3aKhvpy/sSetilyyLUPBa9U/VAdc31/D6w0GjpUiS4ZGFZhrBq3uyYoYT3LErqMxJyAk3Y6yzfJ00g41gIEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709598320; c=relaxed/simple;
-	bh=YBogo24J4oBkTlnWGyxK72muXgmgt39KFTxP1mpezRI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=naij6RZBKOxehEp2iN0oNwNmXjGf1lezqbJpcKUKAroyuvQxzw4e3CCzfreCuHdtgPLT5J8wmdyF6O2Z924mg1FGZegRYWSxAS+rCgDHyOSKZ/jDkRRxRgr3H5v68yce10fhS7D+2TUvaSvTXu5+P5VJ4FbZGOOkFW7+oXAZgyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bA+suA2x; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bA+suA2x"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d288bac3caso62405051fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 16:25:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709598316; x=1710203116; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YBogo24J4oBkTlnWGyxK72muXgmgt39KFTxP1mpezRI=;
-        b=bA+suA2xrKdibDvtfkDM4o8vPaDhdOOljTjQs48pp/RzrNGEfaRnD/GjpWt31BMCHO
-         im3CO6GGPdhO95S/aVFW2gIHNO/p7n6bKRBccXb93wQXm5Zbq6yAJzYPQX641oIlDJvq
-         NqA34feuNsZ3nd4wXNoEAf9uj92N+7cHGDooM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709598316; x=1710203116;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YBogo24J4oBkTlnWGyxK72muXgmgt39KFTxP1mpezRI=;
-        b=qQlDvo7CZFp0GD3Vb7Bh99wcITwViHUhJ5C4pKKbwR8DFBr7m1DgQ+IGnizTuuR9UR
-         JjkUJhT8aPbHtvqpQ8Ee/nPtdFu8VGa2rpExRXut384VMM8fl5ALaDLct0NQZ512FXvR
-         9WJSIrn/o3AKMOJGurZ08AoAAK1T+1Do9dHda+TKqunOCYjckfXl8m0H0qF66U8V3bXv
-         bJ9d5ROpnNohxDAiDU0MB86quIwwybbWQRbu66FN/G2Gx7ptBFPHKxrvrxRwxQKMj6MD
-         s5EirYMkCcwziCcqky57iVPDxTqOf8+n+potCyujCqgPaWVWGgzoa8WUar3wKeZ0H/Ec
-         idug==
-X-Forwarded-Encrypted: i=1; AJvYcCXy5BSrrx2l3UQ7cM6cC45Z+y0Oj+IO17Oa8KePLRLuPZgqHOKw7fNYMeJN4dW8AVox8M3bPe21HhvViii4Ohh3/nVd17PdXDAFuDkG
-X-Gm-Message-State: AOJu0Yz9QxYpNxT25dHTnL03Y4o9UKAsoI9It+EB9IlKF6Qz5UWTtlm3
-	x3pwx1VkuzBVB10mfGiMCd5sVl4jR2F4pbYeAxcTpSltfRIx2jxUcsP+cv2T7Q4Lwf+EIy5j4v6
-	gwy7w
-X-Google-Smtp-Source: AGHT+IGW9cGHqEysPgMaUYZ+A8/RgEztUlp9Pd6ekPS8G+FdK8DHXt+3qxIcgz7u4S1goQ8TWf8kFA==
-X-Received: by 2002:ac2:4e08:0:b0:513:49f7:70f with SMTP id e8-20020ac24e08000000b0051349f7070fmr207594lfr.57.1709598315759;
-        Mon, 04 Mar 2024 16:25:15 -0800 (PST)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com. [209.85.128.43])
-        by smtp.gmail.com with ESMTPSA id lb10-20020a170906adca00b00a45380dfd09sm1947403ejb.105.2024.03.04.16.25.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 16:25:14 -0800 (PST)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-412c79213c8so14225e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 16:25:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXEIwnywMX3R+MDO58zzyh4JzA745AVz/jg8WWWv/TaDgfAusIg4KBCXOt2hxNhv44n2m2tpE/XQsjfNyhLBVEgdOsPjLTuwkAK+f9x
-X-Received: by 2002:a05:600c:34d2:b0:412:e426:a1a7 with SMTP id
- d18-20020a05600c34d200b00412e426a1a7mr22561wmq.1.1709598314010; Mon, 04 Mar
- 2024 16:25:14 -0800 (PST)
+	s=arc-20240116; t=1709598323; c=relaxed/simple;
+	bh=H7au/HmPpb0snM2lhXV4u34jsf91RboakLb53PykwYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Qim2uBMl0bJl4/HrHAOll3aXVYKhpjVzaEPOnEr/Nop+r2A2abvU43gC4GoHKO5puzT1Rcwlj975sPMrWtQisM40zHNN8Zs2pvdOy014D+tV0tbQPYQqdtaI1g6oNQCRslR7EUf30HJIrTrAn32bqDAFacr1spSESVT/uwNMCD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF6AC43390;
+	Tue,  5 Mar 2024 00:25:22 +0000 (UTC)
+Date: Mon, 4 Mar 2024 19:27:10 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Sachin Sant <sachinp@linux.ibm.com>
+Subject: [PATCH] tracing: Have trace_marker writes be just half of
+ TRACE_SEQ_SIZE
+Message-ID: <20240304192710.4c99677c@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304195214.14563-1-hsinyi@chromium.org> <20240304195214.14563-3-hsinyi@chromium.org>
- <87a5nd4tsg.fsf@intel.com> <CAJMQK-j4wGah=szyUW53hu-v6Q4QjgR7WMLKnspoFaO9oPfaQw@mail.gmail.com>
- <874jdl4k01.fsf@intel.com> <CAJMQK-iWHoh6s-hkcNULzZLjMg9UnTuWfjaJ=YfnHU3sQ1NBEg@mail.gmail.com>
-In-Reply-To: <CAJMQK-iWHoh6s-hkcNULzZLjMg9UnTuWfjaJ=YfnHU3sQ1NBEg@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 4 Mar 2024 16:24:58 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UOhTGnhtc9gOQ5C_aAdgVcB+K7NL9RGm4umunF91Wkpg@mail.gmail.com>
-Message-ID: <CAD=FV=UOhTGnhtc9gOQ5C_aAdgVcB+K7NL9RGm4umunF91Wkpg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] drm/edid: Add a function to check monitor string
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-On Mon, Mar 4, 2024 at 4:19=E2=80=AFPM Hsin-Yi Wang <hsinyi@chromium.org> w=
-rote:
->
-> > > Probably change to u32 drm_edid_get_panel_id(const struct drm_edid
-> > > *);? Given that we still need to parse id from
-> > > drm_edid_read_base_block().
-> >
-> > No, we no longer need to parse the id outside of drm_edid.c. You'll hav=
-e
-> > the id's in panel code in the form of struct drm_edid_ident (or
-> > whatever), and use the match function to see if the opaque drm_edid
-> > matches.
-> >
-> drm_panel prints the panel_id info on whether the panel is detected or no=
-t.
-> https://elixir.bootlin.com/linux/v6.8-rc7/source/drivers/gpu/drm/panel/pa=
-nel-edp.c#L792
->
-> Is it okay to remove this information?
+Since the size of trace_seq's buffer is the max an event can output, have
+the trace_marker be half of the entire TRACE_SEQ_SIZE, which is 4K. That
+will keep writes that has meta data written from being dropped (but
+reported), because the total output of the print event is greater than
+what the trace_seq can hold.
 
-Hmmm, I guess it also is exported via debugfs, actually. See
-detected_panel_show() in panel-edp.c. We probably don't want to remove
-that...
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8198bfc54b58..d68544aef65f 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7320,6 +7320,17 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ 	if ((ssize_t)cnt < 0)
+ 		return -EINVAL;
+ 
++	/*
++	 * TRACE_SEQ_SIZE is the total size of trace_seq buffer used
++	 * for output. As the print event outputs more than just
++	 * the string written, keep it smaller than the trace_seq
++	 * as it could drop the event if the extra data makes it bigger
++	 * than what the trace_seq can hold. Half he TRACE_SEQ_SIZE
++	 * is more than enough.
++	 */
++	if (cnt > TRACE_SEQ_SIZE / 2)
++		cnt = TRACE_SEQ_SIZE / 2;
++
+ 	meta_size = sizeof(*entry) + 2;  /* add '\0' and possible '\n' */
+  again:
+ 	size = cnt + meta_size;
+@@ -7328,11 +7339,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ 	if (cnt < FAULTED_SIZE)
+ 		size += FAULTED_SIZE - cnt;
+ 
+-	if (size > TRACE_SEQ_BUFFER_SIZE) {
+-		cnt -= size - TRACE_SEQ_BUFFER_SIZE;
+-		goto again;
+-	}
+-
+ 	buffer = tr->array_buffer.buffer;
+ 	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
+ 					    tracing_gen_ctx());
+-- 
+2.43.0
+
