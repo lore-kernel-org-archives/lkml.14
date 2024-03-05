@@ -1,120 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FE5128824
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 16:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A583F128382
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 16:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709655698; cv=none; b=FTKxn+SbNVPi/Io2onFM2oFwEnJ1XTmkGOQNLBtNxIgAcgMFX/jxoheHqYNepBc8wtXANeMcuNpiVKaRy00GKEsbUx6Ob7OkuK92KgG5oh8rnL6WqkhQvdcPdnQ+TdZOUZT3pO1jdEC5hEnW8+xQJLEeLuWyKFdTg2gHhaZXlqk=
+	t=1709655712; cv=none; b=fM+e8MMBbp/UxwPkeri40GAUMZK1fPkOiKd5G/XIB6K1RR3tta4dD3dxj93xd8exCuKRY95g0NqvakZ5CHjEUcuokIv35/710GpQz8th0rM2Vg0CYzm7cx4cH+iZzxVgN7/YNnpHoijGtbzNW6v4mGMNrWbB8JCTCLPGlxi8Sy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709655698; c=relaxed/simple;
-	bh=3sM/hDXUkFkmLR5h1bxbxTNiZ0cXYZTzkJ/LYUAF0fA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OHyYLmaMY8mcc2Hq2wXZsAAwsaCYY4v0KECPHQG7LKh0ClX4OQUNv7pArOKCNlHqPNlmNGPih24FDMx8MncB5ij+nVSAqfVqH0dN6oglIQCwTR5FgorxBVo6rgWuWt3Re3wOw+QvEQLlr7POo//Lz1A7GbMO90Ruok3Ah37K/A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8BkPL6G; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709655712; c=relaxed/simple;
+	bh=ePf0scKJsigQuOAKkRlhcPZMVuNR9qj2n46++S/7wAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nvDXqnnYt1RsL99b7LyJRreQzl/aDQ+DtzF+n4TZsaWBcu+pkqLOwKPz69fLSbutBLN/zKvx3tAAlh6ABdBCaWcw9GOROhrAB2RWNjKhsNrZIlCmofMBBxL5sNPIZX33lF1jvPYgvj40kccLoV6bmXANKbrQJZMmGnl/X6gCh6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T4Zdm/QD; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8BkPL6G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709655694; x=1741191694;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3sM/hDXUkFkmLR5h1bxbxTNiZ0cXYZTzkJ/LYUAF0fA=;
-  b=Y8BkPL6GPTNx8nsKe3p++d9C46RvUhMaXCA5u1YAxXocQj4kiUcrfZty
-   GKxFedQwS5XyzKP6GGgZhkJrPU0e9FZf1lb6UUEP8cVNTuCErWz+BAeAG
-   KIJ/elH9eRFLo7lBkhyawqhegERYF96ynWX7KhFIIQBNylEo8+H0tXOVu
-   Wrmnfg4OFTjvhNt9rrxBZvoD0vLZ8Q1ybovXiM6bKU70NLrgoHg2Nnp0D
-   83ooI8z4sOGvoyRnLcG/buRrirOA8vqsUnTXDwrqjdmMNz+Q1Fzxa2nS4
-   7RIodFPgwwwnym+G34DeHcYAmBoehyOd2euHLOSw39u40hsrW7lk/Byf6
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4343720"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4343720"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 08:21:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="9391029"
-Received: from mecastro-mobl1.amr.corp.intel.com (HELO [10.212.136.86]) ([10.212.136.86])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 08:21:33 -0800
-Message-ID: <14750023-e5fb-45f7-9c28-9510ce5a5994@intel.com>
-Date: Tue, 5 Mar 2024 08:21:32 -0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T4Zdm/QD"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-412eb6e15ceso7689565e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 08:21:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709655709; x=1710260509; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xbTnyXoHjbAH+HuOp1p4uK1MGCpktFM+Ft7hQZ4kc8Y=;
+        b=T4Zdm/QDsGo7+DHiFCAi+h0B6tVnuom95VW/bt3TqoR4l51WLCTLozJmolkrmNwPBs
+         VT/wFQjCS7tznszg5Y9t6f/y7gAkWpvUXJZx0CwzCv/vWOfZzt4nq7n9Y3swXSsfwfQ/
+         sQq2vx+2RQf23qEusTk6uImaEwbuAFG5Ww1Kem1CmOOa/zceVsivMTcNXlKp2bY58s8L
+         //FuGr/CGc1XHTv7WdsIJ//qDEvQpl+aM1fNdUxdmmuL/UluG1hmwntRGSjiNLRtS4gD
+         i3KCYGibagfvgGMOunXYcSyHpx+7DDVc5+/2ByG+uIMa70kbNHVtQ0ESjwBwLtzS/l48
+         tIBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709655709; x=1710260509;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xbTnyXoHjbAH+HuOp1p4uK1MGCpktFM+Ft7hQZ4kc8Y=;
+        b=UFeWxmNOC8QoTEmtubatDzlyncrw9nkYbPqMA9CCaHgrcS5S2UFJi+r7Jdzf8/nLuj
+         ISJvoDJWUT+Qf0sxGuEpQJ9Aq4aQ435oAX6mq9kpcnimMCG1QU+81cCaf2RAm8gQChDa
+         ZmR8mvzPbksvvK4qEmaAlzwcqSJ7vkifO42LAvb7pE/j0CPoBFYjoo7D9iG2gm19nykv
+         gcqrlAmRRrZHmeVgTLJFEy7MBcB36+KkFbP5Yit90unh3HtLDUJTUv1mta0/czoCK8Ez
+         Af7KTmxeG6Q+jquRCdkZs/Xk95ixGNfgDQ1Gu0A55H1vq/SZy6zMOItkO4CmJ3f6GFEk
+         JrfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhfRBWXS2qbRLdpD0zY5yZmQe69nk8kI3l1p3z1TT35iXI8GIx/eiTcgJ+kbPm9XAHR/U0Kf3IQbdtzc9cC9B0gM3MNt72oPX/XDKm
+X-Gm-Message-State: AOJu0Yysf2I5F3cOgOL2Z1/ukDUtBGkYWrEvfb+tBHKtcBVvNfKQD+ZG
+	VnwamVpcHKCdyy8U4BzkfAAozyQM6PQfklmXJslhzlRc67tfC3hb0/tuJIyS7Ao=
+X-Google-Smtp-Source: AGHT+IFzmlN7MlHIvgYTDNDnpOiEWNiD6ttwixhjRaArwIgoqAErAdm9nFln7aLUd8aHdUcKy+wmzg==
+X-Received: by 2002:a05:600c:46ce:b0:412:ad6e:88cb with SMTP id q14-20020a05600c46ce00b00412ad6e88cbmr10431968wmo.36.1709655708736;
+        Tue, 05 Mar 2024 08:21:48 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id v10-20020a05600c470a00b00412704a0e4asm21342739wmo.2.2024.03.05.08.21.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 08:21:48 -0800 (PST)
+Date: Tue, 5 Mar 2024 19:21:44 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>, linux-staging@lists.linux.dev,
+	linux-tegra@vger.kernel.org, linux-media@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sowjanya Komatineni <skomatineni@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: staging: media: tegra-video: Use common error handling code in
+ tegra_vi_graph_parse_one()
+Message-ID: <e38cc9fb-9453-47ed-b460-335016581049@moroto.mountain>
+References: <dbebaea7-289c-47d9-ba06-cd58a10ea662@web.de>
+ <20240301183936.505fcc72@booty>
+ <9f1b617f-06cb-4b22-a050-325424720c57@moroto.mountain>
+ <f451ffba-db26-4a3b-a4b3-186c31f2ad64@web.de>
+ <20240305162427.49a9f013@booty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] x86/rtc: Remove unused intel-mid.h
-Content-Language: en-US
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
- Mario Limonciello <mario.limonciello@amd.com>, linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-References: <20240305161024.1364098-1-andriy.shevchenko@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240305161024.1364098-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240305162427.49a9f013@booty>
 
-On 3/5/24 08:10, Andy Shevchenko wrote:
-> intel-mid.h is providing some core parts of the South Complex PM,
-> which are usually are not used by individual drivers. In particular,
-> this driver doesn't use it, so simply remove the unused header.
+On Tue, Mar 05, 2024 at 04:24:27PM +0100, Luca Ceresoli wrote:
+> Hello Dan, Markus,
+> 
+> On Sat, 2 Mar 2024 11:40:26 +0100
+> Markus Elfring <Markus.Elfring@web.de> wrote:
+> 
+> > >>> Add a jump target so that a bit of exception handling can be better reused
+> > >>> at the end of this function implementation.  
+> > …
+> > >> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>  
+> > >
+> > > These patches make the code worse.  
+> 
+> This is of course a legitimate opinion. However Markus' patch
+> implements what is recommended by the documentation and is in common
+> use in the kernel code. A quick search found 73 occurrences in v6.8-rc7:
+> 
+> $ expr $(pcregrep -r -M ':\n\tfwnode_handle_put'  drivers | wc -l) / 2
+> 73
+> $
+> 
+> 300+ are found for of_node_put().
+> 
 
-Indeed.  intel-mid.h provides a pretty small amount of stuff and it's
-included in quite a few random-looking spots.  There's also gunk that's
-only compiled in if CONFIG_X86_INTEL_MID=y so if anyone _did_ somehow
-use any of those functions in generic code, they'd probably be creating
-compile problems.
+Using an unwind ladder is the best way to write error handling, yes.
+I've written a long blog about it.
 
-Any chance you'd like to look a _bit_ more widely and just clean up all
-of the unnecessary intel-mid.h #includes that are scattered around?
+https://staticthinking.wordpress.com/2022/04/28/free-the-last-thing-style/
+
+In my blog, I talk about that "Unwinding from loops is slightly
+complicated."  Because what you want to do is clean up partial
+iterations before the goto.
+
+Now imagine we apply Markus's patch and someone comes along an adds a
+new allocation after the loop is over.  Then we have to do some kind of
+bunny hop:
+
+free_new_thing:
+	free(thing);
+	goto cleanup;  <-- ugly little goto
+put_fwnode:
+	fwnode_handle_put(remote);
+cleanup:
+	dev_err(vi->dev, "failed parsing the graph: %d\n", ret);
+	v4l2_async_nf_cleanup(&chan->notifier);
+	return ret;
+
+Adding the little goto seems like a small thing when you're seeing it
+in an email like this.  But when you add the new goto years later,
+people are used to unwind ladders working in a specific way and they
+forget that, "Oh this ladder has a weird rung that we have to skip over."
+We see these bugs more with locking.
+
+	one = alloc();
+	if (!one)
+		return;
+
+	lock();
+	two = alloc();
+	if (!two)
+		goto free_one;  <-- should have unlocked before the goto
+	unlock;
+
+	three = alloc();
+	if (!three)
+		goto free_two;
+
+	return 0;
+
+free_two:
+	free(two);
+free_one:
+	unlock();
+	free(one);
+
+	return -ENOMEM;
+
+regards,
+dan carpenter
+
