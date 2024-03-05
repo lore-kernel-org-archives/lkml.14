@@ -1,62 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA9B7D09D;
-	Tue,  5 Mar 2024 06:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBF9FC1C;
+	Tue,  5 Mar 2024 06:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709619235; cv=none; b=g0mbAi2QJ7aT+YJ95JTLzDQKOIadw0HBR64EmNUt+0jpKyyyHVtYx80Qdksk9XLCFVgnJbV4tWGBH654G/HhE84JvkYTUZMT/0V8zeP7vcWECQ1NDLgxIziFpKupgf/ZLHK0/pVMNGr1kTAphDJbW0rZ9e3cZqA7Uteb90fKM3w=
+	t=1709619331; cv=none; b=WvpmEPTA17UwbU+Y2OXSQnfjrAQ3uod8buOkqJ/V07qgLCdRJ87mEXVqkbuBqOF79utd75gjsPEg1ocvGKSTuByEMBsga1vMbIjoML978YsEtwYHDcUIMFOuQxFLbmci3/06U9VHhwBinM/2kU+NDhYgzzDplLrE7cgWpErS+QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709619235; c=relaxed/simple;
-	bh=i7Fys+2mj4/9XEX2BjPBQtiBsoGLML0DccoIQi8rAyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WYljgOeDDvm8DUDdzXve/ojqt+QMfO0B1yL1SkPMcVcF6N8OkYSnxIdIL7WaMRciX8ybfl+rC5ydULKIEM5e9+IXKbDBICbYw2E7Cbajqk8Pp5LLprW+2JBYopRb8nAhdW1POew08NkKF472rjNjDPWJsk4/EDg744uKkpQt6/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nXYvF08l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709619331; c=relaxed/simple;
+	bh=k0S++Cu8Iyr6uXBN6ACI05p0wIHJD7IqUIi1EDWRXX0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=eZVnPMNZIHHK4+XKEXiPz2i3joHpkb69Vxk3nUOU6pAE+3tyaigjqd7Rxpsk5ag+YNCRqIgw19Mtuh4lIyrY/pcCrJL4Wmb3HtapBe2SuDbMpwgA3yiJGjuJ5f4Qn2CawC++8kzkcveMwEXCEcIAJkMdhCTG+BYoma2Q9k4nNx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=QBOeYQWj; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nXYvF08l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6403BC43390;
-	Tue,  5 Mar 2024 06:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709619234;
-	bh=i7Fys+2mj4/9XEX2BjPBQtiBsoGLML0DccoIQi8rAyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nXYvF08lnJ721IkKLSsQ1rX6VoopDE4gnBkCtBpZjeiwymnYUN8p9UJgoLLa0GKOr
-	 90dP8z6Da5C/CRObKfqjYRCWlw0b2mkTGuYhz10E+NftfF6IBhADmrq4icjr9KG5pJ
-	 HlJTKyaLgSLOcJzvNVkQOG8Sf3vkcsKX0Dxg06PY=
-Date: Tue, 5 Mar 2024 06:13:52 +0000
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Rui Qi <qirui.001@bytedance.com>
-Cc: bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, hpa@zytor.com,
-	jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
-	stable@vger.kernel.org, alexandre.chartre@oracle.com,
-	x86@kernel.org, linux-kernel@vger.kernel.org, yuanzhu@bytedance.com
-Subject: Re: [External] Re: [PATCH v2 0/3] Support intra-function call
- validation
-Message-ID: <2024030506-observant-clamor-1c8f@gregkh>
-References: <20240228024535.79980-1-qirui.001@bytedance.com>
- <2024030438-dropout-satisfy-b4c4@gregkh>
- <2024030404-conjoined-unlined-05c0@gregkh>
- <c98aa910-7b14-401d-a257-274682bb7486@bytedance.com>
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="QBOeYQWj"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1709618979;
+	bh=k0S++Cu8Iyr6uXBN6ACI05p0wIHJD7IqUIi1EDWRXX0=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=QBOeYQWjPjcVLq2dQ5HyXh22PMZs7KuESHcPaGtHEHmWgwM115uQLZdf4M0c48GBi
+	 ovEehHg1WSiwOjpDCXFmFJy7F+yOQpUPAthHdGOkOmNbbHebQ2hTKr7MIMjXZJQWnT
+	 lBL4chzEwOh1OHe4bq0TvoSNd+lkl725lOsu4NkM=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c98aa910-7b14-401d-a257-274682bb7486@bytedance.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
+Subject: Re: nfs4_schedule_state_manager stuck in tight loop
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <ZdisssP88_9o0BXn@manet.1015granger.net>
+Date: Tue, 5 Mar 2024 07:09:19 +0100
+Cc: linux-nfs@vger.kernel.org,
+ jlayton@kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ trondmy@hammerspace.com,
+ anna@kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3404A3C2-31BE-4D39-A256-E3A1FB48ACFB@flyingcircus.io>
+References: <8B04DA70-ABEF-44A4-BBA7-60968E6CFA10@flyingcircus.io>
+ <ZdisssP88_9o0BXn@manet.1015granger.net>
+To: Chuck Lever <chuck.lever@oracle.com>
 
-On Tue, Mar 05, 2024 at 11:28:01AM +0800, Rui Qi wrote:
-> Hi Greg,
-> I checked out commit e133c1ee6d7271007fdba3dbe78818afd88943f9 (Linux 5.4.270), applied my patche set on top, enabled CONFIG_LIVEPATCH based on x86 defconfig, compiled without any issues. I couldn't even grep unwind_hint_empty in the codebase, so I'm quite puzzled about how this phenomenon occurred. Can you tell me how to reproduce this compilation error?
+Hi,
 
-Try building with 'make allmodconfig'.  Also, what compiler and version are you using?
+not sure whether I may have missed a response that didn=E2=80=99t make =
+it back to me or any of the lists.
 
-> In addition, my patchset only applies to the LTS branch of 5.4, not to other branches. Please be careful not to merge it into other branches.Other stable branches do not have the problem of such kernel livepatch issue.
+Just in case, because the CC didn=E2=80=99t include the original =
+addendum I made to my report:
 
-It just broke this branch, I didn't apply it anywhere else.
+Addendum:
 
-thanks,
+I=E2=80=99ve checked kernel changelogs since then but didn=E2=80=99t =
+find anything that I could relate to this aside from *maybe* =
+dfda2a5eb66a685aa6d0b81c0cef1cf8bfe0b3c4 (rename(): fix the locking of =
+subdirectories) which mentions NFS but doesn=E2=80=99t describe the =
+potential impact.
 
-greg k-h
+We=E2=80=99re running 5.15.148 now and as it=E2=80=99s been another 2 =
+months there might be the chance of another lockup in the near future ;)
+
+If anyone has ideas on how to debug/approach a reproducer I=E2=80=99d be =
+more than happy to help and try to provide more data.
+
+Cheers,
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
