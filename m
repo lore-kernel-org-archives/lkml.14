@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4697E767;
-	Tue,  5 Mar 2024 12:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D7485920;
+	Tue,  5 Mar 2024 12:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709642314; cv=none; b=CwbJ2Hfc2EfPvrF//aNc42cpufeCaqk+EnoDaeP4FLHeg+oas+qEWvG+GlipUq3ZaMmSOwnc08ecKsszvVuKpwC7jKwSX1cToMQ0vKVbQEbzsYNiKkOsNmXp2LTrGJuay3MAStuAOcIdlTy/edyl0ovE3GGhpCiiP5rKjXw5CAU=
+	t=1709642336; cv=none; b=IKZxQQxC6o73kCJBe7MIqsNheSxk22yD6gk7k2lYDP0udKf1sQ7bKsDKZjc3qDh6mUTu5H7MY91Bl58cRXwBwbGEtekDHhjowKlON0c6vPinfVYyHfG+Tfn8ILgq09f3Lrn6u4MV7p24paGGWscKoafAUShv0zSeoZ8oVq7p/cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709642314; c=relaxed/simple;
-	bh=nObtFg8naNRmV3MprbT9+jFP4Cfa0klz+xgufazj/DA=;
+	s=arc-20240116; t=1709642336; c=relaxed/simple;
+	bh=VwkM35Jda0C3h7EKsFxBVHx+9GeS6C01tG+KewTTe5E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qWjVuIi4lmS015g5LD5ujbPDydsyyStosuDZGjdzK6Kwje3EGBiilrcll8MH8dtXKzA714DuM0n8PNyVb8ouFls5MTADAXS7zKt5P/OHwat4OI7VVnN21gX2RGf9ZedvE7aNN2hbM2qSoKnxEp0XzUOsVW4lKLJOzZIFIA2Y9LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JGcHcdqS; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=UWbbDG0vl2Ltvg8JQHdBctIUybZEQB+p6Q7qqDjri7Qr2wJEekqQcu6emgZMhxl1QbjhiqimAmqUcAqIZ2rPRxQxN2TxUjveXxlCLiBLwUXnI3mRG8eq3jd3fc89mfFNTLangwkdBZwbNFAA6pX3g6djXQqGBZ/Cyxl2rh8wOTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=c9DEEfbJ; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JGcHcdqS"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="c9DEEfbJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709642309;
-	bh=nObtFg8naNRmV3MprbT9+jFP4Cfa0klz+xgufazj/DA=;
+	s=mail; t=1709642333;
+	bh=VwkM35Jda0C3h7EKsFxBVHx+9GeS6C01tG+KewTTe5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JGcHcdqS580MoUlesY3bQbhKysgcSHV7F82LglGj5ZOegPunlosxe4c4riQP/7q9c
-	 z8YXO+6s8e5/mmwnBAYFhNl48CNST55gG9uCKdM3AWJMn1ZIO6zrKS2/cLSLM94CFY
-	 UjAAl+yA1l+mzha5xANcQbbaaG3JAg4pw4Ymprcm+N9SLGcrgnbHY6fnqPD5HpQ7Cx
-	 J4Rw4+jUS0pOMHT2UvJ8/lGchgtRJgFuy38vz8SGupbEnluqV5SPLRFmWr5kxmss/q
-	 +f5Kiy0FFwqDSAETT9BgsfPoB8POfKFyJmhWRYhJWC5zNSi41l105wVHkL+Zcoi401
-	 if4v+MbI8spsA==
+	b=c9DEEfbJVYKRbFyOJYn8GW/3eer+MVMTZCVghdzEDNmyMtuzEmZ5djstfXjQs9qSn
+	 1PsF1+WJNA2ujD0EReK4D1MKvljfQBIhmwNDF/Ta9rmHFUqNp55E02eIW2SFunNdkS
+	 aSyKEuzmnbPNngDhbo8XgZ1kbLQRybQh3l6pdABCsjSgVEFBcc2YOjJOJ8ZnsGwx8T
+	 vHV5egg2/g6TiGoRIGY2qQJxPZEtDWP48Ws+idTnZ46EJf7z+U1Rdo2wgQiEQ5QS4E
+	 EU2gnCms6fcWUxt9nxD7gARz+Wvo1S1zFMbieEKVNL2+pU7bKgi+E5xKT23DTEsPn0
+	 2a8cHaDFB7CVQ==
 Received: from shreeya.shreeya (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: shreeya)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 056A437820EF;
-	Tue,  5 Mar 2024 12:38:20 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D182437820F2;
+	Tue,  5 Mar 2024 12:38:45 +0000 (UTC)
 From: Shreeya Patel <shreeya.patel@collabora.com>
 To: heiko@sntech.de,
 	mchehab@kernel.org,
@@ -59,9 +59,9 @@ Cc: kernel@collabora.com,
 	linux-clk@vger.kernel.org,
 	linux-arm@lists.infradead.org,
 	Shreeya Patel <shreeya.patel@collabora.com>
-Subject: [PATCH v2 4/6] arm64: dts: rockchip: Add device tree support for HDMI RX Controller
-Date: Tue,  5 Mar 2024 18:06:46 +0530
-Message-Id: <20240305123648.8847-5-shreeya.patel@collabora.com>
+Subject: [PATCH v2 6/6] MAINTAINERS: Add entry for Synopsys DesignWare HDMI RX Driver
+Date: Tue,  5 Mar 2024 18:06:48 +0530
+Message-Id: <20240305123648.8847-7-shreeya.patel@collabora.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240305123648.8847-1-shreeya.patel@collabora.com>
 References: <20240305123648.8847-1-shreeya.patel@collabora.com>
@@ -73,153 +73,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add device tree support for Synopsys DesignWare HDMI RX
-Controller.
+Add an entry for Synopsys DesignWare HDMI Receiver Controller
+Driver.
 
-Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
-Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
 Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
 ---
 Changes in v2 :-
-  - Fix some of the checkpatch errors and warnings
-  - Rename resets, vo1-grf and HPD
-  - Move hdmirx_cma node to the rk3588.dtsi file
+  - Add a patch for MAINTAINERS file changes
 
- .../boot/dts/rockchip/rk3588-pinctrl.dtsi     | 41 ++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3588.dtsi      | 55 +++++++++++++++++++
- 2 files changed, 96 insertions(+)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-pinctrl.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-pinctrl.dtsi
-index 244c66faa161..4fbe194d96b1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-pinctrl.dtsi
-@@ -169,6 +169,47 @@ hdmim0_tx1_sda: hdmim0-tx1-sda {
- 				/* hdmim0_tx1_sda */
- 				<2 RK_PB4 4 &pcfg_pull_none>;
- 		};
-+
-+		/omit-if-no-ref/
-+		hdmim1_rx: hdmim1-rx {
-+			rockchip,pins =
-+				/* hdmim1_rx_cec */
-+				<3 RK_PD1 5 &pcfg_pull_none>,
-+				/* hdmim1_rx_scl */
-+				<3 RK_PD2 5 &pcfg_pull_none_smt>,
-+				/* hdmim1_rx_sda */
-+				<3 RK_PD3 5 &pcfg_pull_none_smt>,
-+				/* hdmim1_rx_hpdin */
-+				<3 RK_PD4 5 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		hdmim1_rx_cec: hdmim1-rx-cec {
-+			rockchip,pins =
-+				/* hdmim1_rx_cec */
-+				<3 RK_PD1 5 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		hdmim1_rx_hpdin: hdmim1-rx-hpdin {
-+			rockchip,pins =
-+				/* hdmim1_rx_hpdin */
-+				<3 RK_PD4 5 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		hdmim1_rx_scl: hdmim1-rx-scl {
-+			rockchip,pins =
-+				/* hdmim1_rx_scl */
-+				<3 RK_PD2 5 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		hdmim1_rx_sda: hdmim1-rx-sda {
-+			rockchip,pins =
-+				/* hdmim1_rx_sda */
-+				<3 RK_PD3 5 &pcfg_pull_none>;
-+		};
- 	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 897fbf1b0701..26ff6a1cb24a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -21427,6 +21427,14 @@ F:	drivers/net/pcs/pcs-xpcs.c
+ F:	drivers/net/pcs/pcs-xpcs.h
+ F:	include/linux/pcs/pcs-xpcs.h
  
- 	i2c0 {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-index 5519c1430cb7..8adb98b99701 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-@@ -7,6 +7,24 @@
- #include "rk3588-pinctrl.dtsi"
- 
- / {
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		/*
-+		 * The 4k HDMI capture controller works only with 32bit
-+		 * phys addresses and doesn't support IOMMU. HDMI RX CMA
-+		 * must be reserved below 4GB.
-+		 */
-+		hdmirx_cma: hdmirx_cma {
-+			compatible = "shared-dma-pool";
-+			alloc-ranges = <0x0 0x0 0x0 0xffffffff>;
-+			size = <0x0 (160 * 0x100000)>; /* 160MiB */
-+			no-map;
-+			status = "disabled";
-+		};
-+	};
++SYNOPSYS DESIGNWARE HDMI RX CONTROLLER DRIVER
++M:	Shreeya Patel <shreeya.patel@collabora.com
++L:	linux-media@vger.kernel.org
++L:	kernel@collabora.com
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.yaml
++F:	drivers/media/platform/synopsys/hdmirx/*
 +
- 	pcie30_phy_grf: syscon@fd5b8000 {
- 		compatible = "rockchip,rk3588-pcie3-phy-grf", "syscon";
- 		reg = <0x0 0xfd5b8000 0x0 0x10000>;
-@@ -85,6 +103,38 @@ i2s10_8ch: i2s@fde00000 {
- 		status = "disabled";
- 	};
- 
-+	hdmi_receiver: hdmi-receiver@fdee0000 {
-+		compatible = "rockchip,rk3588-hdmirx-ctrler", "snps,dw-hdmi-rx";
-+		reg = <0x0 0xfdee0000 0x0 0x6000>;
-+		power-domains = <&power RK3588_PD_VO1>;
-+		rockchip,grf = <&sys_grf>;
-+		rockchip,vo1-grf = <&vo1_grf>;
-+		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "cec", "hdmi", "dma";
-+		clocks = <&cru ACLK_HDMIRX>,
-+			 <&cru CLK_HDMIRX_AUD>,
-+			 <&cru CLK_CR_PARA>,
-+			 <&cru PCLK_HDMIRX>,
-+			 <&cru CLK_HDMIRX_REF>,
-+			 <&cru PCLK_S_HDMIRX>,
-+			 <&cru HCLK_VO1>;
-+		clock-names = "aclk",
-+			      "audio",
-+			      "cr_para",
-+			      "pclk",
-+			      "ref",
-+			      "hclk_s_hdmirx",
-+			      "hclk_vo1";
-+		resets = <&cru SRST_A_HDMIRX>, <&cru SRST_P_HDMIRX>,
-+			 <&cru SRST_HDMIRX_REF>, <&cru SRST_A_HDMIRX_BIU>;
-+		reset-names = "axi", "apb", "ref", "biu";
-+		pinctrl-0 = <&hdmim1_rx>;
-+		pinctrl-names = "default";
-+		status = "disabled";
-+	};
-+
- 	pcie3x4: pcie@fe150000 {
- 		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
- 		#address-cells = <3>;
-@@ -339,3 +389,8 @@ pcie30phy: phy@fee80000 {
- 		status = "disabled";
- 	};
- };
-+
-+&hdmirx_cma {
-+	status = "okay";
-+};
-+
+ SYNOPSYS DESIGNWARE I2C DRIVER
+ M:	Jarkko Nikula <jarkko.nikula@linux.intel.com>
+ R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 -- 
 2.39.2
 
