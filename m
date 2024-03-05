@@ -1,61 +1,60 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B389FD267;
-	Tue,  5 Mar 2024 16:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCC6D268;
+	Tue,  5 Mar 2024 16:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709657870; cv=none; b=jFRthziKkHn/53065+mcwMlqW539AIcfRuWsBh5pbOaV7q0IPymOg9s4mffcONr9URexKixYdNSq+kb9tB6aK1Bt5ljkhSXYo0X5tzNCDKs2OtmdP1VtqBABXApbG2ApWGriUWHrztRHybCUtT0VkFvuRxM/HeLfxomxQp867j4=
+	t=1709657906; cv=none; b=eaJ6qn3fo8cUSTX6BbaOHsiVeLMgOeozdzp9YrZ3Xh0/DMxGKhsY/qgilgNGhN/0E3j5oPkhjYQAOfWDi6FKeN3FzK6IB8J4VQmJoyHAyTonB3p6JHWa18Hdii3uoCw2YtiD8cVjSCt3r6p59KQxqX3DVtm48ZnWFP2pj9vg2A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709657870; c=relaxed/simple;
-	bh=azjFOsktqiCXb357AvMEW9hKL9yqQ3FCu5yPd9IL/jo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WRDeXsA+X9W1f/2bgtRVEf5buQZB1XboZQXxdrxGewl5w6hZTk3vsbKQ47Blm5jhqHkZoN9r6xPH8QAT5sbkQBBSO2Pfo0Yr8765H4CYAzNAsTyYOk9n1ZLVbaF/II4FFB7YepmPrOodEjIIzPk7rjsSp9mYo4YRdNWfk1vPp38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HKbwYqoG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8tNakUsg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1709657906; c=relaxed/simple;
+	bh=Dbene+JorLqbq3nZB9Olrm3SKJvTPOQ5KM0W99aqTcw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cCmw5uC8+H8nODDVncRvdEgXprce3we1ah9/QfEVST3FhlgNCjI0WGJzw9/ZRWQUtUFklpa/VwyAB+SUWeJnB+3dxmvvXs05BqJkc7w5mUVsdrgR98idmYYls6mee8EHSdnZaeMu4Hx8B3BW0C/oFCXj6pBabV20gfHA5hLYJ6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ldwkflPv; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HKbwYqoG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8tNakUsg"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709657861;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HRm+TnjyJg5idEpRreLSl5etxQBLrbJ4QAyjOJxgiHU=;
-	b=HKbwYqoGgFwQ5w0c2x4gUshWZq5DHnmoTWFc3/aZZcUsyBPUvs7FtgO9sXWFeAyfxpuEi6
-	xlcIADFKW3TAaX8V6Ga3Vk3KxGSZLgdUIYbQXmyX2czdZGrJV+gT+com+2AYsi4w5tCpPe
-	P+3R/323Mr+jpB72RGyL7UAB2G4Y24a0f5aPuMXb2XzcFpBHmn6AX+fCh47ITffrAmlSjQ
-	X0sd2R+FxjQ3skVdAjuyST0jIZLH7tS9pVec6Q/PgKFl70I0IEfjpeTld2114ViFAQn5Jb
-	vMDMFcMAgaGC7ZbfrNWUXKsAS9MSi3fMQV2MyyOkR6PfJ5iMQMb9P8IPdthLhQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709657861;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HRm+TnjyJg5idEpRreLSl5etxQBLrbJ4QAyjOJxgiHU=;
-	b=8tNakUsgVDjiTy1DgFT1yzq4jZIkpWJOqH5pgA+w3enng6vlac/FwllNiicYgryByF76pu
-	dUSgco6KK8GYs2CA==
-To: Bitao Hu <yaoma@linux.alibaba.com>, Doug Anderson <dianders@chromium.org>
-Cc: liusong@linux.alibaba.com, akpm@linux-foundation.org, pmladek@suse.com,
- kernelfans@gmail.com, deller@gmx.de, npiggin@gmail.com,
- tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
- jan.kiszka@siemens.com, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, yaoma@linux.alibaba.com
-Subject: Re: [PATCHv11 2/4] genirq: Provide a snapshot mechanism for
- interrupt statistics
-In-Reply-To: <28a24e4b-c322-4631-ad6d-7259ca3d084d@linux.alibaba.com>
-References: <20240228072216.95130-1-yaoma@linux.alibaba.com>
- <20240228072216.95130-3-yaoma@linux.alibaba.com>
- <CAD=FV=U1b+8atmju_w4eRmVKmSqjj6WCsy5EawYqj31fQ1kvrw@mail.gmail.com>
- <87plwdwycx.ffs@tglx>
- <3a89fafb-f62e-472f-b40b-8bf97954e9e3@linux.alibaba.com>
- <87wmqiulaw.ffs@tglx>
- <28a24e4b-c322-4631-ad6d-7259ca3d084d@linux.alibaba.com>
-Date: Tue, 05 Mar 2024 17:57:40 +0100
-Message-ID: <87h6hkvcor.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ldwkflPv"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 425DlDGp015519;
+	Tue, 5 Mar 2024 16:58:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=kOc4mqW7YqT2IuvMfdIuROMR2Y3JLVuf7pv+QEnyKJA=; b=ld
+	wkflPvMNeMySBy4sXWklzfreoNf63GQosctJsOYWtu6qa1UBB+ylYHjhCGKjuduD
+	FnxymjUfg5Vkn241FPhki3CeVhxA2zuVRsdFCE2xceI9F7RuSN2HBhCgrdkcHMUd
+	w8Ksm5muoeD1UlX9WxlCcXesYU2UsHqvkrGBcGKgwOBDoZPPb2cTT5FnB8DrWhku
+	K2Wuh80OVzliDvzGo8PuMDi/RWz+TyBKxUlmCvN2Ud7i4FA9Z/1VTu/l9U5eLGdz
+	AIxuY6riTmoGVwSUEdwzHG89uDsvGNwkIkhcmEJJZ+WYdQQkLdfPEoJrTrav3klM
+	9v3cull930UUqhl26Dew==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wp04612rf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Mar 2024 16:58:06 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 425Gw4hl022108
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 5 Mar 2024 16:58:04 GMT
+Received: from sriramd-linux.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 5 Mar 2024 08:57:57 -0800
+From: Sriram Dash <quic_sriramd@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <gregkh@linuxfoundation.org>, <quic_wcheng@quicinc.com>,
+        <Thinh.Nguyen@synopsys.com>, <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <quic_psodagud@quicinc.com>,
+        <quic_nkela@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
+        <ulf.hansson@linaro.org>, <sudeep.holla@arm.com>,
+        <quic_shazhuss@quicinc.com>
+Subject: [RFC 0/3] Enable firmware-managed USB resources on Qcom targets
+Date: Tue, 5 Mar 2024 22:27:35 +0530
+Message-ID: <1709657858-8563-1-git-send-email-quic_sriramd@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,45 +62,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: f2fMK1kDVeAoNQXzg53S1juzVV-xWszD
+X-Proofpoint-GUID: f2fMK1kDVeAoNQXzg53S1juzVV-xWszD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-05_14,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=934
+ bulkscore=0 suspectscore=0 clxscore=1011 lowpriorityscore=0
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2402120000 definitions=main-2403050136
 
-On Tue, Mar 05 2024 at 18:57, Bitao Hu wrote:
-> On 2024/3/4 22:24, Thomas Gleixner wrote:
-> "GENERIC_IRQ_STAT_SNAPSHOT" visible to the user. However, after
-> analyzing the previous emails, it seems that what you were actually
-> proposing was to directly disable "GENERIC_IRQ_STAT_SNAPSHOT" when
-> "SOFTLOCKUP_DETECTOR_INTR_STORM" is not enabled, as a way to save
-> memory. If my current understanding is correct, then the code for that
-> part would look something like the following.
+Some target systems allow multiple resources to be managed by firmware.
+On these targets, tasks related to clocks, regulators, resets, and
+interconnects can be delegated to the firmware, while the remaining
+responsibilities are handled by Linux.
 
-Correct.
+To support the management of partial resources in Linux and leave the rest
+to firmware, multiple power domains are introduced. Each power domain can
+manage one or more resources, depending on the specific use case.
 
-> diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-> index 2531f3496ab6..a28e5ac5fc79 100644
-> --- a/kernel/irq/Kconfig
-> +++ b/kernel/irq/Kconfig
-> @@ -108,6 +108,10 @@ config GENERIC_IRQ_MATRIX_ALLOCATOR
->   config GENERIC_IRQ_RESERVATION_MODE
->          bool
->
-> +# Snapshot for interrupt statistics
-> +config GENERIC_IRQ_STAT_SNAPSHOT
-> +       bool
-> +
->   # Support forced irq threading
->   config IRQ_FORCED_THREADING
->          bool
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 49f652674bd8..899b69fcb598 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1032,6 +1032,7 @@ config SOFTLOCKUP_DETECTOR
->   config SOFTLOCKUP_DETECTOR_INTR_STORM
->          bool "Detect Interrupt Storm in Soft Lockups"
->          depends on SOFTLOCKUP_DETECTOR && IRQ_TIME_ACCOUNTING
-> +       select GENERIC_IRQ_STAT_SNAPSHOT
+These power domains handle SCMI calls to the firmware, enabling the
+activation and deactivation of firmware-managed resources.
 
-This goes into the patch which adds the lockup detector parts.
+The driver is responsible for managing multiple power domains and
+linking them to consumers as needed. Incase there is only single
+power domain, it is considered to be a standard GDSC hooked on to
+the qcom dt node which is read and assigned to device structure
+(by genpd framework) before the driver probe even begins.
 
-Thanks,
+fw-managed dt property allows the driver to determine whether
+device resources are managed by Linux or firmware, ensuring
+backward compatibility.
 
-        tglx
+Establish the channel and domain mapping for the power domains to connect
+with firmware, enabling the firmware to handle the assigned resources.
+Since these delegated resources will remain invisible to the operating
+system, ensure that any references to them are removed.
+
+Sriram Dash (3):
+  dt-bindings: usb: qcom,dwc3: Add support for multiple power-domains
+  USB: dwc3: qcom: Add support for firmware managed resources
+  arm64: dts: qcom: sa8775p-ride: Enable support for firmware managed
+    resources
+
+ .../phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml        |  74 ++++--
+ .../bindings/phy/qcom,usb-snps-femto-v2.yaml       |  49 +++-
+ .../devicetree/bindings/usb/qcom,dwc3.yaml         |  37 ++-
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dts          |  96 +++++--
+ drivers/phy/qualcomm/phy-qcom-qmp-usb.c            | 290 ++++++++++++++++-----
+ drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c      | 213 ++++++++++++---
+ drivers/usb/dwc3/dwc3-qcom.c                       | 259 +++++++++++++-----
+ 7 files changed, 801 insertions(+), 217 deletions(-)
+
+-- 
+2.7.4
+
