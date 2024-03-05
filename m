@@ -1,262 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35E852F9A;
-	Tue,  5 Mar 2024 09:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25241EF1A
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709629567; cv=none; b=LeP4I7rUnM/GRUC2zY4d+t5jY7YtcQOSR6XDBPod9ybf7hHFRJCSEgmdUC5tg++Xj9o8Bh6ykOesf2JMAcyz53d7F5nl0w0JiqyHWF47KYKO+8QksO+j72VhZQYu1ERxt7wgfRbP0xDej4MBCi1PFU6gNDC7mGrzF/UkoDXPkco=
+	t=1709629613; cv=none; b=aEjWdrUBq1N9rmH8ZQ8o4DWXDLUYMbI2nQ5kUOHO9ZcF68ZIpzGCosgzDY9gV9qpn+4jmjZY4BnYtdugMubM7OkKvG/glsQSEvsJcACzSxeVk4B+vIYlc7Ju703LRZtFCEMki12XshvOsmtIZo8NOwrKC9m2KsmAVeqs70zZHuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709629567; c=relaxed/simple;
-	bh=YzV4B+Up6v+BrjYEAn1oYFeF+XNimEJyLgWYFag+kg0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QdtKsQo9W5AwthmgsSFKuNA9DuwWclOAggv5s77cp1XlHEl/N+SM8iqFIIbBBpiiS3NAy0tKS7ESSMGMrzPvchgRqr24E8kB0FMGfadsVgDR0+QrDnA90W70Z8wLefNU/hGxXbEK2nIlXALnUbl6DFxui2hn/RbEgwOF3B1pmU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rf7cJAhD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709629613; c=relaxed/simple;
+	bh=SVDc3/QVD4qQIeEwISkNQ6ehRKSAArCRXoPluhdHuS8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cLDQ2owYMe3GM9rcGQef8J/lYhd0ndSZ1c1dkA9VJmPzHSjmOfqbIfkpzhCsVgclvGBo9VF85U4QSfqQnheGDuiNdt5CLbZJDafxtANh5Suf62ONyzni3HpI2OMjxPAXnXxovpN524NqytNK3EBsiIElWGlXUGKiZ5Ll8ienuNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UpoQKETn; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rf7cJAhD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA6EC43399;
-	Tue,  5 Mar 2024 09:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709629566;
-	bh=YzV4B+Up6v+BrjYEAn1oYFeF+XNimEJyLgWYFag+kg0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rf7cJAhDiGVJ3PvWeBfrFH70vWt4F4bKhCaZ4EFuWaduH1InHdtrNVED+Tx1idvIl
-	 RBx5nJWC5+duOyMxAb/m2stRvdl7zj4c5vHhdrvShtOYtYojKXb3ufkMGTAzVZ78cR
-	 Cpsfqp4EQQe8iobc939KDkKN1F1IkqI7EEahLql5K4xii6+uaHWLvxWTamUycrSl48
-	 Kz5+hN8LO4jUXsEC59qK1TMZtcszcqcgivExwTb9eG6huW9Gebg+SildJoxu4xNZ5e
-	 pu2YZHy0uSYmHtes7ldsnYokbIcNVkI47rtMC9FKjFgw11p4I+xCK/FwcuqLkrKfXl
-	 DU0ttH87XXLNA==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5649c25369aso7622536a12.2;
-        Tue, 05 Mar 2024 01:06:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWGT2WVDO+yW4h4JcLgI2di4F93WD/vlim4EqEz0XoFJz5mgMfoWsszdTSF2I3QQIbwBlnb21oa3KC2tiRV0jykjuJSMcDykcLWPPGPK6b0Qpt4jVEvlsttngR0qPz6MXBAQuCOtwCKaghV6zzyWQ==
-X-Gm-Message-State: AOJu0YwrgyXMDG81711nw+9vDQFijc4+DGKhA/YUzlj9KeEVRqvi/58P
-	uwrfS1QYhHqfqmJ60TZOrJSj1gBr6E1ddh5bV5hVn8vd1d/ZgoCw5G2FJ11pRxge7svB87Ap3lK
-	Tfla7PoWK4HfmR5KbaNuMwVQJMq4=
-X-Google-Smtp-Source: AGHT+IF5y655SF1UzLRsjTx9W5mW+QUjX8QIDiU5KBYSOletC+9OgP61ceg0UZp63i2DDNELlJrk0YDIHBk+nz2dF+g=
-X-Received: by 2002:a17:906:40d0:b0:a44:9e7e:64c3 with SMTP id
- a16-20020a17090640d000b00a449e7e64c3mr8218278ejk.10.1709629564827; Tue, 05
- Mar 2024 01:06:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UpoQKETn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709629612; x=1741165612;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=SVDc3/QVD4qQIeEwISkNQ6ehRKSAArCRXoPluhdHuS8=;
+  b=UpoQKETnD8sqLravJK8wfLvGG6b6/LEjV7BA7BAW7McwilIAAEbsfENl
+   PHMacgIkmkD41qAQO5Jl02YML9BN6icmvHfb5lpXqVge//bn0cGXo+S1Q
+   dRaLj3BlafGfpVY5bvn5GCMuIaWtZ0xCXE3eTskbCAyN7eyvsn6owoUIQ
+   4HhJJrGBh+iuq+10D5EYx4lPqVxRmQ1Y5QwykeVvJ0ns91aVC3jShVjGE
+   o3bGkQ82/7McZR+9J4xFzMKB/B9Nqm2Fu/iavJAaJgybTP6zlpjrF8Ifx
+   2+tyFeTmqjazNKzJqjIU48OkgPHBbdQC6IyoO6R8beB+/LeLF1hZZxTBG
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4030334"
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="4030334"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:06:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="32471355"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:06:47 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,  david@redhat.com,
+  ryan.roberts@arm.com,  chrisl@kernel.org,  yuzhao@google.com,
+  hanchuanhua@oppo.com,  linux-kernel@vger.kernel.org,
+  willy@infradead.org,  xiang@kernel.org,  mhocko@suse.com,
+  shy828301@gmail.com,  wangkefeng.wang@huawei.com,  Barry Song
+ <v-songbaohua@oppo.com>,  Hugh Dickins <hughd@google.com>
+Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
+ large folio
+In-Reply-To: <CAGsJ_4yKhoztyA1cuSjGEeVwJfNdhNPNidrX-D_dRazRL7D5hg@mail.gmail.com>
+	(Barry Song's message of "Tue, 5 Mar 2024 21:56:02 +1300")
+References: <20240304103757.235352-1-21cnbao@gmail.com>
+	<878r2x9ly3.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAGsJ_4yKhoztyA1cuSjGEeVwJfNdhNPNidrX-D_dRazRL7D5hg@mail.gmail.com>
+Date: Tue, 05 Mar 2024 17:04:53 +0800
+Message-ID: <87msrd82x6.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f477329e-4ecf-4c6c-82b1-1e9b84443902@roeck-us.net> <CANpmjNMZD7-HY9FNGKnWTzHJ+Kibf2++rHj=j+3UTFKZ+Hr+EQ@mail.gmail.com>
-In-Reply-To: <CANpmjNMZD7-HY9FNGKnWTzHJ+Kibf2++rHj=j+3UTFKZ+Hr+EQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 5 Mar 2024 17:05:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4KoFLM1Kf-42CuWbkvRuHOJkBzkudWUNpAY0KMUBqUkA@mail.gmail.com>
-Message-ID: <CAAhV-H4KoFLM1Kf-42CuWbkvRuHOJkBzkudWUNpAY0KMUBqUkA@mail.gmail.com>
-Subject: Re: hw_breakpoint unit test failures with various architectures/platforms
- in qemu
-To: Marco Elver <elver@google.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Peter Zijlstra <peterz@infradead.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Marco,
+Barry Song <21cnbao@gmail.com> writes:
 
-On Tue, Mar 5, 2024 at 4:34=E2=80=AFAM Marco Elver <elver@google.com> wrote=
-:
+> On Tue, Mar 5, 2024 at 8:30=E2=80=AFPM Huang, Ying <ying.huang@intel.com>=
+ wrote:
+>>
+>> Barry Song <21cnbao@gmail.com> writes:
+>>
+>> > From: Barry Song <v-songbaohua@oppo.com>
+>> >
+>> > page_vma_mapped_walk() within try_to_unmap_one() races with other
+>> > PTEs modification such as break-before-make, while iterating PTEs
+>>
+>> Sorry, I don't know what is "break-before-make", can you elaborate?
+>> IIUC, ptep_modify_prot_start()/ptep_modify_prot_commit() can clear PTE
+>> temporarily, which may cause race with page_vma_mapped_walk().  Is that
+>> the issue that you try to fix?
 >
-> On Mon, 4 Mar 2024 at 19:12, Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > Hi,
-> >
-> > I see a number of failures and tracebacks when running the hw_breakpoin=
-t
-> > unit tests on various architectures in qemu. Some examples are below.
-> >
-> > Is this a potential problem with the unit tests, with the hardware,
-> > or with the qemu emulation of that hardware ?
->
-> The test is testing the accounting logic (allocating/deallocating HW
-> breakpoints), not actually using the breakpoints. That requires that
-> the architecture reports the correct number of HW breakpoints
-> available. It looks like it's not doing that.
->
-> > In other words, is it worthwhile to look into this further, or would
-> > it make more sense to just disable those tests if they fail on a
-> > given hardware/platform ?
->
-> It's an arch bug:
-> https://lore.kernel.org/lkml/Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.=
-com/
->
-> Back then we decided to leave the test as-is, given it's reporting an
-> actual issue. However, since then nothing has changed and the test
-> continues to exist as a reminder the arch code needs fixing. I suspect
-> none of us have the time to get to that soon, so we can either leave
-> things as is, or skip the test on all the broken architectures.
->
-> No idea what's going on with loongarch.
-LoongArch's problem comes from QEMU, I have tested on real machine.
+> we are writing pte to zero(break) before writing a new value(make).
 
-[    7.222500] KTAP version 1
-[    7.226067] 1..1
-[    7.228795]     KTAP version 1
-[    7.232737]     # Subtest: hw_breakpoint
-[    7.237512]     # module: hw_breakpoint_test
-[    7.237520]     1..9
-[    7.442899]     ok 1 test_one_cpu
-[    7.443912]     ok 2 test_many_cpus
-[    7.451298]     ok 3 test_one_task_on_all_cpus
-[    7.456486]     ok 4 test_two_tasks_on_all_cpus
-[    7.462291]     ok 5 test_one_task_on_one_cpu
-[    7.468293]     ok 6 test_one_task_mixed
-[    7.474405]     ok 7 test_two_tasks_on_one_cpu
-[    7.479884]     ok 8 test_two_tasks_on_one_all_cpus
-[    7.485699]     ok 9 test_task_on_all_and_one_cpu
-[    7.491488] # hw_breakpoint: pass:9 fail:0 skip:0 total:9
-[    7.496985] # Totals: pass:9 fail:0 skip:0 total:9
-[    7.503179] ok 1 hw_breakpoint
+OK.  Is break and make is commonly used terminology in kernel?  If not,
+it's better to explain a little (e.g., ptep_get_and_clear() / modify /
+set_pte_at()).
 
-Huacai
+> while
+> this behavior is within PTL in another thread,  page_vma_mapped_walk()
+> of try_to_unmap_one thread won't take PTL till it meets a present PTE.
 
+IIUC, !pte_none() should be enough?
+
+> for example, if another threads are modifying nr_pages PTEs under PTL,
+> but we don't hold PTL, we might skip one or two PTEs at the beginning of
+> a large folio.
+> For a large folio, after try_to_unmap_one(), we may result in PTE0 and PT=
+E1
+> untouched but PTE2~nr_pages-1 are set to swap entries.
 >
-> Thanks,
-> -- Marco
+> by holding PTL from PTE0 for large folios, we won't get these intermediate
+> values. At the moment we get PTL, other threads have done.
+
+Got it!  Thanks!
+
+--
+Best Regards,
+Huang, Ying
+
+>>
+>> --
+>> Best Regards,
+>> Huang, Ying
+>>
+>> > of a large folio, it will only begin to acquire PTL after it gets
+>> > a valid(present) PTE. break-before-make intermediately sets PTEs
+>> > to pte_none. Thus, a large folio's PTEs might be partially skipped
+>> > in try_to_unmap_one().
+>> > For example, for an anon folio, after try_to_unmap_one(), we may
+>> > have PTE0 present, while PTE1 ~ PTE(nr_pages - 1) are swap entries.
+>> > So folio will be still mapped, the folio fails to be reclaimed.
+>> > What=E2=80=99s even more worrying is, its PTEs are no longer in a unif=
+ied
+>> > state. This might lead to accident folio_split() afterwards. And
+>> > since a part of PTEs are now swap entries, accessing them will
+>> > incur page fault - do_swap_page.
+>> > It creates both anxiety and more expense. While we can't avoid
+>> > userspace's unmap to break up unified PTEs such as CONT-PTE for
+>> > a large folio, we can indeed keep away from kernel's breaking up
+>> > them due to its code design.
+>> > This patch is holding PTL from PTE0, thus, the folio will either
+>> > be entirely reclaimed or entirely kept. On the other hand, this
+>> > approach doesn't increase PTL contention. Even w/o the patch,
+>> > page_vma_mapped_walk() will always get PTL after it sometimes
+>> > skips one or two PTEs because intermediate break-before-makes
+>> > are short, according to test. Of course, even w/o this patch,
+>> > the vast majority of try_to_unmap_one still can get PTL from
+>> > PTE0. This patch makes the number 100%.
+>> > The other option is that we can give up in try_to_unmap_one
+>> > once we find PTE0 is not the first entry we get PTL, we call
+>> > page_vma_mapped_walk_done() to end the iteration at this case.
+>> > This will keep the unified PTEs while the folio isn't reclaimed.
+>> > The result is quite similar with small folios with one PTE -
+>> > either entirely reclaimed or entirely kept.
+>> > Reclaiming large folios by holding PTL from PTE0 seems a better
+>> > option comparing to giving up after detecting PTL begins from
+>> > non-PTE0.
+>> >
+>> > Cc: Hugh Dickins <hughd@google.com>
+>> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>> > ---
+>> >  mm/vmscan.c | 11 +++++++++++
+>> >  1 file changed, 11 insertions(+)
+>> >
+>> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> > index 0b888a2afa58..e4722fbbcd0c 100644
+>> > --- a/mm/vmscan.c
+>> > +++ b/mm/vmscan.c
+>> > @@ -1270,6 +1270,17 @@ static unsigned int shrink_folio_list(struct li=
+st_head *folio_list,
+>> >
+>> >                       if (folio_test_pmd_mappable(folio))
+>> >                               flags |=3D TTU_SPLIT_HUGE_PMD;
+>> > +                     /*
+>> > +                      * if page table lock is not held from the first=
+ PTE of
+>> > +                      * a large folio, some PTEs might be skipped bec=
+ause of
+>> > +                      * races with break-before-make, for example, PT=
+Es can
+>> > +                      * be pte_none intermediately, thus one or more =
+PTEs
+>> > +                      * might be skipped in try_to_unmap_one, we migh=
+t result
+>> > +                      * in a large folio is partially mapped and part=
+ially
+>> > +                      * unmapped after try_to_unmap
+>> > +                      */
+>> > +                     if (folio_test_large(folio))
+>> > +                             flags |=3D TTU_SYNC;
+>> >
+>> >                       try_to_unmap(folio, flags);
+>> >                       if (folio_mapped(folio)) {
 >
-> > Thanks,
-> > Guenter
-> >
-> > ---
-> > arm:smdkc210:
-> >
-> > [    9.515572]     ok 2 test_many_cpus
-> > [    9.519425] ########### searching unregister_test_bp
-> > [    9.519989] ------------[ cut here ]------------
-> > [    9.520995] ########### searching test_one_task_on_all_cpus
-> > [    9.521318] WARNING: CPU: 1 PID: 63 at kernel/events/hw_breakpoint_t=
-est.c:49 test_one_task_on_all_cpus+0x90/0x1c4
-> > [    9.521921] Modules linked in:
-> > [    9.522532] CPU: 1 PID: 63 Comm: kunit_try_catch Tainted: G         =
-        N 6.8.0-rc7-00028-g624465c9abd6 #1
-> > [    9.523102] Hardware name: Samsung Exynos (Flattened Device Tree)
-> > [    9.523610]  unwind_backtrace from show_stack+0x10/0x14
-> > [    9.523936]  show_stack from dump_stack_lvl+0x68/0x90
-> > [    9.524191]  dump_stack_lvl from __warn+0xbc/0x21c
-> > [    9.524429]  __warn from warn_slowpath_fmt+0x1a8/0x1b0
-> > [    9.524674]  warn_slowpath_fmt from test_one_task_on_all_cpus+0x90/0=
-x1c4
-> > [    9.524971]  test_one_task_on_all_cpus from kunit_try_run_case+0x58/=
-0x18c
-> > [    9.525273]  kunit_try_run_case from kunit_generic_run_threadfn_adap=
-ter+0x14/0x20
-> > [    9.525593]  kunit_generic_run_threadfn_adapter from kthread+0x118/0=
-x124
-> > [    9.525889]  kthread from ret_from_fork+0x14/0x28
-> > [    9.526200] Exception stack(0xf0ad5fb0 to 0xf0ad5ff8)
-> > [    9.526663] 5fa0:                                     00000000 00000=
-000 00000000 00000000
-> > [    9.527112] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000=
-000 00000000 00000000
-> > [    9.527449] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000=
-000
-> > [    9.527876] irq event stamp: 113
-> > [    9.528088] hardirqs last  enabled at (121): [<c01adfb4>] console_un=
-lock+0x114/0x130
-> > [    9.529049] hardirqs last disabled at (140): [<c01adfa0>] console_un=
-lock+0x100/0x130
-> > [    9.529501] softirqs last  enabled at (138): [<c010168c>] __do_softi=
-rq+0x340/0x520
-> > [    9.529892] softirqs last disabled at (129): [<c012f23c>] irq_exit+0=
-x190/0x1c0
-> > [    9.530227] ---[ end trace 0000000000000000 ]---
-> > [    9.531752]     # test_one_task_on_all_cpus: ASSERTION FAILED at ker=
-nel/events/hw_breakpoint_test.c:70
-> > [    9.531752]     Expected IS_ERR(bp) to be false, but is true
-> > [    9.537757]     not ok 3 test_one_task_on_all_cpus
-> >
-> > ---
-> > arm:raspi2b (and others):
-> >
-> > [   14.718608]     # Subtest: hw_breakpoint
-> > [   14.719351]     # module: hw_breakpoint_test
-> > [   14.722275]     1..9
-> > [   14.737927]     # test_one_cpu: ASSERTION FAILED at kernel/events/hw=
-_breakpoint_test.c:70
-> > [   14.737927]     Expected IS_ERR(bp) to be false, but is true
-> > [   14.745960]     not ok 1 test_one_cpu
-> > [   14.750052]     # test_many_cpus: ASSERTION FAILED at kernel/events/=
-hw_breakpoint_test.c:70
-> > [   14.750052]     Expected IS_ERR(bp) to be false, but is true
-> > [   14.791453]     not ok 2 test_many_cpus
-> > [   14.805964]     # test_one_task_on_all_cpus: ASSERTION FAILED at ker=
-nel/events/hw_breakpoint_test.c:70
-> > [   14.805964]     Expected IS_ERR(bp) to be false, but is true
-> > [   14.822662]     not ok 3 test_one_task_on_all_cpus
-> > [   14.836897]     # test_two_tasks_on_all_cpus: ASSERTION FAILED at ke=
-rnel/events/hw_breakpoint_test.c:70
-> > [   14.836897]     Expected IS_ERR(bp) to be false, but is true
-> > [   14.869770]     not ok 4 test_two_tasks_on_all_cpus
-> > [   14.913412]     # test_one_task_on_one_cpu: ASSERTION FAILED at kern=
-el/events/hw_breakpoint_test.c:70
-> > [   14.913412]     Expected IS_ERR(bp) to be false, but is true
-> > [   14.929852]     not ok 5 test_one_task_on_one_cpu
-> > [   14.939676]     # test_one_task_mixed: ASSERTION FAILED at kernel/ev=
-ents/hw_breakpoint_test.c:70
-> > [   14.939676]     Expected IS_ERR(bp) to be false, but is true
-> > [   14.953670]     not ok 6 test_one_task_mixed
-> > [   14.964403]     # test_two_tasks_on_one_cpu: ASSERTION FAILED at ker=
-nel/events/hw_breakpoint_test.c:70
-> > [   14.964403]     Expected IS_ERR(bp) to be false, but is true
-> > [   14.997262]     not ok 7 test_two_tasks_on_one_cpu
-> > [   15.012825]     # test_two_tasks_on_one_all_cpus: ASSERTION FAILED a=
-t kernel/events/hw_breakpoint_test.c:70
-> > [   15.012825]     Expected IS_ERR(bp) to be false, but is true
-> > [   15.045472]     not ok 8 test_two_tasks_on_one_all_cpus
-> > [   15.070033]     # test_task_on_all_and_one_cpu: ASSERTION FAILED at =
-kernel/events/hw_breakpoint_test.c:70
-> > [   15.070033]     Expected IS_ERR(bp) to be false, but is true
-> > [   15.077092]     not ok 9 test_task_on_all_and_one_cpu
-> >
-> > ---
-> > arm64:virt:
-> >
-> > [    7.753199]     ok 2 test_many_cpus
-> > [    7.766356]     # test_one_task_on_all_cpus: ASSERTION FAILED at ker=
-nel/events/hw_breakpoint_test.c:70
-> > [    7.766356]     Expected IS_ERR(bp) to be false, but is true
-> > [    7.775897]     not ok 3 test_one_task_on_all_cpus
-> > [    7.786604]     # test_two_tasks_on_all_cpus: ASSERTION FAILED at ke=
-rnel/events/hw_breakpoint_test.c:70
-> > [    7.786604]     Expected IS_ERR(bp) to be false, but is true
-> > [    7.793878]     not ok 4 test_two_tasks_on_all_cpus
-> > [    7.799954]     # test_one_task_on_one_cpu: ASSERTION FAILED at kern=
-el/events/hw_breakpoint_test.c:70
-> > [    7.799954]     Expected IS_ERR(bp) to be false, but is true
-> > [    7.811446]     not ok 5 test_one_task_on_one_cpu
-> > [    7.823706]     # test_one_task_mixed: ASSERTION FAILED at kernel/ev=
-ents/hw_breakpoint_test.c:70
-> > [    7.823706]     Expected IS_ERR(bp) to be false, but is true
-> > [    7.838892]     not ok 6 test_one_task_mixed
-> > [    7.843594]     # test_two_tasks_on_one_cpu: ASSERTION FAILED at ker=
-nel/events/hw_breakpoint_test.c:70
-> > [    7.843594]     Expected IS_ERR(bp) to be false, but is true
-> > [    7.862087]     not ok 7 test_two_tasks_on_one_cpu
-> > [    7.869706]     # test_two_tasks_on_one_all_cpus: ASSERTION FAILED a=
-t kernel/events/hw_breakpoint_test.c:70
-> > [    7.869706]     Expected IS_ERR(bp) to be false, but is true
-> > [    7.874499]     not ok 8 test_two_tasks_on_one_all_cpus
-> > [    7.878321]     # test_task_on_all_and_one_cpu: ASSERTION FAILED at =
-kernel/events/hw_breakpoint_test.c:70
-> > [    7.878321]     Expected IS_ERR(bp) to be false, but is true
-> > [    7.894138]     not ok 9 test_task_on_all_and_one_cpu
-> > [    7.894501] # hw_breakpoint: pass:2 fail:7 skip:0 total:9
-> > [    7.894911] # Totals: pass:2 fail:7 skip:0 total:9
-> >
-> > ---
-> > loongarch:
-> >
-> > [    7.327439]     ok 2 test_many_cpus
-> > [    7.330144] ------------[ cut here ]------------
-> > [    7.330849] WARNING: CPU: 1 PID: 87 at kernel/events/hw_breakpoint_t=
-est.c:49 test_one_task_on_all_cpus+0x204/0x210
->
+> Thanks
+> Barry
