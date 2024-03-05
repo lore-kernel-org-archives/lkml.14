@@ -1,138 +1,220 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B9C18046;
-	Tue,  5 Mar 2024 02:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06B129CF5
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 02:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709607572; cv=none; b=dHtWJIatxOaw0+qoTuNjZvmJO3BVuUUxgWUQj7EwW4y9IphE8kcmFfsjiT+Ui+x1MKzBwnvCd+ukC280ifHIiOeraWqzM5aMucpX8ZBTpg6CdscJR5SvofWwKKz2BXO6XlH7+00sRXCT3kk8zaAdg5wSC3htVBwevwL6cqduQPs=
+	t=1709607586; cv=none; b=r47iACmQFi54apHxPERptVoQZGTtp/6SUp+8Ey7865wLzhzPPkOCaInk9bhQSjRav/2MV36IdhquockrJL8uUDWqzU9SBWaqagY/Or6EeBkuxqDb2TmRrKxWKso1nObxXA0ajZq5v5pSlv2ny7osdqfV+RiUkbpcolpEahDkxTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709607572; c=relaxed/simple;
-	bh=m10ogqdrHv106k5OB8fY9EcjuKzov88CtD1qN+O1/PY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NErEqxJ0TqL3P9Su1r5C5ZzPUCViQ1PcpNTRRHXHX5u7Km0RAfeu75ueNWnQW/TIgZBwHTGnLzYu/Tk4jCoSTII2GokSftr8X4ibrugdbiYirJw16hFf+J3MN7A9TaY0ic+OcTVm91IjDLe/UobPBJfShvYbWVJ+18ppby1//O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=arNz0Iln; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709607586; c=relaxed/simple;
+	bh=j6Y/Hhr5CqAHm0xm2dsE/+btVkhvBXh3wX7UzKjPM8o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ku0QUTo1OzKiCvacshnJr5MQEuJBAAIyhGVQWGe7FKv0iGIxU0Vo/hjZGoe7xB7MuTM98n13No+TAoS02pcNWUlSHmEQKwIvobIkUfM3Jq+vdnRJQjD21P+7Yiil9ctWRwMk1S3ZZEdM+u2JChyFBw/Iq+wPf3HlKpQVCrEdmiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3wOF5rGe; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="arNz0Iln"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709607570; x=1741143570;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=m10ogqdrHv106k5OB8fY9EcjuKzov88CtD1qN+O1/PY=;
-  b=arNz0IlntIDIy9vubdTA3qG7snBX0aY/7veKGL/f8MKxW5tFo+wXtcFz
-   tbkEc3JfNJBYr9a7LVbELRMUbBr7KejizgIOZtOrmoH4kQ0xVzog0JvTz
-   S4zx8N2r4IZeU/w4wqSaSsp+vmEOchL+KAaQn+kejND0E0KvXn0RxAcfb
-   t/shN29w3zHFDLILRqXQctgKHfpuBVDywlgUh17gy/K/bIjrX5SSuRrXH
-   FluZBw+4XJfP2apvwQvaa7d522xU4JvVOgi92Lrct/4neF7IE7i8/2cpv
-   ofz9cqo6G9MlE0dTYXR6NrDXl0bt62ZBAEPlZ2/BJbOVhR+jUOf0EmX31
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4717479"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4717479"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 18:59:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="40096009"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.125.243.127]) ([10.125.243.127])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 18:59:25 -0800
-Message-ID: <8106d06c-4359-47ef-b363-a6302e1271a4@intel.com>
-Date: Tue, 5 Mar 2024 10:59:23 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3wOF5rGe"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6096c745c33so96959257b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 18:59:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709607583; x=1710212383; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hlOxNUN/T2i2wNDICKtujJTrAn1oMh3X1Wqzwd1LXbs=;
+        b=3wOF5rGe+AOyIuk7ojlcKkKs2UtRr1XzJbxzPVXmThhVWYaKvCCBwV1cA0XouzX7Up
+         LM7zw1M2CKNTIYK11BLfdsydsd0/Dhb2mruNBCu5tVKZR9b7fUDKjfaWGgLvjspcsiys
+         491feMcdIRWE1OgxewO09T2G5FxDuGdaPsHy3dvtvNQHn6E8UYZsjYeWORa+cH5ZzhaB
+         JQQu1js+MhPt/xon525saEfOjy97Wy13GsopEjB6GU+7gOQVcrbfTxgp2zN8uo+O1tsd
+         yE3ahnPUEnr72ND/BNb961g48ZxanVIv4t9rZJLkImeMyZ4GuHPjnnu+7nLHoKslHqOB
+         0c2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709607583; x=1710212383;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hlOxNUN/T2i2wNDICKtujJTrAn1oMh3X1Wqzwd1LXbs=;
+        b=m0xaDBszJnroCIn3SrnE73eS/yr88YENCVHLO89UEEZNNDxEzr06mXP4BLW054Y5xN
+         ahHLWnH5B+7HPvTRImLg0HlAl9jS1JEUM+cwWMGD7SYcDDEjXxeRZ9mOXS87DeWGMyw1
+         hl0OSkSzBD9J1Z0K82O/2qlrlMc29sEGDmHD7sYjXfGkHOSPFK8snHtGHbY2fMp8+SAx
+         Y1RjPKpJDm1TCuIa6mVCe7SYDPuPs/6YNsAIzSlwmflECkL360613Z1u70lePhjmWcDM
+         SVshRgNDF64rOwhA2LFOh1mB1YQbDQZBG7hroEl+1VYT4UqhyJJstdkndBCre3MiMJPp
+         MVfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkRzdAyGa2RNqef8ejAKKS7oZZCENhiZ4EnarYBRw85I4VeF0yKvzS2Ml+Y+Xk5HPilTSsIisYRoaU1F/msu0ITlFo7QircGKZWCgG
+X-Gm-Message-State: AOJu0YzEWIqw5x1Jk3gYdVipwu/uj5VdR7gn0FByaMrS9m/49HqrzMay
+	1QBDf/uuHWo9hnVFBofS6WN6H/qqmg/JEpqI0jQR+SxlQaA7rPJhaXJ3IqaZFJwzQN4v8ktM/TF
+	X2Q==
+X-Google-Smtp-Source: AGHT+IFJPMzA4BMB63dEX0agbVq4KRaIYmaCyPEEtzAnMUP+Exq0++9DbY4jZrTp105nw+RV2ccLnCVd1W8=
+X-Received: from jthies.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:23db])
+ (user=jthies job=sendgmr) by 2002:a05:690c:e18:b0:609:247a:bdc5 with SMTP id
+ cp24-20020a05690c0e1800b00609247abdc5mr3070988ywb.4.1709607583714; Mon, 04
+ Mar 2024 18:59:43 -0800 (PST)
+Date: Tue,  5 Mar 2024 02:58:04 +0000
+In-Reply-To: <20240305025804.1290919-1-jthies@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] kvm: wire up KVM_CAP_VM_GPA_BITS for x86
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>, Gerd Hoffmann <kraxel@redhat.com>
-Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>
-References: <20240301101410.356007-1-kraxel@redhat.com>
- <20240301101410.356007-2-kraxel@redhat.com> <ZeXloHPV1dkOwBTe@google.com>
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <ZeXloHPV1dkOwBTe@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240305025804.1290919-1-jthies@google.com>
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+Message-ID: <20240305025804.1290919-5-jthies@google.com>
+Subject: [PATCH v4 4/4] usb: typec: ucsi: Register SOP' alternate modes with
+ cable plug
+From: Jameson Thies <jthies@google.com>
+To: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org
+Cc: jthies@google.com, pmalani@chromium.org, bleung@google.com, 
+	abhishekpandit@chromium.org, andersson@kernel.org, 
+	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
+	gregkh@linuxfoundation.org, hdegoede@redhat.com, neil.armstrong@linaro.org, 
+	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
+	linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/4/2024 11:15 PM, Sean Christopherson wrote:
-> On Fri, Mar 01, 2024, Gerd Hoffmann wrote:
->> Add new guest_phys_bits field to kvm_caps, return the value to
->> userspace when asked for KVM_CAP_VM_GPA_BITS capability.
->>
->> Initialize guest_phys_bits with boot_cpu_data.x86_phys_bits.
->> Vendor modules (i.e. vmx and svm) can adjust this field in case
->> additional restrictions apply, for example in case EPT has no
->> support for 5-level paging.
->>
->> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
->> ---
->>   arch/x86/kvm/x86.h | 2 ++
->>   arch/x86/kvm/x86.c | 5 +++++
->>   2 files changed, 7 insertions(+)
->>
->> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
->> index 2f7e19166658..e03aec3527f8 100644
->> --- a/arch/x86/kvm/x86.h
->> +++ b/arch/x86/kvm/x86.h
->> @@ -24,6 +24,8 @@ struct kvm_caps {
->>   	bool has_bus_lock_exit;
->>   	/* notify VM exit supported? */
->>   	bool has_notify_vmexit;
->> +	/* usable guest phys bits */
->> +	u32  guest_phys_bits;
->>   
->>   	u64 supported_mce_cap;
->>   	u64 supported_xcr0;
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 48a61d283406..e270b9b708d1 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -4784,6 +4784,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->>   		if (kvm_is_vm_type_supported(KVM_X86_SW_PROTECTED_VM))
->>   			r |= BIT(KVM_X86_SW_PROTECTED_VM);
->>   		break;
->> +	case KVM_CAP_VM_GPA_BITS:
->> +		r = kvm_caps.guest_phys_bits;
-> 
-> This is not a fast path, just compute the effective guest.MAXPHYADDR on the fly
-> using tdp_root_level and max_tdp_level.  But as pointed out and discussed in the
-> previous thread, adverising a guest.MAXPHYADDR that is smaller than host.MAXPHYADDR
-> simply doesn't work[*].
-> 
-> I thought the plan was to add a way for KVM to advertise the maximum *addressable*
-> GPA, and figure out a way to communicate that to the guest, e.g. so that firmware
-> doesn't try to use legal GPAs that the host cannot address.
+Register SOP' alternate modes with a Type-C Connector Class cable plug.
+Alternate modes are queried from the PPM using the GET_ALTERNATE_MODES
+command with recipient set to SOP'.
 
- From one off-list email thread, Paolo was proposing to change the 
-definition of CPUID.0x80000008:EAX[23:16] to "Maximum usable physical 
-address size in bits", in detail:
+Reviewed-by: Benson Leung <bleung@chromium.org>
+Reviewed-by: Prashant Malani <pmalani@chromium.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Jameson Thies <jthies@google.com>
+---
+SOP' GET_ALTERNATE_MODE responses from the PPM are correctly registered
+to the cable plug.
+nospike-rev4 /sys/class/typec # ls port0-cable/port0-plug0/
+device  port0-plug0.0  port0-plug0.1  power  subsystem  uevent
 
-  Maximum usable physical address size in bits. Physical addresses
-  above this size should not be used, but will not produce a "reserved"
-  page fault. When this field is zero, all bits up to PhysAddrSize are
-  usable. This field is expected to be nonzero only on guests where
-  the hypervisor is using nesting paging.
+Changes in v4:
+- None.
 
-As I understand it, it turns bit [23:16] of EAX of CPUID 0x80000008 into 
-a PV field, that is set by VMM(e.g., KVM/QEMU) and consumed by guest.
+Changes in v3:
+- None.
 
-So KVM can advertise maximum addressable/usable physical address bits in 
-CPUID.0x80000008:EAX[23:16] via GET_SUPPORTED_CPUID.
+Changes in v2:
+- Shortened lines to within 80 characters.
+- Tested on usb-testing branch merged with chromeOS 6.8-rc2 kernel.
 
+ drivers/usb/typec/ucsi/ucsi.c | 60 +++++++++++++++++++++++++++++++++++
+ drivers/usb/typec/ucsi/ucsi.h |  2 ++
+ 2 files changed, 62 insertions(+)
 
-> Paolo, any update on this?
-> 
-> [*] https://lore.kernel.org/all/CALMp9eTutnTxCjQjs-nxP=XC345vTmJJODr+PcSOeaQpBW0Skw@mail.gmail.com
-> 
+diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+index 3b64a0f51041c..cf52cb34d2859 100644
+--- a/drivers/usb/typec/ucsi/ucsi.c
++++ b/drivers/usb/typec/ucsi/ucsi.c
+@@ -399,6 +399,27 @@ static int ucsi_register_altmode(struct ucsi_connector *con,
+ 
+ 		con->partner_altmode[i] = alt;
+ 		break;
++	case UCSI_RECIPIENT_SOP_P:
++		i = ucsi_next_altmode(con->plug_altmode);
++		if (i < 0) {
++			ret = i;
++			goto err;
++		}
++
++		ret = ucsi_altmode_next_mode(con->plug_altmode, desc->svid);
++		if (ret < 0)
++			return ret;
++
++		desc->mode = ret;
++
++		alt = typec_plug_register_altmode(con->plug, desc);
++		if (IS_ERR(alt)) {
++			ret = PTR_ERR(alt);
++			goto err;
++		}
++
++		con->plug_altmode[i] = alt;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -566,6 +587,9 @@ static void ucsi_unregister_altmodes(struct ucsi_connector *con, u8 recipient)
+ 	case UCSI_RECIPIENT_SOP:
+ 		adev = con->partner_altmode;
+ 		break;
++	case UCSI_RECIPIENT_SOP_P:
++		adev = con->plug_altmode;
++		break;
+ 	default:
+ 		return;
+ 	}
+@@ -836,6 +860,33 @@ static void ucsi_unregister_partner_pdos(struct ucsi_connector *con)
+ 	con->partner_pd = NULL;
+ }
+ 
++static int ucsi_register_plug(struct ucsi_connector *con)
++{
++	struct typec_plug *plug;
++	struct typec_plug_desc desc = {.index = TYPEC_PLUG_SOP_P};
++
++	plug = typec_register_plug(con->cable, &desc);
++	if (IS_ERR(plug)) {
++		dev_err(con->ucsi->dev,
++			"con%d: failed to register plug (%ld)\n", con->num,
++			PTR_ERR(plug));
++		return PTR_ERR(plug);
++	}
++
++	con->plug = plug;
++	return 0;
++}
++
++static void ucsi_unregister_plug(struct ucsi_connector *con)
++{
++	if (!con->plug)
++		return;
++
++	ucsi_unregister_altmodes(con, UCSI_RECIPIENT_SOP_P);
++	typec_unregister_plug(con->plug);
++	con->plug = NULL;
++}
++
+ static int ucsi_register_cable(struct ucsi_connector *con)
+ {
+ 	struct typec_cable *cable;
+@@ -879,6 +930,7 @@ static void ucsi_unregister_cable(struct ucsi_connector *con)
+ 	if (!con->cable)
+ 		return;
+ 
++	ucsi_unregister_plug(con);
+ 	typec_unregister_cable(con->cable);
+ 	memset(&con->cable_identity, 0, sizeof(con->cable_identity));
+ 	con->cable = NULL;
+@@ -1085,6 +1137,14 @@ static int ucsi_check_cable(struct ucsi_connector *con)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = ucsi_register_plug(con);
++	if (ret < 0)
++		return ret;
++
++	ret = ucsi_register_altmodes(con, UCSI_RECIPIENT_SOP_P);
++	if (ret < 0)
++		return ret;
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+index b89fae82e8ce7..32daf5f586505 100644
+--- a/drivers/usb/typec/ucsi/ucsi.h
++++ b/drivers/usb/typec/ucsi/ucsi.h
+@@ -429,9 +429,11 @@ struct ucsi_connector {
+ 	struct typec_port *port;
+ 	struct typec_partner *partner;
+ 	struct typec_cable *cable;
++	struct typec_plug *plug;
+ 
+ 	struct typec_altmode *port_altmode[UCSI_MAX_ALTMODES];
+ 	struct typec_altmode *partner_altmode[UCSI_MAX_ALTMODES];
++	struct typec_altmode *plug_altmode[UCSI_MAX_ALTMODES];
+ 
+ 	struct typec_capability typec_cap;
+ 
+-- 
+2.44.0.rc1.240.g4c46232300-goog
 
