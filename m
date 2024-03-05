@@ -1,177 +1,149 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9737F7EF;
-	Tue,  5 Mar 2024 08:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5847A7F482;
+	Tue,  5 Mar 2024 08:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709626799; cv=none; b=sX20eKsrS72cHSP9/yOX9kQRWvfiegZFjMo8GylrFU35NESmW56JWjxEl6oeOamhzoHvny22rlwSUTQC6PA94+dhVdLjKMMjykkW6C9G2HFadLJm947ponLC2u9LKLZKpAm3qlcpBi2EzH1lSdAhh/f9Ju9lvbia8nWE7ncYEHo=
+	t=1709626855; cv=none; b=Oj9zI+luyOIeU5pJHWWdAYT7Z+K8/kqN5YUpibktCSgYUWHx7oTj8ngfLeEhI7mncfA5kZG4dxgoN0V6yWEMuXRBNiN+XfdLC5T44ZnCneTZEq6953eNdlYxFVP/C9J2NmOQWRVPgFI4TLxmPfyTnsge695SR/ZZSTTo9+yDkbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709626799; c=relaxed/simple;
-	bh=t6XchAICiSHWdKVGv/WGYM7YeyQcxFEXLVVRKxNtMGA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q3MFDI3KnwW/b0n5dDZJCBptrt1mSmvN+UoxFwzJFjKAUm16GL+isD0rMzthAfSJlsBf3bc20dgONXQK2tKX6AuLj8+fAhbHfZNrLnd5lsTzfFS3RhBtWBstQ7b2DH9gZJu8FyFCc7GlwLc0uNYzRQDQheGfcueOXGMmAaLARgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1709626855; c=relaxed/simple;
+	bh=hZo+4VkfzgWJKPhG/ii63dRyDDI+/MxjXieNWDVvQMU=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=sQV9cXkBmkudgVIexQpOMt8/u7Wt/FkGvTRIbzf4feAyRe8FD7fcbYZhjgpZRYepMvNnfXx9ST8z0m9fvOhAKPNUMYPzHJpLgvDwNSd9977qSk0QFSTAvz+1XYY2bgy7ztkUWE7TI0lKs1Ii/W1dvzLwNUN3QYrAV2sklp4u38o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hzNZC/Qi; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-60925d20af0so54905777b3.2;
-        Tue, 05 Mar 2024 00:19:57 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzNZC/Qi"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dca160163dso51964535ad.3;
+        Tue, 05 Mar 2024 00:20:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709626853; x=1710231653; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ENVdbWViMNbdMsk2tYBUD+u8dUrBMYPUAx5W7hzKOFo=;
+        b=hzNZC/Qi8H/SscKrlapDWqj+mELUkXZz3MC4rkG8Pmm/xtiHz843DSJT/cDIL2o95B
+         XKA9hb3W+oP9/sPamtzhaFPCm6otIKNNUpY1Gbw8iDCVaAW5gRLFAC9uT3g20dMmwlsl
+         RSL/F6+TQ+kuyhdwO0AxccLsC3kCl0bPNBz6WWwJ+ETkBQ+WEMgIDQ0VaYt8qFokOuzU
+         l5fEy9F0G5nJUDdKaoqS8UvVpK8PfCmP6EYiDHbD9i0VFLIyNuzmk+SDUmcQf+NQsGZD
+         AjlADDeQXiAoKrfoUSurPuddBd14vfM+DZsqh+h9+dzNRlWLNF9TqEH9DUqlJ9BlNfBC
+         0V0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709626795; x=1710231595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709626853; x=1710231653;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WZEUhB5dRg0BtcsxeiTUemjtMJD5muiFM6LlHEKnvOw=;
-        b=Ug6HHy3AzDcu3uoEUATjx3axDXiy0Twx9oU/d41U6PtO10gJka7DqWhNMNbhJhu0FW
-         z14M2lm+kE2YHvqGT2XlaYTI/0zbe5QzWExZwyRaSzgPSiXQR2/f3D2WUmgIBA5HNNlp
-         b1QGlg+fTOQIH01x7/z2jj2uEka+TD2iLOzJqFhFFGbP+L8acl/SeQ3y318cMOvNJlsv
-         Cpxq0ztrvKawWUtx1BeFy5mcIvylb/spcfopE7atV7y0qh9xCIjf6MvIStrjDDUSpenm
-         ClILUJ7ep2z5ePUv/ba831wdJB/07DANzAJW6r4KBv5HDJ8GyD0mAxP5VG6mxpGjV1VT
-         Kimg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4eeY8+8YTTtO29eXQwkczf6CJXKTSxNBsCLtk8SFL//q7FUFonYEyxGJq5zwDnbGJJbf+p07ibEH7zSiSCs3rQBJkxAnd7OuxZ7N1f4C6aBXwqxl1L94STxJdrM6uC7y+OKKFwJXz5xyD7rb2qqFHp4tG42Za7gi2ck2pLMNVDd/mtTE=
-X-Gm-Message-State: AOJu0Yyy47JBHdHl6rGrSl6O3QhGSVJeyeKJYuHfdjK/jc0QezW2HbQ1
-	hF/ODDCCzp51YzZYBXe33AQ0zLcMcDwaUYoSp0hoLCyd9/P1a6rHg7ddLuupVk0=
-X-Google-Smtp-Source: AGHT+IGtumgYEaXukERvwQ2+EowBtnDS3CxHvLyAdJblTOhF0H9x8BNhLdpe3XpSjQZzYRUtvyp1pQ==
-X-Received: by 2002:a0d:c303:0:b0:609:b412:41f7 with SMTP id f3-20020a0dc303000000b00609b41241f7mr4565961ywd.45.1709626795619;
-        Tue, 05 Mar 2024 00:19:55 -0800 (PST)
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
-        by smtp.gmail.com with ESMTPSA id w81-20020a814954000000b006079b97c437sm3048957ywa.98.2024.03.05.00.19.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Mar 2024 00:19:54 -0800 (PST)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-60943ad307fso49429057b3.1;
-        Tue, 05 Mar 2024 00:19:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUpJzl8UJr51SUGjJMVd8owK0Ao4ZGXgDV7j6ADCv7bGQ0ExvzZtcPhUR4QvwpcgIyOPfJtXk3Vu8GoJIiojRacG39YwBPFjyXnCqs2xXM6rJzeGQYlSqJskLPphPnOSsYj3ewKY9K47NMPSexHbUyzn5EluImj+S8AgqLvs+OQb6aKmKY=
-X-Received: by 2002:a81:4e45:0:b0:609:c5ca:8b0d with SMTP id
- c66-20020a814e45000000b00609c5ca8b0dmr1984380ywb.12.1709626794525; Tue, 05
- Mar 2024 00:19:54 -0800 (PST)
+        bh=ENVdbWViMNbdMsk2tYBUD+u8dUrBMYPUAx5W7hzKOFo=;
+        b=gdUOowWt220pbCoDyAfGkAV2nwtz+1a1qzGQevh6UblcJFlNRSjntfe3kt9ZXcVrX4
+         tVO5F+IkhoIfbmTBPlkjxdd1whhD7iwvQklmHD0VUVh1ZpDnV1ugtf2ThPWDoFUNjsH/
+         pM4v/OPsA7zGHrguLkOLkux8UK6Y7B430IzQr0Zo5+Vy2amYO7EC/Ipv7zJvEf+NjN+S
+         StKNjkQfeYZOFzeKHa2Fkxpf6T0jOXZW/hpa7YKbSpEJFLhjnfUGPs3M2m4WvT0R1Vt6
+         ygsEhiL9mBmLif/jMOxCbPcSurOaPTR4UveVUnHMgAvDfT/tzvC380V63IT4QFimCgLQ
+         +OYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWk2/ObfjFr8v0Dny/SnAJz5oLLrQYQfcf2NE9/pCjoUgOZKEpjvcN7XCMY5zBvNNbJUgD4LQNnQ/KYgyPtHyADeMy7qTg2z4+nIYaAkky/lQul11+uziW5i/OPDj1TiJ/j0bwxUelqQpk=
+X-Gm-Message-State: AOJu0YxTA9k9RAg+AYv8eiXQuuIUZLaof2Hzx/DBDkBvBgVElT6l4Wk5
+	Wi6l/3V6CwdCwO9jwh2ZfVyo7N1oP3Vba+YL3qZ1SdvCYyxtIrmW
+X-Google-Smtp-Source: AGHT+IGRIXT23C4Loa9kbMHMWmSzvg6b+GSBp7ilkDEE0aeiD2V7Hmv5vccuK/1kB+/XZYehRpgWHQ==
+X-Received: by 2002:a17:90a:c01:b0:299:39e0:98cb with SMTP id 1-20020a17090a0c0100b0029939e098cbmr9160055pjs.15.1709626853359;
+        Tue, 05 Mar 2024 00:20:53 -0800 (PST)
+Received: from linux-l9pv.suse ([124.11.22.254])
+        by smtp.gmail.com with ESMTPSA id mf12-20020a17090b184c00b002904cba0ffbsm11239864pjb.32.2024.03.05.00.20.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Mar 2024 00:20:53 -0800 (PST)
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
+To: Justin Sanders <justin@coraid.com>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Pavel Emelianov <xemul@openvz.org>,
+	Kirill Korotaev <dev@openvz.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chun-Yi Lee <jlee@suse.com>
+Subject: [PATCH] aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts
+Date: Tue,  5 Mar 2024 16:20:48 +0800
+Message-Id: <20240305082048.25526-1-jlee@suse.com>
+X-Mailer: git-send-email 2.12.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240305035853.916430-1-chris.packham@alliedtelesis.co.nz> <20240305035853.916430-3-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20240305035853.916430-3-chris.packham@alliedtelesis.co.nz>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 5 Mar 2024 09:19:42 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVjx6rMbqKiG-9pt+y4c4nVZ-MQk8Miv3HB7jgTd=Pdcg@mail.gmail.com>
-Message-ID: <CAMuHMdVjx6rMbqKiG-9pt+y4c4nVZ-MQk8Miv3HB7jgTd=Pdcg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] dt-bindings: auxdisplay: Add bindings for generic
- 7-segment LED
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: andy@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, andrew@lunn.ch, gregory.clement@bootlin.com, 
-	sebastian.hesselbarth@gmail.com, lee@kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Chris,
+From: Chun-Yi Lee <jlee@suse.com>
 
-On Tue, Mar 5, 2024 at 4:59=E2=80=AFAM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
-> Add bindings for a generic 7-segment LED display using GPIOs.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->
-> Notes:
->     Changes in v4:
->     - Add ASCII art diagram showing arrangement of segments
+This patch is against CVE-2023-6270. The description of cve is:
 
-Thanks for the update!
+  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux
+  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on
+  `struct net_device`, and a use-after-free can be triggered by racing
+  between the free on the struct and the access through the `skbtxq`
+  global queue. This could lead to a denial of service condition or
+  potential code execution.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/auxdisplay/gpio-7-segment.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/auxdisplay/gpio-7-segment.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: GPIO based LED segment display
-> +
-> +maintainers:
-> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-> +
-> +properties:
-> +  compatible:
-> +    const: gpio-7-segment
-> +
-> +  segment-gpios:
-> +    description:
+In aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial
+code is finished. But the net_device ifp will still be used in
+later tx()->dev_queue_xmit() in kthread. Which means that the
+dev_put(ifp) should NOT be called in the success path of skb
+initial code in aoecmd_cfg_pkts(). Otherwise tx() may run into
+use-after-free because the net_device is freed.
 
-Please add "|", as you want to preserve the formatting of the diagram.
+This patch removed the dev_put(ifp) in the success path in
+aoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx().
 
-> +      An array of GPIOs one per segment. The first GPIO corresponds to t=
-he A
-> +      segment the last GPIO corresponds to the G segment. Some LED block=
-s also
+Link: https://nvd.nist.gov/vuln/detail/CVE-2023-6270
+Fixes: 7562f876cd93 ("[NET]: Rework dev_base via list_head (v3)")
+Signed-off-by: Chun-Yi Lee <jlee@suse.com>
+---
+ drivers/block/aoe/aoecmd.c | 12 ++++++------
+ drivers/block/aoe/aoenet.c |  1 +
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-... segment, the ...
+diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
+index d7317425be51..cc9077b588d7 100644
+--- a/drivers/block/aoe/aoecmd.c
++++ b/drivers/block/aoe/aoecmd.c
+@@ -419,13 +419,16 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
+ 	rcu_read_lock();
+ 	for_each_netdev_rcu(&init_net, ifp) {
+ 		dev_hold(ifp);
+-		if (!is_aoe_netif(ifp))
+-			goto cont;
++		if (!is_aoe_netif(ifp)) {
++			dev_put(ifp);
++			continue;
++		}
+ 
+ 		skb = new_skb(sizeof *h + sizeof *ch);
+ 		if (skb == NULL) {
+ 			printk(KERN_INFO "aoe: skb alloc failure\n");
+-			goto cont;
++			dev_put(ifp);
++			continue;
+ 		}
+ 		skb_put(skb, sizeof *h + sizeof *ch);
+ 		skb->dev = ifp;
+@@ -440,9 +443,6 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
+ 		h->major = cpu_to_be16(aoemajor);
+ 		h->minor = aoeminor;
+ 		h->cmd = AOECMD_CFG;
+-
+-cont:
+-		dev_put(ifp);
+ 	}
+ 	rcu_read_unlock();
+ }
+diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
+index c51ea95bc2ce..923a134fd766 100644
+--- a/drivers/block/aoe/aoenet.c
++++ b/drivers/block/aoe/aoenet.c
+@@ -63,6 +63,7 @@ tx(int id) __must_hold(&txlock)
+ 			pr_warn("aoe: packet could not be sent on %s.  %s\n",
+ 				ifp ? ifp->name : "netif",
+ 				"consider increasing tx_queue_len");
++		dev_put(ifp);
+ 		spin_lock_irq(&txlock);
+ 	}
+ 	return 0;
+-- 
+2.35.3
 
-
-> +      have a decimal point (currently ignored).
-> +
-> +               -a-
-> +              |   |
-> +              f   b
-> +              |   |
-> +               -g-
-> +              |   |
-> +              e   c
-> +              |   |
-> +               -d-  dp
-> +
-> +    minItems: 7
-> +    maxItems: 7
-
-I guess it doesn't hurt to have "maxItems: 8", so people don't have
-to update their DTS later when support for the DP is added?
-That would need an update to the description above, as the last segment
-would then be either G or DP.
-
-> +
-> +required:
-> +  - segment-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    led-7seg {
-> +        compatible =3D "gpio-7-segment";
-> +        segment-gpios =3D <&gpio 0 GPIO_ACTIVE_LOW
-> +                         &gpio 1 GPIO_ACTIVE_LOW
-> +                         &gpio 2 GPIO_ACTIVE_LOW
-> +                         &gpio 3 GPIO_ACTIVE_LOW
-> +                         &gpio 4 GPIO_ACTIVE_LOW
-> +                         &gpio 5 GPIO_ACTIVE_LOW
-> +                         &gpio 6 GPIO_ACTIVE_LOW>;
-
-Please group GPIO specifiers using angular brackets:
-
-    segment-gpios =3D <&gpio 0 GPIO_ACTIVE_LOW>,
-                     <&gpio 1 GPIO_ACTIVE_LOW>,
-                     ...
-
-> +    };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
