@@ -1,120 +1,99 @@
-Received: from secondary.pambor.com (secondary.pambor.com [46.38.233.203])
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666DD1272A0;
-	Tue,  5 Mar 2024 15:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.233.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244734683;
+	Tue,  5 Mar 2024 15:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709651689; cv=none; b=OO8FAzJ2gosK47WkgDSPC/BfUOT6nTrb8jWTAgap+ZzIgV0GXMiwNDVW3RfAw6upGEL0cbKeOHWzI1kuxUaJvRoI/z0w7QFxSMvRNIHItK0UlGMsIROHCX0nijBzuRucVWzdu2LkGyMUluZ7TsDNQ1K9wwLV+JfWzhbl6EfC/Ho=
+	t=1709651718; cv=none; b=bQL+A3dB2vZibYGqW2DvJMDOMJqn847H4Zjx7cD4wzBtl6m/b0nvDgH5sbgFQcRBlRI29KSz7aR8j4JjhG0WcXJhAnDtzcXQ1Pjzt1nC+iYo9yiLSd/wynP3el2GLl68HmuSKy9DnCzWEFTt+yTDQfOaa2Ch9HiulvSV0kPkLDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709651689; c=relaxed/simple;
-	bh=VOYq/MFTo0yEAHpbuYHcwnTD5HvVjidlBhWkaXa2qP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f052fS0W4Rej+TocanB+uLAhR0+iDZDX6k9AIi2xx23Lbvhz8Ev6s4FoQZrXd/d7y5PivMKk6QTTgrxhjJXTuuwh3z/xAZXv0vhzD+ReUc/OkdTi0glAaDzPuc25nKL/6E6WnggbNkGEf516K2OggqjDxRdOfwg80q0jCyAq6XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osasysteme.de; spf=pass smtp.mailfrom=osasysteme.de; dkim=pass (2048-bit key) header.d=osasysteme.de header.i=@osasysteme.de header.b=YKwE2vlv; arc=none smtp.client-ip=46.38.233.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osasysteme.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=osasysteme.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=osasysteme.de header.i=@osasysteme.de header.b="YKwE2vlv"
-Received: from localhost (localhost [127.0.0.1])
-	by secondary.pambor.com (Postfix) with ESMTP id 5A24E6F03B4;
-	Tue,  5 Mar 2024 16:14:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=osasysteme.de;
-	s=19022017; t=1709651682;
-	bh=VOYq/MFTo0yEAHpbuYHcwnTD5HvVjidlBhWkaXa2qP8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YKwE2vlvRdJoqi6l+wjPZe/8ZFrPXzXlssXOhHNFBFJ/Fu0OgEWmeXQg2u9BUr4gl
-	 Lu/6ROceiY85q6HQaBHEapUe39htU+nilNP53HixffXqhjIJEKtU/NSjEklWx5DG1h
-	 JQShK0YX3E1GajudwFGkc8rZ9A8dJi+lDU3D7ZbJD99GzijGnm4DWXvOGgdk/4fFjB
-	 fXiBi+XXphofSQ9qDrFNmbDmZ5xZSzzqPyS1ovNSrw+yvFVqjbDrjXOgc1Hyj4qrvm
-	 YCW+lLTr+zVFZDdZZxG+50uQcIu9BNjNsyShdJwXnPEgmAnC9fe7SQFTAY2yI22hh3
-	 FiY25YXR4dE3g==
-X-Virus-Scanned: Debian amavisd-new at secondary.pambor.com
-Received: from secondary.pambor.com ([127.0.0.1])
-	by localhost (secondary.pambor.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id upWvgw96FKnx; Tue,  5 Mar 2024 16:14:40 +0100 (CET)
-Received: from chromebook.fritz.box (dynamic-2a02-3100-5dd1-2001-a8cd-25c2-d6af-d5f4.310.pool.telefonica.de [IPv6:2a02:3100:5dd1:2001:a8cd:25c2:d6af:d5f4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.osasysteme.de (Postfix) with ESMTPSA id 1E9796F03A5;
-	Tue,  5 Mar 2024 16:14:40 +0100 (CET)
-From: Tim Pambor <tp@osasysteme.de>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tim Pambor <tp@osasysteme.de>
-Subject: [PATCH] arm64: dts: r9a07g044: Add complete CPU cache information
-Date: Tue,  5 Mar 2024 16:13:36 +0100
-Message-ID: <20240305151336.144707-1-tp@osasysteme.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1709651718; c=relaxed/simple;
+	bh=ErqQUkJuZVCDN+rlTHGkow9sEbDhSyeI9kVCG07KoLU=;
+	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID; b=MeuccMTn5x2HuCqtswFfTy/p+v3OjXMu0toqLhhDNSylQ1MXCzcHhkCL62VJqaag7hv2mhwxDbASZwqX0IUHZ2YEXP1yD3495e0keJa3z6EDzOMDDZkcoIIzV9oP/2V+8pZ3quAVJc1r6QZMT8WPkCErmB/a4tCxiBBq8buoG9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=5808ba57af=ms@dev.tdt.de>)
+	id 1rhWCG-00CvxE-IF; Tue, 05 Mar 2024 15:55:12 +0100
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1rhWCF-00Cvwq-Fi; Tue, 05 Mar 2024 15:55:11 +0100
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id 140A3240049;
+	Tue,  5 Mar 2024 15:55:11 +0100 (CET)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id 752F9240040;
+	Tue,  5 Mar 2024 15:55:10 +0100 (CET)
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+	by mail.dev.tdt.de (Postfix) with ESMTP id B9DE1363BE;
+	Tue,  5 Mar 2024 15:55:09 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Tue, 05 Mar 2024 15:55:09 +0100
+From: Martin Schiller <ms@dev.tdt.de>
+To: Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, linux-x25@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] net: x25: remove dead links from Kconfig
+Organization: TDT AG
+In-Reply-To: <20240305133139.29236-1-justin.swartz@risingedge.co.za>
+References: <20240305133139.29236-1-justin.swartz@risingedge.co.za>
+Message-ID: <18c63e9cba846c65b83532e3d73b9f42@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.3.17
+X-purgate: clean
+X-purgate-ID: 151534::1709650512-7D69FAEB-CF5D0AE6/0/0
+X-purgate-type: clean
 
-Based on ARM Cortex-A55 TRM and RZG2/L user's manual, each Cortex-A55 has
-- 32 KB of L1 4-way, set-associative instruction cache
-- 32 KB of L1 4-way, set-associative data cache
+On 2024-03-05 14:31, Justin Swartz wrote:
+> Remove the "You can read more about X.25 at" links provided in
+> Kconfig as they have not pointed at any relevant pages for quite
+> a while.
+> 
+> An old copy of https://www.sangoma.com/tutorials/x25/ can be
+> retrieved via https://archive.org/web/ but nothing useful seems
+> to have been preserved for http://docwiki.cisco.com/wiki/X.25
+> 
+> For the sake of necromancy and those who really did want to
+> read more about X.25, a previous incarnation of Kconfig included
+> a link to:
+> http://www.cisco.com/univercd/cc/td/doc/product/software/ios11/cbook/cx25.htm
+> 
+> Which can still be read at:
+> https://web.archive.org/web/20071013101232/http://cisco.com/en/US/docs/ios/11_0/router/configuration/guide/cx25.html
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> ---
+>  net/x25/Kconfig | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/net/x25/Kconfig b/net/x25/Kconfig
+> index 68729aa3a..dc72302cb 100644
+> --- a/net/x25/Kconfig
+> +++ b/net/x25/Kconfig
+> @@ -17,8 +17,6 @@ config X25
+>  	  if you want that) and the lower level data link layer protocol LAPB
+>  	  (say Y to "LAPB Data Link Driver" below if you want that).
+> 
+> -	  You can read more about X.25 at 
+> <https://www.sangoma.com/tutorials/x25/> and
+> -	  <http://docwiki.cisco.com/wiki/X.25>.
+>  	  Information about X.25 for Linux is contained in the files
+>  	  <file:Documentation/networking/x25.rst> and
+>  	  <file:Documentation/networking/x25-iface.rst>.
 
-Each cache has a cache line length of 64B and therefore there are
-32768B/(4 * 64B)=128 sets for each cache.
-
-RZG2/L are not configured with the optional per-core L2 cache but only
-have a L3 cache shared among all cores. In this case, the L3 cache appears
-as a L2 cache to the system. Therefore, specify "cache-level = <2>" for
-the L3 cache.
-
-Signed-off-by: Tim Pambor <tp@osasysteme.de>
----
- arch/arm64/boot/dts/renesas/r9a07g044.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r9a07g044.dtsi b/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-index 9f00b75d2bd0..6379c850526a 100644
---- a/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-@@ -89,6 +89,12 @@ cpu0: cpu@0 {
- 			reg = <0>;
- 			device_type = "cpu";
- 			#cooling-cells = <2>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
- 			next-level-cache = <&L3_CA55>;
- 			enable-method = "psci";
- 			clocks = <&cpg CPG_CORE R9A07G044_CLK_I>;
-@@ -99,6 +105,12 @@ cpu1: cpu@100 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x100>;
- 			device_type = "cpu";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
- 			next-level-cache = <&L3_CA55>;
- 			enable-method = "psci";
- 			clocks = <&cpg CPG_CORE R9A07G044_CLK_I>;
-@@ -109,7 +121,7 @@ L3_CA55: cache-controller-0 {
- 			compatible = "cache";
- 			cache-unified;
- 			cache-size = <0x40000>;
--			cache-level = <3>;
-+			cache-level = <2>;
- 		};
- 	};
- 
--- 
-2.43.0
-
+Acked-by: Martin Schiller <ms@dev.tdt.de>
