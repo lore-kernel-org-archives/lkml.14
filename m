@@ -1,131 +1,115 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A287F537E5
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3807C4CB2E
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709631693; cv=none; b=EhG124r1I0N3CEUQBoTu9JiAt8c0YXYa+1XQgY1c3pwPkSCoCOYhZiQMHbVlnlY24k3d4DqUIgwiFmcH1FR8Nkn7hj3mguhchRBnAWi83MIw9FTEwxxXTwzHuvYAf49wSzcpBv8tY1al55tAfCGC2bRqtP1nqCMiISjbgT7j1YE=
+	t=1709631712; cv=none; b=Er3EDIpJTFlZgdJdBcfeDkfh8AsLzOFvVH9KPovdDKcL4zFPMwA6LPTdfKolihg8vhHLz/B9v+SJ9Q/lSXDMMAbcw5VVt377PVa6Zpay7xgWFuHw5KCPUmmqYDfwuEuUILKb3ZnA2PR5DTz+2eEiX0saLrpnG/L/aL0rmXk2pI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709631693; c=relaxed/simple;
-	bh=yNMRaUkoBUGzMo4lYC++zBwXHqvVQ2SDiAjTQi1KynE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cNNySTYa5e19Qml8g0omh79i0/f1MRKEfDfCum6LloLbgoHDKpMCTRcqyY07D+6ZLTvK/q4orQnw6EEP4vLL9CZ5kIX7M+gWTU/0UexqF4MUivKwKrkYoCJt1msQUOBqJNEdetijyGCXvZ8W4i5j1EA4SCKJc1M/SJ5TRBdL81g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RskWlH7X; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RskWlH7X"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e5a50d91b4so5248554b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 01:41:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709631691; x=1710236491; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=as9+lE8KnefmxAuKs+ZS/mXcrbxKlrRRgGu9dYI0Ql4=;
-        b=RskWlH7XdjX4qeIQWlvvNpjHTHq0o33PhnA/rXe58565YvM0zbizX0EACWfdw9sq45
-         kiTI44oQqKdLorR03MzTBG63Di9n4Zio+lzOVOGnlRZY0ejH5nudNqjCygIAcR+Ha+lq
-         WXxm8AI5OPheLbJAUvW1MnQDAP08WbmcINil0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709631691; x=1710236491;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=as9+lE8KnefmxAuKs+ZS/mXcrbxKlrRRgGu9dYI0Ql4=;
-        b=IrXsyXx5R3nkyowXtstsWUbX+4hRwcv9k6my3hjsa4ckXwYqzjcl4e85cGtMBW9kUw
-         HmL4eZedf9SYVF4E/0zRRSOM046GEaKEXKnhYrcJJVq3Gax5afWDqqCi4Xm+CFO80ayd
-         4P5FQ9sop11DmPpJBdpao6dw/S8uXgAw39/vOwkulUZDKe4L2hlDOicUPR9q5p9EVnkv
-         G9wyeutzdWvcgc/byQj4ilWJIy7POmsblnMNPqsS083T9MDSqHE6/fg/ME5fPUgH0eOd
-         qsla8cdFpfWXMW6525p0zq8BIlK/oMc4h7Xm0ls4YlyKQS0od64c8/D6f9pN1/sAmnOX
-         KTcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmMUMHjXQgaKuTPUBcWjhn93pYFb2W5eAt/ZZ35nrLQFyGowkuBzZzV6oWYfUR4GMNXcNgOf/G9VfOXz0qv55xzILfJdr8uy7WKkXo
-X-Gm-Message-State: AOJu0YxIZmf4ASx9q3hdILFGTsEaBUt9IMnaPaZ9+avTKcvjyKA7Q2fY
-	sYZ8TRolpzVSDVa5PQpdGy+JQr3JvDO7MSRF9tQMqcCdCxjO8zgEQD5KWKIqnnG/2BqpAZYCQiI
-	=
-X-Google-Smtp-Source: AGHT+IHLWDn0ImiexmZH+l62XkhFStqZ8wnEDf2Edq3sxo8a271Wx6ORwR5cKmQu3cOMJO0RH2ld9w==
-X-Received: by 2002:a05:6a20:7489:b0:1a1:4b3f:5571 with SMTP id p9-20020a056a20748900b001a14b3f5571mr1546542pzd.13.1709631691058;
-        Tue, 05 Mar 2024 01:41:31 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fb32-20020a056a002da000b006e6253bbcb7sm2882057pfb.61.2024.03.05.01.41.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 01:41:30 -0800 (PST)
-Date: Tue, 5 Mar 2024 01:41:29 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Adrian Ratiu <adrian.ratiu@collabora.com>,
-	linux-fsdevel@vger.kernel.org, kernel@collabora.com,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
-	Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Mike Frysinger <vapier@chromium.org>
-Subject: Re: [PATCH v2] proc: allow restricting /proc/pid/mem writes
-Message-ID: <202403050134.784D787337@keescook>
-References: <20240301213442.198443-1-adrian.ratiu@collabora.com>
- <20240304-zugute-abtragen-d499556390b3@brauner>
- <202403040943.9545EBE5@keescook>
- <20240305-attentat-robust-b0da8137b7df@brauner>
+	s=arc-20240116; t=1709631712; c=relaxed/simple;
+	bh=Z2qwct6XTybj5nj/8GILqcSdKhOgcrszVOS6anSnpTM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sMsp1x3a2NB0qrh8rKucN9UZVFF6EepDl68Ij1e0vvmAgPU1rlU3thFrK74r6lCshLSWOTZTKQuDGlCF3YE/wQfYQE8Fwqo358oOmzpbE0nSdnISZx13MLlU9RxM3JrmVjXiVoEEbekFxnsh/BI1fCuF+yMKsmeJWSnh9i42CyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [209.85.216.46])
+	by gateway (Coremail) with SMTP id _____8AxeejU6OZlmbIUAA--.32398S3;
+	Tue, 05 Mar 2024 17:41:42 +0800 (CST)
+Received: from mail-pj1-f46.google.com (unknown [209.85.216.46])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPs_S6OZlEXVOAA--.11212S3;
+	Tue, 05 Mar 2024 17:41:39 +0800 (CST)
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-29a5f100c1aso3194785a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 01:41:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWTYfN4lRfVB4cGEfQqPWjUWTvcgLoge/ads7W8ZPXQMkoRqpW9vB6iLdq5YK++kHSdp04ZGk0I8jvW4jBwA+w/6ohslQQiMtyQAXTl
+X-Gm-Message-State: AOJu0YySYoyF5yIVDt2G9yRxFsyHw7ut5cr0WLcDeLvuYtvlHE0ISUiE
+	IavWi2beyLsHEKwWq9tiuclMrbesQQOH8Yp2rJghMrigmE+CK7GA+9JIZqQRb0C/jilhTFBibCF
+	Qo9CtFXA5zEMziZRAp+u9wFgrVnWf2u2ehD3NWQ==
+X-Google-Smtp-Source: AGHT+IFCOgUQy6Yrg/hGm/YPDL5pf6cIPrfQwg8VzhOdB0PFiQXbjuVLpWWugLmSn2Wclxftxj3A7UzLgXYKuu6Ie90=
+X-Received: by 2002:a25:1803:0:b0:dc6:aebb:168e with SMTP id
+ 3-20020a251803000000b00dc6aebb168emr8119664yby.26.1709622525779; Mon, 04 Mar
+ 2024 23:08:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305-attentat-robust-b0da8137b7df@brauner>
+References: <20240304141426.163517-1-wangrui@loongson.cn> <CANiq72mvdVrzN19PC8pNrvuBLkOEEQ3yX0WG6JcWc+RVaSM2nA@mail.gmail.com>
+In-Reply-To: <CANiq72mvdVrzN19PC8pNrvuBLkOEEQ3yX0WG6JcWc+RVaSM2nA@mail.gmail.com>
+From: WANG Rui <wangrui@loongson.cn>
+Date: Tue, 5 Mar 2024 15:08:35 +0800
+X-Gmail-Original-Message-ID: <CAHirt9iNPjHfMRS792E1MHbCQk1v6GnNVcb6LAvhskyyVg8bPw@mail.gmail.com>
+Message-ID: <CAHirt9iNPjHfMRS792E1MHbCQk1v6GnNVcb6LAvhskyyVg8bPw@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: rust: Switch to use built-in rustc target
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:AQAAf8CxPs_S6OZlEXVOAA--.11212S3
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtryxWrWkCF48Cw13Gw17urX_yoWkXrb_X3
+	W7Cr1kGF1UuFs7Za48JrWruFn0q345tay3Z3ykXFsrXr95Zan8WFyDGa4av3Zay3yxWFs3
+	Kr1Fvwn8uw12gosvyTuYvTs0mTUanT9S1TB71UUUU8UqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbf8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Cr1j6rxdM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	kF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8
+	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Mq2tUUUUU==
 
-On Tue, Mar 05, 2024 at 09:59:47AM +0100, Christian Brauner wrote:
-> > > Uhm, this will break the seccomp notifier, no? So you can't turn on
-> > > SECURITY_PROC_MEM_RESTRICT_WRITE when you want to use the seccomp
-> > > notifier to do system call interception and rewrite memory locations of
-> > > the calling task, no? Which is very much relied upon in various
-> > > container managers and possibly other security tools.
-> > > 
-> > > Which means that you can't turn this on in any of the regular distros.
-> > 
-> > FWIW, it's a run-time toggle, but yes, let's make sure this works
-> > correctly.
-> > 
-> > > So you need to either account for the calling task being a seccomp
-> > > supervisor for the task whose memory it is trying to access or you need
-> > > to provide a migration path by adding an api that let's caller's perform
-> > > these writes through the seccomp notifier.
-> > 
-> > How do seccomp supervisors that use USER_NOTIF do those kinds of
-> > memory writes currently? I thought they were actually using ptrace?
-> > Everything I'm familiar with is just using SECCOMP_IOCTL_NOTIF_ADDFD,
-> > and not doing fancy memory pokes.
-> 
-> For example, incus has a seccomp supervisor such that each container
-> gets it's own goroutine that is responsible for handling system call
-> interception.
-> 
-> If a container is started the container runtime connects to an AF_UNIX
-> socket to register with the seccomp supervisor. It stays connected until
-> it stops. Everytime a system call is performed that is registered in the
-> seccomp notifier filter the container runtime will send a AF_UNIX
-> message to the seccomp supervisor. This will include the following fds:
-> 
-> - the pidfd of the task that performed the system call (we should
->   actually replace this with SO_PEERPIDFD now that we have that)
-> - the fd of the task's memory to /proc/<pid>/mem
-> 
-> The seccomp supervisor will then perform the system call interception
-> including the required memory reads and writes.
+On Tue, Mar 5, 2024 at 12:09=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Mon, Mar 4, 2024 at 3:14=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wro=
+te:
+> >
+> > This commit switches to using the built-in rustc
+> > loongarch64-unknown-none-softfloat target for LoongArch.
+> >
+> > The Rust samples have been tested with this commit.
+> >
+> > Signed-off-by: WANG Rui <wangrui@loongson.cn>
+> > ---
+> > base-commit: ("rust: Refactor the build target to allow the use of buil=
+tin targets")
+>
+> I couldn't apply it on top of commit f82811e22b48 in arm64's tree
+> (which is the base? -- the offset differs significantly in the arch
+> Makefile), but I nevertheless applied it manually on top of that one,
+> build-tested it for loongarch64 and boot-tested it for x86_64:
+>
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
+> Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-Okay, so the patch would very much break that. Some questions, though:
-- why not use process_vm_writev()?
-- does the supervisor depend on FOLL_FORCE?
+Oops. The actual base is tag next-20240228. I just want to make it
+clear that this patch needs to be based on ("rust: Refactor the build
+target to allow the use of builtin targets").
 
-Perhaps is is sufficient to block the use of FOLL_FORCE?
+Thanks!
 
-I took a look at the Chrome OS exploit, and I _think_ it is depending
-on the FOLL_FORCE behavior (it searches for a symbol to overwrite that
-if I'm following correctly is in a read-only region), but some of the
-binaries don't include source code, so I couldn't easily see what was
-being injected. Mike or Adrian can you confirm this?
+Regards,
+Rui
 
--- 
-Kees Cook
+>
+> Thanks!
+>
+> Cheers,
+> Miguel
+>
+
