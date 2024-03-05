@@ -1,25 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D4C7604DD
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 10:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD74D11198
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 10:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709635492; cv=none; b=lW90IzghvrAQ8wozmR5YhkdTuHWHPAPC5LsYh+7DF0WAJIdU8tvbnRSRVvd08oecU6CxErMfOg3PekcT0XfwtQuDQOnBuEDbENjdlIqFiYko8aX7/9xOHgs/TPdB7AsLe6NuDrj1f2JdOZqhsQdXA1WjopHVBBFlkplTQOnD1LU=
+	t=1709635567; cv=none; b=AquPlPmLcCNrR1QRP/ZcfYALR84lsKFlxm7OkrWCWJZa5I/6LdXlEN/SKWSiNR3AU2+TcFlAosa+dpvMEF5a/DoulwpQpOE8w+QcFnY4EnnUm0RYuxDiLemLrxLkJXpnEkD9NbalHW0Zo2AkRg7Fwb/8glMsjgkyDsFnU4pFBHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709635492; c=relaxed/simple;
-	bh=1MRTtg6xxW+m8LZNKf6jYXnzCsJ63H6Z/wbBhOItJ6Q=;
+	s=arc-20240116; t=1709635567; c=relaxed/simple;
+	bh=XklbFoUwOSii+y74bxc36aiADpTAj4ZlGh81v8WRHIE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qOC7i/hqse0Peu+pDIn/7dI6BTRHgaayY+Jom+4kNTTcBNbKbtXhPeZS7zkG/4NokkwEhaVyZJPRkHmxQRdbSynY3GpN+fIrNxkUUrWW1pj2Tn1xeCK2CMbczTJgQQ9B8KSVg7DfQbkQ3+OI8vYTmtt73WlK8ac2m7k+YMeo+D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7773D1FB;
-	Tue,  5 Mar 2024 02:45:26 -0800 (PST)
-Received: from [10.1.39.151] (XHFQ2J9959.cambridge.arm.com [10.1.39.151])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDD363F762;
-	Tue,  5 Mar 2024 02:44:47 -0800 (PST)
-Message-ID: <19c2cf15-8789-4977-b149-83b53d2b6abb@arm.com>
-Date: Tue, 5 Mar 2024 10:44:46 +0000
+	 In-Reply-To:Content-Type; b=ZTs9ITIABZthauu1BY5kE+xgQ92i0up9hk+iZcWEBRagTZqOJ8Ziq5w9KZPQvITcvjo5qExBomsbpBPSIN4m59hq6014Jj3E8ov15lcbmpVNHi5j7dbZqkXrF43PavtEJVmCrbNsE80eX0veCEViHKYIr7sVlUdN7JEjA6i+dzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1TKr1Kug; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1TKr1Kug"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33d146737e6so4233312f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 02:46:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709635563; x=1710240363; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JVA1JqDTMPvckuRaTHq5sqq6pnFxGrbQ8TF6seYnelo=;
+        b=1TKr1KugBceesEMwMGGzcf/55Y5czeuKgOSW8hUF2A4z7TvXPZbUOYgeR1XgC1W/Xg
+         fKqN5vLnGGhZQyCuRQJSNo5wDVwWgzN+wl/3+IgVxcE/a9NgkVomCTb26LqDu5keSi2p
+         ADFNs7kMiKQom8xrncsefJ69WNlttJumkg5B3ok8fALTscJr7sHXGdRQIWawG8CKkn8v
+         8NBwMQPflifIgKMGDtNLbRnndmhwfDKlJ5sP7q99z8un65B8i2ph7TBDP4NDHH1zoqVO
+         hew7XKZ4Y74A56I0i3IaOqyfe6sQq/8lYaTAN1cPZ9s5xelmmU2PJgnuMZtXFOwWpdM3
+         gOtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709635563; x=1710240363;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JVA1JqDTMPvckuRaTHq5sqq6pnFxGrbQ8TF6seYnelo=;
+        b=BGjQ2VTTHJiY8+uh5CMgMjKk0wNrXbLcyS6Q+iqKu92o0AJoD/YC0uwMyiYFmzXOlE
+         LM8eN9YkYqpJ82TmpUTVuzaUE5v6tqnmloRmhAvIMPK0rvKmhsTiwCgytlsOhtnGwsLS
+         jrnlBjlhEQxMn/oexLBU5nBI/pszj0fINsV04TymWI0EbxEEjsyePXJ3PcFmAez9/96O
+         F10vgw0L92ZL8VW1DZJs3caTZ6w9BRAZJhlG0bD5JCyz19whFVeOEUuy0qwEDfvPT/+3
+         iXYr4OTOwa43nDVexqpN7515OI7v23WoVilQ1WXzzVcAmcXLKB49i5knMPERuH9epnMi
+         V2PA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVqFrVtmzCmJuf2EKNhQyTcWrs7i7BLfTyrbWqZ2RemfKgZ+KdboqIAI7y1pLn+klSiA4J27KAArrFSTvuNJYbN/FhFSJfvYFG6MiB
+X-Gm-Message-State: AOJu0Yy0zt3vdtBSr56ZQNxO+q7fPFUfg0sJB9ZbmZxo71PtqzNhEyEL
+	3uaZ2K70t+vnnYt84xcvr+q6gj9BKDUR0KPo8ex6AOCaZ8UizEwMMTox9Zvyi0M=
+X-Google-Smtp-Source: AGHT+IE/L4A6bnauZ4LpcW6naeeYuRNA8WEWJrlnt645s9ZaWVjgn/tE11DGJ0F5XhXa7k+kx2lEzw==
+X-Received: by 2002:a05:6000:1249:b0:33d:2226:a28b with SMTP id j9-20020a056000124900b0033d2226a28bmr7827513wrx.37.1709635563236;
+        Tue, 05 Mar 2024 02:46:03 -0800 (PST)
+Received: from [192.168.1.70] ([84.102.31.43])
+        by smtp.gmail.com with ESMTPSA id d15-20020a5d644f000000b0033e052be14fsm14577187wrw.98.2024.03.05.02.46.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Mar 2024 02:46:02 -0800 (PST)
+Message-ID: <3a5f3950-e47f-409a-b881-0c8545778b91@baylibre.com>
+Date: Tue, 5 Mar 2024 11:46:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,91 +61,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] mm: swap: Swap-out small-sized THP without
- splitting
-Content-Language: en-GB
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, david@redhat.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
- shy828301@gmail.com, wangkefeng.wang@huawei.com, willy@infradead.org,
- xiang@kernel.org, ying.huang@intel.com, yuzhao@google.com,
- chrisl@kernel.org, surenb@google.com, hanchuanhua@oppo.com
-References: <20231025144546.577640-5-ryan.roberts@arm.com>
- <20240205095155.7151-1-v-songbaohua@oppo.com>
- <d4f602db-403b-4b1f-a3de-affeb40bc499@arm.com>
- <CAGsJ_4wo7BiJWSKb1K_WyAai30KmfckMQ3-mCJPXZ892CtXpyQ@mail.gmail.com>
- <7061b9f4-b7aa-4dad-858c-53ee186c2d8f@arm.com>
- <CAGsJ_4w8YWMFjWu2i5NhbOA-pfemvzCHt4hB7rWiOpY63GVWSA@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAGsJ_4w8YWMFjWu2i5NhbOA-pfemvzCHt4hB7rWiOpY63GVWSA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 2/2] net: ethernet: ti: am65-cpsw: Add minimal XDP
+ support
+Content-Language: en-US
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org
+References: <20240223-am65-cpsw-xdp-basic-v2-0-01c6caacabb6@baylibre.com>
+ <20240223-am65-cpsw-xdp-basic-v2-2-01c6caacabb6@baylibre.com>
+ <356f4dd4-eb0e-49fa-a9eb-4dffbe5c7e7c@lunn.ch>
+From: Julien Panis <jpanis@baylibre.com>
+In-Reply-To: <356f4dd4-eb0e-49fa-a9eb-4dffbe5c7e7c@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 05/03/2024 09:54, Barry Song wrote:
-> On Tue, Mar 5, 2024 at 10:00 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+On 3/1/24 17:38, Andrew Lunn wrote:
+> On Fri, Mar 01, 2024 at 04:02:53PM +0100, Julien Panis wrote:
+>> This patch adds XDP (eXpress Data Path) support to TI AM65 CPSW
+>> Ethernet driver. The following features are implemented:
+>> - NETDEV_XDP_ACT_BASIC (XDP_PASS, XDP_TX, XDP_DROP, XDP_ABORTED)
+>> - NETDEV_XDP_ACT_REDIRECT (XDP_REDIRECT)
+>> - NETDEV_XDP_ACT_NDO_XMIT (ndo_xdp_xmit callback)
 >>
->> Hi Barry,
->>
->> On 18/02/2024 23:40, Barry Song wrote:
->>> On Tue, Feb 6, 2024 at 1:14 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>
->>>> On 05/02/2024 09:51, Barry Song wrote:
->>>>> +Chris, Suren and Chuanhua
->>>>>
->>>>> Hi Ryan,
->> [...]
->>>>
->>>
->>> Hi Ryan,
->>> I am running into some races especially while enabling large folio swap-out and
->>> swap-in both. some of them, i am still struggling with the detailed
->>> timing how they
->>> are happening.
->>> but the below change can help remove those bugs which cause corrupted data.
->>
->> I'm getting quite confused with all the emails flying around on this topic. Here
->> you were reporting a data corruption bug and your suggested fix below is the one
->> you have now posted at [1]. But in the thread at [1] we concluded that it is not
->> fixing a functional correctness issue, but is just an optimization in some
->> corner cases. So does the corruption issue still manifest? Did you manage to
->> root cause it? Is it a problem with my swap-out series or your swap-in series,
->> or pre-existing?
-> 
-> Hi Ryan,
-> 
-> It is not a problem of your swap-out series, but a problem of my swap-in
-> series. The bug in swap-in series is triggered by the skipped PTEs in the
-> thread[1], but my swap-in code should still be able to cope with this situation
-> and survive it -  a large folio might be partially but not completely unmapped
-> after try_to_unmap_one(). 
+>> The page pool memory model is used to get better performance.
+> Do you have any benchmark numbers? It should help with none XDP
+> traffic as well. So maybe iperf numbers before and after?
+>
+> 	Andrew
 
-Ahh, understood, thanks!
+Argh...Houston, we have a problem. I checked my v3, which is ready for
+submission, with iperf3:
+1) Before = without page pool -> 500 MBits/sec
+2) After = with page pool -> 442 MBits/sec
+-> ~ 10% worse with page pool here.
 
-> I actually replied to you and explained all
-> the details here[2], but guess you missed it :-)
+Unless the difference is not due to page pool. Maybe there's something else
+which is not good in my patch. I'm going to send the v3 which uses page pool,
+hopefully someone will find out something suspicious. Meanwhile, I'll carry on
+investigating: I'll check the results with my patch, by removing only the using of
+page pool.
 
-I did read that mail, but the first line "They are the same" made me think this
-was solving a functional problem. And I still have a very shaky understanding of
-parts of the code that I haven't directly worked on, so sometimes some of the
-details go over my head - I'll get there eventually!
+Julien
 
-> 
-> [1] https://lore.kernel.org/linux-mm/20240304103757.235352-1-21cnbao@gmail.com/
-> [2] https://lore.kernel.org/linux-mm/CAGsJ_4zdh5kOG7QP4UDaE-wmLFiTEJC2PX-_LxtOj=QrZSvkCA@mail.gmail.com/
-> 
-> apology this makes you confused.
 
-No need to apologise - I appreciate your taking the time to write it all down in
-detail. It helps me to learn these areas of the code.
-
-> 
->>
->> [1] https://lore.kernel.org/linux-mm/20240304103757.235352-1-21cnbao@gmail.com/
->>
->> Thanks,
->> Ryan
->>
-> 
-> Thanks
-> Barry
 
