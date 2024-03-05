@@ -1,148 +1,150 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1BA5822C
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 11:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E3055E58
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 11:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709636611; cv=none; b=LCUY+5G8X44AYcJn/708C0TCgpqKmKUBaAN7WHgcIC+MpJAWQCl0GFf03ZgrtyIzwJ2JnvIJVAq/G6ocxi0/+8CuLucFkQt9nM+NnPddwDdFU+pMB9EVTH20GhVZMZAiVIgMq5KDUcBhX7c/1MSG8vzZo5IlN11NLkgodLOel9Q=
+	t=1709636646; cv=none; b=ujoClrNbmg/TRS88ftV1sLS3irSCdN+5A3xc1SLfKg/5ThKQIL4n6AUjyNrHn1r3uvNOB8JR9Cyge89I/tJFGI2kizJ3L0aEMtDKQMobbQCOyVFMq4F3Sx9rsPGCQoR6nH7lAQ2t+66qTx3d0X4lG/qFgaX4TVkZ1Jsw3HqQWds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709636611; c=relaxed/simple;
-	bh=F6CCUVJjzFeMM02fSLem8/HHQsC/x2Ttc9fdcPJ/3WI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Qzc7LJtTLFC+zWPz55eD3/TJIoC8Hg8o2TyU6YuJql2cHlvmmya6zCbTHXxUsfhJYIQSjWxmM0GtJng3few20sW+sJY6dKkcJl9gje33ZdVH2Ad+DuuPdJvGqt7CtlFVAia+heovGyJF+Cs7sGRnzbjmZwnIBxPcrahFgGa966g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+	s=arc-20240116; t=1709636646; c=relaxed/simple;
+	bh=RThZHMySOiz8w1V29Xt3gTRou2ASCksR01yIEmartbs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=l3cbe6GZOC6XBYMhhQx/7HrOSQ8YJue9wzTAAtE6eyFqpTYPc0s0lHwsGEETP/q0pTxyUvtavHnWA1sPK3YFWfa6Z5RBDZ7EhCfJpDB62k1lTjqU6DFn31DsRbgJLTzfAb8WZij5UFAEO8eo3tqWSj7qEC3YzveUt+9LFPyxhbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c495649efdso715784339f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 03:03:29 -0800 (PST)
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c7857e6cb8so734934639f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 03:04:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709636609; x=1710241409;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=61smrnQbOZotuakrMyfB8Rzk7rp+E0dZL4oOdtQON7w=;
-        b=vADKvKGiMYtAtSkErV6T2Feyc4b6wgj4LVRMVem/Um4W3eEv3aPm/kMZQaUwpDqBLa
-         S56cg/8Rmhd0x5WuPEcBoXUTkkdQKrpChK2HBH1vIWxmblHGcVDimtLtjTGvGHqTGB/F
-         XO2/1yx0ahKrai7Na9Ws69sblq5ZQZ2Jsjn4ky/NvWbA0mAEuF0aIDPHS1GDLPgfHM45
-         naAJBnyDIYoe3EVgxcPg1nTPwd24c3bc5jRGxXe5QNRYkeIzc/H2XrrMCVveP835hJ8I
-         PBGV48tueUDUj0RvThFlhcofBllyaJcv9WBTjiejCMCq6onlcSlHAadZZiWbPVyHsti+
-         mx7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUoMtVngg78c5pgcQNvHfu1uBxToIlQ5yh8wsHO4ESSFLgm442xkY+pSeNuxH2QcbF+c3fVb3o3zH/E+VqcBs3AbpqHTl88RjGvc5CK
-X-Gm-Message-State: AOJu0YwlUkTxcx0M6WS5fjCeeyp1LMgE/yaHevwmYHCumzhZetJ4QZF+
-	wbyyhva4X/LLjse+0+nVomODmWCPPQc2xoeqQPfaZdLE7knFhtZT7QUvBkBlYEAdNulCPT8pFPl
-	v2Pc0w+3g5llQ2gvufubYqbIzG/yccZOf0JjtXyn6BuSyvoZBvXCSCII=
-X-Google-Smtp-Source: AGHT+IGgh9KUvpUSaCh3JUfC4N2IL69Gm5j634ufd+1IjISlPa1TgEQyqU69uqmEcoVB5GrFpmtzAlZM8qoNczAqZ9Eryh1ULJ6F
+        d=1e100.net; s=20230601; t=1709636644; x=1710241444;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=czbnCHU202cwLCNNc2Qhgv3x5O0cQlwUUB5S6dG8XCc=;
+        b=g4/iK0UMg7EnuamU+kKrbYutZ16cfMVhLUqb7N5+zptRbK/CglxXATKoA2U44Ta1aI
+         qlMVz6tPolqKRGs7wEkQG3i17afh0UnuqdZXWbxtWHLXe/cX+2pu+sGp62sVqmjL9Yy7
+         bCQKC8SNU1UyCLfVTSF9lOKfsEeNe7YGltDE4kNy31Mf1cPsopMLxzNtQ4f7cZzsyRF6
+         uJkCCo87Dsj6A1AH/Pt0lC4AlvdYq/ftF4tKi/Es/T56l+ExMqjEqvJNVdajQqpjt730
+         5PbqFACclWj5oA/SI/okynLWUWV5iKprZlqkLJyzUi8iRS1JLmUbq9GfWXT0zwAmZhO/
+         2fPQ==
+X-Gm-Message-State: AOJu0YxYULEWj5L+ZJpijm33Br+exsUROohRDki8euci5h/PGri/H3CS
+	a1YRe8JaSQVZqTbLTQ3iXsGM1z6+40+9+rc5XfDKbi2ez5gRdqwWCH74hoY0ZgFZobzy41ZdjMy
+	MWuM9HbLcalJbQ9KmehOWiWrqtSmmrafI+hpv+UMF14kwEjLx7TeQfYvdtw==
+X-Google-Smtp-Source: AGHT+IEuZUZmiEchiydOXb9eysFJuudSyNP1Cf9z55wRtSRC9Dhl5Qq9fzFk4g5upMWnGsKXnMpBN6X5ksR2ZRZy8FR7Rxmaxo3V
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1486:b0:7c8:3577:2a50 with SMTP id
- a6-20020a056602148600b007c835772a50mr402750iow.0.1709636609275; Tue, 05 Mar
- 2024 03:03:29 -0800 (PST)
-Date: Tue, 05 Mar 2024 03:03:29 -0800
+X-Received: by 2002:a05:6602:15cd:b0:7c8:440b:30c0 with SMTP id
+ f13-20020a05660215cd00b007c8440b30c0mr133512iow.0.1709636643929; Tue, 05 Mar
+ 2024 03:04:03 -0800 (PST)
+Date: Tue, 05 Mar 2024 03:04:03 -0800
+In-Reply-To: <aeb26d27-cd0f-4992-b303-f21abeacab21@I-love.SAKURA.ne.jp>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ca86690612e7cacd@google.com>
-Subject: [syzbot] [gfs2?] WARNING in gfs2_check_blk_type (2)
-From: syzbot <syzbot+26e96d7e92eed8a21405@syzkaller.appspotmail.com>
-To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000db4e330612e7ccde@google.com>
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in fpa_set
+From: syzbot <syzbot+cb76c2983557a07cdb14@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
-syzbot found the following issue on:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+BUG: bad usercopy in fpa_set
 
-HEAD commit:    90d35da658da Linux 6.8-rc7
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=10bb48e4180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=119d08814b43915b
-dashboard link: https://syzkaller.appspot.com/bug?extid=26e96d7e92eed8a21405
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17fcb02e180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1028a27a180000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/821deeb51f0a/disk-90d35da6.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9a7d492f89d7/vmlinux-90d35da6.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/78bfac3e2f5d/bzImage-90d35da6.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/a2629006a328/mount_0.gz
-
-Bisection is inconclusive: the issue happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=130748e4180000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=108748e4180000
-console output: https://syzkaller.appspot.com/x/log.txt?x=170748e4180000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+26e96d7e92eed8a21405@syzkaller.appspotmail.com
-
-gfs2: fsid=syz:syz.0: first mount done, others may mount
+usercopy: Kernel memory overwrite attempt detected to SLUB object 'task_struct' (offset 80, size 140)!
 ------------[ cut here ]------------
-WARNING: CPU: 1 PID: 5058 at fs/gfs2/rgrp.c:2630 gfs2_check_blk_type+0x44e/0x680 fs/gfs2/rgrp.c:2630
+kernel BUG at mm/usercopy.c:102!
+Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
 Modules linked in:
-CPU: 1 PID: 5058 Comm: syz-executor354 Not tainted 6.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-RIP: 0010:gfs2_check_blk_type+0x44e/0x680 fs/gfs2/rgrp.c:2630
-Code: d4 01 00 00 8b 1b 89 df 44 89 f6 e8 4c 49 bd fd 4c 89 74 24 10 44 39 f3 76 23 e8 7d 47 bd fd 45 31 ed eb 70 e8 73 47 bd fd 90 <0f> 0b 90 41 bf f9 ff ff ff 48 8b 5c 24 18 e9 46 01 00 00 e8 5a 47
-RSP: 0018:ffffc900040d78c0 EFLAGS: 00010293
-RAX: ffffffff83d6242c RBX: ffff88802ee40028 RCX: ffff8880779e0000
-RDX: 0000000000000000 RSI: 0000000000000012 RDI: 0000000000000013
-RBP: ffffc900040d79d0 R08: ffffffff83d62422 R09: 1ffff1100f3b75dc
-R10: dffffc0000000000 R11: ffffed100f3b75dd R12: 1ffff11005dc8006
-R13: ffff88802ee40000 R14: 0000000000000012 R15: 0000000000000013
-FS:  000055555631c380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000066c7e0 CR3: 000000002aba0000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- gfs2_inode_lookup+0xb05/0xc60 fs/gfs2/inode.c:178
- gfs2_lookup_by_inum+0x51/0xf0 fs/gfs2/inode.c:251
- gfs2_get_dentry fs/gfs2/export.c:139 [inline]
- gfs2_fh_to_dentry+0x13a/0x1f0 fs/gfs2/export.c:160
- exportfs_decode_fh_raw+0x152/0x5f0 fs/exportfs/expfs.c:444
- exportfs_decode_fh+0x3c/0x80 fs/exportfs/expfs.c:584
- do_handle_to_path fs/fhandle.c:155 [inline]
- handle_to_path fs/fhandle.c:210 [inline]
- do_handle_open+0x494/0x650 fs/fhandle.c:226
- do_syscall_64+0xf9/0x240
- entry_SYSCALL_64_after_hwframe+0x6f/0x77
-RIP: 0033:0x7f87a993d839
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff387ac1f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000130
-RAX: ffffffffffffffda RBX: 00007fff387ac3c8 RCX: 00007f87a993d839
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000004
-RBP: 00007f87a99c3610 R08: 0000000000000000 R09: 00007fff387ac3c8
-R10: 00007f87a9978bf3 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007fff387ac3b8 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
+CPU: 0 PID: 3920 Comm: syz-executor.0 Not tainted 6.8.0-rc7-syzkaller #0
+Hardware name: ARM-Versatile Express
+PC is at usercopy_abort+0x98/0x9c mm/usercopy.c:102
+LR is at __wake_up_klogd.part.0+0x7c/0xac kernel/printk/printk.c:3899
+pc : [<8183e740>]    lr : [<802b7f34>]    psr: 60000013
+sp : df9e9e50  ip : df9e9d98  fp : df9e9e74
+r10: 0000001a  r9 : 840c9800  r8 : 83735450
+r7 : dde752c0  r6 : 00000000  r5 : 0000008c  r4 : 00000050
+r3 : 840c9800  r2 : 00000000  r1 : 00000000  r0 : 00000066
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+Control: 30c5387d  Table: 84841ec0  DAC: fffffffd
+Register r0 information: non-paged memory
+Register r1 information: NULL pointer
+Register r2 information: NULL pointer
+Register r3 information: slab task_struct start 840c9800 pointer offset 0 size 3072
+Register r4 information: non-paged memory
+Register r5 information: non-paged memory
+Register r6 information: NULL pointer
+Register r7 information: non-slab/vmalloc memory
+Register r8 information: slab task_struct start 83735400 pointer offset 80 size 3072
+Register r9 information: slab task_struct start 840c9800 pointer offset 0 size 3072
+Register r10 information: non-paged memory
+Register r11 information: 2-page vmalloc region starting at 0xdf9e8000 allocated at kernel_clone+0xac/0x3c8 kernel/fork.c:2902
+Register r12 information: 2-page vmalloc region starting at 0xdf9e8000 allocated at kernel_clone+0xac/0x3c8 kernel/fork.c:2902
+Process syz-executor.0 (pid: 3920, stack limit = 0xdf9e8000)
+Stack: (0xdf9e9e50 to 0xdf9ea000)
+9e40:                                     81fda684 81fadca8 81fc2424 00000050
+9e60: 0000008c 840c9800 df9e9ea4 df9e9e78 804a922c 8183e6b4 0000008c df9e9e88
+9e80: 80216278 83735450 0000008c 00000000 837354dc dde752c0 df9e9edc df9e9ea8
+9ea0: 804e1c20 804a9160 0000008c 00000001 df9e9ecc 83735450 0000008c 00000001
+9ec0: 00000000 00000000 840c9800 0000001a df9e9ef4 df9e9ee0 8020a090 804e1a40
+9ee0: 00000000 0000000c df9e9f6c df9e9ef8 8020a680 8020a01c 00000000 00000000
+9f00: df9e9f1c df9e9f10 81862d34 802798b0 df9e9f6c df9e9f20 8027f524 81862d10
+9f20: df9e9f54 00000000 8027b25c 60000013 818110f0 81827f88 df9e9f54 553a7b00
+9f40: 0000000f 83735400 0000000f 553a7b00 83735400 0000000f 00000001 00000000
+9f60: df9e9fa4 df9e9f70 80253494 8020a398 8020301c 553a7b00 df9e9fac 00000000
+9f80: 00000000 0014c2cc 0000001a 80200288 840c9800 0000001a 00000000 df9e9fa8
+9fa0: 80200060 80253268 00000000 00000000 0000000f 00000004 00000001 00000000
+9fc0: 00000000 00000000 0014c2cc 0000001a 7e859326 7e859327 003d0f00 76bd60fc
+9fe0: 76bd5f08 76bd5ef8 000167e8 00050bd0 60000010 0000000f 00000000 00000000
+Backtrace: 
+[<8183e6a8>] (usercopy_abort) from [<804a922c>] (__check_heap_object+0xd8/0xf4 mm/slub.c:5386)
+[<804a9154>] (__check_heap_object) from [<804e1c20>] (check_heap_object mm/usercopy.c:196 [inline])
+[<804a9154>] (__check_heap_object) from [<804e1c20>] (__check_object_size mm/usercopy.c:251 [inline])
+[<804a9154>] (__check_heap_object) from [<804e1c20>] (__check_object_size+0x1ec/0x30c mm/usercopy.c:213)
+ r8:dde752c0 r7:837354dc r6:00000000 r5:0000008c r4:83735450
+[<804e1a34>] (__check_object_size) from [<8020a090>] (check_object_size include/linux/thread_info.h:215 [inline])
+[<804e1a34>] (__check_object_size) from [<8020a090>] (__copy_from_user include/linux/uaccess.h:101 [inline])
+[<804e1a34>] (__check_object_size) from [<8020a090>] (user_regset_copyin include/linux/regset.h:268 [inline])
+[<804e1a34>] (__check_object_size) from [<8020a090>] (fpa_set+0x80/0xa0 arch/arm/kernel/ptrace.c:589)
+ r10:0000001a r9:840c9800 r8:00000000 r7:00000000 r6:00000001 r5:0000008c
+ r4:83735450
+[<8020a010>] (fpa_set) from [<8020a680>] (copy_regset_from_user include/linux/regset.h:337 [inline])
+[<8020a010>] (fpa_set) from [<8020a680>] (arch_ptrace+0x2f4/0x3e4 arch/arm/kernel/ptrace.c:764)
+ r5:0000000c r4:00000000
+[<8020a38c>] (arch_ptrace) from [<80253494>] (__do_sys_ptrace kernel/ptrace.c:1288 [inline])
+[<8020a38c>] (arch_ptrace) from [<80253494>] (sys_ptrace+0x238/0x4dc kernel/ptrace.c:1261)
+ r7:00000000 r6:00000001 r5:0000000f r4:83735400
+[<8025325c>] (sys_ptrace) from [<80200060>] (ret_fast_syscall+0x0/0x1c arch/arm/mm/proc-v7.S:66)
+Exception stack(0xdf9e9fa8 to 0xdf9e9ff0)
+9fa0:                   00000000 00000000 0000000f 00000004 00000001 00000000
+9fc0: 00000000 00000000 0014c2cc 0000001a 7e859326 7e859327 003d0f00 76bd60fc
+9fe0: 76bd5f08 76bd5ef8 000167e8 00050bd0
+ r10:0000001a r9:840c9800 r8:80200288 r7:0000001a r6:0014c2cc r5:00000000
+ r4:00000000
+Code: e30a0688 e34801fd e58dc000 ebfff35b (e7f001f2) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	e30a0688 	movw	r0, #42632	@ 0xa688
+   4:	e34801fd 	movt	r0, #33277	@ 0x81fd
+   8:	e58dc000 	str	ip, [sp]
+   c:	ebfff35b 	bl	0xffffcd80
+* 10:	e7f001f2 	udf	#18 <-- trapping instruction
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Tested on:
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+commit:         90d35da6 Linux 6.8-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=132bc62a180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=57d422b95aec4095
+dashboard link: https://syzkaller.appspot.com/bug?extid=cb76c2983557a07cdb14
+compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11e46dbc180000
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
