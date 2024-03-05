@@ -1,75 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8278593E;
-	Tue,  5 Mar 2024 13:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0965915D
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 13:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709645723; cv=none; b=rEjC87wkdaEKaOzmtUS6aRJY4U+et/Z3ZlN6gWAkAdJkm2ALY+x2uLIBJ92wPGsX77sMehoty1WCRQq5qaY10/pdXF5MK/o0nTcJ+NQc1+CtVL0SFGq6fLPu7vStblPOTw9syb6gZVVzO8lEIrvhrWzYJtP3DBxqd0oS2/sJHYs=
+	t=1709645814; cv=none; b=A50pLKpWiq1wiXQX914BZnbZye+GWbaX0/IwIMqiot7pjwwiewQOjgsi89+ojZn95mnz5rEzx7ct3FaJR6QNtsif4TDRsQDsTOFlxMnft7rmNvKon0rcGL8kbIXY+VBuh25qpgCmZ124MmzsjZOJYB7o66w7kMoa+JVevT0GlVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709645723; c=relaxed/simple;
-	bh=oiHeawagXvJcQ1MNhjuE3hTeoiG9E8Iex70tagYEp7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BbaV1LYqKWwQIA7ooqVq/4l6Z+AF02FjjI2O3A3DeODrqBJbcQ6vQXH+eBKkhL+eFDjlwYheDZx6bSYLg/9yfQDD5ARF/opTXIISxnRjOnMFbsWyQpGPcFNoMgVNbC4SqKMBV4yvUEerNNZ12Xz1BSJSlKy3J65SkBRha6AkK1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVmWNKCJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709645814; c=relaxed/simple;
+	bh=nQfK6V2xWgqSLI9E0BBwgQAFWw3SBgmC1BgXmzftNdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q7kBsHCAkM2UrwhQV+3Wzhqfqgx53bAdtGIFsTu8howMXiCYwdqEF8656KE0/R7zwSMLQ7bj4iP0/n9Dkl/SJUCnlCf2fqxHTJcDeyEAmb24b1w2F+avGnhi0N+jlSFBFErq1hPLFoMWPbcgfHtOgXFKcHCMdsAIUHzbPaU3lus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=AyWl/pU1; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVmWNKCJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 892AFC43394;
-	Tue,  5 Mar 2024 13:35:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709645722;
-	bh=oiHeawagXvJcQ1MNhjuE3hTeoiG9E8Iex70tagYEp7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cVmWNKCJ2cTRNGR7KpwWe+kAMekLQ+tz52cwqdZBs100bjzobEtW+obocRQ15jdPr
-	 pUG34iyjoqM4AywpvaMNTevcngOdHIctILwrFMbwzRQT60S7uX4yBhpzyttWt7N16E
-	 K/wh4acQCYii6Ppjo2bseNZlSVujJkBERxWEREsemOx5qVuot/l2qfkWKM6wGPz9KP
-	 9Hyg/OTppNvQH+YCyi5P84/NK624y3Cj2PYRvjyqn+soqEKkP1I9AWwLUx9sj1PoZL
-	 VNWRX5cKCytB/46DG/QeriTAArmBGmLxy4kz/pIhn3/tyYfM/8VAjmdOgPyIswOmp5
-	 3b4aletxJg76w==
-Date: Tue, 5 Mar 2024 13:35:18 +0000
-From: Simon Horman <horms@kernel.org>
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, justinstitt@google.com, andrew@lunn.ch,
-	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sr9800: Add check for usbnet_get_endpoints
-Message-ID: <20240305133518.GF2357@kernel.org>
-References: <20240305075927.261284-1-nichen@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="AyWl/pU1"
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 6A82141194
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 13:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1709645809;
+	bh=0402VVh+GEeRN2UVZuJPSy+RAbWSxhwA40pSMz4rtJQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=AyWl/pU1w2FgKtAJXHaV3E39wJu3X/crmMsukfFa76BVcFurwG78B+ItnZWnjGUUJ
+	 Rg9fEnYC0PokG9mP8IXXVD6ghJ5EfgUC6bcC33ZJvTkCC6A1eb2oHcVtDfkY/o1KGj
+	 OWXjZB+1yawCu2KhWF6CkKDZ7GocNLT6c3r2H2rxUoiLsr9/2wlN8aFJWFLWhrMtNW
+	 LAYb93N3yF0iqkPg8L6oOJf6mrxL5lhl0h5t3LXH1/MKYDmjSP22T8iqPGQWLNAjbI
+	 YR/PS5FCYGjGPNXbvPzTPGpu3Y/Xuk3EC5UR7kut3tsJy8dvZeVqKmgD/86e4a8X9/
+	 w8aCy/lVXtHHg==
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-5ce632b2adfso4843429a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 05:36:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709645808; x=1710250608;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0402VVh+GEeRN2UVZuJPSy+RAbWSxhwA40pSMz4rtJQ=;
+        b=A2lk9VzuGhTXddVoFQ/jVWyd3MZe64sGU4b+fqHuorxpsOGDxVkruv+jbCgWBX/VRW
+         ak+FckxVn/rx3UvZA84xfnc7N8rdPh75DchBQ6sLHdNhOn5JzkSTtJGdcTmciuha/hwe
+         CMfg66jOr+OS5n8GHQ2+glzuSJqdbmhwP92OY88Ua1TmRE9V8PXK+1sTCm0ujiWU4h7s
+         0wBzKbbT+WIydvxqPlHeaA2HlJNs7X5qUgbV71Rkh7c+VHMT6Dkhovy0PrN6+ID5sMwC
+         1czZIdwr47DMTRa8R46yVVFXfJQ1PhVsdn0RhjfyqrZbXpyEQybG84rrzqhcDvJ/nTWc
+         Y61Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWuUscrcmAHXuwdWoVrbIByOZyNNZqOMoNf0uJdBMN2sJ5TmnCy16yNyXJfk9zR8PDF6n1dMp26QtfKFtTwwZxJ6DVLYJsWxE14Q4ou
+X-Gm-Message-State: AOJu0YyhbGi3F9GIQbVORsrC8yVRs+Luxt6Zp7111hRbq+6Rh+Tk2ApM
+	bWRGKjQe729k+rg1PAFlKdqa3dS9YOhttCzePiB/YwCY3fUjjQnQ60e0dY/2RNuthOENmuuaNx5
+	QBwPzC9jzISaTe77Nemt2zJM5QwtytoUhAWqXDvvj+wtld/hGthvjS/nf1SKMjwJ9bDuDOrkpYe
+	t0d3IgajLPaC/UDTF35R3Y+d925dklI7qWGs2eHpl1d/9zu51Z8Pzk
+X-Received: by 2002:a05:6a20:af87:b0:1a1:4487:ee25 with SMTP id ds7-20020a056a20af8700b001a14487ee25mr1501419pzb.49.1709645808125;
+        Tue, 05 Mar 2024 05:36:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEOP//ufniFPMkZx0twz+0xxIGTYOpse5o4+VGR1RjmYtquYB3hCwcIfz/sDtZDINGIz76nhkwZK3Ux85NQF40=
+X-Received: by 2002:a05:6a20:af87:b0:1a1:4487:ee25 with SMTP id
+ ds7-20020a056a20af8700b001a14487ee25mr1501407pzb.49.1709645807855; Tue, 05
+ Mar 2024 05:36:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305075927.261284-1-nichen@iscas.ac.cn>
+References: <5761426.DvuYhMxLoT@kreacher>
+In-Reply-To: <5761426.DvuYhMxLoT@kreacher>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Tue, 5 Mar 2024 21:36:36 +0800
+Message-ID: <CAAd53p774TjJkdtRxxUo8b--LvznTBMgGPdpA=yjGxu8eBgmKw@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: runtime: PCI: Drain runtime-idle callbacks before
+ driver removal
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Ricky Wu <ricky_wu@realtek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 05, 2024 at 07:59:27AM +0000, Chen Ni wrote:
-> Add check for usbnet_get_endpoints() and return the error if it fails
-> in order to transfer the error.
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+On Tue, Mar 5, 2024 at 6:45=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.net=
+> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> A race condition between the .runtime_idle() callback and the .remove()
+> callback in the rtsx_pcr PCI driver leads to a kernel crash due to an
+> unhandled page fault [1].
+>
+> The problem is that rtsx_pci_runtime_idle() is not expected to be
+> running after pm_runtime_get_sync() has been called, but the latter
+> doesn't really guarantee that.  It only guarantees that the suspend
+> and resume callbacks will not be running when it returns.
+>
+> However, if a .runtime_idle() callback is already running when
+> pm_runtime_get_sync() is called, the latter will notice that the
+> runtime PM status of the device is RPM_ACTIVE and it will return right
+> away without waiting for the former to complete.  In fact, it cannot
+> wait for .runtime_idle() to complete because it may be called from that
+> callback (it arguably does not make much sense to do that, but it is not
+> strictly prohibited).
+>
+> Thus in general, whoever is providing a .runtime_idle() callback, they
+> need to protect it from running in parallel with whatever code runs
+> after pm_runtime_get_sync().  [Note that .runtime_idle() will not start
+> after pm_runtime_get_sync() has returned, but it may continue running
+> then if it has started earlier already.]
+>
+> One way to address that race condition is to call pm_runtime_barrier()
+> after pm_runtime_get_sync() (not before it, because a nonzero value of
+> the runtime PM usage counter is necessary to prevent runtime PM
+> callbacks from being invoked) to wait for the runtime-idle callback to
+> complete should it be running at that point.  A suitable place for
+> doing that is in pci_device_remove() which calls pm_runtime_get_sync()
+> before removing the driver, so it may as well call pm_runtime_barrier()
+> subsequently, which will prevent the race in question from occurring,
+> not just in the rtsx_pcr driver, but in any PCI drivers providing
+> runtime-idle callbacks.
+>
+> Link: https://lore.kernel.org/lkml/20240229062201.49500-1-kai.heng.feng@c=
+anonical.com/ # [1]
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Tested-by: Ricky Wu <ricky_wu@realtek.com>
+> Cc: All applicable <stable@vger.kernel.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Hi Chen Ni,
+Thanks for the debugging and patch.
+Acked-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-I guess that this is a bug fix and as such it should be targeted
-at the net tree and annotated as such:
-
-	Subject: [PATCH net] ...
-
-And have a fixes tag, perhaps:
-
-Fixes: 19a38d8e0aa3 ("USB2NET : SR9800 : One chip USB2.0 USB2NET SR9800 Device Driver Support")
-
-I don't think there is a need to repost to address the above,
-but please keep it in mind for future Networking patch submissions.
-
-Link: https://docs.kernel.org/process/maintainer-netdev.html
-
-The above notwithstanding, this looks good to me.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-...
+> ---
+>  drivers/pci/pci-driver.c |    7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> Index: linux-pm/drivers/pci/pci-driver.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/pci/pci-driver.c
+> +++ linux-pm/drivers/pci/pci-driver.c
+> @@ -473,6 +473,13 @@ static void pci_device_remove(struct dev
+>
+>         if (drv->remove) {
+>                 pm_runtime_get_sync(dev);
+> +               /*
+> +                * If the driver provides a .runtime_idle() callback and =
+it has
+> +                * started to run already, it may continue to run in para=
+llel
+> +                * with the code below, so wait until all of the runtime =
+PM
+> +                * activity has completed.
+> +                */
+> +               pm_runtime_barrier(dev);
+>                 drv->remove(pci_dev);
+>                 pm_runtime_put_noidle(dev);
+>         }
+>
+>
+>
