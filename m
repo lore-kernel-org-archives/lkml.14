@@ -1,55 +1,119 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EC01F95E;
-	Tue,  5 Mar 2024 14:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ECE737145;
+	Tue,  5 Mar 2024 14:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709649314; cv=none; b=a3zgjnqfEJc3XPEeFbE93qTVHx6K4ictGQpdBKKIB28gGeWO/CeruT7FhC1F9wVKSNoK+fQNpOaQYMMob518E4TSS8+PxfN9VNNuRGqSeVfGu1DwxT6EoLTtk7jnOmCOKDUP+6ZxobVH+CUYFTZ00iBBBafpS8Y49+sf0YbEoGQ=
+	t=1709649400; cv=none; b=QiVvfgyCfCFkpFu+3njrf+BLOA44jpQhGgY31UlOFDnS941AwNZBGp3k1SF1IK7E5axN8mlDqdt2VH2qsqozKgimsPDDwiEqmXiWu7auCmbdzZaXowIdevLPXGaJP4VY6RjMdG5N8ebg7mkmooV7fs8s8XabjDHYGFMseGM5seU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709649314; c=relaxed/simple;
-	bh=6TfOkndwHjhQbu16832bNmwZ8uJQuWEE74QCPikoOHs=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=huNMPRCMEpevzfhZXmHGUkCi+l/Cu9D75Kl6UiHDeTB+lkb7PXrXVwRdqdyEOeP1DSIVxihyHbgyipRye/jfigNg4JG4OBOD9Ia4/wOJV1leMg/S5MYbqi9LloE2XKQRkAlA0T20RqwELIcIAdRqLLb2BwoqJuojCDRt8M+kJ+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.4] (51b693e7.dsl.pool.telekom.hu [::ffff:81.182.147.231])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000075F3C.0000000065E72C67.001FBA26; Tue, 05 Mar 2024 15:29:59 +0100
-Message-ID: <cea322c6acd3b3aec7e56c4b7b1ae7cb87ec3d15.camel@irl.hu>
-Subject: Re: [PATCH v4] platform/x86: add lenovo generic wmi driver
-From: Gergo Koteles <soyer@irl.hu>
-To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
-  ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
-  platform-driver-x86@vger.kernel.org
-Date: Tue, 05 Mar 2024 15:29:58 +0100
-In-Reply-To: <20240305121315.1744363-1-aichao@kylinos.cn>
-References: <20240305121315.1744363-1-aichao@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1709649400; c=relaxed/simple;
+	bh=jT7+/bVUnT1ftVesYJZdiibrGkpzwQBiEa8HWicdv0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M4GS54Ay30uzolXtaGU0rOQutdpWprYAl+3KVs5V1d2EPvgzZe3RxAYKWGEepmTcVFZy3ReOWcS8J5DtoX/XzjX74iWbTRD+plHYHZnH+P6U15RMHZdRXlGioj1NwN3AX00doGWyK0YTsxqgDhBoTdSN//1wgJ8LCAVYWPStiTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F22AC1FB;
+	Tue,  5 Mar 2024 06:37:13 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2177B3F73F;
+	Tue,  5 Mar 2024 06:36:34 -0800 (PST)
+Message-ID: <921173d2-c996-4a0f-b3a5-b660036fa254@arm.com>
+Date: Tue, 5 Mar 2024 14:36:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 03/11] coresight: tmc: Extract device properties from
+ AMBA pid based table lookup
+Content-Language: en-US
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Sudeep Holla <sudeep.holla@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@arm.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20240222082142.3663983-1-anshuman.khandual@arm.com>
+ <20240222082142.3663983-4-anshuman.khandual@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240222082142.3663983-4-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Ai,
+On 22/02/2024 08:21, Anshuman Khandual wrote:
+> This extracts device properties from AMBA pid based table lookup. But first
+> this modifies tmc_etr_setup_caps() to accept csdev access.
+> 
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: James Clark <james.clark@arm.com>
+> Cc: coresight@lists.linaro.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: James Clark <james.clark@arm.com>
 
-On Tue, 2024-03-05 at 20:13 +0800, Ai Chao wrote:
->=20
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-> +MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
+minor nit: Since there were significant changes from what James 
+previously reviewed, it is a good idea to drop his Reviewed-by:
 
-This is forgotten.
-It should be "Lenovo WMI Camera Button driver"
+Otherwise, the changes look good to me.
 
-> +MODULE_LICENSE("GPL");
+Suzuki
 
-Thanks,
-Gergo
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Changes in V5:
+> 
+> - Modified tmc_etr_setup_caps() to accept struct csdev_access argument
+> - Reverted back tmc_etr_setup_caps() call site position in tmc_probe()
+> - Dropped custom mask TMC_AMBA_MASK
+> 
+>   drivers/hwtracing/coresight/coresight-tmc-core.c | 14 ++++++++++----
+>   1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> index 7ec5365e2b64..43874fa4def0 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> @@ -370,16 +370,23 @@ static inline bool tmc_etr_has_non_secure_access(struct tmc_drvdata *drvdata)
+>   	return (auth & TMC_AUTH_NSID_MASK) == 0x3;
+>   }
+>   
+> +static const struct amba_id tmc_ids[];
+> +
+>   /* Detect and initialise the capabilities of a TMC ETR */
+> -static int tmc_etr_setup_caps(struct device *parent, u32 devid, void *dev_caps)
+> +static int tmc_etr_setup_caps(struct device *parent, u32 devid,
+> +			      struct csdev_access *access)
+>   {
+>   	int rc;
+> -	u32 dma_mask = 0;
+> +	u32 tmc_pid, dma_mask = 0;
+>   	struct tmc_drvdata *drvdata = dev_get_drvdata(parent);
+> +	void *dev_caps;
+>   
+>   	if (!tmc_etr_has_non_secure_access(drvdata))
+>   		return -EACCES;
+>   
+> +	tmc_pid = coresight_get_pid(access);
+> +	dev_caps = coresight_get_uci_data_from_amba(tmc_ids, tmc_pid);
+> +
+>   	/* Set the unadvertised capabilities */
+>   	tmc_etr_init_caps(drvdata, (u32)(unsigned long)dev_caps);
+>   
+> @@ -497,8 +504,7 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>   		desc.type = CORESIGHT_DEV_TYPE_SINK;
+>   		desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_SYSMEM;
+>   		desc.ops = &tmc_etr_cs_ops;
+> -		ret = tmc_etr_setup_caps(dev, devid,
+> -					 coresight_get_uci_data(id));
+> +		ret = tmc_etr_setup_caps(dev, devid, &desc.access);
+>   		if (ret)
+>   			goto out;
+>   		idr_init(&drvdata->idr);
 
