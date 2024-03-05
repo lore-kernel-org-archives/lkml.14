@@ -1,95 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9054D9F9;
-	Tue,  5 Mar 2024 10:03:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467DE535CF;
+	Tue,  5 Mar 2024 10:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709632981; cv=none; b=okn3MITzxwXZjUyOReKnhSxNwAhNj1BaI8A/eCDJ+4hNO0CkSf7U9VHQ6aMewBikeu0hRI7IQDpzBwWCq0dJaWhy09/4elpNrbkZbEeEvjjaEFQYGej0SeNFPNgYA5ezPPBdw5tBG+9S34Imv3HQQiIyKqC7u9FL9F0Up1hbckQ=
+	t=1709633068; cv=none; b=bUqRlPvZi22XkZOgO+gobXUJwV47KnyL8oIKTmmgmrAwZmJFjddTRKHioTBdRCT1sVf/w1WodKiMESeSB2kklGHxT0JvRFKXiAw3WwCLe6euTvpjXlOxqFW4Cd36NvgqfrjtmRUGXgkJOoZ0x0jIfhargIUhR92hthnY95otYVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709632981; c=relaxed/simple;
-	bh=CK3hGEkomyEWi++yHT0MA62YvDNmdI7jRyt+cZI+39M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D8LUoWJSRkJxZLnL/ueoS+5BXqh9Q+470ocb9798O+EKA983pv2k+hSqS8t6NodPwVEUeDy26VHWajl41Z25M/8CtwyCjOgeaXlGNELOyzBlRie/S2dTdXwumrx4BhDw7eTqd/JZteFptLJZ9Nc3OTFeRQ3GrRU/9brdmR+DXSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3dghNzo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709633068; c=relaxed/simple;
+	bh=8W2qw1WVmAoRpkjb/Rl0uY6LpoazYFR3M96IUv9XMAs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=QP4Dq6isdaZbWO4Q8ZXENtyb7U4ry2duCVI8Y6vQB16ZvWsZ2yddV7xLgDR3oFvlDDKPuug56WfPan3RDvEAzspATgF6mAFOTo93IS8qYkLCGtPRmzAjkIH6daPrwSwKUcl4KoEhKObVD9BN9yU9JYsRZhNyhv0dpe5dZ6POK8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjDnJHzI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3dghNzo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48687C433C7;
-	Tue,  5 Mar 2024 10:03:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjDnJHzI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77714C433F1;
+	Tue,  5 Mar 2024 10:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709632980;
-	bh=CK3hGEkomyEWi++yHT0MA62YvDNmdI7jRyt+cZI+39M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q3dghNzo7HlmbEOACI4bncZhwmZXipl+TemetSV+yqFniCeRIAGEv/1goTgQg9DKA
-	 QuDNmDvcvUkBEAxItcYPDEah06kSVtuBKKRpVu50+yiPNIQabzdSkEkvRFMgBaWT0/
-	 HwXzBrNkDSLAPZDmNOCB5dnQAMXvO01gizNb3wldqr9DvHpXzYt2SxggwaBKv1W+M0
-	 2VxYi7BjXCcoWjK9n3WtKDUEuZq/tQsM1B4aH1ZhH4qOQtgerQf/cIX0gGMjPPigu2
-	 IE50Z0Q6VXaxXItvGljUFpi8L4lfoe6383qzPkDl3KLgUoT2aM70YzGNxJS93D6rk2
-	 2seRVT/1pMKrg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rhRdb-000000004md-0LEo;
-	Tue, 05 Mar 2024 11:03:07 +0100
-Date: Tue, 5 Mar 2024 11:03:07 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH] Revert "tty: serial: simplify
- qcom_geni_serial_send_chunk_fifo()"
-Message-ID: <Zebt2_BTiYSlgxtJ@hovoldconsulting.com>
-References: <20240304174952.1.I920a314049b345efd1f69d708e7f74d2213d0b49@changeid>
+	s=k20201202; t=1709633067;
+	bh=8W2qw1WVmAoRpkjb/Rl0uY6LpoazYFR3M96IUv9XMAs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=IjDnJHzIKlI5pTTxw9ouETpa8Qru8SG6F+ONURQ03blCAJrme1qkftj3wylFthZH8
+	 IQtZsB3GyU1YvZXM7MnEKATyR6GkpNtb9zz04jYsp39xO6LlFG2oT9CyCJESRg+YtX
+	 /jsJgNg4hbKmLMA1rd9/LkVYTOhgOhThPJHoOrOk8DaIVUViDG78DAulvTL0c1a/Dt
+	 B7WJoK2+uwQV8dDx57HpbDjXkhDHcDlYQuUuN1fTuS1Uuo0GCPQrg0wzqVqNLbsOio
+	 3E6UZEpuH9cTBtbo0duncn9k2ha82s+Sgiy/4aMm87SVnGsJPC9PKKVmwIVO8QK1ei
+	 zXlP8baeG+jTg==
+From: Lee Jones <lee@kernel.org>
+To: Daniel Thompson <daniel.thompson@linaro.org>, 
+ Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240305-backlight-probe-v2-0-609b0cf24bde@linaro.org>
+References: <20240305-backlight-probe-v2-0-609b0cf24bde@linaro.org>
+Subject: Re: [PATCH v2 0/7] backlight: Simplify probe in few drivers
+Message-Id: <170963306625.66390.18051034360544296280.b4-ty@kernel.org>
+Date: Tue, 05 Mar 2024 10:04:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240304174952.1.I920a314049b345efd1f69d708e7f74d2213d0b49@changeid>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.4
 
-On Mon, Mar 04, 2024 at 05:49:53PM -0800, Douglas Anderson wrote:
-> This reverts commit 5c7e105cd156fc9adf5294a83623d7a40c15f9b9.
+On Tue, 05 Mar 2024 09:11:55 +0100, Krzysztof Kozlowski wrote:
+> Simplify old code in few backlight drivers.
 > 
-> As identified by KASAN, the simplification done by the cleanup patch
-> was not legal.
+> Changes in v2
+> =============
+> 1. Patch #1: Drop "Error :" msg.
+> 2. Add Rb tags.
+> Link to v1: https://lore.kernel.org/r/20240304-backlight-probe-v1-0-e5f57d0df6e6@linaro.org
 > 
-> From tracing through the code, it can be seen that we're transmitting
-> from a 4096-byte circular buffer. We copy anywhere from 1-4 bytes from
-> it each time. The simplification runs into trouble when we get near
-> the end of the circular buffer. For instance, we might start out with
-> xmit->tail = 4094 and we want to transfer 4 bytes. With the code
-> before simplification this was no problem. We'd read buf[4094],
-> buf[4095], buf[0], and buf[1]. With the new code we'll do a
-> memcpy(&buf[4094], 4) which reads 2 bytes past the end of the buffer
-> and then skips transmitting what's at buf[0] and buf[1].
+> [...]
 
-Good catch!
+Applied, thanks!
 
-> Running "ls -al" on large directories also made the missing bytes
-> obvious since columns didn't line up.
+[1/7] backlight: gpio: Simplify with dev_err_probe()
+      commit: 2f5929cd930b24a88d6fa73ab08ba857c59f7686
+[2/7] backlight: l4f00242t03: Simplify with dev_err_probe()
+      commit: d3de24fc13465a4b45047d193f729b73e062a881
+[3/7] backlight: bd6107: Handle deferred probe
+      commit: e00b57b4d4464071cb18d03cc8040e103c662d80
+[4/7] backlight: as3711_bl: Handle deferred probe
+      commit: fd9f81bc3f48d5064bfd894eeb0202f5825ea4b1
+[5/7] backlight: lm3630a_bl: Handle deferred probe
+      commit: c7fa2f12e74a437fc8c77b7780131b13acc2fa49
+[6/7] backlight: lm3630a_bl: Simplify probe return on gpio request error
+      commit: dedd6eb26bbb37139d0a0122e4b4ad94f06edaa1
+[7/7] backlight: pandora_bl: Drop unneeded ENOMEM error message
+      commit: 07dbc9e6e2433fe312423096efc037bf47298ed1
 
-I had not noticed this in my limited use of the serial console on the
-sc8280xp CRD, but sure enough there are garbage characters and missing
-characters in the output of 'ls -al' before applying this patch.
+--
+Lee Jones [李琼斯]
 
-> While the original code may not be the most elegant, we only talking
-> about copying up to 4 bytes here. Let's just go back to the code that
-> worked.
-> 
-> Fixes: 5c7e105cd156 ("tty: serial: simplify qcom_geni_serial_send_chunk_fifo()")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-
-and as Jiri already pointed out:
-
-Cc: stable@vger.kernel.org      # 6.4
-
-Johan
