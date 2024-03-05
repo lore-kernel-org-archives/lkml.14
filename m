@@ -1,61 +1,61 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCC957321
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 11:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBC857326
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 11:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709636911; cv=none; b=dJzrcV3QeNLcnI69Zlsd103Va/rksOzFGFIvzbqQtCk22jL/Nt6oD3naIX6w6Apqz0YkTUcd0RcOdvMvFstAFTYG4HULSMSV2uD41d/Ezw4W7rWqNNYdY2Aw7iLUqKO4xgzCsITLDdT/bjmDUc8NHjxOyLEqUxjjBZ8CsOoNGi4=
+	t=1709636914; cv=none; b=cProNRUVyn6UF4JkHjB7IaD5wAwpO/B+avN3ZB+T2epjZRLBtffHcPr5rp199VZoY8aJtsHikFjvRVTxIM1zyN6CqR0UGlS0FbaraYgszRlaolwlviwi+s600RHopd2A2ax8zl/jaG8ya28uppcUfX5kAJgfL8F9vQjM6Adx+Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709636911; c=relaxed/simple;
-	bh=jlmDA8j5BPsGTQCQEi11/ZrPzSbTV7KDqXuvMXnrWBo=;
+	s=arc-20240116; t=1709636914; c=relaxed/simple;
+	bh=Y46qZiPIxVqm/+2ngjD2p6sQy4AqjAerfnqGZzoaKmI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VWc+sCHs/lRntXNObb3zPX6pxhXvDJdfuHFkmxF+hWMUfzbHXQKfsTlrQqXrohuQyMQSN2uSrNO3QWYd9qsFL15/TQ2yrTaWHaxyyO+f/4P+yLGWuJih0ErSlwuYVVWtsaDr4RW7xpf2Yr/ZhuYD+h9JsI7xJXggKDfWcedEyig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XBkOqmoy; arc=none smtp.client-ip=209.85.221.54
+	 In-Reply-To:To:Cc; b=L4llhZgdifkbymkszRMeb5kR+dUXxjJy5gVp/sajMy3+A5ac2Rdhp/6tcp5c8eJGUL9G2S4pnctVHQhS/DN8BYOry2MXPRjcvVb/vr4yEOMJx3lawouNkZ2t/cpjf9FMc9wR8ohYvp4+FQEvNen/W23nU+aqyPHqegZ84DUkC2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lUN91jsa; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XBkOqmoy"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33d0a7f2424so338880f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 03:08:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lUN91jsa"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33de4d3483eso3427158f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 03:08:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709636908; x=1710241708; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709636909; x=1710241709; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qEaZoF9mx7Xkycbcd21LmA2/00TCeHKVbh1e2Dzr7Vc=;
-        b=XBkOqmoyLYJ7y+GW5bf3b56XKA5JAPM0QBc3ZM2TSaJ0xYuY7r7loY88QscPFSW7e8
-         sEhvEvUva+A9/iPqqBT/a990OQPn/mXLCpbT3kwT0DO+jEZ5/9DemjkWbi+ghr9OEEjz
-         LR6pwcnhxmgW69zaX90KP5VS/U3KT45ycDPZt0tLibte58A+5bkWTpUlbdLmN5M75+tU
-         zoeRanJGAoHMOB36p/1MApyJb769D8RzaWUhDJY05qf/507B/7gcraUgxWo62FEAfqAX
-         UHp9TcpBXTyFcu2wCjzJBvFKqS1Km+fP04NE4+PK3LXRtX7TO23PsciKpx8g7mevBpOw
-         YsPQ==
+        bh=canlvOloh4zEnLanokN/WjQ62JpW1VdMiHVT6vaC3r4=;
+        b=lUN91jsalj0pDb7wppcsa+SqD6U4OvMl5kIBO/OzFExwgfh/rETtWhQc6lUjEApgR2
+         2HALN1xoYkeCAW4dog18K1JEVM+apeZKEQgUpsPjJjyplN+tYJYFowdev2vfvxQHfGf2
+         TnMn7k3XPEsKe0gKId1pD8rdeWB7WphI2QYyxxAIhyKf8tYPHYE+Y4asoROkEDIMAmW6
+         mP8C6XJ0wOvJa9FIl8bLqUXIj5V4pGSBmpfTz3162wgLKP0z1+r6yZP2vC1RE/xtajTp
+         ACGGlQaSS8ms+RCzfbGcBwvGfo9bB8oYVR1ARHCpbZy+oN5qf9wlKKqVz66Debbq8UxH
+         fnQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709636908; x=1710241708;
+        d=1e100.net; s=20230601; t=1709636909; x=1710241709;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qEaZoF9mx7Xkycbcd21LmA2/00TCeHKVbh1e2Dzr7Vc=;
-        b=jqNVRvnAEcmt+64gXCgOk7WRANxcfZQFb49KNYEwVovPJRqAe9uxiZ+2CbO9wkcFsE
-         bcM8/KxNJ12JlHrBm2hkwCZbhVrRJTw298n6cnmdvwnMVPWC/+vt0Z+89f8hrlEa1qNg
-         WYDfe6Daf0kk4yONPsAyH7B37KjdwiNLfKJ/H2r7APHeoPGrsvbAKIhfHXgcs1VRxw/W
-         f/W7uZGaMJyO9ebVzBa5+ATPK7sLXi5ToZu/fBje/UoEnsmrXhhSThYA95E3tyEX7etJ
-         9S5BqKIFAt/H/aY1m4VAHeiv/7zLWBzWiieCztolUZOraJHEQ5DrcDe0YUU/zfQaiQWV
-         zfIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhsTZkzzhMYZkphrooWhkrqfIW5PBWFac1vvuRdxJJoLfTa3uHjXF6IDho/dsIpHj9M6l0YjZ9SI1pj+a1Q3xpg69XR6lEfOe97buy
-X-Gm-Message-State: AOJu0Yw9zohFr5DmLErxyndfEbr+LIS9hd1/dAWPGLBYUxgH2h5547ns
-	WDVpIkV/s1XLc3sBt+1FeSEdD8H1NIJNEPciBQcbaSvpFgWMf6AQRRceeA9REtE=
-X-Google-Smtp-Source: AGHT+IE9UuSurqoXqrMGlUzmaVAS5zp1obFuVFAEL0FLf8GIm/g3hMOXZyErpfk1zJpIMEuMGX/ehg==
-X-Received: by 2002:a5d:4047:0:b0:33d:61fe:6ca3 with SMTP id w7-20020a5d4047000000b0033d61fe6ca3mr7985438wrp.26.1709636908019;
-        Tue, 05 Mar 2024 03:08:28 -0800 (PST)
+        bh=canlvOloh4zEnLanokN/WjQ62JpW1VdMiHVT6vaC3r4=;
+        b=pBV7q36nFPh0seTlUW6lPJ1qWWJAbQTnKV6xTBZNNzHQgWSGxBbX2XBzj+mjgT7Fa6
+         4NCtkMhbgE4DhIQbeVLZ1Lgko9uEq4G+x1AJyQbrOAWxmgZLSeuVNOom7jLpL+89ThG+
+         CqEUDiu35kiNrnAuMMcPzpuMr1iV43wn3G+8bZSfITEEdZaRrk8s9Dz4fbL2pO61ERNn
+         5OJCpN/Z6arO7xfy+J0k72wj+vtmj3oxc38bCLyukwymZ/wYCAhbat9ltSZXSzdm5OJg
+         l+EwBFkIBonD2DaE/CO8bQVBaA2TAPqSGtuOyFAgFnZMKz80iuOVtChSAjemRJE9gGfH
+         s0pg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfc7YYBHka9stxZgCdLz3zftf2Y498zx/yEXiZvF03ChSrggUP3yxaTw+N+49gTPo2B3IBQM01+MwFNy+KgaPV4qZzUWlSCtIfKCEj
+X-Gm-Message-State: AOJu0Yz+U9yW2pCLvI2nLwBqZ6TjPKBb1qXYL9U9/AGYN2c5QNcOXOFs
+	wV7OlckJKNM/beY09BEzNZ5JprYalhlDEnSkqvOstR6zR6afH4c8I9+h6sTEjTs=
+X-Google-Smtp-Source: AGHT+IG4PwmV/7gHNDxTSEU+h6KoMa85YHeJ7lcV8oM/YV1RHnHQxziz9Qc7eYQjwiG+ORSZYNEgFg==
+X-Received: by 2002:a05:6000:90e:b0:33d:d15b:9789 with SMTP id cw14-20020a056000090e00b0033dd15b9789mr9030292wrb.65.1709636909620;
+        Tue, 05 Mar 2024 03:08:29 -0800 (PST)
 Received: from [127.0.1.1] ([84.102.31.43])
-        by smtp.gmail.com with ESMTPSA id v7-20020a5d59c7000000b0033e475940fasm2190993wry.66.2024.03.05.03.08.26
+        by smtp.gmail.com with ESMTPSA id v7-20020a5d59c7000000b0033e475940fasm2190993wry.66.2024.03.05.03.08.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 03:08:27 -0800 (PST)
+        Tue, 05 Mar 2024 03:08:29 -0800 (PST)
 From: Julien Panis <jpanis@baylibre.com>
-Date: Tue, 05 Mar 2024 12:08:18 +0100
-Subject: [PATCH v3 1/3] net: ethernet: ti: Add accessors for struct
- k3_cppi_desc_pool members
+Date: Tue, 05 Mar 2024 12:08:19 +0100
+Subject: [PATCH v3 2/3] net: ethernet: ti: Add desc_infos member to struct
+ k3_cppi_desc_pool
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240223-am65-cpsw-xdp-basic-v3-1-5d944a9d84a0@baylibre.com>
+Message-Id: <20240223-am65-cpsw-xdp-basic-v3-2-5d944a9d84a0@baylibre.com>
 References: <20240223-am65-cpsw-xdp-basic-v3-0-5d944a9d84a0@baylibre.com>
 In-Reply-To: <20240223-am65-cpsw-xdp-basic-v3-0-5d944a9d84a0@baylibre.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -81,55 +81,90 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
  Julien Panis <jpanis@baylibre.com>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709636903; l=1852;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709636903; l=3220;
  i=jpanis@baylibre.com; s=20230526; h=from:subject:message-id;
- bh=jlmDA8j5BPsGTQCQEi11/ZrPzSbTV7KDqXuvMXnrWBo=;
- b=dfeer2o0y3GGm8RrN/JvsU55HT41wNQJYnV7qThO2EEG4VL5/5uFU+kGT7yuR5zglIGMB/bAo
- RDemmHF2XC2B5I/tvt6x8yUrU26eWs0i6goZX8R4eJai/yp7iJrzvFc
+ bh=Y46qZiPIxVqm/+2ngjD2p6sQy4AqjAerfnqGZzoaKmI=;
+ b=1yAwaCWRpRqqD4MFtQLKotubUsbSp2bN12toZ5YOy+ngtI0PYQvbpboRO+BB7Ck7zHb88wasq
+ KqmnfqeQQLZCod3pIdhHWyV6JNiRkDVWUNC4LB0oaiSqSPlqUv8gTHW
 X-Developer-Key: i=jpanis@baylibre.com; a=ed25519;
  pk=8eSM4/xkiHWz2M1Cw1U3m2/YfPbsUdEJPCWY3Mh9ekQ=
 
-This patch adds accessors for desc_size and cpumem members. They may be
-used, for instance, to compute a descriptor index.
+This patch introduces a member and the related accessors which can be
+used to store descriptor specific additional information. This member
+can store, for instance, an ID to differentiate a skb TX buffer type
+from a xdpf TX buffer type.
 
 Signed-off-by: Julien Panis <jpanis@baylibre.com>
 ---
- drivers/net/ethernet/ti/k3-cppi-desc-pool.c | 12 ++++++++++++
+ drivers/net/ethernet/ti/k3-cppi-desc-pool.c | 24 ++++++++++++++++++++++++
  drivers/net/ethernet/ti/k3-cppi-desc-pool.h |  2 ++
- 2 files changed, 14 insertions(+)
+ 2 files changed, 26 insertions(+)
 
 diff --git a/drivers/net/ethernet/ti/k3-cppi-desc-pool.c b/drivers/net/ethernet/ti/k3-cppi-desc-pool.c
-index 05cc7aab1ec8..fe8203c05731 100644
+index fe8203c05731..d0c68d722ef2 100644
 --- a/drivers/net/ethernet/ti/k3-cppi-desc-pool.c
 +++ b/drivers/net/ethernet/ti/k3-cppi-desc-pool.c
-@@ -132,5 +132,17 @@ size_t k3_cppi_desc_pool_avail(struct k3_cppi_desc_pool *pool)
- }
- EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_avail);
+@@ -22,6 +22,7 @@ struct k3_cppi_desc_pool {
+ 	size_t			mem_size;
+ 	size_t			num_desc;
+ 	struct gen_pool		*gen_pool;
++	void			**desc_infos;
+ };
  
-+size_t k3_cppi_desc_pool_desc_size(struct k3_cppi_desc_pool *pool)
-+{
-+	return pool->desc_size;
-+}
-+EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_desc_size);
+ void k3_cppi_desc_pool_destroy(struct k3_cppi_desc_pool *pool)
+@@ -72,6 +73,15 @@ k3_cppi_desc_pool_create_name(struct device *dev, size_t size,
+ 		goto gen_pool_create_fail;
+ 	}
+ 
++	pool->desc_infos = devm_kcalloc(dev, pool->num_desc,
++					sizeof(*pool->desc_infos), GFP_KERNEL);
++	if (!pool->desc_infos) {
++		ret = -ENOMEM;
++		dev_err(pool->dev, "pool descriptor infos alloc failed %d\n", ret);
++		kfree_const(pool_name);
++		goto gen_pool_desc_infos_alloc_fail;
++	}
 +
-+void *k3_cppi_desc_pool_cpuaddr(struct k3_cppi_desc_pool *pool)
+ 	pool->gen_pool->name = pool_name;
+ 
+ 	pool->cpumem = dma_alloc_coherent(pool->dev, pool->mem_size,
+@@ -94,6 +104,8 @@ k3_cppi_desc_pool_create_name(struct device *dev, size_t size,
+ 	dma_free_coherent(pool->dev, pool->mem_size, pool->cpumem,
+ 			  pool->dma_addr);
+ dma_alloc_fail:
++	devm_kfree(pool->dev, pool->desc_infos);
++gen_pool_desc_infos_alloc_fail:
+ 	gen_pool_destroy(pool->gen_pool);	/* frees pool->name */
+ gen_pool_create_fail:
+ 	devm_kfree(pool->dev, pool);
+@@ -144,5 +156,17 @@ void *k3_cppi_desc_pool_cpuaddr(struct k3_cppi_desc_pool *pool)
+ }
+ EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_cpuaddr);
+ 
++void k3_cppi_desc_pool_desc_info_set(struct k3_cppi_desc_pool *pool, int desc_idx, void *info)
 +{
-+	return pool->cpumem;
++	pool->desc_infos[desc_idx] = info;
 +}
-+EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_cpuaddr);
++EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_desc_info_set);
++
++void *k3_cppi_desc_pool_desc_info(struct k3_cppi_desc_pool *pool, int desc_idx)
++{
++	return pool->desc_infos[desc_idx];
++}
++EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_desc_info);
 +
  MODULE_LICENSE("GPL");
  MODULE_DESCRIPTION("TI K3 CPPI5 descriptors pool API");
 diff --git a/drivers/net/ethernet/ti/k3-cppi-desc-pool.h b/drivers/net/ethernet/ti/k3-cppi-desc-pool.h
-index a7e3fa5e7b62..149d5579a5e2 100644
+index 149d5579a5e2..0076596307e7 100644
 --- a/drivers/net/ethernet/ti/k3-cppi-desc-pool.h
 +++ b/drivers/net/ethernet/ti/k3-cppi-desc-pool.h
-@@ -26,5 +26,7 @@ k3_cppi_desc_pool_dma2virt(struct k3_cppi_desc_pool *pool, dma_addr_t dma);
- void *k3_cppi_desc_pool_alloc(struct k3_cppi_desc_pool *pool);
- void k3_cppi_desc_pool_free(struct k3_cppi_desc_pool *pool, void *addr);
+@@ -28,5 +28,7 @@ void k3_cppi_desc_pool_free(struct k3_cppi_desc_pool *pool, void *addr);
  size_t k3_cppi_desc_pool_avail(struct k3_cppi_desc_pool *pool);
-+size_t k3_cppi_desc_pool_desc_size(struct k3_cppi_desc_pool *pool);
-+void *k3_cppi_desc_pool_cpuaddr(struct k3_cppi_desc_pool *pool);
+ size_t k3_cppi_desc_pool_desc_size(struct k3_cppi_desc_pool *pool);
+ void *k3_cppi_desc_pool_cpuaddr(struct k3_cppi_desc_pool *pool);
++void k3_cppi_desc_pool_desc_info_set(struct k3_cppi_desc_pool *pool, int desc_idx, void *info);
++void *k3_cppi_desc_pool_desc_info(struct k3_cppi_desc_pool *pool, int desc_idx);
  
  #endif /* K3_CPPI_DESC_POOL_H_ */
 
