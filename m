@@ -1,220 +1,79 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06B129CF5
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 02:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1E91803E;
+	Tue,  5 Mar 2024 03:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709607586; cv=none; b=r47iACmQFi54apHxPERptVoQZGTtp/6SUp+8Ey7865wLzhzPPkOCaInk9bhQSjRav/2MV36IdhquockrJL8uUDWqzU9SBWaqagY/Or6EeBkuxqDb2TmRrKxWKso1nObxXA0ajZq5v5pSlv2ny7osdqfV+RiUkbpcolpEahDkxTk=
+	t=1709607651; cv=none; b=YwGrZeqHaOZ4CArO71O6ZxOTwHNdW2qOel14uQr23LWdzuBW4GPtkqlkMKcnuOA8MRexuF6pxGqXM+XlCxnN1T3Fujf31jJ4CYUAKlSDIHluC7uopceU7EykwKSwyjds5Td48m13hMy28K5JgUsWDnMKirKX2JgUf8eGbHBwBDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709607586; c=relaxed/simple;
-	bh=j6Y/Hhr5CqAHm0xm2dsE/+btVkhvBXh3wX7UzKjPM8o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ku0QUTo1OzKiCvacshnJr5MQEuJBAAIyhGVQWGe7FKv0iGIxU0Vo/hjZGoe7xB7MuTM98n13No+TAoS02pcNWUlSHmEQKwIvobIkUfM3Jq+vdnRJQjD21P+7Yiil9ctWRwMk1S3ZZEdM+u2JChyFBw/Iq+wPf3HlKpQVCrEdmiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3wOF5rGe; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3wOF5rGe"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6096c745c33so96959257b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 18:59:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709607583; x=1710212383; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlOxNUN/T2i2wNDICKtujJTrAn1oMh3X1Wqzwd1LXbs=;
-        b=3wOF5rGe+AOyIuk7ojlcKkKs2UtRr1XzJbxzPVXmThhVWYaKvCCBwV1cA0XouzX7Up
-         LM7zw1M2CKNTIYK11BLfdsydsd0/Dhb2mruNBCu5tVKZR9b7fUDKjfaWGgLvjspcsiys
-         491feMcdIRWE1OgxewO09T2G5FxDuGdaPsHy3dvtvNQHn6E8UYZsjYeWORa+cH5ZzhaB
-         JQQu1js+MhPt/xon525saEfOjy97Wy13GsopEjB6GU+7gOQVcrbfTxgp2zN8uo+O1tsd
-         yE3ahnPUEnr72ND/BNb961g48ZxanVIv4t9rZJLkImeMyZ4GuHPjnnu+7nLHoKslHqOB
-         0c2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709607583; x=1710212383;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlOxNUN/T2i2wNDICKtujJTrAn1oMh3X1Wqzwd1LXbs=;
-        b=m0xaDBszJnroCIn3SrnE73eS/yr88YENCVHLO89UEEZNNDxEzr06mXP4BLW054Y5xN
-         ahHLWnH5B+7HPvTRImLg0HlAl9jS1JEUM+cwWMGD7SYcDDEjXxeRZ9mOXS87DeWGMyw1
-         hl0OSkSzBD9J1Z0K82O/2qlrlMc29sEGDmHD7sYjXfGkHOSPFK8snHtGHbY2fMp8+SAx
-         Y1RjPKpJDm1TCuIa6mVCe7SYDPuPs/6YNsAIzSlwmflECkL360613Z1u70lePhjmWcDM
-         SVshRgNDF64rOwhA2LFOh1mB1YQbDQZBG7hroEl+1VYT4UqhyJJstdkndBCre3MiMJPp
-         MVfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkRzdAyGa2RNqef8ejAKKS7oZZCENhiZ4EnarYBRw85I4VeF0yKvzS2Ml+Y+Xk5HPilTSsIisYRoaU1F/msu0ITlFo7QircGKZWCgG
-X-Gm-Message-State: AOJu0YzEWIqw5x1Jk3gYdVipwu/uj5VdR7gn0FByaMrS9m/49HqrzMay
-	1QBDf/uuHWo9hnVFBofS6WN6H/qqmg/JEpqI0jQR+SxlQaA7rPJhaXJ3IqaZFJwzQN4v8ktM/TF
-	X2Q==
-X-Google-Smtp-Source: AGHT+IFJPMzA4BMB63dEX0agbVq4KRaIYmaCyPEEtzAnMUP+Exq0++9DbY4jZrTp105nw+RV2ccLnCVd1W8=
-X-Received: from jthies.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:23db])
- (user=jthies job=sendgmr) by 2002:a05:690c:e18:b0:609:247a:bdc5 with SMTP id
- cp24-20020a05690c0e1800b00609247abdc5mr3070988ywb.4.1709607583714; Mon, 04
- Mar 2024 18:59:43 -0800 (PST)
-Date: Tue,  5 Mar 2024 02:58:04 +0000
-In-Reply-To: <20240305025804.1290919-1-jthies@google.com>
+	s=arc-20240116; t=1709607651; c=relaxed/simple;
+	bh=xk2vWiWpHN3rKQ0Tp/1QPJGkv/RZv4mYOP9Y0+u1lFQ=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZdqLvkxICLTAClCtoPEw4Oy7NlAs7gDT+9ac2Vj8AARTZdEYpOshCyRU1x6g37tljaxrWTBFfGQWwIZWAcTczACUKjInWoNxLOLnWxa0b8kraFVXs2jpTxlNp3TxXlaqiGmk6CLMfnvzSJAuq3lW/U6O/oJTS1HNy9FyortFtEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TpgJG1rrbzNlsR;
+	Tue,  5 Mar 2024 10:59:10 +0800 (CST)
+Received: from canpemm100001.china.huawei.com (unknown [7.192.105.122])
+	by mail.maildlp.com (Postfix) with ESMTPS id F0B5614037B;
+	Tue,  5 Mar 2024 11:00:46 +0800 (CST)
+Received: from canpemm500004.china.huawei.com (7.192.104.92) by
+ canpemm100001.china.huawei.com (7.192.105.122) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 5 Mar 2024 11:00:46 +0800
+Received: from [10.174.179.14] (10.174.179.14) by
+ canpemm500004.china.huawei.com (7.192.104.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 5 Mar 2024 11:00:45 +0800
+Subject: Re: [PATCH v2] scsi: libsas: Fix disk not being scanned in after
+ being removed
+To: Xingui Yang <yangxingui@huawei.com>, <john.g.garry@oracle.com>,
+	<jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+	<damien.lemoal@opensource.wdc.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
+	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
+References: <20240227090149.29039-1-yangxingui@huawei.com>
+From: Jason Yan <yanaijie@huawei.com>
+Message-ID: <f52b3c8c-886e-665d-a50d-cba3387d8418@huawei.com>
+Date: Tue, 5 Mar 2024 11:00:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240305025804.1290919-1-jthies@google.com>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Message-ID: <20240305025804.1290919-5-jthies@google.com>
-Subject: [PATCH v4 4/4] usb: typec: ucsi: Register SOP' alternate modes with
- cable plug
-From: Jameson Thies <jthies@google.com>
-To: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org
-Cc: jthies@google.com, pmalani@chromium.org, bleung@google.com, 
-	abhishekpandit@chromium.org, andersson@kernel.org, 
-	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
-	gregkh@linuxfoundation.org, hdegoede@redhat.com, neil.armstrong@linaro.org, 
-	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
-	linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+In-Reply-To: <20240227090149.29039-1-yangxingui@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500004.china.huawei.com (7.192.104.92)
 
-Register SOP' alternate modes with a Type-C Connector Class cable plug.
-Alternate modes are queried from the PPM using the GET_ALTERNATE_MODES
-command with recipient set to SOP'.
+On 2024/2/27 17:01, Xingui Yang wrote:
+> As of commit d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to
+> update PHY info"), do discovery will send a new SMP_DISCOVER and update
+> phy->phy_change_count. We found that if the disk is reconnected and phy
+> change_count changes at this time, the disk scanning process will not be
+> triggered.
+> 
+> So update the PHY info with the last query results.
+> 
+> Fixes: d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to update PHY info")
+> Signed-off-by: Xingui Yang<yangxingui@huawei.com>
+> ---
+> v1 -> v2:
+> Use sas_get_phy_discover() instead of sas_get_phy_attached_dev() in
+> sas_rediscover_dev() and use disc_resp to update phy info.
+> ---
+>   drivers/scsi/libsas/sas_expander.c | 37 ++++++++++++++++++++++--------
+>   1 file changed, 28 insertions(+), 9 deletions(-)
 
-Reviewed-by: Benson Leung <bleung@chromium.org>
-Reviewed-by: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Jameson Thies <jthies@google.com>
----
-SOP' GET_ALTERNATE_MODE responses from the PPM are correctly registered
-to the cable plug.
-nospike-rev4 /sys/class/typec # ls port0-cable/port0-plug0/
-device  port0-plug0.0  port0-plug0.1  power  subsystem  uevent
+Looks good to me:
 
-Changes in v4:
-- None.
-
-Changes in v3:
-- None.
-
-Changes in v2:
-- Shortened lines to within 80 characters.
-- Tested on usb-testing branch merged with chromeOS 6.8-rc2 kernel.
-
- drivers/usb/typec/ucsi/ucsi.c | 60 +++++++++++++++++++++++++++++++++++
- drivers/usb/typec/ucsi/ucsi.h |  2 ++
- 2 files changed, 62 insertions(+)
-
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index 3b64a0f51041c..cf52cb34d2859 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -399,6 +399,27 @@ static int ucsi_register_altmode(struct ucsi_connector *con,
- 
- 		con->partner_altmode[i] = alt;
- 		break;
-+	case UCSI_RECIPIENT_SOP_P:
-+		i = ucsi_next_altmode(con->plug_altmode);
-+		if (i < 0) {
-+			ret = i;
-+			goto err;
-+		}
-+
-+		ret = ucsi_altmode_next_mode(con->plug_altmode, desc->svid);
-+		if (ret < 0)
-+			return ret;
-+
-+		desc->mode = ret;
-+
-+		alt = typec_plug_register_altmode(con->plug, desc);
-+		if (IS_ERR(alt)) {
-+			ret = PTR_ERR(alt);
-+			goto err;
-+		}
-+
-+		con->plug_altmode[i] = alt;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -566,6 +587,9 @@ static void ucsi_unregister_altmodes(struct ucsi_connector *con, u8 recipient)
- 	case UCSI_RECIPIENT_SOP:
- 		adev = con->partner_altmode;
- 		break;
-+	case UCSI_RECIPIENT_SOP_P:
-+		adev = con->plug_altmode;
-+		break;
- 	default:
- 		return;
- 	}
-@@ -836,6 +860,33 @@ static void ucsi_unregister_partner_pdos(struct ucsi_connector *con)
- 	con->partner_pd = NULL;
- }
- 
-+static int ucsi_register_plug(struct ucsi_connector *con)
-+{
-+	struct typec_plug *plug;
-+	struct typec_plug_desc desc = {.index = TYPEC_PLUG_SOP_P};
-+
-+	plug = typec_register_plug(con->cable, &desc);
-+	if (IS_ERR(plug)) {
-+		dev_err(con->ucsi->dev,
-+			"con%d: failed to register plug (%ld)\n", con->num,
-+			PTR_ERR(plug));
-+		return PTR_ERR(plug);
-+	}
-+
-+	con->plug = plug;
-+	return 0;
-+}
-+
-+static void ucsi_unregister_plug(struct ucsi_connector *con)
-+{
-+	if (!con->plug)
-+		return;
-+
-+	ucsi_unregister_altmodes(con, UCSI_RECIPIENT_SOP_P);
-+	typec_unregister_plug(con->plug);
-+	con->plug = NULL;
-+}
-+
- static int ucsi_register_cable(struct ucsi_connector *con)
- {
- 	struct typec_cable *cable;
-@@ -879,6 +930,7 @@ static void ucsi_unregister_cable(struct ucsi_connector *con)
- 	if (!con->cable)
- 		return;
- 
-+	ucsi_unregister_plug(con);
- 	typec_unregister_cable(con->cable);
- 	memset(&con->cable_identity, 0, sizeof(con->cable_identity));
- 	con->cable = NULL;
-@@ -1085,6 +1137,14 @@ static int ucsi_check_cable(struct ucsi_connector *con)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = ucsi_register_plug(con);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ucsi_register_altmodes(con, UCSI_RECIPIENT_SOP_P);
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- }
- 
-diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-index b89fae82e8ce7..32daf5f586505 100644
---- a/drivers/usb/typec/ucsi/ucsi.h
-+++ b/drivers/usb/typec/ucsi/ucsi.h
-@@ -429,9 +429,11 @@ struct ucsi_connector {
- 	struct typec_port *port;
- 	struct typec_partner *partner;
- 	struct typec_cable *cable;
-+	struct typec_plug *plug;
- 
- 	struct typec_altmode *port_altmode[UCSI_MAX_ALTMODES];
- 	struct typec_altmode *partner_altmode[UCSI_MAX_ALTMODES];
-+	struct typec_altmode *plug_altmode[UCSI_MAX_ALTMODES];
- 
- 	struct typec_capability typec_cap;
- 
--- 
-2.44.0.rc1.240.g4c46232300-goog
-
+Reviewed-by: Jason Yan <yanaijie@huawei.com>
