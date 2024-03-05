@@ -1,100 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61BD4DA1F;
-	Tue,  5 Mar 2024 09:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39C14CB58
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709630013; cv=none; b=aFEDS3gfhenmmC12tEnOsq6BLYNYWUNc4UjkV8ufxAJushPRq/r7fvfm6DNLoRzNoOctrri8uRS/9JyK1Vl6EHXi4NhJopC9pSZMDBPscoxH848DMG2XgjDeusiJA7YyPaWE7LxzWMlgytj4Ol6ASWb41dhKWNnK0CRCCi0NYf0=
+	t=1709630102; cv=none; b=gbwPp72WeBZhQXbz1hahlhN1ezHJBQCfXivMm2nA+O1PjfT6almSqxUeCEGkD1qKjxxHOFVj9TjqOJKu+MOZg2tSRSJGC9hgLma5bkxEY9q16ROh9LdB1jV4UXXz7q2RY+5NfAAtWJSubnts2ryzQMOvUt+UhcmPnTeJlPUp220=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709630013; c=relaxed/simple;
-	bh=3mXN8KKW4waYOcWzjRN9oSLaIcwuzNcqm3YSkZxcpzY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qXc/ir3KYRwdSBhcvzp2fRoHyObTbrYIw7yjzC+UCn3OR4KPFPhNnjlDn3PY8qOeoxnWgNC/HqaFU7TT56b0VVGuszpnCMX9ZzcOZleX0Z5I8TsR3h41b7vHu/h2TtsEPnBVFHv9z/Qv3TTcpZ35k3qz0bX5bAMkmkDC0JCbIUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gt0Ahmyo; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709630102; c=relaxed/simple;
+	bh=jd8pmbe5h/v8yw2xnreKcGyeHBa6GzmFFuFowwTWuQ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PEPwAvXw6fLTi0w1SSE/w1YtLQpq1BJM+STUVpjmy612mDeqxhXA/w4cpfNm19Dww7SuftMrcOkzi6TxQW+wSkF9TVwhr4Wl4nKtmJ4rZA05x8aCPVHB85WV/bdbTzHvOUQk10xGb3j0wDCszfJ0mkCC1V7Ic6DYSX4glkqiZXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cp3LZ+3X; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gt0Ahmyo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709630012; x=1741166012;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=3mXN8KKW4waYOcWzjRN9oSLaIcwuzNcqm3YSkZxcpzY=;
-  b=Gt0Ahmyous3C15cJfbUaMnCp+ZskDMj2eu/chCdW81oul/E1pvRT8YcA
-   JGEN8XdOtFSSZ10smz/RARTlKHjrBh0I5BesAnFHKFrH7kmv1xq8PCywB
-   dAcj0HI04GugZhckXjK6nPygEzx14q3nSVrp7gTdSSDs0TabTmU5SNJUO
-   XjbQYIOG9KTU1ACh+L1arpx65DOVziq/NINxjQJXuYlCihcyGDxAOW25d
-   oCe2/ivPDIIZnZEKPQZiplyLqRs7OeaMJ1qyfp++oNunCys05aHkluCdi
-   m6futw8sPtVppHM7PVbiGiUoJ4tmHh6xtCkUwBsvcB7NunPIrT99IAzB8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4031546"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4031546"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:13:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="46836038"
-Received: from omakhlou-mobl4.amr.corp.intel.com (HELO localhost) ([10.252.51.143])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:13:24 -0800
-From: Jani Nikula <jani.nikula@intel.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, mpe@ellerman.id.au,
- naresh.kamboju@linaro.org, deller@gmx.de, npiggin@gmail.com,
- christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
- naveen.n.rao@linux.ibm.com
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- lkft-triage@lists.linaro.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v2 2/3] macintosh/via-pmu-backlight: Include
- <linux/backlight.h>
-In-Reply-To: <20240305090910.26742-3-tzimmermann@suse.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240305090910.26742-1-tzimmermann@suse.de>
- <20240305090910.26742-3-tzimmermann@suse.de>
-Date: Tue, 05 Mar 2024 11:13:20 +0200
-Message-ID: <87plw92g9b.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cp3LZ+3X"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1709630097; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=FJUQnbv03TDanaApqCFhn5ON5sBfkERUUs9MYWmPJ3Q=;
+	b=cp3LZ+3XgRGkTZ9OU2ANUsC1CQ2YvwaMGMVFyAE6ctW6NVd0s7dii5PhWW+p5pbSgsGg7rkSSr42jOupvJhNYBCFe4SvdeCe9DeiZPhD4orQxajHF6Hxug4i4vSuuLjnyIZ3X+fkKamLt3Q+x3CwDEDtK4RyHgNS9Y45BoPrXuU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W1tgGgn_1709630095;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W1tgGgn_1709630095)
+          by smtp.aliyun-inc.com;
+          Tue, 05 Mar 2024 17:14:56 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH 3/6] erofs: get rid of `justfound` debugging tag
+Date: Tue,  5 Mar 2024 17:14:45 +0800
+Message-Id: <20240305091448.1384242-3-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240305091448.1384242-1-hsiangkao@linux.alibaba.com>
+References: <20240305091448.1384242-1-hsiangkao@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, 05 Mar 2024, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> Fix builds with CONFIG_PMAC_BACKLIGHT=y. The include statement for the
-> backlight header has recently been removed from <linux/fb.h>. Add it to
-> via-pmu-backlight.c to get the necessary symbols.
->
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Closes: https://lore.kernel.org/dri-devel/CA+G9fYsAk5TbqqxFC2W4oHLGA0CbTHMxbeq8QayFXTU75YiueA@mail.gmail.com/
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Fixes: 11b4eedfc87d ("fbdev: Do not include <linux/backlight.h> in header")
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Jani Nikula <jani.nikula@intel.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
+`justfound` is introduced to identify cached folios that are just added
+to compressed bvecs so that more checks can be applied in the I/O
+submission path.
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+EROFS is quite now stable compared to the codebase at that stage.
+`justfound` becomes a burden for upcoming features.  Drop it.
 
-> ---
->  drivers/macintosh/via-pmu-backlight.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/macintosh/via-pmu-backlight.c b/drivers/macintosh/via-pmu-backlight.c
-> index c2d87e7fa85be..89450645c2305 100644
-> --- a/drivers/macintosh/via-pmu-backlight.c
-> +++ b/drivers/macintosh/via-pmu-backlight.c
-> @@ -10,6 +10,7 @@
->  
->  #include <asm/ptrace.h>
->  #include <linux/adb.h>
-> +#include <linux/backlight.h>
->  #include <linux/pmu.h>
->  #include <asm/backlight.h>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/zdata.c | 20 +++-----------------
+ 1 file changed, 3 insertions(+), 17 deletions(-)
 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index c25074657708..75b05990b571 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -565,17 +565,13 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
+ 
+ 	for (i = 0; i < pclusterpages; ++i) {
+ 		struct page *page, *newpage;
+-		void *t;	/* mark pages just found for debugging */
+ 
+ 		/* Inaccurate check w/o locking to avoid unneeded lookups */
+ 		if (READ_ONCE(pcl->compressed_bvecs[i].page))
+ 			continue;
+ 
+ 		page = find_get_page(mc, pcl->obj.index + i);
+-		if (page) {
+-			t = (void *)((unsigned long)page | 1);
+-			newpage = NULL;
+-		} else {
++		if (!page) {
+ 			/* I/O is needed, no possible to decompress directly */
+ 			standalone = false;
+ 			if (!shouldalloc)
+@@ -589,11 +585,10 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
+ 			if (!newpage)
+ 				continue;
+ 			set_page_private(newpage, Z_EROFS_PREALLOCATED_PAGE);
+-			t = (void *)((unsigned long)newpage | 1);
+ 		}
+ 		spin_lock(&pcl->obj.lockref.lock);
+ 		if (!pcl->compressed_bvecs[i].page) {
+-			pcl->compressed_bvecs[i].page = t;
++			pcl->compressed_bvecs[i].page = page ? page : newpage;
+ 			spin_unlock(&pcl->obj.lockref.lock);
+ 			continue;
+ 		}
+@@ -1423,7 +1418,7 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 	struct z_erofs_bvec zbv;
+ 	struct address_space *mapping;
+ 	struct page *page;
+-	int justfound, bs = i_blocksize(f->inode);
++	int bs = i_blocksize(f->inode);
+ 
+ 	/* Except for inplace pages, the entire page can be used for I/Os */
+ 	bvec->bv_offset = 0;
+@@ -1432,9 +1427,6 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 	spin_lock(&pcl->obj.lockref.lock);
+ 	zbv = pcl->compressed_bvecs[nr];
+ 	page = zbv.page;
+-	justfound = (unsigned long)page & 1UL;
+-	page = (struct page *)((unsigned long)page & ~1UL);
+-	pcl->compressed_bvecs[nr].page = page;
+ 	spin_unlock(&pcl->obj.lockref.lock);
+ 	if (!page)
+ 		goto out_allocpage;
+@@ -1465,9 +1457,6 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 	}
+ 
+ 	lock_page(page);
+-	/* only true if page reclaim goes wrong, should never happen */
+-	DBG_BUGON(justfound && PagePrivate(page));
+-
+ 	/* the cached page is still in managed cache */
+ 	if (page->mapping == mc) {
+ 		/*
+@@ -1475,7 +1464,6 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 		 * `->private` pcluster hint.  Let's reconnect them.
+ 		 */
+ 		if (!PagePrivate(page)) {
+-			DBG_BUGON(!justfound);
+ 			/* compressed_bvecs[] already takes a ref */
+ 			attach_page_private(page, pcl);
+ 			put_page(page);
+@@ -1494,8 +1482,6 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 	 * allocate a new page for compressed data.
+ 	 */
+ 	DBG_BUGON(page->mapping);
+-	DBG_BUGON(!justfound);
+-
+ 	tocache = true;
+ 	unlock_page(page);
+ 	put_page(page);
 -- 
-Jani Nikula, Intel
+2.39.3
+
