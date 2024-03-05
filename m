@@ -1,85 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABCF2CA9;
-	Tue,  5 Mar 2024 00:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC7A10E4;
+	Tue,  5 Mar 2024 00:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709598323; cv=none; b=hIZzVG7fp0oBHVMzeLfXCSadXkI7K2ZjNPOGJManAFLsXrD8ipgBRq8Nna0lOxYKn+g4SdnVt/74tYRT/sbKQoY3aKhvpy/sSetilyyLUPBa9U/VAdc31/D6w0GjpUiS4ZGFZhrBq3uyYoYT3LErqMxJyAk3Y6yzfJ00g41gIEU=
+	t=1709598362; cv=none; b=BSAXENNz7pYdpcIy8eKJcufteAM9w6+c0LUzilmRt67isSoDb8fDe4QJDDjesTF5MsYOcO10vSVm28zbBfSFmev0tdArUrRt8lq9QzsUb6keEXf17AmFQ77SnJ/mZbjAqMXg1crSsKTYi3SxkuSJfU85sSbiBGn89UlOzE5HEwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709598323; c=relaxed/simple;
-	bh=H7au/HmPpb0snM2lhXV4u34jsf91RboakLb53PykwYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Qim2uBMl0bJl4/HrHAOll3aXVYKhpjVzaEPOnEr/Nop+r2A2abvU43gC4GoHKO5puzT1Rcwlj975sPMrWtQisM40zHNN8Zs2pvdOy014D+tV0tbQPYQqdtaI1g6oNQCRslR7EUf30HJIrTrAn32bqDAFacr1spSESVT/uwNMCD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF6AC43390;
-	Tue,  5 Mar 2024 00:25:22 +0000 (UTC)
-Date: Mon, 4 Mar 2024 19:27:10 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Sachin Sant <sachinp@linux.ibm.com>
-Subject: [PATCH] tracing: Have trace_marker writes be just half of
- TRACE_SEQ_SIZE
-Message-ID: <20240304192710.4c99677c@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709598362; c=relaxed/simple;
+	bh=Vic1yyYZkTyBkcHMN/DlotFLffO5adzTXya6pqwwL2Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t5hl7z9WtrVYOne6Jm2mKf4uoPYsdRc+RnEySX8Kg9c3HwrW50Nd32aPlAPOFF+8HRUGexsP6yyCfxGfRrzZpyw5VEoalJmrG2aTDEgWTNHNvnAEJN3N2q8OCMaN5X16u6sYRDTvV0+HpSgeAUUd5oqYBaGace6HMzGhuuPC0MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f5FM0iLZ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5FM0iLZ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dc13fb0133so37902165ad.3;
+        Mon, 04 Mar 2024 16:26:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709598360; x=1710203160; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=apgfPOyBm8fjbNIlIAw478BrY43o1tnAskOyysD67Fs=;
+        b=f5FM0iLZMtFLWqAXPmIYuqfgTfYvkxU8c2SuIuRe3oooH5rvzDqHERIqfsgMRKoUvQ
+         Y20Qt1W1IDXa3tVR0mYYtucGqYA9Rk87vdEnuYtzcNrGlOQ2yV1uHak+emlouhiTSHnc
+         pGMWbrn5CLTZr6RLwPzYYsbkQ5kWPkLR0nsmr69am2mils40r5mJjNISJdG3oq62ec2A
+         3O9QolBPLETtG5WRX+jMhlkDr+qY/awh7K9auB5cwPv1ML48BgSpUxdA0Lm0yZosskm5
+         n/MgrtsMxKmHoo5bUaAEdIyDLvE/CMDYbzQKlGjJgYsDTkn4yj3z13756/T1Ii2/fjxq
+         DoRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709598360; x=1710203160;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=apgfPOyBm8fjbNIlIAw478BrY43o1tnAskOyysD67Fs=;
+        b=m+OlDuOMU69Bhkhjm8R8gcpKUEkICYm3tPX8x1OYSoX5goosst81jjZn5B+t2YRfsB
+         b3+V2z/fqWdu+RaklY7iLOxuzSzF9vT+he/MsDDxvT8I4uLgkW3RprAof1Mcz0TLW325
+         QjvMie4+G+xa0CA6RrgfXujYPIpalF/CMApRzisiOspdOgx8Z4iBj57BIsJCBcBYfzEd
+         3UTq2bsKPdjYjVyFAh48cLIH7KRQG3ukjH3RAmvjJy3tRnIzISsrnH/9see93ZDJljGc
+         Layxq5zk5e0MnQibLKQ97NDHiXjg+OVjKvP7CSeS3xdG9vNlSjyaAqTEfQaJ8WnuSb8j
+         2AxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpshuTl4l8jwWt4OxAWil3Cm5inYBqcoBZeXwrT+yJuwVhqvZJ4umWvv/buylcVXfdVEH3sNu1fqLWbcYf+tWLdTxMw3cnaSGmAaZXH4DgabTByz2c6VzxhS0IhhV720nOO+jI4Iy/TvZj/w==
+X-Gm-Message-State: AOJu0YwjZpgybyE0W6/clV/A8Z5KN6Fso4SD3oe90GkEqT2F9wCOF2Iu
+	EcPPh+NZ0EVmqO51g3KjE7CkNDRqnNWECQb1RTwwyzm8WXIxv6asqM+GrDNb
+X-Google-Smtp-Source: AGHT+IH8VISteBQwVu/ywVhok1br8asTz3CWnUenMckIjlocnVPMmLNsv+ZYwZwB+41xt68s6nRvRg==
+X-Received: by 2002:a17:903:1104:b0:1dc:1c81:1b19 with SMTP id n4-20020a170903110400b001dc1c811b19mr404186plh.3.1709598359824;
+        Mon, 04 Mar 2024 16:25:59 -0800 (PST)
+Received: from rigel.home.arpa ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id mm12-20020a1709030a0c00b001dc96d1a662sm9131940plb.197.2024.03.04.16.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 16:25:59 -0800 (PST)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	bartosz.golaszewski@linaro.org,
+	andriy.shevchenko@linux.intel.com,
+	christophe.leroy@csgroup.eu,
+	shuah@kernel.org,
+	bamv2005@gmail.com
+Cc: Kent Gibson <warthog618@gmail.com>,
+	Pengfei Xu <pengfei.xu@intel.com>,
+	Yi Lai <yi1.lai@intel.com>
+Subject: [PATCH] selftest: gpio: remove obsolete gpio-mockup test
+Date: Tue,  5 Mar 2024 08:21:24 +0800
+Message-Id: <20240305002124.7552-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+With the removal of the ARCH_NR_GPIOS, the number of available GPIOs
+is effectively unlimited, causing the gpio-mockup module load failure
+test that overflowed the number of GPIOs to unexpectedly succeed, and
+so fail.
 
-Since the size of trace_seq's buffer is the max an event can output, have
-the trace_marker be half of the entire TRACE_SEQ_SIZE, which is 4K. That
-will keep writes that has meta data written from being dropped (but
-reported), because the total output of the print event is greater than
-what the trace_seq can hold.
+The test is no longer relevant so remove it.
+Promote the "no lines defined" test so there is still one load
+failure test in the basic set.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
+Reported-by: Pengfei Xu <pengfei.xu@intel.com>
+Reported-by: Yi Lai <yi1.lai@intel.com>
+Closes: https://lore.kernel.org/linux-gpio/ZC6OHBjdwBdT4sSb@xpf.sh.intel.com/
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- kernel/trace/trace.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ tools/testing/selftests/gpio/gpio-mockup.sh | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8198bfc54b58..d68544aef65f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7320,6 +7320,17 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	if ((ssize_t)cnt < 0)
- 		return -EINVAL;
- 
-+	/*
-+	 * TRACE_SEQ_SIZE is the total size of trace_seq buffer used
-+	 * for output. As the print event outputs more than just
-+	 * the string written, keep it smaller than the trace_seq
-+	 * as it could drop the event if the extra data makes it bigger
-+	 * than what the trace_seq can hold. Half he TRACE_SEQ_SIZE
-+	 * is more than enough.
-+	 */
-+	if (cnt > TRACE_SEQ_SIZE / 2)
-+		cnt = TRACE_SEQ_SIZE / 2;
-+
- 	meta_size = sizeof(*entry) + 2;  /* add '\0' and possible '\n' */
-  again:
- 	size = cnt + meta_size;
-@@ -7328,11 +7339,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	if (cnt < FAULTED_SIZE)
- 		size += FAULTED_SIZE - cnt;
- 
--	if (size > TRACE_SEQ_BUFFER_SIZE) {
--		cnt -= size - TRACE_SEQ_BUFFER_SIZE;
--		goto again;
--	}
--
- 	buffer = tr->array_buffer.buffer;
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
- 					    tracing_gen_ctx());
+diff --git a/tools/testing/selftests/gpio/gpio-mockup.sh b/tools/testing/selftests/gpio/gpio-mockup.sh
+index 0d6c5f7f95d2..fc2dd4c24d06 100755
+--- a/tools/testing/selftests/gpio/gpio-mockup.sh
++++ b/tools/testing/selftests/gpio/gpio-mockup.sh
+@@ -377,13 +377,10 @@ if [ "$full_test" ]; then
+ 	insmod_test "0,32,32,44,-1,22,-1,31" 32 12 22 31
+ fi
+ echo "2.  Module load error tests"
+-echo "2.1 gpio overflow"
+-# Currently: The max number of gpio(1024) is defined in arm architecture.
+-insmod_test "-1,1024"
++echo "2.1 no lines defined"
++insmod_test "0,0"
+ if [ "$full_test" ]; then
+-	echo "2.2 no lines defined"
+-	insmod_test "0,0"
+-	echo "2.3 ignore range overlap"
++	echo "2.2 ignore range overlap"
+ 	insmod_test "0,32,0,1" 32
+ 	insmod_test "0,32,1,5" 32
+ 	insmod_test "0,32,30,35" 32
 -- 
-2.43.0
+2.39.2
 
