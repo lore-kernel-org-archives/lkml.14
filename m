@@ -1,194 +1,75 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C967E57D
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854437EEED;
+	Tue,  5 Mar 2024 07:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709623836; cv=none; b=SwgOiEkuX0SSaov3rGtMcq80XeCDbT9m1n8iGPgj+7dXlhbCi2tIA/71pjYjg8fWQRMpEOQZQY3M2q23FxIX6HYoAuDKIwJ6+LShJVNdCDHBjYNm0TwFQXYC1vVfWEdnmaWRtEl0RINFDFHBSit1tEDdwismNyWC1+RWPj+nMOc=
+	t=1709623841; cv=none; b=iwQRDUW0gbQH9OshXHRvEF1g+ca5Od6UzzFwNq0fltFTNWUlVJsIRf0Ef8pgtWwhnPBlG0HSgVxOTPnOG8yE3EwDORMZzrC/wcxeYs0/trYDjZ4ZpStFoQaHHzCioOHO6FQ1FJHtyJLw1BHHkWLdvNflVFk4B92LA5OXvv3WyJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709623836; c=relaxed/simple;
-	bh=6DVkHf9aV/yId4Lmu6rejZkjFcnUgp8btzQ/SNMEhu8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=r+s+PzqgB5BGYyr6KCDN+xv5XP4tal0JkGg7QGEnsvIWLKipiQ1B4J3UrPADIg9++cS8CPWAkY2ouiTEgY5EErCW4rCn65wtTEy4iMm6e66S7Q/PlvVfyEQH69pSNu4cYOzZlZ0760ZD+ROEWywSAjlsEWLYLrvr5hJWyeCpyHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KOVC2Ee/; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709623841; c=relaxed/simple;
+	bh=yQIBy0qAVUfBRKGIK+sYwyQgV6nkRizUnW41Ib6QBHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KhvFUp7XSidQif8sSFTt9Wl6lUCsg2oFvezVku8a8EXuA3HTmNyD7uSA0B+tqH3S0hiyQv2GAlWR1+lInFK7Vwou1xryq8ZS1CCK86xg8gZVR7pap0UkuyV5oxTtNLTBJSbqDupyGxhhmKH5jTJl71+4n7PhIgL3nxRdvyvq8no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HZldMEhT; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KOVC2Ee/"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-564372fb762so6845985a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 23:30:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709623833; x=1710228633; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4wPuXdt26uV3nWuiUz2nQdPuj/Zl3n+dEVTtr/ygvVI=;
-        b=KOVC2Ee/T2Vg7kvn2SXDv6HODnReP6p6Dbyg5TqZ/8be5jXR3FwPsY1VEgVTJk9nia
-         CjmA3TYvPInEefaQH2fYE9zztcRU8Jufe6/RdExP7qKRiL/pdHWCyvf8ftOQ3s+Iuj4n
-         CZi6V392A4CZh+KhoRtjitEplN4DgkCFrd0DziQ4k3dx53npppIhMCT6rYXQtNJvRumW
-         dkgloAQvDmVsfW+zqDevGP5M6Qk0W1cWeya89y8x6g9vXEntbhmIV4PkuQOjbKp/PI2K
-         I11qiY69DMBZpl5HZj0ExbVtvdRIGtCkKB7/Fk9Lf43MXBS+mvJEdMZQYtgzLQfnmt6b
-         iHPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709623833; x=1710228633;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4wPuXdt26uV3nWuiUz2nQdPuj/Zl3n+dEVTtr/ygvVI=;
-        b=chPA5j4tqOqjel+G3CsBNgqUDslGsWzkRBeT1Ts2DfIk3WzrCpJ6I5ebKYwsMORVvF
-         wxZo3Y49dZze4Dd0oOoyOFgRlE2qmbU769aM9+E6AFk83CQLSdGNS+v0/V9d7QqWpiiY
-         1IoI/Awj9Q0eumlqIJmlOP4MBiLBXeSwtAm6M2mzPsp22PnX5O5NMQ3mwZLcG1xfjAWE
-         dwTdwm5NosZxudB5y3AFVQcJzULU8ylCVUumik2GNFQpDEXZFEX5sX5PXFBZkzYd+Io2
-         kdu1Gcow5h/uq8smHZCaqbbaLKX8ZtsSNu5fj31wQdSuFfLruo2xzQIrCqD8wRqGIoOs
-         gqRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYChJqSwFlxLIZjZDYFDOcrWMhJkFnk6u4HKr+QbVoVS6de5+dWfuR/HTfsEV8NKoq7D5wctl4VNUANcmBGh+lVWkpx3H4JZAKbqpa
-X-Gm-Message-State: AOJu0YxMn4p0ag2u9FqmdY5PCZFZ0qMbBn3g1bprvD+gs/8zJYoB+3pZ
-	ePO98ohYVD1IGrWEubb9zqdaFIA/z/9TTLyAvuU4Kp7rCrPZoCjQl4Ty1/hulYo=
-X-Google-Smtp-Source: AGHT+IHiVogKZl3USP3i/JeeOeTjoVjdXnPeQNrUn2JsCxmrpiq71MOn1lYyswLgrH8QF/253iaF3g==
-X-Received: by 2002:aa7:cf06:0:b0:565:a562:9fc3 with SMTP id a6-20020aa7cf06000000b00565a5629fc3mr7041999edy.38.1709623832591;
-        Mon, 04 Mar 2024 23:30:32 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id g26-20020a056402321a00b0055fba4996d9sm5517875eda.71.2024.03.04.23.30.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 23:30:32 -0800 (PST)
-Message-ID: <714cc51c-0d54-4475-b4bf-96b59d499097@linaro.org>
-Date: Tue, 5 Mar 2024 08:30:30 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HZldMEhT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 18AB61BF206;
+	Tue,  5 Mar 2024 07:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709623836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nC0cWtvmF5x1A+WyJrGetk0ETMalgbT5tTFrwZ1CtpE=;
+	b=HZldMEhTv5Go3jOyftYUklwgkm6m/xxeoYgWRP1nQtE1Db0IUTnQoaWVGjjNG9t1NaTsDp
+	5NoOl3J7ecTs/+elZVygkdpDowZ7mA3mPg9IgbRWCQJoPJyRktpBbG3KAAXJbjqq7Ga36E
+	kzkVSRmJqkP8PTJqo2hBtw2VUH7EQf6tVPX8H984J62JFeZDHG6EUPLb474lOo4sLmT20I
+	TnpQP7ZZBHewKCMykJbEtYtj1/QI82+famTJpUoMBHiWuh8yku6mDmmpPByPNkD8T0l4yR
+	XNlYEFN0R0FA7HWISFfxC54VTRIxAVe5yxrosmdT6N1ZsCUMl3XnwT2Vdr75MQ==
+Date: Tue, 5 Mar 2024 08:30:34 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net-next v1 1/1] ieee802154: at86rf230: Replace
+ of_gpio.h by proper one
+Message-ID: <20240305083034.3fa0c5ec@xps-13>
+In-Reply-To: <20240304174218.1198411-1-andriy.shevchenko@linux.intel.com>
+References: <20240304174218.1198411-1-andriy.shevchenko@linux.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindindgs: clock: support NXP i.MX95 BLK CTL
- module
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Peng Fan <peng.fan@nxp.com>, Rob Herring <robh@kernel.org>,
- "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Abel Vesa <abelvesa@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240228-imx95-blk-ctl-v3-0-40ceba01a211@nxp.com>
- <20240228-imx95-blk-ctl-v3-1-40ceba01a211@nxp.com>
- <20240304143916.GA181628-robh@kernel.org>
- <DU0PR04MB941740A36E953A0E1AD690EC88222@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <58cdfa7c-5483-4193-a5de-bb5fa72de637@linaro.org>
- <DU0PR04MB9417551618EB1C723EF3FA9088222@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <4731e688-4d2e-4b94-9ed1-32cbc823079f@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <4731e688-4d2e-4b94-9ed1-32cbc823079f@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 05/03/2024 08:29, Krzysztof Kozlowski wrote:
-> On 05/03/2024 08:18, Peng Fan wrote:
->>> Subject: Re: [PATCH v3 1/2] dt-bindindgs: clock: support NXP i.MX95 BLK CTL
->>> module
->>>
->>> On 05/03/2024 05:13, Peng Fan wrote:
->>>>>> +
->>>>>> +examples:
->>>>>> +  # Clock Control Module node:
->>>>>> +  - |
->>>>>> +    #include <dt-bindings/clock/nxp,imx95-clock.h>
->>>>>> +
->>>>>> +    syscon@4c410000 {
->>>>>
->>>>> clock-controller@...
->>>>
->>>> But this is a syscon, using clock-controller will trigger dt check
->>>> warning.
->>>
->>> Which warning?
->>
->> I just recalled that node with syscon in compatible string needs
->> has syscon as node, I maybe wrong.
-> 
-> Just paste the warning, so we can think about it.
-> 
->>
->>>
->>>>>
->>>>> As that is the main feature/function.
->>>>>
->>>>>> +      compatible = "nxp,imx95-vpumix-csr", "syscon";
->>>>>> +      reg = <0x4c410000 0x10000>;
->>>>>> +      #clock-cells = <1>;
->>>>>
->>>>> Please make the example as full as possible. For example, add
->>>>> mux-controller node. Do some of the blocks not have mux ctrl?
->>>>
->>>> Yes. The blk ctrl is not just for clock, some registers has mux ctrl,
->>>> such as Pixel_link_sel.
->>>
->>> Then mux-controller should not be allowed for them.
->>
->> You mean I should not add mux-controller under the blk ctrl node?
-> 
-> mux-controller is already there, isn't it? I am saying your binding is
-> not precise. Your binding implies that ALL OF THEM have mux controller.
-> You told me it is not true, so you have change the meaning of binding
-> and disallow the mux-controller for the cases it is not applicable.
-> 
+Hi Andy,
 
-... or create separate binding/schema for the variants with mux-controller.
+andriy.shevchenko@linux.intel.com wrote on Mon,  4 Mar 2024 19:42:17
++0200:
 
-Best regards,
-Krzysztof
+> of_gpio.h is deprecated and subject to remove.
+> The driver doesn't use it directly, replace it
+> with what is really being used.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+I guess this will be queued in wpan/next after the merge window,
+probably by Stefan.
+
+Thanks,
+Miqu=C3=A8l
