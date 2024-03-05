@@ -1,265 +1,129 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60017B3CA
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 06:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87457B3CA
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 06:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709618936; cv=none; b=VS/7Q66g9yK/ph4E7hMV64vyDJ70PxJLiwtuzCSzDGg3S4ou0FWWu5wMf+kPvc8rVwuuSkqMitLizmJuRTya8Wg0IN0roFhpdfUAJE3z9YnHWsb91UvpcKssH5hXtR6xFF6nqVzUbc37FlKPXNmFib3sJIdX1KOAuv33RcZjYUk=
+	t=1709618996; cv=none; b=Hg5uTaXcdTwZdsgx7GItIGfUkUn8g/dEAyPnV06/2codSZ9zJoRAVuV8yYLFEyPRpOC+1kepCYuTCshLZSoFmpcyrxozuWYxW0tbCoti1maDMsurO2HnV2npElJyPJzgRFqb53yl2Sb7fbWZOeS7513JRiNRhGy7A97BGaeLYck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709618936; c=relaxed/simple;
-	bh=TRqOC8Vk0vbbiZ0MlxLenaXd116F99mVCwhGyj/rLiI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YfImN5KQK+oA5NAygG2xaYXcmGHWf1g6dgT4lcVMrFdb2DKzqObkulZZ5nrPt8Yd2qq2a2T5RfGM7yUzJZ+lWz7lR6CjLP+mcyO3vuDfrMZKDERinPDKUB/vks+pfanHus16UbrU/EdH13+l5rdeMSJfBg/DzjgyC4L4U6uqH00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=KBNU+FN9; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	s=arc-20240116; t=1709618996; c=relaxed/simple;
+	bh=TNBK9fUwJLsaAImw1Jf5Q46P/Y3QQThaMK9QPXp0nsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AqC8SRKyRGgSl9F9b3cI5ng4hcYSS4HszlI9SJk2hCHXmLv+Y98jzsuEJvzbIJ9S5zmAejKd76OrnpAKotnbUnEJ7KVlu/ktbwp4zNNg0ixzBlAuqbBMjO90437hpnoHPgdurGX9pOk4NUQpmGfCWqIzArfcHtE7+veAgdOAFLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qflZbLNR; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="KBNU+FN9"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dcafff3c50so44928595ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 22:08:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qflZbLNR"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-595aa5b1fe0so186299eaf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 22:09:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1709618934; x=1710223734; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xv8kG9m16/eb8RbFxYy706uGwjYMM+2HEkRfZeEGPKE=;
-        b=KBNU+FN932xmy7i8s5p5mWfkUYIMZ/OzgIHF6cR4Qle97SiDkuCmt8yG+HjXqNx/g3
-         j0yos5sP2oeWaUAf6dc5HM38rHM27WDpJ454APFGvzi/d9+5EceFXPEnlAyWr8m8DqYI
-         EQznuQAYF/YfzqpzjznAdhMOxZpj9lRHv6N7di4YFmluq5M2L+opduEAMnmOBM4OoidY
-         iIqme499nMqG3TH65rNhR5u28lDJai7IL1Ca7n3tBSxcpsaESuMPDdlqwDX5HR49+96F
-         dVEATUVBqrN/muBTfmnL3p+6o+H3XyvpaPyfmxELDDmR88AVoApeEHWcKMaBezBLpmB3
-         q+OA==
+        d=linaro.org; s=google; t=1709618993; x=1710223793; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/BDLkvHSjKn2xGeDzvhFh1c2vd6PQCy331MBE5g4t/8=;
+        b=qflZbLNRn5UYMHmzoq7FzxVgibF+WGlXxko2jmmO98SAzngob3DLY/V6urUs0ZEjww
+         Ji0FhgZ+MgTscwNqUf5PenfKLThxAYfKdGqovEWjDkFRfVa8oMuDLLgYPfX9ysfydJKy
+         gohgmc9UoZsEMU95OgZPvJ2aQOD5Sw9lmYBZs/tSzjEFH3VxILcTaGQaeR9pagZZ3eAU
+         HEh6J8FA6SxfZj2LEcOdO0JFLXKesszHQNtonJPWlqXoKyUQTNpR2ROdtGLZxJtBp+SL
+         5aDMgO/+hVW+PAvEjrqMv+XKbX3vZXbvgCeGHJV/lr8modOMd/eW5B3WTX/od30JnR+M
+         1rtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709618934; x=1710223734;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xv8kG9m16/eb8RbFxYy706uGwjYMM+2HEkRfZeEGPKE=;
-        b=hKcVWz9AVbuNUpXxpeobdp+8ogazF4/igfzVlLz3tldPyO953PJ2n5AI05mVrxu4Cq
-         JEaXwsPeumLy4UG94aCfbvMe3CeuedgDmLiz6RkUPQjqEW6NST89Pic2u/4wm71mcB5o
-         LI3S/uwz9Kgdktc4x9pF7dtwSwN4iV9m+dmkXkeWS7919iI5Zbx4HPBkwF7GYw252a4a
-         exwwebgzEVcPK37+vssf4XQ28rJcX8JNpkMPrjs6Vd3ZM5WsoAYfvid+mVmnleiHzTUk
-         lRoxgBazIfVqUFxPG4ijVQcsAuXBRJELWm0VfSIKCYyH75e8koDvhT2liJMFi9bC5jUc
-         5+4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXhiSQPkwzvE5UgBB7dUvdXzveKTI4TSaHPotVtioA+y3ibgsDgVMtyaCjF1bWEWiSZqJbPyedqRHYKaCU+DzBJ7Q2SqcZqY8OvA8U2
-X-Gm-Message-State: AOJu0Yx+/f4IrZp175F7NmlY0qzdGG0TOraCFjG6mJk2hEdqw5w5+Kvy
-	6D4P4Rf2WduJMYarNtdpVO3UHnx95pur9eK7VJoysy8Z26mchFn9Cy9mQ0bfkA==
-X-Google-Smtp-Source: AGHT+IGlgK4Rtn4cvuBC98qhH71KisMG0IPfh/WW29bpbvkAf1QLkp1hxti+KhU0vBULp/PtBI5DcQ==
-X-Received: by 2002:a17:902:7207:b0:1dd:2e6:b951 with SMTP id ba7-20020a170902720700b001dd02e6b951mr1199829plb.12.1709618933858;
-        Mon, 04 Mar 2024 22:08:53 -0800 (PST)
-Received: from zhadum.home.kylehuey.com (c-76-126-33-191.hsd1.ca.comcast.net. [76.126.33.191])
-        by smtp.gmail.com with ESMTPSA id s5-20020a170902ea0500b001d7057c2fbasm9601708plg.100.2024.03.04.22.08.52
+        d=1e100.net; s=20230601; t=1709618993; x=1710223793;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/BDLkvHSjKn2xGeDzvhFh1c2vd6PQCy331MBE5g4t/8=;
+        b=YJH9AcuoJg+Bu9aTFQnxYx3bwyXjlTl7NKeuEOt6dW2uTRIhEY41mGVWrJO2e4ddFA
+         UFp4Zfvzh0edPU0gc+mDCkV5/kER9arnL9mhFaZYWr8AzT17EmfcZYwh72pk/TPUltxX
+         AZy0JHTFnUJR1kHOGGS+ME1mh3ksC7qC/RyipvWXMoYPBRNiA1LcqEWoVyyZfsKpZZF5
+         GuZM02Ih0t7s3zvmG7NtCzb3pnHcogYbkBa9kk/tzgNML/EsdkLFv7ggH1AlWPT1OuMZ
+         U+bAHsb/ccGaWQb1AXCKYubw08RrejGmwCVyy92DrGMfXlAWTDjgvMZzFH4jaOZjUkkj
+         x2jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9CRgzyO3eXMLafsXlipWHQPu6UEyrNFl7uf8A8aNTW/jgFll4LQ4PNr6or1PVJO9SD7C1ci0NTiENT9YJFRtsenJaD3l0CD5SBRoV
+X-Gm-Message-State: AOJu0YzncVNbpsPY+viTfW29C4saUO2/cEEIzAiIdlwO03P8atZ+ivEM
+	fkkUkh0s+LBhmygKtj11LTgtaIWFtbXfuroW04u+ruaO0tiYom47RC/wlL78KpQ=
+X-Google-Smtp-Source: AGHT+IEIWFOfaFbEh9f6ob6ornvM/SZDefnANJC8LnnWZLbBx3Vndoh0MwTSPcdNEYdKAsuDpqmoSQ==
+X-Received: by 2002:a05:6359:458d:b0:17a:e9db:bc10 with SMTP id no13-20020a056359458d00b0017ae9dbbc10mr974302rwb.20.1709618992856;
+        Mon, 04 Mar 2024 22:09:52 -0800 (PST)
+Received: from localhost ([122.172.85.206])
+        by smtp.gmail.com with ESMTPSA id c11-20020a63da0b000000b005bd980cca56sm8302545pgh.29.2024.03.04.22.09.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 22:08:53 -0800 (PST)
-From: Kyle Huey <me@kylehuey.com>
-X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
-To: Kyle Huey <khuey@kylehuey.com>,
-	Robert O'Callahan <robert@ocallahan.org>,
-	linux-kernel@vger.kernel.org,
-	Ian Rodgers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 2/2] selftests/perf_events: Test FASYNC with watermark wakeups.
-Date: Mon,  4 Mar 2024 22:08:43 -0800
-Message-Id: <20240305060844.9499-2-khuey@kylehuey.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240305060844.9499-1-khuey@kylehuey.com>
-References: <20240305060844.9499-1-khuey@kylehuey.com>
+        Mon, 04 Mar 2024 22:09:51 -0800 (PST)
+Date: Tue, 5 Mar 2024 11:39:49 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Dhruva Gole <d-gole@ti.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] OPP: debugfs: Fix warning with W=1 builds
+Message-ID: <20240305060949.pjzb54zkcelt5xgz@vireshk-i7>
+References: <ab75239d2280e506e5b9386b8aeb9edf97cd3294.1709551295.git.viresh.kumar@linaro.org>
+ <66af18e0-56eb-401f-900d-a83f6e52c603@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66af18e0-56eb-401f-900d-a83f6e52c603@ti.com>
 
-The test uses PERF_RECORD_SWITCH records to fill the ring buffer and
-trigger the watermark wakeup, which in turn should trigger an IO
-signal.
+On 04-03-24, 17:08, Dhruva Gole wrote:
+> Hi,
+> 
+> On 04/03/24 16:52, Viresh Kumar wrote:
+> > We currently get the following warning:
+> > 
+> > debugfs.c:105:54: error: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 8 [-Werror=format-truncation=]
+> >                   snprintf(name, sizeof(name), "supply-%d", i);
+> >                                                        ^~
+> > debugfs.c:105:46: note: directive argument in the range [-2147483644, 2147483646]
+> >                   snprintf(name, sizeof(name), "supply-%d", i);
+> >                                                ^~~~~~~~~~~
+> > debugfs.c:105:17: note: 'snprintf' output between 9 and 19 bytes into a destination of size 15
+> >                   snprintf(name, sizeof(name), "supply-%d", i);
+> > 
+> > Fix this and another potential issues it by allocating larger arrays.
+> 
+> Just to keep in mind while applying maybe: s/another/other
+> 
+> > Use the exact string format to allocate the arrays without getting into
+> > these issues again.
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202402141313.81ltVF5g-lkp@intel.com/
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> > V2: Use string name while allocating memory for the array to fix potential
+> > issues later on.
+> > 
+> >   drivers/opp/debugfs.c | 8 ++++----
+> >   1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/opp/debugfs.c b/drivers/opp/debugfs.c
+> > index ec030b19164a..27c3748347af 100644
+> > --- a/drivers/opp/debugfs.c
+> > +++ b/drivers/opp/debugfs.c
+> > @@ -56,11 +56,11 @@ static void opp_debug_create_bw(struct dev_pm_opp *opp,
+> >   				struct dentry *pdentry)
+> >   {
+> >   	struct dentry *d;
+> > -	char name[20];
+> > +	char name[] = "icc-path-XXXXXXXXXX"; /* Integers can take 10 chars max */
 
-Signed-off-by: Kyle Huey <khuey@kylehuey.com>
----
- .../testing/selftests/perf_events/.gitignore  |   1 +
- tools/testing/selftests/perf_events/Makefile  |   2 +-
- .../selftests/perf_events/watermark_signal.c  | 146 ++++++++++++++++++
- 3 files changed, 148 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/perf_events/watermark_signal.c
+Integers can take 11 chars max, I forgot the negative symbol. Added
+space for another byte and pushed the changes.
 
-diff --git a/tools/testing/selftests/perf_events/.gitignore b/tools/testing/selftests/perf_events/.gitignore
-index 790c47001e77..ee93dc4969b8 100644
---- a/tools/testing/selftests/perf_events/.gitignore
-+++ b/tools/testing/selftests/perf_events/.gitignore
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- sigtrap_threads
- remove_on_exec
-+watermark_signal
-diff --git a/tools/testing/selftests/perf_events/Makefile b/tools/testing/selftests/perf_events/Makefile
-index db93c4ff081a..70e3ff211278 100644
---- a/tools/testing/selftests/perf_events/Makefile
-+++ b/tools/testing/selftests/perf_events/Makefile
-@@ -2,5 +2,5 @@
- CFLAGS += -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
- LDFLAGS += -lpthread
- 
--TEST_GEN_PROGS := sigtrap_threads remove_on_exec
-+TEST_GEN_PROGS := sigtrap_threads remove_on_exec watermark_signal
- include ../lib.mk
-diff --git a/tools/testing/selftests/perf_events/watermark_signal.c b/tools/testing/selftests/perf_events/watermark_signal.c
-new file mode 100644
-index 000000000000..49dc1e831174
---- /dev/null
-+++ b/tools/testing/selftests/perf_events/watermark_signal.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/perf_event.h>
-+#include <stddef.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <sys/syscall.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+#include "../kselftest_harness.h"
-+
-+#define __maybe_unused __attribute__((__unused__))
-+
-+static int sigio_count;
-+
-+static void handle_sigio(int signum __maybe_unused,
-+			 siginfo_t *oh __maybe_unused,
-+			 void *uc __maybe_unused)
-+{
-+	++sigio_count;
-+}
-+
-+static void do_child(void)
-+{
-+	raise(SIGSTOP);
-+
-+	for (int i = 0; i < 20; ++i)
-+		sleep(1);
-+
-+	raise(SIGSTOP);
-+
-+	exit(0);
-+}
-+
-+TEST(watermark_signal)
-+{
-+	struct perf_event_attr attr;
-+	struct perf_event_mmap_page *p = NULL;
-+	struct sigaction previous_sigio, sigio = { 0 };
-+	pid_t child = -1;
-+	int child_status;
-+	int fd = -1;
-+	long page_size = sysconf(_SC_PAGE_SIZE);
-+
-+	sigio.sa_sigaction = handle_sigio;
-+	EXPECT_EQ(sigaction(SIGIO, &sigio, &previous_sigio), 0);
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.size = sizeof(attr);
-+	attr.type = PERF_TYPE_SOFTWARE;
-+	attr.config = PERF_COUNT_SW_DUMMY;
-+	attr.sample_period = 1;
-+	attr.disabled = 1;
-+	attr.watermark = 1;
-+	attr.context_switch = 1;
-+	attr.wakeup_watermark = 1;
-+
-+	child = fork();
-+	EXPECT_GE(child, 0);
-+	if (child == 0)
-+		do_child();
-+	else if (child < 0) {
-+		perror("fork()");
-+		goto cleanup;
-+	}
-+
-+	if (waitpid(child, &child_status, WSTOPPED) != child ||
-+	    !(WIFSTOPPED(child_status) && WSTOPSIG(child_status) == SIGSTOP)) {
-+		fprintf(stderr,
-+			"failed to sycnhronize with child errno=%d status=%x\n",
-+			errno,
-+			child_status);
-+		goto cleanup;
-+	}
-+
-+	fd = syscall(__NR_perf_event_open, &attr, child, -1, -1,
-+		     PERF_FLAG_FD_CLOEXEC);
-+	if (fd < 0) {
-+		fprintf(stderr, "failed opening event %llx\n", attr.config);
-+		goto cleanup;
-+	}
-+
-+	if (fcntl(fd, F_SETFL, FASYNC)) {
-+		perror("F_SETFL FASYNC");
-+		goto cleanup;
-+	}
-+
-+	if (fcntl(fd, F_SETOWN, getpid())) {
-+		perror("F_SETOWN getpid()");
-+		goto cleanup;
-+	}
-+
-+	if (fcntl(fd, F_SETSIG, SIGIO)) {
-+		perror("F_SETSIG SIGIO");
-+		goto cleanup;
-+	}
-+
-+	p = mmap(NULL, 2 * page_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-+	if (p == NULL) {
-+		perror("mmap");
-+		goto cleanup;
-+	}
-+
-+	if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0)) {
-+		perror("PERF_EVENT_IOC_ENABLE");
-+		goto cleanup;
-+	}
-+
-+	if (kill(child, SIGCONT) < 0) {
-+		perror("SIGCONT");
-+		goto cleanup;
-+	}
-+
-+	if (waitpid(child, &child_status, WSTOPPED) != -1 || errno != EINTR)
-+		fprintf(stderr,
-+			"expected SIGIO to terminate wait errno=%d status=%x\n%d",
-+			errno,
-+			child_status,
-+			sigio_count);
-+
-+	EXPECT_GE(sigio_count, 1);
-+
-+cleanup:
-+	if (p != NULL)
-+		munmap(p, 2 * page_size);
-+
-+	if (fd >= 0)
-+		close(fd);
-+
-+	if (child > 0) {
-+		kill(child, SIGKILL);
-+		waitpid(child, NULL, 0);
-+	}
-+
-+	sigaction(SIGIO, &previous_sigio, NULL);
-+}
-+
-+TEST_HARNESS_MAIN
+> Feels like a better solution to me than the previous revision, thanks!
+> 
+> 
+> Reviewed-by: Dhruva Gole <d-gole@ti.com>
+
+Thanks.
+
 -- 
-2.34.1
-
+viresh
