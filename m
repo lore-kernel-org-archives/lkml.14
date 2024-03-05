@@ -1,136 +1,138 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AB643AC5;
-	Tue,  5 Mar 2024 06:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DFC43AC5;
+	Tue,  5 Mar 2024 06:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709621565; cv=none; b=BTNDV7Ap7xPAXfRwNruWcx2CY2LKStOb0F0hAyEVpiI9RrqzP05MXmfal5erxIX4t5ubuKGY8Oj+z2VFkqpFmVm0HMuAR+S2jOSjNoZsZjLEbEI62xyVMc7iz3EfZk+8rqOQtPqUj44VyvEecO/Grg7MKUn3Khm7u3rFg0VX958=
+	t=1709621753; cv=none; b=BL/yYZLwiMiOSpao8EUNvMbWCBL4TeAaGqLnw5zAGcOT0OJ5umjwjRRCrNxvcO4SYsNgI2bIMC4ts4C/dLnTRx22alCugIbsFVY0uV8bQME+vLvifEWHg9FvZ3T6s+NKkD0ne933S1WQ5OJwSdFzr+sLPBDnKdqoXfVCYMhjp8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709621565; c=relaxed/simple;
-	bh=Xl+NCBuHbQxBZioSRlhLg3TlowiKCzujKqHgkDS3MS4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PPKemSZW4VaHKJeaPpaEADQf/ZhFDmFhazDjYrgrSyGPfjLlCKLIqCFKttjAlfcWpDGztRz+PlaXbi6IxSnZ3+EhJy4I8gv3RiiVv+zdvdP2o1l+SnZvV89wevN1iQEo+IaHfB6MQ3WhxFQWLk2hV7ctEl4B9JpqkzdCcNiRSis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=hLwFKGu1; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1709621753; c=relaxed/simple;
+	bh=l5gLoZUsr+5xcG/0VUQfe6qG8NXwhnl1SQb/YulRLgo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eANaRHcGYJulqphbwvC2v9GIUYoYFe8CvwZAsZKLj57XSan+7Kfmam11McIDgOeF7uap/tdwi0oh8N0bnWH9t9O9IxKGTkIqbjq7qzdr/ccyry+QogCEKl6Av/KEAP5Yaq4vdaVfjV9yAO3LYq89G4jEwsrwkC+DboDI2KvT3xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cvy3S4ln; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="hLwFKGu1"
-Received: from localhost.localdomain (unknown [10.101.196.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id E276A3F2AE;
-	Tue,  5 Mar 2024 06:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1709621555;
-	bh=hOacwtkHqQDUtoSDhM1+VFe2+ipCciOvzGFqmRzEolQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=hLwFKGu1voOVMAkHhJ7o5DqJ98eJqAaJ4/PaMQSRtS4EZrFd6vxEfF99vM39fb9I6
-	 cQUq7Bpr3MsOvX+aMqiFTcPW1dLDjOhZ9T5cE5b1RFNzclLjMN4wRnL0DZEfGm0daL
-	 YmI5L8VAvu5XfFy4DifBZyZNgiyjbyzEEkJPuQCfl/pnzTAJ7zprWrEcyEgh4ttd30
-	 2okyz/IlHxD2b41YHIVD0WTomccmIOyUdl158o6crllkJcxkSQqXasYCCxwf4Yr5X6
-	 KGGSUy93vs1Rt0dUs9GkQfrI52j8v2pip3KcIngRf97J8MGaRhCxdcPiSGvsDKN8Bx
-	 w0jONP9etUJhA==
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-To: gregkh@linuxfoundation.org
-Cc: stern@rowland.harvard.edu,
-	mathias.nyman@linux.intel.com,
-	oneukum@suse.com,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Roy Luo <royluo@google.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: Disable USB3 LPM at shutdown
-Date: Tue,  5 Mar 2024 14:51:38 +0800
-Message-Id: <20240305065140.66801-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cvy3S4ln"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709621751; x=1741157751;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=l5gLoZUsr+5xcG/0VUQfe6qG8NXwhnl1SQb/YulRLgo=;
+  b=cvy3S4lnvR1Gq7gDozw/DX+ml7GpU/tobGlFYVUMgS65TkCpaN3AkXrP
+   CrT20ozBlR8Zd+dWA5t31fuxL39n5oN4smQDzztRmMf8/7GLqFPEVPIEZ
+   CS6jzgSyEvpGpmetuwib/Gzmx9YuGMOBFp1YqSSPw13XaJtKolaicmiSX
+   DGIdO/3b5LrTpsYoHGKqjyCESz39yW41zIKkRHuGY/FlDjHZ2QwzdXYN0
+   VQadFyNu3lolx9vlXTfn9IQsb0eKuxuPr+2s19eS4SLrZauINqxclLdFQ
+   nSlLXs7ADT1uYyUgSy/ydAfwAt6lqHNrdPPN4Gk0LyGDX7GaiBNuoHZDz
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4313734"
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="4313734"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 22:55:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="9684219"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.8.218]) ([10.238.8.218])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 22:55:50 -0800
+Message-ID: <6bd61607-9491-4517-8fc8-8d61d9416cab@linux.intel.com>
+Date: Tue, 5 Mar 2024 14:55:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/21] KVM: Allow page-sized MMU caches to be initialized
+ with custom 64-bit values
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
+ michael.roth@amd.com, isaku.yamahata@intel.com, thomas.lendacky@amd.com
+References: <20240227232100.478238-1-pbonzini@redhat.com>
+ <20240227232100.478238-3-pbonzini@redhat.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20240227232100.478238-3-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-SanDisks USB3 storage may disapper after system reboot:
 
-usb usb2-port3: link state change
-xhci_hcd 0000:00:14.0: clear port3 link state change, portsc: 0x2c0
-usb usb2-port3: do warm reset, port only
-xhci_hcd 0000:00:14.0: xhci_hub_status_data: stopping usb2 port polling
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x2b0, return 0x2b0
-usb usb2-port3: not warm reset yet, waiting 50ms
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x2f0, return 0x2f0
-usb usb2-port3: not warm reset yet, waiting 200ms
-...
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x6802c0, return 0x7002c0
-usb usb2-port3: not warm reset yet, waiting 200ms
-xhci_hcd 0000:00:14.0: clear port3 reset change, portsc: 0x4802c0
-xhci_hcd 0000:00:14.0: clear port3 warm(BH) reset change, portsc: 0x4002c0
-xhci_hcd 0000:00:14.0: clear port3 link state change, portsc: 0x2c0
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x2c0, return 0x2c0
-usb usb2-port3: not enabled, trying warm reset again...
 
-This is due to the USB device still cause port change event after xHCI is
-shuted down:
+On 2/28/2024 7:20 AM, Paolo Bonzini wrote:
+> From: Sean Christopherson <seanjc@google.com>
+>
+> Add support to MMU caches for initializing a page with a custom 64-bit
+> value, e.g. to pre-fill an entire page table with non-zero PTE values.
+> The functionality will be used by x86 to support Intel's TDX, which needs
+> to set bit 63 in all non-present PTEs in order to prevent !PRESENT page
+> faults from getting reflected into the guest (Intel's EPT Violation #VE
+> architecture made the less than brilliant decision of having the per-PTE
+> behavior be opt-out instead of opt-in).
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> Message-Id: <5919f685f109a1b0ebc6bd8fc4536ee94bcc172d.1705965635.git.isaku.yamahata@intel.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   include/linux/kvm_types.h |  1 +
+>   virt/kvm/kvm_main.c       | 16 ++++++++++++++--
+>   2 files changed, 15 insertions(+), 2 deletions(-)
 
-xhci_hcd 0000:38:00.0: // Setting command ring address to 0xffffe001
-xhci_hcd 0000:38:00.0: xhci_resume: starting usb3 port polling.
-xhci_hcd 0000:38:00.0: xhci_hub_status_data: stopping usb4 port polling
-xhci_hcd 0000:38:00.0: xhci_hub_status_data: stopping usb3 port polling
-xhci_hcd 0000:38:00.0: hcd_pci_runtime_resume: 0
-xhci_hcd 0000:38:00.0: xhci_shutdown: stopping usb3 port polling.
-xhci_hcd 0000:38:00.0: // Halt the HC
-xhci_hcd 0000:38:00.0: xhci_shutdown completed - status = 1
-xhci_hcd 0000:00:14.0: xhci_shutdown: stopping usb1 port polling.
-xhci_hcd 0000:00:14.0: // Halt the HC
-xhci_hcd 0000:00:14.0: xhci_shutdown completed - status = 1
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x1203, return 0x203
-xhci_hcd 0000:00:14.0: set port reset, actual port 2-3 status  = 0x1311
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x201203, return 0x100203
-xhci_hcd 0000:00:14.0: clear port3 reset change, portsc: 0x1203
-xhci_hcd 0000:00:14.0: clear port3 warm(BH) reset change, portsc: 0x1203
-xhci_hcd 0000:00:14.0: clear port3 link state change, portsc: 0x1203
-xhci_hcd 0000:00:14.0: clear port3 connect change, portsc: 0x1203
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x1203, return 0x203
-usb 2-3: device not accepting address 2, error -108
-xhci_hcd 0000:00:14.0: xHCI dying or halted, can't queue_command
-xhci_hcd 0000:00:14.0: Set port 2-3 link state, portsc: 0x1203, write 0x11261
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x1263, return 0x263
-xhci_hcd 0000:00:14.0: set port reset, actual port 2-3 status  = 0x1271
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x12b1, return 0x2b1
-usb usb2-port3: not reset yet, waiting 60ms
-ACPI: PM: Preparing to enter system sleep state S5
-xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0x12f1, return 0x2f1
-usb usb2-port3: not reset yet, waiting 200ms
-reboot: Restarting system
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 
-The port change event is caused by LPM transition, so disabling LPM at shutdown
-to make sure the device is in U0 for warmboot.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/usb/core/port.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
-index c628c1abc907..c50266d7ce9d 100644
---- a/drivers/usb/core/port.c
-+++ b/drivers/usb/core/port.c
-@@ -418,8 +418,10 @@ static void usb_port_shutdown(struct device *dev)
- {
- 	struct usb_port *port_dev = to_usb_port(dev);
- 
--	if (port_dev->child)
-+	if (port_dev->child) {
- 		usb_disable_usb2_hardware_lpm(port_dev->child);
-+		usb_unlocked_disable_lpm(port_dev->child);
-+	}
- }
- 
- static const struct dev_pm_ops usb_port_pm_ops = {
--- 
-2.34.1
+>
+> diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
+> index d93f6522b2c3..827ecc0b7e10 100644
+> --- a/include/linux/kvm_types.h
+> +++ b/include/linux/kvm_types.h
+> @@ -86,6 +86,7 @@ struct gfn_to_pfn_cache {
+>   struct kvm_mmu_memory_cache {
+>   	gfp_t gfp_zero;
+>   	gfp_t gfp_custom;
+> +	u64 init_value;
+>   	struct kmem_cache *kmem_cache;
+>   	int capacity;
+>   	int nobjs;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 9c99c9373a3e..c9828feb7a1c 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -401,12 +401,17 @@ static void kvm_flush_shadow_all(struct kvm *kvm)
+>   static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+>   					       gfp_t gfp_flags)
+>   {
+> +	void *page;
+> +
+>   	gfp_flags |= mc->gfp_zero;
+>   
+>   	if (mc->kmem_cache)
+>   		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+> -	else
+> -		return (void *)__get_free_page(gfp_flags);
+> +
+> +	page = (void *)__get_free_page(gfp_flags);
+> +	if (page && mc->init_value)
+> +		memset64(page, mc->init_value, PAGE_SIZE / sizeof(mc->init_value));
+> +	return page;
+>   }
+>   
+>   int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity, int min)
+> @@ -421,6 +426,13 @@ int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity,
+>   		if (WARN_ON_ONCE(!capacity))
+>   			return -EIO;
+>   
+> +		/*
+> +		 * Custom init values can be used only for page allocations,
+> +		 * and obviously conflict with __GFP_ZERO.
+> +		 */
+> +		if (WARN_ON_ONCE(mc->init_value && (mc->kmem_cache || mc->gfp_zero)))
+> +			return -EIO;
+> +
+>   		mc->objects = kvmalloc_array(capacity, sizeof(void *), gfp);
+>   		if (!mc->objects)
+>   			return -ENOMEM;
 
