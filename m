@@ -1,113 +1,132 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2349B1353F5
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 23:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A37137901;
+	Tue,  5 Mar 2024 23:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709683126; cv=none; b=bTnALHZQG6CoLBwSnouNSoEy0Urh6iHKbeA3WLAAyiAOgcZVX6+e4RkNDr8zSdp5AeeL8x99Am46JQN7I+6hCr84aCeAFl7EdATkxgoIKCdIQ/iTsPuhYcSCEi7S5pqhRTex9ybabbxki3Q+P8EJ5oPkOCKkups5r1b77zsO2jk=
+	t=1709683133; cv=none; b=emqe8XFrbZF/3T/A1uy8mLtqz/TwhTfQLITHHVvWW0dwT695/DLXmySsL6VxjdS5ZQhBCY6vY6CkC1moMi6WWQiIQ668s5GpXBsUQ2D6TKXGnFpBzuwmj3qB3AidMS4k6xZZcVA3e6UndfJ26340S+OrrXtMDl48qdHF8AnGgxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709683126; c=relaxed/simple;
-	bh=ZQgGWVSWytcgK5MJZ6jggoBjQfFJugefhTJSzcVcgYk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rggp95OLKU35eSmIPD81X2UjMCAzMMddjEhPMivkhs8BJTRq2sgU1D2ZRL03O+5Y/Prjh5jXYmK3ePFYTBoFVm4lsxAVpM5t7xh+22aPbOtjr/dANodRjSzp4Vv7me4RCRAvmLA5GoTmiEdagK9+ADfzkiNfK4YSL95VvFBT54U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1FLFJf6l; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com
+	s=arc-20240116; t=1709683133; c=relaxed/simple;
+	bh=4m3UYcXB+SiijSFEXT4aO9oLM2P/SBGwSBd5v733kis=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dJIva6oo+FXvjDx/S4vePsboMe6WB8IfPLexyxlFkHQ1U53Fn3eO9hkZgoCx4m3XVm0215f4cbHFn4it+XOs4IA4PYMw3bGeSpL2EXZynFWltuKqon552Gmr+ufoPXnoFeOfwYBmhhAYj1if+MURIdd+8ML/K6X6rMbepqIvTOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkKw9JSK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1FLFJf6l"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6dbdcfd39so11972871276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 15:58:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709683124; x=1710287924; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iW4+YjuNAKvAoJg+NmQ5C96xY/u5WzV8UruESW/Bs4M=;
-        b=1FLFJf6lYz6MXkeWmkVOPVP/dTbCxipBlQKRRdIQQrIYT5xVRz2QD10+XwMkhELTOO
-         A4bGpVLhcmi5j+DnbpFoSzd4qZy7nptJpe1yKBTq/h3HhcClu/RlxuWKpoH35rVoeUDN
-         TEytp1a72dm/AWNBXa6KmfCNWxBk2r5PzZnEkgRNkWpbBygTujZQslKPMjWF4AwGSs6Y
-         uhovgu9ZM/lL1czkaTMxO7dyD7W4XstRdBTElHPp7UafjG1xNJbmsc6XrgK6QNR93jZ4
-         TrBbGjYn6qCWRNdf7Mcr9hTZiuPEU+DRpRD4KN8rWLyQg2u9P8lyCJgU/vuRphq/21lo
-         w/IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709683124; x=1710287924;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iW4+YjuNAKvAoJg+NmQ5C96xY/u5WzV8UruESW/Bs4M=;
-        b=p3/A/eMWhpTosTEq3HHhS2kfGV8Uq3ydlZVYyFT+h8lzlBo8Ua6gtbjw8XT7Whdxy0
-         MR/YzKNisfLSJCp7GwcOfftQ8i93thtq+pN1c/t42rzpGvBfKFrtzUUdP8xwtcZiT7Y9
-         x9rq1Tk9PbbC0C+qc/pzCdy0+s0eboMBtTl38S3bplzGLvt5l8vZWY/hze1RMBQjbBK0
-         cX6n6888D0wnfPyMyM0EqoFcsBDKUYw6ONXiHZstjjk3grGnqdwjaDaFZmgmNOxmnwOU
-         XQ5irNBZmPjWy7KvX7ly0t9xrcUKjtCDuvLCerM6TncTr1C9l+sBz7ShBSO7W70g45n9
-         Sy4g==
-X-Forwarded-Encrypted: i=1; AJvYcCXBwf9HRVD/XmhbbG7R2+y37n0zw7ytaUV+zQfvH2KJV0e/OHR1/Y3tvFz5OMkArfxFFsMp0COzkmzPg5F0xrxL2xyJaZroRCZmU0I3
-X-Gm-Message-State: AOJu0YytxR57deLpDmaXVxJV8b1++UQh3/ISQIodgKNvmlWC74a5q6p3
-	/tTdL68AyMctCYouFs5VPH4+92D7votRcbZUSmr+IixjI1BCcV8fO45GNJFTE0C9Fkr/r1BLV/+
-	IawPCfcKoTg==
-X-Google-Smtp-Source: AGHT+IHCo10p/LCIUXuR4X0ieD7GA4BMa+s0Kua3rnoaoX1L1KdO+HKSNyVkjWeL08MQ/A07Bzu15QUgFpNe/A==
-X-Received: from ipylypiv.svl.corp.google.com ([2620:15c:2c5:13:69ff:df2c:aa81:7b74])
- (user=ipylypiv job=sendgmr) by 2002:a05:6902:728:b0:dc2:1f34:fac4 with SMTP
- id l8-20020a056902072800b00dc21f34fac4mr3509623ybt.2.1709683124213; Tue, 05
- Mar 2024 15:58:44 -0800 (PST)
-Date: Tue,  5 Mar 2024 15:58:22 -0800
-In-Reply-To: <20240305235823.3308225-1-ipylypiv@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkKw9JSK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D0CC433C7;
+	Tue,  5 Mar 2024 23:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709683132;
+	bh=4m3UYcXB+SiijSFEXT4aO9oLM2P/SBGwSBd5v733kis=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TkKw9JSKB5H6BhFodbbUblRTJv/WG01QKKMY8DWwWA1Zg661jA6QWfSi5DcgZ5CYY
+	 gOqtfC6yzNgqsHKVFS/DrSaEzC0hg899TWegmtszDWoeUJvTw6YyMUOHEBsrQL05Bt
+	 +od0e/wmluRxRknht3ZPQ3NMAFn87ba2oR8dROdgS8m0f1Ux9/Hrn1S8nNIUdI3wgr
+	 XQwFyZcRswsjwAlnDXBBNtCfDgF1FI1i52RxFSzK98bey37mXJ9ahEH1eaupPZ0W+3
+	 xXnyRvOfKgN9WCKWXT7LGcwY6QE4vlkmRba3HS5X36qjoyynC90RMonbnx0a8CuveJ
+	 W2aqQZ3cTSvqA==
+Message-ID: <311bdf17-c16f-41d8-8366-10f9b00adf27@kernel.org>
+Date: Wed, 6 Mar 2024 08:58:49 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240305235823.3308225-1-ipylypiv@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <20240305235823.3308225-8-ipylypiv@google.com>
-Subject: [PATCH v6 7/7] scsi: isci: Add libsas SATA sysfs attributes group
-From: Igor Pylypiv <ipylypiv@google.com>
-To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Jason Yan <yanaijie@huawei.com>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Jack Wang <jinpu.wang@cloud.ionos.com>, Hannes Reinecke <hare@suse.de>, 
-	Xiang Chen <chenxiang66@hisilicon.com>, Artur Paszkiewicz <artur.paszkiewicz@intel.com>, 
-	Bart Van Assche <bvanassche@acm.org>
-Cc: TJ Adams <tadamsjr@google.com>, linux-ide@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Igor Pylypiv <ipylypiv@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/7] riscv: Kconfig.socs: Allow SOC_CANAAN with MMU for
+ K230
+To: Conor Dooley <conor@kernel.org>, Yangyu Chen <cyy@cyyself.name>
+Cc: linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+References: <tencent_BB2364BBF1812F4E304F7BDDD11E57356605@qq.com>
+ <tencent_0432DA968E39B81431F921F38D747C008208@qq.com>
+ <ef8df22f-dac8-4652-bf17-d10254e6abfb@kernel.org>
+ <tencent_E56A833916E00EC7B4840C34FAF1250ADE0A@qq.com>
+ <20240305-fascism-enrich-06483ddeb149@spud>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20240305-fascism-enrich-06483ddeb149@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The added sysfs attributes group enables the configuration of NCQ Priority
-feature for HBAs that rely on libsas to manage SATA devices.
+On 3/6/24 02:20, Conor Dooley wrote:
+> On Tue, Mar 05, 2024 at 03:47:15PM +0800, Yangyu Chen wrote:
+>> On 2024/3/5 07:46, Damien Le Moal wrote:
+>>> On 3/5/24 06:05, Yangyu Chen wrote:
+>>>> Since K230 was released, SOC_CANAAN is no longer only referred to the K210.
+>>>> Remove it depends on !MMU will allow building dts for K230 and remove the
+>>>> K210 string from the help message.
+>>>>
+>>>> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+>>>> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>>>> ---
+>>>>   arch/riscv/Kconfig.socs | 5 ++---
+>>>>   1 file changed, 2 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+>>>> index 623de5f8a208..b4e9b7f75510 100644
+>>>> --- a/arch/riscv/Kconfig.socs
+>>>> +++ b/arch/riscv/Kconfig.socs
+>>>> @@ -75,13 +75,12 @@ config ARCH_CANAAN
+>>>>   	def_bool SOC_CANAAN
+>>>>   config SOC_CANAAN
+>>>> -	bool "Canaan Kendryte K210 SoC"
+>>>> -	depends on !MMU
+>>>
+>>> This seems wrong to me. The k210 support does require no-mmu. So why remove
+>>> this ?
+>>
+>> It just allows SOC_CANAAN to be selected when MMU=y. With this patch,
+>> nommu_k210_defconfig still works.
+> 
+> I think the concern here is that this would allow people to build a
+> kernel for the k120 with the MMU enabled, not that the existing nommu
+> build will be affected.
 
-Reviewed-by: John Garry <john.g.garry@oracle.com>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Jason Yan <yanaijie@huawei.com>
-Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
----
- drivers/scsi/isci/init.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Yes, this is my concern. Apologies for the lack of clarity.
 
-diff --git a/drivers/scsi/isci/init.c b/drivers/scsi/isci/init.c
-index 6277162a028b..8658dcd61b87 100644
---- a/drivers/scsi/isci/init.c
-+++ b/drivers/scsi/isci/init.c
-@@ -149,6 +149,11 @@ static struct attribute *isci_host_attrs[] = {
- 
- ATTRIBUTE_GROUPS(isci_host);
- 
-+static const struct attribute_group *isci_sdev_groups[] = {
-+	&sas_ata_sdev_attr_group,
-+	NULL
-+};
-+
- static const struct scsi_host_template isci_sht = {
- 
- 	.module				= THIS_MODULE,
-@@ -176,6 +181,7 @@ static const struct scsi_host_template isci_sht = {
- 	.compat_ioctl			= sas_ioctl,
- #endif
- 	.shost_groups			= isci_host_groups,
-+	.sdev_groups			= isci_sdev_groups,
- 	.track_queue_depth		= 1,
- };
- 
+> 
+> Maybe you could squash in something like the following?
+> 
+> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> index b4e9b7f75510..75d55059163f 100644
+> --- a/arch/riscv/Kconfig.socs
+> +++ b/arch/riscv/Kconfig.socs
+> @@ -72,15 +72,19 @@ config SOC_VIRT
+>  	  This enables support for QEMU Virt Machine.
+>  
+>  config ARCH_CANAAN
+> -	def_bool SOC_CANAAN
+> +	bool "Canaan Kendryte SoCs"
+> +	help
+> +	  This enables support for Canaan Kendryte SoC platform hardware.
+>  
+>  config SOC_CANAAN
+> -	bool "Canaan Kendryte SoC"
+> +	bool "Canaan Kendryte K210 SoC"
+> +	depends on !MMU
+> +	depends on ARCH_CANAAN
+>  	select CLINT_TIMER if RISCV_M_MODE
+>  	select ARCH_HAS_RESET_CONTROLLER
+>  	select PINCTRL
+>  	select COMMON_CLK
+>  	help
+> -	  This enables support for Canaan Kendryte SoC platform hardware.
+> +	  This enables support for Canaan Kendryte K210 SoC platform hardware.
+>  
+>  endmenu # "SoC selection"
+> 
+> (Which reminds me, I really need to go and finish sorting out the ARCH_
+> stuff)
+
 -- 
-2.44.0.278.ge034bb2e1d-goog
+Damien Le Moal
+Western Digital Research
 
