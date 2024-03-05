@@ -1,144 +1,216 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2213FE37
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 03:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317BB3CF4B;
+	Tue,  5 Mar 2024 03:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709609291; cv=none; b=Vk1M9UxkB2esRM67nrbfHB5GrmervtitcLd6lnntlK8b1KyPl3eVQ6QX6TQIWxc2xywX6MXsY2zqB8jlsZoRU/aLL0obfxxQT4QTW5c7vago6gcCtRVOj3oxZ8PEgBKU5L7ynlXveSCFAXxiF0cCfpRkLnrYzL9k7cx7FzfydYI=
+	t=1709609330; cv=none; b=ZgP6+P835Wc59fgAorSfj21ri3p7wJ0oXiVoRgiI+ElxBhpt5H3vWSU0POjeOmO+l3Xh8XqXgemEqjb/1UDgpEZI5OnjnNxzlg+PwrxikhG2HxVSl8e2l8mIKFI2i5Qr5nHa2Adxa75z9JBItqjlBW0FlR2jndzZS0VWm0xAaP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709609291; c=relaxed/simple;
-	bh=WamC2udXV+suNnmADkzTuVlaBpdRhCTM/8Q7q9WbMeM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uWPycMlFmSclyFhEqlEoPi/rLXUfvn6l2kvbAe1r9TjPoT89cZlzgRTRldi1NmYtvEnTMxvYIPTnwV60uwLGyMi8cZaukQzbJuYwcDKdJub+kLZn92b8O4pjAPx/QHVc/pcUWbUY5b2de75FJ8scYxdBQK/Rv5OrmyNhbQOPqzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HFUrb4Ms; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1709609330; c=relaxed/simple;
+	bh=RMzA9rsJeXJ+NZUU8skMoi7MVTR2cmvx/sC1vW5T8zQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cNZKShuDxgsAMVmPcYIInKcfrKifENNgxIPRj1vMyoDoOOJRdih0IPCDJoRfRayj1hnXC1t4QePIXwGDHQomy1tgvCa/pdxF+GHCf9nR8IYY18kG6HRg1I2QjO08evcp3O9FHM3AOsYzQMy0AKNTwL9jNgOl+La1hsJxnKnhCVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIywen2I; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HFUrb4Ms"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c1f55ba3ecso616243b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 19:28:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIywen2I"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a452877ddcaso232665566b.3;
+        Mon, 04 Mar 2024 19:28:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709609288; x=1710214088; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1709609327; x=1710214127; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oQEHwzYRYJKhL3B500sQ7f4LkRj9XfhmOot1cZDRXYg=;
-        b=HFUrb4MsO4JcvsLa78buDYFti0el0zflpT8y0/yZvHmk4tsrKqCPEDPep5GyIBmq8f
-         gt29h8fZpYaDURK2kK02q0drJ8P5MruXjB4Icfq6z01T7JIkLhiTHvnw2z6qBM95WZTR
-         w8MlMAXvFknnf3dERTi+RT/y6KYJjAaxnTPoQtg+Q6hZJLuUqgp+SuKqaL956bxShrM2
-         Mb3qM0vJdctCYq732vDGpApkrWslT/8sHL6Lw2DsustveT6d23xGnlJ28u5aGr4zlYi8
-         EMLd4cPN7MwODCtARphsqbJH10UBwaG9ip+HaaslSdXopYhNFcTJUvWvQTRdRV1gxpFW
-         0WFg==
+        bh=4QJKuDK8BEZDzB9t4thrSaIr8oltYP1pSdpjVP1pzNg=;
+        b=PIywen2IYpiVYbtuecQrlc+B6PnmdldC4TitlAWiIt7BLH8XRTnTdFFju4p6vF8g9p
+         Md3ojoJfzKbsCaPRjmlfd/HLmXAoC3p/cCf/bdwMgLBZmro/EHJSoQjV8eg9a9uho2yz
+         6tFPF2J5oua8ksAABkq/9RWgDXTf2fhR3kZeDxxakdTP18tcGIK/BUr/DDTloS6qIUAj
+         gCsi3frigv0nbpzFTgrNTSJ18lZyerKTQmn2s7xgE1uL3uQEDup8GWEfIEPQ9SwFX3s0
+         yXKxCI8/XhcMbvRuZzTE2wt0+ovhh1lG7YDeVB713brj5gb7YmTSuMknYHV+S0zmsJuB
+         eGUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709609288; x=1710214088;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oQEHwzYRYJKhL3B500sQ7f4LkRj9XfhmOot1cZDRXYg=;
-        b=clVQwz2tyNIkx2i3cLSD7YBmY2FnBJcESNCcYMktrcXGvqeX/wkB9Wc4hF4gqajJnt
-         MPYu3ofOaxSYUjUNUw/oIgSHHi9Fg2jJo28QHgnBfj3hjDcB2huyJzdv+dR5/DsG9MAc
-         KRIy6oCP+qmxxtb6QHCcGMyl/ZZ9qrrqQa+ur2/4FLaWfpEqV3Dvp2zID6a7ycSSgLHj
-         HSP4t5sk97b0AKECucJV5Z0lMSau0mQBunXKpjUoVayR5qBLYvcv6sfd40Esxvvc4w+8
-         jNFGfs5YUojCoTAeAueBfkvkxGu1ojG/b6zXhCt6NG7h6u1iqL8bCZCBJIvN1H2bW3IA
-         wVXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHTLMwEpeZHLCE2VjH6dFalfosCp64pq0BsSZtrVSz1eA9BqooWcIotodWCjmXV/UtG2JDp/dZY4TVDB7V1fX7yeI9Q4YAbGKTsaAY
-X-Gm-Message-State: AOJu0Yx8rMmGgTXisonsqpTOY5oO9eFRMmxvVkJwpMqZrcEUEpipNEQX
-	nMAOhn4ccOpgNUalCu0sbFgc+z3HVzvVHjuOUoxXdOHcWqT5x0agKMM5wsM0/Hc=
-X-Google-Smtp-Source: AGHT+IH2bQSMUzSN0S02zlOvSm/FNREnSgBFsEIuRGxZZenpRGxcP7zX2plnTQLrROGRE+fJmgepIw==
-X-Received: by 2002:a05:6808:1524:b0:3c1:ed50:7c2b with SMTP id u36-20020a056808152400b003c1ed507c2bmr807224oiw.47.1709609288317;
-        Mon, 04 Mar 2024 19:28:08 -0800 (PST)
-Received: from ?IPV6:fdbd:ff1:ce00:1d7c:876:e31b:5d3a:49d6? ([2001:c10:ff04:0:1000:0:1:6])
-        by smtp.gmail.com with ESMTPSA id b128-20020a62cf86000000b006e510c61d49sm8335459pfg.183.2024.03.04.19.28.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 19:28:07 -0800 (PST)
-Message-ID: <c98aa910-7b14-401d-a257-274682bb7486@bytedance.com>
-Date: Tue, 5 Mar 2024 11:28:01 +0800
+        d=1e100.net; s=20230601; t=1709609327; x=1710214127;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4QJKuDK8BEZDzB9t4thrSaIr8oltYP1pSdpjVP1pzNg=;
+        b=L/6VaYWBf+36Fp16lNhbG9tsIeuWD1eev7YSSnh/MM1JERYfoob61zUIwjca5MP0jt
+         lTSbAHU2Ppj/yx5zQybTn3dVQZF8Rz6MiL+gPeh/e15p5kvn+D5SHeeJP9UevMNW/CAA
+         Z4aG6i1OJ6vQuzNsG8sSHuTq2hiujMbsbd/ja/zVtb7zBsKqzjaO+8mOYmDJyDw3p/nY
+         f2kS/3WEE/IisiJMKmf/NELAXUxXBQVsxW5mhyA/z1xWvBekQVEp7gyghgXNFKSnlTA9
+         bGx7RdHIIxNNSnH6aPIvKVsaKN/jjz1XqZKzmculL7agJF6HkJnrCUIRl7DfBj1yayu6
+         E1Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCVg6wbv/aUxTyILOMPtwMugNqQL3foPFoZSIGiMvQiVhwGkDV0Lr1ldxAKFRPVvdxZBxvPdsJiBstoZ2UGd5DiW96ecLO9a1IeU4dik/7Kg0s14C8WiQkQtlWBrWnZTPa6f3X1vJQ==
+X-Gm-Message-State: AOJu0Yx5xGbfIydTbn4pYb0P6M80kvNeWl8SCy4YI1mjQ6ap8wKOykHh
+	gMdb1e0ZTpGFkNDxwfbuyuMpbw5NXUz9GBoGQlRlPLx0/pHlyPuMz8cz/sLwNGhjuTEkyt/v+ks
+	pFcC9Nl0QwcxZFBVN+qpKEV7tlag=
+X-Google-Smtp-Source: AGHT+IEDtonzYkx06LNLyN9IEWoJm1ngNQAo134vLqcwoy6xfOUTDb+TH4fHTgtYSUUQZsup/0uu0m8MAVS5NaKNknE=
+X-Received: by 2002:a17:906:c294:b0:a43:fd9d:a64 with SMTP id
+ r20-20020a170906c29400b00a43fd9d0a64mr6711404ejz.31.1709609327242; Mon, 04
+ Mar 2024 19:28:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] Re: [PATCH v2 0/3] Support intra-function call
- validation
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, hpa@zytor.com,
- jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
- stable@vger.kernel.org, alexandre.chartre@oracle.com, x86@kernel.org,
- linux-kernel@vger.kernel.org, yuanzhu@bytedance.com
-References: <20240228024535.79980-1-qirui.001@bytedance.com>
- <2024030438-dropout-satisfy-b4c4@gregkh>
- <2024030404-conjoined-unlined-05c0@gregkh>
-From: Rui Qi <qirui.001@bytedance.com>
-In-Reply-To: <2024030404-conjoined-unlined-05c0@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAEkJfYOh-5_KzWih=qUxynbn=mMz=UfnPi6UftbyT8+MTDP0jg@mail.gmail.com>
+ <CAHC9VhQ3crxcLXbT3fw2k7jYJFKy1VOm25npKpD9ZrwmwKzvJw@mail.gmail.com>
+ <CAJ2a_DcSurcF5_G-DjXL_0X=utasy2y8oJ_ywCms-Qhyy6GORQ@mail.gmail.com>
+ <CAHC9VhQVqokvnnqLPc8tv0jpewnUKqnWeAzQs-sMj3BLrY5=CA@mail.gmail.com>
+ <CAEkJfYOTNdu2rK-7F58sg7XuYk+trdGDBjYo-y0SusxmSeCkFA@mail.gmail.com> <CAHC9VhS=izWYH7uaFcF9vre3GF06FitLXj0uUOKzMAwvq29OEw@mail.gmail.com>
+In-Reply-To: <CAHC9VhS=izWYH7uaFcF9vre3GF06FitLXj0uUOKzMAwvq29OEw@mail.gmail.com>
+From: Sam Sun <samsun1006219@gmail.com>
+Date: Tue, 5 Mar 2024 11:28:35 +0800
+Message-ID: <CAEkJfYP6jG5c5Ng4P1=QL_MVXT+5GJy_LTQUxnwQ0Peqo2v7-Q@mail.gmail.com>
+Subject: Re: [Bug] WARNING: zero-size vmalloc in sel_write_load
+To: Paul Moore <paul@paul-moore.com>
+Cc: =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>, 
+	linux-kernel@vger.kernel.org, "xrivendell7@gmail.com" <xrivendell7@gmail.com>, 
+	syzkaller@googlegroups.com, selinux@vger.kernel.org, omosnace@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Greg,
-I checked out commit e133c1ee6d7271007fdba3dbe78818afd88943f9 (Linux 5.4.270), applied my patche set on top, enabled CONFIG_LIVEPATCH based on x86 defconfig, compiled without any issues. I couldn't even grep unwind_hint_empty in the codebase, so I'm quite puzzled about how this phenomenon occurred. Can you tell me how to reproduce this compilation error?
+On Tue, Mar 5, 2024 at 11:16=E2=80=AFAM Paul Moore <paul@paul-moore.com> wr=
+ote:
+>
+> On Mon, Mar 4, 2024 at 9:32=E2=80=AFPM Sam Sun <samsun1006219@gmail.com> =
+wrote:
+> > On Tue, Mar 5, 2024 at 4:45=E2=80=AFAM Paul Moore <paul@paul-moore.com>=
+ wrote:
+> > > On Mon, Mar 4, 2024 at 3:11=E2=80=AFPM Christian G=C3=B6ttsche
+> > > <cgzones@googlemail.com> wrote:
+> > > > On Mon, 4 Mar 2024 at 20:19, Paul Moore <paul@paul-moore.com> wrote=
+:
+> > > > > On Mon, Mar 4, 2024 at 9:08=E2=80=AFAM Sam Sun <samsun1006219@gma=
+il.com> wrote:
+> > > > > >
+> > > > > > Dear developers and maintainers,
+> > > > > >
+> > > > > > We encountered a warning in function sel_write_load(). It is te=
+sted on
+> > > > > > kernel 6.8.0-rc7. Bug report is listed below.
+> > > > > >
+> > > > > > ```
+> > > > > > WARNING: CPU: 1 PID: 8109 at mm/vmalloc.c:3247
+> > > > > > __vmalloc_node_range+0x10a0/0x1490 mm/vmalloc.c:3247
+> > > > > > Modules linked in:
+> > > > > > CPU: 1 PID: 8109 Comm: syz-executor370 Not tainted 6.7.0-rc7 #1
+> > > > > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.1=
+5.0-1 04/01/2014
+> > > > > > RIP: 0010:__vmalloc_node_range+0x10a0/0x1490 mm/vmalloc.c:3247
+> > > > > > Code: 65 48 2b 04 25 28 00 00 00 0f 85 98 02 00 00 48 81 c4 70 =
+01 00
+> > > > > > 00 4c 89 e0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 e8 71 43 b7 ff 90 =
+<0f> 0b
+> > > > > > 90 45 31 e4 eb a1 e8 63 43 b7 ff 48 8b 4c 24 40 31 f6 45 31
+> > > > > > RSP: 0018:ffffc90002adf9c0 EFLAGS: 00010293
+> > > > > > RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffff81cdc1=
+94
+> > > > > > RDX: ffff888022124ec0 RSI: ffffffff81cdd16f RDI: 00000000000000=
+07
+> > > > > > RBP: 0000000000000000 R08: 0000000000000007 R09: 00000000000000=
+00
+> > > > > > R10: 0000000000000000 R11: 0000000000000001 R12: ffff888107373a=
+48
+> > > > > > R13: dffffc0000000000 R14: 0000000000000000 R15: ffffc90002adfe=
+c8
+> > > > > > FS:  00005555560953c0(0000) GS:ffff888135c00000(0000) knlGS:000=
+0000000000000
+> > > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > > CR2: 0000000020000010 CR3: 000000010503d000 CR4: 0000000000750e=
+f0
+> > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000000=
+00
+> > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000004=
+00
+> > > > > > PKRU: 55555554
+> > > > > > Call Trace:
+> > > > > >  <TASK>
+> > > > > >  __vmalloc_node mm/vmalloc.c:3385 [inline]
+> > > > > >  vmalloc+0x6b/0x80 mm/vmalloc.c:3418
+> > > > > >  sel_write_load+0x27f/0x19d0 security/selinux/selinuxfs.c:603
+> > > > > >  vfs_write+0x2a9/0xd80 fs/read_write.c:582
+> > > > > >  ksys_pwrite64 fs/read_write.c:699 [inline]
+> > > > > >  __do_sys_pwrite64 fs/read_write.c:709 [inline]
+> > > > > >  __se_sys_pwrite64 fs/read_write.c:706 [inline]
+> > > > > >  __x64_sys_pwrite64+0x1f3/0x250 fs/read_write.c:706
+> > > > > >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> > > > > >  do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
+> > > > > >  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+> > > > > > RIP: 0033:0x7f40e7728f8d
+> > > > > > Code: 28 c3 e8 46 1e 00 00 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 =
+f8 48
+> > > > > > 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 =
+<48> 3d
+> > > > > > 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> > > > > > RSP: 002b:00007fff5bf39508 EFLAGS: 00000246 ORIG_RAX: 000000000=
+0000012
+> > > > > > RAX: ffffffffffffffda RBX: 00007fff5bf39708 RCX: 00007f40e7728f=
+8d
+> > > > > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000=
+03
+> > > > > > RBP: 0000000000000001 R08: 0000000000000000 R09: 00007fff5bf397=
+08
+> > > > > > R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000000=
+01
+> > > > > > R13: 00007fff5bf396f8 R14: 00007f40e77a6530 R15: 00000000000000=
+01
+> > > > > >  </TASK>
+> > > > > > ```
+> > > > > >
+> > > > > > The cause of this bug is that in sel_write_load(), parameter "c=
+ount"
+> > > > > > is controlled by user, which could be zero. It is passed to vma=
+lloc()
+> > > > > > as an argument.
+> > > > > >
+> > > > > > If you have any questions, please contact us.
+> > > > > > Reported by: Yue Sun <samsun1006219@gmail.com>
+> > > > > > Reported by: xingwei lee <xrivendell7@gmail.com>
+> > > > >
+> > > > > Everything appears to be working as expected, vmalloc() caught th=
+e
+> > > > > zero-length allocation request, emitted the warning, returned NUL=
+L to
+> > > > > sel_write_load(), and sel_write_load() handled the error conditio=
+n
+> > > > > triggered by vmalloc(0) returning NULL.  Did you see any unexpect=
+ed
+> > > > > behavior beyond this warning message above?
+> > > >
+> > > > Probably because kernel warnings should not be reachable from
+> > > > userspace ...
+> > >
+> > > My question was asking if the reporter was seeing any unexpected
+> > > behavior *beyond* the warning message.  I wanted to make sure they
+> > > weren't seeing anything else on their system that we should also take
+> > > into account.
+> >
+> > I didn't see any unexpected behavior beyond this warning message. You
+> > are right, everything appears to be working as expected. Like
+> > Christian said, I enabled kernel panic_on_warn config. I thought
+> > kernel warning was something worthy to report, but I was wrong. In
+> > future reports, I will check carefully to eliminate kernel warnings
+> > like "vmalloc zero" and "page size alloc too large" if they don't have
+> > unexpected behaviors. Sorry for wasting your time analyzing it, and
+> > thanks for pointing out my mistake!
+>
+> Thanks for the quick reply, I just wanted to make sure there wasn't
+> some other bug that was also triggered by passing a 0 count value; I'm
+> glad to hear there isn't.  Regardless, there is likely some value in
+> protecting against 0 count/size values and I just posted a patch to do
+> just that (and some other misc cleanups to sel_write_load()).
+>
+> --
+> paul-moore.com
 
-In addition, my patchset only applies to the LTS branch of 5.4, not to other branches. Please be careful not to merge it into other branches.Other stable branches do not have the problem of such kernel livepatch issue.
+Maybe I should compile the kernel without panic_on_warn config, so
+that I can see how zero count / size values are passed through code
+and check if there is another potential threat. Thanks for your
+advice!
 
-On 3/4/24 6:55 PM, Greg KH wrote:
-> On Mon, Mar 04, 2024 at 11:41:46AM +0100, Greg KH wrote:
->> On Wed, Feb 28, 2024 at 10:45:32AM +0800, Rui Qi wrote:
->>> Since kernel version 5.4.217 LTS, there has been an issue with the kernel live patching feature becoming unavailable.
->>> When compiling the sample code for kernel live patching, the following message is displayed when enabled:
->>>
->>> livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
->>>
->>> Reproduction steps:
->>> 1.git checkout v5.4.269 -b v5.4.269
->>> 2.make defconfig
->>> 3. Set CONFIG_LIVEPATCH=y、CONFIG_SAMPLE_LIVEPATCH=m
->>> 4. make -j bzImage
->>> 5. make samples/livepatch/livepatch-sample.ko
->>> 6. qemu-system-x86_64 -kernel arch/x86_64/boot/bzImage -nographic -append "console=ttyS0" -initrd initrd.img -m 1024M
->>> 7. insmod livepatch-sample.ko
->>>
->>> Kernel live patch cannot complete successfully.
->>>
->>> After some debugging, the immediate cause of the patch failure is an error in stack checking. The logs are as follows:
->>> [ 340.974853] livepatch: klp_check_stack: kworker/u256:0:23486 has an unreliable stack
->>> [ 340.974858] livepatch: klp_check_stack: kworker/u256:1:23487 has an unreliable stack
->>> [ 340.974863] livepatch: klp_check_stack: kworker/u256:2:23488 has an unreliable stack
->>> [ 340.974868] livepatch: klp_check_stack: kworker/u256:5:23489 has an unreliable stack
->>> [ 340.974872] livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
->>> ......
->>>
->>> BTW,if you use the v5.4.217 tag for testing, make sure to set CONFIG_RETPOLINE = y and CONFIG_LIVEPATCH = y, and other steps are consistent with v5.4.269
->>>
->>> After investigation, The problem is strongly related to the commit 8afd1c7da2b0 ("x86/speculation: Change FILL_RETURN_BUFFER to work with objtool"),
->>> which would cause incorrect ORC entries to be generated, and the v5.4.217 version can undo this commit to make kernel livepatch work normally.
->>> It is a back-ported upstream patch with some code adjustments,from the git log, the author also mentioned no intra-function call validation support.
->>>
->>> Based on commit 6e1f54a4985b63bc1b55a09e5e75a974c5d6719b (Linux 5.4.269), This patchset adds stack validation support for intra-function calls,
->>> allowing the kernel live patching feature to work correctly.
->>>
->>> Alexandre Chartre (2):
->>>    objtool: is_fentry_call() crashes if call has no destination
->>>    objtool: Add support for intra-function calls
->>>
->>> Rui Qi (1):
->>>    x86/speculation: Support intra-function call validation
->>>
->>>   arch/x86/include/asm/nospec-branch.h          |  7 ++
->>>   include/linux/frame.h                         | 11 ++++
->>>   .../Documentation/stack-validation.txt        |  8 +++
->>>   tools/objtool/arch/x86/decode.c               |  6 ++
->>>   tools/objtool/check.c                         | 64 +++++++++++++++++--
->>>   5 files changed, 91 insertions(+), 5 deletions(-)
->>
->> All now queued up, thanks!
-> 
-> Nope, these break the build:
-> 
-> ../arch/x86/include/asm/nospec-branch.h:313: Error: no such instruction: `unwind_hint_empty'
-> ../arch/x86/include/asm/nospec-branch.h:313: Error: no such instruction: `unwind_hint_empty'
-> 
-> How did you test them?  I'll go drop them from the queue now, sorry.
-> Please fix them up and resend when you have something that works.
-> 
-> greg k-h
+Best Regards,
+Yue
