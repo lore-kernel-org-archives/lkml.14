@@ -1,73 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666A85F466;
-	Tue,  5 Mar 2024 10:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BF35F85E
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 10:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633771; cv=none; b=VRXgAD++odSxnW8JWBHtqH9HG5RZZPAakXy5R75duY2uHuEog73F92tFvM1++Ca48yUw6DG9ZzjWYvd1jQ5FMZt4jYJpA0la58I9WrvyQE+RUxjJisngfh05CKl/SjE2O0yg+/jO9VxOw7Fkk4sHWnvjEwZ12HdQXsES1W4qWVo=
+	t=1709633775; cv=none; b=IE2mES6D6OK6MSBMERfar71Ar0KFZYlAkjO6qqwAb4CBMy9q8kGfVDmh/4taG6JatlsrDbOIKP4uKCf5S3o+imaWQZAPM7fr7acq4kGPICwstaJyN2SlHFzp3fxDFO6TYol2P4lUizvfjUSmAM3rKvGSwNFyyAYl8au4/r+tC2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633771; c=relaxed/simple;
-	bh=VVD1wxwJfNeGBkq+0kcqb+dcMkI1qAL6P7iY3YcEByk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kl1+NLQ4X55smiqwuFCpGbCPXc2IqAcpS/xWCuZVp7RnjmpB2nyy2+UqSWx/nbvMr0nmbNyTFqZhL8RipK+r2e16bRwPgXGbKcd57hTFehi/dYJi3saGVVChtOh0R/F5ArWooWhs0muYaMUDm1AlmTNnbsNih8r8H7ZJShMOVLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Re5/PREc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709633775; c=relaxed/simple;
+	bh=b6RJaB6sumGJFM2Uj0ceavLrEbxNxnUwPdzTbSlLs1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lSwL2NEGSDTqxGJ1b2Z30y16eRZR3vQNNQOOEF4VrbW8cPnNh5gSHQEY3s3J7w0jXchp1D6aY1cB9+mjtQLBet+wJwGOk+J69/NNcD5e8g2XveVzVLGG8PEBuznPBd6Dozg4EwsbgRlnQw704RVvy59ZcOFV5c/WRJcfTan8F6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=Z+F4bEeA; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Re5/PREc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2030C433F1;
-	Tue,  5 Mar 2024 10:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709633771;
-	bh=VVD1wxwJfNeGBkq+0kcqb+dcMkI1qAL6P7iY3YcEByk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Re5/PREctans6bjAaCScdeo+OGx9Q0gK1V/DUyZejXI/cOEwqo9NbvH0bS0ukSRzY
-	 IO/UKo4/zvHoXhFlzBm7rkytV2fXO3sfDTwKk1YF4g7KnjIZJnhC38ThoJ8egOf97m
-	 g4a34Fomxt5HbL1QobDIYe5WO49HDJFoBuSUR3sxyehwushCKt9mQaenNr4ah8bZjI
-	 iRyOhCdtO8jqtiPOwv6kquAL+SI7/sZiOaVipfxPtHPM9YEoRLtuvc3A7Jy/k5unuZ
-	 O5i2rMBduMf6GtLh0Na4vtbnu75fR3CLlqQUL81nhWRM2LWeNit78vQf/3WGAsKjtj
-	 dpiN3RI5d/DnQ==
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: [RFC 09/16] RDMA/core: Separate DMA mapping to caching IOVA and page linkage
-Date: Tue,  5 Mar 2024 12:15:19 +0200
-Message-ID: <22f9bd2e33ca2ec2b3d3bbd4cbac55122991e02f.1709631413.git.leon@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <a77609c9c9a09214e38b04133e44eee67fe50ab0.1709631413.git.leon@kernel.org>
-References: <a77609c9c9a09214e38b04133e44eee67fe50ab0.1709631413.git.leon@kernel.org>
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="Z+F4bEeA"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4727ca88800so1386249137.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 02:16:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1709633773; x=1710238573; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/eAz82ZIOSvKn3Q+VG6kky/x7f26GA/KRM2I3Q+2YtI=;
+        b=Z+F4bEeAe6EHrvVMD9bwsoTJz59Jz0OGNdK9l0E4v0pljjmE18Rbacu9mGm/lc5Y09
+         Oa95SoEIXRm0BhFBapixbXU9XjJnS/QGLjaEDe4RF7l5vJ4PYDjq532mDMu0itMxjl5a
+         aM5tFekrNJnbqSHs8XzfC95A6tS2O9BEUuaU2w09tyb7vZo/z87VSYWMUpTA8ddK6/to
+         aa9DnYslNfNIHuPPDs6kfQPSH6dOu21UrLJIEW2pScqnWp3xoCkDmBc0LNIxpA0rMTAe
+         wBiii4SLcGbeXikYVDdP0r/6oGzrI6E8IomVPue5LB9IRbvUq8G2c3D1zfLBqYYsRjpJ
+         apKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709633773; x=1710238573;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/eAz82ZIOSvKn3Q+VG6kky/x7f26GA/KRM2I3Q+2YtI=;
+        b=DZoOMKMB4D0WgLO236ypy6iUUCWXw/u7vRrOxJkklXAN5VwlWArnPEQb8bSjXGur2h
+         FVSMPQxy8mKzY/2BW+/QZji8SaXOyN6LA/39CqBb7qScvROnIF7tNsPCBkHnBoD0b8C8
+         FxwRCYGOig3V3mvF+r3ledegcTLKlVdetsflBHj3RrDBZeNS5kI2aNMdzP2TJC++lZhT
+         nM7d1BabI5/l9LeYSCE9pb8KwjEHvcH1rRWg468YpAEWVbCUkxCnuSkIbOtiJCGI3g7S
+         jrD7+jdmUPmijATMafyAyDdKZIuu5OombT8iQwPkHmCMjSnes699WADSeplCb70gCKG0
+         /adg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMvysBA1cIOmMVg7AYutJ/hCgynANJKUFJUXeMHKLZ+kVMDKJgY5X9WfaUBeLjNxk5i2I9n3K+ChNacCzEC9HNb+0RrQIIyebtgjVy
+X-Gm-Message-State: AOJu0YwH92KGtrLa2X/izG+WoJiaW88UmTTyUbNAfajPqZ0QHMopHcjy
+	MvCwhy5I4cWGjwSYeLkodY+9eK/XGrXxXCaaU9BzWVqSyERTbKHJ8JcBY3Pi8e4=
+X-Google-Smtp-Source: AGHT+IHqLKcI9j3SEC5wxY+r6RQNAXrTu2EzmDh6YpNMF0bSgCmN8TP6y/sZZAZQjlOYYACcg1oCOA==
+X-Received: by 2002:a05:6102:5094:b0:471:e440:6604 with SMTP id bl20-20020a056102509400b00471e4406604mr1366885vsb.32.1709633773024;
+        Tue, 05 Mar 2024 02:16:13 -0800 (PST)
+Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
+        by smtp.gmail.com with ESMTPSA id h30-20020a0561023d9e00b0046d2d45d7cfsm1877089vsv.16.2024.03.05.02.16.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 02:16:12 -0800 (PST)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>
+Cc: mazziesaccount@gmail.com,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v2] hwmon: (pmbus/mp2975) Fix IRQ masking
+Date: Tue,  5 Mar 2024 15:46:07 +0530
+Message-ID: <20240305101608.2807612-1-naresh.solanki@9elements.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,258 +70,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Leon Romanovsky <leonro@nvidia.com>
+From: Patrick Rudolph <patrick.rudolph@9elements.com>
 
-Reuse newly added DMA API to cache IOVA and only link/unlink pages
-in fast path.
+The MP2971/MP2973 use a custom 16bit register format for
+SMBALERT_MASK which doesn't follow the PMBUS specification.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Map the PMBUS defined bits used by the common code onto the custom
+format used by MPS and since the SMBALERT_MASK is currently never read
+by common code only implement the mapping for write transactions.
+
+Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+
 ---
- drivers/infiniband/core/umem_odp.c | 57 ++----------------------------
- drivers/infiniband/hw/mlx5/odp.c   | 22 +++++++++++-
- include/rdma/ib_umem_odp.h         |  8 +----
- include/rdma/ib_verbs.h            | 36 +++++++++++++++++++
- 4 files changed, 61 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-index 3619fb78f786..1301009a6b78 100644
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -81,20 +81,13 @@ static inline int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
- 		if (!umem_odp->pfn_list)
- 			return -ENOMEM;
- 
--		umem_odp->dma_list = kvcalloc(
--			ndmas, sizeof(*umem_odp->dma_list), GFP_KERNEL);
--		if (!umem_odp->dma_list) {
--			ret = -ENOMEM;
--			goto out_pfn_list;
--		}
- 
- 		umem_odp->iova.dev = dev->dma_device;
- 		umem_odp->iova.size = end - start;
- 		umem_odp->iova.dir = DMA_BIDIRECTIONAL;
- 		ret = ib_dma_alloc_iova(dev, &umem_odp->iova);
- 		if (ret)
--			goto out_dma_list;
--
-+			goto out_pfn_list;
- 
- 		ret = mmu_interval_notifier_insert(&umem_odp->notifier,
- 						   umem_odp->umem.owning_mm,
-@@ -107,8 +100,6 @@ static inline int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
- 
- out_free_iova:
- 	ib_dma_free_iova(dev, &umem_odp->iova);
--out_dma_list:
--	kvfree(umem_odp->dma_list);
- out_pfn_list:
- 	kvfree(umem_odp->pfn_list);
+Changes in V2:
+1. Add/Update comment
+2. Update SWAP define to include both variable.
+3. Add defines for each bits of SMBALERT mask.
+---
+ drivers/hwmon/pmbus/mp2975.c | 77 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+
+diff --git a/drivers/hwmon/pmbus/mp2975.c b/drivers/hwmon/pmbus/mp2975.c
+index e5fa10b3b8bc..766026204d88 100644
+--- a/drivers/hwmon/pmbus/mp2975.c
++++ b/drivers/hwmon/pmbus/mp2975.c
+@@ -392,6 +392,82 @@ static int mp2973_read_word_data(struct i2c_client *client, int page,
  	return ret;
-@@ -288,7 +279,6 @@ void ib_umem_odp_release(struct ib_umem_odp *umem_odp)
- 		mutex_unlock(&umem_odp->umem_mutex);
- 		mmu_interval_notifier_remove(&umem_odp->notifier);
- 		ib_dma_free_iova(dev, &umem_odp->iova);
--		kvfree(umem_odp->dma_list);
- 		kvfree(umem_odp->pfn_list);
- 	}
- 	put_pid(umem_odp->tgid);
-@@ -296,40 +286,10 @@ void ib_umem_odp_release(struct ib_umem_odp *umem_odp)
- }
- EXPORT_SYMBOL(ib_umem_odp_release);
- 
--/*
-- * Map for DMA and insert a single page into the on-demand paging page tables.
-- *
-- * @umem: the umem to insert the page to.
-- * @dma_index: index in the umem to add the dma to.
-- * @page: the page struct to map and add.
-- * @access_mask: access permissions needed for this page.
-- *
-- * The function returns -EFAULT if the DMA mapping operation fails.
-- *
-- */
--static int ib_umem_odp_map_dma_single_page(
--		struct ib_umem_odp *umem_odp,
--		unsigned int dma_index,
--		struct page *page)
--{
--	struct ib_device *dev = umem_odp->umem.ibdev;
--	dma_addr_t *dma_addr = &umem_odp->dma_list[dma_index];
--
--	*dma_addr = ib_dma_map_page(dev, page, 0, 1 << umem_odp->page_shift,
--				    DMA_BIDIRECTIONAL);
--	if (ib_dma_mapping_error(dev, *dma_addr)) {
--		*dma_addr = 0;
--		return -EFAULT;
--	}
--	umem_odp->npages++;
--	return 0;
--}
--
- /**
-  * ib_umem_odp_map_dma_and_lock - DMA map userspace memory in an ODP MR and lock it.
-  *
-  * Maps the range passed in the argument to DMA addresses.
-- * The DMA addresses of the mapped pages is updated in umem_odp->dma_list.
-  * Upon success the ODP MR will be locked to let caller complete its device
-  * page table update.
-  *
-@@ -437,15 +397,6 @@ int ib_umem_odp_map_dma_and_lock(struct ib_umem_odp *umem_odp, u64 user_virt,
- 				  __func__, hmm_order, page_shift);
- 			break;
- 		}
--
--		ret = ib_umem_odp_map_dma_single_page(
--				umem_odp, dma_index, hmm_pfn_to_page(range.hmm_pfns[pfn_index]));
--		if (ret < 0) {
--			ibdev_dbg(umem_odp->umem.ibdev,
--				  "ib_umem_odp_map_dma_single_page failed with error %d\n", ret);
--			break;
--		}
--		range.hmm_pfns[pfn_index] |= HMM_PFN_STICKY;
- 	}
- 	/* upon success lock should stay on hold for the callee */
- 	if (!ret)
-@@ -465,7 +416,6 @@ EXPORT_SYMBOL(ib_umem_odp_map_dma_and_lock);
- void ib_umem_odp_unmap_dma_pages(struct ib_umem_odp *umem_odp, u64 virt,
- 				 u64 bound)
- {
--	dma_addr_t dma;
- 	int idx;
- 	u64 addr;
- 	struct ib_device *dev = umem_odp->umem.ibdev;
-@@ -479,15 +429,14 @@ void ib_umem_odp_unmap_dma_pages(struct ib_umem_odp *umem_odp, u64 virt,
- 		struct page *page = hmm_pfn_to_page(umem_odp->pfn_list[pfn_idx]);
- 
- 		idx = (addr - ib_umem_start(umem_odp)) >> umem_odp->page_shift;
--		dma = umem_odp->dma_list[idx];
- 
- 		if (!(umem_odp->pfn_list[pfn_idx] & HMM_PFN_VALID))
- 			continue;
- 		if (!(umem_odp->pfn_list[pfn_idx] & HMM_PFN_STICKY))
- 			continue;
- 
--		ib_dma_unmap_page(dev, dma, BIT(umem_odp->page_shift),
--				  DMA_BIDIRECTIONAL);
-+		ib_dma_unlink_range(dev, &umem_odp->iova,
-+				    idx * (1 << umem_odp->page_shift));
- 		if (umem_odp->pfn_list[pfn_idx] & HMM_PFN_WRITE) {
- 			struct page *head_page = compound_head(page);
- 			/*
-diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
-index 5713fe25f4de..13d61f1ab40b 100644
---- a/drivers/infiniband/hw/mlx5/odp.c
-+++ b/drivers/infiniband/hw/mlx5/odp.c
-@@ -149,6 +149,7 @@ static void populate_mtt(__be64 *pas, size_t idx, size_t nentries,
- {
- 	struct ib_umem_odp *odp = to_ib_umem_odp(mr->umem);
- 	bool downgrade = flags & MLX5_IB_UPD_XLT_DOWNGRADE;
-+	struct ib_device *dev = odp->umem.ibdev;
- 	unsigned long pfn;
- 	dma_addr_t pa;
- 	size_t i;
-@@ -162,12 +163,31 @@ static void populate_mtt(__be64 *pas, size_t idx, size_t nentries,
- 			/* Initial ODP init */
- 			continue;
- 
--		pa = odp->dma_list[idx + i];
-+		if (pfn & HMM_PFN_STICKY && odp->iova.addr)
-+			/*
-+			 * We are in this flow when there is a need to resync flags,
-+			 * for example when page was already linked in prefetch call
-+			 * with READ flag and now we need to add WRITE flag
-+			 *
-+			 * This page was already programmed to HW and we don't want/need
-+			 * to unlink and link it again just to resync flags.
-+			 *
-+			 * The DMA address calculation below is based on the fact that
-+			 * RDMA UMEM doesn't work with swiotlb.
-+			 */
-+			pa = odp->iova.addr + (idx + i) * (1 << odp->page_shift);
-+		else
-+			pa = ib_dma_link_range(dev, hmm_pfn_to_page(pfn), 0, &odp->iova,
-+				       (idx + i) * (1 << odp->page_shift));
-+		WARN_ON_ONCE(ib_dma_mapping_error(dev, pa));
-+
- 		pa |= MLX5_IB_MTT_READ;
- 		if ((pfn & HMM_PFN_WRITE) && !downgrade)
- 			pa |= MLX5_IB_MTT_WRITE;
- 
- 		pas[i] = cpu_to_be64(pa);
-+		odp->pfn_list[idx + i] |= HMM_PFN_STICKY;
-+		odp->npages++;
- 	}
  }
  
-diff --git a/include/rdma/ib_umem_odp.h b/include/rdma/ib_umem_odp.h
-index 095b1297cfb1..a786556c65f9 100644
---- a/include/rdma/ib_umem_odp.h
-+++ b/include/rdma/ib_umem_odp.h
-@@ -17,15 +17,9 @@ struct ib_umem_odp {
- 	/* An array of the pfns included in the on-demand paging umem. */
- 	unsigned long *pfn_list;
- 
--	/*
--	 * An array with DMA addresses mapped for pfns in pfn_list.
--	 * The lower two bits designate access permissions.
--	 * See ODP_READ_ALLOWED_BIT and ODP_WRITE_ALLOWED_BIT.
--	 */
--	dma_addr_t		*dma_list;
- 	struct dma_iova_attrs iova;
- 	/*
--	 * The umem_mutex protects the page_list and dma_list fields of an ODP
-+	 * The umem_mutex protects the page_list field of an ODP
- 	 * umem, allowing only a single thread to map/unmap pages. The mutex
- 	 * also protects access to the mmu notifier counters.
- 	 */
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index e71fa19187cc..c9e2bcd5268a 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -4160,6 +4160,42 @@ static inline void ib_dma_unmap_page(struct ib_device *dev,
- 		dma_unmap_page(dev->dma_device, addr, size, direction);
- }
- 
-+/**
-+ * ib_dma_link_range - Link a physical page to DMA address
-+ * @dev: The device for which the dma_addr is to be created
-+ * @page: The page to be mapped
-+ * @offset: The offset within the page
-+ * @iova: Preallocated IOVA attributes
-+ * @dma_offset: DMA offset
-+ */
-+static inline dma_addr_t ib_dma_link_range(struct ib_device *dev,
-+					   struct page *page,
-+					   unsigned long offset,
-+					   struct dma_iova_attrs *iova,
-+					   dma_addr_t dma_offset)
++static int mp2973_write_word_data(struct i2c_client *client, int page,
++				  int reg, u16 word)
 +{
-+	if (ib_uses_virt_dma(dev))
-+		return (uintptr_t)(page_address(page) + offset);
++	u8 target, mask;
++	int ret;
 +
-+	return dma_link_range(page, offset, iova, dma_offset);
++	if (reg != PMBUS_SMBALERT_MASK)
++		return -ENODATA;
++
++	/*
++	 * Vendor-specific SMBALERT_MASK register with 16 maskable bits.
++	 */
++	ret = pmbus_read_word_data(client, 0, 0, PMBUS_SMBALERT_MASK);
++	if (ret < 0)
++		return ret;
++
++	target = word & 0xff;
++	mask = word >> 8;
++
++/*
++ * Set/Clear 'bit' in 'ret' based on condition followed by define for each bit in SMBALERT_MASK.
++ * Also bit 2 & 15 are reserved.
++ */
++#define SWAP(cond, bit) (ret = (mask & cond) ? (ret & ~BIT(bit)) : (ret | BIT(bit)))
++
++#define MP2973_TEMP_OT		0
++#define MP2973_VIN_UVLO		1
++#define MP2973_VIN_OVP		3
++#define MP2973_MTP_FAULT	4
++#define MP2973_OTHER_COMM	5
++#define MP2973_MTP_BLK_TRIG	6
++#define MP2973_PACKET_ERROR	7
++#define MP2973_INVALID_DATA	8
++#define MP2973_INVALID_COMMAND	9
++#define MP2973_IOUT_OC_LV	10
++#define MP2973_IOUT_OC		11
++#define MP2973_VOUT_MAX_MIN_WARNING 12
++#define MP2973_VOLTAGE_UV	13
++#define MP2973_VOLTAGE_OV	14
++
++	switch (target) {
++	case PMBUS_STATUS_CML:
++		SWAP(PB_CML_FAULT_INVALID_DATA, MP2973_INVALID_DATA);
++		SWAP(PB_CML_FAULT_INVALID_COMMAND,  MP2973_INVALID_COMMAND);
++		SWAP(PB_CML_FAULT_OTHER_COMM, MP2973_OTHER_COMM);
++		SWAP(PB_CML_FAULT_PACKET_ERROR, MP2973_PACKET_ERROR);
++		break;
++	case PMBUS_STATUS_VOUT:
++		SWAP(PB_VOLTAGE_UV_FAULT, MP2973_VOLTAGE_UV);
++		SWAP(PB_VOLTAGE_OV_FAULT, MP2973_VOLTAGE_OV);
++		break;
++	case PMBUS_STATUS_IOUT:
++		SWAP(PB_IOUT_OC_FAULT, MP2973_IOUT_OC);
++		SWAP(PB_IOUT_OC_LV_FAULT, MP2973_IOUT_OC_LV);
++		break;
++	case PMBUS_STATUS_TEMPERATURE:
++		SWAP(PB_TEMP_OT_FAULT, MP2973_TEMP_OT);
++		break;
++	/*
++	 * Map remaining bits to MFR specific to let the PMBUS core mask
++	 * those bits by default.
++	 */
++	case PMBUS_STATUS_MFR_SPECIFIC:
++		SWAP(BIT(1), MP2973_VIN_UVLO);
++		SWAP(BIT(3), MP2973_VIN_OVP);
++		SWAP(BIT(4), MP2973_MTP_FAULT);
++		SWAP(BIT(6), MP2973_MTP_BLK_TRIG);
++		break;
++	default:
++		return 0;
++	}
++#undef SWAP
++
++	return pmbus_write_word_data(client, 0, PMBUS_SMBALERT_MASK, ret);
 +}
 +
-+/**
-+ * ib_dma_unlink_range - Unlink a mapping created by ib_dma_link_page()
-+ * @dev: The device for which the DMA address was created
-+ * @iova: DMA IOVA properties
-+ * @dma_offset: DMA offset
-+ */
-+static inline void ib_dma_unlink_range(struct ib_device *dev,
-+				       struct dma_iova_attrs *iova,
-+				       dma_addr_t dma_offset)
-+{
-+	if (ib_uses_virt_dma(dev))
-+		return;
-+
-+	dma_unlink_range(iova, dma_offset);
-+}
-+
- int ib_dma_virt_map_sg(struct ib_device *dev, struct scatterlist *sg, int nents);
- static inline int ib_dma_map_sg_attrs(struct ib_device *dev,
- 				      struct scatterlist *sg, int nents,
+ static int mp2975_read_word_data(struct i2c_client *client, int page,
+ 				 int phase, int reg)
+ {
+@@ -907,6 +983,7 @@ static struct pmbus_driver_info mp2973_info = {
+ 		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_POUT |
+ 		PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT,
+ 	.read_word_data = mp2973_read_word_data,
++	.write_word_data = mp2973_write_word_data,
+ #if IS_ENABLED(CONFIG_SENSORS_MP2975_REGULATOR)
+ 	.num_regulators = 1,
+ 	.reg_desc = mp2975_reg_desc,
+
+base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
 -- 
-2.44.0
+2.42.0
 
