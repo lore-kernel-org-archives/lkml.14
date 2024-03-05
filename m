@@ -1,123 +1,241 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B27B5B5A1;
-	Tue,  5 Mar 2024 11:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B930F5B5A9;
+	Tue,  5 Mar 2024 11:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709637550; cv=none; b=Hytz62khZs/NrlEss5IlDYw67Elhl4NqWB/xx/+LOqIucEZyEjK0t1s9sT92hi5O/t1bh2l2yrG5p2ym7UJ4/Ue0z0JJ5RuGitsQ+WYCQnq+SGyyh4fU6Tj6IXvdmyP+p+5hnYLoJj+3u3oPws8qehsS1Ev7RY2ettuVKK1lj2Q=
+	t=1709637550; cv=none; b=l5YhC6EsRTVx2sDjwR5V/2Jp4rI39dQDBiQS/jHeSEN6U6RDL2IM+BRD5Wy+s4ykPY3BZog1T1xbUzK6fpj2RdJw20inBVKaMpWjNcmJ87nscAlfH3yzENTwVHC7gM0+g71C30idhHB9SDjo50glrQkRqP8flkdd1bSnX1I4I4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709637550; c=relaxed/simple;
-	bh=Z4IBEZRKAlbU/N0SOY+SwMF12pQcVJDXcB7KTmyw/KA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hy9OALHH8kvwnerbpSoYj9Dq58dinXM15VDCD+8coB7bz548fr9f7vfDn60jK7FUoTCFFLLRJciUBGUSASJS0RprFS8hpGtm9GgkPETE242MIW0htDrqSYGqgvPC84TDySy8yDSBpExZYyNEUiGgz1+t9cnU66WMbJel3ePHWCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTnLPty5; arc=none smtp.client-ip=10.30.226.201
+	bh=W6hmByMbviZow30AysrbmdCiStk7NPI/+8Qeoey1JY8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IxrWI2Mg+fqy2BH6nKEc83hC280UkDqbNgfHvNhhMYVibsbZWBHyyDgxCMnGcTCoSp8sH/QTnT93IUpjH6R+cWkhYEv+DOVnXOJHU4RDL+eWr3Ks80khrSjTrTOQ0PWXLGKt45ydLK3f4YbMw7X8b/MnIRXVcP22RYMmOMRB4mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpdeScnU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTnLPty5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D602C43390;
-	Tue,  5 Mar 2024 11:19:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpdeScnU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71CDC43399;
+	Tue,  5 Mar 2024 11:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709637548;
-	bh=Z4IBEZRKAlbU/N0SOY+SwMF12pQcVJDXcB7KTmyw/KA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oTnLPty5a1khzX8k8vdcade5csRGX487/YQggUreaqE4IdZBeSaK3/ZvxwI1dTXfY
-	 lMCij9GosSsZMianJnpoWlYpCViw6WJZTjlUet4Ca+E3mgmkbwImI9GnRqPIWzlcTn
-	 mJfKB3/cpYijbm/fOV4D6Rn9tKBFWefpvoXj8kImn8ADD2SoSiRoZHSarq2wOTn/6s
-	 hVhlKMoCBEVpWFc+HSni3gip/Ec9K+oeeWJHVyFg0eBoJ2tZnXNKqt9jOcCpRtYba7
-	 dUB1E9idDfn7Nc7PfXqLo+XIGEs1AfAe0N54Mz5T+RctqVO8WWhhy/an1Tsgnx+s8r
-	 Rx6Un/4ujM1Kg==
-Message-ID: <8b2b6492-d460-4981-8624-068dd766d3ac@kernel.org>
-Date: Tue, 5 Mar 2024 12:19:02 +0100
+	s=k20201202; t=1709637550;
+	bh=W6hmByMbviZow30AysrbmdCiStk7NPI/+8Qeoey1JY8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MpdeScnUIeYk+dhaM84hI3cY+U/wRl1QwW6ChtfURz2UuXIkV/XmMb1iErLTtmXiG
+	 /HjgMX099w475jFo54Xe8Q+caajG6pt9XGe0DUtiQeES0xUT7BVd7CoWZIw8EA+uwo
+	 6dsPHe/M7bBaiSWUKfrDQaBJaxVr4WKQToT6uKCEnE7l4hHS5sYzkV1muh3ik4mCtm
+	 eJmV3SQytdzwIJJShgEZZtirWhrLq9A38CmemQNqmmnucs2zB1yVGEf9bDZylrpk3V
+	 omibGAuvCU7jmybm4/4tvGmiTBVuJ6HkGBg7ybwdZHbeop+Scpi/j4bhWKRUfyTUEQ
+	 3R/7MjGMtOeCw==
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	kvm@vger.kernel.org,
+	linux-mm@kvack.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"jack@suse.com" <jack@suse.com>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: [RFC RESEND 04/16] iommu/dma: Provide an interface to allow preallocate IOVA
+Date: Tue,  5 Mar 2024 13:18:35 +0200
+Message-ID: <e580473eb571d56c8e3952ebcdab05151a7efe7c.1709635535.git.leon@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1709635535.git.leon@kernel.org>
+References: <cover.1709635535.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 03/13] selftests: mptcp: add
- mptcp_lib_check_output helper
-Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>
-References: <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-0-66618ea5504e@kernel.org>
- <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-3-66618ea5504e@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-3-66618ea5504e@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Leon Romanovsky <leonro@nvidia.com>
 
-On 05/03/2024 11:42, Matthieu Baerts (NGI0) wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Extract the main part of check() in pm_netlink.sh into a new helper
-> named mptcp_lib_check_output in mptcp_lib.sh.
-> 
-> This helper will be used for userspace dump addresses tests.
+Separate IOVA allocation to dedicated callback so it will allow
+cache of IOVA and reuse it in fast paths for devices which support
+ODP (on-demand-paging) mechanism.
 
-Arf, I just noticed that when the MPTCP tree got rebased on top of
-net-next, Git didn't drop this patch, but resolved the conflicts by
-duplicating mptcp_lib_check_output() function. Of course, redefining the
-function is OK in Bash, and I didn't notice the issue when running the
-tests...
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+---
+ drivers/iommu/dma-iommu.c | 50 +++++++++++++++++++++++++++++----------
+ 1 file changed, 38 insertions(+), 12 deletions(-)
 
-I will resend this series without this patch tomorrow.
-
-Sorry for the noise :-/
-
-pw-bot: changes-requested
-
-Cheers,
-Matt
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 50ccc4f1ef81..e55726783501 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -356,7 +356,7 @@ int iommu_dma_init_fq(struct iommu_domain *domain)
+ 	atomic_set(&cookie->fq_timer_on, 0);
+ 	/*
+ 	 * Prevent incomplete fq state being observable. Pairs with path from
+-	 * __iommu_dma_unmap() through iommu_dma_free_iova() to queue_iova()
++	 * __iommu_dma_unmap() through __iommu_dma_free_iova() to queue_iova()
+ 	 */
+ 	smp_wmb();
+ 	WRITE_ONCE(cookie->fq_domain, domain);
+@@ -760,7 +760,7 @@ static int dma_info_to_prot(enum dma_data_direction dir, bool coherent,
+ 	}
+ }
+ 
+-static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
++static dma_addr_t __iommu_dma_alloc_iova(struct iommu_domain *domain,
+ 		size_t size, u64 dma_limit, struct device *dev)
+ {
+ 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+@@ -806,7 +806,7 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
+ 	return (dma_addr_t)iova << shift;
+ }
+ 
+-static void iommu_dma_free_iova(struct iommu_dma_cookie *cookie,
++static void __iommu_dma_free_iova(struct iommu_dma_cookie *cookie,
+ 		dma_addr_t iova, size_t size, struct iommu_iotlb_gather *gather)
+ {
+ 	struct iova_domain *iovad = &cookie->iovad;
+@@ -843,7 +843,7 @@ static void __iommu_dma_unmap(struct device *dev, dma_addr_t dma_addr,
+ 
+ 	if (!iotlb_gather.queued)
+ 		iommu_iotlb_sync(domain, &iotlb_gather);
+-	iommu_dma_free_iova(cookie, dma_addr, size, &iotlb_gather);
++	__iommu_dma_free_iova(cookie, dma_addr, size, &iotlb_gather);
+ }
+ 
+ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+@@ -861,12 +861,12 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+ 
+ 	size = iova_align(iovad, size + iova_off);
+ 
+-	iova = iommu_dma_alloc_iova(domain, size, dma_mask, dev);
++	iova = __iommu_dma_alloc_iova(domain, size, dma_mask, dev);
+ 	if (!iova)
+ 		return DMA_MAPPING_ERROR;
+ 
+ 	if (iommu_map(domain, iova, phys - iova_off, size, prot, GFP_ATOMIC)) {
+-		iommu_dma_free_iova(cookie, iova, size, NULL);
++		__iommu_dma_free_iova(cookie, iova, size, NULL);
+ 		return DMA_MAPPING_ERROR;
+ 	}
+ 	return iova + iova_off;
+@@ -970,7 +970,7 @@ static struct page **__iommu_dma_alloc_noncontiguous(struct device *dev,
+ 		return NULL;
+ 
+ 	size = iova_align(iovad, size);
+-	iova = iommu_dma_alloc_iova(domain, size, dev->coherent_dma_mask, dev);
++	iova = __iommu_dma_alloc_iova(domain, size, dev->coherent_dma_mask, dev);
+ 	if (!iova)
+ 		goto out_free_pages;
+ 
+@@ -1004,7 +1004,7 @@ static struct page **__iommu_dma_alloc_noncontiguous(struct device *dev,
+ out_free_sg:
+ 	sg_free_table(sgt);
+ out_free_iova:
+-	iommu_dma_free_iova(cookie, iova, size, NULL);
++	__iommu_dma_free_iova(cookie, iova, size, NULL);
+ out_free_pages:
+ 	__iommu_dma_free_pages(pages, count);
+ 	return NULL;
+@@ -1436,7 +1436,7 @@ static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
+ 	if (!iova_len)
+ 		return __finalise_sg(dev, sg, nents, 0);
+ 
+-	iova = iommu_dma_alloc_iova(domain, iova_len, dma_get_mask(dev), dev);
++	iova = __iommu_dma_alloc_iova(domain, iova_len, dma_get_mask(dev), dev);
+ 	if (!iova) {
+ 		ret = -ENOMEM;
+ 		goto out_restore_sg;
+@@ -1453,7 +1453,7 @@ static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
+ 	return __finalise_sg(dev, sg, nents, iova);
+ 
+ out_free_iova:
+-	iommu_dma_free_iova(cookie, iova, iova_len, NULL);
++	__iommu_dma_free_iova(cookie, iova, iova_len, NULL);
+ out_restore_sg:
+ 	__invalidate_sg(sg, nents);
+ out:
+@@ -1706,6 +1706,30 @@ static size_t iommu_dma_opt_mapping_size(void)
+ 	return iova_rcache_range();
+ }
+ 
++static dma_addr_t iommu_dma_alloc_iova(struct device *dev, size_t size)
++{
++	struct iommu_domain *domain = iommu_get_dma_domain(dev);
++	struct iommu_dma_cookie *cookie = domain->iova_cookie;
++	struct iova_domain *iovad = &cookie->iovad;
++	dma_addr_t dma_mask = dma_get_mask(dev);
++
++	size = iova_align(iovad, size);
++	return __iommu_dma_alloc_iova(domain, size, dma_mask, dev);
++}
++
++static void iommu_dma_free_iova(struct device *dev, dma_addr_t iova,
++				size_t size)
++{
++	struct iommu_domain *domain = iommu_get_dma_domain(dev);
++	struct iommu_dma_cookie *cookie = domain->iova_cookie;
++	struct iova_domain *iovad = &cookie->iovad;
++	struct iommu_iotlb_gather iotlb_gather;
++
++	size = iova_align(iovad, size);
++	iommu_iotlb_gather_init(&iotlb_gather);
++	__iommu_dma_free_iova(cookie, iova, size, &iotlb_gather);
++}
++
+ static const struct dma_map_ops iommu_dma_ops = {
+ 	.flags			= DMA_F_PCI_P2PDMA_SUPPORTED,
+ 	.alloc			= iommu_dma_alloc,
+@@ -1728,6 +1752,8 @@ static const struct dma_map_ops iommu_dma_ops = {
+ 	.unmap_resource		= iommu_dma_unmap_resource,
+ 	.get_merge_boundary	= iommu_dma_get_merge_boundary,
+ 	.opt_mapping_size	= iommu_dma_opt_mapping_size,
++	.alloc_iova		= iommu_dma_alloc_iova,
++	.free_iova		= iommu_dma_free_iova,
+ };
+ 
+ /*
+@@ -1776,7 +1802,7 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+ 	if (!msi_page)
+ 		return NULL;
+ 
+-	iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
++	iova = __iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
+ 	if (!iova)
+ 		goto out_free_page;
+ 
+@@ -1790,7 +1816,7 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+ 	return msi_page;
+ 
+ out_free_iova:
+-	iommu_dma_free_iova(cookie, iova, size, NULL);
++	__iommu_dma_free_iova(cookie, iova, size, NULL);
+ out_free_page:
+ 	kfree(msi_page);
+ 	return NULL;
 -- 
-Sponsored by the NGI0 Core fund.
+2.44.0
+
