@@ -1,144 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E997F7D9
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842027E58F;
+	Tue,  5 Mar 2024 07:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709623854; cv=none; b=HOYZndyqEord5xggXxGyLSiNrDFykAqihv+VDu+hECzbEp+R4H5Jp6H4SDtdq2+hNUYVuBSmSS6uakr3PCd0oHiS/6raBIf1aKP80GAmsXUcUxwLbAIDSSkFIKeuWnZE/reOS+dHFPGKm1A3+UjLlJH9W7d57ZfZnr7wSfbu/Vg=
+	t=1709623922; cv=none; b=vBC3/Px+iYjBKtppDYYoYPZFOgQ4Lq0aSsy3j5UDfrUiCWX9YZLVOLBd27lELE2gmB4oic6UNCTh/CUxchXLKYT5Np4oGh9jn9+aPkLxgQfM+zxYEMHYYgWIljPRO8BqgiMER1p/ocsUbTc4adSpMXpVSIRtGRT5cMpAlUVERhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709623854; c=relaxed/simple;
-	bh=EDxT4L0OSxDAkEd0ZQSl0ECYq1LMfRvCmOH5WtqS+h4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bTxXdXH+lNVDvhh4XfBY0Q9Nty4ftpcHVTCGJFDYmG6yWkuA9MsawuL6nzhAw/YiZh7MkZGZSOjBXNOolbkVWNJqrVyxF+Itjax9gpN9yNK7pNfFllYhYTsX6gEHEUxxyWys2hdvoEYIYXsiRe+feaJq3mmBlLc9UKbYh5qjN4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dblI7cMC; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709623922; c=relaxed/simple;
+	bh=BRmbYPu9uwZv0NohdrzAOM6oEjNLSw62KYQSbPqi+fw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qMsO5OtI8dASLs6h4o4r6PB4Rv5WQPtYubx8yWG6sil+z6+epegZJZT9Hh43/0Z6uvTp2DlFIxaciCe2FXz4q8q7Cq+3lpKwcJQawG10qAzoNuANME5e7O6/1wpjptS7LH65Wh6ZtaVOhPSo+1atRAG16INXGjzkyWjjJD993IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PgKYhqGN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dblI7cMC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709623854; x=1741159854;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=EDxT4L0OSxDAkEd0ZQSl0ECYq1LMfRvCmOH5WtqS+h4=;
-  b=dblI7cMCsFSHesVhQENfnImMUVuXXIjKOJScJf6cQ8GKETA8mSQ7fWLe
-   p44H9NZzDuXtfWt7Zl8U2F3VEEdPwiw51ZGUEik79xm5NIoRQIGkqzHmN
-   oGt1SDFJG/j1q/IjNIBtWMjSQ3wTVHoc0JA2n3u/LsQaM6P+vNPsaGEfA
-   H1nsQ2kuq02diCUMjd9eWa4BwPGpNKZYhcxVPWQk4wA6Ymdvzz5OpUpJA
-   Gac+/N8OwpdzDJppCpL4ro2U/xUaopD0Q4Qc4QhI0HPBS9AHg13s7BSZZ
-   SPWGLMiKlcRolwNgWTtKUREGKF7+xLN/Hrsby9bYb8ynze1N6KlKOpclq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="7970833"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="7970833"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 23:30:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="13861172"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 23:30:31 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,  david@redhat.com,
-  ryan.roberts@arm.com,  chrisl@kernel.org,  yuzhao@google.com,
-  hanchuanhua@oppo.com,  linux-kernel@vger.kernel.org,
-  willy@infradead.org,  xiang@kernel.org,  mhocko@suse.com,
-  shy828301@gmail.com,  wangkefeng.wang@huawei.com,  Barry Song
- <v-songbaohua@oppo.com>,  Hugh Dickins <hughd@google.com>
-Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
- large folio
-In-Reply-To: <20240304103757.235352-1-21cnbao@gmail.com> (Barry Song's message
-	of "Mon, 4 Mar 2024 23:37:57 +1300")
-References: <20240304103757.235352-1-21cnbao@gmail.com>
-Date: Tue, 05 Mar 2024 15:28:36 +0800
-Message-ID: <878r2x9ly3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PgKYhqGN"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4256Jttu014028;
+	Tue, 5 Mar 2024 07:31:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=wMbUenWZaYTavA7xWqeeZ0KV1Px9iK8tI8NYl+N974g=; b=Pg
+	KYhqGNpF2CsW4JZ9dfZKfrmXlievESq0K//abrY6QkfE6aV8Fe/udjbdOg4y5B5B
+	I9uU2fViG8DMTsH2nqq/J9M9RarVupVZL5yTdcgemUaCkDpfWpigG8WOe74w00hV
+	DfJmYLQYUJVgdUBDBry7vNQLoQTizUKQRpIY/VsJhRsqChANVci2ZwRs+fz15IF8
+	K+Apd1pVhLvVDfDmvSlR5NvNE9jiSxkm2e9uKy3sGkoluMC7ZyqBsXtOqQSPDwGQ
+	d6z8BrNvpbQ7wwhw/cWJLHjVOazj2GAd+ndcAfRuMg1r+3gDWx6F4xZp19V1m63o
+	mAEQbSpKSt2UF041OrjA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wnx0y04c9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Mar 2024 07:31:43 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4257Vgnr031877
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 5 Mar 2024 07:31:42 GMT
+Received: from [10.216.18.120] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 4 Mar
+ 2024 23:31:39 -0800
+Message-ID: <6dcf6bc5-e1e5-8388-8bcb-c093a5fb61ed@quicinc.com>
+Date: Tue, 5 Mar 2024 13:01:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.0
+Subject: Re: [PATCH RESEND STABLE v6.1] iommu: Avoid races around default
+ domain allocations
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: Charan Teja Kalla <quic_charante@quicinc.com>,
+        Joerg Roedel
+	<joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy
+	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux.dev>, <stable@vger.kernel.org>
+References: <cbf1295589bd90083ad6f75a7fbced01f327c047.1708680521.git.quic_nprakash@quicinc.com>
+ <2024030403-self-morality-062e@gregkh>
+Content-Language: en-US
+From: Nikhil V <quic_nprakash@quicinc.com>
+In-Reply-To: <2024030403-self-morality-062e@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 4JT4wgqE_gix773HeXXQ08JPCQ9hKfZi
+X-Proofpoint-ORIG-GUID: 4JT4wgqE_gix773HeXXQ08JPCQ9hKfZi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-05_04,2024-03-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 impostorscore=0 clxscore=1011 priorityscore=1501 adultscore=0
+ mlxlogscore=755 lowpriorityscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403050058
 
-Barry Song <21cnbao@gmail.com> writes:
 
-> From: Barry Song <v-songbaohua@oppo.com>
->
-> page_vma_mapped_walk() within try_to_unmap_one() races with other
-> PTEs modification such as break-before-make, while iterating PTEs
 
-Sorry, I don't know what is "break-before-make", can you elaborate?
-IIUC, ptep_modify_prot_start()/ptep_modify_prot_commit() can clear PTE
-temporarily, which may cause race with page_vma_mapped_walk().  Is that
-the issue that you try to fix?
+On 3/4/2024 6:55 PM, Greg KH wrote:
+> On Mon, Mar 04, 2024 at 04:40:50PM +0530, Nikhil V wrote:
+>> From: Charan Teja Kalla <quic_charante@quicinc.com>
+>>
+>> This fix is applicable for LTS kernel, 6.1.y. In latest kernels, this race
+>> issue is fixed by the patch series [1] and [2]. The right thing to do here
+>> would have been propagating these changes from latest kernel to the stable
+>> branch, 6.1.y. However, these changes seems too intrusive to be picked for
+>> stable branches. Hence, the fix proposed can be taken as an alternative
+>> instead of backporting the patch series.
+>> [1] https://lore.kernel.org/all/0-v8-81230027b2fa+9d-iommu_all_defdom_jgg@nvidia.com/
+>> [2] https://lore.kernel.org/all/0-v5-1b99ae392328+44574-iommu_err_unwind_jgg@nvidia.com/
+>>
+>> Issue:
+>> A race condition is observed when arm_smmu_device_probe and
+>> modprobe of client devices happens in parallel. This results
+>> in the allocation of a new default domain for the iommu group
+>> even though it was previously allocated and the respective iova
+>> domain(iovad) was initialized. However, for this newly allocated
+>> default domain, iovad will not be initialized. As a result, for
+>> devices requesting dma allocations, this uninitialized iovad will
+>> be used, thereby causing NULL pointer dereference issue.
+>>
+>> Flow:
+>> - During arm_smmu_device_probe, bus_iommu_probe() will be called
+>> as part of iommu_device_register(). This results in the device probe,
+>> __iommu_probe_device().
+>>
+>> - When the modprobe of the client device happens in parallel, it
+>> sets up the DMA configuration for the device using of_dma_configure_id(),
+>> which inturn calls iommu_probe_device(). Later, default domain is
+>> allocated and attached using iommu_alloc_default_domain() and
+>> __iommu_attach_device() respectively. It then ends up initializing a
+>> mapping domain(IOVA domain) and rcaches for the device via
+>> arch_setup_dma_ops()->iommu_setup_dma_ops().
+>>
+>> - Now, in the bus_iommu_probe() path, it again tries to allocate
+>> a default domain via probe_alloc_default_domain(). This results in
+>> allocating a new default domain(along with IOVA domain) via
+>> __iommu_domain_alloc(). However, this newly allocated IOVA domain
+>> will not be initialized.
+>>
+>> - Now, when the same client device tries dma allocations via
+>> iommu_dma_alloc(), it ends up accessing the rcaches of the newly
+>> allocated IOVA domain, which is not initialized. This results
+>> into NULL pointer dereferencing.
+>>
+>> Fix this issue by adding a check in probe_alloc_default_domain()
+>> to see if the iommu_group already has a default domain allocated
+>> and initialized.
+>>
+>> Cc: <stable@vger.kernel.org> # see patch description, fix applicable only for 6.1.y
+>> Signed-off-by: Charan Teja Kalla <quic_charante@quicinc.com>
+>> Co-developed-by: Nikhil V <quic_nprakash@quicinc.com>
+>> Signed-off-by: Nikhil V <quic_nprakash@quicinc.com>
+>> ---
+>>   drivers/iommu/iommu.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+> 
+> Why RESEND?  What happened to the first send?
+> 
+> thanks,
+> 
+> greg k-h
 
---
-Best Regards,
-Huang, Ying
 
-> of a large folio, it will only begin to acquire PTL after it gets
-> a valid(present) PTE. break-before-make intermediately sets PTEs
-> to pte_none. Thus, a large folio's PTEs might be partially skipped
-> in try_to_unmap_one().
-> For example, for an anon folio, after try_to_unmap_one(), we may
-> have PTE0 present, while PTE1 ~ PTE(nr_pages - 1) are swap entries.
-> So folio will be still mapped, the folio fails to be reclaimed.
-> What=E2=80=99s even more worrying is, its PTEs are no longer in a unified
-> state. This might lead to accident folio_split() afterwards. And
-> since a part of PTEs are now swap entries, accessing them will
-> incur page fault - do_swap_page.
-> It creates both anxiety and more expense. While we can't avoid
-> userspace's unmap to break up unified PTEs such as CONT-PTE for
-> a large folio, we can indeed keep away from kernel's breaking up
-> them due to its code design.
-> This patch is holding PTL from PTE0, thus, the folio will either
-> be entirely reclaimed or entirely kept. On the other hand, this
-> approach doesn't increase PTL contention. Even w/o the patch,
-> page_vma_mapped_walk() will always get PTL after it sometimes
-> skips one or two PTEs because intermediate break-before-makes
-> are short, according to test. Of course, even w/o this patch,
-> the vast majority of try_to_unmap_one still can get PTL from
-> PTE0. This patch makes the number 100%.
-> The other option is that we can give up in try_to_unmap_one
-> once we find PTE0 is not the first entry we get PTL, we call
-> page_vma_mapped_walk_done() to end the iteration at this case.
-> This will keep the unified PTEs while the folio isn't reclaimed.
-> The result is quite similar with small folios with one PTE -
-> either entirely reclaimed or entirely kept.
-> Reclaiming large folios by holding PTL from PTE0 seems a better
-> option comparing to giving up after detecting PTL begins from
-> non-PTE0.
->
-> Cc: Hugh Dickins <hughd@google.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> ---
->  mm/vmscan.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 0b888a2afa58..e4722fbbcd0c 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1270,6 +1270,17 @@ static unsigned int shrink_folio_list(struct list_=
-head *folio_list,
->=20=20
->  			if (folio_test_pmd_mappable(folio))
->  				flags |=3D TTU_SPLIT_HUGE_PMD;
-> +			/*
-> +			 * if page table lock is not held from the first PTE of
-> +			 * a large folio, some PTEs might be skipped because of
-> +			 * races with break-before-make, for example, PTEs can
-> +			 * be pte_none intermediately, thus one or more PTEs
-> +			 * might be skipped in try_to_unmap_one, we might result
-> +			 * in a large folio is partially mapped and partially
-> +			 * unmapped after try_to_unmap
-> +			 */
-> +			if (folio_test_large(folio))
-> +				flags |=3D TTU_SYNC;
->=20=20
->  			try_to_unmap(folio, flags);
->  			if (folio_mapped(folio)) {
+Hi Greg,
+
+There are no changes as such w.r.t first send, [1]. It is resent to gain 
+attention on this patch. Also, we have added a proper Cc: stable tag 
+with this patch.
+
+
+[1] 
+https://lore.kernel.org/all/cbf1295589bd90083ad6f75a7fbced01f327c047.1708680521.git.quic_nprakash@quicinc.com/
+
+Thanks
+Nikhil V
