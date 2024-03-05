@@ -1,116 +1,100 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2BB85655
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 12:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD2B85920;
+	Tue,  5 Mar 2024 12:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709642255; cv=none; b=KQo4Ue3IO0J20GxHBF/v1PO/0nlHFmwkxFq0s4E8o9K/U/f6J9sHOVufoJvFKqxu89M1yur8EnR/oB8g11MmYDtAgWtxdBBMCYYw2xQAM3N3k5ctvTcZ72biMM0+7D7U/mGWaOj0m04ysM9ReDj5svgXDIFg6dWspYW7uEVXgH0=
+	t=1709642277; cv=none; b=I8ExbYCPE0vJ9HsA04Wt0f4qbanvQHTDMfKWQfqNIKZ3gbC54zNT2MEAL/lptKEj/gqtFipi3pVFyWijatQvLo123YVTYMAbA4TS6qKxjMgoqsz/LvjRFpA54ZZZXhw3KvvNYEqQ+IzeR6xMzxRae36wwL5xHykdLF5sgVsmOuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709642255; c=relaxed/simple;
-	bh=Q/8Sxgh8pwVTBdT13/X0vZm0jl6EgZhuDOQgkTY4vyI=;
-	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
-	 MIME-Version:Content-Type; b=GLtOan5SL5yoOauQcOxhuDq8o/5RCNnXUZQUQKJhjy02pajWv14XlAnMEMsKWoPa9QHEZIZqO+MGq9cDz2lG4gCH3oEfUDvZGaEue9VXs6lCZfOSkaoB1aLnCJ8JpYTiEXO1G8QhpCCSW67RcKht0ityAYR+cd7XJXTcUUauGcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=PrHjF7Tb; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1709642277; c=relaxed/simple;
+	bh=86J1Y70nbFomIcZR+wldbHnAg/1d9IQlH/UukIiYDyk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NnLsf8s5i+hZ9E9zyXKi84zrRbM6U5rlgHwWNdLOraiwahF1ezfRa/tnbXkv8DztKS5DD8vD143RHiS2fu7DGebEYmnk+EqZvlB6PMZjV1QQXKE8q6m44N8L60uEneBPREkYM8K3jLQNQsXfyryM4Y/aBkEvCsFqgZaexCHmOmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IRdF9bzc; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="PrHjF7Tb"
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id hPQVrX1PmDI6fhU30rU6t5; Tue, 05 Mar 2024 12:37:30 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id hU2zrKbKhK6tthU2zrRIoU; Tue, 05 Mar 2024 12:37:29 +0000
-X-Authority-Analysis: v=2.4 cv=OtRJyT/t c=1 sm=1 tr=0 ts=65e71209
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=piSU1mTir-CSjbXYDCMA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=K6bBwShfnbeyZ6pC/jMFwJr3wSkYsmLTluFpNkwg/nY=; b=PrHjF7TbZlB4SKg5aOnh37Mmks
-	JfJOaBBHYmBPU3GckwtqUdEEx56wMKZIxn/4ylRGJLXTAv1KLSrsrmT48WOihIB0p+VN7AnafLHZm
-	/44EDROSHFQxHF1HD4PwFOWUzhnu7AnELvzeaBXrc/evXI1lM1YPylaca7GwPnhdKlarLeTxeLZDS
-	/PmoCxR1Jl8GX2SQbOAgz2wLosqdIPaz4Tme5L5PkNwOe264KLATfkwOY9tvt03Qm267S6jFWLy8t
-	v4HC230J1sijloOVQChOfG2UZZ2lHOjEwCcS9U9JqeHgSRWi8Pv0kwuqewMzF94NBm9pcjP0Lq/vd
-	RJsYS/hQ==;
-Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:49364 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1rhU2x-000pvx-1B;
-	Tue, 05 Mar 2024 05:37:27 -0700
-Subject: Re: [PATCH 6.7 000/161] 6.7.9-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-References: <20240305112824.448003471@linuxfoundation.org>
-In-Reply-To: <20240305112824.448003471@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-Message-ID: <5a07da44-4abc-200a-7480-1f45dce1a68a@w6rz.net>
-Date: Tue, 5 Mar 2024 04:37:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IRdF9bzc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709642274;
+	bh=86J1Y70nbFomIcZR+wldbHnAg/1d9IQlH/UukIiYDyk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IRdF9bzcM6ILlptiG/sYaf4wbKpaQ7+/bQnNc0+rXKYnMpD9vq/IPBd+7Cmv/i8rd
+	 ZqSxxT8QIhJMvkgi64kqwdNgI20n23powjvHw1Isq32V/hW3suxe8NAXcwe5zi6wGA
+	 mOHmXd34sdxNTh5erKzeY8nCuSgkoyTnkYp57cLUX8Ktopu0UqiuTH4WpK9mqXhe/Z
+	 fj4wthmvMrqmRDZbwdmV/nMlDS/JOm9ivl6zf1OCT6LGbERjUmhv5l7Dc2LNhmtOI0
+	 mo8+9Q1duBtBJUZd4rcQaZLVmLst5TtodnLmWqOkwyCKDpPrQ/840oz/+ji/hz4Lb4
+	 ja17iNdq9t3ag==
+Received: from shreeya.shreeya (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: shreeya)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9BF9E378020D;
+	Tue,  5 Mar 2024 12:37:45 +0000 (UTC)
+From: Shreeya Patel <shreeya.patel@collabora.com>
+To: heiko@sntech.de,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de,
+	jose.abreu@synopsys.com,
+	nelson.costa@synopsys.com,
+	dmitry.osipenko@collabora.com,
+	sebastian.reichel@collabora.com,
+	shawn.wen@rock-chips.com,
+	nicolas.dufresne@collabora.com,
+	hverkuil@xs4all.nl,
+	hverkuil-cisco@xs4all.nl
+Cc: kernel@collabora.com,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-arm@lists.infradead.org,
+	Shreeya Patel <shreeya.patel@collabora.com>
+Subject: [PATCH v2 1/6] dt-bindings: reset: Define reset id used for HDMI Receiver
+Date: Tue,  5 Mar 2024 18:06:43 +0530
+Message-Id: <20240305123648.8847-2-shreeya.patel@collabora.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240305123648.8847-1-shreeya.patel@collabora.com>
+References: <20240305123648.8847-1-shreeya.patel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 98.207.139.8
-X-Source-L: No
-X-Exim-ID: 1rhU2x-000pvx-1B
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:49364
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 4
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPf/szAVvznaVGJfykXHIMo8TCMWabO6S46aeAgXMABuamR9eCcpWsDqg/E2VPJJkavmvQvkiERe9TEukQf/czBkDEADdss8KY6k3GWSgjXhxV1qbrHv
- /r5c+ZqIFa+T7jk7LW5GMR1rTKsPqRnIGUZaR0M6czJPIQnmEWcgSVnwZfuyVeLLW35vEb+X1ru4EHM9DmxLzJaHgLdRSMvjov0=
+Content-Transfer-Encoding: 8bit
 
-On 3/5/24 3:28 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.7.9 release.
-> There are 161 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 07 Mar 2024 11:27:43 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.9-rc3.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Add reset id used for HDMI Receiver in RK3588 SoCs
 
-All good now. Built and booted successfully on RISC-V RV64 (HiFive 
-Unmatched).
+Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+---
+Changes in v2 :-
+  - Move the dt-binding include file changes in a separate patch
+  - Improve the subject and commit message description
 
-Tested-by: Ron Economos <re@w6rz.net>
+ include/dt-bindings/reset/rockchip,rk3588-cru.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/dt-bindings/reset/rockchip,rk3588-cru.h b/include/dt-bindings/reset/rockchip,rk3588-cru.h
+index d4264db2a07f..e2fe4bd5f7f0 100644
+--- a/include/dt-bindings/reset/rockchip,rk3588-cru.h
++++ b/include/dt-bindings/reset/rockchip,rk3588-cru.h
+@@ -751,4 +751,6 @@
+ #define SRST_P_TRNG_CHK			658
+ #define SRST_TRNG_S			659
+ 
++#define SRST_A_HDMIRX_BIU		660
++
+ #endif
+-- 
+2.39.2
 
