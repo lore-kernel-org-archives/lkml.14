@@ -1,192 +1,168 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8817D3FE;
-	Tue,  5 Mar 2024 07:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379947D3FE
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709622857; cv=none; b=E9gP+bgxV4SlUWdETaDzK+MCc7oLJR4+mzLpe5X699Gk9KKd0iCQQVEr+rByQEVZX62OXbRobDTDufkbPxxmPeOURD36QDVHD1tzAR1XIDvXC25dZSFykA1kW9uK1st6cg83gKDGL8o4lIQR4ReH7L/+YMSBOR5VIDCilPdxkk0=
+	t=1709622873; cv=none; b=U26GqW5XfG5nhqoRJBoA4Sk9vaM650ZbPJL3V2oJJ3/A6pWf8TL/Du2IU5EnTw6fzsCp/YdgBZqdN6xuoi3RDdnnu4jP/IC7e0hj8/UfcU5ZzpZ3iPdQ+LNjg7H0MYDSHJ828HK4R1KC5Dudz0Ew9gJFDgQjbM1YjUauOHZYnmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709622857; c=relaxed/simple;
-	bh=SIYTczHVdxaeGArMm3hbe+IIsqq3i7S0WVZ3zb5Tdpk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VmTg2XtLjcBWnavXudby+s+mGqGWDdUTyowmpIx9UkJUCT9xI9RKjuciK3KeOcD3MdG/3akjoo9Qh6iZELxKx+hmeLDFPiNIyzOXHkLmPaB3zjArFh3620oOyKMieaCmG9fo7zt/hT0ZGXG9WNOstYUERcco1YVPzkEKSLDpaas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RcYPXvoe; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709622873; c=relaxed/simple;
+	bh=8zx9t+nH72OZA2vYjFxrFWKNuMr2mmTTLimbqw0qty4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JWiTLDCZl28e3Rrzn+hdjbv/6UQUMvn+hRifakK7FBOzQKfrOQKsn8RAJPHCcW3mMIyeL4E74Yh3SSd61MZAr24tC8x/wbWXS9tKwgeVEcaqBdI1BjKvczKltKhDfBz28vJYR+RWr7fQU4A1JRlWgHqnEzsqaLiw/UnW02QcF8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BLolHZHW; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcYPXvoe"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5658082d2c4so7267237a12.1;
-        Mon, 04 Mar 2024 23:14:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BLolHZHW"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-512e4f4e463so5782073e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 23:14:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709622854; x=1710227654; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SIYTczHVdxaeGArMm3hbe+IIsqq3i7S0WVZ3zb5Tdpk=;
-        b=RcYPXvoecgP7AKGs75WELWboEyeAfCL5PsVBnVAqmUa7CBbgtg+soUdvC5+oQaGmRF
-         870+T6Wznka/SqNdmD8TbqXh/wMnNchQH0Ri+Xf9M5d66RVMFKhbxoMuwswXmg/0WX53
-         7J9sbPj0Ze3fuRY6haBdWdE8835vOZBvjFkQ4sqocWRk6ohiFqneTd5sdNFhDwqo38wt
-         80qi/S4QQcxOZmhIaBg/KK0qCEstcUbK4s4PwVpaUTMQ/EuJStdVCe3oakkOP1R5i5XM
-         uIlDQVbqH7jnkXApA24J4Se1zX5S/kP6s2jV8PpZyW5uijOgyM9hqfJkc984bMb9aI1+
-         W9IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709622854; x=1710227654;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=linaro.org; s=google; t=1709622869; x=1710227669; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=SIYTczHVdxaeGArMm3hbe+IIsqq3i7S0WVZ3zb5Tdpk=;
-        b=w2w7tSz+K0IOuaoyCg+D+FaccYeXpbWZglvezNug/FEPZ0gpdYqf8ihne1iHTqvvai
-         ZThAlh56iSBvZSA2opLDBvkkzvOAoC3FfFSy6EC1SxHGerOwJs4o5OFFicv+yam+69Vs
-         n3ABZKwBN1FrptQu5RUDCmYWexfygBxTNBLcQ+Gi72pu0a22KqKMhm5iGe9o8ud9/SQG
-         74WRmELELluHzPmvTRQEFiblLH2rb7b0X+e0MGuyGSioe8SgKWin/NrPcFa17cGU00VQ
-         qdBh1Xxb19T6GTt2WsemyZ55ItSggWhBRH1uZ6rBRCghuXjrjAcSfIpdCzsYxnpMwLs3
-         aRqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWD7rPzGGH9Oc4Z4nCTA2f9EHbc/OvSNttn4Il+TWHA1Qh7kEwJkGG7/gAenRuwLd766wkyxrZ3f/Aqh4SKo2VNQrkC/UBpRIlV94rNwl8aORHjpNOeVBAoMtC/DMQjZm5L7jKgNY6VoQ==
-X-Gm-Message-State: AOJu0YyHjjquVV2t3nw9olRnR3LfdzvwW7soKWAIQfr502ChALQGfW/b
-	063LPd3Qt6zERbS0+7pMgLtD78Z1JxR2zGyHjQKf2Q3Inh8BxQCY
-X-Google-Smtp-Source: AGHT+IEpIQj0ZZ8kz+w9e760n/zFqI6d6t5uOCxp1QwEmIpJPs/iv4eB0RULE9ITJoF1PMPtB/aYOw==
-X-Received: by 2002:a50:8dc7:0:b0:566:131a:26ee with SMTP id s7-20020a508dc7000000b00566131a26eemr7127162edh.35.1709622853937;
-        Mon, 04 Mar 2024 23:14:13 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
-        by smtp.gmail.com with ESMTPSA id h26-20020aa7c95a000000b005663b0d7243sm5455225edt.83.2024.03.04.23.14.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 23:14:13 -0800 (PST)
-Message-ID: <ca0e141e624edb4f9977ea9f805f74645654bca7.camel@gmail.com>
-Subject: Re: [PATCH v3 0/2] Synchronize DT overlay removal with devlink
- removals
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Frank Rowand <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
- Zhen <max.zhen@amd.com>,  Sonal Santan <sonal.santan@amd.com>, Stefano
- Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Date: Tue, 05 Mar 2024 08:17:38 +0100
-In-Reply-To: <CAGETcx96Nj1RnR2wFOZYJRr=kyBLkcobY0crxBFSLGWmNaXT4A@mail.gmail.com>
-References: <20240229105204.720717-1-herve.codina@bootlin.com>
-	 <20240304150248.GA211460-robh@kernel.org>
-	 <CAGETcx96Nj1RnR2wFOZYJRr=kyBLkcobY0crxBFSLGWmNaXT4A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+        bh=PJOEpSfM7W5q1u08Hp4JeXt1WjIFUvsNQIjWvP89284=;
+        b=BLolHZHWYNhorfoV5ZgAittAmfqmJfkF80mKtJcEmRufKHkTqsRFDFgnhveNvbTr3J
+         8mVHmuwTrnPA3xKyexCVSlrHnikSTJ841oA+MYAfiJuZgkq46eriwcYdAUEgOFalueRX
+         283Fd5rinOmQg26MNeHfxw3LDR/7ep4/f+dSymzeNMjuYHIO7DVJGjJZgd5eJmkF4/JV
+         S56nJcCXlwtWGd3x9Rip3yAyIFKRJ7hSyLpDF5VxAiioqfLUeM+n1VIRcBv+0ElPAQjU
+         dyrJ8g1Sf/gaeZw6AMYv4ZKJEw8qlzYLGEFUCWgb+XNyWgtiWw9AGeHNqXhee9njDlkW
+         76lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709622869; x=1710227669;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PJOEpSfM7W5q1u08Hp4JeXt1WjIFUvsNQIjWvP89284=;
+        b=bQRKzThjlbDMJ+uMcR1PQRXprtzOFBvrUliAlz0ZobooToxa2RqM64lvms2T+gscOg
+         Uc4mV7pWwOQP8jdggwWsn9QTpsarTnbb64mVU71uprr70E6mPLSxsgBufQW/YBRk7HTy
+         IyPUpx6gLaKpJC1Mi1NobMJfddLzvOOeTG/SVU6rLwRfQvnwSwroFoc6EF/NhtIodomL
+         6WW4q/JSzj4tV1sPnGkvVdV46P4zaisr7aBw8L/KsilpXX0N+WU+t99sFqhrERFIhwHC
+         gWrtsfDWNrIPFbpnuhHgp+EJqBVwmPH3eJIABeVWcd4/Pw2q6aR+XkSiuT6ljjLw/NEd
+         LY+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV6CenJa2gM2DBnvpZT7so4/wWrAvIxTq6GTVWK2gY2hQS6oeremvUzzEQNgkMYBrc8iU92nEfuzwn2KGGSqmur7Iey3w5/7/8cbLCg
+X-Gm-Message-State: AOJu0YwIRbF2eBQH7Ah5Np2oUPuaFmiEwz4eDch+3e4AkJfmnGaUuPbl
+	JK5Z/d5Oic6EHlqz9z7quYLp8IArv+qvlBlnj0gzKbK5SvkuHKksCgfwyysBbi4=
+X-Google-Smtp-Source: AGHT+IHp7CcumrNQVRnYzlCRiXUg8lu+RHMCE8Y1XizPlq7rAPckHF7i1dAaJAU1OL50XXyaeagM+A==
+X-Received: by 2002:a05:6512:282c:b0:513:5217:6201 with SMTP id cf44-20020a056512282c00b0051352176201mr823592lfb.59.1709622869242;
+        Mon, 04 Mar 2024 23:14:29 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id p5-20020a1709060dc500b00a4537466591sm2234731eji.32.2024.03.04.23.14.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 23:14:28 -0800 (PST)
+Message-ID: <58cdfa7c-5483-4193-a5de-bb5fa72de637@linaro.org>
+Date: Tue, 5 Mar 2024 08:14:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindindgs: clock: support NXP i.MX95 BLK CTL
+ module
+Content-Language: en-US
+To: Peng Fan <peng.fan@nxp.com>, Rob Herring <robh@kernel.org>,
+ "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Abel Vesa <abelvesa@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240228-imx95-blk-ctl-v3-0-40ceba01a211@nxp.com>
+ <20240228-imx95-blk-ctl-v3-1-40ceba01a211@nxp.com>
+ <20240304143916.GA181628-robh@kernel.org>
+ <DU0PR04MB941740A36E953A0E1AD690EC88222@DU0PR04MB9417.eurprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <DU0PR04MB941740A36E953A0E1AD690EC88222@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2024-03-04 at 22:17 -0800, Saravana Kannan wrote:
-> On Mon, Mar 4, 2024 at 7:02=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
-e:
-> >=20
-> > On Thu, Feb 29, 2024 at 11:52:01AM +0100, Herve Codina wrote:
-> > > Hi,
-> >=20
-> > Please CC Saravana on this.
->=20
-> Nuno, this is why I was replying to the older series. I didn't even
-> get this one.
+On 05/03/2024 05:13, Peng Fan wrote:
+>>> +
+>>> +examples:
+>>> +  # Clock Control Module node:
+>>> +  - |
+>>> +    #include <dt-bindings/clock/nxp,imx95-clock.h>
+>>> +
+>>> +    syscon@4c410000 {
+>>
+>> clock-controller@...
+> 
+> But this is a syscon, using clock-controller will trigger dt
+> check warning.
 
-Arghh, I see... In lot's of replies I was mentioning you :)
+Which warning?
 
-- Nuno S=C3=A1
+>>
+>> As that is the main feature/function.
+>>
+>>> +      compatible = "nxp,imx95-vpumix-csr", "syscon";
+>>> +      reg = <0x4c410000 0x10000>;
+>>> +      #clock-cells = <1>;
+>>
+>> Please make the example as full as possible. For example, add mux-controller
+>> node. Do some of the blocks not have mux ctrl?
+> 
+> Yes. The blk ctrl is not just for clock, some registers has mux ctrl,
+> such as Pixel_link_sel.
 
->=20
-> >=20
-> > >=20
-> > > In the following sequence:
-> > > =C2=A0 of_platform_depopulate(); /* Remove devices from a DT overlay =
-node */
-> > > =C2=A0 of_overlay_remove(); /* Remove the DT overlay node itself */
-> > >=20
-> > > Some warnings are raised by __of_changeset_entry_destroy() which=C2=
-=A0 was
-> > > called from of_overlay_remove():
-> > > =C2=A0 ERROR: memory leak, expected refcount 1 instead of 2 ...
-> > >=20
-> > > The issue is that, during the device devlink removals triggered from =
-the
-> > > of_platform_depopulate(), jobs are put in a workqueue.
-> > > These jobs drop the reference to the devices. When a device is no mor=
-e
-> > > referenced (refcount =3D=3D 0), it is released and the reference to i=
-ts
-> > > of_node is dropped by a call to of_node_put().
-> > > These operations are fully correct except that, because of the
-> > > workqueue, they are done asynchronously with respect to function call=
-s.
-> > >=20
-> > > In the sequence provided, the jobs are run too late, after the call t=
-o
-> > > __of_changeset_entry_destroy() and so a missing of_node_put() call is
-> > > detected by __of_changeset_entry_destroy().
-> > >=20
-> > > This series fixes this issue introducing device_link_wait_removal() i=
-n
-> > > order to wait for the end of jobs execution (patch 1) and using this
-> > > function to synchronize the overlay removal with the end of jobs
-> > > execution (patch 2).
-> > >=20
-> > > Compared to the previous iteration:
-> > > =C2=A0
-> > > https://lore.kernel.org/linux-kernel/20231130174126.688486-1-herve.co=
-dina@bootlin.com/
-> > > this v3 series:
-> > > - add the missing device.h
-> > >=20
-> > > This series handles cases reported by Luca [1] and Nuno [2].
-> > > =C2=A0 [1]: https://lore.kernel.org/all/20231220181627.341e8789@booty=
-/
-> > > =C2=A0 [2]:
-> > > https://lore.kernel.org/all/20240205-fix-device-links-overlays-v2-2-5=
-344f8c79d57@analog.com/
-> > >=20
-> > > Best regards,
-> > > Herv=C3=A9
-> > >=20
-> > > Changes v2 -> v3
-> > > =C2=A0 - Patch 1
-> > > =C2=A0=C2=A0=C2=A0 No changes
-> > >=20
-> > > =C2=A0 - Patch 2
-> > > =C2=A0=C2=A0=C2=A0 Add missing device.h
-> > >=20
-> > > Changes v1 -> v2
-> > > =C2=A0 - Patch 1
-> > > =C2=A0=C2=A0=C2=A0 Rename the workqueue to 'device_link_wq'
-> > > =C2=A0=C2=A0=C2=A0 Add 'Fixes' tag and Cc stable
-> > >=20
-> > > =C2=A0 - Patch 2
-> > > =C2=A0=C2=A0=C2=A0 Add device.h inclusion.
-> > > =C2=A0=C2=A0=C2=A0 Call device_link_wait_removal() later in the overl=
-ay removal
-> > > =C2=A0=C2=A0=C2=A0 sequence (i.e. in free_overlay_changeset() functio=
-n).
-> > > =C2=A0=C2=A0=C2=A0 Drop of_mutex lock while calling device_link_wait_=
-removal().
-> > > =C2=A0=C2=A0=C2=A0 Add=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 'Fixes' ta=
-g and Cc stable
-> > >=20
-> > > Herve Codina (2):
-> > > =C2=A0 driver core: Introduce device_link_wait_removal()
-> > > =C2=A0 of: overlay: Synchronize of_overlay_remove() with the devlink =
-removals
-> > >=20
-> > > =C2=A0drivers/base/core.c=C2=A0=C2=A0=C2=A0 | 26 ++++++++++++++++++++=
-+++---
-> > > =C2=A0drivers/of/overlay.c=C2=A0=C2=A0 | 10 +++++++++-
-> > > =C2=A0include/linux/device.h |=C2=A0 1 +
-> > > =C2=A03 files changed, 33 insertions(+), 4 deletions(-)
-> > >=20
-> > > --
-> > > 2.43.0
-> > >=20
+Then mux-controller should not be allowed for them.
+
+Best regards,
+Krzysztof
 
