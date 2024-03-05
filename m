@@ -1,161 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210935102B;
-	Tue,  5 Mar 2024 14:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCE88615F;
+	Tue,  5 Mar 2024 14:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709647823; cv=none; b=Qa2MzxvRBeMQQtrGpWGG+0CA1S1+FktrHHtfWkBrz/LLq4Z8kPJGg+AdihYgRy1/tBYex5txDUSBKD8rxybvz6zy5Qitlu0H81FZfo82hmQ7ncDsrxS5ILU+b0h1nsI5IdwGwHueeCPZwJuVh5W4Ql4ANCOGJjUUPA0ktWji4z0=
+	t=1709647908; cv=none; b=oJPTyxbXknyKpfEBuNSGzZaCCQd5ZQscXSmiePKOy0DYZwBqrnV7EDZJStIE4q1EKrtUf1S/zRaPp1Y5LgIFNjuwTU9Nu0NbeM+aB8uKxuwAl7VefciVrj7LmEKAC82/fsliSRURlDQYqq5brkHXNLx4tUZpR+1BljhQiqK8mz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709647823; c=relaxed/simple;
-	bh=yligJ8IXn0rMPUgLLCLFsqkXEZzbgJx9pASoGxdfXR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FFXLlkfbN8mOlmwhn+yaxysdzKbxIufVFDjZ/nslE4Wsdr/b3i39EjFBcMhMT/NuJiC6y79CSQIvLd1wjEL/9hcr/S4iBZW1zYYevDwCB8k7spmZkL1Nle4N/VFi8t1AYEqEL6gwXmWdTUd/dErd5jjFQc6Z3pJahAgGNKlk3Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlcGZRPG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709647908; c=relaxed/simple;
+	bh=l87FN/S7hYBgOYZ849x4u4XP0S9wnn3Ph0dNs7/oyLE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BDnVjPpZfv+brcL+l39o5faEt8kEsPNj8JmrJmqaaPdXvQAKhCfpYRMaiAJirppxmi3j+uIxsQv8NBPXrrGX2znslHjyqjt/muVqLB5rs+ZMgNTwVKEAx3jTJxPjOxIk3j/PrKki8EByqk2ve2wgF1tAZ2C7AYjogqB0lyg8n+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THeV5zfz; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlcGZRPG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E72C433C7;
-	Tue,  5 Mar 2024 14:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709647822;
-	bh=yligJ8IXn0rMPUgLLCLFsqkXEZzbgJx9pASoGxdfXR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tlcGZRPGR3iQ3Rz6cSl+sC1Cd46r5Ye33DMAn5FrLL36CXD9BZQNfPcP+eD5kHU8P
-	 erNmTTXjdJzUzz6MpO4rPA74t7oPJs/J1h3bl8qVKDCyB/V3PA/wAqnsBHoUGg8mlK
-	 K/c8410PacOzLJ7pz2EhJ4+/OG0LzlthgNRgJds7EbXVB41PWzf0lKPtNbVRVIu0ps
-	 1+8c8Nb1LLq4IVbq2OnGm6GOAE2JQSoZVVxA4ath12jYeOaeiDSH/3Ksisngcs6gVG
-	 mMwYTdkTa0hLLZ7wMrGWN6Hh/FZvIbmSGo5qbKIt4LktOPc8uvkNwpxmtQd1K9araP
-	 yTgfP0En4Nimw==
-Date: Tue, 5 Mar 2024 08:10:20 -0600
-From: Rob Herring <robh@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, rafael@kernel.org, lenb@kernel.org,
-	will@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-	frowand.list@gmail.com, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
-	mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4] PCI: Add support for preserving boot configuration
-Message-ID: <20240305141020.GA3259724-robh@kernel.org>
-References: <20240222124110.2681455-1-vidyas@nvidia.com>
- <20240223080021.1692996-1-vidyas@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THeV5zfz"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e5b1c6daa3so4103666b3a.1;
+        Tue, 05 Mar 2024 06:11:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709647906; x=1710252706; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0ptWYKwK26XO+pPKZk7491w2CRd3K9UN34Kmlw2Ucys=;
+        b=THeV5zfzEnAhhzjTM9rHS0epw6LX3nadeJI2cDySQzv4somQjRGPVOSg0QUy33XKBF
+         JabVZHVRI028wfrOWtkhDHk51ZfN5uPEOyw52m9MpyyxWZcCuMZOdePlPPzawBQiQR0G
+         5u3DEWhtyGR5HdNqhtJjkYFjqZKFpIHr4ZUaqOpzoIUahRz0JBXrvBBlYS7VikAUtwQ6
+         I/6bBp6Q+8GK7fM689eGGgCxGdPcSZJkKUcm3XSj/BPT7xTp/eswX/lzVJ+4nzJxZG8h
+         lVUGVVRLT1lsEycRyucaLW9i/bJIYDoN29duSdZoKslKS0BoadEvWY2reX5s0pfwNckR
+         0Cog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709647906; x=1710252706;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0ptWYKwK26XO+pPKZk7491w2CRd3K9UN34Kmlw2Ucys=;
+        b=tuK3NAwy0M/KE3RwKp5Fzh/zdtN+mITnVKqslAgLi8nTD4kybIgngI1li2lBuH+Enu
+         A7Dza5N2Ox4PkmdTW2hYgVl1QNbbC4ymJ4wNMMCACRI0YrSrMbEyCPDm7S8leqbBmotH
+         D5GvcZwKBepW197Rndz6iut7m/W9PK1jdd1eZqMno4dvGzU7J2nkbP2IvfFurkE7+/th
+         w9tultnKSps6V4jxIk3df5bZ5qBuA9EDjdB0g5qXXvxq+E1EOCGBF4nB1gDsdi7xEALn
+         /e0LdzacfnaTTCoLX1Cuyr/oAHDwXmP96khjZsJgmE638/tLJSooAd/F7ZbxbnccJlmp
+         Ju6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWGu0aamlzxcQr2NLsHZp8sa99QY4SeYP3DMh0sL42Wt+IE7fhubsXMBvKZ81lMm8Z0QcmGhBSzgJCEyd1ER1tjrb81y/NUGuUbu1TDHdEvtlX1thVmr2FA20oYxbCd70elSAAJukMcZa35jqg4mfBrh4htBnIGyLj2JYcbfa7+ZWCcvA==
+X-Gm-Message-State: AOJu0YxiN2z0jA83blyIhJ/0f+YBcN2FAHNPJsmcYo//GeO+eSC94Fxy
+	5k4j9H7mSNwfgkvdztekhDI9EDdjNaeZC6MJalqJOAoq9nBQI4V2GEVOnHxYGFpt6M7WViUvnbn
+	B24wii6vYrDQC3Oqq8ib9gq9ed3w=
+X-Google-Smtp-Source: AGHT+IF2u1CS/qzzW2dSsR05vsnKkZIimUbzC3oZpDvZ2seDKjLb26oGv8Iks7gNcsCttodsxUxVKire2jLC4A0eqp4=
+X-Received: by 2002:a17:90a:ac12:b0:29b:36a8:4742 with SMTP id
+ o18-20020a17090aac1200b0029b36a84742mr6761437pjq.13.1709647905647; Tue, 05
+ Mar 2024 06:11:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223080021.1692996-1-vidyas@nvidia.com>
+References: <20240305135903.3752568-1-robimarko@gmail.com>
+In-Reply-To: <20240305135903.3752568-1-robimarko@gmail.com>
+From: Robert Marko <robimarko@gmail.com>
+Date: Tue, 5 Mar 2024 15:11:33 +0100
+Message-ID: <CAOX2RU6ciO1dTPTxA2E2v3FVH7y=BLM1tR05XN2rj9tKMEvZLw@mail.gmail.com>
+Subject: Re: [PATCH net v2] net: phy: qca807x: fix compilation when
+ CONFIG_GPIOLIB is not set
+To: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk, 
+	andersson@kernel.org, konrad.dybcio@linaro.org, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, ansuelsmth@gmail.com, 
+	netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 23, 2024 at 01:30:21PM +0530, Vidya Sagar wrote:
-> Add support for preserving the boot configuration done by the
-> platform firmware per host bridge basis, based on the presence of
-> 'linux,pci-probe-only' property in the respective PCI host bridge
-> device-tree node. It also unifies the ACPI and DT based boot flows
-> in this regard.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+On Tue, 5 Mar 2024 at 14:59, Robert Marko <robimarko@gmail.com> wrote:
+>
+> Kernel bot has discovered that if CONFIG_GPIOLIB is not set compilation
+> will fail.
+>
+> Upon investigation the issue is that qca807x_gpio() is guarded by a
+> preprocessor check but then it is called under
+> if (IS_ENABLED(CONFIG_GPIOLIB)) in the probe call so the compiler will
+> error out since qca807x_gpio() has not been declared if CONFIG_GPIOLIB has
+> not been set.
+>
+> Fixes: d1cb613efbd3 ("net: phy: qcom: add support for QCA807x PHY Family")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202403031332.IGAbZzwq-lkp@intel.com/
+> Signed-off-by: Robert Marko <robimarko@gmail.com>
+
+I will resend this as I sent it targeting net instead of net-next.
+
+Regards,
+Robert
 > ---
-> V4:
-> * Addressed Bjorn's review comments
-> 
-> V3:
-> * Unified ACPI and DT flows as part of addressing Bjorn's review comments
-> 
-> V2:
-> * Addressed issues reported by kernel test robot <lkp@intel.com>
-> 
->  drivers/acpi/pci_root.c                  | 12 -------
->  drivers/pci/controller/pci-host-common.c |  4 ---
->  drivers/pci/of.c                         | 21 +++++++++++
->  drivers/pci/probe.c                      | 46 ++++++++++++++++++------
->  include/linux/of_pci.h                   |  6 ++++
->  5 files changed, 62 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index 84030804a763..ddc2b3e89111 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -1008,7 +1008,6 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  	int node = acpi_get_node(device->handle);
->  	struct pci_bus *bus;
->  	struct pci_host_bridge *host_bridge;
-> -	union acpi_object *obj;
->  
->  	info->root = root;
->  	info->bridge = device;
-> @@ -1050,17 +1049,6 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  	if (!(root->osc_ext_control_set & OSC_CXL_ERROR_REPORTING_CONTROL))
->  		host_bridge->native_cxl_error = 0;
->  
-> -	/*
-> -	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
-> -	 * exists and returns 0, we must preserve any PCI resource
-> -	 * assignments made by firmware for this host bridge.
-> -	 */
-> -	obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
-> -				DSM_PCI_PRESERVE_BOOT_CONFIG, NULL);
-> -	if (obj && obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 0)
-> -		host_bridge->preserve_config = 1;
-> -	ACPI_FREE(obj);
-> -
->  	acpi_dev_power_up_children_with_adr(device);
->  
->  	pci_scan_child_bus(bus);
-> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-> index 6be3266cd7b5..e2602e38ae45 100644
-> --- a/drivers/pci/controller/pci-host-common.c
-> +++ b/drivers/pci/controller/pci-host-common.c
-> @@ -73,10 +73,6 @@ int pci_host_common_probe(struct platform_device *pdev)
->  	if (IS_ERR(cfg))
->  		return PTR_ERR(cfg);
->  
-> -	/* Do not reassign resources if probe only */
-> -	if (!pci_has_flag(PCI_PROBE_ONLY))
-> -		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> -
->  	bridge->sysdata = cfg;
->  	bridge->ops = (struct pci_ops *)&ops->pci_ops;
->  	bridge->msi_domain = true;
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 51e3dd0ea5ab..f0f1156040a5 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -258,6 +258,27 @@ void of_pci_check_probe_only(void)
->  }
->  EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
->  
-> +/**
-> + * of_pci_bridge_preserve_resources - Return true if the boot configuration
-> + *                                    needs to be preserved
-> + * @node: Device tree node with the domain information.
-> + *
-> + * This function looks for "linux,pci-probe-only" property for a given
-> + * PCI controller's node and returns true if found. Having this property
-> + * for a PCI controller ensures that the kernel doesn't reconfigure the
-> + * BARs and bridge windows that are already done by the platform firmware.
-> + * NOTE: The scope of "linux,pci-probe-only" defined within a PCI bridge device
-> + *       is limited to the hierarchy under that particular bridge device. whereas
-> + *       the scope of "linux,pci-probe-only" defined within chosen node is
-> + *       system wide.
-> + *
-> + * Return: true if the property exists false otherwise.
-> + */
-> +bool of_pci_bridge_preserve_resources(struct device_node *node)
-> +{
-> +	return of_property_read_bool(node, "linux,pci-probe-only");
-
-This is the wrong type. The existing "linux,pci-probe-only" is a u32 and 
-non-zero value means probe-only. This would return true for 
-'linux,pci-probe-only = <0>'.
-
-Also, this should also check chosen. If you make this work accepting 
-NULL for node, then of_pci_check_probe_only() can be re-implemented to 
-use it.
-
-
-
-Rob
+> Changes in v2:
+> * Reduce the code indent level
+>
+>  drivers/net/phy/qcom/qca807x.c | 32 ++++++++++++++++----------------
+>  1 file changed, 16 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/net/phy/qcom/qca807x.c b/drivers/net/phy/qcom/qca807x.c
+> index 780c28e2e4aa..672c6929119a 100644
+> --- a/drivers/net/phy/qcom/qca807x.c
+> +++ b/drivers/net/phy/qcom/qca807x.c
+> @@ -732,24 +732,24 @@ static int qca807x_probe(struct phy_device *phydev)
+>         priv->dac_disable_bias_current_tweak = of_property_read_bool(node,
+>                                                                      "qcom,dac-disable-bias-current-tweak");
+>
+> -       if (IS_ENABLED(CONFIG_GPIOLIB)) {
+> -               /* Make sure we don't have mixed leds node and gpio-controller
+> -                * to prevent registering leds and having gpio-controller usage
+> -                * conflicting with them.
+> -                */
+> -               if (of_find_property(node, "leds", NULL) &&
+> -                   of_find_property(node, "gpio-controller", NULL)) {
+> -                       phydev_err(phydev, "Invalid property detected. LEDs and gpio-controller are mutually exclusive.");
+> -                       return -EINVAL;
+> -               }
+> +#if IS_ENABLED(CONFIG_GPIOLIB)
+> +       /* Make sure we don't have mixed leds node and gpio-controller
+> +        * to prevent registering leds and having gpio-controller usage
+> +        * conflicting with them.
+> +        */
+> +       if (of_find_property(node, "leds", NULL) &&
+> +           of_find_property(node, "gpio-controller", NULL)) {
+> +               phydev_err(phydev, "Invalid property detected. LEDs and gpio-controller are mutually exclusive.");
+> +               return -EINVAL;
+> +       }
+>
+> -               /* Do not register a GPIO controller unless flagged for it */
+> -               if (of_property_read_bool(node, "gpio-controller")) {
+> -                       ret = qca807x_gpio(phydev);
+> -                       if (ret)
+> -                               return ret;
+> -               }
+> +       /* Do not register a GPIO controller unless flagged for it */
+> +       if (of_property_read_bool(node, "gpio-controller")) {
+> +               ret = qca807x_gpio(phydev);
+> +               if (ret)
+> +                       return ret;
+>         }
+> +#endif
+>
+>         /* Attach SFP bus on combo port*/
+>         if (phy_read(phydev, QCA807X_CHIP_CONFIGURATION)) {
+> --
+> 2.44.0
+>
