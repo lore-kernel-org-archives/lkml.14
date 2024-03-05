@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C151B59F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9591272CC;
 	Tue,  5 Mar 2024 20:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709668833; cv=none; b=THyV/G/vsPzB1SBgl1wNmmj3SQ6RQjB92GKEHdwJjilckQva9liYaxXqCwyJefxRqxLYq7Wx9FfWhGbLVMpYXohV5Z8Gr1onprM21pgf6tdN1xDcgFJSTzlMTkzID9InF+BeIU+1Su0QQXq9CNnNsWaBNzxXUau6qRmijz+Coto=
+	t=1709668833; cv=none; b=kH1G1CNh1xEDq1Uc7Iy6FCJdfu1GQ6VANCpIPq3FnQnGYoNR/ojVqSXsQgdZTKdLFdNFSlQRqi607ZMNBwVTHDf48ePHeV9akuarcSoJguTRZCc4njAiIdPpPLBvLRiKPAfxXxw1NHXkN7Chl2X/DNrDl3ZIlcFRnwXSVhwsp+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709668833; c=relaxed/simple;
-	bh=b/y7JjjxnUdm+R8hNCO+v51ZljJ6BUuJ54yjwBQfOi4=;
+	bh=9xBvEf4prS3iut14em+VSKNMOHTjGO6VQ6nZWv1dzq8=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=aq+AspTcwhthyN2GUIsq2eVKDUOXfvmhiuEJk9P6twkIEbkBGr42zLEcwUmrWy95EY4n5tCpaN0fNTwLHAueDuQWiwnAdYxk9UO/fDbtOkA/USgQTu7qZkbPInBFg+4QMeL0G8/iaxOHIDmi09TRfteYfqAboa/XqrkbFIK9LkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzsmYdbS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=JHgNcVgAateU6NhNQiutmfxipOjg1Kv+3Vw7PghvwXGSxyWPlCPJGcAHoOPgZFlzPiEbMc4Q6AD8fgYmrOPppuHlmhhSX4qiF3q38Q95lWozCA71tBAUOifEajUTantiW4RXfY79GqJmBGT4XOAPke0qirA4ISYXUmQnffZnmnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xc5tbXzh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzsmYdbS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C486C43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xc5tbXzh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 135D2C433C7;
 	Tue,  5 Mar 2024 20:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709668833;
-	bh=b/y7JjjxnUdm+R8hNCO+v51ZljJ6BUuJ54yjwBQfOi4=;
+	bh=9xBvEf4prS3iut14em+VSKNMOHTjGO6VQ6nZWv1dzq8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZzsmYdbSqu2uTmHya40o7b+L43sOw8Ccsp1c3XGjWTyxQVnWf75pxJcoXrXcrGjCZ
-	 PKdgIBb9fLCdTODyzFm/v3h9/99BAu2vHMjhoBy1JcVtVVhyUWPj0Dy+/LsGo7Q8tm
-	 iYM/+gUCgc19eSZvV3oL1P+VtGgEOgfujvC6ehT6IQaA82F1jyW2BnzzqkwYrrCX9T
-	 4nKdbPfjzuuyCanGKiqxwp300rGkKUUkY5Y1huCoTQDQt1Y+HgQNdhdBBGwP2p/QA4
-	 qpiKejCKpBfuPbK/3XsRy48a0DA7QgUIl+Kcu47tHDW236w86s6/m+ofcB4eIBP8aw
-	 +IW6C54RlewZg==
+	b=Xc5tbXzhOvIdwKDJGbcuseVY0UFx2FRbeuxTR9M2TeYJmbH+qw2KSQuGp3BklOm7l
+	 SKtLUoNAgDxcX7JDD0WMyyFpc3+2iCRtVQ+GGICrfocySJkOD+EokME1xP09rCaQ3E
+	 5D7mPWU6DKY2Cxmz9NyEhD8EaPxjHG7iMTkqYwdG93d+/z63j767EcW8D/ewFa8UzM
+	 wkVVKdD/0/f5VczSZF09yoq3YOhofmz0/jDhkLcMwiioi3gQgM0HoOk4tW1Jz1/NlR
+	 FkhhjuDzz1+3DuQtE/Xcr4QAuG7Nd12DS1+/JKZKatSWNU9INFe14ZkXRD6HIqMfSu
+	 4a5OVovToZ0AQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E0195D9A4BB;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EB81AD88F81;
 	Tue,  5 Mar 2024 20:00:32 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,49 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/6] net: constify struct class usage
+Subject: Re: [PATCH] ptp: fc3: Convert to platform remove callback returning void
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170966883291.18762.11753992579931321853.git-patchwork-notify@kernel.org>
+ <170966883295.18762.14661053302967043118.git-patchwork-notify@kernel.org>
 Date: Tue, 05 Mar 2024 20:00:32 +0000
-References: <20240302-class_cleanup-net-next-v1-0-8fa378595b93@marliere.net>
-In-Reply-To: <20240302-class_cleanup-net-next-v1-0-8fa378595b93@marliere.net>
-To: Ricardo B. Marliere <ricardo@marliere.net>
-Cc: yisen.zhuang@huawei.com, salil.mehta@huawei.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- loic.poulain@linaro.org, ryazanov.s.a@gmail.com, johannes@sipsolutions.net,
- krzysztof.kozlowski@linaro.org, gregkh@linuxfoundation.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-ppp@vger.kernel.org
+References: <20240304091325.717546-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20240304091325.717546-2-u.kleine-koenig@pengutronix.de>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40pengutronix=2Ede=3E?=@ci.codeaurora.org
+Cc: richardcochran@gmail.com, min.li.xe@renesas.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sat, 02 Mar 2024 14:05:56 -0300 you wrote:
-> This is a simple and straight forward cleanup series that aims to make the
-> class structures in net constant. This has been possible since 2023 [1].
+On Mon,  4 Mar 2024 10:13:25 +0100 you wrote:
+> The .remove() callback for a platform driver returns an int which makes
+> many driver authors wrongly assume it's possible to do error handling by
+> returning an error code. However the value returned is ignored (apart
+> from emitting a warning) and this typically results in resource leaks.
 > 
-> [1]: https://lore.kernel.org/all/2023040248-customary-release-4aec@gregkh/
-> 
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> To improve here there is a quest to make the remove callback return
+> void. In the first step of this quest all drivers are converted to
+> .remove_new(), which already returns void. Eventually after all drivers
+> are converted, .remove_new() will be renamed to .remove().
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/6] net: hns: make hnae_class constant
-    https://git.kernel.org/netdev/net-next/c/b6e3c115efb5
-  - [net-next,2/6] net: wan: framer: make framer_class constant
-    https://git.kernel.org/netdev/net-next/c/63767a76318c
-  - [net-next,3/6] net: ppp: make ppp_class constant
-    https://git.kernel.org/netdev/net-next/c/2ad2018aa357
-  - [net-next,4/6] net: wwan: hwsim: make wwan_hwsim_class constant
-    https://git.kernel.org/netdev/net-next/c/d9567f212b15
-  - [net-next,5/6] net: wwan: core: make wwan_class constant
-    https://git.kernel.org/netdev/net-next/c/070bef83f03e
-  - [net-next,6/6] nfc: core: make nfc_class constant
-    https://git.kernel.org/netdev/net-next/c/e55600116929
+  - ptp: fc3: Convert to platform remove callback returning void
+    https://git.kernel.org/netdev/net-next/c/60d06425e045
 
 You are awesome, thank you!
 -- 
