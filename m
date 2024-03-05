@@ -1,258 +1,111 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from fhigh7-smtp.messagingengine.com (fhigh7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF551272C3;
-	Tue,  5 Mar 2024 15:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50961272BD;
+	Tue,  5 Mar 2024 15:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709652402; cv=none; b=iaAFANHa0ON1NZrjAj7uiSOjoSI/583nBYosbZ1Znuo/Bcyc509D0ETeZYgP/vwPper+jAiRIjHjtBd2kB4UV77eofJQKzsQ8NgJrmzfbzSqb9mGX0LKZpLJmb2MOHD8YRuDO5+AQoOB+WTUQz6LHvFUUILqAntqR++7lZacFvU=
+	t=1709652403; cv=none; b=KXs0OsWHKQ8gKIHxFLZwV5f732SXlYjC2nHoDdJQaTUWlX/1qLB1aWc9PXVa0A1qqWSrd7U+pNL0sAd4mrdr/hcIva85POEi5+PPx+hnRzgdu4NeGr3tlpkXhw+PO59RSvQHzZ2mk0f2CzfdZRyticv32vXkdqsJ5Wp9mRGn16M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709652402; c=relaxed/simple;
-	bh=Ew3eJSanO6mflhfmFVB/8j7aJcFlCh33obPaFaNEobo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hMrEWKcK6CVm3dvkhybUnDURpL3PVQhKIOQN9ExLEMbSuJOREOsxlouJv3xDGpTom4KacsA3HD7dBh93PeDbN23OC5CNrBv1X/gRP6u2jzojxeuiQ9B0NnbasA9YvThpmdT4KjWC8Q//jz2QtDQI2l02GKdd4lKjT6KG6FOvzWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ddhZ2/mj; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709652403; c=relaxed/simple;
+	bh=9maXCI32il46CAjYFMVaT0KmmG8v0yRwsxQO5+iiyJ8=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=iJToBBCSW4tuoBBgCdRdaV+59yhOo2t7J5EEFqrZuv2D6HSE99iFNjyJoQIdf1N3u1IddENYLD7gO7K4IyvlpVAYQGJ6uCogoEgTswpVQM9wseMBr+viUZCc8i1utdMnEX8NkP912DuxIOu+UVjJbtf/jfpfznBBFlR63HvA9ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=LD6puupe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fyE1OlkM; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ddhZ2/mj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709652399;
-	bh=Ew3eJSanO6mflhfmFVB/8j7aJcFlCh33obPaFaNEobo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ddhZ2/mjAk/IDvAss+FFUl0HNrGuaVdPPiwRLLskLApmw0HMp7chr8FRLb/YCW8ea
-	 dNq7psjkZuLk1/EKViV9/pXW3r8sg36pZX/a7NGovr+g1Bh/W2HEf/DC21a8jv0EdP
-	 yierL+bFvk06nT24Pgm8G1y4RoViwWmrQ/e/aNIBdWh46rbB1slWEhEt9eTm5sjX4T
-	 jnKMirxeTrjK9D21i514THmSm1VE0LQAZVJVr1J9sG6Ss6jN2wBo8AZuNOFfiTGuls
-	 3VxPq5QRlskRGhJTMXOr1lLey/HmFB4t8xMu4vXdPtWWiQPYPjgvO+mg4Z+UHEimP5
-	 6Dacd0Enh51+Q==
-Received: from stla-brain-8255-1.home (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C5A22378204B;
-	Tue,  5 Mar 2024 15:26:38 +0000 (UTC)
-From: Julien Massot <julien.massot@collabora.com>
-To: linux-media@vger.kernel.org
-Cc: kernel@collabora.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mchehab@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	sakari.ailus@iki.fi,
-	Julien Massot <julien.massot@collabora.com>
-Subject: [PATCH v4 2/4] dt-bindings: media: add Maxim MAX96714 GMSL2 Deserializer
-Date: Tue,  5 Mar 2024 16:26:06 +0100
-Message-ID: <20240305152608.287527-3-julien.massot@collabora.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240305152608.287527-1-julien.massot@collabora.com>
-References: <20240305152608.287527-1-julien.massot@collabora.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LD6puupe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fyE1OlkM"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id B628E11401A6;
+	Tue,  5 Mar 2024 10:26:39 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 05 Mar 2024 10:26:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1709652399; x=1709738799; bh=mM85GnrQKa
+	FCJuhHp4V9npg1BWZBV42eoS1VwxzuCH0=; b=LD6puupe+UYOkygnrRV11k93IG
+	FEk6aU9K7Z55tgyn2reA3mFxo0W4CYRmjjOAhKOEFTEGAPi7Ypmw1ehHwIA5K3ZK
+	eLV+VZQ8EsHofPtAV2c9qHouQRi/mNvfKrDK2tpeT4h1FsdaINq9uA3j25JAemq6
+	puN3yKfmv12w8vE2Vv//nflnuBhoncMRNRNx+zhb/sTru+Q3+2ckpN2Bm0GkgXo+
+	pKjrBIb0sKhkgiXB2aAjH+8NdoFIGpGKpdkKAg/nweksABcaB0aWs+KDWBkLE65Y
+	lzC4jGKnwivC9mlK8CAikGWM1d7lxtO4MtWR1Hs6Mohj/2ksa3zwcfBiHITA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1709652399; x=1709738799; bh=mM85GnrQKaFCJuhHp4V9npg1BWZB
+	V42eoS1VwxzuCH0=; b=fyE1OlkMCmXfWWiJZ5I3zI/w9Bi31o+HrIJZpPGwKbSf
+	JGx0KY48Zebpx83JVAqr6b+dXqCSZRKvnfDe/FB0zSMvNfWHwqhTPzd01xV7S9be
+	fBODFpYbHWJ0zJ+UoAGusUoFxokByyYAwcpHMQIgYpUeNfOQtDWw8ZYDQdnzTTdo
+	pyL6au0ELZqWY7stgLH7jwIjowUqqt4pPMB7TRRJEOjyYFIAM+AOO2VAc9l6exyj
+	RbJ6ridJpV1dLIzHmyLqiPEVNyXmje0alQaCBbZB4kpwv/SQEbER/rO43aHy0dcX
+	JTJ/bNZefEC8HP6qITO9XW+tXsjozIg1xv8RQ+klOw==
+X-ME-Sender: <xms:rjnnZQT_uezG3J2Isg5QTmSwV_S5nQuCAt2GlQOU0uvfFQfgef1Hfg>
+    <xme:rjnnZdxI9b3evSjdQYXvh-SLgMH1ZkRL9X5QTyTLLuYXP7jqP9xXBHPP8HMuPGVRS
+    SPgxZpXF9KVgzQVaWc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrheelgdejfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:rjnnZd0FFiuD1NSQOSB6esRu9mO98ISH7SWQAC0hGSqoakLRtGCgCA>
+    <xmx:rjnnZUB5RHRgQb0ZBqkM10fCRCSvcmCIsvWkkGcEh47zjKRXoiuiNg>
+    <xmx:rjnnZZjkWokGwIT-6TJbYbcaFQeQX7z5PX73sAB8gMVKbcoh5_HSqQ>
+    <xmx:rznnZaUfdtytSpaj9K9kcFrXqUTdqR8krMDGrq3XzfZE22DbsEJRmA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 73417B6009B; Tue,  5 Mar 2024 10:26:38 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-208-g3f1d79aedb-fm-20240301.002-g3f1d79ae
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <5648dca0-4853-4dfb-91cf-282a656beb1e@app.fastmail.com>
+In-Reply-To: <8d5780f5-1047-48d7-a9c9-09b95c7b5604@gaisler.com>
+References: 
+ <20240224-sam-fix-sparc32-all-builds-v2-0-1f186603c5c4@ravnborg.org>
+ <20240224-sam-fix-sparc32-all-builds-v2-4-1f186603c5c4@ravnborg.org>
+ <8d5780f5-1047-48d7-a9c9-09b95c7b5604@gaisler.com>
+Date: Tue, 05 Mar 2024 16:26:18 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andreas Larsson" <andreas@gaisler.com>,
+ "Sam Ravnborg" <sam@ravnborg.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ sparclinux@vger.kernel.org, "Randy Dunlap" <rdunlap@infradead.org>
+Cc: "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ linux-parport@lists.infradead.org, "David S . Miller" <davem@davemloft.net>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] sparc32: Do not select ZONE_DMA
+Content-Type: text/plain
 
-Add DT bindings for Maxim MAX96714 GMSL2 Deserializer.
+On Tue, Mar 5, 2024, at 16:06, Andreas Larsson wrote:
+> On 2024-02-24 18:42, Sam Ravnborg via B4 Relay wrote:
 
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
----
-Change since v3:
- - Renamed file to maxim,max96714.yaml dropped the 'f' suffix
- - Removed mention to C-PHY since it's not supported by MAX96714 deserializers
- - Removed bus-type requirement on CSI endpoint since the device only support D-PHY
- - Removed the clock-lanes property in the dt example
+>> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+>> index 734f23daecca..bdbde506c01e 100644
+>> --- a/arch/sparc/Kconfig
+>> +++ b/arch/sparc/Kconfig
+>> @@ -62,7 +62,6 @@ config SPARC32
+>>  	select HAVE_UID16
+>>  	select LOCK_MM_AND_FIND_VMA
+>>  	select OLD_SIGACTION
+>> -	select ZONE_DMA
+>
+> This however makes a number of PCI drivers that depend on
+> ZONE_DMA unselectable.
 
-Change since v2:
- - remove reg description
- - rename enable gpio to powerdown
- - use generic node name: i2c, serializer, deserializer
----
----
- .../bindings/media/i2c/maxim,max96714.yaml    | 169 ++++++++++++++++++
- 1 file changed, 169 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
+I think that is the correct thing to do then: the only
+drivers that I see with this dependency are PCI sound cards
+that apparently rely on DMA to the 16MB ISA range, which is
+not provided by sparc.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-new file mode 100644
-index 000000000000..d76a5213ef0f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-@@ -0,0 +1,169 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2024 Collabora Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/maxim,max96714.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Maxim MAX96714 GMSL2 to CSI-2 Deserializer
-+
-+maintainers:
-+  - Julien Massot <julien.massot@collabora.com>
-+
-+description: |
-+  The MAX96714F deserializer converts GMSL2 serial inputs into MIPI
-+  CSI-2 D-PHY formatted output. The device allows the GMSL2 link to
-+  simultaneously transmit bidirectional control-channel data while forward
-+  video transmissions are in progress. The MAX96714F can connect to one
-+  remotely located serializer using industry-standard coax or STP
-+  interconnects. The device cans operate in pixel or tunnel mode. In pixel mode
-+  the MAX96714F can select individual video stream, while the tunnel mode forward all
-+  the MIPI data received by the serializer.
-+
-+  The GMSL2 serial link operates at a fixed rate of 3Gbps in the
-+  forward direction and 187.5Mbps in the reverse direction.
-+
-+properties:
-+  compatible:
-+    const: maxim,max96714f
-+
-+  reg:
-+    maxItems: 1
-+
-+  powerdown-gpios:
-+    maxItems: 1
-+    description:
-+      Specifier for the GPIO connected to the PWDNB pin.
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        unevaluatedProperties: false
-+        description: GMSL Input
-+        properties:
-+          endpoint:
-+            $ref: /schemas/media/video-interfaces.yaml#
-+            unevaluatedProperties: false
-+            description:
-+              Endpoint for GMSL2-Link port.
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description: CSI-2 Output port
-+
-+        properties:
-+          endpoint:
-+            $ref: /schemas/media/video-interfaces.yaml#
-+            unevaluatedProperties: false
-+
-+            properties:
-+              data-lanes:
-+                minItems: 1
-+                maxItems: 4
-+
-+              lane-polarities:
-+                minItems: 1
-+                maxItems: 5
-+
-+              link-frequencies:
-+                maxItems: 1
-+
-+            required:
-+              - data-lanes
-+
-+    required:
-+      - port@1
-+
-+  i2c-gate:
-+    $ref: /schemas/i2c/i2c-controller.yaml
-+    unevaluatedProperties: false
-+    description: |
-+      The MAX96714 will pass through and forward the I2C requests from the
-+      incoming I2C bus over the GMSL2 link. Therefore it supports an i2c-gate
-+      subnode to configure a serializer.
-+
-+  port0-poc-supply:
-+    description: Regulator providing Power over Coax for the GMSL port
-+
-+required:
-+  - compatible
-+  - reg
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/media/video-interfaces.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        deserializer@28 {
-+            compatible = "maxim,max96714f";
-+            reg = <0x28>;
-+            powerdown-gpios = <&main_gpio0 37 GPIO_ACTIVE_LOW>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                port@0 {
-+                    reg = <0>;
-+                    max96714_gmsl_in: endpoint {
-+                        remote-endpoint = <&max96917f_gmsl_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    max96714_csi_out: endpoint {
-+                        data-lanes = <1 2 3 4>;
-+                        link-frequencies = /bits/ 64 <400000000>;
-+                        remote-endpoint = <&csi_in>;
-+                    };
-+                };
-+            };
-+
-+            i2c-gate {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                serializer@40 {
-+                    compatible = "maxim,max96717f";
-+                    reg = <0x40>;
-+                    gpio-controller;
-+                    #gpio-cells = <2>;
-+                    #clock-cells = <0>;
-+
-+                    ports {
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+
-+                        port@0 {
-+                            reg = <0>;
-+                            max96717f_csi_in: endpoint {
-+                                bus-type = <MEDIA_BUS_TYPE_CSI2_DPHY>;
-+                                data-lanes = <1 2>;
-+                                lane-polarities = <1 0 1>;
-+                                remote-endpoint = <&sensor_out>;
-+                            };
-+                        };
-+
-+                        port@1 {
-+                            reg = <1>;
-+                            max96917f_gmsl_out: endpoint {
-+                                remote-endpoint = <&max96714_gmsl_in>;
-+                            };
-+                        };
-+                    };
-+                };
-+            };
-+        };
-+    };
-+...
--- 
-2.44.0
-
+      Arnd
