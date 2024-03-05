@@ -1,299 +1,94 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2060.outbound.protection.outlook.com [40.107.20.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5401812CDB2;
-	Tue,  5 Mar 2024 21:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.60
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709672884; cv=fail; b=WhsF0jHS9MmzlBBOc/lS3gPvuXXZxnjRroVUq11pwZh4+iTUcgg6cS+I7gVLPZv/lc9zaOrk6Oyh7SVGYGkbx1hxKvFTOZOqmcV4dhjjZ3T4k4Bi0VF2N1Kz1NMFUiUjkBoVgPD/EnanZapr0tAB2bfiK3BcgTxOhZDS+pOTVkQ=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709672884; c=relaxed/simple;
-	bh=UD02bVeKade0qayHj2PAHwdAuzriIUgGFBzjwuJpb5g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=gdKhnWYJFYOHE9SXgeFGLDS0eVWs9TtFKzjaoqXS75ViFYDsCwFcezJxXI1TiJoSB6Gj03aNDSeKw4UgkCwTUVpzy6GADCHdQuCC6M8ihf2AlIzMIdT5sIU45dfMwRzlhx7KEbmvs2NymuFrEGfXh6yfCKv3URreHtWV5FmRc8s=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b=RbLmHFg1; dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b=RbLmHFg1; arc=fail smtp.client-ip=40.107.20.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7661B809
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 21:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709672963; cv=none; b=CTS789+9r6dKqJdMZvu/lF7Qp7YA1pBIB0/0JwVW7lsuzGpNa8XdjAnq/SRVIsI8oNu0/ffHAG7X0WOmnXRJJkCkyJRdZ5l3n1kFxO91+9a8p2XHd/GUvQCwYBso1wF3W+ByrLlH9D/TPpFIpJrBg7mAQ+0QwF5K9VZLR5Y84HM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709672963; c=relaxed/simple;
+	bh=jJZTR3ZQLE6TxtB1On0qTLLClIpP1eKZkTdZYogVliU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=SNTJHwvfcCWZqVKxiGxEvSKDXW4RW5SKAqHx1RV9u0QV65hN6a1NTKwqyYLqACNGU3M04/ZyLjRIMUhKNvNokuGGynKh58WBoGyy4nwV8WdKVRW4ZQ+epbrkhDPcP05K4obrKq2vZLG2UZ/Li3FW4aMaTYmPJb00x/Rw9ZHhWfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zV7ArLKA; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="RbLmHFg1";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="RbLmHFg1"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
- b=mTBy+a6SnEIOWwsSSTpOCYYoxWW0MiWe61yIOWLui1bXHlkML8FswL7LPfwxIUV4vMtKZtMYr6l8ft7PjCkN+UBBF/bXaXtp+Xa/aBVdVWPWxdTMiQri/1nZOwYEizmC3vrGXsvSAKmrNrQGwyUebj+auJPdRYmenIWt+GvG0uGO4h0WWOe09TiVZFoK8AnMzm3AUlI6KewV1Qay03j4l1WDmLuSx+sdGZfyK6lzy8NaeMZuDd44BjyEcg4rfFA4QZhIUyv0qV6VWPCGhrKxD/BGvbu74PXABWum6Dryii7kq7S4X5EtedUnYogErBMcEywH1OzfU16iFaFwSEGi0Q==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sfYBIkiD6i8UMtbRMb050+aPGAF2mjwakWwDU1FZ0LU=;
- b=CaRh+AyaiRKTD/Bi545E7GkdBZuLS8Rov9yLQvDz6X4I+lxfIqLyFDotwS6DgIATs92KmBQB1gdYvpui5IaLLRMRez4UawpF4uq1vV1QacDKRKmT/Z9altw8R1hNTFympKBFcPdVzVY1OcZj3Zz3nWJUB3ph2Diqx/b7sV/CP2Y3uAhrdEUl1c3E9E1NJxi1jWrRHFNhN4I9ymEamoXFqoCq8J0Ejr3HRar/uGObik3bXnfKTzYJTIbHnWewDlrs88o7ROGB3wbmxP2jLy+bG75YmblG4Lg/JRQ9Jq6MpFb81gdc42+3ufrGcwPTYAwZ8DUQgzDThLfwtnStwfOe6w==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=armh.onmicrosoft.com; arc=pass (0
- oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sfYBIkiD6i8UMtbRMb050+aPGAF2mjwakWwDU1FZ0LU=;
- b=RbLmHFg1Ql/NL3IFduVPNYny/xwkxIaOu7dedezKmxWqbhbRbxlvGw7+e/utLJCYOxyDA1JtpB5hvhiypb6gupQohrGplUJ32hoKZzK3NLKDcSaUcLZHJs5d38a7cUHvZGL/2sVvrdIgZiRpMG2afoSgxtjaenw90gck5Qt4Cj8=
-Received: from DU7P195CA0014.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::25)
- by VE1PR08MB5693.eurprd08.prod.outlook.com (2603:10a6:800:1a5::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Tue, 5 Mar
- 2024 21:07:56 +0000
-Received: from DB5PEPF00014B90.eurprd02.prod.outlook.com
- (2603:10a6:10:54d:cafe::2d) by DU7P195CA0014.outlook.office365.com
- (2603:10a6:10:54d::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.40 via Frontend
- Transport; Tue, 5 Mar 2024 21:07:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5PEPF00014B90.mail.protection.outlook.com (10.167.8.228) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7362.11 via Frontend Transport; Tue, 5 Mar 2024 21:07:56 +0000
-Received: ("Tessian outbound 5180408f3322:v276"); Tue, 05 Mar 2024 21:07:56 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 0e6c3815e9386819
-X-CR-MTA-TID: 64aa7808
-Received: from 4d8cb9f73ddc.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id FAA26103-FB13-4C44-AE1D-CBD4D0C91385.1;
-	Tue, 05 Mar 2024 21:07:49 +0000
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4d8cb9f73ddc.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 05 Mar 2024 21:07:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dLE77oABkEWmD2ez7GPx96Tapg/TevTVV4RaqvDtbfywgrlYNWTNyC2cva049JYIvCbnnr7y3FOGuuyYKUHbfi14PjqkVfPsZzaQ6OLJY5pSTtVfQbi86Y+2vH2EkSIuhiq6S6Nxqp0NIO6wBEImuFhb+qdMswdrvL/g3fIWy0RStAsJIW6xZUAAOCsyvi/2JkB9RGDnzd6PxVj3x09mX4f9fx0LvLK7ZkNDPNVaU1zoJZsajSWaFaXppJ0ej+lK2A+QyVqlHfIutbbpqkuaqyJApiCg2rGskNpa6XIfLukgqO/LFAmOLaCg3fCu39+AciCrmOMsPwi1QyAanQLM0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sfYBIkiD6i8UMtbRMb050+aPGAF2mjwakWwDU1FZ0LU=;
- b=KpZOzJx+7RY18u4VH1w8F+3A2I8RjyT6GCDVV7kGHd3LzaRFHf79fB8Aku6fZ5upoWsigcVsbOZ7JzCrWRvZVhokN4VeIriUK+DGstZ+wiLeoJoYs58kLF98ZEqgvlVKkjKoWudLzoiQXDxUINhwaH3OmgdBt/RQwbPNTKMzdZw07AjRF7Lu4ObNyY1SVzaYSHH4NUFnWItUpnb7ebygKdrMWVG0cWjayqWsGwSEoiiWVQUXzO+Y6bJ2fa4IyzNMWbxsB8EwEsB73JzvxRfbz4SnoDjpiREY1bMI7FpP33ChuuvUpPLsGUJVk1fBRXGV5gixk+XSkndiXUftTXBWnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sfYBIkiD6i8UMtbRMb050+aPGAF2mjwakWwDU1FZ0LU=;
- b=RbLmHFg1Ql/NL3IFduVPNYny/xwkxIaOu7dedezKmxWqbhbRbxlvGw7+e/utLJCYOxyDA1JtpB5hvhiypb6gupQohrGplUJ32hoKZzK3NLKDcSaUcLZHJs5d38a7cUHvZGL/2sVvrdIgZiRpMG2afoSgxtjaenw90gck5Qt4Cj8=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM0PR08MB4289.eurprd08.prod.outlook.com (2603:10a6:208:148::12)
- by AM9PR08MB6178.eurprd08.prod.outlook.com (2603:10a6:20b:2db::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Tue, 5 Mar
- 2024 21:07:47 +0000
-Received: from AM0PR08MB4289.eurprd08.prod.outlook.com
- ([fe80::4a5d:48:bf49:a524]) by AM0PR08MB4289.eurprd08.prod.outlook.com
- ([fe80::4a5d:48:bf49:a524%6]) with mapi id 15.20.7339.035; Tue, 5 Mar 2024
- 21:07:47 +0000
-Message-ID: <efd2475c-3748-48cc-9918-1cb305f3f581@arm.com>
-Date: Tue, 5 Mar 2024 21:07:44 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Add memory barrier for mm_cid
-Content-Language: en-US
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
- peterz@infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- nd@arm.com, stable@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>
-References: <20240305145335.2696125-1-yeoreum.yun@arm.com>
- <b0a3e152-22bb-4502-a0a0-4b2513bfbec8@efficios.com>
-From: "levi.yun" <yeoreum.yun@arm.com>
-In-Reply-To: <b0a3e152-22bb-4502-a0a0-4b2513bfbec8@efficios.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO6P265CA0009.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:339::14) To AM0PR08MB4289.eurprd08.prod.outlook.com
- (2603:10a6:208:148::12)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zV7ArLKA"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5133d276cbaso5272471e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 13:09:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709672960; x=1710277760; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jJZTR3ZQLE6TxtB1On0qTLLClIpP1eKZkTdZYogVliU=;
+        b=zV7ArLKAoCh5MB0KLgHepIpJFsdn8mIHnoOQ40I7AzejVd4ym49pD9XQ7Fc3mHqGOS
+         +1wzK+OqvCGQiioY4RvV9Je5IZkKD2dxV6F+8RPKrE/PiEX4fad5OZ/OBAaL0KW6e/Ob
+         o5xXo4lRrdNc5vEvXYK/242jcqiM3A3C6pK/mItwibqcy/L1OcCgtLU/pBUKiXKLGxdB
+         KMqoE7Mwo+Gl2mvKuVz1J2no/McpmM+Y70BvqBtJnjfOKgFCOSJaQfybA7XbZyT8PdFD
+         /xy0/3/6C9H7NzVReln8j//BTeNXjfp32pXRsetvZ+9Sfz+9AN/SWfLwvTJqe8yeTi0a
+         3Kdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709672960; x=1710277760;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jJZTR3ZQLE6TxtB1On0qTLLClIpP1eKZkTdZYogVliU=;
+        b=UjtzE7WOjD14CetGAYabrD26tjfUjUWJhPaYdTt6VeuVey09tvqrI1zGd15Cr/5ULJ
+         UVhTXl1mSzuEt+hTRy4tN8ngKsCrbfPfB+NrPcN2y7BDRvWUPMDmS7ApqxiWyQojVA5b
+         pu8f1XcZ7NXCjBZZBQA5Ra7KDWdrs0dsXDrAl00I8sY6uf9Vdp1db7VKtMv9sMDLX5Ha
+         kn8ffIAmk0fp3DYhuFyLPMjrynV6T4DGDRuD44CtkMfvofunj0h5Mz0oI39/xlpBbbdI
+         DHZyG6yCLFww4bmwiwC2yU6D7jcg2e0WSf6aSSk4jyOx9ZDnBZMtKjMK94am4oHfy6fZ
+         xuBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMAJZJ/nHcdq13fbltoHahj9gb3CkihBqUwrgqTuxJUloaARD27e9l01vE3dJ7eKxvRKSp+S9/x/uXbQH2HflnIADD2Jx07KMlSaLJ
+X-Gm-Message-State: AOJu0YyGdOTFpZLXdkoI2oSW1jmO1ltcBC3FErHOa8kS/uCBej8q6xyx
+	XW+lKjvFAx3G7qkeWp94Su+QneqD7CQDQJsWdiq9BsLyxgIlFA4C57LlElN+1VU=
+X-Google-Smtp-Source: AGHT+IE8CGigUxA1HCYfZiHbYBgeAldb7dQWGONv4ACnT65GTfW31N+bM8GawaFuCe4uzmmOQ4YDwg==
+X-Received: by 2002:a19:f803:0:b0:513:3fa4:3f22 with SMTP id a3-20020a19f803000000b005133fa43f22mr2145235lff.35.1709672959846;
+        Tue, 05 Mar 2024 13:09:19 -0800 (PST)
+Received: from [172.30.204.154] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id g13-20020ac24d8d000000b0051316ccc5besm2300433lfe.269.2024.03.05.13.09.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Mar 2024 13:09:19 -0800 (PST)
+Message-ID: <1697b03c-56ab-4e8b-a268-f9ceeed91c31@linaro.org>
+Date: Tue, 5 Mar 2024 22:09:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM0PR08MB4289:EE_|AM9PR08MB6178:EE_|DB5PEPF00014B90:EE_|VE1PR08MB5693:EE_
-X-MS-Office365-Filtering-Correlation-Id: 957e4012-4f8a-413e-0bcf-08dc3d58548d
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original:
- fS7fuojPhZU7V/+uc/1w/Ae7IVC+vdAl/WGmtEWRjLRU79+9mXGrOY4VGDX2eMZCHYd8BLxUp7mWIEsrFQr7rKNvJwa9PdmUgEVEcMRvbKy3gY13Mq6OlDeHGsdJhoGzQeMCXHJXcjka+eeVcLFb5cy9MrfFbUbCm+YWXS7aohZuTeCmMafcnLMw/H4Q2Hrna2Lt5KaWa5iznWBuF8uWdbexRYiJWnRspay8n44yC9qseurme1BwHZaCYi1UZTQape4edn3g4dLy9KMHlv2KsTlQ139gQxJm4jeWnYmYP5c8f+AKVm/la3QS04Z0AICrDbxMqJqNb01d0bSlJxODf35K+PUtHNq72Hu/3cqZLhkyrOkkI+N1ib9mbvyMRMt3WJ04PdyAimOIGw5dEIxHsSCuESkfPikcQ5AB+BXWVQiA6iLKu8WaXDoZOFV0giwf5WroalTMAJg09hGxYRMCH/jZ705C33z7Qn2VbJ+qMWJ5zkUPXvkhJS68J51EEyhHmdqdBtIvonLr+1H0LQEJXBtWAWRkmKd/KwCnFnEAJpkjvP5Jp0itTiJ7TMFgwy1ng3+9JtqdyTrMJB3BeXQ+NrzokeZQfCQJYO0LaSvF8ebRczuEoU869WFKsnBWEoI7kqagghdT1xiN/rSOVOciO4Z0f92Pkcyno820wRilg9Y=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB4289.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB6178
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB5PEPF00014B90.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	d1d8fd2b-1f2d-4982-fec7-08dc3d584f3d
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	dgXtbNV+tQZoDm2MV8czXBWFHHzHRzQYSOBAdllsWlyqfUy2N2yG6hgLcx2N+IBYRLrzhWRBwqCi9+keM6nfPqUbRuO3stiovjtG15aPoBc3CbNH2K4cj43NaiMGNet3D7aqhPoVcAJX/h4hL9JecNFdbydfmoiukGK/o50Yk7pk3q5Jb2bZwUu9Z0A6e56nE9llkiajPUscEyMSWBoz08xJRWAzRyqCB388CtkC84hqXTiz12RY+4020YEPLiWSpo/PBbLUShL8KtRQ/Xfa6JiWYE/7JgYfevEiocwWbIPerpTmSXvt2wRk0qINf5KuH1wJeo23SOnfHYuwphxa2QRcedJyBPYtLo/Cjx8GRcDXGDg16A3dYmqnXvSo6PkyeLS8n9JLzLNX2XUp0isHAjM9TAxdYZIeCse07PeFdNA/spB0NP887JtXtVDh2Nwvg5Do84QB2XZeTLRBb7yvh4bdViq4GMgMiKSqgPHTPtrYOoe7UOgBcV+APtQBga/jTsqT1SNPt5CheY7fhfCOuxJrkZlLkEUm9c6jjWYaLnzkZWnOYJkU4THql7sTTavxQ984HTRnyN3plHG82x0kUpNKH18DlhGVxSo24jY7QCk3V7R7Pq+0se08orC1jceRAEAh/cuBiHP8FR3s8/f25itJ+ww2wqvAuYIlh8YEyBWJDXBfHVhwyr+oz6tvUvpGDhcN04on4sdENINdMYx015wFIqG0VZw0ZyvgNuR+ouu6dvwpvru+/yCv/70e0uRR
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 21:07:56.4245
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 957e4012-4f8a-413e-0bcf-08dc3d58548d
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B90.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5693
-
-Hi Mathieu!
-
-On 05/03/2024 20:01, Mathieu Desnoyers wrote:
-> On 2024-03-05 09:53, levi.yun wrote:
->> Currently arm64's switch_mm() doesn't always have an smp_mb()
->> which the core scheduler code has depended upon since commit:
->>
->>      commit 223baf9d17f25 ("sched: Fix performance regression 
->> introduced by mm_cid")
->>
->> If switch_mm() doesn't call smp_mb(), sched_mm_cid_remote_clear()
->> can unset the activly used cid when it fails to observe active task 
->> after it
->> sets lazy_put.
->>
->> By adding an smp_mb() in arm64's check_and_switch_context(),
->> Guarantee to observe active task after sched_mm_cid_remote_clear()
->> success to set lazy_put.
->
-> This comment from the original implementation of membarrier
-> MEMBARRIER_CMD_PRIVATE_EXPEDITED states that the original need from
-> membarrier was to have a full barrier between storing to rq->curr and
-> return to userspace:
->
-> commit 22e4ebb9758 ("membarrier: Provide expedited private command")
->
-> commit message:
->
->     * Our TSO archs can do RELEASE without being a full barrier. Look at
->       x86 spin_unlock() being a regular STORE for example.  But for those
->       archs, all atomics imply smp_mb and all of them have atomic ops in
->       switch_mm() for mm_cpumask(), and on x86 the CR3 load acts as a 
-> full
->       barrier.
->         * From all weakly ordered machines, only ARM64 and PPC can do 
-> RELEASE,
->       the rest does indeed do smp_mb(), so there the spin_unlock() is 
-> a full
->       barrier and we're good.
->         * ARM64 has a very heavy barrier in switch_to(), which suffices.
->         * PPC just removed its barrier from switch_to(), but appears 
-> to be
->       talking about adding something to switch_mm(). So add a
->       smp_mb__after_unlock_lock() for now, until this is settled on 
-> the PPC
->       side.
->
-> associated code:
->
-> +               /*
-> +                * The membarrier system call requires each architecture
-> +                * to have a full memory barrier after updating
-> +                * rq->curr, before returning to user-space. For TSO
-> +                * (e.g. x86), the architecture must provide its own
-> +                * barrier in switch_mm(). For weakly ordered machines
-> +                * for which spin_unlock() acts as a full memory
-> +                * barrier, finish_lock_switch() in common code takes
-> +                * care of this barrier. For weakly ordered machines for
-> +                * which spin_unlock() acts as a RELEASE barrier (only
-> +                * arm64 and PowerPC), arm64 has a full barrier in
-> +                * switch_to(), and PowerPC has
-> +                * smp_mb__after_unlock_lock() before
-> +                * finish_lock_switch().
-> +                */
->
-> Which got updated to this by
->
-> commit 306e060435d ("membarrier: Document scheduler barrier 
-> requirements")
->
->                 /*
->                  * The membarrier system call requires each architecture
->                  * to have a full memory barrier after updating
-> +                * rq->curr, before returning to user-space.
-> +                *
-> +                * Here are the schemes providing that barrier on the
-> +                * various architectures:
-> +                * - mm ? switch_mm() : mmdrop() for x86, s390, sparc, 
-> PowerPC.
-> +                *   switch_mm() rely on membarrier_arch_switch_mm() 
-> on PowerPC.
-> +                * - finish_lock_switch() for weakly-ordered
-> +                *   architectures where spin_unlock is a full barrier,
-> +                * - switch_to() for arm64 (weakly-ordered, spin_unlock
-> +                *   is a RELEASE barrier),
->                  */
->
-> However, rseq mm_cid has stricter requirements: the barrier needs to be
-> issued between store to rq->curr and switch_mm_cid(), which happens
-> earlier than:
->
-> - spin_unlock(),
-> - switch_to().
->
-> So it's fine when the architecture switch_mm happens to have that barrier
-> already, but less so when the architecture only provides the full barrier
-> in switch_to() or spin_unlock().
->
-> The issue is therefore not specific to arm64, it's actually a bug in the
-> rseq switch_mm_cid() implementation. All architectures that don't have
-> memory barriers in switch_mm(), but rather have the full barrier 
-> either in
-> finish_lock_switch() or switch_to() have them too late for the needs of
-> switch_mm_cid().
-
-Thanks for the great detail explain!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 0/3] Enable firmware-managed USB resources on Qcom targets
+Content-Language: en-US
+To: Sriram Dash <quic_sriramd@quicinc.com>, andersson@kernel.org,
+ vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ gregkh@linuxfoundation.org, quic_wcheng@quicinc.com,
+ Thinh.Nguyen@synopsys.com, p.zabel@pengutronix.de,
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, quic_psodagud@quicinc.com,
+ quic_nkela@quicinc.com, manivannan.sadhasivam@linaro.org,
+ ulf.hansson@linaro.org, sudeep.holla@arm.com, quic_shazhuss@quicinc.com
+References: <1709657858-8563-1-git-send-email-quic_sriramd@quicinc.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <1709657858-8563-1-git-send-email-quic_sriramd@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
->
-> I would recommend one of three approaches here:
->
-> A) Add smp_mb() in switch_mm_cid() for all architectures that lack that
->    barrier in switch_mm().
->
-> B) Figure out if we can move switch_mm_cid() further down in the 
-> scheduler
->    without breaking anything (within switch_to(), at the very end of
->    finish_lock_switch() for instance). I'm not sure we can do that though
->    because switch_mm_cid() touches the "prev" which is tricky after
->    switch_to().
->
-> C) Add barriers in switch_mm() within all architectures that are 
-> missing it.
->
-> Thoughts ?
-IMHO, A) is look good to me.
 
-Because, In case of B), If you assume spin_unlock() for rq->lock has 
-full memory barrier,
-I'm not sure about the architecture which using queued_spin_unlock().
+On 3/5/24 17:57, Sriram Dash wrote:
+> Some target systems allow multiple resources to be managed by firmware.
+> On these targets, tasks related to clocks, regulators, resets, and
+> interconnects can be delegated to the firmware, while the remaining
+> responsibilities are handled by Linux.
 
-When I see the queued_spin_unlock()'s implementation, It implements 
-using smp_store_relasse().
-But, when we see the memory_barrier.txt describing MULTICOPY ATOMICITY,
-If smp_mb__after_atomic() is implemented with smp_mb(), There might fail 
-to observe.
+Aside from the comments you already got from others, please change
+[RFC m/n] to [PATCH RFC m/n] so that your series isn't filtered out
+out maintainers' inboxes due to the missing PATCH keyword..
 
-Am I wrong?
-
-Many thanks!
-
+Konrad
