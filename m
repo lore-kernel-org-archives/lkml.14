@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D831F18032;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE1C1803A;
 	Tue,  5 Mar 2024 02:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709605196; cv=none; b=NnXgTOMntu8WQzEXiA9RBCespfMiqdLrNrZGZPNihXjpHhWBd7b/Lh7y+eogmFxhvtPWjKRUroUs/w306YvLGPRB06lOjyLaK2nmWcudKzW1jh8sOty9zQN4HTBzhwK6Ikc6eFbBuZl1FBXUZyQUxFMICRTZr7bfsoH5CQhjAIk=
+	t=1709605197; cv=none; b=OG29GNxxt3Kz/nB+ANxPpFmwYHEpUncG5nMykYSIB5SDrvSPFP5SV8SKsxdMvJ+YA2O0QV2vGKsP7RHdC3rtctc/3YuXBMklkQrARt28ViLojkaaKaNzJtt2ZpV9ZUE7xaWyK/J/i5Ug5tklVItlHzyM0zLMCTJnX/z9l4ulHvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709605196; c=relaxed/simple;
-	bh=esSfqR/EN2uGgQJhZInB3gQ5IgggyIpQkCwvAPI4KIE=;
+	s=arc-20240116; t=1709605197; c=relaxed/simple;
+	bh=j2QxGDEhq99RHC8PPIr7+4POEgFQFJ0Y8qdfPyL6lA4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i1g3qAO0z0uk1C3b5k5BtulJW2ByRMWEAr6tEtb6lc7FOn5xRgkdPTOc0R//WwQzDwWeRHWYtyUm5jsS2Cxf31Y6IGQ5aAX4BE2NiwiDCzxCHhrxtYSj71QkWZIHTnkhorevtA1AzXqUuOeQeN2t1j25FnQntX9JnK+ptYhjiis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6jPmrlv; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ebOol546AWmoz7VDoJUQ3Ajv0YhnWgVCLOU1Jp8hF9PKoQbLitTXkIRqbIlG++Q4oaXmaNrOb8ifwvHxsYd2ZZ3zlf2XI1+paoEmYiulUgBAzv+Trnbe06xjIWHG6gBsd9LuEdmaPpH7UwFyM0CAXeC7Dx2Dng+aBybd0EI6+GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAwCX0T5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6jPmrlv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B46BC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAwCX0T5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 90637C43394;
 	Tue,  5 Mar 2024 02:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709605196;
-	bh=esSfqR/EN2uGgQJhZInB3gQ5IgggyIpQkCwvAPI4KIE=;
+	bh=j2QxGDEhq99RHC8PPIr7+4POEgFQFJ0Y8qdfPyL6lA4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=B6jPmrlv0e63tN91R5wSQHmgw+HQjbhM+GG7rMi69/VzxSGNHYI8JsY92W73+sspe
-	 VPOmRDq6g583Pl66liY77KWE2eXAp1HBwgLQgZhjG3oDXK7UV5HapmzqTmWlimU9z5
-	 kBkc+FjWH//O3zJYm4Q5EEpdBezCIuLukoNMpVAiTwQIFDa20xLXE629BYqJ47GgGb
-	 9PIDySWaGiLn/jiF3UCLo7qFJ1WLrRpF1Pk9joaysLHoti93f2bmagGGt39g0Q3UEt
-	 5KSBre2Ly+wCviatpTAMvOGk6Hpgbte9ZsGR8DA5u7GOjQVN6KO0PG7MNYCToZ71fi
-	 g2Oz2ymQPQj2A==
+	b=vAwCX0T5XC55C8KD+4b8Yd+cjS3vfJRmE/JSXBEK+Y579w6DsWnsEQ+SeLG7tyv0c
+	 ummb7qt3utjLsbclCSpfdrK1ZMYCtxKHLH6J1W039wkMEIGkuNCbJb11tp+O6X6IEc
+	 5TBmZGQadJPD7Ds1AG+dalB+FVJ+lWCeZ1uoj4S45emW9qSxpISoInobKnIXd1H9Y6
+	 ySeWju+DOMvhNZ5okrxP1h1Mii2VarkHM2DSpzF3P57Om6kIJdNtLQ994RFv/osKcl
+	 QfWvtxvSMeDb3ErGe1RQJrxnq6tUmNHU51YYOrkzm1suZ4lprkL4nz2ke4ZR/BClTD
+	 PdakwTHcD0J2w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646D3C54E49;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CDAC54E4A;
 	Tue,  5 Mar 2024 02:19:56 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Tue, 05 Mar 2024 10:19:46 +0800
-Subject: [PATCH v4 1/5] phy: hisilicon: hisi-inno-phy: enable clocks for
- every ports
+Date: Tue, 05 Mar 2024 10:19:48 +0800
+Subject: [PATCH v4 3/5] dt-bindings: phy: hisilicon,inno-usb2-phy: add
+ support for Hi3798MV100 INNO PHY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240305-inno-phy-v4-1-a03204c9cf1c@outlook.com>
+Message-Id: <20240305-inno-phy-v4-3-a03204c9cf1c@outlook.com>
 References: <20240305-inno-phy-v4-0-a03204c9cf1c@outlook.com>
 In-Reply-To: <20240305-inno-phy-v4-0-a03204c9cf1c@outlook.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -55,11 +55,11 @@ Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, 
  David Yang <mmyangfl@gmail.com>, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709605195; l=971;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709605195; l=829;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=jGUbESXsyAvU27nkXjLoTOKtwqcjOT068eM8RNJCWfs=;
- b=mZkELQxdOeb+Ne66xgMMDdr9MMJtJvx7d4OtBV0cy5nnZX+tkpCKswo6gT9KRCqANjgeZjyPA
- wGNJRUlf08VDaB8fXHvmiAChKRXphX48gM5i0Dmi7bKCDr/iQX04WzJ
+ bh=6dFyqSF2W3Rgkd9gq9kKKbV4XaRy0uRiH6eHrHgNDio=;
+ b=rkQ0Luc5fivUDIuQxsUqDT1LMOA7aZ5/z3xiXyMpkOfiv2nAPIafLjZGeKrFJSTSJv06mOnDs
+ dgIdv7UUNJ8A9eG0uKnq4B1shlgOHRQLUBJsDd5hc2Dg4YKUiqjTVmB
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -69,30 +69,26 @@ Reply-To: <forbidden405@outlook.com>
 
 From: Yang Xiwen <forbidden405@outlook.com>
 
-This is needed for port1 to work.
+Hi3798MV100 also has a similar INNO USB2 PHY with slightly different
+register fields offsets. Document it in the binding.
 
-Fixes: ba8b0ee81fbb ("phy: add inno-usb2-phy driver for hi3798cv200 SoC")
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-index c138cd4807d6..b7e740eb4752 100644
---- a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-+++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-@@ -86,8 +86,10 @@ static void hisi_inno_phy_write_reg(struct hisi_inno_phy_priv *priv,
+diff --git a/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
+index ba82405ddf51..7f0811a2dc2b 100644
+--- a/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
+@@ -14,6 +14,7 @@ properties:
+     items:
+       - enum:
+           - hisilicon,hi3798cv200-usb2-phy
++          - hisilicon,hi3798mv100-usb2-phy
  
- static void hisi_inno_phy_setup(struct hisi_inno_phy_priv *priv)
- {
-+	int i;
- 	/* The phy clk is controlled by the port0 register 0x06. */
--	hisi_inno_phy_write_reg(priv, 0, 0x06, PHY_CLK_ENABLE);
-+	for (i = 0; i < INNO_PHY_PORT_NUM; i++)
-+		hisi_inno_phy_write_reg(priv, i, 0x06, PHY_CLK_ENABLE);
- 	msleep(PHY_CLK_STABLE_TIME);
- }
- 
+   reg:
+     maxItems: 1
 
 -- 
 2.43.0
