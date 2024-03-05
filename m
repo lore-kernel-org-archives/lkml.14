@@ -1,312 +1,395 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A71850272;
-	Tue,  5 Mar 2024 09:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709630912; cv=fail; b=kIaiO5qtsgI9zZDf0PC6YfKN92o9H5A5IUhn1+V+VWeMwI1eL44TVZplntccVc1+ommLR+NOzmyjEXrSCr8RgWiP5lnbC9VJAjG+SGBEiV9mKtWkWHXl+ku8DVCztcCkP3nU5vxzKJFG4bH2fgYegDxtEJ3tVHmwPeP9jzxPHsI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709630912; c=relaxed/simple;
-	bh=GFF4dI6qo3UOfQAqNs9oQ4Kl2cnIazqyOhzCP9Z2HNY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=SZaDO9JfNsFyxK900dh5NxwW/NRCh7IqBWsYqmzXPWV9mEny8lT1asq0SPk0ZxlLT2RJQ/UVm1Q+/9ymEKyGQGs7uDAwcw9JJS18fJrpE3Lv2WgCcADNQYTQCxHqqxLIR3IO4Px84Yfl8/2u2M1SxwCjCTPA+W/t8zLIX9GJ1OI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZgsHeO24; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2E252F81
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709630950; cv=none; b=WwOrD1CaaVa/NAZsyK2JgDvrsNNqASigd64Tty98054aasbsp2edPtumapcpmYcrzowY0xREtEcibEnnER8DFXciuunak7CycjQoA33ZcYAz6wdCV4Sasn4OI9NTkQrzgr3NVZ6q9Bu4znriwb7C3cjh3X+5LiigqK8bhFLfSTA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709630950; c=relaxed/simple;
+	bh=Mrqo8t6bgnnlAwcyAfSI9kPBX6+0eznEB/cDTEm6dH4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GSIQ386KaVG7Q6diqu08WoXdBV/1h408KM8eBYtIBDvCnKSZL/gxfdnpdyS0ycFgyxI/mMWG5rgWobfW++aSs7W6vbI1uY+k50hYJlo1b5oEVPur4+00QpoQZq1GfBczyOUcymAtKZntYDYTJkIxRtLuo2o/d5fg5Iz6Wtu+wGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BTS0heRB; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZgsHeO24"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709630910; x=1741166910;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=GFF4dI6qo3UOfQAqNs9oQ4Kl2cnIazqyOhzCP9Z2HNY=;
-  b=ZgsHeO24+WPDaHh9TT/odGxfax2sS/715JFA6LRoMzpTeFtyytmKDzNR
-   nVgd0C4dTlNgyIiEctYp7ii0KUV86UF+0dVe2JF+FRuTUfsfXhuM2o1Lz
-   BBl0exZzijrGkj+NNBExIRHh8dbQ1Q3HaqYxv/sOmovfAP5Auhm0mmN9Y
-   dglkuwjliknAnG3JtHzCHHoTDRWBK6fKV5ybZE2sNntvl7gzTotn7YO5F
-   biBnf8Xrw1gzWgAmK/33eO9U6Zu/5uG7E6Irj/AiLEK1EEASbNzvO20pC
-   QirM/1370ByXuxCKA2/7oju4in/hP/dx2eXRiUcdqQ/NKFUWJpXEQFzSN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4051565"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4051565"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:28:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="9283511"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Mar 2024 01:28:29 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 5 Mar 2024 01:28:28 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 5 Mar 2024 01:28:28 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 5 Mar 2024 01:28:28 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yms3pflbKiifQ+bWRBotRxq5nH3ATXO+ebnHyAxDUBLDrtqUQ5mNvAqG5gKweWaAEQEltzpyxeztQ5ej2mhss91OFiRn2aKvKWnapyqoy+BZolDguAhNnX9B7L5sxwV2BlZ80xVVO0cm8EO8dgdx5WT5X6pfQ3PULxyqRDp69vz9tFH+jSjXmGAFt8Miu00fc59mhZLgPpzYqoRaoxDHlVtWeAMLTKOfGn9aym3FtGVh/t9dFkRIFE6cwqD3l7wFA0Qps91Fjm52OpZoUYqvyoPfHWlNjeXB9TKnglW/Op0oQ8GpEjBLgm7aXI3/b8BAejtwyDM7J+ecjLY7eQrexA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ax8BDS9amfusw/1Rt1quZGxcjaSjd6GC0LziaeXmbEs=;
- b=CE0IuAYdVMmbOQ1/Q9qlUX7uv6HXnLNxbnSIsMEsHDM0RCwlVRBo421LdhJFXiM9//BPhi3aki9qczOX+wFGdndbSsfg1gfi0taKANrckFcYSXFUQ5FxYVSHXHrm1cRJ6tg/cE4Bb9+llZ7DOTHFGl4AKt6n3+GHXsHJbBZpxyfqrWJp/eqpFPWL4YCHR9XTYY+IcY7mIJ6Rue75QgBDbKZ6YIYZZCj9SHgTarGR6m/ZZhp1jz4rX/w9/RE4WnBfPTP+dvrUtQQnO6leeSzVoD4DIjTVDAEhilfv/WejE57WldjmhwWXbCK3bcLpfgCnMdtDQjS4J8i0T2CaAaQBaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- PH7PR11MB5795.namprd11.prod.outlook.com (2603:10b6:510:132::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7362.22; Tue, 5 Mar 2024 09:28:25 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::55f1:8d0:2fa1:c7af]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::55f1:8d0:2fa1:c7af%5]) with mapi id 15.20.7362.019; Tue, 5 Mar 2024
- 09:28:25 +0000
-Date: Tue, 5 Mar 2024 16:58:32 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Sagi Shahar <sagis@google.com>
-CC: <linux-kselftest@vger.kernel.org>, Ackerley Tng <ackerleytng@google.com>,
-	Ryan Afranji <afranji@google.com>, Erdem Aktas <erdemaktas@google.com>,
-	"Isaku Yamahata" <isaku.yamahata@intel.com>, Sean Christopherson
-	<seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan
-	<shuah@kernel.org>, "Peter Gonda" <pgonda@google.com>, Haibo Xu
-	<haibo1.xu@intel.com>, Chao Peng <chao.p.peng@linux.intel.com>, Vishal
- Annapurve <vannapurve@google.com>, Roger Wang <runanwang@google.com>, Vipin
- Sharma <vipinsh@google.com>, <jmattson@google.com>, <dmatlack@google.com>,
-	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: Re: [RFC PATCH v5 18/29] KVM: selftests: TDX: Add TDX MMIO writes
- test
-Message-ID: <ZebeuMoz8izs/SoG@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20231212204647.2170650-1-sagis@google.com>
- <20231212204647.2170650-19-sagis@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20231212204647.2170650-19-sagis@google.com>
-X-ClientProxiedBy: SG2PR03CA0130.apcprd03.prod.outlook.com
- (2603:1096:4:91::34) To DS7PR11MB5966.namprd11.prod.outlook.com
- (2603:10b6:8:71::6)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BTS0heRB"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7db68ed7bb1so29353241.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 01:29:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1709630946; x=1710235746; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=79M1BRzVOMDaKqMxEGUh5q94dnwcGvlodjX5ei2a/R4=;
+        b=BTS0heRBs1S9m9m0Cw2rZsvwulJs3a42Lq6jhQV5Tu/x/e66gK++HK8X95i1veG8tn
+         8JPrVf3LB9n59cbCI+hte/17BS0NEYZctWDrl487vuK519nZ3wBIWcvmT9ly9ixEo/G/
+         6MSOf1AZF79VADOZXcON3P+18Vk5SzLpQ/dOHEoIyaAjHt2OkHbiBwtRVR4zb4NKbVCw
+         ldpYs76QbesMzn6ve4dnU5E7wlCt2038iaR9NbxwkH/VjzWZjZG8P3szbgCkjxfJudGj
+         jLCrz92nWlpQpGIlqnvS6Wtj2YXDtNMcHGDmbil5pxcMgGLObB8Ht8qvENYbtUVzdOrI
+         JUcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709630946; x=1710235746;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=79M1BRzVOMDaKqMxEGUh5q94dnwcGvlodjX5ei2a/R4=;
+        b=PoK0yufHody9MI1Fwg4VvX7AdVrTs04/4ad7mg+fJiLO3NEEV7qZTOkKllOuE4jxBB
+         tbLXgL64D6oBFmDA7QtpqXyBN49zkoB+/3/tvYnkVMTPaDvfjUfwKfi869feFNO4qZ+6
+         OcGOxHlghieyLENov2XxCTucZ6lIoZzeWj8EZT02JrLssfhS5FktQ7vHcxSMUr2eaZyv
+         I+AZsjUe5Sq/dEirDANweDoUlCwcojEWohqnMEkEdocw9jaQL6Za6fRoD5QugcfyEQSv
+         yQXpGGguBSL9bE+297bhYf4IL6jwgPGZ3YzYep+QMsUwl/P0P5B4BaVLqngFySA9bkaO
+         pPUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLf/+Wotzl8kKfe5cTxNZZIi/67ZwRtSP4vXA5n2MUXm3IQ1EYsNUAhxvOL+4GlmhO1wto34o1YXSU1IzSSrKV1y1MDGy/ve9x7XjZ
+X-Gm-Message-State: AOJu0Yxt0bPI2bjyaFAfNCESE5/pS5/ke0ZBXoX7CkcNZQxGieBLODkB
+	N3nvCznaohK8Epcv5U+EqlYNJCypbaX82lKEMM9GLfvjcAjYxfRqU1itYMqvkKFFBZng4Snd2GS
+	Zg9nlOItfs6nlbjNZ53q7lhU7saT/uaZ034YHHw==
+X-Google-Smtp-Source: AGHT+IGeG8eiA+gbTAW4lP8+EW0Wh/ImGvq3CgHfBV04xBBfvRQuXg2vDyo36TnOBu+4pDZXWZHNMilzpagoOwujU5k=
+X-Received: by 2002:a05:6102:21ba:b0:472:c844:804d with SMTP id
+ i26-20020a05610221ba00b00472c844804dmr1040181vsb.18.1709630946252; Tue, 05
+ Mar 2024 01:29:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|PH7PR11MB5795:EE_
-X-MS-Office365-Filtering-Correlation-Id: 01d80991-40e5-4bef-0472-08dc3cf69bd5
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GAXgnq32TWO8/gAZ+5pPS/6MSs3TVmZi62OSf4/CUC1y/o+gWp9tVjSkuM6SkfDUSLijHJmUZnrK+5CJCrrwByba0GVz43uWO03O9wNPklq1V2dABmFFoyQOlmgJ3bLzWaKO/ERX8ptceYfjGLAJhla4HyaKNOOlYqa6xe0qQc7amen97MBkwNzyh7iLt9rE7p7xlOVizK7uijRCeuASrPipN5znn2+UGGWUPiK6aHo4c3uOjwWtYX+2Qp1WbgTamMkx9hKvm5qVsKDHwSxDnkIRiuIbr6G3njn0Jc38qgfqxzH44OKLVdp0vNuGjWEZfY5ElzZIduVn5yWdu2aRyGw75HtKSYWCzqvnDr3RnaeGoRHe5rsmIcWHXd5zx5BzEIRj48D0YPXtf0XmPDtb8mphH4VEJKLUFl466pQtZcOwWlghyZXtzLZwDQ0GKwmZHWoPvNzNOjfBCL7s1pu83FYs2+4eKg3oZGcQvDiO8xnwPwRq0rimCN1YWR625SQVK0NyjtbCpDyuGoi8YynWZxBKqFw0z88op1KQzRoeJGPocBQhK7kBH07daBpbdI/OjUySr5vWFxS3uDZZm+bzmLxCR5oOVePBAh7XXWkkQmOECi/aLP2t/tbZPyFyJkO+6goO7A9USp28sgbqCIe+0IpMh3kkja3d0K+Zh26AwTY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?55tDXJXnZkwUZ6s26DzYHKD1Ck7LQnTQohGxVBQAwelp2h9ExoeAl0dfnFHt?=
- =?us-ascii?Q?OcF7NLM5fg1tXKyFxQe03l9swNxUqdCNd/B+EhzuwNnRfAKEHGK/LsO/awSd?=
- =?us-ascii?Q?E/1ST74revbF/CXyJUtFl2HGO6NUboc+zOgkUYlW/S9Zb55MOZhFEnn19UqX?=
- =?us-ascii?Q?8zcAM7US2lck40d003yesSWjqZBftFGUDcGovaqo7C/PeK1ZpWhI63Qi1bee?=
- =?us-ascii?Q?xuIHFruG7NMSC95yLuTg+xfdVK46jiP4vQIuxnweODGfFmeEkvcSncNJKgVz?=
- =?us-ascii?Q?CtIQcVS20dYVAwiKAtj385RQSQ3mNtNg0wbn+lROXtCL5K8VzeB1I40FDe4s?=
- =?us-ascii?Q?A25xH8u4/ccsn6BjaPDsTIgFLXvhp2aKhEVAmzno020pw15sy5y3mDIMvrZr?=
- =?us-ascii?Q?HG7weA2wdkoJHLUpo3ts9VmrJ4HFeJupzg470nMoDK7jsnJHfDAf6Ymt3eII?=
- =?us-ascii?Q?98CVk+BhjWYghUAzH/iSMztzUS4XO2s96wI7d045HJ0wIyx4J82z6XaCuIXy?=
- =?us-ascii?Q?WzjPvBZkdWMBlUJqhPjg+EtzSacQPUj4X5J0c+xIpZrsxwxm1Mv1xAK4zsi8?=
- =?us-ascii?Q?piqzeJQ2qigy55G0GmK4vsrsSI1Qyj4zWRiARVv/k/5dp0SDAZVkkpGwzkWh?=
- =?us-ascii?Q?1jq/aSI9KfSNcTw+pvMfwaSyryd1TT+dzi3Zx/lfJ/zfvtPRn6dpxLFVoaqH?=
- =?us-ascii?Q?D3M7NMlK3gP8zKHw2QUZdDshbiuEFPBXo0t4lZyvjbr1wjkh+t/HsnZtxzgt?=
- =?us-ascii?Q?2uVB6G+jEwpAKQ6rXmP34dQiBvVSO3LkYGsCC5Ps8O9poPpv49uVWylrMvPI?=
- =?us-ascii?Q?ZUO8aarHwg+MhH5LbjDeg9cUtPNMyNP6jj3T+hh2kO0yzVvBMYM4PFwoRXMO?=
- =?us-ascii?Q?ZnhcT8ticVXG9dfgekgPLDKIHCyHKzQ7Bq5fL8SW0Szva3Jr4V6K5JDneCYw?=
- =?us-ascii?Q?yUjnDd9UHe8Em97W75bUukU473Lu9sGAOGaYRm93qiU6HSzadXpHPnST7psu?=
- =?us-ascii?Q?QZ89qFBEVhnzSebP2E/Rgm/HujNv9+po2P/Yv7+vLce56H9G9nP8A9+l608C?=
- =?us-ascii?Q?XFMKXO+4gpgGm14XZZ7cZ9tef3v1Tq8kM6KYoS55M1XSKWAJ8HFzFgajVps9?=
- =?us-ascii?Q?6H4TTCL95csuGZrsq/vZO1fDecqbDBejVrMlRt1RuIqCWq5G1rkSW9aowGDZ?=
- =?us-ascii?Q?tojpkUueAjNdXa8MWF3sQEGnY42ToWP/4DSOvdaL/uHI8kcSpsqsNyMVd9+q?=
- =?us-ascii?Q?720e25pzxV2RiKE7I82C855iRYTnQUroiPJhXkb1tBP/sbVisom3IWwIurL2?=
- =?us-ascii?Q?NNSUDtZd4mg4oMwTkd6m74qKAAIO0eZTKQldURmGjhDcJa5JnF1ziaaOOkQw?=
- =?us-ascii?Q?FfOc5KP3yPx2HbtitYdQGGfqGFsHRcsfVqE/7Ze4+vVX8eghVV73LhomfcdJ?=
- =?us-ascii?Q?01u7xHRPsiXtaNeJj4kguoBbbIAW7xmViNqNr1W/tFA7wbZBhUPPIIkR3h1z?=
- =?us-ascii?Q?dC9elubbenTTHsJVJZkufoZxjsuD+nFOjQKM17ximcmIv7Nc13ZEhzuduV9K?=
- =?us-ascii?Q?BPQq/2nn3TXsEIvULmLAfSvMeCcVG/+m3v0lCrby?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01d80991-40e5-4bef-0472-08dc3cf69bd5
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 09:28:25.4803
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MItJKylEV6cUXucYiUK25iSKA8fuQsjvubmK/6bon4ze9NfqISDQH2CkO6ntJqmZWiadoDBrX6nNz6L4FWQDEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5795
-X-OriginatorOrg: intel.com
+References: <20240301082248.3456086-1-horenchuang@bytedance.com>
+ <20240301082248.3456086-2-horenchuang@bytedance.com> <87jzmibtyh.fsf@yhuang6-desk2.ccr.corp.intel.com>
+In-Reply-To: <87jzmibtyh.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Date: Tue, 5 Mar 2024 01:28:55 -0800
+Message-ID: <CAKPbEqrti2x05n5QhXtefhu+C=xmMUaH8mMwDy83LVN3Fj6nDw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v1 1/1] memory tier: acpi/hmat: create
+ CPUless memory tiers after obtaining HMAT info
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>, aneesh.kumar@linux.ibm.com, mhocko@suse.com, 
+	tj@kernel.org, john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
+	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
+	Alistair Popple <apopple@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Dave Jiang <dave.jiang@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, linux-cxl@vger.kernel.org, 
+	qemu-devel@nongnu.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 12:46:33PM -0800, Sagi Shahar wrote:
-> The test verifies MMIO writes of various sizes from the guest to the host.
-> 
-> Signed-off-by: Sagi Shahar <sagis@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Ryan Afranji <afranji@google.com>
-> ---
->  .../selftests/kvm/include/x86_64/tdx/tdx.h    |  2 +
->  .../selftests/kvm/lib/x86_64/tdx/tdx.c        | 14 +++
->  .../selftests/kvm/x86_64/tdx_vm_tests.c       | 85 +++++++++++++++++++
->  3 files changed, 101 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> index 13ce60df5684..502b670ea699 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> @@ -25,5 +25,7 @@ uint64_t tdg_vp_vmcall_instruction_wrmsr(uint64_t index, uint64_t value);
->  uint64_t tdg_vp_vmcall_instruction_hlt(uint64_t interrupt_blocked_flag);
->  uint64_t tdg_vp_vmcall_ve_request_mmio_read(uint64_t address, uint64_t size,
->  					uint64_t *data_out);
-> +uint64_t tdg_vp_vmcall_ve_request_mmio_write(uint64_t address, uint64_t size,
-> +					uint64_t data_in);
->  
->  #endif // SELFTEST_TDX_TDX_H
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> index b19f07ebc0e7..f4afa09f7e3d 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> @@ -143,3 +143,17 @@ uint64_t tdg_vp_vmcall_ve_request_mmio_read(uint64_t address, uint64_t size,
->  
->  	return ret;
->  }
-> +
-> +uint64_t tdg_vp_vmcall_ve_request_mmio_write(uint64_t address, uint64_t size,
-> +					uint64_t data_in)
-> +{
-> +	struct tdx_hypercall_args args = {
-> +		.r11 = TDG_VP_VMCALL_VE_REQUEST_MMIO,
-> +		.r12 = size,
-> +		.r13 = TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE,
-> +		.r14 = address,
-> +		.r15 = data_in,
-> +	};
-> +
-> +	return __tdx_hypercall(&args, 0);
-> +}
-> diff --git a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> index 48902b69d13e..5e28ba828a92 100644
-> --- a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> +++ b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> @@ -885,6 +885,90 @@ void verify_mmio_reads(void)
->  	printf("\t ... PASSED\n");
->  }
->  
-> +void guest_mmio_writes(void)
-> +{
-> +	uint64_t ret;
-> +
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(TDX_MMIO_TEST_ADDR, 1, 0x12);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(TDX_MMIO_TEST_ADDR, 2, 0x1234);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(TDX_MMIO_TEST_ADDR, 4, 0x12345678);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(TDX_MMIO_TEST_ADDR, 8, 0x1234567890ABCDEF);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	// Write across page boundary.
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(PAGE_SIZE - 1, 8, 0);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	tdx_test_success();
-> +}
-> +
-> +/*
-> + * Varifies guest MMIO writes.
-> + */
-> +void verify_mmio_writes(void)
-> +{
-> +	struct kvm_vm *vm;
-> +	struct kvm_vcpu *vcpu;
-> +
-> +	uint8_t byte_1;
-> +	uint16_t byte_2;
-> +	uint32_t byte_4;
-> +	uint64_t byte_8;
-> +
-> +	vm = td_create();
-> +	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
-> +	vcpu = td_vcpu_add(vm, 0, guest_mmio_writes);
-> +	td_finalize(vm);
-> +
-> +	printf("Verifying TD MMIO writes:\n");
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_MMIO(vcpu, TDX_MMIO_TEST_ADDR, 1, TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE);
-> +	byte_1 = *(uint8_t *)(vcpu->run->mmio.data);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_MMIO(vcpu, TDX_MMIO_TEST_ADDR, 2, TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE);
-> +	byte_2 = *(uint16_t *)(vcpu->run->mmio.data);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_MMIO(vcpu, TDX_MMIO_TEST_ADDR, 4, TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE);
-> +	byte_4 = *(uint32_t *)(vcpu->run->mmio.data);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_MMIO(vcpu, TDX_MMIO_TEST_ADDR, 8, TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE);
-> +	byte_8 = *(uint64_t *)(vcpu->run->mmio.data);
-> +
-> +	TEST_ASSERT_EQ(byte_1, 0x12);
-> +	TEST_ASSERT_EQ(byte_2, 0x1234);
-> +	TEST_ASSERT_EQ(byte_4, 0x12345678);
-> +	TEST_ASSERT_EQ(byte_8, 0x1234567890ABCDEF);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TEST_ASSERT_EQ(vcpu->run->exit_reason, KVM_EXIT_SYSTEM_EVENT);
-> +	TEST_ASSERT_EQ(vcpu->run->system_event.data[1], TDG_VP_VMCALL_INVALID_OPERAND);
-Is it possible that this event is caused by an failure of the last 8 byte write?
-i.e. though MMIO exit to host with correct value 0x1234567890ABCDEF, but guest
-sees ret as TDG_VP_VMCALL_INVALID_OPERAND.
+On Sun, Mar 3, 2024 at 6:42=E2=80=AFPM Huang, Ying <ying.huang@intel.com> w=
+rote:
+>
+> Hi, Jack,
+>
+> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
+>
+> > * Introduce `mt_init_with_hmat()`
+> > We defer memory tier initialization for those CPUless NUMA nodes
+> > until acquiring HMAT info. `mt_init_with_hmat()` is introduced to
+> > post-create CPUless memory tiers after obtaining HMAT info.
+> > It iterates through each CPUless memory node, creating memory tiers if
+> > necessary. Finally, it calculates demotion tables again at the end.
+> >
+> > * Introduce `hmat_find_alloc_memory_type()`
+> > Find or allocate a memory type in the `hmat_memory_types` list.
+> >
+> > * Make `set_node_memory_tier()` more generic
+> > This function can also be used for setting other memory types for a nod=
+e.
+> > To do so, a new argument is added to specify a memory type.
+> >
+> > * Handle cases where there is no HMAT when creating memory tiers
+> > If no HMAT is specified, it falls back to using `default_dram_type`.
+> >
+> > * Change adist calculation code to use another new lock, mt_perf_lock.
+> > Iterating through CPUlist nodes requires holding the `memory_tier_lock`=
+.
+> > However, `mt_calc_adistance()` will end up trying to acquire the same l=
+ock,
+> > leading to a potential deadlock. Therefore, we propose introducing a
+> > standalone `mt_perf_lock` to protect `default_dram_perf`. This approach=
+ not
+> > only avoids deadlock but also prevents holding a large lock simultaneou=
+sly.
+>
+> The patch description is used to described why we need the change, and
+> how we do that, but not what we do.  People can tell what is done from
+> the code itself.
+>
 
-And if, coincidently, guest gets a ret=0 in the next across page boundary write,
-the selftest will show "PASSED", which is not right.
+Got it. Thanks. Will rewrite it after the code is finalized.
 
+> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
+> > ---
+> >  drivers/acpi/numa/hmat.c     |  3 ++
+> >  include/linux/memory-tiers.h |  6 +++
+> >  mm/memory-tiers.c            | 76 ++++++++++++++++++++++++++++++++----
+> >  3 files changed, 77 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> > index d6b85f0f6082..9f57338b3cb5 100644
+> > --- a/drivers/acpi/numa/hmat.c
+> > +++ b/drivers/acpi/numa/hmat.c
+> > @@ -1038,6 +1038,9 @@ static __init int hmat_init(void)
+> >       if (!hmat_set_default_dram_perf())
+> >               register_mt_adistance_algorithm(&hmat_adist_nb);
+> >
+> > +     /* Post-create CPUless memory tiers after getting HMAT info */
+> > +     mt_init_with_hmat();
+> > +
+> >       return 0;
+> >  out_put:
+> >       hmat_free_structures();
+> > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.=
+h
+> > index 69e781900082..2f845e90c033 100644
+> > --- a/include/linux/memory-tiers.h
+> > +++ b/include/linux/memory-tiers.h
+> > @@ -48,6 +48,7 @@ int mt_calc_adistance(int node, int *adist);
+> >  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+> >                            const char *source);
+> >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
+> > +void mt_init_with_hmat(void);
+>
+> HMAT isn't universally available.  It's a driver in fact.  So, don't put
+> driver specific code in general code.
+>
 
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_ASSERT_SUCCESS(vcpu);
-> +
-> +	kvm_vm_free(vm);
-> +	printf("\t ... PASSED\n");
-> +}
-> +
->  int main(int argc, char **argv)
->  {
->  	setbuf(stdout, NULL);
-> @@ -905,6 +989,7 @@ int main(int argc, char **argv)
->  	run_in_new_process(&verify_guest_msr_reads);
->  	run_in_new_process(&verify_guest_hlt);
->  	run_in_new_process(&verify_mmio_reads);
-> +	run_in_new_process(&verify_mmio_writes);
->  
->  	return 0;
->  }
-> -- 
-> 2.43.0.472.g3155946c3a-goog
-> 
-> 
+Please see below regarding "move code to hmat.c"
+
+> >  #ifdef CONFIG_MIGRATION
+> >  int next_demotion_node(int node);
+> >  void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
+> > @@ -136,5 +137,10 @@ static inline int mt_perf_to_adistance(struct acce=
+ss_coordinate *perf, int *adis
+> >  {
+> >       return -EIO;
+> >  }
+> > +
+> > +static inline void mt_init_with_hmat(void)
+> > +{
+> > +
+> > +}
+> >  #endif       /* CONFIG_NUMA */
+> >  #endif  /* _LINUX_MEMORY_TIERS_H */
+> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+> > index 0537664620e5..7a0a579b3deb 100644
+> > --- a/mm/memory-tiers.c
+> > +++ b/mm/memory-tiers.c
+> > @@ -35,7 +35,9 @@ struct node_memory_type_map {
+> >  };
+> >
+> >  static DEFINE_MUTEX(memory_tier_lock);
+> > +static DEFINE_MUTEX(mt_perf_lock);
+> >  static LIST_HEAD(memory_tiers);
+> > +static LIST_HEAD(hmat_memory_types);
+> >  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
+> >  struct memory_dev_type *default_dram_type;
+> >
+> > @@ -502,7 +504,7 @@ static inline void __init_node_memory_type(int node=
+, struct memory_dev_type *mem
+> >       }
+> >  }
+> >
+> > -static struct memory_tier *set_node_memory_tier(int node)
+> > +static struct memory_tier *set_node_memory_tier(int node, struct memor=
+y_dev_type *new_memtype)
+>
+> No. memory_dev_type are passed to the function via node_memory_types[node=
+].memtype.
+>
+
+Got it. Will mimic the way kmem.c does. Thanks.
+
+> >  {
+> >       struct memory_tier *memtier;
+> >       struct memory_dev_type *memtype;
+> > @@ -514,7 +516,7 @@ static struct memory_tier *set_node_memory_tier(int=
+ node)
+> >       if (!node_state(node, N_MEMORY))
+> >               return ERR_PTR(-EINVAL);
+> >
+> > -     __init_node_memory_type(node, default_dram_type);
+> > +     __init_node_memory_type(node, new_memtype);
+> >
+> >       memtype =3D node_memory_types[node].memtype;
+> >       node_set(node, memtype->nodes);
+> > @@ -623,6 +625,56 @@ void clear_node_memory_type(int node, struct memor=
+y_dev_type *memtype)
+> >  }
+> >  EXPORT_SYMBOL_GPL(clear_node_memory_type);
+> >
+> > +static struct memory_dev_type *hmat_find_alloc_memory_type(int adist)
+>
+> Similar function existed in drivers/dax/kmem.c.  Please abstract them
+> and move them here.
+>
+
+Got it. Will try. Thanks.
+
+> > +{
+> > +     bool found =3D false;
+> > +     struct memory_dev_type *mtype;
+> > +
+> > +     list_for_each_entry(mtype, &hmat_memory_types, list) {
+> > +             if (mtype->adistance =3D=3D adist) {
+> > +                     found =3D true;
+> > +                     break;
+> > +             }
+> > +     }
+> > +     if (!found) {
+> > +             mtype =3D alloc_memory_type(adist);
+> > +             if (!IS_ERR(mtype))
+> > +                     list_add(&mtype->list, &hmat_memory_types);
+> > +     }
+> > +     return mtype;
+> > +}
+> > +
+> > +static void mt_create_with_hmat(int node)
+> > +{
+> > +     struct memory_dev_type *mtype =3D NULL;
+> > +     int adist =3D MEMTIER_ADISTANCE_DRAM;
+> > +
+> > +     mt_calc_adistance(node, &adist);
+> > +     if (adist !=3D MEMTIER_ADISTANCE_DRAM) {
+> > +             mtype =3D hmat_find_alloc_memory_type(adist);
+> > +             if (IS_ERR(mtype))
+> > +                     pr_err("%s() failed to allocate a tier\n", __func=
+__);
+> > +     } else {
+> > +             mtype =3D default_dram_type;
+> > +     }
+> > +
+> > +     set_node_memory_tier(node, mtype);
+> > +}
+> > +
+> > +void mt_init_with_hmat(void)
+> > +{
+> > +     int nid;
+> > +
+> > +     mutex_lock(&memory_tier_lock);
+> > +     for_each_node_state(nid, N_MEMORY)
+> > +             if (!node_state(nid, N_CPU))
+> > +                     mt_create_with_hmat(nid);
+> > +
+> > +     establish_demotion_targets();
+> > +     mutex_unlock(&memory_tier_lock);
+> > +}
+> > +EXPORT_SYMBOL_GPL(mt_init_with_hmat);
+> > +
+>
+> I guess that we can put most hmat related code above in hmat.c.
+>
+
+To put the heat-related code to hmat.c I will need to export some
+static functions in memory-tiers.c, like set_node_memory_tier() and
+establish_demotion_targets(). Is that ok?
+
+> >  static void dump_hmem_attrs(struct access_coordinate *coord, const cha=
+r *prefix)
+> >  {
+> >       pr_info(
+> > @@ -636,7 +688,7 @@ int mt_set_default_dram_perf(int nid, struct access=
+_coordinate *perf,
+> >  {
+> >       int rc =3D 0;
+> >
+> > -     mutex_lock(&memory_tier_lock);
+> > +     mutex_lock(&mt_perf_lock);
+> >       if (default_dram_perf_error) {
+> >               rc =3D -EIO;
+> >               goto out;
+> > @@ -684,7 +736,7 @@ int mt_set_default_dram_perf(int nid, struct access=
+_coordinate *perf,
+> >       }
+> >
+> >  out:
+> > -     mutex_unlock(&memory_tier_lock);
+> > +     mutex_unlock(&mt_perf_lock);
+> >       return rc;
+> >  }
+> >
+> > @@ -700,7 +752,7 @@ int mt_perf_to_adistance(struct access_coordinate *=
+perf, int *adist)
+> >           perf->read_bandwidth + perf->write_bandwidth =3D=3D 0)
+> >               return -EINVAL;
+> >
+> > -     mutex_lock(&memory_tier_lock);
+> > +     mutex_lock(&mt_perf_lock);
+> >       /*
+> >        * The abstract distance of a memory node is in direct proportion=
+ to
+> >        * its memory latency (read + write) and inversely proportional t=
+o its
+> > @@ -713,7 +765,7 @@ int mt_perf_to_adistance(struct access_coordinate *=
+perf, int *adist)
+> >               (default_dram_perf.read_latency + default_dram_perf.write=
+_latency) *
+> >               (default_dram_perf.read_bandwidth + default_dram_perf.wri=
+te_bandwidth) /
+> >               (perf->read_bandwidth + perf->write_bandwidth);
+> > -     mutex_unlock(&memory_tier_lock);
+> > +     mutex_unlock(&mt_perf_lock);
+> >
+> >       return 0;
+> >  }
+> > @@ -797,7 +849,7 @@ static int __meminit memtier_hotplug_callback(struc=
+t notifier_block *self,
+> >               break;
+> >       case MEM_ONLINE:
+> >               mutex_lock(&memory_tier_lock);
+> > -             memtier =3D set_node_memory_tier(arg->status_change_nid);
+> > +             memtier =3D set_node_memory_tier(arg->status_change_nid, =
+default_dram_type);
+> >               if (!IS_ERR(memtier))
+> >                       establish_demotion_targets();
+> >               mutex_unlock(&memory_tier_lock);
+> > @@ -836,7 +888,15 @@ static int __init memory_tier_init(void)
+> >        * types assigned.
+> >        */
+> >       for_each_node_state(node, N_MEMORY) {
+> > -             memtier =3D set_node_memory_tier(node);
+> > +             if (!node_state(node, N_CPU))
+> > +                     /*
+> > +                      * Defer memory tier initialization on CPUless nu=
+ma nodes.
+> > +                      * These will be initialized when HMAT informatio=
+n is
+> > +                      * available.
+> > +                      */
+> > +                     continue;
+> > +
+> > +             memtier =3D set_node_memory_tier(node, default_dram_type)=
+;
+>
+> On system with HMAT, how to fall back CPU-less node to
+> default_dram_type?  I found your description, but I don't find it in code=
+.
+>
+
+I assume you meant without HMAT, if so,
+because if no HMAT, adist will not be updated in mt_calc_adistance():
++ int adist =3D MEMTIER_ADISTANCE_DRAM;
++
++ mt_calc_adistance(node, &adist);
++ if (adist !=3D MEMTIER_ADISTANCE_DRAM) {
+=E2=80=A6
++ } else {
++ mtype =3D default_dram_type;
++ }
++
++ set_node_memory_tier(node, mtype);
+
+> >               if (IS_ERR(memtier))
+> >                       /*
+> >                        * Continue with memtiers we are able to setup
+>
+> --
+> Best Regards,
+> Huang, Ying
+--=20
+Best regards,
+Ho-Ren (Jack) Chuang
+=E8=8E=8A=E8=B3=80=E4=BB=BB
