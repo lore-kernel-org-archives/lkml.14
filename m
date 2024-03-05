@@ -1,242 +1,172 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2A11272CC;
-	Tue,  5 Mar 2024 20:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01B8D27E;
+	Tue,  5 Mar 2024 20:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709670077; cv=none; b=mtzit3H6WbpxeK4v+dAm9hycqu1WGQJDuyzYbrdSwJ5NEdVbxBOC5K1+VX+c7j2YghW72t8WBDkj4RawxIjRqCtmSleRyvhux+5b1MvSoTyzlvde8pkMYT6SDkO/Wsb0ZW88RMy0rrBOvn3koHanYdJZ9h3P3hF78tg8f0qGGDI=
+	t=1709670101; cv=none; b=RpgQ4l9/y9CWupJaUz9D0Lkwb5OxrDAynR7AS5fmkgmjEuA/NBexPsq8RK6HysCDT/lIJgb1pwqFmqBFbFXuVUyBzwYs6d0sQre1n0lYdnHe/vqSrWFRZQcWqyhQjh654etVSKe6mtuSk2ymZxr/INZ/fUY9UsDfJqEe7Psw5n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709670077; c=relaxed/simple;
-	bh=OCFxQK/+lGBfLc8K0Ryr/REQzOrbTSaeg5/d5Exp6bQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=re8zf3+RWq9z7cpee+AfgAgkT8fuzW1agjX/0WCDkSig0VPoQ6EWmyEO5B8PpjvrHQVfK+HJ2ixZN60Ah+CxH3aOos/g/NznzXqa2UvW77UIrvRb0lOFHdhrARzfe1MMwATmuaz6H+TVys164359yBRBHMJ4xjjbPaEMXxum/Zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875a9e.versanet.de ([83.135.90.158] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rhbHV-0003er-CG; Tue, 05 Mar 2024 21:20:57 +0100
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Shreeya Patel <shreeya.patel@collabora.com>
-Cc: mchehab@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
- p.zabel@pengutronix.de, jose.abreu@synopsys.com, nelson.costa@synopsys.com,
- dmitry.osipenko@collabora.com, sebastian.reichel@collabora.com,
- shawn.wen@rock-chips.com, nicolas.dufresne@collabora.com, hverkuil@xs4all.nl,
- hverkuil-cisco@xs4all.nl, kernel@collabora.com, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-arm@lists.infradead.org
-Subject:
- Re: [PATCH v2 4/6] arm64: dts: rockchip: Add device tree support for HDMI RX
- Controller
-Date: Tue, 05 Mar 2024 21:20:55 +0100
-Message-ID: <6040170.44csPzL39Z@diego>
-In-Reply-To: <45138-65e76d00-9-580ee380@232156106>
-References:
- <20240305123648.8847-1-shreeya.patel@collabora.com>
- <7657358.31r3eYUQgx@diego> <45138-65e76d00-9-580ee380@232156106>
+	s=arc-20240116; t=1709670101; c=relaxed/simple;
+	bh=mL6fEtV4dWTChRIioAI8WVMr3ESdzLnLOnDpYBV2TOw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=R8znpuxcx97jx0PzKJAa45jcJrOCF+fHe86Nr8uTDQi3zvQ/3baS9iRNGcHVIhiTbKZDbVbgnWffT17nX+/uaKJH4q6barqb6eFrwHoG/EV3kln4FwyNm2hI32O+thTfKiyW/HCQNeqBxaKRDQf0C5hajkUaSd9WTpqFb2YOP64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=bVCxnkPh; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="bVCxnkPh"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e56787e691so122110b3a.0;
+        Tue, 05 Mar 2024 12:21:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709670099; x=1710274899;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1fI7n1PPcQRS/z7Y+0uW1YEXs3Os4Jab/vlVX9n/14s=;
+        b=iMYspoADpVLdA0BHlhZI0o6lFnlAmabVKAHGwiXIKVWz2x73vdJUQg2/BdPU9vTHE2
+         ldLA0ZVoTWjq1O+5CHfIPnFii1Jrl1hZ57iJiSly9B5RwTJIui/zxS0troG6gGWOMkmr
+         /0ZwiBpYqQQIRJvylD0yURcuws7aYUFZRGNqF8T3nJRWifWo4OHkJkcwNvE56vXwPcBz
+         vjSFJ/GLr7R8NF0MX35iuv3W6OWUDrXj2ZolyiXPPXGsH7z8Qydo1pdOFoKDFJhhxYOT
+         AoBmpeuzTx3eobX6hc4iXWL7vknhC9lCyLkFd4d7/j1vG9aQAxuz9FO3PE0/zthFSRls
+         rfEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGyZgiFtCBODopVa/9YIUaWC7mXQxMr9DeRigZhMpZpvzY9NGXi1Hu7azpbuq7MO06Us8J4LquM+5L+wL+irNd2qmn/CdBR7paadQw
+X-Gm-Message-State: AOJu0YynTkyjW8FjRFf0hH96AYvdmT4KynD2wPwscVzfCIPfz95KAjGA
+	+fO22Di5IPcvbRhVKD4fGIodO+YIkIQqHV+LqMZmUY8ubrLcoLlN
+X-Google-Smtp-Source: AGHT+IHUHT+tHH2aFzEIfVJ1KU2MlsE5d6mLNfgPCr5AQGn6F8f/PX/FexxVhnrwEcNjipBoZK+xQQ==
+X-Received: by 2002:a05:6a21:3989:b0:1a1:1f2f:cb36 with SMTP id ad9-20020a056a21398900b001a11f2fcb36mr3579636pzc.26.1709670099269;
+        Tue, 05 Mar 2024 12:21:39 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id k19-20020a63ff13000000b005cfb6e7b0c7sm9753926pgi.39.2024.03.05.12.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 12:21:38 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1709670097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1fI7n1PPcQRS/z7Y+0uW1YEXs3Os4Jab/vlVX9n/14s=;
+	b=bVCxnkPhHL6GmYduWZxA8dusBqwu5W+3LH25CjETtIx8VbkcR/M/Jh2GBBLBTxtaqnykD2
+	2mmTkYbrlK23waWi/I+IbvWb/eqZev1gxo2CqigGe/vN84g4kpvkIqh4v8PTMl9vso9k6g
+	qxHIiyBrJTuWSXTWZwdLlvnd2ny0l/Qyd8x7pOiH3cTk0+McOAMoqFMFYDuedR10LiD4N6
+	Ci+C/gg1W4LGkdMAI8Oa0eRrz3G4RstugHeI1tYLBIdMRU33ES60e1DsiuLvdrvd7BVyvz
+	XAM01QsZfg7wv/J2FWbTDXDBIrfTkncRdeGhuTadrF8YoH/aQ6mEBuzF+EofIg==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Tue, 05 Mar 2024 17:21:33 -0300
+Subject: [PATCH] bcachefs: chardev: make bch_chardev_class constant
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240305-bcachefs-v1-1-436196e25729@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAMx+52UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDYwNT3aTkxOSM1LRiXSPzRJOkJIskyzSTNCWg8oKi1LTMCrBR0bG1tQA
+ SPO7vWgAAAA==
+To: Kent Overstreet <kent.overstreet@linux.dev>, 
+ Brian Foster <bfoster@redhat.com>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2730; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=mL6fEtV4dWTChRIioAI8WVMr3ESdzLnLOnDpYBV2TOw=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl537O34rw+Kc2CHNrIkd5UEsovB7PcG8xybS9v
+ mGB38YCN2iJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZed+zgAKCRDJC4p8Y4ZY
+ pvYaEAC1QirLZS5BzwnEiGj16OUo2/vNFZ5T8+cy/r8nKNFv4aO9Rtt48JCr+lUJPffYxhvQ30t
+ Yqd6phY0czQqtZg2uyf/7XYfNxnqymUPo+GlKapqs3H9EtMAriiKK7FaXq5w+ZgWWTWhYvolr+n
+ 9SoEJ8XO4yis3El/NHFTyE/g2clDoaw3EuGF98gPMpEO/s8wQJZTA+8rLCu30KJSKuNUTEBzoZk
+ SBH1+mKM6SgHqPrCCgOnbXHRdxHJUKiemVuS4twJtobA9HP9Oyoh1axjVjfcggyZWHS4SZaXYwE
+ xbiONqGH/us+kAGsaxzX0hLW/okGeBPfEf/fzU3cAzESR3SpJaucqYpXPbe5gD/Kn8dtt0cei8Y
+ EeptkOXd7ksQCAMuglQVaQoARGecpJiHG1m9R0rBG5IUEdqx/VT6KM6psAstjtyDsJSODjjC7oe
+ 9aipOf24GwTWuRgFpOt0PD5bJqQFQwPZtM3p6+4DbPf0eg1M2ldjENSGz+wVYbPalE4s4CidKII
+ dPmRmWtciTk1K2VMSpUyCJU+rqPEh6OaddK2JDM/EM6Nf/+gQ3xEZNJOAOplK1/Xh7XuUBhTGl4
+ LVwHAHGZRKKoJy99hR/hQyT1DcEgJ3j8r1HgPKMPF9S1X5uxu4eATis7xs4aLPFpjTrhXIi9sq+
+ fyVghRsonZFtP8Q==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-Hi again :-)
+Since commit 43a7206b0963 ("driver core: class: make class_register() take
+a const *"), the driver core allows for struct class to be in read-only
+memory, so move the bch_chardev_class structure to be declared at build
+time placing it into read-only memory, instead of having to be dynamically
+allocated at boot time.
 
-Am Dienstag, 5. M=E4rz 2024, 20:05:02 CET schrieb Shreeya Patel:
-> On Tuesday, March 05, 2024 19:41 IST, Heiko St=FCbner <heiko@sntech.de> w=
-rote:
-> > Am Dienstag, 5. M=E4rz 2024, 13:36:46 CET schrieb Shreeya Patel:
-> > > Add device tree support for Synopsys DesignWare HDMI RX
-> > > Controller.
-> > >=20
-> > > Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> > > Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> > > Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
-> > > Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
-> > > Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
-> > > ---
-> > > Changes in v2 :-
-> > >   - Fix some of the checkpatch errors and warnings
-> > >   - Rename resets, vo1-grf and HPD
-> > >   - Move hdmirx_cma node to the rk3588.dtsi file
-> > >=20
-> > >  .../boot/dts/rockchip/rk3588-pinctrl.dtsi     | 41 ++++++++++++++
-> > >  arch/arm64/boot/dts/rockchip/rk3588.dtsi      | 55 +++++++++++++++++=
-++
-> > >  2 files changed, 96 insertions(+)
-> >=20
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/bo=
-ot/dts/rockchip/rk3588.dtsi
-> > > index 5519c1430cb7..8adb98b99701 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> > > @@ -7,6 +7,24 @@
-> > >  #include "rk3588-pinctrl.dtsi"
-> > > =20
-> > >  / {
-> > > +	reserved-memory {
-> > > +		#address-cells =3D <2>;
-> > > +		#size-cells =3D <2>;
-> > > +		ranges;
-> >=20
-> > add blank line here
-> >=20
-> > > +		/*
-> > > +		 * The 4k HDMI capture controller works only with 32bit
-> > > +		 * phys addresses and doesn't support IOMMU. HDMI RX CMA
-> > > +		 * must be reserved below 4GB.
-> > > +		 */
-> > > +		hdmirx_cma: hdmirx_cma {
-> >=20
-> > phandles use "_", but node-names "-"
-> >=20
-> > > +			compatible =3D "shared-dma-pool";
-> > > +			alloc-ranges =3D <0x0 0x0 0x0 0xffffffff>;
-> > > +			size =3D <0x0 (160 * 0x100000)>; /* 160MiB */
-> >=20
-> > The comment above that node, could elaborate where the value of 160MB
-> > originates from. I assume it is to hold n-times of 4K frames or whateve=
-r,
-> > but it would be helpful for people to be able to read that.
-> >=20
->=20
-> right, we did the following calculation to come up with this value :-
-> 3840 * 2160 * 4 (bytes/pix) * 2 (frames/buffer) / 1000 / 1000 =3D 66M
-> and then we do the 2x times of this value to be on the safer side
-> and support all practical use-cases.
->=20
-> I'll add some more details to the comment in v3.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ fs/bcachefs/chardev.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-thanks, that will be helpful for me and everybody reading the dts later on
+diff --git a/fs/bcachefs/chardev.c b/fs/bcachefs/chardev.c
+index 226b39c17667..af587453fd3d 100644
+--- a/fs/bcachefs/chardev.c
++++ b/fs/bcachefs/chardev.c
+@@ -940,7 +940,9 @@ static const struct file_operations bch_chardev_fops = {
+ };
+ 
+ static int bch_chardev_major;
+-static struct class *bch_chardev_class;
++static const struct class bch_chardev_class = {
++	.name = "bcachefs",
++};
+ static struct device *bch_chardev;
+ 
+ void bch2_fs_chardev_exit(struct bch_fs *c)
+@@ -957,7 +959,7 @@ int bch2_fs_chardev_init(struct bch_fs *c)
+ 	if (c->minor < 0)
+ 		return c->minor;
+ 
+-	c->chardev = device_create(bch_chardev_class, NULL,
++	c->chardev = device_create(&bch_chardev_class, NULL,
+ 				   MKDEV(bch_chardev_major, c->minor), c,
+ 				   "bcachefs%u-ctl", c->minor);
+ 	if (IS_ERR(c->chardev))
+@@ -968,26 +970,25 @@ int bch2_fs_chardev_init(struct bch_fs *c)
+ 
+ void bch2_chardev_exit(void)
+ {
+-	if (!IS_ERR_OR_NULL(bch_chardev_class))
+-		device_destroy(bch_chardev_class,
+-			       MKDEV(bch_chardev_major, U8_MAX));
+-	if (!IS_ERR_OR_NULL(bch_chardev_class))
+-		class_destroy(bch_chardev_class);
++	device_destroy(&bch_chardev_class, MKDEV(bch_chardev_major, U8_MAX));
++	class_unregister(&bch_chardev_class);
+ 	if (bch_chardev_major > 0)
+ 		unregister_chrdev(bch_chardev_major, "bcachefs");
+ }
+ 
+ int __init bch2_chardev_init(void)
+ {
++	int ret;
++
+ 	bch_chardev_major = register_chrdev(0, "bcachefs-ctl", &bch_chardev_fops);
+ 	if (bch_chardev_major < 0)
+ 		return bch_chardev_major;
+ 
+-	bch_chardev_class = class_create("bcachefs");
+-	if (IS_ERR(bch_chardev_class))
+-		return PTR_ERR(bch_chardev_class);
++	ret = class_register(&bch_chardev_class);
++	if (ret)
++		return ret;
+ 
+-	bch_chardev = device_create(bch_chardev_class, NULL,
++	bch_chardev = device_create(&bch_chardev_class, NULL,
+ 				    MKDEV(bch_chardev_major, U8_MAX),
+ 				    NULL, "bcachefs-ctl");
+ 	if (IS_ERR(bch_chardev))
 
->=20
-> >=20
-> > > +			no-map;
-> > > +			status =3D "disabled";
-> > > +		};
-> > > +	};
-> > > +
-> > >  	pcie30_phy_grf: syscon@fd5b8000 {
-> > >  		compatible =3D "rockchip,rk3588-pcie3-phy-grf", "syscon";
-> > >  		reg =3D <0x0 0xfd5b8000 0x0 0x10000>;
-> > > @@ -85,6 +103,38 @@ i2s10_8ch: i2s@fde00000 {
-> > >  		status =3D "disabled";
-> > >  	};
-> > > =20
-> > > +	hdmi_receiver: hdmi-receiver@fdee0000 {
-> >=20
-> > Maybe rename the label to "hdmirx:" ... that way in a board enabling the
-> > cma region, both nodes would stay close to each other?
-> >=20
->=20
-> Umm we already have receiver in the name so I am not sure if adding rx wi=
-ll be
-> a good idea. I was trying to keep it consistent with the names used in ot=
-her device tree files.
-> In case you still feel otherwise then do let me know, I'll make the chang=
-e.
+---
+base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
+change-id: 20240305-bcachefs-27a4bb8b9f4f
 
-I'm somewhat partial to the actual name, I was more getting at similar
-names to keep things together.
-
-General sorting rules are that &foo phandles are sorted alphabetically
-in board devicetrees.
-
-So having
-
-&hdmirx {
-	status =3D "okay";
-};
-
-&hdmirx_cma {
-	status =3D "okay";
-};
-
-in the board dt, makes them stay together automatically ;-)
-
-So if it's hdmirx + hdmirx_cma or hdmi_receiver + hdmi_receiver_cma
-doesn't matter that much, just that they share a common basename.
-
-
-I really want to stay away from allowing special rules for things as much
-as possible, because that becomes a neverending story, so it's
-alphabetical sorting.
-
-But nothing prevents us from naming phandles in an intelligent way ;-) .
-
-
-Thanks
-Heiko
-
-> > > +		compatible =3D "rockchip,rk3588-hdmirx-ctrler", "snps,dw-hdmi-rx";
-> > > +		reg =3D <0x0 0xfdee0000 0x0 0x6000>;
-> > > +		power-domains =3D <&power RK3588_PD_VO1>;
-> > > +		rockchip,grf =3D <&sys_grf>;
-> > > +		rockchip,vo1-grf =3D <&vo1_grf>;
-> > > +		interrupts =3D <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH 0>,
-> > > +			     <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH 0>,
-> > > +			     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH 0>;
-> > > +		interrupt-names =3D "cec", "hdmi", "dma";
-> > > +		clocks =3D <&cru ACLK_HDMIRX>,
-> > > +			 <&cru CLK_HDMIRX_AUD>,
-> > > +			 <&cru CLK_CR_PARA>,
-> > > +			 <&cru PCLK_HDMIRX>,
-> > > +			 <&cru CLK_HDMIRX_REF>,
-> > > +			 <&cru PCLK_S_HDMIRX>,
-> > > +			 <&cru HCLK_VO1>;
-> > > +		clock-names =3D "aclk",
-> > > +			      "audio",
-> > > +			      "cr_para",
-> > > +			      "pclk",
-> > > +			      "ref",
-> > > +			      "hclk_s_hdmirx",
-> > > +			      "hclk_vo1";
-> >=20
-> > the driver uses of_reserved_mem_device_init(), so doesn't this node need
-> > a "memory-region =3D <&hdmirx_cma>; or similar?
-> >=20
->=20
-> yes, we should have the memory-region property here. My bad, I'll correct=
- this in v3.
->=20
-> >=20
-> > > +		resets =3D <&cru SRST_A_HDMIRX>, <&cru SRST_P_HDMIRX>,
-> > > +			 <&cru SRST_HDMIRX_REF>, <&cru SRST_A_HDMIRX_BIU>;
-> > > +		reset-names =3D "axi", "apb", "ref", "biu";
-> > > +		pinctrl-0 =3D <&hdmim1_rx>;
-> > > +		pinctrl-names =3D "default";
-> > > +		status =3D "disabled";
-> > > +	};
-> > > +
-> > >  	pcie3x4: pcie@fe150000 {
-> > >  		compatible =3D "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
-> > >  		#address-cells =3D <3>;
-> > > @@ -339,3 +389,8 @@ pcie30phy: phy@fee80000 {
-> > >  		status =3D "disabled";
-> > >  	};
-> > >  };
-> > > +
-> > > +&hdmirx_cma {
-> > > +	status =3D "okay";
-> > > +};
-> >=20
-> > I'd assume a board that enables &hdmi_receiver would also enable hdmirx=
-_cma
-> > and not the soc dtsi for _all_ boards?
-> >=20
->=20
-> Actually this node should be in the rock-5b.dts file instead of here.
-> v1 had it correct but I made a mistake in v2 :(
-> Thanks for pointing this out, I'll fix this and send a v3 soon.
-
-
-
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
