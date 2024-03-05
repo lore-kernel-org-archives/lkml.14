@@ -1,102 +1,99 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEE285C51;
-	Tue,  5 Mar 2024 13:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D43D85920;
+	Tue,  5 Mar 2024 13:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709645510; cv=none; b=XaXSYMNrdw1pyg9yGugEIBH3AzUFiXuMvkiFcEtOHgjJEIGiu71ofJ/mvExQHHYwATbImUnxFega3Me3czETqS/ruiRQQ1mo07WvYYLp/DtjpyMtl1qs8yCOkkXSpDKEYbfqy5Kbf7iy3lyUqkQ6bfCA2DZISamzC2CdqGuuQYw=
+	t=1709645536; cv=none; b=augqiKaPLVXnIReK5UzpYDh8lVZOmwIDEkXpQFO/poUgo1+HMfdhOFPXMmfvUmrxW6Q72Bjbf67cT1exVldiuaVS5IH9Ov6sLCgcflpk6Q8QZuhpjujqqdJY6qs3U4KUls+WFIvSKyied6iYer0eq1g0tJwxYAjF1ktkCyaQzCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709645510; c=relaxed/simple;
-	bh=znYBTbuKJHdE510kzvyLEyOv9seUryxMrJpA8/nW37w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HPbC6ZFTMKgfAo9ss0Zhrbwpmf1Q6K5sqlgoSMYf6faBQhe4bMCbY9nVDhoJ61lRmepcpmdiSq8scHl/SA752FyQuSif3yZNvFs3UCFos4V+Ibm6aIy5M5ANOOiYa0dv1Jztft4zkXL7Wb064DO4Zts2gm+P5xyYgutGpkQSCbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LvHJImQB; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709645536; c=relaxed/simple;
+	bh=esSfqR/EN2uGgQJhZInB3gQ5IgggyIpQkCwvAPI4KIE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mloBNOaEVZ25ZX2rN4EHRnCBGZ6ywtnwq0UcyWtGbajJytRULQfFbe/33wZ1jAifCdgjL/N2sj9zFNWmoP/qLdznC6G+aWTpJU4dgqmJHqcV+YaeucJ5bmQg9BLFErk83HG46owE0Dq5o8+IhBbnS2kmYxjiKLrOu7L1mH7Ndms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cy+Dkvs3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LvHJImQB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 94378C0002;
-	Tue,  5 Mar 2024 13:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709645505;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=q7U+cWhleujOwN6xyJzC8kzJR7mFMa0ZCOTO3ajZttI=;
-	b=LvHJImQBj1dOnQHrVx4gsvwytfe1chPKE00JMa1qWKwH9KU7x+ThgBOKsOVm1q2wPGruEB
-	FXDNMLs1nLO8ijiGeXS8cA60aS9lL8VZ+LSz5nhqI2UWLHQivC5F285AakL/bFBN6dyGfs
-	IA2KRcmIcsAiX4djfsas/x0QR6BKSKhUqyhNcyQGc66zNZMjXNE1N3i92qj5k6dkF99M1M
-	3n0j8KPIx7h1j8zjzZMmUEYauBaclStTDmgQFar+drmWOfkFkQ2qM5W6RXxLOeGlajNLgM
-	S2E1hMmzSktB2keSzRTX4/mcMJVixDA/lJIlcWG+qhvWcMr1FoQ3gkLBnudgXQ==
-From: =?UTF-8?q?J=C3=A9r=C3=A9mie=20Dautheribes?= <jeremie.dautheribes@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Davis <afd@ti.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Yen-Mei Goh <yen-mei.goh@keysight.com>,
-	=?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
-	=?UTF-8?q?J=C3=A9r=C3=A9mie=20Dautheribes?= <jeremie.dautheribes@bootlin.com>
-Subject: [PATCH 1/1] dt-bindings: net: dp83822: change ti,rmii-mode description
-Date: Tue,  5 Mar 2024 14:31:37 +0100
-Message-Id: <20240305133137.125020-1-jeremie.dautheribes@bootlin.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cy+Dkvs3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B9702C433C7;
+	Tue,  5 Mar 2024 13:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709645535;
+	bh=esSfqR/EN2uGgQJhZInB3gQ5IgggyIpQkCwvAPI4KIE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Cy+Dkvs3AUK003lAX1XA2Tm5K5lMTlK72LOSkm0x0mpV84Jip7Lgmv3wrTMKXjnlL
+	 U0efQ8gUG3yCPVTc2Cxpx5pCrjg6fCk2KEDne9UhJ1Ovi/Gq75JXcTK2+GbOEuQRBi
+	 yomYaiWuWq9utas1Ub2+L0RwzHqdoPRmazUGHs0hyTVacl87djBzrkPezmLbPisaEC
+	 g/UHtJDpUksgTgdSyj8KO+wRUgZXJmSbDeR3qxmD2S/YHk4a2l2sHvrcLZ4AR9IF+Z
+	 ygwXAwRshk+7KxbtgiDsrB1N+QKPVInSqt8cfNoBfYDVqGzqyMu5uxnsffvdPnTTW5
+	 KPqL/5iZvmaNw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AB1C54E49;
+	Tue,  5 Mar 2024 13:32:15 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Tue, 05 Mar 2024 21:32:12 +0800
+Subject: [PATCH v5 1/5] phy: hisilicon: hisi-inno-phy: enable clocks for
+ every ports
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: jeremie.dautheribes@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240305-inno-phy-v5-1-dc1cb130ea08@outlook.com>
+References: <20240305-inno-phy-v5-0-dc1cb130ea08@outlook.com>
+In-Reply-To: <20240305-inno-phy-v5-0-dc1cb130ea08@outlook.com>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Jiancheng Xue <xuejiancheng@hisilicon.com>, 
+ Shawn Guo <shawn.guo@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, 
+ David Yang <mmyangfl@gmail.com>, Yang Xiwen <forbidden405@outlook.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709645533; l=971;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=jGUbESXsyAvU27nkXjLoTOKtwqcjOT068eM8RNJCWfs=;
+ b=HPJ5ck0MlMZNGEmcLKzPz9CIqfO7rL3sKI59I3rFgOAsz0Fpfqj3r4qB5h9RDN5C7XGwYNkvH
+ Y449p9GY2fVBevg2VPT9H4W2fjNMDrjPlZ8Qa5GMzekCMWRNOoJRL5i
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-Drop reference to the 25MHz clock as it has nothing to do with connecting
-the PHY and the MAC.
-Add info about the reference clock direction between the PHY and the MAC
-as it depends on the selected rmii mode.
+From: Yang Xiwen <forbidden405@outlook.com>
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
+This is needed for port1 to work.
+
+Fixes: ba8b0ee81fbb ("phy: add inno-usb2-phy driver for hi3798cv200 SoC")
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
-This patch follows on from my previous patch series [1] which has already been 
-merged into the net-next tree and which added the "ti,rmii-mode" property.
-As suggested by Andrew Lunn, this patch updates the description of this 
-property to make it more consistent with the master/slave relationship it 
-conveys.
+ drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-[1] https://lore.kernel.org/all/20240222103117.526955-1-jeremie.dautheribes@bootlin.com/
+diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+index c138cd4807d6..b7e740eb4752 100644
+--- a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
++++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+@@ -86,8 +86,10 @@ static void hisi_inno_phy_write_reg(struct hisi_inno_phy_priv *priv,
+ 
+ static void hisi_inno_phy_setup(struct hisi_inno_phy_priv *priv)
+ {
++	int i;
+ 	/* The phy clk is controlled by the port0 register 0x06. */
+-	hisi_inno_phy_write_reg(priv, 0, 0x06, PHY_CLK_ENABLE);
++	for (i = 0; i < INNO_PHY_PORT_NUM; i++)
++		hisi_inno_phy_write_reg(priv, i, 0x06, PHY_CLK_ENABLE);
+ 	msleep(PHY_CLK_STABLE_TIME);
+ }
+ 
 
- Documentation/devicetree/bindings/net/ti,dp83822.yaml | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-index 8f23254c0458..784866ea392b 100644
---- a/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-@@ -84,10 +84,10 @@ properties:
-     description: |
-        If present, select the RMII operation mode. Two modes are
-        available:
--         - RMII master, where the PHY operates from a 25MHz clock reference,
--         provided by a crystal or a CMOS-level oscillator
--         - RMII slave, where the PHY operates from a 50MHz clock reference,
--         provided by a CMOS-level oscillator
-+         - RMII master, where the PHY outputs a 50MHz reference clock which can
-+         be connected to the MAC.
-+         - RMII slave, where the PHY expects a 50MHz reference clock input
-+         shared with the MAC.
-        The RMII operation mode can also be configured by its straps.
-        If the strap pin is not set correctly or not set at all, then this can be
-        used to configure it.
 -- 
-2.34.1
+2.43.0
 
