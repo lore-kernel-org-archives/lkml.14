@@ -1,88 +1,128 @@
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9470C12AAF9;
-	Tue,  5 Mar 2024 21:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.143.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7E312B170
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 21:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709672459; cv=none; b=b2gtFOwOGZZjQai5seRfiXD1AYsQSfl//Ix2qoNMUUmNak4x1nYZ0IIegWgGABORl7qo4N7qovxVwGmAVQ4XEGeIxZhApWINWwOo40RLQL+7qYa5v7HRZu9mTtbG6aEEeEwHjZpkF8Z1p9MTnnFVFQA4EYWVLPTxK81wW0yKxBc=
+	t=1709672463; cv=none; b=Lp4GNsPp+TqHy8liPFzs92LoTj65eixHhIf3BUGN7H2C+gcjKRO16pyVlOftUrE23zoNw6DCDTZQqQo8YXylrvmUMfTKYvuwnMm6BJt9Za7361IfB0Bp2tDDHpSqoOGd+YneWIrPg3GBAuMJN2YtrsIzgQN5XvK3dPdAEG5knnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709672459; c=relaxed/simple;
-	bh=u9nBdyY2Zu/bsOk8ujnCI/Ne6Dmf1PlQ6sXI7ZNdlVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mbe4iLxDFbFOJjt8+IUawFa47wHJDXZDPKQh5h3nBAQzUGJTKgqI4n73oRtap9Rt8cHiUSnah3gqKi9YVzdip0Ae7lUOLk+oj2a4hCCA91OPZXGHqFZD6Q7Tn4qu64okW1lxccYLKclrs5dwH8G1vJes+K53lHOb6aIgU1dT4wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=WnMd0/Lp; arc=none smtp.client-ip=68.232.143.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1709672463; c=relaxed/simple;
+	bh=3mL3z/qxqBUyDlYaBkawRzU+GsgP5u+d/+lOsY1c0J8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m2FlA/YbH6whKvBJshhv2rDfCq2cG2mj0L58383PG8Q9/XOEaxAXgobFN0gg1Vo6HRROtZRiTLpcj3BtEKwep3IgyC+l8dwo61MKjBOBRXUO14zdL8/qcYM17pmwKIT+NR/+idia2xYqm9XXPRL9NMGzULszrd2+2WyWK2Dnw8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JfACXXU1; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WnMd0/Lp"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1709672457; x=1741208457;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=u9nBdyY2Zu/bsOk8ujnCI/Ne6Dmf1PlQ6sXI7ZNdlVQ=;
-  b=WnMd0/LpsdZ8M2BtsrRIK6YjtwRAQ+cBIkVlo7m06Vns1l0Rj8BBaMvM
-   ELnOZ4rkiPzT3p18J2bkNy4FsisElzqOGYdb16KNYHYn3LMh2RRA0iOQ2
-   YiOBRd6YSp2QLRB6dM2q4wpFzuRbhNW1laYnhrfCxbUS8PqV9lyb2KWdu
-   UmnZDpthOvrYifrDG4kIM9xHVHtfruvQBifmljojh2FHuofgqlOP+7VXN
-   OOTFk+wAFvfe1eF0ygaKh5xjmjg6fACSIMi9UTiXyWjN68zmdDSn5MV93
-   anzfqsWLgUXRzOoAeyLFIqQZrgiTaHfgtpJy7a9ie7ovbN3rY1RQWqQuz
-   A==;
-X-CSE-ConnectionGUID: TqszR4n2TlSLwmbtNw7Xbw==
-X-CSE-MsgGUID: OlrN9OUeT7eQ5q1FE/XOrQ==
-X-IronPort-AV: E=Sophos;i="6.06,206,1705334400"; 
-   d="scan'208";a="10855930"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Mar 2024 05:00:56 +0800
-IronPort-SDR: Rt9R/jx9dnuzRa/Qt087XNDzD0R+qpyyVtCSjgiNpN0cw4FKITgPiN7vdAmA2B49+NH5FkCibc
- L1WnhlDP3RNg==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Mar 2024 12:10:06 -0800
-IronPort-SDR: rsMfJvruKGXeOGjuRyl9e64RgoyIPbr5JGMjLJuyvDNdH+2sB3u4GbXLrkLB/6QeNoSFIXQ47J
- X6e9lYOTia4g==
-WDCIronportException: Internal
-Received: from 87h6l33.ad.shared (HELO BXYGM33.ad.shared) ([10.225.32.8])
-  by uls-op-cesaip01.wdc.com with ESMTP; 05 Mar 2024 13:00:54 -0800
-From: Avri Altman <avri.altman@wdc.com>
-To: "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Bean Huo <beanhuo@micron.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH v2 0/4] Re-use device management code fragments
-Date: Tue,  5 Mar 2024 23:00:45 +0200
-Message-ID: <20240305210051.10847-1-avri.altman@wdc.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JfACXXU1"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6de3141f041so4220755b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 13:01:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709672461; x=1710277261; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZF432v09KlF629RNN3u5qcmSSQ2n+BPZ5TK5Cfww29c=;
+        b=JfACXXU1Z/tJMbfQJ+OKdyimCcXq5lwZiledrnKJ2x0m5WUwbh/MoGI3Ckwdoy8fcR
+         VLkIdTu66n93EWSyTzE2ojPS0QZMuT65MimK79Zw8A3wfT+I2u8+7P3/dd4nzD4mcrwk
+         DfoyoNPkDVMMveNA7Dmj/oIuzkMfC1n26ApYk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709672461; x=1710277261;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZF432v09KlF629RNN3u5qcmSSQ2n+BPZ5TK5Cfww29c=;
+        b=BETkkwhRc9S5qRVLSO0HaB6SJDrG+GBrrQrpBs0ZR86gIojoVCMQKUWHAWXt1m6+1J
+         WdufPrAtr8PqakOP4X429vFPLClHsQbSSOo+Fii8QBTiMR1MzkSNwvj742sMYqYNaufD
+         c6z7vHgSLZ7NckEy7LOgi2QYUEMMoJ5NbU4e3kxRWNN7K0fXYQd7LbCmHQOMtTe7PY3Q
+         82lblesJspHdGFBRXjE7UvzIl7CJmXxUD1AyEV28ZzHotoGRBgoOJNygYbPL0kzklLFy
+         kwBizZAFgxGPmATXebukGRCIuccrRw8TpnmyQMwyzvFBry4GJ/CHwm4WxBXcw67CXvVS
+         ps2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUtbuCDwoGKid+TMzOW8x/Y/DNzVfCkhPdNZQUqZyJ70r3mN/sHFzEYXWYkZZLFg3nyJc29+pt+WbHv8ldVuaMLvwGHVjDILfwYTqs+
+X-Gm-Message-State: AOJu0YzCjCcodrScu2piA+suKmcrSnZBm6EMrMuQHtvCWNEMETQO1DOi
+	/FsG+LYa4Fhzu7AnxyfTFHEFRnuYer/UgYNl7XJ02uuQAYzkTYvtPNgBrj8Pug==
+X-Google-Smtp-Source: AGHT+IFgU6Ny/h5rqcqqC1Dq853UHL6pR3leCjAfvblgUgL0FZjcQ559bVzwVH8cdJcz3mW5XsbNzQ==
+X-Received: by 2002:a05:6a00:3d10:b0:6e5:a009:9eb4 with SMTP id lo16-20020a056a003d1000b006e5a0099eb4mr15506921pfb.0.1709672459215;
+        Tue, 05 Mar 2024 13:00:59 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r5-20020aa79885000000b006e530aca55asm9416426pfl.123.2024.03.05.13.00.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 13:00:58 -0800 (PST)
+Date: Tue, 5 Mar 2024 13:00:58 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Shuah Khan <shuah@kernel.org>,
+	Mark Brown <broonie@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	"kernel@collabora.com" <kernel@collabora.com>
+Subject: Re: [Test Failure Report] exec: Test failures in execveat
+Message-ID: <202403051256.7A50FE28E7@keescook>
+References: <02c8bf8e-1934-44ab-a886-e065b37366a7@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02c8bf8e-1934-44ab-a886-e065b37366a7@collabora.com>
 
-v1->v2:
- - Attend Bart's comments
+On Tue, Mar 05, 2024 at 07:20:27PM +0500, Muhammad Usama Anjum wrote:
+> Hello,
+> 
+> I've been running execveat (execveat.c) locally on v6.1 and next-20240228.
+> It has flaky test case. There are some test cases which fail consistently.
+> The comment (not very clear) on top of failing cases is as following:
+> 
+> /*
+>  * Execute as a long pathname relative to "/".  If this is a script,
+>  * the interpreter will launch but fail to open the script because its
+>  * name ("/dev/fd/5/xxx....") is bigger than PATH_MAX.
+>  *
+>  * The failure code is usually 127 (POSIX: "If a command is not found,
+>  * the exit status shall be 127."), but some systems give 126 (POSIX:
+>  * "If the command name is found, but it is not an executable utility,
+>  * the exit status shall be 126."), so allow either.
+>  */
+> The file name is just less than PATH_MAX (4096) and we are expecting the
+> execveat() to fail with particular 99 or 127/128 error code. But kernel is
+> returning 1 error code. Snippet from full output:
+> 
+> # child 3493092 exited with 1 not 99 nor 99
+> # child 3493094 exited with 1 not 127 nor 126
+> 
+> I'm not sure if test is wrong or the kernel has changed the return error codes.
+
+The error code is actually coming from the script interpreter (in this
+case, "/bin/sh"). On my system, /bin/sh is /bin/dash, and I see the
+failure. If I manually change "script" to use "#!/bin/bash", the test
+passes for me.
+
+Since lots of other selftests appears to depend on /bin/bash, I think
+the right fix is simply:
 
 
-Device management commands are constructed for query commands that are
-being issued by the driver, but also for raw device management commands
-originated by the bsg module, and recently, by the advanced rpmb
-handler. Thus, the same code fragments, e.g. locking, composing the
-command, composing the upiu etc., appear over and over. Remove those
-duplications.  Theoretically, there should be no functional change.
+diff --git a/tools/testing/selftests/exec/execveat.c b/tools/testing/selftests/exec/execveat.c
+index bf79d664c8e6..0546ca24f2b2 100644
+--- a/tools/testing/selftests/exec/execveat.c
++++ b/tools/testing/selftests/exec/execveat.c
+@@ -393,7 +393,7 @@ static int run_tests(void)
+ static void prerequisites(void)
+ {
+ 	int fd;
+-	const char *script = "#!/bin/sh\nexit $*\n";
++	const char *script = "#!/bin/bash\nexit $*\n";
+ 
+ 	/* Create ephemeral copies of files */
+ 	exe_cp("execveat", "execveat.ephemeral");
 
-Avri Altman (4):
-  scsi: ufs: Re-use device management locking code
-  scsi: ufs: Re-use exec_dev_cmd
-  scsi: ufs: Re-use compose_dev_cmd
-  scsi: ufs: Re-use compose_devman_upiu
 
- drivers/ufs/core/ufshcd.c | 204 ++++++++++++++++----------------------
- 1 file changed, 86 insertions(+), 118 deletions(-)
+Can you test this and let me know if this fixes it for you?
+
+Thanks for the report!
+
+-Kees
 
 -- 
-2.42.0
-
+Kees Cook
