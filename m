@@ -1,106 +1,98 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF4C5A79B
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 10:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FADC5B5A3
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 10:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709635169; cv=none; b=EALWDfr+OHdY0aXuWuDFD12Z5st+8eZOGdGZ1mxT6vV00W0R7f0jljHRUx79aL9hFMC4HejBv5SB1cSRmIKX3c+zVEDsiL7lzOcTjQobfgGRXVamqc1oY4/IfZAPD0c9c3EBUSbmEcoXuRHvwPJR6arTSXVS5GeyXXYswDVb8eE=
+	t=1709635176; cv=none; b=YeeHZ2PPO/ae+2oqX1B0N/7e+E7gKTRiaA2aaBMFO7gNx54NtD6Bzst4eoZYSBEiLrP/0ROYtIcpTUpyZ898S7LBRgFEFDcQhGVUU5Z0jZuFNq5NmhtDVVFx/rXotZ1oEJliuhJ4agrfwSN2bR+Dyqj77gLW1inrVPllkuuUJXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709635169; c=relaxed/simple;
-	bh=JUqcL89qGPDZrUKL7gY5CqBHkDlWDEFVMqHLYYGtoEA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EMP/KG9o1jVRJj3L50hAAKJ7eWyZNLreOpRRlPLyhIA9Jn07AyuCUd+8bvonQ6r9w/BTNlfMgogFMsVloBrdgySM87D2eB7e9lJu1FHsptqkCwlzKAdp+QAsWzpUWaAHZg7dYdPhSAaOf44cz0ePJoYxPC8oZlqxaEBPiyX//7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=wneqPtmW; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="wneqPtmW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709635166;
-	bh=JUqcL89qGPDZrUKL7gY5CqBHkDlWDEFVMqHLYYGtoEA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=wneqPtmW64fyroXo9XhZAZ7h+zl/SIdvBarDT6EFhdosc4xg3GZK6CU8xTa3Vc0QW
-	 gA5uJ+DLOg4YLEvegcuGGZg6MHsCElk3O8lpd8K/Rn1BvFvd0tAZFOA4pwc15kNu/u
-	 trFo49kF2k7Qwy2XkB0H/sJIw9BhyeSeQrt/nFAs0r1p3KxUdzv0NAz5UE6ZqYCCRe
-	 2rLJIoLBuNUAU3me/RqkAEccFBMiitlxoAcIBiprZqaaORgxP34jc+uEsXl2oDi6tE
-	 mrKQODKR4gt5deNJOFC+o3GayJgj/0kx1u2TBQZh1uRXLjXufpuZAeKMMdAgMk/ymu
-	 lvzmxLE2s0/eQ==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 06F3D37820F2;
-	Tue,  5 Mar 2024 10:39:22 +0000 (UTC)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com,
-	helen.koike@collabora.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	david.heidelberg@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	guilherme.gallo@collabora.com,
-	robdclark@gmail.com,
-	jani.nikula@linux.intel.com,
-	joonas.lahtinen@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	tvrtko.ursulin@linux.intel.com,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/ci: update device type for volteer devices
-Date: Tue,  5 Mar 2024 16:08:29 +0530
-Message-Id: <20240305103829.38350-1-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1709635176; c=relaxed/simple;
+	bh=xJC6jDGTZbfYNZLeIFZXozgT6kJjE2Q9dhe8/M+AlaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YpIW4frXEqzAR6dtFYLxwGCX1Z4xEILzWGxnnmdCuleBn/4nueaqGab2tDVd0hAqD9+m4ZRJk+161PwYCVrUqD19iTCO6v34nKln0qY32n5D/etGxDI6NMoQvtJioelE4H3xpoRulTK2x/jGrpiWeuTJbf1rXw70IDYtZsDmR2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rhSCq-0005q9-Kv; Tue, 05 Mar 2024 11:39:32 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rhSCn-004X6O-Dh; Tue, 05 Mar 2024 11:39:29 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rhSCn-00005d-15;
+	Tue, 05 Mar 2024 11:39:29 +0100
+Date: Tue, 5 Mar 2024 11:39:29 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: William Qiu <william.qiu@starfivetech.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Hal Feng <hal.feng@starfivetech.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v11] pwm: opencores: Add PWM driver support
+Message-ID: <isbszrmgdsipmlolzbhf2wlcen7hq4yre3titcrmzea7rvty3s@ugp6hsodvm4k>
+References: <20240223084332.100410-1-william.qiu@starfivetech.com>
+ <ZQ0PR01MB12534DB9109EA8AEA33A221B9F22A@ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wxlbcuxknmfufojp"
+Content-Disposition: inline
+In-Reply-To: <ZQ0PR01MB12534DB9109EA8AEA33A221B9F22A@ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Volteer devices in the collabora lab are categorized under the
-asus-cx9400-volteer device type. The majority of these units
-has an Intel Core i5-1130G7 CPU, while some of them have a
-Intel Core i7-1160G7 CPU instead. So due to this difference,
-new device type template is added for the Intel Core i5-1130G7
-and i7-1160G7 variants of the Acer Chromebook Spin 514 (CP514-2H)
-volteer Chromebooks. So update the same in drm-ci.
 
-https://gitlab.collabora.com/lava/lava/-/merge_requests/149
+--wxlbcuxknmfufojp
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 0119c894ab0dc ("drm: Add initial ci/ subdirectory")
-Reviewed-by: David Heidelberg <david.heidelberg@collabora.com>
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
----
+On Tue, Mar 05, 2024 at 06:12:23AM +0000, William Qiu wrote:
+> Could you please help me review this patch series to see if there is
+> anything that needs to be modified? If not, could you help me integrate
+> this patch into the mainline? Thanks.
 
-v2:
-  - Add fixes tag so change gets propagated to stable.
-    https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1119672
----
- drivers/gpu/drm/ci/test.yml | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I know I'm behind on reviewing this driver. There are a few more and I
+still have your patch on my radar. New drivers require a big effort on
+my side for review---each revision takes easily >1h for me to comment.
+When I find time to review, I usually pick the oldest on
+https://patchwork.ozlabs.org/project/linux-pwm/list/ to reply. So as
+long as your patch appears there, it's not lost.
 
-diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-index 0857773e5c5f..8bc63912fddb 100644
---- a/drivers/gpu/drm/ci/test.yml
-+++ b/drivers/gpu/drm/ci/test.yml
-@@ -252,11 +252,11 @@ i915:cml:
- i915:tgl:
-   extends:
-     - .i915
--  parallel: 8
-+  parallel: 5
-   variables:
--    DEVICE_TYPE: asus-cx9400-volteer
-+    DEVICE_TYPE: acer-cp514-2h-1130g7-volteer
-     GPU_VERSION: tgl
--    RUNNER_TAG: mesa-ci-x86-64-lava-asus-cx9400-volteer
-+    RUNNER_TAG: mesa-ci-x86-64-lava-acer-cp514-2h-1130g7-volteer
- 
- .amdgpu:
-   extends:
--- 
-2.40.1
+So I ask you for some more patience.
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--wxlbcuxknmfufojp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXm9mAACgkQj4D7WH0S
+/k70xAf+L/NjaLnO4btjhXBXfmOqh5Ri5vCe5ftI5y1i5oMovpEpAfMnPxJRWyEU
+lMJBlyHRNbFQmsKxR/vbk63RIn0yV8nCYCVas29BUc6dQMPkkk59j9FDmPNB4bvr
+4l3HQmHfqM7h/kLEhWpbNLZWBnE5jA+JxWLLGsjljArSmqZavQ0ozZ1fNEjTJZUn
+mY9Du3E+GF+2nOZsIrZVJdGmIho6RL7n+CLydiqtX0Nzref06E7Ex5MQARoabMo6
+9Dclkb91uhYxg8yO6kC+EdtfARNBxpXsql9N6p8MCFVKeFcy0O1pipyLMGmYXRJS
+0QnUrgv5qOOMRW3EwP5v3PU5o1TkfA==
+=j+NC
+-----END PGP SIGNATURE-----
+
+--wxlbcuxknmfufojp--
