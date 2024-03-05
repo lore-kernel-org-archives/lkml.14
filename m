@@ -1,87 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DE214AA8;
-	Tue,  5 Mar 2024 16:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C409457
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 16:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709657596; cv=none; b=pRqHWBTDMog6kotCE4G16ZdjNItXDd5b2nzxMwLUiVstOQiWZ5OLGGoEORttBLInZpV2N4NyHql6Uu5tuN2Ov1WbKLYO2PZUw2Z+LTqvVFORSEY9MyPuqYRRP+z70ptH8BiTrCPxI7B3fU27BENJ0TK87kZdeIx0JwKRiKMYPyw=
+	t=1709657689; cv=none; b=bgbVkrlbDEy8NQPlZae3oVxcPT3dEBcwiMHon9sz+O1PuwfOJNr1lqEd4KHM9c0iA4W2/3v58ChWq0xZzVNZdXa15pwLlRGDzfvFpBcaAHqGr3sNhk2ntK/9Bn16d+1chl/XxCCX7o+d2TCtOX9wAdAxG7eNAZGycGg+ZYG+mjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709657596; c=relaxed/simple;
-	bh=fF6x/ulpwTNFTzp9klWdwKw9EJhQYUlQo/GNrjzse7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EkXW9f/nCPxOaWAguqZ/4YrNcNQOGvSPCRt+r1tZKvTthYXUYzbp+8AhFM0bP+FPhPSxUMvhJz2Fp6zAXLxJUVhPm9+gHkmyWbIwYRmofYuPqsQ2pIVnUaL4zGiMDSIwQus8Sjzov5m7CsHvMSuNz99/L8cYSMi73HXIu13oznw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MzqsN3/h; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709657689; c=relaxed/simple;
+	bh=R7VW3Sc7b5eZ6KpyerW+b84HFQ3Blb6GJ63R1AmyMK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WuouNazaSQtEtVcxI97wLWb6ha3RWiscp4oEUx2Cus6Jq70eoV6xhvx/0qsVLRZSckxRa8XEcSu/2ZrH4bmYyrpvgdwbGzrkdCiFxFJbaCzkXcTfbV9HBs+F2qKQhFE8mkX+U5pBu9nMrWpNTkivo563QzardHyQ/1gu8KsthA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=AtE2uG4Y; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=uG38+eLu; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MzqsN3/h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709657595; x=1741193595;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fF6x/ulpwTNFTzp9klWdwKw9EJhQYUlQo/GNrjzse7o=;
-  b=MzqsN3/h2C4YeKthFoNwYxf/uvySsCgiwReFC1t5E35F0dzxM1PIl33d
-   HMkt+xvwhGlOW0md5C3qs81sPF6TPgFzc9TpDIrEHziFMlkhMe6QqcElh
-   c+UgaTl/Eo0cir1QgU8PnmDrLufsD2G9aCBeLhazA4A3zI1ueN3383DlX
-   J9TVrdhqgI0EVhoAAZg/PB9Vp3NCNmSUokVna5BsddKHP5ilT8Mi8t1lS
-   yXbWRBkKGOcr2q4X/3bVBsMSRYvNyNlHgZPqa8VECpKTVuydlpBeaKio8
-   Zy4jBXqmhK7cg3v0lSL6/gUpWA3FH5x1i35ZjbpE2NqZ9RCQjbi87G21K
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="7992146"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="7992146"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 08:53:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="937042728"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="937042728"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2024 08:53:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id B89D84E9; Tue,  5 Mar 2024 18:53:07 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-watchdog@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v1 3/3] watchdog: intel-mid_wdt: Get platform data via dev_get_platdata()
-Date: Tue,  5 Mar 2024 18:52:20 +0200
-Message-ID: <20240305165306.1366823-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240305165306.1366823-1-andriy.shevchenko@linux.intel.com>
-References: <20240305165306.1366823-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="AtE2uG4Y";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="uG38+eLu"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DC6EF6B9AD;
+	Tue,  5 Mar 2024 16:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709657686; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rQ12qku4XFEjo7lOAHiP1outVs/2KwQNkFoPjlWDM48=;
+	b=AtE2uG4YZClE/K1AxSaVoI0PrL/jd2ceTRfu7RXARKDimmFy8phidMgdANUvbidToSW8yX
+	BNevTGTW4nsSx/gFqNFalJfLrdWPmkWfFSF4fQ8EMgCIqujZ6KZX5JT2wKQWDJcayiivTU
+	iFho2zF+ETCqfmXbX3kELOnZ7Cc1bbU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709657685; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rQ12qku4XFEjo7lOAHiP1outVs/2KwQNkFoPjlWDM48=;
+	b=uG38+eLu5pIAMY+AXlOwekxMuCRYw8SJq8cNKk7o2zdNNJgTtgu2/96XVz48sVZGE02r4V
+	6q90wUpDmlwqENLt6hc6i9Su3nZxNLw0fjPVsjVQSkYzwhQi3oA3jhyBNWeQCFxuIMVLsL
+	ZQ8C6yQmnAn6OYRFRIxCFrOvv0jhjW0=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D531113A5B;
+	Tue,  5 Mar 2024 16:54:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fIEJNFVO52XYBgAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Tue, 05 Mar 2024 16:54:45 +0000
+Date: Tue, 5 Mar 2024 17:54:45 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: cve@kernel.org, linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: CVE-2023-52521: bpf: Annotate bpf_long_memcpy with data_race
+Message-ID: <ZedOVc9h_VTBjHLD@tiehlicka>
+References: <2024030253-CVE-2023-52521-d847@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024030253-CVE-2023-52521-d847@gregkh>
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=uG38+eLu
+X-Spamd-Result: default: False [-3.52 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[3];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_LOW(-1.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.71)[98.74%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: DC6EF6B9AD
+X-Spam-Level: 
+X-Spam-Score: -3.52
+X-Spam-Flag: NO
 
-Access to platform data via dev_get_platdata() getter to make code cleaner.
+On Sat 02-03-24 22:53:05, Greg KH wrote:
+> Description
+> ===========
+> 
+> In the Linux kernel, the following vulnerability has been resolved:
+> 
+> bpf: Annotate bpf_long_memcpy with data_race
+> 
+> syzbot reported a data race splat between two processes trying to
+> update the same BPF map value via syscall on different CPUs:
+> 
+>   BUG: KCSAN: data-race in bpf_percpu_array_update / bpf_percpu_array_update
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/watchdog/intel-mid_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
-index 06d5d207a065..8d71f6a2236b 100644
---- a/drivers/watchdog/intel-mid_wdt.c
-+++ b/drivers/watchdog/intel-mid_wdt.c
-@@ -127,7 +127,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct watchdog_device *wdt_dev;
--	struct intel_mid_wdt_pdata *pdata = dev->platform_data;
-+	struct intel_mid_wdt_pdata *pdata = dev_get_platdata(dev);
- 	struct mid_wdt *mid;
- 	int ret;
- 
+I would like to dispute this CVE. It adds data_race annotation which
+doesn't have any impact on the code generation.
 -- 
-2.43.0.rc1.1.gbec44491f096
-
+Michal Hocko
+SUSE Labs
