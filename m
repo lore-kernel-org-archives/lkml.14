@@ -1,31 +1,30 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEEB128374;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0A312D20D;
 	Tue,  5 Mar 2024 23:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709681208; cv=none; b=bmnMPzHfBd0eOE5oVm+G1Whg59KKmI7I7CQf4QNkkvzbjG8higx1C+7bBBBSPlLsmuPKbLzWLmW3ApWGzO3OAhvzugqNf8a1ri0a1FFIKPu7Tbgx9Rlqlip0O9Ke5DHHN08v+ieE2H6OPdkWWINfFi3VFA1CjAgEz6MuNfg94a8=
+	t=1709681208; cv=none; b=YY46E9RCZaNT3H0DJUZoZ9FKPrrsgCyG0lHuUPVl08VXrKoJiGwfHjRgDKTU4C9YVMbKf0nfcekGj5pV5Qo8MkD35cNWozpLEaMAfYXbbc+Qr4Sy2qIdKtP/FxKeCtbeu6H/dSKbS1PzjtKS2PHsRay7RsUfXDz0XH+zEpS4Wgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709681208; c=relaxed/simple;
-	bh=2BAC8prJg5yf1usqspCzk9cPk0M5L7xBiL4UcGSLCPs=;
+	bh=31ibeEGJ5Em1DeIcxHNvakpTfpM5nu/ekQP55sZySEU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VKZZgl8wxFFR3vF5H4/MrglLPKaIjja2uA/+chv8/ORkZMHy6SgrbR2jfr5VxV6Lo7vt25OLEiorQLBiNdbBzNkbhpZmy/XZ+0i93n6MVUWIaeH1r9Tdp3hPy4HEbB19Gul9pmYP28K74CbvRa6GcFNn4GR9XzrtAfRxUks59UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=sbaTKvBm; arc=none smtp.client-ip=128.199.32.197
+	 In-Reply-To:To:Cc; b=p/1K8y5jTgOFUAUkIvh3dwbXdhztey0sKeI8c4Z2veg2Qk/oqML4egd/C0R9C9HXYHpq0t870r38HhwqcydwCa9wR9cjsHBPoWNfvm4fl5LsYRokIf3mPlGkEmei8F7LJTLOgg+teqXMGgtd4oz0U15z/rnMoHCK0ZOBgiCxwEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=LnNfVQGt; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="sbaTKvBm"
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="LnNfVQGt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1709680706; bh=2BAC8prJg5yf1usqspCzk9cPk0M5L7xBiL4UcGSLCPs=;
+	t=1709680705; bh=31ibeEGJ5Em1DeIcxHNvakpTfpM5nu/ekQP55sZySEU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=sbaTKvBmDiFRC5opqIOvKpWJEWQSUiwSeIMvhetcVaIdepjIH6TA/Vdo2EqnubMPo
-	 m2FNfte4jkS/BskyLsU+Q6adePa3/EHQRg95hOemrYsd4wF47i1x7GhklAObAlNNtK
-	 B6Y2A3C0nChgdPbH/gPmhGZFM5+tkART1I8PRxC0=
+	b=LnNfVQGtVh/089VnLWPm5bpqlJmpPTz36nu89g/EIwQRcYJmAmRXdZOqdmbDpC9vR
+	 qAClE+Uvbo9tVfDsBfmFR59sscXGwovyxPItCUu0yoS2CMhfqbxBGrcJfPvsIVv4nI
+	 Mc0W7N32YsVC0w2eWBXc5/dECbKacVZFj8in61qU=
 From: Luca Weiss <luca@z3ntu.xyz>
-Date: Wed, 06 Mar 2024 00:18:07 +0100
-Subject: [PATCH 4/5] ARM: dts: qcom: msm8974pro-castor: Add
- debounce-interval for keys
+Date: Wed, 06 Mar 2024 00:18:05 +0100
+Subject: [PATCH 2/5] ARM: dts: qcom: msm8974pro-castor: Add mmc aliases
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +33,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240306-castor-changes-v1-4-2286eaf85fff@z3ntu.xyz>
+Message-Id: <20240306-castor-changes-v1-2-2286eaf85fff@z3ntu.xyz>
 References: <20240306-castor-changes-v1-0-2286eaf85fff@z3ntu.xyz>
 In-Reply-To: <20240306-castor-changes-v1-0-2286eaf85fff@z3ntu.xyz>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
@@ -45,24 +44,25 @@ To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=945; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=2BAC8prJg5yf1usqspCzk9cPk0M5L7xBiL4UcGSLCPs=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBl56g+F6B1hXGnRxC7F7HnYyGoBzsyRRhWlb1u6
- j+kcTJVZOGJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZeeoPgAKCRBy2EO4nU3X
- VpTxEACPdpFe1qyZ6hvdzwvq40zADoUQCaSgjW2AFeriE0Sabq2gduhNdxczGm/jEM0rCfh7eR1
- w1/LxUk5MMquVTQYCwc5JujKb6eYxptuNPFCTjHS+JbbO7/NroKbSScOb4lIPav+h0ATnThUTwK
- RxdydhhrCr0nQwomrn84gLHwwNg45LI0SO260XEIrhhUKAJmggX7iJuspI/xSDzwyz0JSFe8TWG
- 8oh+qZifqWd6bcTX6acon4ShWItv/KqYWOvphPWzxtTglAwb4/VnIYtIa0wXtLeUhJFQmCf7jkp
- e3ToZnBdrdTILi16CycuxcjYbPM6oM28145MdQwnE1zNzQkg5jY4cHsLsHC4EopAYadl/7P5ggm
- GwwYPqFeGvT8pwS7hWdUtR4pJmmLcJxzNtn2p8WkX/6gI8ZxhUZbqO33AJLzfwHMClvin4VPm5D
- xDnO5dgALY3mjukmqOvRfnUv/8fo5aAyzjvqivCVVbd/gt2v7LBlK+nRcVvSsxITARvH+rOW1Qf
- 2Zv3uxbtx9dwYqk764oboqCqtdNopCcSa5nk6aQsRVGkfBD1fDPEvyZGXsH14EE8GkFzJIcQUEl
- 8mVremH+dxIdkG8vvR8FJPTOX1uoyCyZFjimV5eYxrkbJweobmwmrk3WKd+tEyrkhBotQ0Fbzvv
- RItRR2nP2WsnKaw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=822; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=31ibeEGJ5Em1DeIcxHNvakpTfpM5nu/ekQP55sZySEU=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBl56g8h6ORRDJyVZSt309qt0OmUG3CrqdTbuf8s
+ qFMJlsELrKJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZeeoPAAKCRBy2EO4nU3X
+ Viz8EADOuKWvxh6qAS6qgr7ptj0750yFhmVJA8pdL0r1EMca+TYmDjHaSfkWqwHCTbBjVKg4HX7
+ dyAx/ut+Q5odb/O4X+2MUEnIBM9L2KS+s1eVwOAZYLdz+wkeyoVgbeaX50Pb3QP76MvjMAgHjdA
+ uChP186u1AXncRsXD0j4CK163pcElrAkkNPFbT9C4yOWQssWSGda6wkp5Zm9uu9dY+NqTrU3vme
+ E4PDNQ/sPOvEFODW1aK2fH4sm0xqNmsLMFmBAdaMCHZTOwJDWDslZAG8bF3nqiq5aBZ0x9BQsIt
+ nF2d464OwcXzAEv6wQBcjrx31M9qOSXJGlkeJB6Tq1Bw50eGlaVZjcQptCG7MGLWBFAgs2EprI0
+ Tr4bai7GjFDajUmHw4Wdzji5I+YdwmcP5MDq6UWGtUrzdUAs53poDPOEwCli87SJPfEVvwaMbR6
+ +Hr96diSucU2pvK1ZP/YWSp9q6u6xHFETtveqpWFFU82AgvRDwvgOQk3OhADVuCtebNE87slWOj
+ kiJNlOXuldl1sjDRvp/qy6A+k6X2q2eED2CMS8g4Cqf3OvUWtVqznUDr5xAT9JCLpNwNRjCrrtF
+ gUKtbqUQ5KFWQ9jFKm9L9pK3XEmeYEzhyMwTrxH6BWI4YUhW3i67gzgJIUEzOoR3We+uFuPrlbx
+ GnD5fJmTvMRfIeg==
 X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Set the debounce-interval for the GPIO keys.
+Add the mmc0 & mmc1 aliases to make sure internal storage always becomes
+/dev/mmcblk0 and SD card becomes /dev/mmcblk1
 
 Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 ---
@@ -70,24 +70,18 @@ Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974pro-sony-xperia-shinano-castor.dts b/arch/arm/boot/dts/qcom/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-index 97b55bda9189..c9f74bf2f8bd 100644
+index 2db2ddf00580..da554f72528a 100644
 --- a/arch/arm/boot/dts/qcom/qcom-msm8974pro-sony-xperia-shinano-castor.dts
 +++ b/arch/arm/boot/dts/qcom/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-@@ -32,12 +32,14 @@ key-volume-down {
- 			label = "volume_down";
- 			gpios = <&pm8941_gpios 2 GPIO_ACTIVE_LOW>;
- 			linux,code = <KEY_VOLUMEDOWN>;
-+			debounce-interval = <15>;
- 		};
+@@ -12,6 +12,8 @@ / {
+ 	chassis-type = "tablet";
  
- 		key-volume-up {
- 			label = "volume_up";
- 			gpios = <&pm8941_gpios 5 GPIO_ACTIVE_LOW>;
- 			linux,code = <KEY_VOLUMEUP>;
-+			debounce-interval = <15>;
- 		};
+ 	aliases {
++		mmc0 = &sdhc_1;
++		mmc1 = &sdhc_2;
+ 		serial0 = &blsp1_uart2;
+ 		serial1 = &blsp2_uart1;
  	};
- 
 
 -- 
 2.44.0
