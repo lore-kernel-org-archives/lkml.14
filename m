@@ -1,26 +1,26 @@
 Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2126.outbound.protection.partner.outlook.cn [139.219.17.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8270F7E59D;
-	Tue,  5 Mar 2024 07:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017867E59D;
+	Tue,  5 Mar 2024 07:10:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.126
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709622638; cv=fail; b=uRY8CRzxBcJq7IdPunE3s0zHDYyKftb6SUuf14kPW5nI+hquS8tIlBY75WKCKNvQn/3cttkfN1IzsmR+GL6H/8wxjRwNWWvW4OOQizvNLlnXTfxIDvnOmbtnNa9BPFJecTju1yY4Tf3MCnrES8uUnwvx0zys49dtUhAWUjXiu0s=
+	t=1709622646; cv=fail; b=ZCoIBs80vpEryyahSQ8o/0FYaqljT06y6J71xD4eXcEzoF5MtUHsyJSD0j0b9TFoDeDJ7F2NEP/jPLu2dqecEtK+mn0SlfEQdHD5/xhYvag3RFDp5ELmTI2SIQgpChGxwlKvXpgfAWLRUemg8Rv76FYxHgMamZKQKHrVOgMjzGg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709622638; c=relaxed/simple;
-	bh=cO26IKOAbyQc77U1e+/3YTxNuw7RIXUAiuSwIbH2d1M=;
+	s=arc-20240116; t=1709622646; c=relaxed/simple;
+	bh=fvpoLzKrkpHtFHcG9EX8hP0AgMkpQwrtWBsaj28pfxc=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YSS6+qwsEFU9LkMuXoUTsfovUahqddJiNt/mTJgDn2pSpl6IHAtJw3LQm7Jp9dHkNQjdg3CFXWmEd3wAQq75UmjvsrnBp+TKG4uWJS7dsVzHNrh49E5jArdKA6VNhKcUnDFP0YSA15zZjFn7eE11CrPn90X7KK9/aS6siwRXqDA=
+	 Content-Type:MIME-Version; b=NSOuiPL5GUiw1O9iWMcfu99cQxj2/e23qjHbXi15OlRhXZald1wdvzeqYUtu8iwY69V45ZKn2bRypUL/jzvZlQWuu92bT0J7fzl6aHEiLqbDLzZbi8jnIrKjuOmsJOe5lgLcvQscWhAOnsHxfWsQAk0sDUtTp2j5qBLDEXV6WFE=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.126
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RK6lJ0WJUEIVAQ00BDjonb2MeuzEfeejBy0mxk6O7/OmPYxvmu0537zsBK7P655U/DfMXhuNNQ3RyQge0eMycnPR9kU8x+qZnDiVK+roIaUgISInQAY9TzM5yzZuWO3jYI9VFyEi3Aw8Wn+P4oS2Q5exwVVa5PSAj9zgTFkzjlWyjXPCIMBB5l++kLCbBo2VOK/ADhwnOG4Rk2oo51sLaJMJLX9BnIsrqMye3jOKxVymM2CfVIdPzmiFQfV/4x5bPBTkO1EWUnqpgXxXcRHlxWBtnMTKJlyARfR2vuK2DynRKnzzwlcDJfNqU/HCDALFEA5Ctvyg+4IDDNV4+0hDEA==
+ b=XhCPF49ZIBbVVhrmsM5X5ZkDi+rU7s0UrQUWU7QfNt3sPXwERVji3T7GTnKhNLquucYrakXNz9q6AhZ2v1hyPd1MwwzIQ4GTvo496nEHguihGx95pnec2b1oVpd8o9YVTEZiR4ln5n5yzrREKU7i1jzVp+KUBhsP4eq8ridshWT4I+53nyX+Bt1jqCFWzdvGT7bRjK5HCt73rIFlcAZ9G5J5787BZhA6RNPvAGSeiSoyP7IRj1Mz5Afx2TgwtAJVyvL/1wsdBqH1rQy9UFc7qmRlaOxPqYwxFa9tphGV02hskjyBj+v56wL/RHo8goh7/yaWb9zUdbj5gLYjRygjLg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G+6iJQ1QE70/17cj4lkwfQHYdoRGK2aBsNuuLZGPuwo=;
- b=K3DVDXvd7cUWV/hxztpoXYZE7dTIcFJPxjE0LTHILFGAEje6VY5+W4AirrAmAeahRwIWDp9lxz82Oak78jB1DYTbRqVp63n6VeA4Vx6tRn86S3aDfs+7mPmhmdHhIvm6ELDrYBxwSwmykJgCogzosVOYJiRHTUMenwk6lW02tphpIkcuz20XtPT9234Jzq0c0piIN+t5TWdM36rqZE0FPSYrgTpCZq5bLKkU8Qfq0Vz42QL8Kt0SQoCcitXwSlYC4sBiInd8XdPD5I04nTb7o1PGL4SWLnLo773EqLO0ZdyWEyZLvJZVg76xodBi3oZlJpmOm7rVxTiRhXufuhXQPg==
+ bh=3vg5zTDVfx3zry/Rcynyfi4N2hWHxi4ZNRXcgpfI4UY=;
+ b=SYnxNGhIxW99TTFy4uEvjJ8q6S1kwquanfA07OudWu3cy4grp0d2QRJVPR2hdFvbuF9LxZqQrYszPdQrH8ydeoV5/g2nxdU8cBFKUF/vPfrTyHgyjAw4tzYWjmauzpOQaAQ4VSVSCvm8cgshhS2iSBVE/5S0dOPGtMMuEZ6DXizPnF697P2/lqiAYeIc/j0OKEC1AXFlSOdJ++imwkAO3kqDHfxbA91je/Q3Jt1OP/7W0GDt5+U/YncWeZp/2lmqh5h6s9OROFwce2xpy3fjGqXXy0hUUYERZcg4eDT0fzIDG4VLzy9coXFcxW5JpNGCuA8Fyy+wUnm9NK6N7kEatQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -30,11 +30,11 @@ Received: from SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:26::16) by SHXPR01MB0462.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:1e::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.51; Tue, 5 Mar
- 2024 07:10:24 +0000
+ 2024 07:10:31 +0000
 Received: from SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
  ([fe80::9ffd:1956:b45a:4a5d]) by
  SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn ([fe80::9ffd:1956:b45a:4a5d%6])
- with mapi id 15.20.7249.041; Tue, 5 Mar 2024 07:10:24 +0000
+ with mapi id 15.20.7249.041; Tue, 5 Mar 2024 07:10:31 +0000
 From: Jia Jie Ho <jiajie.ho@starfivetech.com>
 To: Herbert Xu <herbert@gondor.apana.org.au>,
 	"David S . Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ To: Herbert Xu <herbert@gondor.apana.org.au>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: [PATCH v4 2/7] crypto: starfive: Update hash dma usage
-Date: Tue,  5 Mar 2024 15:10:01 +0800
-Message-Id: <20240305071006.2181158-3-jiajie.ho@starfivetech.com>
+Subject: [PATCH v4 5/7] dmaengine: dw-axi-dmac: Support hardware quirks
+Date: Tue,  5 Mar 2024 15:10:04 +0800
+Message-Id: <20240305071006.2181158-6-jiajie.ho@starfivetech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240305071006.2181158-1-jiajie.ho@starfivetech.com>
 References: <20240305071006.2181158-1-jiajie.ho@starfivetech.com>
@@ -66,570 +66,199 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SHXPR01MB0670:EE_|SHXPR01MB0462:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5f1b1722-81e4-439c-d110-08dc3ce353b6
+X-MS-Office365-Filtering-Correlation-Id: d7cfa350-87a4-4430-7352-08dc3ce3583d
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	WrutaAvTcNrANabJgeyHIRK8loytaSdHtQHwxvUagsJA7eZMg3LOsIU0QUjfIF2QtKbwgJAp3EGhg/LYTmtHBRhOV4ihh7w9z0on1RCtaWGoj9NVEdxI0MojO6xiBkhO4Sg47tV29c6vroXaS1ImjOKgRAqZQZnLPRgox2epHx26KRuEt7b9mPFoMyr9ZomnvBK6WiD/20JRvhn5pYDdQt55fkgmEt1Tb0u5bAWufEMsn79h49MmjL2DYBbgaVQK1bqs7GjZ6KfCWYHBrmZJVijPiU0cH8OjK9VOWRNa0pE+TmWzVHT6fXjZswPpcc977I/UZ3dKLfHI6F7HTL+KlJOhe/rLy7G+w9TvQ0qq2eH47DbIfYdzXzpOgZ/Orfexvs0LhGIvMoKANDY4NyszGwKlJ3mfiwfHLchDWuBnBu9yuQF9xos68rn9K15D+oniBKIcJ9RxuDuY7p+bTQqmW5qp0C1VJPvxgUoayO2sk1oCzv7jUnjA7SrwstPTRaNWyMWQrp+19KDotvbtu3yZDw1BQAq6HWNkDs+9jpCBTRHDIEqTTOwEztzzgFpVYL4DJjgJDQX6Ne/LvNGT6513Hbnn/i+DJmzhw/DvmDuX4HzGFlGR27ATlf1jODaoyyVOhZz1jOgGtzHqbC7dvnhbSw==
+	n3Ygq72zUuaILTEh8qs+vNObodS/oVzhxLL4Ly7o2M7txlK0ZoU4TtWAiQr9iLk7pxOPqNlhgb1RvdrsW/z+eON7LKa/BTiKVLeBFoMim4AmueeWZVFqAlv8URVFKDfOHFIUCIyvY/DHOwvX7SF/rpMr7Cc+XtwpR7Dj6cym01isURVfT1luUCI0Z47oP1T4aBx0hbybffyMd5AQo37oQImHRsjKrugufxkWhWpk2e1w76JTXzHcPTLv8DENqQDJK3XbqrapNs8s00iSQq/6JU3hNmzS2tn0h9qSMRAEzoRGU6J6cOlq0SYHIGSuNsemljM7GrgbzfbhECY9lQxzpJNj4j3Rj4qGtS9rSB+7jWCfOqyTJKOhhF+sQBCb/kXbkjqBVliorKukT+oKwAw3LfefAE+PLys4NLfwl2iuRta5rv+d8rFRZzZ7ujsE1oolxbWSt53WkO7WokJLp6oQJZXKBVtxc/mGRyHg+D/RbdmnbecrdBtE/B7yjOeN3gcnttFmyLCo3M9rRW1ZjV4OO48ctbfu7k27ppND0EZY7lwuTr1/mfFvhBRyyL9VqyjD16Gn8n2qYKtaNWyuR6zwcbzrqxkNDnc7FLMaNf24LutEAtJbmkq1hKXkwhLc4+PvKQLOe/GsWmS2ORiUXCaVnw==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(38350700005)(921011);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?b67/26X0NU2I4wMGQdURIuXFiy1oK0rHOEqFuP9RQL5+ccfqS4VyLy5n1brb?=
- =?us-ascii?Q?V3BrbGyAleqERFGGoVKEs9MxiwMmzNmc5pkC8QBmhIIxXp8tHf+JRoGxtRYe?=
- =?us-ascii?Q?E3e7b/oQlPiYG5QicSjYIjtPN1Bjz2qDLOEzurG+e4BX/IZXKaePQp1aomOI?=
- =?us-ascii?Q?5ij84xMxB+A00EDB2zaE8ufB9zzQGVIaz9HZR7PcVDyvRAFdTs3c7Eqvlrzq?=
- =?us-ascii?Q?IsfWuhWaXzyVxV0NrCr5fsTjQx8evMU8iQPxLMVHt+TSIq9q0Y2qjF3799Fg?=
- =?us-ascii?Q?9LyILp8D3HorEVAu0yLLpNY6ieAHJ682//ocPDVFUIsNtMn+KMS3hhgWZBs+?=
- =?us-ascii?Q?GR1lSOEv2jjUceVvepsuH5HbsmLYpm61dzFh52PwZ/br240jIxKfkgBLVLv5?=
- =?us-ascii?Q?SsyZaU7Qw8yYmlVVhEkuiNY0UFvODqX2dCnS9qS7RkliQ1SJ7rYh/TBoHRzc?=
- =?us-ascii?Q?E661ulpUMWTIY0+xRX/21sWsISFd8RtJavZzeqwvPzUEOpkSJG+f7lDeOgk6?=
- =?us-ascii?Q?02igBM9vs49/kce2X7ZtROCnxjQfWHrK90AUnqtMmh/pIZrRifhsOwdL4z1h?=
- =?us-ascii?Q?D+Kd44TohjEk+0XEQHwzV2R3jnBxlxAj1yPbR2fXRjdjRGKWYi0LwdR+WsXk?=
- =?us-ascii?Q?RZ1ZUVOkro/jPY+CPzME+FWXapkLrgGfWIIQ2g8tO/EOR0APF9T+zZemgqLj?=
- =?us-ascii?Q?pFODhpDvSTVzzWN0iKFXchACMV03qaTc4j7sny/FuQ+sC+6UA4IAnbNMtI6t?=
- =?us-ascii?Q?/6UBp2QBLIGSygVQyQBibSo7gQcqr0h0YKhHcxQRZOAjrSS/b126JeJu9TNe?=
- =?us-ascii?Q?bKnGambA4RmgXm13gaSLLjZ/f3MPUX0ZsEYq9qcdh6SIucryUGKmgkirGviN?=
- =?us-ascii?Q?yk+a0yUjYICCzosdXa7TU2Tar2KWatwwhLVxAJCdeSktu9oO5/xWtvT554MD?=
- =?us-ascii?Q?5ibfFU3ZeDtyTdZnFhN9M2rRWTKH19miY+3rfP3CqbgRwbBqC7N1AY+0LMok?=
- =?us-ascii?Q?QFqRsjjXi7rYOArP4lGTx92ztxtYWlMiNjPtRB/1mC6MWpK5rc8YjmD2Ia9i?=
- =?us-ascii?Q?wtxRvyNebgLhyRtVxUo3QqrlJ0FYMlpLDwrY7gf1+WNXABzPbFpKmG4hARxx?=
- =?us-ascii?Q?8edudmzUhyiVEWiS2t+OpzSPle1mQa3ul4z/kM8mwe7gQumPNysnIpcSdz0v?=
- =?us-ascii?Q?UlPX3y8ZWopg0ZhwUG/gzYfPDxgecJo24vhwM1VJd53QNvoIeoaGaXhwfPZ7?=
- =?us-ascii?Q?WXSWIYcIuJscLkcrThI/apnuYsf7vbSnYugEpumOYYagja3yhFRqZ59BYavT?=
- =?us-ascii?Q?eTw5053IhuV744MB/7l8iLXoLJJKofX6ZUr3Z+LJOlz8a4SxzQGoHmORkoxY?=
- =?us-ascii?Q?MPdKgxtPayZfTjREzEeqdDJThYQdpjUtWtUPYErEXVsoo+FGwtq4ckSX8Ycz?=
- =?us-ascii?Q?JPJpUHc5Ed89BF+38RDYvZmIxnrn8/TVtaQdfiNw41HDjCSCskw4MIK4HvWd?=
- =?us-ascii?Q?EPOHX+e1+UppnpjRpeoDc/x3jC4l3JeESbqDkpMYVQq2ExGz6Q0Ag1DkL38f?=
- =?us-ascii?Q?pvJ0u/kmJCyQhJE0gPmUaU3EnOJqyWckNo/7UCHN5c15NI0whDNhplZwM8Ut?=
- =?us-ascii?Q?uw=3D=3D?=
+	=?us-ascii?Q?vpj3sTR8SuCOB1z0wpt+g+4QOo9ZD9uUZ73fjBI9CZHZ36lNk7B3i2ZFUawX?=
+ =?us-ascii?Q?qu3+7oWjX47EV6VYstK0binmqnu2LbNnyGoeB1nELbKD+P8Y1Y3ZOEDjpDX1?=
+ =?us-ascii?Q?Ap0F+HW4PJLjLFxPwNE17mQm0kWG+FpsI3qoQ4fReK8O2KfwjbViIDBIM3im?=
+ =?us-ascii?Q?MxFC93dorQim/41oI8QqyP/YprkSQfCl9TCncP6Z+uyDvNKl56UwXVmOMb9z?=
+ =?us-ascii?Q?wrRIWjgIhoiGF5SZ1yZxTOGQnYUql61AT++U/sdtxv2LLlfbeBADb8TPAWpV?=
+ =?us-ascii?Q?KmGLzTbEZdS1VFubUooYvPgAt3b9jbGud8uStn3UUbCX55oNXaAcZUdlcClz?=
+ =?us-ascii?Q?kezwtS8txjXC6HMTIbUuyfIZ+smQObFiGuDx/z14HK98wyG30ENQ8Bq1r2Rg?=
+ =?us-ascii?Q?kCevuxE34CeQDAJgmZ57DA+LvaELluKwOSLP8zauLshtpo3U/JWfwtkkQA05?=
+ =?us-ascii?Q?BXJ0igNL7QL974u6M6Tdo+k5sIUMesKnYrSeWLje9BV2o9KvBlhNqLZpMpdn?=
+ =?us-ascii?Q?WV5pUkulQOFDIPGGKiYfossfqJyQiJHDeZx/kHApbOxcjB0OneHGgArvjPHV?=
+ =?us-ascii?Q?7QOMKXGnoql2tlaYl6SfASQ4rU8/lhOKT9Oub/rGGuVV02jEdDXOl9V9UMjL?=
+ =?us-ascii?Q?PKgOmWVGiLadmTuwLSLt4NbqGIRYzSFtQw+d0s17vSENyUOB9QcDDyzjCBrL?=
+ =?us-ascii?Q?8a3Enr4Zb4wC4UudwPNyt4R/iI6QZ/2iG0/ciSRhUkoiZZQubET0/xJgtsdE?=
+ =?us-ascii?Q?KCH94lJTnO+nGLi/rqJypH5/HWX0/YGdGQEdP1ZAB6edPf6cPcr3IHGVA8Q+?=
+ =?us-ascii?Q?95nGOycMEcQPlwHHw3/VQ/9uOThXBtZV33dlC8LniR7mfwxqkaShWoIzNv8N?=
+ =?us-ascii?Q?y+pYFK8P/oZUt43I86Axf6cEMj4bin3tRWgjWbS7qK1RlW7IjRZLmR/nm2Cs?=
+ =?us-ascii?Q?On18Mcs5gL4yl/lhHYkiwILaujFJwflRXaHAq77CuukgQA6dXWGt/jPMFXcG?=
+ =?us-ascii?Q?TB0QWYfD81coSQSfpRJzAC9V8lWE/OcsMIcYLLd5nUTsjcEqyRlPV0cwA3hS?=
+ =?us-ascii?Q?Q4mTlruCUcrnAc4mfUMi8qCmCi7fiW84CTueYolNEuY8pmN+Zy//c7ev+/2+?=
+ =?us-ascii?Q?Z50vw6TFB1ic08Jw3oV+4UXyJsyFeOFSVeLQ/8606x1UoeYIpuNedFIgTEsA?=
+ =?us-ascii?Q?D8AVGLP2zj2BdTMOS2mJjEjl0ttihwz31Jtps3iZDuCH/XE3J995vpSH+XXC?=
+ =?us-ascii?Q?NgkCAoKESol09oEqrky+ptueY5g6WdqsB0wcJloDcS6qwqHArzOd1BqeWyv3?=
+ =?us-ascii?Q?STyFQeV8mpMtvXAx+R6ZpobjvOjrNFriTfJkyy8um9G2wrZSu/iv+H41nGkj?=
+ =?us-ascii?Q?pwhul+Y8dIcsPbGNTVzLVDU/XkXkvXpOo44dN5ec2pSAtox+yh/5EqAtX3fW?=
+ =?us-ascii?Q?+/dTicO9RtfmUnh0wJ01bW3aOISBDL+0vhHtbJdGmXHIMdveykmMozLpFuNM?=
+ =?us-ascii?Q?9I7PJDh6W4Q+TVyphVZqfR6b6K49chBOZeohghrOOSxFgZRsJHdxXLsRnXQ4?=
+ =?us-ascii?Q?j9Tb0cWVBy2ZcCYusjDOHnEdeYJj1/J2S3S6pdrAhGVkOfRyr+0X0AUeO/Q9?=
+ =?us-ascii?Q?DQ=3D=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f1b1722-81e4-439c-d110-08dc3ce353b6
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7cfa350-87a4-4430-7352-08dc3ce3583d
 X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 07:10:24.1984
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 07:10:31.7712
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P4AdQcKM9PJsoDAZ1AJTqpvBs2Z/SBiSmUx1HypumT65Bg6/v/HJTbiysickQj4gqniMzSE0JxKMuZRp9wsseSN73iIrL6Tk1IGjYpCOTfc=
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4QJVEyYshNA4JZhMilNbJ5iWQl4FMYTtD6BB0ZZ7bwtNSM7UqB6hvqnYJ266KhFBG8xuX6OcVIxtH8izXdJGgESEyIkzmrZOz/ikZj3mMiU=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0462
 
-Current hash uses sw fallback for non-word aligned input scatterlists.
-Add support for unaligned cases utilizing the data valid mask for dma.
+Adds separate dma hardware descriptor setup for JH8100 hardware quirks.
+JH8100 engine uses AXI1 master for data transfer but current dma driver
+is hardcoded to use AXI0 only. The FIFO offset needs to be incremented due
+to hardware limitations.
 
 Signed-off-by: Jia Jie Ho <jiajie.ho@starfivetech.com>
 ---
- drivers/crypto/starfive/jh7110-cryp.c |   9 -
- drivers/crypto/starfive/jh7110-cryp.h |   4 +-
- drivers/crypto/starfive/jh7110-hash.c | 275 +++++++++++---------------
- 3 files changed, 112 insertions(+), 176 deletions(-)
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 32 ++++++++++++++++---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  2 ++
+ include/linux/dma/dw_axi.h                    | 11 +++++++
+ 3 files changed, 40 insertions(+), 5 deletions(-)
+ create mode 100644 include/linux/dma/dw_axi.h
 
-diff --git a/drivers/crypto/starfive/jh7110-cryp.c b/drivers/crypto/starfive/jh7110-cryp.c
-index 425fddf3a8ab..2685f5483639 100644
---- a/drivers/crypto/starfive/jh7110-cryp.c
-+++ b/drivers/crypto/starfive/jh7110-cryp.c
-@@ -103,12 +103,6 @@ static irqreturn_t starfive_cryp_irq(int irq, void *priv)
- 		tasklet_schedule(&cryp->aes_done);
- 	}
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index a86a81ff0caa..684cabe33c7d 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -647,6 +647,7 @@ static void set_desc_dest_master(struct axi_dma_hw_desc *hw_desc,
  
--	if (status & STARFIVE_IE_FLAG_HASH_DONE) {
--		mask |= STARFIVE_IE_MASK_HASH_DONE;
--		writel(mask, cryp->base + STARFIVE_IE_MASK_OFFSET);
--		tasklet_schedule(&cryp->hash_done);
--	}
--
- 	return IRQ_HANDLED;
- }
- 
-@@ -132,7 +126,6 @@ static int starfive_cryp_probe(struct platform_device *pdev)
- 				     "Error remapping memory for platform device\n");
- 
- 	tasklet_init(&cryp->aes_done, starfive_aes_done_task, (unsigned long)cryp);
--	tasklet_init(&cryp->hash_done, starfive_hash_done_task, (unsigned long)cryp);
- 
- 	cryp->phys_base = res->start;
- 	cryp->dma_maxburst = 32;
-@@ -220,7 +213,6 @@ static int starfive_cryp_probe(struct platform_device *pdev)
- 	reset_control_assert(cryp->rst);
- 
- 	tasklet_kill(&cryp->aes_done);
--	tasklet_kill(&cryp->hash_done);
- 
- 	return ret;
- }
-@@ -234,7 +226,6 @@ static void starfive_cryp_remove(struct platform_device *pdev)
- 	starfive_rsa_unregister_algs();
- 
- 	tasklet_kill(&cryp->aes_done);
--	tasklet_kill(&cryp->hash_done);
- 
- 	crypto_engine_stop(cryp->engine);
- 	crypto_engine_exit(cryp->engine);
-diff --git a/drivers/crypto/starfive/jh7110-cryp.h b/drivers/crypto/starfive/jh7110-cryp.h
-index 6cdf6db5d904..82327e21d340 100644
---- a/drivers/crypto/starfive/jh7110-cryp.h
-+++ b/drivers/crypto/starfive/jh7110-cryp.h
-@@ -91,6 +91,7 @@ union starfive_hash_csr {
- #define STARFIVE_HASH_KEY_DONE			BIT(13)
- 		u32 key_done			:1;
- 		u32 key_flag			:1;
-+#define STARFIVE_HASH_HMAC_DONE			BIT(15)
- 		u32 hmac_done			:1;
- #define STARFIVE_HASH_BUSY			BIT(16)
- 		u32 busy			:1;
-@@ -189,7 +190,7 @@ struct starfive_cryp_dev {
- 	struct scatter_walk			out_walk;
- 	struct crypto_engine			*engine;
- 	struct tasklet_struct			aes_done;
--	struct tasklet_struct			hash_done;
-+	struct completion			dma_done;
- 	size_t					assoclen;
- 	size_t					total_in;
- 	size_t					total_out;
-@@ -237,6 +238,5 @@ void starfive_rsa_unregister_algs(void);
- int starfive_aes_register_algs(void);
- void starfive_aes_unregister_algs(void);
- 
--void starfive_hash_done_task(unsigned long param);
- void starfive_aes_done_task(unsigned long param);
- #endif
-diff --git a/drivers/crypto/starfive/jh7110-hash.c b/drivers/crypto/starfive/jh7110-hash.c
-index b6d1808012ca..2c60a1047bc3 100644
---- a/drivers/crypto/starfive/jh7110-hash.c
-+++ b/drivers/crypto/starfive/jh7110-hash.c
-@@ -36,15 +36,22 @@
- #define STARFIVE_HASH_BUFLEN		SHA512_BLOCK_SIZE
- #define STARFIVE_HASH_RESET		0x2
- 
--static inline int starfive_hash_wait_busy(struct starfive_cryp_ctx *ctx)
-+static inline int starfive_hash_wait_busy(struct starfive_cryp_dev *cryp)
+ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
+ 				  struct axi_dma_hw_desc *hw_desc,
++				  struct axi_dma_desc *desc,
+ 				  dma_addr_t mem_addr, size_t len)
  {
--	struct starfive_cryp_dev *cryp = ctx->cryp;
- 	u32 status;
+ 	unsigned int data_width = BIT(chan->chip->dw->hdata->m_data_width);
+@@ -655,6 +656,8 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
+ 	dma_addr_t device_addr;
+ 	size_t axi_block_ts;
+ 	size_t block_ts;
++	bool hw_quirks = chan->quirks & DWAXIDMAC_STARFIVE_SM_ALGO;
++	u32 val;
+ 	u32 ctllo, ctlhi;
+ 	u32 burst_len;
  
- 	return readl_relaxed_poll_timeout(cryp->base + STARFIVE_HASH_SHACSR, status,
- 					  !(status & STARFIVE_HASH_BUSY), 10, 100000);
- }
+@@ -675,7 +678,8 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
+ 		device_addr = chan->config.dst_addr;
+ 		ctllo = reg_width << CH_CTL_L_DST_WIDTH_POS |
+ 			mem_width << CH_CTL_L_SRC_WIDTH_POS |
+-			DWAXIDMAC_CH_CTL_L_NOINC << CH_CTL_L_DST_INC_POS |
++			(hw_quirks ? DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_DST_INC_POS :
++				     DWAXIDMAC_CH_CTL_L_NOINC << CH_CTL_L_DST_INC_POS) |
+ 			DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_SRC_INC_POS;
+ 		block_ts = len >> mem_width;
+ 		break;
+@@ -685,7 +689,8 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
+ 		ctllo = reg_width << CH_CTL_L_SRC_WIDTH_POS |
+ 			mem_width << CH_CTL_L_DST_WIDTH_POS |
+ 			DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_DST_INC_POS |
+-			DWAXIDMAC_CH_CTL_L_NOINC << CH_CTL_L_SRC_INC_POS;
++			(hw_quirks ? DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_SRC_INC_POS :
++				     DWAXIDMAC_CH_CTL_L_NOINC << CH_CTL_L_SRC_INC_POS);
+ 		block_ts = len >> reg_width;
+ 		break;
+ 	default:
+@@ -726,6 +731,17 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
  
-+static inline int starfive_hash_wait_hmac_done(struct starfive_cryp_dev *cryp)
-+{
-+	u32 status;
-+
-+	return readl_relaxed_poll_timeout(cryp->base + STARFIVE_HASH_SHACSR, status,
-+					  (status & STARFIVE_HASH_HMAC_DONE), 10, 100000);
-+}
-+
- static inline int starfive_hash_wait_key_done(struct starfive_cryp_ctx *ctx)
- {
- 	struct starfive_cryp_dev *cryp = ctx->cryp;
-@@ -84,64 +91,26 @@ static int starfive_hash_hmac_key(struct starfive_cryp_ctx *ctx)
- 	return 0;
- }
+ 	set_desc_src_master(hw_desc);
  
--static void starfive_hash_start(void *param)
-+static void starfive_hash_start(struct starfive_cryp_dev *cryp)
- {
--	struct starfive_cryp_ctx *ctx = param;
--	struct starfive_cryp_request_ctx *rctx = ctx->rctx;
--	struct starfive_cryp_dev *cryp = ctx->cryp;
--	union starfive_alg_cr alg_cr;
- 	union starfive_hash_csr csr;
--	u32 stat;
--
--	dma_unmap_sg(cryp->dev, rctx->in_sg, rctx->in_sg_len, DMA_TO_DEVICE);
--
--	alg_cr.v = 0;
--	alg_cr.clear = 1;
--
--	writel(alg_cr.v, cryp->base + STARFIVE_ALG_CR_OFFSET);
- 
- 	csr.v = readl(cryp->base + STARFIVE_HASH_SHACSR);
- 	csr.firstb = 0;
- 	csr.final = 1;
--
--	stat = readl(cryp->base + STARFIVE_IE_MASK_OFFSET);
--	stat &= ~STARFIVE_IE_MASK_HASH_DONE;
--	writel(stat, cryp->base + STARFIVE_IE_MASK_OFFSET);
- 	writel(csr.v, cryp->base + STARFIVE_HASH_SHACSR);
- }
- 
--static int starfive_hash_xmit_dma(struct starfive_cryp_ctx *ctx)
-+static void starfive_hash_dma_callback(void *param)
- {
--	struct starfive_cryp_request_ctx *rctx = ctx->rctx;
--	struct starfive_cryp_dev *cryp = ctx->cryp;
--	struct dma_async_tx_descriptor	*in_desc;
--	union  starfive_alg_cr alg_cr;
--	int total_len;
--	int ret;
--
--	if (!rctx->total) {
--		starfive_hash_start(ctx);
--		return 0;
--	}
-+	struct starfive_cryp_dev *cryp = param;
- 
--	writel(rctx->total, cryp->base + STARFIVE_DMA_IN_LEN_OFFSET);
--
--	total_len = rctx->total;
--	total_len = (total_len & 0x3) ? (((total_len >> 2) + 1) << 2) : total_len;
--	sg_dma_len(rctx->in_sg) = total_len;
--
--	alg_cr.v = 0;
--	alg_cr.start = 1;
--	alg_cr.hash_dma_en = 1;
--
--	writel(alg_cr.v, cryp->base + STARFIVE_ALG_CR_OFFSET);
--
--	ret = dma_map_sg(cryp->dev, rctx->in_sg, rctx->in_sg_len, DMA_TO_DEVICE);
--	if (!ret)
--		return dev_err_probe(cryp->dev, -EINVAL, "dma_map_sg() error\n");
-+	complete(&cryp->dma_done);
-+}
- 
--	cryp->cfg_in.direction = DMA_MEM_TO_DEV;
--	cryp->cfg_in.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+static void starfive_hash_dma_init(struct starfive_cryp_dev *cryp)
-+{
-+	cryp->cfg_in.src_addr_width = DMA_SLAVE_BUSWIDTH_16_BYTES;
- 	cryp->cfg_in.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	cryp->cfg_in.src_maxburst = cryp->dma_maxburst;
- 	cryp->cfg_in.dst_maxburst = cryp->dma_maxburst;
-@@ -149,50 +118,48 @@ static int starfive_hash_xmit_dma(struct starfive_cryp_ctx *ctx)
- 
- 	dmaengine_slave_config(cryp->tx, &cryp->cfg_in);
- 
--	in_desc = dmaengine_prep_slave_sg(cryp->tx, rctx->in_sg,
--					  ret, DMA_MEM_TO_DEV,
--					  DMA_PREP_INTERRUPT  |  DMA_CTRL_ACK);
--
--	if (!in_desc)
--		return -EINVAL;
--
--	in_desc->callback = starfive_hash_start;
--	in_desc->callback_param = ctx;
--
--	dmaengine_submit(in_desc);
--	dma_async_issue_pending(cryp->tx);
--
--	return 0;
-+	init_completion(&cryp->dma_done);
- }
- 
--static int starfive_hash_xmit(struct starfive_cryp_ctx *ctx)
-+static int starfive_hash_dma_xfer(struct starfive_cryp_dev *cryp,
-+				  struct scatterlist *sg)
- {
--	struct starfive_cryp_request_ctx *rctx = ctx->rctx;
--	struct starfive_cryp_dev *cryp = ctx->cryp;
-+	struct dma_async_tx_descriptor *in_desc;
-+	union starfive_alg_cr alg_cr;
- 	int ret = 0;
- 
--	rctx->csr.hash.v = 0;
--	rctx->csr.hash.reset = 1;
--	writel(rctx->csr.hash.v, cryp->base + STARFIVE_HASH_SHACSR);
--
--	if (starfive_hash_wait_busy(ctx))
--		return dev_err_probe(cryp->dev, -ETIMEDOUT, "Error resetting engine.\n");
-+	alg_cr.v = 0;
-+	alg_cr.start = 1;
-+	alg_cr.hash_dma_en = 1;
-+	writel(alg_cr.v, cryp->base + STARFIVE_ALG_CR_OFFSET);
- 
--	rctx->csr.hash.v = 0;
--	rctx->csr.hash.mode = ctx->hash_mode;
--	rctx->csr.hash.ie = 1;
-+	writel(sg_dma_len(sg), cryp->base + STARFIVE_DMA_IN_LEN_OFFSET);
-+	sg_dma_len(sg) = ALIGN(sg_dma_len(sg), sizeof(u32));
- 
--	if (ctx->is_hmac) {
--		ret = starfive_hash_hmac_key(ctx);
--		if (ret)
--			return ret;
--	} else {
--		rctx->csr.hash.start = 1;
--		rctx->csr.hash.firstb = 1;
--		writel(rctx->csr.hash.v, cryp->base + STARFIVE_HASH_SHACSR);
-+	in_desc = dmaengine_prep_slave_sg(cryp->tx, sg, 1, DMA_MEM_TO_DEV,
-+					  DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	if (!in_desc) {
-+		ret = -EINVAL;
-+		goto end;
- 	}
- 
--	return starfive_hash_xmit_dma(ctx);
-+	reinit_completion(&cryp->dma_done);
-+	in_desc->callback = starfive_hash_dma_callback;
-+	in_desc->callback_param = cryp;
-+
-+	dmaengine_submit(in_desc);
-+	dma_async_issue_pending(cryp->tx);
-+
-+	if (!wait_for_completion_timeout(&cryp->dma_done,
-+					 msecs_to_jiffies(1000)))
-+		ret = -ETIMEDOUT;
-+
-+end:
-+	alg_cr.v = 0;
-+	alg_cr.clear = 1;
-+	writel(alg_cr.v, cryp->base + STARFIVE_ALG_CR_OFFSET);
-+
-+	return ret;
- }
- 
- static int starfive_hash_copy_hash(struct ahash_request *req)
-@@ -215,58 +182,74 @@ static int starfive_hash_copy_hash(struct ahash_request *req)
- 	return 0;
- }
- 
--void starfive_hash_done_task(unsigned long param)
-+static void starfive_hash_done_task(struct starfive_cryp_dev *cryp)
- {
--	struct starfive_cryp_dev *cryp = (struct starfive_cryp_dev *)param;
- 	int err = cryp->err;
- 
- 	if (!err)
- 		err = starfive_hash_copy_hash(cryp->req.hreq);
- 
--	/* Reset to clear hash_done in irq register*/
--	writel(STARFIVE_HASH_RESET, cryp->base + STARFIVE_HASH_SHACSR);
--
- 	crypto_finalize_hash_request(cryp->engine, cryp->req.hreq, err);
- }
- 
--static int starfive_hash_check_aligned(struct scatterlist *sg, size_t total, size_t align)
-+static int starfive_hash_one_request(struct crypto_engine *engine, void *areq)
- {
--	int len = 0;
-+	struct ahash_request *req = container_of(areq, struct ahash_request,
-+						 base);
-+	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
-+	struct starfive_cryp_request_ctx *rctx = ctx->rctx;
-+	struct starfive_cryp_dev *cryp = ctx->cryp;
-+	struct scatterlist *tsg;
-+	int ret, src_nents, i;
- 
--	if (!total)
--		return 0;
-+	writel(STARFIVE_HASH_RESET, cryp->base + STARFIVE_HASH_SHACSR);
- 
--	if (!IS_ALIGNED(total, align))
--		return -EINVAL;
-+	if (starfive_hash_wait_busy(cryp))
-+		return dev_err_probe(cryp->dev, -ETIMEDOUT, "Error resetting hardware\n");
- 
--	while (sg) {
--		if (!IS_ALIGNED(sg->offset, sizeof(u32)))
--			return -EINVAL;
-+	rctx->csr.hash.v = 0;
-+	rctx->csr.hash.mode = ctx->hash_mode;
- 
--		if (!IS_ALIGNED(sg->length, align))
--			return -EINVAL;
-+	if (ctx->is_hmac) {
-+		ret = starfive_hash_hmac_key(ctx);
-+		if (ret)
-+			return ret;
-+	} else {
-+		rctx->csr.hash.start = 1;
-+		rctx->csr.hash.firstb = 1;
-+		writel(rctx->csr.hash.v, cryp->base + STARFIVE_HASH_SHACSR);
++	if (hw_quirks) {
++		if (chan->direction == DMA_MEM_TO_DEV) {
++			set_desc_dest_master(hw_desc, desc);
++		} else {
++			/* Select AXI1 for src master */
++			val = le32_to_cpu(hw_desc->lli->ctl_lo);
++			val |= CH_CTL_L_SRC_MAST;
++			hw_desc->lli->ctl_lo = cpu_to_le32(val);
++		}
 +	}
 +
-+	/* No input message, get digest and end. */
-+	if (!rctx->total)
-+		goto hash_start;
-+
-+	starfive_hash_dma_init(cryp);
-+
-+	for_each_sg(rctx->in_sg, tsg, rctx->in_sg_len, i) {
-+		src_nents = dma_map_sg(cryp->dev, tsg, 1, DMA_TO_DEVICE);
-+		if (src_nents == 0)
-+			return dev_err_probe(cryp->dev, -ENOMEM,
-+					     "dma_map_sg error\n");
- 
--		len += sg->length;
--		sg = sg_next(sg);
-+		ret = starfive_hash_dma_xfer(cryp, tsg);
-+		dma_unmap_sg(cryp->dev, tsg, 1, DMA_TO_DEVICE);
-+		if (ret)
-+			return ret;
- 	}
- 
--	if (len != total)
--		return -EINVAL;
-+hash_start:
-+	starfive_hash_start(cryp);
- 
--	return 0;
--}
-+	if (starfive_hash_wait_busy(cryp))
-+		return dev_err_probe(cryp->dev, -ETIMEDOUT, "Error generating digest\n");
- 
--static int starfive_hash_one_request(struct crypto_engine *engine, void *areq)
--{
--	struct ahash_request *req = container_of(areq, struct ahash_request,
--						 base);
--	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
--	struct starfive_cryp_dev *cryp = ctx->cryp;
-+	if (ctx->is_hmac)
-+		cryp->err = starfive_hash_wait_hmac_done(cryp);
- 
--	if (!cryp)
--		return -ENODEV;
-+	starfive_hash_done_task(cryp);
- 
--	return starfive_hash_xmit(ctx);
-+	return 0;
+ 	hw_desc->len = len;
+ 	return 0;
  }
+@@ -802,8 +818,8 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
+ 	for (i = 0; i < total_segments; i++) {
+ 		hw_desc = &desc->hw_desc[i];
  
- static int starfive_hash_init(struct ahash_request *req)
-@@ -337,22 +320,6 @@ static int starfive_hash_finup(struct ahash_request *req)
- 	return crypto_ahash_finup(&rctx->ahash_fbk_req);
- }
+-		status = dw_axi_dma_set_hw_desc(chan, hw_desc, src_addr,
+-						segment_len);
++		status = dw_axi_dma_set_hw_desc(chan, hw_desc, NULL,
++						src_addr, segment_len);
+ 		if (status < 0)
+ 			goto err_desc_get;
  
--static int starfive_hash_digest_fb(struct ahash_request *req)
--{
--	struct starfive_cryp_request_ctx *rctx = ahash_request_ctx(req);
--	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
--	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(tfm);
--
--	ahash_request_set_tfm(&rctx->ahash_fbk_req, ctx->ahash_fbk);
--	ahash_request_set_callback(&rctx->ahash_fbk_req, req->base.flags,
--				   req->base.complete, req->base.data);
--
--	ahash_request_set_crypt(&rctx->ahash_fbk_req, req->src,
--				req->result, req->nbytes);
--
--	return crypto_ahash_digest(&rctx->ahash_fbk_req);
--}
--
- static int starfive_hash_digest(struct ahash_request *req)
+@@ -885,7 +901,8 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
+ 
+ 		do {
+ 			hw_desc = &desc->hw_desc[loop++];
+-			status = dw_axi_dma_set_hw_desc(chan, hw_desc, mem, segment_len);
++			status = dw_axi_dma_set_hw_desc(chan, hw_desc, desc,
++							mem, segment_len);
+ 			if (status < 0)
+ 				goto err_desc_get;
+ 
+@@ -1023,8 +1040,13 @@ static int dw_axi_dma_chan_slave_config(struct dma_chan *dchan,
+ 					struct dma_slave_config *config)
  {
- 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
-@@ -370,9 +337,6 @@ static int starfive_hash_digest(struct ahash_request *req)
- 	rctx->in_sg_len = sg_nents_for_len(rctx->in_sg, rctx->total);
- 	ctx->rctx = rctx;
+ 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
++	struct dw_axi_peripheral_config *periph = config->peripheral_config;
  
--	if (starfive_hash_check_aligned(rctx->in_sg, rctx->total, rctx->blksize))
--		return starfive_hash_digest_fb(req);
--
- 	return crypto_transfer_hash_request_to_engine(cryp->engine, req);
- }
- 
-@@ -406,7 +370,8 @@ static int starfive_hash_import(struct ahash_request *req, const void *in)
- 
- static int starfive_hash_init_tfm(struct crypto_ahash *hash,
- 				  const char *alg_name,
--				  unsigned int mode)
-+				  unsigned int mode,
-+				  bool is_hmac)
- {
- 	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(hash);
- 
-@@ -426,7 +391,7 @@ static int starfive_hash_init_tfm(struct crypto_ahash *hash,
- 	crypto_ahash_set_reqsize(hash, sizeof(struct starfive_cryp_request_ctx) +
- 				 crypto_ahash_reqsize(ctx->ahash_fbk));
- 
--	ctx->keylen = 0;
-+	ctx->is_hmac = is_hmac;
- 	ctx->hash_mode = mode;
+ 	memcpy(&chan->config, config, sizeof(*config));
++	if (config->peripheral_size == sizeof(*periph))
++		chan->quirks = periph->quirks;
++	else
++		chan->quirks = 0;
  
  	return 0;
-@@ -529,81 +494,61 @@ static int starfive_hash_setkey(struct crypto_ahash *hash,
- static int starfive_sha224_init_tfm(struct crypto_ahash *hash)
- {
- 	return starfive_hash_init_tfm(hash, "sha224-generic",
--				      STARFIVE_HASH_SHA224);
-+				      STARFIVE_HASH_SHA224, 0);
  }
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index 454904d99654..043d7eb7cb67 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -14,6 +14,7 @@
+ #include <linux/clk.h>
+ #include <linux/device.h>
+ #include <linux/dmaengine.h>
++#include <linux/dma/dw_axi.h>
+ #include <linux/types.h>
  
- static int starfive_sha256_init_tfm(struct crypto_ahash *hash)
- {
- 	return starfive_hash_init_tfm(hash, "sha256-generic",
--				      STARFIVE_HASH_SHA256);
-+				      STARFIVE_HASH_SHA256, 0);
- }
- 
- static int starfive_sha384_init_tfm(struct crypto_ahash *hash)
- {
- 	return starfive_hash_init_tfm(hash, "sha384-generic",
--				      STARFIVE_HASH_SHA384);
-+				      STARFIVE_HASH_SHA384, 0);
- }
- 
- static int starfive_sha512_init_tfm(struct crypto_ahash *hash)
- {
- 	return starfive_hash_init_tfm(hash, "sha512-generic",
--				      STARFIVE_HASH_SHA512);
-+				      STARFIVE_HASH_SHA512, 0);
- }
- 
- static int starfive_sm3_init_tfm(struct crypto_ahash *hash)
- {
- 	return starfive_hash_init_tfm(hash, "sm3-generic",
--				      STARFIVE_HASH_SM3);
-+				      STARFIVE_HASH_SM3, 0);
- }
- 
- static int starfive_hmac_sha224_init_tfm(struct crypto_ahash *hash)
- {
--	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(hash);
--
--	ctx->is_hmac = true;
--
- 	return starfive_hash_init_tfm(hash, "hmac(sha224-generic)",
--				      STARFIVE_HASH_SHA224);
-+				      STARFIVE_HASH_SHA224, 1);
- }
- 
- static int starfive_hmac_sha256_init_tfm(struct crypto_ahash *hash)
- {
--	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(hash);
--
--	ctx->is_hmac = true;
--
- 	return starfive_hash_init_tfm(hash, "hmac(sha256-generic)",
--				      STARFIVE_HASH_SHA256);
-+				      STARFIVE_HASH_SHA256, 1);
- }
- 
- static int starfive_hmac_sha384_init_tfm(struct crypto_ahash *hash)
- {
--	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(hash);
--
--	ctx->is_hmac = true;
--
- 	return starfive_hash_init_tfm(hash, "hmac(sha384-generic)",
--				      STARFIVE_HASH_SHA384);
-+				      STARFIVE_HASH_SHA384, 1);
- }
- 
- static int starfive_hmac_sha512_init_tfm(struct crypto_ahash *hash)
- {
--	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(hash);
--
--	ctx->is_hmac = true;
--
- 	return starfive_hash_init_tfm(hash, "hmac(sha512-generic)",
--				      STARFIVE_HASH_SHA512);
-+				      STARFIVE_HASH_SHA512, 1);
- }
- 
- static int starfive_hmac_sm3_init_tfm(struct crypto_ahash *hash)
- {
--	struct starfive_cryp_ctx *ctx = crypto_ahash_ctx(hash);
--
--	ctx->is_hmac = true;
--
- 	return starfive_hash_init_tfm(hash, "hmac(sm3-generic)",
--				      STARFIVE_HASH_SM3);
-+				      STARFIVE_HASH_SM3, 1);
- }
- 
- static struct ahash_engine_alg algs_sha2_sm3[] = {
+ #include "../virt-dma.h"
+@@ -50,6 +51,7 @@ struct axi_dma_chan {
+ 	struct dma_slave_config		config;
+ 	enum dma_transfer_direction	direction;
+ 	bool				cyclic;
++	u32				quirks;
+ 	/* these other elements are all protected by vc.lock */
+ 	bool				is_paused;
+ };
+diff --git a/include/linux/dma/dw_axi.h b/include/linux/dma/dw_axi.h
+new file mode 100644
+index 000000000000..fd49152869a4
+--- /dev/null
++++ b/include/linux/dma/dw_axi.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_DMA_DW_AXI_H
++#define __LINUX_DMA_DW_AXI_H
++
++#include <linux/types.h>
++
++struct dw_axi_peripheral_config {
++#define DWAXIDMAC_STARFIVE_SM_ALGO	BIT(0)
++	u32 quirks;
++};
++#endif /* __LINUX_DMA_DW_AXI_H */
 -- 
 2.34.1
 
