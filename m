@@ -1,210 +1,172 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC15D5C5EA;
-	Tue,  5 Mar 2024 11:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD24A5BAF2;
+	Tue,  5 Mar 2024 11:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709637945; cv=none; b=EaRlDpQcvpHWuKS1O9ddtnLAjrrDd+BVTDKu25jn4IDvbyyA55acPaqDxnvuouvX/5O8PABaumaztCVVC4amoIOo/DHxo8SlbUQfX2aPyr/Rxd0mP/loZm9cKujluI9C8mUtfTCnaPl7i0/zyo50UPmZLD6tHXbQ6iGDtkmlfUM=
+	t=1709637945; cv=none; b=QDRBofV0Y6sqXtvPLvwg1wB20fe/LfljFT4fsB30yCuPp3dXH5k0OrFe/iypWxkKUHzEehCZJfgkqsymTvrbHLbnDRMIk85EslTrysiM5BLJMiG5KLzGgMiQYbi8EAPp161WDVng1k1dyWLuRsTNkt4zK1rU0h4b9Taf/CprKSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709637945; c=relaxed/simple;
-	bh=bWd1eT40X/hwHp5WSMPfe4kK7Kcuvxaxtjt4Df76y6Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WtTRol4Y1eqw3asUigygiLyU8AzkpWze3jvpuHHj+Acyev20n1sO0E4iBXSCMEexTTOyaGFlt4T8iKY04sIIkp7HLLaumZIkVxJ1/iSiCjTzn2dhW/ptsD8JKkRRD72+RgU1vFKyIP9Ig0QFMFo45DEEU4h8c4S4cL4N8ZZ3xDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TptTt282Mz1h1CG;
-	Tue,  5 Mar 2024 19:23:14 +0800 (CST)
-Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6259F1A0172;
-	Tue,  5 Mar 2024 19:25:34 +0800 (CST)
-Received: from [10.67.120.108] (10.67.120.108) by
- dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 5 Mar 2024 19:25:34 +0800
-Message-ID: <15c6d1cf-0aaa-0a01-5bf4-0762f45d7676@huawei.com>
-Date: Tue, 5 Mar 2024 19:25:33 +0800
+	bh=6uzJm/imGg803v5QIcaycnL2wxC40fsPWSQzaCQLZxI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=e2ZAMTnTO9g37cF5wQt6MeKuopn4INiAOlc/UNEaLQ7mjBo1vMVxydqYL/s2s2OR8xXfxyQgIHmdePx1EtXJxA/p1l1+Zmj50QRwJkQ5JEs1undmJD2/Kv3W0kGqDEcth0O7jftioeDs1jSFYTFHqXu7ISo2TivcDwLs5mqqeDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=LKMrYzZP; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="LKMrYzZP"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dc0e5b223eso47419515ad.1;
+        Tue, 05 Mar 2024 03:25:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709637943; x=1710242743;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:dkim-signature:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lpu9eKZ9JGfXXjUBcqDRJO7/y2rbC5c+FnBAtWGE+HA=;
+        b=r5Sss2vj60cngdZOcomhmTHTqhkXsSj2mpVxpi7lc0tEyLbgvWcpt9v/5j8LlN5AWT
+         S8gcXWO+ahuCJoKs0X02UFUKM6L+KYTbvZYiCaUE1iILPFetaNi9TrD42M0RIdv4qhqi
+         WcTIDHBMBDRCwDXUQ14cKDDzgk5YryqVgxI6bbQ7FoshTTDfJPlduyeOCdAj8926ixVe
+         jLiRpaLgGkojcVdv2IWofPkw/rULW+jvmP/hCtqu1dZWxMBJbp9887elxCqUAzqSF8+h
+         +DH4JSAAfTZqHyOX5BNMQXtO0Kr2TwKvNDbdy1jTDyomKMxJNDcRRt9+ji95t0n11dht
+         YOyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaet1ErOC2GYQCGQauTwUWTjEsvz3GeQYPLPRodLXbH1p2JHM88rHUNj0fKAJ5AiV1faICoeVR9El0iqXjHHivgZzw76Y5NCV3WEgU
+X-Gm-Message-State: AOJu0YxdReGsi6tNrVpERbgXfazViUzxbO7LBekivWFZDBKTL5OPqQhA
+	Wre/KzxMIgi1hdqr7h73Zpk+dl59z+QKiE/jEK/awS+TiEm65maNB/8y/8cZ32mvKw==
+X-Google-Smtp-Source: AGHT+IHzqm8sVuSg6jCxTmyUG2oJVBIjKYp2V1i94WEi9onBAmWc/EFCX3VXa8G8Q0fS/RkXv3NfXw==
+X-Received: by 2002:a17:902:680f:b0:1dc:ea85:91d3 with SMTP id h15-20020a170902680f00b001dcea8591d3mr1524528plk.69.1709637942895;
+        Tue, 05 Mar 2024 03:25:42 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id f4-20020a170902684400b001dbbe6f1dc5sm10419499pln.40.2024.03.05.03.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 03:25:42 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1709637941;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lpu9eKZ9JGfXXjUBcqDRJO7/y2rbC5c+FnBAtWGE+HA=;
+	b=LKMrYzZPKI7QifP1FEG5KXjdlh5hHKxoKGH52wdWQIp/QEVwRNLifi0CvqLC9A7UuWvj3t
+	cXbkYrvxDXuBi7sz3gq/O5JqLpepYsrmdLpN39akFAMI+WUtoVz/FniDdbkd4ZYItb/N/e
+	9JafbgwLrJO5ATXHWevuTHfmiYOcX51fGijHDhSfVYZPNrmMCVMbitZdeURBrKcu8TAPui
+	AqA0Srq9/RrgiUcYDvXs4Wwt6fJDUIKgSASefz2sCi+5J+vbxqbJB1Zi/8FaDbVqB75BU2
+	vm8Thc9ZpE128SLfKyDXH5R4FoGbHO1xCZ1MUBx0mny9PsFbhKjUgPM2yzxWIw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Tue, 05 Mar 2024 08:25:22 -0300
+Subject: [PATCH 4/6] s390: tape: make tape_class constant
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH] scsi: libsas: Fix disk not being scanned in after being
- removed
-Content-Language: en-CA
-To: John Garry <john.g.garry@oracle.com>, Jason Yan <yanaijie@huawei.com>,
-	<jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-	<damien.lemoal@opensource.wdc.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
-	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
-References: <20240221073159.29408-1-yangxingui@huawei.com>
- <f095aa1c-f233-40f9-ad0f-fcd8fe69a80d@oracle.com>
- <e2a725ee-98b3-fd57-6ee4-af031ffbd6bc@huawei.com>
- <80050a50-af6a-5862-8c12-ccaf91c5ff74@huawei.com>
- <7e1b554b-a675-14d2-59aa-7f37e3dd5994@huawei.com>
- <a7eb46e3-997c-4746-b820-a09229e75581@oracle.com>
-From: yangxingui <yangxingui@huawei.com>
-In-Reply-To: <a7eb46e3-997c-4746-b820-a09229e75581@oracle.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggpemm100022.china.huawei.com (7.185.36.132) To
- dggpemd100001.china.huawei.com (7.185.36.94)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240305-class_cleanup-s390-v1-4-c4ff1ec49ffd@marliere.net>
+References: <20240305-class_cleanup-s390-v1-0-c4ff1ec49ffd@marliere.net>
+In-Reply-To: <20240305-class_cleanup-s390-v1-0-c4ff1ec49ffd@marliere.net>
+To: Harald Freudenberger <freude@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2407; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=6uzJm/imGg803v5QIcaycnL2wxC40fsPWSQzaCQLZxI=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl5wEhJ7eCqSFl2hmoQHNCEzs8Mnm6IP4sEcw5/
+ tJb/CoBiTmJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZecBIQAKCRDJC4p8Y4ZY
+ ppcYD/9GQSO1a6ryaAgMfQT8scaDhaUjqIjLZgSIvZOF5Zmudryc66QOehHiWGovmqSXBT2Zdic
+ FpHrLMDbhkacghCfqcVbRhdFbVMzB9ydLdUQADo2kcU0AvtrKxfEdZD6rcSxJE4zIlOBk0VBMAu
+ H2rJvjFHmskJVhzfX03S+3slH0xY/w8jZhnik7O1MydF1SBsVGI54pYnEAs9gNeaGNKGSDkj5So
+ HQD6wj7qHycfLUxj5cnkCIBV7+l2D30a6wcfcsZXVjrYdDrXXc0smybnExMiLF5Bc8tnnSEDO7E
+ grIyg2fHoEHVcCvzDYFdEX4WoCZTql0SenhxRtxArtIjldASoOpYLTAH7H0JHf8ZBqKVZssp7QR
+ qegFKi5TP2pjRh0Nd1o+4FZXQGRaHjIVLM5tuYFdUyOvtVm69iu3FLPv7YewitOaHF5NCoohotv
+ ESi97kCM+EOJECZeukRU5YJa/39lhTFbZlYpijYduxS+mWVldxIg4nqFWCnOnW7tYXIbB2ATsli
+ aA5mQhoTbmJbtN+Ga3qO9W6sKxmjaLBzr8++CKdnCeXCYCcD1XYsxKhwZWB6kQ9UfztaALgatJ7
+ 7PDWmzsvzkWZOdIfgCq2DtcMy3ylzYblLFuXmCGglyi8IqgUQQtWSsugpY1YFUezGuXHH4A0iez
+ IT/+6JsSeIdIB3A==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
+Since commit 43a7206b0963 ("driver core: class: make class_register() take
+a const *"), the driver core allows for struct class to be in read-only
+memory, so move the tape_class structure to be declared at build time
+placing it into read-only memory, instead of having to be dynamically
+allocated at boot time.
 
-Hi John,
-On 2024/3/5 18:15, John Garry wrote:
-> On 05/03/2024 02:56, Jason Yan wrote:
->> On 2024/3/4 20:50, yangxingui wrote:
->>> Hi Jason,
->>>
->>> On 2024/3/1 9:55, Jason Yan wrote:
->>>> On 2024/2/29 2:13, John Garry wrote:
->>>>> On 21/02/2024 07:31, Xingui Yang wrote:
->>>>>> As of commit d8649fc1c5e4 ("scsi: libsas: Do discovery on empty 
->>>>>> PHY to
->>>>>> update PHY info"), do discovery will send a new SMP_DISCOVER and 
->>>>>> update
->>>>>> phy->phy_change_count. We found that if the disk is reconnected 
->>>>>> and phy
->>>>>> change_count changes at this time, the disk scanning process will 
->>>>>> not be
->>>>>> triggered.
->>>>>>
->>>>>> So update the PHY info with the last query results.
->>>>>>
->>>>>> Fixes: d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to 
->>>>>> update PHY info")
->>>>>> Signed-off-by: Xingui Yang <yangxingui@huawei.com>kkkkk
->>>>>> ---
->>>>>>   drivers/scsi/libsas/sas_expander.c | 9 ++++-----
->>>>>>   1 file changed, 4 insertions(+), 5 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/scsi/libsas/sas_expander.c 
->>>>>> b/drivers/scsi/libsas/sas_expander.c
->>>>>> index a2204674b680..9563f5589948 100644
->>>>>> --- a/drivers/scsi/libsas/sas_expander.c
->>>>>> +++ b/drivers/scsi/libsas/sas_expander.c
->>>>>> @@ -1681,6 +1681,10 @@ int sas_get_phy_attached_dev(struct 
->>>>>> domain_device *dev, int phy_id,
->>>>>>           if (*type == 0)
->>>>>>               memset(sas_addr, 0, SAS_ADDR_SIZE);
->>>>>>       }
->>>>>> +
->>>>>> +    if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM))
->>>>>
->>>>> It's odd to call sas_set_ex_phy() if we got res == -ECOMM. I mean, 
->>>>> in this this case disc_resp is not filled in as the command did not 
->>>>> execute, right? I know that is what the current code does, but it 
->>>>> is strange.
->>>>
->>>> The current code actually re-send the SMP command and update the PHY 
->>>> status only when the the SMP command is responded correctly.
->>>>
->>>> Xinggui, can you please fix this and send v3?
->>> The current location cannot directly update the phy information. The 
->>> previous phy information will be used later, and the previous sas 
->>> address will be compared with the currently queried sas address. At 
->>> present, v2 is more suitable after many days of testing.
-> 
-> I don't understand this. Where is the previous SAS address compared to 
-> the current SAS address?
-> 
-> Could this work:
-> 
-> diff --git a/drivers/scsi/libsas/sas_expander.c 
-> b/drivers/scsi/libsas/sas_expander.c
-> index a2204674b680..e190038ba7bd 100644
-> --- a/drivers/scsi/libsas/sas_expander.c
-> +++ b/drivers/scsi/libsas/sas_expander.c
-> @@ -1675,11 +1675,13 @@ int sas_get_phy_attached_dev(struct 
-> domain_device *dev, int phy_id,
-> 
->          res = sas_get_phy_discover(dev, phy_id, disc_resp);
->          if (res == 0) {
-> -               memcpy(sas_addr, disc_resp->disc.attached_sas_addr,
-> -                      SAS_ADDR_SIZE);
->                  *type = to_dev_type(&disc_resp->disc);
-> -               if (*type == 0)
-> +               if (*type == SAS_PHY_UNUSED)
->                          memset(sas_addr, 0, SAS_ADDR_SIZE);
-> +               else
-> +                       memcpy(sas_addr, disc_resp->disc.attached_sas_addr,
-> +                      SAS_ADDR_SIZE);
-> +               sas_set_ex_phy(dev, phy_id, disc_resp);
->          }
->          kfree(disc_resp);
->          return res;
-> lines 1-21/21 (END)
-> 
-> It's like the change in this patch.
-This doesn't work properly. the previous sas address will be compared 
-with the currently queried sas address and the previous phy information 
-will also be used when calling sas_unregister_devs_sas_addr() after the 
-sas_rediscover_dev() function calls sas_get_phy_attached_dev(). 
-Therefore, it is more appropriate to update the phy information after 
-the device is unregistered. as follows:
-static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
-                               bool last, int sibling)
-{
-	...
-        res = sas_get_phy_attached_dev(dev, phy_id, sas_addr, &type);
-         switch (res) {
-         case SMP_RESP_NO_PHY:
-                 phy->phy_state = PHY_NOT_PRESENT;
-                 sas_unregister_devs_sas_addr(dev, phy_id, last);
-                 return res;
-         case SMP_RESP_PHY_VACANT:
-                 phy->phy_state = PHY_VACANT;
-                 sas_unregister_devs_sas_addr(dev, phy_id, last);
-                 return res;
-         case SMP_RESP_FUNC_ACC:
-                 break;
-         case -ECOMM:
-                 break;
-         default:
-                 return res;
-         }
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/s390/char/tape_class.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-         if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
-                 phy->phy_state = PHY_EMPTY;
-                 sas_unregister_devs_sas_addr(dev, phy_id, last);
-                 /*
-                  * Even though the PHY is empty, for convenience we 
-discover
-                  * the PHY to update the PHY info, like negotiated 
-linkrate.
-                  */
-                 sas_ex_phy_discover(dev, phy_id);
-                 return res;
-         } else if (SAS_ADDR(sas_addr) == 
-SAS_ADDR(phy->attached_sas_addr) && // <=== Compare the previous sas 
-address with the current sas address
-                    dev_type_flutter(type, phy->attached_dev_type)) {
-                 struct domain_device *ata_dev = sas_ex_to_ata(dev, phy_id);
-                 char *action = "";
+diff --git a/drivers/s390/char/tape_class.c b/drivers/s390/char/tape_class.c
+index 277a0f903d11..eae362bbfbb5 100644
+--- a/drivers/s390/char/tape_class.c
++++ b/drivers/s390/char/tape_class.c
+@@ -22,7 +22,9 @@ MODULE_DESCRIPTION(
+ );
+ MODULE_LICENSE("GPL");
+ 
+-static struct class *tape_class;
++static const struct class tape_class = {
++	.name = "tape390",
++};
+ 
+ /*
+  * Register a tape device and return a pointer to the cdev structure.
+@@ -74,7 +76,7 @@ struct tape_class_device *register_tape_dev(
+ 	if (rc)
+ 		goto fail_with_cdev;
+ 
+-	tcd->class_device = device_create(tape_class, device,
++	tcd->class_device = device_create(&tape_class, device,
+ 					  tcd->char_device->dev, NULL,
+ 					  "%s", tcd->device_name);
+ 	rc = PTR_ERR_OR_ZERO(tcd->class_device);
+@@ -91,7 +93,7 @@ struct tape_class_device *register_tape_dev(
+ 	return tcd;
+ 
+ fail_with_class_device:
+-	device_destroy(tape_class, tcd->char_device->dev);
++	device_destroy(&tape_class, tcd->char_device->dev);
+ 
+ fail_with_cdev:
+ 	cdev_del(tcd->char_device);
+@@ -107,7 +109,7 @@ void unregister_tape_dev(struct device *device, struct tape_class_device *tcd)
+ {
+ 	if (tcd != NULL && !IS_ERR(tcd)) {
+ 		sysfs_remove_link(&device->kobj, tcd->mode_name);
+-		device_destroy(tape_class, tcd->char_device->dev);
++		device_destroy(&tape_class, tcd->char_device->dev);
+ 		cdev_del(tcd->char_device);
+ 		kfree(tcd);
+ 	}
+@@ -117,15 +119,12 @@ EXPORT_SYMBOL(unregister_tape_dev);
+ 
+ static int __init tape_init(void)
+ {
+-	tape_class = class_create("tape390");
+-
+-	return 0;
++	return class_register(&tape_class);
+ }
+ 
+ static void __exit tape_exit(void)
+ {
+-	class_destroy(tape_class);
+-	tape_class = NULL;
++	class_unregister(&tape_class);
+ }
+ 
+ postcore_initcall(tape_init);
 
-                 sas_ex_phy_discover(dev, phy_id);
+-- 
+2.43.0
 
-                 if (ata_dev && phy->attached_dev_type == SAS_SATA_PENDING)
-                         action = ", needs recovery";
-                 pr_debug("ex %016llx phy%02d broadcast flutter%s\n",
-                          SAS_ADDR(dev->sas_addr), phy_id, action);
-                 return res;
-         }
-
-> 
-> 
->>
->> OK, so let me have a closer look at v2.
-> 
-> I have to say that v2 is quite complicated...
-Yes, but it works.
-
-Thanks,
-Xingui
