@@ -1,93 +1,107 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C89DDA0;
-	Tue,  5 Mar 2024 16:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B389FD267;
+	Tue,  5 Mar 2024 16:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709657819; cv=none; b=AITLAhP1YjKaYcKJczAwPvarbji1Hb1Ji/xhTEL/TS1v/aUghcy1zEXkpNYQQ+PJk2FgLzUrQMDKQ6DKYWs/F6qLL5hL3HJIJzPgxH9unNTOTNassFWkeBu2Yk5cCHdihKPMjKyYkz/MaKOTdx/XImxj4TBV0kXzng4YJzJZCQc=
+	t=1709657870; cv=none; b=jFRthziKkHn/53065+mcwMlqW539AIcfRuWsBh5pbOaV7q0IPymOg9s4mffcONr9URexKixYdNSq+kb9tB6aK1Bt5ljkhSXYo0X5tzNCDKs2OtmdP1VtqBABXApbG2ApWGriUWHrztRHybCUtT0VkFvuRxM/HeLfxomxQp867j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709657819; c=relaxed/simple;
-	bh=cI0DEFw2kaaMRX2yorxEsykml5XIXDljX1+quMTyEq8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Kf68tl+bcLgZSLRfMi2duyqPegavQ+wEBpSBCM5xncD6Kh/yvdoJV+Oq/izlwm4PMkFGmyQlcq0VFkkK8qGg7msVxXqcEnyNNOB0MY81liK3+ipC8r9uVKKWt7kE2DcBq7qzBM6C5NNKvACXYXQBaR4kfITaSbGWN2O7NNlYwec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFO+fYMA; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709657870; c=relaxed/simple;
+	bh=azjFOsktqiCXb357AvMEW9hKL9yqQ3FCu5yPd9IL/jo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WRDeXsA+X9W1f/2bgtRVEf5buQZB1XboZQXxdrxGewl5w6hZTk3vsbKQ47Blm5jhqHkZoN9r6xPH8QAT5sbkQBBSO2Pfo0Yr8765H4CYAzNAsTyYOk9n1ZLVbaF/II4FFB7YepmPrOodEjIIzPk7rjsSp9mYo4YRdNWfk1vPp38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HKbwYqoG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8tNakUsg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFO+fYMA"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e46dcd8feaso636171b3a.2;
-        Tue, 05 Mar 2024 08:56:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709657817; x=1710262617; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WQGkHUGJv9iAGFsBSsW89sAex03GUVkrj7xqR9KP8YU=;
-        b=eFO+fYMA2p6njRxUGRYeTF5kv8lZvrHCP3uv9IwMqRhVekj68Ba0TlsHsXBTOg9XVV
-         5Z1vznyKQ2+f+1zrVPj51OW0ft7GnxgzZ5lBCr+Iuk2TXK4wnDoBqchEBxiY3p4ky1iY
-         wc4j4XdTsEQ4pGMbKdSRlI5tk/hSEnWt3IZQcxmB5kkSgkjSRgzgM28OjI/c2biPwnPF
-         EzQ1WVFESBhPQnSBemqBd2mir2nEnsScvz4ddj2gbeIg78UvlkWjzNQZiZCGgm5Z6ya2
-         vq6hJ5ijy9l7qnDKIchrgN3GN9IZC7Wl+pG1/oNeAbnwycL8DMLRQukCYnfvr6y8nnq7
-         pAog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709657817; x=1710262617;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WQGkHUGJv9iAGFsBSsW89sAex03GUVkrj7xqR9KP8YU=;
-        b=est2FqWmlOUAZ2f7fA8YsAX57DYNUaaeNJEgVrEdwGHoZ4kNlPtZSbKPtnd0O7Esko
-         gleAE55fdFH4Ef6ctNQvTlfzUR4p9lNvyZ2gQIEf4KoqACPYwRv7GixCAOFAZfrVbqCA
-         4+lExqNFOKB7W3aEfdY4RdgCb3stVY+KhOsfHZqczXDIb/BKtfuLu119xHOIJQsIBwsd
-         lqgiNmPzV8nElgmJdVU2K9YKJxRzfZ6YkIkxCA55WMEYMaJQyK6VDzs3/XeriTlRSbzR
-         uQcbrah2L70I9zZIKbHaZhuPaEJAj4HCtl2/xMKEVc4Mel16fEHQRlyxPjUYROe7dsGr
-         y16g==
-X-Forwarded-Encrypted: i=1; AJvYcCUbbXCtKYnFTI9M5/km9ubpMwITQJdy8aeNN6/ZBrS0h3VExROh6iZaWD/o3ajq5P+xNhqfE58H7pMgapZJWGUaSMZeyIElZPmfYJl9
-X-Gm-Message-State: AOJu0YxfYikiy4WUOF30g/bOyjLTJjBDbKkNe6af6/ago2yHATt467ur
-	X3AJtiNJpsafO0y6FJflqzNEu8ZhZeHul9OnldsyN0q1XUpH1JXU
-X-Google-Smtp-Source: AGHT+IFcnbfqjPlsggEMvV2KNpHuOuuGmUOnDuok3CiIrE06xauK1fAMcZvBkc6jD3L+h6rS7LA2Iw==
-X-Received: by 2002:a05:6a00:1a8b:b0:6e5:4f19:c863 with SMTP id e11-20020a056a001a8b00b006e54f19c863mr14917595pfv.33.1709657817288;
-        Tue, 05 Mar 2024 08:56:57 -0800 (PST)
-Received: from localhost.localdomain (125-229-101-177.hinet-ip.hinet.net. [125.229.101.177])
-        by smtp.gmail.com with ESMTPSA id y133-20020a62ce8b000000b006e45a0101basm9862766pfg.99.2024.03.05.08.56.55
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 05 Mar 2024 08:56:56 -0800 (PST)
-From: "Hsin-Yu.Chen" <harry021633@gmail.com>
-To: wsa+renesas@sang-engineering.com
-Cc: linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Hsin-Yu.Chen" <harry021633@gmail.com>
-Subject: [PATCH] i2c: remove redundant condition
-Date: Wed,  6 Mar 2024 00:56:52 +0800
-Message-Id: <20240305165652.18842-1-harry021633@gmail.com>
-X-Mailer: git-send-email 2.38.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HKbwYqoG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8tNakUsg"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1709657861;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HRm+TnjyJg5idEpRreLSl5etxQBLrbJ4QAyjOJxgiHU=;
+	b=HKbwYqoGgFwQ5w0c2x4gUshWZq5DHnmoTWFc3/aZZcUsyBPUvs7FtgO9sXWFeAyfxpuEi6
+	xlcIADFKW3TAaX8V6Ga3Vk3KxGSZLgdUIYbQXmyX2czdZGrJV+gT+com+2AYsi4w5tCpPe
+	P+3R/323Mr+jpB72RGyL7UAB2G4Y24a0f5aPuMXb2XzcFpBHmn6AX+fCh47ITffrAmlSjQ
+	X0sd2R+FxjQ3skVdAjuyST0jIZLH7tS9pVec6Q/PgKFl70I0IEfjpeTld2114ViFAQn5Jb
+	vMDMFcMAgaGC7ZbfrNWUXKsAS9MSi3fMQV2MyyOkR6PfJ5iMQMb9P8IPdthLhQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1709657861;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HRm+TnjyJg5idEpRreLSl5etxQBLrbJ4QAyjOJxgiHU=;
+	b=8tNakUsgVDjiTy1DgFT1yzq4jZIkpWJOqH5pgA+w3enng6vlac/FwllNiicYgryByF76pu
+	dUSgco6KK8GYs2CA==
+To: Bitao Hu <yaoma@linux.alibaba.com>, Doug Anderson <dianders@chromium.org>
+Cc: liusong@linux.alibaba.com, akpm@linux-foundation.org, pmladek@suse.com,
+ kernelfans@gmail.com, deller@gmx.de, npiggin@gmail.com,
+ tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
+ jan.kiszka@siemens.com, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, yaoma@linux.alibaba.com
+Subject: Re: [PATCHv11 2/4] genirq: Provide a snapshot mechanism for
+ interrupt statistics
+In-Reply-To: <28a24e4b-c322-4631-ad6d-7259ca3d084d@linux.alibaba.com>
+References: <20240228072216.95130-1-yaoma@linux.alibaba.com>
+ <20240228072216.95130-3-yaoma@linux.alibaba.com>
+ <CAD=FV=U1b+8atmju_w4eRmVKmSqjj6WCsy5EawYqj31fQ1kvrw@mail.gmail.com>
+ <87plwdwycx.ffs@tglx>
+ <3a89fafb-f62e-472f-b40b-8bf97954e9e3@linux.alibaba.com>
+ <87wmqiulaw.ffs@tglx>
+ <28a24e4b-c322-4631-ad6d-7259ca3d084d@linux.alibaba.com>
+Date: Tue, 05 Mar 2024 17:57:40 +0100
+Message-ID: <87h6hkvcor.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-I2C_M_RD is defined as 1 and `flag & I2C_M_RD` is one or zero
-no need one more condition to get the value
+On Tue, Mar 05 2024 at 18:57, Bitao Hu wrote:
+> On 2024/3/4 22:24, Thomas Gleixner wrote:
+> "GENERIC_IRQ_STAT_SNAPSHOT" visible to the user. However, after
+> analyzing the previous emails, it seems that what you were actually
+> proposing was to directly disable "GENERIC_IRQ_STAT_SNAPSHOT" when
+> "SOFTLOCKUP_DETECTOR_INTR_STORM" is not enabled, as a way to save
+> memory. If my current understanding is correct, then the code for that
+> part would look something like the following.
 
-Signed-off-by: Hsin-Yu.Chen <harry021633@gmail.com>
----
- include/linux/i2c.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Correct.
 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 652ecb7abeda..363dde9ef94f 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -931,7 +931,7 @@ static inline int i2c_adapter_id(struct i2c_adapter *adap)
- 
- static inline u8 i2c_8bit_addr_from_msg(const struct i2c_msg *msg)
- {
--	return (msg->addr << 1) | (msg->flags & I2C_M_RD ? 1 : 0);
-+	return (msg->addr << 1) | (msg->flags & I2C_M_RD);
- }
- 
- u8 *i2c_get_dma_safe_msg_buf(struct i2c_msg *msg, unsigned int threshold);
--- 
-2.38.1
+> diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
+> index 2531f3496ab6..a28e5ac5fc79 100644
+> --- a/kernel/irq/Kconfig
+> +++ b/kernel/irq/Kconfig
+> @@ -108,6 +108,10 @@ config GENERIC_IRQ_MATRIX_ALLOCATOR
+>   config GENERIC_IRQ_RESERVATION_MODE
+>          bool
+>
+> +# Snapshot for interrupt statistics
+> +config GENERIC_IRQ_STAT_SNAPSHOT
+> +       bool
+> +
+>   # Support forced irq threading
+>   config IRQ_FORCED_THREADING
+>          bool
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 49f652674bd8..899b69fcb598 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1032,6 +1032,7 @@ config SOFTLOCKUP_DETECTOR
+>   config SOFTLOCKUP_DETECTOR_INTR_STORM
+>          bool "Detect Interrupt Storm in Soft Lockups"
+>          depends on SOFTLOCKUP_DETECTOR && IRQ_TIME_ACCOUNTING
+> +       select GENERIC_IRQ_STAT_SNAPSHOT
 
+This goes into the patch which adds the lockup detector parts.
+
+Thanks,
+
+        tglx
