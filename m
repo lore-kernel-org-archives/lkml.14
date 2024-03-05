@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C842312CD85
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 21:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5A612D1F7
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 21:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709674353; cv=none; b=aUwX74LRlx5cM9TN4YwcK/LHJAC/TmCkvW/cmlLvq2vUouTxmmIvf5Bi10VgvvjYqyrpqi5jS9SsC0EiQPo7vxyd1Jl5amCkvuIqTrEn1xVzhuIh3mnpvRp3w85nCUb6eBycN01g+ogrP54AKTy1YRwu6mzqIjVeZy51iAIoULk=
+	t=1709674355; cv=none; b=G0OvtHwots2BQiv9r3HBoiWxJHaDEO2N9ur5GLXxEfkV/H2oPgLx4ctx7+MpqZJqIQvunYjt42k5FlsU29Qumn10H7yU/q16QvJR+rWtx5XfpzXKjA65lqSFl+0Gn7GWHveCTMsR1XtHJ5qQ62Q/bKpKP+LqMXMZFK6OLTGiPn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709674353; c=relaxed/simple;
-	bh=ax4ocmWgdyR2S0Rp27gdwmhqKLnCwEq0x6qra/psAgE=;
+	s=arc-20240116; t=1709674355; c=relaxed/simple;
+	bh=0KCo74JW0R7cj4rrSXgXdNuuxSCj5INfxzKV5DEPMwA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r4RXpzHTzyN2sdabwYom4QLy0JZ5DWn66qPrRG1bIElEuA2TNpVd6fuqBzdlw0yc9W+zec+ZGXpA6Dv/kWGE7a9+9GS40N85kC8kgHq4xTptkK2sFBfk4tgJEKUGVgak0+TmCEqVRaIPsaWCtNjA0FHAC7Ri2BgC67fHgAHXdRM=
+	 MIME-Version:Content-Type; b=qFXyZdFky7ZB0iZ9+KaMkoWUVzwK73Uf5yEH4PUNXnqv1Wqf3McgbOeLqLzQeASLA9Rf+7OezjGekwDdF5XxXHX4mqvUECAczRjbPZ2VTuHrjfSur6t7BIr+mNvxKnrYBUvSfmYRP0bnrAcIaiZXDYiIjE/dAG1Wr9/spz4swnM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,29 +18,27 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rhcOe-0006r5-NY; Tue, 05 Mar 2024 22:32:24 +0100
+	id 1rhcOf-0006re-CA; Tue, 05 Mar 2024 22:32:25 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rhcOe-004cmH-8i; Tue, 05 Mar 2024 22:32:24 +0100
+	id 1rhcOe-004cmN-N6; Tue, 05 Mar 2024 22:32:24 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rhcOe-000ISx-0a;
+	id 1rhcOe-000IT5-22;
 	Tue, 05 Mar 2024 22:32:24 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+Cc: Nishanth Menon <nm@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	kernel@pengutronix.de
-Subject: [PATCH 1/3] reset: meson-audio-arb: Convert to platform remove callback returning void
-Date: Tue,  5 Mar 2024 22:32:03 +0100
-Message-ID:  <dbca07bad345abe7ca421515004987acf1cb41c2.1709674157.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 3/3] reset: ti-sci: Convert to platform remove callback returning void
+Date: Tue,  5 Mar 2024 22:32:05 +0100
+Message-ID:  <ab374da386cafd6748aac5bdf66e6be3e1860509.1709674157.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1709674157.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1709674157.git.u.kleine-koenig@pengutronix.de>
@@ -51,7 +49,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2039; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=ax4ocmWgdyR2S0Rp27gdwmhqKLnCwEq0x6qra/psAgE=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtTn/SExj8u8VgcX69yuiG7acTjXfv7ha9/s2ly/BNrt+ ayv57+uk9GYhYGRi0FWTJHFvnFNplWVXGTn2n+XYQaxMoFMYeDiFICJrHjHwbDzZGJ1H4fz3tww 07/p8iaGmksUnohsDZULuv8sXqmF/02k+4x9/mI3VBLbDxTczjiQnDpl+rJd34RWshfrHJT9Et9 ftKEnVL00+bBXY5n9qzam3nVaxo1MRSlLb1tI7++7ERSjyMZf+a5Y/ue8qRY7J941mbQ6c53e/r n5FjeaWt+zPN8yfZJRfvVZpe9/chVaOmdv9xcXfrrr2yePJ0yz3of88qiZ7Hz2T4pf7cLKXbJSf 1Y5HJzvHnOI56P/u+To1PT3qg8u7b2lX+x86yOX+mTu10K6SkLHHttGOtgH6ogrXxDLnLOJmbPR 6I+O8HFuji4D83wnw9umGyqkPIJDS9SvMhpv+FvsPakMAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1732; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=0KCo74JW0R7cj4rrSXgXdNuuxSCj5INfxzKV5DEPMwA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl549WCXF5BB4pcMzdyMRiMUfC7yDpKh2iaJHow RBlvhGCM+qJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZeePVgAKCRCPgPtYfRL+ TtJsCACwBOqedx5DD+BLQigiE6xZs8ztjqp5kRLf//PAGCMnfX/ObpPhFqIhvSyD3otWmb9MGFn OYMdWzA9bXwJYnwhCI7WZ39j+2/9BOdpgspbWxJqRhlC1LAuouekvnUQfwnZqppChsys1oWjFkX WOUJYgObSAkljvVJs+U5i57UHsGKnQDW5LWz3ZsNvojHh+XptjjQtxY5z9oBkS5YX5k8jOsqhp+ J15eFel536801i1Im7KsOGtGzkb26fvbHI5sv1mDUAzvaEwla+4S6+swMmQK/30/lIJmHQ/jv0u qy/WCGuCqnHYLWv6u3IAgICb1ThFIq2R7Tjh3LlImw8eAYei
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -74,40 +72,36 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/reset/reset-meson-audio-arb.c | 6 ++----
+ drivers/reset/reset-ti-sci.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
-index 7891d52fa899..8740f5f6abf8 100644
---- a/drivers/reset/reset-meson-audio-arb.c
-+++ b/drivers/reset/reset-meson-audio-arb.c
-@@ -120,7 +120,7 @@ static const struct of_device_id meson_audio_arb_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, meson_audio_arb_of_match);
+diff --git a/drivers/reset/reset-ti-sci.c b/drivers/reset/reset-ti-sci.c
+index cc01fa5b0bea..d384da0982fa 100644
+--- a/drivers/reset/reset-ti-sci.c
++++ b/drivers/reset/reset-ti-sci.c
+@@ -235,20 +235,18 @@ static int ti_sci_reset_probe(struct platform_device *pdev)
+ 	return reset_controller_register(&data->rcdev);
+ }
  
--static int meson_audio_arb_remove(struct platform_device *pdev)
-+static void meson_audio_arb_remove(struct platform_device *pdev)
+-static int ti_sci_reset_remove(struct platform_device *pdev)
++static void ti_sci_reset_remove(struct platform_device *pdev)
  {
- 	struct meson_audio_arb_data *arb = platform_get_drvdata(pdev);
+ 	struct ti_sci_reset_data *data = platform_get_drvdata(pdev);
  
-@@ -130,8 +130,6 @@ static int meson_audio_arb_remove(struct platform_device *pdev)
- 	spin_unlock(&arb->lock);
+ 	reset_controller_unregister(&data->rcdev);
  
- 	clk_disable_unprepare(arb->clk);
+ 	idr_destroy(&data->idr);
 -
 -	return 0;
  }
  
- static int meson_audio_arb_probe(struct platform_device *pdev)
-@@ -189,7 +187,7 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
- 
- static struct platform_driver meson_audio_arb_pdrv = {
- 	.probe = meson_audio_arb_probe,
--	.remove = meson_audio_arb_remove,
-+	.remove_new = meson_audio_arb_remove,
+ static struct platform_driver ti_sci_reset_driver = {
+ 	.probe = ti_sci_reset_probe,
+-	.remove = ti_sci_reset_remove,
++	.remove_new = ti_sci_reset_remove,
  	.driver = {
- 		.name = "meson-audio-arb-reset",
- 		.of_match_table = meson_audio_arb_of_match,
+ 		.name = "ti-sci-reset",
+ 		.of_match_table = ti_sci_reset_of_match,
 -- 
 2.43.0
 
