@@ -1,204 +1,219 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2073.outbound.protection.outlook.com [40.107.101.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68FA2AE95;
-	Tue,  5 Mar 2024 05:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709618242; cv=none; b=V8I1TZQIh9OOFqN4d1ieflNSlaYcqvaIN49TQsJ2F5ePluvGT3qDJ6cHAKdt0oEHM1PiGjS7Xw5oYK1SNTFD8fZPlPkPHeoo+2GKgYrAitB5dnawAE9CXJC0Nfe3Hp78ShK9FhKNorWqOZ5nJm2eBxRjMpbMqiFlQm3ebbQv7MM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709618242; c=relaxed/simple;
-	bh=ls+B1ltP0N7/jwz/5QBBYJTT6qIm/m7EuCGiX3tgNZ4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gv8gwa6CPNPIl/aFxmQrzm4EMNC66/+T+SR9J2tqncfMdS6+mbhKZbPAG+ZUg6Zo+y8OxyxLrnyeBhZF4oSi1AbfUZLXzelC/fTI3Bzj3nSNe2Ak5+zUn166yauyWZcUxW42VnCEw952vmrxJJRgHdyQUNKI21M3NfN/CjSqr68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TplBw2ch5z2BfKn;
-	Tue,  5 Mar 2024 13:54:48 +0800 (CST)
-Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6F4FE1402CB;
-	Tue,  5 Mar 2024 13:57:08 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 5 Mar 2024 13:57:07 +0800
-From: Junxian Huang <huangjunxian6@hisilicon.com>
-To: <jgg@ziepe.ca>, <leon@kernel.org>
-CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
-Subject: [PATCH for-next] RDMA/hns: Append SCC context to the raw dump of QPC
-Date: Tue, 5 Mar 2024 13:52:57 +0800
-Message-ID: <20240305055257.823513-1-huangjunxian6@hisilicon.com>
-X-Mailer: git-send-email 2.30.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285E43C087;
+	Tue,  5 Mar 2024 06:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709618558; cv=fail; b=uVv6J8pda7y5ZKalWend32/sqIPBbFwsPniPq+YpNRVens7ScTRw6Tu2czstOgVWbe3vMuB2yDi26q0aeNSkh5eDrpc7g1MQ5Nm9ano3IPNKxJCR4iTbcC29+L9GAFkzMsUFj8GV6VQZm7QWrRwNi5gNtP4HmZO3imGrioDVYZ4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709618558; c=relaxed/simple;
+	bh=vWB9HVJMcrrYTXwIPAgimPGlvlDjNSy8nLcf4A//mGE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dnTc/ecFIOktqFhLhpqHgHxBZ49qznWTN3snTaPtRjZhfDRPSgMAOAiTlUwjBE/Xu2NwQAODXwbi9WUnSQZsoW3Ob0pUUvoPyKaZ1x4nJ3gSBvj7pYR3J3aKC6sRnafb4HcaAzK/+bNF+XK+lyw2L5hq2xWB0ZCYBZ0G/LdLQ1c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GWX1X3jR; arc=fail smtp.client-ip=40.107.101.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GWX1X3jR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X0wT/sD/RUvyznfT2bImWks+Ebekq7IzglKGRcsfPgBN0UgVEYsKakK2w6kaEDWGt161cly4/VBt+AJ6YVcHr2n5aAP9c3U4HKz4OQ9uTcDwNoEGpQ4ig5DEn7RYcvVvtmU9SI0s39BWr6jDUVAuIqH5HNzBKlOuO7zFkLg3iAOyzEylD4v6mMcnl4InA88WPAA3wZ69OHK7BcC7sjOwF07ye4qWSqYWGx3dgm4ErXMAHw+eJapQy8u/QL1Ns90LCSax5+ZAhA7RJwtHyGHia6uULDApP5yGyi9NtZ6ZOZNIonYWIS+u+R0kzaPW4LFg+9RxHOQDba8cPhEnmI0FcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r3fk4Wm4pObT/TFM3D+OWrGkSPZLmKlNM5aWiFND9t8=;
+ b=IL51ULtVXJieqLroa4GIuSJutq3OFAEUWET3unNpbBGpY2MZVPXi7Q1CqqUjabgI/UlOaI17IfsR24UseRqgMxuMPWt6iGriYsv4EtQ2aoem9DVyY4fvP7q9akpI68RMphtbikHaiEC2syAvTVbeZG2UQk0g5M5Ih1gfxYed+mVBsAhMqfHnKcjX907Hya7R2mAooZQ23UC6FjZO36kvHYh36GRMHcl7/KHBZkRwQVnSU175nf5upSpXpfDc330qjbq9MoM5agf03t1sjGccfdHXRfaDpgpopr8ubBX/Yq6+elGdgBNAXCwp0r+p2E9a5QB/T4xOVVf4lickpdbUVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r3fk4Wm4pObT/TFM3D+OWrGkSPZLmKlNM5aWiFND9t8=;
+ b=GWX1X3jRCJ6rrVwoeYVrPZvOutXSLqaVcyaDwObPTGTCUyT0ewhVx56lnIZkEFW/RdC2ibOgy91cnGHL0F3mgVf/csPsEb8XX1eSP9zAQ7A9hFxRqoGCIPiPEUfNwf6fT88BjncvKbfEAY+TLxK6Z2EpU6n6HO/FJshSyP2xu/I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by DS0PR12MB7873.namprd12.prod.outlook.com (2603:10b6:8:142::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Tue, 5 Mar
+ 2024 06:02:35 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::ed15:6173:2f14:f539]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::ed15:6173:2f14:f539%5]) with mapi id 15.20.7339.035; Tue, 5 Mar 2024
+ 06:02:35 +0000
+Message-ID: <089cddf1-3686-4403-a480-07fddd66ab4b@amd.com>
+Date: Tue, 5 Mar 2024 17:02:27 +1100
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH kernel v2] pci/doe: Support discovery version
+Content-Language: en-US
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>, Dan Williams
+ <dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ira Weiny <ira.weiny@intel.com>
+References: <20240226033114.3100118-1-aik@amd.com>
+ <20240227204116.GA30259@wunner.de>
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <20240227204116.GA30259@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SY0PR01CA0006.ausprd01.prod.outlook.com
+ (2603:10c6:10:1bb::22) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500006.china.huawei.com (7.221.188.68)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DS0PR12MB7873:EE_
+X-MS-Office365-Filtering-Correlation-Id: c66a4e87-4e22-4dc7-5788-08dc3cd9da50
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Zjn8KuN8i3yglyd5P4fDK+Q0eaB1NwMw1/lEfm7NRbNjiDlGr82jl9Npt/QLXSJjpMHpSD6PrRLWbXj/SrZ3PcUlcg9+VQMe9JdIbgxi/0Iing4PBItr+g4OOlYr3MJmSp5dpSxLst1DiGGdThHYq3smIVqfF7/q9tSqyek6OUE0rk6liNg8d+63hLcJV5ESwldZrGejwnDjnSKPcANkIp8F+2wQpshJ141AsfXIECMGRIbq5P1o0kG0N0Egc9Ng8SlXfQbwdRLiLujgkK/YCrcv3KD++dRLYkRheVYd6KPfryXSCDAEbVgNJwlk0D/uYqBGKw45Q6vuL3yLB8q3zUlEzaw10oypt4j5zLSaTQ/92BaCBzTM5ZFjT947X2Cj+yo+kbDMUEbAP9HwKk4i1Ugc555eckb5YUNFCB0ArJUBPyTYv4LoOYDbmdlnAAbe2TQ9YnQ+OQiZolrvkgYFsNOQUR0p/tXlrylNddxY1nuDS3+bXUTwlHJ2oKwBmuF666HB92Hx3zfYxc7zTr9oIgyBL63Tg8sWjUN/zingLT+w6N92xdCt/62mG/6B9kFuvNZpc1bktT7XMb/gv+kLJFZzxVWWcVB2/RyfGw6aR3nvqHCmOQeoJVBxbBvdC2gItu6PWp0Fj+oEXWZuMiTkzMMEKbYzY6ayAZTSb/ZbCj8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Rk4zL0dDTFBySGIvamY3bkpnNHlqL0VQNSsrbjR2QTBld29IM0dFaFJ0R1d0?=
+ =?utf-8?B?eUk2SHBpd0RBa3BUSC8rNjY2b0lRbGtIb0s3VGUyZE5Qb0IvR1dMTyt6T29D?=
+ =?utf-8?B?cGROQ1ZtK1V3WjNtNG01dWpSRlJkZ1MvUGhNVGE0K3hIdGtZSFlZVVRBWHhO?=
+ =?utf-8?B?cUFrdzl4T08yRXZpSVV3Zkc0aGtsTkhoWmg3L0tzVjZHaVZWUHFqN29HZ3JU?=
+ =?utf-8?B?bTNKMXIwN1UrK1hzK3dRenlMYkVHWUtBME00M0Z6QzVNNWVjc2VPUDVOVjFI?=
+ =?utf-8?B?SVN5ajBvOHQ5SmRabDkxVERoeVVvQVpBbnhlSkRaRGY4UExwRzRzU1NORGF4?=
+ =?utf-8?B?SmFaSlpQdERick1GNkhGYlRIMm42QnZJRFNPUkxhL1Z5UDhOb2F5Sy84VUNB?=
+ =?utf-8?B?aFBHTUxQNUkxMDNUanVCbDQwTzdPeVgyVkRHSzE4U0E0KzNHVmhPeEVlNml2?=
+ =?utf-8?B?Z21hNVI2Nm56NjRFcmE1NTZwbG1ROWFWUFRkWXovT0VBS3NQZ2NmNkxrYUxB?=
+ =?utf-8?B?WGVQZ2VVZ0U2bmJEMm5pT0g2bUdjY0VvS2xONC9oTUpxQ3FQRDFxMVlNM0Fv?=
+ =?utf-8?B?bmM2bHIxT1NxU05kWUZvSXlEWWZneGQrL01nQ1dqa214LzA2eHdDczNUOURi?=
+ =?utf-8?B?RmR3eW40enErWnhwd1JCc0ZjRk5QK1hJeUVRWWxBMVRRcXg2anVoVnoxRlpH?=
+ =?utf-8?B?TUZIRkl5TkJTRXFRTExQdHlBbWU0aUVnUXptM1VLL2kwS3FqcXpTZjZPVzhw?=
+ =?utf-8?B?MjJjZFI5bmVHZ25IdnhmYjhDaFF5S2UwWG96L3RXbVR1ZXAxNE11VWtPbEh3?=
+ =?utf-8?B?a3YybW41bUpMelBHZVNDakF4NjBpbzFnamg5WExkMGR6Wm44K3dqOE9rckQy?=
+ =?utf-8?B?OW1kSlYwSElBK3hWSmJqN0xiVzZKcUN4cTdMUVE5TVdYV3A1RzUrRFlycE1K?=
+ =?utf-8?B?dkx3MGdoazdadFVnS1lvamZXWW1HZS9oWE1ocmUwSXNzRzdQanJQWm95Ujgr?=
+ =?utf-8?B?L1RQRVF3dERja3hxMTBPa0kwcFhGU2xoYjVJUjN2dmF6d0t2amd3UnpOWkhr?=
+ =?utf-8?B?VEtlSHJYemtqQitnSmhCNHp5NlNHYVpxcnZocXFvVFA2NWM4VTlQdExPNCtl?=
+ =?utf-8?B?NkVWdnJ4dGU3aHhlU0lYTU10L1BqdmZjVitycUFvd1pCbUdwRm5KMlBQbHlL?=
+ =?utf-8?B?bG12T3hLbkUzbU53UmJuV0V6b25mdHc3YkFYbDZWZVUxTTBSbnF6bEdxUS94?=
+ =?utf-8?B?QUN0cnEyMFlNRjIrM0JxYSt6S3JjbUtOTWs3ODc2R3JKNFhrcmttTExxYnV6?=
+ =?utf-8?B?d0JFamMvcmdwNWtUc3VtYmF4MWtKQ0hPWEZrSGJoNytlNHB3OUJ1WXNZY0da?=
+ =?utf-8?B?bVZUVElVRWgyREhBR2Ivd2svekJHdUNFQitiZUY5UmhCR0JhUnpkNDhSYlJ6?=
+ =?utf-8?B?MGovZ3Z6WitCUDVhek15V1p2QUZrRTJOWW5vTEVaU1E2TGRkUjhQVVVJaVZ4?=
+ =?utf-8?B?L2dsOWp5WUtiOXNlL3VPQkp6SFJVRm1zbndpNFlpYTNtZzJYYzQ3OEpUdGtN?=
+ =?utf-8?B?T2lobzJEY3d1T05MZkNtVmF1WGVla3R4Y1RicG4rVWpMb3lyOG5JTnpidlNx?=
+ =?utf-8?B?dDdEeS85UGRkSmREdEZ5SmNyQ1ZqeERsTlhMb0xpMGRjR3BoLy9VZVYzbFNR?=
+ =?utf-8?B?YjdTU3BKbTAzaXAvS2t5MHl4aDEyaVViVHd2bHA5UG1qSTBNVTM1VHJMWE9n?=
+ =?utf-8?B?YlRWdW9CNGpGUnFNb0NTcFpFSjFmcXRIRUFtbmM3dTd4U1RlTDRvdlIyZWZa?=
+ =?utf-8?B?T0t6aTl1M042ZjNFeXhUTjdrTEhva3JpbjlGaU1PM1NNYTd6VkxkMGZkamNF?=
+ =?utf-8?B?NE1VZ3cwUGw3Q3RMZGRGYlBUWDV4MFhvY2lSY2xXVVpaMzV6T3lZQ2FUQi9x?=
+ =?utf-8?B?NjJFT1NIY0dtb21jZUhhK2RHdFRPS09WQWFrVHB5WXBock5sL0ZxS2tRK0Vh?=
+ =?utf-8?B?VGptcEZGTG42OEJ0akRQUStZL2JqVTJVbGNSbHV5S0lleEFRWGNQM2xNSWhj?=
+ =?utf-8?B?WjNOaklUVlZJaXlmVWdRbkI4VzFWNGZPcTlGTWtFUGpCT3NwT2ZlNzdzaHVl?=
+ =?utf-8?Q?lBZYyf8lV/BRSTMxXQZnEWP/Q?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c66a4e87-4e22-4dc7-5788-08dc3cd9da50
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 06:02:35.1118
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WtRbTSVNnfAZ2VSuCtK5xq/E69AIUxqHPSZ3T4xQVFlrWmb5I1+kIOis5ase1qiTwCsAg/3ApwOKPylnyutmng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7873
 
-From: wenglianfa <wenglianfa@huawei.com>
 
-SCCC (SCC Context) is a context with QP granularity that contains
-information about congestion control. Dump SCCC and QPC together
-to improve troubleshooting.
 
-When dumping raw QPC with rdmatool, there will be a total of 576 bytes
-data output, where the first 512 bytes is QPC and the last 64 bytes is
-SCCC. When congestion control is disabled, the 64 byte SCCC will be all 0.
+On 28/2/24 07:41, Lukas Wunner wrote:
+> On Mon, Feb 26, 2024 at 02:31:14PM +1100, Alexey Kardashevskiy wrote:
+>> Does PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER need to be in pci-regs.h?
+> 
+> Yes that's fine.
+> 
+> 
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -1144,6 +1144,7 @@
+>>   #define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH		0x0003ffff
+>>   
+>>   #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
+>> +#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER	0x0000ff00
+>>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
+>>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
+>>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
+> 
+> "DISCOVER" duplicates the preceding "DISC", maybe just
+> "PCI_DOE_DATA_OBJECT_DISC_REQ_3_VERSION" for simplicity?
 
-Example:
-$rdma res show qp -jpr
-[ {
-        "ifindex": 0,
-        "ifname": "hns_0",
-	"data": [ 67,0,0,0... 512bytes
-		  4,0,2... 64bytes]
-  },...
-} ]
+Well, mostly because the PCIe spec specifically says "discovery" in the 
+field description, not just "version", but ok, I'll drop it.
 
-Signed-off-by: wenglianfa <wenglianfa@huawei.com>
-Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
----
- drivers/infiniband/hw/hns/hns_roce_cmd.h      |  3 +++
- drivers/infiniband/hw/hns/hns_roce_device.h   |  1 +
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c    | 25 +++++++++++++++++++
- drivers/infiniband/hw/hns/hns_roce_hw_v2.h    |  6 +++++
- drivers/infiniband/hw/hns/hns_roce_restrack.c | 23 ++++++++++++++---
- 5 files changed, 55 insertions(+), 3 deletions(-)
+btw "DISC" is just confusing, it has nothing to do with discs. _PROTOCOL 
+is not even correct anymore, now, in PCIe r6.1 it is called "type", 
+lovely :) s/PCI_DOE_DATA_OBJECT_DISC_/PCI_DOE_DISCOVERY_/ (because 
+DO==DATA_OBJECT) imho would do better but may be some other day.
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_cmd.h b/drivers/infiniband/hw/hns/hns_roce_cmd.h
-index 052a3d60905a..11dbbabebdc9 100644
---- a/drivers/infiniband/hw/hns/hns_roce_cmd.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_cmd.h
-@@ -108,6 +108,9 @@ enum {
- 	HNS_ROCE_CMD_QUERY_CEQC		= 0x92,
- 	HNS_ROCE_CMD_DESTROY_CEQC	= 0x93,
- 
-+	/* SCC CTX commands */
-+	HNS_ROCE_CMD_QUERY_SCCC		= 0xa2,
-+
- 	/* SCC CTX BT commands */
- 	HNS_ROCE_CMD_READ_SCCC_BT0	= 0xa4,
- 	HNS_ROCE_CMD_WRITE_SCCC_BT0	= 0xa5,
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index bc015901a7d3..c3cbd0a494bf 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -947,6 +947,7 @@ struct hns_roce_hw {
- 	int (*query_qpc)(struct hns_roce_dev *hr_dev, u32 qpn, void *buffer);
- 	int (*query_mpt)(struct hns_roce_dev *hr_dev, u32 key, void *buffer);
- 	int (*query_srqc)(struct hns_roce_dev *hr_dev, u32 srqn, void *buffer);
-+	int (*query_sccc)(struct hns_roce_dev *hr_dev, u32 qpn, void *buffer);
- 	int (*query_hw_counter)(struct hns_roce_dev *hr_dev,
- 				u64 *stats, u32 port, int *hw_counters);
- 	const struct ib_device_ops *hns_roce_dev_ops;
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 38e426f4afb5..ba7ae792d279 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -5317,6 +5317,30 @@ static int hns_roce_v2_query_srqc(struct hns_roce_dev *hr_dev, u32 srqn,
- 	return ret;
- }
- 
-+static int hns_roce_v2_query_sccc(struct hns_roce_dev *hr_dev, u32 qpn,
-+				  void *buffer)
-+{
-+	struct hns_roce_v2_scc_context *context;
-+	struct hns_roce_cmd_mailbox *mailbox;
-+	int ret;
-+
-+	mailbox = hns_roce_alloc_cmd_mailbox(hr_dev);
-+	if (IS_ERR(mailbox))
-+		return PTR_ERR(mailbox);
-+
-+	ret = hns_roce_cmd_mbox(hr_dev, 0, mailbox->dma, HNS_ROCE_CMD_QUERY_SCCC,
-+				qpn);
-+	if (ret)
-+		goto out;
-+
-+	context = mailbox->buf;
-+	memcpy(buffer, context, sizeof(*context));
-+
-+out:
-+	hns_roce_free_cmd_mailbox(hr_dev, mailbox);
-+	return ret;
-+}
-+
- static u8 get_qp_timeout_attr(struct hns_roce_dev *hr_dev,
- 			      struct hns_roce_v2_qp_context *context)
- {
-@@ -6709,6 +6733,7 @@ static const struct hns_roce_hw hns_roce_hw_v2 = {
- 	.query_qpc = hns_roce_v2_query_qpc,
- 	.query_mpt = hns_roce_v2_query_mpt,
- 	.query_srqc = hns_roce_v2_query_srqc,
-+	.query_sccc = hns_roce_v2_query_sccc,
- 	.query_hw_counter = hns_roce_hw_v2_query_counter,
- 	.hns_roce_dev_ops = &hns_roce_v2_dev_ops,
- 	.hns_roce_dev_srq_ops = &hns_roce_v2_dev_srq_ops,
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-index 359a74672ba1..df04bc8ede57 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-@@ -646,6 +646,12 @@ struct hns_roce_v2_qp_context {
- #define QPCEX_SQ_RQ_NOT_FORBID_EN QPCEX_FIELD_LOC(23, 23)
- #define QPCEX_STASH QPCEX_FIELD_LOC(82, 82)
- 
-+#define SCC_CONTEXT_SIZE 16
-+
-+struct hns_roce_v2_scc_context {
-+	__le32 data[SCC_CONTEXT_SIZE];
-+};
-+
- #define	V2_QP_RWE_S 1 /* rdma write enable */
- #define	V2_QP_RRE_S 2 /* rdma read enable */
- #define	V2_QP_ATE_S 3 /* rdma atomic enable */
-diff --git a/drivers/infiniband/hw/hns/hns_roce_restrack.c b/drivers/infiniband/hw/hns/hns_roce_restrack.c
-index f7f3c4cc7426..356d98816949 100644
---- a/drivers/infiniband/hw/hns/hns_roce_restrack.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_restrack.c
-@@ -97,16 +97,33 @@ int hns_roce_fill_res_qp_entry_raw(struct sk_buff *msg, struct ib_qp *ib_qp)
- {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ib_qp->device);
- 	struct hns_roce_qp *hr_qp = to_hr_qp(ib_qp);
--	struct hns_roce_v2_qp_context context;
-+	struct hns_roce_full_qp_ctx {
-+		struct hns_roce_v2_qp_context qpc;
-+		struct hns_roce_v2_scc_context sccc;
-+	} context = {};
- 	int ret;
- 
- 	if (!hr_dev->hw->query_qpc)
- 		return -EINVAL;
- 
--	ret = hr_dev->hw->query_qpc(hr_dev, hr_qp->qpn, &context);
-+	ret = hr_dev->hw->query_qpc(hr_dev, hr_qp->qpn, &context.qpc);
- 	if (ret)
--		return -EINVAL;
-+		return ret;
-+
-+	/* If SCC is disabled or the query fails, the queried SCCC will
-+	 * be all 0.
-+	 */
-+	if (!(hr_dev->caps.flags & HNS_ROCE_CAP_FLAG_QP_FLOW_CTRL) ||
-+	    !hr_dev->hw->query_sccc)
-+		goto out;
-+
-+	ret = hr_dev->hw->query_sccc(hr_dev, hr_qp->qpn, &context.sccc);
-+	if (ret)
-+		ibdev_warn_ratelimited(&hr_dev->ib_dev,
-+				       "failed to query SCCC, ret = %d.\n",
-+				       ret);
- 
-+out:
- 	ret = nla_put(msg, RDMA_NLDEV_ATTR_RES_RAW, sizeof(context), &context);
- 
- 	return ret;
+> 
+> 
+>> -static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
+>> +static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u16 *vid,
+>>   			     u8 *protocol)
+>>   {
+>> +	u32 disver = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER,
+>> +				(capver >= 2) ? 2 : 0);
+>>   	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
+>> -				    *index);
+>> +				    *index) | disver;
+> 
+> Hm, why use a separate "disver" variable?  This could be combined
+> into a single statement.
+
+
+Less ugly since we want to keep it 80 chars long (do we, still?). Like 
+this looks meh:
+
+
+{ 
+
+         u32 request_pl = 
+FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
+                                     *index) |
+FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER,
+                                     (capver >= 2) ? 2 : 0); 
+
+         __le32 request_pl_le = cpu_to_le32(request_pl); 
+
+
+
+If we did 100 chars, I could do:
+
+{ 
+
+         u32 request_pl = 
+FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX, *index) |
+                          FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_VER, 
+(capver >= 2) ? 2 : 0);
+         __le32 request_pl_le = cpu_to_le32(request_pl); 
+
+
+
+
+> 
+> Subject should probably be "PCI/DOE: Support discovery version 2".
+
+> Otherwise LGTM.
+
+Thanks! I'll repost soon.
+
+> 
+> Thanks,
+> 
+> Lukas
+
 -- 
-2.30.0
+Alexey
 
