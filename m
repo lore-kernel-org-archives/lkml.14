@@ -1,288 +1,120 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806731272B7;
-	Tue,  5 Mar 2024 15:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A5885944;
+	Tue,  5 Mar 2024 15:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709653010; cv=none; b=EIXfI5eiMjysOjr2eLxnwEi2OW6SejEhKE+pyOft8L14J/+v+y/4+7iAS1sGaxCKh6hmzhrPDexre+02d4fn0u4QIw8MI2VnGrb0/dti/DVuadH6rFQMfjR9SIiPQjZ4kG7SMamXQWjZTR4gvXE4kBxH1btrbgkqul1fitGMn1Q=
+	t=1709653080; cv=none; b=SMGFvGB6O11vTqKQz77655xVgon9tJs2nydVZlcv9BNrG8Ol0s2z2DpqFDdFwqgY1uBvPEs/Jxj5xBBPC5on1+607s4QqrDODAGqxLx103aeEVCNj6IS5GYTkMLsUDn+0ZyJcxPI/sFPvcuMn023jZWCthTXD7umheovawVk1d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709653010; c=relaxed/simple;
-	bh=aPbFheI9M3TElH4HfEMIXBUx9AN8rebgLs/CmEGBGNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FNWCp7zwbMtR6y5RQbr4yTlcP5162ELDrniHcBa33yuTOBdvhvcdZgmsXc8qGku6qXfC5C/G4jIzuqsiSRdPx3umWiBb7PiEuYvaaRv+21R3gRmebt1HYvgqJ1GyVANQcYnBnQJxXUQtcrYzs+wewFa/ojf4fZl1eqfhnX2RnwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D6E2A61E5FE38;
-	Tue,  5 Mar 2024 16:35:48 +0100 (CET)
-Message-ID: <14cf3adb-7915-424e-b5ad-2c100cec183e@molgen.mpg.de>
-Date: Tue, 5 Mar 2024 16:35:48 +0100
+	s=arc-20240116; t=1709653080; c=relaxed/simple;
+	bh=xwm84H4f4tjwcSxxtvgbASvINMVOSckg9bf0UJkq3EY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kSoTN9nF871z0xC9eqXZRNGusAxV1MKA23Ce8/3482/4DlxTIyM+gZjRIJ4XPxGbFOhSLcsHdqzYFLBeDRkP7EJ9XACUl88kFoAu9+r5+fHi6me85mO2JW+RVKMaBeNLL1pCL4M4rJahLCJNmrwFH1IYX2rQWeVj0VTGaKjk9Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mHUaJC8j; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mHUaJC8j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709653078; x=1741189078;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=xwm84H4f4tjwcSxxtvgbASvINMVOSckg9bf0UJkq3EY=;
+  b=mHUaJC8jd/X65cvPRoO4/q8f56v2rjc0LO9ho0usS0PtDTtK5PVzi0Vl
+   k/Ey6JABbhA3uBxmyZgFgypqY8Rt/UX5XuEHP9HxRIvcWilnhAQsHsO19
+   bNsbXKmB1CNurqrgH/VhiDRvhSem6avJbg0R5jgxZrN75V1S4aiyZzgCp
+   zdxx4qrUiiBlG2cT72zMEXZA8oPZsrGfCYJuVn51XjFEMXou/h79uvpNE
+   Oet4+fklPRw4VlZLQIb3W2had6AxXhQquV1hsr7b0kl5NtR26soeNfS+N
+   2cglipKrvTSDQgLYs5QoNh3IyrXVD3Hs2CBzOZBQmZ/duNGEdbXhZ3sXW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="21670783"
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="21670783"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 07:37:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="40301723"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.51.37])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 07:37:54 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 5 Mar 2024 17:37:49 +0200 (EET)
+To: Bjorn Helgaas <bhelgaas@google.com>
+cc: linux-pci@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+    Rob Herring <robh@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Igor Mammedov <imammedo@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    Andy Shevchenko <andriy.shevchenko@intel.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] PCI: Solve two bridge window sizing issues
+In-Reply-To: <20231222122901.49538-1-ilpo.jarvinen@linux.intel.com>
+Message-ID: <cdda64e3-3454-406d-55a2-cf79f7650b45@linux.intel.com>
+References: <20231222122901.49538-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] ice: Add get/set hw address for VFs using devlink
- commands
-Content-Language: en-US
-To: Karthik Sundaravel <ksundara@redhat.com>
-Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, jiri@resnulli.us,
- michal.swiatkowski@linux.intel.com, rjarry@redhat.com, aharivel@redhat.com,
- vchundur@redhat.com, cfontain@redhat.com
-References: <20240305152641.53489-1-ksundara@redhat.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240305152641.53489-1-ksundara@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1729510199-1709652635=:1003"
+Content-ID: <cc693734-3506-af03-e013-e615672682bd@linux.intel.com>
 
-Dear Karthik,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-1729510199-1709652635=:1003
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <c95136c0-b742-0650-6c3d-b4247b7f2e47@linux.intel.com>
 
-Thank you for your patch.
+On Fri, 22 Dec 2023, Ilpo J=E4rvinen wrote:
 
-Am 05.03.24 um 16:26 schrieb Karthik Sundaravel:
-> Changing the MAC address of the VFs are not available
+> Hi all,
+>=20
+> Here's a series that contains two fixes to PCI bridge window sizing
+> algorithm. Together, they should enable remove & rescan cycle to work
+> for a PCI bus that has PCI devices with optional resources and/or
+> disparity in BAR sizes.
+>=20
+> For the second fix, I chose to expose find_empty_resource_slot() from
+> kernel/resource.c because it should increase accuracy of the cannot-fit
+> decision (currently that function is called find_resource()). In order
+> to do that sensibly, a few improvements seemed in order to make its
+> interface and name of the function sane before exposing it. Thus, the
+> few extra patches on resource side.
 
-Maybe:
+Hi Bjorn,
 
-… is currently unsupported …
+Can you consider applying this series or do you have some comments on it?
 
-or
+I'm a bit unsure these days if my emails even reach you successfully as I=
+=20
+tend to often receive complaints from Gmail that it has blocked the emails=
+=20
+I send with git send-email detecting them as "unsolicited mail".
 
-… is currently impossible …
-
-> via devlink. Add the function handlers to set and get
-> the HW address for the VFs.
-
-This fits into two lines (with a line length of 75 characters)
-
-> Signed-off-by: Karthik Sundaravel <ksundara@redhat.com>
-> ---
-
-Could you please add a change-log for each patch iteration?
-
->   drivers/net/ethernet/intel/ice/ice_devlink.c | 78 +++++++++++++++++++-
->   drivers/net/ethernet/intel/ice/ice_sriov.c   | 62 ++++++++++++++++
->   drivers/net/ethernet/intel/ice/ice_sriov.h   |  8 ++
->   3 files changed, 147 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_devlink.c b/drivers/net/ethernet/intel/ice/ice_devlink.c
-> index 80dc5445b50d..39d4d79ac731 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_devlink.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_devlink.c
-> @@ -1576,6 +1576,81 @@ void ice_devlink_destroy_pf_port(struct ice_pf *pf)
->   	devlink_port_unregister(&pf->devlink_port);
->   }
->   
-> +/**
-> + * ice_devlink_port_get_vf_fn_mac - .port_fn_hw_addr_get devlink handler
-> + * @port: devlink port structure
-> + * @hw_addr: MAC address of the port
-> + * @hw_addr_len: length of MAC address
-> + * @extack: extended netdev ack structure
-> + *
-> + * Callback for the devlink .port_fn_hw_addr_get operation
-> + * Return: zero on success or an error code on failure.
-> + */
-> +
-> +static int ice_devlink_port_get_vf_fn_mac(struct devlink_port *port,
-> +					  u8 *hw_addr, int *hw_addr_len,
-> +					  struct netlink_ext_ack *extack)
-> +{
-> +	struct devlink_port_attrs *attrs = &port->attrs;
-> +	struct devlink_port_pci_vf_attrs *pci_vf;
-> +	struct devlink *devlink = port->devlink;
-> +	struct ice_pf *pf;
-> +	struct ice_vf *vf;
-> +	int vf_id;
-
-The signature of `ice_get_vf_by_id()` uses u16 as type.
-
-> +
-> +	pf = devlink_priv(devlink);
-> +	pci_vf = &attrs->pci_vf;
-> +	vf_id = pci_vf->vf;
-> +
-> +	vf = ice_get_vf_by_id(pf, vf_id);
-> +	if (!vf) {
-> +		NL_SET_ERR_MSG_MOD(extack, "Unable to get the vf");
-
-Maybe also add the vf_id to theh error message?
-
-> +		return -EINVAL;
-> +	}
-> +	ether_addr_copy(hw_addr, vf->dev_lan_addr);
-> +	*hw_addr_len = ETH_ALEN;
-> +
-> +	ice_put_vf(vf);
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ice_devlink_port_set_vf_fn_mac - .port_fn_hw_addr_set devlink handler
-> + * @port: devlink port structure
-> + * @hw_addr: MAC address of the port
-> + * @hw_addr_len: length of MAC address
-> + * @extack: extended netdev ack structure
-> + *
-> + * Callback for the devlink .port_fn_hw_addr_set operation
-> + * Return: zero on success or an error code on failure.
-> + */
-> +static int ice_devlink_port_set_vf_fn_mac(struct devlink_port *port,
-> +					  const u8 *hw_addr,
-> +					  int hw_addr_len,
-> +					  struct netlink_ext_ack *extack)
-> +
-> +{
-> +	struct devlink_port_attrs *attrs = &port->attrs;
-> +	struct devlink_port_pci_vf_attrs *pci_vf;
-> +	struct devlink *devlink = port->devlink;
-> +	struct ice_pf *pf;
-> +	u8 mac[ETH_ALEN];
-> +	int vf_id;
-> +
-> +	pf = devlink_priv(devlink);
-> +	pci_vf = &attrs->pci_vf;
-> +	vf_id = pci_vf->vf;
-> +
-> +	ether_addr_copy(mac, hw_addr);
-> +
-> +	return ice_set_vf_fn_mac(pf, vf_id, mac);
-> +}
-> +
-> +static const struct devlink_port_ops ice_devlink_vf_port_ops = {
-> +	.port_fn_hw_addr_get = ice_devlink_port_get_vf_fn_mac,
-> +	.port_fn_hw_addr_set = ice_devlink_port_set_vf_fn_mac,
-> +};
-> +
->   /**
->    * ice_devlink_create_vf_port - Create a devlink port for this VF
->    * @vf: the VF to create a port for
-> @@ -1611,7 +1686,8 @@ int ice_devlink_create_vf_port(struct ice_vf *vf)
->   	devlink_port_attrs_set(devlink_port, &attrs);
->   	devlink = priv_to_devlink(pf);
->   
-> -	err = devlink_port_register(devlink, devlink_port, vsi->idx);
-> +	err = devlink_port_register_with_ops(devlink, devlink_port,
-> +					     vsi->idx, &ice_devlink_vf_port_ops);
->   	if (err) {
->   		dev_err(dev, "Failed to create devlink port for VF %d, error %d\n",
->   			vf->vf_id, err);
-> diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.c b/drivers/net/ethernet/intel/ice/ice_sriov.c
-> index 31314e7540f8..73cf1d9e9daa 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_sriov.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_sriov.c
-> @@ -1216,6 +1216,68 @@ ice_get_vf_cfg(struct net_device *netdev, int vf_id, struct ifla_vf_info *ivi)
->   	return ret;
->   }
->   
-> +/**
-> + * ice_set_vf_fn_mac
-> + * @pf: PF to be configure
-> + * @vf_id: VF identifier
-> + * @mac: MAC address
-> + *
-> + * program VF MAC address
-> + */
-> +int ice_set_vf_fn_mac(struct ice_pf *pf, int vf_id, u8 *mac)
-
-Also use u16 for `vf_id`?
-
-> +{
-> +	struct device *dev;
-> +	struct ice_vf *vf;
-> +	int ret;
-> +
-> +	dev = ice_pf_to_dev(pf);
-> +	if (is_multicast_ether_addr(mac)) {
-> +		dev_err(dev, "%pM not a valid unicast address\n", mac);
-> +		return -EINVAL;
-> +	}
-> +
-> +	vf = ice_get_vf_by_id(pf, vf_id);
-> +	if (!vf)
-> +		return -EINVAL;
-> +
-> +	/* nothing left to do, unicast MAC already set */
-> +	if (ether_addr_equal(vf->dev_lan_addr, mac) &&
-> +	    ether_addr_equal(vf->hw_lan_addr, mac)) {
-> +		ret = 0;
-> +		goto out_put_vf;
-> +	}
-> +
-> +	ret = ice_check_vf_ready_for_cfg(vf);
-> +	if (ret)
-> +		goto out_put_vf;
-> +
-> +	mutex_lock(&vf->cfg_lock);
-> +
-> +	/* VF is notified of its new MAC via the PF's response to the
-> +	 * VIRTCHNL_OP_GET_VF_RESOURCES message after the VF has been reset
-> +	 */
-> +	ether_addr_copy(vf->dev_lan_addr, mac);
-> +	ether_addr_copy(vf->hw_lan_addr, mac);
-> +	if (is_zero_ether_addr(mac)) {
-> +		/* VF will send VIRTCHNL_OP_ADD_ETH_ADDR message with its MAC */
-> +		vf->pf_set_mac = false;
-> +		dev_info(dev, "Removing MAC on VF %d. VF driver will be reinitialized\n",
-> +			 vf->vf_id);
-> +	} else {
-> +		/* PF will add MAC rule for the VF */
-> +		vf->pf_set_mac = true;
-> +		dev_info(dev, "Setting MAC %pM on VF %d. VF driver will be reinitialized\n",
-> +			 mac, vf_id);
-> +	}
-> +
-> +	ice_reset_vf(vf, ICE_VF_RESET_NOTIFY);
-> +	mutex_unlock(&vf->cfg_lock);
-> +
-> +out_put_vf:
-> +	ice_put_vf(vf);
-> +	return ret;
-> +}
-> +
->   /**
->    * ice_set_vf_mac
->    * @netdev: network interface device structure
-> diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.h b/drivers/net/ethernet/intel/ice/ice_sriov.h
-> index 346cb2666f3a..a03be184a806 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_sriov.h
-> +++ b/drivers/net/ethernet/intel/ice/ice_sriov.h
-> @@ -28,6 +28,7 @@
->   #ifdef CONFIG_PCI_IOV
->   void ice_process_vflr_event(struct ice_pf *pf);
->   int ice_sriov_configure(struct pci_dev *pdev, int num_vfs);
-> +int ice_set_vf_fn_mac(struct ice_pf *pf, int vf_id, u8 *mac);
->   int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac);
->   int
->   ice_get_vf_cfg(struct net_device *netdev, int vf_id, struct ifla_vf_info *ivi);
-> @@ -76,6 +77,13 @@ ice_sriov_configure(struct pci_dev __always_unused *pdev,
->   	return -EOPNOTSUPP;
->   }
->   
-> +static inline int
-> +ice_set_vf_fn_mac(struct ice_pf __always_unused *pf,
-> +		  int __always_unused vf_id, u8 __always_unused *mac)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
->   static inline int
->   ice_set_vf_mac(struct net_device __always_unused *netdev,
->   	       int __always_unused vf_id, u8 __always_unused *mac)
+--=20
+ i.
 
 
-Kind regards,
+> Unfortunately I don't have a reason to suspect these would help with
+> the issues related to the currently ongoing resource regression
+> thread [1].
+>=20
+> [1] https://lore.kernel.org/linux-pci/ZXpaNCLiDM+Kv38H@marvin.atrad.com.a=
+u/
+>=20
+> Ilpo J=E4rvinen (7):
+>   PCI: Fix resource double counting on remove & rescan
+>   resource: Rename find_resource() to find_empty_resource_slot()
+>   resource: Document find_empty_resource_slot() and resource_constraint
+>   resource: Use typedef for alignf callback
+>   resource: Handle simple alignment inside __find_empty_resource_slot()
+>   resource: Export find_empty_resource_slot()
+>   PCI: Relax bridge window tail sizing rules
 
-Paul
+--8323328-1729510199-1709652635=:1003--
