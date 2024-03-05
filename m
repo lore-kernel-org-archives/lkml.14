@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7249A80BFE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4C98062F;
 	Tue,  5 Mar 2024 08:14:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709626486; cv=none; b=bFO9sqPikphub27YoD1a/o990TBZpUeH8X+dnpDblC8IvL6AqELPJVTbdw/TtiVrH30kcK12TrunSvz71wKjMp6rTTrTQlafrxs0zSpxYmTc+c0uyF8kAxQG3FwBoBI8ANkI8tPa+aO7N+qTNxACA4fmhjGXYtf6kxCmSBVaO+k=
+	t=1709626486; cv=none; b=WDAm+gYgGhO3oKVlhTaKnxiWLsmU9exnZSHfvX0YzWMqJxJqD80TrDlLNdrvMl7htmBESLFOrLyh/mCQrdbjyMhANUOQW5zPdffjs1CltkyJsivgVV3IjoUCNZLKzDKTSlDuJ1Xspn5aRg74W3KfSBnue7nvgYqKEbmd2eeNnFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709626486; c=relaxed/simple;
-	bh=DQk9lCKuHSluKcrPQ1v0+lTVtvnpI7fwkC/si6tMhYo=;
+	bh=OJHWjk4Xm5Pt54cy7lIhhGCkWvJvBeW3Z7MBRZ4L81c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aa5FqH2HxnoWtRl4/qN7xVW8QT3SYVE5jjzvOJw/LlFmBjP2+RkVLKRde6YUCdcAzxbfaxWKLvE8oJcZnXifyX2rb0rSAKiCrTIXazbXDy33XMFDlWLtsHtVjc+HQr6nFFwaw/VsYApLjU+aIQ9jq+bSJumI1rlAnPnD1Qn3V00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2EQX+Wm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Gye7EEl17zx1SmocmNAz0Jq382Yah8qDbPBBZwuzHPk8bD8fEIMhpVZm7/ql+4nI53ifcjGpMjIW/+R9yK4JRq3vpDCch1oGo+1dcmSNIbLudX3lXpqT3eUszciwbPEkR3p5HBV93PqxCKW+i9zae5ZNjfP6/NYfoldX1b/T+SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcoOjbjL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2EQX+Wm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAF83C43601;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcoOjbjL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8996C43330;
 	Tue,  5 Mar 2024 08:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709626485;
-	bh=DQk9lCKuHSluKcrPQ1v0+lTVtvnpI7fwkC/si6tMhYo=;
+	bh=OJHWjk4Xm5Pt54cy7lIhhGCkWvJvBeW3Z7MBRZ4L81c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S2EQX+WmdUT7kERI1AuoPc5sQiTWG9h1kybHRySR06cxllxxIBAxndYRgXj12B5Mk
-	 pJiZwNVbK3xuE5v20ER+5tn1WnCaJ+qEv4FXssHSdxZFw6a5KwkikDmPPpP2ILiJYT
-	 LpWmpCj6/h1Uf6wjgWouLEAJWcHutLP5oZW4jmYpjjEf05RhB3dwq3ooZG3BU4C7Fq
-	 7sly7H8U5LbWudfCSAZiyeZnMznwQ16KjKBj7fG0O5Coek/MoWbqKWrLgkdbWrgff3
-	 Af7DS7vk3JKZSL56iEKoQ4s6OJv9L/9fcOq7q90FM/AMWR4j5ghnll+zj5ChzxwHiE
-	 asz11h/BE7YJw==
+	b=dcoOjbjLKivx6csYxxcB0bZY3VDVvpXOc9+Im43l9NbUZvfjBPD5lymo+2o+sdRTZ
+	 jYM5QOdZ8HWEs9MDWk9R0VfYYMnVXFA9K/62D/aguz0SYUi4vALumoqXe3YC+2EqGV
+	 gwG0XQGLmTkwim3B4hERpo74J4I/l8XTV9AX6M8KY3vyTt3+IJivk3L9NyODu0KIYK
+	 9ztuEowuGulqzmyEWv4ESf1k+O2zeKW+H/4wAgZm0VfPTFEllAsKCWKHPjNkM3dBV9
+	 S+fkP86UY5mLtVdVyavKmSHLX+ejEwCdBDa05VCNBFVQvoSoRAEffLlQ2w4K1+31yZ
+	 DWPjXat1PyTCA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1rhPwp-0000000037p-3Gna;
-	Tue, 05 Mar 2024 09:14:51 +0100
+	id 1rhPwq-0000000037x-0gOM;
+	Tue, 05 Mar 2024 09:14:52 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Bjorn Andersson <andersson@kernel.org>
@@ -45,10 +45,10 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 01/10] dt-bindings: PCI: qcom: Allow 'required-opps'
-Date: Tue,  5 Mar 2024 09:10:56 +0100
-Message-ID: <20240305081105.11912-2-johan+linaro@kernel.org>
+	stable@vger.kernel.org
+Subject: [PATCH v3 05/10] arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
+Date: Tue,  5 Mar 2024 09:11:00 +0100
+Message-ID: <20240305081105.11912-6-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240305081105.11912-1-johan+linaro@kernel.org>
 References: <20240305081105.11912-1-johan+linaro@kernel.org>
@@ -60,45 +60,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some Qualcomm SoCs require a minimum performance level for the power
-domain so add 'required-opps' to the binding.
+Add the missing PCIe CX performance level votes to avoid relying on
+other drivers (e.g. USB or UFS) to maintain the nominal performance
+level required for Gen3 speeds.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Fixes: 813e83157001 ("arm64: dts: qcom: sc8280xp/sa8540p: add PCIe2-4 nodes")
+Cc: stable@vger.kernel.org      # 6.2
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml | 3 +++
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml        | 3 +++
- 2 files changed, 6 insertions(+)
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-index 125136176f93..8d570669650a 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-@@ -59,6 +59,9 @@ properties:
-   power-domains:
-     maxItems: 1
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+index c8e84c53935c..424d143ee26a 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+@@ -1780,6 +1780,7 @@ pcie4: pcie@1c00000 {
+ 			reset-names = "pci";
  
-+  required-opps:
-+    maxItems: 1
-+
-   resets:
-     minItems: 1
-     maxItems: 12
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index c8f36978a94c..1d7a6a520fef 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -111,6 +111,9 @@ properties:
-     description: GPIO controlled connection to PERST# signal
-     maxItems: 1
+ 			power-domains = <&gcc PCIE_4_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
  
-+  required-opps:
-+    maxItems: 1
-+
-   wake-gpios:
-     description: GPIO controlled connection to WAKE# signal
-     maxItems: 1
+ 			phys = <&pcie4_phy>;
+ 			phy-names = "pciephy";
+@@ -1878,6 +1879,7 @@ pcie3b: pcie@1c08000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_3B_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie3b_phy>;
+ 			phy-names = "pciephy";
+@@ -1976,6 +1978,7 @@ pcie3a: pcie@1c10000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_3A_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie3a_phy>;
+ 			phy-names = "pciephy";
+@@ -2077,6 +2080,7 @@ pcie2b: pcie@1c18000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_2B_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie2b_phy>;
+ 			phy-names = "pciephy";
+@@ -2175,6 +2179,7 @@ pcie2a: pcie@1c20000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_2A_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie2a_phy>;
+ 			phy-names = "pciephy";
 -- 
 2.43.0
 
