@@ -1,161 +1,102 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C227129437
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 06:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C38329437;
+	Tue,  5 Mar 2024 06:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709619491; cv=none; b=H4qhJxOYtUlDuTA5sNsoUDHklo05FFNwMcUPvjRG4L89KoOjrmsozEO34ze1r3ukdWlHiTqKqjqrfFHoV3I9NWcx7Oluw9LGJDRcKG2hkf7GhtJgyLJuE0yn+DFssoBZVXP/IAALgdaad8kXdtJYy+IhpGbjJyDl1yalq7r5dt8=
+	t=1709619627; cv=none; b=rYO+7mAkkXnVvBt1KzYNp1diCN/REDWo1Ag+UjDD/OiL8PRVMylaaCQ+INdMIokNHiw3oW6syqF5ZLvGHPKWZkk9I7b6mpJ706h+MzswelpBldyab49LT7wsxif6z5ykyyQEAQr5cdwLBXeMt5HEMyvJklR/vSmQNjIUy7HXT3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709619491; c=relaxed/simple;
-	bh=5qYZ10DvM+5Hlz3LeLO00gLsDU/hwoXgt/RAltDcgpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aOiiOqVM++srsDdgiNPPzYEaZFakQmEvCyVNCs8tdzbA5gUi9vP2D/F/0yx5Ugt+SxGlZ8MC9oVe1yGnEQEpVYKWznhyuS8hUWaHufZcNMC+YJseV3N1BHfNZIyMciijGeMlWnmC8kcStr30aQcSX0uj8EJR/Cf814o6YacWNJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wQARZ+fH; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709619627; c=relaxed/simple;
+	bh=XtxMs+32eXb+O0tOlP+RiquoUnx+cPRNE8UtljjeICU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jXEL9x/S/1636O5GgxDhLUrkhzsXiTZ/AHPbEzrrE6aJ6qqab1VuVe2IgbXWTuTBPZ6UKt1r5bxMCcJ+mKDM+O5aCPF4N6KLUmmahxvFEmCGspMtQRhTqbEcFyCafzHTGeBtAB9D4KVsydB05Nd6/MLSu/CmjuFkUGS2Jor2/Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=nooo8JGX; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wQARZ+fH"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-42f024b809cso50741cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 22:18:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709619489; x=1710224289; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NVjS40y9spM7MIt45tR4JQlRfFsmYBO+5d1kSRBBPBU=;
-        b=wQARZ+fH14Yv8yohWglBkUCDGbQQEjsJ+pstdNZGwV8l3Dq6cvblt8tJezjg0mQyQP
-         EhUPtpNcClPweIb6OhHE6PCgQb/3jDZjNYOsARPdhStLZFnC4nHkTbHdFGkS3CcUisas
-         HCYPN1DTY3il42MXn9evFQmqeCuvROBPd/Aysjezkj8JL5LaOn34UVwSaMFNnIkOKytR
-         Y5JYlR0YS7aA1BL8v4PnJTGIrkDDijs3N0I+NpENCWXIF0El2fNR3zvoZszqJNOujeZ+
-         DgdgQ03ZrW9FKe5CuTVu5Y6NoNjsM50tRe8nq9ErqLVfxpSdsctl6Bhc5WOrjikLr3yB
-         ksPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709619489; x=1710224289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NVjS40y9spM7MIt45tR4JQlRfFsmYBO+5d1kSRBBPBU=;
-        b=LWXTOWUVzZjXcj2ooXbZLGoM14VzGOopWi/uoiL2lwSryLZYJTm0HukPtx0NTCrLMb
-         bhDV36VlY5Q0F5zVZm7C1Mz/YyXtnQ37W8UGebL1UJbrrHdeUvjmN1odDs1DCUaRp8tQ
-         IuHN06cIImpxfjWQeNZynfS5DL7uxWp+bxRP0hbtanlvVRTVZiSVuiF5Bi2KpcIMXFDI
-         uWSe01QosA04INdDIOIkewS5ML0jGgyNxl8VTtKyeBdwjTQOI2QE4vrNMX96GoZv+MJ3
-         73vbODqcYb/RewGKEPPEF+9aoYUIM2StOTd40W5LcJCIX9g3LNi9R08J+i6iorCqXNgj
-         upYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWgHsza+aEUKdhIffUMUlJgvNNVFe5fXX9BbNyiDYS5fwo3qkX+mkOF2R+ldcx0Py0Q66Txb72DlHOJMoSHc+FoqLuQP4cZxTNdYg3
-X-Gm-Message-State: AOJu0YzeDt+aIhr/I2ld78I/TXrNn1s0Pk+KO78z4Do3Zn2fvd/kiY7F
-	c8VCUnzwDi5nl43gM1JrV7GTPW8XBZOL5BBOmK0RiBW2R8vAwaVZcHR+sXtR9EHpydhXDZO+T1j
-	+zXPkRHMTvWqiWZIF4DkXJwFRaBGvqvi49FQH
-X-Google-Smtp-Source: AGHT+IFzqDdVvEEimN/5SXvHqPdktHEmah8wXgWqyto8zJ52zQQCbxrT1IudmHjpj2RhuMuov5fqSECKmFHTdNLDO0k=
-X-Received: by 2002:ac8:7d41:0:b0:42e:cd1b:2421 with SMTP id
- h1-20020ac87d41000000b0042ecd1b2421mr117429qtb.2.1709619488625; Mon, 04 Mar
- 2024 22:18:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="nooo8JGX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=/Yy37cKtsYVqB5e9llo9kr/9z30Da+A+PjrUO4HJ8S8=;
+	t=1709619625; x=1710051625; b=nooo8JGXcCd72Jvydg/3fl/7m62P/uJ+Y6LI0vdqRYH44zu
+	BfHakO/jVzfW6fpZ5DHC7+9vyp8pxIuvrtFaYFi03Y5GLFdJMUlpDbyZ/46j6novUvZU5Q2GayfM/
+	m0H3aaF05mH9UsgmtwL0/7wIOP8reC/5eG3nNDoF86vYzsZfrf7tVT2ThesHoZX6JAPXZik5Sfoes
+	51yC9ncz5KTHc8ATaifjcJaEPC+09s3ZIau+zrXHHizTfaoNWcrGT/h9Tjg9V9WpXdVn2tkUdudFI
+	0At4fUtUvTIAdEGeYJCQnHlxdd6lz5AJ3s2tWSs8i5firxbEof+Dr4kQ7DgTZGBQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rhO9x-0008AZ-9Y; Tue, 05 Mar 2024 07:20:17 +0100
+Message-ID: <1c13f4f7-fa02-4864-8621-bfd738546fc2@leemhuis.info>
+Date: Tue, 5 Mar 2024 07:20:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229105204.720717-1-herve.codina@bootlin.com> <20240304150248.GA211460-robh@kernel.org>
-In-Reply-To: <20240304150248.GA211460-robh@kernel.org>
-From: Saravana Kannan <saravanak@google.com>
-Date: Mon, 4 Mar 2024 22:17:29 -0800
-Message-ID: <CAGETcx96Nj1RnR2wFOZYJRr=kyBLkcobY0crxBFSLGWmNaXT4A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] Synchronize DT overlay removal with devlink removals
-To: Rob Herring <robh@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Frank Rowand <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, 
-	Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "Input: bcm5974 - check endpoint type before
+ starting traffic"
+Content-Language: en-US, de-DE
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Henrik Rydberg <rydberg@bitmath.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20240305-revert_bcm5974_ep_check-v1-1-db4f0422588f@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240305-revert_bcm5974_ep_check-v1-1-db4f0422588f@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709619625;30703a26;
+X-HE-SMSGID: 1rhO9x-0008AZ-9Y
 
-On Mon, Mar 4, 2024 at 7:02=E2=80=AFAM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Feb 29, 2024 at 11:52:01AM +0100, Herve Codina wrote:
-> > Hi,
->
-> Please CC Saravana on this.
+On 05.03.24 06:52, Javier Carrasco wrote:
+> This patch intended to fix an well-knonw issue in old drivers where the
+> endpoint type is taken for granted, which is often triggered by fuzzers.
+> 
+> That was the case for this driver [1], and although the fix seems to be
+> correct, it uncovered another issue that leads to a regression [2] if
+> the endpoints of the current interface are checked. The driver makes use
+> of endpoints that belong to a different interface rather than the one it
+> binds (it binds to the third interface, but also accesses an endpoint
+> from a different one). The driver should claim the interfaces it
+> requires, but that is still not the case.
+> 
+> Given that the regression is more severe than the issue found by
+> syzkaller, the best approach is reverting the patch that causes the
+> regression, and trying to fix the underlying problem before checking
+> the endpoint types again.
+> 
+> Note that reverting this patch will probably trigger the syzkaller bug
+> at some point.
+>> [1] https://syzkaller.appspot.com/bug?extid=348331f63b034f89b622
+> [2] https://lore.kernel.org/linux-input/ab9d758c-3ce9-42f6-99af-877055a589e6@leemhuis.info/T/#t
 
-Nuno, this is why I was replying to the older series. I didn't even
-get this one.
+FWIW, these should be Link: or Closes tags, as explained in the docs.
+And there is a better lore link. And there is the bugzilla entry as well.
+Hence...
+ 
+> This reverts commit 2b9c3eb32a699acdd4784d6b93743271b4970899.
+> 
+> Fixes: b516b1b0dfcc ("Revert "Input: bcm5974 - check endpoint type before starting traffic"")
 
->
-> >
-> > In the following sequence:
-> >   of_platform_depopulate(); /* Remove devices from a DT overlay node */
-> >   of_overlay_remove(); /* Remove the DT overlay node itself */
-> >
-> > Some warnings are raised by __of_changeset_entry_destroy() which  was
-> > called from of_overlay_remove():
-> >   ERROR: memory leak, expected refcount 1 instead of 2 ...
-> >
-> > The issue is that, during the device devlink removals triggered from th=
-e
-> > of_platform_depopulate(), jobs are put in a workqueue.
-> > These jobs drop the reference to the devices. When a device is no more
-> > referenced (refcount =3D=3D 0), it is released and the reference to its
-> > of_node is dropped by a call to of_node_put().
-> > These operations are fully correct except that, because of the
-> > workqueue, they are done asynchronously with respect to function calls.
-> >
-> > In the sequence provided, the jobs are run too late, after the call to
-> > __of_changeset_entry_destroy() and so a missing of_node_put() call is
-> > detected by __of_changeset_entry_destroy().
-> >
-> > This series fixes this issue introducing device_link_wait_removal() in
-> > order to wait for the end of jobs execution (patch 1) and using this
-> > function to synchronize the overlay removal with the end of jobs
-> > execution (patch 2).
-> >
-> > Compared to the previous iteration:
-> >   https://lore.kernel.org/linux-kernel/20231130174126.688486-1-herve.co=
-dina@bootlin.com/
-> > this v3 series:
-> > - add the missing device.h
-> >
-> > This series handles cases reported by Luca [1] and Nuno [2].
-> >   [1]: https://lore.kernel.org/all/20231220181627.341e8789@booty/
-> >   [2]: https://lore.kernel.org/all/20240205-fix-device-links-overlays-v=
-2-2-5344f8c79d57@analog.com/
-> >
-> > Best regards,
-> > Herv=C3=A9
-> >
-> > Changes v2 -> v3
-> >   - Patch 1
-> >     No changes
-> >
-> >   - Patch 2
-> >     Add missing device.h
-> >
-> > Changes v1 -> v2
-> >   - Patch 1
-> >     Rename the workqueue to 'device_link_wq'
-> >     Add 'Fixes' tag and Cc stable
-> >
-> >   - Patch 2
-> >     Add device.h inclusion.
-> >     Call device_link_wait_removal() later in the overlay removal
-> >     sequence (i.e. in free_overlay_changeset() function).
-> >     Drop of_mutex lock while calling device_link_wait_removal().
-> >     Add       'Fixes' tag and Cc stable
-> >
-> > Herve Codina (2):
-> >   driver core: Introduce device_link_wait_removal()
-> >   of: overlay: Synchronize of_overlay_remove() with the devlink removal=
-s
-> >
-> >  drivers/base/core.c    | 26 +++++++++++++++++++++++---
-> >  drivers/of/overlay.c   | 10 +++++++++-
-> >  include/linux/device.h |  1 +
-> >  3 files changed, 33 insertions(+), 4 deletions(-)
-> >
-> > --
-> > 2.43.0
-> >
+you might want to add them here like this:
+
+ Link: https://syzkaller.appspot.com/bug?extid=348331f63b034f89b622 [1]
+ Link: https://lore.kernel.org/linux-input/87sf161jjc.wl-tiwai@suse.de/ [2]
+ Link: https://bugzilla.suse.com/show_bug.cgi?id=1220030
+
+In an ideal world we also would add a "Reported-by: Jacopo Radice" before
+the bugzilla line, as the details in the suse bugtracker apparently is
+public, but it's likely better to not go down that path.
+
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+
+Ciao, Thorsten
