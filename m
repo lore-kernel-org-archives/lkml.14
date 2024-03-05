@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11257E775;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEA77EEE1;
 	Tue,  5 Mar 2024 07:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709625072; cv=none; b=ow5Jtxo0QJjhT7R6U88oCtn4gqINKlf61dcaXz9ai000yI/4TIjfGkR/U523K/qAs1ABI14KoK27mL1tnMQ2vfw1r1NYBGez8hycJOZ46o4wDki2zWMCTl750OlaRJ08Yd/D0CNpcY7Xy6V1412Uijj4rPB5Yz30j3txce56q2o=
+	t=1709625072; cv=none; b=WfqgWWF9Tl/hxd/gmiWLpkS70VthdxX9nGFMCpvdvUsq/ImFxrefD0RhAI9EfpgeY9bvfeEER1nR7NQOW5qnWOoDwGmaPBThBW5JZjcUM6MKRzPps59MNY/96m3qUYwYzPpVQFVTXYD6QK3p/v/Ddn4nLN0BCCOvJKH+7tFdIOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709625072; c=relaxed/simple;
-	bh=LFNIOfkegJnCP0scLIaYXcJC1OdZyxYPTASiv2DQEnU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cOH8OevM+NJN28zsx8gBOWrbueISnitYSkIz1dye5xWv9GavYvkeyWbXhA0JdXMZlnGjqleKC6t94xmB/2yeCKjprJ+GXSiJu8psxvPIqy2Y2mC+uRUrEjKiLxtnotCr3YV2QFh8oBQpfh9lXOjmkqrNByhcKUKVdRX9A01tUnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVBhFvbM; arc=none smtp.client-ip=10.30.226.201
+	bh=Mv+wjnpaqjDPxpuudt6hmB75f7eiz4A9FMh4nOvAHfM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VNKU0qnDcc+9MKrSUrS+WWO5+PgAEAcvDUMecQVubn7bl/9YJSrneOQE4HaIiQKXWRKl9/rOcX3Vva5b89qO7lB+KK7BU3J/5ZOnZTw2QWtSS7y56XMFz29HLwiHc49eVEnr/whW3M7FXUvY3YGKOyOzAvCmnlFxhZc8KQ0U+gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkQ1Exn2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVBhFvbM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 39699C433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkQ1Exn2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 65E9AC43141;
 	Tue,  5 Mar 2024 07:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709625072;
-	bh=LFNIOfkegJnCP0scLIaYXcJC1OdZyxYPTASiv2DQEnU=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=eVBhFvbMJv9VOf2n0gJG4agrIdZBbyucn1XVlCR/k8Q/6AYiPuxf90jAegUC21OHI
-	 lLk0R5U/axdRL57d/VkwzTmffTCx+AoAiaVuMbJteIqbWidC6CankNDG7dDVI78H3U
-	 r4by6xIpOP3ca0eiP3MX+MsngjYUaxkRB01VrXNSpF1Fq8ZxAXcklpe53FLM4U2N80
-	 6yVpDrYuFsKGlzqSQJnSOtaL2zgRwS4GqZJyl98TOs9Car/5RaGFxeL6CrnKupxp0F
-	 RkxpBiCjJdpck6EXmlgKo7CsOqkVR+YWNAW2/aemdBHMtJslsI2JQ418NMojSjc3wX
-	 wH/Z3l8/Zll/g==
+	bh=Mv+wjnpaqjDPxpuudt6hmB75f7eiz4A9FMh4nOvAHfM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=DkQ1Exn2ph24kwJKEFuSXiYt8NAtOo6jMFJ4V3RhGQI1BFnWpc/M1XdyRXTeSyq5X
+	 1/+Gcr/9CodU/adj2q7UaowF+dTp/5GRMIV8wz5celFq/1RVEkdithERcMYjRbh3tw
+	 ycH4r1vQYkMO4kxkataFIWuBVi4azcLyyngl7csrbpshttNx/iZ/kw8XoQGkX8dv55
+	 k3jgYuWeRWdghX4GFDxe12pkacUeg/KfinFw6aviHs0Vt1hCGPQkeiFKIsi+4I3I0i
+	 svkEx4VmVX+1omCt05qlhX+TNYs+Z1Wtl8nCofAtAQt4L6w43cSV1PRm/3x69AExYC
+	 4wDfLcB0Wo/iQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D37CC5478C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3C6C54E5C;
 	Tue,  5 Mar 2024 07:51:12 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Subject: [PATCH net-next v8 0/9] net: hisi-femac: add support for
- Hi3798MV200, remove unmaintained compatibles
-Date: Tue, 05 Mar 2024 15:51:09 +0800
-Message-Id: <20240305-net-v8-0-166aaeea2107@outlook.com>
+Date: Tue, 05 Mar 2024 15:51:13 +0800
+Subject: [PATCH net-next v8 4/9] dt-bindings: net: convert hisi-femac.txt
+ to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAO3O5mUC/23OTU7EMAwF4KuMsqbIcf5ZcQ80izZxmQhoUNupB
- o16d9JmQUdhaT1/z76zicZIE3s53dlIS5xiGvJgn07MX9rhnZoY8swQUAJy3Qw0N65FsMSNl9C
- zvPk9Uh9ve8sb2xYGus3snJNLnOY0/uz1C9/zh6aFN9AQtMEZ9KF17jVd58+UPp59+tobFvxHY
- VbWdUF2BrTyWCtxUAhFiaw6bUl1RpHRqlbyqLAouX1Irba9Ez04qJU6KlGUykqKDjEI54GLWum
- jskXprHQwNoignPW8VuZPCeBFme2WsiiUM0EG+ajWdf0F8mrwd+YBAAA=
+Message-Id: <20240305-net-v8-4-166aaeea2107@outlook.com>
+References: <20240305-net-v8-0-166aaeea2107@outlook.com>
+In-Reply-To: <20240305-net-v8-0-166aaeea2107@outlook.com>
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
  Salil Mehta <salil.mehta@huawei.com>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -56,14 +54,13 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
  Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709625070; l=3362;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709625070; l=5303;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=LFNIOfkegJnCP0scLIaYXcJC1OdZyxYPTASiv2DQEnU=;
- b=OIoCiihOooTHqeLzR80GsvBLxaIHvbwecEUurwhEPN6INbXAd4Z+XfSTl3VYtdkD2r/6cCDHX
- kSTupnXZTvlA1GeZMWr3Rj5y64pgAls5FjHbHd9edhPDmBFiFyqzs37
+ bh=Y31W+EBTMTCB+g3jeFUiVgLCSMs5MTAdgXmolrXBmrQ=;
+ b=Aug3S6YnjDFnp7BTPJCvSRokxnH2+7b4NbmaQAIOQ3Bk9h2Py39VAmu2/07QSeXI+bIEvJ2ei
+ QlvRVFG/7XMAFTZQTUMtT68HYeXyjgdO5m1i+ULdcE0GAiDmyadd1EX
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -71,78 +68,165 @@ X-Endpoint-Received:
 X-Original-From: Yang Xiwen <forbidden405@outlook.com>
 Reply-To: <forbidden405@outlook.com>
 
+From: Yang Xiwen <forbidden405@outlook.com>
+
+Convert the old text binding to new YAML.
+
+While at it, make some changes to the binding:
+- The version numbers are not documented publicly. The version also does
+not change programming interface. Remove it until it's really needed.
+- A few clocks are missing in old binding file. Add them to match the real
+hardware.
+
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
-Changes in v8:
-- remove MODULE_ALIAS: rewrite commit msg (Krzysztof Kozlowski)
-- driver: use only SoC compatibles (Krzysztof Kozlowski)
-- Link to v7: https://lore.kernel.org/r/20240301-net-v7-0-45823597d4d4@outlook.com
+ .../bindings/net/hisilicon,hisi-femac.yaml         | 89 ++++++++++++++++++++++
+ .../devicetree/bindings/net/hisilicon-femac.txt    | 41 ----------
+ 2 files changed, 89 insertions(+), 41 deletions(-)
 
-Changes in v7:
-- dt-bindings: squash a bunch of patches to YAML conversion (Krzysztof Kozlowski)
-- dt-bindings: drop phy-mode->phy-connection-type conversion (Andrew Lunnm, Krzysztof Kozlowski)
-- driver: drop SoC compatibles
-- misc: some minor clean ups
-- driver: remove MODULE_ALIAS()
-- Link to v6: https://lore.kernel.org/r/20240228-net-v6-0-6d78d3d598c1@outlook.com
+diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+new file mode 100644
+index 000000000000..ba207f2c9ae4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/hisilicon,hisi-femac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Hisilicon Fast Ethernet MAC controller
++
++maintainers:
++  - Yang Xiwen <forbidden405@foxmail.com>
++
++allOf:
++  - $ref: ethernet-controller.yaml
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - hisilicon,hi3516cv300-femac
++      - const: hisilicon,hisi-femac
++
++  reg:
++    items:
++      - description: The first region is the MAC core register base and size.
++      - description: The second region is the global MAC control register.
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: MAC main clock
++      - description: MAC bus interface clock
++      - description: PHY clock
++
++  clock-names:
++    items:
++      - const: mac
++      - const: macif
++      - const: phy
++
++  resets:
++    items:
++      - description: MAC reset signal
++      - description: PHY reset signal
++
++  reset-names:
++    items:
++      - const: mac
++      - const: phy
++
++  hisilicon,phy-reset-delays-us:
++    description: PHY reset timing requirement (in micro seconds).
++      The integrated PHY usually have a special reset timing sequence and must
++      interact with MAC controller to accomplish the entire reset procedure. So
++      these properties belong to MAC controller, not PHY.
++    items:
++      - description: pre-reset delay for PHY
++      - description: reset pulse for PHY
++      - description: post-reset delay for PHY
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - resets
++  - reset-names
++  - phy-mode
++  - phy-handle
++  - hisilicon,phy-reset-delays-us
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    ethernet@10090000 {
++        compatible = "hisilicon,hi3516cv300-femac", "hisilicon,hisi-femac";
++        reg = <0x10090000 0x1000>, <0x10091300 0x200>;
++        interrupts = <12>;
++        clocks = <&clk_femac>, <&clk_femacif>, <&clk_fephy>;
++        clock-names = "mac", "macif", "phy";
++        resets = <&crg 0xec 0>, <&crg 0xec 3>;
++        reset-names = "mac", "phy";
++        mac-address = [00 00 00 00 00 00];
++        phy-mode = "mii";
++        phy-handle = <&fephy>;
++        hisilicon,phy-reset-delays-us = <10000 20000 20000>;
++    };
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-femac.txt b/Documentation/devicetree/bindings/net/hisilicon-femac.txt
+deleted file mode 100644
+index 5f96976f3cea..000000000000
+--- a/Documentation/devicetree/bindings/net/hisilicon-femac.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-Hisilicon Fast Ethernet MAC controller
+-
+-Required properties:
+-- compatible: should contain one of the following version strings:
+-	* "hisilicon,hisi-femac-v1"
+-	* "hisilicon,hisi-femac-v2"
+-	and the soc string "hisilicon,hi3516cv300-femac".
+-- reg: specifies base physical address(s) and size of the device registers.
+-  The first region is the MAC core register base and size.
+-  The second region is the global MAC control register.
+-- interrupts: should contain the MAC interrupt.
+-- clocks: A phandle to the MAC main clock.
+-- resets: should contain the phandle to the MAC reset signal(required) and
+-	the PHY reset signal(optional).
+-- reset-names: should contain the reset signal name "mac"(required)
+-	and "phy"(optional).
+-- phy-mode: see ethernet.txt [1].
+-- phy-handle: see ethernet.txt [1].
+-- hisilicon,phy-reset-delays-us: triplet of delays if PHY reset signal given.
+-	The 1st cell is reset pre-delay in micro seconds.
+-	The 2nd cell is reset pulse in micro seconds.
+-	The 3rd cell is reset post-delay in micro seconds.
+-
+-The MAC address will be determined using the optional properties
+-defined in ethernet.txt[1].
+-
+-[1] Documentation/devicetree/bindings/net/ethernet.txt
+-
+-Example:
+-	hisi_femac: ethernet@10090000 {
+-		compatible = "hisilicon,hi3516cv300-femac","hisilicon,hisi-femac-v2";
+-		reg = <0x10090000 0x1000>,<0x10091300 0x200>;
+-		interrupts = <12>;
+-		clocks = <&crg HI3518EV200_ETH_CLK>;
+-		resets = <&crg 0xec 0>,<&crg 0xec 3>;
+-		reset-names = "mac","phy";
+-		mac-address = [00 00 00 00 00 00];
+-		phy-mode = "mii";
+-		phy-handle = <&phy0>;
+-		hisilicon,phy-reset-delays-us = <10000 20000 20000>;
+-	};
 
-Changes in v6:
-- add missing "not" in commit logs (Andrew)
-- rework binding changes, split it into several commits (Krzysztof Kozlowski)
-- Link to v5: https://lore.kernel.org/r/20240223-net-v5-0-43b22d39c013@outlook.com
-
-Changes in v5:
-- hisi-femac-mdio: remove clock completely (Krzysztof Kozlowski)
-- dt-bindings: mdio: apply comments from Krzysztof Kozlowski
-
-Changes in v4:
-- edit commit log to show why mdio bus clk is optional (Krzysztof Kozlowski)
-- add clk_bulk_disable_unprepare() during error path (Maxime Chevallier)
-- remove of_node_put() (Simon Horman)
-- remove histb-clock.h header in binding example as it's goign to be deprecated.
-- rearrange patches so binding comes before driver
-- Link to v3: https://lore.kernel.org/r/20240220-net-v3-0-b68e5b75e765@outlook.com
-
-Changes in v3:
-- rearrange patches to fix bot error. (Rob Herring)
-- rewrite commit logs (Andrew Lunn)
-- use clk_bulk_ APIs (Andrew Lunn)
-- fix uninitialization use of ret (assign to -ENODEV before goto) (Simon Horman)
-- Link to v2: https://lore.kernel.org/r/20240216-net-v2-0-89bd4b7065c2@outlook.com
-
-Changes in v2:
-- replace email.
-- hisi-femac: s/BUS/MACIF (Andrew Lunn)
-- hisi-femac: add "hisilicon,hisi-femac" compatible since the driver
-  seems generic enough for various SoCs
-- hisi-femac-mdio: convert binding to YAML (Krzysztof Kozlowski)
-- rewrite commit logs (Krzysztof Kozlowski)
-- Link to v1: https://lore.kernel.org/r/20240216-net-v1-0-e0ad972cda99@outlook.com
-
----
-Yang Xiwen (9):
-      dt-bindings: net: hisilicon-femac-mdio: convert to YAML
-      dt-bindings: net: hisilicon,hisi-femac-mdio: remove clocks
-      net: mdio: hisi-femac: remove clock
-      dt-bindings: net: convert hisi-femac.txt to YAML
-      dt-bindings: net: hisi-femac: add mandatory MDIO bus subnode
-      dt-bindings: net: hisi-femac: add binding for Hi3798MV200 FEMAC core
-      net: hisi_femac: remove unused compatible strings
-      net: hisi_femac: add support for hisi_femac core on Hi3798MV200
-      net: hisi_femac: remove unneeded MODULE_ALIAS()
-
- .../bindings/net/hisilicon,hisi-femac-mdio.yaml    |  39 +++++++
- .../bindings/net/hisilicon,hisi-femac.yaml         | 120 +++++++++++++++++++++
- .../bindings/net/hisilicon-femac-mdio.txt          |  22 ----
- .../devicetree/bindings/net/hisilicon-femac.txt    |  41 -------
- drivers/net/ethernet/hisilicon/hisi_femac.c        |  77 ++++++++++---
- drivers/net/mdio/mdio-hisi-femac.c                 |  18 +---
- 6 files changed, 220 insertions(+), 97 deletions(-)
----
-base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-change-id: 20240216-net-9a208e17c40f
-
-Best regards,
 -- 
-Yang Xiwen <forbidden405@outlook.com>
+2.43.0
 
