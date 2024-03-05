@@ -1,182 +1,160 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082491400B
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 18:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4521426F;
+	Tue,  5 Mar 2024 18:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709663491; cv=none; b=F+QSzEa9QL+lT0DP5/h32a38e7zyDjRHIWdMWN3Rlo8tynUd0Ky2bbZ/9pCQgoh/GXdk7uHWhRoPJ/jv7P5oxBr1GnjSuhyCHrC6kR7QaMvIcNOQI9vAipZyHo1a8Za9RGojZjtFNuuUQWCmiReg0+LuJFV9e2CnYTQyH3i98S0=
+	t=1709663579; cv=none; b=shedQZvHSTp4rL2t5Tns7Hpd5KU0+U7ksYtJmAa1uK1ZSVue7MV81aj+C8zWq+7CzUy8CIPVoyeQ/DS7/pseIWGKjJxDCOpteyM2bpbkITE2FiMX4EO/rjkMcmnPEkZOFkNpgvnZFzMab4p8qqLfksMhQ8fICz5QIA+xoBvDU20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709663491; c=relaxed/simple;
-	bh=6e4RQ/zZF0nuA79N7nCfJ/8Itu/N9ppQhCFZQB2XfD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KZvBi0iHjGnqfnOKIFzM56WM664xRYHDouA0OwyTCpzoeGbCEab+F1AH0IgMpZ/O+5aRDYS0LYw1Mmr+AzLFbHpQazjEKGIWOJDz9LafmZlIDduWreyp/GgW9Du53IJObJnVECplzJ/F5n5eW4UArLmBO0j5qzJCK9lie5MBw4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oKmQIFTL; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709663579; c=relaxed/simple;
+	bh=8Joi1YnfUI86PoK8RcJj71z8krLezvtgpVjZfkAO2YA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PS3bQQLbvLwVbMndo2YjjXv2+hUprE3ZyKlPhPawxR2hwP5rVxRrXghQk2Pva4B69OIL9zuU6sELtrhKabCv2vcsWKXJUO4fLRgephTfAgvJLfX3x/SD3NfLrv8HqXf94toH4m77A7DkRcNxOQghD0RlaFrS6obybNx2tcA1G5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=guU7GJwE; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oKmQIFTL"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dc1ff3ba1aso46001115ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 10:31:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guU7GJwE"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d3fae963a8so3709561fa.1;
+        Tue, 05 Mar 2024 10:32:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709663489; x=1710268289; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ikksnMYVs1Gg6hYyDAjEo6Ig2VkOOvTHqTs/Rnh5Euk=;
-        b=oKmQIFTLaJO8dnHnYoyEq5yY9PjBBOtC7v+irzzJKSiFLsfHL3uotiwH3AvAUqZ7vL
-         blt1jCNfeOTlvc5gz5JoEw8Sivq6QZq9HhtztqlyElVK5yUN7m/fx17k4LgodLFldiPH
-         65riXrnDQTEk3rxYmf9QtZzKt9GXKieWMwBYDRgODfyvQqWPxXytk8nojP8A9AmtkDbc
-         asVn8b+E+gQPycTzpxp0Ba4q0DVKovmAY20BFB7A8l22khmNyRodzd2+F4vQDidH17L9
-         d/dLT3bwGH8XIBMvJscJMwVtpYHN7zEr9lhhAS0eUpjLTJAzdKpK5oMsDw/MvEo63Aei
-         gGrg==
+        d=gmail.com; s=20230601; t=1709663575; x=1710268375; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XpjG7T2rIbD0hxqF2pzMwPpY3w1Cqosv81NqmDg20eA=;
+        b=guU7GJwEDP/ohZg+VI2wbQfH49WihnjpVS662AmHq3ntkNr4YR/lS+YFhLITIbE6V1
+         mclSvCLFuNBV1BQ2xaY7tyxHT89KPuuI9OBTi/5KpixLYA0JC2gbRtb+5rt5yQCPDaVt
+         QI0PZVRTr2ZCnj6anaZ+/iwjJcFc0jqsSIbGvblTwjG0n2qtcsjY4waF/W8CnvB1eYNo
+         n2iMBCo021fKKfr1ZBx8mnYMrP1+Z3UmN1rIytrYFfKvUj/2VkzomRMByeVqYV6CrxXe
+         cTWc9IbcCPfHRb9/Ztf9mK4xuGxZ+dUGAopmJKsksK573jKVDSM8a8SB93WRP9fEjkL9
+         pu6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709663489; x=1710268289;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ikksnMYVs1Gg6hYyDAjEo6Ig2VkOOvTHqTs/Rnh5Euk=;
-        b=wMccgOWI9SzgM5pvwYLAvcGbWNLXeQ+3UvyCrH5XDUbM8zAtfvF9jaN+n7DfVdDRwK
-         q77ePCjanxNBcvdjbtTDteXmue+JJsr0NA93/ULRYmF6fRszfsoO8CbRi5ofI9b7Kz33
-         tcPJ/1dddPnQIB3AW4970zpeQ5oqHFNiW1Pez1K75eg5bDfdqZrJURZCMCz70AUecUs5
-         EGf45x/4htYhe754oAyVgE8O3BX2CbsimXJ7sUzJNqekl6GFnoOwmK2Tmr0XTkZIbues
-         OKfWFBH/WNkybOrUdWEAkYXYGJddATkGUCM6SZdh0EfDcMevTjjOdCMWq6ZPWKoqTUfa
-         ng8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWH7CsmV1K2FPk/WaUe6UQEMCQPB03zEtKt+ggXQb6N/1i43Q2eBbaGRPJmhncZgF6jt8BgjoRkeFRFMrw09SCkrxxGCNZdjcBxAZHN
-X-Gm-Message-State: AOJu0Yy7jIwgi9+pDaNu59xXZqpOrFAFYzOQOlDDX424Ludtw/O2RRrF
-	MsnjicIlQ7+5/NuNOTztfMz4QDS0yWKAbtsUE3r5yQhRH1/mAivFVvjSdkUWeA==
-X-Google-Smtp-Source: AGHT+IEGC/IRLGlm7P/7w/8sH7dyZdfBnZ8FWcjAaW4rYyf2s3Ow3+QQ0veOoCfIPZmqiTBSgqSMgA==
-X-Received: by 2002:a17:903:124b:b0:1dc:fae0:9073 with SMTP id u11-20020a170903124b00b001dcfae09073mr3403849plh.32.1709663488958;
-        Tue, 05 Mar 2024 10:31:28 -0800 (PST)
-Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
-        by smtp.gmail.com with ESMTPSA id y9-20020a17090264c900b001dcdfbad420sm10314243pli.149.2024.03.05.10.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 10:31:28 -0800 (PST)
-Date: Tue, 5 Mar 2024 18:31:25 +0000
-From: Mingwei Zhang <mizhang@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Like Xu <like.xu.linux@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Sandipan Das <sandipan.das@amd.com>, pbonzini@redhat.com,
-	jmattson@google.com, ravi.bangoria@amd.com, nikunj.dadhania@amd.com,
-	santosh.shukla@amd.com, manali.shukla@amd.com, babu.moger@amd.com,
-	kvm list <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: x86/svm/pmu: Set PerfMonV2 global control bits
- correctly
-Message-ID: <Zedk_XsGUTk-Wvde@google.com>
-References: <20240301075007.644152-1-sandipan.das@amd.com>
- <06061a28-88c0-404b-98a6-83cc6cc8c796@gmail.com>
- <cc8699be-3aae-42aa-9c70-f8b6a9728ee3@amd.com>
- <f5bbe9ac-ca35-4c3e-8cd7-249839fbb8b8@linux.intel.com>
- <ZeYlEGORqeTPLK2_@google.com>
- <8a846ba5-d346-422e-817b-e00ab9701f19@gmail.com>
- <ZedUwKWW7PNkvUH1@google.com>
- <ZedepdnKSl6oFNUq@google.com>
+        d=1e100.net; s=20230601; t=1709663575; x=1710268375;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XpjG7T2rIbD0hxqF2pzMwPpY3w1Cqosv81NqmDg20eA=;
+        b=m+wcbQcMOzLrH6zo0rU+u+fZJ6TUEpmTK6tDLG0eSUak8zFsBuURQQGUDJKgt2eywx
+         KdGJcT8wJ/+8p168+mKWpi36LHxicIGLgOZO8jzoSpkGaJEs9UFL6iv8WHoVmGUjXPMt
+         u+pyugxxq6sV8VklwftKTOernAkvYaeExs62aWK14VM9V2igS2n08Mi4rTJI7moRFbS0
+         1lstBtmTpQwuTiHKYWzfjj28i06YxhPfEtRsV+rZkSwh/KiBEfDFBKNE1y4i7lm8Bu0O
+         qb8Fok+KwKNh+/O6QlmRi5r7di9YvM8xfJnclPw3zC168UO3C6rCpbrp7Q9wbGX29Fea
+         j8jw==
+X-Forwarded-Encrypted: i=1; AJvYcCV94JSYkG5x4m49NeVEG+WIVaDd05azwhL8L3cfb4AAghJY6Iq3zMLXhWqFR1j42qcM6yoKWIT1FFxapJBkmjcg3NGE8wIW71DDy1kCaH/gE81IB2CJp7lxJTsErPMIEiVIXSBjadL3
+X-Gm-Message-State: AOJu0YwYtY4Q3BT3F/YTzkOmKKCbRx8EwCTM6d07A9ZHbnFREjiDhwjI
+	fkEdoyQb+ElWQUo3e+6YLijjJrKmZyuWQnzbCT/dvaL/bh/wC9fd3R+nbC7p2EjCqx5HWnaSfr5
+	fVgx2IEnaum3NlpZtlqdS0TbK4Oc=
+X-Google-Smtp-Source: AGHT+IFu0jJ30nyvSqIno+iVzvIgDHG29XdbqE2DLTx1VGyU1CPP4niQ7GScN82zEFjsRxC4J/FJXjerePfvQgaBmC8=
+X-Received: by 2002:a2e:b98c:0:b0:2d3:365e:9d02 with SMTP id
+ p12-20020a2eb98c000000b002d3365e9d02mr1597644ljp.28.1709663574840; Tue, 05
+ Mar 2024 10:32:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZedepdnKSl6oFNUq@google.com>
+References: <20240305113057.56468-1-pmenzel@molgen.mpg.de> <20240305182320.GA541715@bhelgaas>
+ <AM9P193MB10797B556A8C4C4B389038D5D3222@AM9P193MB1079.EURP193.PROD.OUTLOOK.COM>
+In-Reply-To: <AM9P193MB10797B556A8C4C4B389038D5D3222@AM9P193MB1079.EURP193.PROD.OUTLOOK.COM>
+Reply-To: bjorn@helgaas.com
+From: Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date: Tue, 5 Mar 2024 12:32:42 -0600
+Message-ID: <CABhMZUV7cTvAta--5T7DUE8m=L=wA3jDfdxELXCUdLxiwu5N4A@mail.gmail.com>
+Subject: Re: [PATCH] PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root Ports
+To: Niels van Aert <nvaert1986@hotmail.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 05, 2024, Sean Christopherson wrote:
-> On Tue, Mar 05, 2024, Sean Christopherson wrote:
-> > On Tue, Mar 05, 2024, Like Xu wrote:
-> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> > index 87cc6c8809ad..f61ce26aeb90 100644
-> > --- a/arch/x86/kvm/pmu.c
-> > +++ b/arch/x86/kvm/pmu.c
-> > @@ -741,6 +741,8 @@ static void kvm_pmu_reset(struct kvm_vcpu *vcpu)
-> >   */
-> >  void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
-> >  {
-> > +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> > +
-> >  	if (KVM_BUG_ON(kvm_vcpu_has_run(vcpu), vcpu->kvm))
-> >  		return;
-> >  
-> > @@ -750,8 +752,18 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
-> >  	 */
-> >  	kvm_pmu_reset(vcpu);
-> >  
-> > -	bitmap_zero(vcpu_to_pmu(vcpu)->all_valid_pmc_idx, X86_PMC_IDX_MAX);
-> > +	bitmap_zero(pmu->all_valid_pmc_idx, X86_PMC_IDX_MAX);
-> >  	static_call(kvm_x86_pmu_refresh)(vcpu);
-> > +
-> > +	/*
-> > +	 * At RESET, both Intel and AMD CPUs set all enable bits for general
-> > +	 * purpose counters in IA32_PERF_GLOBAL_CTRL (so that software that
-> > +	 * was written for v1 PMUs don't unknowingly leave GP counters disabled
-> > +	 * in the global controls).  Emulate that behavior when refreshing the
-> > +	 * PMU so that userspace doesn't need to manually set PERF_GLOBAL_CTRL.
-> > +	 */
-> > +	if (kvm_pmu_has_perf_global_ctrl(pmu))
-> > +		pmu->global_ctrl = GENMASK_ULL(pmu->nr_arch_gp_counters - 1, 0);
-> >  }
-> 
-> Doh, this is based on kvm/kvm-uapi, I'll rebase to kvm-x86/next before posting.
-> 
-> I'll also update the changelog to call out that KVM has always clobbered global_ctrl
-> during PMU refresh, i.e. there is no danger of breaking existing setups by
-> clobbering a value set by userspace, e.g. during live migration.
-> 
-> Lastly, I'll also update the changelog to call out that KVM *did* actually set
-> the general purpose counter enable bits in global_ctrl at "RESET" until v6.0,
-> and that KVM intentionally removed that behavior because of what appears to be
-> an Intel SDM bug.
-> 
-> Of course, in typical KVM fashion, that old code was also broken in its own way
-> (the history of this code is a comedy of errors).  Initial vPMU support in commit
-> f5132b01386b ("KVM: Expose a version 2 architectural PMU to a guests") *almost*
-> got it right, but for some reason only set the bits if the guest PMU was
-> advertised as v1:
-> 
->         if (pmu->version == 1) {
->                 pmu->global_ctrl = (1 << pmu->nr_arch_gp_counters) - 1;
->                 return;
->         }
-> 
-> 
-> Commit f19a0c2c2e6a ("KVM: PMU emulation: GLOBAL_CTRL MSR should be enabled on
-> reset") then tried to remedy that goof, but botched things and also enabled the
-> fixed counters:
-> 
->         pmu->global_ctrl = ((1 << pmu->nr_arch_gp_counters) - 1) |
->                 (((1ull << pmu->nr_arch_fixed_counters) - 1) << X86_PMC_IDX_FIXED);
->         pmu->global_ctrl_mask = ~pmu->global_ctrl;
-> 
-> Which was KVM's behavior up until commit c49467a45fe0 ("KVM: x86/pmu: Don't overwrite
-> the pmu->global_ctrl when refreshing") incorrectly removed *everything*.  Very
-> ironically, that commit came from Like.
-> 
-> Author: Like Xu <likexu@tencent.com>
-> Date:   Tue May 10 12:44:07 2022 +0800
-> 
->     KVM: x86/pmu: Don't overwrite the pmu->global_ctrl when refreshing
->     
->     Assigning a value to pmu->global_ctrl just to set the value of
->     pmu->global_ctrl_mask is more readable but does not conform to the
->     specification. The value is reset to zero on Power up and Reset but
->     stays unchanged on INIT, like most other MSRs.
-> 
-> But wait, it gets even better.  Like wasn't making up that behavior, Intel's SDM
-> circa December 2022 states that "Global Perf Counter Controls" is '0' at Power-Up
-> and RESET.  But then the March 2023 SDM rolls out and says
-> 
->   IA32_PERF_GLOBAL_CTRL: Sets bits n-1:0 and clears the upper bits.
-> 
-> So presumably someone at Intel noticed that what their CPUs do and what the
-> documentation says didn't match.
-> 
+On Tue, Mar 5, 2024 at 12:28=E2=80=AFPM Niels van Aert <nvaert1986@hotmail.=
+com> wrote:
+>
+> Bjorn,
+>
+> Feel free to add my name Niels van Aert and e-mail address.
 
-Sean, can you update your commit message with the table name of the
-Intel SDM and the version of the Intel SDM (2023 version). It was quite
-hard to find where exactly SDM mentioned this, since I was using the
-2022 version.
+Done, thanks very much!
 
-Thanks.
--Mingwei
-> *sigh*
+> ________________________________
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Tuesday, March 5, 2024 7:23 PM
+> To: Paul Menzel <pmenzel@molgen.mpg.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>; Mika Westerberg <mika.westerberg=
+@linux.intel.com>; nvaert1986@hotmail.com <nvaert1986@hotmail.com>; linux-p=
+ci@vger.kernel.org <linux-pci@vger.kernel.org>; linux-kernel@vger.kernel.or=
+g <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH] PCI/DPC: Quirk PIO log size for Intel Raptor Lake Ro=
+ot Ports
+>
+> On Tue, Mar 05, 2024 at 12:30:56PM +0100, Paul Menzel wrote:
+> > Commit 5459c0b70467 ("PCI/DPC: Quirk PIO log size for certain Intel Roo=
+t
+> > Ports") and commit 3b8803494a06 ("PCI/DPC: Quirk PIO log size for Intel=
+ Ice
+> > Lake Root Ports") add quirks for Ice, Tiger and Alder Lake Root Ports.
+> > System firmware for Raptor Lake still has the bug, so Linux logs the
+> > warning below on several Raptor Lake systems like Dell Precision 3581 w=
+ith
+> > Intel Raptor Lake processor (0W18NX) system firmware/BIOS version 1.10.=
+1.
+> >
+> >     pci 0000:00:07.0: [8086:a76e] type 01 class 0x060400
+> >     pci 0000:00:07.0: PME# supported from D0 D3hot D3cold
+> >     pci 0000:00:07.0: PTM enabled (root), 4ns granularity
+> >     pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid
+> >     pci 0000:00:07.1: [8086:a73f] type 01 class 0x060400
+> >     pci 0000:00:07.1: PME# supported from D0 D3hot D3cold
+> >     pci 0000:00:07.1: PTM enabled (root), 4ns granularity
+> >     pci 0000:00:07.1: DPC: RP PIO log size 0 is invalid
+> >
+> > So, apply the quirk for Raptor Lake Root Ports as well.
+> >
+> > This also enables the DPC driver to dump the RP PIO Log registers when =
+DPC
+> > is triggered.
+> >
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218560
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: nvaert1986@hotmail.com
+> > Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+>
+> Added stable tag and applied to pci/dpc for v6.9 with tags:
+>
+>   Reported-by: <nvaert1986@hotmail.com>
+>   Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218560
+>   Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+>   Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>   Cc: <stable@vger.kernel.org>
+>   Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+>   Cc: <nvaert1986@hotmail.com>
+>
+> nvaert1986@, thanks very much for your report.  Let me know if you
+> prefer to omit your email or add your real name.  Happy to do either.
+>
+> > ---
+> >  drivers/pci/quirks.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index d797df6e5f3e..663d838fa861 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -6225,6 +6225,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9=
+a2b, dpc_log_size);
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa73f, dpc_log_size);
+> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
+> >  #endif
+> >
+> >  /*
+> > --
+> > 2.43.0
+> >
