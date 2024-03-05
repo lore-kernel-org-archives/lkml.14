@@ -1,60 +1,74 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1C3633ED;
-	Tue,  5 Mar 2024 10:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC89D56755;
+	Tue,  5 Mar 2024 10:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633795; cv=none; b=A+NuPCvPC/LmIIWYKypD8vLLMwEZOK3mX127253DAEHBaS4xOvlQdnOZ1Xw9YxjOiiJfQ4CWCU9me/dJPlGkPA4hDgOf5lK9QS7H27n2Q7SVoV3GiSi84Hljtao/a1VnN+7fzypvLcbqBRPoXs15ed56fiZqd2nSWkLjY5PRLko=
+	t=1709633796; cv=none; b=qxdSSQe/FK6N54ni4h38DDdVJM8iyct6rIq1vgJTb5CuFzcJZQ8mGF3CCs8AH6crc7pvBT1TjEkL+kdtKvpFWlOWGsll007fCuMTFg2yldAxcTurZXSFnMFLpe8b4oDVCtLwsEkaoKzSDFzMfEXSlmlfno8cqskWpHRj6h4ocWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633795; c=relaxed/simple;
-	bh=a7kWb5e0su0761d+6CdvJvWCOKmDe94YCWGARHADOUc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CskgPcFaWzP2VflIElDJqLQ2uBYro3OdeHxXhzIfyjnaTNVeg8mRXC/ZXnCPsbjMTyGt4JmXrAzEJRQ/yhMZDFTv8ke9G37PiqOP6bg7iwpQyzTmThGXTujeRDpDHI5wBdYRGSEjZBxK/W3V1spVWMXSptZKfvQYQCKzZBkW8B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=yHfXeb9v; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709633796; c=relaxed/simple;
+	bh=LoE4Mk2h+x4QygNOYAaQkErlcP1J9OkI1WKvPNtdRq4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rV+YQS5O9L4k7WGttCxaa2KYZ5WDE8bgxPl2KdNHur7aY8c08Z0AKq51k4IIvGNQcaa2BRurtIoxHEWpYBG3/Fx6oD2tWc1mBX2FjjymxNflECxBHeTLSZMXPP24Aq1bj1Y+07WH8ihCgMTktBqTJbdycUsQ42HbqlaHf8sFB0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNEwTJ5c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="yHfXeb9v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709633791;
-	bh=a7kWb5e0su0761d+6CdvJvWCOKmDe94YCWGARHADOUc=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNEwTJ5c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D045C43394;
+	Tue,  5 Mar 2024 10:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709633795;
+	bh=LoE4Mk2h+x4QygNOYAaQkErlcP1J9OkI1WKvPNtdRq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=yHfXeb9vM1uwBAPt120Ay9uAEm5rAxd+qoxfWi7QzUO1oU7vjyWoA2SmtIpEXJg2W
-	 5KOj2C3xP64hAf5ceUCRS6N+BnZNCiX7abF9Tg2TYqelrQaMNZk0/oZjl7sTQ+nQtr
-	 Rxr8e7J/6763SVa2ZjhRc7OpYGMmK4JKg+QYZEMTYUHuCmdi+TvTMHjFvkedWhzpR9
-	 kKIYT6HIc4DTvhUClDLn7o6cg7/I1y2CHGOhlZ5vXGHMXm/n8hdC9kLQP5hxiw4HPf
-	 VIIgN/ASQH+sKMLMYb/zUyZyPJOFJdrZZgLx063ujD85/AU3B81XSDshQJn75EO88h
-	 Re6JA9i61UUXg==
-Received: from eugen-station.domain.com (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ehristev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B6E6C37820AF;
-	Tue,  5 Mar 2024 10:16:27 +0000 (UTC)
-From: Eugen Hristev <eugen.hristev@collabora.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	jaegeuk@kernel.org,
-	chao@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel@collabora.com,
-	eugen.hristev@collabora.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	krisman@suse.de,
-	Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: [PATCH v13 2/9] f2fs: Simplify the handling of cached insensitive names
-Date: Tue,  5 Mar 2024 12:16:01 +0200
-Message-Id: <20240305101608.67943-3-eugen.hristev@collabora.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240305101608.67943-1-eugen.hristev@collabora.com>
-References: <20240305101608.67943-1-eugen.hristev@collabora.com>
+	b=WNEwTJ5cMN9ELwzZS16ppqt8z3E74GD7UClDOZ+K258awlhlHWmthDNESMHRqcqrd
+	 FB5rGUzT1HNrfY0k9YRNPH7tpd6eRrBCHBFvW2HuHKRpDRIcieGpESqf5qYSZEu7Ot
+	 rJawxgEDFjOWV3aypoQz9qlwzRrIaDARCl71nYqsSh9yKTfAjSlP900AU9rH1yZsqq
+	 FSiuklZ0TDjrPQoHx0CLw7CspAdlMh8IJ7b9yEWuOD9m26KZiCU7D2cXRMmTCHbBNI
+	 pVkHPjju2ehO/3/QWSJNDh9vuYxqDYLnTUKNJldj71/uHBe1w+Vt8uTvJzHh9hKp99
+	 5/3DH4IEH+yWg==
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>
+Cc: Chaitanya Kulkarni <kch@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	kvm@vger.kernel.org,
+	linux-mm@kvack.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"jack@suse.com" <jack@suse.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: [RFC 15/16] block: add dma_link_range() based API
+Date: Tue,  5 Mar 2024 12:15:25 +0200
+Message-ID: <1e52aa392b9c434f55203c9d630dd06fcdb75c32.1709631413.git.leon@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <a77609c9c9a09214e38b04133e44eee67fe50ab0.1709631413.git.leon@kernel.org>
+References: <a77609c9c9a09214e38b04133e44eee67fe50ab0.1709631413.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,165 +77,241 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+From: Chaitanya Kulkarni <kch@nvidia.com>
 
-Keeping it as qstr avoids the unnecessary conversion in f2fs_match
+Add two helper functions that are needed to calculate the total DMA
+length of the request blk_rq_get_dma_length() and to create DMA
+mapping blk_rq_dma_map().
 
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-[eugen.hristev@collabora.com: port to 6.8-rc3 and minor changes]
-Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
+blk_rq_get_dma_length() is used to get the total length of the request,
+when driver is allocating IOVA space for this request with the call to
+dma_alloc_iova(). This length is then initialized to the iova->size and
+passed to allocate iova call chain :-
+dma_map_ops->allov_iova()
+        iommu_dma_alloc_iova()
+                alloc_iova_fast()
+                        iova_rcache_get()
+                                OR
+                        alloc_iova()
+
+blk_rq_dma_map() iterates through bvec list and creates DMA mapping
+for each page using iova parameter with the help of dma_link_range().
+Note that @iova is allocated & pre-initialized using dma_alloc_iova()
+by the caller. After creating a mapping for each page, call into the
+callback function @cb provided by the drive with a mapped DMA address
+for this page, offset into the iova space (needed at the time of
+unlink), length of the mapped page, and page number that is mapped in
+this request. Driver is responsible for using this DMA address to
+complete the mapping of underlying protocol-specific data structures,
+such as NVMe PRPs or NVMe SGLs. This callback approach allows us to
+iterate bvec list only once to create bvec to DMA mapping and use that
+DMA address in driver to build the protocol-specific data structure,
+essentially mapping one bvec page at a time to DMA address and using
+that DMA address to create underlying protocol-specific data structures.
+Finally, returning the number of linked count.
+
+Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- fs/f2fs/dir.c      | 51 +++++++++++++++++++++++++---------------------
- fs/f2fs/f2fs.h     | 16 ++++++++++++++-
- fs/f2fs/recovery.c |  5 +----
- 3 files changed, 44 insertions(+), 28 deletions(-)
+ block/blk-merge.c      | 156 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/blk-mq.h |   9 +++
+ 2 files changed, 165 insertions(+)
 
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index 042593aed1ec..266279b82afc 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -42,35 +42,47 @@ static unsigned int bucket_blocks(unsigned int level)
- 		return 4;
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 2d470cf2173e..63effc8ac1db 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -583,6 +583,162 @@ int __blk_rq_map_sg(struct request_queue *q, struct request *rq,
  }
+ EXPORT_SYMBOL(__blk_rq_map_sg);
  
-+#if IS_ENABLED(CONFIG_UNICODE)
- /* If @dir is casefolded, initialize @fname->cf_name from @fname->usr_fname. */
- int f2fs_init_casefolded_name(const struct inode *dir,
- 			      struct f2fs_filename *fname)
++static dma_addr_t blk_dma_link_page(struct page *page, unsigned int page_offset,
++				    struct dma_iova_attrs *iova,
++				    dma_addr_t dma_offset)
++{
++	dma_addr_t dma_addr;
++	int ret;
++
++	dma_addr = dma_link_range(page, page_offset, iova, dma_offset);
++	ret = dma_mapping_error(iova->dev, dma_addr);
++	if (ret) {
++		pr_err("dma_mapping_err %d dma_addr 0x%llx dma_offset %llu\n",
++			ret, dma_addr, dma_offset);
++		/* better way ? */
++		dma_addr = 0;
++	}
++	return dma_addr;
++}
++
++/**
++ * blk_rq_dma_map: block layer request to DMA mapping helper.
++ *
++ * @req         : [in] request to be mapped
++ * @cb          : [in] callback to be called for each bvec mapped bvec into
++ *                     underlaying driver.
++ * @cb_data     : [in] callback data to be passed, privete to the underlaying
++ *                     driver.
++ * @iova        : [in] iova to be used to create DMA mapping for this request's
++ *                     bvecs.
++ * Description:
++ * Iterates through bvec list and create dma mapping between each bvec page
++ * using @iova with dma_link_range(). Note that @iova needs to be allocated and
++ * pre-initialized using dma_alloc_iova() by the caller. After creating
++ * a mapping for each page, call into the callback function @cb provided by
++ * driver with mapped dma address for this bvec, offset into iova space, length
++ * of the mapped page, and bvec number that is mapped in this requets. Driver is
++ * responsible for using this dma address to complete the mapping of underlaying
++ * protocol specific data structure, such as NVMe PRPs or NVMe SGLs. This
++ * callback approach allows us to iterate bvec list only once to create bvec to
++ * DMA mapping & use that dma address in the driver to build the protocol
++ * specific data structure, essentially mapping one bvec page at a time to DMA
++ * address and use that DMA address to create underlaying protocol specific
++ * data structure.
++ *
++ * Caller needs to ensure @iova is initialized & allovated with using
++ * dma_alloc_iova().
++ */
++int blk_rq_dma_map(struct request *req, driver_map_cb cb, void *cb_data,
++		   struct dma_iova_attrs *iova)
++{
++	dma_addr_t curr_dma_offset = 0;
++	dma_addr_t prev_dma_addr = 0;
++	dma_addr_t dma_addr;
++	size_t prev_dma_len = 0;
++	struct req_iterator iter;
++	struct bio_vec bv;
++	int linked_cnt = 0;
++
++	rq_for_each_bvec(bv, req, iter) {
++		if (bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
++			curr_dma_offset = prev_dma_addr + prev_dma_len;
++
++			dma_addr = blk_dma_link_page(bv.bv_page, bv.bv_offset,
++						     iova, curr_dma_offset);
++			if (!dma_addr)
++				break;
++
++			cb(cb_data, linked_cnt, dma_addr, curr_dma_offset,
++			   bv.bv_len);
++
++			prev_dma_len = bv.bv_len;
++			prev_dma_addr = dma_addr;
++			linked_cnt++;
++		} else {
++			unsigned nbytes = bv.bv_len;
++			unsigned total = 0;
++			unsigned offset, len;
++
++			while (nbytes > 0) {
++				struct page *page = bv.bv_page;
++
++				offset = bv.bv_offset + total;
++				len = min(get_max_segment_size(&req->q->limits,
++							       page, offset),
++							       nbytes);
++
++				page += (offset >> PAGE_SHIFT);
++				offset &= ~PAGE_MASK;
++
++				curr_dma_offset = prev_dma_addr + prev_dma_len;
++
++				dma_addr = blk_dma_link_page(page, offset,
++							     iova,
++							     curr_dma_offset);
++				if (!dma_addr)
++					break;
++
++				cb(cb_data, linked_cnt, dma_addr,
++				   curr_dma_offset, len);
++
++				total += len;
++				nbytes -= len;
++
++				prev_dma_len = len;
++				prev_dma_addr = dma_addr;
++				linked_cnt++;
++			}
++		}
++	}
++	return linked_cnt;
++}
++EXPORT_SYMBOL_GPL(blk_rq_dma_map);
++
++/*
++ * Calculate total DMA length needed to satisfy this request.
++ */
++size_t blk_rq_get_dma_length(struct request *rq)
++{
++	struct request_queue *q = rq->q;
++	struct bio *bio = rq->bio;
++	unsigned int offset, len;
++	struct bvec_iter iter;
++	size_t dma_length = 0;
++	struct bio_vec bvec;
++
++	if (rq->rq_flags & RQF_SPECIAL_PAYLOAD)
++		return rq->special_vec.bv_len;
++
++	if (!rq->bio)
++		return 0;
++
++	for_each_bio(bio) {
++		bio_for_each_bvec(bvec, bio, iter) {
++			unsigned int nbytes = bvec.bv_len;
++			unsigned int total = 0;
++
++			if (bvec.bv_offset + bvec.bv_len <= PAGE_SIZE) {
++				dma_length += bvec.bv_len;
++				continue;
++			}
++
++			while (nbytes > 0) {
++				offset = bvec.bv_offset + total;
++				len = min(get_max_segment_size(&q->limits,
++							       bvec.bv_page,
++							       offset), nbytes);
++				total += len;
++				nbytes -= len;
++				dma_length += len;
++			}
++		}
++	}
++
++	return dma_length;
++}
++EXPORT_SYMBOL(blk_rq_get_dma_length);
++
+ static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
+ 						  sector_t offset)
  {
--#if IS_ENABLED(CONFIG_UNICODE)
- 	struct super_block *sb = dir->i_sb;
-+	unsigned char *buf;
-+	int len;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 7a8150a5f051..80b9c7f2c3a0 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -8,6 +8,7 @@
+ #include <linux/scatterlist.h>
+ #include <linux/prefetch.h>
+ #include <linux/srcu.h>
++#include <linux/dma-mapping.h>
  
- 	if (IS_CASEFOLDED(dir) &&
- 	    !is_dot_dotdot(fname->usr_fname->name, fname->usr_fname->len)) {
--		fname->cf_name.name = f2fs_kmem_cache_alloc(f2fs_cf_name_slab,
--					GFP_NOFS, false, F2FS_SB(sb));
--		if (!fname->cf_name.name)
-+		buf = f2fs_kmem_cache_alloc(f2fs_cf_name_slab,
-+					    GFP_NOFS, false, F2FS_SB(sb));
-+		if (!buf)
- 			return -ENOMEM;
--		fname->cf_name.len = utf8_casefold(sb->s_encoding,
--						   fname->usr_fname,
--						   fname->cf_name.name,
--						   F2FS_NAME_LEN);
--		if ((int)fname->cf_name.len <= 0) {
--			kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
--			fname->cf_name.name = NULL;
-+
-+		len = utf8_casefold(sb->s_encoding, fname->usr_fname,
-+				    buf, F2FS_NAME_LEN);
-+		if (len <= 0) {
-+			kmem_cache_free(f2fs_cf_name_slab, buf);
- 			if (sb_has_strict_encoding(sb))
- 				return -EINVAL;
- 			/* fall back to treating name as opaque byte sequence */
-+			return 0;
- 		}
-+		fname->cf_name.name = buf;
-+		fname->cf_name.len = len;
- 	}
--#endif
-+
- 	return 0;
+ struct blk_mq_tags;
+ struct blk_flush_queue;
+@@ -1144,7 +1145,15 @@ static inline int blk_rq_map_sg(struct request_queue *q, struct request *rq,
+ 
+ 	return __blk_rq_map_sg(q, rq, sglist, &last_sg);
  }
- 
-+void f2fs_free_casefolded_name(struct f2fs_filename *fname)
-+{
-+	unsigned char *buf = (unsigned char *)fname->cf_name.name;
 +
-+	kmem_cache_free(f2fs_cf_name_slab, buf);
-+	fname->cf_name.name = NULL;
-+}
-+#endif /* CONFIG_UNICODE */
++typedef void (*driver_map_cb)(void *cb_data, u32 cnt, dma_addr_t dma_addr,
++			      dma_addr_t offset, u32 len);
 +
- static int __f2fs_setup_filename(const struct inode *dir,
- 				 const struct fscrypt_name *crypt_name,
- 				 struct f2fs_filename *fname)
-@@ -142,12 +154,7 @@ void f2fs_free_filename(struct f2fs_filename *fname)
- 	kfree(fname->crypto_buf.name);
- 	fname->crypto_buf.name = NULL;
- #endif
--#if IS_ENABLED(CONFIG_UNICODE)
--	if (fname->cf_name.name) {
--		kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
--		fname->cf_name.name = NULL;
--	}
--#endif
-+	f2fs_free_casefolded_name(fname);
- }
- 
- static unsigned long dir_block_index(unsigned int level,
-@@ -235,11 +242,9 @@ static inline int f2fs_match_name(const struct inode *dir,
- 	struct fscrypt_name f;
- 
- #if IS_ENABLED(CONFIG_UNICODE)
--	if (fname->cf_name.name) {
--		struct qstr cf = FSTR_TO_QSTR(&fname->cf_name);
--
--		return f2fs_match_ci_name(dir, &cf, de_name, de_name_len);
--	}
-+	if (fname->cf_name.name)
-+		return f2fs_match_ci_name(dir, &fname->cf_name,
-+					  de_name, de_name_len);
- #endif
- 	f.usr_fname = fname->usr_fname;
- 	f.disk_name = fname->disk_name;
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 65294e3b0bef..4f68c58718fb 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -524,7 +524,7 @@ struct f2fs_filename {
- 	 * internal operation where usr_fname is also NULL.  In all these cases
- 	 * we fall back to treating the name as an opaque byte sequence.
- 	 */
--	struct fscrypt_str cf_name;
-+	struct qstr cf_name;
- #endif
- };
- 
-@@ -3528,8 +3528,22 @@ int f2fs_get_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
- /*
-  * dir.c
-  */
-+#if IS_ENABLED(CONFIG_UNICODE)
- int f2fs_init_casefolded_name(const struct inode *dir,
- 			      struct f2fs_filename *fname);
-+void f2fs_free_casefolded_name(struct f2fs_filename *fname);
-+#else
-+static inline int f2fs_init_casefolded_name(const struct inode *dir,
-+					    struct f2fs_filename *fname)
-+{
-+	return 0;
-+}
++int blk_rq_dma_map(struct request *req, driver_map_cb cb, void *cb_data,
++		   struct dma_iova_attrs *iova);
 +
-+static inline void f2fs_free_casefolded_name(struct f2fs_filename *fname)
-+{
-+}
-+#endif /* CONFIG_UNICODE */
-+
- int f2fs_setup_filename(struct inode *dir, const struct qstr *iname,
- 			int lookup, struct f2fs_filename *fname);
- int f2fs_prepare_lookup(struct inode *dir, struct dentry *dentry,
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index d0f24ccbd1ac..7e53abf6d216 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -153,11 +153,8 @@ static int init_recovered_filename(const struct inode *dir,
- 		if (err)
- 			return err;
- 		f2fs_hash_filename(dir, fname);
--#if IS_ENABLED(CONFIG_UNICODE)
- 		/* Case-sensitive match is fine for recovery */
--		kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
--		fname->cf_name.name = NULL;
--#endif
-+		f2fs_free_casefolded_name(fname);
- 	} else {
- 		f2fs_hash_filename(dir, fname);
- 	}
+ void blk_dump_rq_flags(struct request *, char *);
++size_t blk_rq_get_dma_length(struct request *rq);
+ 
+ #ifdef CONFIG_BLK_DEV_ZONED
+ static inline unsigned int blk_rq_zone_no(struct request *rq)
 -- 
-2.34.1
+2.44.0
 
