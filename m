@@ -1,142 +1,111 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3286BAD5E
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 05:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7610CAD5E;
+	Tue,  5 Mar 2024 05:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709617025; cv=none; b=j8JZ95uLxEauLs03AWGLvIDLcF/4PIe9VyEsOPsrkFmtXdN5Y5arbeqmEmvnoKWbEmxb03kYY/rQ9ChygZjUl5DC+ZHRpMhKjARvrBpuHSkMLZZHra3y6Z0Ns1VPp9KF+8YBPpMIup4zMTlYuM6JYQLbwpodepTvHwa7GdIckBY=
+	t=1709617153; cv=none; b=i5/jy9fu2ErU6ntdM9c6qLOoDxl3pO8Xfo5Um+YIUk5kJf/Ak0a1IMAP8/eGFbaMBf4duX0OFyNVUMyKePBtyed8Zap/JHHrC9ALnB/bQYnjQud85FULctrPDAUFO5qraI0fnZCfCZh4t02s019XXaOYAU7gG17aihkv6v4DMsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709617025; c=relaxed/simple;
-	bh=6ofdleIjmg4gSNbN7RMlFIqvhZj0cbxzZ1luEqJlDYE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jOTHpgrkuIi6Q3lHe3vOSzb9IGZR2TGjUNoxEkqfpBv3UWWWKxCu/tyT+QGvjLNyHdhd2KXy9nD84yLn99swqBlryup7IAiLWpUizwBeHDil7DHMH5tc4vAnvYheEmRsSSXF9k3aIX40xy0fq4vKr8xUGIYtUU7A1YTBxWt2wCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iKCcnjxP; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709617153; c=relaxed/simple;
+	bh=hUVkvGe/8tYwd184e2oQrO3kaT4UCfnUSnJaMICC4lo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HfTp48+jWafqkLaDqW1wiVsPSSw2NHlTS3E0h52sXq2KzYkv+rg+kgQ6J9ufEGOzCvF8m+cRH+ZlDpP+tWllqo2RmZndQKttorNOBnuMn577S1naaqugnX8RHHh4zVsGeeReamsiTRurOI373CO8XEgJrL1T2e1MAyH+UqXU/gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=taBipomW; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iKCcnjxP"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-7d5bbbe592dso2943904241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 21:37:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709617023; x=1710221823; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9WJdN6jIWjInavb3iZMUJn2P9ZES7C5MXZcfimAwNBo=;
-        b=iKCcnjxPOlrYdmXXUah/wtOb5E5Df2M1VDsdRjJ16U43ik7A3A3RrPSj7T/Bi9TCkv
-         fmPiL+sFUqoXlMklcrnQpJ3ngZIFe9Q83b4U/thr6PU6BoP4r/1i+LLcLVg/XY10mVE9
-         n/h3N/o5GTFMNmqIjTNcqmFOV+gmhYLf8KGXSBcJK8Ccx9hLm4F6Qexwg0V+ISlqcwDu
-         LsNWQlqHwSg3ps5oT7JbF7kDQ2daDE6Wn+casN5CnxEcWrMIGIBCZ15cW6mUJwQzIDq2
-         yMQ3W7ETaMms3gmeEYarx2AIINZn4QXWQysydZN2qxb3fi6MpbZhiNsTqyatXYsXmewN
-         XPAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709617023; x=1710221823;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9WJdN6jIWjInavb3iZMUJn2P9ZES7C5MXZcfimAwNBo=;
-        b=QUGDQ0u6D7Rc3AVEuyREoyebQSQfVMbb5d6NE8tblO2q3M4FQMm7G4TX89n3Gurqm/
-         zzsVkpjg5XrF19SEI64WAmZ6IiuQuTnKR/rft/L1xV1il7AStIkkeewv5ZLs5kLOq7pm
-         Vt12U54xyaBROTV4l9X7BMM8FGSP15bvW7LiJxKu3S52nA4HIGjh/JCjFC8ZH7Ys0nL8
-         qXPW4w/LeLHc8KIZKtXwsco95LNo9sxQRDb9KnmC+cx4DlmS1H4E+pWQBdyicE2uybea
-         vk4jMwJzJ91JOO04fYXF/MQhyDZWQvrv51ltthxUuxtyJd0HFqYiz3eTA3TvfiP3zTMO
-         fLxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnzBmaEKmXfY5xd81YDoqfBqqyNaxRrk+cSjoS64pEw3aMunutIlm6JKwZvA36WRy1VFqaKB0roedf7J0qqcj6yXqDg5Q3aT5GJwxE
-X-Gm-Message-State: AOJu0YzNKF19IsTlYJR43XxOVfgOOwFKvtzYd8rB/zZI37AJ5lTKsuUS
-	KsX1KUGufxFTcuVRuzeFW1YZGMXJy0VZMVklexRRXmUFfPu8Z/r1Qzhas45ECS0ju9B0qq/E48+
-	S5O3U9y71eTsvn9Xqdj4mAnsfdDE11I75hBJ9yw==
-X-Google-Smtp-Source: AGHT+IEJ4bxJhwqVbCZyNHpW+xFJRh6xSEc8u4JgkeVWVlK9/pxTzpopfDpigyMOipaSqiBAvvOW0i5LN2Rxow5sVAI=
-X-Received: by 2002:a67:f1d4:0:b0:470:397e:5329 with SMTP id
- v20-20020a67f1d4000000b00470397e5329mr806565vsm.10.1709617023225; Mon, 04 Mar
- 2024 21:37:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="taBipomW"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4255d1RF096702;
+	Mon, 4 Mar 2024 23:39:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1709617141;
+	bh=DwJ3/VlhfKTDqxCVbaSdIfpNgoltrF9Ybm/F45DIvA8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=taBipomWQpH+mQL2Ill8HvrEMJZnSkqwjW4inwB9qpafQwIT5ixwxosgBq629fP5j
+	 nFKf033DjgcpGoMapFtxUgOI8/SXuztUbmNS85uhINCjYsIadx5NIqJ7AGXgp8gXKZ
+	 C/9luxvUnJJ07JMXoKwyoJ54EAKlrVYK7bX5RPms=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4255d1nX076610
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 4 Mar 2024 23:39:01 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 4
+ Mar 2024 23:39:00 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 4 Mar 2024 23:39:00 -0600
+Received: from [172.24.227.68] (dhruva.dhcp.ti.com [172.24.227.68])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4255cuZP048092;
+	Mon, 4 Mar 2024 23:38:56 -0600
+Message-ID: <df592e1c-30b5-4df5-a4cd-26d1ec266c06@ti.com>
+Date: Tue, 5 Mar 2024 11:08:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223095133.109046-1-balint.dobszay@arm.com>
- <20240223095133.109046-2-balint.dobszay@arm.com> <CAFA6WYNW9-7gCZQSEaV=Gcr+GLdu25rQ8MpTg9yNpX7OwyZ0Tg@mail.gmail.com>
- <4E68610D-8F2B-4E27-AE5C-45CB59D7FEC0@arm.com> <CAFA6WYNz57v_S9CBQHUjvPdzcP9FWuDN0ciPNvgUZY_-m3JKRg@mail.gmail.com>
- <1A75CF74-D486-4A3B-9004-250F870D7330@arm.com>
-In-Reply-To: <1A75CF74-D486-4A3B-9004-250F870D7330@arm.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Tue, 5 Mar 2024 11:06:52 +0530
-Message-ID: <CAFA6WYMocdcQXaqk8hS8dwnfwJLNWKWSEfMLO4wXyCQM=TQ8vQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] tee: optee: Move pool_op helper functions
-To: Balint Dobszay <balint.dobszay@arm.com>
-Cc: op-tee@lists.trustedfirmware.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	jens.wiklander@linaro.org, corbet@lwn.net, sudeep.holla@arm.com, 
-	rdunlap@infradead.org, krzk@kernel.org, gyorgy.szing@arm.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: opp: drop maxItems from inner items
+Content-Language: en-US
+To: David Heidelberg <david@ixit.cz>, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>
+CC: Viresh Kumar <viresh.kumar@linaro.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240304234328.382467-1-david@ixit.cz>
+From: Dhruva Gole <d-gole@ti.com>
+In-Reply-To: <20240304234328.382467-1-david@ixit.cz>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, 4 Mar 2024 at 19:57, Balint Dobszay <balint.dobszay@arm.com> wrote:
->
-> On 4 Mar 2024, at 10:17, Sumit Garg wrote:
->
-> > Hi Balint,
-> >
-> > On Mon, 4 Mar 2024 at 14:33, Balint Dobszay <balint.dobszay@arm.com> wrote:
-> >>
-> >> Hi Sumit,
-> >>
-> >
-> > [snip]
-> >
-> >>>> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-> >>>> index 911ddf92dcee..4cf402424e71 100644
-> >>>> --- a/include/linux/tee_drv.h
-> >>>> +++ b/include/linux/tee_drv.h
-> >>>> @@ -275,6 +275,17 @@ void *tee_get_drvdata(struct tee_device *teedev);
-> >>>>  struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size);
-> >>>>  struct tee_shm *tee_shm_alloc_kernel_buf(struct tee_context *ctx, size_t size);
-> >>>>
-> >>>> +int tee_shm_pool_op_alloc_helper(struct tee_shm_pool *pool, struct tee_shm *shm,
-> >>>> +                                size_t size, size_t align,
-> >>>> +                                int (*shm_register)(struct tee_context *ctx,
-> >>>> +                                                    struct tee_shm *shm,
-> >>>> +                                                    struct page **pages,
-> >>>> +                                                    size_t num_pages,
-> >>>> +                                                    unsigned long start));
-> >>>> +void tee_shm_pool_op_free_helper(struct tee_shm_pool *pool, struct tee_shm *shm,
-> >>>> +                                int (*shm_unregister)(struct tee_context *ctx,
-> >>>> +                                                      struct tee_shm *shm));
-> >>>> +
-> >>>
-> >>> These rather belong to drivers/tee/tee_private.h as we shouldn't
-> >>> expose them to other kernel client drivers.
-> >>
-> >> As per the discussion in the other thread I'll ignore this.
-> >>
-> >
-> > Then it will have conflicts with this [1] patch. If you are fine to
-> > incorporate [1] in your series then the right place for these function
-> > declarations should be include/linux/tee_core.h.
-> >
-> > [1] https://www.spinics.net/lists/kernel/msg5122983.html
->
-> You're right, I'll rebase my patches on this.
->
-> By incorporating your patch in my series, do you mean that I should just
-> add it as the first patch in the series for the next version?
+Hi,
 
-If you are happy to carry it then I would be in favour of this to take
-care of dependency.
+On 05/03/24 05:13, David Heidelberg wrote:
+> With recent changes within matrix dimensions calculation,
+> dropping maxItems: 1 provides a warning-free run.
+> 
+> Fixes warning such as:
+> arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dtb: opp-table: opp-200000000:opp-hz:0: [200000000, 0, 0, 150000000, 0, 0, 0, 0, 300000000] is too long
+> 
+> Fixes: 3cb16ad69bef ("dt-bindings: opp: accept array of frequencies")
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
+>   follow-up of https://lore.kernel.org/lkml/20231229191038.247258-1-david@ixit.cz/T/
+> 
+>   Documentation/devicetree/bindings/opp/opp-v2-base.yaml | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/opp-v2-base.yaml b/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+> index e2f8f7af3cf4..b1bb87c865ed 100644
+> --- a/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+> +++ b/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+> @@ -57,8 +57,6 @@ patternProperties:
+>             specific binding.
+>           minItems: 1
+>           maxItems: 32
+> -        items:
+> -          maxItems: 1
 
--Sumit
+Thanks for the fix,
 
-> Or keep my
-> series as is (do the rebase of course) and just mention that it's using
-> your patch as base?
->
-> Regards,
-> Balint
->
-> >>
-> >>>>  struct tee_shm *tee_shm_register_kernel_buf(struct tee_context *ctx,
-> >>>>                                             void *addr, size_t length);
-> >>>>
-> >>>> --
-> >>>> 2.34.1
-> >>>>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+
+-- 
+Thanks and Regards,
+Dhruva Gole
