@@ -1,66 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D52F10A1B
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342A9535AB;
+	Tue,  5 Mar 2024 09:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709631992; cv=none; b=SoBh/ovNTVUkC332CPCeLV6ZltQYm7ahloG+hQp40PzPX4umiDHftgdhA16f4kOJdm0eu0fc/jB/ErUPJb+dVVe0g4VxPvAtcXP1FDVwy7MM08pEh3Wb7YNUG+DHOCW2X7BA8Lt9WwkcJ54rruMfyRFB5p7e40BAphB4aFGd7ys=
+	t=1709632022; cv=none; b=qWFkpEeNFDE9tkBGyf2XSItsqJBdyZdYuQ8styf0j9XJwrURdphxtIsVfZ8clqaOJklbZ9fgbk96gJokI1zpas/DaW5FHLSKJvpHBKzvyMeK4rqxYf3IgjjOEa1Zxv//YjLcby6+qkb2C8HcpLHWfwGS6iBH1wQnkXsPo1kjoZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709631992; c=relaxed/simple;
-	bh=j5Pt77CTd32TV8V7ZreeJ0uz8eAWYRbZtaIoc5KmXBY=;
+	s=arc-20240116; t=1709632022; c=relaxed/simple;
+	bh=SdVFrDX1tE7NitSkdJ8XNvewUL8AuhZd2lfMdZfjpSk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QNEVmcO+yWdY7cE4Ij7H0Mof9T5fD/Ic1TVnQwk2mD7ow1Nys1gZxNc5Rnxsd8GeywtUI+oJmvNfu4JsJLR5PiMlNnE+tG2fq/ZXB24BT45nOMQz8eUig6aLKGt71CA4pUyU4mSv/5NArRLLkK1FJ2hzFWWtD/vSEsvwhpR/hB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GLYhEu1+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=LHN7YfyMpDM1IJMWp5qbJdSQnH/sNSLnvDxcG6sHCysVvFkj6pzNv4c1PKnyP20VaxBRLZQ7jaTfbiYKX6cauhago9+V2K5KEUhMOiSQ786YyFyaGT8j/I59k+XgAGr+Q0lqo94paRT+QVgB3oXIUgMkweiheJIcjwvk0ijtW20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UuViqyXH; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GLYhEu1+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709631989;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UuViqyXH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E88A91BF207;
+	Tue,  5 Mar 2024 09:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709632018;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qlPaL+1qbcMigBEz3qx7ZtCPheah+YYYXpFOCWieYr8=;
-	b=GLYhEu1+hME+iqok95p+rtcKGdoOo1Irig4gUSqYV02/yb8r0EBnoHBVbS/knD3nndbDdH
-	txk6p6XL8JVxXhTXOco3ZgxULty7z9FkMEyXPLOF3Ol8HplwFo6ZtB8cRaEU0IJN77Ad+c
-	a85YvFfsH/4ED56hezk2fcwTcHoCyE4=
-Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com
- [209.85.221.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-26-g4k60Z-VPdyANI5Uv64S9A-1; Tue, 05 Mar 2024 04:46:28 -0500
-X-MC-Unique: g4k60Z-VPdyANI5Uv64S9A-1
-Received: by mail-vk1-f197.google.com with SMTP id 71dfb90a1353d-4d378b792ebso2342891e0c.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 01:46:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709631987; x=1710236787;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qlPaL+1qbcMigBEz3qx7ZtCPheah+YYYXpFOCWieYr8=;
-        b=SVJELeyy+eRq30T2Z1w7Ewng6V+DKaxywZNAeG01Jjwh5kpscUwPCcbK9e7wnmJRpT
-         2u6WnNyA0orKSbjtWpF5jO1tnM4a9qNQi0K3wfULZCZb3wUrtJWGddNK39pQ1vRK4wwy
-         rpYPAp5xmalphRk/aYxfIdoX1z39Wp2W/JmRD4wmwMw+MvCIv+rlPpDG6wiKsNW3pEBa
-         B4kTy7qs33p01xLnSMvj9xeQtvknQfy7cygP1BoTI+kvPcQvq01zppFbiH44iGyXVJnn
-         F/mts6DlkbQPHl8eRaAD7zk5RwJcdWzACeSwkDAlSn3WbEeyi1Sgb/4vz8ZXXV+v7Ref
-         jPUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrWVOfc6zkEarW0dnH6ZJkWoMIygQPIDRsRpqRUZh2/B46/GKQ7UJSNg+l5w2TU9TP+IJUID2BSFkaojF/1lF9tVca7ycEVTzlQPsL
-X-Gm-Message-State: AOJu0YyHTRQWnx5YHHdX04jA3uzpBWl+017Y/kgugq89172nCmrrC/5x
-	qAcrlSP7rtMPkmP5eK9zkxM8nMk9TsGLtsJUFfB3zoBl4A73RZV6q0qv+qSxlWxHkl/LVWEoCP1
-	NkiXklyxPUWatPGd+wx01l/eaxif10zcGeOVJAAIlz86IdlbaXUEmhbmco+22rQ+f52ztkA==
-X-Received: by 2002:a05:620a:5e13:b0:788:33ec:d8a8 with SMTP id xz19-20020a05620a5e1300b0078833ecd8a8mr2119013qkn.19.1709630320804;
-        Tue, 05 Mar 2024 01:18:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFL7ZlquCoZ60Snk3iqt0FcWv+4rmgyNgIzTovW4+l2TWmVx4HZr2FQyZGXyzR6Vzz7p4retg==
-X-Received: by 2002:a05:620a:5e13:b0:788:33ec:d8a8 with SMTP id xz19-20020a05620a5e1300b0078833ecd8a8mr2119001qkn.19.1709630320559;
-        Tue, 05 Mar 2024 01:18:40 -0800 (PST)
-Received: from [10.32.64.131] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id bp9-20020a05620a458900b0078812f8a042sm3635157qkb.90.2024.03.05.01.18.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Mar 2024 01:18:40 -0800 (PST)
-Message-ID: <deaeaceb-bfb0-4dbf-b800-b0debfd3bac9@redhat.com>
-Date: Tue, 5 Mar 2024 10:18:38 +0100
+	bh=x3jvJ31UW5g1AteAWnKjkA5Ea0CCYOiyYufsygt7PXM=;
+	b=UuViqyXHpmyiPp4V/tHhbWt98t7steNc2d9YJ3j1pxEYOmcx0JzXo0aCcKu16ynreqimG0
+	SM81f8iJQHQrzdFsbMSRaNj1TMi9jjniMcy1hLgzPYUa6x8gYm1lLaRsEnNmQcjuolmB9I
+	VX041rAp1I6nuvhAXHji/rdEQB/OQOQLa0/cZHm8yLjFpZdJhdGbcoT0TqqihFmnh5w34J
+	ZVCxqGGsAjwMHerVXfQs3QfvzieGjuPn0dzp8+66ds5WU9juv15sUrU7bod87gx2rft2ax
+	L96KGP6+qgepjgKlh84xNAiOg6qpuftAcbe9vfqgjJX66YD/ceD4PWJu+pXWfQ==
+Message-ID: <ee36a60d-5b65-4eb8-ac41-e4b6be1cf81f@bootlin.com>
+Date: Tue, 5 Mar 2024 10:46:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,48 +39,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] drm/nouveau: fix stale locked mutex in
- nouveau_gem_ioctl_pushbuf
+Subject: Re: [PATCH v2 3/3] drm/panel: simple: add CMT430B19N00 LCD panel
+ support
 Content-Language: en-US
-To: Karol Herbst <kherbst@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org
-References: <20240304183157.1587152-1-kherbst@redhat.com>
-From: Danilo Krummrich <dakr@redhat.com>
-Organization: RedHat
-In-Reply-To: <20240304183157.1587152-1-kherbst@redhat.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Yen-Mei Goh <yen-mei.goh@keysight.com>
+References: <20240304160454.96977-1-jeremie.dautheribes@bootlin.com>
+ <20240304160454.96977-4-jeremie.dautheribes@bootlin.com>
+ <20240304-inquisitive-kickass-pronghorn-c641ff@houat>
+From: =?UTF-8?B?SsOpcsOpbWllIERhdXRoZXJpYmVz?=
+ <jeremie.dautheribes@bootlin.com>
+In-Reply-To: <20240304-inquisitive-kickass-pronghorn-c641ff@houat>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: jeremie.dautheribes@bootlin.com
 
-On 3/4/24 19:31, Karol Herbst wrote:
-> If VM_BIND is enabled on the client the legacy submission ioctl can't be
-> used, however if a client tries to do so regardless it will return an
-> error. In this case the clients mutex remained unlocked leading to a
-> deadlock inside nouveau_drm_postclose or any other nouveau ioctl call.
+Hi Maxime,
+
+On 04/03/2024 17:25, Maxime Ripard wrote:
+> Hi,
 > 
-> Fixes: b88baab82871 ("drm/nouveau: implement new VM_BIND uAPI")
-> Cc: Danilo Krummrich <dakr@redhat.com>
-> Signed-off-by: Karol Herbst <kherbst@redhat.com>
-
-Should add a stable tag for that one, otherwise:
-
-Reviewed-by: Danilo Krummrich <dakr@redhat.com>
-
-> ---
->   drivers/gpu/drm/nouveau/nouveau_gem.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> On Mon, Mar 04, 2024 at 05:04:54PM +0100, Jérémie Dautheribes wrote:
+>> Add support for Crystal Clear Technology CMT430B19N00 4.3" 480x272
+>> TFT-LCD panel.
+>>
+>> Signed-off-by: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
+>> ---
+>>   drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+>>   1 file changed, 29 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+>> index 20e3df1c59d4..b940220f56e2 100644
+>> --- a/drivers/gpu/drm/panel/panel-simple.c
+>> +++ b/drivers/gpu/drm/panel/panel-simple.c
+>> @@ -1457,6 +1457,32 @@ static const struct panel_desc boe_hv070wsa = {
+>>   	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>>   };
+>>   
+>> +static const struct drm_display_mode cct_cmt430b19n00_mode = {
+>> +	.clock = 9000,
+>> +	.hdisplay = 480,
+>> +	.hsync_start = 480 + 43,
+>> +	.hsync_end = 480 + 43 + 8,
+>> +	.htotal = 480 + 43 + 8 + 4,
+>> +	.vdisplay = 272,
+>> +	.vsync_start = 272 + 12,
+>> +	.vsync_end = 272 + 12 + 8,
+>> +	.vtotal = 272 + 12 + 8 + 4,
+>> +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+>> +};
 > 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
-> index 49c2bcbef1299..5a887d67dc0e8 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_gem.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
-> @@ -764,7 +764,7 @@ nouveau_gem_ioctl_pushbuf(struct drm_device *dev, void *data,
->   		return -ENOMEM;
->   
->   	if (unlikely(nouveau_cli_uvmm(cli)))
-> -		return -ENOSYS;
-> +		return nouveau_abi16_put(abi16, -ENOSYS);
->   
->   	list_for_each_entry(temp, &abi16->channels, head) {
->   		if (temp->chan->chid == req->channel) {
+> Your pixel clock doesn't really match the rest of the timings:
+> 
+> (480 + 43 + 8 + 4) * (272 + 12 + 8 + 4) * 60 = 9501600
+> 
+> So a ~6% deviation.
+> 
+> What does the datasheet say?
 
+Indeed it does not exactly match but the datasheet indicates that the 
+typical clock frequency is 9MHz and when this frequency is used, the 
+typical values of the other parameters are those we have defined in the 
+drm_display_mode structure. I don't see any information about the 
+accepted deviation either.
+
+Best regards,
+
+Jérémie
