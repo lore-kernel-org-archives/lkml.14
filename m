@@ -1,60 +1,59 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556D545005
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE995FDCB
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709622132; cv=none; b=IE/q/7l9D2U20S1zRYlBh3YSS9IBzmB9dzdqr0sKLvvEhLuVWb1MBYklmvNR80h9CHCnHYExjFz3cH4P6Mu6p/WO0RzzEvSMHGsyQyuYcx78BfSxQSGZqqomfoA5v1ClHvdMwner8bHdE5KeaybQhlW+y4MFU1gPK/4Kg6PNzKA=
+	t=1709622304; cv=none; b=oC+4Xe6Q2nYEd3A3waDo9xAKDFmErouGLhlgSEFjnkHfdq6dK1K9oRw6O8u/1HZF556AIjE4lKccK1lig5Uwu/Ld7toZ4/cgg4s25tNaYNqAyWFHfWpMe+Ijb5kUR0xhUFzN5fdweiOUKZY7tK/8LqE1o21qry7g7zBZWP6adck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709622132; c=relaxed/simple;
-	bh=1kyYdsDkAP6TGaLjxGuPa5Gb0wu87h1MGzMU7RSPYFk=;
+	s=arc-20240116; t=1709622304; c=relaxed/simple;
+	bh=4JVBcQ6LdCwPj9B/t1Wya3EcqQrrvRPH9O9H1yxsNkk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U879UXYmVo7iDNcTmccjAlygwXhdTKAHslRyb1gq1b7gdRtur8GWQr/FWwZolnMdIMiUEvtoGpriUHrvox1TkwkCTG7rL+2vLB8/J6PbRePkh0Dtj0UT7QE1dH93SE8Ix0dr36NiM3FtyE7Kr2/U1UDqWlpKptWEt7JJ+9RhqUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OpAEBn9y; arc=none smtp.client-ip=209.85.218.45
+	 In-Reply-To:Content-Type; b=NURnsThQBSk8oOGOnhNjoiN6cnwEkEA0nKJuqa86HeXAV7nfq1NvE7N5MbT+C0BYVSACsTYOfbuKuKED1d2noJvsknITK0cVRY1fSvsCApdmnOOWFjarUGSqzK5j5M+uGLtF+ETO3AbelhH+tkOVka75BKMthu0SlFuqE4SiJZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FLJ8aalq; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OpAEBn9y"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a449c5411e1so485450366b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 23:02:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FLJ8aalq"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so1046958566b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2024 23:05:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709622129; x=1710226929; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=SstHDqzCw0+nfzxAgqKGI1L56sOy1jDIi6jQlSBPYww=;
-        b=OpAEBn9ylIrpmXHFMXm16ojfdLANAkmap/a9PuKEOMNW2VYz3RMvj9NJujPq/HFViT
-         T481RoLup3cXkqM1nHdVU7VPAvXy4OgDfGATTQMIukGZFojCFDIQxfkUzHae5NAVkpy9
-         p9hFJVTM9HqV1/rMETk2kmG+Wap4UgRFf8QkgrQpCbeiuO64ZTeZUduAK6ycUb/bcrmM
-         bu6q2FxY5v3biAuNv4t6YaNYkL4DoAnzzpWHv2ADe5RaTZCcmjXPyjr+kCl4STufxDgK
-         96+Ime1CTqj71tFuGK6SyQaum1RB5xB3peW8RFBmJGYXOJ2gEjh5DT03GckT55Z6sQls
-         TmFw==
+        d=linaro.org; s=google; t=1709622300; x=1710227100; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2klNA+6HuLnelVwHd/hZlMG6axojhHck2M9xbp1Yk8s=;
+        b=FLJ8aalqhn2eWmScY22ave2vpQj0G4uaYFVT1+00K08sciosNQbMeHC7iOR4VAGF2K
+         eLPiWOAennGNZFRsOWMgpbXnlW1LlzBNCMKjtX3CJzOPaDJ8qI+8ubI/Sz0funbkWX1E
+         hqLO7Y89VQkmwcxSGbEOvkQWg1x4iXmxImkP124pzWVkH7Ny3uR1IfHMeifL60jcsfLR
+         qvkUkFf8c4qVXFYn/ZiIxg1dAKV3lWBzfysx+RYxELON7V5TskuFAKnCb6wLbLznzCnc
+         /WrMVkr16lyY9q1fRpBmrQUNREUX3V1t3JLt3FtbWylyqEfF0BkEO7RASRxtzxuxOto+
+         gMVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709622129; x=1710226929;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SstHDqzCw0+nfzxAgqKGI1L56sOy1jDIi6jQlSBPYww=;
-        b=Ynf+jHuRwbQERiy/oW08vlDxYYEalMmaEllY7wkQd6WEQTYaES63Uut+o2jEChO9/N
-         innCD2pmmJH2kdPC90yI4uw8Z/9bvV9iuCF0ss2VSxBEwkGl6HL2hxuySu6BoJtnooZk
-         +8NHjTkhaoayRm66YlhAcgzEqbOVD1mbmdk/SIH9rzfeS1OlTrq1sZbVD09B8X0WT2+G
-         RjcbhsfIwh7+zVwcHO4aZWgENYvnqjruxwQtdj2K6p6Z/TeOng7Qy784OAz2Nz3Kppli
-         Z+CBYcNHCCyqqwJ92csGovVHDDHC02Zjhpj5jKYxgGfu/3WGTTuW9iC6+ZEan1oTcehV
-         +aww==
-X-Forwarded-Encrypted: i=1; AJvYcCXWj/Efik2mgO+1J5wX70t9ykePT363Bj5WQ+RbPEZJeIxZ4rPuDCwhYZU2I6gQdGOETCemaL7aWLzoLFYO456r/FZsNjGSm6rmqeXP
-X-Gm-Message-State: AOJu0Yxc4AHh8+jPD1Iy7X+IZQwPrau4xsiNde2p9J6PYtSvKhG/sKkG
-	NkpQSXfda1d4jW3iMdYA4jhh7Uq74HuBYxESUbENsWWLIFRBBZ+siUp1A26ai6U=
-X-Google-Smtp-Source: AGHT+IGuKSHSvTXHU/zbk57JkXkIoGlfnh5Xlplpn5+UdlZuaAtOAeOwB5i8lHX0C9xf2Fi01i8wAA==
-X-Received: by 2002:a17:906:2b56:b0:a45:6c62:1b96 with SMTP id b22-20020a1709062b5600b00a456c621b96mr2336346ejg.61.1709622128627;
-        Mon, 04 Mar 2024 23:02:08 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709622300; x=1710227100;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2klNA+6HuLnelVwHd/hZlMG6axojhHck2M9xbp1Yk8s=;
+        b=JYUBKlRy63agr5oC61tIk0gPdUATq4bf/jmrHAAoE0bVXWMVjcR16/Grho7JWeBRG+
+         iU1YZ7vUBUgUjaEI4OQj9pbtT/gD/mIp9fl8SFizIB0vnD+A80RKiaYKVLrPpoFWG5/H
+         SP5oSlaQveO23LGTbcr3y6swwv0Kr7TDt/sh3xYU1tXdkbPKy6P4VoiZ3KB+rxLMguoe
+         YXhOx0RmesgR66DE4oCPU+n4VlEQLVWrby+OK2ucAaLYbLQzfdX0ArlNQ8URJthicJde
+         rwXXyNC5SlYhZSIbFEyj+fSHZgJ3Mx483ZvjnIES2bMdhZ4bRCYOuW1KxQTrgCtNdRjh
+         98Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCWe4Is/XyCxr+VUXLk+Wg9alebv4BqYcFFsjgLk6nG7WFBiF/b/g2Qgy+tSUSPCdCtkyGCMnv5nsRS7TYkf4N4Lyx1aQgTUVJm10W0G
+X-Gm-Message-State: AOJu0YwPheJqJWOCnooq98pWQKfr4De/DSXLQCTQc377JlA8bpRbK0Qo
+	7GvjxqzMaVyUfvA7EHNWm2ayYufNbJkJzMbtQcSBNjk3bqsfTpwlTa2oIaAjRrY=
+X-Google-Smtp-Source: AGHT+IHykJXFdxa0ufKnr7SX2KdXakqLJaJBGEg6y0UVS/JVEwPwDx64f3vuGcfAf79RDyfILrpubw==
+X-Received: by 2002:a17:906:3648:b0:a45:96ab:28af with SMTP id r8-20020a170906364800b00a4596ab28afmr1883345ejb.10.1709622300408;
+        Mon, 04 Mar 2024 23:05:00 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id h20-20020a170906591400b00a3d5efc65e0sm5692735ejq.91.2024.03.04.23.02.07
+        by smtp.gmail.com with ESMTPSA id w9-20020a1709064a0900b00a44f0d99d58sm3266126eju.208.2024.03.04.23.04.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 23:02:08 -0800 (PST)
-Message-ID: <c9950c7b-9157-40dc-9c5f-fbbecb7a2768@linaro.org>
-Date: Tue, 5 Mar 2024 08:02:06 +0100
+        Mon, 04 Mar 2024 23:04:59 -0800 (PST)
+Message-ID: <17f958e0-b5f3-46b3-8522-a26fd65eaf79@linaro.org>
+Date: Tue, 5 Mar 2024 08:04:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,14 +61,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: duplicate patches in the samsung-krzk tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>,
- Arnd Bergmann <arnd@arndb.de>
-Cc: ARM <linux-arm-kernel@lists.infradead.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20240305100340.6abe706c@canb.auug.org.au>
+Subject: Re: [PATCH] arm64: defconfig: build ath12k as a module
 Content-Language: en-US
+To: Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ ath12k@lists.infradead.org, linux-wireless@vger.kernel.org
+References: <20240219084610.11007-1-brgl@bgdev.pl>
+ <CAMRc=Md0H4=UZWNOoZR3-b50BrF-ch=34aPdqm2JhOXQzNi-mQ@mail.gmail.com>
+ <228772c6-034e-4727-b410-391316d8f340@quicinc.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -115,23 +122,26 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240305100340.6abe706c@canb.auug.org.au>
+In-Reply-To: <228772c6-034e-4727-b410-391316d8f340@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 05/03/2024 00:03, Stephen Rothwell wrote:
-> Hi all,
+On 04/03/2024 22:46, Jeff Johnson wrote:
+> On 3/3/2024 2:34 AM, Bartosz Golaszewski wrote:
+>> On Mon, Feb 19, 2024 at 9:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>
+>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>
+>>> Qualcomm sm8550-qrd and sm8650-qrd boards have ath12k modules as part of
+>>> their on-board WCN7850 WLAN/BT packages. Enable the relevant driver in
+>>> defconfig.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> The following commits are also in the arm-soc tree as different
-> commits (but the same patches):
-> 
->   213b755e42e2 ("ARM: defconfig: enable STMicroelectronics accelerometer and gyro for Exynos")
->   5fb1252944fc ("ARM: dts: samsung: exynos4412: decrease memory to account for unusable region")
->   b43b68935124 ("ARM: dts: samsung: exynos4412: decrease memory to account for unusable region")
-> 
-> These last two are also identical to each other.
+> Would have been nice to cc the ath12k and linux-wireless lists (done
+> now). Just happened to stumble across this.
 
-arm-soc is my upstream, so that's expected. I'll drop them from my tree.
+This is arm64 change, not wireless.
 
 Best regards,
 Krzysztof
