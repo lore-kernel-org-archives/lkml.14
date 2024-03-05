@@ -1,209 +1,159 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA911863C
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 18:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9691C1AAAE;
+	Tue,  5 Mar 2024 18:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709663099; cv=none; b=LYlHSIKZssGyQdg+8vZgdusHn/SL/bFTQzRVHfiKx8aPunADZSfIm9vQSVF9UzyX+juAyvJZJBfPauvxaoMRyh0+Q7f2WNI+O2+DG6EuJhzRuQOwigsJK38gil1JPaaAGSllpo7ZeegR5bGrN43+oTBIiTEVIQcdC0Bm1eZ4QUs=
+	t=1709663123; cv=none; b=Rk2eCdK++rgt5bdFZFFFQOdQ5dSrPgaIrBAdWru12oGY7mDDWF5kdK9+Wb5cexJys923Nrblp0gOR+bIG5YxFeWT5jXwbbrA/Gh8vu7kFNyY07aSLl3BK2pFsuz6RCpNTdyHwFfAJTEMTZ1XiS0ebdRICAStAOa/32Z9OtpAFmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709663099; c=relaxed/simple;
-	bh=o9CJwYV786v6dPmGV9qZCaWyrfhHpxl39VvWKwVU68Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OjlWIGBiJdj4g/Fa2568wVTOOylNROtFyTNjJgH7RfXFwy6724uc6qQTofEeDBYvSSG3EYekr2TcGrdRmr3gqx9Rq6jmPiFPYX3iH+LpgmWn4/7QcXqM8ln3qU4Ea2Em6yuxUcOjBheKMFuKmTr2eeqeAD9Gh2MBX6ZirzFLfhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bZDlQX2A; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bZDlQX2A"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 425Bjwps004111;
-	Tue, 5 Mar 2024 18:24:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=eb5A4JDbuchBBafxqmTtCwKQlj+2d0meUpzdl7x3pG4=; b=bZ
-	DlQX2AZVmQ2Ysn5AiHZCP74B2xDpTEHzUkolr4+zzp4LjQfeW2GUiy4cvi0Yquoc
-	IIT732TBwE+ufyWAo2eaxdPqU49OjgFBu+6U/Ct00zvG1oUSsXYqK3Ca394TncDJ
-	3G2saNNEJWWYdNPVTDDKFFidpoDabuLu28ckfI0tlV99fBDjY5Osrk7+48kgmgNi
-	Z85YQg5vC1xNj/cFIyrf3wbBNu1Wkw2YrpfdCvYLwBNrXc8Bv3vMJ3oX/vlXwdIS
-	amt5f+dhHLBq76pu91FRKUu5F25ybgW9CWDlyrpo14/k1FVI5Br/htvGuxKx77uU
-	it1npCt9tMSjusqsRLaA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wp00x18tf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 18:24:50 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 425IOnRW028679
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Mar 2024 18:24:50 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 5 Mar 2024 10:24:48 -0800
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <srinivas.kandagatla@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH] nvmem: qfprom: Add constraint read for some SoCs
-Date: Tue, 5 Mar 2024 23:54:40 +0530
-Message-ID: <1709663080-10957-1-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+	s=arc-20240116; t=1709663123; c=relaxed/simple;
+	bh=gAlZJiLfI3RwKjNnb5P7pE29LXqn0S65DwHXQry2obM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WMKm8s0v4LOd2t7AvLoQgZbeeoqHVY8eWuu8NyISmn6LvyC0tXpAaMGprIvKQP9lZghmXRFdb3bzVCcRyxQGKwBTcUfn1Jig1I3UwVp5zhIrn+R9hOlDAyEm5kdnd7R52iS95kywPpuBgpEnV7fjTio+UR5HCgZx+o80sOBu0t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 303011FB;
+	Tue,  5 Mar 2024 10:25:55 -0800 (PST)
+Received: from [10.57.50.122] (unknown [10.57.50.122])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 90E9E3F73F;
+	Tue,  5 Mar 2024 10:25:16 -0800 (PST)
+Message-ID: <8ef57dd9-a16d-4847-89f5-a309c4ccb849@arm.com>
+Date: Tue, 5 Mar 2024 18:25:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: j0gtkOSewRoDh9tHxhjrOlpFdf9gXyro
-X-Proofpoint-GUID: j0gtkOSewRoDh9tHxhjrOlpFdf9gXyro
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-05_15,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 mlxscore=0 mlxlogscore=999
- impostorscore=0 phishscore=0 adultscore=0 malwarescore=0 spamscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403050147
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 00/11] coresight: Move remaining AMBA ACPI devices into
+ platform driver
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Sudeep Holla <sudeep.holla@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@arm.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20240222082142.3663983-1-anshuman.khandual@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240222082142.3663983-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Few SoCs starting from sm8450 where fuse region is
-accessed using secure bus where it is not possible
-to do incremental bytewise reading, while it is
-possible to read 4 byte at a time.
+On 22/02/2024 08:21, Anshuman Khandual wrote:
+> This moves remaining AMBA ACPI devices into respective platform drivers for
+> enabling ACPI based power management support. This series applies on kernel
+> v6.8-rc5 release. This series has been built, and boot tested on a DT based
+> (RB5) and ACPI supported coresight platform (N1SDP).
 
-Add required support in qfprom driver to support
-reading fuse information on these SoCs.
+Please rebase your series on coresight next and fix build failures with 
+the extra warnings turned ON (should be on by default with next).
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/nvmem/qfprom.c | 56 +++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 51 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
-index 116a39e804c7..8fce445f0320 100644
---- a/drivers/nvmem/qfprom.c
-+++ b/drivers/nvmem/qfprom.c
-@@ -68,6 +68,7 @@ struct qfprom_soc_data {
-  * @secclk:       Clock supply.
-  * @vcc:          Regulator supply.
-  * @soc_data:     Data that for things that varies from SoC to SoC.
-+ * @soc_cdata:    Data that are relevant to convey SoC constraints.
-  */
- struct qfprom_priv {
- 	void __iomem *qfpraw;
-@@ -78,6 +79,7 @@ struct qfprom_priv {
- 	struct clk *secclk;
- 	struct regulator *vcc;
- 	const struct qfprom_soc_data *soc_data;
-+	const struct qfprom_soc_compatible_data *soc_cdata;
- };
- 
- /**
-@@ -99,10 +101,14 @@ struct qfprom_touched_values {
-  *
-  * @keepout: Array of keepout regions for this SoC.
-  * @nkeepout: Number of elements in the keepout array.
-+ * @word_size: Should be given for SoC where it is not possible
-+ *	       to do incremental reading or bytewise and while
-+ *	       it is possible read 4 byte at a time.
-  */
- struct qfprom_soc_compatible_data {
- 	const struct nvmem_keepout *keepout;
- 	unsigned int nkeepout;
-+	unsigned int word_size;
- };
- 
- static const struct nvmem_keepout sc7180_qfprom_keepout[] = {
-@@ -125,6 +131,10 @@ static const struct qfprom_soc_compatible_data sc7280_qfprom = {
- 	.nkeepout = ARRAY_SIZE(sc7280_qfprom_keepout)
- };
- 
-+static const struct qfprom_soc_compatible_data sm8450_qfprom = {
-+	.word_size = 4,
-+};
-+
- /**
-  * qfprom_disable_fuse_blowing() - Undo enabling of fuse blowing.
-  * @priv: Our driver data.
-@@ -317,21 +327,55 @@ static int qfprom_reg_write(void *context, unsigned int reg, void *_val,
- 	return ret;
- }
- 
-+static int __qfprom_reg_constraint_read(void __iomem *base, unsigned int reg,
-+					void *_val, size_t bytes,
-+					unsigned int word_size)
-+{
-+	unsigned int i;
-+	u8 *val = _val;
-+	u32 read_val;
-+	u8 *tmp;
-+
-+	for (i = 0; i < bytes; i++, reg++) {
-+		if (i == 0 || reg % word_size == 0) {
-+			read_val = readl(base + (reg & ~(word_size - 1)));
-+			tmp = (u8 *)&read_val;
-+		}
-+
-+		val[i] = tmp[reg & (word_size - 1)];
-+	}
-+
-+	return 0;
-+}
-+
-+static int __qfprom_reg_read(void __iomem *base, unsigned int reg, void *_val,
-+			     size_t bytes)
-+{
-+	u8 *val = _val;
-+	int words = bytes;
-+	int i = 0;
-+
-+	while (words--)
-+		*val++ = readb(base + reg + i++);
-+
-+	return 0;
-+}
-+
- static int qfprom_reg_read(void *context,
- 			unsigned int reg, void *_val, size_t bytes)
- {
- 	struct qfprom_priv *priv = context;
--	u8 *val = _val;
--	int i = 0, words = bytes;
- 	void __iomem *base = priv->qfpcorrected;
- 
- 	if (read_raw_data && priv->qfpraw)
- 		base = priv->qfpraw;
- 
--	while (words--)
--		*val++ = readb(base + reg + i++);
-+	if (priv->soc_cdata && priv->soc_cdata->word_size == 4)
-+		return __qfprom_reg_constraint_read(base, reg,
-+						    _val, bytes,
-+						    priv->soc_cdata->word_size);
- 
--	return 0;
-+	return __qfprom_reg_read(base, reg, _val, bytes);
- }
- 
- static void qfprom_runtime_disable(void *data)
-@@ -390,6 +434,7 @@ static int qfprom_probe(struct platform_device *pdev)
- 		econfig.nkeepout = soc_data->nkeepout;
- 	}
- 
-+	priv->soc_cdata = soc_data;
- 	/*
- 	 * If more than one region is provided then the OS has the ability
- 	 * to write.
-@@ -447,6 +492,7 @@ static const struct of_device_id qfprom_of_match[] = {
- 	{ .compatible = "qcom,qfprom",},
- 	{ .compatible = "qcom,sc7180-qfprom", .data = &sc7180_qfprom},
- 	{ .compatible = "qcom,sc7280-qfprom", .data = &sc7280_qfprom},
-+	{ .compatible = "qcom,sm8450-qfprom", .data = &sm8450_qfprom},
- 	{/* sentinel */},
- };
- MODULE_DEVICE_TABLE(of, qfprom_of_match);
--- 
-2.7.4
+Suzuki
+
+> 
+> https://git.gitlab.arm.com/linux-arm/linux-anshuman.git (amba_other_acpi_migration_v5)
+> 
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: James Clark <james.clark@arm.com>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: coresight@lists.linaro.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> 
+> Changes in V5:
+> 
+> - Used table->mask to filter out bits from pid in coresight_get_uci_data_from_amba()
+> - Dropped custom masks such as STM_AMBA_MASK and TMC_AMBA_MASK
+> - Modified tmc_etr_setup_caps() to accept struct csdev_access argument
+> - Reverted back tmc_etr_setup_caps() call site position in tmc_probe()
+> - Changed replicator and funnel devices to use the new helpers earlier in series
+> - Updated the commit messages regarding xxx_probe() refactoring and renaming
+> 
+> Changes in V4:
+> 
+> https://lore.kernel.org/all/20240123054608.1790189-1-anshuman.khandual@arm.com/
+> 
+> - Fixed PM imbalance in etm4_probe() error path with pm_runtime_disable()
+> - Restored back the pm_runtime_disable() on platform probe error paths
+>    in replicator, funnel, catu, tpiu, tmc and stm devices
+> - Dropped dev_caps argument from __tmc_probe()
+> - Changed xxxx_platform_remove() for platform_driver->remove_new() callback
+> 
+> Changes in V3:
+> 
+> https://lore.kernel.org/all/20231208053939.42901-1-anshuman.khandual@arm.com/
+> 
+> - Split coresight_init_driver/remove_driver() helpers into a separate patch
+> - Added 'drvdata->pclk' comments in replicator, funnel, tpiu, tmc, and stm devices
+> - Updated funnel, and replicator drivers to use these new helpers
+> - Check for drvdata instead of drvdata->pclk in suspend and resume paths in catu,
+>    tmc and debug devices
+> - Added patch to extract device name from AMBA pid based table lookup for stm
+> - Added patch to extract device properties from AMBA pid based table look for tmc
+> - Dropped pm_runtime_put() from common __probe() functions
+> - Handled pm_runtime_put() in AMBA driver in success path
+> - Handled pm_runtime_put() in platform driver in both success and error paths
+> 
+> Changes in V2:
+> 
+> https://lore.kernel.org/all/20231201062053.1268492-1-anshuman.khandual@arm.com/
+> 
+> - Dropped redundant devm_ioremap_resource() hunk from tmc_platform_probe()
+> - Defined coresight_[init|remove]_driver() for both AMBA/platform drivers
+> - Changed catu, tmc, tpiu, stm and debug coresight drivers to use the new
+>    helpers avoiding build issues arising from module_amba_driver(), and
+>    module_platform_driver() being on the same file
+> 
+> Changes in V1:
+> 
+> https://lore.kernel.org/all/20231027072943.3418997-1-anshuman.khandual@arm.com/
+> 
+> - Replaced all IS_ERR() instances with IS_ERR_OR_NULL() as per Suzuki
+> 
+> Changes in RFC:
+> 
+> https://lore.kernel.org/all/20230921042040.1334641-1-anshuman.khandual@arm.com/
+> 
+> Anshuman Khandual (11):
+>    coresight: etm4x: Fix unbalanced pm_runtime_enable()
+>    coresight: stm: Extract device name from AMBA pid based table lookup
+>    coresight: tmc: Extract device properties from AMBA pid based table lookup
+>    coresight: Add helpers registering/removing both AMBA and platform drivers
+>    coresight: replicator: Move ACPI support from AMBA driver to platform driver
+>    coresight: funnel: Move ACPI support from AMBA driver to platform driver
+>    coresight: catu: Move ACPI support from AMBA driver to platform driver
+>    coresight: tpiu: Move ACPI support from AMBA driver to platform driver
+>    coresight: tmc: Move ACPI support from AMBA driver to platform driver
+>    coresight: stm: Move ACPI support from AMBA driver to platform driver
+>    coresight: debug: Move ACPI support from AMBA driver to platform driver
+> 
+>   drivers/acpi/arm64/amba.c                     |   8 -
+>   drivers/hwtracing/coresight/coresight-catu.c  | 142 +++++++++++++---
+>   drivers/hwtracing/coresight/coresight-catu.h  |   1 +
+>   drivers/hwtracing/coresight/coresight-core.c  |  29 ++++
+>   .../hwtracing/coresight/coresight-cpu-debug.c | 141 ++++++++++++++--
+>   .../coresight/coresight-etm4x-core.c          |   3 +
+>   .../hwtracing/coresight/coresight-funnel.c    |  86 +++++-----
+>   drivers/hwtracing/coresight/coresight-priv.h  |  10 ++
+>   .../coresight/coresight-replicator.c          |  81 +++++-----
+>   drivers/hwtracing/coresight/coresight-stm.c   | 115 +++++++++++--
+>   .../hwtracing/coresight/coresight-tmc-core.c  | 153 +++++++++++++++---
+>   drivers/hwtracing/coresight/coresight-tmc.h   |   2 +
+>   drivers/hwtracing/coresight/coresight-tpiu.c  | 102 ++++++++++--
+>   include/linux/coresight.h                     |   7 +
+>   14 files changed, 721 insertions(+), 159 deletions(-)
+> 
 
