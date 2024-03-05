@@ -1,450 +1,160 @@
-Received: from out203-205-221-233.mail.qq.com (out203-205-221-233.mail.qq.com [203.205.221.233])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2010.outbound.protection.outlook.com [40.92.20.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6282312D20D
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 16:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.233
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709655760; cv=none; b=nAc/t2Ylx4LGegUWAJFOWJbIXDavZ02k1G7Qt6g3h355uCNwe1mDn0epeBX91eLptR1frBUhAKgq3NJp5ADGR0Fk9cfWW/pTs8ACpzYsiBcpswV26ztogZYNsO3BYcIgzbR9mN62L9GwiN87BgG3THD/siLZvBWzt5NaXe9ki10=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709655760; c=relaxed/simple;
-	bh=9oWvbUbFO5sNR2li9GSsrwHQF8ckhMdUFxTF/5HEG1Q=;
-	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=vBc56YKDMgdahVtNb4CN51t27Bk6JibFA4ucw+qIqWlKYaCXOxiL6bRe5lZkU+BWe2aeQ/Eg/gXr1/RirTjhR0Bx0J+ELR9skJBObe3KIAzY9ZExbyc0NPKCroqnMYE85mzt62xbOShxWNZ25ffJae36wVbxtloS2iWfuMUzMdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Fm1DA9g+; arc=none smtp.client-ip=203.205.221.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8899F128805
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 16:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709655842; cv=fail; b=jWLAakUfG8Xi6P1/yMMb+3zeOYyMberQEq+lHRY+IPZ8GSmLMlLTCn/yT9ocLE40gH74B+eKcPOGdwWuLFCeHoYkKzFLlE1+dE6FXjTaEhTQFg9WIulnAFnDM9zKw+N++lnkX7tjDN+4/uNcRO0JcQVou2VWGwBufmHJiDyaDwk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709655842; c=relaxed/simple;
+	bh=aPktfKQSQAhVzKW+fbnL05NBszRecILRCviqKE9rMbI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PvNcCBpcWxpXF5+/Ax8W0JrxQW4J4hgRgQnxnfJzxEm1idhLxgImXnRLjew776ziwjTs4elQcO9JjaGol71eqJG7AUwnCRIl6SmRXuJnuZTncfJtWiADaak3zLLyqDGlqJFcsnbULmsNtbm+3XVnqd87S5IKv2quv0ceomZx+98=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Ne3XjBWb; arc=fail smtp.client-ip=40.92.20.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Fm1DA9g+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709655748; bh=NI1khCQzcWGT86WrucsUqSb7H0au1MxvTw8W9ur4UjU=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=Fm1DA9g+zy9NBh5CNyz9B7n6izgR/FGpBB4FLxQpPHyOw9ieQb7wzUJrpdQO+OQHe
-	 TUj9s59QEpgdnCWCW9fVBZwHZWUr49hUZDP5axwJuaOpKGnVXaWn6RgMWolWOy21ZH
-	 uw7/TiXjO1JU+lTMvDRgMdtOouWN3dXmkHI+4p/4=
-Received: from smtpclient.apple ([2001:da8:c800:d084:84f7:c158:bab8:8899])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id 5990E613; Wed, 06 Mar 2024 00:22:25 +0800
-X-QQ-mid: xmsmtpt1709655745t3i0zi3zc
-Message-ID: <tencent_73D26B433B66E05EC6DC86803662F10D0A0A@qq.com>
-X-QQ-XMAILINFO: OfkeHAqGKDFbLKZIxH4I4nhDANs5MgzwwgqsoDNHHnhb97DTp0jRdtRSYayjHZ
-	 y9wgudSVViQICFUpvfx7yifrgQg8ZiNHgmJ02hlzcrqyeFH1vNRQjHDFofYMiux/tjlSR9LH9Fz5
-	 mDSHPQEZZ9OianZNzu84dKJ96LIqEccg+ES6atJfsKHzrjTiysvevpkTHcd7/nTk4o/whX91GWy4
-	 PHl5cXPjSIRwPkS4MxBzhppBquZk7iOG77gMRYwt/IhKCUn5C/wG1oyY8yAKL3WaPxpgw37H4f5f
-	 ABUbj9mokL+vpnTp5ZFOld8EPJQZs+K77RXR5ZZLaCr/nZRZR0oTWJWkogrr6ae5tpAlYe5YEl/x
-	 NiXY6aHjTL9R7/PUMXeYkZHjV8yow4PjgaAFMQOaNiNwuaKpxsBC9MyvYmOqzXfpoWap8O1n82vs
-	 qAb7tVAyIacQ/JSME+zWFMa44cBZGubZNc4a4sw1zbIbE0FTDVxcbWB7xYbaY2EHNJrvr6TW652k
-	 pjxIandKPL7eg/6L5oA0j8oSdvTboPLAVEkSEFOFGxcyjRJWJ3XrdYeQeWFtTwTE6Q3ZpRjtwkNe
-	 M+tM3zhF+/zVyzbkjkT00vD2YE6ngvr/PU6BPebgqBm6pQ5wKif6+dDsQj+JvptoQxGBIBCEHu1U
-	 iQ4iTzdYJvAco02fHN5wIoSbi0zwJyP6vyPpw6p89+dn0d8QY5j1gUMtae31JeDCHrWm3R36gs8E
-	 sLxxCZi7v9UNLOWj2S5LOldD+sA8YpeFLe1GkYSDfvHny949eFZMgTkqjJyjOyzxagpmoDJgjHSL
-	 oOLxgSjvXJGDRlnwhe0a0cGK/E17wXo5hMmnQYFeoUjjOuVQNXu2W6QcNP5cBubDWqGq3RtcKyyt
-	 VvyynHm7PmwRnT9GV1XrykJ5iPZ91rCcevYb0KIoG8qh8gaoyUX/7D7qWb/P4Sg/6iq1YPB9nGsX
-	 R/2f8zZ9Hu6XTviowWCEgZmTx5idnGypIktpctf8NCj2bLBtl1Yq7gmi6tfEKcAqD8iU9xXY27ZI
-	 +4rqNVuBYRpMoDyVFek0dzbeJANZUiQnA1Vm/4Ew==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Ne3XjBWb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eii4+Zz4BFowYX8GVUMdXDJXBFfB8lQIR5aw0YIth4RGU10nfyOOmoLtO/CIWSg516cLeLqPcPy1C/w9YXIVZSSKLI7MqOaXBuevx7ojfx4TCAFwILKeR4wdDzXMVE2liaM3LdnK++ds2E4RZjUsMSKilqWjja1dCuw3rbpYxul0OqxdMg1XLN2QcvFqoDPUBCmjo6vaNpPLcc+O9uuKgF5hDhu6wDBwG3/mN0ZK3puSROikRIRiA87J61Bq4Lmj2XvjDwXImKKqmIYeuWtwDwCGtzuNz40pn4w8wKXgbXrZMBI6DYLhWUPRR9B5bsFVSo+UNsnBIOeDYhCGzupMpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aPktfKQSQAhVzKW+fbnL05NBszRecILRCviqKE9rMbI=;
+ b=B2bTrWY7SAjsnaiRl9typk/msdxYMY1Qb98G9WXqonBGjpjbnXnTMu92Y6yyhGJQe44mizaepGu+oGyXUpf5kV1eZZmweGqzFmMocbdjAQgOppv1eMC74eJ/GmpTsfwlc32RBUXJp517liAgguK9YYOxYVpgm6YcSqT/MQ/bVV8+/1CXu7701WBorwqdwy64//vWsEon2LF7YLgs3ZLVU1AjNgOIOr03uSQiqIVUImIPRgdQ413uAJWPzeKqOxaaUi2DNW2w53BagpDsV2l1ior8REfyRnBnRZydJTNeSHhBJ9ZKiSvLYwZ48eC8+qlL+ZO7Wif/z7dSmjAHX6uB0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aPktfKQSQAhVzKW+fbnL05NBszRecILRCviqKE9rMbI=;
+ b=Ne3XjBWbeEW1ZAXs8+CQzpjMEj0ngy9a0ONhgSISYTAuh1/Y3yZYspSlSqicqIpF//MknnWUTG2g5ou9DA9ZRN7M9gV5iZEmzhcDmrViHQXrb+mtGlhEh3ApEIQwKhKvj9CihO+ylqQzv0a1si+fAviZVqrmoxZvHIYRMGGuitYUNcfF0y1wCVSnDeBQQy7ffUGbWjRNRhYCy87dxFF7HXFhj5ggv1jI8DUgj2vEE8aIyQr5STfFlgfGlK/zzr3A7SX4dcJ1fR3w1d0A1ud7A1cVati088+vvbvObJQwm7u/bGyB/peACMU3ibf4X73yN495u1shTTUbAGcT99HefA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by BY5PR02MB7089.namprd02.prod.outlook.com (2603:10b6:a03:238::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Tue, 5 Mar
+ 2024 16:23:08 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7339.035; Tue, 5 Mar 2024
+ 16:23:08 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, John Ogness
+	<john.ogness@linutronix.de>, Jocelyn Falempe <jfalempe@redhat.com>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Vetter
+	<daniel@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>, "Peter Zijlstra
+ (Intel)" <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Kefeng Wang <wangkefeng.wang@huawei.com>, Lukas
+ Wunner <lukas@wunner.de>, Uros Bizjak <ubizjak@gmail.com>, Petr Mladek
+	<pmladek@suse.com>, Daniel Thompson <daniel.thompson@linaro.org>, Douglas
+ Anderson <dianders@chromium.org>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, David
+ Airlie <airlied@redhat.com>, Thomas Zimmermann <tzimmermann@suse.de>
+Subject: RE: [RFC] How to test panic handlers, without crashing the kernel
+Thread-Topic: [RFC] How to test panic handlers, without crashing the kernel
+Thread-Index: AQHaa8nPQ+IlvdtNEEeAC9DI6HKUj7EoGboAgAAIk4CAATYNgA==
+Date: Tue, 5 Mar 2024 16:23:07 +0000
+Message-ID:
+ <SN6PR02MB4157AF2E765F7ED3B9487351D4222@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <266579a9-fde6-40ff-b13d-fb2312db406c@redhat.com>
+ <87edcpn1l3.fsf@jogness.linutronix.de>
+ <15015345-3068-2fb8-aa38-f32acf27e1d0@igalia.com>
+In-Reply-To: <15015345-3068-2fb8-aa38-f32acf27e1d0@igalia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [xCpC5RLfe+/OJOJ5/WxtOw==]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BY5PR02MB7089:EE_
+x-ms-office365-filtering-correlation-id: 21698ce2-4163-4393-d87b-08dc3d308b0d
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 5V8Qhf/zlzvBuyQ4IxmyWAZ6RbeYEKRDtNF3mYGIfyERRXTpFhpOnX4IVY7HqeowaMURPXDA25exaNeqnhhLtG/0bXxnDPP4YmYKuLL1vqihQaDgkrb+Hv/jg8/V3ZmzjmUjpvZvy7jKpJ+Tn6qSSTt+9dsd/PPF8ry0p3GyiamKC3acrgpGHGs16n2IMgSlIMlqvoUY+IAoPpMPSH2UNbWDiVGXjGcXdm/nY1sszVXRmORDEBcghIINOyS6vaVfLfgepxU1Bg8agtSFOZccu7kybh1mLP6EgDewGHMqTpsMkL2+HB/itB0p40X7dm11NqORdmd8TfYvgIyTG6SnfkiPIsVDSyClBhIjkpe9LRVkKuDefN6IE4SuEIIlwrM2aZ7PkBAcbvgDZB1xnEWx4aGrOgDectA8qwcwYngce1hyKhLm+pCuYVt5vsgpdkavx6vK8i79bR+6e7abD8cXTHNKsDKsTov8IG17sftEpCY38qmxs2a7l8HYNW+5xhnB2R5OB7N2PZzITZFqoomuLbc2AuQHSo2gdJ9X9o+EqSA20z+9e855Qq+RYbDbox8m
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?eTRzLzVzbmFHd01IS3dySGQ5M3JRUGRoczZGQ21FdFJweGVoUVBPVmxlNndk?=
+ =?utf-8?B?bEttZEZLb3VEM0hPUHlxbitBYXBReVRPNkl6RE5qYitQaFBZUlpmZ1ljdkdN?=
+ =?utf-8?B?UktEMXRFZmRFOWZqeTBFQVVwS2E4RlRmbWFqRVVIa3ZTYWRVbGhGd211MUZw?=
+ =?utf-8?B?V0pNeDNJWGVLVWZScDVTWE5MVW9Db1FZLzgzT3Y3ME5iRzVVOXNrVkpITjhy?=
+ =?utf-8?B?ZlRkVG1IVTZXVjlHR2pNSkZZT1J5VTd2eHV4NVQ0aHdFb3dFVGFONktkVy9P?=
+ =?utf-8?B?NGtYdXJCQ1JhVlU5R3I0TFRic21nOUowNmVlbWxma0N6eDNXdXlBNGhvTSsw?=
+ =?utf-8?B?OENNLzhBUml2Y3RnNEhvcHI5M0dlMk1oTDB1eUhUNXBNWXR3cFNRSU9Mb1Ev?=
+ =?utf-8?B?ZVJ3dWZCdjlFWCtuYUd5K1FVN3RhaDQxMnlJVlV3SHphb3QrdURpUkVDYlFE?=
+ =?utf-8?B?eWh4UUY1aHByMEFDRExKc3VKT1NwWThIcEtrMWVRc2FHTU5teVR4SXdBUWtl?=
+ =?utf-8?B?L3JtYnZZdHJUZThNQTdVTi94OFFpWXhEWUgyTUNZL1JNRkpLVDdqOEZwbnhU?=
+ =?utf-8?B?dWt1VktxV1p5RUZhamxEUmZFelhjeHd3QmRaNGVzZFZudWcvU29KL1BTdHht?=
+ =?utf-8?B?WlZTeXZaRTVUMGsvbWorTnFraGVZRERicmNPbDJSZXhSY3h0Zjd1VzZoZjVP?=
+ =?utf-8?B?dDd4R1dPUHVuUGdDM28vcHF0cVhrSDIxUWw2disxNWRCNVNVTklzVkcrRFJr?=
+ =?utf-8?B?SmRqeXp6OG1jTWV4SVFhODgvUFZHQ01vdVZndnV3KzRZc2s5WjdDcWdrMzFK?=
+ =?utf-8?B?d0JhdU00NGg1NFEzMFc2S2FiZ3JCZEJESW04V21HSlU4ZlBBMnkrZnFBdFU2?=
+ =?utf-8?B?Nm9CN2dYUEd2UHpHVE84TnI2OWFZOGZQUUJFZUMyaWdvV1dpTnhleUN5S29k?=
+ =?utf-8?B?UFI1WSt3SENXcmd2V3dnR01Ic3ZwN0RvSUlIRjAwbUxzV0lDOTduMjJVMVBa?=
+ =?utf-8?B?WnJYaTN5SnBVTlpHZkZqVUhKUnlxbU1ibHc1QSt0NTdoWENOZFZVN2Jwb2ZT?=
+ =?utf-8?B?anJrczk1M1hnekhEYjlqQmM3emtsTE1haFRNMlcxYi9SYU5UVk9OdTlGdVRn?=
+ =?utf-8?B?dWpxVjBOVjVwR2JvU1kzeGNTbFprMEszK0N6THRYOFFPUVk2c05tdmpHNVc1?=
+ =?utf-8?B?Z1VrZ0lYWkI4bmZDNENJQUhaTW42djVaRlhlN2lMYW1kalJEYXBPdWtYeDBI?=
+ =?utf-8?B?eEFNMkowenNkemtnSVFNRHRZbnpaby91d2pvZFJyRzJ1S05Nb2NHdnNxaVQ5?=
+ =?utf-8?B?SWlhem5oRFN2YlJzWnVyRUkzVno4aUFSbXdqZHVKU3krTlR1aFpraTJDMUZH?=
+ =?utf-8?B?NDFWcE1yQjJaK3VoYzkzWS9rcVAxSDd2QjJOUkR1MUZvWTBVVHNDaCtGRy9k?=
+ =?utf-8?B?TUZwZ3RyMlNBc3dwSkh1WXZMT0MvQWNrekQrNDM5NkRDOVc4NEZTbk9xVVBD?=
+ =?utf-8?B?SWdwalVpbmR6NlpCVEp2R2tRdTJYMnZ5UW5ab3FwRkVaZVZkVndCNlVTUW9t?=
+ =?utf-8?Q?XVdhvoSIVYz/uTwipNP6hP31267I2sJHcVx3JHwpJCyMhU?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
-Subject: Re: [PATCH v3 6/7] riscv: dts: add initial canmv-k230 and k230-evb
- dts
-From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <mhng-f1aa91d4-211f-4eb4-a94d-a9d88b0d3f6a@palmer-ri-x1c9>
-Date: Wed, 6 Mar 2024 00:22:14 +0800
-Cc: linux-riscv@lists.infradead.org,
- Conor Dooley <conor@kernel.org>,
- dlemoal@kernel.org,
- robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- guoren@kernel.org,
- devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-X-OQ-MSGID: <7A86D933-B85F-4B29-8D6D-AB414A42AC06@cyyself.name>
-References: <mhng-f1aa91d4-211f-4eb4-a94d-a9d88b0d3f6a@palmer-ri-x1c9>
-To: Palmer Dabbelt <palmer@dabbelt.com>
-X-Mailer: Apple Mail (2.3774.400.31)
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21698ce2-4163-4393-d87b-08dc3d308b0d
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2024 16:23:08.0079
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB7089
 
-
-> On Mar 5, 2024, at 23:54, Palmer Dabbelt <palmer@dabbelt.com> wrote:
->=20
-> On Mon, 04 Mar 2024 13:06:00 PST (-0800), cyy@cyyself.name wrote:
->> Add initial dts for CanMV-K230 and K230-EVB powered by Canaan =
-Kendryte
->> K230 SoC [1].
->>=20
->> Some key consideration:
->> - Only place BigCore which is 1.6GHz RV64GCBV
->>=20
->> The existence of cache coherence between the two cores remains =
-unknown
->> since they have dedicated L2 caches. And the factory SDK uses it for
->> other OS by default. I don't know whether the two CPUs on K230 SoC
->> can be used in one system. So only place BigCore here.
->>=20
->> Meanwhile, although docs from Canaan said 1.6GHz Core with Vector is
->> CPU1, the csr.mhartid of this core is 0.
->>=20
->> - Support for "zba" "zbb" "zbc" "zbs" are tested by hand
->>=20
->> The user manual of C908 from T-Head does not document it =
-specifically.
->> It just said it supports B extension V1.0-rc1. [2]
->=20
-> I'm seeing
->=20
->   3.1.6 Vector instruction set (RVV)
->   For more information, see RISC-V =E2=80=9CV=E2=80=9DVector =
-Extension, Version    1.0-rc1-20210608
->   =
-URL=EF=BC=9Ahttps://github.com/riscv/riscv-v-spec/releases/download/v1.0-r=
-c1/riscv-v-spec-1.0-rc1.pdf
->=20
->   3.1.7 Bit operation instruction set (RV64B)
->   For more information, see =EF=BC=9ARISC-V Bit-Manipulation =
-ISA-extensions,    Version 1.0.0, 2021-06-12: public review
->   =
-URL=EF=BC=9Ahttps://github.com/riscv/riscv-bitmanip/releases/download/1.0.=
-0/bitmanip-1.0.0.pdf
->=20
-> so I think maybe that's vector 1.0-rc1 and the final bitmanip?
->=20
-
-Yeah. I just want to say what subset of the B extension is supported by
-C908.
-
->> I have tested it by using this [3] which attempts to execute =
-"add.uw",
->> "andn", "clmulr", "bclr" and they doesn't traps on K230. But on =
-JH7110,
->> "clmulr" and "bclr" will trap.
->>=20
->> - Support for "zicbom" is tested by hand
->>=20
->> Have tested with some out-of-tree drivers from [4] that need DMA and =
-they
->> do not come to the dts currently.
->>=20
->> - Cache parameters are inferred from T-Head docs [2] and Canaan docs =
-[1]
->>=20
->> L1i: 32KB, VIPT 4-Way set-associative, 64B Cacheline
->> L1d: 32KB, VIPT 4-Way set-associative, 64B Cacheline
->> L2: 256KB, PIPT 16-way set-associative, 64B Cacheline
->>=20
->> The numbers of cache sets are calculated from these parameters.
->>=20
->> - MMU only supports Sv39
->>=20
->> Since T-Head docs [2] say C908 should support Sv48. However, it will =
-fail
->> during the kernel probe when running Linux on K230. I also tested it =
-by
->> hand on M-Mode software, writing Sv48 to satp.mode will not trap but =
-will
->> leave the csr unchanged. While writing Sv39 it will take effect. It =
-shows
->> that this CPU does not support Sv48.
->=20
-> I think that only works due to a bug in our sv48 probing routines -- =
-unless I'm missing something, we mixed up the sv57 and sv48 probing and =
-if sv57 fails to probe then we disable sv48 as well.  So I think we =
-probably need some cleanup in there.
->=20
-
-However, the sv48 probing routines work on some other chips with sv48. =
-At
-least I have tested mainline kernel v6.8-rc2. And the attempt to write =
-sv48
-to satp by hand tells me it does not support sv48. I think it might be
-configurable from CPU RTL, and the K230 taped out with no sv48 support.
-
->> - Svpbmt and T-Head MAEE both supported
->>=20
->> T-Head C908 does support both Svpbmt and T-Head MAEE for page-based =
-memory
->> attributes and is controlled by csr.mxstatus. If the kernel wants to =
-use
->> svpbmt, the m-mode software should set BIT(21) of csr.mxstatus to =
-zero
->> before entering the s-mode kernel. Otherwise, the kernel will not =
-boot as 0
->> on T-Head MAEE represent to NonCachable Memory and it will lose dirty =
-cache
->> lines modification that haven't been written back to the memory.
->=20
-> So I guess we need the bootloader to just be accurate here?  ie: =
-whatever extension it tells S-mode kernels is enabled is how S-mode =
-behaves, and then this should just work itself out.
->=20
-
-Yes. Currently, I have patched OpenSBI to disable MAEE. Conor Dooley =
-said
-from a public irc group that he wants to control the enable of T-Head
-variation of zicbom and svpbmt from dts, in addition to mimplid or
-something now. I think that will be a better way for the bootloader to =
-tell
-the kernel whether the T-Head MAEE should be enabled.
-
-Link: =
-https://github.com/cyyself/opensbi/commit/b113c1c01d700314a4a696297ec09031=
-a9399354
-
-Furthermore, I wonder whether a CPU node like this would be acceptable.
-I don't have any other details of how another CPU from K230 SoC works on
-Linux.
-
->> [1] =
-https://developer.canaan-creative.com/k230/dev/zh/00_hardware/K230_datashe=
-et.html#chapter-1-introduction
->> [2] =
-https://occ-intl-prod.oss-ap-southeast-1.aliyuncs.com/resource//1699268369=
-347/XuanTie-C908-UserManual.pdf
->> [3] https://github.com/cyyself/rvb_test
->> [4] https://github.com/cyyself/linux/tree/k230-mainline
->>=20
->> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
->> ---
->> arch/riscv/boot/dts/canaan/Makefile       |   2 +
->> arch/riscv/boot/dts/canaan/k230-canmv.dts |  24 ++++
->> arch/riscv/boot/dts/canaan/k230-evb.dts   |  24 ++++
->> arch/riscv/boot/dts/canaan/k230.dtsi      | 140 =
-++++++++++++++++++++++
->> 4 files changed, 190 insertions(+)
->> create mode 100644 arch/riscv/boot/dts/canaan/k230-canmv.dts
->> create mode 100644 arch/riscv/boot/dts/canaan/k230-evb.dts
->> create mode 100644 arch/riscv/boot/dts/canaan/k230.dtsi
->>=20
->> diff --git a/arch/riscv/boot/dts/canaan/Makefile =
-b/arch/riscv/boot/dts/canaan/Makefile
->> index 987d1f0c41f0..7d54ea5c6f3d 100644
->> --- a/arch/riscv/boot/dts/canaan/Makefile
->> +++ b/arch/riscv/boot/dts/canaan/Makefile
->> @@ -1,6 +1,8 @@
->> # SPDX-License-Identifier: GPL-2.0
->> dtb-$(CONFIG_ARCH_CANAAN) +=3D canaan_kd233.dtb
->> dtb-$(CONFIG_ARCH_CANAAN) +=3D k210_generic.dtb
->> +dtb-$(CONFIG_ARCH_CANAAN) +=3D k230-canmv.dtb
->> +dtb-$(CONFIG_ARCH_CANAAN) +=3D k230-evb.dtb
->> dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_bit.dtb
->> dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_dock.dtb
->> dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_go.dtb
->> diff --git a/arch/riscv/boot/dts/canaan/k230-canmv.dts =
-b/arch/riscv/boot/dts/canaan/k230-canmv.dts
->> new file mode 100644
->> index 000000000000..3ab5c8de11a8
->> --- /dev/null
->> +++ b/arch/riscv/boot/dts/canaan/k230-canmv.dts
->> @@ -0,0 +1,24 @@
->> +// SPDX-License-Identifier: GPL-2.0 OR MIT
->> +/*
->> + * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
->> + */
->> +
->> +#include "k230.dtsi"
->> +
->> +/ {
->> + model =3D "Canaan CanMV-K230";
->> + compatible =3D "canaan,canmv-k230", "canaan,kendryte-k230";
->> +
->> + chosen {
->> + stdout-path =3D "serial0:115200n8";
->> + };
->> +
->> + ddr: memory@0 {
->> + device_type =3D "memory";
->> + reg =3D <0x0 0x0 0x0 0x1fdff000>;
->> + };
->> +};
->> +
->> +&uart0 {
->> + status =3D "okay";
->> +};
->> diff --git a/arch/riscv/boot/dts/canaan/k230-evb.dts =
-b/arch/riscv/boot/dts/canaan/k230-evb.dts
->> new file mode 100644
->> index 000000000000..42720113c566
->> --- /dev/null
->> +++ b/arch/riscv/boot/dts/canaan/k230-evb.dts
->> @@ -0,0 +1,24 @@
->> +// SPDX-License-Identifier: GPL-2.0 OR MIT
->> +/*
->> + * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
->> + */
->> +
->> +#include "k230.dtsi"
->> +
->> +/ {
->> + model =3D "Kendryte K230 EVB";
->> + compatible =3D "canaan,k230-usip-lp3-evb", "canaan,kendryte-k230";
->> +
->> + chosen {
->> + stdout-path =3D "serial0:115200n8";
->> + };
->> +
->> + ddr: memory@0 {
->> + device_type =3D "memory";
->> + reg =3D <0x0 0x0 0x0 0x1fdff000>;
->> + };
->> +};
->> +
->> +&uart0 {
->> + status =3D "okay";
->> +};
->> diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi =
-b/arch/riscv/boot/dts/canaan/k230.dtsi
->> new file mode 100644
->> index 000000000000..0bcff67b78a8
->> --- /dev/null
->> +++ b/arch/riscv/boot/dts/canaan/k230.dtsi
->> @@ -0,0 +1,140 @@
->> +// SPDX-License-Identifier: GPL-2.0 OR MIT
->> +/*
->> + * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
->> + */
->> +
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +
->> +/dts-v1/;
->> +/ {
->> + #address-cells =3D <2>;
->> + #size-cells =3D <2>;
->> + compatible =3D "canaan,kendryte-k230";
->> +
->> + aliases {
->> + serial0 =3D &uart0;
->> + };
->> +
->> + cpus {
->> + #address-cells =3D <1>;
->> + #size-cells =3D <0>;
->> + timebase-frequency =3D <27000000>;
->> +
->> + cpu@0 {
->> + compatible =3D "thead,c908", "riscv";
->> + device_type =3D "cpu";
->> + reg =3D <0>;
->> + riscv,isa =3D "rv64imafdcv_zba_zbb_zbc_zbs_zicbom_svpbmt";
->> + riscv,isa-base =3D "rv64i";
->> + riscv,isa-extensions =3D "i", "m", "a", "f", "d", "c", "v", "zba", =
-"zbb",
->> +        "zbc", "zbs", "zicbom", "zicntr", "zicsr",
->> +        "zifencei", "zihpm", "svpbmt";
->> + riscv,cbom-block-size =3D <64>;
->> + d-cache-block-size =3D <64>;
->> + d-cache-sets =3D <128>;
->> + d-cache-size =3D <32768>;
->> + i-cache-block-size =3D <64>;
->> + i-cache-sets =3D <128>;
->> + i-cache-size =3D <32768>;
->> + next-level-cache =3D <&l2_cache>;
->> + mmu-type =3D "riscv,sv39";
->> +
->> + cpu0_intc: interrupt-controller {
->> + compatible =3D "riscv,cpu-intc";
->> + interrupt-controller;
->> + #interrupt-cells =3D <1>;
->> + };
->> + };
->> +
->> + l2_cache: l2-cache {
->> + compatible =3D "cache";
->> + cache-block-size =3D <64>;
->> + cache-level =3D <2>;
->> + cache-size =3D <262144>;
->> + cache-sets =3D <256>;
->> + cache-unified;
->> + };
->> + };
->> +
->> + apb_clk: apb-clk-clock {
->> + compatible =3D "fixed-clock";
->> + clock-frequency =3D <50000000>;
->> + clock-output-names =3D "apb_clk";
->> + #clock-cells =3D <0>;
->> + };
->> +
->> + soc {
->> + compatible =3D "simple-bus";
->> + interrupt-parent =3D <&plic>;
->> + #address-cells =3D <2>;
->> + #size-cells =3D <2>;
->> + dma-noncoherent;
->> + ranges;
->> +
->> + plic: interrupt-controller@f00000000 {
->> + compatible =3D "canaan,k230-plic" ,"thead,c900-plic";
->> + reg =3D <0xf 0x00000000 0x0 0x04000000>;
->> + interrupts-extended =3D <&cpu0_intc 11>, <&cpu0_intc 9>;
->> + interrupt-controller;
->> + #address-cells =3D <0>;
->> + #interrupt-cells =3D <2>;
->> + riscv,ndev =3D <208>;
->> + };
->> +
->> + clint: timer@f04000000 {
->> + compatible =3D "canaan,k230-clint", "thead,c900-clint";
->> + reg =3D <0xf 0x04000000 0x0 0x04000000>;
->> + interrupts-extended =3D <&cpu0_intc 3>, <&cpu0_intc 7>;
->> + };
->> +
->> + uart0: serial@91400000 {
->> + compatible =3D "snps,dw-apb-uart";
->> + reg =3D <0x0 0x91400000 0x0 0x1000>;
->> + clocks =3D <&apb_clk>;
->> + interrupts =3D <16 IRQ_TYPE_LEVEL_HIGH>;
->> + reg-io-width =3D <4>;
->> + reg-shift =3D <2>;
->> + status =3D "disabled";
->> + };
->> +
->> + uart1: serial@91401000 {
->> + compatible =3D "snps,dw-apb-uart";
->> + reg =3D <0x0 0x91401000 0x0 0x1000>;
->> + clocks =3D <&apb_clk>;
->> + interrupts =3D <17 IRQ_TYPE_LEVEL_HIGH>;
->> + reg-io-width =3D <4>;
->> + reg-shift =3D <2>;
->> + status =3D "disabled";
->> + };
->> +
->> + uart2: serial@91402000 {
->> + compatible =3D "snps,dw-apb-uart";
->> + reg =3D <0x0 0x91402000 0x0 0x1000>;
->> + clocks =3D <&apb_clk>;
->> + interrupts =3D <18 IRQ_TYPE_LEVEL_HIGH>;
->> + reg-io-width =3D <4>;
->> + reg-shift =3D <2>;
->> + status =3D "disabled";
->> + };
->> +
->> + uart3: serial@91403000 {
->> + compatible =3D "snps,dw-apb-uart";
->> + reg =3D <0x0 0x91403000 0x0 0x1000>;
->> + clocks =3D <&apb_clk>;
->> + interrupts =3D <19 IRQ_TYPE_LEVEL_HIGH>;
->> + reg-io-width =3D <4>;
->> + reg-shift =3D <2>;
->> + status =3D "disabled";
->> + };
->> +
->> + uart4: serial@91404000 {
->> + compatible =3D "snps,dw-apb-uart";
->> + reg =3D <0x0 0x91404000 0x0 0x1000>;
->> + clocks =3D <&apb_clk>;
->> + interrupts =3D <20 IRQ_TYPE_LEVEL_HIGH>;
->> + reg-io-width =3D <4>;
->> + reg-shift =3D <2>;
->> + status =3D "disabled";
->> + };
->> + };
->> +};
-
-
+RnJvbTogR3VpbGhlcm1lIEcuIFBpY2NvbGkgPGdwaWNjb2xpQGlnYWxpYS5jb20+IFNlbnQ6IE1v
+bmRheSwgTWFyY2ggNCwgMjAyNCAxOjQzIFBNDQo+IA0KPiBPbiAwNC8wMy8yMDI0IDE4OjEyLCBK
+b2huIE9nbmVzcyB3cm90ZToNCj4gPiBbLi4uXQ0KPiA+PiBUaGUgc2Vjb25kIHF1ZXN0aW9uIGlz
+IGhvdyB0byBzaW11bGF0ZSBhIHBhbmljIGNvbnRleHQgaW4gYQ0KPiA+PiBub24tZGVzdHJ1Y3Rp
+dmUgd2F5LCBzbyB3ZSBjYW4gdGVzdCB0aGUgcGFuaWMgbm90aWZpZXJzIGluIENJLCB3aXRob3V0
+DQo+ID4+IGNyYXNoaW5nIHRoZSBtYWNoaW5lLg0KPiA+DQo+ID4gSSdtIHdvbmRlcmluZyBpZiBh
+ICJmYWtlIHBhbmljIiBjYW4gYmUgaW1wbGVtZW50ZWQgdGhhdCBxdWllc2NlcyBhbGwgdGhlDQo+
+ID4gb3RoZXIgQ1BVcyB2aWEgTk1JIChzaW1pbGFyIHRvIGtkYikgYW5kIHRoZW4gY2FsbHMgdGhl
+IHBhbmljDQo+ID4gbm90aWZpZXJzLiBBbmQgZmluYWxseSByZWxlYXNlcyBldmVyeXRoaW5nIGJh
+Y2sgdG8gbm9ybWFsLiBUaGF0IG1pZ2h0DQo+ID4gcHJvZHVjZSBhIGZhaXJseSByZWFsaXN0aWMg
+cGFuaWMgc2l0dWF0aW9uIGFuZCBzaG91bGQgYmUgZmFpcmx5DQo+ID4gbm9uLWRlc3RydWN0aXZl
+IChkZXBlbmRpbmcgb24gd2hhdCB0aGUgbm90aWZpZXJzIGRvIGFuZCBob3cgbG9uZyB0aGV5DQo+
+ID4gdGFrZSkuDQo+ID4NCj4gDQo+IEhpIEpvY2VseW4gLyBKb2huLA0KPiANCj4gb25lIGNvbmNl
+cm4gaGVyZSBpcyB0aGF0IHRoZSBwYW5pYyBub3RpZmllcnMgYXJlIGtpbmQgb2YgYSBubyBtYW4n
+cw0KPiBsYW5kLCBzbyB3ZSBjYW4gaGF2ZSB2ZXJ5IHNpbXBsZSAvIHNhZmUgb25lcywgd2hpbGUg
+b3RoZXJzIGFyZQ0KPiBkZXN0cnVjdGl2ZSBpbiBuYXR1cmUuDQo+IA0KPiBBbiBleGFtcGxlIG9m
+IGEgZ29vZCBiZWhhdmluZyBub3RpZmllciB0aGF0IGlzIGRlc3RydWN0aXZlIGlzIHRoZQ0KPiBI
+eXBlci1WIG9uZSwgdGhhdCBkZXN0cm95cyBhbiBlc3NlbnRpYWwgaG9zdC1ndWVzdCBpbnRlcmZh
+Y2UgKGNhbGxlZA0KPiAidm1idXMgY29ubmVjdGlvbiIpLiBXaGF0IGhhcHBlbnMgaWYgd2UgdHJp
+Z2dlciB0aGlzIG9uZSBqdXN0IGZvcg0KPiB0ZXN0aW5nIHB1cnBvc2VzIGluIGEgZGVidWdmcyBp
+bnRlcmZhY2U/IExpa2VseSB0aGUgZ3Vlc3Qgd291bGQgZGllLi4uDQo+IA0KPiBbK0NDaW5nIE1p
+Y2hhZWwgS2VsbGV5IGhlcmUgc2luY2UgaGUgc2VlbXMgaW50ZXJlc3RlZCBpbiBwYW5pYyBhbmQg
+aXMNCj4gYWxzbyBleHBlcnQgaW4gSHlwZXItViwganVzdCBpbiBjYXNlIG15IGV4YW1wbGUgaXMg
+Ym9ndXMuXQ0KDQpUaGUgSHlwZXItViBleGFtcGxlIGlzIHZhbGlkLiBBZnRlciBodl9wYW5pY192
+bWJ1c191bmxvYWQoKQ0KaXMgY2FsbGVkLCB0aGUgVk0gd29uJ3QgYmUgYWJsZSB0byBkbyBhbnkg
+ZGlzaywgbmV0d29yaywgb3IgZ3JhcGhpY3MNCmZyYW1lIGJ1ZmZlciBJL08uIFRoZXJlJ3Mgbm8g
+cmVjb3Zlcnkgc2hvcnQgb2YgcmVzdGFydGluZyB0aGUgVk0uDQoNCk1pY2hhZWwNCg0KW0kgaGF2
+ZSByZXRpcmVkIGZyb20gTWljcm9zb2Z0LiAgSSdtIHN0aWxsIG9jY2FzaW9uYWxseSBjb250cmli
+dXRpbmcNCnRvIExpbnV4IGtlcm5lbCB3b3JrIHdpdGggZW1haWwgbWhrbGludXhAb3V0bG9vay5j
+b20uXQ0KDQo+IA0KPiBTbywgbWF5YmUgdGhlIHByb2JsZW0gY291bGQgYmUgc3BsaXQgaW4gMjog
+dGhlIG5vbi1ub3RpZmllcnMgcG9ydGlvbiBvZg0KPiB0aGUgcGFuaWMgcGF0aCwgYW5kIHRoZSB0
+aGUgbm90aWZpZXJzOyBtYXliZSByZXN0cmljdGluZyB0aGUgbm90aWZpZXJzDQo+IHlvdSdkIHJ1
+biBpcyBhIHdheSB0byBjaXJjdW12ZW50IHRoZSByaXNrcywgbGlrZSBpZiB5b3UgY291bGQgcGFz
+cyBhDQo+IGxpc3Qgb2YgdGhlIHNwZWNpZmljIG5vdGlmaWVycyB5b3UgYWltIHRvIHRlc3QsIHRo
+aXMgY291bGQgYmUNCj4gaW50ZXJlc3RpbmcuIExldCdzIHNlZSB3aGF0IHRoZSBvdGhlcnMgdGhp
+bmsgYW5kIHRoYW5rcyBmb3IgeW91ciB3b3JrIGluDQo+IHRoZSBEUk0gcGFuaWMgbm90aWZpZXIg
+PSkNCj4gDQo+IENoZWVycywNCj4gDQo+IA0KPiBHdWlsaGVybWUNCg0K
