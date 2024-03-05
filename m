@@ -1,79 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20F73210;
-	Tue,  5 Mar 2024 00:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653FA5C83;
+	Tue,  5 Mar 2024 00:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709599640; cv=none; b=jZbT20p+zdZRWCJLsxrzhGbnfJWB7Tkpa7knX/ziT0BVN/4gydIkkrQ01DQ8azr9lMc86bp+qEZKRKAc9nUdwcaQTC5WUGm0ll1ptFoDGgtN8SCjoFE8QszneQrB/sAmYQ1p52z7wQpv+9e8pjCruyOsO15z5AW0Gu4m0vWgagM=
+	t=1709599751; cv=none; b=MQb3nBC+gyJBdW155VwXklsZTaUXc91OQCIXyL7Z98oOAXJ3wO12UqVr/Pu20uCtKA0Ln44QWE1gkXq/sdoTo0pbqj/qCHCJUgM4agn2DIPo4OE9RHIGwgUYRYtES9PQ6WnjopEGtP+6SVTCosee8ct+uZpzqN0Xd1KgINjAF7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709599640; c=relaxed/simple;
-	bh=3DXoHz0jv23bY60mQlVYQKbh3ernvy1omqureJCjqks=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sMrBnBByDP8GR862qG7L049+1rv88GyDXEtfkLzfAUaVs6WmqiMNYuH4kxhe/AttYzhXk3ZHRkLI0p3nAfp4SpeOofCMOaQabJFKaRjTUPq/az97W59cyFfKIeG4fASaove2QLbt5TWylL/VrPnKb0hGfxYeGowHwQ68OIOQDD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D05C433F1;
-	Tue,  5 Mar 2024 00:47:19 +0000 (UTC)
-Date: Mon, 4 Mar 2024 19:49:08 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Sachin Sant
- <sachinp@linux.ibm.com>
-Subject: Re: [PATCH] tracing: Have trace_marker writes be just half of
- TRACE_SEQ_SIZE
-Message-ID: <20240304194908.6d8d4fba@gandalf.local.home>
-In-Reply-To: <fa113c5c-07c7-417b-8287-c9bf5f9b42a1@infradead.org>
-References: <20240304192710.4c99677c@gandalf.local.home>
-	<fa113c5c-07c7-417b-8287-c9bf5f9b42a1@infradead.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709599751; c=relaxed/simple;
+	bh=0PpSt6rvjbDQ3SybZDVtfCFRovmYHgovSpROWxh7dVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D7GrrCInZXuzkRfhCd8oE+28yzqlQrTkW5O7Wwzt+H27clBowQg6SiigX+DIiXfP/go1vNAWDeoLkdxpt6riV5WKDpEJ9B0Cgid14LGCqMN4IkPRzYpbXBb+CyCSpRv3BitBXw1BZcZfRvtH3oPwxCSrX5VgzKrNuy98JINWK/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THL7BIc5; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THL7BIc5"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7c843eb31f7so62415439f.1;
+        Mon, 04 Mar 2024 16:49:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709599749; x=1710204549; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rbMkt4JH9fQU1k/SM3hjf0aOsa5Ez6LXN7/VqqW0kvc=;
+        b=THL7BIc57p2z1JG04c8pdrPd2C5qzO+3aULPqTgWIqJv53EvVNpaaUlyFTPmVmyfHK
+         7tD2Yvz8+NUnQGSRn2qUbKEItnrbEkXxclnzZqaglqzxIzrTnsNZ0laSW6okpwYqpb/Q
+         +RFeoGChMmIXbdLVa95Ywr8HZXyR7bfooXwPtOmABY48T6ChnkXVkxZbA+0BZ0csyd7o
+         MFWy8msTH1D8wSiSV6jpIYnvhAsbqx1+pDTS+JCwIVBTtB+XAb+X4KYhnKBB0g8F0mTr
+         9ltRlXQQCsar47/FxyxKJXPW3p9Ss1W6lX8dumajc0pt7se2T2/7e3WB8hypIvlpQoF4
+         Uc0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709599749; x=1710204549;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rbMkt4JH9fQU1k/SM3hjf0aOsa5Ez6LXN7/VqqW0kvc=;
+        b=mc0gFinWajrSziv3F0lj/LPpT9tK1CUz4nnaVaC8taZcZm74SaGi/uXYhZ/Zuqc599
+         9VbhkmhY/jIUYS7OopshLLUMrFRgPI0/LJA+GxxHrDT2uu2Xc741shRayTuSOUusoHDc
+         9PlXl2ohG1NwyqQ3KODdsMVv6rV1HMo1e5giDQDOu3S7txmxjQbWcy/Ti/pa461jgvYc
+         0o43O4RIwaY9gs/ZUYvDDLpXEFlWqX08Hq6HMQx2NLkvzsN+JrLqmGjc5TztkTyAjO9t
+         EVUzE7qG2JMVBHDyzpDT50kqvr2NrDFVnDSeii3EQ0PJslROYNuvQSSCeEz8iyvhtz/Z
+         eyKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXymgpR45774FZDf/OBVBpIIe62TbIjROTGO6DkouQVMyX5QkNA+wDla3lzWEkmy1pn3qusNdu5U5VmIuViAOmoLauEW+WdAglCDsA7V26WloTx70vRh73jO0nR8uAtBa7gXvCPLbXxZg==
+X-Gm-Message-State: AOJu0YxKS2J/oIS53y0dx4pigAcVOa3QyVhlBp4zxsxTqjVq9F+oFWU6
+	htgWhe9cFj3Rvde83XjL/cfMQWfTlZOte5ZZAHNx7wUyzs5QmV0c
+X-Google-Smtp-Source: AGHT+IEw6edKSWyLjziH3r6j5+b+3S3cO5883mFBAzNRhvz6MbZxITGLrOquyH+Wdhvdz/oFR1TNWg==
+X-Received: by 2002:a6b:d802:0:b0:7c8:55d8:7f12 with SMTP id y2-20020a6bd802000000b007c855d87f12mr4434882iob.10.1709599749414;
+        Mon, 04 Mar 2024 16:49:09 -0800 (PST)
+Received: from aford-System-Version.lan ([2601:447:d002:5be:8c4f:ad40:e7e2:538])
+        by smtp.gmail.com with ESMTPSA id i20-20020a02cc54000000b00474d40f8381sm1931209jaq.122.2024.03.04.16.49.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 16:49:08 -0800 (PST)
+From: Adam Ford <aford173@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: aford@beaconembedded.com,
+	laurent.pinchart@ideasonboard.com,
+	Adam Ford <aford173@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V2 1/2] drm/bridge: adv7511: Allow IRQ to share GPIO pins
+Date: Mon,  4 Mar 2024 18:48:57 -0600
+Message-ID: <20240305004859.201085-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 4 Mar 2024 16:43:46 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+The IRQ registration currently assumes that the GPIO is dedicated
+to it, but that may not necessarily be the case. If the board has
+another device sharing the GPIO, it won't be registered and the
+hot-plug detect fails to function.
 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 8198bfc54b58..d68544aef65f 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -7320,6 +7320,17 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
-> >  	if ((ssize_t)cnt < 0)
-> >  		return -EINVAL;
-> >  
-> > +	/*
-> > +	 * TRACE_SEQ_SIZE is the total size of trace_seq buffer used
-> > +	 * for output. As the print event outputs more than just
-> > +	 * the string written, keep it smaller than the trace_seq
-> > +	 * as it could drop the event if the extra data makes it bigger
-> > +	 * than what the trace_seq can hold. Half he TRACE_SEQ_SIZE  
-> 
-> 	                                          the
+Currently, the handler reads two registers and blindly
+assumes one of them caused the interrupt and returns IRQ_HANDLED
+unless there is an error. In order to properly do this, the IRQ
+handler needs to check if it needs to handle the IRQ and return
+IRQ_NONE if there is nothing to handle.  With the check added
+and the return code properly indicating whether or not it there
+was an IRQ, the IRQF_SHARED can be set to share a GPIO IRQ.
 
-I honestly think my 't' key isn't triggering as much. At least when before
-hitting 'h', as I noticed I've been writing "he", "hey" and "here" a lot,
-and spell check isn't (obviously) catching it ;-)
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+V2:  Add check to see if there is IRQ data to handle
 
--- Steve
-
-
-> 
-> > +	 * is more than enough.
-> > +	 */
-> > +	if (cnt > TRACE_SEQ_SIZE / 2)
-> > +		cnt = TRACE_SEQ_SIZE / 2;
-> > +
-> >  	meta_size = sizeof(*entry) + 2;  /* add '\0' and possible '\n' */
-> >   again:
-> >  	size = cnt + meta_size;  
-> 
-> 
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index b5518ff97165..f3b4616a8fb6 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -477,6 +477,11 @@ static int adv7511_irq_process(struct adv7511 *adv7511, bool process_hpd)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* If there is no IRQ to handle, exit indicating no IRQ data */
++	if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
++	    !(irq1 & ADV7511_INT1_DDC_ERROR))
++		return -ENODATA;
++
+ 	regmap_write(adv7511->regmap, ADV7511_REG_INT(0), irq0);
+ 	regmap_write(adv7511->regmap, ADV7511_REG_INT(1), irq1);
+ 
+@@ -1318,7 +1323,8 @@ static int adv7511_probe(struct i2c_client *i2c)
+ 
+ 		ret = devm_request_threaded_irq(dev, i2c->irq, NULL,
+ 						adv7511_irq_handler,
+-						IRQF_ONESHOT, dev_name(dev),
++						IRQF_ONESHOT | IRQF_SHARED,
++						dev_name(dev),
+ 						adv7511);
+ 		if (ret)
+ 			goto err_unregister_audio;
+-- 
+2.43.0
 
