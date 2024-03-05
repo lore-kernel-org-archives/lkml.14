@@ -1,144 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAAB8564E;
-	Tue,  5 Mar 2024 13:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA4255E77;
+	Tue,  5 Mar 2024 13:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709644539; cv=none; b=i97qzP5dtdmk1d9sl0lg2RYC+YOF9Pc8Eixm6L/Ll8pa9ay8fcSL/hx1lWIoAtIOD36ChxWrwWFlP2fDJQm8GYhO4SGeVuTTgN3CRAlxgALbbpGc0u53tM1cRcUuyFw/yQTcj+rluWsa/G4IUrL9QF6QOdnnFo9UJD6RJs47KfU=
+	t=1709644565; cv=none; b=ErrQ4hy+6VY/xn0kxlQVk/IJ0j90WlCdWT59wJ62lfsmXM7UKchIt3O8HqPSgKswkG7LZBH662TbRQLYz1PiWFKlwC+q+4YqkxY0p8lFheuAFzLMpN77VK5wxNaP8yE8I/323pgt+OET9fRAi+NXdQJZ4jE6A7bYnqGiwGN0VJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709644539; c=relaxed/simple;
-	bh=8tP3wCMPCsdXXn25KkEtrRY7OMIA16TK2ToN5XCATSo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=aNP0e+rd0dFnWVq7cHtddDypZa1gYh4c4+CPo76Lh9Oq9J74siW1mVfl6jiYN1MLtMjo0JVmaNScaazJGx5WQBAZwcJhco+LX/ykKIAafCuLunRwNN+EMdGQafnpCkJiwh9U8sTjKZmaW+Yx8aBxiHFn8VgF3BPuej6g827AMWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VPV8xyeM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VPV8xyeM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F97C433C7;
-	Tue,  5 Mar 2024 13:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709644539;
-	bh=8tP3wCMPCsdXXn25KkEtrRY7OMIA16TK2ToN5XCATSo=;
-	h=From:Date:Subject:To:Cc:From;
-	b=VPV8xyeMLMmIJGduUhWpn0Mjz7d7p2Y9WUfVmCMQ4a5IMCg0lPiWt+CzAZFQFBKpV
-	 oWcznsV5IpOMUOokrRVEd6M0VWyDXHd7ZLzvE81RMx5fqToOvQIty/BbuTA1xWUalc
-	 LatrrogV+LrdWXkF/2FNRfOh4h9NVhw1qhKNdMxhrZWpFEN5NKHrAPIlRHgAkngbjU
-	 ZTYWblkbap5PZGWQchlOJFV87x9OzSUq0As/ChIp8hgQCfSFX2ypBF878Y5w71qIwx
-	 9zqORrlaQ4uQkaf+SMpi7CCHyMEtaXjttAqdjjcFnpmDctaXTqyBcEW9iuyMFERbNz
-	 d7FESp1WvxytA==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Tue, 05 Mar 2024 15:15:32 +0200
-Subject: [PATCH v2] arm64: dts: ti: beagleplay: Fix Ethernet PHY RESET
- GPIOs
+	s=arc-20240116; t=1709644565; c=relaxed/simple;
+	bh=JrOn8v/tFG1tuyd+KlzQ2N7IWUKWMCvSln/lXECSltE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jTsBAACSr/3klztq9p2zCGYRbVdPWZz58S5mXK/FubNXKXgCYA3V8tCrf1FNscrMF34/4zRkrJcZVEXLBL8pgFK3bK5iNHuXJRZ07T2tab9Y1FFmYrK2Unrpx20ioMn1tAdMXxESIojSCJh0u0Gp39fQni2q2pvcr3rONC7cnGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id F27451C006B; Tue,  5 Mar 2024 14:16:01 +0100 (CET)
+Date: Tue, 5 Mar 2024 14:16:01 +0100
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com
+Subject: Re: [PATCH 5.10 00/41] 5.10.212-rc2 review
+Message-ID: <ZecbEfXRqD5kBLmM@duo.ucw.cz>
+References: <20240305113119.020328586@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240305-b4-for-v6-9-am65-beagleplay-ethernet-reset-v2-1-2bf463a7bf13@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAPMa52UC/52NSwqDMBRFtyIZ9xXz8TvqPoqDpL5oqDXyIqEi7
- r3RJXRy4dwL9+wsIDkMrM12RhhdcH5OIG4Ze416HhBcn5iJXKhciAaMAusJYgkN6E9ZgEE9TLh
- MegNcR6QZVyAMKfOmtqJS1lhesHS4EFr3vWTPLvHowuppu9yRn+1fmsiBg5GojJSyqk3/eJ/zd
- Pc0sO44jh8eEEt05QAAAA==
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: srk@ti.com, s-vadapalli@ti.com, r-gunasekaran@ti.com, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3114; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=8tP3wCMPCsdXXn25KkEtrRY7OMIA16TK2ToN5XCATSo=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBl5xr4Y1Wf/CKyiKt/McPopCDoLfwA/bR7/olM2
- +1LbVG2fc+JAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZeca+AAKCRDSWmvTvnYw
- k0jdD/9XyfwFTOU65Lg7qS2xN+1cjifVs6TkQ3yi+Oruu59Zb1BlglUJOYq2iEyShQHQNjJax0j
- EUGW6IyXydOsH+SpkQFY2zTI6npW8z0XLKrDGRmX976iaUV3/6WpBfO4wsGhMIS22kKApeoRn3H
- Zy09tVPOFVMla73kvnDbHbitV3NY1/S4azLaWdxeRorXr91OTP+GBj0j6rJ9xmYu7ywHv37Xbrl
- XEjMPt+AQoWNIV25mOpOY12gTpmZUhn/4WPUS6yfwQWOIjjN772t2Vyi+zU+kz42RGNcc4NfMSA
- TvOxhscyjD4T+KwNfieu6+WDdIxI8bHbdi3TKweDjmgwR8/yDTGZYUaPTRQIwpbAI9jrvC3/otO
- ulBetqJEJlhEETI4rSP6n2EtJBfJcxUg1xqtr+Ksq5gaLU8lYaRob8pgxuh9SF0a9zPnk32OCNa
- JKHhHGHmrlKHFnDQ1bh05DFUx/295HxnDVJcb/gXLPbszdXC/h8nO2M6No9NyzLCOL6TJh0/DdC
- 2St4CCyXMDYkyu0Zz1zEw4kswTQQhOJwYrhL/xk65girmWLSqcig6j1GRlFpCHQs+fcJMx2sbeh
- 80v8nAmkoZ/cmEilX2AlzfY2VJRa6HGSvxxuCcCGnP+32UW7uIkDiG8k+1RdnFP5TbUIE0diTmq
- zOExkrlyZeocAwQ==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8tvfEa0ydwhPPFtN"
+Content-Disposition: inline
+In-Reply-To: <20240305113119.020328586@linuxfoundation.org>
 
-The RESET GPIO pinmux should be part of MDIO bus node
-so that they can be in the right state before the PHY
-can be probed via MDIO bus scan.
 
-The GPIO pin should be setup with PIN_INPUT so that
-input circuitry is enabled in case software wants to
-check pin status. Without this, incorrect status is shown
-in /sys/kernel/debug/gpio.
+--8tvfEa0ydwhPPFtN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Add GPIO reset for the Gigabit Ethernet PHY. As per
-RTL8211F datasheet, reset assert width is 10ms and
-PHY registers can be access accessed after 50ms of
-reset deassert.
+Hi!
 
-Fixes: f5a731f0787f ("arm64: dts: ti: Add k3-am625-beagleplay")
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
----
-Changes in v2:
-- Fix Subject to "arm64"
-- Enable PIN_INPUT for SPE_RESET to fix GPIO status.
-- Add Fixes tag.
-- Link to v1: https://lore.kernel.org/r/20240229-b4-for-v6-9-am65-beagleplay-ethernet-reset-v1-1-b3e4b33378bd@kernel.org
----
- arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> This is the start of the stable review cycle for the 5.10.212 release.
+> There are 41 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-index a34e0df2ab86..8ab838f1697c 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-@@ -292,6 +292,8 @@ mdio0_pins_default: mdio0-default-pins {
- 		pinctrl-single,pins = <
- 			AM62X_IOPAD(0x0160, PIN_OUTPUT, 0) /* (AD24) MDIO0_MDC */
- 			AM62X_IOPAD(0x015c, PIN_INPUT, 0) /* (AB22) MDIO0_MDIO */
-+			AM62X_IOPAD(0x003c, PIN_INPUT, 7) /* (M25) GPMC0_AD0.GPIO0_15 */
-+			AM62X_IOPAD(0x018c, PIN_INPUT, 7) /* (AC21) RGMII2_RD2.GPIO1_5 */
- 		>;
- 	};
- 
-@@ -383,7 +385,6 @@ AM62X_IOPAD(0x017c, PIN_INPUT, 1) /* (AD22) RGMII2_RX_CTL.RMII2_RX_ER */
- 			AM62X_IOPAD(0x016c, PIN_INPUT, 1) /* (Y18) RGMII2_TD0.RMII2_TXD0 */
- 			AM62X_IOPAD(0x0170, PIN_INPUT, 1) /* (AA18) RGMII2_TD1.RMII2_TXD1 */
- 			AM62X_IOPAD(0x0164, PIN_INPUT, 1) /* (AA19) RGMII2_TX_CTL.RMII2_TX_EN */
--			AM62X_IOPAD(0x018c, PIN_OUTPUT, 7) /* (AC21) RGMII2_RD2.GPIO1_5 */
- 			AM62X_IOPAD(0x0190, PIN_INPUT, 7) /* (AE22) RGMII2_RD3.GPIO1_6 */
- 			AM62X_IOPAD(0x01f0, PIN_OUTPUT, 5) /* (A18) EXT_REFCLK1.CLKOUT0 */
- 		>;
-@@ -597,6 +598,9 @@ &cpsw3g_mdio {
- 
- 	cpsw3g_phy0: ethernet-phy@0 {
- 		reg = <0>;
-+		reset-gpios = <&main_gpio0 15 GPIO_ACTIVE_LOW>;
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <50000>;
- 	};
- 
- 	cpsw3g_phy1: ethernet-phy@1 {
-@@ -615,7 +619,7 @@ &main_gpio0 {
- 		"USR0", "USR1", "USR2", "USR3", "", "", "USR4",	/* 3-9 */
- 		"EEPROM_WP",					/* 10 */
- 		"CSI2_CAMERA_GPIO1", "CSI2_CAMERA_GPIO2",	/* 11-12 */
--		"CC1352P7_BOOT", "CC1352P7_RSTN", "", "", "",	/* 13-17 */
-+		"CC1352P7_BOOT", "CC1352P7_RSTN", "GBE_RSTN", "", "",	/* 13-17 */
- 		"USR_BUTTON", "", "", "", "", "", "", "", "",	/* 18-26 */
- 		"", "", "", "", "", "", "", "", "", "HDMI_INT",	/* 27-36 */
- 		"", "VDD_WLAN_EN", "", "", "WL_IRQ", "GBE_INTN",/* 37-42 */
+CIP testing did not find any problems here:
 
----
-base-commit: bbef42084cc170cbfc035bf784f2ff055c939d7e
-change-id: 20240229-b4-for-v6-9-am65-beagleplay-ethernet-reset-098f274fbf15
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.1.y
+
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
 
 Best regards,
--- 
-Roger Quadros <rogerq@kernel.org>
+                                                                Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
+--8tvfEa0ydwhPPFtN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZecbEQAKCRAw5/Bqldv6
+8l5vAKCYZSr82wz519l5l0G7qOFcWFSN1QCgsskBNFqLmsNIMs1EfUvdEPV+7rc=
+=ixEc
+-----END PGP SIGNATURE-----
+
+--8tvfEa0ydwhPPFtN--
