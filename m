@@ -1,190 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25241EF1A
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 09:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CBA4DA1F;
+	Tue,  5 Mar 2024 09:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709629613; cv=none; b=aEjWdrUBq1N9rmH8ZQ8o4DWXDLUYMbI2nQ5kUOHO9ZcF68ZIpzGCosgzDY9gV9qpn+4jmjZY4BnYtdugMubM7OkKvG/glsQSEvsJcACzSxeVk4B+vIYlc7Ju703LRZtFCEMki12XshvOsmtIZo8NOwrKC9m2KsmAVeqs70zZHuc=
+	t=1709629672; cv=none; b=QHjSjT8tNBRAp+BuVaRZEVwbF0I8myq/FCo5+PbNiIhr7ob1G0XNt6NeFWCY5e21KPG9GpOBCgYAl0aWZKsQMaJrjehQSPRKNfxPb15tyoMoTc0Hfk6jzYC8rL4K6HRQHEtOYbI+z+BQPigmp4VuScVP26jyNRoF4PG3JQ+B4Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709629613; c=relaxed/simple;
-	bh=SVDc3/QVD4qQIeEwISkNQ6ehRKSAArCRXoPluhdHuS8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cLDQ2owYMe3GM9rcGQef8J/lYhd0ndSZ1c1dkA9VJmPzHSjmOfqbIfkpzhCsVgclvGBo9VF85U4QSfqQnheGDuiNdt5CLbZJDafxtANh5Suf62ONyzni3HpI2OMjxPAXnXxovpN524NqytNK3EBsiIElWGlXUGKiZ5Ll8ienuNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UpoQKETn; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709629672; c=relaxed/simple;
+	bh=9sSwvYiVNiVEMFJhGyHIfjkNYJ+8iisCRGyT03Xnpzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=luSpWG/rLebRwjAdJTWdU2it6h/5Jl2SwNDb/ZxAPH1K7Y0jigLwCzs2eRWwHPfHQcYEPEphberhPW2dpc5Uf5umEZ4WBRRr/dnHPFYJNMrX11sx10eHVMYD5LQcCLMrMX0/25pYFIX36yF+6U1sKkkA7KX/IifaK9tGdUuKqY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JsbX5dzF; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UpoQKETn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709629612; x=1741165612;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=SVDc3/QVD4qQIeEwISkNQ6ehRKSAArCRXoPluhdHuS8=;
-  b=UpoQKETnD8sqLravJK8wfLvGG6b6/LEjV7BA7BAW7McwilIAAEbsfENl
-   PHMacgIkmkD41qAQO5Jl02YML9BN6icmvHfb5lpXqVge//bn0cGXo+S1Q
-   dRaLj3BlafGfpVY5bvn5GCMuIaWtZ0xCXE3eTskbCAyN7eyvsn6owoUIQ
-   4HhJJrGBh+iuq+10D5EYx4lPqVxRmQ1Y5QwykeVvJ0ns91aVC3jShVjGE
-   o3bGkQ82/7McZR+9J4xFzMKB/B9Nqm2Fu/iavJAaJgybTP6zlpjrF8Ifx
-   2+tyFeTmqjazNKzJqjIU48OkgPHBbdQC6IyoO6R8beB+/LeLF1hZZxTBG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4030334"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4030334"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:06:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="32471355"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:06:47 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,  david@redhat.com,
-  ryan.roberts@arm.com,  chrisl@kernel.org,  yuzhao@google.com,
-  hanchuanhua@oppo.com,  linux-kernel@vger.kernel.org,
-  willy@infradead.org,  xiang@kernel.org,  mhocko@suse.com,
-  shy828301@gmail.com,  wangkefeng.wang@huawei.com,  Barry Song
- <v-songbaohua@oppo.com>,  Hugh Dickins <hughd@google.com>
-Subject: Re: [RFC PATCH] mm: hold PTL from the first PTE while reclaiming a
- large folio
-In-Reply-To: <CAGsJ_4yKhoztyA1cuSjGEeVwJfNdhNPNidrX-D_dRazRL7D5hg@mail.gmail.com>
-	(Barry Song's message of "Tue, 5 Mar 2024 21:56:02 +1300")
-References: <20240304103757.235352-1-21cnbao@gmail.com>
-	<878r2x9ly3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4yKhoztyA1cuSjGEeVwJfNdhNPNidrX-D_dRazRL7D5hg@mail.gmail.com>
-Date: Tue, 05 Mar 2024 17:04:53 +0800
-Message-ID: <87msrd82x6.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsbX5dzF"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so3823353a12.3;
+        Tue, 05 Mar 2024 01:07:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709629670; x=1710234470; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xECqrC5wW8C4gpURucKnrkHYEZdlXOnIvk1nQsHS7MM=;
+        b=JsbX5dzFK2fXu4p+216MG6FRTyysaJ0EuZOf3v54PVyw1pJVPmC63JqJejr67+72yW
+         DGXdx0M3wcAMtuTznRRpeYUi+K4l2yYWeY1UuSZ8d7L31L0GRfmsamsT6s3AlYCS68ql
+         cSHrqvbMnMtrp3D88msPwk+bOULSqXvfxs/aOg/cSf8KCZYl1eYU/Z0VoG0X9pMXKQLS
+         4YVT4VAjuvPt+cR99QcLNShCeFTt0GMIT4h5v9ps9BTztSH7Z9SAMUioK1dTu2SofodE
+         Q9Lc6R9ZVntLTgmfGJNLwSK3ExCeaT9hCB5U48F2FYTJlIX9hMfck6RODlOfCiuAnYv5
+         VGcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709629670; x=1710234470;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xECqrC5wW8C4gpURucKnrkHYEZdlXOnIvk1nQsHS7MM=;
+        b=SMgegF9i4uB4y3TxSSUfmAB6GVcihR4nGR253G9xixkvhbi63akwSx2J5nMI+2JNO6
+         LHWVRNybJbTtRsMPG5yk54ncLL6IRh3bBUP7WiY47FgH9YmGXmfauF14eI2H1cb1Hl46
+         iuB3LH6qMhmEolTRw4gOUpf8Z/hcgQRJbBwDi6kKhOVVBEeEs0A4OBgW9TLrG+qbnE+X
+         hNjs9KfBuRB/boDCQZKpPIoUKDolqUJKNBC7vswGfHpbD/IJMUoV0vR7dAN3M7AtCnu2
+         Y9PVZXgvwvTM0sB8A2kY9z9JsdY5Wqaj5gwwEL+PEIHtFxxOrHgs3Y6Y4KCntHp+eZVl
+         3cOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpSdCl+9kY8Wi0YvP1Osrr0AeVImyXPLZIy1BU9CdTgvhWvD37ifO/Tk1MPAreT1JqPDCLb9GpOdwUqsXCJ3hUDLN0Zbty2WXx60w9LVAx8COpYGZvL1hSFKZRia45eBhHX22t
+X-Gm-Message-State: AOJu0Yx2QWPvl/aDAIYQuR3MEJSkJjBTOCnd6O5cO8QLOt7JxPH/gjtI
+	svNOHFqYiv6nIPEDN2rxEap4jltiHs+kVBJvuRBFsAONi4RzKVe3QNeWwk8lPknIf0+R9PFCa5y
+	B8bkLI0alb3ITH5VPPoBbUJfoaRg=
+X-Google-Smtp-Source: AGHT+IHQCsAc5k/dqnxRuofGLrxJI5VV9DX8j35EwjwxKG9bP5pOWIbRfkocDE/Kxr11z/qfnCWoxfbMUcq/eJzkogw=
+X-Received: by 2002:a05:6a21:6da4:b0:19e:2d04:d775 with SMTP id
+ wl36-20020a056a216da400b0019e2d04d775mr1121314pzb.50.1709629669859; Tue, 05
+ Mar 2024 01:07:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20240305074649.580820283@linuxfoundation.org> <20240305-arson-panhandle-afa453ccb0aa@wendy>
+In-Reply-To: <20240305-arson-panhandle-afa453ccb0aa@wendy>
+From: Luna Jernberg <droidbittin@gmail.com>
+Date: Tue, 5 Mar 2024 10:07:37 +0100
+Message-ID: <CADo9pHg4teVS7Lt1j+gOt4G9U=dZF9G92AUK=Km6PTdURkc0pg@mail.gmail.com>
+Subject: Re: [PATCH 6.7 000/163] 6.7.9-rc2 review
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
+	conor@kernel.org, allen.lkml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Barry Song <21cnbao@gmail.com> writes:
-
-> On Tue, Mar 5, 2024 at 8:30=E2=80=AFPM Huang, Ying <ying.huang@intel.com>=
- wrote:
->>
->> Barry Song <21cnbao@gmail.com> writes:
->>
->> > From: Barry Song <v-songbaohua@oppo.com>
->> >
->> > page_vma_mapped_walk() within try_to_unmap_one() races with other
->> > PTEs modification such as break-before-make, while iterating PTEs
->>
->> Sorry, I don't know what is "break-before-make", can you elaborate?
->> IIUC, ptep_modify_prot_start()/ptep_modify_prot_commit() can clear PTE
->> temporarily, which may cause race with page_vma_mapped_walk().  Is that
->> the issue that you try to fix?
+Den tis 5 mars 2024 kl 09:32 skrev Conor Dooley <conor.dooley@microchip.com>:
 >
-> we are writing pte to zero(break) before writing a new value(make).
-
-OK.  Is break and make is commonly used terminology in kernel?  If not,
-it's better to explain a little (e.g., ptep_get_and_clear() / modify /
-set_pte_at()).
-
-> while
-> this behavior is within PTL in another thread,  page_vma_mapped_walk()
-> of try_to_unmap_one thread won't take PTL till it meets a present PTE.
-
-IIUC, !pte_none() should be enough?
-
-> for example, if another threads are modifying nr_pages PTEs under PTL,
-> but we don't hold PTL, we might skip one or two PTEs at the beginning of
-> a large folio.
-> For a large folio, after try_to_unmap_one(), we may result in PTE0 and PT=
-E1
-> untouched but PTE2~nr_pages-1 are set to swap entries.
+> On Tue, Mar 05, 2024 at 07:58:57AM +0000, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.7.9 release.
+> > There are 163 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 07 Mar 2024 07:46:26 +0000.
+> > Anything received after that time might be too late.
 >
-> by holding PTL from PTE0 for large folios, we won't get these intermediate
-> values. At the moment we get PTL, other threads have done.
-
-Got it!  Thanks!
-
---
-Best Regards,
-Huang, Ying
-
->>
->> --
->> Best Regards,
->> Huang, Ying
->>
->> > of a large folio, it will only begin to acquire PTL after it gets
->> > a valid(present) PTE. break-before-make intermediately sets PTEs
->> > to pte_none. Thus, a large folio's PTEs might be partially skipped
->> > in try_to_unmap_one().
->> > For example, for an anon folio, after try_to_unmap_one(), we may
->> > have PTE0 present, while PTE1 ~ PTE(nr_pages - 1) are swap entries.
->> > So folio will be still mapped, the folio fails to be reclaimed.
->> > What=E2=80=99s even more worrying is, its PTEs are no longer in a unif=
-ied
->> > state. This might lead to accident folio_split() afterwards. And
->> > since a part of PTEs are now swap entries, accessing them will
->> > incur page fault - do_swap_page.
->> > It creates both anxiety and more expense. While we can't avoid
->> > userspace's unmap to break up unified PTEs such as CONT-PTE for
->> > a large folio, we can indeed keep away from kernel's breaking up
->> > them due to its code design.
->> > This patch is holding PTL from PTE0, thus, the folio will either
->> > be entirely reclaimed or entirely kept. On the other hand, this
->> > approach doesn't increase PTL contention. Even w/o the patch,
->> > page_vma_mapped_walk() will always get PTL after it sometimes
->> > skips one or two PTEs because intermediate break-before-makes
->> > are short, according to test. Of course, even w/o this patch,
->> > the vast majority of try_to_unmap_one still can get PTL from
->> > PTE0. This patch makes the number 100%.
->> > The other option is that we can give up in try_to_unmap_one
->> > once we find PTE0 is not the first entry we get PTL, we call
->> > page_vma_mapped_walk_done() to end the iteration at this case.
->> > This will keep the unified PTEs while the folio isn't reclaimed.
->> > The result is quite similar with small folios with one PTE -
->> > either entirely reclaimed or entirely kept.
->> > Reclaiming large folios by holding PTL from PTE0 seems a better
->> > option comparing to giving up after detecting PTL begins from
->> > non-PTE0.
->> >
->> > Cc: Hugh Dickins <hughd@google.com>
->> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->> > ---
->> >  mm/vmscan.c | 11 +++++++++++
->> >  1 file changed, 11 insertions(+)
->> >
->> > diff --git a/mm/vmscan.c b/mm/vmscan.c
->> > index 0b888a2afa58..e4722fbbcd0c 100644
->> > --- a/mm/vmscan.c
->> > +++ b/mm/vmscan.c
->> > @@ -1270,6 +1270,17 @@ static unsigned int shrink_folio_list(struct li=
-st_head *folio_list,
->> >
->> >                       if (folio_test_pmd_mappable(folio))
->> >                               flags |=3D TTU_SPLIT_HUGE_PMD;
->> > +                     /*
->> > +                      * if page table lock is not held from the first=
- PTE of
->> > +                      * a large folio, some PTEs might be skipped bec=
-ause of
->> > +                      * races with break-before-make, for example, PT=
-Es can
->> > +                      * be pte_none intermediately, thus one or more =
-PTEs
->> > +                      * might be skipped in try_to_unmap_one, we migh=
-t result
->> > +                      * in a large folio is partially mapped and part=
-ially
->> > +                      * unmapped after try_to_unmap
->> > +                      */
->> > +                     if (folio_test_large(folio))
->> > +                             flags |=3D TTU_SYNC;
->> >
->> >                       try_to_unmap(folio, flags);
->> >                       if (folio_mapped(folio)) {
+> > Samuel Holland <samuel.holland@sifive.com>
+> >     riscv: Save/restore envcfg CSR during CPU suspend
+> >
+> > Samuel Holland <samuel.holland@sifive.com>
+> >     riscv: Add a custom ISA extension for the [ms]envcfg CSR
 >
-> Thanks
-> Barry
+> I left a comment in response to the off-list email about this patch,
+> I don't think it's gonna work as the number this custom extension has
+> been given exceeds the max in 6.7/
+>
+> Cheers,
+> Conor.
+>
+> >
+> > Samuel Holland <samuel.holland@sifive.com>
+> >     riscv: Fix enabling cbo.zero when running in M-mode
+
+Works fine on my Arch Linux desktop with model name    : AMD Ryzen 5
+5600 6-Core Processor
+after the Arch Linux manual intervention for new mkinitcpio settings
+and version in Arch
+
+Tested by: Luna Jernberg <droidbittin@gmail.com>
