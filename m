@@ -1,178 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FB212DD90
-	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 23:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4BA12D218
+	for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2024 23:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709680405; cv=none; b=EJ6vU/f2Yk6hYg5/oV4ibdC3xoFFMfUswMMXByqQAEvaE0AqMdqJxHFjqafYF+RWuKqST0aOMa3TB3BoiXN/o5oOVor4T/YkG7zWGy7xIQfmnlG81lVh7lQ5Hwu8iRlwuDnd4uyV3QmOzxpVTAKv9KvXpICQ5wPlqa5rovlCB5g=
+	t=1709680439; cv=none; b=PTuSgZI5P+UMKeX2W52GS1G4PD+iB35bhAiy4+8JOWjkJFf13WRLOWHf1ttg2swe80xePE9T3SsaI69hZGePC2xpqatmNWRkc6sfVYr00uTw4vMa+hUDaugQDDO/MH5Atznt2y/OqBQMmSCG2tOkjiYe1ezZT2pp5uoJda0YXX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709680405; c=relaxed/simple;
-	bh=cLhW8+AnPXF+x0lQb/dnv/o/Sf8sk08keva7j4YfP4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sBAkwvHl71nW8RNlBswWA9aJcUY/1hAaAjG5gneQbGQATTJr/nFWliRtGCX4kCEelYXW9IsZGD+D4iubUZnH4HT2BunumVAXDEg+ACAH51JuHtBvg89CLY7D0ngP5X0j4/cN1SpHe38hG+1YEer8SrFf46NEal8AV2cMltfshCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IzNiGEzu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709680439; c=relaxed/simple;
+	bh=ZSE908MrL3W9EF4A9/FeE48VeA9QUapWInD9HpQG3I0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pGQeZVxedNKnwltrCfWPRsAPiGm6CC3QiMfTCfmY2zoZJjkFSYR0BbJADp2JTEXHewiZdYeMKNEDEi3Gt/NHbS5cuqtO6gyjvmgMAFRuMMcFOuy5Zo7ves3i8X9AjXDOrDIJf4NhEA8dM7QlCaJTgvwbPZrR7rPjmQMnJjazWhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NAfDVBqM; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IzNiGEzu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709680402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A+hfIOAS3CirjTR2TDkQQzoNgn7WBbQgBJrbYh4eZAU=;
-	b=IzNiGEzuKmOopKbyTc143xoAaOL9oxCEQQeYzeGnDZFm1oSgO6pAqhTfGqQKFOTavjvi6N
-	4a9EoguIXR4bjJ2hlv3BmiFT/6BSOPqqyOtMMqSZkBHSGLC/Qn1ySoPyg10RLkyTsiWoZa
-	sWFiZKrVyKgW7wh1g3TPtDDiO/4ByEk=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-xxFt8O_9NfidoJbzod_iiA-1; Tue, 05 Mar 2024 18:13:21 -0500
-X-MC-Unique: xxFt8O_9NfidoJbzod_iiA-1
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3650bfcb2bfso2212645ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 15:13:21 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NAfDVBqM"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-36523b9fa11so26710365ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 15:13:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709680437; x=1710285237; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QZKWR0J2srML+eyhC61XR43/wjQEkRkTGp8CW9dDv+M=;
+        b=NAfDVBqM+p5SRXWtSIgOYxV9sxY/2zgZfqzQCPpIYxRFqFXeQ5isK3k7txHHdhTuAo
+         NDu6m7gpRJRyJBDq5OJg7LNq5YEq7sHrhfWl/2mzVB26dNdsIPuFXVgZFv60c4cQ9AlY
+         T+ri09c0i6+A8oFm1NTtbz4pWQpPQtftBxI8U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709680400; x=1710285200;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709680437; x=1710285237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=A+hfIOAS3CirjTR2TDkQQzoNgn7WBbQgBJrbYh4eZAU=;
-        b=LXqkuzMTcCceaF1qwX6+ettN9sQsvS0PE9UuT5M3CU3EJRDhKtWk7CGd14C0B3ZUQz
-         vRBIQ9N3hZNFrPSfjRZ50TSRf0WzLA70xd1OCIm7QnzEOQw3GR2n4gwe/hG5pwuTBBwH
-         hoTilR/as/qrLr5fiuVyKvWW2Kgkfn6gg7clA5HvSiQwxd3tsE4bXhL9VZ9Xf4SYdJzo
-         SlLIts3lwNiEZGy+LgF7CmsX8iRoRqKIbS2FrYOH/+wYphTCyFZ5g02dUgbKIQobXAo+
-         nztNphfIxnwycFtT4tRp9ckOdC10pGE+5JyEJua89uqemcTGYeelrIyxXvE071DVJSDU
-         1Bpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUebwa/xJpZG0KAvq0P4TTjyLJFVK0r2fhGcerJoIh7mH/35LOG+ATyXBCAZ2V4GNnd295EfgmiJN+ryXDFUqY/wsAAVO+SpmshGIRk
-X-Gm-Message-State: AOJu0Yz62l52u31ONA7WN9r9IJ/rrXsYYEzuCRCPsj25/2r9ifJ8mwul
-	ODBndtlYbaRO0CKZBMnulVN2sx8wc9aPIukfW0F7wcQBz1nYgFreQESvSy/zYgHiu63CYj3CNks
-	vRHK999dnv645m08rseSy6Eh0M0xjD4dLWAdExZUU/7Q2gi/bT8VE08xUrZ5ZFg==
-X-Received: by 2002:a05:6e02:20ea:b0:361:933c:3b04 with SMTP id q10-20020a056e0220ea00b00361933c3b04mr3503340ilv.7.1709680400426;
-        Tue, 05 Mar 2024 15:13:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH2nNbJIhVFGias1huSm3/yhiAERbq5Ckc+7Kk03yYzrJLJ0gi6XO6zCth4naFRvHkOeLYHrw==
-X-Received: by 2002:a05:6e02:20ea:b0:361:933c:3b04 with SMTP id q10-20020a056e0220ea00b00361933c3b04mr3503335ilv.7.1709680400167;
-        Tue, 05 Mar 2024 15:13:20 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id c26-20020a02c9da000000b00474b48a629csm3084467jap.46.2024.03.05.15.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 15:13:18 -0800 (PST)
-Date: Tue, 5 Mar 2024 16:12:56 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: <ankita@nvidia.com>, Oliver Upton <oliver.upton@linux.dev>
-Cc: <jgg@nvidia.com>, <yishaih@nvidia.com>,
- <shameerali.kolothum.thodi@huawei.com>, <kevin.tian@intel.com>,
- <aniketa@nvidia.com>, <cjia@nvidia.com>, <kwankhede@nvidia.com>,
- <targupta@nvidia.com>, <vsethi@nvidia.com>, <acurrid@nvidia.com>,
- <apopple@nvidia.com>, <jhubbard@nvidia.com>, <danw@nvidia.com>,
- <rrameshbabu@nvidia.com>, <zhiw@nvidia.com>, <anuaggarwal@nvidia.com>,
- <mochs@nvidia.com>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] vfio/nvgrace-gpu: Convey kvm to map device
- memory region as noncached
-Message-ID: <20240305161256.09bda6c4.alex.williamson@redhat.com>
-In-Reply-To: <20240229193934.2417-1-ankita@nvidia.com>
-References: <20240229193934.2417-1-ankita@nvidia.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+        bh=QZKWR0J2srML+eyhC61XR43/wjQEkRkTGp8CW9dDv+M=;
+        b=LChFOukNB8toY284WVOBT7k36jPzros9taw50g1Vzho28bpkcQcRObQbyyU7xAWH06
+         /35Kdcj1SAgTNBqvkQ8WdVFTN/Do2C/4PMsm4iao4IROpiRd+/Ed2hmEf8jKOLbt+hXx
+         U3bVJn9ROHZy/ieAdHRNr3zc7mbMNJIxgrdyBpJgU2PVuu9m0bq9XWjPqHadYg1V5aP4
+         G7W8TmtyNAhS8q51dbJqsKRFuNx0dmRaryt71Ar7qeYWySuYYKGQ2NbV1tLX+d+hul1K
+         R3msQO5HFpaWQSSh3XfD4h50UYDxmiVjymHyCScMCB3xBZ3dxcjWVZVjZx73lf1cWLFm
+         sluw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjLg3E68cLTt6FfqdB4LyQUpN2gPytDicAnY/33R+N1Hlo5b4RbuXYBQvvbI3JOYHTXquvYB1+KIyfPHQLK3pe5zFGWVtIF5Qz0Ydu
+X-Gm-Message-State: AOJu0YyWLQ4IOLzM/83rRothCiIEt4g+YZ3c0nKh1XEYGmRoo8LYa05h
+	kro6wei6FgHG56KBr+o1lA9UjI5EiIfgaM2niaanqVfwR8ttJPm9xM82Mjfs+KK6Yo/u+ZceSv/
+	XJ9aqvfFHnLdePiU+cBweLWcp67ank//JaT7E8QWI2dpwToA=
+X-Google-Smtp-Source: AGHT+IFDvVCNWLD5UqLerMM90o3fXxlm8K2ifoYGV8gIMJPQStPoeWDTtvtRilg2YO2qtDVgyzI7zQsgcgd4+aqlVDw=
+X-Received: by 2002:a05:6e02:1a68:b0:365:7607:3f5d with SMTP id
+ w8-20020a056e021a6800b0036576073f5dmr17242881ilv.3.1709680436858; Tue, 05 Mar
+ 2024 15:13:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240305225652.22872-1-quic_mdtipton@quicinc.com>
+In-Reply-To: <20240305225652.22872-1-quic_mdtipton@quicinc.com>
+From: Rob Clark <robdclark@chromium.org>
+Date: Tue, 5 Mar 2024 15:13:46 -0800
+Message-ID: <CAJs_Fx4DKiBjzh0-F6aBFdsqGDiE9uppXAE84yrO3hxMSzwgjA@mail.gmail.com>
+Subject: Re: [PATCH] interconnect: Don't access req_list while it's being manipulated
+To: Mike Tipton <quic_mdtipton@quicinc.com>
+Cc: djakov@kernel.org, quic_rlaggysh@quicinc.com, quic_okukatla@quicinc.com, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 Feb 2024 19:39:34 +0000
-<ankita@nvidia.com> wrote:
+On Tue, Mar 5, 2024 at 2:57=E2=80=AFPM Mike Tipton <quic_mdtipton@quicinc.c=
+om> wrote:
+>
+> The icc_lock mutex was split into separate icc_lock and icc_bw_lock
+> mutexes in [1] to avoid lockdep splats. However, this didn't adequately
+> protect access to icc_node::req_list.
+>
+> The icc_set_bw() function will eventually iterate over req_list while
+> only holding icc_bw_lock, but req_list can be modified while only
+> holding icc_lock. This causes races between icc_set_bw(), of_icc_get(),
+> and icc_put().
+>
+> Example A:
+>
+>   CPU0                               CPU1
+>   ----                               ----
+>   icc_set_bw(path_a)
+>     mutex_lock(&icc_bw_lock);
+>                                      icc_put(path_b)
+>                                        mutex_lock(&icc_lock);
+>     aggregate_requests()
+>       hlist_for_each_entry(r, ...
+>                                        hlist_del(...
+>         <r =3D invalid pointer>
+>
+> Example B:
+>
+>   CPU0                               CPU1
+>   ----                               ----
+>   icc_set_bw(path_a)
+>     mutex_lock(&icc_bw_lock);
+>                                      path_b =3D of_icc_get()
+>                                        of_icc_get_by_index()
+>                                          mutex_lock(&icc_lock);
+>                                          path_find()
+>                                            path_init()
+>     aggregate_requests()
+>       hlist_for_each_entry(r, ...
+>                                              hlist_add_head(...
+>         <r =3D invalid pointer>
+>
+> Fix this by ensuring icc_bw_lock is always held before manipulating
+> icc_node::req_list. The additional places icc_bw_lock is held don't
+> perform any memory allocations, so we should still be safe from the
+> original lockdep splats that motivated the separate locks.
+>
+> [1] commit af42269c3523 ("interconnect: Fix locking for runpm vs reclaim"=
+)
+>
+> Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
+> Fixes: af42269c3523 ("interconnect: Fix locking for runpm vs reclaim")
 
-> From: Ankit Agrawal <ankita@nvidia.com>
-> 
-> The NVIDIA Grace Hopper GPUs have device memory that is supposed to be
-> used as a regular RAM. It is accessible through CPU-GPU chip-to-chip
-> cache coherent interconnect and is present in the system physical
-> address space. The device memory is split into two regions - termed
-> as usemem and resmem - in the system physical address space,
-> with each region mapped and exposed to the VM as a separate fake
-> device BAR [1].
-> 
-> Owing to a hardware defect for Multi-Instance GPU (MIG) feature [2],
-> there is a requirement - as a workaround - for the resmem BAR to
-> display uncached memory characteristics. Based on [3], on system with
-> FWB enabled such as Grace Hopper, the requisite properties
-> (uncached, unaligned access) can be achieved through a VM mapping (S1)
-> of NORMAL_NC and host mapping (S2) of MT_S2_FWB_NORMAL_NC.
-> 
-> KVM currently maps the MMIO region in S2 as MT_S2_FWB_DEVICE_nGnRE by
-> default. The fake device BARs thus displays DEVICE_nGnRE behavior in the
-> VM.
-> 
-> The following table summarizes the behavior for the various S1 and S2
-> mapping combinations for systems with FWB enabled [3].
-> S1           |  S2           | Result
-> NORMAL_NC    |  NORMAL_NC    | NORMAL_NC
-> NORMAL_NC    |  DEVICE_nGnRE | DEVICE_nGnRE
-> 
-> Recently a change was added that modifies this default behavior and
-> make KVM map MMIO as MT_S2_FWB_NORMAL_NC when a VMA flag
-> VM_ALLOW_ANY_UNCACHED is set [4]. Setting S2 as MT_S2_FWB_NORMAL_NC
-> provides the desired behavior (uncached, unaligned access) for resmem.
-> 
-> To use VM_ALLOW_ANY_UNCACHED flag, the platform must guarantee that
-> no action taken on the MMIO mapping can trigger an uncontained
-> failure. The Grace Hopper satisfies this requirement. So set
-> the VM_ALLOW_ANY_UNCACHED flag in the VMA.
-> 
-> Applied over next-20240227.
-> base-commit: 22ba90670a51
-> 
-> Link: https://lore.kernel.org/all/20240220115055.23546-4-ankita@nvidia.com/ [1]
-> Link: https://www.nvidia.com/en-in/technologies/multi-instance-gpu/ [2]
-> Link: https://developer.arm.com/documentation/ddi0487/latest/ section D8.5.5 [3]
-> Link: https://lore.kernel.org/all/20240224150546.368-1-ankita@nvidia.com/ [4]
-> 
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Cc: Jason Gunthorpe <jgg@nvidia.com>
-> Cc: Vikram Sethi <vsethi@nvidia.com>
-> Cc: Zhi Wang <zhiw@nvidia.com>
-> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+Looks good from a memory/lockdep standpoint,
+
+Reviewed-by: Rob Clark <robdclark@chromium.org>
+
 > ---
->  drivers/vfio/pci/nvgrace-gpu/main.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-
-Applied to vfio next branch for v6.9.
-
-Oliver, FYI I did merge the branch you provided in [1] for this, thanks
-for the foresight in providing that.
-
-Alex
-
-[1]https://lore.kernel.org/all/170899100569.1405597.5047894183843333522.b4-ty@linux.dev/
-
-> 
-> diff --git a/drivers/vfio/pci/nvgrace-gpu/main.c b/drivers/vfio/pci/nvgrace-gpu/main.c
-> index 25814006352d..a7fd018aa548 100644
-> --- a/drivers/vfio/pci/nvgrace-gpu/main.c
-> +++ b/drivers/vfio/pci/nvgrace-gpu/main.c
-> @@ -160,8 +160,17 @@ static int nvgrace_gpu_mmap(struct vfio_device *core_vdev,
->  	 * The carved out region of the device memory needs the NORMAL_NC
->  	 * property. Communicate as such to the hypervisor.
->  	 */
-> -	if (index == RESMEM_REGION_INDEX)
-> +	if (index == RESMEM_REGION_INDEX) {
-> +		/*
-> +		 * The nvgrace-gpu module has no issues with uncontained
-> +		 * failures on NORMAL_NC accesses. VM_ALLOW_ANY_UNCACHED is
-> +		 * set to communicate to the KVM to S2 map as NORMAL_NC.
-> +		 * This opens up guest usage of NORMAL_NC for this mapping.
-> +		 */
-> +		vm_flags_set(vma, VM_ALLOW_ANY_UNCACHED);
+>  drivers/interconnect/core.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 5d1010cafed8..7e9b996b47c8 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -176,6 +176,8 @@ static struct icc_path *path_init(struct device *dev,=
+ struct icc_node *dst,
+>
+>         path->num_nodes =3D num_nodes;
+>
+> +       mutex_lock(&icc_bw_lock);
 > +
->  		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
-> +	}
->  
->  	/*
->  	 * Perform a PFN map to the memory and back the device BAR by the
-
+>         for (i =3D num_nodes - 1; i >=3D 0; i--) {
+>                 node->provider->users++;
+>                 hlist_add_head(&path->reqs[i].req_node, &node->req_list);
+> @@ -186,6 +188,8 @@ static struct icc_path *path_init(struct device *dev,=
+ struct icc_node *dst,
+>                 node =3D node->reverse;
+>         }
+>
+> +       mutex_unlock(&icc_bw_lock);
+> +
+>         return path;
+>  }
+>
+> @@ -792,12 +796,16 @@ void icc_put(struct icc_path *path)
+>                 pr_err("%s: error (%d)\n", __func__, ret);
+>
+>         mutex_lock(&icc_lock);
+> +       mutex_lock(&icc_bw_lock);
+> +
+>         for (i =3D 0; i < path->num_nodes; i++) {
+>                 node =3D path->reqs[i].node;
+>                 hlist_del(&path->reqs[i].req_node);
+>                 if (!WARN_ON(!node->provider->users))
+>                         node->provider->users--;
+>         }
+> +
+> +       mutex_unlock(&icc_bw_lock);
+>         mutex_unlock(&icc_lock);
+>
+>         kfree_const(path->name);
+> --
+> 2.17.1
+>
