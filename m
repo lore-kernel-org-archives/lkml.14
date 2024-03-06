@@ -1,140 +1,119 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7279D5FB97;
-	Wed,  6 Mar 2024 10:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08255FB97;
+	Wed,  6 Mar 2024 10:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709720583; cv=none; b=nG9gpsFBxiNQ1I9yU1m6nIdyAptmZdmr+aV6MIzOfVbsCEo+4+FuKqPl2O+d1VewfwNWXOT6fCD80RWgXjwQSyMJ7Ll0j3YCEUT3YN6KExpab54eJaOlxyS/vfJZmUdj56oMU/fcMQ9ykPkeuj2KY2ZdBfWZ7hMLSr9OoYAIA24=
+	t=1709720596; cv=none; b=ELz69MVcypGpdvLzcs3uds/FTtOPR1Httq363dFnBpIuLPKP0LQa2YvT8eofYKZWb3sNu9KN/fCNoeCSm8uc8dIVxdzG1G4svSUSvO+80zC5o6wAqZxWWk4gv2yLvY28ssU+72nYrZPBEBaFmrep9gQsFwVWJVrM8i6xyf3f/dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709720583; c=relaxed/simple;
-	bh=ru5KVpO0fYpM81R7FvwYOV4mwnZ5EV6GBubWlLtAQZw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mjt1LB3GO+zhueeLaJkTVjr0XM53Zw70XDwcyzeCs/7th7wt9aQ+f4gNrBPCTJRpaBKj4lrZUMEA6iV1fxHWNCE7ytfp3eXa8NiX1PAGfW4XPrYxOFofGMSoca1+a8QjRXPT6Hmyp04Hul76YV9ZV4hcQ/Vl8MqXos6RLwDNxNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XTa1S5u7; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709720596; c=relaxed/simple;
+	bh=am4CcjtfeE6MF8q/1whJHcAa25zNF3wSJWqj4Zqk1f4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NfLRmwYlbvLEKGzXvIlql8GRVTr9Qagpq0I7KTBMgOjrJ7V+7xst0xUk7z3VU0V5LdGNY7TDzF4YK8RF3GXs1RIzQ2tsVASZo2wSgVdakjElv0YNm8CpSOHve9tvUEeI/KBfDSvIrZ+J04etA/HYHmMa8+HkBlW2oYluYoxDEms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ueLaVv6j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTa1S5u7"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4d345250ee1so1637935e0c.1;
-        Wed, 06 Mar 2024 02:23:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709720580; x=1710325380; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ru5KVpO0fYpM81R7FvwYOV4mwnZ5EV6GBubWlLtAQZw=;
-        b=XTa1S5u7QBJ5zL6MMY9uNujsN2y7kLGjHiUdaUhHiKFHOdgeTQU0gJzW1A2X9wOnaR
-         9rBaq6ewk13ARsgQ7O2S+EmdNR/AWbSlHxi51fyVBvT77tBB7kKKHWAiKC39tkzKTo2F
-         SBVGvtC/aFuMmBXBPMSqgoZaWuLf0ZNd+sARshFARi1iTWC0kW5wMt1ZV0oUUZUgM+77
-         L4jX3GzBZendjQNXTNGWuUTwORuMlURiIH/+5z++xSwYJdkJVWImSjpojMNKHVbm37QD
-         OZHmoEWlOKvRm1uYKHB0indzv5rsx4kTUxySQio1PXU6vO0E3c0+CQWZBUh2uDrlYzL4
-         r3ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709720580; x=1710325380;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ru5KVpO0fYpM81R7FvwYOV4mwnZ5EV6GBubWlLtAQZw=;
-        b=NPoY5DiCteWgWnec5wtHGiyOhWcasMTLKYxYmK4SWpLAQJW/R3DMLyCZY4cNfulK2R
-         5wylK04BBgoEw7BZVBvVxakR2zqQfKRnwlKtiizTTZlBy/E9zCiRFope0Gs80n5Edb/o
-         aGq8XWjdGTxLEbcfZotQqAi1es/O1YfcbkHJdVzFJ+k4Wcb0l1lH+ydbyJwQFrUpgIP6
-         +ao3PLJgyUPA1YIrqzIWV1g856RHTvDRG3M2SkKDrFwEwDdISLa1bLvJd5gJ/XRzp3iA
-         qky+8f+sQ3ZKeYJvcjhi9DNcjZcH75xJNs8wP0hXYUZmDoSDNMEP6F0fZIDeKuH1DjoP
-         PBHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfCP2ex1kSmwJ/afCCjFM/3QJXjLh26ghlLTK0IusAadopilEgI+KeErfqdurwRF2T/qAn2vAFieSSqyHrN5X8B1/F74vsr6Dmr1my/hStTdpyRgU+SY6dDzDqnUce1eam4d11whd9UhaB/96lDOEOON9fMrTMmL3ln8gIAY13xQS4psgnJCqpf1QcKvvCskDXfFmTUWRsavvdtNDMqVESHpAo5rm5TRyv
-X-Gm-Message-State: AOJu0Yzdk6mZbyaP8HXxw0KAQboESLe1yMLkjMjPU7uLRBR89dXShX/J
-	k+sjXB3NMwbFGFfixVyWu4q1Thc+qjVJvEPh2pS2TsgWxQ+5LHDyAfYLMGBBEWQKHrTWMEUlSlC
-	9CJRaAo9qxGU1pgM2/dFnM3h1Dxs=
-X-Google-Smtp-Source: AGHT+IHKRYv4UNbCa/SCrVYj+kwMhWRFRmoCtxjdFljqdm3C5fqbtwwuS2zlMBmPq5jAO/mmqLDYjK8504lqUBjqk/Q=
-X-Received: by 2002:a05:6122:4b0b:b0:4d3:35ac:3553 with SMTP id
- fc11-20020a0561224b0b00b004d335ac3553mr4355214vkb.10.1709720580252; Wed, 06
- Mar 2024 02:23:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ueLaVv6j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7588BC433F1;
+	Wed,  6 Mar 2024 10:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709720595;
+	bh=am4CcjtfeE6MF8q/1whJHcAa25zNF3wSJWqj4Zqk1f4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ueLaVv6jN+9gmHWC9HJSXlPkO3zBqGQkVkmk4H6l6wL+0uH1q8fgvL5TKOX4mwQGD
+	 xUDvjXWw54+HQOPN1o3ogBucCVvNElTccBebf5nGZAmcljYk7T/TejzPxGBRbtT+mT
+	 1xYqXL7qOWXDATgBWYa3GXnvH20Iw9cKwkc/CT0zIxTEunhrGnoufYA3j4g1D2QyxT
+	 2lHGuVq3jaHDZ7I2k4WDeBIV3mh5n5G6j8ohMt+si0C3vpgjuoBIgv4d35X10Em9/G
+	 sX7OvecAGfJlZTF5LqBKU9f9VVfD03pp1R5a4C8+Onm+dVQ3C1Y2PzNaev3QAymtw8
+	 jSSixnvi/xDuA==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rhoQa-009tYJ-P6;
+	Wed, 06 Mar 2024 10:23:13 +0000
+Date: Wed, 06 Mar 2024 10:23:03 +0000
+Message-ID: <877cifr75k.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Cc: kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	oliver.upton@linux.dev,
+	darren@os.amperecomputing.com,
+	d.scott.phillips@amperecomputing.com
+Subject: Re: [RFC PATCH] kvm: nv: Optimize the unmapping of shadow S2-MMU tables.
+In-Reply-To: <2911d04d-a785-4d60-9a8d-be0d2cec21de@os.amperecomputing.com>
+References: <20240305054606.13261-1-gankulkarni@os.amperecomputing.com>
+	<86sf150w4t.wl-maz@kernel.org>
+	<6685c3a6-2017-4bc2-ad26-d11949097050@os.amperecomputing.com>
+	<86r0go201z.wl-maz@kernel.org>
+	<2911d04d-a785-4d60-9a8d-be0d2cec21de@os.amperecomputing.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240305171600.328699-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdW0MxqxRwULhLsRtnYXYK8NYxq-uU7E2BscbvPh3axYFg@mail.gmail.com>
- <CA+V-a8vKo8ADB_R==vgBhVpSH43DOzdeA_NhZ1BCBdNuam3UmQ@mail.gmail.com> <CAMuHMdWX=OZJ3DE0vb4=k=6yH_L5JhusLRpVqJkJ0Xv3oT8_TQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWX=OZJ3DE0vb4=k=6yH_L5JhusLRpVqJkJ0Xv3oT8_TQ@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 6 Mar 2024 10:21:58 +0000
-Message-ID: <CA+V-a8uq=gw0_EVT3_CZD0TO+-DnSqXJtFakFcNWHOfq58g4aA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: serial: renesas,scif: Document R9A09G057 support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, darren@os.amperecomputing.com, d.scott.phillips@amperecomputing.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Geert,
+On Tue, 05 Mar 2024 18:33:27 +0000,
+Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
+> 
+> >>>> index 61bdd8798f83..3948681426a0 100644
+> >>>> --- a/arch/arm64/kvm/mmu.c
+> >>>> +++ b/arch/arm64/kvm/mmu.c
+> >>>> @@ -1695,6 +1695,13 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+> >>>>    					     memcache,
+> >>>>    					     KVM_PGTABLE_WALK_HANDLE_FAULT |
+> >>>>    					     KVM_PGTABLE_WALK_SHARED);
+> >>>> +		if ((nested || kvm_is_l1_using_shadow_s2(vcpu)) && !ret) {
+> >>> 
+> >>> I don't understand this condition. If nested is non-NULL, it's because
+> >>> we're using a shadow S2. So why the additional condition?
+> >> 
+> >> No, nested is set only for L2, for L1 it is not.
+> >> To handle L1 shadow S2 case, I have added this condition.
+> > 
+> > But there is *no shadow* for L1 at all. The only way to get a shadow
+> > is to be outside of the EL2(&0) translation regime. El2(&0) itself is
+> > always backed by the canonical S2. By definition, L1 does not run with
+> > a S2 it is in control of. No S2, no shadow.
+> 
+> Shadow, I mean nested_mmus[0] which is used(first consumer of the
+> S2-MMU array) while L1 booting till it switches to NV2.
 
-On Wed, Mar 6, 2024 at 10:15=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, Mar 6, 2024 at 11:06=E2=80=AFAM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Wed, Mar 6, 2024 at 9:53=E2=80=AFAM Geert Uytterhoeven <geert@linux-=
-m68k.org> wrote:
-> > > On Tue, Mar 5, 2024 at 6:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gm=
-ail.com> wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Document support for the Serial Communication Interface with FIFO (=
-SCIF)
-> > > > available in the Renesas RZ/V2H(P) (R9A09G057) SoC. The SCIF interf=
-ace in
-> > > > the Renesas RZ/V2H(P) is similar to that available in the RZ/G2L
-> > > > (R9A07G044) SoC, with the only difference being that the RZ/V2H(P) =
-SoC has
-> > > > three additional interrupts: one for Tx end/Rx ready and the other =
-two for
-> > > > Rx and Tx buffer full, which are edge-triggered.
-> > > >
-> > > > No driver changes are required as generic compatible string
-> > > > "renesas,scif-r9a07g044" will be used as a fallback on RZ/V2H(P) So=
-C.
-> > >
-> > > If you declare SCIF on RZ/V2H compatible with SCIF on RZ/G2L, you
-> > > state that the current driver works fine (but perhaps suboptimal),
-> > > without adding support for the extra 3 interrupts?
-> > >
-> > Yes the current driver works without using the extra interrupts on the
-> > RZ/V2H. The extra interrupts on the RZ/V2H are just sort of duplicate
-> > ie
-> > - Transmit End/Data Ready interrupt , for which we we have two
-> > seperate interrupts already
-> > - Receive buffer full interrupt (EDGE trigger), for which we already
-> > have a Level triggered interrupt
-> > - Transmit buffer empty interrupt (EDGE trigger), for which we already
-> > have a Level triggered interrupt
->
-> Thanks for the confirmation!
->
-> > Are you suggesting to not fallback on RZ/G2L and instead make RZ/V2H
-> > an explicit one so that in future we handle these 3 extra interrupts?
->
-> In light of the confirmation above, I am _not_ suggesting that.
->
-Thanks for clarification.
+Please fix your terminology:
 
-> I just wanted a clarification: if the current driver would not operate
-> properly without changes, the fallback would not have been appropriate.
-> W.r.t. the extra interrupts, you can add support to the driver later,
-> if/when a need or desire ever arises.
->
-Agreed, thanks.
+- if someone is using *any* of the nested_mmus[], then it is an L2. It
+  may come from the same guest binary, but it doesn't change that it
+  has changed translation regime to EL1&0. So by definition, it is an
+  L2. Yes, booting a Linux guest at EL2 involve both an L1 (the EL2
+  part) *and* an L2 (the EL1 part).
 
-Cheers,
-Prabhakar
+- I don't understand 'till it switches to NV2'. Do you mean EL2?
+
+> As per my tracing, the nested_mmus[0] is used for L1 after first ERET
+> trap while L1 is booting and switches back to canonical S2, when it is
+> moved to NV2.
+> 
+> In this window, if the pages are unmapped, we need to unmap from the
+> nested_mmus[0] table.
+
+Well, we need to unmap things from all shadow PTs that target the same
+PA. Index 0 isn't special.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
