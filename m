@@ -1,40 +1,40 @@
 Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AC7140397
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA2A1386A3
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709755416; cv=none; b=ZgsEGU5Uazu3831+IqcGixm4aOWzCxnBbJg1kYPVHC+U2uwdNpkiwx9mGA5NDpJbACpOUAefUB/4OaG+tAynAr4Oa34NxgwMjkBarhYxqN7Q9aYN9DYJI740YsRunDge7aag678oFSrx62fWDvRaJTuQFuy2efeb9qS20skJcxU=
+	t=1709755427; cv=none; b=EgFZypxQI532LWWl5DGk8QEVzPqrLn2OcOKjnX8wriusqG4WVdOIBix8ATD7iyGapvYH4JGV+RlqTplKmd5GFi/w2D7BRFJQsK4muSXi7KKIaXpMjBhvC8H0HBcUcaylmFfszQNQPgxHXtAXisc10P2F/ssSiMbBx2Li4WDIpcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709755416; c=relaxed/simple;
-	bh=i30Vaa/vWmAWuQ1xuyHQbAwUbCzPkek4gi1m2EvEbUs=;
+	s=arc-20240116; t=1709755427; c=relaxed/simple;
+	bh=aJDZ4Vxhj0c8mxaTvf8OfzINnVswHkVDwaZ4BftVAO0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pnAOJmUuUs9zpJrvHd5QaStvQJ+oNma1yHHQvNs74gTg/64mKmH5JM+L3yLakb/Q72fp1LgtOZMB/JLsaOtl/29MrZQBoWmUN5b/4rxdqqx2bIVwkIQX/U63QC4KNlETcspQiuPLWlv0yAdHdQigQ6/T33lUbJZcSpntb/0gdJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=qpY1+0FP; arc=none smtp.client-ip=198.252.153.129
+	 In-Reply-To:To:Cc; b=gA1dW74CwChncyg3bAGyKsdcuB4txM44LpenjTUY4HY1id6EXAj9n7uelS02rkVCYYcBSkGx7yyiJgeR/WGGpwiBlPLLC2xStmZrOzXWcQ7XP6Th+GTwJJBA4FQHHQO60cLWUQlu5mjhbdwSgyDA8vtZig8jIQxFvf0p7pRUoCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=JZYrCyhu; arc=none smtp.client-ip=198.252.153.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="qpY1+0FP"
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="JZYrCyhu"
 Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx1.riseup.net (Postfix) with ESMTPS id 4Tqjzp1b6PzDq8y;
-	Wed,  6 Mar 2024 20:03:34 +0000 (UTC)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4Tqk012NgDzDq8y;
+	Wed,  6 Mar 2024 20:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1709755414; bh=i30Vaa/vWmAWuQ1xuyHQbAwUbCzPkek4gi1m2EvEbUs=;
+	t=1709755425; bh=aJDZ4Vxhj0c8mxaTvf8OfzINnVswHkVDwaZ4BftVAO0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qpY1+0FP6AdVM3Qg8lZv+hYANPxKP5Uhd+ZQCanHSNm0ZAMiUDZjQmzYMem4Zok9Y
-	 R7KxA49tasIbhKDw3h5f6YE/lSen/1CSnbgxgOD3YO2K4dphn5YoKk6XkwN3+5PSqW
-	 nsfZGf4QqtPZladu1ohTmr3RYYToDmwgelbwqIp4=
-X-Riseup-User-ID: 91291689B435C54B67630DDED63C74A69CF5F515D6AE21446F9EFDBED5BFBAF3
+	b=JZYrCyhuwaxxvwBmTWhTbdwqX+yxQfSBhbOKo8LCyht1hV3D+3qC0oaNLnJIHVnn9
+	 k3El+VABMgfJlqtz/QhtvkSlofZ7N6hdiNS7EU0pQOB3j+5UfOhNBBdvY4pcOSPCvC
+	 jR9rUVynAMVSt7YuhVcjbD+sNJtXdQmQV4V0LGJo=
+X-Riseup-User-ID: DADEB8FF0353ACC6617D59334D8182D0B118D71F27E0E6AC0D010F7BF29A0ECC
 Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4Tqjzh2DQtzFvsk;
-	Wed,  6 Mar 2024 20:03:28 +0000 (UTC)
+	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4Tqjzw1r4LzFvr9;
+	Wed,  6 Mar 2024 20:03:40 +0000 (UTC)
 From: Arthur Grillo <arthurgrillo@riseup.net>
-Date: Wed, 06 Mar 2024 17:03:08 -0300
-Subject: [PATCH 1/7] drm: Fix drm_fixp2int_round() making it add 0.5
+Date: Wed, 06 Mar 2024 17:03:10 -0300
+Subject: [PATCH 3/7] drm/vkmm: Use drm_fixed api
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240306-louis-vkms-conv-v1-1-5bfe7d129fdd@riseup.net>
+Message-Id: <20240306-louis-vkms-conv-v1-3-5bfe7d129fdd@riseup.net>
 References: <20240306-louis-vkms-conv-v1-0-5bfe7d129fdd@riseup.net>
 In-Reply-To: <20240306-louis-vkms-conv-v1-0-5bfe7d129fdd@riseup.net>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -58,33 +58,81 @@ To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
- nicolejadeyee@google.com, Pekka Paalanen <pekka.paalanen@collabora.com>
+ nicolejadeyee@google.com
 
-As well noted by Pekka[1], the rounding of drm_fixp2int_round is wrong.
-To round a number, you need to add 0.5 to the number and floor that,
-drm_fixp2int_round() is adding 0.0000076. Make it add 0.5.
+With the new 32.32 values it makes more sense to use drm_fixed functions
+than trying to recreate the wheel.
 
-[1]: https://lore.kernel.org/all/20240301135327.22efe0dd.pekka.paalanen@collabora.com/
-
-Suggested-by: Pekka Paalanen <pekka.paalanen@collabora.com>
 Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
 ---
- include/drm/drm_fixed.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/vkms_formats.c | 54 +++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 26 deletions(-)
 
-diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-index 0c9f917a4d4b..de3a79909ac9 100644
---- a/include/drm/drm_fixed.h
-+++ b/include/drm/drm_fixed.h
-@@ -90,7 +90,7 @@ static inline int drm_fixp2int(s64 a)
- 
- static inline int drm_fixp2int_round(s64 a)
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+index 55ed3f598bd7..adde53cdea26 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.c
++++ b/drivers/gpu/drm/vkms/vkms_formats.c
+@@ -191,32 +191,34 @@ VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
+ 						  struct conversion_matrix *matrix)
  {
--	return drm_fixp2int(a + (1 << (DRM_FIXED_POINT_HALF - 1)));
-+	return drm_fixp2int(a + DRM_FIXED_ONE / 2);
- }
+ 	u8 r, g, b;
+-	s64 y_16, cb_16, cr_16;
+-	s64 r_16, g_16, b_16;
+-
+-	y_16 = y - matrix->y_offset;
+-	cb_16 = cb - 128;
+-	cr_16 = cr - 128;
+-
+-	r_16 = matrix->matrix[0][0] * y_16 + matrix->matrix[0][1] * cb_16 +
+-	       matrix->matrix[0][2] * cr_16;
+-	g_16 = matrix->matrix[1][0] * y_16 + matrix->matrix[1][1] * cb_16 +
+-	       matrix->matrix[1][2] * cr_16;
+-	b_16 = matrix->matrix[2][0] * y_16 + matrix->matrix[2][1] * cb_16 +
+-	       matrix->matrix[2][2] * cr_16;
+-
+-	// rounding the values
+-	r_16 = r_16 + (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH - 4));
+-	g_16 = g_16 + (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH - 4));
+-	b_16 = b_16 + (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH - 4));
+-
+-	r_16 = clamp(r_16, 0, (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH + 8)) - 1);
+-	g_16 = clamp(g_16, 0, (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH + 8)) - 1);
+-	b_16 = clamp(b_16, 0, (1LL << (CONVERSION_MATRIX_FLOAT_DEPTH + 8)) - 1);
+-
+-	r = r_16 >> CONVERSION_MATRIX_FLOAT_DEPTH;
+-	g = g_16 >> CONVERSION_MATRIX_FLOAT_DEPTH;
+-	b = b_16 >> CONVERSION_MATRIX_FLOAT_DEPTH;
++	s64 fp_y, fp_cb, fp_cr;
++	s64 fp_r, fp_g, fp_b;
++
++	fp_y = y - matrix->y_offset;
++	fp_cb = cb - 128;
++	fp_cr = cr - 128;
++
++	fp_y = drm_int2fixp(fp_y);
++	fp_cb = drm_int2fixp(fp_cb);
++	fp_cr = drm_int2fixp(fp_cr);
++
++	fp_r = drm_fixp_mul(matrix->matrix[0][0], fp_y) +
++	       drm_fixp_mul(matrix->matrix[0][1], fp_cb) +
++	       drm_fixp_mul(matrix->matrix[0][2], fp_cr);
++	fp_g = drm_fixp_mul(matrix->matrix[1][0], fp_y) +
++	       drm_fixp_mul(matrix->matrix[1][1], fp_cb) +
++	       drm_fixp_mul(matrix->matrix[1][2], fp_cr);
++	fp_b = drm_fixp_mul(matrix->matrix[2][0], fp_y) +
++	       drm_fixp_mul(matrix->matrix[2][1], fp_cb) +
++	       drm_fixp_mul(matrix->matrix[2][2], fp_cr);
++
++	fp_r = drm_fixp2int_round(fp_r);
++	fp_g = drm_fixp2int_round(fp_g);
++	fp_b = drm_fixp2int_round(fp_b);
++
++	r = clamp(fp_r, 0, 0xff);
++	g = clamp(fp_g, 0, 0xff);
++	b = clamp(fp_b, 0, 0xff);
  
- static inline int drm_fixp2int_ceil(s64 a)
+ 	return argb_u16_from_u8888(255, r, g, b);
+ }
 
 -- 
 2.43.0
