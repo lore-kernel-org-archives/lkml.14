@@ -1,292 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4278E60884;
-	Wed,  6 Mar 2024 10:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682D5605BD
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721623; cv=none; b=CmCfXgbSE7rXoubYey5HbSQPFGEhPuZv8SO2vp5QxsWKdopkw1litETUx0Y5vwPyJA32lKwmepHw5+pzUijNry27KiqnrKctmo4Rhf181mz8dqnNxI6gX79UAd6hTh0uWO+g5uR4jkHy7dqjnP8KBeDOi4rtNIYU27FS22iJjX8=
+	t=1709721629; cv=none; b=nbJa74x5FaJklqVtYFvBU4c4kLdRDNkztbNNJNhoz7FLbfkje5p2amMyCOzxeQJozMiA9FAJ92CMGzgagZ0+C4azSgR9RFTI2OMt1cGcm78Vu5B8GDYf00x2+QAc/UKMV5UFG3e0Dn53okzDgEzaRz6UXqx3su8AU4g/x/53djo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721623; c=relaxed/simple;
-	bh=l02LUWZ0uZyyld4Sn9bjwcmqKToiN7adxC+/gtNEed8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fWoBXkiF63pUcZ3/zuXX21z4cqBVqLYXTMakVq5aYX3ZFUsZr38RhY728nbLt4jDasEsqpKVMxqyjtGqET3s5EC6siu4jZutmqU14AW59mbA2Q3pOGq7GCiX+Zctz9Y1XKFeZICmVPvbQMcOWohodZiakK/gdFinCVgYQrJs4ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8M6s2aK; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709721629; c=relaxed/simple;
+	bh=1sqViaK8zms8lEsbdD14AiqUVOaVq9kcAdx3Wu9HgIw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RyHoJiHvO8AAyYgeuenUPT/ZxjV7xBPLILCRxdSlFl+fgMlpbgtcV1967pdMAgeVjB+ETc2CC5Fu+9N4Tb3sAwdylUKeBNeYgAJUgcxHsO4JG5B9vw3Plccvbz3yQx/UuaMdvr9CxlDQPhA7GFhHxAIOMMcBw6R+BgfzctTrzmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YsHkgbg+; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8M6s2aK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709721621; x=1741257621;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=l02LUWZ0uZyyld4Sn9bjwcmqKToiN7adxC+/gtNEed8=;
-  b=Y8M6s2aKNQNcYXbzqgjcxECufv6pKGIIyJrqkkkRvfOQkfNdo3hnehlA
-   jhnb622en5R3QEfu5/M7Vgz/hxBrP2lwONY0ZR68fXi2CkqVoMugwB+gk
-   i7T5LhM99v93CmJERbhQR2cdXZtH/1GASA+s2lAMjKKQZvgK0Rc5F6BtL
-   tCHRUoJrJrrviffjggFvPVX5xglOw4502CBUzxdTsvAbjoqDvbfxsWHKG
-   OLIlNEePl700OVUw1LRzawktWnnlDAPxpOo5XGADDTtKkpjr6+/aqqTz7
-   ls9dS3h2r86mZzHwyqsk0NIbVN1apmuvKVRoZsgIspPhcsUsG25vA8rhz
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4497610"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="4497610"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:40:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="9803790"
-Received: from ksznyce-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.25.14])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:40:10 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com,
-	tony.luck@intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 4/4] selftests/resctrl: Adjust SNC support messages
-Date: Wed,  6 Mar 2024 11:39:21 +0100
-Message-ID: <8a158ada92f06b97a4679721e84e787e94b94647.1709721159.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1709721159.git.maciej.wieczor-retman@intel.com>
-References: <cover.1709721159.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YsHkgbg+"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-472b709bb5fso508173137.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:40:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709721626; x=1710326426; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Sjwo5RJIhXHjzbNaOpot87oyRxHjUpXY9VVPgdS9wg=;
+        b=YsHkgbg+wWAjPzQK/uvjeTsaNeZEDehvPXeoOUH1g/bycU/l5e5Dt3+bne1ePQVBoV
+         Ei9mTpn6M6Qf8I1QcFoX2nV8pXqvi77tMt910VF8tWGC9Ln/PRC1Z3R5au31ROgWTBZC
+         RK7xnl4vU00Xcc05Gld6gXCTHg4Yi/sFyifpXxx8AwY8Q9zRK0KNjTfu8YTT5Ct4ni1a
+         gAZNzTp4a2TGxsp7P0ONLQfTc6YIL8jhdiO3gNwmc2NT2AjHd+JVDOVqvA7sdyta7Pzj
+         NzDJpZ1l2/uVT6uW/BLKEUOterykIbF2yAEJhuAjyHEcNIHxwgheIFNHdE6KNiYNL0BZ
+         6efQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709721626; x=1710326426;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5Sjwo5RJIhXHjzbNaOpot87oyRxHjUpXY9VVPgdS9wg=;
+        b=FDqy9Oqh9nbQfn7K/4T6+StZSeFpeNvqvIunhYWIFE8eKJp7K1r02xDRT3i6iHUrCp
+         fu7KpuXwbukZWboVN/7ryo9t/ypV/LOl8bTzOV5UlH74wWweVVlJF8RYm2oC3Cy5G0hG
+         LjOVjJZ8jEjmJoLjvLUM4HK0AJfXv99SLGPuHyCDlwDj7DdTwj0QUJ7rZHsS5xG25WZ3
+         ChrWkfU4O0Y/m6mVSDhwMTIWdB/c1acnBEVkL00C0i2zK1KY+GCgGIzrWIZkoGBBe9vi
+         Yfsm2PSWqqKXHWWVts3wJTy2x0bYjC/vxlorvdsgsdptw8XverA/UR+hFLLxmq7I3JGx
+         p7Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeY5wrYXqOJ4RLPJFpjnuAVQH0ShCSC+QvwD70IpFrMSWpY2MMbs6TFmW2io92hOd7C+W1gzYHjIptFoi5tr6cy7BL03FvPGcGoFx5
+X-Gm-Message-State: AOJu0YzPLQXAl2JU3DWsI9XbYXRE34kAD17K0FQdj2f1iytbCmNkM0N3
+	Z4vm2Qr01DY458YOJsVhpHm8ryuiEH5+tVF9MnOPd+IZZW2w1Gy/PbNHNepYgNgl6caCDRZiTxs
+	hlnDSQO1QRfYvULaVp00SQIl54E/k6ydPcUcTnA==
+X-Google-Smtp-Source: AGHT+IGduBh9Are1m4Dmd/r7BVYdWm4z5lzqyISQNPxOmYqfTtHc3lEK6Gv4++jCDQHK3IyEZutr6O/iZppSVzwzGQg=
+X-Received: by 2002:a05:6102:4405:b0:472:ec73:9bf5 with SMTP id
+ df5-20020a056102440500b00472ec739bf5mr2073706vsb.30.1709721624867; Wed, 06
+ Mar 2024 02:40:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240305101745.213933-1-balint.dobszay@arm.com>
+In-Reply-To: <20240305101745.213933-1-balint.dobszay@arm.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Wed, 6 Mar 2024 16:10:13 +0530
+Message-ID: <CAFA6WYPNV5F3h=naCtg=fYr8zfB3rho+G1B6-rggLe_PkqvgnQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] TEE driver for Trusted Services
+To: Balint Dobszay <balint.dobszay@arm.com>
+Cc: op-tee@lists.trustedfirmware.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	jens.wiklander@linaro.org, corbet@lwn.net, sudeep.holla@arm.com, 
+	rdunlap@infradead.org, krzk@kernel.org, gyorgy.szing@arm.com
+Content-Type: text/plain; charset="UTF-8"
 
-Resctrl selftest prints a message on test failure that Sub-Numa
-Clustering (SNC) could be enabled and points the user to check theirs BIOS
-settings. No actual check is performed before printing that message so
-it is not very accurate in pinpointing a problem.
+Hi Balint,
 
-Figuring out if SNC is enabled is only one part of the problem, the
-other being whether the kernel supports it. As there is no easy
-interface that simply states SNC support in the kernel one can find that
-information by comparing L3 cache sizes from different sources. Cache
-size reported by /sys/devices/system/node/node0/cpu0/cache/index3/size
-will always show the full cache size even if it's split by enabled SNC.
-On the other hand /sys/fs/resctrl/size has information about L3 size,
-that with kernel support is adjusted for enabled SNC.
+On Tue, 5 Mar 2024 at 15:48, Balint Dobszay <balint.dobszay@arm.com> wrote:
+>
+> This series introduces a TEE driver for Trusted Services [1].
+>
+> Trusted Services is a TrustedFirmware.org project that provides a
+> framework for developing and deploying device Root of Trust services in
+> FF-A [2] Secure Partitions. The project hosts the reference
+> implementation of Arm Platform Security Architecture [3] for Arm
+> A-profile devices.
+>
+> The FF-A Secure Partitions are accessible through the FF-A driver in
+> Linux. However, the FF-A driver doesn't have a user space interface so
+> user space clients currently cannot access Trusted Services. The goal of
+> this TEE driver is to bridge this gap and make Trusted Services
+> functionality accessible from user space.
+>
+> Changelog:
+> v2[6] -> v3:
+>   - Add patch "tee: Refactor TEE subsystem header files" from Sumit
+>   - Remove unnecessary includes from core.c
+>   - Remove the mutex from "struct ts_context_data" since the same
+>     mechanism could be implemented by reusing the XArray's internal lock
+>   - Rename tee_shm_pool_op_*_helper functions as suggested by Sumit
+>   - Replace pr_* with dev_* as previously suggested by Krzysztof
+>
 
-Add a function to find a cache size from /sys/fs/resctrl/size since
-finding that information from the other source is already implemented.
+I will also suggest you to add a maintainer's entry for this new
+Trusted Services TEE driver.
 
-Add a function that compares the two cache sizes and use it to make the
-SNC support message more meaningful.
+-Sumit
 
-Add the SNC support message just after MBA's check_results() since MBA
-shares code with MBM and also can suffer from enabled SNC if there is no
-support in the kernel.
-
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
- tools/testing/selftests/resctrl/cat_test.c  |  2 +-
- tools/testing/selftests/resctrl/cmt_test.c  |  6 +-
- tools/testing/selftests/resctrl/mba_test.c  |  2 +
- tools/testing/selftests/resctrl/mbm_test.c  |  4 +-
- tools/testing/selftests/resctrl/resctrl.h   |  5 +-
- tools/testing/selftests/resctrl/resctrlfs.c | 69 ++++++++++++++++++++-
- 6 files changed, 79 insertions(+), 9 deletions(-)
-
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index 4cb991be8e31..1cdaadf35f03 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -253,7 +253,7 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 		return ret;
- 
- 	/* Get L3/L2 cache size */
--	ret = get_cache_size(uparams->cpu, test->resource, &cache_total_size);
-+	ret = get_sys_cache_size(uparams->cpu, test->resource, &cache_total_size);
- 	if (ret)
- 		return ret;
- 	ksft_print_msg("Cache size :%lu\n", cache_total_size);
-diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
-index a81f91222a89..b7cada602484 100644
---- a/tools/testing/selftests/resctrl/cmt_test.c
-+++ b/tools/testing/selftests/resctrl/cmt_test.c
-@@ -112,7 +112,7 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 	if (ret)
- 		return ret;
- 
--	ret = get_cache_size(uparams->cpu, "L3", &cache_total_size);
-+	ret = get_sys_cache_size(uparams->cpu, "L3", &cache_total_size);
- 	if (ret)
- 		return ret;
- 	ksft_print_msg("Cache size :%lu\n", cache_total_size);
-@@ -157,8 +157,8 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 		goto out;
- 
- 	ret = check_results(&param, span, n);
--	if (ret && (get_vendor() == ARCH_INTEL))
--		ksft_print_msg("Intel CMT may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
-+	if (ret && (get_vendor() == ARCH_INTEL) && snc_ways() > 1 && !snc_kernel_support())
-+		ksft_print_msg("Kernel doesn't support Sub-NUMA Clustering but it is enabled. Check BIOS configuration.\n");
- 
- out:
- 	cmt_test_cleanup();
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index fc31a61dab0c..89fe3ecbf497 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -160,6 +160,8 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
- 		goto out;
- 
- 	ret = check_results();
-+	if (ret && (get_vendor() == ARCH_INTEL) && snc_ways() > 1 && !snc_kernel_support())
-+		ksft_print_msg("Kernel doesn't support Sub-NUMA Clustering but it is enabled. Check BIOS configuration.\n");
- 
- out:
- 	mba_test_cleanup();
-diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
-index d67ffa3ec63a..e12b4b06f6d5 100644
---- a/tools/testing/selftests/resctrl/mbm_test.c
-+++ b/tools/testing/selftests/resctrl/mbm_test.c
-@@ -129,8 +129,8 @@ static int mbm_run_test(const struct resctrl_test *test, const struct user_param
- 		goto out;
- 
- 	ret = check_results(DEFAULT_SPAN);
--	if (ret && (get_vendor() == ARCH_INTEL))
--		ksft_print_msg("Intel MBM may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
-+	if (ret && (get_vendor() == ARCH_INTEL) && snc_ways() > 1 && !snc_kernel_support())
-+		ksft_print_msg("Kernel doesn't support Sub-NUMA Clustering but it is enabled. Check BIOS configuration.\n");
- 
- out:
- 	mbm_test_cleanup();
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index 178fb2eab13a..038e1269a3fc 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -28,6 +28,7 @@
- #define RESCTRL_PATH		"/sys/fs/resctrl"
- #define PHYS_ID_PATH		"/sys/devices/system/cpu/cpu"
- #define INFO_PATH		"/sys/fs/resctrl/info"
-+#define SIZE_PATH		"/sys/fs/resctrl/size"
- 
- /*
-  * CPU vendor IDs
-@@ -168,14 +169,16 @@ unsigned long create_bit_mask(unsigned int start, unsigned int len);
- unsigned int count_contiguous_bits(unsigned long val, unsigned int *start);
- int get_full_cbm(const char *cache_type, unsigned long *mask);
- int get_mask_no_shareable(const char *cache_type, unsigned long *mask);
--int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size);
- int resource_info_unsigned_get(const char *resource, const char *filename, unsigned int *val);
-+int get_sys_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size);
-+int get_resctrl_cache_size(const char *cache_type, unsigned long *cache_size);
- void ctrlc_handler(int signum, siginfo_t *info, void *ptr);
- int signal_handler_register(void);
- void signal_handler_unregister(void);
- void cat_test_cleanup(void);
- unsigned int count_bits(unsigned long n);
- void cmt_test_cleanup(void);
-+int snc_kernel_support(void);
- 
- void perf_event_attr_initialize(struct perf_event_attr *pea, __u64 config);
- void perf_event_initialize_read_format(struct perf_event_read *pe_read);
-diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-index e4d3624a8817..dbd10cb7abf5 100644
---- a/tools/testing/selftests/resctrl/resctrlfs.c
-+++ b/tools/testing/selftests/resctrl/resctrlfs.c
-@@ -214,14 +214,14 @@ int snc_ways(void)
- }
- 
- /*
-- * get_cache_size - Get cache size for a specified CPU
-+ * get_sys_cache_size - Get cache size for a specified CPU
-  * @cpu_no:	CPU number
-  * @cache_type:	Cache level L2/L3
-  * @cache_size:	pointer to cache_size
-  *
-  * Return: = 0 on success, < 0 on failure.
-  */
--int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size)
-+int get_sys_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size)
- {
- 	char cache_path[1024], cache_str[64];
- 	int length, i, cache_num;
-@@ -273,6 +273,44 @@ int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size
- 	return 0;
- }
- 
-+/*
-+ * get_resctrl_cache_size - Get cache size as reported by resctrl
-+ * @cache_type:	Cache level L2/L3
-+ * @cache_size:	pointer to cache_size
-+ *
-+ * Return: = 0 on success, < 0 on failure.
-+ */
-+int get_resctrl_cache_size(const char *cache_type, unsigned long *cache_size)
-+{
-+	char line[256], cache_prefix[16], *stripped_line, *token;
-+	size_t len;
-+	FILE *fp;
-+
-+	strcpy(cache_prefix, cache_type);
-+	strncat(cache_prefix, ":", 1);
-+
-+	fp = fopen(SIZE_PATH, "r");
-+	if (!fp) {
-+		ksft_print_msg("Failed to open %s : '%s'\n",
-+			       SIZE_PATH, strerror(errno));
-+		return -1;
-+	}
-+
-+	while (fgets(line, sizeof(line), fp)) {
-+		stripped_line = strstr(line, cache_prefix);
-+
-+		if (stripped_line) {
-+			len = strlen(cache_prefix);
-+			stripped_line += len;
-+			token = strtok(stripped_line, ";");
-+			if (sscanf(token, "0=%lu", cache_size) <= 0)
-+				return -1;
-+		}
-+	}
-+	fclose(fp);
-+	return 0;
-+}
-+
- #define CORE_SIBLINGS_PATH	"/sys/bus/cpu/devices/cpu"
- 
- /*
-@@ -935,3 +973,30 @@ unsigned int count_bits(unsigned long n)
- 
- 	return count;
- }
-+
-+/**
-+ * snc_kernel_support - Compare system reported cache size and resctrl
-+ * reported cache size to get an idea if SNC is supported on the kernel side.
-+ * If SNC is enabled and the kernel does support it the value should be equal.
-+ * If the kernel doesn't support SNC the.
-+ *
-+ * Return: 0 if not supported, 1 if supported, < 0 on failure.
-+ */
-+int snc_kernel_support(void)
-+{
-+	unsigned long resctrl_cache_size, node_cache_size;
-+	int ret;
-+
-+	ret = get_sys_cache_size(0, "L3", &node_cache_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = get_resctrl_cache_size("L3", &resctrl_cache_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (resctrl_cache_size == node_cache_size)
-+		return 1;
-+
-+	return 0;
-+}
--- 
-2.44.0
-
+> v1[5] -> v2:
+>   - Refactor session handling to use XArray instead of IDR and linked
+>     list (the linked list was redundant as pointed out by Jens, and IDR
+>     is now deprecated in favor of XArray)
+>   - Refactor tstee_probe() to not call tee_device_unregister() before
+>     calling tee_device_register()
+>   - Address comments from Krzysztof and Jens
+>   - Address documentation comments from Randy
+>   - Use module_ffa_driver() macro instead of separate module init / exit
+>     functions
+>   - Reformat max line length 100 -> 80
+>
+> RFC[4] -> v1:
+>   - Add patch for moving pool_op helper functions to the TEE subsystem,
+>     as suggested by Jens
+>   - Address comments from Sumit, add patch for documentation
+>
+> [1] https://www.trustedfirmware.org/projects/trusted-services/
+> [2] https://developer.arm.com/documentation/den0077/
+> [3] https://www.arm.com/architecture/security-features/platform-security
+> [4] https://lore.kernel.org/linux-arm-kernel/20230927152145.111777-1-balint.dobszay@arm.com/
+> [5] https://lore.kernel.org/lkml/20240213145239.379875-1-balint.dobszay@arm.com/
+> [6] https://lore.kernel.org/lkml/20240223095133.109046-1-balint.dobszay@arm.com/
+>
+>
+> Balint Dobszay (3):
+>   tee: optee: Move pool_op helper functions
+>   tee: tstee: Add Trusted Services TEE driver
+>   Documentation: tee: Add TS-TEE driver
+>
+> Sumit Garg (1):
+>   tee: Refactor TEE subsystem header files
+>
+>  Documentation/tee/index.rst         |   1 +
+>  Documentation/tee/ts-tee.rst        |  71 ++++
+>  MAINTAINERS                         |   1 +
+>  drivers/tee/Kconfig                 |   1 +
+>  drivers/tee/Makefile                |   1 +
+>  drivers/tee/amdtee/amdtee_private.h |   2 +-
+>  drivers/tee/amdtee/call.c           |   2 +-
+>  drivers/tee/amdtee/core.c           |   3 +-
+>  drivers/tee/amdtee/shm_pool.c       |   2 +-
+>  drivers/tee/optee/call.c            |   2 +-
+>  drivers/tee/optee/core.c            |  66 +---
+>  drivers/tee/optee/device.c          |   2 +-
+>  drivers/tee/optee/ffa_abi.c         |   8 +-
+>  drivers/tee/optee/notif.c           |   2 +-
+>  drivers/tee/optee/optee_private.h   |  14 +-
+>  drivers/tee/optee/rpc.c             |   2 +-
+>  drivers/tee/optee/smc_abi.c         |  11 +-
+>  drivers/tee/tee_core.c              |   2 +-
+>  drivers/tee/tee_private.h           |  35 --
+>  drivers/tee/tee_shm.c               |  66 +++-
+>  drivers/tee/tee_shm_pool.c          |   2 +-
+>  drivers/tee/tstee/Kconfig           |  11 +
+>  drivers/tee/tstee/Makefile          |   3 +
+>  drivers/tee/tstee/core.c            | 482 ++++++++++++++++++++++++++++
+>  drivers/tee/tstee/tstee_private.h   |  92 ++++++
+>  include/linux/tee_core.h            | 306 ++++++++++++++++++
+>  include/linux/tee_drv.h             | 285 ++--------------
+>  include/uapi/linux/tee.h            |   1 +
+>  28 files changed, 1087 insertions(+), 389 deletions(-)
+>  create mode 100644 Documentation/tee/ts-tee.rst
+>  create mode 100644 drivers/tee/tstee/Kconfig
+>  create mode 100644 drivers/tee/tstee/Makefile
+>  create mode 100644 drivers/tee/tstee/core.c
+>  create mode 100644 drivers/tee/tstee/tstee_private.h
+>  create mode 100644 include/linux/tee_core.h
+>
+> --
+> 2.34.1
+>
