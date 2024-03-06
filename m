@@ -1,108 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82264133402;
-	Wed,  6 Mar 2024 15:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A571EF1C
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 15:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709739942; cv=none; b=pJbtD6iKC9netI0AiwomCSVBHbzamEUfGH5rUgWDM5fGkPeUfgIrsTrzihDIkaHkjTR2Z7ixsERPLmk314GuxMB1N2LkR+x43Gd9JlXpZ8d86ghWQcrKye5yqFrMheCus5fdD24Hls5OlRJOVrqb3VXLHTF2OYaPry01elrT6dU=
+	t=1709740011; cv=none; b=S9182vE36RdCrT/EjrWLoZBrE5MUaACV8v7Sy2vgxMxqrc8+pYeMSUhXu1kUtj0pW8KtDVaD2aSQo/uZ8VXZPaX/WyS7lepQB6eTyu0krVnLC4ElYr+hwaTspl9+qS7GhbOoblmNkgmAaCO5wZ5p69dNGgu0nQuxkYyv0f0r5jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709739942; c=relaxed/simple;
-	bh=Ftuq41PzbFHr/8KgHVscUxW7Bf3SXW0yTv1U4T5F8Lc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s1YPUFRLroLTiaaTb3ZqYwC8QULFH5d3tEXkoDYNO0bTcfr/cuEdZdssMwIH4rZZgezVLYISf0LhkEuk7Qwoy43fzJosyVumbX86f8mPUHS4URd3ccFHVZrG3CN1cmWc87o8q1K31wJjIPIGabiWeNHu9OzZqqbuCP/fPGbdhOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSwGhMyu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709740011; c=relaxed/simple;
+	bh=WzHVlCnKIOv/vaanA5lJ8h9tIiuSZPhdFTtYwzsrDCM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QgR0NxNhMlsFWM0g01ynMskGQJn2wtqP8nO1+IqSV+LIGE+Fjbhj7eu/sW0El4pLmMpITAxuWwb4uHRXpDCsoD/Rx40GNBwfif3TyRa976priVxyZ8myzODqJre/2/8W7j49BIikAlGJIwhZfAEBr+htDS8j6YNxomyXGsE1t+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=glyZ6U2t; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSwGhMyu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A8E5C433F1;
-	Wed,  6 Mar 2024 15:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709739942;
-	bh=Ftuq41PzbFHr/8KgHVscUxW7Bf3SXW0yTv1U4T5F8Lc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LSwGhMyuGlrSgm3hK1t7CzWTJyisrR6O09rIZ8Dz2XqjLUwkZxgu7Ey1vVQ4VYOGf
-	 Im0lH7cm99nBZdv9Prt/yBCrADQqOmGP97tlzIP3uTQH8bgRDXW23J0VBSWksya3lm
-	 Jv+lpfvRu9EicDekBTPQg4nAjnrfpOKSeP/tqBzo9l/kT4kM4xPiatEWQjZ5AHpWqk
-	 sFaujhhodSWHpWuhVFpLZ2pOvEP0tRBn6OSniJyF8mLhWrcYHenrgCnEdShm0++Ckq
-	 jp0ERfB0uKnAC6JtDZsLxK3VGBT6XBRd4IMYnS1eVYLINPUJhu/5n2v/CK34XjNyWu
-	 hYVB5efQNH9dw==
-From: Christian Brauner <brauner@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] vfs fixes
-Date: Wed,  6 Mar 2024 16:45:13 +0100
-Message-ID: <20240306-vfs-fixes-e08261f0e45a@brauner>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="glyZ6U2t"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29a5f100c1aso4306917a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 07:46:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709740009; x=1710344809; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5gweCxqXk4S131YXuvxyq68tQVRRjvhJQnz+BcuSgxQ=;
+        b=glyZ6U2tUQuKEpKE3OVUw9vD8TsnJUuJMJU80f69cqeBCOR5t1alm7BJzIYEo+AVJK
+         ot2sC50ZCljCbicClarZ//mvT2oV1vaE4nIKMd0npzJyhDhUXKDDEuTqMcdWlvTGegmd
+         c1Agkkj6Y/bLRWIjiWYWGVDuL4tkP6+zfcZmWyAIElPHJoPXwRobpLDc4arXtD01frzd
+         nYoLl2/M09J+5iFUFy9x56Fvq9GSmJmpcUjnJFh3DphWD1gSEVAxG5kZO3tvlMGXi2yK
+         ECcf5yCD7eXhM+4cYSS/uuCmHghSz9sYs8RbaxMNFN9WY4ij02KjZaGbV8ho5c0N5wVN
+         bIYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709740009; x=1710344809;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5gweCxqXk4S131YXuvxyq68tQVRRjvhJQnz+BcuSgxQ=;
+        b=JekVtP1Gfm77VDtXZ+UyYYhNFRAysvxQgQoN+tIuRw841a8dvc+1UYGp6DEc82GV/b
+         rPDQOOWjrLQx7tQZx0gOLKYxAGpmFqRURR2oAfS/3YJy7JvvSc0ckSCpGmfuxbkIWxFv
+         cTKrE0/P7lw6Ako70AXRZeh5bPT9Zp+tn8BBQjnGX+8CNGBeeAJ+4q8nCF1H77dpdFX3
+         j69a5d+l63wm6w9LYzcZcX9fcjZPGT1tQNmTe2hq62LmA6V4eNiDPTHHqGk64QhUPs8v
+         0hPugaNBK6u/9faPPjJuQ2OQOeYSSBCRHWwsQtJccaJTbNuZAx8uhobNZUsFCKghszfB
+         Gj0w==
+X-Gm-Message-State: AOJu0YzKptO8hduLK/qrV22Ni/HL7yVi4RFxOds/ji/vbFuGECBusuiS
+	b5Lpun+gmvB3xv23cGbuYmvxlf6JrQ+4VvjMblaFZBV/gjcxuNND1A5V3DvBAPx61Vm3lj1tOsL
+	/sun2QwKQlFwLLqade5KNaUrxEZh6mE6q2aBECw==
+X-Google-Smtp-Source: AGHT+IGNl/Kdsf5L4RChWua3lySyLGeuihuSCg8CfxmXsjrp44HpHTa9Rq7pPmWzy+9CUc/UYpH/6Y+s6ZlpdJcou+g=
+X-Received: by 2002:a17:90b:1bd0:b0:29b:3d08:c644 with SMTP id
+ oa16-20020a17090b1bd000b0029b3d08c644mr9332259pjb.9.1709740009462; Wed, 06
+ Mar 2024 07:46:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2299; i=brauner@kernel.org; h=from:subject:message-id; bh=Ftuq41PzbFHr/8KgHVscUxW7Bf3SXW0yTv1U4T5F8Lc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS+6J91z92u54m55lyrCVFmfVqvPA6wJH866/3N75HTN 9fOxKv/O0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbi1svw30+BYXnQff9ffVtX HOb42jIl29il5kjz94jSf9O4Hx92bGT4Z8XpwvxWpW/SF7b/Oy7o8Ozcmbn7/1LDW/cOe12IfbE +kRMA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+References: <20240304094831.3639338-1-mingo@kernel.org> <20240304094831.3639338-4-mingo@kernel.org>
+In-Reply-To: <20240304094831.3639338-4-mingo@kernel.org>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Wed, 6 Mar 2024 16:46:38 +0100
+Message-ID: <CAKfTPtCu=_ys+FFTqKfZbu9f_yD69fN7L3nETykEK3y9TW3BmQ@mail.gmail.com>
+Subject: Re: [PATCH 3/9] sched/balancing: Change 'enum cpu_idle_type' to have
+ more natural definitions
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Shrikanth Hegde <sshegde@linux.ibm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Valentin Schneider <vschneid@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hey Linus,
+On Mon, 4 Mar 2024 at 10:48, Ingo Molnar <mingo@kernel.org> wrote:
+>
+> The cpu_idle_type enum has the confusingly inverted property
+> that 'not idle' is 1, and 'idle' is '0'.
+>
+> This resulted in a number of unnecessary complications in the code.
+>
+> Reverse the order, remove the CPU_NOT_IDLE type, and convert
+> all code to a natural boolean form.
+>
+> It's much more readable:
+>
+>   -       enum cpu_idle_type idle = this_rq->idle_balance ?
+>   -                                               CPU_IDLE : CPU_NOT_IDLE;
+>   -
+>   +       enum cpu_idle_type idle = this_rq->idle_balance;
+>
+>   --------------------------------
+>
+>   -       if (env->idle == CPU_NOT_IDLE || !busiest->sum_nr_running)
+>   +       if (!env->idle || !busiest->sum_nr_running)
+>
+>   --------------------------------
+>
+> And gets rid of the double negation in these usages:
+>
+>   -               if (env->idle != CPU_NOT_IDLE && env->src_rq->nr_running <= 1)
+>   +               if (env->idle && env->src_rq->nr_running <= 1)
+>
+> Furthermore, this makes code much more obvious where there's
+> differentiation between CPU_IDLE and CPU_NEWLY_IDLE.
+>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> ---
+>  include/linux/sched/idle.h |  3 +--
+>  kernel/sched/fair.c        | 27 ++++++++++++---------------
+>  2 files changed, 13 insertions(+), 17 deletions(-)
+>
+> diff --git a/include/linux/sched/idle.h b/include/linux/sched/idle.h
+> index 478084f9105e..4a6423700ffc 100644
+> --- a/include/linux/sched/idle.h
+> +++ b/include/linux/sched/idle.h
+> @@ -5,8 +5,7 @@
+>  #include <linux/sched.h>
+>
+>  enum cpu_idle_type {
+> -       CPU_IDLE,
+> -       CPU_NOT_IDLE,
 
-/* Summary */
-This contains three fixes:
+Could be set CPU_NOT_IDLE = 0  to help keeping in mind that 0 means
+cpu is not idle even if we don't use it ?
 
-* Get rid of copy_mc flag in iov_iter which really only makes sense for
-  the core dumping code so move it out of the generic iov iter code and
-  make it coredump's problem. See the detailed commit description.
-* Revert fs/aio: Make io_cancel() generate completions again
-  The initial fix here was predicated on the assumption that calling
-  ki_cancel() didn't complete aio requests. However, that turned out to
-  be wrong since the two drivers that actually make use of this set
-  a cancellation function that performs the cancellation correctly.
-  So revert this change.
-* Ensure that the test for IOCB_AIO_RW always happens before the read
-  from ki_ctx.
-
-/* Testing */
-clang: Debian clang version 16.0.6 (19)
-gcc: (Debian 13.2.0-7) 13.2.0
-
-All patches are based on v6.8-rc7 and have been sitting in linux-next.
-No build failures or warnings were observed.
-
-/* Conflicts */
-At the time of creating this PR no merge conflicts were reported from
-linux-next and no merge conflicts showed up doing a test-merge with
-current mainline.
-
-The following changes since commit 90d35da658da8cff0d4ecbb5113f5fac9d00eb72:
-
-  Linux 6.8-rc7 (2024-03-03 13:02:52 -0800)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.8-release.fixes
-
-for you to fetch changes up to a50026bdb867c8caf9d29e18f9fe9e1390312619:
-
-  iov_iter: get rid of 'copy_mc' flag (2024-03-06 10:52:12 +0100)
-
-Please consider pulling these changes from the signed vfs-6.8-release.fixes tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-vfs-6.8-release.fixes
-
-----------------------------------------------------------------
-Bart Van Assche (2):
-      Revert "fs/aio: Make io_cancel() generate completions again"
-      fs/aio: Check IOCB_AIO_RW before the struct aio_kiocb conversion
-
-Linus Torvalds (1):
-      iov_iter: get rid of 'copy_mc' flag
-
- fs/aio.c            | 35 ++++++++++++++++++++++-------------
- fs/coredump.c       | 45 ++++++++++++++++++++++++++++++++++++++++++---
- include/linux/uio.h | 16 ----------------
- lib/iov_iter.c      | 23 -----------------------
- 4 files changed, 64 insertions(+), 55 deletions(-)
+> +       CPU_IDLE = 1,
+>         CPU_NEWLY_IDLE,
+>         CPU_MAX_IDLE_TYPES
+>  };
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 64ae3d8dc93b..f11fc6dd39b1 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9070,7 +9070,7 @@ static int detach_tasks(struct lb_env *env)
+>                  * We don't want to steal all, otherwise we may be treated likewise,
+>                  * which could at worst lead to a livelock crash.
+>                  */
+> -               if (env->idle != CPU_NOT_IDLE && env->src_rq->nr_running <= 1)
+> +               if (env->idle && env->src_rq->nr_running <= 1)
+>                         break;
+>
+>                 env->loop++;
+> @@ -9803,7 +9803,7 @@ static inline bool smt_vs_nonsmt_groups(struct sched_group *sg1,
+>  static inline bool smt_balance(struct lb_env *env, struct sg_lb_stats *sgs,
+>                                struct sched_group *group)
+>  {
+> -       if (env->idle == CPU_NOT_IDLE)
+> +       if (!env->idle)
+>                 return false;
+>
+>         /*
+> @@ -9827,7 +9827,7 @@ static inline long sibling_imbalance(struct lb_env *env,
+>         int ncores_busiest, ncores_local;
+>         long imbalance;
+>
+> -       if (env->idle == CPU_NOT_IDLE || !busiest->sum_nr_running)
+> +       if (!env->idle || !busiest->sum_nr_running)
+>                 return 0;
+>
+>         ncores_busiest = sds->busiest->cores;
+> @@ -9927,8 +9927,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+>                                 sgs->group_misfit_task_load = rq->misfit_task_load;
+>                                 *sg_status |= SG_OVERLOAD;
+>                         }
+> -               } else if ((env->idle != CPU_NOT_IDLE) &&
+> -                          sched_reduced_capacity(rq, env->sd)) {
+> +               } else if (env->idle && sched_reduced_capacity(rq, env->sd)) {
+>                         /* Check for a task running on a CPU with reduced capacity */
+>                         if (sgs->group_misfit_task_load < load)
+>                                 sgs->group_misfit_task_load = load;
+> @@ -9940,7 +9939,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+>         sgs->group_weight = group->group_weight;
+>
+>         /* Check if dst CPU is idle and preferred to this group */
+> -       if (!local_group && env->idle != CPU_NOT_IDLE && sgs->sum_h_nr_running &&
+> +       if (!local_group && env->idle && sgs->sum_h_nr_running &&
+>             sched_group_asym(env, sgs, group))
+>                 sgs->group_asym_packing = 1;
+>
+> @@ -10698,7 +10697,7 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>                          * waiting task in this overloaded busiest group. Let's
+>                          * try to pull it.
+>                          */
+> -                       if (env->idle != CPU_NOT_IDLE && env->imbalance == 0) {
+> +                       if (env->idle && env->imbalance == 0) {
+>                                 env->migration_type = migrate_task;
+>                                 env->imbalance = 1;
+>                         }
+> @@ -10913,7 +10912,7 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
+>                 goto force_balance;
+>
+>         if (busiest->group_type != group_overloaded) {
+> -               if (env->idle == CPU_NOT_IDLE) {
+> +               if (!env->idle) {
+>                         /*
+>                          * If the busiest group is not overloaded (and as a
+>                          * result the local one too) but this CPU is already
+> @@ -11121,7 +11120,7 @@ asym_active_balance(struct lb_env *env)
+>          * the lower priority @env::dst_cpu help it. Do not follow
+>          * CPU priority.
+>          */
+> -       return env->idle != CPU_NOT_IDLE && sched_use_asym_prio(env->sd, env->dst_cpu) &&
+> +       return env->idle && sched_use_asym_prio(env->sd, env->dst_cpu) &&
+>                (sched_asym_prefer(env->dst_cpu, env->src_cpu) ||
+>                 !sched_use_asym_prio(env->sd, env->src_cpu));
+>  }
+> @@ -11159,7 +11158,7 @@ static int need_active_balance(struct lb_env *env)
+>          * because of other sched_class or IRQs if more capacity stays
+>          * available on dst_cpu.
+>          */
+> -       if ((env->idle != CPU_NOT_IDLE) &&
+> +       if (env->idle &&
+>             (env->src_rq->cfs.h_nr_running == 1)) {
+>                 if ((check_cpu_capacity(env->src_rq, sd)) &&
+>                     (capacity_of(env->src_cpu)*sd->imbalance_pct < capacity_of(env->dst_cpu)*100))
+> @@ -11735,8 +11734,8 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+>                                  * env->dst_cpu, so we can't know our idle
+>                                  * state even if we migrated tasks. Update it.
+>                                  */
+> -                               idle = idle_cpu(cpu) ? CPU_IDLE : CPU_NOT_IDLE;
+> -                               busy = idle != CPU_IDLE && !sched_idle_cpu(cpu);
+> +                               idle = idle_cpu(cpu);
+> +                               busy = !idle && !sched_idle_cpu(cpu);
+>                         }
+>                         sd->last_balance = jiffies;
+>                         interval = get_sd_balance_interval(sd, busy);
+> @@ -12416,9 +12415,7 @@ static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
+>  static __latent_entropy void run_rebalance_domains(struct softirq_action *h)
+>  {
+>         struct rq *this_rq = this_rq();
+> -       enum cpu_idle_type idle = this_rq->idle_balance ?
+> -                                               CPU_IDLE : CPU_NOT_IDLE;
+> -
+> +       enum cpu_idle_type idle = this_rq->idle_balance;
+>         /*
+>          * If this CPU has a pending nohz_balance_kick, then do the
+>          * balancing on behalf of the other idle CPUs whose ticks are
+> --
+> 2.40.1
+>
