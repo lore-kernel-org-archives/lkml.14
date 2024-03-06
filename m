@@ -1,134 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669C5605B4;
-	Wed,  6 Mar 2024 10:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CCE605A6;
+	Wed,  6 Mar 2024 10:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722467; cv=none; b=cTJMhu1QeXJgo3Oq+PaqmeFmGP8806qtWyqg4PceOAht+e5bVJT3oPOMNYFBvRbEUBiSYOjm2v4Na0h51oRcEAGBQUGin9DD52Eio5GfZ1rwjJVrbCGRQPkSe97LOQhE3ucMfs9tKV80i/ZDfEQYdABDkRFKCPuefd4yKRVp6ok=
+	t=1709722474; cv=none; b=Re4vF8gvawyiAX+CA01gFYnnuTo5TRl2rY0Gk5Msn7XmeEPAddZLnrwd5HY4i9CnIGg8py34GHnn02yqPd07sueKGn9ojWJRZToe3Zq9gb72kFwmQzbsvb2hRl1ns3tU3ar2Z8AbfQuQplRA6DO+s4P1JtDsf13NpCV9GRg9X78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709722467; c=relaxed/simple;
-	bh=tNVnFoiAMQ5QeMVMqZGqNlm8+sdvCROQkfknzCEfqIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JSEeA6s0TuXFeMh11oZIh7tzAyj/DcDtCaJvzpd8sFnqbJhg7TcGbDrfOrkgtOttTMnoHjMIOfby/OKAj1gkbyMzUGAd8N0YIewS0BV8lQ87/SQ74akQg70L07kYGQZRadZtIYexfTGQWUEK49tqCx11a0/AYn1hR1dVWBk2lyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfOBlZye; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709722474; c=relaxed/simple;
+	bh=un6WSCrH0nwZRCvTfsywl316B66p1DBPStSLUvF7JXU=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=KL8+xIkjc1ink8Iii8we8uTTJQ8KNgDfl/IaRNys0FrXPs6HtMT9BB6vkvC49t7XCEfZBqK+nFWj7f55LxkTbROPHHjWhoIStgx/d83cHSNLVfFRLvPOw4silG5kcfC66tftZAK2KiEzCqEa+3OVUP1t16KT91Eyffpd/B6M2U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JA8trjj6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfOBlZye"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1428FC433C7;
-	Wed,  6 Mar 2024 10:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709722467;
-	bh=tNVnFoiAMQ5QeMVMqZGqNlm8+sdvCROQkfknzCEfqIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nfOBlZyeqBHPAr5+5y1Br4CmyNoSEbpTx7c11qnnscZF/V9wZKDBd8VkYZfSIvAaQ
-	 /W1gDJhctcoet3zqt997+qergIeLSHVLVlVfVv7+PGEMD0Xd7YDr929Z09/fyplhRC
-	 gEZbICqjkJonllN68zmyhgnoOGtQVftzjBiN4poo3tNM0FkmEAb5vNk2AntutRGyqO
-	 lql4igMg+iwW7Lnoq2uS5iSQfM31XKMZSlfu/CkS2aXu9tFDD4uF+tdRCIi5HreLQM
-	 ItD7zyTcQ5q53zm83EonjVSkbb96AmeH3utNTD8DbqZdqbmMTiade250dO/a52lSHF
-	 CXhh/yYNMvJlA==
-Date: Wed, 6 Mar 2024 11:54:20 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Igor Pylypiv <ipylypiv@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Jason Yan <yanaijie@huawei.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Jack Wang <jinpu.wang@cloud.ionos.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Xiang Chen <chenxiang66@hisilicon.com>,
-	Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	TJ Adams <tadamsjr@google.com>, linux-ide@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/7] NCQ Priority sysfs sttributes for libsas
-Message-ID: <ZehLXDoWQZiLzCTo@ryzen>
-References: <20240306012226.3398927-1-ipylypiv@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JA8trjj6"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4268ewkp028060;
+	Wed, 6 Mar 2024 10:54:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=5TxhWqAJYi09
+	OyiGMAl/JFGwe7rxA4G2XCalQeFYGwU=; b=JA8trjj6fAuoQ8I7X9XmYP/VcjEA
+	QjMquurDrnzhKc6NG69xBfR0mCrDhLrdNRvTwFP0QUByqZiOBzH6Thin2NyRw+UI
+	OtHC/eA6T011vev+Gf0uHAM/ho1UQahIWPrcNLPu5a2KOv6l3qk0C1ygLLiGUeVD
+	wX4SWAtb2ijXde3LglpqRveSpDAV54MV9kPSgUpkrJNIx8C2ivGsqblJMoU7X1rC
+	CWtpCAjnfpwEjjKzg6z1iylEQBo5GCXVC+7d7xTfLGYHvSaxhALPaLIFvCREyYU5
+	AEnwJvcsYT8mi3xWv5WDPsuEX5tWI7Akijuj7ymiIXAD1ubBrRYdx5KTcQ==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpbav1eu2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 10:54:14 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 426AsA4m018092;
+	Wed, 6 Mar 2024 10:54:10 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3wkw6ktcbx-1;
+	Wed, 06 Mar 2024 10:54:10 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 426AsAcU018078;
+	Wed, 6 Mar 2024 10:54:10 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-c-shalma-hyd.qualcomm.com [10.213.108.128])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 426AsApF018077;
+	Wed, 06 Mar 2024 10:54:10 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 2341845)
+	id C4DE13E1F; Wed,  6 Mar 2024 16:24:08 +0530 (+0530)
+From: Shalini Manjunatha <quic_c_shalma@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Raghu Bankapur <quic_rbankapu@quicinc.com>,
+        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+        Shalini Manjunatha <quic_c_shalma@quicinc.com>,
+        linux-kernel@vger.kernel.org
+Cc: Krishna Jha <quic_kkishorj@quicinc.com>
+Subject: [PATCH V0 0/1] ASoC: soc-compress: Fix and add missing DPCM locking
+Date: Wed,  6 Mar 2024 16:23:19 +0530
+Message-Id: <cover.1709720380.git.quic_c_shalma@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: OD4E1X52YD1L7EZ0FIIHkkEBesBmaHjP
+X-Proofpoint-ORIG-GUID: OD4E1X52YD1L7EZ0FIIHkkEBesBmaHjP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-06_06,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=868 impostorscore=0 adultscore=0 bulkscore=0 mlxscore=0
+ phishscore=0 clxscore=1011 priorityscore=1501 spamscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403060086
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306012226.3398927-1-ipylypiv@google.com>
 
-Hello Igor,
+We find mising DPCM locking inside soc_compr_set_params_fe()
+before calling dpcm_be_dai_hw_params() and dpcm_be_dai_prepare()
+which cause lockdep assert for DPCM lock not held in
+__soc_pcm_hw_params() and __soc_pcm_prepare() in above flow
+when ever we play compress offload audio playback use case.
 
-On Tue, Mar 05, 2024 at 05:22:19PM -0800, Igor Pylypiv wrote:
-> This patch series adds sas_ncq_prio_supported and sas_ncq_prio_enable
-> sysfs sttributes for libsas managed SATA devices. Existing libata sysfs
-> attributes cannot be used directly because the ata_port location is
-> different for libsas.
+To fix this issue added DPCM lock and unlock in both places of
+above code flow mentioned.
 
-As far as I can tell, you don't add sas_ncq_prio_supported and
-sas_ncq_prio_enable, but instead add ncq_prio_supported and
-ncq_prio_enable, so perhaps update this sentence.
+Shalini Manjunatha (1):
+  ASoC: soc-compress: Fix and add DPCM locking
 
+ sound/soc/soc-compress.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Kind regards,
-Niklas
+-- 
+2.7.4
 
-> 
-> Changes since v6:
-> - Replaced sas_ata_sdev_attr_group definition with a macro for
->   the "CONFIG_SCSI_SAS_ATA is not set" case. The macro defines
->   an empty rvalue struct eliminating the variable definition.
-> 
-> Changes since v5:
-> - Added __maybe_unused attribute to sas_ata_sdev_attr_group to prevent
->   an unused-const-variable warning when CONFIG_SCSI_SAS_ATA is not set.
-> 
-> Changes since v4:
-> - Updated sas_ncq_prio_* sysfs functions to use WARN_ON_ONCE() instead
->   of WARN_ON().
-> 
-> Changes since v3:
-> - Changed ata_ncq_prio_supported() and ata_ncq_prio_enabled() to store
->   the result into a boolean variable passed by address.
-> - Removed the "usable with both libsas and libata" wording from
->   ata_ncq_prio_* helper's function comments.
-> - Removed the unlikely() in ata_ncq_prio_enable() because the function
->   is not in a fastpath.
-> - Dropped hisi_sas v1 HW driver changes because it doesn't support SATA.
-> 
-> Changes since v2:
-> - Added libsas SATA sysfs attributes to aic94xx and isci.
-> 
-> Changes since v1:
-> - Dropped the "sas_" prefix to align sysfs sttributes naming with AHCI.
-> - Dropped ternary operators to make the code more readable.
-> - Corrected the formatting %u -> %d in sysfs_emit().
-> - Changed kstrtol() to kstrtobool() in [ata|sas]_ncq_prio_enable_store().
-> - Changed comments to use the "/* */" style instead of "//".
-> - Added libsas SATA sysfs attributes to mvsas and hisi_sas.
-> - Dropped the 'Reviewed-by' tags because they were not sent in-reply
->   to the patch emails.
-> 
-> Igor Pylypiv (7):
->   ata: libata-sata: Factor out NCQ Priority configuration helpers
->   scsi: libsas: Define NCQ Priority sysfs attributes for SATA devices
->   scsi: pm80xx: Add libsas SATA sysfs attributes group
->   scsi: mvsas: Add libsas SATA sysfs attributes group
->   scsi: hisi_sas: Add libsas SATA sysfs attributes group
->   scsi: aic94xx: Add libsas SATA sysfs attributes group
->   scsi: isci: Add libsas SATA sysfs attributes group
-> 
->  drivers/ata/libata-sata.c              | 140 ++++++++++++++++++-------
->  drivers/scsi/aic94xx/aic94xx_init.c    |   8 ++
->  drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |   6 ++
->  drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |   6 ++
->  drivers/scsi/isci/init.c               |   6 ++
->  drivers/scsi/libsas/sas_ata.c          |  94 +++++++++++++++++
->  drivers/scsi/mvsas/mv_init.c           |   7 ++
->  drivers/scsi/pm8001/pm8001_ctl.c       |   5 +
->  drivers/scsi/pm8001/pm8001_init.c      |   1 +
->  drivers/scsi/pm8001/pm8001_sas.h       |   1 +
->  include/linux/libata.h                 |   6 ++
->  include/scsi/sas_ata.h                 |   6 ++
->  12 files changed, 247 insertions(+), 39 deletions(-)
-> 
-> -- 
-> 2.44.0.278.ge034bb2e1d-goog
-> 
