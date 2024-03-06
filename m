@@ -1,36 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33EB5D91A
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 09:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5288914F7F
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 09:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709716593; cv=none; b=EEA1RTkvgWYPgVE6uNnl6wfWm5TaSmIyKvlknD3dxrpfIgL39oa7w1DqyBuLUjpXf3lgck8olJ3DFmBjv5mmCk7z6tLgpobKiQuqDm/OUYoKiWvxZQicbFK9HZGzbEdY0YjHw2WZSy6ONuMiEFEA9WIA53gCa3sQyrfSbIXGiKg=
+	t=1709716620; cv=none; b=Dq/SJu9YuiVSjGyJK/drHnuP5z1PLwIONcM6D+YI8FxG9odhruwKHcRuio2nz2mOrPz391mpANP2ljr8VIutae0lMiTBoaNZWgxeRxQVn0bx7mAOi30GkcH/GZR0Z/0SCE7QkS3QPW82WXUkwbsb3eivwiiuVXjq80F1YLt5RZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709716593; c=relaxed/simple;
-	bh=AxT/q9GfqhNnP2P8qI4TfjdaZ0cJ/bFkdt1x4Rv1YwM=;
+	s=arc-20240116; t=1709716620; c=relaxed/simple;
+	bh=O/uagpH1J2ovFBUYOloLfOGN60s6T8qshy3/cRcREIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/uYsaA8CxHCgs1etMAcYWNIBRwWev3iwegAfUXSBf6atX4iQEw5jXwpaeOhy4yjj4gDIh5O1fGNe3p2/1IBEH0zaog4j/5V+p4u0lseVh/lukHOWorjoByygC1gvzzm5TkQFciEr8ur4OiZOQ6X/Q0ubsbM3IPQipLWXmLOAi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Q27lC3TZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LtR3nZ5pvFv9/cKvX3wdEWN4Ib7eC1qawvUCGW/YLkUuV6PkW+0T0G6tzfDrTA6QEfK1jYdK/+0rHrn15CBBaKjT3OsAWzlAXZ41vR8qv3KzyHV3/Km83SHHXm82DsVQ1Sh2bpV3qicaNTZ6x2BANL4e2f626hJ+0nOSigKjA3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQHgjgIP; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Q27lC3TZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35FFC433F1;
-	Wed,  6 Mar 2024 09:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709716593;
-	bh=AxT/q9GfqhNnP2P8qI4TfjdaZ0cJ/bFkdt1x4Rv1YwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q27lC3TZ9eUOVELoitFV2p9rPPsKO/di3aPgsL5ZWfXGDUhL1/wE5aDcGeaso13ax
-	 GhaGf0MTbx7L2AJfSOAbuaMMFh61vgcePVPhn1VIa8yj3k3XGgW965Sbd9wMUVLBQ0
-	 kmAjdgCTkJvJtk55yozl/kLavdYKAD2uH7pglqEM=
-Date: Wed, 6 Mar 2024 09:16:30 +0000
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Red Hat Product Security <secalert@redhat.com>
-Cc: security@suse.de, rfrohl@suse.de, cve@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Re: CVE-2023-52572: cifs: Fix UAF in cifs_demultiplex_thread()
-Message-ID: <2024030628-skyline-contently-4b85@gregkh>
-References: <15436477.7601.1709663408600@app142018.ycg3.service-now.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQHgjgIP"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56759dc7ea6so4101795a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 01:16:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709716617; x=1710321417; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bsi/FoHj6ShlQY8qXSzOurtSi457MXtNJ96Ob2I9GjQ=;
+        b=OQHgjgIPj6aC4i1k1j3dKDefYYFOd0ePjPevLVPTrR0O8ZwQYxJ9npr24ZX5CUD15K
+         iXjWF2Mrl6JWebHb6DPmvrEFu8KJgBq7ZoAS0rCAkPM5pAMcFiUcX14mvLmM7rIkcfJ1
+         Gqr4R/cSt99qROs1LOLaZiDUdLDi9r5BNZr6f3csDn0Iz1DDvZMkWzaVMmMEPRatE02b
+         2HP0V6acWT7CG1KRjy/9SkO0x6P8bVQhh3BkRUihhL0KA8rRn3LML5WxHx0DLZSdT6nI
+         XpBaUe1+4Yu2DNtleLMNN/XmL+W01tZbalk/n/sAIV103k4k967iZFMfvK3P0R/2mke0
+         DtTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709716617; x=1710321417;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bsi/FoHj6ShlQY8qXSzOurtSi457MXtNJ96Ob2I9GjQ=;
+        b=aVH8m8P99zTQqICKQWvZrde67a4xvrHYQpBxJ6tugT2J65VyorjlfQAJrFtc1p9SiU
+         9qO6M2GbLFVZW0KIpF0G7+AWeUImoBwxPNlhNBBt20FnI/bczTYBZ51hn+l2COFE3k+D
+         fD+o6844z0b0eVsmkawhPDDoJwJHDM2KHln/VEzDbG3EtYFDmgOR4VvEz1XFMwYbtjKE
+         f6Cul+0veFIAeRSn7Jmw2ic3S5FjKtcUp6t0xmu326m/v7VSqbjdtVO9rllzYtLLhBKB
+         ZOrs01HXey3BONRxYfK04MGA189MRFRkK+0xBXi0f/A4tHj4qitlzylzGe7mosdPH4IP
+         iCIg==
+X-Gm-Message-State: AOJu0YzUMh4EhYSdaivJQTg8MDQclxurbkCFuq99acAjVgqM4cnOlbvf
+	oaofQsh64WXeTtw+NraEtcCxK0I3HVnKbuthIyXlHpGM2vBqLLj4
+X-Google-Smtp-Source: AGHT+IHMEriM1V1S/rHkOG+u1hX2eaAYg/Mb9sMSIRPWAU5KTUXIItClzgGjKpyENv7M5zkBZlSmgA==
+X-Received: by 2002:a50:85cc:0:b0:565:ec92:bec8 with SMTP id q12-20020a5085cc000000b00565ec92bec8mr9268292edh.7.1709716617053;
+        Wed, 06 Mar 2024 01:16:57 -0800 (PST)
+Received: from gmail.com (1F2EF3E5.nat.pool.telekom.hu. [31.46.243.229])
+        by smtp.gmail.com with ESMTPSA id be27-20020a0564021a3b00b0056650031d94sm6713057edb.90.2024.03.06.01.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 01:16:56 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 6 Mar 2024 10:16:54 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	the arch/x86 maintainers <x86@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] x86: disable non-instrumented version of copy_mc when
+ KMSAN is enabled
+Message-ID: <Zeg0hpElT3TSZcNW@gmail.com>
+References: <3b7dbd88-0861-4638-b2d2-911c97a4cadf@I-love.SAKURA.ne.jp>
+ <06c11112-db64-40ed-bb96-fa02b590a432@I-love.SAKURA.ne.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,21 +75,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <15436477.7601.1709663408600@app142018.ycg3.service-now.com>
+In-Reply-To: <06c11112-db64-40ed-bb96-fa02b590a432@I-love.SAKURA.ne.jp>
 
-On Tue, Mar 05, 2024 at 10:30:08AM -0800, Red Hat Product Security wrote:
+
+* Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
+
+> Ping?
 > 
-> Hello Robert,
->  Thank you for reaching to Red Hat Product Security.
->  I have reviewed the flaws, CVE-2023-1192 has the correct patch used in the reference.
+> This is current top crasher.
+> I hope this patch is applied before the merge window opens.
 
-What do you mean by "reference"?
+1) A false positive is not a 'crasher', it's a bug in instrumentation.
 
-CVE-2023-1192 points to a patch for a totally different filesystem
-(ntfs3).  Will that be fixed?
+2) A false positive in intrusive instrumentation that top distributions do 
+   not enable in their kernels has no immediate relevance to the timing of 
+   the merge window.
 
-And please stop responding in HTML format, the mailing lists reject this :(
+Thanks,
 
-thanks,
-
-greg k-h
+	Ingo
