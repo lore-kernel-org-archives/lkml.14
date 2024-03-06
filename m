@@ -1,166 +1,119 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878F914405D
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C48314039D
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709755564; cv=none; b=V+q6GgAuN3fnJoelvXH7KkUrvpkzD0fLciBNsuYjUTmIdjClY7utiVtynhqqN1JM6FVqeBHX0Oq365m7fLsQGDcJ6IiZhNeA3l+gVTD5Ln6S0P+yfLPZWhPZYhXkmRUJa64GahlDtDVUbV/dtJtsEKXlFr27pfPESeBqgtSxJi0=
+	t=1709755787; cv=none; b=j/mhNhHhny+vjQAd4xxzldpI7LE1Uw33/YZIBbggkWQB9l0THR13DRO5rqKtffk44oeOWi8l+sOuMehDjvvrZHQvr3MAJHQQ62wxnjDn3Y4rptOQVfQqI/QC/dnf6Ddm7CFqsuEWyFw4+kGpSJI0EPa6dinI/R6OWXy5ifCybC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709755564; c=relaxed/simple;
-	bh=iN4rIsai6hci6NstOJ0K84kEfNVKXcecwbATxpKYiuA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lyvoSxbymC7GY5LzoTnOLLRJJGUeSG5fx/syvGsmnD9XAc1z94AiSHV+1Dr8ETiIy88T7QzUE/c2007z5tU+W/skTK47Efx2Wk9+vuybwRzQ1XuJdcn5B0Xhwb2P8gB11zlaVsk6LF7Gs+BQxyEUJeR25wKP/lriLxubW5GA9S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qETGOlQv; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709755787; c=relaxed/simple;
+	bh=Vckjged7npDm7dy1nWj8KbugJi+E32ZOYswLxlfjbA0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=U3h01RRFWH/4fExn0afRqmHyzAyFCrHhHw2vaxiNkE+3Dy7nzMSy6WqNb86VjqlttCyqG02ZwcDV+LvhXmsFK+lKlKuMhNCaedG60z1LdK5nFC8j/xo/pEqPWqtspQdaD/y2aFhexEXrSS9nKswp8quOlY0Kzpk3JD+KtQ6QVfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=bGPu4jkJ; arc=none smtp.client-ip=198.252.153.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qETGOlQv"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-60982a6d8a7so1772377b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 12:06:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709755561; x=1710360361; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4PXujBSZ8FvLDvY0K2TIfDzAysZgYZ9VK/ikeWwgFec=;
-        b=qETGOlQvF1pw6ugodZiZK1yVSY4D8J+d1Wbt0GibuHZ8QpkrskgIFTA8mEAOZp+6hU
-         bcVOmM5RMhij5P0735nCT/Gscrt+KwY3hdBUHArp04BSEDMHk0DbUriCalXq5UrwE/hz
-         jqSxczpuJZp+ssIthq3vd58F2/HB/n5dWQFpCdXpY8XIU+13pRtl5TbrB49CTgeudmqy
-         3quAPXVHxPMogXCNFckdbdQZVyGZvouop58Anu374/1sfeg4p0UtMbibNyEEzNswC/rD
-         pXP4OWVyGP8OPaUSSwERM9bO/Xs8KiNtP+HqNuMc/Iq++m+cgNAHomJbcWKsoB5IckYF
-         +vrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709755561; x=1710360361;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4PXujBSZ8FvLDvY0K2TIfDzAysZgYZ9VK/ikeWwgFec=;
-        b=OUiqe5jktPJiwZEWYwDLoVyfnicqWEJ9CkzDDZ/TmWKgfMzTk4MKRRrLflbu4egl6i
-         g4YsLP8jn7ITSQmwZi/s2Ex9cpvC/qRjOO0Dm0aPP0D3NsemEje9M9HcblaaEBeyQkBm
-         ofjM0RIGdbVfG0osi0Utm/zHxEHMCXCoMgalb72jC8ast78RGpIaO1+9plqkDQQdjRZ5
-         542mLP8HZV4Ic2Z2wNZ8irx8E6n88rET0EdKflPX/F/30lErMGQwdtVhC62i5yrlmfNL
-         wmaHKRBL4c1sPRTu3rmpfBFSdATrTBq5UeBF86Cf9w1nFq69z42dlzEKa56q9fOErXqH
-         lpEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyXohaMTbuvALGN5hm3OJ+WLvRYFuYFKSDoexnidU5+Q0e0kwz5uYJZqKsUvlAYmNurxoBk49SwSfEJx6BS25rxEHdVCU1S+zFrA99
-X-Gm-Message-State: AOJu0YzCaSuKHEL3W/8Sha4w+ppso7AWFHc/NV1HRDF0a7ktO3q3nSaH
-	IIK85mn+YXbJ9pdZZ0wIzCKdluMXlMdOkPNMWLHh6orBMBb3l+jNCvuNCUCbdmiA2+y5HFWV22n
-	+cm959//8/CTckU0IfEqlJuxtv7MwGVkedSmj+w==
-X-Google-Smtp-Source: AGHT+IFa2jOmW/7Mnfj4IRBnhnTPN2y+PfXCBXlkHor2t9o+1xiC2eXXMGaB2T0SmxSappk79AgqFwvOpB0iTT+ziZU=
-X-Received: by 2002:a05:6902:1b88:b0:dcc:c279:d2fa with SMTP id
- ei8-20020a0569021b8800b00dccc279d2famr15505206ybb.30.1709755561553; Wed, 06
- Mar 2024 12:06:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="bGPu4jkJ"
+Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx0.riseup.net (Postfix) with ESMTPS id 4Tqk6x09xzz9wMm;
+	Wed,  6 Mar 2024 20:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1709755785; bh=Vckjged7npDm7dy1nWj8KbugJi+E32ZOYswLxlfjbA0=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=bGPu4jkJHWsZB7Hv7NEKHNEF/usjzIKVWpBfaLuRyR4ikr11WElZyF0drDJQ23NVX
+	 52f1C/hz1McJ91WjJi021Q1VVxR3tnVtFDpZObRM7iphA8vG9D6I1kMi/1EzODIiTw
+	 PvgP+UqeIF9RbwXThAjzVGDt59Gp84+jrfZ3lRsg=
+X-Riseup-User-ID: 61F5DF61F2B792029DA163FF78FC82C46BFACE3AA06EBDECD2CBE287819EB1EE
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4Tqk6r3HrYzJqdb;
+	Wed,  6 Mar 2024 20:09:40 +0000 (UTC)
+Message-ID: <b8bf9fb9-ea1b-468d-8d56-81c6a9ea6466@riseup.net>
+Date: Wed, 6 Mar 2024 17:09:38 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306195031.490994-1-quic_abhinavk@quicinc.com>
- <CAA8EJpq=5=L5RdVZRkf=e2wyjQufnSzEC+=19FjCCF9S6SSEJA@mail.gmail.com> <2295092e-355b-4ebf-f630-14623cf7d9a3@quicinc.com>
-In-Reply-To: <2295092e-355b-4ebf-f630-14623cf7d9a3@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 6 Mar 2024 22:05:50 +0200
-Message-ID: <CAA8EJpovNX31rWS_TdBTQiDmk0+kGBPdax6JncZupbXL0iUZhQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] drm/msm/dp: move link_ready out of HPD event thread
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	swboyd@chromium.org, quic_jesszhan@quicinc.com, quic_parellan@quicinc.com, 
-	quic_khsieh@quicinc.com, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-On Wed, 6 Mar 2024 at 21:59, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
->
->
->
-> On 3/6/2024 11:52 AM, Dmitry Baryshkov wrote:
-> > On Wed, 6 Mar 2024 at 21:50, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
-> >>
-> >> There are cases where the userspace might still send another
-> >> frame after the HPD disconnect causing a modeset cycle after
-> >> a disconnect. This messes the internal state machine of MSM DP driver
-> >> and can lead to a crash as there can be an imbalance between
-> >> bridge_disable() and bridge_enable().
-> >>
-> >> This was also previously reported on [1] for which [2] was posted
-> >> and helped resolve the issue by rejecting commits if the DP is not
-> >> in connected state.
-> >>
-> >> The change resolved the bug but there can also be another race condition.
-> >> If hpd_event_thread does not pick up the EV_USER_NOTIFICATION and process it
-> >> link_ready will also not be set to false allowing the frame to sneak in.
-> >>
-> >> Lets move setting link_ready outside of hpd_event_thread() processing to
-> >> eliminate a window of race condition.
-> >>
-> >> [1] : https://gitlab.freedesktop.org/drm/msm/-/issues/17
-> >> [2] : https://lore.kernel.org/all/1664408211-25314-1-git-send-email-quic_khsieh@quicinc.com/
-> >>
-> >> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> >> ---
-> >>   drivers/gpu/drm/msm/dp/dp_display.c | 7 +++++--
-> >>   1 file changed, 5 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-> >> index 068d44eeaa07..e00092904ccc 100644
-> >> --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> >> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> >> @@ -345,8 +345,6 @@ static int dp_display_send_hpd_notification(struct dp_display_private *dp,
-> >>                                                           dp->panel->downstream_ports);
-> >>          }
-> >>
-> >> -       dp->dp_display.link_ready = hpd;
-> >> -
-> >>          drm_dbg_dp(dp->drm_dev, "type=%d hpd=%d\n",
-> >>                          dp->dp_display.connector_type, hpd);
-> >>          drm_bridge_hpd_notify(bridge, dp->dp_display.link_ready);
-> >> @@ -399,6 +397,8 @@ static int dp_display_process_hpd_high(struct dp_display_private *dp)
-> >>                  goto end;
-> >>          }
-> >>
-> >> +       dp->dp_display.link_ready = true;
-> >
-> > Do we need any kind of locking now?
-> >
->
-> hmm ... correct me if I have missed any flows but I think all paths
-> where we will set link_ready are already protected by event_mutex?
-
-I didn't check the source code, that's why I was asking. If it's
-protected by event_mutex, then it should be fine.
-
->
-> >> +
-> >>          dp_add_event(dp, EV_USER_NOTIFICATION, true, 0);
-> >>
-> >>   end:
-> >> @@ -466,6 +466,8 @@ static int dp_display_notify_disconnect(struct device *dev)
-> >>   {
-> >>          struct dp_display_private *dp = dev_get_dp_display_private(dev);
-> >>
-> >> +       dp->dp_display.link_ready = false;
-> >> +
-> >>          dp_add_event(dp, EV_USER_NOTIFICATION, false, 0);
-> >>
-> >>          return 0;
-> >> @@ -487,6 +489,7 @@ static int dp_display_handle_port_status_changed(struct dp_display_private *dp)
-> >>                  drm_dbg_dp(dp->drm_dev, "sink count is zero, nothing to do\n");
-> >>                  if (dp->hpd_state != ST_DISCONNECTED) {
-> >>                          dp->hpd_state = ST_DISCONNECT_PENDING;
-> >> +                       dp->dp_display.link_ready = false;
-> >>                          dp_add_event(dp, EV_USER_NOTIFICATION, false, 0);
-> >>                  }
-> >>          } else {
-> >> --
-> >> 2.34.1
-> >>
-> >
-> >
+Subject: Re: [PATCH v2 6/9] drm/vkms: Add YUV support
+Content-Language: en-US
+From: Arthur Grillo <arthurgrillo@riseup.net>
+To: Pekka Paalanen <pekka.paalanen@collabora.com>,
+ Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+ thomas.petazzoni@bootlin.com
+References: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
+ <20240223-yuv-v2-6-aa6be2827bb7@bootlin.com>
+ <20240226141916.1627bbbd.pekka.paalanen@collabora.com>
+ <Zd35c_CJbhY46TjQ@localhost.localdomain>
+ <b23da076-0bfb-48b2-9386-383a6dec1868@riseup.net>
+ <8fc07f0f-f14d-4878-9884-2bc4b4c6f426@riseup.net>
+ <20240229141238.51891cad.pekka.paalanen@collabora.com>
+ <ZeXoo4DJxlzhuK4W@localhost.localdomain>
+ <fde6b1d5-56c9-43d0-9ccc-87683b700734@riseup.net>
+ <ZeXtWAM1XDEhxWOM@localhost.localdomain>
+ <a1de0c95-cb5f-456d-8831-684b4e5573db@riseup.net>
+In-Reply-To: <a1de0c95-cb5f-456d-8831-684b4e5573db@riseup.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
--- 
-With best wishes
-Dmitry
+On 04/03/24 13:51, Arthur Grillo wrote:
+> 
+> 
+> On 04/03/24 12:48, Louis Chauvet wrote:
+[...]
+>>>
+>>>> Regarding the YUV part, I don't feel confortable adressing Pekka's 
+>>>> comments, would you mind doing it?
+>>>
+>>> I'm already doing that, how do you want me to send those changes? I reply to
+>>> your series, like a did before?
+>>
+>> Yes, simply reply to my series, so I can rebase everything on the 
+>> line-by-line work.
+> 
+> OK, I will do that.
+
+Hi,
+
+I know that I said that, but it would be very difficult to that with my
+b4 workflow. So, I sent a separate series based on the v4:
+
+https://lore.kernel.org/all/20240306-louis-vkms-conv-v1-0-5bfe7d129fdd@riseup.net/
+
+I hope that it does not difficult things for you.
+
+Best Regards,
+~Arthur Grillo
+
+> 
+> Best Regards,
+> ~Arthur Grillo
+> 
+>> Kind regards,
+>> Louis Chauvet
+>>
+>>> Best Regards,
+>>> ~Arthur Grillo
+>>>
+>>>>
+>>>> Kind regards,
+>>>> Louis Chauvet
+>>>>
+>>>> [...]
+>>>>
+>>
