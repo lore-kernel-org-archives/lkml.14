@@ -1,100 +1,77 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C5213BAE5
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 15:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35CF131E4B;
+	Wed,  6 Mar 2024 15:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709739338; cv=none; b=kuK1YI4QoMWNTCjqyv7hZ2b1u62wOylEt3fgYRx2fXzHTO8R9LHmURB0byTWQqfN2AqXYty8pKO/zrx0mDEo/QxBETluK7sAKJMH0x/5pQ1VfrNT8piUWEumBNNPxzBQO6+y/VQ7y3l5NUaAzEB9Zx3qak+WpsxFRYn6m147ew8=
+	t=1709739376; cv=none; b=Y+v0mbSZ+Z/iv3huY+VYiqBRBmxiI1l5ALjzV2WsU/1Q9YMlO8jkYVTrJjlsX/JO66m8LC+6j8ZGctN+XO7/RFHgk7JquCE/fHJ/wlveBoDZKXyZGor70IjwGLR5JzbC2tTAhWc1KbLZzteAS3nBmFZXgCyLXnDMKIj22Tr2/Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709739338; c=relaxed/simple;
-	bh=VBft5w8jsJHzEyBJ6P97EckERupZPHmyvdDoIbCDjQs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AvIvXnGiDLwXUVBpFpDaQ6RYlz8a2iqwYi23g7Uj+1RtETFhT0tXvieLW9ErUrE5yarQWmz6ABRdZF5/LAjY2SWn0ivJcVydNmMAYnUCvTZbmNYlXsjYu/lOCmIYI6eL8vO49hQoYhRXMJQyNqu0VlEtMnT2H4jnhjWN3+W0r0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=d8Fpz0Zy; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1709739376; c=relaxed/simple;
+	bh=8VLcXR+jG4hJ5Ep8CpH16PpBp78fHR8nnu1PwOGWd28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qsXk3ar1t52MZaC5wtR4++6/4szT7qMU3wPkhD2TMmBogE3gsz31xNiw2nonND1rOQOydzbjIvqqoFnmFAa4+vSDP7jo7EIn44gwplVSDOEwTdspwgFJ/Ub1E8MNtynQLz1KPke9gctSjGXRlLU7yaRSReCdWLYj0k1xA3fOLwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkjBnEqz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="d8Fpz0Zy"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7c876b9d070so12649239f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 07:35:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1709739336; x=1710344136; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZSixkOvyAGzPmQR/w8/wd4aDROkCteYD9fEs3nqiTTc=;
-        b=d8Fpz0Zy0b6wygN1q8Kl0tL/bmsMH2o4jySgbenFTg+/BwcRrSMoe47vJt8OP5PsOp
-         zSh5D96plXFBKplFMAPEXk9LpLGsQtan/9KauT9vWCQAHNZZoi+s8Ez3mMShwhUff/Ws
-         tASrgdWTTtBNO1l30UyAnn5dxXlIGn+o3HHfCnoaKoHT3X/cuTifh8npP32vmTV9Rxlw
-         Xg3B0sg137IUpqR3N10o0UfDCuTH1BEk7UFjqtUkwAiZDwGTQLqpQCD1VO4UAsJQqeBP
-         0gU1YuvXhHqNgX41y+Yb5kEBFsGDnMG47hje6o1dFWFI2ACEQxRsHNRg+HsdX+rxk7YG
-         u6Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709739336; x=1710344136;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZSixkOvyAGzPmQR/w8/wd4aDROkCteYD9fEs3nqiTTc=;
-        b=P7ZHz4beqCLC6T0DiDC4LGYs937F3IgrCheev0nl48urYCcquZfiqJkj6M6rh9k7AZ
-         KZRRGzIjcXBNUIb13BOY5I8y/mkg2sTLM5+pPTrzMvec/SIjjGS9ivz0FEDLMk4K8/zm
-         oh/X/8XEgqWgd6MEFYJmjlM8rSPiMI/AJIAAXhgyBZ8nLx1EfqiYQg78h3jdgEw0P0cC
-         tGm3H6E/CkCRxTZS4ZCh3/JFussT+qhYKLEd0h56SFQ809yC5fzdyr24jXbDAk4DZvr2
-         esxuA4WCJaLHgj27EMfOW3jdkMyGPsLQkLcjjkxt6I0kf6nFYKUbZx0ttDaxfBrphXah
-         UI9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXoC31h5YJ5aJvJQlvmLs9EiUawwRGBJOQ0f5gF0oWiIJMywTyceR1U9BdKgbUupHV3CgNlHsSXnzt/iPAUjnBpGvbWE22SQvIezD+8
-X-Gm-Message-State: AOJu0YzTp7FqnmRGg1xZb7U/JqPhE1FAy8mUuszeZrahZq/hJezZB05z
-	dOEbv0BehiDa7IawDbP7hqM7dcoHQidzruULaFcCaeYERVqtyn1eb5ZSyNl6qHQ=
-X-Google-Smtp-Source: AGHT+IFSaGBg8sH10us0bskBsK7ms5bsiWhwU8fuVwlEdJVXM3oZMPq6CZjM3bs2N5+keLV24lzbqg==
-X-Received: by 2002:a05:6e02:1c46:b0:365:fe09:6431 with SMTP id d6-20020a056e021c4600b00365fe096431mr3733400ilg.3.1709739335996;
-        Wed, 06 Mar 2024 07:35:35 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id t2-20020a92cc42000000b003660612cf73sm324467ilq.49.2024.03.06.07.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 07:35:34 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Justin Sanders <justin@coraid.com>, 
- "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: Pavel Emelianov <xemul@openvz.org>, Kirill Korotaev <dev@openvz.org>, 
- "David S . Miller" <davem@davemloft.net>, linux-block@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Chun-Yi Lee <jlee@suse.com>
-In-Reply-To: <20240305082048.25526-1-jlee@suse.com>
-References: <20240305082048.25526-1-jlee@suse.com>
-Subject: Re: (subset) [PATCH] aoe: fix the potential use-after-free problem
- in aoecmd_cfg_pkts
-Message-Id: <170973933432.23995.8994501180418490235.b4-ty@kernel.dk>
-Date: Wed, 06 Mar 2024 08:35:34 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkjBnEqz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3669FC433C7;
+	Wed,  6 Mar 2024 15:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709739376;
+	bh=8VLcXR+jG4hJ5Ep8CpH16PpBp78fHR8nnu1PwOGWd28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DkjBnEqz3qWpAmjEq8itGuwqU/UL0ZZWLzEE95rgPnZMbj6trlsg+6ODqL1kxm9HT
+	 yLkS2UEMQYqCOeHcgVD+WXooIk16Zfuih2NDmRQP3skGDg3UWtJBuXG+jxRkMweZiW
+	 5Pfur0hAr1FjoT7er3292OOHFuidKGWqhGobe1uavNP3qXQNFi8C/0I6TW/aalCx+Z
+	 LUcuHrxGtIIRoGCpFi3+07fV8/GUfN6kzp0Mw6/hJBpuzIvni91MgBuWcrZ1qVBfOG
+	 2TL4l2Wq/juXglUjmj7q81vm3jj5fa6rzdEmtJhftL3Xtjk0VRaAEkxShEw4N1UPlc
+	 tQv+5AqPYrLQA==
+Date: Wed, 6 Mar 2024 07:36:15 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: chandan.babu@oracle.com, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH v2 1/2] xfs: Remove duplicate include
+Message-ID: <20240306153615.GN1927156@frogsfrogsfrogs>
+References: <20240305024009.52931-1-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305024009.52931-1-jiapeng.chong@linux.alibaba.com>
 
-
-On Tue, 05 Mar 2024 16:20:48 +0800, Lee, Chun-Yi wrote:
-> This patch is against CVE-2023-6270. The description of cve is:
+On Tue, Mar 05, 2024 at 10:40:08AM +0800, Jiapeng Chong wrote:
+> ./fs/xfs/xfs_qm_bhv.c: xfs_mount.h is included more than once.
 > 
->   A flaw was found in the ATA over Ethernet (AoE) driver in the Linux
->   kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on
->   `struct net_device`, and a use-after-free can be triggered by racing
->   between the free on the struct and the access through the `skbtxq`
->   global queue. This could lead to a denial of service condition or
->   potential code execution.
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8386
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+> ---
+>  fs/xfs/xfs_qm_bhv.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> [...]
-
-Applied, thanks!
-
-[1/1] aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts
-      commit: f98364e926626c678fb4b9004b75cacf92ff0662
-
-Best regards,
--- 
-Jens Axboe
-
-
-
+> diff --git a/fs/xfs/xfs_qm_bhv.c b/fs/xfs/xfs_qm_bhv.c
+> index 271c1021c733..a11436579877 100644
+> --- a/fs/xfs/xfs_qm_bhv.c
+> +++ b/fs/xfs/xfs_qm_bhv.c
+> @@ -11,7 +11,6 @@
+>  #include "xfs_trans_resv.h"
+>  #include "xfs_mount.h"
+>  #include "xfs_quota.h"
+> -#include "xfs_mount.h"
+>  #include "xfs_inode.h"
+>  #include "xfs_trans.h"
+>  #include "xfs_qm.h"
+> -- 
+> 2.20.1.7.g153144c
+> 
+> 
