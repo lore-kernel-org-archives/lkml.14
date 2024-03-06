@@ -1,159 +1,138 @@
-Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [67.231.149.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897DE1400B
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 21:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2292C19BA2
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 21:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709759668; cv=none; b=D+BAEPTpne7Ya86VFQz0ndcp1LkpjUycjSr7Bu2ykhvp328mz3OBuRSh/nZHrF+g3pS+3QJc+yaG65GjFzbHC54Uxy0hOXt1o2vYK70l3FaPUqNzR+njxbGh5UDeKOSW9MzHoYsMTgMfr2gzU6lVcpydgoM4mFzsvBr5QNfMbIY=
+	t=1709759693; cv=none; b=uYYA0NcLamFM9AabvOTxyziLKOfeZzPmQ4tRPq36+BV3oAZuJQzCkJ4yxkl5pgry/H0X7ameXsGgopiLO/QyDDjmBefZJvTCuyTI7PWWO/O0+2VYkWWIvvGFUa5kmXA5EYvdYAoSHAfPGf/+0yvqvIi8WB35Y00lD0mxWupyjNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709759668; c=relaxed/simple;
-	bh=ga4zgUFXWs7diRj4vqYeVYM02rIrsgYKm1clvWmkzYg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FaBLPKSNItMN9ZYBLMJSZ6mQ8YUtBBjrL0ATr3fk0ieU9uzhqvu9orcS8k/Da04zdcIRVFjdxqzhbEN+zDlWRZrC/hEniPd1aAIr+C8plbE/Vp3ndWufhHlirJImVWxb4Ma3iS3Zm/Qz8raLvB4Xq4Re/x0kSD8Z5zEflkNlEHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com; spf=pass smtp.mailfrom=akamai.com; dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b=MCMBbqGv; arc=none smtp.client-ip=67.231.149.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=akamai.com
+	s=arc-20240116; t=1709759693; c=relaxed/simple;
+	bh=HlvIehcW7DL2ZkTuZYSlHhQXYbpHC0zj0KWYZTviIpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DSp5BXpmwaItDvVaXaFZtLgZ1ReL1v2hoFQqL5DDfa9pvYtoRaxXMJqK4dcddA07y8h49RNOg4WdPUB+pCB0+uS3Tm1V7gglomJXxT7IQv4ser5BFv3K/pT/J+r5ziW0dMr5WNpSjJCCbZdzYEsgSv7fyCiFV4bVh3DEOJO7puI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=a5QMrMSk; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="MCMBbqGv"
-Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
-	by mx0a-00190b01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4269jX6H026694;
-	Wed, 6 Mar 2024 20:12:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	jan2016.eng; bh=emefHZakE6HNZ1TpPWmcBXM7ziPm7C6zlzbUYgZW+jU=; b=
-	MCMBbqGv6/9/0Dmqg3neFLdXqR/rsGd4m2XZd2ZibSXwsffSwtp38DnzsEejthNP
-	hgpuIatT/m2dtMbGdp35tmFdury1c2Un+ELhjiNsOqI4OkWmx5z2a9zGmzj+KLZn
-	ktOhAm5WxhfZQT/CMQirDnZXktJ5IN5ZMz0Sg16UNprbRfIYJBxWEHqIF4iXiwP5
-	OUCgHmZp+heZsFQ/XRooFLJdKZOSHOcc5ZdMTs+y3ZYLxhKmuKIQ+XVfTFqEyA0V
-	o0hOZhuyMgSXmYoqCnmv+r4zGuQc/fzPgfeRBhODGnGqBjv1xaUDK/cEKmlbwv+5
-	Eai8c1Ld2hYMu0xau83f0g==
-Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
-	by mx0a-00190b01.pphosted.com (PPS) with ESMTPS id 3wnhxwtf17-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 20:12:09 +0000 (GMT)
-Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
-	by prod-mail-ppoint1.akamai.com (8.17.1.19/8.17.1.19) with ESMTP id 426Fe5wP007558;
-	Wed, 6 Mar 2024 15:12:07 -0500
-Received: from prod-mail-relay11.akamai.com ([172.27.118.250])
-	by prod-mail-ppoint1.akamai.com (PPS) with ESMTP id 3wm0b238we-1;
-	Wed, 06 Mar 2024 15:12:07 -0500
-Received: from [172.19.35.123] (bos-lpa4700a.bos01.corp.akamai.com [172.19.35.123])
-	by prod-mail-relay11.akamai.com (Postfix) with ESMTP id 4E36F32E9B;
-	Wed,  6 Mar 2024 20:12:07 +0000 (GMT)
-Message-ID: <854e523c-c467-47f6-b977-933cbaadeb62@akamai.com>
-Date: Wed, 6 Mar 2024 15:12:07 -0500
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="a5QMrMSk"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e63e9abf6aso148463b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 13:14:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1709759691; x=1710364491; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eqhjGVQ8jE8dziHNEPcBuEnJh6YM6o6ZWh6K+R5yz1M=;
+        b=a5QMrMSkCh6CKxSZp1aoMlsWOh1/LdslQA8sbOLyLO3ibrMd6x/h0JqfrHeUOgWa3J
+         L2KBWDgR/51+DeX0Bp/LE2FiKIAdtDpbfigFomyfaR48wFJxkh19s7Uz/Cvg6F/lpdLh
+         pfY3hnq6G4woDGNTNVlZ+kkcj5qJRCngnVAy+gkb868EWY5EU04VMoO1sIADCHOqt0pb
+         0dcvTCDjJerRPi3a5DXq74ZDszeyTNeI58Z29vZ1ArrGPUohsZW1UeNBPoG7+jIry6gX
+         hmB5veaCo5PFqElLML5tRN7hI14+AHMRiFkTvu8fBtN2WcUyHORPEkKzNvapQJQmCyad
+         L5vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709759691; x=1710364491;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eqhjGVQ8jE8dziHNEPcBuEnJh6YM6o6ZWh6K+R5yz1M=;
+        b=LHPZHe23xJbq4dwyehYidNtA4lPoGB2Iu3nw1sybXEbj0V7H2GxVQHl1dFhsdDvyad
+         yKKtyOSm2OFwbwIpHN7E8LQXzVPfkhofvUJLYQHRJZ33/LeHI5giNTNkdaKflZYUBy/u
+         gJ7itBoQFvvV/jdrC2NFQ6CJ6HHnF9+dXZh3/ZLKReMJJBAIoQXwaUZRHH0jKCn3LOsm
+         jObV6u2bGdu5fV1nXauPeiNYN/1/Cav+wn5+xk1GvRQuMkXbkluOEW3EivJ7kyuG6aLb
+         g6FM7w1OD1tknoNDA38aTBvoZm6NF1R389H/NgcXcC/RnCA284sG01Y1/RAxWNvj3z+g
+         HSvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMz0vJnyR+LAjMNWme2R2vIVbcCZWLfESkawIK7JwLyXY/eW0ovCoGXDyS6f9QRM2yzvv11g8qJ3vYTeAfTL9RwhjwhWbj4gysm5Nz
+X-Gm-Message-State: AOJu0YxGjfFZ90GOetCovJO29KDGJ4gGB2KM3tCq1AVBFOoSxMLrCOG6
+	0uKNHJYB1mEwps3LfLAQpifwpp4CT4vhzP3cX+4EPURwSFda2tNdU4E/EWSROOY=
+X-Google-Smtp-Source: AGHT+IH/HqdsN5E4yHe5JC1g3zqWSwIIHXA5eCXfP7jkdLhyjmJz4hhQirNSqS0uE/Icr0g3GgFBXQ==
+X-Received: by 2002:aa7:88cd:0:b0:6e5:561b:4670 with SMTP id k13-20020aa788cd000000b006e5561b4670mr18155480pff.30.1709759691277;
+        Wed, 06 Mar 2024 13:14:51 -0800 (PST)
+Received: from dread.disaster.area (pa49-179-47-118.pa.nsw.optusnet.com.au. [49.179.47.118])
+        by smtp.gmail.com with ESMTPSA id y133-20020a62ce8b000000b006e45a0101basm12036767pfg.99.2024.03.06.13.14.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 13:14:50 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rhybA-00Fy7Q-1A;
+	Thu, 07 Mar 2024 08:14:48 +1100
+Date: Thu, 7 Mar 2024 08:14:48 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: djwong@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk,
+	brauner@kernel.org, jack@suse.cz, chandan.babu@oracle.com,
+	axboe@kernel.dk, martin.petersen@oracle.com,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	linux-block@vger.kernel.org
+Subject: Re: [PATCH v2 07/14] fs: iomap: Sub-extent zeroing
+Message-ID: <ZejcyPPX3bVdvJyV@dread.disaster.area>
+References: <20240304130428.13026-1-john.g.garry@oracle.com>
+ <20240304130428.13026-8-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Bug] WARNING in static_key_disable_cpuslocked
-Content-Language: en-US
-To: Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Sam Sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
-        syzkaller@googlegroups.com, xrivendell7@gmail.com, ardb@kernel.org,
-        peterz@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <CAEkJfYNNZftjpYBpnH4tEnm82orKtQ6SQn9i3sg7YNO-Df3tSQ@mail.gmail.com>
- <20240306105420.6a6bea2c@gandalf.local.home>
- <20240306193101.s2g33o4viqi2azf3@treble>
-From: Jason Baron <jbaron@akamai.com>
-In-Reply-To: <20240306193101.s2g33o4viqi2azf3@treble>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- malwarescore=0 suspectscore=0 mlxscore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403060162
-X-Proofpoint-GUID: JNqldSr41N-PhmmuRCJXIOHnE4atJn4Q
-X-Proofpoint-ORIG-GUID: JNqldSr41N-PhmmuRCJXIOHnE4atJn4Q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 adultscore=0
- malwarescore=0 lowpriorityscore=0 clxscore=1011 priorityscore=1501
- mlxlogscore=999 impostorscore=0 bulkscore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2403060163
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240304130428.13026-8-john.g.garry@oracle.com>
 
-
-
-On 3/6/24 2:31 PM, Josh Poimboeuf wrote:
-> On Wed, Mar 06, 2024 at 10:54:20AM -0500, Steven Rostedt wrote:
->> Now I guess the question is, why is something trying to disable something
->> that is not enabled? Is the above scenario OK? Or should the users of
->> static_key also prevent this?
+On Mon, Mar 04, 2024 at 01:04:21PM +0000, John Garry wrote:
+> For FS_XFLAG_FORCEALIGN support, we want to treat any sub-extent IO like
+> sub-fsblock DIO, in that we will zero the sub-extent when the mapping is
+> unwritten.
 > 
-> Apparently that's an allowed scenario, as the jump label code seems to
-> be actively trying to support it.  Basically the last one "wins".
+> This will be important for atomic writes support, in that atomically
+> writing over a partially written extent would mean that we would need to
+> do the unwritten extent conversion write separately, and the write could
+> no longer be atomic.
 > 
-> See for example:
+> It is the task of the FS to set iomap.extent_shift per iter to indicate
+> sub-extent zeroing required.
 > 
->    1dbb6704de91 ("jump_label: Fix concurrent static_key_enable/disable()")
+> Maybe a macro like i_blocksize() should be introduced for extent sizes,
+> instead of using extent_shift. It would also eliminate excessive use
+> of xfs_get_extss() for XFS in future.
 > 
-> Also the purpose of the first atomic_read() is to do a quick test before
-> grabbing the jump lock.  So instead of grabbing the jump lock earlier,
-> it should actually do the first test atomically:
-
-Makes sense but the enable path can also set key->enabled to -1. So I 
-think a concurrent disable could then see the -1 in tmp and still 
-trigger the WARN. So I think we could change the WARN to be:
-WARN_ON_ONCE(tmp != 0 && tmp != -1). And also add a similar check
-for enable if we have enable vs enable racing?
-
-Although it seems like the set key->enabled to -1 while used in the 
-inc/dec API isn't really doing anything in the enable/disable part here?
-But then the key->enabled I think has to move in front of the 
-jump_label_update() to make that part work right...
-
-Thanks,
-
--Jason
-
-
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  fs/iomap/direct-io.c  | 14 ++++++++------
+>  include/linux/iomap.h |  1 +
+>  2 files changed, 9 insertions(+), 6 deletions(-)
 > 
-> diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-> index d9c822bbffb8..f29c47930d46 100644
-> --- a/kernel/jump_label.c
-> +++ b/kernel/jump_label.c
-> @@ -191,11 +191,14 @@ EXPORT_SYMBOL_GPL(static_key_slow_inc);
->   
->   void static_key_enable_cpuslocked(struct static_key *key)
->   {
-> +	int tmp;
-> +
->   	STATIC_KEY_CHECK_USE(key);
->   	lockdep_assert_cpus_held();
->   
-> -	if (atomic_read(&key->enabled) > 0) {
-> -		WARN_ON_ONCE(atomic_read(&key->enabled) != 1);
-> +	tmp = atomic_read(&key->enabled);
-> +	if (tmp != 0) {
-> +		WARN_ON_ONCE(tmp != 1);
->   		return;
->   	}
->   
-> @@ -222,11 +225,14 @@ EXPORT_SYMBOL_GPL(static_key_enable);
->   
->   void static_key_disable_cpuslocked(struct static_key *key)
->   {
-> +	int tmp;
-> +
->   	STATIC_KEY_CHECK_USE(key);
->   	lockdep_assert_cpus_held();
->   
-> -	if (atomic_read(&key->enabled) != 1) {
-> -		WARN_ON_ONCE(atomic_read(&key->enabled) != 0);
-> +	tmp = atomic_read(&key->enabled);
-> +	if (tmp != 1) {
-> +		WARN_ON_ONCE(tmp != 0);
->   		return;
->   	}
->   
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index bcd3f8cf5ea4..733f83f839b6 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -277,7 +277,7 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
+>  {
+>  	const struct iomap *iomap = &iter->iomap;
+>  	struct inode *inode = iter->inode;
+> -	unsigned int fs_block_size = i_blocksize(inode), pad;
+> +	unsigned int zeroing_size, pad;
+>  	loff_t length = iomap_length(iter);
+>  	loff_t pos = iter->pos;
+>  	blk_opf_t bio_opf;
+> @@ -288,6 +288,8 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
+>  	size_t copied = 0;
+>  	size_t orig_count;
+>  
+> +	zeroing_size = i_blocksize(inode) << iomap->extent_shift;
+
+The iomap interfaces use units of bytes for offsets, sizes, ranges,
+etc. Using shifts to define a granularity value seems like a
+throwback to decades old XFS code and just a bit weird nowdays.  Can
+we just pass this as a byte count? i.e.:
+
+	zeroing_size = i_blocksize(inode);
+	if (iomap->extent_size)
+		zeroing_size = iomap->extent_size;
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
