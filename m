@@ -1,149 +1,159 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [67.231.149.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3651B806
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 21:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897DE1400B
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 21:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709759611; cv=none; b=iggAtqF0y1iveXyb3Ftmu0ScWM9NMODfSLkO/URA5dVsd+8vqPEq8KeWt4DK53pZFWepm0VEAH3RABXuikCxXExoW3wb7eIQ1ErElH/iXvQEDtcFizUsTSiWDGWj3OYausTT3QdGYnTrFDzReSLWUuQhlCEoFzfS/EVmiMA5FQY=
+	t=1709759668; cv=none; b=D+BAEPTpne7Ya86VFQz0ndcp1LkpjUycjSr7Bu2ykhvp328mz3OBuRSh/nZHrF+g3pS+3QJc+yaG65GjFzbHC54Uxy0hOXt1o2vYK70l3FaPUqNzR+njxbGh5UDeKOSW9MzHoYsMTgMfr2gzU6lVcpydgoM4mFzsvBr5QNfMbIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709759611; c=relaxed/simple;
-	bh=d883N2vJtpZj5bifCRAlDtYmvlYuDPPoWBWkmtRiq6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IgCZcF8tT2/U0uCRO3OMY4hdwqC9r9YFRJjYh4L49Nyzuvevhq9xL4ynnlE5f2rlQxngQdx23usBKsqLVdCqYKDYAYYJr3n8gwsnaqoe2CB3a3JPtBVDz8frJVpFggs7x9YwR5nmY+0MrAkg2cAlOlANDbuO0xIPZI1Mu6Mg26A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3MlpxjPt; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709759668; c=relaxed/simple;
+	bh=ga4zgUFXWs7diRj4vqYeVYM02rIrsgYKm1clvWmkzYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FaBLPKSNItMN9ZYBLMJSZ6mQ8YUtBBjrL0ATr3fk0ieU9uzhqvu9orcS8k/Da04zdcIRVFjdxqzhbEN+zDlWRZrC/hEniPd1aAIr+C8plbE/Vp3ndWufhHlirJImVWxb4Ma3iS3Zm/Qz8raLvB4Xq4Re/x0kSD8Z5zEflkNlEHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com; spf=pass smtp.mailfrom=akamai.com; dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b=MCMBbqGv; arc=none smtp.client-ip=67.231.149.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=akamai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3MlpxjPt"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dcd6a3da83so1101725ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 13:13:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709759608; x=1710364408; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l2JVk38XPxvsT3/YhoDsMGF+vCTpgTNDdkuD7ePo4Wc=;
-        b=3MlpxjPtVLPVJ5BScvq0HiKkCmWisnlK5Ozt8VO/pN7XFO7YPc6ynB16pLx8vDmE2b
-         fI/3LDxOpB4Iu8+HSM8F4MIfRAMJIyH6k1sFv7oldzb8U6hKtJYfGi1hfATts+f3ATzu
-         J6U2LDjS6pCafGa+LYU1ts57MXbwEk2NMDiM2JRTBeJcbOaguhXUCFaknOO0QHPAyeG5
-         +OeyzrxncKsk974cNimDVbUbxXTWO1BqpNWUnoQodthV83TFKUIzAQRGyLga6kgRK+jg
-         XLTbXmZNIMHg7Cvbsp303SASiHAcvg5BquewW2wrr9kmbVLu8xyp3BWRDMAqcWzLjxxt
-         LLAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709759608; x=1710364408;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l2JVk38XPxvsT3/YhoDsMGF+vCTpgTNDdkuD7ePo4Wc=;
-        b=bWmx2OzRcNMSAS/ttX58EwO8rzTOl9MrSHOj0qUw+me9wTPi37txT9wq4nqvJW6Zpz
-         NZGgtYBt5eKyMtXQKPGXceOQ4Xdc1TnutGXzzusQ4U5vEHgdfFai3TxMICXGnaJSAjon
-         tFCAuwi77jHTHcyLskTSc4+M+7pn6IBtq2pqoViTQKOVsaoqR9LKcTwYEutai+wI2+mb
-         CS4erqiLIU6Ue+QIs4nLqA0uOvC34z9E10oUQqOwDql2Rb4WyoouxLGgMuKa9oc+L55t
-         +pZRkzubPGDS+PGy/GuRjwp2Wl7FxoeNPYwpNN/hoIp33Ug9chZ3x9KzzAtnRAIAlBuH
-         E7Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaxIUIFTzAGUaGAgFedRJrNr5+PpRf09tl7ip+WyXweeQih4ZJ0Ll2W8C6kjLsPb42htdPLyTZsQnb68f4hzRq1ZCvye+mzvHI0ynM
-X-Gm-Message-State: AOJu0YxhZ+NgHC855+P/xf5crpBsWP1mzQc1piREBmhqJrwN7fLuVFrv
-	Hj7O4Z1Un2RYsH0dGZeaX6q48NuhSO/kElAa/Z389urIUAihvBLRJnM1cLppxg==
-X-Google-Smtp-Source: AGHT+IEjY5wfLmhvO6o+PFnHEKHo1lDD+P9YoVu1QuPXyRH71YIGQ7FOVYJlLAbtUP4oshOZLuF4Yg==
-X-Received: by 2002:a17:903:18f:b0:1dd:152:225d with SMTP id z15-20020a170903018f00b001dd0152225dmr8094717plg.8.1709759607700;
-        Wed, 06 Mar 2024 13:13:27 -0800 (PST)
-Received: from google.com ([2620:15c:2c5:13:9a91:c17:53d9:d156])
-        by smtp.gmail.com with ESMTPSA id q12-20020a170902a3cc00b001dbad2172cbsm13343407plb.8.2024.03.06.13.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 13:13:27 -0800 (PST)
-Date: Wed, 6 Mar 2024 13:13:22 -0800
-From: Igor Pylypiv <ipylypiv@google.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Jason Yan <yanaijie@huawei.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Jack Wang <jinpu.wang@cloud.ionos.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Xiang Chen <chenxiang66@hisilicon.com>,
-	Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	TJ Adams <tadamsjr@google.com>, linux-ide@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] scsi: mvsas: Add libsas SATA sysfs attributes
- group
-Message-ID: <ZejccpVEsQTHjltB@google.com>
-References: <20240306012226.3398927-1-ipylypiv@google.com>
- <20240306012226.3398927-5-ipylypiv@google.com>
- <ZehLl4AymauIvYl8@ryzen>
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="MCMBbqGv"
+Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
+	by mx0a-00190b01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4269jX6H026694;
+	Wed, 6 Mar 2024 20:12:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	jan2016.eng; bh=emefHZakE6HNZ1TpPWmcBXM7ziPm7C6zlzbUYgZW+jU=; b=
+	MCMBbqGv6/9/0Dmqg3neFLdXqR/rsGd4m2XZd2ZibSXwsffSwtp38DnzsEejthNP
+	hgpuIatT/m2dtMbGdp35tmFdury1c2Un+ELhjiNsOqI4OkWmx5z2a9zGmzj+KLZn
+	ktOhAm5WxhfZQT/CMQirDnZXktJ5IN5ZMz0Sg16UNprbRfIYJBxWEHqIF4iXiwP5
+	OUCgHmZp+heZsFQ/XRooFLJdKZOSHOcc5ZdMTs+y3ZYLxhKmuKIQ+XVfTFqEyA0V
+	o0hOZhuyMgSXmYoqCnmv+r4zGuQc/fzPgfeRBhODGnGqBjv1xaUDK/cEKmlbwv+5
+	Eai8c1Ld2hYMu0xau83f0g==
+Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
+	by mx0a-00190b01.pphosted.com (PPS) with ESMTPS id 3wnhxwtf17-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 20:12:09 +0000 (GMT)
+Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
+	by prod-mail-ppoint1.akamai.com (8.17.1.19/8.17.1.19) with ESMTP id 426Fe5wP007558;
+	Wed, 6 Mar 2024 15:12:07 -0500
+Received: from prod-mail-relay11.akamai.com ([172.27.118.250])
+	by prod-mail-ppoint1.akamai.com (PPS) with ESMTP id 3wm0b238we-1;
+	Wed, 06 Mar 2024 15:12:07 -0500
+Received: from [172.19.35.123] (bos-lpa4700a.bos01.corp.akamai.com [172.19.35.123])
+	by prod-mail-relay11.akamai.com (Postfix) with ESMTP id 4E36F32E9B;
+	Wed,  6 Mar 2024 20:12:07 +0000 (GMT)
+Message-ID: <854e523c-c467-47f6-b977-933cbaadeb62@akamai.com>
+Date: Wed, 6 Mar 2024 15:12:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZehLl4AymauIvYl8@ryzen>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug] WARNING in static_key_disable_cpuslocked
+Content-Language: en-US
+To: Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Sam Sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
+        syzkaller@googlegroups.com, xrivendell7@gmail.com, ardb@kernel.org,
+        peterz@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <CAEkJfYNNZftjpYBpnH4tEnm82orKtQ6SQn9i3sg7YNO-Df3tSQ@mail.gmail.com>
+ <20240306105420.6a6bea2c@gandalf.local.home>
+ <20240306193101.s2g33o4viqi2azf3@treble>
+From: Jason Baron <jbaron@akamai.com>
+In-Reply-To: <20240306193101.s2g33o4viqi2azf3@treble>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 mlxscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403060162
+X-Proofpoint-GUID: JNqldSr41N-PhmmuRCJXIOHnE4atJn4Q
+X-Proofpoint-ORIG-GUID: JNqldSr41N-PhmmuRCJXIOHnE4atJn4Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 adultscore=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1011 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 bulkscore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2403060163
 
-On Wed, Mar 06, 2024 at 11:55:19AM +0100, Niklas Cassel wrote:
-> On Tue, Mar 05, 2024 at 05:22:23PM -0800, Igor Pylypiv wrote:
-> > The added sysfs attributes group enables the configuration of NCQ Priority
-> > feature for HBAs that rely on libsas to manage SATA devices.
-> > 
-> > Reviewed-by: John Garry <john.g.garry@oracle.com>
-> > Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-> > Reviewed-by: Jason Yan <yanaijie@huawei.com>
-> > Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
-> > ---
-> >  drivers/scsi/mvsas/mv_init.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/scsi/mvsas/mv_init.c b/drivers/scsi/mvsas/mv_init.c
-> > index 43ebb331e216..f1090bb5f2c9 100644
-> > --- a/drivers/scsi/mvsas/mv_init.c
-> > +++ b/drivers/scsi/mvsas/mv_init.c
-> > @@ -26,6 +26,7 @@ static const struct mvs_chip_info mvs_chips[] = {
-> >  };
-> >  
-> >  static const struct attribute_group *mvst_host_groups[];
-> > +static const struct attribute_group *mvst_sdev_groups[];
-> 
-> I think you can remove this line.
->
-I kept the forward declaration to match the mvst_host_groups style.
 
-Perhaps mvs_sht can be moved to the bottom of the file so that all forward
-declarations can be removed? This can be done in a separate cleanup patch
-series.
 
-I'll keep this and aic94xx patches as-is, unless there are objections.
+On 3/6/24 2:31 PM, Josh Poimboeuf wrote:
+> On Wed, Mar 06, 2024 at 10:54:20AM -0500, Steven Rostedt wrote:
+>> Now I guess the question is, why is something trying to disable something
+>> that is not enabled? Is the above scenario OK? Or should the users of
+>> static_key also prevent this?
+> 
+> Apparently that's an allowed scenario, as the jump label code seems to
+> be actively trying to support it.  Basically the last one "wins".
+> 
+> See for example:
+> 
+>    1dbb6704de91 ("jump_label: Fix concurrent static_key_enable/disable()")
+> 
+> Also the purpose of the first atomic_read() is to do a quick test before
+> grabbing the jump lock.  So instead of grabbing the jump lock earlier,
+> it should actually do the first test atomically:
+
+Makes sense but the enable path can also set key->enabled to -1. So I 
+think a concurrent disable could then see the -1 in tmp and still 
+trigger the WARN. So I think we could change the WARN to be:
+WARN_ON_ONCE(tmp != 0 && tmp != -1). And also add a similar check
+for enable if we have enable vs enable racing?
+
+Although it seems like the set key->enabled to -1 while used in the 
+inc/dec API isn't really doing anything in the enable/disable part here?
+But then the key->enabled I think has to move in front of the 
+jump_label_update() to make that part work right...
+
+Thanks,
+
+-Jason
+
 
 > 
-> >  
-> >  #define SOC_SAS_NUM 2
-> >  
-> > @@ -53,6 +54,7 @@ static const struct scsi_host_template mvs_sht = {
-> >  	.compat_ioctl		= sas_ioctl,
-> >  #endif
-> >  	.shost_groups		= mvst_host_groups,
-> > +	.sdev_groups		= mvst_sdev_groups,
-> >  	.track_queue_depth	= 1,
-> >  };
-> >  
-> > @@ -779,6 +781,11 @@ static struct attribute *mvst_host_attrs[] = {
-> >  
-> >  ATTRIBUTE_GROUPS(mvst_host);
-> >  
-> > +static const struct attribute_group *mvst_sdev_groups[] = {
-> > +	&sas_ata_sdev_attr_group,
-> > +	NULL
-> > +};
-> 
-> ..and move these lines up to be after:
-> static const struct attribute_group *mvst_host_groups[];
-> 
-> 
-> > +
-> >  module_init(mvs_init);
-> >  module_exit(mvs_exit);
-> >  
-> > -- 
-> > 2.44.0.278.ge034bb2e1d-goog
-> > 
+> diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+> index d9c822bbffb8..f29c47930d46 100644
+> --- a/kernel/jump_label.c
+> +++ b/kernel/jump_label.c
+> @@ -191,11 +191,14 @@ EXPORT_SYMBOL_GPL(static_key_slow_inc);
+>   
+>   void static_key_enable_cpuslocked(struct static_key *key)
+>   {
+> +	int tmp;
+> +
+>   	STATIC_KEY_CHECK_USE(key);
+>   	lockdep_assert_cpus_held();
+>   
+> -	if (atomic_read(&key->enabled) > 0) {
+> -		WARN_ON_ONCE(atomic_read(&key->enabled) != 1);
+> +	tmp = atomic_read(&key->enabled);
+> +	if (tmp != 0) {
+> +		WARN_ON_ONCE(tmp != 1);
+>   		return;
+>   	}
+>   
+> @@ -222,11 +225,14 @@ EXPORT_SYMBOL_GPL(static_key_enable);
+>   
+>   void static_key_disable_cpuslocked(struct static_key *key)
+>   {
+> +	int tmp;
+> +
+>   	STATIC_KEY_CHECK_USE(key);
+>   	lockdep_assert_cpus_held();
+>   
+> -	if (atomic_read(&key->enabled) != 1) {
+> -		WARN_ON_ONCE(atomic_read(&key->enabled) != 0);
+> +	tmp = atomic_read(&key->enabled);
+> +	if (tmp != 1) {
+> +		WARN_ON_ONCE(tmp != 0);
+>   		return;
+>   	}
+>   
