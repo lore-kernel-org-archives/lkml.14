@@ -1,107 +1,64 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A801B941;
-	Wed,  6 Mar 2024 22:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D631BC22;
+	Wed,  6 Mar 2024 22:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709762773; cv=none; b=MXqQxUGssCPgGx4V6XYjfwfBlKwI+SPAHvglSaqbKjXDKMrWPUR+Y7oHFzI+GO8uEz0MKy8DvZkRe1SK29RF9L8oSfU5ygJRPGr1F1CSjAvwrCDxZZ97Fvyq0eLQPF8iUDJ40HybMM04zumdRBITuPWibpXUmyq4rCQ8YGicWRs=
+	t=1709762785; cv=none; b=BAfMoaRp4Uk/aqlPzgPLjv9QfAmouLM9iNAmcLhcmAKMpQXZNrlqWUjxL00TTcbnBNRONUzedMdbj6rt97AM59olM4GVhFI5BZhCTAdVpKQgphRjb0tlyZT3JkU5JpZCOTtT7eb8zDICyVzVh1xef7Vr1ZzARwlj6lNL1yLeBIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709762773; c=relaxed/simple;
-	bh=Q6nI/N7wvS+IJoI8zvSoef/iw9QQBEP/19WRjTvAfQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JzPAiBThDInxIEAO8ZrUgiqfl32w7eQOy+FfZ8hoFXOr/m2jyieEN2d5d5JBPhnCDOvqHM8bEicW1HLpb4rK8YMjkAsj6zbyyj5/f3L+sNLoEZyhhXIR7wabOgutsunftn2VNkwiohZJPg4dVkuVbaVdVpB7iFClcizRJhmkzLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aewsjAK6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709762785; c=relaxed/simple;
+	bh=n6HHDuFVnHzuhMnSsH+SBsi4lxo63K+jG/3laYwIoWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gedhI+mYi3C15NUeHcZDzD8CHtnF55IWPXnEGmDLMSk7mtWcmX6mUfBkIF+Q6jlP9Xl5QxOJVWB+41eqDIQeotngSa3uPqSHmfIEG/vP+kg5IbmFXuh4kqgNv1Xe0o6ZCg2DZzbgU4D0rAc97/LtgoKWw67XQfPVoxrBhrDw4G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPUVzL6W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aewsjAK6"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 426LvMYv000406;
-	Wed, 6 Mar 2024 22:06:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=NrYxsIOwkjk9D5Paw8HS8ZbIfu/sTVLwflepMjYx1PU=;
- b=aewsjAK6KhC43FSuWfhlosY068aT54XcXZIH8VgEu4uOCzOEcnUG9E7vxYXih5ZvnEz4
- 4SS7BnbgPhjNnny5vPgrwd8w8L3ZmmNn6jFj+5kmmUTp4cDfL+Uqn3q5asowbkWteKQy
- rumb9NYYfhuX7PSjFIXwxImz35SnETNOnn5lMb9QJv44yujZGXsrSkEwg3CiMv7yaqIX
- mYb+GqzFWIbbAW9O3hO7IX3f6U94qCp91e+XdKN8jx9lVXDr/SB5KdYTfzCKtL9+hg9h
- gV7yl3C+CwIQ+q2SpPehih09Tqvm34F4l2gQ34TZWtJ9pIcMEYQ8ZD2PJ+m9JabINHWt SA== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wq0utr47n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 22:06:07 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 426K3e1J031560;
-	Wed, 6 Mar 2024 22:02:41 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmgnk97kr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 22:02:41 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 426M2cjx28508568
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Mar 2024 22:02:40 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 637C35806B;
-	Wed,  6 Mar 2024 22:02:38 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B78435805D;
-	Wed,  6 Mar 2024 22:02:37 +0000 (GMT)
-Received: from [9.61.98.245] (unknown [9.61.98.245])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  6 Mar 2024 22:02:37 +0000 (GMT)
-Message-ID: <6d8656b0-91ab-49e7-9321-30367052f083@linux.ibm.com>
-Date: Wed, 6 Mar 2024 17:02:37 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPUVzL6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE16C433C7;
+	Wed,  6 Mar 2024 22:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709762784;
+	bh=n6HHDuFVnHzuhMnSsH+SBsi4lxo63K+jG/3laYwIoWs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XPUVzL6W33OtUm70EYpMiO29J9dwBH+D8dYMxcVrXsgBhoIf4NfZBY95wqG/53z99
+	 N32Ayb0uvRu442s5DMTAh/pJreYiyR6VzOVHXB8oOrNDszRQJkNesY8YMghu23rnN0
+	 mlFLxQmVooPX6LcMKbpswX8CePMs+cxSO0H68o8WfhAEnfrHqAI5Li8ta5iE8rGWMq
+	 hxxfQ/B2HyFhUMuFqMQyIRT65gupOJH3Rt9vv7SLnwB03j4uLkkWVTX2kjTyEmDic3
+	 Xr2lrzql66vEaoe/+66x8lKwdfncyaGyCZUaI5tpjBmQ3Isj0qWvFyJful8uOhtqp5
+	 WN+6NLKRlfxDw==
+Date: Wed, 6 Mar 2024 16:06:21 -0600
+From: Rob Herring <robh@kernel.org>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: pavel@ucw.cz, devicetree@vger.kernel.org, conor+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, lee@kernel.org,
+	linux-arm-msm@vger.kernel.org, andersson@kernel.org,
+	konrad.dybcio@linaro.org, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: leds: qcom-lpg: Document PM6150L
+ compatible
+Message-ID: <170976278118.750398.5338079498670448079.robh@kernel.org>
+References: <20240306172710.59780-1-danila@jiaxyga.com>
+ <20240306172710.59780-2-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] s390/vfio-ap: queue_configuration sysfs attribute
- for mdevctl automation
-Content-Language: en-US
-To: "Jason J. Herne" <jjherne@linux.ibm.com>, linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, pasic@linux.ibm.com, akrowiak@linux.ibm.com,
-        borntraeger@de.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com
-References: <20240306140843.10782-1-jjherne@linux.ibm.com>
-From: Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <20240306140843.10782-1-jjherne@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: zbCD7jB1_OXe1Qi7FOjOOWHz-3DEIC-o
-X-Proofpoint-ORIG-GUID: zbCD7jB1_OXe1Qi7FOjOOWHz-3DEIC-o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=999 bulkscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 clxscore=1015
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2403060178
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240306172710.59780-2-danila@jiaxyga.com>
 
-On 3/6/24 9:08 AM, Jason J. Herne wrote:
-> Mdevctl requires a way to atomically query and atomically update a vfio-ap
-> mdev's current state. This patch set creates the queue_configuration sysfs
-> attribute.  This new attribute allows reading and writing an mdev's entire
-> state in one go. If a newly written state is invalid for any reason the entire
-> state is rejected and the target mdev remains unchanged.
+
+On Wed, 06 Mar 2024 20:27:09 +0300, Danila Tikhonov wrote:
+> The PM6150L LPG modules are compatible with the PM8150L LPG modules,
+> document the PM6150L LPG compatible as fallback for the PM8150L LPG.
 > 
-> Changelog
-> ==========
-> v2
->   - Rebased patched on top of latest master
->   - Reworked code to fit changes introduced by f848cba767e59
->       s390/vfio-ap: reset queues filtered from the guest's AP config
->   - Moved docs changes to separate patch
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>  Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-Tested exploitation of the new sysfs interface using proposed s390-tools code + mdevctl.  Besides the other minor changes mentioned separately, feel free to include
-
-Tested-by: Matthew Rosato <mjrosato@linux.ibm.com>
-
-for the code patches.
+Acked-by: Rob Herring <robh@kernel.org>
 
