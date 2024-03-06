@@ -1,97 +1,72 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3011C6A4;
-	Wed,  6 Mar 2024 23:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3505D1C684;
+	Wed,  6 Mar 2024 23:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709767026; cv=none; b=fhLdY4j9NFWiMjD2qQF/0vBjXbui678BqEUJ1ZiAKdvg+9Hh6srbqZNC7QlWxkWILdCjSX+x4UNdzrq76ljekXODz9AhR/RtroNTwG68tpPZinr8MyrHjUXGVwXu06LOs4RpZC6onKXmVCQMO1605WEkv3qOG+tuCPRIbZcq0Q8=
+	t=1709767146; cv=none; b=kEXoSAHILUI+CLgHqaJb0CqnvKAwIAFpii0zJShT3/yNRMWrpYlVed/HbcA1/tHrh8sfYb7l6oQmmMhbfcztKNkT1y0RgGhe5DdjnO2c1lZQUdP6L9YGG9YOc2UTDJJCNIVnwcTk7GFYg3QN5O2t6MtWArR2iHp//cE2rVD2JHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709767026; c=relaxed/simple;
-	bh=yETlT/1t8oXxCw07RT5USNl10PGwaQN7JjFz5rqRjBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hjar6MQlq9Ill2gd5AUTbfnGYFAfsGMo5dYUwILoLhFkNPb+vdpJGLwxKK1zir9GcPTC1sZEEPGRufTqZccx0iHnp8IwtHIjyu+GImYYzPbshpj1B+MbmaUNTUsRgyTNjZ/rmitn/2hkg5r+xhlT2podokkiaaYNzVU2heRxsLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ENeW0deG; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709767146; c=relaxed/simple;
+	bh=upHSE3Z4rIUmGGYbuJAUrYzQRj2maCqMzegqvGENBnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kyz8pVn0zNP1KQO+lTQW7pMJn2tJ2fz+4O64kJzkaH3hd+MAqoMmEdeVK/zTeExDGFeseC9pKRa7KJlijUHw9N6yF5LBGxRvj8hZ0BpuX6elq3Ei8OzLG8nPov0OubRKAt1XJC3dGQegWTt2TcA356ps/FQhqNk5O83XDI/HRbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=53qhwLSb; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENeW0deG"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e5d7f1f25fso222068b3a.0;
-        Wed, 06 Mar 2024 15:17:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709767024; x=1710371824; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q8qZFVmivw2qoLXeTcWzu8ocoxB3n/4z6PQlau97p1Q=;
-        b=ENeW0deG2d5lu01eCBgJ3dcueTfTRHC81Q8jRhsV1pkyo9Gl5rCemVavJdaonWdb4P
-         iQgAcrktPzea0A6cKvx4/zTb0aSemnsaXtFBzkc2ArdUpneNziRnNtOuHWdvNBsoLfLS
-         uANExKmdogMGF/Fpdy4RKmdRKjmt6Rz+ZIlhmEkjLYPVgHlUU/eba3sAnDDSd5JtYIgK
-         m4L60RvlXyVM0+cXS2yV7S5ZfWfhAqXnoEmUil2FsCT9tjyxnDzwFPyyIf70UVpzy1kW
-         Gd2QINwlqhcfEpVt5/D2DbKgoB0D5N1EbBY2fLrTQY2sVq3tjxjjgsfoCAS+u3IRy08x
-         CewQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709767024; x=1710371824;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q8qZFVmivw2qoLXeTcWzu8ocoxB3n/4z6PQlau97p1Q=;
-        b=nM92WXBb0V6Id6039ILDQm4zaZTMR2SZHbEXe4cGsogjvWMeC/EMhIUpoH0Y2UDg2h
-         S7UkxmxjOFaGvvdzZkKW85k5+7Dm3cOqtnRBUVVllEcRrtDhmaQP8+xbHzBNNfWXiIcA
-         V6ircVybssp6v9WpslWGoAKp2anUGa2k4meMyhpQrO6bDf0m296zfrKOCbVIEjPE4Pyq
-         LSbJ+84ey4xPf5XxE5MjT6VZiBNsVinKxKVCXyLEnc/YRqgCpGujX9MA+mBrOJeLKI61
-         9CBqYpJOnD5PUTBb3LBQ8RCD6aHU27cyCAm2buq9KnIbtjPE0LB7ZO3c9dqFPPNpORGi
-         9/0A==
-X-Forwarded-Encrypted: i=1; AJvYcCW5BYSSrxnP4hfY044cegDOAq+1Ab7a2owD1x53pVFmw6F0+m7nYTOLbLHHByxYV7NifTNfzRF8cgxcIXhnlUZobD3pny1ezx7rpCWWgVFG2q+6nRga98E5VvOG0DhLzm0WxaaH
-X-Gm-Message-State: AOJu0YwNxFteTt5aO+ikczBdRInujajTnGPp/JHs5XYamheoTmZa8jVx
-	6fq/1u4N+jEQQEC1hmcC4MRnNU2865qosXvFh9u9Ho7gwIqRLAnw
-X-Google-Smtp-Source: AGHT+IGz1RtSKKjdv1Gd3H/wFiBP6CjCVtfu7R9kgKZxVDtzqP+oR8ruAJXwyLm5uBDpImEbFjidUA==
-X-Received: by 2002:a05:6a20:2590:b0:1a1:6dea:4fb7 with SMTP id k16-20020a056a20259000b001a16dea4fb7mr925667pzd.29.1709767023722;
-        Wed, 06 Mar 2024 15:17:03 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id gd10-20020a17090b0fca00b0029b22d8f5b4sm267293pjb.15.2024.03.06.15.17.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Mar 2024 15:17:03 -0800 (PST)
-Message-ID: <3c5dd644-2e9e-4961-9642-c06167c07e31@gmail.com>
-Date: Wed, 6 Mar 2024 15:16:58 -0800
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="53qhwLSb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ernnd5D8e8Iwl4Vz0vO6Y7+VleA1yRKjoKPp5Py+iFI=; b=53qhwLSb1zUc/8R0W4UHfrSKK3
+	7G9/u2/UnQI8pygFg3oaN6A/0O6KG+fkPnMY1eNB9vyAXm8RqNJ7+GHQnAgZy2EHfTP1xQndXLthW
+	MRbcETkYH6YZTqZXa2e4FBzJgMlx0KIoBWmvdeAfdJRV9KIOGJkJyhDjmghfRLj5/UN4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1ri0Xp-009XNj-26; Thu, 07 Mar 2024 00:19:29 +0100
+Date: Thu, 7 Mar 2024 00:19:29 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Raju.Lakkaraju@microchip.com
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, Bryan.Whitehead@microchip.com,
+	richardcochran@gmail.com, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net 3/3] net: lan743x: Address problems with wake option
+ flags configuration sequences
+Message-ID: <70b01df1-d651-4f6b-a7fc-8e16c18c6e32@lunn.ch>
+References: <20240226080934.46003-1-Raju.Lakkaraju@microchip.com>
+ <20240226080934.46003-4-Raju.Lakkaraju@microchip.com>
+ <b83b74b7-3221-4747-8b71-17738c18c042@lunn.ch>
+ <LV8PR11MB8700C2F9461F4200431446D49F5F2@LV8PR11MB8700.namprd11.prod.outlook.com>
+ <e038ec4e-c54d-4628-8997-90510c0d96ab@lunn.ch>
+ <LV8PR11MB8700FC048AB32D6E7168855E9F5E2@LV8PR11MB8700.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 15/16] net: dsa: vsc73xx: Add bridge support
-Content-Language: en-US
-To: Pawel Dembicki <paweldembicki@gmail.com>, netdev@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Simon Horman
- <horms@kernel.org>, Vladimir Oltean <olteanv@gmail.com>,
- Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
- linux-kernel@vger.kernel.org
-References: <20240301221641.159542-1-paweldembicki@gmail.com>
- <20240301221641.159542-16-paweldembicki@gmail.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240301221641.159542-16-paweldembicki@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <LV8PR11MB8700FC048AB32D6E7168855E9F5E2@LV8PR11MB8700.namprd11.prod.outlook.com>
 
-On 3/1/24 14:16, Pawel Dembicki wrote:
-> This patch adds bridge support for vsc73xx driver.
-> It introduce two functions for port_bridge_join and
-> vsc73xx_port_bridge_leave handling.
+> I'm not able to find  any more "ethtool" documentations other than ethtool man page.
 > 
-> Those functions implement forwarding adjust and use
-> dsa_tag_8021q_bridge_* api for adjust VLAN configuration.
+> I have gone through the ethtool application code.
+> (git://git.kernel.org/pub/scm/network/ethtool/ethtool.git) and check the WOL options.
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+> In ioctl method (Not netlink), do_sset( ) function, before set the parameters, first get the WOL configuration.
+> (i.e. in ethtool.c file, Line no. 3294)
+> 
+> Then, assign/overwrite WOL wanted config to wolopts parameter.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Thanks for documenting all this. So it does seem like wol options
+overwrite, rather than add incrementally. So i would say the correct
+'fix' here is to document that in the man page, because at the moment
+it is not clear what should happen.
 
+Now i need to go back and look at what your original issue was...
+
+	Andrew
