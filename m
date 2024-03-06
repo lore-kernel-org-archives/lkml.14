@@ -1,125 +1,142 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1A260B8D
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AD160B95
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709715410; cv=none; b=Ytq8ws4BXHCfmiyGeEBbLmk7kIspjM55iamB3ne48EGBtlASSGtbmW+bMVFNmKnbCpVIPnwF9gdGRa0VKOJuMVVGrsKtnqm75xUupnaoLD1KBF4Y30Wy+7HQYUWSPdUz560R5fUQbFir8LUBugMzJ40VqwEyx16G8YYlDsARFHU=
+	t=1709715413; cv=none; b=S4ULMRBUxAb+ew3ARiRKaoZ1xI3On2UlokbVu0WZ7smIkTGGAYeinmkRucjEueGLoD7nxS+O/4FxdfaX+Mxrt2u+NXFw+bMJiV+WbgODR+eg14yhJ/CJPfoaLZjSiI440tQsRxx21KSaZn+XwgsOFDc7hUAdluaJxfUQmEDMo1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709715410; c=relaxed/simple;
-	bh=5PaOQohqxvp2+MT7niO+peIr/2hmdAFE5UfHwQ4Ukws=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mvm7IUpMmKitHUg3RwVbxv+7KPwy6obncsZ7OEdc0uIBVVhcNAlzGaz0GDk6P3oPer8XNP3oLMjykKJSjB0GxDmLwIL+0Kzfw/vIJSFXzhgpEzLIzWYLXRkd4tlH/VEcoBSwOovErKAUouUq3K0MT/kMlipFAqfFMQHrAV9R7Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ULFJY8yl; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1709715413; c=relaxed/simple;
+	bh=4nvFQc5+G18sYCQZQXyX7kk6D0mhWRA+LSxQm3IlA0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RA2CyZ7CBaCjH7BfeekErEgzDagM9fMW6eCCqletJkKksGxb8OgokqTzfGoiMrrDy2ujHLWHuULIc0YbQ5ZcbNvx5woP/ogBRvn4hEzfCfLf7/YTom66CLVcpku/m/xIzG77r2ocuqs8UiJbezuL/mlLOZnuDaezblrVNk1CoO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=dkYhWR9+; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=dkYhWR9+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ULFJY8yl"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6e125818649so3462738a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 00:56:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709715408; x=1710320208; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1CABJMt4hSO244iW5Glz3DNnS14exaADs5c0BJOhPvw=;
-        b=ULFJY8ylDjBgKKt/Wg0/xtbkvfomi2pAmc3fbrLuQPCkAqtDQwGzAm7Q0mUHzQOsdj
-         DMPwBWObGn0POhIJlb6liPmoePrS6j2CZiCtmLiaSKGrCSI/0PxdVasK9BF0qly8m+HE
-         //ONfWOQAXSfz9Jj4tLyQF6knxEsiPbAtiz9+BZU2Tab9xqev0KHcmdgxj6ShQ9Xpdxj
-         a5bCyhUl0m2Zb8tz4f2Cs5KVv+6iV5aToGjXpa7XajXah6PTMvzvEL8kieh5SSjHRg8j
-         vZrZF9v9E67NrC36fhjMYB8A+AYNsb5he05z4KKTam6MuGhPUoYro73NL8hKbEz81Jx6
-         RmkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709715408; x=1710320208;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1CABJMt4hSO244iW5Glz3DNnS14exaADs5c0BJOhPvw=;
-        b=Y+a3q0EQFGD+jzGxILB6WO41ItwFN4fXYMAA2eICbnS84L0NTSaZkqkwq2uroNsLFm
-         zYDWGu3GlSRnAjBH8pq9rkuaCa2fVQucLDblbm64uUHI7Dc5HmJlY/54reHD0x499OkE
-         uYK8K6JJvjzqEUpbUQzg+dJy+cX92BZyTOQW1+JUkOU+IMslXz9nUAB3pNk2uDDivgiR
-         tQpntQuJ4gjVr38T+DH/MowvPq/idBgbYfi9Id0cYnNlnP5bwrwxL3STUgf0BZXz/3gI
-         1/bQn5GQIHLJHQsZpee3NP9NJh51dG+TCF09SUwpZnRUTGXLwIhd+syldoZZoCuwju6n
-         2Cug==
-X-Forwarded-Encrypted: i=1; AJvYcCUiJRef0DcWERMRKPtgBpOn0sVvmUQIiR7j6Zxzl72ejhCFWgZtPgupIPd2fDv+weIk7Om3/HmKQiSBN0zUR5x1Utnmh/tLg8xLYHfe
-X-Gm-Message-State: AOJu0YyOgk5TPZIVPhkDdIosWydUXQds9GdKbQEuEkE9IsiLPSzF7DfO
-	YGV6ISbd4UKgPu+rCZAMYH2sjN1l3CmnwJpN77E5Skv2H6QBRRkTCzmpi6ooDs4=
-X-Google-Smtp-Source: AGHT+IE2BdBcL6wdxX3LfFe6ila1xwesEmOhKWIXEUQRU2u85mQlRvRPcTSduuuATxjh6RtMEQbedw==
-X-Received: by 2002:a05:6870:819e:b0:21d:e28a:fb14 with SMTP id k30-20020a056870819e00b0021de28afb14mr4580959oae.47.1709715407767;
-        Wed, 06 Mar 2024 00:56:47 -0800 (PST)
-Received: from L6YN4KR4K9.bytedance.net ([61.213.176.7])
-        by smtp.gmail.com with ESMTPSA id o74-20020a62cd4d000000b006e58663dd0asm10740071pfg.110.2024.03.06.00.56.43
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 06 Mar 2024 00:56:47 -0800 (PST)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	ardb@kernel.org,
-	cuiyunhui@bytedance.com,
-	xuzhipeng.1973@bytedance.com,
-	alexghiti@rivosinc.com,
-	samitolvanen@google.com,
-	bp@alien8.de,
-	xiao.w.wang@intel.com,
-	jan.kiszka@siemens.com,
-	kirill.shutemov@linux.intel.com,
-	nathan@kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: [PATCH 3/3] efistub: fix missed the initialization of gp
-Date: Wed,  6 Mar 2024 16:56:22 +0800
-Message-Id: <20240306085622.87248-3-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20240306085622.87248-1-cuiyunhui@bytedance.com>
-References: <20240306085622.87248-1-cuiyunhui@bytedance.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="dkYhWR9+";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="dkYhWR9+"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BAE0C4DD02;
+	Wed,  6 Mar 2024 08:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709715409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bdycLrzJy1w4EUGhhUtMStsknbzgfSCFfV2j5KkcqJg=;
+	b=dkYhWR9+0U0gYjGbTxaRHZA5/1OXeHwvTRr0o0CTjPb1UZnpKrLt8z53kZ5JT5dKsu57i4
+	8ihZhhkPzno1Pun56CbpSWfxkxblMqWIk+ZPtSzEz+qZq5VXWh2GiRhQCevLQzRlX5I2cW
+	mHUa4t7gv223+yW7zT82qcM3yXLTD3M=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709715409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bdycLrzJy1w4EUGhhUtMStsknbzgfSCFfV2j5KkcqJg=;
+	b=dkYhWR9+0U0gYjGbTxaRHZA5/1OXeHwvTRr0o0CTjPb1UZnpKrLt8z53kZ5JT5dKsu57i4
+	8ihZhhkPzno1Pun56CbpSWfxkxblMqWIk+ZPtSzEz+qZq5VXWh2GiRhQCevLQzRlX5I2cW
+	mHUa4t7gv223+yW7zT82qcM3yXLTD3M=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A19E613AAD;
+	Wed,  6 Mar 2024 08:56:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id O1ObJdEv6GVEbwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Wed, 06 Mar 2024 08:56:49 +0000
+Date: Wed, 6 Mar 2024 09:56:49 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CVE-2023-52560: mm/damon/vaddr-test: fix memory leak in
+ damon_do_test_apply_three_regions()
+Message-ID: <Zegv0XmFyNzNYORb@tiehlicka>
+References: <2024030252-CVE-2023-52560-c3de@gregkh>
+ <ZedNf9uP3_TjIy0g@tiehlicka>
+ <2024030527-sinless-platter-510a@gregkh>
+ <ZeggFvhW-nLqM6G-@tiehlicka>
+ <2024030604-unstuffed-grant-758c@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024030604-unstuffed-grant-758c@gregkh>
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=dkYhWR9+
+X-Spamd-Result: default: False [-6.31 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[3];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_HI(-3.50)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: BAE0C4DD02
+X-Spam-Level: 
+X-Spam-Score: -6.31
+X-Spam-Flag: NO
 
-Compared with gcc version 12, gcc version 13 uses the gp
-register for compilation optimization, but the efistub module
-does not initialize gp.
+On Wed 06-03-24 08:42:07, Greg KH wrote:
+> On Wed, Mar 06, 2024 at 08:49:42AM +0100, Michal Hocko wrote:
+> > On Tue 05-03-24 22:25:11, Greg KH wrote:
+> > > On Tue, Mar 05, 2024 at 05:51:11PM +0100, Michal Hocko wrote:
+> > > > On Sat 02-03-24 22:59:54, Greg KH wrote:
+> > > > > Description
+> > > > > ===========
+> > > > > 
+> > > > > In the Linux kernel, the following vulnerability has been resolved:
+> > > > > 
+> > > > > mm/damon/vaddr-test: fix memory leak in damon_do_test_apply_three_regions()
+> > > > > 
+> > > > > When CONFIG_DAMON_VADDR_KUNIT_TEST=y and making CONFIG_DEBUG_KMEMLEAK=y
+> > > > > and CONFIG_DEBUG_KMEMLEAK_AUTO_SCAN=y, the below memory leak is detected.
+> > > > 
+> > > > This is a kunit test case AFAICS. Is this really a CVE material?
+> > > 
+> > > People run kunit tests on real systems (again, we do not dictate use
+> > > cases.)  So yes, fixing a memory leak that can be triggered is resolving
+> > > a weakness and so should get a CVE I would think, right?
+> > 
+> > This is stretching the meaning of CVE beyond my imagination. Up to you
+> > to decide but I yet have to see a real production system that casually
+> > runs unit test just for <looking for a reason .... but failed>.
+> 
+> I know of at least one place that uses kunit tests in "production", and
+> I know of more that will be enabling them in newer releases, so this is
+> a real thing.
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-Co-Developed-by: Zhipeng Xu <xuzhipeng.1973@bytedance.com>
----
- arch/riscv/kernel/efi-header.S | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+I would be really curious to hear more details.
 
-diff --git a/arch/riscv/kernel/efi-header.S b/arch/riscv/kernel/efi-header.S
-index 515b2dfbca75..fa17c08c092a 100644
---- a/arch/riscv/kernel/efi-header.S
-+++ b/arch/riscv/kernel/efi-header.S
-@@ -40,7 +40,7 @@ optional_header:
- 	.long	__pecoff_data_virt_end - __pecoff_text_end	// SizeOfInitializedData
- #endif
- 	.long	0					// SizeOfUninitializedData
--	.long	__efistub_efi_pe_entry - _start		// AddressOfEntryPoint
-+	.long	_efistub_entry - _start		// AddressOfEntryPoint
- 	.long	efi_header_end - _start			// BaseOfCode
- #ifdef CONFIG_32BIT
- 	.long  __pecoff_text_end - _start		// BaseOfData
-@@ -121,4 +121,13 @@ section_table:
- 
- 	.balign	0x1000
- efi_header_end:
-+
-+	.global	_efistub_entry
-+_efistub_entry:
-+	/* Reload the global pointer */
-+	load_global_pointer
-+
-+	call __efistub_efi_pe_entry
-+	ret
-+
- 	.endm
+> Again, we just mark "fixes for a weakness" as a CVE and
+> let others decide what to do with it.
+
+OK, this is something we have discussed and concluded to disagree. Not
+my call though but I would really like to hear _who_ outside of the stable
+tree userbase is really appreciating this approach.
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
