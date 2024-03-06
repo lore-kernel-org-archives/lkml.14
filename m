@@ -1,86 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8DE13792E;
-	Wed,  6 Mar 2024 15:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDCB13790A
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 15:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709739329; cv=none; b=FbzCANx5bZNeKxO6BZUeJq1vSWB3zUF3siTjfcWnhMlR9iFVf3xDds3gfo1hrobfZ1rIvwSjJ2jChYwdQVD+Y4LrZ65NQpYPc7fBIL2RMGwp37TLd7xxdKV9H2L2ELwefrdfItUIrcMxNff9k2Z+LYZDvRFf/lmPhZ2EugPr68c=
+	t=1709739329; cv=none; b=vFZIe6/Y42ZpmaMGdifcqsxg5hW5YNoaizGDdkV+2G3YQlS+lO39kNfhR/VZDmc6bP0srVBUoGs2O0tPgDgWepC5rvK+tWh2DS8dqGAHUOh12DMM7uyxI3xBgSvLl6/wUV9U9WlZ3phXHjevCZ9omZ/gqZIwH3O9VWfnKFnfRX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709739329; c=relaxed/simple;
-	bh=XzHQ63q+wO8yRhMAcPLJwguwCBW5R4lx0MMXE87Ck+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c7mDYKm+4cQlQoPqJ1Wehwm3MjOsrq6FYkY32Nar7PT2v7y5rRP6Q2SHf21hICiKKiShdcuYMk59q7TOCZItjRz+AtOGY+TqXRwkiquBViM9DkrRFv/NS8lRihjycCBya1fs0GhOruU6JUwHhkFDiq+zp+QU/TirjPLCqmLpJyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E408BC43390;
-	Wed,  6 Mar 2024 15:35:26 +0000 (UTC)
-Date: Wed, 6 Mar 2024 10:37:19 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linke li <lilinke99@qq.com>
-Cc: joel@joelfernandes.org, boqun.feng@gmail.com, dave@stgolabs.net,
- frederic@kernel.org, jiangshanlai@gmail.com, josh@joshtriplett.org,
- linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- paulmck@kernel.org, qiang.zhang1211@gmail.com, quic_neeraju@quicinc.com,
- rcu@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] rcutorture: Fix
- rcu_torture_pipe_update_one()/rcu_torture_writer() data race and
- concurrency bug
-Message-ID: <20240306103719.1d241b93@gandalf.local.home>
-In-Reply-To: <tencent_9882B228F292088CDD68F10CF1C228742009@qq.com>
-References: <f3624f39-bbb1-451d-8161-8518e4108d8e@joelfernandes.org>
-	<tencent_9882B228F292088CDD68F10CF1C228742009@qq.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	bh=EiaDPxdGDvN95P2aJU1WedCYWLCUVsWbHIRBxi+88aE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ri7w/kY7O0uHndmo58BI5nyT8Oh4o0VB2Q6erZYjzryH9+2RpvE0TmCpfOyxxjQNSxfeA5/fhENLN2CsWCeomVSDIIsXSNydIa6jPx/9woCoEA8a4sQ7I4LD8DzxU4byAA/XFQ/rYSIfMZqKjAq/rQLWa0J/fAGm+9sZ2VTeH5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=sRWyUQvj; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="sRWyUQvj"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-365c0dfc769so2153035ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 07:35:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1709739327; x=1710344127; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iz9dhqOr1Ud3NvOw8Nr6oScIMnP2/c+zHKrweYL0YBs=;
+        b=sRWyUQvjOXUwVj8D/0Xxoh8diWddXU4gt95TNjZbjABv8xvznqF4jHMBMkZNNG2k+n
+         y9yekxZ1pxx7zG/naQ2csbZvs3vbin9SYSeYnlSu60pR03TfxaSoE1lK1C8xlf4hPfvg
+         ESVbpdT9gUtSgt9kegVCi4+PVxfiu5jCowv1fCV3Q5nit3K2tyLBn6JI/EN+ItL7clvd
+         sFZ+vW2wWVqMpHXFuXzPD8A8siMneZAuoUkZr8ddb4O4SMBVSxBdvi7+2xI8sfp/NVYZ
+         SsbCd6lhqe/fJCps2ZObUJGhwXyoboAzu0EuBXAM3ATx0o09n/l8s3pvmhaDxXhvyfhS
+         KQ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709739327; x=1710344127;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iz9dhqOr1Ud3NvOw8Nr6oScIMnP2/c+zHKrweYL0YBs=;
+        b=urkxfgTYDXopDARr5B0DB8numqxTwWIVSoKDYT0wDstBelnNHNPy7rmioOGDA8rMNV
+         o6M+veLimOmrc9chzJ3g1p+lEsiXYAJCCEbiMGtnK2t9J4pMpy5+eSeQx4G+anmaXOlj
+         Yl5XsyQyLC9545f2BFvXD1WPjztLQsO/aKIh1I0cuAfazoAwT1WSh9fz/U7Eob1eTaFO
+         ZMUAi2s9Jz+IKRbgIR8AOOkRbO8c6EnSB0vruqliLQWRq+hd7VmI37R0meoAVd6FJW76
+         cR326wLUzI2vjV8ZeivfA4Q7kPMTggYV0CqXDyPsh4cRRlp1oW4qd+vCrrvHzNJe60xy
+         3rLg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9Vp6C4d3msQWVuG5zaKTzYiwBLR6NPDs8fGpj46nY6FD5qXNBgKoDvd9x8OA6daAnSsXo61GmPu32Uyfvlul1m+40/VyFt+5E0eT3
+X-Gm-Message-State: AOJu0YzU5SK5IW53GNF9MQE0YUmjCHfnuDKqsvP3pZLDSYfC30a5MReD
+	H5LZLcJqCgqVbYT7qYsABylm11Y5ZKspa7wMpTZKIeqPh16WghdLFWnuRmsMioE=
+X-Google-Smtp-Source: AGHT+IEpMKeCNyHuNQ869Uxn/zSRMMkFXbQBjmfokpxdpjWTw93gaHDde4ZmdgkX21NmrvO6fw7Yhg==
+X-Received: by 2002:a05:6e02:2164:b0:365:4e45:63ee with SMTP id s4-20020a056e02216400b003654e4563eemr4170290ilv.1.1709739327454;
+        Wed, 06 Mar 2024 07:35:27 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id t2-20020a92cc42000000b003660612cf73sm324467ilq.49.2024.03.06.07.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 07:35:25 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: jonathan.derrick@linux.dev, Li kunyu <kunyu@nfschina.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240306100659.106521-1-kunyu@nfschina.com>
+References: <20240306100659.106521-1-kunyu@nfschina.com>
+Subject: =?utf-8?q?Re=3A_=5BPATCH=5D_sed-opal=3A_Remove_unnecessary_=E2?=
+ =?utf-8?q?=80=980=E2=80=99_values_from_ret?=
+Message-Id: <170973932485.23995.10515626710283058348.b4-ty@kernel.dk>
+Date: Wed, 06 Mar 2024 08:35:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-On Tue,  5 Mar 2024 14:24:20 +0800
-linke li <lilinke99@qq.com> wrote:
 
-> > Anyway, a slightly related/different question:
-> > 
-> > Should that:
-> > WRITE_ONCE(rp->rtort_pipe_count, rp->rtort_pipe_count + 1);
-> > 
-> > Be:
-> > WRITE_ONCE(rp->rtort_pipe_count, READ_ONCE(rp->rtort_pipe_count) + 1);
-> > 
-> > ?  
+On Wed, 06 Mar 2024 18:06:59 +0800, Li kunyu wrote:
+> ret is assigned first, so it does not need to initialize the assignment.
 > 
-> Hi, Joel. Sorry, I am not very sure about this. I do a little research on
-> it.
 > 
-> I looked through all code in kernel that looks like this, both kinds are
-> used. I also try to compile this file with and without the READ_ONCE in
-> WRITE_ONCE using gcc-9. Their binary is just the same. 
-> 
-> Thus I think in the current compiler version, they do not have a big
-> difference, but if the compiler wants to optimize more, maybe the latter
-> one is better.
 
-I'm sorry but all these READ_ONCE/WRITE_ONCE() additions that are being
-added because there's a fear of the compiler tearing long words, is going to
-make the code really ugly and hard to read.
+Applied, thanks!
 
-If we take the policy of handling a compiler that can tear reads and writes
-of any size word, then we should have proper macros to handle it.
+[1/1] sed-opal: Remove unnecessary ‘0’ values from ret
+      commit: 2449be8c8cfcbb24b3cd15d8b55c2c91041c847b
 
-Perhaps READ_SHARED(), WRITE_SHARED(), ADD_SHARED(), SUB_SHARED(). The ONCE
-has nothing to do with the reasons for these changes. But at least "SHARED"
-can be considered "this variable is shared between different contexts".
-Note, this is different than "atomic". It's just to document that this
-variable must be loaded or stored in one transaction.
+Best regards,
+-- 
+Jens Axboe
 
-I don't know if Linus even cares about fixing "read/write tearing" which is
-why I Cc'd him.
 
-But I'm not going to take any patches that add these macros to fix
-compilers that tear words on load and store until we have a set policy on
-what to do with them.
 
--- Steve
