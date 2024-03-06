@@ -1,443 +1,133 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2128.outbound.protection.outlook.com [40.107.102.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E8413699E;
-	Wed,  6 Mar 2024 16:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709744365; cv=none; b=ngKw/AOLEbXOx0ysLlwCAmp62qBC4P9RhhidFVusE2QlaNkfzggS3da42/PKlhuE9HU2yCKzYD7PnyXe642U+FradM14zyKyHus49SeoLc1MCJkkvtZhZEp5t/Sow8nwCTK7D7QXO8M5LUshqGMhqH133Zj9RGGTCHis+gcNzU0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709744365; c=relaxed/simple;
-	bh=5LwtSLzXIec/L5hngIZAnqe4yTLqewA2ZaP/KmBJdCE=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=NyT587uxFJWV0qmNz7eRhcD5oCKB9Ju8bO5f3pirGolUXOSYfvKx9ozEO0Eve0qUJ7bbG066IwLKyiGJg/MDGMP0+j/9aGqRoJRcp0rX5ch9IPkIX4IpOtDoUybqir5w9+1YYq/givhD+L7PbHO62+RKpP014jFf6WBMCMpoPck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PWcABid+; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E07137934;
+	Wed,  6 Mar 2024 17:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.128
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709744490; cv=fail; b=pP9z4O2E5oIGaAhTxouumRVTiINvUrOQMiUBXM01wvpraC5wqQ85/gvurzGPoVkrov/VrqAmr0tEO79JBSMm6wXmlyRZovWMA9pF+/16j+L+X4AeazZBiR2xg0udM6+2n4AG893xOC2wOIz6t7m9WUMgKnGh5WZA5PNjc1QsNP4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709744490; c=relaxed/simple;
+	bh=Ra6N6q4oG6vHpEAKKsox0/acdqN4tHr4xLS2rag4Mas=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 Content-Type:MIME-Version; b=sAF2tpuQVAteNmANYw/54l/CO9W5hFER7YOBbYddqBgrtT3HhsK4uZA5+ISjDoIu7ldbIrJ8ao72dZXsEvOePTCfuGQ90uZ4j1r3gFapw36BkX6CI/MRt3QlBdDVDNz5gPFKLR22lKaYkhybu8J3Ym+FnnCavAwCdQZtuC0kT4s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=rEveHPAU; arc=fail smtp.client-ip=40.107.102.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWcABid+"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33d90dfe73cso1466f8f.0;
-        Wed, 06 Mar 2024 08:59:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="rEveHPAU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ieGdzMHMNqg342y5XmcfYtQ3SIvgxu80JigMwy4GSU8FDt3lPgNVmAyMIF1bEE9DMGCiJwbHxwAM+5kfuB7spChxlRLzgLlMdyCr8ZaHDZAZVCSkgDHy8Pax/YioZ2X1pzEbt31Xw04II2XxUOBf5rTMx7Dec6yp3HxJdhlo7WjUSJS8MJbnE0eqFHKDY6Pb/ipD2zx4bkHuRF13YNYCTGvl4vZpG8oT3lf6TyI0s8axDMCZiNRpVn/49r98k51wJGe6AB4zzrrBQqCIftcysPA4t205noIj4HXDgOmffi6EiS1vDHGb7kbhqEz/py5Y15qN0PKH3Crkzk/od9D24A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KjbuVGNqtXSmQelKlggQSDCcT2qOekAHRrxy8Fb00VA=;
+ b=CuxZ9IqsUSgyUSttzIleVqKMOqCiBVO/y8VUWS7cbUsite98LKrW7ViV9asH9YtMkC8HZknVc1m0A/nqUqhdz3SIP82vCGdjkOCvmZwHEwnrVak2OdyXu1+VgQdz2heFL6aW8mSxBHCNBnfVIE3moswSm5lpM8uJKvB63pARItw/LLLzqxiRB7m7KJi94P1yGF0QFSsVKkXkJtncFObBjJB03WzMG3lKj1qSMuRKjlATBAyWNvW5fwi3mgijYmSgySNLi7/Ik0NrsKf1Hj63bZ/wJb10CNgZ6m1dcsCNxvBL+g3lIZA3PzDrmAZ/YnDNsGWnbpxcU3SoEUafVBIvkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709744361; x=1710349161; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GoDKhwgw+miW5ARkGVrNqzMnxuRe2Uy6wo1ivXGP/JA=;
-        b=PWcABid+FL7xtfrWIPTR2G1SOH2MfFX7gvqhoBlJc3ubT+uN+g2oLz3XAoQ+fz0gKH
-         E2TF/0RBw8VIZi5dCsZfJA0dX2g1uWViDCqtGRJAlf699rYnpOiy/FwbqeBv1Avd6k14
-         2XGEnRNnQ9Ri8eXJjmX0zf8HefVsUYeQRv1VuGtxoXDV7kX3rGQj0X7tl/QNGl1X998D
-         LtcZRFrmi/X+EZo2ktcrbyyBK2AYnRL2TqAD2EUfPxgq2oSL0bjeVfyOKVaanM7DeOpW
-         x27TM46Eoe92ND5fFOc3o440LCtdepj7wbkRmYpeH2K1MtQd8oa9y25kFaWNkUvTxtVi
-         X1cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709744361; x=1710349161;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GoDKhwgw+miW5ARkGVrNqzMnxuRe2Uy6wo1ivXGP/JA=;
-        b=weG+2vh+Ja6JYpkcKe8KgdPRygA3NSjunQVBJue2HsCx6/CdSTAFPh5jeNxS/JgOyf
-         z1erb9YEnhWZrIabmnhra2dc7fYuCGqhPBQipcskvA5Z3xU0/G9laAh4I4Ic+1CY8dxJ
-         7LiGbr9LGMm8X4LD2KBS6FSS3ogmTX6gA5wq+UWCD8p8quNMiDfQ02KJlBtjYiMMOGZ4
-         26XZTNsN7sPzHTb+oZm7RvXXSbiTQSWK/ydMxcSM3inIjOL0b5nG4yGnY1rOwwfOLJEF
-         H7tsQ4tg6NM4ASnZ+KPbo3f+uBZ8bBsvy17KppLJ8MjwuY4qwOSeKasufbA1m3Z9gJVv
-         ZJwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwz1iZ6Ez4W8ciOnOWidlzP1Z5K4X8v1cJGQWERcDPkKt4uUHb+QQ3Aly9KM7D0ZNDBclU9XCaDvq8Xt6CO9MPQaWHz8zjOosUCq76pWJNx+JomXFAkRHNAxmyub9LRKBdsE8GmRo3DADk7UcgK4ZJ
-X-Gm-Message-State: AOJu0Yx6RtSrYm3Mpbw7yZHlGu6UwTABW2w9Z7vVnwzqKo4vDVqrDCsP
-	DFaFhB440K8103RauAZS05o9dkJT2Kh5SH4xrFLZNOgmVQpXignh
-X-Google-Smtp-Source: AGHT+IHKyDBT04YlSczEFz9XpHogy8dsgMG3n5l3SPmhEJfqIvqI+bjBU0cnm2x+43p7VFNEeJFmXA==
-X-Received: by 2002:adf:ca04:0:b0:33d:c45:15ec with SMTP id o4-20020adfca04000000b0033d0c4515ecmr5955057wrh.32.1709744361226;
-        Wed, 06 Mar 2024 08:59:21 -0800 (PST)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id ay30-20020a05600c1e1e00b00412fc25691bsm1294908wmb.38.2024.03.06.08.59.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2024 08:59:20 -0800 (PST)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Guo Ren <guoren@kernel.org>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Sia Jee Heng <jeeheng.sia@starfivetech.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Song Shuai <suagrfillet@gmail.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-Date: Wed,  6 Mar 2024 16:59:04 +0000
-Message-Id: <20240306165904.108141-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.40.1
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KjbuVGNqtXSmQelKlggQSDCcT2qOekAHRrxy8Fb00VA=;
+ b=rEveHPAUTIYzL4fI6sekLIVlznWolVVuPQNLe6QY+9b9nPDCgdpBVd7JgiX6gTR4TJNKuBbO0kfW5xT9U3j2rsmmz84rSvY1HtPwCgvc659VpGaVJh8cok/kd3AgxxHmqTL6OjtRSBwzjyB1gbUUYon3qn9jFg9QeSAl1IF/lng=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM6PR01MB5259.prod.exchangelabs.com (2603:10b6:5:68::27) by
+ BY3PR01MB6529.prod.exchangelabs.com (2603:10b6:a03:357::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7362.26; Wed, 6 Mar 2024 17:01:22 +0000
+Received: from DM6PR01MB5259.prod.exchangelabs.com
+ ([fe80::7ba2:4e8d:3bb:6e1b]) by DM6PR01MB5259.prod.exchangelabs.com
+ ([fe80::7ba2:4e8d:3bb:6e1b%6]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
+ 17:01:22 +0000
+Date: Wed, 6 Mar 2024 09:01:15 -0800 (PST)
+From: "Lameter, Christopher" <cl@os.amperecomputing.com>
+To: Eric Dumazet <edumazet@google.com>
+cc: Adam Li <adamli@os.amperecomputing.com>, corbet@lwn.net, 
+    davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+    willemb@google.com, yangtiezhu@loongson.cn, atenart@kernel.org, 
+    kuniyu@amazon.com, wuyun.abel@bytedance.com, leitao@debian.org, 
+    alexander@mihalicyn.com, dhowells@redhat.com, paulmck@kernel.org, 
+    joel.granados@gmail.com, urezki@gmail.com, joel@joelfernandes.org, 
+    linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    netdev@vger.kernel.org, patches@amperecomputing.com, 
+    shijie@os.amperecomputing.com
+Subject: Re: [PATCH] net: make SK_MEMORY_PCPU_RESERV tunable
+In-Reply-To: <CANn89iJAKEUu_Fdh0OC-+BJ+iVY0D2y0nAakGLxWZ8TywDu=BA@mail.gmail.com>
+Message-ID: <11588267-c76d-f0ac-bf98-1875e07b58cb@os.amperecomputing.com>
+References: <20240226022452.20558-1-adamli@os.amperecomputing.com> <CANn89iLbA4_YdQrF+9Rmv2uVSb1HLhu0qXqCm923FCut1E78FA@mail.gmail.com> <a8de785f-8cc3-4075-a5f2-259e20222dcb@os.amperecomputing.com>
+ <CANn89iJAKEUu_Fdh0OC-+BJ+iVY0D2y0nAakGLxWZ8TywDu=BA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-ClientProxiedBy: CH5P220CA0012.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:610:1ef::24) To DM6PR01MB5259.prod.exchangelabs.com
+ (2603:10b6:5:68::27)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR01MB5259:EE_|BY3PR01MB6529:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ae15b9c-d280-42aa-1d35-08dc3dff0c80
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	tHU2SSD6WrI9VVxrr4cbGlmLXO6d0kOiXH1P0M9FX93Zzq8FlTssKNBmhXcFbr11AGByvH5AgdX/Z0un5yZgXFajRYepY9sn+8UjYD/XwzTlemS04uqI4zbKRPsI0dGUfVAFXSVcxEoh26uJoGwxkrpnBL6ZeGJbcji2Jvv0UT4zxqVUBtvyb2Lzo31xu8hF9M/YbKmzHb6tlmI0zXVG1dxXif9NUf9xeb9xQKeQnF/QpkLSf21J29Uim2aWkU3pES8XtFLZdXC0dv0TGku5nnhGRuKlXtOaElQRfEs5nqtzvN9weprlzXJppdz9hC/Q/oRNGRyhmtZ6pSyS7TlLcQdXB3GEEPePECnXdHD3Czsu6zmzdDqvS69V6kFNxizEPHPMB2sRsTXBrRAPSANDPNlOVxP0Z71kdOyI8P8fMkptp57eJ7sowE4H+bOje3Blb1YR90a3Z1f9wMK3hATLYSCrFw1X4zlbaWu5tbbNzPUUDwX+gawV3ROzx6ARPQHgj2loTj0BFv8nni3cuxJ8v7OSPlFcOWGa7Jb1LDMQR+Ts6Ol60YPbi4149vG7ZkyLAxKalqwjxNjQm3+E68TG/C8Kok1F6eMNY3n1kCI+JZYhFuiaiW2QKlcRQrjezA1QAD7uvo4XpcYOjbX62F5sM9t1Bn0i+UjTLV3qVXdfcl8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR01MB5259.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?VQHNgdW/MZnGurdbN9+9dmKnVEseChomZAgpKXQPf8KNxW8eyDUoXRiutDK5?=
+ =?us-ascii?Q?UPjgz3eF1rBo0jpndhKnLkk2ziokh27/tBQNOSDWVzHw4YtIucAFQfOhwZfy?=
+ =?us-ascii?Q?X6qTYbJM4fwnSErZS0JaWNAug2ybORrhMiW1iWh0YATc6nl0PdEAW6qbG4PY?=
+ =?us-ascii?Q?4Tc31iuqtthWWrM0LwKG0mi7huYilu5TlXs+Zj9lAgMe6xItvXpGh1EaRdTH?=
+ =?us-ascii?Q?h/kvsRjSdhX4Fex0ryZam+/X/hh7qHKo7W++eyEYlj8/1w2+pCMDfbyzbPAI?=
+ =?us-ascii?Q?hR+ohBHNwL36trRBrisbiKKk/X+3u86k3uD/mZLmIV2ipL2/rIDndyxEhqAa?=
+ =?us-ascii?Q?GYj0ko8LEwaRyQ4Q1Usdg8Vvp63RuvOgBomoTiftmVwUTO3alefu9lCHcZbd?=
+ =?us-ascii?Q?sS9VIO2IHeYy5OKHSKNxNkhtUMjMvsB4Mpl3uu9Fy5u9NVBSgLWb4Q/zLqQq?=
+ =?us-ascii?Q?3KYwRZ9Mbf1IZZ0DLIV/CwvFgKcNhjgekNHrk3RUj+ye8co6aTgJ88SsmKmm?=
+ =?us-ascii?Q?LXn1+1oviQrhPXyXIgIapQvpI7Z4y0USDs6VxnjSt+xVzYDb+rvfGfA8+VMH?=
+ =?us-ascii?Q?g5RR9q24lkOLMlCnaEGrphYR8i4xpp9g2viN8Tdkm7uIgshmDURqFAKlvvfE?=
+ =?us-ascii?Q?tOaIJ51hAhqBUiqorbH8w8CO2aw4DQbiqbFVw2P4RY37VBcFvWAYB+Ay6Rgk?=
+ =?us-ascii?Q?R4tecu82Ydvxs9TRGZE2DYfUIaQuJvvveaMToJC4NXje1dbI7ZOTKIgvYCQm?=
+ =?us-ascii?Q?fB7Zb4/hmSguvIX6PUVT6QnxzbtGHAi7jAv/q7aR3wngPvx7u6YEQCEVjaGj?=
+ =?us-ascii?Q?sJS8pq1gES8T19T3FwJReCj+roLbDQJRziJnMoYzUt7UbMQ0Q4FQt0TLkc1w?=
+ =?us-ascii?Q?GMtfW5CUNvPyAvd/2HDWHI5VlGWWZBuRdy04qw0DM0mgTqk7JuPBNiJ0ZoRK?=
+ =?us-ascii?Q?rCtm7L8LS7SyFF6j21ONKGyodQcw2+6/71IwwkaCq4pyvvVQgmZuh0MvXfuR?=
+ =?us-ascii?Q?G39RmQsXTY5Q1xYDe6w7CqeiSBVTN1t7nngfw+tylJYylJDfPOcrUnwE6Vrx?=
+ =?us-ascii?Q?JQ3jN9UhonKOJSv4DW37cnaD6amB6YqE14anQpvdx3WMbAjm4em4TTbWD162?=
+ =?us-ascii?Q?FuCGLHuMbgpM92Al3v3Sv2jdiNGP9+SI8s5t+Pg4gmRSI3wyg7UDoNXKkRro?=
+ =?us-ascii?Q?oPGDuscgNYa1bPr4SUOQz+Px/m5i+5UJVtXJNhGrkdoqiXTE1M4yrk8osRHx?=
+ =?us-ascii?Q?9QjCCaUkavPiDPU4/1JGlhZ5W/4lscrS7Cj5uQdjnBXkZqGbhfT8Nlsg9wXJ?=
+ =?us-ascii?Q?EA90mtA4E3qv6qLXMFpcZosvhTwl2P/G8/nrrHFhT6rnU+CV9mnYll34FoWP?=
+ =?us-ascii?Q?TUzcD2R1apV/0aBml9FZc7U2PzAfs4ekUxlGGwZ8VBgWoYllR4zmXk5hrH5l?=
+ =?us-ascii?Q?SBacyBwPtqq0Utsn6tNr+i/fmP9aFJWkVUpkgh/BpRQpba6LfTt028ONpT9O?=
+ =?us-ascii?Q?XhTRUoMXPxe8fErnOdoVJWimHT2NqgxJezNxWP+HK3AnRW8majk8FKIoZtA/?=
+ =?us-ascii?Q?2uP+FPHCUaVzNDn4ZqJpMBZCX8IFcDMs/jWkfygikiVOIraox08t1rnWUZ0Z?=
+ =?us-ascii?Q?In6OoeQdKpMwTAP9OtG3mqs=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ae15b9c-d280-42aa-1d35-08dc3dff0c80
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR01MB5259.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 17:01:21.8783
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kdujYO1ws6lbP9hiNcveAYuVpJCbE3ilgxtlJqTJsUHXH1BiZsd6Xazpk2Y2Ehztqo5fEPv5rSmUPoReL0Rlb5XaIzN7Y9qNVg5zIlKENqk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR01MB6529
 
-This patch enables support for DYNAMIC_FTRACE_WITH_CALL_OPS on RISC-V.
-This allows each ftrace callsite to provide an ftrace_ops to the common
-ftrace trampoline, allowing each callsite to invoke distinct tracer
-functions without the need to fall back to list processing or to
-allocate custom trampolines for each callsite. This significantly speeds
-up cases where multiple distinct trace functions are used and callsites
-are mostly traced by a single tracer.
+On Wed, 28 Feb 2024, Eric Dumazet wrote:
 
-The idea and most of the implementation is taken from the ARM64's
-implementation of the same feature. The idea is to place a pointer to
-the ftrace_ops as a literal at a fixed offset from the function entry
-point, which can be recovered by the common ftrace trampoline.
+>> __sk_mem_raise_allocated() drops to 0.4%.
+>
+> I suspect some kind of flow/cpu steering issues then.
+> Also maybe SO_RESERVE_MEM would be better for this workload.
 
-We use -fpatchable-function-entry to reserve 8 bytes above the function
-entry by emitting 2 4 byte or 4 2 byte  nops depending on the presence of
-CONFIG_RISCV_ISA_C. These 8 bytes are patched at runtime with a pointer
-to the associated ftrace_ops for that callsite. Functions are aligned to
-8 bytes to make sure that the accesses to this literal are atomic.
-
-This approach allows for directly invoking ftrace_ops::func even for
-ftrace_ops which are dynamically-allocated (or part of a module),
-without going via ftrace_ops_list_func.
-
-I've benchamrked this with the ftrace_ops sample module on Qemu, with
-the next version, I will provide benchmarks on real hardware:
-
-Without this patch:
-
-+-----------------------+-----------------+----------------------------+
-|  Number of tracers    | Total time (ns) | Per-call average time      |
-|-----------------------+-----------------+----------------------------|
-| Relevant | Irrelevant |    100000 calls | Total (ns) | Overhead (ns) |
-|----------+------------+-----------------+------------+---------------|
-|        0 |          0 |        15615700 |        156 |             - |
-|        0 |          1 |        15917600 |        159 |             - |
-|        0 |          2 |        15668000 |        156 |             - |
-|        0 |         10 |        14971500 |        149 |             - |
-|        0 |        100 |        15417600 |        154 |             - |
-|        0 |        200 |        15387000 |        153 |             - |
-|----------+------------+-----------------+------------+---------------|
-|        1 |          0 |       119906800 |       1199 |          1043 |
-|        1 |          1 |       137428600 |       1374 |          1218 |
-|        1 |          2 |       159562400 |       1374 |          1218 |
-|        1 |         10 |       302099900 |       3020 |          2864 |
-|        1 |        100 |      2008785500 |      20087 |         19931 |
-|        1 |        200 |      3965221900 |      39652 |         39496 |
-|----------+------------+-----------------+------------+---------------|
-|        1 |          0 |       119166700 |       1191 |          1035 |
-|        2 |          0 |       157999900 |       1579 |          1423 |
-|       10 |          0 |       425370100 |       4253 |          4097 |
-|      100 |          0 |      3595252100 |      35952 |         35796 |
-|      200 |          0 |      7023485700 |      70234 |         70078 |
-+----------+------------+-----------------+------------+---------------+
-
-Note: per-call overhead is estimated relative to the baseline case with
-0 relevant tracers and 0 irrelevant tracers.
-
-With this patch:
-
-+-----------------------+-----------------+----------------------------+
-|   Number of tracers   | Total time (ns) | Per-call average time      |
-|-----------------------+-----------------+----------------------------|
-| Relevant | Irrelevant |    100000 calls | Total (ns) | Overhead (ns) |
-|----------+------------+-----------------+------------+---------------|
-|        0 |          0 |        15254600 |        152 |             - |
-|        0 |          1 |        16136700 |        161 |             - |
-|        0 |          2 |        15329500 |        153 |             - |
-|        0 |         10 |        15148800 |        151 |             - |
-|        0 |        100 |        15746900 |        157 |             - |
-|        0 |        200 |        15737400 |        157 |             - |
-|----------+------------+-----------------+------------+---------------|
-|        1 |          0 |        47909000 |        479 |           327 |
-|        1 |          1 |        48297400 |        482 |           330 |
-|        1 |          2 |        47314100 |        473 |           321 |
-|        1 |         10 |        47844900 |        478 |           326 |
-|        1 |        100 |        46591900 |        465 |           313 |
-|        1 |        200 |        47178900 |        471 |           319 |
-|----------+------------+-----------------+------------+---------------|
-|        1 |          0 |        46715800 |        467 |           315 |
-|        2 |          0 |       155134500 |       1551 |          1399 |
-|       10 |          0 |       442672800 |       4426 |          4274 |
-|      100 |          0 |      4092353900 |      40923 |         40771 |
-|      200 |          0 |      7135796400 |      71357 |         71205 |
-+----------+------------+-----------------+------------+---------------+
-
-Note: per-call overhead is estimated relative to the baseline case with
-0 relevant tracers and 0 irrelevant tracers.
-
-As can be seen from the above:
-
- a) Whenever there is a single relevant tracer function associated with a
-    tracee, the overhead of invoking the tracer is constant, and does not
-    scale with the number of tracers which are *not* associated with that
-    tracee.
-
- b) The overhead for a single relevant tracer has dropped to ~1/3 of the
-    overhead prior to this series (from 1035ns to 315ns). This is largely
-    due to permitting calls to dynamically-allocated ftrace_ops without
-    going through ftrace_ops_list_func.
-
-Why is this patch a RFC patch:
- 1. I saw some rcu stalls on Qemu and need to debug them and see if they
-    were introduced by this patch.
- 2. This needs to be tested thoroughly on real hardware.
- 3. Seeking reviews to fix any fundamental problems with this patch that I
-    might have missed due to my lack of RISC-V architecture knowledge.
- 4. I would like to benchmark this on real hardware and put the results in
-    the commit message.
-
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- arch/riscv/Kconfig              |  2 ++
- arch/riscv/Makefile             |  8 +++++
- arch/riscv/include/asm/ftrace.h |  3 ++
- arch/riscv/kernel/asm-offsets.c |  3 ++
- arch/riscv/kernel/ftrace.c      | 59 +++++++++++++++++++++++++++++++++
- arch/riscv/kernel/mcount-dyn.S  | 42 ++++++++++++++++++++---
- 6 files changed, 112 insertions(+), 5 deletions(-)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 0bfcfec67ed5..e474742e23b2 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -78,6 +78,7 @@ config RISCV
- 	select EDAC_SUPPORT
- 	select FRAME_POINTER if PERF_EVENTS || (FUNCTION_TRACER && !DYNAMIC_FTRACE)
- 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY if DYNAMIC_FTRACE
-+	select FUNCTION_ALIGNMENT_8B if DYNAMIC_FTRACE_WITH_CALL_OPS
- 	select GENERIC_ARCH_TOPOLOGY
- 	select GENERIC_ATOMIC64 if !64BIT
- 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
-@@ -127,6 +128,7 @@ config RISCV
- 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && (CLANG_SUPPORTS_DYNAMIC_FTRACE || GCC_SUPPORTS_DYNAMIC_FTRACE)
- 	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
-+	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS if (DYNAMIC_FTRACE_WITH_REGS && !CFI_CLANG)
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 252d63942f34..875ad5dc3d32 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -14,12 +14,20 @@ endif
- ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
- 	LDFLAGS_vmlinux += --no-relax
- 	KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-+ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS), y)
-+ifeq ($(CONFIG_RISCV_ISA_C),y)
-+	CC_FLAGS_FTRACE := -fpatchable-function-entry=8,4
-+else
-+	CC_FLAGS_FTRACE := -fpatchable-function-entry=4,2
-+endif
-+else
- ifeq ($(CONFIG_RISCV_ISA_C),y)
- 	CC_FLAGS_FTRACE := -fpatchable-function-entry=4
- else
- 	CC_FLAGS_FTRACE := -fpatchable-function-entry=2
- endif
- endif
-+endif
- 
- ifeq ($(CONFIG_CMODEL_MEDLOW),y)
- KBUILD_CFLAGS_MODULE += -mcmodel=medany
-diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-index 329172122952..c9a84222c9ea 100644
---- a/arch/riscv/include/asm/ftrace.h
-+++ b/arch/riscv/include/asm/ftrace.h
-@@ -28,6 +28,9 @@
- void MCOUNT_NAME(void);
- static inline unsigned long ftrace_call_adjust(unsigned long addr)
- {
-+	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-+		return addr + 8;
-+
- 	return addr;
- }
- 
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
-index a03129f40c46..7d7c4b486852 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -488,4 +488,7 @@ void asm_offsets(void)
- 	DEFINE(STACKFRAME_SIZE_ON_STACK, ALIGN(sizeof(struct stackframe), STACK_ALIGN));
- 	OFFSET(STACKFRAME_FP, stackframe, fp);
- 	OFFSET(STACKFRAME_RA, stackframe, ra);
-+#ifdef CONFIG_FUNCTION_TRACER
-+	DEFINE(FTRACE_OPS_FUNC,		offsetof(struct ftrace_ops, func));
-+#endif
- }
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index f5aa24d9e1c1..e2e75e15d32e 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -82,9 +82,52 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
- 	return 0;
- }
- 
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-+static const struct ftrace_ops *riscv64_rec_get_ops(struct dyn_ftrace *rec)
-+{
-+	const struct ftrace_ops *ops = NULL;
-+
-+	if (rec->flags & FTRACE_FL_CALL_OPS_EN) {
-+		ops = ftrace_find_unique_ops(rec);
-+		WARN_ON_ONCE(!ops);
-+	}
-+
-+	if (!ops)
-+		ops = &ftrace_list_ops;
-+
-+	return ops;
-+}
-+
-+static int ftrace_rec_set_ops(const struct dyn_ftrace *rec,
-+			      const struct ftrace_ops *ops)
-+{
-+	unsigned long literal = rec->ip - 8;
-+
-+	return patch_text_nosync((void *)literal, &ops, sizeof(ops));
-+}
-+
-+static int ftrace_rec_set_nop_ops(struct dyn_ftrace *rec)
-+{
-+	return ftrace_rec_set_ops(rec, &ftrace_nop_ops);
-+}
-+
-+static int ftrace_rec_update_ops(struct dyn_ftrace *rec)
-+{
-+	return ftrace_rec_set_ops(rec, riscv64_rec_get_ops(rec));
-+}
-+#else
-+static int ftrace_rec_set_nop_ops(struct dyn_ftrace *rec) { return 0; }
-+static int ftrace_rec_update_ops(struct dyn_ftrace *rec) { return 0; }
-+#endif
-+
- int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- {
- 	unsigned int call[2];
-+	int ret;
-+
-+	ret = ftrace_rec_update_ops(rec);
-+	if (ret)
-+		return ret;
- 
- 	make_call_t0(rec->ip, addr, call);
- 
-@@ -98,6 +141,11 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
- 		    unsigned long addr)
- {
- 	unsigned int nops[2] = {NOP4, NOP4};
-+	int ret;
-+
-+	ret = ftrace_rec_set_nop_ops(rec);
-+	if (ret)
-+		return ret;
- 
- 	if (patch_text_nosync((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
- 		return -EPERM;
-@@ -125,6 +173,13 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
- 
- int ftrace_update_ftrace_func(ftrace_func_t func)
- {
-+	/*
-+	 * When using CALL_OPS, the function to call is associated with the
-+	 * call site, and we don't have a global function pointer to update.
-+	 */
-+	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-+		return 0;
-+
- 	int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
- 				       (unsigned long)func, true, true);
- 	if (!ret) {
-@@ -147,6 +202,10 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
- 	make_call_t0(caller, old_addr, call);
- 	ret = ftrace_check_current_call(caller, call);
- 
-+	if (ret)
-+		return ret;
-+
-+	ret = ftrace_rec_update_ops(rec);
- 	if (ret)
- 		return ret;
- 
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index b7561288e8da..cb241e36e514 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -191,11 +191,35 @@
- 	.endm
- 
- 	.macro PREPARE_ARGS
--	addi	a0, t0, -FENTRY_RA_OFFSET
-+	addi	a0, t0, -FENTRY_RA_OFFSET	// ip (callsite's auipc insn)
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-+	/*
-+	 * When CALL_OPS is enabled (2 or 4) nops [8B] are placed before the
-+	 * function entry, these are later overwritten with the pointer to the
-+	 * associated struct ftrace_ops.
-+	 *
-+	 * -8: &ftrace_ops of the associated tracer function.
-+	 *<ftrace enable>:
-+	 *  0: auipc  t0/ra, 0x?
-+	 *  4: jalr   t0/ra, ?(t0/ra)
-+	 *
-+	 * -8: &ftrace_nop_ops
-+	 *<ftrace disable>:
-+	 *  0: nop
-+	 *  4: nop
-+	 *
-+	 * t0 is set to ip+8 after the jalr is executed at the callsite,
-+	 * so we find the associated op at t0-16.
-+	 */
-+	mv 	a1, ra				// parent_ip
-+	REG_L   a2, -16(t0)			// op
-+	REG_L   ra, FTRACE_OPS_FUNC(a2)		// op->func
-+#else
- 	la	a1, function_trace_op
--	REG_L	a2, 0(a1)
--	mv	a1, ra
--	mv	a3, sp
-+	REG_L	a2, 0(a1)			// op
-+	mv	a1, ra				// parent_ip
-+#endif
-+	mv	a3, sp				// regs
- 	.endm
- 
- #endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-@@ -233,8 +257,12 @@ SYM_FUNC_START(ftrace_regs_caller)
- 	SAVE_ABI_REGS 1
- 	PREPARE_ARGS
- 
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-+	jalr ra
-+#else
- SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	call	ftrace_stub
-+#endif
- 
- 	RESTORE_ABI_REGS 1
- 	bnez	t1, .Ldirect
-@@ -247,9 +275,13 @@ SYM_FUNC_START(ftrace_caller)
- 	SAVE_ABI_REGS 0
- 	PREPARE_ARGS
- 
--SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-+	jalr ra
-+#else
-+SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	call	ftrace_stub
- 
-+#endif
- 	RESTORE_ABI_REGS 0
- 	jr	t0
- SYM_FUNC_END(ftrace_caller)
--- 
-2.40.1
+This is via loopback. So there is a flow steering issue in the IP 
+stack?
 
