@@ -1,108 +1,140 @@
-Received: from fallback17.i.mail.ru (fallback17.i.mail.ru [79.137.243.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EFD1448E1;
-	Wed,  6 Mar 2024 18:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BFC1361C1
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709748383; cv=none; b=amplHkapjGRx4LqeRTtljHDxyaW1hwL5lwg+xcjyEKcjk+QoSlPqAK5qlXSOqzQrLG1OMAIfWTTCNdWbhKn67pbQ4xszsAJrFKMzgdf/K9NHZmGfL3BshD8/x5SDtruxRQI9cyXlKtmjbImS1ncyhayuzJsmAgqZyPRi7RmWPuY=
+	t=1709748445; cv=none; b=LXUonbJmfgfss2V8Xgm1fSPhe0JNiFKM2mq5kpQjJEGn9jx/mJqbCgNlmb8buIFXqWyCibYcNfdD6GGOO55k2raD1FvLgIWF109EIc/n4+u/rwOZ/Y7I4bam4soLLBH3VaNQVINGiPRSREYdP7n7VMipLijOqsgHKq/P9ipXcUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709748383; c=relaxed/simple;
-	bh=+4nWjfCspJdinJgj70jJ8HI7zjPNCGO/S9eBz33EUB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jcZ/yvTntfPrMmBUTiWm0w+S5iuM2paXV7sD99VDx1sHWx93fJexmsRJB1BiO6R6sF+3gHWkePunGILDQaE5jV+ufXNzpQk8S9QpImnKLvc5Kr6nwZ6cLijlZp0wDxC2mEC+b/YzHlBsNS3yrGcmMILVihCB4jD9FJsiV1JRkjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=lP3ymVse; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=lTobC2Kt; arc=none smtp.client-ip=79.137.243.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	s=arc-20240116; t=1709748445; c=relaxed/simple;
+	bh=8plUTdb6Fv6GLhziZ7ALvzF8vSm83xETHbpXVJSIzMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VsaXMJ7eMClQuZb6zhAjAeDI1I2WtfktYzk1udyB8iaLOxCAkpa6HajK9QnMlPUWkLdoE3Cx+zYfTbq6doOIh4BFTrscRxQp+k7ESFLnE05sCciCHGcPMU2zCLIithalmVhQlg0ovJxLR/76lnqCZNCpUXm0938J/zuqDhJCrsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWKTSgt6; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="lP3ymVse";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="lTobC2Kt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=0+NLwRTMKhcrafU+QpXr/st81vi0wdXyFWrxFLW/RQM=;
-	t=1709748380;x=1709838380; 
-	b=lP3ymVseq2sky4sC2oomuOEcGjxQZezqxeE9kbCreWdDn0N7VogleaxouzSn1hIpwARE2gRhNh6ZqUJbmPUgOye2aFoY52+QrcMpKt+CGNh32an9+wVWAUMFyGf3sv4YlD/SmdLXowstrSFBesUtMredDuNJ9jwbQgh919nDgzY=;
-Received: from [10.12.4.36] (port=60626 helo=smtp59.i.mail.ru)
-	by fallback17.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1rhv3D-00EVIt-8p; Wed, 06 Mar 2024 20:27:31 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=0+NLwRTMKhcrafU+QpXr/st81vi0wdXyFWrxFLW/RQM=; t=1709746051; x=1709836051; 
-	b=lTobC2Kt4IF0n1l/eOKPyloTscCWTq3BLZkTXvIPQuaKiZLS1mvc9c/0Rz2aCJDLGY/nKFRWrFr
-	rhz9ChIzxy3kjAnINKe19NQvnauReUzC0lZHo7+4KdoNQA8JnbmIGCrIM6Rv5ragJTDWIGA6sfKZu
-	85Grp/PaehsP164lEvg=;
-Received: by smtp59.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1rhv2x-0000000F1Va-3Pi5; Wed, 06 Mar 2024 20:27:16 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: pavel@ucw.cz,
-	lee@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH 1/2] dt-bindings: leds: qcom-lpg: Document PM6150L compatible
-Date: Wed,  6 Mar 2024 20:27:09 +0300
-Message-ID: <20240306172710.59780-2-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240306172710.59780-1-danila@jiaxyga.com>
-References: <20240306172710.59780-1-danila@jiaxyga.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWKTSgt6"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c1ea59cf81so2032387b6e.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 10:07:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709748443; x=1710353243; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mQwUmBSggnRD0pcG/xZbZRZTuuiVEi9qcHO+7tcjts0=;
+        b=RWKTSgt6FcRardZi2Z61W3VOaCpDvgy4ntwR1Rk52xMwNSsDMu8SmWpVEaiN80PFmP
+         DM6EPg6QsvDkWIA9FAG2LtrfO7Nonqec0rm8K4hLAl2q3Z8CLZqhYdoSw0Hunn45fwIQ
+         0/QrnoFji9eIA93Wrf22YIO1uSc0BU0asWU3BbWOAkoi6Rg/sNCvby3eB9abhErGGHSR
+         kbSNLUpWjANNHzooQ2cDthROQ9lMI/PQMsKZdQrVZvjPbFu6XrWvuza7VaRh8oxVVg33
+         aPz5RVSxGiKpzo+bzrmssrchYEHAaFdVnHuChPh8x7gZYv8iXebmyzH0AOvhjz9C9V6o
+         +2nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709748443; x=1710353243;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mQwUmBSggnRD0pcG/xZbZRZTuuiVEi9qcHO+7tcjts0=;
+        b=Z0Q6L17OcGfiDgqggwnr/3oOhQFjTDIyKSmtu4f01IkkwumMT782B1rANNkE16G/Uk
+         HQxIF4gHfKkhq8mOQBKjJGBl4TwFVWi5dSEuFrSCvbMmOG+FdmH8MOCVkrD6P0O8upUx
+         J/tEKCsjwwr86JVwJw7/AQuvClgvfSHRJspNVqnRg7pSeJ/SAmBuEeoVqSaYuCiBmBmr
+         QQQwTvlzFGt2CVBdAZjs4/GWdyWwaREhXDqoqMzL0SO22y0P9lvNJFAFReMxS/L4YEYL
+         p/XrhHKgwOoDjQsL1FVlMZMK7606dVqKkOdHKBoTo16fpawh5SfDWp9sfjgqSRn/lFav
+         2Rng==
+X-Forwarded-Encrypted: i=1; AJvYcCULKSmiiM9LzLd6OcB/GKyjuXuaLqSNg5K4EFj6YyzCHqexfUmauSp1WdDf0XCz+rwcgzwAP5AOuLwHDf0PAto0J/XEHIdYfTrERFBp
+X-Gm-Message-State: AOJu0YyrpEWoT/NxVWchKqdAFonTwzYaVmneClyJ80hF9fkp5dmMejDv
+	0gOMt9eQOINNg0iNIS0Krsuckn0Gs1ovl+CK8dFqWxDgxt25gGs2B9V3J8GpS104jTHMOHkKJDJ
+	E2UM5zWDPwlX5a7ZkQJH4u9TIQM0=
+X-Google-Smtp-Source: AGHT+IGPrOh7Nxf2XCNqNWJRrgy482/ux2E59iFt0t+DK4BrB5tNqimAy468jOtXO5UB4zF2DYDQvfbz5R4CL5EqVyY=
+X-Received: by 2002:a05:6808:2985:b0:3c2:1f27:832c with SMTP id
+ ex5-20020a056808298500b003c21f27832cmr1561706oib.1.1709748442874; Wed, 06 Mar
+ 2024 10:07:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD987C0EE6E7F0A597D173D0CE202DA28435F3B31DD656B8ACF182A05F5380850405D78088DE6C213CB411046492FDDF806CA58FC3FCD0956798FCBEF1FD3BB67B11310F8E5CB569241
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE716FAD50E497B9C14EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006370EBB47D88F71BB738638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8226FFF6E9758072FF5F3F533CCBC407A59742E5BDE38CBACCC7F00164DA146DAFE8445B8C89999728AA50765F790063735D2385A5E2B3AC3389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC85FF72824B19451C6F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CB2DECCBDF547A30576E601842F6C81A12EF20D2F80756B5FB606B96278B59C4276E601842F6C81A127C277FBC8AE2E8B120C23C05AEC2B18EC76A7562686271ED91E3A1F190DE8FD2E808ACE2090B5E14AD6D5ED66289B5278DA827A17800CE76631511D42670FFE2EB15956EA79C166A417C69337E82CC275ECD9A6C639B01B78DA827A17800CE7AEA1580DED4E70E3731C566533BA786AA5CC5B56E945C8DA
-X-C1DE0DAB: 0D63561A33F958A540B8A7E7BED5AA655002B1117B3ED6961D31791229A5A08FFB820E9FE7BD014C823CB91A9FED034534781492E4B8EEAD5B606B10FC07407CC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFFC102450E495308653253A64D9D077F4D81B3C12B5DCB65F393F4D47D2D0A30EF509D27A9878C191A2A143A52978B9DD4ECA63C7D1CB82E7C777010AFA8312B6BA7C55DE93E062EA42BF32D1DA1046D202C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojbL9S8ysBdXhgskDnfdo7g1HcIkyXn9qp
-X-Mailru-Sender: 9EB879F2C80682A09F26F806C73949814E2244C9C55FE217BC5A20191D90C84FEA49953AA39D7944651BA650CCE5DC6B2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B485448333635D8AFAF2FD4A3C9FF394F5F15B183966BAD3FC049FFFDB7839CE9ED2C2511FF248D2A2E3882A0B98C05C02B3C18B99DD6EEFD57E4973E196C0C17E
-X-7FA49CB5: 0D63561A33F958A582EFFAF7FDF7EC231781C1B5AFD2E6973D0C7675EF4652658941B15DA834481FA18204E546F3947CFBBF6D3A4198F0AFF6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F790063748BA6E06FEBFA861389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C3975373433331DEB835872C767BF85DA2F004C90652538430E4A6367B16DE6309
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj9auBsoWJeY+WgIjHBVCeZg==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+References: <20240306032414.18488-1-prosunofficial@gmail.com>
+In-Reply-To: <20240306032414.18488-1-prosunofficial@gmail.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 6 Mar 2024 13:07:09 -0500
+Message-ID: <CADnq5_Nnx47dQCCyWrx9sNExFjZAOR=qt+nPdN0cqj1zyRLYRg@mail.gmail.com>
+Subject: Re: [PATCH] Removed redundant @ symbol to fix kernel-doc warnings in
+ -next repo
+To: R SUNDAR <prosunofficial@gmail.com>
+Cc: harry.wentland@amd.com, sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com, 
+	alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com, 
+	airlied@gmail.com, daniel@ffwll.ch, rdunlap@infradead.org, 
+	mario.limonciello@amd.com, mwen@igalia.com, swarupkotikalapudi@gmail.com, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The PM6150L LPG modules are compatible with the PM8150L LPG modules,
-document the PM6150L LPG compatible as fallback for the PM8150L LPG.
+Fixed up patch title prefix and applied.
 
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
----
- Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks!
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-index 54a428d3d46f..7b9e0ad1ecaa 100644
---- a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-+++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-@@ -30,6 +30,10 @@ properties:
-           - qcom,pmi8994-lpg
-           - qcom,pmi8998-lpg
-           - qcom,pmk8550-pwm
-+      - items:
-+          - enum:
-+              - qcom,pm6150l-lpg
-+          - const: qcom,pm8150l-lpg
-       - items:
-           - enum:
-               - qcom,pm8550-pwm
--- 
-2.44.0
+Alex
 
+On Tue, Mar 5, 2024 at 10:48=E2=80=AFPM R SUNDAR <prosunofficial@gmail.com>=
+ wrote:
+>
+> For linux-next repository.
+>
+> ./drivers/gpu/drm/amd/display/dc/inc/hw/hubp.h:1: warning: no structured =
+comments found
+> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use=
+ of kernel-doc format:          * @@overlap_only: Whether overlapping of di=
+fferent planes is allowed.
+> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use=
+ of kernel-doc format:          * @@overlap_only: Whether overlapping of di=
+fferent planes is allowed.
+> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1: warning: no structured c=
+omments found
+> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use=
+ of kernel-doc format:          * @@overlap_only: Whether overlapping of di=
+fferent planes is allowed.
+> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:162: warning: Function para=
+meter or struct member 'pre_multiplied_alpha' not described in 'mpcc_blnd_c=
+fg'
+>
+> Signed-off-by: R SUNDAR <prosunofficial@gmail.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h b/drivers/gpu/dr=
+m/amd/display/dc/inc/hw/mpc.h
+> index ba9b942ce09f..34a398f23fc6 100644
+> --- a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
+> +++ b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
+> @@ -110,9 +110,8 @@ struct mpcc_blnd_cfg {
+>          */
+>         enum mpcc_alpha_blend_mode alpha_mode;
+>
+> -       /***
+> -        * @@pre_multiplied_alpha:
+> -        *
+> +       /**
+> +        * @pre_multiplied_alpha:
+>          * Whether pixel color values were pre-multiplied by the alpha ch=
+annel
+>          * (MPCC_ALPHA_MULTIPLIED_MODE).
+>          */
+> @@ -129,7 +128,7 @@ struct mpcc_blnd_cfg {
+>         int global_alpha;
+>
+>         /**
+> -        * @@overlap_only: Whether overlapping of different planes is all=
+owed.
+> +        * @overlap_only: Whether overlapping of different planes is allo=
+wed.
+>          */
+>         bool overlap_only;
+>
+> --
+> 2.34.1
+>
