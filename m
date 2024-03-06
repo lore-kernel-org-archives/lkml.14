@@ -1,235 +1,308 @@
-Received: from KOR01-PS2-obe.outbound.protection.outlook.com (mail-ps2kor01on2053.outbound.protection.outlook.com [40.107.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC49156C2
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 04:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.128.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709698579; cv=fail; b=JTM4TUtc64Yh7aqaQ813HyEKMVqLhUUXHqlUVDs3NHBH5RVjiAgL1FcE3ZFifEpKylMgbvL8IiBXFtaUCs4UXPPslOd3icjh7WI2FfPItB/DPubGP5nPyMBPbrUoIgM4xubiVhj3YqjUKSxW6ofzZD8la8x82LlkVefS3DpyybI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709698579; c=relaxed/simple;
-	bh=ZN7uzfhuRFY4uAhwjZgkRRirm2PyAMr2KM/ioseZQJY=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ja2eUKSgSM3b2uBsA8krYnWgtpXhE4FLcDvXf779MXKo9qVDJxE4lHFxgRhTwRzqjFKIF4Pf9hKN1pgK4gNuj/1AHbk1SQWz1BFAAV93PTrZwNMg1blCMOP9jeb2CZaYeeccxQ1q757RIK6Ap67zKgp2xMDisUg2kmnIjIq2Vdk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skyhighmemory.com; spf=pass smtp.mailfrom=skyhighmemory.com; dkim=pass (2048-bit key) header.d=skyhighmemory.onmicrosoft.com header.i=@skyhighmemory.onmicrosoft.com header.b=7INxlBqS; arc=fail smtp.client-ip=40.107.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skyhighmemory.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skyhighmemory.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B659215E88
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 04:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709698583; cv=none; b=q3rTj5CNR1k5+EVVT78l/53KEp4nSnu5WvquUGWRwo7qL2lM4Cbpc2+MjU9I5CAUMcu6TDdEAHYg5/NQClocMGf1PKGWKn1lvfgkU9yXjW5wKcA/+y1cfp6yJfM/CFpzIP+b6mrSG2oOmf2CcvGVESgz6m/459NFN6Jx+jZqn8Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709698583; c=relaxed/simple;
+	bh=LCWDVMd2cP9Hje6mZMeKEz/+mvm0x1ByA7NqlbRQIC0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LvWl2a4yAc44p8mDk3eW2z/p7vj2foCiEI1OYZYRMBJvL3FBPHa1Ap4MJhfGET7T5RHyZywuQ9OEAVkTcnPd3yLE0XXS9LKoqaSWFs15pwSlF3ruPS7vGIr3wQqyfh1DNGY37ht57ADw6z+taQoDMz5nKIHDg9Injiq8b4ilB54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=HRBGG9fw; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=skyhighmemory.onmicrosoft.com header.i=@skyhighmemory.onmicrosoft.com header.b="7INxlBqS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QvJwJxw51yNN3jFoOcyR/d1NZ7XE3dp+9g+XVWpnnkkgTmJms+IpG6iCdFSo3YpskHKtNt0YXqCSgB2mf4Rr78dV1oioc4Dyeb+x28LZEA9Fn/h5cpKsJ1xZ7tmVVXqJZ6h8BJLcf2Z9gDpCDKNRUoc1ZmoZ0emJ1z2AdS3t+pKv/Rft82jSt8hYa7EiupK6RRA1A5e75zMgCKNTpzyTDWj/hbFVRTyqt7MAesLGsIAykbdtqb0Ni2VJX08ay/6WpxVt9wKGFJDTaiROvfR7f6ddJshljwlDaqA5fDNuaLm4V12SKkitKs2zZQd+ajwGGLKMoWRdaNb7mkkeDZocxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=89trl++5sIrUmtdjWJlt+98R0lOUKCJOxXi8QsSM5Qc=;
- b=gpu9nIs7Kb15debRxrMvqAPU7JDRTqr2Ze1aigGXS/q5Yu4DLxFsMNHOfqcgel36yRhTrODr0JaxPULtTa7jf3Wzg52ba5JCwZkJThfRCNcvq/BRBfDNHANeDBQxZ+FpHYpJTl+TknMpava+j67FNUsp2nSgWVgDr71xA4Lb18Zc4DsDaVUqpgZC3O1m3BAhHkKvTxvED5NYXcCoUY4zACzAeuyolfF717PvM2XFxIZwWk5Uywtgqq5oT9Xd3zdCW8fkT2aYjrSccHkT/Iya0Nj1buwGCCdj+r4qIBwW+lgA8PwbR811dNmQboztsn208otUuIlWS6/BmQKiIQ1HWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=skyhighmemory.com; dmarc=pass action=none
- header.from=skyhighmemory.com; dkim=pass header.d=skyhighmemory.com; arc=none
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="HRBGG9fw"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78833eb8fe5so42426685a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 20:16:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=skyhighmemory.onmicrosoft.com; s=selector1-skyhighmemory-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=89trl++5sIrUmtdjWJlt+98R0lOUKCJOxXi8QsSM5Qc=;
- b=7INxlBqS0/w3N0/C0JTB/ta+k5UR72liBGsa6Kkh/DADWvgAFpxhX8ygejKvd6mMxVGNJmVdkndNhCOXwuq6n3kR2Q7aE6uvXJMx8PvV4L0VanMS5IMwOf8a3GscTkqKU1Of+i1ewCTzfUfZQg2glSSW6K947v7a2Fnq41j41Uc0PpJ6nB4WDyVCtOUa6Sw/F597hNx+cYg0TFqJTxuyzh2t/K+rzwlzQBqYgkmz2/Ge42sGfdkWjtQXcKu/iHP6bRSU3arC8sqIEWkdqrpr8lcFGzPTkyM9Ol4hMn9/7ZkYpcy3klnmHhsJOo62iaWzMlCtDsEfSIu2syCIJMGXHw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=skyhighmemory.com;
-Received: from SE2P216MB2102.KORP216.PROD.OUTLOOK.COM (2603:1096:101:11b::5)
- by SE2P216MB1992.KORP216.PROD.OUTLOOK.COM (2603:1096:101:119::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Wed, 6 Mar
- 2024 04:16:14 +0000
-Received: from SE2P216MB2102.KORP216.PROD.OUTLOOK.COM
- ([fe80::6bad:dd98:cdca:c48d]) by SE2P216MB2102.KORP216.PROD.OUTLOOK.COM
- ([fe80::6bad:dd98:cdca:c48d%3]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
- 04:16:14 +0000
-From: KR Kim <kr.kim@skyhighmemory.com>
-To: miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	mmkurbanov@salutedevices.com,
-	ddrokosov@sberdevices.ru
-Cc: kr.kim@skyhighmemory.com,
-	gch981213@gmail.com,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	moh.sardi@skyhighmemory.com,
-	changsub.shim@skyhighmemory.com
-Subject: [PATCH 2/2] SPI Nand Patch code for SkyHigh Momory
-Date: Wed,  6 Mar 2024 13:15:32 +0900
-Message-Id: <20240306041532.16985-1-kr.kim@skyhighmemory.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SL2P216CA0079.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:2::12) To SE2P216MB2102.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:11b::5)
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1709698578; x=1710303378; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YsnCXmuMRKvBzC2wS12YISgdwmsP7gvOkh2IUHdH8Ac=;
+        b=HRBGG9fwRo0h+3kJixoTql0hy57+yhwG0B6gbFeKUoLPSKCKPGQn3ApCaO+VbPBDGP
+         RNyHGYkOcTOZyZCSlfwOmwxIXMKtZTM5cDk4duqZIzOrJbdYSXAF+kh104ZaZefb6oOD
+         5awcpJS19rJX12hl8l4Xg8MRY1IO02BE5h7b4osVNkKTaVLW9e+M/XBP8k7GIfTMFaKC
+         aouOTiyH60uxosMBrxDRvKMnXzvXBaqD8Me2B3BJ1SQsR/rq91JyTZhQf8+vhhWBmjmU
+         fsi9WRT8YRJy8KXMU5J+yCL/RQe/jTTgLA+UPDx5BvQGeBy/eFlQjfgoG+SvaHvgqDk7
+         GbOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709698578; x=1710303378;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YsnCXmuMRKvBzC2wS12YISgdwmsP7gvOkh2IUHdH8Ac=;
+        b=cML7itrUMV3FxKYDG4bH6hDpbry7k8Y61pLMf5e/QFpZQeE2Is/me7R02pM5WkTvtT
+         3J+YYYEdlAIod4Y+egpAA9GTxVFmiTTKSXlVXPuL/KtEycV6zR9cefXp6F5Qk1zgSxEv
+         7+Oc4rIK01SzC+xzZBpxwKNkYRlTr66UEiLyGUbJt8DZXNzhb2rG4tPyCOCNwrS2vUWd
+         /ZBuGJEGOs/J2tlOeZH5NNNxMo4Me4rBnQYak3H5AE7HeDdGQnUCf6scB1iLPwfBI2En
+         6K2zScs1N5D87+bo45sBGlMw9BM1uRXRKE541FT1efjyrNJIvGDax2X5vqKbl8oBynQD
+         ErgA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMhOuEwntK9+eL1N9JnNtRRBTReLAvO4p/v8N+/4DkDe9FoXDxwJZMpmxFjQcQ/joW5PKXyt7Faxa8Vxc0f9ZgY15OrUeeGK0geDKo
+X-Gm-Message-State: AOJu0YwZh5aDSLd+PDaIkvOkFdbQcWDHftV0Qh/8Oz+tqtLnkU/1zBHQ
+	mPQk8QfhHS0hEyUIHY+36dvcy6aTdUlom49mUrp0b8urJP+byDL79KgakUaJPuA=
+X-Google-Smtp-Source: AGHT+IH53ISQ9vRSP9djmHScGNCF84JCjW6dAZats/bbyGKJZujXKrIpjPFayyIuZuRtwc6fudoADg==
+X-Received: by 2002:a05:620a:4247:b0:788:1191:2498 with SMTP id w7-20020a05620a424700b0078811912498mr6688122qko.6.1709698578337;
+        Tue, 05 Mar 2024 20:16:18 -0800 (PST)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id g2-20020a05620a108200b007884103dfcesm24324qkk.87.2024.03.05.20.16.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 20:16:17 -0800 (PST)
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Zi Yan <ziy@nvidia.com>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V3 01/10] mm: page_alloc: freelist migratetype hygiene
+Date: Tue,  5 Mar 2024 23:08:31 -0500
+Message-ID: <20240306041526.892167-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SE2P216MB2102:EE_|SE2P216MB1992:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce872f17-71c5-415e-7e44-08dc3d9429de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	buRo6fCD+geAf6UMK/NXpvbUo2sT0/SXgtv7154C8j73P1F+zIcfbxv+ypJxEPIKfT0NcKiTLmkh7xqDDvnfltyT876SrxcSpwfB1wEPBQt9xw+21yYf2Ohc3fDUB/xQmcv/G493tYXsyvK8Ep7p0Xs2UCokKe1IP83wRuh25Z/c6cmoETGL7DF3vkgq6jkwbeJEgx23Ilr2C1xdzorWkVSg7LcMhHXLjZzpP8TJUFZI8azDJn/Y1ONiKzr7THt8z84Pe6Dc22oz2ses6UiCdBTpjG2vkQmP8tX0MfMru5sJEcp9gG4NRktUc8V/0hLYC9H26X2VpWfaGipAUpfpPjLx2462VyX4RbcQdZ3Ctg8vpe0vo9wNUH/YnSr0kwnff4m3PALJX0zvuL9xaKOgjt7KPjIyQ2ICCubOUk/PiMwKUlIs0ZdoVGkt2HQTzu+KC5HAJ6UA8CAINM3ojjt+PIioCr6DX2bv+IzQqLkK5XrEg7qC/TRAJXlb66AfOndxwoOMtuIqtMsge4OQHy3m+rVISZHguleBT4tKbIB54K4Xb0/HdJwvPBtCZDQ27RI5IQ+umjivv3mMpYRUDgjMbyjWDGUu0SmcP52j2iSUdqPHi6nakUBFJNhAhrP+l1ZC0qQrhTQiidWjs+Y6RqiEnSqzXqrCUexZpS3qnr+uFmHAQhh6UaazzzIsQDY+teWL7jRbJPeghigL4kjyWcDncw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SE2P216MB2102.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/pMq6yMP7evG0k/FJffwywPYyCQPHMB2Lp7fLpbcIOKyhNsihRr1qGQgBK4G?=
- =?us-ascii?Q?9sF1doEAZ7wwbDrb7roUnl0oF66hbDEVb1w8pyoxdfTZ6uBCgIsDazexkffC?=
- =?us-ascii?Q?hpjqMXgoRPIF2s2pZ4A4Mfx7Onow11dg9t02sYi90ijkHOXYIIRuZIYnmqFz?=
- =?us-ascii?Q?ptLZDGYg7qSDCV47RIoudTw5RwfT5QHCF5LAKle8ea0I+86Y9cfSqvu6Szu4?=
- =?us-ascii?Q?ldNSStbsmyEzTYYvcyU9h4Y3BPwFi6GozrAabBqiRkTi4DGFgBQaZhNNUujx?=
- =?us-ascii?Q?O/vB71/6eAf0oUpbb9MiXPUcSHITAve8c8CQdEYisSe6csGxj6IHi4LNdxaQ?=
- =?us-ascii?Q?gOsOEZezkFIb3+g33MhXaTx27aXO1lX72E/3rd4dWnfO5KzPKVwrVmgAmmNd?=
- =?us-ascii?Q?YN2D0N+y/kAf0Kr2cy3MfPoDvqQ3RBeyk/X2BUkT0i4CYkthhxNh+mnDqzKD?=
- =?us-ascii?Q?9xIv39868FbCD0zQ6ImnP2HwhLBveoV5jW+X/WJ8TxPZQZMarjHUUgEK6A7L?=
- =?us-ascii?Q?UqOs21QoeHg/UFV89nuKndMRkH3+7tJ4Rn7FMelzAQrYgblOcdpoad8q6mMe?=
- =?us-ascii?Q?Tu5/uk+a1gEnvpoOfwEa2xAXVzGs3Tu0pUhJ2dEOEBosorYOWp+VaCoFhL//?=
- =?us-ascii?Q?0kQMxLpYeAVLLu1309DNAd00kMccXktLIOMBSQoY4K6UvBpn/xa+Tn9xR3/7?=
- =?us-ascii?Q?rqog3fv7ZwvYiOOAVsPgIXfsp/nmahgAb9RKNjihvUT4XkA5NUR4jqZ4NBaA?=
- =?us-ascii?Q?hMAOS97wKRirUhXO3tEPZmbqDGwHzU5hE8k7AgptgTkahBcRUK2JdcF6Wm/E?=
- =?us-ascii?Q?gMQPaRMW0kyXkc8VTktCncuqzQJoBuxLqZ2xUlmTZDNFCLKusDB1NglPxugd?=
- =?us-ascii?Q?NrTR5uRk2j0/qRgB4Tjag8NO36j/F0kHbNzjPct1pGue6LMgj174rmImcLpN?=
- =?us-ascii?Q?5OePDf2QdnRy6Ct5f73G++F2DKJNqgvVpf87l5o676XSkh/CoRVf6hmaPGnp?=
- =?us-ascii?Q?8v5c1vj9FtfeCFuT6GUqPCzNfq/rvDXNWsobpV9Lb3WFalyR+AhbMgVqzaq0?=
- =?us-ascii?Q?WtsReDVnq7/Ta/sPr8kBqwEmmAobYZWBOQhH/B5eYuMsO9huwFjyp+y5f/RO?=
- =?us-ascii?Q?fIVi+mqYDwsTi8Jrqo2/uehxCmA+SlgOIth6qPNyGMxeTNtSIdUVdLv8jmlf?=
- =?us-ascii?Q?2Bb/HgQcFUx/jDuo4Yq6WmdAqkal9o6dtGXPV/6JLn8Vh5QCIJmxnNzzrWtY?=
- =?us-ascii?Q?7Ay5eYTvuw62qiet6jt/1byQYnkhFIVxD0HMt5/td+qCEArENETbrl50vqpt?=
- =?us-ascii?Q?Eaofm7WIa/7chW4gubhdccJdRVeI3bDGN5TIjcDyOjpNbBUSyya5MSt7Orls?=
- =?us-ascii?Q?eN71OMLRJNVeFa889QfRG0AEeANwvrkL9C3ngeFk5LVhS1PL8PXoNsx502dD?=
- =?us-ascii?Q?JwpV/QFNpXJrtFJgQpeYXJWusk8ShwauUGf2N8AuFmH853m3qnslgzHiNDbj?=
- =?us-ascii?Q?UbTZCtz1dGxx/xiL1gWLLkQwC4fsMncnRtCiqIZBUGd78koj2u3H+1R38h7X?=
- =?us-ascii?Q?YdQboKaY0+ENsnN05OfF4xYgEiv2IXZ9H5Syj2lAShtFNXnx1U/aRB6iv94v?=
- =?us-ascii?Q?Fg=3D=3D?=
-X-OriginatorOrg: skyhighmemory.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce872f17-71c5-415e-7e44-08dc3d9429de
-X-MS-Exchange-CrossTenant-AuthSource: SE2P216MB2102.KORP216.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 04:16:14.7350
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 39b82b34-0966-49dc-81a7-5bcab7ea53c0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1ppHe1htDSHnpq1LYB9XQkAJwhXiB1Tl9H0ajAB945X0NAGy3W6H1O1Y4wLj8SWEVqp4tpDT8HkPPHN9QwmGIv4RYriAcwRg+/5FbsfsGo8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE2P216MB1992
+Content-Transfer-Encoding: 8bit
+
+Hello! This is version 3 of the freelist hygiene patches. Sorry it's
+been a while. The short of it is I fixed the bugs uncovered last time
+by Mike and Vlastimil, incorporated Vlastimils suggested optimizations
+and reworked a good chunk of the page isolation code with Zi.
+
+I also iterated on the benchmarks somewhat and grabbed the extfrag
+stats Mel suggested, as well as stats on mismatches between requested
+and received migratetypes from the allocator. I think the results of
+this are pretty good.
+
+Rationale, test results, and detailed changelog follow.
 
 ---
- drivers/mtd/nand/spi/Makefile  |  2 +-
- drivers/mtd/nand/spi/skyhigh.c | 57 ++++++----------------------------
- 2 files changed, 11 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
-index 48b429d90460..1e61ab21893a 100755
---- a/drivers/mtd/nand/spi/Makefile
-+++ b/drivers/mtd/nand/spi/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- spinand-objs := core.o alliancememory.o ato.o esmt.o foresee.o gigadevice.o macronix.o
--spinand-objs += micron.o paragon.o toshiba.o winbond.o xtx.o skyhigh.o
-+spinand-objs += micron.o paragon.o skyhigh.o toshiba.o winbond.o xtx.o
- obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
-diff --git a/drivers/mtd/nand/spi/skyhigh.c b/drivers/mtd/nand/spi/skyhigh.c
-index 71de4fa34406..dd348849216d 100644
---- a/drivers/mtd/nand/spi/skyhigh.c
-+++ b/drivers/mtd/nand/spi/skyhigh.c
-@@ -12,8 +12,8 @@
- #define SPINAND_MFR_SKYHIGH		0x01
- 
- #define SKYHIGH_STATUS_ECC_1TO2_BITFLIPS	(1 << 4)
--#define SKYHIGH_STATUS_ECC_3TO4_BITFLIPS	(2 << 4)
--#define SKYHIGH_STATUS_ECC_5TO6_BITFLIPS	(3 << 4)
-+#define SKYHIGH_STATUS_ECC_3TO6_BITFLIPS	(2 << 4)
-+#define SKYHIGH_STATUS_ECC_UNCOR_ERROR  	(3 << 4)
- 
- #define SKYHIGH_CONFIG_PROTECT_EN	BIT(1)
- 
-@@ -62,49 +62,15 @@ static const struct mtd_ooblayout_ops skyhigh_spinand_ooblayout = {
- 	.free = skyhigh_spinand_ooblayout_free,
- };
- 
--#if 0
--bool skyhigh_spinand_isbad(struct spinand_device *spinand,
--			   const struct nand_pos *pos)
--{
--	u8 marker;
--	struct nand_page_io_req req = {
--		.pos = *pos,
--		.ooblen = 1,
--		.ooboffs = 0,
--		.oobbuf.in = &marker,
--		.mode = MTD_OPS_RAW,
--	};
--
--	req.pos.page = 0;
--	spinand_read_page(spinand, &req);
--	if (marker != 0xff)
--		return true;
--
--#if 0
--	req.pos.page = 1;
--	spinand_read_page(spinand, &req);
--	if (marker != 0xff)
--		return true;
--
--	req.pos.page = 63;
--	spinand_read_page(spinand, &req);
--	if (marker != 0xff)
--		return true;
--#endif
--
--	return false;
--}
--#endif
--
- static int skyhigh_spinand_ecc_get_status(struct spinand_device *spinand,
- 				  u8 status)
- {
- 	/* SHM
--	00 : No bit-flip
--	01 : 1-2 errors corrected
--	10 : 3-6 errors corrected         
--	11 : uncorrectable
--	*/
-+	 * 00 : No bit-flip
-+	 * 01 : 1-2 errors corrected
-+	 * 10 : 3-6 errors corrected         
-+	 * 11 : uncorrectable
-+	 */
- 
- 	switch (status & STATUS_ECC_MASK) {
- 	case STATUS_ECC_NO_BITFLIPS:
-@@ -113,12 +79,10 @@ static int skyhigh_spinand_ecc_get_status(struct spinand_device *spinand,
- 	case SKYHIGH_STATUS_ECC_1TO2_BITFLIPS:
- 		return 2;
- 
--	/* change from 4 to 6 */
--	case SKYHIGH_STATUS_ECC_3TO4_BITFLIPS:
-+ 	case SKYHIGH_STATUS_ECC_3TO6_BITFLIPS:
- 		return 6; 
- 
--	/* uncorrectable for '11' */
--	case SKYHIGH_STATUS_ECC_5TO6_BITFLIPS:
-+ 	case SKYHIGH_STATUS_ECC_UNCOR_ERROR:
- 		return -EBADMSG;;
- 
- 	default:
-@@ -179,8 +143,7 @@ static int skyhigh_spinand_init(struct spinand_device *spinand)
- 
- static const struct spinand_manufacturer_ops skyhigh_spinand_manuf_ops = {
- 	.init = skyhigh_spinand_init,
--/*	.isbad = skyhigh_spinand_isbad,*/
--};
-+ };
- 
- const struct spinand_manufacturer skyhigh_spinand_manufacturer = {
- 	.id = SPINAND_MFR_SKYHIGH,
--- 
-2.34.1
+This is a breakout series from the huge page allocator patches[1].
+
+While testing and benchmarking the series more incrementally, as per
+reviewer request, it became apparent that there are several sources of
+freelist migratetype violations that later patches in the series hid.
+
+Those violations occur when pages of one migratetype end up on the
+freelists of another type. This encourages incompatible page mixing
+down the line, where allocation requests ask for one migrate type, but
+receives pages of another. This defeats the mobility grouping.
+
+The series addresses those causes. The last patch adds type checks on
+all freelist movements to rule out any violations. I used these checks
+to identify the violations fixed up in the preceding patches.
+
+The series is a breakout, but has merit on its own: Less type mixing
+means improved grouping, means less work for compaction, means higher
+THP success rate and lower allocation latencies.
+
+The results can be seen in a mixed workload that stresses the machine
+with a memcache-type workload and a kernel build job while
+periodically attempting to allocate batches of THP. The following data
+is aggregated over 50 consecutive defconfig builds:
+
+                                                        VANILLA                 PATCHED
+Hugealloc Time mean                      165843.93 (    +0.00%)  113025.88 (   -31.85%)
+Hugealloc Time stddev                    158957.35 (    +0.00%)  114716.07 (   -27.83%)
+Kbuild Real time                            310.24 (    +0.00%)     300.73 (    -3.06%)
+Kbuild User time                           1271.13 (    +0.00%)    1259.42 (    -0.92%)
+Kbuild System time                          582.02 (    +0.00%)     559.79 (    -3.81%)
+THP fault alloc                           30585.14 (    +0.00%)   40853.62 (   +33.57%)
+THP fault fallback                        36626.46 (    +0.00%)   26357.62 (   -28.04%)
+THP fault fail rate %                        54.49 (    +0.00%)      39.22 (   -27.53%)
+Pagealloc fallback                         1328.00 (    +0.00%)       1.00 (   -99.85%)
+Pagealloc type mismatch                  181009.50 (    +0.00%)       0.00 (  -100.00%)
+Direct compact stall                        434.56 (    +0.00%)     257.66 (   -40.61%)
+Direct compact fail                         421.70 (    +0.00%)     249.94 (   -40.63%)
+Direct compact success                       12.86 (    +0.00%)       7.72 (   -37.09%)
+Direct compact success rate %                 2.86 (    +0.00%)       2.82 (    -0.96%)
+Compact daemon scanned migrate          3370059.62 (    +0.00%) 3612054.76 (    +7.18%)
+Compact daemon scanned free             7718439.20 (    +0.00%) 5386385.02 (   -30.21%)
+Compact direct scanned migrate           309248.62 (    +0.00%)  176721.04 (   -42.85%)
+Compact direct scanned free              433582.84 (    +0.00%)  315727.66 (   -27.18%)
+Compact migrate scanned daemon %             91.20 (    +0.00%)      94.48 (    +3.56%)
+Compact free scanned daemon %                94.58 (    +0.00%)      94.42 (    -0.16%)
+Compact total migrate scanned           3679308.24 (    +0.00%) 3788775.80 (    +2.98%)
+Compact total free scanned              8152022.04 (    +0.00%) 5702112.68 (   -30.05%)
+Alloc stall                                 872.04 (    +0.00%)    5156.12 (  +490.71%)
+Pages kswapd scanned                     510645.86 (    +0.00%)    3394.94 (   -99.33%)
+Pages kswapd reclaimed                   134811.62 (    +0.00%)    2701.26 (   -98.00%)
+Pages direct scanned                      99546.06 (    +0.00%)  376407.52 (  +278.12%)
+Pages direct reclaimed                    62123.40 (    +0.00%)  289535.70 (  +366.06%)
+Pages total scanned                      610191.92 (    +0.00%)  379802.46 (   -37.76%)
+Pages scanned kswapd %                       76.36 (    +0.00%)       0.10 (   -98.58%)
+Swap out                                  12057.54 (    +0.00%)   15022.98 (   +24.59%)
+Swap in                                     209.16 (    +0.00%)     256.48 (   +22.52%)
+File refaults                             17701.64 (    +0.00%)   11765.40 (   -33.53%)
+
+Huge page success rate is higher, allocation latencies are shorter and
+more predictable.
+
+Stealing (fallback) rate is drastically reduced. Notably, while the
+vanilla kernel keeps doing fallbacks on an ongoing basis, the patched
+kernel enters a steady state once the distribution of block types is
+adequate for the workload. Steals over 50 runs:
+
+VANILLA         PATCHED
+1504.0		227.0
+1557.0		6.0
+1391.0		13.0
+1080.0		26.0
+1057.0		40.0
+1156.0		6.0
+805.0		46.0
+736.0		20.0
+1747.0		2.0
+1699.0		34.0
+1269.0		13.0
+1858.0		12.0
+907.0		4.0
+727.0		2.0
+563.0		2.0
+3094.0		2.0
+10211.0		3.0
+2621.0		1.0
+5508.0		2.0
+1060.0		2.0
+538.0		3.0
+5773.0		2.0
+2199.0		0.0
+3781.0		2.0
+1387.0		1.0
+4977.0		0.0
+2865.0		1.0
+1814.0		1.0
+3739.0		1.0
+6857.0		0.0
+382.0		0.0
+407.0		1.0
+3784.0		0.0
+297.0		0.0
+298.0		0.0
+6636.0		0.0
+4188.0		0.0
+242.0		0.0
+9960.0		0.0
+5816.0		0.0
+354.0		0.0
+287.0		0.0
+261.0		0.0
+140.0		1.0
+2065.0		0.0
+312.0		0.0
+331.0		0.0
+164.0		0.0
+465.0		1.0
+219.0		0.0
+
+Mismatches are down too. Those count every time an allocation request
+asks for one migratetype and gets another. This still happens in the
+patched kernel due to non-stealing fallbacks, but it's quite rare and
+follows the pattern of overall fallbacks - once the block type
+distribution settles, mismatches cease as well:
+
+VANILLA:        PATCHED:
+182602.0	268.0
+135794.0	20.0
+88619.0		19.0
+95973.0		0.0
+129590.0	0.0
+129298.0	0.0
+147134.0	0.0
+230854.0	0.0
+239709.0	0.0
+137670.0	0.0
+132430.0	0.0
+65712.0		0.0
+57901.0		0.0
+67506.0		0.0
+63565.0		4.0
+34806.0		0.0
+42962.0		0.0
+32406.0		0.0
+38668.0		0.0
+61356.0		0.0
+57800.0		0.0
+41435.0		0.0
+83456.0		0.0
+65048.0		0.0
+28955.0		0.0
+47597.0		0.0
+75117.0		0.0
+55564.0		0.0
+38280.0		0.0
+52404.0		0.0
+26264.0		0.0
+37538.0		0.0
+19671.0		0.0
+30936.0		0.0
+26933.0		0.0
+16962.0		0.0
+44554.0		0.0
+46352.0		0.0
+24995.0		0.0
+35152.0		0.0
+12823.0		0.0
+21583.0		0.0
+18129.0		0.0
+31693.0		0.0
+28745.0		0.0
+33308.0		0.0
+31114.0		0.0
+35034.0		0.0
+12111.0		0.0
+24885.0		0.0
+
+Compaction work is markedly reduced despite a better outcome.
+
+In the vanilla kernel, reclaim seems to have been driven primarily by
+watermark boosting that happens as a result of fallbacks. With those
+all but eliminated, watermarks average lower and kswapd does less
+work. The uptick in direct reclaim is because THP requests have to
+fend for themselves more often - which is intended policy right
+now. Aggregate reclaim activity is lowered significantly, though.
+
+V3:
+- fixed freelist type violations from non-atomic page isolation
+  updates (Zi Yan)
+- fixed incorrect migratetype update ordering during merge (Vlastimil Babka)
+- reject moving a zone-straddling block altogether (Vlastimil Babka)
+- fixed freelist type violations from lockless migratetype lookups in
+  cornercase freeing paths (Vlastimil Babka)
+- fixed erroneous WARN in the bulk freeing path that was intended to catch
+  mistakes in the now-removed pcpcache (Mike Kravetz)
+- fixed typo in patch 1's changelog (Zi Yan)
+- optimized migratetype lookup in free_unref_page_list() (Vlastimil Babka)
+- batched vmstat updates in page merging hot path (Vlastimil Babka)
+- rebased to mm-everything-2024-03-05-20-43 (v6.8-rc5+)
+
+V2:
+- dropped the get_pfnblock_migratetype() optimization
+  patchlet since somebody else beat me to it (thanks Zi)
+- broke out pcp bypass fix since somebody else reported the bug:
+  https://lore.kernel.org/linux-mm/20230911181108.GA104295@cmpxchg.org/
+- fixed the CONFIG_UNACCEPTED_MEMORY build (lkp)
+- rebased to v6.6-rc1
+
+ include/linux/mm.h             |  18 +-
+ include/linux/page-isolation.h |   5 +-
+ include/linux/vmstat.h         |   8 -
+ mm/debug_page_alloc.c          |  12 +-
+ mm/internal.h                  |   9 -
+ mm/page_alloc.c                | 650 +++++++++++++++++++++------------------
+ mm/page_isolation.c            | 122 +++-----
+ 7 files changed, 410 insertions(+), 414 deletions(-)
+
+Based on mm-everything-2024-03-05-20-43.
+
+[1] https://lore.kernel.org/lkml/20230418191313.268131-1-hannes@cmpxchg.org/
 
