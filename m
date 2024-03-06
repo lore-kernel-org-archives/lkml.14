@@ -1,100 +1,83 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872B98615A;
-	Wed,  6 Mar 2024 12:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74D612C81D
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 12:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709729601; cv=none; b=fW1Rub3mVmgnT7WFVJ5aoeqidQ3Rih2QArg9+se0teLZa9BJLLQpum6XrbJKFLuhEszWEZLkSNSUm5n+29PEhIP6TF/E2rm3wpUswSm03OUH1rheSx//xn34kFus4sicMSS5RfVEf7cYr8n84toWnw4RtUvz22gH5c1SMihM1fQ=
+	t=1709729602; cv=none; b=TjBm2+CmNKIlUmfA19aiPIE1DNMbCaD5KzW7EYFy5nHDclInZdIXScPNdfyNrIaEKSgw5Kt97RKwujo7j/AVHwHhPNVxflnjaFktfv6LHhUH7RACJa4e5E8rw3juXoDX/8QHpC2bKKNfq4kQ1j8jx7H3aeLWfIYhr9LdR2uwMx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709729601; c=relaxed/simple;
-	bh=y3kQn2h0xqTDbe12pz3WTdK+o94C/uEC85RMraZcn5Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vB1WmAfTNZqEbm4nOw8hVgJ2MGETKH3S7W/guzKSSXBqDIsBNlbl1ujdmLwY48zfO0eZudLK7mib8JcTkdVrildT2DNIV+6KEKqOkCgsO4M//0nr0ziH8HfDt+PLk/mjyFAUhXtf6KYoQCE+jGp5Q0mJ2wWRvhj7SWnr2oSe6aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-21f10aae252so739162fac.0;
-        Wed, 06 Mar 2024 04:53:19 -0800 (PST)
+	s=arc-20240116; t=1709729602; c=relaxed/simple;
+	bh=9+t9Y7EpY+Nh25tbLiKHuxy0RxzvNfE8+vLUCPQG2B0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JV9tj5XNjVTkdQ6WnU7zzCi9jc21loxHEj6F6QLI/Ay4F7NBLBjSNEd92qNL88c5FYuS/Ins2S2St7ikZchR3YMoKlG+e7ZTehKwr65qsOujXc2zJRsHYJ2Av41nUN4LNhTp9DYoKMqjvUC9WmAGprXWOiOBstgH/pomk0Uz6s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c83b5361feso336360239f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 04:53:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709729598; x=1710334398;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qRJTBcBNjexBHBHoxpbZHoKaxr9Kj8yTCM0BDotImdU=;
-        b=afFyQaUizVj77GqPsO7wzm/ElORUTQ6W3reLrvMCxfGYBtPABnh03M9E6iFk+XAFGP
-         WdkORiRPs4gqpBY8u95uZrpl59oKKCTOWTYror2aF0v0RhysPyH8CyQO3dl4pejDmise
-         PMyL+J5JY3+2lD0SSheeK6xhoFj8SBy4KmFfuxOp95WtBQG1qoEii9WdoR++20+GP4Fo
-         p5nr9a2sCNeTMk5zRwHUjBfmbEs/sSL/TaUW8ZKixZAghR/Y8l3RJZ4oykJ04iEfpNXm
-         kaVAKItx2dc5GJF7V/i4lhpY2f5nfMJGn034keb99AbeT9rF+hzzx9xitGFr3RBh931y
-         aR4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUbIRxncaUHlc6Xxft4YXurGJj9WhtG9jsVHswZrlUouP3peDqBcKkafKyeMh/qHRfZbJr9Y9GeDoyjz8T0KlTxe+itw3Bt96A6LCcdnVfFCnTy0F9op1kXjEqQYYlEAop+59A+Jj4=
-X-Gm-Message-State: AOJu0YwSUM+3c597nZcpDXHqeLKjsU+hPuiMDzzjtR2wyWj2X81p7fJc
-	uPQ19SP8PZWD5O7MJREzzfi4nuYKS8V3gSIWOmSFOtp3E7XwFHuImyucYST+dUSsxCQ58t+p9ae
-	fOZQFZfxUvG9HJV9IAmjI2bakDIo=
-X-Google-Smtp-Source: AGHT+IE8Au1kDor7m+c4NznK728Sahd1d7tP44xofyEfiZLxZtSRLXZB4oO2ia5w44eDRWVy1ojmEG+Te/BUP+A4wmU=
-X-Received: by 2002:a05:6870:b507:b0:21f:cd7d:9904 with SMTP id
- v7-20020a056870b50700b0021fcd7d9904mr3603831oap.4.1709729598602; Wed, 06 Mar
- 2024 04:53:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709729600; x=1710334400;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gou0OiZ3/4qiZbmE2nZGs4XwgQLrszXKYnscoVCGmpE=;
+        b=MBym556PIhANGtUM1fsiMTzXYJVMc3CjFiD5USK53DrJ2RgHSFDRKZWKGP2voncPCY
+         4nUtOOl/AbTWb4lLttEsehHMpcrdJIfQQzO+9BZYKi17RHM6uhqxmO5nZxXzSo4kfa60
+         N81hemXyN8RZcD6rh0M3A7sqavtrBdqXGjY8dblsv9d8WW5KuG5HSgt+p/unJSfN/1xr
+         AZPcjzNqi6OuXMIvTQGu6kiDIYD6XqvEcAZxPCkNBlAfaRtaiy3kZnPMh4zHZdPm+sYo
+         jpZEG3m19Amz4TPESFkvfbByCK+Oeh0gO/BB6nbGxRFxHXeMoFCtqAXJhZyvdnJfUy4b
+         EPjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzfRNldXW0JbUtRjPlBqm6aZtYleNLxhpJg4DY+Ap5MhJMppTuDiBw93d+vxemORZtWPxxLn3REhG7rVYSnxMfooLd/tyla6U0y67I
+X-Gm-Message-State: AOJu0YwNOQFP9QbAqQmM9wJRjLu8TSgTSUsmj1btwRaSgGw8U2iXrE46
+	XZ8vLDHQD9fqxp6YNSbJOvEX6j/j84OPFTxR3u0LVf/ZK18WnCWTIXo5OyrzoOAsVhqOa7Glycf
+	GtNxNDrOzQZhFMITTxNi8rI+ulDI9Bl/0tKReji4P390b8QzutL5ElBw=
+X-Google-Smtp-Source: AGHT+IHye2it3rgUqKQhQ+qi8X1zN6qRtpc3cVbcToHSfNtqcRix4qPLQm4dcuStQS6HxSOz4woPjklF59wFcml7ddR5LgzbYIXw
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306085428.88011-1-daniel.lezcano@linaro.org>
- <CAJZ5v0jAn2F-GH=fguX0+3bG38vyAxfufadtFiBUfg=EjTBh6Q@mail.gmail.com> <14651d5b-0f67-4bff-b699-2cd1601b4fb2@linaro.org>
-In-Reply-To: <14651d5b-0f67-4bff-b699-2cd1601b4fb2@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 6 Mar 2024 13:53:07 +0100
-Message-ID: <CAJZ5v0j6At1DuQYjjbA-fw9Z-jJPhXSVSz=_uLa3KfNMJowYbA@mail.gmail.com>
-Subject: Re: [RFC PATCH] thermal/core: Fix trip point crossing events ordering
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	"open list:THERMAL" <linux-pm@vger.kernel.org>
+X-Received: by 2002:a05:6638:40a3:b0:474:e855:ddfd with SMTP id
+ m35-20020a05663840a300b00474e855ddfdmr242316jam.6.1709729599914; Wed, 06 Mar
+ 2024 04:53:19 -0800 (PST)
+Date: Wed, 06 Mar 2024 04:53:19 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000077157f0612fd71e8@google.com>
+Subject: [syzbot] Monthly kernfs report (Mar 2024)
+From: syzbot <syzbot+list0fd290f5a0f10ba9dc82@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 6, 2024 at 1:43=E2=80=AFPM Daniel Lezcano <daniel.lezcano@linar=
-o.org> wrote:
->
-> On 06/03/2024 13:02, Rafael J. Wysocki wrote:
->
-> [ ... ]
->
-> >> +#define for_each_trip_reverse(__tz, __trip)    \
-> >> +       for (__trip =3D &__tz->trips[__tz->num_trips - 1]; __trip >=3D=
- __tz->trips ; __trip--)
-> >> +
-> >>   void __thermal_zone_set_trips(struct thermal_zone_device *tz);
-> >>   int thermal_zone_trip_id(const struct thermal_zone_device *tz,
-> >>                           const struct thermal_trip *trip);
-> >> --
-> >
-> > Generally speaking, this is a matter of getting alignment on the
-> > expectations between the kernel and user space.
-> >
-> > It looks like user space expects to get the notifications in the order
-> > of either growing or falling temperatures, depending on the direction
-> > of the temperature change.  Ordering the trips in the kernel is not
-> > practical, but the notifications can be ordered in principle.  Is this
-> > what you'd like to do?
->
-> Yes
->
-> > Or can user space be bothered with recognizing that it may get the
-> > notifications for different trips out of order?
->
-> IMO it is a bad information if the trip points events are coming
-> unordered. The temperature signal is a time related measurements, the
-> userspace should receive thermal information from this signal in the
-> right order. It sounds strange to track the temperature signal in the
-> kernel, then scramble the information, pass it to the userspace and
-> except it to apply some kind of logic to unscramble it.
+Hello kernfs maintainers/developers,
 
-So the notifications can be ordered before sending them out, as long
-as they are produced by a single __thermal_zone_device_update() call.
+This is a 31-day syzbot report for the kernfs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/kernfs
 
-I guess you also would like the thermal_debug_tz_trip_up/down() calls
-to be ordered, wouldn't you?
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 12 issues are still open and 20 have been fixed so far.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 1761    Yes   possible deadlock in input_event (2)
+                  https://syzkaller.appspot.com/bug?extid=d4c06e848a1c1f9f726f
+<2> 245     Yes   WARNING in kernfs_remove_by_name_ns (3)
+                  https://syzkaller.appspot.com/bug?extid=93cbdd0ab421adc5275d
+<3> 52      Yes   KASAN: use-after-free Read in kernfs_next_descendant_post (2)
+                  https://syzkaller.appspot.com/bug?extid=6bc35f3913193fe7f0d3
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
