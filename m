@@ -1,347 +1,193 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04B85C5EB
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 07:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709709773; cv=none; b=qpudg3ElxE+V2JzlvDL55wucghdAmwQOOxK35P5YhkUfkaSokMYT1wVnC7otaEZSIkhBp70OGsUfJynKKQYUbxcj6VNpi76/7DMU5UUm49tX84orIpu1IseapI3ht7gDdWoUofgCQvd4broCZxHKvkgr0nn3hteNZeZSDD5g6Zg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709709773; c=relaxed/simple;
-	bh=QHK8Z72uJL0SSMh0ktUYerHH/KE8nlgKIDvUzJ3vtc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=buncOck1kFlwlQhne3DbffMCWlYzzjHKm5PrydLhe5Lq3+6WmMN4e9OHFx/R1YcwmoGF0LV4/pDtiKcEawuE+IwEWMtbes0k7DPoEKby2Ddhyj+YAtu1KnV/F7i83nfiAkGeESZ4CYGarzxt/rCkfmGrDeU3pIHswSkH4yO2dy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nVtI3sVH; arc=none smtp.client-ip=209.85.217.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9245C5EB;
+	Wed,  6 Mar 2024 07:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709709810; cv=fail; b=uf/V77qpumTAcBuToEysFPIMLTZZivolgqeRq3q4sqvdz1BPw8JUvtanpZVIfe8skOwqS0jQWFmEeN3O7NM6Rk9Ml5aC+XXnqHwSG0IwblPYufv2tH2Lvt9Dya9lLWf8+OZV8Vcc+ql+Yrtge/UGenVXhE6YzmGXQFy2viwOv1c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709709810; c=relaxed/simple;
+	bh=uZ60qQz2YJlWM3Yz1HVdHUjBG28E/V5PeB1a8JlnQLM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GEfImIxv4WDGwJ9yoBC3sbicWo9k6uhFM97FMB8aLV2zDQh0/wg8WHhPSUB5dQpUUc4WQJeQlZW9GLBr5HPic/ImEq9zDmiMLt5kbUH1p8t5Ps7Fr6ZryG6eXPvVVJ9eUuZT+XMhI+GokQatwZGMQdoi2hUbFpnMX5I458RMl5E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kzl3is/u; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVtI3sVH"
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-472e7d23ffeso200830137.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 23:22:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709709771; x=1710314571; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ulBOfDA6KKatRNYKBMl/Vz+UTRv4qUu7DN7qV5pdB4=;
-        b=nVtI3sVHayTNYMDCK21sViWVVzXlEkRAMyDpA0m022wILD9aJYspHzYjsStsbyPyQH
-         8LPGcZoim8gTE5wOZZfMPET7m7NgueHQP6Kwke/RDf9/htphMLtStVquPL9hjtKB9178
-         J9SGLLITEga2JLGbhWp92t9WeyxFHjM5046VQG7ofT9jpnDlIrITKgJPEpVg0230dkZO
-         TXqCMYmeX03taD+9WkHRViya2IaoxVtzgDoTKQkryZJ8xROlMPWkxJ1KoAiNg14fP1X7
-         FtG9ARFsycf7qYp3sJ3D/rvgKeY5UiPkvucVh1+cBD+UEs3ZpTcQnduu94Xha63ENBMF
-         PGYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709709771; x=1710314571;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3ulBOfDA6KKatRNYKBMl/Vz+UTRv4qUu7DN7qV5pdB4=;
-        b=IitM8LAYtp+kjHJJK7+IdEN+J/vpzuEr6uqoskXqKHffcK48lZ8AmYjCjpntYG5qp2
-         frmioVs9Z2+7IyK4ejOoKDTwJkfEzOkVISPgqfElWvO7E1bjrIKxAkQMpYImcdhx0gLK
-         jD2BTn66WAB0jtHfk16pCB7zfm8R5uBjfC+N8RU3J1hvQAP9jwl6W/9P1GgZ20q8kLVQ
-         7L4al1To69TWkukSPA+DYw9HYl90pOvXjUrAJR0jKah4PECz9OkIaKtEMbZTHRNucT70
-         lCjRwGgXq3jgZ1ZGCAkY6ny4iNQgvfLgpNbFwHza/8wTtGANF6jE9v6CZQDr709j2um5
-         50Og==
-X-Forwarded-Encrypted: i=1; AJvYcCXN5OCzrKHj2DVlSUa4LxitvtvgnHIVjRDnMiO4KSpnqMWuEku+BqZoq/dFUIs11yrSKZ4nZ8FUam1kDgpCds4o/Q1EfaIdgDc6FwFO
-X-Gm-Message-State: AOJu0YxGTzKG2sKmtes732Wio9sMO1BRGxO/Z69XQ6hroM02Cwu90hMm
-	ZbSNn3NX+FSaFwpGAQM/did8creiGURRKldm1dWPYtSz8iJwKXpf7tGYtm3l46srkHe1UeZWB4r
-	exzy98pysqZIduPfpz/zW/XKZPlihKxVLhiTfOw==
-X-Google-Smtp-Source: AGHT+IF1mkXE/cTsTY/hiUFsCDpenaGNFc93A+ucBcvJUF+nUzX9aZITEoEAcrQBQ+FZrs5ZVHzIV82mbbNltp/O5iY=
-X-Received: by 2002:a05:6102:5492:b0:472:60b3:d4a4 with SMTP id
- bk18-20020a056102549200b0047260b3d4a4mr5023876vsb.27.1709709770838; Tue, 05
- Mar 2024 23:22:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kzl3is/u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709709809; x=1741245809;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=uZ60qQz2YJlWM3Yz1HVdHUjBG28E/V5PeB1a8JlnQLM=;
+  b=Kzl3is/ufovqHodzTEQiljBkyGrHAPL0XeBPEWJweA3ZPG6dqQGdJ9oo
+   wyM0c524BlqxHyISZntzQrS/zQkC1yrn6LP0DX+kqZnWXz6waEChRa8RM
+   AjpINA/v4kOWpe3rAasnv6erEB1jRYWkDdvn8ModD/eYT7KkM7dlwK5Ye
+   qLViV+NDCrJE69eVsxYtB5eK3S+yGxN81VFjG4VOMihShfIGyLp9bY52D
+   hjSKLRV+xccpgpv3Llf+EIpIujWplg+A7HPna2XK50qP9NpWmnfAet4ao
+   LQQ+ZINhNcR/t0c1mDl0tjNyQ2FEXcwAejw3e+L4rSnhuY69o0oe1xj1w
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="15716633"
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="15716633"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 23:23:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="14219384"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Mar 2024 23:23:27 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 5 Mar 2024 23:23:27 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 5 Mar 2024 23:23:26 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 5 Mar 2024 23:23:26 -0800
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 5 Mar 2024 23:23:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=azapQ22zLAJ3DRcM4qElLd2D/lMDuxRxxdttoceuYSUDxrGM0RdBD3CM2SE0NXXZdW3cPUfU4cdl4nfioWD1JvFmBvTB+ZLXV9rsGIe+8dVIwVgSjSEx92Hb0E2g4tLxBcY/IosQukPtcJ+mGAH9M+30OvXvpQXNri/sUAtrrSN3FiTNAtKbTufFPBdeMbNfRf/b4SGlGt+4t0tpkxmlEe+ZEWlbWV1cxGkIfq8ka8E9bIjywo4TUiWDYJ5IaYLG2Z58/6MF8VZFQYVcgeMB6RzgYMK0YDJdzq9SQU4DUAp8tf9AJzJj6oyot4rlfir/FWvWYZA0TiTHjJIN5GZZvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tMbft9B7XnakmyrcesWnDgSG7eJd/axuekA4By3WH5E=;
+ b=FE5nLAS7Bo4YJDITN29Lx4kH9DHjao4mFlK3sU8SOR4S0Lys+9SJ8SsGllRwlzlFlOlOSIDxPpdyLGz1ziv5ZPlGolMOgTlRBmjQERC+McB2gPz8pC7E/IEPVhVd13qWE5B7DezYGahJm6SXsYn4bmSWjAlwsjs69MRMDxot6jJjzJNDvjWKdnYPZbq41gU4K0wf5XN1q8poouKRhVKe0siZvM4u75rW6fqMd1TbHx1OiLs2R7YAdx6+oEfrV0W8PtPoXA+Gxgzs8C0vAViX2oQZG23/17owoZi1NNHW5wPB9Uom8IiCdoSQUokXRwXCZvdNAcrbiSucU3cZoHs3dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
+ by MW4PR11MB6861.namprd11.prod.outlook.com (2603:10b6:303:213::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.23; Wed, 6 Mar
+ 2024 07:23:25 +0000
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::6440:4b82:c32c:9eb7]) by MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::6440:4b82:c32c:9eb7%5]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
+ 07:23:25 +0000
+Date: Wed, 6 Mar 2024 08:22:51 +0100
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: "Luck, Tony" <tony.luck@intel.com>
+CC: "Yu, Fenghua" <fenghua.yu@intel.com>, "Chatre, Reinette"
+	<reinette.chatre@intel.com>, Peter Newman <peternewman@google.com>, "Jonathan
+ Corbet" <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+	"x86@kernel.org" <x86@kernel.org>, Shaopeng Tan <tan.shaopeng@fujitsu.com>,
+	James Morse <james.morse@arm.com>, Jamie Iles <quic_jiles@quicinc.com>, "Babu
+ Moger" <babu.moger@amd.com>, Randy Dunlap <rdunlap@infradead.org>, "Drew
+ Fustini" <dfustini@baylibre.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>
+Subject: Re: Cover-cover letter for two resctrl patch sets
+Message-ID: <etisznuzysepwoqe5wi5jworgnska2imdg6tmwqpddcrxzhkam@44k6y26rirqs>
+References: <20240228112215.8044-tony.luck@intel.com>
+ <zhfckkyc7yr57kdcru3x4d2btuqq5dp3x5qdv26agfq2tlai4d@ice7se7vfctp>
+ <SJ1PR11MB60835E98D52C2A0A90C2BFB1FC222@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SJ1PR11MB60835E98D52C2A0A90C2BFB1FC222@SJ1PR11MB6083.namprd11.prod.outlook.com>
+X-ClientProxiedBy: FR0P281CA0039.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:48::22) To MN0PR11MB6231.namprd11.prod.outlook.com
+ (2603:10b6:208:3c4::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305101745.213933-1-balint.dobszay@arm.com> <20240305101745.213933-3-balint.dobszay@arm.com>
-In-Reply-To: <20240305101745.213933-3-balint.dobszay@arm.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Wed, 6 Mar 2024 12:52:39 +0530
-Message-ID: <CAFA6WYMt1GNzrdkGc6_AU_KSOVaMFK4MONHwmWchzNb97GJWvg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] tee: optee: Move pool_op helper functions
-To: Balint Dobszay <balint.dobszay@arm.com>
-Cc: op-tee@lists.trustedfirmware.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	jens.wiklander@linaro.org, corbet@lwn.net, sudeep.holla@arm.com, 
-	rdunlap@infradead.org, krzk@kernel.org, gyorgy.szing@arm.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|MW4PR11MB6861:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1e63e41-e14c-48fb-25c1-08dc3dae4f7b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Fr3Vg5pWRwO7qUZe34yRrew5AKU6jeyVcxFSh6aNajBX20RDg2ToiLYrgudmbMqpsegZ0S/Oc75C2eTgg8dsUgJ7aSBc7XRsnwCg2wU23pkcpyylpEBiyq0QNWp1lIQeX4r9CDjh41XxQT7wdJK1AraLy3b5pFjxXqqoceM2jUwIwllsl8atAmcnimY5hPxtVlbSadEHhOUYG1TlN+EXxtl7TeKyQycXWXmTniUj9T6bmT9pUlP/92Y406PchvVqy2/LCadxlxHma0CjkAGT4s5CPIZgyr22McbQ4puHFlLCgWbIwF/TIsZb0w2BtMhoxWi/NlAlcUekz93U+rXIdGBkANA2U1mWTPLCQAEB2Sm7yhsk00+dy70UGS1hJ3qv+limlpMyL24wrAy/AtesnCkK1p+LwWDGHq4fwk1WiqLu4aFqGN9VE2vmBwFPPQ6rYvNYcTLHRR/W06jq+2n1YaRkv7F2cHW3IhBB9+uffZCg9ejJUzWnTBOeku4cGEVRgeji/tsbl3S+znaf4KQrL8ZPZJslm7Uq8J7YOCMHgJ1QIWvubHRrxhXK+HbN5KklgRR1FQz3m+jEVQKqu3F6KfPQlD4LcaIceMrfD7pdgxzvmZt4WGWUyyLCP7s9qXotHyuXjlZROPkOkbKOorKLYAcz9dSUPsQDOvj+/S+AjA4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?0S5k8Kd8tgMHR0ZgsLXR4y+YNwEKpjBnfpncxhiYGukNWxjqsY5ZesK93w?=
+ =?iso-8859-1?Q?ZuDWESe5iTKAWqBoNhb96JNFY4GxGEb3rsEwIOQz9sfJBBcMlGmmme0Is7?=
+ =?iso-8859-1?Q?KWawSpNX0NK0eiI7LWaSg0S/TBDcdOrEpO4P1OCJcKb891vGqxixIZXUy4?=
+ =?iso-8859-1?Q?B4YMVlIR94BQ5O7qs2VT4VsvXK4tmjwI2x6G5jrVQpEM2st+StAbeBVtWe?=
+ =?iso-8859-1?Q?ZRLwhRs35F7Ua1yEH5YJt9ZzfoClZ/usFwHvcij7uWVIZYBpsyydjQuk94?=
+ =?iso-8859-1?Q?ou7pLPpfeUEB7P54D4yQukPZ9aMC2ETC8bS3St87y4RKzbk7548gPNdfWt?=
+ =?iso-8859-1?Q?crnfZO9V1kU5GVERx0NmviZO0vW6hzxI6yQp+9f9eoucTYxzlhfqwJWj5W?=
+ =?iso-8859-1?Q?2eHiDamWoz/q1ld7UXCzaGbj4aE0FPtAgssW6iKYQNCKpaiiZR3rzHfKXO?=
+ =?iso-8859-1?Q?0QuNZ80VkSCoBjuKxl5/nEfCCyPxT+3dUC/3cy5fLde4rI+joHwm9OQGjJ?=
+ =?iso-8859-1?Q?eCVdrummOFZO8eSH6/hWahlvKBy3W5fOF/eFsyQTIBmznvgWvIute4d3Wj?=
+ =?iso-8859-1?Q?s8nkpx90JuRoF9hYyGeLyYom93DSzxBSQFm3//NKXd/PqxQrFJFi7EVmsg?=
+ =?iso-8859-1?Q?ct4dVkzplBvO5+NnVG50hlrrwy6Ym9WADTI27iHF3ytoATxufEpB4Nwzmf?=
+ =?iso-8859-1?Q?Z7Qi+M9lojCn3aifaM2NtGPhVWv8XPA4wDGifxHzXGo9/6ji+WyST314c7?=
+ =?iso-8859-1?Q?S5yBJdVp6ZLqwBIBvuKqpDvmy5JbV2/0bfEA81hSiJ73XgoSgZcDQSndku?=
+ =?iso-8859-1?Q?z54xo23YBkTg8c5T4nH5W2aQoEPiBSVqy7BZJ4gNu8JytgidAQCwex16at?=
+ =?iso-8859-1?Q?xV2Q0SKOYqWlT8lDhjZSqfXO2eeNCjpGHH6k1AaMD2I5Dy7It0ifX+JeeS?=
+ =?iso-8859-1?Q?3EVIbLaoRAdgGTTvfDmlioMfJdeurLqyX1N+qSi3tju99F51zN07BqyZFM?=
+ =?iso-8859-1?Q?CcK/G2dekrhUupmf84CrrJAJYspRV2udY5bJN6M7aqEWKWhoRCtj0MXJDy?=
+ =?iso-8859-1?Q?lI+bLKIYroP24c3nycy6E3wDdX8+pbOuoQWb2AWwD5k77imbb16KIRQVxZ?=
+ =?iso-8859-1?Q?QZa81MIbV3jfIaU4Bg9rLOOtCIYrriCX3xvM4mFwEdNFhuoBwItc61s4NC?=
+ =?iso-8859-1?Q?FPx5zbe6ZgBWj/joyhI/L67edhHeV+20opIQsNK2oLW345ra5DeK0Jyo4Q?=
+ =?iso-8859-1?Q?FWeCB0mfDyL7Nz+4gLFxz1eBDvxMtj+PkSz+Sqj3MnFGHOeeLXsFBqdl53?=
+ =?iso-8859-1?Q?2KQSHQZEzUdl0bzEJonxOId5pcM7rC6KcqB7fBrajKGaZ3HrpffcgWxras?=
+ =?iso-8859-1?Q?CXjgYjFkjjlqw9KHJE2GAR1kfrus8qj6XNsYBaJT/LOYBEU8C6CLyorNan?=
+ =?iso-8859-1?Q?P9uVIyS74DOsZgGkfZlYoZSn1SCfcswMNytwVh1pZXPb80ZOj2McVV6zCn?=
+ =?iso-8859-1?Q?7lywQ6HIoKuIWik8sMy3hVa3tUJMoknqvLt6aX7GbyRO7Dcc1nE+VYjWmo?=
+ =?iso-8859-1?Q?jGhNC8X3JPyKI78FOewhSbFhvEzgzzhS0zxtG63iOLGPE3I5SJJzv8QuiI?=
+ =?iso-8859-1?Q?2ScfsleT1sf4qJ9vLGbPXNgOe1vkeSjkq75tPKiB4Kh1YXFMQXKYEni8uM?=
+ =?iso-8859-1?Q?eW0cJfCfhMb6OCwsCjE=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1e63e41-e14c-48fb-25c1-08dc3dae4f7b
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 07:23:24.9253
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: APlsz0gC8MqmRGWugCDwO2wiBoG8c4c6+e3EhpXONe8wBPFEALUAc9YXTwIA1IIQjm9Yo60PypAjuCqiG7j4rdLkiW/vavaSSp5p2d3uN2A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6861
+X-OriginatorOrg: intel.com
 
-On Tue, 5 Mar 2024 at 15:49, Balint Dobszay <balint.dobszay@arm.com> wrote:
+On 2024-03-05 at 18:51:55 +0100, Luck, Tony wrote:
+>> Hi, I wanted to ask a mailing technical question.
+>>
+>> My mailing setup with b4 is capable of downloading series by their message id.
+>> With these two series tied together it for some reason doesn't want to download
+>> the smaller series (even when I pass the smaller series ID it ignores it and
+>> fetches the SNC one).
+>>
+>> Do you have some trick or method to download a series with this type of
+>> formatting easier than manually saving emails?
 >
-> Move the pool alloc and free helper functions from the OP-TEE driver to
-> the TEE subsystem, since these could be reused in other TEE drivers.
-> This patch is not supposed to change behavior, it's only reorganizing
-> the code.
->
-> Suggested-by: Jens Wiklander <jens.wiklander@linaro.org>
-> Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
-> ---
->  drivers/tee/optee/core.c          | 64 -------------------------------
->  drivers/tee/optee/ffa_abi.c       |  6 +--
->  drivers/tee/optee/optee_private.h | 12 ------
->  drivers/tee/optee/smc_abi.c       |  9 ++---
->  drivers/tee/tee_shm.c             | 64 +++++++++++++++++++++++++++++++
->  include/linux/tee_core.h          | 10 +++++
->  6 files changed, 81 insertions(+), 84 deletions(-)
->
+>The cover-cover letter seemed like a neat idea, but since it is breaking other
+>tools and workflows I'm not going to do that again.
 
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+I just made my setup with the assumption that the cover letter is the root of
+the thread but that's easy to correct for cases such as this. And this
+cover-cover letter is easy to browse on the lore page.
 
--Sumit
+>
+>I tried asking b4 to specifically pick up version 4:
+>
+>$ b4 am -v4 20240228112952.8090-tony.luck@intel.com
 
-> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-> index f762e3a25119..39e688d4e974 100644
-> --- a/drivers/tee/optee/core.c
-> +++ b/drivers/tee/optee/core.c
-> @@ -9,7 +9,6 @@
->  #include <linux/crash_dump.h>
->  #include <linux/errno.h>
->  #include <linux/io.h>
-> -#include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
-> @@ -17,69 +16,6 @@
->  #include <linux/types.h>
->  #include "optee_private.h"
+Thanks, this worked! I don't know why it didn't before.
+
 >
-> -int optee_pool_op_alloc_helper(struct tee_shm_pool *pool, struct tee_shm *shm,
-> -                              size_t size, size_t align,
-> -                              int (*shm_register)(struct tee_context *ctx,
-> -                                                  struct tee_shm *shm,
-> -                                                  struct page **pages,
-> -                                                  size_t num_pages,
-> -                                                  unsigned long start))
-> -{
-> -       size_t nr_pages = roundup(size, PAGE_SIZE) / PAGE_SIZE;
-> -       struct page **pages;
-> -       unsigned int i;
-> -       int rc = 0;
-> -
-> -       /*
-> -        * Ignore alignment since this is already going to be page aligned
-> -        * and there's no need for any larger alignment.
-> -        */
-> -       shm->kaddr = alloc_pages_exact(nr_pages * PAGE_SIZE,
-> -                                      GFP_KERNEL | __GFP_ZERO);
-> -       if (!shm->kaddr)
-> -               return -ENOMEM;
-> -
-> -       shm->paddr = virt_to_phys(shm->kaddr);
-> -       shm->size = nr_pages * PAGE_SIZE;
-> -
-> -       pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
-> -       if (!pages) {
-> -               rc = -ENOMEM;
-> -               goto err;
-> -       }
-> -
-> -       for (i = 0; i < nr_pages; i++)
-> -               pages[i] = virt_to_page((u8 *)shm->kaddr + i * PAGE_SIZE);
-> -
-> -       shm->pages = pages;
-> -       shm->num_pages = nr_pages;
-> -
-> -       if (shm_register) {
-> -               rc = shm_register(shm->ctx, shm, pages, nr_pages,
-> -                                 (unsigned long)shm->kaddr);
-> -               if (rc)
-> -                       goto err;
-> -       }
-> -
-> -       return 0;
-> -err:
-> -       free_pages_exact(shm->kaddr, shm->size);
-> -       shm->kaddr = NULL;
-> -       return rc;
-> -}
-> -
-> -void optee_pool_op_free_helper(struct tee_shm_pool *pool, struct tee_shm *shm,
-> -                              int (*shm_unregister)(struct tee_context *ctx,
-> -                                                    struct tee_shm *shm))
-> -{
-> -       if (shm_unregister)
-> -               shm_unregister(shm->ctx, shm);
-> -       free_pages_exact(shm->kaddr, shm->size);
-> -       shm->kaddr = NULL;
-> -       kfree(shm->pages);
-> -       shm->pages = NULL;
-> -}
-> -
->  static void optee_bus_scan(struct work_struct *work)
->  {
->         WARN_ON(optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP));
-> diff --git a/drivers/tee/optee/ffa_abi.c b/drivers/tee/optee/ffa_abi.c
-> index cee8ccb84cb8..3235e1c719e8 100644
-> --- a/drivers/tee/optee/ffa_abi.c
-> +++ b/drivers/tee/optee/ffa_abi.c
-> @@ -374,14 +374,14 @@ static int optee_ffa_shm_unregister_supp(struct tee_context *ctx,
->  static int pool_ffa_op_alloc(struct tee_shm_pool *pool,
->                              struct tee_shm *shm, size_t size, size_t align)
->  {
-> -       return optee_pool_op_alloc_helper(pool, shm, size, align,
-> -                                         optee_ffa_shm_register);
-> +       return tee_dyn_shm_alloc_helper(shm, size, align,
-> +                                       optee_ffa_shm_register);
->  }
+>which worked for me (though it did apply Reinette's conditional
+>"Reviewed-by" tag without the suggested change).
 >
->  static void pool_ffa_op_free(struct tee_shm_pool *pool,
->                              struct tee_shm *shm)
->  {
-> -       optee_pool_op_free_helper(pool, shm, optee_ffa_shm_unregister);
-> +       tee_dyn_shm_free_helper(shm, optee_ffa_shm_unregister);
->  }
->
->  static void pool_ffa_op_destroy_pool(struct tee_shm_pool *pool)
-> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
-> index a0698ac18993..429cc20be5cc 100644
-> --- a/drivers/tee/optee/optee_private.h
-> +++ b/drivers/tee/optee/optee_private.h
-> @@ -283,18 +283,6 @@ int optee_cancel_req(struct tee_context *ctx, u32 cancel_id, u32 session);
->  int optee_enumerate_devices(u32 func);
->  void optee_unregister_devices(void);
->
-> -int optee_pool_op_alloc_helper(struct tee_shm_pool *pool, struct tee_shm *shm,
-> -                              size_t size, size_t align,
-> -                              int (*shm_register)(struct tee_context *ctx,
-> -                                                  struct tee_shm *shm,
-> -                                                  struct page **pages,
-> -                                                  size_t num_pages,
-> -                                                  unsigned long start));
-> -void optee_pool_op_free_helper(struct tee_shm_pool *pool, struct tee_shm *shm,
-> -                              int (*shm_unregister)(struct tee_context *ctx,
-> -                                                    struct tee_shm *shm));
-> -
-> -
->  void optee_remove_common(struct optee *optee);
->  int optee_open(struct tee_context *ctx, bool cap_memref_null);
->  void optee_release(struct tee_context *ctx);
-> diff --git a/drivers/tee/optee/smc_abi.c b/drivers/tee/optee/smc_abi.c
-> index 9c296b887dc1..734c484ed0f6 100644
-> --- a/drivers/tee/optee/smc_abi.c
-> +++ b/drivers/tee/optee/smc_abi.c
-> @@ -592,19 +592,18 @@ static int pool_op_alloc(struct tee_shm_pool *pool,
->          * to be registered with OP-TEE.
->          */
->         if (shm->flags & TEE_SHM_PRIV)
-> -               return optee_pool_op_alloc_helper(pool, shm, size, align, NULL);
-> +               return tee_dyn_shm_alloc_helper(shm, size, align, NULL);
->
-> -       return optee_pool_op_alloc_helper(pool, shm, size, align,
-> -                                         optee_shm_register);
-> +       return tee_dyn_shm_alloc_helper(shm, size, align, optee_shm_register);
->  }
->
->  static void pool_op_free(struct tee_shm_pool *pool,
->                          struct tee_shm *shm)
->  {
->         if (!(shm->flags & TEE_SHM_PRIV))
-> -               optee_pool_op_free_helper(pool, shm, optee_shm_unregister);
-> +               tee_dyn_shm_free_helper(shm, optee_shm_unregister);
->         else
-> -               optee_pool_op_free_helper(pool, shm, NULL);
-> +               tee_dyn_shm_free_helper(shm, NULL);
->  }
->
->  static void pool_op_destroy_pool(struct tee_shm_pool *pool)
-> diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> index 96a45c817427..5bf76c35cd9e 100644
-> --- a/drivers/tee/tee_shm.c
-> +++ b/drivers/tee/tee_shm.c
-> @@ -202,6 +202,70 @@ struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size)
->  }
->  EXPORT_SYMBOL_GPL(tee_shm_alloc_priv_buf);
->
-> +int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
-> +                            int (*shm_register)(struct tee_context *ctx,
-> +                                                struct tee_shm *shm,
-> +                                                struct page **pages,
-> +                                                size_t num_pages,
-> +                                                unsigned long start))
-> +{
-> +       size_t nr_pages = roundup(size, PAGE_SIZE) / PAGE_SIZE;
-> +       struct page **pages;
-> +       unsigned int i;
-> +       int rc = 0;
-> +
-> +       /*
-> +        * Ignore alignment since this is already going to be page aligned
-> +        * and there's no need for any larger alignment.
-> +        */
-> +       shm->kaddr = alloc_pages_exact(nr_pages * PAGE_SIZE,
-> +                                      GFP_KERNEL | __GFP_ZERO);
-> +       if (!shm->kaddr)
-> +               return -ENOMEM;
-> +
-> +       shm->paddr = virt_to_phys(shm->kaddr);
-> +       shm->size = nr_pages * PAGE_SIZE;
-> +
-> +       pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
-> +       if (!pages) {
-> +               rc = -ENOMEM;
-> +               goto err;
-> +       }
-> +
-> +       for (i = 0; i < nr_pages; i++)
-> +               pages[i] = virt_to_page((u8 *)shm->kaddr + i * PAGE_SIZE);
-> +
-> +       shm->pages = pages;
-> +       shm->num_pages = nr_pages;
-> +
-> +       if (shm_register) {
-> +               rc = shm_register(shm->ctx, shm, pages, nr_pages,
-> +                                 (unsigned long)shm->kaddr);
-> +               if (rc)
-> +                       goto err;
-> +       }
-> +
-> +       return 0;
-> +err:
-> +       free_pages_exact(shm->kaddr, shm->size);
-> +       shm->kaddr = NULL;
-> +       return rc;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_dyn_shm_alloc_helper);
-> +
-> +void tee_dyn_shm_free_helper(struct tee_shm *shm,
-> +                            int (*shm_unregister)(struct tee_context *ctx,
-> +                                                  struct tee_shm *shm))
-> +{
-> +       if (shm_unregister)
-> +               shm_unregister(shm->ctx, shm);
-> +       free_pages_exact(shm->kaddr, shm->size);
-> +       shm->kaddr = NULL;
-> +       kfree(shm->pages);
-> +       shm->pages = NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_dyn_shm_free_helper);
-> +
->  static struct tee_shm *
->  register_shm_helper(struct tee_context *ctx, struct iov_iter *iter, u32 flags,
->                     int id)
-> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-> index d9b3ba8e8fa9..efd16ed52315 100644
-> --- a/include/linux/tee_core.h
-> +++ b/include/linux/tee_core.h
-> @@ -232,6 +232,16 @@ void *tee_get_drvdata(struct tee_device *teedev);
->   */
->  struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size);
->
-> +int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
-> +                            int (*shm_register)(struct tee_context *ctx,
-> +                                                struct tee_shm *shm,
-> +                                                struct page **pages,
-> +                                                size_t num_pages,
-> +                                                unsigned long start));
-> +void tee_dyn_shm_free_helper(struct tee_shm *shm,
-> +                            int (*shm_unregister)(struct tee_context *ctx,
-> +                                                  struct tee_shm *shm));
-> +
->  /**
->   * tee_shm_is_dynamic() - Check if shared memory object is of the dynamic kind
->   * @shm:       Shared memory handle
-> --
-> 2.34.1
->
+>-Tony
+
+-- 
+Kind regards
+Maciej Wieczór-Retman
