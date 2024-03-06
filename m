@@ -1,175 +1,112 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682D5605BD
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E735FDA3
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721629; cv=none; b=nbJa74x5FaJklqVtYFvBU4c4kLdRDNkztbNNJNhoz7FLbfkje5p2amMyCOzxeQJozMiA9FAJ92CMGzgagZ0+C4azSgR9RFTI2OMt1cGcm78Vu5B8GDYf00x2+QAc/UKMV5UFG3e0Dn53okzDgEzaRz6UXqx3su8AU4g/x/53djo=
+	t=1709721714; cv=none; b=mOoMq/xDR3VXYzoGEK4CvNYkFuK3urERsCf7IaK06RfSE/zRMOsGPeKckqEWbwYNTPba0Zc5E2Vk5bdQmaqoWkibDAFWZBwnn6FHT/K7dTahLFGIU037SQN/nd8YaE2RUriDmo3dqeUvxsqVPPXefFIKjKFC0MY+fW921PJ9ryU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721629; c=relaxed/simple;
-	bh=1sqViaK8zms8lEsbdD14AiqUVOaVq9kcAdx3Wu9HgIw=;
+	s=arc-20240116; t=1709721714; c=relaxed/simple;
+	bh=kCwidvlR/A9CZ3q+xHAYLCMO3jQlBiTdIei1p1YIerU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RyHoJiHvO8AAyYgeuenUPT/ZxjV7xBPLILCRxdSlFl+fgMlpbgtcV1967pdMAgeVjB+ETc2CC5Fu+9N4Tb3sAwdylUKeBNeYgAJUgcxHsO4JG5B9vw3Plccvbz3yQx/UuaMdvr9CxlDQPhA7GFhHxAIOMMcBw6R+BgfzctTrzmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YsHkgbg+; arc=none smtp.client-ip=209.85.217.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=Ps0WWJx9xOHXCWUl32gsi6rQgF8xw4lC4Z2zmIZojgYCkEy8uLcHH4f/A9/vTEExnyfZMzrs2wUDW4Zccx232x9Lfakcv02Ua2UqsQ403F2+/rfKHK8RZe7i8ublXDMWg0yqv31/CUwTFrQt3Gjj5++nMjVDj1s8hJFSjqy5P0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lihvn/1/; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YsHkgbg+"
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-472b709bb5fso508173137.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:40:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lihvn/1/"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56693f0d235so10013a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:41:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709721626; x=1710326426; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Sjwo5RJIhXHjzbNaOpot87oyRxHjUpXY9VVPgdS9wg=;
-        b=YsHkgbg+wWAjPzQK/uvjeTsaNeZEDehvPXeoOUH1g/bycU/l5e5Dt3+bne1ePQVBoV
-         Ei9mTpn6M6Qf8I1QcFoX2nV8pXqvi77tMt910VF8tWGC9Ln/PRC1Z3R5au31ROgWTBZC
-         RK7xnl4vU00Xcc05Gld6gXCTHg4Yi/sFyifpXxx8AwY8Q9zRK0KNjTfu8YTT5Ct4ni1a
-         gAZNzTp4a2TGxsp7P0ONLQfTc6YIL8jhdiO3gNwmc2NT2AjHd+JVDOVqvA7sdyta7Pzj
-         NzDJpZ1l2/uVT6uW/BLKEUOterykIbF2yAEJhuAjyHEcNIHxwgheIFNHdE6KNiYNL0BZ
-         6efQ==
+        d=google.com; s=20230601; t=1709721711; x=1710326511; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ac6YIjBtpRzsjYOfKs4hkAM2nX9AEZlTxzGX/yk4mrs=;
+        b=Lihvn/1/JEvvXKojUB0fIfZDbzvjdKfl837FTVMgGH5vFRFC31/LlEM04hBfxrH/7C
+         qlMNi6EnTx/JNJAnmW58f8RoGGHHALz9aVd8hn3w0FShlSj5UpkW6prA8qJXX8YizH+Z
+         NGS9vOBsCNVOUSYU3R0lsfeWf65lR9RiCugzT6xK6swXlct6ws/6ZQVKOypMrZA02hbO
+         B63hIEJIaeHpx9YaqH6eidnQg/SX7w94Qr4MwGJUb2XyVm3Hbcyjq26PS57jDnHxge9m
+         UEE/Hqw8mlo5WuX6ZnakaF0guGWCZqAayoJvhSQfivH0rqhFsOI9FvGLI8yywr7imh+x
+         KkKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709721626; x=1710326426;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5Sjwo5RJIhXHjzbNaOpot87oyRxHjUpXY9VVPgdS9wg=;
-        b=FDqy9Oqh9nbQfn7K/4T6+StZSeFpeNvqvIunhYWIFE8eKJp7K1r02xDRT3i6iHUrCp
-         fu7KpuXwbukZWboVN/7ryo9t/ypV/LOl8bTzOV5UlH74wWweVVlJF8RYm2oC3Cy5G0hG
-         LjOVjJZ8jEjmJoLjvLUM4HK0AJfXv99SLGPuHyCDlwDj7DdTwj0QUJ7rZHsS5xG25WZ3
-         ChrWkfU4O0Y/m6mVSDhwMTIWdB/c1acnBEVkL00C0i2zK1KY+GCgGIzrWIZkoGBBe9vi
-         Yfsm2PSWqqKXHWWVts3wJTy2x0bYjC/vxlorvdsgsdptw8XverA/UR+hFLLxmq7I3JGx
-         p7Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCVeY5wrYXqOJ4RLPJFpjnuAVQH0ShCSC+QvwD70IpFrMSWpY2MMbs6TFmW2io92hOd7C+W1gzYHjIptFoi5tr6cy7BL03FvPGcGoFx5
-X-Gm-Message-State: AOJu0YzPLQXAl2JU3DWsI9XbYXRE34kAD17K0FQdj2f1iytbCmNkM0N3
-	Z4vm2Qr01DY458YOJsVhpHm8ryuiEH5+tVF9MnOPd+IZZW2w1Gy/PbNHNepYgNgl6caCDRZiTxs
-	hlnDSQO1QRfYvULaVp00SQIl54E/k6ydPcUcTnA==
-X-Google-Smtp-Source: AGHT+IGduBh9Are1m4Dmd/r7BVYdWm4z5lzqyISQNPxOmYqfTtHc3lEK6Gv4++jCDQHK3IyEZutr6O/iZppSVzwzGQg=
-X-Received: by 2002:a05:6102:4405:b0:472:ec73:9bf5 with SMTP id
- df5-20020a056102440500b00472ec739bf5mr2073706vsb.30.1709721624867; Wed, 06
- Mar 2024 02:40:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709721711; x=1710326511;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ac6YIjBtpRzsjYOfKs4hkAM2nX9AEZlTxzGX/yk4mrs=;
+        b=v4EfIs7EHUc91YETqOruwXd2PYSZ3IIcI20RMtIPheSZuD4J/20J0abL3mbztsDG5T
+         XTqmk6asEiEpTKPu7RoDgwfL+PB44LZqeWbEfQP2RxMZVm/ZSWjSuHSfkZuJEakLe62H
+         wuHlx2NNRHhJtuNqVhURDXF1/PRMnwnyxePNVqMuk7eQh1vnYywBB1Gb9ljeP1ird3J1
+         eVytVGOhMcxqHxVN9O7qcP0OZwzl1QmdNXZcpsPMMhdaDhIx67Hz3HQPbyemgig+OrM9
+         lqftfhxApkiHMfAoobXmu4vWgnugvDj4+Uwro/9ZB9eeCVzK4yssSUvwf3UaGLgE4IBA
+         rFzg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4zpqW6htPo4pZJ76wf+WzHSZuJh2sNO0OMS0Q+Xekc/LrQU/ILxNHtE6WWDLMnD4QnPygAiasaZ7P7LYJp2gFXGwWaTr9UnHHHtFW
+X-Gm-Message-State: AOJu0YzRV9V6yBcAWXarDSFzl+e1v/gWUtd8vtSxpLbM1T6a3t8SumtZ
+	iteY3S3eAI02h0wejv3MP6tCrObVNFll/QXDwc84hRE0jKwC6LswTC91wXyOSbbIdOAr0c7nR+s
+	NAV+zyeOH1Mb/bi6SipDvmzvii1BK8MCVq8dC
+X-Google-Smtp-Source: AGHT+IHxXfepDQZyEoAvpk37Sh1LodNo2JflhaLnhu/OhexAMll7TyOInFoT7Ebs7fzQA8WjKmzaZ/Kf4cdkQ/H2Vh0=
+X-Received: by 2002:a50:ef03:0:b0:566:b5f5:48cc with SMTP id
+ m3-20020a50ef03000000b00566b5f548ccmr351403eds.5.1709721710584; Wed, 06 Mar
+ 2024 02:41:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305101745.213933-1-balint.dobszay@arm.com>
-In-Reply-To: <20240305101745.213933-1-balint.dobszay@arm.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Wed, 6 Mar 2024 16:10:13 +0530
-Message-ID: <CAFA6WYPNV5F3h=naCtg=fYr8zfB3rho+G1B6-rggLe_PkqvgnQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] TEE driver for Trusted Services
-To: Balint Dobszay <balint.dobszay@arm.com>
-Cc: op-tee@lists.trustedfirmware.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	jens.wiklander@linaro.org, corbet@lwn.net, sudeep.holla@arm.com, 
-	rdunlap@infradead.org, krzk@kernel.org, gyorgy.szing@arm.com
+References: <CABOYnLwtfAxS7WoMw-1_uxVe3EYajXRuzZfwaQEk0+7m6-B+ug@mail.gmail.com>
+ <CANn89i+qLwyPLztPt6Mavjimyv0H_UihVVNfJXWLjcwrqOudTw@mail.gmail.com> <20240306103632.GC4420@breakpoint.cc>
+In-Reply-To: <20240306103632.GC4420@breakpoint.cc>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 6 Mar 2024 11:41:39 +0100
+Message-ID: <CANn89iLe0KGjbSim5Qxxr6o0AjJVs7-h79UvMMXKOgGKQUosiA@mail.gmail.com>
+Subject: Re: KASAN: slab-use-after-free Read in ip_finish_output
+To: Florian Westphal <fw@strlen.de>
+Cc: xingwei lee <xrivendell7@gmail.com>, pabeni@redhat.com, davem@davemloft.net, 
+	kuba@kernel.org, linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, ralf@linux-mips.org, syzkaller-bugs@googlegroups.com, 
+	samsun1006219@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Balint,
+On Wed, Mar 6, 2024 at 11:36=E2=80=AFAM Florian Westphal <fw@strlen.de> wro=
+te:
+>
+> Eric Dumazet <edumazet@google.com> wrote:
+> > On Wed, Mar 6, 2024 at 11:00=E2=80=AFAM xingwei lee <xrivendell7@gmail.=
+com> wrote:
+> > >
+> > > Hello, I found a new bug titled "KASAN: slab-use-after-free Read in
+> > > ip_finish_output=E2=80=9D or =E2=80=9CKASAN: slab-use-after-free in s=
+k_to_full_sk" and
+> > > confirmed it in the latest net and net-next branch. After my simple
+> > > analysis, it may be related to the net/rose or AF_PACKET/PF_PACKET
+> > > socket.
+> >
+> > I already had a syzbot report for this issue, thanks.
+> >
+> > Adding Florian to the discussion.
+> > The issue is cause by ip defrag layer, which calls skb_orphan()
+> > These were my notes, I had little time to work on it so far.
+>
+> > Calling ip_defrag() in output path is also implying skb_orphan(),
+> > which is buggy because output path relies on sk not disappearing.
+>
+> Ugh.  Thanks for your annotations and notes, this is very helpful.
+>
+> ipvlan (and two spots in ip_output.c do):
+>
+>    err =3D ip_local_out(net, skb->sk, skb);
+>
+> so skb->sk gets propagated down to __ip_finish_output(), long
+> after connrack defrag has called skb_orphan().
+>
+> No idea yet how to fix it,
 
-On Tue, 5 Mar 2024 at 15:48, Balint Dobszay <balint.dobszay@arm.com> wrote:
->
-> This series introduces a TEE driver for Trusted Services [1].
->
-> Trusted Services is a TrustedFirmware.org project that provides a
-> framework for developing and deploying device Root of Trust services in
-> FF-A [2] Secure Partitions. The project hosts the reference
-> implementation of Arm Platform Security Architecture [3] for Arm
-> A-profile devices.
->
-> The FF-A Secure Partitions are accessible through the FF-A driver in
-> Linux. However, the FF-A driver doesn't have a user space interface so
-> user space clients currently cannot access Trusted Services. The goal of
-> this TEE driver is to bridge this gap and make Trusted Services
-> functionality accessible from user space.
->
-> Changelog:
-> v2[6] -> v3:
->   - Add patch "tee: Refactor TEE subsystem header files" from Sumit
->   - Remove unnecessary includes from core.c
->   - Remove the mutex from "struct ts_context_data" since the same
->     mechanism could be implemented by reusing the XArray's internal lock
->   - Rename tee_shm_pool_op_*_helper functions as suggested by Sumit
->   - Replace pr_* with dev_* as previously suggested by Krzysztof
->
+My plan was to refine "inet: frag: Always orphan skbs inside
+ip_defrag()" and only do the skb_orphan()
+for skb added to a frag_list.
 
-I will also suggest you to add a maintainer's entry for this new
-Trusted Services TEE driver.
-
--Sumit
-
-> v1[5] -> v2:
->   - Refactor session handling to use XArray instead of IDR and linked
->     list (the linked list was redundant as pointed out by Jens, and IDR
->     is now deprecated in favor of XArray)
->   - Refactor tstee_probe() to not call tee_device_unregister() before
->     calling tee_device_register()
->   - Address comments from Krzysztof and Jens
->   - Address documentation comments from Randy
->   - Use module_ffa_driver() macro instead of separate module init / exit
->     functions
->   - Reformat max line length 100 -> 80
->
-> RFC[4] -> v1:
->   - Add patch for moving pool_op helper functions to the TEE subsystem,
->     as suggested by Jens
->   - Address comments from Sumit, add patch for documentation
->
-> [1] https://www.trustedfirmware.org/projects/trusted-services/
-> [2] https://developer.arm.com/documentation/den0077/
-> [3] https://www.arm.com/architecture/security-features/platform-security
-> [4] https://lore.kernel.org/linux-arm-kernel/20230927152145.111777-1-balint.dobszay@arm.com/
-> [5] https://lore.kernel.org/lkml/20240213145239.379875-1-balint.dobszay@arm.com/
-> [6] https://lore.kernel.org/lkml/20240223095133.109046-1-balint.dobszay@arm.com/
->
->
-> Balint Dobszay (3):
->   tee: optee: Move pool_op helper functions
->   tee: tstee: Add Trusted Services TEE driver
->   Documentation: tee: Add TS-TEE driver
->
-> Sumit Garg (1):
->   tee: Refactor TEE subsystem header files
->
->  Documentation/tee/index.rst         |   1 +
->  Documentation/tee/ts-tee.rst        |  71 ++++
->  MAINTAINERS                         |   1 +
->  drivers/tee/Kconfig                 |   1 +
->  drivers/tee/Makefile                |   1 +
->  drivers/tee/amdtee/amdtee_private.h |   2 +-
->  drivers/tee/amdtee/call.c           |   2 +-
->  drivers/tee/amdtee/core.c           |   3 +-
->  drivers/tee/amdtee/shm_pool.c       |   2 +-
->  drivers/tee/optee/call.c            |   2 +-
->  drivers/tee/optee/core.c            |  66 +---
->  drivers/tee/optee/device.c          |   2 +-
->  drivers/tee/optee/ffa_abi.c         |   8 +-
->  drivers/tee/optee/notif.c           |   2 +-
->  drivers/tee/optee/optee_private.h   |  14 +-
->  drivers/tee/optee/rpc.c             |   2 +-
->  drivers/tee/optee/smc_abi.c         |  11 +-
->  drivers/tee/tee_core.c              |   2 +-
->  drivers/tee/tee_private.h           |  35 --
->  drivers/tee/tee_shm.c               |  66 +++-
->  drivers/tee/tee_shm_pool.c          |   2 +-
->  drivers/tee/tstee/Kconfig           |  11 +
->  drivers/tee/tstee/Makefile          |   3 +
->  drivers/tee/tstee/core.c            | 482 ++++++++++++++++++++++++++++
->  drivers/tee/tstee/tstee_private.h   |  92 ++++++
->  include/linux/tee_core.h            | 306 ++++++++++++++++++
->  include/linux/tee_drv.h             | 285 ++--------------
->  include/uapi/linux/tee.h            |   1 +
->  28 files changed, 1087 insertions(+), 389 deletions(-)
->  create mode 100644 Documentation/tee/ts-tee.rst
->  create mode 100644 drivers/tee/tstee/Kconfig
->  create mode 100644 drivers/tee/tstee/Makefile
->  create mode 100644 drivers/tee/tstee/core.c
->  create mode 100644 drivers/tee/tstee/tstee_private.h
->  create mode 100644 include/linux/tee_core.h
->
-> --
-> 2.34.1
->
+The head skb would keep a reference to the socket.
