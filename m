@@ -1,90 +1,104 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.aperture-lab.de (mail.aperture-lab.de [116.203.183.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567D7130ACE
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 14:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A662F130ACE;
+	Wed,  6 Mar 2024 14:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.183.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709735036; cv=none; b=Rq1hr3RucSFCOlLTfJ0p1pdyfI+kUeknLERMsVNGfqnvdOTmXWti8Qk//FDjigR5eV2ZD6rvWmdaEU0Y9rHfFwhObAgiRlzzjLN0yRNFw/Qc+kj0QUjIeJOop/XSTbJ8FU7ODZEFMYIlbCYCZsndYCyI0VjDWpVomcJHfIzn54k=
+	t=1709735048; cv=none; b=Guk2MgXcmU7ZtFHIJTQ/mWqjyYbSEzXY3Uh0N5UVSn7Fc1m7f4pIFa0l5s7TbLFIrjdypI7AuzIFcPZfuZ5vXHobwkqJfZ2w6GiJqKYuX1BoHy7OfrlD1uINMUXhcG9du4LKdj5cTAf+MB+bfW+XQtE3oBl8A8JFOh6K/i4vNxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709735036; c=relaxed/simple;
-	bh=wdJDKRGS7HFTRE8jxAsQE8U65zjJmRnaG0CudQdRd+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UVml8dn526UTM/N03vECfisJTCcfxx2BktZQ8903nipLt56GY+eR0dCdo0MZ+6Uwz/wccN8ODlB4NPApQNuA+EXRPmq+Uelq/fIcCgvX0RhUlj+4v01EeRPMTh7TDDMrWXgtjJgG9OtJo64M0IjLfcvgqAKUbRIi1Vl09YQBuSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Us2g2gT/; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Us2g2gT/"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33e4c676f0aso1411570f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 06:23:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709735034; x=1710339834; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GJrroynuRnHM9d1uxPX2EIxDpMmTQhr265Ne8XiRXJ0=;
-        b=Us2g2gT/BroLpTQ5pnBCRIMgKu6chDvKboLg5nvalACT+k2Yq0gufVu+Q1rkdrrcuh
-         HG4H22Baot02e5KJJT+SM2pYIVz+uS9qocctFosjlFCmVWLSTvwEqKQQk2MVJvoojSUw
-         zdNxZmftRWTNa4NmAHOVOsJXiCDgtgWjRy2hil00dQaGi3iQpgjJKjqkWXzuHqsURrae
-         uLkIIjNXV+BkSTrqP4OT6NM0HkHpFqcZxf3sJDD1+FPrAhqUkaouHPLIzRhyEI/1dB5I
-         q+LbaBQFmPHbDp6GKVJGuKZh8xWkpfbDYoez878eq6IMWzbRnq8+ewHOZQdB0JnmJutm
-         QjXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709735034; x=1710339834;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GJrroynuRnHM9d1uxPX2EIxDpMmTQhr265Ne8XiRXJ0=;
-        b=V/KBiJ71oO6lSXvtw0nUyiZ+n1Zo9Kep1oMVRzcN2/uXeV/91YJn5Y6FtjHOpHochX
-         31O5ALGjXDEAqengnI6kUxJnt1oCy0D7dyKymD0EAn5EhtfI2g22eYsr+4COEHwivKdm
-         5reoPfptuRQfDQhwpSjcx2owIBS28H9GFu7TmnWJ0ScHE7oGHlp907d4JV4r5FOOHukC
-         59kieMWvXkA2HKypZyF7jAD/ofAPuvnjlVTrP8F85Ow0Z7h2B4s/ZmFfoGqxzUuwIyhD
-         /9KiEH9DkYbH6VmAvfgavDLtOe8FSSzSSNbg9kCxaW8lXLvFfr5bwP2gJs4FMi1KsVe5
-         ITWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVys7MBr3K3xa+wJqWX7SPFhjEXQvSK9XvfLxXoDlUzVNCOyfZaDhMgNMvH1qxG/5WEnDf9z6MdEOcWZXd/nXj0J6CeL14ihIxzJDcX
-X-Gm-Message-State: AOJu0YzODVZp5PrHq115GbGdlNP/yfZj1HovjBIgo4QHQRHSJ/TPmywE
-	NzOEG+639hTJq8FnCzCXOOIosDGPb0vRX2nhCfJLeLpPMtfohBSj1RsRThwViiY=
-X-Google-Smtp-Source: AGHT+IGCOKQomyj1XoUe7rvgu9g82j1JsX9Z7KQrQqSb0Ub+eD1e9HZF+KS6bVximLW/7kDpMlUX3A==
-X-Received: by 2002:a5d:6310:0:b0:33e:834:13d5 with SMTP id i16-20020a5d6310000000b0033e083413d5mr10627030wru.69.1709735033674;
-        Wed, 06 Mar 2024 06:23:53 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id bu16-20020a056000079000b0033dc3f3d689sm17892394wrb.93.2024.03.06.06.23.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 06:23:53 -0800 (PST)
-Date: Wed, 6 Mar 2024 17:23:49 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: Re: [PATCH v1 3/7] staging: media: starfive: Sink rectangle set to
- ISP source pad
-Message-ID: <892d9583-afc9-4acb-8013-faf021f8ae87@moroto.mountain>
-References: <20240306093334.9321-1-changhuang.liang@starfivetech.com>
- <20240306093334.9321-4-changhuang.liang@starfivetech.com>
+	s=arc-20240116; t=1709735048; c=relaxed/simple;
+	bh=qJ4gjt253xxum5utg91XBCGmUOduxiyObpAmLwXzzHw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BTrZxFeRlaLEvdly3bgBGFv20KFzYmVNF/w90hdQ7PZnZFOp65brtGc8hxfngHEaq3tV3fqwkrJScmk0xaZtkzQj0vwLfu8RaHo//cXXe8gddJIF/mNI/kMwmMrvYPVbS1s0C6toNl9E5H6O7jLCbuWt74+PYskbX7sfDcYz4TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c0d3.blue; spf=pass smtp.mailfrom=c0d3.blue; arc=none smtp.client-ip=116.203.183.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c0d3.blue
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c0d3.blue
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CC7DA419A4;
+	Wed,  6 Mar 2024 15:18:26 +0100 (CET)
+From: =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
+To: netfilter-devel@vger.kernel.org
+Cc: coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Dietmar Maurer <dietmar@proxmox.com>,
+	Thomas Lamprecht <t.lamprecht@proxmox.com>,
+	Wolfgang Bumiller <w.bumiller@proxmox.com>,
+	Alexandre Derumier <aderumier@odiso.com>,
+	=?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
+Subject: [PATCH net] netfilter: conntrack: fix ct-state for ICMPv6 Multicast Router Discovery
+Date: Wed,  6 Mar 2024 15:18:04 +0100
+Message-ID: <20240306141805.17679-1-linus.luessing@c0d3.blue>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306093334.9321-4-changhuang.liang@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Mar 06, 2024 at 01:33:30AM -0800, Changhuang Liang wrote:
-> Sink rectangle will be valid for all source pads.
-> 
+So far Multicast Router Advertisements and Multicast Router
+Solicitations from the Multicast Router Discovery protocol (RFC4286)
+would be marked as INVALID for IPv6, even if they are in fact intact
+and adhering to RFC4286.
 
-This commit message is just really unclear.  What does "Sink rectangle
-set to ISP source pad" even mean?  A better subject would probably be
-"staging: media: starfive: Use PAD_SINK instead of PAD_SRC for crop"
+This broke MRA reception and by that multicast reception on
+IPv6 multicast routers in a Proxmox managed setup, where Proxmox
+would install a rule like "-m conntrack --ctstate INVALID -j DROP"
+at the top of the FORWARD chain with br-nf-call-ip6tables enabled
+by default.
 
-But why are we making this change?  It's not clear.
+Similar to as it's done for MLDv1, MLDv2 and IPv6 Neighbor Discovery
+already, fix this issue by excluding MRD from connection tracking
+handling as MRD always uses predefined multicast destinations
+for its messages, too. This changes the ct-state for ICMPv6 MRD messages
+from INVALID to UNTRACKED.
 
-regards,
-dan carpenter
+This issue was found and fixed with the help of the mrdisc tool
+(https://github.com/troglobit/mrdisc).
+
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+---
+ include/uapi/linux/icmpv6.h               | 1 +
+ net/netfilter/nf_conntrack_proto_icmpv6.c | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/include/uapi/linux/icmpv6.h b/include/uapi/linux/icmpv6.h
+index ecaece3af38d..4eaab89e2856 100644
+--- a/include/uapi/linux/icmpv6.h
++++ b/include/uapi/linux/icmpv6.h
+@@ -112,6 +112,7 @@ struct icmp6hdr {
+ #define ICMPV6_MOBILE_PREFIX_ADV	147
+ 
+ #define ICMPV6_MRDISC_ADV		151
++#define ICMPV6_MRDISC_SOL		152
+ 
+ #define ICMPV6_MSG_MAX          255
+ 
+diff --git a/net/netfilter/nf_conntrack_proto_icmpv6.c b/net/netfilter/nf_conntrack_proto_icmpv6.c
+index 1020d67600a9..327b8059025d 100644
+--- a/net/netfilter/nf_conntrack_proto_icmpv6.c
++++ b/net/netfilter/nf_conntrack_proto_icmpv6.c
+@@ -62,7 +62,9 @@ static const u_int8_t noct_valid_new[] = {
+ 	[NDISC_ROUTER_ADVERTISEMENT - 130] = 1,
+ 	[NDISC_NEIGHBOUR_SOLICITATION - 130] = 1,
+ 	[NDISC_NEIGHBOUR_ADVERTISEMENT - 130] = 1,
+-	[ICMPV6_MLD2_REPORT - 130] = 1
++	[ICMPV6_MLD2_REPORT - 130] = 1,
++	[ICMPV6_MRDISC_ADV - 130] = 1,
++	[ICMPV6_MRDISC_SOL - 130] = 1
+ };
+ 
+ bool nf_conntrack_invert_icmpv6_tuple(struct nf_conntrack_tuple *tuple,
+-- 
+2.43.0
 
