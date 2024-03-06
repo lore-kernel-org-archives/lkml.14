@@ -1,90 +1,54 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1501E5BACE
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 07:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3806F5BAD4;
+	Wed,  6 Mar 2024 07:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709709506; cv=none; b=F46iQLpDizUwqxhkpD1xYfmF254yNZyFcIWYvrxC709qbBGWH7rQT69phx45mrZHlrFYTPNV86ROdxMXOD4HW2KOg8i4lmGE3v+NMhrr+RpR3n9OpQ+/EhMUTTRd6S8hZttT9Vi8wlv/lYqw7EZH+8vlmA9s7EX9c/Q79rHqVFE=
+	t=1709709610; cv=none; b=M6bKL1x+hIO0mAD9T6PWsx69ICj2p42s2+F9DHwQ7BsuARI6uKzxhbJmnDjwFIPi6q2E1pvYdSRKs6/ti6V/QnWul5xl75m9YIxSGir/lxq2lOQOJCGlk7xYf5cOyxuSRg0vfKnZhX7APu30djRH6775GT4WEla96C8iRfhE7ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709709506; c=relaxed/simple;
-	bh=AXYajY2U+Z5syUU9moej2Uf1Mod4PTuKh3eK0Bnxjek=;
+	s=arc-20240116; t=1709709610; c=relaxed/simple;
+	bh=7e0GVHgO/NR/ITDXSFCFIpgdS6eMgQdfekTQKe26Z6o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=db3JeqLKUtbvaS5p1a/OEP2RJnfx6Nc70Gnya9cyldrIgPIXKOJQWES/VeIA1MkCf5mm30UuG8d4pKfroIUykOlFUVWOQT8dXXOAaU8IAXcXg7tCWUR/3agco2wFPkS+hKJ3QcpVO2pboSaBzDeAff7NoL5KnV926+6xaUQN3dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KojWK95l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qDCwZvlf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KojWK95l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qDCwZvlf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=H3wUEZTENNBuK5bvcdDIHi/WJvFHtOTBMp9BUAVnvaEtdcT3sypn7g7ENrhHYFFE69E7BwYM0vV8llzSBHL2jlptDzuCci3fhj1dvjU6zBcYw0LAMZ3Rp4O4dL4DtQci45lj4SMwvIjAeFF2PhgZXsSKDQYB4spZA0K6CTTko6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5r5V81E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KojWK95l";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qDCwZvlf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KojWK95l";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qDCwZvlf"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 46AD24D86C;
-	Wed,  6 Mar 2024 07:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709709503; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dUQr1xvU/HmWnyZi7rd9MHflgE+MVTNA8Pa29gacj80=;
-	b=KojWK95lbUNcOhMutLDRrgPCMAPSG1jqiIoD34bkBaZ4fBXOZ2L/OcI/1OuoS+YlVqxBqE
-	8IDpzhsB6TLp21oHWo73h9ZQATbCGfVjAdmNPrt3/xSf9idBtRWabYs24s/s03xuTizJM6
-	uuvpmApegmidEs/pmhJiih4gnCrlHkU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709709503;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dUQr1xvU/HmWnyZi7rd9MHflgE+MVTNA8Pa29gacj80=;
-	b=qDCwZvlfBUkSpmw78ZJs6fUm2b703Y94syoIkkIuDyBBeVKX7qclC6qJrufpy9L3HvdW8k
-	o6lxXRFAAXLoXgCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709709503; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dUQr1xvU/HmWnyZi7rd9MHflgE+MVTNA8Pa29gacj80=;
-	b=KojWK95lbUNcOhMutLDRrgPCMAPSG1jqiIoD34bkBaZ4fBXOZ2L/OcI/1OuoS+YlVqxBqE
-	8IDpzhsB6TLp21oHWo73h9ZQATbCGfVjAdmNPrt3/xSf9idBtRWabYs24s/s03xuTizJM6
-	uuvpmApegmidEs/pmhJiih4gnCrlHkU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709709503;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dUQr1xvU/HmWnyZi7rd9MHflgE+MVTNA8Pa29gacj80=;
-	b=qDCwZvlfBUkSpmw78ZJs6fUm2b703Y94syoIkkIuDyBBeVKX7qclC6qJrufpy9L3HvdW8k
-	o6lxXRFAAXLoXgCw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A25E613A79;
-	Wed,  6 Mar 2024 07:18:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id RozhJL4Y6GXlCQAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Wed, 06 Mar 2024 07:18:22 +0000
-Date: Wed, 6 Mar 2024 08:19:37 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: Marco Elver <elver@google.com>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, Linux Memory Management List <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [linux-next:master] [mm,page_owner] 4bedfb314b:
- BUG:KASAN:null-ptr-deref_in_init_page_owner
-Message-ID: <ZegZCaFJrnAWL4kb@localhost.localdomain>
-References: <202403051032.e2f865a-lkp@intel.com>
- <ZeblmHyVlxl_6HGC@localhost.localdomain>
- <CANpmjNMOazCrzJr+Ckx0vM73P86dPM_0qbcv=Nu44jUtPERD+A@mail.gmail.com>
- <ZedlIv2ECH08KJcM@localhost.localdomain>
- <Zedmst0pEtGuY6B6@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5r5V81E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AC8C43390;
+	Wed,  6 Mar 2024 07:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709709609;
+	bh=7e0GVHgO/NR/ITDXSFCFIpgdS6eMgQdfekTQKe26Z6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k5r5V81EhuBe6LjOo3DLR4LJFl+7dNzzIISuOk/XIYakZFh6e6G5M3ObQxSKKkiw/
+	 bgN5f9Hr0Id6WHlCwrOxGH1CUt7N78xGPxA1KNUnnkmt31lDwDVKZPjtx3eitjNSTW
+	 ouJm2Og3CB6PSiuQkdcQaFmAbVth8JAFPH5grOXzTLVaM9M2qKBluY8DbkuCXBngYM
+	 dTPQkJGPb/lPQ1Ev55bp+vZ1P/3rfRLlU+tj0DPtQzX3+Bsb7ZLVkMYL4bNslfXzS2
+	 TCkdKyxtTjHvbkRptE6vkoxnsjH6cc+ZREHX7rZREMzP0/x8MTHiMTXG5lP+QzjUZF
+	 kxYDGbw0UgreQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rhlZY-0000000053i-20wI;
+	Wed, 06 Mar 2024 08:20:16 +0100
+Date: Wed, 6 Mar 2024 08:20:16 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/10] arm64: dts: qcom: sc8280xp: PCIe fixes and
+ GICv3 ITS enable
+Message-ID: <ZegZMNWxCnLbHDxP@hovoldconsulting.com>
+References: <20240305081105.11912-1-johan+linaro@kernel.org>
+ <20240306063302.GA4129@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,57 +57,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zedmst0pEtGuY6B6@localhost.localdomain>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -4.07
-X-Spamd-Result: default: False [-4.07 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.988];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[intel.com,lists.linux.dev,kvack.org,linux-foundation.org,suse.cz,gmail.com,google.com,suse.com,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-2.77)[99.02%]
-X-Spam-Flag: NO
+In-Reply-To: <20240306063302.GA4129@thinkpad>
 
-On Tue, Mar 05, 2024 at 07:38:42PM +0100, Oscar Salvador wrote:
-> But they point out to 
-> 
-> commit 4bedfb314bdd85c1662ecc46fa25b33b998f994d (HEAD, bisection)
-> Author: Oscar Salvador <osalvador@suse.de>
-> Date:   Thu Feb 15 22:59:03 2024 +0100
-> 
->     mm,page_owner: maintain own list of stack_records structs
-> 
-> which the only thing it does is to retrieve the stack_record for
-> {dummy,failure}.handle and increment their refcount and link them.
-> I am pretty sure the problem comes from either dummy_handle or
-> failure_handle being 0 and the stack_record we get is NULL.
+On Wed, Mar 06, 2024 at 12:03:02PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Mar 05, 2024 at 09:10:55AM +0100, Johan Hovold wrote:
+> > This series addresses a few problems with the sc8280xp PCIe
+> > implementation.
+> > 
+> > The DWC PCIe controller can either use its internal MSI controller or an
+> > external one such as the GICv3 ITS. Enabling the latter allows for
+> > assigning affinity to individual interrupts, but results in a large
+> > amount of Correctable Errors being logged on both the Lenovo ThinkPad
+> > X13s and the sc8280xp-crd reference design.
+> > 
+> > It turns out that these errors are always generated, but for some yet to
+> > be determined reason, the AER interrupts are never received when using
+> > the internal MSI controller, which makes the link errors harder to
+> > notice.
 
-Yes, jfyi: I "artificially" reproduced this by making
-dummy_handle explicitly = 0 again.
-And I see that KASAN points to the same location.
+> > Enabling AER error reporting on sc8280xp could similarly also reveal
+> > existing problems with the related sa8295p and sa8540p platforms as they
+> > share the base dtsi.
+> > 
+> > After discussing this with Bjorn Andersson at Qualcomm we have decided
+> > to go ahead and disable L0s for all controllers on the CRD and the
+> > X13s.
+ 
+> Just received confirmation from Qcom that L0s is not supported for any of the
+> PCIe instances in sc8280xp (and its derivatives). Please move the property to
+> SoC dtsi.
 
-I am kind of surprised stackdepot ran out of space that early, but I
-guess we cannot take anything for granted.
+Ok, thanks for confirming. But then the devicetree property is not the
+right way to handle this, and we should disable L0s based on the
+compatible string instead.
 
-I am alrady working on a fixup to now blow up here.
+> > As we are now at 6.8-rc7, I've rebased this series on the Qualcomm PCIe
+> > binding rework in linux-next so that the whole series can be merged for
+> > 6.9 (the 'aspm-no-l0s' support and devicetree fixes are all marked for
+> > stable backport anyway).
 
+I'll respin the series. Looks like we've already missed the chance to
+enable ITS in 6.9 anyway.
 
--- 
-Oscar Salvador
-SUSE Labs
+Johan
