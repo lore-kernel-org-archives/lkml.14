@@ -1,112 +1,158 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E735FDA3
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92DF605A5
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721714; cv=none; b=mOoMq/xDR3VXYzoGEK4CvNYkFuK3urERsCf7IaK06RfSE/zRMOsGPeKckqEWbwYNTPba0Zc5E2Vk5bdQmaqoWkibDAFWZBwnn6FHT/K7dTahLFGIU037SQN/nd8YaE2RUriDmo3dqeUvxsqVPPXefFIKjKFC0MY+fW921PJ9ryU=
+	t=1709721723; cv=none; b=UOcIbHC7YNH2iFqhDkQuoga5ppfzniM5HVmXl7lB9peUY+0oe79JXNOuzPGxAaRBTrOhkcpxCs4kk8kc1iAJ7v1EN18l7ry/Z/d/ISAbHWnQ7KJpw32XyZ7ko+cpo603S8jVsTOqRDkSSVY9qdcDh+B0dQmqNmhJ77WWNAoC1hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721714; c=relaxed/simple;
-	bh=kCwidvlR/A9CZ3q+xHAYLCMO3jQlBiTdIei1p1YIerU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ps0WWJx9xOHXCWUl32gsi6rQgF8xw4lC4Z2zmIZojgYCkEy8uLcHH4f/A9/vTEExnyfZMzrs2wUDW4Zccx232x9Lfakcv02Ua2UqsQ403F2+/rfKHK8RZe7i8ublXDMWg0yqv31/CUwTFrQt3Gjj5++nMjVDj1s8hJFSjqy5P0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lihvn/1/; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709721723; c=relaxed/simple;
+	bh=sndXh1K9u7hqol9ljgqbvLP+cDVWvZMzw+q1BPr+LSs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b3MZeu2va/RyYVawD4fkfHznhVRStQuApDiuGNW+hPRu04Ga+jfqBHOwbdI9M0cDXHWZD7Kvpakgwh6O4nirzHhPOAC6aVZ0HMQ9r2bKPImAZTlZzy80D0vtFs/GR5w+ZiUkjYn9oJTPMiizdjj9blfm4eHA7rd/CRID99C1YYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gr832pYl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lihvn/1/"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56693f0d235so10013a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:41:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709721711; x=1710326511; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ac6YIjBtpRzsjYOfKs4hkAM2nX9AEZlTxzGX/yk4mrs=;
-        b=Lihvn/1/JEvvXKojUB0fIfZDbzvjdKfl837FTVMgGH5vFRFC31/LlEM04hBfxrH/7C
-         qlMNi6EnTx/JNJAnmW58f8RoGGHHALz9aVd8hn3w0FShlSj5UpkW6prA8qJXX8YizH+Z
-         NGS9vOBsCNVOUSYU3R0lsfeWf65lR9RiCugzT6xK6swXlct6ws/6ZQVKOypMrZA02hbO
-         B63hIEJIaeHpx9YaqH6eidnQg/SX7w94Qr4MwGJUb2XyVm3Hbcyjq26PS57jDnHxge9m
-         UEE/Hqw8mlo5WuX6ZnakaF0guGWCZqAayoJvhSQfivH0rqhFsOI9FvGLI8yywr7imh+x
-         KkKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709721711; x=1710326511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ac6YIjBtpRzsjYOfKs4hkAM2nX9AEZlTxzGX/yk4mrs=;
-        b=v4EfIs7EHUc91YETqOruwXd2PYSZ3IIcI20RMtIPheSZuD4J/20J0abL3mbztsDG5T
-         XTqmk6asEiEpTKPu7RoDgwfL+PB44LZqeWbEfQP2RxMZVm/ZSWjSuHSfkZuJEakLe62H
-         wuHlx2NNRHhJtuNqVhURDXF1/PRMnwnyxePNVqMuk7eQh1vnYywBB1Gb9ljeP1ird3J1
-         eVytVGOhMcxqHxVN9O7qcP0OZwzl1QmdNXZcpsPMMhdaDhIx67Hz3HQPbyemgig+OrM9
-         lqftfhxApkiHMfAoobXmu4vWgnugvDj4+Uwro/9ZB9eeCVzK4yssSUvwf3UaGLgE4IBA
-         rFzg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4zpqW6htPo4pZJ76wf+WzHSZuJh2sNO0OMS0Q+Xekc/LrQU/ILxNHtE6WWDLMnD4QnPygAiasaZ7P7LYJp2gFXGwWaTr9UnHHHtFW
-X-Gm-Message-State: AOJu0YzRV9V6yBcAWXarDSFzl+e1v/gWUtd8vtSxpLbM1T6a3t8SumtZ
-	iteY3S3eAI02h0wejv3MP6tCrObVNFll/QXDwc84hRE0jKwC6LswTC91wXyOSbbIdOAr0c7nR+s
-	NAV+zyeOH1Mb/bi6SipDvmzvii1BK8MCVq8dC
-X-Google-Smtp-Source: AGHT+IHxXfepDQZyEoAvpk37Sh1LodNo2JflhaLnhu/OhexAMll7TyOInFoT7Ebs7fzQA8WjKmzaZ/Kf4cdkQ/H2Vh0=
-X-Received: by 2002:a50:ef03:0:b0:566:b5f5:48cc with SMTP id
- m3-20020a50ef03000000b00566b5f548ccmr351403eds.5.1709721710584; Wed, 06 Mar
- 2024 02:41:50 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gr832pYl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709721720;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nsf6jReUnDDAR6+gdGYukarc12MvosBlw43zRUpKkD0=;
+	b=Gr832pYlmYmJo4FMHrxRrLYiIpG/6blkDlTdADyWx9q7lDS2YFmQ3/DDJhxVCd/jPdQOpm
+	4+zY4XhTJEhYrUQGd+Lzkup31GJX83vvvIaw92+JnOGIR9WaM69RtPaDktk/CF6ObNRF09
+	q8V+Yi2KKiv7gYPTmFxvMtJVpZ3mcsQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-464-h1aSarPyMoSclrJ9xw8rvg-1; Wed, 06 Mar 2024 05:41:57 -0500
+X-MC-Unique: h1aSarPyMoSclrJ9xw8rvg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 70D85101A56C;
+	Wed,  6 Mar 2024 10:41:56 +0000 (UTC)
+Received: from x1n.redhat.com (unknown [10.72.116.8])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2CD3F112131D;
+	Wed,  6 Mar 2024 10:41:49 +0000 (UTC)
+From: peterx@redhat.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	peterx@redhat.com,
+	Matthew Wilcox <willy@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	x86@kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH RFC 00/13] mm/treewide: Remove pXd_huge() API
+Date: Wed,  6 Mar 2024 18:41:34 +0800
+Message-ID: <20240306104147.193052-1-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABOYnLwtfAxS7WoMw-1_uxVe3EYajXRuzZfwaQEk0+7m6-B+ug@mail.gmail.com>
- <CANn89i+qLwyPLztPt6Mavjimyv0H_UihVVNfJXWLjcwrqOudTw@mail.gmail.com> <20240306103632.GC4420@breakpoint.cc>
-In-Reply-To: <20240306103632.GC4420@breakpoint.cc>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 6 Mar 2024 11:41:39 +0100
-Message-ID: <CANn89iLe0KGjbSim5Qxxr6o0AjJVs7-h79UvMMXKOgGKQUosiA@mail.gmail.com>
-Subject: Re: KASAN: slab-use-after-free Read in ip_finish_output
-To: Florian Westphal <fw@strlen.de>
-Cc: xingwei lee <xrivendell7@gmail.com>, pabeni@redhat.com, davem@davemloft.net, 
-	kuba@kernel.org, linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, ralf@linux-mips.org, syzkaller-bugs@googlegroups.com, 
-	samsun1006219@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On Wed, Mar 6, 2024 at 11:36=E2=80=AFAM Florian Westphal <fw@strlen.de> wro=
-te:
->
-> Eric Dumazet <edumazet@google.com> wrote:
-> > On Wed, Mar 6, 2024 at 11:00=E2=80=AFAM xingwei lee <xrivendell7@gmail.=
-com> wrote:
-> > >
-> > > Hello, I found a new bug titled "KASAN: slab-use-after-free Read in
-> > > ip_finish_output=E2=80=9D or =E2=80=9CKASAN: slab-use-after-free in s=
-k_to_full_sk" and
-> > > confirmed it in the latest net and net-next branch. After my simple
-> > > analysis, it may be related to the net/rose or AF_PACKET/PF_PACKET
-> > > socket.
-> >
-> > I already had a syzbot report for this issue, thanks.
-> >
-> > Adding Florian to the discussion.
-> > The issue is cause by ip defrag layer, which calls skb_orphan()
-> > These were my notes, I had little time to work on it so far.
->
-> > Calling ip_defrag() in output path is also implying skb_orphan(),
-> > which is buggy because output path relies on sk not disappearing.
->
-> Ugh.  Thanks for your annotations and notes, this is very helpful.
->
-> ipvlan (and two spots in ip_output.c do):
->
->    err =3D ip_local_out(net, skb->sk, skb);
->
-> so skb->sk gets propagated down to __ip_finish_output(), long
-> after connrack defrag has called skb_orphan().
->
-> No idea yet how to fix it,
+From: Peter Xu <peterx@redhat.com>
 
-My plan was to refine "inet: frag: Always orphan skbs inside
-ip_defrag()" and only do the skb_orphan()
-for skb added to a frag_list.
+[based on akpm/mm-unstable latest commit a7f399ae964e]
 
-The head skb would keep a reference to the socket.
+In previous work [1], we removed the pXd_large() API, which is arch
+specific.  This patchset further removes the hugetlb pXd_huge() API.
+
+Hugetlb was never special on creating huge mappings when compared with
+other huge mappings.  Having a standalone API just to detect such pgtable
+entries is more or less redundant, especially after the pXd_leaf() API set
+is introduced with/without CONFIG_HUGETLB_PAGE.
+
+When looking at this problem, a few issues are also exposed that we don't
+have a clear definition of the *_huge() variance API.  This patchset
+started by cleaning these issues first, then replace all *_huge() users to
+use *_leaf(), then drop all *_huge() code.
+
+On x86/sparc, swap entries will be reported "true" in pXd_huge(), while for
+all the rest archs they're reported "false" instead.  This part is done in
+patch 1-5, in which I suspect patch 1 can be seen as a bug fix, but I'll
+leave that to hmm experts to decide.
+
+Besides, there are three archs (arm, arm64, powerpc) that have slightly
+different definitions between the *_huge() v.s. *_leaf() variances.  I
+tackled them separately so that it'll be easier for arch experts to chim in
+when necessary.  This part is done in patch 6-9.
+
+The final patches 10-13 do the rest on the final removal, since *_leaf()
+will be the ultimate API in the future, and we seem to have quite some
+confusions on how *_huge() APIs can be defined, provide a rich comment for
+*_leaf() API set to define them properly to avoid future misuse, and
+hopefully that'll also help new archs to start support huge mappings and
+avoid traps (like either swap entries, or PROT_NONE entry checks).
+
+The whole series is only lightly tested on x86, while as usual I don't have
+the capability to test all archs that it touches.
+
+Marking this series RFC as of now.
+
+[1] https://lore.kernel.org/r/20240305043750.93762-1-peterx@redhat.com
+
+Peter Xu (13):
+  mm/hmm: Process pud swap entry without pud_huge()
+  mm/gup: Cache p4d in follow_p4d_mask()
+  mm/gup: Check p4d presence before going on
+  mm/x86: Change pXd_huge() behavior to exclude swap entries
+  mm/sparc: Change pXd_huge() behavior to exclude swap entries
+  mm/arm: Use macros to define pmd/pud helpers
+  mm/arm: Redefine pmd_huge() with pmd_leaf()
+  mm/arm64: Merge pXd_huge() and pXd_leaf() definitions
+  mm/powerpc: Redefine pXd_huge() with pXd_leaf()
+  mm/gup: Merge pXd huge mapping checks
+  mm/treewide: Replace pXd_huge() with pXd_leaf()
+  mm/treewide: Remove pXd_huge()
+  mm: Document pXd_leaf() API
+
+ arch/arm/include/asm/pgtable-2level.h         |  4 +--
+ arch/arm/include/asm/pgtable-3level-hwdef.h   |  1 +
+ arch/arm/include/asm/pgtable-3level.h         |  6 ++--
+ arch/arm/mm/Makefile                          |  1 -
+ arch/arm/mm/hugetlbpage.c                     | 34 -------------------
+ arch/arm64/include/asm/pgtable.h              |  6 +++-
+ arch/arm64/mm/hugetlbpage.c                   | 18 ++--------
+ arch/loongarch/mm/hugetlbpage.c               | 12 +------
+ arch/mips/include/asm/pgtable-32.h            |  2 +-
+ arch/mips/include/asm/pgtable-64.h            |  2 +-
+ arch/mips/mm/hugetlbpage.c                    | 10 ------
+ arch/mips/mm/tlb-r4k.c                        |  2 +-
+ arch/parisc/mm/hugetlbpage.c                  | 11 ------
+ .../include/asm/book3s/64/pgtable-4k.h        | 20 -----------
+ .../include/asm/book3s/64/pgtable-64k.h       | 25 --------------
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |  3 --
+ arch/powerpc/include/asm/nohash/pgtable.h     | 10 ------
+ arch/powerpc/mm/pgtable_64.c                  |  6 ++--
+ arch/riscv/mm/hugetlbpage.c                   | 10 ------
+ arch/s390/mm/hugetlbpage.c                    | 10 ------
+ arch/sh/mm/hugetlbpage.c                      | 10 ------
+ arch/sparc/mm/hugetlbpage.c                   | 12 -------
+ arch/x86/mm/hugetlbpage.c                     | 26 --------------
+ arch/x86/mm/pgtable.c                         |  4 +--
+ include/linux/hugetlb.h                       | 24 -------------
+ include/linux/pgtable.h                       | 24 ++++++++++---
+ mm/gup.c                                      | 24 ++++++-------
+ mm/hmm.c                                      |  9 ++---
+ mm/memory.c                                   |  2 +-
+ 29 files changed, 56 insertions(+), 272 deletions(-)
+ delete mode 100644 arch/arm/mm/hugetlbpage.c
+
+-- 
+2.44.0
+
