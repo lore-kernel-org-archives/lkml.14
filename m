@@ -1,45 +1,50 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.77.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7381BF3A;
-	Wed,  6 Mar 2024 06:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DC51B7E5;
+	Wed,  6 Mar 2024 06:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.77.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709705575; cv=none; b=HiXPfBoPRPk0ADcG4zaHI2nrC1wkSq6liHR3I04hE1qSPTUolkxvuDJc4XfrKxEYKm/Nf+lbm876eko8+guaYCzGVlRMGNJICQQSOPVFkqF9khnJdHNPHhYhuW6qT8rwG3zec8EqT/A1wA2/8ZnHqjvSnCz3Z7fvYLxQ3yamkrw=
+	t=1709705624; cv=none; b=j8M2xolPMVs14h3XUm3mkGtRKGTy6QH7nU6pjtxetLeNU896qxjiXULCaBkzyTVkuGuQXfoaaP7ilnPXnat8OERSY6oo2P3zF4Ot2LcSurpWABzPBy7etFa81PjX+cOoWzPX+QRnAb5iNgc+oBQJYOc7l5AnsFNoR0ZFr7qAKr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709705575; c=relaxed/simple;
-	bh=XB/s6LrajRRxZPmS5K2ul+Jpp/Bn57dJki7p95qfCJ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G6g7o3Aghqx6KRo0XgY91qfRS8ghOYrwIIHRHBoOrxoh0x9kbtVaIqCaAQ2AdJL7/YvxFs13EhsGIxEJvvGxkoDzFjF4FzWoSBQu8NKSh+xLrW2orUni0Z+oHWH8Uo1LRcQ48lUWtbOtSDDpMSRvpzDXz2WdNwk5T27HaUM9CQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.254.200.128
+	s=arc-20240116; t=1709705624; c=relaxed/simple;
+	bh=tlq2g2nlfO8hH8i4zeibwVPijfkfMjcm2SA6C4dQypI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qn+J8DGWq251aRDj55nTmrkoB6nvD/0NDLSwLtYPBlITZ9RMQz/3ML5TunwcRvfDVy3/zEUMPI/lRv0CvkoVFncO+YDKHPX8DFmBgK0T9RxKVsFgne38u8dvBCzynZSgQwpETuVBAt3l3SjG6sECVBfiejeabG/zKlLSBePP2go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.77.159
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp79t1709705530tejr8mq9
-X-QQ-Originating-IP: 33F7Hi8mkHJ/3GMhdDRcEqGpiRerVDDLcrCN+G+D9ek=
+X-QQ-mid: bizesmtp79t1709705539t7dq31o3
+X-QQ-Originating-IP: NCw4+/Q9USsflDJBmpT7/46+g+hPwy5cB3WlwgYr7sI=
 Received: from HX01040022.powercore.com.cn ( [223.112.234.130])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 06 Mar 2024 14:12:08 +0800 (CST)
+	id ; Wed, 06 Mar 2024 14:12:17 +0800 (CST)
 X-QQ-SSF: 01400000000000B0B000000A0000000
-X-QQ-FEAT: zT6n3Y95oi0QQ5IUMJfGD5BCp0MrFSEZjYCXXN07Kjl3bKZmTCPMHHTLiXx+0
-	Z1YAJaMJZ45EP04YVC/wcllIeJmmC4MgCfzD6MxN6SF8mCzilEbDF/efn4LJdbpT7dWCGJt
-	B2bPzhoTAwKQrZlC54zr6tUmQXEgeBjo6aXNnX/QoheTguv1CfScumys3U08NydzAK1QalU
-	4VljwBdaiCsS1Vuc6R84+uLE5NyGoiaFlDhNlqcMlXtAB4eRDMoCDrchbrSzUz2+w9y9d2C
-	VrgfXN+2/epHpKPNlNqYh4DEKpf7v+alH4T8D6KsW60yrra6GHCHzSK7WbvKrUQH5Z7qkU0
-	n7CO57tmqjue9pw2vUY3c3aLYOsjYKfMGtguDyvgs0iEmrAGS+bu3GVr8HkJN0rFULU/90Z
+X-QQ-FEAT: C46Rb8GPIEemHKu/k6HngzPWI4Sro/K2jOZ6+nhYm/itjZ15pS2MBSf9WT4e9
+	mlr6jVRajTCCaJrTk6mFFBVexQeSUTmNuQ83shY+cW57orGqDR+32Hh1BwVkjn4HdY0K89E
+	SuLTWTX/IjLWee5mdFN+7QTiIob62s8kK8OqZjroC+ur2l6NBm7ghXlNVqWInUaI6qR4vNi
+	wTukssOTPrW15glNQGzjr+E0CajIIS02BjBVFUmYOKA8v5zd5wpd7Uu5xDIUozRkn5jZNHP
+	UxBZmdnp6fcRvvlqXJOtasV1zXpAk+zMMX0fbb5DqQMtUdw7rbtcW4pefka4sBC8FwtereT
+	eG/EkLv0NyWx4M1PCxMzF4l0XlKhIAshlk541gwDrfwEuM2VBbPeLa0mNvGB9/HxZkkNv/v
+	5DSkc97eGqhT1WolQksgHhOW3/joQyhM
 X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 9495034024272623364
+X-BIZMAIL-ID: 5249391986606984289
 From: "JiaLong.Yang" <jialong.yang@shingroup.cn>
-To: Will Deacon <will@kernel.org>,
+To: Jialong Yang <jialong.yang@shingroup.cn>,
+	Will Deacon <will@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>
 Cc: shenghui.qu@shingroup.cn,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org
-Subject: [PATCH v3 0/2] Support uncore NI-700 Performance Monitor
-Date: Wed,  6 Mar 2024 14:16:00 +0800
-Message-Id: <cover.1709694173.git.jialong.yang@shingroup.cn>
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] dt-bindings: perf: Support uncore NI-700 PMU
+Date: Wed,  6 Mar 2024 14:16:02 +0800
+Message-Id: <7f2576291e51043b33296a2cd9e21263d16ca077.1709694173.git.jialong.yang@shingroup.cn>
+In-Reply-To: <f674ec19ce824dfc13258396931256c3d33cd207.1709694173.git.jialong.yang@shingroup.cn>
+References: <cover.1709694173.git.jialong.yang@shingroup.cn> <f674ec19ce824dfc13258396931256c3d33cd207.1709694173.git.jialong.yang@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,34 +55,108 @@ Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-1. 
-The MAINTAINERS file should be in dt-bindings or drivers?
-It's needed by the two subpatchs.
-I place it in dt-bindings. So I receive the warning in driver patch.
+Add file corresponding to hx_arm_ni.c introducing ARM NI-700 PMU
+driver for HX.
 
-2.
-When using the new macro DEFINE_FREE(), we should ended it without ';'.
-So there is one warning asking me to indentation next statement.
+Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
+---
+v1 --> v2:
+1. Submit dt-bindings file Seperately.
+2. Do some check:
+   ~ #: make dt_binding_check DT_SCHEMA_FILES=perf
+   LINT    Documentation/devicetree/bindings
+   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+   DTEX    Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.example.dts
+   DTC_CHK Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.example.dtb
 
-3.
-If the file vendor-prefixes.yaml should be submit solely?
+v2 --> v3:
+1. Change vendor from hx to hexin.
+2. Submit driver and dt-bindings files together.
+3. Delete pccs-id property. Use alias-id to do this.
+4. There are at least one interrupt line for the hardware and driver
+   for handling counter overflow.
+5. Use 4 spaces for example indentation in yaml file.
 
-JiaLong.Yang (3):
-  dt-bindings: Add HEXIN Technologies Co., Ltd. vendor prefix
-  dt-bindings: perf: Support uncore NI-700 PMU
-  perf/hx_arm_ni: Support uncore NI-700 PMU
+ .../bindings/perf/hexin,c2000-arm-ni.yaml     | 51 +++++++++++++++++++
+ MAINTAINERS                                   |  6 +++
+ 2 files changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/hexin,c2000-arm-ni.yaml
 
- .../bindings/perf/hexin,c2000-arm-ni.yaml     |   51 +
- .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
- MAINTAINERS                                   |    6 +
- drivers/perf/Kconfig                          |   11 +
- drivers/perf/Makefile                         |    1 +
- drivers/perf/hx_arm_ni.c                      | 1240 +++++++++++++++++
- 6 files changed, 1311 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/hexin,
- c2000-arm-ni.yaml
- create mode 100644 drivers/perf/hx_arm_ni.c
-
+diff --git a/Documentation/devicetree/bindings/perf/hexin,c2000-arm-ni.yaml b/Documentation/devicetree/bindings/perf/hexin,c2000-arm-ni.yaml
+new file mode 100644
+index 000000000000..b2641ee84d60
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/hexin,c2000-arm-ni.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/perf/hexin,c2000-arm-ni.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: HX-C2000 NI (Network-on-chip Interconnect) Performance Monitors
++
++maintainers:
++  - Jialong Yang <jialong.yang@shingroup.cn>
++
++properties:
++  compatible:
++    enum:
++      - hexin,c2000-arm-ni
++
++  reg:
++    items:
++      - description: Physical address of the base (PERIPHBASE) and
++          size of the whole NI configuration address space.
++
++  interrupts:
++    minItems: 1
++    items:
++      - description: Overflow interrupt for clock domain 0
++      - description: Overflow interrupt for clock domain 1
++      - description: Overflow interrupt for clock domain 2
++      - description: Generally, one interrupt line for one PMU. But this also
++          support one interrupt line for a NI if merged.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    aliases {
++        ni-pmu0 = &nipmu0;
++    };
++
++    nipmu0: pmu@23ff0000 {
++        compatible = "hexin,c2000-arm-ni";
++        reg = <0x2b420000 0x10000>;
++        interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4f298c4187fb..4b664cec98a7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18890,6 +18890,12 @@ L:	linux-riscv@lists.infradead.org
+ S:	Maintained
+ F:	arch/riscv/boot/dts/thead/
+ 
++HX ARM-NI-700 PMU DRIVERS
++M:	Jialong Yang <jialong.yang@shingroup.cn>
++S:	Supported
++F:	Documentation/devicetree/bindings/perf/hexin,c2000-arm-ni.yaml
++F:	drivers/perf/hx_arm_ni.c
++
+ RNBD BLOCK DRIVERS
+ M:	Md. Haris Iqbal <haris.iqbal@ionos.com>
+ M:	Jack Wang <jinpu.wang@ionos.com>
 -- 
 2.25.1
 
