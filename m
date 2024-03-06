@@ -1,232 +1,142 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84755FBB7
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01C4E5FBB7;
+	Wed,  6 Mar 2024 10:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722046; cv=none; b=NqXEhkjOjvNTsfMMqtziFbkpFsEQQBBrqRur+QB+6RE7o4QaAy0zaNFVAoAwrmhj3HUkpjL+CB7T3sleuHiY9+R2cqt6OQ/rOCLvqkxQcLOJAhuIfYpioNiqWC99NO8GJL8bodSGFZorJnodFrOgtJnzFZj9fXr2YGgcqJ0QLBQ=
+	t=1709722170; cv=none; b=EaWyxRva73VOV1mq4GLWX3kl3jnE5rD1zi/g7mTHmfsX6xSKPi52r98n9dD79sVSmNGQlNHfJA3yZirwjOMGuAHZeAWiHBdUV73dzurd/f4zbz3ce7vRXF8xI2xXvnOu62GAtn7EAHX6AxjVbMeZjhFpA+hc0Ng2Bt2ZE7xq+eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709722046; c=relaxed/simple;
-	bh=T0tkg6tNNzgKe4ggRojauYOz8jIgWQEfoBASA+Nkh5M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JO/sOqDy1P0gM1QwuQnMaOB8XFo8Pu7uM4ggNP23yO/ehn/xK9idSNCBYoB7RZdOUvF/I1wlCgT7y4z+lhmfRRf+ojJGWZNGLOn1khG+UIY9Cjx4TSWvwieWu1W0XHVIvNQLArpLmmyEdYxlCTkd1Rm9UKWQQaWRlYc9an8aBO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VC+waviz; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VC+waviz"
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-47299367f78so502206137.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:47:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709722044; x=1710326844; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sw05fDmD/5sw/n+gj4x6MEl4S6mdDxa4iaEzvHHso+g=;
-        b=VC+wavizYS7XHaXmzOKL+YqIfVDnXqH9zie7ngCVDFPsoI6DiCreNLhk7koTPQ0/Qt
-         0xALrnHchi2P7w2/mG9rMQyIEbEvSmjPBL6l8OlKaJtsHi/4RwnE+z15tH2jIdEOHeFT
-         AxpP+YLXNyEnwp1niah2Jp97fy+B69kJvbnQiQb97MUz8c4rbJc5RNxtR+5cL+HYckof
-         Zkg8nDCgEpEiN8x0UqTBufxqII0HtObyxkLaFAc65SfI3Q8KK0UBCTgcvnMzK9dFaJVh
-         kexcZirml7vZn8AqdnIG/tjVmQDl4qRdNjZPmpa7y7edhDzml1i6sugFkCfDM6bU6fHQ
-         CbMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709722044; x=1710326844;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sw05fDmD/5sw/n+gj4x6MEl4S6mdDxa4iaEzvHHso+g=;
-        b=MiXeHyaQ9BpjvvRbNf7UZHNgGwhdrDqrKY2IFj6GKRw6IoslyksxRKO2RMp/tALiiJ
-         UzRt0JYbGOJCxrLVuC7X0cZabKj9/nq5Ljxzo7uKTuGrGKu1UldpeJiP3b0CvGIfe/Gf
-         bR0Fv4gBZJJ5woFG020do06wIqJbffUIRXQ7jjmnmedQ2djIbyZiThU0lwqHIPTLedpt
-         nZMFb/FqcIa92FKRGRwU49kOXNpn8HP3HcB1uQCib+V5AoqObbALqh0URl5jfyYt0jKe
-         S6yhH4XUZL5d0j4AV/JZ+4Od4+mQapb3Y4btjdaox55tJwH4kBPceIqqoUMRQFYbt/t/
-         gvBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWeWIqIY57bWLV5vTRF7N9YouWWW7w9ixrTwWPa3akjNTqwJ7Uv30rWWMMXxaqyhjt0cisp0WleZUI6ZjIipglVbwAtjh88ReRWlZvB
-X-Gm-Message-State: AOJu0Yx/IQgTLi9zqf7ug1KOZx062szEYWCE2Ix6kClPm9W/gmSgFDL5
-	P2guwIwZxx574yN+Tl3K4zaZiY1i9gM1rqoBI8OJJ+RucN3YOEu6MW5zRmUd8QiMg5FV5F0YPf6
-	xrMQoS0ijos8hzSGajK4up9RRsd/DWWJs+eN3sEOC37kcOV4DY2I=
-X-Google-Smtp-Source: AGHT+IHFMma7JuSceVxjvjNRcZ0aadlI+aj3d1JXNvjpIxhakTYNUAvBqf/soLRi+E9TJ3sHbH/sfpJqlCtd0CiIXY8=
-X-Received: by 2002:a67:e3b8:0:b0:472:e85e:7a53 with SMTP id
- j24-20020a67e3b8000000b00472e85e7a53mr1941063vsm.33.1709722043784; Wed, 06
- Mar 2024 02:47:23 -0800 (PST)
+	s=arc-20240116; t=1709722170; c=relaxed/simple;
+	bh=tQdJcE5Yp1cHqnDbMCItQBYZ7I5dYkfnQ07VTUZueJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jisGl+eoKIZlrYCP2FJ26+lBLK1yyC5WDueUvxS9TaYwtFM798dMBRZ4bSZ0jXt6SYCdMIFAqXtWNbk3V6Y2zEK0ZRNFuZ/BIz6+RCZxDduabLO++sb2NO/GO8A+GX0hz8KSX20rridCZh/tN/waUyB42puJSXNt/sp/hfLgIRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34CE31FB;
+	Wed,  6 Mar 2024 02:50:05 -0800 (PST)
+Received: from [10.57.95.153] (unknown [10.57.95.153])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56E5F3F738;
+	Wed,  6 Mar 2024 02:49:24 -0800 (PST)
+Message-ID: <2784c093-eea1-4b73-87da-1a45f14013c8@arm.com>
+Date: Wed, 6 Mar 2024 10:49:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304211535.741936181@linuxfoundation.org>
-In-Reply-To: <20240304211535.741936181@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 6 Mar 2024 16:17:12 +0530
-Message-ID: <CA+G9fYtOAL4Kco7zCMp38niCHUJ7Z1hxV5VkT8VnbaWF4mqt_Q@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/25] 5.4.271-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
+To: Bart Van Assche <bvanassche@acm.org>, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, juri.lelli@redhat.com, mingo@redhat.com,
+ rafael@kernel.org, dietmar.eggemann@arm.com, vschneid@redhat.com,
+ vincent.guittot@linaro.org, Johannes.Thumshirn@wdc.com,
+ adrian.hunter@intel.com, ulf.hansson@linaro.org, andres@anarazel.de,
+ asml.silence@gmail.com, linux-pm@vger.kernel.org,
+ linux-block@vger.kernel.org, io-uring@vger.kernel.org,
+ Qais Yousef <qyousef@layalina.io>
+References: <20240304201625.100619-1-christian.loehle@arm.com>
+ <86f0af00-8765-4481-9245-1819fb2c6379@acm.org>
+ <0dc6a839-2922-40ac-8854-2884196da9b9@arm.com>
+ <c5b7fc1f-f233-4d25-952b-539607c2a0cc@acm.org>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <c5b7fc1f-f233-4d25-952b-539607c2a0cc@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 5 Mar 2024 at 03:04, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.271 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 06 Mar 2024 21:15:26 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.271-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Bart,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On 05/03/2024 18:36, Bart Van Assche wrote:
+> On 3/5/24 01:13, Christian Loehle wrote:
+>> On 05/03/2024 00:20, Bart Van Assche wrote:
+>>> On 3/4/24 12:16, Christian Loehle wrote:
+>>>> - Higher cap is not always beneficial, we might place the task away
+>>>> from the CPU where the interrupt handler is running, making it run
+>>>> on an unboosted CPU which may have a bigger impact than the difference
+>>>> between the CPU's capacity the task moved to. (Of course the boost will
+>>>> then be reverted again, but a ping-pong every interval is possible).
+>>>
+>>> In the above I see "the interrupt handler". Does this mean that the NVMe
+>>> controller in the test setup only supports one completion interrupt for
+>>> all completion queues instead of one completion interrupt per completion
+>>> queue? There are already Android phones and developer boards available
+>>> that support the latter, namely the boards equipped with a UFSHCI 4.0 controller.
+>>
+>> No, both NVMe test setups have one completion interrupt per completion queue,
+>> so this caveat doesn't affect them, higher capacity CPU is strictly better.
+>> The UFS and both mmc setups (eMMC with CQE and sdcard) only have one completion
+>> interrupt (on CPU0 on my setup).
+> 
+> I think that measurements should be provided in the cover letter for the
+> two types of storage controllers: one series of measurements for a
+> storage controller with a single completion interrupt and a second
+> series of measurements for storage controllers with one completion
+> interrupt per CPU.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Of the same type of storage controller? Or what is missing for you in
+the cover letter exactly (ufs/emmc: single completion interrupt,
+nvme: one completion interrupt per CPU).
 
-## Build
-* kernel: 5.4.271-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.4.y
-* git commit: fe27532da81b5465567e329b6950454328c9482f
-* git describe: v5.4.269-110-gfe27532da81b
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.2=
-69-110-gfe27532da81b
+> 
+>> FWIW you do gain an additional ~20% (in my specific setup) if you move the ufshcd
+>> interrupt to a big CPU, too. Similarly for the mmc.
+>> Unfortunately the infrastructure is far from being there for the scheduler to move the
+>> interrupt to the same performance domain as the task, which is often optimal both in
+>> terms of throughput and in terms of power.
+>> I'll go looking for a stable testing platform with UFS as you mentioned, benefits of this
+>> patch will of course be greatly increased.
+> 
+> I'm not sure whether making the completion interrupt follow the workload
+> is a good solution. I'm concerned that this would increase energy
+> consumption by keeping the big cores active longer than necessary. I
+> like this solution better (improves storage performance on at least
+> devices with a UFSHCI 3.0 controller): "[PATCH v2 0/2] sched: blk:
+> Handle HMP systems when completing IO"
+> (https://lore.kernel.org/linux-block/20240223155749.2958009-1-qyousef@layalina.io/).
 
-## Test Regressions (compared to v5.4.269)
+That patch is good, don't get me wrong, but you still lose out by running everything
+up to blk_mq_complete_request() on (potentially) a LITTlE (that might be run on a low OPP),
+while having a big CPU available at a high OPP anyway ("for free").
+It is only adjacent to the series but I've done some measurements (Pixel6 again, same device
+as cover letter, Base is Android 6.6 mainline kernel (so without my series, but I somewhat forced
+the effects by task pinning), Applied is with both of sched: blk: Handle HMP systems when completing IO):
 
-## Metric Regressions (compared to v5.4.269)
+Pretty numbers (IOPS):
+Base irq@CPU0 median: 6969
+Base irq@CPU6 median: 8407 (+20.6%)
+Applied irq@CPU0 median: 7144 (+2.5%)
+Applied irq@CPU6 median: 8288 (18.9%)
 
-## Test Fixes (compared to v5.4.269)
+This is with psyncx1 4K Random Read again, of course anything with queue depth
+takes advantage of batch completions to significantly reduce irq pressure.
 
-## Metric Fixes (compared to v5.4.269)
+Not so pretty numbers and full list commands used:
 
-## Test result summary
-total: 98648, pass: 77795, fail: 4006, skip: 16788, xfail: 59
+w/o patch:
+irq on CPU0 (default):
+psyncx1: 7000 6969 7025 6954 6964
+io_uring4x128: 28766 28280 28339 28310 28349
+irq on CPU6:
+psyncx1: 8342 8492 8355 8407 8532
+io_uring4x128: 28641 28356 25908 25787 25853
 
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 138 total, 138 passed, 0 failed
-* arm64: 38 total, 36 passed, 2 failed
-* i386: 25 total, 19 passed, 6 failed
-* mips: 27 total, 27 passed, 0 failed
-* parisc: 3 total, 0 passed, 3 failed
-* powerpc: 32 total, 31 passed, 1 failed
-* riscv: 12 total, 12 passed, 0 failed
-* s390: 8 total, 8 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 8 total, 8 passed, 0 failed
-* x86_64: 34 total, 34 passed, 0 failed
+with patch:
+irq on CPU0:
+psyncx1: 7672 7144 7301 6976 6889
+io_uring4x128: 28266 26314 27648 24482 25301
+irq on CPU6:
+psyncx1: 8208 8401 8351 8221 8288
+io_uring4x128: 25603 25438 25453 25514 25402
 
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-lib
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kselftest-zram
-* kunit
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
 
---
-Linaro LKFT
-https://lkft.linaro.org
+for i in $(seq 0 4); do taskset c0 /data/local/tmp/fio_aosp_build --name=test --rw=randread --bs=4k --runtime=30 --time_based --filename=/dev/block/sda --minimal | awk -F ";" '{print $8}'; sleep 30; done
+
+for i in $(seq 0 4); do taskset c0 /data/local/tmp/fio_aosp_build --name=test --rw=randread --bs=4k --runtime=30 --time_based --filename=/dev/block/sda --ioengine=io_uring --iodepth=128 --numjobs=4 --group_reporting --minimal | awk -F ";" '{print $8}'; sleep 30; done
+
+echo 6 > /proc/irq/296/smp_affinity_list
+
+
+Kind Regards,
+Christian
