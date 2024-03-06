@@ -1,93 +1,147 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9596C5D72F
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 12:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6308480034;
+	Wed,  6 Mar 2024 12:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709728184; cv=none; b=tUjPKP/oK0tPIh9liIz7aI1iefx5J1F2pxUyPNeP4LwgGHwXhfv3y6xaAEyn8Gh3uRwa0aZ4RK1TF97BPPtS0KWe5RRA2tNFvwhWghEZgWDgMG6uEIdYJVVpca8IKwkch6i1FmslG390sWEbx58zBa9GiLb9oxsqWjIbOKoWdb0=
+	t=1709728186; cv=none; b=JrH7Ft9uaESKRZUbmImCCZJ5JHGKw6MGOVeFalFoqvEKD8A/+WbJ7Y36EmFnSuq6/1bxUuKyMqb680wFDwyM9bj84bgINl8G4dYmgefNVmP4KCQnl73yIaZXjLycVDdQd8hrdzu7zzU5VfCkqylclGQHC3KGvVOJN28w3pafeC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709728184; c=relaxed/simple;
-	bh=ObV6wJD1dGgKfM/SEje+rpocSBnWnBjqtC7LP1pKvA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u/rVijJofgvIUtcgJW+Xz6b7SnqsIS39tpcJ2GbO0CkED4lhXXVRivxDBikTOpB07lZA0bOx8w9BwyM+Ho/3qJfNIf4v8t3m7g1gFSp3uq0tnrrC/yUEjoi8aBphoCxctSbxvXeVX8KCeiSrpGFQjHteUpvJ4Xrqqu0DKD5mGzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AbVnHnTb; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709728186; c=relaxed/simple;
+	bh=Yt+ho94pR60luKjtRmzjBa884MCPJnkc5KLlQn2SxNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ca44BzeJEzImJ2ndZBg+vflJ9Mq0Xryt1a41IKYc6+/0XIiSosTV8ybJDhgL9rCYSnigf+bu00uq+Xp6waFBH6Uogj4OOqTN6BOSiuM9dVB1H/4RsxviTSsgdhM5jUW3n1TMzkvUMZnV7PdzjpaXFaSyytT2S73YZrSTMojJKbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=s7NL1SeH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=E328/abI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=URDeu/hI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VLzGhH1D; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AbVnHnTb"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412f988b601so2263755e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 04:29:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709728181; x=1710332981; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1WArnjLr/e7a7LyRrU5MGJmZcAQ87pJ72IgQ8oXzK1E=;
-        b=AbVnHnTbD3uI9KsmUiL8paCc6W3k6B7rjOy9UYooYpI6qfRDEuJF9IokCGHiGL7X8O
-         Dj5dnX8M/o2wukcpC5kvwYzR/dh67mko/x1Ty+PhNhlyv147FVHM7Jehq9uoxnjuKTjz
-         /Kt0FIttmVKOJMpIfn4jUOd8jPO75XBMxN5pEz1erVtxw3nNMEo8z9Te9VQBOR9F0cXQ
-         kfHmr5tYcjsjrbyBF7DfMWpVp9U0Rrk6yGMNKulN4TS9El+5KHp/0S7oaureBknvS9UV
-         kmdUEQPGv+8b54eL5yd4VhpLgeEDdzZ+YRToJ+ybq5Ql2MsZiQ2Iy7cYknnTc0NzyNXd
-         f9Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709728181; x=1710332981;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1WArnjLr/e7a7LyRrU5MGJmZcAQ87pJ72IgQ8oXzK1E=;
-        b=EEoJb9Xe7Dw2ozqXiiRQVc8YzMEE/MZtg4zK7SwV5wd/MSsygBgLplZZ5qJDCF583d
-         BiodnTMcscvAkGL17rDjeoCuCRPZzxSszheyDQj++zcDBStaZ227DndCs06eLlEi07uO
-         0+ZJE2CoE7UJ822voqRtQCKQIYnqfakwwYub6fmEnLlpVAaRCiChdxBKMna6HH3YLQF1
-         dR6C8ptZm3tPWNrTiL9YL0iZ4loJMN4/BEgpkf8zmUkam7KqpV95gu8rag645iJ2u2Pa
-         huXrIndSNeu62Wv8pcxgJV41XGZCAAqGP+3y29bn38DCv8wJDP/kJyuJHY0nSCfGYQRF
-         9thg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmieBSO2yt4MooE4BjH3ofoUtO+RmJk4AGvGUWOB6wxtqWpFQC/fH+csKcEXyNKkyHzSyqLlse2U5+vzHa2LvXPa0xDAMG0+/RSnnz
-X-Gm-Message-State: AOJu0YzIlOKE1WmN1csVbyQA+2MjQOac3TwOKmma8HmUr4SG4aVlyZVa
-	TEDoQTxvnNEjtXHRTC6wHddVGeUltP12JnoKIUvWQB0efWmcLuXq0DhmtHDgnJA=
-X-Google-Smtp-Source: AGHT+IHGdd1EPcqo84bI26AwHBzuTmTNGE0sealqhVdj3w5L0TRy0WhbbcD1LSh1so/dlV5uuizfVw==
-X-Received: by 2002:adf:e641:0:b0:33e:469c:8afa with SMTP id b1-20020adfe641000000b0033e469c8afamr4385548wrn.22.1709728181164;
-        Wed, 06 Mar 2024 04:29:41 -0800 (PST)
-Received: from [192.168.0.102] ([176.61.106.68])
-        by smtp.gmail.com with ESMTPSA id bn20-20020a056000061400b0033e43756d11sm6811932wrb.85.2024.03.06.04.29.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Mar 2024 04:29:40 -0800 (PST)
-Message-ID: <4034004c-a017-4384-9086-6e0d6c154b9b@linaro.org>
-Date: Wed, 6 Mar 2024 12:29:40 +0000
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="s7NL1SeH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="E328/abI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="URDeu/hI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VLzGhH1D"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8306F4ED40;
+	Wed,  6 Mar 2024 12:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709728182; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Zluc5pdwJo1X5Y/YYPNxWSl6vvjmlAN09PftLZOSlFU=;
+	b=s7NL1SeHWkF2MbeTlPKqQvm95tz3aoqI2G9lDHzeXkJsnwrnQI7vwvEbFf4QMWaGRWRODx
+	H2FIztmYi2AXTnuSQ9d7Qb3C0A+C/in4mHKsiKKdlnycGTCWnUtg90g/ED7H+j5bml4Cc9
+	s/oCqv7Bqiwo5KhRmdWzGJ8lMrV2uqo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709728182;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Zluc5pdwJo1X5Y/YYPNxWSl6vvjmlAN09PftLZOSlFU=;
+	b=E328/abIB3tFTOP6OXZ6hhUDJebGKd7aPjZMUzqkPeuagY2oqMhzDEs6MwbCv3ZE76f+wD
+	J0Idh9PMsta+bgBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709728181; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Zluc5pdwJo1X5Y/YYPNxWSl6vvjmlAN09PftLZOSlFU=;
+	b=URDeu/hI/Zn02IV37ksOM9LCOfTbuQG06F0Hfd3pNkwydo2ILv/fHvjsNKw8m0NEXy0mni
+	2eHlmrB1XiSSWgDOFIan2geuceVjWRykzdaKFw1W81jxIAzMCnx+lpsFsfoh/1aFOqMo0o
+	IiY6p7x18yXLVdEy6xJD3Sm/W/mqti4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709728181;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Zluc5pdwJo1X5Y/YYPNxWSl6vvjmlAN09PftLZOSlFU=;
+	b=VLzGhH1DuXcZrVbxUMRIZC6ogdcZerr3MLWzPtHJEV32tN+D/nnh/2wJ9RIaeDOiLAdm2/
+	HCSyZzUc8zdk/+CA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id B5B661377D;
+	Wed,  6 Mar 2024 12:29:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id oRTxKrRh6GWdTgAAn2gu4w
+	(envelope-from <tzimmermann@suse.de>); Wed, 06 Mar 2024 12:29:40 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: mpe@ellerman.id.au,
+	jani.nikula@intel.com,
+	naresh.kamboju@linaro.org,
+	deller@gmx.de,
+	npiggin@gmail.com,
+	christophe.leroy@csgroup.eu,
+	aneesh.kumar@kernel.org,
+	naveen.n.rao@linux.ibm.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	lkft-triage@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v3 0/3] arch/powerpc: Resolve backlight include dependencies
+Date: Wed,  6 Mar 2024 13:28:17 +0100
+Message-ID: <20240306122935.10626-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/20] media: venus: core: Get rid of vcodec_num
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Andy Gross
- <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- Stanimir Varbanov <stanimir.varbanov@linaro.org>,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20230911-topic-mars-v2-0-3dac84b88c4b@linaro.org>
- <20230911-topic-mars-v2-9-3dac84b88c4b@linaro.org>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20230911-topic-mars-v2-9-3dac84b88c4b@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [4.19 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	 R_MISSING_CHARSET(2.50)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[patchwork.freedesktop.org:url];
+	 FREEMAIL_TO(0.00)[ellerman.id.au,intel.com,linaro.org,gmx.de,gmail.com,csgroup.eu,kernel.org,linux.ibm.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.71)[83.48%]
+X-Spam-Level: ****
+X-Spam-Score: 4.19
+X-Spam-Flag: NO
 
-On 09/02/2024 21:09, Konrad Dybcio wrote:
-> That field was only introduced to differentiate between the legacy and
-> non-legacy SDM845 binding. Get rid of it.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+After cleaning up <linux/fb.h> in commit 11b4eedfc87d ("fbdev: Do
+not include <linux/backlight.h> in header"), building with
+CONFIG_PMAC_BACKLIGHT=y returns errors about missing declarations.
+Patches 1 and 2 resolve the errors. Patch 1 has been reviewed at [1].
+Patch 3 removes another dependency between backlight and fbdev code.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Compile tested with ppc6xx_defconfig.
+
+v3:
+	* add Fixes tag and fix typos in patch 3
+v2:
+	* via-pmu-backlight: fix build errors
+	* powerpc: resolve dependency between fbdev and backlight
+
+[1] https://patchwork.freedesktop.org/series/130661/
+
+Thomas Zimmermann (3):
+  fbdev/chipsfb: Include <linux/backlight.h>
+  macintosh/via-pmu-backlight: Include <linux/backlight.h>
+  arch/powerpc: Remove <linux/fb.h> from backlight code
+
+ arch/powerpc/include/asm/backlight.h        |  5 ++--
+ arch/powerpc/platforms/powermac/backlight.c | 26 ---------------------
+ drivers/macintosh/via-pmu-backlight.c       |  1 +
+ drivers/video/fbdev/chipsfb.c               |  1 +
+ 4 files changed, 4 insertions(+), 29 deletions(-)
+
+-- 
+2.44.0
 
