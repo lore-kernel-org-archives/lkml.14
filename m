@@ -1,156 +1,94 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpdh17-1.aruba.it (smtpdh17-1.aruba.it [62.149.155.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1F280020;
-	Wed,  6 Mar 2024 12:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E68A7FBC1
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 12:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709727719; cv=none; b=Eo7dP3AnWvXnJCmSvL0Wl+4y05wUASexnupKw8RdvyjWFfz/renMNJMO1hBlLEh95+e+rQ55CIartce0QU1jAaOA0DREy0QCHiXTjyR2cKISB5C8R8mb00oRUUgJZfHqO3CeyNCwAhjSx/AwM5GAgLIx9CmO3mpV5aNOhjLvOzs=
+	t=1709727721; cv=none; b=QYHAkJaoC6fgbqRuKEaFfn1Bnr4ln5aY+We+jC672MPLjLUojVILUNsS/2ixaI8OCiGjGUKGEqrKxwkF5qr/wOCd/wVEVIpd+mJKLG72326wdFmNxmams6Mah1Zgr4x657UNYAh+sKGu6d5hBvuseL9DdQNwP3AD6fm7AUAZO0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709727719; c=relaxed/simple;
-	bh=TJC1FWTDVH1fS+pEMIatbsyV4hbiOT6t4ESjbRmuabk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QIaST7sj5k3auitJSbkABBXG26XwoLUdc+Oz9mdFMh5oFoP/AIdnl32KgrvMqp6kcSNLBAB0QZgat8W1duzhyRavYdw2S7bnpGOWjnWJLza1VlOdFTa5vtEoph9XpWprg/AiKcPCgeciVs+shPrwB7ERk47gGC5tUte988z5Pyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z5+YjsTm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CKWaYYgO; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z5+YjsTm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CKWaYYgO; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1709727721; c=relaxed/simple;
+	bh=wU3G8YFak0o+nuh4lyA5VMTG3gwzwPSpparlbmHgvS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aDtJ8HDsnsBjcO+GXKn0cwAsxk+l7WcpCUoy/u3Bb6N9O8kTShFnkJ1rQjoFfjt8Cq5Nb8T0nNvbYJJh6gCTJfiWmWVGTOtlemgxYjltwY7xaTvDHjYoNoxUMfDh1yPNHnSzDUHCIBfeRXp9qNy/rRvZ4OkI1v9ZR0hnevQ+T14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=flKz97UR; arc=none smtp.client-ip=62.149.155.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z5+YjsTm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CKWaYYgO";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z5+YjsTm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CKWaYYgO"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B95173F5D7;
-	Wed,  6 Mar 2024 12:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709727715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wUdrt2veIdLubgIpffUH6xTNcOrVJbvGxnIjN06WxzU=;
-	b=Z5+YjsTmzsb1ka+SE5O92dqDnc+F66QMOHQAuPrGOvMQdehmIabEu/YwkU7p3Rj4xZWNAS
-	eqmsUhPanbbBLK4yuG7NFTtVVCLZB03SFlDYCncyU6qvv+qJXsiSGaXCOnDlp9Ko/dTUU2
-	Q2dgikpgklNbEzQb/uKntUd0C9abgkY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709727715;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wUdrt2veIdLubgIpffUH6xTNcOrVJbvGxnIjN06WxzU=;
-	b=CKWaYYgO3W/0+VGFyG+OoCAMvSVEk8lwaVO/zi4eGa6+YA6MZPowMXJs3dVDlcGZAGwfqw
-	lt2PS4gDzaQMHqBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709727715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wUdrt2veIdLubgIpffUH6xTNcOrVJbvGxnIjN06WxzU=;
-	b=Z5+YjsTmzsb1ka+SE5O92dqDnc+F66QMOHQAuPrGOvMQdehmIabEu/YwkU7p3Rj4xZWNAS
-	eqmsUhPanbbBLK4yuG7NFTtVVCLZB03SFlDYCncyU6qvv+qJXsiSGaXCOnDlp9Ko/dTUU2
-	Q2dgikpgklNbEzQb/uKntUd0C9abgkY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709727715;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wUdrt2veIdLubgIpffUH6xTNcOrVJbvGxnIjN06WxzU=;
-	b=CKWaYYgO3W/0+VGFyG+OoCAMvSVEk8lwaVO/zi4eGa6+YA6MZPowMXJs3dVDlcGZAGwfqw
-	lt2PS4gDzaQMHqBQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id ABD231377D;
-	Wed,  6 Mar 2024 12:21:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 243uKeNf6GXWTAAAn2gu4w
-	(envelope-from <jack@suse.cz>); Wed, 06 Mar 2024 12:21:55 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 574E3A0803; Wed,  6 Mar 2024 13:21:55 +0100 (CET)
-Date: Wed, 6 Mar 2024 13:21:55 +0100
-From: Jan Kara <jack@suse.cz>
-To: syzbot <syzbot+4768a8f039aa677897d0@syzkaller.appspotmail.com>
-Cc: almaz.alexandrovich@paragon-software.com, anton@tuxera.com,
-	axboe@kernel.dk, brauner@kernel.org, ghandatmanas@gmail.com,
-	gregkh@linuxfoundation.org, jack@suse.cz, linkinjeon@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-	lkp@intel.com, llvm@lists.linux.dev, ntfs3@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev, syzkaller-bugs@googlegroups.com,
-	syzkaller@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] UBSAN: shift-out-of-bounds in ntfs_iget
-Message-ID: <20240306122155.yr6lse3yyaduo2db@quack3>
-References: <0000000000000424f205fcf9a132@google.com>
- <000000000000c5b2ae0612ef94a9@google.com>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="flKz97UR"
+Received: from [192.168.1.59] ([79.0.204.227])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id hqEQrVf32URZ5hqERrGgl2; Wed, 06 Mar 2024 13:18:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1709727527; bh=wU3G8YFak0o+nuh4lyA5VMTG3gwzwPSpparlbmHgvS8=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=flKz97URq48twY0yFh0zwWlL+ErKCOt2hGsBd/Bmm+y6iDNpMOG7FBaKkM01eXsGS
+	 0GXH8TohjL6KjoV2RWhnA0aONAIica+GIkgnvWFr/xrsIaFSPJYhMlSxiPjI6Pr4k8
+	 AJNenef8m1h0f8314SlgpoMI+vyAX3YaQSxMAefcobzDqMFJjYcJhzzrMQt9TGcUfh
+	 aC5oQaXD138RgLEOxIsU5p3mZXZTki7Cec7A7a3Xq46plUhnhR3TEICYsMG8fnfFL+
+	 d0CuZKIFi2dVS/xw7XFrv0LnZcRP8ab6VyM2xw1P9UVLFg4yBGZOLfHLJAFSE09I/v
+	 tofxpWXUTPYuA==
+Message-ID: <b10e330a-ca9e-47b9-a80f-3dc350e6c502@enneenne.com>
+Date: Wed, 6 Mar 2024 13:18:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000c5b2ae0612ef94a9@google.com>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: *
-X-Spam-Score: 1.58
-X-Spamd-Result: default: False [1.58 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-0.12)[66.97%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=162cf2103e4a7453];
-	 TAGGED_RCPT(0.00)[4768a8f039aa677897d0];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLz5osb6fwsyu4f48yakq7oq33)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[19];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[paragon-software.com,tuxera.com,kernel.dk,kernel.org,gmail.com,linuxfoundation.org,suse.cz,vger.kernel.org,lists.linuxfoundation.org,lists.sourceforge.net,intel.com,lists.linux.dev,googlegroups.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 SUBJECT_HAS_QUESTION(0.00)[]
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pps: use cflags-y instead of EXTRA_CFLAGS
+Content-Language: en-US
+To: Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240306120515.15711-1-lukas.bulwahn@gmail.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+In-Reply-To: <20240306120515.15711-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfNpTQvcxk3honCktkOckSd+dwohuJYM+49XLWmnri4QPHL0a471NeOZqM1PwjXcVHK8OUTVwjfqvdln8hJDHfJaPyOmACwVFiLQ9dKVBsKZsfTxZBL6h
+ cjOfb5sLl/VJYRKphd5mjSsppQ3T60QzGxCdv6m9Xg0QIA/AmD7wH+1O7oboZGwZMDt2lgd+wJyWzKyPV1vkDxzBiQ0lY5YCpSt0FJj2Avbgw6FUwfJKMVXw
+ w3oTF3Dg/rgio+X/nmHBkl0WgtGe6JdoU9hiroFHu2bbkaifvaEECblFCrDTldIqrW4oEhIW32lJta0mttzpsgfeOhtVEi9v9HTUaR3HOm8=
 
-On Tue 05-03-24 12:21:02, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
+On 06/03/24 13:05, Lukas Bulwahn wrote:
+> Commit f77bf01425b1 ("kbuild: introduce ccflags-y, asflags-y and
+> ldflags-y") deprecates use of EXTRA_CFLAGS in the kernel build.
 > 
-> commit 6f861765464f43a71462d52026fbddfc858239a5
-> Author: Jan Kara <jack@suse.cz>
-> Date:   Wed Nov 1 17:43:10 2023 +0000
+> This has been cleaned up in the whole kernel tree long ago, but this one
+> single place must have been missed.
 > 
->     fs: Block writes to mounted block devices
+> Replace the EXTRA_CFLAGS use by the common pattern for such debug flags.
+> No functional change.
 > 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12be09f2180000
-> start commit:   afead42fdfca Merge tag 'perf-tools-fixes-for-v6.4-2-2023-0..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=162cf2103e4a7453
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4768a8f039aa677897d0
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12da9bbd280000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=174e8115280000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
- 
-The reproducer is just mounting the fs so I'm not sure what's happening
-there. But since there's no working repro and this is ntfs3:
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-#syz fix: fs: Block writes to mounted block devices
+Acked-by: Rodolfo Giometti <giometti@enneenne.com>
 
-								Honza
+> ---
+> Rodolfo, please ack.
+> 
+> Greg, please pick this minor cleanup patch.
+> 
+>   drivers/pps/generators/Makefile | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pps/generators/Makefile b/drivers/pps/generators/Makefile
+> index 2d56dd0495d5..2589fd0f2481 100644
+> --- a/drivers/pps/generators/Makefile
+> +++ b/drivers/pps/generators/Makefile
+> @@ -5,6 +5,4 @@
+>   
+>   obj-$(CONFIG_PPS_GENERATOR_PARPORT) += pps_gen_parport.o
+>   
+> -ifeq ($(CONFIG_PPS_DEBUG),y)
+> -EXTRA_CFLAGS += -DDEBUG
+> -endif
+> +ccflags-$(CONFIG_PPS_DEBUG) := -DDEBUG
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
+
