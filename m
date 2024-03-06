@@ -1,76 +1,107 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AFA5D904;
-	Wed,  6 Mar 2024 09:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ED15DF05
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 09:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709718020; cv=none; b=HEi2e3ooAP/ystOzA/8wzPF39bYrFjmm7ZIo2yYen1amXkql5cC/L6tickX4X1KLAyM++HBrVX5jgoUZ7ZsA1INxnMpCRfvDdnjQ5idZdotWPBZ20lfxxKk3/k6yq+8PaxemTgANY/LgvsVUotda6x23ByFSgjtn3AoLZ/bVjBY=
+	t=1709718035; cv=none; b=lUIEAwMLfnzlVYLgaJxQsw/We086BZhhjf19LjLQ14KyQj2bUdy0QEwI0HqVdKjezsegSGceoFkDdFM5l+TYcTdvJtdCeLwLiN5VRCwztT9LlMrjP7v3JnJ5S6OgSYB60d9M/koIkntDNIZSIEEpGlPfcQfScp9At371G+rClVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709718020; c=relaxed/simple;
-	bh=799Tsb0xIH05EYhYK+RXjc9+4qLXqi3Jb64XLFVxStw=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=CfuCe43yTZAQM6u2v/30aOUab3LbvoUq1Upz9OvKUe78CVZENCx46zAkp8UmlBaZYPW3c718ZvcTAEXq7sH5NA1G7hWL5uXxHhowH42z4rz8NJ5c9uYfZlWowzzQu/vaF0u9OG4e9SoqLtG8JjJLEKM4AoMiw1tMXj3STtDCrsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F2TgoCUv; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709718035; c=relaxed/simple;
+	bh=yAmwTThFElfEUXuzDwez7+utuY3FM973SAHJmZYL1KY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hPsppFK8mTFvACwGaW/S9TpUGD/BbZea69JEDDesxiNMhZeUOzRfbq+WEJyYvV7egPykCqs2NQyebShHMn6y5cDIWkRBXSz+69TIKqNfHDld8aiFfN7R7QSwVsnn1BHxj4MXG425aIedPkGzV5NeXDgplqObJfYte9uQ5TjpqfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=DNO8QwTP; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F2TgoCUv"
-Received: by mail.gandi.net (Postfix) with ESMTPA id A304C60007;
-	Wed,  6 Mar 2024 09:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709718016;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NCGrsAuT0b0P0X1QOxE+TCi3XQ9pIjm2ZQrRXk6Wohc=;
-	b=F2TgoCUvYbdq6tKAZgUhaVRHiF5tpGx87C+vLDeQ0NjTFAtW32EYjOJrJEzPK/K34hVIxk
-	XhdJ2EOpqNrspqGR3XjPC+vmV7Ow9RVK69bz8gAvkWtvuspIbk94oXtcdiCY8teErIHMGi
-	Xof6H0cXdzobS5C++hubRDNcnI2XGjFapcrkG25YH2kdpwhIBzh6CWJOzv5IG7i/Lk/pfn
-	tXJAB1WXz6WSO5aZtGdfrcIWoNlGnet06YQu2jftROCVpXbZlSG0721M1Y4brg6W60mHSO
-	QHWOwY8VxUR7yygsn3+SXbi9zVzPcgTBjTcgs7aapHWFgwcmZGMkFWM/ZXButQ==
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DNO8QwTP"
+X-UUID: 90b6474edb9d11eeb8927bc1f75efef4-20240306
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ekRAdx9PacrM+v9N8B7aPw62g80zVfoirlx+37NhmtQ=;
+	b=DNO8QwTPESmv3TC7DhSCetbJHh8NTV5szUqFOiz29AZ1rDP0131XamuPaU9zpHM+8zMp82ffHL2lvL3fCSGo9fcuSK3XhIF11aMiuq+uLww+ah7nBVCkdU0nowZgXR5C52PVvWEqWFImev05cJfZoNCcvr0ohPZLg8ECFbyw2so=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:3b8956a1-6c99-408c-ab7f-263a0ce9db75,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:7a4f1590-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 90b6474edb9d11eeb8927bc1f75efef4-20240306
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+	(envelope-from <chunhui.li@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 887273234; Wed, 06 Mar 2024 17:40:27 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 6 Mar 2024 17:40:25 +0800
+Received: from mbjsdccf07.gcn.mediatek.inc (10.15.20.246) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 6 Mar 2024 17:40:24 +0800
+From: Chunhui Li <chunhui.li@mediatek.com>
+To: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, John
+ Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky
+	<senozhatsky@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>, Chunhui Li
+	<chunhui.li@mediatek.com>
+Subject: [PATCH] printk: fix _entry_ptr build warning
+Date: Wed, 6 Mar 2024 17:26:47 +0800
+Message-ID: <20240306092647.16010-1-chunhui.li@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 06 Mar 2024 10:40:15 +0100
-From: Kamel BOUHARA <kamel.bouhara@bootlin.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marco Felsch
- <m.felsch@pengutronix.de>, Jeff LaBundy <jeff@labundy.com>
-Cc: catalin.popescu@leica-geosystems.com, mark.satterthwaite@touchnetix.com,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory Clement
- <gregory.clement@bootlin.com>, bsp-development.geo@leica-geosystems.com
-Subject: Re: [PATCH v9 0/3] Input: Add TouchNetix axiom touchscreen driver
-In-Reply-To: <20240301103909.167923-1-kamel.bouhara@bootlin.com>
-References: <20240301103909.167923-1-kamel.bouhara@bootlin.com>
-Message-ID: <6a93ecd5527b774a795942ec9c147ad5@bootlin.com>
-X-Sender: kamel.bouhara@bootlin.com
-Organization: Bootlin
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: kamel.bouhara@bootlin.com
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--0.708200-8.000000
+X-TMASE-MatchedRID: Z2f9DQPf1tkE7MuQrZP2o5dc7I2df+ms75oFMklhrnhGL0g1nVmkYVO4
+	BD7nLMxnlTJXKqh1ne2/LclmUK1hkobzTO6asfbjyDp+jSvEtWv0O7M3lSnTW5soi2XrUn/Jn6K
+	dMrRsL14qtq5d3cxkNRqXnrxrKCOXFcwn/U1iS4dD30h1PAU6P6/GTBhLbUgDqhGWfuPUaq93ob
+	md2bsjHipWuuOW0EtOvAgHKzqJDgOL28eWhdXbLK92atjiJrAoF0aD5ljt43pMcHZD6gqu7wxMj
+	fifIXfowkvVoA11Twp+3BndfXUhXQ==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--0.708200-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: 1CE3B773FBAD0C22075C8D3E0E295523F7348289C887245A523E5D76D60A61202000:8
+X-MTK: N
 
-Le 2024-03-01 11:39, Kamel Bouhara a écrit :
-> Add a new driver for the TouchNetix's axiom family of touchscreen
-> controller. This driver only support i2c and can be later adapted for
-> SPI and USB support.
-> 
+We build with Werror and suffer build error when
+enable CONFIG_PRINTK_INDEX, such as
+gfp.h:223:2: error: unused variable '_entry_ptr'
+ratelimit.h:31:3: error: unused variable '_entry_ptr'
+kallsyms.h:172:2: error: unused variable '_entry_ptr'
+[-Werror,-Wunused-variable]
 
-Hello,
+Fix the warning by appending __attribute__((unused)).
 
-Now that all the comments are addressed, do you think there is a chance 
-that this driver could be merged for 6.9?
+Signed-off-by: Chunhui Li <chunhui.li@mediatek.com>
+---
+ include/linux/printk.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 8ef499ab3c1e..749c1c4257f1 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -392,7 +392,7 @@ struct pi_entry {
+ 				.level = __builtin_constant_p(_level) ? (_level) : NULL, \
+ 				.subsys_fmt_prefix = _subsys_fmt_prefix,\
+ 			};						\
+-			static const struct pi_entry *_entry_ptr	\
++			static const struct pi_entry *_entry_ptr __attribute__((unused)) \
+ 			__used __section(".printk_index") = &_entry;	\
+ 		}							\
+ 	} while (0)
+-- 
+2.18.0
+
