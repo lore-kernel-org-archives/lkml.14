@@ -1,197 +1,245 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238195DF0D;
-	Wed,  6 Mar 2024 09:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C7C5F54D
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 09:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709716624; cv=none; b=ub2KQYt45q7TbY8kNhGH+ZuYpCdtZqUVz3aHoM6qQAzvu3LsSnxuA3j3mPAvybV6PnW7DJYh3wvnjgCBt1NGEzQ9jiI86ahxgIHaA/Y/yaKht9MNj/AhF37mpBaULefQhde/N2bv8wtGyv1LHFaEYmkYldv1xigkaIX7dq6uKMI=
+	t=1709716628; cv=none; b=HaNNPiU1w/vYZPb2jDS6e6vrtEnMl9wgcH1a4hkGWhsybR13nl4e94USKNIr1OF0BWfmWsuBzrtOmIeZQ9YcTRpQWX4GMVg+OO/OsiAkhkXrc6MGtgCwBQgphbR6NBvapuq2/nOAJScdClag+gyOseZTdhLUlvIXY1yhAZAh4l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709716624; c=relaxed/simple;
-	bh=tbPgPGFVnt1vtTVYbvkg8PPZSeE+nmVPlPTE7uHHRe0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LqVD+qzLr9wyaxlwCgCfSdbrMmP4/iiVYmZciz/8s0rBNtLUG+rYg6oO+mlgiPqmk6B4/HfXNq1o8wHJ7EFa7eYWxOxie7BKYbwFw37etgzbVW7GQ8CjRmnEoDl/WsVLr3FCEJTxM+FU4Mt5ZHh3xP05IeSLcY+NtO4LVZMoIdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRxGB1XN; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709716628; c=relaxed/simple;
+	bh=IUe3cAnoMPthLD2FcvfY1gDuS5k9Mc7AV8gDfGAWObY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RGmBwKq+Zxh5QPTXykApdrc0nF2lFIEiG064y3stm1DHGAGyizpFx30z2Rh18fOMNwWjgpuxjmLVRQJgJBWHR68W0FZB8GNsoCw9tGB4r6+J7MHMawGu6ggTACjfVxiNq07+qosMpDxIt5Aye0wH83S1tOc7WPyCKpLEpDz6P3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TuaaJn85; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRxGB1XN"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56454c695e6so1106114a12.0;
-        Wed, 06 Mar 2024 01:17:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709716620; x=1710321420; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SCYMpYXG3st4bKv2ILr3sPpiHbuDCWZBcXzngQOpnDs=;
-        b=CRxGB1XNAeWObzfpugCZPdsOK0XsJ4crV7GbXuZHhcpgoHjIvsHrotT7lXI+6TdpNU
-         cHF/4dFAMj4FezVfYNpAwjbDsuHQlSLgK+oAGBvG7rm72AK1RKjonE89cgMAeesPLjtF
-         B6Dg11hJtFsYd6dPuomHnkhHRj/u3T0bqldyUtY8u+IAR4nGpBU/i4EBUY0Kf3YJ82Qf
-         UFA690Leob35aCSJKbSvRXmsg8zX8hQsSakWCwCb8JDTbyc7Y2MyAEUq+uMbucylydlY
-         1NVhL+nJPwr7F8phqA3bDnempzKP2qYbH4eNO9Jw/9XMIMsIRsLqGdOFBn33uUNGyAz3
-         kjqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709716620; x=1710321420;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SCYMpYXG3st4bKv2ILr3sPpiHbuDCWZBcXzngQOpnDs=;
-        b=KxkJSLFNkQJmtiA687nRg86VQPtqiiEo6U17CFowh1Fk7lzJe460QYEEtVCZongLF1
-         H6bBPNFMKRLQvB+Rpko7b3L1qhcmVZMKRR3lS/TB62eGyvMqjUGQEtmC5xxK6rolkYUn
-         JGdmYcu9zeBVDEbxEn7OL5Kz3rtvw018Slj547E118naMOX/gfrs799d6iWPXDivXseG
-         SCkajmdbNZRoB89zlpdVrvqpMqtqBN4y+xNGeb7g4sb81Qol+rHXhtIZco0KZMmqW/LS
-         eQ5mlMTdRL8J6ujd5mpovlz0rfqJSGmuJXnSJ9Tfq0Os3buhht1jBAb+NGQTQ5yAtriC
-         28Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8uofku1fxmEvb+61sF4TAzv8Tyn4XnZKQOilxlKJ7KLATHDvxMn3zrWJDYhjZw+NPw5f+BRlc5LwGQfVMT25SnAsWZ6DylMnMvkAMH+ml4MmA60lCCrW79Ypi1+1Mjwf+Ws7STuEDVdBrtbVbpIvrYeAcFql8KGRxtXVE4Kj3DQ==
-X-Gm-Message-State: AOJu0YylTaUt5t/3eV7o1jl6UHbXXQ38RSVQJ1T3A0tCmFfeDy1DXLB9
-	vt6u/H02iT3OU+LfsUi6YawlQttyibnpJPNQcW2a7TQ2Nr0rIhl1
-X-Google-Smtp-Source: AGHT+IGUDiMb8ahdMX3evZg75AlskwZSyQPf90P6BuETFpKyHMiR6FtoQJFCCL0ZZx+eyNB6efJrgA==
-X-Received: by 2002:a05:6402:12d6:b0:565:4b37:4578 with SMTP id k22-20020a05640212d600b005654b374578mr5432080edx.14.1709716620100;
-        Wed, 06 Mar 2024 01:17:00 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
-        by smtp.gmail.com with ESMTPSA id g3-20020a056402180300b00566ea8e9f38sm5239615edy.40.2024.03.06.01.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 01:16:59 -0800 (PST)
-Message-ID: <1fff8742a13c28dd7e1dda47ad2d6fa8e21e421e.camel@gmail.com>
-Subject: Re: [PATCH v4 1/2] driver core: Introduce device_link_wait_removal()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
- Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
- Saravana Kannan <saravanak@google.com>
-Cc: Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, Sonal Santan
- <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>,
-  Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>,  stable@vger.kernel.org
-Date: Wed, 06 Mar 2024 10:20:24 +0100
-In-Reply-To: <20240306085007.169771-2-herve.codina@bootlin.com>
-References: <20240306085007.169771-1-herve.codina@bootlin.com>
-	 <20240306085007.169771-2-herve.codina@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TuaaJn85"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709716627; x=1741252627;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=IUe3cAnoMPthLD2FcvfY1gDuS5k9Mc7AV8gDfGAWObY=;
+  b=TuaaJn85bbZdN6zPtEp5+1CReL9vu9kl5UWdfa1y/ktkRdY1+VYkB3XR
+   7XBw3Ztn6UUxVtYsBo+8YZszjUZu+mQeQhH9d945So2FGbWTAp2brCiw6
+   TRBp8k38iQ73lxZGBcL2P0ZBabNPjqVuEh1VA/8eH7v/fKhLXdKhaW8bu
+   ava9oYR1F8bSVxQOckAGa82E8aKEeUAce7Ox+gxuSoGprjftlPYmtqWhj
+   XOp5iQdMZkcf6LwtYlubDeXz+hYoqpLAJO0+E0FOd75yDIEpYO1PM4+MW
+   MKCekUblXhaQIzjsZ4D2VplsoxQVpBHssVCgq0PpeUNVM8BfBpmoT91JC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="7260737"
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="7260737"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 01:17:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="9855181"
+Received: from rjongalo-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.33.211])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 01:17:02 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Hsin-Yi Wang <hsinyi@chromium.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Douglas Anderson <dianders@chromium.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] drm/edid: Add a function to match EDID with
+ identity
+In-Reply-To: <20240306004347.974304-3-hsinyi@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240306004347.974304-1-hsinyi@chromium.org>
+ <20240306004347.974304-3-hsinyi@chromium.org>
+Date: Wed, 06 Mar 2024 11:16:59 +0200
+Message-ID: <87sf13zpmc.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Wed, 2024-03-06 at 09:50 +0100, Herve Codina wrote:
-> The commit 80dd33cf72d1 ("drivers: base: Fix device link removal")
-> introduces a workqueue to release the consumer and supplier devices used
-> in the devlink.
-> In the job queued, devices are release and in turn, when all the
-> references to these devices are dropped, the release function of the
-> device itself is called.
->=20
-> Nothing is present to provide some synchronisation with this workqueue
-> in order to ensure that all ongoing releasing operations are done and
-> so, some other operations can be started safely.
->=20
-> For instance, in the following sequence:
-> =C2=A0 1) of_platform_depopulate()
-> =C2=A0 2) of_overlay_remove()
->=20
-> During the step 1, devices are released and related devlinks are removed
-> (jobs pushed in the workqueue).
-> During the step 2, OF nodes are destroyed but, without any
-> synchronisation with devlink removal jobs, of_overlay_remove() can raise
-> warnings related to missing of_node_put():
-> =C2=A0 ERROR: memory leak, expected refcount 1 instead of 2
->=20
-> Indeed, the missing of_node_put() call is going to be done, too late,
-> from the workqueue job execution.
->=20
-> Introduce device_link_wait_removal() to offer a way to synchronize
-> operations waiting for the end of devlink removals (i.e. end of
-> workqueue jobs).
-> Also, as a flushing operation is done on the workqueue, the workqueue
-> used is moved from a system-wide workqueue to a local one.
->=20
-> Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+On Tue, 05 Mar 2024, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> Create a type drm_edid_ident as the identity of an EDID. Currently it
+> contains panel id and monitor name.
+>
+> Create a function that can match a given EDID and an identity:
+> 1. Reject if the panel id doesn't match.
+> 2. If name is not null in identity, try to match it in the detailed timing
+>    blocks. Note that some panel vendors put the monitor name after
+>    EDID_DETAIL_MONITOR_STRING.
+>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 > ---
+> v3->v4:
+> 1. add a type drm_edid_ident
+> 2. match name -> match identity. Modify function to use edid iterators.
+> ---
+>  drivers/gpu/drm/drm_edid.c | 76 ++++++++++++++++++++++++++++++++++++++
+>  include/drm/drm_edid.h     |  8 ++++
+>  2 files changed, 84 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index f9e09f327f81..5e7e69e0e345 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -102,6 +102,11 @@ struct detailed_mode_closure {
+>  	int modes;
+>  };
+>  
+> +struct drm_edid_ident_closure {
+> +	const struct drm_edid_ident *ident;
+> +	bool matched;
+> +};
 
-With the below addressed:
+More like drm_edid_match_closure.
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-
-> =C2=A0drivers/base/core.c=C2=A0=C2=A0=C2=A0 | 26 +++++++++++++++++++++++-=
---
-> =C2=A0include/linux/device.h |=C2=A0 1 +
-> =C2=A02 files changed, 24 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index d5f4e4aac09b..48b28c59c592 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -44,6 +44,7 @@ static bool fw_devlink_is_permissive(void);
-> =C2=A0static void __fw_devlink_link_to_consumers(struct device *dev);
-> =C2=A0static bool fw_devlink_drv_reg_done;
-> =C2=A0static bool fw_devlink_best_effort;
-> +static struct workqueue_struct *device_link_wq;
-> =C2=A0
-> =C2=A0/**
-> =C2=A0 * __fwnode_link_add - Create a link between two fwnode_handles.
-> @@ -532,12 +533,26 @@ static void devlink_dev_release(struct device *dev)
-> =C2=A0	/*
-> =C2=A0	 * It may take a while to complete this work because of the SRCU
-> =C2=A0	 * synchronization in device_link_release_fn() and if the consumer=
- or
-> -	 * supplier devices get deleted when it runs, so put it into the
-> "long"
-> -	 * workqueue.
-> +	 * supplier devices get deleted when it runs, so put it into the
-> +	 * dedicated workqueue.
-> =C2=A0	 */
-> -	queue_work(system_long_wq, &link->rm_work);
-> +	queue_work(device_link_wq, &link->rm_work);
-> =C2=A0}
-> =C2=A0
-> +/**
-> + * device_link_wait_removal - Wait for ongoing devlink removal jobs to
-> terminate
-> + */
-> +void device_link_wait_removal(void)
-> +{
-> +	/*
-> +	 * devlink removal jobs are queued in the dedicated work queue.
-> +	 * To be sure that all removal jobs are terminated, ensure that any
-> +	 * scheduled work has run to completion.
-> +	 */
-> +	flush_workqueue(device_link_wq);
-> +}
-> +EXPORT_SYMBOL_GPL(device_link_wait_removal);
 > +
-> =C2=A0static struct class devlink_class =3D {
-> =C2=A0	.name =3D "devlink",
-> =C2=A0	.dev_groups =3D devlink_groups,
-> @@ -4099,9 +4114,14 @@ int __init devices_init(void)
-> =C2=A0	sysfs_dev_char_kobj =3D kobject_create_and_add("char", dev_kobj);
-> =C2=A0	if (!sysfs_dev_char_kobj)
-> =C2=A0		goto char_kobj_err;
-> +	device_link_wq =3D alloc_workqueue("device_link_wq", 0, 0);
-> +	if (!device_link_wq)
-> +		goto wq_err;
-> =C2=A0
+>  #define LEVEL_DMT	0
+>  #define LEVEL_GTF	1
+>  #define LEVEL_GTF2	2
+> @@ -5455,6 +5460,77 @@ drm_parse_hdmi_vsdb_audio(struct drm_connector *connector, const u8 *db)
+>  		    connector->audio_latency[0], connector->audio_latency[1]);
+>  }
+>  
+> +static void
+> +match_identity(const struct detailed_timing *timing, void *data)
+> +{
+> +	struct drm_edid_ident_closure *closure = data;
+> +	unsigned int i, j;
+> +	const char *str = closure->ident->name;
+> +	unsigned int buflen = strlen(str);
+> +	unsigned int size = ARRAY_SIZE(timing->data.other_data.data.str.str);
+> +
+> +	if (buflen > size ||
+> +	    !(is_display_descriptor(timing, EDID_DETAIL_MONITOR_NAME) ||
+> +	      is_display_descriptor(timing, EDID_DETAIL_MONITOR_STRING)))
+> +		return;
+> +
+> +	for (i = 0; i < buflen; i++) {
+> +		char c = timing->data.other_data.data.str.str[i];
+> +
+> +		if (c != str[i] ||  c == '\n')
+> +			break;
+> +		}
+> +
+> +		if (i == buflen) {
 
-I can't still agree with this. Why not doing it in devlink_class_init()? Th=
-is is
-devlink specific so it makes complete sense to me.
+This will never be true.
 
-Note that this maybe the 3/4 time I'm arguing in here. If you don't agree p=
-lease
-tell me why and I may agree with you :).
+> +			/* Allow trailing white spaces. */
+> +			for (j = i; j < size; j++) {
+> +				char c = timing->data.other_data.data.str.str[j];
+> +
+> +				if (c == '\n') {
+> +					closure->matched = true;
+> +					return;
+> +				} else if (c != ' ') {
+> +					break;
+> +				}
+> +			}
+> +			if (j == size) {
+> +				closure->matched = true;
+> +				return;
+> +			}
+> +	}
 
-(and sorry if you already said something about it and I missed)
+Please let's use strcmp and friends instead of reinventing our own:
 
-- Nuno S=C3=A1
->=20
+const char *name = closure->ident->name;
+int name_len = strlen(name);
+const char *desc = timing->data.other_data.data.str.str;
+int desc_len = ARRAY_SIZE(timing->data.other_data.data.str.str);
 
+if (name_len > desc_len)
+	return;
+
+if (strncmp(name, desc, name_en))
+	return;
+
+for (i = name_len; i < desc_len; i++) {
+	if (!isspace(desc[i]) && !desc[i])
+        	return;
+}
+
+closure->matched = true;
+
+
+> +}
+> +
+> +/**
+> + * drm_edid_match_identity - match drm_edid with given identity
+> + * @drm_edid: EDID
+> + * @ident: the EDID identity to match with
+> + *
+> + * Check if the EDID matches with the given identity.
+> + *
+> + * Return: True if the given identity matched with EDID, false otherwise.
+> + */
+> +bool drm_edid_match_identity(const struct drm_edid *drm_edid,
+> +			     const struct drm_edid_ident *ident)
+
+Can we please just call this drm_edid_match()? Is the _identity in the
+name somehow helpful?
+
+> +{
+> +	if (!drm_edid || edid_extract_panel_id(drm_edid->edid) != ident->panel_id)
+> +		return false;
+
+Side note, edid_extract_panel_id() could now be made to take struct
+drm_edid.
+
+> +
+> +	/* Match with name only if it's not NULL. */
+> +	if (ident->name) {
+> +		struct drm_edid_ident_closure closure = {
+> +			.ident = ident,
+> +			.matched = false,
+> +		};
+> +
+> +		drm_for_each_detailed_block(drm_edid, match_identity, &closure);
+> +
+> +		return closure.matched;
+> +	}
+> +
+> +	return true;
+> +}
+> +EXPORT_SYMBOL(drm_edid_match_identity);
+> +
+>  static void
+>  monitor_name(const struct detailed_timing *timing, void *data)
+>  {
+> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
+> index 9686a7cee6a6..01825a8954b6 100644
+> --- a/include/drm/drm_edid.h
+> +++ b/include/drm/drm_edid.h
+> @@ -312,6 +312,12 @@ struct edid {
+>  	u8 checksum;
+>  } __packed;
+>  
+> +/* EDID matching */
+> +struct drm_edid_ident {
+> +	u32 panel_id;
+> +	const char *name;
+> +};
+> +
+>  #define EDID_PRODUCT_ID(e) ((e)->prod_code[0] | ((e)->prod_code[1] << 8))
+>  
+>  /* Short Audio Descriptor */
+> @@ -412,6 +418,8 @@ struct edid *drm_get_edid(struct drm_connector *connector,
+>  			  struct i2c_adapter *adapter);
+>  const struct drm_edid *drm_edid_read_base_block(struct i2c_adapter *adapter);
+>  u32 drm_edid_get_panel_id(const struct drm_edid *drm_edid);
+> +bool drm_edid_match_identity(const struct drm_edid *drm_edid,
+> +			     const struct drm_edid_ident *ident);
+>  struct edid *drm_get_edid_switcheroo(struct drm_connector *connector,
+>  				     struct i2c_adapter *adapter);
+>  struct edid *drm_edid_duplicate(const struct edid *edid);
+
+-- 
+Jani Nikula, Intel
