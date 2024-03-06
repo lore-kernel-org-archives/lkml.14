@@ -1,232 +1,187 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1EB22F1D;
-	Wed,  6 Mar 2024 08:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494615D8FB
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709713879; cv=none; b=Bs7Ubh3zjMDVr/NBtMK9J/gqNSg7dduEdoLvOf9FMPF50+o9lwyiRLqrNyYa4tJhOfMdmJRZjrObbf3KNs3BEZZnrDRl2+hiOODiqT4wbePTHkjIHCYMkwJKI8E91HTRZe/+MhOx7z85Oc5oSU6msjlayn2TQF1ukkvZVsm9WBQ=
+	t=1709713887; cv=none; b=aZ5Q2uvuEHbNvTSNTKdXZZIGWp/QnAc2BzbWC3vFkGusg6OIpEHwGNCul/uO1M8wGQO+ZLgS09nwRCzcQCklSXze3fXv/o9x9tWqNfPi8UKc6oyqjSbMIcww/mf1HxplRGyBxuQXjhRXjxXo5RJ4t5a/9ReK1YC6WG7sPjyYVYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709713879; c=relaxed/simple;
-	bh=S2k4dHHEQpRhP6c+TZy4wKSpHEmoOGsY42HtUH5CMZk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KDT/kThFW05W1dlMgICWoFKyl1wjD9cAzSXxm/4Nhc5P19WqxBQ/4T/W8H4rlkdFPucU4EdOP1wnDRUEQJpW3RdRT1V7o2xgf3hHHsGA/bona/WV2RrohntTDY5gtfEfrE2HXSMMovFxc8aJ1Cjr2GXpwa1pvXeU4swwLn/CJu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TqQGr2sGmz9y4gm;
-	Wed,  6 Mar 2024 16:15:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 836DC140412;
-	Wed,  6 Mar 2024 16:31:13 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwBHPhfBKehlVBnQAw--.462S2;
-	Wed, 06 Mar 2024 09:31:12 +0100 (CET)
-Message-ID: <720e7d0d55c2a22742ede0104fc884609b2f840d.camel@huaweicloud.com>
-Subject: Re: [PATCH v2 24/25] commoncap: use vfs fscaps interfaces
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>,
-  Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, James
- Morris <jmorris@namei.org>,  Alexander Viro <viro@zeniv.linux.org.uk>, Jan
- Kara <jack@suse.cz>, Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>,  Casey Schaufler
- <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
- <roberto.sassu@huawei.com>,  Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi
- <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
- selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
-Date: Wed, 06 Mar 2024 09:30:54 +0100
-In-Reply-To: <Zed91y4MYugjI1/K@do-x1extreme>
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
-	 <20240221-idmap-fscap-refactor-v2-24-3039364623bd@kernel.org>
-	 <dcbd9e7869d2fcce69546b53851d694b8ebad54e.camel@huaweicloud.com>
-	 <ZeXpbOsdRTbLsYe9@do-x1extreme>
-	 <a7124afa6bed2fcadcb66efa08e256828cd6f8ab.camel@huaweicloud.com>
-	 <ZeX9MRhU/EGhHkCY@do-x1extreme>
-	 <20240305-fachjargon-abmontieren-75b1d6c67a83@brauner>
-	 <3098aef3e5f924e5717b4ba4a34817d9f22ec479.camel@huaweicloud.com>
-	 <7058e2f93d16f910336a5380877b14a2e069ee9d.camel@huaweicloud.com>
-	 <Zed91y4MYugjI1/K@do-x1extreme>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1709713887; c=relaxed/simple;
+	bh=KXp1t8lcI6Rolpam/MVl5z5Wbhly/pEhcZdfFhwVXFc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OXgnwLwUi31AnGwVd5loV3iAmxzjqqvSgcq23kYeH8dctUonBOe0YGkCovTfDhWJE0VTNsRwi8EG0K4Zs0XDtms0CJd/9v+ceHpy2QD3cnek+zsYz2yssvBL+GGT31xP28D/6zjfp3tiKr07rH1vd8I7HosG+p0z9qIPnhYJWEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i+GrPBUi; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i+GrPBUi"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so9568277a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 00:31:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709713883; x=1710318683; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wBclJ2321GquWpSv8u+UQ+5whGNSTBzwaiCmOO6tGzk=;
+        b=i+GrPBUijLYBoaF9sEtBAFdM8iNzVXlF21Eg5f4zJLa8T/uaid8p+mLsTMljW81M/5
+         ORDxjlu15wfF7iTAO+Z087PenxnfWljbm9qXwZ185HnH5CyauxZq8bLnZhsXkiJ+o+kT
+         iEqSboipOZqne4oKF+/3mNSgGCWulKj622/lIMgNx2BqReAssQPcPOnvw7bLos10eY6A
+         AQeqWDu0aMWd4cSlF08vhpzrA1mEEkuPucMhkky+9pUdS7UUX+GXi0yAW7+EWUfCEYTx
+         +uWJJE6KsTFW7A6fyaJudTH2eVQIfKcfC9QYoOIOV0okhGJFzCteyKlUkru4kV7UgPCM
+         Ml/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709713883; x=1710318683;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wBclJ2321GquWpSv8u+UQ+5whGNSTBzwaiCmOO6tGzk=;
+        b=SEgVnu5LjnDOsZoj9DAjsf3sM9LIgbLu1Jk59jwn1SJWregCGyK6Gw93PKrtsXlJYA
+         tnZ/xcS2TFeZRHznoj9k7ZYJBjeKcZUAI3i2bE3H9ec5J6mmTUbrfsFt0ul4RuIhKGoj
+         ZyZBEGcy/EPGLmGcUsMf3L0S2U5PFhn+3VWvLbO0A86kQxl6q4unWL8U/RAoXaAtYabl
+         07WcL99VaizkcsA4563A+pBJZknkbH6JwZ7mp3mNoEO1CxrU4KeaY4M8Bnj4qyjPa9Yc
+         wA2rrSKcYUF9tUq+IyrIct6gmXUeIWsD47MqulnlJaw70+KDPsIrJpGywyRGZkhHhs03
+         +kUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGuJQtBfqWAn6Q1T6QY9n+wPIFx5ZnVm+bQpF34VOOpGaDwbHb2R3USmRC2jIA9mwP/IfJU0DPcZAjvkyk7jKuiNm8Uy9KrgkjVTfY
+X-Gm-Message-State: AOJu0YysfDIazYhzkxh9HoqIvnUHqMrHVhdAzsLTlCPczsiXUn8517S/
+	WyyaVnCiH3yQH6ugiG4AkOQTm78WFpzM4M72bTesrK0wk9uXnNgCUWDJY1iptAM=
+X-Google-Smtp-Source: AGHT+IFXLHG2d3eNsyfX8iT7sDFkCoHDODjhVy+/H/nJ7HEyeKvGvO4QwcZJ1wamHysxGcI9VMcvjQ==
+X-Received: by 2002:a05:6402:5c2:b0:567:6a66:d103 with SMTP id n2-20020a05640205c200b005676a66d103mr4903117edx.0.1709713883631;
+        Wed, 06 Mar 2024 00:31:23 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id q12-20020a056402518c00b00563ec73bbafsm6640290edd.46.2024.03.06.00.31.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Mar 2024 00:31:23 -0800 (PST)
+Message-ID: <e7105dd7-68ff-4af6-b91e-56b6e50ff949@linaro.org>
+Date: Wed, 6 Mar 2024 09:31:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwBHPhfBKehlVBnQAw--.462S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Ar48Cr1DZFyfCry5ZF17Awb_yoW7CFy5pF
-	W5GFn8Kr4kJr1UAr18tr1UX3WFy3yfJF4UXr1DK34jyr1qkr1ftr4Skr17uF98Cr18Gr1j
-	vr1jy3W3Wr15AwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcV
-	CF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOlksDUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAOBF1jj5sG1gABsw
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
+Content-Language: en-US
+To: Odelu Kukatla <quic_okukatla@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
+ quic_mdtipton@quicinc.com
+References: <20240306073016.2163-1-quic_okukatla@quicinc.com>
+ <20240306073016.2163-2-quic_okukatla@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240306073016.2163-2-quic_okukatla@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-03-05 at 14:17 -0600, Seth Forshee (DigitalOcean) wrote:
-> On Tue, Mar 05, 2024 at 06:11:45PM +0100, Roberto Sassu wrote:
-> > On Tue, 2024-03-05 at 13:46 +0100, Roberto Sassu wrote:
-> > > On Tue, 2024-03-05 at 10:12 +0100, Christian Brauner wrote:
-> > > > On Mon, Mar 04, 2024 at 10:56:17AM -0600, Seth Forshee (DigitalOcea=
-n) wrote:
-> > > > > On Mon, Mar 04, 2024 at 05:17:57PM +0100, Roberto Sassu wrote:
-> > > > > > On Mon, 2024-03-04 at 09:31 -0600, Seth Forshee (DigitalOcean) =
-wrote:
-> > > > > > > On Mon, Mar 04, 2024 at 11:19:54AM +0100, Roberto Sassu wrote=
-:
-> > > > > > > > On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOce=
-an) wrote:
-> > > > > > > > > Use the vfs interfaces for fetching file capabilities for=
- killpriv
-> > > > > > > > > checks and from get_vfs_caps_from_disk(). While there, up=
-date the
-> > > > > > > > > kerneldoc for get_vfs_caps_from_disk() to explain how it =
-is different
-> > > > > > > > > from vfs_get_fscaps_nosec().
-> > > > > > > > >=20
-> > > > > > > > > Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kern=
-el.org>
-> > > > > > > > > ---
-> > > > > > > > >  security/commoncap.c | 30 +++++++++++++-----------------
-> > > > > > > > >  1 file changed, 13 insertions(+), 17 deletions(-)
-> > > > > > > > >=20
-> > > > > > > > > diff --git a/security/commoncap.c b/security/commoncap.c
-> > > > > > > > > index a0ff7e6092e0..751bb26a06a6 100644
-> > > > > > > > > --- a/security/commoncap.c
-> > > > > > > > > +++ b/security/commoncap.c
-> > > > > > > > > @@ -296,11 +296,12 @@ int cap_capset(struct cred *new,
-> > > > > > > > >   */
-> > > > > > > > >  int cap_inode_need_killpriv(struct dentry *dentry)
-> > > > > > > > >  {
-> > > > > > > > > -	struct inode *inode =3D d_backing_inode(dentry);
-> > > > > > > > > +	struct vfs_caps caps;
-> > > > > > > > >  	int error;
-> > > > > > > > > =20
-> > > > > > > > > -	error =3D __vfs_getxattr(dentry, inode, XATTR_NAME_CAPS=
-, NULL, 0);
-> > > > > > > > > -	return error > 0;
-> > > > > > > > > +	/* Use nop_mnt_idmap for no mapping here as mapping is =
-unimportant */
-> > > > > > > > > +	error =3D vfs_get_fscaps_nosec(&nop_mnt_idmap, dentry, =
-&caps);
-> > > > > > > > > +	return error =3D=3D 0;
-> > > > > > > > >  }
-> > > > > > > > > =20
-> > > > > > > > >  /**
-> > > > > > > > > @@ -323,7 +324,7 @@ int cap_inode_killpriv(struct mnt_idm=
-ap *idmap, struct dentry *dentry)
-> > > > > > > > >  {
-> > > > > > > > >  	int error;
-> > > > > > > > > =20
-> > > > > > > > > -	error =3D __vfs_removexattr(idmap, dentry, XATTR_NAME_C=
-APS);
-> > > > > > > > > +	error =3D vfs_remove_fscaps_nosec(idmap, dentry);
-> > > > > > > >=20
-> > > > > > > > Uhm, I see that the change is logically correct... but the =
-original
-> > > > > > > > code was not correct, since the EVM post hook is not called=
- (thus the
-> > > > > > > > HMAC is broken, or an xattr change is allowed on a portable=
- signature
-> > > > > > > > which should be not).
-> > > > > > > >=20
-> > > > > > > > For completeness, the xattr change on a portable signature =
-should not
-> > > > > > > > happen in the first place, so cap_inode_killpriv() would no=
-t be called.
-> > > > > > > > However, since EVM allows same value change, we are here.
-> > > > > > >=20
-> > > > > > > I really don't understand EVM that well and am pretty hesitan=
-t to try an
-> > > > > > > change any of the logic around it. But I'll hazard a thought:=
- should EVM
-> > > > > > > have a inode_need_killpriv hook which returns an error in thi=
-s
-> > > > > > > situation?
-> > > > > >=20
-> > > > > > Uhm, I think it would not work without modifying
-> > > > > > security_inode_need_killpriv() and the hook definition.
-> > > > > >=20
-> > > > > > Since cap_inode_need_killpriv() returns 1, the loop stops and E=
-VM would
-> > > > > > not be invoked. We would need to continue the loop and let EVM =
-know
-> > > > > > what is the current return value. Then EVM can reject the chang=
-e.
-> > > > > >=20
-> > > > > > An alternative way would be to detect that actually we are sett=
-ing the
-> > > > > > same value for inode metadata, and maybe not returning 1 from
-> > > > > > cap_inode_need_killpriv().
-> > > > > >=20
-> > > > > > I would prefer the second, since EVM allows same value change a=
-nd we
-> > > > > > would have an exception if there are fscaps.
-> > > > > >=20
-> > > > > > This solves only the case of portable signatures. We would need=
- to
-> > > > > > change cap_inode_need_killpriv() anyway to update the HMAC for =
-mutable
-> > > > > > files.
-> > > > >=20
-> > > > > I see. In any case this sounds like a matter for a separate patch
-> > > > > series.
-> > > >=20
-> > > > Agreed.
-> > >=20
-> > > Christian, how realistic is that we don't kill priv if we are setting
-> > > the same owner?
-> > >=20
-> > > Serge, would we be able to replace __vfs_removexattr() (or now
-> > > vfs_get_fscaps_nosec()) with a security-equivalent alternative?
-> >=20
-> > It seems it is not necessary.
-> >=20
-> > security.capability removal occurs between evm_inode_setattr() and
-> > evm_inode_post_setattr(), after the HMAC has been verified and before
-> > the new HMAC is recalculated (without security.capability).
-> >=20
-> > So, all good.
-> >=20
-> > Christian, Seth, I pushed the kernel and the updated tests (all patches
-> > are WIP):
-> >=20
-> > https://github.com/robertosassu/linux/commits/evm-fscaps-v2/
-> >=20
-> > https://github.com/robertosassu/ima-evm-utils/commits/evm-fscaps-v2/
-> >=20
-> >=20
-> > The tests are passing:
-> >=20
-> > https://github.com/robertosassu/ima-evm-utils/actions/runs/8159877004/j=
-ob/22305521359
->=20
-> Thanks! I probably won't be able to take them exactly as-is due to other
-> changes for the next version (rebasing onto the changes to make IMA and
-> EVM LSMs, forbidding xattr handlers entirely for fscaps), but they will
-> serve as a good road map for what needs to happen.
+On 06/03/2024 08:30, Odelu Kukatla wrote:
+> It adds QoS support for QNOC device and includes support for
+> configuring priority, priority forward disable, urgency forwarding.
+> This helps in priortizing the traffic originating from different
+> interconnect masters at NoC(Network On Chip).
+> 
+> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+> ---
+>  drivers/interconnect/qcom/icc-rpmh.c | 105 +++++++++++++++++++++++++++
+>  drivers/interconnect/qcom/icc-rpmh.h |  32 ++++++++
+>  2 files changed, 137 insertions(+)
 
-Welcome. Yes, both ima_inode_set_fscaps() and ima_inode_remove_fscaps()
-will be registered as LSM hooks in ima_appraise.c. It will be probably
-straightforward for you to make those changes, but if you have any
-question, let me know.
+>  
+> +	if (desc->config) {
+> +		struct resource *res;
+> +		void __iomem *base;
+> +
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		if (!res) {
+> +			dev_warn(dev, "Skipping QoS, failed to get resource\n");
 
-Roberto
+Why is this a warning? If the MMIO is not required, your driver should
+not spawn warnings.
+
+
+> +			goto skip_qos_config;
+> +		}
+> +
+> +		base = devm_ioremap(dev, res->start, resource_size(res));
+
+Combine these two (there's a helper for that).
+
+> +		if (IS_ERR(base)) {
+> +			dev_warn(dev, "Skipping QoS, ioremap failed: %ld\n", PTR_ERR(base));
+> +			goto skip_qos_config;
+> +		};
+> +
+> +		qp->regmap = devm_regmap_init_mmio(dev, base, desc->config);
+> +
+
+Drop blank line.
+
+> +		if (IS_ERR(qp->regmap)) {
+> +			dev_warn(dev, "Skipping QoS, regmap failed; %ld\n", PTR_ERR(qp->regmap));
+> +			goto skip_qos_config;
+> +		}
+> +
+> +		qp->num_clks = devm_clk_bulk_get_all(qp->dev, &qp->clks);
+> +		if (qp->num_clks < 0) {
+> +			dev_warn(dev, "Skipping QoS, failed to get clk: %d\n", qp->num_clks);
+
+dev_info(), because current binding sais clocks are not required and you
+are not allowed to affect ABI. While ABI here does not look broken,
+spawning new warnings to proper users is not welcomed.
+
+Best regards,
+Krzysztof
 
