@@ -1,147 +1,95 @@
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E7E7FBB4;
-	Wed,  6 Mar 2024 11:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.121.71.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101CF7F7E1
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 11:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709725196; cv=none; b=Vz4FtXkXDXMP5/6newE3+CsbsBkKrqWE8C12l1IXA5jd/PNCrOy5RoifTAWqLictAZSMscGKREW10TQPsPsECplyV7OcP3CUEeS/d4ntbds9Yq785+LMOBUdgHQGYIM8yjAQfjxmPDqIrJusWpYuQ7GSPMzSe+BztL6x9CUpwAQ=
+	t=1709725226; cv=none; b=IAH585j9HuGXVYxsPP2j9XIlEjE9AgjHtCKcEoG0ENO84dQcibhi03F15c8+CM3YmG4ZLr2GX7tArg+nKIa8vwuGKmsw0fLCFzxVYHXvYjCG3nDaR6skeS2vXIQdOd1UNptc/2NNLX3bmIgGUyh0aB0RdGbbbSj4CByeGc05B0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709725196; c=relaxed/simple;
-	bh=xwoFzPsHeZCk2y4J/x89E9mHH56JSmXj2yHhGVcCVyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tHrW6pntP8UjKKHZkuVLJBoqDmoqnI5mwVJJtzqAc9NswObrrzkag4jDdtK26l36pO/Kb2BB6E0HLaft3cmovMk85ftszgrZrrlKan1Yd3SvQHv+CsCzcFBnXwNxPjUAP4rD2dpevzvO99GgbSdUOJw8xSsRXYnc4V1sXvMlAak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=qd7s+P0c; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=qd7s+P0c; arc=none smtp.client-ip=91.121.71.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1709725226; c=relaxed/simple;
+	bh=MyDgk4afHvneJK/AGrdFnLoUjc8Ck2lGA49YcoT+rSc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YiGcIPlSUwRl+BZ5Sj92r2d3+PZnusdDc4LdWjjOdcQvhESE4SHWbNcAhPH1Ba8KMOxWKGPgRIqN4QBCIRW7hhzn8tenaWzgcaQl1vK9121kugWqk9E/v3ggWo3h5kVHjtYp0ZNhgsRI+9xgKQMAXe5gZe2DC/YgBIgmb4rfXzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QJAmKDuE; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="qd7s+P0c";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="qd7s+P0c"
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id DE277C01B; Wed,  6 Mar 2024 12:39:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1709725191; bh=M24mEXhEijJg73gWUpW6KA+Popv3l8CYmbbCO5rEZZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qd7s+P0cWX1xdYZUCxiiKX9bBF4pIaMd6U7LCsMAwda6rils2ZVEu/fezpefjRM88
-	 NfambXuo3ZHK1u2KpXY+p6P2w3bW0HyKRGlp5KlNktlDo5qgAZvLBRpAU7ev2mlW3I
-	 aCZrJdnqvuGPnCK37namJfsymVf4N477ftHBkSryt/U+xph8+DqZerSADOoRyRurAy
-	 2G2UtdPrxIDVQ85CeHwn+zX8Ok/S2UYw3tvJrg97pRlb5mX+72sr9KfUnxXZpKfrCG
-	 VYVOvh+QmuIab+vNOir6jL9c3uu2EedFxHBX6dW0HnfDbBQuBeWIhsOb9ZjVSpYUvA
-	 lpXJCDXJ7toDw==
-X-Spam-Level: 
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id 4E49FC009;
-	Wed,  6 Mar 2024 12:39:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1709725191; bh=M24mEXhEijJg73gWUpW6KA+Popv3l8CYmbbCO5rEZZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qd7s+P0cWX1xdYZUCxiiKX9bBF4pIaMd6U7LCsMAwda6rils2ZVEu/fezpefjRM88
-	 NfambXuo3ZHK1u2KpXY+p6P2w3bW0HyKRGlp5KlNktlDo5qgAZvLBRpAU7ev2mlW3I
-	 aCZrJdnqvuGPnCK37namJfsymVf4N477ftHBkSryt/U+xph8+DqZerSADOoRyRurAy
-	 2G2UtdPrxIDVQ85CeHwn+zX8Ok/S2UYw3tvJrg97pRlb5mX+72sr9KfUnxXZpKfrCG
-	 VYVOvh+QmuIab+vNOir6jL9c3uu2EedFxHBX6dW0HnfDbBQuBeWIhsOb9ZjVSpYUvA
-	 lpXJCDXJ7toDw==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 01e7a05f;
-	Wed, 6 Mar 2024 11:39:44 +0000 (UTC)
-Date: Wed, 6 Mar 2024 20:39:29 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>, linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dominique Martinet <dominique.martinet@atmark-techno.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] mmc: part_switch: fixes switch on gp3 partition
-Message-ID: <ZehV8RrGdM9a1hO4@codewreck.org>
-References: <20240306-mmc-partswitch-v1-1-bf116985d950@codewreck.org>
- <Zegx5PCtg6hs8zyp@trax>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QJAmKDuE"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33e570ef661so250096f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 03:40:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709725221; x=1710330021; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bHsDLu11BhsOOu7vOLh5O5SoeXOiXHoKRCejG9ZhGdU=;
+        b=QJAmKDuERm1ib9JzNKOyPSUapuNp3s9GUwU9YQCqHSOXDu7EZHAUu+sckFQsE4dhfQ
+         uvkoM0pQG9YHwMHeroF8pLutTQw4At3bHv/RRoas2NwEMIQzYhE1IWnvKB9asMA4BxML
+         O3JLGql1Zs1riHUhK79LcfrMHbDs0/ryL1xMTUk1lLCW+GaBOkbyNEYJuK8ek36/y5fA
+         LcQN5nRj731LQssULqeN0qHzFFvar2NKz9xTMkkn+lO7JAewe332+3BgSo3zpTU8WFff
+         juvqxPigTkcuNEYCbOefSuKsS8lENM5N4cGcxyslkTSdt6wz2+OtktqXoEPxXq7mqMJo
+         79yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709725221; x=1710330021;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bHsDLu11BhsOOu7vOLh5O5SoeXOiXHoKRCejG9ZhGdU=;
+        b=bP2sQeqe9xtXAeEbw4HGWSt/D65OirUHCjVepJ9w1UvwwsdShde3EfTtPWl8Ud4Eis
+         YwZ+UMKT9BgBuYgbdIzPsP9pxig2sysQR/k56MYMizxEMq454PEYAuxa1dCGwBjFW8mS
+         HNVecC+wEwcvf8rTsV1w5riko2AHVWgl60p7QB4j1sLcQU9HzeYFu+lCMUBBV0vGe73A
+         3QniHGQdhK0fIdGlhKvL0vwTVedkgrrsqPiyYUgLUmEwdAVuu0io2TnAmH7a1DLrCR+3
+         flR2YitQWQnvYexjkIJWzlDIwoYScy5QlXIBSl+aDnRMFDrWwQRBxbuB6+HxxqRwHuWV
+         RXlA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3/BSYuoBSi0w+URd4a5ZGwRh6aASu1v/ELQMg6GktSrwRg8QpMpAE8WwTREHQZmuAET3jtMY5R33TAxnzdRPT9+fbkXCGscryrjPz
+X-Gm-Message-State: AOJu0YzlW1j8Zw8cy9ZP+1cyloMNvuMDnrVDAaZ+u8Uylg6uxKpmOMOp
+	WWL44YYwvwLJL3yeF2i0entb2qzFlCMgEcekipfqJSlySKeGCf9jwN/baHVkIcA=
+X-Google-Smtp-Source: AGHT+IGalMQM+1/5hflu9r2698/GCRP0X8SJOvsj+Y+8YnI4kUwo+Wi3TKvJOHm5HSN/ZO1xW0c84g==
+X-Received: by 2002:adf:fb8c:0:b0:33e:24c7:78ba with SMTP id a12-20020adffb8c000000b0033e24c778bamr10175310wrr.62.1709725221439;
+        Wed, 06 Mar 2024 03:40:21 -0800 (PST)
+Received: from [192.168.0.102] ([176.61.106.68])
+        by smtp.gmail.com with ESMTPSA id bq26-20020a5d5a1a000000b0033e2777f313sm12519582wrb.72.2024.03.06.03.40.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Mar 2024 03:40:21 -0800 (PST)
+Message-ID: <d63a573f-1ec5-4b4c-b3e0-29c46828381e@linaro.org>
+Date: Wed, 6 Mar 2024 11:40:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Zegx5PCtg6hs8zyp@trax>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: venus: avoid multiple core dumps
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <1709704406-22501-1-git-send-email-quic_dikshita@quicinc.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <1709704406-22501-1-git-send-email-quic_dikshita@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Jorge Ramirez-Ortiz, Foundries wrote on Wed, Mar 06, 2024 at 10:05:40AM +0100:
-> > the part_type values of interest here are defined as follow:
-> > main  0
-> > boot0 1
-> > boot1 2
-> > rpmb  3
-> > gp0   4
-> > gp1   5
-> > gp2   6
-> > gp3   7
+On 06/03/2024 05:53, Dikshita Agarwal wrote:
+> Core dump is generated whenever there is system error reported
+> by firmware. Right now, multiple such dumps are generated if
+> recovery fails in first attempt, since the sys error handler is
+> invoked again for every failed recovery.
+> To avoid it, add conditional check to generate core dump only
+> once during every system error notification from firmware.
 > 
-> right, the patch I originally sent didn't consider anything after GP0 as per
-> the definitions below.
-> 
-> #define EXT_CSD_PART_CONFIG_ACC_MASK	(0x7)
-> #define EXT_CSD_PART_CONFIG_ACC_BOOT0	(0x1)
-> #define EXT_CSD_PART_CONFIG_ACC_RPMB	(0x3)
-> #define EXT_CSD_PART_CONFIG_ACC_GP0	(0x4)
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
 
-Yes, as far as I can see these are used in drivers/mmc/core/mmc.c
-for example for GP0, below snippet:
-                        mmc_part_add(card, part_size << 19,
-                                EXT_CSD_PART_CONFIG_ACC_GP0 + idx,
-                                "gp%d", idx, false,
-                                MMC_BLK_DATA_AREA_GP);
+ From my non-filter mail addr
 
-where idx is in [0;3], so we've got 4-7 for GP partitions in the part's
-part_cfg.
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-(similarly, boot has BOOT0 + [0-1], and RPMB has RPMB without anything
-added -- so as far as this field is concerned there seems to be a single
-RPMB)
-
-> That looked strange as there should be support for 4 GP but this code
-> kind of convinced me of the opposite.
-> 
-> 	if (idata->rpmb) {
-> 		/* Support multiple RPMB partitions */
-> 		target_part = idata->rpmb->part_index;
-> 		target_part |= EXT_CSD_PART_CONFIG_ACC_RPMB;
-> 	}
->
-> So if we apply the fix that you propose, how are multiple RPMB
-> partitions (ie, 4) going to be identified as RPMB? Unless there can't be
-> more than 3?
-
-Hmm, that code is definitely odd.
-Reading this I'd normally assume that idata->rpmb->part_index ought to
-be in a range separate fom EXT_CSD_PART_CONFIG_ACC_MASK -- so we've got
-the ACC_RPMB "flag" that identifies it as RPMB within the mask, and then
-it can target a given index within that.
-
-But as far as I'm seeing in the code, rpmb->part_index always comes from
-mmc_blk_alloc_rpmb_part (set to part's part_cfg), which in turn is only
-called if area_type is MMC_BLK_DATA_AREA_RPMB, which is only set for
-mmc_part_add() for rpmb with ACC_RPMB as part_index.. So we've got
-target_part = 3 and then target_part |= 3 which will leave the value
-unchanged.
-
-Even assuming part_index was something else than 3 (let's say 1 or 2),
-we'd end up with target_part = 4 or 5 which won't match the
-PART_CONFIG_ACC_MASK check (&3 != 3), so it doesn't make sense until
-something is shifted somewhere outside of the mask, and I see no trace
-of part_index being shifted.
-
-So the if (idata->rpmb) itself makes sense as per the comment, but we
-could just have target_part take either values here as far as I
-understand.
-
-
-
-I've never actually used the rpmb partition of my MMCs so I'm not sure
-how multiple RPMB partitions is supposed to work in the first place,
-sorry.
-That code is authored by Linus W (in 2017), perhaps he'll remember
-something?
-
--- 
-Dominique
