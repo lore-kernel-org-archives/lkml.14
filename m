@@ -1,136 +1,243 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6801B7FF
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 07:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C695C604;
+	Wed,  6 Mar 2024 07:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709709260; cv=none; b=nNU8pX6KtFs0lKeTLXU1W54y7IWdkTd0aAIvVtpYoSCsSEdPpX+fRR7TiCObQxA41NQnveuqORevtBwbBj6kKPYEzYOQWIhvXE3Z1/4QqKqGM/f7YFZ+wCXmURm6iCwp0M5Cumod/0DpEF0R7+qLCNC5JdfyaPWXZ1z499ZGcjE=
+	t=1709709278; cv=none; b=PcWihtHWGAifJbgNhj0UUakvYfyN3YaB5Ov/JS6tPAJWw4Mlt8Dz4BnhaVN+6DbdvOVC4IaL566dWUW7uwSeR5MIvctVGdHME494+/0NB0LdFxeES3rLFg/lPWgAfI8IHN89tD23GE++coELl6AMnV0pL2FfkCBG4UCsv0KlGtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709709260; c=relaxed/simple;
-	bh=PJz5VgJhJ3QniqYbnJEMV1SdYgsk90S2IsXlezyH2ZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iJguPNhLfY8TJMAoqLPDRtq9JmOP68cj5ID5Goby6WEx5Jgf3dvquXMVuLaQy+bYX1376biZ2jQPxTiwmObYdABAw3PeWWaZ1YDArr/djrNcJuCjMdvaOESZk3IVHJqbQ7+Ds1DyzbZt/kaxVsp4sFG0qnoitKp62M3FbN3svik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Urb0gCBJ; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709709278; c=relaxed/simple;
+	bh=Q4jNS53sz6z+xgVv/481OuFX1jfdnAmQc8opmwqbePw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YpDTs6hVR/xnKnBUYPnNerRXEK4UysFSpEkE34PQq08RQKnJEb3cYYWaTkBzVlhoe9liI+6UNoAwkBk+mvnmXxZEyOaOS6qmn1FPVlhE6Upc1FzWeIgyI4GhaqpTX8qITDzX5tc8hZyvvJPxkzgZa+IJ9E3djcJxXgcLYaxyCgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODMG4cU0; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Urb0gCBJ"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a44e3176120so459586066b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 23:14:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709709257; x=1710314057; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PJz5VgJhJ3QniqYbnJEMV1SdYgsk90S2IsXlezyH2ZY=;
-        b=Urb0gCBJjlbNghmhGaGHNWCZuTXVnNk+66o2+75fSVDFWaGrQusssyFFYylDjdIJ2F
-         tbnpcC270jlJxTQAtYn2V0wd26tU8bh/secKAFfcZqzuyHBNLej8TR9l0rlnpD9pqPGx
-         sXXF1+p4WSrAQVACEKcHRTY2tr7pdcHMxhAdqgei4c7tR1CVUwMXP9wYugmMhQbVuYyc
-         e9Bw+FGZvKzIqEyFxmoeowsv2eww4X5SpU+1A2XdDGiqchEPWM6YiHiYgLakYqIk/AUZ
-         QRocBvUoocFEuQS07oDeo+NXzH+DbbywLYTWlXNGPp1LQg0uOZzJskZaJS8ORX0UqWNs
-         YT3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709709257; x=1710314057;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PJz5VgJhJ3QniqYbnJEMV1SdYgsk90S2IsXlezyH2ZY=;
-        b=VGEUg9N+M60hG2PHltydEbcK/MGSeM5r+gsvWD7rWE+tQGD1ZIN7ZEL0oCuTvnXJK6
-         kiIhO39ohuBNttJzUUviSFyRrMDF9xVb4oYafDX9PspT6yIHfISIXX3/kPcviRz28xZD
-         NSfQNx2gjxO3ZZOQqNQ9tiXF8QNVaJ3qVK7SPUX87kLcSgaxa8iZdsl68R4X9XabQfzi
-         YLRnTyNkbIa1aqt4z4H1DvXxfAEClJuqwKO8a74KofpStsOWn2cu7rxop9Zg0LooC23n
-         63O4ZyH2MoL/hG+dWQm4mKgH+Pb2SHtDuotYa+Sft8+NCFczNZgHyNuxOtANSOe1oUjO
-         oaqA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7UlvHzbUkanCgXZVPl9kW1J8pKTiKooJ4GuYsX/sRGMaxNlZEVnqLD/HRGnOJ2qR3SfseV5YGICJ6RJyqh6TTacKjscgnTKHIpEVz
-X-Gm-Message-State: AOJu0YyYACUhtPuLkclks9g+2owbV82r/tFQVxs6YNHS4mi0lmD8RUp9
-	QnJjOzQjLdBLS/AG7ULo3MBzjW01BpQwT15yhD5A+HPZhNBT1s/AIqTHmgHAZ08=
-X-Google-Smtp-Source: AGHT+IEecCk+TqZFdqb8f1EzPLA2CdGJLn2LnM5oErrBM2/NB5iMvFeVVka3XAupTqGzHL7ZOyo0jA==
-X-Received: by 2002:a17:906:6805:b0:a45:b1e7:df8b with SMTP id k5-20020a170906680500b00a45b1e7df8bmr1561462ejr.64.1709709257349;
-        Tue, 05 Mar 2024 23:14:17 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id y6-20020a056402358600b005645961ad39sm6535904edc.47.2024.03.05.23.14.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Mar 2024 23:14:16 -0800 (PST)
-Message-ID: <a32a2655-7561-4339-8521-bc2558e0bdb1@linaro.org>
-Date: Wed, 6 Mar 2024 08:14:15 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODMG4cU0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709709277; x=1741245277;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Q4jNS53sz6z+xgVv/481OuFX1jfdnAmQc8opmwqbePw=;
+  b=ODMG4cU0lRQrleCoQw0ha0qTW3R8SPVUawB+P/fmDE39Om2uTONFIVTG
+   5aiqY1XBIEHXfNG1gECHvVnCWMmxkplwcJ+CFEtgcgZtYmL0zAlML0lOZ
+   Te4Kld7vzzJ95963siWDtyB99xtwQpb19lLRLoB1UYFmk7qYVtyy5fsFW
+   0I5yJAkCvwrR6sY72acmMBUICii16a8TAsw5fzgyrinQxqVkjA0RD1Vtd
+   DYx93oUWF+yA8ZNbYf6VPMVzAxesBFQw8XBHO8v8eLs22z/ne6Jk4O/+x
+   XcCJVqPmtvGDymYzNnzUQNl/9fe+Pf8TW/7CkoPkXygL4lzQ+lchjR3WN
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4164856"
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="4164856"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 23:14:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="14319175"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa003.jf.intel.com with ESMTP; 05 Mar 2024 23:14:31 -0800
+Date: Wed, 6 Mar 2024 15:10:17 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Charles Perry <charles.perry@savoirfairelinux.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	yilun xu <yilun.xu@intel.com>, Rob Herring <robh+dt@kernel.org>,
+	mdf <mdf@kernel.org>, Allen VANDIVER <avandiver@markem-imaje.com>,
+	Brian CODY <bcody@markem-imaje.com>, hao wu <hao.wu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	krzysztof kozlowski+dt <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-fpga <linux-fpga@vger.kernel.org>,
+	devicetree <devicetree@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: fpga: xlnx,fpga-selectmap: add DT
+ schema
+Message-ID: <ZegW2QpgO0Kk1Iip@yilunxu-OptiPlex-7050>
+References: <20240221195058.1281973-1-charles.perry@savoirfairelinux.com>
+ <20240221195058.1281973-3-charles.perry@savoirfairelinux.com>
+ <4a9f0eef-590b-45df-92bc-b63ad9282e18@linaro.org>
+ <1012793477.1508198.1709486517581.JavaMail.zimbra@savoirfairelinux.com>
+ <cb51aadd-c350-42e2-9684-ac4f7dbf864c@linaro.org>
+ <d377f0ea-2df2-4d4e-b1bc-8a4ca55eec15@linaro.org>
+ <23887452.1534761.1709605624728.JavaMail.zimbra@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dt-bindings: hwmon: tda38640: Add interrupt &
- regulator properties
-Content-Language: en-US
-To: Naresh Solanki <naresh.solanki@9elements.com>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: mazziesaccount@gmail.com, linux-hwmon@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240305210747.1377506-1-naresh.solanki@9elements.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240305210747.1377506-1-naresh.solanki@9elements.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23887452.1534761.1709605624728.JavaMail.zimbra@savoirfairelinux.com>
 
-On 05/03/2024 22:07, Naresh Solanki wrote:
-> Add properties for interrupt & regulator.
-> Also update example.
+On Mon, Mar 04, 2024 at 09:27:04PM -0500, Charles Perry wrote:
+> 
+> 
+> On Mar 4, 2024, at 12:31 AM, Krzysztof Kozlowski krzysztof.kozlowski@linaro.org wrote:
+> 
+> > On 04/03/2024 08:30, Krzysztof Kozlowski wrote:
+> >> On 03/03/2024 18:21, Charles Perry wrote:
+> >>> On Feb 27, 2024, at 3:10 AM, Krzysztof Kozlowski krzysztof.kozlowski@linaro.org
+> >>> wrote:
+> >>>
+> >>>> On 21/02/2024 20:50, Charles Perry wrote:
+> >>>>> Document the SelectMAP interface of Xilinx 7 series FPGA.
+> >>>>>
+> >>>>> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
+> >>>>> ---
+> >>>>>  .../bindings/fpga/xlnx,fpga-selectmap.yaml    | 86 +++++++++++++++++++
+> >>>>>  1 file changed, 86 insertions(+)
+> >>>>>  create mode 100644
+> >>>>>  Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
+> >>>>> b/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
+> >>>>> new file mode 100644
+> >>>>> index 0000000000000..08a5e92781657
+> >>>>> --- /dev/null
+> >>>>> +++ b/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
+> >>>>> @@ -0,0 +1,86 @@
+> >>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>>>> +%YAML 1.2
+> >>>>> +---
+> >>>>> +$id: http://devicetree.org/schemas/fpga/xlnx,fpga-selectmap.yaml#
+> >>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>>> +
+> >>>>> +title: Xilinx SelectMAP FPGA interface
+> >>>>> +
+> >>>>> +maintainers:
+> >>>>> +  - Charles Perry <charles.perry@savoirfairelinux.com>
+> >>>>> +
+> >>>>> +description: |
+> >>>>> +  Xilinx 7 Series FPGAs support a method of loading the bitstream over a
+> >>>>> +  parallel port named the SelectMAP interface in the documentation. Only
+> >>>>> +  the x8 mode is supported where data is loaded at one byte per rising edge of
+> >>>>> +  the clock, with the MSB of each byte presented to the D0 pin.
+> >>>>> +
+> >>>>> +  Datasheets:
+> >>>>> +
+> >>>>> https://www.xilinx.com/support/documentation/user_guides/ug470_7Series_Config.pdf
+> >>>>> +
+> >>>>> +allOf:
+> >>>>> +  - $ref: /schemas/memory-controllers/mc-peripheral-props.yaml#
+> >>>>> +
+> >>>>> +properties:
+> >>>>> +  compatible:
+> >>>>> +    enum:
+> >>>>> +      - xlnx,fpga-xc7s-selectmap
+> >>>>> +      - xlnx,fpga-xc7a-selectmap
+> >>>>> +      - xlnx,fpga-xc7k-selectmap
+> >>>>> +      - xlnx,fpga-xc7v-selectmap
+> >>>>> +
+> >>>>> +  reg:
+> >>>>> +    description:
+> >>>>> +      At least 1 byte of memory mapped IO
+> >>>>> +    maxItems: 1
+> >>>>> +
+> >>>>> +  prog_b-gpios:
+> >>>>
+> >>>> I commented on this and still see underscore. Nothing in commit msg
+> >>>> explains why this should have underscore. Changelog is also vague -
+> >>>> describes that you brought back underscores, instead of explaining why
+> >>>> you did it.
+> >>>>
+> >>>> So the same comments as usual:
+> >>>>
+> >>>> No underscores in names.
+> >>>>
+> >>>> Best regards,
+> >>>> Krzysztof
+> >>>
+> >>> Hello Krzysztof,
+> >>>
+> >>> Yes, I've gone full circle on that issue. Here's what I tried so far:
+> >> 
+> >> And what part of the commit description allows me to understand this?
+> >> 
+> 
+> I have a changelog in the cover letter:
+> https://lore.kernel.org/all/20240221195058.1281973-1-charles.perry@savoirfairelinux.com/
+> 
+> >>>
+> >>>  1) Reuse the same gpio names: Duplicates errors of the past, Krzysztof
+> >>>     doesn't like it.
+> >>>  2) Different gpio names for new driver only: Makes the driver code
+> >>>     overly complicated, Yilun doesn't like it.
+> >> 
+> >> That's a new driver, right? So what is complicated here? You have new
+> >> code and you take prog-b or prog_b?
+> >> 
+> >>>  3) Change gpio names for both drivers, deprecate the old names: Makes
+> >>>     the DT binding and the driver code overly complicated, Rob doesn't
+> >>>     like it.
+> >> 
+> >> I don't think I proposed changing existing bindings.
+> >> 
+> >>>
+> >>> I think that while the driver code shouldn't be the driving force for
+> >>> the DT spec, it can be a good indication that the spec is unpractical to
+> >>> implement.
+> >> 
+> >> What is impractical in implementing this? You just pass either A or B to
+> >> function requesting GPIO. Just choose proper name.
+> >>
+> 
+> It's not complicated but it requires more code than if "prog_b" had been
+> used. 
+>  
+> >>>
+> >>> In this case, there are two interfaces on a chip that uses the same GPIO
+> >>> protocol, it would only make sense that they use the same names, this
+> >>> discards solution #2.
+> >> 
+> >> I don't understand this. You have devm_gpiod_get() in your new code. Why
+> >> is it difficult to use different name?
+> 
+> Yilun asked to avoid changing the names between the two drivers.
+> First comment in this mail:
+> https://lore.kernel.org/all/Zb9GkY6cMtR+4xOX@yilunxu-OptiPlex-7050/
+> 
+> Yilun, let me know if this is something you'd accept as this is a concern
+> for the device tree maintainers.
 
-Nothing improved.
+I agree that deprecated names should not be used for new DT bindings, while
+keeping backward compatibility to exsiting ones, unless there is other
+DT side concern.
 
-Broken record. You got the same comment 3rd or 4th time!
+I'm also good that the driver adapts to the DT binding change.
 
-NAK
+What I'm concerned is the driver API:
 
-Best regards,
-Krzysztof
+  int xilinx_core_probe(struct xilinx_fpga_core *core, struct device *dev,
+		      xilinx_write_func write,
+  -		      xilinx_write_one_dummy_byte_func write_one_dummy_byte)
+  +		      xilinx_write_one_dummy_byte_func write_one_dummy_byte,
+  +		      const char *prog_con_id, const char *init_con_id)
 
+You don't have to make every bus driver input the gpio names.  The core
+falls back to use old gpio names only for existing devices
+(.compatible = "xlnx,fpga-slave-serial").  Then the issue could be
+solved?
+
+Thanks,
+Yilun
+
+> 
+> > 
+> > And I forgot to emphasize: none of these is mentioned in commit msg, so
+> > for v5 you will get exactly the same complains. And for every other
+> > patch which repeats the same and does not clarify caveats or exceptions.
+> > 
+> > Best regards,
+> > Krzysztof
+> 
+> Should I keep my changelog in the individual commits? I thought the norm
+> was to put this the cover letter.
+> 
+> Regards,
+> Charles
+> 
