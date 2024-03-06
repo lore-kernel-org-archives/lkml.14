@@ -1,43 +1,42 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E065ECA4E;
-	Wed,  6 Mar 2024 23:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BC831BDCB;
+	Wed,  6 Mar 2024 23:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709766279; cv=none; b=I1ccN9WieVi5bHIvu3SbROcuHS8EaLc5PvJA41ma7XcnzxVUmrdkU3fTCStUk+8foGhE2B+TaCQzKaxFgNPGdvi6kjA0rW3jwDgWGmwb0BBHoNw+H+HgsV3GAVEixkVtBut2turBRnNvKkqmzSWPNISV0HmOogkoz5bA72MVHEw=
+	t=1709766652; cv=none; b=ey9jRJwsTfzoc8vZxq1Qx7WgOYX4aZYRhGgr3zKiq3m/WwRv8aK3R9TXIh64b4RsRmKwQQVM9X2rC75u2KAFDWaiSudmYq/+JI8DUNCunaFes+EtQHZrjejWm5GXOn3AT3o03ATUyXyzsAoIJsYPrXBs5AzNojVDNSMTpYehbI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709766279; c=relaxed/simple;
-	bh=0BkBoxjoUbL8I9dtSSBP//w6m324kaP3H030ANrh3d4=;
+	s=arc-20240116; t=1709766652; c=relaxed/simple;
+	bh=7VTqeclVPr3FnGH9kzdAkOiynxNGbJdBd+5mrL37qUI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O12Ze/jdOMFUECO6hITxd0/JQEHm+zLaU6Rne1br6L86s9XINLHvg+FmHPr1BaXVKCi0+saTSN/P44XSDECMfQ8H8KjI5wpSMykatgPDEr87Pjr53I62pcUuXhsD/zsz47DGVSdC9FFB9OfgxM2d2ZXVzkq3qVubb0yDJ6lwmgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=SWTqGsj1; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=gtTMYMAu42ww1cQ3XdUUNCCg2soxnhcgSiX0TYj4P01+jeGivggqgqs7NCUJFqm9Qhgs14GwDj+iAtuq0/i88fSqls5o19JbBYmL+sxVoEbfjXnOASXRsY9JAPpeRlilETk892rxmar9YcqtaKqrLyvUIhGISbL2z8NrCflqWPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hP8u1OiJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SWTqGsj1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=tu+kkEy+3vhioMBzuND7fGdxFOSgZ74kUNWaXmcwZi0=; b=SWTqGsj17HGAsi2jz7pUwne5Rn
-	vpi7Fce/yxQpCEkCfCEednlu5X6urS5nPzbn5GIqgkGjJcOW+lSpN2p/BeDUIZ1OW4Qy7NwBok6JL
-	vmkO71up2W3KVX86Cw0ypk4mG1ziPUfHK11nccWbQG8ON5LegIJxuTrfqVwp2kqdbV3I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1ri0Je-009XDq-Dw; Thu, 07 Mar 2024 00:04:50 +0100
-Date: Thu, 7 Mar 2024 00:04:50 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Catalin Popescu <catalin.popescu@leica-geosystems.com>
-Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bsp-development.geo@leica-geosystems.com, m.felsch@pengutronix.de
-Subject: Re: [PATCH net-next] net: phy: dp8382x: keep WOL setting across
- suspends
-Message-ID: <8de1d4e3-6d80-45a5-a638-48451d9b5c15@lunn.ch>
-References: <20240306171446.859750-1-catalin.popescu@leica-geosystems.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hP8u1OiJ"
+Received: by linux.microsoft.com (Postfix, from userid 1131)
+	id 6DA5D20B74C0; Wed,  6 Mar 2024 15:10:43 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6DA5D20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1709766643;
+	bh=+lT60b34SmHHwIMko6RDTMTeNyVjBhtZUMPZ/aaoAJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hP8u1OiJAJbuwzASfA7NLZ8X2Ee4ebZrgWW6tBKhtH+wqsxcHeMkUzmJu85/vmLly
+	 Vq+bkhPvmXrAFKpw3BEKsYSVI2m3dNSB/N+9YZQaA8zpZxFnkwA8GtTVjGPGMrpqjv
+	 Rfg00LvRydZF/t76xtiy2vcNWMZj3vqr7n308e/k=
+Date: Wed, 6 Mar 2024 15:10:43 -0800
+From: Kelsey Steele <kelseysteele@linux.microsoft.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com
+Subject: Re: [PATCH 5.15 00/83] 5.15.151-rc2 review
+Message-ID: <20240306231043.GA18984@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20240305113135.403426564@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,36 +45,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240306171446.859750-1-catalin.popescu@leica-geosystems.com>
+In-Reply-To: <20240305113135.403426564@linuxfoundation.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Mar 06, 2024 at 06:14:46PM +0100, Catalin Popescu wrote:
-> Unlike other ethernet PHYs from TI, PHY dp83822x has WOL enabled
-> at reset.
+On Tue, Mar 05, 2024 at 11:31:56AM +0000, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.151 release.
+> There are 83 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 07 Mar 2024 11:31:11 +0000.
+> Anything received after that time might be too late.
 
-This is rather odd behaviour. Is this stated in the datasheet?
+No regressions found on WSL (x86 and arm64).
 
-> @@ -572,11 +584,17 @@ static int dp83826_config_init(struct phy_device *phydev)
->  			return ret;
->  	}
->  
-> +	if (dp83822->wol_enabled)
-> +		return 0;
->  	return dp8382x_disable_wol(phydev);
->  }
->  
->  static int dp8382x_config_init(struct phy_device *phydev)
->  {
-> +	struct dp83822_private *dp83822 = phydev->priv;
-> +
-> +	if (dp83822->wol_enabled)
-> +		return 0;
->  	return dp8382x_disable_wol(phydev);
+Built, booted, and reviewed dmesg.
 
-Since it is rather odd behaviour, there might be some BIOSes which
-disable WoL. So i would not rely on it being enabled by
-default. Explicitly enable it.
+Thank you. :)
 
-    Andrew
-
----
-pw-bot: cr
+Tested-by: Kelsey Steele <kelseysteele@linux.microsoft.com> 
