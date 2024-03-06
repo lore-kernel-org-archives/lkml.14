@@ -1,110 +1,118 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B5F77A05
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0F777F10
 	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722641; cv=none; b=pYT6fol+gQ7NMM5XxStD7h46wn1G3XMKoAn15QedMgbG82XzGiCVlZCr1sMqGDCUy8NkTrnRnI8GmgenMrsUxNCA+AfoHNW3ifjpd4fBi2SX2/nQzBJ1N1wy9q0pfxSiFAyP6LDynL0moOzR+a/reKyxr8n5P4PbVdu/ByJciq4=
+	t=1709722641; cv=none; b=cECwDUn51E9EgHEQxD/b4xvcIwnGGiaJGjqGvMPdy2FcZT9I/2GZl9NimgvZF7zL08/TJUDDq8nMg0lrY3DugSigeZRFZV9n+uSpYeDzbnfAS2eWvoBRXHa9kN6FnzkiYinycCLu9DpQWIUXmToCSj0tY4Sb1cH2BsE5W01kLXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709722641; c=relaxed/simple;
-	bh=XsLw6ackKx33O4QozjLGkHXzho6GlTehmojGjYysM3A=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=i+YxQXk9FJ54CXOC/7rv4F8eRC95koKeSrUY2AI69PZSKP7iTAiKzA8iwgsjuBX3dzn4NrEhEVBcYcLkBn7K1ku1MqfpxztQwKhw2kO2X41/Oeehxa/06blE2lgQ757gONAdoPdJ9NUW3x3cY4iIJHGA37HZ5SpP6cp3jcwf1uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+	bh=NcwDt28WD1YEa1pUSgc8ylFJjluAMhWyX8PCK+tuF6k=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OBy5gE+QyN2Gek1oqY/1bpSIkhDJN98C24nb4Vo0sGzPNe2FI4Q6kk+TmTmU14rRVm3m0PuV9lznLRUxNdeDWcqJwdLkfY7Ih4O5sBcUlxL3jtpZBdUdFIO8ibCZRkHLFUoL+JjsUAaDbd6RZ15m7KhigqTYH4qBXMUec/mvF98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c8440b33b6so96892039f.1
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c83b729ba5so78799639f.0
         for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:57:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709722638; x=1710327438;
+        d=1e100.net; s=20230601; t=1709722639; x=1710327439;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cCr0TsSg56p14urXWsXr6XqDfXQJ+JrQT+/U6eWZWoU=;
-        b=ouOqZHSsEsaMSEnLgdtdzuvtecS3WX5riUrMmG7m8oExlGhr/G+FYG0GzW+mVIV4kF
-         TQvwiK/eVdaBsS30qKhD6LV0kulgJy9VhEsJ89hauwzPUbaJ0ZSDuFVwENaJgTU0sxkv
-         lQ0HFi/JJ/RS4IQL16kW08s3XPR7JpBYi8qUb47p26HB05aUSDVbnASfEmkwqVQ4qmAf
-         4/8xFvwmWI7hWu3OqbD/3kGu7ysXagXF/1ok8f2y83jJOO19iwi8ZKmmO8Av0GrgxbHY
-         vhZvGO5WfF1rwp67KewGL4p7wYNU1fY+Y24K20H+lDFis0q1mU7o4k4NKZRr/DdrHbsv
-         mvDg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1zFFfycu7uCqtPXdifvwAjfSmSaQA8T99H+Ij3zopwKb8eqQHWMKuYNtbB1B0Ph+KprABXkku7ezuwJUnRHaelVX3ZRpN5n6oMMim
-X-Gm-Message-State: AOJu0YxXI/+HLfKJIxdZ6vaC8MDCi7m7wBdsFWh1UFKscIVbXwqVn35l
-	zN2Wv6JCT/Hq5R8C03vVIXvbEK0JBo67IQl4nEHjJ7zeY0pHR2SmLMVlJjoMzYLPClbunq5Vn4o
-	ooUgN4fcrp/bToXuoqqGeug3LqRcTgAMyKSWcnqV0GAC7OnY6bVpgWWY=
-X-Google-Smtp-Source: AGHT+IGujKW2GhxdCNQ+Pa5KCV/cUet5XpNsDkba1TrtXtNMS5JvOpNbY2oFFSHru0lhN+xwADASaEzKIqfHM3WdDRjqcBtD0+mh
+        bh=8qXxCetncWmf0GqFMx7p5lJmRGpeOCkuynw+Qj5Z8c0=;
+        b=sHiu8j0TGrQKYX0Ovu8luhpnCbh52xon7QcfHG4CNVIC7AMXPoM5Ew5jkXYy6IQ60E
+         UnalczFSvsA+zz6lTL7dgV+vFQDHL8SVIz8DDr3j8cilHy5GzbiI5YGKrvA9e3s+1sQX
+         ZGVvWMR0baU1e5m/U/JC2ogEzrgpd5VLaJh/Ya48r+0KV4aeMOkA8PiAYgVbggt+1lYI
+         qcVJ4UBXhaDVMfztcTvIclXTy65ZW5zyhCrp6GzbbcLM7NRwGec9PNIhhWdH+u50+1Q8
+         6LrKmcD6lUTM+w2GCrFUYGipCa+AgNRZIvdAuKlbCEb8HeKkqZwYIag2DXvtSCQ77SNa
+         lWrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqK48+ZrWD14szgp+xanKkqdVjKZHGEvltqPyFXhua/x9ybLA+JnWpmprZkdLYTEozleUsV/8jOzteRR84nMoh2Wozq7/MJy+VidPQ
+X-Gm-Message-State: AOJu0YwqDxaAtyINiiC7J8bd83zHMFL8oMbLvRM7oZIUql6XORfWd5Kn
+	Juas3B6cWSxDbhwbdK0Y3fNEFoJEAPnkbiY5j+7X8v8Forhu44KwrGK2VQ8dZPVwEIWSK7P72GC
+	71cUii+I/R+hB72CBkGRo3IkC7Fk1fcVYkOgIIoG0caFv8Dn/uTLlR+E=
+X-Google-Smtp-Source: AGHT+IH6YLEGFgRiGIyEjvD7BFJjeOW+RjgB6wkTjfNiPoIvfnN6/JBkaHbXIRzGSOOU+E5tyT9m6Q7Yz4Hx6VF9w13dlbTQP5tN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:16ca:b0:474:b9df:7315 with SMTP id
- g10-20020a05663816ca00b00474b9df7315mr747827jat.2.1709722638714; Wed, 06 Mar
- 2024 02:57:18 -0800 (PST)
-Date: Wed, 06 Mar 2024 02:57:18 -0800
+X-Received: by 2002:a05:6638:3784:b0:474:d7bf:64ed with SMTP id
+ w4-20020a056638378400b00474d7bf64edmr706584jal.6.1709722639017; Wed, 06 Mar
+ 2024 02:57:19 -0800 (PST)
+Date: Wed, 06 Mar 2024 02:57:19 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008b9c410612fbd266@google.com>
-Subject: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in ip_skb_dst_mtu
-From: syzbot <syzbot+e5167d7144a62715044c@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, fw@strlen.de, 
-	kadlec@netfilter.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, pabeni@redhat.com, 
-	pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000009033c40612fbd20f@google.com>
+Subject: [syzbot] [jfs?] INFO: task hung in __get_metapage (2)
+From: syzbot <syzbot+72feb48a17265d9bf496@syzkaller.appspotmail.com>
+To: jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, shaggy@kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    805d849d7c3c Merge tag 'acpi-6.8-rc7' of git://git.kernel...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=14e106ac180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fad652894fc96962
-dashboard link: https://syzkaller.appspot.com/bug?extid=e5167d7144a62715044c
+HEAD commit:    9910665503b3 Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=12413316180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2402d46ab3c7e581
+dashboard link: https://syzkaller.appspot.com/bug?extid=72feb48a17265d9bf496
 compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d490ca180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1025fa6a180000
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=129fb526180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c40bba180000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/17c4652fa589/disk-805d849d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7fc3b5760ca4/vmlinux-805d849d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d88bfccc316a/bzImage-805d849d.xz
+disk image: https://storage.googleapis.com/syzbot-assets/16059f53446c/disk-99106655.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7fc6c7c495d5/vmlinux-99106655.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d8b0ce53ea33/Image-99106655.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/1d3700eeba9f/mount_0.gz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e5167d7144a62715044c@syzkaller.appspotmail.com
+Reported-by: syzbot+72feb48a17265d9bf496@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: slab-use-after-free in sk_fullsock include/net/sock.h:2823 [inline]
-BUG: KASAN: slab-use-after-free in ip_skb_dst_mtu+0x830/0x9b0 include/net/ip.h:499
-Read of size 1 at addr ffff88802dc5a012 by task swapper/1/0
+INFO: task jfsCommit:94 blocked for more than 143 seconds.
+      Not tainted 6.8.0-rc6-syzkaller-g9910665503b3 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:jfsCommit       state:D stack:0     pid:94    tgid:94    ppid:2      flags:0x00000008
+Call trace:
+ __switch_to+0x314/0x560 arch/arm64/kernel/process.c:553
+ context_switch kernel/sched/core.c:5400 [inline]
+ __schedule+0x1498/0x24b4 kernel/sched/core.c:6727
+ __schedule_loop kernel/sched/core.c:6802 [inline]
+ schedule+0xb8/0x19c kernel/sched/core.c:6817
+ io_schedule+0x8c/0x12c kernel/sched/core.c:9023
+ __lock_metapage+0x1cc/0x458 fs/jfs/jfs_metapage.c:50
+ lock_metapage fs/jfs/jfs_metapage.c:64 [inline]
+ __get_metapage+0x96c/0x1050 fs/jfs/jfs_metapage.c:639
+ diIAGRead+0xe4/0x14c fs/jfs/jfs_imap.c:2669
+ diFree+0x800/0x2648 fs/jfs/jfs_imap.c:956
+ jfs_evict_inode+0x2d0/0x3f4 fs/jfs/inode.c:156
+ evict+0x260/0x68c fs/inode.c:665
+ iput_final fs/inode.c:1739 [inline]
+ iput+0x734/0x818 fs/inode.c:1765
+ txUpdateMap+0x73c/0x8e4 fs/jfs/jfs_txnmgr.c:2367
+ txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]
+ jfs_lazycommit+0x3a4/0x98c fs/jfs/jfs_txnmgr.c:2733
+ kthread+0x288/0x310 kernel/kthread.c:388
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
 
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.8.0-rc6-syzkaller-00037-g805d849d7c3c #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x167/0x540 mm/kasan/report.c:488
- kasan_report+0x142/0x180 mm/kasan/report.c:601
- sk_fullsock include/net/sock.h:2823 [inline]
- ip_skb_dst_mtu+0x830/0x9b0 include/net/ip.h:499
- __ip_finish_output+0x12b/0x400 net/ipv4/ip_output.c:306
- ipvlan_process_v4_outbound+0x3ef/0x700 drivers/net/ipvlan/ipvlan_core.c:442
- ipvlan_process_outbound drivers/net/ipvlan/ipvlan_core.c:540 [inline]
- ipvlan_xmit_mode_l3 drivers/net/ipvlan/ipvlan_core.c:602 [inline]
- ipvlan_queue_xmit+0xaa2/0x11f0 drivers/net/ipvlan/ipvlan_core.c:668
- ipvlan_start_xmit+0x4a/0x150 drivers/net/ipvlan/ipvlan_main.c:222
- __netdev_start_xmit include/linux/netdevice.h:4989 [inline]
- netdev_start_xmit include/linux/netdevice.h:5003 [inline]
- xmit_one net/core/dev.c:3547 [inline]
- dev_hard_start_xmit+0x242/0x770 net/core/dev.c:3563
- sch_direct_xmit+0x2b6/0x5f0 net/sched/sch_generic.c:342
- qdisc_restart net/sched/sch_generic.c:407 [inline]
- __qdisc_run+0xbed/0x2150 net/sched/sch_generic.c:415
- qdisc_run+0xda/0x270 include/net/pkt_sched.h:125
- net_tx_action+0x877/0xa30 net/core/dev.c:5197
- __do_softirq+0x2bb/0x942 kernel/softirq.c:553
+Showing all locks held in the system:
+1 lock held by khungtaskd/29:
+ #0: ffff80008ee73f40 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire+0xc/0x44 include/linux/rcupdate.h:297
+2 locks held by jfsCommit/94:
+ #0: ffff0000d8558920 (&(imap->im_aglock[index])){+.+.}-{3:3}, at: diFree+0x2cc/0x2648 fs/jfs/jfs_imap.c:886
+ #1: ffff0000ddd3a638 (&jfs_ip->rdwrlock/1){.+.+}-{3:3}, at: diFree+0x2e0/0x2648 fs/jfs/jfs_imap.c:891
+2 locks held by getty/5932:
+ #0: ffff0000d35540a0 (&tty->ldisc_sem){++++}-{0:0}, at: ldsem_down_read+0x3c/0x4c drivers/tty/tty_ldsem.c:340
+ #1: ffff800094f722f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x41c/0x1228 drivers/tty/n_tty.c:2201
+3 locks held by syz-executor149/7710:
+
+=============================================
+
 
 
 ---
