@@ -1,121 +1,224 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3885D12D1FC
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 13:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3D912C52C
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 13:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709731298; cv=none; b=uPLPAjeorzVkfBvFXpxFgDnRsILXEAONwHDY+4F9G9JaqEWbId5feIlfMacR5sEVOL9LY1JRVkd0HJoBTHoGdOyMLP7uffZh+B78gGjLS1QHjajcv+A/uoZ/c+orP3U503v8Tbvh85F5TyHFS3pVSZu7Qz0FslpXwQLq0Iu4oiw=
+	t=1709731313; cv=none; b=JSGCV9EBhUa0uL9ckpO3OMvtD2+U9nB1VsczaqATvzTcI5Hwwei87iPTA0faeDtBvewS+RNB1O2Z/dQ29TdKR05NR5eBlULnkYad1EhvLt5hJjQT++RG13mpQfzkTeXzVX1Mi/gKs3IvawGtw7V+bytJYl1lT9UepbBJ/jR4/5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709731298; c=relaxed/simple;
-	bh=x6saRHVg0VfK1dnvwUWzELfx+mRt+YMbrULENEEZOVE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X+x9hmqmza3MLpsdSBgzFur9pnDuPiuLeKUqHFNXIOnswQpckolZ+/EjDBkX/uFSiJkH0/w3SjWCyBNl3TXIqitzySagFxy+LMFcfs8FYM9nKg8TmqyXqwR47Ho2R4bNFk93kMr8dMZKauCL+3CRWWTBrQcw6vl2+dt3wViNE50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=B1Unxr3x; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="B1Unxr3x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709731296; x=1741267296;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x6saRHVg0VfK1dnvwUWzELfx+mRt+YMbrULENEEZOVE=;
-  b=B1Unxr3xXjDV5DhfWfZnKy6D7Qju88Q/LT77u6dVZuaCNwgAivVA+4tg
-   O682kneFWX9vXFzKLDDWkRshR26O4UNtLQ0yqZJZRGC46/nRfz/hHNCW9
-   YknOSXYSGTh8FBCyHGoDK0lRYEktqHzY19jKnEiJmh9gCVCIdyBjp3WHa
-   zOXsXVFSTinqG5x1oJxBd33mYLU42qUuJeb5QYPN7QP0V+y5HEaCIrSZU
-   ASJ5aXdcWmVIS3U1HRYSr6sKfXRoEFdVVaZqTFQ9WGG71uAZ6d93uB/jL
-   PN9O8Es2s4XBWJ8lbhD9BHRIiaLwFftqQlM7qUyFpbMvQqdCTXENrfi8O
-   A==;
-X-CSE-ConnectionGUID: MbkuSMWuTa2dMHhEfXhTsQ==
-X-CSE-MsgGUID: 7mh+FgpZTSy/sDRKCR9T0A==
-X-IronPort-AV: E=Sophos;i="6.06,208,1705388400"; 
-   d="asc'?scan'208";a="184556607"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Mar 2024 06:21:34 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Mar 2024 06:20:24 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Wed, 6 Mar 2024 06:20:21 -0700
-Date: Wed, 6 Mar 2024 13:19:37 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang
-	<jszhang@kernel.org>, Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Eric Biggers
-	<ebiggers@kernel.org>, Elliot Berman <quic_eberman@quicinc.com>, Charles Lohr
-	<lohr85@gmail.com>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 3/4] riscv: Decouple emulated unaligned accesses from
- access speed
-Message-ID: <20240306-tactless-decathlon-b0df16517b1b@wendy>
-References: <20240301-disable_misaligned_probe_config-v6-0-612ebd69f430@rivosinc.com>
- <20240301-disable_misaligned_probe_config-v6-3-612ebd69f430@rivosinc.com>
+	s=arc-20240116; t=1709731313; c=relaxed/simple;
+	bh=rNCo6YTRtJ0N3dTHRg1KBXCJ/MqCSeZD2RbLa6pVvK0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JaX3Ci1JreAKus5vprD3O+yGHRFOLcE3S9SdyCruT1dnss3FCZr+81uwL0yH3Ibcn1nPJsq6LGvCdCDWuE2usl8hzCEgoGeslTSA5QuCyQTgtRNyzgXAKrLrevuG0kOy6UJ6ZbC8QrUB8lcZ6kqAUhJk/MoY/sd59RxB2ccHKiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rhrDC-0006zN-4f; Wed, 06 Mar 2024 14:21:34 +0100
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rhrD9-004l1t-JV; Wed, 06 Mar 2024 14:21:31 +0100
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rhrD9-00BPmz-1k;
+	Wed, 06 Mar 2024 14:21:31 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Jiri Pirko <jiri@resnulli.us>,
+	Ivan Vecera <ivecera@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v1 1/1]  net: bridge: switchdev: Improve error message clarity for switchdev_port_obj_add/del_deffered operations
+Date: Wed,  6 Mar 2024 14:21:30 +0100
+Message-Id: <20240306132130.2720721-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0+iLppiDSyfXGqPN"
-Content-Disposition: inline
-In-Reply-To: <20240301-disable_misaligned_probe_config-v6-3-612ebd69f430@rivosinc.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
---0+iLppiDSyfXGqPN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Enhance the error reporting mechanism in the switchdev framework to
+provide more informative and user-friendly error messages.
 
-On Fri, Mar 01, 2024 at 05:45:34PM -0800, Charlie Jenkins wrote:
+Following feedback from users struggling to understand the implications
+of error messages like "failed (err=-28) to add object (id=2)", this
+update aims to clarify what operation failed and how this might impact
+the system or network.
 
-> -void unaligned_emulation_finish(void)
-> +bool check_unaligned_access_emulated_all_cpus(void)
->  {
->  	int cpu;
-> =20
-> -	/*
-> -	 * We can only support PR_UNALIGN controls if all CPUs have misaligned
-> -	 * accesses emulated since tasks requesting such control can run on any
-> -	 * CPU.
-> -	 */
+With this change, error messages now include a description of the failed
+operation, the specific object involved, and a brief explanation of the
+potential impact on the system. This approach helps administrators and
+developers better understand the context and severity of errors,
+facilitating quicker and more effective troubleshooting.
 
-Why was this comment removed? This patch doesn't change the situations
-in which PR_UNALIGN is allowed, right?
+Example of the improved logging:
 
-> -	for_each_online_cpu(cpu) {
-> -		if (per_cpu(misaligned_access_speed, cpu) !=3D
-> -					RISCV_HWPROBE_MISALIGNED_EMULATED) {
-> -			return;
-> -		}
-> -	}
-> +	for_each_online_cpu(cpu)
-> +		if (check_unaligned_access_emulated(cpu))
-> +			return false;
-> +
->  	unaligned_ctl =3D true;
-> +	return true;
->  }
+[   70.516446] ksz-switch spi0.0 uplink: Failed to add Port Multicast
+               Database entry (object id=2) with error: -ENOSPC (-28).
+[   70.516446] Failure in updating the port's Multicast Database could
+               lead to multicast forwarding issues.
+[   70.516446] Current HW/SW setup lacks sufficient resources.
 
+This comprehensive update includes handling for a range of switchdev
+object IDs, ensuring that most operations within the switchdev framework
+benefit from clearer error reporting.
 
---0+iLppiDSyfXGqPN
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ net/switchdev/switchdev.c | 106 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 102 insertions(+), 4 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/net/switchdev/switchdev.c b/net/switchdev/switchdev.c
+index c9189a970eec3..d5a30b626fd9c 100644
+--- a/net/switchdev/switchdev.c
++++ b/net/switchdev/switchdev.c
+@@ -244,6 +244,106 @@ static int switchdev_port_obj_notify(enum switchdev_notifier_type nt,
+ 	return 0;
+ }
+ 
++static void switchdev_obj_id_to_helpful_msg(struct net_device *dev,
++					    enum switchdev_obj_id obj_id,
++					    int err, bool add)
++{
++	char *action = add ? "add" : "del";
++	char *reason = "";
++	char *problem;
++	char *obj_str;
++
++	switch (obj_id) {
++	case SWITCHDEV_OBJ_ID_UNDEFINED:
++		obj_str = "Undefined object";
++		problem = "Attempted operation is undefined, indicating a "
++			  "possible programming error.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_PORT_VLAN:
++		obj_str = "VLAN entry";
++		problem = "Failure in VLAN settings on this port might disrupt "
++		          "network segmentation or traffic isolation, affecting\n"
++		          "network partitioning.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_PORT_MDB:
++		obj_str = "Port Multicast Database entry";
++		problem = "Failure in updating the port's Multicast Database "
++			  "could lead to multicast forwarding issues.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_HOST_MDB:
++		obj_str = "Host Multicast Database entry";
++		problem = "Failure in updating the host's Multicast Database"
++		          "may impact multicast group memberships or\n"
++			  "traffic delivery, affecting multicast communication.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_MRP:
++		obj_str = "Media Redundancy Protocol configuration for port";
++		problem = "Failure to set MRP ring ID on this port prevents"
++			  "communication with the specified redundancy ring,\n"
++			  "resulting in an inability to engage in MRP-based "
++			  "network operations.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_RING_TEST_MRP:
++		obj_str = "MRP Test Frame Operations for port";
++		problem = "Failure to generate/monitor MRP test frames may lead"
++			  "to inability to assess the ring's operational\n"
++			  "integrity and fault response, hindering proactive "
++			  "network management.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_RING_ROLE_MRP:
++		obj_str = "MRP Ring Role Configuration";
++		problem = "Improper MRP ring role configuration may create "
++		          "conflicts in the ring, disrupting communication\n"
++			  "for all participants, or isolate the local system "
++			  "from the ring, hindering its ability to communicate "
++			  "with other participants.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_RING_STATE_MRP:
++		obj_str = "MRP Ring State Configuration";
++		problem = "Failure to correctly set the MRP ring state can "
++		          "result in network loops or leave segments without\n"
++			  "communication. In a Closed state, it maintains loop "
++			  "prevention by blocking one MRM port, while an Open\n"
++			  "state activates in response to failures, changing "
++			  "port states to preserve network connectivity.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_IN_TEST_MRP:
++		obj_str = "MRP_InTest Frame Generation Configuration";
++		problem = "Failure in managing MRP_InTest frame generation can "
++			  "misjudge the interconnection ring's state, leading\n"
++			  "to incorrect blocking or unblocking of the I/C port."
++			  "This misconfiguration might result in unintended\n"
++			  "network loops or isolate critical network segments, "
++			  "compromising network integrity and reliability.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_IN_ROLE_MRP:
++		obj_str = "Interconnection Ring Role Configuration";
++		problem = "Failure in incorrect assignment of interconnection "
++			  "ring roles (MIM/MIC) can impair the formation of the\n"
++			  "interconnection rings.\n";
++		break;
++	case SWITCHDEV_OBJ_ID_IN_STATE_MRP:
++		obj_str = "Interconnection Ring State Configuration";
++		problem = "Failure in updating the interconnection ring state "
++			  "can lead in case of Open state to incorrect blocking\n"
++			  "or unblocking of the I/C port, resulting in unintended"
++			  "network loops or isolation of critical network\n";
++		break;
++	default:
++		obj_str = "Unknown object";
++		problem	= "Indicating a possible programming error.\n";
++	}
++
++	switch (err) {
++	case -ENOSPC:
++		reason = "Current HW/SW setup lacks sufficient resources.\n";
++		break;
++	}
++
++	netdev_err(dev, "Failed to %s %s (object id=%d) with error: %pe (%d).\n%s%s\n",
++		   action, obj_str, obj_id, ERR_PTR(err), err, problem, reason);
++}
++
+ static void switchdev_port_obj_add_deferred(struct net_device *dev,
+ 					    const void *data)
+ {
+@@ -254,8 +354,7 @@ static void switchdev_port_obj_add_deferred(struct net_device *dev,
+ 	err = switchdev_port_obj_notify(SWITCHDEV_PORT_OBJ_ADD,
+ 					dev, obj, NULL);
+ 	if (err && err != -EOPNOTSUPP)
+-		netdev_err(dev, "failed (err=%d) to add object (id=%d)\n",
+-			   err, obj->id);
++		switchdev_obj_id_to_helpful_msg(dev, obj->id, err, true);
+ 	if (obj->complete)
+ 		obj->complete(dev, err, obj->complete_priv);
+ }
+@@ -304,8 +403,7 @@ static void switchdev_port_obj_del_deferred(struct net_device *dev,
+ 
+ 	err = switchdev_port_obj_del_now(dev, obj);
+ 	if (err && err != -EOPNOTSUPP)
+-		netdev_err(dev, "failed (err=%d) to del object (id=%d)\n",
+-			   err, obj->id);
++		switchdev_obj_id_to_helpful_msg(dev, obj->id, err, false);
+ 	if (obj->complete)
+ 		obj->complete(dev, err, obj->complete_priv);
+ }
+-- 
+2.39.2
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZehtaQAKCRB4tDGHoIJi
-0nqQAP9qDs9BXRRIcemNZkKQPjQ7O1zObSc+rYvFSFXl5n2dCgD+LIqa+Incg/HH
-X0NiaSTSjXLgY8Y3hcOJ/2aMZ1V8dQA=
-=VVCG
------END PGP SIGNATURE-----
-
---0+iLppiDSyfXGqPN--
