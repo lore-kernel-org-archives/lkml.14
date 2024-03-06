@@ -1,112 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362256FBD
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 01:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7864F2CA7;
+	Wed,  6 Mar 2024 01:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709689923; cv=none; b=Vy4tfDzXvguHUycyndLczq9BrgEOUBPHZsfhj+qGeKLrLSerltFgBEpJggtuSBD97A1wFJvdmkan8oDgv6RqZeJdJQeg1wbs+cFP5MQbPPovmHaVTWa7fhMPvW6uU/S16/OSXG2wyx39qnYBZZDEnqbXYeUpGxttCCr+AOEniE0=
+	t=1709690294; cv=none; b=L8klqRwH3YyfGb8cpjxgxm5bTcRSPwXrBGwZoqWp6aZAKXW/s59Kt1tqMEcez9L1zCPhcNCbDbv6Q/dCR/AncESnKiK+McZvZJCNJYtf41zvy+L/kvehE2deSV7tQ00XOtSXaq3Tngr/yiyS5OGmY38HmpP/DUXFpncyMxdBkLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709689923; c=relaxed/simple;
-	bh=pjR8YIBGq1VNa51QiHXbbJg32nHSnWWaN8QomRREMxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sFK0XL5RXKs1z8mGn/G1czPdc5LIkmweML7pIZtAaFYWdMoo9Sm7nuPENRvvhy7FUQ02Pp65LsjrrY8wky5H2cdBDBdRYwgD7gU1vat8Rx66zYyH7sE4A4CcjfT1oK+2FGAMXpANTaoVZJN+v5ggfXf+yiVAPFjrRt8h+1FR0n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEfbDRIV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEfbDRIV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A360EC433F1;
-	Wed,  6 Mar 2024 01:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709689922;
-	bh=pjR8YIBGq1VNa51QiHXbbJg32nHSnWWaN8QomRREMxg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mEfbDRIVBOG3N/to2d9M9OyD8pavLacY7xA6M0dCBYF3+yCwNfpKJHE6PZY9aSkyK
-	 fxOg3yMuv9s6UwhwvaRHtz7NcMpxGTFX0yJRb3F0GqjdGT/As8DLtfzP1XUwnbzf7M
-	 abS0A2sQH5ZHwcUPJu99IfhR31tYhQe5lJk5MCUVx/a9g0Of21GX2fMb9+S2hiG3cU
-	 6Iiby7rxMELga0D8EgoYLg3n28/cqAx0a3sMruRb7oC6KdypIyF0+cWz/5nElMqfW0
-	 5IJXL14zQJsqo3g0FziOt2u0dXLUStgqxeR5QESaB0pz93VzENEzJIdnNdTJfx6Qrd
-	 yHYRhP//SuDmQ==
-Message-ID: <61637917-440e-4ed1-8820-fc7af8b8b4f3@kernel.org>
-Date: Wed, 6 Mar 2024 09:51:56 +0800
+	s=arc-20240116; t=1709690294; c=relaxed/simple;
+	bh=TmFcu6VUmLrYChoYqs/XPYIPbEXoIAXhHqI8nZm4bNM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=bY23ghmbZLCvRxBzdHHUBQFCSBPel/bdNwHcNGV2+LCJtdr0ZlDtpumuLAjoSn3BkKmjQbEhljf++sRSITFFcfXNVezesmlKdEDeTPfVMxl1N3j2pmOvH8Aa9NxhAgpfjsYnR2Hcxjrc0XFQQRGaIvKFfjT6CV4JbnykYELN3Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01ED9C433F1;
+	Wed,  6 Mar 2024 01:58:13 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rhgZh-00000000TAP-2WRD;
+	Tue, 05 Mar 2024 21:00:05 -0500
+Message-ID: <20240306020005.461538701@goodmis.org>
+User-Agent: quilt/0.67
+Date: Tue, 05 Mar 2024 20:59:11 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ suleiman@google.com,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Vineeth Pillai <vineeth@bitbyteword.org>,
+ Youssef Esmat <youssefesmat@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Alexander Graf <graf@amazon.com>,
+ Baoquan He <bhe@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ David Howells <dhowells@redhat.com>
+Subject: [PATCH 1/8] ring-buffer: Allow mapped field to be set without mapping
+References: <20240306015910.766510873@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] f2fs: compress: relocate some judgments in
- f2fs_reserve_compress_blocks
-Content-Language: en-US
-To: Xiuhong Wang <xiuhong.wang@unisoc.com>, jaegeuk@kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Cc: hongyu.jin.cn@gmail.com, niuzhiguo84@gmail.com, ke.wang@unisoc.com,
- xiuhong.wang.cn@gmail.com
-References: <20240305084023.3686070-1-xiuhong.wang@unisoc.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20240305084023.3686070-1-xiuhong.wang@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 
-On 2024/3/5 16:40, Xiuhong Wang wrote:
-> The following f2fs_io test will get a "0" result instead of -EINVAL,
-> unisoc # ./f2fs_io compress file
-> unisoc # ./f2fs_io reserve_cblocks file
->   0
-> it's not reasonable, so the judgement of
-> atomic_read(&F2FS_I(inode)->i_compr_blocks) should be placed after
-> the judgement of is_inode_flag_set(inode, FI_COMPRESS_RELEASED).
-> 
-> Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
-> Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> ---
->   fs/f2fs/file.c | 11 +++++------
->   1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 4ca6c693b33a..572d7bd4d161 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -3720,18 +3720,18 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->   	if (ret)
->   		return ret;
->   
-> -	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
-> -		goto out;
-> -
->   	f2fs_balance_fs(sbi, true);
->   
->   	inode_lock(inode);
->   
->   	if (!is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
->   		ret = -EINVAL;
-> -		goto unlock_inode;
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Nitpick, maybe keep unlock_inode label is better.
+In preparation for having the ring buffer mapped to a dedicated location,
+which will have the same restrictions as user space memory mapped buffers,
+allow it to use the "mapped" field of the ring_buffer_per_cpu structure
+without having the user space meta page mapping.
 
-> +		goto out;
->   	}
->   
-> +	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
-> +		goto out;
+When this starts using the mapped field, it will need to handle adding a
+user space mapping (and removing it) from a ring buffer that is using a
+dedicated memory range.
 
-goto unlock_inode
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Thanks,
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1d7d7a701867..524b2c185c88 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5171,6 +5171,9 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+ 
++	if (!meta)
++		return;
++
+ 	meta->reader.read = cpu_buffer->reader_page->read;
+ 	meta->reader.id = cpu_buffer->reader_page->id;
+ 	meta->reader.lost_events = cpu_buffer->lost_events;
+@@ -6159,7 +6162,7 @@ rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
+ 
+ 	mutex_lock(&cpu_buffer->mapping_lock);
+ 
+-	if (!cpu_buffer->mapped) {
++	if (!cpu_buffer->mapped || !cpu_buffer->meta_page) {
+ 		mutex_unlock(&cpu_buffer->mapping_lock);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+@@ -6217,7 +6220,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu)
+ 
+ 	mutex_lock(&cpu_buffer->mapping_lock);
+ 
+-	if (cpu_buffer->mapped) {
++	if (cpu_buffer->meta_page) {
+ 		err = __rb_inc_dec_mapped(buffer, cpu_buffer, true);
+ 		mutex_unlock(&cpu_buffer->mapping_lock);
+ 		return err;
+@@ -6247,7 +6250,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu)
+ 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 
+ 	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
+-	cpu_buffer->mapped = 1;
++	cpu_buffer->mapped++;
+ 
+ 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ unlock:
+-- 
+2.43.0
 
-> +
->   	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
->   	filemap_invalidate_lock(inode->i_mapping);
->   
-> @@ -3776,9 +3776,8 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->   		inode_set_ctime_current(inode);
->   		f2fs_mark_inode_dirty_sync(inode, true);
->   	}
-> -unlock_inode:
-> -	inode_unlock(inode);
->   out:
-> +	inode_unlock(inode);
->   	mnt_drop_write_file(filp);
->   
->   	if (ret >= 0) {
+
