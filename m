@@ -1,115 +1,109 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6D860250
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E0060250;
+	Wed,  6 Mar 2024 20:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709755975; cv=none; b=pbRZMjlCRDftfO/ueRS05ueJLBf+chlrNUTSliLTxzJs24GMws3M78dwppVMil8LaN9+TZo4VQWO43vi78Yr1bhNljZaLIl1y9M7AChJAIwyBPfnqoFNGZemkopoQqQRzSapnF9U640KkeDElu2iBoj/MxPoPc7EH/rIokxLoKs=
+	t=1709756030; cv=none; b=Zqkw7dLTLHpmk5WawbO6tnOUsDYm+LRE7M+uqM+edCL5U4OQSD21rGj95ueQIt2HhgdAYG3ukjk4PWE3f5AFFHrTHJlRmVGHCFmEEpYHNgUgwsVdE6u9k1NqK6ZM7zJeBTnX8jKSmMxA/ZM5j+MgRbePR+Pzpkp7P/yXEqnD3nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709755975; c=relaxed/simple;
-	bh=TX547eTfaPewrf9xdqLu4LWOojF0uMxOHFLW/38Gofg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e8ZLvjzCWPx4rtwpG87wzdzgaT0OOxo1xuhk4ltJd1T52zfbAZr0R0EZbjUW95UPJFi/7ElBQ+Inhdj15ipAJtc+Q+NiSpyPWOBv9s/W22amv9BURW4lg+F9kBQQ4BpfF2gLH6O7RyuVrdxNI6qTKL3xo2HB1MZ8b/9iBzDusgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2539120002;
-	Wed,  6 Mar 2024 20:12:50 +0000 (UTC)
-Message-ID: <ca097f2a-59ec-4945-9860-5e380e1665e4@ghiti.fr>
-Date: Wed, 6 Mar 2024 21:12:50 +0100
+	s=arc-20240116; t=1709756030; c=relaxed/simple;
+	bh=rAnJtzfRsWJZwGzIDXpwXhY4p4LSVYOL62mHk1jLZOw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JvWn68g5DrDjLETiRdLcRbd04UzcEl0dAEZ6QVGPs1CVZ0c8p2jbvxAulodl/ly/s096fmXEIYuEKLBhxciRVurxEWw/qC8Mzr05EwYyBF+er/oPA6C3BvPDiQ8wLuTWSQuSf+xYai0NN5RR8cjY2cOdHwmGvxBUPmkgEALcl78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=kFyJm9c6; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="kFyJm9c6"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id C2008C0000F5;
+	Wed,  6 Mar 2024 12:04:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com C2008C0000F5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1709755488;
+	bh=rAnJtzfRsWJZwGzIDXpwXhY4p4LSVYOL62mHk1jLZOw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kFyJm9c6s4H07GlIrjh+RboECL5o1RtQrDDT15LJhKYBFtto292h+wyC53+c5EmOm
+	 k3PRkTm4uB0mH+bigf4hyG3KPBxTbiOhik1ZM9GBW6HoohOPHGfdtQ4lSTllgmt1Ov
+	 +4swbldgKPtrR3PWtEi+JW2fc/ttu+GYGkSq/QiI=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id F320718041CAC4;
+	Wed,  6 Mar 2024 12:04:46 -0800 (PST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: netdev@vger.kernel.org
+Cc: leitao@debian.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: dsa: Leverage core stats allocator
+Date: Wed,  6 Mar 2024 12:04:09 -0800
+Message-Id: <20240306200416.2973179-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: compat_vdso: install compat_vdso.so.dbg to
- /lib/modules/*/vdso/
-Content-Language: en-US
-To: Masahiro Yamada <masahiroy@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-References: <20231117125807.1058477-1-masahiroy@kernel.org>
- <CAK7LNAStoCja1gnoFmsKikbzGZmKTcTu+Vc7v9zg8B9hwsH+iQ@mail.gmail.com>
- <CAK7LNATVAcj-pa_G-NGBTr9doCACGk1nKCNbxM50-M0mi9q=7w@mail.gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <CAK7LNATVAcj-pa_G-NGBTr9doCACGk1nKCNbxM50-M0mi9q=7w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Masahiro,
+With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core
+and convert veth & vrf"), stats allocation could be done on net core
+instead of in this driver.
 
-On 24/02/2024 04:37, Masahiro Yamada wrote:
-> Ping x 2 ?
->
->
->
->
->
-> On Sun, Jan 21, 2024 at 6:48 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->> On Fri, Nov 17, 2023 at 9:58 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->>> 'make vdso_install' installs debug vdso files to /lib/modules/*/vdso/.
->>>
->>> Only for the compat vdso on riscv, the installation destination differs;
->>> compat_vdso.so.dbg is installed to /lib/module/*/compat_vdso/.
->>>
->>> To follow the standard install destination and simplify the vdso_install
->>> logic, change the install destination to standard /lib/modules/*/vdso/.
->>>
->>> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->>> ---
->>
->> Ping?
->> (in case "yet more RISC-V updates" happens)
->>
->>
->>
->>
->>>   arch/riscv/Makefile | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
->>> index a74be78678eb..5cbe596345c1 100644
->>> --- a/arch/riscv/Makefile
->>> +++ b/arch/riscv/Makefile
->>> @@ -146,7 +146,7 @@ endif
->>>   endif
->>>
->>>   vdso-install-y                 += arch/riscv/kernel/vdso/vdso.so.dbg
->>> -vdso-install-$(CONFIG_COMPAT)  += arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg:../compat_vdso/compat_vdso.so
->>> +vdso-install-$(CONFIG_COMPAT)  += arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg
->>>
->>>   ifneq ($(CONFIG_XIP_KERNEL),y)
->>>   ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_ARCH_CANAAN),yy)
->>> --
->>> 2.40.1
->>>
->>
->> --
->> Best Regards
->> Masahiro Yamada
->
->
-> --
-> Best Regards
-> Masahiro Yamada
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+With this new approach, the driver doesn't have to bother with error
+handling (allocation failure checking, making sure free happens in the
+right spot, etc). This is core responsibility now.
 
+Remove the allocation in the DSA user network device code and leverage
+the network core allocation instead.
 
-Couldn't changing this library install path break some existing 
-application? I mean it kind of breaks where the library is expected to 
-be right?
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ net/dsa/user.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-Thanks,
-
-Alex
+diff --git a/net/dsa/user.c b/net/dsa/user.c
+index 9c42a6edcdc8..16d395bb1a1f 100644
+--- a/net/dsa/user.c
++++ b/net/dsa/user.c
+@@ -2625,11 +2625,7 @@ int dsa_user_create(struct dsa_port *port)
+ 	user_dev->vlan_features = conduit->vlan_features;
+ 
+ 	p = netdev_priv(user_dev);
+-	user_dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
+-	if (!user_dev->tstats) {
+-		free_netdev(user_dev);
+-		return -ENOMEM;
+-	}
++	user_dev->pcpu_stat_type = NETDEV_PCPU_STAT_TSTATS;
+ 
+ 	ret = gro_cells_init(&p->gcells, user_dev);
+ 	if (ret)
+@@ -2695,7 +2691,6 @@ int dsa_user_create(struct dsa_port *port)
+ out_gcells:
+ 	gro_cells_destroy(&p->gcells);
+ out_free:
+-	free_percpu(user_dev->tstats);
+ 	free_netdev(user_dev);
+ 	port->user = NULL;
+ 	return ret;
+@@ -2716,7 +2711,6 @@ void dsa_user_destroy(struct net_device *user_dev)
+ 
+ 	dsa_port_phylink_destroy(dp);
+ 	gro_cells_destroy(&p->gcells);
+-	free_percpu(user_dev->tstats);
+ 	free_netdev(user_dev);
+ }
+ 
+-- 
+2.34.1
 
