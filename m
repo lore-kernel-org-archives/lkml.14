@@ -1,76 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5695C5F9;
-	Wed,  6 Mar 2024 07:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B655A783;
+	Wed,  6 Mar 2024 07:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709709632; cv=none; b=Tf6CXJuW/dusJ1Np6FrscgXOOjOu+R/AY67gJdQxTXdci+BaarRyqRI3LDdiUVqsSmY0W3/aiRLP3VOCgn9Fs8ubwEyvxA3nZfXhnfuNFfZQiFkjrZ4a3bh2x4o5/h5rJXUeon+1LPz/q31si2RaSFYYiuj375ICG4MIwDxqnYs=
+	t=1709709634; cv=none; b=lIvyE9L1v3sGEG01jEUIkovU3abpKl26QxT9iQRV29pgvrObFY+m8EsCakgOpbS/BFEIGwBsfjHcQGKHYuYs6qG4gnQRbkZXEq+yR6aoKP/p3gYrJojvjEYLtjbeid/Ji4vSScCoJ2JQIV6JR0D7ohrdkicg+lawBq6cArIs1kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709709632; c=relaxed/simple;
-	bh=Qugb/thylVBs/11++xQrE7py/hfjgS+7cmnTqZ6Npk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lyzH6YF1I9cFnX4ggfv272jcqIChrQ/aHZ6z7ETrrLjNAqX+boPa7kqGeklRZB4sLFeej3yVADMqnUdJ8A1XDW4zVBKDWcBd0WHrHWpvdixzPLMOPNveWR8XLo8XXS1ZJzVZ+8t+AUfigpPaeThpJhkyyjtLC9BEHdGlXJTRdVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ire0JjbT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ire0JjbT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEAA5C433C7;
-	Wed,  6 Mar 2024 07:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709709630;
-	bh=Qugb/thylVBs/11++xQrE7py/hfjgS+7cmnTqZ6Npk0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ire0JjbTk37nJ8nW8ILDF6ozjTHy+9PDRACslzZH2SKcNTUuUi7a7ClpUtyz6ADno
-	 rtyc7cVI9D3yxR/B8zMEJhFsYPCZKimE7U/KgrQyMPXq6hJKHUGUuh5IBYsyW6GnhB
-	 WBV0qIVBxQlY+hkqyQ5WzrU+tPCZ+noTIbjfrtDPPozUfil+4/10xE3xY6IRXX3eW6
-	 roaePgsJUluqivsZn+2gPvHaMwqJPWAHdjvkpUd8t6udNueYP1UG0gBEd2VHp4lWDK
-	 rCYy18ssfJtM4HgvMfuFk/CKCk9Cz2TFPp5pt97Sj6BAFudLNevCpDufEgav9qBoFJ
-	 fvRlzsARGWpSg==
-Date: Wed, 6 Mar 2024 08:20:27 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: mux: i2c-demux-pinctrl: Drop
- i2c-mux.yaml reference
-Message-ID: <e6cuggewnewxp2tf4g45jkazu46pgiffooo6gdwi2ge44itsps@njsz64u5vjyr>
-References: <20240124190552.1551929-1-robh@kernel.org>
- <Zb6nBYTkZmXZ0G2X@shikoro>
- <Zdxq4GnRyjC07EH8@shikoro>
- <CAL_JsqLnCzXMsyeAHZUx2_oF5dqvLOWBvoj2Bb_Go6VimCxCoA@mail.gmail.com>
+	s=arc-20240116; t=1709709634; c=relaxed/simple;
+	bh=HAP+iMl7BUZdNXqZwAThepZm1K7kacwAMmWl+dtV+7w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dr5sTfvs6kkXbT+yUJyUZwlJTE1eOSAxNO8HWsecpgCskxj63DQeboPqqoqG06QpkR7CZCETLk7CRfmr8EYlvGtpJMyz6iDMP9mmnLQlXEyUzQt5yeaWvAJCjv584bvOBduG9Kzc3PtpF4WVe66RT0ynhkcK69qS9Ax5sXRoMSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp70t1709709583ts91r9nd
+X-QQ-Originating-IP: p4pVVYXG8UKSO1Htum6vp1WgSp9sIHOFpaemxhXGfzU=
+Received: from [127.0.0.1] ( [223.112.234.130])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 06 Mar 2024 15:19:41 +0800 (CST)
+X-QQ-SSF: 00400000000000B0B000000A0000000
+X-QQ-FEAT: qO3Ke1AXI6F1dreDptSiRTmiAnB+l5LDO3YcMSKeHKiRL1DlwaBEDMxG6Oqwi
+	E+QOlXgMrpjFt7CF1WJgX4smAQKP4Lm/8fCCiJe8WBRgzfMXgNYv9G0qsCLQwpuLg/15HjU
+	lI3At+WRKGuNTG2C7dRGAC0XmmV+oWCPvvEhRKcYYbuCaKx4HDzpwRKc3M3hgfXwJFi8gUq
+	d7kPmoFyOb7dwXCwyA+ig3KAkO7UaWkr+y9CRDb+/oh0SzpeneZSuJjG5XTKEmpIds2Oln9
+	CtZaHOrL4jdgGksSNRFSMcMKARZzTQBCsJ/9gpl0NAln32OAMPrrGQT7diwTiKL13ja9pax
+	6wxzhhsZXxNGG8ZnWoeUYGp0lJmXdifa11/kExoD0ZVbbjoNJNM7z74102Fo41xznjimtSz
+	Bx9OCSbW9+QimKa4YKbxHg==
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 16879831237417784052
+Message-ID: <CB998A5566DC04D2+c2e15da5-9b6b-40fc-8651-7b3a631b0e45@shingroup.cn>
+Date: Wed, 6 Mar 2024 15:19:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] dt-bindings: Add HEXIN Technologies Co., Ltd.
+ vendor prefix
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: shenghui.qu@shingroup.cn, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+References: <cover.1709694173.git.jialong.yang@shingroup.cn>
+ <f674ec19ce824dfc13258396931256c3d33cd207.1709694173.git.jialong.yang@shingroup.cn>
+ <74debf9c-d83a-4e97-93c3-3a1322f1b5fe@linaro.org>
+From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
+In-Reply-To: <74debf9c-d83a-4e97-93c3-3a1322f1b5fe@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqLnCzXMsyeAHZUx2_oF5dqvLOWBvoj2Bb_Go6VimCxCoA@mail.gmail.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-Hi Rob,
 
-On Tue, Mar 05, 2024 at 12:06:05PM -0600, Rob Herring wrote:
-> On Mon, Feb 26, 2024 at 4:48 AM Wolfram Sang
-> > On Sat, Feb 03, 2024 at 09:50:13PM +0100, Wolfram Sang wrote:
-> > > On Wed, Jan 24, 2024 at 01:05:50PM -0600, Rob Herring wrote:
-> > > > The I2C de-mux is different than an I2C mux, so i2c-mux.yaml is not
-> > > > relevant and shouldn't be referenced.
-> > > >
-> > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > >
-> > > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> >
-> > Andi, can you pick these up?
+
+在 2024/3/6 15:10, Krzysztof Kozlowski 写道:
+> On 06/03/2024 07:16, JiaLong.Yang wrote:
+>> Update file vendor-prefixes.yaml to include hexin as a vendor prefix
+>> for "HEXIN Technologies Co., Ltd.".
+>>
+>> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
+>> ---
+>> v1 --> v2: Not changes this file and give warning.
+>> v2 --> v3: Add this patch to fix the warning.
+>>
+>>   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> index 1a0dc04f1db4..3a82104ac8a7 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> @@ -619,6 +619,8 @@ patternProperties:
+>>       description: HwaCom Systems Inc.
+>>     "^hxt,.*":
+>>       description: HXT Semiconductor
+>> +  "^hexin,.*":
 > 
-> I already did since you gave your reviewed-by and they hadn't
-> otherwise been picked up.
+> Please fix order of entries.
 
-Oh... I had them in my test branch and was waiting for some more
-tests before sending the notification.
+OK. Thanks.
 
-Shall I remove them from my list?
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
 
-Andi
