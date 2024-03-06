@@ -1,140 +1,199 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BFC1361C1
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3747131738;
+	Wed,  6 Mar 2024 18:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709748445; cv=none; b=LXUonbJmfgfss2V8Xgm1fSPhe0JNiFKM2mq5kpQjJEGn9jx/mJqbCgNlmb8buIFXqWyCibYcNfdD6GGOO55k2raD1FvLgIWF109EIc/n4+u/rwOZ/Y7I4bam4soLLBH3VaNQVINGiPRSREYdP7n7VMipLijOqsgHKq/P9ipXcUw=
+	t=1709748515; cv=none; b=mMKPM7QxcfsLKNj8KhnGbjQxry0wWm4HS7/IZeor/oTpNuqCKEaV2MHCoPaKYQNMrvrMyvPePV00BKN55Kg+K02F7Ozj9l9KY5ugRWqxGBKmcFC+7IbABKrep3HwavUq+I0mDBuMDU/AUHi1n/K0YpXTVM0QdWb7DjU/ouZ0Sb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709748445; c=relaxed/simple;
-	bh=8plUTdb6Fv6GLhziZ7ALvzF8vSm83xETHbpXVJSIzMQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VsaXMJ7eMClQuZb6zhAjAeDI1I2WtfktYzk1udyB8iaLOxCAkpa6HajK9QnMlPUWkLdoE3Cx+zYfTbq6doOIh4BFTrscRxQp+k7ESFLnE05sCciCHGcPMU2zCLIithalmVhQlg0ovJxLR/76lnqCZNCpUXm0938J/zuqDhJCrsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWKTSgt6; arc=none smtp.client-ip=209.85.167.180
+	s=arc-20240116; t=1709748515; c=relaxed/simple;
+	bh=ljLw+k9CYqmKgRHvKD2eBfLWjSEL531EeyQVW6lmIH0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=daR9AkEfuAkj7tZvzfeR8xn2hCM2mGZL1uHSk3sdpYbTcxqiKTcZmId6kdQR5nQk0Xe7u2xRrilIxBThKKaazjwITE4JZr9+Z8qwfNMRFuyJsGOPdH//jpuxKKYRa/ogoRzYf6PmEH0ZNIraSeJvixRSLgik03EFur+OuU9dS9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wh+cu65R; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWKTSgt6"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c1ea59cf81so2032387b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 10:07:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wh+cu65R"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33e285a33bdso3160471f8f.2;
+        Wed, 06 Mar 2024 10:08:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709748443; x=1710353243; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mQwUmBSggnRD0pcG/xZbZRZTuuiVEi9qcHO+7tcjts0=;
-        b=RWKTSgt6FcRardZi2Z61W3VOaCpDvgy4ntwR1Rk52xMwNSsDMu8SmWpVEaiN80PFmP
-         DM6EPg6QsvDkWIA9FAG2LtrfO7Nonqec0rm8K4hLAl2q3Z8CLZqhYdoSw0Hunn45fwIQ
-         0/QrnoFji9eIA93Wrf22YIO1uSc0BU0asWU3BbWOAkoi6Rg/sNCvby3eB9abhErGGHSR
-         kbSNLUpWjANNHzooQ2cDthROQ9lMI/PQMsKZdQrVZvjPbFu6XrWvuza7VaRh8oxVVg33
-         aPz5RVSxGiKpzo+bzrmssrchYEHAaFdVnHuChPh8x7gZYv8iXebmyzH0AOvhjz9C9V6o
-         +2nA==
+        d=gmail.com; s=20230601; t=1709748512; x=1710353312; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v7AKrK6ka8xNFv1OUzoGeNIl36Pi5bzUCr1D648kUhA=;
+        b=Wh+cu65RgmqCxHCeiZhtIf6slGwbW/ZIHd6FyVNUn6h8vIa793l2YPZI55hyeISEf1
+         Sia2GCGVQHBHfkiTTst/p0J3sKqHwQM97+yLncPvWP2BmZyhTaXDxwP192EQ8S/XdvYx
+         Ffnm9Rv1bOKq3cI89lS3EfjyOALX6dpB/Dz4Tbu5uWZ+wHTpEg+QQRL1cMqC9y7sEHi0
+         qzzbPcgKw1JasgkHdW90uN8E9aY1uFcftdxGaA/cPg5+RYju792SHg9Yzijmv2xjN5Kn
+         scldgn1iHbAKYirCNUeAaaIXW5YmIqm3qFEFcz57hAw0aQdtWfTtusCbmix8wP6pN4lR
+         LYnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709748443; x=1710353243;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mQwUmBSggnRD0pcG/xZbZRZTuuiVEi9qcHO+7tcjts0=;
-        b=Z0Q6L17OcGfiDgqggwnr/3oOhQFjTDIyKSmtu4f01IkkwumMT782B1rANNkE16G/Uk
-         HQxIF4gHfKkhq8mOQBKjJGBl4TwFVWi5dSEuFrSCvbMmOG+FdmH8MOCVkrD6P0O8upUx
-         J/tEKCsjwwr86JVwJw7/AQuvClgvfSHRJspNVqnRg7pSeJ/SAmBuEeoVqSaYuCiBmBmr
-         QQQwTvlzFGt2CVBdAZjs4/GWdyWwaREhXDqoqMzL0SO22y0P9lvNJFAFReMxS/L4YEYL
-         p/XrhHKgwOoDjQsL1FVlMZMK7606dVqKkOdHKBoTo16fpawh5SfDWp9sfjgqSRn/lFav
-         2Rng==
-X-Forwarded-Encrypted: i=1; AJvYcCULKSmiiM9LzLd6OcB/GKyjuXuaLqSNg5K4EFj6YyzCHqexfUmauSp1WdDf0XCz+rwcgzwAP5AOuLwHDf0PAto0J/XEHIdYfTrERFBp
-X-Gm-Message-State: AOJu0YyrpEWoT/NxVWchKqdAFonTwzYaVmneClyJ80hF9fkp5dmMejDv
-	0gOMt9eQOINNg0iNIS0Krsuckn0Gs1ovl+CK8dFqWxDgxt25gGs2B9V3J8GpS104jTHMOHkKJDJ
-	E2UM5zWDPwlX5a7ZkQJH4u9TIQM0=
-X-Google-Smtp-Source: AGHT+IGPrOh7Nxf2XCNqNWJRrgy482/ux2E59iFt0t+DK4BrB5tNqimAy468jOtXO5UB4zF2DYDQvfbz5R4CL5EqVyY=
-X-Received: by 2002:a05:6808:2985:b0:3c2:1f27:832c with SMTP id
- ex5-20020a056808298500b003c21f27832cmr1561706oib.1.1709748442874; Wed, 06 Mar
- 2024 10:07:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709748512; x=1710353312;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v7AKrK6ka8xNFv1OUzoGeNIl36Pi5bzUCr1D648kUhA=;
+        b=le1CfFgZJusfG5s8pz245vxZC63VPCh1wT3hOFEQ2HOXAP2MWoCevRHde8Qq2+a6sU
+         D99CK5t/Ta1zkDPFKX9hMaPH04Kx09Q4pTD6fHg5vz9GaGCEHC+XcurK9knKKx20uHMG
+         //WFv4jbHcrnfu6ZVvVIBFSciWDD4Bi3olpLetIGtlk3LLleJ/q4z6cVO5BSkKJ/3b2i
+         VN6EOcKJYzQcQs7pxXcDHF9DjZLcP3qLgvc6Aip3agrEYVXJRpSkjMhGCqZkWcFRFV44
+         jOOjTnP79McZS3iyYpM1SGl1ensqvE+a3S8smAANGTZ/1aRnznEfua8r5/W1n6PHPeum
+         SzOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXaS5OQdzelg688txDqOipo7WHxqp3VxNblJWdk3t7GMR9xNBCyrq0+XdOjiKUEy5qbzyuhqFcFGwsktGKIK8Wqccxtgj7KJhKwIY3NI7IleE4M5HO70bgHP36rGZlI6EfWGa6d2Z2v
+X-Gm-Message-State: AOJu0Yww/xc4Mr7bdlm08zmBYtaQumBOJTv7RAaNh9HkOcDjo0+CJ/XU
+	2xA14MxZdM+nWgUZ9C8OgnWAbXGKLoynU/z+MmnYWK93JV0Utw40
+X-Google-Smtp-Source: AGHT+IEp4iEaCBIHgCpGRsvcD6/HEhcJbucyfZtMOG0D8/MpW/Znuk3qxiThZmrNUvfNllKTh6subQ==
+X-Received: by 2002:a05:6000:144:b0:33e:4390:c04e with SMTP id r4-20020a056000014400b0033e4390c04emr5409036wrx.71.1709748511939;
+        Wed, 06 Mar 2024 10:08:31 -0800 (PST)
+Received: from vamoiridPC ([2a04:ee41:82:7577:8b04:4127:e500:e3de])
+        by smtp.gmail.com with ESMTPSA id az7-20020adfe187000000b0033e433cb471sm2317846wrb.79.2024.03.06.10.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 10:08:31 -0800 (PST)
+From: Vasileios Amoiridis <vassilisamir@gmail.com>
+X-Google-Original-From: Vasileios Amoiridis <vamoirid@vamoiridPC>
+Date: Wed, 6 Mar 2024 19:08:29 +0100
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Vasileios Amoiridis <vassilisamir@gmail.com>, lars@metafoo.de,
+	ang.iglesiasg@gmail.com, andriy.shevchenko@linux.intel.com,
+	linus.walleij@linaro.org, semen.protsenko@linaro.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: iio: pressure: Fixes BMP38x and BMP390 SPI
+ support
+Message-ID: <20240306180829.GA759506@vamoiridPC>
+References: <20240219191359.18367-1-vassilisamir@gmail.com>
+ <20240224163051.3edcf102@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306032414.18488-1-prosunofficial@gmail.com>
-In-Reply-To: <20240306032414.18488-1-prosunofficial@gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 6 Mar 2024 13:07:09 -0500
-Message-ID: <CADnq5_Nnx47dQCCyWrx9sNExFjZAOR=qt+nPdN0cqj1zyRLYRg@mail.gmail.com>
-Subject: Re: [PATCH] Removed redundant @ symbol to fix kernel-doc warnings in
- -next repo
-To: R SUNDAR <prosunofficial@gmail.com>
-Cc: harry.wentland@amd.com, sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com, 
-	alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com, 
-	airlied@gmail.com, daniel@ffwll.ch, rdunlap@infradead.org, 
-	mario.limonciello@amd.com, mwen@igalia.com, swarupkotikalapudi@gmail.com, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240224163051.3edcf102@jic23-huawei>
 
-Fixed up patch title prefix and applied.
+On Sat, Feb 24, 2024 at 04:30:51PM +0000, Jonathan Cameron wrote:
+> On Mon, 19 Feb 2024 20:13:59 +0100
+> Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
+> 
+> > According to the datasheet of BMP38x and BMP390 devices, for an SPI
+> > read operation the first byte that is returned needs to be dropped,
+> > and the rest of the bytes are the actual data returned from the
+> > sensor.
+> > 
+> > Fixes: 8d329309184d ("iio: pressure: bmp280: Add support for BMP380 sensor family")
+> > 
+> > Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+> 
+> Applied and marked for stable - with tweaks to header order and the space above
+> as per discussion.
 
-Thanks!
+Hi Jonathan,
 
-Alex
+I just got my hands on a BME280 humidity sensor and I realized that this commit,
+even though it fixes the SPI support for the BMP38x and BMP390 devices, it breaks
+the SPI support for BME280 and BMP58x. The problem is descirbed below, inline.
 
-On Tue, Mar 5, 2024 at 10:48=E2=80=AFPM R SUNDAR <prosunofficial@gmail.com>=
- wrote:
->
-> For linux-next repository.
->
-> ./drivers/gpu/drm/amd/display/dc/inc/hw/hubp.h:1: warning: no structured =
-comments found
-> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use=
- of kernel-doc format:          * @@overlap_only: Whether overlapping of di=
-fferent planes is allowed.
-> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use=
- of kernel-doc format:          * @@overlap_only: Whether overlapping of di=
-fferent planes is allowed.
-> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1: warning: no structured c=
-omments found
-> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use=
- of kernel-doc format:          * @@overlap_only: Whether overlapping of di=
-fferent planes is allowed.
-> ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:162: warning: Function para=
-meter or struct member 'pre_multiplied_alpha' not described in 'mpcc_blnd_c=
-fg'
->
-> Signed-off-by: R SUNDAR <prosunofficial@gmail.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h b/drivers/gpu/dr=
-m/amd/display/dc/inc/hw/mpc.h
-> index ba9b942ce09f..34a398f23fc6 100644
-> --- a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-> +++ b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-> @@ -110,9 +110,8 @@ struct mpcc_blnd_cfg {
->          */
->         enum mpcc_alpha_blend_mode alpha_mode;
->
-> -       /***
-> -        * @@pre_multiplied_alpha:
-> -        *
-> +       /**
-> +        * @pre_multiplied_alpha:
->          * Whether pixel color values were pre-multiplied by the alpha ch=
-annel
->          * (MPCC_ALPHA_MULTIPLIED_MODE).
->          */
-> @@ -129,7 +128,7 @@ struct mpcc_blnd_cfg {
->         int global_alpha;
->
->         /**
-> -        * @@overlap_only: Whether overlapping of different planes is all=
-owed.
-> +        * @overlap_only: Whether overlapping of different planes is allo=
-wed.
->          */
->         bool overlap_only;
->
-> --
-> 2.34.1
->
+> > ---
+> >  drivers/iio/pressure/bmp280-spi.c | 49 ++++++++++++++++++++++++++++++-
+> >  1 file changed, 48 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp280-spi.c
+> > index e8a5fed07e88..1972014dca93 100644
+> > --- a/drivers/iio/pressure/bmp280-spi.c
+> > +++ b/drivers/iio/pressure/bmp280-spi.c
+> > @@ -8,6 +8,7 @@
+> >  #include <linux/spi/spi.h>
+> >  #include <linux/err.h>
+> >  #include <linux/regmap.h>
+> > +#include <linux/bits.h>
+> >  
+> >  #include "bmp280.h"
+> >  
+> > @@ -35,6 +36,33 @@ static int bmp280_regmap_spi_read(void *context, const void *reg,
+> >  	return spi_write_then_read(spi, reg, reg_size, val, val_size);
+> >  }
+> >  
+> > +static int bmp380_regmap_spi_read(void *context, const void *reg,
+> > +				  size_t reg_size, void *val, size_t val_size)
+> > +{
+> > +	struct spi_device *spi = to_spi_device(context);
+> > +	u8 rx_buf[4];
+> > +	ssize_t status;
+> > +
+> > +	/*
+> > +	 * Maximum number of consecutive bytes read for a temperature or
+> > +	 * pressure measurement is 3.
+> > +	 */
+> > +	if (val_size > 3)
+> > +		return -EINVAL;
+> > +	/*
+> > +	 * According to the BMP3xx datasheets, for a basic SPI read opertion,
+> > +	 * the first byte needs to be dropped and the rest are the requested
+> > +	 * data.
+> > +	 */
+> > +	status = spi_write_then_read(spi, reg, 1, rx_buf, val_size + 1);
+> > +	if (status)
+> > +		return status;
+> > +
+> > +	memcpy(val, rx_buf + 1, val_size);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static struct regmap_bus bmp280_regmap_bus = {
+> >  	.write = bmp280_regmap_spi_write,
+> >  	.read = bmp280_regmap_spi_read,
+> > @@ -42,10 +70,19 @@ static struct regmap_bus bmp280_regmap_bus = {
+> >  	.val_format_endian_default = REGMAP_ENDIAN_BIG,
+> >  };
+> >  
+> > +static struct regmap_bus bmp380_regmap_bus = {
+> > +	.write = bmp280_regmap_spi_write,
+> > +	.read = bmp380_regmap_spi_read,
+> > +	.read_flag_mask = BIT(7),
+> > +	.reg_format_endian_default = REGMAP_ENDIAN_BIG,
+> > +	.val_format_endian_default = REGMAP_ENDIAN_BIG,
+> > +};
+> > +
+> >  static int bmp280_spi_probe(struct spi_device *spi)
+> >  {
+> >  	const struct spi_device_id *id = spi_get_device_id(spi);
+> >  	const struct bmp280_chip_info *chip_info;
+> > +	struct regmap_bus *bmp_regmap_bus;
+> >  	struct regmap *regmap;
+> >  	int ret;
+> >  
+> > @@ -58,8 +95,18 @@ static int bmp280_spi_probe(struct spi_device *spi)
+> >  
+> >  	chip_info = spi_get_device_match_data(spi);
+> >  
+> > +	switch (chip_info->chip_id[0]) {
+> > +	case BMP380_CHIP_ID:
+> > +	case BMP390_CHIP_ID:
+
+These chip IDs, even though they are IDs, they are not unique and they are
+shared among sensors (see bmp280.h line 290). This means that this cases 
+are true also for BME280 and BMP58x devices which of course should not 
+happen because their regmap bus is the bmp280_* and not the bmp380_*.
+
+It can easily be solved by removing the switch-case statement and adding
+an if(!(strcmp(id->name,"bmp380")) which checks the name which is indeed
+unique. I guess that this patch should be reverted, how should I proceed?
+
+> > +		bmp_regmap_bus = &bmp380_regmap_bus;
+> > +		break;
+> > +	default:
+> > +		bmp_regmap_bus = &bmp280_regmap_bus;
+> > +		break;
+> > +	}
+> > +
+> >  	regmap = devm_regmap_init(&spi->dev,
+> > -				  &bmp280_regmap_bus,
+> > +				  bmp_regmap_bus,
+> >  				  &spi->dev,
+> >  				  chip_info->regmap_config);
+> >  	if (IS_ERR(regmap)) {
+> 
