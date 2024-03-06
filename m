@@ -1,95 +1,102 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6089132C0C;
-	Wed,  6 Mar 2024 14:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15481133993
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 14:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709735901; cv=none; b=KvM7e8qExEEF5usYZFI8C/t+KDYhvT/CHV4HmEDDdb/Y5eNkzRBeXLPrhZNm59dsswRSqPLdjwrxyrKaiehhlRExgJ5CocGCt2q+mMZsGy9YKWxBHP7CWoVFS1lfHbdnqewS91L39vYa+7/ER+3K1SZZPdhSmlHcX0qrMLk9g1k=
+	t=1709735903; cv=none; b=SjfEbSozwiWHuV+l8JRBTYuDvutqXLTSezrtCtYe5QD3QdJgDKWvAx8m3YaiSNCAyjfOa+YErXIYpc4YC+914PZs9bJvP/1u5uOjMGxXarUPa2xnR/UvRrWfkwTg6szaIyzZoVpqzEmpJtINCP3XSNDMsTASKSxdGb4i/YIceIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709735901; c=relaxed/simple;
-	bh=MPbTgE3wEX5Gq5cxMoyeMt07mKpUEazcQ9bpo7e/Bgw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j2bg5zxWmSnETsyL1YoY9Wo10sXlMPbS7Ktfcmig3YyP/eGx6lT/YX6wSPL5tWLRbnmg3psLSjASh1IiFWiAai5DFy5qWZSKQbTnGWPb2eqpBtKWz15CY8kc1gfbRYvXcbqAxWQJhTAxWhYO+Aewmu/+vnXkWiaIXCY1s8ltAHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jwh/NWSx; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709735903; c=relaxed/simple;
+	bh=NoMdI+P3ezDczKim8qhxeNDYdobYgb/tcnA+4xYseTE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LVOykd21p6atW6/MpR443sMIu+uIcCHHtZhUT5HpxjUlqpUroQ1iKtmq55YKsJQdlGb1NPFGNXhJmmobvDzDTg0XG8/HNP3k4xQEcZFQLSMbN1EgGiWQvZ+EGRwcTXxpoRPL22GKQR3tmjbwQ4GSqfTVkuNhEwFXgROWsvhWddk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oC+eSq2f; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jwh/NWSx"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 426EWmQD015711;
-	Wed, 6 Mar 2024 14:38:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=MPbTgE3wEX5Gq5cxMoyeMt07mKpUEazcQ9bpo7e/Bgw=;
- b=jwh/NWSxdrS4gxykgRpV6I97opFm119RI/1HqeRzqlUREY/HXbqkf1dz155EfEiSBr0j
- /aFtn8836RqlQKQ5SOiIIcFI5lTrqaGZDBt/cZqNizxlJJgSBz44+aYb1g7nHuFgBF4n
- hkjpEIKG6P9zR0Pnnd4L/eooxVa7ENrDKg29grjviDWMr/MVoL9H7j8jVNk5K4spEC2t
- ja8QGC60aF9z4CCx3k3clhu3j2QFIvLLkbzwLhLCClIcWuOkZKBSz5EXeribufD3NTMr
- WhaOOETzJ3VMWnwRolfsDEnp5yi4v+xaYhr0baXUDZfU9Cu53iL/KTf2fKm+7BeeFPzf Uw== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wptba85xb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 14:38:18 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 426BlJ3Q010907;
-	Wed, 6 Mar 2024 14:38:17 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmh52esjy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 14:38:17 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 426EcEJY34996606
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Mar 2024 14:38:16 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A636658062;
-	Wed,  6 Mar 2024 14:38:14 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1274F58058;
-	Wed,  6 Mar 2024 14:38:14 +0000 (GMT)
-Received: from [9.61.98.245] (unknown [9.61.98.245])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  6 Mar 2024 14:38:13 +0000 (GMT)
-Message-ID: <af844258-135c-45a4-a796-766c496c4018@linux.ibm.com>
-Date: Wed, 6 Mar 2024 09:38:13 -0500
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oC+eSq2f"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dba177c596so6515795ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 06:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709735901; x=1710340701; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pLyuD/CIq7Kcq2J+mXAcpPtUiY8V5eDIIqZPqq8Wh04=;
+        b=oC+eSq2f52991kigKwibLRWjJMsDjuGw/CFx+zyUoyC0Wx9rIoHukwC3Xocz9zirqU
+         qznOIvOucFVVm+1dw2E/6KyTcxsoOSQx39BkPc+r7deQVSNrLao6SO8t+xnukfPw1pdi
+         7YRFOBTtWCPw/aUog6e48z/nWOE6p66js6IJ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709735901; x=1710340701;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pLyuD/CIq7Kcq2J+mXAcpPtUiY8V5eDIIqZPqq8Wh04=;
+        b=n/g5XlKN5HBBoUN4JR7PVxB3HbDxKKqA1VitRpSNgz8pC2eaADA06mFcxbOcuMwsUj
+         fb/CtTlyQzISaQvVZDryl/0lBLNqWJs8IX4/QmEeNovDrhEmTpZBr5K5I2hNkW46LDxx
+         oDm61UVA/0lCciNv+rRzwa7eIF3EiK1Eh/+n/5PmZ6ATCKXJudHPK+s1miUz7cFRp4R6
+         HyOKuGD/gSmloGJzu2StyyZ0ccyMKIo4E6oEYNRg033JsIeSTYIlf5DC0fEOlwP5W/6i
+         UQFOZf0EqgHzM900WSazEJuU6WpEBJWtOV8u843jInwcKdOO3BONJ95BANqZYe1GJUxa
+         43hg==
+X-Forwarded-Encrypted: i=1; AJvYcCWX0xXzzdpqMHE8bfL0xJuyABJDZP/IsPrWjNXWCPnfykuZHcwQZRgglhCH9co6e4//DhvmXpY1VyQu6uOG/EC9VmoqL3aHqzKXZ967
+X-Gm-Message-State: AOJu0YwO0t45BDMj9GwizOaVCNX9bZRYx/NolRek5wk7xtwEcMRK3GrB
+	Ml/vWBM59vqCBJiTDkWksWKzzPJEyUXOJl4Nc3hzdsMlywh90mECZPWcV1bLjA==
+X-Google-Smtp-Source: AGHT+IHZhsekI2nK6sFkLJTOQ3qMI60iZPbvn0ydMSpr9wbA4qAouFyjXAj8VD/Xwrbaf9QKuboxEQ==
+X-Received: by 2002:a17:902:f7cc:b0:1dc:a605:53fd with SMTP id h12-20020a170902f7cc00b001dca60553fdmr252901plw.10.1709735901343;
+        Wed, 06 Mar 2024 06:38:21 -0800 (PST)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:bc24:1849:151f:5509])
+        by smtp.gmail.com with ESMTPSA id e7-20020a17090301c700b001db9e12cd62sm12667178plh.10.2024.03.06.06.38.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 06:38:20 -0800 (PST)
+From: Douglas Anderson <dianders@chromium.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Douglas Anderson <dianders@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Dave Airlie <airlied@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Sean Paul <sean@poorly.run>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "drm/udl: Add ARGB8888 as a format"
+Date: Wed,  6 Mar 2024 06:37:22 -0800
+Message-ID: <20240306063721.1.I4a32475190334e1fa4eef4700ecd2787a43c94b5@changeid>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] s390/vfio-ap: Add sysfs attr, queue_configuration,
- to export mdev state
-Content-Language: en-US
-To: "Jason J. Herne" <jjherne@linux.ibm.com>, linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, pasic@linux.ibm.com, akrowiak@linux.ibm.com,
-        borntraeger@de.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com
-References: <20240306140843.10782-1-jjherne@linux.ibm.com>
- <20240306140843.10782-3-jjherne@linux.ibm.com>
-From: Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <20240306140843.10782-3-jjherne@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Y47MD88-TAPze6iVO1nLMIkwLLKfMLXb
-X-Proofpoint-ORIG-GUID: Y47MD88-TAPze6iVO1nLMIkwLLKfMLXb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_09,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=958 lowpriorityscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 clxscore=1011 bulkscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403060117
+Content-Transfer-Encoding: 8bit
 
-On 3/6/24 9:08 AM, Jason J. Herne wrote:
-> Add ap_config sysfs attribute. This will provide the means for
+This reverts commit 95bf25bb9ed5dedb7fb39f76489f7d6843ab0475.
 
-Title of patch is wrong due to attribute being renamed.
+Apparently there was a previous discussion about emulation of formats
+and it was decided XRGB8888 was the only format to support for legacy
+userspace [1]. Remove ARGB8888. Userspace needs to be fixed to accept
+XRGB8888.
 
-s/queue_configuration/ap_config/
+[1] https://lore.kernel.org/r/60dc7697-d7a0-4bf4-a22e-32f1bbb792c2@suse.de
 
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/gpu/drm/udl/udl_modeset.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/udl/udl_modeset.c b/drivers/gpu/drm/udl/udl_modeset.c
+index 0f8d3678770e..7702359c90c2 100644
+--- a/drivers/gpu/drm/udl/udl_modeset.c
++++ b/drivers/gpu/drm/udl/udl_modeset.c
+@@ -253,7 +253,6 @@ static int udl_handle_damage(struct drm_framebuffer *fb,
+ static const uint32_t udl_primary_plane_formats[] = {
+ 	DRM_FORMAT_RGB565,
+ 	DRM_FORMAT_XRGB8888,
+-	DRM_FORMAT_ARGB8888,
+ };
+ 
+ static const uint64_t udl_primary_plane_fmtmods[] = {
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
