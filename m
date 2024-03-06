@@ -1,539 +1,166 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA435D8EA;
-	Wed,  6 Mar 2024 08:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0AB14F7F
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709715182; cv=none; b=Ut7s9Eei0MS3jnEyZOgE5pAGYln3/5SlOS7ti3segBT1Av1OX5CrxMbHejVP+KMsmCQiX5HIH2OSCSrYFblWFT/KVHl4ugbbwF9wMeerj6iD2h/KFOS0oERDs4gnY6Qfsa9FibdV+Qh20QrCRqo842myvLcpu1RcpXwGysEjwDg=
+	t=1709715292; cv=none; b=bN529MBDGAMiOQtEKN8Zq2bYxIjg9mqYG/aN3LtqVj0KAFqPjg1LE+VO5l8m8vpgqNOwu5zmCqlgvtvHRdJrdnVKt39v/uyo9ILbzRPCV8vEwUgoiNJmSu83nmjU9dp3+0c8snjfshNjQ0jBP+dZE6P/XBOlodWz+RuMeNWOSfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709715182; c=relaxed/simple;
-	bh=0V+FdkudyMrb9hsJWXPvgznXHBT+oKQDh+0RKZgsok4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VXE7EFTJzaOsdBCeY1aiRxRBi1UXAzvkJrI92OEIUMgYHm3YdTdNDtN/d3kj21gd4pFcUu7XTfzWFkfpCIU/SOukKPBzINZNm3TRFHbYR0xaeYs6pzC5naaTvtQm0lbqqsBiRtoVQKDIJ+IvcwGjXiQiNuCgQKdqA9UpkIXHhVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=vuL/ruha; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1709715292; c=relaxed/simple;
+	bh=AHnfFU/ciQmYhYMIVQzkLCBGqeFnJdD975lYVra0ZhE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=q0AsjvxEX8Iomgb8Twpsun8w0dE7cOYGQpmlut4nmZTdq/6coNi1+g8sPv2SB7C54j4+Ef6RhF7idcP3Rqywz9aTKJOviRLQlZIdyJ3Qgn26PRI5P+NeYoON/9O39CQHFA5/uJ7q/bWhOFJP27/ZX+Q7M3guAKIvRjFIAqH5a6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xOoma8gc; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vuL/ruha"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709715180; x=1741251180;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0V+FdkudyMrb9hsJWXPvgznXHBT+oKQDh+0RKZgsok4=;
-  b=vuL/ruhaUEk4A72Cm9PBAhaYYKdOMnSHvIHDNq3HG46NEk79mKCTqalk
-   5VlXt5zn30Hxq1HSAxoZc57ayRBuDtTpUsiXlfrDSye7PpLKg8L6DHsMa
-   1LgMTGNBRS0fyFtbAC5RRpmIglWSLKZHJC3hb9bInIlNTadPyh46sjH8R
-   PQmS2ckV24CAIFWvhOEEnH62gmyDog+/9QGjgM5XP6G51h8Cwh/gZWmv4
-   pN5IYlRXo8ix3mWmn3oN5pTYIaaCXirImLbidoShiUdHe5PoFRRtoQxXE
-   WClyvCl1UxwxcnqqFZqnjgp+iCzxWODG9R3bxIeZVwwVhSdsQ4YgHMnwl
-   Q==;
-X-CSE-ConnectionGUID: cO76qCGVTh6esswCB3LBdA==
-X-CSE-MsgGUID: 2VoiqRHsRl+BHBBtBnF3TQ==
-X-IronPort-AV: E=Sophos;i="6.06,207,1705388400"; 
-   d="scan'208";a="18916180"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Mar 2024 01:52:59 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Mar 2024 01:52:19 -0700
-Received: from CHE-LT-I17164LX.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 6 Mar 2024 01:52:10 -0700
-From: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <saeedm@nvidia.com>,
-	<anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <andrew@lunn.ch>, <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>, <horatiu.vultur@microchip.com>,
-	<ruanjinjie@huawei.com>, <steen.hegelund@microchip.com>,
-	<vladimir.oltean@nxp.com>
-CC: <UNGLinuxDriver@microchip.com>, <Thorsten.Kummermehr@microchip.com>,
-	<Pier.Beruto@onsemi.com>, <Selvamani.Rajagopal@onsemi.com>,
-	<Nicolas.Ferre@microchip.com>, <benjamin.bigler@bernformulastudent.ch>,
-	Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-Subject: [PATCH net-next v3 11/12] microchip: lan865x: add driver support for Microchip's LAN865X MAC-PHY
-Date: Wed, 6 Mar 2024 14:20:16 +0530
-Message-ID: <20240306085017.21731-12-Parthiban.Veerasooran@microchip.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xOoma8gc"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-412f988b601so679915e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 00:54:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709715289; x=1710320089; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m47Yif6fknoeZ44AEL0U4rZRKtyEZdovAlUMxK0WbaE=;
+        b=xOoma8gcOoi0dHNRPZFa2qJySP0WJCFST15DbYYCqboR65dCMZZPvPH7UNHYIfBZz1
+         C8u2bcWxAuMcOiQzW27boP4wghXscUS1SpCNe1bpFTrcVTUZ/wc3hFKQGj1Es3aFuwqA
+         is1SfmNh5kIsTa/3pXwri4Lwcg5TT1GLkT2GuNHNdTJfffDY5/j7+IHUxckRGuwyRKRo
+         C97y8xpYQBCkWCGahAn5CdgC5QW0cpPxeNruYRAFLEZbKqTRMBGC0u8p+VmjAeNedNHl
+         OmGmkFHJ6iPxG+HLDHPrGs8qiyRxaHF3c6GBlGFuC5o6528mozlHpN1WHyaEhqRH/Jnw
+         C/NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709715289; x=1710320089;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m47Yif6fknoeZ44AEL0U4rZRKtyEZdovAlUMxK0WbaE=;
+        b=DehH/zuzPVHScQUZlW49Z+MwtHhEof6WTGA38l1g7YFT8cHh50UTmqC84ECsiV2gge
+         JVIwHgkmNQP/sX6V4HoID4coMnefeRxPCr3h7W0svZXDImYG/dKkiUovLEid/uyzyNkO
+         S99bP74LG/8E/2epgvQ+D0TRr3s3uZXTphext6M1cRycjDrNyMavd44ERDl4MB6F/atl
+         JhDJLowQo8QDij7Xrv9x5i6I6Ue1RYvlMiwgD1P7I13suylST/YXRTNp9C8BqmZ1EkfK
+         sLapToTQNfxRC69e5EgdzAKdpWQt6wT10IVFV7umzssVtomBiDy9pxr0o0N2p9QDEAQO
+         2Zxw==
+X-Gm-Message-State: AOJu0YzzcsXs5yCMhigDa6LAn/woYTqtBpgmirTD4VxWseSnGmRBuITN
+	vpEEmmT5/G2Nh6dFgZKNgTr7YjTZOpaOAN+TN/BfIcL9GIKxi/J6/zrvIeW+jZA=
+X-Google-Smtp-Source: AGHT+IHpRaA9YTSfOpHeWoIzyjTYnpf7UkUY+q20MAdg98y2Wh9yU7XAywmu45vKlP3/corXblLfrw==
+X-Received: by 2002:a05:600c:3146:b0:412:f1cb:b5be with SMTP id h6-20020a05600c314600b00412f1cbb5bemr1394547wmo.3.1709715288811;
+        Wed, 06 Mar 2024 00:54:48 -0800 (PST)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id s14-20020a05600c45ce00b00412f855bc7asm647219wmo.1.2024.03.06.00.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 00:54:48 -0800 (PST)
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: rjw@rjwysocki.net
+Cc: linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org (open list:THERMAL)
+Subject: [RFC PATCH] thermal/core: Fix trip point crossing events ordering
+Date: Wed,  6 Mar 2024 09:54:28 +0100
+Message-Id: <20240306085428.88011-1-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
-References: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-The LAN8650/1 is designed to conform to the OPEN Alliance 10BASE-T1x
-MAC-PHY Serial Interface specification, Version 1.1. The IEEE Clause 4
-MAC integration provides the low pin count standard SPI interface to any
-microcontroller therefore providing Ethernet functionality without
-requiring MAC integration within the microcontroller. The LAN8650/1
-operates as an SPI client supporting SCLK clock rates up to a maximum of
-25 MHz. This SPI interface supports the transfer of both data (Ethernet
-frames) and control (register access).
+Let's assume the following setup:
 
-By default, the chunk data payload is 64 bytes in size. The Ethernet
-Media Access Controller (MAC) module implements a 10 Mbps half duplex
-Ethernet MAC, compatible with the IEEE 802.3 standard. 10BASE-T1S
-physical layer transceiver integrated is into the LAN8650/1. The PHY and
-MAC are connected via an internal Media Independent Interface (MII).
+ - trip 0 = 65°C
+ - trip 1 = 70°C
+ - trip 2 = 75°C
 
-Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+The current temperature is 35°C.
+
+The interrupt is setup to fire at 65°C. If the thermal capacity is
+saturated it is possible the temperature jumps to 72°c when reading
+the temperature after the interrupt fired when 65°C was crossed. That
+means we should have two events notified to userspace. The first one
+for trip 0 and the second one for trip 1.
+
+When the function thermal_zone_update() is called from the threaded
+interrupt, it will read the temperature and then call for_each_trip()
+which in turns call handle_trip_point().
+
+This function will check:
+
+     if (tz->last_temperature < trip->temperature &&
+     	tz->temperature >= trip->temperature)
+			thermal_notify_tz_trip_up()
+
+So here, we will call this function with trip0 followed by trip1. That
+will result in an event for each trip point, reflecting the trip point
+being crossed the way up with a temperature raising. So far, so good.
+
+Usually the sensors have an interrupt when the temperature is crossed
+the way up but not the way down, so there an extra delay corresponding
+to the passive polling where the temperature could have dropped and
+crossed more than one trip point. This scenario is likely to happen
+more often when multiple trip points are specified. So considering the
+same setup after crossing the trip 2, we stop the workload responsible
+of the heat and the temperature drops suddenly to 62°C. In this case,
+the next polling will call thermal_zone_device_update(), then
+for_each_trip() and handle_trip_point().
+
+This function will check:
+
+     if (tz->last_temperature >= trip->temperature &&
+     	tz->temperature < trip->temperature - trip->hysteresis)
+			thermal_notify_tz_trip_down()
+
+The loop for_each_trip() will call trip0, 1 and 2. That will result in
+generating the events for trip0, 1 and 2, in the wrong order. That is
+not reflecting the thermal dynamic and puzzles the userspace
+monitoring the temperature.
+
+Fix this by inspecting the trend of the temperature. If it is raising,
+then we browse the trip point in the ascending order, if it is falling
+then we browse in the descending order.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- MAINTAINERS                                   |   6 +
- drivers/net/ethernet/microchip/Kconfig        |   1 +
- drivers/net/ethernet/microchip/Makefile       |   1 +
- .../net/ethernet/microchip/lan865x/Kconfig    |  19 +
- .../net/ethernet/microchip/lan865x/Makefile   |   6 +
- .../net/ethernet/microchip/lan865x/lan865x.c  | 350 ++++++++++++++++++
- 6 files changed, 383 insertions(+)
- create mode 100644 drivers/net/ethernet/microchip/lan865x/Kconfig
- create mode 100644 drivers/net/ethernet/microchip/lan865x/Makefile
- create mode 100644 drivers/net/ethernet/microchip/lan865x/lan865x.c
+ drivers/thermal/thermal_core.c | 8 ++++++--
+ drivers/thermal/thermal_core.h | 3 +++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 603528948f61..f41b7f2257d2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14374,6 +14374,12 @@ L:	netdev@vger.kernel.org
- S:	Maintained
- F:	drivers/net/ethernet/microchip/lan743x_*
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index dfaa6341694a..abb8ee5c9afe 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -473,8 +473,12 @@ void __thermal_zone_device_update(struct thermal_zone_device *tz,
  
-+MICROCHIP LAN8650/1 10BASE-T1S MACPHY ETHERNET DRIVER
-+M:	Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+F:	drivers/net/ethernet/microchip/lan865x/lan865x.c
-+
- MICROCHIP LAN87xx/LAN937x T1 PHY DRIVER
- M:	Arun Ramadoss <arun.ramadoss@microchip.com>
- R:	UNGLinuxDriver@microchip.com
-diff --git a/drivers/net/ethernet/microchip/Kconfig b/drivers/net/ethernet/microchip/Kconfig
-index 43ba71e82260..06ca79669053 100644
---- a/drivers/net/ethernet/microchip/Kconfig
-+++ b/drivers/net/ethernet/microchip/Kconfig
-@@ -56,6 +56,7 @@ config LAN743X
- 	  To compile this driver as a module, choose M here. The module will be
- 	  called lan743x.
+ 	tz->notify_event = event;
  
-+source "drivers/net/ethernet/microchip/lan865x/Kconfig"
- source "drivers/net/ethernet/microchip/lan966x/Kconfig"
- source "drivers/net/ethernet/microchip/sparx5/Kconfig"
- source "drivers/net/ethernet/microchip/vcap/Kconfig"
-diff --git a/drivers/net/ethernet/microchip/Makefile b/drivers/net/ethernet/microchip/Makefile
-index bbd349264e6f..15dfbb321057 100644
---- a/drivers/net/ethernet/microchip/Makefile
-+++ b/drivers/net/ethernet/microchip/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_LAN743X) += lan743x.o
+-	for_each_trip(tz, trip)
+-		handle_thermal_trip(tz, trip);
++	if (tz->last_temperature < tz->temperature)
++		for_each_trip(tz, trip)
++			handle_thermal_trip(tz, trip);
++	else
++		for_each_trip_reverse(tz, trip)
++			handle_thermal_trip(tz, trip);
  
- lan743x-objs := lan743x_main.o lan743x_ethtool.o lan743x_ptp.o
+ 	monitor_thermal_zone(tz);
+ }
+diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+index e9c099ecdd0f..0072b3d4039e 100644
+--- a/drivers/thermal/thermal_core.h
++++ b/drivers/thermal/thermal_core.h
+@@ -123,6 +123,9 @@ void thermal_governor_update_tz(struct thermal_zone_device *tz,
+ #define for_each_trip(__tz, __trip)	\
+ 	for (__trip = __tz->trips; __trip - __tz->trips < __tz->num_trips; __trip++)
  
-+obj-$(CONFIG_LAN865X) += lan865x/
- obj-$(CONFIG_LAN966X_SWITCH) += lan966x/
- obj-$(CONFIG_SPARX5_SWITCH) += sparx5/
- obj-$(CONFIG_VCAP) += vcap/
-diff --git a/drivers/net/ethernet/microchip/lan865x/Kconfig b/drivers/net/ethernet/microchip/lan865x/Kconfig
-new file mode 100644
-index 000000000000..f3d60d14e202
---- /dev/null
-+++ b/drivers/net/ethernet/microchip/lan865x/Kconfig
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Microchip LAN865x Driver Support
-+#
-+
-+if NET_VENDOR_MICROCHIP
-+
-+config LAN865X
-+	tristate "LAN865x support"
-+	depends on SPI
-+	depends on OA_TC6
-+	help
-+	  Support for the Microchip LAN8650/1 Rev.B1 MACPHY Ethernet chip. It
-+	  uses OPEN Alliance 10BASE-T1x Serial Interface specification.
-+
-+	  To compile this driver as a module, choose M here. The module will be
-+	  called lan865x.
-+
-+endif # NET_VENDOR_MICROCHIP
-diff --git a/drivers/net/ethernet/microchip/lan865x/Makefile b/drivers/net/ethernet/microchip/lan865x/Makefile
-new file mode 100644
-index 000000000000..9f5dd89c1eb8
---- /dev/null
-+++ b/drivers/net/ethernet/microchip/lan865x/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Makefile for the Microchip LAN865x Driver
-+#
-+
-+obj-$(CONFIG_LAN865X) += lan865x.o
-diff --git a/drivers/net/ethernet/microchip/lan865x/lan865x.c b/drivers/net/ethernet/microchip/lan865x/lan865x.c
-new file mode 100644
-index 000000000000..8f265227f75a
---- /dev/null
-+++ b/drivers/net/ethernet/microchip/lan865x/lan865x.c
-@@ -0,0 +1,350 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Microchip's LAN865x 10BASE-T1S MAC-PHY driver
-+ *
-+ * Author: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/phy.h>
-+#include <linux/oa_tc6.h>
-+
-+#define DRV_NAME			"lan865x"
-+
-+/* MAC Network Control Register */
-+#define LAN865X_REG_MAC_NET_CTL		0x00010000
-+#define MAC_NET_CTL_TXEN		BIT(3) /* Transmit Enable */
-+#define MAC_NET_CTL_RXEN		BIT(2) /* Receive Enable */
-+
-+#define LAN865X_REG_MAC_NET_CFG		0x00010001 /* MAC Network Configuration Reg */
-+#define MAC_NET_CFG_PROMISCUOUS_MODE	BIT(4)
-+#define MAC_NET_CFG_MULTICAST_MODE	BIT(6)
-+#define MAC_NET_CFG_UNICAST_MODE	BIT(7)
-+
-+#define LAN865X_REG_MAC_L_HASH		0x00010020 /* MAC Hash Register Bottom */
-+#define LAN865X_REG_MAC_H_HASH		0x00010021 /* MAC Hash Register Top */
-+#define LAN865X_REG_MAC_L_SADDR1	0x00010022 /* MAC Specific Addr 1 Bottom Reg */
-+#define LAN865X_REG_MAC_H_SADDR1	0x00010023 /* MAC Specific Addr 1 Top Reg */
-+
-+struct lan865x_priv {
-+	struct work_struct multicast_work;
-+	struct net_device *netdev;
-+	struct spi_device *spi;
-+	struct oa_tc6 *tc6;
-+};
-+
-+static int lan865x_set_hw_macaddr_low_bytes(struct oa_tc6 *tc6, const u8 *mac)
-+{
-+	u32 regval;
-+
-+	regval = (mac[3] << 24) | (mac[2] << 16) | (mac[1] << 8) | mac[0];
-+
-+	return oa_tc6_write_register(tc6, LAN865X_REG_MAC_L_SADDR1, regval);
-+}
-+
-+static int lan865x_set_hw_macaddr(struct lan865x_priv *priv, const u8 *mac)
-+{
-+	int restore_ret;
-+	u32 regval;
-+	int ret;
-+
-+	/* Configure MAC address low bytes */
-+	ret = lan865x_set_hw_macaddr_low_bytes(priv->tc6, mac);
-+	if (ret)
-+		return ret;
-+
-+	/* Prepare and configure MAC address high bytes */
-+	regval = (mac[5] << 8) | mac[4];
-+	ret = oa_tc6_write_register(priv->tc6, LAN865X_REG_MAC_H_SADDR1, regval);
-+	if (!ret)
-+		return 0;
-+
-+	/* Restore the old MAC address low bytes from netdev if the new MAC
-+	 * address high bytes setting failed.
-+	 */
-+	restore_ret = lan865x_set_hw_macaddr_low_bytes(priv->tc6,
-+						       priv->netdev->dev_addr);
-+	if (restore_ret)
-+		return restore_ret;
-+
-+	return ret;
-+}
-+
-+static void
-+lan865x_get_drvinfo(struct net_device *netdev, struct ethtool_drvinfo *info)
-+{
-+	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
-+	strscpy(info->bus_info, dev_name(netdev->dev.parent),
-+		sizeof(info->bus_info));
-+}
-+
-+static const struct ethtool_ops lan865x_ethtool_ops = {
-+	.get_drvinfo        = lan865x_get_drvinfo,
-+	.get_link_ksettings = phy_ethtool_get_link_ksettings,
-+	.set_link_ksettings = phy_ethtool_set_link_ksettings,
-+};
-+
-+static int lan865x_set_mac_address(struct net_device *netdev, void *addr)
-+{
-+	struct lan865x_priv *priv = netdev_priv(netdev);
-+	struct sockaddr *address = addr;
-+	int ret;
-+
-+	ret = eth_prepare_mac_addr_change(netdev, addr);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ether_addr_equal(address->sa_data, netdev->dev_addr))
-+		return 0;
-+
-+	ret = lan865x_set_hw_macaddr(priv, address->sa_data);
-+	if (ret)
-+		return ret;
-+
-+	eth_hw_addr_set(netdev, address->sa_data);
-+
-+	return 0;
-+}
-+
-+static u32 lan865x_hash(u8 addr[ETH_ALEN])
-+{
-+	return (ether_crc(ETH_ALEN, addr) >> 26) & GENMASK(5, 0);
-+}
-+
-+static void lan865x_set_specific_multicast_addr(struct net_device *netdev)
-+{
-+	struct lan865x_priv *priv = netdev_priv(netdev);
-+	struct netdev_hw_addr *ha;
-+	u32 hash_lo = 0;
-+	u32 hash_hi = 0;
-+
-+	netdev_for_each_mc_addr(ha, netdev) {
-+		u32 bit_num = lan865x_hash(ha->addr);
-+		u32 mask = BIT(bit_num);
-+
-+		/* 5th bit of the 6 bits hash value is used to determine which
-+		 * bit to set in either a high or low hash register.
-+		 */
-+		if (bit_num & BIT(5))
-+			hash_hi |= mask;
-+		else
-+			hash_lo |= mask;
-+	}
-+
-+	/* Enabling specific multicast addresses */
-+	if (oa_tc6_write_register(priv->tc6, LAN865X_REG_MAC_H_HASH, hash_hi)) {
-+		netdev_err(netdev, "Failed to write reg_hashh");
-+		return;
-+	}
-+
-+	if (oa_tc6_write_register(priv->tc6, LAN865X_REG_MAC_L_HASH, hash_lo))
-+		netdev_err(netdev, "Failed to write reg_hashl");
-+}
-+
-+static void lan865x_multicast_work_handler(struct work_struct *work)
-+{
-+	struct lan865x_priv *priv = container_of(work, struct lan865x_priv,
-+						 multicast_work);
-+	u32 regval = 0;
-+
-+	if (priv->netdev->flags & IFF_PROMISC) {
-+		/* Enabling promiscuous mode */
-+		regval |= MAC_NET_CFG_PROMISCUOUS_MODE;
-+		regval &= (~MAC_NET_CFG_MULTICAST_MODE);
-+		regval &= (~MAC_NET_CFG_UNICAST_MODE);
-+	} else if (priv->netdev->flags & IFF_ALLMULTI) {
-+		/* Enabling all multicast mode */
-+		regval &= (~MAC_NET_CFG_PROMISCUOUS_MODE);
-+		regval |= MAC_NET_CFG_MULTICAST_MODE;
-+		regval &= (~MAC_NET_CFG_UNICAST_MODE);
-+	} else if (!netdev_mc_empty(priv->netdev)) {
-+		lan865x_set_specific_multicast_addr(priv->netdev);
-+		regval &= (~MAC_NET_CFG_PROMISCUOUS_MODE);
-+		regval &= (~MAC_NET_CFG_MULTICAST_MODE);
-+		regval |= MAC_NET_CFG_UNICAST_MODE;
-+	} else {
-+		/* enabling local mac address only */
-+		if (oa_tc6_write_register(priv->tc6, LAN865X_REG_MAC_H_HASH,
-+					  regval)) {
-+			netdev_err(priv->netdev, "Failed to write reg_hashh");
-+			return;
-+		}
-+		if (oa_tc6_write_register(priv->tc6, LAN865X_REG_MAC_L_HASH,
-+					  regval)) {
-+			netdev_err(priv->netdev, "Failed to write reg_hashl");
-+			return;
-+		}
-+	}
-+	if (oa_tc6_write_register(priv->tc6, LAN865X_REG_MAC_NET_CFG, regval))
-+		netdev_err(priv->netdev,
-+			   "Failed to enable promiscuous/multicast/normal mode");
-+}
-+
-+static void lan865x_set_multicast_list(struct net_device *netdev)
-+{
-+	struct lan865x_priv *priv = netdev_priv(netdev);
-+
-+	schedule_work(&priv->multicast_work);
-+}
-+
-+static netdev_tx_t lan865x_send_packet(struct sk_buff *skb,
-+				       struct net_device *netdev)
-+{
-+	struct lan865x_priv *priv = netdev_priv(netdev);
-+
-+	return oa_tc6_start_xmit(priv->tc6, skb);
-+}
-+
-+static int lan865x_hw_disable(struct lan865x_priv *priv)
-+{
-+	u32 regval;
-+
-+	if (oa_tc6_read_register(priv->tc6, LAN865X_REG_MAC_NET_CTL, &regval))
-+		return -ENODEV;
-+
-+	regval &= ~(MAC_NET_CTL_TXEN | MAC_NET_CTL_RXEN);
-+
-+	if (oa_tc6_write_register(priv->tc6, LAN865X_REG_MAC_NET_CTL, regval))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static int lan865x_net_close(struct net_device *netdev)
-+{
-+	struct lan865x_priv *priv = netdev_priv(netdev);
-+	int ret;
-+
-+	netif_stop_queue(netdev);
-+	phy_stop(netdev->phydev);
-+	ret = lan865x_hw_disable(priv);
-+	if (ret) {
-+		netdev_err(netdev, "Failed to disable the hardware: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int lan865x_hw_enable(struct lan865x_priv *priv)
-+{
-+	u32 regval;
-+
-+	if (oa_tc6_read_register(priv->tc6, LAN865X_REG_MAC_NET_CTL, &regval))
-+		return -ENODEV;
-+
-+	regval |= MAC_NET_CTL_TXEN | MAC_NET_CTL_RXEN;
-+
-+	if (oa_tc6_write_register(priv->tc6, LAN865X_REG_MAC_NET_CTL, regval))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static int lan865x_net_open(struct net_device *netdev)
-+{
-+	struct lan865x_priv *priv = netdev_priv(netdev);
-+	int ret;
-+
-+	ret = lan865x_hw_enable(priv);
-+	if (ret) {
-+		netdev_err(netdev, "Failed to enable hardware: %d\n", ret);
-+		return ret;
-+	}
-+
-+	phy_start(netdev->phydev);
-+
-+	return 0;
-+}
-+
-+static const struct net_device_ops lan865x_netdev_ops = {
-+	.ndo_open		= lan865x_net_open,
-+	.ndo_stop		= lan865x_net_close,
-+	.ndo_start_xmit		= lan865x_send_packet,
-+	.ndo_set_rx_mode	= lan865x_set_multicast_list,
-+	.ndo_set_mac_address	= lan865x_set_mac_address,
-+};
-+
-+static int lan865x_probe(struct spi_device *spi)
-+{
-+	struct net_device *netdev;
-+	struct lan865x_priv *priv;
-+	int ret;
-+
-+	netdev = alloc_etherdev(sizeof(struct lan865x_priv));
-+	if (!netdev)
-+		return -ENOMEM;
-+
-+	priv = netdev_priv(netdev);
-+	priv->netdev = netdev;
-+	priv->spi = spi;
-+	spi_set_drvdata(spi, priv);
-+	INIT_WORK(&priv->multicast_work, lan865x_multicast_work_handler);
-+
-+	priv->tc6 = oa_tc6_init(spi, netdev);
-+	if (!priv->tc6) {
-+		ret = -ENODEV;
-+		goto free_netdev;
-+	}
-+
-+	/* Get the MAC address from the SPI device tree node */
-+	if (device_get_ethdev_address(&spi->dev, netdev))
-+		eth_hw_addr_random(netdev);
-+
-+	ret = lan865x_set_hw_macaddr(priv, netdev->dev_addr);
-+	if (ret) {
-+		dev_err(&spi->dev, "Failed to configure MAC");
-+		goto oa_tc6_exit;
-+	}
-+
-+	netdev->if_port = IF_PORT_10BASET;
-+	netdev->irq = spi->irq;
-+	netdev->netdev_ops = &lan865x_netdev_ops;
-+	netdev->ethtool_ops = &lan865x_ethtool_ops;
-+
-+	ret = register_netdev(netdev);
-+	if (ret) {
-+		dev_err(&spi->dev, "Register netdev failed (ret = %d)", ret);
-+		goto oa_tc6_exit;
-+	}
-+
-+	return 0;
-+
-+oa_tc6_exit:
-+	oa_tc6_exit(priv->tc6);
-+free_netdev:
-+	free_netdev(priv->netdev);
-+	return ret;
-+}
-+
-+static void lan865x_remove(struct spi_device *spi)
-+{
-+	struct lan865x_priv *priv = spi_get_drvdata(spi);
-+
-+	cancel_work_sync(&priv->multicast_work);
-+	unregister_netdev(priv->netdev);
-+	oa_tc6_exit(priv->tc6);
-+	free_netdev(priv->netdev);
-+}
-+
-+static const struct of_device_id lan865x_dt_ids[] = {
-+	{ .compatible = "microchip,lan8650" },
-+	{ .compatible = "microchip,lan8651" },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, lan865x_dt_ids);
-+
-+static struct spi_driver lan865x_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = lan865x_dt_ids,
-+	 },
-+	.probe = lan865x_probe,
-+	.remove = lan865x_remove,
-+};
-+module_spi_driver(lan865x_driver);
-+
-+MODULE_DESCRIPTION(DRV_NAME " 10Base-T1S MACPHY Ethernet Driver");
-+MODULE_AUTHOR("Parthiban Veerasooran <parthiban.veerasooran@microchip.com>");
-+MODULE_LICENSE("GPL");
++#define for_each_trip_reverse(__tz, __trip)	\
++	for (__trip = &__tz->trips[__tz->num_trips - 1]; __trip >= __tz->trips ; __trip--)
++
+ void __thermal_zone_set_trips(struct thermal_zone_device *tz);
+ int thermal_zone_trip_id(const struct thermal_zone_device *tz,
+ 			 const struct thermal_trip *trip);
 -- 
 2.34.1
 
