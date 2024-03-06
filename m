@@ -1,74 +1,88 @@
 Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A31F1B946
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 22:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745911B952
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 22:08:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709762911; cv=none; b=KNBXQweXLwIuWLurXC+A9pA6Fk7IdUsKTF7/MkTAmXYLDoA9AJpEDs9fCcTOxXhCpT33HZEP4Mt3x3kfo41oH6RN6gF9w9yZHeuIwSK2feAOBINhfTcLLRczOIs7W7Iz0FGf8pX6k1eu5bu5oBa7qolsPUPUOHRp4r3tf/2/8jY=
+	t=1709762912; cv=none; b=K4r89xoS6YGox0StvSZtTZAVtXZszX7BUdFkli9DtzWUc3tcLVZG5x3aHhQ94/aD2amBeVY801sOhKZSCXdtYAD0v52Hud+disy26Ub5nmaSrji2JL0j+lFnc31poJ1druc0xcCPPhaZ5Yz0vNamm2qGI5zxSGzUL6Dh5kOk+k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709762911; c=relaxed/simple;
-	bh=aLqD1qqrg4H5cW6Sta4E4emtGDDwylkjtBqP6jN8U8A=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cTU48EK7VZuwIrS8fDQROp3utCLZAv8pf6nlDBMzV2oeIotkDJZvo+Cw7AvKN/8nN0/8vFLX+7TJ6b9N3kcyi8QtTNmPPR+nkfcAR1Ip4xiToXsy4vl5N63X59SMYr7B2K97HIUxC63bfxlHoPNnLvNYRpOz2c9XAYlL6vWBjw0=
+	s=arc-20240116; t=1709762912; c=relaxed/simple;
+	bh=jObsL/UNTrrOralMnNtL9QtuAbpVCZJ1k/FmyyBW5V8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Fvj2nHKIjKts9RhhPsP7yhHdO2wvGYt2Xd0AZoowUpByquZC41ysxyV/EMlb+mXF6wuAnNQx32pheAZ2ioF8eVk8WCBvTysoO6cspIHBZgySGn1vsznTzfaAcpajx+/Ykhia0KSdFhvV+ZUb84egIgUDUDYzu++TZrj8AdHZGGA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c874fb29a3so32077239f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 14:08:29 -0800 (PST)
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c874fb2baaso35493139f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 14:08:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709762908; x=1710367708;
+        d=1e100.net; s=20230601; t=1709762909; x=1710367709;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9ydl/05qviZ59DUb0+tYjcpB6jNkUerBbrbnghjwTq8=;
-        b=reveCmW64LTu7XXbm2t2KqoIg4PzrF7Yhhdx8N8QArlwraY5ZXosg6uMMzN4adg5NU
-         PVcdOvwTLes/oSFUxivSIKVfwYsgvKLH+JkQc8EbH2a4B5CgDUiDXDhKPzgjixiV9SYn
-         us4/f4gVDLfOdXOrJW0/IMaTHjPyqUhkd5bGdxAUr8g3HnfgrUQwKJYLKfdSn0aX1X7r
-         diEOCx0PYhetejBcQHS/7Enm3zoPH3Db2T+L3kjT5mKFFpFn2CDHwn26CLDDYH2S1uMr
-         SRkbZZ5sIvyF16v+j3Q30xbrFspvqCP2bW8uzFuaaZZML9wecPi6HFvqSI3+UKewNPRG
-         a1Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtGmKaeohhXKoPNGrnT4YZyWcEekowoEKderKrI4CWCoBPEUMqBBL09mOZe5jmB7tfeQ11hxsJZvpQ5p156QSLqLfJLJcmMP3GQrjH
-X-Gm-Message-State: AOJu0Yydl0NtmO2ldUemO3bpc8tihBy7NkCV6L+j6qsHb6XCQheax/4c
-	BGq/Oude9IzWr5KYFnyHwIqsEKU8vsJ+nneoKq10P+2Kxwv7XiT1zFnhMGpjzXsq334SBbgnEqE
-	2REVWAlMehsX+SweVGg2yyRRm5pluAr1ok1yCyZX+pJ9WTxKvbMmFjAk=
-X-Google-Smtp-Source: AGHT+IHR5Fsp+gGDp4OcyRnoO0IK33EA0UpUzzcluBuUVwW4wDXOTe81M5JhSUqqlYaFC9Jb17KkZBZ1+SYYbowiauDgOoKSai0W
+        bh=dP5mf6ppaJeeeqDuDdgoLYu4nUp5wMZfTV0hczsj3VE=;
+        b=pouhKv3ixU5y0mhamibM2CiBXt9RqDfXrbbjSVlL7nw3DSklwd/1J0M/568G2QozUU
+         zwdI91WcEQ46+KeJZoD6bWT/E1xEQA39WzowWKCWVqTfnWHNlkJPkn7OqyWJmDbW9mOp
+         4xVracbdF/GmVDeaaxZDXzu1yKv8uAzoLyJgMMh+bpKsHVQ4npIiZnp6myAqK+IZqnc6
+         h3L8PDszMxABJqjNguROewYyGLaiYqGguNDrh7KJB7UBTJ6vz6Euu7fmHC3/CcFs91KW
+         WbgiCLA62dZ+RIwYzhXmsnLZSFHLwGfix+8Tsse4PsIoYEuT9++YxUKUp+0+gOW5lV7U
+         eWVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmR3YQlZ8lOKMBOSNTjE+gA0mpbOYK1+XhHGzmXPIanbXvlKntaLh6uGE1exxMyl/GybChkuTLaSUtYXJ+cGz25womDKwbDfGi50G4
+X-Gm-Message-State: AOJu0YyZK89NX11pOu/ubV0KIyh27Fc0SK2PUNtnePVNkBHSEL3OLKF3
+	wIKwpICWBq7C55RtOkai8ru8REENWhZWS1ssK5SLA9wCzMJfkrM1pK39sWrYRlp2wwyiwOACaqI
+	3yKx6OsF18Edfh3ObshAZqLrSRbcey8gz0Gup9GSgJ33EMC8wRERy+/4=
+X-Google-Smtp-Source: AGHT+IFPqSCvF/0U8pDf7pIswMxHcFHvDUPvrvqAjK+q5PYCkNfskzE7xmuQEyTGAK8OtumE6ovM9gu4ZydBpcx5uQUSMQs6fwxE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:4818:b0:474:dc73:2aa4 with SMTP id
- cp24-20020a056638481800b00474dc732aa4mr576597jab.3.1709762908799; Wed, 06 Mar
- 2024 14:08:28 -0800 (PST)
-Date: Wed, 06 Mar 2024 14:08:28 -0800
+X-Received: by 2002:a05:6638:2584:b0:474:76c9:b667 with SMTP id
+ s4-20020a056638258400b0047476c9b667mr877556jat.6.1709762909035; Wed, 06 Mar
+ 2024 14:08:29 -0800 (PST)
+Date: Wed, 06 Mar 2024 14:08:29 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d4506f06130532c6@google.com>
-Subject: [syzbot] Monthly exfat report (Mar 2024)
-From: syzbot <syzbot+listfd275f6d56fcfac99f4b@syzkaller.appspotmail.com>
-To: linkinjeon@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sj1557.seo@samsung.com, 
+Message-ID: <000000000000d7ecf606130532ae@google.com>
+Subject: [syzbot] Monthly jfs report (Mar 2024)
+From: syzbot <syzbot+list454fdd6114742843b8e5@syzkaller.appspotmail.com>
+To: jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, shaggy@kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello exfat maintainers/developers,
+Hello jfs maintainers/developers,
 
-This is a 31-day syzbot report for the exfat subsystem.
+This is a 31-day syzbot report for the jfs subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/exfat
+https://syzkaller.appspot.com/upstream/s/jfs
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 3 issues are still open and 14 have been fixed so far.
+During the period, 2 new issues were detected and 0 were fixed.
+In total, 28 issues are still open and 36 have been fixed so far.
 
 Some of the still happening issues:
 
-Ref Crashes Repro Title
-<1> 362     No    INFO: task hung in exfat_sync_fs
-                  https://syzkaller.appspot.com/bug?extid=205c2644abdff9d3f9fc
-<2> 59      Yes   INFO: task hung in exfat_write_inode
-                  https://syzkaller.appspot.com/bug?extid=2f73ed585f115e98aee8
-<3> 43      Yes   INFO: task hung in lookup_slow (3)
-                  https://syzkaller.appspot.com/bug?extid=7cfc6a4f6b025f710423
+Ref  Crashes Repro Title
+<1>  1815    Yes   general protection fault in lmLogSync (2)
+                   https://syzkaller.appspot.com/bug?extid=e14b1036481911ae4d77
+<2>  1621    Yes   kernel BUG in jfs_evict_inode
+                   https://syzkaller.appspot.com/bug?extid=9c0c58ea2e4887ab502e
+<3>  1031    Yes   general protection fault in write_special_inodes
+                   https://syzkaller.appspot.com/bug?extid=c732e285f8fc38d15916
+<4>  576     Yes   kernel BUG in txUnlock
+                   https://syzkaller.appspot.com/bug?extid=a63afa301d1258d09267
+<5>  390     Yes   general protection fault in jfs_flush_journal
+                   https://syzkaller.appspot.com/bug?extid=194bfe3476f96782c0b6
+<6>  299     Yes   KASAN: use-after-free Read in release_metapage
+                   https://syzkaller.appspot.com/bug?extid=f1521383cec5f7baaa94
+<7>  252     Yes   KASAN: null-ptr-deref Read in drop_buffers (2)
+                   https://syzkaller.appspot.com/bug?extid=d285c6d0b23c6033d520
+<8>  144     Yes   KASAN: user-memory-access Write in __destroy_inode
+                   https://syzkaller.appspot.com/bug?extid=dcc068159182a4c31ca3
+<9>  130     Yes   kernel BUG in dbFindLeaf
+                   https://syzkaller.appspot.com/bug?extid=dcea2548c903300a400e
+<10> 87      Yes   kernel BUG in lbmIODone
+                   https://syzkaller.appspot.com/bug?extid=52ddb6c83a04ca55f975
 
 ---
 This report is generated by a bot. It may contain errors.
