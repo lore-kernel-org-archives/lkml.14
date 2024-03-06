@@ -1,128 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5223113F00A;
-	Wed,  6 Mar 2024 19:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4080913F00A;
+	Wed,  6 Mar 2024 19:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709754322; cv=none; b=GJq3WUJg40WP4u1d4ctzMuOnJp5echoUzidsBu91VHyHeQuko2B2n8suXKTDv3/xrXrUOgNrAYPBEpHg8xTZwZT3voElf08wjSmdzKTZyiiyDrAvJ/CZnVmzf6G1dtT7hzsj37tSxoH2OOYkOeuxqvLofrcO63tR0N2dLkBfi4I=
+	t=1709754340; cv=none; b=P2C4CjvkAC/piWvIemx2Qb5qnybROSUIn4+rdrTwwzvG1hhTHux6o1flsKmixJqHcnX1pfoq5PQ8wrw+aAn2zrTKk4tcmYsBK78Cdo5dA9Uv1XxjQyDEfHpt1xutmG9AGQOipBv7veyggCrqjBjIv30dPQzgeVGCEiKWH3m51yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709754322; c=relaxed/simple;
-	bh=GoeNgILuYzw3RIt3lassJRpXKSoD4VrJVLzn63ESTBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ARprUo6dFrxlMTxAzX3+UBQLVLg82YLAaA+TE4yVOjNUabWcXonOInQjOLCZWYxSyhaU3nB8u7Nvx/WGlijnkKj6KT3EsKQ8MS4+zJWx262WSfrSfVyuZPXtECs52+vjKMX5XvCuAit/uWesIa5yLu53Xrnua2uCyr3IFuKrOdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5201BC433C7;
-	Wed,  6 Mar 2024 19:45:20 +0000 (UTC)
-Date: Wed, 6 Mar 2024 14:47:13 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, linke li <lilinke99@qq.com>,
- joel@joelfernandes.org, boqun.feng@gmail.com, dave@stgolabs.net,
- frederic@kernel.org, jiangshanlai@gmail.com, josh@joshtriplett.org,
- linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- qiang.zhang1211@gmail.com, quic_neeraju@quicinc.com, rcu@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Fix
- rcu_torture_pipe_update_one()/rcu_torture_writer() data race and
- concurrency bug
-Message-ID: <20240306144713.2e1709ad@gandalf.local.home>
-In-Reply-To: <CAHk-=whvyzsbqLkw4kwEC-KzAMKFuy5VuMtJFn-mCerSYoRnqw@mail.gmail.com>
-References: <f3624f39-bbb1-451d-8161-8518e4108d8e@joelfernandes.org>
-	<tencent_9882B228F292088CDD68F10CF1C228742009@qq.com>
-	<20240306103719.1d241b93@gandalf.local.home>
-	<27665890-8314-4252-8622-1e019fee27e4@paulmck-laptop>
-	<20240306130103.6da71ddf@gandalf.local.home>
-	<CAHk-=wgG6Dmt1JTXDbrbXh_6s2yLjL=9pHo7uv0==LHFD+aBtg@mail.gmail.com>
-	<20240306135504.2b3872ef@gandalf.local.home>
-	<CAHk-=wjbDgMKLgxbV+yK4LKZ+2Qj6zVL_sHeb+L9KDia980Q8Q@mail.gmail.com>
-	<CAHk-=whvyzsbqLkw4kwEC-KzAMKFuy5VuMtJFn-mCerSYoRnqw@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709754340; c=relaxed/simple;
+	bh=5G1J0BhLc6CdOxwigI/ctXSY559sZ3EGEXyuCpYSgf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GAPKo8INt50ZGKglurPjWLo6ZfOP8pd4wszfalPDpOG1Wnraz48Dbz4qFIpj5AIhcENaJ83BW1Hxm5o9GhsXaoJZOjtdChAxMVRIK7cs5oih3633kPAlJvzgm2rYuRL79bGTj/bhx0CX6ZjPkdluTn6JZCkWRycaZ4DgIY5LFqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEETAeIJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEETAeIJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0CC3C433C7;
+	Wed,  6 Mar 2024 19:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709754340;
+	bh=5G1J0BhLc6CdOxwigI/ctXSY559sZ3EGEXyuCpYSgf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DEETAeIJJSkUQUzPDySpQ9hhYT2x0WxKI6ArF+euMpwJjwUqo2ESLn0WA22TE5j7K
+	 R36pHhm1XakM0l0MMl8oJg+XQV/ZMguoi4lKGDzUDb3GGj3HVakhMYnTO3NC6iGvGr
+	 5Uua+soh+cdMV1VIPtwOX1TIf6lXef/7TWhr8/6D9qmif+9JMIEbZ2eZ5m+AprvbOc
+	 vCaQjDrZ8L+ZelJA9gr/DIso2OwLiSH1SoPWKvBWeX7FIqhM7uOaVUm2UxjAPQEDqq
+	 h7PxMikDG1u9yjzzjHrkOGmf47FsEmNCbxf3ItXW7YBIG87bp1fgOqUgFVzQBlFcBp
+	 rcG8N5FNlw1vw==
+Date: Wed, 6 Mar 2024 19:45:34 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] ASoC: dt-bindings: fsl-sai: allow only one
+ dma-names
+Message-ID: <20240306-petticoat-womb-a61cad7d788d@spud>
+References: <20240305-asrc_8qxp-v4-0-c61b98046591@nxp.com>
+ <20240305-asrc_8qxp-v4-3-c61b98046591@nxp.com>
+ <20240306-pebble-grope-88fdaa95a87c@spud>
+ <ZejDQddMp17RD6Yk@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="trxU1T+09Y67XLwE"
+Content-Disposition: inline
+In-Reply-To: <ZejDQddMp17RD6Yk@lizhi-Precision-Tower-5810>
 
-On Wed, 6 Mar 2024 11:27:04 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> On Wed, 6 Mar 2024 at 11:01, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > In some individual tracing C file where it has a comment above it how
-> > it's braindamaged and unsafe and talking about why it's ok in that
-> > particular context? Go wild.  
-> 
-> Actually, I take that back.
-> 
-> Even in a random C file, the naming makes no sense. There's no "once" about it.
-> 
-> So if you want to do something like
-> 
->    #define UNSAFE_INCREMENTISH(x) (WRITE_ONCE(a, READ_ONCE(a) + 1))
-> 
-> then that's fine, I guess. Because that's what the operation is.
-> 
-> It's not safe, and it's not an increment, but it _approximates_ an
-> increment most of the time. So UNSAFE_INCREMENTISH() pretty much
-> perfectly describes what it is doing.
-> 
-> Note that you'll also almost certainly end up with worse code
-> generation, ie don't expect to see a single "inc" instruction (or "add
-> $1") for the above.
-> 
-> Because at least for gcc, the volatiles involved with those "ONCE"
-> operations end up often generating much worse code, so rather than an
-> "inc" instruction, you'll almost certainly get "load+add+store" and
-> the inevitable code expansion and extra register use.
-> 
-> I really don't know what you want to do, but it smells bad. A big
-> comment about why you'd want that "incrementish" operation will be
-> needed.
-> 
-> To me, this smells like "Steven did something fundamentally wrong
-> again, some tool is now complaining about it, and Steven doesn't want
-> to fix the problem but instead paper over it again".
-> 
-> Not a good look.
-> 
-> But I don't have a link to the original report, and I'm not thrilled
-> enough about this to go looking for it.
+--trxU1T+09Y67XLwE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Well, it's not the above, and I was afraid you would even think that.
+On Wed, Mar 06, 2024 at 02:25:53PM -0500, Frank Li wrote:
+> On Wed, Mar 06, 2024 at 06:45:13PM +0000, Conor Dooley wrote:
+> > On Tue, Mar 05, 2024 at 12:33:04PM -0500, Frank Li wrote:
+> > > Some sai only connect one direction dma (rx/tx) in SOC. For example:
+> > > imx8qxp sai5 only connect tx dma channel. So allow only one "rx" or "=
+tx"
+> > > for dma-names.
+> > >=20
+> > > Remove description under dmas because no user use index to get dma ch=
+annel.
+> > > All user use 'dma-names' to get correct dma channel. dma-names alread=
+y in
+> > > 'required' list.
+> >=20
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> >=20
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/sound/fsl,sai.yaml | 13 ++++++----=
+---
+> > >  1 file changed, 6 insertions(+), 7 deletions(-)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/sound/fsl,sai.yaml b/D=
+ocumentation/devicetree/bindings/sound/fsl,sai.yaml
+> > > index 2456d958adeef..6f551c68d33db 100644
+> > > --- a/Documentation/devicetree/bindings/sound/fsl,sai.yaml
+> > > +++ b/Documentation/devicetree/bindings/sound/fsl,sai.yaml
+> > > @@ -81,15 +81,14 @@ properties:
+> > > =20
+> > >    dmas:
+> > >      minItems: 1
+> > > -    items:
+> > > -      - description: DMA controller phandle and request line for RX
+> > > -      - description: DMA controller phandle and request line for TX
+> > > +    maxItems: 2
+> > > =20
+> > >    dma-names:
+> > > -    minItems: 1
+> > > -    items:
+> > > -      - const: rx
+> > > -      - const: tx
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - const: rx
+> > > +          - const: tx
+> > > +      - enum: [ rx, tx ]
+> >=20
+> > I'm not entirely sure if this was Rob's suggestion, I got the impression
+> > he was suggesting that in the two items case we'd not care about the
+> > order. But while I think this is different to that suggestion it's also
+> > not wrong.
+>=20
+> I log this at cover-letter. b4 can't support write change log at every
+> patch yet. Rob's suggest was not work. dt-binding check complain too long
+> if there are two dma-names =3D "rx", "tx".=20
 
-Here's the back story. I received the following patch:
+Yeh, that is what happens if you just have
+dma-names:
+  enum: [ rx, tx ]
+since that only allows one entry. Take a look at st,stm32-uart.yaml
+instead, for example.
 
-  https://lore.kernel.org/all/tencent_BA1473492BC618B473864561EA3AB1418908@qq.com/
+--trxU1T+09Y67XLwE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I didn't like it. My reply was:
+-----BEGIN PGP SIGNATURE-----
 
-	> -	rbwork->wait_index++;
-	> +	WRITE_ONCE(rbwork->wait_index, READ_ONCE(rbwork->wait_index) + 1);
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZejH3gAKCRB4tDGHoIJi
+0o5ZAQC0bEJLk2rMmNg1h6oK0puBl8tnJqZX4qRtU8t6hz4KlAEAmuy73tHPP4vO
+iIc7yezGXRzST2Kg4QHm/imuO9iUSAs=
+=u4Ht
+-----END PGP SIGNATURE-----
 
-	I mean the above is really ugly. If this is the new thing to do, we need
-	better macros.
-
-	If anything, just convert it to an atomic_t.
-
-Then because I'm a reviewer of RCU patches, I saw the same fix for RCU
-(this thread):
-
-  https://lore.kernel.org/all/tencent_B51A9DA220288A95A435E3435A0443BEB007@qq.com/
-
-Where it was recommended to do the same WRITE_ONCE(a, READ_ONCE(a) + 1),
-and this is when I Cc'd you into the conversation to get your view of the
-situation.
-
-Sounds like my original gut feeling that this is a non-issue is proving to
-be correct.
-
-I even argued against using the _ONCE() macros. If WRITE_ONCE(a, READ_ONCE(a) + 1)
-is a valid operation, I sure as hell don't want it in my code, but I would
-be OK if it had a macro wrapper. Which you seem to be against, so I'm
-against it too.
-
--- Steve
+--trxU1T+09Y67XLwE--
