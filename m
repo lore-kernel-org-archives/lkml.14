@@ -1,129 +1,147 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5B1DDA8
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 00:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6091FA4
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 00:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709685837; cv=none; b=UjvOOL7KzUufAGWH0c3fymyrt23phbgOElfmq5oabyYsyfMZdSBZB9pcA8Os5Uhcjn62tRLmYOtRK2k+xXEJ98JE4+VnhZp9APiREEfkUejap4fqzbp44vg12bptiVnTWVjrUbOZTUdnzLlLXZCUJXPJ2zcUwiw8cOZz/UhU6wk=
+	t=1709686120; cv=none; b=DEmstxwZ28KjOgUm2UI1MrLkMuzjPYSmg2G0IJcBv7l24PLcxt/nO63/lxrh7wcO7CJR2Q92YxC6jdn8LVAiiyYaXjU3El3o0m63+2E9+iGbeZs0rZLZb+Uo9lHqXUOW7TFEoYWP5QyVlEdQj4oWoUOyyYXkb70G0pvNCM3qFpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709685837; c=relaxed/simple;
-	bh=ZB+JxsmgjsLXjT4A8pwUfLxc5wjMafQmYvaibiZNEjI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SS5zVa5uGI7WKkc82EPJNQy1s9rB4uted8gg+3bFYJ2ibbRhpE29c/kltvY4e5AwW1ckMFTFyAkpzcbHFnTRi4kJCgp/+J+Di4QD8PkfKeGmVWgTOTM2YUK8OqZnlyOriERxqElX1GpI6/0JvvNJCjiJTSlXyBSbk4lArafZAaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hbHntp/1; arc=none smtp.client-ip=209.85.167.171
+	s=arc-20240116; t=1709686120; c=relaxed/simple;
+	bh=Txu0fS25vjnU8C2qLEXlcyuVcuXN+A7vHZsCxW2jq9U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cV7pK1O6o3pON+pD3Qc5HHc8eXjReAzGnZ4SAgBu39UkogqNrsK8nNKfKH61A5uzuH/L0iwYqLwre8uH4s+pH6oG7TL+ULDjf0p964zZL2ebE+ErlEd3yMe/y/UthnuA2i78Qn9naOFaWItS+zzsebqqVAAW35J3bXZvUkvd7H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fyN/S4Dy; arc=none smtp.client-ip=209.85.161.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hbHntp/1"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3c1ea5e54d3so189247b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 16:43:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fyN/S4Dy"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-59fc2d22cfaso2293328eaf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 16:48:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709685835; x=1710290635; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1709686118; x=1710290918; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hYTrgZgcMnGwzTHQ0raTPV6Zr3av/0t0vLxqDGbq+dE=;
-        b=hbHntp/1YrXqW9cbxg90cWvzXqLiYgkFUO4bncJG0w+ndfLEmBcEJXaHUnNSbNR0b/
-         p6quUhsteDsjpZ4k1eWzVZZXrcu5gFmQMIb6YHT7KQJv/0FNZ9ELYE5ehMpjoRDQ9utC
-         AM0FcFdkpBH+5hWm9qNz9B2MKi2/454RGtXws=
+        bh=h8YUqfSxXbAYFGGNrVtx7LjoshPbACk3MhhzqeZBjss=;
+        b=fyN/S4Dy6Yj1ywiL6JZjTsC0JsFVXDmdiKYOSXrLprtJtDHemhjJLZuPtvhRTBz5mI
+         KCXaU8PFIkm+hPZQrVC6uDhBYwczDD5lJJT/v/Dugd88SJk0eyYS6Lcxt/ekXfkAC839
+         W4qcKKmqYRxrIVGVpebacbgAP4VX3IrgCmrw8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709685835; x=1710290635;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709686118; x=1710290918;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hYTrgZgcMnGwzTHQ0raTPV6Zr3av/0t0vLxqDGbq+dE=;
-        b=bw8itGOMuyLm6gtnsSZ6DBWaa6fhhnF2RVDxn+xyFg4hhmmIajneHipVSF64Z8/UvL
-         FnTuFl3nfNezxggPqYjOgUvBhv5HjStTRnfcxLx3IYmnhAcsly1cBwfn12Wuf14mV89X
-         HpI99exSfVWLaYbGQDTPSdAXTGW/ymr3ptW9LEP+UZaTH6H/SUhpT+PxBfSr2SPIz0F6
-         e8PWbLvjelQ47mn0vr2znOg0jVuuPpte3MEnnMJPJoBnsVZMPo0LVxFUBoBBzA+v4Fvd
-         DFA3WEdCV0+xgfXnV2c9YXYnBA3ojfjNnISZ8jB/CUWYuZI1U2eJKpGQvCgUa+GoTien
-         3VRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBDK+jm8G+ONYrAY/NOwS7f208RArMlngmZylPc3WW8blMpZxrBFpnwzVLaJKEco3kjfiNUrL8/lNo6tW9tM3gStRmoIEHKs08zW/U
-X-Gm-Message-State: AOJu0YxS78eh0l9nTrJKT6Qg8NivAG3vTWsW05YgS1YFG56ozYyF2OLc
-	NacIOb+u2Mxiyz3NEj66HVNqHSE84mhUWeKLmHAoaK8Z/QGndzFYQ4vY+Y8Cqg==
-X-Google-Smtp-Source: AGHT+IEnBwCzfwvZftrY1cUSm8yx44TS6umhWaiFT1TsIPhxo+eKQUM29yFatyjGk7F35NHZ6+gzsQ==
-X-Received: by 2002:a05:6808:9b0:b0:3c1:db6b:aa7c with SMTP id e16-20020a05680809b000b003c1db6baa7cmr3045373oig.1.1709685835241;
-        Tue, 05 Mar 2024 16:43:55 -0800 (PST)
-Received: from hsinyi.sjc.corp.google.com ([2620:15c:9d:2:29bc:b3d:1ba8:cf52])
-        by smtp.gmail.com with ESMTPSA id x37-20020a631725000000b005dc48e56191sm8512885pgl.11.2024.03.05.16.43.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 16:43:54 -0800 (PST)
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Douglas Anderson <dianders@chromium.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/5] drm/panel-edp: Fix AUO 0x405c panel naming and add a variant
-Date: Tue,  5 Mar 2024 16:34:05 -0800
-Message-ID: <20240306004347.974304-6-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-In-Reply-To: <20240306004347.974304-1-hsinyi@chromium.org>
-References: <20240306004347.974304-1-hsinyi@chromium.org>
+        bh=h8YUqfSxXbAYFGGNrVtx7LjoshPbACk3MhhzqeZBjss=;
+        b=nQIVCitrKsywQ40BIcGgWaQk6ggtNYpQ6ddwiZIcLCsN2nVFyvdSoJViiSi+J9koEM
+         a8ub1hmSmnMMT16S1tU/O+nT5bBUQqqXWF/JTU/Y/5/up+W3DeZOCqhcsP0/du8IpWod
+         p6xBI5By5F4sMMqPrEE8UJEzi93EdUEwqAufdjdJp84PzpkCkOi9DLQKBp3b7BQ58rbH
+         1Yiy9X29mEDCyflefeBeqsGMkOm85SfqvLegJZg6/W64phdD6V5pgxV5zKNkcI46Kutd
+         1dx66KTk2jB257N2Up1tSFwM8RGRToDFfYIHBx4rH5Z7DgSJULohD5nouT7NoNO133P0
+         CscQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXThWwBaR4FTSKBX4v6O67LVwNUjYadzKS4gaYQ4JBOD1waa85DZFWQR967sYIqpFAIsiYUSFJPhPG0kwKMbrBwwL6mEb/Ki2PjPc/t
+X-Gm-Message-State: AOJu0YzoALa8UQFdvgydSqcQMuYNd497Ci/dWcdg5f8NnqF6tnahJT7m
+	mzFoNHTASijz2TqFhvLuWaJMkM58f+BavEBhEwcuLXIz+76Vjft2jlSwcLFHW/KSHvkxYthfKUv
+	FrywiUnlbv0lfBVTdAFcG/safUDyB6Qbh8IBz
+X-Google-Smtp-Source: AGHT+IHThZOocFCZMmHlyA07NzSu/hUzk0+wRXvbdVZwsQ63Hxp4vmWebG9XV+3+bsLjN4hF9iqXD16nnPW8ixndG/0=
+X-Received: by 2002:a4a:9b17:0:b0:5a0:e486:cbbc with SMTP id
+ a23-20020a4a9b17000000b005a0e486cbbcmr3765020ook.6.1709686118132; Tue, 05 Mar
+ 2024 16:48:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240304195214.14563-1-hsinyi@chromium.org> <20240304195214.14563-3-hsinyi@chromium.org>
+ <87a5nd4tsg.fsf@intel.com> <CAJMQK-j4wGah=szyUW53hu-v6Q4QjgR7WMLKnspoFaO9oPfaQw@mail.gmail.com>
+ <874jdl4k01.fsf@intel.com> <CAJMQK-iWHoh6s-hkcNULzZLjMg9UnTuWfjaJ=YfnHU3sQ1NBEg@mail.gmail.com>
+ <CAD=FV=UOhTGnhtc9gOQ5C_aAdgVcB+K7NL9RGm4umunF91Wkpg@mail.gmail.com>
+ <87y1ax2iu1.fsf@intel.com> <CAD=FV=WzLLeEw-b0Kug-Pm-9EYm7eHvmukEUJ8VHnu-4YY3WNQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=WzLLeEw-b0Kug-Pm-9EYm7eHvmukEUJ8VHnu-4YY3WNQ@mail.gmail.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Date: Tue, 5 Mar 2024 16:48:12 -0800
+Message-ID: <CAJMQK-hE8sWL2rO-N2WZuyXzPhnXZJN4LUL_TwzKGhq_Ozz6Vw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] drm/edid: Add a function to check monitor string
+To: Doug Anderson <dianders@chromium.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There are 2 different AUO panels using the same panel id. One of the
-variants requires using overridden modes to resolve glitching issue as
-described in commit 70e0d5550f5c ("drm/panel-edp: Add auo_b116xa3_mode").
-Other variants should use the modes parsed from EDID.
+On Tue, Mar 5, 2024 at 11:25=E2=80=AFAM Doug Anderson <dianders@chromium.or=
+g> wrote:
+>
+> Hi,
+>
+> On Tue, Mar 5, 2024 at 12:17=E2=80=AFAM Jani Nikula <jani.nikula@linux.in=
+tel.com> wrote:
+> >
+> > On Mon, 04 Mar 2024, Doug Anderson <dianders@chromium.org> wrote:
+> > > Hi,
+> > >
+> > > On Mon, Mar 4, 2024 at 4:19=E2=80=AFPM Hsin-Yi Wang <hsinyi@chromium.=
+org> wrote:
+> > >>
+> > >> > > Probably change to u32 drm_edid_get_panel_id(const struct drm_ed=
+id
+> > >> > > *);? Given that we still need to parse id from
+> > >> > > drm_edid_read_base_block().
+> > >> >
+> > >> > No, we no longer need to parse the id outside of drm_edid.c. You'l=
+l have
+> > >> > the id's in panel code in the form of struct drm_edid_ident (or
+> > >> > whatever), and use the match function to see if the opaque drm_edi=
+d
+> > >> > matches.
+> > >> >
+> > >> drm_panel prints the panel_id info on whether the panel is detected =
+or not.
+> > >> https://elixir.bootlin.com/linux/v6.8-rc7/source/drivers/gpu/drm/pan=
+el/panel-edp.c#L792
+> > >>
+> > >> Is it okay to remove this information?
+> > >
+> > > Hmmm, I guess it also is exported via debugfs, actually. See
+> > > detected_panel_show() in panel-edp.c. We probably don't want to remov=
+e
+> > > that...
+> >
+> > You currently print the information via panel->detected_panel, which is
+> > a struct edp_panel_entry *. That doesn't change. It'll be slightly
+> > restructured to contain a struct drm_edid_ident, which will not be an
+> > opaque type.
+>
+> Hmm. As Hsin-Yi pointed out to me offline. Somehow we'll need to get
+> the actual panel ID out. Right now in panel-edp.c we have:
+>
+> dev_warn(dev,
+>   "Unknown panel %s %#06x, using conservative timings\n",
+>   vend, product_id);
+>
+> Where "vend" and "product_id" come from the panel ID of a panel that
+> we didn't recognize. For instance:
+>
+>   Unknown panel BOE 0x0731, using conservative timings
+>
+> We need to still be able to print this message for unrecognized
+> panels. Then when we see field reports including this message we know
+> that somehow we ended up shipping an unrecognized panel.
+>
+> Any suggestions on what abstraction you'd like to see to enable us to
+> print that message if everything is opaque?
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
-v4->v5: no change
----
- drivers/gpu/drm/panel/panel-edp.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+Sent v4 here: https://lore.kernel.org/lkml/20240306004347.974304-1-hsinyi@c=
+hromium.org/
 
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index fb70e97a2e71..9db04457fb4d 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -1007,6 +1007,19 @@ static const struct panel_desc auo_b101ean01 = {
- 	},
- };
- 
-+static const struct drm_display_mode auo_b116xa3_mode = {
-+	.clock = 70589,
-+	.hdisplay = 1366,
-+	.hsync_start = 1366 + 40,
-+	.hsync_end = 1366 + 40 + 40,
-+	.htotal = 1366 + 40 + 40 + 32,
-+	.vdisplay = 768,
-+	.vsync_start = 768 + 10,
-+	.vsync_end = 768 + 10 + 12,
-+	.vtotal = 768 + 10 + 12 + 6,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-+};
-+
- static const struct drm_display_mode auo_b116xak01_mode = {
- 	.clock = 69300,
- 	.hdisplay = 1366,
-@@ -1966,7 +1979,9 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x239b, &delay_200_500_e50, "B116XAN06.1"),
- 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x255c, &delay_200_500_e50, "B116XTN02.5"),
- 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x403d, &delay_200_500_e50, "B140HAN04.0"),
--	EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B116XAK01.0"),
-+	EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B116XAN04.0"),
-+	EDP_PANEL_ENTRY2('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B116XAK01.0 ",
-+			 &auo_b116xa3_mode),
- 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x435c, &delay_200_500_e50, "Unknown"),
- 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x582d, &delay_200_500_e50, "B133UAN01.0"),
- 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x615c, &delay_200_500_e50, "B116XAN06.1"),
--- 
-2.44.0.278.ge034bb2e1d-goog
+Besides that it still keeps drm_edid_get_panel_id() to be used on the
+kernel warning when no panel is matched, other parts I think are
+following the comments.
 
+Thanks.
+>
+> -Doug
