@@ -1,128 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C0F1C6B7;
-	Wed,  6 Mar 2024 23:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E065ECA4E;
+	Wed,  6 Mar 2024 23:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709766073; cv=none; b=qKntluW54J/S1L/iyxgaOlPfMbysz4EIuweWAcjbwmfjdiAH8EfX9G+3cmimgWN3kwgdgTw4ytDr5UE9YYjl3StpxFOQn4GtRZmKeK6pXmT9P+PiWzWxgCne7Qj5MwCvy96KoykwC3FutgdzPeAW63c5JJfgEtbRtLnvV/meX8Q=
+	t=1709766279; cv=none; b=I1ccN9WieVi5bHIvu3SbROcuHS8EaLc5PvJA41ma7XcnzxVUmrdkU3fTCStUk+8foGhE2B+TaCQzKaxFgNPGdvi6kjA0rW3jwDgWGmwb0BBHoNw+H+HgsV3GAVEixkVtBut2turBRnNvKkqmzSWPNISV0HmOogkoz5bA72MVHEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709766073; c=relaxed/simple;
-	bh=1foeIlAL02HQ/9fWETjo+VPeQRpGEBkjUsRFchJX7d4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f7s0X0KyGwm9aOcW0Y2JfdRZA3TCIJWg4NEAugeZy/xEpHxi0N5ovzeWEwvW5An/bFX6oIm6YddOdFQkg2z6ZkzqU8EOXM4rsfdJr6GD2Za8sV5jH/+vGGJzFQhjVZc7BNC+KfzyPZMf6WzS9IhCzjfr/Thlf4Blbp7uTBOMTZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FzGykI5t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709766279; c=relaxed/simple;
+	bh=0BkBoxjoUbL8I9dtSSBP//w6m324kaP3H030ANrh3d4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O12Ze/jdOMFUECO6hITxd0/JQEHm+zLaU6Rne1br6L86s9XINLHvg+FmHPr1BaXVKCi0+saTSN/P44XSDECMfQ8H8KjI5wpSMykatgPDEr87Pjr53I62pcUuXhsD/zsz47DGVSdC9FFB9OfgxM2d2ZXVzkq3qVubb0yDJ6lwmgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=SWTqGsj1; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FzGykI5t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61598C433A6;
-	Wed,  6 Mar 2024 23:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709766073;
-	bh=1foeIlAL02HQ/9fWETjo+VPeQRpGEBkjUsRFchJX7d4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FzGykI5t1KZcrcNh3uIkXsI4mhxdAVRhHvFVRqEEeCR8jYOZBf7sIsQYsEmuoj7Cp
-	 VJ6XN/kVz/j7ISNU6iJKQDCYUJmit3KyAdc//QwJiR2o5MN2ihF+ss0bY2FRwXOw8Y
-	 16xCLbhfe6SOMgclhR+g9ttqkRAacHzIx+G26l4lFwWlcxDagL7vq1NClMiqfMZrLF
-	 V3aL0pc75FJc0Fhi9frO5zcqRZAwskdM87VYHPQH+CUDT3xk8JSontUBbFSweZ3oS8
-	 JNJxUi6okj8ACN6TKTIWyhVqSRg7/4sSKO41qB7DO6R3zCyv4rLzMKCu0wHoRzla0L
-	 09TQtdiq5BF3Q==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51331634948so1430963e87.0;
-        Wed, 06 Mar 2024 15:01:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX55ddvTi+1PL8+Fw8hmol8Drzqhd1Jk4Iq9GjqI+BYY0AmhJEFpErttfEiBIkfbKrYEMcKIt7EGNelZ/lqaeVFJtLLNDlshDu2GUgibRCkAwVp2UHe78wuRnpKsLW7v4hr6kRSp/wAmeENopzOhY+o+iZ4ZTVfzkNhGRO5SYwUUZmM51nv
-X-Gm-Message-State: AOJu0YzPyrXfz5fPXnB28hWBbo6+R1725ikxRac/d3dnEffvkuxDZupO
-	6lsE+Juz3dP08WI19IL6iuL83p/CaQsEUMUitlHRA252jpf5wcdIn769nTVP0Zrwm5EZW6jgofs
-	LJdS2yXLWaFMiozW4ukwRzUWbKw==
-X-Google-Smtp-Source: AGHT+IEe7ONAG3lrAgIWy+05ru/C7vwOPDlzVeORdLHPWUfWrnU47WOhZwb4SSMXu5BC5lZaDn1RllTR5GSnhrsxEUU=
-X-Received: by 2002:ac2:5a0b:0:b0:513:3b3e:c361 with SMTP id
- q11-20020ac25a0b000000b005133b3ec361mr70664lfn.2.1709766071504; Wed, 06 Mar
- 2024 15:01:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SWTqGsj1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=tu+kkEy+3vhioMBzuND7fGdxFOSgZ74kUNWaXmcwZi0=; b=SWTqGsj17HGAsi2jz7pUwne5Rn
+	vpi7Fce/yxQpCEkCfCEednlu5X6urS5nPzbn5GIqgkGjJcOW+lSpN2p/BeDUIZ1OW4Qy7NwBok6JL
+	vmkO71up2W3KVX86Cw0ypk4mG1ziPUfHK11nccWbQG8ON5LegIJxuTrfqVwp2kqdbV3I=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1ri0Je-009XDq-Dw; Thu, 07 Mar 2024 00:04:50 +0100
+Date: Thu, 7 Mar 2024 00:04:50 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bsp-development.geo@leica-geosystems.com, m.felsch@pengutronix.de
+Subject: Re: [PATCH net-next] net: phy: dp8382x: keep WOL setting across
+ suspends
+Message-ID: <8de1d4e3-6d80-45a5-a638-48451d9b5c15@lunn.ch>
+References: <20240306171446.859750-1-catalin.popescu@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305-asrc_8qxp-v4-0-c61b98046591@nxp.com> <20240305-asrc_8qxp-v4-2-c61b98046591@nxp.com>
- <20240306202537.GA587561-robh@kernel.org> <ZejX0/FA/z4wa7cY@lizhi-Precision-Tower-5810>
-In-Reply-To: <ZejX0/FA/z4wa7cY@lizhi-Precision-Tower-5810>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 6 Mar 2024 17:00:59 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ6U2-EGeJgTuxBooEy=OEJ08wDNshWnfKooryAr6=QNg@mail.gmail.com>
-Message-ID: <CAL_JsqJ6U2-EGeJgTuxBooEy=OEJ08wDNshWnfKooryAr6=QNg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] ASoC: dt-bindings: fsl,imx-asrc: update max
- interrupt numbers
-To: Frank Li <Frank.li@nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Shengjiu Wang <shengjiu.wang@nxp.com>, linux-sound@vger.kernel.org, 
-	devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240306171446.859750-1-catalin.popescu@leica-geosystems.com>
 
-On Wed, Mar 6, 2024 at 2:53=E2=80=AFPM Frank Li <Frank.li@nxp.com> wrote:
->
-> On Wed, Mar 06, 2024 at 02:25:37PM -0600, Rob Herring wrote:
-> > On Tue, Mar 05, 2024 at 12:33:03PM -0500, Frank Li wrote:
-> > > fsl,imx8qxp-spdif and fsl,imx8qm-spdif have 2 interrupts. Other platf=
-orms
-> > > have 1 interrupt.
-> > >
-> > > Increase max interrupt number to 2 and add restriction for platforms =
-except
-> > > i.MX8QXP and i.MX8QM.
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/sound/fsl,spdif.yaml | 18 ++++++++=
-+++++++++-
-> > >  1 file changed, 17 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.yaml b=
-/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
-> > > index 56f8c0c8afdea..7f6590708e1ec 100644
-> > > --- a/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
-> > > +++ b/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
-> > > @@ -31,7 +31,8 @@ properties:
-> > >      maxItems: 1
-> > >
-> > >    interrupts:
-> > > -    maxItems: 1
-> > > +    minItems: 1
-> > > +    maxItems: 2
-> > >
-> > >    dmas:
-> > >      items:
-> > > @@ -101,6 +102,21 @@ required:
-> > >  additionalProperties: false
-> > >
-> > >  allOf:
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          enum:
-> > > +            - fsl,imx8qm-spdif
-> > > +            - fsl,imx8qxp-spdif
-> > > +    then:
-> > > +      properties:
-> > > +        interrupts:
-> > > +          minItems: 2
-> >
-> > Nowhere is it explained what the 2 interrupts are or what the order of
-> > them is. Is the first interrupt the same as before, and there is a new
-> > interrupt for something else? Or it's the same interrupts, but they've
-> > just split up into 2?
->
-> It is same one and split to tx and rx. Order doesn't matter.
+On Wed, Mar 06, 2024 at 06:14:46PM +0100, Catalin Popescu wrote:
+> Unlike other ethernet PHYs from TI, PHY dp83822x has WOL enabled
+> at reset.
 
-Make that clear in the schema. Order does matter and you have to
-define the order in the schema.
+This is rather odd behaviour. Is this stated in the datasheet?
 
-> They uses one
-> irq handle.
+> @@ -572,11 +584,17 @@ static int dp83826_config_init(struct phy_device *phydev)
+>  			return ret;
+>  	}
+>  
+> +	if (dp83822->wol_enabled)
+> +		return 0;
+>  	return dp8382x_disable_wol(phydev);
+>  }
+>  
+>  static int dp8382x_config_init(struct phy_device *phydev)
+>  {
+> +	struct dp83822_private *dp83822 = phydev->priv;
+> +
+> +	if (dp83822->wol_enabled)
+> +		return 0;
+>  	return dp8382x_disable_wol(phydev);
 
-What does that mean?
+Since it is rather odd behaviour, there might be some BIOSes which
+disable WoL. So i would not rely on it being enabled by
+default. Explicitly enable it.
 
-Rob
+    Andrew
+
+---
+pw-bot: cr
