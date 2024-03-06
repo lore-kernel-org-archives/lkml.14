@@ -1,179 +1,539 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2097.outbound.protection.partner.outlook.cn [139.219.17.97])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2047.outbound.protection.outlook.com [40.107.6.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E3F5F549;
-	Wed,  6 Mar 2024 10:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239F35F549;
+	Wed,  6 Mar 2024 10:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709719728; cv=fail; b=cr/sG6KHAiltql96vSss2VvWMfsNcsh48Mx0I3MJGWDqg0pPhMaKlDqZHFCyljxJINyv94W/1GOz0yrnmKnBvD6QTqsTA6pOe9jL441JfNJ/UbSiFYvWOmtnxFdL9KF7G73qialW+a64D1UTxtOJo43ZvxhaewdugoJC0OIZXSA=
+	t=1709719756; cv=fail; b=IRwz9pKXhKPr3MBuTcWgQiYiKd4MVJByG60eHKXLOKU5XU/Y+11qKFBtTfwEN7UwpBtXz+YRnr6xqNJFTnCh/M06L0tG+pURJjrwt//3GaJnzYw9LzWaI9TSMnsoRCq2HgpejE6U6FvjMrOwXjafz4lO3Bh7+7iOO5aSadD4j0A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709719728; c=relaxed/simple;
-	bh=Ag/9jm7fZlBWooHWCeXB5OWwqFPZwihKU9de3eVv2g4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IYbeTkkwDPOf3Z5VkGrhKp82VKfJWzDJCyotKq04vfVwTKT1oGRD9+8KGOkEIQo8Q2FTuF7rl59J1ocI9Ql6pwd88IV2pyGxFserIBu8bqKuDqPLt5Nef2A4nMVPFTV8IFggu5JffYAzZNfjueoYYL1Pf/5HRqKO/rk7KHpoO24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1709719756; c=relaxed/simple;
+	bh=oSpMdFmOHhQ+Z/fCey7nFjMsg//2gLZzg4fyUGwMf9M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q+RXeb9mSb7adVxmlv2qY8EFzAUAxeZMuGaR22asdTlWoX5/cT2sWuwAb4q0w7zcHXOC+6h0PvcnVZH61ZSjhve5fi+9qtT/ENw+bzpX9AwdwBibIlQGKDWSQiGDhRp7atv74eVCSyuoPk+vFphfLsVlTcURsdr6oKGjzgDi3WI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=rC1SNHtn; arc=fail smtp.client-ip=40.107.6.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="rC1SNHtn"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CXCgC3TtGQMYBg1xiSxmqCjQWia24Y/Yz0K98SLdig6ETZroOycmH1OZyhOl6dvYkDaN1VqaE3UfoQsC5cI2wLl5+58toKKE02RrfW+Gv0jIJ1fRCZ0kSdce8QbzEY7R1gvE657uAP4NQ7cVlwXkLIHhH/r8+j8nOCCG9IBb9TdH1Z1fp/1rnJlAmfC3bVNTTnCaRnwNAHoEo3EF+4NHMFWVwCfiaRsYW1uODQ1zU5doZ1SY13kp7xAB8/O88ZtYjzI1LnGCRltXLfehcSQhqp9dVI1s7shcigshFwZv7UGsDZLOkeBDGjI12FQF6TNNZRoCnnyAjPS9baD58oKr2A==
+ b=gnjR1gGdSXRR07fhItvPo87Er+WVnvXrcsOgDVJMvDcD2+g18HKYIASh3CoyQ4QtmjK8unqhyjVtlTmnWU/Ar9lnF89Fm8+YUYEd4B7V/NL5PS5ptz1uhJ0D7+VSNHrB7jgEP8tyhbU3BIkbd8Pqe0//Uf8VsypFekJ/5Jdxqhs2ncQsKG2xnIYNhFmpwW2YVnSNcm/xlWg/qj9b9OU2F2cPfvgwF/A1JOy8XykxAOnhKRWCQRRShTygbRBcIYFJrZ3Yg1quFmij0lnn0C2SkF1Mc4RWfFFayWA9O2Jk3GGcD//MTDC2qAsAj45P7DHEZK15O3leQDXWQlLCaZtEmg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xAPstmroN5nFl6jMr8n3AzD2pk6wIBAH7OD/yrVrd9w=;
- b=RiS4pslRQpUs5zHnDC2p9iAPVC1LBy7n3YDWejYqTdIJHgUA3pzx+in9FDD9l4Dmu8sfVAX/nSMGvEul8Pf3Q6dCnWLavTdT4Nv9BLwCR33JrmeE1CyHVjWOs5ezvObp6CA0zI8tGIK7gHo0AtEUV/IXr0Tuy8Z2jrlgM7wA7jEaxuJDJTpZkGaS4ej/BXm6E5U3bAUyt+7C8JDIUUjRTMY+o8Y1UqZDIBlDqaT8eqkiDwChaZWFIEi42mjnotyzellCB7G35kPVD24iOJ+L+bbKo5pBIJ1J0B9Z8woW9MuDKB0vVNgHQvCBno8w+NQU/1LHUBTpyFac/CoVz6GVig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) by SHXPR01MB0765.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.51; Wed, 6 Mar
- 2024 09:33:46 +0000
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- ([fe80::b0af:4c9d:2058:a344]) by
- SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%6])
- with mapi id 15.20.7249.041; Wed, 6 Mar 2024 09:33:46 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: [PATCH v1 4/7] staging: media: starfive: Add multi streams for ISP
-Date: Wed,  6 Mar 2024 01:33:31 -0800
-Message-Id: <20240306093334.9321-5-changhuang.liang@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240306093334.9321-1-changhuang.liang@starfivetech.com>
-References: <20240306093334.9321-1-changhuang.liang@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0010.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:5::17) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10)
+ bh=vKQHTXeQFBEUyficpLq6A1GXpMFqK/kks6u59mcG2eg=;
+ b=IEdbwcx3BjtJXQsvRTZnSpFhCTDYfdsWGLVxjgMYymE64TyG4D9segoyX1xHxki+yYu3V0UNLt1OzNnTErkwPgvP/xG6hbgSqcQASjl5MPw6BU/ZfO3dDJUk6ZCTldEwIHM2/EUt69Kx6VUma+k5Yy3YmT7rWzGhDIu39bYwiv63+GoFPB25qMXIc6+gEXW7BtNZeRXtbtTEoUoPqCOLgNSNZcPVyOvYulGfjWrqQy2MEWdgMfqThKxWg6tV4A0Il5GaXjpAb+Ccn7aMn2Fpyf8Yr2yv5yRaZHWUa8aH0qHQ0zep29usjLI+8zGMlUSemh6g/Hq5aXAG03ffDJpNJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=kernel.org smtp.mailfrom=axis.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vKQHTXeQFBEUyficpLq6A1GXpMFqK/kks6u59mcG2eg=;
+ b=rC1SNHtnR3KBCdka576fc+oxjrEPJ7P56yV3m2YDTIHD5HgBjP21AgbMiAj7LR2fo0LP+IK/6t+BQHEOS7wYzkVxhVyRs8yeQ9vQOPCxqC7KmfM8ewkWheILQXCA8sIJCCXhIKvBgozvKYOaVOy64IwsuZuwjpoqgJg3LpR45zs=
+Received: from AM7PR02CA0023.eurprd02.prod.outlook.com (2603:10a6:20b:100::33)
+ by DB9PR02MB7035.eurprd02.prod.outlook.com (2603:10a6:10:1fd::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Wed, 6 Mar
+ 2024 10:09:09 +0000
+Received: from AMS1EPF00000045.eurprd04.prod.outlook.com
+ (2603:10a6:20b:100:cafe::de) by AM7PR02CA0023.outlook.office365.com
+ (2603:10a6:20b:100::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24 via Frontend
+ Transport; Wed, 6 Mar 2024 10:09:09 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=axis.com;
+Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
+ designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com;
+Received: from mail.axis.com (195.60.68.100) by
+ AMS1EPF00000045.mail.protection.outlook.com (10.167.16.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7362.11 via Frontend Transport; Wed, 6 Mar 2024 10:09:09 +0000
+Received: from SE-MAIL21W.axis.com (10.20.40.16) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 6 Mar
+ 2024 11:09:08 +0100
+Received: from se-mail02w.axis.com (10.20.40.8) by SE-MAIL21W.axis.com
+ (10.20.40.16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 6 Mar
+ 2024 11:09:08 +0100
+Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Wed, 6 Mar 2024 11:09:08 +0100
+Received: from lnxchenhuiz2.sh.cn.axis.com (lnxchenhuiz2.sh.cn.axis.com [192.168.77.59])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 2D7FA15BE0;
+	Wed,  6 Mar 2024 11:09:07 +0100 (CET)
+Received: from lnxchenhuiz2.sh.cn.axis.com (localhost [127.0.0.1])
+	by lnxchenhuiz2.sh.cn.axis.com (8.17.1.9/8.17.1.9/Debian-2) with ESMTP id 426A96b31914286;
+	Wed, 6 Mar 2024 18:09:06 +0800
+Received: (from chenhuiz@localhost)
+	by lnxchenhuiz2.sh.cn.axis.com (8.17.1.9/8.17.1.9/Submit) id 426A967A1914285;
+	Wed, 6 Mar 2024 18:09:06 +0800
+From: Hermes Zhang <Hermes.Zhang@axis.com>
+To: Sebastian Reichel <sre@kernel.org>
+CC: <kernel@axis.com>, Hermes Zhang <Hermes.Zhang@axis.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] power: supply: bq27xxx: Divide the reg cache to each register
+Date: Wed, 6 Mar 2024 18:09:03 +0800
+Message-ID: <20240306100904.1914263-1-Hermes.Zhang@axis.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0765:EE_
-X-MS-Office365-Filtering-Correlation-Id: c597e034-318f-4948-2b19-08dc3dc085cc
+X-MS-TrafficTypeDiagnostic: AMS1EPF00000045:EE_|DB9PR02MB7035:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc1fe342-7b12-4f2f-f1ad-08dc3dc576e5
 X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	og76OOEnX5KI6Ac5SL8zUEwRepFmh+bSa0DI3k7r1gTtI4ORcZw4w003ln3bD9aZ4yxa9WmvGSThSxsCYNkWryQOekZ8+i+/t/bMYg/AO+9tuc3f6cQ1uOvbkYs38QDfBZpUKXNVLIoC06IuWjZlkEZkWf9A18flJ1cubcLJkOr1X0YmbKVk4s0O9WZzSL7TFE+1Ui3DkR20+8dj1EdZb59LRsuU8xiU2jxi8kcs5xBAWNc9fD5nGwGLY/zA0fiZnUnHO1CHeBpa+VjIFZjkk3EMybLRvlVdoPN8nlqKu/qwN18AGbjLbRDT0Vp1dpekwHbTze9seVd7r0D882zEBs7CYlOZQ/nA9g4w8f5I+CWpdahSe9ne2EodXQOUrxBppE8DA7vccXihAade3YPDClbmkTG+gISufyojoKLoS1XIrLQa0wjCyptiXpqW6wGIfBTCm8/mPrl8lqtW5Bm/FYm3PjQ6vrJOYtlkuT4nj9mJXLdRZt9TvbSi8gvMu45x04qsQ7X/si7dFWwwjTXEs0dm6QQUqfw0EV8b4Wa0R3ngkHb9XxL6T8MfkPYYSEqJ0wQMHsJMJA08ZRkWs6p+otAjE7FDMuoPN9yaTPFh6ENVHTWbnn1bEImpS2nDN+KH
+	lqMsVWE77M3TfdTYBkwzfMQ8BkxZ/kl9AiBlH4rlnVxJa+Dxz7pEJSenR2EEkVTouMTCIleB67jxnc0YzjYSlPPEB5ng1dHVnKYYAZLNRGrkrxkgOA5ckjKfB9jumaVsd+4dgrQGGRrlKMdOvgOOV1gLesXIl8LOCA6GFZyvXc0CfcasrpK2UbEZL+TXgPglK3hpJs0lzbQPVcsjqQT8ijoapEj7LQQAv9h4Na52So82SoUkFwXIG7cA9d1ZiR7XFwN1NFmAFB7DdZE1VWp9NjLynoLfz1X/B3hBdWNCtU+ETncYioMHCQYJe7073kJ/ru6dZxOcUyGcxBEGCZ7Gi1Q2IqIySoHiXdfo3WIhDN8OrI9ZzggT0CQ+6DsSqoT1UudKUdnMKy1p5uVjRtuOtvIVKn9fvFb/fg16qEdcsO+7fKR+LLQ8BmLVYnYOnfbEud9QbDyuHlMMYIdRnm1PGl7WAz1K/lzySyyXQ04ojsdYaDNnQfcnciOBBmReMGjAwlc+KemqJ24KndwhnMHgYJzm99NvaBM2dD6HXr8nePTlYV/F857qUCdIB3DHR6MrheTLlpLT3LIaRtXiRUBqCOWnrfLjrTLG3j94W10sqwjDkpLFgWhbTW+Gy9fNbLTApKYH4vFDP1sjbSFlGbaCQW2hJU6o3qKLBHxfeM9zuAbHzQwBtYMd3F9YAeycJtKBSR3/mqy1rUxK3RKybOHWkX4a/yM/I0Z9IAapiT+32oiy+wYxyq0/hUPv3LFpnJZE
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tUXXXps2Rksso7CBdyufFPKBob+wxRkA/Mf5TVVYh246DOaBG8XyfV1cOLO5?=
- =?us-ascii?Q?C2mUpOmvSbODJAX7qSI+n3s1Ip3HAcs2zJtqj2RgytWV1gPZN5rKyabDu3t5?=
- =?us-ascii?Q?G2+jVLhcCAT4Fa1yxxb0zlM31NHuScNx4FDwr//Yd90CMuVNnaTEKiesEvX5?=
- =?us-ascii?Q?11KAaRmPd092ayqZp4tWK3qErV3eGbUQbAbccqLikn7QdDTBZQNKFgbkjgJL?=
- =?us-ascii?Q?4voSo0lWRbe9e6KTS8HfFQSRGwn8CfT80B1Quz3FEREyXdVpE4etYmB7zI+S?=
- =?us-ascii?Q?G5roA60PezLRNElslzHhGclgeF7Q9Dy2stG+37G1q8vmIi7rWHLpJun4CEff?=
- =?us-ascii?Q?X2YTgGMcEEJU04cHxYCQCseXvTxNsCr8RsEUs7BI/tEOqZh/xKJ+657x6gHR?=
- =?us-ascii?Q?Ohqjybstg256kTFE1gS0HJVFCJBWGId1bdssdEu6B605KQf/itUorP+R4Cpr?=
- =?us-ascii?Q?234W6wvPw5Yj296ZwmY6+cOJ1StJ/gHyhqDn0fuFdP2oQZfn/g3Sy1aRXtu7?=
- =?us-ascii?Q?CJd089koGBmM1Sx+d7v8h7h04SuuisltKZZTqZhd7LX21WJB1IKVDTwh9qK7?=
- =?us-ascii?Q?egjOXRPYKjiahpoYQ8FFe+UbV75WHSFkGBL9CX32yrBwf8kIgbTE+//XpX/t?=
- =?us-ascii?Q?IaV13ka12Cn/q+AGX5yLHuaXdJl3KPd3GauosMjSdnm/jZDKmayu9nerPl9v?=
- =?us-ascii?Q?h4rbBtG/FGRKcoMz2ILkc/Oe/7yLNTBNNv+KQ1aFO603qqIQ/k780D2w75WK?=
- =?us-ascii?Q?oUHlz90uEbavs2po9rtzRs1x/QRw2c2aWfbsIj7WDm9JGdIuBwvPx8OsUGfe?=
- =?us-ascii?Q?TwD+OTWSDBkAVCT8KQEnZFgmy+0+F/wvqtTaQt3E7fjBc5SdCmGClxPLGyvK?=
- =?us-ascii?Q?Y+n7+KzCQbVPhYyvtxFck4qnQrEvSVUF3yb7GVo07ohzX+ZlDg9S0aHVAL9H?=
- =?us-ascii?Q?WNjWy+0bX7zPA1+T3I5hidFIDBBriTuQxksP/amX3DP9pjcxTAUHI9CpteLo?=
- =?us-ascii?Q?wtgQZvH2kEt6pVyo0LqafK7wr9zyJvANVhNeH37kbAnVzNqkJDUsuxvWXxNu?=
- =?us-ascii?Q?l1xEKq5HTMLPc1XtM+h7xzn12BVbdE8gr42i6JwSn73sN5OhAU2dxVPE+cKZ?=
- =?us-ascii?Q?Vyms0OQkOwQEHJ/az4LBl3MLodJgaxeHkD2aE9Y7eOdrAe7HVl7jhK745VNT?=
- =?us-ascii?Q?JeBheG2jpyD8yqKw7W9VKosjm8oe0Fv26uioCcYC/cjBtOahCg4j4S7a6jgF?=
- =?us-ascii?Q?bNpwxikSE43hG6QHOIAMK7USEwipGYO69tXgMBxhNe7vfg9jHB4cJL7c/nzO?=
- =?us-ascii?Q?tI57WNO6GvnG655GTfk/aHDOtBzGFuj9/4dsBFtUuSByKHJzHol788yjLnKN?=
- =?us-ascii?Q?/gA+u0PN8l6P9Lo0DYHJRcr+xhAM4jH4eiEixz40OuZrue/HSBHk7+yPkSYZ?=
- =?us-ascii?Q?AMQfBEvP9un5aO4BMLouBt/T1gYAifoKBZ6xkjec3EczG5Ce+Utouthn0vPl?=
- =?us-ascii?Q?e1/FwXHg7GIAQ38tTbJnUN0RaC7Dr+SuVbR2NFN3hHnkCSsZRR9EAyFh1mWK?=
- =?us-ascii?Q?byE12wM5uohPU+OVviOxXzkYmImTBKKzTDh39BcCrbGkIU72SUpkqBDFWNCY?=
- =?us-ascii?Q?xMEmQU4zC3+e20/abugK+0A=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c597e034-318f-4948-2b19-08dc3dc085cc
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 09:33:46.8701
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 10:09:09.2088
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MAhmhPG27jV75DULtX8LM2y1BIfUtr/9J767AowYLGD818vrGppcB4PNyH9ZcKOAuXpJVItlTV6qj2h09iRCwJ9fj/buLqlOIPbHqrMm6cWATCaVDbA9vtMC2UdAWMKg
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0765
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc1fe342-7b12-4f2f-f1ad-08dc3dc576e5
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS1EPF00000045.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB7035
 
-ISP support multi streams output. Add stream_count to save the number
-of stream on.
+The reg cache used to be grouped and activated for each property
+access, regardless of whether it was part of the group. That will
+lead to a significant increase in I2C transmission.
+Divide the cache group and create a cache for every register. The
+cache won't work until the register has been fetched. This will help
+in reducing the quantity of pointless I2C communication and avoiding
+the error -16 (EBUSY) that occurs while using an I2C bus that is
+shared by many devices.
 
-Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+Signed-off-by: Hermes Zhang <Hermes.Zhang@axis.com>
 ---
- .../staging/media/starfive/camss/stf-isp.c    | 28 +++++++++++++------
- .../staging/media/starfive/camss/stf-isp.h    |  1 +
- 2 files changed, 21 insertions(+), 8 deletions(-)
+v2:
+ - Refactor implementation.
 
-diff --git a/drivers/staging/media/starfive/camss/stf-isp.c b/drivers/staging/media/starfive/camss/stf-isp.c
-index 9b5745669fa6..1bfd336b14a1 100644
---- a/drivers/staging/media/starfive/camss/stf-isp.c
-+++ b/drivers/staging/media/starfive/camss/stf-isp.c
-@@ -92,15 +92,27 @@ static int isp_set_stream(struct v4l2_subdev *sd, int enable)
- 	src = stf_isp_g_index_by_mcode(fmt_t_src, fmt_src->code);
+ drivers/power/supply/bq27xxx_battery.c | 231 +++++++++++++++++--------
+ include/linux/power/bq27xxx_battery.h  |  30 ++--
+ 2 files changed, 179 insertions(+), 82 deletions(-)
+
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index 1c4a9d137744..cc724322f4f0 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -1746,14 +1746,16 @@ static bool bq27xxx_battery_capacity_inaccurate(struct bq27xxx_device_info *di,
  
- 	if (enable) {
--		stf_isp_reset(isp_dev);
--		stf_isp_init_cfg(isp_dev);
--		stf_isp_settings(isp_dev, crop, fmt->code);
--		stf_isp_config_yuv_out_stride(isp_dev, crop->width,
--					      fmt_t_src->fmts[src].bpp);
--		stf_isp_stream_set(isp_dev);
--	}
-+		if (!isp_dev->stream_count) {
-+			stf_isp_reset(isp_dev);
-+			stf_isp_init_cfg(isp_dev);
-+			stf_isp_settings(isp_dev, crop, fmt->code);
-+			stf_isp_config_yuv_out_stride(isp_dev, crop->width,
-+						      fmt_t_src->fmts[src].bpp);
-+			stf_isp_stream_set(isp_dev);
+ static int bq27xxx_battery_read_health(struct bq27xxx_device_info *di)
+ {
++	int flags = di->cache[CACHE_REG_FLAGS].value;
 +
-+			v4l2_subdev_call(isp_dev->source_subdev, video,
-+					 s_stream, enable);
-+		}
-+
-+		isp_dev->stream_count++;
-+	} else {
-+		isp_dev->stream_count--;
+ 	/* Unlikely but important to return first */
+-	if (unlikely(bq27xxx_battery_overtemp(di, di->cache.flags)))
++	if (unlikely(bq27xxx_battery_overtemp(di, flags)))
+ 		return POWER_SUPPLY_HEALTH_OVERHEAT;
+-	if (unlikely(bq27xxx_battery_undertemp(di, di->cache.flags)))
++	if (unlikely(bq27xxx_battery_undertemp(di, flags)))
+ 		return POWER_SUPPLY_HEALTH_COLD;
+-	if (unlikely(bq27xxx_battery_dead(di, di->cache.flags)))
++	if (unlikely(bq27xxx_battery_dead(di, flags)))
+ 		return POWER_SUPPLY_HEALTH_DEAD;
+-	if (unlikely(bq27xxx_battery_capacity_inaccurate(di, di->cache.flags)))
++	if (unlikely(bq27xxx_battery_capacity_inaccurate(di, flags)))
+ 		return POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED;
  
--	v4l2_subdev_call(isp_dev->source_subdev, video, s_stream, enable);
-+		if (!isp_dev->stream_count) {
-+			v4l2_subdev_call(isp_dev->source_subdev, video,
-+					 s_stream, enable);
-+		}
-+	}
+ 	return POWER_SUPPLY_HEALTH_GOOD;
+@@ -1778,7 +1780,7 @@ static int bq27xxx_battery_current_and_status(
+ 	struct bq27xxx_device_info *di,
+ 	union power_supply_propval *val_curr,
+ 	union power_supply_propval *val_status,
+-	struct bq27xxx_reg_cache *cache)
++	struct bq27xxx_cache_reg *reg)
+ {
+ 	bool single_flags = (di->opts & BQ27XXX_O_ZERO);
+ 	int curr;
+@@ -1790,8 +1792,8 @@ static int bq27xxx_battery_current_and_status(
+ 		return curr;
+ 	}
  
- 	v4l2_subdev_unlock_state(sd_state);
+-	if (cache) {
+-		flags = cache->flags;
++	if (reg) {
++		flags = reg->value;
+ 	} else {
+ 		flags = bq27xxx_read(di, BQ27XXX_REG_FLAGS, single_flags);
+ 		if (flags < 0) {
+@@ -1832,57 +1834,128 @@ static int bq27xxx_battery_current_and_status(
  	return 0;
-diff --git a/drivers/staging/media/starfive/camss/stf-isp.h b/drivers/staging/media/starfive/camss/stf-isp.h
-index 4fc5cfac115c..30e4eb29f077 100644
---- a/drivers/staging/media/starfive/camss/stf-isp.h
-+++ b/drivers/staging/media/starfive/camss/stf-isp.h
-@@ -414,6 +414,7 @@ struct stf_isp_dev {
- 	const struct stf_isp_format_table *formats;
- 	unsigned int nformats;
- 	struct v4l2_subdev *source_subdev;
-+	unsigned int stream_count;
+ }
+ 
+-static void bq27xxx_battery_update_unlocked(struct bq27xxx_device_info *di)
++static int bq27xxx_cached_reg_value_unlocked(struct bq27xxx_device_info *di,
++					     enum bq27xxx_cache_registers item)
+ {
+-	union power_supply_propval status = di->last_status;
+-	struct bq27xxx_reg_cache cache = {0, };
+-	bool has_singe_flag = di->opts & BQ27XXX_O_ZERO;
+-
+-	cache.flags = bq27xxx_read(di, BQ27XXX_REG_FLAGS, has_singe_flag);
+-	if ((cache.flags & 0xff) == 0xff)
+-		cache.flags = -1; /* read error */
+-	if (cache.flags >= 0) {
+-		cache.temperature = bq27xxx_battery_read_temperature(di);
++	struct bq27xxx_cache_reg *reg;
++	int tmp = -EINVAL;
++
++	reg = &di->cache[item];
++
++	if (time_is_after_jiffies(reg->last_update + 5 * HZ))
++		return reg->value;
++
++	switch (item) {
++	case CACHE_REG_TEMPERATURE:
++		tmp = bq27xxx_battery_read_temperature(di);
++		break;
++	case CACHE_REG_TIME_TO_EMPTY:
+ 		if (di->regs[BQ27XXX_REG_TTE] != INVALID_REG_ADDR)
+-			cache.time_to_empty = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTE);
++			tmp = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTE);
++		break;
++	case CACHE_REG_TIME_TO_EMPTY_AVG:
+ 		if (di->regs[BQ27XXX_REG_TTECP] != INVALID_REG_ADDR)
+-			cache.time_to_empty_avg = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTECP);
++			tmp = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTECP);
++		break;
++	case CACHE_REG_TIME_TO_FULL:
+ 		if (di->regs[BQ27XXX_REG_TTF] != INVALID_REG_ADDR)
+-			cache.time_to_full = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTF);
+-
+-		cache.charge_full = bq27xxx_battery_read_fcc(di);
+-		cache.capacity = bq27xxx_battery_read_soc(di);
+-		if (di->regs[BQ27XXX_REG_AE] != INVALID_REG_ADDR)
+-			cache.energy = bq27xxx_battery_read_energy(di);
+-		di->cache.flags = cache.flags;
+-		cache.health = bq27xxx_battery_read_health(di);
++			tmp = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTF);
++		break;
++	case CACHE_REG_CHARGE_FULL:
++		tmp = bq27xxx_battery_read_fcc(di);
++		break;
++	case CACHE_REG_CYCLE_COUNT:
+ 		if (di->regs[BQ27XXX_REG_CYCT] != INVALID_REG_ADDR)
+-			cache.cycle_count = bq27xxx_battery_read_cyct(di);
+-
+-		/*
+-		 * On gauges with signed current reporting the current must be
+-		 * checked to detect charging <-> discharging status changes.
+-		 */
+-		if (!(di->opts & BQ27XXX_O_ZERO))
+-			bq27xxx_battery_current_and_status(di, NULL, &status, &cache);
+-
+-		/* We only have to read charge design full once */
+-		if (di->charge_design_full <= 0)
+-			di->charge_design_full = bq27xxx_battery_read_dcap(di);
++			tmp = bq27xxx_battery_read_cyct(di);
++		break;
++	case CACHE_REG_CAPACITY:
++		tmp = bq27xxx_battery_read_soc(di);
++		break;
++	case CACHE_REG_ENERGY:
++		if (di->regs[BQ27XXX_REG_AE] != INVALID_REG_ADDR)
++			tmp = bq27xxx_battery_read_energy(di);
++		break;
++	case CACHE_REG_FLAGS:
++		bool has_singe_flag = di->opts & BQ27XXX_O_ZERO;
++
++		tmp = bq27xxx_read(di, BQ27XXX_REG_FLAGS, has_singe_flag);
++		if ((tmp & 0xff) == 0xff)
++			tmp = -1; /* read error */
++		break;
++	default:
++		break;
++	}
++
++	/* only update cache value when successful */
++	if (tmp >= 0) {
++		reg->value = tmp;
++		reg->last_update = jiffies;
+ 	}
+ 
+-	if ((di->cache.capacity != cache.capacity) ||
+-	    (di->cache.flags != cache.flags) ||
++	return tmp;
++}
++
++static int bq27xxx_cached_reg_value(struct bq27xxx_device_info *di,
++				    enum bq27xxx_cache_registers item)
++{
++	int ret;
++
++	mutex_lock(&di->lock);
++	ret = bq27xxx_cached_reg_value_unlocked(di, item);
++	mutex_unlock(&di->lock);
++
++	return ret;
++}
++
++static void bq27xxx_battery_update_unlocked(struct bq27xxx_device_info *di)
++{
++	union power_supply_propval status = di->last_status;
++	int old_flags, flags;
++	int old_capacity, capacity;
++
++	old_capacity = di->cache[CACHE_REG_CAPACITY].value;
++	capacity = old_capacity;
++
++	old_flags = di->cache[CACHE_REG_FLAGS].value;
++	flags = bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_FLAGS);
++
++	if (flags < 0)
++		goto out;
++
++	bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_TEMPERATURE);
++	if (di->regs[BQ27XXX_REG_TTE] != INVALID_REG_ADDR)
++		bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_TIME_TO_EMPTY);
++	if (di->regs[BQ27XXX_REG_TTECP] != INVALID_REG_ADDR)
++		bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_TIME_TO_EMPTY_AVG);
++	if (di->regs[BQ27XXX_REG_TTF] != INVALID_REG_ADDR)
++		bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_TIME_TO_FULL);
++
++	bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_CHARGE_FULL);
++	bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_CAPACITY);
++	if (di->regs[BQ27XXX_REG_AE] != INVALID_REG_ADDR)
++		bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_ENERGY);
++	if (di->regs[BQ27XXX_REG_CYCT] != INVALID_REG_ADDR)
++		bq27xxx_cached_reg_value_unlocked(di, CACHE_REG_CYCLE_COUNT);
++
++	/*
++	 * On gauges with signed current reporting the current must be
++	 * checked to detect charging <-> discharging status changes.
++	 */
++	if (!(di->opts & BQ27XXX_O_ZERO))
++		bq27xxx_battery_current_and_status(di, NULL, &status,
++						   &di->cache[CACHE_REG_FLAGS]);
++
++	/* We only have to read charge design full once */
++	if (di->charge_design_full <= 0)
++		di->charge_design_full = bq27xxx_battery_read_dcap(di);
++
++out:
++	if ((old_capacity != capacity) || (old_flags != flags) ||
+ 	    (di->last_status.intval != status.intval)) {
+ 		di->last_status.intval = status.intval;
+ 		power_supply_changed(di->bat);
+ 	}
+ 
+-	if (memcmp(&di->cache, &cache, sizeof(cache)) != 0)
+-		di->cache = cache;
+-
+-	di->last_update = jiffies;
+-
+ 	if (!di->removed && poll_interval > 0)
+ 		mod_delayed_work(system_wq, &di->work, poll_interval * HZ);
+ }
+@@ -1934,29 +2007,32 @@ static int bq27xxx_battery_capacity_level(struct bq27xxx_device_info *di,
+ 					  union power_supply_propval *val)
+ {
+ 	int level;
++	int flags;
++
++	flags = di->cache[CACHE_REG_FLAGS].value;
+ 
+ 	if (di->opts & BQ27XXX_O_ZERO) {
+-		if (di->cache.flags & BQ27000_FLAG_FC)
++		if (flags & BQ27000_FLAG_FC)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+-		else if (di->cache.flags & BQ27000_FLAG_EDVF)
++		else if (flags & BQ27000_FLAG_EDVF)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+-		else if (di->cache.flags & BQ27000_FLAG_EDV1)
++		else if (flags & BQ27000_FLAG_EDV1)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_LOW;
+ 		else
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+ 	} else if (di->opts & BQ27Z561_O_BITS) {
+-		if (di->cache.flags & BQ27Z561_FLAG_FC)
++		if (flags & BQ27Z561_FLAG_FC)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+-		else if (di->cache.flags & BQ27Z561_FLAG_FDC)
++		else if (flags & BQ27Z561_FLAG_FDC)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+ 		else
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+ 	} else {
+-		if (di->cache.flags & BQ27XXX_FLAG_FC)
++		if (flags & BQ27XXX_FLAG_FC)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+-		else if (di->cache.flags & BQ27XXX_FLAG_SOCF)
++		else if (flags & BQ27XXX_FLAG_SOCF)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+-		else if (di->cache.flags & BQ27XXX_FLAG_SOC1)
++		else if (flags & BQ27XXX_FLAG_SOC1)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_LOW;
+ 		else
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+@@ -2004,13 +2080,12 @@ static int bq27xxx_battery_get_property(struct power_supply *psy,
+ {
+ 	int ret = 0;
+ 	struct bq27xxx_device_info *di = power_supply_get_drvdata(psy);
++	int flags;
++	int cache;
+ 
+-	mutex_lock(&di->lock);
+-	if (time_is_before_jiffies(di->last_update + 5 * HZ))
+-		bq27xxx_battery_update_unlocked(di);
+-	mutex_unlock(&di->lock);
++	flags = bq27xxx_cached_reg_value(di, CACHE_REG_FLAGS);
+ 
+-	if (psp != POWER_SUPPLY_PROP_PRESENT && di->cache.flags < 0)
++	if (psp != POWER_SUPPLY_PROP_PRESENT && flags < 0)
+ 		return -ENODEV;
+ 
+ 	switch (psp) {
+@@ -2021,30 +2096,40 @@ static int bq27xxx_battery_get_property(struct power_supply *psy,
+ 		ret = bq27xxx_battery_voltage(di, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_PRESENT:
+-		val->intval = di->cache.flags < 0 ? 0 : 1;
++		val->intval = flags < 0 ? 0 : 1;
+ 		break;
+ 	case POWER_SUPPLY_PROP_CURRENT_NOW:
+ 		ret = bq27xxx_battery_current_and_status(di, val, NULL, NULL);
+ 		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY:
+-		ret = bq27xxx_simple_value(di->cache.capacity, val);
++		cache = bq27xxx_cached_reg_value(di, CACHE_REG_CAPACITY);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
+ 		ret = bq27xxx_battery_capacity_level(di, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_TEMP:
+-		ret = bq27xxx_simple_value(di->cache.temperature, val);
++		cache = bq27xxx_cached_reg_value(di, CACHE_REG_TEMPERATURE);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		if (ret == 0)
+ 			val->intval -= 2731; /* convert decidegree k to c */
+ 		break;
+ 	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:
+-		ret = bq27xxx_simple_value(di->cache.time_to_empty, val);
++		cache = bq27xxx_cached_reg_value(di, CACHE_REG_TIME_TO_EMPTY);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG:
+-		ret = bq27xxx_simple_value(di->cache.time_to_empty_avg, val);
++		cache = bq27xxx_cached_reg_value(di, CACHE_REG_TIME_TO_EMPTY_AVG);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_TIME_TO_FULL_NOW:
+-		ret = bq27xxx_simple_value(di->cache.time_to_full, val);
++		cache = bq27xxx_cached_reg_value(di, CACHE_REG_TIME_TO_FULL);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_TECHNOLOGY:
+ 		if (di->opts & BQ27XXX_O_MUL_CHEM)
+@@ -2059,7 +2144,9 @@ static int bq27xxx_battery_get_property(struct power_supply *psy,
+ 			ret = bq27xxx_simple_value(bq27xxx_battery_read_rc(di), val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_CHARGE_FULL:
+-		ret = bq27xxx_simple_value(di->cache.charge_full, val);
++		cache = bq27xxx_cached_reg_value(di, CACHE_REG_CHARGE_FULL);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
+ 		ret = bq27xxx_simple_value(di->charge_design_full, val);
+@@ -2072,16 +2159,22 @@ static int bq27xxx_battery_get_property(struct power_supply *psy,
+ 	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
+ 		return -EINVAL;
+ 	case POWER_SUPPLY_PROP_CYCLE_COUNT:
+-		ret = bq27xxx_simple_value(di->cache.cycle_count, val);
++		cache = bq27xxx_cached_reg_value(di, CACHE_REG_CYCLE_COUNT);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_ENERGY_NOW:
+-		ret = bq27xxx_simple_value(di->cache.energy, val);
++		cache = bq27xxx_cached_reg_value(di, CACHE_REG_ENERGY);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_POWER_AVG:
+ 		ret = bq27xxx_battery_pwr_avg(di, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_HEALTH:
+-		ret = bq27xxx_simple_value(di->cache.health, val);
++		cache = bq27xxx_battery_read_health(di);
++
++		ret = bq27xxx_simple_value(cache, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_MANUFACTURER:
+ 		val->strval = BQ27XXX_MANUFACTURER;
+diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/bq27xxx_battery.h
+index 7d8025fb74b7..617c8409d80f 100644
+--- a/include/linux/power/bq27xxx_battery.h
++++ b/include/linux/power/bq27xxx_battery.h
+@@ -46,17 +46,22 @@ struct bq27xxx_access_methods {
+ 	int (*write_bulk)(struct bq27xxx_device_info *di, u8 reg, u8 *data, int len);
  };
  
- int stf_isp_reset(struct stf_isp_dev *isp_dev);
+-struct bq27xxx_reg_cache {
+-	int temperature;
+-	int time_to_empty;
+-	int time_to_empty_avg;
+-	int time_to_full;
+-	int charge_full;
+-	int cycle_count;
+-	int capacity;
+-	int energy;
+-	int flags;
+-	int health;
++struct bq27xxx_cache_reg {
++	int value;
++	unsigned long last_update;
++};
++
++enum bq27xxx_cache_registers {
++	CACHE_REG_TEMPERATURE = 0,
++	CACHE_REG_TIME_TO_EMPTY,
++	CACHE_REG_TIME_TO_EMPTY_AVG,
++	CACHE_REG_TIME_TO_FULL,
++	CACHE_REG_CHARGE_FULL,
++	CACHE_REG_CYCLE_COUNT,
++	CACHE_REG_CAPACITY,
++	CACHE_REG_ENERGY,
++	CACHE_REG_FLAGS,
++	CACHE_REG_MAX,
+ };
+ 
+ struct bq27xxx_device_info {
+@@ -68,10 +73,9 @@ struct bq27xxx_device_info {
+ 	struct bq27xxx_dm_reg *dm_regs;
+ 	u32 unseal_key;
+ 	struct bq27xxx_access_methods bus;
+-	struct bq27xxx_reg_cache cache;
++	struct bq27xxx_cache_reg cache[CACHE_REG_MAX];
+ 	int charge_design_full;
+ 	bool removed;
+-	unsigned long last_update;
+ 	union power_supply_propval last_status;
+ 	struct delayed_work work;
+ 	struct power_supply *bat;
 -- 
-2.25.1
+2.39.2
 
