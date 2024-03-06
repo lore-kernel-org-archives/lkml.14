@@ -1,140 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C160660B9E
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189A560DD1
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709720740; cv=none; b=B/xoxSW1MZak3WVjJr59BOcUxxuq5s8uDLYPSXDtQKwVXYnNNvBI2THDIHI2eQoG/GAqIUitoL88Iu8uJ9U0zgsAJQ7CEXgrpu5XopoQomyuUsm5t9W6BHU/KIx3MTQYXlP7pwfYN8PNyvRCalVXkvbjzwmy14+AsvKcq1CVzFg=
+	t=1709720746; cv=none; b=J6VBbHJKhkxo83lNGXYC4NjbC0WLBsHfGHaQtuNBBbRPeqUcYf3D+F/hz85lzIk+lOAz04YQ4cNGoLsYS7x2RNYl84tYxpwc0Wyj+N39X2kHf03l878Mr+5EATyze3pufffmbcLPTWvBsd4EVCJYLtycYTIMR3iisB/ckfLw/Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709720740; c=relaxed/simple;
-	bh=El+OOs5pi7lzmVrizlMxTEsWscK7ZxT9Eu6oAzyd4V4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dviEIJ7vDWRXzyMPY5GLV06ZupdyPWEwB+su7LNtGcOsl4cKAGdjGWUn8xLxvzc2PEmrpSfq7xq2g1Od2HwuFKN618HWARp6XFoI38fCYj0qcp9vPTT3B5ci4qTLPBVSxeTl+d8jrvtW0P3/NZUsE+RH7TVLECc0ytr6iYFD+Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DQUJ6b0X; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709720746; c=relaxed/simple;
+	bh=4EBURAKcVEtzuH44BB1l5zxkTY5Se0NtwxvaQH+CNMw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=vGdUDelTjvTm+cFO5PpOlx22kum8kC5zoFs4SPR2NDTm0JqyX0n6Ds+Lbv/1DYBrXHEA8W8PkzRwBsk4CA8wIt3pMzDmvCKCnkZiUdPwiMALSvyvs5faeirP5ctNhqsj2ETMupBRiT1e6cIRxcN8aaLO2rg3YoRMbcsf/eUOfnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IQQdB+SK; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DQUJ6b0X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709720738; x=1741256738;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=El+OOs5pi7lzmVrizlMxTEsWscK7ZxT9Eu6oAzyd4V4=;
-  b=DQUJ6b0XCYSs1v9ehONBqixV7N3fprq+YbZxeM9C58Qb4flDl7ToFfTx
-   z0AaJVpHKlG2L7Ylxm8GAWACnSEO0sBD8lyYhiL8hly09KUHQMK7YG6i9
-   fYfxazXIDAZxsFB0DQZ3AX/wtHk8r19hnTQl5KQkb1ENpcmBRjt4AUSVX
-   WE/4vLHmhz5NZH8p2Jk2Z5U5+oZuX2xxE+n+qJnTNlZKfAc+AlskrFrEo
-   O5O5aCypsKQD83L/AthZHmpNHoXlja/m0v3ZndgnIi9sAAzJV23uuy2rW
-   61cTuC5Ky4jDkmhBx+A5vPgTTrzQa7eJ8ch0U3i7i6UsHhq0fJw+emaSf
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="21778852"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="21778852"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:25:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="9587507"
-Received: from rjongalo-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.33.211])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:25:33 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Hsin-Te Yuan <yuanhsinte@chromium.org>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Hsin-Te
- Yuan <yuanhsinte@chromium.org>
-Subject: Re: [PATCH v3] drm/bridge: anx7625: Update audio status while
- detecting
-In-Reply-To: <20240306-anx7625-v3-1-9034263bf530@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240306-anx7625-v3-1-9034263bf530@chromium.org>
-Date: Wed, 06 Mar 2024 12:25:30 +0200
-Message-ID: <87frx3zmg5.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IQQdB+SK"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4269v86e025889;
+	Wed, 6 Mar 2024 10:25:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=p7FxxulEkaVgT4xCt+jgJQJXvspoIlD5AhWudCKfuuc=;
+ b=IQQdB+SKpHHSmP6qChYQ++113kcKQCljNB77XLMJRW2gzYFglrySR+mmhVxatu5KSf4w
+ KoQcnDQSSd3dqeRqrPTuc/Te5gzR7bJUfjMd35W7ZlNQqZLn2tfLstPMXBoUk2BMLR6J
+ mS2uVufijhDkfPX5FW+Cts1OjhQLkvIF8X+Ngn1Srrc6Ge8TLTi3jUPrUOQO5tlhrGYZ
+ L9C+WvDTF+M5Sw0imcloh7yriL4oLsSjDL/61828MlTn1pHThJFN30nN4sj1oOnw/xb8
+ +lhyoqNiQzKxOH7evK55lNe4T+7ecXpEnIpjYGofXwoTPtI+OAAdnUbick3IJni8Q7lI gw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wppaarqyf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 10:25:34 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 426AOWfQ022751;
+	Wed, 6 Mar 2024 10:25:33 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wppaarqvy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 10:25:33 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4269A1OP025376;
+	Wed, 6 Mar 2024 10:25:31 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmetyp565-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 10:25:31 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 426APQZx7668244
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 6 Mar 2024 10:25:28 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1ACDA2004D;
+	Wed,  6 Mar 2024 10:25:26 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1A5B32004F;
+	Wed,  6 Mar 2024 10:25:23 +0000 (GMT)
+Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.ibm.com.com (unknown [9.43.37.79])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  6 Mar 2024 10:25:22 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
+Cc: sshegde@linux.ibm.com, yu.c.chen@intel.com, dietmar.eggemann@arm.com,
+        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
+        aboorvad@linux.ibm.com, srikar@linux.ibm.com, vschneid@redhat.com,
+        pierre.gondois@arm.com, qyousef@layalina.io
+Subject: [PATCH v5 2/3] sched/fair: Use helper function to access rd->overutilized
+Date: Wed,  6 Mar 2024 15:54:53 +0530
+Message-Id: <20240306102454.341014-3-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240306102454.341014-1-sshegde@linux.ibm.com>
+References: <20240306102454.341014-1-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: XB5eQkQ2Wbn02ntkIIWNCbP0rrKi8ReI
+X-Proofpoint-ORIG-GUID: _BZ7cXCquaSCDmVLhXWl04hn3nHI_kEO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-06_05,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=853
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 adultscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2403060082
 
-On Wed, 06 Mar 2024, Hsin-Te Yuan <yuanhsinte@chromium.org> wrote:
-> Previously, the audio status was not updated during detection, leading
-> to a persistent audio despite hot plugging events. To resolve this
-> issue, update the audio status during detection.
->
-> Fixes: 566fef1226c1 ("drm/bridge: anx7625: add HDMI audio function")
-> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
-> ---
-> Changes in v3:
-> - Add Fixes tag. 
+Overutilized field is accessed directly in multiple places.
+So it could use a helper function. That way one might be more
+informed that it needs to be used only in case of EAS.
 
-You don't need to send another version just to update commit message
-trailers. They can either be added while applying, or when you need to
-update the patch anyway.
+No change in functionality intended.
 
-Or, if b4 is used to apply the patches, it can automagically pick up the
-trailers from replies to the patch with the Fixes: trailer.
+Reviewed-by: Qais Yousef <qyousef@layalina.io>
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+---
+ kernel/sched/fair.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-> - Link to v2: https://lore.kernel.org/r/20240306-anx7625-v2-1-7138e00b25bf@chromium.org
->
-> Changes in v2:
-> - Add a space after the colons in the subject line.
-> - Link to v1: https://lore.kernel.org/r/20240305-anx7625-v1-1-83ed3ccfa64c@chromium.org
-> ---
->  drivers/gpu/drm/bridge/analogix/anx7625.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> index 29d91493b101a..9f0d0c5b8ebf5 100644
-> --- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-> +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> @@ -2481,15 +2481,22 @@ static void anx7625_bridge_atomic_disable(struct drm_bridge *bridge,
->  	mutex_unlock(&ctx->aux_lock);
->  }
->  
-> +static void
-> +anx7625_audio_update_connector_status(struct anx7625_data *ctx,
-> +				      enum drm_connector_status status);
-> +
->  static enum drm_connector_status
->  anx7625_bridge_detect(struct drm_bridge *bridge)
->  {
->  	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
->  	struct device *dev = ctx->dev;
-> +	enum drm_connector_status status;
->  
->  	DRM_DEV_DEBUG_DRIVER(dev, "drm bridge detect\n");
->  
-> -	return anx7625_sink_detect(ctx);
-> +	status = anx7625_sink_detect(ctx);
-> +	anx7625_audio_update_connector_status(ctx, status);
-> +	return status;
->  }
->  
->  static struct edid *anx7625_bridge_get_edid(struct drm_bridge *bridge,
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 997e570d9423..e3086c8930ea 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6675,6 +6675,15 @@ static inline bool cpu_overutilized(int cpu)
+ 	return !util_fits_cpu(cpu_util_cfs(cpu), rq_util_min, rq_util_max, cpu);
+ }
 
-I guess this could be applied with less context (-C 2) but the baseline
-is old. In drm-misc-next, all of drm/bridge has moved on to struct
-drm_edid.
++/*
++ * Ensure that caller can do EAS. overutilized value
++ * make sense only if EAS is enabled
++ */
++static inline int is_rd_overutilized(struct root_domain *rd)
++{
++	return READ_ONCE(rd->overutilized);
++}
++
+ static inline void set_rd_overutilized_status(struct root_domain *rd,
+ 					      unsigned int status)
+ {
+@@ -6694,7 +6703,7 @@ static inline void check_update_overutilized_status(struct rq *rq)
+ 	if (!sched_energy_enabled())
+ 		return;
 
-BR,
-Jani.
+-	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
++	if (!is_rd_overutilized(rq->rd) && cpu_overutilized(rq->cpu))
+ 		set_rd_overutilized_status(rq->rd, SG_OVERUTILIZED);
+ }
+ #else
+@@ -6708,6 +6717,11 @@ static inline void set_rd_overutilized_status(struct root_domain *rd,
+ {
+ 	return 0;
+ }
++
++static inline int is_rd_overutilized(struct root_domain *rd)
++{
++	return 0;
++}
+ #endif
 
+ /* Runqueue only has SCHED_IDLE tasks enqueued */
+@@ -7989,7 +8003,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 
->
-> ---
-> base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-> change-id: 20240305-anx7625-fe16d3a9d37d
->
-> Best regards,
+ 	rcu_read_lock();
+ 	pd = rcu_dereference(rd->pd);
+-	if (!pd || READ_ONCE(rd->overutilized))
++	if (!pd || is_rd_overutilized(rd))
+ 		goto unlock;
 
--- 
-Jani Nikula, Intel
+ 	/*
+@@ -10872,7 +10886,7 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
+ 	if (sched_energy_enabled()) {
+ 		struct root_domain *rd = env->dst_rq->rd;
+
+-		if (rcu_dereference(rd->pd) && !READ_ONCE(rd->overutilized))
++		if (rcu_dereference(rd->pd) && !is_rd_overutilized(rd))
+ 			goto out_balanced;
+ 	}
+
+--
+2.39.3
+
