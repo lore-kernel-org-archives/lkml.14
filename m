@@ -1,82 +1,92 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C041B806
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 22:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56271B59D
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 22:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709764684; cv=none; b=BYGetvjBGLVIvR0msOZmO/eZKz9tg5m2zyE5fEy1SV44VCzkxlTb0DG7FHwRyDgOxQrG89nw8PG8X7AmKMvKt+5IcYr5ErWux08vPPZiAF9dTfVArRK4VXIGsQNrhLnJR0s4e9ePJU9tD1/S8vpnI78HfOIle9ZfTQiETgbaYoY=
+	t=1709764689; cv=none; b=qvdQKVbCGT534OzxRrSV7AieJwq/STa00eNmDLCgmuKudi245j9QvD84tueNBizYrjhb0nVW1yaepSefdGJ2gGqSZ5Uj+JH1SMDSMzNTQZGYc29am6z1xRYOC21jlQrWpn3rmBzzxcV/ROHgqvWZh9V1CJksMVehWYHOM2rg4hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709764684; c=relaxed/simple;
-	bh=aONfvMBLi+nGa8z5RQpjQsVQe9F1v8fIwL3IxZQZEyI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=AI1kEr4EV5eS84oPZ31kSY9JR4tqqN+1Pqr5RJXfDZ92eYZ7REalaK8q4J4xaVBy1Bjc227C9mJ/zFlVAyaZoK6C042ve6xHQxaROVyn8M3UYvfw1LV5T+k84tLkj6qCWY2OzL0NzZ8FCmWTrM4yVR8Z+R3lOVdLMEToOBfdyFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bc32b2226aso32368139f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 14:38:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709764682; x=1710369482;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oQx8oyVkoBQfTgwpCDc5Joc1fA/0UhEcaF4wgBQJJZ8=;
-        b=OmM96LOYl/ou4c0+qjoq77OxmR7vl/vq7HEMtwjv8GkfdDK409HolI/IsVYQUnr0Rl
-         hHFvyXDNEQzxO+aymyx3he/MJ3tqzluYVM6EsoVz2LxK0GN5dKu0ig7j97XhATG8rP2I
-         kMRXgoHx6hgWU1t36dEyUQ5Ij8dXsDS48yBYQ+pyJYn5TB6TB9x5MtcPMiv7fZ6J63Oq
-         D5xQWcAtJo76eHaVw1vbekFvnOZstMMRgItmpoDq76c/OL+H9PRHpoC02ibyCVHYtzdI
-         SAnIR59fBaJi++nlApuMvr7Qjo8W8xQTG6OiPEXDiqX4wzDcEndZFtuxVpOQ13OfhD/U
-         hOTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPmKPFFBNqgr2WfUyWqAhskYSjVlU4vpoI3wIkS7slN+D0Cw0z8ub2S6/skxNOwyfqZ4V+XwO62BuyqlcatXbDpaQcLGQXyowWAuEp
-X-Gm-Message-State: AOJu0Yy4QnAgS/1ISQvO2HPl7k0y+qiaToviijoGhSSYbod5qHQNAevA
-	uVbHmhc92mMv4XMc8cRkH09w8jtKb6mrIfjkmwgmpCVnW9UNhYenOuUOSyBwVYJCYND/pFCMh8U
-	nwqQHDwEFe5tM02IeWHb2zUrkZEsnxU9wbLe7/dquQn6mosUwV+A2cJo=
-X-Google-Smtp-Source: AGHT+IGUeFlmZ563e7wj+Rf7wOdbVjqxtWnT0cqDf2LCScDa5TAdV8QLnpmJdPdM1DX82HvmD30tfAYPKrbIiXL+LIblSWlVilKs
+	s=arc-20240116; t=1709764689; c=relaxed/simple;
+	bh=QMHws1QctT5NyUyniNy/i1yS7FjuctqycFRrFidhZb8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LfZB9rC54eWa5fbaq7r9A/lWPXlrxSaP6UGQW0lkiBl2Q/e3ElRAO0SsUxSFc2FjhgAAMSMR/e4OJC/H/wxdCmk/IZhXkn8PN0UEiPDm50UoxIs2K91zYoZzS/BRhTXLRspBm2j9CLMPHop7/xszHN3qurW9J8mMDJg9P73lJEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T+jfCp4F; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T+jfCp4F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709764686;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WhvHTa8E6KIfz47SC53e3jlZc8KPDvEvRYf6GRtCMqU=;
+	b=T+jfCp4FWDI03kwn11+06p4n/obom/VYctpr/0dxrlzoPtlPSPQjslzI6xl8g2uI2MkPUM
+	Tr4GTpic9kc8An4uYC780TIhWR5b4XPUhUu3sek1Or4xfsaAh3uvvIRlT0NDHee9CWwH86
+	6sghB+KHGhNqRO0I1VMmr+RcMKfwnvg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-QO_v-DYrOPqLzMUdIsx2gA-1; Wed, 06 Mar 2024 17:38:03 -0500
+X-MC-Unique: QO_v-DYrOPqLzMUdIsx2gA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A430E857A81;
+	Wed,  6 Mar 2024 22:38:02 +0000 (UTC)
+Received: from localhost.redhat.com (unknown [10.22.9.120])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1E907111D793;
+	Wed,  6 Mar 2024 22:38:02 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ben@decadent.org.uk,
+	shuah@kernel.org,
+	akpm@linux-foundation.org,
+	usama.anjum@collabora.com
+Subject: [PATCH v2 1/3] selftests/mm: Dont fail testsuite due to a lack of hugepages
+Date: Wed,  6 Mar 2024 15:37:12 -0700
+Message-ID: <20240306223714.320681-2-npache@redhat.com>
+In-Reply-To: <20240306223714.320681-1-npache@redhat.com>
+References: <20240306223714.320681-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2181:b0:474:c5e2:384c with SMTP id
- s1-20020a056638218100b00474c5e2384cmr727865jaj.4.1709764682541; Wed, 06 Mar
- 2024 14:38:02 -0800 (PST)
-Date: Wed, 06 Mar 2024 14:38:02 -0800
-In-Reply-To: <0000000000000c439a05daa527cb@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008d7cfe0613059c97@google.com>
-Subject: Re: [syzbot] [netfilter?] INFO: rcu detected stall in gc_worker (3)
-From: syzbot <syzbot+eec403943a2a2455adaa@syzkaller.appspotmail.com>
-To: bpf@vger.kernel.org, coreteam@netfilter.org, davem@davemloft.net, 
-	dvyukov@google.com, edumazet@google.com, fw@strlen.de, gautamramk@gmail.com, 
-	hdanton@sina.com, jhs@mojatatu.com, jiri@resnulli.us, kadlec@netfilter.org, 
-	kuba@kernel.org, lesliemonis@gmail.com, linux-kernel@vger.kernel.org, 
-	michal.kubiak@intel.com, mohitbhasi1998@gmail.com, netdev@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, pabeni@redhat.com, pablo@netfilter.org, 
-	paulmck@kernel.org, sdp.sachin@gmail.com, syzkaller-bugs@googlegroups.com, 
-	tahiliani@nitk.edu.in, tglx@linutronix.de, vsaicharan1998@gmail.com, 
-	xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-syzbot suspects this issue was fixed by commit:
+On systems that have large core counts and large page sizes, but limited
+memory, the userfaultfd test hugepage requirement is too large.
 
-commit 8c21ab1bae945686c602c5bfa4e3f3352c2452c5
-Author: Eric Dumazet <edumazet@google.com>
-Date:   Tue Aug 29 12:35:41 2023 +0000
+Exiting early due to missing one test's requirements is a rather aggressive
+strategy, and prevents a lot of other tests from running. Remove the
+early exit to prevent this.
 
-    net/sched: fq_pie: avoid stalls in fq_pie_timer()
+Fixes: ee00479d6702 ("selftests: vm: Try harder to allocate huge pages")
+Signed-off-by: Nico Pache <npache@redhat.com>
+---
+ tools/testing/selftests/mm/run_vmtests.sh | 1 -
+ 1 file changed, 1 deletion(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1338df0e180000
-start commit:   d4a7ce642100 igc: Fix Kernel Panic during ndo_tx_timeout c..
-git tree:       net
-kernel config:  https://syzkaller.appspot.com/x/.config?x=77b9a3cf8f44c6da
-dashboard link: https://syzkaller.appspot.com/bug?extid=eec403943a2a2455adaa
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1504b511a80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=137bf931a80000
+diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+index 246d53a5d7f28..727ea22ba408e 100755
+--- a/tools/testing/selftests/mm/run_vmtests.sh
++++ b/tools/testing/selftests/mm/run_vmtests.sh
+@@ -173,7 +173,6 @@ if [ -n "$freepgs" ] && [ -n "$hpgsize_KB" ]; then
+ 	if [ "$freepgs" -lt "$needpgs" ]; then
+ 		printf "Not enough huge pages available (%d < %d)\n" \
+ 		       "$freepgs" "$needpgs"
+-		exit 1
+ 	fi
+ else
+ 	echo "no hugetlbfs support in kernel?"
+-- 
+2.44.0
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: net/sched: fq_pie: avoid stalls in fq_pie_timer()
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
