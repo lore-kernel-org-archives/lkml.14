@@ -1,212 +1,165 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BEB5D48F
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 17:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04480136987;
+	Wed,  6 Mar 2024 17:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709747877; cv=none; b=Q6r/XvT/f1RRCbbOsEsK28TsUjyAh312voQqKvKeEfI0/VHgSdTQC4WOEnXDQDF7qymXyayfyYbjUScqedQOeyTC6tzp/Q1qjOuIaOZmpZo/EdZ7nfbVAFb/QJv75X8WjR/Qlu5W0MODRYaqOZib8KRXR2OSUjfd9HRjvtVsbOE=
+	t=1709747879; cv=none; b=T7tAG/I8lvpCFhVSxAr++pwa5bSH1uLXF3dXanYZutKDCNwW1088+i6L3sP28fCCltM3Bpihs1qxeL/LBg5UCvV72RhpbqAvUmMG87ZhIwFCmQPRYScP4uabPH5AXyBhKNELO+V7II1Mz5T9zPxkHgMwxrGwBDJNYNfKRTUdd3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709747877; c=relaxed/simple;
-	bh=A+RJIboiAiSHzFwIGTG+pLAmV34D1JkjLrbUzmX+ydA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tf8PQ7d8bCkyg6OWd2yGeMaFtt+akE3oTEJquMeTDQ46iOBiLhvcb56VE5Ok+oQdaIMC45PSIFPkjIFa/IQ91jl90m3tv7ADcoJqTcFLoTBN7oo1SlVEbDFKF86KRTvlYl9SfJfJl9MzNVUlgx3N0dd2yzLMFNFR9sp0yIqGP04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M+iQYWAB; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709747879; c=relaxed/simple;
+	bh=QUqisBiS7xXNdRUk3IDGMEjPq5qEk9BBlwz6y0jfWus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J3Ml31/gQxb3hWJPZkHNlM0FMGmZLH6KHVtTt1BeVKzGoXw77WxnpX9q5G0GYIHh4vUVn6lOMl4gI4rPw2RD2ciAk/t0whxp7Mti3aidfWC6QUSXlj+QKP/d34+BR6ajcbt1560eyzhvwDVmakGXzfY5zY+DljdMhsVZq/XToX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=EjTVU2c1; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M+iQYWAB"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dcd07252d9so2475ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 09:57:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709747875; x=1710352675; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iz/q/61+6k4jv/ntFkhv95Db7Kj6nibuvxIyJnMWHgM=;
-        b=M+iQYWABYQxx3v3T4nyuWtRBt8h5ex+I+7LmWfENZcYnLzvEiKzN/AYZqCwYL92SoL
-         V4UdPwZTvy6wxx5KH3F2G45RIq14Owcm6swpET7DC7wlpJyHBoSscM23dK04wrJhOx4e
-         XxQ6fd7sXJ+g8X9wtQou/V0cEQTfkj0n14bCzThyHFATeiO37HeqeVdBWyHOHRrkyjQc
-         iy3ruVkt3GhmLYRKw7fC0i/FMUpvOPvLBI8p7unkdW/Aa6paBj7n+Tfoo4pwSVEsl8qR
-         voROmOfcPheFUWKqz6xnWE95AZ0AL9NoYTE1PYx3ZrTdcN1BIbJ9FNnNnoZ+F/Vj+2XO
-         13dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709747875; x=1710352675;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Iz/q/61+6k4jv/ntFkhv95Db7Kj6nibuvxIyJnMWHgM=;
-        b=SXhHvpDiISS0IV1SVjiob2rd/MDSsk1s4aBp+j7l3N8d8+6Rx6Dvd7Gk9iHVB2VR2e
-         hwULSLYbGDJQQEMcU1ICbsxqWK6pgGC8BLU4E3HJzjD4QbkytOiNM0C6xSJ0p4lmQGbf
-         puK8/2cQik8x3o4iNlw+r2rHqU3nvHn4+exyQC/TVajFWnv+2dmSsHKbsyds2UTZM/3D
-         IA3BSyA/AE8Mk2W/L+kHNM4X5ipeB0Hpp0SSMEV3zefBcXNO6iK7AzbWmopN5ZRpKwqa
-         +cLWZ9GLjzo1hoV3xyhLNVUwl1+2RgZzLDOOCYgMXxabClGmNbCzfqEgqmvof/7h1x4p
-         BWoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyr0cZmXcicTXMNEzTTDalRsZVHOi6u/bhre7FEEhb/ljMyQRup4N5w7tqIcVEJAsJvHjDCKrbHpflZOtPLm5PSOJdPqaJ5dRXkC7k
-X-Gm-Message-State: AOJu0YyI1OQl+xAMa/S3qS2BM/iL7sdcQHnP8HjUCBREwpX2Ns/M8o52
-	8pwtbhWXyqf0aHEWVBFIBUTE/DBsaibKa2NZVHXg3QQh9bfNhQVMDVcsfdUpcq5U2O9j5kstAD1
-	uQT+aO7N3K12AEj9RVEKdZDWMIqyTcMffW9DT
-X-Google-Smtp-Source: AGHT+IGONinR76McGlcNk+1yKf1YpKero3GD9FraFlLoMGj1RcyafvVPOHQGAkTJt08dI8zLZzKp+OmVcM7sg9VFamY=
-X-Received: by 2002:a17:902:684a:b0:1dc:89f6:8b8d with SMTP id
- f10-20020a170902684a00b001dc89f68b8dmr29328pln.5.1709747874585; Wed, 06 Mar
- 2024 09:57:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="EjTVU2c1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709747856; x=1710352656; i=w_armin@gmx.de;
+	bh=QUqisBiS7xXNdRUk3IDGMEjPq5qEk9BBlwz6y0jfWus=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=EjTVU2c1ilxIWoNULS+lLzo5/HzE5sR15i7oYbdNd/UYKmx2O9mwQ5N30oW5c23C
+	 51EIiFkmN4gFFUOuaTqH97jIVGBrAFcBoHAkc564gDDJtH5EDtYTzgYrpzCK+yleA
+	 BQVWP2yg3zLoQEO2lRg2qMfqvdarOuKmFJFSfL+taIf8bDuGmQXKazB+NStpVJSpK
+	 9TyDn1eoPQPqPjpjhpNc3VEouLPznWRP0lAxDcXnSJZv3x8JyYnT0Q1qJS2uVVNi2
+	 JZVKB4Waop1cITF+XhEjvjFu52/Kuc55NrVJvKyf3STv4qtWWp524xX2NvobYo1bJ
+	 jl2EiHLZQiUSCowIEA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1McpJg-1r98fS2LgI-00ZzTj; Wed, 06
+ Mar 2024 18:57:36 +0100
+Message-ID: <bac77347-1308-49a1-b02a-19c6b7a5a31b@gmx.de>
+Date: Wed, 6 Mar 2024 18:57:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306001511.932348-1-jthoughton@google.com> <Zefl5mJ32IxxYtaF@x1n>
-In-Reply-To: <Zefl5mJ32IxxYtaF@x1n>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 6 Mar 2024 09:57:17 -0800
-Message-ID: <CADrL8HWaeEwoUov9y0weGCTNPffN4nbURDetF_+s2bF+MttKsw@mail.gmail.com>
-Subject: Re: [PATCH] mm: Add an explicit smp_wmb() to UFFDIO_CONTINUE
-To: Peter Xu <peterx@redhat.com>
-Cc: Axel Rasmussen <axelrasmussen@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Muchun Song <songmuchun@bytedance.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] platform/x86: wmi: Support reading/writing 16 bit EC
+ values
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+References: <20240304221732.39272-1-W_Armin@gmx.de>
+ <ffb87c8f-3d6d-c96c-71e9-2abccfe68405@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <ffb87c8f-3d6d-c96c-71e9-2abccfe68405@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:feF8vV7gQon9C5KSS4hdaK1sHZXtm5Yw+8fO7Sw8qDZmNeP2y/c
+ ktWpEAuIjQZaM+YXCc3AFfCF4wEGcpYIKmn63v2kMxjxSJG09ELyV1xzoFqssDp4Hk45r6T
+ KjxwbtzGqO+9ek/1CeWbrgm30RTPPfJPA+qXw0kybQrGC/P8nym40IsLYMLV6N9UR4tEKkC
+ T2APgm5BTTUYfDW7pgVbw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:PwLHHy9sUMw=;TA1kQu+WXeJuNKAPVKA2+2uoFIG
+ VQE3tQsOtJqSL8gdHWA95rWsSM89K6db6K1NOGuS9rya72twymnhsAGlGPcmvDa4OrmnwF6u7
+ VsWeQNhOGgeonat/8TqlywIsEiRNjB7h5iL+5ROjNfmXC4+v6VrTyRr0WKVk0DNGqSke3dR/5
+ j48gsRD0VBf2zhaOCwVxKcNYpYBmGmBGeG3DyOs/qv6W22zuRoIUEl7WERkLAA48MQbXZ27/+
+ ntUzG6JN1OWjK1sTssE/haIUJoWcw4h7nhfSYwRAwKqQqemWOt2hjK7ptImNWOTjwMo47Qf1N
+ e3M/Nfrk4ubvTGiuRhaZ4QAY9tD9TFQpH58MOlE/zs8pcftfQPUsFNLVR8nV87X+kpgIbPAKS
+ mRzwmm1AMsh2Yd/5Pg3krQvdoLw1MsdvIzsmpIxREiDk0b7fiZd19eHCA1OasfeJoEtzgf1iM
+ kwfabf5BIj/UQYRhoS52WPgIWteXfQ2KD37hbHzCxCNL0iiRAvnU/d0k6+sfTBd8JSWe/zVc0
+ qCMihghA+IUpi8nUj8Ps45/R1kY6vT+oKNx5EFa8QCVH8d94LgSqZG0z9yP5j4ZCsBtS8BHeA
+ WjT4jtkAb705/6G//q0xlIuVjXWTVuj4dQu4wC2sNTCUHG2b7mQnjZ2xoDRKrMm4flrnywzpz
+ RlYPm1H3pRSkXji3+wo79ZJCwwF7+fLFqiGHbOO/3wz657ZuNkDvmIOn5WrJPxn7z7e/OTUwk
+ tdtRrqqcOxBryM4HeBuTIoHCtXZHe/s5i1dFFD60PVlP0X8n3fRhP2ZlEXU84ehgEkFJSPJ+V
+ 1nIsEgbcTxi6OuZGF038vNtXn2SVRkhFAIGJCXdKY/XLY=
 
-On Tue, Mar 5, 2024 at 7:41=E2=80=AFPM Peter Xu <peterx@redhat.com> wrote:
->
-> On Wed, Mar 06, 2024 at 12:15:10AM +0000, James Houghton wrote:
-> > I've tried to see if I can legitimately get a user to read stale data,
-> > and a few attempts with this test[2] have been unsuccessful.
->
-> AFAICT that won't easily reproduce even if the problem existed, as we
-> contain so many implict memory barriers here and there.  E.g. right at th=
-e
-> entry of ioctl(), mmget_not_zero() already contains a full ordering
-> constraint:
->
-> /**
->  * atomic_inc_not_zero() - atomic increment unless zero with full orderin=
-g
->  * @v: pointer to atomic_t
+Am 06.03.24 um 11:19 schrieb Ilpo J=C3=A4rvinen:
 
-Oh yes, of course. Thanks for pointing this out. So we definitely
-don't need a Fixes.
-
+> On Mon, 4 Mar 2024, Armin Wolf wrote:
 >
-> I was expecting the syscall routine will guarantee an ordering already bu=
-t
-> indeed I can't find any.  I also checked up Intel's spec and SYSCALL inst
-> document only has one paragraph on ordering:
+>> The ACPI EC address space handler currently only supports
+>> reading/writing 8 bit values. Some firmware implementations however
+>> want to access for example 16 bit values, which is prefectly legal
+>> according to the ACPI spec.
+>>
+>> Add support for reading/writing such values.
+>>
+>> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
+>>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/platform/x86/wmi.c | 44 +++++++++++++++++++++++++++++--------=
+-
+>>   1 file changed, 34 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+>> index 1920e115da89..900e0e52a5fa 100644
+>> --- a/drivers/platform/x86/wmi.c
+>> +++ b/drivers/platform/x86/wmi.c
+>> @@ -1153,6 +1153,32 @@ static int parse_wdg(struct device *wmi_bus_dev,=
+ struct platform_device *pdev)
+>>   	return 0;
+>>   }
+>>
+>> +static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
+>> +{
+>> +	int i, ret;
+>> +
+>> +	for (i =3D 0; i < bytes; i++) {
+>> +		ret =3D ec_read(address + i, &buffer[i]);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
+>> +{
+>> +	int i, ret;
+>> +
+>> +	for (i =3D 0; i < bytes; i++) {
+>> +		ret =3D ec_write(address + i, buffer[i]);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   /*
+>>    * WMI can have EmbeddedControl access regions. In which case, we jus=
+t want to
+>>    * hand these off to the EC driver.
+>> @@ -1162,27 +1188,25 @@ acpi_wmi_ec_space_handler(u32 function, acpi_ph=
+ysical_address address,
+>>   			  u32 bits, u64 *value,
+>>   			  void *handler_context, void *region_context)
+>>   {
+>> -	int result =3D 0;
+>> -	u8 temp =3D 0;
+>> +	int bytes =3D bits / 8;
+> I'm a quite hesitant about this. IMO, it should do DIV_ROUND_UP(bits,
+> BITS_PER_BYTE) or return AE_BAD_PARAMETER when bits is not divisable by =
+8.
+> And if you choose the round up approach, I'm not sure what the write
+> should do with the excess bits.
 >
->         Instruction ordering. Instructions following a SYSCALL may be
->         fetched from memory before earlier instructions complete executio=
-n,
->         but they will not execute (even speculatively) until all
->         instructions prior to the SYSCALL have completed execution (the
->         later instructions may execute before data stored by the earlier
->         instructions have become globally visible).
+> In any case, 8 -> BITS_PER_BYTE.
+
+After taking a look at acpi_ex_access_region(), which invokes the address =
+space handler,
+i think the number of bits are always divisible by 8.
+
+I CCed the maintainers of the ACPI EC driver, so that we can clarify if th=
+is is indeed
+always the case.
+
+Thanks,
+Armin Wolf
+
+>> +	int ret;
+>>
+>> -	if ((address > 0xFF) || !value)
+>> +	if (address > 0xFF || !value)
+> This should takes bytes into account to not overflow the u8 address?
 >
-> I guess it implies a hardware reordering is indeed possible in this case?
-
-That's my understanding as well.
-
->
-> >
-> > [1]: commit 153132571f02 ("userfaultfd/shmem: support UFFDIO_CONTINUE f=
-or shmem")
-> > [2]: https://gist.github.com/48ca/38d0665b0f1a6319a56507dc73a173f9
-> >
-> >  mm/hugetlb.c     | 15 +++++++++------
-> >  mm/userfaultfd.c | 18 ++++++++++++++++++
-> >  2 files changed, 27 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index bb17e5c22759..533bf6b2d94d 100644
-> > --- a/mm/hugetlb.c
-> > +++ b/mm/hugetlb.c
-> > @@ -6779,12 +6779,15 @@ int hugetlb_mfill_atomic_pte(pte_t *dst_pte,
-> >               }
-> >       }
-> >
-> > -     /*
-> > -      * The memory barrier inside __folio_mark_uptodate makes sure tha=
-t
-> > -      * preceding stores to the page contents become visible before
-> > -      * the set_pte_at() write.
-> > -      */
-> > -     __folio_mark_uptodate(folio);
-> > +     if (!is_continue) {
-> > +             /*
-> > +              * The memory barrier inside __folio_mark_uptodate makes =
-sure
-> > +              * that preceding stores to the page contents become visi=
-ble
-> > +              * before the set_pte_at() write.
-> > +              */
-> > +             __folio_mark_uptodate(folio);
->
-> Can we move the comment above the "if", explaining both conditions?
-
-Yes, I'll do that. I think the explanation for
-WARN_ON_ONCE(!folio_test_uptodate(folio)) is:
-
-    We only need to `__folio_mark_uptodate(folio)` if we have
-allocated a new folio, and HugeTLB pages will always be Uptodate if
-they are in the pagecache.
-
-We could even drop the WARN_ON_ONCE.
-
->
-> > +     } else
-> > +             WARN_ON_ONCE(!folio_test_uptodate(folio));
-> >
-> >       /* Add shared, newly allocated pages to the page cache. */
-> >       if (vm_shared && !is_continue) {
-> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > index 503ea77c81aa..d515b640ca48 100644
-> > --- a/mm/userfaultfd.c
-> > +++ b/mm/userfaultfd.c
-> > @@ -531,6 +531,10 @@ static __always_inline ssize_t mfill_atomic_hugetl=
-b(
-> >                       goto out_unlock;
-> >       }
-> >
-> > +     if (uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
-> > +             /* See the comment in mfill_atomic. */
-> > +             smp_wmb();
-> > +
-> >       while (src_addr < src_start + len) {
-> >               BUG_ON(dst_addr >=3D dst_start + len);
-> >
-> > @@ -743,6 +747,20 @@ static __always_inline ssize_t mfill_atomic(struct=
- userfaultfd_ctx *ctx,
-> >           uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
-> >               goto out_unlock;
-> >
-> > +     if (uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
-> > +             /*
-> > +              * A caller might reasonably assume that UFFDIO_CONTINUE
-> > +              * contains a wmb() to ensure that any writes to the
-> > +              * about-to-be-mapped page by the thread doing the
-> > +              * UFFDIO_CONTINUE are guaranteed to be visible to subseq=
-uent
-> > +              * reads of the page through the newly mapped address.
-> > +              *
-> > +              * For MFILL_ATOMIC_COPY, the wmb() is done for each COPY=
-ed
-> > +              * page. We can do the wmb() now for CONTINUE as the user=
- has
-> > +              * already prepared the page contents.
-> > +              */
-> > +             smp_wmb();
-> > +
->
-> Why you did it twice separately?  Can we still share the code?
->
-> I'm wildly guessing: I don't worry on an extra wmb() in failure paths, as
-> that's never a performance concern to make failure slightly slower, IMHO.
-
-You're right, I shouldn't care so much about making the slow paths a
-little bit slower. I'll move the wmb earlier so that we only need it
-in one place.
-
->
-> Thanks,
-
-Thanks Peter!
