@@ -1,186 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from quicklyemailsend77.com (quicklyemailsend77.com [57.128.172.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB091BF33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC411BF2F
 	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 06:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.128.172.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709706242; cv=none; b=D86olHVh009/VgKX0drmIVHdnvdClA9qZP4ohNiBqmCMEflbugUnFVkbL1Y5E+qSq/xQA4Dj9TtVC06Efkb3BRG3BEb2IDoU5+bd/AI1FV3QA+Yn0Bx6W6eYW64BL2U+w+OC9QPRUGK+R2tnw/V86Iglv67fp13+fqBi+478JfY=
+	t=1709706243; cv=none; b=Ad4MTF2hES6SNlHBqFacv7YegV/Z/qT97kUARcV3HDjb2Kys44nz7KVuuAgriNOWUFU22xWMI2jnTbGxF/eWTd825sNkss4I4XZxJem4ASbyyPtEGD0zrc7S42V8qgF/HqNFmp77G3pU0P827vhXjw838Ylxhh34ZzAnmv7EG7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709706242; c=relaxed/simple;
-	bh=RjcUrgFFbqLCRk4mp6+71yebhvFupXWUxXPN5bFeYEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QO3MkG/aYWb/wdVGXr9MxMTRzkTETriY9u8IawwdxLHkNE+qt19GGOuYgUTlDpIHrahOyr2QAZG4XdQEf633ChA3NlggOJJPS6qcijSMWE0nqT2mZFxOIOro6w8gOza6mxQFU2qp1u+vF624AlhTkKtOw+mFcU0btH2qV8pYg3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRd4hIXl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709706243; c=relaxed/simple;
+	bh=UkCnC3hxyWUR811IY5T5PlAQFaHotSY7xhHSl4hh88I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=URuVWTCefEt3ZKB7ZqqKwP/PZm+MZRb8Tdj4NNn63zJ10NU24U3gREepW7rfRAPIZ+I/mVVJR84p2yjLs1u0h6ffndjuwdzXE+2XvMzrc0Sd8ikegE2J3XVBI5aDl3+p5XV1o9p270fv2rNB2ycbi0o0pnUZVsUThmRYk9AbQFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicklyemailsend77.com; spf=pass smtp.mailfrom=quicklyemailsend77.com; dkim=pass (2048-bit key) header.d=quicklyemailsend77.com header.i=@quicklyemailsend77.com header.b=gjjLnEba; arc=none smtp.client-ip=57.128.172.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicklyemailsend77.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicklyemailsend77.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRd4hIXl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBDBFC433F1;
-	Wed,  6 Mar 2024 06:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709706241;
-	bh=RjcUrgFFbqLCRk4mp6+71yebhvFupXWUxXPN5bFeYEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pRd4hIXllVAPYIPtLMMzSPf8ff00qQuCW3SfaXOqUD0RmE00JMLNSCefhf3qCvS9v
-	 iXMTwezrqdF2Tw+jmSQKGpvH1i9g7BiXu4hyp4wP3wQw6YXLVNaLlJFM+uDQrLxfyy
-	 T1N4heGZOJDB27E6vlPsuikUAkdiVw9moQBOtLTrMdFi81r0nhUnKBTY8qG7s7wliY
-	 LNkxN5O7d3nRQmYKmioxKmovfm6U0oHWVkiC7hmL932YDpmqBag/ql4uC2HZMGO41l
-	 mmdIfdeSfKu1GzqJ3iHFseO7h9d3L5EOC9eRpw9xyGk0RkcXaJW1hfE5iGA+BtdoXg
-	 i4VKBk+Je/NYw==
-Date: Wed, 6 Mar 2024 08:23:07 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: peterx@redhat.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>, x86@kernel.org,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Jason Gunthorpe <jgg@nvidia.com>, Yang Shi <shy828301@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linuxppc-dev@lists.ozlabs.org, Muchun Song <muchun.song@linux.dev>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v3 03/10] mm/x86: Replace p4d_large() with p4d_leaf()
-Message-ID: <ZegLy9z7cdROGL3D@kernel.org>
-References: <20240305043750.93762-1-peterx@redhat.com>
- <20240305043750.93762-4-peterx@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicklyemailsend77.com header.i=@quicklyemailsend77.com header.b="gjjLnEba"
+Received: from quicklyemailsend77.com (unknown [185.255.114.95])
+	by quicklyemailsend77.com (Postfix) with ESMTPA id 33B5439779A
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 03:51:44 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 quicklyemailsend77.com 33B5439779A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=quicklyemailsend77.com; s=default; t=1709697105;
+	bh=eefLZdwY5mr6nwq86b3d+rtsxGUHJntuGmXl+R35AcQ=;
+	h=Reply-To:From:To:Subject:Date:From;
+	b=gjjLnEbafL8Lam699gS2AUI0FxkMG7DdNid/jahnbn5jcSg/ayTXkSn6Grh6Q3N8a
+	 cShYaBhtxPx1cQ/WEtAVVPN+38LpoHfYuqQyeDhC7se+9kS6vjS5+77kWAT7ZftmPz
+	 tazvuK1izBvS+8YsECPe6JFoo0G/3mBzaw4+NSte54epPYMN6LFmaDiaoa3e/TQgdu
+	 d0tnAQdXAC/LlWn0Y/1H9pH695M9edu8vnE36UoycFt+Pm6eN/RBowUJDgji4UTcAF
+	 focswrskTAHEqLL2Z61kkapucn3u0Cd2aatx8afMUrIyMWqhP69TR1BOGrs+PTzqhV
+	 fd8Ic0J41SWBA==
+Reply-To: joakimlarson@skendiaelevator.com
+From: info@quicklyemailsend77.com
+To: linux-kernel@vger.kernel.org
+Subject: =?UTF-8?B?7YyQ66ekIOusuOydmCAyMDI0?=
+Date: 05 Mar 2024 19:51:43 -0800
+Message-ID: <20240305195143.2A2489BC838A9DF9@quicklyemailsend77.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305043750.93762-4-peterx@redhat.com>
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 05, 2024 at 12:37:43PM +0800, peterx@redhat.com wrote:
-> From: Peter Xu <peterx@redhat.com>
-> 
-> p4d_large() is always defined as p4d_leaf().  Merge their usages.  Chose
-> p4d_leaf() because p4d_leaf() is a global API, while p4d_large() is not.
-> 
-> Only x86 has p4d_leaf() defined as of now.  So it also means after this
-> patch we removed all p4d_large() usages.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
 
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+=EC=95=88=EB=85=95=ED=95=98=EC=84=B8=EC=9A=94
+=20
+=EC=8A=A4=EC=9B=A8=EB=8D=B4 =EC=8A=A4=EC=B9=B8=EB=94=94=EC=95=84 =EC=97=98=
+=EB=A0=88=EB=B0=94=ED=86=A0(Skandia Elevato)=EC=97=90=EC=84=9C =EC=98=A8 =
+=EC=9A=94=EC=95=84=ED=82=B4 =EB=9D=BC=EB=A5=B4=EC=86=90(JOAKIM LARSSON) .
+=20
+=EC=9A=B0=EB=A6=AC=EB=8A=94 =EA=B8=B4=EA=B8=89=ED=95=98=EA=B2=8C =EA=B7=80=
+=ED=95=98=EC=9D=98 =EC=A0=9C=ED=92=88=EC=9D=84 =ED=95=84=EC=9A=94=EB=A1=9C =
+=ED=95=98=EB=A9=B0 =EA=B0=80=EB=8A=A5=ED=95=9C =ED=95=9C =EB=B9=A8=EB=A6=AC=
+ =EC=8B=9C=ED=97=98 =EC=A3=BC=EB=AC=B8=EC=9D=84 =ED=95=98=EA=B3=A0 =EC=8B=
+=B6=EC=8A=B5=EB=8B=88=EB=8B=A4. 
+=20
+=EC=98=A8=EB=9D=BC=EC=9D=B8=EC=9C=BC=EB=A1=9C =EC=A0=9C=ED=92=88=EC=97=90 =
+=EB=8C=80=ED=95=9C =EC=A0=95=EB=B3=B4=EB=A5=BC =EC=88=98=EC=A7=91=ED=95=98=
+=EA=B3=A0 =EC=9E=88=EC=8A=B5=EB=8B=88=EB=8B=A4. 
+=20
+=EA=B7=B8=EB=A6=AC=EA=B3=A0 =EB=82=B4 =EB=AA=A8=EC=9E=84=EC=97=90=EC=84=9C =
+=EB=82=98=EB=8A=94 =EC=9A=B0=EB=A6=AC=EA=B0=80 =EB=8B=B9=EC=8B=A0=EC=9D=98 =
+=EC=A0=9C=ED=92=88=EC=9D=84 =EC=A3=BC=EB=AC=B8=ED=95=A0 =EA=B2=83=EC=9D=B4=
+=EB=9D=BC=EA=B3=A0 =EC=83=9D=EA=B0=81=ED=95=A9=EB=8B=88=EB=8B=A4.
+=20
+1. =EC=B5=9C=EC=8B=A0 Catalouge=EB=A5=BC =EB=B3=B4=EB=82=BC =EC=88=98 =EC=
+=9E=88=EC=8A=B5=EB=8B=88=EA=B9=8C?
+=20
+2. =EC=9A=B0=EB=A6=AC=EA=B0=80 =EC=A3=BC=EB=AC=B8=ED=95=A0 =EC=88=98 =EC=9E=
+=88=EB=8A=94 =EC=B5=9C=EC=86=8C=ED=95=9C=EC=9D=80 =EB=AC=B4=EC=97=87=EC=9D=
+=B4=EA=B3=A0 =EB=98=90=ED=95=9C =EA=B8=B0=EA=B0=84=EC=9D=84 =EB=B3=B4=EB=82=
+=B4=EC=8B=AD=EC=8B=9C=EC=98=A4=20
+=EB=B0=8F =EC=A1=B0=EA=B1=B4.
+3. =EC=9A=B0=EB=A6=AC=EA=B0=80 =EC=A3=BC=EB=AC=B8=ED=95=98=EB=8A=94 =EA=B2=
+=BD=EC=9A=B0 =EC=A7=80=EB=B6=88=EC=9D=84 =EC=96=B4=EB=96=BB=EA=B2=8C =ED=95=
+=B4=EA=B2=B0=ED=95=98=EA=B8=B0=EB=A5=BC =EC=9B=90=ED=95=98=EC=8B=AD=EB=8B=
+=88=EA=B9=8C?
+=20
+=EA=B7=80=ED=95=98=EC=9D=98 =ED=9A=8C=EC=8B=A0 =EB=8C=80=EA=B8=B0 =EC=A4=91=
 
-> ---
->  arch/x86/mm/fault.c          | 4 ++--
->  arch/x86/mm/init_64.c        | 2 +-
->  arch/x86/mm/pat/set_memory.c | 4 ++--
->  arch/x86/mm/pti.c            | 2 +-
->  arch/x86/power/hibernate.c   | 2 +-
->  arch/x86/xen/mmu_pv.c        | 2 +-
->  6 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index 679b09cfe241..8b69ce3f4115 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -368,7 +368,7 @@ static void dump_pagetable(unsigned long address)
->  		goto bad;
->  
->  	pr_cont("P4D %lx ", p4d_val(*p4d));
-> -	if (!p4d_present(*p4d) || p4d_large(*p4d))
-> +	if (!p4d_present(*p4d) || p4d_leaf(*p4d))
->  		goto out;
->  
->  	pud = pud_offset(p4d, address);
-> @@ -1039,7 +1039,7 @@ spurious_kernel_fault(unsigned long error_code, unsigned long address)
->  	if (!p4d_present(*p4d))
->  		return 0;
->  
-> -	if (p4d_large(*p4d))
-> +	if (p4d_leaf(*p4d))
->  		return spurious_kernel_fault_check(error_code, (pte_t *) p4d);
->  
->  	pud = pud_offset(p4d, address);
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index ebdbcae48011..d691e7992a9a 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -1197,7 +1197,7 @@ remove_p4d_table(p4d_t *p4d_start, unsigned long addr, unsigned long end,
->  		if (!p4d_present(*p4d))
->  			continue;
->  
-> -		BUILD_BUG_ON(p4d_large(*p4d));
-> +		BUILD_BUG_ON(p4d_leaf(*p4d));
->  
->  		pud_base = pud_offset(p4d, 0);
->  		remove_pud_table(pud_base, addr, next, altmap, direct);
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index e9b448d1b1b7..5359a9c88099 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -676,7 +676,7 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
->  		return NULL;
->  
->  	*level = PG_LEVEL_512G;
-> -	if (p4d_large(*p4d) || !p4d_present(*p4d))
-> +	if (p4d_leaf(*p4d) || !p4d_present(*p4d))
->  		return (pte_t *)p4d;
->  
->  	pud = pud_offset(p4d, address);
-> @@ -739,7 +739,7 @@ pmd_t *lookup_pmd_address(unsigned long address)
->  		return NULL;
->  
->  	p4d = p4d_offset(pgd, address);
-> -	if (p4d_none(*p4d) || p4d_large(*p4d) || !p4d_present(*p4d))
-> +	if (p4d_none(*p4d) || p4d_leaf(*p4d) || !p4d_present(*p4d))
->  		return NULL;
->  
->  	pud = pud_offset(p4d, address);
-> diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-> index 669ba1c345b3..dc0a81f5f60e 100644
-> --- a/arch/x86/mm/pti.c
-> +++ b/arch/x86/mm/pti.c
-> @@ -206,7 +206,7 @@ static pmd_t *pti_user_pagetable_walk_pmd(unsigned long address)
->  	if (!p4d)
->  		return NULL;
->  
-> -	BUILD_BUG_ON(p4d_large(*p4d) != 0);
-> +	BUILD_BUG_ON(p4d_leaf(*p4d) != 0);
->  	if (p4d_none(*p4d)) {
->  		unsigned long new_pud_page = __get_free_page(gfp);
->  		if (WARN_ON_ONCE(!new_pud_page))
-> diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
-> index 6f955eb1e163..28153789f873 100644
-> --- a/arch/x86/power/hibernate.c
-> +++ b/arch/x86/power/hibernate.c
-> @@ -165,7 +165,7 @@ int relocate_restore_code(void)
->  	pgd = (pgd_t *)__va(read_cr3_pa()) +
->  		pgd_index(relocated_restore_code);
->  	p4d = p4d_offset(pgd, relocated_restore_code);
-> -	if (p4d_large(*p4d)) {
-> +	if (p4d_leaf(*p4d)) {
->  		set_p4d(p4d, __p4d(p4d_val(*p4d) & ~_PAGE_NX));
->  		goto out;
->  	}
-> diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-> index e21974f2cf2d..12a43a4abebf 100644
-> --- a/arch/x86/xen/mmu_pv.c
-> +++ b/arch/x86/xen/mmu_pv.c
-> @@ -1104,7 +1104,7 @@ static void __init xen_cleanmfnmap_p4d(p4d_t *p4d, bool unpin)
->  	pud_t *pud_tbl;
->  	int i;
->  
-> -	if (p4d_large(*p4d)) {
-> +	if (p4d_leaf(*p4d)) {
->  		pa = p4d_val(*p4d) & PHYSICAL_PAGE_MASK;
->  		xen_free_ro_pages(pa, P4D_SIZE);
->  		return;
-> -- 
-> 2.44.0
-> 
-> 
 
--- 
-Sincerely yours,
-Mike.
+Mr Joakim larssonv(=EB=B6=80=EC=82=AC=EC=9E=A5/=EC=98=81=EC=97=85 =EA=B4=80=
+=EB=A6=AC=EC=9E=90)
+
+=EB=B0=A9=EB=AC=B8=EC=9E=90 =EC=A3=BC=EC=86=8C: Kedumsv=C3=A4gen 14, SE-534=
+ 94 Vara, Sweden
+
+=EB=B0=B0=EC=86=A1 =EC=A3=BC=EC=86=8C: Industriv=C3=A4gen, SE-534 94 Vara, =
+Sweden
+
+joakimlarson@skendiaelevator.com
+https://skandiaelevator.com
+
