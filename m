@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C8318EA1
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 03:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F481B7E4
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 03:08:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709694490; cv=none; b=M1epZ8gfi7GT/9e6b/vcf9smAmvLXNADctxSbLYxsaE3Gj4BAy/eufZIYtA6cRLzrPnwBYe2OlCSGO4+ga2vipTyt10Em1WQQOGB0M94lZGqaHDChWqA1UnM6XI/aupnDRsIAsRoGqIwEU40WKq7P++aHIySPeWyAUkyibEJ+8A=
+	t=1709694498; cv=none; b=PYLTQIzWePW66Wj0W+gnaQOdzCEdRRRJ4s18a7Wrj8Is8Ig8TI4NjT+ceDgA8UxCAOPNDV/mCo1rccv93KS3o1yKKyXyU6ID+znGNmQ/qMFVW/iiKWB221ATdP7BTvx+/E+LGP57zt/EOPln8cy6xDKsf8CDQEy6EWawVE73nOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709694490; c=relaxed/simple;
-	bh=Zj1UiEHbeb0KyAFKY2FdnK+0iAKODEVl/7mIWetKQhc=;
+	s=arc-20240116; t=1709694498; c=relaxed/simple;
+	bh=IOOplzt3a+1WgBxTkdTD5u+hoOWtgBCavIFPsM/LyC4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cQ1Q4aq/oguKXh3BnG61sI8hPzMJPHzWCz0HP9y10of/AizU2YOMIYc58OMp1xdm0oAaErHcyJb02RGYuNOxIvgcjPVc1bnzAnCEXgBAqNbVK36cYcoI34Y44m1XrzwJ6HdAL+bbxfsnps3VX/sIT+iJTXV9iRTDMd5dahsCoFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ORLyU63R; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=a3onfBKk9f1xOMX2gLe7W7mU/8nmPe/sQlrY3/15hZB55hbXvxSfjlP1ftAKT0h3nEz416+tWlq5AxUfBq+vf0zZ5ayjj2o2BcEK6383q+YZCiphWRMoqwUv4jVlHSEinGRk4iWpyxJbUnOjBaeIBYVIO4mktdjv1Exgjvdx9sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=e9hMU3E1; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ORLyU63R"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="e9hMU3E1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709694486;
-	bh=Zj1UiEHbeb0KyAFKY2FdnK+0iAKODEVl/7mIWetKQhc=;
+	s=mail; t=1709694495;
+	bh=IOOplzt3a+1WgBxTkdTD5u+hoOWtgBCavIFPsM/LyC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ORLyU63R0RIUvKmIXVdC+snNUnIr6Y64ffiLbYm8ldTnYQuzX+ZrjSc20lWNd8YRu
-	 FeX6/EEhm2E17Hc7sZPKaql6qQ5Sv0mcZtNHcBmNutye0v/lEPNYHtebdLFzbfxGvb
-	 dRoA+82Xk0uqNdBVaCdmQ79zrXqT1PB28/spCvOMMC2FxYc3PMezPOSe+qb8/bPO6d
-	 QA5VKH3Gjy3CbGLnqZz4yZvTKjMnzX5m0dVDlbQ1gKuIiKyoYNF7Xtfob7kf63Kk/4
-	 2AISFHKs+EQTeY8rsqeKWVoC0pC+fizT1Rybjwj76upXt6hnX/NNLUmpaHpg2O55aE
-	 KHeHhFRW0X3Xg==
+	b=e9hMU3E11256A4vuSkZ4g8oJ540xjnNbvfynsgXvr9t8YLbvy77UQe6ykYI9JOLam
+	 I4/EA5y9Dlrg79y8U6/e7jZDwGceCB6Clfl+e+peie5f+FC1o/sSJoZDbfyh/g6Fa5
+	 eZifoUsgR+aeDeKfWCrKf1l+2sEewBCq0XMa9fVyRme5O0+l9/OT1mr0IfLu5o8Goo
+	 paxB1aAjMrehDp6Qs2TNc7nwHM0j8JRhsBPWfM/i9yP4z/B4SrxYBNSVBN6voCVhV1
+	 Zt6oyobWu1NaRylKkl3/HxoWCnY8L51pQbiJzc/ZAiAHSgjhtWedeJI4/32wr+dBP2
+	 mhd+kOs49d7pg==
 Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: vignesh)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BE31E3780624;
-	Wed,  6 Mar 2024 03:08:02 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 451A337820C6;
+	Wed,  6 Mar 2024 03:08:11 +0000 (UTC)
 From: Vignesh Raman <vignesh.raman@collabora.com>
 To: dri-devel@lists.freedesktop.org
 Cc: daniels@collabora.com,
@@ -53,9 +53,9 @@ Cc: daniels@collabora.com,
 	linux-amlogic@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/11] drm/ci: uprev IGT and update testlist
-Date: Wed,  6 Mar 2024 08:36:41 +0530
-Message-Id: <20240306030649.60269-4-vignesh.raman@collabora.com>
+Subject: [PATCH v4 05/11] drm/ci: mediatek: Refactor existing mediatek jobs
+Date: Wed,  6 Mar 2024 08:36:43 +0530
+Message-Id: <20240306030649.60269-6-vignesh.raman@collabora.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240306030649.60269-1-vignesh.raman@collabora.com>
 References: <20240306030649.60269-1-vignesh.raman@collabora.com>
@@ -67,610 +67,209 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Uprev IGT and add amd, v3d, vc4 and vgem specific
-tests to testlist. Have testlist.txt per driver
-and include a base testlist so that the driver
-specific tests will run only on those hardware.
-Also add testlists to the MAINTAINERS file.
+For mediatek mt8173 and mt8183, the display driver is mediatek.
+Currently, in drm-ci for mediatek, only the display driver is
+tested. Refactor the existing mediatek jobs so that gpu driver
+testing jobs can be added later and update xfails accordingly.
+Since the correct driver name is passed from the job to test gpu
+and display driver, remove the check to set IGT_FORCE_DRIVER
+based on driver name.
 
 Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
 ---
 
+v2:
+  - Refactor the patch to rename job to indicate display driver testing,
+    rename the existing xfail files, and remove IGT_FORCE_DRIVER from the
+    script since it's now set by the job.
+
 v3:
-  - New patch in series to uprev IGT and update testlist.
+  - Add the job name in GPU_VERSION and use it for xfail file names instead
+    of using DRIVER_NAME. Also update xfails.
 
 v4:
-  - Add testlists to the MAINTAINERS file and remove amdgpu xfails changes.
+  - Remove the display suffix in job and rename xfails accordingly.
+    Remove the change adding job name in GPU_VERSION.
 
 ---
- MAINTAINERS                              |  11 ++
- drivers/gpu/drm/ci/gitlab-ci.yml         |   2 +-
- drivers/gpu/drm/ci/igt_runner.sh         |  12 +-
- drivers/gpu/drm/ci/testlist-amdgpu.txt   | 151 +++++++++++++++++++++++
- drivers/gpu/drm/ci/testlist-msm.txt      |  50 ++++++++
- drivers/gpu/drm/ci/testlist-panfrost.txt |  17 +++
- drivers/gpu/drm/ci/testlist-v3d.txt      |  73 +++++++++++
- drivers/gpu/drm/ci/testlist-vc4.txt      |  49 ++++++++
- drivers/gpu/drm/ci/testlist.txt          |  84 ++++++-------
- 9 files changed, 398 insertions(+), 51 deletions(-)
- create mode 100644 drivers/gpu/drm/ci/testlist-amdgpu.txt
- create mode 100644 drivers/gpu/drm/ci/testlist-msm.txt
- create mode 100644 drivers/gpu/drm/ci/testlist-panfrost.txt
- create mode 100644 drivers/gpu/drm/ci/testlist-v3d.txt
- create mode 100644 drivers/gpu/drm/ci/testlist-vc4.txt
+ drivers/gpu/drm/ci/igt_runner.sh              | 10 ---------
+ drivers/gpu/drm/ci/test.yml                   | 21 ++++++++++++++-----
+ .../drm/ci/xfails/mediatek-mt8173-fails.txt   | 15 -------------
+ .../drm/ci/xfails/mediatek-mt8173-flakes.txt  | 13 ++++++++++++
+ .../drm/ci/xfails/mediatek-mt8183-fails.txt   | 21 ++++++++++++-------
+ .../drm/ci/xfails/mediatek-mt8183-flakes.txt  |  8 +++++++
+ 6 files changed, 50 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3bc7e122a094..4da66ca92f1a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1665,6 +1665,8 @@ L:	dri-devel@lists.freedesktop.org
- S:	Supported
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- F:	Documentation/gpu/panfrost.rst
-+F:	drivers/gpu/drm/ci/testlist-panfrost.txt
-+F:	drivers/gpu/drm/ci/testlist.txt
- F:	drivers/gpu/drm/panfrost/
- F:	include/uapi/drm/panfrost_drm.h
- 
-@@ -6753,6 +6755,8 @@ S:	Maintained
- B:	https://gitlab.freedesktop.org/drm/msm/-/issues
- T:	git https://gitlab.freedesktop.org/drm/msm.git
- F:	Documentation/devicetree/bindings/display/msm/
-+F:	drivers/gpu/drm/ci/testlist-msm.txt
-+F:	drivers/gpu/drm/ci/testlist.txt
- F:	drivers/gpu/drm/ci/xfails/msm*
- F:	drivers/gpu/drm/msm/
- F:	include/uapi/drm/msm_drm.h
-@@ -7047,6 +7051,7 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
- F:	Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
- F:	Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
- F:	Documentation/gpu/meson.rst
-+F:	drivers/gpu/drm/ci/testlist.txt
- F:	drivers/gpu/drm/ci/xfails/meson*
- F:	drivers/gpu/drm/meson/
- 
-@@ -7160,6 +7165,7 @@ L:	dri-devel@lists.freedesktop.org
- L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
- S:	Supported
- F:	Documentation/devicetree/bindings/display/mediatek/
-+F:	drivers/gpu/drm/ci/testlist.txt
- F:	drivers/gpu/drm/ci/xfails/mediatek*
- F:	drivers/gpu/drm/mediatek/
- F:	drivers/phy/mediatek/phy-mtk-dp.c
-@@ -7211,6 +7217,7 @@ L:	dri-devel@lists.freedesktop.org
- S:	Maintained
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- F:	Documentation/devicetree/bindings/display/rockchip/
-+F:	drivers/gpu/drm/ci/testlist.txt
- F:	drivers/gpu/drm/ci/xfails/rockchip*
- F:	drivers/gpu/drm/rockchip/
- 
-@@ -10739,6 +10746,7 @@ C:	irc://irc.oftc.net/intel-gfx
- T:	git git://anongit.freedesktop.org/drm-intel
- F:	Documentation/ABI/testing/sysfs-driver-intel-i915-hwmon
- F:	Documentation/gpu/i915.rst
-+F:	drivers/gpu/drm/ci/testlist.txt
- F:	drivers/gpu/drm/ci/xfails/i915*
- F:	drivers/gpu/drm/i915/
- F:	include/drm/i915*
-@@ -18255,6 +18263,8 @@ C:	irc://irc.oftc.net/radeon
- T:	git https://gitlab.freedesktop.org/agd5f/linux.git
- F:	Documentation/gpu/amdgpu/
- F:	drivers/gpu/drm/amd/
-+F:	drivers/gpu/drm/ci/testlist-amdgpu.txt
-+F:	drivers/gpu/drm/ci/testlist.txt
- F:	drivers/gpu/drm/ci/xfails/amd*
- F:	drivers/gpu/drm/radeon/
- F:	include/uapi/drm/amdgpu_drm.h
-@@ -23303,6 +23313,7 @@ L:	dri-devel@lists.freedesktop.org
- L:	virtualization@lists.linux.dev
- S:	Maintained
- T:	git git://anongit.freedesktop.org/drm/drm-misc
-+F:	drivers/gpu/drm/ci/testlist.txt
- F:	drivers/gpu/drm/ci/xfails/virtio*
- F:	drivers/gpu/drm/virtio/
- F:	include/uapi/linux/virtio_gpu.h
-diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-index bc8cb3420476..e2b021616a8e 100644
---- a/drivers/gpu/drm/ci/gitlab-ci.yml
-+++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-@@ -5,7 +5,7 @@ variables:
-   UPSTREAM_REPO: git://anongit.freedesktop.org/drm/drm
-   TARGET_BRANCH: drm-next
- 
--  IGT_VERSION: d2af13d9f5be5ce23d996e4afd3e45990f5ab977
-+  IGT_VERSION: b0cc8160ebdc87ce08b7fd83bb3c99ff7a4d8610
- 
-   DEQP_RUNNER_GIT_URL: https://gitlab.freedesktop.org/anholt/deqp-runner.git
-   DEQP_RUNNER_GIT_TAG: v0.15.0
 diff --git a/drivers/gpu/drm/ci/igt_runner.sh b/drivers/gpu/drm/ci/igt_runner.sh
-index f1a08b9b146f..77cd81fe6d1a 100755
+index 77cd81fe6d1a..711f32772e48 100755
 --- a/drivers/gpu/drm/ci/igt_runner.sh
 +++ b/drivers/gpu/drm/ci/igt_runner.sh
-@@ -74,10 +74,20 @@ if ! grep -q "core_getversion" /install/testlist.txt; then
- fi
+@@ -20,16 +20,6 @@ cat /sys/kernel/debug/dri/*/state
+ set -e
  
- set +e
-+if [ "$DRIVER_NAME" = "amdgpu" ]; then
-+    TEST_LIST="/install/testlist-amdgpu.txt"
-+elif [ "$DRIVER_NAME" = "msm" ]; then
-+    TEST_LIST="/install/testlist-msm.txt"
-+elif [ "$DRIVER_NAME" = "panfrost" ]; then
-+    TEST_LIST="/install/testlist-panfrost.txt"
-+else
-+    TEST_LIST="/install/testlist.txt"
-+fi
+ case "$DRIVER_NAME" in
+-    rockchip|meson)
+-        export IGT_FORCE_DRIVER="panfrost"
+-        ;;
+-    mediatek)
+-        if [ "$GPU_VERSION" = "mt8173" ]; then
+-            export IGT_FORCE_DRIVER=${DRIVER_NAME}
+-        elif [ "$GPU_VERSION" = "mt8183" ]; then
+-            export IGT_FORCE_DRIVER="panfrost"
+-        fi
+-        ;;
+     amdgpu)
+         # Cannot use HWCI_KERNEL_MODULES as at that point we don't have the module in /lib
+         mv /install/modules/lib/modules/* /lib/modules/.
+diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+index 0857773e5c5f..f8f48523ada3 100644
+--- a/drivers/gpu/drm/ci/test.yml
++++ b/drivers/gpu/drm/ci/test.yml
+@@ -282,29 +282,40 @@ amdgpu:stoney:
+     - .lava-igt:arm64
+   stage: mediatek
+   variables:
+-    DRIVER_NAME: mediatek
+     DTB: ${DEVICE_TYPE}
+     BOOT_METHOD: depthcharge
+     KERNEL_IMAGE_TYPE: ""
+ 
+-mediatek:mt8173:
++.mt8173:
+   extends:
+     - .mediatek
+   parallel: 4
+   variables:
+     DEVICE_TYPE: mt8173-elm-hana
+-    GPU_VERSION: mt8173
+     RUNNER_TAG: mesa-ci-x86-64-lava-mt8173-elm-hana
+ 
+-mediatek:mt8183:
++.mt8183:
+   extends:
+     - .mediatek
+   parallel: 3
+   variables:
+     DEVICE_TYPE: mt8183-kukui-jacuzzi-juniper-sku16
+-    GPU_VERSION: mt8183
+     RUNNER_TAG: mesa-ci-x86-64-lava-mt8183-kukui-jacuzzi-juniper-sku16
+ 
++mediatek:mt8173:
++  extends:
++    - .mt8173
++  variables:
++    GPU_VERSION: mt8173
++    DRIVER_NAME: mediatek
 +
- igt-runner \
-     run \
-     --igt-folder /igt/libexec/igt-gpu-tools \
--    --caselist /install/testlist.txt \
-+    --caselist $TEST_LIST \
-     --output /results \
-     $IGT_SKIPS \
-     $IGT_FLAKES \
-diff --git a/drivers/gpu/drm/ci/testlist-amdgpu.txt b/drivers/gpu/drm/ci/testlist-amdgpu.txt
++mediatek:mt8183:
++  extends:
++    - .mt8183
++  variables:
++    GPU_VERSION: mt8183
++    DRIVER_NAME: mediatek
++
+ # drm-mtk doesn't even probe yet in mainline for mt8192
+ .mediatek:mt8192:
+   extends:
+diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8173-fails.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-fails.txt
+index ef0cb7c3698c..c63abd603b02 100644
+--- a/drivers/gpu/drm/ci/xfails/mediatek-mt8173-fails.txt
++++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-fails.txt
+@@ -9,28 +9,13 @@ kms_bw@linear-tiling-3-displays-1920x1080p,Fail
+ kms_bw@linear-tiling-3-displays-2560x1440p,Fail
+ kms_bw@linear-tiling-3-displays-3840x2160p,Fail
+ kms_color@invalid-gamma-lut-sizes,Fail
+-kms_color@pipe-A-invalid-gamma-lut-sizes,Fail
+-kms_color@pipe-B-invalid-gamma-lut-sizes,Fail
+ kms_cursor_legacy@cursor-vs-flip-atomic,Fail
+ kms_cursor_legacy@cursor-vs-flip-legacy,Fail
+ kms_flip@flip-vs-modeset-vs-hang,Fail
+ kms_flip@flip-vs-panning-vs-hang,Fail
+ kms_flip@flip-vs-suspend,Fail
+ kms_flip@flip-vs-suspend-interruptible,Fail
+-kms_force_connector_basic@force-edid,Fail
+-kms_force_connector_basic@force-load-detect,Fail
+-kms_force_connector_basic@prune-stale-modes,Fail
+-kms_hdmi_inject@inject-4k,Fail
+-kms_plane_scaling@planes-upscale-20x20,Fail
+-kms_plane_scaling@planes-upscale-20x20-downscale-factor-0-25,Fail
+-kms_plane_scaling@planes-upscale-20x20-downscale-factor-0-5,Fail
+-kms_plane_scaling@planes-upscale-20x20-downscale-factor-0-75,Fail
+-kms_plane_scaling@upscale-with-modifier-20x20,Fail
+-kms_plane_scaling@upscale-with-pixel-format-20x20,Fail
+-kms_plane_scaling@upscale-with-rotation-20x20,Fail
+ kms_properties@get_properties-sanity-atomic,Fail
+ kms_properties@plane-properties-atomic,Fail
+ kms_properties@plane-properties-legacy,Fail
+ kms_rmfb@close-fd,Fail
+-kms_selftest@drm_format,Timeout
+-kms_selftest@drm_format_helper,Timeout
+diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt
 new file mode 100644
-index 000000000000..4486f86d340b
+index 000000000000..64b30c092c85
 --- /dev/null
-+++ b/drivers/gpu/drm/ci/testlist-amdgpu.txt
-@@ -0,0 +1,151 @@
-+testlist.txt
-+amdgpu/amd_abm@dpms_cycle
-+amdgpu/amd_abm@backlight_monotonic_basic
-+amdgpu/amd_abm@backlight_monotonic_abm
-+amdgpu/amd_abm@abm_enabled
-+amdgpu/amd_abm@abm_gradual
-+amdgpu/amd_bo@amdgpu_bo_export_import
-+amdgpu/amd_bo@amdgpu_bo_metadata
-+amdgpu/amd_bo@amdgpu_bo_map_unmap
-+amdgpu/amd_bo@amdgpu_memory_alloc
-+amdgpu/amd_bo@amdgpu_mem_fail_alloc
-+amdgpu/amd_bo@amdgpu_bo_find_by_cpu_mapping
-+amdgpu/amd_cp_dma_misc@GTT_to_VRAM-AMDGPU_HW_IP_GFX0
-+amdgpu/amd_cp_dma_misc@GTT_to_VRAM-AMDGPU_HW_IP_COMPUTE0
-+amdgpu/amd_cp_dma_misc@VRAM_to_GTT-AMDGPU_HW_IP_GFX0
-+amdgpu/amd_cp_dma_misc@VRAM_to_GTT-AMDGPU_HW_IP_COMPUTE0
-+amdgpu/amd_cp_dma_misc@VRAM_to_VRAM-AMDGPU_HW_IP_GFX0
-+amdgpu/amd_cp_dma_misc@VRAM_to_VRAM-AMDGPU_HW_IP_COMPUTE0
-+amdgpu/amd_dispatch@amdgpu-dispatch-test-compute-with-IP-COMPUTE
-+amdgpu/amd_dispatch@amdgpu-dispatch-test-gfx-with-IP-GFX
-+amdgpu/amd_dispatch@amdgpu-dispatch-hang-test-gfx-with-IP-GFX
-+amdgpu/amd_dispatch@amdgpu-dispatch-hang-test-compute-with-IP-COMPUTE
-+amdgpu/amd_dispatch@amdgpu-reset-test-gfx-with-IP-GFX-and-COMPUTE
-+amdgpu/amd_hotplug@basic
-+amdgpu/amd_hotplug@basic-suspend
-+amdgpu/amd_jpeg_dec@amdgpu_cs_jpeg_decode
-+amdgpu/amd_max_bpc@4k-mode-max-bpc
-+amdgpu/amd_module_load@reload
-+amdgpu/amd_plane@test-mpo-4k
-+amdgpu/amd_plane@mpo-swizzle-toggle
-+amdgpu/amd_plane@mpo-swizzle-toggle-multihead
-+amdgpu/amd_plane@mpo-pan-rgb
-+amdgpu/amd_plane@mpo-pan-rgb-multihead
-+amdgpu/amd_plane@mpo-pan-nv12
-+amdgpu/amd_plane@mpo-pan-nv12-multihead
-+amdgpu/amd_plane@mpo-pan-p010
-+amdgpu/amd_plane@mpo-pan-p010-multihead
-+amdgpu/amd_plane@mpo-pan-multi-rgb
-+amdgpu/amd_plane@mpo-pan-multi-nv12
-+amdgpu/amd_plane@mpo-pan-multi-p010
-+amdgpu/amd_plane@multi-overlay
-+amdgpu/amd_plane@multi-overlay-invalid
-+amdgpu/amd_plane@mpo-scale-rgb
-+amdgpu/amd_plane@mpo-scale-rgb-multihead
-+amdgpu/amd_plane@mpo-scale-nv12
-+amdgpu/amd_plane@mpo-scale-nv12-multihead
-+amdgpu/amd_plane@mpo-scale-p010
-+amdgpu/amd_plane@mpo-scale-p010-multihead
-+amdgpu/amd_pstate@amdgpu_pstate
-+amdgpu/amd_subvp@dual-4k60
-+amdgpu/amd_uvd_enc@uvd_enc_create
-+amdgpu/amd_uvd_enc@amdgpu_uvd_enc_session_init
-+amdgpu/amd_uvd_enc@amdgpu_uvd_enc_encode
-+amdgpu/amd_uvd_enc@uvd_enc_destroy
-+amdgpu/amd_vm@vmid-reserve-test
-+amdgpu/amd_vm@amdgpu-vm-unaligned-map
-+amdgpu/amd_vm@amdgpu-vm-mapping-test
-+amdgpu/amd_assr@assr-links
-+amdgpu/amd_assr@assr-links-dpms
-+amdgpu/amd_assr@assr-links-suspend
-+amdgpu/amd_bypass@8bpc-bypass-mode
-+amdgpu/amd_cs_nop@cs-nops-with-nop-compute0
-+amdgpu/amd_cs_nop@cs-nops-with-nop-gfx0
-+amdgpu/amd_cs_nop@cs-nops-with-sync-compute0
-+amdgpu/amd_cs_nop@cs-nops-with-sync-gfx0
-+amdgpu/amd_cs_nop@cs-nops-with-fork-compute0
-+amdgpu/amd_cs_nop@cs-nops-with-fork-gfx0
-+amdgpu/amd_cs_nop@cs-nops-with-sync-fork-compute0
-+amdgpu/amd_cs_nop@cs-nops-with-sync-fork-gfx0
-+amdgpu/amd_dp_dsc@dsc-enable-basic
-+amdgpu/amd_dp_dsc@dsc-slice-dimensions-change
-+amdgpu/amd_dp_dsc@dsc-link-settings
-+amdgpu/amd_dp_dsc@dsc-bpc
-+amdgpu/amd_ilr@ilr-link-training-configs
-+amdgpu/amd_ilr@ilr-policy
-+amdgpu/amd_link_settings@link-training-configs
-+amdgpu/amd_mem_leak@connector-suspend-resume
-+amdgpu/amd_mem_leak@connector-hotplug
-+amdgpu/amd_odm@odm-combine-2-to-1-4k144
-+amdgpu/amd_prime@i915-to-amd
-+amdgpu/amd_prime@amd-to-i915
-+amdgpu/amd_prime@shrink
-+amdgpu/amd_ras@RAS-basic
-+amdgpu/amd_ras@RAS-query
-+amdgpu/amd_ras@RAS-inject
-+amdgpu/amd_ras@RAS-disable
-+amdgpu/amd_ras@RAS-enable
-+amdgpu/amd_syncobj@amdgpu_syncobj_timeline
-+amdgpu/amd_vce_dec@amdgpu_cs_vce_create
-+amdgpu/amd_vce_dec@amdgpu_cs_vce_encode
-+amdgpu/amd_vce_dec@amdgpu_cs_vce_destroy
-+amdgpu/amd_vpe@vpe-fence-test
-+amdgpu/amd_vpe@vpe-blit-test
-+amdgpu/amd_basic@memory-alloc
-+amdgpu/amd_basic@userptr-with-IP-DMA
-+amdgpu/amd_basic@cs-gfx-with-IP-GFX
-+amdgpu/amd_basic@cs-compute-with-IP-COMPUTE
-+amdgpu/amd_basic@cs-multi-fence-with-IP-GFX
-+amdgpu/amd_basic@cs-sdma-with-IP-DMA
-+amdgpu/amd_basic@semaphore-with-IP-GFX-and-IP-DMA
-+amdgpu/amd_basic@eviction-test-with-IP-DMA
-+amdgpu/amd_basic@sync-dependency-test-with-IP-GFX
-+amdgpu/amd_color@crtc-linear-degamma
-+amdgpu/amd_color@crtc-linear-regamma
-+amdgpu/amd_color@crtc-lut-accuracy
-+amdgpu/amd_deadlock@amdgpu-deadlock-sdma
-+amdgpu/amd_deadlock@amdgpu-gfx-illegal-reg-access
-+amdgpu/amd_deadlock@amdgpu-gfx-illegal-mem-access
-+amdgpu/amd_deadlock@amdgpu-deadlock-gfx
-+amdgpu/amd_deadlock@amdgpu-deadlock-compute
-+amdgpu/amd_deadlock@amdgpu-deadlock-sdma-corrupted-header-test
-+amdgpu/amd_deadlock@amdgpu-deadlock-sdma-slow-linear-copy
-+amdgpu/amd_freesync_video_mode@freesync-base-to-various
-+amdgpu/amd_freesync_video_mode@freesync-lower-to-higher
-+amdgpu/amd_freesync_video_mode@freesync-non-preferred-to-freesync
-+amdgpu/amd_freesync_video_mode@freesync-custom-mode
-+amdgpu/amd_info@query-firmware-version
-+amdgpu/amd_info@query-timestamp
-+amdgpu/amd_info@query-timestamp-while-idle
-+amdgpu/amd_mall@static-screen
-+amdgpu/amd_mode_switch@mode-switch-first-last-pipe-0
-+amdgpu/amd_mode_switch@mode-switch-first-last-pipe-1
-+amdgpu/amd_mode_switch@mode-switch-first-last-pipe-2
-+amdgpu/amd_mode_switch@mode-switch-first-last-pipe-3
-+amdgpu/amd_mode_switch@mode-switch-first-last-pipe-4
-+amdgpu/amd_mode_switch@mode-switch-first-last-pipe-5
-+amdgpu/amd_pci_unplug@amdgpu_hotunplug_simple
-+amdgpu/amd_pci_unplug@amdgpu_hotunplug_with_cs
-+amdgpu/amd_pci_unplug@amdgpu_hotunplug_with_exported_bo
-+amdgpu/amd_pci_unplug@amdgpu_hotunplug_with_exported_fence
-+amdgpu/amd_psr@psr_enable
-+amdgpu/amd_psr@psr_enable_null_crtc
-+amdgpu/amd_psr@psr_su_mpo
-+amdgpu/amd_psr@psr_su_ffu
-+amdgpu/amd_psr@psr_su_cursor
-+amdgpu/amd_psr@psr_su_cursor_mpo
-+amdgpu/amd_psr@psr_su_mpo_scaling_1_5
-+amdgpu/amd_psr@psr_su_mpo_scaling_0_75
-+amdgpu/amd_security@amdgpu-security-alloc-buf-test
-+amdgpu/amd_security@sdma-write-linear-helper-secure
-+amdgpu/amd_security@gfx-write-linear-helper-secure
-+amdgpu/amd_security@amdgpu-secure-bounce
-+amdgpu/amd_uvd_dec@amdgpu_uvd_dec_create
-+amdgpu/amd_uvd_dec@amdgpu_uvd_decode
-+amdgpu/amd_uvd_dec@amdgpu_uvd_dec_destroy
-+amdgpu/amd_vcn@vcn-decoder-create-decode-destroy
-+amdgpu/amd_vcn@vcn-encoder-create-encode-destroy
-+amdgpu/amd_vrr_range@freesync-parsing
-+amdgpu/amd_vrr_range@freesync-parsing-suspend
-+amdgpu/amd_vrr_range@freesync-range
-+amdgpu/amd_vrr_range@freesync-range-suspend
-diff --git a/drivers/gpu/drm/ci/testlist-msm.txt b/drivers/gpu/drm/ci/testlist-msm.txt
++++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt
+@@ -0,0 +1,13 @@
++# Board Name: mt8173-elm-hana.dtb
++# Bug Report: https://lore.kernel.org/dri-devel/931e3f9a-9c5c-fc42-16fc-abaac4e0c0ff@collabora.com/T/#u
++# IGT Version: 1.28-gd2af13d9f
++# Failure Rate: 50
++# Linux Version: 6.7.0-rc3
++
++# Reported by deqp-runner
++kms_cursor_legacy@cursor-vs-flip-atomic-transitions
++
++# Below test shows inconsistency across multiple runs,
++# giving results of Pass and Timeout/Fail alternately
++kms_prop_blob@invalid-set-prop
++kms_prop_blob@invalid-set-prop-any
+diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt
+index 67d690fc4037..28c825c9cd60 100644
+--- a/drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt
++++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt
+@@ -1,13 +1,18 @@
+-kms_addfb_basic@addfb25-bad-modifier,Fail
++core_setmaster_vs_auth,Fail
++kms_bw@linear-tiling-1-displays-1920x1080p,Fail
+ kms_bw@linear-tiling-1-displays-2560x1440p,Fail
++kms_bw@linear-tiling-1-displays-3840x2160p,Fail
+ kms_bw@linear-tiling-2-displays-1920x1080p,Fail
+ kms_bw@linear-tiling-2-displays-2560x1440p,Fail
+ kms_bw@linear-tiling-2-displays-3840x2160p,Fail
+-kms_bw@linear-tiling-3-displays-2560x1440p,Fail
+-kms_bw@linear-tiling-3-displays-3840x2160p,Fail
+-kms_color@pipe-A-invalid-gamma-lut-sizes,Fail
+-kms_plane_cursor@overlay,Fail
+-kms_plane_cursor@primary,Fail
+-kms_plane_cursor@viewport,Fail
+-kms_plane_scaling@upscale-with-rotation-20x20,Fail
++kms_color@invalid-gamma-lut-sizes,Fail
++kms_cursor_legacy@cursor-vs-flip-atomic,Fail
++kms_cursor_legacy@cursor-vs-flip-legacy,Fail
++kms_flip@flip-vs-modeset-vs-hang,Fail
++kms_flip@flip-vs-panning-vs-hang,Fail
++kms_flip@flip-vs-suspend,Fail
++kms_prop_blob@invalid-set-prop-any,Fail
++kms_properties@get_properties-sanity-atomic,Fail
++kms_properties@plane-properties-atomic,Fail
++kms_properties@plane-properties-legacy,Fail
+ kms_rmfb@close-fd,Fail
+diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt
 new file mode 100644
-index 000000000000..b6c4371fe0b4
+index 000000000000..5885a950fa72
 --- /dev/null
-+++ b/drivers/gpu/drm/ci/testlist-msm.txt
-@@ -0,0 +1,50 @@
-+testlist.txt
-+msm_shrink@copy-gpu-sanitycheck-8
-+msm_shrink@copy-gpu-sanitycheck-32
-+msm_shrink@copy-gpu-8
-+msm_shrink@copy-gpu-32
-+msm_shrink@copy-gpu-madvise-8
-+msm_shrink@copy-gpu-madvise-32
-+msm_shrink@copy-gpu-oom-8
-+msm_shrink@copy-gpu-oom-32
-+msm_shrink@copy-mmap-sanitycheck-8
-+msm_shrink@copy-mmap-sanitycheck-32
-+msm_shrink@copy-mmap-8
-+msm_shrink@copy-mmap-32
-+msm_shrink@copy-mmap-madvise-8
-+msm_shrink@copy-mmap-madvise-32
-+msm_shrink@copy-mmap-oom-8
-+msm_shrink@copy-mmap-oom-32
-+msm_shrink@copy-mmap-dmabuf-sanitycheck-8
-+msm_shrink@copy-mmap-dmabuf-sanitycheck-32
-+msm_shrink@copy-mmap-dmabuf-8
-+msm_shrink@copy-mmap-dmabuf-32
-+msm_shrink@copy-mmap-dmabuf-madvise-8
-+msm_shrink@copy-mmap-dmabuf-madvise-32
-+msm_shrink@copy-mmap-dmabuf-oom-8
-+msm_shrink@copy-mmap-dmabuf-oom-32
-+msm_mapping@ring
-+msm_mapping@sqefw
-+msm_mapping@shadow
-+msm_submitoverhead@submitbench-10-bos
-+msm_submitoverhead@submitbench-10-bos-no-implicit-sync
-+msm_submitoverhead@submitbench-100-bos
-+msm_submitoverhead@submitbench-100-bos-no-implicit-sync
-+msm_submitoverhead@submitbench-250-bos
-+msm_submitoverhead@submitbench-250-bos-no-implicit-sync
-+msm_submitoverhead@submitbench-500-bos
-+msm_submitoverhead@submitbench-500-bos-no-implicit-sync
-+msm_submitoverhead@submitbench-1000-bos
-+msm_submitoverhead@submitbench-1000-bos-no-implicit-sync
-+msm_recovery@hangcheck
-+msm_recovery@gpu-fault
-+msm_recovery@gpu-fault-parallel
-+msm_recovery@iova-fault
-+msm_submit@empty-submit
-+msm_submit@invalid-queue-submit
-+msm_submit@invalid-flags-submit
-+msm_submit@invalid-in-fence-submit
-+msm_submit@invalid-duplicate-bo-submit
-+msm_submit@invalid-cmd-idx-submit
-+msm_submit@invalid-cmd-type-submit
-+msm_submit@valid-submit
-diff --git a/drivers/gpu/drm/ci/testlist-panfrost.txt b/drivers/gpu/drm/ci/testlist-panfrost.txt
-new file mode 100644
-index 000000000000..e1002156a508
---- /dev/null
-+++ b/drivers/gpu/drm/ci/testlist-panfrost.txt
-@@ -0,0 +1,17 @@
-+testlist.txt
-+panfrost_get_param@base-params
-+panfrost_get_param@get-bad-param
-+panfrost_get_param@get-bad-padding
-+panfrost_gem_new@gem-new-4096
-+panfrost_gem_new@gem-new-0
-+panfrost_gem_new@gem-new-zeroed
-+panfrost_prime@gem-prime-import
-+panfrost_submit@pan-submit
-+panfrost_submit@pan-submit-error-no-jc
-+panfrost_submit@pan-submit-error-bad-in-syncs
-+panfrost_submit@pan-submit-error-bad-bo-handles
-+panfrost_submit@pan-submit-error-bad-requirements
-+panfrost_submit@pan-submit-error-bad-out-sync
-+panfrost_submit@pan-reset
-+panfrost_submit@pan-submit-and-close
-+panfrost_submit@pan-unhandled-pagefault
-diff --git a/drivers/gpu/drm/ci/testlist-v3d.txt b/drivers/gpu/drm/ci/testlist-v3d.txt
-new file mode 100644
-index 000000000000..6ef7957f6344
---- /dev/null
-+++ b/drivers/gpu/drm/ci/testlist-v3d.txt
-@@ -0,0 +1,73 @@
-+testlist.txt
-+v3d_create_bo@create-bo-invalid-flags
-+v3d_create_bo@create-bo-0
-+v3d_create_bo@create-bo-4096
-+v3d_create_bo@create-bo-zeroed
-+v3d_get_bo_offset@create-get-offsets
-+v3d_get_bo_offset@get-bad-handle
-+v3d_get_param@base-params
-+v3d_get_param@get-bad-param
-+v3d_get_param@get-bad-flags
-+v3d_job_submission@array-job-submission
-+v3d_job_submission@multiple-singlesync-to-multisync
-+v3d_job_submission@threaded-job-submission
-+v3d_mmap@mmap-bad-flags
-+v3d_mmap@mmap-bad-handle
-+v3d_mmap@mmap-bo
-+v3d_perfmon@create-perfmon-0
-+v3d_perfmon@create-perfmon-exceed
-+v3d_perfmon@create-perfmon-invalid-counters
-+v3d_perfmon@create-single-perfmon
-+v3d_perfmon@create-two-perfmon
-+v3d_perfmon@get-values-invalid-pad
-+v3d_perfmon@get-values-invalid-perfmon
-+v3d_perfmon@get-values-invalid-pointer
-+v3d_perfmon@get-values-valid-perfmon
-+v3d_perfmon@destroy-invalid-perfmon
-+v3d_perfmon@destroy-valid-perfmon
-+v3d_submit_cl@bad-pad
-+v3d_submit_cl@bad-flag
-+v3d_submit_cl@bad-extension
-+v3d_submit_cl@bad-bo
-+v3d_submit_cl@bad-perfmon
-+v3d_submit_cl@bad-in-sync
-+v3d_submit_cl@bad-multisync-pad
-+v3d_submit_cl@bad-multisync-extension
-+v3d_submit_cl@bad-multisync-out-sync
-+v3d_submit_cl@bad-multisync-in-sync
-+v3d_submit_cl@valid-submission
-+v3d_submit_cl@single-out-sync
-+v3d_submit_cl@single-in-sync
-+v3d_submit_cl@simple-flush-cache
-+v3d_submit_cl@valid-multisync-submission
-+v3d_submit_cl@multisync-out-syncs
-+v3d_submit_cl@multi-and-single-sync
-+v3d_submit_cl@multiple-job-submission
-+v3d_submit_cl@job-perfmon
-+v3d_submit_csd@bad-pad
-+v3d_submit_csd@bad-flag
-+v3d_submit_csd@bad-extension
-+v3d_submit_csd@bad-bo
-+v3d_submit_csd@bad-perfmon
-+v3d_submit_csd@bad-in-sync
-+v3d_submit_csd@bad-multisync-pad
-+v3d_submit_csd@bad-multisync-extension
-+v3d_submit_csd@bad-multisync-out-sync
-+v3d_submit_csd@bad-multisync-in-sync
-+v3d_submit_csd@valid-submission
-+v3d_submit_csd@single-out-sync
-+v3d_submit_csd@single-in-sync
-+v3d_submit_csd@valid-multisync-submission
-+v3d_submit_csd@multisync-out-syncs
-+v3d_submit_csd@multi-and-single-sync
-+v3d_submit_csd@multiple-job-submission
-+v3d_submit_csd@job-perfmon
-+v3d_wait_bo@bad-bo
-+v3d_wait_bo@bad-pad
-+v3d_wait_bo@unused-bo-0ns
-+v3d_wait_bo@unused-bo-1ns
-+v3d_wait_bo@map-bo-0ns
-+v3d_wait_bo@map-bo-1ns
-+v3d_wait_bo@used-bo-0ns
-+v3d_wait_bo@used-bo-1ns
-+v3d_wait_bo@used-bo
-diff --git a/drivers/gpu/drm/ci/testlist-vc4.txt b/drivers/gpu/drm/ci/testlist-vc4.txt
-new file mode 100644
-index 000000000000..5a9ee4751337
---- /dev/null
-+++ b/drivers/gpu/drm/ci/testlist-vc4.txt
-@@ -0,0 +1,49 @@
-+testlist.txt
-+vc4_create_bo@create-bo-4096
-+vc4_create_bo@create-bo-0
-+vc4_create_bo@create-bo-zeroed
-+vc4_dmabuf_poll@poll-write-waits-until-write-done
-+vc4_dmabuf_poll@poll-read-waits-until-write-done
-+vc4_label_bo@set-label
-+vc4_label_bo@set-bad-handle
-+vc4_label_bo@set-bad-name
-+vc4_label_bo@set-kernel-name
-+vc4_lookup_fail@bad-color-write
-+vc4_mmap@mmap-bad-handle
-+vc4_mmap@mmap-bo
-+vc4_perfmon@create-perfmon-0
-+vc4_perfmon@create-perfmon-exceed
-+vc4_perfmon@create-perfmon-invalid-events
-+vc4_perfmon@create-single-perfmon
-+vc4_perfmon@create-two-perfmon
-+vc4_perfmon@get-values-invalid-perfmon
-+vc4_perfmon@get-values-invalid-pointer
-+vc4_perfmon@get-values-valid-perfmon
-+vc4_perfmon@destroy-invalid-perfmon
-+vc4_perfmon@destroy-valid-perfmon
-+vc4_purgeable_bo@mark-willneed
-+vc4_purgeable_bo@mark-purgeable
-+vc4_purgeable_bo@mark-purgeable-twice
-+vc4_purgeable_bo@mark-unpurgeable-twice
-+vc4_purgeable_bo@access-purgeable-bo-mem
-+vc4_purgeable_bo@access-purged-bo-mem
-+vc4_purgeable_bo@mark-unpurgeable-check-retained
-+vc4_purgeable_bo@mark-unpurgeable-purged
-+vc4_purgeable_bo@free-purged-bo
-+vc4_tiling@get-bad-handle
-+vc4_tiling@set-bad-handle
-+vc4_tiling@get-bad-flags
-+vc4_tiling@set-bad-flags
-+vc4_tiling@get-bad-modifier
-+vc4_tiling@set-bad-modifier
-+vc4_tiling@set-get
-+vc4_tiling@get-after-free
-+vc4_wait_bo@bad-bo
-+vc4_wait_bo@bad-pad
-+vc4_wait_bo@unused-bo-0ns
-+vc4_wait_bo@unused-bo-1ns
-+vc4_wait_bo@used-bo-0ns
-+vc4_wait_bo@used-bo-1ns
-+vc4_wait_bo@used-bo
-+vc4_wait_seqno@bad-seqno-0ns
-+vc4_wait_seqno@bad-seqno-1ns
-diff --git a/drivers/gpu/drm/ci/testlist.txt b/drivers/gpu/drm/ci/testlist.txt
-index 3377f002f8c5..06fa047388f0 100644
---- a/drivers/gpu/drm/ci/testlist.txt
-+++ b/drivers/gpu/drm/ci/testlist.txt
-@@ -2710,52 +2710,38 @@ kms_writeback@writeback-invalid-parameters
- kms_writeback@writeback-fb-id
- kms_writeback@writeback-check-output
- prime_mmap_kms@buffer-sharing
--msm_shrink@copy-gpu-sanitycheck-8
--msm_shrink@copy-gpu-sanitycheck-32
--msm_shrink@copy-gpu-8
--msm_shrink@copy-gpu-32
--msm_shrink@copy-gpu-madvise-8
--msm_shrink@copy-gpu-madvise-32
--msm_shrink@copy-gpu-oom-8
--msm_shrink@copy-gpu-oom-32
--msm_shrink@copy-mmap-sanitycheck-8
--msm_shrink@copy-mmap-sanitycheck-32
--msm_shrink@copy-mmap-8
--msm_shrink@copy-mmap-32
--msm_shrink@copy-mmap-madvise-8
--msm_shrink@copy-mmap-madvise-32
--msm_shrink@copy-mmap-oom-8
--msm_shrink@copy-mmap-oom-32
--msm_shrink@copy-mmap-dmabuf-sanitycheck-8
--msm_shrink@copy-mmap-dmabuf-sanitycheck-32
--msm_shrink@copy-mmap-dmabuf-8
--msm_shrink@copy-mmap-dmabuf-32
--msm_shrink@copy-mmap-dmabuf-madvise-8
--msm_shrink@copy-mmap-dmabuf-madvise-32
--msm_shrink@copy-mmap-dmabuf-oom-8
--msm_shrink@copy-mmap-dmabuf-oom-32
--msm_mapping@ring
--msm_mapping@sqefw
--msm_mapping@shadow
--msm_submitoverhead@submitbench-10-bos
--msm_submitoverhead@submitbench-10-bos-no-implicit-sync
--msm_submitoverhead@submitbench-100-bos
--msm_submitoverhead@submitbench-100-bos-no-implicit-sync
--msm_submitoverhead@submitbench-250-bos
--msm_submitoverhead@submitbench-250-bos-no-implicit-sync
--msm_submitoverhead@submitbench-500-bos
--msm_submitoverhead@submitbench-500-bos-no-implicit-sync
--msm_submitoverhead@submitbench-1000-bos
--msm_submitoverhead@submitbench-1000-bos-no-implicit-sync
--msm_recovery@hangcheck
--msm_recovery@gpu-fault
--msm_recovery@gpu-fault-parallel
--msm_recovery@iova-fault
--msm_submit@empty-submit
--msm_submit@invalid-queue-submit
--msm_submit@invalid-flags-submit
--msm_submit@invalid-in-fence-submit
--msm_submit@invalid-duplicate-bo-submit
--msm_submit@invalid-cmd-idx-submit
--msm_submit@invalid-cmd-type-submit
--msm_submit@valid-submit
-+prime_vgem@basic-read
-+prime_vgem@basic-write
-+prime_vgem@basic-gtt
-+prime_vgem@basic-blt
-+prime_vgem@shrink
-+prime_vgem@coherency-gtt
-+prime_vgem@coherency-blt
-+prime_vgem@sync
-+prime_vgem@busy
-+prime_vgem@wait
-+prime_vgem@basic-fence-read
-+prime_vgem@basic-fence-mmap
-+prime_vgem@basic-fence-blt
-+prime_vgem@basic-fence-flip
-+prime_vgem@fence-read-hang
-+prime_vgem@fence-write-hang
-+prime_vgem@fence-flip-hang
-+prime_vgem@fence-wait
-+vgem_basic@unload
-+vgem_basic@setversion
-+vgem_basic@second-client
-+vgem_basic@create
-+vgem_basic@mmap
-+vgem_basic@bad-flag
-+vgem_basic@bad-pad
-+vgem_basic@bad-handle
-+vgem_basic@bad-fence
-+vgem_basic@busy-fence
-+vgem_basic@dmabuf-export
-+vgem_basic@dmabuf-mmap
-+vgem_basic@dmabuf-fence
-+vgem_basic@dmabuf-fence-before
-+vgem_basic@sysfs
-+vgem_basic@debugfs
-+vgem_slow@nohang
++++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt
+@@ -0,0 +1,8 @@
++# Board Name: mt8183-kukui-jacuzzi-juniper-sku16.dtb
++# Bug Report: https://lore.kernel.org/dri-devel/931e3f9a-9c5c-fc42-16fc-abaac4e0c0ff@collabora.com/T/#u
++# IGT Version: 1.28-gd2af13d9f
++# Failure Rate: 100
++# Linux Version: 6.7.0-rc3
++
++# Reported by deqp-runner
++kms_cursor_legacy@cursor-vs-flip-atomic-transitions
 -- 
 2.40.1
 
