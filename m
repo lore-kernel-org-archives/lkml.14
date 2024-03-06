@@ -1,157 +1,124 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e2i652.smtp2go.com (e2i652.smtp2go.com [103.2.142.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCE813E7F4
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1821136647
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709750627; cv=none; b=a5kkYGghWeQvAd1p3D7Ow2cnm5qAr5onw1eK/g7TZMdlbyNVH6OpOIUlvi16QkEFg/jngSQv+ANFZbLbl0DSUVn9nYS7r+J+/aTmizX6oM1JUflVw8CgaDz4U7D1yVAOh/0nu6GzDHwmvCu4qtOsAGpiK9Ib7QJaO5dFL4OfRZE=
+	t=1709750622; cv=none; b=AWjZyfqcjAVLdp8Rb7IRkq9pZDRIWUblGSV9+qyUWfs98zPMQEgxVeA6rr+40m6rW+9JkbWmslPJV/knv4bRCBOKv8Nx1qA08U6y8sr4rXQxnKo8Am7fYzNz0svM5LzbA1v4lAr5e7NaG7WQYEEY7I/H22uVbG/q1yGlifj9qYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709750627; c=relaxed/simple;
-	bh=sMqhYwV20Y535DYN+vGw6lCYwpXjUAzsUCGQTdaeBto=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dm6pYPJ9cjmEFCBYqZk7B5/1Qop4NuT0tOvKXSBqGs9YCKOR90U5//KqHqMucYTOK+/nuO6lETQHhYAhEzPGj9hztxckopho1ycwlOdYXVrfFHgk7mLoGVcaTrJyKEwl1Rh1wTCK9TKSOwMY7m5dBaT3+sc3QpV0uJEr6TsiD9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=C308fTnM; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1709750622; c=relaxed/simple;
+	bh=lqf5F5/wynUuLQMyXci5UgqCurfaGt/bCOCumtuezvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/LUPxE0wbP9ytKB/8cd4in31Hc5gcwCv7cYfGep5fOtbRp5nV9OQ3nLZO/ubzgvMsLgG/2OQWryDHXFrQq9k46kHwcldpX0lj1uVrcctxVMC9itFhJf8rGn2tO0wrjfsk7k5d+XTSDhHLw0+hF1GzYXDI3F+wKq9SGOsk0NNKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=hmE1A4X1 reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=C52ZWhLc; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=NuqjY41F; arc=none smtp.client-ip=103.2.142.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C308fTnM"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-563d56ee65cso32251a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 10:43:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1709750623; x=1710355423; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DQKl6UzO1h7CA/xfOVaLJcIbW5ASITdcUcyzKmlemHI=;
-        b=C308fTnM6+goujFNMeoX3EJxOD/dDItY/FdygQz2XXjDVzesFCDZSFFYqDy0yqc+S3
-         37Ua3rBxOHAsr+Cgu4YhIkiQvIOE9jHv6PMjzBTJIhodBqY+71n/fUnFqF2OO1TF8ilQ
-         VQMPzwH1Caxx/tYibmk4M26P9nGTkCubruoTU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709750623; x=1710355423;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DQKl6UzO1h7CA/xfOVaLJcIbW5ASITdcUcyzKmlemHI=;
-        b=r3ZEVwkd2ceCpEQSkAZEHp72taYAe2q6u1JUz+f7nvBi9MhgzI5Fj1EyOxPmBfsCBI
-         JKXngLlwBq3ifaQb8hcmiplGl0Quc4SjFC1ltLHrLrY65HCnSy2N/ym1/2o5ACpxt94W
-         D+IgmntznU/UzFWIn1+px/WYbHhe0kqaKgVn9RNwZSFjdXVArMPODqeYxV0+79CgQkZ0
-         NXMnZFeF8pXWfLRb5gWhZcFcCgoJU5pqQZQHjJMuoph8IY9+aODqdT0uEpXw8zI5z92j
-         Yul0sBYNDixmrw8WNeXxqWalJgj2ChA9KokrayJwlCC4m66KxL/Ia1eHG/sKf3UfPsE0
-         3SJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUW2Hl2kUuyFjehGICvturCmvl01lb6/aUXhon/Nxz7oPzKfa1np9KMpXW/Zh8s6fAAbtIp6edQZAH9z5wHNmjupzyK0l6ZR4n3G6MM
-X-Gm-Message-State: AOJu0YwGzPTx4Ku4ygZhZHfbkv2N2Q99/vJGK0DiLLJfFt3D/zF6awrh
-	g3pFlLN2iXUoOyoSYN83AVwz9ZIYN4IwjDhGgw0eTWgXQy+9Foip8Hzi751/H5E6Cj5XvHuLrdQ
-	rmGI=
-X-Google-Smtp-Source: AGHT+IHrVcCpMN/G1DWhjnEADR6VjslgV2btXbqS6wMznMx3nNqzHs+H4cJEwwJGvzD+QAg8DmyIEg==
-X-Received: by 2002:a17:906:714f:b0:a44:5515:3b48 with SMTP id z15-20020a170906714f00b00a4455153b48mr10862603ejj.14.1709750623393;
-        Wed, 06 Mar 2024 10:43:43 -0800 (PST)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id h20-20020a170906591400b00a3d5efc65e0sm7411930ejq.91.2024.03.06.10.43.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Mar 2024 10:43:42 -0800 (PST)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3f893ad5f4so11464666b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 10:43:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWCZRE8MnG/UtvJS42zoZqt4EZGkP0MgjcmUzOiHijLmKD6Us+mU2pDPeJxVhNXjiyRLR0mOuaa9waEXC2RFJCBBS3jAibss/HdexFC
-X-Received: by 2002:a17:906:f898:b0:a44:17da:424 with SMTP id
- lg24-20020a170906f89800b00a4417da0424mr10700423ejb.56.1709750621742; Wed, 06
- Mar 2024 10:43:41 -0800 (PST)
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="hmE1A4X1";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="C52ZWhLc";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="NuqjY41F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1709751508; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe; bh=lqf5F5/wynUuLQMyXci5UgqCurfaGt/bCOCumtuezvc=; b=hmE1A4X1
+	JPcv0ECUaSk4h8+r1arnpv5JpCB+tzj3nJhKKF2tdFBM0XxaGAEqzB4PDZq2ut60mT/nJLXWg+hXf
+	wOCZIr7jU0+QpWZw/qTroypWCp0GZCYFIVovwibWKrLopNw9ms03+dERhdNMen/DcYppcBxSbyh7t
+	+hp3z0g7gLnTBLDc1WfoT+RH2ZXf0wTQ/LMRJw9XSaWQfDKX3S1GT9X/PAXfeDboNr8hx5mRz4j7A
+	O27LZ92vTBWdnSHNOUp5nA/nk3cUxeiH82bUsLX4DStUu3MOxCOOsrNYcCVTQBDw2vPWSTzeOQ+ya
+	xQvgwiVl6rvt+vhP4h8nOery3g==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1709750608; h=from : subject :
+ to : message-id : date;
+ bh=lqf5F5/wynUuLQMyXci5UgqCurfaGt/bCOCumtuezvc=;
+ b=C52ZWhLcp7BvxLk/oPPuFgpaXkOMt62joR7w+cY90wlhfyTmv1tQwoAjtmSKklP3nW3gp
+ BtsLcdFprYINNGOrIBKBwuc8XeYXW3ORwW+z46Yw18HkzautLoceD/9jAaXO/8JeblWOzt/
+ g0x/4rh3ET+XRS7nHcJ47jCnosiQGk4sdVToqcQt9I/mwVfYAzpoYWlQmeO2xoLVuB/0wgv
+ KB9WFBJ3vsdN+LAU8qihbnSJHnwDD0J9nPgGiS6CjVSXjX5fPe8STiHhjGwfH6VWi9cxn/S
+ RaexZPESfKswkS72ynnNW/Epz0isJ7n+BFs3GORbgDz3aI75JfAChXcviASQ==
+Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1rhwEA-qt4Bqe-MD; Wed, 06 Mar 2024 18:42:54 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.96.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1rhwEA-4XqxWs-0M; Wed, 06 Mar 2024 18:42:54 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1709750568; bh=lqf5F5/wynUuLQMyXci5UgqCurfaGt/bCOCumtuezvc=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=NuqjY41FDI9SwfMB+XzOfXEdDX0enZGk62Jg5uU4RsZTkqUAV4ctou70R32bmz7rB
+ lvhK7kECnrGI/CfyB40ReKlq/LJJhJhbhgJexqPBqI+BFBtoHWPBmh3/chnh+KfbEQ
+ CDtLm2modjfUgR/5SYNdpNH4O0rCkilLrr/UfzJc=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id D3B3E3C401; Wed,  6 Mar 2024 19:42:47 +0100 (CET)
+Date: Wed, 6 Mar 2024 19:42:47 +0100
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: unexport abs_srctree and abs_objtree
+Message-ID: <Zei5J7aU1Yd720Po@fjasle.eu>
+References: <20240306104222.308473-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f3624f39-bbb1-451d-8161-8518e4108d8e@joelfernandes.org>
- <tencent_9882B228F292088CDD68F10CF1C228742009@qq.com> <20240306103719.1d241b93@gandalf.local.home>
- <27665890-8314-4252-8622-1e019fee27e4@paulmck-laptop> <20240306130103.6da71ddf@gandalf.local.home>
-In-Reply-To: <20240306130103.6da71ddf@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 6 Mar 2024 10:43:25 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgG6Dmt1JTXDbrbXh_6s2yLjL=9pHo7uv0==LHFD+aBtg@mail.gmail.com>
-Message-ID: <CAHk-=wgG6Dmt1JTXDbrbXh_6s2yLjL=9pHo7uv0==LHFD+aBtg@mail.gmail.com>
-Subject: Re: [PATCH] rcutorture: Fix rcu_torture_pipe_update_one()/rcu_torture_writer()
- data race and concurrency bug
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, linke li <lilinke99@qq.com>, joel@joelfernandes.org, 
-	boqun.feng@gmail.com, dave@stgolabs.net, frederic@kernel.org, 
-	jiangshanlai@gmail.com, josh@joshtriplett.org, linux-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, qiang.zhang1211@gmail.com, 
-	quic_neeraju@quicinc.com, rcu@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature"; boundary="QvLgz0ZfwNfKstKB"
+Content-Disposition: inline
+In-Reply-To: <20240306104222.308473-1-masahiroy@kernel.org>
+X-Smtpcorp-Track: 1rhwEj4bqxWs0u.6GktAVmgQOdvo
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286smcNLppFyP
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-On Wed, 6 Mar 2024 at 09:59, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> IIRC, the original purpose of READ_ONCE() and WRITE_ONCE() was to make sure
-> that the compiler only reads or writes the variable "once". Hence the name.
-> That way after a load, you don't need to worry that the content of the
-> variable you read isn't going to be read again from the original location
-> because the compiler decided to save stack space and registers.
->
-> But that macro has now been extended for other purposes.
 
-Not really.
+--QvLgz0ZfwNfKstKB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tearing of simple types (as opposed to structures or bitfields or
-"more than one word" or whatever) has never really been a real
-concern.
+On Wed, Mar 06, 2024 at 07:42:22PM +0900 Masahiro Yamada wrote:
+> Commit 25b146c5b8ce ("kbuild: allow Kbuild to start from any directory")
+> exported abs_srctree and abs_objtree to avoid recomputation after the
+> sub-make. However, this approach turned out to be fragile.
+>=20
+> Commit 5fa94ceb793e ("kbuild: set correct abs_srctree and abs_objtree
+> for package builds") moved them above "ifneq ($(sub_make_done),1)",
+> eliminating the need for exporting them.
+>=20
+> These are only needed in the top Makefile. If an absolute path is
+> required in sub-directories, you can use $(abspath ) or $(realpath )
+> as needed.
+>=20
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-It keeps being brought up as a "compilers could do this", but it's
-basically just BS fear-mongering. Compilers _don't_ do it, and the
-reason why compilers don't do it isn't some "compilers are trying to
-be nice" issue, but simply a "it is insane and generates worse code"
-issue.
+Thanks, I appreciate that abs_* is only used in top-level Makefile.
 
-So what happens is that READ_ONCE() and WRITE_ONCE() have always been
-about reading and writing *consistent* values. There is no locking,
-but the idea is - and has always been - that you get one *single*
-answer from READ_ONCE(), and that single answer will always be
-consistent with something that has been written by WRITE_ONCE.
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
 
-That's often useful - lots of code doesn't really care if you get the
-old or the new value, but the code *does* care that it gets *one*
-value, and not some random mix of "I tested one value for validity,
-then it got reloaded due to register pressure, and I actually used
-another value".
+--QvLgz0ZfwNfKstKB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And not some "I read one value, and it was a mix of two other values".
+-----BEGIN PGP SIGNATURE-----
 
-But in order to get those semantics, the READ_ONCE() and WRITE_ONCE()
-macros don't do just the 'volatile' (to get the "no reloads"
-guarantee), but they also do that "simple types" check.
+iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmXouR0ACgkQB1IKcBYm
+Emkexg//YCqubDBQYOUGXOKDWZ4Biw/QL+kh6UNDM76LouVyCapjebmlag3VD3pm
+ArbuWKInK1qc+aBp0XY7G3+MqJP6hdFVGxHZ+oyNHKAWtXJ3QiZtsUY5GL006t0p
+19OfoVnk2T0zlu93GQZc74Q1l3ZScOdichEZc5b5mTsc3PH+4pkETyJLTOeS4hLV
+WcYnUIrV2h8W021j9/xGByQlWfE707croysbSCAW5loB7u1rW2Y8E6NU4F7zjXf4
+a4Z7alQybcmYYosvhkEAR8PHnXb3Q9jP5ZehH+9yw2JGUZAvep65qOe6vGAOK9g1
+r1nWOTVgnOb0tbr8a0tYlfV/iWx/LI1jd79xQkRpmt7hJ36R2m+nqcoAwza6dd2B
+njUISzuxDTJRNU7yBY6X6+tiAMI5G4+UPAqFtcCYnYcIZ6pZSFGBeH+S+C7OGuEW
+k/eAaqSWZ7vbyio6utJCY7PH1OmEjzTOQKvsYr8CVmUiMix5fz8o/Kv7WZ6EQm2q
+BPX0e6rGYjurOnMplAIR6x3u/c75Wj/V38GnLkl4It7g6+ypaN3pAvsWc10H8Jt7
+l+kampFC+1BBilJw4nq384Exhkr0q1vWvDsDO/L1NGCWDUMsy+c0CZaHYD78lFAi
+GzYVdP7cXFP2Ho+VrQzjbKTEa/K0yisJIghPFJVUbiK9oC1GyU4=
+=21AF
+-----END PGP SIGNATURE-----
 
-So READ_ONCE/WRITE_ONCE has never really been "extended for other
-purposes". The purpose has always been the same: one single consistent
-value.
-
-What did happen that our *original* name for this was not "read vs
-write", but just "access".
-
-So instead of "READ_ONCE(x)" you'd do "ACCESS_ONCE(x)", and instead of
-"WRITE_ONCE(x,y)" you'd do "ACCESS_ONCE(x) = y".
-
-And, to make matters more interesting, we had code that did that on
-things that were *not* simple values. IOW, we'd have things like
-ACCESS_ONCE() on things that literally *couldn't* be accessed as one
-single value.
-
-The most notable was accessing page table entries, which on multiple
-architectures (including plain old 32-bit x86) ended up being two
-words.
-
-So the extension that *did* happen is that READ_ONCE and WRITE_ONCE
-actually verify that the type is simple, and that you can't do a
-64-bit READ_ONCE on a 32-bit architecture. Because then while you
-migth guarantee that the value isn't reloaded multiple times, you
-cannot guarantee that you actually get a value that is consistent with
-a WRITE_ONCE (because the reads and writes are both two operations).
-
-Now, we've gotten rid of the whole ACCESS_ONCE() thing, and so some of
-that history is no longer visible (although you can still see that
-pattern in the rseq self-tests).
-
-So yes, READ_ONCE/WRITE_ONCE do control "tearing", but realistically,
-it was always only about the "complex values" kind of tearing that the
-old ACCESS_ONCE() model silently and incorrectly allowed.
-
-              Linus
+--QvLgz0ZfwNfKstKB--
