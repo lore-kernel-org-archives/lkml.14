@@ -1,189 +1,324 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2069.outbound.protection.outlook.com [40.107.237.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D43A5FDDC;
-	Wed,  6 Mar 2024 10:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721617; cv=none; b=hU01BQa4fmOko1yWPMxU7rmbBf0VVt39sZ04IG5dadyOSsRuBZG8sPhwWLiDF3yPZLNoPtXVOtimhBfPkz1VV2hrXsP6FzjBPawHhjeqUhT+m1pKs/ttuqUiksCS9GWub+cp2vgVZiV6cVNzY3xpDVhyy32kH9/sq4/9rwdyAEU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511CB23772
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709721617; cv=fail; b=ootvkM4yT2pptVetkUSoeBOnUqJE0tse+qoeUmCG2jKaxOmtJr7RugJj1rR7lQe24tsUz3eTMmk3Uu5zJJRuIYJUCCIcwZ9lrOdFyNPfDifpLDn673sD+DqQhk+0ooOZjizmHL/BQC9k17DPJDVB67fk8T1JfNuoFKoaQENdazE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709721617; c=relaxed/simple;
-	bh=ytJVUPhnNOpLuteR3P9HW/TY0UWzPBgOZqqHRWr+b7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IYgFXfHJ3tGHpW8nF0g+GC+Kt8SK6GdZdqMsfnMVGDAqzy+27Qo5sxfNAgFHycav3/N9hJMNIJAM16SccDJAquKl5JExQXM3dXHjy7Tj1OELC43sE13Lef/p2ZEJe1QGsFUGcLLhJk0q5uuxE2Gemyg3u7YAaIRmEA9Crp1Epsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LOvf1xpv; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=vEuyO4aqEUVJjTOZxEagviKdWyQFGxITyEiGuZdyxaw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=mc+8hmLpjpB/rRa/9DffYE4g9BsNfUdKOnMLFsGIb0WJR9kv+mh4nJ5kIWUBqrmTiR5s3mRP4n3shI2IekL4M7E5ycDspXioYkLTilbmO6wDKzQHYs5NybgDQ/Tx1XmnfROFVP6rATjugH57QXwtwi31/ly72z53Wp9/v/RB5ho=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=j9BFIrRl; arc=fail smtp.client-ip=40.107.237.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LOvf1xpv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709721616; x=1741257616;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ytJVUPhnNOpLuteR3P9HW/TY0UWzPBgOZqqHRWr+b7U=;
-  b=LOvf1xpvBPnKtxkj93sGzS2u/48wszrZsVOc/Kwae74cgL0CXb06/oDC
-   Ay/cIYt06Z9JntQaRuqW1g76NZk2GZdFHvvjLc7IHtInMpjE7r6VErPQ0
-   Xr/MRbqyabUEJ1uk10WhTPGHtnzxrdzJj6SISLrvhPCL1+rymj3loX4KV
-   rux4YryGaWF6cb6L6jPl0HoO75Lm3D6GTtKG1mB7OedlPtJ4KA3l/uRmk
-   j5UjqNPxkArgE+M2ZKl1nRF6Hx/NUCHO15C+2PYIMNpqSsWkyPanzAoam
-   EUvDIhNdVo7ffHLwNqb2Y5rMpOOe3mEvhBBHXTaFtSgvudrndHwlCwtA0
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4497564"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="4497564"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:39:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="9803667"
-Received: from ksznyce-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.25.14])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:39:45 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com,
-	tony.luck@intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 1/4] selftests/resctrl: Adjust effective L3 cache size with SNC enabled
-Date: Wed,  6 Mar 2024 11:39:18 +0100
-Message-ID: <b143f7514b5302522b7c9fb09ae83ec8ec5799d4.1709721159.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1709721159.git.maciej.wieczor-retman@intel.com>
-References: <cover.1709721159.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="j9BFIrRl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NnHLHlXASLV3IdrVX+D16JT2nQHzEQnWlTJPs3/Py5ej/84Hg6NRfP4HMZbhKSI5sLbTSGwQvpzlZZAhFLNSYhZIdJLDYjXb5tirZ7AfooGwqKWNjRfHEPR8huCwUOEmiA10mpSNAxBkVw9ub9WvYMDJ5jQxK4rLZIxToEauEbWCZaYCR9dxF8VD+U+vzz9BVJm3fMrLY4/jmzm7d651M+JokPyAnflRMuyfoEzfpAB5FZlC8iBdduELaKRyZqOrADBL3NlUn3M7WFvUo8HwM44/0eDP70VrP9LBJfVM+iwnUAef8fNNHiPenigflMUJ6UwIEHBml+aqRSJn48DRFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JJAEt4RW8kbGxW4kDRKmEttcA5OsGwcy7D0RJj4zSac=;
+ b=RJ2IAjRl6FSty6Q/ILt2PqlDkWPWz2xYzInu/kQ1Hig8BLQH27pX5MVB8u/2/N2cfX3Acb9MmgmDAXEAgxfjrDc4+oMvGC5d9eQnc7o9iI2iDcwTrzIzP4CLxtsmDHXZ7qzP+15Ry8CKKSutuyirisW3ADCQaMmlejE/SR97oxj+v6KhjP+BndtCQmDe6cSHn2eLv5/xE+VMvayw2NWv+WBrTwQhda7FzefM1xPL4FaCC1wjnrXgnbSkvQWzavg7aibyPafFtX+8QkoTw0mKG7kZ+sw+0FomnFBk/ScA3Pi5Z4A4O/vrhcLwAXkOPuEr1C0AltLZQKmPmDrmELkx6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JJAEt4RW8kbGxW4kDRKmEttcA5OsGwcy7D0RJj4zSac=;
+ b=j9BFIrRlSySg+FhTLmX8ji4NKuEQu2aCyAkejK2u5eTUS56yjtEI7z8LAZD0bERQdiO5GpAhC752l8VW0iU6UlsJGSpm5OeDq6Pw87OJRaof1WPT/xwZCwCRIdVabK4lXPilCV+9/Pg0jlO/XQyJiz+143i5ACHLMcOuYsg/zGg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5596.namprd12.prod.outlook.com (2603:10b6:510:136::13)
+ by SJ2PR12MB8183.namprd12.prod.outlook.com (2603:10b6:a03:4f4::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Wed, 6 Mar
+ 2024 10:40:11 +0000
+Received: from PH7PR12MB5596.namprd12.prod.outlook.com
+ ([fe80::6f48:e3f1:6ff9:75bd]) by PH7PR12MB5596.namprd12.prod.outlook.com
+ ([fe80::6f48:e3f1:6ff9:75bd%4]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
+ 10:40:11 +0000
+Message-ID: <5e2899cd-75b4-4ddd-97ff-4e10a2e67fbb@amd.com>
+Date: Wed, 6 Mar 2024 16:10:01 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amdgpu: cache in more vm fault information
+Content-Language: en-US
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Sunil Khatri <sunil.khatri@amd.com>, Alex Deucher
+ <alexander.deucher@amd.com>, Shashank Sharma <shashank.sharma@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, Pan@rtg-sunil-navi33.amd.com,
+ Xinhui <Xinhui.Pan@amd.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Mukul Joshi <mukul.joshi@amd.com>,
+ Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>
+References: <20240306090408.3453152-1-sunil.khatri@amd.com>
+ <2f792620-fd8a-412e-9130-e276ba36d5a0@amd.com>
+From: "Khatri, Sunil" <sukhatri@amd.com>
+In-Reply-To: <2f792620-fd8a-412e-9130-e276ba36d5a0@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0162.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26::17) To PH7PR12MB5596.namprd12.prod.outlook.com
+ (2603:10b6:510:136::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5596:EE_|SJ2PR12MB8183:EE_
+X-MS-Office365-Filtering-Correlation-Id: afb969da-0f6c-41ef-37ad-08dc3dc9cc60
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	oBQrlc0WsZvNpWCvpfTzHR7j8VU4Jr2dS9r1bMIWFpiSSkLbTUY4CCjgqM3C0bw6T0FPwJuIQ1xWZdwCn/4SWHD8nquKJRVueVQBKtFL/WJW45UZ/xReVF0b/TKFilPAVEh079EGHPgcaikAxVyDVoPK1jWmPD5PD0Hi7WK3x4oFnfOYCIC8dHK42Lx+Kw0VU1ejQzYVuxnOMViLhdOnqRfxcBkxc6RNx/ftvyAvHEV37UHhk4jv6NjYfivyXcc47kBqaDr2LQ0EpHPUBI7vnoYPfTdwoYsiHMpUK2p27YxfJEnjYBXu3My542B95stX9+yPykFDyj7tdOJ1EckKAT9mWnLdp1xlSAyHtHyzaKp6R7/VAo1SMSVNgTC0lHSB+JcviFCPK9pzigFEzPYbKItIdya108Q+BHg+ejkOBN4e2i6Iens2KhfSDAv+fqWBx8dWKMIw4D/wOAp1PAVOce3MzDkMegyCgquLB2EiA1c/nHGaD/EPUlYftyN3ZqeqQZU9/kRpaC2KcljucDQl1VaYQODQ+j1qUH1SWLXhSmvyIryhN+C/pjVNhQ4RIugd96VeuBjRNqo1MEcN/zRxh+E2BfkWgqcQutEwpEPBxy3eUu2i7OL4bqWIeCUe/qaEzxrkC1yy7ZUv9JfJ+pP7d0u1LufPyA1u9QEAoWd2hCw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5596.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aURCTFhFMk9NQjVsdVZFcC9wdlB2SzNYbFBWaG1CaTNGQWpKajBiZnhnTkJy?=
+ =?utf-8?B?bTNyWTZheHpWcDZ5aWhKaGIrS0dSeEJ5UHh3bEVDang3OVovbjU2MFBxWkVC?=
+ =?utf-8?B?NXJaUllBYjJXQUdOMWJybGJKQWRLalh4U1hmOVFPYTVnN2NGRHFtM2I0V2lm?=
+ =?utf-8?B?OWtNMC9FM3hGVHRnSUU4dUxkYWI3VUVUYTI3KzN1aFZDOFl4RWpNSHBpVk5j?=
+ =?utf-8?B?YTlGbzIwRWtBMEJYc1k0Q1AzaXJSYWVORE8wOGV5S0VKTmp4aTJlczdtNGtD?=
+ =?utf-8?B?cFh3RDFOZE9JaXI0RGdWTWU0dmJTMjlhWWh3dDNJZ2FBSmNzd1lHWWVocHZr?=
+ =?utf-8?B?aVMyRGw0MElsS2pzVkQ0RTRZYlczeWdvT3E4Q2R1VWFPUjRIR1ZmUUROQlRw?=
+ =?utf-8?B?MVg5RHFIRDNYNDhoNUN1QzlkZ3FTN2hDSnhVcUE2NnVKVkFoazRlT1cxeVBQ?=
+ =?utf-8?B?WE5MUmpWRVlzY0dXd2xJMWFpYVVHNHB6dWhVWHdqRDdCRUIwTEdKTXpha2p6?=
+ =?utf-8?B?dG1Qa2F3WGgzNkltbGNORUtpOVo0OCtrRHNkKzQ2YUpKM3JucHl5Uk1MY0Qv?=
+ =?utf-8?B?TDd3ODFjWmIyMzFsR295L3o5NkkzWmhDSXVFSHJIY1V3OWtXK0hyZDZ6OEtU?=
+ =?utf-8?B?ZXppZGd5VHM1dzdPczZrNkVHUzl6enR4UVJNZkRpazhIS3JBZXl3SEZtNzAr?=
+ =?utf-8?B?eEFOZGw0cWNOU20xcWR3NDBYK1dVTEpmUjkwRUhRUlVRSjhPd0ZQWGJ0Tndj?=
+ =?utf-8?B?dHQyNWJSRllQbWV6NlUxdVdnWU9yRWpEQ0s5R0x2OFc5dGhFL1cyaUcrRmFp?=
+ =?utf-8?B?d09oUmQyakJZTTFvZi8vNi9qclZoc0ZXL0NpVTZJSHdWUGZJN1laWkwxWGFB?=
+ =?utf-8?B?bmZaQXRnQm13NHpBdFQ4NFg5dUhjQnhXRkNUdWNHaStQY3lNc2xXcTR5bFdy?=
+ =?utf-8?B?SzV5ZC9nL25YUmViUWZ6K29vb2E4VFJuYzE1V09EeEpyWDlDSk9FYkFOZE95?=
+ =?utf-8?B?STl0aUJpbklpNEVTbWUrMi9DcWtPRHc0ajM4WEVJWG52c2FjNnZUcXRNTXlD?=
+ =?utf-8?B?VzlRYjZXaGROY0NyalpvYjVuYTd6WTRuT1RqdzArVlhHRE9PdjEwZGFya1My?=
+ =?utf-8?B?ZDEyQUJzSnhETW9kUitDc1l2M3B4VldUQ0xpdUlUKzVHWlJHMnpCczR5c1dl?=
+ =?utf-8?B?NDJJOE1Tdmpva3pnTVZ1UzMvQ2VEWmp4dDBqSzFJSHlHblppYy9XMXB6UDlS?=
+ =?utf-8?B?c2svS3dRcDZDWTFVSjB5a2NjbVIwMkNVUElvb0RsS1BZaXJOYVk0U0NrL01x?=
+ =?utf-8?B?MFI0VG9zbVBMKzVGdU5MT3RFYldzQ3lrZ3lxQU1TbUtiMm16UmxLb0NLQXFD?=
+ =?utf-8?B?MWJwRXUwWVV2Uk00dXNoYXVML0NkcFZLYW5VN0xwOE5WN3c1NXFTRFN5bWVn?=
+ =?utf-8?B?TCtLam5VdmlkdzdEWVAwRVdRVFRMNjZMajQvZ3V5SmJ4dTgvRDBJbXhRK3Zo?=
+ =?utf-8?B?OUw0QmtURERXbU1FVnF1SExQMysyZHNoRHFYd2kwU3RVR2libDFUQWQ5c2JC?=
+ =?utf-8?B?c3hBUWlJbzg5M0xUZWkxYnBqbzFwVTkrS3pYbWRaUnVNQzd2MGQ5SkIybkNY?=
+ =?utf-8?B?UitpMkRvSncvbWRkNnA3cXlyNTBaajFCNFFXVWtaN0MyUUtWem81V3ExU0xH?=
+ =?utf-8?B?VmltUjE3RTJ4SHIrNGJLeVdtN2hYL29UTnNJaGw1bmpaV1J5L2VZYmxuczd6?=
+ =?utf-8?B?ZWV5VmN4S0laeXVlT0s2KzRLNnZmQWlMMXJtb1ZpVFBpMDg3ZWhwazE4ZC9P?=
+ =?utf-8?B?Z2FyWU9JbE9hSDZsWUtvRmNmTTZGdkIzeUQ2bjRCYXJqUyt2ME9tS0U3Rk5X?=
+ =?utf-8?B?Z1NpQ2VKOGIrQW9keGo5UWZqL0xrV0llK0ROcFlHVm9WbC9EcUcvalBGQlhy?=
+ =?utf-8?B?cnA5aEpZUTBNcEw0cW1VeW5iajZEbjV4SFlIYVVKWTUvRVBBbUVVVXg4RzZY?=
+ =?utf-8?B?MWMyRnppWHV5c2JJUHFLMmE0VkltNXo5U25xWjV2Zkk0a3Z5ZnAzK2pOODNJ?=
+ =?utf-8?B?akhRcUhsbGE2OGRraTRaM3BaZy9iRCtNWkV3bHhiVEZFRjd6aHVocFJXcFF4?=
+ =?utf-8?Q?VeFIGwSXiTMrSnudQvX3j0WGG?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afb969da-0f6c-41ef-37ad-08dc3dc9cc60
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5596.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 10:40:10.9745
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f0a5bDsbB+tv5qcaa6a0bVGn+8TtclF9gsEEnorc6a4Py/sW+NPm3vJMQh3O6dRZzip1tmFt+B7STZPA1bUcuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8183
 
-Sub-NUMA Cluster divides CPUs sharing an L3 cache into separate NUMA
-nodes. Systems may support splitting into either two or four nodes.
 
-When SNC mode is enabled the effective amount of L3 cache available
-for allocation is divided by the number of nodes per L3.
+On 3/6/2024 3:37 PM, Christian König wrote:
+> Am 06.03.24 um 10:04 schrieb Sunil Khatri:
+>> When an  page fault interrupt is raised there
+>> is a lot more information that is useful for
+>> developers to analyse the pagefault.
+>
+> Well actually those information are not that interesting  because they 
+> are hw generation specific.
+>
+> You should probably rather use the decoded strings here, e.g. hub, 
+> client, xcc_id, node_id etc...
+>
+> See gmc_v9_0_process_interrupt() an example.
+> I saw this v9 does provide more information than what v10 and v11 
+> provide like node_id and fault from which die but thats again very 
+> specific to IP_VERSION(9, 4, 3)) i dont know why thats information is 
+> not there in v10 and v11.
 
-Detect which SNC mode is active by comparing the number of CPUs
-that share a cache with CPU0, with the number of CPUs on node0.
+I agree to your point but, as of now during a pagefault we are dumping 
+this information which is useful like which client
+has generated an interrupt and for which src and other information like 
+address. So i think to provide the similar information in the devcoredump.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Co-developed-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
- tools/testing/selftests/resctrl/resctrl.h   |  4 ++
- tools/testing/selftests/resctrl/resctrlfs.c | 59 +++++++++++++++++++++
- 2 files changed, 63 insertions(+)
+Currently we do not have all this information from either job or vm 
+being derived from the job during a reset. We surely could add more 
+relevant information later on as per request but this information is 
+useful as
+eventually its developers only who would use the dump file provided by 
+customer to debug.
 
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index 2051bd135e0d..41811e87f81c 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -11,6 +11,7 @@
- #include <signal.h>
- #include <dirent.h>
- #include <stdbool.h>
-+#include <ctype.h>
- #include <sys/stat.h>
- #include <sys/ioctl.h>
- #include <sys/mount.h>
-@@ -43,6 +44,8 @@
- 
- #define DEFAULT_SPAN		(250 * MB)
- 
-+#define MAX_SNC		4
-+
- #define PARENT_EXIT()				\
- 	do {					\
- 		kill(ppid, SIGKILL);		\
-@@ -129,6 +132,7 @@ extern pid_t bm_pid, ppid;
- 
- extern char llc_occup_path[1024];
- 
-+int snc_ways(void);
- int get_vendor(void);
- bool check_resctrlfs_support(void);
- int filter_dmesg(void);
-diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-index 1cade75176eb..e4d3624a8817 100644
---- a/tools/testing/selftests/resctrl/resctrlfs.c
-+++ b/tools/testing/selftests/resctrl/resctrlfs.c
-@@ -156,6 +156,63 @@ int get_domain_id(const char *resource, int cpu_no, int *domain_id)
- 	return 0;
- }
- 
-+/*
-+ * Count number of CPUs in a /sys bit map
-+ */
-+static unsigned int count_sys_bitmap_bits(char *name)
-+{
-+	FILE *fp = fopen(name, "r");
-+	int count = 0, c;
-+
-+	if (!fp)
-+		return 0;
-+
-+	while ((c = fgetc(fp)) != EOF) {
-+		if (!isxdigit(c))
-+			continue;
-+		switch (c) {
-+		case 'f':
-+			count++;
-+		case '7': case 'b': case 'd': case 'e':
-+			count++;
-+		case '3': case '5': case '6': case '9': case 'a': case 'c':
-+			count++;
-+		case '1': case '2': case '4': case '8':
-+			count++;
-+		}
-+	}
-+	fclose(fp);
-+
-+	return count;
-+}
-+
-+/*
-+ * Detect SNC by comparing #CPUs in node0 with #CPUs sharing LLC with CPU0.
-+ * If some CPUs are offline the numbers may not be exact multiples of each
-+ * other. Any offline CPUs on node0 will be also gone from shared_cpu_map of
-+ * CPU0 but offline CPUs from other nodes will only make the cache_cpus value
-+ * lower. Still try to get the ratio right by preventing the second possibility.
-+ */
-+int snc_ways(void)
-+{
-+	int node_cpus, cache_cpus, i;
-+
-+	node_cpus = count_sys_bitmap_bits("/sys/devices/system/node/node0/cpumap");
-+	cache_cpus = count_sys_bitmap_bits("/sys/devices/system/cpu/cpu0/cache/index3/shared_cpu_map");
-+
-+	if (!node_cpus || !cache_cpus) {
-+		fprintf(stderr, "Warning could not determine Sub-NUMA Cluster mode\n");
-+		return 1;
-+	}
-+
-+	for (i = 1; i <= MAX_SNC ; i++) {
-+		if (i * node_cpus >= cache_cpus)
-+			return i;
-+	}
-+
-+	return 1;
-+}
-+
- /*
-  * get_cache_size - Get cache size for a specified CPU
-  * @cpu_no:	CPU number
-@@ -211,6 +268,8 @@ int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size
- 			break;
- 	}
- 
-+	if (cache_num == 3)
-+		*cache_size /= snc_ways();
- 	return 0;
- }
- 
--- 
-2.44.0
+Below is the information that i dump in devcore and i feel that is good 
+information but new information could be added which could be picked later.
 
+> Page fault information
+> [gfxhub] page fault (src_id:0 ring:24 vmid:3 pasid:32773)
+> in page starting at address 0x0000000000000000 from client 0x1b (UTCL2)
+
+Regards
+Sunil Khatri
+
+>
+> Regards,
+> Christian.
+>
+>>
+>> Add all such information in the last cached
+>> pagefault from an interrupt handler.
+>>
+>> Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
+>> ---
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 9 +++++++--
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h | 7 ++++++-
+>>   drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c | 2 +-
+>>   drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c | 2 +-
+>>   drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c  | 2 +-
+>>   drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c  | 2 +-
+>>   drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c  | 2 +-
+>>   7 files changed, 18 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c 
+>> b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+>> index 4299ce386322..b77e8e28769d 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+>> @@ -2905,7 +2905,7 @@ void amdgpu_debugfs_vm_bo_info(struct amdgpu_vm 
+>> *vm, struct seq_file *m)
+>>    * Cache the fault info for later use by userspace in debugging.
+>>    */
+>>   void amdgpu_vm_update_fault_cache(struct amdgpu_device *adev,
+>> -                  unsigned int pasid,
+>> +                  struct amdgpu_iv_entry *entry,
+>>                     uint64_t addr,
+>>                     uint32_t status,
+>>                     unsigned int vmhub)
+>> @@ -2915,7 +2915,7 @@ void amdgpu_vm_update_fault_cache(struct 
+>> amdgpu_device *adev,
+>>         xa_lock_irqsave(&adev->vm_manager.pasids, flags);
+>>   -    vm = xa_load(&adev->vm_manager.pasids, pasid);
+>> +    vm = xa_load(&adev->vm_manager.pasids, entry->pasid);
+>>       /* Don't update the fault cache if status is 0.  In the multiple
+>>        * fault case, subsequent faults will return a 0 status which is
+>>        * useless for userspace and replaces the useful fault status, so
+>> @@ -2924,6 +2924,11 @@ void amdgpu_vm_update_fault_cache(struct 
+>> amdgpu_device *adev,
+>>       if (vm && status) {
+>>           vm->fault_info.addr = addr;
+>>           vm->fault_info.status = status;
+>> +        vm->fault_info.client_id = entry->client_id;
+>> +        vm->fault_info.src_id = entry->src_id;
+>> +        vm->fault_info.vmid = entry->vmid;
+>> +        vm->fault_info.pasid = entry->pasid;
+>> +        vm->fault_info.ring_id = entry->ring_id;
+>>           if (AMDGPU_IS_GFXHUB(vmhub)) {
+>>               vm->fault_info.vmhub = AMDGPU_VMHUB_TYPE_GFX;
+>>               vm->fault_info.vmhub |=
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h 
+>> b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
+>> index 047ec1930d12..c7782a89bdb5 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
+>> @@ -286,6 +286,11 @@ struct amdgpu_vm_fault_info {
+>>       uint32_t    status;
+>>       /* which vmhub? gfxhub, mmhub, etc. */
+>>       unsigned int    vmhub;
+>> +    unsigned int    client_id;
+>> +    unsigned int    src_id;
+>> +    unsigned int    ring_id;
+>> +    unsigned int    pasid;
+>> +    unsigned int    vmid;
+>>   };
+>>     struct amdgpu_vm {
+>> @@ -605,7 +610,7 @@ static inline void 
+>> amdgpu_vm_eviction_unlock(struct amdgpu_vm *vm)
+>>   }
+>>     void amdgpu_vm_update_fault_cache(struct amdgpu_device *adev,
+>> -                  unsigned int pasid,
+>> +                  struct amdgpu_iv_entry *entry,
+>>                     uint64_t addr,
+>>                     uint32_t status,
+>>                     unsigned int vmhub);
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c 
+>> b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
+>> index d933e19e0cf5..6b177ce8db0e 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
+>> @@ -150,7 +150,7 @@ static int gmc_v10_0_process_interrupt(struct 
+>> amdgpu_device *adev,
+>>           status = RREG32(hub->vm_l2_pro_fault_status);
+>>           WREG32_P(hub->vm_l2_pro_fault_cntl, 1, ~1);
+>>   -        amdgpu_vm_update_fault_cache(adev, entry->pasid, addr, 
+>> status,
+>> +        amdgpu_vm_update_fault_cache(adev, entry, addr, status,
+>>                            entry->vmid_src ? AMDGPU_MMHUB0(0) : 
+>> AMDGPU_GFXHUB(0));
+>>       }
+>>   diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c 
+>> b/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
+>> index 527dc917e049..bcf254856a3e 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
+>> @@ -121,7 +121,7 @@ static int gmc_v11_0_process_interrupt(struct 
+>> amdgpu_device *adev,
+>>           status = RREG32(hub->vm_l2_pro_fault_status);
+>>           WREG32_P(hub->vm_l2_pro_fault_cntl, 1, ~1);
+>>   -        amdgpu_vm_update_fault_cache(adev, entry->pasid, addr, 
+>> status,
+>> +        amdgpu_vm_update_fault_cache(adev, entry, addr, status,
+>>                            entry->vmid_src ? AMDGPU_MMHUB0(0) : 
+>> AMDGPU_GFXHUB(0));
+>>       }
+>>   diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c 
+>> b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+>> index 3da7b6a2b00d..e9517ebbe1fd 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+>> @@ -1270,7 +1270,7 @@ static int gmc_v7_0_process_interrupt(struct 
+>> amdgpu_device *adev,
+>>       if (!addr && !status)
+>>           return 0;
+>>   -    amdgpu_vm_update_fault_cache(adev, entry->pasid,
+>> +    amdgpu_vm_update_fault_cache(adev, entry,
+>>                        ((u64)addr) << AMDGPU_GPU_PAGE_SHIFT, status, 
+>> AMDGPU_GFXHUB(0));
+>>         if (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_FIRST)
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c 
+>> b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+>> index d20e5f20ee31..a271bf832312 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+>> @@ -1438,7 +1438,7 @@ static int gmc_v8_0_process_interrupt(struct 
+>> amdgpu_device *adev,
+>>       if (!addr && !status)
+>>           return 0;
+>>   -    amdgpu_vm_update_fault_cache(adev, entry->pasid,
+>> +    amdgpu_vm_update_fault_cache(adev, entry,
+>>                        ((u64)addr) << AMDGPU_GPU_PAGE_SHIFT, status, 
+>> AMDGPU_GFXHUB(0));
+>>         if (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_FIRST)
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c 
+>> b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+>> index 47b63a4ce68b..dc9fb1fb9540 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+>> @@ -666,7 +666,7 @@ static int gmc_v9_0_process_interrupt(struct 
+>> amdgpu_device *adev,
+>>       rw = REG_GET_FIELD(status, VM_L2_PROTECTION_FAULT_STATUS, RW);
+>>       WREG32_P(hub->vm_l2_pro_fault_cntl, 1, ~1);
+>>   -    amdgpu_vm_update_fault_cache(adev, entry->pasid, addr, status, 
+>> vmhub);
+>> +    amdgpu_vm_update_fault_cache(adev, entry, addr, status, vmhub);
+>>         dev_err(adev->dev,
+>>           "VM_L2_PROTECTION_FAULT_STATUS:0x%08X\n",
+>
