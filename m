@@ -1,87 +1,83 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D645613248F;
-	Wed,  6 Mar 2024 14:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458C9131759;
+	Wed,  6 Mar 2024 14:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709733840; cv=none; b=eGYrk359E8qxZ7aOMf/GZxpRWoZjklVdiff1ulYAVlT7Mr0rySG8opdYFxDgwc6YUqrRJw/YLzC+rHSMwzrfE2WTwzAqUHimyzlGdE1UClrbd55iHV3FK4sMrriKVhPlch8OGxJ0cNZBkjdHkmPQT733dFvpgb0jSY3nfE5PzYY=
+	t=1709733844; cv=none; b=OX1HCClnHAxdHWvBm0tdYdsk1cuhp8PvPzLZARmg98vEsjTBi2hB2tU/zms8MV32BT5F+gGLF1Tszw9Fo1KsYJav3tPtY0K3hm98ddDkKvzUbbAjzZH2ATSfv3ifWFHt8awh0FgWjptLJDyFcmFCqY+R6Iaik+eNTVzxWZgE3KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709733840; c=relaxed/simple;
-	bh=L64mzeVNFc5OsAcWRE5Ix+mgIBf8QZHe+Pr/czduqRQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=a5yyAEcIk1ElusAW3IbjZQ8j+ZXIcQ4TRERMVG+0wre4XqqoHdZqv2Fi0JGwBZP8r7wSBHGvn64+blfv2TgF8VgA31zCdUuoKme8ZzuHz/pTAl8ENUYU+7XnwJJA8u43P/oLU5uJc7ajo3F651YvDS01goNuz7WC9yrfXilqDME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:4970:eaac:ef59:d8ae:5dc6])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 16F147E0132;
-	Wed,  6 Mar 2024 22:03:38 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Robert Marko <robimarko@gmail.com>
-Subject: [PATCH v2 4/4] arm64: dts: qcom: ipq6018-mp5496: add LDOA2 regulator
-Date: Wed,  6 Mar 2024 22:03:06 +0800
-Message-Id: <20240306140306.876188-5-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240306140306.876188-1-amadeus@jmu.edu.cn>
-References: <20240306140306.876188-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1709733844; c=relaxed/simple;
+	bh=ZL5UEHiy9sKgAhcnzVEkK56fqJjvEAVvWU7/2zX1N3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UIAMK/gQybJ+IaN5trmz9bCcfRG97Cl9j7J4GMfKvDQ1N4mOPRWpSWi+XxqSj/SC1opId5egnl6iCXbxJ4i+zSAGO387YWB+0Csvamr4QPlAQRmb0p8a3UqPOnmAOgykcB5PUdb6t9/5Xp+fwig37GleqxFMaaypk1dUuw5RMto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28ED3C43390;
+	Wed,  6 Mar 2024 14:04:03 +0000 (UTC)
+Date: Wed, 6 Mar 2024 09:05:55 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linke li <lilinke99@qq.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: mark racy accesses on work->wait_index
+Message-ID: <20240306090555.4bdba89f@gandalf.local.home>
+In-Reply-To: <tencent_BA1473492BC618B473864561EA3AB1418908@qq.com>
+References: <tencent_BA1473492BC618B473864561EA3AB1418908@qq.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTx9JVk0aSEJDTUxCHxkdTFUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUlPSx5BSBlIQUkYS0pBT0JMS0EeGhoYQR4dTkJBH0MaHkFOHxhNWVdZFhoPEhUdFF
-	lBWU9LSFVKTEpPTENVSktLVUpCS0tZBg++
-X-HM-Tid: 0a8e1413afcc03a2kunm16f147e0132
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Kzo6KSo*HjMPA0MZGEgoCRI1
-	GgMKCTJVSlVKTEtCTEhIQ0pDTUtMVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0pBT0JMS0EeGhoYQR4dTkJBH0MaHkFOHxhNWVdZCAFZQUlISU43Bg++
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add LDOA2 regulator of MP5496 to support SDCC voltage scaling.
+On Wed,  6 Mar 2024 10:55:34 +0800
+linke li <lilinke99@qq.com> wrote:
 
-Suggested-by: Robert Marko <robimarko@gmail.com>
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
----
- arch/arm64/boot/dts/qcom/ipq6018-mp5496.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> Mark data races to work->wait_index as benign using READ_ONCE and WRITE_ONCE. These accesses are expected to be racy.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018-mp5496.dtsi b/arch/arm64/boot/dts/qcom/ipq6018-mp5496.dtsi
-index 841fd757bee7..9910bec8a70f 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018-mp5496.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018-mp5496.dtsi
-@@ -9,9 +9,18 @@ ipq6018_s2: s2 {
- 			regulator-max-microvolt = <1062500>;
- 			regulator-always-on;
- 		};
-+
-+		ipq6018_l2: l2 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
- 	};
- };
- 
-+&sdhc {
-+	vqmmc-supply = <&ipq6018_l2>;
-+};
-+
- &CPU0 {
- 	cpu-supply = <&ipq6018_s2>;
- };
--- 
-2.25.1
+Are we now to the point that every single access of a variable (long size
+or less) needs a READ_ONCE/WRITE_ONCE even with all the necessary smp_r/wmb()s?
+
+
+> 
+> Signed-off-by: linke li <lilinke99@qq.com>
+> ---
+>  kernel/trace/ring_buffer.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 0699027b4f4c..a47e9e9750cc 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -798,7 +798,7 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+>  		rbwork = &cpu_buffer->irq_work;
+>  	}
+>  
+> -	rbwork->wait_index++;
+> +	WRITE_ONCE(rbwork->wait_index, READ_ONCE(rbwork->wait_index) + 1);
+
+I mean the above is really ugly. If this is the new thing to do, we need
+better macros.
+
+If anything, just convert it to an atomic_t.
+
+-- Steve
+
+
+>  	/* make sure the waiters see the new index */
+>  	smp_wmb();
+>  
+> @@ -906,7 +906,7 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
+>  
+>  		/* Make sure to see the new wait index */
+>  		smp_rmb();
+> -		if (wait_index != work->wait_index)
+> +		if (wait_index != READ_ONCE(work->wait_index))
+>  			break;
+>  	}
+>  
 
