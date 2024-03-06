@@ -1,147 +1,150 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868A9D518
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 02:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D8017F5;
+	Wed,  6 Mar 2024 02:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709692858; cv=none; b=VF2gcwku0Z9rZntawI1PtrSNKb7qmzrfDL0DbqOy+/xXHJjB+QlvvUkKPQWLYRugVjQvZPbVbsoU7ccodBrlc9LA5umtw/h1TV+tt3Zb3oC8sntdA4RRKceW2qH9PTFz2pjnGgNOwt4qgMsyv0a69mJPtfcxCjjNVg3uvOaK9Lw=
+	t=1709692880; cv=none; b=fp7npuZBso7474uaNpJI4y6dECu9WvVHKDZpsz6HRpBT3fva0VqHRxVKLL+9Z6Iqzf1Xc3fVRqxKiEk29flrV1XV0YwzmmRWmDGWH8VgzN6A+a8Lijt+5pbuvb7vYeQxSAoeJHrmLG9tBmiN+CIL+eY0bLDmhtuLhr5jCAVFZc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709692858; c=relaxed/simple;
-	bh=mgOhO0IDZgLwsPvXZt6ogw3x+b9+CWMm5P2F9Ag7u7o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=QUCOrQGg3AkJz/3PqWEQ+9Ysnlo5Q4MlUSp0zPM8g5IVS8z8S9Vukbw0KUQQjlEf9T9a6aXiSBqpekSDDKSz3Rk0pGsDNCvp9vHHs8vQaKtvNvGawAv5P+mps4scdTDDwSI+O2Kx9zl7sojMQbSW6Mzl77WSySQri/SCybtpIiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MZr+N44x; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709692880; c=relaxed/simple;
+	bh=foxpAO3zNvBtAsxiTI5xgxbfm6Fwoz5RnfFjuTvze4g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Xmb5bZ3LUWLc8Pa5fj58w4uplbUwb9CZzjMD7HICob8Fjf8XJ3bJQg1A6oNDglziCpEMG4MKRhmlgMNMmhvsp9KubW8nLd08TTuvpT3IEucEMUS1agAdCwdVkS7AjWddVXt4RhDdB3H03mMPtIoO8rmcYGJYoXxydyp5fCzY8YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UjDBfmY0; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MZr+N44x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709692854;
-	bh=mgOhO0IDZgLwsPvXZt6ogw3x+b9+CWMm5P2F9Ag7u7o=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=MZr+N44xWgYx/KeDYYxby6i5AzGFwBKGEf04A7jZxAjv/oiqSPM+Iac/PrkzORUkH
-	 A1WXgZKX3mcU8AvNMeimSYpUq9t+Juc6tBMXKanpqny19+fjNt1wAbIolq2ednOBDw
-	 tanlqsaUCXZnB1wseZjvY1ci9HHDWh3b5k5xvDYaV1PxT0tMOW9DklPtS7+xuMdDdG
-	 OjxOq2VbGWANCyPIMv2jX4XA0pChfI+Awtt/4eJr+aZkeUYEHzXwriZbtWCFwW466B
-	 MAgE7dgS0n1Wqkcs5dR+rnPHEJ1gCpsR2axSkhPy+RRHhGjmInK6oQcXWqffprHr2V
-	 nCXUY3ZHF6V3g==
-Received: from [100.66.96.193] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id F0AC53780624;
-	Wed,  6 Mar 2024 02:40:51 +0000 (UTC)
-Message-ID: <ea5d08ef-a9bb-5102-4357-21dbae3462cd@collabora.com>
-Date: Wed, 6 Mar 2024 08:10:49 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjDBfmY0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709692876; x=1741228876;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=foxpAO3zNvBtAsxiTI5xgxbfm6Fwoz5RnfFjuTvze4g=;
+  b=UjDBfmY0CXKDs0f90jt0UHSnKepwNLLrzFuq4uVQMyvQDiSOuUgUPr43
+   5LKPAilHJlPNavls26o3I+Z+jYH9d4EAay303QgPiO+Y+5q4CFDZ851wp
+   zmBdIn1IhFsA6uUmItIBxgw6NrQ8h2tkHUZeJHfJK68akijfcSU7OusHk
+   l2BAXNxb9mc7/2M8I75q/r+QY8TTFRfeqaqFvNYbTdfIJ7TOcAwec3/DP
+   8s2K9Pp9MRKeNi7j3hPXWe5rZ4tDrW7j0VnBrafw6gSJeYAVk4R2hpVyG
+   vYZL8vm2Ds8gvxl9d18s/FHihwy0hl6aQCQLv8xE+O16jXkqnHMeZxENh
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4397680"
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="4397680"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 18:41:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="14156593"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 18:41:12 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  stable@vger.kernel.org
+Subject: Re: [PATCH v1] mm: swap: Fix race between free_swap_and_cache() and
+ swapoff()
+In-Reply-To: <017414bc-78cd-4aa1-9edf-6ce947b9e4e4@redhat.com> (David
+	Hildenbrand's message of "Tue, 5 Mar 2024 23:05:11 +0100")
+References: <20240305151349.3781428-1-ryan.roberts@arm.com>
+	<cb738797-77d9-4e20-a54c-f70385cdbd95@redhat.com>
+	<8989df79-84f5-488c-bd74-c11d2241eff1@arm.com>
+	<017414bc-78cd-4aa1-9edf-6ce947b9e4e4@redhat.com>
+Date: Wed, 06 Mar 2024 10:39:18 +0800
+Message-ID: <87a5nc84o9.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 9/9] drm/ci: uprev IGT and update testlist
-Content-Language: en-US
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: =?UTF-8?Q?Ma=c3=adra_Canal?= <mcanal@igalia.com>,
- dri-devel@lists.freedesktop.org
-Cc: linux-rockchip@lists.infradead.org, guilherme.gallo@collabora.com,
- sergi.blanch.torne@collabora.com, linux-kernel@vger.kernel.org,
- david.heidelberg@collabora.com, helen.koike@collabora.com,
- linux-mediatek@lists.infradead.org, amd-gfx@lists.freedesktop.org,
- daniel@ffwll.ch, linux-amlogic@lists.infradead.org, airlied@gmail.com
-References: <20240130150340.687871-1-vignesh.raman@collabora.com>
- <20240130150340.687871-10-vignesh.raman@collabora.com>
- <26f6426d-dcb6-4b14-b031-368b2248e9e7@igalia.com>
- <799653a3-e079-4e17-9d68-c0e384a216b0@igalia.com>
- <e1f56317-b70d-0b81-75f0-fef50616e026@collabora.com>
-In-Reply-To: <e1f56317-b70d-0b81-75f0-fef50616e026@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 
-Hi Maíra,
+David Hildenbrand <david@redhat.com> writes:
 
-On 19/02/24 14:22, Vignesh Raman wrote:
-> Hi Maíra,
-> 
-> On 10/02/24 23:50, Maíra Canal wrote:
->> On 2/10/24 15:17, Maíra Canal wrote:
->>> On 1/30/24 12:03, Vignesh Raman wrote:
->>>> Uprev IGT and add amd, v3d, vc4 and vgem specific
->>>> tests to testlist. Have testlist.txt per driver
->>>> and include a base testlist so that the driver
->>>> specific tests will run only on those hardware.
+> On 05.03.24 17:33, Ryan Roberts wrote:
+>> On 05/03/2024 15:50, David Hildenbrand wrote:
+>>> On 05.03.24 16:13, Ryan Roberts wrote:
+>>>> There was previously a theoretical window where swapoff() could run and
+>>>> teardown a swap_info_struct while a call to free_swap_and_cache() was
+>>>> running in another thread. This could cause, amongst other bad
+>>>> possibilities, swap_page_trans_huge_swapped() (called by
+>>>> free_swap_and_cache()) to access the freed memory for swap_map.
 >>>>
->>>> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
->>>> ---
+>>>> This is a theoretical problem and I haven't been able to provoke it from
+>>>> a test case. But there has been agreement based on code review that this
+>>>> is possible (see link below).
 >>>>
->>>> v3:
->>>>    - New patch in series to uprev IGT and update testlist.
+>>>> Fix it by using get_swap_device()/put_swap_device(), which will stall
+>>>> swapoff(). There was an extra check in _swap_info_get() to confirm that
+>>>> the swap entry was valid. This wasn't present in get_swap_device() so
+>>>> I've added it. I couldn't find any existing get_swap_device() call sites
+>>>> where this extra check would cause any false alarms.
 >>>>
->>>> ---
->>>>   drivers/gpu/drm/ci/gitlab-ci.yml              |   2 +-
->>>>   drivers/gpu/drm/ci/igt_runner.sh              |  12 +-
->>>>   drivers/gpu/drm/ci/testlist-amdgpu.txt        | 151 
->>>> ++++++++++++++++++
->>>>   drivers/gpu/drm/ci/testlist-msm.txt           |  50 ++++++
->>>>   drivers/gpu/drm/ci/testlist-panfrost.txt      |  17 ++
->>>>   drivers/gpu/drm/ci/testlist-v3d.txt           |  73 +++++++++
->>>>   drivers/gpu/drm/ci/testlist-vc4.txt           |  49 ++++++
->>>>   drivers/gpu/drm/ci/testlist.txt               | 100 ++++--------
->>>>   .../gpu/drm/ci/xfails/amdgpu-stoney-fails.txt |  24 ++-
->>>>   .../drm/ci/xfails/amdgpu-stoney-flakes.txt    |   9 +-
->>>>   .../gpu/drm/ci/xfails/amdgpu-stoney-skips.txt |  10 +-
->>>>   11 files changed, 427 insertions(+), 70 deletions(-)
->>>>   create mode 100644 drivers/gpu/drm/ci/testlist-amdgpu.txt
->>>>   create mode 100644 drivers/gpu/drm/ci/testlist-msm.txt
->>>>   create mode 100644 drivers/gpu/drm/ci/testlist-panfrost.txt
->>>>   create mode 100644 drivers/gpu/drm/ci/testlist-v3d.txt
->>>>   create mode 100644 drivers/gpu/drm/ci/testlist-vc4.txt
->>>>
->>>> diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml 
->>>> b/drivers/gpu/drm/ci/gitlab-ci.yml
->>>> index bc8cb3420476..e2b021616a8e 100644
->>>> --- a/drivers/gpu/drm/ci/gitlab-ci.yml
->>>> +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
->>>> @@ -5,7 +5,7 @@ variables:
->>>>     UPSTREAM_REPO: git://anongit.freedesktop.org/drm/drm
->>>>     TARGET_BRANCH: drm-next
->>>> -  IGT_VERSION: d2af13d9f5be5ce23d996e4afd3e45990f5ab977
->>>> +  IGT_VERSION: b0cc8160ebdc87ce08b7fd83bb3c99ff7a4d8610
->>>>     DEQP_RUNNER_GIT_URL: 
->>>> https://gitlab.freedesktop.org/anholt/deqp-runner.git
->>>>     DEQP_RUNNER_GIT_TAG: v0.15.0
->>>> diff --git a/drivers/gpu/drm/ci/igt_runner.sh 
->>>> b/drivers/gpu/drm/ci/igt_runner.sh
->>>> index f001e015d135..2fd09b9b7cf6 100755
->>>> --- a/drivers/gpu/drm/ci/igt_runner.sh
->>>> +++ b/drivers/gpu/drm/ci/igt_runner.sh
->>>> @@ -64,10 +64,20 @@ if ! grep -q "core_getversion" 
->>>> /install/testlist.txt; then
->>>>   fi
->>>>   set +e
->>>> +if [ "$DRIVER_NAME" = "amdgpu" ]; then
->>>> +    TEST_LIST="/install/testlist-amdgpu.txt"
->>>> +elif [ "$DRIVER_NAME" = "msm" ]; then
->>>> +    TEST_LIST="/install/testlist-msm.txt"
->>>> +elif [ "$DRIVER_NAME" = "panfrost" ]; then
->>>> +    TEST_LIST="/install/testlist-panfrost.txt"
->>>> +else
->>>> +    TEST_LIST="/install/testlist.txt"
->>>> +fi
->>>> +
+>>>> Details of how to provoke one possible issue (thanks to David Hilenbrand
+>>>> for deriving this):
 >>>
->>> Isn't V3D and VC4 testlists missing?
-> 
-> Yes. We need to add ci jobs to test v3d/vc4. The initial idea was just 
-> to split the testlist per driver and add vc4/v3d tests so that it can be 
-> used in future. I will add the jobs as part of v4.
+>>> Almost
+>>>
+>>> "s/Hilenbrand/Hildenbrand/" :)
+>> 
+>> Ahh sorry... I even explicitly checked it against your name on emails... fat
+>> fingers...
+>
+> No need to be sorry. Even your average German person would get it wrong,
+> because there are other (more common) variants :)
+>
+> [...]
+>
+>>>>
+>>>
+>>> LGTM
+>>>
+>>> Are you planning on sending a doc extension for get_swap_device()?
+>> 
+>> I saw your comment:
+>> 
+>> We should likely update the documentation of get_swap_device(), that after
+>> decrementing the refcount, the SI might become stale and should not be touched
+>> without a prior get_swap_device().
+>> 
+>> But when I went to make the changes, I saw the documentation already said:
+>> 
+>> ...we need to enclose all swap related functions with get_swap_device() and
+>> put_swap_device()... Notice that swapoff ... can still happen before the
+>> percpu_ref_tryget_live() in get_swap_device() or after the percpu_ref_put() in
+>> put_swap_device()... The caller must be prepared for that.
+>> 
+>> I thought that already covered it? I'm sure as usual, I've misunderstood your
+>> point. Happy to respin if you have something in mind?
+>
+> No need to respin, we could clarify on top, if we decide it makes sense.
+>
+> I was thinking about something like this, making it clearer that the PTL
+> discussion above does not express the corner case we discovered:
+>
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 2b3a2d85e350b..646a436581eee 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1232,6 +1232,11 @@ static unsigned char __swap_entry_free_locked(struct swap_info_struct *p,
+>    * with get_swap_device() and put_swap_device(), unless the swap
+>    * functions call get/put_swap_device() by themselves.
+>    *
+> + * Note that when only holding the PTL, swapoff might succeed immediately
+> + * after freeing a swap entry. Therefore, immediately after
+> + * __swap_entry_free(), the swap info might become stale and should not
+> + * be touched without a prior get_swap_device().
+> + *
+>    * Check whether swap entry is valid in the swap device.  If so,
+>    * return pointer to swap_info_struct, and keep the swap entry valid
+>    * via preventing the swap device from being swapoff, until
 
-To include RPi jobs, we need to tweak mesa-ci to pass kernel and dtb and 
-update mesa-ci in drm-ci. So will send this as a seperate patch/series.
+LGTM.  Thanks!
 
-Regards,
-Vignesh
+--
+Best Regards,
+Huang, Ying
