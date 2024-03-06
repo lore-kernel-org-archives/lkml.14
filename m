@@ -1,127 +1,140 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C662BD53F
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7279D5FB97;
+	Wed,  6 Mar 2024 10:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709720566; cv=none; b=Hkof4DVV7BqMe7ngT8Fs/Jatzz06e/neRhTusict82fTUz6eccUKd9DRWVy57Jz6O+go/XZuICpVXJODq2+0KjlLpuM08zTyUMe2t2CtfevAtutbeZsdIPxJGL5V9+yWX+qm/JmGPo+NKq4+hcVt/AxQUz1MUOdhY75EdjwkjVE=
+	t=1709720583; cv=none; b=nG9gpsFBxiNQ1I9yU1m6nIdyAptmZdmr+aV6MIzOfVbsCEo+4+FuKqPl2O+d1VewfwNWXOT6fCD80RWgXjwQSyMJ7Ll0j3YCEUT3YN6KExpab54eJaOlxyS/vfJZmUdj56oMU/fcMQ9ykPkeuj2KY2ZdBfWZ7hMLSr9OoYAIA24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709720566; c=relaxed/simple;
-	bh=U8+MilrlyQLMqCKs6OSXrDnQL6lG3tUvuqNkFusZTRE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n3ohnlZwD6ZqAc1zEoAFq9mdE/bdqviwNpe250mvYzC0CdLe7IuCSO5iQrEbA39wgPyCMlYxcbQH2ST1zEQZqThRLWCRZiXZkfcskSYqpvrVpGhsAVy0//iV68M1yfCkb2e5MsheEQlrNR5RG4+SF6M6ppJe7mN4/I9V5ryOY30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MxDnGw1r; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709720583; c=relaxed/simple;
+	bh=ru5KVpO0fYpM81R7FvwYOV4mwnZ5EV6GBubWlLtAQZw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mjt1LB3GO+zhueeLaJkTVjr0XM53Zw70XDwcyzeCs/7th7wt9aQ+f4gNrBPCTJRpaBKj4lrZUMEA6iV1fxHWNCE7ytfp3eXa8NiX1PAGfW4XPrYxOFofGMSoca1+a8QjRXPT6Hmyp04Hul76YV9ZV4hcQ/Vl8MqXos6RLwDNxNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XTa1S5u7; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MxDnGw1r"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso4695256a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:22:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTa1S5u7"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4d345250ee1so1637935e0c.1;
+        Wed, 06 Mar 2024 02:23:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709720564; x=1710325364; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mHEwlZG3mvwmMDQMT2HCEzxvwXSOeNme8F0oQ3C5z7U=;
-        b=MxDnGw1r567ema+QyIwGgU6Cync+wxC2bQ8GraTGrqEWW2JJWNdJ0jwM+5RRwX9ulD
-         bnGUBd05tEw7RY6RE/K8YGNGJmUBdQat5E5mPACGfVHTMaU7I+Q7vX+ZIJBDDel1lGGQ
-         SBNmdU+gJ1h3M5l3ZBkJfmjbJP9V4fQoUiDrTiptTyYPSWn8V6MNUHLyynk9MG4vevH2
-         6vwenZ+NbPzCEsIY/AdZitenNdym9ObqlynHNbkJpZBQPHFsDYkKeORiATaDl3LoYQHo
-         fWOMr4+BpsZEx+bxb9kBNpIEVIMSSGs565KAdwr/MsKca/DGe/RAZ9R3L56h4Oi5iYY2
-         B6uw==
+        d=gmail.com; s=20230601; t=1709720580; x=1710325380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ru5KVpO0fYpM81R7FvwYOV4mwnZ5EV6GBubWlLtAQZw=;
+        b=XTa1S5u7QBJ5zL6MMY9uNujsN2y7kLGjHiUdaUhHiKFHOdgeTQU0gJzW1A2X9wOnaR
+         9rBaq6ewk13ARsgQ7O2S+EmdNR/AWbSlHxi51fyVBvT77tBB7kKKHWAiKC39tkzKTo2F
+         SBVGvtC/aFuMmBXBPMSqgoZaWuLf0ZNd+sARshFARi1iTWC0kW5wMt1ZV0oUUZUgM+77
+         L4jX3GzBZendjQNXTNGWuUTwORuMlURiIH/+5z++xSwYJdkJVWImSjpojMNKHVbm37QD
+         OZHmoEWlOKvRm1uYKHB0indzv5rsx4kTUxySQio1PXU6vO0E3c0+CQWZBUh2uDrlYzL4
+         r3ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709720564; x=1710325364;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709720580; x=1710325380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mHEwlZG3mvwmMDQMT2HCEzxvwXSOeNme8F0oQ3C5z7U=;
-        b=tw8uqka58EK6Jd+d6wEd7d8wl3fJ0t2nBQEfQB2Ax+MP9s1HfwK+p+dFzk2EwsYdvv
-         g7EiyQQvQPwHBESNRgkrxcXDhvLpOPLoK8FXw7neHNWY4Tz9f3c1eFiVAkA0U/bUnduQ
-         Fna8RL+gaOn7Ge9QxspAK2RDfsmCTxY8pehXGxYLGOQsM6k07piNtfNxw26qItUlVosb
-         WU8BXi4iKZ3gSzS7UuDLO7sTWJg0sWJ5h7J+20buskPsdEW0XLITVWHgIsfvB9dYs/+L
-         boYv4ufgI3NzECUvQyPGgXUO+bxyQpaEtEyja8eFdW85tDTN7rJXEY/6XvF1BRWbg9I6
-         s7GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQQe2dilbCnPsjjytKaS92xQ7TisyV8Ya5kcsmlF8fPi3Dkd0Bt8IqvX5S12aQU+D+RgPujnorTkR3k/EHO1I4lHCh+SS1wXvkQxRs
-X-Gm-Message-State: AOJu0Yz4TQbOrK5YHssohAOEzJh03Ed250DrYrmD1UPnYqq1deSyD0HM
-	TBjcO5uqNnttn+pXt1wn3PNHV80gJUXePS+YmdtyKE2/9kdbs5H4RCZKZDyRyw==
-X-Google-Smtp-Source: AGHT+IF8rDfZJIt86MXmm3NNVX3iMYcEEBEQhVqxtxh7WlEtk0uSWa+lKYrHKR61rYf8lI2654xteQ==
-X-Received: by 2002:a17:90a:d392:b0:29a:a37f:22c6 with SMTP id q18-20020a17090ad39200b0029aa37f22c6mr11069558pju.28.1709720564128;
-        Wed, 06 Mar 2024 02:22:44 -0800 (PST)
-Received: from [127.0.1.1] ([117.248.1.194])
-        by smtp.gmail.com with ESMTPSA id li17-20020a17090b48d100b0029ab96b13ebsm13339320pjb.40.2024.03.06.02.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 02:22:43 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Wed, 06 Mar 2024 15:52:01 +0530
-Subject: [PATCH v4 5/5] PCI: epf-mhi: Enable HDMA for SA8775P SoC
+        bh=ru5KVpO0fYpM81R7FvwYOV4mwnZ5EV6GBubWlLtAQZw=;
+        b=NPoY5DiCteWgWnec5wtHGiyOhWcasMTLKYxYmK4SWpLAQJW/R3DMLyCZY4cNfulK2R
+         5wylK04BBgoEw7BZVBvVxakR2zqQfKRnwlKtiizTTZlBy/E9zCiRFope0Gs80n5Edb/o
+         aGq8XWjdGTxLEbcfZotQqAi1es/O1YfcbkHJdVzFJ+k4Wcb0l1lH+ydbyJwQFrUpgIP6
+         +ao3PLJgyUPA1YIrqzIWV1g856RHTvDRG3M2SkKDrFwEwDdISLa1bLvJd5gJ/XRzp3iA
+         qky+8f+sQ3ZKeYJvcjhi9DNcjZcH75xJNs8wP0hXYUZmDoSDNMEP6F0fZIDeKuH1DjoP
+         PBHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfCP2ex1kSmwJ/afCCjFM/3QJXjLh26ghlLTK0IusAadopilEgI+KeErfqdurwRF2T/qAn2vAFieSSqyHrN5X8B1/F74vsr6Dmr1my/hStTdpyRgU+SY6dDzDqnUce1eam4d11whd9UhaB/96lDOEOON9fMrTMmL3ln8gIAY13xQS4psgnJCqpf1QcKvvCskDXfFmTUWRsavvdtNDMqVESHpAo5rm5TRyv
+X-Gm-Message-State: AOJu0Yzdk6mZbyaP8HXxw0KAQboESLe1yMLkjMjPU7uLRBR89dXShX/J
+	k+sjXB3NMwbFGFfixVyWu4q1Thc+qjVJvEPh2pS2TsgWxQ+5LHDyAfYLMGBBEWQKHrTWMEUlSlC
+	9CJRaAo9qxGU1pgM2/dFnM3h1Dxs=
+X-Google-Smtp-Source: AGHT+IHKRYv4UNbCa/SCrVYj+kwMhWRFRmoCtxjdFljqdm3C5fqbtwwuS2zlMBmPq5jAO/mmqLDYjK8504lqUBjqk/Q=
+X-Received: by 2002:a05:6122:4b0b:b0:4d3:35ac:3553 with SMTP id
+ fc11-20020a0561224b0b00b004d335ac3553mr4355214vkb.10.1709720580252; Wed, 06
+ Mar 2024 02:23:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240306-dw-hdma-v4-5-9fed506e95be@linaro.org>
-References: <20240306-dw-hdma-v4-0-9fed506e95be@linaro.org>
-In-Reply-To: <20240306-dw-hdma-v4-0-9fed506e95be@linaro.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Mrinmay Sarkar <quic_msarkar@quicinc.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1016;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=HBFaoOrEPY28OgpXbosd8HC8b9IU9rla4yFX01mozG0=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl6EPR3LjKVzSqhLSTX52Xj52sP8auulr1YRKUA
- e7kAGWdmt+JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZehD0QAKCRBVnxHm/pHO
- 9ZXBB/4x+EAhH/4vRq8jl6l9OTtS8TpJ1OWU+CL5k04aHCII7oiapzr6jT0TU56ExlM0Fp+KVwx
- MvcGTaBu1oPvRhvxxi8Ya0sxBNxjDrGkJujhLtueKz1fJRKpfweL17BtDkn2t8qksxOBrRA9TUA
- UwBHwB6/HKXAKsCjctTYcuxmeAgj21s/GzhVoxR+HCrOSgR2C91gaGtINfsqZ6lz8Uf8ZBKZ3Sk
- lAMxv9bKabKiDJX8XvNAv30QxGagZ88OT1LtImQiQn2+0+PE1LDFdtvmUN6Pw901+KTTqA6vYOS
- iJ+AOF/p/jv6dYsAsJKaL5QiupeN0cZHqOwtJWFR0hDmtXQh
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+References: <20240305171600.328699-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdW0MxqxRwULhLsRtnYXYK8NYxq-uU7E2BscbvPh3axYFg@mail.gmail.com>
+ <CA+V-a8vKo8ADB_R==vgBhVpSH43DOzdeA_NhZ1BCBdNuam3UmQ@mail.gmail.com> <CAMuHMdWX=OZJ3DE0vb4=k=6yH_L5JhusLRpVqJkJ0Xv3oT8_TQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWX=OZJ3DE0vb4=k=6yH_L5JhusLRpVqJkJ0Xv3oT8_TQ@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 6 Mar 2024 10:21:58 +0000
+Message-ID: <CA+V-a8uq=gw0_EVT3_CZD0TO+-DnSqXJtFakFcNWHOfq58g4aA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: serial: renesas,scif: Document R9A09G057 support
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Hi Geert,
 
-SA8775P SoC supports Hyper DMA (HDMA) DMA Engine present in the DWC IP. So,
-let's enable it in the EPF driver so that the DMA Engine APIs can be used
-for data transfer.
+On Wed, Mar 6, 2024 at 10:15=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Wed, Mar 6, 2024 at 11:06=E2=80=AFAM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> > On Wed, Mar 6, 2024 at 9:53=E2=80=AFAM Geert Uytterhoeven <geert@linux-=
+m68k.org> wrote:
+> > > On Tue, Mar 5, 2024 at 6:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gm=
+ail.com> wrote:
+> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > Document support for the Serial Communication Interface with FIFO (=
+SCIF)
+> > > > available in the Renesas RZ/V2H(P) (R9A09G057) SoC. The SCIF interf=
+ace in
+> > > > the Renesas RZ/V2H(P) is similar to that available in the RZ/G2L
+> > > > (R9A07G044) SoC, with the only difference being that the RZ/V2H(P) =
+SoC has
+> > > > three additional interrupts: one for Tx end/Rx ready and the other =
+two for
+> > > > Rx and Tx buffer full, which are edge-triggered.
+> > > >
+> > > > No driver changes are required as generic compatible string
+> > > > "renesas,scif-r9a07g044" will be used as a fallback on RZ/V2H(P) So=
+C.
+> > >
+> > > If you declare SCIF on RZ/V2H compatible with SCIF on RZ/G2L, you
+> > > state that the current driver works fine (but perhaps suboptimal),
+> > > without adding support for the extra 3 interrupts?
+> > >
+> > Yes the current driver works without using the extra interrupts on the
+> > RZ/V2H. The extra interrupts on the RZ/V2H are just sort of duplicate
+> > ie
+> > - Transmit End/Data Ready interrupt , for which we we have two
+> > seperate interrupts already
+> > - Receive buffer full interrupt (EDGE trigger), for which we already
+> > have a Level triggered interrupt
+> > - Transmit buffer empty interrupt (EDGE trigger), for which we already
+> > have a Level triggered interrupt
+>
+> Thanks for the confirmation!
+>
+> > Are you suggesting to not fallback on RZ/G2L and instead make RZ/V2H
+> > an explicit one so that in future we handle these 3 extra interrupts?
+>
+> In light of the confirmation above, I am _not_ suggesting that.
+>
+Thanks for clarification.
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-[mani: reworded commit message]
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 1 +
- 1 file changed, 1 insertion(+)
+> I just wanted a clarification: if the current driver would not operate
+> properly without changes, the fallback would not have been appropriate.
+> W.r.t. the extra interrupts, you can add support to the driver later,
+> if/when a need or desire ever arises.
+>
+Agreed, thanks.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index 2c54d80107cf..570c1d1fb12e 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -137,6 +137,7 @@ static const struct pci_epf_mhi_ep_info sa8775p_info = {
- 	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
- 	.msi_count = 32,
- 	.mru = 0x8000,
-+	.flags = MHI_EPF_USE_DMA,
- };
- 
- struct pci_epf_mhi {
-
--- 
-2.25.1
-
+Cheers,
+Prabhakar
