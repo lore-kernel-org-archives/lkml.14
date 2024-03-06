@@ -1,183 +1,100 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28839130E53;
-	Wed,  6 Mar 2024 13:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5599130AF7;
+	Wed,  6 Mar 2024 13:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709732165; cv=none; b=ClvVatI71obYvivrjWllCgGDZkhzN58foXCA8EN4oBXEboOMZ+gFdPmKql/sy1J3C83rh1kZOcRkL31L35s27oHLgSB3gayw+pFlf3r7NrXWRG9Yl5dAJTDVOow7xbNdGedgvLhqwVdRWo6ykcZrWJ9bi3nhMkJJwb35opEh4Gw=
+	t=1709732275; cv=none; b=fwE7LpzIs00LATRBvuTUSu60SaXpD9Z8lsnquZdHClcbM4H0t0FyHrYhdXI/p0gdOo5ZTn9Xuw0iA5617mGA6PHRaH7JvxmGYhYQ2lz4I8RTj6P6ley4Q5RtT67QzIZdCVgji8Z7JO/XLLZiCw5oPbI+tnv7HdwuRaoFzxB331U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709732165; c=relaxed/simple;
-	bh=45rfJriq8pHTLWr4t7k5bjYjJj5l2xBOYzlRQciLBtE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mzkjRCfvc3mjQLABKTb+FR5SzxhfUTg+F3l3WQxr/FPmgi8yq67M2+rEXFIwrt6+0p4fB0oBLiPeH1JPT2uCoE6Hhi8f1+tdFDaRtHbc1DGPYspT4lxrcw5KJmm3fW5t9TACabbtgR0vRWLF13Tuty5yFqHWgcv1JDw33AlWNMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N/kKxGsH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N/kKxGsH"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42668Qg7020826;
-	Wed, 6 Mar 2024 13:35:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=xoHpZpwwQUQZQok0NwWkenfwu8JYTx3dNHbq+3VZ4PQ=; b=N/
-	kKxGsHJEPtiLZxKmtQvnUvzWquGzPrnyOOi0iFmeqivp1ggD1s5Qs5d9WPtr0uPf
-	CeGMKxYL6eqsbBsDdqjB/0JPDhrzjb1iK+0x9eWkP+nv4v8bAmTqsodzi8xMiT0r
-	5QwZ2z/AipyNSWaD+pT+pUh7yqo+F8EXXuaLr4movpeHOsA8AtNeDglMVp5b6Ub6
-	iarlV2a21cYlipIAc/Wt4F02PZ6dW1wlFHIFOCSybyceRvAyPVtrTeDGT2cgz808
-	RVryyS1ZUzL9PLeGiI9n8Lk2HDMV40wZUJWQyL20CgOvm3ixC2JzASA4XR/sN8vc
-	mL8RoZnCeQuRt8koL4yQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpjy3rup5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 13:35:53 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 426DZpMW018597
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 6 Mar 2024 13:35:51 GMT
-Received: from [10.218.10.86] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 6 Mar
- 2024 05:35:43 -0800
-Message-ID: <da971427-e3d3-88d4-b455-57b469c2fea8@quicinc.com>
-Date: Wed, 6 Mar 2024 19:05:40 +0530
+	s=arc-20240116; t=1709732275; c=relaxed/simple;
+	bh=dTTRBS7bG/8ZSH3M64mBci0tWA+vNQEp1kcS8aS3mrM=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=mdVsyVRHCHerJb9Cr3BAuVnkm6Ipc7oUWWHaihoEV6TQ/YhU0X8hcLD+8QGVLo2iq7lC3wiX36dPBYmWRLhr7/mRlVSYFEnNCgXO7xB84EB1pW6/ti3mewCv/5+pNJNC4Pui/BgSILmY8gwXISji0qUu/2CAvMFdQICLy1a7/Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
+ (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 6 Mar
+ 2024 14:37:45 +0100
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
+ 15.01.2507.035; Wed, 6 Mar 2024 14:37:45 +0100
+From: John Ernberg <john.ernberg@actia.se>
+To: Wei Fang <wei.fang@nxp.com>
+CC: Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	NXP Linux Team <linux-imx@nxp.com>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Ernberg
+	<john.ernberg@actia.se>
+Subject: [PATCH net v3 0/2] net: fec: Fixes to suspend / resume with
+ mac_managed_pm
+Thread-Topic: [PATCH net v3 0/2] net: fec: Fixes to suspend / resume with
+ mac_managed_pm
+Thread-Index: AQHab8t4ec6I8Jhhj0eD3dmYTsGDgA==
+Date: Wed, 6 Mar 2024 13:37:45 +0000
+Message-ID: <20240306133734.4144808-1-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.43.0
+x-esetresult: clean, is OK
+x-esetid: 37303A2958D72955627162
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v9 0/5] arm64: qcom: sa8775p: add support for EP PCIe
-Content-Language: en-US
-To: Manivannan Sadhasivam <mani@kernel.org>
-CC: <agross@kernel.org>, <andersson@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <robh@kernel.org>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_schintav@quicinc.com>,
-        <quic_shijjose@quicinc.com>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mhi@lists.linux.dev>
-References: <1701432377-16899-1-git-send-email-quic_msarkar@quicinc.com>
- <20240216105241.GB2559@thinkpad>
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-In-Reply-To: <20240216105241.GB2559@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Q27V3CctFGVspXbA9dCVLk9ZDdGVC6f6
-X-Proofpoint-ORIG-GUID: Q27V3CctFGVspXbA9dCVLk9ZDdGVC6f6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_08,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0 spamscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403060109
 
+Since the introduction of mac_managed_pm in the FEC driver there were some
+discrepancies regarding power management of the PHY.
 
-On 2/16/2024 4:22 PM, Manivannan Sadhasivam wrote:
-> On Fri, Dec 01, 2023 at 05:36:11PM +0530, Mrinmay Sarkar wrote:
->> This series adds the relavent DT bindings, new compatible string,
->> add support to EPF driver and add EP PCIe node in dtsi file for
->> ep pcie0 controller.
->>
-> Applied patches 3 and 4 to pci/endpoint!
->
-> - Mani
->
->> v8 -> v9:
->> - update author in "Add pci_epf_mhi_ prefix to the function" patch.
->> - add ack by and reviewed by tag in commit message.
->>
->> v7 -> v8:
->> - Add new patch PCI: epf-mhi: Add "pci_epf_mhi_" prefix to the function
->>    names
->> - Update PCI: epf-mhi: Add support for SA8775P patch on top of the new
->>    patch and update commit message.
->>
->> v6 -> v7:
->> - add reviewed by tag in commit message in all patches.
->> - update commit message in patch 2 as per comment.
->> - update reason for reusing PID in commit message.
->>
->> v5 -> v6:
->> - update cover letter.
->>
->> v4 -> v5:
->> - add maxItems to the respective field to constrain io space and
->>    interrupt in all variants.
->>
->> v3 -> v4:
->> - add maxItems field in dt bindings
->> - update comment in patch2
->> - dropped PHY driver patch as it is already applied [1]
->> - update comment in EPF driver patch
->> - update commect in dtsi and add iommus instead of iommu-map
->>
->> [1] https://lore.kernel.org/all/169804254205.383714.18423881810869732517.b4-ty@kernel.org/
->>
->> v2 -> v3:
->> - removed if/then schemas, added minItems for reg,
->>    reg-bnames, interrupt and interrupt-names instead.
->> - adding qcom,sa8775p-pcie-ep compitable for sa8775p
->>    as we have some specific change to add.
->> - reusing sm8450's pcs_misc num table as it is same as sa8775p.
->>    used appropriate namespace for pcs.
->> - remove const from sa8775p_header as kernel test robot
->>    throwing some warnings due to this.
->> - remove fallback compatiable as we are adding compatiable for sa8775p.
->>
->> v1 -> v2:
->> - update description for dma
->> - Reusing qcom,sdx55-pcie-ep compatibe so remove compaitable
->>    for sa8775p
->> - sort the defines in phy header file and remove extra defines
->> - add const in return type pci_epf_header and remove MHI_EPF_USE_DMA
->>    flag as hdma patch is not ready
->> - add fallback compatiable as qcom,sdx55-pcie-ep, add iommu property
->>
->>
->> Manivannan Sadhasivam (1):
->>    PCI: epf-mhi: Add "pci_epf_mhi_" prefix to the function names
->>
->> Mrinmay Sarkar (4):
->>    dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
->>    PCI: qcom-ep: Add support for SA8775P SOC
->>    PCI: epf-mhi: Add support for SA8775P
->>    arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
->>
->>   .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 64 +++++++++++++++++++++-
->>   arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 46 ++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-qcom-ep.c          |  1 +
->>   drivers/pci/endpoint/functions/pci-epf-mhi.c       | 21 ++++++-
->>   4 files changed, 128 insertions(+), 4 deletions(-)
->>
->> -- 
->> 2.7.4
-Thanks for applying patches 3 and 4.
+This failed on our board that has a permanently powered Microchip LAN8700R
+attached to the FEC. Although the root cause of the failure can be traced
+back to f166f890c8f0 ("net: ethernet: fec: Replace interrupt driven MDIO
+with polled IO") and probably even before that, we only started noticing
+the problem going from 5.10 to 6.1.
 
-Seems like patches 1,2 and 5 are yet to apply on linux-next.
-Please help me by applying those patches.
+Since 557d5dc83f68 ("net: fec: use mac-managed PHY PM") is actually a fix
+to most of the power management sequencing problems that came with power
+managing the MDIO bus which for the FEC meant adding a race with FEC
+resume (and phy_start() if netif was running) and PHY resume.
 
-Thanks,
-Mrinmay
->>
->>
+That it worked before for us was probably just luck...
+
+Thanks to Wei's response to my report at [1] I was able to pick up his
+patch and start honing in on the remaining missing details.
+
+[1]: https://lore.kernel.org/netdev/1f45bdbe-eab1-4e59-8f24-add177590d27@ac=
+tia.se/
+
+v3:
+ - Implement feedback from Wei Fang for patch 2
+ - Fixes tag in patch 2 dropped, should it be delayed for net-next now?
+
+v2: https://lore.kernel.org/netdev/20240229105256.2903095-1-john.ernberg@ac=
+tia.se/
+ - Completely different approach that should be much more correct
+   (Wei Fang, Jakub Kicinski)
+ - Re-target to net tree, because I have fixes tags now
+
+v1: https://lore.kernel.org/netdev/20240212105010.2258421-1-john.ernberg@ac=
+tia.se/
+
+John Ernberg (1):
+  net: fec: Suspend the PHY on probe
+
+Wei Fang (1):
+  net: fec: Set mac_managed_pm during probe
+
+ drivers/net/ethernet/freescale/fec_main.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+--=20
+2.43.0
