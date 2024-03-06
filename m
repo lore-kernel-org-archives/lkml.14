@@ -1,133 +1,96 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA406FBD;
-	Wed,  6 Mar 2024 03:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1DD173;
+	Wed,  6 Mar 2024 03:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709694276; cv=none; b=kNMq36JRo0kjV0NqM/PANpJBhv3TO+fqzlyArA+AginSHN/emtnXXAHXe522+1duyiN0l9mtiUOuAXuvO/dF5Ly3BKq8edv/G1o50fK2ETzzU/s4j/OMFuv8RZm87zIEG32+H50drSLamzqRC5gGmjJLLxCcH3jPn9IQZ77bUUs=
+	t=1709694328; cv=none; b=H9kgC9pQVQKE6N9cAhd04PHuPKjtQAxyfqNV0YSy1Txe+gYZRbWMjl1E0P22I512JcpEbiJkOc6Ocaf7M0oh3ezIg8tFNOuvNgJI6hLuCW3rllQ4TyV3Yi8kUf9L7KRhpzI1wqmltJ2z2Q9RtLHr3Iss9cQqWD900QIeIVCPsCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709694276; c=relaxed/simple;
-	bh=JyjzSJUGaqbxeBl1jQ/EmcWgAHdNKg9nJ33oHJMgwoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=enWzbEDAeV/P5dQXJXNP6bz4aKTPiDrPoza/+e7eJ7Nr6f7/lnxB2sbn4D9Qc7fUT8D2+GgQbwRpgnQ4OXfvGCxN/AK09Tw5JButyyqyYwPeADZq+czFDIvKugmimSoXmgGx5blIAK4vHrSJPa2DZUK9Az5hlKnIdZwsjJyQ3TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=LMj7DqoL; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1709694328; c=relaxed/simple;
+	bh=+6dHN2SSImxbZVsLMYu8GjPrXgMt14/8zzaKZLLtt6w=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=J9IoSGVGpwFJ90DlGnxTLa0hKormeHQoCBUVFJKFP7bv8tStMhLwpGyEWm/um2udnSqIqBSOBCxtxXl/p5vFv/KFj1RWKW7/2v+TH2Dq/vSQL6FQHGfW8PAAbpP06MNSpvrcwZWEQGlfeNvWG+saSurgl1zxl7kXTzscmGbTCKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=qAzJNIG1; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LMj7DqoL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1709694269;
-	bh=hpRAoziea5celHY51DssOfuNt9b12/CZ7msR4eZfA6g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LMj7DqoLN9pGCtTB3iVdPDtKoI5B/FpVnYMOw4/X1LaKEiq9lR01jjzplbS9AT/Bi
-	 aaE3/xoo/+VYdxTDTom5tu87QPrk77SzWYHkd60dcsGC17DqCXe9n8C7SY3QvQdkLA
-	 fRvTvIyxpp8C7alfxuiBhkBdNZvS9A6w+wJ7Z08YU5S15EhYLm0v1DsayrbE2vu19F
-	 uYfZY5xJsf5mFoWGJ+NJwuc/vXlgy0aSQpUw53T47ewqbrQqZ4w84jJgNFtLPBpwaf
-	 Pr/IAiAhmjrjkmz9YsjRR+su7r0ZDDIms2BG8LkE1DPrPkXz23sEWhZGefS4qvYbic
-	 jbD4N55YA6/0w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TqHMw4n7Lz4wcD;
-	Wed,  6 Mar 2024 14:04:28 +1100 (AEDT)
-Date: Wed, 6 Mar 2024 14:04:27 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Lee Jones <lee@kernel.org>
-Cc: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the backlight tree
-Message-ID: <20240306140427.4cb24a5e@canb.auug.org.au>
-In-Reply-To: <20240306095539.0da4e342@canb.auug.org.au>
-References: <20240226132828.7524baec@canb.auug.org.au>
-	<20240305111634.57e84398@canb.auug.org.au>
-	<20240305091737.GB5206@google.com>
-	<20240306095539.0da4e342@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="qAzJNIG1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709694320; bh=C1CCOEGfxwvS0ORC18PbykbGWEcGm+e5TlS2qTiTC8M=;
+	h=From:To:Cc:Subject:Date;
+	b=qAzJNIG1GjapQ/ruL6Gk2OIxfzaaElejbgO/E8VXY5hUwN9fKxlPPROwXsKulo3Uh
+	 IYjvcl3cgBbv7cGIeQc26o9J7hSdgkWoq+Sj/qolWEjKuJvsoSobUkol/oNdnfE5w0
+	 MwM3OnbitvZbyR6uk3fFJV2iaZl4qqYYpv7ADxh8=
+Received: from localhost.localdomain ([218.94.142.74])
+	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
+	id EB629EBA; Wed, 06 Mar 2024 10:58:54 +0800
+X-QQ-mid: xmsmtpt1709693934tgba4zn3s
+Message-ID: <tencent_BA1473492BC618B473864561EA3AB1418908@qq.com>
+X-QQ-XMAILINFO: Mm/8i8/T4ynehAJEBEIWe8kG3QjwIOBAAFjtzj/bi2QqEXFKL/S0q3DtlSLDJP
+	 BSQ1mTkDMHeN2FDx2PpEyPWS+EZvcrvr9opjubjS1khLEHyACXUzhs6ImoJi3R+dcAxX5wuvQEhg
+	 bDc1CGQC+rNI+P0tEL7pFcI97ZZWuMK2hjcYuQ74eoEsEPmK656+dtO6EFYyY7xDkWV68PnC28F8
+	 QVcXabTYCVwWNfFlyq4hZNfxSxjvIf9hXTFfy+4z2ZIWLiKXLvBeZZIs9u5FJmT8uYU2AFi1d8ja
+	 WmQb1U24QeArVysoV7/afaOElbGEZptRK51F7dBKOTuxGBqz4sZxhkukVuRwZkr93r2vHyojzMuF
+	 K/5fvUetXJfqHmTLCpsmvHOQgaaMjW/i8lI12o4aHaM/W7hEsoMEZRrDE9qTuDQwERR+vzm0zS0G
+	 mgeuM08ijapmyO/Cb6QKWz7DrFtjpSAm89AZf2Rq7T7CNoifpgI7bEz0c1QKMoxntQzeI0zXd24F
+	 7KkudePX2InU0iabP2J6UHXS6swI1jHtMbrb3Ty1FHFYFaKD3zLKElG1bZDf3V9mc0PRqNkRVI5J
+	 SubW5Opks1Y+LMYWnxYJ9Qqyqm8XsROdZDVf5vKhUyT+vJZRYuDqHQ+r5h7X6XQk0eZXNlKXWFvS
+	 a5l9OsYQeNnOJIoRBxMChUnOGkpgXjatisEbgAwu6NeJVEtM7JD5Zd0i8e2Xv1fcjNbMmJI84EGc
+	 iHVWEWEaKAWWSKQxTbQm7ZUfkWk0pcYPEBzEHfLZ+lUyjvG0muxKfBF4lMFHhdh3ztBfqZ7VIi43
+	 3F7zaRgMUUDIR8J6UtH66Ik8zRQGKT2rXNdyRXvy+FQRwzZkKJ0yWd0AbvJMmGTIH0/l4BMowHtV
+	 +heYewETaagm7CfFxxek4zgMbHjYZxvrnAcWFfS7jxxGvZg0C4e4iTzxO+ddX9BKMP8eCvt48Rbz
+	 UTbfUusx93/iresHxmihJaNw2j4DpD6UxsPfoudIm587AI8qTxd/kBote8auyJOo+0FYCgb6n089
+	 7AcTDDnOohg7b9wPWXYYE0wexUbBtgbp2hfbCM+9SSgBQddk1VNpkYXfatTjE=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: lilinke99@qq.com,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ring-buffer: mark racy accesses on work->wait_index
+Date: Wed,  6 Mar 2024 10:55:34 +0800
+X-OQ-MSGID: <20240306025534.49139-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GOAK+gnWa=diFn7z7lIQnuw";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/GOAK+gnWa=diFn7z7lIQnuw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Mark data races to work->wait_index as benign using READ_ONCE and WRITE_ONCE. These accesses are expected to be racy.
 
-Hi Lee,
+Signed-off-by: linke li <lilinke99@qq.com>
+---
+ kernel/trace/ring_buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Wed, 6 Mar 2024 09:55:39 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> On Tue, 5 Mar 2024 09:17:37 +0000 Lee Jones <lee@kernel.org> wrote:
-> > On Tue, 05 Mar 2024, Stephen Rothwell wrote: =20
-> > > On Mon, 26 Feb 2024 13:28:28 +1100 Stephen Rothwell <sfr@canb.auug.or=
-g.au> wrote:   =20
-> > > >
-> > > > After merging the backlight tree, today's linux-next build (x86_64
-> > > > allmodconfig) failed like this:
-> > > >=20
-> > > > drivers/video/backlight/ktd2801-backlight.c:8:10: fatal error: linu=
-x/leds-expresswire.h: No such file or directory
-> > > >     8 | #include <linux/leds-expresswire.h>
-> > > >       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > >=20
-> > > > Caused by commit
-> > > >=20
-> > > >   48749e2f14e3 ("backlight: Add Kinetic KTD2801 backlight support")
-> > > >=20
-> > > > I have used the backlight tree from next-20240223 for today.   =20
-> > >=20
-> > > I am still getting this failure.   =20
-> >=20
-> > I just pushed a bunch of patches. =20
->=20
-> I saw only 3 new ones (forgot to push?) none of which addressed this
-> problem.
->=20
-> > Please let me know if this is still an issue tomorrow. =20
->=20
-> The problem is that after Feb 23, you rebased your tree and dropped commit
->=20
->   25ae5f5f4168 ("leds: Introduce ExpressWire library")
->=20
-> which (added the leds-expresswire.h header), but kept commit
->=20
->   48749e2f14e3 ("backlight: Add Kinetic KTD2801 backlight support")
->=20
-> which uses it.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 0699027b4f4c..a47e9e9750cc 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -798,7 +798,7 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 		rbwork = &cpu_buffer->irq_work;
+ 	}
+ 
+-	rbwork->wait_index++;
++	WRITE_ONCE(rbwork->wait_index, READ_ONCE(rbwork->wait_index) + 1);
+ 	/* make sure the waiters see the new index */
+ 	smp_wmb();
+ 
+@@ -906,7 +906,7 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
+ 
+ 		/* Make sure to see the new wait index */
+ 		smp_rmb();
+-		if (wait_index != work->wait_index)
++		if (wait_index != READ_ONCE(work->wait_index))
+ 			break;
+ 	}
+ 
+-- 
+2.39.3 (Apple Git-145)
 
-Now I see what happened.  I have 2 trees from you, the backlight tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git#for-backli=
-ght-next)
-and the leds-lj tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git#for-leds-next)
-and the former implicitly depends on the latter (and I merge the
-backlight tree first).  You should make that dependency explicit by
-merging (part of) the latter into the former (or something).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/GOAK+gnWa=diFn7z7lIQnuw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXn3TsACgkQAVBC80lX
-0GzRbAf/VnPnRbwDaIyeXQcpSxo0mfy1eM/FQqsOSCrvZU+frg6aVH97QX2b17hy
-VyKXb6clQHhrFmPnqv5AgrH9KkY39/TliPmYrv0dH3ihV2e3tL8GgYA8KngtqDVv
-e6WJUlRlwZlfVklxXVA5c+8qFsntcVHrRn1idjmNMNwPP0DeOpxJNpBaskPGshu8
-ausC8VpV+qq01D1wCzokw+OrRDvOH1nIpgYe5lksZ/A61E8b9VEKSjj/Q56eh2xX
-jssDLDyg4eHEqSsEoMA1AeTcdOsqonp2cOPv/XLWONHMw+dpDR8Y9BSSWStnsSqF
-VBdo6SfJy4VbCbUpQ+G13iPu413asg==
-=BL6z
------END PGP SIGNATURE-----
-
---Sig_/GOAK+gnWa=diFn7z7lIQnuw--
