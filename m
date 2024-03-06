@@ -1,238 +1,172 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581FC12D1FC;
-	Wed,  6 Mar 2024 13:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD0F7FBAF;
+	Wed,  6 Mar 2024 13:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709730115; cv=none; b=YzxSAvUWmkUvKiX9vNlyst7iIOszoGA6L0BcYwsIjFa7q445CY7q/B4/n/PumWwfYqKPemEjmj69FYevSGWXzfke2BKs4d/CfE+kV6qcomI/QEQJnzCaYi8uXTudnUkzk3jtWDuV4NnlV1RWpVsW5+5mSCZytjRVSpmIsrQ99aY=
+	t=1709730125; cv=none; b=toodEE6TsuvMVLmhkZjvh1ZbMJprPbOsHXruww5XFWg2lkgvbAVHoawXgJIgp6BT5bA24gC67jfhRTUPVrRvU44n56dvSe3VPI7VvnMx+ztyD21P0DL0W8baeCZyfqqgjD71PB4zDXyaTTA252ng5dOCladJFCgrM+olUggGnaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709730115; c=relaxed/simple;
-	bh=aitebT0QlJARJIrnF7SJmZko1XhGLFibTGZNq/mnCkE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=txQYiCcWfMqHUO79z3IgwBG0JLeNWdA3Do4IY5JKf74f3ZSgbNp7how+hlqFi1Ae8vFpTGoMUO8BCYPX12bhZ+8kXdsVyk8nean9jAo9PEIjLYR3ZwCQ3p+j/9NaPUsiS6yCrhrJbpPpbLfaW/Y0NYKqTZv7EHOIHrL5cCqyF5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GXXJG5EX; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXXJG5EX"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a458eb7db13so129277266b.2;
-        Wed, 06 Mar 2024 05:01:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709730112; x=1710334912; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aitebT0QlJARJIrnF7SJmZko1XhGLFibTGZNq/mnCkE=;
-        b=GXXJG5EXtbuXmXN6p95dTdCRNwqc75GlzC4BS2VQOpIkFP3Hn7iA2lE2lLzRjJ2dvF
-         RzVqOOieVKofbJoW68EzmxwSQYQKvPLbuzbu6h4q+/9O2S3lB5b+GHLQvr9n9awfjkvD
-         2BfZWUCTziHcphHV64uGAh7aLoyq0bcwZaeZ6KuscunV3NjnENuEAw57p5moU17WDomR
-         TURdMAvPhvq9DJ6Niff2oNZmlb9W6IX3pRR7UQbhy2+nWQ9R9kCDduXMEvvaa4LHFYOv
-         AwJ1tgpn2l53UYl72XJ3L1lLEvjvs8Wl9FHJEwCagthfpMh6I6DUWGX50MKHyz3N9wpk
-         INqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709730112; x=1710334912;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aitebT0QlJARJIrnF7SJmZko1XhGLFibTGZNq/mnCkE=;
-        b=tH4rwieQdEc/NGDh2Exa1rdNcKKUXaPmtbNHBR3xCkakvH9MeV6ybv5ZmmLxMt0tRo
-         fO/d/zCgGdqLSwsTswGGhfR824cSxE7n/ve4Mf7AavFOIqu/72VhrYJmgpVgpIm/BweD
-         sFOhxE2FXQp3lI+Bb8B22xaLmUwAhRiwRkJMEJikySiu+LrRiETN4UVyxzd9BbMHGWm2
-         b+fsLxWMvmfS8UbUXnzMgSGeOyO3E2lDIiE5/HjfDmjp/qP+UPUjzdOh3viaA/pAsik1
-         2xnqMHKRFyYhVit4GyY8tf3/I6uskGS43SNoXh4NIwXof6WKsIlvjw9SWExH6sGXStjG
-         Un+A==
-X-Forwarded-Encrypted: i=1; AJvYcCU+XMwkcK2XreG194aAmiH5peEP8mck2GJp3qo10QYhRlsmnOO2OFQc/xXFN/BQT6iat5nFj1a8ki1z3ttv883szzL35jvEyG8RG8YjLP5jtqMlvaYyNT2bSwzbmFLiDxeC4DP7viy/6f6RO102uWIPXYa1pPcaQq3GNpHojKubHA==
-X-Gm-Message-State: AOJu0YxGtlf0nNH9gUBYAysmG5+Bh3vcsGgaZIZeppKCUCXcBEjXNrbx
-	J9YuaBw5nwuHINEUuzqukH+g8ISK1SdLbD+H13K9u3EPUwe+OUsu
-X-Google-Smtp-Source: AGHT+IE0ImX8FGEU2/tPsozvNoAqk/2A8buSxLSrFuz5xxCaSXO3E+756WshmkQCzBmZWK3KY5Y06A==
-X-Received: by 2002:a17:906:d92d:b0:a43:fa38:901d with SMTP id rn13-20020a170906d92d00b00a43fa38901dmr10066621ejb.45.1709730111283;
-        Wed, 06 Mar 2024 05:01:51 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
-        by smtp.gmail.com with ESMTPSA id f17-20020a170906085100b00a45b6e84e00sm808577ejd.75.2024.03.06.05.01.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 05:01:50 -0800 (PST)
-Message-ID: <ed442b6916016b3a40782dc32538fc517715db6c.camel@gmail.com>
-Subject: Re: [PATCH v4 1/2] driver core: Introduce device_link_wait_removal()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Frank
- Rowand <frowand.list@gmail.com>, Saravana Kannan <saravanak@google.com>,
- Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, Sonal Santan
- <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>,
-  Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>,  stable@vger.kernel.org
-Date: Wed, 06 Mar 2024 14:05:16 +0100
-In-Reply-To: <CAJZ5v0gWCo9nDAHkzeD08tTKoE0DE0ocht-Qq4zA7P59y9KeuQ@mail.gmail.com>
-References: <20240306085007.169771-1-herve.codina@bootlin.com>
-	 <20240306085007.169771-2-herve.codina@bootlin.com>
-	 <1fff8742a13c28dd7e1dda47ad2d6fa8e21e421e.camel@gmail.com>
-	 <CAJZ5v0gWCo9nDAHkzeD08tTKoE0DE0ocht-Qq4zA7P59y9KeuQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+	s=arc-20240116; t=1709730125; c=relaxed/simple;
+	bh=sLNJRztVhA8TtYhb/exdQXUkIVIKU+BQJpgybmhd68U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bfu3gAIAJcMJnBTIxmmZmfwTwoaEnFKVi/k2l5ku1hnfNcNU4AlqG6TiiatW6rpPvS+Q+tnRPef/w31dLMrOSl8tf65cOsenimqZ0doFHaU38KVouFuoqMVaknL20+arrAuv0FEUCiQ7f+b39Y3OGNBQMpkr0J9tJTIhXwX/SnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TqXZf5hkTz2Bdtb;
+	Wed,  6 Mar 2024 20:59:38 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0A4451A016E;
+	Wed,  6 Mar 2024 21:02:00 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 6 Mar 2024 21:01:59 +0800
+Message-ID: <df64802a-02fd-4f72-b9ec-7812e2779df3@huawei.com>
+Date: Wed, 6 Mar 2024 21:01:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bcachefs: chardev: make bch_chardev_class constant
+Content-Language: en-US
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+CC: Kent Overstreet <kent.overstreet@linux.dev>, Brian Foster
+	<bfoster@redhat.com>, <linux-bcachefs@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+References: <20240305-bcachefs-v1-1-436196e25729@marliere.net>
+ <d1209aa3-b8d4-4509-9689-4882bc079ffd@huawei.com>
+ <sky4no6qxoytrkd3azcf5hokmhxrrpluao5ilhbqvprqxwuj4r@ozwmbbulfbrt>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <sky4no6qxoytrkd3azcf5hokmhxrrpluao5ilhbqvprqxwuj4r@ozwmbbulfbrt>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Wed, 2024-03-06 at 13:43 +0100, Rafael J. Wysocki wrote:
-> On Wed, Mar 6, 2024 at 10:17=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.c=
-om> wrote:
-> >=20
-> > On Wed, 2024-03-06 at 09:50 +0100, Herve Codina wrote:
-> > > The commit 80dd33cf72d1 ("drivers: base: Fix device link removal")
-> > > introduces a workqueue to release the consumer and supplier devices u=
-sed
-> > > in the devlink.
-> > > In the job queued, devices are release and in turn, when all the
-> > > references to these devices are dropped, the release function of the
-> > > device itself is called.
-> > >=20
-> > > Nothing is present to provide some synchronisation with this workqueu=
-e
-> > > in order to ensure that all ongoing releasing operations are done and
-> > > so, some other operations can be started safely.
-> > >=20
-> > > For instance, in the following sequence:
-> > > =C2=A0 1) of_platform_depopulate()
-> > > =C2=A0 2) of_overlay_remove()
-> > >=20
-> > > During the step 1, devices are released and related devlinks are remo=
-ved
-> > > (jobs pushed in the workqueue).
-> > > During the step 2, OF nodes are destroyed but, without any
-> > > synchronisation with devlink removal jobs, of_overlay_remove() can ra=
-ise
-> > > warnings related to missing of_node_put():
-> > > =C2=A0 ERROR: memory leak, expected refcount 1 instead of 2
-> > >=20
-> > > Indeed, the missing of_node_put() call is going to be done, too late,
-> > > from the workqueue job execution.
-> > >=20
-> > > Introduce device_link_wait_removal() to offer a way to synchronize
-> > > operations waiting for the end of devlink removals (i.e. end of
-> > > workqueue jobs).
-> > > Also, as a flushing operation is done on the workqueue, the workqueue
-> > > used is moved from a system-wide workqueue to a local one.
-> > >=20
-> > > Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > > ---
-> >=20
-> > With the below addressed:
-> >=20
-> > Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-> >=20
-> > > =C2=A0drivers/base/core.c=C2=A0=C2=A0=C2=A0 | 26 ++++++++++++++++++++=
-+++---
-> > > =C2=A0include/linux/device.h |=C2=A0 1 +
-> > > =C2=A02 files changed, 24 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > index d5f4e4aac09b..48b28c59c592 100644
-> > > --- a/drivers/base/core.c
-> > > +++ b/drivers/base/core.c
-> > > @@ -44,6 +44,7 @@ static bool fw_devlink_is_permissive(void);
-> > > =C2=A0static void __fw_devlink_link_to_consumers(struct device *dev);
-> > > =C2=A0static bool fw_devlink_drv_reg_done;
-> > > =C2=A0static bool fw_devlink_best_effort;
-> > > +static struct workqueue_struct *device_link_wq;
-> > >=20
-> > > =C2=A0/**
-> > > =C2=A0 * __fwnode_link_add - Create a link between two fwnode_handles=
-.
-> > > @@ -532,12 +533,26 @@ static void devlink_dev_release(struct device *=
-dev)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * It may take a while to complet=
-e this work because of the SRCU
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * synchronization in device_link=
-_release_fn() and if the consumer
-> > > or
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * supplier devices get deleted when i=
-t runs, so put it into the
-> > > "long"
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * workqueue.
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * supplier devices get deleted when i=
-t runs, so put it into the
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * dedicated workqueue.
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0 queue_work(system_long_wq, &link->rm_work);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 queue_work(device_link_wq, &link->rm_work);
-> > > =C2=A0}
-> > >=20
-> > > +/**
-> > > + * device_link_wait_removal - Wait for ongoing devlink removal jobs =
-to
-> > > terminate
-> > > + */
-> > > +void device_link_wait_removal(void)
-> > > +{
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * devlink removal jobs are queued in =
-the dedicated work queue.
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * To be sure that all removal jobs ar=
-e terminated, ensure that any
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * scheduled work has run to completio=
-n.
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 flush_workqueue(device_link_wq);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(device_link_wait_removal);
-> > > +
-> > > =C2=A0static struct class devlink_class =3D {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "devlink",
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_groups =3D devlink_groups,
-> > > @@ -4099,9 +4114,14 @@ int __init devices_init(void)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sysfs_dev_char_kobj =3D kobject_create=
-_and_add("char", dev_kobj);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!sysfs_dev_char_kobj)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 goto char_kobj_err;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 device_link_wq =3D alloc_workqueue("device_=
-link_wq", 0, 0);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 if (!device_link_wq)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 goto wq_err;
-> > >=20
-> >=20
-> > I can't still agree with this. Why not doing it in devlink_class_init()=
-?
-> > This is
-> > devlink specific so it makes complete sense to me.
->=20
-> If you do that in devlink_class_init() and it fails, you essentially
-> cause the creation of every device link to fail.=C2=A0 IOW, you try to li=
-ve
-> without device links and pretend that it is all OK.=C2=A0 That won't get
-> you very far, especially on systems where DT is used.
->=20
-> Doing it here, if it fails, you prevent the driver model from working
-> at all (because one of its necessary components is unavailable), which
-> arguably is a better choice.
 
-That makes sense but then the only thing I still don't fully get is why we =
-have
-a separate devlink_class_init() initcall for registering the devlink class
-(which can also fail)... What I take from the above is that we should fail =
-the
-driver model if one of it's fundamental components fails so I would say we
-should merge devlink_class_init() with device_init() otherwise it's a bit
-confusing (at least to me) and gives the idea that it's ok for the driver m=
-odel
-to exist without the links (unless I'm missing some other reason for the de=
-vlink
-init function).
 
-- Nuno S=C3=A1
+On 2024/3/6 19:50, Ricardo B. Marliere wrote:
+> On  6 Mar 09:23, Hongbo Li wrote:
+>> On 2024/3/6 4:21, Ricardo B. Marliere wrote:
+>>> Since commit 43a7206b0963 ("driver core: class: make class_register() take
+>>> a const *"), the driver core allows for struct class to be in read-only
+>>> memory, so move the bch_chardev_class structure to be declared at build
+>>> time placing it into read-only memory, instead of having to be dynamically
+>>> allocated at boot time.
+>>>
+>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+>>> ---
+>>>    fs/bcachefs/chardev.c | 23 ++++++++++++-----------
+>>>    1 file changed, 12 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/fs/bcachefs/chardev.c b/fs/bcachefs/chardev.c
+>>> index 226b39c17667..af587453fd3d 100644
+>>> --- a/fs/bcachefs/chardev.c
+>>> +++ b/fs/bcachefs/chardev.c
+>>> @@ -940,7 +940,9 @@ static const struct file_operations bch_chardev_fops = {
+>>>    };
+>>>    
+>>>    static int bch_chardev_major;
+>>> -static struct class *bch_chardev_class;
+>>> +static const struct class bch_chardev_class = {
+>>> +	.name = "bcachefs",
+>>> +};
+>>>    static struct device *bch_chardev;
+>>>    
+>>>    void bch2_fs_chardev_exit(struct bch_fs *c)
+>>> @@ -957,7 +959,7 @@ int bch2_fs_chardev_init(struct bch_fs *c)
+>>>    	if (c->minor < 0)
+>>>    		return c->minor;
+>>>    
+>>> -	c->chardev = device_create(bch_chardev_class, NULL,
+>>> +	c->chardev = device_create(&bch_chardev_class, NULL,
+>>>    				   MKDEV(bch_chardev_major, c->minor), c,
+>>>    				   "bcachefs%u-ctl", c->minor);
+>>>    	if (IS_ERR(c->chardev))
+>>> @@ -968,26 +970,25 @@ int bch2_fs_chardev_init(struct bch_fs *c)
+>>>    
+>>>    void bch2_chardev_exit(void)
+>>>    {
+>>> -	if (!IS_ERR_OR_NULL(bch_chardev_class))
+>>> -		device_destroy(bch_chardev_class,
+>>> -			       MKDEV(bch_chardev_major, U8_MAX));
+>>> -	if (!IS_ERR_OR_NULL(bch_chardev_class))
+>>> -		class_destroy(bch_chardev_class);
+>>> +	device_destroy(&bch_chardev_class, MKDEV(bch_chardev_major, U8_MAX));
+>>> +	class_unregister(&bch_chardev_class);
+>>>    	if (bch_chardev_major > 0)
+>>>    		unregister_chrdev(bch_chardev_major, "bcachefs");
+>>>    }
+>>>    
+>>>    int __init bch2_chardev_init(void)
+>>>    {
+>>> +	int ret;
+>>> +
+>>>    	bch_chardev_major = register_chrdev(0, "bcachefs-ctl", &bch_chardev_fops);
+>>>    	if (bch_chardev_major < 0)
+>>>    		return bch_chardev_major;
+>>>    
+>>> -	bch_chardev_class = class_create("bcachefs");
+>>> -	if (IS_ERR(bch_chardev_class))
+>>> -		return PTR_ERR(bch_chardev_class);
+>>> +	ret = class_register(&bch_chardev_class);
+>>> +	if (ret)
+>> Here, I think you should call class_unregister to relase resource which
+>> allocated before. And the same thing shoud be done in other exception exit.
+> 
+> Hi Hongbo,
+> 
+> Thank you for the feedback. Did you mean that bch_chardev_major should
+> be unregistered if the class_register() call fails? Because if it does,
+> there is no need to call class_unregister().
+> 
+>>> +		return ret;
+>>>    
+>>> -	bch_chardev = device_create(bch_chardev_class, NULL,
+>>> +	bch_chardev = device_create(&bch_chardev_class, NULL,
+>>>    				    MKDEV(bch_chardev_major, U8_MAX),
+>>>    				    NULL, "bcachefs-ctl");
+>>>    	if (IS_ERR(bch_chardev))
+>> like here..
+> 
+> Can you please elaborate?
+> 
+Yes, this I mean. The example like this:
 
+```c
+    major = register_chrdev(0, xx, xx);
+    class = class_create("bcachefs");
+    if (IS_ERR(class))
+         goto out_chrdev:
+
+    ...
+out_class:
+     class_unregister(xxx);
+out_chrdev:
+     unregister_chrdev(xx, xx);
+     ...
+```
+
+Although this was not part of your original intention, it is indeed a flaw.
+
+
+> Best regards,
+> -	Ricardo.
+> 
+> 
+>>>
+>>> ---
+>>> base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
+>>> change-id: 20240305-bcachefs-27a4bb8b9f4f
+>>>
+>>> Best regards,
+> 
