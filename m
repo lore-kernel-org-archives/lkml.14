@@ -1,110 +1,94 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A8113174A;
-	Wed,  6 Mar 2024 13:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F57C131E56;
+	Wed,  6 Mar 2024 13:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709730693; cv=none; b=uPcdJFrcS88sa1/Z75cdU0GRaiSMoTlkihbu/v/c9y8oIjgG/B5XsN1aLizwvCLm+g/56b8gKLCl6QRrPK2CEi05DdcOKQHE2FZXI5dLOFN01SdBwwTE+iWJSYCd3xdaMeNk4gW+zxzRMrSc/4zQL/gocdr4qFnLdabzuqJLVEU=
+	t=1709730694; cv=none; b=qYGfAwajf0KoadMoIMh26XDbelSIIXZHK9qnOr85GpwAP+f0YLrIytvWz8KIOUL0kl5V2RzLEtOwcZEBa4jmyEipXWdHrnMxgJ/WpqslrEM1snAc3sTzE/6HkQGMgFeGwxGghIIhLp0ZbUaGNgtBVb+0zgYv9mvt4HhqQC5lPQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709730693; c=relaxed/simple;
-	bh=fSqn3Zbgadl02jfzTwI8nibflBV6IWMiictSJSckEj4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Mi/HF8uOvHq92zyXwKaPGyRz42smWMmuwPKZR4SJclqRuANbk/40S1+NePSkuT/4WBy4lnybEBYo3s4AZ/Q6fFiY4LkgZ3aVn28nucgg7BY09g/ijRZXsDnUA2ILbVxdNMMNiz4OUd49mqOwBHlkX3r9sudqaBUMzRJYoc6MIWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oFPhXD72; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1709730694; c=relaxed/simple;
+	bh=56f2HhQhxeS1dJOLBZNhXaT2SUwuIV0zVPH+7uTCfMo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kZ/CF5esH9zhJIJNOLEiLlCLVjHR3+VJNyb+NlNbSZ8NPmfVs180drZ048godK5X3HYa16yE2U1DU64zF2xQHGpf9B0iXRZCX7mqdQ7ZVWaFCzgwpv7gOMTnaIW+xYOqG5sw/l9Mlom6op3rwajuSrgOkMKdBUfBpqybgCRJ2Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUJIv8Vv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oFPhXD72"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 426CDPr1011302;
-	Wed, 6 Mar 2024 13:11:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	qcppdkim1; bh=qEYDXRFpLK5+POddrnkz67UY0S8hVFcQkA/yuqMVZxI=; b=oF
-	PhXD72eGeEFflD7bRFzdDt1PYHtx3nMONs7WpmAyY5KI71QxtCtwUt5E0ncWgEBq
-	UxCW+BFn2XY2UwOBRgWwHZhBl71RgT2XoGUAA3e4Jgu7IBGmawime1FVe4RG+ZtK
-	4EMZaib6EFnDLueNOpqEDejonBrC9umRxJ5SyupTnIpLYaHuua/5Vs32Xln4dn9R
-	KNwBxaPs4zayKqPKdAe1YGCHUCmAvBY9y3eyDDysJU0j0LKJOQwAYkRi0sK3IXPQ
-	yIBiBEHuVQpB8IS004UoyFbsc3S2cDRVD8hspH5ASyLVQFBA8wwI61yrAjo7L8/7
-	rzSsEjaxvGt5qJSEzoSQ==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpbav1pvr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 13:11:24 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 426DBIrt019094;
-	Wed, 6 Mar 2024 13:11:21 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3wp0608qm3-1;
-	Wed, 06 Mar 2024 13:11:21 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 426DBLQE019123;
-	Wed, 6 Mar 2024 13:11:21 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 426DBLi8019116;
-	Wed, 06 Mar 2024 13:11:21 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-	id 0F9583A6E; Wed,  6 Mar 2024 18:41:20 +0530 (+0530)
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-To: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, konrad.dybcio@linaro.org,
-        manivannan.sadhasivam@linaro.org, robh@kernel.org
-Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_schintav@quicinc.com, Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v6 3/3] arm64: dts: qcom: sa8775p: Mark PCIe EP controller as cache coherent
-Date: Wed,  6 Mar 2024 18:41:12 +0530
-Message-Id: <1709730673-6699-4-git-send-email-quic_msarkar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1709730673-6699-1-git-send-email-quic_msarkar@quicinc.com>
-References: <1709730673-6699-1-git-send-email-quic_msarkar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fCMkkEUdJvlisMZJIKbAVBiNsaTMEuPq
-X-Proofpoint-ORIG-GUID: fCMkkEUdJvlisMZJIKbAVBiNsaTMEuPq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_08,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 bulkscore=0 mlxscore=0
- phishscore=0 clxscore=1015 priorityscore=1501 spamscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403060105
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUJIv8Vv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFEA1C4167E;
+	Wed,  6 Mar 2024 13:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709730693;
+	bh=56f2HhQhxeS1dJOLBZNhXaT2SUwuIV0zVPH+7uTCfMo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IUJIv8VvEfYLvwT+YDnqccZcw1yCt7fXEs+bWvMVLPgIkVdEhgbkMhBOJuGgsAQzm
+	 VxJ7Lbq+OgPkntwvH05FmbHw8TKJK0dv669vqaO/SBBNd7AADf6d22fVhurg0ZmH2X
+	 39o1H5UG9I9l9xSYNCAHq36Uy4W0QD1q25VyYqrGkYQg4wZPwEaZSob15o4REp73Cq
+	 CtjyIZDfEGb5L7jg42VaCs6uDR6G73c1dWWejnTRRtsmg3VJHRK5/Q0P5PKOJoIfhD
+	 WZAbnOuk5eexqwbMeXqzukcPjt4Amza3nqlJufXhDFemROvbdlh06F/YvTx7gjmU/M
+	 y7JFSUhKp/uZQ==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5133d26632fso5019871e87.2;
+        Wed, 06 Mar 2024 05:11:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWtdn+ZS6L2jfbCMGuTIts8V6BqWt9L6dayr8X8Zeovb6usiwQ3YOa83GwSOTJOj7G3bEedLS6TV0/d3PKzpEj3HZgudEs6xMxnRrXqwERcRxeTWULOL96P0copkw//3ouPRY4LyH6v
+X-Gm-Message-State: AOJu0YzJKtPhLDYNW9zQ33JKw31NBti+OMXt8HiWXF8sVYJIwDLtaGi1
+	3YXUPqpDyDCaq24lDzm3xm9U4tm7IZvOu3a+XDyRxvFPctDwASjCB8So0wshig6l3EZGp25asbd
+	U7zgcX96D8hHl39nZToma4qhqRtM=
+X-Google-Smtp-Source: AGHT+IGwsRyIuiauoWfKtSLXpu4UtpzpI5hTliB/89gQ4tkgzBQId4Wcr1DRFw8Ntkd6cNvqo95hi/5Je9wNAgYhyCU=
+X-Received: by 2002:ac2:5193:0:b0:513:5e2f:7bc9 with SMTP id
+ u19-20020ac25193000000b005135e2f7bc9mr1093188lfi.9.1709730691762; Wed, 06 Mar
+ 2024 05:11:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240306085622.87248-1-cuiyunhui@bytedance.com>
+ <26f3e99c-8f57-4779-a679-2085e469d9cd@siemens.com> <CAEEQ3wnDKdhCH4yz+MY+Xks21jLnuFiyx-xxa7CFczokG2shvQ@mail.gmail.com>
+In-Reply-To: <CAEEQ3wnDKdhCH4yz+MY+Xks21jLnuFiyx-xxa7CFczokG2shvQ@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 6 Mar 2024 14:11:20 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFxzFRQz0BUVw27xdOj+xAVtX9jPjwaLHsEOYDUSqXMOw@mail.gmail.com>
+Message-ID: <CAMj1kXFxzFRQz0BUVw27xdOj+xAVtX9jPjwaLHsEOYDUSqXMOw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH 1/3] Revert "riscv/efistub: Ensure
+ GP-relative addressing is not used"
+To: yunhui cui <cuiyunhui@bytedance.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, xuzhipeng.1973@bytedance.com, alexghiti@rivosinc.com, 
+	samitolvanen@google.com, bp@alien8.de, xiao.w.wang@intel.com, 
+	kirill.shutemov@linux.intel.com, nathan@kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The PCIe EP controller on SA8775P supports cache coherency, hence add
-the "dma-coherent" property to mark it as such.
+On Wed, 6 Mar 2024 at 14:08, yunhui cui <cuiyunhui@bytedance.com> wrote:
+>
+> Hi Jan,
+>
+> On Wed, Mar 6, 2024 at 8:52=E2=80=AFPM Jan Kiszka <jan.kiszka@siemens.com=
+> wrote:
+> >
+> > On 06.03.24 09:56, Yunhui Cui wrote:
+> > > This reverts commit afb2a4fb84555ef9e61061f6ea63ed7087b295d5.
+> > >
+> >
+> > This comes without a reason - which is likely something around "will fi=
+x
+> > this properly later". But then you regress first and only fix
+> > afterwards. Can't that be done the other way around?
+>
+> Sorry, I don't quite understand what you mean. Can you help explain it
+> more clearly? Do you mean "delete mno-relax instead of revert
+> directly?"
+>
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+You should order your patches in a way that does not create
+intermediate states (between 1-2 or between 2-3) where the original
+problem is being recreated.
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index d9802027..53c31c7 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -3713,6 +3713,7 @@
- 				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_0 0>;
- 		interconnect-names = "pcie-mem", "cpu-pcie";
- 
-+		dma-coherent;
- 		iommus = <&pcie_smmu 0x0000 0x7f>;
- 		resets = <&gcc GCC_PCIE_0_BCR>;
- 		reset-names = "core";
--- 
-2.7.4
+So in this case, you should
+a) fix the issue
+b) revert the existing patches in *opposite* order
 
+However, I don't think the EFI stub can use GP - please refer to my other r=
+eply.
