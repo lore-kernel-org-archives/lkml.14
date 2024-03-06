@@ -1,30 +1,30 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7E85DF0B
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041235D750
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709720021; cv=none; b=UkWtT5pxS01sLARJicgRYhwY0r0vBH6V7+cltaFB11AAe1IqX7/z7at4PWofRozlfljbG5iaC/8wHDv4JDuWZH3c4dBy2m/jcguAyxRgWYxLySckkhzvzifGhY2OjgCuerD3AoTiAJo0C2ERdxWyFP9x26I912xPYDEJFmuMSK4=
+	t=1709720023; cv=none; b=MusrVvZHrbsTnpUyZOXZwmnSBXRRF9Zbs7ObEcklZlHCHZvlMlgy8KTG0+KbQsH8yX95NfCTzQrvuaR4l2Hc6SeRJy0jOjs8FEAaMxiJEg2q+czdHm/nzLQnNzhuN1sFa7Sb+PLwrkwvrHrV4Yx4IyqVpw1SUIbvm8Wr8bRWyIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709720021; c=relaxed/simple;
-	bh=0mmw8V+OMLJ53wZ3rKzZ+MMr209UW8xjMgFiOKuz7rw=;
+	s=arc-20240116; t=1709720023; c=relaxed/simple;
+	bh=MzCC0AE/rUvpEAo4tb5cVZ7cGsewHKgZszzxyYlWgms=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=InCA8dGrOC7ct/XzkjBfiBa9dJZAZRZeq4un4v8DBLFE+mah3IiUEd13ZdYStTzU5jPpXIukVbam8BVobS96QjwXjuqd+LxaGYyu+lyeJNS20wws6gVo8PNuWlNlX0Un4vNiVBwy/G3MjXtk0PRzJqwPKv/RFDaT/KKe4/asCvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ovx+ENA2; arc=none smtp.client-ip=115.124.30.130
+	 MIME-Version; b=foAprtJ0H+fGcIz4XPbPNRAhY935n/+B6B8RZibPe80XKR0g/n0TKrliKrklrxgYo03xj/EGaw6ob3JSkkmDAEWpmI/+qo07/D10xj++eNB4S7TIkVZI8tDMjNmfSwlWp2xIDi/68x8qdKaHFyuyG+tz/pg6QItpn7+L7BrbJEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aVH/oJsK; arc=none smtp.client-ip=115.124.30.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ovx+ENA2"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aVH/oJsK"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1709720016; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=3+gbi0TkcqE1wrd2gyS4ajAOD2lf+Wm0tnSEhRfeeJg=;
-	b=ovx+ENA2ciAIRF89BS1/APfAwi9WM2FNh7KwQ48SMEyvQ+G3ZGSHutWO03xJQk4KMbcrF49etQ0TfnHCNlOnYBUV/3byTPgkKjxqvtWP82HgHzsGnoFBzh/UEjPSCsHtLx8R+04SgeYbv4tRl3ulJ22F505aP3fuXwFhCJFJxGc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W1xC4XJ_1709720015;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W1xC4XJ_1709720015)
+	t=1709720018; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=jQS6ixAjVk0AC8cKYwTBDAm2HkLKEDsUdifzfOmBcs0=;
+	b=aVH/oJsKmuK6AiXGW+Yhae9St6wsrA+7CYmVTQyL6WXrMA45Ym8q7cE4mc3QAGNjSve/8uzcXVWPvHkxX9Lo1UKlrEko+TNsrrsRzfrKXLFO6PYLgwM5NjXyyZfAuimM0UZnYzeqp8abGal/E6v5Vx+OfdCGAPr9JhSCGrzwp24=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W1xC4Y-_1709720017;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W1xC4Y-_1709720017)
           by smtp.aliyun-inc.com;
-          Wed, 06 Mar 2024 18:13:36 +0800
+          Wed, 06 Mar 2024 18:13:38 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org
 Cc: muchun.song@linux.dev,
@@ -36,9 +36,9 @@ Cc: muchun.song@linux.dev,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] mm: record the migration reason for struct migration_target_control
-Date: Wed,  6 Mar 2024 18:13:26 +0800
-Message-Id: <7b95d4981e07211f57139fc5b1f7ce91b920cee4.1709719720.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH v2 3/3] docs: hugetlbpage.rst: add hugetlb migration description
+Date: Wed,  6 Mar 2024 18:13:28 +0800
+Message-Id: <63fb16e7a4ebc5cb69ce655af86e29b2d8e9ba34.1709719720.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1709719720.git.baolin.wang@linux.alibaba.com>
 References: <cover.1709719720.git.baolin.wang@linux.alibaba.com>
@@ -50,121 +50,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To support different hugetlb allocation strategies during hugetlb migration
-based on various migration reasons, record the migration reason in the
-migration_target_control structure as a preparation.
+Add some description of the hugetlb migration strategy.
 
 Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
 ---
- mm/gup.c            | 1 +
- mm/internal.h       | 1 +
- mm/memory-failure.c | 1 +
- mm/memory_hotplug.c | 1 +
- mm/mempolicy.c      | 1 +
- mm/migrate.c        | 1 +
- mm/page_alloc.c     | 1 +
- mm/vmscan.c         | 3 ++-
- 8 files changed, 9 insertions(+), 1 deletion(-)
+ Documentation/admin-guide/mm/hugetlbpage.rst | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index df83182ec72d..959a1a05b059 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2132,6 +2132,7 @@ static int migrate_longterm_unpinnable_pages(
- 		struct migration_target_control mtc = {
- 			.nid = NUMA_NO_NODE,
- 			.gfp_mask = GFP_USER | __GFP_NOWARN,
-+			.reason = MR_LONGTERM_PIN,
- 		};
+diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
+index e4d4b4a8dc97..f34a0d798d5b 100644
+--- a/Documentation/admin-guide/mm/hugetlbpage.rst
++++ b/Documentation/admin-guide/mm/hugetlbpage.rst
+@@ -376,6 +376,13 @@ Note that the number of overcommit and reserve pages remain global quantities,
+ as we don't know until fault time, when the faulting task's mempolicy is
+ applied, from which node the huge page allocation will be attempted.
  
- 		if (migrate_pages(movable_page_list, alloc_migration_target,
-diff --git a/mm/internal.h b/mm/internal.h
-index 2b7efffbe4d7..47edf69b6ee6 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -959,6 +959,7 @@ struct migration_target_control {
- 	int nid;		/* preferred node id */
- 	nodemask_t *nmask;
- 	gfp_t gfp_mask;
-+	enum migrate_reason reason;
- };
++The hugetlb may be migrated between the per-node hugepages pool in the following
++scenarios: memory offline, memory failure, longterm pinning, syscalls(mbind,
++migrate_pages and move_pages), alloc_contig_range() and alloc_contig_pages().
++Now only memory offline, memory failure and syscalls allow fallbacking to allocate
++a new hugetlb on a different node if the current node is unable to allocate during
++hugetlb migration, that means these 3 cases can break the per-node hugepages pool.
++
+ .. _using_huge_pages:
  
- /*
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 9349948f1abf..780bb2aee0af 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -2666,6 +2666,7 @@ static int soft_offline_in_use_page(struct page *page)
- 	struct migration_target_control mtc = {
- 		.nid = NUMA_NO_NODE,
- 		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-+		.reason = MR_MEMORY_FAILURE,
- 	};
- 
- 	if (!huge && folio_test_large(folio)) {
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index a444e2d7dd2b..b79ba36e09e0 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1841,6 +1841,7 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 		struct migration_target_control mtc = {
- 			.nmask = &nmask,
- 			.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-+			.reason = MR_MEMORY_HOTPLUG,
- 		};
- 		int ret;
- 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index f60b4c99f130..98ceb12e0e17 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1070,6 +1070,7 @@ static long migrate_to_node(struct mm_struct *mm, int source, int dest,
- 	struct migration_target_control mtc = {
- 		.nid = dest,
- 		.gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_THISNODE,
-+		.reason = MR_SYSCALL,
- 	};
- 
- 	nodes_clear(nmask);
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 73a052a382f1..bde63010a3cf 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2060,6 +2060,7 @@ static int do_move_pages_to_node(struct list_head *pagelist, int node)
- 	struct migration_target_control mtc = {
- 		.nid = node,
- 		.gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_THISNODE,
-+		.reason = MR_SYSCALL,
- 	};
- 
- 	err = migrate_pages(pagelist, alloc_migration_target, NULL,
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 96839b210abe..8e6dd3a1028b 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6266,6 +6266,7 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
- 	struct migration_target_control mtc = {
- 		.nid = zone_to_nid(cc->zone),
- 		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-+		.reason = MR_CONTIG_RANGE,
- 	};
- 
- 	lru_cache_disable();
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 402c290fbf5a..510f438bb9e0 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -978,7 +978,8 @@ static unsigned int demote_folio_list(struct list_head *demote_folios,
- 		.gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) | __GFP_NOWARN |
- 			__GFP_NOMEMALLOC | GFP_NOWAIT,
- 		.nid = target_nid,
--		.nmask = &allowed_mask
-+		.nmask = &allowed_mask,
-+		.reason = MR_DEMOTION,
- 	};
- 
- 	if (list_empty(demote_folios))
+ Using Huge Pages
 -- 
 2.39.3
 
