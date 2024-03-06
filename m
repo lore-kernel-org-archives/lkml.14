@@ -1,22 +1,23 @@
-Received: from out187-18.us.a.mail.aliyun.com (out187-18.us.a.mail.aliyun.com [47.90.187.18])
+Received: from out187-16.us.a.mail.aliyun.com (out187-16.us.a.mail.aliyun.com [47.90.187.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E732E5FDC8
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1605FDBD
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709720712; cv=none; b=ruzISdTa0IcHsIYHFq1rj4N47PcWtFQSkfX3MObcQMiX0yv/xXnB2OBijFEszS93w9E9IUx2PT9WWZLbtvrajq/LfsG+8u81Hkepf48If6NZNCmnTeFrT2uCj70IlTiYv68xq1EHUUAy/d+mXlSDZCYDVZ/2SJXZhSoLYsn1Je0=
+	t=1709720713; cv=none; b=ZCpGSUPv0AOewwKyWxlBv7uwLgEDBmqnujU10uzpffp+HY78/40znbAdYRo8R45QKj4PiKeVAE3ThBzrj6NhnQqj/9+YWXOk962CeCXf//8JXOkImvKHHz0/u6YzH/YUCIyAxlp98qmRbNmBYVdOu2XDRhwiMXrj2cD7p7fWIDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709720712; c=relaxed/simple;
-	bh=oOu1pkOWoktHS4cvFVRB8OTOFr1IdzINy46KO6Q5sFo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=M4Elo8Z0JnLQIAGhbteLiSv+QoJBdOSuCemX3y9X0uB4mu9axMmKnn/sKnUjVjsrKKhibzG5w2130Zx0G2PeKkcgPZDD0L6tedm63MopeT3Nfh32EUhV0ww1rZs6zSuVp0MQuNfEJ7kcpsxxfxmAy2WJiuZuPAFE3myfIoSBOwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=47.90.187.18
+	s=arc-20240116; t=1709720713; c=relaxed/simple;
+	bh=e5W/30uahPxnnobqPEw5qPDCHBhsj0fyCzs0F+PD/V8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LBvylGeu84ih/eyzK4H8R9nuHA2MDl6YdeIK3aNS9iPOwyt4oTctFx+P6Yo2d6ZbLy4DhlHp/bZjjK0/HLlqbjuhbkBR3ZIrORzHeac10WgWC53YyiBdNeJLDJrAXe+ddyzbAJsOKpa2w1KtjTlO7eJ9Kl1CQteSW+CGGSD6kqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=47.90.187.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047205;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---.Wgbn-I5_1709720375;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.Wgbn-I5_1709720375)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047211;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---.Wgbn-Jk_1709720382;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.Wgbn-Jk_1709720382)
           by smtp.aliyun-inc.com;
-          Wed, 06 Mar 2024 18:19:40 +0800
+          Wed, 06 Mar 2024 18:19:42 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
 To: richard@nod.at,
 	anton.ivanov@cambridgegreys.com,
@@ -26,85 +27,49 @@ Cc:  <jani.nikula@intel.com>,
    <linux-kernel@vger.kernel.org>,
    <intel-xe@lists.freedesktop.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v3 0/9] um: Minor fixes and cleanups
-Date: Wed, 06 Mar 2024 18:19:16 +0800
-Message-Id: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
+Subject: [PATCH v3 4/9] um: Fix the return type of __switch_to
+Date: Wed, 06 Mar 2024 18:19:20 +0800
+Message-Id: <20240306101925.1088870-5-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
+References: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A series of minor fixes and cleanups for UML.
+Make it match the declaration in asm-generic/switch_to.h. And
+also include the header to allow the compiler to check it.
 
-Most changes in this series are very straightforward. Please consider
-picking this series for v6.9.
+Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+---
+ arch/um/kernel/process.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-There are still some remaining -Wmissing-prototypes warnings. I plan to
-send a followup RFC series first to fix those warnings.
-
-Feedbacks on this series would be appreciated. Thanks!
-
-Changes since v2:
-https://lore.kernel.org/lkml/20240205114708.25235-1-tiwei.btw@antgroup.com/
-- Add "um: Move declarations to proper headers";
-- Add "um: Fix -Wmissing-prototypes warnings for text_poke*";
-- Add "um: Fix -Wmissing-prototypes warnings for __warp_* and foo";
-- Make do_set_thread_area() static;
-- Add the missing header for calibrate_delay_is_known;
-
-Tiwei Bie (9):
-  um: Make local functions and variables static
-  um: Fix the declaration of vfree
-  um: Remove unused functions
-  um: Fix the return type of __switch_to
-  um: Add missing headers
-  um: Stop tracking host PID in cpu_tasks
-  um: Move declarations to proper headers
-  um: Fix -Wmissing-prototypes warnings for text_poke*
-  um: Fix -Wmissing-prototypes warnings for __warp_* and foo
-
- arch/um/drivers/pcap_kern.c                |  4 +-
- arch/um/drivers/ubd_user.c                 |  2 +-
- arch/um/include/asm/ptrace-generic.h       |  3 ++
- arch/um/include/shared/as-layout.h         |  1 -
- arch/um/include/shared/kern_util.h         |  1 +
- arch/um/include/shared/um_malloc.h         |  2 +-
- arch/um/kernel/kmsg_dump.c                 |  2 +-
- arch/um/kernel/mem.c                       |  2 +
- arch/um/kernel/physmem.c                   |  3 +-
- arch/um/kernel/process.c                   | 48 +++++-----------------
- arch/um/kernel/ptrace.c                    |  3 --
- arch/um/kernel/reboot.c                    |  1 +
- arch/um/kernel/skas/mmu.c                  |  1 +
- arch/um/kernel/skas/process.c              |  5 +--
- arch/um/kernel/time.c                      |  7 ++--
- arch/um/kernel/tlb.c                       |  7 +---
- arch/um/kernel/um_arch.c                   |  1 +
- arch/um/kernel/um_arch.h                   |  2 +
- arch/um/os-Linux/drivers/ethertap_kern.c   |  2 +-
- arch/um/os-Linux/drivers/tuntap_kern.c     |  2 +-
- arch/um/os-Linux/main.c                    |  5 +++
- arch/um/os-Linux/signal.c                  |  4 +-
- arch/um/os-Linux/start_up.c                |  1 +
- arch/x86/um/asm/ptrace.h                   |  6 +++
- arch/x86/um/bugs_32.c                      |  1 +
- arch/x86/um/bugs_64.c                      |  1 +
- arch/x86/um/elfcore.c                      |  1 +
- arch/x86/um/fault.c                        |  1 +
- arch/x86/um/os-Linux/mcontext.c            |  1 +
- arch/x86/um/os-Linux/registers.c           |  2 +-
- arch/x86/um/os-Linux/tls.c                 |  1 +
- arch/x86/um/ptrace_32.c                    |  2 -
- arch/x86/um/shared/sysdep/kernel-offsets.h |  3 ++
- arch/x86/um/tls_32.c                       |  2 +-
- arch/x86/um/user-offsets.c                 |  3 ++
- 35 files changed, 63 insertions(+), 70 deletions(-)
-
+diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
+index 292c8014aaa6..a7607ef1b02f 100644
+--- a/arch/um/kernel/process.c
++++ b/arch/um/kernel/process.c
+@@ -26,6 +26,7 @@
+ #include <linux/resume_user_mode.h>
+ #include <asm/current.h>
+ #include <asm/mmu_context.h>
++#include <asm/switch_to.h>
+ #include <linux/uaccess.h>
+ #include <as-layout.h>
+ #include <kern_util.h>
+@@ -73,7 +74,7 @@ static inline void set_current(struct task_struct *task)
+ 
+ extern void arch_switch_to(struct task_struct *to);
+ 
+-void *__switch_to(struct task_struct *from, struct task_struct *to)
++struct task_struct *__switch_to(struct task_struct *from, struct task_struct *to)
+ {
+ 	to->thread.prev_sched = from;
+ 	set_current(to);
 -- 
 2.34.1
 
