@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9269E7475;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7519D518;
 	Wed,  6 Mar 2024 01:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709690294; cv=none; b=OYMVrooHQZubeeUu/TCGz19I1n8IxTOff59nqFIM2cYq61e+SzEUWORiyjUIFTQbhQTXh41kgK7oZKJKzM4E4rtiA4EPGaInHQHUsFvQY+dwhQfb7069TfuCLy27MAZP5JrQiA7pwkQhYgajtAm/U3SJjWXsRKmUt909EL746H4=
+	t=1709690294; cv=none; b=spD1ooTUAEMqD/0nu/QlxX5LlAZ231xOEO4SFGWToTvi78OWEkGUKc/ehHmxa5lvRWI3CDYfIJv7tt70QICyQelnObXWiGsTPbtpzZjjEKNRTS9WKLSi56ylZPcR3e8IdGg3wNvGMpbc3DZkmuTiJWBR/OOR2oJFQI8s4XTswVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709690294; c=relaxed/simple;
-	bh=N4Ees7iya5usqGesrtJuSIFeHK7U2bfQot6aaUcpFmA=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=npI32z3JFixrYb9shdqkHty71uEozQj2CGjjnIdJJSDOUeOjrPxi7fvfts/vMoQaMMtKDCfDgrXyEHLhoVo2sXuiDd8HCCJYW3psnq8cHSA8vcErSKMObNQK8Fw6ZJ0f+VuelglXNj4WK6Eu3JQICZjPwvpGxM2u9R7vvshYe70=
+	bh=YbMoNGJoQ7LPWdY+QV7XwG6+ZinAIu9HNwmJVTQ9CoU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=H8X1xqzlmZB0DAFcdDD17Hwh47Hj9bI13vAFjruXcBvmsJiqCsy2GqPBD7zSWChDS1eZqvCEbLn+4IqZMfvUHayOaLnoMLYYPsvmOuzMrcHyODHo4oplrlqPxTIU1qS4tG5w2u980w7PaaxgIECplzfFdBiZNQOAQFsOir2dSEE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2A6C43390;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63663C43142;
 	Wed,  6 Mar 2024 01:58:14 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rhgZh-00000000T9u-1oSf;
+	id 1rhgZh-00000000TBO-3sEl;
 	Tue, 05 Mar 2024 21:00:05 -0500
-Message-ID: <20240306015910.766510873@goodmis.org>
+Message-ID: <20240306020005.782553145@goodmis.org>
 User-Agent: quilt/0.67
-Date: Tue, 05 Mar 2024 20:59:10 -0500
+Date: Tue, 05 Mar 2024 20:59:13 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -42,106 +43,207 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Borislav Petkov <bp@alien8.de>,
  "Paul E. McKenney" <paulmck@kernel.org>,
  David Howells <dhowells@redhat.com>
-Subject: [PATCH 0/8] tracing: Persistent traces across a reboot or crash
+Subject: [PATCH 3/8] tracing: Create "boot_mapped" instance for memory mapped buffer
+References: <20240306015910.766510873@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+
+Add two global variables trace_buffer_start and trace_buffer_size. If they
+are both set, then a "boot_mapped" instance will be created using the
+memory specified by these variables as its ring buffer.
+
+The instance will exist in:
+
+  /sys/kernel/tracing/instances/boot_mapped
+
+Note, because the ring buffer is using a defined memory ranged, it will
+act just like a memory mapped ring buffer. It will not have a snapshot
+buffer, as it can't swap out the buffer. The snapshot files as well as any
+tracers that uses a snapshot will not be present in the boot_mapped
+instance.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/trace.h |  7 +++++
+ kernel/trace/trace.c  | 65 ++++++++++++++++++++++++++++++++++++-------
+ kernel/trace/trace.h  |  3 ++
+ 3 files changed, 65 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/trace.h b/include/linux/trace.h
+index fdcd76b7be83..75dab6bb88c9 100644
+--- a/include/linux/trace.h
++++ b/include/linux/trace.h
+@@ -33,6 +33,13 @@ struct trace_array;
+ int register_ftrace_export(struct trace_export *export);
+ int unregister_ftrace_export(struct trace_export *export);
+ 
++/*
++ * If the below are set, then a "boot_mapped" tracing instance will
++ * be created using this memory for its ring buffer.
++ */
++extern unsigned long trace_buffer_start;
++extern unsigned long trace_buffer_size;
++
+ /**
+  * trace_array_puts - write a constant string into the trace buffer.
+  * @tr:    The trace array to write to
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ff0b0a999171..ff986d2a4bd0 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4900,6 +4900,11 @@ static int tracing_open(struct inode *inode, struct file *file)
+ static bool
+ trace_ok_for_array(struct tracer *t, struct trace_array *tr)
+ {
++#ifdef CONFIG_TRACER_SNAPSHOT
++	/* arrays with mapped buffer range do not have snapshots */
++	if (tr->range_addr_start && t->use_max_tr)
++		return false;
++#endif
+ 	return (tr->flags & TRACE_ARRAY_FL_GLOBAL) || t->allow_instances;
+ }
+ 
+@@ -8670,11 +8675,13 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
+ 				tr, cpu, &tracing_entries_fops);
+ 
+ #ifdef CONFIG_TRACER_SNAPSHOT
+-	trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
+-				tr, cpu, &snapshot_fops);
++	if (!tr->range_addr_start) {
++		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
++				      tr, cpu, &snapshot_fops);
+ 
+-	trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
+-				tr, cpu, &snapshot_raw_fops);
++		trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
++				      tr, cpu, &snapshot_raw_fops);
++	}
+ #endif
+ }
+ 
+@@ -9211,7 +9218,18 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+ 
+ 	buf->tr = tr;
+ 
+-	buf->buffer = ring_buffer_alloc(size, rb_flags);
++	if (tr->range_addr_start && tr->range_addr_size) {
++		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
++						      tr->range_addr_start,
++						      tr->range_addr_size);
++		/*
++		 * This is basically the same as a mapped buffer,
++		 * with the same restrictions.
++		 */
++		tr->mapped++;
++	} else {
++		buf->buffer = ring_buffer_alloc(size, rb_flags);
++	}
+ 	if (!buf->buffer)
+ 		return -ENOMEM;
+ 
+@@ -9248,6 +9266,10 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
+ 		return ret;
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
++	/* Fix mapped buffer trace arrays do not have snapshot buffers */
++	if (tr->range_addr_start)
++		return 0;
++
+ 	ret = allocate_trace_buffer(tr, &tr->max_buffer,
+ 				    allocate_snapshot ? size : 1);
+ 	if (MEM_FAIL(ret, "Failed to allocate trace buffer\n")) {
+@@ -9348,7 +9370,9 @@ static int trace_array_create_dir(struct trace_array *tr)
+ }
+ 
+ static struct trace_array *
+-trace_array_create_systems(const char *name, const char *systems)
++trace_array_create_systems(const char *name, const char *systems,
++			   unsigned long range_addr_start,
++			   unsigned long range_addr_size)
+ {
+ 	struct trace_array *tr;
+ 	int ret;
+@@ -9374,6 +9398,10 @@ trace_array_create_systems(const char *name, const char *systems)
+ 			goto out_free_tr;
+ 	}
+ 
++	/* Only for boot up memory mapped ring buffers */
++	tr->range_addr_start = range_addr_start;
++	tr->range_addr_size = range_addr_size;
++
+ 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
+ 
+ 	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
+@@ -9431,9 +9459,24 @@ trace_array_create_systems(const char *name, const char *systems)
+ 
+ static struct trace_array *trace_array_create(const char *name)
+ {
+-	return trace_array_create_systems(name, NULL);
++	return trace_array_create_systems(name, NULL, 0, 0);
++}
++
++unsigned long trace_buffer_start;
++unsigned long trace_buffer_size;
++
++static int __init trace_range_tr(void)
++{
++	if (!trace_buffer_start || !trace_buffer_size)
++		return 0;
++
++	trace_array_create_systems("boot_mapped", NULL,
++				   trace_buffer_start, trace_buffer_size);
++	return 0;
+ }
+ 
++fs_initcall(trace_range_tr);
++
+ static int instance_mkdir(const char *name)
+ {
+ 	struct trace_array *tr;
+@@ -9485,7 +9528,7 @@ struct trace_array *trace_array_get_by_name(const char *name, const char *system
+ 			goto out_unlock;
+ 	}
+ 
+-	tr = trace_array_create_systems(name, systems);
++	tr = trace_array_create_systems(name, systems, 0, 0);
+ 
+ 	if (IS_ERR(tr))
+ 		tr = NULL;
+@@ -9678,8 +9721,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 		MEM_FAIL(1, "Could not allocate function filter files");
+ 
+ #ifdef CONFIG_TRACER_SNAPSHOT
+-	trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
+-			  tr, &snapshot_fops);
++	if (!tr->range_addr_start) {
++		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
++				  tr, &snapshot_fops);
++	}
+ #endif
+ 
+ 	trace_create_file("error_log", TRACE_MODE_WRITE, d_tracer,
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 749a182dab48..d22d7c3b770a 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -338,6 +338,9 @@ struct trace_array {
+ 	unsigned int		snapshot;
+ 	unsigned int		mapped;
+ 	unsigned long		max_latency;
++	/* The below is for memory mapped ring buffer */
++	unsigned long		range_addr_start;
++	unsigned long		range_addr_size;
+ #ifdef CONFIG_FSNOTIFY
+ 	struct dentry		*d_max_latency;
+ 	struct work_struct	fsnotify_work;
+-- 
+2.43.0
 
 
-This is a way to map a ring buffer instance across reboots.
-The requirement is that you have a memory region that is not erased.
-I tested this on a Debian VM running on qemu on a Debian server,
-and even tested it on a baremetal box running Fedora. I was
-surprised that it worked on the baremetal box, but it does so
-surprisingly consistently.
-
-The idea is that you can reserve a memory region and save it in two
-special variables:
-
-  trace_buffer_start and trace_buffer_size
-
-If these are set by fs_initcall() then a "boot_mapped" instance
-is created. The memory that was reserved is used by the ring buffer
-of this instance. It acts like a memory mapped instance so it has
-some limitations. It does not allow snapshots nor does it allow
-tracers which use a snapshot buffer (like irqsoff and wakeup tracers).
-
-On boot up, when setting up the ring buffer, it looks at the current
-content and does a vigorous test to see if the content is valid.
-It even walks the events in all the sub-buffers to make sure the
-ring buffer meta data is correct. If it determines that the content
-is valid, it will reconstruct the ring buffer to use the content
-it has found.
-
-If the buffer is valid, on the next boot, the boot_mapped instance
-will contain the data from the previous boot. You can cat the
-trace or trace_pipe file, or even run trace-cmd extract on it to
-make a trace.dat file that holds the date. This is much better than
-dealing with a ftrace_dump_on_opps (I wish I had this a decade ago!)
-
-There are still some limitations of this buffer. One is that it assumes
-that the kernel you are booting back into is the same one that crashed.
-At least the trace_events (like sched_switch and friends) all have the
-same ids. This would be true with the same kernel as the ids are determined
-at link time.
-
-Module events could possible be a problem as the ids may not match.
-
-One idea is to just print the raw fields and not process the print formats
-for this instance, as the print formats may do some crazy things with
-data that does not match.
-
-Another limitation is any print format that has "%pS" will likely not work.
-That's because the pointer in the old ring buffer is for an address that
-may be different than the function points to now. I was thinking of
-adding a file in the boot_mapped instance that holds the delta of the
-old mapping to the new mapping, so that trace-cmd and perf could
-calculate the current kallsyms from the old pointers.
-
-Finally, this is still a proof of concept. How to create this memory
-mapping isn't decided yet. In this patch set I simply hacked into
-kexec crash code and hard coded an address that worked for one of my
-machines (for the other machine I had to play around to find another
-address). Perhaps we could add a kernel command line parameter that
-lets people decided, or an option where it could possibly look at
-the ACPI (for intel) tables to come up with an address on its own.
-
-Anyway, I plan on using this for debugging, as it already is pretty
-featureful but there's much more that can be done.
-
-Basically, all you need to do is:
-
-  echo 1 > /sys/kernel/tracing/instances/boot_mapped/events/enable
-
-Do what ever you want and the system crashes (and boots to the same
-kernel). Then:
-
-  cat /sys/kernel/tracing/instances/boot_mapped/trace
-
-and it will have the trace.
-
-I'm sure there's still some gotchas here, which is why this is currently
-still just a POC.
-
-Enjoy...
-
-Steven Rostedt (Google) (8):
-      ring-buffer: Allow mapped field to be set without mapping
-      ring-buffer: Add ring_buffer_alloc_range()
-      tracing: Create "boot_mapped" instance for memory mapped buffer
-      HACK: Hard code in mapped tracing buffer address
-      ring-buffer: Add ring_buffer_meta data
-      ring-buffer: Add output of ring buffer meta page
-      ring-buffer: Add test if range of boot buffer is valid
-      ring-buffer: Validate boot range memory events
-
-----
- arch/x86/kernel/setup.c     |  20 ++
- include/linux/ring_buffer.h |  17 +
- include/linux/trace.h       |   7 +
- kernel/trace/ring_buffer.c  | 826 ++++++++++++++++++++++++++++++++++++++------
- kernel/trace/trace.c        |  95 ++++-
- kernel/trace/trace.h        |   5 +
- 6 files changed, 856 insertions(+), 114 deletions(-)
