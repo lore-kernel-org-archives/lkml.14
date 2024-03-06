@@ -1,174 +1,115 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7E6173
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 00:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61639EC4
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 00:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709684124; cv=none; b=LTjwtQOf1ddyjbL0p9pR0nPR58MZ4t2t6j/eNKpkWuStm35tjZtrhRMdhtdTccpRSXIVO5EOVwwsf65s5yysKp7Og7bTTaEhso+DMUjYxhAci8dMmeOV3RD7WfSJaGPMDQJpiPuQQiwDfNCBSeT4nh7mebXWD5WtV19vjPqE6jU=
+	t=1709684389; cv=none; b=DzAqO9K6huOgP/+13UPuITlVyxSS8oVfs3ZTtdd+B4KQg/JwUU7yUzg//5XFweDCW/qqYBtDFIOr76xK6W/gr+NmMIG49cpyPNuxM2UlH3ISjzO067EGRBIKqhwoMKfmMFEgX2VvO+Y9dYKLiJSHLysJTl/cvLfHWw8x2ofdQ/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709684124; c=relaxed/simple;
-	bh=Ery4zifMCCuUuZyzrIBlY0WEBPD7CQi0y3uIJntdw9E=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=R4t9HNNw90V4Sj7CpRWhIuRDhSZi6DKWB79mfp+j3IPWfLolndXm5OQAEms66VvaG/qB4x11ecev0NDP+anOYIgE/KVB/B/CXbZMBuW6AAhamhpKh4CWFKZNrdJ1vaen9Kr7jRvCpd9MyZqOk1VzCST0rrRJebqDcz4Oug2xKR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KLRvMa9y; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1709684389; c=relaxed/simple;
+	bh=l5Z4UTiZAV0FnKHADONYXORI5k3mrUH4FrHUJ/WTslc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=K5fXZpa2LH0siUbsM6MLPLa7ao5B6yaoUrPuDxof0r0CZyuUseFEqFHLpb6OeXduqhz1giD6uXSo1wpXK25hg0MPsiNrVn++OQPIdn2LcSG5a4vS3FeHRdfEfO4lSeF9astUP2IGgBtFkAGoNClK9i15WjOZNKjggZ8TQGdn9P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ismIrwIF; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KLRvMa9y"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6096c745c33so117360597b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 16:15:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ismIrwIF"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5dbddee3694so163123a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 16:19:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709684122; x=1710288922; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ChgiPj0kYltLQzZMIn6xeFnYbJXLFSJLwKxQczKImDM=;
-        b=KLRvMa9yTvD44rFz7ov1LtSm3goSqRD7dkILYh94flF9Gk8dgH9EH9dImsMh2JLaMt
-         BCq9aNtWuoYilr4ZdK/rtYewdfkza1iHP2ENOXIaFCTzBIR8pG+BS9Y6k6BFS2U19OqA
-         9BZy84caM8NMk0+2WGpU6rNUeUDBCtmvuAGJyjIaLJcpJOSNgMQEu2DMok0W8CMShuR1
-         hNruRRY3+FXilIoW0X0A/mN+ZOohiZrsPSvP8z5NSQ+78SY4G49Ib7GzshtbE/4vRi72
-         U9iqBn2RSxfqstp3kkeXAQUyG2Sl8aoEeO5ajS8MlnUkIZGxq4gOOB4XP2SQ71AzDRSD
-         z6ZA==
+        d=google.com; s=20230601; t=1709684388; x=1710289188; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OlafunnuQDmjQI6RGQQ8IG6bwWUsRoZnzCla50xupzE=;
+        b=ismIrwIFvYMISOdBkmI7N5m/tcB87kkhyGIVzc6/DuXBo1KZlReryVhSBwUwyZQzv1
+         GiwuJcHMILNr9RzHT4QGpxrFSsbBNhpKb/5zTt3AeV2MLpw40LYbiV16PowI7YIWOqT3
+         cQEW6lYRc3tP9M+1l3slyaNBTpwRxDuYwD803IgBxDUqnEa+Srq8lrxQgWouvT14zXFe
+         XfEHm6IzuB/1iPtw9v3Q9SUc0ChBDLSV0bttZbQyPKQrKAwTGV0fGiPiUCyt2B5XpCKv
+         ScI06BMWPfNGlnZsHcaN33S2wslMwQnT9BvxsXXmJs3iTvU2FmnEb1EgSZpOlxhF3l+n
+         CMCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709684122; x=1710288922;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ChgiPj0kYltLQzZMIn6xeFnYbJXLFSJLwKxQczKImDM=;
-        b=tW4Or4VGESm+QSE9n7iP2HvnrJmc08QeGnT+68pP3Gxo5zt2ATUPJGHgLouBoXGXc1
-         jKYj+iU79BFrMPpAz4Qb3AOjBkT2jUF8Zd5reRJxvo7hEVgx+aQLK7cqa+i4jInILFgm
-         qxBiJYfQ2Jjk6z8+/pAbmxdmREkr1xduw84Ycq3HzL+x2L7EHqGEHVnLn1VzIwz1vCHG
-         0bHRXW2zEupcu9k9ESbWuVNychC75xDFC4C9X8q/4RAiaZpn3pydeXG74NNXLkk3p3FC
-         5IRPBZa2QJSaubtzYGyoveNjrm0T9sZh8t40eVQhtNdTUgdsm8UN1+a2eJvQwH98i5dO
-         71oA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmzQJ6pVAlG5SWYP5wGJY4YCftIW5XntbdL8835KaeG9zjpJNjGjPuK5wG6fgpITlMTPYZfOrVpEN4nzbTlxhC2oUqUF6Dc7fhhSe8
-X-Gm-Message-State: AOJu0YwK/untwWvtJwr6i5DQ5wixe1PZ8gRifP6dvh5Ep6nqB/q03zPc
-	ZNhP6nE6aVYnJf3nnwIljbichHzFsWqWQXUHw4TFXTOBdrzw9RFKvpj8yzvI7B+AHGyp76m1cwh
-	kuHWiqhQTUvX79z+j7w==
-X-Google-Smtp-Source: AGHT+IFfsY8LjMQNkNxTJ0rSe20ZUdfR3+FzZIQB2yeaN8wmwfvRIu02vM39uiLYIz0MeSq9L6HZCKPA8Bw8F9cK
-X-Received: from jthoughton.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:2a4f])
- (user=jthoughton job=sendgmr) by 2002:a81:9a92:0:b0:607:fd67:b946 with SMTP
- id r140-20020a819a92000000b00607fd67b946mr3796447ywg.10.1709684121991; Tue,
- 05 Mar 2024 16:15:21 -0800 (PST)
-Date: Wed,  6 Mar 2024 00:15:10 +0000
+        d=1e100.net; s=20230601; t=1709684388; x=1710289188;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OlafunnuQDmjQI6RGQQ8IG6bwWUsRoZnzCla50xupzE=;
+        b=N8jk3jY/C++NJQxD2dg+Ueu6W0N3YK5nJwrjZA8UfwjUAzQbsOICwOOUsJSdDONR+h
+         MHQNiR9njE+El5k1n46Y2PXx8/A+4S/Ix1LgC3r9ibHZ1r+H3ug/lspa2eE7emO2/6Ba
+         ND8Kb2Bl7m7LbXw3Jzlr/8oB7CzvWw2WOVbl4D8BP/rZ/9sVsILZ3NVCOl2pyoUwK2NC
+         ptiqCp6q+mUKCgt0yQI9sDuajM4V/ouxGPaQbR5l89QjPQsLZEI9CLP1lkemZB5ryONP
+         er391EcYldtTfM+nJymXbhUu/APJCrD8OE5JaST4lvDtnpvJwaa9FL2jONJNtohujGfp
+         ZWwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTU7qQrE45Z9ausmOj9b8sbBB/5k1u0I2C+ZFw45XfYuipEIVs7HueSwxc4Z7Kx0qG6G05Jq4D1IyVikF5aSd19OtNNNIX/vJrSBlX
+X-Gm-Message-State: AOJu0YxoYJCopIZQExEahC/jwCIuuiiE+a0wTwjbNyxJ1oUlrN4Zxxll
+	VMsYylQt1D39G5xla5MQ0iq3yKfMon1pmluV47lcicaXcM4ABDEdJpbFgXQWzkgr76yq+ddFNar
+	icw==
+X-Google-Smtp-Source: AGHT+IGnRNghV9U0qTiTeThRt68W4kCSoa4n/bzHUjWD8qRkEmjsgFZT0aiuWc8DkWGKfbQn5Mz5agbV/hI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:f311:0:b0:5dc:4a5f:a5ee with SMTP id
+ l17-20020a63f311000000b005dc4a5fa5eemr11899pgh.1.1709684387635; Tue, 05 Mar
+ 2024 16:19:47 -0800 (PST)
+Date: Tue, 5 Mar 2024 16:19:46 -0800
+In-Reply-To: <edd86a97-b2ef-49e6-aa2b-16b1ef790d96@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <20240306001511.932348-1-jthoughton@google.com>
-Subject: [PATCH] mm: Add an explicit smp_wmb() to UFFDIO_CONTINUE
-From: James Houghton <jthoughton@google.com>
-To: Peter Xu <peterx@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <songmuchun@bytedance.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, James Houghton <jthoughton@google.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <1880816055.4545532.1709260250219.JavaMail.zimbra@sjtu.edu.cn>
+ <ZeYK-hNDQz5cFhre@google.com> <edd86a97-b2ef-49e6-aa2b-16b1ef790d96@amd.com>
+Message-ID: <Zee2ogAOl8cR4vNZ@google.com>
+Subject: Re: [PATCH] KVM:SVM: Flush cache only on CPUs running SEV guest
+From: Sean Christopherson <seanjc@google.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Zheyun Shen <szy0127@sjtu.edu.cn>, pbonzini@redhat.com, tglx@linutronix.de, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Users of UFFDIO_CONTINUE may reasonably assume that a write memory
-barrier is included as part of UFFDIO_CONTINUE. That is, a user may
-(mistakenly) believe that all writes it has done to a page that it is
-now UFFDIO_CONTINUE'ing are guaranteed to be visible to anyone
-subsequently reading the page through the newly mapped virtual memory
-region.
+On Tue, Mar 05, 2024, Tom Lendacky wrote:
+> On 3/4/24 11:55, Sean Christopherson wrote:
+> > +Tom
+> > 
+> > "KVM: SVM:" for the shortlog scope.
+> > 
+> > On Fri, Mar 01, 2024, Zheyun Shen wrote:
+> > > On AMD CPUs without ensuring cache consistency, each memory page reclamation in
+> > > an SEV guest triggers a call to wbinvd_on_all_cpus, thereby affecting the
+> > > performance of other programs on the host.
+> > > 
+> > > Typically, an AMD server may have 128 cores or more, while the SEV guest might only
+> > > utilize 8 of these cores. Meanwhile, host can use qemu-affinity to bind these 8 vCPUs
+> > > to specific physical CPUs.
+> > > 
+> > > Therefore, keeping a record of the physical core numbers each time a vCPU runs
+> > > can help avoid flushing the cache for all CPUs every time.
+> > 
+> > This needs an unequivocal statement from AMD that flushing caches only on CPUs
+> > that do VMRUN is sufficient.  That sounds like it should be obviously correct,
+> > as I don't see how else a cache line can be dirtied for the encrypted PA, but
+> > this entire non-coherent caches mess makes me more than a bit paranoid.
+> 
+> As long as the wbinvd_on_all_cpus() related to the ASID flushing isn't
+> changed, this should be ok. And the code currently flushes the source pages
+> when doing LAUNCH_UPDATE commands and adding encrypted regions, so should be
+> good there.
 
-Include only a single smp_wmb() for each UFFDIO_CONTINUE, as that is all
-that is necessary. While we're at it, optimize the smp_wmb() that is
-already incidentally present for the HugeTLB case.
+Nice, thanks!
 
-Documentation doesn't specify if the kernel does a wmb(), so it's not
-wrong not to include it. But by not including it, we are making is easy
-for a user to have a very hard-to-detect bug. Include it now to be safe.
+> Would it make sense to make this configurable, with the current behavior the
+> default, until testing looks good for a while?
 
-A user that decides to update the contents of the page in one thread and
-UFFDIO_CONTINUE that page in another must already take additional steps
-to synchronize properly.
+I don't hate the idea, but I'm inclined to hit the "I'm feeling lucky" button.
+I would rather we put in effort to all but guarantee we can do a clean revert in
+the future, at which point a kill switch doesn't add all that much value.  E.g.
+it would allow for a non-disruptive fix, and maybe a slightly faster confirmation
+of a bug, but that's about it.
 
-Signed-off-by: James Houghton <jthoughton@google.com>
----
+And since the fallout from this would be host data corruption, _not_ rebooting
+hosts that may have been corrupted is probably a bad idea, i.e. the whole
+non-disruptive fix benefit is quite dubious.
 
-I'm not sure if this patch should be merged. I think it's the right
-thing to do, as it is very easy for a user to get this wrong. (I have
-been using UFFDIO_CONTINUE for >2 years and only realized this problem
-recently.) Given that it's not a "bug" strictly speaking, even if this
-patch is a good idea, I'm unsure if it needs to be backported.
-
-This quirk has existed since minor fault support was added for shmem[1].
-
-I've tried to see if I can legitimately get a user to read stale data,
-and a few attempts with this test[2] have been unsuccessful.
-
-[1]: commit 153132571f02 ("userfaultfd/shmem: support UFFDIO_CONTINUE for shmem")
-[2]: https://gist.github.com/48ca/38d0665b0f1a6319a56507dc73a173f9
-
- mm/hugetlb.c     | 15 +++++++++------
- mm/userfaultfd.c | 18 ++++++++++++++++++
- 2 files changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index bb17e5c22759..533bf6b2d94d 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -6779,12 +6779,15 @@ int hugetlb_mfill_atomic_pte(pte_t *dst_pte,
- 		}
- 	}
- 
--	/*
--	 * The memory barrier inside __folio_mark_uptodate makes sure that
--	 * preceding stores to the page contents become visible before
--	 * the set_pte_at() write.
--	 */
--	__folio_mark_uptodate(folio);
-+	if (!is_continue) {
-+		/*
-+		 * The memory barrier inside __folio_mark_uptodate makes sure
-+		 * that preceding stores to the page contents become visible
-+		 * before the set_pte_at() write.
-+		 */
-+		__folio_mark_uptodate(folio);
-+	} else
-+		WARN_ON_ONCE(!folio_test_uptodate(folio));
- 
- 	/* Add shared, newly allocated pages to the page cache. */
- 	if (vm_shared && !is_continue) {
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 503ea77c81aa..d515b640ca48 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -531,6 +531,10 @@ static __always_inline ssize_t mfill_atomic_hugetlb(
- 			goto out_unlock;
- 	}
- 
-+	if (uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
-+		/* See the comment in mfill_atomic. */
-+		smp_wmb();
-+
- 	while (src_addr < src_start + len) {
- 		BUG_ON(dst_addr >= dst_start + len);
- 
-@@ -743,6 +747,20 @@ static __always_inline ssize_t mfill_atomic(struct userfaultfd_ctx *ctx,
- 	    uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
- 		goto out_unlock;
- 
-+	if (uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
-+		/*
-+		 * A caller might reasonably assume that UFFDIO_CONTINUE
-+		 * contains a wmb() to ensure that any writes to the
-+		 * about-to-be-mapped page by the thread doing the
-+		 * UFFDIO_CONTINUE are guaranteed to be visible to subsequent
-+		 * reads of the page through the newly mapped address.
-+		 *
-+		 * For MFILL_ATOMIC_COPY, the wmb() is done for each COPYed
-+		 * page. We can do the wmb() now for CONTINUE as the user has
-+		 * already prepared the page contents.
-+		 */
-+		smp_wmb();
-+
- 	while (src_addr < src_start + len) {
- 		pmd_t dst_pmdval;
- 
-
-base-commit: a7f399ae964e1d2a11d88d863a1d64392678ccaf
--- 
-2.44.0.278.ge034bb2e1d-goog
-
+The other issue is that it'd be extremely difficult to know when we could/should
+remove the kill switch.  It might be months or even years before anyone starts
+running high volume of SEV/SEV-ES VMs with this optimization.
