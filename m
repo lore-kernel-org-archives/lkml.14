@@ -1,181 +1,223 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2081.outbound.protection.outlook.com [40.107.249.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9DC5D47A;
-	Wed,  6 Mar 2024 07:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709711797; cv=fail; b=ZEZYi5g3NnVQNymywjoTXjJjW+SDDYbAWZzR+puja3F7XUeomRDYl8A79p851ofpUTROPfL+oOUY3mATK0K8a1NVILty+YcyknaPPiDHeSaLT8ZXuND8LpJ4Rzqvcrkb7vG3jKQuLrERSTozuT2rHJtZNdRUgiIBZAGOCmXfGL4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709711797; c=relaxed/simple;
-	bh=ABObIBVV0pm33eBjssCezbbuagIOtvDFTS+Is3Z2YtU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ldNmzCDu0Pu+mJzUSfr+mE1g8cumC+D/uLi73jsHkyBqpQY9bDFBwBAcB6WT2YcJa7hTabr/f1uR8vx9u7mb/ShT0FaGlM969Ecpa4XivElfwZZCAO0Yp9fTh6Wbza9wB08S4n5/9tfQo41ucv3LLQncbSdeyoRYc36XuvveJMI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=jrlqsufg; arc=fail smtp.client-ip=40.107.249.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040A55D48E;
+	Wed,  6 Mar 2024 07:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709711801; cv=none; b=jI/O0rjyRl/1p50L24UDPZKB5uzMGoEYnRPjKxHX9duEEXWcBQ8R03y7Ov0j0OWAIZH1zQPPmiEozoi3WGIU1WZy1Dbxzva5O2SzdoA5McwRlQm4EzpP7swI+BbSnIkNHAooSOdsDnoiulfbHOWRXTQLvNBa6vooLICNuAVjcNI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709711801; c=relaxed/simple;
+	bh=GYr7m8K6mxpIbzSAb4QoLozaKgrbAWOSyE7TrCOPgDE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q0cxps4GbDqRSuKRjcKjn0DmoI8dvtkReJNirFCYWCsgP1HHxO/bL/6TKRYqcCZHYChB8lXdmjZPfIpyc7pXrC45fepnGqpXn6bBqR+tw5AzvILCS8ml3Deam6OqwlcTLsQzJiW4NK/W6aiFiunavaZ59MC72ATdXs7g6ZnmF6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOkz57Wl; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jrlqsufg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oFsB3PFDdsmdL9t0ycUI6Bye5dGEQqS6uE5J1qvqZ6dkC5otnhvjq6RyJsNFgqpLEFNqpkaCB1eItIGVoUnyAOyexJApFnFlm2VUDgYR+UocxY93u2wx+cuBgoZB/U3Nnxh+vy7aJ6znANcxuPhU9JwZ0hb5JOh+PVT0UklJVBvr7M3v8danLV4EdqTW+RfIPP83XdEMs3pPGlX9JJPWg2g574RjtObxM5eVEZOsXTrrCnysh8y8CRcWEccVTaiGTsSFP+/KC/sOlQUMS38R8OK68DuWv16U5IZh6OR9+49hw4kJOytAXVyP/kF9AZQcmJkcEUEayeZe37c7wExEnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C0HxxwqbTUQyhMeXXnXFbjpyx5CV83NN+sqlk2mdOZE=;
- b=aFXZkr+jWyb2pUQ3vJlExtSCWpw+KdkcsX+YKjGo9uiGV25By8j656pqsQR4klRiozrxg8phhVoIxBOI3v3keyXpDJ1P+9gyKcGBODgKGwL75SQ8x4lTHVdMO/rie86uq09PlJ5za/g3xpgogxMRg5cX8joZaPiBuT5Ltm83XcYmHI2I1BGkhiJWDQcSrCxUrUsCzZ61awgFxlSKnRtiZdv6topEPrN4XxK2fy0d2B6P5N2VM5zj5Wtt2JqDgPsDA3MoAYlgjMqmEPoygXsPbp3IVhWAdflWXw7lI6Ayr3ot1s0KVJQiBpotkb+KS+Jos0V1hU3FJcF3i18xsncqvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C0HxxwqbTUQyhMeXXnXFbjpyx5CV83NN+sqlk2mdOZE=;
- b=jrlqsufgwvu/8fdl8vaf4zS8Gvnkj8Qq7/oUAUSSw6hZusgoWGyc8FfhBejuZxhkQ1wj1GvfpypU8J57lfWZ+XHn/mKQqeCf5mgCZxnm5YsGM0rA0uRkynDxpKZiohIpFH1GvFmSB1StPYIELsNb98mLGi565b4OjKW+smQXAeY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9498.eurprd04.prod.outlook.com (2603:10a6:10:360::21)
- by DU2PR04MB9147.eurprd04.prod.outlook.com (2603:10a6:10:2f6::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Wed, 6 Mar
- 2024 07:56:32 +0000
-Received: from DB9PR04MB9498.eurprd04.prod.outlook.com
- ([fe80::4bee:acb0:401a:3a01]) by DB9PR04MB9498.eurprd04.prod.outlook.com
- ([fe80::4bee:acb0:401a:3a01%7]) with mapi id 15.20.7339.035; Wed, 6 Mar 2024
- 07:56:32 +0000
-From: Chancel Liu <chancel.liu@nxp.com>
-To: shengjiu.wang@gmail.com,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	linux-imx@nxp.com,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Chancel Liu <chancel.liu@nxp.com>
-Subject: [PATCH 4/4] ASoC: fsl: imx-rpmsg: Update to correct DT node
-Date: Wed,  6 Mar 2024 16:55:10 +0900
-Message-ID: <20240306075510.535963-5-chancel.liu@nxp.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240306075510.535963-1-chancel.liu@nxp.com>
-References: <20240306075510.535963-1-chancel.liu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0017.apcprd04.prod.outlook.com
- (2603:1096:4:197::15) To DB9PR04MB9498.eurprd04.prod.outlook.com
- (2603:10a6:10:360::21)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOkz57Wl"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-365fec6644fso1999485ab.0;
+        Tue, 05 Mar 2024 23:56:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709711799; x=1710316599; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jPhPQT45kHdyzdhpdUe+DVL+6CjOwhe9gLeuSsNNlCQ=;
+        b=WOkz57Wl3JT/gYcOW3RcVs2kbhgGvu18c8CELUerRDYzjGRzp700DYbTWeBQed/6o7
+         N+Oaz59ACfGkU28uep6wJ/oOAy9uRx7mXzVfREooBAWBxbtNADfHTe03LiN5Lxysx0lv
+         EchL+r+hs2W6aPREDdaYpGyelFc1XufjVy6VgjCC6koBvc9HFz25pUwheiAeoRTnn2G9
+         dujIKincWSTwWmU8ux7ivePdo6H+QfMsjaWAMTod785le/KwuAboAdiqQCl7J570Wkxj
+         1IUolWZPRtfdeymLYv0DfS8CTAUty4Xpqpcv4J+FZsMADbD15CQNrngP1xQgQP6Ygl8U
+         Ht2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709711799; x=1710316599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jPhPQT45kHdyzdhpdUe+DVL+6CjOwhe9gLeuSsNNlCQ=;
+        b=Czj8mktQriwxVIqBB6XVXq0ivzzihwTScNm9kCXZHLm9BBrRTAxMrpu7/B9/wMsoAH
+         epy8OaplhUYHIuaNaIFwdOZ+vEoh5cvMVzr7QyXzHW0+ZENL94KRpvxtHnqeGTw8knfG
+         M5lygMK7qeGRQJGh+rXgaiUFqIUy5A1dB23s/UBIe+o4xh/fAm70kIYUm4SlDzb2tEOF
+         88bvIqCo7m5Eu+4RoyJGMnAC5pBpQI1FSxTEvloowjvCQWjT2gPNy9l4FuFPkMT7v9Lz
+         WopKzoDNoD0pvcSORjkT/fhkmlLg2ybSdhJHG178FzZk3gjbRTQeLx2xBtC7T9QGXfD6
+         OEkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUd9ppIQ7Nl0B0gBtQi/Pm+ugz3ChgpxWOvFKS+y66wB76t+tErKnGBBPy71utwzD2ooevQbLzDwDtVwZOXKPP0XFQxWHFAhZ33H5yYBJeNhFPHcxXvOug2XJvET/qhtvuSqO/moNd4aspeluVfTfBVWSFuYbAbBMfSUOiICKGrm2cR9wk8LsshS1IFieM1rLG/HYwxs86BVO7JLJ/LOA7J
+X-Gm-Message-State: AOJu0YxPtWXK45ux+ZP+B42l9CinbChQ8YdhXT54+tIIAhw9hW8Q16MT
+	XuYmseyZTvnGjbBME/pe+vDfZ1EXe+0GXAUU7dxXORRItmEJEWDbA/Nkpl2FbyDUFqSUKBGuX4a
+	IcMLMIOXOFOqW0tK+c4upaIqv/Xk=
+X-Google-Smtp-Source: AGHT+IE58vRHwDBTTuXKHgQFQ/UJSqdO7pnSZOi6XVe91c0PQI282+bUYNvb4IHteGaUW+HdSI/Vt7sBb1zhbo8GFCs=
+X-Received: by 2002:a05:6e02:12ce:b0:365:102a:ee10 with SMTP id
+ i14-20020a056e0212ce00b00365102aee10mr4294177ilm.6.1709711799054; Tue, 05 Mar
+ 2024 23:56:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9498:EE_|DU2PR04MB9147:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9083713-b647-4051-b35a-08dc3db2f00a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	mR/vwwmLdF94JRO6Y25cSjgqB+z/A+HSbLizGtzA7nieaDtfkQihwS7fjNJe2WvKzTgVE0b9jZNQrvPLXnpwepe+88rvs7gZFkwx6uDv4PcnAzxXdcI+93iP/wk22WbSoIqsj7IuhcUgbup8L18X7Z5S41R0nZMRHFS9AvMaenOjk3aX/MyobPMuZJtnGxG0aRFTbAXjPLlQnozeBLIgFrjJ0QB3EE5if2/X1zQhzwt9c7wxfaodkgPflAqdaan8KwjCgQfB3RRm7gjzv92eG+bdicu49x+IghhAa6+5qfkvrnez9G+MWhhIQsTh4naxMvwgZipMutJEopfyysD0mqzbQ24Jb48l6yZDOQqXMGCSXLFTPFXEeX45M042iAfrlBBnIscJIDlY2ZbrbQxNamHk3oTU/COb+6p+aGk2CDKtw/5LAIVAqUvSoRu2S/HK2tDMDCtmsY0JhKZiickjPRgu6twRWFa+QDLy/7L34eelGHMwQfkGaSUD1zY1rAKie9xksF2ELgeTsGg9CCJ91RHEbj9Hsh2jtD19GqDsF4hwTF8wb8f4wJa8OH/xFzqwv8w+4mNtfANvHKp39fdz8wM91uCHTZVOnThNMjriyO6kOmdyhhWrFWu8uqdvRgHqBJd7bDhMXCPvkkNjcJQIe+2VVmkZtZF/1mHK/lSgCqhh6JnWrjMY8RcI328/4j3CgnI34Rkg2b0SXShwjxOJz++A0SAPJxuIX58sghU/m/8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9498.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(921011)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MzZMjqGo7y/wrOG7nx1SHROhWjPx2Gjcx0EHzRvoss/AToOAzoX9JDQWZZK6?=
- =?us-ascii?Q?RpZBbW9rEaJLnpC05ZlvQ/2Zo+K++uwqK8LEyt3Ya5UdLnDQATBATn2knkiD?=
- =?us-ascii?Q?awZlp4Q/1jjr6xAldDHStTVLcyjEEHw9Whksnf9lMKp0mdrSXr5h5AtQvk46?=
- =?us-ascii?Q?uFXj4Qd7SbmoyRLm30ifoLH7tQzBHRKPwaLI+ihjf2PF/HKuOopbsyT3FimE?=
- =?us-ascii?Q?bwQJApGY/uM/sGL3fcPWuVxbcqFokxcuhYxl0+L9uhTQm1hYUgrZjW7kJmuF?=
- =?us-ascii?Q?PqixWkX9KdRpk7pBv9U1Nljr+M5KCKdDxAPWVZw52qrmAlxddJ2elMP6PXWH?=
- =?us-ascii?Q?olB3iVNXoBTIJnjIBIw7CHP40McYe0bSY5BS1BHcoT+5H+1XXy9MgH+w1DB1?=
- =?us-ascii?Q?9APumKBBmq4YpAjSwyl8s1sJ2RB19k60f5ZIBTASfsc4vOxlTgVhyFdXJJ/3?=
- =?us-ascii?Q?k8px/FXwjtPL9dZF8uQXK1/zwzmzuYtCLg0/wKmmJoo5JB3AZ4pxnVKjyE7Y?=
- =?us-ascii?Q?oPhRgHvlZ51SrLiGx/ni/udjMN2mDRYuG9lY+niePHkK50mCwGhbgOyVnf/C?=
- =?us-ascii?Q?obv2KcImIQE8us9PYuHCjL2FpxdID0RiQW2Jd8cN4R4AECOig0IV/7gqd47L?=
- =?us-ascii?Q?QEMgYXdFcAkXD27tTCHCvDUvo5y9DFHLzoaWI3AbC00HqOamuLc5mDCxh0Ve?=
- =?us-ascii?Q?LBL2WYYpGGFI+XHUlBMgLZYqRjxAeFyXNZCbSKw1YFIGfJ5yiNfxEQbHImfI?=
- =?us-ascii?Q?6HMLmnf3pYWNRsj+v+dTrzWTqowPu/QQcsiXSoLPGPUePIparZP3QAD2U0ju?=
- =?us-ascii?Q?3ivesqWlEE7HFsmTpJwhH91VbboTPPltxzTOPEFnrZUKOFQCpUaPj2BLzEyZ?=
- =?us-ascii?Q?PSYO+CrWRjx1l0aRDww/6WuCwc3MlmbV1wEOsFy3D4wNb8eWzmPUqa4iCwmr?=
- =?us-ascii?Q?jkaW1qZkL2aAOhHq1mFKofR0lXyih9xVsqc510a0GhQpSgIPRRtyCGUADey1?=
- =?us-ascii?Q?1ZedAW7MCT5Vu+aEUVLSo2+t323kMclLnAQve+ImUBXPUb6hAO4bjSF0rpHF?=
- =?us-ascii?Q?DlwsZiB7ebmrbsc5PeOyAV4V2+l3xyhHlT4yhZtay+/+BmfQv0rLTQj+xPlq?=
- =?us-ascii?Q?ID4t5Zu2eBIHQAq5hKtSz/maufE498Qy59VsTMOCpt0LuLTSS6fDi2U0RseT?=
- =?us-ascii?Q?ECFBTDT8FeLX7TtQjI+1FRjc2i0EMB0BREO8S28bUbcd9It2/bhjnSZv6HJ/?=
- =?us-ascii?Q?PXEp7jXVZx3pzIsY3HgoeZ+4MD1dpKvaEDGiEeVjBYZyVPYxRiHYHHEeJ4nZ?=
- =?us-ascii?Q?8LQYS9Grr6x5WxzxnDYseHWtoSvCj67QUOyIcvC7nB1Yl6K63BVUVkRxZU8/?=
- =?us-ascii?Q?QItZcpLct81T69fjt3xLMChAAqcKNHZsMVKmgwaYIyUXWFrJTaksx7p0VjSi?=
- =?us-ascii?Q?s4qZMKIdq+M7c0R2D8r4KI4enBCbkPCu4Ya6YyaQuS2B+sQRMb9dr5JXlwyC?=
- =?us-ascii?Q?/88ptwHythwSbbA2F1My1Bw/FnqRc86MWRCrhkXpEYQB7jThQnQWKHnueb80?=
- =?us-ascii?Q?s3tli/C892Inaddg5ej3yWlvv5Vrsx8V90a7QSwD?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9083713-b647-4051-b35a-08dc3db2f00a
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9498.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 07:56:32.2170
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uqYAVVvBbScxeiDNv3L7qd/sOT0zFSiGgy9g66x3u2HreaY/0nkrzY8fNJJRx0QKRFaFeMM7blWBaySLEdDkCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9147
+References: <20240227005606.1107203-1-kcfeng0@nuvoton.com> <20240227005606.1107203-3-kcfeng0@nuvoton.com>
+ <93d67381-34fc-423c-868a-565378c63e09@molgen.mpg.de>
+In-Reply-To: <93d67381-34fc-423c-868a-565378c63e09@molgen.mpg.de>
+From: Ban Feng <baneric926@gmail.com>
+Date: Wed, 6 Mar 2024 15:56:28 +0800
+Message-ID: <CALz278YF8FGz=JM83Q=6PeoQmGOJ4dfB8QTu1qbu9p4eSBHi8Q@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: hwmon: Add NCT7363Y documentation
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, corbet@lwn.net, 
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, kcfeng0@nuvoton.com, 
+	kwliu@nuvoton.com, openbmc@lists.ozlabs.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, DELPHINE_CHIU@wiwynn.com, 
+	naresh.solanki@9elements.com, billy_tsai@aspeedtech.com, 
+	Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Platform device for card to probe is registered in imx-audio-rpmsg.
-According to this change DT node of ASoC CPU DAI device is updated.
+Hi Paul,
 
-Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
----
- sound/soc/fsl/imx-rpmsg.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+On Wed, Feb 28, 2024 at 3:30=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de>=
+ wrote:
+>
+> Dear Ban,
+>
+>
+> Thank you for your patch.
+>
+>
+> Am 27.02.24 um 01:56 schrieb baneric926@gmail.com:
+> > From: Ban Feng <kcfeng0@nuvoton.com>
+> >
+> > Adding bindings for the Nuvoton NCT7363Y Fan Controller
+>
+> s/Adding/Add/ or even Document bindings =E2=80=A6
 
-diff --git a/sound/soc/fsl/imx-rpmsg.c b/sound/soc/fsl/imx-rpmsg.c
-index e5bd63dab10c..2686125b3043 100644
---- a/sound/soc/fsl/imx-rpmsg.c
-+++ b/sound/soc/fsl/imx-rpmsg.c
-@@ -108,10 +108,9 @@ static int imx_rpmsg_late_probe(struct snd_soc_card *card)
- static int imx_rpmsg_probe(struct platform_device *pdev)
- {
- 	struct snd_soc_dai_link_component *dlc;
--	struct device *dev = pdev->dev.parent;
- 	/* rpmsg_pdev is the platform device for the rpmsg node that probed us */
--	struct platform_device *rpmsg_pdev = to_platform_device(dev);
--	struct device_node *np = rpmsg_pdev->dev.of_node;
-+	struct platform_device *rpmsg_pdev = NULL;
-+	struct device_node *np = NULL;
- 	struct of_phandle_args args;
- 	const char *platform_name;
- 	struct imx_rpmsg *data;
-@@ -127,6 +126,22 @@ static int imx_rpmsg_probe(struct platform_device *pdev)
- 		goto fail;
- 	}
- 
-+	if (!strcmp(pdev->dev.platform_data, "rpmsg-micfil-channel"))
-+		np = of_find_node_by_name(NULL, "rpmsg_micfil");
-+	else
-+		np = of_find_node_by_name(NULL, "rpmsg_audio");
-+	if (!np) {
-+		dev_err(&pdev->dev, "failed to parse node\n");
-+		ret = -EINVAL;
-+		goto fail;
-+	}
-+	rpmsg_pdev = of_find_device_by_node(np);
-+	if (!rpmsg_pdev) {
-+		dev_err(&pdev->dev, "failed to parse platform device\n");
-+		ret = -EINVAL;
-+		goto fail;
-+	}
+ok, fix in v5
+
+>
+> Do you have an URL to the datasheet?
+
+I'll add "Datasheet: Available from Nuvoton upon request" per Guenter
+suggested in v5.
+
+>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
+> > ---
+> >   .../bindings/hwmon/nuvoton,nct7363.yaml       | 63 ++++++++++++++++++=
 +
- 	ret = of_reserved_mem_device_init_by_idx(&pdev->dev, np, 0);
- 	if (ret)
- 		dev_warn(&pdev->dev, "no reserved DMA memory\n");
--- 
-2.43.0
+> >   MAINTAINERS                                   |  6 ++
+> >   2 files changed, 69 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/hwmon/nuvoton,nc=
+t7363.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.ya=
+ml b/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
+> > new file mode 100644
+> > index 000000000000..1a9d9a5d614e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
+> > @@ -0,0 +1,63 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +
+> > +$id: http://devicetree.org/schemas/hwmon/nuvoton,nct7363.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Nuvoton NCT7363Y Hardware Monitoring IC
+> > +
+> > +maintainers:
+> > +  - Ban Feng <kcfeng0@nuvoton.com>
+> > +
+> > +description: |
+> > +  The NCT7363Y is a Fan controller which provides up to 16 independent
+>
+> lowecase: fan controller?
 
+ok, fix in v5
+
+>
+> > +  FAN input monitors, and up to 16 independent PWM output with SMBus i=
+nterface.
+>
+> output*s*?
+
+ok, fix in v5
+
+Thanks,
+Ban
+
+>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - nuvoton,nct7363
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  "#pwm-cells":
+> > +    const: 2
+> > +
+> > +patternProperties:
+> > +  "^fan-[0-9]+$":
+> > +    $ref: fan-common.yaml#
+> > +    unevaluatedProperties: false
+> > +    required:
+> > +      - pwms
+> > +      - tach-ch
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#pwm-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        hwmon: hwmon@22 {
+> > +            compatible =3D "nuvoton,nct7363";
+> > +            reg =3D <0x22>;
+> > +            #pwm-cells =3D <2>;
+> > +
+> > +            fan-0 {
+> > +                pwms =3D <&hwmon 0 50000>;
+> > +                tach-ch =3D /bits/ 8 <0x00>;
+> > +            };
+> > +            fan-1 {
+> > +                pwms =3D <&hwmon 1 50000>;
+> > +                tach-ch =3D /bits/ 8 <0x01>;
+> > +            };
+> > +        };
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 2ecaaec6a6bf..7b1efefed7c4 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -15084,6 +15084,12 @@ S:   Maintained
+> >   F:  Documentation/devicetree/bindings/hwmon/nuvoton,nct6775.yaml
+> >   F:  drivers/hwmon/nct6775-i2c.c
+> >
+> > +NCT7363 HARDWARE MONITOR DRIVER
+> > +M:   Ban Feng <kcfeng0@nuvoton.com>
+> > +L:   linux-hwmon@vger.kernel.org
+> > +S:   Maintained
+> > +F:   Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
+> > +
+> >   NETDEVSIM
+> >   M:  Jakub Kicinski <kuba@kernel.org>
+> >   S:  Maintained
+>
+> Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+>
+>
+> Kind regards,
+>
+> Paul
