@@ -1,129 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40E7A50
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 01:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1FDA50
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 01:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709687866; cv=none; b=WVBR0RMJxx8xnUokBIbgux37m86mlpCEBXuEFFfRWbzG6vImb4q3Z+SL52SiOUXFmwdrVR5AQBwh73bK4vZEQIIq+Lsa5968upW5uEvHkFLflpvmQiLKQSzuqXPMU14HQeNyC2/I7PuqOKW0ILX9NQQ2LR1l1A3CpdznKCJwIM4=
+	t=1709688116; cv=none; b=ah1ByqYtaohoZmvq7joJXbrvsRCe5GbWGyPTg5bpwujvNSqnTkPQwjrKQTUgwIxM1XXb+sjMgNFuJXZOfYRZt2OJ/rsYiCvC4tjcVgU9dRBX8DWyKsqbz9w4n/Bsg53TT/r65/PNCi8s0ZymkDx8utUTKoOnfghyUdVLHotTi6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709687866; c=relaxed/simple;
-	bh=y65RKsbmlzXJf/JzYfgyoDk48h1PddbLHcQTH86O6+c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ABuKmxHy29t8Ph0E8NpidmEge0mzWr+0P9KoTruLuK5amYhLyNEb82zcSxE3ElQ8PYhQYiOACUpm9bjjrJgk719FSbTFSWo6UDGV+O/0f0JA0Ap2Tv+m+Tk5kpS5TstdYJBH44olgWtyQKEtFqUR7dEQOgNdAJCqJBc2GCSI8CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NA4hCINN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NA4hCINN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709687863;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KSopfOJkAuYOw6M3itXYUuSKT5SC9i3M+OvcTTde/l4=;
-	b=NA4hCINNjSTe3RQDOUVa5W2Tz8k1XitdQGsmaHk/LGy5eg39BWGECqClqab4PkgjHtfwsX
-	p3OLP88ByMrsuPOOuAu3LjLIj3dHUUXkUoKCCRUSSEDl2b7KsVeUXkv5FJ+X+X5xqrdfPx
-	GQIqkowQpyNWqoynw0CyS69J44AKSMA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-57-amOpKSPGOZGuX2z2dQNEjA-1; Tue, 05 Mar 2024 20:17:42 -0500
-X-MC-Unique: amOpKSPGOZGuX2z2dQNEjA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7B6B4800265;
-	Wed,  6 Mar 2024 01:17:41 +0000 (UTC)
-Received: from li-a71a4dcc-35d1-11b2-a85c-951838863c8d.ibm.com.com (unknown [10.72.112.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5AB1F1C060D6;
-	Wed,  6 Mar 2024 01:17:35 +0000 (UTC)
-From: xiubli@redhat.com
-To: linux-fscrypt@vger.kernel.org
-Cc: ebiggers@kernel.org,
-	tytso@mit.edu,
-	jaegeuk@kernel.org,
-	linux-kernel@vger.kernel.org,
-	idryomov@gmail.com,
-	ceph-devel@vger.kernel.org,
-	jlayton@kernel.org,
-	vshankar@redhat.com,
-	mchangir@redhat.com,
-	Xiubo Li <xiubli@redhat.com>
-Subject: [PATCH] ceph: return -ENODATA when xattr doesn't exist for removexattr
-Date: Wed,  6 Mar 2024 09:15:02 +0800
-Message-ID: <20240306011502.183332-1-xiubli@redhat.com>
+	s=arc-20240116; t=1709688116; c=relaxed/simple;
+	bh=Y0mXW4p+zCBSuWaP3zmYDPSxRg0kMzt8nr4tJ39mBk8=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=HN8DEe6lGkxN+KJRmpRiwOErMXbwDPiDClNoxV4U8U8+tL4PbwEBDfbK2OIkTOdPNmQT2+i8rEtp8TLri/iWIbkIy9ELnOKyCLx0fsKxXBzuyVq/Yx2YqJolPWUdMFe0pyr07DPNk7Q0vhsHKbU59d6LVcCXATGA9SAVWgAAFDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TqF3d4hMlzNlsR;
+	Wed,  6 Mar 2024 09:20:13 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5B7F4140114;
+	Wed,  6 Mar 2024 09:21:51 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 6 Mar 2024 09:21:50 +0800
+Subject: Re: [PATCH] mtd: ubi: make ubi_class constant
+To: "Ricardo B. Marliere" <ricardo@marliere.net>, Richard Weinberger
+	<richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, Vignesh
+ Raghavendra <vigneshr@ti.com>
+CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20240305-class_cleanup-mtd-v1-1-7861914e2218@marliere.net>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <0e612171-d3f0-f284-12b7-373f4da350d3@huawei.com>
+Date: Wed, 6 Mar 2024 09:21:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20240305-class_cleanup-mtd-v1-1-7861914e2218@marliere.net>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-From: Xiubo Li <xiubli@redhat.com>
+ÔÚ 2024/3/6 3:35, Ricardo B. Marliere Ð´µÀ:
+> Since commit 43a7206b0963 ("driver core: class: make class_register() take
+> a const *"), the driver core allows for struct class to be in read-only
+> memory, so move the ubi_class structure to be declared at build time
+> placing it into read-only memory, instead of having to be dynamically
+> allocated at boot time.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> ---
+>   drivers/mtd/ubi/build.c | 2 +-
+>   drivers/mtd/ubi/ubi.h   | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 
-The POSIX says we should return -ENODATA when the corresponding
-attribute doesn't exist when removing it. While there is one
-exception for the acl ones in the local filesystems, for exmaple
-for xfs, which will treat it as success.
-
-While in the MDS side there have two ways to remove the xattr:
-sending a CEPH_MDS_OP_SETXATTR request by setting the 'flags' with
-CEPH_XATTR_REMOVE and just issued a CEPH_MDS_OP_RMXATTR request
-directly.
-
-For the first one it will always return 0 when the corresponding
-xattr doesn't exist, while for the later one it will return
--ENODATA instead, this should be fixed in MDS to make them to be
-consistent.
-
-URL: https://tracker.ceph.com/issues/64679
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
----
- fs/ceph/acl.c   | 9 ++++++++-
- fs/ceph/xattr.c | 5 ++---
- 2 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/fs/ceph/acl.c b/fs/ceph/acl.c
-index 1564eacc253d..836b92526fa2 100644
---- a/fs/ceph/acl.c
-+++ b/fs/ceph/acl.c
-@@ -158,7 +158,14 @@ int ceph_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
- 		goto out_free;
- 	}
- 
--	ceph_set_cached_acl(inode, type, acl);
-+	/*
-+	 * If the attribute didn't exist to start with that's fine.
-+	 */
-+	if (!acl && ret == -ENODATA)
-+		ret = 0;
-+
-+	if (!ret)
-+		ceph_set_cached_acl(inode, type, acl);
- 
- out_free:
- 	kfree(value);
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index e066a556eccb..08b14eea66e9 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -613,11 +613,10 @@ static int __set_xattr(struct ceph_inode_info *ci,
- 			return err;
- 		}
- 		if (update_xattr < 0) {
--			if (xattr)
--				__remove_xattr(ci, xattr);
-+			err = __remove_xattr(ci, xattr);
- 			kfree(name);
- 			kfree(*newxattr);
--			return 0;
-+			return err;
- 		}
- 	}
- 
--- 
-2.43.0
+Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
+> 
+> diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+> index 7d4ff1193db6..1938b61e1b74 100644
+> --- a/drivers/mtd/ubi/build.c
+> +++ b/drivers/mtd/ubi/build.c
+> @@ -111,7 +111,7 @@ static struct attribute *ubi_class_attrs[] = {
+>   ATTRIBUTE_GROUPS(ubi_class);
+>   
+>   /* Root UBI "class" object (corresponds to '/<sysfs>/class/ubi/') */
+> -struct class ubi_class = {
+> +const struct class ubi_class = {
+>   	.name		= UBI_NAME_STR,
+>   	.class_groups	= ubi_class_groups,
+>   };
+> diff --git a/drivers/mtd/ubi/ubi.h b/drivers/mtd/ubi/ubi.h
+> index 0b42bb45dd84..21c3208a9210 100644
+> --- a/drivers/mtd/ubi/ubi.h
+> +++ b/drivers/mtd/ubi/ubi.h
+> @@ -812,7 +812,7 @@ extern struct kmem_cache *ubi_wl_entry_slab;
+>   extern const struct file_operations ubi_ctrl_cdev_operations;
+>   extern const struct file_operations ubi_cdev_operations;
+>   extern const struct file_operations ubi_vol_cdev_operations;
+> -extern struct class ubi_class;
+> +extern const struct class ubi_class;
+>   extern struct mutex ubi_devices_mutex;
+>   extern struct blocking_notifier_head ubi_notifiers;
+>   
+> 
+> ---
+> base-commit: 77bf032528393d2dc9430b3cea1fee8d0762a86f
+> change-id: 20240305-class_cleanup-mtd-b7dfe2ea8c26
+> 
+> Best regards,
+> 
 
