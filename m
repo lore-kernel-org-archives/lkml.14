@@ -1,112 +1,77 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904DE6089A;
-	Wed,  6 Mar 2024 10:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EBE604A7;
+	Wed,  6 Mar 2024 11:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722744; cv=none; b=c3R6CYVT+/WlUndbwYRpuM5v6/1QIt6XWbTY0axOgQkz8OrLrtWe4rTGd5ls+InLu3mtRNUzrTdqKCdAH51649ZyDN0h+ROl7lNrJj9/dRejIGPjyjWsj/9o/MgnpTCn6oHNdJc4h/fsgnBuH9TyODr51sWnScbajenFXQmFGvA=
+	t=1709722886; cv=none; b=G8n6o7p2xbc0rvUc8rB6bGIOda0GltK8GIqsc/+Ogn6oc8T2B8CMiL9pHcEbm4iBTtHqH/4SBIHwcP/g5OsTtMR4BT3EtY/1KzKCYj4ZCEl9ogiOSl5C78zCdkyoCoRrKLGQV2n9unhOvgz+lwf/98QlA6zMUUHLaShfAGHiPec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709722744; c=relaxed/simple;
-	bh=9irRIG0KFERmL3sNKB1GcQ9JLqgiQH8nptVh6vPu5mg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VliGbM4R5bT6kmJCKDGBFN9zRmNdu1Yqhqk6Nx9aBLG9QJDlYT32/zn14V/HzNvDuBbpZlgo3t4wK68eSAr+aRXI6kCAcKf8AbzrBAuTxMU2zhIzrCKOwe0EH3zHqYNSNhXvXCn7FYI1Uujh9By4j1sgRjnZ42Yx04rB7KQtKno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OLNoQeRd; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709722886; c=relaxed/simple;
+	bh=QnEU6jhwX7i1ZB/3pShjxSETQ3xsLNz0r4DdTZhkXTo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sYI0gf+o6Oscij8/HCaFDtvpvu5BBoQYp+T38AGNn4E7pEbRIKAg68S9go21xsKbUacMmrv2DVq5pXVxxU37siBgNHmKdWFfZngckjop8/TO0p12qT2dxtdS/8Qi7+gymEsDvWcWAi8YJ3uK59gq4RQT0cLRoK+nYBCiRjFAqQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GJQarYuB; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLNoQeRd"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a45c006ab82so48093266b.3;
-        Wed, 06 Mar 2024 02:59:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709722741; x=1710327541; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e5Z0N03v/ohpTjWPfQRgP/mEBY6xf/mkdG3hCpH/bMQ=;
-        b=OLNoQeRdmYFCi95vmYODy9EeMtLhKh0hrbhqiLnsRjh2hLjXjak/QSF719cR1lKRdk
-         tsSHBcKiLOjjpxLB6ZzNfEA8mzVvDsjojSW5/qb6LiUgwxrXR8zubekDPJH3k97hxlGi
-         i1d2l1p+u9h+8ydVAxPPWM2lSGXmKUxmeYOXI+PcmhqR75HeC55qSV4wfjDKqIVRu/9L
-         e/ISVoOd8Jq9J60xa+XUHAS0LXD/2ZVXdcJCxwtXltt4oFGUUeE2YR1WcqOPSEkZfLrs
-         L6H8zEMkP32OrKmTe10FlO896R/9TVPD6Mkx8grxndR13SXpOV/AsDerLtEhksXQvmzo
-         aEng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709722741; x=1710327541;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e5Z0N03v/ohpTjWPfQRgP/mEBY6xf/mkdG3hCpH/bMQ=;
-        b=nEF++5i84TkhByeDUxp7jJyyp+Ustq+bp7bNoIDGIaugWvsATdv5DEyVr5QzKNyzAP
-         X+wH3uFxBheeYjYKSFmp0iTgCfUt9e8YXNyp50J1W4pp4+4AHfW2cO1GjTfNc+4hRJt6
-         whnzM/n/czQZaqrkrDhJWdaWPPz+n7U0+yegBmelQbbQElyo6Ni2BzxENI1jfeNS/T0t
-         5I/TlN07MxaT44CKHP1w7K3dkmYscGtygaOGcQYmhDyKo2FwWWeC55TI3lNl6+Bgbz/l
-         Ans4aHOnXylX4svykQc1lxgURSdqqx9GxI4YPq+W8IhrPjO+EGuMLyROLGaiaubYjQEp
-         08/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWF4rqL9eNRaFhc75g9Wke9kSkA+l65bvtCy1FhCfNjjcJ6P5zzLXNIlfBesmdS4//BVGZ7wwTXFHnibu3sFKBcoYjFkl2l1uAaGBdVDWPS6OBcywWFLLzFwKh3tpGS0pKJg77nQDO1rHz9rk2w9kLl3X4Fbo1EfSO2R1Bwz9fRxd0NlQQ=
-X-Gm-Message-State: AOJu0YxI6P/JbQCHcGd6CnDBetaZu2d0Aq4UGmJJHotAK9pUPo5PPtX4
-	ujM6m93VlIRf5hlyomoHXLmQQQR4ODygn9gOUfGRhKGu7wqTvzycmZD3yicGZe3sJW8sguqLTNm
-	odM0LjDSIoIZM4oRxvEh35TPGZyo=
-X-Google-Smtp-Source: AGHT+IFR/RKGlCn3Fh34/aH2tzfQC9FgfHtJe362qDydqHz8e5ZEJGTvks01Qy+NFLTjVu8vZdi1vIdnJoYGzqQGu6I=
-X-Received: by 2002:a17:907:20b9:b0:a43:6cd2:7a27 with SMTP id
- pw25-20020a17090720b900b00a436cd27a27mr9255436ejb.19.1709722740894; Wed, 06
- Mar 2024 02:59:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GJQarYuB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709722884; x=1741258884;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=QnEU6jhwX7i1ZB/3pShjxSETQ3xsLNz0r4DdTZhkXTo=;
+  b=GJQarYuBT2EZ8Y84EQn/LWtWpuGgMtkh+cA6cW0M2QD/1hzhXkhs4B93
+   pwQYqUtsqs0X9e+Wr2ltTtNZ6DO1Vf/lZtrxPezxnkrZLqmSjNDaro3Ai
+   Wzy1bCFClr/TliLg0xAleI3Fub/uRo28pPdRfzSPom4Htab/p3KP20Khy
+   SNkQgdvtIzjkodZvITttECrmyoR3eIqRE+unAGfYLCKCfR0vy404bge7v
+   hFAnF7UOVT3YRp0D/YxKMawUBgFwkkMnk13lLa2XdUcUkx7FgetMDX/8i
+   EuXPAP8Ok6MOZuMaVnORI9hRdNN/kEq70CYUy+ZWn2yM5VorhdnfYI0c6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4445296"
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="4445296"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:01:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="9594623"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:01:20 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 6 Mar 2024 13:01:14 +0200 (EET)
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel/tpmi: Change vsec offset to u64
+In-Reply-To: <20240305194644.2077867-1-srinivas.pandruvada@linux.intel.com>
+Message-ID: <3a97f188-3998-866d-6a23-e0f4559c673d@linux.intel.com>
+References: <20240305194644.2077867-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305035853.916430-1-chris.packham@alliedtelesis.co.nz>
- <20240305035853.916430-2-chris.packham@alliedtelesis.co.nz>
- <CAMuHMdXF+12PHa5A7WeyPMfvsGcJN13WaPuCbTmJU52Huq=osA@mail.gmail.com>
- <Zecy1RsSfpmH-cvG@smile.fi.intel.com> <216eb75d-5384-4654-9e86-4a9856494ad0@alliedtelesis.co.nz>
-In-Reply-To: <216eb75d-5384-4654-9e86-4a9856494ad0@alliedtelesis.co.nz>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 6 Mar 2024 12:58:24 +0200
-Message-ID: <CAHp75Vdi8K2mf2JSCG=e4vX+18CuNyaH-U5Q8-NGvihhyrJBJg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] auxdisplay: Add 7-segment LED display driver
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	"robh+dt@kernel.org" <robh+dt@kernel.org>, 
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>, 
-	"gregory.clement@bootlin.com" <gregory.clement@bootlin.com>, 
-	"sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "lee@kernel.org" <lee@kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Mar 6, 2024 at 12:34=E2=80=AFAM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
-> On 6/03/24 03:57, Andy Shevchenko wrote:
-> > On Tue, Mar 05, 2024 at 09:23:07AM +0100, Geert Uytterhoeven wrote:
-> >> On Tue, Mar 5, 2024 at 4:59=E2=80=AFAM Chris Packham
-> >> <chris.packham@alliedtelesis.co.nz> wrote:
+On Tue, 5 Mar 2024, Srinivas Pandruvada wrote:
 
-...
+> The vsec offset can be 64 bit long depending on the PFS start. So change
+> type to u64. Also use 64 bit formatting for seq_printf.
+> 
+> Fixes: 47731fd2865f ("platform/x86/intel: Intel TPMI enumeration driver")
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: <stable@vger.kernel.org> # v6.3+
+> ---
+> This is a forward looking change. There is no platform with this issue.
+> This can go through regular cycle.
 
-> >>> +       priv->segment_gpios =3D devm_gpiod_get_array(dev, "segment", =
-GPIOD_OUT_LOW);
-> >>> +       if (IS_ERR(priv->segment_gpios))
-> >>> +               return PTR_ERR(priv->segment_gpios);
-> >> This needs some validation of priv->segment_gpios->ndescs, else the
-> >> call to gpiod_set_array_value_cansleep() in seg_led_update() may
-> >> trigger an out-of-bounds access of the values bitmap.
-> > Alternatively we can call gpiod_count() beforehand and check its result=
-.
-> Unless there are any objections I think I'll go with the ndescs check as
-> it'll be easier to update to the subnode style in the future.
+I've applied this to review-ilpo.
 
-Either works for me.
+-- 
+ i.
 
-> It does
-> mean there will be some extra allocations/frees (handled via the devm_
-> APIs) in the error case.
-
-
---=20
-With Best Regards,
-Andy Shevchenko
