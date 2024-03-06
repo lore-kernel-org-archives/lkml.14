@@ -1,147 +1,146 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4995D750;
-	Wed,  6 Mar 2024 08:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778EA56771;
+	Wed,  6 Mar 2024 08:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709715085; cv=none; b=ezcBb4FwjzQHfkypKGq13TG4Zww+z5VyF1Af5Pp6OJQjMuQ1kvu0jctFVgEM1s7/OTqT5bq2we2Oj5KMCz8RE55G2hDm3L0RlSC1U3VeHBRhFYU58EDZXzZoZ+LZREFWLXkPRz+9oZRQ+DkeGzB93+CY6c7pnu9Pjixd54mFkMM=
+	t=1709715085; cv=none; b=b6ibAFX0TEaTq0RjWTuuqyN+esLGkJRFa4EogLSLT5YVXQgnt/4DSEusZiVJL5q65pw+0NoCrLTtZc5TWaZ9+3p4B1j42RdBtuDKTcrd6800RE8GyY5xKVxDlqSlmMvBgezV8kDDLU51lVJ5o6gx47JKaNxJDzaHT1HJn4BTP74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709715085; c=relaxed/simple;
-	bh=Z5IbOGz8ERh6b3UPw1IPPaGjlmXO5pE5liV0ILfL2IM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NKw9+RkmNI96iW2tDG0yc4ROT3R0v8QwKFzAxf2PNXdRGbxK4l5YBIOQ9rue2iIOgFIKn6DeBtSZ1Tv53V3Gu/qPCWx73JDZuRV8SS5IXtqrSaxzZ6Tc9fRrL+oW2QFi7Gv/fbfKMpdjxgdRdYOmN/CkvQCGNqBOb1RCq2/YhvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Qq50eQOr; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	bh=tnoJkWYj/Uj6sncvyvTKE/XgBKRb6CWryuCiPxRBwTE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fsno/XDsJJUX8vGyadWrKpkX+DqW6Zlr/MKeLbsDa6d4tkwbwsZXfoELiLgdoKK1kLT9JDiuHSq90srFiFR4IM1w7MZ3ckJvJ0mskh5ex6JQZAYvrUrVlYpCay0KhlYO57/coUrepJTH5HMQInRnzcoCjppDobCfUf0kGWFSIr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Fa6wSSat; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Qq50eQOr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709715083; x=1741251083;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Z5IbOGz8ERh6b3UPw1IPPaGjlmXO5pE5liV0ILfL2IM=;
-  b=Qq50eQOrva4/goep4y0HR/INYWYeUVo6QVtMf9C4ZPAi7ug7HV+9bGzs
-   1NqpZpJO7ApDs0FilTf742hfPOsKN5NXXOG05la6I7PXv09mkiqkbharx
-   aw7nMJcDugxWJbZrUrpWilOsGwmaVeKVXfrgIZz3AwVcGa6NI/0FArdmI
-   9ihsXHV4djUvKnUzSMVLvOl6aEFKs6cVlGWyLwn6n0botGlnPmKOmojhH
-   2sW0cC6GAc8bkJn7E00fPgIhtGXzlSMk4Rf1IeEB/Jw1M7Sae9rUqb3dH
-   Y/EA5hfwD6bbwCbO7fFWyayRYG9aa6ugzMf98LBggHa3ga4Ai/4zlnZMF
-   A==;
-X-CSE-ConnectionGUID: D37j0VVORIyxmw0YyEEuxg==
-X-CSE-MsgGUID: 4idh1lMLSzWK9wPx70hqtA==
-X-IronPort-AV: E=Sophos;i="6.06,207,1705388400"; 
-   d="scan'208";a="18916098"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Mar 2024 01:51:21 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Mar 2024 01:51:21 -0700
-Received: from CHE-LT-I17164LX.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 6 Mar 2024 01:51:12 -0700
-From: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <saeedm@nvidia.com>,
-	<anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <andrew@lunn.ch>, <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>, <horatiu.vultur@microchip.com>,
-	<ruanjinjie@huawei.com>, <steen.hegelund@microchip.com>,
-	<vladimir.oltean@nxp.com>
-CC: <UNGLinuxDriver@microchip.com>, <Thorsten.Kummermehr@microchip.com>,
-	<Pier.Beruto@onsemi.com>, <Selvamani.Rajagopal@onsemi.com>,
-	<Nicolas.Ferre@microchip.com>, <benjamin.bigler@bernformulastudent.ch>,
-	Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-Subject: [PATCH net-next v3 05/12] net: ethernet: oa_tc6: implement error interrupts unmasking
-Date: Wed, 6 Mar 2024 14:20:10 +0530
-Message-ID: <20240306085017.21731-6-Parthiban.Veerasooran@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
-References: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Fa6wSSat"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 15CA9C0006;
+	Wed,  6 Mar 2024 08:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709715075;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wIxtNB7MjWKtylBlmPy6WrGj5nTOVTfIn876kGABVuY=;
+	b=Fa6wSSatR7tMh9c19HLWmwCHUKAPx8BnougFcDgK8iShld7PT9pgq71MkjBu2UuAI9kXsF
+	XsBoGAXWBCrnQmisgtBU8fvWdVSlzVg6DJ6jDt7Z2tJqb9Nyq7YnRJHzp9bFGV9UsYg3yG
+	oc/1y4Rd4KaS0LrszHjdfjDAMwmZ9/gyL4dGUqlqiPgJfk4lkoOgdKov1ITkBlyGRxZ7tW
+	nwbyS3Za9zH3aAwrkIgRufzCDTk9iTu7IOqUAyg/cQ8idhi0k5OBu/gki3Bt8taUSUwxmH
+	j+b/8zcKJfOcVRiEfC9DJIv3SrbdROq09tqCuLiwUT+NWsukTBk5P5+CjRRceQ==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Saravana Kannan <saravanak@google.com>
+Cc: Lizhi Hou <lizhi.hou@amd.com>,
+	Max Zhen <max.zhen@amd.com>,
+	Sonal Santan <sonal.santan@amd.com>,
+	Stefano Stabellini <stefano.stabellini@xilinx.com>,
+	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Nuno Sa <nuno.sa@analog.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v4 0/2] Synchronize DT overlay removal with devlink removals
+Date: Wed,  6 Mar 2024 09:50:01 +0100
+Message-ID: <20240306085007.169771-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-GND-Sasl: herve.codina@bootlin.com
 
-This will unmask the following error interrupts from the MAC-PHY.
-  tx protocol error
-  rx buffer overflow error
-  loss of frame error
-  header error
-The MAC-PHY will signal an error by setting the EXST bit in the receive
-data footer which will then allow the host to read the STATUS0 register
-find the source of the error.
+Hi,
 
-Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
----
- drivers/net/ethernet/oa_tc6.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+In the following sequence:
+  of_platform_depopulate(); /* Remove devices from a DT overlay node */
+  of_overlay_remove(); /* Remove the DT overlay node itself */
 
-diff --git a/drivers/net/ethernet/oa_tc6.c b/drivers/net/ethernet/oa_tc6.c
-index e9ddc4ff7d0d..f8593b793291 100644
---- a/drivers/net/ethernet/oa_tc6.c
-+++ b/drivers/net/ethernet/oa_tc6.c
-@@ -18,6 +18,13 @@
- #define OA_TC6_REG_STATUS0			0x0008
- #define STATUS0_RESETC				BIT(6)	/* Reset Complete */
- 
-+/* Interrupt Mask Register #0 */
-+#define OA_TC6_REG_INT_MASK0			0x000C
-+#define INT_MASK0_HEADER_ERR_MASK		BIT(5)
-+#define INT_MASK0_LOSS_OF_FRAME_ERR_MASK	BIT(4)
-+#define INT_MASK0_RX_BUFFER_OVERFLOW_ERR_MASK	BIT(3)
-+#define INT_MASK0_TX_PROTOCOL_ERR_MASK		BIT(0)
-+
- /* Control command header */
- #define OA_TC6_CTRL_HEADER_DATA_NOT_CTRL	BIT(31)
- #define OA_TC6_CTRL_HEADER_WRITE		BIT(29)
-@@ -324,6 +331,23 @@ static int oa_tc6_sw_reset_macphy(struct oa_tc6 *tc6)
- 	return oa_tc6_write_register(tc6, OA_TC6_REG_STATUS0, regval);
- }
- 
-+static int oa_tc6_unmask_macphy_error_interrupts(struct oa_tc6 *tc6)
-+{
-+	u32 regval;
-+	int ret;
-+
-+	ret = oa_tc6_read_register(tc6, OA_TC6_REG_INT_MASK0, &regval);
-+	if (ret)
-+		return ret;
-+
-+	regval &= ~(INT_MASK0_TX_PROTOCOL_ERR_MASK |
-+		    INT_MASK0_RX_BUFFER_OVERFLOW_ERR_MASK |
-+		    INT_MASK0_LOSS_OF_FRAME_ERR_MASK |
-+		    INT_MASK0_HEADER_ERR_MASK);
-+
-+	return oa_tc6_write_register(tc6, OA_TC6_REG_INT_MASK0, regval);
-+}
-+
- /**
-  * oa_tc6_init - allocates and initializes oa_tc6 structure.
-  * @spi: device with which data will be exchanged.
-@@ -364,6 +388,13 @@ struct oa_tc6 *oa_tc6_init(struct spi_device *spi)
- 		return NULL;
- 	}
- 
-+	ret = oa_tc6_unmask_macphy_error_interrupts(tc6);
-+	if (ret) {
-+		dev_err(&tc6->spi->dev,
-+			"MAC-PHY error interrupts unmask failed: %d\n", ret);
-+		return NULL;
-+	}
-+
- 	return tc6;
- }
- EXPORT_SYMBOL_GPL(oa_tc6_init);
+Some warnings are raised by __of_changeset_entry_destroy() which  was
+called from of_overlay_remove():
+  ERROR: memory leak, expected refcount 1 instead of 2 ...
+
+The issue is that, during the device devlink removals triggered from the
+of_platform_depopulate(), jobs are put in a workqueue.
+These jobs drop the reference to the devices. When a device is no more
+referenced (refcount == 0), it is released and the reference to its
+of_node is dropped by a call to of_node_put().
+These operations are fully correct except that, because of the
+workqueue, they are done asynchronously with respect to function calls.
+
+In the sequence provided, the jobs are run too late, after the call to
+__of_changeset_entry_destroy() and so a missing of_node_put() call is
+detected by __of_changeset_entry_destroy().
+
+This series fixes this issue introducing device_link_wait_removal() in
+order to wait for the end of jobs execution (patch 1) and using this
+function to synchronize the overlay removal with the end of jobs
+execution (patch 2).
+
+Compared to the previous iteration:
+  https://lore.kernel.org/linux-kernel/20240229105204.720717-1-herve.codina@bootlin.com/
+this v4 series:
+- Uses flush_workqueue()
+- Keep the of_mutex lock taken calling device_link_wait_removal()
+- Perform the wait in of_changeset_destroy()
+
+This series handles cases reported by Luca [1] and Nuno [2].
+  [1]: https://lore.kernel.org/all/20231220181627.341e8789@booty/
+  [2]: https://lore.kernel.org/all/20240205-fix-device-links-overlays-v2-2-5344f8c79d57@analog.com/
+
+Best regards,
+Hervé
+
+Changes v3 -> v4
+  - Patch 1
+    Uses flush_workqueue() instead of drain_workqueue().
+
+  - Patch 2
+    Remove unlock/re-lock when calling device_link_wait_removal()
+    Move device_link_wait_removal() call to of_changeset_destroy()
+    Update commit log
+
+Changes v2 -> v3
+  - Patch 1
+    No changes
+
+  - Patch 2
+    Add missing device.h
+
+Changes v1 -> v2
+  - Patch 1
+    Rename the workqueue to 'device_link_wq'
+    Add 'Fixes' tag and Cc stable
+
+  - Patch 2
+    Add device.h inclusion.
+    Call device_link_wait_removal() later in the overlay removal
+    sequence (i.e. in free_overlay_changeset() function).
+    Drop of_mutex lock while calling device_link_wait_removal().
+    Add	'Fixes'	tag and Cc stable
+
+Herve Codina (2):
+  driver core: Introduce device_link_wait_removal()
+  of: dynamic: Synchronize of_changeset_destroy() with the devlink
+    removals
+
+ drivers/base/core.c    | 26 +++++++++++++++++++++++---
+ drivers/of/dynamic.c   |  7 +++++++
+ include/linux/device.h |  1 +
+ 3 files changed, 31 insertions(+), 3 deletions(-)
+
 -- 
-2.34.1
+2.43.0
 
