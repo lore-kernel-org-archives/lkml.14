@@ -1,127 +1,128 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A4D140E2B
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 19:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5223113F00A;
+	Wed,  6 Mar 2024 19:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709754248; cv=none; b=LEDJXkwJyeHItYTGaC8eQmh2wdILY/MM18GS9VDG4snqEm+ZgqYMEuhDh91HDH6yg3121SDHnJlspZN0/f+54VPv6hDKJf4d6HoCtRE6Ftuus6V/08e2r6oDssRjFVb2ofAlvVPDZDMlgGlrEPU2y/UyAvzuxahG92hF7FJB+Bw=
+	t=1709754322; cv=none; b=GJq3WUJg40WP4u1d4ctzMuOnJp5echoUzidsBu91VHyHeQuko2B2n8suXKTDv3/xrXrUOgNrAYPBEpHg8xTZwZT3voElf08wjSmdzKTZyiiyDrAvJ/CZnVmzf6G1dtT7hzsj37tSxoH2OOYkOeuxqvLofrcO63tR0N2dLkBfi4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709754248; c=relaxed/simple;
-	bh=U+62DFfvTUd9cVF7bW1OVpX/9biRZ2d6eaC3T0WRuuE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CybE6V4UA7ldGYnxa2DSwaNfaOkzDiQC+3c5BABQ8L2RE34EOFMAzLVkQogB1UuVa9vmtztgxMJ/BJiPdsJwNk5kfO9jg5YJTCJ/faNTEzT/jVvIY5QPOueYwjXEM91S7Dh9DPFoUMuOjonrktqi5z/7zPSKyK8su517aq3hiFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aVjqSzD5; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aVjqSzD5"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so113012276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 11:44:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709754246; x=1710359046; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mJrG65AeFbyOONi7SjWLiuAQnFw+0U6EBjiSUZknhFc=;
-        b=aVjqSzD55hjFDWc00bne2HbCTabOgQrKY2se06qTLHS4FcBShacJ2F5zeyw9904EGb
-         5+4nUhCkBGcliBxUlUT6Yt2+wBaYNmGeOPOx2X3HM80SJ41H/5p13SixuQ52HhMr8xYd
-         TArJS7MVvnuJHtmsWioSS3LpInDOBw832YOzMSNXtIQSvKxIJAJtRmf53FrpsfeTQV4t
-         20n0ciNf02aJx2upgEO2Gf3rDTA70oyJgfPMgmCNsW7M1rg2bOdi9T/a2U7rW4zHxI/d
-         CRjFhWCThofDL0uxnPDfuItXnkJwQGTCcnC9KV+k29B+D6Fes5oaryvc+i01OKPaeSjQ
-         uLWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709754246; x=1710359046;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mJrG65AeFbyOONi7SjWLiuAQnFw+0U6EBjiSUZknhFc=;
-        b=NoGgXikL1j+8nGe1ssQN8puebzOtQtq/b+ioI+WdfBWWIwS0kLCg2M5IqM/gIjG6Er
-         3m4Fs+DsAVj+5gjqiwi+LdevZTYkeEmDlaS3SlrsWOlZElWA23LprMTUTxRqYafPzmyC
-         wNT1KCx2CAUacuM7ylKw8rrwC7m38BP0OP8K3F5NcnDs+wZZPxVG3GQzAbXab8vSUNZe
-         6C7Nf/cSjQcudsUAVg7ntWFj7VowRLC+18eESjBUt+iBvQi8Hl3ZxqmJ5YOaH9agbESX
-         PKTdul/NoEF2rCKLeu711ys1ZDtIHOxT9yp4gCRF8NAFj9I/fPuuk8Vsu6Qps/lC2Tn6
-         uNtg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVfzhX7LT3zXlz9Mv9EfELzm3ltsdf0DDILEeHYtd44lRZ14KDbPsmDoPf821W2wj89kgLeQg3mm0YH7v0r8oic+bF3Xg0ZuCKDJOa
-X-Gm-Message-State: AOJu0YwTvUYc8LnvMRLe8etzOVv9tlLoi3tskzqldgs5vr/krOQH03ke
-	XRarI7ODMCCtJvXRG4gJbhuvpKTm9GcAUTXmR7mpQW2UDnv+fxBKk5kC5nS/vRxfFA8XSYkZHSG
-	pM/Cu9cbFUeii6551hsIlmk6b6TU3PvoMTOsq/g==
-X-Google-Smtp-Source: AGHT+IHV00hGxbwLNrRno0/EaPbba2Q0tqVKw89IXjITfrFjO9PtwLCLi8BInz+o5+AXsuIZ4okJKCw3DV2MFKFZRNA=
-X-Received: by 2002:a25:ed01:0:b0:dc6:de93:7929 with SMTP id
- k1-20020a25ed01000000b00dc6de937929mr4891662ybh.26.1709754245936; Wed, 06 Mar
- 2024 11:44:05 -0800 (PST)
+	s=arc-20240116; t=1709754322; c=relaxed/simple;
+	bh=GoeNgILuYzw3RIt3lassJRpXKSoD4VrJVLzn63ESTBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ARprUo6dFrxlMTxAzX3+UBQLVLg82YLAaA+TE4yVOjNUabWcXonOInQjOLCZWYxSyhaU3nB8u7Nvx/WGlijnkKj6KT3EsKQ8MS4+zJWx262WSfrSfVyuZPXtECs52+vjKMX5XvCuAit/uWesIa5yLu53Xrnua2uCyr3IFuKrOdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5201BC433C7;
+	Wed,  6 Mar 2024 19:45:20 +0000 (UTC)
+Date: Wed, 6 Mar 2024 14:47:13 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, linke li <lilinke99@qq.com>,
+ joel@joelfernandes.org, boqun.feng@gmail.com, dave@stgolabs.net,
+ frederic@kernel.org, jiangshanlai@gmail.com, josh@joshtriplett.org,
+ linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ qiang.zhang1211@gmail.com, quic_neeraju@quicinc.com, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcutorture: Fix
+ rcu_torture_pipe_update_one()/rcu_torture_writer() data race and
+ concurrency bug
+Message-ID: <20240306144713.2e1709ad@gandalf.local.home>
+In-Reply-To: <CAHk-=whvyzsbqLkw4kwEC-KzAMKFuy5VuMtJFn-mCerSYoRnqw@mail.gmail.com>
+References: <f3624f39-bbb1-451d-8161-8518e4108d8e@joelfernandes.org>
+	<tencent_9882B228F292088CDD68F10CF1C228742009@qq.com>
+	<20240306103719.1d241b93@gandalf.local.home>
+	<27665890-8314-4252-8622-1e019fee27e4@paulmck-laptop>
+	<20240306130103.6da71ddf@gandalf.local.home>
+	<CAHk-=wgG6Dmt1JTXDbrbXh_6s2yLjL=9pHo7uv0==LHFD+aBtg@mail.gmail.com>
+	<20240306135504.2b3872ef@gandalf.local.home>
+	<CAHk-=wjbDgMKLgxbV+yK4LKZ+2Qj6zVL_sHeb+L9KDia980Q8Q@mail.gmail.com>
+	<CAHk-=whvyzsbqLkw4kwEC-KzAMKFuy5VuMtJFn-mCerSYoRnqw@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306123006.724934-1-amadeus@jmu.edu.cn> <20240306123006.724934-2-amadeus@jmu.edu.cn>
-In-Reply-To: <20240306123006.724934-2-amadeus@jmu.edu.cn>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 6 Mar 2024 21:43:54 +0200
-Message-ID: <CAA8EJpqYjutM1Kh6QxysB6XNAmXywtOtRJ7KP0LbY5E36kCPvA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] arm64: dts: qcom: ipq6018: add sdhci node
-To: Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 6 Mar 2024 at 14:31, Chukun Pan <amadeus@jmu.edu.cn> wrote:
->
-> Add node to support mmc controller inside of IPQ6018.
-> This controller supports both eMMC and SD cards.
->
-> Tested with:
->   eMMC (HS200)
->   SD Card (SDR50/SDR104)
->
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-> ---
->  arch/arm64/boot/dts/qcom/ipq6018.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> index 322eced0b876..420c192bccd9 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> @@ -441,6 +441,25 @@ dwc_1: usb@7000000 {
->                         };
->                 };
->
-> +               sdhc: mmc@7804000 {
-> +                       compatible = "qcom,ipq6018-sdhci", "qcom,sdhci-msm-v5";
-> +                       reg = <0x0 0x07804000 0x0 0x1000>,
-> +                             <0x0 0x07805000 0x0 0x1000>;
-> +                       reg-names = "hc", "cqhci";
-> +
-> +                       interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "hc_irq", "pwr_irq";
-> +
-> +                       clocks = <&gcc GCC_SDCC1_AHB_CLK>,
-> +                                <&gcc GCC_SDCC1_APPS_CLK>,
-> +                                <&xo>;
-> +                       clock-names = "iface", "core", "xo";
-> +                       resets = <&gcc GCC_SDCC1_BCR>;
-> +                       max-frequency = <192000000>;
+On Wed, 6 Mar 2024 11:27:04 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-If I understand correctly, GCC_SDCC1_APPS_CLK support frequencies up
-to 384 MHz, but here you are limiting it to 192 MHz. Why is it so?
+> On Wed, 6 Mar 2024 at 11:01, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > In some individual tracing C file where it has a comment above it how
+> > it's braindamaged and unsafe and talking about why it's ok in that
+> > particular context? Go wild.  
+> 
+> Actually, I take that back.
+> 
+> Even in a random C file, the naming makes no sense. There's no "once" about it.
+> 
+> So if you want to do something like
+> 
+>    #define UNSAFE_INCREMENTISH(x) (WRITE_ONCE(a, READ_ONCE(a) + 1))
+> 
+> then that's fine, I guess. Because that's what the operation is.
+> 
+> It's not safe, and it's not an increment, but it _approximates_ an
+> increment most of the time. So UNSAFE_INCREMENTISH() pretty much
+> perfectly describes what it is doing.
+> 
+> Note that you'll also almost certainly end up with worse code
+> generation, ie don't expect to see a single "inc" instruction (or "add
+> $1") for the above.
+> 
+> Because at least for gcc, the volatiles involved with those "ONCE"
+> operations end up often generating much worse code, so rather than an
+> "inc" instruction, you'll almost certainly get "load+add+store" and
+> the inevitable code expansion and extra register use.
+> 
+> I really don't know what you want to do, but it smells bad. A big
+> comment about why you'd want that "incrementish" operation will be
+> needed.
+> 
+> To me, this smells like "Steven did something fundamentally wrong
+> again, some tool is now complaining about it, and Steven doesn't want
+> to fix the problem but instead paper over it again".
+> 
+> Not a good look.
+> 
+> But I don't have a link to the original report, and I'm not thrilled
+> enough about this to go looking for it.
 
-> +                       status = "disabled";
-> +               };
-> +
->                 blsp_dma: dma-controller@7884000 {
->                         compatible = "qcom,bam-v1.7.0";
->                         reg = <0x0 0x07884000 0x0 0x2b000>;
-> --
-> 2.25.1
->
->
+Well, it's not the above, and I was afraid you would even think that.
 
+Here's the back story. I received the following patch:
 
--- 
-With best wishes
-Dmitry
+  https://lore.kernel.org/all/tencent_BA1473492BC618B473864561EA3AB1418908@qq.com/
+
+I didn't like it. My reply was:
+
+	> -	rbwork->wait_index++;
+	> +	WRITE_ONCE(rbwork->wait_index, READ_ONCE(rbwork->wait_index) + 1);
+
+	I mean the above is really ugly. If this is the new thing to do, we need
+	better macros.
+
+	If anything, just convert it to an atomic_t.
+
+Then because I'm a reviewer of RCU patches, I saw the same fix for RCU
+(this thread):
+
+  https://lore.kernel.org/all/tencent_B51A9DA220288A95A435E3435A0443BEB007@qq.com/
+
+Where it was recommended to do the same WRITE_ONCE(a, READ_ONCE(a) + 1),
+and this is when I Cc'd you into the conversation to get your view of the
+situation.
+
+Sounds like my original gut feeling that this is a non-issue is proving to
+be correct.
+
+I even argued against using the _ONCE() macros. If WRITE_ONCE(a, READ_ONCE(a) + 1)
+is a valid operation, I sure as hell don't want it in my code, but I would
+be OK if it had a macro wrapper. Which you seem to be against, so I'm
+against it too.
+
+-- Steve
