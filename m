@@ -1,199 +1,104 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06745130AD5;
-	Wed,  6 Mar 2024 13:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5258213174E;
+	Wed,  6 Mar 2024 13:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709732275; cv=none; b=Whf0BBRLhepVwm+VbERXK9aAHpelNLnfaXkNp6d/LJURVfLUD8gxsGpMVap19kQcRuWKkOLjSqdDhhvYAB1Wt02k3zsB7fiqUpB1ePvOp5wps4V8GXElhMuKoVRHznGd1+Hnd3Y7/V57yJZnbB9/ZzSxMJa1JwOe8+RyX9HaXlA=
+	t=1709732278; cv=none; b=WojMiZK9H/1qYbZSfzFU43fLaurWfkpnS48tFhHi5lIA8lNmOf9fAgmHs3wwz4+ri0lGNUhgy3LmorBplENxfjU6+6EkeKC+iYaTY97Op9myNk1T/IdoreUA5y5/379Sg6THznf5n1DfkiK1XIwOO8PPUqF11tHpqiTksuaEGl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709732275; c=relaxed/simple;
-	bh=FT0CuWap6zBzxhbKjuZ6jvoFoUhW89ZJUGjASGAUnVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ni6HPf/j/8/WFVCux/9KdNk5NeePW3LP4NTty/u3ISjyMIyav2EDDgfAZ9qep69CjWc9Fcd/74mhwplceHx4Md3XErXlXZJ7yOJ/tSCQ5vtrMD28o+GBD38peNMskP/o6hEK2MKH+Bp22bu61gC10vG+UPsW1drAHyGu9bUEn+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ak1d3DZC; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ak1d3DZC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 45A8DE000C;
-	Wed,  6 Mar 2024 13:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709732264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Sy4JIC0/Wgrgbb/8vwfGd+8uG9N2YnNcKef9emZ4Q+Y=;
-	b=Ak1d3DZCv1iDyVKudR877bHXBTN+ZKzEpLvMLpUYS11rNFGWn6QCz7Y4vKvg+VsttQFOcy
-	EUOJU0z6mFdEMaK3Vn5svoJHos2RJh6c2Y3baSL56GP/WIm48IPKJ5292crTJFgKn+t8kX
-	04QLU26nKbvY6BX4Ueqx4qqpcOs6iVBck8F5wLN0CJmR4hDDcVnh1Gea1XBpcS6cgra9Na
-	iMAeecizJVBlkQ54fG6izl8hN/Vkmk4tu5NL41zOxg2p3xnxW/Eq2QyCfeeaGXockMMf4H
-	B4GZe0coskS+BlgYcUneK34x7mZiTp10lNI71kqub4nXH1vlRIO8TjDI+bwndw==
-Date: Wed, 6 Mar 2024 14:37:43 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Ratheesh Kannoth <rkannoth@marvell.com>
-Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 1/5] net: wan: Add support for QMC HDLC
-Message-ID: <20240306143743.5732b298@bootlin.com>
-In-Reply-To: <20240306105651.1210286-1-rkannoth@marvell.com>
-References: <20240306080726.167338-2-herve.codina@bootlin.com>
-	<20240306105651.1210286-1-rkannoth@marvell.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1709732278; c=relaxed/simple;
+	bh=zmEX1PyysnR4IfejG+xCR/9Da+bh9s0rL8ilvGkuH2s=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=m64QoLE8emtjdw/R7LDWxQT/C8ulULSNLZ2W+/AC4/QDZohUtKB0Xvt+KB9A/U3uAkscp6zJK9Vt7BJHQvdYRsTqWJg0eUbMi7aT+K9UEbRTCdUmOQDVCHQQ56JTFrW5FIFFte2TZHx6Q5bvxMWw46lPqUN8CA8B6Kcv6g4a/4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
+ (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 6 Mar
+ 2024 14:37:46 +0100
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
+ 15.01.2507.035; Wed, 6 Mar 2024 14:37:46 +0100
+From: John Ernberg <john.ernberg@actia.se>
+To: Wei Fang <wei.fang@nxp.com>
+CC: Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	NXP Linux Team <linux-imx@nxp.com>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Ernberg
+	<john.ernberg@actia.se>
+Subject: [PATCH net v3 2/2] net: fec: Suspend the PHY on probe
+Thread-Topic: [PATCH net v3 2/2] net: fec: Suspend the PHY on probe
+Thread-Index: AQHab8t46xO1JP3Hxke5Lu7SCFbkbQ==
+Date: Wed, 6 Mar 2024 13:37:45 +0000
+Message-ID: <20240306133734.4144808-3-john.ernberg@actia.se>
+References: <20240306133734.4144808-1-john.ernberg@actia.se>
+In-Reply-To: <20240306133734.4144808-1-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.43.0
+x-esetresult: clean, is OK
+x-esetid: 37303A2921D72955627162
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Ratheesh
+Since the power management is now performed by the FEC instead of generic
+pm the PHY will not suspend until the link has been up.
 
-On Wed, 6 Mar 2024 16:26:51 +0530
-Ratheesh Kannoth <rkannoth@marvell.com> wrote:
+Therefor suspend it on probe. It will be resumed by {of_,}phy_connect()
+when the link is brought up.
 
-...
+Since {of_,}phy_connect() and phy_disconnect() will resume and suspend the
+PHY when the link is brought up and down respectively, and phy_stop() and
+phy_start() will resume and suspend the PHY in the suspend-resume paths
+there is no need for any additional calls anywhere.
 
-> > +static void qmc_hcld_recv_complete(void *context, size_t length, unsigned int flags)
-> > +{
-> > +	struct qmc_hdlc_desc *desc = context;
-> > +	struct net_device *netdev = desc->netdev;
-> > +	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);  
-> Reverse xmas tree
+Signed-off-by: John Ernberg <john.ernberg@actia.se>
 
-The reverse xmas tree order cannot be used here.
-qmc_hdlc depends on netdev, netdev depends on desc.
+---
 
-...
-> > +static void qmc_hdlc_xmit_complete(void *context)
-> > +{
-> > +	struct qmc_hdlc_desc *desc = context;
-> > +	struct net_device *netdev = desc->netdev;
-> > +	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
-> > +	struct sk_buff *skb;  
-> Reverse xmas tree
+v3:
+ - Only call phy_suspend() in probe, it is taken care of by the phy framewo=
+rk (Wei Fang)
+ - Update commit message to reflect the above
+ - Drop fixes tag, this is technically not a fix anymore (Wei Fang)
+    Should I re-send this for the net-next tree later, or is it still ok fo=
+r net?
 
-Ditto
+v2:
+ - New patch
+---
+ drivers/net/ethernet/freescale/fec_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > +
-> > +	scoped_guard(spinlock_irqsave, &qmc_hdlc->tx_lock) {
-> > +		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_TO_DEVICE);
-> > +		skb = desc->skb;
-> > +		desc->skb = NULL; /* Release the descriptor */
-> > +		if (netif_queue_stopped(netdev))
-> > +			netif_wake_queue(netdev);
-> > +	}
-> > +
-> > +	netdev->stats.tx_packets++;
-> > +	netdev->stats.tx_bytes += skb->len;
-> > +
-> > +	dev_consume_skb_any(skb);
-> > +}
-> > +
-...
-> > +
-> > +static netdev_tx_t qmc_hdlc_xmit(struct sk_buff *skb, struct net_device *netdev)
-> > +{
-> > +	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
-> > +	struct qmc_hdlc_desc *desc;
-> > +	int err;
-> > +
-> > +	guard(spinlock_irqsave)(&qmc_hdlc->tx_lock);
-> > +
-> > +	desc = &qmc_hdlc->tx_descs[qmc_hdlc->tx_out];
-> > +	if (WARN_ONCE(desc->skb, "No tx descriptors available\n")) {
-> > +		/* Should never happen.
-> > +		 * Previous xmit should have already stopped the queue.
-> > +		 */
-> > +		netif_stop_queue(netdev);
-> > +		return NETDEV_TX_BUSY;
-> > +	}
-> > +
-> > +	desc->netdev = netdev;
-> > +	desc->dma_size = skb->len;
-> > +	desc->skb = skb;
-> > +	err = qmc_hdlc_xmit_queue(qmc_hdlc, desc);
-> > +	if (err) {
-> > +		desc->skb = NULL; /* Release the descriptor */
-> > +		if (err == -EBUSY) {
-> > +			netif_stop_queue(netdev);
-> > +			return NETDEV_TX_BUSY;
-> > +		}
-> > +		dev_kfree_skb(skb);
-> > +		netdev->stats.tx_dropped++;
-> > +		return NETDEV_TX_OK;
-> > +	}
-> > +
-> > +	qmc_hdlc->tx_out = (qmc_hdlc->tx_out + 1) % ARRAY_SIZE(qmc_hdlc->tx_descs);
-> > +
-> > +	if (qmc_hdlc->tx_descs[qmc_hdlc->tx_out].skb)  
-> wont it race if tx completion and this function context run in different cpu ?
-
-We are protected by the qmc_hdlc->tx_lock spinlock.
-
-guard() call in this function and scoped_guard() call in qmc_hdlc_xmit_complete().
-
-What is the race you thought of ?
-
-> 
-> > +		netif_stop_queue(netdev);
-> > +
-> > +	return NETDEV_TX_OK;
-> > +}
-> > +
-...
-> > +	/* Queue as many recv descriptors as possible */
-> > +	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->rx_descs); i++) {
-> > +		desc = &qmc_hdlc->rx_descs[i];
-> > +
-> > +		desc->netdev = netdev;
-> > +		ret = qmc_hdlc_recv_queue(qmc_hdlc, desc, chan_param.hdlc.max_rx_buf_size);
-> > +		if (ret == -EBUSY && i != 0)
-> > +			break; /* We use all the QMC chan capability */
-> > +		if (ret)
-> > +			goto free_desc;
-> > +	}
-> > +
-> > +	ret = qmc_chan_start(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
-> > +	if (ret) {
-> > +		dev_err(qmc_hdlc->dev, "qmc chan start failed (%d)\n", ret);
-> > +		goto free_desc;
-> > +	}
-> > +
-> > +	netif_start_queue(netdev);
-> > +
-> > +	return 0;
-> > +
-> > +free_desc:
-> > +	qmc_chan_reset(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
-> > +	while (i--) {  
-> Double free ? i'th descriptor skb is freed in qmc_hdlc_recv_queue() function's error handler itself.
-> Should we be predecrement of i ?
-
-Suppose a failure on i = 5. The item 5 is already cleaned (done by 
-qmc_hdlc_recv_queue() itself).
-The 'while (i--)' set i to 4 and operations are performed with i = 4, 3, 2, 1 and 0.
-
-Where is the double free ?
-Do I miss something ?
-
-> 
-> > +		desc = &qmc_hdlc->rx_descs[i];
-> > +		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size,
-> > +				 DMA_FROM_DEVICE);
-> > +		kfree_skb(desc->skb);
-> > +		desc->skb = NULL;
-> > +	}
-> > +hdlc_close:
-> > +	hdlc_close(netdev);
-> > +	return ret;
-> > +}
-> > +
-> > +
-
-Best regards,
-Hervé
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethern=
+et/freescale/fec_main.c
+index 8decb1b072c5..fb092b7bfe85 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -2539,8 +2539,10 @@ static int fec_enet_mii_init(struct platform_device =
+*pdev)
+ 	/* find all the PHY devices on the bus and set mac_managed_pm to true */
+ 	for (addr =3D 0; addr < PHY_MAX_ADDR; addr++) {
+ 		phydev =3D mdiobus_get_phy(fep->mii_bus, addr);
+-		if (phydev)
++		if (phydev) {
+ 			phydev->mac_managed_pm =3D true;
++			phy_suspend(phydev);
++		}
+ 	}
+=20
+ 	mii_cnt++;
+--=20
+2.43.0
