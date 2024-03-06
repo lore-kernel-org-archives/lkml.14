@@ -1,67 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C805605C9
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC1760BA1;
+	Wed,  6 Mar 2024 10:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721794; cv=none; b=KvmQHV+lmbc3xktcNpfFehnjyL68B9PST/OerPwaJnTnWZMwU6Rt16xz6dw3UxRZahzYd3lBP+2chyRaVU08QAN2q/haUFwFOf+dEAotdMV8Pxd1MyWSoAyWmjOtoU4wZguLXttaZgIyQ/rNV8Ak19rWIVElUeRyyrh9bqT/+oA=
+	t=1709721797; cv=none; b=Xsf3webqzz4YK45BIHZe9HC4GDq9RKC0zj42MtnS8vWRsziSIUG6RYa/LTncMqS4PuOlauv/YmaUuxdgKBzpBcaPB7zyLJ4gaRm1cYJhM++JUXtcHFPVt+pwcn3xzFPkZ1P0LsuuPkaAGL6vXTJJVv3n5yZZtFwMFErGHU6+akk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721794; c=relaxed/simple;
-	bh=t18R28ny76a7TFkmozYcxNFR6pN9FqPc0sZ3mbG+iGw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xe6H2zlcSm4Ze9tfAJaRk+Ie9qLVnqhkoMQ3gIIK9s67iW9U865+/ckFCglTJ4g+Bskois7ZJoLx6PKEslSVwa4m9HvkNkug6Kyxv8pLzuWlUj2pJXM1ibBI9KB6liCIZbLT2vGElp1jbr+VjCGqc6Mq58K54OIkKodYeHG/I1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HgJq3k63; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709721797; c=relaxed/simple;
+	bh=qPc3Rze+xdFVIDt8rY61AlQ9GWmq0n15nKjNocAbfY0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KY1MD6FmdoeSCw6lYPlRsgfkcuQi8rnE+rD2CJ4UNA8IC0xmc7+++ERPJ9ac2+//Q9DV26GP+yQsS+ROq486eqxqhlwPKTwCkzmtwVae5VeF1YIk4060OE8u9PSXo4Q+S0dOvr3mEgm/BXhVSKIMiTVU63JBJevi/6lLSSWTjsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ob1wDC6T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgJq3k63"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709721791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xZurg04juSYF/uW9HtnhgkfMM1C/gArxmrpoVNEgvCQ=;
-	b=HgJq3k63XX/ienOhVi9BGJEeTEX8yucrH3k1moQ08pe2PxtMP0Z6dlsquQw7um0evJvOCo
-	ep/Njojqfg4NEO5GcrQj0nMgDxNsEcWHzTjaVKZedAsphqFYuLQBZiyFFpQRkAns7JLZKf
-	/WWSrdicQKt3TRknx3c+MlgvDk44BZw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-392-yz4Oyb-YMiytY0-QZ4ib3A-1; Wed,
- 06 Mar 2024 05:43:02 -0500
-X-MC-Unique: yz4Oyb-YMiytY0-QZ4ib3A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 79C4B3C0DF76;
-	Wed,  6 Mar 2024 10:43:01 +0000 (UTC)
-Received: from x1n.redhat.com (unknown [10.72.116.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 45DD5111DCFF;
-	Wed,  6 Mar 2024 10:42:53 +0000 (UTC)
-From: peterx@redhat.com
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	peterx@redhat.com,
-	Matthew Wilcox <willy@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	x86@kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Mark Salter <msalter@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH RFC 08/13] mm/arm64: Merge pXd_huge() and pXd_leaf() definitions
-Date: Wed,  6 Mar 2024 18:41:42 +0800
-Message-ID: <20240306104147.193052-9-peterx@redhat.com>
-In-Reply-To: <20240306104147.193052-1-peterx@redhat.com>
-References: <20240306104147.193052-1-peterx@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ob1wDC6T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7F0C43394;
+	Wed,  6 Mar 2024 10:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709721796;
+	bh=qPc3Rze+xdFVIDt8rY61AlQ9GWmq0n15nKjNocAbfY0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ob1wDC6TqX8niGkM2eQeaSpFizoDM/FaBMz/mvcNOK3unqNNkDrL9l5RvRw7Iz19T
+	 09a6oA9+gNa2+04BlWmERnTOHG4EoYo2TZpwve6xaRG647CQ7zRvJgGBU7J0wH7jho
+	 eLgQOl3LpYejyauzDw8sTGSEdQj89Wa7POXDHc7YtSxBu5R6fZJv8XwNH2P2HqrjMM
+	 nvE9jv+VOu/EYq1yTIuly7fqmb4vbcgFyhgSNUfedS2bnSdZWFyheL2z3TlHMx84OF
+	 6PKCu0XxS8uKVMfmVE7b+/6lJjy0h4GaDTM8KkkuUY3siOsO3Ci7fRDM2znWlh/Udx
+	 X2xNYN9C/McXQ==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] kbuild: unexport abs_srctree and abs_objtree
+Date: Wed,  6 Mar 2024 19:42:22 +0900
+Message-Id: <20240306104222.308473-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,75 +40,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-From: Peter Xu <peterx@redhat.com>
+Commit 25b146c5b8ce ("kbuild: allow Kbuild to start from any directory")
+exported abs_srctree and abs_objtree to avoid recomputation after the
+sub-make. However, this approach turned out to be fragile.
 
-Unlike most archs, aarch64 defines pXd_huge() and pXd_leaf() slightly
-differently.  Redefine the pXd_huge() with pXd_leaf().
+Commit 5fa94ceb793e ("kbuild: set correct abs_srctree and abs_objtree
+for package builds") moved them above "ifneq ($(sub_make_done),1)",
+eliminating the need for exporting them.
 
-There used to be two traps for old aarch64 definitions over these APIs that
-I found when reading the code around, they're:
+These are only needed in the top Makefile. If an absolute path is
+required in sub-directories, you can use $(abspath ) or $(realpath )
+as needed.
 
- (1) 4797ec2dc83a ("arm64: fix pud_huge() for 2-level pagetables")
- (2) 23bc8f69f0ec ("arm64: mm: fix p?d_leaf()")
-
-Define pXd_huge() with the current pXd_leaf() will make sure (2) isn't a
-problem (on PROT_NONE checks). To make sure it also works for (1), we move
-over the __PAGETABLE_PMD_FOLDED check to pud_leaf(), allowing it to
-constantly returning "false" for 2-level pgtables, which looks even safer
-to cover both now.
-
-Cc: Muchun Song <muchun.song@linux.dev>
-Cc: Mark Salter <msalter@redhat.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 4 ++++
- arch/arm64/mm/hugetlbpage.c      | 8 ++------
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 401087e8a43d..14d24c357c7a 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -704,7 +704,11 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
- #define pud_none(pud)		(!pud_val(pud))
- #define pud_bad(pud)		(!pud_table(pud))
- #define pud_present(pud)	pte_present(pud_pte(pud))
-+#ifndef __PAGETABLE_PMD_FOLDED
- #define pud_leaf(pud)		(pud_present(pud) && !pud_table(pud))
-+#else
-+#define pud_leaf(pud)		false
-+#endif
- #define pud_valid(pud)		pte_valid(pud_pte(pud))
- #define pud_user(pud)		pte_user(pud_pte(pud))
- #define pud_user_exec(pud)	pte_user_exec(pud_pte(pud))
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 0f0e10bb0a95..1234bbaef5bf 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -81,16 +81,12 @@ bool arch_hugetlb_migration_supported(struct hstate *h)
+ Makefile                 | 4 ++--
+ rust/Makefile            | 4 ++--
+ scripts/Makefile.package | 2 +-
+ tools/lib/bpf/Makefile   | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index d84c0fb215fd..d9274e7c75f0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -39,8 +39,8 @@ __all:
+ # prepare rule.
  
- int pmd_huge(pmd_t pmd)
- {
--	return pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT);
-+	return pmd_leaf(pmd);
- }
+ this-makefile := $(lastword $(MAKEFILE_LIST))
+-export abs_srctree := $(realpath $(dir $(this-makefile)))
+-export abs_objtree := $(CURDIR)
++abs_srctree := $(realpath $(dir $(this-makefile)))
++abs_objtree := $(CURDIR)
  
- int pud_huge(pud_t pud)
- {
--#ifndef __PAGETABLE_PMD_FOLDED
--	return pud_val(pud) && !(pud_val(pud) & PUD_TABLE_BIT);
--#else
--	return 0;
--#endif
-+	return pud_leaf(pud);
- }
+ ifneq ($(sub_make_done),1)
  
- static int find_num_contig(struct mm_struct *mm, unsigned long addr,
+diff --git a/rust/Makefile b/rust/Makefile
+index 9d2a16cc91cb..ae691b71d9fc 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -100,7 +100,7 @@ rustdoc: rustdoc-core rustdoc-macros rustdoc-compiler_builtins \
+ 		-e 's:rust-logo-[0-9a-f]+\.svg:logo.svg:g' \
+ 		-e 's:favicon-[0-9a-f]+\.svg:logo.svg:g' \
+ 		-e 's:<link rel="alternate icon" type="image/png" href="[/.]+/static\.files/favicon-(16x16|32x32)-[0-9a-f]+\.png">::g' \
+-		-e 's:<a href="srctree/([^"]+)">:<a href="$(abs_srctree)/\1">:g'
++		-e 's:<a href="srctree/([^"]+)">:<a href="$(realpath $(srctree))/\1">:g'
+ 	$(Q)for f in $(rustdoc_output)/static.files/rustdoc-*.css; do \
+ 		echo ".logo-container > img { object-fit: contain; }" >> $$f; done
+ 
+@@ -413,7 +413,7 @@ quiet_cmd_rustc_library = $(if $(skip_clippy),RUSTC,$(RUSTC_OR_CLIPPY_QUIET)) L
+ rust-analyzer:
+ 	$(Q)$(srctree)/scripts/generate_rust_analyzer.py \
+ 		--cfgs='core=$(core-cfgs)' --cfgs='alloc=$(alloc-cfgs)' \
+-		$(abs_srctree) $(abs_objtree) \
++		$(realpath $(srctree)) $(realpath $(objtree)) \
+ 		$(RUST_LIB_SRC) $(KBUILD_EXTMOD) > \
+ 		$(if $(KBUILD_EXTMOD),$(extmod_prefix),$(objtree))/rust-project.json
+ 
+diff --git a/scripts/Makefile.package b/scripts/Makefile.package
+index a81dfb1f5181..38653f3e8108 100644
+--- a/scripts/Makefile.package
++++ b/scripts/Makefile.package
+@@ -135,7 +135,7 @@ snap-pkg:
+ 	mkdir $(objtree)/snap
+ 	$(MAKE) clean
+ 	sed "s@KERNELRELEASE@$(KERNELRELEASE)@; \
+-		s@SRCTREE@$(abs_srctree)@" \
++		s@SRCTREE@$(realpath $(srctree))@" \
+ 		$(srctree)/scripts/package/snapcraft.template > \
+ 		$(objtree)/snap/snapcraft.yaml
+ 	cd $(objtree)/snap && \
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 4be7144e4803..2cf892774346 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -2,7 +2,7 @@
+ # Most of this file is copied from tools/lib/traceevent/Makefile
+ 
+ RM ?= rm
+-srctree = $(abs_srctree)
++srctree := $(realpath $(srctree))
+ 
+ VERSION_SCRIPT := libbpf.map
+ LIBBPF_VERSION := $(shell \
 -- 
-2.44.0
+2.40.1
 
