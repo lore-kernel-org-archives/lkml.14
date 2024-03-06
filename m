@@ -1,99 +1,89 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B09E1B81F
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 22:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C686C14265;
+	Wed,  6 Mar 2024 22:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709762434; cv=none; b=dCafAuvKAb3Lg/UxgXWppaRa9hez7oPsN0pinN32Mc6hDQBiHdPwPFEXNXvho7Xx0Bxr71jHFqJqv6+tb9z8CwYvESP1nEZcU4xks32yGu8IquDPqPKYur1fBO4bQkE8LJ9aVJXl4m2oWENPpJgqzvT3nHCwpS+BWS9L6A1ER60=
+	t=1709762586; cv=none; b=GBP19MdkUY6oRHQVT27/vE6P1GV5gVazeBN+vUq1Ct8Tm8800io2gNrluNGsAkLxLmNNl0MHaQxyfErbqTQPAQKBbvqsEzYvboyT1M7Cr5e9FxyHrGebz/0WnfyYnjdnUXMUD1ukeWaLcKML0T+8AEiGVAhVipmaMC6e2DEb3lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709762434; c=relaxed/simple;
-	bh=hDwOgBcfiZUvGAVEwHEQbgSGzi8gfJaF9VyDIkEARlA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IXB/PUDHJLFZwF6x2xAbrN9Cp+qUS/WWyjHFsu5gqRm5wRK9xE7BQpks9tRCgDlJfrh4HX2JtEcDxWDE9EZs6GRjefe+xsduPOz8LmgmrjY2OJBgF2cW3rCN8TddNR2ELoYfL8UDu973G67+v6aP3cHwq6HEVuFnuiAeutioHUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=PfbYyyF7; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1709762586; c=relaxed/simple;
+	bh=cEbUuXsZACViKDPcLAjXi3B8PzKkHg+TCY3LacfiDl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qrXdZenR1xHywRj+B2VDJC4+GoyHaW6njuDmqBe4la518KYvZ3YisFlNj+FsS6JzWGzknVAPTRmTc7CfrnCgVliFeqK5tmMzcz6wOm8Z/GATNgtgwH2bMjRri5wAVdqB5npuvxiI5wKSxzaeguTG+bb73patfYYTE2ykQ1ZFeNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=LB1+qNkt; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="PfbYyyF7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 97D2F20003;
-	Wed,  6 Mar 2024 22:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1709762428;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dDYNGqN6w1YyDxJqmC877Bab2ohGefRUrXkbW8c41lo=;
-	b=PfbYyyF77TWLxWYVLGEQuzIy4ZW94hqAyjP+KyZQrR0+6rIMU14annTzgaHWChwZxqQ2Qi
-	p1LDb03rabTJBFztqaXvzkhV8BlYftOQ/WRu6nuF8RXlK4bKU4Lb5XyNRDvYI0e6/anX5j
-	r+Oj0P9JNG03S+kNqs0GkpkJNZwgpR3hvC567H81ZY0BkSJTdv1FoLnCc62iWFguzwHxIh
-	FUOPcUyW3vxdCN0AW6cZVMySk+SrSQBHQeqmKwgtMrH6TG8Zj3q404iAgc2EXTByHoItkj
-	1yW8dKoX0yw6OBORIKZnZL/pdWzOpbA+2xhUC12hscxAgov51SmS66F4+xl0Qg==
-Message-ID: <7360e276-653f-4223-9ffd-3f701844a84f@yoseli.org>
-Date: Wed, 6 Mar 2024 23:00:27 +0100
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LB1+qNkt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1709762580;
+	bh=kUMpoFQbGCQarorx79BVdrmJa2tpnfUn3HLRzolwxk4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=LB1+qNktKtBZIW556ltEtK+XKKv3yn3+wvTOWwTZivnFsLF+VxnNoAmr7VCn6IhPN
+	 SDgA6pQY3S+YQjbeFMpFoGTuyN25SW6ghD6fYbbiSdigILCDn8Y0OQEPWYryJ5U7v7
+	 DNoOeZ+zeouxmdpvrasH+qCmm9EI+x8KtxWgUyGwkYSXwNrDCxAghssqppIYE8ahpN
+	 AzgvB+nm51/IvrX0LnguCtlobcorIYxdZGXxo9nk23fapMB6HcnDeIKcrSs9DevJmB
+	 0ZWbTZuphOifsjlUyyJ/zzLJJ/bULGKA4eNa+a8u82h23s6CIwgn8icDjpFsVhlc3g
+	 VxbrqhrgFy9ag==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tqmdc1wWDz4wc9;
+	Thu,  7 Mar 2024 09:03:00 +1100 (AEDT)
+Date: Thu, 7 Mar 2024 09:02:59 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the vfs-brauner tree
+Message-ID: <20240307090259.6ad93e35@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mailmap: add entry for Jean-Michel Hautbois
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, axboe@kernel.dk,
- stephen@networkplumber.org, o.rempel@pengutronix.de,
- quic_bjorande@quicinc.com, heiko@sntech.de, konrad.dybcio@linaro.org,
- kuba@kernel.org
-References: <20240306085934.35904-1-jeanmichel.hautbois@yoseli.org>
- <20240306125003.de7b09d64e28a7685eb22f17@linux-foundation.org>
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <20240306125003.de7b09d64e28a7685eb22f17@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Type: multipart/signed; boundary="Sig_/CQ0Q=+IN.dh1kQZhmxVlM0i";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello Andrew,
+--Sig_/CQ0Q=+IN.dh1kQZhmxVlM0i
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 06/03/2024 21:50, Andrew Morton wrote:
-> On Wed,  6 Mar 2024 09:59:34 +0100 Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
-> 
->> Despite having contributed several patches, my email address was not
->> previously included. This update ensures that my contributions are
->> correctly attributed.
->>
->> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
->> +++ b/.mailmap
->> @@ -250,6 +250,7 @@ Jayachandran C <c.jayachandran@gmail.com> <jchandra@broadcom.com>
->>   Jayachandran C <c.jayachandran@gmail.com> <jchandra@digeo.com>
->>   Jayachandran C <c.jayachandran@gmail.com> <jnair@caviumnetworks.com>
->>   <jean-philippe@linaro.org> <jean-philippe.brucker@arm.com>
->> +Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
->>   Jean Tourrilhes <jt@hpl.hp.com>
->>   Jeevan Shriram <quic_jshriram@quicinc.com> <jshriram@codeaurora.org>
->>   Jeff Garzik <jgarzik@pretzel.yyz.us>
->> -- 
-> 
-> Well, this isn't ./CREDITS.  Why do we need this?
-> 
-> .mailmap has:
-> 
-> #
-> # This list is used by git-shortlog to fix a few botched name translations
-> # in the git archive, either because the author's full name was messed up
-> # and/or not always written the same way, making contributions from the
-> # same person appearing not to be so or badly displayed. Also allows for
-> # old email addresses to map to new email addresses.
-> #
-> 
-> Now if this entry was mapping your ideasonboard.com and/or veo-labs.com
-> and/or vodalys.com and/or gmail.com addresses onto one address then I
-> can see why we'd need the change.
-> 
+Hi all,
 
-Indeed, I am sorry for the confusion :-/.
+The following commit is also in Linus Torvalds' tree as a different commit
+(but the same patch):
 
-I will send a revised one to map the old addresses to this new one. Thanks.
+  0b9887fae769 ("fs/aio: Check IOCB_AIO_RW before the struct aio_kiocb conv=
+ersion")
 
-JM
+This is commit
+
+  961ebd120565 ("fs/aio: Check IOCB_AIO_RW before the struct aio_kiocb conv=
+ersion")
+
+in Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CQ0Q=+IN.dh1kQZhmxVlM0i
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXo6BMACgkQAVBC80lX
+0Gx0Pwf/c1dFvPnxrTzNQIdOjZUAIUjzacHT2CUGWqODHy0stbNU5kcxsod7Q0Eq
+ksUJH925qqnL4AWN5z9LqALHjGyp121FCbqOOxx0UcjjANS4/miAV3od9hp5VLH1
+mLlsbw6ueQlPtMtelr/7yvHQ4BBssP7JdSGTvxSiAZvoih+6TFBhMgyF261xvD3Z
+tQGHaPfOlK0UM4bqdQc8JWRkoZWEEQcEbqewLJTY8m2ANmt/EF7QKokra5mf5BA1
+Cwsch34XwrCsrDn2KQ6gbP+Hxq10o521nLl6PLWvsd7AhWvQ3BzEpHLZjo7Q7d1u
+bbogEZOgOkXiKPQClmCh6oAfrl+5ww==
+=5lG4
+-----END PGP SIGNATURE-----
+
+--Sig_/CQ0Q=+IN.dh1kQZhmxVlM0i--
