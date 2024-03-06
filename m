@@ -1,112 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC36013BAE8;
-	Wed,  6 Mar 2024 17:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2965D48F;
+	Wed,  6 Mar 2024 17:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709747953; cv=none; b=cSxOgyjkcIMAgJ1WXMudwcYOWp/ulDSK+FiJwXByuD2e/uJxyBXHM6DNaDfYln9km7S7q9D4bLTMdCLS3RdCQnTglPmugzabZbGt/FZjayaZiGfmLVGuen9yra4AE0xAyWM3bQFgXcfpAmgt8YmaX4fWVR3AMavwtA7kN73bfOM=
+	t=1709747973; cv=none; b=jfTTg9pEpWTjjAw1fvYmRoIhe8yM+nvHkxY+mznEZfrPHOEF3Lx6poviORPhGxHt1s44IFkVX0mzVPWwHkTBa25A+ouDYzd31KNLU7FWW9lA0yzum+ex3uT/jYHv2sIA+R3ENs/7RN89CcUx1LNeFsOKOQUPCCipKrpj2vobuiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709747953; c=relaxed/simple;
-	bh=HDO+XgS2uhz8t0fGGsGDxAX/o5QGbVirBj1RmpOGOKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SoZ9BaEGAb51wyuHZHMubB5f+scq0VGGV3eAlD5LWNuAyDw36sm8wZZQp21asXbSveIk3pSGcoohlwhzqXljJfLrZ4s5VDM8IyDADlHRz7R7DHEYJEq8Wh+Vt9SVLnmj+6gjsJfsMjbLWD7Ha/5bTlXmh9QnK77Cht9ESULnX/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE63EC433F1;
-	Wed,  6 Mar 2024 17:59:11 +0000 (UTC)
-Date: Wed, 6 Mar 2024 13:01:03 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linke li <lilinke99@qq.com>, joel@joelfernandes.org,
- boqun.feng@gmail.com, dave@stgolabs.net, frederic@kernel.org,
- jiangshanlai@gmail.com, josh@joshtriplett.org,
- linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- qiang.zhang1211@gmail.com, quic_neeraju@quicinc.com, rcu@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] rcutorture: Fix
- rcu_torture_pipe_update_one()/rcu_torture_writer() data race and
- concurrency bug
-Message-ID: <20240306130103.6da71ddf@gandalf.local.home>
-In-Reply-To: <27665890-8314-4252-8622-1e019fee27e4@paulmck-laptop>
-References: <f3624f39-bbb1-451d-8161-8518e4108d8e@joelfernandes.org>
-	<tencent_9882B228F292088CDD68F10CF1C228742009@qq.com>
-	<20240306103719.1d241b93@gandalf.local.home>
-	<27665890-8314-4252-8622-1e019fee27e4@paulmck-laptop>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709747973; c=relaxed/simple;
+	bh=ECHxC7b7bLXcI95sYnAvV2Yu8iR1BSGxurCKiipgcxk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nIELKkdBaXuR1zB9DulCSdqBzYf79SrCoNZjkZY2loSrjRvVmQQO4BNpEilVH0tXqXuY0w8s3EgVAsIZo/D1gBcwiTiCa1ll3yF+CDejcaklVInDnazXex+KXN5Id5aLVU+ZHmko8nz1nd8q+tdJiiblHDwu0P0sOKWbO6HUPnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WGWNeC2M; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WGWNeC2M"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D5F8A4000D;
+	Wed,  6 Mar 2024 17:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709747969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QnePZ6t0muj+qmO6GfgW6xbIGHfwmN9GJxf+1OfIJzA=;
+	b=WGWNeC2MV1NPZRTiQznlZ0yZ4yKFUe/qf+KzxskGcjIdLN+SrgM1jyS21PiAySEAn+hv5N
+	gEzBH4kuV8jXhiZY/Nlr1rCBbm3xBDeYy18MRGBcQtztI6xVP6sSC0qFAaz2snAxVShLTu
+	UdcXZXS51wR3IMhvA79U9MrWpwfvUrFotZioi/EtrIpxJrBtzCaCb8jhEHc5QQvEuBwjkx
+	uIQL79O9KsFFIFP5OxR3QBVWAZh6OpU/mcvHnkbKe3DcgeBCNz6ZLRhD0W6+eziLIkPcqI
+	PV1iGk03maSyqjpUfDpRHWb/tniMSimlFZ74ACB1oLSeAGGw1vyeAa66ULROvg==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Wed, 06 Mar 2024 18:59:29 +0100
+Subject: [PATCH v3 09/11] i2c: nomadik: sort includes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240306-mbly-i2c-v3-9-605f866aa4ec@bootlin.com>
+References: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
+In-Reply-To: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mips@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Wed, 6 Mar 2024 09:36:16 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+Sort #include statements in i2c-nomadik driver.
 
-> > If we take the policy of handling a compiler that can tear reads and writes
-> > of any size word, then we should have proper macros to handle it.  
-> 
-> Those are in fact READ_ONCE() and WRITE_ONCE() when given machine-word
-> sized/aligned variables.
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ drivers/i2c/busses/i2c-nomadik.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-IIRC, the original purpose of READ_ONCE() and WRITE_ONCE() was to make sure
-that the compiler only reads or writes the variable "once". Hence the name.
-That way after a load, you don't need to worry that the content of the
-variable you read isn't going to be read again from the original location
-because the compiler decided to save stack space and registers.
+diff --git a/drivers/i2c/busses/i2c-nomadik.c b/drivers/i2c/busses/i2c-nomadik.c
+index 7d039bd36aa6..ce18f7d43945 100644
+--- a/drivers/i2c/busses/i2c-nomadik.c
++++ b/drivers/i2c/busses/i2c-nomadik.c
+@@ -15,21 +15,21 @@
+  * Author: Srinidhi Kasagar <srinidhi.kasagar@stericsson.com>
+  * Author: Sachin Verma <sachin.verma@st.com>
+  */
++#include <linux/amba/bus.h>
+ #include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
+ #include <linux/init.h>
+-#include <linux/module.h>
+-#include <linux/amba/bus.h>
+-#include <linux/slab.h>
+ #include <linux/interrupt.h>
+-#include <linux/i2c.h>
+-#include <linux/err.h>
+-#include <linux/clk.h>
+ #include <linux/io.h>
+-#include <linux/pm_runtime.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/pinctrl/consumer.h>
+-#include <linux/mfd/syscon.h>
++#include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
++#include <linux/slab.h>
+ 
+ #define DRIVER_NAME "nmk-i2c"
+ 
 
-But that macro has now been extended for other purposes.
-
-> 
-> > Perhaps READ_SHARED(), WRITE_SHARED(), ADD_SHARED(), SUB_SHARED(). The ONCE
-> > has nothing to do with the reasons for these changes. But at least "SHARED"
-> > can be considered "this variable is shared between different contexts".
-> > Note, this is different than "atomic". It's just to document that this
-> > variable must be loaded or stored in one transaction.  
-> 
-> We already have READ_ONCE() and WRITE_ONCE().  An ADD_SHARED() might
-> be useful, though compilers are starting to learn how to emit good code
-> for things like WRITE_ONCE(a, READ_ONCE(a) + 1).
-
-Well, if we keep the _ONCE() naming, it should be ADD_ONCE(). Because
-
-  WRITE_ONCE(a, READ_ONCE(a) + 1)
-
-is an abomination and should only be present in obfuscation contests.
-
-> 
-> But such things should also be documented and added to LKMM.
-> 
-> > I don't know if Linus even cares about fixing "read/write tearing" which is
-> > why I Cc'd him.  
-> 
-> I am sure that whatever his views, he will not suffer in silence.  ;-)
-> 
-> > But I'm not going to take any patches that add these macros to fix
-> > compilers that tear words on load and store until we have a set policy on
-> > what to do with them.  
-> 
-> Maintainer's choice!
-> 
-> For RCU, I want the code to just work with future compiler optimizations
-> as well as with current ones.  This stuff is fun enough without giving
-> the compiler opportunities for more mischief!
-
-I'm not against the changes. I'm against the ugliness of the changes.
-Should we just create a ADD_ONCE() macro?
-
-If the approach is now to find all places that access a variable between
-different contexts, and create READ_ONCE()/WRITE_ONCE() around them, I'm
-fine with it.
-
-Perhaps we need a way to annotate them, like we have with __rcu. "__shared"?
-
-Then all accesses to that variable must be wrapped with a READ_ONCE() or
-WRITE_ONCE()? I mean, if this can cause legitimate bugs, we should probably
-address it like we do with locking and RCU.
-
--- Steve
-
+-- 
+2.44.0
 
