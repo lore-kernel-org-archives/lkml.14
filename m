@@ -1,137 +1,81 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 5.mo550.mail-out.ovh.net (5.mo550.mail-out.ovh.net [178.33.45.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9E9132492
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 14:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC40060895
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 14:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.45.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709735049; cv=none; b=Up0wEAGc2khMA5vYs1o521tajtjVMtJbNwrEobwChyDSEn36NB4I4SMWq1flRo8GbClCzjpFrHeker2f8VA1iQDC0RmpNa/Ij6DSrCYWHAdJ11/UWGYeF3kjpZ8L6LozB1xZ1Iy+5gjC/4wuU95ljk+qxgPfz4BPBHUR9HHEDn8=
+	t=1709735098; cv=none; b=twCmX4TgI6VlV0BBe8rM6H2dH3xrKeMrgHOpLzv0agZwD+rz+yHGcsj/BUORy9PHv1hWlqkUpYhEWDMZG3VqT32/B4L1R5OS0gbL88E7YAx8bWhlomsRRv37oEQwFYbhAwF5ILqJDJ0y/AH6vHs0kTRdZAvxK0JyXioofMZg+ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709735049; c=relaxed/simple;
-	bh=D55zblidkL3ckE+AmtkNPXQnODfYtAxEddZ5M/AL7lg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M16ZyhWu0CK7CZFNzt9adNERmiTEdk4cNhzHHbfmuy9Hz2wdsSxKYKeDf4PBGFJHdt8chRLLEnUv6tjPe6om+xwI4VS6fXqPmYIVCC9FCUlndNFrAvIM5qSIPhqQ1/gPSE1A5Ar5pnnUjjCrHXSMOaPHx/5XbGOvDKgWomHXl3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TESMI/qP; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TESMI/qP"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412e0feb40eso25662235e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 06:24:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709735045; x=1710339845; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S4nfN6YbZjdl+jd88R4xaz7uFPn5Ccodd8JF1GyHVFM=;
-        b=TESMI/qPEhqFVcI31ZSor4EC96UtXFfgUKcufD4oEMQmrEbAVDlsy+ZfLXeXCK0kWC
-         10+CAWp1r0rwRZPRW3Yv89MWd7k3o+ZO2G5NNgQmINcH+7pxv2TuaDN/bSdKYMryInfI
-         CHzaFATEhtz2Mnf3Rzwh/wY+H+sR4Chg5Y8gxLq0rqvZ3Ng8bAywuC1c/7N8D7qozgte
-         C3AgD9V22Zet34RDPi8lNMW0vz0gbj+TSshuQmAThESzWGDzcumLPHjmNfALJvDUDMis
-         v2PczK6PB1AGdSI6RO+YoeEYWqKJGAjc6/IQix5HuN522XMql82o4yuMnwGFfNH5rkIF
-         rtJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709735045; x=1710339845;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S4nfN6YbZjdl+jd88R4xaz7uFPn5Ccodd8JF1GyHVFM=;
-        b=socyE+wvq37HB7codO+M2pp7zwgIsbFH1rhnuj4LNM5On5WxyNY1iMjhRohP9H9af4
-         X6AnZ2S5oIO6Yh5FPk+cmIbnpd5VS3yvSVUqC0w0DhdBD8pluVtDr5Bwkzk7CQzYRPc5
-         /A5nfzDm85z0axDRk670O3B3kvAAM/xceIXXyzWSV6FsNyWEUuqj0ajSF9kug90zX32Z
-         KVsUIUrRtoszne7wvmaxzcWoqZoPDUvaBmxcU6HKPp+MKqw4Hf+bz5oGFhHOgc+l7WLL
-         BZWphoLnWPvPrvraGMp8/sZdjyZ9v9WpPZ9nb8wTFgtmxvGvnG5axbdhoRTGOSYNCyuF
-         m0tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVy1n59VPqKsdlrBuPvpa85017Ab4OdWv6ZsGmb4Qvpcg5rAjO6wB9qIBVl30m3L2Dpx87lnIoxWJz2qUFFwDxTYhNxdFO2epVy9Ewv
-X-Gm-Message-State: AOJu0Yw844XER9u9UThw+koeGStCNGSqEVi71nyzLi4whQYM9Q2F7heF
-	SvkyYruGuiplfXS2pxPFcsATKLdogVzwD1ns9xjrIru2nK1mFg1ELHUz6guFj+o=
-X-Google-Smtp-Source: AGHT+IERmlyJCEwEASgOi5a4L2ybD14kuymZDGs7u2XrY8A0Ry6r+u23L39/I9/RdxpfQRdKBbC4GA==
-X-Received: by 2002:a05:600c:a019:b0:412:e290:3dd1 with SMTP id jg25-20020a05600ca01900b00412e2903dd1mr6740090wmb.9.1709735045052;
-        Wed, 06 Mar 2024 06:24:05 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id u17-20020a05600c19d100b00412a31d2e2asm21339809wmq.32.2024.03.06.06.24.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 06:24:04 -0800 (PST)
-Date: Wed, 6 Mar 2024 17:24:01 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: Re: [PATCH v1 4/7] staging: media: starfive: Add multi streams for
- ISP
-Message-ID: <1efd7773-4b53-44dc-8885-4259b5823bb9@moroto.mountain>
-References: <20240306093334.9321-1-changhuang.liang@starfivetech.com>
- <20240306093334.9321-5-changhuang.liang@starfivetech.com>
+	s=arc-20240116; t=1709735098; c=relaxed/simple;
+	bh=r5/BbODiVYHKi4Vy9BlmKr5xBKMSKvqljtQVJe3nSwc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XZdTTe/zyExAfiG/OsQ/lHBmf4XHOJVFqB701GBEICFJQDIFoWpzc6ykz7O1l6wGprbkBOCbb099w9skxNDOUiVHGy22QDn/bl1rvejj8+3JJ4WIKod0qpaUutcBCGr2R8zHGS2DAw5GOhJz3vGyYIVbWptgm61mhJSTkozVYMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.33.45.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director7.ghost.mail-out.ovh.net (unknown [10.109.176.170])
+	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4TqW8n0x2hz1L27
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 11:55:37 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-n2q92 (unknown [10.110.113.124])
+	by director7.ghost.mail-out.ovh.net (Postfix) with ESMTPS id B275B1FE65;
+	Wed,  6 Mar 2024 11:55:33 +0000 (UTC)
+Received: from etezian.org ([37.59.142.107])
+	by ghost-submission-6684bf9d7b-n2q92 with ESMTPSA
+	id xHmDHbVZ6GUUgAEA0v5T7Q
+	(envelope-from <andi@etezian.org>); Wed, 06 Mar 2024 11:55:33 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-107S0019a2d669e-ee64-4ca9-a271-21f25ef40524,
+                    62DEF991EB217AB86F953B10C2782167B22AFEEB) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Jesper Nilsson <jesper.nilsson@axis.com>
+Cc: Naveen Krishna Ch <ch.naveen@samsung.com>, linux-i2c@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel@axis.com
+In-Reply-To: <20240305-i2c_exynos5-v3-1-17a749688806@axis.com>
+References: <20240305-i2c_exynos5-v3-1-17a749688806@axis.com>
+Subject: Re: [PATCH v3] i2c: exynos5: Init data before registering
+ interrupt handler
+Message-Id: <170972613133.1712532.6066452137196640811.b4-ty@kernel.org>
+Date: Wed, 06 Mar 2024 12:55:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306093334.9321-5-changhuang.liang@starfivetech.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Ovh-Tracer-Id: 6464917266006870544
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledriedugdefudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheehtddpmhhouggvpehsmhhtphhouhht
 
-On Wed, Mar 06, 2024 at 01:33:31AM -0800, Changhuang Liang wrote:
-> ISP support multi streams output. Add stream_count to save the number
-> of stream on.
+Hi
+
+On Tue, 05 Mar 2024 11:50:00 +0100, Jesper Nilsson wrote:
+> devm_request_irq() is called before we initialize the "variant"
+> member variable from of_device_get_match_data(), so if an interrupt
+> is triggered inbetween, we can end up following a NULL pointer
+> in the interrupt handler.
 > 
-
-The ISP can support multiple output streams.  Introduce stream_count to
-store the number of streams.  No functional change.
-
-> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
-> ---
->  .../staging/media/starfive/camss/stf-isp.c    | 28 +++++++++++++------
->  .../staging/media/starfive/camss/stf-isp.h    |  1 +
->  2 files changed, 21 insertions(+), 8 deletions(-)
+> This problem was exposed when the I2C controller in question was
+> (mis)configured to be used in both secure world and Linux.
 > 
-> diff --git a/drivers/staging/media/starfive/camss/stf-isp.c b/drivers/staging/media/starfive/camss/stf-isp.c
-> index 9b5745669fa6..1bfd336b14a1 100644
-> --- a/drivers/staging/media/starfive/camss/stf-isp.c
-> +++ b/drivers/staging/media/starfive/camss/stf-isp.c
-> @@ -92,15 +92,27 @@ static int isp_set_stream(struct v4l2_subdev *sd, int enable)
->  	src = stf_isp_g_index_by_mcode(fmt_t_src, fmt_src->code);
->  
->  	if (enable) {
-> -		stf_isp_reset(isp_dev);
-> -		stf_isp_init_cfg(isp_dev);
-> -		stf_isp_settings(isp_dev, crop, fmt->code);
-> -		stf_isp_config_yuv_out_stride(isp_dev, crop->width,
-> -					      fmt_t_src->fmts[src].bpp);
-> -		stf_isp_stream_set(isp_dev);
-> -	}
-> +		if (!isp_dev->stream_count) {
-> +			stf_isp_reset(isp_dev);
-> +			stf_isp_init_cfg(isp_dev);
-> +			stf_isp_settings(isp_dev, crop, fmt->code);
-> +			stf_isp_config_yuv_out_stride(isp_dev, crop->width,
-> +						      fmt_t_src->fmts[src].bpp);
-> +			stf_isp_stream_set(isp_dev);
-> +
-> +			v4l2_subdev_call(isp_dev->source_subdev, video,
-> +					 s_stream, enable);
+> [...]
 
-s/enable/true/
+Applied to i2c/i2c-host-fixes on
 
-> +		}
-> +
-> +		isp_dev->stream_count++;
-> +	} else {
-> +		isp_dev->stream_count--;
->  
-> -	v4l2_subdev_call(isp_dev->source_subdev, video, s_stream, enable);
-> +		if (!isp_dev->stream_count) {
-> +			v4l2_subdev_call(isp_dev->source_subdev, video,
-> +					 s_stream, enable);
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
-s/enable/false/
+Thank you,
+Andi
 
-> +		}
-> +	}
+Patches applied
+===============
+[1/1] i2c: exynos5: Init data before registering interrupt handler
+      commit: 51130d52b84c473f5da5378aa7e7633611f79313
 
-regards,
-dan carpenter
