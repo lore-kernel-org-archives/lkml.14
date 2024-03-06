@@ -1,69 +1,81 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7CC84A2A;
-	Wed,  6 Mar 2024 12:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A09784A50
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 12:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709728268; cv=none; b=VgvEuHFY3d6QwJSRHJ14X2yRGWWMjQRJW32CYI90rvh6cy8qmjkxqGbHEBXy3gFS75Mr1Et1JfgdZa1V/uXq1ly1b7PF/ysWTbF62+hkk+npMppZ6De99YLKLZHqFdgs8QFaQa+cdqu/0c/1IUk7XTP2drnb5sk/HeaIkojb/DA=
+	t=1709728269; cv=none; b=Qbv6z/XtjWueTqyB5KLbh3rkpKNHAkBEPY1nRBys3qTVSCqpW1l2W3Ue1sY21C/5bQHAzfftIy7b8ZJ8QSkECTktaPKhYc9PB/0nu8R0LdBp9IXJy367Wih2KSXNpbkaD/zLg2/6mJ7jTxdXiyoYNkwX19twRVkcHhjquZMPII8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709728268; c=relaxed/simple;
-	bh=uKV+klLUjkMD5Ca8wpkNsN1iWWbCl3KEGL9BFSa3GBA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dcauqCOipTHW9rH5DJwPKsNqJamah6cEY6W0T/6QPUui4UMUhcPIiiZQfVnffueKXzjuEJWi9jYW/FvbCKxdzGJ8uJs6NhM5xcnhhqJFttMCSnekrY9uqo/ydcTWQ9E47/xAEvPkcYjFmb0qxIYgUWEuvEgHigQ0A9AwrdXLSBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flums+Ot; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709728269; c=relaxed/simple;
+	bh=OJ5OQ/uhP1l4U1hoKnI8+v2ylqMuH5ZlTJlyOjBm2VQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eSVikoSMhjy98xsJLvkn7NmPKjwnR+JCuKyhXgT53CBJldWtc6UC1gNtlcRqWQk2Y+oYLz+oo0ywhOgAReLCf4xEtD+7+m1zTJ5Deb890J7G3DxuX3y435il64Po6Rv/MSe1CEABo/97iWkd7ih2aL0YKdBW7zVIwyiasxLUfX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aKwnTMXN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sWi4DkF+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aKwnTMXN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sWi4DkF+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flums+Ot"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5135540c40dso2077450e87.3;
-        Wed, 06 Mar 2024 04:31:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709728265; x=1710333065; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BGNo45CWdeWI1ssvFsIg1kI6YA8MzwdKzzHMhRiBLfo=;
-        b=flums+OtCdmFpp6EjeMQ5Ua6uWwyRDH6pAZApsZP38VhPxN2wlDzYsByCKPtsa0vxF
-         +Hcj/5XJus8ZKGbuDIrf22r/2qGzSkksSoP7QCujTGzd7kctVoXNBGmG4j3efyw+l7xW
-         JdP4Bb7LYBth9/yewmCicfFnWs33K+HKxqYyGkdw09DOaZ6ZKZAMF5EC8l8QedBTsU5y
-         B0eb+VQEnoJQPPNS8DYPZX2p7PAVYy5G+23bt0FMDVs1VUFRvb5y7uym0/vT/9nrKy4E
-         OFmmPbE68T7p7n5rzrzUc9LGJHmF3h1Wpp6dx1WKMs+mkwR+cnGdePJ7R6f4K9zeTt7h
-         1U9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709728265; x=1710333065;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BGNo45CWdeWI1ssvFsIg1kI6YA8MzwdKzzHMhRiBLfo=;
-        b=PNp4VaMXI/jJzmPLiuzX3alAkX+6wCZ9lxgVtQ6VYlq0PuOj1KeLRw5Nq9u3bECyO4
-         7t2MJ9dipci12VKVhWN8/9YqOQuO5ZPSNHa1TaQ5ozPLjKQo+W95NvN3FmZcG9MyWMTU
-         KdnvmlfPE6TWMXQmt6ddzqcKWrYLlWJsoYRiAbKfyJis+tgUinlWWHSgb8XimOnMlUsR
-         GW2zaoyUNb0P1b3JJwuFX1iWQjTqT2vUYjA3fulPUfGI+pmOtGBMXwt6Z+k0j7cxJ1VL
-         s5IaWpeENdlQ9CVZ/J0e2DuOqRm6vmpa9aCCdk8rLcE0JmBRrF5EtkUNCc3ysYaue5pv
-         8Zjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPYxXALY97QDi3WYpbg8EG/WzdMkWKRj8j7a2b6JXvy1u7rsNPbxYm+WT/n8ZlaM0/6Vg3XSuUsI6h3DnwX+6g8TG8DEFQerhyoHcdiys5ZHQgqUpNaE5HKX6ohOB/0EkAryuhVZyybSNuxGE=
-X-Gm-Message-State: AOJu0YxHs1G+E7NZpmi7QqHLSZ1PaUhu6HQoFc8lbbciY2zFDdnGpg49
-	5AvRHAJOJ3bK8D5DdNTkkwme2/z4T2VK7s1j5XA9Gh7aoEHr3pjg
-X-Google-Smtp-Source: AGHT+IGwie5Q/XJc5mrS0q4+BJSoNAr3cKEGAzJ+WWlnYZEyDkgNJdn1aznuS39VLrrzrMzBfC7DFw==
-X-Received: by 2002:a05:6512:1191:b0:513:42e:ddf0 with SMTP id g17-20020a056512119100b00513042eddf0mr3852061lfr.36.1709728265125;
-        Wed, 06 Mar 2024 04:31:05 -0800 (PST)
-Received: from rand-ubuntu-development.dl.local ([79.99.106.86])
-        by smtp.gmail.com with ESMTPSA id z14-20020ac25dee000000b0051345b2b0d6sm475989lfq.258.2024.03.06.04.31.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 04:31:04 -0800 (PST)
-From: Rand Deeb <rand.sec96@gmail.com>
-To: Michael Buesch <m@bues.ch>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: kvalo@kernel.org,
-	deeb.rand@confident.ru,
-	lvc-project@linuxtesting.org,
-	voskresenski.stanislav@confident.ru,
-	khoroshilov@ispras.ru,
-	Rand Deeb <rand.sec96@gmail.com>
-Subject: [PATCH v3] ssb: Fix potential NULL pointer dereference in ssb_device_uevent
-Date: Wed,  6 Mar 2024 15:30:28 +0300
-Message-Id: <20240306123028.164155-1-rand.sec96@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aKwnTMXN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sWi4DkF+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aKwnTMXN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sWi4DkF+"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 888F73F175;
+	Wed,  6 Mar 2024 12:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709728265; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7k1zCH7rJUyjn+pQMiSRznsRTbRsX0fOvgjrgBeV6A4=;
+	b=aKwnTMXNgc9REm9yqZG4yA7xSay4ad6HAcMCKrWtKwCYNleez1FK92Qz6clVUOUpy9Jt0C
+	Zs0r+XGUCLu1vS9vILHj+BsdBtKPlihx12HQXqiQbTBtupSQXh2BPvmI1Sa+SQDRMIVol/
+	Yz5zqIWS/PWrDmwY5y+OAI5WNSZ3UZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709728265;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7k1zCH7rJUyjn+pQMiSRznsRTbRsX0fOvgjrgBeV6A4=;
+	b=sWi4DkF+w0Aacvtstg/Auv+UtdStARm08STTABEHlxz3u3VQnQD+OtCKqbYfjhYR1VRioB
+	UmkzZO5c1JDPpMCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709728265; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7k1zCH7rJUyjn+pQMiSRznsRTbRsX0fOvgjrgBeV6A4=;
+	b=aKwnTMXNgc9REm9yqZG4yA7xSay4ad6HAcMCKrWtKwCYNleez1FK92Qz6clVUOUpy9Jt0C
+	Zs0r+XGUCLu1vS9vILHj+BsdBtKPlihx12HQXqiQbTBtupSQXh2BPvmI1Sa+SQDRMIVol/
+	Yz5zqIWS/PWrDmwY5y+OAI5WNSZ3UZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709728265;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7k1zCH7rJUyjn+pQMiSRznsRTbRsX0fOvgjrgBeV6A4=;
+	b=sWi4DkF+w0Aacvtstg/Auv+UtdStARm08STTABEHlxz3u3VQnQD+OtCKqbYfjhYR1VRioB
+	UmkzZO5c1JDPpMCA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id EFD411377D;
+	Wed,  6 Mar 2024 12:31:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id PbCJNwhi6GUaTwAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Wed, 06 Mar 2024 12:31:04 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH 0/2] page_owner: Fixup and cleanup
+Date: Wed,  6 Mar 2024 13:32:15 +0100
+Message-ID: <20240306123217.29774-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,42 +83,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=aKwnTMXN;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sWi4DkF+
+X-Spamd-Result: default: False [1.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,suse.com,suse.cz,google.com,gmail.com,suse.de];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.88)[85.73%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 1.81
+X-Rspamd-Queue-Id: 888F73F175
+X-Spam-Level: *
+X-Spam-Flag: NO
+X-Spamd-Bar: +
 
-The ssb_device_uevent function first attempts to convert the 'dev' pointer
-to 'struct ssb_device *'. However, it mistakenly dereferences 'dev' before
-performing the NULL check, potentially leading to a NULL pointer
-dereference if 'dev' is NULL.
+Hi,
 
-To fix this issue, this patch moves the NULL check before dereferencing the
-'dev' pointer, ensuring that the pointer is valid before attempting to use
-it.
+this patchset consists of a fixup by an error that was reported by intel
+robot, where it seems to be that by the time page_owner gets
+initialized, stackdepot has already depleted its allocation space and
+returns 0-handles, turning that into null stack_records when trying
+to retrieve the stack_record.
+I was not able to reproduce that from the config because it booted fine
+for me, but when setting e.g: dummy_handle to 0 artificially,
+I could see the same error that was reported.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+The second patch is a cleanup that can also lead to a compilation
+warning.
 
-Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
----
- drivers/ssb/main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Oscar Salvador (2):
+  mm,page_owner: Check for null stack_record before bumping its refcount
+  mm,page_owner: Drop unnecesary check
 
-diff --git a/drivers/ssb/main.c b/drivers/ssb/main.c
-index b9934b9c2d70..070a99a4180c 100644
---- a/drivers/ssb/main.c
-+++ b/drivers/ssb/main.c
-@@ -341,11 +341,13 @@ static int ssb_bus_match(struct device *dev, struct device_driver *drv)
- 
- static int ssb_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
- {
--	const struct ssb_device *ssb_dev = dev_to_ssb_dev(dev);
-+	const struct ssb_device *ssb_dev;
- 
- 	if (!dev)
- 		return -ENODEV;
- 
-+	ssb_dev = dev_to_ssb_dev(dev);
-+
- 	return add_uevent_var(env,
- 			     "MODALIAS=ssb:v%04Xid%04Xrev%02X",
- 			     ssb_dev->id.vendor, ssb_dev->id.coreid,
+ mm/page_owner.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
 -- 
-2.34.1
+2.44.0
 
