@@ -1,75 +1,144 @@
-Received: from 9.mo575.mail-out.ovh.net (9.mo575.mail-out.ovh.net [46.105.78.111])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A873130ADD
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 15:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.78.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C445F1350FA
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 15:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709740122; cv=none; b=pBm48lIR9aTIfIi2xHC3hnMPjWEG907SXW7gZf20h3NNKy84TCkNGpIBBgDRcKNM7jTLDQpJjJrbCLahaTeRJyl8+dUhYsUcQRCPUIaYKMemx0ugjAe/yy42hfN0ZpnThmvpvZ9OMFnNUoR4SvCleLlGaP38otQ1MKlv/8O1Zko=
+	t=1709740123; cv=none; b=IswU1doaKLRnJzM9hb2by8N1czGxyrSaNmMgu5np+4uUGosE6OZN//kE9tXzT135tsuUAIAdka2FvW4nsdl3whetW383WsEAyWGR3ky2nH+WkLFPA2m/6soqP3gC8GNia0SHnb0FkuhZt1o/KxWY+D/rHsq84DA/jvn6rnxhqt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709740122; c=relaxed/simple;
-	bh=ddVEZ/hCRRIaQR+Zd4qHp55qWobjMRKrD1xXYor6Njs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tfCsT7mnLfo23l0wJh3xGGr8bxRzoPwOY6OxQXp5NIiiZNj3lazSOJnnYthWUJpvu2XvxrSNrEDYC7Y7qNIMtQXhz22oqf94VqAPlvKajFF1khthHpXSf6wWiMAx07/basFyKdO68+Rm+BupIICgoXApfUCvwlFXEzf3eWzDQTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.78.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director11.ghost.mail-out.ovh.net (unknown [10.109.148.178])
-	by mo575.mail-out.ovh.net (Postfix) with ESMTP id 4TqcCk08Sdz1Prr
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 15:43:29 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-zgt6x (unknown [10.110.113.115])
-	by director11.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 523151FFCE;
-	Wed,  6 Mar 2024 15:43:29 +0000 (UTC)
-Received: from etezian.org ([37.59.142.109])
-	by ghost-submission-6684bf9d7b-zgt6x with ESMTPSA
-	id mCmqCiGP6GXMAwEAjxLk1w
-	(envelope-from <andi@etezian.org>); Wed, 06 Mar 2024 15:43:29 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-109S003b68dbd3f-2314-40a5-abca-d04c75d496b3,
-                    62DEF991EB217AB86F953B10C2782167B22AFEEB) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Michal Simek <michal.simek@amd.com>, 
- Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
- linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240119013326.3405484-1-jisheng.teoh@starfivetech.com>
-References: <20240119013326.3405484-1-jisheng.teoh@starfivetech.com>
-Subject: Re: [PATCH v2 RESEND] i2c: cadence: Add system suspend and resume
- PM support
-Message-Id: <170973980846.1763249.4872045565378143580.b4-ty@kernel.org>
-Date: Wed, 06 Mar 2024 16:43:28 +0100
+	s=arc-20240116; t=1709740123; c=relaxed/simple;
+	bh=QVVQ1xiFKyBJFe9o+x5uoUD6TLmjiI/YhYSrY81aKUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pCXMfxlv6vdr2bxiiObaLjVX0ln/BJ5qrUiy6urR1NnE4c8d9D2DrxcO7bbkyYjSH+CKmwyX88vbSjDENbXzB3kCWm4w8uR6A4CWUSj/lmIhKovxqKh5CZm4skJ6knyd4PuLS3QJoE8fwk4hqVcxFmX2Ct1H7kLbMtEcpCLcML8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FuUw0xVi; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FuUw0xVi"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DF22360006;
+	Wed,  6 Mar 2024 15:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709740113;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YEOdzOBUr0WjDYq1EsFLRmuHaeXeVKpnjrYhZumWSoY=;
+	b=FuUw0xViG3lOaqo8K0khqMdjuEJkKhWsTlZRVgouI1do0kSU1DKGfXs5nFNZHW1yGpH9Uo
+	PEQjvcE2Re4bOI+mkSQKdT/h9NIxLO8tJB9xqFohVt5izWYPxDWUoUUTJqyQbq/MyIotEb
+	DanxzGkhZeY6Ug7rJLmkWD3+jHgG7KGOoT+ObXPHU8mLvHW/dFJKvmgYIR+ku3+Pw7OtzP
+	b3wsAa6DttaVZuLIeCscvTvYQTKjrfksKdjQgCqnplp8l8Myu2mfSAOgoEmZEQhIocMnjL
+	5f3B+JveaOEy7QAyV+21G/CsKFSySXEXPNHeZI0uMSuWa29QVc6UgoQFXRMADw==
+Date: Wed, 6 Mar 2024 16:48:31 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Alexander Dahl <ada@thorsis.com>
+Cc: linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+ Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org
+Subject: Re: mtd: nand: raw: Possible bug in nand_onfi_detect()?
+Message-ID: <20240306164831.29eed907@xps-13>
+In-Reply-To: <20240306-shaky-bunion-d28b65ea97d7@thorsis.com>
+References: <20240306-shaky-bunion-d28b65ea97d7@thorsis.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 10313524625080715995
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledriedugdejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrddutdelnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheejhedpmhhouggvpehsmhhtphhouhht
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi
+Hi Alexander,
 
-On Fri, 19 Jan 2024 09:33:26 +0800, Ji Sheng Teoh wrote:
-> Enable device system suspend and resume PM support, and mark the device
-> state as suspended during system suspend to reject any data transfer.
-> 
-> 
+ada@thorsis.com wrote on Wed, 6 Mar 2024 15:36:04 +0100:
 
-Applied to i2c/i2c-host on
+> Hello everyone,
+>=20
+> I think I found a bug in nand_onfi_detect() which was introduced with
+> commit c27842e7e11f ("mtd: rawnand: onfi: Adapt the parameter page
+> read to constraint controllers") back in 2020.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+Interesting. I don't think this patch did broke anything, as
+constrained controllers would just not support the read_data_op() call
+anyway.
 
-Thank you,
-Andi
+That being said, I don't see why the atmel controller would
+refuse this operation, as it is supposed to support all
+operations without limitation. This is one of the three issues
+you have, that probably needs fixing.
 
-Patches applied
-===============
-[1/1] i2c: cadence: Add system suspend and resume PM support
-      commit: 747bdf912e22732e8de9bd04a2d3e387055604a8
+> Background on how I found this: I'm currently struggling getting raw
+> nand flash access to fly with an at91 sam9x60 SoC and a S34ML02G1
+> Spansion SLC raw NAND flash on a custom board.  The setup is
+> comparable to the sam9x60 curiosity board and can be reproduced with
+> that one.
+>=20
+> NAND flash on sam9x60 curiosity board works fine with what is in
+> mainline Linux kernel.  However after removing the line 'rb-gpios =3D
+> <&pioD 5 GPIO_ACTIVE_HIGH>;' from at91-sam9x60_curiosity.dts all data
+> read from the flash appears to be zeros only.  (I did not add that
+> line to the dts of my custom board first, this is how I stumbled over
+> this.)
+>=20
+> I have no explanation for that behaviour, it should work without R/B#
+> by reading the status register, maybe we investigate that
+> in depth later.
 
+I don't see why at a first look. The default is "no RB" if no property
+is given in the DT so it should work. Tracing the wait ready function
+calls might help.
+
+>  However those all zeros data reads happens when
+> reading the ONFI param page as well es data read from OOB/spare area
+> later and I bet it's the same with usual data.
+
+Reading data without observing tWB + tR may lead to this.
+
+> This read error reveals a bug in nand_onfi_detect().  After setting
+> up some things there's this for loop:
+>=20
+>     for (i =3D 0; i < ONFI_PARAM_PAGES; i++) {
+>=20
+> For i =3D 0 nand_read_param_page_op() is called and in my case all zeros
+> are returned and thus the CRC calculated does not match the all zeros
+> CRC read.  So the usual break on successful reading the first page is
+> skipped and for reading the second page nand_change_read_column_op()
+> is called.  I think that one always fails on this line:
+>=20
+>     if (offset_in_page + len > mtd->writesize + mtd->oobsize) {
+>=20
+> Those variables contain the following values:
+>=20
+>     offset_in_page: 256
+>     len: 256
+>     mtd->writesize: 0
+>     mtd->oobsize: 0
+
+Indeed. We probably need some kind of extra check that does not perform
+the if clause above if !mtd->writesize.
+
+> The condition is true and nand_change_read_column_op() returns with
+> -EINVAL, because mtd->writesize and mtd->oobsize are not set yet in
+> that code path.  Those are probably initialized later, maybe with
+> parameters read from that ONFI param page?
+>=20
+> Returning with error from nand_change_read_column_op() leads to
+> jumping out of nand_onfi_detect() early, and no ONFI param page is
+> evaluated at all, although the second or third page could be intact.
+>=20
+> I guess this would also fail with any other reason for not matching
+> CRCs in the first page, but I have not faulty NAND flash chip to
+> confirm that.
+
+Thanks for the whole report, it is interesting and should lead to fixes:
+- why does the controller refuses the datain op?
+- why nand_soft_waitrdy is not enough?
+- changing the condition in nand_change_read_column_op()
+
+Can you take care of these?
+
+Thanks,
+Miqu=C3=A8l
