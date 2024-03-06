@@ -1,121 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBE260892
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F225F566;
+	Wed,  6 Mar 2024 10:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721826; cv=none; b=HvE5Rb8YRNYKpJ8Pn0WwyLKhn/VWHcTSSPmENKUY1rjNtc86KuT6MgqW8YfXC0u4dfc5B0LYufXNO4TzQNTJC27/Nn2A6980O442YvVtPKA6FSEPy6xohBUt72sr8K4ctcPgbUMOLLxEgbz9mgcrHTvc+OVXJ1fz22E94tXVTaw=
+	t=1709721854; cv=none; b=d+JFnIUrI74YLliE4aoEqOnkD3Qh1VXhcrx8NeTc5o/nR1UhpJuZCpjsRyuw4vGvgA3uo8VwenUjAFJIT9WHCDxQApdmwZjeMMLKxk2j1ofy+07y3LNfRp5MtrgNPGMn4mRgZIV4vQTRihnUxQrs9e2miA+eKpdBrIPStjmCMjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721826; c=relaxed/simple;
-	bh=c49fwyRKoS6wfKvCgxkRGT+RfTOSzCUnQcMvkubeAHI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K4FH3N/gpcSw322YZ2XXYSgIqyUhB0k42jjo8ZQ+sUwuoOg+ISNfMBdbccGBBXvjhqhfsnVChQ3FHbvnMgloSpUbl34yD9q56her5z0N7t2cy8+cDWpEf0Siowh6ojDA8xqlgk8OZ17WFKzEqBrBIt6dIN1D4lXdN2AfezlY3Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JnPj9dUJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709721854; c=relaxed/simple;
+	bh=HhnXlWY9s6EDZvVdpbAhFNG9/tYqle4lWF2NCBXLZrE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QBBFzAUCcq7Q8tQajPND5llCMO49KH9Zk+aQZgkAnfFV0WnUSh6tkFNazHjAw/w2um4xIInfog/NZXd9eYUK1gLY8ghn+2XyS6WzwBJaU8KjJ5gDIQDnqqG+JI0j8881F+jYr0QabiCYPtyjK0/ADIGNq1lcOVG10BovTB6GKgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zpmns5nj; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JnPj9dUJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709721824;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EszM++ZyWA4F0AEHMeW0S6yDLENEL5nIwjErtg69nlA=;
-	b=JnPj9dUJW5civc0vmQUjHJKZzGo0vQZZR6gTdJEWqfRLQUfq02sW485cSNUBjWHRwjaJ7H
-	h3henowujFD0mx6HvPDDmfstYJrKOzXAYymjS6RDZ38EGorX6rE2YDRqaotcndbB8a+pKe
-	dOBv4blpPYNuOblsUFhnwUVLppuClks=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-122-so8_Bz8AP0eINzkAwxTEYA-1; Wed, 06 Mar 2024 05:43:38 -0500
-X-MC-Unique: so8_Bz8AP0eINzkAwxTEYA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0BD8284B0C5;
-	Wed,  6 Mar 2024 10:43:38 +0000 (UTC)
-Received: from x1n.redhat.com (unknown [10.72.116.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A13A3111DD02;
-	Wed,  6 Mar 2024 10:43:31 +0000 (UTC)
-From: peterx@redhat.com
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	peterx@redhat.com,
-	Matthew Wilcox <willy@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	x86@kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH RFC 13/13] mm: Document pXd_leaf() API
-Date: Wed,  6 Mar 2024 18:41:47 +0800
-Message-ID: <20240306104147.193052-14-peterx@redhat.com>
-In-Reply-To: <20240306104147.193052-1-peterx@redhat.com>
-References: <20240306104147.193052-1-peterx@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zpmns5nj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709721852; x=1741257852;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=HhnXlWY9s6EDZvVdpbAhFNG9/tYqle4lWF2NCBXLZrE=;
+  b=Zpmns5njKwOmFONMwp6ByePF2HL0PxjZEN43rh+kEA+GrJ8f7c+9czdQ
+   75L98eMxYNqLd4GhlDibObxWUWc27gVMuQZR9KdsvsIolkl2EXF4HKYSo
+   nN/GWPfhhxXGQ3CMtEItOlCyxOAj/TDyM4aisEjZKowAnRQYCOOmJhYLV
+   cJIe1i3euR0OwnXJ0rvloQmIK0ZQk1SBPLBKzEe35XDAeRa7omoHRCbH5
+   6jJPovdmGCZmtk2m+oIsojp5zBrW7c7ZUNRV0+qsprpGr2pRitMinL9YT
+   bDrRC0SAJ2oyVZVHllgVQ9+McBSKGSH1VBMHjQo48U5g7nz+Af4ySlJOx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4190472"
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="4190472"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:44:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="9801470"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:44:08 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 6 Mar 2024 12:44:03 +0200 (EET)
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    Julian Winkler <julian.winkler1@web.de>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] platform/x86: intel_scu_pcidrv: Remove unused
+ intel-mid.h
+In-Reply-To: <20240305161539.1364717-3-andriy.shevchenko@linux.intel.com>
+Message-ID: <31213f82-196d-8ab0-6c24-a09a2db43388@linux.intel.com>
+References: <20240305161539.1364717-1-andriy.shevchenko@linux.intel.com> <20240305161539.1364717-3-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Type: text/plain; charset=US-ASCII
 
-From: Peter Xu <peterx@redhat.com>
+On Tue, 5 Mar 2024, Andy Shevchenko wrote:
 
-There's one small section already, but since we're going to remove
-pXd_huge(), that comment may start to obsolete.
+> intel-mid.h is providing some core parts of the South Complex PM,
+> which are usually are not used by individual drivers. In particular,
 
-Rewrite that section with more information, hopefully with that the API is
-crystal clear on what it implies.
+Both applied to review-ilpo. I fixed that double "are" for you while 
+applying.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- include/linux/pgtable.h | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 85fc7554cd52..6b0d222a7fad 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1770,11 +1770,25 @@ typedef unsigned int pgtbl_mod_mask;
- #endif
- 
- /*
-- * p?d_leaf() - true if this entry is a final mapping to a physical address.
-- * This differs from p?d_huge() by the fact that they are always available (if
-- * the architecture supports large pages at the appropriate level) even
-- * if CONFIG_HUGETLB_PAGE is not defined.
-- * Only meaningful when called on a valid entry.
-+ * pXd_leaf() is the API to check whether a pgtable entry is a huge page
-+ * mapping.  It should work globally across all archs, without any
-+ * dependency on CONFIG_* options.  For architectures that do not support
-+ * huge mappings on specific levels, below fallbacks will be used.
-+ *
-+ * A leaf pgtable entry should always imply the following:
-+ *
-+ * - It is a "present" entry.  IOW, before using this API, please check it
-+ *   with pXd_present() first. NOTE: it may not always mean the "present
-+ *   bit" is set.  For example, PROT_NONE entries are always "present".
-+ *
-+ * - It should _never_ be a swap entry of any type.  Above "present" check
-+ *   should have guarded this, but let's be crystal clear on this.
-+ *
-+ * - It should contain a huge PFN, which points to a huge page larger than
-+ *   PAGE_SIZE of the platform.  The PFN format isn't important here.
-+ *
-+ * - It should cover all kinds of huge mappings (e.g., pXd_trans_huge(),
-+ *   pXd_devmap(), or hugetlb mappings).
-  */
- #ifndef pgd_leaf
- #define pgd_leaf(x)	false
 -- 
-2.44.0
+ i.
 
+
+> this driver doesn't use it, so simply remove the unused header.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_scu_pcidrv.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel_scu_pcidrv.c
+> index d904fad499aa..dbf0310448da 100644
+> --- a/drivers/platform/x86/intel_scu_pcidrv.c
+> +++ b/drivers/platform/x86/intel_scu_pcidrv.c
+> @@ -11,7 +11,6 @@
+>  #include <linux/init.h>
+>  #include <linux/pci.h>
+>  
+> -#include <asm/intel-mid.h>
+>  #include <asm/intel_scu_ipc.h>
+>  
+>  static int intel_scu_pci_probe(struct pci_dev *pdev,
+> 
