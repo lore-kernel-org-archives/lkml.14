@@ -1,45 +1,45 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127C85C5F7;
-	Wed,  6 Mar 2024 07:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65625D46D;
+	Wed,  6 Mar 2024 07:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709710252; cv=none; b=HPwqeZLHJPgtU0cprMSKLoAZHPs0a1odJ86CVCORbRx9li9tiGdIgiJX1s+il+2fpaF3zmDhIZDno6ktL25R3z6gfkQTmiKOkC57Yttld3DhDFyIMefg4MXP8KIJnpJcjgo2wBfJ4ruqWI4GuVSRSWKRTVXv3TbUlPI5kEc5Rec=
+	t=1709710261; cv=none; b=BwcS6T+ktbZ8rX6u/HD1GotN7sXa4Whn3YaBlD58agQ2HiaY+2VQqdF5rZvvGLpqSBpDkfm6Dzj7yYgB3tM+8Az2kVwOK3Hynnh4TVVeX7WNPrlgK1G28FRZFMbi1kff5XX/DJy4GyHCzm+iVL+RgPiONWGvzWumX/OZ38LCI98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709710252; c=relaxed/simple;
-	bh=c1bftpDuIOmUwgy2gnxRjxmco5Z0u5DKZrGSG+jJz6w=;
+	s=arc-20240116; t=1709710261; c=relaxed/simple;
+	bh=J8rAfTB8Dz0cD0ouGjdO5KN4NNn2oSqBrYvKTdOIgjc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NWK1EPwwSf93QUko1VLeNBUYT53c6Mxp9eYZCx1iH5IQzjqJOUxbEckoTwHIotKKHXfVa6Bl67ZeE4TGzB8OQj/1C/xI6rGBs/pu93UqX/n4Z9Yk31RwNrXBy2o0BwYpsu0qTokiaAg0G/DtzNQlCmWBboWpftWi48BU+tUQhyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aSFzF0Io; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=bVSFIbdlZ5h7cZPBg6U/NHAmh/LoA//3/wiVHSVD3i4L5nZ7cblm6/kZDp081uTeMSoARZpytflEE2gRyCNtU5Bg9TE7DLDBceze8nQ/KwB+m9ZGOKCVIjQTuPSxFwplFFkoAeQlBI3JN8unCMx0IhTsP6Iov2d4pv/qfO6WAMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=euJqDinB; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aSFzF0Io"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42668cFV020915;
-	Wed, 6 Mar 2024 07:30:46 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="euJqDinB"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4264GgYL027191;
+	Wed, 6 Mar 2024 07:30:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=S10ty99sebGJdDg/EZze
-	O5bavZLB9qCBiYbmsMoBeSo=; b=aSFzF0IoL1tiiOlaNgk4JIOciJsVE21iIe/N
-	S9404WkbNe/U0ERmdOKQcqe1cefKXMCTGCGcvM405B5d2qut6052TDwAAO+5NJt4
-	duh7lA4/v/7F0YkRnxgN5nDJ9BXusagyvI8P6StsqxOanTPVqkAnam9+1gimpEZa
-	zYJTV53JwnU3UcXTsP54soNIdnzLx1k1FYavo2ZAWVSrKM/IsIB7q4ygWdrcPvb3
-	d1gc3Xc4HuXbFeWnPxjLO+VCqdwFSClZFBEbJGWwi3LJ6VWR0EWNUHCVYuwzeeVA
-	7w1odt6PC1jLH8FCjm3P9M/awUR+rDwYjNadXkQ9ToL8faVSmg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpjy3r5mk-1
+	:mime-version:content-type; s=qcppdkim1; bh=oZo2YnbccVAuXSnZc+lW
+	Ut35fh0qCOdd/MVID34SqTg=; b=euJqDinB1JwTSflqIulR06dODlb5z/QDkVWy
+	xAjqjdDylXfYEIQAEKqqpcGPX3indIM+q/3tp+4U8ZMGtSCc+iT9txDc8+WLpiAG
+	WegMizqNFjuju98xOlS8viGYovSkOWh+qde1917jo395X7xVU38bftnx1+mrwNNH
+	tvwnJJxruYfAwyc3Zy1volk9HfIQGFx44arePbgyeFnouCVPWjOyl7wCG7CD9rsg
+	MctzqubUTbRfOuI5GJbb/8lXG/tXD6SKhOInIo7lN1fA2Fbt7Vp++ikYrsc2Ks/4
+	MqedFhiCeq7ueerpz2fHNjx4vfgSyjisostiALyHn6AmmQEknA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wp2bptc86-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 07:30:46 +0000 (GMT)
+	Wed, 06 Mar 2024 07:30:55 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4267Uivl023706
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4267Utn3018903
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 6 Mar 2024 07:30:44 GMT
+	Wed, 6 Mar 2024 07:30:55 GMT
 Received: from hu-okukatla-hyd.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 5 Mar 2024 23:30:39 -0800
+ 15.2.1118.40; Tue, 5 Mar 2024 23:30:50 -0800
 From: Odelu Kukatla <quic_okukatla@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio
@@ -54,9 +54,9 @@ CC: Kees Cook <keescook@chromium.org>, <cros-qcom-dts-watchers@chromium.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>,
         <quic_mdtipton@quicinc.com>
-Subject: [PATCH v3 1/4] interconnect: qcom: icc-rpmh: Add QoS configuration support
-Date: Wed, 6 Mar 2024 13:00:13 +0530
-Message-ID: <20240306073016.2163-2-quic_okukatla@quicinc.com>
+Subject: [PATCH v3 3/4] dt-bindings: interconnect: add clock property to enable QOS on SC7280
+Date: Wed, 6 Mar 2024 13:00:15 +0530
+Message-ID: <20240306073016.2163-4-quic_okukatla@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240306073016.2163-1-quic_okukatla@quicinc.com>
 References: <20240306073016.2163-1-quic_okukatla@quicinc.com>
@@ -71,270 +71,93 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: -LPk5ON0g1L3tEQEuuEcfRSAIizXgoh-
-X-Proofpoint-ORIG-GUID: -LPk5ON0g1L3tEQEuuEcfRSAIizXgoh-
+X-Proofpoint-GUID: aBmVuAPHHo95AXST6M397EKHA1YvD0Bq
+X-Proofpoint-ORIG-GUID: aBmVuAPHHo95AXST6M397EKHA1YvD0Bq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-06_04,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999
+ lowpriorityscore=0 clxscore=1015 malwarescore=0 spamscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2402120000 definitions=main-2403060058
 
-It adds QoS support for QNOC device and includes support for
-configuring priority, priority forward disable, urgency forwarding.
-This helps in priortizing the traffic originating from different
-interconnect masters at NoC(Network On Chip).
+Added clock property to enable clocks required for accessing
+qos registers.
 
 Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
 ---
- drivers/interconnect/qcom/icc-rpmh.c | 105 +++++++++++++++++++++++++++
- drivers/interconnect/qcom/icc-rpmh.h |  32 ++++++++
- 2 files changed, 137 insertions(+)
+ .../interconnect/qcom,sc7280-rpmh.yaml        | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
-index c1aa265c1f4e..b4681849df80 100644
---- a/drivers/interconnect/qcom/icc-rpmh.c
-+++ b/drivers/interconnect/qcom/icc-rpmh.c
-@@ -1,19 +1,57 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
+index b135597d9489..758a6e924037 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
++++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
+@@ -53,10 +53,50 @@ allOf:
+       required:
+         - reg
  
-+#include <linux/clk.h>
- #include <linux/interconnect.h>
- #include <linux/interconnect-provider.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/slab.h>
-+#include <linux/bitfield.h>
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,sc7280-aggre1-noc
++    then:
++      properties:
++        clocks:
++          items:
++            - description: aggre UFS PHY AXI clock
++            - description: aggre USB3 PRIM AXI clock
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,sc7280-aggre2-noc
++    then:
++      properties:
++        clocks:
++          items:
++            - description: RPMH CC IPA clock
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,sc7280-aggre1-noc
++              - qcom,sc7280-aggre2-noc
++    then:
++      required:
++        - clocks
++    else:
++      properties:
++        clocks: false
++
+ unevaluatedProperties: false
  
- #include "bcm-voter.h"
- #include "icc-common.h"
- #include "icc-rpmh.h"
- 
-+/* QNOC QoS */
-+#define QOSGEN_MAINCTL_LO(p, qp)	(0x8 + (p->port_offsets[qp]))
-+#define QOS_SLV_URG_MSG_EN_MASK		BIT_MASK(3)
-+#define QOS_DFLT_PRIO_MASK		GENMASK(6, 4)
-+#define QOS_DISABLE_MASK		BIT_MASK(24)
+ examples:
+   - |
++    #include <dt-bindings/clock/qcom,gcc-sc7280.h>
+     interconnect {
+         compatible = "qcom,sc7280-clk-virt";
+         #interconnect-cells = <2>;
+@@ -69,3 +109,12 @@ examples:
+         #interconnect-cells = <2>;
+         qcom,bcm-voters = <&apps_bcm_voter>;
+     };
 +
-+/**
-+ * qcom_icc_set_qos - initialize static QoS configurations
-+ * @qp: qcom icc provider to which @node belongs
-+ * @node: qcom icc node to operate on
-+ */
-+static void qcom_icc_set_qos(struct qcom_icc_provider *qp,
-+				struct qcom_icc_node *node)
-+{
-+	const struct qcom_icc_qosbox *qos = node->qosbox;
-+	int port;
-+
-+	if (!qp->regmap || !qos)
-+		return;
-+
-+	for (port = 0; port < qos->num_ports; port++) {
-+		regmap_update_bits(qp->regmap, QOSGEN_MAINCTL_LO(qos, port),
-+				   QOS_DISABLE_MASK,
-+				   FIELD_PREP(QOS_DISABLE_MASK, qos->prio_fwd_disable));
-+
-+		regmap_update_bits(qp->regmap, QOSGEN_MAINCTL_LO(qos, port),
-+				   QOS_DFLT_PRIO_MASK,
-+				   FIELD_PREP(QOS_DFLT_PRIO_MASK, qos->prio));
-+
-+		regmap_update_bits(qp->regmap, QOSGEN_MAINCTL_LO(qos, port),
-+				   QOS_SLV_URG_MSG_EN_MASK,
-+				   FIELD_PREP(QOS_SLV_URG_MSG_EN_MASK, qos->urg_fwd));
-+	}
-+}
-+
- /**
-  * qcom_icc_pre_aggregate - cleans up stale values from prior icc_set
-  * @node: icc node to operate on
-@@ -159,6 +197,36 @@ int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev)
- }
- EXPORT_SYMBOL_GPL(qcom_icc_bcm_init);
- 
-+/**
-+ * qcom_icc_rpmh_configure_qos - configure QoS parameters
-+ * @qp: qcom icc provider associated with QoS endpoint nodes
-+ *
-+ * Return: 0 on success, or an error code otherwise
-+ */
-+static int qcom_icc_rpmh_configure_qos(struct qcom_icc_provider *qp)
-+{
-+	struct qcom_icc_node *qnode;
-+	size_t i;
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(qp->num_clks, qp->clks);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < qp->num_nodes; i++) {
-+		qnode = qp->nodes[i];
-+		if (!qnode)
-+			continue;
-+
-+		if (qnode->qosbox)
-+			qcom_icc_set_qos(qp, qnode);
-+	}
-+
-+	clk_bulk_disable_unprepare(qp->num_clks, qp->clks);
-+
-+	return ret;
-+}
-+
- int qcom_icc_rpmh_probe(struct platform_device *pdev)
- {
- 	const struct qcom_icc_desc *desc;
-@@ -199,7 +267,9 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
- 
- 	qp->dev = dev;
- 	qp->bcms = desc->bcms;
-+	qp->nodes = desc->nodes;
- 	qp->num_bcms = desc->num_bcms;
-+	qp->num_nodes = desc->num_nodes;
- 
- 	qp->voter = of_bcm_voter_get(qp->dev, NULL);
- 	if (IS_ERR(qp->voter))
-@@ -229,6 +299,41 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
- 		data->nodes[i] = node;
- 	}
- 
-+	if (desc->config) {
-+		struct resource *res;
-+		void __iomem *base;
-+
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		if (!res) {
-+			dev_warn(dev, "Skipping QoS, failed to get resource\n");
-+			goto skip_qos_config;
-+		}
-+
-+		base = devm_ioremap(dev, res->start, resource_size(res));
-+		if (IS_ERR(base)) {
-+			dev_warn(dev, "Skipping QoS, ioremap failed: %ld\n", PTR_ERR(base));
-+			goto skip_qos_config;
-+		};
-+
-+		qp->regmap = devm_regmap_init_mmio(dev, base, desc->config);
-+
-+		if (IS_ERR(qp->regmap)) {
-+			dev_warn(dev, "Skipping QoS, regmap failed; %ld\n", PTR_ERR(qp->regmap));
-+			goto skip_qos_config;
-+		}
-+
-+		qp->num_clks = devm_clk_bulk_get_all(qp->dev, &qp->clks);
-+		if (qp->num_clks < 0) {
-+			dev_warn(dev, "Skipping QoS, failed to get clk: %d\n", qp->num_clks);
-+			goto skip_qos_config;
-+		}
-+
-+		ret = qcom_icc_rpmh_configure_qos(qp);
-+		if (ret)
-+			dev_warn(dev, "Failed to program QoS: %d\n", ret);
-+	}
-+
-+skip_qos_config:
- 	ret = icc_provider_register(provider);
- 	if (ret)
- 		goto err_remove_nodes;
-diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
-index 2de29460e808..a0533d8aeffe 100644
---- a/drivers/interconnect/qcom/icc-rpmh.h
-+++ b/drivers/interconnect/qcom/icc-rpmh.h
-@@ -1,12 +1,14 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #ifndef __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
- #define __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
- 
- #include <dt-bindings/interconnect/qcom,icc.h>
-+#include <linux/regmap.h>
- 
- #define to_qcom_provider(_provider) \
- 	container_of(_provider, struct qcom_icc_provider, provider)
-@@ -18,6 +20,11 @@
-  * @bcms: list of bcms that maps to the provider
-  * @num_bcms: number of @bcms
-  * @voter: bcm voter targeted by this provider
-+ * @nodes: list of icc nodes that maps to the provider
-+ * @num_nodes: number of @nodes
-+ * @regmap: used for QoS, register access
-+ * @clks : clks required for register access
-+ * @num_clks: number of @clks
-  */
- struct qcom_icc_provider {
- 	struct icc_provider provider;
-@@ -25,6 +32,11 @@ struct qcom_icc_provider {
- 	struct qcom_icc_bcm * const *bcms;
- 	size_t num_bcms;
- 	struct bcm_voter *voter;
-+	struct qcom_icc_node * const *nodes;
-+	size_t num_nodes;
-+	struct regmap *regmap;
-+	struct clk_bulk_data *clks;
-+	int num_clks;
- };
- 
- /**
-@@ -41,6 +53,23 @@ struct bcm_db {
- 	u8 reserved;
- };
- 
-+/**
-+ * struct qcom_icc_qosbox - Qualcomm specific QoS config
-+ * @prio: priority value assigned to requests on the node
-+ * @urg_fwd: whether to forward the urgency promotion issued by master(endpoint), or discard
-+ * @prio_fwd_disable: whether to forward the priority driven by mster, or override by @prio
-+ * @num_ports: number of @ports
-+ * @port_offsets: qos register offsets
-+ */
-+
-+struct qcom_icc_qosbox {
-+	const u32 prio;
-+	const bool urg_fwd;
-+	const bool prio_fwd_disable;
-+	const u32 num_ports;
-+	const u32 port_offsets[] __counted_by(num_ports);
-+};
-+
- #define MAX_LINKS		128
- #define MAX_BCMS		64
- #define MAX_BCM_PER_NODE	3
-@@ -58,6 +87,7 @@ struct bcm_db {
-  * @max_peak: current max aggregate value of all peak bw requests
-  * @bcms: list of bcms associated with this logical node
-  * @num_bcms: num of @bcms
-+ * @qosbox: qos config data associated with node
-  */
- struct qcom_icc_node {
- 	const char *name;
-@@ -70,6 +100,7 @@ struct qcom_icc_node {
- 	u64 max_peak[QCOM_ICC_NUM_BUCKETS];
- 	struct qcom_icc_bcm *bcms[MAX_BCM_PER_NODE];
- 	size_t num_bcms;
-+	const struct qcom_icc_qosbox *qosbox;
- };
- 
- /**
-@@ -114,6 +145,7 @@ struct qcom_icc_fabric {
- };
- 
- struct qcom_icc_desc {
-+	const struct regmap_config *config;
- 	struct qcom_icc_node * const *nodes;
- 	size_t num_nodes;
- 	struct qcom_icc_bcm * const *bcms;
++    interconnect@16e0000 {
++        reg = <0x016e0000 0x1c080>;
++        compatible = "qcom,sc7280-aggre1-noc";
++        #interconnect-cells = <2>;
++        qcom,bcm-voters = <&apps_bcm_voter>;
++        clocks = <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
++                 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>;
++    };
 -- 
 2.17.1
 
