@@ -1,55 +1,57 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B659215E88
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 04:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FF315ACB
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 04:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709698583; cv=none; b=q3rTj5CNR1k5+EVVT78l/53KEp4nSnu5WvquUGWRwo7qL2lM4Cbpc2+MjU9I5CAUMcu6TDdEAHYg5/NQClocMGf1PKGWKn1lvfgkU9yXjW5wKcA/+y1cfp6yJfM/CFpzIP+b6mrSG2oOmf2CcvGVESgz6m/459NFN6Jx+jZqn8Y=
+	t=1709698584; cv=none; b=L9Gf5LbKmFcsTyVyAvwB/EabjwUmwyZLB+RmYd78Efli0H7Bd75s52qKiOmGn/QrELiPrKnoSCiJNESwmCE4I3LL8/d0T13WhDKdlP1EXRZGAN3BTmhMpHz0Xdijl4GeQf6fn5EjuQtEyT7eZL8OmdS6+c1TTCUsYsJvGfcvj2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709698583; c=relaxed/simple;
-	bh=LCWDVMd2cP9Hje6mZMeKEz/+mvm0x1ByA7NqlbRQIC0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LvWl2a4yAc44p8mDk3eW2z/p7vj2foCiEI1OYZYRMBJvL3FBPHa1Ap4MJhfGET7T5RHyZywuQ9OEAVkTcnPd3yLE0XXS9LKoqaSWFs15pwSlF3ruPS7vGIr3wQqyfh1DNGY37ht57ADw6z+taQoDMz5nKIHDg9Injiq8b4ilB54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=HRBGG9fw; arc=none smtp.client-ip=209.85.222.174
+	s=arc-20240116; t=1709698584; c=relaxed/simple;
+	bh=dEF4fHRjltrstHuxukV0Wd2znano2LVwA29eCmc//+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MfZ8Ya9h1eyF2ykMQ/hQs4ETjn23iuhlvlomAGQMUYCgXSB0p6Zh9H1qSmG60VHSpa4IAnvstCP5HU3jeZat3j6Qy9acqw+aAtsFhadvdtBUwoyYTTstDnQWcwPGV8gNwsRQfeZQ+mTThQKNL6sOeIuoH/WdErVkzfhksJ+s5VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=LgWk2zI7; arc=none smtp.client-ip=209.85.160.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="HRBGG9fw"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78833eb8fe5so42426685a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 20:16:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="LgWk2zI7"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-42edb6f56f2so17933281cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 20:16:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1709698578; x=1710303378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YsnCXmuMRKvBzC2wS12YISgdwmsP7gvOkh2IUHdH8Ac=;
-        b=HRBGG9fwRo0h+3kJixoTql0hy57+yhwG0B6gbFeKUoLPSKCKPGQn3ApCaO+VbPBDGP
-         RNyHGYkOcTOZyZCSlfwOmwxIXMKtZTM5cDk4duqZIzOrJbdYSXAF+kh104ZaZefb6oOD
-         5awcpJS19rJX12hl8l4Xg8MRY1IO02BE5h7b4osVNkKTaVLW9e+M/XBP8k7GIfTMFaKC
-         aouOTiyH60uxosMBrxDRvKMnXzvXBaqD8Me2B3BJ1SQsR/rq91JyTZhQf8+vhhWBmjmU
-         fsi9WRT8YRJy8KXMU5J+yCL/RQe/jTTgLA+UPDx5BvQGeBy/eFlQjfgoG+SvaHvgqDk7
-         GbOQ==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1709698581; x=1710303381; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xpqItcyH2EDAXtPSFuVCpgEvxVG9s6bJRth9b0kyPMA=;
+        b=LgWk2zI7jGhLHmdeBJx0VevSKPoeopb+6F33HQRCc96RfG0mslR7b394J/wV5NW1RM
+         BRXBux8eeK4PpFcnZPSC+tdpuE+XMkPe4H0JXb1h7G1eZAg2gcgBRZVV5gm/SqqUntp/
+         +x6+VCsFOD2NXn2HL5F/w2OmfNqz24qOFkW6j2gtFfviziO37CrzMNSDgnumgi0DkimR
+         0tZMAtPb9D7cEHygucTVg7+1XrrBPU4Eum0ortfkI/+/5vD/+d9LW42x+r52acE4heHI
+         kDvVwZEfDuIJAK5jqustPmzCJyv40hO2uGVJCNZoJnQ4CDvPz2dVvIHzFEjrz5XmkX3N
+         MGcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709698578; x=1710303378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YsnCXmuMRKvBzC2wS12YISgdwmsP7gvOkh2IUHdH8Ac=;
-        b=cML7itrUMV3FxKYDG4bH6hDpbry7k8Y61pLMf5e/QFpZQeE2Is/me7R02pM5WkTvtT
-         3J+YYYEdlAIod4Y+egpAA9GTxVFmiTTKSXlVXPuL/KtEycV6zR9cefXp6F5Qk1zgSxEv
-         7+Oc4rIK01SzC+xzZBpxwKNkYRlTr66UEiLyGUbJt8DZXNzhb2rG4tPyCOCNwrS2vUWd
-         /ZBuGJEGOs/J2tlOeZH5NNNxMo4Me4rBnQYak3H5AE7HeDdGQnUCf6scB1iLPwfBI2En
-         6K2zScs1N5D87+bo45sBGlMw9BM1uRXRKE541FT1efjyrNJIvGDax2X5vqKbl8oBynQD
-         ErgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMhOuEwntK9+eL1N9JnNtRRBTReLAvO4p/v8N+/4DkDe9FoXDxwJZMpmxFjQcQ/joW5PKXyt7Faxa8Vxc0f9ZgY15OrUeeGK0geDKo
-X-Gm-Message-State: AOJu0YwZh5aDSLd+PDaIkvOkFdbQcWDHftV0Qh/8Oz+tqtLnkU/1zBHQ
-	mPQk8QfhHS0hEyUIHY+36dvcy6aTdUlom49mUrp0b8urJP+byDL79KgakUaJPuA=
-X-Google-Smtp-Source: AGHT+IH53ISQ9vRSP9djmHScGNCF84JCjW6dAZats/bbyGKJZujXKrIpjPFayyIuZuRtwc6fudoADg==
-X-Received: by 2002:a05:620a:4247:b0:788:1191:2498 with SMTP id w7-20020a05620a424700b0078811912498mr6688122qko.6.1709698578337;
-        Tue, 05 Mar 2024 20:16:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709698581; x=1710303381;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xpqItcyH2EDAXtPSFuVCpgEvxVG9s6bJRth9b0kyPMA=;
+        b=TzFxpMjKr+vuWyygYi9/Sau01tAJA2nxD0SG/xdpOqQoGxqxfE6E/DeCVQaR5aIluF
+         sXcJF6+bEm4O3ynoXj297k+i8NXbp0tgjzmf+GS6P+SKobNrJtxFo8pr14ueRkIAGh3H
+         VWlaRYDQuQx+cUzwXbfHDUA5zsVAPFkxCgNXlAug52J4Cto1jAkmLicjGFRnGhWCEvq4
+         ounFb+IJ2f7o7Qs2BaAIqQzlBnkMPWsXlaJW+ljNzEk9JMsCN469AFG6QOFpNmoeCApP
+         NN2AYuq0d5CAhWc1BPzlrICUF1poZYUyAyJGS/SinRzi6u6lMGwNRzbKsxUn8KqKyT4m
+         WPAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWtDJt2fHW4MUy+XExBUBAYSilM2+V/s8ehOiwVCMGGXpy+ZmjI3VQEffHDOkTS4jPV7PMKZ/91Vd7Ds9PyQA4IzALtB4cHfWzZ/yls
+X-Gm-Message-State: AOJu0Yw/uAiQbMX3w5Lp8IKUJSK4g2BvihzaYdugn8FaNYWuUni4jH81
+	n/U4G80n+nAM9Lz1jisCfob1KnmC4LWiLbHzoPhoSp/xo5l9Z3Gd62tqcGzNg5o=
+X-Google-Smtp-Source: AGHT+IFlnJve3Rb16fSRkg2cnwF59nsIv8qKr5z8db/VPIGVmj2pSzSHnn6osAw7nOgwMuODvBzfPg==
+X-Received: by 2002:a05:622a:110b:b0:42e:f56b:91d1 with SMTP id e11-20020a05622a110b00b0042ef56b91d1mr4214660qty.32.1709698581469;
+        Tue, 05 Mar 2024 20:16:21 -0800 (PST)
 Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id g2-20020a05620a108200b007884103dfcesm24324qkk.87.2024.03.05.20.16.17
+        by smtp.gmail.com with ESMTPSA id k6-20020ac80746000000b0042ee243ca95sm3509250qth.50.2024.03.05.20.16.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 20:16:17 -0800 (PST)
+        Tue, 05 Mar 2024 20:16:20 -0800 (PST)
 From: Johannes Weiner <hannes@cmpxchg.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>,
@@ -60,10 +62,12 @@ Cc: Vlastimil Babka <vbabka@suse.cz>,
 	David Hildenbrand <david@redhat.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V3 01/10] mm: page_alloc: freelist migratetype hygiene
-Date: Tue,  5 Mar 2024 23:08:31 -0500
-Message-ID: <20240306041526.892167-1-hannes@cmpxchg.org>
+Subject: [PATCH 02/10] mm: page_alloc: optimize free_unref_page_list()
+Date: Tue,  5 Mar 2024 23:08:33 -0500
+Message-ID: <20240306041526.892167-3-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240306041526.892167-1-hannes@cmpxchg.org>
+References: <20240306041526.892167-1-hannes@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,237 +76,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello! This is version 3 of the freelist hygiene patches. Sorry it's
-been a while. The short of it is I fixed the bugs uncovered last time
-by Mike and Vlastimil, incorporated Vlastimils suggested optimizations
-and reworked a good chunk of the page isolation code with Zi.
+Move direct freeing of isolated pages to the lock-breaking block in
+the second loop. This saves an unnecessary migratetype reassessment.
 
-I also iterated on the benchmarks somewhat and grabbed the extfrag
-stats Mel suggested, as well as stats on mismatches between requested
-and received migratetypes from the allocator. I think the results of
-this are pretty good.
+Minor comment and local variable scoping cleanups.
 
-Rationale, test results, and detailed changelog follow.
-
+Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+Tested-by: "Huang, Ying" <ying.huang@intel.com>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
+ mm/page_alloc.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-This is a breakout series from the huge page allocator patches[1].
-
-While testing and benchmarking the series more incrementally, as per
-reviewer request, it became apparent that there are several sources of
-freelist migratetype violations that later patches in the series hid.
-
-Those violations occur when pages of one migratetype end up on the
-freelists of another type. This encourages incompatible page mixing
-down the line, where allocation requests ask for one migrate type, but
-receives pages of another. This defeats the mobility grouping.
-
-The series addresses those causes. The last patch adds type checks on
-all freelist movements to rule out any violations. I used these checks
-to identify the violations fixed up in the preceding patches.
-
-The series is a breakout, but has merit on its own: Less type mixing
-means improved grouping, means less work for compaction, means higher
-THP success rate and lower allocation latencies.
-
-The results can be seen in a mixed workload that stresses the machine
-with a memcache-type workload and a kernel build job while
-periodically attempting to allocate batches of THP. The following data
-is aggregated over 50 consecutive defconfig builds:
-
-                                                        VANILLA                 PATCHED
-Hugealloc Time mean                      165843.93 (    +0.00%)  113025.88 (   -31.85%)
-Hugealloc Time stddev                    158957.35 (    +0.00%)  114716.07 (   -27.83%)
-Kbuild Real time                            310.24 (    +0.00%)     300.73 (    -3.06%)
-Kbuild User time                           1271.13 (    +0.00%)    1259.42 (    -0.92%)
-Kbuild System time                          582.02 (    +0.00%)     559.79 (    -3.81%)
-THP fault alloc                           30585.14 (    +0.00%)   40853.62 (   +33.57%)
-THP fault fallback                        36626.46 (    +0.00%)   26357.62 (   -28.04%)
-THP fault fail rate %                        54.49 (    +0.00%)      39.22 (   -27.53%)
-Pagealloc fallback                         1328.00 (    +0.00%)       1.00 (   -99.85%)
-Pagealloc type mismatch                  181009.50 (    +0.00%)       0.00 (  -100.00%)
-Direct compact stall                        434.56 (    +0.00%)     257.66 (   -40.61%)
-Direct compact fail                         421.70 (    +0.00%)     249.94 (   -40.63%)
-Direct compact success                       12.86 (    +0.00%)       7.72 (   -37.09%)
-Direct compact success rate %                 2.86 (    +0.00%)       2.82 (    -0.96%)
-Compact daemon scanned migrate          3370059.62 (    +0.00%) 3612054.76 (    +7.18%)
-Compact daemon scanned free             7718439.20 (    +0.00%) 5386385.02 (   -30.21%)
-Compact direct scanned migrate           309248.62 (    +0.00%)  176721.04 (   -42.85%)
-Compact direct scanned free              433582.84 (    +0.00%)  315727.66 (   -27.18%)
-Compact migrate scanned daemon %             91.20 (    +0.00%)      94.48 (    +3.56%)
-Compact free scanned daemon %                94.58 (    +0.00%)      94.42 (    -0.16%)
-Compact total migrate scanned           3679308.24 (    +0.00%) 3788775.80 (    +2.98%)
-Compact total free scanned              8152022.04 (    +0.00%) 5702112.68 (   -30.05%)
-Alloc stall                                 872.04 (    +0.00%)    5156.12 (  +490.71%)
-Pages kswapd scanned                     510645.86 (    +0.00%)    3394.94 (   -99.33%)
-Pages kswapd reclaimed                   134811.62 (    +0.00%)    2701.26 (   -98.00%)
-Pages direct scanned                      99546.06 (    +0.00%)  376407.52 (  +278.12%)
-Pages direct reclaimed                    62123.40 (    +0.00%)  289535.70 (  +366.06%)
-Pages total scanned                      610191.92 (    +0.00%)  379802.46 (   -37.76%)
-Pages scanned kswapd %                       76.36 (    +0.00%)       0.10 (   -98.58%)
-Swap out                                  12057.54 (    +0.00%)   15022.98 (   +24.59%)
-Swap in                                     209.16 (    +0.00%)     256.48 (   +22.52%)
-File refaults                             17701.64 (    +0.00%)   11765.40 (   -33.53%)
-
-Huge page success rate is higher, allocation latencies are shorter and
-more predictable.
-
-Stealing (fallback) rate is drastically reduced. Notably, while the
-vanilla kernel keeps doing fallbacks on an ongoing basis, the patched
-kernel enters a steady state once the distribution of block types is
-adequate for the workload. Steals over 50 runs:
-
-VANILLA         PATCHED
-1504.0		227.0
-1557.0		6.0
-1391.0		13.0
-1080.0		26.0
-1057.0		40.0
-1156.0		6.0
-805.0		46.0
-736.0		20.0
-1747.0		2.0
-1699.0		34.0
-1269.0		13.0
-1858.0		12.0
-907.0		4.0
-727.0		2.0
-563.0		2.0
-3094.0		2.0
-10211.0		3.0
-2621.0		1.0
-5508.0		2.0
-1060.0		2.0
-538.0		3.0
-5773.0		2.0
-2199.0		0.0
-3781.0		2.0
-1387.0		1.0
-4977.0		0.0
-2865.0		1.0
-1814.0		1.0
-3739.0		1.0
-6857.0		0.0
-382.0		0.0
-407.0		1.0
-3784.0		0.0
-297.0		0.0
-298.0		0.0
-6636.0		0.0
-4188.0		0.0
-242.0		0.0
-9960.0		0.0
-5816.0		0.0
-354.0		0.0
-287.0		0.0
-261.0		0.0
-140.0		1.0
-2065.0		0.0
-312.0		0.0
-331.0		0.0
-164.0		0.0
-465.0		1.0
-219.0		0.0
-
-Mismatches are down too. Those count every time an allocation request
-asks for one migratetype and gets another. This still happens in the
-patched kernel due to non-stealing fallbacks, but it's quite rare and
-follows the pattern of overall fallbacks - once the block type
-distribution settles, mismatches cease as well:
-
-VANILLA:        PATCHED:
-182602.0	268.0
-135794.0	20.0
-88619.0		19.0
-95973.0		0.0
-129590.0	0.0
-129298.0	0.0
-147134.0	0.0
-230854.0	0.0
-239709.0	0.0
-137670.0	0.0
-132430.0	0.0
-65712.0		0.0
-57901.0		0.0
-67506.0		0.0
-63565.0		4.0
-34806.0		0.0
-42962.0		0.0
-32406.0		0.0
-38668.0		0.0
-61356.0		0.0
-57800.0		0.0
-41435.0		0.0
-83456.0		0.0
-65048.0		0.0
-28955.0		0.0
-47597.0		0.0
-75117.0		0.0
-55564.0		0.0
-38280.0		0.0
-52404.0		0.0
-26264.0		0.0
-37538.0		0.0
-19671.0		0.0
-30936.0		0.0
-26933.0		0.0
-16962.0		0.0
-44554.0		0.0
-46352.0		0.0
-24995.0		0.0
-35152.0		0.0
-12823.0		0.0
-21583.0		0.0
-18129.0		0.0
-31693.0		0.0
-28745.0		0.0
-33308.0		0.0
-31114.0		0.0
-35034.0		0.0
-12111.0		0.0
-24885.0		0.0
-
-Compaction work is markedly reduced despite a better outcome.
-
-In the vanilla kernel, reclaim seems to have been driven primarily by
-watermark boosting that happens as a result of fallbacks. With those
-all but eliminated, watermarks average lower and kswapd does less
-work. The uptick in direct reclaim is because THP requests have to
-fend for themselves more often - which is intended policy right
-now. Aggregate reclaim activity is lowered significantly, though.
-
-V3:
-- fixed freelist type violations from non-atomic page isolation
-  updates (Zi Yan)
-- fixed incorrect migratetype update ordering during merge (Vlastimil Babka)
-- reject moving a zone-straddling block altogether (Vlastimil Babka)
-- fixed freelist type violations from lockless migratetype lookups in
-  cornercase freeing paths (Vlastimil Babka)
-- fixed erroneous WARN in the bulk freeing path that was intended to catch
-  mistakes in the now-removed pcpcache (Mike Kravetz)
-- fixed typo in patch 1's changelog (Zi Yan)
-- optimized migratetype lookup in free_unref_page_list() (Vlastimil Babka)
-- batched vmstat updates in page merging hot path (Vlastimil Babka)
-- rebased to mm-everything-2024-03-05-20-43 (v6.8-rc5+)
-
-V2:
-- dropped the get_pfnblock_migratetype() optimization
-  patchlet since somebody else beat me to it (thanks Zi)
-- broke out pcp bypass fix since somebody else reported the bug:
-  https://lore.kernel.org/linux-mm/20230911181108.GA104295@cmpxchg.org/
-- fixed the CONFIG_UNACCEPTED_MEMORY build (lkp)
-- rebased to v6.6-rc1
-
- include/linux/mm.h             |  18 +-
- include/linux/page-isolation.h |   5 +-
- include/linux/vmstat.h         |   8 -
- mm/debug_page_alloc.c          |  12 +-
- mm/internal.h                  |   9 -
- mm/page_alloc.c                | 650 +++++++++++++++++++++------------------
- mm/page_isolation.c            | 122 +++-----
- 7 files changed, 410 insertions(+), 414 deletions(-)
-
-Based on mm-everything-2024-03-05-20-43.
-
-[1] https://lore.kernel.org/lkml/20230418191313.268131-1-hannes@cmpxchg.org/
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 9665a2db3b53..88f4e08726ee 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2521,30 +2521,17 @@ void free_unref_folios(struct folio_batch *folios)
+ 	unsigned long __maybe_unused UP_flags;
+ 	struct per_cpu_pages *pcp = NULL;
+ 	struct zone *locked_zone = NULL;
+-	int i, j, migratetype;
++	int i, j;
+ 
+ 	/* Prepare folios for freeing */
+ 	for (i = 0, j = 0; i < folios->nr; i++) {
+ 		struct folio *folio = folios->folios[i];
+-		unsigned long pfn = folio_pfn(folio);
+ 		unsigned int order = folio_order(folio);
+ 
+ 		if (order > 0 && folio_test_large_rmappable(folio))
+ 			folio_undo_large_rmappable(folio);
+ 		if (!free_pages_prepare(&folio->page, order))
+ 			continue;
+-
+-		/*
+-		 * Free isolated folios and orders not handled on the PCP
+-		 * directly to the allocator, see comment in free_unref_page.
+-		 */
+-		migratetype = get_pfnblock_migratetype(&folio->page, pfn);
+-		if (!pcp_allowed_order(order) ||
+-		    is_migrate_isolate(migratetype)) {
+-			free_one_page(folio_zone(folio), &folio->page, pfn,
+-					order, migratetype, FPI_NONE);
+-			continue;
+-		}
+ 		folio->private = (void *)(unsigned long)order;
+ 		if (j != i)
+ 			folios->folios[j] = folio;
+@@ -2557,15 +2544,29 @@ void free_unref_folios(struct folio_batch *folios)
+ 		struct zone *zone = folio_zone(folio);
+ 		unsigned long pfn = folio_pfn(folio);
+ 		unsigned int order = (unsigned long)folio->private;
++		int migratetype;
+ 
+ 		folio->private = NULL;
+ 		migratetype = get_pfnblock_migratetype(&folio->page, pfn);
+ 
+ 		/* Different zone requires a different pcp lock */
+-		if (zone != locked_zone) {
++		if (zone != locked_zone ||
++		    is_migrate_isolate(migratetype)) {
+ 			if (pcp) {
+ 				pcp_spin_unlock(pcp);
+ 				pcp_trylock_finish(UP_flags);
++				locked_zone = NULL;
++				pcp = NULL;
++			}
++
++			/*
++			 * Free isolated pages directly to the
++			 * allocator, see comment in free_unref_page.
++			 */
++			if (is_migrate_isolate(migratetype)) {
++				free_one_page(zone, &folio->page, pfn,
++					      order, migratetype, FPI_NONE);
++				continue;
+ 			}
+ 
+ 			/*
+@@ -2578,7 +2579,6 @@ void free_unref_folios(struct folio_batch *folios)
+ 				pcp_trylock_finish(UP_flags);
+ 				free_one_page(zone, &folio->page, pfn,
+ 					      order, migratetype, FPI_NONE);
+-				locked_zone = NULL;
+ 				continue;
+ 			}
+ 			locked_zone = zone;
+-- 
+2.44.0
 
