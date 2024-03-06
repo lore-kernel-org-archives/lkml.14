@@ -1,255 +1,120 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAEE1448FA
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508E1145353
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709749511; cv=none; b=U7OLnAdYEKUT6dwUBx2zjqTFaJdc666g30fnNH680vT5PgZ3j27hVb4JjSSr60XI8qOlKEwTm84X0aQFSm/QDRJXw/MWm7X4Um5aHFwrhDVxRYJir4EvPOBrkMEzH7HNdgIMwZKMjlQacW8JQgE0s43KnRhgycDsQKBYIP7A1P4=
+	t=1709749512; cv=none; b=lyWO+iQmjhGbgNJ1g8noB8dW9ZIm1/JculBJDTS0vX5749X44d2YCIMAJ/ioN3GYYTgr0gZr8LOwWp9tUQxcu/13F6+Sh03mSi9VPI616KWGTsQM0Sa7YegduLJzuV3GspbNXUI82skvmtqmYNu8xH04/nlGlHS1liuso4bgBW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709749511; c=relaxed/simple;
-	bh=w76fRUGZUp2sEJ4t0V9JFFjEr0Jh1N1N4LA1RyBtYmE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QSRT1IJVthHdSUZFXO4E5wmTjJEB60JiW10a1Rgs8GjT87rkxRUndGlIF2qvGmndMLPI3KireiPVy27llY9IVdakfiKi5B2qoNVqK5RZ0Tk3hwgjdmIgK+hxWwjYwQ1+j3yBpNtnVWMTVOFp1eWhpE7eGCsVJ6A1LGdfy3DxDGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bSgZl286; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	s=arc-20240116; t=1709749512; c=relaxed/simple;
+	bh=6QmO9SZfOYGCQNYv4ZynnxE5IKMUsPX/PaEUiiJ1CpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZdB7lGtlNL4v2fI6X7V0EnVNpxwndE4a6MDUjEL+Ako0cVQK+Ps72+DvJWLCvrYA1bijBR9eGhZDU0zPW6gaCqedNC/CEKX6sa8eyRFKpROx/8SfGgOEVURxWYodubw397Owd1SEgTLlcIAHn4aR3bgpyZtfQAIs5AuWRaxoF+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=AxsmY1NC; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bSgZl286"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60998466af4so108257b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 10:25:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="AxsmY1NC"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e5760eeb7aso15464b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 10:25:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709749508; x=1710354308; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tPAQlIYBmu/nqjnWAR+Y3waoaH5kDJ/L5+WSbugHpuw=;
-        b=bSgZl286jTnsqnlKTgB4OSkFLrCqwd+ab/e6Ll3b5TdHAkTv831brq97jYhDBqJ0ev
-         Ohwgj97508UjJBOdcaoHbEN4c8+iLCUTKpAa3J1f7WhSHvLdcxyvM5i610EeoVF4Augk
-         YbiI8CrabV2DjF/aOtWuzUldlNrU4mCkTAmOqtaf5Oy5gdv5ercVk+go0royQOPpExYO
-         v/ic4qJ5vZ+txVO1/YIlkLjGBCVbXTOoG0Na25kmfltbaihSa/OsGz8rj/bV14e+dvvu
-         6qqB+TAx5pCaX3K71u+q7a9TueFOMcCF9VQyqlKxCc4zJTIqs/T/Xv57Cc9xDp8dj/Jm
-         zOrQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709749509; x=1710354309; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Y5GuVIgcMEMa1wdjCxyxHdeavu9gb67/KgkXVHvPFs=;
+        b=AxsmY1NC9fuaUQo1Br5pKJHLR38CTsfblqW1GsR4i8zDylW1c0UI3m3754PzQ+2hqW
+         3uQCoP+fvV5ck+lnuWdTfWyrhFq14qC+8ei3NURS7FHfbRWGaacIz9lLYpNB0r+Vipdo
+         5Aowlhr/2xNhjl6alyczQ1DPjillipWYnniZy6ddIZVe8b+ckdmzI8kdf4d4XCG6a4Qd
+         I01SYaBGcOMcvG9zhsobLnw+zDJkWFpujStHW9ijAWES2Q9UFmUHYiL4GeWx2ANHoRo8
+         gsyMhxy3fyhdDDT5HchsVvpe22h/1ZvH9qGeNbSF7szNHWGWUb60tFn0lca1l9/7++lE
+         JIhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709749508; x=1710354308;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tPAQlIYBmu/nqjnWAR+Y3waoaH5kDJ/L5+WSbugHpuw=;
-        b=HbOzwVCQz9nvjlWr08GbKROpdzveyBwVgnfrJBBJ/7AOG6qiKI+h4YMc/c20DYvEZc
-         sf2LDVrkVzsnV7DdPzCqWRzNx6ILbL2Azu73z5C+72eXcOF3NG/HLFobFZFJlUSfIO4J
-         3BN0/Sw9kp0OdCWTPJs6Fsi/gIK7xwDhWsPbHGVkv1tF83/JKaXe74vK2llN+yizJafd
-         +hOb3sqApHm9CXAzvlMi3tmBiyoJkW4pMrOTmO0ajlQ5qDFle9r3XvpPo2IELYwZvr86
-         JMhwE7lGO/K6BwucdobUyerRMoeFdYNPWSWDFd8ACNNbNMLjvLE8bnhPvfyujVSFZOFq
-         xv7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUUbWAiA0PxIVk8j5nL4oEff+d2cCGhv5BaXOy2jWrsrXTw8V9dtQUYWJF9zMxJb5UssGghZDkAEpnVjr9io17wsTnzKSAe9i8H7pAY
-X-Gm-Message-State: AOJu0YxQsQI+7dJ6ZBiFSZGo1K+GYTALApgekeLtz4/093+vgCA3mBMN
-	L3PKLS4MwzspKjfUDxaIERDfHlvGjIE7SVr1iazU9DRm41qKRgt8mHsqxTKdmxKwFrgCy9JMsbt
-	mhA==
-X-Google-Smtp-Source: AGHT+IEd0tsvecVu5KDk9xxf7Y3b9Rk1jgR8DS8Z815x0mHqtjUMO8iZmPCQu0I1T2SCEsTJC91g87PAOnY=
-X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:85f0:e3db:db05:85e2])
- (user=surenb job=sendgmr) by 2002:a05:690c:ec5:b0:609:247a:fd3c with SMTP id
- cs5-20020a05690c0ec500b00609247afd3cmr4821873ywb.2.1709749508522; Wed, 06 Mar
- 2024 10:25:08 -0800 (PST)
-Date: Wed,  6 Mar 2024 10:24:09 -0800
-In-Reply-To: <20240306182440.2003814-1-surenb@google.com>
+        d=1e100.net; s=20230601; t=1709749509; x=1710354309;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Y5GuVIgcMEMa1wdjCxyxHdeavu9gb67/KgkXVHvPFs=;
+        b=Q/+k0R7LGC4bV4nhc9kX0h4pq+lSBaS94Faqs+9csdYRS7GNaxahn+MQcwAvbehBGq
+         gkRKezakznGGZEAzcjeYmtwCSjluiZkwjl4HSCrmPLqv6VX8QVbOYG2T9RiA+dte5Azr
+         Zt+IeH3zVTI1Kl2QxiEUKp3UStw5f5DdJdJNJ+cfva19Sxp30sA44YpoNQ+6qcE0IBsk
+         K6IMmSis3l2kQtUdyp/hjdLs33axUBaJQgfRwJ+HcxtxdzPzFGjca6CnoAXbC2hWXbOH
+         BU3wREEJoA2IqXOQuwH13RL9bZOKkzUtDXlJf/kong7gqdPdfbr+TBjWAtu/MjJ84lKj
+         IYFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVloCKT1katws2bQOEtvynpJqLbYNckbryFVFatdRaUORTg5Af/ODsF/xNjMIbXsJQ9BMrkHln8kVg4dryQhcYxrufrSy9x6HLbbbVZ
+X-Gm-Message-State: AOJu0YxuJbQHHzFZm+AcHkYaUACrEE3MbnUY8jttObgch17AG+fOF3kM
+	Q4yjaPz86qwo2iVTtZri3F38x6/r2L+hYM+QQqyJO8NImPNtsqUwHDtlCU0kGx8rTFi80VpqvgD
+	kkvo=
+X-Google-Smtp-Source: AGHT+IFzBSLMGaJ08Dnj/BOlVEgA32D3g8w6QsqRlEsrWvsKtK4rYL3jf902EvY1b1GzhFtzX6klyA==
+X-Received: by 2002:a05:6a00:a86:b0:6e6:5374:411a with SMTP id b6-20020a056a000a8600b006e65374411amr1699696pfl.18.1709749509245;
+        Wed, 06 Mar 2024 10:25:09 -0800 (PST)
+Received: from ghost ([2600:1010:b05d:dc52:3fa4:a88f:2bde:e9a])
+        by smtp.gmail.com with ESMTPSA id f17-20020a63e311000000b005dc4da2121fsm11201406pgh.6.2024.03.06.10.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 10:25:08 -0800 (PST)
+Date: Wed, 6 Mar 2024 10:25:05 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Charles Lohr <lohr85@gmail.com>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/4] riscv: Decouple emulated unaligned accesses from
+ access speed
+Message-ID: <Zei1Ac8RKNJu01Fs@ghost>
+References: <20240301-disable_misaligned_probe_config-v6-0-612ebd69f430@rivosinc.com>
+ <20240301-disable_misaligned_probe_config-v6-3-612ebd69f430@rivosinc.com>
+ <20240306-tactless-decathlon-b0df16517b1b@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240306182440.2003814-1-surenb@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <20240306182440.2003814-12-surenb@google.com>
-Subject: [PATCH v5 11/37] lib: code tagging module support
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
-	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org, 
-	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
-	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, 
-	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
-	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
-	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
-	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, 
-	rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
-	surenb@google.com, kernel-team@android.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240306-tactless-decathlon-b0df16517b1b@wendy>
 
-Add support for code tagging from dynamically loaded modules.
+On Wed, Mar 06, 2024 at 01:19:37PM +0000, Conor Dooley wrote:
+> On Fri, Mar 01, 2024 at 05:45:34PM -0800, Charlie Jenkins wrote:
+> 
+> > -void unaligned_emulation_finish(void)
+> > +bool check_unaligned_access_emulated_all_cpus(void)
+> >  {
+> >  	int cpu;
+> >  
+> > -	/*
+> > -	 * We can only support PR_UNALIGN controls if all CPUs have misaligned
+> > -	 * accesses emulated since tasks requesting such control can run on any
+> > -	 * CPU.
+> > -	 */
+> 
+> Why was this comment removed? This patch doesn't change the situations
+> in which PR_UNALIGN is allowed, right?
 
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Co-developed-by: Kent Overstreet <kent.overstreet@linux.dev>
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
----
- include/linux/codetag.h | 12 +++++++++
- kernel/module/main.c    |  4 +++
- lib/codetag.c           | 58 +++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 72 insertions(+), 2 deletions(-)
+I'll add it back, that was unintentional. Thank you.
 
-diff --git a/include/linux/codetag.h b/include/linux/codetag.h
-index 7734269cdb63..c44f5b83f24d 100644
---- a/include/linux/codetag.h
-+++ b/include/linux/codetag.h
-@@ -33,6 +33,10 @@ union codetag_ref {
- struct codetag_type_desc {
- 	const char *section;
- 	size_t tag_size;
-+	void (*module_load)(struct codetag_type *cttype,
-+			    struct codetag_module *cmod);
-+	void (*module_unload)(struct codetag_type *cttype,
-+			      struct codetag_module *cmod);
- };
- 
- struct codetag_iterator {
-@@ -65,4 +69,12 @@ void codetag_to_text(struct seq_buf *out, struct codetag *ct);
- struct codetag_type *
- codetag_register_type(const struct codetag_type_desc *desc);
- 
-+#if defined(CONFIG_CODE_TAGGING) && defined(CONFIG_MODULES)
-+void codetag_load_module(struct module *mod);
-+void codetag_unload_module(struct module *mod);
-+#else
-+static inline void codetag_load_module(struct module *mod) {}
-+static inline void codetag_unload_module(struct module *mod) {}
-+#endif
-+
- #endif /* _LINUX_CODETAG_H */
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index b0b99348e1a8..bf5a4afbe4c5 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -56,6 +56,7 @@
- #include <linux/dynamic_debug.h>
- #include <linux/audit.h>
- #include <linux/cfi.h>
-+#include <linux/codetag.h>
- #include <linux/debugfs.h>
- #include <uapi/linux/module.h>
- #include "internal.h"
-@@ -1242,6 +1243,7 @@ static void free_module(struct module *mod)
- {
- 	trace_module_free(mod);
- 
-+	codetag_unload_module(mod);
- 	mod_sysfs_teardown(mod);
- 
- 	/*
-@@ -2983,6 +2985,8 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 	/* Get rid of temporary copy. */
- 	free_copy(info, flags);
- 
-+	codetag_load_module(mod);
-+
- 	/* Done! */
- 	trace_module_load(mod);
- 
-diff --git a/lib/codetag.c b/lib/codetag.c
-index 8b5b89ad508d..54d2828eba25 100644
---- a/lib/codetag.c
-+++ b/lib/codetag.c
-@@ -124,15 +124,20 @@ static void *get_symbol(struct module *mod, const char *prefix, const char *name
- {
- 	DECLARE_SEQ_BUF(sb, KSYM_NAME_LEN);
- 	const char *buf;
-+	void *ret;
- 
- 	seq_buf_printf(&sb, "%s%s", prefix, name);
- 	if (seq_buf_has_overflowed(&sb))
- 		return NULL;
- 
- 	buf = seq_buf_str(&sb);
--	return mod ?
-+	preempt_disable();
-+	ret = mod ?
- 		(void *)find_kallsyms_symbol_value(mod, buf) :
- 		(void *)kallsyms_lookup_name(buf);
-+	preempt_enable();
-+
-+	return ret;
- }
- 
- static struct codetag_range get_section_range(struct module *mod,
-@@ -173,8 +178,11 @@ static int codetag_module_init(struct codetag_type *cttype, struct module *mod)
- 
- 	down_write(&cttype->mod_lock);
- 	err = idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
--	if (err >= 0)
-+	if (err >= 0) {
- 		cttype->count += range_size(cttype, &range);
-+		if (cttype->desc.module_load)
-+			cttype->desc.module_load(cttype, cmod);
-+	}
- 	up_write(&cttype->mod_lock);
- 
- 	if (err < 0) {
-@@ -185,6 +193,52 @@ static int codetag_module_init(struct codetag_type *cttype, struct module *mod)
- 	return 0;
- }
- 
-+void codetag_load_module(struct module *mod)
-+{
-+	struct codetag_type *cttype;
-+
-+	if (!mod)
-+		return;
-+
-+	mutex_lock(&codetag_lock);
-+	list_for_each_entry(cttype, &codetag_types, link)
-+		codetag_module_init(cttype, mod);
-+	mutex_unlock(&codetag_lock);
-+}
-+
-+void codetag_unload_module(struct module *mod)
-+{
-+	struct codetag_type *cttype;
-+
-+	if (!mod)
-+		return;
-+
-+	mutex_lock(&codetag_lock);
-+	list_for_each_entry(cttype, &codetag_types, link) {
-+		struct codetag_module *found = NULL;
-+		struct codetag_module *cmod;
-+		unsigned long mod_id, tmp;
-+
-+		down_write(&cttype->mod_lock);
-+		idr_for_each_entry_ul(&cttype->mod_idr, cmod, tmp, mod_id) {
-+			if (cmod->mod && cmod->mod == mod) {
-+				found = cmod;
-+				break;
-+			}
-+		}
-+		if (found) {
-+			if (cttype->desc.module_unload)
-+				cttype->desc.module_unload(cttype, cmod);
-+
-+			cttype->count -= range_size(cttype, &cmod->range);
-+			idr_remove(&cttype->mod_idr, mod_id);
-+			kfree(cmod);
-+		}
-+		up_write(&cttype->mod_lock);
-+	}
-+	mutex_unlock(&codetag_lock);
-+}
-+
- #else /* CONFIG_MODULES */
- static int codetag_module_init(struct codetag_type *cttype, struct module *mod) { return 0; }
- #endif /* CONFIG_MODULES */
--- 
-2.44.0.278.ge034bb2e1d-goog
+- Charlie
+
+> 
+> > -	for_each_online_cpu(cpu) {
+> > -		if (per_cpu(misaligned_access_speed, cpu) !=
+> > -					RISCV_HWPROBE_MISALIGNED_EMULATED) {
+> > -			return;
+> > -		}
+> > -	}
+> > +	for_each_online_cpu(cpu)
+> > +		if (check_unaligned_access_emulated(cpu))
+> > +			return false;
+> > +
+> >  	unaligned_ctl = true;
+> > +	return true;
+> >  }
+> 
+
 
