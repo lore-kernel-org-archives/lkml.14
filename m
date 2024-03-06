@@ -1,212 +1,133 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7FE143C6C
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF0414403F
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709755443; cv=none; b=AyM7YzK3FoZcoSC/Jvy5lQJcPfSZiDJS1TjrO7XAlKC1/IFw1B8fRqVlptQ/VEK4K+IqWGZHVUmSbafko6VnFM4Ji+eFjzDKUAnjMcAcXdSM/2hNV+XwLH3LgFPMWTwWztFpPnn1SelCjidnOc3rLmcBNTkWob5AKcQeETMteqY=
+	t=1709755444; cv=none; b=GHEGrwLWN6kOo50oIxJCja6Ne6TfkegJnXkNtnbnzGG5jFLr7AEoVl9N/sKWikXang+ufrXBmnRhFNy9dUuFEEUMGPpIn7238LO9T6ef3Qs1mYBGcSUme3sISE6wknz1h0KyyPYwblRQ4zpLWyNP1I629kCW+AlSybj4jtHG12I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709755443; c=relaxed/simple;
-	bh=YnbFyUg19IyC4NGlQHUfGlIjWONpLIgFxHpFqJtP19A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uelPhWyT3nJ8MA0Hf72PqwAJITO7PKq0bhdzXsv0r84MD/WD53Sx5ai6flnJc+g815l5Wxmy3gQe5fXfM3skkfEGjK4liWDVSNtR0b+wrg/RhH6kkwM5K4uTwQYlwwOBc4s/3TFYUhqnAagMciRha4MbY0qxMFzmBw02cvAp2iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dld9EuqG; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709755444; c=relaxed/simple;
+	bh=yXbuN+CoZuGbUAgSQaHGYWiyhuige5NUNnLWq/soBQM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GjH1Lj+ZAGbABeVXc+bhX6rZYRXG7BzVeGm170z5ep9hekMS5UGWe17rpDNC3HxlJzXdk24HntvGHtL+CjgppJq+y+u8kNRUjWiqHwVszRFHgY+ZqFuFBODD+EUQhWX1vYjhKDZ/z16Bdra/fG43sQgDNoDGf9F5oPHcgUZu2Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=sxaH4jB+; arc=none smtp.client-ip=198.252.153.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dld9EuqG"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e622b46f45so97471b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 12:04:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709755441; x=1710360241; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4CE2sNS/vxOPb5cf5bC+myjwShUIoD0EfwdnD7Qy1Os=;
-        b=dld9EuqG0dwtisitmT/BUAykAtkuPJJLVAvmptVB5hwrB4Bjo3nTBvTj7kuyR/Lknd
-         2apEF27+aVMq3b9LIGUUCr0EXvRhu8Odr3lTXcPGfexQ7It0qk3pTht8lwvLUyKs0bS0
-         oi1tiJvL7zNOC4YLL/0rLHnXl4kUVm1nGA/j4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709755441; x=1710360241;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4CE2sNS/vxOPb5cf5bC+myjwShUIoD0EfwdnD7Qy1Os=;
-        b=Bv62RlAvwRq6YD798FkMcOepi2rvSdKv+38NVXtB2tzf/EsMVkqcqYq8W/kbGtlPsd
-         sDNVY+jvsAGWWSb/Uv0+PqmxFLbKRBOXTo+DxFqNEKjZl2dwr+fw9xbbbx1fATJAtyDF
-         o4+G9o5zngILFNYHGRydiOGLxNGnrn6D7oyt5fFrKdrCGGZmMmYYsDboZRX5dFpDOrm+
-         g8IQfV+Ael9HaQ/3pCBFC271tq5XuqCP33TKpmJKVUc0UuxA5hx2m8R3LjeLuiQBZWD9
-         y51ADGWghGaMwTCcNlyS229EQMMzQE0eTIU++t+vxKtqdN5wAs5hcxp4ur9UkU4YZ1cZ
-         slZg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5rokb1try04DQGLWfRfv683s3L7DMXLq4Spl+4z+bT0pVtcIwid65P8uNWj4iwPgDTfrIZ9dxS/MKMCb2ueVLDBn2w3GwR0ZQ8pfR
-X-Gm-Message-State: AOJu0YxSQ3IKPVmYlZfguCd6sE/md02WMcy4VKlrwuE7Lzz7KUWK18gj
-	/QSJ5qmIwdWut8h7Q5GqH8p5Oa+nDXfeWkaJ/chlOGM2AISyyLuJWpSqYrstYg==
-X-Google-Smtp-Source: AGHT+IETZdUaUGspqsCyXd6rJT/N5p6jaVTBU5cNKikpauZE+EH7NLX+lSXVUp6nj8dsq6Y/lQsAUw==
-X-Received: by 2002:a05:6a20:a104:b0:1a1:6f1b:a86a with SMTP id q4-20020a056a20a10400b001a16f1ba86amr126518pzk.28.1709755440790;
-        Wed, 06 Mar 2024 12:04:00 -0800 (PST)
-Received: from hsinyi.sjc.corp.google.com ([2620:15c:9d:2:a215:f6c0:3224:5460])
-        by smtp.gmail.com with ESMTPSA id e3-20020aa79803000000b006e5667793d4sm11124241pfl.66.2024.03.06.12.04.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 12:04:00 -0800 (PST)
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Douglas Anderson <dianders@chromium.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/6] drm/panel-edp: Match edp_panels with panel identity
-Date: Wed,  6 Mar 2024 11:55:55 -0800
-Message-ID: <20240306200353.1436198-6-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-In-Reply-To: <20240306200353.1436198-1-hsinyi@chromium.org>
-References: <20240306200353.1436198-1-hsinyi@chromium.org>
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="sxaH4jB+"
+Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx0.riseup.net (Postfix) with ESMTPS id 4Tqk0K6DYWz9wLd;
+	Wed,  6 Mar 2024 20:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1709755442; bh=yXbuN+CoZuGbUAgSQaHGYWiyhuige5NUNnLWq/soBQM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=sxaH4jB+I12ibLBpFeegaJT5HHbr9J8j1ezVHJuBPLXC0BVfhqvbjVfBxb7b+6JCI
+	 RF+vx+UTTLk3b4s5BI5Cgwr8C4mYoO4uDa7hqYuCbn5M1k0l3wstsYoi8P4YgWHp8U
+	 nRXk71dhMWSTZSUIgsT3Kya+Z+5R8JgDdDarHqyQ=
+X-Riseup-User-ID: 8880DFCE1D029D93798CB6476356726EB753FBDD344B564393D9FDDA451E06DC
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4Tqk0D2vmCzFvsZ;
+	Wed,  6 Mar 2024 20:03:56 +0000 (UTC)
+From: Arthur Grillo <arthurgrillo@riseup.net>
+Date: Wed, 06 Mar 2024 17:03:13 -0300
+Subject: [PATCH 6/7] drm/vkms: Change the gray RGB representation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240306-louis-vkms-conv-v1-6-5bfe7d129fdd@riseup.net>
+References: <20240306-louis-vkms-conv-v1-0-5bfe7d129fdd@riseup.net>
+In-Reply-To: <20240306-louis-vkms-conv-v1-0-5bfe7d129fdd@riseup.net>
+To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
+ Melissa Wen <melissa.srw@gmail.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
+ Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net, 
+ Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi, 
+ Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
+ thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
+ nicolejadeyee@google.com
 
-It's found that some panels have variants that they share the same panel id
-although their EDID and names are different. When matching generic edp
-panels, we should first match with both panel identity, which contains both
-panel id and panel name. If not found, match with panel id only.
+Using the drm_fixed calls, this needs to be changed. Which in fact is
+more correct, colour.YCbCr_to_RGB() gives 0x8080 for same the yuv
+parameters.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
 ---
-v5: no change
----
- drivers/gpu/drm/panel/panel-edp.c | 45 ++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+ drivers/gpu/drm/vkms/tests/vkms_format_test.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index fe51680feb61..772bf6011d79 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -210,15 +210,12 @@ struct panel_desc {
-  * struct edp_panel_entry - Maps panel ID to delay / panel name.
-  */
- struct edp_panel_entry {
--	/** @panel_id: 32-bit ID for panel, encoded with drm_edid_encode_panel_id(). */
--	u32 panel_id;
-+	/** @ident: edid identity used for panel matching. */
-+	const struct drm_edid_ident ident;
- 
- 	/** @delay: The power sequencing delays needed for this panel. */
- 	const struct panel_delay *delay;
- 
--	/** @name: Name of this panel (for printing to logs). */
--	const char *name;
--
- 	/** @override_edid_mode: Override the mode obtained by edid. */
- 	const struct drm_display_mode *override_edid_mode;
- };
-@@ -691,7 +688,7 @@ static int detected_panel_show(struct seq_file *s, void *data)
- 	else if (!p->detected_panel)
- 		seq_puts(s, "HARDCODED\n");
- 	else
--		seq_printf(s, "%s\n", p->detected_panel->name);
-+		seq_printf(s, "%s\n", p->detected_panel->ident.name);
- 
- 	return 0;
- }
-@@ -761,7 +758,7 @@ static void panel_edp_parse_panel_timing_node(struct device *dev,
- 		dev_err(dev, "Reject override mode: No display_timing found\n");
- }
- 
--static const struct edp_panel_entry *find_edp_panel(u32 panel_id);
-+static const struct edp_panel_entry *find_edp_panel(u32 panel_id, const struct drm_edid *edid);
- 
- static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
- {
-@@ -799,7 +796,6 @@ static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
- 	base_block = drm_edid_read_base_block(panel->ddc);
- 	if (base_block) {
- 		panel_id = drm_edid_get_panel_id(base_block);
--		drm_edid_free(base_block);
- 	} else {
- 		dev_err(dev, "Couldn't identify panel via EDID\n");
- 		ret = -EIO;
-@@ -807,7 +803,9 @@ static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
- 	}
- 	drm_edid_decode_panel_id(panel_id, vend, &product_id);
- 
--	panel->detected_panel = find_edp_panel(panel_id);
-+	panel->detected_panel = find_edp_panel(panel_id, base_block);
-+
-+	drm_edid_free(base_block);
- 
- 	/*
- 	 * We're using non-optimized timings and want it really obvious that
-@@ -840,7 +838,7 @@ static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
- 		panel->detected_panel = ERR_PTR(-EINVAL);
- 	} else {
- 		dev_info(dev, "Detected %s %s (%#06x)\n",
--			 vend, panel->detected_panel->name, product_id);
-+			 vend, panel->detected_panel->ident.name, product_id);
- 
- 		/* Update the delay; everything else comes from EDID */
- 		desc->delay = *panel->detected_panel->delay;
-@@ -1954,17 +1952,21 @@ static const struct panel_delay delay_200_500_e50_po2e200 = {
- 
- #define EDP_PANEL_ENTRY(vend_chr_0, vend_chr_1, vend_chr_2, product_id, _delay, _name) \
- { \
--	.name = _name, \
--	.panel_id = drm_edid_encode_panel_id(vend_chr_0, vend_chr_1, vend_chr_2, \
--					     product_id), \
-+	.ident = { \
-+		.name = _name, \
-+		.panel_id = drm_edid_encode_panel_id(vend_chr_0, vend_chr_1, vend_chr_2, \
-+						     product_id), \
-+	}, \
- 	.delay = _delay \
- }
- 
- #define EDP_PANEL_ENTRY2(vend_chr_0, vend_chr_1, vend_chr_2, product_id, _delay, _name, _mode) \
- { \
--	.name = _name, \
--	.panel_id = drm_edid_encode_panel_id(vend_chr_0, vend_chr_1, vend_chr_2, \
--					     product_id), \
-+	.ident = { \
-+		.name = _name, \
-+		.panel_id = drm_edid_encode_panel_id(vend_chr_0, vend_chr_1, vend_chr_2, \
-+						     product_id), \
-+	}, \
- 	.delay = _delay, \
- 	.override_edid_mode = _mode \
- }
-@@ -2111,15 +2113,16 @@ static const struct edp_panel_entry edp_panels[] = {
- 	{ /* sentinal */ }
- };
- 
--static const struct edp_panel_entry *find_edp_panel(u32 panel_id)
-+static const struct edp_panel_entry *find_edp_panel(u32 panel_id, const struct drm_edid *edid)
- {
- 	const struct edp_panel_entry *panel;
- 
--	if (!panel_id)
--		return NULL;
-+	for (panel = edp_panels; panel->ident.panel_id; panel++)
-+		if (drm_edid_match(edid, &panel->ident))
-+			return panel;
- 
--	for (panel = edp_panels; panel->panel_id; panel++)
--		if (panel->panel_id == panel_id)
-+	for (panel = edp_panels; panel->ident.panel_id; panel++)
-+		if (panel->ident.panel_id == panel_id)
- 			return panel;
- 
- 	return NULL;
+diff --git a/drivers/gpu/drm/vkms/tests/vkms_format_test.c b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+index 66cdd83c3d25..49125cf76eb5 100644
+--- a/drivers/gpu/drm/vkms/tests/vkms_format_test.c
++++ b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+@@ -48,7 +48,7 @@ static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+ 		.n_colors = 6,
+ 		.colors = {
+ 			{"white", {0xff, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
+-			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8080, 0x8080, 0x8080}},
+ 			{"black", {0x00, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
+ 			{"red",   {0x4c, 0x55, 0xff}, {0xffff, 0xffff, 0x0000, 0x0000}},
+ 			{"green", {0x96, 0x2c, 0x15}, {0xffff, 0x0000, 0xffff, 0x0000}},
+@@ -71,7 +71,7 @@ static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+ 		.n_colors = 6,
+ 		.colors = {
+ 			{"white", {0xeb, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
+-			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8080, 0x8080, 0x8080}},
+ 			{"black", {0x10, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
+ 			{"red",   {0x51, 0x5a, 0xf0}, {0xffff, 0xffff, 0x0000, 0x0000}},
+ 			{"green", {0x91, 0x36, 0x22}, {0xffff, 0x0000, 0xffff, 0x0000}},
+@@ -94,7 +94,7 @@ static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+ 		.n_colors = 4,
+ 		.colors = {
+ 			{"white", {0xff, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
+-			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8080, 0x8080, 0x8080}},
+ 			{"black", {0x00, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
+ 			{"red",   {0x36, 0x63, 0xff}, {0xffff, 0xffff, 0x0000, 0x0000}},
+ 			{"green", {0xb6, 0x1e, 0x0c}, {0xffff, 0x0000, 0xffff, 0x0000}},
+@@ -117,7 +117,7 @@ static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+ 		.n_colors = 4,
+ 		.colors = {
+ 			{"white", {0xeb, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
+-			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8080, 0x8080, 0x8080}},
+ 			{"black", {0x10, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
+ 			{"red",   {0x3f, 0x66, 0xf0}, {0xffff, 0xffff, 0x0000, 0x0000}},
+ 			{"green", {0xad, 0x2a, 0x1a}, {0xffff, 0x0000, 0xffff, 0x0000}},
+@@ -140,7 +140,7 @@ static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+ 		.n_colors = 4,
+ 		.colors = {
+ 			{"white", {0xff, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
+-			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"gray",  {0x80, 0x80, 0x80}, {0xffff, 0x8080, 0x8080, 0x8080}},
+ 			{"black", {0x00, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
+ 			{"red",   {0x43, 0x5c, 0xff}, {0xffff, 0xffff, 0x0000, 0x0000}},
+ 			{"green", {0xad, 0x24, 0x0b}, {0xffff, 0x0000, 0xffff, 0x0000}},
+@@ -163,7 +163,7 @@ static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+ 		.n_colors = 4,
+ 		.colors = {
+ 			{"white", {0xeb, 0x80, 0x80}, {0xffff, 0xffff, 0xffff, 0xffff}},
+-			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8000, 0x8000, 0x8000}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0xffff, 0x8080, 0x8080, 0x8080}},
+ 			{"black", {0x10, 0x80, 0x80}, {0xffff, 0x0000, 0x0000, 0x0000}},
+ 			{"red",   {0x4a, 0x61, 0xf0}, {0xffff, 0xffff, 0x0000, 0x0000}},
+ 			{"green", {0xa4, 0x2f, 0x19}, {0xffff, 0x0000, 0xffff, 0x0000}},
+
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.43.0
 
