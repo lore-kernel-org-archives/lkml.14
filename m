@@ -1,73 +1,67 @@
-Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
+Received: from out203-205-221-236.mail.qq.com (out203-205-221-236.mail.qq.com [203.205.221.236])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F4E79DE
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 02:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FCCD272;
+	Wed,  6 Mar 2024 02:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709691060; cv=none; b=aMZtuxkXPzfRsb8SI2a/9zz27IJ/k38yFgWNRYOEA/JsDZcqU0QbbgE/oNixLMXaYDXYPmRTBtoWohVVRh1hpcRUdiD5BkcStqA86csc6TGJvBft8/kabGUNlv8J3lSleBiV57SWTkraDMFN2727onoy94pkjmlNZ64z/s4BcZU=
+	t=1709691095; cv=none; b=TOTUrjG/SCzjv32hshwe5F5iMJGHfd8JohyGzIUskzwiSBewEzY9TuWeS+pl5qI44pyw/kYSNnn5v9bdoyOi+tBubNxnGILINMIYdgWlG6lrWMlLCHdzSy4S1IG3Qa/2llSUYXKYqNri0MyAfeZdRAKnzqsabcTIuZFUZ/QwpGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709691060; c=relaxed/simple;
-	bh=m0JFzhbCYRltGtekfKUn6fpcNdUzP/Wm9UQTmk0KYGU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FPzQyQQXh+mr4DBb/ualpmINX8sE29ZZ5OmnlQVckALMggFjRmDJbYn1PXcR7ehSNWaxhe3x/YGHGzBJcVM6iqxzJZMhGP36DqPJ8DOKZtz+7PbjMhVZ56tlZ6hQe4dbb9EdQtj24BFKGJDcRTlJeTFWJ+HfOT0JPWOFam0914k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=pass (2048-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=iECa9yxT; arc=none smtp.client-ip=60.251.196.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
+	s=arc-20240116; t=1709691095; c=relaxed/simple;
+	bh=Z+/9ljkeSU0oZW5bdtyR6B/2/tSLJ/OhxBOyXh/VRjg=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=JuIPNI4sIV8s2IXP4YT0FxQbQLL0aetofJu8uBaCf+r3rruIH8FJebMC9V1zDQ//6KoeFntsztf3AG3RWPJ/7BFUB7bSNGY1H5YgRsPnC7Jq/tJePvIzd2/iWCCul0mQ8ZFlp8AJ13HkA414JCDSUX7VWPMyJvcsMBherbmCe24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=lfi6C+sx; arc=none smtp.client-ip=203.205.221.236
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="iECa9yxT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=ite.com.tw; s=dkim;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZGM4CTvY0+d25ts8P1XACik2JTlfRT4G4KiIsDIO+0o=;
-  b=iECa9yxTcR1CiuFx2MY4zxPYso0/S4KmXwNCr6EKMQx04aGuMw/DCCza
-   NPJYV3VSMKhWqqHf4DgAXGzi9jOJC4SO2aepsnjqADzNX6+lJ6kxE7TiR
-   k/JXkJKdWiAoqv2KSh3pT6YYONKVWlfsT/1EHXK23ofBY7XHRZUxLosCt
-   dj0M7fzh9lODhDm/3jufe1JSHtt4LfKsPfuLxIWClwpVOw5k/GeU4K+Hr
-   hmqwt3lCXcggeBR1gnP9jpDmzn2KH46Hq6L7YGW3cEjo85IApyrfa/VLt
-   cpyj1dBbpJ1tbGc3HvN0JK0DyGttrbyEuT6QHfb5jyNHCDCbtHQ59i8dR
-   A==;
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 06 Mar 2024 10:09:45 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
-	by mse.ite.com.tw with ESMTP id 42629eri035636;
-	Wed, 6 Mar 2024 10:09:40 +0800 (GMT-8)
-	(envelope-from kuro.chung@ite.com.tw)
-Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Mar 2024 10:09:40 +0800
-From: kuro <kuro.chung@ite.com.tw>
-To:
-CC: Allen Chen <allen.chen@ite.com.tw>, Pin-yen Lin <treapking@chromium.org>,
-        Kuro Chung <kuro.chung@ite.com.tw>,
-        Kenneth Haung <kenneth.hung@ite.com.tw>,
-        Allen Chen <allen.chen@ite.corp-partner.google.com>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS"
-	<dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/1] UPSTREAM: drm/bridge: it6505: fix hibernate to resume no display issue
-Date: Wed, 6 Mar 2024 10:20:03 +0800
-Message-ID: <20240306022003.259245-2-kuro.chung@ite.com.tw>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240306022003.259245-1-kuro.chung@ite.com.tw>
-References: <20240306022003.259245-1-kuro.chung@ite.com.tw>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="lfi6C+sx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709691090; bh=PWmk73R2PGj1OEAHYbuSO5yqqiAnHgDbDoSjsb+aNVQ=;
+	h=From:To:Cc:Subject:Date;
+	b=lfi6C+sxf2JHJHY1RdKZsPobtRE/7AeVjPQdeFRpO3qmjICLwzFyHzScU+HpXNF22
+	 cjQJbHvF4E0pXku3VUEjS8+DqWOLxG2J8Sg79L7+JScllXridbNFqd4Brqt5jZL7Cn
+	 4lAI/Bi+LdaLaIAUPAwMq5Efz7IUaNFL451TVDLU=
+Received: from localhost.localdomain ([218.94.142.74])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id 1562C877; Wed, 06 Mar 2024 10:05:22 +0800
+X-QQ-mid: xmsmtpt1709690722twb7dafhj
+Message-ID: <tencent_5D8919B7D1F21906868DE81406015360270A@qq.com>
+X-QQ-XMAILINFO: NwIPvWX4YDagXilQRA9dEGsmt258n+FOi34HuLOiBHx+Qs9Yjy+ik06aad1BT8
+	 SLb11g9yqhYganyejj6G7p411BRbl/dD9PPFrszEaU2R1on2maRETiQ6oLiFqva/YrGqxg6mgNOe
+	 ziFlQ4Efbm/gMdG/xZXDlvdMw5nielgeEKO6bO1QC3iVWdV2QwiMIXU5kyUy2H8O9LAYcuV1wBAh
+	 Ojwkkxadq7p1cPzO3+r4PYVwHSYH3gda0zv1OsmONVwW9MKzpyi1OJJmRYcVC8Pfyf1CwiFN5rIV
+	 irWtlTkHyYkATUkxCF5GM/8oGvz2k27TLI1nOLd87oiyb5X/IGqGhZL9j+66wjQQ7fHDStjsQifY
+	 SPya9anWo604GCu/f7FwI0Jfmr7IvQEoetGBN62ffTxV8NoiTxnkcSnbQJ1lHv3jkUjFizgr3cKd
+	 0NezBsoeifmjD0/eQLWtlGixTla1y5ell4C/nqAPJPfXR58vk11n3QzPzfYuqlsi6oPFGznbINCm
+	 Z0F9th4jKwydIzaajJBoHme6MGDgDUogxaPEjakiXTqyYum5JmT0v9nQacWz0cyPbXwmNqNbLh6M
+	 9ARyG/sv1PmKhQD38M6Ms9wHYA/ldYXH0UKbe063tUi79EcLaYUs28ljZON6oNxMyKTDpTKk7xX8
+	 Oee94Q4vG2kMnn502F9pkxfjv33UOKGJDmzA/pbGsZiRrmmQ/gS9lVYte0pMuTXPatxbft5TXwdw
+	 Hd38fUAAf+fYN8ay3D9/rsvXAuIWSgUcWb99AWd5dge5RvJ016R8K+aD6a/h7iNdzkVnn48GeK8J
+	 I+W5CryCR4zjHFfC+DkDm0OnPejjyewGMiZ8UZACeIBMxRJ7BRFvWqy40IoLsOa5tdkbXjH4hZ6G
+	 M8vk64SWPsbuEhSHU/EBKzCsH4asm6Yn9Gxc2pDHRk8bzaz4Nkfzt4YbNkzvmAFN6zHmyyVN6wPU
+	 ur53HDRK3F0tlYT335duK9VX99w8Y73g+OU45QIRwC+EizJB8Ml7vnJASXdVHxiMXDeh7G2kiAzk
+	 aXZYZALpDt7is7etZ+ueBcf87ZnmvwvN32BlbO62dU0QTaxKDN
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: lilinke99@qq.com,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org
+Subject: [PATCH v2] rcutorture: Reuse value read using READ_ONCE instead of re-reading it
+Date: Wed,  6 Mar 2024 10:05:20 +0800
+X-OQ-MSGID: <20240306020520.40589-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,127 +69,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP:
-	AB1182823ED4183B2573C8A499561AD63DC9946A6777A5F025F3089B587BDBE82002:8
-X-MAIL:mse.ite.com.tw 42629eri035636
 
-From: kuro chung <kuro.chung@ite.com.tw>
+rp->rtort_pipe_count is modified concurrently by rcu_torture_writer(). To
+prevent a data race, reuse i which is read using READ_ONCE before instead
+of re-reading it.
 
-ITE added a FIFO reset bit for input video. When system power resume,
-the TTL input of it6505 may get some noise before video signal stable
-and the hardware function reset is required.
-But the input FIFO reset will also trigger error interrupts of output module rising.
-Thus, it6505 have to wait a period can clear those expected error interrupts
-caused by manual hardware reset in one interrupt handler calling to avoid interrupt looping.
-
-Signed-off-by: Allen Chen <allen.chen@ite.corp-partner.google.com>
+Signed-off-by: linke li <lilinke99@qq.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- drivers/gpu/drm/bridge/ite-it6505.c | 54 ++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 9 deletions(-)
+v1 -> v2: change the patch to focus on data race in rcu_torture_pipe_update_one ; update change log
 
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index b53da9bb65a16..e592e14a48578 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -1318,6 +1318,8 @@ static void it6505_video_reset(struct it6505 *it6505)
- 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_VID_MUTE, EN_VID_MUTE);
- 	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_VID_CTRL_PKT, 0x00);
- 	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x02);
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x00);
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, RST_501_FIFO);
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, 0x00);
- 	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, 0x00);
-@@ -2480,10 +2482,6 @@ static void it6505_irq_video_fifo_error(struct it6505 *it6505)
- 	struct device *dev = &it6505->client->dev;
- 
- 	DRM_DEV_DEBUG_DRIVER(dev, "video fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
- }
- 
- static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
-@@ -2491,10 +2489,6 @@ static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
- 	struct device *dev = &it6505->client->dev;
- 
- 	DRM_DEV_DEBUG_DRIVER(dev, "IO latch fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
- }
- 
- static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
-@@ -2502,6 +2496,46 @@ static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
- 	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
- }
- 
-+static bool it6505_is_video_error_int(const int *int_status)
-+{
-+	if ((it6505_test_bit(BIT_INT_VID_FIFO_ERROR, (unsigned int *)int_status)) || (it6505_test_bit(BIT_INT_IO_FIFO_OVERFLOW, (unsigned int *)int_status)))
-+		return 1;
-+	return 0;
-+}
-+
-+static void it6505_irq_video_error_handler(struct it6505 *it6505)
-+{
-+	struct device *dev = &it6505->client->dev;
-+	int int_status[3] = {0};
-+	int reg_0d;
-+	int i;
-+
-+	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
-+	flush_work(&it6505->link_works);
-+	it6505_stop_hdcp(it6505);
-+	it6505_video_reset(it6505);
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "Video Error reset wait video...");
-+
-+	for (i = 0; i < 10; i++) {
-+		usleep_range(10000, 11000);
-+		int_status[2] = it6505_read(it6505, INT_STATUS_03);
-+		reg_0d = it6505_read(it6505, REG_SYSTEM_STS);
-+		it6505_write(it6505, INT_STATUS_03, int_status[2]);
-+
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg08 = 0x%02x", int_status[2]);
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg0D = 0x%02x", reg_0d);
-+
-+		if ((reg_0d & VIDEO_STB) && (reg_0d >= 0))
-+			break;
-+
-+		if (it6505_is_video_error_int(int_status)) {
-+			it6505_video_reset(it6505);
-+			DRM_DEV_DEBUG_DRIVER(dev, "Video Error reset wait video (%d)", i);
-+		}
-+	}
-+}
-+
- static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- {
- 	struct it6505 *it6505 = data;
-@@ -2522,7 +2556,7 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 		{ BIT_INT_VID_FIFO_ERROR, it6505_irq_video_fifo_error },
- 		{ BIT_INT_IO_FIFO_OVERFLOW, it6505_irq_io_latch_fifo_overflow },
- 	};
--	int int_status[3], i;
-+	int int_status[3], i, reg_0d;
- 
- 	if (it6505->enable_drv_hold || !it6505->powered)
- 		return IRQ_HANDLED;
-@@ -2550,6 +2584,8 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 			if (it6505_test_bit(irq_vec[i].bit, (unsigned int *)int_status))
- 				irq_vec[i].handler(it6505);
- 		}
-+		if (it6505_is_video_error_int(int_status))
-+			it6505_irq_video_error_handler(it6505);
+ kernel/rcu/rcutorture.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 7567ca8e743c..53415121be39 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -466,7 +466,7 @@ rcu_torture_pipe_update_one(struct rcu_torture *rp)
+ 		i = RCU_TORTURE_PIPE_LEN;
+ 	atomic_inc(&rcu_torture_wcount[i]);
+ 	WRITE_ONCE(rp->rtort_pipe_count, i + 1);
+-	if (rp->rtort_pipe_count >= RCU_TORTURE_PIPE_LEN) {
++	if (i + 1 >= RCU_TORTURE_PIPE_LEN) {
+ 		rp->rtort_mbtest = 0;
+ 		return true;
  	}
- 
- 	pm_runtime_put_sync(dev);
 -- 
-2.25.1
+2.39.3 (Apple Git-145)
 
