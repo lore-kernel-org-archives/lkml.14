@@ -1,298 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2136.outbound.protection.partner.outlook.cn [139.219.17.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E2C13F44D;
-	Wed,  6 Mar 2024 16:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709740889; cv=none; b=NB+4NzUMKioz79OC0JaV2btXJrJd+HKFLlQsHObRDQ312/qRQ23yBjX61ENvR898LctE6uMh101OIil2um55+73Rw7BWPLvDI1YVM/T0ayWrV+QhDu3FjZX6Rb9orrO9rq81AIm76GmsNamG43ve7pjdpqJLpeWQY93+QHlRmIk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709740889; c=relaxed/simple;
-	bh=2P5SJN0mZupkQUYJMPK1FJ8A0y8TZeDvivA+SQJ6m7M=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WIqYDld+8x1I/QJEbN78tBT9nDdlDtB/zaPgJXLNvHB2gX34I55OvQIkNvtWtgR0ybhK8craZRAXl34WQxQ5WtBOsujQyN5fU0ui1XIp93C4qXexXiLrBTnbv94HunQ2B16n586poa7vQQUuvaS5xdd1OhDOaSLN1O2esWESqT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cyVfXuFz; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cyVfXuFz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709740888; x=1741276888;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=2P5SJN0mZupkQUYJMPK1FJ8A0y8TZeDvivA+SQJ6m7M=;
-  b=cyVfXuFzZLJuOZXDxjRN0ni+ABVzu3Zy3f69kAgEjKSb/mxj50hdfL80
-   0expzLn/8CxKpXhHHGtDPjR8PEsag+VT27Z6y6yYWFLnBGWse4AvoqI6L
-   Sz/RwstgjuHnIx1xhKMkeK+Foa6c+/tJROxd8fUpP7DMdRZFGpY8a7dLH
-   zp7ITFF+g5Wglnm+ss7LKnMR2GyY15Fara6aeHHa6db9Jk0dl0vwOVGo9
-   r/rXaDqEgUzsqH3ek4rxv2j6Q1mLxch7uyQbC1ilnOanLo2CnVdiW+NK/
-   ioouy+AQNDnYV5elQxUWuyZDMGRdczYLP6R+unoEupMMLqU7/OVhY+dXT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15504050"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="15504050"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 08:01:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="937045132"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="937045132"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Mar 2024 08:01:26 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 25F10184; Wed,  6 Mar 2024 18:01:25 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] spi: Fix multiple issues with Chip Select variables and comments
-Date: Wed,  6 Mar 2024 17:59:42 +0200
-Message-ID: <20240306160114.3471398-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240306160114.3471398-1-andriy.shevchenko@linux.intel.com>
-References: <20240306160114.3471398-1-andriy.shevchenko@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6EB13F430;
+	Wed,  6 Mar 2024 16:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709740892; cv=fail; b=MB6TsUejpwuOwf7sauzPrGZoTSbl6bGOfwBjR2jRpdP9wkr+HlohPm29IkwPqvr+csiOwocq+V5HKRs89ntjgau8IwJXNZvZirIwehGBr0oM0boFWScK+L9N4kTOd4hfFKbNq/OQdpRYQziexJE+wNsYIrd0CsemJ3vzQMRUvnk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709740892; c=relaxed/simple;
+	bh=Pbbd3arx99p+198utPQbAl0S+4t633dgR+8Py/khP3o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=N6ogqFGPBvGmh1ZDouh4W0JXQ8Mlw7rj0wdN5RDz8tnrVv9zpoynHDWaDDWKzgOS/rvhIYptbVqSSiL9SXH4Ys2Eylfbp40op00rNQe+TzpNellnA59PoHT6rFVgaGp2tsxi6latgxbt0OVQyR2rGPGTXdXHVnyLbYBdO2BNVjE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iBrxq3991/7xKJidC0W0Tzxc7opVjWLEUa+chJW+tDNvl4xJG9Z5fUOKqzPfIaDmso3m8/qQnt6UMI87HZgfhO3wKyDcJKC4Bj0Ub+uu9ZsiV3BRIZw4aEIKHl+4PwzVtU3DhYq5znwIVluQlEdzoyuBmmXcMh4h1Y/bz15m0sjBX7azjLCfLBrStem1TfE+BghcZfmqsfQkMm+LIf5+jUQrSafeQqTV3PVrMp/dDgX2QQsoIuvwBpJs0hlK6pm5j+fhTj1G3ZPmfyWpl0+1oRBjgd5+8MzfnwoDhqEOJ/3Mfdd4JNKOcyUEjmCJwN+15esiHJHhzzjHc23ph8IfAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kfdv3AoU0LUfMpoQxN5RD2zAvb6XJFlnInq3BjyyWnE=;
+ b=e6tvEa6FI0CRneLwSkDZMDh0GF3Js9xnO6H7VF88Wf67m1YK3mSxHiQoRVNRk0DkaUTfJAT3kfJ0fXdjQWZH6qRZMgQWsxJkHbgmVLrWr9KwtFl8MJdjx1O4CR7Oq/eOCM0V0lV5RiwlmrTut2cuM4mvaIRz/lC+bFbIFO0iJQeckGMt4EzvPsqc5DmvJmp3MjN8jyIvwBmj+jyrSEUJ5FK2PB7VAd07oY+ghEObfFJqUd5vE7baneEldXPO6OSeHjwBFgj3bOQNKqNXHb71XyWepw/k50dxbjC+Gl7a9UALLmqu3BFVyUJ+4kzkfD3hZEdJfmHoaQsiS+1MGIj4xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:20::14) by SH0PR01MB0571.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:8::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.53; Wed, 6 Mar
+ 2024 16:01:17 +0000
+Received: from SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+ ([fe80::f6ed:1a18:3fbf:788]) by SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+ ([fe80::f6ed:1a18:3fbf:788%6]) with mapi id 15.20.7316.050; Wed, 6 Mar 2024
+ 16:01:17 +0000
+From: Joshua Yeong <joshua.yeong@starfivetech.com>
+To: Frank Li <Frank.Li@nxp.com>
+CC: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+	"conor.culhane@silvaco.com" <conor.culhane@silvaco.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, "jirislaby@kernel.org"
+	<jirislaby@kernel.org>, "joe@perches.com" <joe@perches.com>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"krzysztof.kozlowski@linaro.org" <krzysztof.kozlowski@linaro.org>,
+	"linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+	"miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "robh@kernel.org"
+	<robh@kernel.org>, "zbigniew.lukwinski@linux.intel.com"
+	<zbigniew.lukwinski@linux.intel.com>
+Subject: RE: [PATCH v7 5/8] i3c: target: add svc target controller support
+Thread-Topic: [PATCH v7 5/8] i3c: target: add svc target controller support
+Thread-Index: AQHaWIvaQw3YyHT02UKJrOMhyC7OnbErDKXQ
+Date: Wed, 6 Mar 2024 16:01:17 +0000
+Message-ID:
+ <SH0PR01MB08410A70ABB956DF9DD4DE25F921A@SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn>
+References: <20240205233326.552576-1-Frank.Li@nxp.com>
+ <20240205233326.552576-6-Frank.Li@nxp.com>
+In-Reply-To: <20240205233326.552576-6-Frank.Li@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SH0PR01MB0841:EE_|SH0PR01MB0571:EE_
+x-ms-office365-filtering-correlation-id: 3006193a-a604-486a-d8dc-08dc3df6a822
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ w5jH6AvrA5s6Xg2PxzM3MmJC8M1b5nh1HIPp1c9sFBuPW0/pOWsNneBQAnSE5hzHqy/ESpEvZr9t2AAZPNmnbs0zZpqMneQeO6XcidFSP4V4W5U2uKH/Fu7mFbugNm+QXUCgE6LCXVw9BsEEd7W4Valn9HJ4WR/G08RwI8f3eICfJ1JxpuyCAAsA9W+p+D88CyHujkv30/zgQuUY1k8QuWWMttISbIwGe4eFxoR2Mg99aCY0KQjbP92gtjIWN+61/EVFYyZuMpOa5erUXJV8g9ZQ4FLA7Uiscxc5mNwhRG7UT2P3YRkQ/AYcvwhj4ohPJIN6HWCUyBBpCcXKKwMCucSSbIjyoahoSKSdN8L8seQni9I6cuweLf2Ih0QArcHeNXABYGfM36aXH5GPq5bVrdF9zR9nY8KXLRK8W+PMO/MkjSRcKDqP+uGWfv5khk0Us17sk+XPcYji5IFymXHyVCXEdV7YKZPSqGK4IRwCp6lxdcG01tYPRo/SnRzJdzIBJPQ+tF/F7YkCCHvD2Doi52KOTSfM2jMzy1z79x3mHGSKf3HesLRKiqHiEiVfwigE2QyvS25D0YClrp+ZxThILx9aRSvsqTOWkprvSNrp2z+xTaZKlFEo4NQ2MwGKVm2k
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?axLzjIVgz7yHQx2rECoVNZrSJhyiSRw7B03ZCrJiNoS3AtPceWUAaR96n5Mn?=
+ =?us-ascii?Q?UuB3v4cmulEhrzXHQZbF7kd23w7XS5ZjCZ6lMLpC/d00Z6RjnFsEJxUmZejb?=
+ =?us-ascii?Q?8U65fw4B4bjtPQGTjEmERlCrpnjyBIWP1T16nWgJVHkg0cm4QZw4edDNAnKd?=
+ =?us-ascii?Q?EG3RhB+g4EV0Pz5GaW0m539eZRdsyK+2qZeQDZ1knpp6TMOA1z3LYA7AjzlN?=
+ =?us-ascii?Q?hElGNBNXhMWv6q1pSndtOmskSj3rP/4+Jq/hRu6rtjGD6X7xxPXmTVXB34R8?=
+ =?us-ascii?Q?M5RIsIX86PgoZsBuoCJCcU9YD56P3TBuA4tOlelYB9rXSocZGIHTBd4lk75E?=
+ =?us-ascii?Q?J+PqH/w4T8qyB/Z5n2ne+Tcoqr+vEPjOZnYg+XOPblxKkqUsm97rICJFFbKt?=
+ =?us-ascii?Q?94z1LxaxxYoaLw6dUixTK9B0TvTTIpcrMPq1CgcoUfNF1fpe3mkEspzMfW+e?=
+ =?us-ascii?Q?JF8uEHC3RkrI/K9t0s3qBTlgnaarofhfkbAqBhhAefj+7jkPnBYpfU/6q8fU?=
+ =?us-ascii?Q?JTtQyI1RawKTn0iWwj3vd6jX0UcbvwCjXM0E1XHll9fh+oriQ6qfT45VXe3c?=
+ =?us-ascii?Q?jXwpwcUkbhfpyHqe5Ly7qpO0s+XZasa5LDL/UhkkxUYsDUPeIuux48jx7oGT?=
+ =?us-ascii?Q?ZdpxlnEnWY+6GpeF5WQaLvp5fz5VNJV1uFGtXYLML9N1tS4wC5G1phebiRtQ?=
+ =?us-ascii?Q?5eLvZ6B5YCoj2/EXeFK77ydxPWUFhYKgtOO4IBQ60I0XczybfiSi/pbMqd9R?=
+ =?us-ascii?Q?ufofTTWWsJuT087/De+uxhjPusLUqirhwozNS4zIG0NADXQ8IiPB9VZX0NWM?=
+ =?us-ascii?Q?EIYkckxCUsIU1Wbxe/ompPOuxKQ6mLcvcFxbIePgY/6PatyieP2yd8CSbCEG?=
+ =?us-ascii?Q?UzinWM2d8n4WF0EUjtUF6C3uW4ukclOlsr2WeWIKYj1rO52ifmnVu2xOFegE?=
+ =?us-ascii?Q?YuXgoi+P/ldoPTo4LR8zluvQCm070D2Xyd/vBf872MHNBkgspJbvDsXJEOEz?=
+ =?us-ascii?Q?apsWRqYfIKs0JEYKAvOjxPXPBX+nC+P947wpDF/4v4guTK70rJV0s5EmlvHu?=
+ =?us-ascii?Q?0bniXhJrbMZHS096luab/lvNQmPoisjKq+2ZxITlKQT0tXN9WPQ1iZXi3rOr?=
+ =?us-ascii?Q?e4jWKmKYir6yf9a1Phcc5PaVBJcEtktUjlSSDnISOmVXbwBLwmvwk8uhK6UO?=
+ =?us-ascii?Q?5VolAqSCTF3EbWQ4xKQ+qm45gGUsNeqv3oH32S3X9oXFbVMuUEjrS0v/uVc6?=
+ =?us-ascii?Q?CHhztsxaCupD7NCKsnJ/7UlYoGCRuCWa7D/eIhPtoa+p9alJoLjE/fLH9XDz?=
+ =?us-ascii?Q?Mt77mHHaT4nn9+pXP/p3DL0VdNleNCdaYtfnHk74rZDbGMnagGOEjR3Byro3?=
+ =?us-ascii?Q?uartzmY6B+zftqcyYGLSbN7nTNERxKjllwD+aqZWfhz3wBi5Qox6csXKB6UW?=
+ =?us-ascii?Q?G6latGXNAB3gNIHTbUKnbV1vIQ1EfcIgGhHNwARx3YxKJW6cWsf7l2IiTWId?=
+ =?us-ascii?Q?4R20qBqdSm56WS6tO+jNG09HKM0MWstpR8MNJyQhJpt5HcVDguIu07OpMSu7?=
+ =?us-ascii?Q?GtnWn+UFFVBHGmzKJx5FakqvrdUsyJ0Gf3vP3IxB+rILzyjCUH/XqliCBrIf?=
+ =?us-ascii?Q?mg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3006193a-a604-486a-d8dc-08dc3df6a822
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2024 16:01:17.1853
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jaQX3N6ZatN2jQjb7BATAIVcmPLNhPCPV1hVfIPNQ/MwhPiH0PioyKCZ8ZqZuQ2FbjHwrt7y6DBsVG+jjdYDVFe3nCSucZ54S/i8BFYQaQQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SH0PR01MB0571
 
-There are the following issues with the current code:
-- inconsistent use of 0xFF and -1 for invalid chip select pin
-- inconsistent plain or BIT() use
-- wrong types used for last_cs_* fields
-- wrong multi-line comment style
-- misleading or hard-to-understand comments
+Hi Frank,
 
-Fix all of these here.
+> -----Original Message-----
+> From: linux-i3c <linux-i3c-bounces@lists.infradead.org> On Behalf Of Fran=
+k Li
+> Sent: Tuesday, February 6, 2024 7:33 AM
+> To: frank.li@nxp.com
+> Cc: alexandre.belloni@bootlin.com; conor.culhane@silvaco.com;
+> devicetree@vger.kernel.org; gregkh@linuxfoundation.org;
+> ilpo.jarvinen@linux.intel.com; imx@lists.linux.dev; jirislaby@kernel.org;
+> joe@perches.com; krzysztof.kozlowski+dt@linaro.org;
+> krzysztof.kozlowski@linaro.org; linux-i3c@lists.infradead.org; linux-
+> kernel@vger.kernel.org; linux-serial@vger.kernel.org;
+> miquel.raynal@bootlin.com; robh@kernel.org;
+> zbigniew.lukwinski@linux.intel.com
+> Subject: [PATCH v7 5/8] i3c: target: add svc target controller support
+>=20
+> Add Silvaco I3C target controller support
+>=20
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>=20
+> Notes:
+>     Change from v2 to v3
+>     - fix build warning
+>=20
+>  drivers/i3c/master/Makefile         |   2 +-
+>  drivers/i3c/master/svc-i3c-main.c   |  35 +-
+>  drivers/i3c/master/svc-i3c-target.c | 776
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/spi/spi.c       | 74 +++++++++++++++++++----------------------
- include/linux/spi/spi.h | 15 +++++----
- 2 files changed, 42 insertions(+), 47 deletions(-)
+I think putting target mode files under "master" might not make sense. We m=
+ight have to
+consider that we may have a "secondary master" mode. Some other ways of spl=
+itting
+or handling of target mode is needed here.
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index eb7e3ddf909b..f18738ae95f8 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -608,6 +608,22 @@ static void spi_dev_set_name(struct spi_device *spi)
- 		     spi_get_chipselect(spi, 0));
- }
- 
-+/*
-+ * Zero(0) is a valid physical CS value and can be located at any
-+ * logical CS in the spi->chip_select[]. If all the physical CS
-+ * are initialized to 0 then It would be difficult to differentiate
-+ * between a valid physical CS 0 & an unused logical CS whose physical
-+ * CS can be 0. As a solution to this issue initialize all the CS to -1.
-+ * Now all the unused logical CS will have -1 physical CS value & can be
-+ * ignored while performing physical CS validity checks.
-+ */
-+#define SPI_INVALID_CS		((s8)-1)
-+
-+static inline bool is_valid_cs(s8 chip_select)
-+{
-+	return chip_select != SPI_INVALID_CS;
-+}
-+
- static inline int spi_dev_check_cs(struct device *dev,
- 				   struct spi_device *spi, u8 idx,
- 				   struct spi_device *new_spi, u8 new_idx)
-@@ -618,7 +634,7 @@ static inline int spi_dev_check_cs(struct device *dev,
- 	cs = spi_get_chipselect(spi, idx);
- 	for (idx_new = new_idx; idx_new < SPI_CS_CNT_MAX; idx_new++) {
- 		cs_new = spi_get_chipselect(new_spi, idx_new);
--		if (cs != 0xFF && cs_new != 0xFF && cs == cs_new) {
-+		if (is_valid_cs(cs) && is_valid_cs(cs_new) && cs == cs_new) {
- 			dev_err(dev, "chipselect %u already in use\n", cs_new);
- 			return -EBUSY;
- 		}
-@@ -658,7 +674,7 @@ static int __spi_add_device(struct spi_device *spi)
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
- 		/* Chipselects are numbered 0..max; validate. */
- 		cs = spi_get_chipselect(spi, idx);
--		if (cs != 0xFF && cs >= ctlr->num_chipselect) {
-+		if (is_valid_cs(cs) && cs >= ctlr->num_chipselect) {
- 			dev_err(dev, "cs%d >= max %d\n", spi_get_chipselect(spi, idx),
- 				ctlr->num_chipselect);
- 			return -EINVAL;
-@@ -698,7 +714,7 @@ static int __spi_add_device(struct spi_device *spi)
- 
- 		for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
- 			cs = spi_get_chipselect(spi, idx);
--			if (cs != 0xFF)
-+			if (is_valid_cs(cs))
- 				spi_set_csgpiod(spi, idx, ctlr->cs_gpiods[cs]);
- 		}
- 	}
-@@ -756,17 +772,8 @@ static void spi_set_all_cs_unused(struct spi_device *spi)
- {
- 	u8 idx;
- 
--	/*
--	 * Zero(0) is a valid physical CS value and can be located at any
--	 * logical CS in the spi->chip_select[]. If all the physical CS
--	 * are initialized to 0 then It would be difficult to differentiate
--	 * between a valid physical CS 0 & an unused logical CS whose physical
--	 * CS can be 0. As a solution to this issue initialize all the CS to 0xFF.
--	 * Now all the unused logical CS will have 0xFF physical CS value & can be
--	 * ignore while performing physical CS validity checks.
--	 */
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++)
--		spi_set_chipselect(spi, idx, 0xFF);
-+		spi_set_chipselect(spi, idx, SPI_INVALID_CS);
- }
- 
- /**
-@@ -1021,7 +1028,7 @@ static inline bool spi_is_last_cs(struct spi_device *spi)
- 	bool last = false;
- 
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
--		if ((spi->cs_index_mask >> idx) & 0x01) {
-+		if (spi->cs_index_mask & BIT(idx)) {
- 			if (spi->controller->last_cs[idx] == spi_get_chipselect(spi, idx))
- 				last = true;
- 		}
-@@ -1050,7 +1057,7 @@ static void spi_set_cs(struct spi_device *spi, bool enable, bool force)
- 
- 	spi->controller->last_cs_index_mask = spi->cs_index_mask;
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++)
--		spi->controller->last_cs[idx] = enable ? spi_get_chipselect(spi, 0) : -1;
-+		spi->controller->last_cs[idx] = enable ? spi_get_chipselect(spi, 0) : SPI_INVALID_CS;
- 	spi->controller->last_cs_mode_high = spi->mode & SPI_CS_HIGH;
- 
- 	if (spi->mode & SPI_CS_HIGH)
-@@ -1072,8 +1079,7 @@ static void spi_set_cs(struct spi_device *spi, bool enable, bool force)
- 			 * into account.
- 			 */
- 			for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
--				if (((spi->cs_index_mask >> idx) & 0x01) &&
--				    spi_get_csgpiod(spi, idx)) {
-+				if ((spi->cs_index_mask & BIT(idx)) && spi_get_csgpiod(spi, idx)) {
- 					if (has_acpi_companion(&spi->dev))
- 						gpiod_set_value_cansleep(spi_get_csgpiod(spi, idx),
- 									 !enable);
-@@ -2456,14 +2462,10 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
- 		spi_set_chipselect(spi, idx, cs[idx]);
- 
- 	/*
--	 * spi->chip_select[i] gives the corresponding physical CS for logical CS i
--	 * logical CS number is represented by setting the ith bit in spi->cs_index_mask
--	 * So, for example, if spi->cs_index_mask = 0x01 then logical CS number is 0 and
--	 * spi->chip_select[0] will give the physical CS.
--	 * By default spi->chip_select[0] will hold the physical CS number so, set
--	 * spi->cs_index_mask as 0x01.
-+	 * By default spi->chip_select[0] will hold the physical CS number,
-+	 * so set bit 0 in spi->cs_index_mask.
- 	 */
--	spi->cs_index_mask = 0x01;
-+	spi->cs_index_mask = BIT(0);
- 
- 	/* Device speed */
- 	if (!of_property_read_u32(nc, "spi-max-frequency", &value))
-@@ -2587,14 +2589,10 @@ struct spi_device *spi_new_ancillary_device(struct spi_device *spi,
- 	ancillary->max_speed_hz = spi->max_speed_hz;
- 	ancillary->mode = spi->mode;
- 	/*
--	 * spi->chip_select[i] gives the corresponding physical CS for logical CS i
--	 * logical CS number is represented by setting the ith bit in spi->cs_index_mask
--	 * So, for example, if spi->cs_index_mask = 0x01 then logical CS number is 0 and
--	 * spi->chip_select[0] will give the physical CS.
--	 * By default spi->chip_select[0] will hold the physical CS number so, set
--	 * spi->cs_index_mask as 0x01.
-+	 * By default spi->chip_select[0] will hold the physical CS number,
-+	 * so set bit 0 in spi->cs_index_mask.
- 	 */
--	ancillary->cs_index_mask = 0x01;
-+	ancillary->cs_index_mask = BIT(0);
- 
- 	WARN_ON(!mutex_is_locked(&ctlr->add_lock));
- 
-@@ -2841,14 +2839,10 @@ struct spi_device *acpi_spi_device_alloc(struct spi_controller *ctlr,
- 	spi->irq		= lookup.irq;
- 	spi->bits_per_word	= lookup.bits_per_word;
- 	/*
--	 * spi->chip_select[i] gives the corresponding physical CS for logical CS i
--	 * logical CS number is represented by setting the ith bit in spi->cs_index_mask
--	 * So, for example, if spi->cs_index_mask = 0x01 then logical CS number is 0 and
--	 * spi->chip_select[0] will give the physical CS.
--	 * By default spi->chip_select[0] will hold the physical CS number so, set
--	 * spi->cs_index_mask as 0x01.
-+	 * By default spi->chip_select[0] will hold the physical CS number,
-+	 * so set bit 0 in spi->cs_index_mask.
- 	 */
--	spi->cs_index_mask	= 0x01;
-+	spi->cs_index_mask	= BIT(0);
- 
- 	return spi;
- }
-@@ -3346,9 +3340,9 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		goto free_bus_id;
- 	}
- 
--	/* Setting last_cs to -1 means no chip selected */
-+	/* Setting last_cs to SPI_INVALID_CS means no chip selected */
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++)
--		ctlr->last_cs[idx] = -1;
-+		ctlr->last_cs[idx] = SPI_INVALID_CS;
- 
- 	status = device_add(&ctlr->dev);
- 	if (status < 0)
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index e400d454b3f0..81ca62e608c1 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -226,7 +226,8 @@ struct spi_device {
- 	/* The statistics */
- 	struct spi_statistics __percpu	*pcpu_statistics;
- 
--	/* Bit mask of the chipselect(s) that the driver need to use from
-+	/*
-+	 * Bit mask of the chipselect(s) that the driver need to use from
- 	 * the chipselect array.When the controller is capable to handle
- 	 * multiple chip selects & memories are connected in parallel
- 	 * then more than one bit need to be set in cs_index_mask.
-@@ -448,9 +449,11 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
-  *	the @cur_msg_completion. This flag is used to signal the context that
-  *	is running spi_finalize_current_message() that it needs to complete()
-  * @cur_msg_mapped: message has been mapped for DMA
-+ * @fallback: fallback to PIO if DMA transfer return failure with
-+ *	SPI_TRANS_FAIL_NO_START.
-+ * @last_cs_mode_high: was (mode & SPI_CS_HIGH) true on the last call to set_cs.
-  * @last_cs: the last chip_select that is recorded by set_cs, -1 on non chip
-  *           selected
-- * @last_cs_mode_high: was (mode & SPI_CS_HIGH) true on the last call to set_cs.
-  * @xfer_completion: used by core transfer_one_message()
-  * @busy: message pump is busy
-  * @running: message pump is running
-@@ -527,8 +530,6 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
-  *	If the driver does not set this, the SPI core takes the snapshot as
-  *	close to the driver hand-over as possible.
-  * @irq_flags: Interrupt enable state during PTP system timestamping
-- * @fallback: fallback to PIO if DMA transfer return failure with
-- *	SPI_TRANS_FAIL_NO_START.
-  * @queue_empty: signal green light for opportunistically skipping the queue
-  *	for spi_sync transfers.
-  * @must_async: disable all fast paths in the core
-@@ -708,10 +709,10 @@ struct spi_controller {
- 	bool				rt;
- 	bool				auto_runtime_pm;
- 	bool				cur_msg_mapped;
--	char				last_cs[SPI_CS_CNT_MAX];
--	char				last_cs_index_mask;
--	bool				last_cs_mode_high;
- 	bool                            fallback;
-+	bool				last_cs_mode_high;
-+	s8				last_cs[SPI_CS_CNT_MAX];
-+	u32				last_cs_index_mask : SPI_CS_CNT_MAX;
- 	struct completion               xfer_completion;
- 	size_t				max_dma_len;
- 
--- 
-2.43.0.rc1.1.gbec44491f096
+...
 
+> +
+> +#define I3C_SCONFIG	0x4
+> +#define   I3C_SCONFIG_SLVENA_MASK	BIT(0)
+> +#define	  I3C_SCONFIG_OFFLINE_MASK	BIT(9)
+> +#define   I3C_SCONFIG_SADDR_MASK	GENMASK(31, 25)
+> +
+> +#define I3C_SSTATUS	0x8
+> +#define	  I3C_SSTATUS_STNOTSTOP_MASK	BIT(0)
+> +#define	  I3C_SSTATUS_STOP_MASK		BIT(10)
+> +#define	  I3C_SSTATUS_RX_PEND_MASK	BIT(11)
+> +#define   I3C_SSTATUS_TXNOTFULL_MASK	BIT(12)
+> +#define	  I3C_SSTATUS_DACHG_MASK	BIT(13)
+> +#define	  I3C_SSTATUS_EVDET_MASK	GENMASK(21, 20)
+> +#define	  I3C_SSTATUS_EVDET_ACKED	0x3
+> +#define	  I3C_SSTATUS_IBIDIS_MASK	BIT(24)
+> +#define	  I3C_SSTATUS_HJDIS_MASK	BIT(27)
+> +
+
+There is couple of space formatting here that requires to be fixed.
+
+Cheers,
+Joshua
