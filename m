@@ -1,81 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85ED112FF88;
-	Wed,  6 Mar 2024 15:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4168136987;
+	Wed,  6 Mar 2024 15:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709739385; cv=none; b=u2tnpkXqoPTJ0nQ1U9p1Cq9Xs+PJKC8bO3WrfmmMGnG9+ByCkeFeMEIgRzHIhlKdKzun/zqvqTcofwlWeR5u9Q9qcXvq9CswfGSnkf6KOId2tJvLVnRVdljkwAAsyU9B9UJJ78IfOGz0dXRO5+zi9Nf2fl7Bov32WtNceQYQiqY=
+	t=1709739392; cv=none; b=MvcghaESf3uRBueXl19V1oCuZFcMQq15nqwNQLwtAO8fWpAFGZAqMVXMOusTnj5lXCzP/1ticbV8ENIKIjpXpO0nLPxp42BX5nNSVKRghXuMpIk/6BNX6g2D2wtgqIPNIwq74VOaeMEU1i1cbRqhTGnceBEGNxVCqsn+/SmUZZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709739385; c=relaxed/simple;
-	bh=Bh5Dp27/tqyItLKHwyKeEmWbTpge2ZVnRBPEZ8Itq3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mt39l8ByE56RL4zq72BfMfiPTYU44iEpjdqN8DQAOJooiaproJ4BvFfpNEy+1yXP+/++joCQSUD0wZt6oAiEbwokzKNhxJEDR05Mu95rdi7hav2YjveIf3bEvH04wOJn0NG747IdZW41Q69T3JLtlDjnUtP1cjhCi+Uwt5trPCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T2Cg0Ta0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T2Cg0Ta0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00797C433F1;
-	Wed,  6 Mar 2024 15:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709739385;
-	bh=Bh5Dp27/tqyItLKHwyKeEmWbTpge2ZVnRBPEZ8Itq3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T2Cg0Ta00yUrXeehc7UDXzl+DzKBdm5vDlhzNht5QdJaVU7PyLyIrNrFqrbDl2MLx
-	 SATq9IeRmxZlSCFO5of0MlbhTUQwfK0zSiVp5PgppVoCKfHxXEBTppsWNNk7qncGr/
-	 1teHZ8V9m3uKVTyXP22AdlgG/p8f7NjMecv+MucGbhRcMi7oXtIUjuOWFTXU2XIxmj
-	 lojH5o8xY6MICDuZzBh/XPmtyWGe/oAujETOntqV4W9H9b426KfuQR9/nCtxYRlUzt
-	 nyFZ28Aiiw3TT6bY076xIMvNHLO+1252ccj3jydeSBygCcw09QTAV9/kBdOTDIGO/E
-	 j5GIskJh2KkDQ==
-Date: Wed, 6 Mar 2024 07:36:24 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: chandan.babu@oracle.com, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH v2 2/2] xfs: Remove duplicate include
-Message-ID: <20240306153624.GO1927156@frogsfrogsfrogs>
-References: <20240305024009.52931-1-jiapeng.chong@linux.alibaba.com>
- <20240305024009.52931-2-jiapeng.chong@linux.alibaba.com>
+	s=arc-20240116; t=1709739392; c=relaxed/simple;
+	bh=r8rlS53KDa7OBL3LUkW9yTADcn+889iX4PNH/lTZoaM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Zk6KvT3ICi5WhdQtDbk7Rz38Xdw/dJZQdxH0y7o+UL1GMFQhCg9A9ShypbSqPzLE8GowUpYg8gq/uxaqtymHNNaX01Akvve8/5VVcN2CBnA5E2/mFXZJpomfFktnFPnQQ9qy88d0erxZ9OGFoPkdeTHrc3SROPDf0jF6uAWJaGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:4970:eaac:ef59:d8ae:5dc6])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 3FE0B7E00D3;
+	Wed,  6 Mar 2024 23:36:13 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: dmitry.baryshkov@linaro.org
+Cc: amadeus@jmu.edu.cn,
+	andersson@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	konrad.dybcio@linaro.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH v2 1/4] arm64: dts: qcom: ipq6018: add 1.2GHz CPU Frequency
+Date: Wed,  6 Mar 2024 23:36:10 +0800
+Message-Id: <20240306153610.1289999-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAA8EJpreeGWfstEKEFiHM_RJCZbYYdo0H=fY0GqPPtZM-7ZUhA@mail.gmail.com>
+References: <CAA8EJpreeGWfstEKEFiHM_RJCZbYYdo0H=fY0GqPPtZM-7ZUhA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305024009.52931-2-jiapeng.chong@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTkMeVh5NHh1OSUJDTxhPT1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUlPSx5BSBlIQUkYS0pBT0JMS0EeGhoYQR4dTkJBH0MaHkFOHxhNWVdZFhoPEhUdFF
+	lBWU9LSFVKSktISkNVSktLVUtZBg++
+X-HM-Tid: 0a8e146873b003a2kunm3fe0b7e00d3
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MRw6Pgw*SzMIMUM#QzoDLB4P
+	QxhPCzJVSlVKTEtCTEhCSExIQ0tJVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0pBT0JMS0EeGhoYQR4dTkJBH0MaHkFOHxhNWVdZCAFZQUpDSUM3Bg++
 
-On Tue, Mar 05, 2024 at 10:40:09AM +0800, Jiapeng Chong wrote:
-> ./fs/xfs/xfs_trace.c: xfs_bmap.h is included more than once.
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8385
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Hi, Dmitry
+> How is it "some"? You are enabling this opp for all IPQ6000 SoC instances.
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+This is not the case, please see `opp-supported-hw = <0x4>;`.
+Also: https://github.com/torvalds/linux/blob/master/drivers/cpufreq/qcom-cpufreq-nvmem.c#L345
+This 1.2GHz Frequency only takes effect when BIT(2) exists.
+For fused 1.5GHz devices, the 1.2GHz frequency will not appear.
+I have tested this patch on both fused 1.2GHz and 1.5GHz devices.
 
---D
+Thanks,
+Chukun
 
-> ---
-> Changes in v2:
->   -Remove the second #include.
-> 
->  fs/xfs/xfs_trace.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_trace.c b/fs/xfs/xfs_trace.c
-> index 1a963382e5e9..3f253884fe5b 100644
-> --- a/fs/xfs/xfs_trace.c
-> +++ b/fs/xfs/xfs_trace.c
-> @@ -38,7 +38,6 @@
->  #include "xfs_iomap.h"
->  #include "xfs_buf_mem.h"
->  #include "xfs_btree_mem.h"
-> -#include "xfs_bmap.h"
->  
->  /*
->   * We include this last to have the helpers above available for the trace
-> -- 
-> 2.20.1.7.g153144c
-> 
-> 
+-- 
+2.25.1
+
