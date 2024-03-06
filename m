@@ -1,86 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB70D81AA7
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 12:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5C882D68;
+	Wed,  6 Mar 2024 12:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709728238; cv=none; b=XVpOTeLPrhtw+Kn12zRW5+z3EAK/08kUnaWFlwrFox6477Mz+iDmvx7lbFW0T9s9yEgbfQv4OAtE3q8WL78l9l0c5eykD8pbxqI+3/ldKyiIKg7EeMAzfHGsI5Epjru63kYFBFE9VbSYe/ENODstwbeN+7659ZyjetPyC07pHYc=
+	t=1709728255; cv=none; b=DEGE3fQuaC5MSx98iJM3LYb8q9zgCO+TzUJABoJd/3g3hQ4zZkEJ6N9r1fOR++J9k6H1uN3QrNmbb6WeQMi2N4bsHy/GNo5b0KbaRPkCC2W/gwQYTOw7tLqEBde52Edxa7upF+rhU36ptLfALJTnth49jPw2y0O+38M34xYA7K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709728238; c=relaxed/simple;
-	bh=pdMYFUtmmmiHYhf0XcZfaR/D30jt3cb2Ukz7Zk/Zn7U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gjqCBAloOCzxQvG4+2ATpFt2EYI6mdk9+b2e0anUbOW7EKYPiEURhllUoOFdJ2gzuaAIJEMqDBZ9KJE8qNTJ9pY1/UnIuOThHSywKm99SpDHHPXjhaIRwSYnEFHR1y2QiQrGJbHAh7wboLs0w5myp95N0Xwazfy3dWSQPrf9t6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mO9dGTVu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mO9dGTVu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76E80C433F1;
-	Wed,  6 Mar 2024 12:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709728237;
-	bh=pdMYFUtmmmiHYhf0XcZfaR/D30jt3cb2Ukz7Zk/Zn7U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=mO9dGTVuVm6qAACXwrFIOPdjQghjj2/fWHwiTAS7YKYreqNFSCpIAhTNbOtFyMI+u
-	 AXAh/mHIOOY0wjd5YkimFhVMDT9lgmVaoEyQ/ZtxiMI69nmdTW/MxGDM0qvHun2K3d
-	 POn/JpUuoq2Xjbj3HeeOamuSPRUgMQR+8EO5lKLr009aYeV9v1DwGwXNRr5b1zSoda
-	 8Oa6yIdbT2ZvigrZlrFHUrltS0lwzR9URi7gNYJqUWvKa8gKkNtHZivkAKL043rtoP
-	 ud7VcBlcX+vMwtk8NRCYjKPO+qGX0Ez12rxbYCBt6dz5C8ZV78dG9WGfOXT5tUSsiv
-	 ZR0puu5316BUg==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-In-Reply-To: <20240305-class_cleanup-regulator-v1-1-4950345d6d8f@marliere.net>
-References: <20240305-class_cleanup-regulator-v1-1-4950345d6d8f@marliere.net>
-Subject: Re: [PATCH] regulator: core: make regulator_class constant
-Message-Id: <170972823620.17754.2739172116321783279.b4-ty@kernel.org>
-Date: Wed, 06 Mar 2024 12:30:36 +0000
+	s=arc-20240116; t=1709728255; c=relaxed/simple;
+	bh=dd2Jx+08JxjgBH+HAXKgiSjHOiOGW8h2sPlP18xoQHA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JOTWLVdOZn8+zRZ8NZ4r9RlPu67ZTPpr67z52K3X3lX6mfVA18xJw0/NgJsysfzos1yMc0ky3Z2lZhcPBhOktCWG/AGx39vfAwiIDxhWpzgvthu3NYJngv/IM16ypktGs7fNXigIVr2+Xob2TDjolNmyn6uHs1am96QIRDKV3s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:4970:eaac:ef59:d8ae:5dc6])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 3F98E7E0173;
+	Wed,  6 Mar 2024 20:30:13 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH v5 1/1] arm64: dts: qcom: ipq6018: add sdhci node
+Date: Wed,  6 Mar 2024 20:30:06 +0800
+Message-Id: <20240306123006.724934-2-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240306123006.724934-1-amadeus@jmu.edu.cn>
+References: <20240306123006.724934-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-a684c
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGUlLVk4aTkpKGkgZSEpKQlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUlPSx5BSBlIQUkYS0pBT0JMS0EeGhoYQR4dTkJBH0MaHkFOHxhNWVdZFhoPEhUdFF
+	lBWU9LSFVKSktISkNVSktLVUtZBg++
+X-HM-Tid: 0a8e13be2a0403a2kunm3f98e7e0173
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ND46Gjo5GTMQMUNWIQ5OQk4X
+	CUMKFEJVSlVKTEtCTElDSUpIQ0xCVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0pBT0JMS0EeGhoYQR4dTkJBH0MaHkFOHxhNWVdZCAFZQUlNTEw3Bg++
 
-On Tue, 05 Mar 2024 16:00:45 -0300, Ricardo B. Marliere wrote:
-> Since commit 43a7206b0963 ("driver core: class: make class_register() take
-> a const *"), the driver core allows for struct class to be in read-only
-> memory, so move the regulator_class structure to be declared at build time
-> placing it into read-only memory, instead of having to be dynamically
-> allocated at boot time.
-> 
-> 
-> [...]
+Add node to support mmc controller inside of IPQ6018.
+This controller supports both eMMC and SD cards.
 
-Applied to
+Tested with:
+  eMMC (HS200)
+  SD Card (SDR50/SDR104)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+---
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Thanks!
-
-[1/1] regulator: core: make regulator_class constant
-      commit: 4fe6207508d6525e87149348daeafde152ba672c
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 322eced0b876..420c192bccd9 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -441,6 +441,25 @@ dwc_1: usb@7000000 {
+ 			};
+ 		};
+ 
++		sdhc: mmc@7804000 {
++			compatible = "qcom,ipq6018-sdhci", "qcom,sdhci-msm-v5";
++			reg = <0x0 0x07804000 0x0 0x1000>,
++			      <0x0 0x07805000 0x0 0x1000>;
++			reg-names = "hc", "cqhci";
++
++			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
++
++			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
++				 <&gcc GCC_SDCC1_APPS_CLK>,
++				 <&xo>;
++			clock-names = "iface", "core", "xo";
++			resets = <&gcc GCC_SDCC1_BCR>;
++			max-frequency = <192000000>;
++			status = "disabled";
++		};
++
+ 		blsp_dma: dma-controller@7884000 {
+ 			compatible = "qcom,bam-v1.7.0";
+ 			reg = <0x0 0x07884000 0x0 0x2b000>;
+-- 
+2.25.1
 
