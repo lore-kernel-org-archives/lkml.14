@@ -1,54 +1,54 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88178143C4C
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C03140E23
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709755442; cv=none; b=g4w7CDbjPEDd5PqGx0RhpN81c/dH+N+P5vL54+2lMwU9xRK9p5PI+CPh3TU+Q3hTDHefCJV/bq1YXVnV1z4jwi2Mno6dnBl6an9k58P7ntqJU/3mWKxGSDDExWbO+rNWnNkVWva2RntKkn6guLkywztyrGD7A7i6qtrmOsG7XW0=
+	t=1709755443; cv=none; b=tN69KCBM1TG9vMktX198V+H6u8HRXeuiiMYIpsDWoh4Dz2TqLvogbhVZeubwy7mTyDUyTH4SsJBi6ANFaQzX4NnrAFnklKwHmXe7e6N1yH4liKDrt1BYukoha/j+0uZOzRqiehT30j5SPeRh8oKKg/ywfAg/s7SkA8cL6+V7vDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709755442; c=relaxed/simple;
-	bh=hEpsavpaqhOCfUkMXmoZI8tqy+kyvROq31HXhJ/C6io=;
+	s=arc-20240116; t=1709755443; c=relaxed/simple;
+	bh=lrGPAvL5ujSKUvsLCktpA1LbY+Wsz6CFM+NUlFd6JMo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Iyk1dbnXK/YJZILSx8sbpfnG3h8oMZH8DbGJNwd80EOEkpf/ZvDmLQkYtmeB+Vk1gkdWW4CGHmxZS9eld0My4w2/19L91AEynPFjfF+M+lkkbqiE1Qzpj0/tiaugm9uPhTn4E+MyPgtxLCmbqEDzVSoZ4dR4JPBHbaibb3kpJCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fCh8Bkuz; arc=none smtp.client-ip=209.85.210.177
+	 MIME-Version; b=aZce8WDQ0A9KA/2B9TGhocHbx2OCuck/zYrGS8SjYNhh0toty3MN+jVI0eh49Miekaoalmh3BMAvKwqSrxhRt60VJcvIsHKqX3YZNJiVStHNp0QsFtjkYaQj29oeoZ3YyTrk3RE7nlDPsxqdx3GHbVWqw39msKcdy2fwN3Hm3qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KzNvzn26; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fCh8Bkuz"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e61851dbaeso73127b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 12:04:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KzNvzn26"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e5b1c6daa3so105989b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 12:04:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709755440; x=1710360240; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709755441; x=1710360241; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jcV5LiM2kdZ7H9iL9vZSs1WtOpfzFcM+Wcf+rllNpWo=;
-        b=fCh8Bkuzu7bAXrp78sa6SrbHaKwHOLGLjJ8/S0y/ZPQBaXCiFsrEam2IML7+CKLHEM
-         NS0oTG0ZBOsCLObei8KN2abSu4PJJXzyDVJ7tlt+P1IwAOo3Tn4Iyxoma8IyhYJ9TTs4
-         v8jiR6ctl/6q60s1fRd19f0Vyr9Zfop/7/Zgs=
+        bh=5q7RSLprSn1rt1j4rdHGaFDAMNSTGJDra0FF/HsNmOM=;
+        b=KzNvzn2651fnj33UhdKQBDgQau8SDv6cqeXWLC5TZGe75lPnEhV2BO5C2N8guL06aq
+         GCx/IxBhM3+sFJstVFIPWyYNANdoznaZVsNt2XT4qcFM0WHdGzA+PYuKp59cVn7zrBSP
+         fqdxgEuHnhG3nQ8fe6rpJNt8uZ1LDX7hMPxh8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709755440; x=1710360240;
+        d=1e100.net; s=20230601; t=1709755441; x=1710360241;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jcV5LiM2kdZ7H9iL9vZSs1WtOpfzFcM+Wcf+rllNpWo=;
-        b=MbaXMjOMDooEIyhFjBKPPwGShrj22hgIWLeGXNBjuMstNWY/5wZJLC1+qIkEb5OE+y
-         Y2BJKujaUP6L+LiRBJ1/w1A7R4iB20twCdkgWbV0Z3MthDlXs6ReY3cfaIcz5pgO+6sJ
-         mDwT1Sea7yJGiT+8UehTfF47ixHYKoPo00rcv06S4k8NWZdIhS1Eq8W3YZwDookDCTbO
-         qwshv/SpS1Hd3S77r+lhF+G2iUB2bmiM1pQeDwXyDjaSx8YbJrX3XbP3387T0wBHBtbN
-         RYjCOFWeSwWdaHwqIhpZj08YD6NbFjl0WaSouvEjmpeaop0msu2keGw0y42p7sKyCkOm
-         ywSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpx+TYPwkR+EmdPlL+t1tAgD7qkr4K3VWV9/zmDNWKk2qEs5URq4qRZ0QhwKIqWfEYsT079f06G90k8u7vckjYdeR6KIZ19w/O9XUN
-X-Gm-Message-State: AOJu0YwflqECvyuKEGl8f3O0g96+COvn+Mc5L4tWdu51A87OrecXm5bt
-	0yt7dr/uL39i6ahiH6uDiib43b5Ke5WEiZ00TUaa9XluYua1zxwklsHCtrvINA==
-X-Google-Smtp-Source: AGHT+IFCgN8qo4pn/qojFIdZBRNxtgY9xf1gMLK7jbuggLu5VWKkK+6qu1VlMtZ+ebGWkZKHlSr2Cw==
-X-Received: by 2002:a05:6a20:5489:b0:1a1:6d2c:45da with SMTP id i9-20020a056a20548900b001a16d2c45damr971620pzk.14.1709755439863;
-        Wed, 06 Mar 2024 12:03:59 -0800 (PST)
+        bh=5q7RSLprSn1rt1j4rdHGaFDAMNSTGJDra0FF/HsNmOM=;
+        b=KC94ue+B3Zmzabtk4Y5RFB0CpCG5OfUG0wDd5h/VKjGUe2pKoOTkFnI95CJPKf6avz
+         pRU3tFvFqAACJmbCA4EnFSd77P92xKRj6mR1x3dpwTYXnZOLzz+hiXShz2/Icq5OQkt/
+         5jaL83Y/xlr0fXdoop2rpXkYHVvp8OPSCQqF4i/2grspUYADKfYwMI9Cx3oMXliiV0j4
+         4jegrocHgBb9tjBFnS7d76DpBQ4MSzm8oIzCoF3/D/Zpkv5FZXyve8W4lGU0efAVtJxp
+         dEYJQBm9JUpD/aVaLW1nBTnMfvQVPBpwlb0X9x7dDrQSSkZ2/y7dKKba2KIAs92EN1Zc
+         7LDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvvJ1xDgnGBFlwS8V9Yma6alTn9RQdMySxw9PQG5mosYxqKmXnaC256DB/beWNUcQnWiqH8q+8O4WISrGpndFYfoDrmZz28BXmnm0R
+X-Gm-Message-State: AOJu0Yz7PsH2vrINbgxZXePUBzcc3sHhoJTBtxEuiFliIjRAzaxYSM4j
+	8z49smHLBlvUMQQAmzp4wTftlQAspkXm1oL80gWLhxgxYlIpHWIZ8TgAyK+B7A==
+X-Google-Smtp-Source: AGHT+IEvpr4QV5mPBpt2sxAyZS+vMLVhwGwjJwhB/E1OupG/ADEUdABJiDL7NbFUKKyTsEDER6dy8A==
+X-Received: by 2002:a05:6a20:8e09:b0:1a1:4e68:30db with SMTP id y9-20020a056a208e0900b001a14e6830dbmr7188437pzj.12.1709755441698;
+        Wed, 06 Mar 2024 12:04:01 -0800 (PST)
 Received: from hsinyi.sjc.corp.google.com ([2620:15c:9d:2:a215:f6c0:3224:5460])
-        by smtp.gmail.com with ESMTPSA id e3-20020aa79803000000b006e5667793d4sm11124241pfl.66.2024.03.06.12.03.58
+        by smtp.gmail.com with ESMTPSA id e3-20020aa79803000000b006e5667793d4sm11124241pfl.66.2024.03.06.12.04.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 12:03:59 -0800 (PST)
+        Wed, 06 Mar 2024 12:04:01 -0800 (PST)
 From: Hsin-Yi Wang <hsinyi@chromium.org>
 To: Jani Nikula <jani.nikula@linux.intel.com>,
 	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
@@ -63,9 +63,9 @@ Cc: Neil Armstrong <neil.armstrong@linaro.org>,
 	Daniel Vetter <daniel@ffwll.ch>,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/6] drm/edid: Match edid quirks with identity
-Date: Wed,  6 Mar 2024 11:55:54 -0800
-Message-ID: <20240306200353.1436198-5-hsinyi@chromium.org>
+Subject: [PATCH v5 6/6] drm/panel-edp: Fix AUO 0x405c panel naming and add a variant
+Date: Wed,  6 Mar 2024 11:55:56 -0800
+Message-ID: <20240306200353.1436198-7-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
 In-Reply-To: <20240306200353.1436198-1-hsinyi@chromium.org>
 References: <20240306200353.1436198-1-hsinyi@chromium.org>
@@ -77,63 +77,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently edid quirks are matched by panel id only.
+There are 2 different AUO panels using the same panel id. One of the
+variants requires using overridden modes to resolve glitching issue as
+described in commit 70e0d5550f5c ("drm/panel-edp: Add auo_b116xa3_mode").
+Other variants should use the modes parsed from EDID.
 
-Modify it to match with identity so it's easier to be extended
-for more complex matching if required.
-
-Suggested-by: Jani Nikula <jani.nikula@linux.intel.com>
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
 ---
 v5: no change
 ---
- drivers/gpu/drm/drm_edid.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/panel/panel-edp.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 29ef35ebee32..f9e4dacd7255 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -112,13 +112,15 @@ struct drm_edid_match_closure {
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index 772bf6011d79..e3de55314bda 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -1009,6 +1009,19 @@ static const struct panel_desc auo_b101ean01 = {
+ 	},
+ };
  
- #define EDID_QUIRK(vend_chr_0, vend_chr_1, vend_chr_2, product_id, _quirks) \
- { \
--	.panel_id = drm_edid_encode_panel_id(vend_chr_0, vend_chr_1, vend_chr_2, \
--					     product_id), \
-+	.ident = { \
-+		.panel_id = drm_edid_encode_panel_id(vend_chr_0, vend_chr_1, \
-+						     vend_chr_2, product_id), \
-+	}, \
- 	.quirks = _quirks \
- }
- 
- static const struct edid_quirk {
--	u32 panel_id;
-+	const struct drm_edid_ident ident;
- 	u32 quirks;
- } edid_quirk_list[] = {
- 	/* Acer AL1706 */
-@@ -2880,16 +2882,17 @@ EXPORT_SYMBOL(drm_edid_duplicate);
-  * @drm_edid: EDID to process
-  *
-  * This tells subsequent routines what fixes they need to apply.
-+ *
-+ * Return: A u32 represents the quirks to apply.
-  */
- static u32 edid_get_quirks(const struct drm_edid *drm_edid)
- {
--	u32 panel_id = drm_edid_get_panel_id(drm_edid);
- 	const struct edid_quirk *quirk;
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(edid_quirk_list); i++) {
- 		quirk = &edid_quirk_list[i];
--		if (quirk->panel_id == panel_id)
-+		if (drm_edid_match(drm_edid, &quirk->ident))
- 			return quirk->quirks;
- 	}
- 
++static const struct drm_display_mode auo_b116xa3_mode = {
++	.clock = 70589,
++	.hdisplay = 1366,
++	.hsync_start = 1366 + 40,
++	.hsync_end = 1366 + 40 + 40,
++	.htotal = 1366 + 40 + 40 + 32,
++	.vdisplay = 768,
++	.vsync_start = 768 + 10,
++	.vsync_end = 768 + 10 + 12,
++	.vtotal = 768 + 10 + 12 + 6,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++};
++
+ static const struct drm_display_mode auo_b116xak01_mode = {
+ 	.clock = 69300,
+ 	.hdisplay = 1366,
+@@ -1990,7 +2003,9 @@ static const struct edp_panel_entry edp_panels[] = {
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x239b, &delay_200_500_e50, "B116XAN06.1"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x255c, &delay_200_500_e50, "B116XTN02.5"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x403d, &delay_200_500_e50, "B140HAN04.0"),
+-	EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B116XAK01.0"),
++	EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B116XAN04.0"),
++	EDP_PANEL_ENTRY2('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B116XAK01.0 ",
++			 &auo_b116xa3_mode),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x435c, &delay_200_500_e50, "Unknown"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x582d, &delay_200_500_e50, "B133UAN01.0"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x615c, &delay_200_500_e50, "B116XAN06.1"),
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
