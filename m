@@ -1,103 +1,94 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C1578682;
-	Wed,  6 Mar 2024 12:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B095D72F
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 12:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709728048; cv=none; b=c5Ey4tINBGi1rJajS3udsY1yZb44INVoe/iibJijSHxCFuAGPEN/GBhg59Ig9LkQb8GY7bUElygwg4OnwcGPzLtsVuf5iOpq5iKaEBEao77zkYO/3ZlcmcYjD44WazoyB1PFqMNWlju5lM3JVA4HWqAz/NyEMygejrurWlJvs8g=
+	t=1709728134; cv=none; b=I6vol35cijffQPw65UblPjM8TalSB+ps+hnNZ2v0CsmhO9eodatX/liCHWuc+agpKLHTAHKDnNVgZHFD4DowwqV7Z04CgKpqeXPW5hFetS76/iZI5mRsw16wakDYja0ltMTYOSc5wh09kHEJ7yttaJmFRQkR7LkrIVRxCr5F6s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709728048; c=relaxed/simple;
-	bh=tNa2pO3DxCUf23rLalNIYqIGxfZJD7s/HasBZY3POgI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ptEDOR3EYTWk9vV/hsDTZQywxXft05KCqvdetUEfbmgbtKA9H2AvOSVOKiidnSW7BZgXuQFEbGOeie+h4v4duc6K7GxJEp6t0MmzeJ8SQMvbwyWZgtXGMpUZwi5XKeyWtPEpBqDdJ/nJNUCa6a5dAutotQ3FD2VG/fdonRamXzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=G3RW7QOj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709728134; c=relaxed/simple;
+	bh=VLOS2vVv4IuuAP5UT08HBwa1ioaWzhky52552bmm8wA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MZilu8qOaoVagFG9qOOUwMPSIvjnQV7ionsjjFaFFsDqztcfCtdrXkj1V091ABeZUIpI7s0U9dmL5xrZV+fl6Eg9l6MwIsu78yzD+d3/L0rBGBtlydoPqr/S9eCw63geR2X4wcC0b7j+CgOHoZtCYkONwgwtYJJGki4UQ2Bz6iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cb+cqJ38; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="G3RW7QOj"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 426Bqokb001766;
-	Wed, 6 Mar 2024 12:27:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=GnahFC5xU+L3TooWag+V
-	CCXDbcKdEp+ORqjNvQepIVY=; b=G3RW7QOjCm9hGhey9/dbAZwOUego7S+rKDOo
-	PXZvNFRBCYTgGc2sUkvPRSS4gCiP+69iKL8swaroESIp57MUPciwd5L+HH47vHRt
-	9UYxl2XBNWdnr3C54AbnO8yWgMWYMi03p3G8VPiFAo7zHJnZkbxhrUfnPQNIuxrr
-	V4ivh7CN5JcBAT9zTNsLUOH8B6lWilC3454b+b6MKriVh/LW6/YVvK0X7HFgrlUl
-	Wog5eh1Tzn8bwd6WYgm4DjUqViJDyr0wt49Ikg9lAVD8ttpKG68mNj2i3iIlowmf
-	Y9Q++OM+w3+bKg58P0KHiu86x/hbyrNlaSpZkkmLdjvvtqUp6Q==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpgdsryxf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 12:27:23 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 426CQoVp017148
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 6 Mar 2024 12:26:50 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 6 Mar 2024 04:26:47 -0800
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH 1/3] arm64: dts: qcom: sm8450: Add qfprom node
-Date: Wed, 6 Mar 2024 17:56:33 +0530
-Message-ID: <1709727995-19821-2-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1709727995-19821-1-git-send-email-quic_mojha@quicinc.com>
-References: <1709727995-19821-1-git-send-email-quic_mojha@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cb+cqJ38"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412e96284b9so14908405e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 04:28:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709728131; x=1710332931; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1+jaysDx7kzbPxogzlLwhX0qb8dGOpg3gc0tLTZPBlI=;
+        b=cb+cqJ38c1aCH1KZE9dDqMAPRf2KsGg1F/Sjs7SSjJ9ZwndKtMS3818jQgyMnNjt5U
+         vrdcvlzexDa1x0n/A7LpfQC/40xacFfmPmmLUl875z7AmzEW4CAmGi0/9CBet7GB0bo6
+         aTjz2Kbw08q7tm+ENW/8DUJAi4Z5UkIKJjoKkPjOOMXFHgsps6jzrSU16IjpwMdkDLOM
+         +VooXQwcghTlAa3AWxYDtqUJbJfTG/xfCYlgC6z9oDIs7HXEGYWysoU/CbuCjODnA1ZM
+         OCCJkoInaq0NZNT3hlQUqns2Nu6ErVfMRKPU++RNG9b0NXmTCcqi0DwbF65Eojyky7lw
+         Nr6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709728131; x=1710332931;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1+jaysDx7kzbPxogzlLwhX0qb8dGOpg3gc0tLTZPBlI=;
+        b=RkyxlWKW3ZDue2pIlHKtr5IErenbTPk7s+Artz3oGX/EI71HjXmj88GQlyqWfs/kPS
+         vucSTDs4jAb8NCRCutviQO6PSdE7MpiOpIX/bAvlTaCFy9mYPsbDxL3ZQz+0ZJs8ff/C
+         kxXdiMtgFoL4vU3qnmnesJB+QZ1POyd7KX3n6gL+oPq5T0Z2JOizKeGvader7OJUN7i9
+         PpFua+o4lsJJCRuPbLh/7JAs+QiIAO4i1Y5fsm2G8qLcZ5h5/PxFCFmGPH2UcJeln7eF
+         PAxoDYzmpr+QAjt/WJZIryJ7wOJ7qOOQDdZBeKNY/VC+jvlvj5jxteSzUOpw67qofvD0
+         yyng==
+X-Forwarded-Encrypted: i=1; AJvYcCUu7Erik/EfXjTNxfJdQIrdshHU7D9cGZTdGP8VbvgOx7ZnpYc0AcN6MeRoWSvqZMxLvg3J3EPCjCv9p1Ke5P7xPfMugTk8jBLxEh6a
+X-Gm-Message-State: AOJu0YypsvZWTbshE5d2O14bjf8mFqx14wpOozzLCE1qMJ0FjltCAhPE
+	qE9s3BwSIZ/g0APWEJsi4RSVjslzhWa+SxY04pHMo4BSxiW1UC0xoukcO1k137s=
+X-Google-Smtp-Source: AGHT+IETdEzABGZ5rA7uZ90k0itisYxcBiZM3vaWPWgmQKh0tg8Z9BR1QWHuNS2bjWtsUYHHAWSJ+w==
+X-Received: by 2002:a05:6000:4c7:b0:33e:8fd:1173 with SMTP id h7-20020a05600004c700b0033e08fd1173mr11966388wri.60.1709728131322;
+        Wed, 06 Mar 2024 04:28:51 -0800 (PST)
+Received: from [192.168.0.102] ([176.61.106.68])
+        by smtp.gmail.com with ESMTPSA id bn20-20020a056000061400b0033e43756d11sm6811932wrb.85.2024.03.06.04.28.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Mar 2024 04:28:51 -0800 (PST)
+Message-ID: <865ba063-e5a8-4a24-af92-3742834b31ea@linaro.org>
+Date: Wed, 6 Mar 2024 12:28:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: vt7X1WRfNVGA1Ol6_-_xamqgO0AX5Z84
-X-Proofpoint-GUID: vt7X1WRfNVGA1Ol6_-_xamqgO0AX5Z84
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_07,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 mlxlogscore=833 impostorscore=0 mlxscore=0 spamscore=0
- adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2403060100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/20] media: venus: core: Deduplicate OPP genpd names
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Andy Gross
+ <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20230911-topic-mars-v2-0-3dac84b88c4b@linaro.org>
+ <20230911-topic-mars-v2-8-3dac84b88c4b@linaro.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20230911-topic-mars-v2-8-3dac84b88c4b@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add the qfprom node for sm8450 SoC.
+On 09/02/2024 21:09, Konrad Dybcio wrote:
+> Instead of redefining the same literals over and over again, define
+> them once and point the reference to that definition.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sm8450.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-index b86be34a912b..02089a388d03 100644
---- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-@@ -4575,6 +4575,13 @@
- 			};
- 		};
- 
-+		qfprom: efuse@221c8000 {
-+			compatible = "qcom,sm8450-qfprom", "qcom,qfprom";
-+			reg = <0 0x221c8000 0 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
-+
- 		nsp_noc: interconnect@320c0000 {
- 			compatible = "qcom,sm8450-nsp-noc";
- 			reg = <0 0x320c0000 0 0x10000>;
--- 
-2.7.4
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
