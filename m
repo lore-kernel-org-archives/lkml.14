@@ -1,241 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CC81426B
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0F62E641
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709714608; cv=none; b=Xy0KpwvOrvapRB/ZSh/w8ckgsnsiacrd7K9DDNykU33zPJrJg3S1oj3v6apaRBvkFXmben595Qm+ctGWwb/lfifCekyspC0wjFkmRpkTUCRj3bg2wn7L7GELelvA67uQf0l4/JQ25sfM3hkqQkqyq3uzkop2yBVRBthLGVlNVbU=
+	t=1709714720; cv=none; b=EJ/d4YEfyaAj8RPPtiAM2iXAxbZ2c3ok3kEVUBdXBAA4k2tjQEI38gRIuhRamy9V3L/kbRb91hJtBlofjuOTQDn8uvcy6Gas2vG3YaI4i5Pt9F8nEHMnj/ZWFohXQkVedWjbO/gIeDYUKaajZ9x5K0CQUxORdK+Na3f0jB7Qqbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709714608; c=relaxed/simple;
-	bh=o1f+IK+oob/TNW+G6c9s3CJ0ykrpd884VVhiFMZV1rU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JyRWGWBmxU+ZmDWDIgs9cTRBQJJB7IIu0eQiee9HkOVxOja/m68pcc1ISFk9sMoERn8428f8W1HAe09tazVYmkFki2GutRum36WqExydHOG8G1SsIhrNqZGXMtLZ1xrLrum1/k3Pv+Wm34eEBZINg9KQwH9/P+6VfVhklcwgmqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MwI3f5Ip; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709714720; c=relaxed/simple;
+	bh=SAfOQXJPClJAnWs7E5f8VER84YPuD871EGJKvZeYlDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q0fXfb371S8fozE17i+mhkvy3lkeJg/99UnkjRAlILVSxhaVQIXs1Se3k5ed2tLfbZkrRttFmNju/Pylj5ZsSUNZ1HQeVY6nbFl88h2jvpjtsiep5Tg42Tae0OmTvm4RKU2qxrnN8/mD4tJNb++4SO/hRJieUM7g2tA0UUVwSgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2RDm71qY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UCLBWCjz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2RDm71qY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UCLBWCjz; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MwI3f5Ip"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709714606; x=1741250606;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=o1f+IK+oob/TNW+G6c9s3CJ0ykrpd884VVhiFMZV1rU=;
-  b=MwI3f5Ipf9bsp7eszovlDUEVgA0xcJ5aQEIYu+ZLf7xH7wk5iTlp8hHS
-   5H+6E2uzZ8E84h9R9gOC0l+4aCqUqCKBpuBOqOC+YBSrVHXNXF1JV9Bru
-   xtHR+D+JI+Y9lbH08JYRfjJEt90RCabd8EdY0vDBeVSXneHWD6QFJQmyH
-   KeevP5qYzmxziiLpYqPx3vlD4mAke9qvmzMvvWZI33Llbd3mmUh2yO7g2
-   1A8QKuv68Id0mMKtYCiYOUJcY1xVfJ35szMdexz5kujLL31sYxF3mHOQI
-   f+GPL3lvvRDOO1xP+7xrozjmdfkbtb6fAaPuutxq3Uo4pRNjI86lWMDgn
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="15726250"
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="15726250"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 00:43:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="9556791"
-Received: from rjongalo-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.33.211])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 00:43:16 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Hsin-Yi Wang <hsinyi@chromium.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Douglas Anderson <dianders@chromium.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] drm_edid: Add a function to get EDID base block
-In-Reply-To: <20240306004347.974304-2-hsinyi@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240306004347.974304-1-hsinyi@chromium.org>
- <20240306004347.974304-2-hsinyi@chromium.org>
-Date: Wed, 06 Mar 2024 10:43:09 +0200
-Message-ID: <87v85zzr6q.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2RDm71qY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UCLBWCjz";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2RDm71qY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UCLBWCjz"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5F29E21A20;
+	Wed,  6 Mar 2024 08:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709714717; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5hNv5uA53bbnjTxhxZxB4EFwSuZ+2wclxh0E1t2ykxk=;
+	b=2RDm71qYwUcCfefhb6/vy0hJdvWvBABcNFuJtMlHjtTXiuap3GoceJ/+ifKT032LDobxN0
+	XlN+6I0mAigzbHc/XJenRpZK3NmxPC7voTVEcGjizktbeOu4ZHzhSwRQEX/NCPpAW2hQqd
+	SU+UHLzjP0jXPJFp/RACk5ZMTwAH3uU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709714717;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5hNv5uA53bbnjTxhxZxB4EFwSuZ+2wclxh0E1t2ykxk=;
+	b=UCLBWCjzoVX1/ktiAgZfLWEybwS22JtC7bn3pqwzU2q305aQ3JcN+mlIEg8l8AeS53D1xp
+	yrrP0NLLzHfLVtCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709714717; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5hNv5uA53bbnjTxhxZxB4EFwSuZ+2wclxh0E1t2ykxk=;
+	b=2RDm71qYwUcCfefhb6/vy0hJdvWvBABcNFuJtMlHjtTXiuap3GoceJ/+ifKT032LDobxN0
+	XlN+6I0mAigzbHc/XJenRpZK3NmxPC7voTVEcGjizktbeOu4ZHzhSwRQEX/NCPpAW2hQqd
+	SU+UHLzjP0jXPJFp/RACk5ZMTwAH3uU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709714717;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5hNv5uA53bbnjTxhxZxB4EFwSuZ+2wclxh0E1t2ykxk=;
+	b=UCLBWCjzoVX1/ktiAgZfLWEybwS22JtC7bn3pqwzU2q305aQ3JcN+mlIEg8l8AeS53D1xp
+	yrrP0NLLzHfLVtCg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id CD43F1377D;
+	Wed,  6 Mar 2024 08:45:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id ctcPLxwt6GVjGwAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Wed, 06 Mar 2024 08:45:16 +0000
+Date: Wed, 6 Mar 2024 09:46:35 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, david@redhat.com,
+	linmiaohe@huawei.com, naoya.horiguchi@nec.com, mhocko@kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm: hugetlb: make the hugetlb migration strategy
+ consistent
+Message-ID: <Zegta2FEb8pkV4vz@localhost.localdomain>
+References: <cover.1709041586.git.baolin.wang@linux.alibaba.com>
+ <bdca97e6c59f1b58f09e18defac0c47d1e38f44b.1709041586.git.baolin.wang@linux.alibaba.com>
+ <Zd38_AYtr9QKp-F6@localhost.localdomain>
+ <8d35b8ae-b8d8-4237-bfcf-ed63c0bb4223@linux.alibaba.com>
+ <Zd7xnrzGb_8QiqcE@localhost.localdomain>
+ <3eda72bd-25ad-4518-b38e-b63f75e5e94d@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3eda72bd-25ad-4518-b38e-b63f75e5e94d@linux.alibaba.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-2.86 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.76)[98.97%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.86
 
-On Tue, 05 Mar 2024, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> It's found that some panels have variants that they share the same panel id
-> although their EDID and names are different. Besides panel id, now we need
-> more information from the EDID base block to distinguish these panel
-> variants.
->
-> Add drm_edid_read_base_block() to return the EDID base block, which is
-> wrapped in struct drm_edid.
->
-> Caller can further use it to get panel id or check if the block contains
-> certain strings, such as panel name.
->
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
-> v3->v4: change drm_edid_read_base_block return type to drm_edid.
-> ---
->  drivers/gpu/drm/drm_edid.c        | 63 +++++++++++++++++++------------
->  drivers/gpu/drm/panel/panel-edp.c |  8 +++-
->  include/drm/drm_edid.h            |  3 +-
->  3 files changed, 46 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 923c4423151c..f9e09f327f81 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -2770,58 +2770,71 @@ static u32 edid_extract_panel_id(const struct edid *edid)
->  }
->  
->  /**
-> - * drm_edid_get_panel_id - Get a panel's ID through DDC
-> - * @adapter: I2C adapter to use for DDC
-> + * drm_edid_get_panel_id - Get a panel's ID from EDID
-> + * @drm_edid: EDID that contains panel ID.
->   *
-> - * This function reads the first block of the EDID of a panel and (assuming
-> + * This function uses the first block of the EDID of a panel and (assuming
->   * that the EDID is valid) extracts the ID out of it. The ID is a 32-bit value
->   * (16 bits of manufacturer ID and 16 bits of per-manufacturer ID) that's
->   * supposed to be different for each different modem of panel.
->   *
-> + * Return: A 32-bit ID that should be different for each make/model of panel.
-> + *         See the functions drm_edid_encode_panel_id() and
-> + *         drm_edid_decode_panel_id() for some details on the structure of this
-> + *         ID.
-> + */
-> +u32 drm_edid_get_panel_id(const struct drm_edid *drm_edid)
-> +{
-> +	return edid_extract_panel_id(drm_edid->edid);
-> +}
-> +EXPORT_SYMBOL(drm_edid_get_panel_id);
-> +
-> +/**
-> + * drm_edid_read_base_block - Get a panel's EDID base block
-> + * @adapter: I2C adapter to use for DDC
-> + *
-> + * This function returns the drm_edid containing the first block of the EDID of
-> + * a panel.
-> + *
->   * This function is intended to be used during early probing on devices where
->   * more than one panel might be present. Because of its intended use it must
-> - * assume that the EDID of the panel is correct, at least as far as the ID
-> - * is concerned (in other words, we don't process any overrides here).
-> + * assume that the EDID of the panel is correct, at least as far as the base
-> + * block is concerned (in other words, we don't process any overrides here).
-> + *
-> + * Caller should call drm_edid_free() after use.
->   *
->   * NOTE: it's expected that this function and drm_do_get_edid() will both
->   * be read the EDID, but there is no caching between them. Since we're only
->   * reading the first block, hopefully this extra overhead won't be too big.
->   *
-> - * Return: A 32-bit ID that should be different for each make/model of panel.
-> - *         See the functions drm_edid_encode_panel_id() and
-> - *         drm_edid_decode_panel_id() for some details on the structure of this
-> - *         ID.
-> + * WARNING: Only use this function when the connector is unknown. For example,
-> + * during the early probe of panel. The EDID read from the function is temporary
-> + * and should be replaced by the full EDID returned from other drm_edid_read.
-> + *
-> + * Return: Pointer to allocated EDID base block, or NULL on any failure.
->   */
-> -
-> -u32 drm_edid_get_panel_id(struct i2c_adapter *adapter)
-> +const struct drm_edid *drm_edid_read_base_block(struct i2c_adapter *adapter)
->  {
->  	enum edid_block_status status;
->  	void *base_block;
-> -	u32 panel_id = 0;
-> -
-> -	/*
-> -	 * There are no manufacturer IDs of 0, so if there is a problem reading
-> -	 * the EDID then we'll just return 0.
-> -	 */
->  
->  	base_block = kzalloc(EDID_LENGTH, GFP_KERNEL);
->  	if (!base_block)
-> -		return 0;
-> +		return NULL;
->  
->  	status = edid_block_read(base_block, 0, drm_do_probe_ddc_edid, adapter);
->  
->  	edid_block_status_print(status, base_block, 0);
->  
-> -	if (edid_block_status_valid(status, edid_block_tag(base_block)))
-> -		panel_id = edid_extract_panel_id(base_block);
-> -	else
-> +	if (!edid_block_status_valid(status, edid_block_tag(base_block))) {
->  		edid_block_dump(KERN_NOTICE, base_block, 0);
-> +		kfree(base_block);
-> +		return NULL;
-> +	}
->  
-> -	kfree(base_block);
-> -
-> -	return panel_id;
-> +	return drm_edid_alloc(base_block, EDID_LENGTH);
+On Wed, Mar 06, 2024 at 04:35:26PM +0800, Baolin Wang wrote:
+> On 2024/2/28 16:41, Oscar Salvador wrote:
 
-This leaks base_block. Please use _drm_edid_alloc() (with underscore) to
-only allocate the container without kmemduping the data.
+> >   	if (folio_test_hugetlb(src)) {
+> >   		struct hstate *h = folio_hstate(src);
+> > +		bool allow_fallback = false;
+> > +
+> > +		if ((1UL << reason) & HTLB_ALLOW_FALLBACK)
+> > +			allow_fallback = true;
+> 
+> IMHO, users also should not be aware of these hugetlb logics.
 
-Otherwise LGTM.
+Note that what I wrote there was ugly, because it was just a PoC.
 
-BR,
-Jani.
+It could be a helper e.g:
 
+ if (hugetlb_reason_allow_alloc_fallback(reason)) (or whatever)
+     allow_fallback_alloc = true
 
+> > 
+> >   		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
+> >   		return alloc_hugetlb_folio_nodemask(h, nid,
+> > -						mtc->nmask, gfp_mask);
+> > +						mtc->nmask, gfp_mask,
+> > +						allow_fallback);
+> 
+> 'allow_fallback' can be confusing, that means it is 'allow_fallback' for a
+> new temporary hugetlb allocation, but not 'allow_fallback' for an available
+> hugetlb allocation in alloc_hugetlb_folio_nodemask().
 
->  }
-> -EXPORT_SYMBOL(drm_edid_get_panel_id);
-> +EXPORT_SYMBOL(drm_edid_read_base_block);
->  
->  /**
->   * drm_get_edid_switcheroo - get EDID data for a vga_switcheroo output
-> diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-> index 745f3e48f02a..d094cfc43da8 100644
-> --- a/drivers/gpu/drm/panel/panel-edp.c
-> +++ b/drivers/gpu/drm/panel/panel-edp.c
-> @@ -766,6 +766,7 @@ static const struct edp_panel_entry *find_edp_panel(u32 panel_id);
->  static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
->  {
->  	struct panel_desc *desc;
-> +	const struct drm_edid *base_block;
->  	u32 panel_id;
->  	char vend[4];
->  	u16 product_id;
-> @@ -795,8 +796,11 @@ static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
->  		goto exit;
->  	}
->  
-> -	panel_id = drm_edid_get_panel_id(panel->ddc);
-> -	if (!panel_id) {
-> +	base_block = drm_edid_read_base_block(panel->ddc);
-> +	if (base_block) {
-> +		panel_id = drm_edid_get_panel_id(base_block);
-> +		drm_edid_free(base_block);
-> +	} else {
->  		dev_err(dev, "Couldn't identify panel via EDID\n");
->  		ret = -EIO;
->  		goto exit;
-> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-> index 7923bc00dc7a..9686a7cee6a6 100644
-> --- a/include/drm/drm_edid.h
-> +++ b/include/drm/drm_edid.h
-> @@ -410,7 +410,8 @@ struct edid *drm_do_get_edid(struct drm_connector *connector,
->  	void *data);
->  struct edid *drm_get_edid(struct drm_connector *connector,
->  			  struct i2c_adapter *adapter);
-> -u32 drm_edid_get_panel_id(struct i2c_adapter *adapter);
-> +const struct drm_edid *drm_edid_read_base_block(struct i2c_adapter *adapter);
-> +u32 drm_edid_get_panel_id(const struct drm_edid *drm_edid);
->  struct edid *drm_get_edid_switcheroo(struct drm_connector *connector,
->  				     struct i2c_adapter *adapter);
->  struct edid *drm_edid_duplicate(const struct edid *edid);
+Well, you can pick "alloc_fallback_on_alloc" which is more descriptive I
+guess.
+
+Bottomline line is that I do not think that choosing to allow
+fallbacking or not here is spreading more logic than having the
+htlb_modify_alloc_mask() here and not directly in
+alloc_hugetlb_folio_nodemask().
+
+As I said, code-wise looks fine, it is just that having to pass
+the 'reason' all the way down and making the decision there makes
+me go "meh..".
+
 
 -- 
-Jani Nikula, Intel
+Oscar Salvador
+SUSE Labs
