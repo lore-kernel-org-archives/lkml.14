@@ -1,94 +1,131 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2E1132482
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 16:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8C81369B7
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 16:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709743423; cv=none; b=I3nWUGnG6cPsTeGF0uzmq0WHQOHiwMuoznVgEwAo7rLuhqyGcw+kkHYZVaAkPiFYUXDqIoUcibcc179gT3hOkg8W3UCPzRLY2uRY4h7c+WbMDVUggp75Og9bUB/6Vwu7LLjtGny7gw8aU1Wtww+Wr2FEgK6nprF+Bi4eAeHhSA8=
+	t=1709743521; cv=none; b=Kl7LFafq0O7o4BfcogLnPapofy8TrQ3eV4cj+wZtSem9tyTfesaRMqnCIZLDxUrlFByPNq2KsW6di09rbGi2T+60RfPTMSO+hsHFfo5xZJTlKgIeYZHLFV4OSN5/ArH4amJyuLkqgah7nUlkQ50ED65l7NDcoj2gP97btow/Wjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709743423; c=relaxed/simple;
-	bh=E3MQOz1OCEoOqhzGxzqvg86mWlLxnYD562N0ynNIUgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ni08h2WWUnpqCUSRp6tvv86y6Nv9g94B9w/Ee188jhQhKLENcyCcRtSk9Qa2ElPJdesjmvaegc4e8d4Rai96ZfJLzifFxSY1bcpWiu1ftSvIbHo34CLFalY2vrTEABM+VP6BC4uQqq9qpC+1zA4NjFIClNE291jKE7S3jaM81Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WtBKxm0F; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709743521; c=relaxed/simple;
+	bh=4h2+ccgnnm7BOvBn+5jjhRD3CpCSaSxs1q/2EbjETd0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=K8xxO2oVcCl4SicAhB6AZ8XTawjzdBPYWwlGtm06rXPtkMcOcL10z8PwXIeOG3JzwV/bJsFDPTTA6epilZUBp0FphjF5z/qABt9YVJpnYtCigMVJMoLkX+5CjOUSpn7KF8IcmBa+eMsb+45Z+otttaHrahWjtAjfFH2vu9i43K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oT3UjOFp; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WtBKxm0F"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4d34dadcb23so1397792e0c.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 08:43:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oT3UjOFp"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608d6ffc64eso15303127b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 08:45:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709743421; x=1710348221; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+CzHKJhoZJ9L9/JumXPgp0DQ56z60RjeIgEzaXkgl64=;
-        b=WtBKxm0FgQ4JzrKaKgOHxpRCy5Wg0C4o1nAxZ2mfFCXs0IKswdUF61huwKuuel1rL2
-         RmomFY8CnUZyR1kL0/80f78mfan3AxQ5nTdeN+ntuOO9CZhZPd00C4XMa9JhJNTdb9GX
-         YnF6SdGjPRDu9O8veB8mHkvGSFitZ8YMy7OfH9TIcKnFZJ+rXyfuCJRf0FWKZOmfCgra
-         Cwrr2/ENtq4l1ZyejuqWet5R7sUdKs+QfVh9LVSeAz5VjLFzpcKECk3CsFdib4nGnjjJ
-         0OUB2Z5yRxTOMBZ6BM+05wOQK7gFRkDnT+5ZAdvZ7V1sFUJPKMupHEzoUUVpjddKo+YX
-         1/Yg==
+        d=google.com; s=20230601; t=1709743519; x=1710348319; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nIsCFmhpWTW8fxuoFcfHLz0Rx4rMwL+WRCdnBbQqrps=;
+        b=oT3UjOFpJPOUZ718+iKA8cKCe106L4rLrqikIiwuKEcJ35Erj9pNoN/puCfWnEnBUq
+         wxSOJfE/5TkCceANj6AqO3W3/A0HbAkV+P4DLPnmfRa1/pBRy3qSoX9kXvznZFwktNZt
+         5rgkG/pUj7kDG/wRDQZ1n1CdG03YxNzTUXXzYfOvYNREqCMfSVVH3Hos24LWpeUy2mJl
+         XuqEnWM6drDAIIuqPhB4/aWqSRMpxgQqIpVGpof/5GzOzAgFEg7df3MY6yUqkWnJBokh
+         6AKN8VPtMQz84hEIbBJlx9YJSEFb5MvG441FfmlAHjN8HpDRQ9vsdpiV3dewjnjUo0WY
+         vJWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709743421; x=1710348221;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+CzHKJhoZJ9L9/JumXPgp0DQ56z60RjeIgEzaXkgl64=;
-        b=r6ikJCPW2iQsLSV7/O6FZBc5CUbxjJhsnmHy4u/UA20X1d1OfjUTGtbFy5QeR7GNmi
-         0aZXSRsrv4fuYJx1CZW7xD9cVzWMkAaRoI3j9lrqgj8ZPBu8mU4c3boZxgULCVU9DDzq
-         yykoN3TS2xQkX2kRbymLQslqiHQWOYaZ9J2xHaNOZ/If2odrqiW1KFoozuumnfBSzXWb
-         8IUdSh9hkeFoZq07LSsgUPbwG/GopMXVEXIS78KyB7UskFlAr2BDoI5wgBczbyzNcrK8
-         UuN94JZHsR8dPQ6b5ez5hUG8VuepFtPVMqM3dM9fjyx3mghnFDeUUSTHMJjM3yk+xhxq
-         ftAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVISoI74uQ2Uia/ycczyZWObx0g/jSUs97ODSmm6QmmzfaSkcnsf+SeS6nDdANFrp61f/co7766zhUUMuzconADmBkQywjfUCa4RdZ3
-X-Gm-Message-State: AOJu0YzV9esDbD+7v8F1uc4O+crxEvQ9rzdbboWaM+ad11fUgGDaHXwz
-	jYj5bNaI19q3V1n7zLA+3r1rwXUEEQc3kSgfeTK/wYSupM6Sx7X+Gyj8zzq/eCY=
-X-Google-Smtp-Source: AGHT+IEtqKs4f+XSGVsSLHNo1vi31Z+1UVpK7SSLgkuapm9nCa1m0G66gdX1EHLx1QeDvVmUMUFg2A==
-X-Received: by 2002:ac5:ccc7:0:b0:4cd:20ea:35aa with SMTP id j7-20020ac5ccc7000000b004cd20ea35aamr4880544vkn.8.1709743420987;
-        Wed, 06 Mar 2024 08:43:40 -0800 (PST)
-Received: from ishi.. ([185.243.57.249])
-        by smtp.gmail.com with ESMTPSA id ep15-20020a056122390f00b004c02d68e4ffsm1628459vkb.44.2024.03.06.08.43.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 08:43:40 -0800 (PST)
-From: William Breathitt Gray <william.gray@linaro.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: William Breathitt Gray <william.gray@linaro.org>,
-	syednwaris@gmail.com,
-	vigneshr@ti.com,
-	jpanis@baylibre.com,
-	alexandre.torgue@foss.st.com,
-	linux-iio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] counter: Introduce the COUNTER_COMP_FREQUENCY() macro
-Date: Wed,  6 Mar 2024 11:43:23 -0500
-Message-ID: <170974334053.40130.15652602513065815985.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240306153631.4051115-1-fabrice.gasnier@foss.st.com>
-References: <20240306153631.4051115-1-fabrice.gasnier@foss.st.com>
+        d=1e100.net; s=20230601; t=1709743519; x=1710348319;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nIsCFmhpWTW8fxuoFcfHLz0Rx4rMwL+WRCdnBbQqrps=;
+        b=USnrGkrC84QVlnnuEj76+iyCvVUT6FbgyPHSci2AUy6hO5GbUy9ZUl1G59rcI4IxPd
+         /OV/QI2j+v8SAPR1vIizR8+kHBRSTaydvD0YBj+KxjnuOi8/Ng/ZeMueaRcxlpvWFPWb
+         ixNt9a8JIg6A/DgolDxlEkBfp4wo+wpvjh01uVFCQYKzJuHSyNeTcQUTGTddOY62tGFU
+         3adXMuQCmaQ1CtYikRX76gu31ZmdQx6A0M5mN7fKRzSYqcv4rm6Bq8D3kQedpXx8MAtE
+         24gXNLtmvVWMk98V8ZlA+IEuOcebg3oTACE+YDdIJ7jcDL/sjQdAHntiHBvEGee2+bcA
+         JnYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXH9cYRs7+3S4lXz3vJLuevIP7ND+/o0oWxyVhk1tN186DbOaAm9SWoC2yiCAXcHFu2EHZFC71vNwJoTO6jLw6cgV4wd59O71+dHOE1
+X-Gm-Message-State: AOJu0YwPsCaiCehXMeS6EzveCC49lBzgiazLl+TsV0pr58BwXtacrLkS
+	ulANQVu8JPARwf4SBLqd164tH1bU2O+Zw2yVH+VawiuPsZ7YwWH1+KbtWCFeQupOgrM6CeFOJUT
+	gXA==
+X-Google-Smtp-Source: AGHT+IFjfJotvxJ8vPf8sI+9CDo37YHTT6sLO5DzRvYUKGyGWuNZ8zheCdzzRe+bcWeuAf9lBuohBf98uEg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:d104:0:b0:609:82e7:c0b with SMTP id
+ w4-20020a81d104000000b0060982e70c0bmr1162866ywi.3.1709743519455; Wed, 06 Mar
+ 2024 08:45:19 -0800 (PST)
+Date: Wed, 6 Mar 2024 08:45:17 -0800
+In-Reply-To: <76744e4b-361d-43ae-9a52-6a410ed57303@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <1880816055.4545532.1709260250219.JavaMail.zimbra@sjtu.edu.cn>
+ <ZeYK-hNDQz5cFhre@google.com> <edd86a97-b2ef-49e6-aa2b-16b1ef790d96@amd.com>
+ <Zee2ogAOl8cR4vNZ@google.com> <76744e4b-361d-43ae-9a52-6a410ed57303@amd.com>
+Message-ID: <ZeidnSrRcRkUe7gh@google.com>
+Subject: Re: [PATCH] KVM:SVM: Flush cache only on CPUs running SEV guest
+From: Sean Christopherson <seanjc@google.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Zheyun Shen <szy0127@sjtu.edu.cn>, pbonzini@redhat.com, tglx@linutronix.de, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-
-On Wed, 06 Mar 2024 16:36:31 +0100, Fabrice Gasnier wrote:
-> Now that there are two users for the "frequency" extension, introduce a
-> new COUNTER_COMP_FREQUENCY() macro.
-> This extension is intended to be a read-only signal attribute.
+On Wed, Mar 06, 2024, Tom Lendacky wrote:
+> On 3/5/24 18:19, Sean Christopherson wrote:
+> > On Tue, Mar 05, 2024, Tom Lendacky wrote:
+> > > On 3/4/24 11:55, Sean Christopherson wrote:
+> > > > +Tom
+> > > > 
+> > > > "KVM: SVM:" for the shortlog scope.
+> > > > 
+> > > > On Fri, Mar 01, 2024, Zheyun Shen wrote:
+> > > > > On AMD CPUs without ensuring cache consistency, each memory page reclamation in
+> > > > > an SEV guest triggers a call to wbinvd_on_all_cpus, thereby affecting the
+> > > > > performance of other programs on the host.
+> > > > > 
+> > > > > Typically, an AMD server may have 128 cores or more, while the SEV guest might only
+> > > > > utilize 8 of these cores. Meanwhile, host can use qemu-affinity to bind these 8 vCPUs
+> > > > > to specific physical CPUs.
+> > > > > 
+> > > > > Therefore, keeping a record of the physical core numbers each time a vCPU runs
+> > > > > can help avoid flushing the cache for all CPUs every time.
+> > > > 
+> > > > This needs an unequivocal statement from AMD that flushing caches only on CPUs
+> > > > that do VMRUN is sufficient.  That sounds like it should be obviously correct,
+> > > > as I don't see how else a cache line can be dirtied for the encrypted PA, but
+> > > > this entire non-coherent caches mess makes me more than a bit paranoid.
+> > > 
+> > > As long as the wbinvd_on_all_cpus() related to the ASID flushing isn't
+> > > changed, this should be ok. And the code currently flushes the source pages
+> > > when doing LAUNCH_UPDATE commands and adding encrypted regions, so should be
+> > > good there.
+> > 
+> > Nice, thanks!
+> > 
+> > > Would it make sense to make this configurable, with the current behavior the
+> > > default, until testing looks good for a while?
+> > 
+> > I don't hate the idea, but I'm inclined to hit the "I'm feeling lucky" button.
+> > I would rather we put in effort to all but guarantee we can do a clean revert in
+> > the future, at which point a kill switch doesn't add all that much value.  E.g.
+> > it would allow for a non-disruptive fix, and maybe a slightly faster confirmation
+> > of a bug, but that's about it.
+> > 
+> > And since the fallout from this would be host data corruption, _not_ rebooting
+> > hosts that may have been corrupted is probably a bad idea, i.e. the whole
+> > non-disruptive fix benefit is quite dubious.
+> > 
+> > The other issue is that it'd be extremely difficult to know when we could/should
+> > remove the kill switch.  It might be months or even years before anyone starts
+> > running high volume of SEV/SEV-ES VMs with this optimization.
 > 
-> 
+> I can run the next version of the patch through our CI and see if it
+> uncovers anything. I just worry about corner cases... but then that's just
+> me.
 
-Applied, thanks!
+Heh, it's definitely not just you, this scares me more than a bit.
 
-[1/1] counter: Introduce the COUNTER_COMP_FREQUENCY() macro
-      commit: 0e313270e0e91e8d48be7a58e1622228cf9e53f3
-
-William Breathitt Gray
+Doh, I realize I misread your suggestion (several times).  You're suggesting we
+make this opt-in.  Hmm, that's definitely more valuable than a kill switch, though
+it has the same problem of us having no idea when it's safe to enable by default.
+And I'm not sure I like the idea of having a knob that basically says, "we think
+this works, but we're too scared to enable it by default, so _you_ should totally
+enable it and let us know if we've corrupted your data" :-)
