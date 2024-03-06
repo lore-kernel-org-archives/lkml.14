@@ -1,168 +1,77 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4CBD534;
-	Wed,  6 Mar 2024 16:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36184137936;
+	Wed,  6 Mar 2024 16:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709743677; cv=none; b=rsE5+C7GqumhQrFCMsyfLnnA5+qCWwR3xTNXjruAHIvs7/MSbqvTtmyslvIpkqMu+cAAXYgEaR0Kt1omLDiTkHQjbi6WkBpzbDAkXYKEGPrjR60a1Kgmk/RQysacB6416AG5TR+xp36YZbfKdbP88dOj1H6OLH0ZSqX1wn6Bf/s=
+	t=1709743679; cv=none; b=eTw/Sth9Ca6jmRGTQ6hACxpJpAK9ydbKJbxOi/89QzsVFFXPkwwAT9e0LCaP2CMk9qcjbbag/46vG3zjGq4OWgA9mEIAibDdKdjDj40WBNZSxl0G06oHL4Vf3zv1pom1E5retWpLXBiU2uEO+PRpGg+p7qBSYBvbUtqjSNPw7ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709743677; c=relaxed/simple;
-	bh=8W7Dq7YatRAs2b0t73cA2kCx69/JJSpwmIKPnNBRLk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=APY/YP0wiuty6zTFVeSH+UDccidDxZq0udNXfT/Wa+pmVeaWoIRBtXA8ATOk5mkk6tNY4pKUYbMsTnQfKOwjFDHNl+hXUfdJQjfIe73heCMt3lKoTBuViydAm/EhS54CFdle3EybfZNRYtc+eBjztLxsj4J2dQ1I3uYS+1oXjow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=vIJKhngX; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1709743679; c=relaxed/simple;
+	bh=gyK3Oa2EgaOEcRwH1bFm2IMU4x6SIH8TB4MiAN3Tmtg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M6noxD/gn4SL8fY6FcSjb29oHFHaHsW9Afx7fRZhaHRwGaF54fgLgJSqw+BEAV5b/ElOALg1MEhetxVapfs9QSUmcHLAJ8zupmdOqbyeWkiHTtt+yoFLgTRV2XMF0gLltS6rS42gJrjuGXvqepuo+f7odL1hYCQNxUpkOLGcyk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqX0qM0A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vIJKhngX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709743675; x=1741279675;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8W7Dq7YatRAs2b0t73cA2kCx69/JJSpwmIKPnNBRLk4=;
-  b=vIJKhngXsPX8hBVzPBMD2rNIebMa7g55tU1ViL+ZBTr5+qVhy/bEvfJR
-   bC+nUH/q3FpfSgjdi2nkqot4pXc8rpXMCVowstmCW3GQhFFrlkThbqHA6
-   +qxFR9hgEfMlVJWCTzF4HTE6wVcbKMNnVv8aLZcat9kKA/6exEfHAm3JD
-   L09YUvDQ7pq6YHYN4NBEfPQhEukccrhVoQbWG4J6/ov4ID0F8g+F91YeD
-   gGC9f8J5M21IOeQM8yyCoMItOSTv/nu2jkCIKXmVkf2N31Imh826FEewB
-   YJnMURBTKp3HSAyG37oEsC+FKbECGITevuoeLlUYPgZ5HP+tzHfwuB5St
-   A==;
-X-CSE-ConnectionGUID: Utymty8TR7qygpmqy9lhLQ==
-X-CSE-MsgGUID: 4QUS1VrJSxG6Nif7mvyF0g==
-X-IronPort-AV: E=Sophos;i="6.06,208,1705388400"; 
-   d="scan'208";a="17834673"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Mar 2024 09:47:51 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Mar 2024 09:47:25 -0700
-Received: from [10.180.117.170] (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 6 Mar 2024 09:47:21 -0700
-Message-ID: <e6537742-d9be-4745-b457-b36e60ccaa9b@microchip.com>
-Date: Wed, 6 Mar 2024 17:46:19 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqX0qM0A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41257C433F1;
+	Wed,  6 Mar 2024 16:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709743678;
+	bh=gyK3Oa2EgaOEcRwH1bFm2IMU4x6SIH8TB4MiAN3Tmtg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XqX0qM0A8xM6CjT/E02/ozWGPWddzvlAD1SKPZeeIYniqf3O/apGGdbEKSK+SBlgd
+	 Us3mWwgAleZtLRQgKt7ZyXBYeVoOsmu0cLQKejzFSFwo5rKx2H08Am3sSXzmSnsNhK
+	 tSVhj6VDf1pP7fFSvFBHpYolt/DqYy+QHA2cUKv2teTcn4g6V16BEdO6EXLuUpNyvz
+	 FCSCeD3h3MIS9JZ0JkxO6KXBgJkMJ8y7alGEUHCOEbsH3K5Cv7VxDyCdWn3ITiI11K
+	 BevR8F6K47bChOgGsHQ+p20R+PAo/LVQBcQiHJ94mFPV8OEIbDZJs2mwc1FJ4tTgLs
+	 oLQY2Z2JhDWWQ==
+Date: Wed, 6 Mar 2024 16:47:54 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Stuart Henderson <stuarth@opensource.cirrus.com>
+Cc: shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com,
+	patches@opensource.cirrus.com, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 2/5] ASoC: wm8962: Enable both SPKOUTR_ENA and
+ SPKOUTL_ENA in mono mode
+Message-ID: <1db18205-64ec-4235-964d-89cfd198a5b9@sirena.org.uk>
+References: <20240306161439.1385643-1-stuarth@opensource.cirrus.com>
+ <20240306161439.1385643-2-stuarth@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dt-bindings: display: atmel,lcdc: convert to dtschema
-Content-Language: en-US, fr-FR
-To: Dharma B - I70843 <Dharma.B@microchip.com>, Rob Herring <robh@kernel.org>
-CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-References: <20240304-lcdc-fb-v3-1-8b616fbb0199@microchip.com>
- <20240304220154.GA1115739-robh@kernel.org>
- <d3ae3196-4e8a-4e73-bc36-f53541598ab2@microchip.com>
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <d3ae3196-4e8a-4e73-bc36-f53541598ab2@microchip.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Dharma, all,
-
-On 06/03/2024 at 15:35, Dharma B - I70843 wrote:
-> 
-> On 05/03/24 3:31 am, Rob Herring wrote:
->> On Mon, Mar 04, 2024 at 08:00:03PM +0530, Dharma Balasubiramani wrote:
->>> Convert the atmel,lcdc bindings to DT schema.
->>> Changes during conversion: add missing clocks and clock-names properties.
->>>
->>> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
->>> ---
->>> This patch converts the existing lcdc display text binding to JSON schema.
->>> The binding is split into two namely
->>> lcdc.yaml
->>> - Holds the frame buffer properties
->>> lcdc-display.yaml
->>> - Holds the display panel properties which is a phandle to the display
->>> property in lcdc fb node.
->>>
->>> These bindings are tested using the following command.
->>> 'make DT_CHECKER_FLAGS=-m dt_binding_check'
->>> ---
->>> Changes in v3:
->>> - Remove the generic property "bits-per-pixel"
->>> - Link to v2: https://lore.kernel.org/r/20240304-lcdc-fb-v2-1-a14b463c157a@microchip.com
->>>
->>> Changes in v2:
->>> - Run checkpatch and remove whitespace errors.
->>> - Add the standard interrupt flags.
->>> - Split the binding into two, namely lcdc.yaml and lcdc-display.yaml.
->>> - Link to v1: https://lore.kernel.org/r/20240223-lcdc-fb-v1-1-4c64cb6277df@microchip.com
->>> ---
->>>    .../bindings/display/atmel,lcdc-display.yaml       | 97 ++++++++++++++++++++++
->>>    .../devicetree/bindings/display/atmel,lcdc.txt     | 87 -------------------
->>>    .../devicetree/bindings/display/atmel,lcdc.yaml    | 70 ++++++++++++++++
->>>    3 files changed, 167 insertions(+), 87 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/atmel,lcdc-display.yaml b/Documentation/devicetree/bindings/display/atmel,lcdc-display.yaml
->>> new file mode 100644
->>> index 000000000000..5e0b706d695d
-
-[..]
-
->>> +  atmel,lcd-wiring-mode:
->>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
->>
->> Isn't this just a single string rather than an array?
->>
->>> +    description: lcd wiring mode "RGB" or "BRG"
->>
->> enum:
->>     - RGB
->>     - BRG
->>
->> No BGR?
-> 
-> In the current driver implementation, we have interpreted the wiring
-> mode represented by ATMEL_LCDC_WIRING_BGR as 'BRG' in the array
-> atmel_lcdfb_wiring_modes. Considering conventional color representation,
-> would it be appropriate to consider modifying the existing driver to use
-> the 'BGR' string instead of 'BRG' for better alignment with standard
-> naming conventions?
-
-This "BRG" thing is definitively a typo. We never had such thing as a 
-BRG color wiring but did have BGR wiring mode.
-
-> static const char *atmel_lcdfb_wiring_modes[] = {
->           [ATMEL_LCDC_WIRING_BGR] = "BRG",
->           [ATMEL_LCDC_WIRING_RGB] = "RGB",
-
-The thing is that we have one DT using that:
-arch/arm/boot/dts/at91sam9261ek.dts
-
-So, either I would leave it like that: it's only old product using it.
-Or just focus on first character in the string so that it works for both 
-"BRG" or "BGR", and maintains the backward compatibility.
-
-Regards,
-   Nicolas
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="EoYH/R4wBBEJKnZL"
+Content-Disposition: inline
+In-Reply-To: <20240306161439.1385643-2-stuarth@opensource.cirrus.com>
+X-Cookie: Have at you!
 
 
-> };
-> 
-> 
->>
->> But wait, the example shows the value is '1'. That should fail testing.
->> It didn't, but I've now fixed that.
-> 
-> It seems correctly configured in our dts files but didn't noticed the
-> same in the bindings example, thanks for letting me know, I will correct
-> it in the next revision.
+--EoYH/R4wBBEJKnZL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Mar 06, 2024 at 04:14:36PM +0000, Stuart Henderson wrote:
+> Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+
+Because...?
+
+--EoYH/R4wBBEJKnZL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXonjkACgkQJNaLcl1U
+h9CKDAf9GubyuS+G38uH6EeHSpRuTVyLfwf8KGTJQNFNlfLpma07D2/LU3K1KqvT
+dsSPV1QE2jlr7kwLXdQIZj8qOpFRRAS6Md3L3Lrlzct5wNf2w0KPE3fiCKTHHka2
+eqYvKcTTYpboaN+rkG3N65z7La4aaNv/8cTcfe8yd5LNbqfceuun3El1EdxXfn2B
+dnaIVSyXBCzAURjbnwONWlVGcqhRUboLAQ1ePukh2/zWNv5oY2XKvwmtIFpdf4iF
+6aUbFPdU+F7oeq/xdGCuDgVUepJVc/Y1coSw6FdaFoojAlWErr/VCxh5IFTvVKlH
+uzN9wCsXix9cKZrZxKrdYaRiXyEvmQ==
+=/g8g
+-----END PGP SIGNATURE-----
+
+--EoYH/R4wBBEJKnZL--
