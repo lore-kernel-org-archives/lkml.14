@@ -1,175 +1,304 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EB713E7E7
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224FD13F010
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709749763; cv=none; b=lHHvh749w7MKvXXb6iOXWRbDiGwx80dm36nAVMbKPJqtzFjvS/QtBIAVtOE4Dh8nTIN9/3N373fVhRjbjQ+Aw+H4J+3c2+3MmySMaAtPkYxr4CwY+kwS/IYBem0oOvD/lM5w13tZepbdI0B9Oa2ho+I5bnSlG6Lkbg+/B7OjBnE=
+	t=1709749961; cv=none; b=RSp0nqpI3wZ5pjcbD/wua4D2WqTtMhIpbpVrQuZihzwmKjNEQwETyJ5u946ZvJaWyIETMw2G/HYjiv3NEPtbR61xtzrsRTR+1eGMeSav9HD7HrPMP/uDDC/rW1w+4QzD/uvpBnubsrLUaMGgfCz3ABm0a7qiH/sNGSMSqpPb5W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709749763; c=relaxed/simple;
-	bh=b2NtjrcvXQJqz/AVXkk3RxGWkCw+tf+mZi/GXAeFbYE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=I838cvVJCxhxsMLndSTK5n9kxSfE1szhnvwySQPKWXzT8g24ktp1CGqG9kR2cdh6hnUJ5IJKuqf3J0jT/EpteGPF0WoMPOKSSBMXz4xP1uh6u0cgDcy13v7VPQvqgBb+n1KQdBQAzQFO0+9N5s/VdZ8yCdMyYqUvHAuNhjYROzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=WKyWZwZq; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1709749961; c=relaxed/simple;
+	bh=olQTicqfYcmVTsm3FQKV2F3k0dMzmxjbtiI0dKzapRQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eOuXnIolshzuFGvuVjCZdlFOOazCAdH/9W8Its83JSRd4uKL2i8tGHtXY4BzaCzBk3sWLZyM6InHhHC3Bb9bbncAh0OTnS2UWVllZ0ZVIRcPGhLP9iI4HrU6eSU2X9BTgFVsYcsaDfc9VzlwvtWI17CdrXCDnLbM/gC80CUK24A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=E93zEFjq; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WKyWZwZq"
-Received: from [192.168.7.187] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 426ISQw91528489
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 6 Mar 2024 10:28:27 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 426ISQw91528489
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1709749708;
-	bh=XQAir3QRa5LQDi4wpuJlDHfgaqnwTrNgWliu5M/6UP4=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=WKyWZwZqRkd0DiLDAyMi5GM+f+MfmhKuUh/wbJdQIAdwUtv0kKzPL6nlh/4toQG/H
-	 PF5Sszl+gtSmhdTPeBuBZoPXgDpednmhUbwDvyXHs6II7gdoA1E3zeg/PhwZ73dJls
-	 GECwKlguNNbFXv1k5YyqHSQhjEfuQ02Rat/dl18qx/tXfRNV5ORM+CzK6AH1MFtJDx
-	 rs8r0MocTOaRThspYxT2xB/XSyXVwWNzICsGv2o8ILA5qwuJnnJhE2et++7cPh8dEr
-	 ktx8Vo53tnvOQQ6FPaZgfGQJY1PQosR7hboXEUQH0aSHWuBY857Qkl3g8TD3kGw9s/
-	 7BmBpxRWbTEIQ==
-Message-ID: <f982f5ad-36be-4173-a15b-b898252c103c@zytor.com>
-Date: Wed, 6 Mar 2024 10:28:25 -0800
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="E93zEFjq"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29b7b9a4908so551693a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 10:32:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709749958; x=1710354758; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XfZjj69mDmLoiwD1gM4D487QZWwlC1Dl/rzDgzdNAo0=;
+        b=E93zEFjq+aO6YnfTyp/TWQ5Dua7u8cwCqzNJU0chcIWqcSj22d5GhzoMdCDDjxjS5t
+         nu0GaI/kL66gXFP29hs3RteYeiUf6WlcRpZcM92kEz+JtTqXrXWlqqS0Yi/HLIukzHTI
+         p5K0KYaNP/AdUjOFCjTMjBMD8j4N+oNpD8veM7FPXIkpv1qyCxmfG4b2/jwr0XszwYgu
+         H1CdVOZQ0mH3kts4LEuyD8vK+DgDVMQa44fDkYkaGvLGHW9aH9XRSKZ3HaJa4cufZWlD
+         ODtrdWBqENoU5UfpG08XzXJ5gw8uuQewsEZ5PANNUmqNDcLLS4LibiuaAboHZYswyxKA
+         3vjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709749958; x=1710354758;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XfZjj69mDmLoiwD1gM4D487QZWwlC1Dl/rzDgzdNAo0=;
+        b=jwha1QwmIfh0yN+AX5AOXnl29GMWjC6/HPTWBRsoQVMIz/ASZ47dPs68NMkQjSYx63
+         RpvV2w/LLGbirP2v0j7eDlYmj8o9YwrFeTp2k7g1u30n7EIr6zDe7EtqFh6KVuLKFrJy
+         EUb/Zn60s8VvcbeAUrNkfQZV3dd+0Ne4M45zugN552O7dQOzI35owSKTD73zt/qH2QDK
+         lG+o3Y/Kk0XnhyoETbiHIxWwT16hTXmK0etd2/4INFRCqQFhRFglNfCB4Oz6Ej0X1GS9
+         IlZwrEDqquu658NoaY1dKhgo4rGTeheh7Vtg3IhsXUj3PfzTXnHTUoxUQIAu944lry7w
+         hVCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJWJKuF1XBxiV2fVvKVzwmhrVT+SS+xlvQGC315jO5EpXh9Ff7VgHyJ86LsuTh/py36qj1XfAz1mBDO4/QcOheHbKLUHhENP4eskjb
+X-Gm-Message-State: AOJu0Ywe/dtZahrRiseklORuw+pqrodjxzHFlwi3egXer0IAhx6k8xxa
+	UGjvyomMP/5YXYNSGZw66flSehL+/Q5TO+Ns4TTr8LaTybmZwRAkadGfGtvq0Lw=
+X-Google-Smtp-Source: AGHT+IGE0QhAzn32NXbkD7EesqkeigncptlI/KdVReqMmdcHMJEeZ5illDHoQWS5vVOvh7EgAo8WUQ==
+X-Received: by 2002:a17:90b:b04:b0:29a:c89a:bcdb with SMTP id bf4-20020a17090b0b0400b0029ac89abcdbmr11603810pjb.46.1709749958262;
+        Wed, 06 Mar 2024 10:32:38 -0800 (PST)
+Received: from ghost ([2600:1010:b05d:dc52:3fa4:a88f:2bde:e9a])
+        by smtp.gmail.com with ESMTPSA id ig11-20020a17090b154b00b0029b82aa1523sm36634pjb.28.2024.03.06.10.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 10:32:37 -0800 (PST)
+Date: Wed, 6 Mar 2024 10:32:34 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Charles Lohr <lohr85@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/4] riscv: Set unaligned access speed at compile time
+Message-ID: <Zei2wrx4oFB5lj6i@ghost>
+References: <20240301-disable_misaligned_probe_config-v6-0-612ebd69f430@rivosinc.com>
+ <20240301-disable_misaligned_probe_config-v6-4-612ebd69f430@rivosinc.com>
+ <20240306-bring-gullible-72ec4260fd56@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] x86/fred: Fix init_task thread stack pointer
- initialization
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, boris.ostrovsky@oracle.com, arnd@arndb.de,
-        andrew.cooper3@citrix.com, brgerst@gmail.com
-References: <20240304083333.449322-1-xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240304083333.449322-1-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240306-bring-gullible-72ec4260fd56@spud>
 
-On 3/4/2024 12:33 AM, Xin Li (Intel) wrote:
-> As TOP_OF_KERNEL_STACK_PADDING is defined as 0 on x86_64, no one noticed
-> it's missing in the calculation of the .sp field in INIT_THREAD until it
-> is defined to 16 with CONFIG_X86_FRED=y.
+On Wed, Mar 06, 2024 at 04:19:33PM +0000, Conor Dooley wrote:
+> Hey,
 > 
-> Subtract TOP_OF_KERNEL_STACK_PADDING from the .sp field of INIT_THREAD.
+> On Fri, Mar 01, 2024 at 05:45:35PM -0800, Charlie Jenkins wrote:
+> > Introduce Kconfig options to set the kernel unaligned access support.
+> > These options provide a non-portable alternative to the runtime
+> > unaligned access probe.
+> > 
+> > To support this, the unaligned access probing code is moved into it's
+> > own file and gated behind a new RISCV_PROBE_UNALIGNED_ACCESS_SUPPORT
+> > option.
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  arch/riscv/Kconfig                         |  58 ++++--
+> >  arch/riscv/include/asm/cpufeature.h        |  26 +--
+> >  arch/riscv/kernel/Makefile                 |   4 +-
+> >  arch/riscv/kernel/cpufeature.c             | 272 ----------------------------
+> >  arch/riscv/kernel/sys_hwprobe.c            |  21 +++
+> >  arch/riscv/kernel/traps_misaligned.c       |   2 +
+> >  arch/riscv/kernel/unaligned_access_speed.c | 282 +++++++++++++++++++++++++++++
+> >  7 files changed, 369 insertions(+), 296 deletions(-)
+> > 
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index bffbd869a068..60b6de35599d 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -688,27 +688,61 @@ config THREAD_SIZE_ORDER
+> >  	  affects irq stack size, which is equal to thread stack size.
+> >  
+> >  config RISCV_MISALIGNED
+> > -	bool "Support misaligned load/store traps for kernel and userspace"
+> > +	bool
+> >  	select SYSCTL_ARCH_UNALIGN_ALLOW
+> > -	default y
+> >  	help
+> > -	  Say Y here if you want the kernel to embed support for misaligned
+> > -	  load/store for both kernel and userspace. When disable, misaligned
+> > -	  accesses will generate SIGBUS in userspace and panic in kernel.
+> > +	  Embed support for misaligned load/store for both kernel and userspace.
+> > +	  When disabled, misaligned accesses will generate SIGBUS in userspace
+> > +	  and panic in kernel.
 > 
-> Fixes: 65c9cc9e2c14 ("x86/fred: Reserve space for the FRED stack frame")
-> Fixes: 3adee777ad0d ("x86/smpboot: Remove initial_stack on 64-bit")
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202402262159.183c2a37-lkp@intel.com
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
+> "in the kernel".
+> 
+> > +
+> > +choice
+> > +	prompt "Unaligned Accesses Support"
+> > +	default RISCV_PROBE_UNALIGNED_ACCESS
+> > +	help
+> 
+> > +	  This selects the hardware support for unaligned accesses. This
+> 
+> "This determines what level of support for..."
+> 
+> > +	  information is used by the kernel to perform optimizations. It is also
+> > +	  exposed to user space via the hwprobe syscall. The hardware will be
+> > +	  probed at boot by default.
+> > +
+> > +config RISCV_PROBE_UNALIGNED_ACCESS
+> > +	bool "Probe for hardware unaligned access support"
+> > +	select RISCV_MISALIGNED
+> > +	help
+> > +	  During boot, the kernel will run a series of tests to determine the
+> > +	  speed of unaligned accesses. This probing will dynamically determine
+> > +	  the speed of unaligned accesses on the boot hardware.
+> 
+> "on the underlying system"?
+> 
+> > The kernel will
+> > +	  also check if unaligned memory accesses will trap into the kernel and
+> > +	  handle such traps accordingly.
+> 
+> I think I would phrase this to be more understandable to users. I think
+> we need to explain why it would trap and what we will do. Maybe
+> something like: "if unaligned memory accesses trap into the kernel as
+> they are not supported by the system, the kernel will emulate the
+> unaligned accesses to preserve the UABI".
+> 
+> > +config RISCV_EMULATED_UNALIGNED_ACCESS
+> > +	bool "Assume the system expects emulated unaligned memory accesses"
+> > +	select RISCV_MISALIGNED
+> > +	help
+> > +	  Assume that the system expects unaligned memory accesses to be
+> > +	  emulated. The kernel will check if unaligned memory accesses will
+> > +	  trap into the kernel and handle such traps accordingly.
+> 
+> I guess the same suggestion applies here, but I think the description
+> here isn't quite accurate. This option is basically the same as above,
+> but without the speed test, right? It doesn't actually assume emulation
+> is required at all, in fact the assumption we make is that if the
+> hardware supports unaligned access that access is slow.
+> 
+> I think I'd do:
+> ```
+> boot "Emulate unaligned access where system support is missing"
+> help
+>   If unaligned accesses trap into the kernel as they are not supported
+>   by the system, the kernel will emulate the unaligned accesses to
+>   preserve the UABI. When the underlying system does support unaligned
+>   accesses, probing at boot is not done and unaligned accesses are
+>   assumed to be slow.
 
-Should this fix, if it looks good, be included for the coming merge
-window?
-
-Thanks!
-     Xin
+Great suggestions thank you. I think I will change up the second
+sentence a little bit to be "When the underlying system does support
+unaligned accesses, the unaligned accesses are assumed to be slow."
 
 > 
-> Change Since v1:
-> * Apply offset TOP_OF_KERNEL_STACK_PADDING to all uses of __end_init_task
->    (Brian Gerst).
-> ---
->   arch/x86/include/asm/processor.h | 6 ++++--
->   arch/x86/kernel/head_64.S        | 3 ++-
->   arch/x86/xen/xen-head.S          | 2 +-
->   3 files changed, 7 insertions(+), 4 deletions(-)
+> > +config RISCV_SLOW_UNALIGNED_ACCESS
+> > +	bool "Assume the system supports slow unaligned memory accesses"
+> > +	depends on NONPORTABLE
+> > +	help
+> > +	  Assume that the system supports slow unaligned memory accesses. The
+> > +	  kernel may not be able to run at all on systems that do not support
+> > +	  unaligned memory accesses.
 > 
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> index 26620d7642a9..17fe81998ce4 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -664,8 +664,10 @@ static __always_inline void prefetchw(const void *x)
->   #else
->   extern unsigned long __end_init_task[];
->   
-> -#define INIT_THREAD {							    \
-> -	.sp	= (unsigned long)&__end_init_task - sizeof(struct pt_regs), \
-> +#define INIT_THREAD {							\
-> +	.sp	= (unsigned long)&__end_init_task -			\
-> +		  TOP_OF_KERNEL_STACK_PADDING -				\
-> +		  sizeof(struct pt_regs),				\
->   }
->   
->   extern unsigned long KSTK_ESP(struct task_struct *task);
-> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-> index d4918d03efb4..c38e43589046 100644
-> --- a/arch/x86/kernel/head_64.S
-> +++ b/arch/x86/kernel/head_64.S
-> @@ -26,6 +26,7 @@
->   #include <asm/apicdef.h>
->   #include <asm/fixmap.h>
->   #include <asm/smp.h>
-> +#include <asm/thread_info.h>
->   
->   /*
->    * We are not able to switch in one step to the final KERNEL ADDRESS SPACE
-> @@ -66,7 +67,7 @@ SYM_CODE_START_NOALIGN(startup_64)
->   	mov	%rsi, %r15
->   
->   	/* Set up the stack for verify_cpu() */
-> -	leaq	(__end_init_task - PTREGS_SIZE)(%rip), %rsp
-> +	leaq	(__end_init_task - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE)(%rip), %rsp
->   
->   	leaq	_text(%rip), %rdi
->   
-> diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-> index a0ea285878db..04101b984f24 100644
-> --- a/arch/x86/xen/xen-head.S
-> +++ b/arch/x86/xen/xen-head.S
-> @@ -49,7 +49,7 @@ SYM_CODE_START(startup_xen)
->   	ANNOTATE_NOENDBR
->   	cld
->   
-> -	leaq	(__end_init_task - PTREGS_SIZE)(%rip), %rsp
-> +	leaq	(__end_init_task - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE)(%rip), %rsp
->   
->   	/* Set up %gs.
->   	 *
+> ...and userspace programs cannot use unaligned access either, I think
+> that is worth mentioning.
 > 
-> base-commit: e13841907b8fda0ae0ce1ec03684665f578416a8
+> >  
+> >  config RISCV_EFFICIENT_UNALIGNED_ACCESS
+> > -	bool "Assume the CPU supports fast unaligned memory accesses"
+> > +	bool "Assume the system supports fast unaligned memory accesses"
+> >  	depends on NONPORTABLE
+> >  	select DCACHE_WORD_ACCESS if MMU
+> >  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+> >  	help
+> > -	  Say Y here if you want the kernel to assume that the CPU supports
+> > -	  efficient unaligned memory accesses.  When enabled, this option
+> > -	  improves the performance of the kernel on such CPUs.  However, the
+> > -	  kernel will run much more slowly, or will not be able to run at all,
+> > -	  on CPUs that do not support efficient unaligned memory accesses.
+> > +	  Assume that the system supports fast unaligned memory accesses. When
+> > +	  enabled, this option improves the performance of the kernel on such
+> > +	  systems.  However, the kernel will run much more slowly, or will not
+> > +	  be able to run at all, on systems that do not support efficient
+> > +	  unaligned memory accesses.
+> >  
+> > -	  If unsure what to do here, say N.
+> > +endchoice
+> >  
+> >  endmenu # "Platform type"
+> 
+> > +#if defined(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)
+> >  DECLARE_STATIC_KEY_FALSE(fast_unaligned_access_speed_key);
+> >  
+> >  static __always_inline bool has_fast_unaligned_accesses(void)
+> >  {
+> >  	return static_branch_likely(&fast_unaligned_access_speed_key);
+> >  }
+> > +#elif defined(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)
+> > +static __always_inline bool has_fast_unaligned_accesses(void)
+> > +{
+> > +	return true;
+> > +}
+> > +#else
+> > +static __always_inline bool has_fast_unaligned_accesses(void)
+> > +{
+> > +	return false;
+> > +}
+> > +#endif
+> 
+> These tree could just be one function with if(IS_ENABLED), whatever code
+> gets made dead should be optimised out.
+> 
+
+Sure, will do.
+
+> > diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+> > index a7c56b41efd2..dad02f5faec3 100644
+> > --- a/arch/riscv/kernel/sys_hwprobe.c
+> > +++ b/arch/riscv/kernel/sys_hwprobe.c
+> > @@ -147,8 +147,10 @@ static bool hwprobe_ext0_has(const struct cpumask *cpus, unsigned long ext)
+> >  	return (pair.value & ext);
+> >  }
+> >  
+> > +#if defined(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)
+> >  static u64 hwprobe_misaligned(const struct cpumask *cpus)
+> >  {
+> > +	return RISCV_HWPROBE_MISALIGNED_FAST;
+> 
+> This hack is still here.
+
+Oh no! I removed it locally but it snuck back in...
+
+> 
+> >  	int cpu;
+> >  	u64 perf = -1ULL;
+> >  
+> > @@ -169,6 +171,25 @@ static u64 hwprobe_misaligned(const struct cpumask *cpus)
+> >  
+> >  	return perf;
+> >  }
+> 
+> > +#elif defined(CONFIG_RISCV_EMULATED_UNALIGNED_ACCESS)
+> > +static u64 hwprobe_misaligned(const struct cpumask *cpus)
+> > +{
+> > +	if (unaligned_ctl_available())
+> > +		return RISCV_HWPROBE_MISALIGNED_EMULATED;
+> > +	else
+> > +		return RISCV_HWPROBE_MISALIGNED_SLOW;
+> > +}
+> > +#elif defined(CONFIG_RISCV_SLOW_UNALIGNED_ACCESS)
+> > +static u64 hwprobe_misaligned(const struct cpumask *cpus)
+> > +{
+> > +	return RISCV_HWPROBE_MISALIGNED_SLOW;
+> > +}
+> > +#elif defined(CONFIG_RISCV_EFFICIENT_UNALIGNED_ACCESS)
+> > +static u64 hwprobe_misaligned(const struct cpumask *cpus)
+> > +{
+> > +	return RISCV_HWPROBE_MISALIGNED_FAST;
+> > +}
+> > +#endif
+> 
+> Same applies to these three functions.
+> 
+> Thanks,
+> Conor.
+
+Thank you, I will send out a new version shortly.
+
+- Charlie
 
