@@ -1,129 +1,125 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9673160B86;
-	Wed,  6 Mar 2024 11:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D722D7B8;
+	Wed,  6 Mar 2024 11:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709726129; cv=none; b=CSLzRHA9McWZYS/zqxLAOlvxLzntZ8pVE+g12tHIwM0KCewSrO5vGN31RvHUqdKxnInjFVl8Ef0ewCAwoVItYPv7D3vZQpU8o2x/rXoxVXbwpGx2aCIt3Tw0/W3WY52Nu/Med7oc2yNoTRLI6RTxpjCYwI41hRK3NWnVpvibQEs=
+	t=1709726194; cv=none; b=C+EtAlfy3xYk3H3i8FBMoGwe0l9V6VIIlONmIpK9u54+En8x+bOHcb9OkAxz68aFnfXMjDkBFBNs8zDg+ug6kvPU/suNJu+2gFnjSbeksaZt9e0BcSAYneDVF4moRR91elb3YTkwou8VfGij+ckbgiWPJROHbzPGeIhvyWP1xaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709726129; c=relaxed/simple;
-	bh=XdWyUAYB3kLZe/yIQrocuP6DXR4ct+DXO30W//s+sbM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IGAxLZFEa0e2ddME3YwWKh1H9h4MTW/b78AddrPK1Q3CEGshcVvqDqAUjsWpEjLGwFRHdfyMW/brpsQ9U8x1o/E9B6MSJM4foyo6iYJQ3iviaqLJJDYhgb1bSVJt0WIp5V8C0+R/oTU7TvLbBJgFtV/vGdG0iWrTLJGYfLrMqYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rvTphROz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709726194; c=relaxed/simple;
+	bh=UrapeRk4i8gmM86Amitnr2+Q6gX/VbewF7zIepiz7V0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yn8HoYw1Td/N3Yne7bh45hwclctSWdIdTF2cUueBxE4uaJHMinsxTCGmM2mlbE7KtXy8aT4f0vg75jJPK2GVxBsvs0wxYHpR4mPqU8YJAvrV6T0GnLP+tI7KajQgAYe+r0MWjbup5z3isUI2h0JpG8T+58lXJauh4Z4Bit6E7Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g1a20u7C; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rvTphROz"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 426B2AhJ002879;
-	Wed, 6 Mar 2024 11:55:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=kIFk6i1GlO9jyQC37kXh4zuglxoT8soSWpXp8uAyqYU=;
- b=rvTphROzvGynwyj3F22V++TsSE2lQr4PeZK5YQfEWDrl4Es9pI6j89tZzR5Bmdk2FlaL
- nvMd8/402M9FYwAL8yCYEUDmbRLLEE8GsoblMFmwQLUA37j0vSNZAYyh/FZnQkFSm5Qt
- yTRUTBZ6hVrXtr0PB7jVkFAA+iwel/6DLPQfSlYxMujbqUsmmBWhHzvbuhSciatqWszn
- E+KcuzAxzXctieFrRjCLpox2xOi57r0eIybiUm9H+YuLr0Ytwy1TwjWO+7gY9NJmvkk7
- KmVkaK6g66pSW5od8kq1989gjLJs2EMURujO8EKyyvyoeMtbkuiS2DYNQZQbRx7B0+Vu Ag== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wpq8n93tk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 11:55:18 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 426BKIj3000875;
-	Wed, 6 Mar 2024 11:55:16 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wpq8n93by-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 11:55:15 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 426Bo5Bi010877;
-	Wed, 6 Mar 2024 11:55:06 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmh52dywp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 11:55:06 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 426Bt3MJ26870372
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Mar 2024 11:55:05 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D887B5806B;
-	Wed,  6 Mar 2024 11:55:01 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AFBFA58066;
-	Wed,  6 Mar 2024 11:55:00 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.175.142])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  6 Mar 2024 11:55:00 +0000 (GMT)
-Message-ID: <a677a9cd8eda40e5529094ba2a6ad2f7c0c927fa.camel@linux.ibm.com>
-Subject: Re: [PATCH v2] integrity: eliminate unnecessary "Problem loading
- X.509 certificate" msg
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Maxime Ripard <mripard@redhat.com>,
-        Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, Coiby Xu
- <coxu@redhat.com>
-Cc: linux-integrity@vger.kernel.org, itrymybest80@protonmail.com,
-        Eric
- Snowberg <eric.snowberg@oracle.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        "open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date: Wed, 06 Mar 2024 06:55:00 -0500
-In-Reply-To: <20240306-humongous-nuthatch-of-science-00e58b@houat>
-References: <20231227044156.166009-1-coxu@redhat.com>
-	 <20240109002429.1129950-1-coxu@redhat.com>
-	 <20240306-humongous-nuthatch-of-science-00e58b@houat>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: aBm0LrkuZUuj8SQWpvgPCWwlXDnciCbo
-X-Proofpoint-ORIG-GUID: xHSEh9S-92NQMJAUK730F36o_g7js2Mk
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g1a20u7C"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-512f54fc2dbso5912833e87.1;
+        Wed, 06 Mar 2024 03:56:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709726191; x=1710330991; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NeF0Ei8m8d4A5gmCE/VG9m7laohctkjiFtIiDyy/jY8=;
+        b=g1a20u7CzsbxBLJog6hqstP9wSrAckNkjnOF/iI3TmJa+xYi4Dxf9WUI3NM63DXNgy
+         N+9W46jzYn/yE96LTMXkzb1MvNBadHQwo8dD2GP/O+ZIByX0EN6r8c9YXivE8BZGhOp5
+         5+1coLV4ty2RTrygiJXUZdNQ1w4nnHvB2eSk33om5ybWWiT5zfzQ9pylA+84YGfFy9ng
+         jSLZYSERTJrkKcfW9Uh5cnW9qZASzCepaVdW2jAkHg7MYIE6WcvjER3lXvssRv08Zx9V
+         vSVokmsKb1o7xAflqElHVT7uMxMeSWGDeTZH5VoSH7tFT4UNPdAP/OIrjc4Yq96rmFOZ
+         kMKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709726191; x=1710330991;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NeF0Ei8m8d4A5gmCE/VG9m7laohctkjiFtIiDyy/jY8=;
+        b=dk9JVDJMa8hVb51CmhTLKFge5DZkIsX31AofYwSClTkTAML8mcoeFCxEakwjbzju3X
+         KCc99QJ1f0+qCW86PpMWaNJMPz8f4KCx7eqPk27WXPflxVh53R2HFOWXxt9GvVfkvM94
+         n9cM9WrpmWHxqjv0jx/1av1UbOJsd8uA8v0pCkDKOBowEmq33iObXpgZ8zhTIsimFWO6
+         WecyEDlFTOD5EE2th7i0CjGrq4Zr16kuW70AKAi6FZqSXctdf6nTzKugrC8E0QO/HzD9
+         KE0GG/tqtAWGxdGue7xbuc1hTchkzo54Sc+JACEmGfLurawBGypiGkOFQ0EEi5nR/sNd
+         5Ngg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6XCHfF8p5sR0oztQ3gqQ9i2GjksZUck46CfnrPHAUL6eOhrqgO3SwOWpKHVQh8QlsHdeAcjKNHJfHgfiWyH4gwOVZN9/U/bWQNxx1obsWTGnKRrmJWAglm/SwRAl3EGlV
+X-Gm-Message-State: AOJu0Yzuf3YnOuiOMgEQWBMH4bnTTvJqbj1BJxE83uJDRpJouz+IIIwc
+	lI9dwv7BN5JYiC+iWWnkOdprmL+NULpj9AXMWDdnMxiPDEr+lHFQ
+X-Google-Smtp-Source: AGHT+IE5EdoAhOmujbMVYbxHEmDr76Ukr3iG9OZB+oZHA66WY7PakFMZ2YN4KlQ6EOYiGzQhttTq7Q==
+X-Received: by 2002:a19:690b:0:b0:513:5bdb:10f8 with SMTP id e11-20020a19690b000000b005135bdb10f8mr1113142lfc.48.1709726190957;
+        Wed, 06 Mar 2024 03:56:30 -0800 (PST)
+Received: from pc636 (host-90-235-1-20.mobileonline.telia.com. [90.235.1.20])
+        by smtp.gmail.com with ESMTPSA id u26-20020ac25bda000000b005133b2d1acasm1855509lfn.50.2024.03.06.03.56.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 03:56:30 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 6 Mar 2024 12:56:28 +0100
+To: Z qiang <qiang.zhang1211@gmail.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH 2/2] rcu: Allocate WQ with WQ_MEM_RECLAIM bit set
+Message-ID: <ZehZ7Ef3DW2mT9fc@pc636>
+References: <20240305195720.42687-1-urezki@gmail.com>
+ <20240305195720.42687-2-urezki@gmail.com>
+ <CALm+0cWiOfKR=Gci0dj=z4gT4vSbZ=ZzMfo+CxLZCFQzL1bjfQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_07,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 malwarescore=0 spamscore=0 phishscore=0 impostorscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403060095
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALm+0cWiOfKR=Gci0dj=z4gT4vSbZ=ZzMfo+CxLZCFQzL1bjfQ@mail.gmail.com>
 
-On Wed, 2024-03-06 at 11:57 +0100, Maxime Ripard wrote:
-> Hi Dmitry, Eric, James, Mimi, Paul, Serge,
+On Wed, Mar 06, 2024 at 10:15:44AM +0800, Z qiang wrote:
+> >
+> > synchronize_rcu() users have to be processed regardless
+> > of memory pressure so our private WQ needs to have at least
+> > one execution context what WQ_MEM_RECLAIM flag guarantees.
+> >
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  kernel/rcu/tree.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 475647620b12..59881a68dd26 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -1581,6 +1581,7 @@ static void rcu_sr_put_wait_head(struct llist_node *node)
+> >  /* Disabled by default. */
+> >  static int rcu_normal_wake_from_gp;
+> >  module_param(rcu_normal_wake_from_gp, int, 0644);
+> > +static struct workqueue_struct *sync_wq;
+> >
+> >  static void rcu_sr_normal_complete(struct llist_node *node)
+> >  {
+> > @@ -1679,7 +1680,7 @@ static void rcu_sr_normal_gp_cleanup(void)
+> >          * of outstanding users(if still left) and releasing wait-heads
+> >          * added by rcu_sr_normal_gp_init() call.
+> >          */
+> > -       queue_work(system_highpri_wq, &rcu_state.srs_cleanup_work);
+> > +       queue_work(sync_wq, &rcu_state.srs_cleanup_work);
+> >  }
+> >
+> >  /*
+> > @@ -5584,6 +5585,9 @@ void __init rcu_init(void)
+> >         rcu_gp_wq = alloc_workqueue("rcu_gp", WQ_MEM_RECLAIM, 0);
+> >         WARN_ON(!rcu_gp_wq);
+> >
+> > +       sync_wq = alloc_workqueue("sync_wq", WQ_MEM_RECLAIM, 0);
 > 
-> On Tue, Jan 09, 2024 at 08:24:28AM +0800, Coiby Xu wrote:
-> > Currently when the kernel fails to add a cert to the .machine keyring,
-> > it will throw an error immediately in the function integrity_add_key.
-> > 
-> > Since the kernel will try adding to the .platform keyring next or throw
-> > an error (in the caller of integrity_add_key i.e. add_to_machine_keyring),
-> > so there is no need to throw an error immediately in integrity_add_key.
-> > 
-> > Reported-by: itrymybest80@protonmail.com
-> > Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2239331
-> > Fixes: d19967764ba8 ("integrity: Introduce a Linux keyring called machine")
-> > Reviewed-by: Eric Snowberg <eric.snowberg@oracle.com>
-> > Signed-off-by: Coiby Xu <coxu@redhat.com>
+> Why was WQ_HIGHPRI removed?
 > 
-> Any chance this patch can be merged? This is breaking (at least) Fedora
-> at the moment.
+I would like to check perf. figures with it and send out it as a
+separate patch if it is worth it.
 
-https://git.kernel.org/torvalds/c/29cd507cbec282e13dcf8f38072a100af96b2bb7
-
-Mimi
-
+--
+Uladzislau Rezki
