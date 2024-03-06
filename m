@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E4A1CABF;
-	Wed,  6 Mar 2024 23:34:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E04AA1C6B8;
+	Wed,  6 Mar 2024 23:34:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709768096; cv=none; b=NGtDMlj46xbbT6604QDgSkesYn/ty6bgnevRsscjHwics6CkQPr5Tse2aPdttjbXBCVbRAtuXkfA5B4chWJ1xcpDYmqoc95llAiVyjEZktcqnolEhkJu41/QlRWc+FCBpNJdEiXSZxk03JEnEP9d7QarQx3re4JfQu/tvGivJSo=
+	t=1709768099; cv=none; b=mJg/WFa+QA+RJH4fT8CBKaaUS+risodJgh80Q4NbsAsjC4wgI1V1xS7mDUWisyth56N3z3f27Nj3Fk2gQXnR2FrbD/asZCrQw1AB8Wv6jI+rG9HoGdvfGsKKMLKbek5qZwXxSWDpTX8LLXFIvpgcCpTTWKeRa9s+5GPZ+LrV1JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709768096; c=relaxed/simple;
-	bh=L25Oy6FnDnOXDI+S90VkDgc9hM+j0sW2Jeamc5OQnVc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=AAwF5UOAdR0ICm46HWCtPW4k9aN+8jQF0kaE4LlPvzQNqoL/QQhOFdo+pIWWSplmWg8HJHNyOQsJmqSuJltIYvjOcoLqdUlqqDYx5f7FOnMQOUVcFncs7wBvMB1B2oHKb0z1PN3/uIMNgTid0hTkmVRLhsx580dO0MNcT2mM+uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jl4o6WFQ; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1709768099; c=relaxed/simple;
+	bh=5ciSuXFcPAqlMScKCh/OLg/cYFaZ/I5HXIYem2MOpQ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=XcnnfiNehFhxyToXvnIDK0abJnAnpCADbQ/2mxdkpYiWXz0jgsPRGPd8r8gXbSnxFKUqjDVL2yHKFje59vePrcHCgvNVmar1VfpvkclLiB7FlZZS6LoOSYprlxkD7xzhYEvSramy5DH1jvpdF/6Caktgu0iv2cqiCko75AgS9Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aVX0wA0t; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jl4o6WFQ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aVX0wA0t"
 Received: by linux.microsoft.com (Postfix, from userid 1052)
-	id 36DF920B74C9; Wed,  6 Mar 2024 15:34:52 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 36DF920B74C9
+	id 9FE1320B74D7; Wed,  6 Mar 2024 15:34:52 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9FE1320B74D7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1709768092;
-	bh=vGLfT6QYN/cpclyLFsjJynIUa6xGDoXeixbbbyzhDVE=;
+	bh=DP7pJ46XQmOmQeW5xINRR1Wcr/qDmQzA4z6vIZOePrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jl4o6WFQtfPGwqItIGSIPifBUzkx43krp6X9PJGun5dWClgxJn31rMgeaOD8j4r6v
-	 WcurnMGCjWnE3xTGoIUl92A7tWxgdDA/DK+T6MlC3T3Y3qvswDpsCHp26ES6Dahe/r
-	 ACU/ia2WjZI8qriS8CCjFqAnecw0Zw1FzZzzAYyc=
+	b=aVX0wA0thVq0M9WLE3ctF1SL4Cx9hIEG6176FnFX85NIowWRkdGTa4HOkTxT71rlV
+	 lkDHDtJ0j0EhXbYUUByy44Hhbo5l58M0UusieEu+RZn8E5090qoyhlycgoSQ6PY/n3
+	 Oge/4bG/F9OR5wWsfUdJ/9lHRW9LXNIF0tGICSik=
 From: Fan Wu <wufan@linux.microsoft.com>
 To: corbet@lwn.net,
 	zohar@linux.ibm.com,
@@ -44,9 +44,9 @@ Cc: linux-doc@vger.kernel.org,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Fan Wu <wufan@linux.microsoft.com>
-Subject: [RFC PATCH v14 05/19] initramfs|security: Add a security hook to do_populate_rootfs()
-Date: Wed,  6 Mar 2024 15:34:30 -0800
-Message-Id: <1709768084-22539-6-git-send-email-wufan@linux.microsoft.com>
+Subject: [RFC PATCH v14 12/19] dm: add finalize hook to target_type
+Date: Wed,  6 Mar 2024 15:34:37 -0800
+Message-Id: <1709768084-22539-13-git-send-email-wufan@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1709768084-22539-1-git-send-email-wufan@linux.microsoft.com>
 References: <1709768084-22539-1-git-send-email-wufan@linux.microsoft.com>
@@ -56,104 +56,86 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-This patch introduces a new hook to notify security system that the
-content of initramfs has been unpacked into the rootfs.
+This patch adds a target finalize hook.
 
-Upon receiving this notification, the security system can activate
-a policy to allow only files that originated from the initramfs to
-execute or load into kernel during the early stages of booting.
+The hook is triggered just before activating an inactive table of a
+mapped device. If it returns an error the __bind get cancelled.
 
-This approach is crucial for minimizing the attack surface by
-ensuring that only trusted files from the initramfs are operational
-in the critical boot phase.
+The dm-verity target will use this hook to attach the dm-verity's
+roothash metadata to the block_device struct of the mapped device.
 
 Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
 
 ---
-v1-v11:
+v1-v10:
   + Not present
 
-v12:
+v11:
   + Introduced
 
+v12:
+  + No changes
+
 v13:
-  + Rename the hook name to initramfs_populated()
+  + No changes
 
 v14:
-  + No changes
+  + Add documentation
 ---
- include/linux/lsm_hook_defs.h |  2 ++
- include/linux/security.h      |  8 ++++++++
- init/initramfs.c              |  3 +++
- security/security.c           | 10 ++++++++++
- 4 files changed, 23 insertions(+)
+ drivers/md/dm.c               | 12 ++++++++++++
+ include/linux/device-mapper.h |  9 +++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 76458b6d53da..e0f50789a18f 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -425,3 +425,5 @@ LSM_HOOK(int, 0, uring_override_creds, const struct cred *new)
- LSM_HOOK(int, 0, uring_sqpoll, void)
- LSM_HOOK(int, 0, uring_cmd, struct io_uring_cmd *ioucmd)
- #endif /* CONFIG_IO_URING */
-+
-+LSM_HOOK(void, LSM_RET_VOID, initramfs_populated, void)
-diff --git a/include/linux/security.h b/include/linux/security.h
-index d0eb20f90b26..619e17e59532 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -2167,4 +2167,12 @@ static inline int security_uring_cmd(struct io_uring_cmd *ioucmd)
- #endif /* CONFIG_SECURITY */
- #endif /* CONFIG_IO_URING */
- 
-+#ifdef CONFIG_SECURITY
-+extern void security_initramfs_populated(void);
-+#else
-+static inline void security_initramfs_populated(void)
-+{
-+}
-+#endif /* CONFIG_SECURITY */
-+
- #endif /* ! __LINUX_SECURITY_H */
-diff --git a/init/initramfs.c b/init/initramfs.c
-index 76deb48c38cb..140619a583ff 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -18,6 +18,7 @@
- #include <linux/init_syscalls.h>
- #include <linux/task_work.h>
- #include <linux/umh.h>
-+#include <linux/security.h>
- 
- static __initdata bool csum_present;
- static __initdata u32 io_csum;
-@@ -720,6 +721,8 @@ static void __init do_populate_rootfs(void *unused, async_cookie_t cookie)
- #endif
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index 8dcabf84d866..15b46edae49f 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -2266,6 +2266,18 @@ static struct dm_table *__bind(struct mapped_device *md, struct dm_table *t,
+ 		goto out;
  	}
  
-+	security_initramfs_populated();
++	for (unsigned int i = 0; i < t->num_targets; i++) {
++		struct dm_target *ti = dm_table_get_target(t, i);
 +
- done:
- 	/*
- 	 * If the initrd region is overlapped with crashkernel reserved region,
-diff --git a/security/security.c b/security/security.c
-index f168bc30a60d..26c28db211fd 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -5619,3 +5619,13 @@ int security_uring_cmd(struct io_uring_cmd *ioucmd)
- 	return call_int_hook(uring_cmd, 0, ioucmd);
- }
- #endif /* CONFIG_IO_URING */
++		if (ti->type->finalize) {
++			ret = ti->type->finalize(ti);
++			if (ret) {
++				old_map = ERR_PTR(ret);
++				goto out;
++			}
++		}
++	}
 +
-+/**
-+ * security_initramfs_populated() - Notify LSMs that initramfs has been loaded
-+ *
-+ * Tells the LSMs the initramfs has been unpacked into the rootfs.
+ 	old_map = rcu_dereference_protected(md->map, lockdep_is_held(&md->suspend_lock));
+ 	rcu_assign_pointer(md->map, (void *)t);
+ 	md->immutable_target_type = dm_table_get_immutable_target_type(t);
+diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
+index 772ab4d74d94..d7a0ba1fa19e 100644
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -160,6 +160,14 @@ typedef int (*dm_dax_zero_page_range_fn)(struct dm_target *ti, pgoff_t pgoff,
+  */
+ typedef size_t (*dm_dax_recovery_write_fn)(struct dm_target *ti, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i);
++/*
++ * This hook allows DM targets in an inactive table to complete their setup
++ * before the table is made active.
++ * Returns:
++ *  < 0 : error
++ *  = 0 : success
 + */
-+void security_initramfs_populated(void)
-+{
-+	call_void_hook(initramfs_populated);
-+}
++typedef int (*dm_finalize_fn) (struct dm_target *target);
+ 
+ void dm_error(const char *message);
+ 
+@@ -210,6 +218,7 @@ struct target_type {
+ 	dm_dax_direct_access_fn direct_access;
+ 	dm_dax_zero_page_range_fn dax_zero_page_range;
+ 	dm_dax_recovery_write_fn dax_recovery_write;
++	dm_finalize_fn finalize;
+ 
+ 	/* For internal device-mapper use. */
+ 	struct list_head list;
 -- 
 2.43.1
 
