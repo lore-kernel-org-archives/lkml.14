@@ -1,842 +1,228 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic304-27.consmr.mail.ne1.yahoo.com (sonic304-27.consmr.mail.ne1.yahoo.com [66.163.191.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CFB137926;
-	Wed,  6 Mar 2024 16:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1409137917
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 16:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.191.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709744156; cv=none; b=rSEcVZ9rmxR9MSZKm376LaxotBx4t63PJrKtLvvJ5dEcvbBMMLv+xqNlce18zrczAUY+MH1lP7bQH6rGSF6FeIl+eAajnx/TJugZwePH1o59adjgovKLWI9QypHUgteb5vYY7l7QkOeON4T5MzLStnG34WntG1Dvb5BiR6swdIY=
+	t=1709744227; cv=none; b=PI9b3oancpoub0sIiuLspZvY1JLEpxC/q+YDImSeD0deliHepFustlAXxzN3CLZ9mv435TL2BXWi4qFjyFQk2GqRI4paxKXolaYtCTiR6c5uP+7FDg55ZGC0guvYWFaHeIiLPOK19kIgV1myJA/GIQpqiRP8r3kTkJXY3iF13Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709744156; c=relaxed/simple;
-	bh=qyeQ0OAsH3r/3GNZnpz12aCzPQYN6+l9Sqi1/+zDfYw=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=ORPSBHSkxfJKR72s3EsZEKrZKx67UAgVtXMv2fHEkNpZMWZk8+lePv9rX4KFoiST+VgK39GhBWnobp+uI72WgmTgYIsYTojSJkbY6YX38tK8FYvJDgpDPP9AHHlETV06Uzu/ZWXoA9+7VsRvWbWjQ09VfWxsCUQTqnjowNEbM1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=rlWzUpcD; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1709744227; c=relaxed/simple;
+	bh=DB+sDU/M+USWi3IkAkYPXXij67XzJa642gnHaaSiOns=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KMGB3l+VIHPdKoIMH+Ap5++7xamxesdtQmENVOBakuIn9YkyfU3XrxvKJvWI73lUlpSvwqwwQloQAgxCa8Uo23vGTRT0ssv4CgPZyBQgzAROo6S7qenwPe+0I/udaahGvAsBoEbZ46lE6HifiGTXcQbS3qSYGAHlwaxlOWdEAvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=sV2DtKmZ; arc=none smtp.client-ip=66.163.191.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rlWzUpcD"
-Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C95C7BD1;
-	Wed,  6 Mar 2024 17:55:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1709744128;
-	bh=qyeQ0OAsH3r/3GNZnpz12aCzPQYN6+l9Sqi1/+zDfYw=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=rlWzUpcDRiD4dAi/rAjS7376ZyuewssSnGrMhpA7ILEMJBKfRnPW+YvDgvqfXia6L
-	 fBN45AFyUoU4ycqFddSXrjdj0VfEzlk2wfk4EBb+kbmMf1nZMBZQq+a8hU/7bSMHlb
-	 SN5bIUdh/He6SH6H22hexwsRrStUAzx1VJ4DUgfY=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="sV2DtKmZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1709744225; bh=aNAjDWeJw8zalTZ9wVamqZVMgmFVPK14WsEI1ujAZJI=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=sV2DtKmZjaL+uTYLBLxqOx9SLTVY6RykUqUdzRvsIYKJ2t2YgZnqcQW5lA3JpTGkyBn4vfHV+dGOn6F6tQHpldS0cAo6Xd+DZ9nzFSEeDGRLNaXbf3jmLJGPgJjmRqS2DKrxUY3+1gqhhjX7haST495VT4tRm/vdcQ+ZRg16T0lC5W17wTKroJyqprEKhXueeHg7nEonxLUrW3ypNNICycWUnItSXBFNurO99CufaynGXpTIQpEJbEJspPxpyCB6B65zY0HnymFvInWbcEftLjOmudFGq2JWgE0tnbJykbFAh915xCIxppVVxipb8BmvwtpH2DPYTESgZDGUbqQw+w==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1709744225; bh=hT99byMjlTQzPqMcbNopNL4TqhusiS8HbWUebtdcOX9=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=ajHZ+N6uNm5s+E/fUSYDSrjRrRo5ah2w+QQHlRMOaQonm/z/xWZ3JSXYKiQUyUXv1kJf9CkiymgOMMuq/ExOYYMMcF36VZaS6mNXpDOwfrvhOYxp1HqeZggwKpzwNuX/lKivRbksdvpp2CPK582aDSWIlcvdcZlB6XsVKFILPrR9q0dqdlNDTaU9HxUJrlZgcU9DrZFGZ74sCImLX06KBUBRYOVJXqsUo1xaScwmQxSceUPBrz0Fds2xp+mHSIGlpnRZq7yTQZiX3yPSWIYwSivQ9Yf5aMCu1WaWjjMuBtebzI1f/HFmzMMAIHYG4KdAB+wQnvVDQspS7anZmaAqZg==
+X-YMail-OSG: bGf.osIVM1kTnWYb0egr0H0.6XCAHkRpE7FKdQE3BTVHCIfehvfwRRIYzVzZbj6
+ TAslbBVQqhpaOCWxumDFKBt8BrKxE0MqJFPqGoek50I6gIy4WAy0VAqEaYZLktXlwULsm.58TOPD
+ Ang.fYwEBq5Q.eUgVV0q._.UYebj3c5Pi4GmFlUHxba1QypBJWodTOUjXp_w7zUGc4Nmq7twr35.
+ 75a5pdJ9u.YZVnOwDH2SOubyCrRb1cXm623Hpud.OGRKnV.FlKAyvpJnZ_raFSAP2ceFrJe6xioj
+ Nb2q3O39QMDK_1DbbFGifYU8o57R8quIcpsY.FKAaBJVzB54.BpYnm8eiciy.s1wGAxOCXgnxrNC
+ CnnJYO.qX68.3lAszqiob1bs5OSxSGlfcZ5S7I9YP6a3wklYlMBWCZkLfrHXV2Tab5PJWTbP9V2w
+ 0KmTxNj6aymcR0T9.S7lc3y8y3gM43ElZWrnq8M5FMmg7v0YArckcr0ehm9lrGpQkgZDRpAJxy0Q
+ m1Vh0ewRIpT_vgqtZjpYn73bCRFFH39YXB9q7j0S4Y7l_hw8bJIVnbt87dNKQQbeQAH9bRTBJYbO
+ RQ1oFoDTyyI0sOzLgqdbjG4xNPbc6pfdbRSP4GNrihv.QaoQrwEpokXlcYAuS74DSbvIoGQfmIU6
+ h8vsdhHpDaSwMz2s3Nq2u5UWYzR6ReKsp713_Hq_bJTgyQmwHy_EsvLym9gNjjU.QY6plPT9ldE9
+ FqGBiSFNkOT53xW0MrCn9iwKxGmodVuSZsEMg3T3QT2azV9sqh0k29doZQ10f0iWRz4FXW5.cq0F
+ Q6X6XqGatQTs.KqH.eFmx8fud7w3UJ2Wh18geOBJbenQivNR4djdmPWZfzAfZP9pm7a_Ttmufrk2
+ 9Hvush5dDpqpmeokFi6k_ZWg7ixtpbS7WhhBZz7GFxk487RmXkwwqR622IKik6QPBgHUu8eSDv3U
+ M_D6x13XlMUuzP1MVpgRzpP6eptmZYeHuDxXQ3wnR8wb5SOqj8Tjaa2WQqP5OgxtvETphl1WKAFS
+ IJv_4Z_Z4HLP1Pw0_kXhUZB3zQRq_XCXU_9UMX.eh2tNrErjXb4tkmDv8HDKE7GJyiVQsAzxYbQk
+ KTvFkdfVpmsxTzl7aBuG9t1cUg7P7BXhDK_XfFLz61eWq9bxFx_ntt.C_b0txNYCG1SzFu70tvJB
+ wSwBFWNNtPizmWRu6OL.GCWP0jjR8WMniItwA2i_7vQLm8pphLeiXWmq49zE5J9e6jlO4TARznU7
+ ZWnbQnv.bYvMbIORhxml_wgeOB_v6VAqM_8_5FJsml7KYemCH2IjJVYJKcWR93aG2MWx2fy9Fuuh
+ igYCdnOpTqrnMmK.wJ14MuzSMVLzx5ziQs1yNCZ9iP7ucDLPtbmnTc.wT5t7hvXlbrOo3UMKrYX6
+ G2v46sjA3FOXVJt3_O8neKpJT1iOiD77NeXC8LjypMAXKijwDd.7kPVb5b_islB.hHvwdCnpaoSM
+ Gb8swX_Cte4.nlEQzllzViLpAflUMxnT6lKH6i3c.PzZjzuslS1Y8MsxRzv5sjhBTOcM2TMboFZf
+ rZLkTVTB3WUSymoVsctVo1cOuihEVDCU_6jC7_MGoo3.FAnWS5ryfbm.9hF_CsP_JmbrbpEBRbNm
+ ZdUU9lcLmEs8_sKkv1j8ldClY60r51VFAcunt7HJO4yX1VvFqPv7pkzya3x_gksv6YX7Wfs_PINm
+ uVtk7pNYHHPr4Om85xLTrWsfztg2q1UZqZ7YAG.5guLVx1NDWqKM8gin2hp37sxxmfR.at3c363d
+ rS0wR0LxESCofSB3JukhBBXL2gI6CzH0epiKIJCOP5_.ah1XMewQTRK.8cBPHS0PXfoEDfnYsKkF
+ beAkXHNUMfSbX25Jk8VZcLy0ONnj9ZlgSip4wxPL5Gmg7xmSZVpAQj.LzAag663p4c.0h1WhamBj
+ 981WxySdIxLZlI22ZQI7m1.ThV4yuMjQqNMzO1xhHBBNe.bdZShrmwW7w3Ad1m2u.r_1frYZPkfO
+ CNIKC3H8e4RBG89NrgB_vNkEliNBpx6dSDhvt0RAjyYnnt6v_636.bg5JgI_8N5SSjhxsycHANUk
+ etm.404j_sfJHOZZjp8_cXEwbHwqrg.t_WZr7toIxuHWiIp0zDcyYZfVNxWIapl.bR3wT36d6f6j
+ qDE507ELgaIfFQ5PIgXnDIs.5MAhFKEQtQETpXa2wN17njfArJl.TS4JS.peP34uILF5m0o051Hb
+ 3.ezG8IJFfS3yrB8I60q.7hvrLZv6LMuiskZCcWSZmtO__qfvRZUD2x6_nbDkPkja.StcqYRBJtj
+ jRESLtrcr
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 8a719fc2-1256-4236-bddd-8849d178ba2e
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ne1.yahoo.com with HTTP; Wed, 6 Mar 2024 16:57:05 +0000
+Received: by hermes--production-gq1-5c57879fdf-kht2b (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 58294bfc0cc78b4b24de1cb3e48bb175;
+          Wed, 06 Mar 2024 16:56:59 +0000 (UTC)
+Message-ID: <5c99f987-d359-4366-984f-fe36fcff601b@schaufler-ca.com>
+Date: Wed, 6 Mar 2024 08:56:57 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240306081038.212412-4-umang.jain@ideasonboard.com>
-References: <20240306081038.212412-1-umang.jain@ideasonboard.com> <20240306081038.212412-4-umang.jain@ideasonboard.com>
-Subject: Re: [PATCH 3/5] media: imx335: Use V4L2 CCI for accessing sensor registers
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Alexander Shiyan <eagle.alexander923@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, Umang Jain <umang.jain@ideasonboard.com>
-To: Umang Jain <umang.jain@ideasonboard.com>, linux-media@vger.kernel.org
-Date: Wed, 06 Mar 2024 16:55:44 +0000
-Message-ID: <170974414454.362031.7807106836550969076@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v39 01/42] integrity: disassociate ima_filter_rule from
+ security_audit_rule
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, paul@paul-moore.com,
+ linux-security-module@vger.kernel.org
+Cc: jmorris@namei.org, serge@hallyn.com, keescook@chromium.org,
+ john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp,
+ stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org,
+ mic@digikod.net, linux-integrity@vger.kernel.org,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <20231215221636.105680-1-casey@schaufler-ca.com>
+ <20231215221636.105680-2-casey@schaufler-ca.com>
+ <d4cbe23822f7fdac900d1ebd5da9865d8bb96977.camel@huaweicloud.com>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <d4cbe23822f7fdac900d1ebd5da9865d8bb96977.camel@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.22129 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Quoting Umang Jain (2024-03-06 08:10:36)
-> Use the new comon CCI register access helpers to replace the private
-> register access helpers in the imx335 driver.
->=20
-> Select V4L2_CCI_I2C Kconfig option which the imx335 driver now
-> depends on.
->=20
-> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
-> ---
->  drivers/media/i2c/Kconfig  |   1 +
->  drivers/media/i2c/imx335.c | 521 ++++++++++++++++---------------------
->  2 files changed, 225 insertions(+), 297 deletions(-)
->=20
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index 56f276b920ab..8d248b9c9562 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -195,6 +195,7 @@ config VIDEO_IMX334
->  config VIDEO_IMX335
->         tristate "Sony IMX335 sensor support"
->         depends on OF_GPIO
-> +       select V4L2_CCI_I2C
->         help
->           This is a Video4Linux2 sensor driver for the Sony
->           IMX335 camera.
-> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-> index 7f3f74240cd0..6ea09933e47b 100644
-> --- a/drivers/media/i2c/imx335.c
-> +++ b/drivers/media/i2c/imx335.c
-> @@ -11,47 +11,49 @@
->  #include <linux/i2c.h>
->  #include <linux/module.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> =20
-> +#include <media/v4l2-cci.h>
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
-> =20
->  /* Streaming Mode */
-> -#define IMX335_REG_MODE_SELECT 0x3000
-> +#define IMX335_REG_MODE_SELECT CCI_REG8(0x3000)
->  #define IMX335_MODE_STANDBY    0x01
->  #define IMX335_MODE_STREAMING  0x00
-> =20
->  /* Data Lanes */
-> -#define IMX335_LANEMODE                0x3a01
-> +#define IMX335_REG_LANEMODE    CCI_REG8(0x3a01)
->  #define IMX335_2LANE           1
->  #define IMX335_4LANE           3
-> =20
->  /* Lines per frame */
-> -#define IMX335_REG_LPFR                0x3030
-> +#define IMX335_REG_VMAX                CCI_REG24_LE(0x3030)
-> =20
->  /* Chip ID */
-> -#define IMX335_REG_ID          0x3912
-> +#define IMX335_REG_ID          CCI_REG8(0x3912)
->  #define IMX335_ID              0x00
-> =20
->  /* Exposure control */
-> -#define IMX335_REG_SHUTTER     0x3058
-> +#define IMX335_REG_SHUTTER     CCI_REG24_LE(0x3058)
->  #define IMX335_EXPOSURE_MIN    1
->  #define IMX335_EXPOSURE_OFFSET 9
->  #define IMX335_EXPOSURE_STEP   1
->  #define IMX335_EXPOSURE_DEFAULT        0x0648
-> =20
->  /* Analog gain control */
-> -#define IMX335_REG_AGAIN       0x30e8
-> +#define IMX335_REG_AGAIN       CCI_REG8(0x30e8)
->  #define IMX335_AGAIN_MIN       0
->  #define IMX335_AGAIN_MAX       240
->  #define IMX335_AGAIN_STEP      1
->  #define IMX335_AGAIN_DEFAULT   0
-> =20
->  /* Group hold register */
-> -#define IMX335_REG_HOLD                0x3001
-> +#define IMX335_REG_HOLD                CCI_REG8(0x3001)
-> =20
->  /* Test pattern generator */
-> -#define IMX335_REG_TPG         0x329e
-> +#define IMX335_REG_TPG         CCI_REG8(0x329e)
->  #define IMX335_TPG_ALL_000     0
->  #define IMX335_TPG_ALL_FFF     1
->  #define IMX335_TPG_ALL_555     2
-> @@ -65,6 +67,46 @@
->  #define IMX335_TPG_H_COLOR_BARS 10
->  #define IMX335_TPG_V_COLOR_BARS 11
-> =20
-> +#define IMX335_REG_MASTER_MODE         CCI_REG8(0x3002)
-> +#define IMX335_REG_WINMODE             CCI_REG8(0x3018)
-> +#define IMX335_REG_HTRIMMING_START     CCI_REG16_LE(0x302c)
-> +#define IMX335_REG_HNUM                        CCI_REG8(0x302e)
-> +#define IMX335_REG_XVS_XHS_DRV         CCI_REG8(0x31a1)
-> +#define IMX335_REG_Y_OUT_SIZE          CCI_REG16_LE(0x3056)
-> +#define IMX335_REG_VCROP_POS           CCI_REG16_LE(0x3074)
-> +#define IMX335_REG_VCROP_SIZE          CCI_REG16_LE(0x3076)
-> +#define IMX335_REG_OPB_SIZE_V          CCI_REG8(0x304c)
-> +
-> +#define IMX335_REG_ADBIT               CCI_REG8(0x3050)
-> +#define IMX335_REG_MDBIT               CCI_REG8(0x319d)
-> +#define IMX335_REG_ADBIT1              CCI_REG16_LE(0x341c)
-> +
-> +#define IMX335_REG_BCWAIT_TIME         CCI_REG8(0x300c)
-> +#define IMX335_REG_CPWAIT_TIME         CCI_REG8(0x300d)
-> +#define IMX335_REG_INCLKSEL1           CCI_REG16_LE(0x314c)
-> +#define IMX335_REG_INCLKSEL2           CCI_REG8(0x315a)
-> +#define IMX335_REG_INCLKSEL3           CCI_REG8(0x3168)
-> +#define IMX335_REG_INCLKSEL4           CCI_REG8(0x316a)
-> +#define IMX335_REG_SYSMODE             CCI_REG8(0x319e)
-> +
-> +#define IMX335_REG_TCLKPOST            CCI_REG16_LE(0x3a18)
-> +#define IMX335_REG_TCLKPREPARE         CCI_REG16_LE(0x3a1a)
-> +#define IMX335_REG_TCLK_TRAIL          CCI_REG16_LE(0x3a1c)
-> +#define IMX335_REG_TCLK_ZERO           CCI_REG16_LE(0x3a1e)
-> +#define IMX335_REG_THS_PREPARE         CCI_REG16_LE(0x3a20)
-> +#define IMX335_REG_THS_ZERO            CCI_REG16_LE(0x3a22)
-> +#define IMX335_REG_THS_TRAIL           CCI_REG16_LE(0x3a24)
-> +#define IMX335_REG_THS_EXIT            CCI_REG16_LE(0x3a26)
-> +#define IMX335_REG_TPLX                        CCI_REG16_LE(0x3a28)
-> +
-> +
-> +#define IMX335_REG_TPG_TESTCLKEN       CCI_REG8(0x3148)
-> +#define IMX335_REG_TPG_DIG_CLP_MODE    CCI_REG8(0x3280)
-> +#define IMX335_REG_TPG_EN_DUOUT                CCI_REG8(0x329c)
-> +#define IMX335_REG_TPG_COLORWIDTH      CCI_REG8(0x32a0)
-> +#define IMX335_REG_TPG_BLKLEVEL                CCI_REG16_LE(0x3302)
-> +#define IMX335_REG_TPG_WRJ_OPEN                CCI_REG8(0x336c)
-
-I would try to keep all these new definitions in register address order,
-along with the existing definitions rather than add them at the end.
-
-
-> +
->  /* Input clock rate */
->  #define IMX335_INCLK_RATE      24000000
-> =20
-> @@ -83,16 +125,6 @@
->  #define IMX335_PIXEL_ARRAY_WIDTH       2592U
->  #define IMX335_PIXEL_ARRAY_HEIGHT      1944U
-> =20
-> -/**
-> - * struct imx335_reg - imx335 sensor register
-> - * @address: Register address
-> - * @val: Register value
-> - */
-> -struct imx335_reg {
-> -       u16 address;
-> -       u8 val;
-> -};
-> -
->  /**
->   * struct imx335_reg_list - imx335 sensor register list
->   * @num_of_regs: Number of registers in the list
-> @@ -100,7 +132,7 @@ struct imx335_reg {
->   */
->  struct imx335_reg_list {
->         u32 num_of_regs;
-> -       const struct imx335_reg *regs;
-> +       const struct cci_reg_sequence *regs;
->  };
-> =20
->  static const char * const imx335_supply_name[] =3D {
-> @@ -161,6 +193,7 @@ struct imx335 {
->         struct media_pad pad;
->         struct gpio_desc *reset_gpio;
->         struct regulator_bulk_data supplies[ARRAY_SIZE(imx335_supply_name=
-)];
-> +       struct regmap *cci;
-> =20
->         struct clk *inclk;
->         struct v4l2_ctrl_handler ctrl_handler;
-> @@ -213,140 +246,135 @@ static const int imx335_tpg_val[] =3D {
->  };
-> =20
->  /* Sensor mode registers */
-> -static const struct imx335_reg mode_2592x1940_regs[] =3D {
-> -       {0x3000, 0x01},
-> -       {0x3002, 0x00},
-> -       {0x3018, 0x04},
-> -       {0x302c, 0x3c},
-> -       {0x302e, 0x20},
-> -       {0x3056, 0x94},
-> -       {0x3074, 0xc8},
-> -       {0x3076, 0x28},
-> -       {0x304c, 0x00},
-> -       {0x31a1, 0x00},
-> -       {0x3288, 0x21},
-> -       {0x328a, 0x02},
-> -       {0x3414, 0x05},
-> -       {0x3416, 0x18},
-> -       {0x3648, 0x01},
-> -       {0x364a, 0x04},
-> -       {0x364c, 0x04},
-> -       {0x3678, 0x01},
-> -       {0x367c, 0x31},
-> -       {0x367e, 0x31},
-> -       {0x3706, 0x10},
-> -       {0x3708, 0x03},
-> -       {0x3714, 0x02},
-> -       {0x3715, 0x02},
-> -       {0x3716, 0x01},
-> -       {0x3717, 0x03},
-> -       {0x371c, 0x3d},
-> -       {0x371d, 0x3f},
-> -       {0x372c, 0x00},
-> -       {0x372d, 0x00},
-> -       {0x372e, 0x46},
-> -       {0x372f, 0x00},
-> -       {0x3730, 0x89},
-> -       {0x3731, 0x00},
-> -       {0x3732, 0x08},
-> -       {0x3733, 0x01},
-> -       {0x3734, 0xfe},
-> -       {0x3735, 0x05},
-> -       {0x3740, 0x02},
-> -       {0x375d, 0x00},
-> -       {0x375e, 0x00},
-> -       {0x375f, 0x11},
-> -       {0x3760, 0x01},
-> -       {0x3768, 0x1b},
-> -       {0x3769, 0x1b},
-> -       {0x376a, 0x1b},
-> -       {0x376b, 0x1b},
-> -       {0x376c, 0x1a},
-> -       {0x376d, 0x17},
-> -       {0x376e, 0x0f},
-> -       {0x3776, 0x00},
-> -       {0x3777, 0x00},
-> -       {0x3778, 0x46},
-> -       {0x3779, 0x00},
-> -       {0x377a, 0x89},
-> -       {0x377b, 0x00},
-> -       {0x377c, 0x08},
-> -       {0x377d, 0x01},
-> -       {0x377e, 0x23},
-> -       {0x377f, 0x02},
-> -       {0x3780, 0xd9},
-> -       {0x3781, 0x03},
-> -       {0x3782, 0xf5},
-> -       {0x3783, 0x06},
-> -       {0x3784, 0xa5},
-> -       {0x3788, 0x0f},
-> -       {0x378a, 0xd9},
-> -       {0x378b, 0x03},
-> -       {0x378c, 0xeb},
-> -       {0x378d, 0x05},
-> -       {0x378e, 0x87},
-> -       {0x378f, 0x06},
-> -       {0x3790, 0xf5},
-> -       {0x3792, 0x43},
-> -       {0x3794, 0x7a},
-> -       {0x3796, 0xa1},
-> -       {0x37b0, 0x36},
-> -       {0x3a00, 0x00},
-> +static const struct cci_reg_sequence mode_2592x1940_regs[] =3D {
-> +       {IMX335_REG_MODE_SELECT, 0x01},
-> +       {IMX335_REG_MASTER_MODE, 0x00},
-> +       {IMX335_REG_WINMODE, 0x04},
-> +       {IMX335_REG_HTRIMMING_START, 0x0180},
-> +       {IMX335_REG_HNUM, 0x0a20},
-> +       {IMX335_REG_Y_OUT_SIZE, 0x0794},
-
-It could be nice for a patch on top to convert values that we would
-consider 'integer' (like a size) to be changed to decimal for
-readability (but not in this patch, I think it's better for review to
-keep this as a conversion from hex values to hex values.
-
-1940 will be far more comprehendable here than 0x0794. Same for any
-other position or size register values... But perhaps they'll get
-converted to more programattic implementations later too.
-
-> +       {IMX335_REG_VCROP_POS, 0x00b0},
-> +       {IMX335_REG_VCROP_SIZE, 0x0f58},
-> +       {IMX335_REG_OPB_SIZE_V, 0x00},
-> +       {IMX335_REG_XVS_XHS_DRV, 0x00},
-> +       {CCI_REG8(0x3288), 0x21}, /* undocumented */
-> +       {CCI_REG8(0x328a), 0x02}, /* undocumented */
-> +       {CCI_REG8(0x3414), 0x05}, /* undocumented */
-> +       {CCI_REG8(0x3416), 0x18}, /* undocumented */
-> +       {CCI_REG8(0x3648), 0x01}, /* undocumented */
-> +       {CCI_REG8(0x364a), 0x04}, /* undocumented */
-> +       {CCI_REG8(0x364c), 0x04}, /* undocumented */
-> +       {CCI_REG8(0x3678), 0x01}, /* undocumented */
-> +       {CCI_REG8(0x367c), 0x31}, /* undocumented */
-> +       {CCI_REG8(0x367e), 0x31}, /* undocumented */
-> +       {CCI_REG8(0x3706), 0x10}, /* undocumented */
-> +       {CCI_REG8(0x3708), 0x03}, /* undocumented */
-> +       {CCI_REG8(0x3714), 0x02}, /* undocumented */
-> +       {CCI_REG8(0x3715), 0x02}, /* undocumented */
-> +       {CCI_REG8(0x3716), 0x01}, /* undocumented */
-> +       {CCI_REG8(0x3717), 0x03}, /* undocumented */
-> +       {CCI_REG8(0x371c), 0x3d}, /* undocumented */
-> +       {CCI_REG8(0x371d), 0x3f}, /* undocumented */
-> +       {CCI_REG8(0x372c), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x372d), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x372e), 0x46}, /* undocumented */
-> +       {CCI_REG8(0x372f), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x3730), 0x89}, /* undocumented */
-> +       {CCI_REG8(0x3731), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x3732), 0x08}, /* undocumented */
-> +       {CCI_REG8(0x3733), 0x01}, /* undocumented */
-> +       {CCI_REG8(0x3734), 0xfe}, /* undocumented */
-> +       {CCI_REG8(0x3735), 0x05}, /* undocumented */
-> +       {CCI_REG8(0x3740), 0x02}, /* undocumented */
-> +       {CCI_REG8(0x375d), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x375e), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x375f), 0x11}, /* undocumented */
-> +       {CCI_REG8(0x3760), 0x01}, /* undocumented */
-> +       {CCI_REG8(0x3768), 0x1b}, /* undocumented */
-> +       {CCI_REG8(0x3769), 0x1b}, /* undocumented */
-> +       {CCI_REG8(0x376a), 0x1b}, /* undocumented */
-> +       {CCI_REG8(0x376b), 0x1b}, /* undocumented */
-> +       {CCI_REG8(0x376c), 0x1a}, /* undocumented */
-> +       {CCI_REG8(0x376d), 0x17}, /* undocumented */
-> +       {CCI_REG8(0x376e), 0x0f}, /* undocumented */
-> +       {CCI_REG8(0x3776), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x3777), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x3778), 0x46}, /* undocumented */
-> +       {CCI_REG8(0x3779), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x377a), 0x89}, /* undocumented */
-> +       {CCI_REG8(0x377b), 0x00}, /* undocumented */
-> +       {CCI_REG8(0x377c), 0x08}, /* undocumented */
-> +       {CCI_REG8(0x377d), 0x01}, /* undocumented */
-> +       {CCI_REG8(0x377e), 0x23}, /* undocumented */
-> +       {CCI_REG8(0x377f), 0x02}, /* undocumented */
-> +       {CCI_REG8(0x3780), 0xd9}, /* undocumented */
-> +       {CCI_REG8(0x3781), 0x03}, /* undocumented */
-> +       {CCI_REG8(0x3782), 0xf5}, /* undocumented */
-> +       {CCI_REG8(0x3783), 0x06}, /* undocumented */
-> +       {CCI_REG8(0x3784), 0xa5}, /* undocumented */
-> +       {CCI_REG8(0x3788), 0x0f}, /* undocumented */
-> +       {CCI_REG8(0x378a), 0xd9}, /* undocumented */
-> +       {CCI_REG8(0x378b), 0x03}, /* undocumented */
-> +       {CCI_REG8(0x378c), 0xeb}, /* undocumented */
-> +       {CCI_REG8(0x378d), 0x05}, /* undocumented */
-> +       {CCI_REG8(0x378e), 0x87}, /* undocumented */
-> +       {CCI_REG8(0x378f), 0x06}, /* undocumented */
-> +       {CCI_REG8(0x3790), 0xf5}, /* undocumented */
-> +       {CCI_REG8(0x3792), 0x43}, /* undocumented */
-> +       {CCI_REG8(0x3794), 0x7a}, /* undocumented */
-> +       {CCI_REG8(0x3796), 0xa1}, /* undocumented */
-> +       {CCI_REG8(0x37b0), 0x36}, /* undocumented */
-> +       {CCI_REG8(0x3a00), 0x00}, /* undocumented */
-
-Not much we can do about that at the moment :-(
-
-
->  };
-> =20
-> -static const struct imx335_reg raw10_framefmt_regs[] =3D {
-> -       {0x3050, 0x00},
-> -       {0x319d, 0x00},
-> -       {0x341c, 0xff},
-> -       {0x341d, 0x01},
-> +static const struct cci_reg_sequence raw10_framefmt_regs[] =3D {
-> +       {IMX335_REG_ADBIT, 0x00},
-> +       {IMX335_REG_MDBIT, 0x00},
-> +       {IMX335_REG_ADBIT1, 0x1ff},
->  };
-> =20
-> -static const struct imx335_reg raw12_framefmt_regs[] =3D {
-> -       {0x3050, 0x01},
-> -       {0x319d, 0x01},
-> -       {0x341c, 0x47},
-> -       {0x341d, 0x00},
-> +static const struct cci_reg_sequence raw12_framefmt_regs[] =3D {
-> +       {IMX335_REG_ADBIT, 0x01},
-> +       {IMX335_REG_MDBIT, 0x01},
-> +       {IMX335_REG_ADBIT1, 0x47},
->  };
-> =20
-> -static const struct imx335_reg mipi_data_rate_1188Mbps[] =3D {
-> -       {0x300c, 0x3b},
-> -       {0x300d, 0x2a},
-> -       {0x314c, 0xc6},
-> -       {0x314d, 0x00},
-> -       {0x315a, 0x02},
-> -       {0x3168, 0xa0},
-> -       {0x316a, 0x7e},
-> -       {0x319e, 0x01},
-> -       {0x3a18, 0x8f},
-> -       {0x3a1a, 0x4f},
-> -       {0x3a1c, 0x47},
-> -       {0x3a1e, 0x37},
-> -       {0x3a1f, 0x01},
-> -       {0x3a20, 0x4f},
-> -       {0x3a22, 0x87},
-> -       {0x3a24, 0x4f},
-> -       {0x3a26, 0x7f},
-> -       {0x3a28, 0x3f},
-> +static const struct cci_reg_sequence mipi_data_rate_1188Mbps[] =3D {
-> +       {IMX335_REG_BCWAIT_TIME, 0x3b},
-> +       {IMX335_REG_CPWAIT_TIME, 0x2a},
-> +       {IMX335_REG_INCLKSEL1, 0x00c6},
-> +       {IMX335_REG_INCLKSEL2, 0x02},
-> +       {IMX335_REG_INCLKSEL3, 0xa0},
-> +       {IMX335_REG_INCLKSEL4, 0x7e},
-> +       {IMX335_REG_SYSMODE, 0x01},
-> +       {IMX335_REG_TCLKPOST, 0x8f},
-> +       {IMX335_REG_TCLKPREPARE, 0x4f},
-> +       {IMX335_REG_TCLK_TRAIL, 0x47},
-> +       {IMX335_REG_TCLK_ZERO, 0x0137},
-> +       {IMX335_REG_THS_PREPARE, 0x4f},
-> +       {IMX335_REG_THS_ZERO,  0x87},
-> +       {IMX335_REG_THS_TRAIL, 0x4f},
-> +       {IMX335_REG_THS_EXIT, 0x7f},
-> +       {IMX335_REG_TPLX, 0x3f},
->  };
-> =20
-> -static const struct imx335_reg mipi_data_rate_891Mbps[] =3D {
-> -       {0x300c, 0x3b},
-> -       {0x300d, 0x2a},
-> -       {0x314c, 0x29},
-> -       {0x314d, 0x01},
-> -       {0x315a, 0x06},
-> -       {0x3168, 0xa0},
-> -       {0x316a, 0x7e},
-> -       {0x319e, 0x02},
-> -       {0x3a18, 0x7f},
-> -       {0x3a1a, 0x37},
-> -       {0x3a1c, 0x37},
-> -       {0x3a1e, 0xf7},
-> -       {0x3a20, 0x3f},
-> -       {0x3a22, 0x6f},
-> -       {0x3a24, 0x3f},
-> -       {0x3a26, 0x5f},
-> -       {0x3a28, 0x2f},
-> +static const struct cci_reg_sequence mipi_data_rate_891Mbps[] =3D {
-> +       {IMX335_REG_BCWAIT_TIME, 0x3b},
-> +       {IMX335_REG_CPWAIT_TIME, 0x2a},
-> +       {IMX335_REG_INCLKSEL1, 0x0129},
-> +       {IMX335_REG_INCLKSEL2, 0x06},
-> +       {IMX335_REG_INCLKSEL3, 0xa0},
-> +       {IMX335_REG_INCLKSEL4, 0x7e},
-> +       {IMX335_REG_SYSMODE, 0x02},
-> +       {IMX335_REG_TCLKPOST, 0x7f},
-> +       {IMX335_REG_TCLKPREPARE, 0x37},
-> +       {IMX335_REG_TCLK_TRAIL, 0x37},
-> +       {IMX335_REG_TCLK_ZERO, 0xf7},
-> +       {IMX335_REG_THS_PREPARE, 0x3f},
-> +       {IMX335_REG_THS_ZERO, 0x6f},
-> +       {IMX335_REG_THS_TRAIL, 0x3f},
-> +       {IMX335_REG_THS_EXIT, 0x5f},
-> +       {IMX335_REG_TPLX, 0x2f},
->  };
-> =20
->  static const s64 link_freq[] =3D {
-> @@ -397,101 +425,6 @@ static inline struct imx335 *to_imx335(struct v4l2_=
-subdev *subdev)
->         return container_of(subdev, struct imx335, sd);
->  }
-> =20
-> -/**
-> - * imx335_read_reg() - Read registers.
-> - * @imx335: pointer to imx335 device
-> - * @reg: register address
-> - * @len: length of bytes to read. Max supported bytes is 4
-> - * @val: pointer to register value to be filled.
-> - *
-> - * Big endian register addresses with little endian values.
-> - *
-> - * Return: 0 if successful, error code otherwise.
-> - */
-> -static int imx335_read_reg(struct imx335 *imx335, u16 reg, u32 len, u32 =
-*val)
-> -{
-> -       struct i2c_client *client =3D v4l2_get_subdevdata(&imx335->sd);
-> -       struct i2c_msg msgs[2] =3D {0};
-> -       u8 addr_buf[2] =3D {0};
-> -       u8 data_buf[4] =3D {0};
-> -       int ret;
-> -
-> -       if (WARN_ON(len > 4))
-> -               return -EINVAL;
-> -
-> -       put_unaligned_be16(reg, addr_buf);
-> -
-> -       /* Write register address */
-> -       msgs[0].addr =3D client->addr;
-> -       msgs[0].flags =3D 0;
-> -       msgs[0].len =3D ARRAY_SIZE(addr_buf);
-> -       msgs[0].buf =3D addr_buf;
-> -
-> -       /* Read data from register */
-> -       msgs[1].addr =3D client->addr;
-> -       msgs[1].flags =3D I2C_M_RD;
-> -       msgs[1].len =3D len;
-> -       msgs[1].buf =3D data_buf;
-> -
-> -       ret =3D i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
-> -       if (ret !=3D ARRAY_SIZE(msgs))
-> -               return -EIO;
-> -
-> -       *val =3D get_unaligned_le32(data_buf);
-> -
-> -       return 0;
-> -}
-> -
-> -/**
-> - * imx335_write_reg() - Write register
-> - * @imx335: pointer to imx335 device
-> - * @reg: register address
-> - * @len: length of bytes. Max supported bytes is 4
-> - * @val: register value
-> - *
-> - * Big endian register addresses with little endian values.
-> - *
-> - * Return: 0 if successful, error code otherwise.
-> - */
-> -static int imx335_write_reg(struct imx335 *imx335, u16 reg, u32 len, u32=
- val)
-> -{
-> -       struct i2c_client *client =3D v4l2_get_subdevdata(&imx335->sd);
-> -       u8 buf[6] =3D {0};
-> -
-> -       if (WARN_ON(len > 4))
-> -               return -EINVAL;
-> -
-> -       put_unaligned_be16(reg, buf);
-> -       put_unaligned_le32(val, buf + 2);
-> -       if (i2c_master_send(client, buf, len + 2) !=3D len + 2)
-> -               return -EIO;
-> -
-> -       return 0;
-> -}
-> -
-> -/**
-> - * imx335_write_regs() - Write a list of registers
-> - * @imx335: pointer to imx335 device
-> - * @regs: list of registers to be written
-> - * @len: length of registers array
-> - *
-> - * Return: 0 if successful. error code otherwise.
-> - */
-> -static int imx335_write_regs(struct imx335 *imx335,
-> -                            const struct imx335_reg *regs, u32 len)
-> -{
-> -       unsigned int i;
-> -       int ret;
-> -
-> -       for (i =3D 0; i < len; i++) {
-> -               ret =3D imx335_write_reg(imx335, regs[i].address, 1, regs=
-[i].val);
-> -               if (ret)
-> -                       return ret;
-> -       }
-> -
-> -       return 0;
-> -}
-> -
->  /**
->   * imx335_update_controls() - Update control ranges based on streaming m=
-ode
->   * @imx335: pointer to imx335 device
-> @@ -528,7 +461,7 @@ static int imx335_update_controls(struct imx335 *imx3=
-35,
->  static int imx335_update_exp_gain(struct imx335 *imx335, u32 exposure, u=
-32 gain)
->  {
->         u32 lpfr, shutter;
-> -       int ret;
-> +       int ret =3D 0;
-> =20
->         lpfr =3D imx335->vblank + imx335->cur_mode->height;
->         shutter =3D lpfr - exposure;
-> @@ -536,64 +469,49 @@ static int imx335_update_exp_gain(struct imx335 *im=
-x335, u32 exposure, u32 gain)
->         dev_dbg(imx335->dev, "Set exp %u, analog gain %u, shutter %u, lpf=
-r %u\n",
->                 exposure, gain, shutter, lpfr);
-> =20
-> -       ret =3D imx335_write_reg(imx335, IMX335_REG_HOLD, 1, 1);
-> -       if (ret)
-> -               return ret;
-> -
-> -       ret =3D imx335_write_reg(imx335, IMX335_REG_LPFR, 3, lpfr);
-> -       if (ret)
-> -               goto error_release_group_hold;
-> -
-> -       ret =3D imx335_write_reg(imx335, IMX335_REG_SHUTTER, 3, shutter);
-> -       if (ret)
-> -               goto error_release_group_hold;
-> -
-> -       ret =3D imx335_write_reg(imx335, IMX335_REG_AGAIN, 2, gain);
-> -
-> -error_release_group_hold:
-> -       imx335_write_reg(imx335, IMX335_REG_HOLD, 1, 0);
-> +       cci_write(imx335->cci, IMX335_REG_HOLD, 1, &ret);
-> +       cci_write(imx335->cci, IMX335_REG_VMAX, lpfr, &ret);
-> +       cci_write(imx335->cci, IMX335_REG_SHUTTER, shutter, &ret);
-> +       cci_write(imx335->cci, IMX335_REG_AGAIN, gain, &ret);
-> +       cci_write(imx335->cci, IMX335_REG_HOLD, 0, &ret);
-
-Aha, now this bit is more tricky. Even in case of error we need to
-unconditionally (attempt) to release the hold. We'll need two ret
-values...
-
-and then:
-
-- cci_write(imx335->cci, IMX335_REG_HOLD, 0, &ret);
-+ /*
-+  * Unconditionally attempt to release the hold, but track the
-+  * error if the unhold itself fails.
-+  */
-+ ret_hold =3D cci_write(imx335->cci, IMX335_REG_HOLD, 0, NULL);
-+ if (ret_hold)
-+	ret =3D ret_hold;
-
-> =20
->         return ret;
->  }
-> =20
->  static int imx335_update_test_pattern(struct imx335 *imx335, u32 pattern=
-_index)
->  {
-> -       int ret;
-> +       int ret =3D 0;
-> =20
->         if (pattern_index >=3D ARRAY_SIZE(imx335_tpg_val))
->                 return -EINVAL;
-> =20
->         if (pattern_index) {
-> -               const struct imx335_reg tpg_enable_regs[] =3D {
-> -                       { 0x3148, 0x10 },
-> -                       { 0x3280, 0x00 },
-> -                       { 0x329c, 0x01 },
-> -                       { 0x32a0, 0x11 },
-> -                       { 0x3302, 0x00 },
-> -                       { 0x3303, 0x00 },
-> -                       { 0x336c, 0x00 },
-> +               const struct cci_reg_sequence tpg_enable_regs[] =3D {
-> +                       {IMX335_REG_TPG_TESTCLKEN, 0x10},
-> +                       {IMX335_REG_TPG_DIG_CLP_MODE, 0x00},
-> +                       {IMX335_REG_TPG_EN_DUOUT, 0x01},
-> +                       {IMX335_REG_TPG_COLORWIDTH, 0x11},
-> +                       {IMX335_REG_TPG_BLKLEVEL, 0x00},
-> +                       {IMX335_REG_TPG_WRJ_OPEN, 0x00},
->                 };
-> =20
-> -               ret =3D imx335_write_reg(imx335, IMX335_REG_TPG, 1,
-> -                                      imx335_tpg_val[pattern_index]);
-> -               if (ret)
-> -                       return ret;
-> +               cci_write(imx335->cci, IMX335_REG_TPG,
-> +                         imx335_tpg_val[pattern_index], &ret);
-> =20
-> -               ret =3D imx335_write_regs(imx335, tpg_enable_regs,
-> -                                       ARRAY_SIZE(tpg_enable_regs));
-> +               cci_multi_reg_write(imx335->cci, tpg_enable_regs,
-> +                                   ARRAY_SIZE(tpg_enable_regs), &ret);
->         } else {
-> -               const struct imx335_reg tpg_disable_regs[] =3D {
-> -                       { 0x3148, 0x00 },
-> -                       { 0x3280, 0x01 },
-> -                       { 0x329c, 0x00 },
-> -                       { 0x32a0, 0x10 },
-> -                       { 0x3302, 0x32 },
-> -                       { 0x3303, 0x00 },
-> -                       { 0x336c, 0x01 },
-> +               const struct cci_reg_sequence tpg_disable_regs[] =3D {
-> +                       {IMX335_REG_TPG_TESTCLKEN, 0x00},
-> +                       {IMX335_REG_TPG_DIG_CLP_MODE, 0x01},
-> +                       {IMX335_REG_TPG_EN_DUOUT, 0x00},
-> +                       {IMX335_REG_TPG_COLORWIDTH, 0x10},
-> +                       {IMX335_REG_TPG_BLKLEVEL, 0x32},
-> +                       {IMX335_REG_TPG_WRJ_OPEN, 0x01},
->                 };
-> =20
-> -               ret =3D imx335_write_regs(imx335, tpg_disable_regs,
-> -                                       ARRAY_SIZE(tpg_disable_regs));
-> +               cci_multi_reg_write(imx335->cci, tpg_disable_regs,
-> +                                   ARRAY_SIZE(tpg_disable_regs), &ret);
->         }
-> =20
->         return ret;
-> @@ -892,12 +810,14 @@ static int imx335_set_framefmt(struct imx335 *imx33=
-5)
->  {
->         switch (imx335->cur_mbus_code) {
->         case MEDIA_BUS_FMT_SRGGB10_1X10:
-> -               return imx335_write_regs(imx335, raw10_framefmt_regs,
-> -                                        ARRAY_SIZE(raw10_framefmt_regs));
-> +               return cci_multi_reg_write(imx335->cci, raw10_framefmt_re=
-gs,
-> +                                          ARRAY_SIZE(raw10_framefmt_regs=
-),
-> +                                          NULL);
-> =20
->         case MEDIA_BUS_FMT_SRGGB12_1X12:
-> -               return imx335_write_regs(imx335, raw12_framefmt_regs,
-> -                                        ARRAY_SIZE(raw12_framefmt_regs));
-> +               return cci_multi_reg_write(imx335->cci, raw12_framefmt_re=
-gs,
-> +                                          ARRAY_SIZE(raw12_framefmt_regs=
-),
-> +                                          NULL);
->         }
-> =20
->         return -EINVAL;
-> @@ -916,7 +836,8 @@ static int imx335_start_streaming(struct imx335 *imx3=
-35)
-> =20
->         /* Setup PLL */
->         reg_list =3D &link_freq_reglist[__ffs(imx335->link_freq_bitmap)];
-> -       ret =3D imx335_write_regs(imx335, reg_list->regs, reg_list->num_o=
-f_regs);
-> +       ret =3D cci_multi_reg_write(imx335->cci, reg_list->regs,
-> +                                 reg_list->num_of_regs, NULL);
->         if (ret) {
->                 dev_err(imx335->dev, "%s failed to set plls\n", __func__);
->                 return ret;
-> @@ -924,8 +845,8 @@ static int imx335_start_streaming(struct imx335 *imx3=
-35)
-> =20
->         /* Write sensor mode registers */
->         reg_list =3D &imx335->cur_mode->reg_list;
-> -       ret =3D imx335_write_regs(imx335, reg_list->regs,
-> -                               reg_list->num_of_regs);
-> +       ret =3D cci_multi_reg_write(imx335->cci, reg_list->regs,
-> +                                 reg_list->num_of_regs, NULL);
->         if (ret) {
->                 dev_err(imx335->dev, "fail to write initial registers\n");
->                 return ret;
-> @@ -939,7 +860,8 @@ static int imx335_start_streaming(struct imx335 *imx3=
-35)
->         }
-> =20
->         /* Configure lanes */
-> -       ret =3D imx335_write_reg(imx335, IMX335_LANEMODE, 1, imx335->lane=
-_mode);
-> +       ret =3D cci_write(imx335->cci, IMX335_REG_LANEMODE,
-> +                       imx335->lane_mode, NULL);
->         if (ret)
->                 return ret;
-> =20
-> @@ -951,8 +873,8 @@ static int imx335_start_streaming(struct imx335 *imx3=
-35)
->         }
-> =20
->         /* Start streaming */
-> -       ret =3D imx335_write_reg(imx335, IMX335_REG_MODE_SELECT,
-> -                              1, IMX335_MODE_STREAMING);
-> +       ret =3D cci_write(imx335->cci, IMX335_REG_MODE_SELECT,
-> +                       IMX335_MODE_STREAMING, NULL);
->         if (ret) {
->                 dev_err(imx335->dev, "fail to start streaming\n");
->                 return ret;
-> @@ -972,8 +894,8 @@ static int imx335_start_streaming(struct imx335 *imx3=
-35)
->   */
->  static int imx335_stop_streaming(struct imx335 *imx335)
->  {
-> -       return imx335_write_reg(imx335, IMX335_REG_MODE_SELECT,
-> -                               1, IMX335_MODE_STANDBY);
-> +       return cci_write(imx335->cci, IMX335_REG_MODE_SELECT,
-> +                        IMX335_MODE_STANDBY, NULL);
->  }
-> =20
->  /**
-> @@ -1024,14 +946,14 @@ static int imx335_set_stream(struct v4l2_subdev *s=
-d, int enable)
->  static int imx335_detect(struct imx335 *imx335)
->  {
->         int ret;
-> -       u32 val;
-> +       u64 val;
-> =20
-> -       ret =3D imx335_read_reg(imx335, IMX335_REG_ID, 2, &val);
-> +       ret =3D cci_read(imx335->cci, IMX335_REG_ID, &val, NULL);
->         if (ret)
->                 return ret;
-> =20
->         if (val !=3D IMX335_ID) {
-> -               dev_err(imx335->dev, "chip id mismatch: %x!=3D%x\n",
-> +               dev_err(imx335->dev, "chip id mismatch: %x!=3D%llx\n",
->                         IMX335_ID, val);
->                 return -ENXIO;
->         }
-> @@ -1345,6 +1267,11 @@ static int imx335_probe(struct i2c_client *client)
->                 return -ENOMEM;
-> =20
->         imx335->dev =3D &client->dev;
-> +       imx335->cci =3D devm_cci_regmap_init_i2c(client, 16);
-> +       if (IS_ERR(imx335->cci)) {
-> +               dev_err(imx335->dev, "Unable to initialize I2C\n");
-> +               return -ENODEV;
-> +       }
-> =20
->         /* Initialize subdev */
->         v4l2_i2c_subdev_init(&imx335->sd, client, &imx335_subdev_ops);
-> --=20
-> 2.43.0
+On 3/6/2024 1:54 AM, Roberto Sassu wrote:
+> On Fri, 2023-12-15 at 14:15 -0800, Casey Schaufler wrote:
+>> Create real functions for the ima_filter_rule interfaces.
+>> These replace #defines that obscure the reuse of audit
+>> interfaces. The new functions are put in security.c because
+>> they use security module registered hooks that we don't
+>> want exported.
+> Beginner question: what makes IMA special, that the audit subsystem
+> does not need an AUDIT_LSM field to do the same that IMA would do?
 >
+> In other words, why can't we add the lsm_id parameter to
+> security_audit_*() functions, so that IMA can just call those?
+
+I have never liked the reuse of the audit filter functions, especially
+the way that they're hidden behind #define. The assumption that the
+two facilities (audit and IMA) are going to use them the same way, and
+that they will never diverge in their requirements, has always seemed
+questionable.
+
+In most cases audit needs an lsmblob rather than a secid+lsm_id pair,
+as there is information required about all the LSMs, not just the one
+actively involved.
+
+>
+> Thanks
+>
+> Roberto
+>
+>> Acked-by: Paul Moore <paul@paul-moore.com>
+>> Reviewed-by: John Johansen <john.johansen@canonical.com>
+>> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+>> To: Mimi Zohar <zohar@linux.ibm.com>
+>> Cc: linux-integrity@vger.kernel.org
+>> ---
+>>  include/linux/security.h     | 24 ++++++++++++++++++++++++
+>>  security/integrity/ima/ima.h | 26 --------------------------
+>>  security/security.c          | 21 +++++++++++++++++++++
+>>  3 files changed, 45 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/include/linux/security.h b/include/linux/security.h
+>> index 750130a7b9dd..4790508818ee 100644
+>> --- a/include/linux/security.h
+>> +++ b/include/linux/security.h
+>> @@ -2009,6 +2009,30 @@ static inline void security_audit_rule_free(void *lsmrule)
+>>  #endif /* CONFIG_SECURITY */
+>>  #endif /* CONFIG_AUDIT */
+>>  
+>> +#if defined(CONFIG_IMA_LSM_RULES) && defined(CONFIG_SECURITY)
+>> +int ima_filter_rule_init(u32 field, u32 op, char *rulestr, void **lsmrule);
+>> +int ima_filter_rule_match(u32 secid, u32 field, u32 op, void *lsmrule);
+>> +void ima_filter_rule_free(void *lsmrule);
+>> +
+>> +#else
+>> +
+>> +static inline int ima_filter_rule_init(u32 field, u32 op, char *rulestr,
+>> +					   void **lsmrule)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static inline int ima_filter_rule_match(u32 secid, u32 field, u32 op,
+>> +					    void *lsmrule)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static inline void ima_filter_rule_free(void *lsmrule)
+>> +{ }
+>> +
+>> +#endif /* defined(CONFIG_IMA_LSM_RULES) && defined(CONFIG_SECURITY) */
+>> +
+>>  #ifdef CONFIG_SECURITYFS
+>>  
+>>  extern struct dentry *securityfs_create_file(const char *name, umode_t mode,
+>> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+>> index c29db699c996..560d6104de72 100644
+>> --- a/security/integrity/ima/ima.h
+>> +++ b/security/integrity/ima/ima.h
+>> @@ -420,32 +420,6 @@ static inline void ima_free_modsig(struct modsig *modsig)
+>>  }
+>>  #endif /* CONFIG_IMA_APPRAISE_MODSIG */
+>>  
+>> -/* LSM based policy rules require audit */
+>> -#ifdef CONFIG_IMA_LSM_RULES
+>> -
+>> -#define ima_filter_rule_init security_audit_rule_init
+>> -#define ima_filter_rule_free security_audit_rule_free
+>> -#define ima_filter_rule_match security_audit_rule_match
+>> -
+>> -#else
+>> -
+>> -static inline int ima_filter_rule_init(u32 field, u32 op, char *rulestr,
+>> -				       void **lsmrule)
+>> -{
+>> -	return -EINVAL;
+>> -}
+>> -
+>> -static inline void ima_filter_rule_free(void *lsmrule)
+>> -{
+>> -}
+>> -
+>> -static inline int ima_filter_rule_match(u32 secid, u32 field, u32 op,
+>> -					void *lsmrule)
+>> -{
+>> -	return -EINVAL;
+>> -}
+>> -#endif /* CONFIG_IMA_LSM_RULES */
+>> -
+>>  #ifdef	CONFIG_IMA_READ_POLICY
+>>  #define	POLICY_FILE_FLAGS	(S_IWUSR | S_IRUSR)
+>>  #else
+>> diff --git a/security/security.c b/security/security.c
+>> index d7b15ea67c3f..8e5379a76369 100644
+>> --- a/security/security.c
+>> +++ b/security/security.c
+>> @@ -5350,6 +5350,27 @@ int security_audit_rule_match(u32 secid, u32 field, u32 op, void *lsmrule)
+>>  }
+>>  #endif /* CONFIG_AUDIT */
+>>  
+>> +#ifdef CONFIG_IMA_LSM_RULES
+>> +/*
+>> + * The integrity subsystem uses the same hooks as
+>> + * the audit subsystem.
+>> + */
+>> +int ima_filter_rule_init(u32 field, u32 op, char *rulestr, void **lsmrule)
+>> +{
+>> +	return call_int_hook(audit_rule_init, 0, field, op, rulestr, lsmrule);
+>> +}
+>> +
+>> +void ima_filter_rule_free(void *lsmrule)
+>> +{
+>> +	call_void_hook(audit_rule_free, lsmrule);
+>> +}
+>> +
+>> +int ima_filter_rule_match(u32 secid, u32 field, u32 op, void *lsmrule)
+>> +{
+>> +	return call_int_hook(audit_rule_match, 0, secid, field, op, lsmrule);
+>> +}
+>> +#endif /* CONFIG_IMA_LSM_RULES */
+>> +
+>>  #ifdef CONFIG_BPF_SYSCALL
+>>  /**
+>>   * security_bpf() - Check if the bpf syscall operation is allowed
