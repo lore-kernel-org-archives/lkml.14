@@ -1,269 +1,254 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58A2D5D735;
-	Wed,  6 Mar 2024 08:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8585C057;
+	Wed,  6 Mar 2024 08:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709713508; cv=none; b=Dj4z/gnef5IZynjLZo4tVAhsx8tJBDrc9EtF4QNjQUhYuPe6SyscMhy51BuHBxC/36vmoIBi+7UiMll8tKvJJSO0hVwzlHe6ZBgtl6/XNefhBZ0XGiHlahVK25OcBmQOTFsr3BknIiJ1BqPFaI2G8h1pgTrzGtluNENZLsufjxc=
+	t=1709713576; cv=none; b=XpVtk8IEmKm6HHMnlh9y8O1SyM5MgQlBVJWF/gI1Yd9fgQqYvJSEHVwOG9GBWCp7fPtH+LrdnoTaraSyf+wxlby0FAPBnHsilTthwh2BvxLohx/wuFEthlrWGlAB5v0Xs7CF4OZffjafSaZ6b+47bZPX2So+WgznxQjbPv5PEaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709713508; c=relaxed/simple;
-	bh=JZf2RmGphYGkZHB7CaIcGc5DX4EZaA9p+YSIv+s/ImE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b2QcgjPk1r72WkQN4MVkmMsRp95uTy+I3DbUjeZGtVaIwJXr4luz5JT1olMLCDlGMfZlCG7VpureaHNi3bOk4t5vk/I63F8t6INRIhVD1TEZG5wF3v/kMN3Sa2Ru2qgsek2RTtrTo1sZq5wzH851U/XWABjJjcEPSRDQhU+7fdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABBBF1FB;
-	Wed,  6 Mar 2024 00:25:41 -0800 (PST)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEBAC3F762;
-	Wed,  6 Mar 2024 00:24:59 -0800 (PST)
-Date: Wed, 6 Mar 2024 09:24:19 +0100
-From: Beata Michalska <beata.michalska@arm.com>
-To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-Cc: Huisong Li <lihuisong@huawei.com>,
-	Ionela Voinescu <ionela.voinescu@arm.com>,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, rafael@kernel.org,
-	sumitg@nvidia.com, zengheng4@huawei.com,
-	yang@os.amperecomputing.com, will@kernel.org, sudeep.holla@arm.com,
-	liuyonglong@huawei.com, zhanjie9@hisilicon.com,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] arm64: topology: Add arch_freq_get_on_cpu()
- support
-Message-ID: <ZegoMy7_BJ0Smvkl@arm.com>
-References: <20240229162520.970986-2-vanshikonda@os.amperecomputing.com>
+	s=arc-20240116; t=1709713576; c=relaxed/simple;
+	bh=IVbVUMXrP0pWnl6Gqzn7NDcqyyzsIK+2/AJi/qKsKYo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X3tk3uGjUu7Q8MwKc2un65xVgN9VPDb3VJGXsk42NLIXlnvwptnvt7wAvfX7xFG84hL3sXaoLwc6oQRiUrCqad+JNfutBZPMlTIGGmerOz8rUJSiNz/F1e2VFZ2D0oUeskwglbA6qySc0CYzcUV59Px2xB09xGl9SqI+baQLI6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TqQ8z72pQz9xrt5;
+	Wed,  6 Mar 2024 16:10:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 17A50140416;
+	Wed,  6 Mar 2024 16:26:04 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwBnoCSIKOhlyTjHAw--.13514S2;
+	Wed, 06 Mar 2024 09:26:03 +0100 (CET)
+Message-ID: <1217017cc1928842abfdb40a7fa50bad8ae5e99f.camel@huaweicloud.com>
+Subject: Re: [PATCH v2 24/25] commoncap: use vfs fscaps interfaces
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, Christian Brauner
+ <brauner@kernel.org>,  "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+Cc: Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, Eric
+ Paris <eparis@redhat.com>, James Morris <jmorris@namei.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Stephen Smalley
+ <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+ Casey Schaufler <casey@schaufler-ca.com>, Roberto Sassu
+ <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>,  "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi
+ <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
+ selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Date: Wed, 06 Mar 2024 09:25:40 +0100
+In-Reply-To: <10773e5b90ec9378cbc69fa9cfeb61a84273edc2.camel@linux.ibm.com>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+	 <20240221-idmap-fscap-refactor-v2-24-3039364623bd@kernel.org>
+	 <dcbd9e7869d2fcce69546b53851d694b8ebad54e.camel@huaweicloud.com>
+	 <ZeXpbOsdRTbLsYe9@do-x1extreme>
+	 <a7124afa6bed2fcadcb66efa08e256828cd6f8ab.camel@huaweicloud.com>
+	 <ZeX9MRhU/EGhHkCY@do-x1extreme>
+	 <20240305-fachjargon-abmontieren-75b1d6c67a83@brauner>
+	 <3098aef3e5f924e5717b4ba4a34817d9f22ec479.camel@huaweicloud.com>
+	 <7058e2f93d16f910336a5380877b14a2e069ee9d.camel@huaweicloud.com>
+	 <10773e5b90ec9378cbc69fa9cfeb61a84273edc2.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240229162520.970986-2-vanshikonda@os.amperecomputing.com>
+X-CM-TRANSID:GxC2BwBnoCSIKOhlyTjHAw--.13514S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3WF4kAr4UGFyxXr45GFWfKrg_yoW7ZF1xpr
+	y5GF4UKr4DJr1UJrn7tr1UX3W0y3yfJF4UXrn8G34UAr1qyr13Gr1xCr17uFyDur18Gr1U
+	Zr1jyFy3Wr1UAwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYY7kG6xAYrwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
+	WxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUguHqUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAOBF1jj5sG0gAAs1
 
+On Tue, 2024-03-05 at 21:17 -0500, Mimi Zohar wrote:
+> On Tue, 2024-03-05 at 18:11 +0100, Roberto Sassu wrote:
+> > On Tue, 2024-03-05 at 13:46 +0100, Roberto Sassu wrote:
+> > > On Tue, 2024-03-05 at 10:12 +0100, Christian Brauner wrote:
+> > > > On Mon, Mar 04, 2024 at 10:56:17AM -0600, Seth Forshee (DigitalOcea=
+n)
+> > > > wrote:
+> > > > > On Mon, Mar 04, 2024 at 05:17:57PM +0100, Roberto Sassu wrote:
+> > > > > > On Mon, 2024-03-04 at 09:31 -0600, Seth Forshee (DigitalOcean) =
+wrote:
+> > > > > > > On Mon, Mar 04, 2024 at 11:19:54AM +0100, Roberto Sassu wrote=
+:
+> > > > > > > > On Wed, 2024-02-21 at 15:24 -0600, Seth Forshee (DigitalOce=
+an)
+> > > > > > > > wrote:
+> > > > > > > > > Use the vfs interfaces for fetching file capabilities for
+> > > > > > > > > killpriv
+> > > > > > > > > checks and from get_vfs_caps_from_disk(). While there, up=
+date
+> > > > > > > > > the
+> > > > > > > > > kerneldoc for get_vfs_caps_from_disk() to explain how it =
+is
+> > > > > > > > > different
+> > > > > > > > > from vfs_get_fscaps_nosec().
+> > > > > > > > >=20
+> > > > > > > > > Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kern=
+el.org>
+> > > > > > > > > ---
+> > > > > > > > >  security/commoncap.c | 30 +++++++++++++-----------------
+> > > > > > > > >  1 file changed, 13 insertions(+), 17 deletions(-)
+> > > > > > > > >=20
+> > > > > > > > > diff --git a/security/commoncap.c b/security/commoncap.c
+> > > > > > > > > index a0ff7e6092e0..751bb26a06a6 100644
+> > > > > > > > > --- a/security/commoncap.c
+> > > > > > > > > +++ b/security/commoncap.c
+> > > > > > > > > @@ -296,11 +296,12 @@ int cap_capset(struct cred *new,
+> > > > > > > > >   */
+> > > > > > > > >  int cap_inode_need_killpriv(struct dentry *dentry)
+> > > > > > > > >  {
+> > > > > > > > > -	struct inode *inode =3D d_backing_inode(dentry);
+> > > > > > > > > +	struct vfs_caps caps;
+> > > > > > > > >  	int error;
+> > > > > > > > > =20
+> > > > > > > > > -	error =3D __vfs_getxattr(dentry, inode, XATTR_NAME_CAPS=
+,
+> > > > > > > > > NULL, 0);
+> > > > > > > > > -	return error > 0;
+> > > > > > > > > +	/* Use nop_mnt_idmap for no mapping here as mapping is
+> > > > > > > > > unimportant */
+> > > > > > > > > +	error =3D vfs_get_fscaps_nosec(&nop_mnt_idmap, dentry,
+> > > > > > > > > &caps);
+> > > > > > > > > +	return error =3D=3D 0;
+> > > > > > > > >  }
+> > > > > > > > > =20
+> > > > > > > > >  /**
+> > > > > > > > > @@ -323,7 +324,7 @@ int cap_inode_killpriv(struct mnt_idm=
+ap
+> > > > > > > > > *idmap, struct dentry *dentry)
+> > > > > > > > >  {
+> > > > > > > > >  	int error;
+> > > > > > > > > =20
+> > > > > > > > > -	error =3D __vfs_removexattr(idmap, dentry,
+> > > > > > > > > XATTR_NAME_CAPS);
+> > > > > > > > > +	error =3D vfs_remove_fscaps_nosec(idmap, dentry);
+> > > > > > > >=20
+> > > > > > > > Uhm, I see that the change is logically correct... but the
+> > > > > > > > original
+> > > > > > > > code was not correct, since the EVM post hook is not called=
+ (thus
+> > > > > > > > the
+> > > > > > > > HMAC is broken, or an xattr change is allowed on a portable
+> > > > > > > > signature
+> > > > > > > > which should be not).
+> > > > > > > >=20
+> > > > > > > > For completeness, the xattr change on a portable signature =
+should
+> > > > > > > > not
+> > > > > > > > happen in the first place, so cap_inode_killpriv() would no=
+t be
+> > > > > > > > called.
+> > > > > > > > However, since EVM allows same value change, we are here.
+> > > > > > >=20
+> > > > > > > I really don't understand EVM that well and am pretty hesitan=
+t to
+> > > > > > > try an
+> > > > > > > change any of the logic around it. But I'll hazard a thought:=
+ should
+> > > > > > > EVM
+> > > > > > > have a inode_need_killpriv hook which returns an error in thi=
+s
+> > > > > > > situation?
+> > > > > >=20
+> > > > > > Uhm, I think it would not work without modifying
+> > > > > > security_inode_need_killpriv() and the hook definition.
+> > > > > >=20
+> > > > > > Since cap_inode_need_killpriv() returns 1, the loop stops and E=
+VM
+> > > > > > would
+> > > > > > not be invoked. We would need to continue the loop and let EVM =
+know
+> > > > > > what is the current return value. Then EVM can reject the chang=
+e.
+> > > > > >=20
+> > > > > > An alternative way would be to detect that actually we are sett=
+ing the
+> > > > > > same value for inode metadata, and maybe not returning 1 from
+> > > > > > cap_inode_need_killpriv().
+> > > > > >=20
+> > > > > > I would prefer the second, since EVM allows same value change a=
+nd we
+> > > > > > would have an exception if there are fscaps.
+> > > > > >=20
+> > > > > > This solves only the case of portable signatures. We would need=
+ to
+> > > > > > change cap_inode_need_killpriv() anyway to update the HMAC for =
+mutable
+> > > > > > files.
+> > > > >=20
+> > > > > I see. In any case this sounds like a matter for a separate patch
+> > > > > series.
+> > > >=20
+> > > > Agreed.
+> > >=20
+> > > Christian, how realistic is that we don't kill priv if we are setting
+> > > the same owner?
+> > >=20
+> > > Serge, would we be able to replace __vfs_removexattr() (or now
+> > > vfs_get_fscaps_nosec()) with a security-equivalent alternative?
+> >=20
+> > It seems it is not necessary.
+> >=20
+> > security.capability removal occurs between evm_inode_setattr() and
+> > evm_inode_post_setattr(), after the HMAC has been verified and before
+> > the new HMAC is recalculated (without security.capability).
+> >=20
+> > So, all good.
+> >=20
+> > Christian, Seth, I pushed the kernel and the updated tests (all patches
+> > are WIP):
+> >=20
+> > https://github.com/robertosassu/linux/commits/evm-fscaps-v2/
+>=20
+> Resetting the IMA status flag is insufficient.  The EVM status needs to b=
+e reset
+> as well.  Stefan's "ima: re-evaluate file integrity on file metadata chan=
+ge"
+> patch does something similar for overlay.
 
-Hi Vanshidhar,
+Both the IMA and EVM status are reset. The IMA one is reset based on
+the evm_revalidate_status() call, similarly to ACLs.
 
-On Thu, Feb 29, 2024 at 08:25:13AM -0800, Vanshidhar Konda wrote:
-> AMU counters are used by the Frequency Invariance Engine (FIE) to
-> estimate the CPU utilization during each tick. The delta of the AMU
-> counters between two ticks can also be used to estimate the average CPU
-> frequency of each core over the tick duration. Measure the AMU counters
-> during tick, compute the delta and store it. When the frequency of the
-> core is queried, use the stored delta to determine the frequency.
-> 
-> arch_freq_get_on_cpu() is used on x86 systems to estimate the frequency
-> of each CPU. It can be wired up on arm64 for the same functionality.
-> 
-> Signed-off-by: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-> ---
->  arch/arm64/kernel/topology.c | 114 +++++++++++++++++++++++++++++------
->  1 file changed, 96 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> index 1a2c72f3e7f8..db8d14525cf4 100644
-> --- a/arch/arm64/kernel/topology.c
-> +++ b/arch/arm64/kernel/topology.c
-> @@ -17,6 +17,8 @@
->  #include <linux/cpufreq.h>
->  #include <linux/init.h>
->  #include <linux/percpu.h>
-> +#include <linux/sched/isolation.h>
-> +#include <linux/seqlock_types.h>
->  
->  #include <asm/cpu.h>
->  #include <asm/cputype.h>
-> @@ -82,20 +84,54 @@ int __init parse_acpi_topology(void)
->  #undef pr_fmt
->  #define pr_fmt(fmt) "AMU: " fmt
->  
-> +struct amu_counters {
-> +	seqcount_t	seq;
-> +	unsigned long	last_update;
-> +	u64		core_cnt;
-> +	u64		const_cnt;
-> +	u64		delta_core_cnt;
-> +	u64		delta_const_cnt;
-> +};
-It still might not be necessary to track both last taken sample and deltas from
-previous ones, see[1].
-I could send v3 of [1] and take into account the changes you have suggested here,
-namely the last tick recorded. Otherwise few comments below.
-> +
->  /*
->   * Ensure that amu_scale_freq_tick() will return SCHED_CAPACITY_SCALE until
->   * the CPU capacity and its associated frequency have been correctly
->   * initialized.
->   */
-> -static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =  1UL << (2 * SCHED_CAPACITY_SHIFT);
-> -static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
-> -static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
-> +static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =
-> +	1UL << (2 * SCHED_CAPACITY_SHIFT);
-> +static DEFINE_PER_CPU_SHARED_ALIGNED(struct amu_counters, cpu_samples) = {
-> +	.seq = SEQCNT_ZERO(cpu_samples.seq)
-> +};
->  static cpumask_var_t amu_fie_cpus;
->  
->  void update_freq_counters_refs(void)
->  {
-> -	this_cpu_write(arch_core_cycles_prev, read_corecnt());
-> -	this_cpu_write(arch_const_cycles_prev, read_constcnt());
-> +	struct amu_counters *cpu_sample = this_cpu_ptr(&cpu_samples);
-> +	u64 core_cnt, const_cnt, delta_core_cnt, delta_const_cnt;
-> +
-> +	const_cnt = read_constcnt();
-> +	core_cnt = read_corecnt();
-> +
-> +	if (unlikely(core_cnt < cpu_sample->core_cnt) ||
-> +	    unlikely(const_cnt < cpu_sample->const_cnt)) {
-> +		WARN(1, "AMU counter values should be monotonic.\n");
-> +		cpu_sample->delta_const_cnt = 0;
-> +		cpu_sample->delta_core_cnt = 0;
-Not sure if zero-ing is really necessary here
-> +		return;
-> +	}
-> +
-> +	delta_core_cnt = core_cnt - cpu_sample->core_cnt;
-> +	delta_const_cnt = const_cnt - cpu_sample->const_cnt;
-> +
-> +	cpu_sample->core_cnt = core_cnt;
-> +	cpu_sample->const_cnt = const_cnt;
-> +
-> +	raw_write_seqcount_begin(&cpu_sample->seq);
-> +	cpu_sample->last_update = jiffies;
-> +	cpu_sample->delta_const_cnt = delta_const_cnt;
-> +	cpu_sample->delta_core_cnt = delta_core_cnt;
-> +	raw_write_seqcount_end(&cpu_sample->seq);
->  }
->  
->  static inline bool freq_counters_valid(int cpu)
-> @@ -108,8 +144,7 @@ static inline bool freq_counters_valid(int cpu)
->  		return false;
->  	}
->  
-> -	if (unlikely(!per_cpu(arch_const_cycles_prev, cpu) ||
-> -		     !per_cpu(arch_core_cycles_prev, cpu))) {
-> +	if (unlikely(per_cpu_ptr(&cpu_samples, cpu) == NULL)) {
->  		pr_debug("CPU%d: cycle counters are not enabled.\n", cpu);
->  		return false;
->  	}
-> @@ -152,19 +187,15 @@ void freq_inv_set_max_ratio(int cpu, u64 max_rate)
->  
->  static void amu_scale_freq_tick(void)
->  {
-> -	u64 prev_core_cnt, prev_const_cnt;
-> -	u64 core_cnt, const_cnt, scale;
-> -
-> -	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
-> -	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
-> +	struct amu_counters *cpu_sample = this_cpu_ptr(&cpu_samples);
-> +	u64 delta_core_cnt, delta_const_cnt, scale;
->  
->  	update_freq_counters_refs();
->  
-> -	const_cnt = this_cpu_read(arch_const_cycles_prev);
-> -	core_cnt = this_cpu_read(arch_core_cycles_prev);
-> +	delta_const_cnt = cpu_sample->delta_const_cnt;
-> +	delta_core_cnt = cpu_sample->delta_core_cnt;
->  
-> -	if (unlikely(core_cnt <= prev_core_cnt ||
-> -		     const_cnt <= prev_const_cnt))
-> +	if ((delta_const_cnt == 0) || (delta_core_cnt == 0))
->  		return;
->  
->  	/*
-> @@ -175,15 +206,62 @@ static void amu_scale_freq_tick(void)
->  	 * See validate_cpu_freq_invariance_counters() for details on
->  	 * arch_max_freq_scale and the use of SCHED_CAPACITY_SHIFT.
->  	 */
-> -	scale = core_cnt - prev_core_cnt;
-> +	scale = delta_core_cnt;
->  	scale *= this_cpu_read(arch_max_freq_scale);
->  	scale = div64_u64(scale >> SCHED_CAPACITY_SHIFT,
-> -			  const_cnt - prev_const_cnt);
-> +			  delta_const_cnt);
->  
->  	scale = min_t(unsigned long, scale, SCHED_CAPACITY_SCALE);
->  	this_cpu_write(arch_freq_scale, (unsigned long)scale);
->  }
->  
-> +/*
-> + * Discard samples older than the define maximum sample age of 20ms. There
-> + * is no point in sending IPIs in such a case. If the scheduler tick was
-> + * not running then the CPU is either idle or isolated.
-> + */
-> +#define MAX_SAMPLE_AGE	((unsigned long)HZ / 50)
-This depends on the config, so for HZ_1000 it will indeed give 20ms,
-for CONFIG_250 that will be 5ms. It might be better to set it to number of
-expected missed ticks instead ? Or amend the comment.
-> +
-> +unsigned int arch_freq_get_on_cpu(int cpu)
-> +{
-> +	struct amu_counters *cpu_sample = per_cpu_ptr(&cpu_samples, cpu);
-> +	u64 delta_const_cnt, delta_core_cnt;
-> +	unsigned int seq, freq;
-> +	unsigned long last;
-> +
-> +	if (!freq_counters_valid(cpu))
-> +		goto fallback;
-> +
-> +	do {
-> +		seq = raw_read_seqcount_begin(&cpu_sample->seq);
-> +		last = cpu_sample->last_update;
-> +		delta_core_cnt = cpu_sample->delta_core_cnt;
-> +		delta_const_cnt = cpu_sample->delta_const_cnt;
-> +	} while (read_seqcount_retry(&cpu_sample->seq, seq));
-> +
-This seems to be taken from APERF/MPERF relevant code. Including the comments.
-> +	/*
-> +	 * Bail on invalid count and when the last update was too long ago,
-> +	 * which covers idle and NOHZ full CPUs.
-> +	 */
-> +	if (!delta_const_cnt || ((jiffies - last) > MAX_SAMPLE_AGE)) {
-Shouldn't the first condition (non-zero increase of cnt_cycles counter)
-disqualify the sample taken altogether ?
-> +		if (!(housekeeping_cpu(cpu, HK_TYPE_TICK) && idle_cpu(cpu)))
-> +			goto fallback;
-Not entirely convinced that this condition is what is expected ?
-For housekeeping cpu that is not idle it will still resolve to AMU counters,
-not sure if that's what was intended ?
-Also, for cases when given cpufreq policy spans more than a single core, the
-frequency might be queried based on relevant CPU that might have seen the tick
-within specified timeframe (see [1])
+Roberto
 
-> +	}
-> +
-> +	/*
-> +	 * CPU frequency = reference perf (in Hz) * (/\ delivered) / (/\ reference)
-> +	 * AMU reference performance counter increment rate is equal to the rate
-> +	 * of increment of the System counter, CNTPCT_EL0 and can be used to
-> +	 * compute the CPU frequency.
-> +	 */
-> +	return div64_u64((delta_core_cnt * (arch_timer_get_rate() / HZ)),
-/HZ/HZ_PER_KHZ ?
-> +			 delta_const_cnt);
-> +
-> +fallback:
-> +	freq = cpufreq_quick_get(cpu);
-> +	return freq ? freq : cpufreq_get_hw_max_freq(cpu);
-If the arch specific code cannot determine the frequency it should actually make
-it clear by returning '0' instead of trying to patch things up by itself (?)
+> Mimi
+>=20
+> https://lore.kernel.org/linux-integrity/20240223172513.4049959-8-stefanb@=
+linux.ibm.com/
+>=20
+> >=20
+> > https://github.com/robertosassu/ima-evm-utils/commits/evm-fscaps-v2/
+> >=20
+> >=20
+> > The tests are passing:
+> >=20
+> > https://github.com/robertosassu/ima-evm-utils/actions/runs/8159877004/j=
+ob/22305521359
+> >=20
+> > Roberto
+> >=20
+> >=20
+>=20
 
-Overall I'd prefer to revive [1] and amened it accordingly instead.
-
----
-[1] https://lore.kernel.org/all/20231127160838.1403404-1-beata.michalska@arm.com/
----
-Best Regards
-Beata
-> +}
-> +
->  static struct scale_freq_data amu_sfd = {
->  	.source = SCALE_FREQ_SOURCE_ARCH,
->  	.set_freq_scale = amu_scale_freq_tick,
-> -- 
-> 2.43.1
-> 
