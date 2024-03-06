@@ -1,136 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1E7BA55;
-	Wed,  6 Mar 2024 14:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FB9BA55;
+	Wed,  6 Mar 2024 14:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709736496; cv=none; b=c2qtM+L8dYzUpTz0XlorgASIn8xRICymI6bhy+vJmIxfXDZxX+Szq8MU6DiZfvsj5DkkfZCjavITSKDqbPJg9ZczYH/kks6zjutR2NFulSGsDsFknT0wNEoqhpML7d4HmKqGEetdvptLKd0lJ3LK81HT3EhfBtO/kmCBH0rGq8U=
+	t=1709736506; cv=none; b=ZGS0rqGXgvAgL++wQZYRXe33vNMgTWCZNW130mTKoWbbXs7Rry2U8YAJRNmZ56vepfd5LK8W3Ia4eh34DgmGZDIsqYGeSLBridwv2Tumc/c1oIbzqnUPCo6wTRr3z3KK6zDN6ajxGQxI67mcRKvnpQbehyA4c7+BVHMMXbBcPno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709736496; c=relaxed/simple;
-	bh=LKxAHNk2aLDWzzV1w2tW3dpSb8kzakIi8zhJRlDYp30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dc4A9wbwOIPN7xqv/qyhmtXjuogTpZesVeVJ99UIrF5bckjuqWEblgwPvQjC75gnPAa6DzdESiULcmddNkC/zZ2/adklp371/yR/r0xRR7UJXN8tu5sdQC1n+VGk2DR4Neb8ZYf58ONnEFwRW0ojwub1C+N7FwmXqY11S3jyBBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXBlgeae; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXBlgeae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42FFAC433F1;
-	Wed,  6 Mar 2024 14:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709736495;
-	bh=LKxAHNk2aLDWzzV1w2tW3dpSb8kzakIi8zhJRlDYp30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lXBlgeaeEd838cjSpXB5fqRMp0JDlOUS2RNQONh2ebnE3caajbq4gcz5fgrUUrSyU
-	 JDGeWAMG9Bd3x0Q0Zixif0b5VboyKVsI8uWeQeIvZPuadhN2GnG1MJasnaniRuvn/x
-	 A8RtYP6ecWpHi87rDDNV4VrS9FhOIwMilZU1k03FhdKOZ8eXDrbJ5AdHY5yCNPPldE
-	 hnxsilPlv7krDOXsoX6v5EEUo793kDnpUYR48kQKHhlrqJMcltGCEs5wkqN1KHlUnW
-	 6kw8Bsa/Ah24iuGlq+MLiZgTuYSE7GBNJ3pm6O0Th8G+8NfhuQFFsJ+5VZJxmLi0KX
-	 FslSnN+FajSng==
-Date: Wed, 6 Mar 2024 15:48:13 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Sandor Yu <Sandor.yu@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v15 2/8] phy: Add HDMI configuration options
-Message-ID: <20240306-inquisitive-funny-bull-017550@houat>
-References: <20240306101625.795732-1-alexander.stein@ew.tq-group.com>
- <20240306101625.795732-3-alexander.stein@ew.tq-group.com>
+	s=arc-20240116; t=1709736506; c=relaxed/simple;
+	bh=wPwFHxl685tH7blzlSHwK4TFwVDG8koIWrtaYuGT7t0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=e17NNAiS41h4XLxebqiWYb6uPw8eRBUh73QET2MfH+0xCCOwiVf5S3R6pmxQ7gSRrs52w20cQlptOXaJjc2MbPE9pQB+YVuH0kVkdH/Kl3Yi0qlUzdm1OSiwadiklb23HY/I/aUd9jpTVlI1Ms2KApgVUdTFwSPzNxt7NG4g8Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 917F28446D;
+	Wed,  6 Mar 2024 15:40:22 +0100 (CET)
+From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Date: Wed, 06 Mar 2024 15:40:06 +0100
+Subject: [PATCH v3 1/3] input: touchscreen: imagis: use FIELD_GET where
+ applicable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wazjs4qrv6r7qq5x"
-Content-Disposition: inline
-In-Reply-To: <20240306101625.795732-3-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240306-b4-imagis-keys-v3-1-2c429afa8420@skole.hr>
+References: <20240306-b4-imagis-keys-v3-0-2c429afa8420@skole.hr>
+In-Reply-To: <20240306-b4-imagis-keys-v3-0-2c429afa8420@skole.hr>
+To: Markuss Broks <markuss.broks@gmail.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Karel Balej <balejk@matfyz.cz>, ~postmarketos/upstreaming@lists.sr.ht, 
+ phone-devel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2661;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=wPwFHxl685tH7blzlSHwK4TFwVDG8koIWrtaYuGT7t0=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBl6IBODyfcfG498TupsW/xJOdjgBHrqwUj9lBtq
+ gns2lXASfWJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZeiATgAKCRCaEZ6wQi2W
+ 4dDyD/9cqrj5jZHJ35g2PAZ5viUdLLBuYfpfTpIXlqg+NZSVCEvtlb4Jh0yjhqterXk/RRuFU3O
+ qsS4AcXRRQ+MWBjtntHUXS5VVzg57JVHuxXrJtAiZrH96i+qWtzWvWlgaEm9Sd7l8N5ydVEWDWi
+ ndokDa/z67MiuzFmkmTjeRExDnVxX7eh6WaXba0KZf3ie8Dzm5o4hJ1erHKWcXFVkxxhO+o8XQe
+ GUcIxj0V7ypSemQ/PLraqcXvgdED7Vg7Ct1janq1m+OFkcXKR3ACbhzOIwwKr0fIb9y4RUOWBd0
+ 8sWb4wSm+XVyVqd+h6Px0WwGfUDiOzfAoLvFboyb3CHN0cICTG7QUNJa+F79MYK3fFqjMIG5NSv
+ 9wVImcG+6ql2W8uKnpjvFBaNpjGWEpQgshz0G1y/byaYYVaBfTa5flbuNOp/2T5ZvsGV3d2mcnF
+ k8ZyCxTtcwcMx6JJC/eizXE2fNZC//1xtQ8kGNmlHQzqK21XzCK6jgoIqaa2puD2ulLeg+LmOWl
+ iSj03TyVBlrt3XZLVNQ6HBwdP174hUVHb3RDJi9huulPmV7RomEo70ySAj/hdfzfui25zE8ln7q
+ Yx8CUB9INMRMTi/lf7k89n9avKPM1PSraE6gbOlDzgGZ7g9V3V9jI1XDOLgMwBhpDfOv2Xw23/0
+ 6JU5CCEDaJoBWHQ==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+
+Instead of manually extracting certain bits from registers with binary
+ANDs and shifts, the FIELD_GET macro can be used. With this in mind, the
+*_SHIFT macros can be dropped.
+
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+ drivers/input/touchscreen/imagis.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/input/touchscreen/imagis.c b/drivers/input/touchscreen/imagis.c
+index e1fafa561ee3..4eae98771bd2 100644
+--- a/drivers/input/touchscreen/imagis.c
++++ b/drivers/input/touchscreen/imagis.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ 
++#include <linux/bitfield.h>
+ #include <linux/bits.h>
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+@@ -29,12 +30,9 @@
+ #define IST3038C_I2C_RETRY_COUNT	3
+ #define IST3038C_MAX_FINGER_NUM		10
+ #define IST3038C_X_MASK			GENMASK(23, 12)
+-#define IST3038C_X_SHIFT		12
+ #define IST3038C_Y_MASK			GENMASK(11, 0)
+ #define IST3038C_AREA_MASK		GENMASK(27, 24)
+-#define IST3038C_AREA_SHIFT		24
+ #define IST3038C_FINGER_COUNT_MASK	GENMASK(15, 12)
+-#define IST3038C_FINGER_COUNT_SHIFT	12
+ #define IST3038C_FINGER_STATUS_MASK	GENMASK(9, 0)
+ 
+ struct imagis_properties {
+@@ -106,8 +104,7 @@ static irqreturn_t imagis_interrupt(int irq, void *dev_id)
+ 		goto out;
+ 	}
+ 
+-	finger_count = (intr_message & IST3038C_FINGER_COUNT_MASK) >>
+-				IST3038C_FINGER_COUNT_SHIFT;
++	finger_count = FIELD_GET(IST3038C_FINGER_COUNT_MASK, intr_message);
+ 	if (finger_count > IST3038C_MAX_FINGER_NUM) {
+ 		dev_err(&ts->client->dev,
+ 			"finger count %d is more than maximum supported\n",
+@@ -115,7 +112,7 @@ static irqreturn_t imagis_interrupt(int irq, void *dev_id)
+ 		goto out;
+ 	}
+ 
+-	finger_pressed = intr_message & IST3038C_FINGER_STATUS_MASK;
++	finger_pressed = FIELD_GET(IST3038C_FINGER_STATUS_MASK, intr_message);
+ 
+ 	for (i = 0; i < finger_count; i++) {
+ 		if (ts->tdata->protocol_b)
+@@ -136,12 +133,10 @@ static irqreturn_t imagis_interrupt(int irq, void *dev_id)
+ 		input_mt_report_slot_state(ts->input_dev, MT_TOOL_FINGER,
+ 					   finger_pressed & BIT(i));
+ 		touchscreen_report_pos(ts->input_dev, &ts->prop,
+-				       (finger_status & IST3038C_X_MASK) >>
+-						IST3038C_X_SHIFT,
+-				       finger_status & IST3038C_Y_MASK, 1);
++				       FIELD_GET(IST3038C_X_MASK, finger_status),
++				       FIELD_GET(IST3038C_Y_MASK, finger_status), 1);
+ 		input_report_abs(ts->input_dev, ABS_MT_TOUCH_MAJOR,
+-				 (finger_status & IST3038C_AREA_MASK) >>
+-					IST3038C_AREA_SHIFT);
++				       FIELD_GET(IST3038C_AREA_MASK, finger_status));
+ 	}
+ 
+ 	input_mt_sync_frame(ts->input_dev);
+
+-- 
+2.44.0
 
 
---wazjs4qrv6r7qq5x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Alexander,
-
-On Wed, Mar 06, 2024 at 11:16:19AM +0100, Alexander Stein wrote:
-> From: Sandor Yu <Sandor.yu@nxp.com>
->=20
-> Allow HDMI PHYs to be configured through the generic
-> functions through a custom structure added to the generic union.
->=20
-> The parameters added here are based on HDMI PHY
-> implementation practices.  The current set of parameters
-> should cover the potential users.
->=20
-> Signed-off-by: Sandor Yu <Sandor.yu@nxp.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  include/linux/phy/phy-hdmi.h | 24 ++++++++++++++++++++++++
->  include/linux/phy/phy.h      |  7 ++++++-
->  2 files changed, 30 insertions(+), 1 deletion(-)
->  create mode 100644 include/linux/phy/phy-hdmi.h
->=20
-> diff --git a/include/linux/phy/phy-hdmi.h b/include/linux/phy/phy-hdmi.h
-> new file mode 100644
-> index 0000000000000..b7de88e9090f0
-> --- /dev/null
-> +++ b/include/linux/phy/phy-hdmi.h
-> @@ -0,0 +1,24 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright 2022 NXP
-> + */
-> +
-> +#ifndef __PHY_HDMI_H_
-> +#define __PHY_HDMI_H_
-> +
-> +#include <linux/hdmi.h>
-> +/**
-> + * struct phy_configure_opts_hdmi - HDMI configuration set
-> + * @pixel_clk_rate: Pixel clock of video modes in KHz.
-> + * @bpc: Maximum bits per color channel.
-> + * @color_space: Colorspace in enum hdmi_colorspace.
-> + *
-> + * This structure is used to represent the configuration state of a HDMI=
- phy.
-> + */
-> +struct phy_configure_opts_hdmi {
-> +	unsigned int pixel_clk_rate;
-> +	unsigned int bpc;
-> +	enum hdmi_colorspace color_space;
-> +};
-
-Does the PHY actually care about the pixel clock rate, color space and
-formats, or does it only care about the character rate?
-
-Also, how would you handle pixel doubling?
-
-Maxime
-
---wazjs4qrv6r7qq5x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZeiCLAAKCRDj7w1vZxhR
-xSnUAP41rpokDnniw6MdmXTRycs0PMI6TgR/87jmxzdVFERWKgEA/uUZeHTkC2sD
-5V8zpf6ghz8P69W2+uKQN5GBGohZ5Ag=
-=ozbL
------END PGP SIGNATURE-----
-
---wazjs4qrv6r7qq5x--
