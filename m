@@ -1,104 +1,95 @@
-Received: from mail.aperture-lab.de (mail.aperture-lab.de [116.203.183.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A662F130ACE;
-	Wed,  6 Mar 2024 14:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.183.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BC5133425;
+	Wed,  6 Mar 2024 14:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709735048; cv=none; b=Guk2MgXcmU7ZtFHIJTQ/mWqjyYbSEzXY3Uh0N5UVSn7Fc1m7f4pIFa0l5s7TbLFIrjdypI7AuzIFcPZfuZ5vXHobwkqJfZ2w6GiJqKYuX1BoHy7OfrlD1uINMUXhcG9du4LKdj5cTAf+MB+bfW+XQtE3oBl8A8JFOh6K/i4vNxA=
+	t=1709735049; cv=none; b=lGQu9jE7jNIkU8e7GQitz6eIKA4Kk5PX79ukQRCWMZCTli72WZUHvLQgzrpprZ7zDH65J29DxU4t9IPE2pNcrrIlp7UC6eJFIwig8sbdLRj3zqYwGD8faGSKs5mwIbSukKop3wq3lHhth/XgZtqmnUpEaIFy9bmb7VcAjI6BG98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709735048; c=relaxed/simple;
-	bh=qJ4gjt253xxum5utg91XBCGmUOduxiyObpAmLwXzzHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BTrZxFeRlaLEvdly3bgBGFv20KFzYmVNF/w90hdQ7PZnZFOp65brtGc8hxfngHEaq3tV3fqwkrJScmk0xaZtkzQj0vwLfu8RaHo//cXXe8gddJIF/mNI/kMwmMrvYPVbS1s0C6toNl9E5H6O7jLCbuWt74+PYskbX7sfDcYz4TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c0d3.blue; spf=pass smtp.mailfrom=c0d3.blue; arc=none smtp.client-ip=116.203.183.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c0d3.blue
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c0d3.blue
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CC7DA419A4;
-	Wed,  6 Mar 2024 15:18:26 +0100 (CET)
-From: =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
-To: netfilter-devel@vger.kernel.org
-Cc: coreteam@netfilter.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Dietmar Maurer <dietmar@proxmox.com>,
-	Thomas Lamprecht <t.lamprecht@proxmox.com>,
-	Wolfgang Bumiller <w.bumiller@proxmox.com>,
-	Alexandre Derumier <aderumier@odiso.com>,
-	=?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
-Subject: [PATCH net] netfilter: conntrack: fix ct-state for ICMPv6 Multicast Router Discovery
-Date: Wed,  6 Mar 2024 15:18:04 +0100
-Message-ID: <20240306141805.17679-1-linus.luessing@c0d3.blue>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1709735049; c=relaxed/simple;
+	bh=NHmFvRnNMD452asVhlhHNDgJw06OaHqITdfsgJNpHh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e2ZsLwQXyJcoBGTLRv5yDCoBP9WSgUWFN6mvbK06Ln0GLxYxtJbryHxUckR8PBimeV6Z2fIuWd7wLttk/K6TucIzGaehqZDDPc9fFOfB040fe6A5zfDSerQKUjnbC+RqONF8K361V4WzmtNtymMxU9GAt+/nn7HtCwIMlVFMoFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NaiMRe/2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NaiMRe/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20741C43399;
+	Wed,  6 Mar 2024 14:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709735048;
+	bh=NHmFvRnNMD452asVhlhHNDgJw06OaHqITdfsgJNpHh4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NaiMRe/2mFh6h1S8urgy9n5GgygPUznUpk9N2V/+cQ8hjqJykFfAzwDLyx9Y0hLzf
+	 Oth1C9Esz9x9ZJKtdBkuuAoT5UUo6dCg8ag1wX6Ypa0Z7fY8O+PkUP75hQas9gOxUM
+	 7f5AH2JZ2xkZlKveKRMbN7mLeJ4agEQIao7sH5dtWyX08GxvCz2rt20D1qtlc697g7
+	 ERm2e4/EbBiBnZk3iLBPTsSZXXVjD7fqmjNcGZk6FqVyCuk1hxAYNm/ccE388K+YSO
+	 r6w41nF6E+1cdk/YaYMrD0+jdVMC5YC8vJ63ViSejSWqARljgjDomzQmfkuYvmdP4P
+	 dZwpKdKDwdMYA==
+Date: Wed, 6 Mar 2024 15:24:05 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: forbidden405@outlook.com
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] clk: set initial best mux parent to current
+ parent when determining rate
+Message-ID: <20240306-inescapable-astute-bobcat-20c3e8@houat>
+References: <20240306-mux-v2-0-92a5fa461fd2@outlook.com>
+ <20240306-mux-v2-1-92a5fa461fd2@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zf73hvuk44f6kich"
+Content-Disposition: inline
+In-Reply-To: <20240306-mux-v2-1-92a5fa461fd2@outlook.com>
 
-So far Multicast Router Advertisements and Multicast Router
-Solicitations from the Multicast Router Discovery protocol (RFC4286)
-would be marked as INVALID for IPv6, even if they are in fact intact
-and adhering to RFC4286.
 
-This broke MRA reception and by that multicast reception on
-IPv6 multicast routers in a Proxmox managed setup, where Proxmox
-would install a rule like "-m conntrack --ctstate INVALID -j DROP"
-at the top of the FORWARD chain with br-nf-call-ip6tables enabled
-by default.
+--zf73hvuk44f6kich
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Similar to as it's done for MLDv1, MLDv2 and IPv6 Neighbor Discovery
-already, fix this issue by excluding MRD from connection tracking
-handling as MRD always uses predefined multicast destinations
-for its messages, too. This changes the ct-state for ICMPv6 MRD messages
-from INVALID to UNTRACKED.
+Hi,
 
-This issue was found and fixed with the help of the mrdisc tool
-(https://github.com/troglobit/mrdisc).
+On Wed, Mar 06, 2024 at 12:22:23AM +0800, Yang Xiwen via B4 Relay wrote:
+> From: Yang Xiwen <forbidden405@outlook.com>
+>=20
+> Originally, the initial clock rate is hardcoded to 0, this can lead to
+> some problem when setting a very small rate with CLK_MUX_ROUND_CLOSEST.
+>=20
+> For example, if the lowest possible rate provided by the mux is 1000Hz,
+> setting a rate below 500Hz will fail, because no clock can provide a
+> better rate than the non-existant 0Hz. But it should succeed with 1000Hz
+> being set.
+>=20
+> Setting the initial best parent to current parent could solve this bug.
+>=20
+> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
----
- include/uapi/linux/icmpv6.h               | 1 +
- net/netfilter/nf_conntrack_proto_icmpv6.c | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+That patch makes sense to me, but this changes the behaviour of the functio=
+n.
 
-diff --git a/include/uapi/linux/icmpv6.h b/include/uapi/linux/icmpv6.h
-index ecaece3af38d..4eaab89e2856 100644
---- a/include/uapi/linux/icmpv6.h
-+++ b/include/uapi/linux/icmpv6.h
-@@ -112,6 +112,7 @@ struct icmp6hdr {
- #define ICMPV6_MOBILE_PREFIX_ADV	147
- 
- #define ICMPV6_MRDISC_ADV		151
-+#define ICMPV6_MRDISC_SOL		152
- 
- #define ICMPV6_MSG_MAX          255
- 
-diff --git a/net/netfilter/nf_conntrack_proto_icmpv6.c b/net/netfilter/nf_conntrack_proto_icmpv6.c
-index 1020d67600a9..327b8059025d 100644
---- a/net/netfilter/nf_conntrack_proto_icmpv6.c
-+++ b/net/netfilter/nf_conntrack_proto_icmpv6.c
-@@ -62,7 +62,9 @@ static const u_int8_t noct_valid_new[] = {
- 	[NDISC_ROUTER_ADVERTISEMENT - 130] = 1,
- 	[NDISC_NEIGHBOUR_SOLICITATION - 130] = 1,
- 	[NDISC_NEIGHBOUR_ADVERTISEMENT - 130] = 1,
--	[ICMPV6_MLD2_REPORT - 130] = 1
-+	[ICMPV6_MLD2_REPORT - 130] = 1,
-+	[ICMPV6_MRDISC_ADV - 130] = 1,
-+	[ICMPV6_MRDISC_SOL - 130] = 1
- };
- 
- bool nf_conntrack_invert_icmpv6_tuple(struct nf_conntrack_tuple *tuple,
--- 
-2.43.0
+Before, if we couldn't find a good configuration for the rate, we were
+error'ing out. Now, we keep the current configuration. We should
+document the new behaviour in the function documentation, and we should
+probably run that through kernelci to make sure we aren't breaking any
+platform (and from experience, we probably are).
 
+Maxime
+
+--zf73hvuk44f6kich
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZeh8hQAKCRDj7w1vZxhR
+xYFUAQC64cGB/6QatYSjC3DnlztHH8x/x6LsjJUpD5B/vIbvVAEAmQ+PxbQ+4VTJ
+iPySZ72xkzqMzdCHaGE2dgv/wYd63gk=
+=+nPB
+-----END PGP SIGNATURE-----
+
+--zf73hvuk44f6kich--
