@@ -1,128 +1,159 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37B0134403;
-	Wed,  6 Mar 2024 15:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C6460912;
+	Wed,  6 Mar 2024 15:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709740594; cv=none; b=lRAVOWgvARLrE7pAiZ+Xak0z0anBCPPVe7M5IWKTIiUbfBMEWa2s8FJjGDDIqrcOemrRuUHt6x//W5r0/THTXFQrT+Z15+ERh91OCOsUFZvi7q6LvdDy3svWkmvj5MqVXr9PZR8wMxDRiyyhKZ+6sumzLBhLCq7Y7BH9vOGcMmA=
+	t=1709740621; cv=none; b=FNbQJgz2dVLIbhozGAK2rVbiNFE7Wy2jDLc79e6mgJfQxdow06WtftK0E3tVNc3f8zhkHOXZeZzgN6NUBym3Wrpr5kiOZ+EyQEmAtNShRnFbLuwVh3U2JCqvw3htDT9uu0J9TLT3O6K3Ad2jNxW0gwCaFs/h6oNI79zxntN3miM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709740594; c=relaxed/simple;
-	bh=Oz32/wMDNQyZ+GUkfWFCbi2LxQFupaz1KvZmM94gXOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IXjPYZqClXtRRz8PTNBO0kqIW22K+pFRgtn3h3WRH5Vzzui94pH/KUSM4io0q/UYH/BJMFrfUyIdfvqxxceEIySInjsp5t0oqCLFih4D7ERUNEAUxVjjD5xGsBMASVVdQ8O2Dsck3EGGHYwU2zqXAnpRp9GNzKTRRkARdvWNMLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dBfwpnqe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dBfwpnqe"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 426EOGkS023083;
-	Wed, 6 Mar 2024 15:54:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ckAyNtrP5c4f3cs2RoVpKPD8Gp7l9mit7Cq+JM89jOM=; b=dB
-	fwpnqesnlFVMUVteGHjp5KaK3Zrkg/rc6lB4t+xBIcfO2Y/pnWHd4NU49X3OE9uk
-	dtK0u8xDZHxmTzu0T4wCFJ0Iqh6Cy4LU7yTLHYXfbOzu85oQ/Lsmx1Bkd2caYIwt
-	upNff4oqQyh2AoABRYw32m+Rc9/gB/HRBqZJjYN7Tf873h67slwWMIjlpgLugdnB
-	2/JI/ycvZ2ZAaRznLscQ+e+A7fIwnpWcxMxwsBH3/3g1L8i+j5zvNcT+DesiEQ6e
-	IDpFWP+o4JBFg4SIyPTR6CjfUUf0AM0YE/ANV+1fPTpoR6L3jHiNPxY6HTDyCjWM
-	ZBQK1tDgk1AmvJJgrKvQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpjy3s619-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 15:54:53 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 426Fsq4e011446
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 6 Mar 2024 15:54:52 GMT
-Received: from [10.110.86.150] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 6 Mar
- 2024 07:54:51 -0800
-Message-ID: <0b9923a3-e9d9-40ba-8acd-a916785df769@quicinc.com>
-Date: Wed, 6 Mar 2024 07:54:50 -0800
+	s=arc-20240116; t=1709740621; c=relaxed/simple;
+	bh=4tghISU+9PtSjWtX/KooJvAfp+afRTcd2Wim7+281EQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V3fnhn+SqQpRPkCjVpcJk7kKElfpovxu33CdVAQJWT500Dpd5VPSseM4T7eJ3LfSrGWtxXd5+Gzl6uFjlKAs3i9VGnXo/0rFSToiAT6Fw+xLtgU7gnI1CeRPo/hbl3InZRhNsvXhO64u+d0kY04ifh3PdX6sgyeAMQQZPupY3Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-220ce420472so1347446fac.1;
+        Wed, 06 Mar 2024 07:56:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709740619; x=1710345419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rRuYu3pgVDn4yl5odBwmAdoeGMF5J7JUGXQ//zks9Lo=;
+        b=caIkFuJjjXDO/al/axSusjbPiXmNNt3mzhGkUieoiXW90xWxq0v/0W4pKvI2xfUQRM
+         a7YOFhY6kd2MM+3+NoDaVLgbSKaxXp4+eMveJLzae5phMVGBbgstmYUuDUvWh48da8jl
+         x8MOjDFepXKxQXs4DXjRt10wz5zczX/XeUE6buQZTjVIdPVDRWuds8aI2JjaU2Id1Zf8
+         v6r5N/TvY3Pxhhwna0Uj9Momr7AOcggC+hHdIOqX7FcgSEmKGsDDZhEXPzs9VJkabcjv
+         YRbBShnhkblHMXs498jj53GpeLbFaGxwzEcYkg+PtjPZPab2Yr5QCPO91KETeZC6Y03i
+         bjWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2T2/rJcCyAMW3lFrqSlJ6aK8MN8aUqRIu7CDisTdZZyItHdpfyO+l99n7bf9rR+cl5Smx649y2fXnwzd52XyyUu43/mpZsj0RegLuRhlB2sOqsDzqS4S/FXG8KKv3AGW/ppe+DsrDsiJEG6Z4v4QlH361jFzLIHJLdTD+2NhJAw==
+X-Gm-Message-State: AOJu0YyF3NvROZjWzy/q6GkfQeLoa64NEaQB7naVxrCWzVpJY+n8I1P3
+	wH1gQ1LFEWTZ6ktQqiMD3alGTMy7waMsNYu5TXsSEQHKXsbK+UxwdDN60u240/3rDffc1+uqtj8
+	YloACJiYIHU84iKAu7bt86VecMhI=
+X-Google-Smtp-Source: AGHT+IEsBZ3LiBc38I6NvmS8TqLDiRTOWQTra2Xy4MwzY0sHI3hzoucfdrgc0TI/rKjp4G4ZH/bvtO8MllvCteIq4ac=
+X-Received: by 2002:a05:6870:d681:b0:21e:ad52:3029 with SMTP id
+ z1-20020a056870d68100b0021ead523029mr4049265oap.0.1709740619125; Wed, 06 Mar
+ 2024 07:56:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] ssb: Fix potential NULL pointer dereference in
- ssb_device_uevent
-Content-Language: en-US
-To: Rand Deeb <rand.sec96@gmail.com>, Michael Buesch <m@bues.ch>,
-        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <kvalo@kernel.org>, <deeb.rand@confident.ru>,
-        <lvc-project@linuxtesting.org>, <voskresenski.stanislav@confident.ru>,
-        <khoroshilov@ispras.ru>
-References: <20240306123028.164155-1-rand.sec96@gmail.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240306123028.164155-1-rand.sec96@gmail.com>
+References: <20240306085007.169771-1-herve.codina@bootlin.com>
+ <20240306085007.169771-2-herve.codina@bootlin.com> <CAJZ5v0gENrBFfJ3FDJ=m0-veFbue_Bw168+k2cs7v2u9MtCT8Q@mail.gmail.com>
+ <20240306162447.2a843a11@bootlin.com>
+In-Reply-To: <20240306162447.2a843a11@bootlin.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 6 Mar 2024 16:56:47 +0100
+Message-ID: <CAJZ5v0hYxhoLEEJ=MXPNFWpp7bidx_832RdOAgzx4m=aM0YzXg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] driver core: Introduce device_link_wait_removal()
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Saravana Kannan <saravanak@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, 
+	Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: qQz6YbctqTfkH_2NapHeEo43O1Xy55CE
-X-Proofpoint-ORIG-GUID: qQz6YbctqTfkH_2NapHeEo43O1Xy55CE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_10,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 mlxlogscore=683
- suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0 spamscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403060128
+Content-Transfer-Encoding: quoted-printable
 
-On 3/6/2024 4:30 AM, Rand Deeb wrote:
-> The ssb_device_uevent function first attempts to convert the 'dev' pointer
-> to 'struct ssb_device *'. However, it mistakenly dereferences 'dev' before
-> performing the NULL check, potentially leading to a NULL pointer
-> dereference if 'dev' is NULL.
-> 
-> To fix this issue, this patch moves the NULL check before dereferencing the
+On Wed, Mar 6, 2024 at 4:24=E2=80=AFPM Herve Codina <herve.codina@bootlin.c=
+om> wrote:
+>
+> Hi Rafael,
+>
+> On Wed, 6 Mar 2024 13:48:37 +0100
+> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+>
+> > On Wed, Mar 6, 2024 at 9:51=E2=80=AFAM Herve Codina <herve.codina@bootl=
+in.com> wrote:
+> > >
+> > > The commit 80dd33cf72d1 ("drivers: base: Fix device link removal")
+> > > introduces a workqueue to release the consumer and supplier devices u=
+sed
+> > > in the devlink.
+> > > In the job queued, devices are release and in turn, when all the
+> > > references to these devices are dropped, the release function of the
+> > > device itself is called.
+> > >
+> > > Nothing is present to provide some synchronisation with this workqueu=
+e
+> > > in order to ensure that all ongoing releasing operations are done and
+> > > so, some other operations can be started safely.
+> > >
+> > > For instance, in the following sequence:
+> > >   1) of_platform_depopulate()
+> > >   2) of_overlay_remove()
+> > >
+> > > During the step 1, devices are released and related devlinks are remo=
+ved
+> > > (jobs pushed in the workqueue).
+> > > During the step 2, OF nodes are destroyed but, without any
+> > > synchronisation with devlink removal jobs, of_overlay_remove() can ra=
+ise
+> > > warnings related to missing of_node_put():
+> > >   ERROR: memory leak, expected refcount 1 instead of 2
+> > >
+> > > Indeed, the missing of_node_put() call is going to be done, too late,
+> > > from the workqueue job execution.
+> > >
+> > > Introduce device_link_wait_removal() to offer a way to synchronize
+> > > operations waiting for the end of devlink removals (i.e. end of
+> > > workqueue jobs).
+> > > Also, as a flushing operation is done on the workqueue, the workqueue
+> > > used is moved from a system-wide workqueue to a local one.
+> > >
+> > > Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
+> >
+> > No, it is not fixed by this patch.
+>
+> Was explicitly asked by Saravana on v1 review:
+> https://lore.kernel.org/linux-kernel/CAGETcx9uP86EHyKJNifBMd23oCsA+KpMa+e=
+36wJEEnHDve+Avg@mail.gmail.com/
 
-see
-<https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes>
+Well, I don't think this is a valid request, sorry.
 
-"Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
-instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy to
-do frotz", as if you are giving orders to the codebase to change its
-behaviour."
+> The commit 80dd33cf72d1 introduces the workqueue and so some asynchronous=
+ tasks
+> on removal.
+> This patch and the next one allows to re-sync execution waiting for jobs =
+in
+> the workqueue when it is needed.
 
-so please use imperative mood: s/this patch moves/move/
+I get this, but still, this particular individual patch by itself
+doesn't fix anything.  Do you agree with this?
 
-> 'dev' pointer, ensuring that the pointer is valid before attempting to use
-> it.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
-> ---
->  drivers/ssb/main.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ssb/main.c b/drivers/ssb/main.c
-> index b9934b9c2d70..070a99a4180c 100644
-> --- a/drivers/ssb/main.c
-> +++ b/drivers/ssb/main.c
-> @@ -341,11 +341,13 @@ static int ssb_bus_match(struct device *dev, struct device_driver *drv)
->  
->  static int ssb_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
->  {
-> -	const struct ssb_device *ssb_dev = dev_to_ssb_dev(dev);
-> +	const struct ssb_device *ssb_dev;
->  
->  	if (!dev)
->  		return -ENODEV;
->  
-> +	ssb_dev = dev_to_ssb_dev(dev);
-> +
->  	return add_uevent_var(env,
->  			     "MODALIAS=ssb:v%04Xid%04Xrev%02X",
->  			     ssb_dev->id.vendor, ssb_dev->id.coreid,
+If somebody applies this patch without the next one in the series,
+they will not get any change in behavior, so the tag is at least
+misleading.
 
+You can claim that the next patch on top of this one fixes things, so
+adding a Fixes tag to the other patch would be fine.
+
+There is an explicit dependency between them (the second patch is not
+even applicable without the first one, or if it is, the resulting code
+won't compile anyway), but you can make a note to the maintainer that
+they need to go to -stable together.
+
+> >
+> > In fact, the only possibly observable effect of this patch is the
+> > failure when the allocation of device_link_wq fails AFAICS.
+> >
+> > > Cc: stable@vger.kernel.org
+> >
+> > So why?
+>
+> Cc:stable is needed as this patch is a prerequisite of patch 2 (needed
+> to fix the asynchronous workqueue task issue).
+
+Dependencies like this can be expressed in "Cc: stable" tags.
+Personally, I'd do it like this:
+
+Cc: stable@vger.kernel.org # 5.13: Depends on the first patch in the series
