@@ -1,371 +1,438 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BBA17FE;
-	Wed,  6 Mar 2024 00:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08555139D
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 00:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709685114; cv=none; b=V4hPQRWSOtMU3MMcNFPKCNy5zE5mz0MuQWHzYIINvMenY/QXkFcJdsMFL+TZ0jBwIQDTDSZlvDq7NKJxNcwTD6vpqOgqEI/JC7NZxE3fdt9F1BmqjMJsVY5N0p5Uo5bQTJZg2/PK6+vt/HI7hNk/LnOCeMh087MEXpd1nb2dS6Q=
+	t=1709685185; cv=none; b=bt1MAoAriZoLmJYY2Xf2cFJAoFQYxWYnV3NwQLja1C6SLLpwquKOqmWoj30vxZoxE6LYjo7zPdluWw4K9phODXQxid4nY1S/nb/Td65/QVJ0yU2pj1nrME4brZ/TaE4qrdSuflqMSwaylvx0TJYoywAiWqv6Kg7ZWZLerfT3mcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709685114; c=relaxed/simple;
-	bh=24USGJX+5HF6cawBeR9czfYQyxzFeE3QhwPNVojCdDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iauv+uFSaDCzUc8Sdj0n2ynONT+tZlBcSEZvEpM2H9QjSq5f4C3K2f8oKEmAj5f3UgYZaN3KPpAS9/JoTFVeFgy/SMdfkBoaNWHA6j22iNup0qDgwJqZ9nK7JOjIf9/TF9WXuTgVpMSwLCcO9+GFWKqkFjTP1cASHrVebiLCrjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gwi2a6x5; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709685185; c=relaxed/simple;
+	bh=CSFXV2L5fXt997UjPiPcy7wlrK2/a6AmHhunEEDQRpY=;
+	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
+	 Date:Cc:References:To; b=bi1DSRXnz8607TYEL9GaSn25nThPzlpau7PBpCrkv/duxUafRw+PIMjHqG7SNT5lhRTSNc4y0gVuRqWRZTPBWMfAy8MFKK/OvU7Y5+bCigvAVnQ1Yia85FJ0DqhTx7eodm6npy+vD2vQqvkYKdb+O0T7QJ6OKgPrEwF34N2eeIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=fbRR/pNg; arc=none smtp.client-ip=203.205.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gwi2a6x5"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6900f479e3cso12185086d6.0;
-        Tue, 05 Mar 2024 16:31:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709685111; x=1710289911; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OOWW1k3nbZI9PWQkTL2cUnlaYitkHwiDsbTXRc6mNMA=;
-        b=Gwi2a6x5FJrCCM5y+zq75Lpx/eRAOSMpyi0fBhWEAw0YJ/bvqV7L9sil2elhstuNk7
-         3L8QomOkc58E7sQJLaIQMs29nxBjSHwmV0Aj0YexrCr3vwXa/vj21jcnC1CA5qBKCZ/h
-         v7T24Cd6u/xtX4pruISptODwyX5LhjIXoONaz6KWvhs1WB131hyaNl106k+Rqu7oAinB
-         vCtoRgL1+Olt/Kcg0e3BFd/l47oryfC+EaNJHMP8G8BOpSRaHTK7ps+lvV4EeRJX+3UN
-         3WKPqgNmPU4EAUA4mIot84YJ04lkQ3avCOR4PxYBBCFAo0N8MGlqyDwqRNCewVh8a0D/
-         vZJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709685111; x=1710289911;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OOWW1k3nbZI9PWQkTL2cUnlaYitkHwiDsbTXRc6mNMA=;
-        b=b4bjpJoptAQvXGzia9XgcRd58n/Rn/DkrOVBsikxsrRmCwPHm3VlD0tUu5GwZ02zSG
-         Z56JERoW+dAdATFEwkAyQ/vfvdAHByISjkNReGxhCj0cluw+h0qWDmO9kaxfXH/90uBn
-         34cA3UH/jF2xNV2ZBn7a82knMeGdGTWv61w55cX+GLqNYFqXRiVfIGtz6RVvQEOrOx+k
-         3m+F9AX2XOnqLR/EvjxVJ+9aCXs3xmKhabJJTD0wPBa2pSLBKnnhdXwyHwHSoztcsW3g
-         Rtn6kI6R2p5JRQW0jkk9gFdbMlZaDY/jVOFX93J+/OtywGg90bIU/rv4HxLD7cyR20xb
-         HaSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQdiC4kQDAq39SLx/aDeyKW9HewMzsIJ+wJvLnWvdVElv/F5cZAATr21SY/Hgy98PlAAUjHEOMU7x7lganlbIRIa9w8Dz6Y5CJcllP
-X-Gm-Message-State: AOJu0YwIEhu5mTAzcSjF6YdTKKa4WUEVwVonN/hJ/lHLLycQFFw6h7Hv
-	5gjk3LLv3F0tPxDYJfwYIbVKDPjbBgq7DXWIDBq34aXmW+jFRp3YUdbXle02
-X-Google-Smtp-Source: AGHT+IFJm+E4vhBGmtmnCUYA6zBfSR6TCcGNW1Sd/rWZJf6cUH0dF8ONpDxaDdYsCVLqwMJ/+//iEQ==
-X-Received: by 2002:a0c:fa4d:0:b0:690:644c:ed8b with SMTP id k13-20020a0cfa4d000000b00690644ced8bmr3773197qvo.37.1709685111564;
-        Tue, 05 Mar 2024 16:31:51 -0800 (PST)
-Received: from localhost ([2601:8c:502:14f0:acdd:1182:de4a:7f88])
-        by smtp.gmail.com with ESMTPSA id on7-20020a056214448700b0068f9b20fb0bsm6737364qvb.100.2024.03.05.16.31.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 16:31:51 -0800 (PST)
-Date: Tue, 5 Mar 2024 14:31:48 -0500
-From: Oliver Crumrine <ozlinuxc@gmail.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
-Message-ID: <7ubz52rfdl2i76sotvd3s4thv6jvbfao6zct3sywqus2owlvkx@wpbeqqdvipo4>
-References: <hxiq3upwxs3j5mc5arwlx4jriqm7fq5z54wroc4h4kqcq4gq7m@uwnoq2vnkhup>
- <ZeXzuWVmC9AnsECt@debian>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="fbRR/pNg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709685179; bh=x4EPX/unzZFoeIl3jLbRWqFEmfzubh3lbLQvLYdUtMI=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=fbRR/pNgDB0xMOBBV6jVc6ovXs2m2LtxhpBkuqjVgkPsJ9YqNplt8l/1AzZgtEHIN
+	 vE5u3S+FuB6CVKLcr2CISkIYlCZ1Juhup5QtOOJDffEKZS2N/pFAE2+fwfBmniXyEj
+	 UTcY2KbkFad+GJpkEKnSR7PgIM6EjJh3fS1ts6nA=
+Received: from smtpclient.apple ([2001:da8:c800:d084:c97e:f65d:9c20:e57a])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id 7EE87496; Wed, 06 Mar 2024 08:31:46 +0800
+X-QQ-mid: xmsmtpt1709685106t34dcha83
+Message-ID: <tencent_67A3156E708C4B8856E3399F8F6085B69206@qq.com>
+X-QQ-XMAILINFO: M1rD3f8svNznan3rGAt6euGEVlBzkTGlrfqYMs8WFHKyxzZmsi8tf/64e+h9TJ
+	 E9xMhj6GKYByjkfdNB4+0Hq5lt31dBQYwGYuuqVhQ3oMInKPdY8h2JIKKXaA8THohCitLllO1UDs
+	 1LoRpJ9Yt6ONuZEQ3WeiT8hVOizIGamP3d+dfNdm+Pz+8HJrUpNrLMjzBjMkRmuYiNgXwPBbnenp
+	 4Erki+B6MQGyJ77VoZ3a2XOFoLNdXhxg/sTyXr84P7AlZPrl+SVLDUkiJrj6yTqOH+gDMaYD19ax
+	 KO8hboLElvOCRDczDTZ+iYJI9O13XpHxZAx4fhyTtlINEsbQ7yKy7f9tqCMeqiPO1KG7tKeXrb7K
+	 lwtpgMFhQ5UDvZrjdTiFwr2ebbDBPJXpntq5LIQwaJW4mRAdwG+ZTnYyO6Wp3B8lYInpe4g/Og2G
+	 E5Vz3z73LWDqCeDYqKWdNWwuv9Iie6nTiKyZTmsI295lg2D5HGftc3QCmeI9bVDoie5Z08C+W47p
+	 rU1gcPwAV2eTbKSs7nv53T4W8O+mS+5Zw08sWLMTEBtN6BEU6lZxN7DJA58PPZ/47glAaA+nvz7v
+	 tpFWFr7q5gp+6rR1KdEzmAf42QNmUZI1cvF++erHQQRQZASG93cHmQF0lAKlt6xO/1pQ7IaWXgRI
+	 BY/cRzpaBmbM2J8HTQXgVZRDFJpxpI0kiCqfC/w3f/OCiW/S7mL6/6Dr3pmrMbxwTe3NehLSeHtk
+	 cwM5dLWXEoGjdZccRk52HAj2rJ/LdBpdkijyVqMCsefA6jdg0tXVY6q3ILMZJDKIrqGP+nWnql3U
+	 8H1TXf9hUfJK7x7oysVoAIIwghOw+D1euz+Kne1KSF3bgB6GN4zT6icGEas2Q9AsTdwB46lIoQ2F
+	 p/QZqaRXrOSVet7rLw33Ztenk3sXFRr0rn0BAyNvH7T4mdfHB2fOROT8gI2rMvdkEQ9fvWbHXT05
+	 isXA8MEhTbpzgqJD3fSCW+rKSg2Zm5iEIOVsqdf5xHaudWlx+DJXi9WUyShwh8uRWV0U0uz8MasO
+	 3cgoeLFg==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="lrh4g4xyeypto3ql"
-Content-Disposition: inline
-In-Reply-To: <ZeXzuWVmC9AnsECt@debian>
-
-
---lrh4g4xyeypto3ql
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Mar 04, 2024 at 05:15:52PM +0100, Alejandro Colomar wrote:
-> Hi Oliver,
-> 
-> On Sat, Mar 02, 2024 at 01:19:42PM -0500, Oliver Crumrine wrote:
-> > It was not made clear in several socket options that they were not
-> > supported by SOCK_STREAM; this patch fixes that.
-> > 
-> > Socket options not supported by SOCK_STREAM are handled in the
-> > ip_cmsg_recv_offset function in net/ipv4/ip_sockglue.c. The function is
-> > called for udp sockets, and indirectly by ping and raw sockets, but not
-> > for TCP sockets, as they don't support these options.
-> > 
-> > Signed-off-by: Oliver Crumrine <ozlinuxc@gmail.com>
-> 
-> Could you write some small example programs demonstrating that these are
-> not supported?  I'd like to check it with a small program, if possible.
-> 
-> Have a lovely say!
-> Alex
-> 
-Hi Alex,
-I have attached two programs in the form of C source code below. No
-special compilation options required. To change between the three
-different socket options outlined in my patch, there are two options on
-line 16 and 18 with a comment above them explaining how to use the
-fields.
-
-Here's how to use the programs:
-0. Make sure you have netcat installed.
-1. Compile the dgram one.
-2. Run it.
-3. Run nc localhost 8888 -u (in a seperate terminal window or tab)
-4. Type whatever into netcat and press enter
-5. Observe that there is a control message recieved, and there is a byte
-printed, which is the first byte of the data in the control message.
-6. You may repeat this for the three different socket options.
-7. Repeat for the stream one, but use nc localhost 8888 (without the -u)
-for #5.
-8. Observe that there are no control messages recieved with the stream one,
-and byte is 00, which is the initial value of the variable, before it has
-a value assigned when the control messages (of which there are none) are read.
-
-Thanks,
-Oliver
-> > ---
-> >  man7/ip.7 | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/man7/ip.7 b/man7/ip.7
-> > index 2b4b06324..104e65feb 100644
-> > --- a/man7/ip.7
-> > +++ b/man7/ip.7
-> > @@ -828,6 +828,9 @@ is not zero, the primary local address of the interface specified by the
-> >  index overwrites
-> >  .I ipi_spec_dst
-> >  for the routing table lookup.
-> > +Not supported for
-> > +.B SOCK_STREAM
-> > +sockets.
-> >  .TP
-> >  .BR IP_RECVERR " (since Linux 2.2)"
-> >  .\" Precisely: since Linux 2.1.15
-> > @@ -989,6 +992,9 @@ in which the kernel returns the original destination address
-> >  of the datagram being received.
-> >  The ancillary message contains a
-> >  .IR "struct sockaddr_in" .
-> > +Not supported for
-> > +.B SOCK_STREAM
-> > +sockets.
-> >  .TP
-> >  .BR IP_RECVTOS " (since Linux 2.2)"
-> >  .\" Precisely: since Linux 2.1.68
-> > @@ -998,6 +1004,9 @@ ancillary message is passed with incoming packets.
-> >  It contains a byte which specifies the Type of Service/Precedence
-> >  field of the packet header.
-> >  Expects a boolean integer flag.
-> > +Not supported for
-> > +.B SOCK_STREAM
-> > +sockets.
-> >  .TP
-> >  .BR IP_RECVTTL " (since Linux 2.2)"
-> >  .\" Precisely: since Linux 2.1.68
-> > -- 
-> > 2.44.0
-> > 
-> 
-> -- 
-> <https://www.alejandro-colomar.es/>
-> Looking for a remote C programming job at the moment.
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
+Subject: Re: [PATCH v4 6/7] riscv: dts: add initial canmv-k230 and k230-evb
+ dts
+From: Yangyu Chen <cyy@cyyself.name>
+In-Reply-To: <CAJF2gTSWZ8j19jSXsNH=b+_dS3o8yVBYHMg_xP6BDVPduYiifg@mail.gmail.com>
+Date: Wed, 6 Mar 2024 08:31:35 +0800
+Cc: linux-riscv@lists.infradead.org,
+ Conor Dooley <conor@kernel.org>,
+ Damien Le Moal <dlemoal@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+X-OQ-MSGID: <7A3C1ADE-7FA8-47D2-8C99-98701D2DCB7F@cyyself.name>
+References: <tencent_587730262984A011834F42D0563BC6B10405@qq.com>
+ <tencent_4AA6C678842835E2F069095268533A76E20A@qq.com>
+ <CAJF2gTSWZ8j19jSXsNH=b+_dS3o8yVBYHMg_xP6BDVPduYiifg@mail.gmail.com>
+To: Guo Ren <guoren@kernel.org>
+X-Mailer: Apple Mail (2.3774.400.31)
 
 
 
---lrh4g4xyeypto3ql
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="testDgramSocketServer.c"
+> On Mar 6, 2024, at 07:55, Guo Ren <guoren@kernel.org> wrote:
+>=20
+> On Wed, Mar 6, 2024 at 3:39=E2=80=AFAM Yangyu Chen <cyy@cyyself.name> =
+wrote:
+>>=20
+>> Add initial dts for CanMV-K230 and K230-EVB powered by Canaan =
+Kendryte
+>> K230 SoC [1].
+>>=20
+>> Some key consideration:
+>> - Only place BigCore which is 1.6GHz RV64GCBV
+>>=20
+>> The existence of cache coherence between the two cores remains =
+unknown
+>> since they have dedicated L2 caches. And the factory SDK uses it for
+>> other OS by default. I don't know whether the two CPUs on K230 SoC
+>> can be used in one system. So only place BigCore here.
+>>=20
+>> Meanwhile, although docs from Canaan said 1.6GHz Core with Vector is
+>> CPU1, the csr.mhartid of this core is 0.
+>>=20
+>> - Support for "zba" "zbb" "zbc" "zbs" are tested by hand
+>>=20
+>> The user manual of C908 from T-Head does not document it =
+specifically.
+>> It just said it supports B extension V1.0-rc1. [2]
+>>=20
+>> I have tested it by using this [3] which attempts to execute =
+"add.uw",
+>> "andn", "clmulr", "bclr" and they doesn't traps on K230. But on =
+JH7110,
+>> "clmulr" and "bclr" will trap.
+>>=20
+>> - Support for "zicbom" is tested by hand
+>>=20
+>> Have tested with some out-of-tree drivers from [4] that need DMA and =
+they
+>> do not come to the dts currently.
+>>=20
+>> - Cache parameters are inferred from T-Head docs [2] and Canaan docs =
+[1]
+>>=20
+>> L1i: 32KB, VIPT 4-Way set-associative, 64B Cacheline
+> L1i: VIPT non-aliasing
 
-#include<stdio.h>	//printf
-#include<string.h> //memset
-#include<stdlib.h> //exit(0);
-#include<arpa/inet.h>
-#include<sys/socket.h>
-#include<unistd.h>
+Just wonder how 4-Way can be non-aliasing. If it is 32KB, each way =
+should
+have 8KB which is larger than the minimum page size.
 
-#define BUFLEN 1500	//Max length of buffer
-#define PORT 8888	//The port on which to listen for incoming data
+>> L1d: 32KB, VIPT 4-Way set-associative, 64B Cacheline
+> L1d is PIPT
+
+The document says L1d is VIPT. Even on the Chinese version released on
+20240218. I think that should be fixed.
+
+Link: =
+https://occ-oss-prod.oss-cn-hangzhou.aliyuncs.com/resource//1708231018770/=
+%E7%8E%84%E9%93%81C908R1S0%EF%BC%88xrvm%EF%BC%89%E7%94%A8%E6%88%B7%E6%89%8=
+B%E5%86%8C_20240218.pdf
+
+>> L2: 256KB, PIPT 16-way set-associative, 64B Cacheline
+>>=20
+>> The numbers of cache sets are calculated from these parameters.
+>>=20
+>> - MMU only supports Sv39
+>>=20
+>> Since T-Head docs [2] say C908 should support Sv48. However, it will =
+fail
+>> during the kernel probe when running Linux on K230. I also tested it =
+by
+>> hand on M-Mode software, writing Sv48 to satp.mode will not trap but =
+will
+>> leave the csr unchanged. While writing Sv39 it will take effect. It =
+shows
+>> that this CPU does not support Sv48.
+>>=20
+>> - Svpbmt and T-Head MAEE both supported
+>>=20
+>> T-Head C908 does support both Svpbmt and T-Head MAEE for page-based =
+memory
+>> attributes and is controlled by csr.mxstatus. If the kernel wants to =
+use
+>> svpbmt, the m-mode software should set BIT(21) of csr.mxstatus to =
+zero
+>> before entering the s-mode kernel. Otherwise, the kernel will not =
+boot as 0
+>> on T-Head MAEE represent to NonCachable Memory and it will lose dirty =
+cache
+>> lines modification that haven't been written back to the memory.
+>>=20
+>> [1] =
+https://developer.canaan-creative.com/k230/dev/zh/00_hardware/K230_datashe=
+et.html#chapter-1-introduction
+>> [2] =
+https://occ-intl-prod.oss-ap-southeast-1.aliyuncs.com/resource//1699268369=
+347/XuanTie-C908-UserManual.pdf
+>> [3] https://github.com/cyyself/rvb_test
+>> [4] https://github.com/cyyself/linux/tree/k230-mainline
+>>=20
+>> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+>> ---
+>> arch/riscv/boot/dts/canaan/Makefile       |   2 +
+>> arch/riscv/boot/dts/canaan/k230-canmv.dts |  24 ++++
+>> arch/riscv/boot/dts/canaan/k230-evb.dts   |  24 ++++
+>> arch/riscv/boot/dts/canaan/k230.dtsi      | 140 =
+++++++++++++++++++++++
+>> 4 files changed, 190 insertions(+)
+>> create mode 100644 arch/riscv/boot/dts/canaan/k230-canmv.dts
+>> create mode 100644 arch/riscv/boot/dts/canaan/k230-evb.dts
+>> create mode 100644 arch/riscv/boot/dts/canaan/k230.dtsi
+>>=20
+>> diff --git a/arch/riscv/boot/dts/canaan/Makefile =
+b/arch/riscv/boot/dts/canaan/Makefile
+>> index 987d1f0c41f0..7d54ea5c6f3d 100644
+>> --- a/arch/riscv/boot/dts/canaan/Makefile
+>> +++ b/arch/riscv/boot/dts/canaan/Makefile
+>> @@ -1,6 +1,8 @@
+>> # SPDX-License-Identifier: GPL-2.0
+>> dtb-$(CONFIG_ARCH_CANAAN) +=3D canaan_kd233.dtb
+>> dtb-$(CONFIG_ARCH_CANAAN) +=3D k210_generic.dtb
+>> +dtb-$(CONFIG_ARCH_CANAAN) +=3D k230-canmv.dtb
+>> +dtb-$(CONFIG_ARCH_CANAAN) +=3D k230-evb.dtb
+>> dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_bit.dtb
+>> dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_dock.dtb
+>> dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_go.dtb
+>> diff --git a/arch/riscv/boot/dts/canaan/k230-canmv.dts =
+b/arch/riscv/boot/dts/canaan/k230-canmv.dts
+>> new file mode 100644
+>> index 000000000000..3ab5c8de11a8
+>> --- /dev/null
+>> +++ b/arch/riscv/boot/dts/canaan/k230-canmv.dts
+>> @@ -0,0 +1,24 @@
+>> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+>> +/*
+>> + * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
+>> + */
+>> +
+>> +#include "k230.dtsi"
+>> +
+>> +/ {
+>> +       model =3D "Canaan CanMV-K230";
+>> +       compatible =3D "canaan,canmv-k230", "canaan,kendryte-k230";
+>> +
+>> +       chosen {
+>> +               stdout-path =3D "serial0:115200n8";
+>> +       };
+>> +
+>> +       ddr: memory@0 {
+>> +               device_type =3D "memory";
+>> +               reg =3D <0x0 0x0 0x0 0x1fdff000>;
+>> +       };
+>> +};
+>> +
+>> +&uart0 {
+>> +       status =3D "okay";
+>> +};
+>> diff --git a/arch/riscv/boot/dts/canaan/k230-evb.dts =
+b/arch/riscv/boot/dts/canaan/k230-evb.dts
+>> new file mode 100644
+>> index 000000000000..42720113c566
+>> --- /dev/null
+>> +++ b/arch/riscv/boot/dts/canaan/k230-evb.dts
+>> @@ -0,0 +1,24 @@
+>> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+>> +/*
+>> + * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
+>> + */
+>> +
+>> +#include "k230.dtsi"
+>> +
+>> +/ {
+>> +       model =3D "Kendryte K230 EVB";
+>> +       compatible =3D "canaan,k230-usip-lp3-evb", =
+"canaan,kendryte-k230";
+>> +
+>> +       chosen {
+>> +               stdout-path =3D "serial0:115200n8";
+>> +       };
+>> +
+>> +       ddr: memory@0 {
+>> +               device_type =3D "memory";
+>> +               reg =3D <0x0 0x0 0x0 0x1fdff000>;
+>> +       };
+>> +};
+>> +
+>> +&uart0 {
+>> +       status =3D "okay";
+>> +};
+>> diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi =
+b/arch/riscv/boot/dts/canaan/k230.dtsi
+>> new file mode 100644
+>> index 000000000000..0bcff67b78a8
+>> --- /dev/null
+>> +++ b/arch/riscv/boot/dts/canaan/k230.dtsi
+>> @@ -0,0 +1,140 @@
+>> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+>> +/*
+>> + * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +/dts-v1/;
+>> +/ {
+>> +       #address-cells =3D <2>;
+>> +       #size-cells =3D <2>;
+>> +       compatible =3D "canaan,kendryte-k230";
+>> +
+>> +       aliases {
+>> +               serial0 =3D &uart0;
+>> +       };
+>> +
+>> +       cpus {
+>> +               #address-cells =3D <1>;
+>> +               #size-cells =3D <0>;
+>> +               timebase-frequency =3D <27000000>;
+>> +
+>> +               cpu@0 {
+>> +                       compatible =3D "thead,c908", "riscv";
+>> +                       device_type =3D "cpu";
+>> +                       reg =3D <0>;
+>> +                       riscv,isa =3D =
+"rv64imafdcv_zba_zbb_zbc_zbs_zicbom_svpbmt";
+>> +                       riscv,isa-base =3D "rv64i";
+>> +                       riscv,isa-extensions =3D "i", "m", "a", "f", =
+"d", "c", "v", "zba", "zbb",
+>> +                                              "zbc", "zbs", =
+"zicbom", "zicntr", "zicsr",
+>> +                                              "zifencei", "zihpm", =
+"svpbmt";
+> If we use "isa-base + isa-extensions," why shall we keep riscv,isa?
+> It's a little bit of a duplicate.
+>=20
+
+The mainline OpenSBI can not parse riscv,isa-extensions now. So keep it
+for better compatibility.
+
+>> +                       riscv,cbom-block-size =3D <64>;
+>> +                       d-cache-block-size =3D <64>;
+>> +                       d-cache-sets =3D <128>;
+>> +                       d-cache-size =3D <32768>;
+>> +                       i-cache-block-size =3D <64>;
+>> +                       i-cache-sets =3D <128>;
+>> +                       i-cache-size =3D <32768>;
+>> +                       next-level-cache =3D <&l2_cache>;
+>> +                       mmu-type =3D "riscv,sv39";
+>> +
+>> +                       cpu0_intc: interrupt-controller {
+>> +                               compatible =3D "riscv,cpu-intc";
+>> +                               interrupt-controller;
+>> +                               #interrupt-cells =3D <1>;
+>> +                       };
+>> +               };
+>> +
+>> +               l2_cache: l2-cache {
+>> +                       compatible =3D "cache";
+>> +                       cache-block-size =3D <64>;
+>> +                       cache-level =3D <2>;
+>> +                       cache-size =3D <262144>;
+>> +                       cache-sets =3D <256>;
+>> +                       cache-unified;
+>> +               };
+>> +       };
+>> +
+>> +       apb_clk: apb-clk-clock {
+>> +               compatible =3D "fixed-clock";
+>> +               clock-frequency =3D <50000000>;
+>> +               clock-output-names =3D "apb_clk";
+>> +               #clock-cells =3D <0>;
+>> +       };
+>> +
+>> +       soc {
+>> +               compatible =3D "simple-bus";
+>> +               interrupt-parent =3D <&plic>;
+>> +               #address-cells =3D <2>;
+>> +               #size-cells =3D <2>;
+>> +               dma-noncoherent;
+>> +               ranges;
+>> +
+>> +               plic: interrupt-controller@f00000000 {
+>> +                       compatible =3D "canaan,k230-plic" =
+,"thead,c900-plic";
+>> +                       reg =3D <0xf 0x00000000 0x0 0x04000000>;
+>> +                       interrupts-extended =3D <&cpu0_intc 11>, =
+<&cpu0_intc 9>;
+>> +                       interrupt-controller;
+>> +                       #address-cells =3D <0>;
+>> +                       #interrupt-cells =3D <2>;
+>> +                       riscv,ndev =3D <208>;
+>> +               };
+>> +
+>> +               clint: timer@f04000000 {
+>> +                       compatible =3D "canaan,k230-clint", =
+"thead,c900-clint";
+>> +                       reg =3D <0xf 0x04000000 0x0 0x04000000>;
+>> +                       interrupts-extended =3D <&cpu0_intc 3>, =
+<&cpu0_intc 7>;
+>> +               };
+>> +
+>> +               uart0: serial@91400000 {
+>> +                       compatible =3D "snps,dw-apb-uart";
+>> +                       reg =3D <0x0 0x91400000 0x0 0x1000>;
+>> +                       clocks =3D <&apb_clk>;
+>> +                       interrupts =3D <16 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       reg-io-width =3D <4>;
+>> +                       reg-shift =3D <2>;
+>> +                       status =3D "disabled";
+>> +               };
+>> +
+>> +               uart1: serial@91401000 {
+>> +                       compatible =3D "snps,dw-apb-uart";
+>> +                       reg =3D <0x0 0x91401000 0x0 0x1000>;
+>> +                       clocks =3D <&apb_clk>;
+>> +                       interrupts =3D <17 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       reg-io-width =3D <4>;
+>> +                       reg-shift =3D <2>;
+>> +                       status =3D "disabled";
+>> +               };
+>> +
+>> +               uart2: serial@91402000 {
+>> +                       compatible =3D "snps,dw-apb-uart";
+>> +                       reg =3D <0x0 0x91402000 0x0 0x1000>;
+>> +                       clocks =3D <&apb_clk>;
+>> +                       interrupts =3D <18 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       reg-io-width =3D <4>;
+>> +                       reg-shift =3D <2>;
+>> +                       status =3D "disabled";
+>> +               };
+>> +
+>> +               uart3: serial@91403000 {
+>> +                       compatible =3D "snps,dw-apb-uart";
+>> +                       reg =3D <0x0 0x91403000 0x0 0x1000>;
+>> +                       clocks =3D <&apb_clk>;
+>> +                       interrupts =3D <19 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       reg-io-width =3D <4>;
+>> +                       reg-shift =3D <2>;
+>> +                       status =3D "disabled";
+>> +               };
+>> +
+>> +               uart4: serial@91404000 {
+>> +                       compatible =3D "snps,dw-apb-uart";
+>> +                       reg =3D <0x0 0x91404000 0x0 0x1000>;
+>> +                       clocks =3D <&apb_clk>;
+>> +                       interrupts =3D <20 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       reg-io-width =3D <4>;
+>> +                       reg-shift =3D <2>;
+>> +                       status =3D "disabled";
+>> +               };
+>> +       };
+>> +};
+>> --
+>> 2.43.0
+>>=20
+>=20
+>=20
+> --=20
+> Best Regards
+> Guo Ren
 
 
-//Hi Alex,
-//These are the two lines that allow you to switch between the three socket options outlined in my patch
-//The socket options tell the kernel to add a control message (cmsg), allowing the program
-//to recieve the data it is requesting. The three options are: IP_RECVTOS for the type of service byte,
-//IP_RECVORIGDSTADDR for the orignial dst address, and IP_PKTINFO for some random packet info.
-#define SOCKOPT IP_RECVORIGDSTADDR
-//This field is synonymous with the above one. Valid options are: IP_TOS, IP_ORIGDSTADDR, and IP_PKTINFO
-#define RECIVEOPTION IP_ORIGDSTADDR
-
-void die(char *s)
-{
-	perror(s);
-	exit(1);
-}
-
-int main(void)
-{
-	struct sockaddr_in si_me, si_other;
-	
-	int s, i, slen = sizeof(si_other) , recv_len;
-	char buf[BUFLEN];
-	
-	if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-	{
-		die("socket");
-	}
-	
-	memset((char *) &si_me, 0, sizeof(si_me));
-	
-	si_me.sin_family = AF_INET;
-	si_me.sin_port = htons(PORT);
-	si_me.sin_addr.s_addr = htonl(INADDR_ANY);
-	
-	if( bind(s , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
-	{
-		die("bind");
-	}
-	int yes = 1;
-	if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) != 0){
-		die("setsockopt");
-	}
-	while(1)
-	{
-		struct msghdr mhdr;
-		struct iovec iov[1];
-		struct cmsghdr *cmhdr;
-		char control[1000];
-		char databuf[1500];
-		unsigned char tos = 0;
-		
-		mhdr.msg_name = &si_me;
-		mhdr.msg_namelen = sizeof(si_me);
-		mhdr.msg_iov = iov;
-		mhdr.msg_iovlen = 1;
-		mhdr.msg_control = &control;
-		mhdr.msg_controllen = sizeof(control);
-		iov[0].iov_base = databuf;
-		iov[0].iov_len = sizeof(databuf);
-		memset(databuf, 0, sizeof(databuf));	
-		fflush(stdout);
-		
-		//this is blocking
-		if ((recv_len = recvmsg(s, &mhdr, 0)) == -1)
-		{
-			die("recvfrom()");
-		}
-		cmhdr = CMSG_FIRSTHDR(&mhdr);
-		while (cmhdr) {
-			printf("cmsg recieved\n");
-    		    if (cmhdr->cmsg_level == IPPROTO_IP && cmhdr->cmsg_type == RECIVEOPTION) {
-    		        //read the byte recieved
-			    tos = ((unsigned char *)CMSG_DATA(cmhdr))[0];
-    		    }
-    		    cmhdr = CMSG_NXTHDR(&mhdr, cmhdr);
-    		}
-		//print out the data recieved as a hex byte
-    		printf("data read: %sbyte = %02X\n", databuf, tos); 	
-		
-	}
-
-	close(s);
-	return 0;
-}
-
---lrh4g4xyeypto3ql
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="testStreamSocketServer.c"
-
-#include<stdio.h>	//printf
-#include<string.h> //memset
-#include<stdlib.h> //exit(0);
-#include<arpa/inet.h>
-#include<sys/socket.h>
-#include<unistd.h>
-
-#define BUFLEN 1500	//Max length of buffer
-#define PORT 8888	//The port on which to listen for incoming data
-
-//Hi Alex,
-//These are the two lines that allow you to switch between the three socket options outlined in my patch
-//The socket options tell the kernel to add a control message (cmsg), allowing the program
-//to recieve the data it is requesting. The three options are: IP_RECVTOS for the type of service byte,
-//IP_RECVORIGDSTADDR for the orignial dst address, and IP_PKTINFO for some random packet info.
-#define SOCKOPT IP_RECVORIGDSTADDR
-//This field is synonymous with the above one. Valid options are: IP_TOS, IP_ORIGDSTADDR, and IP_PKTINFO
-#define RECIVEOPTION IP_ORIGDSTADDR
-
-void die(char *s)
-{
-	perror(s);
-	exit(1);
-}
-
-int main(void)
-{
-	struct sockaddr_in si_me, si_other;
-	
-	int s, i, slen = sizeof(si_other) , recv_len;
-	char buf[BUFLEN];
-	
-	if ((s=socket(AF_INET, SOCK_STREAM, 0)) == -1)
-	{
-		die("socket");
-	}
-	
-	memset((char *) &si_me, 0, sizeof(si_me));
-	
-	si_me.sin_family = AF_INET;
-	si_me.sin_port = htons(PORT);
-	si_me.sin_addr.s_addr = htonl(INADDR_ANY);
-	
-	if( bind(s , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
-	{
-		die("bind");
-	}
-	listen(s, 10);
-	while(1)
-	{
-		int connectedfd = accept(s, (struct sockaddr*)NULL, NULL);
-		int yes = 1;                                                     	
-		if(setsockopt(connectedfd, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) != 0){
-			die("setsockopt");
-		}
-
-		
-		
-		struct msghdr mhdr;
-		struct iovec iov[1];
-		struct cmsghdr *cmhdr;
-		char control[1000];
-		char databuf[1500];
-		unsigned char tos = 0;
-		
-		mhdr.msg_name = &si_me;
-		mhdr.msg_namelen = sizeof(si_me);
-		mhdr.msg_iov = iov;
-		mhdr.msg_iovlen = 1;
-		mhdr.msg_control = &control;
-		mhdr.msg_controllen = sizeof(control);
-		iov[0].iov_base = databuf;
-		iov[0].iov_len = sizeof(databuf);
-		memset(databuf, 0, sizeof(databuf));	
-		fflush(stdout);
-		
-		//this is blocking
-		if ((recv_len = recvmsg(connectedfd, &mhdr, 0)) == -1)
-		{
-			die("recvfrom()");
-		}
-		cmhdr = CMSG_FIRSTHDR(&mhdr);
-		while (cmhdr) {
-			printf("cmsg recieved \n");
-    		    if (cmhdr->cmsg_level == IPPROTO_IP && cmhdr->cmsg_type == RECIVEOPTION) {
-    		        //read the byte recieved
-			    tos = ((unsigned char *)CMSG_DATA(cmhdr))[0];
-    		    }
-    		    cmhdr = CMSG_NXTHDR(&mhdr, cmhdr);
-    		}
-		//print out the data recieved as a hex byte
-    		printf("data read: %sbyte = %02X\n", databuf, tos); 	
-		close(connectedfd);	
-	}
-
-	close(s);
-	return 0;
-}
-
---lrh4g4xyeypto3ql--
