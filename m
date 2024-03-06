@@ -1,150 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D8017F5;
-	Wed,  6 Mar 2024 02:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06E1D51D
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 02:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709692880; cv=none; b=fp7npuZBso7474uaNpJI4y6dECu9WvVHKDZpsz6HRpBT3fva0VqHRxVKLL+9Z6Iqzf1Xc3fVRqxKiEk29flrV1XV0YwzmmRWmDGWH8VgzN6A+a8Lijt+5pbuvb7vYeQxSAoeJHrmLG9tBmiN+CIL+eY0bLDmhtuLhr5jCAVFZc8=
+	t=1709692973; cv=none; b=mdSvP+au+Ygu3Dw+yqIQqKzaQiGMLxeM75s/ReX5XHcXdIyqEBokBUkhvLgnxsqJtf1UsaFHXMW+Als/QaQiZU5oXGSaLT+d/xgicko/cuJCXNbwVd0uayJP6LHYGpL3BrojviRQXW7UYBZMLbM4kAxCB/i5uM0Rbop3QBrs6a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709692880; c=relaxed/simple;
-	bh=foxpAO3zNvBtAsxiTI5xgxbfm6Fwoz5RnfFjuTvze4g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Xmb5bZ3LUWLc8Pa5fj58w4uplbUwb9CZzjMD7HICob8Fjf8XJ3bJQg1A6oNDglziCpEMG4MKRhmlgMNMmhvsp9KubW8nLd08TTuvpT3IEucEMUS1agAdCwdVkS7AjWddVXt4RhDdB3H03mMPtIoO8rmcYGJYoXxydyp5fCzY8YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UjDBfmY0; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709692973; c=relaxed/simple;
+	bh=NvDvKdXSBfFKBtLGn84e/ck4Kn9xC15K+wg1+/TVvIE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l9jdUOHRGkb90yjXzXMQecL83CcB0Df9JaRpnlj3gcDRhFPA3jN/6XcSK88la0O+pihvpJtDWSKNn2Im76c12zlQK97SvXSChdew9IlKDTLE+cfxXb1ey0hgz/V8DiLuIDsPwcXAKaO+4+bWkQLltyjWogzz3YDYbObVzJuG0YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZFNSeEi6; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjDBfmY0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709692876; x=1741228876;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=foxpAO3zNvBtAsxiTI5xgxbfm6Fwoz5RnfFjuTvze4g=;
-  b=UjDBfmY0CXKDs0f90jt0UHSnKepwNLLrzFuq4uVQMyvQDiSOuUgUPr43
-   5LKPAilHJlPNavls26o3I+Z+jYH9d4EAay303QgPiO+Y+5q4CFDZ851wp
-   zmBdIn1IhFsA6uUmItIBxgw6NrQ8h2tkHUZeJHfJK68akijfcSU7OusHk
-   l2BAXNxb9mc7/2M8I75q/r+QY8TTFRfeqaqFvNYbTdfIJ7TOcAwec3/DP
-   8s2K9Pp9MRKeNi7j3hPXWe5rZ4tDrW7j0VnBrafw6gSJeYAVk4R2hpVyG
-   vYZL8vm2Ds8gvxl9d18s/FHihwy0hl6aQCQLv8xE+O16jXkqnHMeZxENh
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4397680"
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="4397680"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 18:41:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="14156593"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 18:41:12 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org,  stable@vger.kernel.org
-Subject: Re: [PATCH v1] mm: swap: Fix race between free_swap_and_cache() and
- swapoff()
-In-Reply-To: <017414bc-78cd-4aa1-9edf-6ce947b9e4e4@redhat.com> (David
-	Hildenbrand's message of "Tue, 5 Mar 2024 23:05:11 +0100")
-References: <20240305151349.3781428-1-ryan.roberts@arm.com>
-	<cb738797-77d9-4e20-a54c-f70385cdbd95@redhat.com>
-	<8989df79-84f5-488c-bd74-c11d2241eff1@arm.com>
-	<017414bc-78cd-4aa1-9edf-6ce947b9e4e4@redhat.com>
-Date: Wed, 06 Mar 2024 10:39:18 +0800
-Message-ID: <87a5nc84o9.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZFNSeEi6"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a45b6fcd5e8so32165966b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 18:42:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709692969; x=1710297769; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x2WY4uFfSORqsxmoN252fMsc5YpGsXMNwoTLggkrkUc=;
+        b=ZFNSeEi6fJz1DxapDerPDO0oc3CCjhA4NKeWKjNh5mOF7RPy73sAJa+6d8Jl0hD4//
+         qaWfnGJDRztzQdE2ONgL48DEla3ykgVII3xlYaOzktBdXeecXIwEZVtg6/f6zcJSbyCX
+         +v2Pw8/EdMIoYJEAWnRtEM5Wsg6PMFK7cK+8MTNNuip90TSqu4T/KUDQbN7knCo4jkU6
+         XxmEhZhJtc0Xv79ozueLyCX+rP7eVEN6JxHPfclD5yooPfLL0R/mf0co4iPW0Kp4nVuU
+         0bn1Ttic5qrtTyM+vhJn3yWOo08SQZQt7OWKODQd9eXY3FFWNQ28hjWU0UeuyvPQb3qp
+         LS6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709692969; x=1710297769;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x2WY4uFfSORqsxmoN252fMsc5YpGsXMNwoTLggkrkUc=;
+        b=Ag4SkbBmUujdC9A+RV/YQ3k0SuO3X1QlVSm5Cxsdj/Sagq8bTbhzVKIfcv/YCy3bgn
+         y7Y3x0MXnu8BBStE29YWiESV8jRUYvuyOIVdVwdYNXCOz1LD26/P9J6DJEEqeSprEjhd
+         lQlvNdtymawSiMvj0T0H9mytfyzujpE8O+tH5kw5sb3MEgkflluV2077sUcC0jVQScnA
+         wzf6S4+puMCQpz6JBYTZ1ehvWtmK6tHSZfujEpRQ1l8Vddmrd3e2Whm6GLWPo+vxM/aN
+         XTlU9jHz70Ak/GGPRByaDGKCIO2rDEzciX2OSLQIXC+gE+N/o7fv2E7U1blapgAmAwNV
+         rXFA==
+X-Forwarded-Encrypted: i=1; AJvYcCW86G/WaTM02fpOsUqwp9kQig1j/8BKlzzN9KQNazMZEgaSM6EOH1PTMMUV1nm1vAg0mAz0LjheyngeOBZ2203r23rJ5HYY9A1HADDy
+X-Gm-Message-State: AOJu0YxnOuy54UiOCRCAvlXXjDQf2WKRhCVyBFBug5A+8gY85jK7ztKP
+	Nbw6EUHQhNwan8DF7i2Ip8GI4evVRaZtmIsbb/Lv16C5gis2jC8p/BvEZhOMasXjYnxC3JEFkgC
+	gpUDY3PjqQB96I2H4F8RJDcl4Fycnp+0NscTa
+X-Google-Smtp-Source: AGHT+IE0p4dMKmBQEWPN97sZRzFoRZYkkR6K2Lqxx/MoMEWGX+2miy2Ao5l4zesUpz9uL42402ZTwWMCpTdHvKmmsvU=
+X-Received: by 2002:a17:906:2417:b0:a45:ad5d:98ac with SMTP id
+ z23-20020a170906241700b00a45ad5d98acmr1779500eja.44.1709692968869; Tue, 05
+ Mar 2024 18:42:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-10-almasrymina@google.com> <383c4870-167f-4123-bbf3-928db1463e01@davidwei.uk>
+In-Reply-To: <383c4870-167f-4123-bbf3-928db1463e01@davidwei.uk>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 5 Mar 2024 18:42:35 -0800
+Message-ID: <CAHS8izP_PzDJVxycwZe_d_x10-SX4=Q-CWpKTjoOQ5dc2NSn3w@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v6 09/15] memory-provider: dmabuf devmem
+ memory provider
+To: David Wei <dw@davidwei.uk>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-David Hildenbrand <david@redhat.com> writes:
+On Tue, Mar 5, 2024 at 6:28=E2=80=AFPM David Wei <dw@davidwei.uk> wrote:
+>
+> On 2024-03-04 18:01, Mina Almasry wrote:
+> > +     if (pool->p.queue)
+> > +             binding =3D READ_ONCE(pool->p.queue->binding);
+> > +
+> > +     if (binding) {
+> > +             pool->mp_ops =3D &dmabuf_devmem_ops;
+> > +             pool->mp_priv =3D binding;
+> > +     }
+>
+> This is specific to TCP devmem. For ZC Rx we will need something more
+> generic to let us pass our own memory provider backend down to the page
+> pool.
+>
+> What about storing ops and priv void ptr in struct netdev_rx_queue
+> instead? Then we can both use it.
 
-> On 05.03.24 17:33, Ryan Roberts wrote:
->> On 05/03/2024 15:50, David Hildenbrand wrote:
->>> On 05.03.24 16:13, Ryan Roberts wrote:
->>>> There was previously a theoretical window where swapoff() could run and
->>>> teardown a swap_info_struct while a call to free_swap_and_cache() was
->>>> running in another thread. This could cause, amongst other bad
->>>> possibilities, swap_page_trans_huge_swapped() (called by
->>>> free_swap_and_cache()) to access the freed memory for swap_map.
->>>>
->>>> This is a theoretical problem and I haven't been able to provoke it from
->>>> a test case. But there has been agreement based on code review that this
->>>> is possible (see link below).
->>>>
->>>> Fix it by using get_swap_device()/put_swap_device(), which will stall
->>>> swapoff(). There was an extra check in _swap_info_get() to confirm that
->>>> the swap entry was valid. This wasn't present in get_swap_device() so
->>>> I've added it. I couldn't find any existing get_swap_device() call sites
->>>> where this extra check would cause any false alarms.
->>>>
->>>> Details of how to provoke one possible issue (thanks to David Hilenbrand
->>>> for deriving this):
->>>
->>> Almost
->>>
->>> "s/Hilenbrand/Hildenbrand/" :)
->> 
->> Ahh sorry... I even explicitly checked it against your name on emails... fat
->> fingers...
->
-> No need to be sorry. Even your average German person would get it wrong,
-> because there are other (more common) variants :)
->
-> [...]
->
->>>>
->>>
->>> LGTM
->>>
->>> Are you planning on sending a doc extension for get_swap_device()?
->> 
->> I saw your comment:
->> 
->> We should likely update the documentation of get_swap_device(), that after
->> decrementing the refcount, the SI might become stale and should not be touched
->> without a prior get_swap_device().
->> 
->> But when I went to make the changes, I saw the documentation already said:
->> 
->> ...we need to enclose all swap related functions with get_swap_device() and
->> put_swap_device()... Notice that swapoff ... can still happen before the
->> percpu_ref_tryget_live() in get_swap_device() or after the percpu_ref_put() in
->> put_swap_device()... The caller must be prepared for that.
->> 
->> I thought that already covered it? I'm sure as usual, I've misunderstood your
->> point. Happy to respin if you have something in mind?
->
-> No need to respin, we could clarify on top, if we decide it makes sense.
->
-> I was thinking about something like this, making it clearer that the PTL
-> discussion above does not express the corner case we discovered:
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 2b3a2d85e350b..646a436581eee 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1232,6 +1232,11 @@ static unsigned char __swap_entry_free_locked(struct swap_info_struct *p,
->    * with get_swap_device() and put_swap_device(), unless the swap
->    * functions call get/put_swap_device() by themselves.
->    *
-> + * Note that when only holding the PTL, swapoff might succeed immediately
-> + * after freeing a swap entry. Therefore, immediately after
-> + * __swap_entry_free(), the swap info might become stale and should not
-> + * be touched without a prior get_swap_device().
-> + *
->    * Check whether swap entry is valid in the swap device.  If so,
->    * return pointer to swap_info_struct, and keep the swap entry valid
->    * via preventing the swap device from being swapoff, until
+Yes, this is dmabuf specific, I was thinking you'd define your own
+member of netdev_rx_queue, and then add something like this to
+page_pool_init:
 
-LGTM.  Thanks!
++       if (pool->p.queue)
++               io_uring_metadata =3D READ_ONCE(pool->p.queue->io_uring_met=
+adata);
++
++       /* We don't support rx-queues that are configured for both
+io_uring & dmabuf binding */
++       BUG_ON(io_uring_metadata && binding);
++
++       if (io_uring_metadata) {
++               pool->mp_ops =3D &io_uring_ops;
++               pool->mp_priv =3D io_uring_metadata;
++       }
 
---
-Best Regards,
-Huang, Ying
+I.e., we share the pool->mp_ops and the pool->mp_priv but we don't
+really need to share the same netdev_rx_queue member. For me it's a
+dma-buf specific data structure (netdev_dmabuf_binding) and for you
+it's something else.
+
+page_pool_init() probably needs to validate that the queue is
+configured for dma-buf or io_uring but not both. If it's configured
+for both then the user is doing something funky we shouldn't support.
+
+Perhaps I can make the intention clearer by renaming 'binding' to
+something more specific to dma-buf like queue->dmabuf_binding, to make
+it clear that this is the dma-buf binding and not some other binding
+like io_uring?
+
+--=20
+Thanks,
+Mina
