@@ -1,35 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61926137921;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC2B13B7BD;
 	Wed,  6 Mar 2024 16:58:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709744340; cv=none; b=nChNfiuUIBMfyi1qHHsp8VOxlKH9km7UDCbXReBAl112BNNOS2NM270yWrjYqHYN3uFHwrV89+EG1S0TttI6ofJELRoN6T3VG28zCiafplB63RFxpKK1OThyEhFIqCllX4ajamFyUM+7UPyl8O47Gs+CSijAvY1ZQwz/QlVxqzI=
+	t=1709744340; cv=none; b=RMGI7XqhA2nKcflWEM/JLTtssV6KePvcBcqzU7eMunQGd+9UCQ4R0M61+02Gnq0d1Mz4MxiLkkgzmeuKJ6qi2bRvTlmPfsmK9DxHW+seSTFcnBhdWskV1JZTMoESxxo3VDR6TpLq4VX5R+IulwwhhbHK55e8p92Io76ffp7sprg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709744340; c=relaxed/simple;
-	bh=7KcwAx8GomKY81dwdLlPImImGc1QY46ZYt5n12Z+btk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=anpmbO2fPD8Smsg0TQ6DQljOy5o/pXboynLzB5WV6XM2l7g5lpnm8Y14W2yuzcDQR3zVzB5IROVGeakEfVs4toRHxCzQ3YvgyIT1E3gKafukUQoFLIJ9d8eLRJ3jiT3TQUNM/chxrKx5OxQ/yDyoh94GGApQGRFji03uKLn2SKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=aUXi9APT; arc=none smtp.client-ip=193.104.135.124
+	bh=pULFdc99bT3kGEpnmoQAhimYHSPZ/ND5NNhVMP7CCsw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K6EAyTNSdVFMbHGe8VX69/FL8aOdeHvAokQJ0GvY4LJq8J2yeTSJmlKrCqXhlxnZUrRLI8YqVfdae6ATxfHQD1/uCXEOW7Z7WJIbK6WUxXEpHeQ7hnG/S2ywiVR7koFqxtlciSCt61P5NzebOpeJK0Az/fmH8+Gde5GNYLFKy7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=h9Vju3EQ; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="aUXi9APT"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="h9Vju3EQ"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 041CC60311;
-	Wed,  6 Mar 2024 16:58:55 +0000 (UTC)
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 3A0496030D;
+	Wed,  6 Mar 2024 16:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1709744335;
-	bh=7KcwAx8GomKY81dwdLlPImImGc1QY46ZYt5n12Z+btk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aUXi9APTa+3aMxCc+bghaMIHksFhAiOf+0Q44BI032sdjEFsMhOAyzOH1z4mw3NYq
-	 S5AysNk3v+sJoNEH10usqETy2TYf2WRzOGfeKhKAHOIfcavZLnYdPOu22lepbIGkKg
-	 Hqxgxiq421HAiVP8SFS3mp7MZdxJxIMTdIZcsBxAUI2afGLSv2/P0Bn8ZtH6v/Q1bV
-	 Wzk18copaP/LGRTPESOt2sJ93H7vZebw3PZIR6St2IdPIOV0HRx3iD1MOVtDZ0OH5T
-	 YuIuo1DkYwjQ/e2n2ugHXqp4e5O/L/Q/TQwOx387Yel+it+goJTwNgLPVZXUpYCjCk
-	 JpCB60+05UDyA==
+	s=202008; t=1709744330;
+	bh=pULFdc99bT3kGEpnmoQAhimYHSPZ/ND5NNhVMP7CCsw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=h9Vju3EQfOt6JdPYLHlJJ3quowNMNibzAbJvtjjidydjEeajM06yFf26QThTbmuM7
+	 k+eFkrKxae03FnTzCE/ahfF8hj4yZOq0fiLIW8ycDUc7Fjlh+aWWsjZ7bnQ2353Xx7
+	 tdPIFZP8Um0lGyD/QzBSqzUCGuZa7x6/Kt+IAIahEPgHE+GQL3QhDzXvpBH0kEr2EJ
+	 ANHf75Qd0j+hdd0ScFu8QBmIbth3OurMifQDFUbOeU6WczkLMRugfpNOwr1sPtACdf
+	 DJ3ImdEW07vF8KF67b9rCywnKtVsruFWXwJNG/1LRV4POi4MoyLiGUTVruhEwmU3T5
+	 2xBzAaLL6jmeQ==
 Received: by x201s (Postfix, from userid 1000)
-	id 7953E201D3B; Wed,  6 Mar 2024 16:58:22 +0000 (UTC)
+	id ACF7B20376D; Wed,  6 Mar 2024 16:58:26 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: Jamal Hadi Salim <jhs@mojatatu.com>,
 	Cong Wang <xiyou.wangcong@gmail.com>,
@@ -41,10 +42,12 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	llu@fiberby.dk
-Subject: [PATCH net-next v3 0/3] make skip_sw actually skip software
-Date: Wed,  6 Mar 2024 16:58:08 +0000
-Message-ID: <20240306165813.656931-1-ast@fiberby.net>
+Subject: [PATCH net-next v3 2/3] net: sched: cls_api: add filter counter
+Date: Wed,  6 Mar 2024 16:58:10 +0000
+Message-ID: <20240306165813.656931-3-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240306165813.656931-1-ast@fiberby.net>
+References: <20240306165813.656931-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,61 +57,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Maintain a count of filters per block.
 
-During development of flower-route[1], which I
-recently presented at FOSDEM[2], I noticed that
-CPU usage, would increase the more rules I installed
-into the hardware for IP forwarding offloading.
+Counter updates are protected by cb_lock, which is
+also used to protect the offload counters.
 
-Since we use TC flower offload for the hottest
-prefixes, and leave the long tail to the normal (non-TC)
-Linux network stack for slow-path IP forwarding.
-We therefore need both the hardware and software
-datapath to perform well.
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+---
+ include/net/sch_generic.h |  2 ++
+ net/sched/cls_api.c       | 19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-I found that skip_sw rules, are quite expensive
-in the kernel datapath, since they must be evaluated
-and matched upon, before the kernel checks the
-skip_sw flag.
-
-This patchset optimizes the case where all rules
-are skip_sw, by implementing a TC bypass for these
-cases, where TC is only used as a control plane
-for the hardware path.
-
-CHanges from v2:
-- Patch 3:
-  - Fix source_inline
-  - Fix build failure, when CONFIG_NET_CLS without CONFIG_NET_CLS_ACT.
-
-Changes from v1:
-- Patch 1:
-  - Add Reviewed-By from Jiri Pirko
-- Patch 2:
-  - Move code, to avoid forward declaration (Jiri).
-- Patch 3
-  - Refactor to use a static key.
-  - Add performance data for trapping, or sending
-    a packet to a non-existent chain (as suggested by Marcelo).
-
-[1] flower-route
-    https://github.com/fiberby-dk/flower-route
-
-[2] FOSDEM talk
-    https://fosdem.org/2024/schedule/event/fosdem-2024-3337-flying-higher-hardware-offloading-with-bird/
-
-Asbjørn Sloth Tønnesen (3):
-  net: sched: cls_api: add skip_sw counter
-  net: sched: cls_api: add filter counter
-  net: sched: make skip_sw actually skip software
-
- include/net/pkt_cls.h     |  9 +++++++++
- include/net/sch_generic.h |  4 ++++
- net/core/dev.c            | 10 ++++++++++
- net/sched/cls_api.c       | 41 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 64 insertions(+)
-
+diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
+index 46a63d1818a0..7af0621db226 100644
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -427,6 +427,7 @@ struct tcf_proto {
+ 	 */
+ 	spinlock_t		lock;
+ 	bool			deleting;
++	bool			counted;
+ 	refcount_t		refcnt;
+ 	struct rcu_head		rcu;
+ 	struct hlist_node	destroy_ht_node;
+@@ -476,6 +477,7 @@ struct tcf_block {
+ 	struct flow_block flow_block;
+ 	struct list_head owner_list;
+ 	bool keep_dst;
++	atomic_t filtercnt; /* Number of filters */
+ 	atomic_t skipswcnt; /* Number of skip_sw filters */
+ 	atomic_t offloadcnt; /* Number of oddloaded filters */
+ 	unsigned int nooffloaddevcnt; /* Number of devs unable to do offload */
+diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+index 397c3d29659c..304a46ab0e0b 100644
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -410,12 +410,30 @@ static void tcf_proto_get(struct tcf_proto *tp)
+ 	refcount_inc(&tp->refcnt);
+ }
+ 
++static void tcf_block_filter_cnt_update(struct tcf_block *block, bool *counted, bool add)
++{
++	lockdep_assert_not_held(&block->cb_lock);
++
++	down_write(&block->cb_lock);
++	if (*counted != add) {
++		if (add) {
++			atomic_inc(&block->filtercnt);
++			*counted = true;
++		} else {
++			atomic_dec(&block->filtercnt);
++			*counted = false;
++		}
++	}
++	up_write(&block->cb_lock);
++}
++
+ static void tcf_chain_put(struct tcf_chain *chain);
+ 
+ static void tcf_proto_destroy(struct tcf_proto *tp, bool rtnl_held,
+ 			      bool sig_destroy, struct netlink_ext_ack *extack)
+ {
+ 	tp->ops->destroy(tp, rtnl_held, extack);
++	tcf_block_filter_cnt_update(tp->chain->block, &tp->counted, false);
+ 	if (sig_destroy)
+ 		tcf_proto_signal_destroyed(tp->chain, tp);
+ 	tcf_chain_put(tp->chain);
+@@ -2364,6 +2382,7 @@ static int tc_new_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ 	err = tp->ops->change(net, skb, tp, cl, t->tcm_handle, tca, &fh,
+ 			      flags, extack);
+ 	if (err == 0) {
++		tcf_block_filter_cnt_update(block, &tp->counted, true);
+ 		tfilter_notify(net, skb, n, tp, block, q, parent, fh,
+ 			       RTM_NEWTFILTER, false, rtnl_held, extack);
+ 		tfilter_put(tp, fh);
 -- 
 2.43.0
 
