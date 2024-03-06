@@ -1,127 +1,147 @@
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05780134721;
-	Wed,  6 Mar 2024 14:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CC3BA55
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 14:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709736510; cv=none; b=BWjAAtWZIFqjEglIy/Lr7NHCoAEZkEy/iKLQXjfeyV1fYVkCS8GI/vnBmo6owJ7z4W6A2pNTBxwFk6+7dXaHFdK2hmsaZSSOZBzd8+sk/lIYyvLXmkNpp6vXaIyS71pUMVroIdcbMn9q4MVafyn328sj4v/On/aNG78nBhiOBDM=
+	t=1709736570; cv=none; b=M3HTjEIEqM0GlXW1PwNXlPTtFiej3Na9263hLHu4d9+IiaDqPNH4GK34XzaWPl3Xp0Vwp5DtIinqHUDv+X7c4TF3QfipYBgOgpc5T3X/wDPLHqGjoqZbQOxoN7Q0KvOmPDmo5CStz/a+PgWk5RruLTmP8ICCVoHyyzd4Uh1/+Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709736510; c=relaxed/simple;
-	bh=vb9lAfGCzgdyZZPDYOO6/i/MkBRkN3itdR6S4zfZ9og=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iQkBDzzX084p7IuSIC2YsHo5zfzFSbbhwYbUpiR84m3aFB/vA3xu5vGIUiGZUQjQnLAHp7859BrHLLJbyEwblJ/NrSQ9EjCS1W7s/dhqpNeylhKc5sGbxCkRttchKoYkSpjt+EcokZT/TGRXxG3Je0w7JeV5sWdR+oS7ZJkzclY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 00348859A7;
-	Wed,  6 Mar 2024 15:40:23 +0100 (CET)
-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Wed, 06 Mar 2024 15:40:07 +0100
-Subject: [PATCH v3 2/3] dt-bindings: input: imagis: Document touch keys
+	s=arc-20240116; t=1709736570; c=relaxed/simple;
+	bh=E/D7bEgQKeR71GajlhXk0odYvLbCUjPlonCC9WxDrHk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SDiGXD1ZlWfEsXkiDbhCECSCXWwxDfSzpzHaan+5h96OWU7Ww+3KGCjsC5L1EBJjMi9yJ1Vf/UvMxL0D+iUCeNmFW3VfANkMnYs9AHpZRpqSqmLp0guENzSF5mhdctGz88ivbSqryhHmbMLm70nFXuXKL6ulhBiKmYEJm+WgRIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZzqdVYb; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZzqdVYb"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5645960cd56so2704251a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 06:49:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709736567; x=1710341367; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EAkc1OHDacbLTatYDw+lBf1IqKACMXV+5rXIO07fBAo=;
+        b=VZzqdVYb/V63yqbys0bOcjliI8CRZrxWZqrAi90cadEHMzBFcZAwNhtNjzFNds+Vb3
+         oi1vtOARalHcxHZwIEqSHoSczPH8odBn61cdyanxzYlRc7dcmBRo7qakj/eC3rUj3PNW
+         pLG71GqqPMX4Evrqr76jU43IGVBahdCi59SJZuXkET2c1Qc4B4n66GN1WZA3pMd723jA
+         Tq3YfhvsEtou3T3BEySRyEhb8AtJk1DHVA0kvT3rawr/wV8AgXzf2IWkyhgHUad5QmJA
+         BVCD5y+tRG6Fkxk+PgFpTiQk4uyQuw3DmkiO6Pu3VhDT3gtZOH9zopjC8y55JysT34UB
+         vEjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709736567; x=1710341367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EAkc1OHDacbLTatYDw+lBf1IqKACMXV+5rXIO07fBAo=;
+        b=YZ8RZqnEF/OBIgMIW2lFwA1xIygQSQ/Xxkr78Cw6K8u2DYM/k5DJeIo4JE7FJFyxVm
+         4MoSXRO4HXMi1NvVlddu/9aM9YD2TrxYAH9OYpXd85hxzNbV8Lb6OIN9wKIyKtBV0QSw
+         LLEpcRwYbjqEF8WtE+QdcI2PPRGHSrv1+W5VIo05loY+11D5ekBVn05r/SfWv5JVzQVG
+         Rfb71AGmTrf9TzSiSuPQpc8uMXVjsIi6z+1oi9YyRZW8IKo6UYgWOXh/rV2yJ2rwNcOE
+         9lVdH5h9sMCcEv/iZ8Ynd/9E97ZrMtALrjUad/WKd1MWOJU0IKKCVl1CmXarDncDNZiA
+         n5IA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeizy2GBpPzkUcHL5hvhjcBq2o/HJMAvRHVyqjCUFKP1uSEreEeNjb+szd+xo1KKrgeRoRNC3Rqi0sDv2tt0M+eRPK+UCcNybssmi4
+X-Gm-Message-State: AOJu0Yzkm7A+f+0p89dqh1YMMJRRZH70/MCoRh0R8sI2c3IS8GyBb9yb
+	AQcHffEFmGcUO12E23v8ifCT/Un4n3t4/AnwDPZUYigCVWKKC8EDuNqk/CbXkK0QaJMIcQvsnfq
+	el+bqdZkcbGsVq9ZjvBgge0Yrmjk=
+X-Google-Smtp-Source: AGHT+IGpzGXwfAEXyPE1R2p6+5ryRp3o0dtuvz8V70oDQzqGHjU35trofjh01j1cedUDehM15sSsDGsocB7kbpcnnhs=
+X-Received: by 2002:a05:6402:2151:b0:566:6a0e:7625 with SMTP id
+ bq17-20020a056402215100b005666a0e7625mr10360598edb.7.1709736567251; Wed, 06
+ Mar 2024 06:49:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240306-b4-imagis-keys-v3-2-2c429afa8420@skole.hr>
-References: <20240306-b4-imagis-keys-v3-0-2c429afa8420@skole.hr>
-In-Reply-To: <20240306-b4-imagis-keys-v3-0-2c429afa8420@skole.hr>
-To: Markuss Broks <markuss.broks@gmail.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Karel Balej <balejk@matfyz.cz>, ~postmarketos/upstreaming@lists.sr.ht, 
- phone-devel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1861;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=vb9lAfGCzgdyZZPDYOO6/i/MkBRkN3itdR6S4zfZ9og=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBl6IBOMsGu5gvZPCCrxOUcNU6lkDKeASrpyk3a8
- bJ+kKpIQ3CJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZeiATgAKCRCaEZ6wQi2W
- 4QHpD/0Xs9q3Ree2ZRF15CvMFrp4W65ui7wVR8OwxCLLxJ8rQ9fZkz2UsnfZr1Y4+EJKvypQTyM
- cW7R9Fw38PkdX7BVITCCB4mXmLCmEIoCOdRmhI4PkdBvuFaqgG4anAyrrjhmlY6lNZ+NUmI4oMp
- p6U5sXn/rieWORugLCCS08IerjrA9Pz5swhRlpAVkTwh5GEv/rDDaux7V8IQ4XQ2XHs0GiIuWbi
- K8oE7Ay9NeV4uCaHiq4VJjAdhf9sicu0cA1XaLkYKGXJWUQHL95x5a6erRClpTYPNzOCZnZzV7N
- JNv/PCrnidpoaoAm68aQTWVEfeD8bKs1/hdNqnsuZuLyb1Czm0E/TcUTe0O6L/m+bL3ozqwUjSB
- qMbkQ9b+1tJK3qX2dqi9gZ4+UKo0eVmQejpigf+COWi+sFUSYyYcm9Fsi6yrcNIv6J3quvkuGfB
- ZIErRDWqi0jzc6Cd3Uj3bd1PykY9CnHtjsTZgLabVh1qNbCq46Lq8JMM8LoSUx6wW+1baY7vpCn
- IK4MnSp5WaYwyGxGV1PG8bvNV4mERAy4g18z7j/GzdOeXF5GSIaAYcV/e1BCiqSGlKjMvrrizM6
- AbZohdcMCLFY9PqQTM69ZeEO5voaPkl/Oni5QV17sgwKp3yy5eyFHgwyrlc1k2+6TMhl1iEHxX+
- Zx0WduTMLxlmxkw==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+References: <20240227141928.1.I24ac8d51544e4624b7e9d438d95880c4283e611b@changeid>
+ <60dc7697-d7a0-4bf4-a22e-32f1bbb792c2@suse.de>
+In-Reply-To: <60dc7697-d7a0-4bf4-a22e-32f1bbb792c2@suse.de>
+From: Rob Clark <robdclark@gmail.com>
+Date: Wed, 6 Mar 2024 06:49:15 -0800
+Message-ID: <CAF6AEGs2zCP1SWPzxz4v2CU--yyEsN0+PS3dKM1nOuGyVkCpLg@mail.gmail.com>
+Subject: Re: [PATCH] drm/udl: Add ARGB8888 as a format
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, 
+	Rob Clark <robdclark@chromium.org>, Javier Martinez Canillas <javierm@redhat.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@redhat.com>, David Airlie <airlied@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, Sean Paul <sean@poorly.run>, 
+	=?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-IST3032C (and possibly some other models) has touch keys. Document this.
+On Wed, Mar 6, 2024 at 4:18=E2=80=AFAM Thomas Zimmermann <tzimmermann@suse.=
+de> wrote:
+>
+> Hi,
+>
+> sorry that I did not see the patch before.
+>
+> Am 27.02.24 um 23:19 schrieb Douglas Anderson:
+> > Even though the UDL driver converts to RGB565 internally (see
+> > pixel32_to_be16() in udl_transfer.c), it advertises XRGB8888 for
+> > compatibility. Let's add ARGB8888 to that list.
+>
+> We had a heated discussion about the emulation of color formats. It was
+> decided that XRGB8888 is the only format to support; and that's only
+> because legacy userspace sometimes expects it. Adding other formats to
+> the list should not be done easily.
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
-Changes in v3:
-- Move allOf under additionalProperties and move if under allOf
-- Properly define linux,keycodes
-- Fix linux,keycodes constraint
-- Change maximum number of keycodes to 5 in accordance with the size of
-  the key status field
+OTOH it is fixing a kernel change that broke userspace
 
-Changes in v2:
-- Allow specifying custom keycodes and document this in binding
----
- .../bindings/input/touchscreen/imagis,ist3038c.yaml   | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+> >
+> > This makes UDL devices work on ChromeOS again after commit
+> > c91acda3a380 ("drm/gem: Check for valid formats"). Prior to that
+> > commit things were "working" because we'd silently treat the ARGB8888
+> > that ChromeOS wanted as XRGB8888.
+>
+> This problem has been caused by userspace. Why can it not be fixed there?
+>
+> And udl is just one driver. Any other driver without ARGB8888, such as
+> simpledrm or ofdrm, would be affected. Do these work?
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml b/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml
-index 2af71cbcc97d..77ba280b3bdc 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml
-+++ b/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml
-@@ -9,9 +9,6 @@ title: Imagis IST30XXC family touchscreen controller
- maintainers:
-   - Markuss Broks <markuss.broks@gmail.com>
- 
--allOf:
--  - $ref: touchscreen.yaml#
--
- properties:
-   $nodename:
-     pattern: "^touchscreen@[0-9a-f]+$"
-@@ -34,6 +31,10 @@ properties:
-   vddio-supply:
-     description: Power supply regulator for the I2C bus
- 
-+  linux,keycodes:
-+    description: Keycodes for the touch keys
-+    maxItems: 5
-+
-   touchscreen-size-x: true
-   touchscreen-size-y: true
-   touchscreen-fuzz-x: true
-@@ -44,6 +45,18 @@ properties:
- 
- additionalProperties: false
- 
-+allOf:
-+  - $ref: touchscreen.yaml#
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              const: imagis,ist3032c
-+    then:
-+      properties:
-+        linux,keycodes: false
-+
- required:
-   - compatible
-   - reg
+Probably any driver where ARGB8888 is equivalent to XRGB8888 (ie.
+single primary plane, etc) should advertise both.
 
--- 
-2.44.0
+BR,
+-R
 
-
+> Best regards
+> Thomas
+>
+> >
+> > Fixes: c91acda3a380 ("drm/gem: Check for valid formats")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >   drivers/gpu/drm/udl/udl_modeset.c | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/gpu/drm/udl/udl_modeset.c b/drivers/gpu/drm/udl/ud=
+l_modeset.c
+> > index 7702359c90c2..0f8d3678770e 100644
+> > --- a/drivers/gpu/drm/udl/udl_modeset.c
+> > +++ b/drivers/gpu/drm/udl/udl_modeset.c
+> > @@ -253,6 +253,7 @@ static int udl_handle_damage(struct drm_framebuffer=
+ *fb,
+> >   static const uint32_t udl_primary_plane_formats[] =3D {
+> >       DRM_FORMAT_RGB565,
+> >       DRM_FORMAT_XRGB8888,
+> > +     DRM_FORMAT_ARGB8888,
+> >   };
+> >
+> >   static const uint64_t udl_primary_plane_fmtmods[] =3D {
+>
+> --
+> --
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Frankenstrasse 146, 90461 Nuernberg, Germany
+> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> HRB 36809 (AG Nuernberg)
+>
