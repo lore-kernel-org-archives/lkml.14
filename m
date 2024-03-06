@@ -1,203 +1,118 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19D1152DEE
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 18:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E068B14290D;
+	Wed,  6 Mar 2024 18:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709749568; cv=none; b=mt0EqZiOWm3ffFUbrUIngrZHfML8vnonEe4728VaHohsAlCOUTwomLGmLGO3vDvmf0ozpNOl4PPlTw3geovlvBemKqIgZiLmw51Tkdr9P3EWXr6iuUETLq1dHQiuedheghWMTtKfttuiCkKuodDm1x0ezt4AcsdXzxoKn19MNxo=
+	t=1709749598; cv=none; b=OBEACqQWnc8FrUvqNR/MQCot3BTAdJt0heWfe57V3RblxQdvCLYBCHOaXD4xZj/nmDPAOfa1ukJAPUCXpwcQ9h3BAnJAL46brvmc68PcHw1jJXJodijl36pNi3KS5aIBbmXY4TCL6QRNK9xWxws5CmoE2jjA1KycDhPcRsn3I70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709749568; c=relaxed/simple;
-	bh=WZ9Wfhph9SqMvpwjpOilQz7uq5chx2Sd29yINS9foKA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Mkp/IDqtm+PpN7YcncxIzXM2z2bW942UerJcTtWjmztmPN87eZscuDeUNGFVT9qRt4JeXpAISJx5ulDFUUAGCDulSRquGKGxG/dSddB9BcqEh5k2hWyYKOWH7ieYu7Sngp4XiyVzJAFVy+CdRyYgWN5ft4v95coIHG6F1UGN6ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D/UMJVvP; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D/UMJVvP"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b267bf11so8287226276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 10:26:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709749564; x=1710354364; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGhey761h+yk0goaaYaIkNpiVVUjQ3rocN1HojLD7sY=;
-        b=D/UMJVvP9HSPPg/+UMFUn2uZmSu2zF9hVOmrJ8EDa6yA8umDSMaFwniCa11IGfob6+
-         pPTYXHkvmUQZ7h5CbcIAv6z5Jc6pNpACFiOM0RanoRglnxOK2Us+/8PdMVd7VNPGpn5R
-         gEWA/O7R6ylKAL9OWCKGt56aPulT1OItTwVIqjTMjP9+CPPayXSqheN4JJYkAlh+YWpf
-         YWjsqWfjx5qQ3iirKrDcIsg76y44ErK7ViJMUMtFnB9PCUMx8lXIA1e+0+sCnVZW+Pdv
-         ZLCNBRifYQXpn7hbpYkEIZJjuiSaHX54snkLPAT8zxkbs7l/Bvf1uPpdw74AvHsWkS3N
-         vK9Q==
+	s=arc-20240116; t=1709749598; c=relaxed/simple;
+	bh=T71wY2scHtTXTP4/sl05QrepXCFVXT46YKK4DY2mUDg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XdCDr4pAK2C1xqZ9InSqR1dA3AbclCw4kUchNOp2WzPdCRf4TN74XqYmASYMaEmCLyIqIaMWiwkR1fDyiO5tO2Us4Bl3NV8LRLhpagvhLvpv1zG7LyoxGPssr18W8qOy+nf0RUyIU0mq7PjQmAJ07vfPgUhzCv757yfDy+Iq5lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso994118a12.2;
+        Wed, 06 Mar 2024 10:26:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709749564; x=1710354364;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGhey761h+yk0goaaYaIkNpiVVUjQ3rocN1HojLD7sY=;
-        b=v4kaXZni+lqaEqpEu+aKKN64YfBn5LV9/ZY2GgAcbACpe3mMSmAN0FThn5K4daR51u
-         mebK8W18s7nN5Szq0JTx5maxzfEIGHqf+cOmkma6ddIqdTMZFCSMkuRCDwSKr+/hXSUj
-         Yv0MAjTkaTzyWo6Zridg+ABfQ2T7MgfeQOmZXXrTtSUvqm+GdfQ1DL6Rfd40sF5T903q
-         7RW4DdFKul0LuPDn2jQw8YV2N/obcXgBzISD71NUB1jQMJcVR0rhKMrKX4nl3viJbXPE
-         PqBTae3SerMFF3Vp6W1g8HYlB42HGZMscExiVi5qjX44TQYzNNAaJU4tQEyJSBrnOCqm
-         Eexg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4zpZbw7T2XCCaq48U4/IK5W+/tcUb4SAkroUH6UVVHpRcynrxF5pZqBoSq9OpH07l58/IDoptF9Gbtq4U6u1rrKzUpD28M5OVGY4j
-X-Gm-Message-State: AOJu0YzInNgXISe0Eqt3Uc/GwBPNFPYAxydq+I6mV8NRmjiIjWIMSdRY
-	LUI/iCcSWdY8/TCMwpqKwqIA84FayjXLnZc6CQtT8FYJ4Q89UHT7VKzDzv5t9nNvaqfVHoZs1sr
-	XTg==
-X-Google-Smtp-Source: AGHT+IGSwvnidbX0/rOv0INS3he6frJgJB+IsYvN52GAPjMVdVuwPoKCHiyeHTzcN2rL9OOwKUgSVjL4/4I=
-X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:85f0:e3db:db05:85e2])
- (user=surenb job=sendgmr) by 2002:a25:2fc1:0:b0:dc6:ebd4:cca2 with SMTP id
- v184-20020a252fc1000000b00dc6ebd4cca2mr528159ybv.11.1709749563843; Wed, 06
- Mar 2024 10:26:03 -0800 (PST)
-Date: Wed,  6 Mar 2024 10:24:35 -0800
-In-Reply-To: <20240306182440.2003814-1-surenb@google.com>
+        d=1e100.net; s=20230601; t=1709749596; x=1710354396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h9R6qqm0g/+E63vqpNrdKfjU08hftBk5a0rLrgW5krU=;
+        b=s5tZGIscCF40KeW5U+6wRzxDhXiBnmnRNdu6FNJf9nEKDrMEkK1nvah3z9/btcUhoQ
+         w40CAkok0ZOIsExAHf0Pbbivh+nJqpqJinnhetYdrgc5pzPXm2unBVzuy+zM6NaODM0L
+         PCAG8l7Rb3vSEg/9a/4VzDESa654T4qga8ZIxprd664S+MoVEsQcO2yvDK4keINI2swQ
+         jvUecKFfL/dhJ84Kv1ZIktGe41JzRnlJ/jyCIimetm2IVlNi9z4P5rpmNSiQuLX6tt6d
+         BDLaYpwL7YYyXUHSGVgkcxusEkPsDRBu3Fjh2urXpNaIFcPoHXA8ZZAPkL4v9mhv4LlU
+         e8mA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8CMKUkxVVDGLOasIRNNoU5+11bU5GKSumY1ak6p04I7WouzXcPOXYHlA0sJG3Nu1Mw0rgDogTo7hKrZ9mifLHjzutO6k95eb1maakUHYUB+0jgHAVQFzHfhtz2JUkJanKGxxN1UvwU5ePQwLvLg==
+X-Gm-Message-State: AOJu0Yxs/FBga9babKTJ1Bggx2bUv75gorwgv72IbVtJtUUMlpS5Gi1f
+	OhA2RXC5EpcQl1FH38S4CnPeHSKlGuFsvR/W27QUjGXtw8fVodVr0KBdPGZ5RrG/zdsNVgyHuGF
+	IlT1VfHPHmYhu2ZA1aKrHUffPR7Q=
+X-Google-Smtp-Source: AGHT+IH7yeQ6EPQb5Dz9tV6ssROlhefmL/NLrrsFoEA04BJ4KF6ZRvT5NZoQ/7OSNL/fsMcn0GLg9I+a0XenK+g0PEA=
+X-Received: by 2002:a17:90b:892:b0:299:5401:89d2 with SMTP id
+ bj18-20020a17090b089200b00299540189d2mr12323738pjb.45.1709749596082; Wed, 06
+ Mar 2024 10:26:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240306182440.2003814-1-surenb@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <20240306182440.2003814-38-surenb@google.com>
-Subject: [PATCH v5 37/37] memprofiling: Documentation
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
-	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org, 
-	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
-	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, 
-	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
-	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
-	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
-	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, 
-	rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
-	surenb@google.com, kernel-team@android.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
+MIME-Version: 1.0
+References: <20240304230815.1440583-1-namhyung@kernel.org>
+In-Reply-To: <20240304230815.1440583-1-namhyung@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 6 Mar 2024 10:26:24 -0800
+Message-ID: <CAM9d7chkbcV14PtjhretGLkhUh2mF7sGx9Y0fvG3kZE8aUqpeg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf annotate: Improve memory usage for symbol histogram
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Andi Kleen <ak@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kent Overstreet <kent.overstreet@linux.dev>
+Hi Arnaldo,
 
-Provide documentation for memory allocation profiling.
+On Mon, Mar 4, 2024 at 3:08=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hello,
+>
+> This is another series of memory optimization in perf annotate.
+>
+> v2 changes:
+>  * fix a bug when offset is bigger than 16 bits
 
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
----
- Documentation/mm/allocation-profiling.rst | 91 +++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/mm/allocation-profiling.rst
+Are you ok with this now?
 
-diff --git a/Documentation/mm/allocation-profiling.rst b/Documentation/mm/allocation-profiling.rst
-new file mode 100644
-index 000000000000..8a862c7d3aab
---- /dev/null
-+++ b/Documentation/mm/allocation-profiling.rst
-@@ -0,0 +1,91 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===========================
-+MEMORY ALLOCATION PROFILING
-+===========================
-+
-+Low overhead (suitable for production) accounting of all memory allocations,
-+tracked by file and line number.
-+
-+Usage:
-+kconfig options:
-+ - CONFIG_MEM_ALLOC_PROFILING
-+ - CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
-+ - CONFIG_MEM_ALLOC_PROFILING_DEBUG
-+   adds warnings for allocations that weren't accounted because of a
-+   missing annotation
-+
-+Boot parameter:
-+  sysctl.vm.mem_profiling=0|1|never
-+
-+  When set to "never", memory allocation profiling overheads is minimized and it
-+  cannot be enabled at runtime (sysctl becomes read-only).
-+  When CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=y, default value is "1".
-+  When CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=n, default value is "never".
-+
-+sysctl:
-+  /proc/sys/vm/mem_profiling
-+
-+Runtime info:
-+  /proc/allocinfo
-+
-+Example output:
-+  root@moria-kvm:~# sort -g /proc/allocinfo|tail|numfmt --to=iec
-+        2.8M    22648 fs/kernfs/dir.c:615 func:__kernfs_new_node
-+        3.8M      953 mm/memory.c:4214 func:alloc_anon_folio
-+        4.0M     1010 drivers/staging/ctagmod/ctagmod.c:20 [ctagmod] func:ctagmod_start
-+        4.1M        4 net/netfilter/nf_conntrack_core.c:2567 func:nf_ct_alloc_hashtable
-+        6.0M     1532 mm/filemap.c:1919 func:__filemap_get_folio
-+        8.8M     2785 kernel/fork.c:307 func:alloc_thread_stack_node
-+         13M      234 block/blk-mq.c:3421 func:blk_mq_alloc_rqs
-+         14M     3520 mm/mm_init.c:2530 func:alloc_large_system_hash
-+         15M     3656 mm/readahead.c:247 func:page_cache_ra_unbounded
-+         55M     4887 mm/slub.c:2259 func:alloc_slab_page
-+        122M    31168 mm/page_ext.c:270 func:alloc_page_ext
-+===================
-+Theory of operation
-+===================
-+
-+Memory allocation profiling builds off of code tagging, which is a library for
-+declaring static structs (that typcially describe a file and line number in
-+some way, hence code tagging) and then finding and operating on them at runtime
-+- i.e. iterating over them to print them in debugfs/procfs.
-+
-+To add accounting for an allocation call, we replace it with a macro
-+invocation, alloc_hooks(), that
-+ - declares a code tag
-+ - stashes a pointer to it in task_struct
-+ - calls the real allocation function
-+ - and finally, restores the task_struct alloc tag pointer to its previous value.
-+
-+This allows for alloc_hooks() calls to be nested, with the most recent one
-+taking effect. This is important for allocations internal to the mm/ code that
-+do not properly belong to the outer allocation context and should be counted
-+separately: for example, slab object extension vectors, or when the slab
-+allocates pages from the page allocator.
-+
-+Thus, proper usage requires determining which function in an allocation call
-+stack should be tagged. There are many helper functions that essentially wrap
-+e.g. kmalloc() and do a little more work, then are called in multiple places;
-+we'll generally want the accounting to happen in the callers of these helpers,
-+not in the helpers themselves.
-+
-+To fix up a given helper, for example foo(), do the following:
-+ - switch its allocation call to the _noprof() version, e.g. kmalloc_noprof()
-+ - rename it to foo_noprof()
-+ - define a macro version of foo() like so:
-+   #define foo(...) alloc_hooks(foo_noprof(__VA_ARGS__))
-+
-+It's also possible to stash a pointer to an alloc tag in your own data structures.
-+
-+Do this when you're implementing a generic data structure that does allocations
-+"on behalf of" some other code - for example, the rhashtable code. This way,
-+instead of seeing a large line in /proc/allocinfo for rhashtable.c, we can
-+break it out by rhashtable type.
-+
-+To do so:
-+ - Hook your data structure's init function, like any other allocation function
-+ - Within your init function, use the convenience macro alloc_tag_record() to
-+   record alloc tag in your data structure.
-+ - Then, use the following form for your allocations:
-+   alloc_hooks_tag(ht->your_saved_tag, kmalloc_noprof(...))
--- 
-2.44.0.278.ge034bb2e1d-goog
+Thanks,
+Namhyung
 
+>
+>
+> When perf annotate (or perf report/top with TUI) processes samples, it
+> needs to save the sample period (overhead) at instruction level.  For
+> now, it allocates an array to do that for the whole symbol when it
+> hits any new symbol.  This comes with a lot of waste since samples can
+> be very few and instructions span to multiple bytes.
+>
+> For example, when a sample hits symbol 'foo' that has size of 100 and
+> that's the only sample falls into the symbol.  Then it needs to
+> allocate a symbol histogram (sym_hist) and the its size would be
+>
+>   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) =3D 1616
+>
+> But actually it just needs 32 (header + sym_hist_entry) bytes.  Things
+> get worse if the symbol size is bigger (and it doesn't have many
+> samples in different places).  Also note that it needs a separate
+> histogram for each event.
+>
+> Let's split the sym_hist_entry and have it in a hash table so that it
+> can allocate only necessary entries.
+>
+> No functional change intended.
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (4):
+>   perf annotate: Add a hashmap for symbol histogram
+>   perf annotate: Calculate instruction overhead using hashmap
+>   perf annotate: Remove sym_hist.addr[] array
+>   perf annotate: Add comments in the data structures
+>
+>  tools/perf/ui/gtk/annotate.c |  14 ++++-
+>  tools/perf/util/annotate.c   | 116 ++++++++++++++++++++++-------------
+>  tools/perf/util/annotate.h   |  86 +++++++++++++++++++++++---
+>  3 files changed, 159 insertions(+), 57 deletions(-)
+>
+> --
+> 2.44.0.rc1.240.g4c46232300-goog
+>
+>
