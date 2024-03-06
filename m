@@ -1,61 +1,62 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2096.outbound.protection.partner.outlook.cn [139.219.17.96])
+Received: from SINPR02CU002.outbound.protection.outlook.com (mail-southeastasiaazon11021007.outbound.protection.outlook.com [52.101.133.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE6F5EE7B;
-	Wed,  6 Mar 2024 09:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FA45DF21;
+	Wed,  6 Mar 2024 09:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.133.7
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709717710; cv=fail; b=p6EDsA+ExbpXGp1vADhLDtOqn+93UMi7O18AjortqS6g8ZbK7/6mVLxLCww4dXgawsgCP41d/UwpLjxbW26GOzEcA7++i8N3zXdJVIOFfvjip3nL7cKmzuHVLw7kiDAun3/BZM2jWwXMQKiEle9mqfiHXN4nZYjMVbYEyJ1eTxQ=
+	t=1709717750; cv=fail; b=ZTgm4ngZ+hsF8D+n1B8Zpz2m0Iq9E6QRAJY82+5K3Jfs0482UuQFKynaOkqqEzkZGY5dSjsB0BO73G0Q7mvqcdK+qsNOH40sUtbQL9WKa7hAa1+hKkccfeg9CLQ86fXzkDr1kAVO9ffbSm7AJ7BLS1s64XBoFaLKbOpHPjxusu0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709717710; c=relaxed/simple;
-	bh=t/8lt0Pr+j3CoLNkrd0kChJLBkBwY8rlY79cPmxwmpY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lkv45F45L4N6h+8nEXW0eQNggbZu4jduJ6Wf0pGD2URz8TEQk8qVjQLHUs+Zcgnhlw8+Ws0WSV4j00rHXl02/E7xFY5U3tA9K7wGvoaGi1fGwg/qpztEFeYL3NsNyZIdr1f5fVu3kPQE/oNLQfnkxDXG07BKQebXZAdFI43rMZA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1709717750; c=relaxed/simple;
+	bh=7oLHKbm0r4TEDUCEZ8CZBoZ1ZzBTXlG2aBlV0cUdKos=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=YpvIEtgD+UeXENeHFsMfPJp1iqNzgdJUZNK547A1HrBXE3dG/An+TnhencshkAjakZhNG4SKpWk4Qh89zLnAIfSi72IGVb2vw1U4RpXdZ1SsqnTJekU3EsXAvsFQXYAJf0Kl2/SMH1lnTnnpJHpdu+lP8tgktjJjulDKsdqmmt8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fibocom.com; spf=pass smtp.mailfrom=fibocom.com; dkim=pass (1024-bit key) header.d=fibocomcorp.onmicrosoft.com header.i=@fibocomcorp.onmicrosoft.com header.b=Mmnza4s/; arc=fail smtp.client-ip=52.101.133.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fibocom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fibocom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fibocomcorp.onmicrosoft.com header.i=@fibocomcorp.onmicrosoft.com header.b="Mmnza4s/"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QgH4DoXRHG7cbPcK3d+nVDHKFqu5KFuMhFFaiRuZBD6yOmLlgmf8ceUuFSCtDdyE8Phf5RPyNWaOjorq9OusgxuJTlyXs512oiwQOxchpErXdTI4IdXiyLXWZTkpmGKSljMlmukmnWXaPKbDpqvcl05T+fqYdPZYKl2u4u5wAVRh1LuGADiMBkVRt1pJxYOTr13EcI3rbtooeuI/cXmE1kHSGNntQXa8SMIGmx0kV6v2VKtHuBzwTgO57vNdspvEVkdxeYfo8KJv9GMpzY1ZueVcfFj/0F8bQBAYhyjOYADhctgOTqUQHAN7zSNePkbDav3aX9nKWuEgvqnNyawPpg==
+ b=ks49sJ4OgnRGDpO9R7BCaDv7FJWUARl++HaZSmCKl19zr2F0zrkDAkEZiJvnN/ZHYC8hNdse6asOX6SrW+YXflLAcjQY/ufwmGm+WZwFIx8cQIq1ccCLx19McZctAnHKRl9XVP937tkT/nikButZVE6so1HpgL4+21PhhWHBkgFdLhrLa3JvR3Mfoh9IUPAvxu7RmlUmyXwYNQGZjAlpxfEvGRxqiMMfaupWqUBpoLF4TGL/ylko0aqkVwouzswXdFYpOfioMw6+InqrrYLxi7GlR3JHX4u28Wi1X+JhFSoYlR/HkyLxQ2yA8vKY6c3lNClcIh0B9/51mYDTLOmITg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1ZwJCOce09A/wb0xiNcquqsX1G80AklZpIiCYsYxIGE=;
- b=B/IdvxDW1kLhCLTmSiB2W5W15DEPicJAwymna+RWcB9pMk3e//y7h7PYJ1+DR+j4uCAJfRovJfPvmRKK+VkkPIcUWTiIzw7mGaVoyUOCnn+CMmF3Oa25pE1Qty2h3mQRhs8MSalVgUXE6pHzwI5PaW0vsxgk01Xf1Xb8DAggYQaTEjHHBCJ0yXvILmRtoIj0uus+ksnbqTCX3u5gmWeI+QxL9kZ/D7e01E7kW4q6HAsORMR/5X+lDg3HShscRwU1bJMxNk7RxKBjWCFrqEmyjI3nbGvbeRLiwxQnk428hI7wJQrg4pHcIUu3Sy49fTK0TGlQ+JBzL+etvTBbRwcOLw==
+ bh=kaslRnZQ3Jkyq5jyTIxiZsAU8f4jz+uwRHMhy7E6Kys=;
+ b=DjrLiUVQ31rAF1ZKo3e/N6/j5VWtuvNsxmMzQOVufGtELDCuB0awzM2h4mO56jQaw23MnUXKznQ5nEVJHVRguAqypqN8FqjW0s1ojtFeHoz4zNbUJ3wtGiN9h0Lu6fnhvHxKYiUfl3Dt8UrytIPNSat/1bdV6JdYsLUYzRTFkI5NNODWRR7jtpzdTJ5EjIDv/GIKhF2hlcO88eWlXcFVdfO2TP8RQF+TEur8M8DAD3sBLBoDNeDxwt1/wXsQbVkcnG83nujvCZTaNPD1LNbXKYH1+Qp3oLc+NwsYspOQZ6z003VpBLd+gX3HJ3FiSQNed3qiBrS5Dh4TCDUbzJuh/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+ smtp.mailfrom=fibocom.com; dmarc=pass action=none header.from=fibocom.com;
+ dkim=pass header.d=fibocom.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=fibocomcorp.onmicrosoft.com; s=selector1-fibocomcorp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kaslRnZQ3Jkyq5jyTIxiZsAU8f4jz+uwRHMhy7E6Kys=;
+ b=Mmnza4s/gtQO/ntj9aMeBDktT05kcNrbj5xBgYpX7MudBEkOlYd5kJ+ZL+TkVIyGKm/7Hj5b5deD9S87E3DqTYYieDAbb3YBph2cYhXIXDAHLAmfZGYk7VpL8AlqmVbG4LRvxjANMDcgnM34HmuNcxG9Xg5WYCnbQvtgWx5q+C4=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) by SHXPR01MB0765.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.51; Wed, 6 Mar
- 2024 09:33:49 +0000
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- ([fe80::b0af:4c9d:2058:a344]) by
- SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%6])
- with mapi id 15.20.7249.041; Wed, 6 Mar 2024 09:33:49 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
-	linux-media@vger.kernel.org,
+ header.d=none;dmarc=none action=none header.from=fibocom.com;
+Received: from KL1PR02MB6283.apcprd02.prod.outlook.com (2603:1096:820:dc::11)
+ by KL1PR02MB6378.apcprd02.prod.outlook.com (2603:1096:820:e5::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Wed, 6 Mar
+ 2024 09:35:43 +0000
+Received: from KL1PR02MB6283.apcprd02.prod.outlook.com
+ ([fe80::87a8:fbd4:757d:2f75]) by KL1PR02MB6283.apcprd02.prod.outlook.com
+ ([fe80::87a8:fbd4:757d:2f75%7]) with mapi id 15.20.7316.023; Wed, 6 Mar 2024
+ 09:35:43 +0000
+From: bolan wang <bolan.wang@fibocom.com>
+To: johan@kernel.org,
+	gregkh@linuxfoundation.org,
+	larsm17@gmail.com
+Cc: linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: [PATCH v1 6/7] staging: media: starfive: Add raw output stride configure
-Date: Wed,  6 Mar 2024 01:33:33 -0800
-Message-Id: <20240306093334.9321-7-changhuang.liang@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240306093334.9321-1-changhuang.liang@starfivetech.com>
-References: <20240306093334.9321-1-changhuang.liang@starfivetech.com>
+	bolan wang <bolan.wang@fibocom.com>
+Subject: [PATCH] USB: serial: option: add Fibocom FM135-GL variants
+Date: Wed,  6 Mar 2024 17:35:33 +0800
+Message-Id: <20240306093533.1313241-1-bolan.wang@fibocom.com>
+X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0010.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:5::17) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10)
+X-ClientProxiedBy: SG2PR01CA0138.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::18) To KL1PR02MB6283.apcprd02.prod.outlook.com
+ (2603:1096:820:dc::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,156 +64,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0765:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11e03947-6e98-4c31-7764-08dc3dc08723
+X-MS-TrafficTypeDiagnostic: KL1PR02MB6283:EE_|KL1PR02MB6378:EE_
+X-MS-Office365-Filtering-Correlation-Id: 108789f9-5e0d-4c18-e8c7-08dc3dc0cb36
 X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	1jhSHRMEYeyVmPMd46UyFxwO2x9XHeEIPyerq5FPUq5NKdAS2SWfXLTg8vcCTCm7DdpQvQAwgVoGVbIq1/AkX3s6cNgxhLZgE5V5yYvO/1GAilEeAV8WviSi5QbZL8E3DtbU4dfoe9GQ7oUpMx1Deg9xmH3b+oeyPLtdUfrOn0Yi4QiN+qYlmBgGntCpOIYXsetwdI96vMjZgIiYo+3gLzyb7UDy4HHAfjC4fmUqitnG4ZHtVhEe0JNSfpqGYoMij/VErQU0tFD4IjS/iGNnX3FVemb6/DqkKBH6nJXMMdQUst+7gqOOjBMBM5XyJYU41L9G0rgDxFyyfQpQHSknJQYU0Qq7rHz180Es7CqL66n60daXzgKLAMfzYKn0aOStCv0rnwD0G/WFfqHZww0J2hiloE5cAi5sSlCC6AJdEW+LbEequkY69+NQ4Q1Cg/2eW9ZxufBAB7AGy4h54zYMbmnksOMIoEBkaOMutP7Ti55U/Ytwf1gf5gnOcyQ2wzcksxJJt0Z8WwlLtL7o2Qx+LmpE+p4pFl38XsGp01E2On1oZRMWnjHeiAwonrMvIEum8xcaWzxGsk9Paz3vWoS6a3ltq3ZH0gpm116cMahpKU7uyqMQxPjKeNZ9W9BnIB0h
+	U9fbCFPf5zXWpBGfS8vFz+IESH6yPxY300PeaO1FGVTtJrw/s1IOXp4Yse8vOrJBUwrZN6414qS4M6KVcRuZbpXQQ563Crw2PSH5GgB7ptZjtkdnkAPt+vbzdh8R5XwLxZLv8bfFSYARbL2nqBsqtlTIE4j/R9TGPS899savNrBb861bOQ5IJtKBsobggkBNAgEpQKtO7EqJuos2DiooyaEQoCB2/U6DGfBGQBIz7ZCVDAc6LBUssdULwzmKcyRwvRGl7I4aO65/rk29mu950q5CEuciQ8yZi2GsxLiTOXCAgms9yaGza3zhfID9+77K1CeqUm/dcAbBbmFPFddYoiul7efbS9C4YqNyMpn64aUct/IMqkoZv+uE1xlkXgDcBfxFm0ke5SiOyewupNC5iOMocFK4wVUOEhXVDB0ksWyePvhhXiW3j7OxyWAEH4pSKMcbNvbSXoGSZ/K8GL7ERwy2xyGkSgLJOKKik6Ad6+lZgeF2Az2/R89cDkarPa77oLt3Oz3vUs3xYd9TEDqHHx7aMyPJ0NjAELJ4aBV6+mG3NJo23bB9sk/KvOb2ChsIPn7aBkUmZBekNqoD7COY8P0LfgftbzgSJXglVQfaFuc62cscrJ7FAq+V+Q8VxAOyFtm6ecwwnsky0/h5oAfxv7tA2albkoK8Kj7jpiC3NkflmS/c4VFdLw0LhO3mjdMEdqt1siMQb/9isdjAXrwxlCwkb46ACaQ+02rO3QHwefc=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(38350700005);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR02MB6283.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?inwLTePbVv6+60Sje4cJ+IK9nVa91tX4LJYG95RG4VpMKHNSBbF1BRHYeIsm?=
- =?us-ascii?Q?h84ITpWCERTPHTzOcbwZ0478XJSXdLth5pRbS3MsIx6yviJPUUqmJhiaZAyL?=
- =?us-ascii?Q?y6RNq3efC41Kezk74OK8FsxD945HMhJg53ZFBtte5BqGQP8xet60p4zfJWsT?=
- =?us-ascii?Q?vec9Z1zteJwz8Ac4ii+R8dtABQFy9RrqpQsK/RwTu6/DCGkZX1hHZV5DPrcz?=
- =?us-ascii?Q?j76uORkqwdwqT7k0PHTU/Ke7WLze7GMna1dNk2ATNswC0gvd1PFUw7s3CQFh?=
- =?us-ascii?Q?1P/NmHPTAAVif2GQNek9Eq1WftUtkY7byAq5/KLSzanjRMsZARU1MAMXls4W?=
- =?us-ascii?Q?OgkaWVIkj6jnYg/MO1zlg47DzsGDq538buSxnBH7h9k/39stFSaiq3qyDi6m?=
- =?us-ascii?Q?I19YeFQVHoHkGQoLbW+boGxbVyFGaB5omF6rc4vRjrVSTIajME5uUUJ0DU1i?=
- =?us-ascii?Q?BBDGSvnjye2QFzrWKH4KzHGIvGlxLeDAuBfGgXPjRyFuehGoiUloL/CBRi/j?=
- =?us-ascii?Q?xotrGZSfmL+r/YRX4A+0pkYize+1mULA3/k5PsD2kTMSxTXtdLsRdtl0macY?=
- =?us-ascii?Q?elQr+/dGit5hrCL3XDiKEHrSgGQFRirVNF/C7Z2vF0S2UKYmPNkBM+96JQ6l?=
- =?us-ascii?Q?l7BV/8A4z+kXYhsQxdHKna9S09Oeo9yGpZmzIOmn/LJwiEw/kC5Yus+Qcxze?=
- =?us-ascii?Q?JIDHWn+m/Dg7xZmL0KP4+jS/P7umCnZjNG4V4pk+dyi0pwyaU8c7DEaJUm6O?=
- =?us-ascii?Q?Uk4UbMbayeocaAXnLKC+Z3DEpKnrr3yAZjAEAmul7qn8Sw7GBNrmzGfON9bd?=
- =?us-ascii?Q?7YxX1QEB0KAp3EAAzIyJfn3LSWWlw4bGubQ4cY3oC4ai/7FblcJaMc7EB/PG?=
- =?us-ascii?Q?227l+97rTu6pQ8Ktm0CDztw/VemZXFrrdXRAECGY+3s6tcdEpHh9ADNDtg/K?=
- =?us-ascii?Q?P6J0di+68n2OEIxI36eRIkN03H3iKc4Ia+2zN67tVEtlSQulFaZBGQ6B36Bq?=
- =?us-ascii?Q?cvq9ydBlfLyos9wZcKK93EEn782tZEm+19BHjbNaFNcfuAqHm/3Ypl3GrIuf?=
- =?us-ascii?Q?00HmrAw0P6h5nyROMjWg036iUAVMjKVDvMwjLnG7gJEVAd231y+B9giBZ2hx?=
- =?us-ascii?Q?lQc4L+lTS0qrFv66uaDq3wdDJWTFc83X9OW0AuivJZVFkiO8NvKlodYS7Mbh?=
- =?us-ascii?Q?5P7dCoxlilXUW6l3ioiISkNvk76K9pepGeCXMOUBAQfENzvCDSoEpShfkqy+?=
- =?us-ascii?Q?J0FAXMwZjYvTAzd44QksYgIbYM6jYxSOxVLw/PseM/5lpphUwV15IfHyDXOl?=
- =?us-ascii?Q?18f//SojcH47AQs8hwvf9pxlXGL6ikaWufT1Qa2zj5MmQt+gNtGIbeZAOg4C?=
- =?us-ascii?Q?Ec9OENqQSC9qUxDHmkyjU3X73/55DoI6eN2mOFHQoouZEIZXSIJhpIIkYBaB?=
- =?us-ascii?Q?F2KFjpheFDzK7ROzPxo6r9fU5953mb0EsC/vxS40pgrPoF1VxJJuUIbHT68Q?=
- =?us-ascii?Q?9gZikAMLDpvHOuaJLw33BPFTPTzM4BKR/brL6XeUgGkh74Jwu1T1V4m2MNrf?=
- =?us-ascii?Q?nOyOXtVZZeLz/7xNMl1F4tTrQElPf8SNlDdHa1avNO6M3DQTQvjFBvZPdcj1?=
- =?us-ascii?Q?sZdTmIdpTUK65/27h70lbUU=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11e03947-6e98-4c31-7764-08dc3dc08723
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+	=?us-ascii?Q?F/BTzlAmz258XjM5pPtHVeNGfnGrpbFjMXodgsMBsGOR5IYOUABN/qFL4XdX?=
+ =?us-ascii?Q?5DXiWTMupdJffePjctCBl3oymHTLWGKWblod+kD6XepndJx217DFlYjBk89z?=
+ =?us-ascii?Q?AxIvzeIlN9GKl+1iW9cGLmkCeNf5C8yQ17L8xEfMNk6p0QewR3Fp6JnXc1pg?=
+ =?us-ascii?Q?YqUFExfxo77fG6q+Mj4Xiu8m+i3QztbvchIRGoKtRKmHXud2Q3UB3z5h0PPT?=
+ =?us-ascii?Q?sGsko/N6kslhHoPtVtJw+nct0qUxoim90z9xCeZ395sC5is5B5uXTBcLl917?=
+ =?us-ascii?Q?haRcPRoJ9ylERjN/Ztp52RPYVPvtazTfWdpsqqS/jDZ0V7ddMtT9/+RahsGQ?=
+ =?us-ascii?Q?NyBcoOWiltjfCHtLkvAcQ8BeOsKGudaMU2A5uLbGiYkW7CN+IzEbMLm8Dtk5?=
+ =?us-ascii?Q?n1xRH+tuLhPgSwXob/EC4o4eksyvfzt/1KwjHkGq6IALC15YIYzaINRgaW59?=
+ =?us-ascii?Q?Hk9Lqba6/Kp8FzR9lDHBy3MIhXEnh98+9FZAUw7nlJm1nMROpBOJbIFKvjxH?=
+ =?us-ascii?Q?cAxPeuobtVzP3oUq/dwFT0mqjqU8d2X++r82qB0ymrTOXT5WVJnQtM/k8YhA?=
+ =?us-ascii?Q?gyOTtE+AsXsL5MxFB3IX+6QMMrQXj1lujdzhdu3orO1Ut+pqmUIewi9R5GcU?=
+ =?us-ascii?Q?V4UvkJpcROVmvxIGxaJ5OoTvZsyFLP3PFdftvZL6THF4HhlYAEgBwilZPXms?=
+ =?us-ascii?Q?vfYBM1zaJd3hkaSS1dhXR/HAmGFVdVZlNozDTO6U35F2NrZw3MQ3MvhY5MDI?=
+ =?us-ascii?Q?B99dOineVEnSqoYOhbG+3XGuKqg/pFuujog5H4lWOplL8rAkTYq+mg2XqG6W?=
+ =?us-ascii?Q?HXeoPxqdJwU/vEYT7NWRe/NGWoLqwZiVLzCcFlxVZ0zwdKmRuYvcM4QDaSRK?=
+ =?us-ascii?Q?oDyisQnGqM3bKpxtgdy3ZVb9XA1f5cz5tdDZ9Z6FaDS1dZ8CMxuiTQavNqIe?=
+ =?us-ascii?Q?AtkN2Mvh5L6vuHLZBbJrmt31PEL6YMQfUjAQWgAm7ZtYPBb1vzb5N2PLBRrS?=
+ =?us-ascii?Q?THPFsyFfkn+rUhCl4x2yJ5LR/Ax9a7ikEgyxszOsHXRAdxofAJPBO75Alg+Q?=
+ =?us-ascii?Q?4T6tWmCxJ+HHBxPuNe1OrXpu8jkPXonTMUkl21sFWLmfxlY+X+O4j/5Cj9QA?=
+ =?us-ascii?Q?h/KKPBlStG9m2vy/X86rW3btJGFbVwfU+jJZNO3E0zVHlNW5C6IrF8RNxg2P?=
+ =?us-ascii?Q?tRGP1Ga6VlNES+bR/jRwY1q4NBS8Wd1zLoSp9+L8Tx9BGjcZvUTnMj8EIcvH?=
+ =?us-ascii?Q?h3aGA9kt53sZvjjMm6qLxrAM2XI6u+jOe0Ws8Z0NKuwhVnTcBiNEaT4+uANC?=
+ =?us-ascii?Q?itYLTi+HrHo4RcjlopBEbFvTD370gNy5OF4OMP0Izdq4NA1+84AbrfnAhWWM?=
+ =?us-ascii?Q?N98AeHm5XKu29O1LMlDgbTaB0gKjwjCiaF9TdHiPxoYbRwfY3hkz/4sZ9hAM?=
+ =?us-ascii?Q?z4PrJHJ4atIiml3MP23JLSZo6QzfM/IjCMuPrazUwNUmIcwyvbqmhNiMDRe1?=
+ =?us-ascii?Q?25gbZ1MdrtrTmrjYTzd9r25ueUYvb4fqmeVvwZD86l04nP5v74gmLI0B7DKR?=
+ =?us-ascii?Q?colocviUb9VqzUqNtEAMogh3UhEZYGeqzt/HSTxmwndQQILF8Lepp/Q1ggic?=
+ =?us-ascii?Q?NA=3D=3D?=
+X-OriginatorOrg: fibocom.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 108789f9-5e0d-4c18-e8c7-08dc3dc0cb36
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR02MB6283.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 09:33:49.1116
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 09:35:43.5131
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-Id: 889bfe61-8c21-436b-bc07-3908050c8236
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NktCT5QeRxFrP3hH8k1YJ5Vshuxq6yOQrnpPw+heCcqvYHj7BJj39x8ac8Iv1/q1yTIPkhXuNZVcCX7htftW1DmA9YHP7okf+TYP7sws0t1CFSJnOCHo5smmpw/bppfz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0765
+X-MS-Exchange-CrossTenant-UserPrincipalName: yRHR2WACUqQbfTovFc3h+85r4zUi1AzJnQmQNdAZBm31XONSTPkc0K206Df0iu9tH8dzX1/hxDmxKwFKzKK4Cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR02MB6378
 
-Add raw output stride to enable sent the aligned raw data to memory.
+Update the USB serial option driver support for the Fibocom
+FM135-GL LTE modules.
+- VID:PID 2cb7:0115, FM135-GL for laptop debug M.2 cards(with MBIM
+interface for /Linux/Chrome OS)
 
-Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+0x0115: mbim, diag, at, pipe
+
+Signed-off-by: bolan wang <bolan.wang@fibocom.com>
 ---
- .../staging/media/starfive/camss/stf-isp-hw-ops.c   | 13 +++++++++----
- drivers/staging/media/starfive/camss/stf-isp.c      | 11 ++++++++---
- drivers/staging/media/starfive/camss/stf-isp.h      |  4 ++--
- 3 files changed, 19 insertions(+), 9 deletions(-)
+ drivers/usb/serial/option.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/media/starfive/camss/stf-isp-hw-ops.c b/drivers/staging/media/starfive/camss/stf-isp-hw-ops.c
-index b933d425cbd0..e7f60616bd7c 100644
---- a/drivers/staging/media/starfive/camss/stf-isp-hw-ops.c
-+++ b/drivers/staging/media/starfive/camss/stf-isp-hw-ops.c
-@@ -366,6 +366,15 @@ void stf_isp_config_yuv_out_stride(struct stf_isp_dev *isp_dev,
- 	stf_isp_reg_write(isp_dev->stfcamss, ISP_REG_STRIDE, val);
- }
- 
-+void stf_isp_config_raw_out_stride(struct stf_isp_dev *isp_dev,
-+				   u32 width, u8 bpp)
-+{
-+	u32 val = ALIGN(width * bpp / 8, STFCAMSS_FRAME_WIDTH_ALIGN_128);
-+
-+	stf_isp_reg_write(isp_dev->stfcamss, ISP_REG_DUMP_CFG_1,
-+			  DUMP_BURST_LEN(3) | val);
-+}
-+
- static void stf_isp_config_raw_fmt(struct stfcamss *stfcamss, u32 mcode)
- {
- 	u32 val, val1;
-@@ -417,10 +426,6 @@ void stf_isp_settings(struct stf_isp_dev *isp_dev,
- 	stf_isp_config_crop(stfcamss, crop);
- 	stf_isp_config_raw_fmt(stfcamss, mcode);
- 
--	stf_isp_reg_set_bit(stfcamss, ISP_REG_DUMP_CFG_1,
--			    DUMP_BURST_LEN_MASK | DUMP_SD_MASK,
--			    DUMP_BURST_LEN(3));
--
- 	stf_isp_reg_write(stfcamss, ISP_REG_ITIIWSR,
- 			  ITI_HSIZE(IMAGE_MAX_HEIGH) |
- 			  ITI_WSIZE(IMAGE_MAX_WIDTH));
-diff --git a/drivers/staging/media/starfive/camss/stf-isp.c b/drivers/staging/media/starfive/camss/stf-isp.c
-index 1bfd336b14a1..845446ba279c 100644
---- a/drivers/staging/media/starfive/camss/stf-isp.c
-+++ b/drivers/staging/media/starfive/camss/stf-isp.c
-@@ -78,18 +78,21 @@ int stf_isp_init(struct stfcamss *stfcamss)
- static int isp_set_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct stf_isp_dev *isp_dev = v4l2_get_subdevdata(sd);
--	const struct stf_isp_format_table *fmt_t_src;
--	struct v4l2_mbus_framefmt *fmt, *fmt_src;
-+	const struct stf_isp_format_table *fmt_t_src, *fmt_t_raw;
-+	struct v4l2_mbus_framefmt *fmt, *fmt_src, *fmt_raw;
- 	struct v4l2_subdev_state *sd_state;
- 	struct v4l2_rect *crop;
--	int src;
-+	int src, raw;
- 
- 	sd_state = v4l2_subdev_lock_and_get_active_state(sd);
- 	fmt_t_src = &isp_dev->formats[STF_ISP_PAD_SRC];
-+	fmt_t_raw = &isp_dev->formats[STF_ISP_PAD_SRC_RAW];
- 	fmt = v4l2_subdev_state_get_format(sd_state, STF_ISP_PAD_SINK);
- 	fmt_src = v4l2_subdev_state_get_format(sd_state, STF_ISP_PAD_SRC);
-+	fmt_raw = v4l2_subdev_state_get_format(sd_state, STF_ISP_PAD_SRC_RAW);
- 	crop = v4l2_subdev_state_get_crop(sd_state, STF_ISP_PAD_SINK);
- 	src = stf_isp_g_index_by_mcode(fmt_t_src, fmt_src->code);
-+	raw = stf_isp_g_index_by_mcode(fmt_t_raw, fmt_raw->code);
- 
- 	if (enable) {
- 		if (!isp_dev->stream_count) {
-@@ -98,6 +101,8 @@ static int isp_set_stream(struct v4l2_subdev *sd, int enable)
- 			stf_isp_settings(isp_dev, crop, fmt->code);
- 			stf_isp_config_yuv_out_stride(isp_dev, crop->width,
- 						      fmt_t_src->fmts[src].bpp);
-+			stf_isp_config_raw_out_stride(isp_dev, crop->width,
-+						      fmt_t_raw->fmts[raw].bpp);
- 			stf_isp_stream_set(isp_dev);
- 
- 			v4l2_subdev_call(isp_dev->source_subdev, video,
-diff --git a/drivers/staging/media/starfive/camss/stf-isp.h b/drivers/staging/media/starfive/camss/stf-isp.h
-index 30e4eb29f077..dcbc42f0dfe4 100644
---- a/drivers/staging/media/starfive/camss/stf-isp.h
-+++ b/drivers/staging/media/starfive/camss/stf-isp.h
-@@ -76,8 +76,6 @@
- #define DUMP_SHT(n)				((n) << 20)
- #define DUMP_BURST_LEN(n)			((n) << 16)
- #define DUMP_SD(n)				((n) << 0)
--#define DUMP_BURST_LEN_MASK			GENMASK(17, 16)
--#define DUMP_SD_MASK				GENMASK(15, 0)
- 
- #define ISP_REG_DEC_CFG				0x030
- #define DEC_V_KEEP(n)				((n) << 24)
-@@ -424,6 +422,8 @@ void stf_isp_settings(struct stf_isp_dev *isp_dev,
- void stf_isp_stream_set(struct stf_isp_dev *isp_dev);
- void stf_isp_config_yuv_out_stride(struct stf_isp_dev *isp_dev,
- 				   u32 width, u8 bpp);
-+void stf_isp_config_raw_out_stride(struct stf_isp_dev *isp_dev,
-+				   u32 width, u8 bpp);
- int stf_isp_init(struct stfcamss *stfcamss);
- int stf_isp_register(struct stf_isp_dev *isp_dev, struct v4l2_device *v4l2_dev);
- int stf_isp_unregister(struct stf_isp_dev *isp_dev);
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 2ae124c49d44..c7ea7e5ec875 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -2267,6 +2267,8 @@ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x2cb7, 0x010b, 0xff, 0xff, 0x30) },	/* Fibocom FG150 Diag */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x2cb7, 0x010b, 0xff, 0, 0) },		/* Fibocom FG150 AT */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0111, 0xff) },			/* Fibocom FM160 (MBIM mode) */
++	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0115, 0xff),			/* Fibocom FM135 (laptop MBIM) */
++	  .driver_info = RSVD(5) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x01a0, 0xff) },			/* Fibocom NL668-AM/NL652-EU (laptop MBIM) */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x01a2, 0xff) },			/* Fibocom FM101-GL (laptop MBIM) */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x01a3, 0xff) },			/* Fibocom FM101-GL (laptop MBIM) */
 -- 
-2.25.1
+2.34.1
 
