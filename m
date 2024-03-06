@@ -1,139 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7688960DDE;
-	Wed,  6 Mar 2024 09:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099C15C904
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 09:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709718221; cv=none; b=btnksAWmANynmt5OLTID7WqYcqPAm7LMzDegYwZzRF3YL4Od+zCbAlDQXKfQUYwW4+ZiHissyS47Ua7fcqrYKYKmoU8jWkq8ZbSE3Alf5BFVBj3/qk+gBmXVayb1m7vD8M4YGKmVQMbo/FL+WVVKecA4iwpGdlmvA0Xzko9TV5Y=
+	t=1709718304; cv=none; b=eiBIb/psWD/QFIp8MirH7ebJ3OfenbuBPB3hsSj4CfNAaSvAqG/ZpdMcrbjwnGGAf4hR2pb0pzpbYkesBTR5WN3JGADdD8GjajEauYF3a0I50Nm+b5YCDEUqANszg0ZYay+iRh5d+vsdX3UQCtnLTugzJeZrupMoYk+aSEMd988=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709718221; c=relaxed/simple;
-	bh=TXr6T5gctPLk+weuAPDK0CvjU5ZW8VNUAi1/4q57pf4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UzZHTPjAQuXZAq6K8GTTtaVtls/ktV6O+HDt23iUQNROl8allnwzFji8Fqv2CrBJ4vi72YeTPVUv4t2TqqtS8A/XmmBVhXtTopu58D0lrHUfLtVmxUiWA++V3sEsBJ75LA9kXxuL8lNgFqByUmg7b6wKdNGxm6hNMpkQocx9Zn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqKIkW92; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709718304; c=relaxed/simple;
+	bh=HOZAMW/H6iDoUqklncDGbTIw5V9afaXH/RbYAT/6KBQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ox0mZ97TwRJb645m2Zo+LybeLqz5wDirXqZzCPorRax8a8Yq8SwDwiJJ+pVwUdj+Ki0/Jk0UGvLGn2NZRItokPXKmIEG3KUicprrEcMIzvpFDZKXEEVIYx2kdzD7sNtoYmVUdKwf1My5CDmU1MIdIooHiPfzcUOW1VkZKZcjd2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WDzaenik; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqKIkW92"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B997AC43394;
-	Wed,  6 Mar 2024 09:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709718221;
-	bh=TXr6T5gctPLk+weuAPDK0CvjU5ZW8VNUAi1/4q57pf4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hqKIkW92n6YI3RrTE31cbQs+D4nShq9qFbUe9q0QbSeRNFoAze+VcAPg6Vh/UwhMn
-	 lhGS+YheKA4USCBL4xp0MTnoX3qa2mZi6LJuqeHjCXSKkNqs4VSEp1uHNfHs1yBdzG
-	 8Z9ZCWUx8g3HyF8zlWpAnw4EaASqz/yi22BHGNp6Hm03yeJ4wVNnIkILrYv7ODD9qN
-	 PCBlxYLAhmMPX3MIdoBFjohOKDj160MeFleBpAkvqnFTBrc/KFJHZXOHaIeyWR5qNN
-	 B+/KjXNH2l/90m6XxGhAAAnGPd4bZyjmSTceypzu4Rhem/OqY1GO9fkXVY4lgHw+Pk
-	 dF2QotIDDzguQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 06 Mar 2024 10:43:01 +0100
-Subject: [PATCH net-next v2 12/12] selftests: userspace pm: avoid
- relaunching pm events
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WDzaenik"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc74e33fe1bso808293276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 01:45:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709718302; x=1710323102; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mQP1wgCpBBioFokr90QAK5gY3jqGey3mX1zxKrDnCL8=;
+        b=WDzaenikIh72Ul+Pj4kWeS/tODp7Fh74634i0vjJkzTIfMwqB5QpAqsn1vUvJCBt5U
+         OasuSZgk7SInxlcLEW78TcROBRiiP57hZso6F6vjpaw9gHBcNsBjjmQmIGtTA2xSUH7W
+         kX7OSFVgQNVnndxwNFt3S+DWyKe4jPoImBhi0rQTIOhYvsVmNlJQ+Mk9HOsS0Mlh8kHX
+         Nk8mXhwL8EspfyIk45HnPqj/UFvRShhnyURFtKnIkiXM7rS/qXK6f2+rTbIVsQ3PY8xi
+         tXAVuFMm20CV7enzIalcwPMKM7QqKL7YSAVX24ZZiMaqh3gXrCtMiEb2NlsLab9cR/fE
+         Tgzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709718302; x=1710323102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mQP1wgCpBBioFokr90QAK5gY3jqGey3mX1zxKrDnCL8=;
+        b=RCmyYXvRI/4L/aE0eK4sOwXG4SC1QEvZBWWhufkuS8RUG4TdaDiELRrWQ7mpzTIK1p
+         PV5yrxFbM+rF/xzrUCWe/ALoRZd+lypK6s1w0hfkNbJqFC5wbZtZaVSCRxLB581gEl9K
+         ePAhKiaEM4awplcm28zGLysTDkRRcFEH2Q9npb54BfyVKpKJ/f5ZuBe5nOnkt1KksQhM
+         PtJwrL0K2h3nh6zG1yczv5wZoml+fQrZrT7mMWjxRsOLL4Jf1L/DsAe5M89GA9aUZ2zU
+         kxCwl/t9tTp8WC288Nl9vrdC5O+cGHFZehkMaaFxvm3hdoRwsSw3EUZdPpf3cGvBdSjX
+         bUww==
+X-Gm-Message-State: AOJu0YzYKa503UkpDJ52n77ZCkIdh9Rbox9QL3DXt2PNIskUHpf0aTSk
+	BPvUpdhMH8CKhR/mn1oyzo3uT0xyV9m5vvwJgG7lwy1vxTNhQJwCpC1GLt7ZmB3447/JAXdcuIV
+	hxCzSq6xxX3E8ytrP1/cYejjpgvW4FacXbVTYcA==
+X-Google-Smtp-Source: AGHT+IHWT6I+snMD+D9zIeDpZ6WEp58iDCV+aplCIJiyTv3e4e4154r40sk77XmqDRXyrrx892Y7VbpFM0ogd6KQsNY=
+X-Received: by 2002:a25:868f:0:b0:dc7:776b:5e4a with SMTP id
+ z15-20020a25868f000000b00dc7776b5e4amr11676441ybk.56.1709718301925; Wed, 06
+ Mar 2024 01:45:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240306-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v2-12-bc79e6e5e6a0@kernel.org>
-References: <20240306-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v2-0-bc79e6e5e6a0@kernel.org>
-In-Reply-To: <20240306-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v2-0-bc79e6e5e6a0@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2205; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=TXr6T5gctPLk+weuAPDK0CvjU5ZW8VNUAi1/4q57pf4=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl6DqnnvKD6kkrhkEHHr19YMe9Cu8g1S1GcYRAY
- 0HRl4AuWOuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeg6pwAKCRD2t4JPQmmg
- c2UWEACtz0bJ+al4KBOIPNZn32mKMkgA1r7et63FIYhJccg66dhsLZardA0U68Y15KAAvHBbhTQ
- EKFqGxtGP7VhuRMoeVjWqARBqLUQ5mrOVj5yvm1X5ZYE3JWEw0u40ZZFT4Qzva1UcdlCxVOAZXB
- q3m8c64PxEeReQf7qciakJAKUdROpYKCH3iA0y2QGkLye/4LSAGak4WTKwvaA9Xm5zPy+Rh4o3m
- Gg3S5axHC1sANZdn+WrrQ3I+8fNm2R0eNUqWuaCqHrCueSnRbtpe2hrrD3QCOCstKdnM5mY+gkw
- rHpKwheJsQgyn7Y8nzaw/ervviyh9TP5LkgTV8u2FownBZKIeLdrI2jEqyQ+Aglvn3nI+xfC4oE
- B9Mwn/dWszqIsYE22tqeeVyTlHDeT8rJPMTc3jC1998zcDeWPUxDS7ZXkPDdddCr4CgtsNrx6XS
- g6pYyrCF59d24rCDNr+FHVZ+qxDmBypVEmW8TrTwBwcR9uDAkN9tnKf4UqXEOEddhmzn2SZ0yuj
- usJexU5jyaxzpzFUBLpvZzNI4dfQsWiYKwvj6NgpE5CfEaPsMhBBhz/tPMxfKEwNlNr4Wow73pB
- 5oAufijlEEvmGVqNPDMHXDxknEJHmmDKHfsLdb4nKWIEAq4OyIn1xxX77b4s2AAJUxyXqFZoXaz
- Gu8avI/uJDp0MpQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+References: <20240220171457.703-1-kprateek.nayak@amd.com>
+In-Reply-To: <20240220171457.703-1-kprateek.nayak@amd.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 6 Mar 2024 10:44:50 +0100
+Message-ID: <CACRpkdbxjU0r+PDTxJwrgzuJgaKnOCHtkaZtm4jO6bmFQ0SPiQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/14] Introducing TIF_NOTIFY_IPI flag
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: linux-kernel@vger.kernel.org, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Richard Henderson <richard.henderson@linaro.org>, Russell King <linux@armlinux.org.uk>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, x86@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-'make_connection' is launched twice: once for IPv4, once for IPv6.
+Hi K Prateek,
 
-But then, the "pm_nl_ctl events" was launched a first time, killed, then
-relaunched after for no particular reason.
+I trimmed down the recipient list so we don't bounce.
 
-We can then move this code, and the generation of the temp file to
-exchange, to the init part, and remove extra conditions that no longer
-needed.
+On Tue, Feb 20, 2024 at 6:15=E2=80=AFPM K Prateek Nayak <kprateek.nayak@amd=
+.com> wrote:
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 29 ++++++++++-------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+> Same experiment was repeated on an dual socket ARM server (2 x 64C)
+> which too saw a significant improvement in the ipistorm performance:
+>
+>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>   Test          : ipistorm (modified)
+>   Units         : Normalized runtime
+>   Interpretation: Lower is better
+>   Statistic     : AMean
+>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>   kernel:                               time [pct imp]
+>   tip:sched/core                        1.00 [0.00]
+>   tip:sched/core + TIF_NOTIFY_IPI       0.41 [59.29]
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 3200d0b96d53..b0cce8f065d8 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -149,17 +149,23 @@ ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
- ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
- ip -net "$ns2" link set ns2eth1 up
- 
-+file=$(mktemp)
-+mptcp_lib_make_file "$file" 2 1
-+
-+# Capture netlink events over the two network namespaces running
-+# the MPTCP client and server
-+client_evts=$(mktemp)
-+mptcp_lib_events "${ns2}" "${client_evts}" client_evts_pid
-+server_evts=$(mktemp)
-+mptcp_lib_events "${ns1}" "${server_evts}" server_evts_pid
-+sleep 0.5
-+
- print_title "Init"
- print_test "Created network namespaces ns1, ns2"
- test_pass
- 
- make_connection()
- {
--	if [ -z "$file" ]; then
--		file=$(mktemp)
--	fi
--	mptcp_lib_make_file "$file" 2 1
--
- 	local is_v6=$1
- 	local app_port=$app4_port
- 	local connect_addr="10.0.1.1"
-@@ -173,17 +179,8 @@ make_connection()
- 		is_v6="v4"
- 	fi
- 
--	# Capture netlink events over the two network namespaces running
--	# the MPTCP client and server
--	if [ -z "$client_evts" ]; then
--		client_evts=$(mktemp)
--	fi
--	mptcp_lib_events "${ns2}" "${client_evts}" client_evts_pid
--	if [ -z "$server_evts" ]; then
--		server_evts=$(mktemp)
--	fi
--	mptcp_lib_events "${ns1}" "${server_evts}" server_evts_pid
--	sleep 0.5
-+	:>"$client_evts"
-+	:>"$server_evts"
- 
- 	# Run the server
- 	ip netns exec "$ns1" \
+Is that a 64bit ARM64 system or really an ARM 32-bit 64-core system?
 
--- 
-2.43.0
+I'm confused because:
 
+> K Prateek Nayak (10):
+>   arm/thread_info: Introduce TIF_NOTIFY_IPI flag
+
+There is no arm64 patch in the patch series.
+
+I can perhaps test the patches on an ARM32 system but all I have is dualcor=
+e
+I think.
+
+Yours,
+Linus Walleij
