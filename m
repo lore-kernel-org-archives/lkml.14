@@ -1,330 +1,187 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6231BC2F;
-	Wed,  6 Mar 2024 22:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709763947; cv=none; b=nnr+n0x/w+8uqthxAQb6ZvGL9R7ryuFoI4xHzy3SLE/9Oa+JlvVveNc8wXauSe6jpBDba+9Jn16DhDiZRnwxv954hjq3r5uRVPcW1xZPTn47IBV4Otw9KwVpBEWKNH3irxp1jmWQpgTgF/SnWx5k0FjCXx5a7Dx5HkclS93Thk4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709763947; c=relaxed/simple;
-	bh=d5bC4t/E+JrAT9ULw2LNwcvdLX1ce0LQ5UH06xAcjEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Uyh7UqfBdmy4Gz9Gcg5GM2rVBi6yaFFjhev7om+7WudDN7YBksH+PCB1PccacrLsvGmLCZO2cNYtWPT4s8nFkar3Xscw/rEcuom3BwYRcUNgXIT0mmwFoJnxrfXbbjcGC3GP+YqmNxs8azptv0r0u2zAkTY49ZPYjrC0AZniEFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e95PKDGp; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8861B947;
+	Wed,  6 Mar 2024 22:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709763965; cv=fail; b=G/Sy1lHYtJKrwAxXGbUVYi9ly40PUE5IzNlTKhA6+EKRPw9WbwrcXPKxfWbzTiySPGFb8CH4cTB211OWMTFbvdt1v9k/kf9bW/gY0vdA1hsT3XFY1xM7nTQvY0gNALZLq3AfcDCKe2QBxpRnqpkBvtQdrrkFEx+fJyzb/CE+wAw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709763965; c=relaxed/simple;
+	bh=9gLhdxM7E8tB3y9bTAw9EZbP7GlsZk56P4+FX+NAQrc=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=mFRJuOTJ7FuSBpnbzZLpgyiT2DUJThtrIWLXOFKG8PHpHHptHBzgzjHHk/GxWXo5L2a0dCLJdcrGpPLogSCKuOPOfrYixZYGkCHkP5a0iYtKSlvGdvxocyFuZz0LA3QG9UeOOZVKolucB2yjT/0amXpKQ6q0jv67aju4hOGGAgA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hn03Yafa; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e95PKDGp"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 426MAx8M031580;
-	Wed, 6 Mar 2024 22:25:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=fFAshMmTj7xwLK3Ezhpt6XkpmPwobPlyj26lDDp+LS8=;
- b=e95PKDGpjuCaB1WfzNym+ESaSkNwihpOkqap0/pbQVUtVgxLgxZ8v0sTbcmM4r8e7pJr
- Ynvwwa5DvlTu0zo3idRRrq4RiJp0cx6iP7bXEdHJDfJzYJ2Dd8puqNyox9VloDj7Upyr
- Yh2GMpZIdqMy5uhfZG0Y3i9wiyhYl7+fNiTl6phk1cgjq7rfyLsdPukcEB/zlmRvWHZd
- Dct4sDHSZRINUnXB97psQkucWKjJc6/2dcT6JlTixp6J52P71bnf9+cK0/A+VVDmxu9N
- O1OtqIYkISuDuUQKtebFLcs0MgQclXAEqEmRp3GQ8brVaWISt5oWuwQJHaeIwtbjPlOt aw== 
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wq0ge11q3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 22:25:38 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 426L04vC025399;
-	Wed, 6 Mar 2024 22:23:10 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmetysup9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 22:23:10 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 426MN8Vv32768386
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Mar 2024 22:23:10 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 388AE5806B;
-	Wed,  6 Mar 2024 22:23:08 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B77CA58058;
-	Wed,  6 Mar 2024 22:23:07 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  6 Mar 2024 22:23:07 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br, lukas@wunner.de,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v5 10/12] crypto: ecdsa - Register NIST P521 and extend test suite
-Date: Wed,  6 Mar 2024 17:22:55 -0500
-Message-ID: <20240306222257.979304-11-stefanb@linux.ibm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240306222257.979304-1-stefanb@linux.ibm.com>
-References: <20240306222257.979304-1-stefanb@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hn03Yafa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709763964; x=1741299964;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=9gLhdxM7E8tB3y9bTAw9EZbP7GlsZk56P4+FX+NAQrc=;
+  b=Hn03YafaeCJ1qeeW55gMOsbqaV+xMiI/mYUcap+RXYxrPxj+9VbmXNu3
+   AGLaiejEyYXFgULGwapTCAOenqRTQNK+314itnZCWOvI55ETtLic+me8q
+   jwbTiA7QhpmMHti7saBEnIGV8ANi2JMuTD1sQVyUz4R1efPdE7EXRk2Si
+   b0B6ZaBEJYETJRmK8CjqjPRPNib4PrzuK6nSarjOxKj3OjoPUlHPxlTgP
+   mY/osKH80UQ+Nb5l9vXYD3z2zHanre2/GQaesqDLwaN2X4leWwnLQVJU9
+   Z2Si49OTG3rFTSeBuODoh/6sZAObrc8iU2aio5ByBqubRA4sWzRT+62Qv
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="21927645"
+X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
+   d="scan'208";a="21927645"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 14:26:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
+   d="scan'208";a="33050987"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Mar 2024 14:26:03 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Mar 2024 14:26:02 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Mar 2024 14:26:02 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 6 Mar 2024 14:26:02 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 6 Mar 2024 14:26:01 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M361eDNdEIfnUap7PsRgjEZf11dXDLRvrxpe/P281Fs8t2gt0CwUyxHj7KjL1mdegqi7BmlgmHaaNxSb6y7yu9zGXOamnbvOc/dXfZmSTcxwgapzaFokwarDYwCHSnGJ21eOYH37BRg8r+VPrH5vP3TQvCCnUGkiE5QA0zhpZ1ojwNA+PuZPzzCwYjmV1JXmdxO08WphM5FNZw2fwn4TDJHkwe2SoxEcl9lojnk3K7W6MDD6j0xwVPgEaHhkTseG4/j87CpDbdiY0AzQbaHrLdupstUt90PA3qUdVPJFy9pxQObicuuneXvrwIcHxnfahmyYo6mER1rG99I0w4pqeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pkp5twfWVkP/cogBnlBNSNEIFSVeLAA8Ik0a4UaQq2Q=;
+ b=GvWxA5o+3u6ubTgYyB6IWr+WxmWK7oPcs/KrrsQdEpCkUMAwO3ns5mBQk/TxPUvdtyAhMrESt2ifwePD4mgVRmYlzY4nGGvCVPRXlpD7jIFQFMs198z+JWuW8ligVowvAyxX5krRAXHbE/Qz6LTs77N/sz/hZmKVLpBwwgRiGf+jLNfydYbYW7JGEC3WOkceW7viZATycN5Wa31W7DVTVqfQJigsH9Hd3Zq8CziOB/2MZ4Rb2BXNyGpgmz7Z8qPbGgpF6CxsBp/OfitJIOJeoUj2m9j4P8ij4NOhAK2x5h9aMhpaZIYfOF8TJMjuTOx1wO+WI6G2V+rNRn7E3bzMPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
+ by IA1PR11MB6292.namprd11.prod.outlook.com (2603:10b6:208:3e4::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Wed, 6 Mar
+ 2024 22:25:58 +0000
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
+ 22:25:58 +0000
+Message-ID: <6d92f593-77d8-4008-af3f-5b5bc790b87b@intel.com>
+Date: Thu, 7 Mar 2024 11:25:49 +1300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 008/130] x86/tdx: Warning with 32bit build
+ shift-count-overflow
+Content-Language: en-US
+To: Isaku Yamahata <isaku.yamahata@linux.intel.com>
+CC: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	<isaku.yamahata@intel.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <isaku.yamahata@gmail.com>, Paolo Bonzini
+	<pbonzini@redhat.com>, <erdemaktas@google.com>, Sean Christopherson
+	<seanjc@google.com>, Sagi Shahar <sagis@google.com>, <chen.bo@intel.com>,
+	<hang.yuan@intel.com>, <tina.zhang@intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <a50918ba3415be4186a91161fe3bbd839153d8b2.1708933498.git.isaku.yamahata@intel.com>
+ <2f6897c0-1b57-45b3-a1f1-9862b0e4c884@intel.com>
+ <jvyz3nuz225ry6ss6hs42jyuvrytsnsi2l74cwibtt5sedaimb@v2vilg4mbhws>
+ <20240305081219.GC10568@ls.amr.corp.intel.com>
+ <75adc31d-6632-4ea1-8191-dad1659e7b33@intel.com>
+ <20240306221728.GB368614@ls.amr.corp.intel.com>
+From: "Huang, Kai" <kai.huang@intel.com>
+In-Reply-To: <20240306221728.GB368614@ls.amr.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4P220CA0021.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::26) To BL1PR11MB5978.namprd11.prod.outlook.com
+ (2603:10b6:208:385::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LlBnGJPaJqQbJj4MjZdlKTN6fEx2UseQ
-X-Proofpoint-ORIG-GUID: LlBnGJPaJqQbJj4MjZdlKTN6fEx2UseQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- suspectscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 spamscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403060181
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR11MB5978:EE_|IA1PR11MB6292:EE_
+X-MS-Office365-Filtering-Correlation-Id: f0f576f2-af85-4705-274c-08dc3e2c65ac
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1wFty8k94fNBq0aarHlgNm/TnxWIdUGqwenGFbHfCEMa+S+aNjvXvHYAPCSp1nLWsA7K2nBRRTyY1N5Mdd249/leDuLCLa69Ry+O5lMkGYi0ulmEeY0ncYzFZNtB83k/9Vkjx8D/0Bfayid73BtJyxc9Zb6G0Z9W+H45IBhjiiQKA645Uy+BJ2Hf+OXlYESvLp1yghfj6JtRgqHK0XFvs2e90Phueeef6KKgIgZhZKo5dP/XoxzTZal477hKk/k77XCtr2SohJkzB+0WWb7LzJOCBv30JxbWMP1mcJNSCnfp2zVB/4xM1tkyaEuoP74zA24Oyjs05EzvqQT9ZxoTe+r1pcdAfIAxBOVM16YII9mwyNTJyXJhjoPCzPt5qsK5xp2+dveRNY0HFCpD4sEVEszrAqXsxc9by8dodzCiWbcQRbwfRUCH+hbvFyQjZl6Q2xpUK/n/VFAOE0GhnlF1sU65ahQ/kFzpoBu2lNh2kJl6hAlKDfTna4GiKiJ67Wz0u23UTMXc5oH46c9wKbZKhTnIY4wO94gg4USR1SP+1oS/pJxzmFaMamwYudSMF//yoJZOSPi9z4qz9Kzcd2x+kKJe+PVwZhtnf22+LElA9WUzFnhXQO2akRQflzjBUMsz9hwPG5XcJZxyoKjIMyqSOSvN2u9lmYBY2rjKyTG3PHs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TVZWUzFKU2lQYzcrLzRkaDdHdWlIY2s2SHhEeVRVL2lYQ1Zoc0RWNklZSWlX?=
+ =?utf-8?B?dVNSQXUyQTFybVE3UUYrN3JVSGRSN3FUS1lzcVdBTzVVbjRWaXMvaWFkc3NO?=
+ =?utf-8?B?dVE1NXVlMEtmQ1NaRnZaVXFQL1E5MUdHRHNSQkdpK0RMZ3h4OHh5VlQrbkZH?=
+ =?utf-8?B?VWpxc04wN1RrbjVtd1BZd3lwMXpYaC8yK1oxYWMwdGpTYjJFblFQN2MyYS9V?=
+ =?utf-8?B?N1puN2tsQ21RSllFVlhDSHQ3Mjc4Q0I0R0doMnBtZis4ZjNmWkhySG42aUxI?=
+ =?utf-8?B?UHhKcU12UTFJbmRFeWdtMHRHYWkxOG9hSVdMWld4Z3lycFpEbjhQU0c1WnRI?=
+ =?utf-8?B?bDJqVmZBb2xwa0RQV0RPdU9aaGIwZGRlZHkxMmROVEdKd24yN1NXZUN6M040?=
+ =?utf-8?B?M0FkeXY0VmxieUFqZnlIcjEvSFpuZFZpVmZlMCs2cmI2TDhHRDdUb1NoWVBR?=
+ =?utf-8?B?eVV6eHVha2NYYmp1bTBhWmJYRElpUWUyWjJ4SnpLbUMyaTNpOCtuazFhaGVP?=
+ =?utf-8?B?YWJ1WUkya05wN0ZOWk10VzRpLzFuRHczLzZCdGk5YlNqVWRJVEY1cStHZXFH?=
+ =?utf-8?B?SDFqRm9JdjZtR24waWlOUzBFek9aOEI3OHd5K2l5UHVmTFBqMmgydGtYby95?=
+ =?utf-8?B?aTJQMXRUdERpeGhMVklmWGs3UkJFWWJPMEdpSG1ORWI3UkpyeUcvRUhpRGRZ?=
+ =?utf-8?B?cytZVmNQM1N4c3lFNlRQVzN1K29CUUVxWi8rdzdCYmxrejdhaWt4UWtIdmtY?=
+ =?utf-8?B?UGhDMXNHRVh4K3hXNm5OLzRmcUtEUmk0WWErTVZWOHdhVGVIRWFGMGRlR1k3?=
+ =?utf-8?B?aEYwcmo2NnJtZWtaZ2Fnem5XNXlTZDNSbnFYMlM3M2x2b1Z4SHJnWmlSYVZa?=
+ =?utf-8?B?L0FBRmRaK21BbGNXNEMrbGtvTkpkbFMvVXJOd2pmYmdUa3RrL1Z4eVFSZStt?=
+ =?utf-8?B?aEZ3eGkyeGp1Z1FuQmFzaWovTEpicmpXR1FwYlVvNDBSSkRkUExNS2MwdWRn?=
+ =?utf-8?B?R0V0eUhldnd6ZGY3c0k4di9pV3V4aEhFR1plci9xcG5oakZ4RWljSEtoVVFM?=
+ =?utf-8?B?L1RJWXRpek5DQUtnc2xIM1hOcVJVV1NOTEtsMXc4SHFmclNvY2JCZFZuaEFH?=
+ =?utf-8?B?VGVQeGUxL2IyTTJCdFRSV3E1bk5DMmkvbTFsNS9ZRktsZGpPdjVTVHVRaHQ3?=
+ =?utf-8?B?cDRTaW9renkxSTZkWU14c3R6YVdVT243NDBVS3l1OU5Nd1NlUE9kamZKMXN4?=
+ =?utf-8?B?U0xTNVVuMG0xM2tTRFgvNHJFb2pCQmpBMytiYkhUVDBBTXZabzhIc1o5ekJW?=
+ =?utf-8?B?enBRaHoxK1RkQUU0Mk92bG1iOGcxSlozR2ZrVGVHdDRFY2w4eHFCcTRFM0po?=
+ =?utf-8?B?TXFMMENlVkgyUTlycHdZbGN0dmtEY1RiZUVtWVJsSElmaVU0aDkrVGkzVGRh?=
+ =?utf-8?B?aXVaOTJUMVdtd21RV0FnbTRoSHBYVnRsS3RJMnM2Z1pPT1BQbS92QyttMjZw?=
+ =?utf-8?B?SmFKa0MyYmhGdDJUc0VYdkZrODR1VENIb0ZrODBtVEttSUdUL2xjcDBtaVZZ?=
+ =?utf-8?B?Yld0aStNN2RneEJoenVQclhHS3pWbElsSUxDY091ai9Nd0FrSkh5ZlJNa1Jo?=
+ =?utf-8?B?TzVmbU1na3ZoV3J3K2RUOGFCcWFLc0pxVnh3VDBBV0pWMWtTRFlNWjZjQ0lF?=
+ =?utf-8?B?MUJ2dW1pQWovem1jMzhzcHAraUMyc3BUS2lYT1cwMmxQSGN6RmJiNC9TTmdG?=
+ =?utf-8?B?QWoxYkQ0ai9oRVJGL0grVkIwQ1JoWXVKNjBjc3ppV1dBdXA1V0NiK1haREpT?=
+ =?utf-8?B?ZFRjZUhPNVp6TlpKS09wK0VrTEozVUNHZkdDMzkrNjAzRWhIRlhHdGgzeHhv?=
+ =?utf-8?B?Y3FtTmNHWlNDbGRUaGNTVytNb0c3QWprRWdhVUpZYXlOYUVCVkd2czJCZzlu?=
+ =?utf-8?B?bVA2UVgwVHRpd05WbllUdGRQejBTQWZrNVlYZWlMUi95L05ocTMybHY5cUox?=
+ =?utf-8?B?eXlFQzRvWFlKZ1prU2NVNUpzbGoyZ0ovMnVYVXFlT3FZYStRV1k1djN1UTRk?=
+ =?utf-8?B?MnRTQlFLelA4NHJmbmh0cnFJN3QrYnFOU3gvZERtdzNyUVpFK3hOemhJcUlG?=
+ =?utf-8?Q?/DfMSdbXIr1JdGEf8L6D3LM4F?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0f576f2-af85-4705-274c-08dc3e2c65ac
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 22:25:58.6485
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0THpi9X6VBia6CnQAq5TkCXp3EkeqCjVDS/IZKGVQA++vKIYtfU0tB1Y2kFGbsfUueoGqcnh1f+4lhmhhOYmlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6292
+X-OriginatorOrg: intel.com
 
-Register NIST P521 as an akcipher and extend the testmgr with
-NIST P521-specific test vectors.
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Tested-by: Lukas Wunner <lukas@wunner.de>
----
- crypto/ecdsa.c   |  30 ++++++++++
- crypto/testmgr.c |   7 +++
- crypto/testmgr.h | 146 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 183 insertions(+)
+>> Please just clarify (at least):
+>>
+>>   - Does this problem exist in upstream code?
+> 
+> No.
+> 
+>>   - If it does, what is the root cause, and how to reproduce?
+> 
+> v18 had a problem because it has stub function. v19 doesn't have problem because
+> it deleted the stub function.
 
-diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
-index 4e847b59622a..894599f1885f 100644
---- a/crypto/ecdsa.c
-+++ b/crypto/ecdsa.c
-@@ -269,6 +269,28 @@ static unsigned int ecdsa_max_size(struct crypto_akcipher *tfm)
- 	return DIV_ROUND_UP(ctx->curve->nbits, 8);
- }
- 
-+static int ecdsa_nist_p521_init_tfm(struct crypto_akcipher *tfm)
-+{
-+	struct ecc_ctx *ctx = akcipher_tfm_ctx(tfm);
-+
-+	return ecdsa_ecc_ctx_init(ctx, ECC_CURVE_NIST_P521);
-+}
-+
-+static struct akcipher_alg ecdsa_nist_p521 = {
-+	.verify = ecdsa_verify,
-+	.set_pub_key = ecdsa_set_pub_key,
-+	.max_size = ecdsa_max_size,
-+	.init = ecdsa_nist_p521_init_tfm,
-+	.exit = ecdsa_exit_tfm,
-+	.base = {
-+		.cra_name = "ecdsa-nist-p521",
-+		.cra_driver_name = "ecdsa-nist-p521-generic",
-+		.cra_priority = 100,
-+		.cra_module = THIS_MODULE,
-+		.cra_ctxsize = sizeof(struct ecc_ctx),
-+	},
-+};
-+
- static int ecdsa_nist_p384_init_tfm(struct crypto_akcipher *tfm)
- {
- 	struct ecc_ctx *ctx = akcipher_tfm_ctx(tfm);
-@@ -352,8 +374,15 @@ static int __init ecdsa_init(void)
- 	if (ret)
- 		goto nist_p384_error;
- 
-+	ret = crypto_register_akcipher(&ecdsa_nist_p521);
-+	if (ret)
-+		goto nist_p521_error;
-+
- 	return 0;
- 
-+nist_p521_error:
-+	crypto_unregister_akcipher(&ecdsa_nist_p384);
-+
- nist_p384_error:
- 	crypto_unregister_akcipher(&ecdsa_nist_p256);
- 
-@@ -369,6 +398,7 @@ static void __exit ecdsa_exit(void)
- 		crypto_unregister_akcipher(&ecdsa_nist_p192);
- 	crypto_unregister_akcipher(&ecdsa_nist_p256);
- 	crypto_unregister_akcipher(&ecdsa_nist_p384);
-+	crypto_unregister_akcipher(&ecdsa_nist_p521);
- }
- 
- subsys_initcall(ecdsa_init);
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index c26aeda85787..a017b4ad119b 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -5097,6 +5097,13 @@ static const struct alg_test_desc alg_test_descs[] = {
- 		.suite = {
- 			.akcipher = __VECS(ecdsa_nist_p384_tv_template)
- 		}
-+	}, {
-+		.alg = "ecdsa-nist-p521",
-+		.test = alg_test_akcipher,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.akcipher = __VECS(ecdsa_nist_p521_tv_template)
-+		}
- 	}, {
- 		.alg = "ecrdsa",
- 		.test = alg_test_akcipher,
-diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-index 986f331a5fc2..9bde04be8df9 100644
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -991,6 +991,152 @@ static const struct akcipher_testvec ecdsa_nist_p384_tv_template[] = {
- 	},
- };
- 
-+static const struct akcipher_testvec ecdsa_nist_p521_tv_template[] = {
-+	{
-+	.key = /* secp521r1(sha224) */
-+	"\x04\x01\x4f\x43\x18\xb6\xa9\xc9\x5d\x68\xd3\xa9\x42\xf8\x98\xc0"
-+	"\xd2\xd1\xa9\x50\x3b\xe8\xc4\x40\xe6\x11\x78\x88\x4b\xbd\x76\xa7"
-+	"\x9a\xe0\xdd\x31\xa4\x67\x78\x45\x33\x9e\x8c\xd1\xc7\x44\xac\x61"
-+	"\x68\xc8\x04\xe7\x5c\x79\xb1\xf1\x41\x0c\x71\xc0\x53\xa8\xbc\xfb"
-+	"\xf5\xca\xd4\x01\x40\xfd\xa3\x45\xda\x08\xe0\xb4\xcb\x28\x3b\x0a"
-+	"\x02\x35\x5f\x02\x9f\x3f\xcd\xef\x08\x22\x40\x97\x74\x65\xb7\x76"
-+	"\x85\xc7\xc0\x5c\xfb\x81\xe1\xa5\xde\x0c\x4e\x8b\x12\x31\xb6\x47"
-+	"\xed\x37\x0f\x99\x3f\x26\xba\xa3\x8e\xff\x79\x34\x7c\x3a\xfe\x1f"
-+	"\x3b\x83\x82\x2f\x14",
-+	.key_len = 133,
-+	.params =
-+	"\x30\x10\x06\x07\x2a\x86\x48\xce\x3d\x02\x01\x06\x05\x2b\x81\x04"
-+	"\x00\x23",
-+	.param_len = 18,
-+	.m =
-+	"\xa2\x3a\x6a\x8c\x7b\x3c\xf2\x51\xf8\xbe\x5f\x4f\x3b\x15\x05\xc4"
-+	"\xb5\xbc\x19\xe7\x21\x85\xe9\x23\x06\x33\x62\xfb",
-+	.m_size = 28,
-+	.algo = OID_id_ecdsa_with_sha224,
-+	.c =
-+	"\x30\x81\x86\x02\x41\x01\xd6\x43\xe7\xff\x42\xb2\xba\x74\x35\xf6"
-+	"\xdc\x6d\x02\x7b\x22\xac\xe2\xef\x07\x92\xee\x60\x94\x06\xf8\x3f"
-+	"\x59\x0f\x74\xf0\x3f\xd8\x18\xc6\x37\x8a\xcb\xa7\xd8\x7d\x98\x85"
-+	"\x29\x88\xff\x0b\x94\x94\x6c\xa6\x9b\x89\x8b\x1e\xfd\x09\x46\x6b"
-+	"\xc7\xaf\x7a\xb9\x19\x0a\x02\x41\x3a\x26\x0d\x55\xcd\x23\x1e\x7d"
-+	"\xa0\x5e\xf9\x88\xf3\xd2\x32\x90\x57\x0f\xf8\x65\x97\x6b\x09\x4d"
-+	"\x22\x26\x0b\x5f\x49\x32\x6b\x91\x99\x30\x90\x0f\x1c\x8f\x78\xd3"
-+	"\x9f\x0e\x64\xcc\xc4\xe8\x43\xd9\x0e\x1c\xad\x22\xda\x82\x00\x35"
-+	"\xa3\x50\xb1\xa5\x98\x92\x2a\xa5\x52",
-+	.c_size = 137,
-+	.public_key_vec = true,
-+	.siggen_sigver_test = true,
-+	},
-+	{
-+	.key = /* secp521r1(sha256) */
-+	"\x04\x01\x05\x3a\x6b\x3b\x5a\x0f\xa7\xb9\xb7\x32\x53\x4e\xe2\xae"
-+	"\x0a\x52\xc5\xda\xdd\x5a\x79\x1c\x30\x2d\x33\x07\x79\xd5\x70\x14"
-+	"\x61\x0c\xec\x26\x4d\xd8\x35\x57\x04\x1d\x88\x33\x4d\xce\x05\x36"
-+	"\xa5\xaf\x56\x84\xfa\x0b\x9e\xff\x7b\x30\x4b\x92\x1d\x06\xf8\x81"
-+	"\x24\x1e\x51\x00\x09\x21\x51\xf7\x46\x0a\x77\xdb\xb5\x0c\xe7\x9c"
-+	"\xff\x27\x3c\x02\x71\xd7\x85\x36\xf1\xaa\x11\x59\xd8\xb8\xdc\x09"
-+	"\xdc\x6d\x5a\x6f\x63\x07\x6c\xe1\xe5\x4d\x6e\x0f\x6e\xfb\x7c\x05"
-+	"\x8a\xe9\x53\xa8\xcf\xce\x43\x0e\x82\x20\x86\xbc\x88\x9c\xb7\xe3"
-+	"\xe6\x77\x1e\x1f\x8a",
-+	.key_len = 133,
-+	.params =
-+	"\x30\x10\x06\x07\x2a\x86\x48\xce\x3d\x02\x01\x06\x05\x2b\x81\x04"
-+	"\x00\x23",
-+	.param_len = 18,
-+	.m =
-+	"\xcc\x97\x73\x0c\x73\xa2\x53\x2b\xfa\xd7\x83\x1d\x0c\x72\x1b\x39"
-+	"\x80\x71\x8d\xdd\xc5\x9b\xff\x55\x32\x98\x25\xa2\x58\x2e\xb7\x73",
-+	.m_size = 32,
-+	.algo = OID_id_ecdsa_with_sha256,
-+	.c =
-+	"\x30\x81\x88\x02\x42\x00\xcd\xa5\x5f\x57\x52\x27\x78\x3a\xb5\x06"
-+	"\x0f\xfd\x83\xfc\x0e\xd9\xce\x50\x9f\x7d\x1f\xca\x8b\xa8\x2d\x56"
-+	"\x3c\xf6\xf0\xd8\xe1\xb7\x5d\x95\x35\x6f\x02\x0e\xaf\xe1\x4c\xae"
-+	"\xce\x54\x76\x9a\xc2\x8f\xb8\x38\x1f\x46\x0b\x04\x64\x34\x79\xde"
-+	"\x7e\xd7\x59\x10\xe9\xd9\xd5\x02\x42\x01\xcf\x50\x85\x38\xf9\x15"
-+	"\x83\x18\x04\x6b\x35\xae\x65\xb5\x99\x12\x0a\xa9\x79\x24\xb9\x37"
-+	"\x35\xdd\xa0\xe0\x87\x2c\x44\x4b\x5a\xee\xaf\xfa\x10\xdd\x9b\xfb"
-+	"\x36\x1a\x31\x03\x42\x02\x5f\x50\xf0\xa2\x0d\x1c\x57\x56\x8f\x12"
-+	"\xb7\x1d\x91\x55\x38\xb6\xf6\x34\x65\xc7\xbd",
-+	.c_size = 139,
-+	.public_key_vec = true,
-+	.siggen_sigver_test = true,
-+	},
-+	{
-+	.key = /* secp521r1(sha384) */
-+	"\x04\x00\x2e\xd6\x21\x04\x75\xc3\xdc\x7d\xff\x0e\xf3\x70\x25\x2b"
-+	"\xad\x72\xfc\x5a\x91\xf1\xd5\x9c\x64\xf3\x1f\x47\x11\x10\x62\x33"
-+	"\xfd\x2e\xe8\x32\xca\x9e\x6f\x0a\x4c\x5b\x35\x9a\x46\xc5\xe7\xd4"
-+	"\x38\xda\xb2\xf0\xf4\x87\xf3\x86\xf4\xea\x70\xad\x1e\xd4\x78\x8c"
-+	"\x36\x18\x17\x00\xa2\xa0\x34\x1b\x2e\x6a\xdf\x06\xd6\x99\x2d\x47"
-+	"\x50\x92\x1a\x8a\x72\x9c\x23\x44\xfa\xa7\xa9\xed\xa6\xef\x26\x14"
-+	"\xb3\x9d\xfe\x5e\xa3\x8c\xd8\x29\xf8\xdf\xad\xa6\xab\xfc\xdd\x46"
-+	"\x22\x6e\xd7\x35\xc7\x23\xb7\x13\xae\xb6\x34\xff\xd7\x80\xe5\x39"
-+	"\xb3\x3b\x5b\x1b\x94",
-+	.key_len = 133,
-+	.params =
-+	"\x30\x10\x06\x07\x2a\x86\x48\xce\x3d\x02\x01\x06\x05\x2b\x81\x04"
-+	"\x00\x23",
-+	.param_len = 18,
-+	.m =
-+	"\x36\x98\xd6\x82\xfa\xad\xed\x3c\xb9\x40\xb6\x4d\x9e\xb7\x04\x26"
-+	"\xad\x72\x34\x44\xd2\x81\xb4\x9b\xbe\x01\x04\x7a\xd8\x50\xf8\x59"
-+	"\xba\xad\x23\x85\x6b\x59\xbe\xfb\xf6\x86\xd4\x67\xa8\x43\x28\x76",
-+	.m_size = 48,
-+	.algo = OID_id_ecdsa_with_sha384,
-+	.c =
-+	"\x30\x81\x88\x02\x42\x00\x93\x96\x76\x3c\x27\xea\xaa\x9c\x26\xec"
-+	"\x51\xdc\xe8\x35\x5e\xae\x16\xf2\x4b\x64\x98\xf7\xec\xda\xc7\x7e"
-+	"\x42\x71\x86\x57\x2d\xf1\x7d\xe4\xdf\x9b\x7d\x9e\x47\xca\x33\x32"
-+	"\x76\x06\xd0\xf9\xc0\xe4\xe6\x84\x59\xfd\x1a\xc4\x40\xdd\x43\xb8"
-+	"\x6a\xdd\xfb\xe6\x63\x4e\x28\x02\x42\x00\xff\xc3\x6a\x87\x6e\xb5"
-+	"\x13\x1f\x20\x55\xce\x37\x97\xc9\x05\x51\xe5\xe4\x3c\xbc\x93\x65"
-+	"\x57\x1c\x30\xda\xa7\xcd\x26\x28\x76\x3b\x52\xdf\xc4\xc0\xdb\x54"
-+	"\xdb\x8a\x0d\x6a\xc3\xf3\x7a\xd1\xfa\xe7\xa7\xe5\x5a\x94\x56\xcf"
-+	"\x8f\xb4\x22\xc6\x4f\xab\x2b\x62\xc1\x42\xb1",
-+	.c_size = 139,
-+	.public_key_vec = true,
-+	.siggen_sigver_test = true,
-+	},
-+	{
-+	.key = /* secp521r1(sha512) */
-+	"\x04\x00\xc7\x65\xee\x0b\x86\x7d\x8f\x02\xf1\x74\x5b\xb0\x4c\x3f"
-+	"\xa6\x35\x60\x9f\x55\x23\x11\xcc\xdf\xb8\x42\x99\xee\x6c\x96\x6a"
-+	"\x27\xa2\x56\xb2\x2b\x03\xad\x0f\xe7\x97\xde\x09\x5d\xb4\xc5\x5f"
-+	"\xbd\x87\x37\xbf\x5a\x16\x35\x56\x08\xfd\x6f\x06\x1a\x1c\x84\xee"
-+	"\xc3\x64\xb3\x00\x9e\xbd\x6e\x60\x76\xee\x69\xfd\x3a\xb8\xcd\x7e"
-+	"\x91\x68\x53\x57\x44\x13\x2e\x77\x09\x2a\xbe\x48\xbd\x91\xd8\xf6"
-+	"\x21\x16\x53\x99\xd5\xf0\x40\xad\xa6\xf8\x58\x26\xb6\x9a\xf8\x77"
-+	"\xfe\x3a\x05\x1a\xdb\xa9\x0f\xc0\x6c\x76\x30\x8c\xd8\xde\x44\xae"
-+	"\xd0\x17\xdf\x49\x6a",
-+	.key_len = 133,
-+	.params =
-+	"\x30\x10\x06\x07\x2a\x86\x48\xce\x3d\x02\x01\x06\x05\x2b\x81\x04"
-+	"\x00\x23",
-+	.param_len = 18,
-+	.m =
-+	"\x5c\xa6\xbc\x79\xb8\xa0\x1e\x11\x83\xf7\xe9\x05\xdf\xba\xf7\x69"
-+	"\x97\x22\x32\xe4\x94\x7c\x65\xbd\x74\xc6\x9a\x8b\xbd\x0d\xdc\xed"
-+	"\xf5\x9c\xeb\xe1\xc5\x68\x40\xf2\xc7\x04\xde\x9e\x0d\x76\xc5\xa3"
-+	"\xf9\x3c\x6c\x98\x08\x31\xbd\x39\xe8\x42\x7f\x80\x39\x6f\xfe\x68",
-+	.m_size = 64,
-+	.algo = OID_id_ecdsa_with_sha512,
-+	.c =
-+	"\x30\x81\x88\x02\x42\x01\x5c\x71\x86\x96\xac\x21\x33\x7e\x4e\xaa"
-+	"\x86\xec\xa8\x05\x03\x52\x56\x63\x0e\x02\xcc\x94\xa9\x05\xb9\xfb"
-+	"\x62\x1e\x42\x03\x6c\x74\x8a\x1f\x12\x3e\xb7\x7e\x51\xff\x7f\x27"
-+	"\x93\xe8\x6c\x49\x7d\x28\xfc\x80\xa6\x13\xfc\xb6\x90\xf7\xbb\x28"
-+	"\xb5\x04\xb0\xb6\x33\x1c\x7e\x02\x42\x01\x70\x43\x52\x1d\xe3\xc6"
-+	"\xbd\x5a\x40\x95\x35\x89\x4f\x41\x5f\x9e\x19\x88\x05\x3e\x43\x39"
-+	"\x01\xbd\xb7\x7a\x76\x37\x51\x47\x49\x98\x12\x71\xd0\xe9\xca\xa7"
-+	"\xc0\xcb\xaa\x00\x55\xbb\x6a\xb4\x73\x00\xd2\x72\x74\x13\x63\x39"
-+	"\xa6\xe5\x25\x46\x1e\x77\x44\x78\xe0\xd1\x04",
-+	.c_size = 139,
-+	.public_key_vec = true,
-+	.siggen_sigver_test = true,
-+	},
-+};
-+
- /*
-  * EC-RDSA test vectors are generated by gost-engine.
-  */
--- 
-2.43.0
+What is the "stub function"??
 
+If "v19 doesn't have problem", why do you even _need_ this patch??
+
+I am tired of guessing, but I don't care anymore given it's not a 
+problem in upstream code.
