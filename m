@@ -1,209 +1,130 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5125D75C;
-	Wed,  6 Mar 2024 08:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69295D47A;
+	Wed,  6 Mar 2024 08:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709715015; cv=none; b=Qjlh7lC1V7u4sT2wSblH+n+UM9S7uDQqVLihSasa+AA7wOfufi11Pu8Sllu9OTNvI82vW/hceNjMUeAxAuWZHxt3+VIXhHzS6nusoHLKHdpFxrIG2uZ1cxi0iKEQwpTMK2naURh7fQzO+hXfLNkrAxy0VyYPDhLiRL4WWglMKSM=
+	t=1709715030; cv=none; b=YVAHR7zB7RcA3CB9ThrvydWormOT3jGsgc5zAerYRiRjP2UZny0SWbUvAjEq/eq6qhL1zOOxWmC/jBDG+kSIDi+eGBgkLxSFh/lLMKZqiD8p9Ce+Hx+XhpPNvFGuSuEZ9h5UURM37Y+aT+v8Oq2fBBQUC2k5yphCX2Lt+Ea3Q7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709715015; c=relaxed/simple;
-	bh=HateX3LLeZdB/hmGCbPu2UTVKn/rmhpctmgFXc6UpcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ayq2UjEBPnyx8n6AAVsgTu7ecuF9QD1QQSgR2JTtWz/7pUPLl/vQO3on2ktF35Y5e3uzZMsBUfoJtpS9Vj/MCZIY7hGqu0EsJYBV1U0cIjJZfm3NI7MIvDBt9NUBupaF/j2p49gyiZmmZpujlFdlG6U0TnHbbuX2ZyRPGKsbaDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Eatb8Jib; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709715030; c=relaxed/simple;
+	bh=7jG67fGId0CdX9CLJmVsTwSsrzWZShXWdZdV4aiHbCs=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=U1724MMMq8vI/+B9Bx+GsYSgPuYPg9watuDd0m8scTsfkpFaci6omwRuxOhPJJ5BgVvu2Bjh56BQUhSYi/oDAPF5mXBAXxbKLQcHYe/DD2w0bxLBoxtwlC9Qws/kcrIxVwd3nP3ydwWC69zzp+OJjVJNz1EXVOG2lW+5NS6ev7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aGcPyRcD; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Eatb8Jib"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709715012;
-	bh=HateX3LLeZdB/hmGCbPu2UTVKn/rmhpctmgFXc6UpcY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Eatb8JibbQ25Fe1nNtOgWaSZR8QMC68IIenGsNhQVHyvWG2ygFqPZ1j5xv2zcSNfF
-	 EBn5q2K0SltAHws33YmDk4s2xHIzv0YICGp+WMp2PAcwHREBASOq2xupjYN88k6ThM
-	 EHcf2Gf8NETrkwAzs5zJBQPMTbpvqMNR91DF45uuxZ1QQdwy9nlKMjpQqH3N12EmAj
-	 +TJ0F+BYzMkC6YVmOZQMqvnn9QjHr5TcI5UmD6zf0UtJpEpArgrp2AJw/4XZvjLcOV
-	 5xkxLryihLPLN4H7Kuy250EAROxDScp0XFtCW+Xxqncrl7oGvqJnk0V/FV2QB0rEiI
-	 rK/sEN34+Yynw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EDD8B37820D0;
-	Wed,  6 Mar 2024 08:50:10 +0000 (UTC)
-Message-ID: <c55f2c6e-1de8-4248-a52a-d6c9e49b565a@collabora.com>
-Date: Wed, 6 Mar 2024 09:50:10 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGcPyRcD"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dc74435c428so7254599276.2;
+        Wed, 06 Mar 2024 00:50:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709715028; x=1710319828; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bhvGossaIFikEDdBLhLIr5Ze7xMtGtGJ5kS7C2G6lPo=;
+        b=aGcPyRcDQBktnFBP4Oqr36jLirJUjP7B0St1tiFqsF4a0WN/y/SsvWC5eou5jJfRNW
+         039jFcHE/OkxVMSEYzkS13xph2JYHYOq7GNFNaf3nX/ugqG5bcMl8CjYY9W2fLmfqsXI
+         tKBLGwXN2Viyllb+/ByDpWa09wEyeFKmCGy1MM0RNgY+cGfBAtly/n7d3ioKX3p7it//
+         5U0LBLkvUmQOia8DZo5Ni0QofnhV0y7S5SLV6xgt4y5rqwggWi2Faxff1K8OejqDYsLX
+         8qT5lsB7lEBfxIo7+YaRKey3TMxUAdqJtLxrKse/8B3a7rhd6uMG13Lq+9hKUhYQQuw0
+         dZ5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709715028; x=1710319828;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bhvGossaIFikEDdBLhLIr5Ze7xMtGtGJ5kS7C2G6lPo=;
+        b=p3x1WQi4Ay5pfigPQyUqMwk+ylQwm+ZLuAmHhGJiBspwa5v42Hm74VpJg6/UXwyoJL
+         foLw0VfZmCx7su3YcYAVIirYmKs3FzxlVhgeM8DXmdEU/UupFKQf5Q/jAWoYYkcTJg9T
+         83cU2sotXb0X7ePuIN8LycqjC1yrJOZXQKgb3/QPsFSRwjh+AipZNxKn83oNOxYyZc2U
+         vpXAdg60RxN+fAAbJZV8cReVH3V3yPGhnvodD+RBX6m/QmtNoC6y6bzdfyBnnDS+ELtx
+         cV3C1SByfI1hPL5lpS2o3SUw/vx7RPgWGUZ3MwcWzfLzfXqY4ba8Gy/U+nJ3nGFTlH0L
+         g3AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXCCwL4S7t/JxS/0WtEROOSh4BPwFXMK3cXroICZ9KStb6/tQBSlyWJZRNzDJ/7fSXGRns0nHKbsuUxNuI5jiQRCse5D2Rp7gwveLXWGCFkUxzsU2NCWpQxM7HDCRR/CgZK9ABS
+X-Gm-Message-State: AOJu0Yz1IwtiMT0+zehWrQ2isffKDmGkV6N1Jd0Q7sJg+MW/Vvpw/zOy
+	BrVJ5S1yvqdp/cvc/oS+uTBFJM9+tow3ecQi6qW4AQDcvolJotsG
+X-Google-Smtp-Source: AGHT+IHo0fVyrwRdqqDFiDf/4hTnJ0mdwUKvvIdtVbtQ7ZmcIh6wtGxbKUnfXd7ZYkwMcDEuQy1C8g==
+X-Received: by 2002:a25:aa8b:0:b0:dc2:2b0d:613e with SMTP id t11-20020a25aa8b000000b00dc22b0d613emr11442609ybi.10.1709715027798;
+        Wed, 06 Mar 2024 00:50:27 -0800 (PST)
+Received: from localhost (55.87.194.35.bc.googleusercontent.com. [35.194.87.55])
+        by smtp.gmail.com with ESMTPSA id k26-20020ac8605a000000b0042efc6ad5a9sm1740625qtm.23.2024.03.06.00.50.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 00:50:27 -0800 (PST)
+Date: Wed, 06 Mar 2024 03:50:27 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Marcelo Tosatti <mtosatti@redhat.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Valentin Schneider <vschneid@redhat.com>, 
+ Paolo Abeni <pabeni@redhat.com>
+Message-ID: <65e82e533857c_a463929462@willemb.c.googlers.com.notmuch>
+In-Reply-To: <ZeXQup48+X6U9TQ/@tpad>
+References: <ZeXQup48+X6U9TQ/@tpad>
+Subject: Re: [PATCH net-next -v3] net/core/dev.c: enable timestamp static key
+ if CPU isolation is configured
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Assert MAC reset only if PHY reset
- also present
-To: =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= <Jianjun.Wang@mediatek.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "linux-mediatek@lists.infradead.org"
- <linux-mediatek@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "wenst@chromium.org" <wenst@chromium.org>,
- "kernel@collabora.com" <kernel@collabora.com>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- Ryder Lee <Ryder.Lee@mediatek.com>,
- "nfraprado@collabora.com" <nfraprado@collabora.com>
-References: <20240229092449.580971-1-angelogioacchino.delregno@collabora.com>
- <30824df32636dec25b9a5972b1ee8de76b295feb.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <30824df32636dec25b9a5972b1ee8de76b295feb.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Il 01/03/24 03:48, Jianjun Wang (王建军) ha scritto:
-> Hi Angelo,
+Marcelo Tosatti wrote:
 > 
-> Thanks for your patch.
+> For systems that use CPU isolation (via nohz_full), creating or destroying
+> a socket with
+
+- timestamping (SOCK_TIMESTAMPING_RX_SOFTWARE) might cause a
++ SO_TIMESTAMP, SO_TIMESTAMPNS or SO_TIMESTAMPING with flag
++ SOF_TIMESTAMPING_RX_SOFTWARE will cause a
+
+> static key to be enabled/disabled. This in turn causes undesired
+> IPIs to isolated CPUs.
 > 
-> On Thu, 2024-02-29 at 10:24 +0100, AngeloGioacchino Del Regno wrote:
->> Some SoCs have two PCI-Express controllers: in the case of MT8195,
->> one of them is using a dedicated PHY, but the other uses a combo PHY
->> that is shared with USB and in that case the PHY cannot be reset
->> from the PCIe driver, or USB functionality will be unable to resume.
->>
->> Resetting the PCIe MAC without also resetting the PHY will result in
->> a full system lockup at PCIe resume time and the only option to
->> resume operation is to hard reboot the system (with a PMIC cut-off).
->>
->> To resolve this issue, check if we've got both a PHY and a MAC reset
->> and, if not, never assert resets at PM suspend time: in that case,
->> the link is still getting powered down as both the clocks and the
->> power domains will go down anyway.
->>
->> Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
->> Signed-off-by: AngeloGioacchino Del Regno <
->> angelogioacchino.delregno@collabora.com>
->> ---
->>
->> Changes in v2:
->>   - Rebased over next-20240229
->>
->>   drivers/pci/controller/pcie-mediatek-gen3.c | 25 ++++++++++++++-----
->> --
->>   1 file changed, 17 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
->> b/drivers/pci/controller/pcie-mediatek-gen3.c
->> index 975b3024fb08..99b5d7a49be1 100644
->> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
->> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
->> @@ -874,17 +874,26 @@ static int mtk_pcie_power_up(struct
->> mtk_gen3_pcie *pcie)
->>   	return err;
->>   }
->>   
->> -static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
->> +static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie, bool
->> is_suspend)
->>   {
->> +	bool suspend_reset_supported = pcie->mac_reset && pcie-
->>> phy_reset;
->> +
->>   	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
->>   
->>   	pm_runtime_put_sync(pcie->dev);
->>   	pm_runtime_disable(pcie->dev);
->> -	reset_control_assert(pcie->mac_reset);
->> +
->> +	/*
->> +	 * Assert MAC reset only if we also got a PHY reset, otherwise
->> +	 * the system will lockup at PM resume time.
->> +	 */
->> +	if (is_suspend && suspend_reset_supported)
->> +		reset_control_assert(pcie->mac_reset);
->>   
->>   	phy_power_off(pcie->phy);
->>   	phy_exit(pcie->phy);
->> -	reset_control_assert(pcie->phy_reset);
->> +	if (is_suspend && suspend_reset_supported)
->> +		reset_control_assert(pcie->phy_reset);
->>   }
->>   
->>   static int mtk_pcie_setup(struct mtk_gen3_pcie *pcie)
->> @@ -920,7 +929,7 @@ static int mtk_pcie_setup(struct mtk_gen3_pcie
->> *pcie)
->>   	return 0;
->>   
->>   err_setup:
->> -	mtk_pcie_power_down(pcie);
->> +	mtk_pcie_power_down(pcie, false);
->>   
->>   	return err;
->>   }
->> @@ -951,7 +960,7 @@ static int mtk_pcie_probe(struct platform_device
->> *pdev)
->>   	err = pci_host_probe(host);
->>   	if (err) {
->>   		mtk_pcie_irq_teardown(pcie);
->> -		mtk_pcie_power_down(pcie);
->> +		mtk_pcie_power_down(pcie, false);
->>   		return err;
->>   	}
->>   
->> @@ -969,7 +978,7 @@ static void mtk_pcie_remove(struct
->> platform_device *pdev)
->>   	pci_unlock_rescan_remove();
->>   
->>   	mtk_pcie_irq_teardown(pcie);
->> -	mtk_pcie_power_down(pcie);
->> +	mtk_pcie_power_down(pcie, false);
+> So enable the static key unconditionally, if CPU isolation is enabled,
+> thus avoiding the IPIs.
 > 
-> Is there any reason not to reset the MAC and PHY when probe fails and
-> driver removing? Some SoCs may not have MTCMOS to cut off their power,
-> we need to assert the reset signal to save power in that case.
+> Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index c588808be77f..15a32f5900e6 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -155,6 +155,7 @@
+>  #include <net/netdev_rx_queue.h>
+>  #include <net/page_pool/types.h>
+>  #include <net/page_pool/helpers.h>
+> +#include <linux/sched/isolation.h>
+>  
+>  #include "dev.h"
+>  #include "net-sysfs.h"
+> @@ -11851,3 +11852,14 @@ static int __init net_dev_init(void)
+>  }
+>  
+>  subsys_initcall(net_dev_init);
+> +
+> +static int __init net_dev_late_init(void)
+> +{
+> +	/* avoid static key IPIs to isolated CPUs */
+> +	if (housekeeping_enabled(HK_TYPE_MISC))
+> +		net_enable_timestamp();
+> +
+> +	return 0;
+> +}
+> +
+> +late_initcall(net_dev_late_init);
 > 
 
-Sorry for the late reply - yes, there is a reason.
+Can this be included in the existing net_dev_init
+subsys_initcall?
 
-On platforms needing this quirk, resetting at .remove() time will hang the
-machine if the module is reinserted later (hence, .probe() called at a later
-time).
-
-Regards,
-Angelo
-
-> Thanks.
-> 
->>   }
->>   
->>   static void mtk_pcie_irq_save(struct mtk_gen3_pcie *pcie)
->> @@ -1044,7 +1053,7 @@ static int mtk_pcie_suspend_noirq(struct device
->> *dev)
->>   	dev_dbg(pcie->dev, "entered L2 states successfully");
->>   
->>   	mtk_pcie_irq_save(pcie);
->> -	mtk_pcie_power_down(pcie);
->> +	mtk_pcie_power_down(pcie, true);
->>   
->>   	return 0;
->>   }
->> @@ -1060,7 +1069,7 @@ static int mtk_pcie_resume_noirq(struct device
->> *dev)
->>   
->>   	err = mtk_pcie_startup_port(pcie);
->>   	if (err) {
->> -		mtk_pcie_power_down(pcie);
->> +		mtk_pcie_power_down(pcie, false);
->>   		return err;
->>   	}
->>   
-
-
+Aside from that small question LGTM.
