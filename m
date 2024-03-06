@@ -1,205 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73BB7460;
-	Wed,  6 Mar 2024 02:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709691538; cv=fail; b=tqaI6f0YcwG/L3jA7To3cdmqR5dO6PEJ7SoZHvYsWftBQasW9FYWM+0f6s+OHC+UbLYWapJQrEi7h66XjtRU9MyqDtIejP7oCIoBtLyNs0LAD4DpwsSONEUtr6yHDSXWu2aB7E4AuI4ytmXCMYY+icvywTY2F6dG3EKw/pe9UyE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709691538; c=relaxed/simple;
-	bh=FU/QqbWavtxhiowV49K10UC40h3nDdFk4SU990kGbVg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Qa9mSRFyRkFwS26224XjKkvMkzgx6g0sX5kEf1OOTpo8KGlsNyUSlU90dsBwNoy2GVclY5CjwqnHTxMr5b97BOSJ7dwDGPYGm+i8/WuKFGDXsCvXcVQeq9qjPOyuld+pUxCWiXrFLlQf0FotEwc9sDobubN05z7+g++A+BzPTVo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XkYHRoXB; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE11479E4
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 02:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709691599; cv=none; b=bCVHxstHZhrjMwpiU5jJVcuwp5weGnx+LjEEnlYi6+0DCTp6ZQpYykbRRFL90un7rHJ0Cc8x1ZHk/vfBBrdQsf52siROPeVR4DAECR1HMxpe0bWbVXGS90fksJedZrXiNUXACq5oO4k4it+SnnFHmCnWo/qg6oz3UlWtrSkgvko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709691599; c=relaxed/simple;
+	bh=onWesjGOBT5yTGQmpOG1LxJdI89DNGUvK1WI3F/z19k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mISzBK1XpjrvC97dySQmNBIh19fJSex+5CdehfEmGPPC1USWcRND7F5QEmAGfNmlAitBZzcjEJ3HfMjCLVRjMzhLx18+FzWKCEgWUmT5TO8aEyDtIquZc8rUdDQjmQEvkFbbn13DvQNvliPdqN7L7ssNxjyw7/LbspDl85z8Kaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=PpUTOqRZ; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XkYHRoXB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709691537; x=1741227537;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=FU/QqbWavtxhiowV49K10UC40h3nDdFk4SU990kGbVg=;
-  b=XkYHRoXB7WaW0Gvj708135hN05toxy+eMUPRdMlO3c/biHVnR1Err05O
-   z1j0ovbNJlpetCtvwzXPOFHOoKO96Dl3yEB9kb/ytQHjbdo0OsVZMZAj1
-   OkItOVFLhuY9uupSOHi7nuErv8y0JWX9tamzXfP6u1pVCa41V2RY004hJ
-   j13tq0w2rFDplmsNxOEX2vywxwMt+sWHs4Dg1CJotBMGreUwiNWSEdNeM
-   Jw+6DjHSX+qOgZrBytCrmbZ2RyvMw5wsFzPR4aHqRUqfp0F8T7s096qt6
-   41SMZobQ+GHZTNA9RPr6HC2VWNl6BxPO7NsTHsP37YDum1hqyv7KlGld3
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="15001020"
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="15001020"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 18:18:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="10172282"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Mar 2024 18:18:55 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 5 Mar 2024 18:18:55 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 5 Mar 2024 18:18:55 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 5 Mar 2024 18:18:55 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DmPO8D2gn8ftCfCrKFq9aX26psC2s9SleAqfrY3C7CRSyKRtZ4/H0rmtjK6G3i4/NDtn7HhuoQz2PZsowtFgqdpCdfby0nmPZeoZc2BmRJDLMSLOI3JYL7e/hmCT5XowOTCOPaFSJQ6BaD+lmsgF9/+YBJrJjVl2NhSwEbHJzQ/tyWWz0FLLIFam3oJgc9bhSvKKSMI1LZywvJ/Kfe5cbQ2JUqhMnl7rZpF9wweqsd15Sy9eST6U+d7oWzdn/wIPYXYaDE6nzq9EasxISnYwnWJHr4FryP7++zD5yPayeZ1mDPVorprIsOcjbGnqQawhVJsb5GB10lg9kKytmggtWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SP5VWbVyFNZ8iTKEziTWUXCvnkjh6bqeIPUgMDqzCmg=;
- b=ONMBu0dvp95rmWGQ/07q6+jU8Uo5JpcRVobGWHVmdT4ugwZI2TAeyeVBnkdvqq67zFwsTMSB9yKyrGlegwE3CNBYSl7I5W54K7ZPCiOap7r2Zbt5Wm/JCR8BhzVqepEVgUXzBgsjiov2xZk5dLsZpb6+MtS6zGH6yQu4dcEBFxqWedAhk0y2fQLwx+WgtjwtOkSV+wH8yeqaZ5GyUafvBYhnEyfpLYZZC8AR3KE2gM1ttTLQvNewM+eWuQOoBtiOooW5/LCetN5Exwhot348SpyEF/0yVhBAjMbuMaDMlinKga3TC4BUdezMaD73Hf7k8mntmBn0lkW142yZXmjg7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- DM6PR11MB4548.namprd11.prod.outlook.com (2603:10b6:5:2ad::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7362.23; Wed, 6 Mar 2024 02:18:52 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::55f1:8d0:2fa1:c7af]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::55f1:8d0:2fa1:c7af%5]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
- 02:18:52 +0000
-Date: Wed, 6 Mar 2024 09:49:00 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Sagi Shahar <sagis@google.com>
-CC: <linux-kselftest@vger.kernel.org>, Ackerley Tng <ackerleytng@google.com>,
-	Ryan Afranji <afranji@google.com>, Erdem Aktas <erdemaktas@google.com>,
-	"Isaku Yamahata" <isaku.yamahata@intel.com>, Sean Christopherson
-	<seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan
-	<shuah@kernel.org>, "Peter Gonda" <pgonda@google.com>, Haibo Xu
-	<haibo1.xu@intel.com>, Chao Peng <chao.p.peng@linux.intel.com>, Vishal
- Annapurve <vannapurve@google.com>, Roger Wang <runanwang@google.com>, Vipin
- Sharma <vipinsh@google.com>, <jmattson@google.com>, <dmatlack@google.com>,
-	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: Re: [RFC PATCH v5 24/29] KVM: selftests: Expose _vm_vaddr_alloc
-Message-ID: <ZefLjLa1KAHE0Toa@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20231212204647.2170650-1-sagis@google.com>
- <20231212204647.2170650-25-sagis@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20231212204647.2170650-25-sagis@google.com>
-X-ClientProxiedBy: SI1PR02CA0003.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::20) To DS7PR11MB5966.namprd11.prod.outlook.com
- (2603:10b6:8:71::6)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="PpUTOqRZ"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-68ee2c0a237so3308196d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 18:19:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1709691595; x=1710296395; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=acf+30rZOU0mvAbyQhYXFdJzkgjEIoHhA9P8NXsNW7E=;
+        b=PpUTOqRZ0wRh0l7sEW5J/XK5emyGAu0rv9q4q6oV9molp3oDkdbmvw5yqpeg4AaoXY
+         BcJEBWRb92PJvVoZeUTEn1Qf4eJvtQG+Hn0I2PIv2yt2N4Q0gdZriuEfbJHOeohBvz/N
+         9l6oSwegZs6oOrn2Hittxpn8zrdRtXKQEPa7L4Cvvqun30CLp7meYhpMwwgSSe8NGSfJ
+         6ztyVWJBENTKzqUXmtiZZu545UMModMSqNLP/qZ1biac+tJE8Cbf3fNCOYbxiNxELh9r
+         iu+tKM+g4LD85WGoTJERUihZy5YuQKeqSueg4fpPVZ4quH1kFoC0H2HTzd6EmlRJHC8e
+         LdtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709691595; x=1710296395;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=acf+30rZOU0mvAbyQhYXFdJzkgjEIoHhA9P8NXsNW7E=;
+        b=v12JOnRsHa34i0e0cGSN9YmUeq8S//QxdJTGbP93odeUV2TB2jMtfbRNpadFH97lhg
+         HuwsKVlbF9ABBCUmYvhnkXJ0EfsGRpoOHp28x+ElbaZhjgtuGzXp+Wm/+elxfOC6zc5E
+         woY/sdEeNVDqgHZGXJR+c4tU3rMhHLP7A9M69E/tZ+VKfJv3o6Mi+UktmPDsetxhvfF0
+         3Rf2vob+B6wvAyvlKt0ifGuErMa8Jb5tFJCIt/VXjfd5eMcCynhTeppPoHk3JiEggjTx
+         iANESUQ0RH4hp4cywy89dNY1NQhISPLNTflEHDJgdFuVnWa/W4yD5rXUhtCidvz+DmEg
+         L/CA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXGsSzGfvf3/p1C4eh5wMwrlqlQuw+X6DLB04Dymn5EiO0P+O+WQI0vzys+Vjf0zeY6Q7sRhRB3VwpWBYe5Os5sj5n0h0hr4yPXjyN
+X-Gm-Message-State: AOJu0YzWYNKLvC/1lcklS+Ph7EUfGJerigG7/NXKIQ9GiXGelXb6QhUO
+	lSmauckmnxf4MygpmXSKOS6m559OWgE/wkIinKIyY4EuQt17Sq8bivU0njk+d5M=
+X-Google-Smtp-Source: AGHT+IEmyP0orYTDcGtYCnkFo+3YjfLkmaNOkkJK6Ir3myHyg0AcpXpcmUhE2WdPcJpjeWnyKDNU1A==
+X-Received: by 2002:a0c:dc04:0:b0:690:68a:a141 with SMTP id s4-20020a0cdc04000000b00690068aa141mr6220950qvk.24.1709691595613;
+        Tue, 05 Mar 2024 18:19:55 -0800 (PST)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id pd6-20020a056214490600b006907801a000sm2629696qvb.26.2024.03.05.18.19.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 18:19:54 -0800 (PST)
+Date: Tue, 5 Mar 2024 21:19:50 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Huang, Ying" <ying.huang@intel.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v1] mm: swap: Fix race between free_swap_and_cache() and
+ swapoff()
+Message-ID: <20240306021950.GA801254@cmpxchg.org>
+References: <20240305151349.3781428-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|DM6PR11MB4548:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29bf49e5-74a5-4b94-4c83-08dc3d83c420
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zHfhWuubjYqfynC6UkiFL/wJuguHFUgUbHDs1pcDM/2WKt5bKCK/6/buj0c6325JwwbI4cgrtaFFHCbfldV5xjugy0a3X0I6y3QaUjjiBiauULRMym60o3eP1brOrZe2h1DWQ8aDdkBwVC7obG06pu8VzsnLMWwLfLbgGd5AFdiGMUquOwnELKfM2p1sVCRlAJ3R6Y6mjLEZpuACiFeEP/1duCiHAWhz6N6HYHLJsKAdpy0baNkrZPlXy/7VU66hBiw27zDu06GJLytNyovavkFzSqNFDEsUirALZOjMYZMEson9EHtkreQWTKRCCMqpMVce5NHAWNQDNkhYaDR7yPqlNdkBZpmkhOi9pEXebSevXGqixj1n2c376JK/Qo+wmkV2YFAEvPVCqo/CLSgcYsGtxXvljP8Zt1h1jWwgySRu/H54g5GtsLjiT7Ntow051PEfhVRmWohWY3FWk9hhCYJz/eaGF8EraCx19+07A4N0Sg19GbfzRr5FQQLBW+4H5TtoiQiAzg7OaqmiIdyWw3ERj8XGNmh5srLU/Kr/NnW6b0oknhnPtxy5H/aM75/e4hASS1XKUmyZjrvNfg/PLEP3UyR6qbbQ4Za0FUM/sT9dM/7bOYBjgprmfyP5pqdFAyNM7IKZw/mJdkL4e4jY6rsyPKNsgqQC4Xp1t03niQo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3gdBFs/evYC4N9hImEde5/m7o8vqVGiCXEFByTXhQ1Je2LbKdy4x+L5ZTv+E?=
- =?us-ascii?Q?RhAyeD5zOhq64lZJQjVHPBGQgay8lavXYEfIfHjMAekozoiYOU0iyjA+vmQb?=
- =?us-ascii?Q?xjT/77FDYxSYVD1E7IEBGPFUvCLPW/KJoDxS32it95SXeJT4OI4dMfUHUlDf?=
- =?us-ascii?Q?DlMYELUB6l19ZHNuqPMVAt60UhEQxLJ0KOHZ9r23OWhTu98jpIJyZMxD1a5P?=
- =?us-ascii?Q?O8wYra2mgb4JfXsheo0EpD9yi0LaAVdorPgp1AsPJ55QJ4IBxbIeRn/13FS+?=
- =?us-ascii?Q?eIGqDocMe1TuhRJcfgC0mluWK6zE2TTKOWkAuRABfRbK35c8DWf2/1CvOrgN?=
- =?us-ascii?Q?V8vz9iHjjUtRPilpr5AuzK7oo7QZ/XosOgHoiWOZ1nLeFDvqUGDuv3SeCv6X?=
- =?us-ascii?Q?XNoCboMWYIXGcTPnxAXs5bn9xWA9sK8yqfPX51AeCxQV5i9Jqfj58BZhr6Hq?=
- =?us-ascii?Q?+80htmLBmA/651mhN//auox9xM8zeYdy/r/cAUfNRfqKx8szz8o0lu7MVK5h?=
- =?us-ascii?Q?dQPGajQk26NimBu+pFdoOMixDl1SXxrnqvHHCV9HmM+bzNUcrEMCOH3i8oWe?=
- =?us-ascii?Q?mfW6cLuGLc4pPRF9Uw9ynZrRPwzQTFqvo6ECp7fMnmI5iDBn1GuqJITVKgdx?=
- =?us-ascii?Q?SkrRtyLDnTTVFR7O18EvZl2fJaHaE9pmB5ValNcOSwYYmoeRHbhGBiUb4M/s?=
- =?us-ascii?Q?e9/ArYcbmvItN2f57ZBYgUh0l+rB83mi0dz6hVS45Hu3b/93kPB6FKCD0odx?=
- =?us-ascii?Q?3JLQkLgJMvl9d4rO50H/L2oLT8QNWgZt4rkfZzKY8yWLLPEAsN2ymBwjYsXf?=
- =?us-ascii?Q?w3N+gQXiOOmcpakMrsj6BMlkVd6MbXQx9MXSIvrLUaRf1fOyL35kBzawXxJw?=
- =?us-ascii?Q?LLdqDZAXqSDjrwZUo6KXBz/88+SEIA1xFQQCAKKgMVkQ2JxH7tDnZOoTI6YZ?=
- =?us-ascii?Q?FAYgeAUMfOZmZx0bF8JWRe8Kt8x22XnFGWjO5DkcPsmDiLOI6Dbm6+V0wRyh?=
- =?us-ascii?Q?Tdumc1n/TZKjNKLNgwvtW8FFmM6FHasLL5lT48BJ43vTNJ6h7V7PGrix2SL4?=
- =?us-ascii?Q?ck7QOciVYXqV4aciuThc9ZMhzm3I81ggN/XlLWYNRMFNqOianCO7wwWTVMJu?=
- =?us-ascii?Q?omAStZDoiiQjdZ0W3PgTY4xrC4wple9Ypzpc8I2vsYPP8TaCM+ZPXLY3xS7p?=
- =?us-ascii?Q?wFvqgXug4efjhXgBlh6isbzT7vgPgaQbMY3zX9hAHDLMTPm3b3xSjuAg1hFr?=
- =?us-ascii?Q?eZ4+NfhzTT/KtU1aPkOSOPioJMkMJayWNgkEkxA5iH12h7/6ee7ujtrBEipx?=
- =?us-ascii?Q?syWV3xMJwWIIhOOegFMBRBTqFJxO5Ga2A5MVOCn+f32Z16JnaeWbMMn1QDU9?=
- =?us-ascii?Q?g+AxPhsG2Wuu4J9DMxWy13gRLPs0i/ipH+lFgZ2TXpnoaM+y1tmJzBOT9GLm?=
- =?us-ascii?Q?JmjWHznXe+LN+1C+4H+7AknMNzHmmV40Yn9HnQfmSLzj8ROUygC46fkFL36O?=
- =?us-ascii?Q?l3CjErYf5AWml197xQMjeDPiR802NEi0pny2mpQszpwEtaRpt5g93Njr5+ZU?=
- =?us-ascii?Q?yYnfN056O0FfSP2xZnKEAEzmZLRWwOfpeD/GV3Ok?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29bf49e5-74a5-4b94-4c83-08dc3d83c420
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 02:18:52.4584
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fVtm8SGqZj/dnwWJHMamWl0Qjuv5Tg/Hln2wCITDC5F2hM0Ng9BdWABOffGis5AXo+H5PC63Ajm55xpGMcm/VQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4548
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305151349.3781428-1-ryan.roberts@arm.com>
 
-On Tue, Dec 12, 2023 at 12:46:39PM -0800, Sagi Shahar wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
-> 
-> vm_vaddr_alloc always allocates memory in memslot 0. This allows users
-> of this function to choose which memslot to allocate virtual memory
-> in.
-> 
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Ryan Afranji <afranji@google.com>
-> Signed-off-by: Sagi Shahar <sagis@google.com>
-> ---
->  tools/testing/selftests/kvm/include/kvm_util_base.h | 3 +++
->  tools/testing/selftests/kvm/lib/kvm_util.c          | 6 +++---
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
-> index efd7ae8abb20..5dbebf5cfd07 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util_base.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
-> @@ -561,6 +561,9 @@ void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot);
->  struct kvm_vcpu *__vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id);
->  void vm_populate_vaddr_bitmap(struct kvm_vm *vm);
->  vm_vaddr_t vm_vaddr_unused_gap(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min);
-> +vm_vaddr_t ____vm_vaddr_alloc(struct kvm_vm *vm, size_t sz,
-> +			      vm_vaddr_t vaddr_min, vm_paddr_t paddr_min,
-> +			      uint32_t data_memslot, bool encrypt);
->  vm_vaddr_t vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min);
->  vm_vaddr_t __vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
->  			    enum kvm_mem_region_type type);
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 28780fa1f0f2..d024abc5379c 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -1410,9 +1410,9 @@ vm_vaddr_t vm_vaddr_unused_gap(struct kvm_vm *vm, size_t sz,
->   * a unique set of pages, with the minimum real allocation being at least
->   * a page.
->   */
-> -static vm_vaddr_t ____vm_vaddr_alloc(struct kvm_vm *vm, size_t sz,
-> -				     vm_vaddr_t vaddr_min, vm_paddr_t paddr_min,
-> -				     uint32_t data_memslot, bool encrypt)
-> +vm_vaddr_t ____vm_vaddr_alloc(struct kvm_vm *vm, size_t sz,
-> +			      vm_vaddr_t vaddr_min, vm_paddr_t paddr_min,
-> +			      uint32_t data_memslot, bool encrypt)
-Is it better to expose a helper function with meaningful name?
-It's annoying to count the number of "_" to figure out which version is
-used, especially when there're "__", "____" versions :)
+Hi Ryan,
 
->  {
->  	uint64_t pages = (sz >> vm->page_shift) + ((sz % vm->page_size) != 0);
->  
-> -- 
-> 2.43.0.472.g3155946c3a-goog
+On Tue, Mar 05, 2024 at 03:13:49PM +0000, Ryan Roberts wrote:
+> There was previously a theoretical window where swapoff() could run and
+> teardown a swap_info_struct while a call to free_swap_and_cache() was
+> running in another thread. This could cause, amongst other bad
+> possibilities, swap_page_trans_huge_swapped() (called by
+> free_swap_and_cache()) to access the freed memory for swap_map.
 > 
+> This is a theoretical problem and I haven't been able to provoke it from
+> a test case. But there has been agreement based on code review that this
+> is possible (see link below).
 > 
+> Fix it by using get_swap_device()/put_swap_device(), which will stall
+> swapoff(). There was an extra check in _swap_info_get() to confirm that
+> the swap entry was valid. This wasn't present in get_swap_device() so
+> I've added it. I couldn't find any existing get_swap_device() call sites
+> where this extra check would cause any false alarms.
+
+Unfortunately, I found one, testing current mm-everything:
+
+[  189.420777] get_swap_device: Unused swap offset entry 000641ae
+[  189.426648] ------------[ cut here ]------------
+[  189.431290] WARNING: CPU: 3 PID: 369 at mm/swapfile.c:1301 get_swap_device+0x2da/0x3f0
+[  189.439242] CPU: 3 PID: 369 Comm: cachish Not tainted 6.8.0-rc5-00527-g19d98776f227-dirty #30
+[  189.447791] Hardware name: Micro-Star International Co., Ltd. MS-7B98/Z390-A PRO (MS-7B98), BIOS 1.80 12/25/2019
+[  189.457998] RIP: 0010:get_swap_device+0x2da/0x3f0
+[  189.462721] Code: a8 03 75 2a 65 48 ff 08 e9 36 ff ff ff 4c 89 e9 48 c7 c2 40 fd 91 83 48 c7 c6 c0 f9 91 83 48 c7 c7 60 ee 91 83 e8 26 2f af ff <0f> 0b eb af 4c 8d 6b 08 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48
+[  189.481497] RSP: 0000:ffffc90000cff8a8 EFLAGS: 00010282
+[  189.486760] RAX: 0000000000000032 RBX: ffff8881262eee00 RCX: 0000000000000000
+[  189.493909] RDX: 0000000000000001 RSI: ffffffff83a1e620 RDI: 0000000000000001
+[  189.501054] RBP: 1ffff9200019ff15 R08: 0000000000000001 R09: fffff5200019fee1
+[  189.508202] R10: ffffc90000cff70f R11: 0000000000000001 R12: ffffc900018d51ae
+[  189.515346] R13: 00000000000641ae R14: 0000000000000000 R15: 00000000000641af
+[  189.522494] FS:  00007f7120263680(0000) GS:ffff88841c380000(0000) knlGS:0000000000000000
+[  189.530591] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  189.536373] CR2: 00007f6e659a2ea3 CR3: 0000000046860004 CR4: 00000000003706f0
+[  189.543516] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  189.550661] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  189.557811] Call Trace:
+[  189.560276]  <TASK>
+[  189.562393]  ? __warn+0xc4/0x250
+[  189.565647]  ? get_swap_device+0x2da/0x3f0
+[  189.569761]  ? report_bug+0x348/0x440
+[  189.573444]  ? handle_bug+0x6d/0x90
+[  189.576951]  ? exc_invalid_op+0x13/0x40
+[  189.580810]  ? asm_exc_invalid_op+0x16/0x20
+[  189.585019]  ? get_swap_device+0x2da/0x3f0
+[  189.589142]  ? get_swap_device+0x2da/0x3f0
+[  189.593255]  ? __pfx_get_swap_device+0x10/0x10
+[  189.597717]  __read_swap_cache_async+0x9f/0x630
+[  189.602281]  ? __pfx___read_swap_cache_async+0x10/0x10
+[  189.607439]  ? __mod_memcg_lruvec_state+0x238/0x4f0
+[  189.612344]  ? __pfx_swp_swap_info+0x10/0x10
+[  189.616652]  swap_cluster_readahead+0x2cd/0x510
+[  189.621206]  ? __pfx_swap_cluster_readahead+0x10/0x10
+[  189.626279]  ? swap_cache_get_folio+0xcd/0x360
+[  189.630760]  ? __count_memcg_events+0x10a/0x370
+[  189.635318]  shmem_swapin_folio+0x2f2/0xc60
+[  189.639525]  ? __pfx__raw_spin_lock+0x10/0x10
+[  189.643908]  ? __pte_offset_map+0x19/0x1d0
+[  189.648024]  shmem_get_folio_gfp+0x307/0xe30
+[  189.652323]  ? __schedule+0x9f0/0x1fe0
+[  189.656096]  ? __pfx_shmem_get_folio_gfp+0x10/0x10
+[  189.660923]  ? filemap_map_pages+0x999/0xe60
+[  189.665211]  shmem_fault+0x1d9/0x810
+[  189.668834]  ? __pfx_shmem_fault+0x10/0x10
+[  189.672954]  ? __pfx_filemap_map_pages+0x10/0x10
+[  189.677590]  __do_fault+0xed/0x390
+[  189.681012]  __handle_mm_fault+0x1ba1/0x2e80
+[  189.685297]  ? __pfx___handle_mm_fault+0x10/0x10
+[  189.689933]  ? __pfx_down_read_trylock+0x10/0x10
+[  189.694570]  ? __pfx_hrtimer_nanosleep+0x10/0x10
+[  189.699215]  handle_mm_fault+0xe0/0x560
+[  189.703074]  ? __pfx_restore_fpregs_from_fpstate+0x10/0x10
+[  189.708620]  do_user_addr_fault+0x2ba/0x9d0
+[  189.712828]  exc_page_fault+0x54/0x90
+[  189.716508]  asm_exc_page_fault+0x22/0x30
+[  189.720535] RIP: 0033:0x5640dc2d72b5
+[  189.724131] Code: 98 48 ba 00 00 00 00 03 00 00 00 48 89 d6 48 2b 75 a0 ba 00 00 00 00 48 f7 f6 48 89 d1 48 89 ca 48 8b 45 a0 48 01 d0 48 01 d8 <0f> b6 00 bf e8 03 00 00 e8 1e fe ff ff 48 83 45 a8 01 48 8d 45 d0
+[  189.742922] RSP: 002b:00007ffc227e3f60 EFLAGS: 00010206
+[  189.748165] RAX: 00007f6e659a2ea3 RBX: 00007f6e2007e000 RCX: 0000000045924ea3
+[  189.755311] RDX: 0000000045924ea3 RSI: 0000000300000000 RDI: 00007f71202586a0
+[  189.762483] RBP: 00007ffc227e3fe0 R08: 00007f7120258074 R09: 00007f71202580a0
+[  189.769633] R10: 0000000000019458 R11: 00000000008aa400 R12: 0000000000000000
+[  189.776781] R13: 00007ffc227e4128 R14: 00007f712029d000 R15: 00005640dc2d9dd8
+[  189.783928]  </TASK>
+[  189.786126] ---[ end trace 0000000000000000 ]---
+[  285.827888] get_swap_device: Unused swap offset entry 0018403f
+[  320.699306] get_swap_device: Unused swap offset entry 000b001b
+[  354.031339] get_swap_device: Unused swap offset entry 000681a9
+[  364.958435] get_swap_device: Unused swap offset entry 001f4055
+[  364.976235] get_swap_device: Unused swap offset entry 001f4057
+[  365.530174] get_swap_device: Unused swap offset entry 000d415c
+[  394.223792] get_swap_device: Unused swap offset entry 001540d0
+[  394.317299] get_swap_device: Unused swap offset entry 000341d9
+[  394.341727] get_swap_device: Unused swap offset entry 0006c07e
+[  396.062365] get_swap_device: Unused swap offset entry 000541a4
+[  396.068262] get_swap_device: Unused swap offset entry 000541a7
+[  402.629551] get_swap_device: Unused swap offset entry 00294021
+[  436.740622] get_swap_device: Unused swap offset entry 00334155
+[  436.758527] get_swap_device: Unused swap offset entry 001b417c
+
+swap_cluster_readahead() calls __read_swap_cache_async() on a range of
+made-up swap entries around the faulting slot. The device and the
+range (si->max) are valid, but the specific entry might not be in
+use. __read_swap_cache_async() instead relies on swapcache_prepare()
+returning -ENOENT to catch this and skip gracefully.
+
+Confirmed that reverting the patch makes the warnings go away.
