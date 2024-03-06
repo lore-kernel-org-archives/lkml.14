@@ -1,122 +1,168 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C28412D743;
-	Wed,  6 Mar 2024 13:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F5A86647
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 13:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709730829; cv=none; b=u3XQWBwFDhiuofmcOTI21+FQ2nga3tJbdI9YuOaqra9KpX9V9f25fDpGl49ukEhv0JwJqki7kqixWw5WtAOwCsxtkBwm2ZWZKpQsQqwrOkZutoNXnVojj7pJk/gS/4cpE+/7GKzZH0z+at9y0yTknI5yKtKvT7EbvErs1GSsnSU=
+	t=1709730881; cv=none; b=Iuxor8avHkO7MXnj9/RKikoamx2QjhlP3xwMzqwEuqpY6CEszOr8ooPGGIUgi3Tuh8R4diuuUh5s5ryq07sROucYLoit98BNev4gOlzxXYb3LLqRD1nkYxnTw8pT/+yIcVhFFmKjpeC0EW/r5NO3lspbazaDC0ovh3svaD/qhQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709730829; c=relaxed/simple;
-	bh=zZTqZM1B1Da/pRYhOGZkJOmcUeVzEW4JS9modMCz4zw=;
-	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=bVo6RVZOYsQ7bAFhGYm8mwQmYvyp4V9goPp1BZ+XL2nR4evXDcaK/d9vgF/01Ugkqh8SQFW7GiPyRYi+hVm35bVvEZR2Xf40IT572UUsS3kGuuICkRgDhjk0AVVZGPccV+fl5u6vEku4HBB1BnBDcHOYHKfLzkFGMZB7DotMov4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gcsgb1bL; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gcsgb1bL"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso6245280a12.2;
-        Wed, 06 Mar 2024 05:13:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709730827; x=1710335627; darn=vger.kernel.org;
-        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uypOmawqOIrPwCriVHDF7rFN8Nbzv9NUbNdsbCE+5jI=;
-        b=Gcsgb1bLhfVTPJoyoPmfJCV7GP6SIKlqlaVIR6oVU+MWyXbO+acmyB+YkXRu96HAWs
-         HId5oV/mjGiCZZxuhrDH+dOCXAPPOijfc1hD9VyJFiHBWY4iEVfwPyMfavLOA/aIfM58
-         7S5tbZ5EYNKa90LM78XhfBMAUUIdtvFaXmLYtV+9K4FuslGFc+cf0d9Q5rmuIPABbwLp
-         Yjv1ofGP/JKJOh7Cx59C6lBBumtaIcEsIxRlbmdWGejNpuke399xqwCuPBfAgfEhl/I7
-         ThNpoBT6Kc1IToFnKheNNnUOIncPhWojg7SfaUxsT55d1RTmJexBAubYmsXIsaM1w9Pa
-         uEEQ==
+	s=arc-20240116; t=1709730881; c=relaxed/simple;
+	bh=NBkN7yQfAa7PLCdKB8AWp3JIJxP/gKGV/xcc0W35Ujw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=YA+n20VPE3hmHrergnuzvtfoMtbGh+5Tmh25TZBB+vNfng1XeTqxtl6m87e8CjE/Hgpk9zT1eC8nnnewV5jyLNY2KaQI/ul4R8qtOkcskvtvKMEezV3Qzd5sNCSdyYE4tpSPDrb9BUWae/cpbYgFY+q76R2N8xTjkMrkoWwA/FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c84939e5a4so291379439f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 05:14:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709730827; x=1710335627;
-        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uypOmawqOIrPwCriVHDF7rFN8Nbzv9NUbNdsbCE+5jI=;
-        b=A3TrrS7rEKU92C1wWQIQYCU2Gfsg1MVuqgI4ww5sn1Jrf6Ou1B+S0ey/ipueYZ/vAR
-         O38zaOtvZCf/kN2AH4vAMQXQ37GG24FVmbWVJsILIpO5NBOlfgRmu2xkQ3QKfKL8crK4
-         mHlvGseazRSvbFY2iyn3F2+c0HLTPt0Qj2kBYla1TjVkq2+3qBsqongxMIg6yFmAhsQn
-         gRWM+Hm9gutzKHiAsybbFChhlYsgoObrdxr1n4F7p56Sq3KEdFyUd1XvOUt7otelHltP
-         E5+oVl110m8VFfBNHusZlF5SnEQs7zK5WlL1wbw0+yf6SIwrVrmRmk6L0bpa6DUg36CD
-         XvqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7HFblxm5UykLZ8esNtUXOZVhUgl908mz2QsFk4ps21bQWBzq6WjMKXqFA2iG6viPJAmX+pWKTdXqslDxA7TPHt0MV/xWEKH44eJ70L7WAAivmCOtPWgpfGzDa+1/XNE5U4kMy4vu2tPlKByilCYKpYOZRfiQ4VDNldt6AwOqg13VL6DAM68k=
-X-Gm-Message-State: AOJu0YxnahSyAqderFvxRQ1HnGK2HGI4NR2K13DzWRsrWQS9UiV4Mxxd
-	E4yYSQ9XtiPi5cFQAokBGi8u/1me6o7lTHqCa/nxJjA9Fz0tWDjeTn9yZ7h/JaE=
-X-Google-Smtp-Source: AGHT+IG0wggrx1Jx+WY2aA3T8NsgKp7yzhb+H/WmreiPwQFQP+6Qv+dQze5BqQRo6TetqXDOxpZGwg==
-X-Received: by 2002:a05:6a20:2584:b0:1a1:6aa8:ee82 with SMTP id k4-20020a056a20258400b001a16aa8ee82mr620624pzd.42.1709730826433;
-        Wed, 06 Mar 2024 05:13:46 -0800 (PST)
-Received: from dw-tp ([49.205.218.89])
-        by smtp.gmail.com with ESMTPSA id y26-20020aa793da000000b006e6500caa4esm984426pff.199.2024.03.06.05.13.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 05:13:45 -0800 (PST)
-Date: Wed, 06 Mar 2024 18:43:40 +0530
-Message-Id: <87il1zpkor.fsf@doe.com>
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: John Garry <john.g.garry@oracle.com>, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, Dave Chinner <david@fromorbit.com>
-Cc: Ojaswin Mujoo <ojaswin@linux.ibm.com>, Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>, Matthew Wilcox <willy@infradead.org>, "Darrick J . Wong" <djwong@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 0/9] ext4: Add direct-io atomic write support using fsawu
-In-Reply-To: <e4bd58d4-723f-4c94-bf46-826bceeb6a8d@oracle.com>
+        d=1e100.net; s=20230601; t=1709730879; x=1710335679;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u5M20glDBiQnz053hv9P0J8VDogdHXOJ11z3E6yWqJI=;
+        b=FN1m/R3E5Cj2D98Z124MAEWvCMtjfnvcFBM8/PfIPq81fJy1oE8cSXKrSbBQZu5ZX7
+         oF9xSvat6xLr0P7gEPYted9sc0wx7DZE9c0ZRsfE36ugoN/WuppWyO9wWa7sy5DtWEcv
+         DF8oazMTgkLPMh2e0HzzHenC7ZlB+XsNw3yLIG3vPuHf2hKlqLlbARzSYCiD7HiHcgUc
+         FNG2peRbKh0d84FWKCoTLlfNkGspMC4YV8jLQ26uZ0JuaIF/J/s5TEuM/0Rzg+V05RjD
+         b0YHzhTLA2YBTV4rUdpWt1lzbuxmRkxAAq0vI2/hNkrbbZIQVHLk0v+ITutmkMrwGX6a
+         jvLg==
+X-Gm-Message-State: AOJu0YzUUUbqfjWJ4smEnl3EMT1pG6cEu8PMzlO9XAF/fcHLWD6jcI14
+	j3GizIs/mkpHBf6ZwAyNQbsUDqyknTOssM/esdwhGnJikfhtefvMuj6ZIMccM4i1LBhbI7M/zap
+	irWnHU2HAj/BLZNPxZhYqRavtnFL3DAJ0o7KUQ5Oqv3V5gLpkgVx4Jkzlig==
+X-Google-Smtp-Source: AGHT+IFkIdlj3Vh+Dr0JneBvr/lbEYMK9+EY5Kx/huO52Th9Lh+ScMAWiyOkddlzR2PS7JknLqj4vKkS/2yM4Y+Qq+1y5UPJC/sY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1d01:b0:365:177f:6db6 with SMTP id
+ i1-20020a056e021d0100b00365177f6db6mr1109462ila.3.1709730879216; Wed, 06 Mar
+ 2024 05:14:39 -0800 (PST)
+Date: Wed, 06 Mar 2024 05:14:39 -0800
+In-Reply-To: <000000000000fd588e060de27ef4@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b7b41d0612fdbdb5@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [virtualization?] KMSAN: uninit-value in
+ virtqueue_add (4)
+From: syzbot <syzbot+d7521c1e3841ed075a42@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-John Garry <john.g.garry@oracle.com> writes:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-> On 02/03/2024 07:41, Ritesh Harjani (IBM) wrote:
->> Hello all,
->> 
->> This RFC series adds support for atomic writes to ext4 direct-io using
->> filesystem atomic write unit. It's built on top of John's "block atomic
->> write v5" series which adds RWF_ATOMIC flag interface to pwritev2() and enables
->> atomic write support in underlying device driver and block layer.
->> 
->> This series uses the same RWF_ATOMIC interface for adding atomic write support
->> to ext4's direct-io path. One can utilize it by 2 of the methods explained below.
->> ((1)mkfs.ext4 -b <BS>, (2) with bigalloc).
->> 
->> Filesystem atomic write unit (fsawu):
->> ============================================
->> Atomic writes within ext4 can be supported using below 3 methods -
->> 1. On a large pagesize system (e.g. Power with 64k pagesize or aarch64 with 64k pagesize),
->>     we can mkfs using different blocksizes. e.g. mkfs.ext4 -b <4k/8k/16k/32k/64k).
->>     Now if the underlying HW device supports atomic writes, than a corresponding
->>     blocksize can be chosen as a filesystem atomic write unit (fsawu) which
->>     should be within the underlying hw defined [awu_min, awu_max] range.
->>     For such filesystem, fsawu_[min|max] both are equal to blocksize (e.g. 16k)
->> 
->>     On a smaller pagesize system this can be utilized when support for LBS is
->>     complete (on ext4).
->> 
->> 2. EXT4 already supports a feature called bigalloc. In that ext4 can handle
->>     allocation in cluster size units. So for e.g. we can create a filesystem with
->>     4k blocksize but with 64k clustersize. Such a configuration can also be used
->>     to support atomic writes if the underlying hw device supports it.
->>     In such case the fsawu_min will most likely be the filesystem blocksize and
->>     fsawu_max will mostly likely be the cluster size.
->> 
->>     So a user can do an atomic write of any size between [fsawu_min, fsawu_max]
->>     range as long as it satisfies other constraints being laid out by HW device
->>     (or by software stack) to support atomic writes.
->>     e.g. len should be a power of 2, pos % len should be naturally
->>     aligned and [start | end] (phys offsets) should not straddle over
->>     an atomic write boundary.
->
-> JFYI, I gave this a quick try, and it seems to work ok. Naturally it 
+***
 
-Thanks John for giving this a try!
+Subject: Re: [syzbot] [virtualization?] KMSAN: uninit-value in virtqueue_add (4)
+Author: penguin-kernel@i-love.sakura.ne.jp
 
-> suffers from the same issue discussed at 
-> https://lore.kernel.org/linux-fsdevel/434c570e-39b2-4f1c-9b49-ac5241d310ca@oracle.com/ 
-> with regards to writing to partially written extents, which I have tried 
-> to address properly in my v2 for that same series.
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v6.7
 
-I did go through other revisions, but I guess I missed going through this series.
+diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
+index 6e8b7e600def..6858f80fc9a2 100644
+--- a/arch/x86/lib/copy_mc.c
++++ b/arch/x86/lib/copy_mc.c
+@@ -61,12 +61,18 @@ unsigned long copy_mc_enhanced_fast_string(void *dst, const void *src, unsigned
+  */
+ unsigned long __must_check copy_mc_to_kernel(void *dst, const void *src, unsigned len)
+ {
+-	if (copy_mc_fragile_enabled)
+-		return copy_mc_fragile(dst, src, len);
+-	if (static_cpu_has(X86_FEATURE_ERMS))
+-		return copy_mc_enhanced_fast_string(dst, src, len);
+-	memcpy(dst, src, len);
+-	return 0;
++	unsigned long ret;
++
++	if (copy_mc_fragile_enabled) {
++		ret = copy_mc_fragile(dst, src, len);
++	} else if (static_cpu_has(X86_FEATURE_ERMS)) {
++		ret = copy_mc_enhanced_fast_string(dst, src, len);
++	} else {
++		memcpy(dst, src, len);
++		ret = 0;
++	}
++	kmsan_memmove(dst, src, len - ret);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(copy_mc_to_kernel);
+ 
+@@ -78,15 +84,13 @@ unsigned long __must_check copy_mc_to_user(void __user *dst, const void *src, un
+ 		__uaccess_begin();
+ 		ret = copy_mc_fragile((__force void *)dst, src, len);
+ 		__uaccess_end();
+-		return ret;
+-	}
+-
+-	if (static_cpu_has(X86_FEATURE_ERMS)) {
++	} else if (static_cpu_has(X86_FEATURE_ERMS)) {
+ 		__uaccess_begin();
+ 		ret = copy_mc_enhanced_fast_string((__force void *)dst, src, len);
+ 		__uaccess_end();
+-		return ret;
++	} else {
++		ret = copy_user_generic((__force void *)dst, src, len);
+ 	}
+-
+-	return copy_user_generic((__force void *)dst, src, len);
++	kmsan_copy_to_user(dst, src, len, ret);
++	return ret;
+ }
+diff --git a/include/linux/kmsan-checks.h b/include/linux/kmsan-checks.h
+index c4cae333deec..4c2a614dab2d 100644
+--- a/include/linux/kmsan-checks.h
++++ b/include/linux/kmsan-checks.h
+@@ -61,6 +61,17 @@ void kmsan_check_memory(const void *address, size_t size);
+ void kmsan_copy_to_user(void __user *to, const void *from, size_t to_copy,
+ 			size_t left);
+ 
++/**
++ * kmsan_memmove() - Notify KMSAN about a data copy within kernel.
++ * @to:   destination address in the kernel.
++ * @from: source address in the kernel.
++ * @size: number of bytes to copy.
++ *
++ * Invoked after non-instrumented version (e.g. implemented using assembly
++ * code) of memmove()/memcpy() is called, in order to copy KMSAN's metadata.
++ */
++void kmsan_memmove(void *to, const void *from, size_t size);
++
+ #else
+ 
+ static inline void kmsan_poison_memory(const void *address, size_t size,
+@@ -77,6 +88,9 @@ static inline void kmsan_copy_to_user(void __user *to, const void *from,
+ 				      size_t to_copy, size_t left)
+ {
+ }
++static inline void kmsan_memmove(void *to, const void *from, size_t size)
++{
++}
+ 
+ #endif
+ 
+diff --git a/mm/kmsan/hooks.c b/mm/kmsan/hooks.c
+index 5d6e2dee5692..364f778ee226 100644
+--- a/mm/kmsan/hooks.c
++++ b/mm/kmsan/hooks.c
+@@ -285,6 +285,17 @@ void kmsan_copy_to_user(void __user *to, const void *from, size_t to_copy,
+ }
+ EXPORT_SYMBOL(kmsan_copy_to_user);
+ 
++void kmsan_memmove(void *to, const void *from, size_t size)
++{
++	if (!kmsan_enabled || kmsan_in_runtime())
++		return;
++
++	kmsan_enter_runtime();
++	kmsan_internal_memmove_metadata(to, (void *)from, size);
++	kmsan_leave_runtime();
++}
++EXPORT_SYMBOL(kmsan_memmove);
++
+ /* Helper function to check an URB. */
+ void kmsan_handle_urb(const struct urb *urb, bool is_out)
+ {
 
-Thanks Dave & John for your comments over the series.
-Let me go through the revisions I have missed and John's latest revision.
-I will update this series accordingly.
-
-Appreciate your help!
--ritesh
