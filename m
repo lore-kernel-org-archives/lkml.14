@@ -1,222 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5E85BAD4
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5125D75C;
+	Wed,  6 Mar 2024 08:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709714986; cv=none; b=BZYcjWLmtKbe/s9zBA3tp52dGmHO0sV1Fki25KK2yWv2OWYyKpMtKmjVWjcaJ5+9TUtdWO65N049JIx8o/NLFqryNsGqJxSWSoj+uQL7PmUdcYP4u5ytktYeW/+BGPR4kBgxMn+/5cfks/AUkv4muRYQ5yqR57ROvvtgkHRhHE0=
+	t=1709715015; cv=none; b=Qjlh7lC1V7u4sT2wSblH+n+UM9S7uDQqVLihSasa+AA7wOfufi11Pu8Sllu9OTNvI82vW/hceNjMUeAxAuWZHxt3+VIXhHzS6nusoHLKHdpFxrIG2uZ1cxi0iKEQwpTMK2naURh7fQzO+hXfLNkrAxy0VyYPDhLiRL4WWglMKSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709714986; c=relaxed/simple;
-	bh=yYuU7VBni22INYGto9gt3oHjxTlQN5HG/8o/ajfAzJk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=A656mz4033mDe+V4v3BUWH8kT0QfdThBTaB26RqRf4AsCZSPorcqLAYVrNJPfhUsHZRsFd/ECGWhsmuMAcpLa1SGMEQk2NwYvo8Z9JJNGv3P2TL+xzYDKy7ztaFwJJyQAd5qBbROYgayEI8drzPMEWsD9ZBn17hq/vxB6m+41Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hAIWm4NP; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709715015; c=relaxed/simple;
+	bh=HateX3LLeZdB/hmGCbPu2UTVKn/rmhpctmgFXc6UpcY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ayq2UjEBPnyx8n6AAVsgTu7ecuF9QD1QQSgR2JTtWz/7pUPLl/vQO3on2ktF35Y5e3uzZMsBUfoJtpS9Vj/MCZIY7hGqu0EsJYBV1U0cIjJZfm3NI7MIvDBt9NUBupaF/j2p49gyiZmmZpujlFdlG6U0TnHbbuX2ZyRPGKsbaDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Eatb8Jib; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hAIWm4NP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709714984; x=1741250984;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=yYuU7VBni22INYGto9gt3oHjxTlQN5HG/8o/ajfAzJk=;
-  b=hAIWm4NPKv2/Ya0UsDn56gZ82PDpk7uYTfLZBt+pm/+fKTFCJbbzgic8
-   DU7Dpj4yNK2YqG0tXF/WytQNY1rztsJ+h60zXyDFlNZO83VyDCkHNImSX
-   FAPy79lpe1aH/G2QUWG/NuahW2hIdbrv5nh0mWI7FiZW7+puOcdZ63Xyr
-   dk0syn1HUm/ftprQ1IZbEJ/AxCi/wJBBY68RwODgrQMQ0uC4Pbvc9nWZW
-   1K+R3eE277euqJm8T05a1fh/OBoqg7QX3Gpwj2kJkiS7NgCA5Mdo/zxnn
-   7jGiJXFx3j6oYqM3BuF1eieyAki8QTspAmqJjOiXj1CANyLlSwYJGBvln
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="29765374"
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="29765374"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 00:49:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="9628784"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 00:49:40 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Peng Zhang <zhangpeng362@huawei.com>
-Cc: <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
-  <akpm@linux-foundation.org>,  <willy@infradead.org>,
-  <fengwei.yin@intel.com>,  <david@redhat.com>,
-  <aneesh.kumar@linux.ibm.com>,  <shy828301@gmail.com>,
-  <hughd@google.com>,  <wangkefeng.wang@huawei.com>,
-  <sunnanyong@huawei.com>
-Subject: Re: [PATCH v4] filemap: avoid unnecessary major faults in
- filemap_fault()
-In-Reply-To: <20240306083809.1236634-1-zhangpeng362@huawei.com> (Peng Zhang's
-	message of "Wed, 6 Mar 2024 16:38:09 +0800")
-References: <20240306083809.1236634-1-zhangpeng362@huawei.com>
-Date: Wed, 06 Mar 2024 16:47:45 +0800
-Message-ID: <871q8n926m.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Eatb8Jib"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709715012;
+	bh=HateX3LLeZdB/hmGCbPu2UTVKn/rmhpctmgFXc6UpcY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Eatb8JibbQ25Fe1nNtOgWaSZR8QMC68IIenGsNhQVHyvWG2ygFqPZ1j5xv2zcSNfF
+	 EBn5q2K0SltAHws33YmDk4s2xHIzv0YICGp+WMp2PAcwHREBASOq2xupjYN88k6ThM
+	 EHcf2Gf8NETrkwAzs5zJBQPMTbpvqMNR91DF45uuxZ1QQdwy9nlKMjpQqH3N12EmAj
+	 +TJ0F+BYzMkC6YVmOZQMqvnn9QjHr5TcI5UmD6zf0UtJpEpArgrp2AJw/4XZvjLcOV
+	 5xkxLryihLPLN4H7Kuy250EAROxDScp0XFtCW+Xxqncrl7oGvqJnk0V/FV2QB0rEiI
+	 rK/sEN34+Yynw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EDD8B37820D0;
+	Wed,  6 Mar 2024 08:50:10 +0000 (UTC)
+Message-ID: <c55f2c6e-1de8-4248-a52a-d6c9e49b565a@collabora.com>
+Date: Wed, 6 Mar 2024 09:50:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI: mediatek-gen3: Assert MAC reset only if PHY reset
+ also present
+To: =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= <Jianjun.Wang@mediatek.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Cc: "linux-mediatek@lists.infradead.org"
+ <linux-mediatek@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "wenst@chromium.org" <wenst@chromium.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ Ryder Lee <Ryder.Lee@mediatek.com>,
+ "nfraprado@collabora.com" <nfraprado@collabora.com>
+References: <20240229092449.580971-1-angelogioacchino.delregno@collabora.com>
+ <30824df32636dec25b9a5972b1ee8de76b295feb.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <30824df32636dec25b9a5972b1ee8de76b295feb.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Peng Zhang <zhangpeng362@huawei.com> writes:
+Il 01/03/24 03:48, Jianjun Wang (王建军) ha scritto:
+> Hi Angelo,
+> 
+> Thanks for your patch.
+> 
+> On Thu, 2024-02-29 at 10:24 +0100, AngeloGioacchino Del Regno wrote:
+>> Some SoCs have two PCI-Express controllers: in the case of MT8195,
+>> one of them is using a dedicated PHY, but the other uses a combo PHY
+>> that is shared with USB and in that case the PHY cannot be reset
+>> from the PCIe driver, or USB functionality will be unable to resume.
+>>
+>> Resetting the PCIe MAC without also resetting the PHY will result in
+>> a full system lockup at PCIe resume time and the only option to
+>> resume operation is to hard reboot the system (with a PMIC cut-off).
+>>
+>> To resolve this issue, check if we've got both a PHY and a MAC reset
+>> and, if not, never assert resets at PM suspend time: in that case,
+>> the link is still getting powered down as both the clocks and the
+>> power domains will go down anyway.
+>>
+>> Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
+>> Signed-off-by: AngeloGioacchino Del Regno <
+>> angelogioacchino.delregno@collabora.com>
+>> ---
+>>
+>> Changes in v2:
+>>   - Rebased over next-20240229
+>>
+>>   drivers/pci/controller/pcie-mediatek-gen3.c | 25 ++++++++++++++-----
+>> --
+>>   1 file changed, 17 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
+>> b/drivers/pci/controller/pcie-mediatek-gen3.c
+>> index 975b3024fb08..99b5d7a49be1 100644
+>> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+>> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+>> @@ -874,17 +874,26 @@ static int mtk_pcie_power_up(struct
+>> mtk_gen3_pcie *pcie)
+>>   	return err;
+>>   }
+>>   
+>> -static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
+>> +static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie, bool
+>> is_suspend)
+>>   {
+>> +	bool suspend_reset_supported = pcie->mac_reset && pcie-
+>>> phy_reset;
+>> +
+>>   	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>>   
+>>   	pm_runtime_put_sync(pcie->dev);
+>>   	pm_runtime_disable(pcie->dev);
+>> -	reset_control_assert(pcie->mac_reset);
+>> +
+>> +	/*
+>> +	 * Assert MAC reset only if we also got a PHY reset, otherwise
+>> +	 * the system will lockup at PM resume time.
+>> +	 */
+>> +	if (is_suspend && suspend_reset_supported)
+>> +		reset_control_assert(pcie->mac_reset);
+>>   
+>>   	phy_power_off(pcie->phy);
+>>   	phy_exit(pcie->phy);
+>> -	reset_control_assert(pcie->phy_reset);
+>> +	if (is_suspend && suspend_reset_supported)
+>> +		reset_control_assert(pcie->phy_reset);
+>>   }
+>>   
+>>   static int mtk_pcie_setup(struct mtk_gen3_pcie *pcie)
+>> @@ -920,7 +929,7 @@ static int mtk_pcie_setup(struct mtk_gen3_pcie
+>> *pcie)
+>>   	return 0;
+>>   
+>>   err_setup:
+>> -	mtk_pcie_power_down(pcie);
+>> +	mtk_pcie_power_down(pcie, false);
+>>   
+>>   	return err;
+>>   }
+>> @@ -951,7 +960,7 @@ static int mtk_pcie_probe(struct platform_device
+>> *pdev)
+>>   	err = pci_host_probe(host);
+>>   	if (err) {
+>>   		mtk_pcie_irq_teardown(pcie);
+>> -		mtk_pcie_power_down(pcie);
+>> +		mtk_pcie_power_down(pcie, false);
+>>   		return err;
+>>   	}
+>>   
+>> @@ -969,7 +978,7 @@ static void mtk_pcie_remove(struct
+>> platform_device *pdev)
+>>   	pci_unlock_rescan_remove();
+>>   
+>>   	mtk_pcie_irq_teardown(pcie);
+>> -	mtk_pcie_power_down(pcie);
+>> +	mtk_pcie_power_down(pcie, false);
+> 
+> Is there any reason not to reset the MAC and PHY when probe fails and
+> driver removing? Some SoCs may not have MTCMOS to cut off their power,
+> we need to assert the reset signal to save power in that case.
+> 
 
-> From: ZhangPeng <zhangpeng362@huawei.com>
->
-> The major fault occurred when using mlockall(MCL_CURRENT | MCL_FUTURE)
-> in application, which leading to an unexpected issue[1].
->
-> This caused by temporarily cleared PTE during a read+clear/modify/write
-> update of the PTE, eg, do_numa_page()/change_pte_range().
->
-> For the data segment of the user-mode program, the global variable area
-> is a private mapping. After the pagecache is loaded, the private anonymous
-> page is generated after the COW is triggered. Mlockall can lock COW pages
-> (anonymous pages), but the original file pages cannot be locked and may
-> be reclaimed. If the global variable (private anon page) is accessed when
-> vmf->pte is zeroed in numa fault, a file page fault will be triggered.
-> At this time, the original private file page may have been reclaimed.
-> If the page cache is not available at this time, a major fault will be
-> triggered and the file will be read, causing additional overhead.
->
-> This issue affects our traffic analysis service. The inbound traffic is
-> heavy. If a major fault occurs, the I/O schedule is triggered and the
-> original I/O is suspended. Generally, the I/O schedule is 0.7 ms. If
-> other applications are operating disks, the system needs to wait for
-> more than 10 ms. However, the inbound traffic is heavy and the NIC buffer
-> is small. As a result, packet loss occurs. But the traffic analysis service
-> can't tolerate packet loss.
->
-> Fix this by holding PTL and rechecking the PTE in filemap_fault() before
-> triggering a major fault. We do this check only if vma is VM_LOCKED to
-> reduce the performance impact in common scenarios.
->
-> In our product environment, there were 7 major faults every 12 hours.
-> After the patch is applied, no major fault have been triggered.
->
-> Testing file page read and write page fault performance in ext4 and
-> ramdisk using will-it-scale[2] on a x86 physical machine. The data is
-> the average change compared with the mainline after the patch is applied.
-> The test results are within the range of fluctuation. We do this check
-> only if vma is VM_LOCKED, therefore, no performance regressions is caused
-> for most common cases.
->
-> The test results are as follows:
->                           processes processes_idle  threads threads_idle
-> ext4    private file write:  0.22%    0.26%           1.21%  -0.15%
-> ext4    private file  read:  0.03%    1.00%           1.39%   0.34%
-> ext4    shared  file write: -0.50%   -0.02%          -0.14%  -0.02%
-> ramdisk private file write:  0.07%    0.02%           0.53%   0.04%
-> ramdisk private file  read:  0.01%    1.60%          -0.32%  -0.02%
->
-> [1] https://lore.kernel.org/linux-mm/9e62fd9a-bee0-52bf-50a7-498fa17434ee@huawei.com/
-> [2] https://github.com/antonblanchard/will-it-scale/
->
-> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Sorry for the late reply - yes, there is a reason.
 
-LGTM, Thanks!  Feel free to add
+On platforms needing this quirk, resetting at .remove() time will hang the
+machine if the module is reinserted later (hence, .probe() called at a later
+time).
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+Regards,
+Angelo
 
-> ---
-> v3->v4:
-> - Update the performance data and commit message
-> - Check PTE without lock firstly per Huang, Ying
-> - Update comments for recheck function per David Hildenbrand
-> - Simply return 0 to make it easier to read per David Hildenbrand
-> - Check !FAULT_FLAG_ORIG_PTE_VALID instead of pmd_none()
->
-> v2->v3:
-> - Do this check only if vma is VM_LOCKED per David Hildenbrand
-> - Hold PTL and recheck the PTE
-> - Place the recheck code in a new function filemap_fault_recheck_pte()
->
-> v1->v2:
-> - Add more test results per Huang, Ying
-> - Add more comments before check PTE per Huang, Ying, David Hildenbrand
->   and Yin Fengwei
-> - Change pte_offset_map_nolock to pte_offset_map as the PTL won't
->   be used
->
-> RFC->v1:
-> - Add error handling when ptep == NULL per Huang, Ying and Matthew
->   Wilcox
-> - Check the PTE without acquiring PTL in filemap_fault(), suggested by
->   Huang, Ying and Yin Fengwei
-> - Add pmd_none() check before PTE map
-> - Update commit message and add performance test information
->
->  mm/filemap.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index b4858d89f1b1..31ab455c4537 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3181,6 +3181,48 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
->  	return fpin;
->  }
->  
-> +static vm_fault_t filemap_fault_recheck_pte_none(struct vm_fault *vmf)
-> +{
-> +	struct vm_area_struct *vma = vmf->vma;
-> +	vm_fault_t ret = 0;
-> +	pte_t *ptep;
-> +
-> +	/*
-> +	 * We might have COW'ed a pagecache folio and might now have an mlocked
-> +	 * anon folio mapped. The original pagecache folio is not mlocked and
-> +	 * might have been evicted. During a read+clear/modify/write update of
-> +	 * the PTE, such as done in do_numa_page()/change_pte_range(), we
-> +	 * temporarily clear the PTE under PT lock and might detect it here as
-> +	 * "none" when not holding the PT lock.
-> +	 *
-> +	 * Not rechecking the PTE under PT lock could result in an unexpected
-> +	 * major fault in an mlock'ed region. Recheck only for this special
-> +	 * scenario while holding the PT lock, to not degrade non-mlocked
-> +	 * scenarios. Recheck the PTE without PT lock firstly, thereby reducing
-> +	 * the number of times we hold PT lock.
-> +	 */
-> +	if (!(vma->vm_flags & VM_LOCKED))
-> +		return 0;
-> +
-> +	if (!(vmf->flags & FAULT_FLAG_ORIG_PTE_VALID))
-> +		return 0;
-> +
-> +	ptep = pte_offset_map(vmf->pmd, vmf->address);
-> +	if (unlikely(!ptep))
-> +		return VM_FAULT_NOPAGE;
-> +
-> +	if (unlikely(!pte_none(ptep_get_lockless(ptep)))) {
-> +		ret = VM_FAULT_NOPAGE;
-> +	} else {
-> +		spin_lock(vmf->ptl);
-> +		if (unlikely(!pte_none(ptep_get(ptep))))
-> +			ret = VM_FAULT_NOPAGE;
-> +		spin_unlock(vmf->ptl);
-> +	}
-> +	pte_unmap(ptep);
-> +	return ret;
-> +}
-> +
->  /**
->   * filemap_fault - read in file data for page fault handling
->   * @vmf:	struct vm_fault containing details of the fault
-> @@ -3236,6 +3278,10 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
->  			mapping_locked = true;
->  		}
->  	} else {
-> +		ret = filemap_fault_recheck_pte_none(vmf);
-> +		if (unlikely(ret))
-> +			return ret;
-> +
->  		/* No page in the page cache at all */
->  		count_vm_event(PGMAJFAULT);
->  		count_memcg_event_mm(vmf->vma->vm_mm, PGMAJFAULT);
+> Thanks.
+> 
+>>   }
+>>   
+>>   static void mtk_pcie_irq_save(struct mtk_gen3_pcie *pcie)
+>> @@ -1044,7 +1053,7 @@ static int mtk_pcie_suspend_noirq(struct device
+>> *dev)
+>>   	dev_dbg(pcie->dev, "entered L2 states successfully");
+>>   
+>>   	mtk_pcie_irq_save(pcie);
+>> -	mtk_pcie_power_down(pcie);
+>> +	mtk_pcie_power_down(pcie, true);
+>>   
+>>   	return 0;
+>>   }
+>> @@ -1060,7 +1069,7 @@ static int mtk_pcie_resume_noirq(struct device
+>> *dev)
+>>   
+>>   	err = mtk_pcie_startup_port(pcie);
+>>   	if (err) {
+>> -		mtk_pcie_power_down(pcie);
+>> +		mtk_pcie_power_down(pcie, false);
+>>   		return err;
+>>   	}
+>>   
+
+
