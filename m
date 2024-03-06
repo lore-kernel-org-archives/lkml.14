@@ -1,73 +1,71 @@
-Received: from out187-3.us.a.mail.aliyun.com (out187-3.us.a.mail.aliyun.com [47.90.187.3])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B7E60B8E
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E22604D7;
+	Wed,  6 Mar 2024 10:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721330; cv=none; b=bhe+ZwSKCtlGGckr5tfJP1w5U5KhyMqE0GfMRohp88E+28Acp7DZyK5PcMjTT1xGvBaUMyx9yJYPzudkStJUuJs98OuTMPWZGUU9KAPxJLOUvM1lUBWNllEz5vD+0pMJpsVb1Gdh+doPo81TgE8ZdZeGFXHMezVkh6q9Adku9WU=
+	t=1709721401; cv=none; b=vCeQ9ZY2sjOJe4l+E1R1zn84rr5e/3ARZ8EEZh/Hb7Lp2qK4rYl/haqGPT4yI/iqqzCt7i/xx9i/xfVwWcOf4YEMS+9zcjBRYI+Zoxcseix3VlRNGYgyeFquQou806Mw4NuZLWVd68CJ89t3vA3DDLsMdp6ZSEEfmQxVtpLw+Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721330; c=relaxed/simple;
-	bh=O0NWohxWLhuPCPdgUtUvYLL8yZ/Ty6sMX82olIEuy3M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XooFPYSEydGyokgl6XKEOJiO8UzWccurg42inWoMq925dxQJTElTxhGu1325lm5ZR92IrzZHaTvdJgMifwxo1MyP0rmEKSam1frKIay9HWiofh7wXwzLut3O7mJJynIHoyylK7fbnsa870ryATrli3mQqYKElr+/QdMeHdKyJ4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=47.90.187.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047207;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---.Wgbn-K1_1709720384;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.Wgbn-K1_1709720384)
-          by smtp.aliyun-inc.com;
-          Wed, 06 Mar 2024 18:19:44 +0800
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-To: richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net
-Cc:  <jani.nikula@intel.com>,
-   <linux-um@lists.infradead.org>,
-   <linux-kernel@vger.kernel.org>,
-   <intel-xe@lists.freedesktop.org>,
-  "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v3 8/9] um: Fix -Wmissing-prototypes warnings for text_poke*
-Date: Wed, 06 Mar 2024 18:19:24 +0800
-Message-Id: <20240306101925.1088870-9-tiwei.btw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
-References: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
+	s=arc-20240116; t=1709721401; c=relaxed/simple;
+	bh=N6jX8ADXXK5aXnOAfJU8uWTNWIUA6GVIw/zP4wxmiGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvi5KTf9l4mIYsfvkG37vw6JfpysY1raBQgOMe4z6KcH/Ow8VRS40Kixvs7PC8NOQqnfR7CnLL7NlP98Ldh0Ww0/RrjIckBg37ns1FwdOW0DctreJGDjiEHuJxrDZh4awBikJ4cL9gwc15Gxo2NfphUPqLU4AKIC88/6BnshDeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1rhodU-0005vI-29; Wed, 06 Mar 2024 11:36:32 +0100
+Date: Wed, 6 Mar 2024 11:36:32 +0100
+From: Florian Westphal <fw@strlen.de>
+To: Eric Dumazet <edumazet@google.com>
+Cc: xingwei lee <xrivendell7@gmail.com>, Florian Westphal <fw@strlen.de>,
+	pabeni@redhat.com, davem@davemloft.net, kuba@kernel.org,
+	linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, ralf@linux-mips.org,
+	syzkaller-bugs@googlegroups.com, samsun1006219@gmail.com
+Subject: Re: KASAN: slab-use-after-free Read in ip_finish_output
+Message-ID: <20240306103632.GC4420@breakpoint.cc>
+References: <CABOYnLwtfAxS7WoMw-1_uxVe3EYajXRuzZfwaQEk0+7m6-B+ug@mail.gmail.com>
+ <CANn89i+qLwyPLztPt6Mavjimyv0H_UihVVNfJXWLjcwrqOudTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANn89i+qLwyPLztPt6Mavjimyv0H_UihVVNfJXWLjcwrqOudTw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The prototypes for text_poke* are declared in asm/text-patching.h
-under arch/x86/include/. It's safe to include this header, as it's
-UML-aware (by checking CONFIG_UML_X86).
+Eric Dumazet <edumazet@google.com> wrote:
+> On Wed, Mar 6, 2024 at 11:00 AM xingwei lee <xrivendell7@gmail.com> wrote:
+> >
+> > Hello, I found a new bug titled "KASAN: slab-use-after-free Read in
+> > ip_finish_output” or “KASAN: slab-use-after-free in sk_to_full_sk" and
+> > confirmed it in the latest net and net-next branch. After my simple
+> > analysis, it may be related to the net/rose or AF_PACKET/PF_PACKET
+> > socket.
+> 
+> I already had a syzbot report for this issue, thanks.
+> 
+> Adding Florian to the discussion.
+> The issue is cause by ip defrag layer, which calls skb_orphan()
+> These were my notes, I had little time to work on it so far.
 
-This will address below -Wmissing-prototypes warnings:
+> Calling ip_defrag() in output path is also implying skb_orphan(),
+> which is buggy because output path relies on sk not disappearing.
 
-arch/um/kernel/um_arch.c:461:7: warning: no previous prototype for ‘text_poke’ [-Wmissing-prototypes]
-arch/um/kernel/um_arch.c:473:6: warning: no previous prototype for ‘text_poke_sync’ [-Wmissing-prototypes]
+Ugh.  Thanks for your annotations and notes, this is very helpful.
 
-Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
----
- arch/um/kernel/um_arch.c | 1 +
- 1 file changed, 1 insertion(+)
+ipvlan (and two spots in ip_output.c do):
 
-diff --git a/arch/um/kernel/um_arch.c b/arch/um/kernel/um_arch.c
-index 7a9820797eae..e95f805e5004 100644
---- a/arch/um/kernel/um_arch.c
-+++ b/arch/um/kernel/um_arch.c
-@@ -23,6 +23,7 @@
- #include <asm/cpufeature.h>
- #include <asm/sections.h>
- #include <asm/setup.h>
-+#include <asm/text-patching.h>
- #include <as-layout.h>
- #include <arch.h>
- #include <init.h>
--- 
-2.34.1
+   err = ip_local_out(net, skb->sk, skb);
 
+so skb->sk gets propagated down to __ip_finish_output(), long
+after connrack defrag has called skb_orphan().
+
+No idea yet how to fix it,
