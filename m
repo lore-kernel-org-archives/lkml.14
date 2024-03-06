@@ -1,196 +1,92 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121FD605B2
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BF35FDD2;
+	Wed,  6 Mar 2024 10:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722177; cv=none; b=NbJuZnTIuEEaHyO31d2sBLfQ4T9VeKBbSo7cD2fhiTGgNZp+PTHlBBLy6CjyCgWIx7MpEcajz65r/s+9vIXs4txVeANxVMKfbGH+orRzDd9E0GBtFz4fzjRiZ1YCN7va3GQbLHt/nFX8yWbPwS3v5ffozT+XTwLABRTiC4PMFQY=
+	t=1709722220; cv=none; b=RgTv19VySXoz+cb52Ev1cL3rKmuuc8KhrnkAoGBm6xM4espMMzW4FFT8dEy7LOOOnsEmL+of7CdwkB3Vtw5wL2JRcBGuWJFF+3bBmoz/EXL2ohwyrllhbPJN8xCqxe4w3N07Yp0DzzwhN8pqRRENFkHhBwbH7PgM6rYAngf/p1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709722177; c=relaxed/simple;
-	bh=RASrq3LBTekIgSKG7TbLLKECG+SrNyOwLafAkERxv94=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vGa/vqbInIKWFAjYlLCZYmasY15L6XoeVdFqeKKjVMB2cQ/RNh1qyxJcuw+GIwHcGi8N8wPfv4osGXLMYE519N347Wb2gv94Pe1KHNFbTCETu0xYrB38TFL1tKZULNTuckmQDLPFoEenXXmAjI50ZAUMEH6HwiA43m2efsnlFgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JdmmeZGj; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709722220; c=relaxed/simple;
+	bh=/FQwOjsjlEXsuJlp+9wnACCslIvKGqy6TJS6hVnDSpM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=a7J9ZJaHzuxQ376T9hKQpmd7ALCL1D/tIXJHHpa4lOpE514As12muMQ7gEjdju0QVIfnjfLTk6btXVVV7Wmg2ZitNI2yl7V99pyBR7LTmWrwbVVcvOOIgaRRan8HMc8sgVfNKNZkQRI6ne02nfqpLkemFrFIcSlO5pmERIrVJnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U1gzvKde; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JdmmeZGj"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33de4d3483eso4133688f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:49:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709722174; x=1710326974; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GmiutPs420KSubfj+E41AV5jWZP3h7vvOSaBZaC9xL0=;
-        b=JdmmeZGjN6ACa8pcWynXSw/Sk3ibfpc+h/Nktcl9+z/Rjj50TCSRIGCKVBHsHTa6WU
-         L1X2Zhr8zeipNbM/iXMaowEFJl6gO/JW7yHi+giDQBboojZ6Y4N8n9Q+oSwekATJplMr
-         PVeXye5+MCLUud04JYqHiX8yTlwEJ9KbfIf8SY2sScr5uXbh8nWxSsicaTkO62EAa7UL
-         i55tuw8ix+2OdNcWgLGLwdOpGeQhF4tpB/WLmTRZ7wamzEUium3tL7Bom8Kh/fRHkqmX
-         NiGYKFp3v24j4psntFMDB1bUB3Vj5pm2Du9RdoErXLJi31TjL87bkgSNP40bD+i/8NE6
-         VN9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709722174; x=1710326974;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GmiutPs420KSubfj+E41AV5jWZP3h7vvOSaBZaC9xL0=;
-        b=rVbYOSA8J3bc+JpmajUyS81gM/2GK6m/9j/5enjskSUHVRtQaC0NwGd0AoBFsdpASG
-         zRCrd0BxRF0EIwMZzK0eKCGPjt6q2pQz5mjzj/U8ma/orRAeoHWUakgRv2PSGebxLd8L
-         vxYVh98a9UKSC7OUlgLoGSSAMbB85+i7ATBTHd9LtzT197D9AGDifbuxjhRHRyPDz7G4
-         dI7fpqS99PFIGIBJOfFQrcLY3SEI/bz9ma+lbKR9AtaK1dl4VS+NfmH0gQsUlxJMhvTz
-         Y31NfnjmmmOtgKw2uwdXl4snTO7B1THV2ZMT3dqOKNXhBRlxaF6yjf+gC+ieEaWWSCbD
-         D1LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNiERYe88/FT/9jIuAT/SIOBhDj1ySK5X5zNxhSbzfPbW0+V7b6kF46NJ4dcJdikZ9N9OXx7XjFjtxM8dbXeJCCyfYNcvVLu5A1zR+
-X-Gm-Message-State: AOJu0YxKHH+kM3s1orZZt0A3jMJLffQupjyM9zaklWVwbMqtq6HC/LYh
-	uKPoib8OxalR9fD4yXfAUo4WHRVTcQs8Gfx/fTO8Teel6M6UF0iSjYHaNzGCA7AvducKgvMqv8P
-	JuoofW2mKXZs/be2aBjcWmwHz3ta5jmdhowA=
-X-Google-Smtp-Source: AGHT+IHuDffvn/pnnziaF4PScFMpADJINdhzS4hqx6J2YTbhZdXnevKvtPrPZgkBTOW92T27l1SGBqRt+5kxzCXiHsU=
-X-Received: by 2002:adf:e883:0:b0:33d:1720:8cfd with SMTP id
- d3-20020adfe883000000b0033d17208cfdmr10811564wrm.41.1709722174393; Wed, 06
- Mar 2024 02:49:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U1gzvKde"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709722218; x=1741258218;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=/FQwOjsjlEXsuJlp+9wnACCslIvKGqy6TJS6hVnDSpM=;
+  b=U1gzvKdeI0onrymFaAShjZAbTUAczFLnHIrpCFJVCtQSpOf7wnOKE1Mq
+   LtVQ8VRYqFCTKBgbhH/T5gQyQ0i93HAwkKlbTo/KD3GK5appwdzvSvge8
+   vN06GMR3z2oThZ86xFED4Sfn2JW0xpjF83qF4YSIOuw+jpET4zcO13ISC
+   bCKvATWFAgtIUOCxXq6AfVRqWBMre5qYMF/5NfDKpYqN5PVM+evJjBFUR
+   L1ioQC9M8xtpl2GGABZoYhe0X0SjveQsAHF6J981jFJuV4PgacR5g/kwp
+   C2+CHIiTTa0/JzbzMXw7n9alir096kUpceAkJVUQiiYutrlgbzzN/OwMv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="8143242"
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="8143242"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:50:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="14394664"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:50:16 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Shyam-sundar.S-k@amd.com, Armin Wolf <W_Armin@gmx.de>
+Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240304205005.10078-1-W_Armin@gmx.de>
+References: <20240304205005.10078-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v3 0/4] platform/x86/amd/pmf: Fix policy binary
+ handling
+Message-Id: <170972220931.2521.8343066824996760779.b4-ty@linux.intel.com>
+Date: Wed, 06 Mar 2024 12:50:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301213442.198443-1-adrian.ratiu@collabora.com>
- <20240304-zugute-abtragen-d499556390b3@brauner> <202403040943.9545EBE5@keescook>
- <20240305-attentat-robust-b0da8137b7df@brauner> <202403050134.784D787337@keescook>
- <20240305-kontakt-ticken-77fc8f02be1d@brauner> <20240305-gremien-faucht-29973b61fb57@brauner>
-In-Reply-To: <20240305-gremien-faucht-29973b61fb57@brauner>
-From: Matt Denton <mpdenton@google.com>
-Date: Wed, 6 Mar 2024 02:49:21 -0800
-Message-ID: <CAFsT0xi1Dkv4eoG86vBHWvTzS=JjmrxBf0BNLDafi-Eq2H2tfw@mail.gmail.com>
-Subject: Re: [PATCH v2] proc: allow restricting /proc/pid/mem writes
-To: Christian Brauner <brauner@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Matthew Denton <mpdenton@chromium.org>, 
-	Adrian Ratiu <adrian.ratiu@collabora.com>, linux-fsdevel@vger.kernel.org, 
-	kernel@collabora.com, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Guenter Roeck <groeck@chromium.org>, Doug Anderson <dianders@chromium.org>, 
-	Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Mike Frysinger <vapier@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-The SECCOMP_RET_USER_NOTIF sandbox is partially implemented but the
-reason we needed it (glibc blocking signals during certain syscalls we
-wanted to emulate) got reverted and we haven't had any important
-issues with the SECCOMP_RET_TRAP sandbox since then. /proc/pid/mem was
-always restricted on ChromeOS so the plan was to use
-process_vm_readv() and process_vm_writev() in the unsandboxed broker
-process. We knew about the pid race of course, but this would be far
-from the only place that Chrome would be potentially vulnerable to the
-race so it didn't seem any worse.
+On Mon, 04 Mar 2024 21:50:01 +0100, Armin Wolf wrote:
 
-We did need to use process_vm_writev() for some syscalls, like
-emulating stat() required us to write into the supervised process.
+> This patch series fixes various issues inside the policy binary
+> handling code.
+> The first patch makes sure that a valid error code is returned upon
+> failing to start the policy engine, while the second patch drops the
+> usage of readl() on non-io memory.
+> The last two patches fix a possible out-of-bounds memory access when
+> parsing the policy binary header.
+> 
+> [...]
 
-On Tue, Mar 5, 2024 at 3:03=E2=80=AFAM Christian Brauner <brauner@kernel.or=
-g> wrote:
->
-> On Tue, Mar 05, 2024 at 10:58:31AM +0100, Christian Brauner wrote:
-> > On Tue, Mar 05, 2024 at 01:41:29AM -0800, Kees Cook wrote:
-> > > On Tue, Mar 05, 2024 at 09:59:47AM +0100, Christian Brauner wrote:
-> > > > > > Uhm, this will break the seccomp notifier, no? So you can't tur=
-n on
-> > > > > > SECURITY_PROC_MEM_RESTRICT_WRITE when you want to use the secco=
-mp
-> > > > > > notifier to do system call interception and rewrite memory loca=
-tions of
-> > > > > > the calling task, no? Which is very much relied upon in various
-> > > > > > container managers and possibly other security tools.
-> > > > > >
-> > > > > > Which means that you can't turn this on in any of the regular d=
-istros.
-> > > > >
-> > > > > FWIW, it's a run-time toggle, but yes, let's make sure this works
-> > > > > correctly.
-> > > > >
-> > > > > > So you need to either account for the calling task being a secc=
-omp
-> > > > > > supervisor for the task whose memory it is trying to access or =
-you need
-> > > > > > to provide a migration path by adding an api that let's caller'=
-s perform
-> > > > > > these writes through the seccomp notifier.
-> > > > >
-> > > > > How do seccomp supervisors that use USER_NOTIF do those kinds of
-> > > > > memory writes currently? I thought they were actually using ptrac=
-e?
-> > > > > Everything I'm familiar with is just using SECCOMP_IOCTL_NOTIF_AD=
-DFD,
-> > > > > and not doing fancy memory pokes.
-> > > >
-> > > > For example, incus has a seccomp supervisor such that each containe=
-r
-> > > > gets it's own goroutine that is responsible for handling system cal=
-l
-> > > > interception.
-> > > >
-> > > > If a container is started the container runtime connects to an AF_U=
-NIX
-> > > > socket to register with the seccomp supervisor. It stays connected =
-until
-> > > > it stops. Everytime a system call is performed that is registered i=
-n the
-> > > > seccomp notifier filter the container runtime will send a AF_UNIX
-> > > > message to the seccomp supervisor. This will include the following =
-fds:
-> > > >
-> > > > - the pidfd of the task that performed the system call (we should
-> > > >   actually replace this with SO_PEERPIDFD now that we have that)
-> > > > - the fd of the task's memory to /proc/<pid>/mem
-> > > >
-> > > > The seccomp supervisor will then perform the system call intercepti=
-on
-> > > > including the required memory reads and writes.
-> > >
-> > > Okay, so the patch would very much break that. Some questions, though=
-:
-> > > - why not use process_vm_writev()?
-> >
-> > Because it's inherently racy as I've explained in an earlier mail in
-> > this thread. Opening /proc/<pid>/mem we can guard via:
-> >
-> > // Assume we hold @pidfd for supervised process
-> >
-> > int fd_mem =3D open("/proc/$pid/mem", O_RDWR);:
-> >
-> > if (pidfd_send_signal(pidfd, 0, ...) =3D=3D 0)
-> >         write(fd_mem, ...);
-> >
-> > But we can't exactly do:
-> >
-> > process_vm_writev(pid, WRITE_TO_MEMORY, ...);
-> > if (pidfd_send_signal(pidfd, 0, ...) =3D=3D 0)
-> >         write(fd_mem, ...);
-> >
-> > That's always racy. The process might have been reaped before we even
-> > call pidfd_send_signal() and we're writing to some random process
-> > memory.
-> >
-> > If we wanted to support this we'd need to implement a proposal I had a
-> > while ago:
-> >
-> > #define PROCESS_VM_RW_PIDFD (1 << 0)
-> >
-> > process_vm_readv(pidfd,  ..., PROCESS_VM_RW_PIDFD);
-> > process_vm_writev(pidfd, ..., PROCESS_VM_RW_PIDFD);
-> >
-> > which is similar to what we did for waitid(pidfd, P_PIDFD, ...)
-> >
-> > That would make it possible to use a pidfd instead of a pid in the two
-> > system calls. Then we can get rid of the raciness and actually use thos=
-e
-> > system calls. As they are now, we can't.
->
-> What btw, is the Linux sandbox on Chromium doing? Did they finally move
-> away from SECCOMP_RET_TRAP to SECCOMP_RET_USER_NOTIF? I see:
->
-> https://issues.chromium.org/issues/40145101
->
-> What ever became of this?
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/4] platform/x86/amd/pmf: Fix return value of amd_pmf_start_policy_engine()
+      commit: 98cfcece0ab86c99bc106633d764fb6ad4a35b8e
+[2/4] platform/x86/amd/pmf: Do not use readl() for policy buffer access
+      commit: 379a7c64c4fa33315b504ede86a87188dc88fef4
+[3/4] platform/x86/amd/pmf: Use struct for cookie header
+      commit: a87d92223084f61d37da4952ad68634ea8a7caaf
+[4/4] platform/x86/amd/pmf: Fix possible out-of-bound memory accesses
+      commit: 1e7a14ee259e2ff85be51bf36a7692b20233159a
+
+--
+ i.
+
