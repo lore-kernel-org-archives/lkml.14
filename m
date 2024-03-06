@@ -1,32 +1,46 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1165C60F
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 07:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AE25D476;
+	Wed,  6 Mar 2024 07:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709711714; cv=none; b=lvmsZANjXIZGpybX5IYcAnof8bzchOY4ZEJrisuS+BDWfOA+gXOCEjYg+Udjwcq/KXYUJVGU6+FobbOEeuLeh/RtpNf5KtDEEOARrd17WU4SryKPZtWbx5r8V/sZoWJrl5zSnnCRImiM0JIzGKwp4MatRbUvv36T0jZoHgfY4T0=
+	t=1709711720; cv=none; b=aMKIXFRXL3/v0y169//Wd0wVih/RwMB7EcAFpxhqsC9s5R+t6oTA73YLGBKxFOUD9WSsb9JYW9HcB4DInxZcSz2MgMn6vF5AqhLzf0pCKP2BZa5e8dHhVsP57cA6X3xxv3Qjq8DQhyydHA0055WuiSKIU9Okq8mrw0XXgTjOR8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709711714; c=relaxed/simple;
-	bh=vw1Do1mdUeSYW8XeseizCXsoA/vB1CreAqCRX8tXwoI=;
+	s=arc-20240116; t=1709711720; c=relaxed/simple;
+	bh=14yPEBFlfpDYBSe2mRwnNTZjIKqNOs6jB4Q1YJJadS0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mn7k81cAQFxKuEUJiZBRwXQkzptrKuI5Fz9pBa19xi5fKuV8K6khwQ1H3GeDHw/ayVTJYxLsUcVhEChtbo/Ly3AqUSpcJcT03JQJJF9QLa8nxyGz+3VlEOqMc2B2/85TZroULMx13TLgH4ivocsiRUo2zYd2ymgKcCSqqrxfE8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RZMYyu/m; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=iHm82thDbgpAjeswYPBjWqVDv+8gnpEKpXqv0/U7CN1h/VAH0yFztPIioGYlMGhDaNntwLeQTG+eleU6XT0SI6gntjhuTDFS+83O1G8czxyZ5tS6dcnx+yLWTWYZZ7PGvUgOkXpFuU6PMwiJ6rslhkpWzS2sRFtCuaw9hvxazmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDr0QJTh; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RZMYyu/m"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1709711708; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=6m9vEWZGyUoYUNKNnaBD15J1Z0XArlRy+U6S81860p4=;
-	b=RZMYyu/mWJUEasutgo7FvnE/M2gGaBnUL9CI3RfDG7x6IeEMCRW5DS6cnROxadx/f0t3M3Xk1O8L0m8kDFUJ1L7fTMzzPvBRUSb0NIAK7L+BCATm+VMQiSv6zjA2X5FlVFQAt7HJJSQvp/T+0Yt+vPak1fEwHU/CqJR3sudXRrM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W1wff2R_1709711707;
-Received: from 30.221.146.143(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W1wff2R_1709711707)
-          by smtp.aliyun-inc.com;
-          Wed, 06 Mar 2024 15:55:08 +0800
-Message-ID: <3db6b039-a071-4736-aaa8-fe1a7934f981@linux.alibaba.com>
-Date: Wed, 6 Mar 2024 15:55:06 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDr0QJTh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709711718; x=1741247718;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=14yPEBFlfpDYBSe2mRwnNTZjIKqNOs6jB4Q1YJJadS0=;
+  b=KDr0QJThu7QYFbP2Kkjuv5Ol6tyemUkmmcGA3h25iNf2Y35ZDdKqbvB0
+   ZdO8w+1RGp+5qjR1P2/Ode9VjKPb35BDgVc7C29/SaM6kRM8E1qroxKJc
+   8eJ+auCRl7oDs4GsvgmMa5Yz9eXb8bWiSfKVlKu3YZw1nV34SViW/u00o
+   vz4A2ke8Hy6jqIvHoTl+pag+5yhNQNSVWB46KtWj9GlmiMPBCfLRFvFHF
+   yViuFkdulOatmg+LpJV5BXCr1RNcNsEcAEkZIBraQVsb6J8ypzLR9Qa6x
+   uZgqc23O4cbn0Wv0tPA9tOSATXVpSgI/0YnX4sd/krlsilKkuNsuGP1sA
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="14886766"
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="14886766"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 23:55:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="32828199"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.239.60]) ([10.124.239.60])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 23:55:14 -0800
+Message-ID: <37b3bb47-059e-4524-a7d8-1aa28099cc94@linux.intel.com>
+Date: Wed, 6 Mar 2024 15:55:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,71 +48,159 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: apply proper VMA alignment for memory mapped files
- on THP
+Subject: Re: [Patch v3] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with
+ macros
 Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240306053138.2240206-1-hsiangkao@linux.alibaba.com>
- <30300dc7-3063-4e09-bb21-22951ec23a38@linux.alibaba.com>
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <30300dc7-3063-4e09-bb21-22951ec23a38@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Kan Liang
+ <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+ Zhang Xiong <xiong.y.zhang@intel.com>, Lv Zhiyuan <zhiyuan.lv@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>, Mingwei Zhang <mizhang@google.com>
+References: <20230824020546.1108516-1-dapeng1.mi@linux.intel.com>
+ <ZeepGjHCeSfadANM@google.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <ZeepGjHCeSfadANM@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
+On 3/6/2024 7:22 AM, Sean Christopherson wrote:
+> +Mingwei
+>
+> On Thu, Aug 24, 2023, Dapeng Mi wrote:
+>   diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+>> index 7d9ba301c090..ffda2ecc3a22 100644
+>> --- a/arch/x86/kvm/pmu.h
+>> +++ b/arch/x86/kvm/pmu.h
+>> @@ -12,7 +12,8 @@
+>>   					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
+>>   
+>>   /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
+>> -#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
+>> +#define fixed_ctrl_field(ctrl_reg, idx) \
+>> +	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
+>>   
+>>   #define VMWARE_BACKDOOR_PMC_HOST_TSC		0x10000
+>>   #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
+>> @@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+>>   
+>>   	if (pmc_is_fixed(pmc))
+>>   		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>> -					pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+>> +					pmc->idx - INTEL_PMC_IDX_FIXED) &
+>> +					(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
+>>   
+>>   	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>>   }
+>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+>> index f2efa0bf7ae8..b0ac55891cb7 100644
+>> --- a/arch/x86/kvm/vmx/pmu_intel.c
+>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+>> @@ -548,8 +548,13 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>>   		setup_fixed_pmc_eventsel(pmu);
+>>   	}
+>>   
+>> -	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
+>> -		pmu->fixed_ctr_ctrl_mask &= ~(0xbull << (i * 4));
+>> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+>> +		pmu->fixed_ctr_ctrl_mask &=
+>> +			 ~intel_fixed_bits_by_idx(i,
+>> +						  INTEL_FIXED_0_KERNEL |
+>> +						  INTEL_FIXED_0_USER |
+>> +						  INTEL_FIXED_0_ENABLE_PMI);
+>> +	}
+>>   	counter_mask = ~(((1ull << pmu->nr_arch_gp_counters) - 1) |
+>>   		(((1ull << pmu->nr_arch_fixed_counters) - 1) << INTEL_PMC_IDX_FIXED));
+>>   	pmu->global_ctrl_mask = counter_mask;
+>> @@ -595,7 +600,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>>   			pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
+>>   			for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+>>   				pmu->fixed_ctr_ctrl_mask &=
+>> -					~(1ULL << (INTEL_PMC_IDX_FIXED + i * 4));
+> OMG, this might just win the award for most obfuscated PMU code in KVM, which is
+> saying something.  The fact that INTEL_PMC_IDX_FIXED happens to be 32, the same
+> bit number as ICL_FIXED_0_ADAPTIVE, is 100% coincidence.  Good riddance.
+>
+> Argh, and this goofy code helped introduce a real bug.  reprogram_fixed_counters()
+> doesn't account for the upper 32 bits of IA32_FIXED_CTR_CTRL.
+>
+> Wait, WTF?  Nothing in KVM accounts for the upper bits.  This can't possibly work.
+>
+> IIUC, because KVM _always_ sets precise_ip to a non-zero bit for PEBS events,
+> perf will _always_ generate an adaptive record, even if the guest requested a
+> basic record.  Ugh, and KVM will always generate adaptive records even if the
+> guest doesn't support them.  This is all completely broken.  It probably kinda
+> sorta works because the Basic info is always stored in the record, and generating
+> more info requires a non-zero MSR_PEBS_DATA_CFG, but ugh.
+>
+> Oh great, and it gets worse.  intel_pmu_disable_fixed() doesn't clear the upper
+> bits either, i.e. leaves ICL_FIXED_0_ADAPTIVE set.  Unless I'm misreading the code,
+> intel_pmu_enable_fixed() effectively doesn't clear ICL_FIXED_0_ADAPTIVE either,
+> as it only modifies the bit when it wants to set ICL_FIXED_0_ADAPTIVE.
 
-On 3/6/24 2:51 PM, Gao Xiang wrote:
-> 
-> 
-> On 2024/3/6 13:31, Gao Xiang wrote:
->> There are mainly two reasons that thp_get_unmapped_area() should be
->> used for EROFS as other filesystems:
->>
->>   - It's needed to enable PMD mappings as a FSDAX filesystem, see
->>     commit 74d2fad1334d ("thp, dax: add thp_get_unmapped_area for pmd
->>     mappings");
->>
->>   - It's useful together with CONFIG_READ_ONLY_THP_FOR_FS which enables
->>     THPs for read-only mmapped files (e.g. shared libraries) even without
->>     FSDAX.  See commit 1854bc6e2420 ("mm/readahead: Align file mappings
->>     for non-DAX").
-> 
-> Refine this part as
-> 
->  - It's useful together with large folios and CONFIG_READ_ONLY_THP_FOR_FS
->    which enable THPs for mmapped files (e.g. shared libraries) even without
->    ...
-> 
->>
->> Fixes: 06252e9ce05b ("erofs: dax support for non-tailpacking regular
->> file")
-> 
-> Fixes: ce529cc25b18 ("erofs: enable large folios for iomap mode")
-> Fixes: be62c5198861 ("erofs: enable large folios for fscache mode")
-> 
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->>   fs/erofs/data.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index c98aeda8abb2..3d9721b3faa8 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -447,5 +447,6 @@ const struct file_operations erofs_file_fops = {
->>       .llseek        = generic_file_llseek,
->>       .read_iter    = erofs_file_read_iter,
->>       .mmap        = erofs_file_mmap,
->> +    .get_unmapped_area = thp_get_unmapped_area,
->>       .splice_read    = filemap_splice_read,
->>   };
+
+Currently the host PMU driver would always set the "Adaptive_Record" bit 
+in PERFEVTSELx and FIXED_CNTR_CTR MSRs as long as HW supports the 
+adaptive PEBS feature (See details in helpers intel_pmu_pebs_enable() 
+and intel_pmu_enable_fixed()).
+
+It looks perf system doesn't export a interface to enable/disable the 
+adaptive PEBS.  I suppose that's why KVM doesn't handle the 
+"Adaptive_Record" bit in ERFEVTSELx and FIXED_CNTR_CTR MSRs.
 
 
-LGTM.
+>
+> *sigh*
+>
+> I'm _very_ tempted to disable KVM PEBS support for the current PMU, and make it
+> available only when the so-called passthrough PMU is available[*].  Because I
+> don't see how this is can possibly be functionally correct, nor do I see a way
+> to make it functionally correct without a rather large and invasive series.
+>
+> Ouch.  And after chatting with Mingwei, who asked the very good question of
+> "can this leak host state?", I am pretty sure that yes, this can leak host state.
+>
+> When PERF_CAP_PEBS_BASELINE is enabled for the guest, i.e. when the guest has
+> access to adaptive records, KVM gives the guest full access to MSR_PEBS_DATA_CFG
+>
+> 	pmu->pebs_data_cfg_mask = ~0xff00000full;
+>
+> which makes sense in a vacuum, because AFAICT the architecture doesn't allow
+> exposing a subset of the four adaptive controls.
+>
+> GPRs and XMMs are always context switched and thus benign, but IIUC, Memory Info
+> provides data that might now otherwise be available to the guest, e.g. if host
+> userspace has disallowed equivalent events via KVM_SET_PMU_EVENT_FILTER.
+>
+> And unless I'm missing something, LBRs are a full leak of host state.  Nothing
+> in the SDM suggests that PEBS records honor MSR intercepts, so unless KVM is
+> also passing through LBRs, i.e. is context switching all LBR MSRs, the guest can
+> use PEBS to read host LBRs at will.
 
-Reviewed-by: Jingbo Xu \<jefflexu@linux.alibaba.com>
+Not sure If I missed something, but I don't see there is leak of host 
+state. All perf events created by KVM would set "exclude_host" 
+attribute, that would leads to all guest counters including the PEBS 
+enabling counters would be disabled immediately by VMX once vm exits, 
+and so the PEBS engine would stop as well. I don't see a PEBS record 
+contains host state is possible to be written into guest DS area.
 
--- 
-Thanks,
-Jingbo
+
+>
+> Unless someone chimes in to point out how PEBS virtualization isn't a broken mess,
+> I will post a patch to effectively disable PEBS virtualization.
+>
+> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+> index 41a4533f9989..a2f827fa0ca1 100644
+> --- a/arch/x86/kvm/vmx/capabilities.h
+> +++ b/arch/x86/kvm/vmx/capabilities.h
+> @@ -392,7 +392,7 @@ static inline bool vmx_pt_mode_is_host_guest(void)
+>   
+>   static inline bool vmx_pebs_supported(void)
+>   {
+> -       return boot_cpu_has(X86_FEATURE_PEBS) && kvm_pmu_cap.pebs_ept;
+> +       return false;
+>   }
+>   
+>   static inline bool cpu_has_notify_vmexit(void)
