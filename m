@@ -1,113 +1,170 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0034A1C684;
-	Wed,  6 Mar 2024 22:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F44D1B7E4
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 23:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709765945; cv=none; b=db13v0Nxbj+ud9YZVU8D5zVFesI1GwVyxrfB4veChRlDmd0xjL1jkW7y+DzZOVGiwdmvycHoJ6ZkoBIQL87Bwdwc78EenU6nQDXpi5U8K9oypYHcDDK7m/llXDM9VheIbyWFbhtTuoxAb3bDX5OSYPkiiWr2SWK5Hsm3rF4imPw=
+	t=1709766068; cv=none; b=BgVWiBnvh8R5zRhhKt/MfonJMfkdDTkQ58CpKh2Fi7qn4P/2YhWYIRA6I+ek2PePs0oSZ+6jltrIsCPKyRunOunkkbxLD/qJ92tP1aQcJS1VAyCPjeQ1zFh9h/hWlDVEb2dbSPiBp9TR3zFPVFKOgrp2D67+f2aACwMJ5jYNq+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709765945; c=relaxed/simple;
-	bh=oNL4woPH2GgB/0aAHfXk2961xRNs+WQXgdtPX1mrVSo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=utRuA6WZdaa1bOjybWdTTvsFRhaHcSIj+hTEz1LIPsyJicegm1WjnL/VsAHSljmLNcjBVUJShK+jPJPjRTon8eaK09lRDGsCNKX8IzkhzWSbpw9t34/X1I2MDlrq9eXfezOKaW7Q1OrfjN79+XWobdDzgJS9iV13rZg4pocGylI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VKYrAG//; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709766068; c=relaxed/simple;
+	bh=NW+sQlo/7EybAM3SogmzAKt1K9OGuME79HDfxRhZzro=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZYp6uznDUobcLJZ322N7h5MZ0oJMEgW/sJdAuN50r/2NU+3PJuZuZrjZq7wQTjLcvbDA8AMYU2COfbUtJVNdLgNRUzut5aLT+4vvGjm0/Sc6GrBKzPsENN7LwYoJXTSBuGNdDIrMWXSt+D71C2QjF/tRdW7VSuvhhcNeUUnFHAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gGLKdnTx; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VKYrAG//"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 426MgDw8018256;
-	Wed, 6 Mar 2024 22:58:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=fZBVeTFFrn96qz5boWPG4MRz0Oeii50WF0vdP2piFhs=;
- b=VKYrAG//fcN7izxPTJi1ObzKnhA0D3uIh3cJc0cw7fstngK+WA1siR00uN+WEowtjhjC
- /UmTVEineOuKx36dqyUSXoUBRSm/n4aweD1dhIKJjjYemdp6tHTVzU64DYGjAEDH8h2Y
- pXCjGcA4YxxfgJNzF36MPrq1wX9MMhYVDXS9222fY1fEA8u5X6q74BN1+vHn66O3uZ5L
- lIbO7TPnyVEsMLwg9rHvu+fxav2MKhp0YzImGMMVr9LPlpurDyVb1E3ZJckKQ6SW/Zwe
- 1t3QugfDSAikwQa6YcmYcteZVxunGHfqr86D3zjh35KBpzGVep/owl8q7S/Iu5ephDnK Pg== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wq1gugb0f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 22:58:57 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 426MIwG9026216;
-	Wed, 6 Mar 2024 22:23:10 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmfep1nq3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 22:23:10 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 426MN7Mo13631748
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Mar 2024 22:23:09 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DFCA358061;
-	Wed,  6 Mar 2024 22:23:05 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6208858068;
-	Wed,  6 Mar 2024 22:23:05 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  6 Mar 2024 22:23:05 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br, lukas@wunner.de,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v5 06/12] crypto: ecc - Add special case for NIST P521 in ecc_point_mult
-Date: Wed,  6 Mar 2024 17:22:51 -0500
-Message-ID: <20240306222257.979304-7-stefanb@linux.ibm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240306222257.979304-1-stefanb@linux.ibm.com>
-References: <20240306222257.979304-1-stefanb@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gGLKdnTx"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcd94cc48a1so330449276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 15:01:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709766066; x=1710370866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RcwkQpLt5gEvw9lzOYXIygCaKSwMUmTC1mBtpnpNrdY=;
+        b=gGLKdnTxGIK2wuNX8E8loTBpdtR4iExJl8/YS6YX9Zdu3zBXU0gZ2c4+R2KMPXAlV9
+         QSiUFOA/jaHvimJkhhrGBmi/IQCSLqvYcnaH2OTXwR/7TCI4MeXgEhrZvhDeUD3zSdxu
+         OSPINLhhRCENoGaCuDjPx14K9sz1Aj9oFGJp9oWBwnvOd4FWe4ggE1ItbReNklTZ0Qkh
+         qXjWoPlH/3YGydBYzz76A9c6rkmrTVe93crVzKb7kt6iN3tYtG2FNk+gKvO4tD7ln/J0
+         pMO6khfHCLWMf21BQQPlVL+0adOluXPAQNp5HRqC+Vsedp51u7aHeTiMAeeOBhkSnHxz
+         4y2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709766066; x=1710370866;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RcwkQpLt5gEvw9lzOYXIygCaKSwMUmTC1mBtpnpNrdY=;
+        b=B2UeZkDnEtToNHsbGTYgYezCCm9IyPHtg+WUqJPMo+4UwoyO68o1y0G2uW0BFAdX5N
+         F5cpZTz9zp40HpF9Ptz8KR2Ud9GNkW4yLnAhcm+rhrSPm96SMDo8sKuIfIwDoDVprLEw
+         f+IZw7SzMGSP8xR4aKA8wuHjMEoaUcSMT/fyj3k0tOxnaQczQPhV86E4BwpkGg/3ZcWv
+         imCNUN5iJo7Iui5ZNCmiCEDd8xbKv620Fjv80BzLsPcI/nBFZTXiol1REMit2Y+LrFLd
+         2qQjQsxx/w7+28wuwGRPCSBOOHSU5QnGBmQJzU9JSJc5XIl8h7vk4eGd1wvCdmrTSci0
+         V8VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXN1Q0s+DkTgPwPThQMcQy1QTZRkzI+tV6+WVmtMs69/VdiFYseX7+uT1SdSpi+yDOBwZP0HhTOvsgfwCgEN+kSwEscbJPFNbUzn5eP
+X-Gm-Message-State: AOJu0YwUb8tE0MsAYLNAimVOfvBeshk4cBlf9/iRqiQwEGyjtP7nBCnv
+	/uhwcccyRciZUfc3ydKCnvQ5aCzj1r5z7H+0sCUNCN+9Lj7tBJKJ+bKSsdYHx9evaW/2NFvXLiC
+	WkA==
+X-Google-Smtp-Source: AGHT+IGZoQmVqCVd/23cUslfqz8onL3il57LkzhWOvgl7OCZGQJeoymsA0M5Y2Vn5b0vjetJm1+A83a8IOs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1004:b0:dc7:48ce:d17f with SMTP id
+ w4-20020a056902100400b00dc748ced17fmr4153235ybt.10.1709766066391; Wed, 06 Mar
+ 2024 15:01:06 -0800 (PST)
+Date: Wed, 6 Mar 2024 15:01:04 -0800
+In-Reply-To: <5f230626-2738-41cc-875d-ab1a7ef19f64@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 5Wi3TuOfounAn6vNDh3bvOoo3h3hx1YA
-X-Proofpoint-ORIG-GUID: 5Wi3TuOfounAn6vNDh3bvOoo3h3hx1YA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 suspectscore=0 spamscore=0 adultscore=0 mlxscore=0
- mlxlogscore=999 impostorscore=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2403060185
+Mime-Version: 1.0
+References: <20240228024147.41573-1-seanjc@google.com> <20240228024147.41573-12-seanjc@google.com>
+ <0a05d5ec-5352-4bab-96ae-2fa35235477c@intel.com> <ZejxqaEBi3q0TU_d@google.com>
+ <5f230626-2738-41cc-875d-ab1a7ef19f64@intel.com>
+Message-ID: <Zej1sBTPLXIhfemS@google.com>
+Subject: Re: [PATCH 11/16] KVM: x86/mmu: Explicitly disallow private accesses
+ to emulated MMIO
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yan Zhao <yan.y.zhao@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	Michael Roth <michael.roth@amd.com>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-In ecc_point_mult use the number of bits of the NIST P521 curve + 2. The
-change is required specifically for NIST P521 to pass mathematical tests
-on the public key.
+On Thu, Mar 07, 2024, Kai Huang wrote:
+>=20
+>=20
+> On 7/03/2024 11:43 am, Sean Christopherson wrote:
+> > On Thu, Mar 07, 2024, Kai Huang wrote:
+> > >=20
+> > >=20
+> > > On 28/02/2024 3:41 pm, Sean Christopherson wrote:
+> > > > Explicitly detect and disallow private accesses to emulated MMIO in
+> > > > kvm_handle_noslot_fault() instead of relying on kvm_faultin_pfn_pri=
+vate()
+> > > > to perform the check.  This will allow the page fault path to go st=
+raight
+> > > > to kvm_handle_noslot_fault() without bouncing through __kvm_faultin=
+_pfn().
+> > > >=20
+> > > > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > > > ---
+> > > >    arch/x86/kvm/mmu/mmu.c | 5 +++++
+> > > >    1 file changed, 5 insertions(+)
+> > > >=20
+> > > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > > > index 5c8caab64ba2..ebdb3fcce3dc 100644
+> > > > --- a/arch/x86/kvm/mmu/mmu.c
+> > > > +++ b/arch/x86/kvm/mmu/mmu.c
+> > > > @@ -3314,6 +3314,11 @@ static int kvm_handle_noslot_fault(struct kv=
+m_vcpu *vcpu,
+> > > >    {
+> > > >    	gva_t gva =3D fault->is_tdp ? 0 : fault->addr;
+> > > > +	if (fault->is_private) {
+> > > > +		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+> > > > +		return -EFAULT;
+> > > > +	}
+> > > > +
+> > >=20
+> > > As mentioned in another reply in this series, unless I am mistaken, f=
+or TDX
+> > > guest the _first_ MMIO access would still cause EPT violation with MM=
+IO GFN
+> > > being private.
+> > >=20
+> > > Returning to userspace cannot really help here because the MMIO mappi=
+ng is
+> > > inside the guest.
+> >=20
+> > That's a guest bug.  The guest *knows* it's a TDX VM, it *has* to know.=
+  Accessing
+> > emulated MMIO and thus taking a #VE before enabling paging is nonsensic=
+al.  Either
+> > enable paging and setup MMIO regions as shared, or go straight to TDCAL=
+L.
+>=20
+> +Kirill,
+>=20
+> I kinda forgot the detail, but what I am afraid is there might be bunch o=
+f
+> existing TDX guests (since TDX guest code is upstream-ed) using unmodifie=
+d
+> drivers, which doesn't map MMIO regions as shared I suppose.
+>=20
+> Kirill,
+>=20
+> Could you clarify whether TDX guest code maps MMIO regions as shared sinc=
+e
+> beginning?
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Tested-by: Lukas Wunner <lukas@wunner.de>
----
- crypto/ecc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Y'all get the same answer we gave the SNP folks: KVM does not yet support T=
+DX,
+so as far is KVM is concerned, there is no existing functionality to suppor=
+t.
 
-diff --git a/crypto/ecc.c b/crypto/ecc.c
-index 373660e7b19d..55fd390d3386 100644
---- a/crypto/ecc.c
-+++ b/crypto/ecc.c
-@@ -1326,7 +1326,10 @@ static void ecc_point_mult(struct ecc_point *result,
- 	carry = vli_add(sk[0], scalar, curve->n, ndigits);
- 	vli_add(sk[1], sk[0], curve->n, ndigits);
- 	scalar = sk[!carry];
--	num_bits = sizeof(u64) * ndigits * 8 + 1;
-+	if (curve->nbits == 521)
-+		num_bits = curve->nbits + 2;
-+	else
-+		num_bits = sizeof(u64) * ndigits * 8 + 1;
- 
- 	vli_set(rx[1], point->x, ndigits);
- 	vli_set(ry[1], point->y, ndigits);
--- 
-2.43.0
+s/firmware/Linux if this is a Linux kernel problem.
 
+  On Thu, Feb 08, 2024, Paolo Bonzini wrote:
+  > On Thu, Feb 8, 2024 at 6:27=E2=80=AFPM Sean Christopherson <seanjc@goog=
+le.com> wrote:
+  > > No.  KVM does not yet support SNP, so as far as KVM's ABI goes, there=
+ are no
+  > > existing guests.  Yes, I realize that I am burying my head in the san=
+d to some
+  > > extent, but it is simply not sustainable for KVM to keep trying to pi=
+ck up the
+  > > pieces of poorly defined hardware specs and broken guest firmware.
+  >=20
+  > 101% agreed. There are cases in which we have to and should bend
+  > together backwards for guests (e.g. older Linux kernels), but not for
+  > code that---according to current practices---is chosen by the host
+  > admin.
+  >=20
+  > (I am of the opinion that "bring your own firmware" is the only sane
+  > way to handle attestation/measurement, but that's not how things are
+  > done currently).
