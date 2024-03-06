@@ -1,63 +1,38 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395F0171BB
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 03:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC85E79E4
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 03:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709696895; cv=none; b=DOBjJ6JRV0w3bfDsYcoW666NH9UKVfpOhznC6IGnC+BonvcSZsMSGtcK01TBQsC6Rcvu0L+AH4/3dxY4oQsNny4kTEUE0tYolcPK6/cq5xU/669zh3hXEc2jqCiUX6/NbByWXwG5zLzsxr+becPC/LdG/NegupWNut30a3mSKfA=
+	t=1709696923; cv=none; b=AS0lyCtl9cc+hEt6mggChyNougldWsxRrt2F2nD6MO/Xl697d0bWeGmUylgIwGY1h6BkhMHUj0G1ozU4aK8wf0qRwpOfqUJ+/m2p43dKgbDufbtK7XUlNh3D5PBAck+It+45nRmGJ2gZvAk2ZIYoa/9bnxNRL229g5eJwkMOapI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709696895; c=relaxed/simple;
-	bh=St9h/+bWAu6YRwQAQlMD4+fbPy3oF63/fAF6IAwIBV0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fXJpiJmFJvZgj0AX6gdPL1FcRH+IAuzh9nAfk0Ey69R5SVNuJ5NdUJkhI5If9o1MXJFul9U/Ag7B4uqGWlADGu4JBtWgXegCaeW7uqccGtTi+fgz+onYy5bzLnWmPyqylGcKBTiUF+TI4yTa5J6F9GR2nI6eVsTDVHSqEv0sE24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QF/QxwQo; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QF/QxwQo"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c1f55ba3ecso1395683b6e.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 19:48:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709696893; x=1710301693; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3dFueebX921q9ASDQ4GIy98CaSdx6xaQg+PhrFhce1c=;
-        b=QF/QxwQo5KLm2ZknHESODLexHLO3J2in+VHk4otuYqy6W2MrA2llmyAXafwOaHYTvQ
-         NxBo9eCOGaPbQlY6YJ7U+m7cG/l7zxtZyrjenq2o1wSXhJVo1N30oHi5D+EFDw48pe70
-         kBl4bWR4LtQbX5cnpffRGtfusoFs9nyikqg1e9gtLtRY4LTBAjEbXW9yqm49nmEy2/Xz
-         hq033oXAztxcEhf5z5Wdgt8+7X273eDwHJNV46VYDT1pMnXjb0lhzMtR/Zy01QI3GgKo
-         4+qw5fiUbbLzvEdF1553aEXH4aICskY/Qpoqlovst38s1s3oeyvQUYiCbFe3EXqSTqHp
-         alzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709696893; x=1710301693;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3dFueebX921q9ASDQ4GIy98CaSdx6xaQg+PhrFhce1c=;
-        b=Ycy3c+h26Qj9IjyFVh+5ZcBX7xbv66Xr/U4zxMp97gkaUF46DfcE12pPXMtAtDwOZp
-         IHyajPenyWiwJz9sfjQaKYQWo5D/5NCCuA022RE/BLpnvhYkLwHo21CYyixm6QjIsUSk
-         MzP0GWJ7McmQlAVMK3FgxtkeOP4YG3+a8ug1yLHsDFmlp+2eFf+tzd+cVJnC5QzhN3uj
-         e/LRVWZVoQkFkLhzRsPwvKamPdmvv+J1F7DOuBQpMqYLJx7qIy6D8ug08pu4N+KhjsV3
-         ooTsoyWJGVJhQif68WwU1qdS5OjxOpWo12slzsmY2j2OgmcThGkossryVZwKVh6o1a6s
-         P9MQ==
-X-Gm-Message-State: AOJu0Yz/QJzwzbplWSEpzgZ8gkWGGKj6pZIj8+HRC7mBpBHSIec+QaWZ
-	a1Xa8hLFgNI0zHVPMWo8AeyZ9aVkNpL1tJexl4muOsD/nnWF3eK9gqcjFQ23rxs=
-X-Google-Smtp-Source: AGHT+IHTyN5mI+PUfGcKFCyPziQNB8MoBPoLDjp+YUhxaIAFpIeWxKBYsBFNmQhGvkueYRcfBHqasA==
-X-Received: by 2002:a05:6808:1901:b0:3c2:10c9:d930 with SMTP id bf1-20020a056808190100b003c210c9d930mr4073332oib.56.1709696893272;
-        Tue, 05 Mar 2024 19:48:13 -0800 (PST)
-Received: from FLYINGPENG-MB1.tencent.com ([103.7.29.30])
-        by smtp.gmail.com with ESMTPSA id bd9-20020a056a00278900b006e60c07f551sm5022921pfb.200.2024.03.05.19.48.11
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 05 Mar 2024 19:48:12 -0800 (PST)
-From: flyingpenghao@gmail.com
-X-Google-Original-From: flyingpeng@tencent.com
-To: akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	Peng Hao <flyingpeng@tencent.com>
-Subject: [PATCH]  buildid: use kmap_local_page()
-Date: Wed,  6 Mar 2024 11:48:04 +0800
-Message-Id: <20240306034804.62087-1-flyingpeng@tencent.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+	s=arc-20240116; t=1709696923; c=relaxed/simple;
+	bh=Yv/wEQyVLh3O8dYuUsQBBEHcdO49+5NW64lg8IZHy9k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z50YRDS5vIvYc8zPV3ZnFN1DpVQ+RHL4GIz4hudzbEtE1o0nq9RN/hqT9Ebft5rf37kKzoouta72bvWleK0TH9pIetBhGnHcxvZcl3F+4nmeOazz5ALCElfrHkJSW8ZYYcTlujpmLH1xexZS+uv4dU/I+A2Tl49FC5zKIn+Pj1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 4263lq9f002745;
+	Wed, 6 Mar 2024 11:47:52 +0800 (+08)
+	(envelope-from Xiuhong.Wang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TqJJp0bvGz2Kt9WL;
+	Wed,  6 Mar 2024 11:46:50 +0800 (CST)
+Received: from tj10379pcu.spreadtrum.com (10.5.32.15) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 6 Mar 2024 11:47:49 +0800
+From: Xiuhong Wang <xiuhong.wang@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+CC: <hongyu.jin.cn@gmail.com>, <niuzhiguo84@gmail.com>, <ke.wang@unisoc.com>,
+        <xiuhong.wang.cn@gmail.com>
+Subject: [PATCH V2 1/2] f2fs: compress: relocate some judgments in f2fs_reserve_compress_blocks
+Date: Wed, 6 Mar 2024 11:47:45 +0800
+Message-ID: <20240306034746.3722986-1-xiuhong.wang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,41 +40,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 4263lq9f002745
 
-From: Peng Hao <flyingpeng@tencent.com>
+The following f2fs_io test will get a "0" result instead of -EINVAL,
+unisoc # ./f2fs_io compress file
+unisoc # ./f2fs_io reserve_cblocks file
+ 0
+it's not reasonable, so the judgement of
+atomic_read(&F2FS_I(inode)->i_compr_blocks) should be placed after
+the judgement of is_inode_flag_set(inode, FI_COMPRESS_RELEASED).
 
-From: Peng Hao <flyingpeng@tencent.com>
-
-Use kmap_local_page() instead of kmap_atomic() which has been
-deprecated.
-
-Signed-off-by: Peng Hao <flyingpeng@tencent.com>
+Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
+Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
 ---
- lib/buildid.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/file.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/lib/buildid.c b/lib/buildid.c
-index e3a7acdeef0e..29fdfb4cccf0 100644
---- a/lib/buildid.c
-+++ b/lib/buildid.c
-@@ -140,7 +140,7 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
- 		return -EFAULT;	/* page not mapped */
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 4ca6c693b33a..74c5e48fce22 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3720,9 +3720,6 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 	if (ret)
+ 		return ret;
  
- 	ret = -EINVAL;
--	page_addr = kmap_atomic(page);
-+	page_addr = kmap_local_page(page);
- 	ehdr = (Elf32_Ehdr *)page_addr;
+-	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
+-		goto out;
+-
+ 	f2fs_balance_fs(sbi, true);
  
- 	/* compare magic x7f "ELF" */
-@@ -156,7 +156,7 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
- 	else if (ehdr->e_ident[EI_CLASS] == ELFCLASS64)
- 		ret = get_build_id_64(page_addr, build_id, size);
- out:
--	kunmap_atomic(page_addr);
-+	kunmap_local(page_addr);
- 	put_page(page);
- 	return ret;
- }
+ 	inode_lock(inode);
+@@ -3732,6 +3729,9 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 		goto unlock_inode;
+ 	}
+ 
++	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
++		goto unlock_inode;
++
+ 	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 	filemap_invalidate_lock(inode->i_mapping);
+ 
+@@ -3778,7 +3778,6 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 	}
+ unlock_inode:
+ 	inode_unlock(inode);
+-out:
+ 	mnt_drop_write_file(filp);
+ 
+ 	if (ret >= 0) {
 -- 
-2.31.1
+2.25.1
 
