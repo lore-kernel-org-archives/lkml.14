@@ -1,82 +1,95 @@
-Received: from 19.mo581.mail-out.ovh.net (19.mo581.mail-out.ovh.net [178.33.251.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC83E12C52C
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 14:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.251.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F58A132C3D
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 14:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709734987; cv=none; b=O6w6Zbo5G0AVLAD7JXHGZg1Vdmz01Dex6oDNGn8hu1v0qOkPsGjq5xvBTwYdxJsBmdjg/RXEoTxKvkvB2vegr4z3JzrYo4MnViR96cJUKfObt5o0HCkNMkr3SxIwvgP2Lbjsxt8Rbdy/PekcbQICFUoYfJ2g0mN35QcVtJ87iIQ=
+	t=1709734992; cv=none; b=rSoUcBujbUESDpO/DEkSw4FxYy9jfsdeVJmcK3v7+aa2jdtOHh9H9oBeihuVPHmUFoFyc1vfoqEQd+L9Lj19pWQ4bp8/icJxNs3o/y5TZsmUVreEtonPTVkw4gmhNX6QoHjmENI5gNUfoFal4XtapIFwVPOx3hHXkATu13iqy3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709734987; c=relaxed/simple;
-	bh=GScJtoRBAe4lkdk7YCQcaJqSxf7aTWrzfVxXIXxEmMM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Bt6UHl1525AV/XwYEtpVK/V9NXf2KjHIgCdqnUc9Bu0KneB1fl8mUNBmIhf8Lv66LCbBzTYHQccpbI+NLy/I251Oenqe5fPtuAY4DZK5IBrinY8C7S9ryZuMbMX89gHB7oqfkf/o/i9PwVK41RJ/uAw1hwicvgMeMv/X72cq69A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.33.251.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director9.ghost.mail-out.ovh.net (unknown [10.108.25.111])
-	by mo581.mail-out.ovh.net (Postfix) with ESMTP id 4TqW926ptcz14nt
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 11:55:50 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-7smw2 (unknown [10.111.182.47])
-	by director9.ghost.mail-out.ovh.net (Postfix) with ESMTPS id AC5801FF06;
-	Wed,  6 Mar 2024 11:55:44 +0000 (UTC)
-Received: from etezian.org ([37.59.142.101])
-	by ghost-submission-6684bf9d7b-7smw2 with ESMTPSA
-	id sAEZNcBZ6GXmNgEA++KPQQ
-	(envelope-from <andi@etezian.org>); Wed, 06 Mar 2024 11:55:44 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-101G0043716780f-fe81-4286-987a-6a321cced5bc,
-                    62DEF991EB217AB86F953B10C2782167B22AFEEB) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: brendan.higgins@linux.dev, benh@kernel.crashing.org, joel@jms.id.au, 
- andrew@codeconstruct.com.au, jae.hyun.yoo@linux.intel.com, wsa@kernel.org, 
- Tommy Huang <tommy_huang@aspeedtech.com>
-Cc: linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, 
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
-In-Reply-To: <20240305011906.2745639-1-tommy_huang@aspeedtech.com>
-References: <20240305011906.2745639-1-tommy_huang@aspeedtech.com>
-Subject: Re: [PATCH v2] i2c: aspeed: Fix the dummy irq expected print
-Message-Id: <170972614153.1712532.8035778125665215281.b4-ty@kernel.org>
-Date: Wed, 06 Mar 2024 12:55:41 +0100
+	s=arc-20240116; t=1709734992; c=relaxed/simple;
+	bh=AsmhaGXykgBlpIYOs3YSnmBAyE1Ypg8y1KFAQNP2p/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O8X8Gb2yIcT6EcrGDb0cUsNwov+Z5lDYSfreJ10sdyEUYS5oQo8DWyTBfWsESOKN3+3U20iteiQbWFaXZKRy24fhovogSM9vF7GhDCLBYqHtDWL4vR+KdTXIiYWAtErCIbTsznFQNapMmXmnBgvykfKbOnsnPnBpyuDkDsMYZKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gfwizPda; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gfwizPda"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412f8d2b0fcso3490555e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 06:23:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709734989; x=1710339789; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R30SW6r7kkcz9rR70c7AXNIgyI+HRbFxKSmQCilxNYc=;
+        b=gfwizPdaqRzCf8EqiXJaUDvK74Ew2XplU95lFERI8iXDCoOseTlvojnaF0fqL8w+LN
+         wlN/JrJxlWJs+nlI1g33Pdv4VMLMDSeL0/6idhxVwccKjhru/tFn56zCj2WeqfOpS8ct
+         +6ZdQ/NbZJLwzzyHW6UIQ8bR7n4bnHG/QLEmwayyfLpBVa2qTCMwyNr+WFTZRmn/ceIY
+         6mywL2icQbSy7EVSepMQmQJFDt46XWmKkfnWK30ZFZHryqxgfWQZvAppe7VY3OCn4ZM2
+         zUYpicFMqlvZ1AzcqY8BAv989UO42Who92KTEOgbYAGdYR0v2I3nVP5daw4Jqasrnpid
+         9i1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709734989; x=1710339789;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R30SW6r7kkcz9rR70c7AXNIgyI+HRbFxKSmQCilxNYc=;
+        b=GrZc8XcmeH+EiIMANb9aNBPAzjpmj5wtJjksBKR6QX6qVgKjl1eND4SJERHZytmW+N
+         e1SjDVk9dwXpUU2EgZQJ4VR62uC5jFRlBCavVMKviA6E4HzmCTIhONl/OWL1+wO+Yxti
+         8hD6h91BFMwKnF64koPaj8RZ+8iExVT6Qw4GartqGElJ5Ivy+LLiUYG6XZIGmluxUKK6
+         zkrT9wvI9ql+nWtLGfpGAQOCRDuiV8uUoqRXc56jJnxWl0nMFCIm/bREVGqWu1z9+lxS
+         pep++0nxiFLGoohi0vnKUV6g0IEjfKqpJ/E2UCVEoEodyhvbGAboSUU4e0OaqWifeCY8
+         JTXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcATtm2ku3jaqOkrmEUlcNGmCw0Y0FBXq/PM2kL3fnA4rT/9jxqC0CmSvAjtj1OG4zp1qVBZtgcu4KG1LWC1Yq0vHLF3IE0w4eg71c
+X-Gm-Message-State: AOJu0Yz8TlNEHZyVQNpW48UZBPE4hqTSEW02sb2dYIjs4d28aUcgb5ng
+	pwc61oBrKOIZd2JRsEMi3J332ImIzv+3J+tuRIaayTDFa/nLv4HwAYSW9n+Bm8s=
+X-Google-Smtp-Source: AGHT+IFik5zZonyK9lfW3FFZ5//dn9vpf/Oex5P9EnsbT+ZYCfD2/JkWWjnOMVAt0EeR7S59HT1j5w==
+X-Received: by 2002:a05:600c:3106:b0:412:ad75:aad1 with SMTP id g6-20020a05600c310600b00412ad75aad1mr11626007wmo.38.1709734989251;
+        Wed, 06 Mar 2024 06:23:09 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id u6-20020a05600c19c600b00412dc5cfc2dsm12309760wmq.33.2024.03.06.06.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 06:23:08 -0800 (PST)
+Date: Wed, 6 Mar 2024 17:23:04 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jack Zhu <jack.zhu@starfivetech.com>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
+Subject: Re: [PATCH v1 1/7] staging: media: starfive: Replaced current_fmt
+ with get from sd_state
+Message-ID: <8a0cf244-1cb7-48a5-a900-1f82877d1e2f@moroto.mountain>
+References: <20240306093334.9321-1-changhuang.liang@starfivetech.com>
+ <20240306093334.9321-2-changhuang.liang@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 6468857915411270185
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledriedugdefudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrddutddunecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekuddpmhhouggvpehsmhhtphhouhht
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240306093334.9321-2-changhuang.liang@starfivetech.com>
 
-Hi
+On Wed, Mar 06, 2024 at 01:33:28AM -0800, Changhuang Liang wrote:
+> current_fmt only can store one pad format, when setting other pad it
+> will be overwrote. Replaced it with get from sd_state directly.
+>
 
-On Tue, 05 Mar 2024 09:19:06 +0800, Tommy Huang wrote:
-> When the i2c error condition occurred and master state was not
-> idle, the master irq function will goto complete state without any
-> other interrupt handling. It would cause dummy irq expected print.
-> Under this condition, assign the irq_status into irq_handle.
-> 
-> For example, when the abnormal start / stop occurred (bit 5) with
-> normal stop status (bit 4) at same time. Then the normal stop status
-> would not be handled and it would cause irq expected print in
-> the aspeed_i2c_bus_irq.
-> 
-> [...]
+These commit descriptions are kind of hard to understand so I have
+proposed new commit messages.
 
-Applied to i2c/i2c-host-fixes on
+Subject: staging: media: starfive: Get rid of current_fmt
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+We want to support mutiple formats so saving one "current_fmt" doesn't
+work.  This was only used to set the ISP_REG_STRIDE so use the sd_state
+directly for that and delete the ->current_fmt pointer.  No functional
+change.
 
-Thank you,
-Andi
-
-Patches applied
-===============
-[1/1] i2c: aspeed: Fix the dummy irq expected print
-      commit: 94e889260a5bae7d4c06de90f1724aeb8b1175c6
+regards,
+dan carpenter
 
