@@ -1,365 +1,612 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2072.outbound.protection.outlook.com [40.107.244.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BA85E206;
-	Wed,  6 Mar 2024 10:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709720308; cv=fail; b=lbf1nZ5fbFoqDnkVIiP+7rZOjCZL9PJBslRwL9/1JD6nuxKtRQGcSrsZuXbal+w/nfiTm6f43CYM/U61TCw/yOEyjO7asHs+ghPboXGrutD/HP0eEPoH3wlHDSYaF8TW+U/UaYgX9rvfdW+lD/OncZGZN90ZS/YeIUxTV3iKNjw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709720308; c=relaxed/simple;
-	bh=4RhJjRsGlLgEmpaJoIYbG1pC5zTit8Rvkng5onsUIKE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ex4x24r7xfmI2TxDJvaY/wQ72s0s3Sc3P4anZNYDo0xQum3+crmL18xrgUw6GXlDYCgXZHCFDb12817XQk80bToLTEqdwvrmDtZdRA3p38PtkzkWfHjhDTMOSk9k9fpdqwHYlpnxNmVwPlET5wDFmeNQM04//kGOZMcnGeEMxQY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2c8uZed6; arc=fail smtp.client-ip=40.107.244.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CD35F57A;
+	Wed,  6 Mar 2024 10:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709720338; cv=none; b=NV1mofU4/JPlARVdaJvuHnE1o0+pmZfDIu3cBIFPPCrKl2p+GAvJ7ZmcHn2JN6ctu9aECeOlpdQiYN7b+dBNiRrIAoX+y9C/+mInMDJNmk3igNeu4JvsZ0Jj5egL9E1IkpPZCjM93smfq+4w3b0ASZ7oM+pjdN4xBfBg3mwaQvE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709720338; c=relaxed/simple;
+	bh=XMN2ASLPgeYKjHsltUD5egzuzYq61GdgX1KnChl5caE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jHthkB2KgPQQwIUUmMQwI1DaCfVxX73/2VtWtfHh/tVEcMjmnOdG/q1VbS2eydY6TIzwnN8LnDheznTcfXhnrYalTaaVxqSZHl8jOPA/jsyx8mATm0JNuOcGZBvfExTq9ehi8Iotw/fcufNya2elM+k2G6Up8Rcx1yZjFKLL9ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QsSsKEQn; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2c8uZed6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bdZFAhU/s9wAzoSQMH3qgZx0ZdlgK6tfujoDTwPR1MrvKvqhCp+FihTJBxgpf/sPUkkNJkaBcH7Rf7OMKn+8NHQ3quSF3y+1GENf6vnr54AuCxiRyMRPVwGD16De2hiI+l+CY62993GX1CU2QiLTY/u3VX4+Hjke/MT/S+59VTd5t/Tsb2Ngz/D7+7R/w1d0om4hamRg6xdPzpb7kdih0tQo1cEW23qoAFmBt6Cu4AtZxV3t+Z5lgmrFSCaxIXXyBZcaNeptXXWIF9VFK3akL9uaSG2fvl80iOZihi8dUaFb1N28r8NGWlZLec2HpqKPkswYIsTCwdoIkPlBW2kKUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=271HAeafWP9n7OZDlZqDB10ArtHBR7BySMK7MnftyN4=;
- b=DR2/GVm4EsuedIhSGDZH0SkducrmH/hrEDmArF1H3ekfMyts8jmgFA2/+ZXLUZ8xmrgcnumDnZ6CxnOtsS8THWJIerG2FQeUrdspNN9GE1V43rxYIgmsgfy/2cGWIaSwoEEWh+GuNrBvaeB+AWVLU5mrP1U+GlrEbT+5X8DaLsWEF6XPzWrO9y/Nv+AjdIh9DzdcbE0k2b5qhz49xomlIR0f2pMtcniNSoteIeFFI+VFc5fqVWMC8noHUkB9lS3304RXdMCiGGU97QE7RzQyTtHrfrHnkYz33XaR1jp9FCwThBmGfg0Fh8jrf/WIZabfO5WFvlFIpTKLsbcy/QJ3xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=271HAeafWP9n7OZDlZqDB10ArtHBR7BySMK7MnftyN4=;
- b=2c8uZed6X40co24R5EwumD14bTnJtnslLSDpC+6Wu9eUWKXvDg2vTWSE4GT6tqP2XzrMrPBM5fGeXOCQKJED2l6sd3fatcqUQkxr/7WKIbhwJkSFu9yB6azocAwgeJmw00gKgnQPXcS6pQZqc4gB36LjDYgst+ehO5z/DjDPlUs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW2PR12MB2379.namprd12.prod.outlook.com (2603:10b6:907:9::24)
- by SJ1PR12MB6146.namprd12.prod.outlook.com (2603:10b6:a03:45b::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.34; Wed, 6 Mar
- 2024 10:18:23 +0000
-Received: from MW2PR12MB2379.namprd12.prod.outlook.com
- ([fe80::3150:d50f:7411:e6bb]) by MW2PR12MB2379.namprd12.prod.outlook.com
- ([fe80::3150:d50f:7411:e6bb%5]) with mapi id 15.20.7339.035; Wed, 6 Mar 2024
- 10:18:23 +0000
-Message-ID: <bf7b4e37-51cf-50d6-dc8e-626f29b5bdd8@amd.com>
-Date: Wed, 6 Mar 2024 15:48:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [RFC PATCH 00/14] Introducing TIF_NOTIFY_IPI flag
-Content-Language: en-US
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel@vger.kernel.org, "Gautham R. Shenoy"
- <gautham.shenoy@amd.com>, Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
- Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- "David S. Miller" <davem@davemloft.net>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
- Al Viro <viro@zeniv.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>,
- Ard Biesheuvel <ardb@kernel.org>, Andrew Donnellan <ajd@linux.ibm.com>,
- Nicholas Miehlbradt <nicholas@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tony Battersby <tonyb@cybernetics.com>, Brian Gerst <brgerst@gmail.com>,
- Tim Chen <tim.c.chen@linux.intel.com>, David Vernet <void@manifault.com>,
- x86@kernel.org, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
- Julia Lawall <julia.lawall@inria.fr>
-References: <20240220171457.703-1-kprateek.nayak@amd.com>
- <CAKfTPtBqPVQ5bo8HTZ=sPCUTYr48qtH61A8Z1dwCT434O7cSyQ@mail.gmail.com>
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <CAKfTPtBqPVQ5bo8HTZ=sPCUTYr48qtH61A8Z1dwCT434O7cSyQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0192.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::16) To MW2PR12MB2379.namprd12.prod.outlook.com
- (2603:10b6:907:9::24)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsSsKEQn"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a452877ddcaso433669066b.3;
+        Wed, 06 Mar 2024 02:18:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709720334; x=1710325134; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=r2RnXTHq3Gog55ulKqP6SBmztwDFNMNi8Z69LCuOOVk=;
+        b=QsSsKEQnreyr6pVLEdhFDiVgQDcIaDwq3uctPo7s5P52s0A8oczhUINU5fnQl7ZLnY
+         u1w9x4gaVeWf5dVEIndm0tgffPHdKsJLpWh/3/Rx7GxwiUwCq3h9dXxFEjk+Q2MxOJT3
+         XfcCzhPDSmSizNHk0LEIoUqA1MSWsiSc+tyW6MA30zfgUNKuP9Qj8PNj6CCwNNvZWkPN
+         ehODmCTpZCxDFd1DBTkPYIGVUPeuA1PE1vLFzcyhTjIHywquGlotlhDF98GER+lw6Lqx
+         5U8hc/9Olv/1ydZI14oBPduFXWSNa75uU9tl3d9cTksCF7FQvUjodjW+PQhFEattoYTF
+         2x6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709720334; x=1710325134;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r2RnXTHq3Gog55ulKqP6SBmztwDFNMNi8Z69LCuOOVk=;
+        b=LwbSbsrf02oUj+Wi5fXnM+cI27VftocX9EVGQyBnKym6kODfaPL+Ygo81wmUIK0d9H
+         Au/YtEM62FGZC6k+qRrjYDoQsncPLJlPMHywx6i7UYL+UDsC6g/xBGRr+TamWQaC7djK
+         dzHw/5SG0lV399GrSDUfdq6KqS35KKB8sxXvQ7KCiovMAsX6mwicGKHfvdWJmCoyrHar
+         RwXDiRkbE1p5QDnINOubscjvpIPQokXmMEt+43/V3/XnNRENaWkTeHWv2DJYYXP62MSC
+         OxbV3fBQglHhtcD/QLG+sYdTMMVTIOAnEW7SkXLMbzFzkV/TDBkHnP5sEuFhsCp94oya
+         RABA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdL5xyu6oF2Gstf8/OuJK+gHOcCY/T445zjC/uhxYUNbUWxSJfG0tIdrUuw7AJwuzPAqAoQfAJ6ML6nA6tLdkVYcokikRAw4/sRulu4F4G0H4OP9SQMu6cABS9qHIZJAkVL/utPktP2Y/Z0WaMKFi25YiR0rYRUvkwblVPnxVVgOcHDg==
+X-Gm-Message-State: AOJu0YxAsZyGMBHHDvUqe4xJyeEh3QKvkpo1wcf+ra7o4xgJ3mFykhSs
+	BxtxmT+3T+O9FN9vQNefiBF6bG2Pye6Tv2525tvCI+wT812aqNw4
+X-Google-Smtp-Source: AGHT+IEQtn8CDjF2xCBC1wH5peul3h6JiqslZcnp10igLfmToZdPLK+FgKiHTXdAMuajhpfXinmqAA==
+X-Received: by 2002:a17:906:aa0e:b0:a45:4ba5:2917 with SMTP id ko14-20020a170906aa0e00b00a454ba52917mr5500314ejb.75.1709720333550;
+        Wed, 06 Mar 2024 02:18:53 -0800 (PST)
+Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
+        by smtp.gmail.com with ESMTPSA id um9-20020a170906cf8900b00a44d01aff81sm4919355ejb.97.2024.03.06.02.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 02:18:53 -0800 (PST)
+Message-ID: <a2e3aa8ace198e339f8e3b00e299e4139d1b8861.camel@gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: adc: ad7944: add driver for
+ AD7944/AD7985/AD7986
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
+ <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 06 Mar 2024 11:22:18 +0100
+In-Reply-To: <20240304-ad7944-mainline-v5-2-f0a38cea8901@baylibre.com>
+References: <20240304-ad7944-mainline-v5-0-f0a38cea8901@baylibre.com>
+	 <20240304-ad7944-mainline-v5-2-f0a38cea8901@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2379:EE_|SJ1PR12MB6146:EE_
-X-MS-Office365-Filtering-Correlation-Id: 404a825b-adf7-4eaf-2334-08dc3dc6c0e3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	JgNXHZzeqgyRXeP6T7vOLSRet2PVzH3+BMYJsAjRNrIhVZ4Ww5kMc0LnEvULhmwpxW0cG8HCAW58pXI0vnRfHXPzZlXL1PjghOf8vCXAcm44EiLi99vzUEbP5Frv+tNQAd0lVMClSGsuoRnlH/eTVjiNJ+YWJWDakjeZIxpyIXAbN2PaFPONYV8jRSvZsirs/S9w/bIDgpfjI9qWDPyraVOQtUFwGWk6SC48z5MEUvJ1kS9ox5FT/HIGRcjNEyX3pnPVEanIMA7l/xqqZJkqAYOglO2k8DkMJXWK2/lSZqI4ibcJchpGSVGcoVQcKiFulvLJhuyG9C4sDXaI5WtIaeBKCMuIod9QNz7sKjUXmHjq+Y3T8XVAwXbLMLeBF2e7H/C7pMnP0QJjFHKdZ23Ucwk9788kxEnpngjam8UZK0XSoNouG9sT33Kxhs6t+wDNNhlYd/cwjAafMDM2seU4xwtArw+z/7YlKpssMLJX+21de9WACozWIVPhnWCAuEs39II4BCrf4fuCLgL7p/HqLqFEHH0V5UkxWPNmo7lXOPd2KEuBTKU9gHEKJP1qIm7KDCaZv07eeWDJFnnpN7b4nlAf1/WfD+xkQqjRQzGxjGlDVfyI0jysX8iAJetpPQ7a
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Z3FBK1lmZHNCcDlqTFhha3ZjdHVSdzhaLzlqaE9seFJjdHNzeWZVK0RkTGwx?=
- =?utf-8?B?MkdQaFA3NVpXSkN1OGJOeVpwR09wYzNyQi9zRFVMNUtNVjdwTU50YzZrS1Nw?=
- =?utf-8?B?UlYzcytxTDR2QlpJc0hScFM3R0dHcW00c002am0zejF6bFBVWE5rWlZUR3VY?=
- =?utf-8?B?MlE0MHIvZTZ1TisybXR3cnZiV2xsRlcvWS9IN2gyaCtyc296cHMrUEM4c21F?=
- =?utf-8?B?OFpLdHpZVzlpcDlvTmRrUkhkN01ncmg0Nmh1NFQzdGVvUWhtd0NFYjBZS0Fw?=
- =?utf-8?B?SStyVHpMbXlNUjFyZDNrUmtvU3RWRXFSTk1ISlYvSHFqZVZuejBPK2N1anRW?=
- =?utf-8?B?eVA0d3dpaERLY2NyZWVERlppZTFEMElEQTBBSUtFb2dCSzBtV0J5dmgxZ05S?=
- =?utf-8?B?S2ZBaVFPSzhKTkJhRllRSjdzc2s2bDBrSGMyMkFILy9iZkRGeE1VWDRnU2RV?=
- =?utf-8?B?VEkrNm8velBPblFOV25XajFjUGsreXQxYWZ2b1Rza3RtK3E3SzNtSlM3Zks3?=
- =?utf-8?B?SjdFY3M1Z0lEL3pXbkxhOERtazV0TWcxYmhGVVl2aXE3YW81WlcybkhGNk95?=
- =?utf-8?B?YzVKUS8xK05UbHRnNDRxN2I2QzZTVWlmTkJmeEl1dnJZYmpMMmhVSWlQbHJk?=
- =?utf-8?B?dXB4RFdYQlZNRzdiWWFsdThBSWVteTFhYVB5L040RzcwZnNMTWo0YmJiR0FP?=
- =?utf-8?B?UHc2TlhhT3QzVUhHVVR6Rml4bnE2QWpBcjZINjdLeDhFdzA2TjNpVWV3RXJl?=
- =?utf-8?B?eE5jb0p3YXByTkpaL3NaenhhSG1EbDc5Q1JlZXN5S2crMDFUS1lEWmMwdmV0?=
- =?utf-8?B?Tjd0dGlFd3dxc0x4czdJU3NKSTA0Z3NKZmxwSncxeDBuYmhmcFEzRVU5eUZz?=
- =?utf-8?B?bHh3WmZDQ3FJd3RpMnE5TVh2Ri9rcVBpWStSUFQ5Ti93ajdSb2F0WjdEUWpi?=
- =?utf-8?B?M2NmQnRwekRzRXlaY2gwRWdtMEN5eXNIOVgrTDZxMVlSRlJqaERxbW40R3ov?=
- =?utf-8?B?QXFML2lMVVRTN3NoVk1RZFdYSTJDT3pXRlI3eG12djIvS3hXczh0L1JZcWor?=
- =?utf-8?B?Rm9zZ0dhcFlndHVyL3VEWU1VNHhScmZsRUFEL2JJSHZTN0ovREdVWkFKdE1i?=
- =?utf-8?B?WHd2Z29VQkFoVFJuNlVDS28wMXhadTBObkNqK1JUNnRFWDZxcHE4Wm1NU0Jh?=
- =?utf-8?B?aUh6dkdmUXpGR01neVp1SDFvVVQrZVBUbUdkZkxYS25PMVlheE1FekhIVENp?=
- =?utf-8?B?Mzk4RWF4bVA1aFNoQmNydVlQRTFmenRZMTMvbzRYVnRjWDd4QUlaTjlaRGtx?=
- =?utf-8?B?RUVGbG5ESHRYeVhTVkw0VE1GQ3RwUzFSaEYvQ3BCbTBmRVV0S3VwdXArcTdr?=
- =?utf-8?B?TGNxbU55dysvQmZ4ejZ3MEc0ZncvUmsyWnpNNnBFVWpKTDVSclh0WTBKYWdG?=
- =?utf-8?B?cEVITC81bFpyaW5MMkxsajdZRTJtSlExSHVURHhzTDdqLzluRW96NmNZaHVo?=
- =?utf-8?B?RzVDOUZFa3c2dlY4TFVTV3BOaEVpVUVTUDJySmcrTFhadTViZkxzVnZERGdM?=
- =?utf-8?B?ZWNxWElxNWVYd1NDbUpCV2tYUG14SWI0dG1VcGVmQmticDRDblhvZVVRK2RE?=
- =?utf-8?B?cWdqYnByeXVTYlBrTTJTQXRleTI4dnhEaHpUZSthbStzSWU0ckNYK0xYdVpv?=
- =?utf-8?B?dTAwRERodWpGZlY2UzNqWW1LejdpTVhyRFBCQ0FUQjJaUy9seUc5RCtrLzgw?=
- =?utf-8?B?bENaVCtOV285cGRFakkxVXR1NlRrWUVXZFlUbWdQaFZpbXNzTHk3VjNWcGMr?=
- =?utf-8?B?YjMwZmlBYkFSb0NuUmdxSVhFa1BJckJPWWNwR2w4cGREaHBzZFkzVFo5NENH?=
- =?utf-8?B?NDloSTkrR3BlbXpINzhyc0plR2hNOWg0bUVvdllQL1RlMUlSV3VXWlZobC9i?=
- =?utf-8?B?SERwNEI3dmVaaXErREFWL2tXcU9XZjJyYnhHNE9zN2FqbVlsamRmdUdzQktL?=
- =?utf-8?B?NUlsbll3bUNkY1JvSU4zcTBJRnVqRGV0RjZSTDJkQUFBWFZYM3I5TVVTaTBo?=
- =?utf-8?B?ZzVYeGtLTmVoZmUvcHNMdEJxQXA1MHVDcDlnUi9Qamg0N2NhYm5tbXBFcTZL?=
- =?utf-8?Q?GSYAXrRfmKXHExTDyYI5tZPko?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 404a825b-adf7-4eaf-2334-08dc3dc6c0e3
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2379.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 10:18:23.1766
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c+MbiJnl6k0arshKYqL5YUo5amx69vThIYAgOi+z6rR54wa3qW1yFPzYt4Jch8A+HpehTn+GiXM8swO87ahncQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6146
 
-Hello Vincent,
+On Mon, 2024-03-04 at 13:48 -0600, David Lechner wrote:
+> This adds a driver for the Analog Devices Inc. AD7944, AD7985, and
+> AD7986 ADCs. These are a family of pin-compatible ADCs that can sample
+> at rates up to 2.5 MSPS.
+>=20
+> The initial driver adds support for sampling at lower rates using the
+> usual IIO triggered buffer and can handle all 3 possible reference
+> voltage configurations.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
 
-Thank you for taking a look at the series.
+LGTM:
 
-On 3/6/2024 3:29 PM, Vincent Guittot wrote:
-> Hi Prateek,
-> 
-> Adding Julia who could be interested in this patchset. Your patchset
-> should trigger idle load balance instead of newly idle load balance
-> now when the polling is used. This was one reason for not migrating
-> task in idle CPU
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-Thank you.
 
-> 
-> On Tue, 20 Feb 2024 at 18:15, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
->>
->> Hello everyone,
->>
->> [..snip..]
->>
->>
->> Skipping newidle_balance()
->> ==========================
->>
->> In an earlier attempt to solve the challenge of the long IRQ disabled
->> section, newidle_balance() was skipped when a CPU waking up from idle
->> was found to have no runnable tasks, and was transitioning back to
->> idle [2]. Tim [3] and David [4] had pointed out that newidle_balance()
->> may be viable for CPUs that are idling with tick enabled, where the
->> newidle_balance() has the opportunity to pull tasks onto the idle CPU.
->>
->> Vincent [5] pointed out a case where the idle load kick will fail to
->> run on an idle CPU since the IPI handler launching the ILB will check
->> for need_resched(). In such cases, the idle CPU relies on
->> newidle_balance() to pull tasks towards itself.
-> 
-> Calling newidle_balance() instead of the normal idle load balance
-> prevents the CPU to pull tasks from other groups
 
-Thank you for the correction.
+> v5 changes:
+> - Dropped "nanoseconds" from comments.
+> - Renamed "t" to "timing_spec"
+> - Replaced "&spi->dev" with "dev"
+> - Fixed logic on optional "ref" regulator
+> - Added comment explaining why "cnv" gpio is required
+> - Simplified always_turbo assignment
+>=20
+> v4 changes: none
+>=20
+> v3 changes:
+> - Replaced _sign with _diff in chip info struct to properly handle
+> =C2=A0 pseudo-differential vs. true differential chips. Pseudo-differenti=
+al chips
+> =C2=A0 now just have a voltage0 channel instead of voltage0-voltage1.
+> - Fixed not resetting the CNV gpio on error return.
+> - Simplified check of adi,spi-mode property now that "multi" is no longer=
+ a
+> =C2=A0 valid option.
+> ---
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/adc/Kconfig=C2=A0 |=C2=A0 10 ++
+> =C2=A0drivers/iio/adc/Makefile |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/adc/ad7944.c | 416
+> +++++++++++++++++++++++++++++++++++++++++++++++
+> =C2=A04 files changed, 428 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 35f27504632d..7b1a6f2d0c9c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -448,6 +448,7 @@ R:	David Lechner <dlechner@baylibre.com>
+> =C2=A0S:	Supported
+> =C2=A0W:	https://ez.analog.com/linux-software-drivers
+> =C2=A0F:	Documentation/devicetree/bindings/iio/adc/adi,ad7944.yaml
+> +F:	drivers/iio/adc/ad7944.c
+> =C2=A0
+> =C2=A0ADAFRUIT MINI I2C GAMEPAD
+> =C2=A0M:	Anshul Dalal <anshulusr@gmail.com>
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 0d9282fa67f5..555ac74889f3 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -264,6 +264,16 @@ config AD7923
+> =C2=A0	=C2=A0 To compile this driver as a module, choose M here: the
+> =C2=A0	=C2=A0 module will be called ad7923.
+> =C2=A0
+> +config AD7944
+> +	tristate "Analog Devices AD7944 and similar ADCs driver"
+> +	depends on SPI
+> +	help
+> +	=C2=A0 Say yes here to build support for Analog Devices
+> +	=C2=A0 AD7944, AD7985, AD7986 ADCs.
+> +
+> +	=C2=A0 To compile this driver as a module, choose M here: the
+> +	=C2=A0 module will be called ad7944
+> +
+> =C2=A0config AD7949
+> =C2=A0	tristate "Analog Devices AD7949 and similar ADCs driver"
+> =C2=A0	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index b3c434722364..a0d69b452cca 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_AD7780) +=3D ad7780.o
+> =C2=A0obj-$(CONFIG_AD7791) +=3D ad7791.o
+> =C2=A0obj-$(CONFIG_AD7793) +=3D ad7793.o
+> =C2=A0obj-$(CONFIG_AD7887) +=3D ad7887.o
+> +obj-$(CONFIG_AD7944) +=3D ad7944.o
+> =C2=A0obj-$(CONFIG_AD7949) +=3D ad7949.o
+> =C2=A0obj-$(CONFIG_AD799X) +=3D ad799x.o
+> =C2=A0obj-$(CONFIG_AD9467) +=3D ad9467.o
+> diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
+> new file mode 100644
+> index 000000000000..adb007cdd287
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7944.c
+> @@ -0,0 +1,416 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Analog Devices AD7944/85/86 PulSAR ADC family driver.
+> + *
+> + * Copyright 2024 Analog Devices, Inc.
+> + * Copyright 2024 BayLibre, SAS
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/string_helpers.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +
+> +#define AD7944_INTERNAL_REF_MV		4096
+> +
+> +struct ad7944_timing_spec {
+> +	/* Normal mode max conversion time (t_{CONV}). */
+> +	unsigned int conv_ns;
+> +	/* TURBO mode max conversion time (t_{CONV}). */
+> +	unsigned int turbo_conv_ns;
+> +};
+> +
+> +struct ad7944_adc {
+> +	struct spi_device *spi;
+> +	/* Chip-specific timing specifications. */
+> +	const struct ad7944_timing_spec *timing_spec;
+> +	/* GPIO connected to CNV pin. */
+> +	struct gpio_desc *cnv;
+> +	/* Optional GPIO to enable turbo mode. */
+> +	struct gpio_desc *turbo;
+> +	/* Indicates TURBO is hard-wired to be always enabled. */
+> +	bool always_turbo;
+> +	/* Reference voltage (millivolts). */
+> +	unsigned int ref_mv;
+> +
+> +	/*
+> +	 * DMA (thus cache coherency maintenance) requires the
+> +	 * transfer buffers to live in their own cache lines.
+> +	 */
+> +	struct {
+> +		union {
+> +			u16 u16;
+> +			u32 u32;
+> +		} raw;
+> +		u64 timestamp __aligned(8);
+> +	 } sample __aligned(IIO_DMA_MINALIGN);
+> +};
+> +
+> +static const struct ad7944_timing_spec ad7944_timing_spec =3D {
+> +	.conv_ns =3D 420,
+> +	.turbo_conv_ns =3D 320,
+> +};
+> +
+> +static const struct ad7944_timing_spec ad7986_timing_spec =3D {
+> +	.conv_ns =3D 500,
+> +	.turbo_conv_ns =3D 400,
+> +};
+> +
+> +struct ad7944_chip_info {
+> +	const char *name;
+> +	const struct ad7944_timing_spec *timing_spec;
+> +	const struct iio_chan_spec channels[2];
+> +};
+> +
+> +/*
+> + * AD7944_DEFINE_CHIP_INFO - Define a chip info structure for a specific=
+ chip
+> + * @_name: The name of the chip
+> + * @_ts: The timing specification for the chip
+> + * @_bits: The number of bits in the conversion result
+> + * @_diff: Whether the chip is true differential or not
+> + */
+> +#define AD7944_DEFINE_CHIP_INFO(_name, _ts, _bits, _diff)		\
+> +static const struct ad7944_chip_info _name##_chip_info =3D {		\
+> +	.name =3D
+> #_name,							\
+> +	.timing_spec =3D &_ts##_timing_spec,				\
+> +	.channels =3D {							\
+> +		{							\
+> +			.type =3D IIO_VOLTAGE,				\
+> +			.indexed =3D 1,					\
+> +			.differential =3D _diff,				\
+> +			.channel =3D 0,					\
+> +			.channel2 =3D _diff ? 1 : 0,			\
+> +			.scan_index =3D 0,				\
+> +			.scan_type.sign =3D _diff ? 's' : 'u',		\
+> +			.scan_type.realbits =3D _bits,			\
+> +			.scan_type.storagebits =3D _bits > 16 ? 32 : 16,	\
+> +			.scan_type.endianness =3D IIO_CPU,		\
+> +			.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW)	\
+> +					| BIT(IIO_CHAN_INFO_SCALE),	\
+> +		},							\
+> +		IIO_CHAN_SOFT_TIMESTAMP(1),				\
+> +	},								\
+> +}
+> +
+> +/* pseudo-differential with ground sense */
+> +AD7944_DEFINE_CHIP_INFO(ad7944, ad7944, 14, 0);
+> +AD7944_DEFINE_CHIP_INFO(ad7985, ad7944, 16, 0);
+> +/* fully differential */
+> +AD7944_DEFINE_CHIP_INFO(ad7986, ad7986, 18, 1);
+> +
+> +/*
+> + * ad7944_4wire_mode_conversion - Perform a 4-wire mode conversion and
+> acquisition
+> + * @adc: The ADC device structure
+> + * @chan: The channel specification
+> + * Return: 0 on success, a negative error code on failure
+> + *
+> + * Upon successful return adc->sample.raw will contain the conversion re=
+sult.
+> + */
+> +static int ad7944_4wire_mode_conversion(struct ad7944_adc *adc,
+> +					const struct iio_chan_spec *chan)
+> +{
+> +	unsigned int t_conv_ns =3D adc->always_turbo ? adc->timing_spec-
+> >turbo_conv_ns
+> +						=C2=A0=C2=A0 : adc->timing_spec-
+> >conv_ns;
+> +	struct spi_transfer xfers[] =3D {
+> +		{
+> +			/*
+> +			 * NB: can get better performance from some SPI
+> +			 * controllers if we use the same bits_per_word
+> +			 * in every transfer.
+> +			 */
+> +			.bits_per_word =3D chan->scan_type.realbits,
+> +			/*
+> +			 * CS has to be high for full conversion time to
+> avoid
+> +			 * triggering the busy indication.
+> +			 */
+> +			.cs_off =3D 1,
+> +			.delay =3D {
+> +				.value =3D t_conv_ns,
+> +				.unit =3D SPI_DELAY_UNIT_NSECS,
+> +			},
+> +
+> +		},
+> +		{
+> +			.rx_buf =3D &adc->sample.raw,
+> +			.len =3D BITS_TO_BYTES(chan->scan_type.storagebits),
+> +			.bits_per_word =3D chan->scan_type.realbits,
+> +		},
+> +	};
+> +	int ret;
+> +
+> +	/*
+> +	 * In 4-wire mode, the CNV line is held high for the entire
+> conversion
+> +	 * and acquisition process.
+> +	 */
+> +	gpiod_set_value_cansleep(adc->cnv, 1);
+> +	ret =3D spi_sync_transfer(adc->spi, xfers, ARRAY_SIZE(xfers));
+> +	gpiod_set_value_cansleep(adc->cnv, 0);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ad7944_single_conversion(struct ad7944_adc *adc,
+> +				=C2=A0=C2=A0=C2=A0 const struct iio_chan_spec *chan,
+> +				=C2=A0=C2=A0=C2=A0 int *val)
+> +{
+> +	int ret;
+> +
+> +	ret =3D ad7944_4wire_mode_conversion(adc, chan);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (chan->scan_type.storagebits > 16)
+> +		*val =3D adc->sample.raw.u32;
+> +	else
+> +		*val =3D adc->sample.raw.u16;
+> +
+> +	if (chan->scan_type.sign =3D=3D 's')
+> +		*val =3D sign_extend32(*val, chan->scan_type.realbits - 1);
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int ad7944_read_raw(struct iio_dev *indio_dev,
+> +			=C2=A0=C2=A0 const struct iio_chan_spec *chan,
+> +			=C2=A0=C2=A0 int *val, int *val2, long info)
+> +{
+> +	struct ad7944_adc *adc =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret =3D iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret =3D ad7944_single_conversion(adc, chan, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		return ret;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			*val =3D adc->ref_mv;
+> +
+> +			if (chan->scan_type.sign =3D=3D 's')
+> +				*val2 =3D chan->scan_type.realbits - 1;
+> +			else
+> +				*val2 =3D chan->scan_type.realbits;
+> +
+> +			return IIO_VAL_FRACTIONAL_LOG2;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info ad7944_iio_info =3D {
+> +	.read_raw =3D &ad7944_read_raw,
+> +};
+> +
+> +static irqreturn_t ad7944_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf =3D p;
+> +	struct iio_dev *indio_dev =3D pf->indio_dev;
+> +	struct ad7944_adc *adc =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret =3D ad7944_4wire_mode_conversion(adc, &indio_dev->channels[0]);
+> +	if (ret)
+> +		goto out;
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, &adc->sample.raw,
+> +					=C2=A0=C2=A0 pf->timestamp);
+> +
+> +out:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const char * const ad7944_power_supplies[] =3D {
+> +	"avdd",	"dvdd",	"bvdd", "vio"
+> +};
+> +
+> +static void ad7944_ref_disable(void *ref)
+> +{
+> +	regulator_disable(ref);
+> +}
+> +
+> +static int ad7944_probe(struct spi_device *spi)
+> +{
+> +	const struct ad7944_chip_info *chip_info;
+> +	struct device *dev =3D &spi->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ad7944_adc *adc;
+> +	bool have_refin =3D false;
+> +	struct regulator *ref;
+> +	int ret;
+> +
+> +	/*
+> +	 * driver currently only supports the conventional "4-wire" mode and
+> +	 * not other special wiring configurations.
+> +	 */
+> +	if (device_property_present(dev, "adi,spi-mode"))
+> +		return dev_err_probe(dev, -EINVAL,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "adi,spi-mode is not currently
+> supported\n");
+> +
+> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*adc));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	adc =3D iio_priv(indio_dev);
+> +	adc->spi =3D spi;
+> +
+> +	chip_info =3D spi_get_device_match_data(spi);
+> +	if (!chip_info)
+> +		return dev_err_probe(dev, -EINVAL, "no chip info\n");
+> +
+> +	adc->timing_spec =3D chip_info->timing_spec;
+> +
+> +	/*
+> +	 * Some chips use unusual word sizes, so check now instead of waiting
+> +	 * for the first xfer.
+> +	 */
+> +	if (!spi_is_bpw_supported(spi, chip_info-
+> >channels[0].scan_type.realbits))
+> +		return dev_err_probe(dev, -EINVAL,
+> +				"SPI host does not support %d bits per
+> word\n",
+> +				chip_info->channels[0].scan_type.realbits);
+> +
+> +	ret =3D devm_regulator_bulk_get_enable(dev,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0
+> ARRAY_SIZE(ad7944_power_supplies),
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 ad7944_power_supplies);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get and enable supplies\n");
+> +
+> +	/*
+> +	 * Sort out what is being used for the reference voltage. Options
+> are:
+> +	 * - internal reference: neither REF or REFIN is connected
+> +	 * - internal reference with external buffer: REF not connected,
+> REFIN
+> +	 *=C2=A0=C2=A0 is connected
+> +	 * - external reference: REF is connected, REFIN is not connected
+> +	 */
+> +
+> +	ref =3D devm_regulator_get_optional(dev, "ref");
+> +	if (IS_ERR(ref)) {
+> +		if (PTR_ERR(ref) !=3D -ENODEV)
+> +			return dev_err_probe(dev, PTR_ERR(ref),
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get REF supply\n");
+> +
+> +		ref =3D NULL;
+> +	}
+> +
+> +	ret =3D devm_regulator_get_enable_optional(dev, "refin");
+> +	if (ret =3D=3D 0)
+> +		have_refin =3D true;
+> +	else if (ret !=3D -ENODEV)
+> +		return dev_err_probe(dev, ret,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get and enable REFIN
+> supply\n");
+> +
+> +	if (have_refin && ref)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "cannot have both refin and ref
+> supplies\n");
+> +
+> +	if (ref) {
+> +		ret =3D regulator_enable(ref);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "failed to enable REF
+> supply\n");
+> +
+> +		ret =3D devm_add_action_or_reset(dev, ad7944_ref_disable, ref);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret =3D regulator_get_voltage(ref);
+> +		if (ret < 0)
+> +			return dev_err_probe(dev, ret,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get REF voltage\n");
+> +
+> +		/* external reference */
+> +		adc->ref_mv =3D ret / 1000;
+> +	} else {
+> +		/* internal reference */
+> +		adc->ref_mv =3D AD7944_INTERNAL_REF_MV;
+> +	}
+> +
+> +	/*
+> +	 * CNV gpio is required in 4-wire mode which is the only currently
+> +	 * supported mode.
+> +	 */
+> +	adc->cnv =3D devm_gpiod_get(dev, "cnv", GPIOD_OUT_LOW);
+> +	if (IS_ERR(adc->cnv))
+> +		return dev_err_probe(dev, PTR_ERR(adc->cnv),
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get CNV GPIO\n");
+> +
+> +	adc->turbo =3D devm_gpiod_get_optional(dev, "turbo", GPIOD_OUT_LOW);
+> +	if (IS_ERR(adc->turbo))
+> +		return dev_err_probe(dev, PTR_ERR(adc->turbo),
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get TURBO GPIO\n");
+> +
+> +	adc->always_turbo =3D device_property_present(dev, "adi,always-turbo");
+> +
+> +	if (adc->turbo && adc->always_turbo)
+> +		return dev_err_probe(dev, -EINVAL,
+> +			"cannot have both turbo-gpios and adi,always-
+> turbo\n");
+> +
+> +	indio_dev->name =3D chip_info->name;
+> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> +	indio_dev->info =3D &ad7944_iio_info;
+> +	indio_dev->channels =3D chip_info->channels;
+> +	indio_dev->num_channels =3D ARRAY_SIZE(chip_info->channels);
+> +
+> +	ret =3D devm_iio_triggered_buffer_setup(dev, indio_dev,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio_pollfunc_store_time,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ad7944_trigger_handler, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +static const struct of_device_id ad7944_of_match[] =3D {
+> +	{ .compatible =3D "adi,ad7944", .data =3D &ad7944_chip_info },
+> +	{ .compatible =3D "adi,ad7985", .data =3D &ad7985_chip_info },
+> +	{ .compatible =3D "adi,ad7986", .data =3D &ad7986_chip_info },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ad7944_of_match);
+> +
+> +static const struct spi_device_id ad7944_spi_id[] =3D {
+> +	{ "ad7944", (kernel_ulong_t)&ad7944_chip_info },
+> +	{ "ad7985", (kernel_ulong_t)&ad7985_chip_info },
+> +	{ "ad7986", (kernel_ulong_t)&ad7986_chip_info },
+> +	{ }
+> +
+> +};
+> +MODULE_DEVICE_TABLE(spi, ad7944_spi_id);
+> +
+> +static struct spi_driver ad7944_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "ad7944",
+> +		.of_match_table =3D ad7944_of_match,
+> +	},
+> +	.probe =3D ad7944_probe,
+> +	.id_table =3D ad7944_spi_id,
+> +};
+> +module_spi_driver(ad7944_driver);
+> +
+> +MODULE_AUTHOR("David Lechner <dlechner@baylibre.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD7944 PulSAR ADC family driver");
+> +MODULE_LICENSE("GPL");
+>=20
 
-> 
->>
->> Using an alternate flag instead of NEED_RESCHED to indicate a pending
->> IPI was suggested as the correct approach to solve this problem on the
->> same thread.
->>
->>
->> Proposed solution: TIF_NOTIFY_IPI
->> =================================
->>
->> Instead of reusing TIF_NEED_RESCHED bit to pull an TIF_POLLING CPU out
->> of idle, TIF_NOTIFY_IPI is a newly introduced flag that
->> call_function_single_prep_ipi() sets on a target TIF_POLLING CPU to
->> indicate a pending IPI, which the idle CPU promises to process soon.
->>
->> On architectures that do not support the TIF_NOTIFY_IPI flag (this
->> series only adds support for x86 and ARM processors for now),
-> 
-> I'm surprised that you are mentioning ARM processors because they
-> don't use TIF_POLLING.
-
-Yup I just realised that after Linus Walleij pointed it out on the
-thread.
-
-> 
->> call_function_single_prep_ipi() will fallback to setting
->> TIF_NEED_RESCHED bit to pull the TIF_POLLING CPU out of idle.
->>
->> Since the pending IPI handlers are processed before the call to
->> schedule_idle() in do_idle(), schedule_idle() will only be called if the
->> IPI handler have woken / migrated a new task on the idle CPU and has set
->> TIF_NEED_RESCHED bit to indicate the same. This avoids running into the
->> long IRQ disabled section in schedule_idle() unnecessarily, and any
->> need_resched() check within a call function will accurately notify if a
->> task is waiting for CPU time on the CPU handling the IPI.
->>
->> Following is the crude visualization of how the situation changes with
->> the newly introduced TIF_NOTIFY_IPI flag:
->> --
->> CPU0                                                    CPU1
->> ====                                                    ====
->>                                                         do_idle() {
->>                                                                 __current_set_polling();
->>                                                                 ...
->>                                                                 monitor(addr);
->>                                                                 if (!need_resched_or_ipi())
->>                                                                         mwait() {
->>                                                                         /* Waiting */
->> smp_call_function_single(CPU1, func, wait = 1) {                                ...
->>         ...                                                                     ...
->>         set_nr_if_polling(CPU1) {                                               ...
->>                 /* Realizes CPU1 is polling */                                  ...
->>                 try_cmpxchg(addr,                                               ...
->>                             &val,                                               ...
->>                             val | _TIF_NOTIFY_IPI);                             ...
->>         } /* Does not send an IPI */                                            ...
->>         ...                                                             } /* mwait exit due to write at addr */
->>         csd_lock_wait() {                                       ...
->>         /* Waiting */                                           preempt_fold_need_resched(); /* fold if NEED_RESCHED */
->>                 ...                                             __current_clr_polling();
->>                 ...                                             flush_smp_call_function_queue() {
->>                 ...                                                     func(); /* Will set NEED_RESCHED if sched_ttwu_pending() */
->>         } /* End of wait */                                     }
->> }                                                               if (need_resched()) {
->>                                                                         schedule_idle();
->> smp_call_function_single(CPU1, func, wait = 1) {                }
->>         ...                                                     ... /* IRQs remain enabled */
->>         arch_send_call_function_single_ipi(CPU1); ----------->  /* Processes the IPI */
->> --
->>
->> Results
->> =======
->>
->> With the TIF_NOTIFY_IPI, the time taken to complete a fixed set of IPIs
->> using ipistorm improves drastically. Following are the numbers from the
->> same dual socket 3rd Generation EPYC system (2 x 64C/128T) (boost on,
->> C2 disabled) running ipistorm between CPU8 and CPU16:
->>
->> cmdline: insmod ipistorm.ko numipi=100000 single=1 offset=8 cpulist=8 wait=1
->>
->>   ==================================================================
->>   Test          : ipistorm (modified)
->>   Units         : Normalized runtime
->>   Interpretation: Lower is better
->>   Statistic     : AMean
->>   ==================================================================
->>   kernel:                               time [pct imp]
->>   tip:sched/core                        1.00 [0.00]
->>   tip:sched/core + revert               0.81 [19.36]
->>   tip:sched/core + TIF_NOTIFY_IPI       0.20 [80.99]
->>
->> Same experiment was repeated on an dual socket ARM server (2 x 64C)
->> which too saw a significant improvement in the ipistorm performance:
-> 
-> Could you share more details about this ARM server ? Could it be an Arm64 one ?
-> I was not expecting any change for arm/arm64 which are not using TIF_POLLING
-
-I looked at the lscpu output and it said It was an "aarch64" server with
-model name "Neoverse-N1". Let me go back and test it once again just to
-be sure I did not catch a one off behavior (Might be a while since I
-have limited access to this machine) I'll also add a debug
-WARN_ON_ONCE() to see if "TIF_NOTIF_IPI" is being set.
-
-> 
-> 
->>
->>   ==================================================================
->>   Test          : ipistorm (modified)
->>   Units         : Normalized runtime
->>   Interpretation: Lower is better
->>   Statistic     : AMean
->>   ==================================================================
->>   kernel:                               time [pct imp]
->>   tip:sched/core                        1.00 [0.00]
->>   tip:sched/core + TIF_NOTIFY_IPI       0.41 [59.29]
->>
->> netperf and tbench results with the patch match the results on tip on
->> the dual socket 3rd Generation AMD system (2 x 64C/128T). Additionally,
->> hackbench, stream, and schbench too were tested, with results from the
->> patched kernel matching that of the tip.
->>
->>
->> Future Work
->> ===========
->>
->> Evaluate impact of newidle_balance() when scheduler tick hits an idle
->> CPU. The call to newidle_balance() will be skipped with the
-> 
-> But it should call the normal idle load balance instead
-
-Yup, but the frequency of normal idle balance will be lower than the
-frequency at which a newidle balance is being triggered currently if
-tick is not disabled right? Please correct me if I'm wrong. 
-
-> 
->> TIF_NOTIFY_IPI solution similar to [2]. Counter argument for the case is
->> that if the idle state did not set the TIF_POLLING bit, the idle CPU
->> would not have called schedule_idle() unless the IPI handler set the
->> NEED_RESCHED bit.
->>
->>
->> Links
->> =====
->>
->> [1] https://github.com/antonblanchard/ipistorm
->> [2] https://lore.kernel.org/lkml/20240119084548.2788-1-kprateek.nayak@amd.com/
->> [3] https://lore.kernel.org/lkml/b4f5ac150685456cf45a342e3bb1f28cdd557a53.camel@linux.intel.com/
->> [4] https://lore.kernel.org/lkml/20240123211756.GA221793@maniforge/
->> [5] https://lore.kernel.org/lkml/CAKfTPtC446Lo9CATPp7PExdkLhHQFoBuY-JMGC7agOHY4hs-Pw@mail.gmail.com/
->>
->> This series is based on tip:sched/core at tag "sched-core-2024-01-08".
->> [..snip..]
->>
- 
---
-Thanks and Regards,
-Prateek
