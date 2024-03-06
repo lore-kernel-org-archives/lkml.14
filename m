@@ -1,143 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SINPR02CU002.outbound.protection.outlook.com (mail-southeastasiaazon11021006.outbound.protection.outlook.com [52.101.133.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C431C287
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 06:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709705807; cv=none; b=tOgqa+v20fvOCFzLRIItOqOMDeIe8mb7nNzQkLRgoNI6O9FAkbjY7H4npMsKLr5+r59kZspHXGxmFWCyn6dlSZtbqFg+hEcrbiLyNwVagXHFaLepAmeI7kEOuLdHeue6LqUy92nkE92X7siyj5Sk5B2DHA6imP3yF4wwyOaRdvM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709705807; c=relaxed/simple;
-	bh=IB3GfOzNUfXIFpeJe83ampj3Bt5+cvL3ZIZkQ8chnV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e4jk9dyCNno9yOp4JJWzu2O7w0khUAU/fHnm6eUyrwdT+bfTMf6L6XtgS6pdBCBnL2A+WFXSd+j1osahAQ3r1VrDtzfjROBQ3J1sOAI10pjNZQblQa8asgQAVKM+wpghppAmtFvRctKyJ0/ij4XQUbE/ZFCoeSTqaRBQqRA3ey8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvZkxAzs; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FE71BDC4;
+	Wed,  6 Mar 2024 06:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.133.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709705916; cv=fail; b=ZkZJ2/UnmmqyWOZR7kIQFlp6hhjSoQMFNa2r1CaPOEsN5KZys7sSGSNeprOzMFM3Z/BdKP9k9kKs66EJ0nNn4KLJ1sR2HzwZiYDZFzfSf8pXWJLtx7r89a2hN3JzNn+aaY725BPpPrP80yj0xCoRTMqo/frKUlbPhDWFR/fYN8s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709705916; c=relaxed/simple;
+	bh=mf+gZzdK6CV8KsIuLRr9pyopvJs2yP33u1nH6nK5+Ug=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Bx9S6XZ7yajGRg2PtQEdFBrhFhT6OrgTdNFHqsjtqxmY21z7PVeancn5wgDcZvOVR5Q5j8pdlMkgVxqaAGk2B7wJdkUaGvWRuRx8lKb9v1xjqCFAH5lfiMPqgrwOg2csM24AUaYYCnOYOxtgG5oT0u+nquyLfCak2t2Vk2bNDSc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fibocom.com; spf=pass smtp.mailfrom=fibocom.com; dkim=pass (1024-bit key) header.d=fibocomcorp.onmicrosoft.com header.i=@fibocomcorp.onmicrosoft.com header.b=kO/Z3JTU; arc=fail smtp.client-ip=52.101.133.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fibocom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fibocom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvZkxAzs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F608C433C7;
-	Wed,  6 Mar 2024 06:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709705806;
-	bh=IB3GfOzNUfXIFpeJe83ampj3Bt5+cvL3ZIZkQ8chnV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MvZkxAzsCLc/0ZLBdD7AJr1R8IXx+NjawjJcePutExZPCOi0qLI0u6XEPirHngsWw
-	 6jkkHtLd9ocCleDtOhmO+Usd8PQWEmDAsy7EpBC2MDFlT8iFzlvxnwCqFWtGW8sE11
-	 PoGZMscM6T2m04L+rU3wgOg4vayMgd5e7LD9vkZhlhiO7IsQMzk854f9WmF6Ww0pgr
-	 o6h9EbhB5nmpC6VW4bxaVLxbeCt8MMiwlEremthZOjx+gAbAgyIrFr/9rQyDX9ctor
-	 POTbTZi/F+PwOinsAGphF0K50OMAjX+J00tS6AaCwPs+mPY/Uho2xKDcvIHthehBL2
-	 Ywr6Rprr3pl2w==
-Date: Wed, 6 Mar 2024 08:15:53 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: peterx@redhat.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>, x86@kernel.org,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Jason Gunthorpe <jgg@nvidia.com>, Yang Shi <shy828301@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linuxppc-dev@lists.ozlabs.org, Muchun Song <muchun.song@linux.dev>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH v3 01/10] mm/ppc: Define pXd_large() with pXd_leaf()
-Message-ID: <ZegKGU4kTV-icKKC@kernel.org>
-References: <20240305043750.93762-1-peterx@redhat.com>
- <20240305043750.93762-2-peterx@redhat.com>
+	dkim=pass (1024-bit key) header.d=fibocomcorp.onmicrosoft.com header.i=@fibocomcorp.onmicrosoft.com header.b="kO/Z3JTU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jGUhJkT47iIvbbjW56ck93Ln1SZNeLfaM5xSJO2pMRyTRRWNiaceAoo7gHjuKFEB5ORAEC3bCUJI+LxJ4Ngi2oK+d2/uZtT/hyz4aNhXQSJLNxEE7VxXmXmp+SazQ9tMf+4Ns6Jns7tDqn/f7Xua2OtFoIWq3jkR5zk9/IK/0kApsQlD347Pl1qM71WW02Jmu4Rn4Izx0xiEIuTm1/Wkffgynzz3yIFskYvr9dQGGyvhia1Npbqry28fxCSNoE/qGW8BlU9HPwuWEpYu0Vr2HOWpbWhKWygfZdNTLUxZ40mDD6S75xQjZbXmSPf67/M5rjujqIGvQso28jGxQscBhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mf+gZzdK6CV8KsIuLRr9pyopvJs2yP33u1nH6nK5+Ug=;
+ b=jFAK/tU+D/WaymxkHY2DGoWwjNew/NbjJb3F+7wtnw/NQD2LfD+OLDuk+idlEsayIZqIKTBDJ2mn1PjUM34GmUphnf7nPnIT8XsOZcIU90MRmQAM4hKq6SApXHLymspXpH72QHQhhueXsgLUipKqQYIjIqC+bw6ouYJv4dIGvJWIjGMgcPJV2mYRedrT1guNQObmS4PhsWK8iN+4kq6WDy+4aFCBxF6SS/3S8NPen4yBiWULSw64TnqEiThrOhCCZWvudRLuC7UbN0j29UkwNmpdJcTwDFqb+9IjVFpy7NCmgVmJfRpMjoYbnW/YNB3dV/EScN1o/jZDEfUVYXv1aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fibocom.com; dmarc=pass action=none header.from=fibocom.com;
+ dkim=pass header.d=fibocom.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=fibocomcorp.onmicrosoft.com; s=selector1-fibocomcorp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mf+gZzdK6CV8KsIuLRr9pyopvJs2yP33u1nH6nK5+Ug=;
+ b=kO/Z3JTU9IKXHDr2St7/0Pdv4PzH1LSBNWWP6pgMPLbvXKD8vlAwTIGjC4hoD+aL/rxfKOQd7OvwfKjDUNxZEunQk0P7W5K+Qp9UAFoDJKvytvFt2Z54lSaksy4LJiOTlpXHr5oLtT5S8UiBLo9Evu9z0c1GdkWFB16rUeRVJFI=
+Received: from KL1PR02MB6283.apcprd02.prod.outlook.com (2603:1096:820:dc::11)
+ by TYZPR02MB6222.apcprd02.prod.outlook.com (2603:1096:400:282::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Wed, 6 Mar
+ 2024 06:18:29 +0000
+Received: from KL1PR02MB6283.apcprd02.prod.outlook.com
+ ([fe80::87a8:fbd4:757d:2f75]) by KL1PR02MB6283.apcprd02.prod.outlook.com
+ ([fe80::87a8:fbd4:757d:2f75%7]) with mapi id 15.20.7316.023; Wed, 6 Mar 2024
+ 06:18:28 +0000
+From: "Bolan Wang(Bolan)" <bolan.wang@fibocom.com>
+To: Lars Melin <larsm17@gmail.com>, "johan@kernel.org" <johan@kernel.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] USB: serial: option: add Fibocom FM135-GL variants
+Thread-Topic: [PATCH] USB: serial: option: add Fibocom FM135-GL variants
+Thread-Index: AdpvjNPq56VjetUaSKKUAbkY96LWsA==
+Date: Wed, 6 Mar 2024 06:18:28 +0000
+Message-ID:
+ <KL1PR02MB6283EBD2786A3B3E4E373F0389212@KL1PR02MB6283.apcprd02.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fibocom.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: KL1PR02MB6283:EE_|TYZPR02MB6222:EE_
+x-ms-office365-filtering-correlation-id: 94b4fc72-7880-495d-3315-08dc3da53d4c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ xJUolu28UBDggVPV8KT88DNlDWqiBLCBrB+gmxspD+P+tS0d2GB27cW3iOkKUnRqHxOFg0VgnQNbq69xfEdQ+lsghqUpERMH4v22Znbr1ts0DVe8trMNTl+cu9tWBKLR+0XDF9eyEkgS+J3pkZj9pu1B6YWySRg5Jd8enEUuXYq0oX8zr8XNt6QXDBqjCwImeg8i0TvMhGLg56ptpP4Zvn385inB2jig/GObwgKypsllQwhsHATXb5mIqLxTcYfg+25XdpFyOB9JY7y3LhxWZyUw1ja2krXXWoDJo3epW2M/qeHBUMyXWBZzyh0gVXeqSjdF1T+f58bDxG9eguZriHWVZBuQCda9kQOhCCTRBAwsC1G+VFBU08xA+7c6V1cO1+QB8bnYTaR1RXeAX9cwqLEr7bDjYYlmwfg8cJaUnzBdmhlIb4G6a3CG2mwUKtsfD9WAkaU8tWnNewQesmDxelx+R801FMgLNvLKYijYjG9v5xpgwQn15JME8l/G4auSKjD3NreAkJYmhi+6r2U0MzhpEHB22V8MyKiJ2Ya0aOT1xDf4Btv8cDrvarD4OKksTINg/VSNf0tUsLQa+HRr3cD5drMm8CImE2VKvUKgHSGQQtcFWUKyFvD4id5Z86stxwPnu8D8A8U3qsYauuFghFx8oPYsAadWmMAph5Zdbn1n6e60xMYFt5gNBN8jaAP6ZDKmZ6IIk5AXHIOh8eojjP50ENKiZdq2pOOCyje5hEw=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR02MB6283.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?TGthOHd2U3YzOVFiRmR4MW4xNlZCMkV4VnRJblE0a3Y4VDFGQ0hNY3F3UkJY?=
+ =?utf-8?B?RGRSNDNibUo4RXNobmduQUtwOVgrUEczN1ZaQ3AwNHp5N000VG1FMHN1TDdo?=
+ =?utf-8?B?aHpPOWh5UXhRKzQvYmZpTFZNd2pNMDdmVWJOMUx3T3hKejQrVTZtVWhDSG43?=
+ =?utf-8?B?bWlKME9rbVVZcUlteVN4ZEs0SUpIZnM4RGFkeHhpNll5KzVJckFJbDNnRkhF?=
+ =?utf-8?B?ZDF1djNXYWpKQkxmbURuaVlaZTJKaTJzNmQvaU5YZVlzbmZ0c1I4cEE4UVla?=
+ =?utf-8?B?SXZudGlYT3hsdGxWTXJLVE1weVA4NVdhcHhIdS9tYjlTZnBES3BiNDRWMjVT?=
+ =?utf-8?B?ZEZpRFF5bTZFNjFIL1lndmxUNm1haEJWd2pjZFFoMTJ4aGpHdVhVVWNFY1Bm?=
+ =?utf-8?B?MVJtNnpNT0NZNUtUaTJ0MTloU1U4bDZDaFhGVGE5V2JXYjNrYzFXbkQ5ODdq?=
+ =?utf-8?B?REFyUTlnTGwvZVNJNzR3KzUvUGVEc05Ed0NsYzRjeWpxOVkrVGZQMW5Rd29a?=
+ =?utf-8?B?NC9zc1ZJRkNOUnpsVVBJOGlDUXB4anpNQlMrVWljNlBndzdTdjZTZmJQVEVZ?=
+ =?utf-8?B?U2NJa2U1dTBxazBMRkZneTl2SUlRQWpiRktUaEtMNzErdlNDUFRzOXNFWWhx?=
+ =?utf-8?B?TzJYWGhZNDJldy9iaUs5a2pFRVIxVGJXLytWYnpodXU4d0hBQ1o3N005VkpO?=
+ =?utf-8?B?NFFSd1lVbnRLbXJNZ0lRdUdPU01wWGx6RG5OY1RiT2tGSzF4R1VabEZySDRZ?=
+ =?utf-8?B?c1lpOEpJOEVzMUNyaCtiZnBXVTR4bnhXRWFPalZTMi92ZmpFcTNGMmNSSE9t?=
+ =?utf-8?B?b1ViQm94WFhuVXJWeC9tS3ZmdFNIQ01QQXU4YnN3NmdhSUM5Y3pkNXQ0T3Zs?=
+ =?utf-8?B?WmlFaC9xQitQSTIrSENMMk9OVTlORUJSdVQycW05NXVJUUpiZnk2Yzl4Sk1i?=
+ =?utf-8?B?djhaNmJRZGFsSHEwK1NaNnRCNWF2SFNkV2pMNkJOQmxmbmFsTnBJL0swY1Za?=
+ =?utf-8?B?NkJyazgzQ3YyU2hlTXNJb0h5SEhaVHVRVUU2bXNGUnFsOW1BbHM0RlpZcG9q?=
+ =?utf-8?B?cSt1V2JqSTJ4RFJWRFRNWk90Z0tWUE5kdHFoUktXaitFanlyTnZJQlYvTjNL?=
+ =?utf-8?B?RmkwVXJkVUhRa3FmOEdwblY5TVk2MWI2Q3FwN21GWVhSckx3b3RuTDVkem5p?=
+ =?utf-8?B?b0ZkYXZqcjROZTc4bTlRSGhuQTM1dS9VbnREYVVCRGljelVTWkxZazVydC9q?=
+ =?utf-8?B?Ym1MSEJhMldnRnU1TTdNeUI2aFdxUlVxNUpYV01EN1p5bDIzNkV0ZWorcXRU?=
+ =?utf-8?B?VFRCQWVOTkcxMDJvWGZVamRvU0xGbmtWZXNoUFZGemkrR05zSzFlaUt6bVRx?=
+ =?utf-8?B?QnRiQ2VpRFRPTG1HMFgvNWhPMnZuTThiN1Y4LzcyZ3NVR2pvODBlYlhLMnR5?=
+ =?utf-8?B?SWpBQzkxSENGWEtKQm0ybEthbEN0WHAvYXVhbmVOeDM5SWFYdXZHVkE1RzdX?=
+ =?utf-8?B?K0ZUVGdCZGpBRUVsNU16cHRiV25KbU0rNHhIZUJtOTZWTzJCWGoyb0hzeHYr?=
+ =?utf-8?B?V1pCemgrZ1RvTEdxVjlzeCtNekRVRnh1Q3VNZndyc0ZCSkV6NUtXV3p5WEIr?=
+ =?utf-8?B?Tkh2SkE2enE5Y0NoYXFEWlV6UFo2R2Qxb2Exa2ViZmxYU2pyVEVaQ2h4eW5W?=
+ =?utf-8?B?OHlHNTFtVkxrWFZtRVpSN0F6OVBRb21PZnIrRS9ZdnN1VGRnUytmcjJweGhF?=
+ =?utf-8?B?T0RxWVdqbFhlbmZpQkF3UEd0UTVYbVRLcXpaUjRPWVN5Mk0wc1oxYkpPU0Vm?=
+ =?utf-8?B?blN4NGhwZ0I2a0NvTmxvTEQrdUJLRTdrWGNHWURLMGJGbEltRUdIWGp2QlNr?=
+ =?utf-8?B?bXR0ZDc4eVZuVk5PaVIvU0ptSndmZXJlOW9GMWp4aWZtUjNWY0tZYnU0RktQ?=
+ =?utf-8?B?NjcyLzNHMzQrWGN3bHA2Z0lOTzJsRmJsZEhIellYK1lBbis0TnZkLzUwL3Bp?=
+ =?utf-8?B?TUFybDlvc0NOQ2lrR1cvUTE5SVNNRXhmSjlUUUw2cjF2YVVySVZwOFZkenl2?=
+ =?utf-8?B?V2JzaGR0ZjhhZWlQc0dNSkRHUXBqVnZvV0pWMDVxYThzRis5QlhUN2NyVnI5?=
+ =?utf-8?Q?L5ug8sin0MBbhoh0d3sfR3EDH?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305043750.93762-2-peterx@redhat.com>
+X-OriginatorOrg: fibocom.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR02MB6283.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94b4fc72-7880-495d-3315-08dc3da53d4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2024 06:18:28.6605
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 889bfe61-8c21-436b-bc07-3908050c8236
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HXpmC7Jka9M4HItxRok0WmvsWL1UbMaJ78uYCdnIYsR5vK/Z26A0DH3KNs8mPE2smaE4dgVvQpwuucrfhO6ugg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR02MB6222
 
-On Tue, Mar 05, 2024 at 12:37:41PM +0800, peterx@redhat.com wrote:
-> From: Peter Xu <peterx@redhat.com>
-> 
-> The two definitions are the same.  The only difference is that pXd_large()
-> is only defined with THP selected, and only on book3s 64bits.
-> 
-> Instead of implementing it twice, make pXd_large() a macro to pXd_leaf().
-> Define it unconditionally just like pXd_leaf().  This helps to prepare
-> merging the two APIs.
-> 
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
-
-> ---
->  arch/powerpc/include/asm/book3s/64/pgtable.h | 16 ++--------------
->  arch/powerpc/include/asm/pgtable.h           |  2 +-
->  2 files changed, 3 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> index 927d585652bc..d1318e8582ac 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -1157,20 +1157,6 @@ pud_hugepage_update(struct mm_struct *mm, unsigned long addr, pud_t *pudp,
->  	return pud_val(*pudp);
->  }
->  
-> -/*
-> - * returns true for pmd migration entries, THP, devmap, hugetlb
-> - * But compile time dependent on THP config
-> - */
-> -static inline int pmd_large(pmd_t pmd)
-> -{
-> -	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
-> -}
-> -
-> -static inline int pud_large(pud_t pud)
-> -{
-> -	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
-> -}
-> -
->  /*
->   * For radix we should always find H_PAGE_HASHPTE zero. Hence
->   * the below will work for radix too
-> @@ -1455,6 +1441,7 @@ static inline bool is_pte_rw_upgrade(unsigned long old_val, unsigned long new_va
->   */
->  #define pmd_is_leaf pmd_is_leaf
->  #define pmd_leaf pmd_is_leaf
-> +#define pmd_large pmd_leaf
->  static inline bool pmd_is_leaf(pmd_t pmd)
->  {
->  	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
-> @@ -1462,6 +1449,7 @@ static inline bool pmd_is_leaf(pmd_t pmd)
->  
->  #define pud_is_leaf pud_is_leaf
->  #define pud_leaf pud_is_leaf
-> +#define pud_large pud_leaf
->  static inline bool pud_is_leaf(pud_t pud)
->  {
->  	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
-> diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
-> index 7a1ba8889aea..5928b3c1458d 100644
-> --- a/arch/powerpc/include/asm/pgtable.h
-> +++ b/arch/powerpc/include/asm/pgtable.h
-> @@ -101,7 +101,7 @@ void poking_init(void);
->  extern unsigned long ioremap_bot;
->  extern const pgprot_t protection_map[16];
->  
-> -#ifndef CONFIG_TRANSPARENT_HUGEPAGE
-> +#ifndef pmd_large
->  #define pmd_large(pmd)		0
->  #endif
->  
-> -- 
-> 2.44.0
-> 
-> 
-
--- 
-Sincerely yours,
-Mike.
+PiBJZiB0aGUgZGV2aWNlIHdpdGggcGlkIDB4MDFhMSBvbmx5IGhhcyBhbiBtYmltIGludGVyZmFj
+ZSBhcyB5b3UgaGF2ZSBpbmRpY2F0ZWQgdGhlbiB3aHkgZG8geW91IGFkZCBpdCB0byB0aGUgb3B0
+aW9uIHNlcmlhbCBkcml2ZXI/DQoNCkhpIExhcnM6DQogIFRoZSBwaWQgMHgwMWExIG1heSBpbmNs
+dWRlIGF0LCBkaWFnIHBvcnRzIGluIGRpZmZlcmVudCB1c2IgbW9kZXMuIEN1cnJlbnRseSwgb25s
+eSBoYXMgdGhlIG1iaW0gaW50ZXJmYWNlLg0KDQp0aGFua3MNCmJvbGFuDQo=
