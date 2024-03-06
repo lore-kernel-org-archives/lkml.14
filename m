@@ -1,48 +1,48 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E802374A;
-	Wed,  6 Mar 2024 08:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C502B5D474;
+	Wed,  6 Mar 2024 08:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709713919; cv=none; b=p0WqknyWE438g3yzBuFiNu3ytK2rdcbTNHHSye5VwKbOhEM4WfjIb/nSb/ZkG6P5hINk7ZGtCIo12C2fk4qu+A0EJ0eLeTIt8qR+xHRLNNdi013Ex/Iy0SucyHraDuqxi/C4eHNuvb01NrEK/rlted3kf9os4H7d7qnFjCaZ7QQ=
+	t=1709713985; cv=none; b=TGnNmGXrwohrAQq0iXDEUCTC/S/d7tEyiIn2xOFRbH2dZrtbDNCiS31TTLuEmSpUQdl7VIBSEtQRDwqev3TBnE9+eSxXG2ut/8uHnivRZSUFmIgr6YqMSYic9fzJqzKodhr8kuNisejGKz1GCNWGN5Y7+1w9FeZRaJKcCmLd3H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709713919; c=relaxed/simple;
-	bh=vTXlzKfVuR7thkMypOhy/ZsOpYaW4JBviEC5G7CKrTw=;
+	s=arc-20240116; t=1709713985; c=relaxed/simple;
+	bh=UnIKCfpRywsmooXz+n9fMtoH0j9SzJw+eCtg2L2wY+k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JqyzJvJXfJHFmQxIDkUo+Qw+23FmJW1GsMUsmefw2+lRWbmByKW3DY5ENV5PcuMBsU6/05N55niPwf+hpzcWQ8PhxvNwUNR+nlX6vS+5t7XJnieoN7b9q9CiVYcASFP/ROwnlT5KIUl9t1KW6mZArXliGMG2nvdI8x3cD+g+154=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dPhwLhU0; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=fSsL9ssLHTbh6IsR7IN/mC+gINnzk1bANDmCWwEOwOnGzmomfM1bbjWtrROjlMA9LK4GjrwSq503JhcSqnG516swQGGfo8PMGHGRb/t0f1fTMZ2I+hgTygS1xVCSARZeYslCz0FvFkSUHSoc1hgHVNn2gwTqVPR07l6L+ov0Vg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E0K8AJR1; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dPhwLhU0"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4265xoNr020249;
-	Wed, 6 Mar 2024 08:31:20 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E0K8AJR1"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4266eJpC005782;
+	Wed, 6 Mar 2024 08:32:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	message-id:date:mime-version:subject:to:cc:references:from
 	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=q86A9onL0rmqEe1iKRvRqZ3S28SROOVGnLJLR6S1sK8=; b=dP
-	hwLhU0DBVyiGKqk04VPPE3RpjYgMykQp1nBuELT+S39/R73q0nIH/igEsvThZiSO
-	75C4Mxr3MajWXQ/bmUYgAGTHkN+esMTKFLrzEp3w0ym+7y72zwkSM65fm6hchiSg
-	e2pOVMioIX1Ak+XlEEPIareL1RyLu8py6MoQ01AbalBFVF6IereriEUcUU583Bmo
-	wNc4o4sBM0R2gYi1NF9eelPoi0QmvuOy3YXOnemh9crMlyJVp0t+U3a4V8nG2Qiv
-	/5W3KyoPcxgx6XOREDD4eLbqS4GpAH9H9KlA0m/Bk9VjggbhZe2MtY00YpXpXb/Q
-	Rnjud3N7N3H7J9xb3yEQ==
+	qcppdkim1; bh=UnIKCfpRywsmooXz+n9fMtoH0j9SzJw+eCtg2L2wY+k=; b=E0
+	K8AJR1jP9x0GVqfJlanI4u24R/W9cCEMcR1sTj6FvajQ5mF/8r2eLfD30vwR+Ujy
+	22g8wnfBBbhlQjlKK7esDLcjvrRd9+6A1U7kZ0DADfzyDcw700EqdtzVw9+vLU1/
+	SOVDfL5Oln6e+BzSsb/bfcq9zjn1IqlxCvTSxKAR6+pAJd36AiLDEJZqru3P64Wg
+	IaxSLbsxLEi6nlxagEPr5i0QA8XHbN6twWsiRuQFJwPSFfEYzJ1sIy68UsuEOUse
+	EylN0R6bluvfsexLDTIXgP0vGCFuoi9o7Rd3EYU+kHLN9uxa8IMS9ai3pBUpnjC+
+	VAYi9VIX9vONXgxR0Z0Q==
 Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpgdsrhht-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpke387ny-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 08:31:20 +0000 (GMT)
+	Wed, 06 Mar 2024 08:32:25 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4268VJIl012146
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4268WPLn013366
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 6 Mar 2024 08:31:19 GMT
+	Wed, 6 Mar 2024 08:32:25 GMT
 Received: from [10.218.19.46] (10.80.80.8) by nalasex01c.na.qualcomm.com
  (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 6 Mar
- 2024 00:31:13 -0800
-Message-ID: <83fd1995-a06e-b76a-d91b-de1c1a6ab0ea@quicinc.com>
-Date: Wed, 6 Mar 2024 14:00:56 +0530
+ 2024 00:32:19 -0800
+Message-ID: <e98bdda6-3da5-689c-f8fe-7f64131707a8@quicinc.com>
+Date: Wed, 6 Mar 2024 14:02:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,8 +51,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH 4/5] clk: qcom: Add camera clock controller driver for
- SM8150
+Subject: Re: [PATCH 5/5] arm64: dts: qcom: Add camera clock controller for
+ sm8150
 Content-Language: en-US
 To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
         Bjorn Andersson
@@ -73,137 +73,36 @@ CC: Stephen Boyd <sboyd@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
         Taniya Das <quic_tdas@quicinc.com>,
         Jagadeesh Kona <quic_jkona@quicinc.com>
 References: <20240229-camcc-support-sm8150-v1-0-8c28c6c87990@quicinc.com>
- <20240229-camcc-support-sm8150-v1-4-8c28c6c87990@quicinc.com>
- <18567989-fb60-49ae-92e6-94e1bc2fa1c7@linaro.org>
+ <20240229-camcc-support-sm8150-v1-5-8c28c6c87990@quicinc.com>
+ <6620b011-933e-40cd-98e1-a4d39cc96346@linaro.org>
 From: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>
-In-Reply-To: <18567989-fb60-49ae-92e6-94e1bc2fa1c7@linaro.org>
+In-Reply-To: <6620b011-933e-40cd-98e1-a4d39cc96346@linaro.org>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 488fqkA63x5DW3xa_wvVr61O3_z7-kd_
-X-Proofpoint-GUID: 488fqkA63x5DW3xa_wvVr61O3_z7-kd_
+X-Proofpoint-ORIG-GUID: O8eQnkyqs70RVInPJby50HT0ZqxhjcdH
+X-Proofpoint-GUID: O8eQnkyqs70RVInPJby50HT0ZqxhjcdH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-06_04,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- lowpriorityscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 spamscore=0
- adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2403060067
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 mlxlogscore=901 phishscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403060067
 
 
-On 3/2/2024 9:43 PM, Bryan O'Donoghue wrote:
+On 3/2/2024 9:45 PM, Bryan O'Donoghue wrote:
 > On 29/02/2024 5:38 a.m., Satya Priya Kakitapalli wrote:
->> Add support for the camera clock controller for camera clients
->> to be able to request for camcc clocks on SM8150 platform.
->>
->> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
->> ---
+>> +            clocks = <&gcc GCC_CAMERA_AHB_CLK>, <&rpmhcc RPMH_CXO_CLK>;
 >
->> +static int cam_cc_sm8150_probe(struct platform_device *pdev)
->> +{
->> +    struct regmap *regmap;
->> +    int ret;
->> +
->> +    ret = devm_pm_runtime_enable(&pdev->dev);
->> +    if (ret)
->> +        return ret;
->> +
->> +    ret = pm_runtime_resume_and_get(&pdev->dev);
->> +    if (ret)
->> +        return ret;
->> +
->> +    regmap = qcom_cc_map(pdev, &cam_cc_sm8150_desc);
->> +    if (IS_ERR(regmap)) {
->> +        pm_runtime_put(&pdev->dev);
->> +        return PTR_ERR(regmap);
->> +    }
->> +
->> +    clk_trion_pll_configure(&cam_cc_pll0, regmap, &cam_cc_pll0_config);
->> +    clk_trion_pll_configure(&cam_cc_pll1, regmap, &cam_cc_pll1_config);
->> +    clk_regera_pll_configure(&cam_cc_pll2, regmap, 
->> &cam_cc_pll2_config);
->> +    clk_trion_pll_configure(&cam_cc_pll3, regmap, &cam_cc_pll3_config);
->> +    clk_trion_pll_configure(&cam_cc_pll4, regmap, &cam_cc_pll4_config);
->> +
->> +    /* Keep the critical clock always-on */
->> +    qcom_branch_set_clk_en(regmap, 0xc1e4); /* cam_cc_gdsc_clk */
->
-> Does this clock need to be specified this way ?
+> <&rpmhcc ..> should go on a separate line
 >
 
-Yes, we need this clock to be always on.
-
-
-> drivers/clk/qcom/camcc-sc8280xp.c::camcc_gdsc_clk specifies the gdsc 
-> clock as a shared op clock.
->
-> Actually it looks to be register compatible, please try defining 
-> titan_top_gdsc as per the example in 8280xp.
->> +
->> +    ret = qcom_cc_really_probe(pdev, &cam_cc_sm8150_desc, regmap);
->> +
->> +    pm_runtime_put(&pdev->dev);
->> +
->> +    return ret;
->> +}
->
-> So this is a pattern we keep repeating in the clock probe() functions 
-> which I am writing a series to address. There's no need to continue to 
-> replicate the bug in new code though.
->
-> Only switch on always-on clocks if probe succeeds.
->
->     ret = qcom_cc_really_probe(pdev, &cam_cc_sm8150_desc, regmap);
->     if (ret)
->         goto probe_err;
->
->     qcom_branch_set_clk_en(regmap, 0xc1e4); /* cam_cc_gdsc_clk */
->
->     pm_runtime_put(&pdev->dev);
->
->     return 0;
->
-> probe_err:
->     pm_runtime_put_sync(&pdev->dev);
->
-> Alternatively switch on the always-on clocks before the really_probe() 
-> but then roll back in a probe_err: goto
->
-> probe_err:
->     remap_bits_update(regmap, 0xc1e4, BIT(0), 0);
->     pm_runtime_put_sync(&pdev->dev);
->
-> There may be corner cases where always-on has to happen before 
-> really_probe() I suppose but as a general pattern the above should be 
-> how we go.
->
-> Anyway I suspect the right thing to do is to define a 
-> titan_top_gdsc_clk with shared ops to "park" the GDSC clock to 19.2 
-> MHz instead of turning it off.
->
-> You can get rid of the hard-coded always-on and indeed represent the 
-> clock in /sysfs - which is preferable IMO to just whacking registers 
-> to keep clocks always-on in probe anyway.
->
-> Please try to define the titan_top_gdsc_clk as a shared_ops clock 
-> instead of hard coding to always on.
->
-
-Defining the gdsc clk allows consumers to control it, we do not want 
-this clock to be disabled/controlled from consumers. Hence it is better 
-to not model this clock and just keep it always on from probe.
-
-
-> If that doesn't work for some reason, then please fix your always-on 
-> logic in probe() to only make the clock fixed on, if really_probe() 
-> succeeds.
->
-
-Sure I'll do this.
+Okay, I'll fix this in v2.
 
 
 > ---
