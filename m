@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B5238C
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 06:01:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DEC1B7FB
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 06:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709704888; cv=none; b=gwognDdjWIM7AZwpb//2vvcNPTId2GmJwpH7NxLI0EPJm2P1F7BMOEVwI7GRlMXwtp+WMNow78L4+vI6eSNQCqaPxzuZOizoifRBSUz6zV+fa6lxIWSPJkH78OoVvkSTJNWoHtji46MwURDnAOd16eSiMB9vp2hiwmiwItAvJpo=
+	t=1709704907; cv=none; b=Xa7/ssN9PyYj6uKmDR5y9yOjSaFMv0GNMnRLenNeQje7GEF3FPkaDYz8D0gx+AMY7z8z3Ho1uHjseJMGBRXaaLi2yKngeFox7H9T9Hx8OMPoLenTtRqJvOOSdeq6LWOLGGXkC7bRXoJc8oObQNywn0Q0PquZMy6tg6l8642BO20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709704888; c=relaxed/simple;
-	bh=LEXu0zftvUCaHMRtidt+R8eK9jxwX75gz0eH8GU39wc=;
+	s=arc-20240116; t=1709704907; c=relaxed/simple;
+	bh=N+SgGvSCwByLSnQR1Rh3deKeagcMHHdrJ7YxgUIVkd4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jqXffcCVKJhy1+J8Yp0Ci+XXeot83s8yH2b7dxbZ74rwLkRgrfuYsaJUtpKmnV026+gIMFtZSBedkvamWo+WdOla/BbYhgWHdP3hnRhJe/jkenVtoYM9NbmNrPlwObD8PslJOdi8sQe5G23N4b6VhBhWlzpatpAYf84OjQmBTRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsDIzB2o; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=OAT2mPsIt0blfvkPO4HmNFmS4WI67l4ICbucmRxs5vnbIL/p5S1YHB9IGEOWEb3OdPcnL1z+G8/CqD40ahJt9uRzTThf5DvHZMtID4eYPmGhzIfimWNJPRFl/I3NihrYDW/lz/krW/syTA5ROwy+wUeJxe9cchlNA9rWgGePoPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhYOG1XZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsDIzB2o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DAAC433C7;
-	Wed,  6 Mar 2024 06:01:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhYOG1XZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69601C433C7;
+	Wed,  6 Mar 2024 06:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709704888;
-	bh=LEXu0zftvUCaHMRtidt+R8eK9jxwX75gz0eH8GU39wc=;
+	s=k20201202; t=1709704906;
+	bh=N+SgGvSCwByLSnQR1Rh3deKeagcMHHdrJ7YxgUIVkd4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UsDIzB2oRSEuT5fbfzip8GjqMGoG9RMDoCZBFz9FPM+5rF9bYJk/r7QxJNeUxm2IQ
-	 3E2grz647YVgBtzgXs0dpU+br6ynSFd9fhsUoWr2CM5F8W1A7PdiEk+8SoeagfDgE2
-	 rea2b/ghmCZHTj7cI1k7f7BZvhX99fv2SV0alKHImKuXbVgys2XaPYYGGozzEDuI16
-	 Nm+/ejuU+f0jAwXUQhZW+neGdwytSMgfKcWKQ1xocIwVe8rhLqZsp6MH8qfsWJe1Nz
-	 bnafvjRj632Yl8PV/r//FWMI5a2qRCq4uzE3JZKSMocjJ++LjEDbZ3MlrWc64goSP+
-	 VvBBSGc5b8vDg==
-Message-ID: <72a62115-8596-4697-9a1d-87aea34af1c7@kernel.org>
-Date: Wed, 6 Mar 2024 14:01:23 +0800
+	b=qhYOG1XZWFyNBL2vtFMaIu2qy+cTMl79RAJ1/+UlpH3XizkL5N6v4SAVKTm+Dps++
+	 Jb9eeTBH0aPJFDbRTHeY1qpq2JCCGbBAAna5W7AorR1NfS8/93tWfmjCFvWPpfHBSv
+	 fQGdSLingiJ/8ApsiB1sEPxzr3FJlAqsdCxKDbuZJzHfceYLltgKOS34jcB8tXPUoz
+	 nf3vTJXyPetEa7Kb7AyrLvgPblL1wgCG6Ij1xoIBpCkW97BGy2H8FTQjv3UJHZ3O8t
+	 chzKWBj6zUoLrGWQZj1qpjnZe5yxMSYjbsE5ZOVlDToG+F2Wz/2pMUAy2LbdFuXeGT
+	 xOQUark0HeHdQ==
+Message-ID: <7cd469b2-ce64-4799-90db-c08df7ab6174@kernel.org>
+Date: Wed, 6 Mar 2024 14:01:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,27 +35,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/2] f2fs: compress: relocate some judgments in
- f2fs_reserve_compress_blocks
+Subject: Re: [PATCH V2 2/2] f2fs: compress: fix reserve_cblocks counting error
+ when out of space
 Content-Language: en-US
 To: Xiuhong Wang <xiuhong.wang@unisoc.com>, jaegeuk@kernel.org,
  linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
 Cc: hongyu.jin.cn@gmail.com, niuzhiguo84@gmail.com, ke.wang@unisoc.com,
  xiuhong.wang.cn@gmail.com
 References: <20240306034746.3722986-1-xiuhong.wang@unisoc.com>
+ <20240306034746.3722986-2-xiuhong.wang@unisoc.com>
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20240306034746.3722986-1-xiuhong.wang@unisoc.com>
+In-Reply-To: <20240306034746.3722986-2-xiuhong.wang@unisoc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2024/3/6 11:47, Xiuhong Wang wrote:
-> The following f2fs_io test will get a "0" result instead of -EINVAL,
-> unisoc # ./f2fs_io compress file
-> unisoc # ./f2fs_io reserve_cblocks file
->   0
-> it's not reasonable, so the judgement of
-> atomic_read(&F2FS_I(inode)->i_compr_blocks) should be placed after
-> the judgement of is_inode_flag_set(inode, FI_COMPRESS_RELEASED).
+> When a file only needs one direct_node, performing the following
+> operations will cause the file to be unrepairable:
+> 
+> unisoc # ./f2fs_io compress test.apk
+> unisoc #df -h | grep dm-48
+> /dev/block/dm-48 112G 112G 1.2M 100% /data
+> 
+> unisoc # ./f2fs_io release_cblocks test.apk
+> 924
+> unisoc # df -h | grep dm-48
+> /dev/block/dm-48 112G 112G 4.8M 100% /data
+> 
+> unisoc # dd if=/dev/random of=file4 bs=1M count=3
+> 3145728 bytes (3.0 M) copied, 0.025 s, 120 M/s
+> unisoc # df -h | grep dm-48
+> /dev/block/dm-48 112G 112G 1.8M 100% /data
+> 
+> unisoc # ./f2fs_io reserve_cblocks test.apk
+> F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
+> 
+> adb reboot
+> unisoc # df -h  | grep dm-48
+> /dev/block/dm-48             112G 112G   11M 100% /data
+> unisoc # ./f2fs_io reserve_cblocks test.apk
+> 0
+> 
+> This is because the file has only one direct_node. After returning
+> to -ENOSPC, reserved_blocks += ret will not be executed. As a result,
+> the reserved_blocks at this time is still 0, which is not the real
+> number of reserved blocks. Therefore, fsck cannot be set to repair
+> the file.
+> 
+> After this patch, the fsck flag will be set to fix this problem.
+> 
+> unisoc # df -h | grep dm-48
+> /dev/block/dm-48             112G 112G  1.8M 100% /data
+> unisoc # ./f2fs_io reserve_cblocks test.apk
+> F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
+> 
+> adb reboot then fsck will be executed
+> unisoc # df -h  | grep dm-48
+> /dev/block/dm-48             112G 112G   11M 100% /data
+> unisoc # ./f2fs_io reserve_cblocks test.apk
+> 924
 > 
 > Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
 > Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
