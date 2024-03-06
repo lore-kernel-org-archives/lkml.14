@@ -1,146 +1,180 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778EA56771;
-	Wed,  6 Mar 2024 08:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810FB5DF18;
+	Wed,  6 Mar 2024 08:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709715085; cv=none; b=b6ibAFX0TEaTq0RjWTuuqyN+esLGkJRFa4EogLSLT5YVXQgnt/4DSEusZiVJL5q65pw+0NoCrLTtZc5TWaZ9+3p4B1j42RdBtuDKTcrd6800RE8GyY5xKVxDlqSlmMvBgezV8kDDLU51lVJ5o6gx47JKaNxJDzaHT1HJn4BTP74=
+	t=1709715087; cv=none; b=FrmzarS8VkStDYX3UzF4qR6BaP4R8xw5akSsC+mVEAV8l3HXmoL1tKLicQXRW0pgY/7LaIRjJIIDj427SSDWIIW28YzDbjnzutyjYViKcRTLYO3lS+334IRLbTwG9GW09FHZ6Su/3TB53X99MwnN6C4cihHF2NgHY3Y6P65HLec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709715085; c=relaxed/simple;
-	bh=tnoJkWYj/Uj6sncvyvTKE/XgBKRb6CWryuCiPxRBwTE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fsno/XDsJJUX8vGyadWrKpkX+DqW6Zlr/MKeLbsDa6d4tkwbwsZXfoELiLgdoKK1kLT9JDiuHSq90srFiFR4IM1w7MZ3ckJvJ0mskh5ex6JQZAYvrUrVlYpCay0KhlYO57/coUrepJTH5HMQInRnzcoCjppDobCfUf0kGWFSIr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Fa6wSSat; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709715087; c=relaxed/simple;
+	bh=1bwISmyy1PxfGsJiZe7IrdJTGba+bmITcKZYdxhr350=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C4f+8Is+9oLMVCmVfM5fwkUEYvj14Q2OWuLfLEbZzaz1gy1bkW9AQYcCWDjxByrnnD5VTrk9lV1TzL430Wu7BnZ2AMbp35NXXXVwNB8gI/dUWIrRgObtkJGvAGkcGz2FC+dO8moHt7oqLcFGKCJqYq7dpQ9ff9AzKrblClITwhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=MxQcwssL; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Fa6wSSat"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 15CA9C0006;
-	Wed,  6 Mar 2024 08:51:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709715075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wIxtNB7MjWKtylBlmPy6WrGj5nTOVTfIn876kGABVuY=;
-	b=Fa6wSSatR7tMh9c19HLWmwCHUKAPx8BnougFcDgK8iShld7PT9pgq71MkjBu2UuAI9kXsF
-	XsBoGAXWBCrnQmisgtBU8fvWdVSlzVg6DJ6jDt7Z2tJqb9Nyq7YnRJHzp9bFGV9UsYg3yG
-	oc/1y4Rd4KaS0LrszHjdfjDAMwmZ9/gyL4dGUqlqiPgJfk4lkoOgdKov1ITkBlyGRxZ7tW
-	nwbyS3Za9zH3aAwrkIgRufzCDTk9iTu7IOqUAyg/cQ8idhi0k5OBu/gki3Bt8taUSUwxmH
-	j+b/8zcKJfOcVRiEfC9DJIv3SrbdROq09tqCuLiwUT+NWsukTBk5P5+CjRRceQ==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Lizhi Hou <lizhi.hou@amd.com>,
-	Max Zhen <max.zhen@amd.com>,
-	Sonal Santan <sonal.santan@amd.com>,
-	Stefano Stabellini <stefano.stabellini@xilinx.com>,
-	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Nuno Sa <nuno.sa@analog.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v4 0/2] Synchronize DT overlay removal with devlink removals
-Date: Wed,  6 Mar 2024 09:50:01 +0100
-Message-ID: <20240306085007.169771-1-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="MxQcwssL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709715085; x=1741251085;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1bwISmyy1PxfGsJiZe7IrdJTGba+bmITcKZYdxhr350=;
+  b=MxQcwssLSiTzshsUFg9Gja66ecO/ryIcPEeNST/wzGGixyML3rsxajiv
+   WUdRJQhyXdl3r2Y02/ldN+a4NF1xf8IgC6MmgVdJvmH9lTlNeklO2EnbM
+   2A9IGPIdQRJ6o8yBgyTRTK8BkFzPlR6pBMj784iyI5ql9C0zhLyjzc3J3
+   pBUKgVwmUcWetGhoYPRJGSXTFylAJtqT60ZDoWISe/IDTTP0i9ZlojV/5
+   iA7Q8YSh3VXRNOKBopRYqIhJENItXdSnqZ/PBE0LKLRXdJCDYb94va8Hq
+   Gz+mrzLnh7akg0WAET3ZbS/NoCOcHVyqU3yqWGvsEhFT/QOsV4GWGoWTx
+   Q==;
+X-CSE-ConnectionGUID: dD6mxt9eTkeG+LSdBVuFYA==
+X-CSE-MsgGUID: 2qrX19q2QK6u1B8+LI46hw==
+X-IronPort-AV: E=Sophos;i="6.06,207,1705388400"; 
+   d="scan'208";a="17265143"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Mar 2024 01:51:24 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Mar 2024 01:51:12 -0700
+Received: from CHE-LT-I17164LX.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 6 Mar 2024 01:51:03 -0700
+From: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>, <saeedm@nvidia.com>,
+	<anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <andrew@lunn.ch>, <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <horatiu.vultur@microchip.com>,
+	<ruanjinjie@huawei.com>, <steen.hegelund@microchip.com>,
+	<vladimir.oltean@nxp.com>
+CC: <UNGLinuxDriver@microchip.com>, <Thorsten.Kummermehr@microchip.com>,
+	<Pier.Beruto@onsemi.com>, <Selvamani.Rajagopal@onsemi.com>,
+	<Nicolas.Ferre@microchip.com>, <benjamin.bigler@bernformulastudent.ch>,
+	Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Subject: [PATCH net-next v3 04/12] net: ethernet: oa_tc6: implement software reset
+Date: Wed, 6 Mar 2024 14:20:09 +0530
+Message-ID: <20240306085017.21731-5-Parthiban.Veerasooran@microchip.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
+References: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain
 
-Hi,
+Reset complete bit is set when the MAC-PHY reset completes and ready for
+configuration. Additionally reset complete bit in the STS0 register has
+to be written by one upon reset complete to clear the interrupt.
 
-In the following sequence:
-  of_platform_depopulate(); /* Remove devices from a DT overlay node */
-  of_overlay_remove(); /* Remove the DT overlay node itself */
+Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+---
+ drivers/net/ethernet/oa_tc6.c | 53 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-Some warnings are raised by __of_changeset_entry_destroy() which  was
-called from of_overlay_remove():
-  ERROR: memory leak, expected refcount 1 instead of 2 ...
-
-The issue is that, during the device devlink removals triggered from the
-of_platform_depopulate(), jobs are put in a workqueue.
-These jobs drop the reference to the devices. When a device is no more
-referenced (refcount == 0), it is released and the reference to its
-of_node is dropped by a call to of_node_put().
-These operations are fully correct except that, because of the
-workqueue, they are done asynchronously with respect to function calls.
-
-In the sequence provided, the jobs are run too late, after the call to
-__of_changeset_entry_destroy() and so a missing of_node_put() call is
-detected by __of_changeset_entry_destroy().
-
-This series fixes this issue introducing device_link_wait_removal() in
-order to wait for the end of jobs execution (patch 1) and using this
-function to synchronize the overlay removal with the end of jobs
-execution (patch 2).
-
-Compared to the previous iteration:
-  https://lore.kernel.org/linux-kernel/20240229105204.720717-1-herve.codina@bootlin.com/
-this v4 series:
-- Uses flush_workqueue()
-- Keep the of_mutex lock taken calling device_link_wait_removal()
-- Perform the wait in of_changeset_destroy()
-
-This series handles cases reported by Luca [1] and Nuno [2].
-  [1]: https://lore.kernel.org/all/20231220181627.341e8789@booty/
-  [2]: https://lore.kernel.org/all/20240205-fix-device-links-overlays-v2-2-5344f8c79d57@analog.com/
-
-Best regards,
-Hervé
-
-Changes v3 -> v4
-  - Patch 1
-    Uses flush_workqueue() instead of drain_workqueue().
-
-  - Patch 2
-    Remove unlock/re-lock when calling device_link_wait_removal()
-    Move device_link_wait_removal() call to of_changeset_destroy()
-    Update commit log
-
-Changes v2 -> v3
-  - Patch 1
-    No changes
-
-  - Patch 2
-    Add missing device.h
-
-Changes v1 -> v2
-  - Patch 1
-    Rename the workqueue to 'device_link_wq'
-    Add 'Fixes' tag and Cc stable
-
-  - Patch 2
-    Add device.h inclusion.
-    Call device_link_wait_removal() later in the overlay removal
-    sequence (i.e. in free_overlay_changeset() function).
-    Drop of_mutex lock while calling device_link_wait_removal().
-    Add	'Fixes'	tag and Cc stable
-
-Herve Codina (2):
-  driver core: Introduce device_link_wait_removal()
-  of: dynamic: Synchronize of_changeset_destroy() with the devlink
-    removals
-
- drivers/base/core.c    | 26 +++++++++++++++++++++++---
- drivers/of/dynamic.c   |  7 +++++++
- include/linux/device.h |  1 +
- 3 files changed, 31 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/net/ethernet/oa_tc6.c b/drivers/net/ethernet/oa_tc6.c
+index 35e377577ba4..e9ddc4ff7d0d 100644
+--- a/drivers/net/ethernet/oa_tc6.c
++++ b/drivers/net/ethernet/oa_tc6.c
+@@ -6,8 +6,18 @@
+  */
+ 
+ #include <linux/bitfield.h>
++#include <linux/iopoll.h>
+ #include <linux/oa_tc6.h>
+ 
++/* OPEN Alliance TC6 registers */
++/* Reset Control and Status Register */
++#define OA_TC6_REG_RESET			0x0003
++#define RESET_SWRESET				BIT(0)	/* Software Reset */
++
++/* Status Register #0 */
++#define OA_TC6_REG_STATUS0			0x0008
++#define STATUS0_RESETC				BIT(6)	/* Reset Complete */
++
+ /* Control command header */
+ #define OA_TC6_CTRL_HEADER_DATA_NOT_CTRL	BIT(31)
+ #define OA_TC6_CTRL_HEADER_WRITE		BIT(29)
+@@ -24,6 +34,8 @@
+ 						(OA_TC6_CTRL_MAX_REGISTERS *\
+ 						OA_TC6_CTRL_REG_VALUE_SIZE) +\
+ 						OA_TC6_CTRL_IGNORED_SIZE)
++#define STATUS0_RESETC_POLL_DELAY		5
++#define STATUS0_RESETC_POLL_TIMEOUT		100
+ 
+ /* Internal structure for MAC-PHY drivers */
+ struct oa_tc6 {
+@@ -279,6 +291,39 @@ int oa_tc6_write_register(struct oa_tc6 *tc6, u32 address, u32 value)
+ }
+ EXPORT_SYMBOL_GPL(oa_tc6_write_register);
+ 
++static int oa_tc6_read_sw_reset_status(struct oa_tc6 *tc6)
++{
++	u32 regval;
++	int ret;
++
++	ret = oa_tc6_read_register(tc6, OA_TC6_REG_STATUS0, &regval);
++	if (ret)
++		return 0;
++
++	return regval;
++}
++
++static int oa_tc6_sw_reset_macphy(struct oa_tc6 *tc6)
++{
++	u32 regval = RESET_SWRESET;
++	int ret;
++
++	ret = oa_tc6_write_register(tc6, OA_TC6_REG_RESET, regval);
++	if (ret)
++		return ret;
++
++	/* Poll for soft reset complete for every 5us until 100us timeout */
++	ret = readx_poll_timeout(oa_tc6_read_sw_reset_status, tc6, regval,
++				 regval & STATUS0_RESETC,
++				 STATUS0_RESETC_POLL_DELAY,
++				 STATUS0_RESETC_POLL_TIMEOUT);
++	if (ret)
++		return -ENODEV;
++
++	/* Clear the reset complete status */
++	return oa_tc6_write_register(tc6, OA_TC6_REG_STATUS0, regval);
++}
++
+ /**
+  * oa_tc6_init - allocates and initializes oa_tc6 structure.
+  * @spi: device with which data will be exchanged.
+@@ -289,6 +334,7 @@ EXPORT_SYMBOL_GPL(oa_tc6_write_register);
+ struct oa_tc6 *oa_tc6_init(struct spi_device *spi)
+ {
+ 	struct oa_tc6 *tc6;
++	int ret;
+ 
+ 	tc6 = devm_kzalloc(&spi->dev, sizeof(*tc6), GFP_KERNEL);
+ 	if (!tc6)
+@@ -311,6 +357,13 @@ struct oa_tc6 *oa_tc6_init(struct spi_device *spi)
+ 	if (!tc6->spi_ctrl_rx_buf)
+ 		return NULL;
+ 
++	ret = oa_tc6_sw_reset_macphy(tc6);
++	if (ret) {
++		dev_err(&tc6->spi->dev,
++			"MAC-PHY software reset failed: %d\n", ret);
++		return NULL;
++	}
++
+ 	return tc6;
+ }
+ EXPORT_SYMBOL_GPL(oa_tc6_init);
 -- 
-2.43.0
+2.34.1
 
