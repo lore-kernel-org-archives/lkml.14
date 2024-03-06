@@ -1,86 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDC51D543
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 22:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D87F1C2A5
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 22:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709764702; cv=none; b=o/Iv1zyZIawyQ1PndfTACnxTctKTeTl4n3shp44v4/N14Bx2P6CkCBgEFRBZnT7EbvnbrFA6pWlxAyiPCf4m9g6t6zi3MxFWtXVOpklNT5SZHkkdnj5b0++I2gHn8DmBFM81dI7T9/hd9XJWTFx6wK6QzKRXBB6BwvYzins3QUc=
+	t=1709764773; cv=none; b=oPg95UWPU036dSuoNVQURAbFQnPM70EBZFYbv9vXu0OY8EB3PG+0XeYnSBPDX9ATkg/o/TQ7uNpdVf3VAawHOItXULL0MV6hCIQDVXwYETS5lpbnDFhsTdY6KUADCyZSWXQRjXVVGnWwdcxh89JgM3z4BPKiMvlr5W36+iK72Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709764702; c=relaxed/simple;
-	bh=ffbOlrqTwYJ/jZ1HLkY21kGOkQvioZziUqhpiJPsuSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PdgakL9SnPnKe2gh/QaquQbeFnXbXkwNtx3syRmdK0OFDhnJgzvFryeHhu6rkvx2vX72ESBpjI7gMSfuIIXuy1ww/a+4fGJWWhVegXjQMtG0/A63EwbU/TJ3O+XNOv/bXUly76hb5mIUXddAEFkRkAcWaoFjL4rvFLi7DV1H9qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CS3XLq5h; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709764773; c=relaxed/simple;
+	bh=JxK17bHEwL0YPMpQY4ljZfLKRGGd9JkkHlt2xcABl+s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dle3xWld9PkBhCsxpJhfHxcAR8WcGbvw5sv3NrGy3lbo2OdA0cV09G07avbFpWrTShtItqd+wzwxpOfElPbsGx2PX6qvo9flqh3rtblEqU9VRu8uHkyS5ZwyaDcvDtXBqRzL8BXIaV0m0InjYSLZlCVn9Ms/BLmp7hsihWqIrws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pThmoOQf; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CS3XLq5h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709764700;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+ifJ4/8mTgVXdkLtTQ3Zdd4IQQKyln2F43BUCv9cvQ8=;
-	b=CS3XLq5h16WmoVVeP9LX6EpxJDzHxv9ljD+Px7NlYuMl4msGWRj7nI7BhJhYjW5t9kcABm
-	4zVxNA0EOopBGLLpQL+K6YBKCWrM3GF3QcbRI22riUtZd8Jq73y+0oOkfPh2aPQwtaOPa7
-	MkxrgjxV5+GZSkBhj7d7jAciC5afErs=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-639-mYyl0hfOMk2bG2oTxsARlA-1; Wed,
- 06 Mar 2024 17:38:18 -0500
-X-MC-Unique: mYyl0hfOMk2bG2oTxsARlA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0944F280480C;
-	Wed,  6 Mar 2024 22:38:02 +0000 (UTC)
-Received: from localhost.redhat.com (unknown [10.22.9.120])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 58820111D792;
-	Wed,  6 Mar 2024 22:38:01 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ben@decadent.org.uk,
-	shuah@kernel.org,
-	akpm@linux-foundation.org,
-	usama.anjum@collabora.com
-Subject: [PATCH v2 0/3] selftests/mm: Improve Hugepage Test Handling in MM Selftests
-Date: Wed,  6 Mar 2024 15:37:11 -0700
-Message-ID: <20240306223714.320681-1-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pThmoOQf"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dbed179f0faso1110287276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 14:39:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709764770; x=1710369570; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JxK17bHEwL0YPMpQY4ljZfLKRGGd9JkkHlt2xcABl+s=;
+        b=pThmoOQfMz+w/vR7mFY0J5Qc+bczUVAC1A81/prY6W3YPurWE4Bb88z60JRKwMNONn
+         EgZ/korQnPoPIGuD5J2Y0TIbwdEJc8y59X4l+4RSfPnX0V7pamJcztyDgURUpOM44Ihe
+         bUM9fb6wghwFVAQ2/0FHyrMUakYeNWeOsqjpYHfogZhpZVFddKtrfRZU+Eu+JyC4oJn9
+         Vt95RkVzgU+AK2Lyxu4I9GPV9vSZjj6lp4UCqL9b+StJHYDUI22sWdyPKOwCvCYmBprP
+         ZsECEwZWw+UpvwX19PUAFPRAFc1gwwoqRmNoSIWwDY8eWng/+/+44RnGEkGwIeKvEuMo
+         dI/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709764770; x=1710369570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JxK17bHEwL0YPMpQY4ljZfLKRGGd9JkkHlt2xcABl+s=;
+        b=HOpfMDwGABRYOaKLarvWR2SuhENN5jYnlZzlxsYpV15LMrrxgT9qD16F8nPTnTfqo6
+         3iVPGV8G15d/e3bhwNHWBCp/yEqg+rKvshpPS8rotM9C7mmXN+AxRcGgw7sh0ykzYrJF
+         z0dsQffZa+IfjAB4dfw7ra4Rx76O2DWDcLxvVqfG1umN19S8D6rzeFFbNB5uHJzjEtLq
+         SqYEcuExuITD3D3cMZuqiGhLhdoQXs8Flzm3NQ6uHko9XipdMkC9KoxpBZ/kaUfH3ick
+         hR9kANqnypJyij3orItu8DiS1FOLYqpNa1dExRDDdvBNmatccgzmrjkANm0IbwOoMHKJ
+         y76Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWpH2Beg7griVyc0GFCX9alqdXFnqqZowHQ/a6ly48AEUtbFr+0r8CvaqSQAYz4sF1g6Yl1OcrPG1zRzqOOozfEVGoPay5L9KuWFR4L
+X-Gm-Message-State: AOJu0YywE9nl5Si1msTlFDSGwrbdgNF1v6vSW1MZjISmu1p/pavlpFy0
+	d1mT6hSrgF9jRoEhp4rfIZKWeVTLQ1coO4wmB731a/8JzblXHJpocoP8VG08ECmdd9zS2tmHlzF
+	LUvb4KNkkjg0UyXpjC+NAsBs6BGU7NRkbl0o+ew==
+X-Google-Smtp-Source: AGHT+IF61VY2gTAQCgd0GZml0xM8R/GEGUIKU510VpCSAhmbFuO44X6XOlsxI9rQaspybfokha3bpCBK5RV4BUdg46A=
+X-Received: by 2002:a25:d652:0:b0:dcf:eb30:c580 with SMTP id
+ n79-20020a25d652000000b00dcfeb30c580mr1222007ybg.3.1709764770305; Wed, 06 Mar
+ 2024 14:39:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+References: <20240306-mmc-partswitch-v1-1-bf116985d950@codewreck.org>
+ <Zegx5PCtg6hs8zyp@trax> <CACRpkdYZrDgVVCp2bqJqY1BpeHSXDWbRSqk6d=N_QhC4OVv=Ew@mail.gmail.com>
+ <Zeh8HGDToMoHglD2@trax> <CACRpkdZ1ervTXj6++oBPDNJT3TpVgPeYsyhaEMRYavJQ5iZPqg@mail.gmail.com>
+ <CAPDyKFqYDPgNjSkpH=XATkUY2XtjsaDstChcAnGxoas4jgDVfw@mail.gmail.com> <CACRpkdaUUD8UMp9GxNVQfdAM8QV_LASp-k5hh1cvQrGVHKySKA@mail.gmail.com>
+In-Reply-To: <CACRpkdaUUD8UMp9GxNVQfdAM8QV_LASp-k5hh1cvQrGVHKySKA@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 6 Mar 2024 23:38:53 +0100
+Message-ID: <CAPDyKFrdki=OyQWHghF6R3ukv9R6FRQfxRbUrSKfVJ+CNCjXTQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: part_switch: fixes switch on gp3 partition
+To: Linus Walleij <linus.walleij@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>
+Cc: "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>, Jens Wiklander <jens.wiklander@linaro.org>, 
+	Tomas Winkler <tomas.winkler@intel.com>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Dominique Martinet <dominique.martinet@atmark-techno.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This series addresses issues related to hugepage requirements in the MM
-selftests, ensuring tests are skipped rather than failing when the
-necessary hugepage count is not met.
+On Wed, 6 Mar 2024 at 20:49, Linus Walleij <linus.walleij@linaro.org> wrote=
+:
+>
+> On Wed, Mar 6, 2024 at 4:57=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
+g> wrote:
+> > On Wed, 6 Mar 2024 at 15:38, Linus Walleij <linus.walleij@linaro.org> w=
+rote:
+>
+> > > We should probably rename it part_cfg because that is what we
+> > > store in it, it's assigned from card->part[idx].part_cfg.
+> > >
+> > > Then the id field in mmc_rpmb_data should be deleted along
+> > > with all the IDA counter code etc and the partition name hardcoded
+> > > to be "0" as there will never be anything else.
+> >
+> > Seems reasonable to me. Are you thinking of sending a cleanup patch on
+> > top of $subject patch?
+>?
+> Yes I can do that once this patch is finalized and merged.
 
-This adjustment allows for a more graceful handling for systems with
-insufficient hugepages, preventing unnecessary test failures and improving
-the overall robustness of the test suite.
+Great!
 
-Nico Pache (3):
-  selftests/mm: Dont fail testsuite due to a lack of hugepages
-  selftests/mm: Skip uffd hugetlb tests with insufficient hugepages
-  selftests/mm: Skip the hugetlb-madvise tests on unmet hugepage
-    requirements
+I don't think the $subject patch is perfect, but it's slim and
+suitable for stable - and of course it seems to do the job well. I am
+therefore queuing it for fixes, thanks everyone for helping out!
 
-Changes from v1:
-  - Added checks to skip tests when hugepage requirements are not met, rather
-    than exiting with a failure.
-
- tools/testing/selftests/mm/hugetlb-madvise.c | 2 +-
- tools/testing/selftests/mm/run_vmtests.sh    | 1 -
- tools/testing/selftests/mm/uffd-stress.c     | 6 ++++++
- 3 files changed, 7 insertions(+), 2 deletions(-)
-
--- 
-2.44.0
-
+Kind regards
+Uffe
