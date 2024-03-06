@@ -1,38 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B22F13BAF5;
-	Wed,  6 Mar 2024 17:59:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D43013BAE8;
+	Wed,  6 Mar 2024 17:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709747972; cv=none; b=MkInxexV3wsehVD6fYaO/jWOmc4ncFmshpXt7Kn0NSDQAMWw7Xx9R6qJDYMJeGSjtugbZjuKC0a2OrpMzpAKUTAaZNp4mcBuv9owfZ1fh2sAACgTwwfHiSbbWKoIxc/vxZFQWuRyS+Oqu5KFPE/B5XFnpfuJav/293nDqc7H1Hg=
+	t=1709747974; cv=none; b=o+m4K+GbSucSBJv/sd8148SqgnvyqKkOqFX6jLqscMAswoO9EhBpMSCZU6uD8Z6x5+9FACXSBbhLz5pPb8nYaMfI70fZAMxqsYbmXiFPq4ubJEi+O8WH4MlYhLi08l39SZHOL9kwLKOXaatGUorTqZrjDyPf6tSH4RntbqFrndg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709747972; c=relaxed/simple;
-	bh=7rNmIiJvHZRRcyxK8sahGbJdTPGuTBAHirBOnXT5Ozk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gVZE3Nhq2e5oKgIpz5sD8+dn1yCB7NfjL8XuClaIw2x8N0GdxZW/uZEDwS5HqWzWppE9YNGSIotVKQ96gxFGwdXpCHUjkTlMSYP4CqhAnxvM6k+s+R1GoIes1nLK2VvzKlLjRchaxOaOtU0mkoANbPdMC3Q55qH1eG6VjcTDtQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XrHjw7j1; arc=none smtp.client-ip=217.70.183.194
+	s=arc-20240116; t=1709747974; c=relaxed/simple;
+	bh=wgh9N+CBwM+aLjQ27FC0mOmFRQB+O0TwEfCz4geWpIE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=E5taDnps7b5Uku/HLMUbWJlU8UZssEFJ9MO5Ra6ZW3yMctWv4hfc49talMz0VunnwNNbRexdZp/fPAUzrzUP36cCMaG2TT79kU9FI99qEtpKf+T4mdyyXBmtypLMHdvX6OD2n6hXwxVOeBSegjPclwaHXSr0vDBS0dac/wMFKoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zio+a3KE; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XrHjw7j1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6690940002;
-	Wed,  6 Mar 2024 17:59:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zio+a3KE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 344424000C;
+	Wed,  6 Mar 2024 17:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709747963;
+	t=1709747968;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=feUsser08/oRbJl8T+/+meJYT6wkDGmgBWV/M3Vs1vU=;
-	b=XrHjw7j1yFLFY+SWL4phvU+R0M4qjVf9pCSNLN3GOiFINCKTO6V8tZqhb+X5qiZcr2mclM
-	FZ8SY4jubBSJBqmweKAnFsmx8gHYy+12Skxl9jUT7UCcZt5v6Ovt0bnMi4pRQ9qcObsdSe
-	gA3ptXKBzX0o98XKq41+ouc0xxlO2u12B8woLgVKI3T+tDfc/r7vZ0yyIPcc+FcNfqDSTU
-	dGDk8z9qv2u0826HicHpB1OUaE4v3scJYew4EjFr4yaFtYQByEhTSyH9g5EKX0DYgpIsrL
-	5RM6chw1hCg25gQreIDt1EcOuG6TZTQGHckB02375C26IOA12aYQbHM/WEbe6g==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9EX9mJDEuqhUN3QW7p56boj+54Mj8nqPeRzDwy82z70=;
+	b=Zio+a3KEXeQf48OxvYj7ANhA3w9M6odw+pGds9x6jNnUAP3WmOqyj/VNrZkXU8etxXVGld
+	7eTgLVs2Ij+gvy/3Dqoczmymq0qJ9OUB4ukHODzCbFXs6QiGqFVwwLI720iwlbKVELvBye
+	kz6BMOOICV7ioSLjzxzchvj6Ply91GZZcLahCOoJtC6vZKWT5O7jl/OvgrdjwkXVUgjH2Z
+	5R4HCOIgNy0MJ76skYpJQgWSq7LrEUKi+/S15Aslu41USRz+8Yr1whWsEQZbUH6AtLdyyu
+	q0nckTBXSz6wnAlMtrmU9uo60dtpGauTc5zUp1I+PCRV3dfjFPl55uJjgzXnWA==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: [PATCH v3 00/11] Add Mobileye EyeQ5 support to the Nomadik I2C
- controller & use hrtimers for timeouts
-Date: Wed, 06 Mar 2024 18:59:20 +0100
-Message-Id: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
+Date: Wed, 06 Mar 2024 18:59:28 +0100
+Subject: [PATCH v3 08/11] i2c: nomadik: support Mobileye EyeQ5 I2C
+ controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAPiu6GUC/1WMzQ6CMBAGX4Xs2Zru1h/qyfcwHmgpsglQ05JGQ
- nh3CxfxsIfZfDMzRBfYRbgVMwSXOLIfMqhDAbathpcTXGcGkqQwn+hNNwkmK66WGmMMktYN5Pk
- 7uIY/W+rxzNxyHH2YtnLC9btGTpLw/IskFFKgrpS6OI21re7G+7Hj4Wh9D2sm0U4lvVMpq0aRq
- 7G0Upf2X12W5QsnrkFb3QAAAA==
+Message-Id: <20240306-mbly-i2c-v3-8-605f866aa4ec@bootlin.com>
+References: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
+In-Reply-To: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
@@ -56,142 +56,214 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
  Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hi,
+Add compatible for the integration of the same DB8500 IP block into the
+Mobileye EyeQ5 platform. Two quirks are present:
 
-This series adds two tangent features to the Nomadik I2C controller:
+ - The memory bus only supports 32-bit accesses. Avoid writeb() and
+   readb() by introducing helper functions that fallback to writel()
+   and readl().
 
- - Add a new compatible to support Mobileye EyeQ5 which uses the same IP
-   block as Nomadik.
+ - A register must be configured for the I2C speed mode; it is located
+   in a shared register region called OLB. We access that memory region
+   using a syscon & regmap that gets passed as a phandle (mobileye,olb).
 
-   It has two quirks to be handled:
-    - The memory bus only supports 32-bit accesses. Avoid readb() and
-      writeb() calls that might generate byte load/store instructions.
-    - We must write a value into a shared register region (OLB)
-      depending on the I2C bus speed.
+   A two-bit enum per controller is written into the register; that
+   requires us to know the global index of the I2C controller (cell arg
+   to the mobileye,olb phandle).
 
- - Allow xfer timeouts below one jiffy by using a waitqueue and hrtimers
-   instead of a completion.
+We add #include <linux/mfd/syscon.h> and <linux/regmap.h>.
 
-   The situation to be addressed is:
-    - Many devices on the same I2C bus.
-    - One xfer to each device is sent at regular interval.
-    - One device gets stuck and does not answer.
-    - With long timeouts, following devices won't get their message. A
-      shorter timeout ensures we can still talk to the following
-      devices.
-
-   This clashes a bit with the current i2c_adapter timeout field that
-   stores a jiffies amount. We therefore avoid it and store the value
-   in a private struct field, as a µs amount. If the timeout is less
-   than a jiffy duration, we switch from standard jiffies timeout to
-   hrtimers.
-
-About dependencies:
- - For testing on EyeQ5 hardware and devicetree patches, we need the
-   base platform series from Grégory [0] and its dependency [1]. Both
-   in mips-next [2].
- - Devicetree commits require the EyeQ5 syscon series [3] that provides
-   the reset controller node.
-
-Have a nice day,
-Théo Lebrun
-
-[0]: https://lore.kernel.org/lkml/20240216174227.409400-1-gregory.clement@bootlin.com/
-[1]: https://lore.kernel.org/linux-mips/20240209-regname-v1-0-2125efa016ef@flygoat.com/
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/log/
-[3]: https://lore.kernel.org/lkml/20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com/
-
-To: Linus Walleij <linus.walleij@linaro.org>
-To: Andi Shyti <andi.shyti@kernel.org>
-To: Rob Herring <robh+dt@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Cc: <linux-i2c@vger.kernel.org>
-Cc: <devicetree@vger.kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
-Cc: <linux-mips@vger.kernel.org>
-Cc: Gregory Clement <gregory.clement@bootlin.com>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-
-Changes in v3:
-- dt-bindings:
-  - hwmon: lm75: drop patch taken into hwmon-next.
-  - i2c: nomadik: remove superfluous "The variant found in..." comments.
-- i2c: nomadik:
-  - Add style fixes description in commit message of "rename private
-    struct pointers from dev to priv".
-  - Improve commit message of "simplify IRQ masking logic".
-  - introduce ADR_3MSB_BITS constant to avoid magic GENMASK() in code.
-  - Introduce enum i2c_operating_mode to avoid magic 0b01 in
-    DEFAULT_I2C_REG_CR. Named as in manual, using outdated terms.
-  - i2c_irq_handler(): add newline and split declaration and assignment
-    in I2C_IT_BERR case.
-  - Make timeout_usecs an u32 rather than int; avoid superfluous cast.
-  - nmk_i2c_probe(): remove extraneous debug log.
-  - nmk_i2c_eyeq5_probe():
-    - Straight return error and remove useless handling of NULL. Put
-      dev_err_probe() call in probe().
-    - Add ID value check.
-    - Add enum for speed mode values.
-    - Add static array for masks.
-  - Reorder includes in separate commit from Mobileye support.
-- Take trailers from Andi, Wolfram and Linus.
-- Link to v2: https://lore.kernel.org/r/20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com
-
-Changes in v2:
-- dt-bindings: i2c: st,nomadic-i2c:
-  - Drop timeout-usecs property, rely on generic i2c-transfer-timeout-us.
-  - Use phandle to syscon with cell args; remove mobileye,id prop; move
-    mobileye,olb from if-statement to top-level.
-- dt-bindings: hwmon: lm75:
-  - Inherit from hwmon-common.yaml rather than declare generic label property.
-- i2c: nomadik: (ie driver code)
-  - Parse i2c-transfer-timeout-us rather than custom timeout-usecs property.
-  - Introduce readb/writeb helpers with fallback to readl/writel.
-  - Avoid readb() on Mobileye.
-  - Use mobileye,olb cell args to get controller index rather than mobileye,id.
-  - Take 5 Reviewed-by Linus Walleij.
-- MIPS: mobileye: (ie devicetrees)
-  - Use mobileye,olb with cell args rather than mobileye,id.
-  - Squash reset commit.
-  - Add i2c-transfer-timeout-us value of 10ms to all controllers.
-  - Rename LM75 instance from tmp112@48 to temperature-sensor@48.
-- Link to v1: https://lore.kernel.org/r/20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com
-
 ---
-Théo Lebrun (11):
-      dt-bindings: i2c: nomadik: add mobileye,eyeq5-i2c bindings and example
-      i2c: nomadik: rename private struct pointers from dev to priv
-      i2c: nomadik: simplify IRQ masking logic
-      i2c: nomadik: use bitops helpers
-      i2c: nomadik: support short xfer timeouts using waitqueue & hrtimer
-      i2c: nomadik: replace jiffies by ktime for FIFO flushing timeout
-      i2c: nomadik: fetch i2c-transfer-timeout-us property from devicetree
-      i2c: nomadik: support Mobileye EyeQ5 I2C controller
-      i2c: nomadik: sort includes
-      MIPS: mobileye: eyeq5: add 5 I2C controller nodes
-      MIPS: mobileye: eyeq5: add evaluation board I2C temp sensor
+ drivers/i2c/busses/i2c-nomadik.c | 90 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 86 insertions(+), 4 deletions(-)
 
- .../devicetree/bindings/i2c/st,nomadik-i2c.yaml    |  49 +-
- arch/mips/boot/dts/mobileye/eyeq5-epm5.dts         |   8 +
- arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  75 +++
- drivers/i2c/busses/i2c-nomadik.c                   | 740 ++++++++++++---------
- 4 files changed, 558 insertions(+), 314 deletions(-)
----
-base-commit: 70a29ee8ef53a09ab62b46540c12ccb94a4a8532
-change-id: 20231023-mbly-i2c-7c2fbbb1299f
+diff --git a/drivers/i2c/busses/i2c-nomadik.c b/drivers/i2c/busses/i2c-nomadik.c
+index 2e738b18677e..7d039bd36aa6 100644
+--- a/drivers/i2c/busses/i2c-nomadik.c
++++ b/drivers/i2c/busses/i2c-nomadik.c
+@@ -6,6 +6,12 @@
+  * I2C master mode controller driver, used in Nomadik 8815
+  * and Ux500 platforms.
+  *
++ * The Mobileye EyeQ5 platform is also supported; it uses
++ * the same Ux500/DB8500 IP block with two quirks:
++ *  - The memory bus only supports 32-bit accesses.
++ *  - A register must be configured for the I2C speed mode;
++ *    it is located in a shared register region called OLB.
++ *
+  * Author: Srinidhi Kasagar <srinidhi.kasagar@stericsson.com>
+  * Author: Sachin Verma <sachin.verma@st.com>
+  */
+@@ -22,6 +28,8 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/of.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
+ 
+ #define DRIVER_NAME "nmk-i2c"
+ 
+@@ -110,6 +118,15 @@ enum i2c_freq_mode {
+ 	I2C_FREQ_MODE_FAST_PLUS,	/* up to 1 Mb/s */
+ };
+ 
++/* Mobileye EyeQ5 offset into a shared register region (called OLB) */
++#define NMK_I2C_EYEQ5_OLB_IOCR2			0x0B8
++
++enum i2c_eyeq5_speed {
++	I2C_EYEQ5_SPEED_FAST,
++	I2C_EYEQ5_SPEED_FAST_PLUS,
++	I2C_EYEQ5_SPEED_HIGH_SPEED,
++};
++
+ /**
+  * struct i2c_vendor_data - per-vendor variations
+  * @has_mtdws: variant has the MTDWS bit
+@@ -174,6 +191,7 @@ struct i2c_nmk_client {
+  * @xfer_wq: xfer done wait queue.
+  * @xfer_done: xfer done boolean.
+  * @result: controller propogated result.
++ * @has_32b_bus: controller is on a bus that only supports 32-bit accesses.
+  */
+ struct nmk_i2c_dev {
+ 	struct i2c_vendor_data		*vendor;
+@@ -192,6 +210,7 @@ struct nmk_i2c_dev {
+ 	struct wait_queue_head		xfer_wq;
+ 	bool				xfer_done;
+ 	int				result;
++	bool				has_32b_bus;
+ };
+ 
+ /* controller's abort causes */
+@@ -215,6 +234,24 @@ static inline void i2c_clr_bit(void __iomem *reg, u32 mask)
+ 	writel(readl(reg) & ~mask, reg);
+ }
+ 
++static inline u8 nmk_i2c_readb(const struct nmk_i2c_dev *priv,
++			       unsigned long reg)
++{
++	if (priv->has_32b_bus)
++		return readl(priv->virtbase + reg);
++	else
++		return readb(priv->virtbase + reg);
++}
++
++static inline void nmk_i2c_writeb(const struct nmk_i2c_dev *priv, u32 val,
++				unsigned long reg)
++{
++	if (priv->has_32b_bus)
++		writel(val, priv->virtbase + reg);
++	else
++		writeb(val, priv->virtbase + reg);
++}
++
+ /**
+  * flush_i2c_fifo() - This function flushes the I2C FIFO
+  * @priv: private data of I2C Driver
+@@ -523,7 +560,7 @@ static void fill_tx_fifo(struct nmk_i2c_dev *priv, int no_bytes)
+ 			(priv->cli.count != 0);
+ 			count--) {
+ 		/* write to the Tx FIFO */
+-		writeb(*priv->cli.buffer, priv->virtbase + I2C_TFR);
++		nmk_i2c_writeb(priv, *priv->cli.buffer, I2C_TFR);
+ 		priv->cli.buffer++;
+ 		priv->cli.count--;
+ 		priv->cli.xfer_bytes++;
+@@ -792,7 +829,7 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
+ 	case I2C_IT_RXFNF:
+ 		for (count = rft; count > 0; count--) {
+ 			/* Read the Rx FIFO */
+-			*priv->cli.buffer = readb(priv->virtbase + I2C_RFR);
++			*priv->cli.buffer = nmk_i2c_readb(priv, I2C_RFR);
+ 			priv->cli.buffer++;
+ 		}
+ 		priv->cli.count -= rft;
+@@ -802,7 +839,7 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
+ 	/* Rx FIFO full */
+ 	case I2C_IT_RXFF:
+ 		for (count = MAX_I2C_FIFO_THRESHOLD; count > 0; count--) {
+-			*priv->cli.buffer = readb(priv->virtbase + I2C_RFR);
++			*priv->cli.buffer = nmk_i2c_readb(priv, I2C_RFR);
+ 			priv->cli.buffer++;
+ 		}
+ 		priv->cli.count -= MAX_I2C_FIFO_THRESHOLD;
+@@ -818,7 +855,7 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
+ 				if (priv->cli.count == 0)
+ 					break;
+ 				*priv->cli.buffer =
+-					readb(priv->virtbase + I2C_RFR);
++					nmk_i2c_readb(priv, I2C_RFR);
+ 				priv->cli.buffer++;
+ 				priv->cli.count--;
+ 				priv->cli.xfer_bytes++;
+@@ -996,6 +1033,44 @@ static void nmk_i2c_of_probe(struct device_node *np,
+ 		priv->timeout_usecs = 200 * USEC_PER_MSEC;
+ }
+ 
++static const unsigned int nmk_i2c_eyeq5_masks[] = {
++	GENMASK(5, 4),
++	GENMASK(7, 6),
++	GENMASK(9, 8),
++	GENMASK(11, 10),
++	GENMASK(13, 12),
++};
++
++static int nmk_i2c_eyeq5_probe(struct nmk_i2c_dev *priv)
++{
++	struct device *dev = &priv->adev->dev;
++	struct device_node *np = dev->of_node;
++	unsigned int mask, speed_mode;
++	struct regmap *olb;
++	unsigned int id;
++
++	priv->has_32b_bus = true;
++
++	olb = syscon_regmap_lookup_by_phandle_args(np, "mobileye,olb", 1, &id);
++	if (IS_ERR(olb))
++		return PTR_ERR(olb);
++	if (id >= ARRAY_SIZE(nmk_i2c_eyeq5_masks))
++		return -ENOENT;
++
++	if (priv->clk_freq <= 400000)
++		speed_mode = I2C_EYEQ5_SPEED_FAST;
++	else if (priv->clk_freq <= 1000000)
++		speed_mode = I2C_EYEQ5_SPEED_FAST_PLUS;
++	else
++		speed_mode = I2C_EYEQ5_SPEED_HIGH_SPEED;
++
++	mask = nmk_i2c_eyeq5_masks[id];
++	regmap_update_bits(olb, NMK_I2C_EYEQ5_OLB_IOCR2,
++			   mask, speed_mode << __fls(mask));
++
++	return 0;
++}
++
+ static int nmk_i2c_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+ 	int ret = 0;
+@@ -1012,8 +1087,15 @@ static int nmk_i2c_probe(struct amba_device *adev, const struct amba_id *id)
+ 
+ 	priv->vendor = vendor;
+ 	priv->adev = adev;
++	priv->has_32b_bus = false;
+ 	nmk_i2c_of_probe(np, priv);
+ 
++	if (of_device_is_compatible(np, "mobileye,eyeq5-i2c")) {
++		ret = nmk_i2c_eyeq5_probe(priv);
++		if (ret)
++			return dev_err_probe(dev, ret, "failed OLB lookup\n");
++	}
++
+ 	if (priv->tft > max_fifo_threshold) {
+ 		dev_warn(dev, "requested TX FIFO threshold %u, adjusted down to %u\n",
+ 			 priv->tft, max_fifo_threshold);
 
-Best regards,
 -- 
-Théo Lebrun <theo.lebrun@bootlin.com>
+2.44.0
 
