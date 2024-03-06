@@ -1,134 +1,112 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869336FBD
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 03:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9DCDDAB
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 03:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709694461; cv=none; b=A7Uee92gGFVKnGSWZUFGAHff/Gd8VdqrzN8LjNzf5jwyv/0wTOUXqBc6v8dYvKLsQ4w6n8JmMBPhb/FoFVKHdaYvae/5o84Abk1a8iZnAv6rJC7NubuprgMlHtTJc4DU1yP+Pcw2pRFw/JAfGSXyFa7rgINaxaspENfeQ7F+htQ=
+	t=1709694476; cv=none; b=D/tWGYzcUIwTw+QXUA9LnQxm2UMh3+QoW3V8JIdeahpdbKaHvKexerg9d8YcOU8oSYGGjCktjmdp1+JitXrmXkzzgxygCNPMOdMHh+rqA3d4A+YCaOz6njTFhWSS1WATdJaSTwpvRFwkks5yq454pM9wws+An4wqpMshkYvtTtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709694461; c=relaxed/simple;
-	bh=6B1nkuOxoST/+lT2hJKGS+JnQ1uuTVGEHk5JkbzMaMI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bXTqm21Ysem4b9JgkV62gWcd8dkjwYn+2yII9lCmZ1RAlC9y2oFhv7CgYhH84GfUTChboM5odCSClIdrWZbHERmd07XoFzbk8SrjY1JstMcb9f8pKHtQ6a6paXn77BhRecFKM7bDVUWWUZ+WffQhBb3poFlke2TQ59BBUPOhWR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VSIZXhl7; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709694476; c=relaxed/simple;
+	bh=Vtwk64MJfFurchghTacEBkuQ/GO/QTdi/78Hoc2Pm3s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KSd7gZsLOnWwoqWnApeikVBY0s/gOIsdfNunhrOeJEarvqQ2abUQI82wNmpa3mdLA+t/Jyf71RYiqd3e8dhphjqVFLi8xpbOPNkawp6IhQuPiK0G+76Ls0nMPnDfCEMdI/9oa5Of5OJA4D43OElrJeX6ooQv/Aq+4UcD+Juhmlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DlJRNxMm; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VSIZXhl7"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d22b8801b9so91727521fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 19:07:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DlJRNxMm"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29ab78237d2so4386019a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 19:07:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709694457; x=1710299257; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c3G5ilIgHzJp9EnFwdcrT7Tr1Dh0x/+SLzMuY+cXrdc=;
-        b=VSIZXhl73Qt11fRTHrwMG24y89AHLhWlo+7Swvx5TksNxwuo/z+XGuHZKZ870QdYOf
-         gtoKEvXX+vbGbM9TAmikuBdU5Yjgnqm5OA1ZFWP1Px9AzW9wnXC0SS5MbWEHI2z2N3GL
-         /+b3GPkHbe9e/siHx7qq3vxVbnyU4iuAjHhyk=
+        d=bytedance.com; s=google; t=1709694473; x=1710299273; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fpYzOvRaHq4gHEmEypaVl6DouqaHn7yaLW4F5xgQiHk=;
+        b=DlJRNxMmxSvW4Nh4AkV1ahQMFBtNScEn5fC8/zo9dykb9ehHuXOPXNJHMhByFqTWq9
+         AOD6oNLq0JWwdrZ6wkckWi7Boa22luQNcEJW8IeUEiLqcWtOhv3fnhizKp4ea9zMDCYf
+         ge3zyU03iPgYKP4JyFKHuVb9W1Yw6QDz8Jesn12EdR6B1bfwnIoj4hT+XYKwA6sNaNDE
+         B428hH3SP5eyx+u5bIOS596aJrca0ukjjRve251GpJ+F5mzKOK42Mrd2vxCXpf6D0Kw7
+         h48C2q6Yr7QJ/nmaAzB0/Z0r644smjXCtVM7p7ublPOXL+ZnuWj5kOrmr3QkcNO96YL4
+         xEgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709694457; x=1710299257;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c3G5ilIgHzJp9EnFwdcrT7Tr1Dh0x/+SLzMuY+cXrdc=;
-        b=duGuYs5xQ3hvo3IlR0xtn2Sr3MmtBWqA37UxILmZ6dTRkwUfIrZfMl+4bwHidPUvcH
-         wCnUXTcHdd/Qygq23booqkYwnoQrC2NKwDBNyIH6PeDf++mYpcvbALMBovoQU0BweOva
-         DU5WK7SOJEVsgwTt9dHFuCp8Uq3HnwaASbBPGnmu5dwb97sVSlynIAXEK686EXOPQf+N
-         3CTCksBPVnh8uORHKHn+4ghHDsIpWIUIyXPMTKL7U8xWAGZazrueB+9MRKcruQwD3rXy
-         ML/soxmJYF9uuUTvpNPGtvu2Q2vnSGejIVp6mY0iybtK+vpGBCmd99P54x4UcvIkur41
-         9HwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzDYpildDJfNXJCCidSoMsB5hHMf8+J3xGxXsivYBg4pRzlz4FTN8RE5vhSAzYzj2ti8IX4S74Z2mLViiZfEXz9MG/UxevR0rBDwU4
-X-Gm-Message-State: AOJu0YxhxnYCInI2Wcci50iQXClvi1RqvsK4C7NqIsW4cG5vk4gZyNVH
-	NgRm8+KW07Y//TWymz4Lm/J5RUp7zvhFtrFK3wy6YMD4VK3w/Jr4DoYSgM0gVsjS/JZA9IZIfL2
-	wIAq+7fPF32YEgzuRhFTPwkJZm76zLUdFpZHt
-X-Google-Smtp-Source: AGHT+IFd4fYrH7VT+oC7ZfIpSRkqSnwMMbSguOpGCTPqEmdBUEJov0MCaZASXOwtSpdb28dWKW8lrLtkXDn42JRqQ8M=
-X-Received: by 2002:a2e:9e16:0:b0:2d2:d32b:dabf with SMTP id
- e22-20020a2e9e16000000b002d2d32bdabfmr2332926ljk.22.1709694457516; Tue, 05
- Mar 2024 19:07:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709694473; x=1710299273;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fpYzOvRaHq4gHEmEypaVl6DouqaHn7yaLW4F5xgQiHk=;
+        b=AfiPfzhI5g0C7nnWSSRq5GD/ZxYjSvSuRyw34ja5QYzIHWaALHtCFoux9ATa0b7DkT
+         7lbdgnWHOvV6HN+eoF5E37MbraxgYrOHJ0aDMWhFLtTBk9YWHh31UhvfkRJYeXrcVYtX
+         oaFTN7c/8zzuzMULegvFMSt/dKoYar52Nt81vBfBvBLlUCFg3Bp4ipL/hTEoc4W2HMBP
+         oTc+DXpdIIqQNA5Ucm/P137Ikmf1TNQS0b0XJR13enFpe/VTf420PjOHLMIMO2ge++YG
+         wqmTVpR6k5L/UyOG0nIZ5o1rHQ4qLfdN1MN0B8yNSkhuZOp/GZFG52tB6IrHJW4XH5fx
+         hY0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXeUoY0EyEKMWViKMhIpX96pAd3tOshIs4/IsQ9Cvz7xxUeRiHMem43JmMGGWdfeMbS399WHoI179M8IOsHd7M8ab1gNCcDxAqgWeXw
+X-Gm-Message-State: AOJu0Yx4uKi7edmicK8X4jf/Bi9mYNl+PCQ9D7drpNLLHrMdWzSUJXCh
+	BOmlEg6n/td43pMtIo5dRRHt/1y2VPLdk6nh42uL2RZUVWk/hiK8SIFw+Xe5o9w=
+X-Google-Smtp-Source: AGHT+IEkulV0CF0+6jCbcIRX7tivRu/l6oZ/37/IH08UQvwjeOE8FRrP/N47GBJ8LezOo/DmItXFqw==
+X-Received: by 2002:a17:90a:5404:b0:29b:347f:23ea with SMTP id z4-20020a17090a540400b0029b347f23eamr8063152pjh.3.1709694473410;
+        Tue, 05 Mar 2024 19:07:53 -0800 (PST)
+Received: from [10.84.154.116] ([203.208.167.155])
+        by smtp.gmail.com with ESMTPSA id m2-20020a17090a34c200b00298d8804ba8sm13624811pjf.46.2024.03.05.19.07.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Mar 2024 19:07:52 -0800 (PST)
+Message-ID: <10c71757-032f-4aa0-a178-cdc8cff5f2e6@bytedance.com>
+Date: Wed, 6 Mar 2024 11:06:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305-anx7625-v1-1-83ed3ccfa64c@chromium.org>
-In-Reply-To: <20240305-anx7625-v1-1-83ed3ccfa64c@chromium.org>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 6 Mar 2024 11:07:26 +0800
-Message-ID: <CAGXv+5GdgECuCeXGX3MJJRMr3XyMdZkJPyH7e5V+041ViQEi-g@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge:anx7625:Update audio status while detecting
-To: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] sched/eevdf: Always update V if se->on_rq when
+ reweighting
+Content-Language: en-US
+To: Tianchen Ding <dtcccc@linux.alibaba.com>, linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
+References: <20240306022133.81008-1-dtcccc@linux.alibaba.com>
+ <20240306022133.81008-2-dtcccc@linux.alibaba.com>
+From: Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <20240306022133.81008-2-dtcccc@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-Please add a space after the colons in the subject line.
-
-On Tue, Mar 5, 2024 at 8:32=E2=80=AFPM Hsin-Te Yuan <yuanhsinte@chromium.or=
-g> wrote:
->
-> Previously, the audio status was not updated during detection, leading
-> to a persistent audio despite hot plugging events. To resolve this
-
-                       ^ it feels like this sentence is incomplete.
-
-> issue, update the audio status during detection.
-
-Please add a Fixes: tag.
-
-> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+On 3/6/24 10:21 AM, Tianchen Ding Wrote:
+> reweight_eevdf() needs the latest V to do accurate calculation for new
+> ve and vd. So update V unconditionally when se is runnable.
+> 
+> Fixes: eab03c23c2a1 ("sched/eevdf: Fix vruntime adjustment on reweight")
+> Suggested-by: Abel Wu <wuyun.abel@bytedance.com>
+> Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
 > ---
->  drivers/gpu/drm/bridge/analogix/anx7625.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/=
-bridge/analogix/anx7625.c
-> index 29d91493b101a..9f0d0c5b8ebf5 100644
-> --- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-> +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> @@ -2481,15 +2481,22 @@ static void anx7625_bridge_atomic_disable(struct =
-drm_bridge *bridge,
->         mutex_unlock(&ctx->aux_lock);
->  }
->
-> +static void
-> +anx7625_audio_update_connector_status(struct anx7625_data *ctx,
-> +                                     enum drm_connector_status status);
-> +
->  static enum drm_connector_status
->  anx7625_bridge_detect(struct drm_bridge *bridge)
->  {
->         struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
->         struct device *dev =3D ctx->dev;
-> +       enum drm_connector_status status;
->
->         DRM_DEV_DEBUG_DRIVER(dev, "drm bridge detect\n");
->
-> -       return anx7625_sink_detect(ctx);
-> +       status =3D anx7625_sink_detect(ctx);
-> +       anx7625_audio_update_connector_status(ctx, status);
+>   kernel/sched/fair.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 03be0d1330a6..5551ce2af73e 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3790,9 +3790,8 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+>   
+>   	if (se->on_rq) {
+>   		/* commit outstanding execution time */
+> -		if (curr)
+> -			update_curr(cfs_rq);
+> -		else
+> +		update_curr(cfs_rq);
+> +		if (!curr)
+>   			__dequeue_entity(cfs_rq, se);
+>   		update_load_sub(&cfs_rq->load, se->load.weight);
+>   	}
 
-Nit: add an empty line here.
+Reviewed-by: Abel Wu <wuyun.abel@bytedance.com>
 
-> +       return status;
->  }
->
->  static struct edid *anx7625_bridge_get_edid(struct drm_bridge *bridge,
->
-> ---
-> base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-> change-id: 20240305-anx7625-fe16d3a9d37d
->
-> Best regards,
-> --
-> Hsin-Te Yuan <yuanhsinte@chromium.org>
->
+Thanks!
