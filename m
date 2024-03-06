@@ -1,128 +1,351 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0A41CD29
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 23:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6294E1C6A3;
+	Wed,  6 Mar 2024 23:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709767848; cv=none; b=FS/EfZ1J2634CzRyeYiBz/WHo/M1Ag8SuZAPiMHSrX4PHlGPhef/zGuNaq90jk6qejD7XPybcIdRx5+2nmlpMTooYEiD14E/rlJ7fa2CQAC/lHhaY3W1/7atMMdsJtjfWRWIlt6aVnUuemfLocZzkHVqjcZ++lYyGD5gGDOyQ5M=
+	t=1709768094; cv=none; b=N3TiCmFxb8oT7Vc2kMzuA2gDIdROhZgtFluMvsyBXMw3y+B1ln4/y/gXgjb2dKSL6nIp9Y6s0iz1PgGiWmp6kI9c+lPC4gL+tWKwQ1ODnzEAlwGshldhDo0JGJOC9ijf/4It0cbCFxlA7TXzf8/crtc6TU6oDeFTH/fzJofrMmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709767848; c=relaxed/simple;
-	bh=ieEKZjdTWSiXB1Cq5DltRH5aYblKtMQdGVpzZK6y3e8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PXmgdQLZ6TS087GC0L5f9mtxi+r2nEBg2W5vvU7Qd5wmOMyTc5Ekf5DB1liOe0F5zAeQxxQ9HEnoZdc5QXUmK0kJIvdO663W7ikZ/lRteZMQd3dSo9Cac9yctaRLiEpegNqhY9B7sSSFR7UnS8n+mfFn8PrTmGwWTGhpffI0qZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j9NWqJ5m; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709768094; c=relaxed/simple;
+	bh=4V3icIloo2hNYIQxpQeW9IzGuZtFcqVqZ9dx3sLjRAk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Jv0bA1KAg2AGvB+5qjPloWNgAuvTf1xgNS2932tQ976PPXtugeyO0jPQ3WFt8y4KRJBbJRvWBr2KNaiczrxAChzQ+E6mwinyxb24DwZLlt1qPCcV9ujpXDOInYMJbVl7RlX7Hkkwwd8d+xvcu9mjMrV+e/1D7pG286I8mNtK7gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tNykY4Wr; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j9NWqJ5m"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-690a0c8a6a4so495226d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 15:30:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709767843; x=1710372643; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W9T8NOESVHEKZJ+Km+dtXiN45KTXenjEtsmbvdRzQv4=;
-        b=j9NWqJ5maVs4MIH8tyDg1o02FX/xJSvtrrfxuQ/b8LxGVhX/ELnqkwOxE94QiEb9Ox
-         ZVPwEK//u67FZeRJv0Icw6oAXreHbzHoV683cFvlX52HsXK2QB8iTIah5WgPs/OsK3vX
-         myrH3nWMJPfOGqMS8FosnEyef93FMzGaMGRr8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709767843; x=1710372643;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W9T8NOESVHEKZJ+Km+dtXiN45KTXenjEtsmbvdRzQv4=;
-        b=ZSCo/oYBsOIYGw3riGqGlnB6URu+EaiKpXvsZwswvX5gFsYjCYmgdd8x+Iw7lZ46+O
-         lWAWEpD3PZW9XRDeuhM1MOLpU1UCqTZqWdmq5KAcgxymbj1ibQrmICobs4uNbhg4+FJq
-         Y7Vo2yj7LC8VqTmC50R+2b0zu7j8ITUfkCib11MgrtAKLtRJPw6nMcu3WXGZovOajsj2
-         16EIXfHcFsAcmHnK6z9TX2yzyusb7nbe6U5gE3vhdpk28Cj6DfE3tlg98UOl+m75KPOy
-         DOiwnFo2MUYhJpH4Vr/CogSHKX2uB6ZsehRvJkE0ilVkMB/h6GJKx343GpcjI2Nd5NEL
-         HmYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCw1NTddWLfCNRhT016ccL8bXWd2uTheDStXsn8uugDft4a6uSmyMuMSQGF/dN7S3jt9TFddY/2Km0N9HOkHvEYE1kJ8Cctgv0UVXW
-X-Gm-Message-State: AOJu0YzX6M64Ocw+0lM7RaVCsrxe5sfS1s0FG4UVaPeSENk1rmNhnHuz
-	ADX1IsZpDgGY22zmmN7zBIV9wS12J8qZHgSYiLQNyIjo67cuKxPiPwhJuDZ54kMfxW6csecn/uY
-	=
-X-Google-Smtp-Source: AGHT+IHavaBnAjRfEe1r9T373mJ61nTj+24LegF7/1ZLk3k2ZGPg1YvKiWsUApmLnNO/2d9UA74Tmg==
-X-Received: by 2002:a0c:aa97:0:b0:690:9d2d:52c9 with SMTP id f23-20020a0caa97000000b006909d2d52c9mr1406030qvb.25.1709767843708;
-        Wed, 06 Mar 2024 15:30:43 -0800 (PST)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com. [209.85.160.179])
-        by smtp.gmail.com with ESMTPSA id pj19-20020a0562144b1300b006904c34d5basm7553659qvb.64.2024.03.06.15.30.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Mar 2024 15:30:32 -0800 (PST)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-42ee0c326e8so119531cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 15:30:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUg+TS3/fivFMCwtX8m/ggXgjP/eQ2dR28clmBKGdh6BDeM7rylE0pv2ATpvfFRnpkiox9qDPhGphWuXr9ZM5jDPkO0yLxLMYMjpb8p
-X-Received: by 2002:a05:622a:1190:b0:42f:a3c:2d4c with SMTP id
- m16-20020a05622a119000b0042f0a3c2d4cmr111258qtk.13.1709767832191; Wed, 06 Mar
- 2024 15:30:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tNykY4Wr"
+Received: by linux.microsoft.com (Postfix, from userid 1052)
+	id ED6B520B74C1; Wed,  6 Mar 2024 15:34:51 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ED6B520B74C1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1709768091;
+	bh=ZJH59lfxuBoRBOKgvNdXZmHiIWCN3gtjOcQPqtDkRqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tNykY4WrJNIphgRNp+UUzqx5Kzwsrr/T6LNxDDggcFjT2prLN7AJ4G4JDxAk0Sodg
+	 rU1ePwA1+DaNl2N5APbN86v4eKbBoMF9etPRAbTkxfURlhXlARkYruyAlW6Pgdd7mJ
+	 TtseeTyODRYqcDzDU1MfbYEG7ijb8zupjAe9N0k8=
+From: Fan Wu <wufan@linux.microsoft.com>
+To: corbet@lwn.net,
+	zohar@linux.ibm.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	tytso@mit.edu,
+	ebiggers@kernel.org,
+	axboe@kernel.dk,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	eparis@redhat.com,
+	paul@paul-moore.com
+Cc: linux-doc@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	audit@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Deven Bowers <deven.desai@linux.microsoft.com>,
+	Fan Wu <wufan@linux.microsoft.com>
+Subject: [RFC PATCH v14 01/19] security: add ipe lsm
+Date: Wed,  6 Mar 2024 15:34:26 -0800
+Message-Id: <1709768084-22539-2-git-send-email-wufan@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1709768084-22539-1-git-send-email-wufan@linux.microsoft.com>
+References: <1709768084-22539-1-git-send-email-wufan@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240306200353.1436198-1-hsinyi@chromium.org> <20240306200353.1436198-7-hsinyi@chromium.org>
-In-Reply-To: <20240306200353.1436198-7-hsinyi@chromium.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 6 Mar 2024 15:30:20 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VvhKZHVzHQdOO=_p0E5m7ig1LY2s5MZRojRynKHbF1xw@mail.gmail.com>
-Message-ID: <CAD=FV=VvhKZHVzHQdOO=_p0E5m7ig1LY2s5MZRojRynKHbF1xw@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] drm/panel-edp: Fix AUO 0x405c panel naming and add
- a variant
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+From: Deven Bowers <deven.desai@linux.microsoft.com>
 
-On Wed, Mar 6, 2024 at 12:04=E2=80=AFPM Hsin-Yi Wang <hsinyi@chromium.org> =
-wrote:
->
-> @@ -1009,6 +1009,19 @@ static const struct panel_desc auo_b101ean01 =3D {
->         },
->  };
->
-> +static const struct drm_display_mode auo_b116xa3_mode =3D {
-> +       .clock =3D 70589,
-> +       .hdisplay =3D 1366,
-> +       .hsync_start =3D 1366 + 40,
-> +       .hsync_end =3D 1366 + 40 + 40,
-> +       .htotal =3D 1366 + 40 + 40 + 32,
-> +       .vdisplay =3D 768,
-> +       .vsync_start =3D 768 + 10,
-> +       .vsync_end =3D 768 + 10 + 12,
-> +       .vtotal =3D 768 + 10 + 12 + 6,
-> +       .flags =3D DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-> +};
-> +
->  static const struct drm_display_mode auo_b116xak01_mode =3D {
->         .clock =3D 69300,
->         .hdisplay =3D 1366,
-> @@ -1990,7 +2003,9 @@ static const struct edp_panel_entry edp_panels[] =
-=3D {
->         EDP_PANEL_ENTRY('A', 'U', 'O', 0x239b, &delay_200_500_e50, "B116X=
-AN06.1"),
->         EDP_PANEL_ENTRY('A', 'U', 'O', 0x255c, &delay_200_500_e50, "B116X=
-TN02.5"),
->         EDP_PANEL_ENTRY('A', 'U', 'O', 0x403d, &delay_200_500_e50, "B140H=
-AN04.0"),
-> -       EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B11=
-6XAK01.0"),
-> +       EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B11=
-6XAN04.0"),
-> +       EDP_PANEL_ENTRY2('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B1=
-16XAK01.0 ",
+Integrity Policy Enforcement (IPE) is an LSM that provides an
+complimentary approach to Mandatory Access Control than existing LSMs
+today.
 
-Remove the trailing space from the string above now?
+Existing LSMs have centered around the concept of access to a resource
+should be controlled by the current user's credentials. IPE's approach,
+is that access to a resource should be controlled by the system's trust
+of a current resource.
 
-Aside from that:
+The basis of this approach is defining a global policy to specify which
+resource can be trusted.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
+---
+v2:
+  + Split evaluation loop, access control hooks,
+    and evaluation loop from policy parser and userspace
+    interface to pass mailing list character limit
+
+v3:
+  + Move ipe_load_properties to patch 04.
+  + Remove useless 0-initializations
+  + Prefix extern variables with ipe_
+  + Remove kernel module parameters, as these are
+    exposed through sysctls.
+  + Add more prose to the IPE base config option
+    help text.
+  + Use GFP_KERNEL for audit_log_start.
+  + Remove unnecessary caching system.
+  + Remove comments from headers
+  + Use rcu_access_pointer for rcu-pointer null check
+  + Remove usage of reqprot; use prot only.
+  + Move policy load and activation audit event to 03/12
+
+v4:
+  + Remove sysctls in favor of securityfs nodes
+  + Re-add kernel module parameters, as these are now
+    exposed through securityfs.
+  + Refactor property audit loop to a separate function.
+
+v5:
+  + fix minor grammatical errors
+  + do not group rule by curly-brace in audit record,
+    reconstruct the exact rule.
+
+v6:
+  + No changes
+
+v7:
+  + Further split lsm creation into a separate commit from the
+    evaluation loop and audit system, for easier review.
+
+  + Introduce the concept of an ipe_context, a scoped way to
+    introduce execution policies, used initially for allowing for
+    kunit tests in isolation.
+
+v8:
+  + Follow lsmname_hook_name convention for lsm hooks.
+  + Move LSM blob accessors to ipe.c and mark LSM blobs as static.
+
+v9:
+  + Remove ipe_context for simplification
+
+v10:
+  + Add github url
+
+v11:
+  + Correct github url
+  + Move ipe before bpf
+
+v12:
+  + Switch to use lsm_id instead of string for lsm name
+
+v13:
+  + No changes
+
+v14:
+  + No changes
+---
+ MAINTAINERS              |  7 +++++++
+ include/uapi/linux/lsm.h |  1 +
+ security/Kconfig         | 11 ++++++-----
+ security/Makefile        |  1 +
+ security/ipe/Kconfig     | 17 +++++++++++++++++
+ security/ipe/Makefile    |  9 +++++++++
+ security/ipe/ipe.c       | 41 ++++++++++++++++++++++++++++++++++++++++
+ security/ipe/ipe.h       | 16 ++++++++++++++++
+ security/security.c      |  3 ++-
+ 9 files changed, 100 insertions(+), 6 deletions(-)
+ create mode 100644 security/ipe/Kconfig
+ create mode 100644 security/ipe/Makefile
+ create mode 100644 security/ipe/ipe.c
+ create mode 100644 security/ipe/ipe.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 13158047f2af..8517011f88ff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10650,6 +10650,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+ F:	security/integrity/
+ F:	security/integrity/ima/
+ 
++INTEGRITY POLICY ENFORCEMENT (IPE)
++M:	Fan Wu <wufan@linux.microsoft.com>
++L:	linux-security-module@vger.kernel.org
++S:	Supported
++T:	git https://github.com/microsoft/ipe.git
++F:	security/ipe/
++
+ INTEL 810/815 FRAMEBUFFER DRIVER
+ M:	Antonino Daplas <adaplas@gmail.com>
+ L:	linux-fbdev@vger.kernel.org
+diff --git a/include/uapi/linux/lsm.h b/include/uapi/linux/lsm.h
+index f8aef9ade549..43e2fb32745a 100644
+--- a/include/uapi/linux/lsm.h
++++ b/include/uapi/linux/lsm.h
+@@ -62,6 +62,7 @@ struct lsm_ctx {
+ #define LSM_ID_LOCKDOWN		108
+ #define LSM_ID_BPF		109
+ #define LSM_ID_LANDLOCK		110
++#define LSM_ID_IPE		111
+ 
+ /*
+  * LSM_ATTR_XXX definitions identify different LSM attributes
+diff --git a/security/Kconfig b/security/Kconfig
+index 52c9af08ad35..cc7adfbb6b96 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -194,6 +194,7 @@ source "security/yama/Kconfig"
+ source "security/safesetid/Kconfig"
+ source "security/lockdown/Kconfig"
+ source "security/landlock/Kconfig"
++source "security/ipe/Kconfig"
+ 
+ source "security/integrity/Kconfig"
+ 
+@@ -233,11 +234,11 @@ endchoice
+ 
+ config LSM
+ 	string "Ordered list of enabled LSMs"
+-	default "landlock,lockdown,yama,loadpin,safesetid,smack,selinux,tomoyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
+-	default "landlock,lockdown,yama,loadpin,safesetid,apparmor,selinux,smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
+-	default "landlock,lockdown,yama,loadpin,safesetid,tomoyo,bpf" if DEFAULT_SECURITY_TOMOYO
+-	default "landlock,lockdown,yama,loadpin,safesetid,bpf" if DEFAULT_SECURITY_DAC
+-	default "landlock,lockdown,yama,loadpin,safesetid,selinux,smack,tomoyo,apparmor,bpf"
++	default "landlock,lockdown,yama,loadpin,safesetid,smack,selinux,tomoyo,apparmor,ipe,bpf" if DEFAULT_SECURITY_SMACK
++	default "landlock,lockdown,yama,loadpin,safesetid,apparmor,selinux,smack,tomoyo,ipe,bpf" if DEFAULT_SECURITY_APPARMOR
++	default "landlock,lockdown,yama,loadpin,safesetid,tomoyo,ipe,bpf" if DEFAULT_SECURITY_TOMOYO
++	default "landlock,lockdown,yama,loadpin,safesetid,ipe,bpf" if DEFAULT_SECURITY_DAC
++	default "landlock,lockdown,yama,loadpin,safesetid,selinux,smack,tomoyo,apparmor,ipe,bpf"
+ 	help
+ 	  A comma-separated list of LSMs, in initialization order.
+ 	  Any LSMs left off this list, except for those with order
+diff --git a/security/Makefile b/security/Makefile
+index 59f238490665..cc0982214b84 100644
+--- a/security/Makefile
++++ b/security/Makefile
+@@ -25,6 +25,7 @@ obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown/
+ obj-$(CONFIG_CGROUPS)			+= device_cgroup.o
+ obj-$(CONFIG_BPF_LSM)			+= bpf/
+ obj-$(CONFIG_SECURITY_LANDLOCK)		+= landlock/
++obj-$(CONFIG_SECURITY_IPE)		+= ipe/
+ 
+ # Object integrity file lists
+ obj-$(CONFIG_INTEGRITY)			+= integrity/
+diff --git a/security/ipe/Kconfig b/security/ipe/Kconfig
+new file mode 100644
+index 000000000000..e4875fb04883
+--- /dev/null
++++ b/security/ipe/Kconfig
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Integrity Policy Enforcement (IPE) configuration
++#
++
++menuconfig SECURITY_IPE
++	bool "Integrity Policy Enforcement (IPE)"
++	depends on SECURITY && SECURITYFS
++	select PKCS7_MESSAGE_PARSER
++	select SYSTEM_DATA_VERIFICATION
++	help
++	  This option enables the Integrity Policy Enforcement LSM
++	  allowing users to define a policy to enforce a trust-based access
++	  control. A key feature of IPE is a customizable policy to allow
++	  admins to reconfigure trust requirements on the fly.
++
++	  If unsure, answer N.
+diff --git a/security/ipe/Makefile b/security/ipe/Makefile
+new file mode 100644
+index 000000000000..f7a80d0f18f8
+--- /dev/null
++++ b/security/ipe/Makefile
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) Microsoft Corporation. All rights reserved.
++#
++# Makefile for building the IPE module as part of the kernel tree.
++#
++
++obj-$(CONFIG_SECURITY_IPE) += \
++	ipe.o \
+diff --git a/security/ipe/ipe.c b/security/ipe/ipe.c
+new file mode 100644
+index 000000000000..b013aed15e73
+--- /dev/null
++++ b/security/ipe/ipe.c
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) Microsoft Corporation. All rights reserved.
++ */
++#include <uapi/linux/lsm.h>
++
++#include "ipe.h"
++
++static struct lsm_blob_sizes ipe_blobs __ro_after_init = {
++};
++
++static const struct lsm_id ipe_lsmid = {
++	.name = "ipe",
++	.id = LSM_ID_IPE,
++};
++
++static struct security_hook_list ipe_hooks[] __ro_after_init = {
++};
++
++/**
++ * ipe_init - Entry point of IPE.
++ *
++ * This is called at LSM init, which happens occurs early during kernel
++ * start up. During this phase, IPE registers its hooks and loads the
++ * builtin boot policy.
++ * Return:
++ * * 0		- OK
++ * * -ENOMEM	- Out of memory
++ */
++static int __init ipe_init(void)
++{
++	security_add_hooks(ipe_hooks, ARRAY_SIZE(ipe_hooks), &ipe_lsmid);
++
++	return 0;
++}
++
++DEFINE_LSM(ipe) = {
++	.name = "ipe",
++	.init = ipe_init,
++	.blobs = &ipe_blobs,
++};
+diff --git a/security/ipe/ipe.h b/security/ipe/ipe.h
+new file mode 100644
+index 000000000000..a1c68d0fc2e0
+--- /dev/null
++++ b/security/ipe/ipe.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) Microsoft Corporation. All rights reserved.
++ */
++
++#ifndef _IPE_H
++#define _IPE_H
++
++#ifdef pr_fmt
++#undef pr_fmt
++#endif
++#define pr_fmt(fmt) "IPE: " fmt
++
++#include <linux/lsm_hooks.h>
++
++#endif /* _IPE_H */
+diff --git a/security/security.c b/security/security.c
+index 7035ee35a393..f168bc30a60d 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -51,7 +51,8 @@
+ 	(IS_ENABLED(CONFIG_SECURITY_SAFESETID) ? 1 : 0) + \
+ 	(IS_ENABLED(CONFIG_SECURITY_LOCKDOWN_LSM) ? 1 : 0) + \
+ 	(IS_ENABLED(CONFIG_BPF_LSM) ? 1 : 0) + \
+-	(IS_ENABLED(CONFIG_SECURITY_LANDLOCK) ? 1 : 0))
++	(IS_ENABLED(CONFIG_SECURITY_LANDLOCK) ? 1 : 0) + \
++	(IS_ENABLED(CONFIG_SECURITY_IPE) ? 1 : 0))
+ 
+ /*
+  * These are descriptions of the reasons that can be passed to the
+-- 
+2.43.1
+
