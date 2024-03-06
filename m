@@ -1,92 +1,109 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF648137921;
-	Wed,  6 Mar 2024 16:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D4313958C;
+	Wed,  6 Mar 2024 16:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709744334; cv=none; b=ptBuisbqV/7qXksl4NT6JAL53bceai+wfjT+6xL80YKMlBe5tKzVtR/EMuvIgIaCJNX+YIUUmjehm2SaExzuVNJGXUUguLsAMW24hCoJibLlT2NC2Z4uLqud+Cgfuzag8JHNPCUjl+UwgeTMEnH1ywdZpsmJwkrNET5zZGl31KU=
+	t=1709744339; cv=none; b=olrFbYrqcSFQcoSH4eTYTZESFRhJj8FtURT6LjapZpFCMF/1mGPRpX4GUABMwuoLgYF1LrWE9TMya5IvQJIkQwB9s0Cbh+4vncuKGyVisC494RHyE9zjbbLAT35i+FWBIyaxPUbeVN4xxB4jpzW7DFO8CVpx2lHb/nigBpSjYi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709744334; c=relaxed/simple;
-	bh=7pWHKj0hmElwO8enpNR235mzFnRo0EL0Vrh5GHTv+t8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R2J2ZXgZCMETuNXatZ19mrtlTuqKEpzkd58KneAFNtvBtPjIOfOvebYXVtswBH6oVvGbGlevdUvAy1gOt7l7DaAJSm3CDP/6NARHZpwQn4kjnPdo709PMAWBbIj3ufF3vviIs5RCXpymin7beDmjitLmGzXbxt5tjCaltbZSJnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-From: Mike Gilbert <floppym@gentoo.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: 
-Date: Wed,  6 Mar 2024 11:58:43 -0500
-Message-ID: <20240306165848.3843339-1-floppym@gentoo.org>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1709744339; c=relaxed/simple;
+	bh=0qX6BUcKSD/m80wV0OqOMy5T5kt64bceTHF5BMHCdPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vi7dduzMmRSpSsyRiLI2omccQz1V/p5vMg909j/IvpmPzBQ5CtZKSrOTldNyD8QjfuXgE2tRBBnotuqZalRNQgMFSt8GTRzowXes2uASYStfHGGgxn6LTsIcqGmUoAJMGsPBJxTmAJpdF5OjCLkipeuAoj8TZdatsvOdPymk0ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=FBGdCd14; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="FBGdCd14"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 8CF696030A;
+	Wed,  6 Mar 2024 16:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1709744326;
+	bh=0qX6BUcKSD/m80wV0OqOMy5T5kt64bceTHF5BMHCdPk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FBGdCd14MTKWxXFYmqJ5+2p9IcCI2AX44huOxLUUquSpAT5M4Fcpw0yQi7hXqsq3g
+	 1Ktze2xoBPnhgiIdBb7nl3XVNmLdvuAoRq6se0BqzIxvMTsTHRkSnNtwTlieC6dcrk
+	 IUEOxLND3B80OCcFb89zvj95Nym4utts57oPma6mR5GIsLYMRgYmjxIMUOQKIC5X2+
+	 bEEqjEPLgX/lRaas13S8v2z/f9clMdhlQDL9s4gTFiAkbN6yNuZD85o6d1vuGdkrgf
+	 G4baK3cQC2SaEKbSLCrv2pyEFum1tPfI4c9dfnxmZ8ukdL/6enblnTcY0ob0Tfp+5X
+	 HN/tEGg3TlWqA==
+Received: by x201s (Postfix, from userid 1000)
+	id A37E02022E5; Wed,  6 Mar 2024 16:58:23 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Vlad Buslov <vladbu@nvidia.com>,
+	Marcelo Ricardo Leitner <mleitner@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llu@fiberby.dk,
+	Jiri Pirko <jiri@nvidia.com>
+Subject: [PATCH net-next v3 1/3] net: sched: cls_api: add skip_sw counter
+Date: Wed,  6 Mar 2024 16:58:09 +0000
+Message-ID: <20240306165813.656931-2-ast@fiberby.net>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240306165813.656931-1-ast@fiberby.net>
+References: <20240306165813.656931-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Subject: [PATCH] sparc: move struct termio to asm/termios.h
+Maintain a count of skip_sw filters.
 
-Every other arch declares struct termio in asm/termios.h, so make sparc
-match them.
+This counter is protected by the cb_lock, and is updated
+at the same time as offloadcnt.
 
-Resolves a build failure in the PPP software package, which includes
-both bits/ioctl-types.h via sys/ioctl.h (glibc) and asm/termbits.h.
-
-Closes: https://bugs.gentoo.org/918992
-Signed-off-by: Mike Gilbert <floppym@gentoo.org>
-Cc: stable@vger.kernel.org
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
 ---
- arch/sparc/include/uapi/asm/termbits.h | 10 ----------
- arch/sparc/include/uapi/asm/termios.h  |  9 +++++++++
- 2 files changed, 9 insertions(+), 10 deletions(-)
+ include/net/sch_generic.h | 1 +
+ net/sched/cls_api.c       | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/sparc/include/uapi/asm/termbits.h b/arch/sparc/include/uapi/asm/termbits.h
-index 4321322701fc..0da2b1adc0f5 100644
---- a/arch/sparc/include/uapi/asm/termbits.h
-+++ b/arch/sparc/include/uapi/asm/termbits.h
-@@ -10,16 +10,6 @@ typedef unsigned int	tcflag_t;
- typedef unsigned long	tcflag_t;
- #endif
+diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
+index 934fdb977551..46a63d1818a0 100644
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -476,6 +476,7 @@ struct tcf_block {
+ 	struct flow_block flow_block;
+ 	struct list_head owner_list;
+ 	bool keep_dst;
++	atomic_t skipswcnt; /* Number of skip_sw filters */
+ 	atomic_t offloadcnt; /* Number of oddloaded filters */
+ 	unsigned int nooffloaddevcnt; /* Number of devs unable to do offload */
+ 	unsigned int lockeddevcnt; /* Number of devs that require rtnl lock. */
+diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+index ca5676b2668e..397c3d29659c 100644
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -3483,6 +3483,8 @@ static void tcf_block_offload_inc(struct tcf_block *block, u32 *flags)
+ 	if (*flags & TCA_CLS_FLAGS_IN_HW)
+ 		return;
+ 	*flags |= TCA_CLS_FLAGS_IN_HW;
++	if (tc_skip_sw(*flags))
++		atomic_inc(&block->skipswcnt);
+ 	atomic_inc(&block->offloadcnt);
+ }
  
--#define NCC 8
--struct termio {
--	unsigned short c_iflag;		/* input mode flags */
--	unsigned short c_oflag;		/* output mode flags */
--	unsigned short c_cflag;		/* control mode flags */
--	unsigned short c_lflag;		/* local mode flags */
--	unsigned char c_line;		/* line discipline */
--	unsigned char c_cc[NCC];	/* control characters */
--};
--
- #define NCCS 17
- struct termios {
- 	tcflag_t c_iflag;		/* input mode flags */
-diff --git a/arch/sparc/include/uapi/asm/termios.h b/arch/sparc/include/uapi/asm/termios.h
-index ee86f4093d83..cceb32260881 100644
---- a/arch/sparc/include/uapi/asm/termios.h
-+++ b/arch/sparc/include/uapi/asm/termios.h
-@@ -40,5 +40,14 @@ struct winsize {
- 	unsigned short ws_ypixel;
- };
+@@ -3491,6 +3493,8 @@ static void tcf_block_offload_dec(struct tcf_block *block, u32 *flags)
+ 	if (!(*flags & TCA_CLS_FLAGS_IN_HW))
+ 		return;
+ 	*flags &= ~TCA_CLS_FLAGS_IN_HW;
++	if (tc_skip_sw(*flags))
++		atomic_dec(&block->skipswcnt);
+ 	atomic_dec(&block->offloadcnt);
+ }
  
-+#define NCC 8
-+struct termio {
-+	unsigned short c_iflag;		/* input mode flags */
-+	unsigned short c_oflag;		/* output mode flags */
-+	unsigned short c_cflag;		/* control mode flags */
-+	unsigned short c_lflag;		/* local mode flags */
-+	unsigned char c_line;		/* line discipline */
-+	unsigned char c_cc[NCC];	/* control characters */
-+};
- 
- #endif /* _UAPI_SPARC_TERMIOS_H */
 -- 
-2.44.0
+2.43.0
 
