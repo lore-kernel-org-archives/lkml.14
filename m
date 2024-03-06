@@ -1,85 +1,113 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32CBB131744;
-	Wed,  6 Mar 2024 14:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096B05DF27;
+	Wed,  6 Mar 2024 14:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709734308; cv=none; b=fbPl142g+ClxqC/2P0QqPQ7O9X9MCd/q99PFlJr/FfKpDwqRjtU6mC64t9cb1nz7jfYIfmC299YBnBPWs+KXB1qKgMAZr2asvnjbxlz/7cOiahN1QjiaDureA30YjjAU9xfBE9h4plzx8d9/IXFK7uRTAci9J/03oQbx4myJSY8=
+	t=1709734459; cv=none; b=pNeZzAk7ABAV7Ax4RBE13nnM5GvHiE5K3IeBN4uh4Hl0MvtvE3VnHSkrgo06DNTd9Qskffob/tYYczksxAjZ1dbXWMgeyfn3LrhiolvX6a4o0BjbO+AkMsGUgA25j/QcaFBXIah2fp562njdyBaM8OJhI8R1An5Yz02PXCIygAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709734308; c=relaxed/simple;
-	bh=fZVgHUnYdsFxM3B1qJGTGRghmDpQj6Xe/Q2Ec5t6OfA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=VeNKN5HArV8VsUweYgp7szpadp3P8GG/ZmkuK3IhMlBY2n1Bn+gDzNLBdtcUpoiHKL3N6rufSJjZ43fRLxo2ucIUboNacVbP22q72MquPlGMWRKpvPz5OivI92ct6G3EMVkmin08rbD8OXnALuiGV/FiCD5h2HK4W6GDaX3+TSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from duoming$zju.edu.cn ( [106.117.76.127] ) by
- ajax-webmail-mail-app2 (Coremail) ; Wed, 6 Mar 2024 22:11:21 +0800
- (GMT+08:00)
-Date: Wed, 6 Mar 2024 22:11:21 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: duoming@zju.edu.cn
-To: "Arend van Spriel" <arend.vanspriel@broadcom.com>
-Cc: "Arnd Bergmann" <arnd@arndb.de>, "Kalle Valo" <kvalo@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Konrad Dybcio" <konrad.dybcio@linaro.org>,
-	"Hans de Goede" <hdegoede@redhat.com>, minipli@grsecurity.net,
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com
-Subject: Re: [PATCH] wifi: brcmfmac: pcie: handle randbuf allocation failure
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT5 build
- 20231205(37e20f0e) Copyright (c) 2002-2024 www.mailtech.cn
- mispb-4df6dc2c-e274-4d1c-b502-72c5c3dfa9ce-zj.edu.cn
-In-Reply-To: <29de0b03-f65b-4918-ab5b-28dfd1c16a5d@broadcom.com>
-References: <20240301135134.29577-1-duoming@zju.edu.cn>
- <fdaefac9-1d02-4424-b893-4306b97028ca@broadcom.com>
- <87h6hjhbqy.fsf@kernel.org>
- <3d433b58-384f-452e-904d-62e23b3b5a0b@app.fastmail.com>
- <29de0b03-f65b-4918-ab5b-28dfd1c16a5d@broadcom.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1709734459; c=relaxed/simple;
+	bh=WIKTu97/GHeWLs/loOTdSuwxaW/iFGLGrqJns6l2xVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q+kxCUK5cJ2tuqrSbLqW7Qgzy0YzBdP7yDrKNk1NXi187mO8PhO4tLvWbgwn9D3Q2PLJ6F1/zS3fvyxiS1FzFRPDzP//i+N78bVZdYUmE/RBilDracUm7inUoUOgR7UhYRh0xF9KzzvLmDUphkBPcvpPaZt9wbLPr93hAA6w1rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLLpJbRa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLLpJbRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42A43C433C7;
+	Wed,  6 Mar 2024 14:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709734458;
+	bh=WIKTu97/GHeWLs/loOTdSuwxaW/iFGLGrqJns6l2xVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qLLpJbRabgifZKGJMJ6fgLVSinxL0cRS4XMQ7vZ1Hm2Z4OpQRIC5qFTc5MVKXSaqS
+	 Mv1uICGzG390Tzd3yZKlKBBZG/hKfBUsbOgC3YDlMv6dHBL1ijjCIJ+lK7uyPiderP
+	 9HTXFFLj42HOhFd4NBOI86XfzNQ65xG2a4dGUI/mVrOpt6WI0nb23fQQiZLcwGJZ0f
+	 b6XpMRPudLmt9pXFItgYH9wRBjPlrFmckdGMc1QoxxFnR4GIQ5/hdWFlm3VxT2C+0K
+	 VVdYFWsqp3aN88cJaFEagcSLmprnMPgei7mvYlFk+vlhhMDWbcCmLB33yp7R1WTu92
+	 tBEmsNZ/+mrPQ==
+Date: Wed, 6 Mar 2024 15:14:15 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Sebastian Wick <sebastian.wick@redhat.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: Document requirements for driver-specific KMS props
+ in new drivers
+Message-ID: <20240306-hulking-funky-fox-b9581b@houat>
+References: <20240229202833.198691-1-sebastian.wick@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <224867b0.cdd3.18e141ac13c.Coremail.duoming@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:by_KCgBnja2JeehlSFzNAg--.50707W
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwQMAWXnadMaowAAsL
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jx5njdxurrf2cgix"
+Content-Disposition: inline
+In-Reply-To: <20240229202833.198691-1-sebastian.wick@redhat.com>
 
-T24gV2VkLCA2IE1hciAyMDI0IDEzOjUzOjE5ICswMTAwIEFyZW5kIHZhbiBTcHJpZWwgd3JvdGU6
-Cj4gPj4+PiBUaGUga3phbGxvYygpIGluIGJyY21mX3BjaWVfZG93bmxvYWRfZndfbnZyYW0oKSB3
-aWxsIHJldHVybgo+ID4+Pj4gbnVsbCBpZiB0aGUgcGh5c2ljYWwgbWVtb3J5IGhhcyBydW4gb3V0
-LiBBcyBhIHJlc3VsdCwgaWYgd2UKPiA+Pj4+IHVzZSBnZXRfcmFuZG9tX2J5dGVzKCkgdG8gZ2Vu
-ZXJhdGUgcmFuZG9tIGJ5dGVzIGluIHRoZSByYW5kYnVmLAo+ID4+Pj4gdGhlIG51bGwgcG9pbnRl
-ciBkZXJlZmVyZW5jZSBidWcgd2lsbCBoYXBwZW4uCj4gPj4+PiBSZXR1cm4gLUVOT01FTSBmcm9t
-IGJyY21mX3BjaWVfZG93bmxvYWRfZndfbnZyYW0oKSBpZiBremFsbG9jKCkKPiA+Pj4+IGZhaWxz
-IGZvciByYW5kYnVmLgo+ID4+Pj4gRml4ZXM6IDkxOTE4Y2U4OGQ5ZiAoIndpZmk6IGJyY21mbWFj
-OiBwY2llOiBQcm92aWRlIGEgYnVmZmVyIG9mCj4gPj4+PiByYW5kb20gYnl0ZXMgdG8gdGhlIGRl
-dmljZSIpCj4gPj4+Cj4gPj4+IExvb2tzIGdvb2QgdG8gbWUuIExvb2tpbmcgZm9yIGtlcm5lbCBn
-dWlkZWxpbmUgYWJvdXQgc3RhY2sgdXNhZ2UgdG8KPiA+Pj4gZGV0ZXJtaW5lIHdoZXRoZXIgaXQg
-d291bGQgYmUgb2sgdG8ganVzdCB1c2UgYnVmZmVyIG9uIHN0YWNrLiBEb2VzCj4gPj4+IGFueW9u
-ZSBrbm93LiBUaGlzIG9uZSBpcyAyNTYgYnl0ZXMgc28gSSBndWVzcyB0aGUgYWxsb2NhdGlvbiBp
-cwo+ID4+PiB3YXJyYW50ZWQgaGVyZS4KPiA+Pgo+ID4+IEFybmQsIHdoYXQgZG8geW91IHN1Z2dl
-c3Q/IERvIHdlIGhhdmUgYW55IGRvY3VtZW50YXRpb24gb3IgZ3VpZGVsaW5lcwo+ID4+IGFueXdo
-ZXJlPwo+ID4gCj4gPiBJIGRvbid0IHRoaW5rIHdlIGhhdmUgYW55dGhpbmcgZG9jdW1lbnQgYWJv
-dXQgdGhpcy4gSSB1c3VhbGx5Cj4gPiBjb25zaWRlciBhbnl0aGluZyBtb3JlIHRoYW4gaGFsZiBh
-IGtpbG9ieXRlIGFzIGV4Y2Vzc2l2ZSwKPiA+IGV2ZW4gdGhvdWdoIHRoZSB3YXJuaW5nIGxpbWl0
-IGlzIGhpZ2hlci4KPiA+IAo+ID4gMjU2IGJ5dGVzIGlzIHVzdWFsbHkgZmluZSwgYnV0IGluIHRo
-aXMgY2FzZSBJIHdvdWxkIHNwbGl0IG91dAo+ID4gdGhlIGJhc2ljIGJsb2NrIHRoYXQgZG9lcyB0
-aGlzIGludG8gYSBzZXBhcmF0ZSBmdW5jdGlvbgo+ID4gc28gaXQgZG9lcyBub3Qgc2hhcmUgdGhl
-IHN0YWNrIGZyYW1lIHdpdGggb3RoZXIgbGVhZiBmdW5jdGlvbnMKPiA+IGJlbG93IGJyY21mX3Bj
-aWVfZG93bmxvYWRfZndfbnZyYW0oKS4gSXQgbWlnaHQgYWxzbyBiZSBqdXN0aWZpZWQKPiA+IHRv
-IHRoZW4gbWFyayBpdCBhcyBub2lubGluZV9mb3Jfc3RhY2suCj4gCj4gVGhhbmtzLCBBcm5kCj4g
-Cj4gTWFrZXMgc2Vuc2UuCj4gCj4gQER1b21pbmcgWmhvdSwKPiAKPiBDYW4geW91IHByb3ZpZGUg
-YSB2MiB3aXRoIHNlcGFyYXRlIGZ1bmN0aW9uIHVzaW5nIGJ1ZmZlciBvbiBzdGFjaz8KPiAKPiBz
-dGF0aWMgbm9pbmxpbmVfZm9yX3N0YWNrCj4gdm9pZCBicmNtZl9wY2llX3Byb3ZpZGVfcmFuZG9t
-X2J5dGVzKHN0cnVjdCBicmNtZl9wY2llZGV2X2luZm8gKmRldmluZm8sIAo+IHUzMiBhZGRyZXNz
-KQo+IHsKPiAJdTggcmFuZGJ1ZltCUkNNRl9SQU5ET01fU0VFRF9MRU5HVEhdOwo+IAk6Cj4gCToK
-PiB9CgpUaGFuayB5b3UgZm9yIHlvdXIgc3VnZ2VzdGlvbnMsIEkgaGF2ZSBhbHJlYWR5IHByb3Zp
-ZGVkIGEgdjIuCgpCZXN0IHJlZ2FyZHMsCkR1b21pbmcgWmhvdQo=
+
+--jx5njdxurrf2cgix
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, Feb 29, 2024 at 09:28:31PM +0100, Sebastian Wick wrote:
+> When extending support for a driver-specific KMS property to additional
+> drivers, we should apply all the requirements for new properties and
+> make sure the semantics are the same and documented.
+>=20
+> Signed-off-by: Sebastian Wick <sebastian.wick@redhat.com>
+> ---
+>  Documentation/gpu/drm-kms.rst | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/Documentation/gpu/drm-kms.rst b/Documentation/gpu/drm-kms.rst
+> index 13d3627d8bc0..afa10a28035f 100644
+> --- a/Documentation/gpu/drm-kms.rst
+> +++ b/Documentation/gpu/drm-kms.rst
+> @@ -496,6 +496,11 @@ addition to the one mentioned above:
+> =20
+>  * An IGT test must be submitted where reasonable.
+> =20
+> +For historical reasons, non-standard, driver-specific properties exist. =
+If a KMS
+> +driver wants to add support for one of those properties, the requirement=
+s for
+> +new properties apply where possible. Additionally, the documented behavi=
+or must
+> +match the de facto semantics of the existing property to ensure compatib=
+ility.
+> +
+
+I'm conflicted about this one, really.
+
+On one hand, yeah, it's definitely reasonable and something we would
+want on the long run.
+
+But on the other hand, a driver getting its technical debt worked on for
+free by anyone but its developpers doesn't seem fair to me.
+
+Also, I assume this is in reaction to the discussion we had on the
+Broadcast RGB property. We used in vc4 precisely because there was some
+userspace code to deal with it and we could just reuse it, and it was
+documented. So the requirements were met already.
+
+Maxime
+
+--jx5njdxurrf2cgix
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZeh6NgAKCRDj7w1vZxhR
+xduLAQDWHzR22qPgjQfjobO9zEFwx3q0Cfg112/Dqo7VmDn4DQEAoshXfdwKoAl4
+/YStjp8eyrAPpOr5jgxK6Xqh7WXF6gM=
+=Z2rn
+-----END PGP SIGNATURE-----
+
+--jx5njdxurrf2cgix--
