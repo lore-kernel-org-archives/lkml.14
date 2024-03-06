@@ -1,97 +1,186 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE4C5D460
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41FC5C8F2
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 08:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709712409; cv=none; b=P1KD0ynkhaAXxorFK5C4D82EHfTkhV5As6rOQvE4nwE2XQ25JJ22nk8d/7B+t24DnDi8OBfIFB5BETmThOxQMugWf7IFeIaFQz5BLqPUoElEf+g0+ycQU0yZe3K8nUYK5rMX3W19WsZwA5TicK1f3PMHrkKURoV1YPF40HhLk50=
+	t=1709712467; cv=none; b=eU0R8e31IMdewEwH9yw2FuNrA/+nsjlCmD/Agqr/FUqWjjHesPh9hlXPgK5dYh5B2ajCiXv6HRiBzSYB8FvdHp+ORhRWRdsP961I5HOrRvQPt1e3Eu3pE1NLpfmV/uyUYvKxiO7iHX4+yTPhlFuVFT8KRj199SQyOjVYgkjX58I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709712409; c=relaxed/simple;
-	bh=C3Ztksq1l7A04RRMglZnwFlXOXmS/C199y+UaIehcFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kiXq/qPm3lxGnjVxFhhG5Td/C4F5/0ZThGAM5kyfrWQVHRsOzhjkVIOsG99anLWljNuGmtXfflear0fu9cV1kM9H1YWpcDjN7jrvOut6rhrpeEO0K1jMjdqoq0V/XByTaTDkxgGbmbpsxiRd9qnPwDAD2xSo/WN0WcG6BGAyN14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BK0GBPG7; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709712467; c=relaxed/simple;
+	bh=WUyXjfCKxdHQcvCv8rGh0pPCuiwJdw+dA3UIxJEkWak=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CE5jRLukeYrPFhxv2L+EZdrJOvbH7D1uZnOSZ4tM8gLJjOASUxjbwrIhENB8vPFd0tYVJanoEACt/iZjaGW7AGwWyuPG5oPBsbG66Z91lfWAEbJOrojLyve+ZW1jAy+XW5fVKkG4j8y62xxaXuZM8U2q4pbu9Za0ooEPGjbXY7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XgLGesxX; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BK0GBPG7"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-60821136c5aso47830587b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 00:06:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709712407; x=1710317207; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C3Ztksq1l7A04RRMglZnwFlXOXmS/C199y+UaIehcFU=;
-        b=BK0GBPG7OKWL/gD8vUSphQZygf4GLgV2PXxaKfknezU9NNkMjJO72bXETo9MVuaxpO
-         gwPvHIohexDdtpE4r8ICpjsUWlnP75Oez7gdNhtg6cWnGeGUoV2gfOiuCjUOgJs0zHnB
-         5rfYldlgq97HIalIjn89NdWBj0o2/8qFgjF2oVuroq9qx3ReJ1lD4lPZkGcHYPyetv+D
-         L6CzIGSsJZq18SryxieYyt4l8ACelMGCnk1Jt3a2/uiZTKZAWr/n2w/UQfVBhnAJLwVY
-         1xCEOwVcmo8CBiQjtrY+K/cngtdbTnBSxzMl4d/SPPRNMU0ouV4MTdmoE/WGFoFHLV25
-         ezkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709712407; x=1710317207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C3Ztksq1l7A04RRMglZnwFlXOXmS/C199y+UaIehcFU=;
-        b=N2/jcpuu9OhNgyymCtwe3nO+hLpmW5+jucMy7UZKWCtwWtpROx/NnF+EU3SrCl1N7v
-         AWXmFKLZzVunja0AykamlrBNkmwHVHo81ek0ZhQ+ZzOhoJ4E6t+Uj3ucnrKHGD0ZqEi0
-         EfnEROyWZbicMm9e6XsNoyXvaMhcFIyiDCCllLskK7tYLfc1DHdpi4xWTnd1ZDMM/f2w
-         RzgsIEHd3oVBqfgttLWtLMPiwpOHmKCQDO2eDDwd+9vyrV1idOwdTWaSPAkLgtb0l8ph
-         e8NsvI8OgikrGLSKsfsg6sH0JOTPIKlQDeRLEcVXcc6AJVPugqyLLl2usBaxCl6+usiJ
-         AiXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUc1XOJ2vfV3BrnrPwuDvdezqiW/lM6C8RR5G/K6OY9s4yowr1YKZwS3gBnopGzINYrTLGWd2uvN6vpe+ULcY0Yff5Aml6n4g+UalP4
-X-Gm-Message-State: AOJu0YwMd+xslv4u1oeZDJ4YhiffL8X8ubzcIsbuOz08EtnNtBmk+f17
-	Nh4w+JzH+tCy9eTIZzCbDJa/Hec8pbVbsDDBwLE+mKgzbec8V3KnFwH3gJO3PlfKaYTNTnXkFHr
-	Z9/2DWAP3hXe07f+N3O4Yd4u/2IZVkUyV4V7JwA==
-X-Google-Smtp-Source: AGHT+IHRtBIwm6wvaDL3JJRC+EtkHRhtg1Rh8XMi8YL4NhEOPx0wbM1EIpmo39CJmntE7XTva7TagCxU7j3w4z2FMIA=
-X-Received: by 2002:a25:361e:0:b0:dc6:d093:8622 with SMTP id
- d30-20020a25361e000000b00dc6d0938622mr12231100yba.15.1709712407155; Wed, 06
- Mar 2024 00:06:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XgLGesxX"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 88B001BF203;
+	Wed,  6 Mar 2024 08:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709712461;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kHg4bTL7dYbp26FFw88j9BBPy3JhM3fqgWkSx+1pe5o=;
+	b=XgLGesxX3iEkgWQwgjoFYI5SQrXBJs3gHGST3ALKmV/1WPlkTnr7TUGZO/oZea4pE+cx8y
+	1fHoDu7fakET5VJWOAi56ayCmTPLtJtxfSBc4izoyN5Hdx1t1Ixxs+7oYdArmgKiiq/npB
+	IbZndQ4LWhkQ9QNjFexWBrRgO6BzgIVaQc/DjQ6QH6zyMDMQXKeOGAm50oC8mnNXaFXk3s
+	9W+fAwqdjEOt4x7i8Q6zSgksTqBJ1JfH3m/9uRhc/amCi/pGaLrCijwqX9jPb6kpRSZMLv
+	yAflGzj2/k6/rJC6RCe5Y0BYihinJ6VIl1h31v71Oz0FlrBysL2KVp+J9IYN3w==
+Date: Wed, 6 Mar 2024 09:07:39 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: KR Kim <kr.kim@skyhighmemory.com>
+Cc: richard@nod.at, vigneshr@ti.com, mmkurbanov@salutedevices.com,
+ ddrokosov@sberdevices.ru, gch981213@gmail.com,
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ moh.sardi@skyhighmemory.com, changsub.shim@skyhighmemory.com
+Subject: Re: [PATCH 2/2] SPI Nand Patch code for SkyHigh Momory
+Message-ID: <20240306090739.31911391@xps-13>
+In-Reply-To: <20240306041532.16985-1-kr.kim@skyhighmemory.com>
+References: <20240306041532.16985-1-kr.kim@skyhighmemory.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me> <20240118-ep93xx-v7-3-d953846ae771@maquefel.me>
-In-Reply-To: <20240118-ep93xx-v7-3-d953846ae771@maquefel.me>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 6 Mar 2024 09:06:36 +0100
-Message-ID: <CACRpkdYKeQYvDma0NvrryETZdC5Tp__XNqFtw6TULOK2RSEPyg@mail.gmail.com>
-Subject: Re: [PATCH v7 03/39] ARM: ep93xx: add regmap aux_dev
-To: nikita.shubin@maquefel.me
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Thierry Reding <thierry.reding@gmail.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, Jan 18, 2024 at 9:23=E2=80=AFAM Nikita Shubin via B4 Relay
-<devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
+Hello,
 
-> From: Nikita Shubin <nikita.shubin@maquefel.me>
->
-> The following driver's should be instantiated by ep93xx syscon driver:
->
-> - reboot
-> - pinctrl
-> - clock
->
-> They all require access to DEVCFG register with a shared lock held, to
-> avoid conflict writing to swlocked parts of DEVCFG.
->
-> Provide common resources such as base, regmap and spinlock via auxiliary
-> bus framework.
->
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+The subject tag is wrong (v2), the prefix is wrong, you are missing
+the commit message, there is no Signed-off-by, and you sent a diff with
+your v1 rather than a full patch.
 
-This looks like a reasonable solution.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+You should probably try sending these using --dry-run and
+--suppress-cc=3Dall while you are working on your series :)
 
-Yours,
-Linus Walleij
+Thanks,
+Miqu=C3=A8l
+
+kr.kim@skyhighmemory.com wrote on Wed,  6 Mar 2024 13:15:32 +0900:
+
+> ---
+>  drivers/mtd/nand/spi/Makefile  |  2 +-
+>  drivers/mtd/nand/spi/skyhigh.c | 57 ++++++----------------------------
+>  2 files changed, 11 insertions(+), 48 deletions(-)
+>=20
+> diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
+> index 48b429d90460..1e61ab21893a 100755
+> --- a/drivers/mtd/nand/spi/Makefile
+> +++ b/drivers/mtd/nand/spi/Makefile
+> @@ -1,4 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  spinand-objs :=3D core.o alliancememory.o ato.o esmt.o foresee.o gigadev=
+ice.o macronix.o
+> -spinand-objs +=3D micron.o paragon.o toshiba.o winbond.o xtx.o skyhigh.o
+> +spinand-objs +=3D micron.o paragon.o skyhigh.o toshiba.o winbond.o xtx.o
+>  obj-$(CONFIG_MTD_SPI_NAND) +=3D spinand.o
+> diff --git a/drivers/mtd/nand/spi/skyhigh.c b/drivers/mtd/nand/spi/skyhig=
+h.c
+> index 71de4fa34406..dd348849216d 100644
+> --- a/drivers/mtd/nand/spi/skyhigh.c
+> +++ b/drivers/mtd/nand/spi/skyhigh.c
+> @@ -12,8 +12,8 @@
+>  #define SPINAND_MFR_SKYHIGH		0x01
+> =20
+>  #define SKYHIGH_STATUS_ECC_1TO2_BITFLIPS	(1 << 4)
+> -#define SKYHIGH_STATUS_ECC_3TO4_BITFLIPS	(2 << 4)
+> -#define SKYHIGH_STATUS_ECC_5TO6_BITFLIPS	(3 << 4)
+> +#define SKYHIGH_STATUS_ECC_3TO6_BITFLIPS	(2 << 4)
+> +#define SKYHIGH_STATUS_ECC_UNCOR_ERROR  	(3 << 4)
+> =20
+>  #define SKYHIGH_CONFIG_PROTECT_EN	BIT(1)
+> =20
+> @@ -62,49 +62,15 @@ static const struct mtd_ooblayout_ops skyhigh_spinand=
+_ooblayout =3D {
+>  	.free =3D skyhigh_spinand_ooblayout_free,
+>  };
+> =20
+> -#if 0
+> -bool skyhigh_spinand_isbad(struct spinand_device *spinand,
+> -			   const struct nand_pos *pos)
+> -{
+> -	u8 marker;
+> -	struct nand_page_io_req req =3D {
+> -		.pos =3D *pos,
+> -		.ooblen =3D 1,
+> -		.ooboffs =3D 0,
+> -		.oobbuf.in =3D &marker,
+> -		.mode =3D MTD_OPS_RAW,
+> -	};
+> -
+> -	req.pos.page =3D 0;
+> -	spinand_read_page(spinand, &req);
+> -	if (marker !=3D 0xff)
+> -		return true;
+> -
+> -#if 0
+> -	req.pos.page =3D 1;
+> -	spinand_read_page(spinand, &req);
+> -	if (marker !=3D 0xff)
+> -		return true;
+> -
+> -	req.pos.page =3D 63;
+> -	spinand_read_page(spinand, &req);
+> -	if (marker !=3D 0xff)
+> -		return true;
+> -#endif
+> -
+> -	return false;
+> -}
+> -#endif
+> -
+>  static int skyhigh_spinand_ecc_get_status(struct spinand_device *spinand,
+>  				  u8 status)
+>  {
+>  	/* SHM
+> -	00 : No bit-flip
+> -	01 : 1-2 errors corrected
+> -	10 : 3-6 errors corrected        =20
+> -	11 : uncorrectable
+> -	*/
+> +	 * 00 : No bit-flip
+> +	 * 01 : 1-2 errors corrected
+> +	 * 10 : 3-6 errors corrected        =20
+> +	 * 11 : uncorrectable
+> +	 */
+> =20
+>  	switch (status & STATUS_ECC_MASK) {
+>  	case STATUS_ECC_NO_BITFLIPS:
+> @@ -113,12 +79,10 @@ static int skyhigh_spinand_ecc_get_status(struct spi=
+nand_device *spinand,
+>  	case SKYHIGH_STATUS_ECC_1TO2_BITFLIPS:
+>  		return 2;
+> =20
+> -	/* change from 4 to 6 */
+> -	case SKYHIGH_STATUS_ECC_3TO4_BITFLIPS:
+> + 	case SKYHIGH_STATUS_ECC_3TO6_BITFLIPS:
+>  		return 6;=20
+> =20
+> -	/* uncorrectable for '11' */
+> -	case SKYHIGH_STATUS_ECC_5TO6_BITFLIPS:
+> + 	case SKYHIGH_STATUS_ECC_UNCOR_ERROR:
+>  		return -EBADMSG;;
+> =20
+>  	default:
+> @@ -179,8 +143,7 @@ static int skyhigh_spinand_init(struct spinand_device=
+ *spinand)
+> =20
+>  static const struct spinand_manufacturer_ops skyhigh_spinand_manuf_ops =
+=3D {
+>  	.init =3D skyhigh_spinand_init,
+> -/*	.isbad =3D skyhigh_spinand_isbad,*/
+> -};
+> + };
+> =20
+>  const struct spinand_manufacturer skyhigh_spinand_manufacturer =3D {
+>  	.id =3D SPINAND_MFR_SKYHIGH,
+
