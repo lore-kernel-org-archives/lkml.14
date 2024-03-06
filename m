@@ -1,98 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE30B5D8FA;
-	Wed,  6 Mar 2024 09:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93C05CDF1
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 09:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709716345; cv=none; b=FS1+wbbFBYL3hzM5AE3SNEd8ALD/OMOssEjMMuYaJfVckQx6tmvwVhY6aU/6TYF4TX6SWEBEQAP85qEo4HCeaXIegmHXoa0quVM70av7SK9YYYiLPG30ImuwiOOflDhCiALU+I1fujIDA2GHp+dCrr0rOw0G/3W4aj+tuClT+kM=
+	t=1709716425; cv=none; b=ZJyBdy7vgdTythNEfKKl8BTpGRuncJth+0VX6UkTfYkS5z060obX8hKXY4zOAy63iII4AHw8ETq4JhmH4nHLBgqP9V/BvO3Oa6C/wgxUXczaAhDDGqJXQRZCq/pcuaRww630qEK/5odTyJ8lG4cNOb88j/pdDwyNx5e1QPAWK3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709716345; c=relaxed/simple;
-	bh=e/HA3/Wu6r00AM+Hcn0703vmIttHljfM3nHEyflR5DY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H49t1wCyDZrwHy8qZjCwN3Ah4eB820KHA2LFC2Q0VQaZlDPMI8qLony6GetoXVQUhs666CtoyW/UHB7atEp4IJvOIuryM96Ek7n97MykEJ3n4x92JF7ol801aPObHhu0itjP/OV1gS3v+OGcmA6jN2AWNTBnEGtfSw2k/+c0HJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrOgL34i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709716425; c=relaxed/simple;
+	bh=Qk/DgjzzjMSGlkOr40MEBE4bLbSg4IfJnGTatQO/eMo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BNbipkvKxvxIpq9boWGfI025O94RoHdKXFLg86r1mX9RsY9p/7d6uEFTsfLJ9X1FGy4CNd/wsIRYm6uQaTWI0H638WnltInRaTEug6rylCChGCcE1qSH4lAdbMvdnPBXM9zv8ejxBIatM1IPkYoDART97T0XROv830JJ4GABoCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=bhBhU5fN; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrOgL34i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19225C433C7;
-	Wed,  6 Mar 2024 09:12:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709716345;
-	bh=e/HA3/Wu6r00AM+Hcn0703vmIttHljfM3nHEyflR5DY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CrOgL34i8C9TMoIflZBCmnMRQNCK7UwMEqK8eS7KWQRgfDrlYUZ3ZHnkLyxeLxSZ8
-	 hcvhIvdFxhiY+wOjKtO7GkIv/+iF1a/Y68Ek9DIbj2gfpaekgeRFmKg1WsQx4Ro3se
-	 Y2Dty1mvJm7+Tc2gk7yTfHJ+4qOUKE8+XoMjN8PYywVkM6wu30RKvKhv4UrXmxJ8WV
-	 8oMu52r2nEjjhCb4fcNAzqdDTDkGHJ/0OBFwDfVZNV8IsHD433pGC+XcfOSWH7bAcR
-	 oYtbkTVfnlUhMB49f58Cbz1RhvTat7xgm0mdlOThUdlhiR4k7Xy7c7f79+upTdD1EP
-	 sz7CG4PEerjmw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rhnKB-000000008RC-0EJv;
-	Wed, 06 Mar 2024 10:12:31 +0100
-Date: Wed, 6 Mar 2024 10:12:31 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/10] arm64: dts: qcom: sc8280xp: PCIe fixes and
- GICv3 ITS enable
-Message-ID: <Zegzf_QKbr8yA6Vw@hovoldconsulting.com>
-References: <20240305081105.11912-1-johan+linaro@kernel.org>
- <20240306063302.GA4129@thinkpad>
- <ZegZMNWxCnLbHDxP@hovoldconsulting.com>
- <20240306083925.GB4129@thinkpad>
- <CAA8EJppsbX=YXf1Z6Ud+YMnp2XnutN1hcb1T0KdAAWXFREVxXg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="bhBhU5fN"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a449c5411e1so662967866b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 01:13:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1709716421; x=1710321221; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qk/DgjzzjMSGlkOr40MEBE4bLbSg4IfJnGTatQO/eMo=;
+        b=bhBhU5fNwZ5NqT0bjBfmI8yYE8497uLD5ocbat8fgeLSUHkpHADu4CV6Px/N7I7wzg
+         5mKP+wC8FaeYdcidDoxMNECGlkyX5G9DEE+nGgi0lls+5HPUXm/Opo6mOPt0FA/iIH4H
+         DIBbg1aujcIteGxEv9Zr4ci4GHnXD1eiZHVWE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709716421; x=1710321221;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qk/DgjzzjMSGlkOr40MEBE4bLbSg4IfJnGTatQO/eMo=;
+        b=fIk3YKKdwhAHJT3bHN8UOJ+4m6M6s8Wl8eY6Zv8Ru7DDKi7Gmtfi9YuV3E3LiMtlrX
+         qDg/BPqJFbPPIUvz46Rxbdn26ua5Kk1ghB+8eh9q7mV8H3Mo9AJpIFcPEewMnpE6dLxo
+         bSAzKehJlItw3of2UwI3nUbA+Sx5oqHLjANpUQeaawLBSWYRO/YBXYQIl/cfmMNj9+ft
+         gCqJKXJHKbWeMM6X7ZX6p5+x+Ud6UykrDoLph1tGAyk5GmHSTFZu7dTGZBJEU6IUdUsl
+         HssWSPZ3jsHXEIn4/fOozI7g+oo5uORfWfRpn8Qn7G4Vgg63yIDfNurO9SWEt4qTfEsz
+         pdiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX38li3EqyTaF199JJzyg5ce4rLTcYYP50FFffL9/zsvvsXR5GrQ3JQAYyiuxSo0/MiNBfWLNhLPHjDHUaYAiWNSMWybEjTaXUFg+PK
+X-Gm-Message-State: AOJu0Yxn0MHgQO7q7cccdT6Ggm7Cn3Ry8r6Dj7uVPcxCkfqyXE1lTLdr
+	CoVc+qA2WbjQYmDGqiRuJviEH4LMXzIYxrkO1hFUex9ZZ3uu+hHNPYirC/A6Y5sUCrAygD6+jOe
+	uxtjL07JTBws//PNRosPN/4hJpSkZSr8K7QyjfA==
+X-Google-Smtp-Source: AGHT+IF5uZKkvzzVvH1pdzaj4G0tyPvVgc2P1x6T/jfjAEtk8AF3FusxtxHz4G91nr1NSpZWjbsyOBQrRGKPsU4HqrE=
+X-Received: by 2002:a17:907:20b9:b0:a43:eb29:a293 with SMTP id
+ pw25-20020a17090720b900b00a43eb29a293mr9389627ejb.5.1709716420766; Wed, 06
+ Mar 2024 01:13:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJppsbX=YXf1Z6Ud+YMnp2XnutN1hcb1T0KdAAWXFREVxXg@mail.gmail.com>
+References: <20230608084609.14245-1-zhangjiachen.jaycee@bytedance.com> <20230608084609.14245-3-zhangjiachen.jaycee@bytedance.com>
+In-Reply-To: <20230608084609.14245-3-zhangjiachen.jaycee@bytedance.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 6 Mar 2024 10:13:29 +0100
+Message-ID: <CAJfpegtnTafRiHGG6jpZaZ_XbOhT2aGFyZM3FeDdPoSSEanNNw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] fuse: remove an unnecessary if statement
+To: Jiachen Zhang <zhangjiachen.jaycee@bytedance.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@osdl.org>, me@jcix.top
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 06, 2024 at 10:48:30AM +0200, Dmitry Baryshkov wrote:
-> On Wed, 6 Mar 2024 at 10:39, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> > On Wed, Mar 06, 2024 at 08:20:16AM +0100, Johan Hovold wrote:
-> > > On Wed, Mar 06, 2024 at 12:03:02PM +0530, Manivannan Sadhasivam wrote:
+On Thu, 8 Jun 2023 at 10:47, Jiachen Zhang
+<zhangjiachen.jaycee@bytedance.com> wrote:
+>
+> FUSE remote locking code paths never add any locking state to
+> inode->i_flctx, so the locks_remove_posix() function called on
+> file close will return without calling fuse_setlk().
+>
+> Therefore, as the if statement to be removed in this commit will
+> always be false, remove it for clearness.
+>
+> Fixes: 7142125937e1 ("[PATCH] fuse: add POSIX file locking support")
+> Signed-off-by: Jiachen Zhang <zhangjiachen.jaycee@bytedance.com>
 
-> > > > Just received confirmation from Qcom that L0s is not supported for any of the
-> > > > PCIe instances in sc8280xp (and its derivatives). Please move the property to
-> > > > SoC dtsi.
+Applied, thanks.
 
-> > > Ok, thanks for confirming. But then the devicetree property is not the
-> > > right way to handle this, and we should disable L0s based on the
-> > > compatible string instead.
-
-> > Hmm. I checked further and got the info that there is no change in the IP, but
-> > the PHY sequence is not tuned correctly for L0s (as I suspected earlier). So
-> > there will be AERs when L0s is enabled on any controller instance. And there
-> > will be no updated PHY sequence in the future also for this chipset.
-> 
-> Why? If it is a bug in the PHY driver, it should be fixed there
-> instead of adding workarounds.
-
-ASPM L0s is currently broken on these platforms and, as far as I
-understand, both under Windows and Linux. Since Qualcomm hasn't been
-able to come up with the necessary PHY init sequences for these
-platforms yet, I doubt they will suddenly appear in the near future.
-
-So we need to disable L0s for now. If an updated PHY init sequence later
-appears, we can always enable it again.
-
-> > So yeah, let's disable it in the driver instead.
-
-Johan
+Miklos
