@@ -1,23 +1,23 @@
-Received: from out0-208.mail.aliyun.com (out0-208.mail.aliyun.com [140.205.0.208])
+Received: from out187-18.us.a.mail.aliyun.com (out187-18.us.a.mail.aliyun.com [47.90.187.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF88605BD
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D7360B8F
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721323; cv=none; b=PVbBdqt0e0eDHb1EIVrBk7fGmPMlUcVjiN9vi9l7eju7GcYLmF+ztOcjmrVXqUT1nHhxQu2/BxEiqZ7u9MDlcO1z9hj8eZFXYp9ZN5xYsT0meSDSBfkd3rRWgn79fKcxc48JpkjHYNs3dxx8PRSjwMKL1RKLnUDn2hDWCgYFYxo=
+	t=1709721328; cv=none; b=eKtPrFoOLTPYFa3ZiqFX/h+Kg0u8ggfmRowQviHBiccPJEc/ZO6MRnCOpNrOA2vj9y7JFsHUejv3LweOiNZA2KeY8hP/tkw1WnXOUPetOk9ftLwDNW1H+tGRdPFy1rNCHFpZV0flwZzhO3bA9CR6c+ONUmGUfBjJrh62+AbI63c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721323; c=relaxed/simple;
-	bh=zBjAivud5mTNfsW4xRhvWvtLToxsTYEYwBbFkqAQ+MM=;
+	s=arc-20240116; t=1709721328; c=relaxed/simple;
+	bh=5BvnaK+Q3e30bHwbnZ/Zuza3SgyqFfcHiBGD0cfTfMY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R5GqYu9yBqQcYElHzg5woCsuSwWikOosGot0t00zU2y6VVjvy9YDytA35mBEGZHW6fTYK29/hU/vetImVq9ZTD9XGChM5pTWl4bAW7rz6MYxKIMubS8WH4/eLRoRU4izNH4125LOLUOfoBhdqKqeHOExK4wDVEz2o6XRwpjHp2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.208
+	 MIME-Version:Content-Type; b=VOAJT2+4EWMaLkAVFGMul6hwp8Rs9GFrG5oOd5eWb0A0NGZia+dJPhhRjA0VvSD2aENyw0vbrCDhX4FNc6UEV6BvFxNKPX0TSWah/AHuae00BwD5pCA0/4lOwuu6jne+1AWaPWKumoT0KzHODCQMPPH/9Z1AswYOMCQA3Tu51k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=47.90.187.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047205;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---.Wgbn-K9_1709720384;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.Wgbn-K9_1709720384)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047213;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---.Wgbn-Jf_1709720382;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.Wgbn-Jf_1709720382)
           by smtp.aliyun-inc.com;
-          Wed, 06 Mar 2024 18:19:44 +0800
+          Wed, 06 Mar 2024 18:19:42 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
 To: richard@nod.at,
 	anton.ivanov@cambridgegreys.com,
@@ -27,9 +27,9 @@ Cc:  <jani.nikula@intel.com>,
    <linux-kernel@vger.kernel.org>,
    <intel-xe@lists.freedesktop.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v3 9/9] um: Fix -Wmissing-prototypes warnings for __warp_* and foo
-Date: Wed, 06 Mar 2024 18:19:25 +0800
-Message-Id: <20240306101925.1088870-10-tiwei.btw@antgroup.com>
+Subject: [PATCH v3 3/9] um: Remove unused functions
+Date: Wed, 06 Mar 2024 18:19:19 +0800
+Message-Id: <20240306101925.1088870-4-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
 References: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
@@ -42,69 +42,81 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-These functions are not called explicitly. Let's just workaround
-the -Wmissing-prototypes warnings by declaring them locally similar
-to what was done in arch/x86/kernel/asm-offsets_32.c.
+These functions are not used anymore. Removing them will also address
+below -Wmissing-prototypes warnings:
 
-This will address below -Wmissing-prototypes warnings:
-
-./arch/x86/um/shared/sysdep/kernel-offsets.h:9:6: warning: no previous prototype for ‘foo’ [-Wmissing-prototypes]
-arch/um/os-Linux/main.c:187:7: warning: no previous prototype for ‘__wrap_malloc’ [-Wmissing-prototypes]
-arch/um/os-Linux/main.c:208:7: warning: no previous prototype for ‘__wrap_calloc’ [-Wmissing-prototypes]
-arch/um/os-Linux/main.c:222:6: warning: no previous prototype for ‘__wrap_free’ [-Wmissing-prototypes]
-arch/x86/um/user-offsets.c:17:6: warning: no previous prototype for ‘foo’ [-Wmissing-prototypes]
+arch/um/kernel/process.c:51:5: warning: no previous prototype for ‘pid_to_processor_id’ [-Wmissing-prototypes]
+arch/um/kernel/process.c:253:5: warning: no previous prototype for ‘copy_to_user_proc’ [-Wmissing-prototypes]
+arch/um/kernel/process.c:263:5: warning: no previous prototype for ‘clear_user_proc’ [-Wmissing-prototypes]
+arch/um/kernel/tlb.c:579:6: warning: no previous prototype for ‘flush_tlb_mm_range’ [-Wmissing-prototypes]
 
 Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- arch/um/os-Linux/main.c                    | 5 +++++
- arch/x86/um/shared/sysdep/kernel-offsets.h | 3 +++
- arch/x86/um/user-offsets.c                 | 3 +++
- 3 files changed, 11 insertions(+)
+ arch/um/kernel/process.c | 21 ---------------------
+ arch/um/kernel/tlb.c     |  6 ------
+ 2 files changed, 27 deletions(-)
 
-diff --git a/arch/um/os-Linux/main.c b/arch/um/os-Linux/main.c
-index c8a42ecbd7a2..e82164f90288 100644
---- a/arch/um/os-Linux/main.c
-+++ b/arch/um/os-Linux/main.c
-@@ -184,6 +184,11 @@ int __init main(int argc, char **argv, char **envp)
+diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
+index 20f3813143d8..292c8014aaa6 100644
+--- a/arch/um/kernel/process.c
++++ b/arch/um/kernel/process.c
+@@ -48,17 +48,6 @@ static inline int external_pid(void)
+ 	return userspace_pid[0];
+ }
  
- extern void *__real_malloc(int);
- 
-+/* workaround for -Wmissing-prototypes warnings */
-+void *__wrap_malloc(int size);
-+void *__wrap_calloc(int n, int size);
-+void __wrap_free(void *ptr);
-+
- void *__wrap_malloc(int size)
+-int pid_to_processor_id(int pid)
+-{
+-	int i;
+-
+-	for (i = 0; i < ncpus; i++) {
+-		if (cpu_tasks[i].pid == pid)
+-			return i;
+-	}
+-	return -1;
+-}
+-
+ void free_stack(unsigned long stack, int order)
  {
- 	void *ret;
-diff --git a/arch/x86/um/shared/sysdep/kernel-offsets.h b/arch/x86/um/shared/sysdep/kernel-offsets.h
-index a004bffb7b8d..48de3a71f845 100644
---- a/arch/x86/um/shared/sysdep/kernel-offsets.h
-+++ b/arch/x86/um/shared/sysdep/kernel-offsets.h
-@@ -6,6 +6,9 @@
- #include <linux/kbuild.h>
- #include <asm/mman.h>
+ 	free_pages(stack, order);
+@@ -250,21 +239,11 @@ char *uml_strdup(const char *string)
+ }
+ EXPORT_SYMBOL(uml_strdup);
  
-+/* workaround for a warning with -Wmissing-prototypes */
-+void foo(void);
-+
- void foo(void)
+-int copy_to_user_proc(void __user *to, void *from, int size)
+-{
+-	return copy_to_user(to, from, size);
+-}
+-
+ int copy_from_user_proc(void *to, void __user *from, int size)
  {
- #include <common-offsets.h>
-diff --git a/arch/x86/um/user-offsets.c b/arch/x86/um/user-offsets.c
-index e54a9814ccf1..1c77d9946199 100644
---- a/arch/x86/um/user-offsets.c
-+++ b/arch/x86/um/user-offsets.c
-@@ -14,6 +14,9 @@
- 	COMMENT(#val " / sizeof(unsigned long)");	\
- 	DEFINE(sym, val / sizeof(unsigned long))
+ 	return copy_from_user(to, from, size);
+ }
  
-+/* workaround for a warning with -Wmissing-prototypes */
-+void foo(void);
-+
- void foo(void)
+-int clear_user_proc(void __user *buf, int size)
+-{
+-	return clear_user(buf, size);
+-}
+-
+ static atomic_t using_sysemu = ATOMIC_INIT(0);
+ int sysemu_supported;
+ 
+diff --git a/arch/um/kernel/tlb.c b/arch/um/kernel/tlb.c
+index 7d050ab0f78a..70b5e47e9761 100644
+--- a/arch/um/kernel/tlb.c
++++ b/arch/um/kernel/tlb.c
+@@ -576,12 +576,6 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ }
+ EXPORT_SYMBOL(flush_tlb_range);
+ 
+-void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+-			unsigned long end)
+-{
+-	fix_range(mm, start, end, 0);
+-}
+-
+ void flush_tlb_mm(struct mm_struct *mm)
  {
- #ifdef __i386__
+ 	struct vm_area_struct *vma;
 -- 
 2.34.1
 
