@@ -1,129 +1,125 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D84779F3;
-	Wed,  6 Mar 2024 10:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA540779F8
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 10:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722647; cv=none; b=dmW57ndzAueCmvW7qJSQvGff2yRpz8pKxMwE1VMF/8StuKAxptw4Xb87iILPt01PKTB9nBJqaFlgX53k8gdUOUxrTmcwhTNr/hzNIe4YXrfpHmeqqHYFZ7En+ovxoLsu4oTJBHuVBcweNYhZJUoiAoHOMa0PjhLQ/t2roCRBGY8=
+	t=1709722648; cv=none; b=Rdz0AKZ2LPQ4dPJo2mQ9wD7Gm4s4X5ibyTm/2F9MPgAuQ89ECPdyaw+7tR/rC4MlpDf3hRWfoIda/bEUDOhrxdSS+d7pfnoebAcqwaglHuo+OBY6CMlvr/XCWmXXXrx2P/wJKKE44tor3tSclqfMaC7bezDQGhlQg9PBv7Wu0MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709722647; c=relaxed/simple;
-	bh=3xeotuDCdQW1grDwcrF1sKKx1r0PdzuU7cowPj5kBKM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uOcMaPTsXdVpUszPQDBxywNfE0MeMQx2fcfZPbu7Hy6K4hhoQvokYDDBpSMJudoTjLFN2JCbunqYUU68vMU6Vt7VGsThIpF5Sv5oc3c5hWxfOWtfqq2Jyvu4TPAL12DW0yFJNPvTNqpqA7jDiBL0YP6pKOiYW+xDuAopoE6COjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iixSnPNA; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709722648; c=relaxed/simple;
+	bh=b4XyqL2PnC56hJ2b/S40mLdDbJwaGE9J/KbgoSiF4LY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RnghBFD5NRm9tjU5sRuK/2sWLOtY07Yxotqi9t8Ia3HhGhXV9VxxOxyY4T2rk732EokZX5D3ipaN1BHaW6+q7KcSYTJ7lbM+hde+OIvRZHRkzhxHKdzi7RPecI5nNUxzIpzCtWW1cJi1muX8s4AYgcy7x9QpyA/j7+Wup6XVgZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DSH671vw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iixSnPNA"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3bbbc6b4ed1so5084487b6e.2;
-        Wed, 06 Mar 2024 02:57:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709722645; x=1710327445; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hi11Eg+aCzsA79R7LW/JZfX5SqkmL+m2Yfafruuq3ag=;
-        b=iixSnPNAMd/wv2PLByJHVRPGXfjK0VdcNMGXWU8ObO9/9HqtHUulPTnvxwGuhl2veG
-         ASJPTy8oSj3KGQ7QbWewNxnlyTtjVHMHaRjN7qtUw4evU3m6zGtJ5JEoFaGuzCFFeYdA
-         P1qvEodaOPHmn4ASZv7WsCNQRSG0somcnMSYeOPRJ2P2r8VugyeicjRO03FQd/VStK++
-         f9gHOIJTz6CzKmUN7FhqhSrKfveqXbc8mDm8xdKYY91gacNpwsIjyI4ZSKRTuqCbLvwl
-         vF6jgE+a5x/Sne5pxjv30rDR3Egp5JvC1lMEoWTfPDz5cS0ZcqzxxmRyscST7BAu4YAy
-         StmA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DSH671vw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709722645;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b4XyqL2PnC56hJ2b/S40mLdDbJwaGE9J/KbgoSiF4LY=;
+	b=DSH671vwCJN+v69pk6RKe/udFDqYlsJUBm+V0skAxpsNgFYBFhzxpqiZPFDqy63KNWOtOy
+	DDI+eQnrvFluvDDK2cn4Cz3/aDRP4bXaSspmsfQMbpYeGbiDA9trbyZ+rOkjes5kLkbV7N
+	NbogP6hGxwO9MPhR/fm+Raa3yVm0Cts=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-127-q8SZT93IPn-ctm5Aea4oYQ-1; Wed, 06 Mar 2024 05:57:21 -0500
+X-MC-Unique: q8SZT93IPn-ctm5Aea4oYQ-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-33d60ac6781so955844f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 02:57:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709722645; x=1710327445;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hi11Eg+aCzsA79R7LW/JZfX5SqkmL+m2Yfafruuq3ag=;
-        b=K9n/TgvUirSe5qIDOXSft4h1GtpWWqw4eRpgsUXynywVLe+S2/lQjHkzydq9zzAQ0R
-         IaS8xfhoRvdNfol9rFqtEbaP2jYAQLjYawxcd5GcklF3f6WjaMGpM0jiOIeG3MIufZBb
-         QeGNj7wLSBJ9yE6d/bkrhcJX+Me4yRbMjtGOLTpHyy000uB45JEhesuI/opxbx5l34fk
-         VduGfd77EvMmej2gyW25PJ9FiSgitblx0VrbIexWYGDpQRm4x4MuFwM2pdio+Y+9qUNr
-         un+xMK9o7gB2ldCbh93rKJd40pW2JJCYIGczVVshBFZ0mAYH9KEdJhFz1swjrTDhhTRy
-         zwFw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/7XjJXlORc/Na9ChlObcsItaIwKD2REqX1Lw78q0dBIgB3VOhoPoESUo1GP9SGaJEeFwfu39XfJlfqDPqubD/Z/XDRJciJjdydYqP
-X-Gm-Message-State: AOJu0YyTV0lf/XdO36bJYI82LpEO3Vdztfv0IApfl0Srq4jnKz9hjZR7
-	mkZ2v0ukFuwxbHHePIyPoNF7m6daHdeg+AAmGUWn9DnAlMK0q5H2
-X-Google-Smtp-Source: AGHT+IFVSukjVVH7mZHilwVRsN1EmJYXk6UjTSyCDZxNbuODfzqzL5aG5NrxO/WTKnVs7VWqmZlIng==
-X-Received: by 2002:a05:6808:10c2:b0:3c1:ef95:c503 with SMTP id s2-20020a05680810c200b003c1ef95c503mr5974554ois.0.1709722645388;
-        Wed, 06 Mar 2024 02:57:25 -0800 (PST)
-Received: from VM-147-239-centos.localdomain ([14.116.239.34])
-        by smtp.gmail.com with ESMTPSA id bg1-20020a056a02010100b005dc9ab425c2sm9341531pgb.35.2024.03.06.02.57.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2024 02:57:24 -0800 (PST)
-From: Yongzhi Liu <hyperlyzcs@gmail.com>
-To: pabeni@redhat.com,
-	shannon.nelson@amd.com,
-	brett.creeley@amd.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jitxie@tencent.com,
-	huntazhang@tencent.com,
-	Yongzhi Liu <hyperlyzcs@gmail.com>
-Subject: [PATCH net V3] net: pds_core: Fix possible double free in error handling path
-Date: Wed,  6 Mar 2024 18:57:14 +0800
-Message-Id: <20240306105714.20597-1-hyperlyzcs@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <9c4da99a83bceb4680aac9588151cc8190ff07e0.camel@redhat.com>
-References: <9c4da99a83bceb4680aac9588151cc8190ff07e0.camel@redhat.com>
+        d=1e100.net; s=20230601; t=1709722640; x=1710327440;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b4XyqL2PnC56hJ2b/S40mLdDbJwaGE9J/KbgoSiF4LY=;
+        b=MZAYI3AJlRROZwMcgDaPR6f/IdEnGCr8hju4QM5Al+oz8Nq1/CVaKTcz08IyGjDJ0V
+         /2wYzJZD6jYHcgc0BRW0vZvvdXDsyJA+RjgB21xGwF5faMXz/ph/jP4sHSr3A+KY4DDT
+         jPDxy0Zyk09cFm77RzLdlewH4Ye9K2d6H15UBHrSKmeCfrjdIRzJbqCI+6z4psTLVrGD
+         6uP65l+jumCm4f7qHCW3n+drwHxJsbV6lvz4eiZoro/+APUdTzNhxTFOjmxd4ASOe301
+         6kBhsvOsyE4AN4E+jPqmNAFtvOSTLe6iVFKWOlweuE6k57pYhkOCTZ55EM3TWdUH/05j
+         Ujlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfywEFda3gx2VNaQb5HD5uC38uBz/uzKPa/W6z7V+ZVJaR0As5+FByNyWIs1OJ8kSZxDvBxEctZif1BcAkPITjM9cn3GApQ+0PTBl4
+X-Gm-Message-State: AOJu0Yw+wD4Jxr5U7Cvr0l9xjMpJlv3vfNbnvuG3n835d/UxvhKKviEf
+	ZSitqAYRvc0RreB8EqhGj5QfHqa+KZxnu38nBrVTsIzhavmVFsUvYs2/gWFT+T08vVUMmRMB26Y
+	DYffMeUOKPvC0nLZ8b2xGHuXDwoIBBrn2cwL0XujFwHjulR73r9+7DoNA0QMVvg==
+X-Received: by 2002:a5d:5f48:0:b0:33d:215a:1914 with SMTP id cm8-20020a5d5f48000000b0033d215a1914mr13001148wrb.38.1709722640468;
+        Wed, 06 Mar 2024 02:57:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHRZPOXIucKkLpt2y1Kl5ONuSx0wUfC6rVS8K/ER3pp2uiUyHn4H8Vrm+c3L1dNUe5NOyldIw==
+X-Received: by 2002:a5d:5f48:0:b0:33d:215a:1914 with SMTP id cm8-20020a5d5f48000000b0033d215a1914mr13001113wrb.38.1709722639939;
+        Wed, 06 Mar 2024 02:57:19 -0800 (PST)
+Received: from localhost ([2a01:e0a:b25:f902::ff])
+        by smtp.gmail.com with ESMTPSA id bx5-20020a5d5b05000000b0033e103eaf5bsm17353346wrb.115.2024.03.06.02.57.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 02:57:19 -0800 (PST)
+Date: Wed, 6 Mar 2024 11:57:19 +0100
+From: Maxime Ripard <mripard@redhat.com>
+To: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Paul Moore <paul@paul-moore.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Coiby Xu <coxu@redhat.com>
+Cc: linux-integrity@vger.kernel.org, itrymybest80@protonmail.com, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] integrity: eliminate unnecessary "Problem loading
+ X.509 certificate" msg
+Message-ID: <20240306-humongous-nuthatch-of-science-00e58b@houat>
+References: <20231227044156.166009-1-coxu@redhat.com>
+ <20240109002429.1129950-1-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xv7pnznz2fqkk5di"
+Content-Disposition: inline
+In-Reply-To: <20240109002429.1129950-1-coxu@redhat.com>
 
-When auxiliary_device_add() returns error and then calls
-auxiliary_device_uninit(), Callback function pdsc_auxbus_dev_release
-calls kfree(padev) to free memory. We shouldn't call kfree(padev)
-again in the error handling path.
 
-Fix this by cleaning up the redundant kfree() and putting
-the error handling back to where the errors happened.
+--xv7pnznz2fqkk5di
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 4569cce43bc6 ("pds_core: add auxiliary_bus devices")
-Signed-off-by: Yongzhi Liu <hyperlyzcs@gmail.com>
----
- drivers/net/ethernet/amd/pds_core/auxbus.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+Hi Dmitry, Eric, James, Mimi, Paul, Serge,
 
-diff --git a/drivers/net/ethernet/amd/pds_core/auxbus.c b/drivers/net/ethernet/amd/pds_core/auxbus.c
-index 11c23a7f3172..fd1a5149c003 100644
---- a/drivers/net/ethernet/amd/pds_core/auxbus.c
-+++ b/drivers/net/ethernet/amd/pds_core/auxbus.c
-@@ -160,23 +160,19 @@ static struct pds_auxiliary_dev *pdsc_auxbus_dev_register(struct pdsc *cf,
- 	if (err < 0) {
- 		dev_warn(cf->dev, "auxiliary_device_init of %s failed: %pe\n",
- 			 name, ERR_PTR(err));
--		goto err_out;
-+		kfree(padev);
-+		return ERR_PTR(err);
- 	}
- 
- 	err = auxiliary_device_add(aux_dev);
- 	if (err) {
- 		dev_warn(cf->dev, "auxiliary_device_add of %s failed: %pe\n",
- 			 name, ERR_PTR(err));
--		goto err_out_uninit;
-+		auxiliary_device_uninit(aux_dev);
-+		return ERR_PTR(err);
- 	}
- 
- 	return padev;
--
--err_out_uninit:
--	auxiliary_device_uninit(aux_dev);
--err_out:
--	kfree(padev);
--	return ERR_PTR(err);
- }
- 
- int pdsc_auxbus_dev_del(struct pdsc *cf, struct pdsc *pf)
--- 
-2.36.1
+On Tue, Jan 09, 2024 at 08:24:28AM +0800, Coiby Xu wrote:
+> Currently when the kernel fails to add a cert to the .machine keyring,
+> it will throw an error immediately in the function integrity_add_key.
+>=20
+> Since the kernel will try adding to the .platform keyring next or throw
+> an error (in the caller of integrity_add_key i.e. add_to_machine_keyring),
+> so there is no need to throw an error immediately in integrity_add_key.
+>=20
+> Reported-by: itrymybest80@protonmail.com
+> Closes: https://bugzilla.redhat.com/show_bug.cgi?id=3D2239331
+> Fixes: d19967764ba8 ("integrity: Introduce a Linux keyring called machine=
+")
+> Reviewed-by: Eric Snowberg <eric.snowberg@oracle.com>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+
+Any chance this patch can be merged? This is breaking (at least) Fedora
+at the moment.
+
+Thanks!
+Maxime
+
+--xv7pnznz2fqkk5di
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZehMDgAKCRDj7w1vZxhR
+xRjcAQDO43bKYImGBD+B/EBUcAe1M2J0uqbm6+QesqiYtsPvGAD/fUFr3rDbhTvM
+CAt76KLDM5Hbt0iKpgt0TgS06wTsLQQ=
+=tyck
+-----END PGP SIGNATURE-----
+
+--xv7pnznz2fqkk5di--
 
