@@ -1,127 +1,96 @@
-Received: from bee.tesarici.cz (unknown [77.93.223.253])
+Received: from mx0.infotecs.ru (mx0.infotecs.ru [91.244.183.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47295F578;
-	Wed,  6 Mar 2024 10:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0D85FB8C;
+	Wed,  6 Mar 2024 10:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.244.183.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709719399; cv=none; b=Q+1uQe0Rs+FQG/EkFEnm6gEOQ1KVNtFYSfVzv9hVr6ZHSj2gXVDTAZiBP4Qr4AvIBvC7Cvp/Mxh/2KHPGoe5/fMA4xAJO9XUC01BroB1eB45gCjXa/w70PAoWIzL5rhxWTVwtlwOhgW1qsX9GZoQxz9ASSkfpIKOrbZVR0wqeIk=
+	t=1709719502; cv=none; b=UAJ/sNzDMcFMVCyebJl4Ddfif3IitXiAksnZ5kb6nHVvelSGnfasze/otuBKm2uHcAiXallXb0eVSTgk/LXSJm0YQHSRvrHZ1kcLskVEVt/3ELQtebRliuUxLv2x6ZdkiYTzxF7WJQ+lHDwcDXSSsYIDVNmIO7HBqrYCYGX0S6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709719399; c=relaxed/simple;
-	bh=jxwznpdyYueFkeb4KzOmzTRoxHJqaVHSTFEhTSAKMtI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HdHACIqrbyCnXUMIAcrIiz9acEktTkEZV8uNu0K8NcgPD5Ag6CmwZ1hsKEekxzyfgRYPPdppBrKsh+BTNz8vSLd8bzg6gfYyqx3uDFVPb+zLNQD5kZapoA7UZ2pLnW0VX2eUMMiwXtr9us4AU6/ImG3EA+oHIFhro5VkxQr4NG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=RlP2Oi+O; arc=none smtp.client-ip=77.93.223.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1709719502; c=relaxed/simple;
+	bh=Xx6fuMijWmbCZ68HGYxzw2XFhSveMJbNuQ55fTD8vyM=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=jy8K7dUu1urXGN65F7xomN+Y/g/HZhaIefUORxgfqCgpNNK5XmQbjlIiKZHggCdXfzGpZSU3LKlviPiRNojZoRwUucLMJf3Ru+Ovjv+nIJ4vjehbTSNCgsANAzgoMwbN2PLFEdPiVT2YB4WJdy/D0dK8DX4ReceQE3OvJHAHIJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru; spf=pass smtp.mailfrom=infotecs.ru; dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b=mi4Yy9F5; arc=none smtp.client-ip=91.244.183.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infotecs.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="RlP2Oi+O"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 8F1AE1CA694;
-	Wed,  6 Mar 2024 11:03:13 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1709719394; bh=LS0wJFf5B1tehneoZpGaqF5s3dF3oVsKN5z6xY0DqMY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RlP2Oi+O4wJ/Ea1AjU8xy+THyjDsyEFw51VxG9ETIqAxI8g1tCOlVx4XquuNwsBvU
-	 IEkz8g7NsRz4iqnJl6dlhVR3ltrOvh+/GtDgYmE8MuN1WYhLMqql3I3KRESYlBz3V/
-	 8WVSnoUfBhGMNEhdSZt3EBy7LnEbMuDDFyASgMkRZuNYgbuqUEiB8WAkJb3MXpQFSi
-	 0HwRq4R0lscJwUlb/QXb1ThASEAZRMWCuIog0BaqMS8GqSBOoWU/rXuI1Pr8g0J4hK
-	 TivKZmrO0NS868efpT0j0M1zp08xfRJNCtvJm7HKYtvt4t9CfMZOJXqI4RwbtqXBV2
-	 3xIa4SYfK+7Ow==
-Date: Wed, 6 Mar 2024 11:03:12 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Eric Dumazet <edumazet@google.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, "David S.
- Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Jakub
- Kicinski <kuba@kernel.org>, Jisheng Zhang <jszhang@kernel.org>, Alexandre
- Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, "open list:STMMAC ETHERNET DRIVER"
- <netdev@vger.kernel.org>, "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>, "moderated list:ARM/STM32
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list
- <linux-kernel@vger.kernel.org>, "open list:ARM/Allwinner sunXi SoC support"
- <linux-sunxi@lists.linux.dev>, Marc Haber <mh+netdev@zugschlus.de>, Andrew
- Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- stable@vger.kernel.org, alexis.lothore@bootlin.com, Guenter Roeck
- <linux@roeck-us.net>
-Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit
- statistics counters
-Message-ID: <20240306110312.04ddcde3@meshulam.tesarici.cz>
-In-Reply-To: <20240306100153.32d305f7@meshulam.tesarici.cz>
-References: <20240203190927.19669-1-petr@tesarici.cz>
-	<ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
-	<Zct5qJcZw0YKx54r@xhacker>
-	<CANn89i+4tVWezqr=BYZ5AF=9EgV2EPqhdHun=u=ga32CEJ4BXQ@mail.gmail.com>
-	<20d94512-c4f2-49f7-ac97-846dc24a6730@roeck-us.net>
-	<CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
-	<a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info>
-	<20240228120308.48d6a9c2@meshulam.tesarici.cz>
-	<e3181555-c08d-463f-a9a9-b08c69875c84@leemhuis.info>
-	<20240306100153.32d305f7@meshulam.tesarici.cz>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b="mi4Yy9F5"
+Received: from mx0.infotecs-nt (localhost [127.0.0.1])
+	by mx0.infotecs.ru (Postfix) with ESMTP id DEC201423784;
+	Wed,  6 Mar 2024 12:57:50 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx0.infotecs.ru DEC201423784
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infotecs.ru; s=mx;
+	t=1709719071; bh=MO5pj3YzaettEmio8Z6W3c3zdCICCzph1tchXffqFi0=;
+	h=From:To:CC:Subject:Date:From;
+	b=mi4Yy9F5aiqk54JaClW5h6c9Gec/kRoaj7FXX9qxryuWIghOXRki8XdrSsz5LVMBN
+	 EXog8AwH911oOB229tNkwriQu9b6EEzuzBmEMcHVES2XReqknLywhd9xJzA7s2/yEK
+	 u7mVLQD73atAokkuKX9UHUtm9dciPepvwaYCI2LY=
+Received: from msk-exch-02.infotecs-nt (msk-exch-02.infotecs-nt [10.0.7.192])
+	by mx0.infotecs-nt (Postfix) with ESMTP id DB8FD318FDDC;
+	Wed,  6 Mar 2024 12:57:50 +0300 (MSK)
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+To: Eric Dumazet <edumazet@google.com>
+CC: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+Subject: [PATCH net-next] tcp: fix incorrect parameter validation in the
+ do_tcp_getsockopt() function
+Thread-Topic: [PATCH net-next] tcp: fix incorrect parameter validation in the
+ do_tcp_getsockopt() function
+Thread-Index: AQHab6y/ymlnx20eHUyJFqMhxuWaSg==
+Date: Wed, 6 Mar 2024 09:57:50 +0000
+Message-ID: <20240306095430.1782163-1-Ilia.Gavrilov@infotecs.ru>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: 208ac3cd-1ed4-4982-a353-bdefac89ac0a
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 5
+X-KLMS-Message-Action: clean
+X-KLMS-AntiSpam-Status: not scanned, disabled by settings
+X-KLMS-AntiSpam-Interceptor-Info: not scanned
+X-KLMS-AntiPhishing: Clean, bases: 2024/03/06 07:48:00
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2024/03/06 02:14:00 #24008090
+X-KLMS-AntiVirus-Status: Clean, skipped
 
-On Wed, 6 Mar 2024 10:01:53 +0100
-Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> wrote:
+The 'len' variable can't be negative because all 'min_t' parameters
+cast to unsigned int, and then the minimum one is chosen.
 
-> On Wed, 6 Mar 2024 09:23:53 +0100
-> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.inf=
-o> wrote:
->=20
-> > On 28.02.24 12:03, Petr Tesa=C5=99=C3=ADk wrote: =20
-> > > On Wed, 28 Feb 2024 07:19:56 +0100
-> > > "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis=
-.info> wrote:
-> > >    =20
-> > >> Net maintainers, chiming in here, as it seems handling this regressi=
-on
-> > >> stalled.   =20
-> > > Indeed, I was too busy with sandbox mode...   =20
-> >=20
-> > Hmm, no reply in the past week to Petr's request for help from someone
-> > with more knowledge about the field. :-/
-> >=20
-> > So I guess this means that this won't be fixed for 6.8? Unfortunate, but
-> > well, that's how it it sometimes. =20
->=20
-> For the record, I _can_ reproduce lockdep splats on my device, but they
-> don't make any sense to me. They seem to confirm Jisheng Zhang's
-> conclusion that lockdep conflates two locks which should have different
-> lock-classes.
->=20
-> So far I have noticed only one issue: the per-cpu syncp's are not
-> initialized. I'll recompile and see if that's what confuses lockdep.
+To fix it, move the if statement higher.
 
-That wasn't the issue. FTR the syncp was in fact initialized, because
-devm_netdev_alloc_pcpu_stats() is a macro that also takes care of the
-initialization of the syncp struct field.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+---
+ net/ipv4/tcp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The problem is u64_stats_init().
-
-Commit 9464ca650008 ("net: make u64_stats_init() a function") changed
-it to an inline function. But that's wrong. It uses seqcount_init(),
-which in turn declares:
-
-	static struct lock_class_key __key;
-
-This assumes that each lock gets its own instance. But if
-u64_stats_init() is a function (albeit an inline one), all calls
-within the same file end up using the same instance.
-
-Eric, would it be OK to revert the above-mentioned commit?
-
-Petr T
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index c82dc42f57c6..a4f418592314 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -4010,11 +4010,11 @@ int do_tcp_getsockopt(struct sock *sk, int level,
+ 	if (copy_from_sockptr(&len, optlen, sizeof(int)))
+ 		return -EFAULT;
+=20
+-	len =3D min_t(unsigned int, len, sizeof(int));
+-
+ 	if (len < 0)
+ 		return -EINVAL;
+=20
++	len =3D min_t(unsigned int, len, sizeof(int));
++
+ 	switch (optname) {
+ 	case TCP_MAXSEG:
+ 		val =3D tp->mss_cache;
+--=20
+2.39.2
