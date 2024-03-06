@@ -1,115 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B82612C52C;
-	Wed,  6 Mar 2024 13:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5C4131743
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 13:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709730747; cv=none; b=Qnv3Hm6HKtMkxcNi//Ta9b/aI9jVefffGXGDmG3DCvyOTSwQnNGA4STZq2322IUyJ/UH0wGSVcm0Jh4C1IFJ227BC0aPpINpFHt0dycKBHYi8eeR7i9HYo7+gjBEpCVsVxUQWwLiz1EjuRqhq1GbRONvBMa0LnMsWsMnrhYcm98=
+	t=1709730761; cv=none; b=qcOssI0A3u7gNujJMDNQOpSBNaejdajTNbZaV58yOQe77wNd2D+DSwSwg6NIkoPs9VM5kosWvj2zDBWVxBjDMy65xiXOgdNzS4GTBq+HZPaDQwp8ZUFSBgHtCA3pJ7NLQ+Cwja79w8s3zCh3e+YRNOU4w2jeogR8L7OZrZnGV5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709730747; c=relaxed/simple;
-	bh=znAyfDfvPiSviTV5pIub082WYjH2lOSzE/FbF134A/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ea0/44K6fXLSdmKa3B1CtuEo7ePicgwkC2qE5RFVW+tboTmSrbUJ1RaUKZZUyOV0vfcajIcEf3D5f/gl//V46Jtr54AZmvlYxO5NKwBA3yz6Q2iWzTn2Bs7VPqkUw+BB0KuEKDrdtGf/Ns6c9b3YES/84q/bTF+W7wdaKNgZSJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sVMvs5C1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709730761; c=relaxed/simple;
+	bh=zc2zZ6M5U5YJr4cZh6IDmp+6jTvsRZlZFYiNFJlAj2M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GT4V2F8KZpcIpbZT1av0NCG9tGizn7Ejz3d+clmQDfY5bY4XNKalWp/e4nzUN52eeyVIgD46kLYOuSUC4+x4ggTh85AdE1hzsblOLEMVTtXApHpZTRIWpKMZw8edncgh5ZOqcgC+kCx6UouBQz1QWcKRp8zE875RB5Xb1HWJcKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=DpufhFl0; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sVMvs5C1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0959AC433C7;
-	Wed,  6 Mar 2024 13:12:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709730746;
-	bh=znAyfDfvPiSviTV5pIub082WYjH2lOSzE/FbF134A/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sVMvs5C1r6AHhJG0OMp/scMB7a3gfIlKXUGEzYyQSL0onk3LqodbHIAoliGJAI12U
-	 yA5WDwHxgOX9v3wMlpNK37wfr01qfw0ymE9WvUVzjKlI4GdXX76gebXupkrs1nYslU
-	 wTgLCcUYOLZIDP3sIDpjNTL6Q+NcHKOVjb8BJpa0aJqvOs42IBrrw0HdysE0kpEH/K
-	 7UKNl0NdDTm6W6euovVNrxXyInMY2NFx7FOQylFsX0XQVzDWS/HSTgLME93VnZyxrT
-	 Jc5vTAX645NO/I8e0qIzAXXlO6hVo5YFFo7AwVoxbGMhdsft36pIYZlvYYCK4DstQ1
-	 +4YI2cXXMrbYg==
-Date: Wed, 6 Mar 2024 14:12:23 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Oliver Crumrine <ozlinuxc@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org
-Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
-Message-ID: <ZehrtwSDQV-X7BXV@debian>
-References: <hxiq3upwxs3j5mc5arwlx4jriqm7fq5z54wroc4h4kqcq4gq7m@uwnoq2vnkhup>
- <ZeXzuWVmC9AnsECt@debian>
- <7ubz52rfdl2i76sotvd3s4thv6jvbfao6zct3sywqus2owlvkx@wpbeqqdvipo4>
- <ZehMWQ0LkemsTHAC@debian>
- <CAK1VsR0XZMgUW8qMQMcDPohD8-+OZsgW68sZegLbVy6cdoWucQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="DpufhFl0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709730759; x=1741266759;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zc2zZ6M5U5YJr4cZh6IDmp+6jTvsRZlZFYiNFJlAj2M=;
+  b=DpufhFl0tHMBF+/bOZsP+Idw6ID45hbmOKdhES7g4N28A2Y+DUy0V3sw
+   9Vquj3UQgRBIRxJBTO8cUZMF0yLvzcNtq53Jxf0bXO+AQ3Sjgrk4L4C/v
+   Fg4EMlABLxpI42YBdO+1gAGWGqVTM/oxptNBjiVD9leO4/1A5BJRB0qZY
+   SCg8G5iHxIY+tQU0uQ++pXu3QaqKzSJe98TQpLxsHgkrLnsxl6y4CtmiV
+   zsovoigTUx36fl9dgTFEd00kkUW6s23kKlyvYDCruX0ZGqIUo5T9fNvMK
+   ZCNg8kxX1ivuTN+7zOX4qtHA3TOPTZGPG/JsGNwwmzXE/WdZ4ABzWDWID
+   Q==;
+X-CSE-ConnectionGUID: It6AnLiDS5GINWmYX8VNaw==
+X-CSE-MsgGUID: M2/mz+qiSvaT8qbC98gVHA==
+X-IronPort-AV: E=Sophos;i="6.06,208,1705388400"; 
+   d="asc'?scan'208";a="18925469"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Mar 2024 06:12:37 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Mar 2024 06:12:30 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Wed, 6 Mar 2024 06:12:28 -0700
+Date: Wed, 6 Mar 2024 13:11:43 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang
+	<jszhang@kernel.org>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Eric Biggers
+	<ebiggers@kernel.org>, Elliot Berman <quic_eberman@quicinc.com>, Charles Lohr
+	<lohr85@gmail.com>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 2/4] riscv: Only check online cpus for emulated
+ accesses
+Message-ID: <20240306-spry-retread-56d6c8dce327@wendy>
+References: <20240301-disable_misaligned_probe_config-v6-0-612ebd69f430@rivosinc.com>
+ <20240301-disable_misaligned_probe_config-v6-2-612ebd69f430@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="naiMyB7E1A9ldgjP"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CLY4JT0rzhj1XS62"
 Content-Disposition: inline
-In-Reply-To: <CAK1VsR0XZMgUW8qMQMcDPohD8-+OZsgW68sZegLbVy6cdoWucQ@mail.gmail.com>
+In-Reply-To: <20240301-disable_misaligned_probe_config-v6-2-612ebd69f430@rivosinc.com>
 
-
---naiMyB7E1A9ldgjP
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--CLY4JT0rzhj1XS62
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 6 Mar 2024 14:12:23 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Oliver Crumrine <ozlinuxc@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org
-Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
 
-On Wed, Mar 06, 2024 at 08:02:10AM -0500, Oliver Crumrine wrote:
-> Hi Alex,
+On Fri, Mar 01, 2024 at 05:45:33PM -0800, Charlie Jenkins wrote:
+> The unaligned access checker only sets valid values for online cpus.
+> Check for these values on online cpus rather than on present cpus.
+>=20
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Fixes: 71c54b3d169d ("riscv: report misaligned accesses emulation to hwpr=
+obe")
 
-Hi Oliver,
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-> Type into netcat, not the program I sent.
-> My program is the server and prints out whatever it recieves,
-> along with some other stuff that lets you know which options
-> are supported.
+Cheers,
+Conor.
 
-Nothing either.
+> ---
+>  arch/riscv/kernel/traps_misaligned.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/tra=
+ps_misaligned.c
+> index 8ded225e8c5b..c2ed4e689bf9 100644
+> --- a/arch/riscv/kernel/traps_misaligned.c
+> +++ b/arch/riscv/kernel/traps_misaligned.c
+> @@ -632,7 +632,7 @@ void unaligned_emulation_finish(void)
+>  	 * accesses emulated since tasks requesting such control can run on any
+>  	 * CPU.
+>  	 */
+> -	for_each_present_cpu(cpu) {
+> +	for_each_online_cpu(cpu) {
+>  		if (per_cpu(misaligned_access_speed, cpu) !=3D
+>  					RISCV_HWPROBE_MISALIGNED_EMULATED) {
+>  			return;
 
-$ date; nc localhost 8888 -u | ts
-Wed Mar  6 14:09:38 CET 2024
-foo
-$ echo $?
-0
+I went looking to see what the practical differences were between
+"present" and "possible", cos I'd never really seen much code using
+"present". Turns out present and possible are essentially the same on
+riscv. TIL.
 
-
-$ cc testDgramSocketServer.c=20
-$ date; ./a.out | ts
-Wed Mar  6 14:09:05 CET 2024
-^C
-$
-
-
-Have a lovely day!
-Alex
-
---=20
-<https://www.alejandro-colomar.es/>
-Looking for a remote C programming job at the moment.
-
---naiMyB7E1A9ldgjP
+--CLY4JT0rzhj1XS62
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmXoa7cACgkQnowa+77/
-2zKoXg/7BBATtPrwKlIT8X1yCNo4xxJpc2tN3XxJkGWpvuA3dtJzYNn4oJjZ+zZ4
-KnxkZbcAgxGiHxHF32viqu//xbSur+7+ECnhn55mrmGnAzg72SYsjlHe7FxDrisp
-GcxncrYURVIeZJsnuJYeTXW7qdrAoiudbllSsMClT+Xrf2nHoERD7lhgWGl7u29k
-TtzemTrmHGB5A/5S1E8Lr7dNpHnBMLDQ2kJFB6b61P14d195miflYx2jeQ72FRoq
-flfqGJRkQnFJHxQg8APti0ui/NznzyqHlYVVtIlycaT1MqrZYBz3Vd17BwRciQLb
-B+jiksHuSEdVAHMnv12dzGVf/mDg7raZ6u1V72Zo3ReoNCB6n5y+eg7kzcLwKwkq
-L/vaF8M6maXCCNxGkSOIcgZANkA0x4tLYWdIRa1sErE8xWEzcyRk3Bln/k6D2zzO
-RBcIvaxqeAmj0y+0FNqDDIDJ9aM4JVjlDZmAFx1aMdD4sJTWJ8JHWFapzKENbAs4
-sNiCUqnN0aAZdF1lN3Epxb+YMOshxreJp9h+aaxuJ6bMckh1sy5vvG3vK28D8Q4H
-Q8xDeohjHhgi0SgChrPFNjdIUWBjZTCpS+QG3zvXd5phLGtIkRanHqHm4GoAwRqe
-4JqO60btSrRIySoND/99INv2BfhjS1PMYIQysiTHb0Aa2UVimbc=
-=PSrm
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZehrjwAKCRB4tDGHoIJi
+0nKQAQC/tSJTZ1Iyv8vL/KUSfV1d92ey0waFTZfCGSIMtUCNYgEA3wE18AO5OlwU
+9ZQodv7iKYlcM9xT0XbN4zjDfJsrmAw=
+=A42a
 -----END PGP SIGNATURE-----
 
---naiMyB7E1A9ldgjP--
+--CLY4JT0rzhj1XS62--
