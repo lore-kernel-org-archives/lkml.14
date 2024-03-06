@@ -1,94 +1,107 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B065E1B941;
-	Wed,  6 Mar 2024 22:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A801B941;
+	Wed,  6 Mar 2024 22:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709762729; cv=none; b=bIvVn8HSBtOYlsUENdqo1ICedoF5j/rVsmNJKsuHTXLpfnFAm2U/GalD7y9g4/+1ylgQcDlFG+i+lcgQRUi086yqtA2AcnAG5sNXUEbkaCmUOz6yPL2v58uEO4J/7yD4AnbX7KUHoR8WajGMTWvLrjklV+IuIa1mOSJUhVvIIkg=
+	t=1709762773; cv=none; b=MXqQxUGssCPgGx4V6XYjfwfBlKwI+SPAHvglSaqbKjXDKMrWPUR+Y7oHFzI+GO8uEz0MKy8DvZkRe1SK29RF9L8oSfU5ygJRPGr1F1CSjAvwrCDxZZ97Fvyq0eLQPF8iUDJ40HybMM04zumdRBITuPWibpXUmyq4rCQ8YGicWRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709762729; c=relaxed/simple;
-	bh=sFCrcJfe3GWfAni0vKXs+57THCQF6p5EsjvUzbOtd/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qqCQ/bGiWcOo8s7l3TYszDPl/Yq3IJ440qHl0RXdmGuWii3wPZVkaBEA1fzeyYG9NTbikVayWti6fjNDnm5vdvOsqw7QiemrbFPAdSEpnxluA3+jjmLzEWsM0AsGKNz6lC/gUe5YOWuDpkSDJxlP4FM4Q92lVmovi58zXTuKCoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FqOKdVki; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1709762773; c=relaxed/simple;
+	bh=Q6nI/N7wvS+IJoI8zvSoef/iw9QQBEP/19WRjTvAfQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JzPAiBThDInxIEAO8ZrUgiqfl32w7eQOy+FfZ8hoFXOr/m2jyieEN2d5d5JBPhnCDOvqHM8bEicW1HLpb4rK8YMjkAsj6zbyyj5/f3L+sNLoEZyhhXIR7wabOgutsunftn2VNkwiohZJPg4dVkuVbaVdVpB7iFClcizRJhmkzLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aewsjAK6; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FqOKdVki"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1709762726;
-	bh=EJGSxR3EOBEByhMkVaJ1i/CBJY8Ts/5WzF5Ku+ZJea8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=FqOKdVkiJU4Ycpl10e1BFJ7Ez6yBReQScQ1sdJdw6MKvA2PmSATlURXlHBRK++34q
-	 7IwF8ZMi+BHjwg1wWfMJcYhP/FAcGk08DBLnGxE8RM01H5go+WnNTXVDEvorRmiH9O
-	 HRHb7C7ay8Fu6u84EdR3p+JVA1vxTQq7DifMe3qbPS0/neCkHV0IEKPPE8wpKrk6r5
-	 nMDQ1CSfFlcQemha8Ib0fHBNjCU0CAo/D1qyufYJqkVObAaeSQBKT0KdRsPlVjkJgY
-	 tEc+gAEuwYoLwj4SW4UIzXEwogH6JBWnllOKlLc/dYUk5DSBHQF5+iSscL+JWXJIKG
-	 zISijTxJV7SyQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TqmhQ0k7Vz4wb2;
-	Thu,  7 Mar 2024 09:05:25 +1100 (AEDT)
-Date: Thu, 7 Mar 2024 09:05:24 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Perry Yuan <perry.yuan@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the pm tree
-Message-ID: <20240307090524.6635a4d8@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aewsjAK6"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 426LvMYv000406;
+	Wed, 6 Mar 2024 22:06:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=NrYxsIOwkjk9D5Paw8HS8ZbIfu/sTVLwflepMjYx1PU=;
+ b=aewsjAK6KhC43FSuWfhlosY068aT54XcXZIH8VgEu4uOCzOEcnUG9E7vxYXih5ZvnEz4
+ 4SS7BnbgPhjNnny5vPgrwd8w8L3ZmmNn6jFj+5kmmUTp4cDfL+Uqn3q5asowbkWteKQy
+ rumb9NYYfhuX7PSjFIXwxImz35SnETNOnn5lMb9QJv44yujZGXsrSkEwg3CiMv7yaqIX
+ mYb+GqzFWIbbAW9O3hO7IX3f6U94qCp91e+XdKN8jx9lVXDr/SB5KdYTfzCKtL9+hg9h
+ gV7yl3C+CwIQ+q2SpPehih09Tqvm34F4l2gQ34TZWtJ9pIcMEYQ8ZD2PJ+m9JabINHWt SA== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wq0utr47n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 22:06:07 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 426K3e1J031560;
+	Wed, 6 Mar 2024 22:02:41 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmgnk97kr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 22:02:41 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 426M2cjx28508568
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 6 Mar 2024 22:02:40 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 637C35806B;
+	Wed,  6 Mar 2024 22:02:38 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B78435805D;
+	Wed,  6 Mar 2024 22:02:37 +0000 (GMT)
+Received: from [9.61.98.245] (unknown [9.61.98.245])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  6 Mar 2024 22:02:37 +0000 (GMT)
+Message-ID: <6d8656b0-91ab-49e7-9321-30367052f083@linux.ibm.com>
+Date: Wed, 6 Mar 2024 17:02:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0b4xJs+wRp5HjKj.zGk34Ei";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] s390/vfio-ap: queue_configuration sysfs attribute
+ for mdevctl automation
+Content-Language: en-US
+To: "Jason J. Herne" <jjherne@linux.ibm.com>, linux-s390@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, pasic@linux.ibm.com, akrowiak@linux.ibm.com,
+        borntraeger@de.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com
+References: <20240306140843.10782-1-jjherne@linux.ibm.com>
+From: Matthew Rosato <mjrosato@linux.ibm.com>
+In-Reply-To: <20240306140843.10782-1-jjherne@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: zbCD7jB1_OXe1Qi7FOjOOWHz-3DEIC-o
+X-Proofpoint-ORIG-GUID: zbCD7jB1_OXe1Qi7FOjOOWHz-3DEIC-o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 mlxlogscore=999 bulkscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2403060178
 
---Sig_/0b4xJs+wRp5HjKj.zGk34Ei
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 3/6/24 9:08 AM, Jason J. Herne wrote:
+> Mdevctl requires a way to atomically query and atomically update a vfio-ap
+> mdev's current state. This patch set creates the queue_configuration sysfs
+> attribute.  This new attribute allows reading and writing an mdev's entire
+> state in one go. If a newly written state is invalid for any reason the entire
+> state is rejected and the target mdev remains unchanged.
+> 
+> Changelog
+> ==========
+> v2
+>   - Rebased patched on top of latest master
+>   - Reworked code to fit changes introduced by f848cba767e59
+>       s390/vfio-ap: reset queues filtered from the guest's AP config
+>   - Moved docs changes to separate patch
 
-Hi all,
+Tested exploitation of the new sysfs interface using proposed s390-tools code + mdevctl.  Besides the other minor changes mentioned separately, feel free to include
 
-In commit
+Tested-by: Matthew Rosato <mjrosato@linux.ibm.com>
 
-  a51ab63b297c ("ACPI: CPPC: enable AMD CPPC V2 support for family 17h proc=
-essors")
+for the code patches.
 
-Fixes tag
-
-  Fixes: fbd74d1689 ("ACPI: CPPC: Fix enabling CPPC on AMD systems with sha=
-red memory")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    This can be fixed for the future by setting core.abbrev to 12 (or
-    more) or (for git v2.11 or later) just making sure it is not set
-    (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/0b4xJs+wRp5HjKj.zGk34Ei
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXo6KQACgkQAVBC80lX
-0GxNYAf8CDg/3nvoz24HyLl/Zxogs5HK55k8Z1QSxHs1aD4AnBXr41SMwMojsQwM
-H67+uq7ynIw8jb5KrT5UKFEOybQtYjihrf+o2y2MbE4ibMXsHpXewvy+QKcDoNgJ
-vHKgEAxlteueZMkYb3hcaNq247j1YwE5u8AKoW1LnATqcXJK86e7J/4gYod5cCOv
-mBNLQ3p7nyO1cc/S7CgnLP2FIQd00wKBkKGfdHCGVzk2wq1miPHKXi/xG68pN3/T
-MJbZK4pEsI54ButGEqzZwkt1RFGeogKmwSgzR68CGbdfhpZoncWJX9yZCsr+iilj
-jWAnI78g6U6rCd2/N363HjmXLtlF4g==
-=7kid
------END PGP SIGNATURE-----
-
---Sig_/0b4xJs+wRp5HjKj.zGk34Ei--
