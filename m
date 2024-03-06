@@ -1,80 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 9.mo575.mail-out.ovh.net (9.mo575.mail-out.ovh.net [46.105.78.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA561EF1C;
-	Wed,  6 Mar 2024 15:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A873130ADD
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 15:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.78.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709740028; cv=none; b=ZRWQVZO9UrY3WFpgufE0EEvFvD5a4icOaHE3bh9gt+MygmhQLM+m+a0dKA+w26Xxya7xQhhgFoSNPZQZgEootq4xCeS5p3/xNJ8gdKYnGYHLw7gXIuYoZTgpkxVTrj3Zr2ARizJevzISjgGiEO1UirBH3bxUqWaRau5WJAUb9Zw=
+	t=1709740122; cv=none; b=pBm48lIR9aTIfIi2xHC3hnMPjWEG907SXW7gZf20h3NNKy84TCkNGpIBBgDRcKNM7jTLDQpJjJrbCLahaTeRJyl8+dUhYsUcQRCPUIaYKMemx0ugjAe/yy42hfN0ZpnThmvpvZ9OMFnNUoR4SvCleLlGaP38otQ1MKlv/8O1Zko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709740028; c=relaxed/simple;
-	bh=9DOihWQw0xuRTLjGIEQbHnRXdG9fyUWdY9YNVRIcx2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C7idwTluXTtA6p6ZiR15sgyxCkUJOQ7bKrrPuiVC0uZSONvNwwfGndUKoVYMgRXPjQr/skal9L/BKWPpbpJz407A306ouFCUrbTd172A1HuG+UgcM5bx4FXFdAB/B/tsYnYMZUKOaooxAHTfXwpaUcfqwbf+l5RwsjrOdKAe+kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ttL9H21N; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ttL9H21N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8CB8C433F1;
-	Wed,  6 Mar 2024 15:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709740028;
-	bh=9DOihWQw0xuRTLjGIEQbHnRXdG9fyUWdY9YNVRIcx2o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ttL9H21NSL2imX2DI0HYqy6nx9UlnZI55BzxADMtnM0o+/Fu10kzkerlNOxafY3HZ
-	 DVA89wjxIR804P0/gHDAsykFUrWZx2XEFpVrgoLDFSKc0zu51rc1lXepryUVSI2xdd
-	 u6jpZ/NC4gOpCk7PoxLtbwjjy7lLClV8Ack3j6q13j7/dZsvoVOLQhcTBNjwNDAStu
-	 s40RFGICmri6J80r19tBz9EcG0CCxmO5HMu9z00jKgLOg57Ver5MqzWznlkiDQnqPJ
-	 yXN9E/hXyHK8m6HC9EYgAock0xatww+lYOMevWjHrhIzMP0JCW+qcLup9JELwRXzUJ
-	 fzRK87hoaNEUA==
-From: Jakub Kicinski <kuba@kernel.org>
-To: davem@davemloft.net
-Cc: netdev@vger.kernel.org,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	Jakub Kicinski <kuba@kernel.org>,
-	jesse.brandeburg@intel.com,
-	anthony.l.nguyen@intel.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] Add Jeff Kirsher to .get_maintainer.ignore
-Date: Wed,  6 Mar 2024 07:47:03 -0800
-Message-ID: <20240306154703.1392919-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1709740122; c=relaxed/simple;
+	bh=ddVEZ/hCRRIaQR+Zd4qHp55qWobjMRKrD1xXYor6Njs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tfCsT7mnLfo23l0wJh3xGGr8bxRzoPwOY6OxQXp5NIiiZNj3lazSOJnnYthWUJpvu2XvxrSNrEDYC7Y7qNIMtQXhz22oqf94VqAPlvKajFF1khthHpXSf6wWiMAx07/basFyKdO68+Rm+BupIICgoXApfUCvwlFXEzf3eWzDQTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.78.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director11.ghost.mail-out.ovh.net (unknown [10.109.148.178])
+	by mo575.mail-out.ovh.net (Postfix) with ESMTP id 4TqcCk08Sdz1Prr
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 15:43:29 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-zgt6x (unknown [10.110.113.115])
+	by director11.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 523151FFCE;
+	Wed,  6 Mar 2024 15:43:29 +0000 (UTC)
+Received: from etezian.org ([37.59.142.109])
+	by ghost-submission-6684bf9d7b-zgt6x with ESMTPSA
+	id mCmqCiGP6GXMAwEAjxLk1w
+	(envelope-from <andi@etezian.org>); Wed, 06 Mar 2024 15:43:29 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-109S003b68dbd3f-2314-40a5-abca-d04c75d496b3,
+                    62DEF991EB217AB86F953B10C2782167B22AFEEB) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Michal Simek <michal.simek@amd.com>, 
+ Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240119013326.3405484-1-jisheng.teoh@starfivetech.com>
+References: <20240119013326.3405484-1-jisheng.teoh@starfivetech.com>
+Subject: Re: [PATCH v2 RESEND] i2c: cadence: Add system suspend and resume
+ PM support
+Message-Id: <170973980846.1763249.4872045565378143580.b4-ty@kernel.org>
+Date: Wed, 06 Mar 2024 16:43:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Ovh-Tracer-Id: 10313524625080715995
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledriedugdejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrddutdelnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheejhedpmhhouggvpehsmhhtphhouhht
 
-Jeff was retired as the Intel driver maintainer in
-commit 6667df916fce ("MAINTAINERS: Update MAINTAINERS for
-Intel ethernet drivers"), and his address bounces.
-But he has signed-off a lot of patches over the years
-so get_maintainer insists on CCing him.
+Hi
 
-We haven't heard from him since he left Intel, so remapping
-the address via mailmap is also pointless. Add to ignored
-addresses.
+On Fri, 19 Jan 2024 09:33:26 +0800, Ji Sheng Teoh wrote:
+> Enable device system suspend and resume PM support, and mark the device
+> state as suspended during system suspend to reject any data transfer.
+> 
+> 
 
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
-CC: jesse.brandeburg@intel.com
-CC: anthony.l.nguyen@intel.com
-CC: linux-kernel@vger.kernel.org
----
- .get_maintainer.ignore | 1 +
- 1 file changed, 1 insertion(+)
+Applied to i2c/i2c-host on
 
-diff --git a/.get_maintainer.ignore b/.get_maintainer.ignore
-index c298bab3d320..7d1b30aae874 100644
---- a/.get_maintainer.ignore
-+++ b/.get_maintainer.ignore
-@@ -1,4 +1,5 @@
- Alan Cox <alan@lxorguk.ukuu.org.uk>
- Alan Cox <root@hraefn.swansea.linux.org.uk>
- Christoph Hellwig <hch@lst.de>
-+Jeff Kirsher <jeffrey.t.kirsher@intel.com>
- Marc Gonzalez <marc.w.gonzalez@free.fr>
--- 
-2.44.0
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+
+Thank you,
+Andi
+
+Patches applied
+===============
+[1/1] i2c: cadence: Add system suspend and resume PM support
+      commit: 747bdf912e22732e8de9bd04a2d3e387055604a8
 
