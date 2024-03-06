@@ -1,85 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0841B7E4
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 22:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1B91B7E4;
+	Wed,  6 Mar 2024 22:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709765206; cv=none; b=KTDwmTHkK4jXoG9V9aDH2LpkfQwc47FQnlG/NyHjLokKsKFmp/JgBt9kCQNbf+hjbcmTlhZ422bFNhOJdevt9dsR0cw8Pi/OkexNoLY6tCgA4YP3eLZgqCzQ+4v+ygWMmqfQQgKXnlRyTxdvNlocmrN8mkrQ/L6T0/p0WsbEHNU=
+	t=1709765292; cv=none; b=qcA/DlEb1ckWL3qPtyiOxhL5zIKxChe4B1Scv+4GaZ0Em45S/5alRi7ZLVmu55fuqQZMd64e3h26eBpLB7dbl60WkWzvYYYYqA61Dv4617wW7+t0GjPpXz9Pxxz66AgiZLSbaPSgS8ssmaOs7pKOa1qVqZZTQZnUYqB+LiE+sn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709765206; c=relaxed/simple;
-	bh=IIyzKQaugyVEay7v/TS1NkBvw201LO7QQeSmsI0yQ8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sr0Mm/B1QH03RPH6znBIUbU0+64YepiIRdO8h1nRnX4O4Y894WrgKYyJYa2QWaedRTS/OXfh6bk/6Bt3UKDOZHIbJzRMd2+V7wFOd6n892iGH7z0yjVc0ZJ5r2KG4WgAgJ5dqTIhKpKFM36Ps/TilHIhSGi209EnZGayBeRFwAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=c631OACJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709765292; c=relaxed/simple;
+	bh=8crutX9dpmo8bG+8UbYg4M3nXirj3AaUnPS+ao0lWvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cscDbYIQ30VaWFTsoTB1VJ4VjNFVWkkFxWosX1YIS2eHuXUbGFwLuHirWoNnmEeiWM/f++UDKWsotvLDtrn0QSVXIfBwPa97gFJ+LuuDbuJyhNlFfAdDhWbPMIxW2fjga0wE7QiO4xSJ9OBxKvaayWmRM9axAfFOMP79zvgODd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EuCUvYR8; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="c631OACJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA505C433C7;
-	Wed,  6 Mar 2024 22:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709765206;
-	bh=IIyzKQaugyVEay7v/TS1NkBvw201LO7QQeSmsI0yQ8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c631OACJtyyGVZVywHRNQs9fxY3OBMDO1ibEtIKfvcD7tKf6EmKMQykSzqla8AI+9
-	 Rzrx5eSiRTEuUwiT2X5ccxWy+h0JZVWpBxSzrQwYNdDxr222btu7i5gak/g3zlkx91
-	 Ru2wtdDe7EHSHAOZkU1BndCxbnHyP+gQJrfUZlS8=
-Date: Wed, 6 Mar 2024 22:46:43 +0000
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Thorsten Scherer <T.Scherer@eckelmann.de>,
-	linux-kernel@vger.kernel.org,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>
-Subject: Re: siox patches for next development cycle [Re: [PATCH 0/4] siox:
- Move some complexity into the core]
-Message-ID: <2024030655-sketch-conical-b506@gregkh>
-References: <cover.1708328466.git.u.kleine-koenig@pengutronix.de>
- <lkgvr2t4wzw4jkfg523zcek6y2v5l7kj6onw77yffvvs7i2gfy@6ectsjpcg64t>
- <vg5yex3wpnfeibgkwmi33yazdxdz2pbhn4w72mnffqm3qtvjf6@gv3syxj6gsk7>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EuCUvYR8"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 426MS7cD014098;
+	Wed, 6 Mar 2024 22:48:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=dqz8s/tDay0NtoWCi/zHFHzJNonemDZUejLfpG+e+DU=;
+ b=EuCUvYR8U9SmV6NjNVOMzqc+0PucKeEuaAeCasSeQOV6GRhrGfRHMGSFSHByNUxSb6ul
+ IOA63fKqbLMuoAN/A9++nGp6kXykbstjE/duiHHL/hJaVksFX2MseU2e+JvKA6WEg0mW
+ vVLfakRyNeElzRArvdxJ9MllCiwSB2fQtJNVIC00QO8mC0jsOpfrv6Fpo8Cy26FD26mN
+ Y93JlysQJTZz8A01lHJOEMYktCduBwFZTp9G7z2jTZBa1pdTkkSSnqG5LUyYUFhXLqTq
+ ay8GfvJPWFnnyoRVXNcH+sCC+XVDOQqU4KuLgcUo2hptghQdrPBjpsmlTLwFJ3u0JfFP eQ== 
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wq1a98dkx-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 22:48:04 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 426KgrSh010913;
+	Wed, 6 Mar 2024 22:23:06 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmh52h7xq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Mar 2024 22:23:06 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 426MN3FA43057604
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 6 Mar 2024 22:23:05 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8FE1B58062;
+	Wed,  6 Mar 2024 22:23:03 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 12D2A58061;
+	Wed,  6 Mar 2024 22:23:03 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  6 Mar 2024 22:23:02 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br, lukas@wunner.de,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v5 02/12] crypto: ecdsa - Adjust tests on length of key parameters
+Date: Wed,  6 Mar 2024 17:22:47 -0500
+Message-ID: <20240306222257.979304-3-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240306222257.979304-1-stefanb@linux.ibm.com>
+References: <20240306222257.979304-1-stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <vg5yex3wpnfeibgkwmi33yazdxdz2pbhn4w72mnffqm3qtvjf6@gv3syxj6gsk7>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WxKmyU7IWKALJ9c5QIQomlhNFxziGRSv
+X-Proofpoint-GUID: WxKmyU7IWKALJ9c5QIQomlhNFxziGRSv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-06_12,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2403060183
 
-On Wed, Mar 06, 2024 at 07:24:38PM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> On Tue, Feb 27, 2024 at 11:21:24AM +0100, Thorsten Scherer wrote:
-> > On Mon, Feb 19, 2024 at 08:46:28AM +0100, Uwe Kleine-König wrote:
-> > The series looks sensible.
-> > 
-> > Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
-> > 
-> > @gregkh: Would you please pick up Uwe's series as well?
-> 
-> There are currently six patches for drivers/siox waiting to be applied.
-> (Two by Ricardo and four by me.) Thorsten asked Greg to do so. Greg
-> didn't pick these up yet though. So I collected them and put them to a
-> branch at:
-> 
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git siox/for-next
-> 
-> I'd like to get them in during the next development cycle.
-> 
-> Greg, what is easiest for you? Are they still on your list of open
-> patches and we (I) need just a bit more patience? Or should I send a PR
-> to Linus when the merge window opens?
+In preparation for support of NIST P521, adjust the basic tests on the
+length of the provided key parameters to only ensure that the length of the
+x plus y coordinates parameter array is not an odd number and that each
+coordinate fits into an array of 'ndigits' digits. Mathematical tests on
+the key's parameters are then done in ecc_is_pubkey_valid_full rejecting
+invalid keys.
 
-Yes, they are on my list, but I am way behind, sorry.  But hey, a pull
-request is faster, I'll go take this now, thanks!
+The change is necessary since NIST P521 keys do not have keys with
+coordinates that each fully require 'full' digits (= u64), unlike
+NIST P192/256/384 that all require multiple 'full' digits.
 
-Oops, nope, I get the following build error with this tree:
-	ERROR: modpost: "devm_siox_master_alloc" [drivers/siox/siox-bus-gpio.ko] undefined!
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Tested-by: Lukas Wunner <lukas@wunner.de>
+---
+ crypto/ecdsa.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So are you sure you tested this?
+diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
+index 6653dec17327..64e1e69d53ba 100644
+--- a/crypto/ecdsa.c
++++ b/crypto/ecdsa.c
+@@ -230,7 +230,7 @@ static int ecdsa_set_pub_key(struct crypto_akcipher *tfm, const void *key, unsig
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (keylen < 1 || (((keylen - 1) >> 1) % sizeof(u64)) != 0)
++	if (keylen < 1 || ((keylen - 1) & 1) != 0)
+ 		return -EINVAL;
+ 	/* we only accept uncompressed format indicated by '4' */
+ 	if (d[0] != 4)
+-- 
+2.43.0
 
-thanks,
-
-greg k-h
