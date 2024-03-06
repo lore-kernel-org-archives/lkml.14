@@ -1,62 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B8713DBB7;
-	Wed,  6 Mar 2024 18:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2AA5FDCC;
+	Wed,  6 Mar 2024 18:53:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709751194; cv=none; b=WiBbbdmxY5z5Jfrk2A1Pz9jyDS3oCh37GlxJk2StQ8y1Rtvmf74dsNEWqAEX5CBI20S8wBbNIX6q1uzDysKBOw7MvlaalSw5TGDb5YGzjOldXMqsCEugvg2NNUIvpkh8VENmI6lleyMDx0WikpvApgczMxcXONL71rhStZn1OCY=
+	t=1709751215; cv=none; b=A0zpjldQgJFhI6wDmodz16+xzjx5G/nG1515pbfmG9ZOKLCHxp3UiDa6sgiackmMTq8r8+KfVmQXeD7qKB9uNtVNJ7SECB7KGdosSgfo2zU7gCyUmzwArqQZO1/bi5+djxf34E24OisxByqyahvBkcPI5E3S2jBOR0dKYq7nK7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709751194; c=relaxed/simple;
-	bh=pTxcLZycLySNRRWtPcoZMpgtrgApnpFDXfUYU2x8wHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WG0HxpT4cjIHtPtli5s2g7DoP8G5fuRToJgrlPfWASwKkyif5pFb0dVAtErZ9qN5fM3IxQxXthtK5N5ePwfxwsTC1XoqloCUd6VFUudAYU0utCdnK+kgrGFql8Bt+xjsONw9A39+mKTj+sWXS71LaFrd7qwaS/RdicByrjGQjM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD8AC433F1;
-	Wed,  6 Mar 2024 18:53:11 +0000 (UTC)
-Date: Wed, 6 Mar 2024 13:55:04 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, linke li <lilinke99@qq.com>,
- joel@joelfernandes.org, boqun.feng@gmail.com, dave@stgolabs.net,
- frederic@kernel.org, jiangshanlai@gmail.com, josh@joshtriplett.org,
- linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- qiang.zhang1211@gmail.com, quic_neeraju@quicinc.com, rcu@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Fix
- rcu_torture_pipe_update_one()/rcu_torture_writer() data race and
- concurrency bug
-Message-ID: <20240306135504.2b3872ef@gandalf.local.home>
-In-Reply-To: <CAHk-=wgG6Dmt1JTXDbrbXh_6s2yLjL=9pHo7uv0==LHFD+aBtg@mail.gmail.com>
-References: <f3624f39-bbb1-451d-8161-8518e4108d8e@joelfernandes.org>
-	<tencent_9882B228F292088CDD68F10CF1C228742009@qq.com>
-	<20240306103719.1d241b93@gandalf.local.home>
-	<27665890-8314-4252-8622-1e019fee27e4@paulmck-laptop>
-	<20240306130103.6da71ddf@gandalf.local.home>
-	<CAHk-=wgG6Dmt1JTXDbrbXh_6s2yLjL=9pHo7uv0==LHFD+aBtg@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709751215; c=relaxed/simple;
+	bh=sNdO9nT79tocdpHlSu6Tel+IFTT6tNR337Bq9tNA2DI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TlEfVcy6/BTWA+BgBb5EbGnP6cltfZU/bmopYG4TLWwcnQ8qtj2+iOlOfbs86r1UtivCbmbWb6XRmixFTdbw8GQv9p3SXAjJ0rb/vB2j2eW1zHecQRisCQ2a1PE/ljBbyA1lV4C3aSUjv84bVZ/3/hCdElQTRifKtCJgMCChF9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aug0Cwrj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aug0Cwrj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D10FC433F1;
+	Wed,  6 Mar 2024 18:53:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709751214;
+	bh=sNdO9nT79tocdpHlSu6Tel+IFTT6tNR337Bq9tNA2DI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Aug0CwrjD0Fj3Uh/SHf0yMg+mCs0N/Ik/CMN4qqQfSX0vcBtRfDMfhaqTwc8X1vOr
+	 8NHcAODztGqGSVkOiHjlV63q+rGR/Ri9+5+QcgVjvaNUuWHzuod4JsizNd39WZTaaf
+	 obeJjjvNEQJ33eP03jLOOatiMPcXpuVKPvbwxKkMtkDVo7CSs+ujlg8FHQVOcZlbN3
+	 tU5TIv8MQcUi2yuDez625vgt5MPdHfurMTiY/H5J1uY/Csigzm8V/F/PipDDfiSvKB
+	 B52JwMOZ5BvOrTPxMQGTvEF1SmLapAC8C2guP11EmCmlgQetz2FZYh8oVd1zXafgj3
+	 4gLX0BivxOJoQ==
+Date: Wed, 6 Mar 2024 18:53:29 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] ASoC: dt-bindings: fsl,imx-asrc/spdif: Add
+ power-domains property
+Message-ID: <20240306-rack-hurling-4ffabd4f507b@spud>
+References: <20240305-asrc_8qxp-v4-0-c61b98046591@nxp.com>
+ <20240305-asrc_8qxp-v4-1-c61b98046591@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="JzFOx+mcF0ef70Ss"
+Content-Disposition: inline
+In-Reply-To: <20240305-asrc_8qxp-v4-1-c61b98046591@nxp.com>
 
-On Wed, 6 Mar 2024 10:43:25 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Thanks for the history lesson ;-)
+--JzFOx+mcF0ef70Ss
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> So yes, READ_ONCE/WRITE_ONCE do control "tearing", but realistically,
-> it was always only about the "complex values" kind of tearing that the
-> old ACCESS_ONCE() model silently and incorrectly allowed.
+On Tue, Mar 05, 2024 at 12:33:02PM -0500, Frank Li wrote:
+> Add power-domains property for asrc and spdif since fsl,imx8qm-asrc/spdif
+> and fsl,imx8qxp-asrc/spdif require 'power-domains'.
+>=20
+> Set 'power-domains' as required property for compatible string
+> fsl,imx8qm-asrc/spdif and fsl,imx8qxp-asrc/spdif.
+>=20
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Now, are you OK with an addition of ADD_ONCE() and/or INC_ONCE()? So that we
-don't have to look at:
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-	WRITE_ONCE(a, READ_ONCE(a) + 1);
+Cheers,
+Conor.
 
-?
+--JzFOx+mcF0ef70Ss
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- Steve
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZei7qQAKCRB4tDGHoIJi
+0gn7AP0dCMMNi73674NaiMLRXtLe28MNRzsLoBHYAWMCVW3jCAD+LZ5OhLVdWRAs
+deG5qWB9TVWh/dGTLOkOMlnBWwJRmQI=
+=eERr
+-----END PGP SIGNATURE-----
+
+--JzFOx+mcF0ef70Ss--
