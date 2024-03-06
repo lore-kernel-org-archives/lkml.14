@@ -1,122 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA775F87A;
-	Wed,  6 Mar 2024 09:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0E25DF30
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 09:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709719189; cv=none; b=jp9sj4JBxz8+k4tDshqp0x9rMXRwIPFNy0K0YenVhsXZtvIXwseAfXoYIGSuBOOdi/Neq8SHwEQqG9dwIqgtcr0eTEd5JHQ1TSbyUH9fgw/L4+2rYLTrc1Vs8o4JzGOgTY/N7p+HUXllQQksossJXZIt/UvC7J31/VUAc8RCMiM=
+	t=1709719190; cv=none; b=olESMobc3qbpEcN1uJ9nZCDswbP9j1DFGU/ijJFeCmR8nFheAbxueER8A6fqTgh36uK8rf69u+e8ekb/3AtB/3bDFdS1Gyn9e+RDV99bYJn8GYXerNTmk8eyMZY4fdtTIKGtLjSWYJZsbbKcr4JkYUU+8wBLu+KUXAMx3g3DCD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709719189; c=relaxed/simple;
-	bh=et5lilMWMjndYk7hnjmXvEqmk3WER9uNeffbRsLDvYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lsFqsaVCVDP8IEMO8Kl3ww44lclHAKwjv5VorjjnT1LGriJg87K5KrgZ4xfPHvymTegdZqOMn/Oe/8MVXbaFp8IAD1us1k9opBVTTG7GNzvR3Bg2gchyq2S9cUhLkuYTeVuu5N9FeDNVuSgHML1udPYtOyIXnd4IjZqtvPq4YIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehZ3et0b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709719190; c=relaxed/simple;
+	bh=PYrLa71JafYTrx6ScD/co5t0rYc+KGdAr2yCFd2nTeI=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N6XQCPfAABmLcc7quuHpC/YWE2XL49HsiGS9m9krpUWLBxIKVK296yHoRHSXz3C0HuYxlZb9guffERKv/u8iBjgA0ND4dy7fgXwScbjQHKayjOHD5UAcTGbX1cwbkGOL6hHvwBurGrKZrGS18wf2AFP+Edpv/ubLAxL8mglSFuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=gMWrhojv; arc=none smtp.client-ip=203.205.221.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehZ3et0b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ECD1C4160E;
-	Wed,  6 Mar 2024 09:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709719189;
-	bh=et5lilMWMjndYk7hnjmXvEqmk3WER9uNeffbRsLDvYU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ehZ3et0bR95TOoUFbYAJFyp03YgXIS8x7wwBhlHEEnIpo5yj13fCRQvybd8X+Ry/w
-	 BTsqp4C/tLq7Pc84jOi2Nlz/Q1IlH5Xbggq9Ym+HfI7acLNY1ru24kwylUcDUPlXhC
-	 jH+2ZCZEqE6ZBEnENeXAqjBLXp/F7KRSmZ/hd6duaQPpQD6WJHt1W4IiLtLgUOZMyK
-	 PRcD7hZqEZYaRzbmE/tskmF9uoKtkuXPcOVeKGMeeR+BcL/CT+IRq1Q4wZ/b78bgqb
-	 lwRCK0ui6VfvnAY/5Y0uhMmD9AX28qssZ0tdoni8i/N4WAB3Bc4R/ODy+YmjYVEBQG
-	 XkY/rCtI/FpOQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1rho44-000000001b5-3d78;
-	Wed, 06 Mar 2024 10:59:56 +0100
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v4 4/5] arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
-Date: Wed,  6 Mar 2024 10:56:50 +0100
-Message-ID: <20240306095651.4551-5-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240306095651.4551-1-johan+linaro@kernel.org>
-References: <20240306095651.4551-1-johan+linaro@kernel.org>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="gMWrhojv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1709718879;
+	bh=oNIsFqxxtkHbwol+QQzHwWGVGalIcSBK9gQ9PgE3tlg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=gMWrhojvFUpZkWNcj5+4X2MOJXXyg/J2T+JkpJzocWn/jdURgbiQ9F3RlpteXW7RZ
+	 l6wn5kioiVwI+aasY2NfW8BvcePMcc3hOq2DSFDr+OOtZYhlXbgbzcyHfLJuR/ffZQ
+	 hi6gx+/jlDvfjSIiijDH0nnUm+TrCyOvC4lDIkUE=
+Received: from localhost ([2409:895a:3aa0:aa0:3ef0:ad11:601:8a38])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id DA515AD4; Wed, 06 Mar 2024 17:54:37 +0800
+X-QQ-mid: xmsmtpt1709718877tmkxjqfu6
+Message-ID: <tencent_744E0AF832049C200F96FD6582D5114D7F0A@qq.com>
+X-QQ-XMAILINFO: N3QMWHy44bBnzVjCFnVL/EJKR287sqNOnb7s3DASL0C7TUlF8Mwqub5ZvAESTp
+	 9Lz+7mtA3/FQK/x7U2OKgM8bLI4FEg6lEkBcvZhembgq1sCsLuM2nxyqxvq+cDvuERHArRuYYm+J
+	 +oV5CQzgZUgo+kaOhLQ8T83MgqrZB+zkyBslhfwzNpZXvO01yO9FIntCsVjGF4qJdFtOBVN8TekQ
+	 Jmyjjrh6YlvRK3MqDsTuSp3+54ZOyZ/9mqkT35Q/sOcdJSMiaDmkBdUPXwBfFXAJ02eaERoy4nuv
+	 os06Qh7YrdFjmJ/Wz/nEBDwga3k1I/hTWE76nu5xOKOEyEgNrPZKxhuVH066kT0nMepcMGt6+htF
+	 IyBJBK8oi21RKGRB4qNG1iugxMXCmUA1xoJcDa99rSAVtFYr7ZTtA9vfLPuICuwuvk5fmwOY9LrH
+	 TZtgClDeSelwcyRn0i2nSaqffpNJLPS+3lPM6p38PrYt+wtBftD0SvnyR3X/XU4gIutLu44+BLgZ
+	 iTu9Ulqt8BuXFBNWn1A1p3/zd33ReKYe/prGpzqKpiOzTiQJqntCiyVd9RvPf86uNErt7rWCo8ug
+	 X68pDK+ou3F51hXFDBdL/dRSDK4HaHOXv1e2g7b45btbOSqHFTL3db9OnQCWiVKUosQGW0oQ5MyI
+	 jh0/CxjPsQEHtwW0FrGduq28CWMSTcsV4Qh1JS4d1HDqwGbMN2WCoQaP3tLeygyfsg3LChJy84xH
+	 2EfUTBJuMVy5vHKzZGGB2SkZKGp2VoghKcoeDkSdHgxqlyl1IXohYNCbReMBXoFtvMsBjoq1CyBT
+	 D41uA5SL9DtJzz8xwYnXvKOSuVkvZTgVqK0y2KkK6+kwhXJSfsQa9JGearyD2A9CEpgG5gtKuf8l
+	 qQ5U9t6Pug0ZYXki9+u8Fv03V1lFCLQfczHvwEb21PpfzBI5duVa0DVYysQHgDN/iWDCWdD0XPbd
+	 a0q1RBElSz2Vzd23Yv56NMTmKT//R7ue0EQERoi0w=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+Sender: kenneth-lee-2012@foxmail.com
+Date: Wed, 6 Mar 2024 17:53:31 +0800
+From: Kenneth-Lee-2012@foxmail.com
+To: Andrea Parri <parri.andrea@gmail.com>
+Cc: linux-kernel@vger.kernel.org, stern@rowland.harvard.edu,
+	paulmck@kernel.org
+Subject: Re: Question about PB rule of LKMM
+X-OQ-MSGID: <20240306095331.sgmksoorkebfb2cw@kllt01>
+References: <tencent_C5266B7D6F024A916BCA7833FDEA94A74309@qq.com>
+ <Zedd18wiAkK68Lzr@andrea>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zedd18wiAkK68Lzr@andrea>
 
-Add the missing PCIe CX performance level votes to avoid relying on
-other drivers (e.g. USB or UFS) to maintain the nominal performance
-level required for Gen3 speeds.
+On Tue, Mar 05, 2024 at 07:00:55PM +0100, Andrea Parri wrote:
+> Date: Tue, 5 Mar 2024 19:00:55 +0100
+> From: Andrea Parri <parri.andrea@gmail.com>
+> To: Kenneth-Lee-2012@foxmail.com
+> Cc: linux-kernel@vger.kernel.org, stern@rowland.harvard.edu,
+>  paulmck@kernel.org
+> Subject: Re: Question about PB rule of LKMM
+> 
+> (Expanding Cc:,)
+> 
+> > In the LKMM document, it said the pb link:
+> > 
+> >    E ->coe W ->cumul-fence* X ->rfe? Y ->strong-fence Z ->hb* F
+> > 
+> > can make sure E execute before F. But the cat file define pb as follow:
+> > 
+> >   let pb = prop ; strong-fence ; hb* ; [Marked]
+> >   acyclic pb as propagation
+> > 
+> > So the acyclic rule is only on pb relationshit itself. So it won't
+> > forbid F -rfe-> E, will it? It only forgit F -pb-> E. So how can
+> > propagation rule ensure E execute before F?
+> 
+> With regard to your first question, the propagation rule does indeed forbid
+> F ->rfe E.  To see why, suppose that F ->rfe E (in particular, E is a load
+> and the first link in your sequence is fre instead of coe).  Then
+> 
+>    E ->fre W ->cumul-fence* X ->rfe? Y ->strong-fence Z ->hb* F ->rfe E.
+> 
+> Since any rfe-link is an hb-link (by definition of the hb-relation), the
+> previous expression can be written as follows:
+> 
+>    E ->fre W ->cumul-fence* X ->rfe? Y ->strong-fence Z ->hb* F ->hb E,
+> 
+> that is, given that hb* is the reflexive transitive closure of hb,
+> 
+>    E ->fre W ->cumul-fence* X ->rfe? Y ->strong-fence Z ->hb* E,
+> 
+> contradicting the fact that pb is acyclic.  An argument similar to the one
+> reported above can show that the propagation rule forbids F ->hb E.
+> 
 
-Fixes: 813e83157001 ("arm64: dts: qcom: sc8280xp/sa8540p: add PCIe2-4 nodes")
-Cc: stable@vger.kernel.org      # 6.2
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Wow, my gosh, I didn't expect the last "hb*" works like this:). Very clear
+explaination, thank you very much.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-index 2fc8d3308844..a8279ba6a756 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-@@ -1780,6 +1780,7 @@ pcie4: pcie@1c00000 {
- 			reset-names = "pci";
- 
- 			power-domains = <&gcc PCIE_4_GDSC>;
-+			required-opps = <&rpmhpd_opp_nom>;
- 
- 			phys = <&pcie4_phy>;
- 			phy-names = "pciephy";
-@@ -1878,6 +1879,7 @@ pcie3b: pcie@1c08000 {
- 			reset-names = "pci";
- 
- 			power-domains = <&gcc PCIE_3B_GDSC>;
-+			required-opps = <&rpmhpd_opp_nom>;
- 
- 			phys = <&pcie3b_phy>;
- 			phy-names = "pciephy";
-@@ -1976,6 +1978,7 @@ pcie3a: pcie@1c10000 {
- 			reset-names = "pci";
- 
- 			power-domains = <&gcc PCIE_3A_GDSC>;
-+			required-opps = <&rpmhpd_opp_nom>;
- 
- 			phys = <&pcie3a_phy>;
- 			phy-names = "pciephy";
-@@ -2077,6 +2080,7 @@ pcie2b: pcie@1c18000 {
- 			reset-names = "pci";
- 
- 			power-domains = <&gcc PCIE_2B_GDSC>;
-+			required-opps = <&rpmhpd_opp_nom>;
- 
- 			phys = <&pcie2b_phy>;
- 			phy-names = "pciephy";
-@@ -2175,6 +2179,7 @@ pcie2a: pcie@1c20000 {
- 			reset-names = "pci";
- 
- 			power-domains = <&gcc PCIE_2A_GDSC>;
-+			required-opps = <&rpmhpd_opp_nom>;
- 
- 			phys = <&pcie2a_phy>;
- 			phy-names = "pciephy";
+> To address the second question, I'd start by first remarking that the CAT
+> file doesn't define an "execute-before" relation currently.  This file does
+> however include the following comment:
+> 
+> (*
+>  * The happens-before, propagation, and rcu constraints are all
+>  * expressions of temporal ordering.  They could be replaced by
+>  * a single constraint on an "executes-before" relation, xb:
+>  *
+>  * let xb = hb | pb | rb
+>  * acyclic xb as executes-before
+>  *)
+> 
+> In this sense, the propagation rule (like other "acyclicity"-constraints of
+> the LKMM) expresses "temporal ordering", and any pb-link is (by definition)
+> an "execute-before"-link.  The file explanation.txt can provide additional
+> context/information, based on the (informal) operational model described in
+> that file, about this matter.
+
+So it is just a rule in the sence of mathematics? I think it would be better
+if there were some explaination in the explaination file. It is
+descripted in nature language, the reader might not notify it is just a
+mathematics rule. And you cannot say an action executes before another
+because they are in the pb link. It becomes a cycling in logic...
+
+But anyway, now I understand. Thank you very much.
+
+> 
+> Notice that, as examples in tools/memory-model/litmus-tests/ can illustrate,
+> none of the three components of the xb-relation is redundant.  Specifically,
+> there do exist pb-links/cycles which are not hb-link/cycles (and viceversa).
+> 
+> Maintaining three distinct/separate constraints (happens-before, propagation,
+> and rcu) instead of a single "executes-before" constraint, although formally
+> unnecessary, highlights the modularity and eases the debugging of the LKMM.
+
 -- 
-2.43.0
+			-Kenneth Lee
 
