@@ -1,105 +1,91 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE34C140397
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 19:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F78140386
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 20:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709755201; cv=none; b=Lt7paM9pwf6iq0dUEtcJnEofw1YBXJ9QNUCMQVdYASUkYkfwF6VuJXnA43a22NFtsqP6E2Wizmko65EL3iTAr0musgl19yBLLDK0QmAvKHHrm4x4NJrGkrSuId/nVu7ZGMJqtgXTLOpLOqjVhJjeymmvD1gNQOPOgPYgTXq1dnw=
+	t=1709755252; cv=none; b=msrSqIOzgPB0O8xjZVKmivH3rOpQRGthJT0F0GoHAYA5XM1RlP1K0w8iInV05yxYXi9OYMc9XnRhsWEn3KBiupA++YPYaVS2GrxCTzUCoOzbpFV/ZpoO0eEYZ3snnYFY/GLk0qdgZnGsowKBEf3EwXaU1lK9GrODiew0a1m1TsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709755201; c=relaxed/simple;
-	bh=MJQooKERrkO5M8FdxXsbgrCB1vQwZZRXngnYowa1Ucg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=klwJmPnY/8LslQdwLQ5THfH1d4rGdMGh1BCD1eHLhtYy9WLDVl2O15exvex6P5ucGJCCgEuhbD+daXVx3JYrUXNdjnEo6gbGmRlGoruiBZ1aSwaGuCdEx2xN6/Pj7NCwFYi4P+NCel98ZGQLkEoua2xQywNZ/jF/hdR8CvYDaG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=nxITYk6F; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="nxITYk6F"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6096ab005c0so1377747b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 11:59:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1709755198; x=1710359998; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nk0/J29KPf4TmmeCSNMEsRp4h+k2/fvkEQwAaLlHWxs=;
-        b=nxITYk6FUOJOhKf/sKhG47NLK2mwoGTzHmTNNhxNIk7Bj8T0g3ZXECO7EtcSbbER1L
-         XjxBYhZohxdwY4VBAYKuMI4JSwJEYP2iAigz9VB0licnoowBnxfUxJ9tGsxhL5sZow5+
-         sOkvA06fPJzle4rR3N4lrtCRMvFVd1tv6txgRiDRczMNjT3LuReoqnwbMQf7Yqx95zzO
-         mde9jwIbLHrz1zpSU52WxOFTXRGf9+TA0pTf5na5pOZvEySIAMVSz+RHkZHJFSTsoiwT
-         WJyfZSZrEu56E7OmanKvlynbnnJAqGBgJtm3YxTqt8khigdtDEZGkQq6smn02PrGzagD
-         k8zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709755198; x=1710359998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nk0/J29KPf4TmmeCSNMEsRp4h+k2/fvkEQwAaLlHWxs=;
-        b=rz2SUdW50oZIIZ76jYOO/MYhhW6oTvkf8DWpf+gL2jSlpdpVtmgE/5E3pTda1NQBVk
-         DSS7L5XM/6yze/gE+y6O0QQmrOlSqzBjBT+2wDf2IImWuVRy3zu58RKj7Src8hnUvD82
-         Viu8oon7VgwOTHQEr42HvknJaE4UWITP4lE+eoxoaA+uJ1fyuIl0zC+unBb5ZofAVXJP
-         iuuHA+nj83XCoxjDNljp/2R/GjZTKBBSGZWDKFMcQBcKXmAPSyCPZJayN0hqCkCpl2CA
-         ZynZ6omzMKkTYyy58cnVjoLjzvKfD9ByarspmXwQ2e3zm1rKcik/oShkOtinhulrClKG
-         AI9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWnvTDcNO6fEdPuGCy9gELSnJbmy9qOmHLYxeKanAJSfqJugGAyQNXjahN2r9PiKEELdxSZSYO+OExW95W0TctuqkzX4XGJck3LX4cJ
-X-Gm-Message-State: AOJu0YxSellTrrwfRjyCM+ecquN6iQzvm/cMMvtihwZBNudpedreW60P
-	S1YsBN45Ofl+9/eXjkpYq1kyJGKt4uDc/y6K/YZ2zUuJQiWRG1R42fBjiyBeeRw=
-X-Google-Smtp-Source: AGHT+IEmVpurGUd31yZyHxSu4mjLVka0+r+yTrQMWzelFcoJ23tJQXn1JppRqRT3evd2Ke2EuGrRpg==
-X-Received: by 2002:a81:8784:0:b0:608:290d:9f1b with SMTP id x126-20020a818784000000b00608290d9f1bmr14538562ywf.49.1709755197926;
-        Wed, 06 Mar 2024 11:59:57 -0800 (PST)
-Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id r13-20020ac85e8d000000b0042f02284578sm1888194qtx.68.2024.03.06.11.59.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 11:59:57 -0800 (PST)
-Date: Wed, 6 Mar 2024 14:59:56 -0500
-From: Josef Bacik <josef@toxicpanda.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
-	David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH] statx: stx_vol
-Message-ID: <20240306195956.GA2420648@perftesting>
-References: <20240302220203.623614-1-kent.overstreet@linux.dev>
- <20240304-konfus-neugierig-5c7c9d5a8ad6@brauner>
+	s=arc-20240116; t=1709755252; c=relaxed/simple;
+	bh=ThBic/H+/99AwjUove3ckV4qt59NoORjigFxFZ2oRh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pU5LjO5KZr7fZEtE9vX3hUQ24CfkOUeJHXkxOeBZenhxvvq0f9ukab+lLjuE5XugtdBn+SkF+2xWY+Ns1wCDaVdBw8Usi+E+NGqriXsNb4k6cOgQwVXUDtaHEtKSIhY8q46bWfbTVYS2DKB2we8f0PwpCjCw6ayUlEtnQfFYJ5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A9C3620007;
+	Wed,  6 Mar 2024 20:00:44 +0000 (UTC)
+Message-ID: <048b4cff-9f3e-48aa-8c17-043261888ad5@ghiti.fr>
+Date: Wed, 6 Mar 2024 21:00:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240304-konfus-neugierig-5c7c9d5a8ad6@brauner>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: compat_vdso: align VDSOAS build log
+Content-Language: en-US
+To: Masahiro Yamada <masahiroy@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+References: <20231117125843.1058553-1-masahiroy@kernel.org>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20231117125843.1058553-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-On Mon, Mar 04, 2024 at 10:18:22AM +0100, Christian Brauner wrote:
-> On Sat, Mar 02, 2024 at 05:02:03PM -0500, Kent Overstreet wrote:
-> > Add a new statx field for (sub)volume identifiers.
-> > 
-> > This includes bcachefs support; we'll definitely want btrfs support as
-> > well.
-> > 
-> > Link: https://lore.kernel.org/linux-fsdevel/2uvhm6gweyl7iyyp2xpfryvcu2g3padagaeqcbiavjyiis6prl@yjm725bizncq/
-> > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > Cc: Josef Bacik <josef@toxicpanda.com>
-> > Cc: Miklos Szeredi <mszeredi@redhat.com>
-> > Cc: Christian Brauner <brauner@kernel.org>
-> > Cc: David Howells <dhowells@redhat.com>
-> > ---
-> 
-> As I've said many times before I'm supportive of this and would pick up
-> a patch like this. There's definitely a lot of userspace that would make
-> use of this that I'm aware of. If the btrfs people could provide an Ack
-> on this to express their support here that would be great.
-> 
-> And it would be lovely if we could expand the commit message a bit and
-> do some renaming/bikeshedding. Imho, STATX_SUBVOLUME_ID is great and
-> then stx_subvolume_id or stx_subvol_id. And then subvolume_id or
-> subvol_id for the field in struct kstat.
+Hi Masahiro,
 
-Sorry I had my head down in some NFS problems.  This works for me, I agree with
-the naming suggestions you've made.  Kent, when you send a new version I'll
-review it and then followup with a btrfs patch.  Thanks for getting this ball
-rolling,
+On 17/11/2023 13:58, Masahiro Yamada wrote:
+> Add one more space after "VDSOAS" for better alignment in the build log.
+>
+> [Before]
+>
+>    LDS     arch/riscv/kernel/compat_vdso/compat_vdso.lds
+>    VDSOAS arch/riscv/kernel/compat_vdso/rt_sigreturn.o
+>    VDSOAS arch/riscv/kernel/compat_vdso/getcpu.o
+>    VDSOAS arch/riscv/kernel/compat_vdso/flush_icache.o
+>    VDSOAS arch/riscv/kernel/compat_vdso/note.o
+>    VDSOLD  arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg
+>    VDSOSYM include/generated/compat_vdso-offsets.h
+>
+> [After]
+>
+>    LDS     arch/riscv/kernel/compat_vdso/compat_vdso.lds
+>    VDSOAS  arch/riscv/kernel/compat_vdso/rt_sigreturn.o
+>    VDSOAS  arch/riscv/kernel/compat_vdso/getcpu.o
+>    VDSOAS  arch/riscv/kernel/compat_vdso/flush_icache.o
+>    VDSOAS  arch/riscv/kernel/compat_vdso/note.o
+>    VDSOLD  arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg
+>    VDSOSYM include/generated/compat_vdso-offsets.h
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>   arch/riscv/kernel/compat_vdso/Makefile | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/compat_vdso/Makefile b/arch/riscv/kernel/compat_vdso/Makefile
+> index 62fa393b2eb2..3df4cb788c1f 100644
+> --- a/arch/riscv/kernel/compat_vdso/Makefile
+> +++ b/arch/riscv/kernel/compat_vdso/Makefile
+> @@ -74,5 +74,5 @@ quiet_cmd_compat_vdsold = VDSOLD  $@
+>                      rm $@.tmp
+>   
+>   # actual build commands
+> -quiet_cmd_compat_vdsoas = VDSOAS $@
+> +quiet_cmd_compat_vdsoas = VDSOAS  $@
+>         cmd_compat_vdsoas = $(COMPAT_CC) $(a_flags) $(COMPAT_CC_FLAGS) -c -o $@ $<
 
-Josef
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
