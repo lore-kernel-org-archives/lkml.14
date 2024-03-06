@@ -1,44 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B58F28EC;
-	Wed,  6 Mar 2024 14:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC6712FB31;
+	Wed,  6 Mar 2024 14:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709736218; cv=none; b=ljq9JFPK5iQe0+spxDC+uSqObUcrl/FrhV9ZhB+Keo3kqyLZgLgnU4c6FCcE6TYP4YzlAbL1N/UUfhGB/oaB2s91+jrqwwIhqyfNaOBl5G3P1SQ4k8b450nCz27YLH+m8txnak4RwJvRT123/T35GDgXCtbs8ho6cjr8VpW6QxM=
+	t=1709736268; cv=none; b=LopTb/fKh34Npc6RH+aVljXKQu9LKnQxIKOKMWoJbAU09CeBdkWJC7Q8EE3Ah8ZNrZ0zg8v7blR49lzR0EeNi9IZz0vIFniPstE1OEOiqcpBaS1oSrTOE1c7DWdjdbES98Ql6S8yqpFs8/ldkd50uJR7LWElMOXdb1KXA5EKAAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709736218; c=relaxed/simple;
-	bh=mWbp73eMNAokt9fYznOu9SNauqvLUqMJhCKZDXxOfNE=;
+	s=arc-20240116; t=1709736268; c=relaxed/simple;
+	bh=Cg+/N+/d48kp+Bii6xwPc6Sv3b/fJs9pKZfyKHqumHo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ki1EjzCQ0Rirq0h6r1v8NIM5k9VllpaTW9BAHIqTRRycayM/spLBqFupFjBv3MPv24vtZa6D2ai46ztiRHGvgCvSsX4o5DWAuAYzqAApH+Dg6/DewWXO7PatSd+YW5iurY+kLiYIrxo6WsShLgWEt9f7iPuwU4DEHYhRA/nsLas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OgyhOkVd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OgyhOkVd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26DF3C433C7;
-	Wed,  6 Mar 2024 14:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709736217;
-	bh=mWbp73eMNAokt9fYznOu9SNauqvLUqMJhCKZDXxOfNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OgyhOkVd6u4W1iU9MwffZEuZVCC29CBMHvD/EVRTHl54EfAiveOAdI/WlsPpa0XiP
-	 xUZLAOGxJ8gQvg8/MyH4WZgZlkFYKEqK/jKLJqs2GFYc7w3sbzeZ/knXIzLbS6H1xR
-	 NpY0knjWotss727Q7C8fAcbLX5qwiqFIFcO4+Rlei/wFNtRE6jPYA/3g6Wlg6f9MU+
-	 zMblSRZ2hHVwZ8J3QBglYvaVrNodciQnBv2g0jYCvg+XbGA9G/6QjaYu+UFCK/LGw3
-	 EwXOT/Zhqo0dAKB2XN6l3lVyW/0otjgXnpVndljWcw7os9DkTj+UlElp6i1f8LrprU
-	 68AChOpdZ114g==
-Date: Wed, 6 Mar 2024 15:43:32 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Fang Xiang <fangxiang3@xiaomi.com>, Marc Zyngier <maz@kernel.org>,
-	Robert Moore <robert.moore@intel.com>
-Subject: Re: [PATCH v5 0/1] irqchip/gic-v3: Enable non-coherent GIC designs
- probing
-Message-ID: <ZeiBFBDhwlJnCUZ2@lpieralisi>
-References: <20240123110332.112797-1-lpieralisi@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ihvgbR0V/c/+G46kcT7Bcac8cuquZlRMadzCs1boqg+FblI1xFMXQnUOPOsjafPpPmu6fpSU/pgk80tmbucADUtbKT9gGPTp5fEwgKEw1CJaIz7PFpE6BXodGmpYwH5/ijMc+EDLE10issr+RjDPsHwhU8cfrbNF+/WouN1+KzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 6727E68C4E; Wed,  6 Mar 2024 15:44:17 +0100 (CET)
+Date: Wed, 6 Mar 2024 15:44:16 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"jack@suse.com" <jack@suse.com>, Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to two
+ steps
+Message-ID: <20240306144416.GB19711@lst.de>
+References: <cover.1709635535.git.leon@kernel.org> <47afacda-3023-4eb7-b227-5f725c3187c2@arm.com> <20240305122935.GB36868@unreal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,85 +56,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240123110332.112797-1-lpieralisi@kernel.org>
+In-Reply-To: <20240305122935.GB36868@unreal>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Jan 23, 2024 at 12:03:31PM +0100, Lorenzo Pieralisi wrote:
-> This series is v5 of previous series:
+On Tue, Mar 05, 2024 at 02:29:35PM +0200, Leon Romanovsky wrote:
+> > > These advanced DMA mapping APIs are needed to calculate IOVA size to
+> > > allocate it as one chunk and some sort of offset calculations to know
+> > > which part of IOVA to map.
+> > 
+> > I don't follow this part at all - at *some* point, something must know a
+> > range of memory addresses involved in a DMA transfer, so that's where it
+> > should map that range for DMA. 
 > 
-> v4: https://lore.kernel.org/all/20231227110038.55453-1-lpieralisi@kernel.org
-> v3: https://lore.kernel.org/all/20231006125929.48591-1-lpieralisi@kernel.org
-> v2: https://lore.kernel.org/all/20230906094139.16032-1-lpieralisi@kernel.org
-> v1: https://lore.kernel.org/all/20230905104721.52199-1-lpieralisi@kernel.org
+> In all presented cases in this series, the overall DMA size is known in
+> advance. In RDMA case, it is known when user registers the memory, in
+> VFIO, when live migration is happening and in NVMe, when BIO is created.
 > 
-> v4 -> v5
-> 	- ACPICA patches merged for v6.8
-> 	- Refactored ACPI parsing code according to review
-> 	- Rebased against v6.8-rc1
+> So once we allocated IOVA, we will need to link ranges, which si the
+> same as map but without IOVA allocation.
 
-Hi Marc, all,
+But above you say:
 
-this is not an urgent fix (I don't think there is any ACPI platform
-affected in the field so it is not even a fix), I am just asking please
-what should I do with it, I appreciate it is late in the cycle (and I
-know some fixes got merged in -rcX leading up to -rc7 that are
-pre-requisite for this patch to work).
+"These advanced DMA mapping APIs are needed to calculate IOVA size to
+allocate it as one chunk and some sort of offset calculations to know
+which part of IOVA to map."
 
-Thanks,
-Lorenzo
+this suggests you need helpers to calculate the len and offset.  I
+can't see where that would ever make sense.  The total transfer
+size should just be passed in by the callers and be known, and
+there should be no offset.
 
-> v3 -> v4:
-> 	- Dropped patches [1-3], already merged
-> 	- Added Linuxized ACPICA changes accepted upstream
-> 	- Rebased against v6.7-rc3
+> > > Instead of teaching DMA to know these specific datatypes, let's separate
+> > > existing DMA mapping routine to two steps and give an option to advanced
+> > > callers (subsystems) perform all calculations internally in advance and
+> > > map pages later when it is needed.
+> > 
+> > From a brief look, this is clearly an awkward reinvention of the IOMMU API.
+> > If IOMMU-aware drivers/subsystems want to explicitly manage IOMMU address
+> > spaces then they can and should use the IOMMU API. Perhaps there's room for
+> > some quality-of-life additions to the IOMMU API to help with common usage
+> > patterns, but the generic DMA mapping API is absolutely not the place for
+> > it.
 > 
-> v2 -> v3:
-> 	- Added ACPICA temporary changes and ACPI changes to implement
-> 	  ECR https://bugzilla.tianocore.org/show_bug.cgi?id=4557
-> 	- ACPI changes are for testing purposes - subject to ECR code
-> 	  first approval
+> DMA mapping gives nice abstraction from IOMMU, and allows us to have
+> same flow for IOMMU and non-IOMMU flows without duplicating code, while
+> you suggest to teach almost every part in the kernel to know about IOMMU.
+
+Except that the flows are fundamentally different for the "can coalesce"
+vs "can't coalesce" case.  In the former we have one dma_addr_t range,
+and in the latter as many as there are input vectors (this is ignoring
+the weird iommu merging case where we we coalesce some but not all
+segments, but I'd rather not have that in a new API).
+
+So if we want to efficiently be able to handle these cases we need
+two APIs in the driver and a good framework to switch between them.
+Robins makes a point here that the iommu API handles the can coalesce
+case and he has a point as that's exactly how the IOMMU API works.
+I'd still prefer to wrap it with dma callers to handle things like
+swiotlb and maybe Xen grant tables and to avoid the type confusion
+between dma_addr_t and then untyped iova in the iommu layer, but
+having this layer or not is probably worth a discussion.
+
 > 
-> v1 -> v2:
-> 	- Updated DT bindings as per feedback
-> 	- Updated patch[2] to use GIC quirks infrastructure
+> In this series, we changed RDMA, VFIO and NVMe, and in all cases we
+> removed more code than added. From what I saw, VDPA and virito-blk will
+> benefit from proposed API too.
 > 
-> Original cover letter
-> ---
-> The GICv3 architecture specifications provide a means for the
-> system programmer to set the shareability and cacheability
-> attributes the GIC components (redistributors and ITSes) use
-> to drive memory transactions.
+> Even in this RFC, where Chaitanya did partial job and didn't convert
+> whole driver, the gain is pretty obvious:
+> https://lore.kernel.org/linux-rdma/016fc02cbfa9be3c156a6f74df38def1e09c08f1.1709635535.git.leon@kernel.org/T/#u
 > 
-> Albeit the architecture give control over shareability/cacheability
-> memory transactions attributes (and barriers), it is allowed to
-> connect the GIC interconnect ports to non-coherent memory ports
-> on the interconnect, basically tying off shareability/cacheability
-> "wires" and de-facto making the redistributors and ITSes non-coherent
-> memory observers.
-> 
-> This series aims at starting a discussion over a possible solution
-> to this problem, by adding to the GIC device tree bindings the
-> standard dma-noncoherent property. The GIC driver uses the property
-> to force the redistributors and ITSes shareability attributes to
-> non-shareable, which consequently forces the driver to use CMOs
-> on GIC memory tables.
-> 
-> On ARM DT DMA is default non-coherent, so the GIC driver can't rely
-> on the generic DT dma-coherent/non-coherent property management layer
-> (of_dma_is_coherent()) which would default all GIC designs in the field
-> as non-coherent; it has to rely on ad-hoc dma-noncoherent property handling.
-> 
-> When a consistent approach is agreed upon for DT an equivalent binding will
-> be put forward for ACPI based systems.
-> 
-> Lorenzo Pieralisi (1):
->   irqchip/gic-v3: Enable non-coherent redistributors/ITSes ACPI probing
-> 
->  drivers/acpi/processor_core.c    | 15 +++++++++++++++
->  drivers/irqchip/irq-gic-v3-its.c |  4 ++++
->  drivers/irqchip/irq-gic-v3.c     |  9 +++++++++
->  include/linux/acpi.h             |  3 +++
->  4 files changed, 31 insertions(+)
-> 
-> -- 
-> 2.34.1
-> 
+
+I have no idea how that nvme patch is even supposed to work.  It removes
+the PRP path in nvme-pci, which not only is the most common I/O path
+but actually required for the admin queue as NVMe doesn't support
+SGLs for the admin queue.
+
