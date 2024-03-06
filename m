@@ -1,196 +1,100 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81B517742;
-	Wed,  6 Mar 2024 08:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94885C057;
+	Wed,  6 Mar 2024 08:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709713446; cv=none; b=o6axp7Tdg5iHNZc0mODhH7yqLpKqn4RD7yw+3E9qzSzfUSdJjY0G7b6MbOtwETHkRnHkfrPjVhtsLbajS43faMT+U24FDkzmuORwuvFkbJbFMTI/aPzhyedAP0nEn5zvjp3ZE9gcZfsbfFQ8jHHljYBmaDZatCdVPEJlY+jyGAE=
+	t=1709713491; cv=none; b=WJUHAGILrJkDEZ+i0CuIc1FtxQpaVc+YsNnZ53gYV1NLDD9RWV3Ncj1Hlx8I6/v5fmey3zw8Ul58zFj5Oy87cudeiVXlZBcOpeOUWNBWQ9GBk7oeISVuoyKwqGTs9l/tDmWcjO08r24cSgI1ADY0ZavAVwRGwbVWOSkCbiGsGx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709713446; c=relaxed/simple;
-	bh=avi3s/FLxkX7grCL8/bkpLAuIzuIxOYGkRAv8Br88SE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bgOoRWxh3Vi0aZK0smmrdOjGQ9oMNITg6OfwJhF/Y3OHw2HxsBMkL6SZRE5jgCZ78WFz5Ny/Ys0aBjdnuoYmjUL+IgpjoLhV26qCyD8YvT4tfYulHqqjVgYy3M/QVu3kzyyb0drk6In5ydXBm++aPHa+HLNi75VX6uYchIwyVrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=z7ULDoGJ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1709713491; c=relaxed/simple;
+	bh=k/HbIqiXk/wu0mDYWVOYPq1UOLi4MM2rdQIq1/sN4pM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pUZXP3hOZpCT7IfFZFmmWfXDhmZpTXOF3McoiLmp0ljX6gvTTdt0eau8bDTdpj+01jAC4w1Cp9bEFoVtCTrdR/QAu9ZJmS0vV1RYzqObAatV9XD2JFku0pEpVocPpkfMPalz1z5Bl2ZpFXJM3XlylPUO6h6ZuQ0LR5WwRyQzNbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SdtcunEi; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="z7ULDoGJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=dP4C4A5WCdxvCJCpj0oUh+9+DdThZPg4vHyHIY5V3mA=;
-	t=1709713444; x=1710145444; b=z7ULDoGJEdsOD/HUiThsgVzA9tOvLjMxKTYsEWlJ23NeCyG
-	HglRGiZDgZzWzMF8cBsap3L5GFhZydA+0fTLaVGbHc3CHx7nQPiSS3npk3NCQLgz+Lu95sOXWaIKY
-	EUfVVW6VKlj/qgq9+B+ZtAOUaaxh9FgxUZG65wGBJ1ji3LqnHipFqTLm5nf/a4ryBMrAjoKFJgnZA
-	ZXOHkR9Pgyr1wOo/HZHYq20Pbi83W+MkILcivGIXqcuIYaIK6pjjL11Zj1OyLMTFz+T77RuioYglF
-	AgP9WZY5aGwHuentcao2jpgLwsUHegVMrhdTI5S+vuL3N4zcXcyIBXbsMxr3tybA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rhmZ8-0000fd-P1; Wed, 06 Mar 2024 09:23:54 +0100
-Message-ID: <e3181555-c08d-463f-a9a9-b08c69875c84@leemhuis.info>
-Date: Wed, 6 Mar 2024 09:23:53 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SdtcunEi"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a450bedffdfso403863266b.3;
+        Wed, 06 Mar 2024 00:24:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709713488; x=1710318288; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k/HbIqiXk/wu0mDYWVOYPq1UOLi4MM2rdQIq1/sN4pM=;
+        b=SdtcunEi6vU2MtqGoKD+IkQaB17j7zpv60kLRHVDRmZCHR/mc7Zmtq8FEj9PmtHzvT
+         gnBxZP32LxNR8k+UioXhd3Z9Kw/H0lO12lG7V116j0g2/P8lsOVMcOFd7J8DIg705hWv
+         hfssl1RS4LWKRVP8/o46qa65qN//sUdd22NPr4Fm+vL0214VGnJgCENwfxnrO3YiStk9
+         f7+c2LuL33euMCGNHFMOQ0xEMaVceerrAwtjcGghCRTyL0QPF+7bbT6UFPJMBIoRnXw0
+         AF/4IrRLHEjHE5aFmmz9/KaKmAjbemejwWxZutu2Z5tqijpi0NGxwX3boBRLXnaDvv+Y
+         ylIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709713488; x=1710318288;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k/HbIqiXk/wu0mDYWVOYPq1UOLi4MM2rdQIq1/sN4pM=;
+        b=DzyphULBtVtgYAl4nf8YaInkFG3PfchaHANtqmTLbaafbtBHSUHxYwVo5fnL/sNJhB
+         3gcjDU0vBvDgJ6g78l9vcFMqIrF+nAi97bleAyToyUNQ6dQzlhJ94yY+DRqS/mlCvtfz
+         CoB+LhMRC8acqOY6XidojcZsyeJ/WfoQCnIetVBGMcbVhQsiLFXrdOEm6834iVRdzLhl
+         5USXU1DZbr7CzVEWHbHHN2G8GKdxrPT6Ox0tXMeKX5xLRxvHCQIN47sOCRsGMsxKRWj5
+         bCpZWx3x4C/DNgq0wF4AI3LEKo5gN4O7SawzYklJK/BUq2s1C5ZkzrwcHIbv/yDBdkgF
+         K0zA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjtrdvFy0rGsQNpi5RLIbAoDGXLMYDR3sflFX1A2dAUN9mPGX100DR+9bgVWJa7M7v2BnaPaSiwPiWgWhv0lg3QPbCQnrcbMDjOob4zSB0eSDDlwW5YMEpGXCykfLRGQVbiFsUfWZm
+X-Gm-Message-State: AOJu0Yy2LzrUAByJ8Q7Lix13BUHPs4UFRCRDNHV9/82hhLQQV+l1DGev
+	bBHnRzrS9qEtmvYhu3didoyz+DxADPQGfUa+AjF7AIM8e4IegCi8JdzJiJCF9R/ftrswdjoQJYm
+	rjKp949onaPCfD9wjl5LiiGsy60U=
+X-Google-Smtp-Source: AGHT+IF1Fv26nqs+0M2KpaCDTRPR7Ax7eaJRl9mRZxqdztpvBOx3KHsG5Lj8D313IqZflw5h/azi5NbJ/GfBtDmQU3A=
+X-Received: by 2002:a17:906:d9d0:b0:a41:315b:94d9 with SMTP id
+ qk16-20020a170906d9d000b00a41315b94d9mr8666736ejb.71.1709713487809; Wed, 06
+ Mar 2024 00:24:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit statistics
- counters
-Content-Language: en-US, de-DE
-To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Jisheng Zhang <jszhang@kernel.org>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- "open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ARM/Allwinner sunXi SoC support" <linux-sunxi@lists.linux.dev>,
- Marc Haber <mh+netdev@zugschlus.de>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org,
- alexis.lothore@bootlin.com, Guenter Roeck <linux@roeck-us.net>
-References: <20240203190927.19669-1-petr@tesarici.cz>
- <ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
- <Zct5qJcZw0YKx54r@xhacker>
- <CANn89i+4tVWezqr=BYZ5AF=9EgV2EPqhdHun=u=ga32CEJ4BXQ@mail.gmail.com>
- <20d94512-c4f2-49f7-ac97-846dc24a6730@roeck-us.net>
- <CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
- <a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info>
- <20240228120308.48d6a9c2@meshulam.tesarici.cz>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240228120308.48d6a9c2@meshulam.tesarici.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709713444;c709e32f;
-X-HE-SMSGID: 1rhmZ8-0000fd-P1
+References: <20240303-sdma_upstream-v1-0-869cd0165b09@nxp.com>
+ <20240303-sdma_upstream-v1-4-869cd0165b09@nxp.com> <CAOMZO5A60zG+1u0NYPFaLsAgCxcF1RxxybVeatovTGj07oxqBA@mail.gmail.com>
+ <Zec8nYk6gzx9IxOS@lizhi-Precision-Tower-5810>
+In-Reply-To: <Zec8nYk6gzx9IxOS@lizhi-Precision-Tower-5810>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Wed, 6 Mar 2024 10:24:35 +0200
+Message-ID: <CAEnQRZCZk4_Vc10dV3qbk56jtO3Rb7hhghz2zqzg6_gbyvxD4Q@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dmaengine: imx-sdma: Add i2c dma support
+To: Frank Li <Frank.li@nxp.com>
+Cc: Fabio Estevam <festevam@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dmaengine@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, Robin Gong <yibin.gong@nxp.com>, 
+	Clark Wang <xiaoning.wang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28.02.24 12:03, Petr Tesařík wrote:
-> On Wed, 28 Feb 2024 07:19:56 +0100
-> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
-> 
->> Net maintainers, chiming in here, as it seems handling this regression
->> stalled.
-> Indeed, I was too busy with sandbox mode...
+On Tue, Mar 5, 2024 at 5:39=E2=80=AFPM Frank Li <Frank.li@nxp.com> wrote:
+>
+> On Mon, Mar 04, 2024 at 08:12:09AM -0300, Fabio Estevam wrote:
+> > On Mon, Mar 4, 2024 at 1:33=E2=80=AFAM Frank Li <Frank.Li@nxp.com> wrot=
+e:
+> > >
+> > > From: Robin Gong <yibin.gong@nxp.com>
+> > >
+> > > New sdma script support i2c. So add I2C dma support.
+> >
+> > What is the SDMA firmware version that corresponds to this "new SDMA sc=
+ript"?
+>
+> sdma-6q: v3.5
+> sdma-7d: v4.5
+>
+> >
+> > In which SoC has this been tested?
+> >
+>
+> imx8mp and imx6ull.
 
-Hmm, no reply in the past week to Petr's request for help from someone
-with more knowledge about the field. :-/
 
-So I guess this means that this won't be fixed for 6.8? Unfortunate, but
-well, that's how it it sometimes.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
->> On 13.02.24 16:52, Eric Dumazet wrote:
->>> On Tue, Feb 13, 2024 at 4:26 PM Guenter Roeck <linux@roeck-us.net> wrote:  
->>>> On Tue, Feb 13, 2024 at 03:51:35PM +0100, Eric Dumazet wrote:  
->>>>> On Tue, Feb 13, 2024 at 3:29 PM Jisheng Zhang <jszhang@kernel.org> wrote:  
->>>>>> On Sun, Feb 11, 2024 at 08:30:21PM -0800, Guenter Roeck wrote:  
->>>>>>> On Sat, Feb 03, 2024 at 08:09:27PM +0100, Petr Tesarik wrote:  
->>>>>>>> As explained by a comment in <linux/u64_stats_sync.h>, write side of struct
->>>>>>>> u64_stats_sync must ensure mutual exclusion, or one seqcount update could
->>>>>>>> be lost on 32-bit platforms, thus blocking readers forever. Such lockups
->>>>>>>> have been observed in real world after stmmac_xmit() on one CPU raced with
->>>>>>>> stmmac_napi_poll_tx() on another CPU.
->>>>>>>>
->>>>>>>> To fix the issue without introducing a new lock, split the statics into
->>>>>>>> three parts:
->>>>>>>>
->>>>>>>> 1. fields updated only under the tx queue lock,
->>>>>>>> 2. fields updated only during NAPI poll,
->>>>>>>> 3. fields updated only from interrupt context,
->>>>>>>>
->>>>>>>> Updates to fields in the first two groups are already serialized through
->>>>>>>> other locks. It is sufficient to split the existing struct u64_stats_sync
->>>>>>>> so that each group has its own.
->>>>>>>>
->>>>>>>> Note that tx_set_ic_bit is updated from both contexts. Split this counter
->>>>>>>> so that each context gets its own, and calculate their sum to get the total
->>>>>>>> value in stmmac_get_ethtool_stats().
->>>>>>>>
->>>>>>>> For the third group, multiple interrupts may be processed by different CPUs
->>>>>>>> at the same time, but interrupts on the same CPU will not nest. Move fields
->>>>>>>> from this group to a newly created per-cpu struct stmmac_pcpu_stats.
->>>>>>>>
->>>>>>>> Fixes: 133466c3bbe1 ("net: stmmac: use per-queue 64 bit statistics where necessary")
->>>>>>>> Link: https://lore.kernel.org/netdev/Za173PhviYg-1qIn@torres.zugschlus.de/t/
->>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>> Signed-off-by: Petr Tesarik <petr@tesarici.cz>  
->>>>>>>
->>>>>>> This patch results in a lockdep splat. Backtrace and bisect results attached.
->>>>>>>
->>>>>>> ---
->>>>>>> [   33.736728] ================================
->>>>>>> [   33.736805] WARNING: inconsistent lock state
->>>>>>> [   33.736953] 6.8.0-rc4 #1 Tainted: G                 N
->>>>>>> [   33.737080] --------------------------------
->>>>>>> [   33.737155] inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
->>>>>>> [   33.737309] kworker/0:2/39 [HC1[1]:SC0[2]:HE0:SE0] takes:
->>>>>>> [   33.737459] ef792074 (&syncp->seq#2){?...}-{0:0}, at: sun8i_dwmac_dma_interrupt+0x9c/0x28c
->>>>>>> [   33.738206] {HARDIRQ-ON-W} state was registered at:
->>>>>>> [   33.738318]   lock_acquire+0x11c/0x368
->>>>>>> [   33.738431]   __u64_stats_update_begin+0x104/0x1ac
->>>>>>> [   33.738525]   stmmac_xmit+0x4d0/0xc58  
->>>>>>
->>>>>> interesting lockdep splat...
->>>>>> stmmac_xmit() operates on txq_stats->q_syncp, while the
->>>>>> sun8i_dwmac_dma_interrupt() operates on pcpu's priv->xstats.pcpu_stats
->>>>>> they are different syncp. so how does lockdep splat happen.  
->>>>>
->>>>> Right, I do not see anything obvious yet.  
->>>>
->>>> Wild guess: I think it maybe saying that due to
->>>>
->>>>         inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
->>>>
->>>> the critical code may somehow be interrupted and, while handling the
->>>> interrupt, try to acquire the same lock again.  
->>>
->>> This should not happen, the 'syncp' are different. They have different
->>> lockdep classes.
->>>
->>> One is exclusively used from hard irq context.
->>>
->>> The second one only used from BH context.  
->>
->> Alexis Lothoré hit this now as well, see yesterday report in this
->> thread; apart from that nothing seem to have happened for two weeks now.
->> The change recently made it to some stable/longterm kernels, too. Makes
->> me wonder:
->>
->> What's the plan forward here? Is this considered to be a false positive?
-> 
-> Although my system has run stable for a couple of months, I am hesitant
-> to call it a false positive.
-> 
->> Or a real problem?
-> 
-> That's what I think. But I would have to learn a lot about the network
-> stack to understand what exactly happens here.
-> 
-> It may go faster if somebody else on the Cc can give me a hint where to
-> start looking based on the lockdep warning.
-> 
-> Petr T
-> 
-> 
+This information should be present in the commit message.
