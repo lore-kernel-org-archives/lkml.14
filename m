@@ -1,58 +1,71 @@
-Received: from fallback20.i.mail.ru (fallback20.i.mail.ru [79.137.243.76])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2071.outbound.protection.outlook.com [40.107.22.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF845CDE2;
-	Wed,  6 Mar 2024 18:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.76
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709748258; cv=none; b=SLdaZl3N91HNxkbNDhbR/YGh+40WTq3PHWaOuuGA8c1jI923JP0UBkjEc6d8ZddZEoKTDJpR8NEDQAmBaqPKD7Ugomwa+aaNx7NOjwPwW2logayO/pdsUQIE2nv58bYEWeQzRc3E/cBdwJmG2sekla/aQFJW5E4OyoZEgwkWhrY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709748258; c=relaxed/simple;
-	bh=1XM6zSKx8QxYG4iaQLbgEtAjXMdIsmBn9KOjIiBlaHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H4RucpTjVFl74oCpAsLrVoVkn6ga1C8f6Ducdv3aVK9MIXohS+0yna8Pmi2kdQmbr6uCjsNSdrKQS4gHorgrqql/7eE42BZMHsy/b6fSg/DP9ZU/W5FO2PwygKzzixFRkMxsaa6AjRhiE73dkWxPyNI3dTZNIW3JGQQkFidG7mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=cXQsFGba; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=iAXWNih9; arc=none smtp.client-ip=79.137.243.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F451428FE;
+	Wed,  6 Mar 2024 18:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709748282; cv=fail; b=cDtbHzEJkOXth9I5YFiKscO/26cZVMEXq9SQ4xE+xAVG6ig2f5gGDAVM93oBaYGRP0UwMDLNzU7Yy/HrKJyPRytcYysfSKqp+PY+VD60jjku+U44isG7YlOUJ/UT3iCr6u4JNPaqhyQP7UH01jj57gUpZ4TQLWwomiz04hrR4iY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709748282; c=relaxed/simple;
+	bh=UsKa7tIHLMp1wTklpMNWN3DRQsBwbxmdf8XPj5b9WYk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tkhS1hx0tNdDghswLnz5TxjI1jKcmVru/h42DXHa+iMtLJwQ+mWAY6qaG/+qPgm/uOLjGBSSNnF2ESFMiqaYP8jvB5b0WqIn8vTuVvx9l6Ldwku31UewXtP2WhV/oGG3ndknFOilhGZFLWb6KPL4AJF1jq/+3DXmcwCPtQ3DIvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=lLtgrr+L; arc=fail smtp.client-ip=40.107.22.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="cXQsFGba";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="iAXWNih9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=VqtGmFubmMdx/QuIH83X3k2GawclvWnYOe3ClUecCvA=;
-	t=1709748255;x=1709838255; 
-	b=cXQsFGbashTGdi0+8d0dajSTZ/kQosotB0TfC+A5M7Jv2+k3abrjR83U6MkjKHB1dAapG88nwvcCCKovWp0playN9HdQ0gODMindL97Fs1mYOJP3Jg4UzvZARB4NyHg7vtBQX/wq7nhRzdvc71jNZaLHZlzr/SR05zQo9wvcfcw=;
-Received: from [10.12.4.36] (port=37770 helo=smtp59.i.mail.ru)
-	by fallback20.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1rhv3E-003q5j-3k; Wed, 06 Mar 2024 20:27:32 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=VqtGmFubmMdx/QuIH83X3k2GawclvWnYOe3ClUecCvA=; t=1709746052; x=1709836052; 
-	b=iAXWNih9gUjONAz0FQ4Ah86NbAy8qpOQaPtsWCEqAqRK6QvozsW2U+EHV2YVbMoVcsaOwCHVGME
-	ujkvCrCvDEhehbNxOVoz5J98W2jvtccOgFp8tEJY7J67K7DWQjk8XOp7NiTt7QxoWptXbMQWrHD9p
-	ByiQJ7kRpOdnhlFcSdQ=;
-Received: by smtp59.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1rhv2v-0000000F1Va-1dz2; Wed, 06 Mar 2024 20:27:14 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: pavel@ucw.cz,
-	lee@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="lLtgrr+L"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MIPK5qfm8EkJWWrcthuDRCUo1p103UON4IEXI5NZRyT2iXIyrsb+InW/kIEdYmC5SOo6qfm4Yr+2K39hsDMbq4iBllgWl6UKj2nvbFl5Lloo0xburunreei0YAWov3ZHi1Z+Cm0Se04bHk0NlwhAPfX7RjooMa5FBir1XP1y2N/iDMdvY7wmRDJDKsuzsHAtfiLptIbbD+mB6qj8/6L0vhZL+vVWMmW6uMquL7X/IdS7C+pPq+Keo9AT3NgBViGzqnIjQX6ZS2yt/UAHesJqfRYydfAyhKBdI/yc5y7LZFvmHhTKRNUA4I8Irar8lAd38BHp2jEOQU5mpnWhFgIelA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O6v2HbHcgkKbexa8oZfX/H/QR+qOB904iEZZ7iuZxbk=;
+ b=PHElU38tAsXhSsDadAwWMhP4yZ8M/kkY4KHGXS5iDkZhxXkXYdZrCV4np4Sfe4y8UJ36tNIAUcvoEFocAVWR28HGIuCD0IqOvAGZWV2jfidd7eAWq4qdqY0pNgxNScXmC4vse6jbA8sWbHQ3sLifIhr0KR+nse5pYrRT03fpCgJ/oRwGyMsA9dyMkBOaODSAP5cSUYOpSGTIaq2nYKX1hErFt6gbYAz0j8tDKjnXSy2FBvem8WGyj2HojqgqPlEc2WfJcal+s1Xzpe5KZjL2uZo1bBOxqyU6Vukanc9zmTWKrvux3pheE6+KdgDaNXumfEGL46XzAlcrEUSYITuX6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=leica-geosystems.com; dkim=none (message not signed);
+ arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O6v2HbHcgkKbexa8oZfX/H/QR+qOB904iEZZ7iuZxbk=;
+ b=lLtgrr+L13E+XDA0O9wy/lsXNdlD25TWZg7T4m54q1U/MReQnFK563TB3rRI4hevcl5q5bK85vVv81R58dsF4F80+GBfMA1WAFPdrkvDlr3fDj/9XXOWiiGwqMS3/SOm26ermoCR8D/xwYd6+mN9+MxG8OFbSuHlqqXb/ezEVjM=
+Received: from DB9PR02CA0015.eurprd02.prod.outlook.com (2603:10a6:10:1d9::20)
+ by DB9PR06MB7467.eurprd06.prod.outlook.com (2603:10a6:10:262::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Wed, 6 Mar
+ 2024 18:04:37 +0000
+Received: from DB5PEPF00014B99.eurprd02.prod.outlook.com
+ (2603:10a6:10:1d9:cafe::2c) by DB9PR02CA0015.outlook.office365.com
+ (2603:10a6:10:1d9::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39 via Frontend
+ Transport; Wed, 6 Mar 2024 18:04:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
+ smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
+Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
+ designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.8.40.94; helo=hexagon.com; pr=C
+Received: from hexagon.com (193.8.40.94) by
+ DB5PEPF00014B99.mail.protection.outlook.com (10.167.8.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7362.11 via Frontend Transport; Wed, 6 Mar 2024 18:04:37 +0000
+Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
+	 Wed, 6 Mar 2024 19:04:36 +0100
+From: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+To: mturquette@baylibre.com,
+	sboyd@kernel.org
+Cc: linux-clk@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH 0/2] Add LPG/PWM support for PM6150L PMIC
-Date: Wed,  6 Mar 2024 20:27:08 +0300
-Message-ID: <20240306172710.59780-1-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.44.0
+	bsp-development.geo@leica-geosystems.com,
+	m.felsch@pengutronix.de,
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>
+Subject: [PATCH next] clk: rs9: fix wrong default value for clock amplitude
+Date: Wed,  6 Mar 2024 19:04:35 +0100
+Message-Id: <20240306180435.1033052-1-catalin.popescu@leica-geosystems.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,47 +73,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD987C0EE6E7F0A597D21AFE2E000C69B1FB60C465D22E5E337182A05F53808504049F0544BE37C111F411046492FDDF80652244347E8A8460C8FCBEF1FD3BB67B11AD6A186BD11839C
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE79145AB6E9E75F07EEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637FF37B1FF54E2C7C48638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D897F4AA6A8CCC14A3F5F3F533CCBC407AE9949CC6CDFBED31CC7F00164DA146DAFE8445B8C89999728AA50765F7900637DCE3DBD6F8E38AFD389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8062BEEFFB5F8EA3EF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CDA7BFA4571439BB2AD7EC71F1DB884274AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C30F1327A8DDF03E57BA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF17B107DEF921CE791DD303D21008E298D5E8D9A59859A8B6B372FE9A2E580EFC725E5C173C3A84C30E7A8B1B1FD51AB935872C767BF85DA2F004C90652538430E4A6367B16DE6309
-X-C1DE0DAB: 0D63561A33F958A54DB3675F4747B4005002B1117B3ED6961C1A280A149093B0E99897350C7C491E823CB91A9FED034534781492E4B8EEAD4ADCFBF7921B375DC79554A2A72441328621D336A7BC284946AD531847A6065A17B107DEF921CE79BDAD6C7F3747799A
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFD6E5FA0672843F7182F7520D73D3C94650883FCD0B965DB77379BE37D308936A669E50AE97022433A2A143A52978B9DDB47F12560EE94F35C777010AFA8312B64183ED9D5400F72F42BF32D1DA1046D202C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj9auBsoWJeY+uU6a7Ba86tQ==
-X-Mailru-Sender: 9EB879F2C80682A09F26F806C73949814E2244C9C55FE2176750B362712FA5BDF3C6304B9C750CE3BA2E80206BB77BB22C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B485448333635D8AFAF2FD4A3C9FF394F50FA50637E8B29678049FFFDB7839CE9ED2C2511FF248D2A2666371CEF2DF2FEAE9EB77E8478749A5DBDC8F043DCD8110
-X-7FA49CB5: 0D63561A33F958A560416A7FD8E464987212A3635F6E9486F73BFADD419A7AD48941B15DA834481FA18204E546F3947CAC84B7EF345C8436117882F4460429724CE54428C33FAD30A8DF7F3B2552694AC26CFBAC0749D213D2E47CDBA5A9658378DA827A17800CE7B687D752F9FE62218941B15DA834481F9449624AB7ADAF3735872C767BF85DA227C277FBC8AE2E8BFC70575558BC73B275ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj9auBsoWJeY9tcyz8zQLd0g==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+X-OriginalArrivalTime: 06 Mar 2024 18:04:36.0986 (UTC) FILETIME=[C04B85A0:01DA6FF0]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B99:EE_|DB9PR06MB7467:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 74e5f93b-8c9d-4df6-b236-08dc3e07e306
+X-SET-LOWER-SCL-SCANNER: YES
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	sOgseA4eA+1GlG18A/OgliOyuig5TC036hdusGnYimHE1dR7nVfflki90lYu09JuHhAuhFcV+nVjMJlPLIX67JE7IHnF3zMLIaoAtUJNlp4N9kr21X9fe7GAS39EltsUK1bV51F2oeikLX/KWOpHM9cEoBWATH8cSa5XeJ7dntG6tw8+SUJBNx7ZG33EncfmpVp1hK6C/bvgsGqXf0PK2fkFFd9i31Ctkjv426WdgmdEZeXvOyjlz46f/WEuCLJdFe1mvROeDUH59JKRnDRKJRnvD19HHDKSUi2xeOSqSmQEYyGWq7SvPMXijJZ+h+3FHJ5/FMMQO/BXuI9TN7nfkvA6hLjjiCKlMMzNIUkU4oSh5gB1uJbHRqf66sCHNpyDrnOyfcCpyZp2IsM+tr1KJ4Aq7t8Q4uAIJS5Zg5WPuUfHU22H9XSD9eDyoLOPpBPDC3lqo+QsBMLVIOzNaiHct5SQyQIz6p82fuCEwkIx3KdHZzjBW8Wq3q3HM5zgnDnCRXcLk9AU+l20M6pAvUPGlYfC7ueqFeGfWNkc+svjN4cYKb/KBCwam2x3RS5dlmHuDPByFYvi8hv+o66W5g8A9I+W+feNaRr8xvFgAC18Wox4/l1wvpn+vUnezoX9WE0v0kRewGlu5wY/vb+Yo9HM253GUkUN/qRvRl8la9jOXhMMdZRfYEXQOa79mogl8DZLvADHoh4bhs1foGlXI5pfLRjE2RcCLCV0MwxayVFghy4YcGpeo16JGuPeUANqklab
+X-Forefront-Antispam-Report:
+	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: leica-geosystems.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 18:04:37.3077
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74e5f93b-8c9d-4df6-b236-08dc3e07e306
+X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB5PEPF00014B99.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR06MB7467
 
-This series adds LPG/PWM support for PM6150L. Was tested on SM7150
-(xiaomi-surya).
+According to 9FGV0241 & 9FGV0441 datasheets, the default value
+for the clock amplitude is 0.8V, while the driver was assuming
+0.7V.
 
-To: Pavel Machek <pavel@ucw.cz>
-To: Lee Jones <lee@kernel.org>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+---
+ drivers/clk/clk-renesas-pcie.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Danila Tikhonov (2):
-  dt-bindings: leds: qcom-lpg: Document PM6150L compatible
-  arm64: dts: qcom: pm6150l: add Light Pulse Generator device node
+diff --git a/drivers/clk/clk-renesas-pcie.c b/drivers/clk/clk-renesas-pcie.c
+index 53e21ac302e6..4c3a5e4eb77a 100644
+--- a/drivers/clk/clk-renesas-pcie.c
++++ b/drivers/clk/clk-renesas-pcie.c
+@@ -25,10 +25,12 @@
+ #define RS9_REG_SS_AMP_0V7			0x1
+ #define RS9_REG_SS_AMP_0V8			0x2
+ #define RS9_REG_SS_AMP_0V9			0x3
++#define RS9_REG_SS_AMP_DEFAULT			RS9_REG_SS_AMP_0V8
+ #define RS9_REG_SS_AMP_MASK			0x3
+ #define RS9_REG_SS_SSC_100			0
+ #define RS9_REG_SS_SSC_M025			(1 << 3)
+ #define RS9_REG_SS_SSC_M050			(3 << 3)
++#define RS9_REG_SS_SSC_DEFAULT			RS9_REG_SS_SSC_100
+ #define RS9_REG_SS_SSC_MASK			(3 << 3)
+ #define RS9_REG_SS_SSC_LOCK			BIT(5)
+ #define RS9_REG_SR				0x2
+@@ -205,8 +207,8 @@ static int rs9_get_common_config(struct rs9_driver_data *rs9)
+ 	int ret;
+ 
+ 	/* Set defaults */
+-	rs9->pll_amplitude = RS9_REG_SS_AMP_0V7;
+-	rs9->pll_ssc = RS9_REG_SS_SSC_100;
++	rs9->pll_amplitude = RS9_REG_SS_AMP_DEFAULT;
++	rs9->pll_ssc = RS9_REG_SS_SSC_DEFAULT;
+ 
+ 	/* Output clock amplitude */
+ 	ret = of_property_read_u32(np, "renesas,out-amplitude-microvolt",
+@@ -247,13 +249,13 @@ static void rs9_update_config(struct rs9_driver_data *rs9)
+ 	int i;
+ 
+ 	/* If amplitude is non-default, update it. */
+-	if (rs9->pll_amplitude != RS9_REG_SS_AMP_0V7) {
++	if (rs9->pll_amplitude != RS9_REG_SS_AMP_DEFAULT) {
+ 		regmap_update_bits(rs9->regmap, RS9_REG_SS, RS9_REG_SS_AMP_MASK,
+ 				   rs9->pll_amplitude);
+ 	}
+ 
+ 	/* If SSC is non-default, update it. */
+-	if (rs9->pll_ssc != RS9_REG_SS_SSC_100) {
++	if (rs9->pll_ssc != RS9_REG_SS_SSC_DEFAULT) {
+ 		regmap_update_bits(rs9->regmap, RS9_REG_SS, RS9_REG_SS_SSC_MASK,
+ 				   rs9->pll_ssc);
+ 	}
 
- .../devicetree/bindings/leds/leds-qcom-lpg.yaml        |  4 ++++
- arch/arm64/boot/dts/qcom/pm6150l.dtsi                  | 10 ++++++++++
- 2 files changed, 14 insertions(+)
-
+base-commit: 61996c073c9b070922ad3a36c981ca6ddbea19a5
+prerequisite-patch-id: 0000000000000000000000000000000000000000
 -- 
-2.44.0
+2.34.1
 
