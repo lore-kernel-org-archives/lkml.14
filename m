@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFAF746521;
-	Wed,  6 Mar 2024 23:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2CAE1CD05;
+	Wed,  6 Mar 2024 23:34:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709768101; cv=none; b=om2OEQprBLSJ1aVeXop2BTmYsUZ0cadF8WuoFxLBqhrL2HJHqPzXQ01wo/FvyTjJCzjsMTKBZ8Sss0LM69GFDgai7+CYsHjXLqnqd1+MppvKCJfccZUZwRvoMzaOBM26E/bEW9n5agqMLqOcndhzcRuqK94Xq95U8VsrRRHsY3I=
+	t=1709768101; cv=none; b=cRPHX+BG5j61TV5qXanaTrc104r1GrY4nE1O4opOh9NtWn0DPE2ldrLE5h3N9/HaTv/wRKyXPeVKEfZPjgHItJrmMuQG4rHjNcg88O3N9Cx4i3rv8/6bRBQMNIqq0Yvg4oAkjwkKLjCxiF7xOCHaJ26ZruA1+fsxnlEIE0oNjS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709768101; c=relaxed/simple;
-	bh=JMGFzxzJSuX8HTzW3/y9gmlqQwTGf542nsFK190Y+i4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=o6LiRsPme5+XAFV6wbqJLWBkM+hvUrbOmJfW3lEZBqmHH6FdEpDCsZqgWdiDvQYHTGYgbl1KhJMw90QbkF0dGGf6rbOxm98zZFzliqUayxV1FI9ADZRDfC30qzVO0LwHpey/WjURpcxWdtXX7KUw4kU9Vhw80hv7t/2cvEsZfSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tA1BCOWi; arc=none smtp.client-ip=13.77.154.182
+	bh=lhcpsSgmIKPdWKFGSPrgCpOZyw5E8X4X6o0rcRnO6Ts=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=PDDsJLzk/WTnoNfFc0lgmsUuBscqYwfOOKCaePzFQVvJfrkzKQZu/CAc0qh8iJ2UOS9Il1Q0cC63SEVCPbuI2k/HYZ5sl+gpTvbjIqSP0sbEuayVHcndU+786vSFs+Tw6Qr2G8+s6s1Xe+e3FcZVtr0AIAkmqX80SNVB3jv199E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cb4GAJNz; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tA1BCOWi"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cb4GAJNz"
 Received: by linux.microsoft.com (Postfix, from userid 1052)
-	id 05AD320B74E2; Wed,  6 Mar 2024 15:34:52 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 05AD320B74E2
+	id 9149D20B74D5; Wed,  6 Mar 2024 15:34:52 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9149D20B74D5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1709768093;
-	bh=KN8yiKPI7h4k5IV/Ds1qGJWY0tuHJk5+XQgL6E7JT+E=;
+	s=default; t=1709768092;
+	bh=iSuMxHd4X5zPSdyMKGiOczdYwNtNwHyoZWCoaCn1mhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tA1BCOWijbSd6/cD3MuPcSClMx98QWJiDucrtQ/wkO9jwpO2E/9MSxNph2xTg1TVz
-	 terqU6cPyouL7GF/116iNQein0whOv3P2BgOXFjaP/in9nzVZGW9JSShTVQaIgu/cS
-	 EEJ7mmL4BQlr4xHoEqDidiYjHkcw8D8k+v5BNsSU=
+	b=cb4GAJNzQ++KPgs3zIjA6q3sNSMVjKe/QS2ZU9IOgkx43l1GhTwpjNDAzSU8mlv5o
+	 oZ1Bjla9/F0VS942LMKo1rP3R0bKo4UjGsxgdXQKFFZpb1NCuaW0lLszzI3b+mCoU+
+	 ojgFSIvyZPEMJNCsoj5VxFoCNyUn+ubKU5kBGLD4=
 From: Fan Wu <wufan@linux.microsoft.com>
 To: corbet@lwn.net,
 	zohar@linux.ibm.com,
@@ -45,9 +45,9 @@ Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Deven Bowers <deven.desai@linux.microsoft.com>,
 	Fan Wu <wufan@linux.microsoft.com>
-Subject: [RFC PATCH v14 18/19] ipe: kunit test for parser
-Date: Wed,  6 Mar 2024 15:34:43 -0800
-Message-Id: <1709768084-22539-19-git-send-email-wufan@linux.microsoft.com>
+Subject: [RFC PATCH v14 11/19] block|security: add LSM blob to block_device
+Date: Wed,  6 Mar 2024 15:34:36 -0800
+Message-Id: <1709768084-22539-12-git-send-email-wufan@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1709768084-22539-1-git-send-email-wufan@linux.microsoft.com>
 References: <1709768084-22539-1-git-send-email-wufan@linux.microsoft.com>
@@ -59,28 +59,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Deven Bowers <deven.desai@linux.microsoft.com>
 
-Add various happy/unhappy unit tests for both IPE's policy parser.
+Some block devices have valuable security properties that is only
+accessible during the creation time.
 
-Besides, a test suite for IPE functionality is available at
-https://github.com/microsoft/ipe/tree/test-suite
+For example, when creating a dm-verity block device, the dm-verity's
+roothash and roothash signature, which are extreme important security
+metadata, are passed to the kernel. However, the roothash will be saved
+privately in dm-verity, which prevents the security subsystem to easily
+access that information. Worse, in the current implementation the
+roothash signature will be discarded after the verification, making it
+impossible to utilize the roothash signature by the security subsystem.
+
+With this patch, an LSM blob is added to the block_device structure.
+This enables the security subsystem to store security-sensitive data
+related to block devices within the security blob. For example, LSM can
+use the new LSM blob to save the roothash signature of a dm-verity,
+and LSM can make access decision based on the data inside the signature,
+like the signer certificate.
+
+The implementation follows the same approach used for security blobs in
+other structures like struct file, struct inode, and struct superblock.
+The initialization of the security blob occurs after the creation of the
+struct block_device, performed by the security subsystem. Similarly, the
+security blob is freed by the security subsystem before the struct
+block_device is deallocated or freed.
 
 Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
 Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
+Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
 
 ---
-v1-v6:
-  + Not present
+v2:
+  + No Changes
+
+v3:
+  + Minor style changes from checkpatch --strict
+
+v4:
+  + No Changes
+
+v5:
+  + Allow multiple callers to call security_bdev_setsecurity
+
+v6:
+  + Simplify security_bdev_setsecurity break condition
 
 v7:
-  Introduced
+  + Squash all dm-verity related patches to two patches,
+    the additions to dm-verity/fs, and the consumption of
+    the additions.
 
 v8:
-  + Remove the kunit tests with respect to the fsverity digest, as these
-    require significant changes to work with the new method of acquiring
-    the digest at runtime.
+  + Split dm-verity related patches squashed in v7 to 3 commits based on
+    topic:
+      + New LSM hook
+      + Consumption of hook outside LSM
+      + Consumption of hook inside LSM.
+
+  + change return of security_bdev_alloc / security_bdev_setsecurity
+    to LSM_RET_DEFAULT instead of 0.
+
+  + Change return code to -EOPNOTSUPP, bring inline with other
+    setsecurity hooks.
 
 v9:
-  + Remove the kunit tests related to ipe_context
+  + Add Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+  + Remove unlikely when calling LSM hook
+  + Make the security field dependent on CONFIG_SECURITY
 
 v10:
   + No changes
@@ -97,349 +142,263 @@ v13:
 v14:
   + No changes
 ---
- security/ipe/Kconfig        |  17 +++
- security/ipe/Makefile       |   3 +
- security/ipe/policy_tests.c | 294 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 314 insertions(+)
- create mode 100644 security/ipe/policy_tests.c
+ block/bdev.c                  |  7 +++
+ include/linux/blk_types.h     |  3 ++
+ include/linux/lsm_hook_defs.h |  5 ++
+ include/linux/lsm_hooks.h     |  1 +
+ include/linux/security.h      | 22 ++++++++
+ security/security.c           | 99 +++++++++++++++++++++++++++++++++++
+ 6 files changed, 137 insertions(+)
 
-diff --git a/security/ipe/Kconfig b/security/ipe/Kconfig
-index bf3b9ff0c913..216a9b340caa 100644
---- a/security/ipe/Kconfig
-+++ b/security/ipe/Kconfig
-@@ -55,4 +55,21 @@ config IPE_PROP_FS_VERITY
- 
- endmenu
- 
-+config SECURITY_IPE_KUNIT_TEST
-+	bool "Build KUnit tests for IPE" if !KUNIT_ALL_TESTS
-+	depends on KUNIT=y
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the IPE KUnit tests.
+diff --git a/block/bdev.c b/block/bdev.c
+index e9f1b12bd75c..c3bb5d6a030c 100644
+--- a/block/bdev.c
++++ b/block/bdev.c
+@@ -24,6 +24,7 @@
+ #include <linux/pseudo_fs.h>
+ #include <linux/uio.h>
+ #include <linux/namei.h>
++#include <linux/security.h>
+ #include <linux/part_stat.h>
+ #include <linux/uaccess.h>
+ #include <linux/stat.h>
+@@ -307,6 +308,11 @@ static struct inode *bdev_alloc_inode(struct super_block *sb)
+ 	if (!ei)
+ 		return NULL;
+ 	memset(&ei->bdev, 0, sizeof(ei->bdev));
 +
-+	  KUnit tests run during boot and output the results to the debug log
-+	  in TAP format (https://testanything.org/). Only useful for kernel devs
-+	  running KUnit test harness and are not for inclusion into a
-+	  production build.
-+
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
- endif
-diff --git a/security/ipe/Makefile b/security/ipe/Makefile
-index ce23101b66ba..def674e09e84 100644
---- a/security/ipe/Makefile
-+++ b/security/ipe/Makefile
-@@ -26,3 +26,6 @@ obj-$(CONFIG_SECURITY_IPE) += \
- 	audit.o \
- 
- clean-files := boot-policy.c \
-+
-+obj-$(CONFIG_SECURITY_IPE_KUNIT_TEST) += \
-+	policy_tests.o \
-diff --git a/security/ipe/policy_tests.c b/security/ipe/policy_tests.c
-new file mode 100644
-index 000000000000..d67c42c9ca59
---- /dev/null
-+++ b/security/ipe/policy_tests.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) Microsoft Corporation. All rights reserved.
-+ */
-+
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/list.h>
-+#include <kunit/test.h>
-+#include "policy.h"
-+struct policy_case {
-+	const char *const policy;
-+	int errno;
-+	const char *const desc;
-+};
-+
-+static const struct policy_case policy_cases[] = {
-+	{
-+		"policy_name=allowall policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW",
-+		0,
-+		"basic",
-+	},
-+	{
-+		"policy_name=trailing_comment policy_version=152.0.0 #This is comment\n"
-+		"DEFAULT action=ALLOW",
-+		0,
-+		"trailing comment",
-+	},
-+	{
-+		"policy_name=allowallnewline policy_version=0.2.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"\n",
-+		0,
-+		"trailing newline",
-+	},
-+	{
-+		"policy_name=carriagereturnlinefeed policy_version=0.0.1\n"
-+		"DEFAULT action=ALLOW\n"
-+		"\r\n",
-+		0,
-+		"clrf newline",
-+	},
-+	{
-+		"policy_name=whitespace policy_version=0.0.0\n"
-+		"DEFAULT\taction=ALLOW\n"
-+		"     \t     DEFAULT \t    op=EXECUTE      action=DENY\n"
-+		"op=EXECUTE boot_verified=TRUE action=ALLOW\n"
-+		"# this is a\tcomment\t\t\t\t\n"
-+		"DEFAULT \t op=KMODULE\t\t\t  action=DENY\r\n"
-+		"op=KMODULE boot_verified=TRUE action=ALLOW\n",
-+		0,
-+		"various whitespaces and nested default",
-+	},
-+	{
-+		"policy_name=boot_verified policy_version=-1236.0.0\n"
-+		"DEFAULT\taction=ALLOW\n",
-+		-EINVAL,
-+		"negative version",
-+	},
-+	{
-+		"policy_name=$@!*&^%%\\:;{}() policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW",
-+		0,
-+		"special characters",
-+	},
-+	{
-+		"policy_name=test policy_version=999999.0.0\n"
-+		"DEFAULT action=ALLOW",
-+		-ERANGE,
-+		"overflow version",
-+	},
-+	{
-+		"policy_name=test policy_version=255.0\n"
-+		"DEFAULT action=ALLOW",
-+		-EBADMSG,
-+		"incomplete version",
-+	},
-+	{
-+		"policy_name=test policy_version=111.0.0.0\n"
-+		"DEFAULT action=ALLOW",
-+		-EBADMSG,
-+		"extra version",
-+	},
-+	{
-+		"",
-+		-EBADMSG,
-+		"0-length policy",
-+	},
-+	{
-+		"policy_name=test\0policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW",
-+		-EBADMSG,
-+		"random null in header",
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"\0DEFAULT action=ALLOW",
-+		-EBADMSG,
-+		"incomplete policy from NULL",
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=DENY\n\0"
-+		"op=EXECUTE dmverity_signature=TRUE action=ALLOW\n",
-+		0,
-+		"NULL truncates policy",
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"op=EXECUTE dmverity_signature=abc action=ALLOW",
-+		-EBADMSG,
-+		"invalid property type",
-+	},
-+	{
-+		"DEFAULT action=ALLOW",
-+		-EBADMSG,
-+		"missing policy header",
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n",
-+		-EBADMSG,
-+		"missing default definition",
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"dmverity_signature=TRUE op=EXECUTE action=ALLOW",
-+		-EBADMSG,
-+		"invalid rule ordering"
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"action=ALLOW op=EXECUTE dmverity_signature=TRUE",
-+		-EBADMSG,
-+		"invalid rule ordering (2)",
-+	},
-+	{
-+		"policy_name=test policy_version=0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"op=EXECUTE dmverity_signature=TRUE action=ALLOW",
-+		-EBADMSG,
-+		"invalid version",
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"op=UNKNOWN dmverity_signature=TRUE action=ALLOW",
-+		-EBADMSG,
-+		"unknown operation",
-+	},
-+	{
-+		"policy_name=asdvpolicy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n",
-+		-EBADMSG,
-+		"missing space after policy name",
-+	},
-+	{
-+		"policy_name=test\xFF\xEF policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"op=EXECUTE dmverity_signature=TRUE action=ALLOW",
-+		0,
-+		"expanded ascii",
-+	},
-+	{
-+		"policy_name=test\xFF\xEF policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"op=EXECUTE dmverity_roothash=GOOD_DOG action=ALLOW",
-+		-EBADMSG,
-+		"invalid property value (2)",
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"policy_name=test policy_version=0.1.0\n"
-+		"DEFAULT action=ALLOW",
-+		-EBADMSG,
-+		"double header"
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"DEFAULT action=ALLOW\n",
-+		-EBADMSG,
-+		"double default"
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"DEFAULT op=EXECUTE action=DENY\n"
-+		"DEFAULT op=EXECUTE action=ALLOW\n",
-+		-EBADMSG,
-+		"double operation default"
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"DEFAULT op=EXECUTE action=DEN\n",
-+		-EBADMSG,
-+		"invalid action value"
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"DEFAULT op=EXECUTE action\n",
-+		-EBADMSG,
-+		"invalid action value (2)"
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"UNKNOWN value=true\n",
-+		-EBADMSG,
-+		"unrecognized statement"
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"op=EXECUTE dmverity_roothash=1c0d7ee1f8343b7fbe418378e8eb22c061d7dec7 action=DENY\n",
-+		-EBADMSG,
-+		"old-style digest"
-+	},
-+	{
-+		"policy_name=test policy_version=0.0.0\n"
-+		"DEFAULT action=ALLOW\n"
-+		"op=EXECUTE fsverity_digest=1c0d7ee1f8343b7fbe418378e8eb22c061d7dec7 action=DENY\n",
-+		-EBADMSG,
-+		"old-style digest"
++	if (security_bdev_alloc(&ei->bdev)) {
++		kmem_cache_free(bdev_cachep, ei);
++		return NULL;
 +	}
-+};
+ 	return &ei->vfs_inode;
+ }
+ 
+@@ -316,6 +322,7 @@ static void bdev_free_inode(struct inode *inode)
+ 
+ 	free_percpu(bdev->bd_stats);
+ 	kfree(bdev->bd_meta_info);
++	security_bdev_free(bdev);
+ 
+ 	if (!bdev_is_partition(bdev)) {
+ 		if (bdev->bd_disk && bdev->bd_disk->bdi)
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index f288c94374b3..339647f8645a 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -69,6 +69,9 @@ struct block_device {
+ #endif
+ 	bool			bd_ro_warned;
+ 	int			bd_writers;
++#ifdef CONFIG_SECURITY
++	void			*security;
++#endif
+ 	/*
+ 	 * keep this out-of-line as it's both big and not needed in the fast
+ 	 * path
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index e0f50789a18f..8303f10ba7b2 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -427,3 +427,8 @@ LSM_HOOK(int, 0, uring_cmd, struct io_uring_cmd *ioucmd)
+ #endif /* CONFIG_IO_URING */
+ 
+ LSM_HOOK(void, LSM_RET_VOID, initramfs_populated, void)
 +
-+static void pol_to_desc(const struct policy_case *c, char *desc)
++LSM_HOOK(int, 0, bdev_alloc_security, struct block_device *bdev)
++LSM_HOOK(void, LSM_RET_VOID, bdev_free_security, struct block_device *bdev)
++LSM_HOOK(int, 0, bdev_setsecurity, struct block_device *bdev, const char *name,
++	 const void *value, size_t size)
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index a2ade0ffe9e7..f1692179aa56 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -78,6 +78,7 @@ struct lsm_blob_sizes {
+ 	int	lbs_msg_msg;
+ 	int	lbs_task;
+ 	int	lbs_xattr_count; /* number of xattr slots in new_xattrs array */
++	int	lbs_bdev;
+ };
+ 
+ /**
+diff --git a/include/linux/security.h b/include/linux/security.h
+index e74e8b2a07f4..22707bddf8c9 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -496,6 +496,11 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
+ int security_locked_down(enum lockdown_reason what);
+ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, size_t *uctx_len,
+ 		      void *val, size_t val_len, u64 id, u64 flags);
++int security_bdev_alloc(struct block_device *bdev);
++void security_bdev_free(struct block_device *bdev);
++int security_bdev_setsecurity(struct block_device *bdev,
++			      const char *name, const void *value,
++			      size_t size);
+ #else /* CONFIG_SECURITY */
+ 
+ static inline int call_blocking_lsm_notifier(enum lsm_event event, void *data)
+@@ -1439,6 +1444,23 @@ static inline int lsm_fill_user_ctx(struct lsm_ctx __user *uctx,
+ {
+ 	return -EOPNOTSUPP;
+ }
++
++static inline int security_bdev_alloc(struct block_device *bdev)
 +{
-+	strscpy(desc, c->desc, KUNIT_PARAM_DESC_SIZE);
++	return 0;
 +}
 +
-+KUNIT_ARRAY_PARAM(ipe_policies, policy_cases, pol_to_desc);
++static inline void security_bdev_free(struct block_device *bdev)
++{
++}
++
++static inline int security_bdev_setsecurity(struct block_device *bdev,
++					    const char *name,
++					    const void *value, size_t size)
++{
++	return 0;
++}
++
+ #endif	/* CONFIG_SECURITY */
+ 
+ #if defined(CONFIG_SECURITY) && defined(CONFIG_WATCH_QUEUE)
+diff --git a/security/security.c b/security/security.c
+index 26c28db211fd..32989a6b0478 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -31,6 +31,7 @@
+ #include <linux/msg.h>
+ #include <linux/overflow.h>
+ #include <net/flow.h>
++#include <linux/fs.h>
+ 
+ /* How many LSMs were built into the kernel? */
+ #define LSM_COUNT (__end_lsm_info - __start_lsm_info)
+@@ -232,6 +233,7 @@ static void __init lsm_set_blob_sizes(struct lsm_blob_sizes *needed)
+ 	lsm_set_blob_size(&needed->lbs_task, &blob_sizes.lbs_task);
+ 	lsm_set_blob_size(&needed->lbs_xattr_count,
+ 			  &blob_sizes.lbs_xattr_count);
++	lsm_set_blob_size(&needed->lbs_bdev, &blob_sizes.lbs_bdev);
+ }
+ 
+ /* Prepare LSM for initialization. */
+@@ -405,6 +407,7 @@ static void __init ordered_lsm_init(void)
+ 	init_debug("superblock blob size = %d\n", blob_sizes.lbs_superblock);
+ 	init_debug("task blob size       = %d\n", blob_sizes.lbs_task);
+ 	init_debug("xattr slots          = %d\n", blob_sizes.lbs_xattr_count);
++	init_debug("bdev blob size       = %d\n", blob_sizes.lbs_bdev);
+ 
+ 	/*
+ 	 * Create any kmem_caches needed for blobs
+@@ -737,6 +740,28 @@ static int lsm_msg_msg_alloc(struct msg_msg *mp)
+ 	return 0;
+ }
+ 
++/**
++ * lsm_bdev_alloc - allocate a composite block_device blob
++ * @bdev: the block_device that needs a blob
++ *
++ * Allocate the block_device blob for all the modules
++ *
++ * Returns 0, or -ENOMEM if memory can't be allocated.
++ */
++static int lsm_bdev_alloc(struct block_device *bdev)
++{
++	if (blob_sizes.lbs_bdev == 0) {
++		bdev->security = NULL;
++		return 0;
++	}
++
++	bdev->security = kzalloc(blob_sizes.lbs_bdev, GFP_KERNEL);
++	if (!bdev->security)
++		return -ENOMEM;
++
++	return 0;
++}
++
+ /**
+  * lsm_early_task - during initialization allocate a composite task blob
+  * @task: the task that needs a blob
+@@ -5512,6 +5537,80 @@ int security_locked_down(enum lockdown_reason what)
+ }
+ EXPORT_SYMBOL(security_locked_down);
+ 
++/**
++ * security_bdev_alloc() - Allocate a block device LSM blob
++ * @bdev: block device
++ *
++ * Allocate and attach a security structure to @bdev->security.  The
++ * security field is initialized to NULL when the bdev structure is
++ * allocated.
++ *
++ * Return: Return 0 if operation was successful.
++ */
++int security_bdev_alloc(struct block_device *bdev)
++{
++	int rc = 0;
++
++	rc = lsm_bdev_alloc(bdev);
++	if (unlikely(rc))
++		return rc;
++
++	rc = call_int_hook(bdev_alloc_security, 0, bdev);
++	if (unlikely(rc))
++		security_bdev_free(bdev);
++
++	return LSM_RET_DEFAULT(bdev_alloc_security);
++}
++EXPORT_SYMBOL(security_bdev_alloc);
 +
 +/**
-+ * ipe_parser_unsigned_test - Test the parser by passing unsigned policies.
-+ * @test: Supplies a pointer to a kunit structure.
++ * security_bdev_free() - Free a block device's LSM blob
++ * @bdev: block device
 + *
-+ * This is called by the kunit harness. This test does not check the correctness
-+ * of the policy, but ensures that errors are handled correctly.
++ * Deallocate the bdev security structure and set @bdev->security to NULL.
 + */
-+static void ipe_parser_unsigned_test(struct kunit *test)
++void security_bdev_free(struct block_device *bdev)
 +{
-+	const struct policy_case *p = test->param_value;
-+	struct ipe_policy *pol = ipe_new_policy(p->policy, strlen(p->policy), NULL, 0);
-+
-+	if (p->errno) {
-+		KUNIT_EXPECT_EQ(test, PTR_ERR(pol), p->errno);
++	if (!bdev->security)
 +		return;
-+	}
 +
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pol);
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, pol->parsed);
-+	KUNIT_EXPECT_STREQ(test, pol->text, p->policy);
-+	KUNIT_EXPECT_PTR_EQ(test, NULL, pol->pkcs7);
-+	KUNIT_EXPECT_EQ(test, 0, pol->pkcs7len);
++	call_void_hook(bdev_free_security, bdev);
 +
-+	ipe_free_policy(pol);
++	kfree(bdev->security);
++	bdev->security = NULL;
 +}
++EXPORT_SYMBOL(security_bdev_free);
 +
 +/**
-+ * ipe_parser_widestring_test - Ensure parser fail on a wide string policy.
-+ * @test: Supplies a pointer to a kunit structure.
++ * security_bdev_setsecurity() - Set a security property of a block device
++ * @bdev: block device
++ * @name: security property name
++ * @value: security property value
++ * @size: length of the property value
 + *
-+ * This is called by the kunit harness.
++ * Set the security property associated with @name for @bdev from the security
++ * property value @value. @size indicates the size of the @value in bytes.
++ * If a @name is not implemented for a hook, it should return -EOPNOTSUPP.
++ *
++ * Return: Returns 0 on success.
 + */
-+static void ipe_parser_widestring_test(struct kunit *test)
++int security_bdev_setsecurity(struct block_device *bdev,
++			      const char *name, const void *value,
++			      size_t size)
 +{
-+	struct ipe_policy *pol = NULL;
-+	const unsigned short policy[] = L"policy_name=Test policy_version=0.0.0\n"
-+					L"DEFAULT action=ALLOW";
++	int rc = 0;
++	struct security_hook_list *p;
 +
-+	pol = ipe_new_policy((const char *)policy, (ARRAY_SIZE(policy) - 1) * 2, NULL, 0);
-+	KUNIT_EXPECT_TRUE(test, IS_ERR_OR_NULL(pol));
++	hlist_for_each_entry(p, &security_hook_heads.bdev_setsecurity, list) {
++		rc = p->hook.bdev_setsecurity(bdev, name, value, size);
++		if (rc && rc != -EOPNOTSUPP)
++			return rc;
++	}
 +
-+	ipe_free_policy(pol);
++	return LSM_RET_DEFAULT(bdev_setsecurity);
 +}
++EXPORT_SYMBOL(security_bdev_setsecurity);
 +
-+static struct kunit_case ipe_parser_test_cases[] = {
-+	KUNIT_CASE_PARAM(ipe_parser_unsigned_test, ipe_policies_gen_params),
-+	KUNIT_CASE(ipe_parser_widestring_test),
-+};
-+
-+static struct kunit_suite ipe_parser_test_suite = {
-+	.name = "ipe-parser",
-+	.test_cases = ipe_parser_test_cases,
-+};
-+
-+kunit_test_suite(ipe_parser_test_suite);
+ #ifdef CONFIG_PERF_EVENTS
+ /**
+  * security_perf_event_open() - Check if a perf event open is allowed
 -- 
 2.43.1
 
