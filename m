@@ -1,99 +1,101 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697CBD52E
-	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 02:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B21633E1
+	for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2024 02:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709693714; cv=none; b=TJPGeGTv/mIDGHayQ2BLfunL6VbPkOvex3rcAm8OFJKZJtfuBQABEY6GHKSqma4Zesp2dBHFZLNsk5uVsDKQHaqTTyoLK3iTRtpsekRGPStgLt4xrAcWHomZhKEOEPsoK6jdksUy4idMRWk3IKfFvjDq/6klVPwGxAPOWMSa8AE=
+	t=1709693905; cv=none; b=E9gKQ1R9sNGUTc3M6zjuHmCM+xG+x9OX/FNDf901VNbEyEZU7hMcn1aeNWmK/Im5/p6wqHAZYqvU1/qqy31QDHTaPUS7p6bYOBDwSKAIgl/nag/bZtMPK3EORT3rchmgqowuKSbNGCMFLNi6IM/8EHkn3hlszNxs4aL4jNYSt3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709693714; c=relaxed/simple;
-	bh=GsRdJoaN6E/LLUOYDglle0uztnU6Sis59Fl7J6wutgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YdAl6yBAQhLrHeDydNVmMjJzoIWDJrOaU9vP7xkuaufTGpXYwwOhYZRuSsTOKaWc0OtB9tRPNWp5v5bZRAwbrbKRoDwCNhDE4eVRQRBU+Xw5babRD6lYUFneZ07hYz+iaGJN0UOzTXQVAu22WrLLFx9HAWHu+wP48D3CQEL995s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=gr9MzxY6; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
+	s=arc-20240116; t=1709693905; c=relaxed/simple;
+	bh=a0OOWv2WSGmSbvPtvl2vO3P9ZD7k/by876B14jjFqP4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qt3TaEZiNNf8+ct1oLgUpxSCljoRlUoR9rktvtLl5v9NH6vZXRt04PeNyZJMiV412SCARJpDldD+zDMLJkveCShLqmg5iPMAX+wiAsHIsimuXYmFugOKH5iOSH49R++ZoyPPzYXSVXC/X4zMTfMFhkNUfrIEqTcKp/+dOO7/rwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ylj4pOSC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="gr9MzxY6"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2210865d962so2089539fac.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2024 18:55:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google; t=1709693711; x=1710298511; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xRMkuI014AzS1zR02MZc4IRf3TGjXINu42gGkCfeGs0=;
-        b=gr9MzxY6didSDee6a3fcTJvshdgeUWuGOajnzve4ciqcfD25SrXInp+dlXNELYE01Q
-         UmA2qeoHQ1EN/Qr6s1ZHa8D96bRKjIBndr+w3LksBg9BNKTaiiHMlXfd79jJNNKc/iu6
-         +Zf2xH0ZnDnkqEmy1dPrhwnE9CSVRK+yW79DI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709693711; x=1710298511;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xRMkuI014AzS1zR02MZc4IRf3TGjXINu42gGkCfeGs0=;
-        b=B0wCKMLkBZ0ZTcZbOHNPOmwISoQy2U7Ckmv50EfnZYpw7cgA7KDVBEUmj56Mee1puz
-         NgPqAWv+/hvgcwoMHELf+S+BANEQ8QCvdcFm21w+acz/wG+iFEzkhAp3qW2LrH2zU5Yb
-         DyLZbzE1D7FO8ATAc5SqnDfgZoqcLo3woPvXFZ9e+4aXaOL+zNn72meAQYZqilSbBYLm
-         eZXEYIEdDMNNTWOWsgmw6+cibts5I2A6rAP9JnX/Ti31KcyIvLxcIkewNgMbPpC82XDG
-         +lOKcLIJ+PgU8+BOEZaprteAX0QPBA1JWoQKNqcHF/VZmqIHCHQqgnHKuLnHnzl98we2
-         pZwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWyfgu0e2xDAdXP7HE1ZyJBMJjjQMllXByUhLCP+yiDf36LDYHcz1qEgs6aInGElc+gRVbpSiMCJBslyZ5seBcFEO73bYK518nJ66eB
-X-Gm-Message-State: AOJu0YxUAzxTIIFwXGn4WAsienh14uYemIJGx0sb0IVdfasSX2BacxVO
-	56zcJH3C/5ue3VhzccBCMH+tQQT0CrUp/M0NctaybzXBPdkrv5Me/2Nv/umSvbBwkgepOO5jMyT
-	GNg==
-X-Google-Smtp-Source: AGHT+IGVQj4drpeLlqZu0UGH7MJF2dKwPJG+QIfz4rVWUgG8ZqQMiN4a2/ohEToFBsdf7vzvg14fqw==
-X-Received: by 2002:a05:6870:63a7:b0:21f:17b4:3842 with SMTP id t39-20020a05687063a700b0021f17b43842mr3820887oap.45.1709693711394;
-        Tue, 05 Mar 2024 18:55:11 -0800 (PST)
-Received: from fedora64.linuxtx.org ([99.47.93.78])
-        by smtp.gmail.com with ESMTPSA id qh10-20020a056870bf0a00b002208ea2347asm3245084oab.11.2024.03.05.18.55.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 18:55:11 -0800 (PST)
-Sender: Justin Forbes <jmforbes@linuxtx.org>
-Date: Tue, 5 Mar 2024 20:55:09 -0600
-From: Justin Forbes <jforbes@fedoraproject.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com
-Subject: Re: [PATCH 6.7 000/161] 6.7.9-rc3 review
-Message-ID: <ZefbDbzbLpiIR-0J@fedora64.linuxtx.org>
-References: <20240305112824.448003471@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ylj4pOSC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709693902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NpaEtz8DypAu/ov2Q0LUUMD0B3ELzhFV6wWxCNb2Rjc=;
+	b=Ylj4pOSCFcS/Fz00gBOCJLdk9EBqq2TYDAwiG5GIXEBIQHL9AtRedJ8aSp1c+0rWxc5Q3U
+	VsmH3PEyX5NSZAs8tVuebuOWhSFQ9J+jqw0ffbUH4KZ6q/uuv9IHXoH+5s5+GdrAUZpIdR
+	xVAhHzfUy/op1uZoLcpt9cFJmjrnj8M=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-222-5dusHTwePVCJ3TuZP1Wrpw-1; Tue, 05 Mar 2024 21:58:21 -0500
+X-MC-Unique: 5dusHTwePVCJ3TuZP1Wrpw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 945338007A7;
+	Wed,  6 Mar 2024 02:58:20 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.36])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0BA0D111DCFF;
+	Wed,  6 Mar 2024 02:58:15 +0000 (UTC)
+From: Kate Hsuan <hpa@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
+	linux-kernel@vger.kernel.org
+Cc: Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH v4 0/2] KTD2026 indicator LED for X86 Xiaomi Pad2
+Date: Wed,  6 Mar 2024 10:57:59 +0800
+Message-ID: <20240306025801.8814-1-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305112824.448003471@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On Tue, Mar 05, 2024 at 11:28:47AM +0000, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.7.9 release.
-> There are 161 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 07 Mar 2024 11:27:43 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.9-rc3.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+This patch added the support for Xiaomi Pad2 indicator LED. This work
+included two parts.
+1. Added the KTD2026 swnode description to describe the LED controller.
+2. Migrated the original driver to fwnode to support x86 platform.
 
-Tested rc3 against the Fedora build system (aarch64, ppc64le, s390x,
-x86_64), and boot tested x86_64. No regressions noted.
+Moreover, the LED trigger is set to bq27520-0-charging for Xiaomi Pad2
+so the LED will be turned on when charging.
 
-Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
+--
+Changes in v4:
+1. Fix double casting.
+2. Since force casting a pointer value to int will trigger a compiler
+   warning, the type of num_leds was changed to unsigned long. 
+
+Changes in v3:
+1. Drop the patch "leds-ktd202x: Skip regulator settings for Xiaomi
+   pad2"
+
+Changes in v2:
+1. Typo and style fixes.
+2. The patch 0003 skips all the regulator setup for Xiaomi pad2 since
+   KTD2026 on Xiaomi pad2 is already powered by BP25890RTWR. So, the
+   sleep can be removed when removing the module.
+
+Kate Hsuan (2):
+  platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
+    indicator LED
+  leds: rgb: leds-ktd202x: Get device properties through fwnode to
+    support ACPI
+
+ drivers/leds/rgb/Kconfig                      |  1 -
+ drivers/leds/rgb/leds-ktd202x.c               | 60 ++++++++-----
+ .../platform/x86/x86-android-tablets/other.c  | 85 +++++++++++++++++++
+ .../x86/x86-android-tablets/shared-psy-info.h |  2 +
+ 4 files changed, 127 insertions(+), 21 deletions(-)
+
+-- 
+2.43.2
+
