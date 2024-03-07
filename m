@@ -1,93 +1,134 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1593D823BF
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 09:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E6382D7F;
+	Thu,  7 Mar 2024 09:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709802515; cv=none; b=Ct42EYfVKCR+G/oyQ3C9cikjKn0qzr9NKeW1M+IbWCvM0prAOjXTnCH6YMH9Oi4edBqTsShaJbvh/CqHRzz1AgJuAEk+TukwCEe/2VEyNRWp90LAaolI/S0WRGAZeOf5hKiLehuq5MclSWwZjAFAWpUoPnVLWPyh+2DC2VUFaEg=
+	t=1709802607; cv=none; b=WzOuLFaL41fgdwTkJXudqP/iFZG6VMb571/wVHOJMspoILBmG8uifPQTYnYXrCVCK+YLKmJPggweowJmOMcw7SaLx0XF1ZNguTfHfNmvFeP4OQwtE868Qca4251sTLP7adp4Dd6x9H+mB6WLiZ5VXOfRXec4Dw75YcHTUEfkfS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709802515; c=relaxed/simple;
-	bh=MhPKVKt5bqVMniQ/NgqFAw+BatWOS+z0ZiSQ9WK6huM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ntYIhBUnqBkpg0GkJ9fOZd6JnPih/BX2HF55Ttq75YWlO+qVbM+5TN3n/+/fS3Eya/spiJURu0hkQb7SH9aFtBl81W1FgBw4bwPFjPkOsfaSwE9p32HSqq9oxHsjlTBFZZBVJmbttBCfDO6ArpON+tkaatBhwoM4Hcu7ou2dDC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Tr3Ls2yX2zXhsC;
-	Thu,  7 Mar 2024 17:06:13 +0800 (CST)
-Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4F4981400DD;
-	Thu,  7 Mar 2024 17:08:30 +0800 (CST)
-Received: from [10.174.177.174] (10.174.177.174) by
- dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 17:08:29 +0800
-Message-ID: <84a79c06-692a-25b8-b95c-21e565eced19@huawei.com>
-Date: Thu, 7 Mar 2024 17:08:29 +0800
+	s=arc-20240116; t=1709802607; c=relaxed/simple;
+	bh=joJfI32naIHizqZEIiVjdVjShxZm0AfkYNv34+xBk28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UWDB+83M7AHvTGoNFwvh5U//mijI5cCMoS/5Xp/90it0DeeNVGnMGYQODm+8YhnzCSupmBMg1vfJqQF/ja5v5IM8X0boWl+7l65vyCfaqn+HIrpCzygZO0c0bExVbmnR7EDjvXdfdK1J+fjfmSpo8wlCAOH1P+bJecCbwr5T5+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XOEeidBf; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XOEeidBf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709802606; x=1741338606;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=joJfI32naIHizqZEIiVjdVjShxZm0AfkYNv34+xBk28=;
+  b=XOEeidBf83zqMYNwvpxuQtHXVUauxXdWagG8+5LcX117dT8vfFFlSgqN
+   fgx9tT9/pLUOXdGwbUvsOBIqWprPsg1hJa163x/fRoU+NpWPhJ0xXxesb
+   /sOl3w06/wiyeEuuxRc2Yz/O+MeYcdLPauTuiRFsWEDGAZcDB+XYrXTg5
+   SKIvebiUPEjNMSN+FXPZJMRymPUygBbBChOEi2Y6+QhzpJ3V4vg1G6VFD
+   RT0eF+okuSn21+WT4NlIGGI62HvF6Ql6dhATJRgjIEWi1cH3uwH9EHBYq
+   jWgyeCJ5uo0F2O6kWRBYxD1IL5d4O8DHDJs0DY6azXwX7snmnPT3CT6Jv
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4636016"
+X-IronPort-AV: E=Sophos;i="6.06,211,1705392000"; 
+   d="scan'208";a="4636016"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 01:10:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,211,1705392000"; 
+   d="scan'208";a="10602967"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa008.jf.intel.com with ESMTP; 07 Mar 2024 01:10:01 -0800
+Date: Thu, 7 Mar 2024 17:05:45 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Yan Zhao <yan.y.zhao@intel.com>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Yu Zhang <yu.c.zhang@linux.intel.com>,
+	Chao Peng <chao.p.peng@linux.intel.com>,
+	Fuad Tabba <tabba@google.com>, David Matlack <dmatlack@google.com>
+Subject: Re: [PATCH 05/16] KVM: x86/mmu: Use synthetic page fault error code
+ to indicate private faults
+Message-ID: <ZemDaWzRCzV4Q5ni@yilunxu-OptiPlex-7050>
+References: <20240228024147.41573-1-seanjc@google.com>
+ <20240228024147.41573-6-seanjc@google.com>
+ <Zeg6tKA0zNQ+dUpn@yilunxu-OptiPlex-7050>
+ <ZeiBLjzDsEN0UsaW@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH] erofs: fix lockdep false positives on initializing
- erofs_pseudo_mnt
-Content-Language: en-US
-To: Al Viro <viro@zeniv.linux.org.uk>
-CC: <linux-erofs@lists.ozlabs.org>, <xiang@kernel.org>, <chao@kernel.org>,
-	<huyue2@coolpad.com>, <jefflexu@linux.alibaba.com>,
-	<linux-kernel@vger.kernel.org>, <yangerkun@huawei.com>, <houtao1@huawei.com>,
-	<yukuai3@huawei.com>, <chengzhihao1@huawei.com>, Baokun Li
-	<libaokun1@huawei.com>
-References: <20240307024459.883044-1-libaokun1@huawei.com>
- <20240307050717.GB538574@ZenIV>
- <7e9746db-033e-64d0-a3d5-9d341c66cec7@huawei.com>
- <20240307072112.GC538574@ZenIV> <20240307084608.GD538574@ZenIV>
-From: Baokun Li <libaokun1@huawei.com>
-In-Reply-To: <20240307084608.GD538574@ZenIV>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500021.china.huawei.com (7.185.36.21)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZeiBLjzDsEN0UsaW@google.com>
 
-On 2024/3/7 16:46, Al Viro wrote:
-> On Thu, Mar 07, 2024 at 07:21:12AM +0000, Al Viro wrote:
->> On Thu, Mar 07, 2024 at 03:06:49PM +0800, Baokun Li wrote:
->>>>> +int erofs_anon_register_fs(void)
->>>>> +{
->>>>> +	return register_filesystem(&erofs_anon_fs_type);
->>>>> +}
->>>> What for?  The only thing it gives you is an ability to look it up by
->>>> name.  Which is completely pointless, IMO,
->>> The helper function here is to avoid extern erofs_anon_fs_type(), because
->>> we define it in fscache.c, but also use it in super.c. Moreover, we don't
->>> need
->>> to register it when CONFIG_EROFS_FS_ONDEMAND is not enabled, so we
->> You don't need to register it at all.
->>
->> The one and only effect of register_filesystem() is making file_system_type
->> instance visible to get_fs_type() (and making it show up in /proc/filesystems).
->>
->> That's it.  If you want to have it looked up by name (e.g. for userland
->> mounts), you need to register.  If not, you do not need to do that.
->>
->> Note that kern_mount() take a pointer to struct file_system_type,
->> not its (string) name.  So all you get from registration is an extra line
->> in /proc/filesystems.  What's the point?
-> PS: at one point I considered renaming it to something that would sound
-> less vague, but the best variant I'd been able to come up with was
-> "publish_filesystem()", which is not much better and has an extra problem -
-> how do you describe the reverse of that?  "withdraw_filesystem()"?
-> Decided that it wasn't worth the amount of noise and headache...
-I feel the emphasis on "fs_name" rather than "filesystem" is less
-likely to be misunderstood. What do you think about renaming
-to add_fs_name/remove_fs_name?
+On Wed, Mar 06, 2024 at 06:45:30AM -0800, Sean Christopherson wrote:
+> On Wed, Mar 06, 2024, Xu Yilun wrote:
+> > On Tue, Feb 27, 2024 at 06:41:36PM -0800, Sean Christopherson wrote:
+> > > Add and use a synthetic, KVM-defined page fault error code to indicate
+> > > whether a fault is to private vs. shared memory.  TDX and SNP have
+> > > different mechanisms for reporting private vs. shared, and KVM's
+> > > software-protected VMs have no mechanism at all.  Usurp an error code
+> > > flag to avoid having to plumb another parameter to kvm_mmu_page_fault()
+> > > and friends.
+> > > 
+> > > Alternatively, KVM could borrow AMD's PFERR_GUEST_ENC_MASK, i.e. set it
+> > > for TDX and software-protected VMs as appropriate, but that would require
+> > > *clearing* the flag for SEV and SEV-ES VMs, which support encrypted
+> > > memory at the hardware layer, but don't utilize private memory at the
+> > > KVM layer.
+> > 
+> > I see this alternative in other patchset.  And I still don't understand why
+> > synthetic way is better after reading patch #5-7.  I assume for SEV(-ES) if
+> > there is spurious PFERR_GUEST_ENC flag set in error code when private memory
+> > is not used in KVM, then it is a HW issue or SW bug that needs to be caught
+> > and warned, and by the way cleared.
+> 
+> The conundrum is that SEV(-ES) support _encrypted_ memory, but cannot support
+> what KVM calls "private" memory.  In quotes because SEV(-ES) memory encryption
+> does provide confidentially/privacy, but in KVM they don't support memslots that
 
--- 
-With Best Regards,
-Baokun Li
-.
+I see.  I searched the basic knowledge of SEV(-ES/SNP) and finally understand
+the difference of encrypted vs. private.  For SEV(-ES) only encrypted.  For SEV-SNP
+both encrypted & private(ownership) supported, but seems now we are trying
+to make encrypted & private equal, there is no "encrypted but shared" or
+"plain but private" memory from KVM's perspective.
+
+> can be switched between private and shared, e.g. will return false for
+> kvm_arch_has_private_mem().
+> 
+> And KVM _can't_ sanely use private/shared memslots for SEV(-ES), because it's
+> impossible to intercept implicit conversions by the guest, i.e. KVM can't prevent
+> the guest from encrypting a page that KVM thinks is private, and vice versa.
+
+Is it because there is no #NPF for RMP violation?
+
+> 
+> But from hardware's perspective, while the APM is a bit misleading and I don't
+> love the behavior, I can't really argue that it's a hardware bug if the CPU sets
+> PFERR_GUEST_ENC on a fault where the guest access had C-bit=1, because the access
+> _was_ indeed to encrypted memory.
+> 
+> Which is a long-winded way of saying the unwanted PFERR_GUEST_ENC faults aren't
+> really spurious, nor are they hardware or software bugs, just another unfortunate
+> side effect of the fact that the hypervisor can't intercept shared<->encrypted
+> conversions for SEV(-ES) guests.  And that means that KVM can't WARN, because
+> literally every SNP-capable CPU would yell when running SEV(-ES) guests.
+> 
+> I also don't like the idea of usurping PFERR_GUEST_ENC to have it mean something
+> different in KVM as compared to how hardware defines/uses the flag.
+
+Thanks for your clue.  I agree PFERR_GUEST_ENC just for encrypted and a
+synthetic flag for private.
+
+Yilun
+
+> 
+> Lastly, the approach in Paolo's series to propagate PFERR_GUEST_ENC to .is_private
+> iff the VM has private memory is brittle, in that it would be too easy for KVM
+> code that has access to the error code to do the wrong thing and interpret
+> PFERR_GUEST_ENC has meaning "private".
