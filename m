@@ -1,71 +1,54 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8983112E1FE
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 18:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D3212FB3E;
+	Thu,  7 Mar 2024 18:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709835534; cv=none; b=b6qomTq0f0qO526kk/19mLap5IJU8tlA09s3TF5k1Szwcu3S6ju+02w/KVMtGEFWAMktpqocMj5NHfKA+DWu00lxmKG5dwjr08j+qq+wdBIRPTFrrC8ZQ9fxxjQoRd06N4GAIaA8s7PwnxKFik0xy42VkKL8jNQ3MQFBZiQU1Y4=
+	t=1709835593; cv=none; b=Iys50yLIHiDq6jEVqMjvrhEn+Sm4Oam+ypRIooRS9fjc3DkDJab3jyGCbKsbPuJj1n8dAeu+UrH7c1UgFD4Xr4LjGEcvMgWey2iEqFmke1RPjpN1OafKg9JSjw8IUPR6O5No3ZTLPKyexxJ6Mz813U9pYp1lpg2dYa8fBXGuqeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709835534; c=relaxed/simple;
-	bh=FXT4m7HmrVbNlkkcuqc4h5hIuOLr2Owzoeu7EYph2QU=;
+	s=arc-20240116; t=1709835593; c=relaxed/simple;
+	bh=WA5Rxzhhx8a7zAo+/YHstenX60EqTAE3spGTukshUXc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MWHv+bCbRSoAfJ0RxbrpjSe+yW+vFRBsBOvM/08eHovSm51TzcEYqiccoiobAGudd01jodWeAZ3imR6fazI0F8BvqzcYERzuWsUSqHl9aOa6PfZ4NSrBJfVeXlp5WqnVOTDTgqcXsEbf4kEIkj+/SCBHNhPcXkGmaskBbByq0o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebOeCamR; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aYSJ8bDElbjaWwOtho9YqNy5oBhUlJaGAIWwKk8doAtCNmk+BxhllJfZM/xdK8KKm6B7uW24LIidB6bkFPg7Rz8AVbRrQ8vinPa4TEXCM2Wi+y8C4Ph1UCm7fTHYPtXuFs2pAUrR8VupqUDfeyM7Kod+NXoypYYwVoDstJ5R7Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=diPaEMio; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebOeCamR"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56647babfe6so1800985a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 10:18:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709835531; x=1710440331; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ih2qp0TpnzVvtyG5Tp6Nj5YhfoLGtJWPyIG/4IO+Lc=;
-        b=ebOeCamRvZrgmoWb23Ekh1qyArb9pieXzv1tZdVn5IWgXSdHUZJT4uR2iq7Ac/HFXm
-         m3P7nJu17yBLx6g+oLgWjhRCDpQIgpNLm1tqbEK21hsjxlO9YDsRX0rPBOZUdgkLxAnI
-         fm/oO69JAmB/rMWcHxIER3gKmzBtXbWhVhGIvOm4juKiQ5TjFLF6h/kManun44OVDI9K
-         QS70izlgCjqBTU3RUl1M/kGWBM0Etkq5MCfQhxZCsI1yLV13Bb6D2NDAPrpr2xQsWv+J
-         2B0F17Z1vsOKOZOuO7nTWxuMFOCD9oa72rl6I8IqtwWWEw63P4nKMMdZvPROWFBFoCQX
-         KuJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709835531; x=1710440331;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ih2qp0TpnzVvtyG5Tp6Nj5YhfoLGtJWPyIG/4IO+Lc=;
-        b=uwugJhWKtDHkaIv7a39vkNf+j3/UezH9cCvBx9Bq3HcmpxVIlI6erTLs9/+dEyrM34
-         pxWr0yFiYRLzrU3Eb37QKO/bZjtyd4qvj9TmvsdILXIM3MMZtJr7CiRNDGKiHXx1yTvj
-         Q1uryECY3egBgk9OLRrNShQJm/rj0D0jC4vu59RH54NqpDHorzqVphL+bLDHzpmnja6C
-         uiBG471Axx3c1w2gO7+aXplkQrAgvSZhVzgBQPVrGVYcNdi99X8BftDwNaUO0VsxFKQ5
-         OAu0Ab0gKUg3+A+hRJZ4MI7wkSCQH/xXmRMlFr9lbOCANQJA3US01GUhnl6SefyXjuih
-         a2Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCU5es+9+38C1oBfZ+Xwh4P/QaRoriHgq5H9tm29G9qYRhUoAtOCP8WwOvX7RaW7Vpcd57ecEFG7smaVNRKr1+aYyk3RvutpBhxgBQN+
-X-Gm-Message-State: AOJu0YxWtzGMWRS581HBinvVrTykM0iE76rWfdt7a3lH0+bQXowGtKws
-	nVwYVRUYUAf82GUlu/KVbh4J5aUeQ2n4HLAamn879zeBZWAj5IPIUQkN4Ftb
-X-Google-Smtp-Source: AGHT+IFjVyBM1I0YrYvFS2Yf7mFCSmMnGCqlE5FTKQWqn6ZXKlyaKeLTlmjxtg3EWaKCaHD5DH9Spw==
-X-Received: by 2002:a17:906:f8c8:b0:a45:20e3:688e with SMTP id lh8-20020a170906f8c800b00a4520e3688emr8941380ejb.56.1709835530603;
-        Thu, 07 Mar 2024 10:18:50 -0800 (PST)
-Received: from andrea ([31.189.122.3])
-        by smtp.gmail.com with ESMTPSA id lk11-20020a170906cb0b00b00a4577ffe69csm4137062ejb.78.2024.03.07.10.18.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 10:18:50 -0800 (PST)
-Date: Thu, 7 Mar 2024 19:18:46 +0100
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Kenneth-Lee-2012@foxmail.com, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org
-Subject: Re: Question about PB rule of LKMM
-Message-ID: <ZeoFBkB1BeTdEQsn@andrea>
-References: <tencent_C5266B7D6F024A916BCA7833FDEA94A74309@qq.com>
- <Zedd18wiAkK68Lzr@andrea>
- <tencent_744E0AF832049C200F96FD6582D5114D7F0A@qq.com>
- <ZeipiSVLR01jmM6b@andrea>
- <e05fa6a9-c810-46cb-b033-b91ae7a5c382@rowland.harvard.edu>
- <ZejC+lutRuwXQrMz@andrea>
- <Zenip+8BDM3p+MUh@andrea>
- <eb8f2a21-d388-424d-8504-ccd7bdb53a93@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="diPaEMio"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=sQiGN4jIqTJ8/H2bJBWpCXvVI8NYM1BBTxMzEXi08HE=; b=diPaEMio9VQr0WFLWrPAabWE0k
+	gH39iV++eI1NqopjmAeiOHHmwCqOaF8yIEWUvf5QgP7S/qzDUa0APY3OGW1AILP9HYy6DORCZe+MJ
+	4ryNKGzxTDeR29DHTDmrxuoTxbByWbaXU79bauI0uYXzcBDvIYTAViY3kuGB4th+gjnvyRjL8pUXO
+	ySN3Ls1sNwA5Yw5jIuatxSRo1sdITYi2iSLU+ex6O2lIwTYW8IYoERzZWW2/evXgrE7eNQ9G7+9QN
+	vg/2tfUvjjiC31c77VGc24KKTG57qSx2BUHa52669RThzEftKE6bNjehdHY+O59UQc3Xpo+6aJx5O
+	7IuG5YfA==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1riILL-00000009gfM-0K7j;
+	Thu, 07 Mar 2024 18:19:47 +0000
+Date: Thu, 7 Mar 2024 18:19:46 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Jan Kara <jack@suse.cz>
+Cc: "Yin, Fengwei" <fengwei.yin@intel.com>, Yujie Liu <yujie.liu@intel.com>,
+	Oliver Sang <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Guo Xuenan <guoxuenan@huawei.com>, linux-fsdevel@vger.kernel.org,
+	ying.huang@intel.com, feng.tang@intel.com
+Subject: Re: [linus:master] [readahead] ab4443fe3c: vm-scalability.throughput
+ -21.4% regression
+Message-ID: <ZeoFQnVYLLBLNL6J@casper.infradead.org>
+References: <202402201642.c8d6bbc3-oliver.sang@intel.com>
+ <20240221111425.ozdozcbl3konmkov@quack3>
+ <ZdakRFhEouIF5o6D@xsang-OptiPlex-9020>
+ <20240222115032.u5h2phfxpn77lu5a@quack3>
+ <20240222183756.td7avnk2srg4tydu@quack3>
+ <ZeVVN75kh9Ey4M4G@yujie-X299>
+ <dee823ca-7100-4289-8670-95047463c09d@intel.com>
+ <20240307092308.u54fjngivmx23ty3@quack3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,28 +57,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eb8f2a21-d388-424d-8504-ccd7bdb53a93@rowland.harvard.edu>
+In-Reply-To: <20240307092308.u54fjngivmx23ty3@quack3>
 
-> So I guess you're talking about the second, intuitive meaning.  That's 
-> very simple to explain.  Since every instruction executes at _some_ 
-> time, and since we can safely assume that no two instructions execute at 
-> exactly the _same_ time, if F doesn't execute before E then E must 
-> execute before F.  Or using your terms, (not F ->xb E) implies (E ->xb 
-> F).  Would that answer the original question satisfactorily?
+On Thu, Mar 07, 2024 at 10:23:08AM +0100, Jan Kara wrote:
+> Thanks for testing! This is an interesting result and certainly unexpected
+> for me. The readahead code allocates naturally aligned pages so based on
+> the distribution of allocations it seems that before commit ab4443fe3ca6
+> readahead window was at least 32 pages (128KB) aligned and so we allocated
+> order 5 pages. After the commit, the readahead window somehow ended up only
+> aligned to 20 modulo 32. To follow natural alignment and fill 128KB
+> readahead window we allocated order 2 page (got us to offset 24 modulo 32),
+> then order 3 page (got us to offset 0 modulo 32), order 4 page (larger
+> would not fit in 128KB readahead window now), and order 2 page to finish
+> filling the readahead window.
+> 
+> Now I'm not 100% sure why the readahead window alignment changed with
+> different rounding when placing readahead mark - probably that's some
+> artifact when readahead window is tiny in the beginning before we scale it
+> up (I'll verify by tracing whether everything ends up looking correctly
+> with the current code). So I don't expect this is a problem in ab4443fe3ca6
+> as such but it exposes the issue that readahead page insertion code should
+> perhaps strive to achieve better readahead window alignment with logical
+> file offset even at the cost of occasionally performing somewhat shorter
+> readahead. I'll look into this once I dig out of the huge heap of email
+> after vacation...
 
-I'd disagree with these premises: certain instructions can and do execute
-at the same time.  FWIW, in the formal model, it is not that difficult to
-provide examples of "(not F ->xb E) and (not E ->xb F)".
+I was surprised by what you said here, so I went and re-read the code
+and it doesn't work the way I thought it did.  So I had a good long think
+about how it _should_ work, and I looked for some more corner conditions,
+and this is what I came up with.
 
+The first thing I've done is separate out the two limits.  The EOF is
+a hard limit; we will not allocate pages beyond EOF.  The ra->size is
+a soft limit; we will allocate pages beyond ra->size, but not too far.
 
-> The new text says the same thing as the original, just in a more 
-> condensed way.  It skips the detailed explanation of why E must execute 
-> before W propagates to E's CPU, merely saying that it is because "W is 
-> coherence-later than E".  I'm not sure this is an improvement; the 
-> reader might want to know exactly how this reasoning goes.
+The second thing I noticed is that index + ra_size could wrap.  So add
+a check for that, and set it to ULONG_MAX.  index + ra_size - async_size
+could also wrap, but this is harmless.  We certainly don't want to kick
+off any more readahead in this circumstance, so leaving 'mark' outside
+the range [index..ULONG_MAX] is just fine.
 
-The current text relies on an argument by contradiction.  A contradiction
-is reached by "forcing" (F ->xb E), hence all it can be concluded is that
-(not F ->xb E).  Again, AFAICS, this doesn't match the claim in the text.
+The third thing is that we could allocate a folio which contains a page
+at ULONG_MAX.  We don't really want that in the page cache; it makes
+filesystems more complicated if they have to check for that, and we
+don't allow an order-0 folio at ULONG_MAX, so there's no need for it.
+This _should_ already be prohibited by the "Don't allocate pages past EOF"
+check, but let's explicitly prohibit it.
 
-  Andrea
+Compile tested only.
+
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 130c0e7df99f..742e1f39035b 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -488,7 +488,8 @@ void page_cache_ra_order(struct readahead_control *ractl,
+ {
+ 	struct address_space *mapping = ractl->mapping;
+ 	pgoff_t index = readahead_index(ractl);
+-	pgoff_t limit = (i_size_read(mapping->host) - 1) >> PAGE_SHIFT;
++	pgoff_t last = (i_size_read(mapping->host) - 1) >> PAGE_SHIFT;
++	pgoff_t limit = index + ra->size;
+ 	pgoff_t mark = index + ra->size - ra->async_size;
+ 	int err = 0;
+ 	gfp_t gfp = readahead_gfp_mask(mapping);
+@@ -496,23 +497,26 @@ void page_cache_ra_order(struct readahead_control *ractl,
+ 	if (!mapping_large_folio_support(mapping) || ra->size < 4)
+ 		goto fallback;
+ 
+-	limit = min(limit, index + ra->size - 1);
+-
+ 	if (new_order < MAX_PAGECACHE_ORDER) {
+ 		new_order += 2;
+ 		new_order = min_t(unsigned int, MAX_PAGECACHE_ORDER, new_order);
+ 		new_order = min_t(unsigned int, new_order, ilog2(ra->size));
+ 	}
+ 
++	if (limit < index)
++		limit = ULONG_MAX;
+ 	filemap_invalidate_lock_shared(mapping);
+-	while (index <= limit) {
++	while (index < limit) {
+ 		unsigned int order = new_order;
+ 
+ 		/* Align with smaller pages if needed */
+ 		if (index & ((1UL << order) - 1))
+ 			order = __ffs(index);
++		/* Avoid wrap */
++		if (index + (1UL << order) == 0)
++			order--;
+ 		/* Don't allocate pages past EOF */
+-		while (index + (1UL << order) - 1 > limit)
++		while (index + (1UL << order) - 1 > last)
+ 			order--;
+ 		err = ra_alloc_folio(ractl, index, mark, order, gfp);
+ 		if (err)
