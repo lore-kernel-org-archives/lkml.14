@@ -1,122 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8098F12C52B;
-	Thu,  7 Mar 2024 14:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9001D699;
+	Thu,  7 Mar 2024 14:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709820751; cv=none; b=BFeZalbg3ZN/H1P24hdTzVdDqHVpG76aCrtIju/jv+imZy1L90ls1XlAqfP+Pr+UoSFWXekpurTd2AKRR5g5cMthWkhMxJeFyN34SgiagjC2IOL8TgZQzV7khx4vLTV7pyPpAI5sO25aMu+ZoaTjxSP3xEw6hVIrVl4pmn+q064=
+	t=1709820953; cv=none; b=MCT1pNHei8/9C4ycoRjlVJRaxG5Z7fZ/7/Jg7Hr4wyGMRlD/+dc6FSh4KYB9vg64cEQxfrWnVEeV6KtNOoNyUCLECZxcIqwq3I20ebnCcc11J+iJsp3NpPzxphhWpGvsF2wHNbSNSVUw9yG2LoGB6dLAmkbvxhiDbsdxzjJScwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709820751; c=relaxed/simple;
-	bh=nvbQsr5KjGsdgCRWMMm6N+qmKuGEbiis9IDBpCnfHWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HRIcObYYWvWDD5CNjGqiTVMQwvThZsRjoz1Wy6kmB4lHD6ZP5wb6/i0DsBi65Y7PcSZ5Xb9Mv5QnojvWJtJhKIIORjsi75o0inydAgJDn0qoehsvzyJy8SUEtBaLMwXa79amadWFt4CR76j5/lh8kN1iYrmurSOCe6HgFKEGj1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6PAGLgF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6PAGLgF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76175C433F1;
-	Thu,  7 Mar 2024 14:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709820750;
-	bh=nvbQsr5KjGsdgCRWMMm6N+qmKuGEbiis9IDBpCnfHWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S6PAGLgFEUhhVnJvxN9VBaasVy+W3B8NrblbXlXKVEObuLjkruTXouwbGYKa3GBI1
-	 FJ0VlAfRtDaE5JJfuzJbej0DtmIINDKfOopCmms4fGTiC/gf6fd/jn9AmErabgyRXY
-	 FVviSDnbtXKgXWetVHpzUBe50o7wsniQJz9BAQYTE+WY2iRACaHPqdA1U+p0TB3wxg
-	 YTvrigZ9SNzD5itbbaw+okGwNGH2+NKjg5sDuxqthcxBh15/V4ZzX2uw4qnOWuTKIk
-	 SiKQ8QZhMO+HiFSChgY86lRoZwtKUikxUNyToLVHB2q6z69CISeHTkAhft9xoZX2ww
-	 NWn67JxkycS6g==
-Date: Thu, 7 Mar 2024 08:12:28 -0600
-From: Rob Herring <robh@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: broonie@kernel.org, wenst@chromium.org, lgirdwood@gmail.com,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.com,
-	trevor.wu@mediatek.com, maso.huang@mediatek.com,
-	xiazhengqiao@huaqin.corp-partner.google.com, arnd@arndb.de,
-	kuninori.morimoto.gx@renesas.com, shraash@google.com,
-	amergnat@baylibre.com, nicolas.ferre@microchip.com,
-	u.kleine-koenig@pengutronix.de, dianders@chromium.org,
-	frank.li@vivo.com, allen-kh.cheng@mediatek.com,
-	eugen.hristev@collabora.com, claudiu.beznea@tuxon.dev,
-	jarkko.nikula@bitmer.com, jiaxin.yu@mediatek.com,
-	alpernebiyasak@gmail.com, ckeepax@opensource.cirrus.com,
-	zhourui@huaqin.corp-partner.google.com, nfraprado@collabora.com,
-	alsa-devel@alsa-project.org, shane.chien@mediatek.com,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v2 19/22] ASoC: dt-bindings: mt8192: Document
- audio-routing and dai-link subnode
-Message-ID: <20240307141228.GA2491015-robh@kernel.org>
-References: <20240307114445.196981-1-angelogioacchino.delregno@collabora.com>
- <20240307114445.196981-20-angelogioacchino.delregno@collabora.com>
+	s=arc-20240116; t=1709820953; c=relaxed/simple;
+	bh=u7CyU/Gn809FB8Jl2uilydLVkL+tLjbp10Hl08tZ/5Q=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ihTrUvW3KAP9ZAOskD+knbtyIeBdWAtmVlKQ9nQ/6rbjz/9hbmqMITfMd9voo2PVq/d8uBKUruytWi54pJeWZJVMHF22rlXv3CITDcyinLvgBiQul0Pgcu69qyjjtfKBWHq/gxMcCcoJfGQ1vfCB88uKRBDt1vaLY7I8GriUXNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TrBCv34w2z1FM1f;
+	Thu,  7 Mar 2024 22:15:39 +0800 (CST)
+Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id C5350140444;
+	Thu,  7 Mar 2024 22:15:48 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 7 Mar 2024 22:15:48 +0800
+From: Xingui Yang <yangxingui@huawei.com>
+To: <john.g.garry@oracle.com>, <yanaijie@huawei.com>, <jejb@linux.ibm.com>,
+	<martin.petersen@oracle.com>, <damien.lemoal@opensource.wdc.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
+	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
+Subject: [PATCH v4 2/2] scsi: libsas: Fix disk not being scanned in after being removed
+Date: Thu, 7 Mar 2024 14:14:13 +0000
+Message-ID: <20240307141413.48049-3-yangxingui@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240307141413.48049-1-yangxingui@huawei.com>
+References: <20240307141413.48049-1-yangxingui@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240307114445.196981-20-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemd100001.china.huawei.com (7.185.36.94)
 
-On Thu, Mar 07, 2024 at 12:44:42PM +0100, AngeloGioacchino Del Regno wrote:
-> Document the dai-link subnodes and the audio-routing property, allowing
-> to describe machine specific audio hardware and links in device tree.
-> 
-> While at it, also deprecate the old properties which were previously
-> used with the driver's partially hardcoded configuration.
-> 
+As of commit d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to
+update PHY info"), do discovery will send a new SMP_DISCOVER and update
+phy->phy_change_count. We found that if the disk is reconnected and phy
+change_count changes at this time, the disk scanning process will not be
+triggered.
 
-I replied on v1, but one more thing here.
+Therefore, call sas_set_ex_phy() to update the PHY info with the results of
+the last query. And because the previous phy info will be used when calling
+sas_unregister_devs_sas_addr(), sas_unregister_devs_sas_addr() should be
+called before sas_set_ex_phy().
 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../sound/mt8192-mt6359-rt1015-rt5682.yaml    | 124 ++++++++++++++++--
->  1 file changed, 115 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml b/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
-> index 7e50f5d65c8f..449454c50dcc 100644
-> --- a/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
-> +++ b/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
-> @@ -13,6 +13,9 @@ maintainers:
->  description:
->    This binding describes the MT8192 sound card.
->  
-> +allOf:
-> +  - $ref: sound-card-common.yaml#
-> +
->  properties:
->    compatible:
->      enum:
-> @@ -20,6 +23,14 @@ properties:
->        - mediatek,mt8192_mt6359_rt1015p_rt5682
->        - mediatek,mt8192_mt6359_rt1015p_rt5682s
->  
-> +  audio-routing:
-> +    description:
-> +      A list of the connections between audio components. Each entry is a
-> +      pair of strings, the first being the connection's sink, the second
-> +      being the connection's source.
-> +      Valid names could be the input or output widgets of audio components,
-> +      power supplies, MicBias of codec and the software switch.
-> +
->    mediatek,platform:
->      $ref: /schemas/types.yaml#/definitions/phandle
->      description: The phandle of MT8192 ASoC platform.
-> @@ -27,10 +38,12 @@ properties:
->    mediatek,hdmi-codec:
->      $ref: /schemas/types.yaml#/definitions/phandle
->      description: The phandle of HDMI codec.
-> +    deprecated: true
+Fixes: d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to update PHY info")
+Signed-off-by: Xingui Yang <yangxingui@huawei.com>
+Reviewed-by: John Garry <john.g.garry@oracle.com>
+---
+ drivers/scsi/libsas/sas_expander.c | 32 ++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
-The deprecated keyword doesn't do anything at the moment, but my plan 
-there is to add a mode to the tools which disables all deprecated 
-properties. That will give you want you want in terms of disallowing 
-these properties.
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index d6147616339f..ee3808bfd534 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -1955,6 +1955,7 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
+ 	struct expander_device *ex = &dev->ex_dev;
+ 	struct ex_phy *phy = &ex->ex_phy[phy_id];
+ 	enum sas_device_type type = SAS_PHY_UNUSED;
++	struct smp_disc_resp *disc_resp;
+ 	u8 sas_addr[SAS_ADDR_SIZE];
+ 	char msg[80] = "";
+ 	int res;
+@@ -1966,33 +1967,41 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
+ 		 SAS_ADDR(dev->sas_addr), phy_id, msg);
+ 
+ 	memset(sas_addr, 0, SAS_ADDR_SIZE);
+-	res = sas_get_phy_attached_dev(dev, phy_id, sas_addr, &type);
++	disc_resp = alloc_smp_resp(DISCOVER_RESP_SIZE);
++	if (!disc_resp)
++		return -ENOMEM;
++
++	res = sas_get_phy_discover(dev, phy_id, disc_resp);
+ 	switch (res) {
+ 	case SMP_RESP_NO_PHY:
+ 		phy->phy_state = PHY_NOT_PRESENT;
+ 		sas_unregister_devs_sas_addr(dev, phy_id, last);
+-		return res;
++		goto out_free_resp;
+ 	case SMP_RESP_PHY_VACANT:
+ 		phy->phy_state = PHY_VACANT;
+ 		sas_unregister_devs_sas_addr(dev, phy_id, last);
+-		return res;
++		goto out_free_resp;
+ 	case SMP_RESP_FUNC_ACC:
+ 		break;
+ 	case -ECOMM:
+ 		break;
+ 	default:
+-		return res;
++		goto out_free_resp;
+ 	}
+ 
++	if (res == 0)
++		sas_get_sas_addr_and_dev_type(disc_resp, sas_addr, &type);
++
+ 	if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
+ 		phy->phy_state = PHY_EMPTY;
+ 		sas_unregister_devs_sas_addr(dev, phy_id, last);
+ 		/*
+-		 * Even though the PHY is empty, for convenience we discover
+-		 * the PHY to update the PHY info, like negotiated linkrate.
++		 * Even though the PHY is empty, for convenience we update
++		 * the PHY info, like negotiated linkrate.
+ 		 */
+-		sas_ex_phy_discover(dev, phy_id);
+-		return res;
++		if (res == 0)
++			sas_set_ex_phy(dev, phy_id, disc_resp);
++		goto out_free_resp;
+ 	} else if (SAS_ADDR(sas_addr) == SAS_ADDR(phy->attached_sas_addr) &&
+ 		   dev_type_flutter(type, phy->attached_dev_type)) {
+ 		struct domain_device *ata_dev = sas_ex_to_ata(dev, phy_id);
+@@ -2004,7 +2013,7 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
+ 			action = ", needs recovery";
+ 		pr_debug("ex %016llx phy%02d broadcast flutter%s\n",
+ 			 SAS_ADDR(dev->sas_addr), phy_id, action);
+-		return res;
++		goto out_free_resp;
+ 	}
+ 
+ 	/* we always have to delete the old device when we went here */
+@@ -2013,7 +2022,10 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
+ 		SAS_ADDR(phy->attached_sas_addr));
+ 	sas_unregister_devs_sas_addr(dev, phy_id, last);
+ 
+-	return sas_discover_new(dev, phy_id);
++	res = sas_discover_new(dev, phy_id);
++out_free_resp:
++	kfree(disc_resp);
++	return res;
+ }
+ 
+ /**
+-- 
+2.17.1
 
-That would require dropping them from "required" which I'm fine with you 
-doing. (Though technically that's still an ABI change)
-
-Rob
