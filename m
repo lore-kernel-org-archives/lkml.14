@@ -1,198 +1,134 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3909B634;
-	Thu,  7 Mar 2024 02:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6806D1847;
+	Thu,  7 Mar 2024 02:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709779135; cv=none; b=PgNmsOt9gfo3t0H8pSlYeuaXbEarlADfS0zJJe4C1bpfahm1JirTJ23c/1sNpVJjxNybCbMTCR9jgSZFjldXC11h5ckNI14zF3yG/jfDBQ+CKfn5XF2n1LhnB+dxgKNA4+LoPXSChZxiGX9EDZ9nVTpXP5nmqwNgrCKfM7sVmLY=
+	t=1709779256; cv=none; b=hpVIqg92GrjyfTZjhzs1EA13+SQNQZChAkxgA77aFjn0PyXbtlzi7Pd6VeMFjyczFrd2PR1PWUcH6bsoQIjr5GMJbQNOcib/O2WNK9PKBzMzC/LPFq33IPBVTgja/FJoIxG6DIa7iYFYPND7P9g2ZjyDMtsjLELx+s4Qep+mG8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709779135; c=relaxed/simple;
-	bh=I1Wv8eWLueECEbm/aljAThrcOJwuRiULiF4kYPDDxhc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=oDYzZlrxmOJPZfmzrLaqrQNXgO1Y93QvcyKJESZjMejvQF7bVxgBndkhXKfiz1xF94b4bs2/ajsoNEg3XC7pnmYRrKnIuxDg6g+GJtfMRB8zvgfIQ7/b4vEZsaJnEdQTSwKBBsZigbK7KSzb/uZnxpHld9fypc2acJntSd2bh3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Tqtj71HnVz1h1WY;
-	Thu,  7 Mar 2024 10:36:27 +0800 (CST)
-Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id AF7DB180060;
-	Thu,  7 Mar 2024 10:38:48 +0800 (CST)
-Received: from [10.173.135.154] (10.173.135.154) by
- canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+	s=arc-20240116; t=1709779256; c=relaxed/simple;
+	bh=Yjjz5ewPjXZp4KyL2oiueZbhuwnsqUODQj8pNHnwbkc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iJbtFnOEg6mXXJZPx4wiFzm1NEN4ci8mL569hfjFMV6Rbe6J4+MuYRQW82Yso+SABZPQGqKTWzBl1Kvnc74r4aArMURKosEIMNZ1O0qfQXL5dKGUVx3LlLFGWtm0qkvUyWnCnmAcaPks01TbMZ6bx7Og9TB2avbAUnKEp1h/TIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=ngT8lCR3; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="ngT8lCR3"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 05C5312001F;
+	Thu,  7 Mar 2024 05:40:45 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 05C5312001F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1709779245;
+	bh=jEVsja8SSmoMIIjVaOxrbFMoSgIk5r+GyxaxqJuvUC4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=ngT8lCR3EkUmke2AOk56uWYG4CAuNBWDlIKszqS1zln2UZaEF+1yEzt2vI7f8Nn0W
+	 KojlbOIIVzM95uqCKn1NJAG9vU7b7gTDCvhIX+GMFiquDk7sLDkBvk95nuPECE26q+
+	 /Eu1HxrZr7thZXj90/iIJeve4tbdPOdjyWU3MBLNdcnHzamHA9gDqdOxG0dw/J7M1Z
+	 k4bhE4Og8ZeCC8Een2FVn7E1O5Bi610KIzTocJq+EGHSvRT2FRDAQg/Qkcz5A8Yvpc
+	 wrhRfI+pCpolfY/a0nOpQJL8Kmbusli08c3YBudNBCLrJHzmh3LJFTmnH/15ZiZWEe
+	 qlS4PomkNG+nw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Thu,  7 Mar 2024 05:40:44 +0300 (MSK)
+Received: from localhost.localdomain (100.125.24.169) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 10:38:48 +0800
-Subject: Re: [PATCH v1] mm: swap: Fix race between free_swap_and_cache() and
- swapoff()
-To: Ryan Roberts <ryan.roberts@arm.com>
-CC: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
-	<david@redhat.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>, "Huang, Ying" <ying.huang@intel.com>
-References: <20240305151349.3781428-1-ryan.roberts@arm.com>
- <875xy0842q.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <c8fe62d0-78b8-527a-5bef-ee663ccdc37a@huawei.com>
- <af11bbca-3f6a-4db5-916c-b0d5b942352b@arm.com>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <ff6aec00-f939-b7ba-c127-b133c4d95ee5@huawei.com>
-Date: Thu, 7 Mar 2024 10:38:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+ 15.2.1118.40; Thu, 7 Mar 2024 05:40:44 +0300
+From: George Stark <gnstark@salutedevices.com>
+To: <andy.shevchenko@gmail.com>, <pavel@ucw.cz>, <lee@kernel.org>,
+	<vadimp@nvidia.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<christophe.leroy@csgroup.eu>, <hdegoede@redhat.com>,
+	<mazziesaccount@gmail.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<will@kernel.org>, <longman@redhat.com>, <boqun.feng@gmail.com>,
+	<nikitos.tr@gmail.com>, <kabel@kernel.org>
+CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <kernel@salutedevices.com>, George Stark
+	<gnstark@salutedevices.com>
+Subject: [PATCH v5 01/10] locking/mutex: move mutex_destroy() definition lower
+Date: Thu, 7 Mar 2024 05:40:25 +0300
+Message-ID: <20240307024034.1548605-2-gnstark@salutedevices.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240307024034.1548605-1-gnstark@salutedevices.com>
+References: <20240307024034.1548605-1-gnstark@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <af11bbca-3f6a-4db5-916c-b0d5b942352b@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500002.china.huawei.com (7.192.104.244)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-a-m1.sberdevices.ru (172.24.196.116) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 100.125.24.169
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On 2024/3/6 17:31, Ryan Roberts wrote:
-> On 06/03/2024 08:51, Miaohe Lin wrote:
->> On 2024/3/6 10:52, Huang, Ying wrote:
->>> Ryan Roberts <ryan.roberts@arm.com> writes:
->>>
->>>> There was previously a theoretical window where swapoff() could run and
->>>> teardown a swap_info_struct while a call to free_swap_and_cache() was
->>>> running in another thread. This could cause, amongst other bad
->>>> possibilities, swap_page_trans_huge_swapped() (called by
->>>> free_swap_and_cache()) to access the freed memory for swap_map.
->>>>
->>>> This is a theoretical problem and I haven't been able to provoke it from
->>>> a test case. But there has been agreement based on code review that this
->>>> is possible (see link below).
->>>>
->>>> Fix it by using get_swap_device()/put_swap_device(), which will stall
->>>> swapoff(). There was an extra check in _swap_info_get() to confirm that
->>>> the swap entry was valid. This wasn't present in get_swap_device() so
->>>> I've added it. I couldn't find any existing get_swap_device() call sites
->>>> where this extra check would cause any false alarms.
->>>>
->>>> Details of how to provoke one possible issue (thanks to David Hilenbrand
->>>> for deriving this):
->>>>
->>>> --8<-----
->>>>
->>>> __swap_entry_free() might be the last user and result in
->>>> "count == SWAP_HAS_CACHE".
->>>>
->>>> swapoff->try_to_unuse() will stop as soon as soon as si->inuse_pages==0.
->>>>
->>>> So the question is: could someone reclaim the folio and turn
->>>> si->inuse_pages==0, before we completed swap_page_trans_huge_swapped().
->>>>
->>>> Imagine the following: 2 MiB folio in the swapcache. Only 2 subpages are
->>>> still references by swap entries.
->>>>
->>>> Process 1 still references subpage 0 via swap entry.
->>>> Process 2 still references subpage 1 via swap entry.
->>>>
->>>> Process 1 quits. Calls free_swap_and_cache().
->>>> -> count == SWAP_HAS_CACHE
->>>> [then, preempted in the hypervisor etc.]
->>>>
->>>> Process 2 quits. Calls free_swap_and_cache().
->>>> -> count == SWAP_HAS_CACHE
->>>>
->>>> Process 2 goes ahead, passes swap_page_trans_huge_swapped(), and calls
->>>> __try_to_reclaim_swap().
->>>>
->>>> __try_to_reclaim_swap()->folio_free_swap()->delete_from_swap_cache()->
->>>> put_swap_folio()->free_swap_slot()->swapcache_free_entries()->
->>>> swap_entry_free()->swap_range_free()->
->>>> ...
->>>> WRITE_ONCE(si->inuse_pages, si->inuse_pages - nr_entries);
->>>>
->>>> What stops swapoff to succeed after process 2 reclaimed the swap cache
->>>> but before process1 finished its call to swap_page_trans_huge_swapped()?
->>>>
->>>> --8<-----
->>>
->>> I think that this can be simplified.  Even for a 4K folio, this could
->>> happen.
->>>
->>> CPU0                                     CPU1
->>> ----                                     ----
->>>
->>> zap_pte_range
->>>   free_swap_and_cache
->>>   __swap_entry_free
->>>   /* swap count become 0 */
->>>                                          swapoff
->>>                                            try_to_unuse
->>>                                              filemap_get_folio
->>>                                              folio_free_swap
->>>                                              /* remove swap cache */
->>>                                            /* free si->swap_map[] */
->>>
->>>   swap_page_trans_huge_swapped <-- access freed si->swap_map !!!
->>
->> Sorry for jumping the discussion here. IMHO, free_swap_and_cache is called with pte lock held.
-> 
-> I don't beleive it has the PTL when called by shmem.
+mutex_destroy() definition is located in the middle of the code related
+purely to mutex initialization so place it separately after mutex_init()
 
-In the case of shmem, folio_lock is used to guard against the race.
+Signed-off-by: George Stark <gnstark@salutedevices.com>
+---
+Hello Waiman. This is helper patch to make resulting mutex.h look like we discussed
+it in December. It was in you cleanup patch at first but slept away somehow
 
-> 
->> So synchronize_rcu (called by swapoff) will wait zap_pte_range to release the pte lock. So this
->> theoretical problem can't happen. Or am I miss something?
-> 
-> For Huang Ying's example, I agree this can't happen because try_to_unuse() will
-> be waiting for the PTL (see the reply I just sent).
+ include/linux/mutex.h | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-Do you mean the below message?
-"
-I don't think si->inuse_pages is decremented until __try_to_reclaim_swap() is
-called (per David, above), which is called after swap_page_trans_huge_swapped()
-has executed. So in CPU1, try_to_unuse() wouldn't see si->inuse_pages being zero
-until after CPU0 has completed accessing si->swap_map, so if swapoff starts
-where you have put it, it would get stalled waiting for the PTL which CPU0 has.
-"
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index 67edc4ca2bee..f7611c092db7 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -37,14 +37,10 @@
+ # define __DEBUG_MUTEX_INITIALIZER(lockname)				\
+ 	, .magic = &lockname
 
-I agree try_to_unuse() will wait for si->inuse_pages being zero. But why will it waits
-for the PTL? It seems PTL is not used to protect si->inuse_pages. Or am I miss something?
+-extern void mutex_destroy(struct mutex *lock);
+-
+ #else
 
-> 
->>
->> CPU0                                     CPU1
->> ----                                     ----
->>
->> zap_pte_range
->>   pte_offset_map_lock -- spin_lock is held.
->>   free_swap_and_cache
->>    __swap_entry_free
->>    /* swap count become 0 */
->>                                          swapoff
->>                                            try_to_unuse
->>                                              filemap_get_folio
->>                                              folio_free_swap
->>                                              /* remove swap cache */
->> 					    percpu_ref_kill(&p->users);
->>    swap_page_trans_huge_swapped
->>   pte_unmap_unlock -- spin_lock is released.
->> 					    synchronize_rcu();  --> Will wait pte_unmap_unlock to be called?
-> 
-> Perhaps you can educate me here; I thought that synchronize_rcu() will only wait
-> for RCU critical sections to complete. The PTL is a spin lock, so why would
-> synchronize_rcu() wait for the PTL to become unlocked?
+ # define __DEBUG_MUTEX_INITIALIZER(lockname)
 
-I assume PTL will always disable preemption which disables a grace period until PTL is released.
-But this might be fragile and I'm not really sure. I might be wrong.
+-static inline void mutex_destroy(struct mutex *lock) {}
+-
+ #endif
 
-Thanks.
-> 
-> 
->>                                            /* free si->swap_map[] */
->>
->> Thanks.
->>
->>
-> 
-> .
-> 
+ #ifndef CONFIG_PREEMPT_RT
+@@ -117,6 +113,16 @@ do {							\
+ } while (0)
+ #endif /* CONFIG_PREEMPT_RT */
+
++#ifdef CONFIG_DEBUG_MUTEXES
++
++void mutex_destroy(struct mutex *lock);
++
++#else
++
++static inline void mutex_destroy(struct mutex *lock) {}
++
++#endif
++
+ /*
+  * See kernel/locking/mutex.c for detailed documentation of these APIs.
+  * Also see Documentation/locking/mutex-design.rst.
+--
+2.25.1
 
