@@ -1,225 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC5512BEA5;
-	Thu,  7 Mar 2024 13:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0176A12BEB7;
+	Thu,  7 Mar 2024 13:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709816798; cv=none; b=g++4Ryx1oWJGH+KFjq356uCGzOU7Vw8Azzij6C88vUfMIrZzl9npFxpazumSw4pG9U99tpF0GKazBHFFzM4SrcDQFnwZO1T5FN2YL1ulGhDL5IOjbtfUkUeHdb/+StbZrlTWdJG4p/o7sd0BBza+DZA42r4N028OvUtfK+jJgo0=
+	t=1709816832; cv=none; b=FAf2Fvzcc1bmoqXYoInjBwnOjJjrGdyJ7tmw1rd6cYpWNo7DVvnzQuXYyM4YNpR1RqpiF+SX6Ub6b0/HF1EjPVSEnu4XAF4LKU4GWQfo6KWXJiRZ3wZZXgeUJex6DgxLPAN4T0IvdNTB23E1ix8KEv76kaMhvW44iY4ph4q45mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709816798; c=relaxed/simple;
-	bh=2RMapmPCobYn5uXk9EvUvUddEuIWAUjZ3Hmw1WtqFXI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gSacdbC5TIqand3WlkX265Cc3LoD10LRbpqUhutncTNglIEOfOWJlbx/J5eze2YlP4EL4fqjh5V5INgZDGUe/T/g+kVraT/3UZpCkrPsrjX/GJPOGIVU4ZtKbJedP2yCBeIpEtZ98hdTlNtoyQ4nRZXbd8WvL4uWE6+ZFMTTuTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f9mDbwjc; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709816832; c=relaxed/simple;
+	bh=cjI8HdcqWfSzb4EPROgu3kbBICUTAibkbIw37DdMKZQ=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=BXjSz5bex/Ay9TTo+JVqRYNYcuTUp+EXumcuzfeNDuIZzbCzIlcHia328BxW9xMhSoQ/dUAvhz18ChK3QOfmLr6C1r8yFaPyMoZYwN/Ne+g6mHXPVi60tT8vBaL2UjKSxPIGGFiL/i6epuS8Z/d6o3cq2MxBM12Pf2OoLzAFwKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ErmKsbBx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LPltvXx+; arc=none smtp.client-ip=64.147.123.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f9mDbwjc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709816796; x=1741352796;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2RMapmPCobYn5uXk9EvUvUddEuIWAUjZ3Hmw1WtqFXI=;
-  b=f9mDbwjc0SfnVzuqiJnNRL6IQdcShoHhKvMkrEb4ToVwBGkEJ8JIOeqs
-   HI4jiJ/schW9+DX7PonRBtr07owys34SxFb/2jDnZP4QPxd6mpiGHX6lr
-   K/WDqCZtqdUQHEaiBt8sBvEoc60kglsU0nRY4apY44wcP00ixI18WPfBu
-   xMsyTOr1otKrIcL2tbcEUGd2Socf3YuhksdYJgdaAx097wU+KmntFmvM0
-   koUV50hv/aJU2f2okV1TQYsvgiDvESUz0ZpCgYyBLAnFHRMILeoFcKGvy
-   ytuV3rOgQguPQGzc71/IfO0QUp2vwh1OQps87fNMvHeT7FAV/ZDxh/PUy
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15890618"
-X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="15890618"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 05:03:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="47594405"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.169])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 05:03:12 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 7 Mar 2024 15:03:07 +0200 (EET)
-To: Kane Chen <kane.chen@intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    david.e.box@intel.com, kane.chen@intel.corp-partner.google.com
-Subject: Re: [PATCH 1/1] platform/x86/intel/pmc: Improve PKGC residency
- counters debug
-In-Reply-To: <20240307091011.877921-1-kane.chen@intel.com>
-Message-ID: <f3d362bc-4ebf-3c36-6b10-06054e5e33dc@linux.intel.com>
-References: <20240307091011.877921-1-kane.chen@intel.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ErmKsbBx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LPltvXx+"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id A76811C00096;
+	Thu,  7 Mar 2024 08:07:07 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 07 Mar 2024 08:07:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1709816827; x=1709903227; bh=KIlJ9/MMoQ
+	ydcaKrNuZHiK1uGjrE3/F6Od5LC7tnK/8=; b=ErmKsbBxBCZtoosoVThwRby/dF
+	JJDWd4x2cfSFm/U4sxOMSsJ3B3NKY/vZcwX38EDm94XUTrx0YiEBDlWtdNXrrQQQ
+	obzgn9C9h7tWbnDOobbNqEhGUWHwn2VY1y98KoLe2RvHOHHU7SuLdAUmk8JR9h4z
+	uca3qn9pxZWe7rb6fM6CRq9M2BL3ngerFlxczb0Zd7kiOySP9AMsr0l6i8hfhgI9
+	clsMc26SIRI0mIVMg9m+hm30YTq1XqXLIg75cCuLz2uW0gXjkPuQmLwfceiv7TiM
+	dc2aEoV0kYbRQD6ExMiP1pw/C0gPvPE/BVxSTlKRO/wqqCewShI55QggpsKw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1709816827; x=1709903227; bh=KIlJ9/MMoQydcaKrNuZHiK1uGjrE
+	3/F6Od5LC7tnK/8=; b=LPltvXx+FmwRg1QDk6r3n8KsXSO580DsxXXlNXHXJ9EB
+	3GigYEwMG44CsYmTF8WWgKEEM0iQ7ADuX3GzaGaggWXY9IQfEmxgr/JGjPD1GLz4
+	+j4ySIBU1Plcrglm0nO0723jmpzw1gbSEa48FD6tHO9XVQH/iylBXWDXvlHjOlGX
+	dgT8ZpRLi6RxoMNtgo1rF3RXGqJYpqlJZk2W8P5+lQPESoXu7yW1hB9TtEy23ur4
+	yrotVVAB8G9fj5Vtdfkx436O0G7ijQ0eg2AR4qDaeTSGWKY7BVOyg1NGgutSLCGd
+	kuosSFRvTxcVrNVCoDO4zx+OHfI4LFFC/3dVSCAiaw==
+X-ME-Sender: <xms:-rvpZXt5qaX3lQhx_3cdRmxnViimUF_YOeQlhfuCLMDFLpjwb8I4oQ>
+    <xme:-rvpZYdXp7vU9MtQ9OAEuMWvPRZpGhCyo3i9zBi50NebA7tMY2AGDHC_lzjNJyH4i
+    Nvsqbg99sqjOQEmR3o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdegkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:-rvpZazmt_gDXWLXGhdnIQAVmHd29HpaweYr7FQ9nL2Hj8ALP44Ffg>
+    <xmx:-rvpZWMr_zKd-w8ntmcHo9ZjQkvSU2QGWcmpESbSd5e4S8dIoZPCmQ>
+    <xmx:-rvpZX8vKA2X6zxV2dK-zbrvOnOkSNzMc8EDgQsvpt6m7FKEbah5ig>
+    <xmx:-7vpZTTSHdQFYM5aj0AFPAubartSoU6aMikV8g_3FT7BWcHkxg7JazWyOGk>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 25551B6008D; Thu,  7 Mar 2024 08:07:06 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1964956985-1709816587=:1003"
+Message-Id: <fd7d8c88-5832-4179-890a-3b3af88a83a9@app.fastmail.com>
+In-Reply-To: <74afd65d-85ed-4ee9-b5f2-a6702f9bc01c@gaisler.com>
+References: 
+ <20240224-sam-fix-sparc32-all-builds-v2-0-1f186603c5c4@ravnborg.org>
+ <20240224-sam-fix-sparc32-all-builds-v2-4-1f186603c5c4@ravnborg.org>
+ <8d5780f5-1047-48d7-a9c9-09b95c7b5604@gaisler.com>
+ <5648dca0-4853-4dfb-91cf-282a656beb1e@app.fastmail.com>
+ <bc33b608-e0b5-4dff-aa05-8513dce409b3@gaisler.com>
+ <75a4a08d-85c2-4a60-9cbd-90dd50f765a8@app.fastmail.com>
+ <5d97d50a-9d40-4651-8071-073dee5f9aa8@gaisler.com>
+ <001ba36a-9d4c-45c4-b1f2-448824848afc@app.fastmail.com>
+ <5568f26d-9e1a-4530-a086-564659b21666@app.fastmail.com>
+ <74afd65d-85ed-4ee9-b5f2-a6702f9bc01c@gaisler.com>
+Date: Thu, 07 Mar 2024 14:06:45 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andreas Larsson" <andreas@gaisler.com>,
+ "Sam Ravnborg" <sam@ravnborg.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ sparclinux@vger.kernel.org, "Randy Dunlap" <rdunlap@infradead.org>
+Cc: "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ linux-parport@lists.infradead.org, "David S . Miller" <davem@davemloft.net>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] sparc32: Do not select ZONE_DMA
+Content-Type: text/plain
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Mar 7, 2024, at 13:42, Andreas Larsson wrote:
+> On 2024-03-06 19:19, Arnd Bergmann wrote:
+>
+>> I still don't know the history behind this choice, but I
+>> see this was already configured the same when arch/sparc/
+>> was originally merged. You can probably change it to a more
+>> sensible 0xc0000000 or 0x80000000 like on other
+>> architectures and run without highmem on anything with
+>> less than 2GB of total RAM.
+>> 
+>> How much RAM do Leon machines have typically, or at the
+>> maximum?
+> The amount of RAM can vary greatly between systems, from less that
+> 128 MiB up to 2 GiB. An upcoming design uses the entire 36-bit
+> physical address space and have the possibility of having up to 60
+> GiB memory.
 
---8323328-1964956985-1709816587=:1003
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+If the current maximum is 2GiB, that would be easily handled
+by making PAGE_OFFSET configurable the same way that x86 or
+arm do, where the common CONFIG_VMSPLIT_3G would extend lowmem
+from 192MiB to a little under 1GiB, with PAGE_OFFSET 0xc0000000,
+and VMSPLIT_2G_OPT allows exactly 2GiB of lowmem, plus a little
+under 2GiB of user addressing.
 
-On Thu, 7 Mar 2024, Kane Chen wrote:
+This would also be an improvement over using highmem for
+most applications today, and it means you can keep using the
+same setup once highmem support gets removed from the kernel.
 
-> The current code only prints PKGC-10 residency when the PKGC-10
-> is not reached in previous 'freeze' attempt. To debug PKGC-10 issues, we
-> also need to know other PKGC residency counters to better triage issues.
-> Ex:
-> 1. When system is stuck in PC2, it can be caused short LTR from device.
-> 2. When system is stuck in PC8, it can be caused by display engine.
->=20
-> To better triage issues, all PKGC residency are needed when issues happen=
-s.
+For a new design, I would strongly advise against advertising
+support for more than 2GiB on a 32-bit Linux kernel, as this
+is likely to not be supportable in the future. Note that
+in the best case today (40 byte struct page), the mem_map[]
+array uses 10MiB of lowmem per GiB installed memory, so you
+quickly run out of lowmem when you allow more RAM.
 
-happen.
-
-> Example log:
->  CPU did not enter Package C10!!! (Package C10 cnt=3D0x0)
->  Prev Package C2 cnt =3D 0x2191a325de, Current Package C2 cnt =3D 0x21aba=
-30724
->  Prev Package C3 cnt =3D 0x0, Current Package C3 cnt =3D 0x0
->  Prev Package C6 cnt =3D 0x0, Current Package C6 cnt =3D 0x0
->  Prev Package C7 cnt =3D 0x0, Current Package C7 cnt =3D 0x0
->  Prev Package C8 cnt =3D 0x0, Current Package C8 cnt =3D 0x0
->  Prev Package C9 cnt =3D 0x0, Current Package C9 cnt =3D 0x0
->  Prev Package C10 cnt =3D 0x0, Current Package C10 cnt =3D 0x0
->=20
-> With this log, we can know whether it's a stuck PC2 issue, and we can
-> check whether the short LTR from device causes the issue.
->=20
-> Signed-off-by: Kane Chen <kane.chen@intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 47 ++++++++++++++++++++-------
->  drivers/platform/x86/intel/pmc/core.h |  7 ++--
->  2 files changed, 41 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86=
-/intel/pmc/core.c
-> index 8f9c036809c79..b8910b671667e 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1389,6 +1389,15 @@ static int pmc_core_probe(struct platform_device *=
-pdev)
->  =09=09return -ENOMEM;
->  =09pmcdev->pmcs[PMC_IDX_MAIN] =3D primary_pmc;
-> =20
-> +=09/* The last element in msr_map is empty */
-> +=09pmcdev->num_of_pkgc =3D ARRAY_SIZE(msr_map) - 1;
-> +=09pmcdev->pkgc_res_cnt =3D devm_kcalloc(&pdev->dev,
-> +=09=09=09=09=09    pmcdev->num_of_pkgc,
-> +=09=09=09=09=09    sizeof(*pmcdev->pkgc_res_cnt),
-> +=09=09=09=09=09    GFP_KERNEL);
-> +=09if (!pmcdev->pkgc_res_cnt)
-> +=09=09return -ENOMEM;
-> +
->  =09/*
->  =09 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
->  =09 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
-> @@ -1432,6 +1441,7 @@ static __maybe_unused int pmc_core_suspend(struct d=
-evice *dev)
->  {
->  =09struct pmc_dev *pmcdev =3D dev_get_drvdata(dev);
->  =09struct pmc *pmc =3D pmcdev->pmcs[PMC_IDX_MAIN];
-> +=09int i;
-
-unsigned int.
-
->  =09if (pmcdev->suspend)
->  =09=09pmcdev->suspend(pmcdev);
-> @@ -1440,9 +1450,11 @@ static __maybe_unused int pmc_core_suspend(struct =
-device *dev)
->  =09if (pm_suspend_via_firmware())
->  =09=09return 0;
-> =20
-> -=09/* Save PC10 residency for checking later */
-> -=09if (rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter))
-> -=09=09return -EIO;
-> +=09/* Save PKGC residency for checking later */
-> +=09for (i =3D 0; i < pmcdev->num_of_pkgc; i++) {
-> +=09=09if (rdmsrl_safe(msr_map[i].bit_mask, &pmcdev->pkgc_res_cnt[i]))
-> +=09=09=09return -EIO;
-> +=09}
-> =20
->  =09/* Save S0ix residency for checking later */
->  =09if (pmc_core_dev_state_get(pmc, &pmcdev->s0ix_counter))
-> @@ -1451,14 +1463,15 @@ static __maybe_unused int pmc_core_suspend(struct=
- device *dev)
->  =09return 0;
->  }
-> =20
-> -static inline bool pmc_core_is_pc10_failed(struct pmc_dev *pmcdev)
-> +static inline bool pmc_core_is_deepest_pkgc_failed(struct pmc_dev *pmcde=
-v)
->  {
-> -=09u64 pc10_counter;
-> +=09u32 deepest_pkgc_msr =3D msr_map[pmcdev->num_of_pkgc - 1].bit_mask;
-> +=09u64 deepest_pkgc_residency;
-> =20
-> -=09if (rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter))
-> +=09if (rdmsrl_safe(deepest_pkgc_msr, &deepest_pkgc_residency))
->  =09=09return false;
-> =20
-> -=09if (pc10_counter =3D=3D pmcdev->pc10_counter)
-> +=09if (deepest_pkgc_residency =3D=3D pmcdev->pkgc_res_cnt[pmcdev->num_of=
-_pkgc - 1])
->  =09=09return true;
-> =20
->  =09return false;
-> @@ -1497,10 +1510,22 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev=
-)
->  =09if (!warn_on_s0ix_failures)
->  =09=09return 0;
-> =20
-> -=09if (pmc_core_is_pc10_failed(pmcdev)) {
-> -=09=09/* S0ix failed because of PC10 entry failure */
-> -=09=09dev_info(dev, "CPU did not enter PC10!!! (PC10 cnt=3D0x%llx)\n",
-> -=09=09=09 pmcdev->pc10_counter);
-> +=09if (pmc_core_is_deepest_pkgc_failed(pmcdev)) {
-> +=09=09/* S0ix failed because of deepest PKGC entry failure */
-> +=09=09dev_info(dev, "CPU did not enter %s!!! (%s cnt=3D0x%llx)\n",
-> +=09=09=09 msr_map[pmcdev->num_of_pkgc - 1].name,
-> +=09=09=09 msr_map[pmcdev->num_of_pkgc - 1].name,
-> +=09=09=09 pmcdev->pkgc_res_cnt[pmcdev->num_of_pkgc - 1]);
-> +
-> +=09=09for (i =3D 0; i < pmcdev->num_of_pkgc; i++) {
-> +=09=09=09u64 pc_cnt;
-> +
-> +=09=09=09if (!rdmsrl_safe(msr_map[i].bit_mask, &pc_cnt)) {
-> +=09=09=09=09dev_info(dev, "Prev %s cnt =3D 0x%llx, Current %s cnt =3D 0x=
-%llx\n",
-> +=09=09=09=09=09 msr_map[i].name, pmcdev->pkgc_res_cnt[i],
-> +=09=09=09=09=09 msr_map[i].name, pc_cnt);
-> +=09=09=09}
-> +=09=09}
->  =09=09return 0;
->  =09}
-> =20
-> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86=
-/intel/pmc/core.h
-> index 54137faaae2b2..fd7ae76984ac7 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -385,7 +385,8 @@ struct pmc {
->   * @pmc_xram_read_bit:=09flag to indicate whether PMC XRAM shadow regist=
-ers
->   *=09=09=09used to read MPHY PG and PLL status are available
->   * @mutex_lock:=09=09mutex to complete one transcation
-> - * @pc10_counter:=09PC10 residency counter
-> + * @pkgc_res_cnt:=09PKGC residency counter
-
-Array of PKGC residency counters
-
-
-With those addressed, feel free to add:
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-
---=20
- i.
---8323328-1964956985-1709816587=:1003--
+     Arnd
