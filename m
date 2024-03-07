@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFC3137C40
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 20:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD2A137C43
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 20:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709841746; cv=none; b=jTlOh0WcULfI2gHHkao5UNP/vUmWGBO9sI5IZV1BTfFFmtCO0Bw17HVVMD1NknKl1Rmldm73jaXfZigF8kOmNYjNJOKVi8/wg8143ye2tu3qI2VWWxJTjjwkwVXOrQCc3uNWQolyBvgZFlVBJ8hjWLD/rdkUAYGweh/c/XoixvU=
+	t=1709841802; cv=none; b=lCYSzl4xv42AKMmzfWVrMf177RVneBwe0filpWfdS44NaN935zmlFyRmez8WhLtueV27sAOOkgCPfgoAhglwp3GTpuzv0Vjdr/5wGbrbkZH+w4AgVCpiaXTNwcd6I1XYq+gXMgoiUqBTM/OeVeRfBk9qzhLZRQQ5AinHKs+DrVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709841746; c=relaxed/simple;
-	bh=QbobZIm6vzGL9mxcMfH8aT0PgqTNhtb1r9nMruHiV+s=;
+	s=arc-20240116; t=1709841802; c=relaxed/simple;
+	bh=7gzXjcQpe1br0id+cMuvyEEjQ+bjQv6boiSWuc3QOmo=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=M8rx/GwBDrMNpRcj/QNbXjHwk3ySMnbXQvM0lNmG/sRB2hGO5zuZ6UBflzbpJ9aG2w6vOYzl9mIbzR9ldBQ+jMu4lDKoVT7A2kjsiRFnOqfxZkqSfEL5Eamb69fhKsh8kkRzT2luUD+Kw+3Tmbym87BoofuFGrLFaVZNw8ExSmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=wnsVQwjI; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=ur40ZjQy3nBmA5m5V6vqXFWEBDawWJ/O/XA35TKlvR4kIShhzIaOuOuNchORuGkK5YGTWdOBhMLaR8iplZzkVQwx2Dc2dFZD18CoHLFNMYBayKdOL1so5QNVaCo+89E6b75QMqfzu//wKjdzOCM+Y09dlBsN7tusBYrpFEiu1lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZVVYJ4IF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="wnsVQwjI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B6AFC433C7;
-	Thu,  7 Mar 2024 20:02:25 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZVVYJ4IF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F4FDC433C7;
+	Thu,  7 Mar 2024 20:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1709841745;
-	bh=QbobZIm6vzGL9mxcMfH8aT0PgqTNhtb1r9nMruHiV+s=;
+	s=korg; t=1709841801;
+	bh=7gzXjcQpe1br0id+cMuvyEEjQ+bjQv6boiSWuc3QOmo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=wnsVQwjISTY26rsce3Mp51KQ9qVjmObeUi7hVcXKuWEu+cPGKv153v4mf+bBGr7qd
-	 knIISBKOVKQxMviHSCqE1UoUndxCJqzPDBfx7h3VuAMpmubswxI0u58JUi8tWPg1o2
-	 mGb337V5oD3l6TjJNsWMcdYue0YK+Kis9Rht+Nlo=
-Date: Thu, 7 Mar 2024 12:02:24 -0800
+	b=ZVVYJ4IFHfKsuUlhziAaGn5ufRwnBJgRFlcTGO6XdPkjw88Ejj01S7IdUWIWlDFLj
+	 sdCgIU0rBzG9TbrmWzULuR87BDUkfvo/4nIdEtCab5fqSEPBfDYWcEW/SXz7KU0nq6
+	 U5dripuf+1G3xloGjXIlmQi/v83wvOrEynMpugc8=
+Date: Thu, 7 Mar 2024 12:03:20 -0800
 From: Andrew Morton <akpm@linux-foundation.org>
 To: Zi Yan <ziy@nvidia.com>
 Cc: Zi Yan <zi.yan@sent.com>, linux-mm@kvack.org, Dan Carpenter
@@ -35,7 +35,7 @@ Cc: Zi Yan <zi.yan@sent.com>, linux-mm@kvack.org, Dan Carpenter
  linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 1/2] mm/huge_memory: check new folio order when split a
  folio
-Message-Id: <20240307120224.0e627784a13cff1121048ae4@linux-foundation.org>
+Message-Id: <20240307120320.fe18b44a912020d77d74156f@linux-foundation.org>
 In-Reply-To: <20240307181854.138928-1-zi.yan@sent.com>
 References: <20240307181854.138928-1-zi.yan@sent.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
@@ -50,19 +50,8 @@ Content-Transfer-Encoding: 7bit
 
 On Thu,  7 Mar 2024 13:18:53 -0500 Zi Yan <zi.yan@sent.com> wrote:
 
-> From: Zi Yan <ziy@nvidia.com>
-> 
-> A folio can only be split into lower orders. Check new_order to make sure
-> it is smaller than input folio order.
+> Link: https://lore.kernel.org/linux-mm/7dda9283-b437-4cf8-ab0d-83c330deb9c0@moroto.mountain/
 
-It isn't clear what's being fixed here.  Presumably something is
-passing in such folios, but what and where and why and what are the
-effects?
+Oh, there it is.
 
-Might it be that these folios are being caused by the debugfs
-interface?  Or something else?
-
-So I'll add it, but I do think more information and context would
-improve the patch, please.  Suitable Reported-by:, Closes: and Link:
-tags, perhaps.
-
+I'll change this to Reported-by: and Closes:, thanks.
