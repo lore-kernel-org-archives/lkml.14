@@ -1,94 +1,108 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B0A6306D
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBD76306D;
+	Thu,  7 Mar 2024 08:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709799870; cv=none; b=MWeieIZPktMEl4l/uMOM4M7brElDOpzdTrw/o4bL4YlGxkxt1jnQy5tIB3sPJfbT9fWWZB2SLad7z6/+CM6oJKZFNBOgLsSSe7Q5t/LUnAp8VqclOJl9Q1HEpimougWOhWhfpI08DWT0HT+eYGm+vd3bCHnygYNs1/CKycNNBZk=
+	t=1709799890; cv=none; b=SgGr4aVaheXNFFgvj6JsPWeErgIRBFkCAfza/16uBgSd62dzeEqmnkEh3BehkmSdCX6zZov1EQddSJOECFZtnj1osLsCEZAzs9kJ0JVOHi81/m23TKQ6s41zKjiSCaB7LFhr9Fnrrcip5QdlAoeC/bNO8BLPZxk8QNkMDDwooKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709799870; c=relaxed/simple;
-	bh=HwIOtDxBs12zJ1pvutYk5Ifex95KRtN8D3N43+ZcAH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BvjJNMPLGPa7f4p47dknRtGLBtEI0JrUHJieacTK8IS7vU0cFvYGGyCEWS4fprgg0S/VSNTDAc5LuIlcpFLEbXmV7JCRaPxA8QSiNYtSekl9YQjzl2HZ+9fWOUCTh+2cAGU2t88qXJjOpIPqwZrZMfclBXqcyth6nS067eET2VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yabwS6aa; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709799890; c=relaxed/simple;
+	bh=JRjeMOhVcUoYGH5wfYDmdc5dmJuRXe0e+FF4nl515X8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZZ9Ggl+XHPhIkELcBRz7z/aqya34Og27Ak/t5coDkmR3k9XVcdqrvOLxr/MbG5AUfXVzLZ2BFNfaSJGNYWjQXG27ensZBj4aIGF1kiy033URRAHnaxsgs+OzHAdxSnuWPqP0WFuB30LGUzN5nztUWcYMgTJwFPdbv+nG8Y/XeBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fj6R8WLM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yabwS6aa"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso635997276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 00:24:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709799868; x=1710404668; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HrWzrMUBdT94HiU9dUcTPoeH7WMZ5J8gNIFhjinA3XM=;
-        b=yabwS6aaXCzgGvFibIinRm8ZSwvAXOfLiefILhrE84G1GObiyJyukOfnwE+z911cHk
-         t4zrC+KFZu1EGcn8gE31PLQpt0Li2WToMHv0joeWB2CGdSmkWNIZUuC409nIA1l+OlpN
-         ldQfWsQbHl9p9UzrEz0gjphgZZxKDrgb8fh0NwJBkWxSp6v4Tn4J02Rltt3M3zJ8AR51
-         Ll9fO6vhKwvxFzivk7IEkiaHCa4MWBx56DamQ/1PcnOnYBjcpROMhN7CxIMrK2dOCFBy
-         97XXU8JU5aPN4luq4dXqrl/ZtwC+yelVyVPcvwQecB6eAX6SysAMx7sJpnrjQHkZpdkr
-         ruWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709799868; x=1710404668;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HrWzrMUBdT94HiU9dUcTPoeH7WMZ5J8gNIFhjinA3XM=;
-        b=v3xegytgc4Tg679+xoQFmUaabF2H7z8T7fRpiyd+SjItIvLcWA5w8WqFYis1lCXFPg
-         Kqes1pVC6HFdyjVsYVgqxdmSgBd+HjbU/hnzwXCHpzn/L4CViGSJpk0uWnGgp4aQZq73
-         69Y93Ja7OD0+qTja0ZWMKnaWBjcNKsB72PkvhNdQQULReehGGfONi35pCmPHS1lY2Jrp
-         kqDcRNF8a4drFtEMfPxrzLeWp19NClbs1gRMJTGR9O6iFwCwDGa0i4jLXuraJvZSir0E
-         QE6yd8XzBgCVcGK6qs76Cd0bPcSGqtUKd9Qr83FAHzDsUFIsPzCA7i5XDIoyf78ECT81
-         79ww==
-X-Forwarded-Encrypted: i=1; AJvYcCUvqdRV7QE2mZm131ThHpoI/zTYFcspocg1VacXqufz2f7xbtMOIDCoDpJI+40d8Yss9kmFeu7ebDVbUVZZfk5dZGs7GJgD3dD05qXM
-X-Gm-Message-State: AOJu0YxDD6XQfwah0+f9JlHOwgVl2Zc2B9t5pyaWvp4IDyHVieqvcHjo
-	V2JWwAz9qyNv1Pn2DQ7tZwbo2o88a76WMjB1DrdblpL8c7rc8KW8fSQODser8Xk4aWcuY1IwtmB
-	pVDqCFjl/Y5VTdDxORKNu5cliXGez3UuCiQYikg==
-X-Google-Smtp-Source: AGHT+IGo9lHi+LEb+DS8+PgVMTubJMqAp8Nr0DkwjG6EMkEJSTxocKlvC0xiwUrwFMIXHE/XWrup2AjbpmgQzZTgH3U=
-X-Received: by 2002:a25:8a08:0:b0:dbe:4f15:b5cf with SMTP id
- g8-20020a258a08000000b00dbe4f15b5cfmr14221787ybl.15.1709799868120; Thu, 07
- Mar 2024 00:24:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fj6R8WLM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22855C433C7;
+	Thu,  7 Mar 2024 08:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709799890;
+	bh=JRjeMOhVcUoYGH5wfYDmdc5dmJuRXe0e+FF4nl515X8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fj6R8WLMvU4vNlTsx9EwZdiYvlgld0IKGoYwsXRN7lt26LFlNozeCNsZCMu6q6snW
+	 dkRzRdJ7qC3lbWwlw+f/k2Ja47hvf1S5Y0Qbcuoz7NXShSt02131HvjQhoOS595ym+
+	 OIQm8c9WjBXYB41k18jIYfXqfCbZrY/dA/Vyyk5G9om8CWk89cyKsKUWoMUK6PoEwr
+	 ZK2AVPRPUCKFJfSY4wthKxbziOMLIyV7HnuXa7w8S4F24O6qwJvGIruCuv6xvW7KCO
+	 DXkz9CEWTZDjt6Oid68kZylr0kXblDnTn7tbYjA9IzX0+BUN2P4GWF2Mtu5eWjYnx+
+	 vfDIhVCi4/w2Q==
+Date: Thu, 7 Mar 2024 08:24:45 +0000
+From: Lee Jones <lee@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the backlight tree
+Message-ID: <20240307082445.GK86322@google.com>
+References: <20240226132828.7524baec@canb.auug.org.au>
+ <20240305111634.57e84398@canb.auug.org.au>
+ <20240305091737.GB5206@google.com>
+ <20240306095539.0da4e342@canb.auug.org.au>
+ <20240306140427.4cb24a5e@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240215103929.19357-1-quic_riteshk@quicinc.com> <5271ebb4-68e7-468f-b1e0-b35a77f53902@quicinc.com>
-In-Reply-To: <5271ebb4-68e7-468f-b1e0-b35a77f53902@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 7 Mar 2024 10:24:17 +0200
-Message-ID: <CAA8EJpridDoMFRTo46n6dqvm1Lu8Bxka2S5AD97JjXM_6WhCLg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] add display and panel on qcm6490 idp
-To: Ritesh Kumar <quic_riteshk@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	catalin.marinas@arm.com, will@kernel.org, quic_bjorande@quicinc.com, 
-	geert+renesas@glider.be, arnd@arndb.de, neil.armstrong@linaro.org, 
-	nfraprado@collabora.com, m.szyprowski@samsung.com, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	quic_abhinavk@quicinc.com, quic_rajeevny@quicinc.com, 
-	quic_vproddut@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240306140427.4cb24a5e@canb.auug.org.au>
 
-On Thu, 7 Mar 2024 at 10:20, Ritesh Kumar <quic_riteshk@quicinc.com> wrote:
->
->
-> On 2/15/2024 4:09 PM, Ritesh Kumar wrote:
-> > Build the Novatek NT36672E DSI Panel driver as module and enable
-> > display subsystem on Qualcomm qcm6490 idp board.
+On Wed, 06 Mar 2024, Stephen Rothwell wrote:
+
+> Hi Lee,
+> 
+> On Wed, 6 Mar 2024 09:55:39 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > >
-> > Ritesh Kumar (2):
-> >    arm64: defconfig: enable Novatek NT36672E DSI Panel driver
-> >    arm64: dts: qcom: qcm6490-idp: add display and panel
->
-> Can you please review and apply these two patches.
+> > On Tue, 5 Mar 2024 09:17:37 +0000 Lee Jones <lee@kernel.org> wrote:
+> > > On Tue, 05 Mar 2024, Stephen Rothwell wrote:  
+> > > > On Mon, 26 Feb 2024 13:28:28 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:    
+> > > > >
+> > > > > After merging the backlight tree, today's linux-next build (x86_64
+> > > > > allmodconfig) failed like this:
+> > > > > 
+> > > > > drivers/video/backlight/ktd2801-backlight.c:8:10: fatal error: linux/leds-expresswire.h: No such file or directory
+> > > > >     8 | #include <linux/leds-expresswire.h>
+> > > > >       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > 
+> > > > > Caused by commit
+> > > > > 
+> > > > >   48749e2f14e3 ("backlight: Add Kinetic KTD2801 backlight support")
+> > > > > 
+> > > > > I have used the backlight tree from next-20240223 for today.    
+> > > > 
+> > > > I am still getting this failure.    
+> > > 
+> > > I just pushed a bunch of patches.  
+> > 
+> > I saw only 3 new ones (forgot to push?) none of which addressed this
+> > problem.
+> > 
+> > > Please let me know if this is still an issue tomorrow.  
+> > 
+> > The problem is that after Feb 23, you rebased your tree and dropped commit
+> > 
+> >   25ae5f5f4168 ("leds: Introduce ExpressWire library")
+> > 
+> > which (added the leds-expresswire.h header), but kept commit
+> > 
+> >   48749e2f14e3 ("backlight: Add Kinetic KTD2801 backlight support")
+> > 
+> > which uses it.
+> 
+> Now I see what happened.  I have 2 trees from you, the backlight tree
+> (git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git#for-backlight-next)
+> and the leds-lj tree
+> (git://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git#for-leds-next)
+> and the former implicitly depends on the latter (and I merge the
+> backlight tree first).  You should make that dependency explicit by
+> merging (part of) the latter into the former (or something).
 
-Can you please read docs regarding the kernel development process?
+Right.  So you build each tree as its merged?
 
+My assumption was that all things come together in -next?
 
 -- 
-With best wishes
-Dmitry
+Lee Jones [李琼斯]
