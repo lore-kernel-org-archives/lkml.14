@@ -1,484 +1,102 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6A112DDB2
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB73412E1FA;
+	Thu,  7 Mar 2024 14:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709820169; cv=none; b=tY+GgqWihP1nFcQcP8/rqTQASaGSZlzr0DU1dLU7KHT4pWfnv3Ff06hrrpRSIvkvgY/2ENHVaeu42g8/lGXAvYiS7AaljHqiJ6yv3KiWJ4BxTTfsHyChyRYh67uO2NxlJmX/AEJX7p4p9ZGqFwbGH+2oTfnvQFF6vfxciBMhEQA=
+	t=1709820175; cv=none; b=Vr7G+bXpYQVVg8WjIcHjdPLYqOq3d4lgiMnqNt3nOZhbbk4bENmhqk2QagTqEvXlsq9qMo6Jd6kZ9w1A9MNHMvYlrxSR/N1dYNcGSM4dyXr2n3pfcbgSd7m+0EhjOkxRwjmo97fHrY1aVOqilcJ1gIfAaKCM+SK538hfljfqL1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709820169; c=relaxed/simple;
-	bh=ZUHW8LNBIo9M1zxTe50XDGTswAw1iWpf9j5JpMBKdFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uqe4scVBWRZKNxXgF5SS9PdWkqQb6iQP6QImS615hXdOttavi8KEZViODKmoukeA8jB3jiu/eY907HAqxIOYPjhj9LMo5wX0IgQm7Ted/Bsei5MGSk/aeXn5T047c5gyPZWlT/99HPqv1KFc4fW9oZDSWYSlb60KziXO76vIs+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cO3cwItF; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709820175; c=relaxed/simple;
+	bh=buSnnVcPm9q1IGlVOeLRFi6yISTc1DhJcXxXAaJLJPk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=duKy+Bo5Lx2siOZo5Plsr5zATXAIllYbDlEt3KMnaWcJYqZOuZu7VSZD4Nnxb+1hXIHg6IaRgHOmEFSrVNwpY3NDYdmd4HspYEsOEi5YOny6sCHFqVIB3xKF0MktFN/q+GW/3MQzUyS7zCd2OGIDSIz/H/l3JmNvUiSqq5ZdBxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=1cVUVPMR; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cO3cwItF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709820164;
-	bh=ZUHW8LNBIo9M1zxTe50XDGTswAw1iWpf9j5JpMBKdFo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cO3cwItFXwD3JnLwdriaccgFGuCV60oGjC2aCgrZwE+P8rqFI3oFSO9l4G1Ueqn8L
-	 V/FeCKUPwm3HHleSLJo7ojz3Q43t7GbbQiBVZg3uEiBCHxRrHfxPeSkk+4SAEqWGTk
-	 dCP/5tB7Spq9/iGNOlsnKF2nUJRrHBEeO0lPbh3WEJYhXHKI3nF7SLwzQ5bPPe76U6
-	 qWyD/eqGAN8ZsWJQSS22QxsFgRe3nlHXWaSe2TelynpDCbFm1VLCmpKkkpaPpKW3Qr
-	 Lj/f5EyBdZZH0j2/lzs9WMTIHgI0vl2jWRCMYwkWXp/ics88XAAskGQRKr8BJxT/39
-	 7LDUwx5FmC8JA==
-Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: koike)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BD3BB37820EE;
-	Thu,  7 Mar 2024 14:02:38 +0000 (UTC)
-Message-ID: <098d2345-df99-4ad2-bc1c-9641662ed9bd@collabora.com>
-Date: Thu, 7 Mar 2024 11:02:38 -0300
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="1cVUVPMR"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4279qDL1004218;
+	Thu, 7 Mar 2024 15:02:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=gxYbWB4
+	fXb38xLpOEzgo56z8fvAXCuQ7VDTmsUnu2Mo=; b=1cVUVPMRBeF/QwnpIahXUla
+	MF6PHZtiUba895i14rt1G4DoQT4SFrxPqt5ak9XBOW2yp3zpobqP4PiTkMARpoge
+	GYJG7jUHdw0TkxcqOUaMi5a3XVlTukqvtyysXrS6eXVckTe4ii9AIwEgNtbJ+XHz
+	P8a/Dqlc9mz6xOJsYesPGAhDcQBFTb9kQfwp+Qivsl/AvTHlFtTPgng3BCsqw0sD
+	R8HGKyjPeUW8rmBomlyHu9c/pSa2Q7Jg+/v//kjQ/T6mpvNXU5/cj2mDRudSbCVx
+	kunb+d0OljShFcG/N7C3h13TUztJiUz8+R4X6U3TH7gpsw4sptd6IiRuyKO9/Vg=
+	=
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wmej5dxs4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 15:02:23 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0509E40044;
+	Thu,  7 Mar 2024 15:02:18 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6100327D0FC;
+	Thu,  7 Mar 2024 15:01:10 +0100 (CET)
+Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 7 Mar
+ 2024 15:01:09 +0100
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] Add properties in dwmac-stm32 documentation
+Date: Thu, 7 Mar 2024 14:59:55 +0100
+Message-ID: <20240307135957.303481-1-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/11] drm/ci: rockchip: Refactor existing rockchip
- jobs
-Content-Language: en-US
-To: Vignesh Raman <vignesh.raman@collabora.com>,
- dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com, airlied@gmail.com, daniel@ffwll.ch,
- emma@anholt.net, robdclark@gmail.com, david.heidelberg@collabora.com,
- guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
- hamohammed.sa@gmail.com, rodrigosiqueiramelo@gmail.com,
- melissa.srw@gmail.com, mairacanal@riseup.net, mcanal@igalia.com,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240306030649.60269-1-vignesh.raman@collabora.com>
- <20240306030649.60269-10-vignesh.raman@collabora.com>
-From: Helen Koike <helen.koike@collabora.com>
-In-Reply-To: <20240306030649.60269-10-vignesh.raman@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
 
+Introduce 2 new properties in dwamc-stm32 documentation
 
+ - phy-supply: to manage PHY regulator.
+ - st,ext-phyclk: is present since 2020 in driver so need to explain
+   it and avoid dtbs check issue : views/kernel/upstream/net-next/arch/arm/boot/dts/st/stm32mp157c-dk2.dtb: 
+ethernet@5800a000: Unevaluated properties are not allowed 
+('st,ext-phyclk' was unexpected) 
 
-On 06/03/2024 00:06, Vignesh Raman wrote:
-> For rockchip rk3288 and rk3399, the display driver is rockchip.
-> Currently, in drm-ci for rockchip, only the display driver is
-> tested. Refactor the existing rockchip jobs so that gpu driver
-> testing jobs can be added later and update xfails accordingly.
-> 
-> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
-> ---
-> 
-> v2:
->    - Refactor the patch to rename job to indicate display driver testing,
->      rename the existing xfail files.
-> 
-> v3:
->    - Add the job name in GPU_VERSION and use it for xfail file names
->      instead of using DRIVER_NAME. Also update xfails.
-> 
-> v4:
->    - Remove the display suffix in job and rename xfails accordingly.
->      Remove the change adding job name in GPU_VERSION.
-> 
-> ---
->   drivers/gpu/drm/ci/test.yml                   | 36 ++++++++----
->   .../drm/ci/xfails/rockchip-rk3288-fails.txt   | 58 ++++++-------------
->   .../drm/ci/xfails/rockchip-rk3288-flakes.txt  | 20 +++++++
->   .../drm/ci/xfails/rockchip-rk3288-skips.txt   | 54 ++---------------
->   .../drm/ci/xfails/rockchip-rk3399-fails.txt   | 38 ++++++------
->   .../drm/ci/xfails/rockchip-rk3399-flakes.txt  | 28 +++++++--
->   .../drm/ci/xfails/rockchip-rk3399-skips.txt   |  5 +-
->   7 files changed, 110 insertions(+), 129 deletions(-)
->   create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt
-> 
-> diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-> index 6ae6398b3d88..831e580e6dfd 100644
-> --- a/drivers/gpu/drm/ci/test.yml
-> +++ b/drivers/gpu/drm/ci/test.yml
-> @@ -153,33 +153,45 @@ msm:sdm845:
->     script:
->       - ./install/bare-metal/cros-servo.sh
->   
-> -rockchip:rk3288:
-> -  extends:
-> -    - .lava-igt:arm32
-> +.rockchip:
->     stage: rockchip
->     variables:
-> -    DRIVER_NAME: rockchip
+Christophe Roullier (2):
+  dt-bindings: net: add phy-supply property for stm32
+  dt-bindings: net: add new property st,ext-phyclk in documentation for
+    stm32
 
-Looks like it make sense to keep DRIVER_NAME here, no?
+ Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> -    DEVICE_TYPE: rk3288-veyron-jaq
->       DTB: ${DEVICE_TYPE}
->       BOOT_METHOD: depthcharge
-> +
-> +.rk3288:
-> +  extends:
-> +    - .lava-igt:arm32
-> +    - .rockchip
+-- 
+2.25.1
 
-Maybe, instead of extending .rockchip here, make .rockchip tied to the 
-DRIVER_NAME and .rk3288 tied to the GPU_VERSION, and on rockchip:rk3288 
-you can extend both .rockchip and .rk3288, what do you think?
-So rockchip:rk3399 you can extend .rockchip and .rk3399.
-
-and in the panfrost one you can have a .panfrost (that can extend 
-.rockchip if they are the same definition).
-
-I feel it becomes less confusing, what do you think?
-
-I would even add some prefix or suffix to make it less confusing, like 
-.driver-rockchip and .gpu-rk3288 for instance, making it a bit more 
-intuitive and helping our future selves :)
-
-> +  variables:
-> +    DEVICE_TYPE: rk3288-veyron-jaq
->       KERNEL_IMAGE_TYPE: "zimage"
-> -    GPU_VERSION: rk3288
-
-Looks like it make sense to keep GPU_VERSION here, no? Same comment for 
-.rk3399.
-
-Regards,
-Helen
-
->       RUNNER_TAG: mesa-ci-x86-64-lava-rk3288-veyron-jaq
->   
-> -rockchip:rk3399:
-> +.rk3399:
->     extends:
->       - .lava-igt:arm64
-> -  stage: rockchip
-> +    - .rockchip
->     parallel: 2
->     variables:
-> -    DRIVER_NAME: rockchip
->       DEVICE_TYPE: rk3399-gru-kevin
-> -    DTB: ${DEVICE_TYPE}
-> -    BOOT_METHOD: depthcharge
->       KERNEL_IMAGE_TYPE: ""
-> -    GPU_VERSION: rk3399
->       RUNNER_TAG: mesa-ci-x86-64-lava-rk3399-gru-kevin
->   
-> +rockchip:rk3288:
-> +  extends:
-> +    - .rk3288
-> +  variables:
-> +    GPU_VERSION: rk3288
-> +    DRIVER_NAME: rockchip
-> +
-> +rockchip:rk3399:
-> +  extends:
-> +    - .rk3399
-> +  variables:
-> +    GPU_VERSION: rk3399
-> +    DRIVER_NAME: rockchip
-> +
->   .i915:
->     extends:
->       - .lava-igt:x86_64
-> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt
-> index 90c63f519e9e..c16e0a06cc8f 100644
-> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt
-> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt
-> @@ -1,54 +1,30 @@
-> -kms_3d,Crash
-> -kms_bw@linear-tiling-2-displays-1920x1080p,Fail
->   kms_bw@linear-tiling-2-displays-2560x1440p,Fail
-> -kms_bw@linear-tiling-2-displays-3840x2160p,Fail
->   kms_bw@linear-tiling-3-displays-1920x1080p,Fail
-> -kms_bw@linear-tiling-3-displays-2560x1440p,Fail
-> -kms_bw@linear-tiling-3-displays-3840x2160p,Fail
-> +kms_cursor_crc@cursor-onscreen-32x10,Crash
-> +kms_cursor_crc@cursor-onscreen-64x21,Crash
-> +kms_cursor_crc@cursor-onscreen-64x64,Crash
-> +kms_cursor_crc@cursor-random-32x10,Crash
-> +kms_cursor_crc@cursor-random-64x21,Crash
-> +kms_cursor_crc@cursor-random-64x64,Crash
-> +kms_cursor_crc@cursor-sliding-32x10,Crash
-> +kms_cursor_crc@cursor-sliding-32x32,Crash
-> +kms_cursor_crc@cursor-sliding-64x64,Crash
-> +kms_cursor_legacy@basic-flip-before-cursor-atomic,Fail
-> +kms_cursor_legacy@basic-flip-before-cursor-legacy,Fail
-> +kms_cursor_legacy@cursor-vs-flip-atomic,Fail
-> +kms_cursor_legacy@cursor-vs-flip-atomic-transitions,Fail
-> +kms_cursor_legacy@cursor-vs-flip-toggle,Fail
-> +kms_cursor_legacy@flip-vs-cursor-crc-atomic,Crash
-> +kms_cursor_legacy@flip-vs-cursor-crc-legacy,Crash
->   kms_flip@flip-vs-modeset-vs-hang,Crash
->   kms_flip@flip-vs-panning-vs-hang,Crash
-> -kms_force_connector_basic@force-load-detect,Fail
->   kms_invalid_mode@int-max-clock,Crash
-> -kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Crash
-> -kms_pipe_crc_basic@nonblocking-crc-frame-sequence,Crash
->   kms_pipe_crc_basic@read-crc-frame-sequence,Crash
->   kms_plane@pixel-format,Crash
-> -kms_plane@pixel-format-source-clamping,Crash
-> -kms_plane@plane-position-hole,Crash
-> -kms_plane@plane-position-hole-dpms,Crash
->   kms_plane_cursor@overlay,Crash
-> -kms_plane_cursor@pipe-A-overlay-size-128,Fail
-> -kms_plane_cursor@pipe-A-overlay-size-256,Fail
-> -kms_plane_cursor@pipe-A-overlay-size-64,Fail
-> -kms_plane_cursor@pipe-A-primary-size-128,Fail
-> -kms_plane_cursor@pipe-A-primary-size-256,Fail
-> -kms_plane_cursor@pipe-A-primary-size-64,Fail
-> -kms_plane_cursor@pipe-A-viewport-size-128,Fail
-> -kms_plane_cursor@pipe-A-viewport-size-256,Fail
-> -kms_plane_cursor@pipe-A-viewport-size-64,Fail
-> -kms_plane_cursor@pipe-B-overlay-size-128,Fail
-> -kms_plane_cursor@pipe-B-overlay-size-256,Fail
-> -kms_plane_cursor@pipe-B-overlay-size-64,Fail
-> -kms_plane_cursor@pipe-B-primary-size-128,Fail
-> -kms_plane_cursor@pipe-B-primary-size-256,Fail
-> -kms_plane_cursor@pipe-B-primary-size-64,Fail
-> -kms_plane_cursor@pipe-B-viewport-size-128,Fail
-> -kms_plane_cursor@pipe-B-viewport-size-256,Fail
-> -kms_plane_cursor@pipe-B-viewport-size-64,Fail
->   kms_plane_cursor@primary,Crash
-> -kms_plane_cursor@viewport,Crash
-> -kms_plane_lowres@tiling-none,Fail
-> -kms_plane_scaling@downscale-with-modifier-factor-0-25,Fail
-> -kms_plane_scaling@downscale-with-rotation-factor-0-25,Fail
-> -kms_plane_scaling@upscale-with-modifier-20x20,Fail
-> -kms_plane_scaling@upscale-with-modifier-factor-0-25,Fail
-> -kms_plane_scaling@upscale-with-pixel-format-20x20,Fail
-> -kms_plane_scaling@upscale-with-pixel-format-factor-0-25,Fail
-> -kms_plane_scaling@upscale-with-rotation-20x20,Fail
-> -kms_prime@basic-crc,Fail
-> -kms_properties@connector-properties-atomic,Crash
-> +kms_prop_blob@invalid-set-prop,Crash
->   kms_properties@connector-properties-legacy,Crash
->   kms_properties@get_properties-sanity-atomic,Crash
->   kms_properties@get_properties-sanity-non-atomic,Crash
->   kms_rmfb@close-fd,Crash
-> -kms_setmode@invalid-clone-single-crtc,Crash
-> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt
-> new file mode 100644
-> index 000000000000..de13bac3a5bc
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt
-> @@ -0,0 +1,20 @@
-> +# Board Name: rk3288-veyron-jaq.dtb
-> +# Bug Report: https://lore.kernel.org/dri-devel/bdb53650-1888-30b8-93ee-2290d020af4a@collabora.com/T/#u
-> +# Failure Rate: 50
-> +# IGT Version: 1.28-gd2af13d9f
-> +# Linux Version: 6.7.0-rc3
-> +
-> +# Reported by deqp-runner
-> +kms_cursor_crc@cursor-offscreen-64x21
-> +kms_cursor_legacy@flip-vs-cursor-legacy
-> +kms_cursor_legacy@flip-vs-cursor-atomic
-> +kms_plane@plane-panning-top-left
-> +kms_cursor_crc@cursor-alpha-opaque
-> +kms_flip@dpms-vs-vblank-race-interruptible
-> +kms_universal_plane@universal-plane-functional
-> +
-> +# The below test shows inconsistency across multiple runs, giving
-> +# results of Pass and Crash alternately.
-> +kms_cursor_crc@cursor-size-change
-> +core_setmaster_vs_auth
-> +kms_flip@modeset-vs-vblank-race
-> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
-> index f20c3574b75a..627bf03f3c78 100644
-> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
-> @@ -1,52 +1,8 @@
->   # Suspend to RAM seems to be broken on this machine
->   .*suspend.*
->   
-> -# Too unstable, machine ends up hanging after lots of Oopses
-> -kms_cursor_legacy.*
-> -
-> -# Started hanging the machine on Linux 5.19-rc2:
-> -#
-> -# [IGT] kms_plane_lowres: executing
-> -# [IGT] kms_plane_lowres: starting subtest pipe-F-tiling-y
-> -# [IGT] kms_plane_lowres: exiting, ret=77
-> -# Console: switching to colour frame buffer device 170x48
-> -# rockchip-drm display-subsystem: [drm] *ERROR* flip_done timed out
-> -# rockchip-drm display-subsystem: [drm] *ERROR* [CRTC:35:crtc-0] commit wait timed out
-> -# BUG: spinlock bad magic on CPU#3, kms_plane_lowre/482
-> -# 8<--- cut here ---
-> -# Unable to handle kernel paging request at virtual address 7812078e
-> -# [7812078e] *pgd=00000000
-> -# Internal error: Oops: 5 [#1] SMP ARM
-> -# Modules linked in:
-> -# CPU: 3 PID: 482 Comm: kms_plane_lowre Tainted: G        W         5.19.0-rc2-323596-g00535de92171 #1
-> -# Hardware name: Rockchip (Device Tree)
-> -# Process kms_plane_lowre (pid: 482, stack limit = 0x1193ac2b)
-> -#  spin_dump from do_raw_spin_lock+0xa4/0xe8
-> -#  do_raw_spin_lock from wait_for_completion_timeout+0x2c/0x120
-> -#  wait_for_completion_timeout from drm_crtc_commit_wait+0x18/0x7c
-> -#  drm_crtc_commit_wait from drm_atomic_helper_wait_for_dependencies+0x44/0x168
-> -#  drm_atomic_helper_wait_for_dependencies from commit_tail+0x34/0x180
-> -#  commit_tail from drm_atomic_helper_commit+0x164/0x18c
-> -#  drm_atomic_helper_commit from drm_atomic_commit+0xac/0xe4
-> -#  drm_atomic_commit from drm_client_modeset_commit_atomic+0x23c/0x284
-> -#  drm_client_modeset_commit_atomic from drm_client_modeset_commit_locked+0x60/0x1c8
-> -#  drm_client_modeset_commit_locked from drm_client_modeset_commit+0x24/0x40
-> -#  drm_client_modeset_commit from drm_fbdev_client_restore+0x58/0x94
-> -#  drm_fbdev_client_restore from drm_client_dev_restore+0x70/0xbc
-> -#  drm_client_dev_restore from drm_release+0xf4/0x114
-> -#  drm_release from __fput+0x74/0x240
-> -#  __fput from task_work_run+0x84/0xb4
-> -#  task_work_run from do_exit+0x34c/0xa20
-> -#  do_exit from do_group_exit+0x34/0x98
-> -#  do_group_exit from __wake_up_parent+0x0/0x18
-> -# Code: e595c008 12843d19 03e00000 03093168 (15940508)
-> -# ---[ end trace 0000000000000000 ]---
-> -# note: kms_plane_lowre[482] exited with preempt_count 1
-> -# Fixing recursive fault but reboot is needed!
-> -kms_plane_lowres@pipe-F-tiling-y
-> -
-> -# Take too long, we have only two machines, and these are very flaky
-> -kms_cursor_crc.*
-> -
-> -# Machine is hanging in this test, so skip it
-> -kms_pipe_crc_basic@disable-crc-after-crtc
-> \ No newline at end of file
-> +# Machine is hanging in this test with linux kernel version 6.7.0-rc4, so skip it
-> +kms_cursor_crc@cursor-onscreen-32x32
-> +kms_pipe_crc_basic@disable-crc-after-crtc
-> +kms_pipe_crc_basic@pipe-A-eDP-1
-> +kms_bw@linear-tiling-3-displays-2560x1440
-> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-fails.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-fails.txt
-> index d516d9c1d546..ace0d6ed6f2f 100644
-> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-fails.txt
-> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-fails.txt
-> @@ -1,12 +1,13 @@
-> -kms_color@gamma,Fail
-> +kms_atomic_transition@modeset-transition,Fail
-> +kms_atomic_transition@modeset-transition-fencing,Fail
-> +kms_atomic_transition@plane-toggle-modeset-transition,Fail
->   kms_color@legacy-gamma,Fail
-> -kms_color@pipe-A-legacy-gamma,Fail
-> -kms_color@pipe-B-legacy-gamma,Fail
->   kms_cursor_crc@cursor-alpha-opaque,Fail
->   kms_cursor_crc@cursor-alpha-transparent,Fail
->   kms_cursor_crc@cursor-dpms,Fail
->   kms_cursor_crc@cursor-offscreen-32x10,Fail
->   kms_cursor_crc@cursor-offscreen-32x32,Fail
-> +kms_cursor_crc@cursor-offscreen-64x21,Fail
->   kms_cursor_crc@cursor-offscreen-64x64,Fail
->   kms_cursor_crc@cursor-onscreen-32x10,Fail
->   kms_cursor_crc@cursor-onscreen-32x32,Fail
-> @@ -16,6 +17,7 @@ kms_cursor_crc@cursor-random-32x10,Fail
->   kms_cursor_crc@cursor-random-32x32,Fail
->   kms_cursor_crc@cursor-random-64x21,Fail
->   kms_cursor_crc@cursor-random-64x64,Fail
-> +kms_cursor_crc@cursor-rapid-movement-32x10,Fail
->   kms_cursor_crc@cursor-rapid-movement-32x32,Fail
->   kms_cursor_crc@cursor-rapid-movement-64x21,Fail
->   kms_cursor_crc@cursor-rapid-movement-64x64,Fail
-> @@ -24,23 +26,33 @@ kms_cursor_crc@cursor-sliding-32x10,Fail
->   kms_cursor_crc@cursor-sliding-32x32,Fail
->   kms_cursor_crc@cursor-sliding-64x21,Fail
->   kms_cursor_crc@cursor-sliding-64x64,Fail
-> +kms_cursor_legacy@basic-flip-before-cursor-atomic,Fail
-> +kms_cursor_legacy@basic-flip-before-cursor-legacy,Fail
-> +kms_cursor_legacy@cursor-vs-flip-atomic,Fail
-> +kms_cursor_legacy@cursor-vs-flip-legacy,Fail
-> +kms_cursor_legacy@cursor-vs-flip-toggle,Fail
-> +kms_cursor_legacy@flip-vs-cursor-atomic,Fail
-> +kms_cursor_legacy@flip-vs-cursor-crc-atomic,Fail
-> +kms_cursor_legacy@flip-vs-cursor-crc-legacy,Fail
-> +kms_cursor_legacy@flip-vs-cursor-legacy,Fail
-> +kms_cursor_legacy@long-nonblocking-modeset-vs-cursor-atomic,Fail
->   kms_flip@basic-flip-vs-wf_vblank,Fail
->   kms_flip@blocking-wf_vblank,Fail
->   kms_flip@dpms-vs-vblank-race,Fail
-> +kms_flip@dpms-vs-vblank-race-interruptible,Fail
->   kms_flip@flip-vs-absolute-wf_vblank,Fail
-> -kms_flip@flip-vs-absolute-wf_vblank-interruptible,Fail
->   kms_flip@flip-vs-blocking-wf-vblank,Fail
->   kms_flip@flip-vs-modeset-vs-hang,Fail
->   kms_flip@flip-vs-panning,Fail
->   kms_flip@flip-vs-panning-interruptible,Fail
->   kms_flip@flip-vs-panning-vs-hang,Fail
->   kms_flip@modeset-vs-vblank-race,Fail
-> +kms_flip@modeset-vs-vblank-race-interruptible,Fail
->   kms_flip@plain-flip-fb-recreate,Fail
->   kms_flip@plain-flip-fb-recreate-interruptible,Fail
->   kms_flip@plain-flip-ts-check,Fail
->   kms_flip@plain-flip-ts-check-interruptible,Fail
->   kms_flip@wf_vblank-ts-check,Fail
-> -kms_flip@wf_vblank-ts-check-interruptible,Fail
->   kms_invalid_mode@int-max-clock,Fail
->   kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Fail
->   kms_pipe_crc_basic@compare-crc-sanitycheck-xr24,Fail
-> @@ -56,20 +68,6 @@ kms_plane@plane-panning-top-left,Fail
->   kms_plane@plane-position-covered,Fail
->   kms_plane@plane-position-hole,Fail
->   kms_plane@plane-position-hole-dpms,Fail
-> -kms_plane_cursor@overlay,Fail
-> -kms_plane_cursor@pipe-B-overlay-size-128,Fail
-> -kms_plane_cursor@pipe-B-overlay-size-256,Fail
-> -kms_plane_cursor@pipe-B-overlay-size-64,Fail
-> -kms_plane_cursor@pipe-B-primary-size-128,Fail
-> -kms_plane_cursor@pipe-B-primary-size-256,Fail
-> -kms_plane_cursor@pipe-B-primary-size-64,Fail
-> -kms_plane_cursor@pipe-B-viewport-size-128,Fail
-> -kms_plane_cursor@pipe-B-viewport-size-256,Fail
-> -kms_plane_cursor@pipe-B-viewport-size-64,Fail
-> -kms_plane_cursor@primary,Fail
-> -kms_plane_cursor@viewport,Fail
-> -kms_plane_multiple@atomic-pipe-B-tiling-none,Fail
->   kms_plane_multiple@tiling-none,Fail
-> -kms_prime@basic-crc,Fail
->   kms_rmfb@close-fd,Fail
-> -kms_universal_plane@universal-plane-pipe-B-functional,Fail
-> +kms_universal_plane@universal-plane-functional,Fail
-> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt
-> index c9fdc623ab91..5126a849bf4a 100644
-> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt
-> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt
-> @@ -1,7 +1,25 @@
-> -kms_bw@linear-tiling-2-displays-1920x1080p
-> -kms_cursor_crc@cursor-offscreen-64x21
-> +# Board Name: rk3399-gru-kevin.dtb
-> +# Bug Report: https://lore.kernel.org/dri-devel/bdb53650-1888-30b8-93ee-2290d020af4a@collabora.com/T/#u
-> +# IGT Version: 1.28-gd2af13d9f
-> +# Failure Rate: 50
-> +# Linux Version: 6.7.0-rc3
-> +
-> +# Reported by deqp-runner
-> +kms_bw@linear-tiling-1-displays-1920x1080p
-> +kms_color@gamma
-> +kms_cursor_legacy@cursorA-vs-flipA-toggle
-> +kms_cursor_legacy@nonblocking-modeset-vs-cursor-atomic
-> +kms_flip@dpms-vs-vblank-race
->   kms_flip@dpms-vs-vblank-race-interruptible
-> +kms_flip@flip-vs-absolute-wf_vblank-interruptible
->   kms_flip@flip-vs-wf_vblank-interruptible
-> -kms_plane_cursor@overlay
-> -kms_plane_cursor@primary
-> -kms_plane_cursor@viewport
-> +kms_flip@modeset-vs-vblank-race-interruptible
-> +kms_pipe_crc_basic@compare-crc-sanitycheck-xr24
-> +kms_setmode@basic
-> +
-> +# The below test shows inconsistency across multiple runs, giving
-> +# results of Pass and Crash alternately.
-> +kms_bw@linear-tiling-2-displays-1920x1080p
-> +kms_bw@linear-tiling-3-displays-2560x1440p
-> +kms_cursor_crc@cursor-rapid-movement-32x10
-> +kms_flip@wf_vblank-ts-check-interruptible
-> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
-> index 10c3d81a919a..cf5577b7720c 100644
-> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
-> @@ -1,5 +1,6 @@
->   # Suspend to RAM seems to be broken on this machine
->   .*suspend.*
->   
-> -# Too unstable, machine ends up hanging after lots of Oopses
-> -kms_cursor_legacy.*
-> +# Machine ends up hanging after lots of Oopses with linux version 6.7.0-rc4
-> +# rockchip-dp ff970000.dp: AUX CH error happened: 0x2
-> +kms_plane_multiple.*
