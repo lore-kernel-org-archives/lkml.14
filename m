@@ -1,272 +1,173 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1305112AAE3;
-	Thu,  7 Mar 2024 15:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE6B12DD99
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 15:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709824295; cv=none; b=TYbSxrMLhB2F2EEzQH+cP2tm6pczQQhrBdsebn+RCmia8TfyH+D7CckMGXHnrYIRUvTcLDR1BX/WTfYxCIqn1vdbKp9+AoLRtJQZlqrieZJRAkAGGUyitoaJRtUlL5S0Mm9VwB2wKL5lJ+HecHYxFtO0jHCB00wdAj/ZAeiQDDw=
+	t=1709824362; cv=none; b=neYnsAvDWo3BfCRtNUmu5gHSv6kJizAOHOnXhmN+g4YmqVjqVYRg2wjJiY8M5L0EnkOr/VEeBkuXVPUhzeYGd6hngNaFd1159dX0mDCs0ifbs6auqg4FyOvoKjh2sb0OUlgSMyabCw2ig9caA2ExEAFPcj3OnJoUuzHqzkiS9ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709824295; c=relaxed/simple;
-	bh=K6fryOPMFIxmuaNoiVubm4IGiZHmoG1NifVuB3JMmbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R5lBgF5gQrdwspB6ztToGitzt8TcEDWlBC2J5cgql77ESph+2xrK4A80OVjTN0kqU0Na2od0q+cyaQZeeI15p9KV5y06t6sUfDizROweog+NjIESgHWK+LNFOkuyW+3o//H8eftu0v+sXUSRhgVpa8q0DvqhDlGim1BKq11C8lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N8F91ScA; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709824362; c=relaxed/simple;
+	bh=3/MS3w+BjpyGQQ/yvQk2ofeke2ntBrE76z6kvY8nSTs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gx8UbXEqbRuUAdo+wwsU8uiCBnpkkiY4CAvUQi32YbJ33OOUmah0G4nM0eeIxgyJ1+rlKu8qP/xIrbFz8CuD36cEgf96Wpssct1GORe2DuCOubM4N/tzbFEisK8I+i06eJNb6uDWbKenTF+T3N/fpKVgKz1QfWMKu93o5y0clYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=usspeqpF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N8F91ScA"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 427F1LYx008788;
-	Thu, 7 Mar 2024 15:11:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=euuEeJjXnpV9EfcF+g1Rid2F4dUJ5mf3sXTllA3YfJM=;
- b=N8F91ScAgemvne6GJtQshOw6+R2JgJWh3z0GkteecEFB9sChgGvo0j52KwvDHSJpEphV
- aG6RZI1ECJFiX4rD4yj2HZPTdMRGfh59xKzrW5oSqyNHENRYPOvdYVBUgsyDFLbyztA8
- ky+qM0+bK4Z8c/ZdM6eC8+Xjq0S1jQmbaX1HNaQzPRmD+RQdEpwsRKxA/ptaN70abkg/
- vXLZ4b8jmSexz6u7dsUGbKGKWmzwNdgjLgl61cOfS1TfBR/Pk9j16SoDOG0Sx45SWaK6
- jbuV7w9l4MA7CZVNHjHb3HfU1uF86ndBaAEvDeCl6plST/5c/EtMC6YEXNPfTiUvXrXZ ew== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqfup0gp6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 15:11:10 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 427F1R5p009217;
-	Thu, 7 Mar 2024 15:11:10 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqfup0gnh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 15:11:09 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 427CDSnw031575;
-	Thu, 7 Mar 2024 15:11:09 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmgnkdysy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 15:11:09 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 427FB52b17891964
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Mar 2024 15:11:07 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8B16B58067;
-	Thu,  7 Mar 2024 15:11:05 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 415055806C;
-	Thu,  7 Mar 2024 15:11:04 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  7 Mar 2024 15:11:04 +0000 (GMT)
-Message-ID: <768fc5f1-3919-477e-a8e6-16a7e8536add@linux.ibm.com>
-Date: Thu, 7 Mar 2024 10:11:03 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="usspeqpF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23140C433F1;
+	Thu,  7 Mar 2024 15:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709824361;
+	bh=3/MS3w+BjpyGQQ/yvQk2ofeke2ntBrE76z6kvY8nSTs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=usspeqpFcaqpougqBOJeTiihzK8g/ZvphZrp2GXq9szbwP2O4Sa/L3Q8B/dDFtmpI
+	 l7hndx1xmcd9BHuaH9Rn0YXyiywBMm8CNOvDbHYpgNL2WzOrFl1i+StZVTqhubUHB9
+	 ykNGxcd9mrz8i7izQUgj/a4k897itUVSSLGnvbT+XZEDwFEAnOkSev1gvUDTRTphUW
+	 4CXxtfcwlF8qmIIcT/JcAX1vVZbBQrzT0hEphnp80fJKUn4tb4yxOXHL6M68VJ2g7V
+	 briwFOH027Em+wGLA0v6g0RM2b2pGot2TQDbCJHmyzixlLyYjjwnK9DWVafI+Waxa4
+	 c+XkNpO1eWAOA==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] f2fs: fix to truncate meta inode pages forcely
+Date: Thu,  7 Mar 2024 23:12:35 +0800
+Message-Id: <20240307151235.3864725-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] powerpc/prom_init: Replace linux,sml-base/sml-size
- with linux,sml-log
-Content-Language: en-US
-To: Michael Ellerman <mpe@ellerman.id.au>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, conor.dooley@microchip.com,
-        nayna@linux.ibm.com, Lukas Wunner <lukas@wunner.de>
-Cc: linux-kernel@vger.kernel.org, jarkko@kernel.org, rnsastry@linux.ibm.com,
-        peterhuewe@gmx.de, viparash@in.ibm.com
-References: <20240306155511.974517-1-stefanb@linux.ibm.com>
- <20240306155511.974517-2-stefanb@linux.ibm.com> <87jzmenx2c.fsf@mail.lhotse>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <87jzmenx2c.fsf@mail.lhotse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WG70hV3g-X3LsEer3ntyisB7PM9L6BHp
-X-Proofpoint-GUID: SN9INhSckFwDHrQ84Ri7zLvgWPujb7qZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 suspectscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403070087
+Content-Transfer-Encoding: 8bit
 
+Below race case can cause data corruption:
 
+Thread A				GC thread
+- f2fs_inplace_write_data
+					- gc_data_segment
+					 - ra_data_block
+					  - locked meta_inode page
+ - invalidate_mapping_pages
+ : fail to invalidate meta_inode page
+   due to lock failure or dirty|writeback
+   status
+ - f2fs_submit_page_bio
+ : write last dirty data to old blkaddr
+					 - move_data_block
+					  - load old data from meta_inode page
+					  - f2fs_submit_page_write
+					  : write old data to new blkaddr
 
-On 3/7/24 05:41, Michael Ellerman wrote:
-> Stefan Berger <stefanb@linux.ibm.com> writes:
->> linux,sml-base holds the address of a buffer with the TPM log. This
->> buffer may become invalid after a kexec and therefore embed the whole TPM
->> log in linux,sml-log. This helps to protect the log since it is properly
->> carried across a kexec with both of the kexec syscalls.
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> ---
->>   arch/powerpc/kernel/prom_init.c | 8 ++------
->>   1 file changed, 2 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
->> index e67effdba85c..41268c30de4c 100644
->> --- a/arch/powerpc/kernel/prom_init.c
->> +++ b/arch/powerpc/kernel/prom_init.c
->> @@ -1956,12 +1956,8 @@ static void __init prom_instantiate_sml(void)
->>   
->>   	reserve_mem(base, size);
->>   
->> -	prom_setprop(ibmvtpm_node, "/vdevice/vtpm", "linux,sml-base",
->> -		     &base, sizeof(base));
->> -	prom_setprop(ibmvtpm_node, "/vdevice/vtpm", "linux,sml-size",
->> -		     &size, sizeof(size));
->> -
->> -	prom_debug("sml base     = 0x%llx\n", base);
->> +	prom_setprop(ibmvtpm_node, "/vdevice/vtpm", "linux,sml-log",
->> +		     (void *)base, size);
-> 
-> As we discussed via chat, doing it this way sucks the full content of
-> the log back into Open Firmware.
-> 
-> That relies on OF handling such big properties, and also means more
-> memory will be consumed, which can cause problems early in boot.
-> 
-> A better solution is to explicitly add the log to the FDT in the
-> flattening phase.
+Because invalidate_mapping_pages() will skip invalidating page when the
+page has unclear status including locked, dirty, writeback and so on, so
+we need to use truncate_inode_pages_range() instead of
+invalidate_mapping_pages() to make sure meta_inode page will be dropped.
 
-Done.
+Fixes: 6aa58d8ad20a ("f2fs: readahead encrypted block during GC")
+Fixes: e3b49ea36802 ("f2fs: invalidate META_MAPPING before IPU/DIO write")
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/checkpoint.c    |  5 +++--
+ fs/f2fs/f2fs.h          | 28 +++++++++++++++++++++++++++-
+ fs/f2fs/segment.c       |  5 ++---
+ include/linux/f2fs_fs.h |  1 +
+ 4 files changed, 33 insertions(+), 6 deletions(-)
 
-> 
-> Also adding the new linux,sml-log property should be accompanied by a
-> change to the device tree binding.
-
-
-See my proposal below.
-
-> 
-> The syntax is not very obvious to me, but possibly something like?
-> 
-> diff --git a/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml b/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-> index 50a3fd31241c..cd75037948bc 100644
-> --- a/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-> +++ b/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-> @@ -74,8 +74,6 @@ required:
->     - ibm,my-dma-window
->     - ibm,my-drc-index
->     - ibm,loc-code
-> -  - linux,sml-base
-> -  - linux,sml-size
->   
->   allOf:
->     - $ref: tpm-common.yaml#
-> diff --git a/Documentation/devicetree/bindings/tpm/tpm-common.yaml b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
-> index 3c1241b2a43f..616604707c95 100644
-> --- a/Documentation/devicetree/bindings/tpm/tpm-common.yaml
-> +++ b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
-> @@ -25,6 +25,11 @@ properties:
->         base address of reserved memory allocated for firmware event log
->       $ref: /schemas/types.yaml#/definitions/uint64
->   
-> +  linux,sml-log:
-> +    description:
-> +      Content of firmware event log
-> +    $ref: /schemas/types.yaml#/definitions/uint8-array
-> +
->     linux,sml-size:
->       description:
->         size of reserved memory allocated for firmware event log
-> @@ -53,15 +58,22 @@ dependentRequired:
->     linux,sml-base: ['linux,sml-size']
->     linux,sml-size: ['linux,sml-base']
->   
-> -# must only have either memory-region or linux,sml-base
-> +# must only have either memory-region or linux,sml-base/size or linux,sml-log
->   # as well as either resets or reset-gpios
->   dependentSchemas:
->     memory-region:
->       properties:
->         linux,sml-base: false
-> +      linux,sml-log: false
->     linux,sml-base:
->       properties:
->         memory-region: false
-> +      linux,sml-log: false
-> +  linux,sml-log:
-> +    properties:
-> +      memory-region: false
-> +      linux,sml-base: false
-> +      linux,sml-size: false
->     resets:
->       properties:
->         reset-gpios: false
-> 
-> 
-
-I have been working with this patch here now and it passes the following 
-test:
-
-make dt_binding_check dtbs_check DT_SCHEMA_FILES=tpm/ibm,vtpm.yaml
-
-
-diff --git a/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml 
-b/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-index 50a3fd31241c..cacf6c3082de 100644
---- a/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-+++ b/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-@@ -74,8 +74,12 @@ required:
-    - ibm,my-dma-window
-    - ibm,my-drc-index
-    - ibm,loc-code
--  - linux,sml-base
--  - linux,sml-size
-+oneOf:
-+  - required:
-+      - linux,sml-base
-+      - linux,sml-size
-+  - required:
-+      - linux,sml-log
-
-  allOf:
-    - $ref: tpm-common.yaml#
-@@ -102,3 +106,21 @@ examples:
-              linux,sml-size = <0xbce10200>;
-          };
-      };
-+  - |
-+    soc {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index a09a9609e228..55b7d2cf030f 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1598,8 +1598,9 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 	 */
+ 	if (f2fs_sb_has_encrypt(sbi) || f2fs_sb_has_verity(sbi) ||
+ 		f2fs_sb_has_compression(sbi))
+-		invalidate_mapping_pages(META_MAPPING(sbi),
+-				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1);
++		f2fs_bug_on(sbi,
++			invalidate_inode_pages2_range(META_MAPPING(sbi),
++				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1));
+ 
+ 	f2fs_release_ino_entry(sbi, false);
+ 
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 4836e7cb0efe..9814e5981a6a 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4655,10 +4655,36 @@ static inline bool f2fs_is_readonly(struct f2fs_sb_info *sbi)
+ 	return f2fs_sb_has_readonly(sbi) || f2fs_readonly(sbi->sb);
+ }
+ 
++static inline void f2fs_truncate_meta_inode_pages(struct f2fs_sb_info *sbi,
++					block_t blkaddr, unsigned int cnt)
++{
++	bool need_submit = false;
++	int i = 0;
 +
-+        tpm@30000003 {
-+            compatible = "IBM,vtpm";
-+            device_type = "IBM,vtpm";
-+            reg = <0x30000003>;
-+            interrupts = <0xa0003 0x0>;
-+            ibm,#dma-address-cells = <0x2>;
-+            ibm,#dma-size-cells = <0x2>;
-+            ibm,my-dma-window = <0x10000003 0x0 0x0 0x0 0x10000000>;
-+            ibm,my-drc-index = <0x30000003>;
-+            ibm,loc-code = "U8286.41A.10082DV-V3-C3";
-+            linux,sml-log = <00 00 00 00 03 00 00>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/tpm/tpm-common.yaml 
-b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
-index 3c1241b2a43f..591c48f8cb74 100644
---- a/Documentation/devicetree/bindings/tpm/tpm-common.yaml
-+++ b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
-@@ -30,6 +30,11 @@ properties:
-        size of reserved memory allocated for firmware event log
-      $ref: /schemas/types.yaml#/definitions/uint32
-
-+  linux,sml-log:
-+    description:
-+      firmware event log
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
++	do {
++		struct page *page;
 +
-    memory-region:
-      description: reserved memory allocated for firmware event log
-      maxItems: 1
++		page = find_get_page(META_MAPPING(sbi), blkaddr + i);
++		if (page) {
++			if (PageWriteback(page))
++				need_submit = true;
++			f2fs_put_page(page, 0);
++		}
++	} while (++i < cnt && !need_submit);
++
++	if (need_submit)
++		f2fs_submit_merged_write_cond(sbi, sbi->meta_inode,
++							NULL, 0, DATA);
++
++	truncate_inode_pages_range(META_MAPPING(sbi),
++			F2FS_BLK_TO_BYTES((loff_t)blkaddr),
++			F2FS_BLK_END_BYTES((loff_t)(blkaddr + cnt - 1)));
++}
++
+ static inline void f2fs_invalidate_internal_cache(struct f2fs_sb_info *sbi,
+ 								block_t blkaddr)
+ {
+-	invalidate_mapping_pages(META_MAPPING(sbi), blkaddr, blkaddr);
++	f2fs_truncate_meta_inode_pages(sbi, blkaddr, 1);
+ 	f2fs_invalidate_compress_page(sbi, blkaddr);
+ }
+ 
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 4ff3b2d14ddf..20af48d7f784 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3741,8 +3741,7 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ 	}
+ 
+ 	if (fio->post_read)
+-		invalidate_mapping_pages(META_MAPPING(sbi),
+-				fio->new_blkaddr, fio->new_blkaddr);
++		f2fs_truncate_meta_inode_pages(sbi, fio->new_blkaddr, 1);
+ 
+ 	stat_inc_inplace_blocks(fio->sbi);
+ 
+@@ -3932,7 +3931,7 @@ void f2fs_wait_on_block_writeback_range(struct inode *inode, block_t blkaddr,
+ 	for (i = 0; i < len; i++)
+ 		f2fs_wait_on_block_writeback(inode, blkaddr + i);
+ 
+-	invalidate_mapping_pages(META_MAPPING(sbi), blkaddr, blkaddr + len - 1);
++	f2fs_truncate_meta_inode_pages(sbi, blkaddr, len);
+ }
+ 
+ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+index 755e9a41b196..a357287eac1e 100644
+--- a/include/linux/f2fs_fs.h
++++ b/include/linux/f2fs_fs.h
+@@ -27,6 +27,7 @@
+ 
+ #define F2FS_BYTES_TO_BLK(bytes)	((bytes) >> F2FS_BLKSIZE_BITS)
+ #define F2FS_BLK_TO_BYTES(blk)		((blk) << F2FS_BLKSIZE_BITS)
++#define F2FS_BLK_END_BYTES(blk)		(F2FS_BLK_TO_BYTES(blk + 1) - 1)
+ 
+ /* 0, 1(node nid), 2(meta nid) are reserved node id */
+ #define F2FS_RESERVED_NODE_NUM		3
+-- 
+2.40.1
 
-
-Is my patch missing something?
