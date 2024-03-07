@@ -1,115 +1,103 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CA812B169
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 13:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0509A129A98;
+	Thu,  7 Mar 2024 13:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709817698; cv=none; b=FOhxsMRZcV6TViLWPCuUlRE+Hx0wi87fT3+3wgc9GieUYQPz81gPQszTqQp+59OO1OGzSXawGgU3dlI2+kn1W0zbw2NL5TZ+v9/1qAV+7vbYadVcAE4sF0FHNFuYGWPwbvJz2KlKvUGhfZixhgYEbpYF8uF3aW1M2+pLFPIJy64=
+	t=1709817726; cv=none; b=ndl2XnXnMczd09DEBS2G8zcTXojNIPd4JCMvRaRIDUMPPw/jv0cIrD64gtbMtpkK8fGWE1Gei9mIbDGtWckrqytq1pJekuHM0N721G2BkTsC1z5MH/JxBX7WK4S+LSrIAmYdE6fk8gtBBPWUGvThmMo2aXU9SbC9NWf3LctuH1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709817698; c=relaxed/simple;
-	bh=aGenckXGkrmLwEafuy5dZPtP7xfD+h/1iwwhHPnePH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hbkKmsNMI6mrG5nPBaKZnlSIoMzQo5O2AOPoubK8T/zkYUt63idFvS8HSreEGzaR6m7PySzuAbTSukfR7skWMAbkpdqO/XfHm2XMlh1QgMQ6f0bD+MT6mn5M1bLbzX2+RZuM9jN5aPEk/QSs4a6rTqbkYxwAcvYriSGGSfkQrXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EpJtF5QZ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709817726; c=relaxed/simple;
+	bh=w2MkkM7a8PG5sSCI7iTEMgtD4tpClgb1lVwK2p69wa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRopV+l9UhaFto6Fs+VsjY8tQC+5HMEBatY8l5QzO0Y4lJww0Y2GZ+iktO62VPc9RcFU2rKrPZX4grQtZo5fMGgykyo1WwNhrfw/GFz+cy+7WfhKnjBWRv1iOCjcWhX/W+yUEyDymVk6YL2rOcEMf4/CE2O+xS0oP49a44EjWz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NS0qDYMY; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EpJtF5QZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709817695;
-	bh=aGenckXGkrmLwEafuy5dZPtP7xfD+h/1iwwhHPnePH4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EpJtF5QZFsd8vbZLtmFfgtRzkemMIYvCzLDRjJ9XAoAxJ9FeX9aTBKtG5bvOnfOYd
-	 +a+lSfyq2wdERSUAyA4Lfjmy6KPOMJsqdCD2Puri4cGGgQsECN0rcEmjQ9XkwOpvEk
-	 Nhc0syu31FVtQOlaSNQOMxaQo2tuXD8CX01FlaUfsZjmwM5LACErlTaX95v6fRyNje
-	 V1z6LoIRcJVd7omI0gXXhs8PZbTB4FuRo6mC5P0jmHbfgqNpESsa+NtOJyWRMjKh8P
-	 XLBAqR1bAnIWgEfQvZPMvHkm7GBabmnsfxmLC4FhlzMxCEic0eG6YeL45P/aU305VX
-	 Fsoy5dzKKALdg==
-Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: koike)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5AE2C3780B5F;
-	Thu,  7 Mar 2024 13:21:30 +0000 (UTC)
-Message-ID: <a8ae3ca9-67d5-4d83-90e8-2777862473d7@collabora.com>
-Date: Thu, 7 Mar 2024 10:21:27 -0300
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NS0qDYMY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=2adjiSztGzfYM9T4lx+mXU7akcr/eZ53zqRB/d3naCg=; b=NS0qDYMYyfSg/DYyBW0xzZV6ke
+	O5nAjui8RFwzJMoYUkx/9X+X1rylXwKUHbQF1h1POAX8BoZEODQnlVDeKWQo53ajra4vj97Rt7eXD
+	kqB4a0NOvWQdq1Ihs2tuNw9oVYkEBYLlVr9OiOjB7ZAFLQgYqRFd6cPn30NZWNi5m16M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1riDhR-009aTZ-0R; Thu, 07 Mar 2024 14:22:17 +0100
+Date: Thu, 7 Mar 2024 14:22:16 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Parthiban.Veerasooran@microchip.com
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, saeedm@nvidia.com,
+	anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, corbet@lwn.net,
+	linux-doc@vger.kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, Horatiu.Vultur@microchip.com,
+	ruanjinjie@huawei.com, Steen.Hegelund@microchip.com,
+	vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
+	Thorsten.Kummermehr@microchip.com, Pier.Beruto@onsemi.com,
+	Selvamani.Rajagopal@onsemi.com, Nicolas.Ferre@microchip.com,
+	benjamin.bigler@bernformulastudent.ch
+Subject: Re: [PATCH net-next v3 03/12] net: ethernet: oa_tc6: implement
+ register read operation
+Message-ID: <d2f254b9-7e7a-46ed-a979-00bdf92899ac@lunn.ch>
+References: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
+ <20240306085017.21731-4-Parthiban.Veerasooran@microchip.com>
+ <48b65759-6e69-46ef-a2ed-857d04eadac8@lunn.ch>
+ <83e0b340-521e-4d60-90bb-92d2ca6f5abe@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] drm/ci: update device type for volteer devices
-Content-Language: en-US
-To: Vignesh Raman <vignesh.raman@collabora.com>,
- dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com, airlied@gmail.com, daniel@ffwll.ch,
- david.heidelberg@collabora.com, sergi.blanch.torne@collabora.com,
- guilherme.gallo@collabora.com, robdclark@gmail.com,
- jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
- rodrigo.vivi@intel.com, tvrtko.ursulin@linux.intel.com,
- intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240307021841.100561-1-vignesh.raman@collabora.com>
-From: Helen Koike <helen.koike@collabora.com>
-In-Reply-To: <20240307021841.100561-1-vignesh.raman@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83e0b340-521e-4d60-90bb-92d2ca6f5abe@microchip.com>
 
+On Thu, Mar 07, 2024 at 07:04:20AM +0000, Parthiban.Veerasooran@microchip.com wrote:
+> Hi Andrew,
+> 
+> On 07/03/24 5:49 am, Andrew Lunn wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> >>   enum oa_tc6_register_op {
+> >> +     OA_TC6_CTRL_REG_READ = 0,
+> >>        OA_TC6_CTRL_REG_WRITE = 1,
+> >>   };
+> > 
+> > I thought it looked a little odd when the enum was added in the
+> > previous patch with the first value of 1, and only one value. Now it
+> > makes more sense.
+> Ok.
+> > 
+> > The actual value appears to not matter? It is always
+> > 
+> >> +     if (reg_op == OA_TC6_CTRL_REG_WRITE)
+> > 
+> > So i would drop the numbering, and leave it to the compiler. The
+> > patches will then look less odd.
+> "drop the numbering", do you refer to this patch alone or previous patch 
+> also? If it is for this patch alone then it makes sense as they are 
+> going to be 0 and 1 anyway. But if we drop the numbering in the previous 
+> patch it will become 0 which will create an issue in the below line as 
+> it needs 1,
+> 
+> FIELD_PREP(OA_TC6_CTRL_HEADER_WRITE, reg_op)
 
+That is why i asked: 
 
-On 06/03/2024 23:18, Vignesh Raman wrote:
-> Volteer devices in the collabora lab are categorized under the
-> asus-cx9400-volteer device type. The majority of these units
-> has an Intel Core i5-1130G7 CPU, while some of them have a
-> Intel Core i7-1160G7 CPU instead. So due to this difference,
-> new device type template is added for the Intel Core i5-1130G7
-> and i7-1160G7 variants of the Acer Chromebook Spin 514 (CP514-2H)
-> volteer Chromebooks. So update the same in drm-ci.
+> The actual value appears to not matter? It is always
 > 
-> https://gitlab.collabora.com/lava/lava/-/merge_requests/149
-> 
-> Fixes: 0119c894ab0d ("drm: Add initial ci/ subdirectory")
-> Reviewed-by: David Heidelberg <david.heidelberg@collabora.com>
-> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+> +     if (reg_op == OA_TC6_CTRL_REG_WRITE)
 
-Acked-by: Helen Koike <helen.koike@collabora.com>
+So the actual value does matter, so keep it in the previous patch.
+Does the value of OA_TC6_CTRL_REG_READ matter? Is it also used in
+FIELD_PREP etc? If not, taking away the = 0 will emphasise that 
+OA_TC6_CTRL_REG_WRITE has to be 1.
 
-Thanks
-Helen
-
-> ---
-> 
-> v2:
->    - Add fixes tag so change gets propagated to stable.
->      https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1119672
-> 
-> v3:
->    - Fix checkpatch warning.
->      Please use correct Fixes: style 'Fixes: <12 chars of sha1> ("<title line>")'
-> 
-> ---
->   drivers/gpu/drm/ci/test.yml | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-> index 0857773e5c5f..8bc63912fddb 100644
-> --- a/drivers/gpu/drm/ci/test.yml
-> +++ b/drivers/gpu/drm/ci/test.yml
-> @@ -252,11 +252,11 @@ i915:cml:
->   i915:tgl:
->     extends:
->       - .i915
-> -  parallel: 8
-> +  parallel: 5
->     variables:
-> -    DEVICE_TYPE: asus-cx9400-volteer
-> +    DEVICE_TYPE: acer-cp514-2h-1130g7-volteer
->       GPU_VERSION: tgl
-> -    RUNNER_TAG: mesa-ci-x86-64-lava-asus-cx9400-volteer
-> +    RUNNER_TAG: mesa-ci-x86-64-lava-acer-cp514-2h-1130g7-volteer
->   
->   .amdgpu:
->     extends:
+	Andrew
