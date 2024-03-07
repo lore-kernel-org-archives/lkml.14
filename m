@@ -1,246 +1,329 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791801B96E;
-	Thu,  7 Mar 2024 14:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A641E866
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709822368; cv=none; b=Mp263hkAvLv78rWwUdPze7jM+Njf2sCRsp7JMQOTaoQOE/Ur7N0HHgax+MUZgbw25o1vccN8a1G6e8PaYDGv7CTAUwPMs/oTIY632VSJXzjOMZboWsGXLx7IE54tq+lzjhLpHgOBHOHtLyxaFcvAbCz10rRkwjf53BMA00yuIh8=
+	t=1709822513; cv=none; b=alar+x0Ji3wF1DEfQmuzbbg1xfHH3146aUXzoiLkoP/2mvJQs5OSIgXA9ibmGxzmaYCw85mlxB4HYO5UFrfRD2hyOKkXEzC+TtkKuNfXJajzVzreOZslCWc4qhaeCsSk0C1Dx9CIsI/5mHymKRfSdSUsqeZdmC9PQF1M8s0mv1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709822368; c=relaxed/simple;
-	bh=1wda9rVFemYUpjfFp/MVZ9nQg/5x5u0oC4XBV/jPWOA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=i3Kgy7IldpVvEL+PdXmRahd7U8im/McxGJ2wTzfu207IDseQQ+PAw//PrkauBGHI8fq8/3zFeMYM/WMzTjIcIGao2caHO0dVADbwrh7W7UcY0Y2T5NVwfiuqJoddbabkXIf/ZMFUQICybV1zb0OP5qHffKDCYilfG3xkMXqs5BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KUvVw+Y0; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709822513; c=relaxed/simple;
+	bh=BqjPest2vXT/k2vDdsQZawkPG6mzTE+3Ac/tfXOk/fA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DyrBVuSZyjeIs+HiBbeV86E0RFjzw19RZ1QydkRWHyALjznZ10MCMUVoRp5KcUReIYGK5sKdQ1ia6dKh8rLKIOJrXHeJ/Vkvgp6gnMlDa7pvkN774FcqAKwZK2TUuvOHzBdKZMZYzau4bcGzhTdAX+DYpSQBCNb3Ry2R+grnDJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JjAgIR+e; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KUvVw+Y0"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D65D3E000D;
-	Thu,  7 Mar 2024 14:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709822357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DyyvLt3PFqGEcHS9MBOofH4aGB4ndkaOSLBfw95+8NY=;
-	b=KUvVw+Y01jMAdb7/WuVobY4KF3yUKmM23k9AgcVjHc/v5OwMpPfYQ4ZgVXW3tRHpjZGuPi
-	938qrKHa+lMcaX+rAnjITZIzrZWJLGP0FI/6LyDu6CZdYfR3Ig9b3SzffXnNEDNyVmVKGi
-	UUuO75aY3JPLLly0cdYMCCxDVzR+LQ8W+CPLo2J96wObP+emCBrFhPMEB/CUpC/zRf7sQ4
-	TSipvoVusU1LiQXGZw+6Et2ykxxFnvj689jZgGU/bsjVSy/iVgJn0Kz2AnXQf3dICGHhEe
-	GtZrD40tK6eSXTpacy4F6dnwfRzpyhDXLI1i7c7AzPI7y0k48UOIbCKJQZA/BA==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjAgIR+e"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dcbf82cdf05so949572276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 06:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709822511; x=1710427311; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4j+RBywVVOs9aYXXDFYhmAM4YOjedOfLhk9nCVzIHhQ=;
+        b=JjAgIR+eA35UvEKjLcV4K9BH1zsXE2GYpp5UlamKZ6sM1pwUD0piZ9YdXmSjhHo6nj
+         SVvTZnq9RYhWwG2KHzcg35srOZL6wGZu0F6Fa670SfFcvJgKqakSljUnzsn7dhouY3md
+         PqZXJME2Ua/Rze+Iyca+O4qGW0OTXnmSjL47n0xOzQnEsUFlYFY27cZ0beywzvMUc3Wj
+         Xl5Sxrv5vVB2Rf/YU5Vz281qmKLJgL/dZjBWPwPaeqr9vDeQY56uK/CmDieLw7z1dTNB
+         muz3yB3hoM8R6IS8r1w2PGe78kSkWHNGlLzDj5AkTYILIRqJU1L95n0uTaeSi29lu/zL
+         UWwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709822511; x=1710427311;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4j+RBywVVOs9aYXXDFYhmAM4YOjedOfLhk9nCVzIHhQ=;
+        b=iiD48iBL/KdLsArl1Ud5Z+9LsbH0jxwYNYPMCeziP4n/jnHjOe4kp3n8MmXqfbm1V1
+         HT7h0ta+fVNnBXblYOCF/WZRAay0l5qYJtN1G5dNsbmdhWYeU/dUP3+FA0/b/DUo2woU
+         yHsEf+Pw0wnFI96PVuSN+0Ry7kKX5dgLl08yIRhDiIU8jMy7zQAunJ/ULAXWggZG0tvZ
+         gbsLcTOVTEh8eGelR28f0INZJCWWrdLIU0uTkmio4lUkt7kujWvPZ2j28ZxWvMlh5jHR
+         9l7rBCUDVnOYFRjdsUsGZSzxEV6XbGh0Xp5R8GeKhTjqeAkwzmMH33Q159rYmNQLsJ5G
+         wKMw==
+X-Forwarded-Encrypted: i=1; AJvYcCWU7OBqPp86RNqzZ7gDKSoq72MP/8NqFY/ORLvgMi1m1DsWQJRdzuqm70V3AWUR8w05xGwDvdZD5LltQHkneRWrw8+cGy6Pz7SDhgTG
+X-Gm-Message-State: AOJu0YxIkPnX4hgXto6fDsH6W/3TwPsp20aKrz42/DgBq5oZnd1Xd4R8
+	s7zM29zhAz7EIwwgeIIdHHCBlE1LveVL63KC5fpoJ+1iDgUUKZuHsIzMkZONkl8zRtg3NL2DIC9
+	RVQX91oD3h3qiBETeoFz7/+3/jBU=
+X-Google-Smtp-Source: AGHT+IEDxvCrrfvxOcu/4yY6zIqt5/u2anHJxDWo8f6Vd6sNy7uSR6/79RHkYg4iN0i4S+Qlxt7fQbIsnqmF0Go75VA=
+X-Received: by 2002:a5b:810:0:b0:dcc:eb38:199c with SMTP id
+ x16-20020a5b0810000000b00dcceb38199cmr16213392ybp.56.1709822510918; Thu, 07
+ Mar 2024 06:41:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240307061425.21013-1-ioworker0@gmail.com> <CAGsJ_4xcRvZGdpPh1qcFTnTnDUbwz6WreQ=L_UO+oU2iFm9EPg@mail.gmail.com>
+ <CAK1f24k2G_DSEjuqqqPyY0f7+btpYbjfoyMH7btLfP8nkasCTQ@mail.gmail.com>
+ <CAGsJ_4xREM-P1mFqeM-s3-cJ9czb6PXwizb-3hOhwaF6+QM5QA@mail.gmail.com>
+ <03458c20-5544-411b-9b8d-b4600a9b802f@arm.com> <CAGsJ_4zp1MXTjG=4gBO+J3owg7sHDgDJ8Ut51i1RBSnKnK0BfQ@mail.gmail.com>
+ <501c9f77-1459-467a-8619-78e86b46d300@arm.com> <8f84c7d6-982a-4933-a7a7-3f640df64991@redhat.com>
+ <e6bc142e-113d-4034-b92c-746b951a27ed@redhat.com> <d24f8553-33f2-4ae7-a06d-badaf9462d84@arm.com>
+ <db46212b-000d-4e8e-87d2-90dbf0a6236a@redhat.com>
+In-Reply-To: <db46212b-000d-4e8e-87d2-90dbf0a6236a@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Thu, 7 Mar 2024 22:41:39 +0800
+Message-ID: <CAK1f24k8MgR-3sqpqZmg=aTF5Sh4if2o7qeW9zfGpGCSbHR2PA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mm/madvise: enhance lazyfreeing with mTHP in madvise_free
+To: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>, 
+	Vishal Moola <vishal.moola@gmail.com>, akpm@linux-foundation.org, zokeefe@google.com, 
+	shy828301@gmail.com, mhocko@suse.com, fengwei.yin@intel.com, 
+	xiehuan09@gmail.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com, 
+	peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 07 Mar 2024 15:39:15 +0100
-Message-Id: <CZNLFUH8WWIA.MAUN8E53X7PK@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v4 3/9] usb: cdns3-ti: move reg writes from probe into
- ->runtime_resume()
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Kevin
- Hilman" <khilman@kernel.org>, "Alan Stern" <stern@rowland.harvard.edu>,
- <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-To: "Roger Quadros" <rogerq@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Peter Chen" <peter.chen@kernel.org>, "Pawel
- Laszczak" <pawell@cadence.com>, "Nishanth Menon" <nm@ti.com>, "Vignesh
- Raghavendra" <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20240307-j7200-usb-suspend-v4-0-5ec7615431f3@bootlin.com>
- <20240307-j7200-usb-suspend-v4-3-5ec7615431f3@bootlin.com>
- <d1ca5d29-8ef4-4d7f-b1c8-bcb361e6c351@kernel.org>
-In-Reply-To: <d1ca5d29-8ef4-4d7f-b1c8-bcb361e6c351@kernel.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hello Roger,
+Hey Barry, Ryan, David,
 
-On Thu Mar 7, 2024 at 1:31 PM CET, Roger Quadros wrote:
-> Hi,
+Thanks a lot for taking the time to explain and provide suggestions!
+I really appreciate your time!
+
+IIUC, here's what we need to do for v3:
+
+If folio_likely_mapped_shared() is true, or if we cannot acquire
+the folio lock, we simply skip the batched PTEs. Then, we compare
+the number of batched PTEs against folio_mapcount(). Finally,
+batch-update the access and dirty only.
+
+I'm not sure if I've understood correctly, could you please confirm?
+
+Thanks,
+Lance
+
+On Thu, Mar 7, 2024 at 7:17=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
 >
-> On 07/03/2024 11:55, Th=C3=A9o Lebrun wrote:
-> > The hardware initialisation register write sequence is only used at
-> > probe. Move it from being done at explicitely at probe to being done
-> > implicitely by pm_runtime_get_sync() that calls ->runtime_resume().
+> On 07.03.24 12:13, Ryan Roberts wrote:
+> > On 07/03/2024 10:54, David Hildenbrand wrote:
+> >> On 07.03.24 11:54, David Hildenbrand wrote:
+> >>> On 07.03.24 11:50, Ryan Roberts wrote:
+> >>>> On 07/03/2024 09:33, Barry Song wrote:
+> >>>>> On Thu, Mar 7, 2024 at 10:07=E2=80=AFPM Ryan Roberts <ryan.roberts@=
+arm.com> wrote:
+> >>>>>>
+> >>>>>> On 07/03/2024 08:10, Barry Song wrote:
+> >>>>>>> On Thu, Mar 7, 2024 at 9:00=E2=80=AFPM Lance Yang <ioworker0@gmai=
+l.com> wrote:
+> >>>>>>>>
+> >>>>>>>> Hey Barry,
+> >>>>>>>>
+> >>>>>>>> Thanks for taking time to review!
+> >>>>>>>>
+> >>>>>>>> On Thu, Mar 7, 2024 at 3:00=E2=80=AFPM Barry Song <21cnbao@gmail=
+.com> wrote:
+> >>>>>>>>>
+> >>>>>>>>> On Thu, Mar 7, 2024 at 7:15=E2=80=AFPM Lance Yang <ioworker0@gm=
+ail.com> wrote:
+> >>>>>>>>>>
+> >>>>>>>> [...]
+> >>>>>>>>>> +static inline bool can_mark_large_folio_lazyfree(unsigned lon=
+g addr,
+> >>>>>>>>>> +                                                struct folio =
+*folio,
+> >>>>>>>>>> pte_t *start_pte)
+> >>>>>>>>>> +{
+> >>>>>>>>>> +       int nr_pages =3D folio_nr_pages(folio);
+> >>>>>>>>>> +       fpb_t flags =3D FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIR=
+TY;
+> >>>>>>>>>> +
+> >>>>>>>>>> +       for (int i =3D 0; i < nr_pages; i++)
+> >>>>>>>>>> +               if (page_mapcount(folio_page(folio, i)) !=3D 1=
+)
+> >>>>>>>>>> +                       return false;
+> >>>>>>>>>
+> >>>>>>>>> we have moved to folio_estimated_sharers though it is not preci=
+se, so
+> >>>>>>>>> we don't do
+> >>>>>>>>> this check with lots of loops and depending on the subpage's ma=
+pcount.
+> >>>>>>>>
+> >>>>>>>> If we don't check the subpage=E2=80=99s mapcount, and there is a=
+ cow folio
+> >>>>>>>> associated
+> >>>>>>>> with this folio and the cow folio has smaller size than this fol=
+io,
+> >>>>>>>> should we still
+> >>>>>>>> mark this folio as lazyfree?
+> >>>>>>>
+> >>>>>>> I agree, this is true. However, we've somehow accepted the fact t=
+hat
+> >>>>>>> folio_likely_mapped_shared
+> >>>>>>> can result in false negatives or false positives to balance the
+> >>>>>>> overhead.  So I really don't know :-)
+> >>>>>>>
+> >>>>>>> Maybe David and Vishal can give some comments here.
+> >>>>>>>
+> >>>>>>>>
+> >>>>>>>>> BTW, do we need to rebase our work against David's changes[1]?
+> >>>>>>>>> [1]
+> >>>>>>>>> https://lore.kernel.org/linux-mm/20240227201548.857831-1-david@=
+redhat.com/
+> >>>>>>>>
+> >>>>>>>> Yes, we should rebase our work against David=E2=80=99s changes.
+> >>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>>> +
+> >>>>>>>>>> +       return nr_pages =3D=3D folio_pte_batch(folio, addr, st=
+art_pte,
+> >>>>>>>>>> +                                        ptep_get(start_pte), =
+nr_pages,
+> >>>>>>>>>> flags, NULL);
+> >>>>>>>>>> +}
+> >>>>>>>>>> +
+> >>>>>>>>>>     static int madvise_free_pte_range(pmd_t *pmd, unsigned lon=
+g addr,
+> >>>>>>>>>>                                    unsigned long end, struct m=
+m_walk *walk)
+> >>>>>>>>>>
+> >>>>>>>>>> @@ -676,11 +690,45 @@ static int madvise_free_pte_range(pmd_t =
+*pmd,
+> >>>>>>>>>> unsigned long addr,
+> >>>>>>>>>>                     */
+> >>>>>>>>>>                    if (folio_test_large(folio)) {
+> >>>>>>>>>>                            int err;
+> >>>>>>>>>> +                       unsigned long next_addr, align;
+> >>>>>>>>>>
+> >>>>>>>>>> -                       if (folio_estimated_sharers(folio) !=
+=3D 1)
+> >>>>>>>>>> -                               break;
+> >>>>>>>>>> -                       if (!folio_trylock(folio))
+> >>>>>>>>>> -                               break;
+> >>>>>>>>>> +                       if (folio_estimated_sharers(folio) !=
+=3D 1 ||
+> >>>>>>>>>> +                           !folio_trylock(folio))
+> >>>>>>>>>> +                               goto skip_large_folio;
+> >>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>> I don't think we can skip all the PTEs for nr_pages, as some of=
+ them
+> >>>>>>>>> might be
+> >>>>>>>>> pointing to other folios.
+> >>>>>>>>>
+> >>>>>>>>> for example, for a large folio with 16PTEs, you do MADV_DONTNEE=
+D(15-16),
+> >>>>>>>>> and write the memory of PTE15 and PTE16, you get page faults, t=
+hus PTE15
+> >>>>>>>>> and PTE16 will point to two different small folios. We can only=
+ skip
+> >>>>>>>>> when we
+> >>>>>>>>> are sure nr_pages =3D=3D folio_pte_batch() is sure.
+> >>>>>>>>
+> >>>>>>>> Agreed. Thanks for pointing that out.
+> >>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>>> +
+> >>>>>>>>>> +                       align =3D folio_nr_pages(folio) * PAGE=
+_SIZE;
+> >>>>>>>>>> +                       next_addr =3D ALIGN_DOWN(addr + align,=
+ align);
+> >>>>>>>>>> +
+> >>>>>>>>>> +                       /*
+> >>>>>>>>>> +                        * If we mark only the subpages as laz=
+yfree, or
+> >>>>>>>>>> +                        * cannot mark the entire large folio =
+as lazyfree,
+> >>>>>>>>>> +                        * then just split it.
+> >>>>>>>>>> +                        */
+> >>>>>>>>>> +                       if (next_addr > end || next_addr - add=
+r !=3D
+> >>>>>>>>>> align ||
+> >>>>>>>>>> +                           !can_mark_large_folio_lazyfree(add=
+r, folio,
+> >>>>>>>>>> pte))
+> >>>>>>>>>> +                               goto split_large_folio;
+> >>>>>>>>>> +
+> >>>>>>>>>> +                       /*
+> >>>>>>>>>> +                        * Avoid unnecessary folio splitting i=
+f the large
+> >>>>>>>>>> +                        * folio is entirely within the given =
+range.
+> >>>>>>>>>> +                        */
+> >>>>>>>>>> +                       folio_clear_dirty(folio);
+> >>>>>>>>>> +                       folio_unlock(folio);
+> >>>>>>>>>> +                       for (; addr !=3D next_addr; pte++, add=
+r +=3D
+> >>>>>>>>>> PAGE_SIZE) {
+> >>>>>>>>>> +                               ptent =3D ptep_get(pte);
+> >>>>>>>>>> +                               if (pte_young(ptent) ||
+> >>>>>>>>>> pte_dirty(ptent)) {
+> >>>>>>>>>> +                                       ptent =3D ptep_get_and=
+_clear_full(
+> >>>>>>>>>> +                                               mm, addr, pte,
+> >>>>>>>>>> tlb->fullmm);
+> >>>>>>>>>> +                                       ptent =3D pte_mkold(pt=
+ent);
+> >>>>>>>>>> +                                       ptent =3D pte_mkclean(=
+ptent);
+> >>>>>>>>>> +                                       set_pte_at(mm, addr, p=
+te, ptent);
+> >>>>>>>>>> +                                       tlb_remove_tlb_entry(t=
+lb, pte,
+> >>>>>>>>>> addr);
+> >>>>>>>>>> +                               }
+> >>>>>>>>>
+> >>>>>>>>> Can we do this in batches? for a CONT-PTE mapped large folio, y=
+ou are
+> >>>>>>>>> unfolding
+> >>>>>>>>> and folding again. It seems quite expensive.
+> >>>>>>
+> >>>>>> I'm not convinced we should be doing this in batches. We want the =
+initial
+> >>>>>> folio_pte_batch() to be as loose as possible regarding permissions=
+ so that we
+> >>>>>> reduce our chances of splitting folios to the min. (e.g. ignore SW=
+ bits like
+> >>>>>> soft dirty, etc). I think it might be possible that some PTEs are =
+RO and other
+> >>>>>> RW too (e.g. due to cow - although with the current cow impl, prob=
+ably not.
+> >>>>>> But
+> >>>>>> its fragile to assume that). Anyway, if we do an initial batch tha=
+t ignores
+> >>>>>> all
+> >>>>>
+> >>>>> You are correct. I believe this scenario could indeed occur. For in=
+stance,
+> >>>>> if process A forks process B and then unmaps itself, leaving B as t=
+he
+> >>>>> sole process owning the large folio.  The current wp_page_reuse() f=
+unction
+> >>>>> will reuse PTE one by one while the specific subpage is written.
+> >>>>
+> >>>> Hmm - I thought it would only reuse if the total mapcount for the fo=
+lio was 1.
+> >>>> And since it is a large folio with each page mapped once in proc B, =
+I thought
+> >>>> every subpage write would cause a copy except the last one? I haven'=
+t looked at
+> >>>> the code for a while. But I had it in my head that this is an area w=
+e need to
+> >>>> improve for mTHP.
+> >>>
+> >>> wp_page_reuse() will currently reuse a PTE part of a large folio only=
+ if
+> >>> a single PTE remains mapped (refcount =3D=3D 0).
+> >>
+> >> ^ =3D=3D 1
+> >
+> > Ahh yes. That's what I meant. I got the behacviour vagulely right thoug=
+h.
+> >
+> > Anyway, regardless, I'm not sure we want to batch here. Or if we do, we=
+ want to
+> > batch function that will only clear access and dirty.
 >
-> explicitly / implicitly
+> We likely want to detect a folio batch the "usual" way (as relaxed as
+> possible), then do all the checks (#pte =3D=3D folio_mapcount() under fol=
+io
+> lock), and finally batch-update the access and dirty only.
 >
-> >=20
-> > Keep devicetree parsing in probe and add a new field in the private
-> > struct to remember the USB2 refclk rate code computation result.
-> >=20
-> > This opens the door to having the init sequence being executed later
-> > down the road, at system-wide resume for example. This is NOT currently
-> > happening because runtime PM is disabled at suspend without the
-> > refcount being affected.
-> >=20
-> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> > ---
-> >  drivers/usb/cdns3/cdns3-ti.c | 90 +++++++++++++++++++++++++-----------=
---------
-> >  1 file changed, 52 insertions(+), 38 deletions(-)
-> >=20
-> > diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.=
-c
-> > index 5945c4b1e11f..4c8a557e6a6f 100644
-> > --- a/drivers/usb/cdns3/cdns3-ti.c
-> > +++ b/drivers/usb/cdns3/cdns3-ti.c
-> > @@ -57,6 +57,7 @@ struct cdns_ti {
-> >  	unsigned vbus_divider:1;
-> >  	struct clk *usb2_refclk;
-> >  	struct clk *lpm_clk;
-> > +	int usb2_refclk_rate_code;
-> >  };
-> > =20
-> >  static const int cdns_ti_rate_table[] =3D {	/* in KHZ */
-> > @@ -90,10 +91,8 @@ static int cdns_ti_probe(struct platform_device *pde=
-v)
-> >  	struct device *dev =3D &pdev->dev;
-> >  	struct device_node *node =3D pdev->dev.of_node;
-> >  	struct cdns_ti *data;
-> > -	int error;
-> > -	u32 reg;
-> > -	int rate_code, i;
-> >  	unsigned long rate;
-> > +	int error, i;
-> > =20
-> >  	data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> >  	if (!data)
-> > @@ -133,7 +132,9 @@ static int cdns_ti_probe(struct platform_device *pd=
-ev)
-> >  		return -EINVAL;
-> >  	}
-> > =20
-> > -	rate_code =3D i;
-> > +	data->usb2_refclk_rate_code =3D i;
-> > +	data->vbus_divider =3D device_property_read_bool(dev, "ti,vbus-divide=
-r");
-> > +	data->usb2_only =3D device_property_read_bool(dev, "ti,usb2-only");
-> > =20
-> >  	pm_runtime_enable(dev);
-> >  	error =3D pm_runtime_get_sync(dev);
-> > @@ -142,40 +143,6 @@ static int cdns_ti_probe(struct platform_device *p=
-dev)
-> >  		goto err;
-> >  	}
-> > =20
-> > -	/* assert RESET */
-> > -	reg =3D cdns_ti_readl(data, USBSS_W1);
-> > -	reg &=3D ~USBSS_W1_PWRUP_RST;
-> > -	cdns_ti_writel(data, USBSS_W1, reg);
-> > -
-> > -	/* set static config */
-> > -	reg =3D cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-> > -	reg &=3D ~USBSS1_STATIC_PLL_REF_SEL_MASK;
-> > -	reg |=3D rate_code << USBSS1_STATIC_PLL_REF_SEL_SHIFT;
-> > -
-> > -	reg &=3D ~USBSS1_STATIC_VBUS_SEL_MASK;
-> > -	data->vbus_divider =3D device_property_read_bool(dev, "ti,vbus-divide=
-r");
-> > -	if (data->vbus_divider)
-> > -		reg |=3D 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
-> > -
-> > -	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
-> > -	reg =3D cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-> > -
-> > -	/* set USB2_ONLY mode if requested */
-> > -	reg =3D cdns_ti_readl(data, USBSS_W1);
-> > -	data->usb2_only =3D device_property_read_bool(dev, "ti,usb2-only");
-> > -	if (data->usb2_only)
-> > -		reg |=3D USBSS_W1_USB2_ONLY;
-> > -
-> > -	/* set default modestrap */
-> > -	reg |=3D USBSS_W1_MODESTRAP_SEL;
-> > -	reg &=3D ~USBSS_W1_MODESTRAP_MASK;
-> > -	reg |=3D USBSS_MODESTRAP_MODE_NONE << USBSS_W1_MODESTRAP_SHIFT;
-> > -	cdns_ti_writel(data, USBSS_W1, reg);
-> > -
-> > -	/* de-assert RESET */
-> > -	reg |=3D USBSS_W1_PWRUP_RST;
-> > -	cdns_ti_writel(data, USBSS_W1, reg);
-> > -
-> >  	error =3D of_platform_populate(node, NULL, NULL, dev);
-> >  	if (error) {
-> >  		dev_err(dev, "failed to create children: %d\n", error);
-> > @@ -211,6 +178,52 @@ static void cdns_ti_remove(struct platform_device =
-*pdev)
-> >  	platform_set_drvdata(pdev, NULL);
-> >  }
-> > =20
-> > +static int cdns_ti_runtime_resume(struct device *dev)
-> > +{
-> > +	struct cdns_ti *data =3D dev_get_drvdata(dev);
-> > +	u32 reg;
-> > +
-> > +	/* assert RESET */
-> > +	reg =3D cdns_ti_readl(data, USBSS_W1);
-> > +	reg &=3D ~USBSS_W1_PWRUP_RST;
-> > +	cdns_ti_writel(data, USBSS_W1, reg);
-> > +
-> > +	/* set static config */
-> > +	reg =3D cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-> > +	reg &=3D ~USBSS1_STATIC_PLL_REF_SEL_MASK;
-> > +	reg |=3D data->usb2_refclk_rate_code << USBSS1_STATIC_PLL_REF_SEL_SHI=
-FT;
-> > +
-> > +	reg &=3D ~USBSS1_STATIC_VBUS_SEL_MASK;
-> > +
-> > +	if (data->vbus_divider)
-> > +		reg |=3D 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
-> > +
-> > +	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
-> > +	reg =3D cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-> > +
-> > +	/* set USB2_ONLY mode if requested */
-> > +	reg =3D cdns_ti_readl(data, USBSS_W1);
-> > +
-> > +	if (data->usb2_only)
-> > +		reg |=3D USBSS_W1_USB2_ONLY;
-> > +
-> > +	/* set default modestrap */
-> > +	reg |=3D USBSS_W1_MODESTRAP_SEL;
-> > +	reg &=3D ~USBSS_W1_MODESTRAP_MASK;
-> > +	reg |=3D USBSS_MODESTRAP_MODE_NONE << USBSS_W1_MODESTRAP_SHIFT;
-> > +	cdns_ti_writel(data, USBSS_W1, reg);
-> > +
-> > +	/* de-assert RESET */
-> > +	reg |=3D USBSS_W1_PWRUP_RST;
-> > +	cdns_ti_writel(data, USBSS_W1, reg);
+> --
+> Cheers,
 >
-> I don't think USB controller requires a reset and re-init between
-> runtime suspend/resume.
+> David / dhildenb
 >
-> What you need is reset/re-init during system Resume on certain platforms.
-> So you should move this part of code into a helper function and call it
-> from .probe() and .system_resume()
-
-Runtime resume is being called at probe() and system-wide resume. See
-our runtime_resume() implementation as that helper function you are
-describing.
-
-A previous revision did what you are recommending. We leaned towards the
-current version. See:
-https://lore.kernel.org/lkml/7h34wxfmwn.fsf@baylibre.com/
-
-Also, assuming we enable runtime PM, a reset and re-init after runtime
-suspend would be the right thing to do anyways. My reading of
-drivers/pmdomain/core.c tells me that if our device goes to runtime
-suspend, domains will be shut down. Our controller will be reset and
-we'll need to re-init it. The GENPD_FLAG_RPM_ALWAYS_ON flag is of
-interest to avoid the PD to be shut down during runtime PM.
-
-Regards,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
