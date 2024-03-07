@@ -1,199 +1,273 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA8412FB3E;
-	Thu,  7 Mar 2024 18:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B211D13329E;
+	Thu,  7 Mar 2024 18:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709835425; cv=none; b=u2+tibIpPEbxa8LPVEzTksX+mutFIT/N+jmaK8Chcht5femmwrSbX77N/uYPdK6OFJRhRlIvZ0vb70a48nJxioaNHb4wCVfZItfIJkNOl1+Trw2EPsdMPGRIG4s1FHu8VSB05OWA3U8vJ8/kbG96pfYxGbqLQaKKb0a5JrPnaDk=
+	t=1709835446; cv=none; b=heLpYqvUshRT5ML8JjceB2kq7X+jQX2F9QlFrYeCsTaEShWzJuNi30Bfe1kGodDXjYJez5zc56+I3KKAiru2M8CgG5SAQ/ksOBtF+E/uSfRIn8RjGGBbSNdWrYBebXt10WGVvJ6AIwJWe3jhsUX6jipK9PTswWpFvGi/Nj/i0MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709835425; c=relaxed/simple;
-	bh=wPNhnbjYtr8nNf0xfcvCWhf/R2zeOK/14UW2AOf6LHA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O+sqotT21QBRuHeDKtmaU1C1c+IfOSvJDl5Id14qZp04R5DTj0dsPQPHHCiKAZir8ber56QUK4tsaky+6RiaU/fEnEeFQ6+GCm0yNJwD1IRO4JxLbHAQNDFi54UajD/DucLYcw/RIGJltR4h5yTkQETqIotckUU1pgGuEsny2JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=C/djWXY9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mbzQuoAW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=C/djWXY9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mbzQuoAW; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709835446; c=relaxed/simple;
+	bh=17xkoOp/RcqQ2Bfic2Dy+htvwJ8t+y8Dib3iXXsLSV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TufG81PZ9wJlcMjzHz/3nMirlydgmTwJawpxsN5ezRduxc87533oavzmiCg5P+8TQpROyO1GPmygnMHYM9JY1ZCU+BMT09OTK2Bi1FysSQUGiFpAXUSc5DaD1cy/y8omcAb2vVmLS1WmFLu3YWCIoU3LSVteJ2dNBenGzNZfcQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pSqDPCQ5; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="C/djWXY9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mbzQuoAW";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="C/djWXY9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mbzQuoAW"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 841905D00A;
-	Thu,  7 Mar 2024 16:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709827353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cMNJbshkkARiLJa25Qz/aZkoMSzYIEZDxAvRw1s71Sw=;
-	b=C/djWXY94UZf8tSS//GXm9k2HLaDnognY2Th4qwfzL+5lFOZ6eDg/lfRfFZk/YXK0bYbV8
-	1w4Wh6i9nB18Fp0P/vcAdYDwmqUYaFFtr0LI4PTcwUDwLY2sAaMHvDtrxuKLLZ1eYW1Qoc
-	XSvF+dXuaD4HDIkyAfW3DDbhxJsAEaY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709827353;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cMNJbshkkARiLJa25Qz/aZkoMSzYIEZDxAvRw1s71Sw=;
-	b=mbzQuoAWb39WAt4VKnGIq4DtAR+T2dNJTMMBXhhSrBhsc1zDOqHWQ45M69a8STV4keZxsZ
-	68KFqYUFkZHd6XAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709827353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cMNJbshkkARiLJa25Qz/aZkoMSzYIEZDxAvRw1s71Sw=;
-	b=C/djWXY94UZf8tSS//GXm9k2HLaDnognY2Th4qwfzL+5lFOZ6eDg/lfRfFZk/YXK0bYbV8
-	1w4Wh6i9nB18Fp0P/vcAdYDwmqUYaFFtr0LI4PTcwUDwLY2sAaMHvDtrxuKLLZ1eYW1Qoc
-	XSvF+dXuaD4HDIkyAfW3DDbhxJsAEaY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709827353;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cMNJbshkkARiLJa25Qz/aZkoMSzYIEZDxAvRw1s71Sw=;
-	b=mbzQuoAWb39WAt4VKnGIq4DtAR+T2dNJTMMBXhhSrBhsc1zDOqHWQ45M69a8STV4keZxsZ
-	68KFqYUFkZHd6XAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AB8DB12FC5;
-	Thu,  7 Mar 2024 16:02:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eOCUJhjl6WXtcwAAD6G6ig
-	(envelope-from <lhenriques@suse.de>); Thu, 07 Mar 2024 16:02:32 +0000
-Received: from localhost (brahms.olymp [local])
-	by brahms.olymp (OpenSMTPD) with ESMTPA id f65e79f4;
-	Thu, 7 Mar 2024 16:02:29 +0000 (UTC)
-From: Luis Henriques <lhenriques@suse.de>
-To: Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>
-Cc: linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-unionfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luis Henriques <lhenriques@suse.de>
-Subject: [PATCH v2 3/3] ovl: fix the parsing of empty string mount parameters
-Date: Thu,  7 Mar 2024 16:02:25 +0000
-Message-ID: <20240307160225.23841-4-lhenriques@suse.de>
-In-Reply-To: <20240307160225.23841-1-lhenriques@suse.de>
-References: <20240307160225.23841-1-lhenriques@suse.de>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pSqDPCQ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709835429; x=1710440229; i=w_armin@gmx.de;
+	bh=17xkoOp/RcqQ2Bfic2Dy+htvwJ8t+y8Dib3iXXsLSV4=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
+	b=pSqDPCQ5u3gYOqbyX+4uIv9RBmf9O91b2qXk4GqB7axYbEsMziJxtHAW2ewc3f1V
+	 E6ZFS1tdrHkFZ7udXJ7odfy5p7WQhn1vLFKnme2S0fCone7tjojciQ4N959WdV/iF
+	 AORPe+HQCnsQ2d2+tHwX5EwGnabYllSOr7UOs+1gldRrsuOxTadXmsYjRVrQe2z/v
+	 99a8JuKgyP8MRiCnSskXTnd5Nj+IEox3IWIjmzPHlH29SmC8o1xoMpkswno1W99QW
+	 pv6PuHcr5L4B7fY9JsoEFNmW6mBt32HEnK4me1lvAjamDOmTF0AXVvOiq3Hzkg58h
+	 sG4V9RaOYeHwrDc5aQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLzBj-1rR2ZA1AXZ-00Hxzc; Thu, 07
+ Mar 2024 19:17:09 +0100
+Message-ID: <4138a86e-c0cd-4bd1-948c-88dd73749027@gmx.de>
+Date: Thu, 7 Mar 2024 19:17:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.30
-X-Spamd-Result: default: False [-0.30 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 REPLY(-4.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[4];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FREEMAIL_TO(0.00)[mit.edu,dilger.ca,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_LAST(0.00)[];
-	 BAYES_HAM(-0.00)[44.69%]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] platform/x86: add lenovo wmi camera button driver
+To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20240307085939.668881-1-aichao@kylinos.cn>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240307085939.668881-1-aichao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rQjpVGoBcHFxH+hSQxJCNqhe0vjPZvbm5a0Ld1TfvEMTfQk61Bh
+ 4xg0J6SAcZMXHyk/w/10bFDgoG/dZEeODvk8jl0M8YS/cm2DtuCO6NTgPkZdkI9laag0qmX
+ x5RTSCJuQ0O/qftm6Ku9sH3nWALZTi+ecyk22Yg1iGdOM0vkhBFhGVQoQpq60sbpJGbMmXo
+ dSq2wfF2GkGDBxEGvLnAA==
 X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2nViqPVXDJI=;AKiMCwB8jmfOMufyK3l0wW+GkXY
+ KurZfcMS4Zb7KvXBhIsv1jKQ4ii1Glw6vGO+jY05XpoqGZtL43KRffVy4JLSYNf9h4hUeyDTF
+ 9+hBdJ5euYzUTlGj/MVQRpT83w39wdLE59niRgP71mIpSyWFUn/hklfv7Wz9Lc4w7YWQ2Bb2o
+ jU3f2Xz5ROiss3xrOMWOJKoeMozo2fac/2LxjPRXtHqXQkJfcZN/69kwhd5B+beucHpetiw/Q
+ xRvRXevS7Tv04g2w1a+zsNIMm8xj2UfqADQ10jD8/wBKv4IELiss4OHwwUtzgKMMVZFIjgN/R
+ akj9sFK3Hj/IzviMb+Y71eFihOOF3j0pJkSI4Y9BpsYtqOGU6oUKqHR4AoZ5Ug7LC8DfVQmRZ
+ 0i991oyn95WNtOsmpzXt0HqLKysXC414I3t5RUeCbf3T3IqI9semxfkKclaUX+nGe1IU9w/E9
+ Hf7mol8bR8sFL4W5CVGrN66OcNx3rBPsHtxijHmI9+rsm2SZ+XDmbgFqMGK/inK77ClHEQRRi
+ X0bZbM6deEGAez1dbckYD2L4d1Da/39gG8be/yW8yAraAanLmwXSDdiu9TExLVHg0MFZ31JuU
+ gjT0dw1WaiK8/lLPNie8IPe3FpEfQ/AyA9wR2cBK/LTNWTggvH/S1x1EG8miSE/vtY9BSbK/f
+ 7sri9Bt5U+yew5+EMK1L8OF+gI2giwQuee5vBfMX56ldd8kbwE4Q3zJfeYDVHUKqlKWpUbasA
+ dt7sQa0gVI+GUbV79lHJaNKOz7DK9GcRhGrTcdqBdsKzwcE0MCvFbIE0ScFjtADLE/8/FGXiC
+ AVrlv64PY3FJeqfPt2lVUBPI74HgGMfJeGdWPOt2HNegU=
 
-This patch fixes the usage of mount parameters that are defined as strings
-but which can be empty.  Currently, only 'lowerdir' parameter is in this
-situation for overlayfs.  But since userspace can pass it in as 'flag'
-type (when it doesn't have a value), the parsing will fail because a
-'string' type is assumed.
+Am 07.03.24 um 09:59 schrieb Ai Chao:
 
-This issue is fixed by using the new helper fsparam_string_or_flag() and by
-also taking the parameter type into account.
+> Add lenovo generic wmi driver to support camera button.
+> The Camera button is a GPIO device. This driver receives ACPI notifyi
+> when the camera button is switched on/off. This driver is used in
+> Lenovo A70, it is a Computer integrated machine.
+>
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
+> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COV=
+ER.
+> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_w=
+mi_priv.
+> v3: Remove lenovo_wmi_remove function.
+> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+>
+>   drivers/platform/x86/Kconfig             | 12 ++++
+>   drivers/platform/x86/Makefile            |  1 +
+>   drivers/platform/x86/lenovo-wmi-camera.c | 89 ++++++++++++++++++++++++
+>   3 files changed, 102 insertions(+)
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index bdd302274b9a..9506a455b547 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+>   	To compile this driver as a module, choose M here: the module
+>   	will be called inspur-platform-profile.
+>
+> +config LENOVO_WMI_CAMERA
+> +	tristate "Lenovo WMI Camera Button driver"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	help
+> +	  This driver provides support for Lenovo camera button. The Camera
+> +	  button is a GPIO device. This driver receives ACPI notify when the
+> +	  camera button is switched on/off.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called lenovo-wmi-camera.
+> +
+>   source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>
+>   config FW_ATTR_CLASS
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index 1de432e8861e..217e94d7c877 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
+>   obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
+>   obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
+>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
+> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
+>
+>   # Intel
+>   obj-y				+=3D intel/
+> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform=
+/x86/lenovo-wmi-camera.c
+> new file mode 100644
+> index 000000000000..571d67ade8ac
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Lenovo WMI Camera Button Driver
+> + *
+> + * Author: Ai Chao <aichao@kylinos.cn>
+> + * Copyright (C) 2024 KylinSoft Corporation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/input.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F=
+4EA400013"
+> +
+> +struct lenovo_wmi_priv {
+> +	struct input_dev *idev;
+> +	struct device *dev;
+> +};
+> +
+> +enum {
+> +	SW_CAMERA_OFF	=3D 0,
+> +	SW_CAMERA_ON	=3D 1,
+> +};
+> +
+> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_objec=
+t *obj)
+> +{
+> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> +
+> +	if (obj->type =3D=3D ACPI_TYPE_BUFFER &&
+> +	    obj->buffer.pointer[0] <=3D SW_CAMERA_ON) {
 
-While there, also remove the now unused fsparam_string_empty() macro.
+Hi,
 
-Suggested-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Luis Henriques <lhenriques@suse.de>
----
- fs/overlayfs/params.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+please check that the ACPI buffer has an appropriate size before you acces=
+s it.
+In this case, check that the ACPI buffer has a length of 1;
 
-diff --git a/fs/overlayfs/params.c b/fs/overlayfs/params.c
-index 112b4b12f825..6eb163ca4b92 100644
---- a/fs/overlayfs/params.c
-+++ b/fs/overlayfs/params.c
-@@ -139,12 +139,8 @@ static int ovl_verity_mode_def(void)
- 	return OVL_VERITY_OFF;
- }
- 
--#define fsparam_string_empty(NAME, OPT) \
--	__fsparam(fs_param_is_string, NAME, OPT, fs_param_can_be_empty, NULL)
--
--
- const struct fs_parameter_spec ovl_parameter_spec[] = {
--	fsparam_string_empty("lowerdir",    Opt_lowerdir),
-+	fsparam_string_or_flag("lowerdir",    Opt_lowerdir),
- 	fsparam_string("lowerdir+",         Opt_lowerdir_add),
- 	fsparam_string("datadir+",          Opt_datadir_add),
- 	fsparam_string("upperdir",          Opt_upperdir),
-@@ -424,12 +420,13 @@ static void ovl_reset_lowerdirs(struct ovl_fs_context *ctx)
-  *     "/data1" and "/data2" as data lower layers. Any existing lower
-  *     layers are replaced.
-  */
--static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
-+static int ovl_parse_param_lowerdir(struct fs_context *fc, struct fs_parameter *param)
- {
- 	int err;
- 	struct ovl_fs_context *ctx = fc->fs_private;
- 	struct ovl_fs_context_layer *l;
- 	char *dup = NULL, *iter;
-+	const char *name = param->string;
- 	ssize_t nr_lower, nr;
- 	bool data_layer = false;
- 
-@@ -441,7 +438,7 @@ static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
- 	/* drop all existing lower layers */
- 	ovl_reset_lowerdirs(ctx);
- 
--	if (!*name)
-+	if ((param->type == fs_value_is_flag) || (!*name))
- 		return 0;
- 
- 	if (*name == ':') {
-@@ -572,7 +569,7 @@ static int ovl_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 
- 	switch (opt) {
- 	case Opt_lowerdir:
--		err = ovl_parse_param_lowerdir(param->string, fc);
-+		err = ovl_parse_param_lowerdir(fc, param);
- 		break;
- 	case Opt_lowerdir_add:
- 	case Opt_datadir_add:
+> +		/* obj->buffer.pointer[0] is camera mode:
+> +		 *      0 camera close
+> +		 *      1 camera open
+> +		 */
+> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER,
+> +				    obj->buffer.pointer[0]);
+
+If SW_CAMERA_LENS_COVER is set, then it means that the camera lens is cove=
+red. So in this case
+you have to pass 1 when the camera is closed and 0 when the camera is open=
+ (basically the opposite
+of camera mode).
+
+> +		input_sync(priv->idev);
+> +	} else {
+> +		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
+> +	}
+> +}
+> +
+> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *contex=
+t)
+> +{
+> +	struct lenovo_wmi_priv *priv;
+> +
+> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +
+> +	priv->idev =3D devm_input_allocate_device(&wdev->dev);
+> +	if (!priv->idev)
+> +		return -ENOMEM;
+> +
+> +	priv->idev->name =3D "Lenovo WMI Camera Button";
+> +	priv->idev->phys =3D "wmi/input0";
+> +	priv->idev->id.bustype =3D BUS_HOST;
+> +	priv->idev->dev.parent =3D &wdev->dev;
+> +	input_set_capability(priv->idev, EV_SW, SW_CAMERA_LENS_COVER);
+> +
+
+Is there a way to determine the current state of the camera switch without=
+ having
+to wait for an WMI event?
+
+If its not possible to determine the current state of the camera switch, t=
+hen your
+driver has to defer the initialization of the input device until it knows =
+the current
+state of the camera switch. Otherwise the initial switch state reported by=
+ the
+input device might be wrong.
+
+In this case, that means your driver must initialize the input device when=
+ receiving
+a valid WMI event for the first time.
+
+Basically when your driver receives a WMI event, it has to check if the in=
+put device
+is already initialized. If this is not the case, then the input device is =
+initialized.
+Please protect this check and the input device initialization with a mutex=
+, since WMI
+event handling is multithreaded.
+
+After that the event is reported as usual.
+
+Other than that, the driver seems to be in good shape.
+
+Thanks,
+Armin Wolf
+
+> +	return input_register_device(priv->idev);
+> +}
+> +
+> +static const struct wmi_device_id lenovo_wmi_id_table[] =3D {
+> +	{ .guid_string =3D WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
+> +	{  }
+> +};
+> +
+> +static struct wmi_driver lenovo_wmi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "lenovo-wmi-camera",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D lenovo_wmi_id_table,
+> +	.no_singleton =3D true,
+> +	.probe =3D lenovo_wmi_probe,
+> +	.notify =3D lenovo_wmi_notify,
+> +};
+> +
+> +module_wmi_driver(lenovo_wmi_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
+> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
+> +MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
+> +MODULE_LICENSE("GPL");
