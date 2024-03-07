@@ -1,102 +1,235 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8402D63113
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 07:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9608E6310D
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 07:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709798123; cv=none; b=EOkccRbqNprpgxDiBBS0scYZI69bOpM8PYF+bxElREjqKZe4yh2QjVdBJ1NWVpjyIol8IJclwt6e4/HtWrlbVr4V6P6aWbMShVyMCrf9MugMYCPBmVjq0DNbBsacgtavYNVsT9RWcpVYg+uUfAkBqaAHMpUmFPeT6vPcjTWbCUo=
+	t=1709798144; cv=none; b=lp7xAlns5VXmwCda59Ex+Jwx+Gvoe0P5vNzYXiEIhRsHKhxpxUwkNTfFvO29PoJ+3hv0RxH8T9aKOZqfbwEOtQJj6ct6zzB/KBHaKJBcLzLZ/yAR/T3LKQ23kwbp30xoNBQDBr9csGBOk72mdEJX0eS69nDE5tJFLAlnNVq0azE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709798123; c=relaxed/simple;
-	bh=Aa66jG2WGimBH4GX5jmV/YXE8uZyBO6e9RgV/X53laE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NHHNwuC8JSq/GMMCyjQV4E4bs6B+Grbdm5ONyQwvA0KmK4fK/SvCuIdRGChM22MkD+wjF1OCGd2y3PrNCLc8Y4dHJXC6t7SrpbzrsL6orqmSwc0X0kkKSwV8zF8o/9L7qk/kOOtdZXOnPI5c3ohk28LWdWbhpYuYLzx889bSm/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vUInqjBw; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709798144; c=relaxed/simple;
+	bh=hJjhdaNUwAxii5nQBmY/ltozS1ZCFSHYR02AZtzuvzM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BXyldW246jFsP0V+l6yPlPmZGPzCvpw8aEHL5puhRH6rDmLrKYdisdnAWGBFdOU76UtJfZGmfB2Z0n9SBejK3u+az8kOGyrthZZm6pEWDOEgHkPQrVmmmso05gwvi3Ghp1DHd+d8KnHvL4a9DOZIJUjY9RfUBruuLhr5ZnPNVcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ZWRnljvn; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vUInqjBw"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a44d084bfe1so77796466b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 23:55:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709798120; x=1710402920; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bn0DWqG7g9N74WkvhFXOQ0ffZSSFhFrSnC9Q4XDpoto=;
-        b=vUInqjBwkR9a9RVfmg7a2IODcxTrbnVbXOEfzFN0264q073mNb80bbBgjHP8Do/nVc
-         wp7Wx1qxIdhGNQMSSWKZ7NFGHf8mDLbKzo6aMaz9W+9nyd5QFzFTheD49vjzk/KtTMIt
-         ZtieHxPNI2w0mAk4Kp8MTnSsml3ZhdD9LSYPrQrmSexAspUPt3YlBX8wnkUgAqx5m0/P
-         jjhRNQQfDn6U6fmNJqG+voG7IJpRCOLruKXL20NGZKQMkjxnaiyBc04Kn7OXEJcTzQJL
-         CXpr0BuuE1EKA7Nw36gGiapCd6RwREdTJVqIk7U2+elGEv/pTDqGI4hB18Oz+dxgHHa0
-         7gxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709798120; x=1710402920;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bn0DWqG7g9N74WkvhFXOQ0ffZSSFhFrSnC9Q4XDpoto=;
-        b=RERKcd6pNtFLFTyT+pBau8KjTylRzsof+0RQtfGHNs5HETwMPx1ET3zMVzSR4qFaPO
-         Z0WbQncG6QyG88ZRi1CMHpcLhfSH/OyJke64C2RgFhTGVWyapDaEqjUkW5N4OrJGi2gm
-         cM/Hcg/OHDhqUZHgAy8zo+l/raWiIPb2Svv0C+3xT8YE+TCGKkf8z94G4n0HkRgs3E7B
-         p6bOG7Y8VXbdAQDGlBVAW9gyQDIxoGRqRCZS0wtNaSdZgYeNeBPsigCGtC55GAc2IycA
-         MejiHdFD3XXDfY1i0IsprvqAGzXvALfZCCfwa9mC0aX6PTB7rU0q4OBIQG3VIHF0AVmk
-         DyMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwfJA51MGD+KkRyycADXPMf3f9t19Awof2Kpn5npWsj/Eyd98rUozQv7cl0HZZqZq/Echw6E3uMWuzEmHos7VGu0k/zFMDAdTUmLV6
-X-Gm-Message-State: AOJu0Yx8z16UX/jJaVYC1qJpt9d7uffvwEbyBCYakaBGPi0Q72V3Bst9
-	BCEvkZsBO9WGNO9A32Xjc632dL29fzuLBFG9ZpWXAxLEpdLR5lsG3Xml9iAc2gU=
-X-Google-Smtp-Source: AGHT+IHWh6qHbiDAcCnz7U/s5fQPQnTrwoA3CIOujNr0ES6F4oppiRIthyVdwep26V/Yz6L0NmQdfQ==
-X-Received: by 2002:a17:906:a456:b0:a3f:5144:ada2 with SMTP id cb22-20020a170906a45600b00a3f5144ada2mr11682129ejb.2.1709798119161;
-        Wed, 06 Mar 2024 23:55:19 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id lb7-20020a170906adc700b00a4479997b97sm7037985ejb.66.2024.03.06.23.55.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 23:55:18 -0800 (PST)
-Date: Thu, 7 Mar 2024 10:55:15 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQw==?= =?utf-8?Q?H?= v1 5/7] staging:
- media: starfive: Add ISP raw video device
-Message-ID: <17e9c68f-0019-4b76-908b-6763fb24eb22@moroto.mountain>
-References: <20240306093334.9321-1-changhuang.liang@starfivetech.com>
- <20240306093334.9321-6-changhuang.liang@starfivetech.com>
- <c474bd8f-6c23-4536-a915-efbc197a223e@moroto.mountain>
- <SHXPR01MB06715A4810E596B068029472F220A@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZWRnljvn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709798143; x=1741334143;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hJjhdaNUwAxii5nQBmY/ltozS1ZCFSHYR02AZtzuvzM=;
+  b=ZWRnljvnwDNoVc2Izc7kqTA8RRWbC9IWubyEAlzqS+2sOVO8ll2GEBtY
+   J7W5SI6JE/LUy4gCJrLkBuaMS3gwbB8GlrF/x6LSJY4fviAchspBTN/+4
+   UIEqBds5kHAZAtAUg3BV8bqxhMiZSkugxJsaHhTYrkbWXoNPaollJfOR5
+   dNVlXDUI/SBOEcvJG6NRfOUD4mWJ+heX9GwQbObCMu2RZ/QfXA/qiSw5m
+   8Nh0XcBJymDSx1buRz8OBBcp7jJPgqTVqMha4pmuOK/sXlad6bSaERY1G
+   B/tU9dfBt7zaijNmY1muWbgWuEpgKcHJW+gT68Ty5GU90CPHU59qFT9nL
+   w==;
+X-CSE-ConnectionGUID: yLB2gpleSK6dHLSN/Bgr/Q==
+X-CSE-MsgGUID: MZdFEMxTQiiSfCbGlN/hYA==
+X-IronPort-AV: E=Sophos;i="6.06,210,1705388400"; 
+   d="asc'?scan'208";a="17336139"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Mar 2024 00:55:41 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 7 Mar 2024 00:55:20 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Thu, 7 Mar 2024 00:55:18 -0700
+Date: Thu, 7 Mar 2024 07:54:34 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang
+	<jszhang@kernel.org>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Eric Biggers
+	<ebiggers@kernel.org>, Elliot Berman <quic_eberman@quicinc.com>, Charles Lohr
+	<lohr85@gmail.com>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 3/4] riscv: Decouple emulated unaligned accesses from
+ access speed
+Message-ID: <20240307-during-unlovely-d5c3cd6dc4a6@wendy>
+References: <20240306-disable_misaligned_probe_config-v7-0-6c90419e7a96@rivosinc.com>
+ <20240306-disable_misaligned_probe_config-v7-3-6c90419e7a96@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yMPX+f2X0itTroHT"
+Content-Disposition: inline
+In-Reply-To: <20240306-disable_misaligned_probe_config-v7-3-6c90419e7a96@rivosinc.com>
+
+--yMPX+f2X0itTroHT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SHXPR01MB06715A4810E596B068029472F220A@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 07, 2024 at 02:13:50AM +0000, Changhuang Liang wrote:
-> Hi, Dan
-> 
-> [...]
-> > >
-> > > +err_rm_links0:
-> > > +	media_entity_remove_links(&isp_dev->subdev.entity);
-> > 
-> > I don't think this line is correct.  I think we only need to remove
-> > &cap_yuv->video.vdev.entity.
-> > 
-> 
-> The instance I refer to needs to clear both the source entity and the sink entity. See
-> https://elixir.bootlin.com/linux/v6.8-rc7/source/drivers/media/platform/verisilicon/hantro_drv.c#L855
-> 
+On Wed, Mar 06, 2024 at 12:00:03PM -0800, Charlie Jenkins wrote:
+> Detecting if a system traps into the kernel on an unaligned access
+> can be performed separately from checking the speed of unaligned
+> accesses. This decoupling will make it possible to selectively enable
+> or disable each of these checks
 
-Oh yeah.  It's the same in v4l2_m2m_register_media_controller().
+> as is done in the following patch.
 
-regards,
-dan carpenter
+nit: these sort of comments can bitrot if things get backported or
+may not be accurate if only partial series get applied to a branch.
 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+> ---
+>  arch/riscv/include/asm/cpufeature.h  |  2 +-
+>  arch/riscv/kernel/cpufeature.c       | 25 +++++++++++++++++++++----
+>  arch/riscv/kernel/traps_misaligned.c | 15 +++++++--------
+>  3 files changed, 29 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm=
+/cpufeature.h
+> index 466e1f591919..6fec91845aa0 100644
+> --- a/arch/riscv/include/asm/cpufeature.h
+> +++ b/arch/riscv/include/asm/cpufeature.h
+> @@ -37,7 +37,7 @@ void riscv_user_isa_enable(void);
+> =20
+>  #ifdef CONFIG_RISCV_MISALIGNED
+>  bool unaligned_ctl_available(void);
+> -bool check_unaligned_access_emulated(int cpu);
+> +bool check_unaligned_access_emulated_all_cpus(void);
+>  void unaligned_emulation_finish(void);
+>  #else
+>  static inline bool unaligned_ctl_available(void)
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index 7878cddccc0d..abb3a2f53106 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -719,7 +719,8 @@ static int check_unaligned_access(void *param)
+>  	void *src;
+>  	long speed =3D RISCV_HWPROBE_MISALIGNED_SLOW;
+> =20
+> -	if (check_unaligned_access_emulated(cpu))
+> +	if (IS_ENABLED(CONFIG_RISCV_MISALIGNED) &&
+> +	    per_cpu(misaligned_access_speed, cpu) !=3D RISCV_HWPROBE_MISALIGNED=
+_UNKNOWN)
+>  		return 0;
+> =20
+>  	/* Make an unaligned destination buffer. */
+> @@ -896,8 +897,8 @@ static int riscv_offline_cpu(unsigned int cpu)
+>  	return 0;
+>  }
+> =20
+> -/* Measure unaligned access on all CPUs present at boot in parallel. */
+> -static int check_unaligned_access_all_cpus(void)
+> +/* Measure unaligned access speed on all CPUs present at boot in paralle=
+l. */
+> +static int check_unaligned_access_speed_all_cpus(void)
+>  {
+>  	unsigned int cpu;
+>  	unsigned int cpu_count =3D num_possible_cpus();
+> @@ -935,7 +936,6 @@ static int check_unaligned_access_all_cpus(void)
+>  				  riscv_online_cpu, riscv_offline_cpu);
+> =20
+>  out:
+> -	unaligned_emulation_finish();
+>  	for_each_cpu(cpu, cpu_online_mask) {
+>  		if (bufs[cpu])
+>  			__free_pages(bufs[cpu], MISALIGNED_BUFFER_ORDER);
+> @@ -945,6 +945,23 @@ static int check_unaligned_access_all_cpus(void)
+>  	return 0;
+>  }
+> =20
+> +#ifdef CONFIG_RISCV_MISALIGNED
+> +static int check_unaligned_access_all_cpus(void)
+> +{
+> +	bool all_cpus_emulated =3D check_unaligned_access_emulated_all_cpus();
+> +
+> +	if (!all_cpus_emulated)
+> +		return check_unaligned_access_speed_all_cpus();
+> +
+> +	return 0;
+> +}
+> +#else
+> +static int check_unaligned_access_all_cpus(void)
+> +{
+> +	return check_unaligned_access_speed_all_cpus();
+> +}
+> +#endif
+> +
+>  arch_initcall(check_unaligned_access_all_cpus);
+> =20
+>  void riscv_user_isa_enable(void)
+> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/tra=
+ps_misaligned.c
+> index c2ed4e689bf9..e55718179f42 100644
+> --- a/arch/riscv/kernel/traps_misaligned.c
+> +++ b/arch/riscv/kernel/traps_misaligned.c
+> @@ -596,7 +596,7 @@ int handle_misaligned_store(struct pt_regs *regs)
+>  	return 0;
+>  }
+> =20
+> -bool check_unaligned_access_emulated(int cpu)
+> +static bool check_unaligned_access_emulated(int cpu)
+>  {
+>  	long *mas_ptr =3D per_cpu_ptr(&misaligned_access_speed, cpu);
+>  	unsigned long tmp_var, tmp_val;
+> @@ -623,7 +623,7 @@ bool check_unaligned_access_emulated(int cpu)
+>  	return misaligned_emu_detected;
+>  }
+> =20
+> -void unaligned_emulation_finish(void)
+> +bool check_unaligned_access_emulated_all_cpus(void)
+>  {
+>  	int cpu;
+> =20
+> @@ -632,13 +632,12 @@ void unaligned_emulation_finish(void)
+>  	 * accesses emulated since tasks requesting such control can run on any
+>  	 * CPU.
+>  	 */
+> -	for_each_online_cpu(cpu) {
+> -		if (per_cpu(misaligned_access_speed, cpu) !=3D
+> -					RISCV_HWPROBE_MISALIGNED_EMULATED) {
+> -			return;
+> -		}
+> -	}
+> +	for_each_online_cpu(cpu)
+> +		if (!check_unaligned_access_emulated(cpu))
+> +			return false;
+> +
+>  	unaligned_ctl =3D true;
+> +	return true;
+>  }
+> =20
+>  bool unaligned_ctl_available(void)
+>=20
+> --=20
+> 2.43.2
+>=20
+
+--yMPX+f2X0itTroHT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZelyugAKCRB4tDGHoIJi
+0g3VAP9QiE8HW9ysP2EHv2XnwmEKajEm0LsQscHBZIVHRWhFYQEAvADvRw/xG0WR
+7PP/F8RBUjLO3kGm9BX/dVzrWZ0I9gk=
+=bbOd
+-----END PGP SIGNATURE-----
+
+--yMPX+f2X0itTroHT--
