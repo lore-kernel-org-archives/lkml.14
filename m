@@ -1,145 +1,96 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3E780C1F;
-	Thu,  7 Mar 2024 08:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A640A82883;
+	Thu,  7 Mar 2024 08:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709801071; cv=none; b=NVWgiL67RMxEBQtm/Z5hcUhYculAFhozX2N9Ks3sJ2GVRnz59PIUsDOeKpg7F4aBP5HoIzjSoh08ysENo7eGRpb+EUnpdn8qgZx3Jo1axB5qJ6uFzKR7xirIgxt3cL/b/jIfDTEl0bie1w0WGB5G/Jc9ViQGSFkD3y02vDrri8Y=
+	t=1709801096; cv=none; b=YDeTMo/aK0u5PL4VKGvxrcH/fewEIkyjiN32Sh0S1VWftRXneGDPBZxYC+6J072cz2NOfi4OVaZe9u5a9DQ/GtnOQcgEgpP7dfEIhHgZjmnphhkmPWXbzfG8qKLTcg5n5u+TBKaQnK9HtT+voX6q/hbg/Fv8CESZKAXX97g0KCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709801071; c=relaxed/simple;
-	bh=TImqIAoJvStQdyHuXOudqUE7tZvk0JApfWvejmmmwpM=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=p2+ZFc51lddYbywY6VWdF9f6HxP6m3Rirk1ldGK2qmn3Mqc4CB4jB/bZ7pHVJpF7PpSHhTWwfuLcMJPCfJZzbnCN7hYzUq/QlECp5LB0a7G+8KMKZpaNlBZiweOaAFJ6SqhCtU4XaZM9a9Fj4QYvi1u2Aq1Epgg6yo2suiKmrJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=gW+LiIMh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=q9x+Oejp; arc=none smtp.client-ip=64.147.123.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="gW+LiIMh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="q9x+Oejp"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 6F05E18000AB;
-	Thu,  7 Mar 2024 03:44:25 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 07 Mar 2024 03:44:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709801064; x=1709887464; bh=3x5EJge/Em
-	DoFbef/njqgwd3SUh9kx0m4dgwsd9pvxQ=; b=gW+LiIMhZ5dX+1y2jIuxu8urAV
-	I+94yqHIdHWJxG0UXkjcYfSOK6dQsSOi32Iv+aP7Jv5/JYJtlX6Y5i7goqvdlytM
-	5pH5oDSV6mBMltpmG6VaGNsrWcuIA4ebtVZDEUoTyIneh7XWkqr6OYzvd1m+i/pd
-	U9b90JwQgECo6EShjOk3WeNFU+mqUsAbjPHJ+E5EKY4Xn3fhanYASY54RzDB9T+L
-	jumYGX8OD4uGLR5hDXLkrmXLYo3zegUM0FfiSw0CytA7jfXHG/Nag2EX7RC8ZM29
-	P7z/fNb/NhuWWXmbYPHnL1L6azxhgE2vD1X4RmENlHy8M3DBh+a7scqE/Waw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709801064; x=1709887464; bh=3x5EJge/EmDoFbef/njqgwd3SUh9
-	kx0m4dgwsd9pvxQ=; b=q9x+OejpwtxbInNV1pB+5UsW7B1Gw4/FdTM3Lrx85V09
-	tdnjq2nB4gxHdPkLexUIzWthuucc9iHoAF90BtEFSoLKWf9CWdFkTdPQ3qijhNth
-	Mj6amIrIcPhvwecUdxtRmy1ogm74ZRahxuuuedS+Pu6MjxqnFU91Qf96aDxvjFnU
-	Yh18JOHQxwrluTDgkI+Bj+ANNzWuIWfmCtLSJAPLRPnsqzpJnVrCIRUnrx2pQ1fH
-	eItLh4mm5V9ECSZAwNzt4q8IZXVkoDTvggYwWdgl41eSrwG/C2suz1RfEyOdmI7P
-	b5g0/2Ox+LDS2ZrirDM+E+c8dkomK51laVaVmgwV1g==
-X-ME-Sender: <xms:aH7pZQRMTZnFz-kMyHV_9d4-GkQ2_djj4i8jWTM-XNQPbrPvngIyiQ>
-    <xme:aH7pZdwR24tzB5RUIHDCB7PsVwoBT_PabPcsOyxqa2ingmIDh7Vg8Xl2hqGOK8Ytl
-    RT4xwU0TXul7CpzhiY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledriedvgdduvddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:aH7pZd2agpRhZ7xsM1ATy3YKuwahGSz9xgCYItToeCPtFbApie4mrw>
-    <xmx:aH7pZUDqXUFNDhPSfBf4_cs6UUiHfHtDnqKgZ_asrswjo97rznzNfg>
-    <xmx:aH7pZZgBtuTvRxv0bmng63ucxota81RZhVR3D0hHA_s6u20_sf1YPA>
-    <xmx:aH7pZaGW_1q3sGd-4J14uI4cgPzvA_M0NAq9q0f446gyEUjUSUDroLfb2fQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 2E7F5B6008D; Thu,  7 Mar 2024 03:44:23 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	s=arc-20240116; t=1709801096; c=relaxed/simple;
+	bh=fZTndBaRGIc7XTnn+2HLU5SFyVILvATus03elPoOvG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eawnzU4w8EpNqrXE556NBF5imMCx4EZbtzt4ryTx7/pkk4w9VMcxWpMLjG9SFXfBOjxlGQ6TZq0AR/feG/cpldcWuS0tVSIXT6G1MiE02TmRAiJONbh0cjx53PNX5GwnhX8EcdzxhEzeSComY+zXunr3BQfUOu0W9U4YNI9eohs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcbf82cdf05so595349276.2;
+        Thu, 07 Mar 2024 00:44:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709801092; x=1710405892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a6KGx5cJC7n/o7O+84TUUVjMC/DZFxOfsHhOH0F6S8s=;
+        b=tKSleO7PtgGA83MgoTaijIjyZNmLtMN3Ne+0gHcGuzR0geJmh4MxW7iH2ib1cu7om4
+         JG1Afwn6i4Fka+l8fStANu26xw3Cq0MQRJtFu8H8wQHVE9hvCTDgMSsDZ+DzF8dJyzCJ
+         VF3IGxGaBHkqIq0JhzDpkkqS43jKXbqhrNVM8QD8nIEgun2NPVyOZiy3Lg6/s6MS5At6
+         G4IHFAW6mtgUEVJeOoQy1EVNqrEvq/wwmhCCuDmimEDRHvpZ2Ech2oSucxLKm2DqkLwp
+         qUIJCnNvXqWY3NDlhWM7gAY3hpAamEQGYWup/NyIWUrmbm9nCOw8jHxZs7Y5CtAGiH1X
+         +DAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXH+Vh2WIiiYkK9HmQvADovzxQTCdhhDoF+18amPmfV6jflLxnasAdUCFYuJKLTcPM158MIZzjJ5/miA9cxhZflRz/+WAgG6V3lVYy7gO3L3+iTqsqnlSQGj6EmwcqycVizZGHxl+0zNBS9qmFoIrvb+AFSgZexEjvsLKhlMc+lFPEQGIchBYFBwhiEVpP3QGknYJS7Fk6Ti5MGZiki1oizNi/I+l0zkIhy
+X-Gm-Message-State: AOJu0YxspiAMDDItXIeFxCl/7n2vnM3+76LTb71TxqQFPAyHknwJhxGq
+	XPZbBPZYNj1KcWqRpOl0rZuL4CeqAS2VSEanY/7V9J4KRWYHePETVsOUHPmnn5k=
+X-Google-Smtp-Source: AGHT+IGc7m4g4Pb6b4U2eS9YbjCT13EuMWTe1kXONwhI/+jR4L1FviP+F3kmYJB0qQiKFihK0Rug+A==
+X-Received: by 2002:a25:8a01:0:b0:dcd:407d:52e5 with SMTP id g1-20020a258a01000000b00dcd407d52e5mr15473596ybl.29.1709801092479;
+        Thu, 07 Mar 2024 00:44:52 -0800 (PST)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
+        by smtp.gmail.com with ESMTPSA id i3-20020a056902068300b00dc74ac54f5fsm3395091ybt.63.2024.03.07.00.44.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 00:44:51 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-609acac53d0so5784217b3.1;
+        Thu, 07 Mar 2024 00:44:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUXD0LnnWPV6JllKRTeR8sR9Rl+fDLwkLpXa1gVhLk3mOw62Om2azyj5BIQyL/CKRyIEXrZbe4UWkqv7AvLz57y1C6+X9xVdIts6uWCD2+9iPnzRQvR96+21uxSeBEsHQ6stvomPN4eomd23d3wDiu+ZNW0BRLmCtzi8gQIHbXlfaIDwuP3VqIsvR36eLLbvYSExq6DK1ArBP/w7axUOnXv5MqIYsA1LDJ9
+X-Received: by 2002:a81:7c0b:0:b0:608:cbf2:518a with SMTP id
+ x11-20020a817c0b000000b00608cbf2518amr18018502ywc.49.1709801091706; Thu, 07
+ Mar 2024 00:44:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <c9e9da9f-ff81-48eb-beec-4f54921cd268@app.fastmail.com>
-In-Reply-To: 
- <f23da383a8fdbee15acd41fdcd38ef3a89045a43.1709780590.git.haibo1.xu@intel.com>
-References: <cover.1709780590.git.haibo1.xu@intel.com>
- <f23da383a8fdbee15acd41fdcd38ef3a89045a43.1709780590.git.haibo1.xu@intel.com>
-Date: Thu, 07 Mar 2024 09:44:03 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Haibo Xu" <haibo1.xu@intel.com>
-Cc: "Alison Schofield" <alison.schofield@intel.com>,
- "Jisheng Zhang" <jszhang@kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
- "Conor.Dooley" <conor.dooley@microchip.com>, guoren <guoren@kernel.org>,
- "Zong Li" <zong.li@sifive.com>, "James Morse" <james.morse@arm.com>,
- linux-riscv@lists.infradead.org, "Ard Biesheuvel" <ardb@kernel.org>,
- "Baoquan He" <bhe@redhat.com>, acpica-devel@lists.linux.dev,
- "Robert Moore" <robert.moore@intel.com>, linux-acpi@vger.kernel.org,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "Greentime Hu" <greentime.hu@sifive.com>,
- "Dan Williams" <dan.j.williams@intel.com>, "Len Brown" <lenb@kernel.org>,
- "Albert Ou" <aou@eecs.berkeley.edu>,
- "Alexandre Ghiti" <alexghiti@rivosinc.com>,
- "Charlie Jenkins" <charlie@rivosinc.com>,
- "Chen Jiahao" <chenjiahao16@huawei.com>,
- "Yuntao Wang" <ytcoode@gmail.com>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- =?UTF-8?Q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>,
- "Haibo Xu" <xiaobo55x@gmail.com>, "Anup Patel" <apatel@ventanamicro.com>,
- "Tony Luck" <tony.luck@intel.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org,
- "Samuel Holland" <samuel.holland@sifive.com>,
- "Evan Green" <evan@rivosinc.com>, "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Andrew Jones" <ajones@ventanamicro.com>
-Subject: Re: [PATCH v2 5/6] ACPI: NUMA: Remove ARCH depends option in ACPI_NUMA Kconfig
-Content-Type: text/plain
+References: <20240306231007.13622-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240306231007.13622-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240306231007.13622-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 7 Mar 2024 09:44:40 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUi5U1BjcdFu1p7PrUteuRxwWiQm39c-tprxA=_LED0DA@mail.gmail.com>
+Message-ID: <CAMuHMdUi5U1BjcdFu1p7PrUteuRxwWiQm39c-tprxA=_LED0DA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: serial: renesas,scif: Move ref for
+ serial.yaml at the end
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 7, 2024, at 09:47, Haibo Xu wrote:
-> x86/arm64/loongarch would select ACPI_NUMA by default and riscv
-> would do the same thing, so the dependency is no longer needed
-> since these are the four architectures that support ACPI.
+On Thu, Mar 7, 2024 at 12:11=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
-> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> ---
->  drivers/acpi/numa/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
+> In preparation for adding more validation checks move the ref for
+> 'serial.yaml' to the end and also move reset check in 'allOf' block.
 >
-> diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
-> index 849c2bd820b9..2bf47ad1ec9b 100644
-> --- a/drivers/acpi/numa/Kconfig
-> +++ b/drivers/acpi/numa/Kconfig
-> @@ -2,7 +2,6 @@
->  config ACPI_NUMA
->  	bool "NUMA support"
->  	depends on NUMA
-> -	depends on (X86 || ARM64 || LOONGARCH)
->  	default y if ARM64
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Can we remove the prompt as well and make this a
-hidden option? I think this is now always selected
-when it can be used anyway.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-If we make it
+Gr{oetje,eeting}s,
 
-      def_bool NUMA && !X86
+                        Geert
 
-then the select statements except for the X86_64_ACPI_NUMA
-can also go away.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-      Arnd
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
