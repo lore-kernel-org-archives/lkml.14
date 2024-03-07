@@ -1,97 +1,75 @@
-Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B069412FF60
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 17:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89F912FF7C;
+	Thu,  7 Mar 2024 17:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709830852; cv=none; b=ryNTb/w+cb26WQ2+1y7eXm136kcA5r2WpA5y7Rt+idlqFQLZ739Opc3gGxTVU0R8c4FHai4EjI4hrW7M8DHJTfvggzEqkjqcllN8g88lfoJ3lZOtsDaDDIlp4myzuMkpATwXHf9udzZt0XZ7YjooDqNrdF+4w2W/jFcqWMeCZjw=
+	t=1709830908; cv=none; b=o0gxhTx+Y1BWLGRrVxMd6iaoMTZ1NgoaT6OnSpIV2KXvoZTC6txKHcH1jm/leaRuGUMkUdk0LnpXrYKRW8tG90PWqZa5LkxbUUKzw6JhtA79/HDgeEvzKYJAvmwlT3asZMQm7VsUGuSdeD7afwoQw51tIr2FyAeydyGVsU1dM2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709830852; c=relaxed/simple;
-	bh=x81ybjupnyX+PAUmlHwHcC5WFsdaIVVpOu7gQj0Xl4w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rxFvu5bxzJe3Em32xSo32f5sby3HtUk/JwN83GJhIlG9Nr8CXyTFSA+dIS91YX9mx2hxaZEfimPUs2UQSpw6QPy+hUcDY1kZMZDNNgUmWVAKQSn9muPgLMo/524YRm58kdJlmuBSKbnGbGc8hk3pLqMd1KtK70JMU83fwsxcG0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
-Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 427H0bgb3857411;
-	Thu, 7 Mar 2024 22:30:37 +0530
-Received: (from sunil@localhost)
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 427H0bGp3857410;
-	Thu, 7 Mar 2024 22:30:37 +0530
-From: Sunil Khatri <sunil.khatri@amd.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Shashank Sharma <shashank.sharma@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Mukul Joshi <mukul.joshi@amd.com>,
-        Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>,
-        Sunil Khatri <sunil.khatri@amd.com>
-Subject: [PATCH 2/2] drm/amdgpu: add vm fault information to devcoredump
-Date: Thu,  7 Mar 2024 22:29:32 +0530
-Message-Id: <20240307165932.3856952-3-sunil.khatri@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240307165932.3856952-1-sunil.khatri@amd.com>
-References: <20240307165932.3856952-1-sunil.khatri@amd.com>
+	s=arc-20240116; t=1709830908; c=relaxed/simple;
+	bh=7G4vPcy1mVijMS9YptzTs4Sy9VY1PByVCAyawRbldZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ttkpggNCg8EBOJC0M5fVV4tc32asURq42SX8MhOMW4ej1N/rLBfKUFc1omxgCsBc7WVFO0re9+td2aZcjVcmgzRkLSeenhH4r1xbBm3jebj+c5lmVtlGRf57mcusf4qW95YLojCjGcNp2P9cul9SE9yerw0i4v/bg22bZTm7VzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V05fzXYX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V05fzXYX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94FAEC433F1;
+	Thu,  7 Mar 2024 17:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709830907;
+	bh=7G4vPcy1mVijMS9YptzTs4Sy9VY1PByVCAyawRbldZo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=V05fzXYXPZJtUZZkphCUMCbcmNTYxpe5srx+UWvP1T0xxlIrhwkrlFqnCihMnLfRw
+	 mW1+jEfwzbc4uzz672NEfHJ9q1yUTmrzpvdawpMZVsM8khCyt6WqHDK4tMQh/5/0Dz
+	 3P17nayM+w019SlqInHJRrmrRbVc6NnC/xg3Cu8XeVHkJhSDGEb7noBhMAWOCJlpzf
+	 t6xm9DHf4fX+IkQPD4l7qkm8Uz64u/6vBJIozxfdHxS/sB1D50E1cRzyTyWLCEOlNB
+	 nx8x8+trQODCI8eFY2DxsbuF2pEfMFl1LJHkxlHrLyzplpH/sapqinQqOBnfXgc9NA
+	 5n+MloVbNUYBg==
+Date: Thu, 7 Mar 2024 09:01:45 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>, Shradha Gupta
+ <shradhagupta@microsoft.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+ <linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Ajay Sharma <sharmaajay@microsoft.com>, Leon
+ Romanovsky <leon@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, KY Srinivasan
+ <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Long Li <longli@microsoft.com>, Michael Kelley
+ <mikelley@microsoft.com>
+Subject: Re: [PATCH] net :mana : Add per-cpu stats for MANA device
+Message-ID: <20240307090145.2fc7aa2e@kernel.org>
+In-Reply-To: <DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com>
+References: <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
+	<20240307072923.6cc8a2ba@kernel.org>
+	<DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add page fault information to the devcoredump.
+On Thu, 7 Mar 2024 15:49:15 +0000 Haiyang Zhang wrote:
+> > > Extend 'ethtool -S' output for mana devices to include per-CPU packet
+> > > stats  
+> > 
+> > But why? You already have per queue stats.  
+> Yes. But the q to cpu binding is dynamic, we also want the per-CPU stat 
+> to analyze the CPU usage by counting the packets and bytes on each CPU.
 
-Output of devcoredump:
-**** AMDGPU Device Coredump ****
-version: 1
-kernel: 6.7.0-amd-staging-drm-next
-module: amdgpu
-time: 29.725011811
-process_name: soft_recovery_p PID: 1720
+Dynamic is a bit of an exaggeration, right? On a well-configured system
+each CPU should use a single queue assigned thru XPS. And for manual
+debug bpftrace should serve the purpose quite well.
 
-Ring timed out details
-IP Type: 0 Ring Name: gfx_0.0.0
-
-[gfxhub] Page fault observed
-Faulty page starting at address 0x0000000000000000
-Protection fault status register:0x301031
-
-VRAM is lost due to GPU reset!
-
-Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-index 147100c27c2d..dd39e614d907 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-@@ -203,8 +203,20 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
- 			   coredump->ring->name);
- 	}
- 
-+	if (coredump->adev) {
-+		struct amdgpu_vm_fault_info *fault_info =
-+			&coredump->adev->vm_manager.fault_info;
-+
-+		drm_printf(&p, "\n[%s] Page fault observed\n",
-+			   fault_info->vmhub ? "mmhub" : "gfxhub");
-+		drm_printf(&p, "Faulty page starting at address 0x%016llx\n",
-+			   fault_info->addr);
-+		drm_printf(&p, "Protection fault status register:0x%x\n",
-+			   fault_info->status);
-+	}
-+
- 	if (coredump->reset_vram_lost)
--		drm_printf(&p, "VRAM is lost due to GPU reset!\n");
-+		drm_printf(&p, "\nVRAM is lost due to GPU reset!\n");
- 	if (coredump->adev->reset_info.num_regs) {
- 		drm_printf(&p, "AMDGPU register dumps:\nOffset:     Value:\n");
- 
--- 
-2.34.1
-
+Please note that you can't use num_present_cpus() to size stats in
+ethtool -S , you have to use possible_cpus(), because the retrieval
+of the stats is done in a multi-syscall fashion and there are no
+explicit lengths in the API. So you must always report all possible
+stats, not just currently active :(
