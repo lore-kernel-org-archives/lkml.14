@@ -1,177 +1,139 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9F7137C5A;
-	Thu,  7 Mar 2024 20:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411941332B3
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 20:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709842680; cv=none; b=heFPavcxxNYeoi2CCILAuWJIDF5RQHu5Iz6VCFriKzOKVW7T4ppVzljJhUR1o1AsdNehAEUjIR3Lav/vsFkou45TphVejBSMHWJM6rONhvBKZHc8X5SJsG0IUb5P1ZpT32O3aIZyIJRzZ874KnKWBklP1KYJletDChZdEPFEYMQ=
+	t=1709842722; cv=none; b=snUMLq0tD26H8HSB+GHpdYQZPTR5dD0PCJWSQhNWlLh3w2K8REcSaWd8R1hioYr5I4LPuigPnEXgfjMcm69sSSAE+55XbL6+Ao+qsJD3kq8MnJJ+86JlWCIID8za9H2bzdLKLFZfqdtrxku6kWPcQJDuEhAyUe2EzvSyPVNzBEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709842680; c=relaxed/simple;
-	bh=r/8blkKqYPsCBkHFNYcQBtfslcTcKITOwPP4iW8Ofpk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=Znf96/L66RbkpV0JN6fC1k15+xADtZJeb2uExLYsT7aCvkVg0kfYsScfT3YYkBCiW7vQKONtQgsM4T0HX+XvI6HeDX7MJYmfRl0tOa3dbP/QwPHw8MRO80YpZ/shQfu+5m0mz4cp6MLNfCCEeoz5B7RyQn/K5p/eEHqofCqo4E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=q5E6ACEX; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709842722; c=relaxed/simple;
+	bh=sUbCpYjNTBPADWmBmZOyBcxK/ihUSUaSQdgDSHI4MIY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tr/kpExUG0+td9JvAV37upMMLRxg5wy47fpLL0gVPdvlSCVZJzOvw95Y8iOjaNVmdyJqcjDF+YTax8K3nfYNdv9mjgDvPYIJDmdHRDx5j95vGolu03Z6lRLN9VX0aPjbfivKoVgCG+CpEWAqCKV8aXjdb6i/aHNv2FXYJZqv4dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gJSu/7BI; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="q5E6ACEX"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 427K2M8n024240;
-	Thu, 7 Mar 2024 20:17:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=ATyzSmY6hc2fJ6cvh377et3WJ2a2h5UtxL9G4l1VoRQ=;
- b=q5E6ACEXgJ9n/+bofQ45jHmMpHLtkGhtLV0cst3vT5nIgTpSfYbZC6VKXl298Mkhw4oH
- 2q6TLgx+QRApD6Md604BGN2ERxMxdWhdRQJATZUGA0hhIUQJk+phHBkWaoltLBtyGiLm
- svcEdbXzyznlzg5MSUTW+7vIL0681EnCyKVSBn4gGaymIc1V5DMHgjEEKG+Sm0aDNo7B
- 92IUOKvdI/GUzIEuTOrPB1OSxewib6zFEUmffkwDd2aHlImnQPOy3BzmUdgpwrsGRitw
- PDips5I7zZgVWZWjs+yK+5vvJTu1Y7JauDFritrsEkgoQvkelKJEmaSE4xyumE9tLgDO FQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqm8ur7j1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 20:17:11 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 427KEjdu026733;
-	Thu, 7 Mar 2024 20:17:10 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqm8ur7gx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 20:17:10 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 427IDGK8006063;
-	Thu, 7 Mar 2024 20:17:09 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmeetg72m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 20:17:09 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 427KH69H31523288
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Mar 2024 20:17:08 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7C44258064;
-	Thu,  7 Mar 2024 20:17:06 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D725258062;
-	Thu,  7 Mar 2024 20:17:03 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.133.222])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  7 Mar 2024 20:17:03 +0000 (GMT)
-Message-ID: <ed5df367582f0c5e212638a12204fd20fd8e46e5.camel@linux.ibm.com>
-Subject: Re: [RFC][PATCH 4/8] ima: Add digest_cache_measure and
- digest_cache_appraise boot-time policies
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, corbet@lwn.net,
-        dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-        wufan@linux.microsoft.com, pbrobinson@gmail.com, zbyszek@in.waw.pl,
-        hch@lst.de, mjg59@srcf.ucam.org, pmatilai@redhat.com, jannh@google.com,
-        dhowells@redhat.com, jikos@kernel.org, mkoutny@suse.com,
-        ppavlu@suse.com, petr.vorel@gmail.com, petrtesarik@huaweicloud.com,
-        mzerqung@0pointer.de, kgold@linux.ibm.com,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date: Thu, 07 Mar 2024 15:17:03 -0500
-In-Reply-To: <20240214143525.2205481-5-roberto.sassu@huaweicloud.com>
-References: <20240214143525.2205481-1-roberto.sassu@huaweicloud.com>
-	 <20240214143525.2205481-5-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gJSu/7BI"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e4da29904eso694867a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 12:18:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709842720; x=1710447520; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7MCQxZzA+X4VwUId6l+G07DVSjCf5LO0NLL8gGAxMXc=;
+        b=gJSu/7BIFCqsbycnRGE3G4cx0Y9tP1SSFkzKAkviVRH6mZiYpGvOkvdaX36hfXQZRL
+         xdFAVNYW9X+KTo05mhIPhWUPaTnk/42SLGGtAfeIZjfAw96hapEu44Kth3knrkt63crE
+         cM60faOXdOi05R0X6XfHhYm7wObjLQrdfozp0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709842720; x=1710447520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7MCQxZzA+X4VwUId6l+G07DVSjCf5LO0NLL8gGAxMXc=;
+        b=hFkH+8lymTWNIZwz7lcOLpOxAZWsnbs3HsqiTvJ6ZX4G/gi94zn6h/SgQxm0/d3o7i
+         XcVugj9jTHjRvPvvLuTS/92Dm9EN6qiRDvNSPgj3w47I6Lei/kQiHAUok04xh7WLD5oG
+         Uju9LHt97G+TqA5lq0YE9I4uNrCi7F2F0Lbw75vCt6frY47Zxn8MHdbGPJUN8jb5/IQj
+         yppwT/A4QpNCl8w3FNaoeAaiBq1m3G8wcmaMKsynfjnqfDfL5x/2SlBboggQVPWSaqYb
+         fBl/lGR2dQvozUT3gUyk+KmYE1W/zqJJmxNJpnMawxsctqzzAYJ/ygMltcPCymGdW2cD
+         Y0sw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGVssCsDu1bfkqI0RJVHkNzk3ZIdLuVXYyS8Qk8FipdB5w43gtmwQA1VvObhYLRZ0ALy5zpqlZnDTVb7nTkiPMhTV7VxY4WW+5w6Nn
+X-Gm-Message-State: AOJu0YxfbqQY+zJmFnrpyEqLf/Ni4AW45kRv7YNGQOx8YQYCUrxZiLq/
+	S5tpIRJ88V/45OBLQXGI6HvdyXRvFCBZ5Al8Ofr6kB+bMUwXzSDGpvfF8kPWD5i8GU86AILIihR
+	7ITKzNa58rykujYvt3qbElDfyPVa6QF+WtQdD
+X-Google-Smtp-Source: AGHT+IHnQWZq5sTkoFgDP1OClhsVZQSs/T5a+/TDdaivOzpMFvr9a2x5ufdUSv5PqX6045dLB9IK5AV4mGBEBemRhEM=
+X-Received: by 2002:a05:6830:2052:b0:6e4:8c94:bf6f with SMTP id
+ f18-20020a056830205200b006e48c94bf6fmr8906984otp.37.1709842720376; Thu, 07
+ Mar 2024 12:18:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: TfqGrkqKNzvW7VbgqMWaMNGsy172yF4L
-X-Proofpoint-ORIG-GUID: w_l64ZQrM3m9TfhqJDI21trE_EDpnMAA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_15,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 clxscore=1015
- phishscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403070142
+MIME-Version: 1.0
+References: <20240306200353.1436198-1-hsinyi@chromium.org> <20240306200353.1436198-7-hsinyi@chromium.org>
+ <CAD=FV=VvhKZHVzHQdOO=_p0E5m7ig1LY2s5MZRojRynKHbF1xw@mail.gmail.com> <87msraw4q6.fsf@intel.com>
+In-Reply-To: <87msraw4q6.fsf@intel.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Date: Thu, 7 Mar 2024 12:18:14 -0800
+Message-ID: <CAJMQK-izRv18V1o7_Q23vWFXQsFgaR74xxZ4Vby0FVtNn21TMg@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] drm/panel-edp: Fix AUO 0x405c panel naming and add
+ a variant
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Doug Anderson <dianders@chromium.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-02-14 at 15:35 +0100, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
-> 
-> Specify the 'digest_cache_measure' boot-time policy with 'ima_policy=' in
-> the kernel command line
+On Thu, Mar 7, 2024 at 5:28=E2=80=AFAM Jani Nikula <jani.nikula@linux.intel=
+.com> wrote:
+>
+> On Wed, 06 Mar 2024, Doug Anderson <dianders@chromium.org> wrote:
+> > Hi,
+> >
+> > On Wed, Mar 6, 2024 at 12:04=E2=80=AFPM Hsin-Yi Wang <hsinyi@chromium.o=
+rg> wrote:
+> >>
+> >> @@ -1009,6 +1009,19 @@ static const struct panel_desc auo_b101ean01 =
+=3D {
+> >>         },
+> >>  };
+> >>
+> >> +static const struct drm_display_mode auo_b116xa3_mode =3D {
+> >> +       .clock =3D 70589,
+> >> +       .hdisplay =3D 1366,
+> >> +       .hsync_start =3D 1366 + 40,
+> >> +       .hsync_end =3D 1366 + 40 + 40,
+> >> +       .htotal =3D 1366 + 40 + 40 + 32,
+> >> +       .vdisplay =3D 768,
+> >> +       .vsync_start =3D 768 + 10,
+> >> +       .vsync_end =3D 768 + 10 + 12,
+> >> +       .vtotal =3D 768 + 10 + 12 + 6,
+> >> +       .flags =3D DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+> >> +};
+> >> +
+> >>  static const struct drm_display_mode auo_b116xak01_mode =3D {
+> >>         .clock =3D 69300,
+> >>         .hdisplay =3D 1366,
+> >> @@ -1990,7 +2003,9 @@ static const struct edp_panel_entry edp_panels[]=
+ =3D {
+> >>         EDP_PANEL_ENTRY('A', 'U', 'O', 0x239b, &delay_200_500_e50, "B1=
+16XAN06.1"),
+> >>         EDP_PANEL_ENTRY('A', 'U', 'O', 0x255c, &delay_200_500_e50, "B1=
+16XTN02.5"),
+> >>         EDP_PANEL_ENTRY('A', 'U', 'O', 0x403d, &delay_200_500_e50, "B1=
+40HAN04.0"),
+> >> -       EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "=
+B116XAK01.0"),
+> >> +       EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "=
+B116XAN04.0"),
+> >> +       EDP_PANEL_ENTRY2('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, =
+"B116XAK01.0 ",
+> >
+> > Remove the trailing space from the string above now?
+>
+> Maybe it actually needs to be considered part of the name; see my other
+> reply in the earlier patch.
+>
+I randomly checked 3 of the AUO panels that I had a datasheet with,
+and all of them have a white space padding before \n.
+The descriptor of that field is marked as "Reserved for definition",
+unlike other characters, representing the name, which are marked with
+"Manufacture P/N".
 
-The 'built-in' policies may be specified on the boot command line.  Please
-update Subject line, to user the term "built-in" as well as here.
+For this example, do we still want to consider the white space part of
+the name? I know they didn't follow the spec exactly.
 
->  to add the following rule at the beginning of the
-> IMA policy, before other rules:
-
-Comments below...
-
-> 
-> measure func=DIGEST_LIST_CHECK pcr=12
-> 
-> which will measure digest lists into PCR 12 (or the value in
-> CONFIG_IMA_DIGEST_CACHE_MEASURE_PCR_IDX).
-> 
-> 'digest_cache_measure' also adds 'digest_cache=content pcr=12' to the other
-> measure rules, if they have a compatible IMA hook. The PCR value still
-> comes from CONFIG_IMA_DIGEST_CACHE_MEASURE_PCR_IDX.
-> 
-> Specify 'digest_cache_appraise' to add the following rule at the beginning,
-> before other rules:
-> 
-> appraise func=DIGEST_LIST_CHECK appraise_type=imasig|modsig
-> 
-> which will appraise digest lists with IMA signatures or module-style
-> appended signatures.
-> 
-> 'digest_cache_appraise' also adds 'digest_cache=content' to the other
-> appraise rules, if they have a compatible IMA hook.
-> 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         | 15 ++++++-
->  security/integrity/ima/Kconfig                | 10 +++++
->  security/integrity/ima/ima_policy.c           | 45 +++++++++++++++++++
->  3 files changed, 69 insertions(+), 1 deletion(-)
-
-[...]
- 
-> @@ -971,6 +1006,16 @@ void __init ima_init_policy(void)
->  {
->  	int build_appraise_entries, arch_entries;
->  
-> +	/*
-> +	 * We need to load digest cache rules at the beginning, to avoid dont_
-> +	 * rules causing ours to not be reached.
-> +	 */
-
-"lockdown" trusts IMA to measure and appraise kernel modules, if the rule
-exists.  Placing the digest_cache first breaks this trust.
-
-From a trusted and secure boot perspective, the architecture specific policy
-rules should not be ignored. Putting the digest_cache before any other rules
-will limit others from being able to use digest_cache.
-
-Instead of putting the digest_cache_{measure,appraise} built-in policies first,
-skip loading the dont_measure_rules.
-
-
-Mimi
-
-> +	if (ima_digest_cache_measure)
-> +		add_rules(&measure_digest_cache_rule, 1, IMA_DEFAULT_POLICY);
-> +
-> +	if (ima_digest_cache_appraise)
-> +		add_rules(&appraise_digest_cache_rule, 1, IMA_DEFAULT_POLICY);
-> +
->  	/* if !ima_policy, we load NO default rules */
->  	if (ima_policy)
->  		add_rules(dont_measure_rules, ARRAY_SIZE(dont_measure_rules),
-
+> >
+> > Aside from that:
+> >
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>
+> --
+> Jani Nikula, Intel
