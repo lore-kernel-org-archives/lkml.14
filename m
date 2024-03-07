@@ -1,105 +1,104 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7B61DA2F;
-	Thu,  7 Mar 2024 20:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A581384A3;
+	Thu,  7 Mar 2024 20:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709842469; cv=none; b=XBhPC2iIfV6f7keCgITHLFtoEWsoo2tr5yobftxyJ3pljzDl1yA5iV55jXzxaoh2Eg8FQudcNy9d3Ns9oxFFyJ5NV9LvK2ySCyNY1B7Qw3NV688QadPZgs7JmNyxHyz8FQmSkMSAB5YFxvG7aI4yvXWFpfy5i9f+509gF9+fdVk=
+	t=1709842573; cv=none; b=fIwrZj/N6R7OdhdbamGQbLo5bOQdWiPefJBAB9KcJOiI8dxwY1G12jV6TuTezuLs3Rw//uwqwcD4ET33xZ/f+xv7LhRlhW0A3bAHNa2kOENWYhtAd/KHruPc477AtsgkNASXpi4LbapVbOZk6OAZRO1qEM3oHchRosySLp+wdyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709842469; c=relaxed/simple;
-	bh=UGJzzYkfDdKkOjnlty7YFmm4I4PFag7shNz/wSGmHls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i1MI9Tr3QmdT0d1BmtH4MxPb9yZYIbnthFxRIlSdZPfxymTmxk+M414qm+urq7fC0sQ6mF5UtQNXb1BALST0F6mUIUjy6yDo85RgdqI2nKsVyadA0Ogeh9NqiFnVDp/JtjVxUX9OpSNK5LJECnr8EklQhc11ncuUFx41/BulKWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e2b466d213so253905a34.0;
-        Thu, 07 Mar 2024 12:14:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709842467; x=1710447267;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cQ1nk67dG3LM1VN+vZEbHn5Ol1vo3NNvxceJvm4ef4E=;
-        b=Z7nkiFuQjVNUMjtWMqQXID5DQCXpRc7lxhxjcBzXY/sSzdMS5bjTcdIX3srtkRLQIg
-         wOJkzyy25Ub/Ts1r0B4uSqjJ0Jvi6q3VQvjxm7KFJbNtKEE3n3py5OqUFeM+mulQJ5ZA
-         vnvUtRAG6d+YdnjuQMKT/Bk/cWFQWbvSUr2AKIz/riSrpbTB7nt5H34cvxeIPP/dS0od
-         lB3JUuSFlBu80j9wclvnxfaI7RPM6sNuXWlmDsWFVhkP1jGtJ+9zDXShFqUlOFhPNJqa
-         4Lo7veaw+bSsjhI1WsukdvsF4KogGwu8h1rEJz4YXpD35yi4BoQ6PvaoWckzhb9HiKyz
-         zVUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNrlrYa7KM/zGk2LEEaoDFgg/IHsdp622bnqrplk0jl1DNpCxOaLCrtYafS/qTN0J0Eb7WCh0auvspxzwJ4GpU4rKYwU8D8mEvcyWLaMjC+gXhEudu5EG0b1gq1iugSvN5bcZfmuE=
-X-Gm-Message-State: AOJu0YzKW6XXLyGLnFEnofQNGMlB+9OabyNInC0qTUdDcb92ey+Czpns
-	au4Kt+bIL2m3cDQ2de2j281+WxUDvWABE7HQrYuM8rrIobfiCF/YkVZ3uZ9wHcmtaqQQHK0VBbz
-	vad7yRwbdhZqqxi/WBlh/O75KZ/XKjbgf
-X-Google-Smtp-Source: AGHT+IE/HMP790FSOKOzWRMjrESdSTJcpXREuN+NywBz976YEv9PMVM63tFwzwuRUFXFPNFgiFVS7v7KQcWFynRuIHM=
-X-Received: by 2002:a4a:c80e:0:b0:5a0:2cbe:43dd with SMTP id
- s14-20020a4ac80e000000b005a02cbe43ddmr20401ooq.1.1709842467204; Thu, 07 Mar
- 2024 12:14:27 -0800 (PST)
+	s=arc-20240116; t=1709842573; c=relaxed/simple;
+	bh=A4ojRm1yac8P8+7JjT9Co/kkOIRrumYEoOESGZHp/gA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGlYyeYNP6Lw9YX3bwoWZNXnbIZUw9P45dBC5JBsrdE4U88CwUeFOqIlxhcdDTGLBkawoE2SAoMyULd4Q8n87S2pv3QFN8wXg5sna+ZJvdYKGyfST0CcMKP1LWegsBBVlOK+ac4pPiTR/sTPUsTXhGsu2eRpyGgta8jBCafu5DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
+Received: by cae.in-ulm.de (Postfix, from userid 1000)
+	id 8CB3B14053E; Thu,  7 Mar 2024 21:16:00 +0100 (CET)
+Date: Thu, 7 Mar 2024 21:16:00 +0100
+From: "Christian A. Ehrhardt" <lk@c--e.de>
+To: coverity-bot <keescook@chromium.org>
+Cc: Jameson Thies <jthies@google.com>, Hans de Goede <hdegoede@redhat.com>,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	linux-usb@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+	Saranya Gopal <saranya.gopal@intel.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Prashant Malani <pmalani@chromium.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: ucsi_check_cable(): Null pointer dereferences
+Message-ID: <ZeoggIXSLy+lVHP1@cae.in-ulm.de>
+References: <202403071134.7C7C077655@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6eeb5f78-a38d-4f00-abca-db417d08d6fe@linuxfoundation.org>
-In-Reply-To: <6eeb5f78-a38d-4f00-abca-db417d08d6fe@linuxfoundation.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 7 Mar 2024 21:14:15 +0100
-Message-ID: <CAJZ5v0i+DOikYLA6ZyfJHptPxpH0UVKzLBT9QGzingYxGZQQ-w@mail.gmail.com>
-Subject: Re: [GIT PULL] cpupower update for Linux 6.9-rc1
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, shuah <shuah@kernel.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Renninger <trenn@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202403071134.7C7C077655@keescook>
 
-Hi Shuah,
 
-On Wed, Mar 6, 2024 at 9:49=E2=80=AFPM Shuah Khan <skhan@linuxfoundation.or=
-g> wrote:
->
-> Hi Rafael,
->
-> Please pull the following cpupower fixes update for Linux 6.9-rc1.
->
-> This cpupower update for Linux 6.9-rc1 consists of a single fix
-> to a typo in cpupower-frequency-info.1 man page.
->
-> diff is included.
->
-> thanks,
-> -- Shuah
->
-> ----------------------------------------------------------------
-> The following changes since commit b401b621758e46812da61fa58a67c3fd8d91de=
-0d:
->
->    Linux 6.8-rc5 (2024-02-18 12:56:25 -0800)
->
-> are available in the Git repository at:
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux tags/linux-c=
-pupower-6.9-rc1
->
-> for you to fetch changes up to a114d9f1f2cf4896d838ab0a9c30a75411736829:
->
->    Fix cpupower-frequency-info.1 man page typo (2024-03-06 09:27:57 -0700=
-)
->
-> ----------------------------------------------------------------
-> linux-cpupower-6.9-rc1
->
-> This cpupower update for Linux 6.9-rc1 consists of a single fix
-> to a typo in cpupower-frequency-info.1 man page.
->
-> ----------------------------------------------------------------
-> Jan Kratochvil (1):
->        Fix cpupower-frequency-info.1 man page typo
->
->   tools/power/cpupower/man/cpupower-frequency-info.1 | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> ----------------------------------------------------------------
+Hi,
 
-Pulled and added to the linux-next branch in linux-pm.git, thanks!
+On Thu, Mar 07, 2024 at 11:34:21AM -0800, coverity-bot wrote:
+> Hello!
+> 
+> This is an experimental semi-automated report about issues detected by
+> Coverity from a scan of next-20240307 as part of the linux-next scan project:
+> https://scan.coverity.com/projects/linux-next-weekly-scan
+> 
+> You're getting this email because you were associated with the identified
+> lines of code (noted below) that were touched by commits:
+> 
+>   Tue Mar 5 13:11:08 2024 +0000
+>     f896d5e8726c ("usb: typec: ucsi: Register SOP/SOP' Discover Identity Responses")
+> 
+> Coverity reported the following:
+> 
+> *** CID 1584245:  Null pointer dereferences  (FORWARD_NULL)
+> drivers/usb/typec/ucsi/ucsi.c:1136 in ucsi_check_cable()
+> 1130     	}
+> 1131
+> 1132     	ret = ucsi_register_cable(con);
+> 1133     	if (ret < 0)
+> 1134     		return ret;
+> 1135
+> vvv     CID 1584245:  Null pointer dereferences  (FORWARD_NULL)
+> vvv     Passing "con" to "ucsi_get_cable_identity", which dereferences null "con->cable".
+> 1136     	ret = ucsi_get_cable_identity(con);
+> 1137     	if (ret < 0)
+> 1138     		return ret;
+> 1139
+> 1140     	ret = ucsi_register_plug(con);
+> 1141     	if (ret < 0)
+> 
+> If this is a false positive, please let us know so we can mark it as
+> such, or teach the Coverity rules to be smarter. If not, please make
+> sure fixes get into linux-next. :) For patches fixing this, please
+> include these lines (but double-check the "Fixes" first):
+
+This looks like a false positive to me. The code looks like this:
+
+	if (con->cable)
+		return 0;
+	[ ... ]
+	ret = ucsi_register_cable(con)
+	if (ret < 0)
+		return ret;
+	ret = ucsi_get_cable_identity(con);
+	[ ... ]
+
+From the con->cable check coverity concludes that con->cable is
+initially NULL. Later ucsi_register_cable() initializes con->cable
+if successful. Coverity seems to miss this and still thinks that
+con->cable is NULL. Then converity correctly notices that
+ucsi_get_cable_identity() dereferences con->cable and complains.
+
+     regards  Christian
+
