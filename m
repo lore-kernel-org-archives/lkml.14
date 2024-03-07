@@ -1,176 +1,156 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EF1129A7A;
-	Thu,  7 Mar 2024 11:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA80129A8C
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709812098; cv=none; b=Ld5FY5YTw5/ieKLmtMDKA3CY/nTIYnpfXCiGpnKF0PIl6S7aeud6efYysotbrcEcsYVtxBLYq/dlqf2gdwbNz8sTlRxWkhnyQ7htpe4Zfy0n0drFAbE2ZXcS3jPRpjAYlQCLnf9N8TB6LmHkpLr/emr2d7eOhMpQGJ0LCAwFdQA=
+	t=1709812212; cv=none; b=ihPteDChv1YhoohlrZ2fuFr9om7hx6eKOoSJYgvhS1/tvw/qs6wz0CkYk2qndeKdNj71IlL7S5Qhc2prfU5iMEW+urhOzyB+qRvHGWCQp4kWgA4PIf13mHV3WctPx9cJCHAs/FSDiyhze+iUbagN8XANS9gze2JiGXeXEtJsKHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709812098; c=relaxed/simple;
-	bh=p1e4tJNMl2RFCMrte2AszGEoRzNHGeM0TnyX8cSFV2M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I3luVUeXgTysX4ofa+nCgOtEmZ90910ly9FvltLgsjpHx1nkqucmz4NLQ+QLNYEqdYkvFBYC5tAxzNUiwS8FgTRmpSzLqIkgd/iPTbr8Z50doCtug0k/PhXGuNUZq4s7QU4refu8qlJDG1zWoDe7nU+Eq5K2ck6zyn+rAwlHB+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fo+YjDCQ; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709812212; c=relaxed/simple;
+	bh=c62K5oPh61vCveDvQf0OpOvXF4WeEmn4VK50d27H8EA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SvNxF+ABw+2FPtO/Nog3REK/OaYzvyE8OP+Q5oyRpFymAE0vFAI1Y7DM7lKYiyaDHI0VRaWui7HfMgZa337+E55N/f/owp9nrUA9Mfywg5qGUwbW+dRUw5N9THlyPBUxfwOsbk/hAP2OsqL4/12ckHzvdAtDHXfmoIuvX007I2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fJ/lk8uH; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fo+YjDCQ"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412fe981ef1so4696975e9.1;
-        Thu, 07 Mar 2024 03:48:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fJ/lk8uH"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5131316693cso965203e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:50:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709812095; x=1710416895; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HdCRMTKRhqynPJO0vr+KIPrYHrZQvMYn+jwShMV7v90=;
-        b=Fo+YjDCQPclstjGrOSppSZvjV9iIVogbbN+yo84E520nvQh44YUC3YnirTwXJHMYdT
-         EC1ipNba7h8nMP1R/0P+By2ti0sEe+Ehs/jFX1CRb7dOEzdbNcUDuDifllO0bLeJigU0
-         HfflVm+p7syr5tx++fwRmIANLLRbJivy4QsPBN7JNxnOGDWITQyALMNZiGg7dO8aZPPy
-         tlB0GpGHCHr+3Ij20uK4nfLaTHxQ03ayMFy7B3fNT99j8xEXcnuCidmex1XV7lJ0JYGg
-         sPtuiEF7kVuozdfUKjWu9X9U81gW32XYLJ2TneFVsuN6RXMT2sQ0hcsB9uDkywSoqVXc
-         wtuA==
+        d=linaro.org; s=google; t=1709812209; x=1710417009; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e6uts5XAuJGMgcS3q5Z9N3SGrS49osI0Xq6KbzVVrfg=;
+        b=fJ/lk8uHB8PjTgDVNicH9xnL5Fy6XT4hrGjlqd3YIZKTy0U5zF1Js0cA7gSs7Ag6+O
+         3OmlXTi2/2XQJJhk87DpzVXOj2hmnAfc0lzsDF7a2gW8Yj35wEMz71GtaXbi0ah+8Yjz
+         UwMv+dVHN/FfpgJVnXkdXUzql1+VJU/Ldz6z9Ktj9hQpSzFZCC6Z/Qqbbq6bZL8yxtNl
+         7Lo+/hjklFOUEa5JIkCvt41H2hrN9PyYbyHSoWqgp59lhzQbkn2TOGwQ367OSgPS/gRj
+         e4OwBd3Fv4dA5JY4ToJm9CNYbgLeV/FKqwxHf82ExaYngUKMcH0narl5rAfGXKqWWxBA
+         a6zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709812095; x=1710416895;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HdCRMTKRhqynPJO0vr+KIPrYHrZQvMYn+jwShMV7v90=;
-        b=p3jXY5aXK8W15Dtkz1drY6BAaIwX2HK7bCy+clSzgKZBxf3qdxER4NGCEpLnIrKDyS
-         9rXYZVsdr+19W5ILYClUu4jcuKzdXWc7qVnn5gt0zJ9A9CtTGHmh7TiZJekui9fpl9ro
-         wIHD5dw0nDG9S/MGOMknULxUKmTPXrCvOkJE7Hj98vcjqpzwqkbDzO6D9tiIpwN7o1Ja
-         0+PYK3dYYSlC0THPeGGLnb2i5PVzOFFlw8B3K7AWUMpXOeu6hTUEVzzG+WlfpFnvnGeK
-         CvmFdPJrQ08eC7KwEuUndXCIcvkBtOqF8QT2Xe+9mDI7RVESKWzFBZZHGulpkckamLIK
-         kVpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxQRpgIj2ZziMYiwjwY5ZJ5xIHb6vIMhrsDSCWFQmV+fnMcJbcTqnEwiTlCpTRwTCfeFSK3bQ9qhoaPO4dKcgu0Lpaiaml+O5TUp3pVXS9JRRISYNyyvDNr4dOAF6G/kzh3F09GeraQpJt5koRYNgzBAsjLxyRVP31yHcGY4E5ndFuxEFCgWhMsO5N
-X-Gm-Message-State: AOJu0YzTHxoKSYzmHoPPuDYDEDPmj5MN0LD7Ed6OgGffjm2+r8GAkMp7
-	ZX/PkEKMPG85Ml8IWGylIWNS5QUVmorRHVltz6ELqj1LINRT1how
-X-Google-Smtp-Source: AGHT+IFHgnbyzOxpiE/NPYUNciYRrQC8bvPnKwv7h8vdfmxZdkKUBxJdS+wQAto8IoYEvVYfaahYzw==
-X-Received: by 2002:a05:600c:4f91:b0:413:119:33e2 with SMTP id n17-20020a05600c4f9100b00413011933e2mr1328074wmq.14.1709812094868;
-        Thu, 07 Mar 2024 03:48:14 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2500:a01:fef2:3c1d:a816:65f7])
-        by smtp.gmail.com with ESMTPSA id fc20-20020a05600c525400b00412ae4b45b3sm2401616wmb.30.2024.03.07.03.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 03:48:14 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] dt-bindings: serial: renesas,scif: Document R9A09G057 support
-Date: Thu,  7 Mar 2024 11:47:31 +0000
-Message-Id: <20240307114731.34953-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1709812209; x=1710417009;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e6uts5XAuJGMgcS3q5Z9N3SGrS49osI0Xq6KbzVVrfg=;
+        b=atLKclU89Cej+oAlZyc62PNFDXDTKkCUg+adcNikpdn0TFSY0NeNbCDaxZL2L9aL70
+         2uYcYSgYgoPoOtK7HEFPKiUYQKueKAyeE3K1JPzldYH8dWidKv4ZwjCtHrosUY32HN22
+         Vjn/VNx9bZ2zWfx3VKDlNu6uaErL9pOCKP8OqMOyG3DXuEFcyhx1P2Fs3oXp2xdzHZxS
+         gERSZGSFTAkM0kHoCV/OyORlhI2UZFmzp78LHIVHyjf3AmIFaTUjx7Nf6ghyT6IKWEMH
+         Adz3hbynznFRkUajQq5fffryrSugpeKb2hMQbV8MoboKpeBrgCZUpNMnVhjBYUDa2S5R
+         UCHA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+4FAlFqcR9Hf5eKbZfW54ZM1ckihinR+kZTnFi1aknX98CV23/17IAcmiHbeZvrZOfcqV6/U2CUaPRDQCNBak9ieoCQbvA5d0cruW
+X-Gm-Message-State: AOJu0Yzk10jDI/UQcuLEMMQT8T/qZ2jG7UZ0ml4I8EZvdDXUqbgzb4qM
+	8CtoIOe8Kntyx83ayk4QVYNG/5EdL8xz1E3Nzdie/oRTMS0ageK+AClJpd/UFOo=
+X-Google-Smtp-Source: AGHT+IG4bzS87kZ3geSfi5mpqxwhIKXkroOdY/OO1oaxjjX8DMoKWY9bpC3ELNXCuGKGxX1lM0ohTA==
+X-Received: by 2002:ac2:5b44:0:b0:513:5217:6201 with SMTP id i4-20020ac25b44000000b0051352176201mr1333056lfp.59.1709812208871;
+        Thu, 07 Mar 2024 03:50:08 -0800 (PST)
+Received: from [172.30.204.36] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id q12-20020ac25a0c000000b00513360b4f1esm2435370lfn.305.2024.03.07.03.50.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 03:50:08 -0800 (PST)
+Message-ID: <48fd9457-d092-4226-9a6c-13dea81694f5@linaro.org>
+Date: Thu, 7 Mar 2024 12:50:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/1] arm64: dts: qcom: ipq6018: add sdhci node
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Robert Marko <robimarko@gmail.com>
+Cc: Chukun Pan <amadeus@jmu.edu.cn>, Bjorn Andersson <andersson@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240306123006.724934-1-amadeus@jmu.edu.cn>
+ <20240306123006.724934-2-amadeus@jmu.edu.cn>
+ <CAA8EJpqYjutM1Kh6QxysB6XNAmXywtOtRJ7KP0LbY5E36kCPvA@mail.gmail.com>
+ <78b1a1a2-a9fa-4b28-9d96-d65bb5517199@gmail.com>
+ <CAA8EJppJBOQh19r4A-igsh5znDE_R6mDNy+ao5ximx7vtsZZvA@mail.gmail.com>
+ <CAOX2RU4W-zV3A8eW0A+1V838Fm=tUkXY=Bs3j4VJ8Jo9mxrOAw@mail.gmail.com>
+ <CAA8EJpq=-r4XhnFJset0=X=YO5QNUpuw+e1r6DTsPvzNAZCyNw@mail.gmail.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAA8EJpq=-r4XhnFJset0=X=YO5QNUpuw+e1r6DTsPvzNAZCyNw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Document support for the Serial Communication Interface with FIFO (SCIF)
-available in the Renesas RZ/V2H(P) (R9A09G057) SoC. The SCIF interface in
-the Renesas RZ/V2H(P) is similar to that available in the RZ/G2L
-(R9A07G044) SoC, with the only difference being that the RZ/V2H(P) SoC has
-three additional interrupts: one for Tx end/Rx ready and the other two for
-Rx and Tx buffer full, which are edge-triggered.
 
-No driver changes are required as generic compatible string
-"renesas,scif-r9a07g044" will be used as a fallback on RZ/V2H(P) SoC.
+On 3/7/24 08:50, Dmitry Baryshkov wrote:
+> On Thu, 7 Mar 2024 at 09:38, Robert Marko <robimarko@gmail.com> wrote:
+>>
+>> On Thu, 7 Mar 2024 at 08:28, Dmitry Baryshkov
+>> <dmitry.baryshkov@linaro.org> wrote:
+>>>
+>>> On Wed, 6 Mar 2024 at 22:35, Robert Marko <robimarko@gmail.com> wrote:
+>>>>
+>>>>
+>>>> On 06. 03. 2024. 20:43, Dmitry Baryshkov wrote:
+>>>>> On Wed, 6 Mar 2024 at 14:31, Chukun Pan <amadeus@jmu.edu.cn> wrote:
+>>>>>> Add node to support mmc controller inside of IPQ6018.
+>>>>>> This controller supports both eMMC and SD cards.
+>>>>>>
+>>>>>> Tested with:
+>>>>>>     eMMC (HS200)
+>>>>>>     SD Card (SDR50/SDR104)
+>>>>>>
+>>>>>> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+>>>>>> ---
+>>>>>>    arch/arm64/boot/dts/qcom/ipq6018.dtsi | 19 +++++++++++++++++++
+>>>>>>    1 file changed, 19 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>>>>> index 322eced0b876..420c192bccd9 100644
+>>>>>> --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>>>>> @@ -441,6 +441,25 @@ dwc_1: usb@7000000 {
+>>>>>>                           };
+>>>>>>                   };
+>>>>>>
+>>>>>> +               sdhc: mmc@7804000 {
+>>>>>> +                       compatible = "qcom,ipq6018-sdhci", "qcom,sdhci-msm-v5";
+>>>>>> +                       reg = <0x0 0x07804000 0x0 0x1000>,
+>>>>>> +                             <0x0 0x07805000 0x0 0x1000>;
+>>>>>> +                       reg-names = "hc", "cqhci";
+>>>>>> +
+>>>>>> +                       interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +                                    <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>> +                       interrupt-names = "hc_irq", "pwr_irq";
+>>>>>> +
+>>>>>> +                       clocks = <&gcc GCC_SDCC1_AHB_CLK>,
+>>>>>> +                                <&gcc GCC_SDCC1_APPS_CLK>,
+>>>>>> +                                <&xo>;
+>>>>>> +                       clock-names = "iface", "core", "xo";
+>>>>>> +                       resets = <&gcc GCC_SDCC1_BCR>;
+>>>>>> +                       max-frequency = <192000000>;
+>>>>> If I understand correctly, GCC_SDCC1_APPS_CLK support frequencies up
+>>>>> to 384 MHz, but here you are limiting it to 192 MHz. Why is it so?
+>>>>>
+>>>>> I am not sure that 384MHz is actually supported as IPQ6018 datasheet
+>>>>> clearly indicates that HS400 mode is not supported.
+>>>
+>>> I didn't check the datasheet, I opened the gcc-ipq6018.c
+>>
+>> I understand that, I just pointed it out, it wouldn't surprise me if
+>> the frequency table
+>> was just copy/pasted from IPQ8074.
+> 
+> Then it might be fixed instead, making the max-frequency property unnecessary.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
----
-v1->v2
-* Added validation to check interrupts and interrupt-names count
+The clock driver contains clock settings that were either autogenerated
+or manually included, or copypasted. These settings, and particularly
+downstream, only describe the known-working clock rates and the minimum
+required voltage setting just to keep them ticking nicely (think running
+a car with the clutch pressed, no real load), a subset (which may be an
+improper subset) of which gets translated into the device OPPs (or frequency
+levels downstream). We should have an OPP table here.
 
-Note, this patch applies on top of series [0].
-
-[0] https://patchwork.ozlabs.org/project/devicetree-bindings/cover/20240307114217.34784-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
----
- .../bindings/serial/renesas,scif.yaml         | 31 ++++++++++++++++---
- 1 file changed, 27 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/serial/renesas,scif.yaml b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-index 6ba6b6d52208..a9c60334d702 100644
---- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-+++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-@@ -77,6 +77,7 @@ properties:
-               - renesas,scif-r9a07g043      # RZ/G2UL and RZ/Five
-               - renesas,scif-r9a07g054      # RZ/V2L
-               - renesas,scif-r9a08g045      # RZ/G3S
-+              - renesas,scif-r9a09g057      # RZ/V2H(P)
-           - const: renesas,scif-r9a07g044   # RZ/G2{L,LC} fallback
- 
-   reg:
-@@ -91,6 +92,9 @@ properties:
-       - description: Break interrupt
-       - description: Data Ready interrupt
-       - description: Transmit End interrupt
-+      - description: Transmit End/Data Ready interrupt
-+      - description: Receive buffer full interrupt (EDGE trigger)
-+      - description: Transmit buffer empty interrupt (EDGE trigger)
- 
-   interrupt-names:
-     minItems: 4
-@@ -101,6 +105,9 @@ properties:
-       - const: bri
-       - const: dri
-       - const: tei
-+      - const: teidri
-+      - const: rxi-edge
-+      - const: txi-edge
- 
-   clocks:
-     minItems: 1
-@@ -197,15 +204,31 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - renesas,scif-r7s9210
--              - renesas,scif-r9a07g044
-+              - renesas,scif-r9a09g057
-     then:
-       properties:
-         interrupts:
--          minItems: 6
-+          minItems: 9
- 
-         interrupt-names:
--          minItems: 6
-+          minItems: 9
-+    else:
-+      if:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - renesas,scif-r7s9210
-+                - renesas,scif-r9a07g044
-+      then:
-+        properties:
-+          interrupts:
-+            minItems: 6
-+            maxItems: 6
-+
-+          interrupt-names:
-+            minItems: 6
-+            maxItems: 6
- 
- unevaluatedProperties: false
- 
--- 
-2.34.1
-
+Konrad
