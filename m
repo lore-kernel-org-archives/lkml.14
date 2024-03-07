@@ -1,173 +1,87 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27088657D1
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6090C6313B;
+	Thu,  7 Mar 2024 08:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709799274; cv=none; b=hVwL/Vgx98fNqnERry5++JOnpNxKD/wHQ3Ot9SqaN2XTyvxr+C2a7wyM5QDapwJlUMHTXQEO84o1i0gr99JUvCSciE4auEz18mSn5uddiPXp9eRW4gSaTeCGaJz7/sNUEwyGR/10ZxrBahDrDuQVy2fpxBlBSzB9jGNefwyWVfM=
+	t=1709799325; cv=none; b=HGTLjHaqYrmAH9FECmSMnWHzrCtm+7QKVWaYITKbvZ0upTG6Ge77yOJthLjvzU4eYFHTJtvrB1kDfKJJl1c/oYheg657NX2hOEM5Uq65NQPNSbdZhh0nUbLjS5yP2NGa8hwh7YnmTtjg/nSDB6Bqvs/hukRcPmz2I9+SBvSg6dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709799274; c=relaxed/simple;
-	bh=+1cu9dKkJ8vg6JWFPY9f9GjbOG3Y+bB8WG0Z1sbnmSY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=VG+49EgJWzA7Pd2HUYnihHEqDkfKkYe/2Wvuodn12Z1UhOBM0TnxMoS+lA7w3Z31LZTzsQKMy2gqx3ukdfNuaCEpXMH7M0rdqlUPl0k7+ru+j/+Nxmd1fXwHuzr7OqZX0ybPw0A64fq1gFJDcEb6OJf0YKKZzv4SU+Mwu+TDc2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uWe+Rk8U; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1709799325; c=relaxed/simple;
+	bh=ZstXiN8BCb6FOQN96D81OboJCXKA33Stl82Xuecf8cg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=vFCeS7Z5L4cQ4E2+Nap7YXaxLSNTaJ8xiZlQdTLpYtxrjdduSv7fmeb5e2bSw0+EvDDRf9Ta4GhmM4Sjumw6Q19/HjPosZRLvc86MbegenSzmYgiPzfLQ8ZFH0kBKEHbbZ11Nzvx6m+e5FxQSq8WRNv70mOz3y1KDVyM/PT5/TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=blvw5orK; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uWe+Rk8U"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-609ea26233dso12882627b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 00:14:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709799272; x=1710404072; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qJestFEVqFGCX9FS9Jv13Zp7RYO5S1fF+epvUel+hMU=;
-        b=uWe+Rk8U7KDFAi9k5HxPbYz3dsCNPQQcGB0zrocandfOjp8fa3F75bdEh4UmkrFo+k
-         WT5518DvJ1Y6yD/zg3T67h/5Bd7D4cmUORTeihV7E5oS7PACn1RPe3NUoBJKjag/qj48
-         /7JPZbDt1PIv/ybb/fMGF+VLvfap4XC12jUwXO73jJn3o4ByAqpPF9L0E4QHLY82BrKm
-         8KYsCuqQJGioxk/7C27hZ9kSWlsmDvYfyl63HiPlukO0/KvkXIn/d7AutKHwt6HKMBHk
-         ObSakJtpEa5S/zYMZNDRVqfgsHIG6Af42rrjr44DM6SXux2m7PI9xT6Lb0cC926xGAfR
-         9jmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709799272; x=1710404072;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qJestFEVqFGCX9FS9Jv13Zp7RYO5S1fF+epvUel+hMU=;
-        b=dwT9ZNHKg/nYPwu9hq/tn4fRs3gmLrJPdoAhG09Jy1mKd93ZMxxVPRWkarvR+r9MG4
-         e9qK40G9EkXhIBaj52AHRot2HaKFiIOLLQsFJ8RYAtzFW5W/hXEKSvWGgK3a28tMcUeE
-         B98mqOqDeG3pvUxZv/LF74dUFQ2V8QCdpJGBsr+M9YHQefq3/5vpD986OCzqIjLlDnxp
-         2BrT0ISI5IwkTYD6e9h0zYPHIwuuIBlsJIDes8PguoZg4fM27nX4t8OWgRStAbmIrxkv
-         6YzaKtdYIdmk8LUvuqyd7xDJ+JDeyN7BpVSgCIFssf9THhqa4n9vYFqBhM32kXjSuC+g
-         BGnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBN4GQ0uU2NS0QQD5jbbO9gg/PdjmYs/AXxeP4SkUu/Q7ojj5cOsZkccbn1xxGSZEF0QSAW2loMvWMArSQJldOt5s4pB3Nt44oXPhB
-X-Gm-Message-State: AOJu0Yz38cZn7bnxWh/MiN1nTYmOqJkvY0ot1LIbnTsHFUNeDqV5VHPT
-	JZB8VTWtm9ZzWdUM5WMcJlFnG2cZy4ReO1z0OMn81jPXcJeZmlEXQnhRa6O0CoR0VLC1lSeaX8i
-	QVYeXGg==
-X-Google-Smtp-Source: AGHT+IF62rYpy6xSsQVXWRCPb5hibRpnoEJ2h4Jq+ifJXuHBEDTcW2Nt2tXiYyoCck/ZJKxZgDYae1etPY/v
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:47d6:1de1:237a:6728])
- (user=irogers job=sendgmr) by 2002:a05:690c:c17:b0:609:3834:e0f4 with SMTP id
- cl23-20020a05690c0c1700b006093834e0f4mr5271362ywb.7.1709799272283; Thu, 07
- Mar 2024 00:14:32 -0800 (PST)
-Date: Thu,  7 Mar 2024 00:14:11 -0800
-In-Reply-To: <20240307081412.3933750-1-irogers@google.com>
-Message-Id: <20240307081412.3933750-7-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="blvw5orK"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 432FE240003;
+	Thu,  7 Mar 2024 08:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709799320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=buhNLZyABPkypJJr6jjWYuCWSEEmx3G3WXbzfi/P7uA=;
+	b=blvw5orKpmVdJ/dB539TbEIfgeahPbmYw365thGcbpUH75juP7CDVqDlaI73HRofGBHhjT
+	rSUx+luK9x/JspZBrKcrQA17WCLNSz4AqQFFOhje2kCoIG1I/Rx1rhE0HEvXz1YROKA7R3
+	bTHZpEQstUB92nTHj4zqd7vFh6Dsz6cSXtz2nAIPajHvOeX79alwbXDAoq3SccCYjjl3Vk
+	b1NPOf8100775Jyc5YgySmD4sMdov+G0yHW3czaj/oKWL8PLvoU2QifgzjNWyA/4ft8Z2E
+	+P10YYalHRf5t+cJEhkC8qsHO0EOsNtCdEwB0BVRKyLC/dcV6m7HnKe3183WTg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240307081412.3933750-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v1 6/6] perf tools: Add/use PMU reverse lookup from config to name
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 07 Mar 2024 09:15:18 +0100
+Message-Id: <CZND9VGAGS45.210DYP50RTA9F@bootlin.com>
+Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski@linaro.org>
+To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, "Gregory
+ CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Linus Walleij"
+ <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
+ <rafal@milecki.pl>, "Philipp Zabel" <p.zabel@pengutronix.de>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v9 0/9] Add support for Mobileye EyeQ5 system controller
+X-Mailer: aerc 0.15.2
+References: <20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com>
+In-Reply-To: <20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add perf_pmu__name_from_config that does a reverse lookup from a
-config number to an alias name. The lookup is expensive as the config
-is computed for every alias by filling in a perf_event_attr, but this
-is only done when verbose output is enabled. The lookup also only
-considers config, and not config1, config2 or config3.
+Hello,
 
-An example of the output:
-```
-$ perf stat -vv -e data_read true
-...
-perf_event_attr:
-  type                             24 (uncore_imc_free_running_0)
-  size                             136
-  config                           0x20ff (data_read)
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-  exclude_guest                    1
-...
-```
+On Fri Mar 1, 2024 at 5:22 PM CET, Th=C3=A9o Lebrun wrote:
+> Here again for a new revision of the system-controller on Mobileye
+> EyeQ5. It deals with clk, reset and pinctrl. Drivers are meant to be
+> merged in their respective trees. Each already have their dt-bindings
+> in -next.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/perf_event_attr_fprintf.c | 10 ++++++++--
- tools/perf/util/pmu.c                     | 19 +++++++++++++++++++
- tools/perf/util/pmu.h                     |  1 +
- 3 files changed, 28 insertions(+), 2 deletions(-)
+I'd be curious to get the state of mind of the involved maintainers
+about this series?
+ - clk, reset, pinctrl: I feel like the three drivers look in good shape
+   now that we've done a few review iterations.
+ - MIPS: dt-bindings have been queued in their respective branches so
+   devicetree patches have no reason to change.
 
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index 29e66835da3a..59fbbba79697 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -222,8 +222,14 @@ static void __p_config_tracepoint_id(char *buf, size_t size, u64 value)
- }
- #endif
- 
--static void __p_config_id(char *buf, size_t size, u32 type, u64 value)
-+static void __p_config_id(struct perf_pmu *pmu, char *buf, size_t size, u32 type, u64 value)
- {
-+	const char *name = perf_pmu__name_from_config(pmu, value);
-+
-+	if (name) {
-+		print_id_hex(name);
-+		return;
-+	}
- 	switch (type) {
- 	case PERF_TYPE_HARDWARE:
- 		return __p_config_hw_id(buf, size, value);
-@@ -252,7 +258,7 @@ static void __p_config_id(char *buf, size_t size, u32 type, u64 value)
- #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE, val)
- #define p_read_format(val)	__p_read_format(buf, BUF_SIZE, val)
- #define p_type_id(val)		__p_type_id(pmu, buf, BUF_SIZE, val)
--#define p_config_id(val)	__p_config_id(buf, BUF_SIZE, attr->type, val)
-+#define p_config_id(val)	__p_config_id(pmu, buf, BUF_SIZE, attr->type, val)
- 
- #define PRINT_ATTRn(_n, _f, _p, _a)			\
- do {							\
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 904725f03d29..f26b06912a8a 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -2139,3 +2139,22 @@ void perf_pmu__delete(struct perf_pmu *pmu)
- 	zfree(&pmu->id);
- 	free(pmu);
- }
-+
-+const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
-+{
-+	struct perf_pmu_alias *event;
-+
-+	if (!pmu)
-+		return NULL;
-+
-+	list_for_each_entry(event, &pmu->aliases, list) {
-+		struct perf_event_attr attr = {.config = 0,};
-+		int ret = perf_pmu__config(pmu, &attr, &event->terms, NULL);
-+
-+		if (ret)
-+			return NULL;
-+		if (config == attr.config)
-+			return event->name;
-+	}
-+	return NULL;
-+}
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 9f5284b29ecf..152700f78455 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -276,5 +276,6 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
- struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus);
- void perf_pmu__delete(struct perf_pmu *pmu);
- struct perf_pmu *perf_pmus__find_core_pmu(void);
-+const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config);
- 
- #endif /* __PMU_H */
--- 
-2.44.0.278.ge034bb2e1d-goog
+Can patches be queued before the upcoming merge window?
+
+Have a nice day,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
