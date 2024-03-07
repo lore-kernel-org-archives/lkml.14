@@ -1,183 +1,206 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD350823C4
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 09:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5BD823BF;
+	Thu,  7 Mar 2024 09:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709803213; cv=none; b=FJKEUYJmAz/EZrGEHROfYI5uVscEtLUDwYwEaAkZOcrvPWQYUwKJgi1FiYGpnItknaR2o1ut+y+UCT3Ymuvk7QcblkCylxGXq6dPEjE1vDuKF5XTuk76ufuDXl9KIvD71SHYWseo+ScGmqdnDpSaRrJW6iaXYar8pW7ypZU9dcU=
+	t=1709803264; cv=none; b=RpU/040Oj73pvxEZrTDEqrVctJaj1K8SKO9NUTqP1J/tVbLRCDFZJ7V9XBKmRtGPmjp+R+bKJDscNV7bfme/ry+mULwpGXIwnGbS/GGz++S52PRaNo1WZ0qC88hbd3hmW8qEK6egJJ7HFyFN+cgCzGD4mKjcmemdHUipob1poxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709803213; c=relaxed/simple;
-	bh=YT/FbZZyceAX2Mb3Zbme+x0madJmou1w+qr8J8YUkXs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kl9leYnXlq7j3wHZWGYUB31jd4PzBkdWtYsyA3NxvM8tNnlxN/VXz6hsoxY2qUuSaor3K67j8MC35Rz6o3WBX9/k6k+PUr6exCIyR5bI/NTFl7bWA+CcRnwWF4o88AiJGD+PQOYwgZV1U6v25viHdaEl2fBi9mW33MtlPddVS6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jOWC3ehH; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jOWC3ehH"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1709803208; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=4QBG2QheUKTY1OnbPSDP0o85jjGq1EgwtF8LIisWhmc=;
-	b=jOWC3ehHqZBqbsl4W/bne15gfu/A7M+oN6I81ScxnJZygUKMNow+S1yDE12cuh+LKFEGyvO9S2a8yu/1gKv8rD1MSAPLNDec0RsZDGgdpCqoHhDIEBGPbPBWp3HENZ13vSWBSsm2edSddzBiDk+AHTN7jnPVwusdG+UhyxEF6W8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R411e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W2-5tED_1709803206;
-Received: from 30.97.48.224(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W2-5tED_1709803206)
-          by smtp.aliyun-inc.com;
-          Thu, 07 Mar 2024 17:20:07 +0800
-Message-ID: <50205009-07e6-4e7e-9ac5-e6d04e12e62d@linux.alibaba.com>
-Date: Thu, 7 Mar 2024 17:20:06 +0800
+	s=arc-20240116; t=1709803264; c=relaxed/simple;
+	bh=r3/myK4/ZpKNlUkLE94ZeTlMFLlsx33jDPOvRo6U2a8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NDQ9JQl6QOzd09D76QXsCZi/L7petlNHcnazrtMS4H6Pb3kk+rSVtBN7PRkGXM0/IxbTeRmoykbnTRaUZfsl7VsSN6JJY9iE6GtwCNNfi4BW5Bjo/keiTVc8dbSaCCu/grLgesgqvzVN52xCK8VGrvxEI4JI65y9RtBF7i8SItM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3607b475cb7d4278aab10ffaaee8bd0e-20240307
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:e8ea706b-495e-4725-a2f2-38442837f5a6,IP:10,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-30
+X-CID-INFO: VERSION:1.1.37,REQID:e8ea706b-495e-4725-a2f2-38442837f5a6,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-30
+X-CID-META: VersionHash:6f543d0,CLOUDID:d65a9eff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:240307163618P7UYFQLJ,BulkQuantity:1,Recheck:0,SF:24|17|19|44|66|38|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:41,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: 3607b475cb7d4278aab10ffaaee8bd0e-20240307
+X-User: aichao@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1393049069; Thu, 07 Mar 2024 16:59:41 +0800
+From: Ai Chao <aichao@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v5] platform/x86: add lenovo wmi camera button driver
+Date: Thu,  7 Mar 2024 16:59:39 +0800
+Message-Id: <20240307085939.668881-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: fix lockdep false positives on initializing
- erofs_pseudo_mnt
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jingbo Xu <jefflexu@linux.alibaba.com>, Baokun Li <libaokun1@huawei.com>,
- linux-erofs@lists.ozlabs.org, xiang@kernel.org, chao@kernel.org,
- huyue2@coolpad.com, linux-kernel@vger.kernel.org, yangerkun@huawei.com,
- houtao1@huawei.com, yukuai3@huawei.com, chengzhihao1@huawei.com,
- Al Viro <viro@zeniv.linux.org.uk>
-References: <20240307024459.883044-1-libaokun1@huawei.com>
- <f9e30004-6691-4171-abc5-7e286d9ccec6@linux.alibaba.com>
- <7e262242-d90d-4f61-a217-f156219eaa4d@linux.alibaba.com>
- <38934cc4-58da-47b4-a120-00a2f3a56836@linux.alibaba.com>
- <20240307-segmentieren-sitzkissen-5086f5e1f99f@brauner>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240307-segmentieren-sitzkissen-5086f5e1f99f@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Christian,
+Add lenovo generic wmi driver to support camera button.
+The Camera button is a GPIO device. This driver receives ACPI notifyi
+when the camera button is switched on/off. This driver is used in
+Lenovo A70, it is a Computer integrated machine.
 
-On 2024/3/7 17:17, Christian Brauner wrote:
-> On Thu, Mar 07, 2024 at 12:18:52PM +0800, Gao Xiang wrote:
->> Hi,
->>
->> (try to +Cc Christian and Al here...)
->>
->> On 2024/3/7 11:41, Jingbo Xu wrote:
->>> Hi Baokun,
->>>
->>> Thanks for catching this!
->>>
->>>
->>> On 3/7/24 10:52 AM, Gao Xiang wrote:
->>>> Hi Baokun,
->>>>
->>>> On 2024/3/7 10:44, Baokun Li wrote:
->>>>> Lockdep reported the following issue when mounting erofs with a
->>>>> domain_id:
->>>>>
->>>>> ============================================
->>>>> WARNING: possible recursive locking detected
->>>>> 6.8.0-rc7-xfstests #521 Not tainted
->>>>> --------------------------------------------
->>>>> mount/396 is trying to acquire lock:
->>>>> ffff907a8aaaa0e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
->>>>>                           at: alloc_super+0xe3/0x3d0
->>>>>
->>>>> but task is already holding lock:
->>>>> ffff907a8aaa90e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
->>>>>                           at: alloc_super+0xe3/0x3d0
->>>>>
->>>>> other info that might help us debug this:
->>>>>     Possible unsafe locking scenario:
->>>>>
->>>>>           CPU0
->>>>>           ----
->>>>>      lock(&type->s_umount_key#50/1);
->>>>>      lock(&type->s_umount_key#50/1);
->>>>>
->>>>>     *** DEADLOCK ***
->>>>>
->>>>>     May be due to missing lock nesting notation
->>>>>
->>>>> 2 locks held by mount/396:
->>>>>     #0: ffff907a8aaa90e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
->>>>>               at: alloc_super+0xe3/0x3d0
->>>>>     #1: ffffffffc00e6f28 (erofs_domain_list_lock){+.+.}-{3:3},
->>>>>               at: erofs_fscache_register_fs+0x3d/0x270 [erofs]
->>>>>
->>>>> stack backtrace:
->>>>> CPU: 1 PID: 396 Comm: mount Not tainted 6.8.0-rc7-xfstests #521
->>>>> Call Trace:
->>>>>     <TASK>
->>>>>     dump_stack_lvl+0x64/0xb0
->>>>>     validate_chain+0x5c4/0xa00
->>>>>     __lock_acquire+0x6a9/0xd50
->>>>>     lock_acquire+0xcd/0x2b0
->>>>>     down_write_nested+0x45/0xd0
->>>>>     alloc_super+0xe3/0x3d0
->>>>>     sget_fc+0x62/0x2f0
->>>>>     vfs_get_super+0x21/0x90
->>>>>     vfs_get_tree+0x2c/0xf0
->>>>>     fc_mount+0x12/0x40
->>>>>     vfs_kern_mount.part.0+0x75/0x90
->>>>>     kern_mount+0x24/0x40
->>>>>     erofs_fscache_register_fs+0x1ef/0x270 [erofs]
->>>>>     erofs_fc_fill_super+0x213/0x380 [erofs]
->>>>>
->>>>> This is because the file_system_type of both erofs and the pseudo-mount
->>>>> point of domain_id is erofs_fs_type, so two successive calls to
->>>>> alloc_super() are considered to be using the same lock and trigger the
->>>>> warning above.
->>>>>
->>>>> Therefore add a nodev file_system_type named erofs_anon_fs_type to
->>>>> silence this complaint. In addition, to reduce code coupling, refactor
->>>>> out the erofs_anon_init_fs_context() and erofs_kill_pseudo_sb() functions
->>>>> and move the erofs_pseudo_mnt related code to fscache.c.
->>>>>
->>>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->>>>
->>>> IMHO, in the beginning, I'd like to avoid introducing another fs type
->>>> for erofs to share (meta)data between filesystems since it will cause
->>>> churn, could we use some alternative way to resolve this?
->>>
->>> Yeah as Gao Xiang said, this is initially intended to avoid introducing
->>> anothoer file_system_type, say erofs_anon_fs_type.
->>>
->>> What we need is actually a method of allocating anonymous inode as a
->>> sentinel identifying each blob.  There is indeed a global mount, i.e.
->>> anon_inode_mnt, for allocating anonymous inode/file specifically.  At
->>> the time the share domain feature is introduced, there's only one
->>> anonymous inode, i.e. anon_inode_inode, and all the allocated anonymous
->>> files are bound to this single anon_inode_inode.  Thus we decided to
->>> implement a erofs internal pseudo mount for this usage.
->>>
->>> But I noticed that we can now allocate unique anonymous inodes from
->>> anon_inode_mnt since commit e7e832c ("fs: add LSM-supporting anon-inode
->>> interface"), though the new interface is initially for LSM usage.
->>
->> Yes, as summary, EROFS now maintains a bunch of anon inodes among
->> all different filesystem instances, so that like
->>
->> blob sharing or
->> page cache sharing across filesystems can be done.
->>
->> In brief, I think the following patch is a good idea but it
->> hasn't been landed until now:
->> https://lore.kernel.org/r/20210309155348.974875-3-hch@lst.de
->>
->> Other than that, is it a good idea to introduce another fs type
->> (like erofs_anon_fs_type) for such usage?
-> 
-> It depends. If you're allocating a lot of inodes then having a separate
-> filesystem type for erofs makes sense. If it's just a few then it
-> probably doesn't matter. If you need custom inode operations for these
-> anonymous inodes then it also makes sense to have a separate filesystem
-> type.
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
+v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
+v3: Remove lenovo_wmi_remove function.
+v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
 
-Yeah, I think some time this year we will finish a formal
-page cache sharing design and implementation for both bdev
-and fscache mode.
+ drivers/platform/x86/Kconfig             | 12 ++++
+ drivers/platform/x86/Makefile            |  1 +
+ drivers/platform/x86/lenovo-wmi-camera.c | 89 ++++++++++++++++++++++++
+ 3 files changed, 102 insertions(+)
+ create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
 
-So a separate filesystem type seems more reasonable in the
-future,  thanks for your confirmation!
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index bdd302274b9a..9506a455b547 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+ 	To compile this driver as a module, choose M here: the module
+ 	will be called inspur-platform-profile.
+ 
++config LENOVO_WMI_CAMERA
++	tristate "Lenovo WMI Camera Button driver"
++	depends on ACPI_WMI
++	depends on INPUT
++	help
++	  This driver provides support for Lenovo camera button. The Camera
++	  button is a GPIO device. This driver receives ACPI notify when the
++	  camera button is switched on/off.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called lenovo-wmi-camera.
++
+ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+ 
+ config FW_ATTR_CLASS
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 1de432e8861e..217e94d7c877 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
++obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+ 
+ # Intel
+ obj-y				+= intel/
+diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
+new file mode 100644
+index 000000000000..571d67ade8ac
+--- /dev/null
++++ b/drivers/platform/x86/lenovo-wmi-camera.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Lenovo WMI Camera Button Driver
++ *
++ * Author: Ai Chao <aichao@kylinos.cn>
++ * Copyright (C) 2024 KylinSoft Corporation.
++ */
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/input.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
++
++struct lenovo_wmi_priv {
++	struct input_dev *idev;
++	struct device *dev;
++};
++
++enum {
++	SW_CAMERA_OFF	= 0,
++	SW_CAMERA_ON	= 1,
++};
++
++static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	if (obj->type == ACPI_TYPE_BUFFER &&
++	    obj->buffer.pointer[0] <= SW_CAMERA_ON) {
++		/* obj->buffer.pointer[0] is camera mode:
++		 *      0 camera close
++		 *      1 camera open
++		 */
++		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER,
++				    obj->buffer.pointer[0]);
++		input_sync(priv->idev);
++	} else {
++		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
++	}
++}
++
++static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct lenovo_wmi_priv *priv;
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	dev_set_drvdata(&wdev->dev, priv);
++
++	priv->idev = devm_input_allocate_device(&wdev->dev);
++	if (!priv->idev)
++		return -ENOMEM;
++
++	priv->idev->name = "Lenovo WMI Camera Button";
++	priv->idev->phys = "wmi/input0";
++	priv->idev->id.bustype = BUS_HOST;
++	priv->idev->dev.parent = &wdev->dev;
++	input_set_capability(priv->idev, EV_SW, SW_CAMERA_LENS_COVER);
++
++	return input_register_device(priv->idev);
++}
++
++static const struct wmi_device_id lenovo_wmi_id_table[] = {
++	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
++	{  }
++};
++
++static struct wmi_driver lenovo_wmi_driver = {
++	.driver = {
++		.name = "lenovo-wmi-camera",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++	.id_table = lenovo_wmi_id_table,
++	.no_singleton = true,
++	.probe = lenovo_wmi_probe,
++	.notify = lenovo_wmi_notify,
++};
++
++module_wmi_driver(lenovo_wmi_driver);
++
++MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
++MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
++MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
-Thanks,
-Gao Xiang
