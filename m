@@ -1,181 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F05EAEB
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 10:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8BC1D699;
+	Thu,  7 Mar 2024 10:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709807797; cv=none; b=hq6xuhYCc3yClzmFAliz/dqZJA6J4ZfEbg39NleHpqncIvl4r4QZ2anw3s43OYBHqumumNbGNO9ZOIsXj5GG/kJuSu3PiqA9GSvAGDvT8uHnDtMJ/k6S6BQ+cs7EAsZMDiddst0D3Ga+H+RK5/9SV8SnVgXRPO/JSgisK97ozB0=
+	t=1709808086; cv=none; b=Fe8E1Xzu+O7VVL4An1i3/SVN1Z/KU1KWkmBun+dHtpQJAuMULfQCihnGiERysGVVmZAfBA7lVk01RUCJlYQIxEopv/vx5dU7ohG8sQdVxLvPwvAqesoGN84hGlnkOUo2azL7l+h3+yLMJnuP38IqQMP0ce3hMXyyViw0QVp8I9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709807797; c=relaxed/simple;
-	bh=oSvpQF78OH2SIBcN2hrMJ6J8dbzBxbdEOqWa3QXaon8=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=OhdICG91ko767L8hQXtZgpp+ZHlsM3dS5UsyLjZXFxnfGGBuAS6s+c8RYharzxWnTpFrHAaj9ri0Mde13t3PKfcxr4OyfJVYdRyjJPimI4mLxKXIUgfOaxnMOWH3LCkaV6f33jK92fJ/WDhfOXCAVgbxcIsBCUEoAv8VpuC6LFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CZRrB0zA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709808086; c=relaxed/simple;
+	bh=u0HbKc169Dv/IfHrwEar9MH/mTXRwSs/imuaMF9eTMQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=oPFSiz7HGNahwmH8GL0eKNanFmyOUcNmsf3gYu0qCiI0D7JqhG6/6Bj+eyUI0iJUh2EdBH2sKt3Gm5qL9ymbljox2FX4q59D7vbt7RggkHLFwbnwGZGea7lfCz1J40SxvHVHqmlu6cuXc/0RcVUg88OtGuoqFSA/YisSIJNC7Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CG5NMRVh; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CZRrB0zA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709807794;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rD9pKOLlJMagBhvvso8urKdJzEY4DWr9MOofjPhNFFA=;
-	b=CZRrB0zA78RUduIO0smpVmRzUhPqgq+DsC9itHwWXuhRsQ0im+GgnjgNDbe8x+21JqQdRU
-	rpyZ1cbQa+76eaKXXoy85+T5zzHU4WCCj2kXFqDEjBwWj3kvI1MbOzQr5abUQltFvp8z8x
-	WmPtt/2cdBej1xOxEeeFGZzq4dykbRM=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-358-zJKFNu4oMJWt0JTIEUyesQ-1; Thu,
- 07 Mar 2024 05:36:33 -0500
-X-MC-Unique: zJKFNu4oMJWt0JTIEUyesQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6F4E329AC020;
-	Thu,  7 Mar 2024 10:36:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 23538C01600;
-	Thu,  7 Mar 2024 10:36:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <ZelGX3vVlGfEZm8H@casper.infradead.org>
-References: <ZelGX3vVlGfEZm8H@casper.infradead.org> <1668172.1709764777@warthog.procyon.org.uk>
-To: Matthew Wilcox <willy@infradead.org>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    Miklos Szeredi <miklos@szeredi.hu>, Christoph Hellwig <hch@lst.de>
-Cc: dhowells@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
-    Alexander Viro <viro@zeniv.linux.org.uk>,
-    Christian Brauner <brauner@kernel.org>,
-    Jeff Layton <jlayton@kernel.org>, linux-mm@kvack.org,
-    linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
-    v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-    ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] mm: Replace ->launder_folio() with flush and wait
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CG5NMRVh"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412fc5f5099so5804775e9.2;
+        Thu, 07 Mar 2024 02:41:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709808083; x=1710412883; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qgaA4hwjMMxXsNn/H65VvY2aAb1+rjCArUM3dz35oeg=;
+        b=CG5NMRVhpcDuJcA+oNFDOK1FTObA0mcwbghq7pZZSGn5yl/mX/FqhLpqffdIrIE7Wz
+         BaLB/Dm2gaoeXa647Opbu+YrAxQDo3gang6KqpnmIsKUhdozjkbkImRhHlURsxfiOMhj
+         LzD/3bEtj1TxC0XVakAO54d6NFp0E/elfXGEVl0JDv6pMG7jfm4En/VGfT5OYiH0McUQ
+         xN/Hs+7lxWuIrqkQbr+NVWofvqAdAWbNKuyBn9ZgQVgqVtsUUWowENcrmcwQtEdcBIq5
+         sL+7Cj1LLousMDvVY2Pn7/+mnOUyM75HP3BA2R8jty529iS6xC0OBHL1ncKnUTP9B2Tr
+         m6aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709808083; x=1710412883;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qgaA4hwjMMxXsNn/H65VvY2aAb1+rjCArUM3dz35oeg=;
+        b=en2BGEeoKze2KrxAneQSh95MmfscFErs4rLITsbFBVMCfTa/yxJ5NxAKAIefW5Xp3b
+         qcW40H5sZHqMcGvfYV7QEjZ4W/D3Wm6ir+vO1uhbOfGq4ladr5u4ERoiljp/BKs6FzQ/
+         /Qf92+rfUcMwhSa3GhiSLCXaOxSlT+uBdgwpB0r7ugyiRmcseQHNqpdcCyw8uD5Xzx/2
+         jCo6BD15XUoRh5TbfFFeOig6ZmM3ey8apdmU5uIcZ6o4mJ1cbIzHmKdNoSGC/YsAGikm
+         eJIeZ7J72MxPBx+2ETvlsN0fFQ6rVMD3mHDQmRB49vU8Xo3nI9jI0zGho0ad6AvQCf6Q
+         EWfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWY5Mof1wu/2i4OpMdd3GASZ+w5zSTkSHH2MFAjDIu/5YNGSqsknkovNnAOYqqTMHLtl/4yrAVUQ5XYL4LbuVhiWWEJgPVUcc8RDc5e
+X-Gm-Message-State: AOJu0YzSJycQT8MAMYyUnidUaVs0vjyFTEpvDw3aNAe3dfIORNAWZBEu
+	Y60O9S3cgLuL+EyNtFVBnJEaHdnBE2HeM/vWqcWQZYJyS1Kyk/y4
+X-Google-Smtp-Source: AGHT+IHFfQLpO+Ajim+32v9BfNQVyFeSt1SNjsGAX7r/QvA8WtdX08e2LuaNBQOxKkcCwOPQi0HNYg==
+X-Received: by 2002:a05:600c:4ecf:b0:412:b457:6303 with SMTP id g15-20020a05600c4ecf00b00412b4576303mr15685863wmq.21.1709808082840;
+        Thu, 07 Mar 2024 02:41:22 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id fk15-20020a05600c0ccf00b00413133cb9b8sm384147wmb.19.2024.03.07.02.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 02:41:19 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Dave Airlie <airlied@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	virtualization@lists.linux.dev,
+	spice-devel@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/qxl: remove unused variable num_relocs
+Date: Thu,  7 Mar 2024 10:41:19 +0000
+Message-Id: <20240307104119.1980621-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1831808.1709807788.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 07 Mar 2024 10:36:28 +0000
-Message-ID: <1831809.1709807788@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Matthew Wilcox <willy@infradead.org> wrote:
+The variable num_relocs is being initialized and incremented but it is
+never actually referenced in any other way. The variable is redundant
+and can be removed.
 
-> On Wed, Mar 06, 2024 at 10:39:37PM +0000, David Howells wrote:
-> > Here's a patch to have a go at getting rid of ->launder_folio().  Sinc=
-e it's
-> > failable and cannot guarantee that pages in the range are removed, I'v=
-e tried
-> > to replace laundering with just flush-and-wait, dropping the folio loc=
-k around
-> > the I/O.
-> =
+Cleans up clang scan build warning:
+drivers/gpu/drm/qxl/qxl_ioctl.c:148:14: warning: variable 'num_relocs'
+set but not used [-Wunused-but-set-variable]
 
-> My sense is that ->launder_folio doesn't actually need to be replaced.
-> =
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/gpu/drm/qxl/qxl_ioctl.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> commit e3db7691e9f3dff3289f64e3d98583e28afe03db
-> Author: Trond Myklebust <Trond.Myklebust@netapp.com>
-> Date:   Wed Jan 10 23:15:39 2007 -0800
-> =
-
->     [PATCH] NFS: Fix race in nfs_release_page()
-> =
-
->         NFS: Fix race in nfs_release_page()
-> =
-
->         invalidate_inode_pages2() may find the dirty bit has been set on=
- a page
->         owing to the fact that the page may still be mapped after it was=
- locked.
->         Only after the call to unmap_mapping_range() are we sure that th=
-e page
->         can no longer be dirtied.
->         In order to fix this, NFS has hooked the releasepage() method an=
-d tries
->         to write the page out between the call to unmap_mapping_range() =
-and the
->         call to remove_mapping(). This, however leads to deadlocks in th=
-e page
->         reclaim code, where the page may be locked without holding a ref=
-erence
->         to the inode or dentry.
-> =
-
->         Fix is to add a new address_space_operation, launder_page(), whi=
-ch will
->         attempt to write out a dirty page without releasing the page loc=
-k.
-> =
-
->     Signed-off-by: Trond Myklebust <Trond.Myklebust@netapp.com>
-> =
-
-> I don't understand why this couldn't've been solved by page_mkwrite.
-> NFS did later add nfs_vm_page_mkwrite in July 2007, and maybe it's just
-> not needed any more?  I haven't looked into it enough to make sure,
-> but my belief is that we should be able to get rid of it.
-
-Okay, it's slightly more complex than I thought - and I'm not sure all cal=
-lers
-are actually using it correctly.  There are some additional interesting ca=
-ses
-I've found, beyond the pre-/post-DIO case:
-
- (1) NFS relies on it to retry the write before stripping the pages in the
-     case where a writeback error occurs.  I think this can probably be de=
-alt
-     with by sticking a filemap_fdatawrite() call before the invalidation.
-     I'm not sure if this would incur the deadlock with the page reclaim c=
-ode
-     of which Trond speaks.
-
- (2) invalidate_inode_pages2() is used in some places to effect invalidati=
-on
-     of the pagecache in the case where the server tells us that a third p=
-arty
-     modified the server copy of a file.  What the right behaviour should =
-be
-     here, I'm not sure, but at the moment, any dirty data will get launde=
-red
-     back to the server.  Possibly it should be simply invalidated locally=
- or
-     the user asked how they want to handle the divergence.
-
-     Some filesystems use invalidate_remote_inode() instead which seems to
-     leave the dirty pages in place locally.
-
-     If it is desirous to save the dirty data, then filemap_fdatawrite()
-     could be deployed before invalidating the pages.
-
- (3) Fuse uses invalidate_inode_pages2() in fuse_do_setattr() to strip all=
- the
-     pages from an inode that has had its size changed, laundering any pag=
-e
-     that's still dirty.  This would seem to be excessive, but maybe Miklo=
-s
-     had a reason for doing it that way.
-
-There are some places that should perhaps be using kiocb_invalidate_pages(=
-)
-and kiocb_invalidate_post_direct_write() instead - assuming Christoph has =
-no
-objection to the latter function being exported.
-
-David
+diff --git a/drivers/gpu/drm/qxl/qxl_ioctl.c b/drivers/gpu/drm/qxl/qxl_ioctl.c
+index dd0f834d881c..506ae1f5e099 100644
+--- a/drivers/gpu/drm/qxl/qxl_ioctl.c
++++ b/drivers/gpu/drm/qxl/qxl_ioctl.c
+@@ -145,7 +145,7 @@ static int qxl_process_single_command(struct qxl_device *qdev,
+ 	struct qxl_release *release;
+ 	struct qxl_bo *cmd_bo;
+ 	void *fb_cmd;
+-	int i, ret, num_relocs;
++	int i, ret;
+ 	int unwritten;
+ 
+ 	switch (cmd->type) {
+@@ -200,7 +200,6 @@ static int qxl_process_single_command(struct qxl_device *qdev,
+ 	}
+ 
+ 	/* fill out reloc info structs */
+-	num_relocs = 0;
+ 	for (i = 0; i < cmd->relocs_num; ++i) {
+ 		struct drm_qxl_reloc reloc;
+ 		struct drm_qxl_reloc __user *u = u64_to_user_ptr(cmd->relocs);
+@@ -230,7 +229,6 @@ static int qxl_process_single_command(struct qxl_device *qdev,
+ 			reloc_info[i].dst_bo = cmd_bo;
+ 			reloc_info[i].dst_offset = reloc.dst_offset + release->release_offset;
+ 		}
+-		num_relocs++;
+ 
+ 		/* reserve and validate the reloc dst bo */
+ 		if (reloc.reloc_type == QXL_RELOC_TYPE_BO || reloc.src_handle) {
+-- 
+2.39.2
 
