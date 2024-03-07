@@ -1,178 +1,364 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2050.outbound.protection.outlook.com [40.107.8.50])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187E88286D;
-	Thu,  7 Mar 2024 08:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709800499; cv=fail; b=gWbKr9CG8a+ipZMjMciS7yEMQPatn/V7A1dgkXPhKcXCQQ5C7FprAoLtgdaNDHSpKZi6mbxGSCojnXn2f3djHZJy+C3LkzEe/RWQyGlWw7aKItj8OqBiSBhyO+5wA9R9cFcjSktRS1Al1SNkweP5oc/LvmGCtSo4BrCSHh3RsHQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709800499; c=relaxed/simple;
-	bh=gsSc7T26QFT86Y80S5LIvA/zMConjiNPpB48JB+Sfg8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=DxJK44TXmyglhJ+7mZXbDlocUwD80nPRNl/sycHw92sT/LAGbS7Zpmo39tMm3RJ1hxDNckEZlc4/2WRML5Qc6g2Rgb+eKY79o6f7W/O3trOTK39tkOBX8XTNDfg0VvV+WuElAXGXsjfJUX8wsxo7p6inHOCaDMUoNXsBfnMOI5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=RGVHQmpt; arc=fail smtp.client-ip=40.107.8.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4DE82864;
+	Thu,  7 Mar 2024 08:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709800506; cv=none; b=jf0iNH1b6WuS2NJ55vIIJuP7pSLwlaz7sysWE7r3ID34S12MvSCZbDmDAIlRq+b3CgxHpnWRWjI67t2tQ8gJz/Pp9CfYWi16AuB9yRUEI3uTe924H+5py7xWZmQmTjKNNn26AUbTptd/p1gYU/7PhpjOVCOfuxVGn2IFJPIYS2Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709800506; c=relaxed/simple;
+	bh=g4tiDkkSZnXc0ReWfyPmSD14iq7asegAk7ookJoxuww=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Xu0g/TX5Stm3Z6V5tz0hsdGUQIWfR7n+zf9zUaqWhQe28VwJZMhoERTeW8VVCzuhF4CETn0M23TqdrDwV/wEg95BU75u6ev/QxXD+locbKJFBirBfTYjGGSXfHM7W5zHnUOs4BiKp7hnsZa9z5eBGlJC8PrFD72aieyC0FUUeOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4ID3A6Q; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RGVHQmpt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C9bzbaFhpAwT0EshqvCgh72PieA5OUPet7MHQzlWwmB7DNJBOzNFhIAnnkZAHg9uIgwo8hNX3Gf9lUN7vn34EzzKHdP/aSyFxCLhg8AuNDSwz8z2mYwxT4QRDk90fEmBTaTGqG+LbalN0pZ2dD/nrsnpSri67YQsmc0/jj/HgIAAAzr/toacnLkv11rW4fZAbRx65s/7Jbx2GqP7ZwYF62vavli6iZWf/c4BUfH521J/aQbtek2lArRfYyh1s2HQ+lWS5+myg/MxeVAkz4O1fHVtJHA/V4fJyzL278qqbujzSmYPdIptXZHJqevapISIf7sUxP/XP3jEpCU3V/TCYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gsSc7T26QFT86Y80S5LIvA/zMConjiNPpB48JB+Sfg8=;
- b=GPtg7uJABn4swEsryfKKcH/r4Y694VviBxSLznYbSdz5h15lyaVhEsQzCZbLpTxMl982tMCNrtP1a/VqVOQPepQTEtKsX9yFw1naHCrGn5z0/usxLI4rGzw9+ZtDZZaKLeEeVkm7k/6BPKJzEQwL/oFo1OHRRhW/pcRrwRahSCjiBoGO/3A4P320av7UQHhFFEO8Yi0Et3FQPySGUvqjhHQeZyjU7EQbnQy+I9iZNjn3NCm4O5rQxm1fzZ8NZ8lhBczRdAt0Mb5C9y/1v81vVGjs0CGDvmIOtGkE1nxAWTMVUSwEIUOfnnwISbNQlwtp8ekCEECDuUnBLwB8LBL7AA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gsSc7T26QFT86Y80S5LIvA/zMConjiNPpB48JB+Sfg8=;
- b=RGVHQmptQFxOg4E6cSHUjl4EJ9o9RBJWiAdQnHdvmcOk17KUjMo8bV2E7x/TwWE9A449jliSeD6ye2EzOA1Nn0WpfNUeTMqPwxhv6gKyj5d6skILv+hYW+Wb6uZ1S9yJcyFFwd3ywl9rK5SkSlaK0i63d8wAg0aTCEUXGxuOtjY=
-Received: from AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
- by AS4PR04MB9551.eurprd04.prod.outlook.com (2603:10a6:20b:4fa::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Thu, 7 Mar
- 2024 08:34:53 +0000
-Received: from AS4PR04MB9386.eurprd04.prod.outlook.com
- ([fe80::8a76:10d0:859e:c8b2]) by AS4PR04MB9386.eurprd04.prod.outlook.com
- ([fe80::8a76:10d0:859e:c8b2%4]) with mapi id 15.20.7362.024; Thu, 7 Mar 2024
- 08:34:53 +0000
-From: Joy Zou <joy.zou@nxp.com>
-To: Frank Li <frank.li@nxp.com>, Vinod Koul <vkoul@kernel.org>, Shawn Guo
-	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
-	dl-linux-imx <linux-imx@nxp.com>
-CC: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	Robin Gong <yibin.gong@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>
-Subject: RE: [PATCH 4/4] dmaengine: imx-sdma: Add i2c dma support
-Thread-Topic: [PATCH 4/4] dmaengine: imx-sdma: Add i2c dma support
-Thread-Index: AQHabe0jjKnsdyWNH0OB2wZbVzuQ/rEr+Ezw
-Date: Thu, 7 Mar 2024 08:34:53 +0000
-Message-ID:
- <AS4PR04MB938674B93282C8A15D940B2CE1202@AS4PR04MB9386.eurprd04.prod.outlook.com>
-References: <20240303-sdma_upstream-v1-0-869cd0165b09@nxp.com>
- <20240303-sdma_upstream-v1-4-869cd0165b09@nxp.com>
-In-Reply-To: <20240303-sdma_upstream-v1-4-869cd0165b09@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS4PR04MB9386:EE_|AS4PR04MB9551:EE_
-x-ms-office365-filtering-correlation-id: f035b8f2-4b96-42e2-4c13-08dc3e817639
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 6aiZD7dP+cyEZbqSx2i9dWzzLq7Y3DrFtWVuc5H9sjaqvOdmt4+zZLPMqfbJTCCH7pYuKVaNPDzbtJvUN3nLBMV72nrM5SXxWE2Jjip434xIxMq7rw/2zrGyTQtjMAMaInD8RBDB+ngwH7UJ4GSk+eMN6HRDkNYQKxql5gNJECHqYavC2koC7f4RVZXmnb4RasQTbacuQcnNcbikt/mUOeACTIvMTSZ6UM08OqofvQgvZzKrrFdBa8yzO6wHE/s+pHmoUEfgU8/VEgBNzqnsU8MzNRDsymMQQ5oE0BqLa31c2qXhl/zvaNaQ1EOUd7CvB5t8PK052RdkKf6uqHLMKhbkt1K8eNJqwPbjRHnmie6LW8Y1yli4mw6rSlQj+HeKtYa++ggBRiguXtqHes2CwHOGNADtHHqdwqfL0wzlrVoPoIRQFmbZEIq4No80NxVq0siTtdO3/6YvuunOvMe8D64COUEOd/hksyLD/Rx75RnDeapCTYI68shloMgBtPFhEhtxJpd0Haua2v0ix2sazmOgduCV2LBoLuv/hPn4QWGFAiYJ2S5Niw6JirAcvvKZKwqFFUiDu9YKiZhQddPml5ait4kI1dsVf+cjvXk09qcEjlzKOLkn6Us8iiQiuw8Xh81+uJQF2byJgFqxaR0QnGOCU4oOO0JL4abYK00SGURI3InWeCLgvBXmQmurae4W8uNPrgkRMCqmb37zyS6FV3CV+hC5V3ziENxg3WkkV3g=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9386.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NDcyRVI1QWhreGRvTUI5emthUUx4MVMybjJCWFhDYlhsVDYvKzM5TXpJNzZr?=
- =?utf-8?B?R1B2TWZvVURReG84U0xRYm5lWjVjdnhNbzY4aVN3NmVFWWZkeXE2R296bVk3?=
- =?utf-8?B?YjBqd2kxbzhOa3V0V0N5Z0tTM1RvM0ZJUjNIdDR6REVoNDhKNExTdm5LV1lz?=
- =?utf-8?B?TkNFbjNuUTlwdlQ4UUNJWmVFVXFRUTFqWk8vN2VKSUErY0lWb2QzR0R5REoy?=
- =?utf-8?B?MXA3ZW05QjdXWHUrdCtrbStHY251bFhkcUdMclRpM2lYd2U2Q2V5ck9XSVVl?=
- =?utf-8?B?SjJma2pDMnl4RTFLV2xGVVRudEQvS1lXSDhSejZYcjRNNEdjcSsyM0dvYkZU?=
- =?utf-8?B?VlI0TFZBUGZFV0lGdzBKa2hHV3lXZGJtTWUyYUcwQ3JSbU5YVk1BZVMySFBG?=
- =?utf-8?B?SWRneDExRUxhOWJHYWh2RkY0SWh4SVNwRWtzdTZLMUVjMWNBa2VDc1RTWUIx?=
- =?utf-8?B?bGEwc1FZN2QvWFk5RGtzUDVhYUc3WmY5U0VnMkJtZVpHM2xsVmJaL0dRVWpS?=
- =?utf-8?B?SXQ5MVRYL3FNbmpqTDFNT3BLQStaSjFFcnduS0NJdUw3WWRVOXdGOTRwOEJI?=
- =?utf-8?B?eldZT3hKYkhkMHpRZ2xSN0VmQ1ZXUGVMSUpNeUtyRHlCMVlQNWhKdFVONnR6?=
- =?utf-8?B?dUJjU2tTODhzTTNHUTIvWjJETUZldzhwc3JuVVVSelVQcGdJTUppQlh4ZENt?=
- =?utf-8?B?QXF2QitOTFhMMWFSdS9hMnZraDVsK0lGWDMwa3FWMjN0dlVxL2RRaExhOHNk?=
- =?utf-8?B?bmtvaWMzQTF6ZVRINWNKWjBHRXVNbEx5bDVpZEJNZVh5Z2VPK2l4cDlNSVRs?=
- =?utf-8?B?d1dxSGtUNVJmaFFXcVlXeXBscG1uY0JCYlJxb3RjYlp5bDFPNzZuT3prR01E?=
- =?utf-8?B?WXR2elFjNS9KTlJaWXZuSFRhaHVEamVialN3Y3dIaDVTaFpwc0JrYlExT0tv?=
- =?utf-8?B?TW1aeVBUQmV0QllES3J3SlZKUG9mUGxJMGlqNzZPN3ZzTm5pWVlnRmlJR2Ur?=
- =?utf-8?B?Y1hicWdvQXNTTUlMRFMzb0d2S2Fwa3FUM0JYRFRBbVNBWVBvSUF5ZmdxbW44?=
- =?utf-8?B?d0Y3NHZ4eHZ1UGFUOW5zRkdoOXNjQzdtSllCOGtxRHZjU01RSFVvMzJLVHNP?=
- =?utf-8?B?dUVsdGtxQklzSXdnTGczNHZqTUpUZDhDVElXUzVVMFFQaDdjUU1iOWh0KzBB?=
- =?utf-8?B?Z2Q5aFArd3B3QXdOU2h5Y2U1WlZzOEVpb2wrNCswdjdkYnRLeWVaK0FVMUpM?=
- =?utf-8?B?T1A4Z0luemNHbUExYzVDNEQ1SmlNV3ZRTElEWDJWZm1IN3Q0MUxOeWYvTlFv?=
- =?utf-8?B?d095ekh6R3h6YjBpY3RVd0xncEcyU05DN1h1dThmR3l1N1RhUDZLanBpVE5t?=
- =?utf-8?B?N1M4V003N0lxWXNDMjV3VWhJY0M5R0hYYmpzamdzVGVxeU0xWXpSV09wNjdS?=
- =?utf-8?B?dVFlMzRhaXRseHRMVi8wUW96blZKVFQrVlkrRjlOZElKS01pbmlWTEJBRjh1?=
- =?utf-8?B?Rk9jUXNIQTk3c3NJTWd5dno2c3ZOdWN3cUFPMktUZzFLbk1Fb1pSVkVjYUp4?=
- =?utf-8?B?WGV5OVRGVmlWeUxMZVV4N3hHTzJFZlZ5bTE5bkN5LzhNMWx5KzhqYlNKa0dn?=
- =?utf-8?B?dTM5UDk0bVhvZFBpZWJkd0pTL2poRlpOY0pRNlNVZ0laQ2tpaGJod0ZXQnBT?=
- =?utf-8?B?bVRUTkZvR0tNZHBzaUIyRnJtaENqaW1BOU9COTBVdmhWVFdrV1A3c0ZaNjBX?=
- =?utf-8?B?UFRpdDY3YjlJZFh4d2NNbUxaRFl0U2FnSHBNanY2aUx4dUg4YVZJWnhER0ph?=
- =?utf-8?B?MWsyWlFIMjEva1p1bnBHMDZpWWJRZEozM1ZPbGhkWjg1cU56a0VoUUh2RFBi?=
- =?utf-8?B?V3FDL3ZrSEFHeFJETUtxWHBNaDEyWkxaakFTaDdVd3hqRjJwMFhWSHdrb0NJ?=
- =?utf-8?B?QWl4T2VXZ1FYSlNtekQ0Z2g5bElBNTBlTWM3NktZZXZjUFd5ckdoUytRRVN5?=
- =?utf-8?B?aFJob2hmYVg4YWUvUko3WnVCS3ZONDh0QmlLWHBQOFFJT3ZXN1ZqajdoU0Rz?=
- =?utf-8?B?Z3JHazRyRWVTc2JvV2JSR2V2MWF3d05aQmVPODBnbllhNXhsK0hhdjZJNDhJ?=
- =?utf-8?Q?vVEU=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4ID3A6Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709800504; x=1741336504;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=g4tiDkkSZnXc0ReWfyPmSD14iq7asegAk7ookJoxuww=;
+  b=Z4ID3A6QnkCPwWLRcVLweLoc9i6xrNttPVafCpLq+PVwxlWngGz6hdXf
+   Xaq4PEZloeVIhoeqJ5nQQ4/ui4vuuC1Iepv9Fw+DJ8WUQQnf7uGUGvxVy
+   vr8KRO5RKW/abcU0cv2VSQdZYJvguAczNYy/vqNXFz7qNMW4bdgT8gYta
+   gZq+O6c1usnxf4IVlRGKu/GeERZGiHpaxCYvFZV3ABlM/eM3PTAM3OMOw
+   Nm78UiUSFw/cvllJCfVK577FoWIaICMFj8Z3VN5WsimssS+gzEmmj/NED
+   bnk9hg+jllpb0ydcaEg9ndAW07gVAjRNO0IZJtH0endJbtbcyhWCf8k71
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4600361"
+X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
+   d="scan'208";a="4600361"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 00:35:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
+   d="scan'208";a="14699636"
+Received: from haibo-optiplex-7090.sh.intel.com ([10.239.159.132])
+  by orviesa004.jf.intel.com with ESMTP; 07 Mar 2024 00:34:54 -0800
+From: Haibo Xu <haibo1.xu@intel.com>
+To: 
+Cc: xiaobo55x@gmail.com,
+	ajones@ventanamicro.com,
+	sunilvl@ventanamicro.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Guo Ren <guoren@kernel.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Baoquan He <bhe@redhat.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Zong Li <zong.li@sifive.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	James Morse <james.morse@arm.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Evan Green <evan@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: [PATCH v2 2/6] ACPI: RISCV: Add NUMA support based on SRAT and SLIT
+Date: Thu,  7 Mar 2024 16:47:54 +0800
+Message-Id: <7ca110c59cbb2fb358304a9ba4f9c7cbeb191345.1709780590.git.haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1709780590.git.haibo1.xu@intel.com>
+References: <cover.1709780590.git.haibo1.xu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9386.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f035b8f2-4b96-42e2-4c13-08dc3e817639
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2024 08:34:53.4813
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f8OWmH3q3ddXc9yskBpiewb8AdneiM5Q3QncnmmhX3zs/Jb6CcB4KY6/podsFjWY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9551
+Content-Transfer-Encoding: 8bit
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRnJhbmsgTGkgPGZyYW5r
-LmxpQG54cC5jb20+DQo+IFNlbnQ6IDIwMjTlubQz5pyINOaXpSAxMjozMw0KPiBUbzogVmlub2Qg
-S291bCA8dmtvdWxAa2VybmVsLm9yZz47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47
-DQo+IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT47IFBlbmd1dHJvbml4IEtl
-cm5lbCBUZWFtDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtIDxmZXN0
-ZXZhbUBnbWFpbC5jb20+Ow0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBD
-YzogZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBpbXhAbGlzdHMubGlu
-dXguZGV2OyBGcmFuayBMaQ0KPiA8ZnJhbmsubGlAbnhwLmNvbT47IFJvYmluIEdvbmcgPHlpYmlu
-LmdvbmdAbnhwLmNvbT47IENsYXJrIFdhbmcNCj4gPHhpYW9uaW5nLndhbmdAbnhwLmNvbT4NCj4g
-U3ViamVjdDogW1BBVENIIDQvNF0gZG1hZW5naW5lOiBpbXgtc2RtYTogQWRkIGkyYyBkbWEgc3Vw
-cG9ydA0KPiANCj4gRnJvbTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KPiANCj4g
-TmV3IHNkbWEgc2NyaXB0IHN1cHBvcnQgaTJjLiBTbyBhZGQgSTJDIGRtYSBzdXBwb3J0Lg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KPiBBY2tl
-ZC1ieTogQ2xhcmsgV2FuZyA8eGlhb25pbmcud2FuZ0BueHAuY29tPg0KPiBTaWduZWQtb2ZmLWJ5
-OiBGcmFuayBMaSA8RnJhbmsuTGlAbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IEpveSBab3UgPGpv
-eS56b3VAbnhwLmNvbT4NCkJSDQpKb3kgWm91DQo+IC0tLQ0KPiAgZHJpdmVycy9kbWEvaW14LXNk
-bWEuYyAgICAgIHwgNyArKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L2RtYS9pbXgtZG1hLmggfCAx
-ICsNCj4gIDIgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9kbWEvaW14LXNkbWEuYyBiL2RyaXZlcnMvZG1hL2lteC1zZG1hLmMgaW5kZXgN
-Cj4gOWIxMzM5OTBhZmEzOS4uODMyYmU3ZWNjYjMzNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9k
-bWEvaW14LXNkbWEuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jDQo+IEBAIC0yNDcs
-NiArMjQ3LDggQEAgc3RydWN0IHNkbWFfc2NyaXB0X3N0YXJ0X2FkZHJzIHsNCj4gIAlzMzIgc2Fp
-XzJfbWN1X2FkZHI7DQo+ICAJczMyIHVhcnRfMl9tY3Vfcm9tX2FkZHI7DQo+ICAJczMyIHVhcnRz
-aF8yX21jdV9yb21fYWRkcjsNCj4gKwlzMzIgaTJjXzJfbWN1X2FkZHI7DQo+ICsJczMyIG1jdV8y
-X2kyY19hZGRyOw0KPiAgCS8qIEVuZCBvZiB2MyBhcnJheSAqLw0KPiAgCXMzMiBtY3VfMl96cXNw
-aV9hZGRyOw0KPiAgCS8qIEVuZCBvZiB2NCBhcnJheSAqLw0KPiBAQCAtMTA3OCw2ICsxMDgwLDEx
-IEBAIHN0YXRpYyBpbnQgc2RtYV9nZXRfcGMoc3RydWN0IHNkbWFfY2hhbm5lbA0KPiAqc2RtYWMs
-DQo+ICAJCXBlcl8yX2VtaSA9IHNkbWEtPnNjcmlwdF9hZGRycy0+c2FpXzJfbWN1X2FkZHI7DQo+
-ICAJCWVtaV8yX3BlciA9IHNkbWEtPnNjcmlwdF9hZGRycy0+bWN1XzJfc2FpX2FkZHI7DQo+ICAJ
-CWJyZWFrOw0KPiArCWNhc2UgSU1YX0RNQVRZUEVfSTJDOg0KPiArCQlwZXJfMl9lbWkgPSBzZG1h
-LT5zY3JpcHRfYWRkcnMtPmkyY18yX21jdV9hZGRyOw0KPiArCQllbWlfMl9wZXIgPSBzZG1hLT5z
-Y3JpcHRfYWRkcnMtPm1jdV8yX2kyY19hZGRyOw0KPiArCQlzZG1hYy0+aXNfcmFtX3NjcmlwdCA9
-IHRydWU7DQo+ICsJCWJyZWFrOw0KPiAgCWNhc2UgSU1YX0RNQVRZUEVfSERNSToNCj4gIAkJZW1p
-XzJfcGVyID0gc2RtYS0+c2NyaXB0X2FkZHJzLT5oZG1pX2RtYV9hZGRyOw0KPiAgCQlzZG1hYy0+
-aXNfcmFtX3NjcmlwdCA9IHRydWU7DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2RtYS9p
-bXgtZG1hLmggYi9pbmNsdWRlL2xpbnV4L2RtYS9pbXgtZG1hLmgNCj4gaW5kZXggY2ZlYzVmOTQ2
-ZTIzNy4uNzZhOGRlOWFlMTUxNyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9kbWEvaW14
-LWRtYS5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvZG1hL2lteC1kbWEuaA0KPiBAQCAtNDEsNiAr
-NDEsNyBAQCBlbnVtIHNkbWFfcGVyaXBoZXJhbF90eXBlIHsNCj4gIAlJTVhfRE1BVFlQRV9TQUks
-CS8qIFNBSSAqLw0KPiAgCUlNWF9ETUFUWVBFX01VTFRJX1NBSSwJLyogTVVMVEkgRklGT3MgRm9y
-IEF1ZGlvICovDQo+ICAJSU1YX0RNQVRZUEVfSERNSSwgICAgICAgLyogSERNSSBBdWRpbyAqLw0K
-PiArCUlNWF9ETUFUWVBFX0kyQywJLyogSTJDICovDQo+ICB9Ow0KPiANCj4gIGVudW0gaW14X2Rt
-YV9wcmlvIHsNCj4gDQo+IC0tDQo+IDIuMzQuMQ0KDQo=
+Add acpi_numa.c file to enable parse NUMA information from
+ACPI SRAT and SLIT tables. SRAT table provide CPUs(Hart) and
+memory nodes to proximity domain mapping, while SLIT table
+provide the distance metrics between proximity domains.
+
+Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+---
+ arch/riscv/include/asm/acpi.h |  15 +++-
+ arch/riscv/kernel/Makefile    |   1 +
+ arch/riscv/kernel/acpi.c      |   5 --
+ arch/riscv/kernel/acpi_numa.c | 131 ++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/setup.c     |   4 +-
+ arch/riscv/kernel/smpboot.c   |   2 -
+ include/linux/acpi.h          |   6 ++
+ 7 files changed, 154 insertions(+), 10 deletions(-)
+ create mode 100644 arch/riscv/kernel/acpi_numa.c
+
+diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+index 7dad0cf9d701..e0a1f84404f3 100644
+--- a/arch/riscv/include/asm/acpi.h
++++ b/arch/riscv/include/asm/acpi.h
+@@ -61,11 +61,14 @@ static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+ 
+ void acpi_init_rintc_map(void);
+ struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu);
+-u32 get_acpi_id_for_cpu(int cpu);
++static inline u32 get_acpi_id_for_cpu(int cpu)
++{
++	return acpi_cpu_get_madt_rintc(cpu)->uid;
++}
++
+ int acpi_get_riscv_isa(struct acpi_table_header *table,
+ 		       unsigned int cpu, const char **isa);
+ 
+-static inline int acpi_numa_get_nid(unsigned int cpu) { return NUMA_NO_NODE; }
+ void acpi_get_cbo_block_size(struct acpi_table_header *table, u32 *cbom_size,
+ 			     u32 *cboz_size, u32 *cbop_size);
+ #else
+@@ -87,4 +90,12 @@ static inline void acpi_get_cbo_block_size(struct acpi_table_header *table,
+ 
+ #endif /* CONFIG_ACPI */
+ 
++#ifdef CONFIG_ACPI_NUMA
++int acpi_numa_get_nid(unsigned int cpu);
++void acpi_map_cpus_to_nodes(void);
++#else
++static inline int acpi_numa_get_nid(unsigned int cpu) { return NUMA_NO_NODE; }
++static inline void acpi_map_cpus_to_nodes(void) { }
++#endif /* CONFIG_ACPI_NUMA */
++
+ #endif /*_ASM_ACPI_H*/
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index f71910718053..5d3e9cf89b76 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -105,3 +105,4 @@ obj-$(CONFIG_COMPAT)		+= compat_vdso/
+ 
+ obj-$(CONFIG_64BIT)		+= pi/
+ obj-$(CONFIG_ACPI)		+= acpi.o
++obj-$(CONFIG_ACPI_NUMA)	+= acpi_numa.o
+diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
+index e619edc8b0cc..040bdbfea2b4 100644
+--- a/arch/riscv/kernel/acpi.c
++++ b/arch/riscv/kernel/acpi.c
+@@ -191,11 +191,6 @@ struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
+ 	return &cpu_madt_rintc[cpu];
+ }
+ 
+-u32 get_acpi_id_for_cpu(int cpu)
+-{
+-	return acpi_cpu_get_madt_rintc(cpu)->uid;
+-}
+-
+ /*
+  * __acpi_map_table() will be called before paging_init(), so early_ioremap()
+  * or early_memremap() should be called here to for ACPI table mapping.
+diff --git a/arch/riscv/kernel/acpi_numa.c b/arch/riscv/kernel/acpi_numa.c
+new file mode 100644
+index 000000000000..0231482d6946
+--- /dev/null
++++ b/arch/riscv/kernel/acpi_numa.c
+@@ -0,0 +1,131 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ACPI 6.6 based NUMA setup for RISCV
++ * Lots of code was borrowed from arch/arm64/kernel/acpi_numa.c
++ *
++ * Copyright 2004 Andi Kleen, SuSE Labs.
++ * Copyright (C) 2013-2016, Linaro Ltd.
++ *		Author: Hanjun Guo <hanjun.guo@linaro.org>
++ * Copyright (C) 2024 Intel Corporation.
++ *
++ * Reads the ACPI SRAT table to figure out what memory belongs to which CPUs.
++ *
++ * Called from acpi_numa_init while reading the SRAT and SLIT tables.
++ * Assumes all memory regions belonging to a single proximity domain
++ * are in one chunk. Holes between them will be included in the node.
++ */
++
++#define pr_fmt(fmt) "ACPI: NUMA: " fmt
++
++#include <linux/acpi.h>
++#include <linux/bitmap.h>
++#include <linux/kernel.h>
++#include <linux/mm.h>
++#include <linux/memblock.h>
++#include <linux/mmzone.h>
++#include <linux/module.h>
++#include <linux/topology.h>
++
++#include <asm/numa.h>
++
++static int acpi_early_node_map[NR_CPUS] __initdata = { NUMA_NO_NODE };
++
++int __init acpi_numa_get_nid(unsigned int cpu)
++{
++	return acpi_early_node_map[cpu];
++}
++
++static inline int get_cpu_for_acpi_id(u32 uid)
++{
++	int cpu;
++
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
++		if (uid == get_acpi_id_for_cpu(cpu))
++			return cpu;
++
++	return -EINVAL;
++}
++
++static int __init acpi_parse_rintc_pxm(union acpi_subtable_headers *header,
++				       const unsigned long end)
++{
++	struct acpi_srat_rintc_affinity *pa;
++	int cpu, pxm, node;
++
++	if (srat_disabled())
++		return -EINVAL;
++
++	pa = (struct acpi_srat_rintc_affinity *)header;
++	if (!pa)
++		return -EINVAL;
++
++	if (!(pa->flags & ACPI_SRAT_RINTC_ENABLED))
++		return 0;
++
++	pxm = pa->proximity_domain;
++	node = pxm_to_node(pxm);
++
++	/*
++	 * If we can't map the UID to a logical cpu this
++	 * means that the UID is not part of possible cpus
++	 * so we do not need a NUMA mapping for it, skip
++	 * the SRAT entry and keep parsing.
++	 */
++	cpu = get_cpu_for_acpi_id(pa->acpi_processor_uid);
++	if (cpu < 0)
++		return 0;
++
++	acpi_early_node_map[cpu] = node;
++	pr_info("SRAT: PXM %d -> HARTID 0x%lx -> Node %d\n", pxm,
++		cpuid_to_hartid_map(cpu), node);
++
++	return 0;
++}
++
++void __init acpi_map_cpus_to_nodes(void)
++{
++	int i;
++
++	/*
++	 * In ACPI, SMP and CPU NUMA information is provided in separate
++	 * static tables, namely the MADT and the SRAT.
++	 *
++	 * Thus, it is simpler to first create the cpu logical map through
++	 * an MADT walk and then map the logical cpus to their node ids
++	 * as separate steps.
++	 */
++	acpi_table_parse_entries(ACPI_SIG_SRAT, sizeof(struct acpi_table_srat),
++				 ACPI_SRAT_TYPE_RINTC_AFFINITY, acpi_parse_rintc_pxm, 0);
++
++	for (i = 0; i < nr_cpu_ids; i++)
++		early_map_cpu_to_node(i, acpi_numa_get_nid(i));
++}
++
++/* Callback for Proximity Domain -> logical node ID mapping */
++void __init acpi_numa_rintc_affinity_init(struct acpi_srat_rintc_affinity *pa)
++{
++	int pxm, node;
++
++	if (srat_disabled())
++		return;
++
++	if (pa->header.length < sizeof(struct acpi_srat_rintc_affinity)) {
++		pr_err("SRAT: Invalid SRAT header length: %d\n", pa->header.length);
++		bad_srat();
++		return;
++	}
++
++	if (!(pa->flags & ACPI_SRAT_RINTC_ENABLED))
++		return;
++
++	pxm = pa->proximity_domain;
++	node = acpi_map_pxm_to_node(pxm);
++
++	if (node == NUMA_NO_NODE) {
++		pr_err("SRAT: Too many proximity domains %d\n", pxm);
++		bad_srat();
++		return;
++	}
++
++	node_set(node, numa_nodes_parsed);
++}
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index 4f73c0ae44b2..a2cde65b69e9 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -281,8 +281,10 @@ void __init setup_arch(char **cmdline_p)
+ 	setup_smp();
+ #endif
+ 
+-	if (!acpi_disabled)
++	if (!acpi_disabled) {
+ 		acpi_init_rintc_map();
++		acpi_map_cpus_to_nodes();
++	}
+ 
+ 	riscv_init_cbo_blocksizes();
+ 	riscv_fill_hwcap();
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index cfbe4b840d42..81a2aa77680c 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -100,7 +100,6 @@ static int __init acpi_parse_rintc(union acpi_subtable_headers *header, const un
+ 	if (hart == cpuid_to_hartid_map(0)) {
+ 		BUG_ON(found_boot_cpu);
+ 		found_boot_cpu = true;
+-		early_map_cpu_to_node(0, acpi_numa_get_nid(cpu_count));
+ 		return 0;
+ 	}
+ 
+@@ -110,7 +109,6 @@ static int __init acpi_parse_rintc(union acpi_subtable_headers *header, const un
+ 	}
+ 
+ 	cpuid_to_hartid_map(cpu_count) = hart;
+-	early_map_cpu_to_node(cpu_count, acpi_numa_get_nid(cpu_count));
+ 	cpu_count++;
+ 
+ 	return 0;
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index b7165e52b3c6..f74c62956e07 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -269,6 +269,12 @@ acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+ 
+ int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
+ 
++#ifdef CONFIG_RISCV
++void acpi_numa_rintc_affinity_init(struct acpi_srat_rintc_affinity *pa);
++#else
++static inline void acpi_numa_rintc_affinity_init(struct acpi_srat_rintc_affinity *pa) { }
++#endif
++
+ #ifndef PHYS_CPUID_INVALID
+ typedef u32 phys_cpuid_t;
+ #define PHYS_CPUID_INVALID (phys_cpuid_t)(-1)
+-- 
+2.34.1
+
