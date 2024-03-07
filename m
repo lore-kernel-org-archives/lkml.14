@@ -1,225 +1,174 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4AA1BF31
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 06:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F7581F;
+	Thu,  7 Mar 2024 06:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709792519; cv=none; b=oWCq2wGti3ppyyHUQIeH4xKNjOdhmv4iKbKHwLAoph6uubBkPigSw3KaOqN8e5zMeCiKFOm+LNBXJOMmLxSg05y5//XDTxZAclQOux1AXQytTOJcMiytLGp+zIfF0Plwuz4vFMZDsuxm0V1LGvUUrNr4XkV37kAwBtfy1+rBD3Y=
+	t=1709792538; cv=none; b=k6fkiTkbwFZ5cnaZR/EPZMooowY4gFB4FnwmzAmS8lsK1LoP89EpW7o48o4c0zvPcHLY9E9LpTw3AWviHlfWcsXiurHdVkGTlBK1lyrKsPDJw3/eGHESREDDDOD0vtB25KlGECNWqiBw//CHzcp3koQkrQ39ims/NBqkYjrG7Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709792519; c=relaxed/simple;
-	bh=QKwzNGAsKsvRTs/1Psocg21Y9gPoueC9GIDaUhtN3LU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=HTpojGnDYJ+K0eJOFgDjrOdrPJfHMDO3JiYBSno9wQ6+AZCgyYzodgXQ/DxGTFJldyMpn67+WJkfNg+9bmfgRo1ulB4vKOSn4hNzeG/46WxParOC3lSezcNcSEgTKOg7TaVp0bRRzW8fCmWIMrzB0pldwhmt0aHjTYzZrixh5JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=eDBsA1hQ; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1709792538; c=relaxed/simple;
+	bh=tJk5GPSWzHu5iJyfgh1vvpdf+5NuhobzvsMmLQkBAYY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XaTRBP3dTCIsogZy31/tpr0ZSBkCBUROj0TzBj5t/pe1TLZBHJLuBdurjB9B5+Hh5ocanuT2wwB+G+3reDpjdSFG3cFCnsk9vnOsNYgxeNa4vQLwYI4OYgluUUkChfm5JLC2EIOMFsdhxVpcXjhx6uWyvc2EdoR1LaWDMReeq3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KTJ84kqI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="eDBsA1hQ"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-68f5cdca7a3so13014076d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 22:21:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1709792516; x=1710397316; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ImzynJrvqwnXUnHjeXPOvdUqQOzMzF7+CE154eZIXmo=;
-        b=eDBsA1hQHAgEV8aHc0nuN/omxBZnhCJ2t/FIvkHo/ux1o677HRqg/3Xg2BrzdWcik1
-         OnPqASsdrb27SxkgNODcNACzlMAjHwNKRkFuSmmVX2fucXDSBjA5K3HWmEJF1nfXzFUL
-         Fl2ZjvCptujOb0H7EBmSbhq8Fz/QuyUjVbuts=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709792516; x=1710397316;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ImzynJrvqwnXUnHjeXPOvdUqQOzMzF7+CE154eZIXmo=;
-        b=ROfO6wPITTrPJ5Q6XY5z10ePi0ydw9dFpLPyzW9ZFYdISHGASfPtRJMasz8vAfm5RO
-         UdSucABMBzyzhlpPKNbZLp1xUTuO9ta6dhv7J9GAqlGbb3g/86jWBc9pJv1D1BdNPOY4
-         2Lj6C+bKpO5kFoG7SdNzc926Le++f/s3TsE6DLAcKpGleUICBJUX7O8IjlcvoZer9OuN
-         oGTW2JP2qYsieNoiKDLRN3pCFnJtYAJYZZJ9DjRqkp3tTQpna6OqPINEvYjEX43doWzm
-         1RvGtdZhwUgZXl+8gVKfAYQqU+fmVQa4hf0zHVpowG4QITcJOSyaC/oTwFkJIaADVLcy
-         6/4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUABwT6ZCRazrQsTsMyzdvPg7Gxu0e7JEKRRdKczrhOs46CKIXheVFb46VdHrOItbXy4JdZDMzasWsCQuUNc3mXf3PFH4LfeZTvLoED
-X-Gm-Message-State: AOJu0YymrGiJqUSWrQ1UH92NRsT3P4cSOPLr/wB0/WpnAPFP+EsXkNHa
-	x2Xrh8APuU4/CbGTiPHCN8Orjuuc3/sR2H7vXhfwoR3IgMjWM6cC72aoBPIQjUk=
-X-Google-Smtp-Source: AGHT+IEUHmSxAYv6krmrCkWACPHTjZZ0qM1Lexgz4DY/Diu+g2F2ILXdGJS83UruM29x7RqIp5pb2A==
-X-Received: by 2002:a05:6214:5588:b0:690:a672:a107 with SMTP id mi8-20020a056214558800b00690a672a107mr211509qvb.0.1709792516084;
-        Wed, 06 Mar 2024 22:21:56 -0800 (PST)
-Received: from [10.5.0.2] ([91.196.69.189])
-        by smtp.gmail.com with ESMTPSA id lq9-20020a0562145b8900b0069055b05705sm7219808qvb.132.2024.03.06.22.21.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Mar 2024 22:21:55 -0800 (PST)
-Message-ID: <14ab5bd4-d7b8-4233-9389-f21884986671@joelfernandes.org>
-Date: Thu, 7 Mar 2024 01:21:50 -0500
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KTJ84kqI"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42743qt6014596;
+	Thu, 7 Mar 2024 06:22:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=Z3bYhTRiiQvxZ9pfqEtV3Mv1twCj+OvqZpPRG8NMtK4=; b=KT
+	J84kqIn3oTcDTZQ3HjRDS/eL6xFtvThLBVxyvd7/luBvv8rjPDL+jjJI/0X6Lx5H
+	TfLoCelFHmuScpcF4fnQA+5+dztNJ77MqynszG+uXPAsqOLAwbTOpU3UL2XwDZgL
+	cyJH+UwqW8z51vxpTN2Qv+j7nECTf6ZEvhqu97THYOmLmxcVkCpuU9CCvDnXPiix
+	Vl589EfiFrJ0+FJWfB+J7xoXYpGk7NexlW/YeUCJ6H4/g+aszjkapwlDFmWLr+uB
+	L8RuoStbTM5juleALkB56LtSGZ6AyzUOB9JWYs0TUy/vfV2ceua7DgmvmTerplxR
+	T1ccefWys08BlQCFII0Q==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wq0rbrt6x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 06:22:12 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4276LiVk014899
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 7 Mar 2024 06:21:44 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 6 Mar 2024 22:21:38 -0800
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Wesley Cheng
+	<quic_wcheng@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Felipe Balbi
+	<balbi@kernel.org>, Johan Hovold <johan@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
+        Krishna Kurapati
+	<quic_kriskura@quicinc.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v16 5/9] dt-bindings: usb: qcom,dwc3: Add bindings for SC8280 Multiport
+Date: Thu, 7 Mar 2024 11:50:48 +0530
+Message-ID: <20240307062052.2319851-6-quic_kriskura@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240307062052.2319851-1-quic_kriskura@quicinc.com>
+References: <20240307062052.2319851-1-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] rcu: Do not release a wait-head from a GP kthread
-Content-Language: en-US
-From: Joel Fernandes <joel@joelfernandes.org>
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
- "Paul E . McKenney" <paulmck@kernel.org>
-Cc: RCU <rcu@vger.kernel.org>, Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
- Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
- LKML <linux-kernel@vger.kernel.org>,
- Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
- Frederic Weisbecker <frederic@kernel.org>
-References: <20240305195720.42687-1-urezki@gmail.com>
- <a1faf101-c689-4530-a9a5-c7f95b8825d6@joelfernandes.org>
-In-Reply-To: <a1faf101-c689-4530-a9a5-c7f95b8825d6@joelfernandes.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: fq-XmDlK_TJdwOqvcsl3RrrOu3BNpfCw
+X-Proofpoint-ORIG-GUID: fq-XmDlK_TJdwOqvcsl3RrrOu3BNpfCw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_02,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403070045
 
+Add the compatible string for SC8280 Multiport USB controller from
+Qualcomm.
 
+There are 4 power event irq interrupts supported by this controller
+(one for each port of multiport). Added all the 4 as non-optional
+interrupts for SC8280XP-MP
 
-On 3/6/2024 5:31 PM, Joel Fernandes wrote:
-> 
-> 
-> On 3/5/2024 2:57 PM, Uladzislau Rezki (Sony) wrote:
->> Fix a below race by not releasing a wait-head from the
->> GP-kthread as it can lead for reusing it whereas a worker
->> can still access it thus execute newly added callbacks too
->> early.
->>
->> CPU 0                              CPU 1
->> -----                              -----
->>
->> // wait_tail == HEAD1
->> rcu_sr_normal_gp_cleanup() {
->>     // has passed SR_MAX_USERS_WAKE_FROM_GP
->>     wait_tail->next = next;
->>     // done_tail = HEAD1
->>     smp_store_release(&rcu_state.srs_done_tail, wait_tail);
->>     queue_work() {
->>         test_and_set_bit(WORK_STRUCT_PENDING_BIT, work_data_bits(work)
->>         __queue_work()
->>     }
->> }
->>
->>                                set_work_pool_and_clear_pending()
->>                                rcu_sr_normal_gp_cleanup_work() {
->> // new GP, wait_tail == HEAD2
->> rcu_sr_normal_gp_cleanup() {
->>     // executes all completion, but stop at HEAD1
->>     wait_tail->next = HEAD1;
->>     // done_tail = HEAD2
->>     smp_store_release(&rcu_state.srs_done_tail, wait_tail);
->>     queue_work() {
->>         test_and_set_bit(WORK_STRUCT_PENDING_BIT, work_data_bits(work)
->>         __queue_work()
->>     }
->> }
->>                                  // done = HEAD2
->>                                  done = smp_load_acquire(&rcu_state.srs_done_tail);
->>                                  // head = HEAD1
->>                                  head = done->next;
->>                                  done->next = NULL;
->>                                  llist_for_each_safe() {
->>                                  // completes all callbacks, release HEAD1
->>                                  }
->>                                }
->>                                // Process second queue
->>                                set_work_pool_and_clear_pending()
->>                                rcu_sr_normal_gp_cleanup_work() {
->>                                // done = HEAD2
->>                                done = smp_load_acquire(&rcu_state.srs_done_tail);
->>
->> // new GP, wait_tail == HEAD3
->> rcu_sr_normal_gp_cleanup() {
->>     // Finds HEAD2 with ->next == NULL at the end
->>     rcu_sr_put_wait_head(HEAD2)
->>     ...
->>
->> // A few more GPs later
->> rcu_sr_normal_gp_init() {
->>      HEAD2 = rcu_sr_get_wait_head();
->>      llist_add(HEAD2, &rcu_state.srs_next);
->>                                // head == rcu_state.srs_next
->>                                head = done->next;
->>                                done->next = NULL;
->>                                llist_for_each_safe() {
->>                                 // EXECUTE CALLBACKS TOO EARLY!!!
->>                                 }
->>                                }
->>
->> Reported-by: Frederic Weisbecker <frederic@kernel.org>
->> Fixes: 05a10b921000 ("rcu: Support direct wake-up of synchronize_rcu() users")
->> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
->> ---
->>  kernel/rcu/tree.c | 22 ++++++++--------------
->>  1 file changed, 8 insertions(+), 14 deletions(-)
->>
->> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
->> index 31f3a61f9c38..475647620b12 100644
->> --- a/kernel/rcu/tree.c
->> +++ b/kernel/rcu/tree.c
->> @@ -1656,21 +1656,11 @@ static void rcu_sr_normal_gp_cleanup(void)
->>  	WARN_ON_ONCE(!rcu_sr_is_wait_head(wait_tail));
->>  
->>  	/*
->> -	 * Process (a) and (d) cases. See an illustration. Apart of
->> -	 * that it handles the scenario when all clients are done,
->> -	 * wait-head is released if last. The worker is not kicked.
->> +	 * Process (a) and (d) cases. See an illustration.
->>  	 */
->>  	llist_for_each_safe(rcu, next, wait_tail->next) {
->> -		if (rcu_sr_is_wait_head(rcu)) {
->> -			if (!rcu->next) {
->> -				rcu_sr_put_wait_head(rcu);
->> -				wait_tail->next = NULL;
->> -			} else {
->> -				wait_tail->next = rcu;
->> -			}
->> -
->> +		if (rcu_sr_is_wait_head(rcu))
->>  			break;
->> -		}
->>  
->>  		rcu_sr_normal_complete(rcu);
->>  		// It can be last, update a next on this step.
->> @@ -1684,8 +1674,12 @@ static void rcu_sr_normal_gp_cleanup(void)
->>  	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
->>  	ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_done_tail);
->>  
->> -	if (wait_tail->next)
->> -		queue_work(system_highpri_wq, &rcu_state.srs_cleanup_work);
->> +	/*
->> +	 * We schedule a work in order to perform a final processing
->> +	 * of outstanding users(if still left) and releasing wait-heads
->> +	 * added by rcu_sr_normal_gp_init() call.
->> +	 */
->> +	queue_work(system_highpri_wq, &rcu_state.srs_cleanup_work);
->>  }
+Also each port of multiport has one DP and oen DM IRQ. Add all DP/DM
+IRQ's related to 4 ports of SC8280XP Teritiary controller.
 
-One question, why do you need to queue_work() if wait_tail->next == NULL?
+Also added ss phy irq for both SS Ports.
 
-AFAICS, at this stage if wait_tail->next == NULL, you are in CASE f. so the last
-remaining HEAD stays?  (And llist_for_each_safe() in
-rcu_sr_normal_gp_cleanup_work becomes a NOOP).
+Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/usb/qcom,dwc3.yaml    | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-Could be something like this, but maybe I missed something:
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+index 63d150b216c5..53cb05e94433 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+@@ -30,6 +30,7 @@ properties:
+           - qcom,sc7180-dwc3
+           - qcom,sc7280-dwc3
+           - qcom,sc8280xp-dwc3
++          - qcom,sc8280xp-dwc3-mp
+           - qcom,sdm660-dwc3
+           - qcom,sdm670-dwc3
+           - qcom,sdm845-dwc3
+@@ -282,6 +283,7 @@ allOf:
+           contains:
+             enum:
+               - qcom,sc8280xp-dwc3
++              - qcom,sc8280xp-dwc3-mp
+               - qcom,x1e80100-dwc3
+     then:
+       properties:
+@@ -470,6 +472,38 @@ allOf:
+             - const: dm_hs_phy_irq
+             - const: ss_phy_irq
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,sc8280xp-dwc3-mp
++    then:
++      properties:
++        interrupts:
++          minItems: 18
++          maxItems: 18
++        interrupt-names:
++          items:
++            - const: pwr_event_1
++            - const: pwr_event_2
++            - const: pwr_event_3
++            - const: pwr_event_4
++            - const: hs_phy_1
++            - const: hs_phy_2
++            - const: hs_phy_3
++            - const: hs_phy_4
++            - const: dp_hs_phy_1
++            - const: dm_hs_phy_1
++            - const: dp_hs_phy_2
++            - const: dm_hs_phy_2
++            - const: dp_hs_phy_3
++            - const: dm_hs_phy_3
++            - const: dp_hs_phy_4
++            - const: dm_hs_phy_4
++            - const: ss_phy_1
++            - const: ss_phy_2
++
+ additionalProperties: false
+ 
+ examples:
+-- 
+2.34.1
 
-@@ -1672,7 +1674,7 @@ static void rcu_sr_normal_gp_cleanup_work(struct
-work_struct *work)
-  */
- static void rcu_sr_normal_gp_cleanup(void)
- {
--       struct llist_node *wait_tail, *next, *rcu;
-+       struct llist_node *wait_tail, *next = NULL, *rcu = NULL;
-        int done = 0;
-
-        wait_tail = rcu_state.srs_wait_tail;
-@@ -1707,7 +1709,8 @@ static void rcu_sr_normal_gp_cleanup(void)
-         * of outstanding users(if still left) and releasing wait-heads
-         * added by rcu_sr_normal_gp_init() call.
-         */
--       queue_work(system_highpri_wq, &rcu_state.srs_cleanup_work);
-+       if (rcu)
-+               queue_work(system_highpri_wq, &rcu_state.srs_cleanup_work);
- }
-
- /*
