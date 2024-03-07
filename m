@@ -1,120 +1,91 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480BF85634
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B43A12A156;
+	Thu,  7 Mar 2024 11:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709811765; cv=none; b=IvLShLHgWuHXnv8bpnSZ+Pkj9SHwIPGubkmxtHbbfLoZR8emdENkm9I3hUzZrw3NemhRtApWlh23l7F4wgrRssvosHKrEbX1eEd+I7/CNTKHp3r/dNAMqUquWVdG9BGdeMtLHbuCzRkUUWCkI5amKymRCPuIWj/TiBqBw8ohV5w=
+	t=1709811769; cv=none; b=eBhfjJ9EZyR9wuxtZ36NYMxDZPuZN3KicGz6rwpfFWU6AjzcJGeHHyO9pbBUZVL9s3k7srRowdazz1lRZ76pjTu4sGzQVx+V2DugfK6rPB21L9qsO88FgdUvPsDxKCxEhaeY9Itb4I9AVC0vLhSpGAXuVPNRnt/Z11GmFiFJAKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709811765; c=relaxed/simple;
-	bh=HmiysDGoQdQ1CCsY7P4BykmggdQ+5ESOnGLry3+yVEc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Ji9ksq+XS1Ow4q0PF44AWhOPuJrjG7u793OyYw37fpT3+yJj3lKXPmcnqGSXxJKNXcPXFGLP50ljRmXNOvi2mUFFCpH39W28P1dNP+aZck71tLJSS9t5xIHvfpVla8xJFNaHInJ247VCW6NaTeA/4h8Vlq0mHJrneOap2jTKDNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_128_GCM_SHA256:128)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1riC8g-0002VN-2E;
-	Thu, 07 Mar 2024 11:42:18 +0000
-Date: Thu, 07 Mar 2024 11:42:12 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: linux-mtd@lists.infradead.org, Dan Carpenter <dan.carpenter@linaro.org>,
- Zhihao Cheng <chengzhihao1@huawei.com>
-CC: Richard Weinberger <richard@nod.at>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>, Daniel Diaz <daniel.diaz@linaro.org>,
- Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: Re: [PATCH v2] mtd: ubi: fix NVMEM over UBI volumes on 32-bit systems
-User-Agent: K-9 Mail for Android
-In-Reply-To: <27c875fb-9507-4034-8468-c4d46c952754@moroto.mountain>
-References: <31a20aead3419209991bf01aaeaefe07ab94d23a.1709081052.git.daniel@makrotopia.org> <8ae44e8e-fc3d-28bd-5d1e-e900ce53529f@huawei.com> <27c875fb-9507-4034-8468-c4d46c952754@moroto.mountain>
-Message-ID: <005448D3-A311-4B2D-B515-C7A9399B48E4@makrotopia.org>
+	s=arc-20240116; t=1709811769; c=relaxed/simple;
+	bh=eyprLHFR1EiVFsCGdQ/GNrh/FyDMORPPriQDhRlU+Yk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I6LjFO1NFO3dLZkey+Z3T/TQtkb+wkeCWi+Rg/lYCa4MYrXt/rdp2t8bKNFSqD49M7jACAOBkA0fBaekZVgUBh0hAp2owOXDI/0V6mhZvR6aUeeZE265GVE/0bsHMPPd0rrd5oVzYwK1YdkoFMHEEdYLPZdnuLknBiYeA6olp+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ki8nLuQj; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ki8nLuQj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709811768; x=1741347768;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eyprLHFR1EiVFsCGdQ/GNrh/FyDMORPPriQDhRlU+Yk=;
+  b=ki8nLuQjhkBWELQaGww8nhzcQQTyp7m4IWE6GS2jAuyubSkUlsL5wo22
+   wi4b51KJwRx36bvD1hUDvCIbfrA+lePW66HnmKfVcToqf2K+t6vSNNXA0
+   rfGiKAklEdhusLe9Bee+sl1vpYDvjmqHNNPk4Ntx+L71NfjSY1wZOFixD
+   5pMsLtOcU6BhZ9kzMIhLfAZfPy3BHzptVovzZhWAZoM2v/tOKqyJUmt1W
+   XCohe8DA9pmnS39GXD0R4v3uzP3tbD527eq03DdvPXk9WcTSE4EMrroDS
+   /Yng6XyFSzneUHWmMQeMWuj/VQ3FdJLYQ7+Fc134tpfEJxq6JHl4jEvxc
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15119775"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="15119775"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 03:42:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="937045879"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="937045879"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2024 03:42:46 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id F401C193; Thu,  7 Mar 2024 13:42:44 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] serial: pic32_uart: Replace of_gpio.h by proper one
+Date: Thu,  7 Mar 2024 13:42:43 +0200
+Message-ID: <20240307114243.3642832-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+of_gpio.h is deprecated and subject to remove.
+The driver doesn't use it directly, replace it
+with what is really being used.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/tty/serial/pic32_uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 7 March 2024 09:17:45 UTC, Dan Carpenter <dan=2Ecarpenter@linaro=2Eorg>=
- wrote:
->On Wed, Feb 28, 2024 at 09:45:13AM +0800, Zhihao Cheng wrote:
->> =E5=9C=A8 2024/2/28 8:46, Daniel Golle =E5=86=99=E9=81=93:
->> > A compiler warning related to sizeof(int) !=3D 8 when calling do_div(=
-)
->> > is triggered when building on 32-bit platforms=2E
->> > Address this by using integer types having a well-defined size=2E
->> >=20
->> > Fixes: 3ce485803da1 ("mtd: ubi: provide NVMEM layer over UBI volumes"=
-)
->> > Signed-off-by: Daniel Golle <daniel@makrotopia=2Eorg>
->> > ---
->> > v2: use size_t for 'bytes_left' variable to match parameter type
->> >=20
->> >   drivers/mtd/ubi/nvmem=2Ec | 5 ++++-
->> >   1 file changed, 4 insertions(+), 1 deletion(-)
->> >=20
->> > diff --git a/drivers/mtd/ubi/nvmem=2Ec b/drivers/mtd/ubi/nvmem=2Ec
->> > index b7a93c495d172=2E=2Ee68b8589c4279 100644
->> > --- a/drivers/mtd/ubi/nvmem=2Ec
->> > +++ b/drivers/mtd/ubi/nvmem=2Ec
->> > @@ -23,9 +23,12 @@ struct ubi_nvmem {
->> >   static int ubi_nvmem_reg_read(void *priv, unsigned int from,
->> >   			      void *val, size_t bytes)
->> >   {
->> > -	int err =3D 0, lnum =3D from, offs, bytes_left =3D bytes, to_read;
->> >   	struct ubi_nvmem *unv =3D priv;
->> >   	struct ubi_volume_desc *desc;
->> > +	size_t bytes_left =3D bytes;
->> > +	uint32_t offs, to_read;
->> There still exist a type truncation assignment 'to_read =3D bytes_left'=
- below,
->> although it's safe in logic=2E
->
->Yeah=2E  As you say, from looking at the logic we know it's safe=2E
->
->    41                  if (to_read > bytes_left)
->    42                          to_read =3D bytes_left;
->
->Obviously the new value is smaller than the original, so it must fit
->within a u32 range=2E=2E=2E
+diff --git a/drivers/tty/serial/pic32_uart.c b/drivers/tty/serial/pic32_uart.c
+index bbb46e6e98a2..1619186e158e 100644
+--- a/drivers/tty/serial/pic32_uart.c
++++ b/drivers/tty/serial/pic32_uart.c
+@@ -8,11 +8,11 @@
+  *   Sorin-Andrei Pistirica <andrei.pistirica@microchip.com>
+  */
+ 
++#include <linux/gpio/consumer.h>
+ #include <linux/kernel.h>
+ #include <linux/platform_device.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+-#include <linux/of_gpio.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-
-I've sent v3 of this fix which should be finally be warning free now=2E
-
-https://patchwork=2Eozlabs=2Eorg/project/linux-mtd/patch/ff29447dcee834c17=
-e4e1e99725b9454c90136ca=2E1709178325=2Egit=2Edaniel@makrotopia=2Eorg/
-
->
->This bug has been breaking the build since Dec 19=2E =20
-
-I have a hard time believing that as the offending commit was only applied=
- on Feb 25=2E
-
-https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/next/linux-next=2Egit/=
-commit/?id=3D3ce485803da1b79b2692b6d0c2792829292ad838
-
-> It's fine if you're
->able to manually create your own =2Econfigs to work around build breakage=
-=2E
->But if you're doing automated testing at scale then it's a show stopper=
-=2E
->Could we please fix it=2E
->
->regards,
->dan carpenter
->
->
->______________________________________________________
->Linux MTD discussion mailing list
->http://lists=2Einfradead=2Eorg/mailman/listinfo/linux-mtd/
