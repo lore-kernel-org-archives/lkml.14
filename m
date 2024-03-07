@@ -1,155 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0A41384A3
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 20:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD01224B29
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 20:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709843286; cv=none; b=t0ePPik3dTM3EyM88t4cq0etEEOBB5zrNNzezgSsmUGuop/Bg6x9nuQcQHSiDnYlxS0sSuUORSBss4x5Mu5BybpIuJJUeh/JW3DpiJjuEunT5VsNc6C23o4MhZRfNXrP4XmpKprL71pP3ot4AQcAI5JOSQCzWvOVvtaOvcZu1DY=
+	t=1709843481; cv=none; b=Veo/MKV/a1uh20xNbx1UudylsdPl/ihlssD4Lk7BfuvxL6qH7NuJ/BDqp0LY6/Yjo+a57U+npg6zPyorKZSQvHV04NDntmrrJzUZEU9n7z38WmLEf9vIzZn6m4dmWC5ToT/rP2i934FOOL3zHmWp3izGRGJ/5YUpQqdm3ghDqbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709843286; c=relaxed/simple;
-	bh=N9iAxXFSqH7B5Ms78Cze59MmtfuvL/enafxHsGfnODY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=A/iAYZeFnBC5tHoGFAF80xnU+oowXOBQPnjZ0EZg2LWYqj0ci83vsCNfnU4ItqvX1qV9WdRe8GZRycli52zmkevjmAHsJNTAarGXe5L3h5z9fGid1gmySWq6tFS0bq7W2ts25YqLnOuWHr1MLO1kJlqD/rvFjKDOqq3eCg+PMhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WN6RIMTv; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709843481; c=relaxed/simple;
+	bh=uFkSV3XWA6pSvBdWPTS5Z4D4hTCdELrOUpWgEurePV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPZjbZqZu6yp/sir6Mc9Tt9tftfXY3Acn3MJ8XWC1OoK+bFPlNIqqN3FGbuUyTpfO+2szOIRQ/xp3yKyGX1KzPR3qrjl/nt9tz7ed0ITJEJ0JvBqjxVJP9A4hvI4XCOC+KTN4ljwI4mxYJT4/NQBx/KD5fEQ9uACIPtRyklY2uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PcZLmtxG; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WN6RIMTv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709843284; x=1741379284;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=N9iAxXFSqH7B5Ms78Cze59MmtfuvL/enafxHsGfnODY=;
-  b=WN6RIMTvKBgZNSUY28ApjzpPyd8a8y0yRJv9VOMwTh1/9pkeAXuZf1kg
-   f9vfZCnt8CPGzv3tr1xeMSZ49sLbU9smWAZ3p699Rk8Pw/ohIu7DQV9+u
-   PcEjMLhKfJJL8NdMSEHOiUoxcG30ksMxcgtrEfhCdqgQ7AhkFLUR88A7O
-   CcDm9BE+Ud2nrJ1suyj7ZK0+A1tqZmr+/oiEG+hQ1kZtgiVXvpsgrvBrr
-   JIWYgZaATQAoNPWEmov7FfYsRNzD7jp1SjNReLCGt4ONbCk9IDEICMLZo
-   MaHymS3wYkSSrqqlKO7W8I8aROQo76YWxtoVMZmWgt6Et0Eu5T9oA0rqI
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="27010944"
-X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
-   d="scan'208";a="27010944"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 12:28:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
-   d="scan'208";a="10215658"
-Received: from tofferse-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.212])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 12:27:59 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Doug Anderson <dianders@chromium.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg
- <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter
- <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 6/6] drm/panel-edp: Fix AUO 0x405c panel naming and
- add a variant
-In-Reply-To: <CAJMQK-izRv18V1o7_Q23vWFXQsFgaR74xxZ4Vby0FVtNn21TMg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240306200353.1436198-1-hsinyi@chromium.org>
- <20240306200353.1436198-7-hsinyi@chromium.org>
- <CAD=FV=VvhKZHVzHQdOO=_p0E5m7ig1LY2s5MZRojRynKHbF1xw@mail.gmail.com>
- <87msraw4q6.fsf@intel.com>
- <CAJMQK-izRv18V1o7_Q23vWFXQsFgaR74xxZ4Vby0FVtNn21TMg@mail.gmail.com>
-Date: Thu, 07 Mar 2024 22:27:55 +0200
-Message-ID: <874jdhwzw4.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PcZLmtxG"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dc3b4b9b62so10170705ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 12:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709843479; x=1710448279; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=td/qc1v+LcJcAxN8xi3WFcUXSnLHGt1lHwkmw1ZD0As=;
+        b=PcZLmtxGTh7uVIpOoxFb+QeLRCq04OP99KCB1sSGFi0d/uUTcPGVZwkss6BrXiAiUi
+         fhV3wi1KmFHke/EUAggJyb4TDH8uN6X9TWvYkhoFq/2TNkOkurSMCYzZ/OAwgZQkYQx8
+         +JL3tjctLJ3J2e2JwyNP5wJw6MY3H1FSyEZ7U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709843479; x=1710448279;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=td/qc1v+LcJcAxN8xi3WFcUXSnLHGt1lHwkmw1ZD0As=;
+        b=ESPm1SSz1QGLxe2x5O4ZykXDjpfyOVXALRtjQ0CL8NFlGIJzzq91/qfk2kKfr8EHLp
+         4d9fY+i8hlHd+ftFSC8Wy/Z0GRi5DP5A4SDzvEZfbxzEp928ptF0iy9yW6SWBxWvb0J6
+         VN0t1ch6aCNLqWDiN6Jyvs4tFgH5k0a1JLxmx34z3i5qPONxqCEPDJ7XKjwQI9bqaGCg
+         KFOhu5Ic7ezmFdo9bT7pS6adFI6bBgjvbj9Lwv9tIEGbB1D7Ewi3e3i2j5TAIf8DG77y
+         /WWKKzoVucQODGLqW5xELQM4jeG6GdZOFfRikSDVq0ajnweCPhTLcaYRnD0Jn7VV3j4q
+         EyMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+/w5uCXXS+vLoZ//UdFHJ4E5mtJe2mEzRqAxOfG0WvGir4AATIZjEQ2ciD2qIV29TbsvD4fgCH9kZ3Flc9U9f9o2tf35t8qzQTmJl
+X-Gm-Message-State: AOJu0Ywqj8WVSpIe0toBgsjmkVBZv3aqgCcS9OEp1q6/8r6R1XQC+ERc
+	lAL37638oz3W9mWSPu7gypJ9JEFsNOTLmsZvTRpp+BIJXW2OZ43xgT5SC/n1Yg==
+X-Google-Smtp-Source: AGHT+IHhycg/pXareFKjHDwHXtqmeBe85lRVxuPqPrSPkJ5nHJkgXlFDDbM6P1CA4nS+KS/ufBK3GA==
+X-Received: by 2002:a17:903:22cf:b0:1db:9ff1:b59b with SMTP id y15-20020a17090322cf00b001db9ff1b59bmr3493970plg.23.1709843479184;
+        Thu, 07 Mar 2024 12:31:19 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i9-20020a170902c94900b001dcc09487e8sm15044171pla.50.2024.03.07.12.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 12:31:18 -0800 (PST)
+Date: Thu, 7 Mar 2024 12:31:17 -0800
+From: Kees Cook <keescook@chromium.org>
+To: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
+Message-ID: <202403071227.D29DE5F8C4@keescook>
+References: <20240305100933.it.923-kees@kernel.org>
+ <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
 
-On Thu, 07 Mar 2024, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> On Thu, Mar 7, 2024 at 5:28=E2=80=AFAM Jani Nikula <jani.nikula@linux.int=
-el.com> wrote:
->>
->> On Wed, 06 Mar 2024, Doug Anderson <dianders@chromium.org> wrote:
->> > Hi,
->> >
->> > On Wed, Mar 6, 2024 at 12:04=E2=80=AFPM Hsin-Yi Wang <hsinyi@chromium.=
-org> wrote:
->> >>
->> >> @@ -1009,6 +1009,19 @@ static const struct panel_desc auo_b101ean01 =
-=3D {
->> >>         },
->> >>  };
->> >>
->> >> +static const struct drm_display_mode auo_b116xa3_mode =3D {
->> >> +       .clock =3D 70589,
->> >> +       .hdisplay =3D 1366,
->> >> +       .hsync_start =3D 1366 + 40,
->> >> +       .hsync_end =3D 1366 + 40 + 40,
->> >> +       .htotal =3D 1366 + 40 + 40 + 32,
->> >> +       .vdisplay =3D 768,
->> >> +       .vsync_start =3D 768 + 10,
->> >> +       .vsync_end =3D 768 + 10 + 12,
->> >> +       .vtotal =3D 768 + 10 + 12 + 6,
->> >> +       .flags =3D DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
->> >> +};
->> >> +
->> >>  static const struct drm_display_mode auo_b116xak01_mode =3D {
->> >>         .clock =3D 69300,
->> >>         .hdisplay =3D 1366,
->> >> @@ -1990,7 +2003,9 @@ static const struct edp_panel_entry edp_panels[=
-] =3D {
->> >>         EDP_PANEL_ENTRY('A', 'U', 'O', 0x239b, &delay_200_500_e50, "B=
-116XAN06.1"),
->> >>         EDP_PANEL_ENTRY('A', 'U', 'O', 0x255c, &delay_200_500_e50, "B=
-116XTN02.5"),
->> >>         EDP_PANEL_ENTRY('A', 'U', 'O', 0x403d, &delay_200_500_e50, "B=
-140HAN04.0"),
->> >> -       EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, =
-"B116XAK01.0"),
->> >> +       EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, =
-"B116XAN04.0"),
->> >> +       EDP_PANEL_ENTRY2('A', 'U', 'O', 0x405c, &auo_b116xak01.delay,=
- "B116XAK01.0 ",
->> >
->> > Remove the trailing space from the string above now?
->>
->> Maybe it actually needs to be considered part of the name; see my other
->> reply in the earlier patch.
->>
-> I randomly checked 3 of the AUO panels that I had a datasheet with,
-> and all of them have a white space padding before \n.
-> The descriptor of that field is marked as "Reserved for definition",
-> unlike other characters, representing the name, which are marked with
-> "Manufacture P/N".
->
-> For this example, do we still want to consider the white space part of
-> the name? I know they didn't follow the spec exactly.
+On Wed, Mar 06, 2024 at 09:47:36AM +0800, GONG, Ruiqi wrote:
+> 
+> 
+> On 2024/03/05 18:10, Kees Cook wrote:
+> > Hi,
+> > 
+> > Repeating the commit logs for patch 4 here:
+> > 
+> >     Dedicated caches are available For fixed size allocations via
+> >     kmem_cache_alloc(), but for dynamically sized allocations there is only
+> >     the global kmalloc API's set of buckets available. This means it isn't
+> >     possible to separate specific sets of dynamically sized allocations into
+> >     a separate collection of caches.
+> > 
+> >     This leads to a use-after-free exploitation weakness in the Linux
+> >     kernel since many heap memory spraying/grooming attacks depend on using
+> >     userspace-controllable dynamically sized allocations to collide with
+> >     fixed size allocations that end up in same cache.
+> > 
+> >     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> >     against these kinds of "type confusion" attacks, including for fixed
+> >     same-size heap objects, we can create a complementary deterministic
+> >     defense for dynamically sized allocations.
+> > 
+> >     In order to isolate user-controllable sized allocations from system
+> >     allocations, introduce kmem_buckets_create(), which behaves like
+> >     kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
+> >     which behaves like kmem_cache_alloc().)
+> 
+> So can I say the vision here would be to make all the kernel interfaces
+> that handles user space input to use separated caches? Which looks like
+> creating a "grey zone" in the middle of kernel space (trusted) and user
+> space (untrusted) memory. I've also thought that maybe hardening on the
+> "border" could be more efficient and targeted than a mitigation that
+> affects globally, e.g. CONFIG_RANDOM_KMALLOC_CACHES.
 
-If there's one thing that's for sure, EDIDs are full of stuff like this,
-across the board.
+I think it ends up having a similar effect, yes. The more copies that
+move to memdup_user(), the more coverage is created. The main point is to
+just not share caches between different kinds of allocations. The most
+abused version of this is the userspace size-controllable allocations,
+which this targets. The existing caches (which could still be used for
+type confusion attacks when the sizes are sufficiently similar) have a
+good chance of being mitigated by CONFIG_RANDOM_KMALLOC_CACHES already,
+so this proposed change is just complementary, IMO.
 
-Ignoring the whitespace at the end seemed reasonable, initially, to me
-too. But the question is, if we start catering for this, what else
-should we cater for? Do we keep adding "reasonable" interpretations, or
-just go by the spec?
+-Kees
 
-
-BR,
-Jani.
-
-
->
->> >
->> > Aside from that:
->> >
->> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
->>
->> --
->> Jani Nikula, Intel
-
---=20
-Jani Nikula, Intel
+-- 
+Kees Cook
