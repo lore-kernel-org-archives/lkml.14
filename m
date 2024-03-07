@@ -1,57 +1,57 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42D212D775
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B115112F5A7
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709820208; cv=none; b=om1U/n1Wkeujacyh+9Uzae8NsBl3eYAMqtXXBupmHKj7NK3ByFcls4B/6pUlYEsVybuvGF/1JpOV4j4jHWO/K7WdljBO3nbCeEr2yF+U+YvDFVBwmfRR9MYoebatSGrAy4uNMDVqf04tEs3Iea/vHESiz9v6bJdoSS3gm299Oy4=
+	t=1709820220; cv=none; b=n5emJVKBvZf0n6oiENUOKX97z2shiMeBkCpaFclqfaNHXnjzJzForYx7kLD4ig9GGcxd6lbmhodxS+otg0jhd1ys8DW1HX6akrsIrjnGeXSIxtYixTyQs1x83bpD6DlV7xl+Cn9hJivpn0tr2RFfb/dMq00upy0F3vFFcEHL3TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709820208; c=relaxed/simple;
-	bh=6ldkn/NLN5Vok7/3YlbAjD/lx6DIcA8TyTnQ2yT4OV4=;
+	s=arc-20240116; t=1709820220; c=relaxed/simple;
+	bh=C9EKczNAFX+6Mc1JCsVPq0H3H5ZJEkOYL3PTY/VUSH0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NBdEFc0boVajjNjyBdH/l8enlPRRkwTeZ/BczJtUdvioCuHCreAnh2dlZDLH1nYo+547EaTNcFEDUCLCscr3T9BQTXcUouag6OMi9xALpOznAGyFL5Tf3ckVPRbSdn3AVTVP2ydt+POatLH/cKQoCVOhn1kr7vsRU93905/I0Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=g9hHKuL0; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=ERs0uhbhYRE3MnACba23XULKYPZWfmBclgFLGDFQSBiLNH3TysYZsmKtGY3G6AGFj6FSYHU3vXLz2FxjIeNagHwmiphef6RIG+UZQLYrFlgRf4bfiI1yh1xF6q2VygUKVx1RGzi58ubZ50ub4RHCK/CabDtzmimFp99lCW8AMMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fzffflav; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="g9hHKuL0"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dbae7b8ff2so7717695ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 06:03:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fzffflav"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1dd10ae77d8so8051835ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 06:03:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1709820206; x=1710425006; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1709820218; x=1710425018; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e2jsLyFwepKDrwIr/uWJV0RdUuyknGyf55lcJyFTRiQ=;
-        b=g9hHKuL0QoZUwFVh1V6jsNRycyZYWCgvWFLof2hNZD346NVcWuAArQ0ORFxzz/FWvn
-         ipPL2OoPEayvGCJmoiGigSp88HexSbr3JBUgfcLnm8Bm4HKVoZ9fnW88wmPwrFeGysLR
-         I/nOei7tARKNStF3dE4eOlTgTlWZSQcAQMKZdgSOi4Dv5YBsyy5/9PEGn89oJP+jiJ25
-         ISGDG9M2b/HkjOmmy0S+jby3gTED/wpH0AWJ/YAlMLDgMV8XRtwZsk6aG1/ijEsKnUfG
-         PI/Gbsz50sBOMRF77vdLl4KuJvCe2uQXTNeL0ixkUorEgDe+msMSOW9gGlZJgCUN0bxR
-         W2zQ==
+        bh=CiqobbaTZGToIizH7YEjH5rrAclq8QumllxtxL7qHRY=;
+        b=fzffflavSscKsIM1BRifORqwJqkV8aNyo35eY6ieyGaubIkN9w7Yjsa+7v19rCREBh
+         n8knaKf9+sUkAabM/+hXLSI2cQH6JR5kZhSsPbl+C6cR05Kzh5tJ6jDFBDIypdeeYv0w
+         73j+vKp21kGg5eZcv7UDDoyKZ10kPObt3BiYS+qvGpTLs2CKCnSQQwZaBoJAHRdcqxkH
+         l7lJTuy6Lm12u5OBLPwjhHBFznaX96XlJh/jS79xTSZWmwtpmQ5tjrVXhbs+yUqNnGQ/
+         nl/gAZwaJ9Mkpp+VJmAywFiHiy8jxKeQ3jyiklnnKzsUoU23mReGESDFxtoDepxl0zQP
+         8PtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709820206; x=1710425006;
+        d=1e100.net; s=20230601; t=1709820218; x=1710425018;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e2jsLyFwepKDrwIr/uWJV0RdUuyknGyf55lcJyFTRiQ=;
-        b=MjSfrM24/b2KlXDJUqhGz9JDbH/qRflYX8z3DI1JDkyMz+7HCHJXJ/iHb0hHv7MjR/
-         k4oeW4Q6l0TP48BtIuCLiyXwfBnW4qTC54gG2H9HHRbXJVxOjlGjguKMJrYygGTuKHHx
-         AvbhRhHrILaC1R29nwS2gHt/p/e0IaQLNcSw8cMFpPlb3RGgxQfBfVXgRajQxeQhgSQD
-         seJvd0YgDv9IoTfHYuPdu9Wnvu+//LE1hRdNbcuPJw5U9JF1sXfBpD1IES/IgDf4FSCP
-         Cbba3EwQxU4wXjc8qXN7mv+ew7mr2IYzPWJFKwtDBxun68d7xDEv01typSttN0WZiA9C
-         4XqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5afDQdRFjnHUt0dhqRMIOcVte/acPCbqKraPrqn+zTxqvyiULzD0AF8cMjtYjERZm6M5wXYiQccc0yX29BK2PXz205sPHDHhBwrc8
-X-Gm-Message-State: AOJu0YzUhGNZBCuQPUbYl5AXOkKMPbP0XXsznnqOMsLDAkc+wl7HfMBl
-	7wSK/jYXNXqIL1RUbANDz0I/pVzthCQn8obLv+8fDwrpON+8U+yacNNTSB6WzQY=
-X-Google-Smtp-Source: AGHT+IHDor7u00sbp/GTDoDI6+rgSZZGrbnvvmYwOBTvc5KC4VOub2+x1CyLQvdN2sZ+nqsalEnWkQ==
-X-Received: by 2002:a17:902:ea0f:b0:1dc:6775:a350 with SMTP id s15-20020a170902ea0f00b001dc6775a350mr9485886plg.58.1709820205954;
-        Thu, 07 Mar 2024 06:03:25 -0800 (PST)
+        bh=CiqobbaTZGToIizH7YEjH5rrAclq8QumllxtxL7qHRY=;
+        b=pGHcCkG7wf4mxzFYT8nRb9oY+OqcmfjYRqsBlw10CCfUWFBfGDKbDwymKWpIF579fn
+         r8eKGFs0TgifmPxfbvr9qN3uwdlX2Prm7l4rZlkpqOGn/ky7Z5NcSaISxVpJbDnT5dQG
+         hW9cgZrT9sKqIV1vBoPZUUAfOLy0jArY6XqkS+YV6jKPpWVm/Yb6mAmGeG5hWEkK2uG7
+         IuV9PqHnL60X49H5gDL30qAwcHaQGFQ46vvkJQdHyKAWts1xbrOvdyD6GMtNralCK1sj
+         vbvmC6xyomxNfZTKe8XBgJpqh0qrHuKVcZMx903ocZ2LMHo11/sBYS5AS0CP4sY6O+26
+         G07Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW1YtQHTkR71nwjbTeK5CavGZaHRuTrpQW8841Oi8CZrKAMCOWnuyjnZERB0XOh7uzk6g2rZQa0sogWlm90c0uIGU1/k8VMQkigsXdo
+X-Gm-Message-State: AOJu0YyO4lo59DyuGti9xDZmmrLQaDYrmyGSJbcrUfGPk0j8Uoflw6Rc
+	7E7QC2oDudhWavZSfWPQ+R/CD4PgIixqbqYYkGqngxpDHoIL2vs/sRkO1KSg0TA=
+X-Google-Smtp-Source: AGHT+IHW4m035NlTDyk9r9csSv4GlQ6fJ+YJ+amFlFaJmsuynrdQLjHIa5ggVqQfR7SmYET/DEWDKw==
+X-Received: by 2002:a17:902:ecd1:b0:1dc:8c27:9a07 with SMTP id a17-20020a170902ecd100b001dc8c279a07mr9805559plh.31.1709820217708;
+        Thu, 07 Mar 2024 06:03:37 -0800 (PST)
 Received: from anup-ubuntu-vm.localdomain ([171.76.84.79])
-        by smtp.gmail.com with ESMTPSA id w1-20020a1709026f0100b001dd6174c651sm386228plk.149.2024.03.07.06.03.18
+        by smtp.gmail.com with ESMTPSA id w1-20020a1709026f0100b001dd6174c651sm386228plk.149.2024.03.07.06.03.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 06:03:25 -0800 (PST)
+        Thu, 07 Mar 2024 06:03:37 -0800 (PST)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Palmer Dabbelt <palmer@dabbelt.com>,
 	Paul Walmsley <paul.walmsley@sifive.com>,
@@ -71,12 +71,10 @@ Cc: Marc Zyngier <maz@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v16 1/9] dt-bindings: interrupt-controller: Add RISC-V incoming MSI controller
-Date: Thu,  7 Mar 2024 19:32:59 +0530
-Message-Id: <20240307140307.646078-2-apatel@ventanamicro.com>
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH v16 3/9] irqchip/riscv-imsic: Add device MSI domain support for platform devices
+Date: Thu,  7 Mar 2024 19:33:01 +0530
+Message-Id: <20240307140307.646078-4-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240307140307.646078-1-apatel@ventanamicro.com>
 References: <20240307140307.646078-1-apatel@ventanamicro.com>
@@ -88,195 +86,394 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add DT bindings document for the RISC-V incoming MSI controller (IMSIC)
-defined by the RISC-V advanced interrupt architecture (AIA) specification.
+The Linux platform MSI support allows per-device MSI domains so add
+a platform irqchip driver for RISC-V IMSIC which provides a base IRQ
+domain with MSI parent support for platform device domains.
+
+The IMSIC platform driver assumes that the IMSIC state is already
+initialized by the IMSIC early driver.
 
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../interrupt-controller/riscv,imsics.yaml    | 172 ++++++++++++++++++
- 1 file changed, 172 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
+ drivers/irqchip/Makefile                   |   2 +-
+ drivers/irqchip/irq-riscv-imsic-platform.c | 343 +++++++++++++++++++++
+ drivers/irqchip/irq-riscv-imsic-state.h    |   1 +
+ 3 files changed, 345 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/irqchip/irq-riscv-imsic-platform.c
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index d714724387ce..abca445a3229 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -95,7 +95,7 @@ obj-$(CONFIG_QCOM_MPM)			+= irq-qcom-mpm.o
+ obj-$(CONFIG_CSKY_MPINTC)		+= irq-csky-mpintc.o
+ obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
+ obj-$(CONFIG_RISCV_INTC)		+= irq-riscv-intc.o
+-obj-$(CONFIG_RISCV_IMSIC)		+= irq-riscv-imsic-state.o irq-riscv-imsic-early.o
++obj-$(CONFIG_RISCV_IMSIC)		+= irq-riscv-imsic-state.o irq-riscv-imsic-early.o irq-riscv-imsic-platform.o
+ obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
+ obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
+ obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
+diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
 new file mode 100644
-index 000000000000..84976f17a4a1
+index 000000000000..35291bf90d65
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
-@@ -0,0 +1,172 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/riscv,imsics.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/irqchip/irq-riscv-imsic-platform.c
+@@ -0,0 +1,343 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2021 Western Digital Corporation or its affiliates.
++ * Copyright (C) 2022 Ventana Micro Systems Inc.
++ */
 +
-+title: RISC-V Incoming MSI Controller (IMSIC)
++#define pr_fmt(fmt) "riscv-imsic: " fmt
++#include <linux/bitmap.h>
++#include <linux/cpu.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqdomain.h>
++#include <linux/module.h>
++#include <linux/msi.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
++#include <linux/smp.h>
 +
-+maintainers:
-+  - Anup Patel <anup@brainfault.org>
++#include "irq-riscv-imsic-state.h"
 +
-+description: |
-+  The RISC-V advanced interrupt architecture (AIA) defines a per-CPU incoming
-+  MSI controller (IMSIC) for handling MSIs in a RISC-V platform. The RISC-V
-+  AIA specification can be found at https://github.com/riscv/riscv-aia.
++static bool imsic_cpu_page_phys(unsigned int cpu, unsigned int guest_index,
++				phys_addr_t *out_msi_pa)
++{
++	struct imsic_global_config *global;
++	struct imsic_local_config *local;
 +
-+  The IMSIC is a per-CPU (or per-HART) device with separate interrupt file
-+  for each privilege level (machine or supervisor). The configuration of
-+  a IMSIC interrupt file is done using AIA CSRs and it also has a 4KB MMIO
-+  space to receive MSIs from devices. Each IMSIC interrupt file supports a
-+  fixed number of interrupt identities (to distinguish MSIs from devices)
-+  which is same for given privilege level across CPUs (or HARTs).
++	global = &imsic->global;
++	local = per_cpu_ptr(global->local, cpu);
 +
-+  The device tree of a RISC-V platform will have one IMSIC device tree node
-+  for each privilege level (machine or supervisor) which collectively describe
-+  IMSIC interrupt files at that privilege level across CPUs (or HARTs).
++	if (BIT(global->guest_index_bits) <= guest_index)
++		return false;
 +
-+  The arrangement of IMSIC interrupt files in MMIO space of a RISC-V platform
-+  follows a particular scheme defined by the RISC-V AIA specification. A IMSIC
-+  group is a set of IMSIC interrupt files co-located in MMIO space and we can
-+  have multiple IMSIC groups (i.e. clusters, sockets, chiplets, etc) in a
-+  RISC-V platform. The MSI target address of a IMSIC interrupt file at given
-+  privilege level (machine or supervisor) encodes group index, HART index,
-+  and guest index (shown below).
++	if (out_msi_pa)
++		*out_msi_pa = local->msi_pa + (guest_index * IMSIC_MMIO_PAGE_SZ);
 +
-+  XLEN-1            > (HART Index MSB)                  12    0
-+  |                  |                                  |     |
-+  -------------------------------------------------------------
-+  |xxxxxx|Group Index|xxxxxxxxxxx|HART Index|Guest Index|  0  |
-+  -------------------------------------------------------------
++	return true;
++}
 +
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
++static void imsic_irq_mask(struct irq_data *d)
++{
++	imsic_vector_mask(irq_data_get_irq_chip_data(d));
++}
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - qemu,imsics
-+      - const: riscv,imsics
++static void imsic_irq_unmask(struct irq_data *d)
++{
++	imsic_vector_unmask(irq_data_get_irq_chip_data(d));
++}
 +
-+  reg:
-+    minItems: 1
-+    maxItems: 16384
-+    description:
-+      Base address of each IMSIC group.
++static int imsic_irq_retrigger(struct irq_data *d)
++{
++	struct imsic_vector *vec = irq_data_get_irq_chip_data(d);
++	struct imsic_local_config *local;
 +
-+  interrupt-controller: true
++	if (WARN_ON(!vec))
++		return -ENOENT;
 +
-+  "#interrupt-cells":
-+    const: 0
++	local = per_cpu_ptr(imsic->global.local, vec->cpu);
++	writel_relaxed(vec->local_id, local->msi_va);
++	return 0;
++}
 +
-+  msi-controller: true
++static void imsic_irq_compose_vector_msg(struct imsic_vector *vec, struct msi_msg *msg)
++{
++	phys_addr_t msi_addr;
 +
-+  "#msi-cells":
-+    const: 0
++	if (WARN_ON(!vec))
++		return;
 +
-+  interrupts-extended:
-+    minItems: 1
-+    maxItems: 16384
-+    description:
-+      This property represents the set of CPUs (or HARTs) for which given
-+      device tree node describes the IMSIC interrupt files. Each node pointed
-+      to should be a riscv,cpu-intc node, which has a CPU node (i.e. RISC-V
-+      HART) as parent.
++	if (WARN_ON(!imsic_cpu_page_phys(vec->cpu, 0, &msi_addr)))
++		return;
 +
-+  riscv,num-ids:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 63
-+    maximum: 2047
-+    description:
-+      Number of interrupt identities supported by IMSIC interrupt file.
++	msg->address_hi = upper_32_bits(msi_addr);
++	msg->address_lo = lower_32_bits(msi_addr);
++	msg->data = vec->local_id;
++}
 +
-+  riscv,num-guest-ids:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 63
-+    maximum: 2047
-+    description:
-+      Number of interrupt identities are supported by IMSIC guest interrupt
-+      file. When not specified it is assumed to be same as specified by the
-+      riscv,num-ids property.
++static void imsic_irq_compose_msg(struct irq_data *d, struct msi_msg *msg)
++{
++	imsic_irq_compose_vector_msg(irq_data_get_irq_chip_data(d), msg);
++}
 +
-+  riscv,guest-index-bits:
-+    minimum: 0
-+    maximum: 7
-+    default: 0
-+    description:
-+      Number of guest index bits in the MSI target address.
++#ifdef CONFIG_SMP
++static void imsic_msi_update_msg(struct irq_data *d, struct imsic_vector *vec)
++{
++	struct msi_msg msg = { };
 +
-+  riscv,hart-index-bits:
-+    minimum: 0
-+    maximum: 15
-+    description:
-+      Number of HART index bits in the MSI target address. When not
-+      specified it is calculated based on the interrupts-extended property.
++	imsic_irq_compose_vector_msg(vec, &msg);
++	irq_data_get_irq_chip(d)->irq_write_msi_msg(d, &msg);
++}
 +
-+  riscv,group-index-bits:
-+    minimum: 0
-+    maximum: 7
-+    default: 0
-+    description:
-+      Number of group index bits in the MSI target address.
++static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
++				  bool force)
++{
++	struct imsic_vector *old_vec, *new_vec;
++	struct irq_data *pd = d->parent_data;
 +
-+  riscv,group-index-shift:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 55
-+    default: 24
-+    description:
-+      The least significant bit position of the group index bits in the
-+      MSI target address.
++	old_vec = irq_data_get_irq_chip_data(pd);
++	if (WARN_ON(!old_vec))
++		return -ENOENT;
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - msi-controller
-+  - "#msi-cells"
-+  - interrupts-extended
-+  - riscv,num-ids
++	/* If old vector cpu belongs to the target cpumask then do nothing */
++	if (cpumask_test_cpu(old_vec->cpu, mask_val))
++		return IRQ_SET_MASK_OK_DONE;
 +
-+unevaluatedProperties: false
++	/* If move is already in-flight then return failure */
++	if (imsic_vector_get_move(old_vec))
++		return -EBUSY;
 +
-+examples:
-+  - |
-+    // Example 1 (Machine-level IMSIC files with just one group):
++	/* Get a new vector on the desired set of CPUs */
++	new_vec = imsic_vector_alloc(old_vec->hwirq, mask_val);
++	if (!new_vec)
++		return -ENOSPC;
 +
-+    interrupt-controller@24000000 {
-+      compatible = "qemu,imsics", "riscv,imsics";
-+      interrupts-extended = <&cpu1_intc 11>,
-+                            <&cpu2_intc 11>,
-+                            <&cpu3_intc 11>,
-+                            <&cpu4_intc 11>;
-+      reg = <0x28000000 0x4000>;
-+      interrupt-controller;
-+      #interrupt-cells = <0>;
-+      msi-controller;
-+      #msi-cells = <0>;
-+      riscv,num-ids = <127>;
-+    };
++	/* Point device to the new vector */
++	imsic_msi_update_msg(d, new_vec);
 +
-+  - |
-+    // Example 2 (Supervisor-level IMSIC files with two groups):
++	/* Update irq descriptors with the new vector */
++	pd->chip_data = new_vec;
 +
-+    interrupt-controller@28000000 {
-+      compatible = "qemu,imsics", "riscv,imsics";
-+      interrupts-extended = <&cpu1_intc 9>,
-+                            <&cpu2_intc 9>,
-+                            <&cpu3_intc 9>,
-+                            <&cpu4_intc 9>;
-+      reg = <0x28000000 0x2000>, /* Group0 IMSICs */
-+            <0x29000000 0x2000>; /* Group1 IMSICs */
-+      interrupt-controller;
-+      #interrupt-cells = <0>;
-+      msi-controller;
-+      #msi-cells = <0>;
-+      riscv,num-ids = <127>;
-+      riscv,group-index-bits = <1>;
-+      riscv,group-index-shift = <24>;
-+    };
-+...
++	/* Update effective affinity of parent irq data */
++	irq_data_update_effective_affinity(pd, cpumask_of(new_vec->cpu));
++
++	/* Move state of the old vector to the new vector */
++	imsic_vector_move(old_vec, new_vec);
++
++	return IRQ_SET_MASK_OK_DONE;
++}
++#endif
++
++static struct irq_chip imsic_irq_base_chip = {
++	.name			= "IMSIC",
++	.irq_mask		= imsic_irq_mask,
++	.irq_unmask		= imsic_irq_unmask,
++	.irq_retrigger		= imsic_irq_retrigger,
++	.irq_compose_msi_msg	= imsic_irq_compose_msg,
++	.flags			= IRQCHIP_SKIP_SET_WAKE |
++				  IRQCHIP_MASK_ON_SUSPEND,
++};
++
++static int imsic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				  unsigned int nr_irqs, void *args)
++{
++	struct imsic_vector *vec;
++
++	/* Multi-MSI is not supported yet. */
++	if (nr_irqs > 1)
++		return -EOPNOTSUPP;
++
++	vec = imsic_vector_alloc(virq, cpu_online_mask);
++	if (!vec)
++		return -ENOSPC;
++
++	irq_domain_set_info(domain, virq, virq, &imsic_irq_base_chip, vec,
++			    handle_simple_irq, NULL, NULL);
++	irq_set_noprobe(virq);
++	irq_set_affinity(virq, cpu_online_mask);
++
++	return 0;
++}
++
++static void imsic_irq_domain_free(struct irq_domain *domain, unsigned int virq,
++				  unsigned int nr_irqs)
++{
++	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
++
++	imsic_vector_free(irq_data_get_irq_chip_data(d));
++	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
++}
++
++static int imsic_irq_domain_select(struct irq_domain *domain, struct irq_fwspec *fwspec,
++				   enum irq_domain_bus_token bus_token)
++{
++	const struct msi_parent_ops *ops = domain->msi_parent_ops;
++	u32 busmask = BIT(bus_token);
++
++	if (fwspec->fwnode != domain->fwnode || fwspec->param_count != 0)
++		return 0;
++
++	/* Handle pure domain searches */
++	if (bus_token == ops->bus_select_token)
++		return 1;
++
++	return !!(ops->bus_select_mask & busmask);
++}
++
++#ifdef CONFIG_GENERIC_IRQ_DEBUGFS
++static void imsic_irq_debug_show(struct seq_file *m, struct irq_domain *d,
++				 struct irq_data *irqd, int ind)
++{
++	if (!irqd) {
++		imsic_vector_debug_show_summary(m, ind);
++		return;
++	}
++
++	imsic_vector_debug_show(m, irq_data_get_irq_chip_data(irqd), ind);
++}
++#endif
++
++static const struct irq_domain_ops imsic_base_domain_ops = {
++	.alloc		= imsic_irq_domain_alloc,
++	.free		= imsic_irq_domain_free,
++	.select		= imsic_irq_domain_select,
++#ifdef CONFIG_GENERIC_IRQ_DEBUGFS
++	.debug_show	= imsic_irq_debug_show,
++#endif
++};
++
++static bool imsic_init_dev_msi_info(struct device *dev,
++				    struct irq_domain *domain,
++				    struct irq_domain *real_parent,
++				    struct msi_domain_info *info)
++{
++	const struct msi_parent_ops *pops = real_parent->msi_parent_ops;
++
++	/* MSI parent domain specific settings */
++	switch (real_parent->bus_token) {
++	case DOMAIN_BUS_NEXUS:
++		if (WARN_ON_ONCE(domain != real_parent))
++			return false;
++#ifdef CONFIG_SMP
++		info->chip->irq_set_affinity = imsic_irq_set_affinity;
++#endif
++		break;
++	default:
++		WARN_ON_ONCE(1);
++		return false;
++	}
++
++	/* Is the target supported? */
++	switch (info->bus_token) {
++	case DOMAIN_BUS_DEVICE_MSI:
++		/*
++		 * Per-device MSI should never have any MSI feature bits
++		 * set. It's sole purpose is to create a dumb interrupt
++		 * chip which has a device specific irq_write_msi_msg()
++		 * callback.
++		 */
++		if (WARN_ON_ONCE(info->flags))
++			return false;
++
++		/* Core managed MSI descriptors */
++		info->flags |= MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS |
++			       MSI_FLAG_FREE_MSI_DESCS;
++		break;
++	case DOMAIN_BUS_WIRED_TO_MSI:
++		break;
++	default:
++		WARN_ON_ONCE(1);
++		return false;
++	}
++
++	/* Use hierarchial chip operations re-trigger */
++	info->chip->irq_retrigger = irq_chip_retrigger_hierarchy;
++
++	/*
++	 * Mask out the domain specific MSI feature flags which are not
++	 * supported by the real parent.
++	 */
++	info->flags &= pops->supported_flags;
++
++	/* Enforce the required flags */
++	info->flags |= pops->required_flags;
++
++	return true;
++}
++
++#define MATCH_PLATFORM_MSI		BIT(DOMAIN_BUS_PLATFORM_MSI)
++
++static const struct msi_parent_ops imsic_msi_parent_ops = {
++	.supported_flags	= MSI_GENERIC_FLAGS_MASK,
++	.required_flags		= MSI_FLAG_USE_DEF_DOM_OPS |
++				  MSI_FLAG_USE_DEF_CHIP_OPS,
++	.bus_select_token	= DOMAIN_BUS_NEXUS,
++	.bus_select_mask	= MATCH_PLATFORM_MSI,
++	.init_dev_msi_info	= imsic_init_dev_msi_info,
++};
++
++int imsic_irqdomain_init(void)
++{
++	struct imsic_global_config *global;
++
++	if (!imsic || !imsic->fwnode) {
++		pr_err("early driver not probed\n");
++		return -ENODEV;
++	}
++
++	if (imsic->base_domain) {
++		pr_err("%pfwP: irq domain already created\n", imsic->fwnode);
++		return -ENODEV;
++	}
++
++	/* Create Base IRQ domain */
++	imsic->base_domain = irq_domain_create_tree(imsic->fwnode,
++						    &imsic_base_domain_ops, imsic);
++	if (!imsic->base_domain) {
++		pr_err("%pfwP: failed to create IMSIC base domain\n", imsic->fwnode);
++		return -ENOMEM;
++	}
++	imsic->base_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
++	imsic->base_domain->msi_parent_ops = &imsic_msi_parent_ops;
++
++	irq_domain_update_bus_token(imsic->base_domain, DOMAIN_BUS_NEXUS);
++
++	global = &imsic->global;
++	pr_info("%pfwP:  hart-index-bits: %d,  guest-index-bits: %d\n",
++		imsic->fwnode, global->hart_index_bits, global->guest_index_bits);
++	pr_info("%pfwP: group-index-bits: %d, group-index-shift: %d\n",
++		imsic->fwnode, global->group_index_bits, global->group_index_shift);
++	pr_info("%pfwP: per-CPU IDs %d at base PPN %pa\n",
++		imsic->fwnode, global->nr_ids, &global->base_addr);
++	pr_info("%pfwP: total %d interrupts available\n",
++		imsic->fwnode, num_possible_cpus() * (global->nr_ids - 1));
++
++	return 0;
++}
++
++static int imsic_platform_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	if (imsic && imsic->fwnode != dev->fwnode) {
++		dev_err(dev, "fwnode mismatch\n");
++		return -ENODEV;
++	}
++
++	return imsic_irqdomain_init();
++}
++
++static const struct of_device_id imsic_platform_match[] = {
++	{ .compatible = "riscv,imsics" },
++	{}
++};
++
++static struct platform_driver imsic_platform_driver = {
++	.driver = {
++		.name		= "riscv-imsic",
++		.of_match_table	= imsic_platform_match,
++	},
++	.probe = imsic_platform_probe,
++};
++builtin_platform_driver(imsic_platform_driver);
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.h b/drivers/irqchip/irq-riscv-imsic-state.h
+index 8ec9649d0d01..5ae2f69b035b 100644
+--- a/drivers/irqchip/irq-riscv-imsic-state.h
++++ b/drivers/irqchip/irq-riscv-imsic-state.h
+@@ -103,5 +103,6 @@ void imsic_vector_debug_show_summary(struct seq_file *m, int ind);
+ void imsic_state_online(void);
+ void imsic_state_offline(void);
+ int imsic_setup_state(struct fwnode_handle *fwnode);
++int imsic_irqdomain_init(void);
+ 
+ #endif
 -- 
 2.34.1
 
