@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48C412880A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C572912883C;
 	Thu,  7 Mar 2024 11:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709811582; cv=none; b=DfIc9ZkAvqHH00bg1JjD/7itnEvF84Q0hAxzU0n3UNtDN0SMJRLd4l9fCPIS4bsT5pXGpOdtFHFQsKCij8OMYwbFIUwUsqNbFNGLsjq7Jqrem3iebfYH2eVtQg6V/TUbk1Kn9IGUGvNdJOuJ0zbvMRWbo4KQ6Oqs+o/p3155ZlQ=
+	t=1709811582; cv=none; b=I3hr+KgODQiDtEF2Un0I+60Bc4GHmcDS5JgjTGR7s9Ky+dG/DkGeiYFH6/h2m46rwLMfYCfxTeyaoPZpUIfPiQvA9EXQT+ZKfuK/wzflNqvCI74xTxu3/i1+yQtJbfFqzdL9xeJ6PvivUSuuqDP1Yfa/eschU0/kydAy4Ef49fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709811582; c=relaxed/simple;
-	bh=iqZV3mRl4X6woeXPEVm5WsIKnmDS1fVKh9IZ/j83Cvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hqKKCi5a7o0ybw2EMJ2YUd0fGPBT5JvMv7H85kI6oj2LE5qgtpM5sLTqhd4kXNzNy1+kNuAqrwb9ZdTM6WmYt/Z8/lU9S5oEZn6/L4UqOlmuZQkeTFuHOeEbz8B1nbxOm8Fx6XuJhMqxzgHr0XIJM8DBgb0o8Uga6vI8i/gmAWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmiMTaw1; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=Qvy5YIlLldiX0R7wIDqtJBVKHeubDCELaurFbpCFnp8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bmwXTYmmgOnU/QveBZE96+mzRKtapgZ8oJFQvZQiF45EYOPV2STW2jFQmudGiC8wsaq2OAezu7bn7wV/sKrzmC/guf+8hKJ2arlR4etJE8azphJLgM4jaugHUDWIB0I9hj5wLG1N+iygID769DS8be6z7fH85PYb2rZPHEKAzwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bXF8b2AI; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmiMTaw1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709811581; x=1741347581;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iqZV3mRl4X6woeXPEVm5WsIKnmDS1fVKh9IZ/j83Cvs=;
-  b=kmiMTaw1cH/re/xSqBDGCcX6d6CBWoDBOWXenfXI696CzQ0zLdruv0YA
-   36uBXcXqYySo3IHY0hu8Rvsa1xFZcWzhCSCyT0oUzpsV3RrtVmRl20EP0
-   kzglAvqx+yLQxyLefIYceYq4O+A2X/Ml60Sv6MjsIUGR6rvydw0v7A4f8
-   tnJySPkgYO5Ff/obxYEndpLx36P4YrNAJm7634OFtJQs4x/vuDX8CVNRG
-   Hhymf7kA6pbzjo0nR2Ek8OEsmeNQeYZmILrYKOJzEU/3PHu6iLxAGukfX
-   +qv1lj9EB2+yGuN6s9aGLrGjFbGDTl2WxMpTH4OHzoz9BvDoaOgrB9ctP
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15119379"
-X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="15119379"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 03:39:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="937045877"
-X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="937045877"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2024 03:39:37 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C3BB4193; Thu,  7 Mar 2024 13:39:36 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] USB: gadget: pxa27x_udc: Remove unused of_gpio.h
-Date: Thu,  7 Mar 2024 13:39:36 +0200
-Message-ID: <20240307113936.3642469-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bXF8b2AI"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 1DDFEC000A;
+	Thu,  7 Mar 2024 11:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709811578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=opmB03pxVbtCj6pvCgp5nhczC3sDrqxdKFiEeY7PEsQ=;
+	b=bXF8b2AIkfLorCcrYS8MgF6GnecKXVoYsLzN6ja0TkzMurmm5ffGi+M49tL3aWCMhKUJcI
+	/dO+o+cmqt1pCQPR6DM8D1Ec9+/MpSsp2CHWY3TpF7mcbjS4lVRHOEx4OlbIFPoTMdSCVr
+	3EFtEx+NuTXjKYZc5Zl7m5Df9W20XImWOBH2DJHhGqmI41OYN9JzhOJYCmKA6GbGdUvZkN
+	ZuOeopIqRjSasWp+SkytxhSuhcchaYSgDF83d87xDNCBrw0mfD97NUhcy7kSXDkMSnf8sX
+	4Gy6w+4X9YFgVAvOFaqQj4ofRyRexuY0WynZ8zQ8CE689POD9vlOJMtITmfrGg==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Andrew Lunn <andrew@lunn.ch>,
+	Mark Brown <broonie@kernel.org>,
+	Ratheesh Kannoth <rkannoth@marvell.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v7 2/5] MAINTAINERS: Add the Freescale QMC HDLC driver entry
+Date: Thu,  7 Mar 2024 12:39:05 +0100
+Message-ID: <20240307113909.227375-3-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240307113909.227375-1-herve.codina@bootlin.com>
+References: <20240307113909.227375-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,27 +61,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-of_gpio.h is deprecated and subject to remove.
-The driver doesn't use it, simply remove the unused header.
+After contributing the driver, add myself as the maintainer for the
+Freescale QMC HDLC driver.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/usb/gadget/udc/pxa27x_udc.c | 1 -
- 1 file changed, 1 deletion(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/pxa27x_udc.c b/drivers/usb/gadget/udc/pxa27x_udc.c
-index 61424cfd2e1c..1a6317e4b2a3 100644
---- a/drivers/usb/gadget/udc/pxa27x_udc.c
-+++ b/drivers/usb/gadget/udc/pxa27x_udc.c
-@@ -24,7 +24,6 @@
- #include <linux/byteorder/generic.h>
- #include <linux/platform_data/pxa2xx_udc.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a69..15cd3a8e5866 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8584,6 +8584,13 @@ F:	Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+ F:	drivers/soc/fsl/qe/qmc.c
+ F:	include/soc/fsl/qe/qmc.h
  
- #include <linux/usb.h>
- #include <linux/usb/ch9.h>
++FREESCALE QUICC ENGINE QMC HDLC DRIVER
++M:	Herve Codina <herve.codina@bootlin.com>
++L:	netdev@vger.kernel.org
++L:	linuxppc-dev@lists.ozlabs.org
++S:	Maintained
++F:	drivers/net/wan/fsl_qmc_hdlc.c
++
+ FREESCALE QUICC ENGINE TSA DRIVER
+ M:	Herve Codina <herve.codina@bootlin.com>
+ L:	linuxppc-dev@lists.ozlabs.org
 -- 
-2.43.0.rc1.1.gbec44491f096
+2.43.0
 
