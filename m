@@ -1,176 +1,134 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B210125DC;
-	Thu,  7 Mar 2024 10:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3357B125DC;
+	Thu,  7 Mar 2024 10:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709808980; cv=none; b=rOL+BIVGuk/6YKFuhdPqSe96plhxnzXP4qEKfVcN224DXGS9v+yRPZtRjz0eBprnC6oEpP84jGq1gF/xGucrgukWXmPQgx4xLt9xEQqkz0FErSKixZZESVp2W2K1+nEoCJC0sdQ/4WqYteSeJHJ9FWKO0iBzqtszljgxrp+g8kI=
+	t=1709809027; cv=none; b=X9ml+BxO846GxEtp0sZIIx1KTDOF0JeIKoiaToopa7dLFO4L1h6/IeKXNR+pbJij1c+aQjHeLSGsSdNRz7k5vDAVhgt9A/30fnl7RX+CkMGHSyGGd3b5dThqB5jUKZ7Be2HcA2UR3JuDVbHT3Vzf8BvNeOtn8yKLg2ClpIECqyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709808980; c=relaxed/simple;
-	bh=2GgQweUhzFLfzUjhti26P2U1kq5XmI/CYrNVeRbxi+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DAAhpm7UpqvNKz62rNI6gxKgIx/CqLk39iqg6CIOeQ3okqVzcSRZS4LjkrEXoTZYvoWcb5bCYlZ161KZDC6Ptf2pWk2BA/FUE9BW1aVtDQd18X7TnNpRoGPoe75As5KC9CRPbeTEreHBWPXTpWjLOWvtyqjh/0EDtsKr9lfbQ0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T5fvhh+y; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709809027; c=relaxed/simple;
+	bh=WM12WLtYAz2cxFua0kfokyW2yT1caSiNtxTO/r91NvY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S4t35sYIxy9oaMX4cDsMoHSO4SLPYaZOHDzRHvOTKOW+7Djoz33edfHKtMwA/2JDdZj7+wjL4h7p6i2sCjsitehlmhdhG1X6aKGtcYCqEmE/WuWAPQc33UGQzO85sKT0STxNz2D10Ra7ZQjJhm4OWmYH0jdt1J45m2nTA+3m83c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Tr7xuXde; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5fvhh+y"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4d35b644c1bso231863e0c.3;
-        Thu, 07 Mar 2024 02:56:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709808978; x=1710413778; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=APg0N8EtrD5ihsxq8VybDP8ajvEhmkrsMBzTGWpbS9c=;
-        b=T5fvhh+y8uVwaLMrEYnaOyYOT7Ua2AocIGzkBp1T1wAo1TOPuoB8LI5h6/Vv8OPyFe
-         1rTcuwdlrsi/Xl2ZLUZEVDiy5yd1SwiiXlj+KluYSzvjIkNIxr9qlRoN03TD8Hrr0MOI
-         DcbAw8lHqFgDgsb92x0O9OxtnKr2sGJCYJ+ElCFtkB97Q0abi4kBS9LiT9XKHRVIpR/h
-         ebMlkuzzdI9l6z6XFMZhgaRkmHZbBe54ANYDbqgF1XSXHWcqznKGK8LiIuewX+sKncjf
-         gGGF4rvUZRl/ajQ9QAYB7P83kT0QQnB0ui8RRAhmZGo4dOFcQlTlqRccByAGQZHkSCVb
-         T7DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709808978; x=1710413778;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=APg0N8EtrD5ihsxq8VybDP8ajvEhmkrsMBzTGWpbS9c=;
-        b=N7xS82WdhZriDKLx6hpHopI+tGsPTLAM3yyzMzuYgbysFk+GL6jd4ihLlb/jWq907Y
-         /BfCznTm4XdbUkkqE3bfR8ECESHhjTS0sjUB+2TkfsBIotNbLDkATkEWIC8gMfgpSzy1
-         Z7iPzE8xVsmchg3RgG1BKUm5D9wtNvkoLmcZ8A7jsOc3w4s3QV3pHsaw4Uk2qXoftIbp
-         oMqj6xtyiRGVRe4u7vprNgQ1DOkkhN2S/Ayt+8LQiVNfy+5YVibZCGS3bseFyImb4Fk8
-         ZQP1WoJvzvBqSFyLQ0D4ogBd29gxhchuzzOCwtF/WD+gxjW9lfuQXXG3kcPA+aL1pwij
-         VfdA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcCpU9jaaLGTC50FSnYv2yeBU0Wi1BFleASAgEyIOnN7zlsumxpupE+EiCtHnb+ST+YgIveBAiLYrj/4HvgXJslcxQcQ2Ucj4YaajqrcGkV5wltduldExo1j6BHnINyfjXbrbFsdZX/QLUit4QTDT8vf+CjLnFOkerM56oJhkjSe1O7Uf4Uxzx4oi/5+H+DUBnp9IRt3TaWrVHrKrxi0NUMoKZDrglzCVe
-X-Gm-Message-State: AOJu0YwaJwfJocpTwTWYWXt0PLR5DgrpqFThCwpk8v763VTQapD2y5x5
-	XaEc4u7xBuLBST4LZRKVaSdx9TIw0MbT48mbgfha0nOS8uXJtGdP5a2g+qrGOLdd6PL16TPuK9Y
-	Ig1k4w7Bhg5cTclJzDS5gK5PlB3g=
-X-Google-Smtp-Source: AGHT+IHwiECTYUsVDlle5F8w3ZHAzBBT1vnPBCdYReaj9r/gIrBvUM1my/kEbtph3MIKxEtZR711+TWUoBbC32iGjfY=
-X-Received: by 2002:a05:6122:200d:b0:4d3:3878:a523 with SMTP id
- l13-20020a056122200d00b004d33878a523mr7038781vkd.12.1709808976570; Thu, 07
- Mar 2024 02:56:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Tr7xuXde"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4275jbOD008239;
+	Thu, 7 Mar 2024 02:56:58 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=3BqF1EAT
+	OqrJt33ZWiXXxcwocmc1ljkbIFVDyslFIyU=; b=Tr7xuXdeg+rnUJzwKY9nMzXp
+	L4l3o8YQV7IG2E264x6uPkPy4RlOTaInL8BKtFxlwj3B+dzfRrHoymwjwryKFe8H
+	V9QesUG63+yYbRaYZCVaoxsWDuHRvKEvhw+nWu7j3YrXgGbtC3ecSKUXYfxOGafv
+	wPlic/edeUr+sDsjRSxGOknSERvbXdQLNfpETmCv9vi3Qq+ar8xGjCflCKvIdeDs
+	/UY3TR0kKpjV5hhZjUrBZXbhPeo8OAbSqUi3zS/bkCSSwooXpJsqKimtAFyFs7Lv
+	xiSmT/53srabsgrc7FTNJN2fhhTInhQVrue6XHyy/hIyHYeZAdUgHt1VqKtCBw==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3wq7q8ruux-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 02:56:58 -0800 (PST)
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Thu, 7 Mar
+ 2024 02:56:57 -0800
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH02.marvell.com (10.69.176.39) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Thu, 7 Mar 2024 02:56:36 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Thu, 7 Mar 2024 02:56:36 -0800
+Received: from hyd1425.marvell.com (unknown [10.29.37.83])
+	by maili.marvell.com (Postfix) with ESMTP id B17A03F7055;
+	Thu,  7 Mar 2024 02:56:32 -0800 (PST)
+From: Sai Krishna <saikrishnag@marvell.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sgoutham@marvell.com>,
+        <lcherian@marvell.com>, <jerinj@marvell.com>, <gakula@marvell.com>,
+        <hkelam@marvell.com>, <sbhatta@marvell.com>
+CC: Sai Krishna <saikrishnag@marvell.com>
+Subject: [net PATCH] octeontx2-af: Fix devlink params
+Date: Thu, 7 Mar 2024 16:26:23 +0530
+Message-ID: <20240307105623.474757-1-saikrishnag@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305171600.328699-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdW0MxqxRwULhLsRtnYXYK8NYxq-uU7E2BscbvPh3axYFg@mail.gmail.com>
- <CA+V-a8vKo8ADB_R==vgBhVpSH43DOzdeA_NhZ1BCBdNuam3UmQ@mail.gmail.com>
- <CAMuHMdWX=OZJ3DE0vb4=k=6yH_L5JhusLRpVqJkJ0Xv3oT8_TQ@mail.gmail.com>
- <CA+V-a8uq=gw0_EVT3_CZD0TO+-DnSqXJtFakFcNWHOfq58g4aA@mail.gmail.com>
- <CA+V-a8vunmsUfGkFO30nwvqFkiks7vceLgG1jo7TcsFajeckmQ@mail.gmail.com> <CAMuHMdU0pTGg72r4+PkwyTin6pp1kApHruJUE5oSrdGucLYV7Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdU0pTGg72r4+PkwyTin6pp1kApHruJUE5oSrdGucLYV7Q@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 7 Mar 2024 10:55:10 +0000
-Message-ID: <CA+V-a8vmOv3qZEzz8jAHMmhT2d4kVTQ4ZZ5iOz4Lf3rN4nHbhg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: serial: renesas,scif: Document R9A09G057 support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: ygj9CeR1aXefL178zpeNV2lhtwcXiihr
+X-Proofpoint-GUID: ygj9CeR1aXefL178zpeNV2lhtwcXiihr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_07,2024-03-06_01,2023-05-22_02
 
-Hi Geert,
+From: Sunil Goutham <sgoutham@marvell.com>
 
-On Thu, Mar 7, 2024 at 10:18=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, Mar 7, 2024 at 11:09=E2=80=AFAM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Wed, Mar 6, 2024 at 10:21=E2=80=AFAM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Wed, Mar 6, 2024 at 10:15=E2=80=AFAM Geert Uytterhoeven <geert@lin=
-ux-m68k.org> wrote:
-> > > > On Wed, Mar 6, 2024 at 11:06=E2=80=AFAM Lad, Prabhakar
-> > > > <prabhakar.csengg@gmail.com> wrote:
-> > > > > On Wed, Mar 6, 2024 at 9:53=E2=80=AFAM Geert Uytterhoeven <geert@=
-linux-m68k.org> wrote:
-> > > > > > On Tue, Mar 5, 2024 at 6:16=E2=80=AFPM Prabhakar <prabhakar.cse=
-ngg@gmail.com> wrote:
-> > > > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > > >
-> > > > > > > Document support for the Serial Communication Interface with =
-FIFO (SCIF)
-> > > > > > > available in the Renesas RZ/V2H(P) (R9A09G057) SoC. The SCIF =
-interface in
-> > > > > > > the Renesas RZ/V2H(P) is similar to that available in the RZ/=
-G2L
-> > > > > > > (R9A07G044) SoC, with the only difference being that the RZ/V=
-2H(P) SoC has
-> > > > > > > three additional interrupts: one for Tx end/Rx ready and the =
-other two for
-> > > > > > > Rx and Tx buffer full, which are edge-triggered.
-> > > > > > >
-> > > > > > > No driver changes are required as generic compatible string
-> > > > > > > "renesas,scif-r9a07g044" will be used as a fallback on RZ/V2H=
-(P) SoC.
-> > > > > >
-> > > > > > If you declare SCIF on RZ/V2H compatible with SCIF on RZ/G2L, y=
-ou
-> > > > > > state that the current driver works fine (but perhaps suboptima=
-l),
-> > > > > > without adding support for the extra 3 interrupts?
-> > > > > >
-> > > > > Yes the current driver works without using the extra interrupts o=
-n the
-> > > > > RZ/V2H. The extra interrupts on the RZ/V2H are just sort of dupli=
-cate
-> > > > > ie
-> > > > > - Transmit End/Data Ready interrupt , for which we we have two
-> > > > > seperate interrupts already
-> > > > > - Receive buffer full interrupt (EDGE trigger), for which we alre=
-ady
-> > > > > have a Level triggered interrupt
-> > > > > - Transmit buffer empty interrupt (EDGE trigger), for which we al=
-ready
-> > > > > have a Level triggered interrupt
-> > > >
-> > > > Thanks for the confirmation!
-> > > >
-> > > > > Are you suggesting to not fallback on RZ/G2L and instead make RZ/=
-V2H
-> > > > > an explicit one so that in future we handle these 3 extra interru=
-pts?
-> > > >
-> > > > In light of the confirmation above, I am _not_ suggesting that.
-> > > >
-> > With the introduction of validation checks for interrupts, falling
-> > back to "renesas,scif-r9a07g044" for RZ/V2H will be difficult for
-> > validating interrupt count.
-> >
-> >   - if:
-> >       properties:
-> >         compatible:
-> >           contains:
-> >             enum:
-> >               - renesas,scif-r7s9210
-> >               - renesas,scif-r9a07g044
-> >     then:
-> >       properties:
-> >         interrupts:
-> >           minItems: 6
-> >
-> >         interrupt-names:
-> >           minItems: 6
-> >
-> > With the above check RZ/V2H fall into this if block,
-> >
-> > Is there any way I can specify to match two compat strings?
->
-> if r9a09g057 then ... else if r7s9210 || r9a07g044 then ...?
->
-Thanks for the pointer (I was grepping for elif ;)).
+Devlink param for adjusting NPC MCAM high zone
+area is in wrong param list and is not getting
+activated on CN10KA silicon.
+That patch fixes this issue.
 
-Cheers,
-Prabhakar
+Fixes: dd7842878633 ("octeontx2-af: Add new devlink param to configure maximum usable NIX block LFs")
+Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
+Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
+---
+ .../marvell/octeontx2/af/rvu_devlink.c        | 20 +++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
+index 1e6fbd98423d..96c04f7d93f8 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
+@@ -1235,8 +1235,8 @@ static int rvu_af_dl_dwrr_mtu_get(struct devlink *devlink, u32 id,
+ enum rvu_af_dl_param_id {
+ 	RVU_AF_DEVLINK_PARAM_ID_BASE = DEVLINK_PARAM_GENERIC_ID_MAX,
+ 	RVU_AF_DEVLINK_PARAM_ID_DWRR_MTU,
+-	RVU_AF_DEVLINK_PARAM_ID_NPC_EXACT_FEATURE_DISABLE,
+ 	RVU_AF_DEVLINK_PARAM_ID_NPC_MCAM_ZONE_PERCENT,
++	RVU_AF_DEVLINK_PARAM_ID_NPC_EXACT_FEATURE_DISABLE,
+ 	RVU_AF_DEVLINK_PARAM_ID_NIX_MAXLF,
+ };
+ 
+@@ -1434,15 +1434,6 @@ static const struct devlink_param rvu_af_dl_params[] = {
+ 			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
+ 			     rvu_af_dl_dwrr_mtu_get, rvu_af_dl_dwrr_mtu_set,
+ 			     rvu_af_dl_dwrr_mtu_validate),
+-};
+-
+-static const struct devlink_param rvu_af_dl_param_exact_match[] = {
+-	DEVLINK_PARAM_DRIVER(RVU_AF_DEVLINK_PARAM_ID_NPC_EXACT_FEATURE_DISABLE,
+-			     "npc_exact_feature_disable", DEVLINK_PARAM_TYPE_STRING,
+-			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
+-			     rvu_af_npc_exact_feature_get,
+-			     rvu_af_npc_exact_feature_disable,
+-			     rvu_af_npc_exact_feature_validate),
+ 	DEVLINK_PARAM_DRIVER(RVU_AF_DEVLINK_PARAM_ID_NPC_MCAM_ZONE_PERCENT,
+ 			     "npc_mcam_high_zone_percent", DEVLINK_PARAM_TYPE_U8,
+ 			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
+@@ -1457,6 +1448,15 @@ static const struct devlink_param rvu_af_dl_param_exact_match[] = {
+ 			     rvu_af_dl_nix_maxlf_validate),
+ };
+ 
++static const struct devlink_param rvu_af_dl_param_exact_match[] = {
++	DEVLINK_PARAM_DRIVER(RVU_AF_DEVLINK_PARAM_ID_NPC_EXACT_FEATURE_DISABLE,
++			     "npc_exact_feature_disable", DEVLINK_PARAM_TYPE_STRING,
++			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
++			     rvu_af_npc_exact_feature_get,
++			     rvu_af_npc_exact_feature_disable,
++			     rvu_af_npc_exact_feature_validate),
++};
++
+ /* Devlink switch mode */
+ static int rvu_devlink_eswitch_mode_get(struct devlink *devlink, u16 *mode)
+ {
+-- 
+2.25.1
+
