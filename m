@@ -1,87 +1,82 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035F81E866;
-	Thu,  7 Mar 2024 14:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30711B94D;
+	Thu,  7 Mar 2024 14:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709822849; cv=none; b=CzhSNNu3G//HmmsL+vKxnMi1gLBYw3FYE0fix9zBlL4ZDuE8r2TLiTg10g6vaH/7LXTrHK07LVbGqkX6ZsMzkhaT45+qX9qajyTJELNHEOcgW0NbEPZB8MlVl0Q3xhu6ffeEp64eRLf3oNwwVG2nFxo3tVgmi2dpNig0Gd4YVgI=
+	t=1709822998; cv=none; b=OfELjcdkE6G/wBTcZ2PLx8ac/q/qu+YGJZVcP17TaSjvLW4rQS0g5jCUA4IX4oo3rA3+aPuZuoS9+lulKCm2fXCV2J48xPrjiYUCZ/RGun+NER0tznUw65KMyI8IvZf/T4Uu6p+vINKV/47vhglqiBUXVDrv9KH3K47tUR8ej0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709822849; c=relaxed/simple;
-	bh=Km2LqwgcdVVDZyJtk6ImV9GP5lvaIR2i3Xbk0PN+jYk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=NMTn4I05fLl8FugjmNKC9nFibK8FEkZYPIzvJqKJ08x/jqnMnhChHMy4XshVfRv2Q/CSSQssmeWG4qlIBFMsE+GbWC+7ps6zb2fpVYdcsl0Tfa2gcLO4cggqMp1BSzd2Zh9nMgf4xZde2+tCWlRjfckBUYu7BEs6Z5du0uwiXrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BwetML2N; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709822998; c=relaxed/simple;
+	bh=m7rJ+0egJzJtARHOsYtJ2DtjkXer4oCX2aD/B5er6ws=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gDo+rlk38MB0cm36Um08FxHrkmXaMUqFpeFxHU8C2s1XtPrEh2l9fI89+6TTR4XXeI/eT0TVVU7hbx9rmf7YajBWUhrmCIfJq6MUJF5T2aNl9/5lqZjt9lT5qyAA5+cSRQNGaJUIRK62TvoVRHDgu/PJsPbRbzMRZX1nLtaMq9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SIOLXPmq; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BwetML2N"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4A8681C000C;
-	Thu,  7 Mar 2024 14:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709822843;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Km2LqwgcdVVDZyJtk6ImV9GP5lvaIR2i3Xbk0PN+jYk=;
-	b=BwetML2Nvuxg3humKkkGofoQSPzBvCFAr3106R7KsRbVuH95a8R3iv32qZfqvW3hP1N/bU
-	QftFWxf0kZmTZqAZ14iNng5XmOj46xH7JwF1PGrUQXPa3PRbxTA2yviKPDqxdZIjgAVf6d
-	vgwGwNsamireV7q6t9GjpudPj18/oW6Oo2W70U0MFchAZT1FkTYS4cwnBsyqfurtg5u+fO
-	tpONToan2coljFio+GwUqS/Lckl7HhAbEy6XGEobh52HN67rkgo7C3/mNmSEwDAuIaMzUu
-	zB2kqhqRXi29lyzlGSoeDhfcBpyuk0MNtUtJ4fA9+YGQ1b73Osi+lT56zb5Vpw==
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SIOLXPmq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709822994;
+	bh=m7rJ+0egJzJtARHOsYtJ2DtjkXer4oCX2aD/B5er6ws=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SIOLXPmqlTB70ND8BsPLGSLGfYA5mqSbmj9DKqb7/LD/nM5YLUUVR3ChCcuYr7Mxt
+	 cfN0gc8t2z6aAJihuUIi4pRI82RNIoCGutJJv6rwVJ1IuMJ71ryILSSLi2lbtIh5vr
+	 RdmsRCDa6/wbO6fhjctv0VIUE2EBNZjFO3lsBTkDO6QRKdKsWwyDTGvJFOsDYjMdK8
+	 iR1MVYmcoNIrx/Jxcjg9MYGrhiPXqN/QxXeQeWrgNEfwjMFBScCwf4LA5t1DbYoot3
+	 SY/sPFn+Agnxz3Z4KVI8Bpt1MH0LxqeOAHtUcr0Uty+jhr/YX16vk7LX5OFiqJ2PHD
+	 yTAkhiFlrVr2g==
+Received: from localhost.localdomain (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4C5FE37820DA;
+	Thu,  7 Mar 2024 14:49:51 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Jaehoon Chung <jh80.chung@samsung.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	tianshuliang <tianshuliang@hisilicon.com>,
+	Shawn Guo <shawn.guo@linaro.org>,
+	Jiancheng Xue <xuejiancheng@hisilicon.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	kernel-janitors@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: dw_mmc: remove unneeded assignment
+Date: Thu,  7 Mar 2024 19:50:13 +0500
+Message-Id: <20240307145013.2721326-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 07 Mar 2024 15:47:21 +0100
-Message-Id: <CZNLM1VYID7L.1PVM0H06E6TBO@bootlin.com>
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Kevin
- Hilman" <khilman@kernel.org>, "Alan Stern" <stern@rowland.harvard.edu>,
- <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-To: "Roger Quadros" <rogerq@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Peter Chen" <peter.chen@kernel.org>, "Pawel
- Laszczak" <pawell@cadence.com>, "Nishanth Menon" <nm@ti.com>, "Vignesh
- Raghavendra" <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v4 5/9] usb: cdns3-ti: pass auxdata from match data to
- of_platform_populate()
-X-Mailer: aerc 0.15.2
-References: <20240307-j7200-usb-suspend-v4-0-5ec7615431f3@bootlin.com>
- <20240307-j7200-usb-suspend-v4-5-5ec7615431f3@bootlin.com>
- <bc361325-1510-4fe0-a7ee-bc5be0a1b4cc@kernel.org>
-In-Reply-To: <bc361325-1510-4fe0-a7ee-bc5be0a1b4cc@kernel.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hello,
+The err is being set to 0 and replaced every time after this
+assignment. Remove this assignment as it is extraneous.
 
-On Thu Mar 7, 2024 at 1:38 PM CET, Roger Quadros wrote:
->
->
-> On 07/03/2024 11:55, Th=C3=A9o Lebrun wrote:
-> > Allow compatible to pick auxdata given to child platform devices.
-> >=20
-> > No compatible exploits this functionality, just yet.
-> >=20
->
-> This patch could be merged with Patch 7 so we know exactly how auxdata
-> is used?
+Fixes: e382ab741252 ("mmc: dw_mmc: add support for hi3798cv200 specific extensions of dw-mshc")
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+ drivers/mmc/host/dw_mmc-hi3798cv200.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Indeed. I liked splitting. Previous revision had it as a single patch.
-I can revert.
-
-Regards,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/drivers/mmc/host/dw_mmc-hi3798cv200.c b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+index 61923a5183693..6099756e59b3c 100644
+--- a/drivers/mmc/host/dw_mmc-hi3798cv200.c
++++ b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+@@ -87,7 +87,6 @@ static int dw_mci_hi3798cv200_execute_tuning(struct dw_mci_slot *slot,
+ 			goto tuning_out;
+ 
+ 		prev_err = err;
+-		err = 0;
+ 	}
+ 
+ tuning_out:
+-- 
+2.39.2
 
