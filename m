@@ -1,112 +1,124 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BAA839E3;
-	Thu,  7 Mar 2024 11:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFAB128812
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709810395; cv=none; b=HRGnPid+o57ThiFR88Dwh4XEwDBp1ojHA2fZniJmxMkN+D7ouqbwHhYDsV4JPdHZ5l3vlwU3A3UqdeHldxB7+kGdHsRpg/QFiBIBhopfewOsi4nkq8RZI1ZptDG58fQ+rE1h5hzfChOoL1RgDDjIePBRnBd23TlZ6XDWjNLCgw8=
+	t=1709810404; cv=none; b=jg/pxXu6txCRG05QW4uQb47SoJf3r2j0iTD5ZrwXNM2Yo9pm0UhlYirnagtYtF2xKFKo7EIG12sr80WLZFZ+7vaV0V2qXDUhi5t2JmNfhWBAsk0xS53o+r/q8swSV76HldqGFQ0B8JmIy5VAQfIxIJh5PFwUj+ANM/ZCEU1kX4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709810395; c=relaxed/simple;
-	bh=QbV5WjqAjW2pbLLQ+buUKTQxRQ8ErN6ci83Pq7iTb6U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=qBw0QFBfwQluBiY3d9Ftz6lJb1DbK+UNzEQ7ypZvQom5wUv2IkQPuviyQkjyKRT1X9Q/qCUpp++IiuKXcJIstTSF3pAsEWJlyWpeDVzL6QdE2mXz1IgnA8Z2FxnkC5zDtYx2K32hevkG/Azt/4Fbf5vE/OBMRVv9vSNCgPCHZ3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=GMAzmmP3; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1709810404; c=relaxed/simple;
+	bh=DfswE7HJLLqy77GWnPiVArfI05VtoLAEZZ8wtl2bLVQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=blKMuy+xCr0OE0LX6igEGgPxaI34EHbK/5+fe8b946W0LeQ6EExUX/8M89h11oKK0++UX78LePPFkhY7wM9rpd1Gfx3XXs7NBiBxekFiaxze5u6DoRJa96fLh68MYd4ujy7K0yGvadNVZ47fMtxOCWCDrG3XOb2CDQutwq5sydQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qp0rPK08; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="GMAzmmP3"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 037A29C498B;
-	Thu,  7 Mar 2024 06:19:51 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 2WSTG1iEmFg8; Thu,  7 Mar 2024 06:19:50 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 4DCE59C4AC5;
-	Thu,  7 Mar 2024 06:19:50 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 4DCE59C4AC5
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qp0rPK08"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso9407911fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:20:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1709810390; bh=ZL5kJeBt2AJwIW7XKBPvdhgd1Q+WZ+LRmadNaYy5kfU=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=GMAzmmP3afMD5YbbLFlL9s9JzhNRXr8c7HaXOlDrM8JHgqMqEj4ftSJoQAZxFWXet
-	 bWFuBntAVjH5QVHvyqpV13M43k0cljoVebk9e/7NXg+lVZZ8iKCXG+5OCAylUjxSOG
-	 KmXAf6xR3qKD66FRBPl7SnC7C5cZR540P4faERS6dOmXZKWZYxWLob+MnHWmwI1mp6
-	 DSrLRvNlYeWTHf2YX6d9oniTMHJ8aps6yNl8bR8daUA4JxvCvzRWvNVqEAtM4cJKJk
-	 MIEX3l0I/TyTrj702sV0jrSjDsAwsPjX9CHhwuTQRKWIsvqhF3U7QvDrYmZ8iOQkO1
-	 8q3stLix4j+mg==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id g5bDPnKGjSwG; Thu,  7 Mar 2024 06:19:50 -0500 (EST)
-Received: from gerard.rennes.sfl (lmontsouris-657-1-69-118.w80-15.abo.wanadoo.fr [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id ADD7F9C498B;
-	Thu,  7 Mar 2024 06:19:48 -0500 (EST)
-From: =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= <kevin.lhopital@savoirfairelinux.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Dan Murphy <dmurphy@ti.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= <kevin.lhopital@savoirfairelinux.com>,
-	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH v2] net: phy: fix phy_get_internal_delay accessing an empty array
-Date: Thu,  7 Mar 2024 12:19:06 +0100
-Message-Id: <20240307111906.297749-1-kevin.lhopital@savoirfairelinux.com>
-X-Mailer: git-send-email 2.34.1
+        d=linaro.org; s=google; t=1709810400; x=1710415200; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XTSBVVVJ5YriwXW83Xu49WC7Hj5VHh4fFgiqujVWr9o=;
+        b=Qp0rPK08swaXH27iS0DcRBQgAvckoR8HEpAoYS75USBCO417zqthTf/8gr09pzXI4p
+         uAxVuczpD7demMAmO9HaWD0yfB8mJ4HqDtDv3vGdDFZSTlJ3OzpH7EzAQR95wlpbM9oR
+         d4fLEFmDr1WWv7KDbD8S9gjCAQhFG6nrhA3ekE/8txkEPblhd8mY/SphVCwirZ1kgBXi
+         s03TsrU4L9ByfepDDzgQb0Eq/E4PZZ1kZF0SNcVRvuKBRN8UalR8kKLC/hYGsZlOmgSe
+         RfeF9Nm3vNdxPoT+IwZj1WiO9N+cAp75bsgodOTOvBEWSjmDky+HmXMJcFo7LoKO2XrR
+         4irA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709810400; x=1710415200;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XTSBVVVJ5YriwXW83Xu49WC7Hj5VHh4fFgiqujVWr9o=;
+        b=fJo5g9b6oi6klSbz1QQRYemB4dPpYud6smA9dCFcZeeZ8/edYcntDZZEF7hg9nF0kx
+         10b7NwFch7WpLx7aHIYRAXtNyc+HorXfuyUvMby8INjtYQNmi8T3ApTdgmVED/hC/8y4
+         7sBeGPVpi+zMjVS55ja+uxsgbT3ibvlTvykhUoTbXahKoN5/DgdjsJj1Zki1XIT+Nrkz
+         Uppv4BjoD7GDMYEDsYmQ6QGlK2uAfj2J5EiMAdkKqUD/Qz5AX8jmC9tocp+q/GVgZypj
+         E/RTIh0CkNWYr0zsov9AzqP3/d69VPruPYU03MufOzqOF1nm/U0JOok3b4yByj3PrD5V
+         Vb8g==
+X-Forwarded-Encrypted: i=1; AJvYcCV32kOucnbm21G4BNYUYSs8/rluMhVfnDPKTMvCamE9qi0DCAFM+/F8+RTJX7X7uGvxrSnP+fLEA+KXz6sawTUNyHOnfqQSdmpIsN/q
+X-Gm-Message-State: AOJu0YwqQS6zkh4ZeBpeBsjf+DhRdszDqTKZKGh+B+SNg9eKvg2jZhAC
+	Afc69xS9iJ+sA+xzIQRlFYrct0ckg8DsanQMM4Uwm39grQlQLyqVm9NR8/VdZa4=
+X-Google-Smtp-Source: AGHT+IEJFP45iEkqRIJfjQVGnd9vf8NSboPCjm6h35YrqWvxgwSyal1JJf1HtYzDNDxj06EzP2Td4A==
+X-Received: by 2002:a2e:6804:0:b0:2d4:5f4:dee with SMTP id c4-20020a2e6804000000b002d405f40deemr1190422lja.18.1709810400006;
+        Thu, 07 Mar 2024 03:20:00 -0800 (PST)
+Received: from [172.30.204.36] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id s6-20020a2e9c06000000b002d38f36f3a4sm2003570lji.117.2024.03.07.03.19.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 03:19:59 -0800 (PST)
+Message-ID: <afc709b5-4e4e-4308-a399-e0b521592250@linaro.org>
+Date: Thu, 7 Mar 2024 12:19:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: qcom: Enable BDF to SID translation properly
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240307-pci-bdf-sid-fix-v1-1-9423a7e2d63c@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240307-pci-bdf-sid-fix-v1-1-9423a7e2d63c@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The phy_get_internal_delay function could try to access to an empty
-array in the case that the driver is calling phy_get_internal_delay
-without defining delay_values and rx-internal-delay-ps or
-tx-internal-delay-ps is defined to 0 in the device-tree.
-This will lead to "unable to handle kernel NULL pointer dereference at
-virtual address 0". To avoid this kernel oops, the test should be delay
->=3D 0. As there is already delay < 0 test just before, the test could
-only be size =3D=3D 0.
 
-Fixes: 92252eec913b ("net: phy: Add a helper to return the index for of t=
-he internal delay")
-Co-developed-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoi=
-rfairelinux.com>
-Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirf=
-airelinux.com>
-Signed-off-by: K=C3=A9vin L'h=C3=B4pital <kevin.lhopital@savoirfairelinux=
-.com>
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
----
-V1 -> V2: Fixed Signed-off-by tags
 
- drivers/net/phy/phy_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 3/7/24 12:05, Manivannan Sadhasivam wrote:
+> Qcom SoCs making use of ARM SMMU require BDF to SID translation table in
+> the driver to properly map the SID for the PCIe devices based on their BDF
+> identifier. This is currently achieved with the help of
+> qcom_pcie_config_sid_1_9_0() function for SoCs supporting the 1_9_0 config.
+> 
+> But With newer Qcom SoCs starting from SM8450, BDF to SID translation is
+> set to bypass mode by default in hardware. Due to this, the translation
+> table that is set in the qcom_pcie_config_sid_1_9_0() is essentially
+> unused and the default SID is used for all endpoints in SoCs starting from
+> SM8450.
+> 
+> This is a security concern and also warrants swapping the DeviceID in DT
+> while using the GIC ITS to handle MSIs from endpoints. The swapping is
+> currently done like below in DT when using GIC ITS:
+> 
+> 			/*
+> 			 * MSIs for BDF (1:0.0) only works with Device ID 0x5980.
+> 			 * Hence, the IDs are swapped.
+> 			 */
+> 			msi-map = <0x0 &gic_its 0x5981 0x1>,
+> 				  <0x100 &gic_its 0x5980 0x1>;
+> 
+> Here, swapping of the DeviceIDs ensure that the endpoint with BDF (1:0.0)
+> gets the DeviceID 0x5980 which is associated with the default SID as per
+> the iommu mapping in DT. So MSIs were delivered with IDs swapped so far.
+> But this also means the Root Port (0:0.0) won't receive any MSIs (for PME,
+> AER etc...)
+> 
+> So let's fix these issues by clearing the BDF to SID bypass mode for all
+> SoCs making use of the 1_9_0 config. This allows the PCIe devices to use
+> the correct SID, thus avoiding the DeviceID swapping hack in DT and also
+> achieving the isolation between devices.
+> 
+> Cc:  <stable@vger.kernel.org> # 5.11
+> Fixes: 4c9398822106 ("PCI: qcom: Add support for configuring BDF to SID mapping for SM8250")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 3611ea64875e..3ad9bbf65cbe 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2959,7 +2959,7 @@ s32 phy_get_internal_delay(struct phy_device *phyde=
-v, struct device *dev,
- 	if (delay < 0)
- 		return delay;
-=20
--	if (delay && size =3D=3D 0)
-+	if (size =3D=3D 0)
- 		return delay;
-=20
- 	if (delay < delay_values[0] || delay > delay_values[size - 1]) {
---=20
-2.34.1
+Looks sensible..
 
+Does switching away from bypass show any performance degradation?
+
+Konrad
