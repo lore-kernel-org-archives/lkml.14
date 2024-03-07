@@ -1,44 +1,44 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680A51C27;
-	Thu,  7 Mar 2024 02:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B80A4C8B;
+	Thu,  7 Mar 2024 02:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709779256; cv=none; b=sblV196yRZPBhH9io5UffXl40dDASbzMaQIt+ipCamRcbRD1ah2ez8Cnfh2Xa4XRhvjzh004gl5IdKIYJo3l3S6KBXt3z26BSBGtW7L+41tnzcbYUh5OrwMT6wU4R4xJpToyQaDQmUIFvEqRFwXTQJerXLES5X/XkHakBnilObg=
+	t=1709779257; cv=none; b=SxWtemnbQkudA3HyJrppxi3J2hNFQZUiV0NSu2OjozHw7tXXZO8i3VpajYHpWg90g5z6ztCaMDYt7rJtg4E4oY40L1qP+vxV4MUrqMdfDQtl1z28tYTSbwP0YkRPqcagG2zTVxM2LDnrydB0ojA2VRRuj0cMZJ++BYYfpoVCt7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709779256; c=relaxed/simple;
-	bh=pBPynPtz/V7v/h5wuWtgu0O4YV1eNNCWoKb2hnz3ZPk=;
+	s=arc-20240116; t=1709779257; c=relaxed/simple;
+	bh=5IGhjunV2hAmlgsdkLV8Tg/Fpxd45I02KlxjIntlF8A=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EzQey0ss4I0LpIHvME1vLo5hpTmvUy9BGR4A/hZC0rCGLXl3LwpyFYLyFBQ0ekg23pKo/PSv2yN5XuRzTULb+gnba604MUAwY3BiKWEwPNj+x4Acbg36rmYSz1DW2oOFyjwH7zzEkq30rbsECM+2PeUgUMzkP1MDR6Bbb/AbiiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=vtfXGAQ3; arc=none smtp.client-ip=45.89.224.132
+	 MIME-Version:Content-Type; b=H5Jookzi1Uncs7EEptgWltf/EY47hGUhOq/kBfKaFv87+isvA9A4w5mSvFZ1Ayz9oDwHtyKX6hclUyQ7QfSA9/+XAvkGgecm4UdoCBsVUK2wMWiVn7/zOtybicR9bq+6wz3wxZtfr5uX+ZJfbZUPidxThuAQ+HV04hvA/xqQeTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=ZWlsCrBG; arc=none smtp.client-ip=37.18.73.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="vtfXGAQ3"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 8256F120021;
-	Thu,  7 Mar 2024 05:40:45 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 8256F120021
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="ZWlsCrBG"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 7AA3D10003A;
+	Thu,  7 Mar 2024 05:40:46 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 7AA3D10003A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1709779245;
-	bh=gPoYxl99hZw4r2GrN+UX1NkBh/kze2TFpy26yv3N7sw=;
+	s=mail; t=1709779246;
+	bh=9xjL3ldEl071R5nZpqc+4uOtXpIAYgEXiDe8edy0VvQ=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=vtfXGAQ3hrwUHgW0YKhiJaXoT8leKfVpXR+Z3J1UJpafb3gPvsfB2Q0EuFQv6s5CE
-	 J1Le5Xzzo28siZ9fEQw6OVf68dJGh3VPcW3EL3Fc1cBqmOXXWRMjCDGlV9xm8Jp47S
-	 3y83p1ybkSzi8v9OcgWezZV2Ixtv1HS7RJ2k3qiJebWNQw7eOnHmt4MlGY/U8DTYjK
-	 i4uN592ubjzBdlUqWG5ZUn3j9ygjelCpyO7riXWDt5tSlsgn6aUIWCq0OhiUjGeJwP
-	 gf/gEUgA5tH6zeFPHgXX8pr3l4D8BBGVFwmN89U9/etGjQ2DcZNS/hyG8BlB8AxI3t
-	 9btS69O0ZR7GQ==
+	b=ZWlsCrBGOEK+F3p8ssLvbis08QhtmTLVfwi30KcZt7QBhmC2HAklFEBVUPnoNUFiV
+	 hVriW75UHXI20eojErsh2eTq5P3F+BWoHW2rtYnVhk5axFhswlr8zaev33VVycotX+
+	 fWoZ/spYz6a4zZSquwrSWrKkmp0/pysyITDOLD5eyreSDO99ehG3fwFEgZgLaud2Ae
+	 dPYs4k7AAVnpy05Kj8VTo7jYFD5eh8NWiCeTkC38hkddvvhj+iIRj3JW7JwlTUUvOT
+	 Jcvd1rymAGnK96O2o5bd6IwUuGN+YFtf/OJC/PvEgRgqBd5Muc1fI7o0BqGoIEizma
+	 h/8feEcVMDfOg==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu,  7 Mar 2024 05:40:45 +0300 (MSK)
+	Thu,  7 Mar 2024 05:40:46 +0300 (MSK)
 Received: from localhost.localdomain (100.125.24.169) by
  p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 7 Mar 2024 05:40:44 +0300
+ 15.2.1118.40; Thu, 7 Mar 2024 05:40:45 +0300
 From: George Stark <gnstark@salutedevices.com>
 To: <andy.shevchenko@gmail.com>, <pavel@ucw.cz>, <lee@kernel.org>,
 	<vadimp@nvidia.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
@@ -48,10 +48,10 @@ To: <andy.shevchenko@gmail.com>, <pavel@ucw.cz>, <lee@kernel.org>,
 	<nikitos.tr@gmail.com>, <kabel@kernel.org>
 CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linuxppc-dev@lists.ozlabs.org>, <kernel@salutedevices.com>, George Stark
-	<gnstark@salutedevices.com>, Nikita Travkin <nikita@trvn.ru>
-Subject: [PATCH v5 03/10] leds: aw2013: use devm API to cleanup module's resources
-Date: Thu, 7 Mar 2024 05:40:27 +0300
-Message-ID: <20240307024034.1548605-4-gnstark@salutedevices.com>
+	<gnstark@salutedevices.com>
+Subject: [PATCH v5 07/10] leds: nic78bx: use devm API to cleanup module's resources
+Date: Thu, 7 Mar 2024 05:40:31 +0300
+Message-ID: <20240307024034.1548605-8-gnstark@salutedevices.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240307024034.1548605-1-gnstark@salutedevices.com>
 References: <20240307024034.1548605-1-gnstark@salutedevices.com>
@@ -89,78 +89,65 @@ the LEDs and that callback uses resources which were destroyed already
 in module's remove() so use devm API instead of remove().
 
 Signed-off-by: George Stark <gnstark@salutedevices.com>
-Tested-by: Nikita Travkin <nikita@trvn.ru>
 ---
- drivers/leds/leds-aw2013.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ drivers/leds/leds-nic78bx.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/leds/leds-aw2013.c b/drivers/leds/leds-aw2013.c
-index 17235a5e576a..6475eadcb0df 100644
---- a/drivers/leds/leds-aw2013.c
-+++ b/drivers/leds/leds-aw2013.c
-@@ -320,6 +320,11 @@ static int aw2013_probe_dt(struct aw2013 *chip)
- 	return 0;
- }
+diff --git a/drivers/leds/leds-nic78bx.c b/drivers/leds/leds-nic78bx.c
+index a86b43dd995e..f3049fa14f04 100644
+--- a/drivers/leds/leds-nic78bx.c
++++ b/drivers/leds/leds-nic78bx.c
+@@ -118,6 +118,15 @@ static struct nic78bx_led nic78bx_leds[] = {
+ 	}
+ };
  
-+static void aw2013_chip_disable_action(void *data)
++static void lock_led_reg_action(void *data)
 +{
-+	aw2013_chip_disable(data);
++	struct nic78bx_led_data *led_data = (struct nic78bx_led_data *)data;
++
++	/* Lock LED register */
++	outb(NIC78BX_LOCK_VALUE,
++	     led_data->io_base + NIC78BX_LOCK_REG_OFFSET);
 +}
 +
- static const struct regmap_config aw2013_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -336,7 +341,10 @@ static int aw2013_probe(struct i2c_client *client)
- 	if (!chip)
- 		return -ENOMEM;
+ static int nic78bx_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -152,6 +161,10 @@ static int nic78bx_probe(struct platform_device *pdev)
+ 	led_data->io_base = io_rc->start;
+ 	spin_lock_init(&led_data->lock);
  
--	mutex_init(&chip->mutex);
-+	ret = devm_mutex_init(&client->dev, &chip->mutex);
++	ret = devm_add_action(dev, lock_led_reg_action, led_data);
 +	if (ret)
 +		return ret;
 +
- 	mutex_lock(&chip->mutex);
+ 	for (i = 0; i < ARRAY_SIZE(nic78bx_leds); i++) {
+ 		nic78bx_leds[i].data = led_data;
  
- 	chip->client = client;
-@@ -384,6 +392,10 @@ static int aw2013_probe(struct i2c_client *client)
- 		goto error_reg;
- 	}
- 
-+	ret = devm_add_action(&client->dev, aw2013_chip_disable_action, chip);
-+	if (ret)
-+		goto error_reg;
-+
- 	ret = aw2013_probe_dt(chip);
- 	if (ret < 0)
- 		goto error_reg;
-@@ -406,19 +418,9 @@ static int aw2013_probe(struct i2c_client *client)
- 
- error:
- 	mutex_unlock(&chip->mutex);
--	mutex_destroy(&chip->mutex);
+@@ -167,15 +180,6 @@ static int nic78bx_probe(struct platform_device *pdev)
  	return ret;
  }
  
--static void aw2013_remove(struct i2c_client *client)
+-static void nic78bx_remove(struct platform_device *pdev)
 -{
--	struct aw2013 *chip = i2c_get_clientdata(client);
+-	struct nic78bx_led_data *led_data = platform_get_drvdata(pdev);
 -
--	aw2013_chip_disable(chip);
--
--	mutex_destroy(&chip->mutex);
+-	/* Lock LED register */
+-	outb(NIC78BX_LOCK_VALUE,
+-	     led_data->io_base + NIC78BX_LOCK_REG_OFFSET);
 -}
 -
- static const struct of_device_id aw2013_match_table[] = {
- 	{ .compatible = "awinic,aw2013", },
- 	{ /* sentinel */ },
-@@ -432,7 +434,6 @@ static struct i2c_driver aw2013_driver = {
- 		.of_match_table = aw2013_match_table,
- 	},
- 	.probe = aw2013_probe,
--	.remove = aw2013_remove,
- };
+ static const struct acpi_device_id led_device_ids[] = {
+ 	{"NIC78B3", 0},
+ 	{"", 0},
+@@ -184,7 +188,6 @@ MODULE_DEVICE_TABLE(acpi, led_device_ids);
  
- module_i2c_driver(aw2013_driver);
+ static struct platform_driver led_driver = {
+ 	.probe = nic78bx_probe,
+-	.remove_new = nic78bx_remove,
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 		.acpi_match_table = ACPI_PTR(led_device_ids),
 -- 
 2.25.1
 
