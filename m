@@ -1,175 +1,286 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2C4126F39;
-	Thu,  7 Mar 2024 11:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F65126F39;
+	Thu,  7 Mar 2024 11:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709811459; cv=none; b=Sscq3cOsue7I1w38+S1ZbfUXTMbh+WU1h4KO8am0cH7ueaJ6UsSYckiMZBADlY+nVTtFpfF0iXr2YdIArsFGjngYKRY+ES+wAjauNfqrsdWqx8yKMO2wwMequmbs7WMxHwsD3BR2xhfGq3Yys/boetmb24qV+dl5+YniJncU9jc=
+	t=1709811541; cv=none; b=lVavtYUZTmSfhqOxH2uqMJh0NT3Uz19rkyqCZEtQI1H0n3VBOY/EcdaD5h1l0S5lalL9KP2EYkjmq1KSRtIL2PmrkKR8qH+jFiVynYhKdMNOV1bg+jzGyRpTmlPNQn6L2M9BNp4Q0XS5VKq9Cg/G+tP9BsZuvePXjnSOxj5WFEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709811459; c=relaxed/simple;
-	bh=bzo9Wfyr1Xgx6msDtriXR11PddtGvGUYjz6kRXVoZDM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rNbVp3eBTLuGejWoqluNCYI43HnZgYUOl1YXQTbkuK9ImDQFyyxzzYjDCLBzcnKdANHn6TPWO2UGVWZuGZiq+l3qDuVLGht8eNJ5RY8dY37McMnf5IFaOT47FNK6ytMoFjGO+w3E0WxKo1cI2WGUOWVfG11Pk2GW3f2Uav5K+/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PmShF53T; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PmShF53T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709811457; x=1741347457;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bzo9Wfyr1Xgx6msDtriXR11PddtGvGUYjz6kRXVoZDM=;
-  b=PmShF53TzEnTKURp0YrmEXQjzMYTWOiKykI0gZ+jO/9nN9Mqv1mpQkbB
-   pBWwxVhJfk84vMxShCTKMBtBPDSI/DykKU8VIIOpdmnbgk6r6fee4rY2f
-   CwwYkn8fXAh2MAAlzUR8anAuGqbbeAl6j736s5Ji0u3k8CSuVPdLYmkJN
-   71P1x4plIfz8e7bGpQmaqt9mDYP//3xg4k9GlrKlMyOZwa1RqPMMiS/oC
-   FZ+3CZq5LRucBvTJvxvmrf1GrU7/0CkeiVYZrwNBlr8jgHx5LjBHa2LqP
-   CSv8Gk8F7wqlKyR7eLiZQUtueoazIPbfButUoMtsCATo7uE23q/QVOJkv
-   w==;
-X-CSE-ConnectionGUID: vGKddyPVT5y+FgobIIh7Vw==
-X-CSE-MsgGUID: kumRBleARg+kz1/1CMIDRA==
-X-IronPort-AV: E=Sophos;i="6.07,211,1708412400"; 
-   d="asc'?scan'208";a="17329607"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Mar 2024 04:37:35 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 04:36:24 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 7 Mar 2024 04:36:22 -0700
-Date: Thu, 7 Mar 2024 11:35:37 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Stefan Berger <stefanb@linux.ibm.com>
-CC: <mpe@ellerman.id.au>, <linux-integrity@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<jarkko@kernel.org>, <rnsastry@linux.ibm.com>, <peterhuewe@gmx.de>,
-	<viparash@in.ibm.com>
-Subject: Re: [PATCH 2/2] tpm: of: If available Use linux,sml-log to get the
- log and its size
-Message-ID: <20240307-chill-roundup-44a73c50aebc@wendy>
-References: <20240306155511.974517-1-stefanb@linux.ibm.com>
- <20240306155511.974517-3-stefanb@linux.ibm.com>
+	s=arc-20240116; t=1709811541; c=relaxed/simple;
+	bh=uX7S0ye0/RwbE45mNrU4QeDT8JTmzF6N5NJm4xWvp9Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GgdWlEYvfDtyw3NpD1vquNXrZpRgKEAAYF6l/NAwgRqMYeJbQPbHmpGtDTVhK8qTOwYyCH3xk7bbd9IUSsXw+q52lS6+ezdA3j0SXZwa6OIn+25DLElm4VKidxrAxGhuDtvpkx8juTBDcHHbenRlvqLUYGKXtEmG2DC4xKZd8c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e4ea48972cso321937a34.0;
+        Thu, 07 Mar 2024 03:38:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709811539; x=1710416339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0aXuxbQB6L9E9sYp+MsxGWXfxoLpRZ+/4Exv7ss/u8c=;
+        b=cOXIkf1DZ9rPHSTq6irDnu+Qh3jR1UD67qD2JRbkNaXSejmKdJ0HplOlI1i9JDod0o
+         3AsE3leSTfLYR82kPZCtihEbz5KKZX8M0qXk//d8pThfQ9sLmdK6GoEJFNYF7efHBgjG
+         zre3QTCl+bFrnAniQSESkuL7CsiXnl8BpuQUzvNt+eVbGH/5dPwrIOL3sTz+hmrfvTx3
+         CQQkASEVc6migJKyz6liuSXCTVfS5RT1ggPqxb8UqzlvDmQtbjd850IJEVTNLId32GCW
+         bUCKvXzkHChrJzq9eCABo83IdpnmHUASYHzBC9fliJd9qNek3VDwRM8f+PqYysGoAZRJ
+         42gg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5VxvQIP1fRQvg4eJflQxE4d/NAECrqWz2OYYhWQm5ybPgs1Bvw+SO6ac+S6FGYdrjPVJWlmWSyPnHDKy8Qhqw/yo4/8A2IEM=
+X-Gm-Message-State: AOJu0YwLdGoBhmYFEuk1joAKHZMUh+4TjNy3BBCQYCWRTzpSM86ck7+v
+	s8eMQ05tKb0pVQdnWDChxyvvQihb456p9nazPnauNn7X+tQBrqseZy+PW/UNxPSkvkeVILiWfBk
+	PX802Cbo9SzQkM/lair/2cmWAJuw=
+X-Google-Smtp-Source: AGHT+IF3BoxPjVFlegfb1RJogAksj61KraW7uvXe0Yxsv26cFmP/Q3g5IWTOjoFdv35tm7EtpPm+Rycyuufp8Ls67Sc=
+X-Received: by 2002:a05:6870:f808:b0:21f:aa52:55d6 with SMTP id
+ fr8-20020a056870f80800b0021faa5255d6mr2123874oab.0.1709811539070; Thu, 07 Mar
+ 2024 03:38:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pGsz+08ahPIBPDcV"
-Content-Disposition: inline
-In-Reply-To: <20240306155511.974517-3-stefanb@linux.ibm.com>
-
---pGsz+08ahPIBPDcV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240306085428.88011-1-daniel.lezcano@linaro.org>
+ <CAJZ5v0gWhNqTGpoOH01scCdC51cEnt_8_T5ccqZC6yXPDv9QcA@mail.gmail.com>
+ <3bb7c6cf-f7a8-4059-ad8e-02e09c2a44b1@linaro.org> <2266782.iZASKD2KPV@kreacher>
+In-Reply-To: <2266782.iZASKD2KPV@kreacher>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 7 Mar 2024 12:38:46 +0100
+Message-ID: <CAJZ5v0jDdD1FSZsab0F=AQyxnUTKrBEFWpY4H+RJFGk8uYnJGQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] thermal/core: Fix trip point crossing events ordering
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	"open list:THERMAL" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 06, 2024 at 10:55:11AM -0500, Stefan Berger wrote:
-> If linux,sml-log is available use it to get the TPM log rather than the
-> pointer found in linux,sml-base. This resolves an issue on PowerVM and KVM
-> on Power where after a kexec the memory pointed to by linux,sml-base may
-> have been corrupted. Also, linux,sml-log has replaced linux,sml-base and
-> linux,sml-size on these two platforms.
-
-Those two properties are documented, but linux,sml-log is not, nor can I
-find patches on the list documenting it.
-There should be a patch adding this to tmp-common.yaml.
-
-Cheers,
-Conor.
-
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> ---
->  drivers/char/tpm/eventlog/of.c | 36 +++++++++++-----------------------
->  1 file changed, 11 insertions(+), 25 deletions(-)
->=20
-> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/o=
-f.c
-> index 930fe43d5daf..e37196e64ef1 100644
-> --- a/drivers/char/tpm/eventlog/of.c
-> +++ b/drivers/char/tpm/eventlog/of.c
-> @@ -54,8 +54,8 @@ int tpm_read_log_of(struct tpm_chip *chip)
->  	const u32 *sizep;
->  	const u64 *basep;
->  	struct tpm_bios_log *log;
-> +	const void *logp;
->  	u32 size;
-> -	u64 base;
-> =20
->  	log =3D &chip->log;
->  	if (chip->dev.parent && chip->dev.parent->of_node)
-> @@ -66,37 +66,23 @@ int tpm_read_log_of(struct tpm_chip *chip)
->  	if (of_property_read_bool(np, "powered-while-suspended"))
->  		chip->flags |=3D TPM_CHIP_FLAG_ALWAYS_POWERED;
-> =20
-> -	sizep =3D of_get_property(np, "linux,sml-size", NULL);
-> -	basep =3D of_get_property(np, "linux,sml-base", NULL);
-> -	if (sizep =3D=3D NULL && basep =3D=3D NULL)
-> -		return tpm_read_log_memory_region(chip);
-> -	if (sizep =3D=3D NULL || basep =3D=3D NULL)
-> -		return -EIO;
-> -
-> -	/*
-> -	 * For both vtpm/tpm, firmware has log addr and log size in big
-> -	 * endian format. But in case of vtpm, there is a method called
-> -	 * sml-handover which is run during kernel init even before
-> -	 * device tree is setup. This sml-handover function takes care
-> -	 * of endianness and writes to sml-base and sml-size in little
-> -	 * endian format. For this reason, vtpm doesn't need conversion
-> -	 * but physical tpm needs the conversion.
-> -	 */
-> -	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
-> -	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
-> +	logp =3D of_get_property(np, "linux,sml-log", &size);
-> +	if (logp =3D=3D NULL) {
-> +		sizep =3D of_get_property(np, "linux,sml-size", NULL);
-> +		basep =3D of_get_property(np, "linux,sml-base", NULL);
-> +		if (sizep =3D=3D NULL && basep =3D=3D NULL)
-> +			return tpm_read_log_memory_region(chip);
-> +		if (sizep =3D=3D NULL || basep =3D=3D NULL)
-> +			return -EIO;
-> +		logp =3D __va(be64_to_cpup((__force __be64 *)basep));
->  		size =3D be32_to_cpup((__force __be32 *)sizep);
-> -		base =3D be64_to_cpup((__force __be64 *)basep);
-> -	} else {
-> -		size =3D *sizep;
-> -		base =3D *basep;
->  	}
-> -
->  	if (size =3D=3D 0) {
->  		dev_warn(&chip->dev, "%s: Event log area empty\n", __func__);
->  		return -EIO;
->  	}
-> =20
-> -	log->bios_event_log =3D devm_kmemdup(&chip->dev, __va(base), size, GFP_=
-KERNEL);
-> +	log->bios_event_log =3D devm_kmemdup(&chip->dev, logp, size, GFP_KERNEL=
+On Wed, Mar 6, 2024 at 8:32=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.net=
+> wrote:
+>
+> On Wednesday, March 6, 2024 4:55:51 PM CET Daniel Lezcano wrote:
+> > On 06/03/2024 16:41, Rafael J. Wysocki wrote:
+> > > On Wed, Mar 6, 2024 at 2:16=E2=80=AFPM Daniel Lezcano <daniel.lezcano=
+@linaro.org> wrote:
+> > >>
+> > >> On 06/03/2024 13:53, Rafael J. Wysocki wrote:
+> > >>> On Wed, Mar 6, 2024 at 1:43=E2=80=AFPM Daniel Lezcano <daniel.lezca=
+no@linaro.org> wrote:
+> > >>>>
+> > >>>> On 06/03/2024 13:02, Rafael J. Wysocki wrote:
+> > >>>>
+> > >>>> [ ... ]
+> > >>>>
+> > >>>>>> +#define for_each_trip_reverse(__tz, __trip)    \
+> > >>>>>> +       for (__trip =3D &__tz->trips[__tz->num_trips - 1]; __tri=
+p >=3D __tz->trips ; __trip--)
+> > >>>>>> +
+> > >>>>>>     void __thermal_zone_set_trips(struct thermal_zone_device *tz=
 );
->  	if (!log->bios_event_log)
->  		return -ENOMEM;
-> =20
-> --=20
-> 2.43.0
->=20
+> > >>>>>>     int thermal_zone_trip_id(const struct thermal_zone_device *t=
+z,
+> > >>>>>>                             const struct thermal_trip *trip);
+> > >>>>>> --
+> > >>>>>
+> > >>>>> Generally speaking, this is a matter of getting alignment on the
+> > >>>>> expectations between the kernel and user space.
+> > >>>>>
+> > >>>>> It looks like user space expects to get the notifications in the =
+order
+> > >>>>> of either growing or falling temperatures, depending on the direc=
+tion
+> > >>>>> of the temperature change.  Ordering the trips in the kernel is n=
+ot
+> > >>>>> practical, but the notifications can be ordered in principle.  Is=
+ this
+> > >>>>> what you'd like to do?
+> > >>>>
+> > >>>> Yes
+> > >>>>
+> > >>>>> Or can user space be bothered with recognizing that it may get th=
+e
+> > >>>>> notifications for different trips out of order?
+> > >>>>
+> > >>>> IMO it is a bad information if the trip points events are coming
+> > >>>> unordered. The temperature signal is a time related measurements, =
+the
+> > >>>> userspace should receive thermal information from this signal in t=
+he
+> > >>>> right order. It sounds strange to track the temperature signal in =
+the
+> > >>>> kernel, then scramble the information, pass it to the userspace an=
+d
+> > >>>> except it to apply some kind of logic to unscramble it.
+> > >>>
+> > >>> So the notifications can be ordered before sending them out, as lon=
+g
+> > >>> as they are produced by a single __thermal_zone_device_update() cal=
+l.
+> > >>>
+> > >>> I guess you also would like the thermal_debug_tz_trip_up/down() cal=
+ls
+> > >>> to be ordered, wouldn't you?
+> > >>
+> > >> Right
+> > >
+> > > I have an idea how to do this, but it is based on a couple of patches
+> > > that I've been working on in the meantime.
+> > >
+> > > Let me post these patches first and then I'll send a prototype patch
+> > > addressing this on top of them.
+> >
+> > That is awesome, thanks !
+>
+> Anytime!
+>
+> Now that I've posted this series:
+>
+> https://lore.kernel.org/linux-pm/4558384.LvFx2qVVIh@kreacher/
+>
+> I can append the patch below that is based on it.
+>
+> The idea is really straightforward: Instead of sending the notifications
+> and recording the stats right away, create two lists of trips for which
+> they need to be send, sort them and then send the notifications etc in
+> the right order.  I want to avoid explicit memory allocations that can
+> fail in principle, which is why lists are used.
+>
+> The reason why two lists are used is in case the trips are updated and
+> that's why they appear to be crossed (which may not depend on the actual
+> temperature change).
+>
+> One caveat is that the lists are sorted by trip thresholds (because they
+> are the real values take into account in the code), but user space may
+> expect them to be sorted by trip temperatures instead.  That can be chang=
+ed.
 
---pGsz+08ahPIBPDcV
-Content-Type: application/pgp-signature; name="signature.asc"
+I've concluded that it is better to sort by trip temperature, because
+the thresholds used here are the new ones (computed after the trips
+have been crossed) which may be confusing.
 
------BEGIN PGP SIGNATURE-----
+> ---
+>  drivers/thermal/thermal_core.c |   39 +++++++++++++++++++++++++++++++++-=
+-----
+>  drivers/thermal/thermal_core.h |    1 +
+>  2 files changed, 34 insertions(+), 6 deletions(-)
+>
+> Index: linux-pm/drivers/thermal/thermal_core.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/thermal/thermal_core.c
+> +++ linux-pm/drivers/thermal/thermal_core.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/kdev_t.h>
+>  #include <linux/idr.h>
+> +#include <linux/list_sort.h>
+>  #include <linux/thermal.h>
+>  #include <linux/reboot.h>
+>  #include <linux/string.h>
+> @@ -361,7 +362,9 @@ static void handle_critical_trips(struct
+>  }
+>
+>  static void handle_thermal_trip(struct thermal_zone_device *tz,
+> -                               struct thermal_trip_desc *td)
+> +                               struct thermal_trip_desc *td,
+> +                               struct list_head *way_up_list,
+> +                               struct list_head *way_down_list)
+>  {
+>         const struct thermal_trip *trip =3D &td->trip;
+>
+> @@ -382,8 +385,7 @@ static void handle_thermal_trip(struct t
+>                  * the threshold and the trip temperature will be equal.
+>                  */
+>                 if (tz->temperature >=3D trip->temperature) {
+> -                       thermal_notify_tz_trip_up(tz, trip);
+> -                       thermal_debug_tz_trip_up(tz, trip);
+> +                       list_add_tail(&td->notify_list_node, way_up_list)=
+;
+>                         td->threshold =3D trip->temperature - trip->hyste=
+resis;
+>                 } else {
+>                         td->threshold =3D trip->temperature;
+> @@ -400,8 +402,7 @@ static void handle_thermal_trip(struct t
+>                  * the trip.
+>                  */
+>                 if (tz->temperature < trip->temperature - trip->hysteresi=
+s) {
+> -                       thermal_notify_tz_trip_down(tz, trip);
+> -                       thermal_debug_tz_trip_down(tz, trip);
+> +                       list_add(&td->notify_list_node, way_down_list);
+>                         td->threshold =3D trip->temperature;
+>                 } else {
+>                         td->threshold =3D trip->temperature - trip->hyste=
+resis;
+> @@ -457,10 +458,24 @@ static void thermal_zone_device_init(str
+>                 pos->initialized =3D false;
+>  }
+>
+> +static int thermal_trip_notify_cmp(void *ascending, const struct list_he=
+ad *a,
+> +                                  const struct list_head *b)
+> +{
+> +       struct thermal_trip_desc *tda =3D container_of(a, struct thermal_=
+trip_desc,
+> +                                                    notify_list_node);
+> +       struct thermal_trip_desc *tdb =3D container_of(b, struct thermal_=
+trip_desc,
+> +                                                    notify_list_node);
+> +       int ret =3D tdb->threshold - tda->threshold;
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZemmegAKCRB4tDGHoIJi
-0geZAQDRqcSLRqXvICr64TJ1WsNpahDiNbtCA9bLKrnnkQKChwEAqoh88ZpfefYJ
-7KQ6U0WmddS80c0+qFeqxjEqa1WH5gM=
-=oHvc
------END PGP SIGNATURE-----
+So this will become
 
---pGsz+08ahPIBPDcV--
++    int ret =3D tdb->trip.temperature - tda->trip.temperature;
+
+> +
+> +       return ascending ? ret : -ret;
+> +}
+> +
+>  void __thermal_zone_device_update(struct thermal_zone_device *tz,
+>                                   enum thermal_notify_event event)
+>  {
+>         struct thermal_trip_desc *td;
+> +       LIST_HEAD(way_down_list);
+> +       LIST_HEAD(way_up_list);
+>
+>         if (tz->suspended)
+>                 return;
+> @@ -475,7 +490,19 @@ void __thermal_zone_device_update(struct
+>         tz->notify_event =3D event;
+>
+>         for_each_trip_desc(tz, td)
+> -               handle_thermal_trip(tz, td);
+> +               handle_thermal_trip(tz, td, &way_up_list, &way_down_list)=
+;
+> +
+> +       list_sort((void *)true, &way_up_list, thermal_trip_notify_cmp);
+> +       list_for_each_entry(td, &way_up_list, notify_list_node) {
+> +               thermal_notify_tz_trip_up(tz, &td->trip);
+> +               thermal_debug_tz_trip_up(tz, &td->trip);
+> +       }
+> +
+> +       list_sort(NULL, &way_down_list, thermal_trip_notify_cmp);
+> +       list_for_each_entry(td, &way_down_list, notify_list_node) {
+> +               thermal_notify_tz_trip_down(tz, &td->trip);
+> +               thermal_debug_tz_trip_down(tz, &td->trip);
+> +       }
+>
+>         monitor_thermal_zone(tz);
+>  }
+> Index: linux-pm/drivers/thermal/thermal_core.h
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/thermal/thermal_core.h
+> +++ linux-pm/drivers/thermal/thermal_core.h
+> @@ -17,6 +17,7 @@
+>
+>  struct thermal_trip_desc {
+>         struct thermal_trip trip;
+> +       struct list_head notify_list_node;
+>         int threshold;
+>  };
+>
