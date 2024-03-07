@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDCA12F373
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE0312F374
 	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 15:22:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709824949; cv=none; b=C03yMB+cLXBbvEkdMOhbC9zjvwaik02aTaCCRZ0NI/6EUn+F/IldUeX724Ifc9Z/EUtQrcII2A/JoF6Nk1l/yK2JD348/b1T1WZu32WR1UXsm/oOU+L39aA1NyURJCX6/QFPVz9Jzv24/qtL86b4V2NoahFSCBCZWgQNtUgUfbc=
+	t=1709824950; cv=none; b=p/Ep089/L4/STN3tXeTTV981WnKpvnMUsZykwImV9Ik7TU42qC8Y8HC6lWqk98Tl1t16P6tI8HqUsiLSZgpXe6xt+hLL6ZyX/3HQfCP0BWZgqO8gcxhjYMkOyrwtdHkr+bKlA/XVfXO5apRTDAyOD+Zu7l5wK6WEvkEQqHFallA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709824949; c=relaxed/simple;
-	bh=Ez1QdUV04iD4E6g4vgQsdKZqu2XEGi7/ylSKu6ZB/CU=;
+	s=arc-20240116; t=1709824950; c=relaxed/simple;
+	bh=y5PPyv47vwajakI0WCCzwWI0+5CKdDwYJF4dLuKJReo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n0DxHELUHSKG9amqeKVtDrUH2IAHKZZRpZFvy+lrOopziM7VKg73fwQ3D9VXuX5AC1zSRR56pryXbboxBlaNEAI46Hb/syo+JB9sIhZm3XPf1qF/RJo3jxOMpc4ZP1XziyGvjb9sdXObCBOKzIaDDjyUel+TtVBVcqvq7Bh0egQ=
+	 In-Reply-To:To:Cc; b=InHQEy76mj4M1g0iPxjD9FP3xe7tTgLfXqwK9JaY1jA9iKBBKCLVuC+s3Ljs6Y6jiqgW7EtuLv42EpxZzWQB7Fe2tiesp3Pum0rj7mPAEmFN3aU9pa+um9xhfIiljMGllcGAZsTtPMzqd2aTA0eSDdYao1ReUyhr2xKQu75fs3Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,21 +18,21 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1riFZd-0007MM-5V; Thu, 07 Mar 2024 16:22:21 +0100
+	id 1riFZd-0007ML-5V; Thu, 07 Mar 2024 16:22:21 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1riFZb-004y6j-QV; Thu, 07 Mar 2024 16:22:19 +0100
+	id 1riFZb-004y6h-QD; Thu, 07 Mar 2024 16:22:19 +0100
 Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
 	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
 	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1riFZb-0029BI-2T;
+	id 1riFZb-0029BI-2R;
 	Thu, 07 Mar 2024 16:22:19 +0100
 From: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Date: Thu, 07 Mar 2024 16:22:05 +0100
-Subject: [PATCH 3/3] usb: dwc3: gadget: check the whole started queue for
- missed requests in complete
+Date: Thu, 07 Mar 2024 16:22:03 +0100
+Subject: [PATCH 1/3] usb: dwc3: gadget: reclaim the whole started list when
+ request was missed
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240307-dwc3-gadget-complete-irq-v1-3-4fe9ac0ba2b7@pengutronix.de>
+Message-Id: <20240307-dwc3-gadget-complete-irq-v1-1-4fe9ac0ba2b7@pengutronix.de>
 References: <20240307-dwc3-gadget-complete-irq-v1-0-4fe9ac0ba2b7@pengutronix.de>
 In-Reply-To: <20240307-dwc3-gadget-complete-irq-v1-0-4fe9ac0ba2b7@pengutronix.de>
 To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
@@ -49,21 +49,21 @@ To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Michael Grzeschik <m.grzeschik@pengutronix.de>
 X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2246;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2318;
  i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
- bh=Ez1QdUV04iD4E6g4vgQsdKZqu2XEGi7/ylSKu6ZB/CU=;
- b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBl6durU2XZUppWhknO+4hbYmEDglFjpowcKZEIx
- 9SflZ9T1ZOJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZenbqwAKCRC/aVhE+XH0
- qzk1EACelLwRYh3AlWHS6eUG1KKpMfBZqocop45UyYKduPTX4vExZsrHqeR8A2VWvjywd0ckrHN
- VtBohqFvhjVQ4Nh9zONDzs4+EQqnHo/ePf+0E3wDl/nvjIxDbfj8s6kwtlAVjaslcUs3ntzOOAJ
- AiNYIEGw/u+pR2abmCu9/GvYFPXbnIIVxkghcQ2YMRXaVAcMEJaBEPT0jzmF6mvyXXR/eFVWPVe
- ic70MG48Q5SCkmBLYhbH42WETbLBNVOUX9V9G5MoQTijI5YVf746+Pj9TLRzgJy/Xsbrs3BfPsB
- U4xjq0RlxDutqioS+nC6yAncjsZoR7Cx83Fl05v5qFSOGXXFv4LUkSxuhQz6OkNd/Zvu2TqKqeV
- I4iw2PExnGbqzbDgmtg9cGxBk2Lx6Mra4xTK6Tz4Md5j+XkhVaqm+Mdu6eXjp7fIdeABSpF10Y1
- ZZTNvgBShfytRcmeFJ/cWvapOW2Zx/c4bQEpaJfQ/edKc/6OGl+ut6Unlyvq+qyNykcbz4oET+P
- DxWed70G/7DapkPEA67fQ4xmb6/mguKK6VXjD3scLV4TbJgGxb39klLcnG3xLBgDF1NW/WCSDhf
- uTvLsJr9BNmDfhIl9SEMDHHS1pfb7Kv83yDkBXyaK9N6C3YoxPJmjc+aJN9Xfgq0MF7C2XXnBjT
- +IVLY1I1lA6DIXQ==
+ bh=y5PPyv47vwajakI0WCCzwWI0+5CKdDwYJF4dLuKJReo=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBl6duq3zOdIbp0K9WhuFx01AOQ4JwAkYlDIamtp
+ OB6ObNC54eJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZenbqgAKCRC/aVhE+XH0
+ q8oFD/9+mQ6z0hwSyuHxcNOp6QcLDz8wHB44r/R5uJW485dramOromUtXGAQfi9OXN/T57c5pfr
+ G0mPqQbMu3MOY3oyan3YYoxry5IkRUTE9TWyUxZn+m2mtBVcDCLxWbyjWTqWKZNILkHro0DzEBf
+ OjIwhv7+RrDQYnn7tehjH2tCpcBhNkW76TKely9/WpYEnMA1WokOX9VdqeHbOwOkIXX2YWxtKCn
+ bLItFf3n5ZNa9YwQLwelQ1GfWOOW/NcQG7V37IBlQLcYivMFBMwZKhcD3Pm+QM6qH47DGcT1qw4
+ 6OsLEeOCKIAMYDpHnefAZ2dBJI4TbZ/BhmB3/XTU5D93v7ZMzYtVfUMMPnPhPXPY1xHape7hG/M
+ PzRxwgrVfSSmM1SrTEmzQHGDgNE8n5RB9Qjt5QYHJD50fR15NcjlyDBj4FrzvpHqMfQwGxf9awC
+ KpYDOSFOxOxbN7aJAjOHTywwhpx/8z4qPUC+08D1CxSt72wWRv8S8T64m/oAqfCm+6MC9CnFIiw
+ 0fkg1uTGg6ep0nKl8fwGjsV60s121BRL14LRDawTR8BdtOc8fj5ko2U1govmgCGJXSUUie7uk/k
+ Z3xwqM3mfssadEPHAqA9MgS3LsSiQ5wRar6LgAl08bRSitIym3U7HvOD/0eTfxlBtDPa93v6qU7
+ m7RRKDMBdRx1uUA==
 X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
  fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -71,62 +71,60 @@ X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The function dwc3_gadget_endpoint_trbs_complete will be called with the
-interrupt event. This event is only representing the interrupt reason of
-the exact trb that had IOC enabled. In the current approach the function
-dwc3_gadget_ep_cleanup_completed_requests will give back and complete
-the requests with the corresponding trb status and therefor will
-correctly return the missed requests that are already finished.
+On EXDEV/Missed status interrupt, the handler has to stop the running
+transfer and ensure that every request complete call will not run kick
+on the current transfer. This is achieved by calling
+dwc3_stop_active_transfer early before cleaning up the started request
+list.
 
-Since inbetween those complete functioncalls of the properly
-finished and the missed trbs, a missed transfer could get new
-trbs enqueued with the updatecmd, this will just lead to more missed
-trbs.
+If the current transfer was stopped we can not keep all requests in the
+hardware and have to reclaim them all. Since the requests could have
+no_interrupt bit the cleanup on an stopped pipeline has to remove every
+request and may not stop on the one that has the IOC bit set.
 
-To break the cascading scenario this patch is checking all trbs from the
-started list for any trb that has the missed trb status before even
-calling the complete handler but stopping the transfer instead.
+To ensure that the dwc3_gadget_ep_cleanup_completed_request will
+iterate over every request in that case, we skip the stop condition
+in reclaim_completed_trb if the current transfer was stopped by checking
+for DWC3_EP_END_TRANSFER_PENDING bit set.
 
 Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 ---
- drivers/usb/dwc3/gadget.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index f22b68a0b2dac..ca87f4d988d41 100644
+index 40c52dbc28d3b..b9fce7b1dcdec 100644
 --- a/drivers/usb/dwc3/gadget.c
 +++ b/drivers/usb/dwc3/gadget.c
-@@ -3563,6 +3563,21 @@ static void dwc3_gadget_endpoint_frame_from_event(struct dwc3_ep *dep,
- 	dep->frame_number = event->parameters;
- }
+@@ -3404,7 +3404,8 @@ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
+ 	    DWC3_TRB_SIZE_TRBSTS(trb->size) == DWC3_TRBSTS_MISSED_ISOC)
+ 		return 1;
  
-+static int dwc3_gadget_ep_check_missed_requests(struct dwc3_ep *dep)
-+{
-+	struct dwc3_request	*req;
-+	struct dwc3_request	*tmp;
-+
-+	list_for_each_entry_safe(req, tmp, &dep->started_list, list) {
-+		struct dwc3_trb *trb = req->trb;
-+
-+		if (DWC3_TRB_SIZE_TRBSTS(trb->size) == DWC3_TRBSTS_MISSED_ISOC)
-+			return -EXDEV;
-+	}
-+
-+	return 0;
-+}
-+
- static bool dwc3_gadget_endpoint_trbs_complete(struct dwc3_ep *dep,
- 		const struct dwc3_event_depevt *event, int status)
- {
-@@ -3584,7 +3599,7 @@ static bool dwc3_gadget_endpoint_trbs_complete(struct dwc3_ep *dep,
- 		transfer_in_flight = trb->ctrl & DWC3_TRB_CTRL_HWO;
- 	}
+-	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
++	if (((trb->ctrl & DWC3_TRB_CTRL_IOC) &&
++		 !(dep->flags & DWC3_EP_END_TRANSFER_PENDING)) ||
+ 	    (trb->ctrl & DWC3_TRB_CTRL_LST))
+ 		return 1;
  
--	if (status == -EXDEV || !transfer_in_flight)
-+	if (status == -EXDEV || !transfer_in_flight || dwc3_gadget_ep_check_missed_requests(dep))
- 		dwc3_stop_active_transfer(dep, true, true);
+@@ -3568,6 +3569,9 @@ static bool dwc3_gadget_endpoint_trbs_complete(struct dwc3_ep *dep,
+ 	struct dwc3		*dwc = dep->dwc;
+ 	bool			no_started_trb = true;
  
++	if (status == -EXDEV)
++		dwc3_stop_active_transfer(dep, true, true);
++
  	dwc3_gadget_ep_cleanup_completed_requests(dep, event, status);
+ 
+ 	if (dep->flags & DWC3_EP_END_TRANSFER_PENDING)
+@@ -3578,7 +3582,7 @@ static bool dwc3_gadget_endpoint_trbs_complete(struct dwc3_ep *dep,
+ 
+ 	if (usb_endpoint_xfer_isoc(dep->endpoint.desc) &&
+ 		list_empty(&dep->started_list) &&
+-		(list_empty(&dep->pending_list) || status == -EXDEV))
++		(list_empty(&dep->pending_list)))
+ 		dwc3_stop_active_transfer(dep, true, true);
+ 	else if (dwc3_gadget_ep_should_continue(dep))
+ 		if (__dwc3_gadget_kick_transfer(dep) == 0)
 
 -- 
 2.39.2
