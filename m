@@ -1,151 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA221A21;
-	Thu,  7 Mar 2024 00:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7573917F0
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 00:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709769785; cv=none; b=gWWV/8JJXC6KyhH+AphrfcPppjgGd4z/Hjm+ZbPaFLy0UVJABkqGtFcdEPsXZ2c1PVKmeKT4WpLZxCJ0o3I8V7d+6eWAmftR1VYTy94J9jeB+UTYGVAADClQU8LHF6XexvdCc+vxM+tCFEB2oFQP7OMT3qyltpuY8OJSuY8S+MA=
+	t=1709769820; cv=none; b=OplQs96794SUdMHPcavwXe9yVu3dibd78d69T+D84w2c6lYQmb8yWZZiRmZVxVOd+QqLOhU82l26BR3A6o1o+eoaQt2oF+BgNhBm2luUa5o83qv1iUGhN7rP/Ea3ddYwUF1TaQFWOIkRsXR7XRdrwqCkQ6486vFbbdDFORZPdsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709769785; c=relaxed/simple;
-	bh=UOKNzMhwVFkCQi+cFJQD6VB8TNDKSv/w2l7quwCmF0M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZSP/p+ok/SPuBcfYJ+yEsn3H1jpuk+eP7de+MkSBjeb2H66whageBQnIyQ8Ww9f/3ztPmu73rkNth3XOF/PL3FZhZ/jFFrGsaPhLaqkM/ZsaMCGYOnc8itvEApQH8pP0dv8DNRvagB8DBpcDXOp9xaURgpkXFF6klONmp5mkObs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gYWptQIE; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709769820; c=relaxed/simple;
+	bh=RmIaE95j9tGXdTs/a5M9v0UNVZUALUbMvKJoZsyGp6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NZjAd6hG9LOUDiFz6zaMuvk176IF0jZLLp7lmIyoA7hVejdXBuQwP1FGxVBQkPqhKUPWjRM43qFwNCPdtV+ovFFnEEFaKTdzpB2vGqAmkW6iOSprRY6kTpvmNkuBksD657iRmJav6tIIR2m9AZpVP/4u1DvsNXczWzgpJlVkc5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=peexX0AA; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gYWptQIE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709769784; x=1741305784;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=UOKNzMhwVFkCQi+cFJQD6VB8TNDKSv/w2l7quwCmF0M=;
-  b=gYWptQIESomAq7sAnni17OATP7RUock1ACLjSVgFzT8/hrmtkxUxb6nW
-   bbR8NPuwet4tBUOWG5+yH/S79sCxmOIpvyqyBYB0kd+9ToJUiE5p90ZnU
-   9W3phV5Uz4s9qIKFjAzZarWhZ8Uwxnr5l0kvmcFTaak95cnxKtL4lzVMJ
-   AglI9w4NMQ6mcpdHPB7nAHEiKzoRWLna7TTeCA3HirzLnYDa3rXQK5Lwy
-   ZHLdPorD2hUud2rp7Fc1VroJIvQNPRGDmiGmUVD77yzdEZEzIM5noZC3H
-   qrEqs9DVKKSRbvIJ1a8d45Su5zGlNJAsCrzjbe1xvP2CX9cf8CffcCBjk
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="14990564"
-X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="14990564"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 16:03:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="14506394"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 16:03:02 -0800
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: "Naik, Avadhut" <avadnaik@amd.com>,
-	"Mehta, Sohil" <sohil.mehta@intel.com>,
-	"Yazen Ghannam" <yazen.ghannam@amd.com>,
-	x86@kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v2] x86/mce: Dynamically size space for machine check records
-Date: Wed,  6 Mar 2024 16:02:56 -0800
-Message-ID: <20240307000256.34352-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="peexX0AA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9C5B360003;
+	Thu,  7 Mar 2024 00:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709769816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YV8E64LTaxsAW1jsNczlEzcxi3GT245AiC4UGrhHsUI=;
+	b=peexX0AANXlwYG/zkq1lh5bvcDkR4fuWupWrXew1xWKDoA2nh9qH4Oa8i4lRKxqiApBJsB
+	N3L+NL3g3WU49hDCburHjmTJnN99968AyIp/opJG2aopR1DGib1K2JEFYTHjHdj/6OmM7L
+	+86zvJAbY7zYguuiwtGJZiiK8y1Mt0eLmDprVmAknuDLYyc73Iv5vTtpFTBEVvLVlmrF7c
+	Mr1MRJEyK1zNiZp8IWnSdpXumwcVAyB6EmMfPQTYDCX0HsvUhAd9KiOlpXh8b/s9rK75Q9
+	UYlS25AYWQQZY9RmCRizn6/bLLsOmMZHOIXL8d31GOOWbbCriyTU3/tsRKO6mg==
+Date: Thu, 7 Mar 2024 01:03:33 +0100
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Arthur Grillo <arthurgrillo@riseup.net>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+	pekka.paalanen@haloniitty.fi, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
+Subject: Re: [PATCH 4/7] drm/vkms: Fix compilation issues
+Message-ID: <ZekEVT_HNmZbFWNG@localhost.localdomain>
+Mail-Followup-To: Arthur Grillo <arthurgrillo@riseup.net>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+	pekka.paalanen@haloniitty.fi, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
+References: <20240306-louis-vkms-conv-v1-0-5bfe7d129fdd@riseup.net>
+ <20240306-louis-vkms-conv-v1-4-5bfe7d129fdd@riseup.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240306-louis-vkms-conv-v1-4-5bfe7d129fdd@riseup.net>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Systems with a large number of CPUs may generate a large
-number of machine check records when things go seriously
-wrong. But Linux has a fixed buffer that can only capture
-a few dozen errors.
+Le 06/03/24 - 17:03, Arthur Grillo a écrit :
+> Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+> ---
+>  drivers/gpu/drm/vkms/tests/vkms_format_test.c | 2 +-
+>  drivers/gpu/drm/vkms/vkms_drv.h               | 4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/tests/vkms_format_test.c b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+> index 4636b013602f..3522ecee960f 100644
+> --- a/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+> +++ b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+> @@ -113,7 +113,7 @@ static void vkms_format_test_yuv_u8_to_argb_u16(struct kunit *test)
+>  	for (size_t i = 0; i < param->n_colors; i++) {
+>  		const struct format_pair *color = &param->colors[i];
+>  
+> -		const struct conversion_matrix *matrix = get_conversion_matrix_to_argb_u16
+> +		struct conversion_matrix *matrix = get_conversion_matrix_to_argb_u16
+>  			(DRM_FORMAT_NV12, param->encoding, param->range);
+>  
+>  		argb = argb_u16_from_yuv888(color->yuv.y, color->yuv.u, color->yuv.v, matrix);
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+> index 393b76e7c694..3d62578499ab 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> @@ -47,6 +47,10 @@ struct pixel_argb_u16 {
+>  	u16 a, r, g, b;
+>  };
+>  
+> +struct pixel_yuv_u8 {
+> +	u8 y, u, v;
+> +};
 
-Allocate space based on the number of CPUs (with a minimum
-value based on the historical fixed buffer that could store
-80 records).
+Can I move this structure in the test itself? As discussed with Pekka, I 
+think it's not a good idea to have such specific `pixel_{fmt}_{size}` for 
+each variant. Leaving it in vkms_drv.h give the idea of "for each new kind 
+of format we have to create a new structure".
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
+> +
+>  struct line_buffer {
+>  	size_t n_pixels;
+>  	struct pixel_argb_u16 *pixels;
+> 
+> -- 
+> 2.43.0
+> 
 
-Changes since v1: Link: https://lore.kernel.org/all/Zd--PJp-NbXGrb39@agluck-desk3/
-
-Sohil:
-	Group declaration of "order" with other int's in mce_gen_pool_create()
-	Use #define MCE_MIN_ENTRIES instead of hard-coded inline "80"
-	Missed kfree(mce_pool) in error path.
-
-Yazen:
-	Use order_base_2() instead of ilog2() as rounded up size of
-	structure is needed.
-
-Avadhut:
-	Allocate 2 records per CPU
-
-Me:
-	Add a #define MCE_PER_CPU for number of records per CPU
-
- arch/x86/kernel/cpu/mce/genpool.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/genpool.c b/arch/x86/kernel/cpu/mce/genpool.c
-index fbe8b61c3413..42ce3dc97ca8 100644
---- a/arch/x86/kernel/cpu/mce/genpool.c
-+++ b/arch/x86/kernel/cpu/mce/genpool.c
-@@ -16,14 +16,14 @@
-  * used to save error information organized in a lock-less list.
-  *
-  * This memory pool is only to be used to save MCE records in MCE context.
-- * MCE events are rare, so a fixed size memory pool should be enough. Use
-- * 2 pages to save MCE events for now (~80 MCE records at most).
-+ * MCE events are rare, so a fixed size memory pool should be enough.
-+ * Allocate on a sliding scale based on number of CPUs.
-  */
--#define MCE_POOLSZ	(2 * PAGE_SIZE)
-+#define MCE_MIN_ENTRIES	80
-+#define MCE_PER_CPU	2
- 
- static struct gen_pool *mce_evt_pool;
- static LLIST_HEAD(mce_event_llist);
--static char gen_pool_buf[MCE_POOLSZ];
- 
- /*
-  * Compare the record "t" with each of the records on list "l" to see if
-@@ -118,16 +118,27 @@ int mce_gen_pool_add(struct mce *mce)
- 
- static int mce_gen_pool_create(void)
- {
-+	int mce_numrecords, mce_poolsz, order;
- 	struct gen_pool *tmpp;
- 	int ret = -ENOMEM;
-+	void *mce_pool;
- 
--	tmpp = gen_pool_create(ilog2(sizeof(struct mce_evt_llist)), -1);
-+	order = order_base_2(sizeof(struct mce_evt_llist));
-+	tmpp = gen_pool_create(order, -1);
- 	if (!tmpp)
- 		goto out;
- 
--	ret = gen_pool_add(tmpp, (unsigned long)gen_pool_buf, MCE_POOLSZ, -1);
-+	mce_numrecords = max(MCE_MIN_ENTRIES, num_possible_cpus() * MCE_PER_CPU);
-+	mce_poolsz = mce_numrecords * (1 << order);
-+	mce_pool = kmalloc(mce_poolsz, GFP_KERNEL);
-+	if (!mce_pool) {
-+		gen_pool_destroy(tmpp);
-+		goto out;
-+	}
-+	ret = gen_pool_add(tmpp, (unsigned long)mce_pool, mce_poolsz, -1);
- 	if (ret) {
- 		gen_pool_destroy(tmpp);
-+		kfree(mce_pool);
- 		goto out;
- 	}
- 
-
-base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
 -- 
-2.43.0
-
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
