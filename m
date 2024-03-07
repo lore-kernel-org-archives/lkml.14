@@ -1,235 +1,235 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9608E6310D
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 07:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8092C63113;
+	Thu,  7 Mar 2024 07:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709798144; cv=none; b=lp7xAlns5VXmwCda59Ex+Jwx+Gvoe0P5vNzYXiEIhRsHKhxpxUwkNTfFvO29PoJ+3hv0RxH8T9aKOZqfbwEOtQJj6ct6zzB/KBHaKJBcLzLZ/yAR/T3LKQ23kwbp30xoNBQDBr9csGBOk72mdEJX0eS69nDE5tJFLAlnNVq0azE=
+	t=1709798193; cv=none; b=m9lP7OTUWeaKRf+AU/iKRaKgy1eAFF+CHNcmzmbdGPeLhmjfb/R2+J8HdKgEZ5KrCSMCSJvefBlOSBBDFd/e7A+9ty5Q8tqee858KPzbIiKcx4kXelh0r1CzLcIFsGSv2sI1eiuCRf2sSnjhrXvTh1NkmheTA62jCG9/5aXrtPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709798144; c=relaxed/simple;
-	bh=hJjhdaNUwAxii5nQBmY/ltozS1ZCFSHYR02AZtzuvzM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXyldW246jFsP0V+l6yPlPmZGPzCvpw8aEHL5puhRH6rDmLrKYdisdnAWGBFdOU76UtJfZGmfB2Z0n9SBejK3u+az8kOGyrthZZm6pEWDOEgHkPQrVmmmso05gwvi3Ghp1DHd+d8KnHvL4a9DOZIJUjY9RfUBruuLhr5ZnPNVcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ZWRnljvn; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZWRnljvn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709798143; x=1741334143;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hJjhdaNUwAxii5nQBmY/ltozS1ZCFSHYR02AZtzuvzM=;
-  b=ZWRnljvnwDNoVc2Izc7kqTA8RRWbC9IWubyEAlzqS+2sOVO8ll2GEBtY
-   J7W5SI6JE/LUy4gCJrLkBuaMS3gwbB8GlrF/x6LSJY4fviAchspBTN/+4
-   UIEqBds5kHAZAtAUg3BV8bqxhMiZSkugxJsaHhTYrkbWXoNPaollJfOR5
-   dNVlXDUI/SBOEcvJG6NRfOUD4mWJ+heX9GwQbObCMu2RZ/QfXA/qiSw5m
-   8Nh0XcBJymDSx1buRz8OBBcp7jJPgqTVqMha4pmuOK/sXlad6bSaERY1G
-   B/tU9dfBt7zaijNmY1muWbgWuEpgKcHJW+gT68Ty5GU90CPHU59qFT9nL
-   w==;
-X-CSE-ConnectionGUID: yLB2gpleSK6dHLSN/Bgr/Q==
-X-CSE-MsgGUID: MZdFEMxTQiiSfCbGlN/hYA==
-X-IronPort-AV: E=Sophos;i="6.06,210,1705388400"; 
-   d="asc'?scan'208";a="17336139"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Mar 2024 00:55:41 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 00:55:20 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 7 Mar 2024 00:55:18 -0700
-Date: Thu, 7 Mar 2024 07:54:34 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang
-	<jszhang@kernel.org>, Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Eric Biggers
-	<ebiggers@kernel.org>, Elliot Berman <quic_eberman@quicinc.com>, Charles Lohr
-	<lohr85@gmail.com>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 3/4] riscv: Decouple emulated unaligned accesses from
- access speed
-Message-ID: <20240307-during-unlovely-d5c3cd6dc4a6@wendy>
-References: <20240306-disable_misaligned_probe_config-v7-0-6c90419e7a96@rivosinc.com>
- <20240306-disable_misaligned_probe_config-v7-3-6c90419e7a96@rivosinc.com>
+	s=arc-20240116; t=1709798193; c=relaxed/simple;
+	bh=aDQo1bQl0RDAwOdXjNmrDGk/5u267gaajZWOBt0j6Es=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UE0Cxjd5HoAwZs1FeBtTrGOPJZXygvzjhIN9b9SJIlWRyPGq+NS2s8gCJihBWEAM9c2dFuMxHUuIrae6NcEhF694J0nG+4L8D6hqc5dwIN0n0VeDDFSXCqUe3zbHNslW+1BANeu8J7EWr+CBgqFaxO7V4DFuXrnkJu4otsPbJeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tr1MY1qKTz9xwvx;
+	Thu,  7 Mar 2024 15:36:41 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 142591404FE;
+	Thu,  7 Mar 2024 15:56:21 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwDHuhMac+ll5APgAw--.3745S2;
+	Thu, 07 Mar 2024 08:56:20 +0100 (CET)
+Message-ID: <85d71fd5ac7ffe9aee399b4754a8bb1ec44e7186.camel@huaweicloud.com>
+Subject: Re: [PATCH v39 01/42] integrity: disassociate ima_filter_rule from
+ security_audit_rule
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Casey Schaufler <casey@schaufler-ca.com>, paul@paul-moore.com, 
+	linux-security-module@vger.kernel.org
+Cc: jmorris@namei.org, serge@hallyn.com, keescook@chromium.org, 
+ john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp, 
+ stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org,
+ mic@digikod.net,  linux-integrity@vger.kernel.org
+Date: Thu, 07 Mar 2024 08:56:07 +0100
+In-Reply-To: <5c99f987-d359-4366-984f-fe36fcff601b@schaufler-ca.com>
+References: <20231215221636.105680-1-casey@schaufler-ca.com>
+	 <20231215221636.105680-2-casey@schaufler-ca.com>
+	 <d4cbe23822f7fdac900d1ebd5da9865d8bb96977.camel@huaweicloud.com>
+	 <5c99f987-d359-4366-984f-fe36fcff601b@schaufler-ca.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yMPX+f2X0itTroHT"
-Content-Disposition: inline
-In-Reply-To: <20240306-disable_misaligned_probe_config-v7-3-6c90419e7a96@rivosinc.com>
+X-CM-TRANSID:LxC2BwDHuhMac+ll5APgAw--.3745S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Gw1DZry3Xr1UKF1xCFykXwb_yoW7WF4UpF
+	WUKF4UCFW0qFy7Gr9ay3Zru3ZaqrWrGr1DZrsxG34qyFn0yrnrGr13Ar4rur9Yg3y0yr1I
+	vF17WrW3ur4Dt3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAPBF1jj5sSDgAAs8
 
---yMPX+f2X0itTroHT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Mar 06, 2024 at 12:00:03PM -0800, Charlie Jenkins wrote:
-> Detecting if a system traps into the kernel on an unaligned access
-> can be performed separately from checking the speed of unaligned
-> accesses. This decoupling will make it possible to selectively enable
-> or disable each of these checks
-
-> as is done in the following patch.
-
-nit: these sort of comments can bitrot if things get backported or
-may not be accurate if only partial series get applied to a branch.
-
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
-> ---
->  arch/riscv/include/asm/cpufeature.h  |  2 +-
->  arch/riscv/kernel/cpufeature.c       | 25 +++++++++++++++++++++----
->  arch/riscv/kernel/traps_misaligned.c | 15 +++++++--------
->  3 files changed, 29 insertions(+), 13 deletions(-)
+On Wed, 2024-03-06 at 08:56 -0800, Casey Schaufler wrote:
+> On 3/6/2024 1:54 AM, Roberto Sassu wrote:
+> > On Fri, 2023-12-15 at 14:15 -0800, Casey Schaufler wrote:
+> > > Create real functions for the ima_filter_rule interfaces.
+> > > These replace #defines that obscure the reuse of audit
+> > > interfaces. The new functions are put in security.c because
+> > > they use security module registered hooks that we don't
+> > > want exported.
+> > Beginner question: what makes IMA special, that the audit subsystem
+> > does not need an AUDIT_LSM field to do the same that IMA would do?
+> >=20
+> > In other words, why can't we add the lsm_id parameter to
+> > security_audit_*() functions, so that IMA can just call those?
 >=20
-> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm=
-/cpufeature.h
-> index 466e1f591919..6fec91845aa0 100644
-> --- a/arch/riscv/include/asm/cpufeature.h
-> +++ b/arch/riscv/include/asm/cpufeature.h
-> @@ -37,7 +37,7 @@ void riscv_user_isa_enable(void);
-> =20
->  #ifdef CONFIG_RISCV_MISALIGNED
->  bool unaligned_ctl_available(void);
-> -bool check_unaligned_access_emulated(int cpu);
-> +bool check_unaligned_access_emulated_all_cpus(void);
->  void unaligned_emulation_finish(void);
->  #else
->  static inline bool unaligned_ctl_available(void)
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
-e.c
-> index 7878cddccc0d..abb3a2f53106 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -719,7 +719,8 @@ static int check_unaligned_access(void *param)
->  	void *src;
->  	long speed =3D RISCV_HWPROBE_MISALIGNED_SLOW;
-> =20
-> -	if (check_unaligned_access_emulated(cpu))
-> +	if (IS_ENABLED(CONFIG_RISCV_MISALIGNED) &&
-> +	    per_cpu(misaligned_access_speed, cpu) !=3D RISCV_HWPROBE_MISALIGNED=
-_UNKNOWN)
->  		return 0;
-> =20
->  	/* Make an unaligned destination buffer. */
-> @@ -896,8 +897,8 @@ static int riscv_offline_cpu(unsigned int cpu)
->  	return 0;
->  }
-> =20
-> -/* Measure unaligned access on all CPUs present at boot in parallel. */
-> -static int check_unaligned_access_all_cpus(void)
-> +/* Measure unaligned access speed on all CPUs present at boot in paralle=
-l. */
-> +static int check_unaligned_access_speed_all_cpus(void)
->  {
->  	unsigned int cpu;
->  	unsigned int cpu_count =3D num_possible_cpus();
-> @@ -935,7 +936,6 @@ static int check_unaligned_access_all_cpus(void)
->  				  riscv_online_cpu, riscv_offline_cpu);
-> =20
->  out:
-> -	unaligned_emulation_finish();
->  	for_each_cpu(cpu, cpu_online_mask) {
->  		if (bufs[cpu])
->  			__free_pages(bufs[cpu], MISALIGNED_BUFFER_ORDER);
-> @@ -945,6 +945,23 @@ static int check_unaligned_access_all_cpus(void)
->  	return 0;
->  }
-> =20
-> +#ifdef CONFIG_RISCV_MISALIGNED
-> +static int check_unaligned_access_all_cpus(void)
-> +{
-> +	bool all_cpus_emulated =3D check_unaligned_access_emulated_all_cpus();
-> +
-> +	if (!all_cpus_emulated)
-> +		return check_unaligned_access_speed_all_cpus();
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int check_unaligned_access_all_cpus(void)
-> +{
-> +	return check_unaligned_access_speed_all_cpus();
-> +}
-> +#endif
-> +
->  arch_initcall(check_unaligned_access_all_cpus);
-> =20
->  void riscv_user_isa_enable(void)
-> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/tra=
-ps_misaligned.c
-> index c2ed4e689bf9..e55718179f42 100644
-> --- a/arch/riscv/kernel/traps_misaligned.c
-> +++ b/arch/riscv/kernel/traps_misaligned.c
-> @@ -596,7 +596,7 @@ int handle_misaligned_store(struct pt_regs *regs)
->  	return 0;
->  }
-> =20
-> -bool check_unaligned_access_emulated(int cpu)
-> +static bool check_unaligned_access_emulated(int cpu)
->  {
->  	long *mas_ptr =3D per_cpu_ptr(&misaligned_access_speed, cpu);
->  	unsigned long tmp_var, tmp_val;
-> @@ -623,7 +623,7 @@ bool check_unaligned_access_emulated(int cpu)
->  	return misaligned_emu_detected;
->  }
-> =20
-> -void unaligned_emulation_finish(void)
-> +bool check_unaligned_access_emulated_all_cpus(void)
->  {
->  	int cpu;
-> =20
-> @@ -632,13 +632,12 @@ void unaligned_emulation_finish(void)
->  	 * accesses emulated since tasks requesting such control can run on any
->  	 * CPU.
->  	 */
-> -	for_each_online_cpu(cpu) {
-> -		if (per_cpu(misaligned_access_speed, cpu) !=3D
-> -					RISCV_HWPROBE_MISALIGNED_EMULATED) {
-> -			return;
-> -		}
-> -	}
-> +	for_each_online_cpu(cpu)
-> +		if (!check_unaligned_access_emulated(cpu))
-> +			return false;
-> +
->  	unaligned_ctl =3D true;
-> +	return true;
->  }
-> =20
->  bool unaligned_ctl_available(void)
+> I have never liked the reuse of the audit filter functions, especially
+> the way that they're hidden behind #define. The assumption that the
+> two facilities (audit and IMA) are going to use them the same way, and
+> that they will never diverge in their requirements, has always seemed
+> questionable.
 >=20
-> --=20
-> 2.43.2
->=20
+> In most cases audit needs an lsmblob rather than a secid+lsm_id pair,
+> as there is information required about all the LSMs, not just the one
+> actively involved.
 
---yMPX+f2X0itTroHT
-Content-Type: application/pgp-signature; name="signature.asc"
+Fair enough.
 
------BEGIN PGP SIGNATURE-----
+Thanks
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZelyugAKCRB4tDGHoIJi
-0g3VAP9QiE8HW9ysP2EHv2XnwmEKajEm0LsQscHBZIVHRWhFYQEAvADvRw/xG0WR
-7PP/F8RBUjLO3kGm9BX/dVzrWZ0I9gk=
-=bbOd
------END PGP SIGNATURE-----
+Roberto
 
---yMPX+f2X0itTroHT--
+> >=20
+> > Thanks
+> >=20
+> > Roberto
+> >=20
+> > > Acked-by: Paul Moore <paul@paul-moore.com>
+> > > Reviewed-by: John Johansen <john.johansen@canonical.com>
+> > > Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> > > To: Mimi Zohar <zohar@linux.ibm.com>
+> > > Cc: linux-integrity@vger.kernel.org
+> > > ---
+> > >  include/linux/security.h     | 24 ++++++++++++++++++++++++
+> > >  security/integrity/ima/ima.h | 26 --------------------------
+> > >  security/security.c          | 21 +++++++++++++++++++++
+> > >  3 files changed, 45 insertions(+), 26 deletions(-)
+> > >=20
+> > > diff --git a/include/linux/security.h b/include/linux/security.h
+> > > index 750130a7b9dd..4790508818ee 100644
+> > > --- a/include/linux/security.h
+> > > +++ b/include/linux/security.h
+> > > @@ -2009,6 +2009,30 @@ static inline void security_audit_rule_free(vo=
+id *lsmrule)
+> > >  #endif /* CONFIG_SECURITY */
+> > >  #endif /* CONFIG_AUDIT */
+> > > =20
+> > > +#if defined(CONFIG_IMA_LSM_RULES) && defined(CONFIG_SECURITY)
+> > > +int ima_filter_rule_init(u32 field, u32 op, char *rulestr, void **ls=
+mrule);
+> > > +int ima_filter_rule_match(u32 secid, u32 field, u32 op, void *lsmrul=
+e);
+> > > +void ima_filter_rule_free(void *lsmrule);
+> > > +
+> > > +#else
+> > > +
+> > > +static inline int ima_filter_rule_init(u32 field, u32 op, char *rule=
+str,
+> > > +					   void **lsmrule)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static inline int ima_filter_rule_match(u32 secid, u32 field, u32 op=
+,
+> > > +					    void *lsmrule)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static inline void ima_filter_rule_free(void *lsmrule)
+> > > +{ }
+> > > +
+> > > +#endif /* defined(CONFIG_IMA_LSM_RULES) && defined(CONFIG_SECURITY) =
+*/
+> > > +
+> > >  #ifdef CONFIG_SECURITYFS
+> > > =20
+> > >  extern struct dentry *securityfs_create_file(const char *name, umode=
+_t mode,
+> > > diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/im=
+a.h
+> > > index c29db699c996..560d6104de72 100644
+> > > --- a/security/integrity/ima/ima.h
+> > > +++ b/security/integrity/ima/ima.h
+> > > @@ -420,32 +420,6 @@ static inline void ima_free_modsig(struct modsig=
+ *modsig)
+> > >  }
+> > >  #endif /* CONFIG_IMA_APPRAISE_MODSIG */
+> > > =20
+> > > -/* LSM based policy rules require audit */
+> > > -#ifdef CONFIG_IMA_LSM_RULES
+> > > -
+> > > -#define ima_filter_rule_init security_audit_rule_init
+> > > -#define ima_filter_rule_free security_audit_rule_free
+> > > -#define ima_filter_rule_match security_audit_rule_match
+> > > -
+> > > -#else
+> > > -
+> > > -static inline int ima_filter_rule_init(u32 field, u32 op, char *rule=
+str,
+> > > -				       void **lsmrule)
+> > > -{
+> > > -	return -EINVAL;
+> > > -}
+> > > -
+> > > -static inline void ima_filter_rule_free(void *lsmrule)
+> > > -{
+> > > -}
+> > > -
+> > > -static inline int ima_filter_rule_match(u32 secid, u32 field, u32 op=
+,
+> > > -					void *lsmrule)
+> > > -{
+> > > -	return -EINVAL;
+> > > -}
+> > > -#endif /* CONFIG_IMA_LSM_RULES */
+> > > -
+> > >  #ifdef	CONFIG_IMA_READ_POLICY
+> > >  #define	POLICY_FILE_FLAGS	(S_IWUSR | S_IRUSR)
+> > >  #else
+> > > diff --git a/security/security.c b/security/security.c
+> > > index d7b15ea67c3f..8e5379a76369 100644
+> > > --- a/security/security.c
+> > > +++ b/security/security.c
+> > > @@ -5350,6 +5350,27 @@ int security_audit_rule_match(u32 secid, u32 f=
+ield, u32 op, void *lsmrule)
+> > >  }
+> > >  #endif /* CONFIG_AUDIT */
+> > > =20
+> > > +#ifdef CONFIG_IMA_LSM_RULES
+> > > +/*
+> > > + * The integrity subsystem uses the same hooks as
+> > > + * the audit subsystem.
+> > > + */
+> > > +int ima_filter_rule_init(u32 field, u32 op, char *rulestr, void **ls=
+mrule)
+> > > +{
+> > > +	return call_int_hook(audit_rule_init, 0, field, op, rulestr, lsmrul=
+e);
+> > > +}
+> > > +
+> > > +void ima_filter_rule_free(void *lsmrule)
+> > > +{
+> > > +	call_void_hook(audit_rule_free, lsmrule);
+> > > +}
+> > > +
+> > > +int ima_filter_rule_match(u32 secid, u32 field, u32 op, void *lsmrul=
+e)
+> > > +{
+> > > +	return call_int_hook(audit_rule_match, 0, secid, field, op, lsmrule=
+);
+> > > +}
+> > > +#endif /* CONFIG_IMA_LSM_RULES */
+> > > +
+> > >  #ifdef CONFIG_BPF_SYSCALL
+> > >  /**
+> > >   * security_bpf() - Check if the bpf syscall operation is allowed
+
