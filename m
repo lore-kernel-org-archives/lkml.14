@@ -1,195 +1,239 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667DE4A31;
-	Thu,  7 Mar 2024 07:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153654A31
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 07:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709797001; cv=none; b=BcNFSoqGGo8PBFFb7wwiKJKcmJua+SGLFrOibzaOFXDLEwvQ04hMye+8ypnJ4qLDpV9ZpLbyNXWGNil5FCxuO8f1eBua0LNJ5lhzqOHLjON45TLUbjzVHSMoAsbBIzmU7hbk+8moHfIEsUTo+cjxh5cqta1uPRdh6eEYvgMmuD8=
+	t=1709797008; cv=none; b=NwMknCEun3U6Pi176xjSEEaNKChyjWZfGXc2iLDeZkOtdL/7hFvnruH3AePrd2g21kcw/MvR4PgEVHBCdBl1Zc/HCpVjZQ3dbpHyyUPpoH2wt+lN9VGgvazIFvmGcWoEt8gxmqDB26SA22fhNAF0ORNx49XQWf6ZC39A3+yPrxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709797001; c=relaxed/simple;
-	bh=0kfFQ3v5nLN2q6UY/69rGMRfdWI+zcCCjuvpf3DZH9M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iyanZCceEyPOQ1w6refM5scF9dgSos+jAh4H0+SaYdHV8ZLwkRxTffdiJFefcHI4SORfzm+MPjOCeTyGmXBp+No5GU3P9odkHGYBxPw4YOi+t5bcUm8oF6aqkhaMJwtQHbYVEVONPtCdtwBYQIeLfLbkzHsrsjRl7d4+gjIDlfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EP0k/ibn; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709797008; c=relaxed/simple;
+	bh=E6S2dpyLsGYi8c5IEhuIzH3T3SPBzMU/IkeOrhc3E2s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WLgweUsrmarxRqvCefdOQ+VckYjRXEXAttsxe5+P6XLgf7P6mtNWeQghPhbO92YPXMJuRiLlF3YNBbv9FNCoNeIEd+KqLZwkBIzh3/SZXeakR4gjYTxdRd0PkSBMLyFV/YWiRStiFRdcNogoHzXeTwd8eCkDgLXzOk2JtcwwHzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HIZCkuBj; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EP0k/ibn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709797000; x=1741333000;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=0kfFQ3v5nLN2q6UY/69rGMRfdWI+zcCCjuvpf3DZH9M=;
-  b=EP0k/ibnhARYa+vxr6fVHa4p/7iRIhMigb6Edt04DvzvHHjMO3EGKhmC
-   Ds78Vtan2n49cgrAEy+iR7PcrPwWNnnf8ekhTmDgFbGsO2iRnLXO/ewrE
-   6BRsVMsnLFGGqydBtLOZwxBkEsMYHj6hI72qAJZDC6MZnjzvP0ES5/kQN
-   nj55/jjJNYBLM9+deMS8WZpGHwC7WrBAtDroqQFjqvWHeykTiqA9T2hYJ
-   NErGmGa+Z0KQnLaTVXZ7zRcryLCOb9RPr/dKU1WqxkkJ3zcp5pdV2fMMW
-   g2EfpzJjIQoOhShgQbTQbpnZqI4WBIr/eln/h4uDuDp7eV6Oeg4De4X5a
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15174116"
-X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
-   d="scan'208";a="15174116"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 23:36:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
-   d="scan'208";a="9930329"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 23:36:36 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  David Hildenbrand <david@redhat.com>,
-  <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
-  <stable@vger.kernel.org>
-Subject: Re: [PATCH v1] mm: swap: Fix race between free_swap_and_cache() and
- swapoff()
-In-Reply-To: <0925807f-d226-7f08-51d1-ab771b1a6c24@huawei.com> (Miaohe Lin's
-	message of "Thu, 7 Mar 2024 14:50:10 +0800")
-References: <20240305151349.3781428-1-ryan.roberts@arm.com>
-	<875xy0842q.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<c8fe62d0-78b8-527a-5bef-ee663ccdc37a@huawei.com>
-	<af11bbca-3f6a-4db5-916c-b0d5b942352b@arm.com>
-	<ff6aec00-f939-b7ba-c127-b133c4d95ee5@huawei.com>
-	<87bk7q7ffp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<0925807f-d226-7f08-51d1-ab771b1a6c24@huawei.com>
-Date: Thu, 07 Mar 2024 15:34:42 +0800
-Message-ID: <8734t27awd.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HIZCkuBj"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dcd6a3da83so3937945ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 23:36:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709797006; x=1710401806; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w+MN4ptFkwcB+XZr/cs1zSULQpGzvYmR0JQ9D+CN+vc=;
+        b=HIZCkuBjVVHbKEyi/YwfHoAmj8OHCp7KItXhG3CaUqUPYEBN+wYXMrPw3/bpfTOh2p
+         GVsNDOX9aQxzl5+IdOHo8EcH3/daW5BvW2q2VehSkt/O41LuZPwFJwu3lZPVNrq7fSeU
+         rHAHxha9R40AGNK5DOcE9H5B8/0MvZYGNVYCI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709797006; x=1710401806;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w+MN4ptFkwcB+XZr/cs1zSULQpGzvYmR0JQ9D+CN+vc=;
+        b=RzzGCtgwrEAo62EAwt79eD8VSdc3vksvN1qQOq632K9bZzJu+j9VbYLUcCcPsXiVr/
+         hMjMsQZZf4sh5eCpk2Aqf3++1W92Qf3e3iImSjAQxUS5zzc32Bd0d504rAz+H4kqVvbC
+         n4QtsX9+J+LD+lkVSRHcA8oq3nosDR4s0YjtkfehM98BOqxkOuk+nm8j0X1EydC9SIQw
+         PBNTxMX2OVvykg9L2TvrG8XabXPbbDvQInAZLyVKAIgH5BZQXRw8h3ftGQiHrArSkOGR
+         L2SOJ1Xiot2fm9tYP47OVfQFcKoIH7zIZmq1C56Oj0j2ey7kvjQIclwHPRtkjNRRr3WU
+         C6NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUpGF6Q2PH87TbRZ6QN+Kavmgtq9FesKwuJX3VuqQKK+/ctSj7vk1QH8aBmMClnk8tYw9wwFC3ddtvROksHy9EUfS/rT5dTPi599Cq
+X-Gm-Message-State: AOJu0YzWxT0+SCRVgt94J25Mt8v5yiESi6ZSQr3QtqhwXpK4yqKVVxT4
+	TJl1QBodrS9L+L7yi2A/8QqAaRasv0YkREeOR2jopS0WYrSAgkUtgzK0pKLL5R7mX87T6s60qa6
+	n2i1eeTfBvAuGrcMchku+qvZ7pPdKBmEj/ueL
+X-Google-Smtp-Source: AGHT+IHvJsVqLgGrNZlh/xfdeWe4swJEY4jFYFEM6z8EhW5HhXST2toU/hsrYQOATquskgUKjmdb8WOGTkKmoMYBn+o=
+X-Received: by 2002:a17:902:a389:b0:1dd:1c6f:af4f with SMTP id
+ x9-20020a170902a38900b001dd1c6faf4fmr6633144pla.55.1709797006410; Wed, 06 Mar
+ 2024 23:36:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20240306022003.259245-1-kuro.chung@ite.com.tw> <20240306022003.259245-2-kuro.chung@ite.com.tw>
+In-Reply-To: <20240306022003.259245-2-kuro.chung@ite.com.tw>
+From: Pin-yen Lin <treapking@chromium.org>
+Date: Thu, 7 Mar 2024 15:36:35 +0800
+Message-ID: <CAEXTbpccS64sb9_Ocjby1UxDWfkEPU6-JYRP4dWCKqGRe3Ux0A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] UPSTREAM: drm/bridge: it6505: fix hibernate to
+ resume no display issue
+To: kuro <kuro.chung@ite.com.tw>
+Cc: Allen Chen <allen.chen@ite.com.tw>, Kenneth Haung <kenneth.hung@ite.com.tw>, 
+	Allen Chen <allen.chen@ite.corp-partner.google.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Miaohe Lin <linmiaohe@huawei.com> writes:
+Hi Kuro,
 
-> On 2024/3/7 13:56, Huang, Ying wrote:
->> Miaohe Lin <linmiaohe@huawei.com> writes:
->> 
->>> On 2024/3/6 17:31, Ryan Roberts wrote:
->>>> On 06/03/2024 08:51, Miaohe Lin wrote:
->>>>> On 2024/3/6 10:52, Huang, Ying wrote:
->>>>>> Ryan Roberts <ryan.roberts@arm.com> writes:
->>>>>>
->>>>>>> There was previously a theoretical window where swapoff() could run and
->>>>>>> teardown a swap_info_struct while a call to free_swap_and_cache() was
->>>>>>> running in another thread. This could cause, amongst other bad
->>>>>>> possibilities, swap_page_trans_huge_swapped() (called by
->>>>>>> free_swap_and_cache()) to access the freed memory for swap_map.
->>>>>>>
->>>>>>> This is a theoretical problem and I haven't been able to provoke it from
->>>>>>> a test case. But there has been agreement based on code review that this
->>>>>>> is possible (see link below).
->>>>>>>
->>>>>>> Fix it by using get_swap_device()/put_swap_device(), which will stall
->>>>>>> swapoff(). There was an extra check in _swap_info_get() to confirm that
->>>>>>> the swap entry was valid. This wasn't present in get_swap_device() so
->>>>>>> I've added it. I couldn't find any existing get_swap_device() call sites
->>>>>>> where this extra check would cause any false alarms.
->>>>>>>
->>>>>>> Details of how to provoke one possible issue (thanks to David Hilenbrand
->>>>>>> for deriving this):
->>>>>>>
->>>>>>> --8<-----
->>>>>>>
->>>>>>> __swap_entry_free() might be the last user and result in
->>>>>>> "count == SWAP_HAS_CACHE".
->>>>>>>
->>>>>>> swapoff->try_to_unuse() will stop as soon as soon as si->inuse_pages==0.
->>>>>>>
->>>>>>> So the question is: could someone reclaim the folio and turn
->>>>>>> si->inuse_pages==0, before we completed swap_page_trans_huge_swapped().
->>>>>>>
->>>>>>> Imagine the following: 2 MiB folio in the swapcache. Only 2 subpages are
->>>>>>> still references by swap entries.
->>>>>>>
->>>>>>> Process 1 still references subpage 0 via swap entry.
->>>>>>> Process 2 still references subpage 1 via swap entry.
->>>>>>>
->>>>>>> Process 1 quits. Calls free_swap_and_cache().
->>>>>>> -> count == SWAP_HAS_CACHE
->>>>>>> [then, preempted in the hypervisor etc.]
->>>>>>>
->>>>>>> Process 2 quits. Calls free_swap_and_cache().
->>>>>>> -> count == SWAP_HAS_CACHE
->>>>>>>
->>>>>>> Process 2 goes ahead, passes swap_page_trans_huge_swapped(), and calls
->>>>>>> __try_to_reclaim_swap().
->>>>>>>
->>>>>>> __try_to_reclaim_swap()->folio_free_swap()->delete_from_swap_cache()->
->>>>>>> put_swap_folio()->free_swap_slot()->swapcache_free_entries()->
->>>>>>> swap_entry_free()->swap_range_free()->
->>>>>>> ...
->>>>>>> WRITE_ONCE(si->inuse_pages, si->inuse_pages - nr_entries);
->>>>>>>
->>>>>>> What stops swapoff to succeed after process 2 reclaimed the swap cache
->>>>>>> but before process1 finished its call to swap_page_trans_huge_swapped()?
->>>>>>>
->>>>>>> --8<-----
->>>>>>
->>>>>> I think that this can be simplified.  Even for a 4K folio, this could
->>>>>> happen.
->>>>>>
->>>>>> CPU0                                     CPU1
->>>>>> ----                                     ----
->>>>>>
->>>>>> zap_pte_range
->>>>>>   free_swap_and_cache
->>>>>>   __swap_entry_free
->>>>>>   /* swap count become 0 */
->>>>>>                                          swapoff
->>>>>>                                            try_to_unuse
->>>>>>                                              filemap_get_folio
->>>>>>                                              folio_free_swap
->>>>>>                                              /* remove swap cache */
->>>>>>                                            /* free si->swap_map[] */
->>>>>>
->>>>>>   swap_page_trans_huge_swapped <-- access freed si->swap_map !!!
->>>>>
->>>>> Sorry for jumping the discussion here. IMHO, free_swap_and_cache is called with pte lock held.
->>>>
->>>> I don't beleive it has the PTL when called by shmem.
->>>
->>> In the case of shmem, folio_lock is used to guard against the race.
->> 
->> I don't find folio is lock for shmem.  find_lock_entries() will only
->> lock the folio if (!xa_is_value()), that is, not swap entry.  Can you
->> point out where the folio is locked for shmem?
+Following up my comments from v2 [1]:
+
+On Wed, Mar 6, 2024 at 10:09=E2=80=AFAM kuro <kuro.chung@ite.com.tw> wrote:
 >
-> You're right, folio is locked if not swap entry. That's my mistake. But it seems above race is still nonexistent.
-> shmem_unuse() will first be called to read all the shared memory data that resides in the swap device back into
-> memory when doing swapoff. In that case, all the swapped pages are moved to page cache thus there won't be any
-> xa_is_value(folio) cases when calling shmem_undo_range(). free_swap_and_cache() even won't be called from
-> shmem_undo_range() after shmem_unuse(). Or am I miss something?
+> From: kuro chung <kuro.chung@ite.com.tw>
+>
+> ITE added a FIFO reset bit for input video. When system power resume,
+> the TTL input of it6505 may get some noise before video signal stable
+> and the hardware function reset is required.
+> But the input FIFO reset will also trigger error interrupts of output mod=
+ule rising.
+> Thus, it6505 have to wait a period can clear those expected error interru=
+pts
+> caused by manual hardware reset in one interrupt handler calling to avoid=
+ interrupt looping.
+>
+> Signed-off-by: Allen Chen <allen.chen@ite.corp-partner.google.com>
 
-I think the following situation is possible.  Right?
+IIUC you need to sign this off with your name as well. See [2] for more det=
+ails.
+> ---
+>  drivers/gpu/drm/bridge/ite-it6505.c | 54 ++++++++++++++++++++++++-----
+>  1 file changed, 45 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge=
+/ite-it6505.c
+> index b53da9bb65a16..e592e14a48578 100644
+> --- a/drivers/gpu/drm/bridge/ite-it6505.c
+> +++ b/drivers/gpu/drm/bridge/ite-it6505.c
+> @@ -1318,6 +1318,8 @@ static void it6505_video_reset(struct it6505 *it650=
+5)
+>         it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_VID_MUTE, EN_VID_M=
+UTE);
+>         it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_VID_CTRL_PKT, 0x00=
+);
+>         it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET)=
+;
+> +       it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x02);
+> +       it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x00);
+>         it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, RST_501_=
+FIFO);
+>         it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, 0x00);
+>         it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, 0x00);
+> @@ -2480,10 +2482,6 @@ static void it6505_irq_video_fifo_error(struct it6=
+505 *it6505)
+>         struct device *dev =3D &it6505->client->dev;
+>
+>         DRM_DEV_DEBUG_DRIVER(dev, "video fifo overflow interrupt");
+> -       it6505->auto_train_retry =3D AUTO_TRAIN_RETRY;
+> -       flush_work(&it6505->link_works);
+> -       it6505_stop_hdcp(it6505);
+> -       it6505_video_reset(it6505);
+>  }
+>
+>  static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
+> @@ -2491,10 +2489,6 @@ static void it6505_irq_io_latch_fifo_overflow(stru=
+ct it6505 *it6505)
+>         struct device *dev =3D &it6505->client->dev;
+>
+>         DRM_DEV_DEBUG_DRIVER(dev, "IO latch fifo overflow interrupt");
+> -       it6505->auto_train_retry =3D AUTO_TRAIN_RETRY;
+> -       flush_work(&it6505->link_works);
+> -       it6505_stop_hdcp(it6505);
+> -       it6505_video_reset(it6505);
+>  }
 
-CPU0                               CPU1
-----                               ----
-shmem_undo_range
-  shmem_free_swap
-    xa_cmpxchg_irq
-    free_swap_and_cache
-      __swap_entry_free
-      /* swap count become 0 */
-                                   swapoff
-                                     try_to_unuse
-                                       shmem_unuse /* cannot find swap entry */
-                                       find_next_to_unuse
-                                       filemap_get_folio
-                                       folio_free_swap
-                                       /* remove swap cache */
-                                       /* free si->swap_map[] */
-      swap_page_trans_huge_swapped <-- access freed si->swap_map !!!
+I don't really like functions that only print one line of debug log,
+but I'm not sure what other reviewers think about this.
+>
+>  static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
+> @@ -2502,6 +2496,46 @@ static bool it6505_test_bit(unsigned int bit, cons=
+t unsigned int *addr)
+>         return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
+>  }
+>
+> +static bool it6505_is_video_error_int(const int *int_status)
+> +{
+> +       if ((it6505_test_bit(BIT_INT_VID_FIFO_ERROR, (unsigned int *)int_=
+status)) || (it6505_test_bit(BIT_INT_IO_FIFO_OVERFLOW, (unsigned int *)int_=
+status)))
+> +               return 1;
+> +       return 0;
+> +}
+> +
+> +static void it6505_irq_video_error_handler(struct it6505 *it6505)
+> +{
+> +       struct device *dev =3D &it6505->client->dev;
+> +       int int_status[3] =3D {0};
+> +       int reg_0d;
+> +       int i;
+> +
+> +       it6505->auto_train_retry =3D AUTO_TRAIN_RETRY;
+> +       flush_work(&it6505->link_works);
+> +       it6505_stop_hdcp(it6505);
+> +       it6505_video_reset(it6505);
+> +
+> +       DRM_DEV_DEBUG_DRIVER(dev, "Video Error reset wait video...");
+> +
+> +       for (i =3D 0; i < 10; i++) {
+> +               usleep_range(10000, 11000);
+> +               int_status[2] =3D it6505_read(it6505, INT_STATUS_03);
+> +               reg_0d =3D it6505_read(it6505, REG_SYSTEM_STS);
+> +               it6505_write(it6505, INT_STATUS_03, int_status[2]);
+> +
+> +               DRM_DEV_DEBUG_DRIVER(dev, "reg08 =3D 0x%02x", int_status[=
+2]);
+> +               DRM_DEV_DEBUG_DRIVER(dev, "reg0D =3D 0x%02x", reg_0d);
+> +
+> +               if ((reg_0d & VIDEO_STB) && (reg_0d >=3D 0))
+> +                       break;
+> +
+> +               if (it6505_is_video_error_int(int_status)) {
+> +                       it6505_video_reset(it6505);
+> +                       DRM_DEV_DEBUG_DRIVER(dev, "Video Error reset wait=
+ video (%d)", i);
+> +               }
+> +       }
 
-shmem_undo_range can run earlier.
+Again, I think we need some code comments for this section, and some
+of your replies should be included there.
 
---
-Best Regards,
-Huang, Ying
+And can you elaborate more about how this speeds up the video
+stabilization? What would happen if we only clear the interrupts once
+instead of doing a loop?
+
+> +}
+> +
+>  static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
+>  {
+>         struct it6505 *it6505 =3D data;
+> @@ -2522,7 +2556,7 @@ static irqreturn_t it6505_int_threaded_handler(int =
+unused, void *data)
+>                 { BIT_INT_VID_FIFO_ERROR, it6505_irq_video_fifo_error },
+>                 { BIT_INT_IO_FIFO_OVERFLOW, it6505_irq_io_latch_fifo_over=
+flow },
+>         };
+> -       int int_status[3], i;
+> +       int int_status[3], i, reg_0d;
+>
+>         if (it6505->enable_drv_hold || !it6505->powered)
+>                 return IRQ_HANDLED;
+> @@ -2550,6 +2584,8 @@ static irqreturn_t it6505_int_threaded_handler(int =
+unused, void *data)
+>                         if (it6505_test_bit(irq_vec[i].bit, (unsigned int=
+ *)int_status))
+>                                 irq_vec[i].handler(it6505);
+>                 }
+> +               if (it6505_is_video_error_int(int_status))
+> +                       it6505_irq_video_error_handler(it6505);
+>         }
+>
+>         pm_runtime_put_sync(dev);
+> --
+> 2.25.1
+>
+
+[1]: https://lore.kernel.org/all/CAEXTbpc6084rcmhFABw51SibU7FVyTWo=3DteQsET=
+q5vCujGKWng@mail.gmail.com/
+[2]: https://www.kernel.org/doc/html/latest/process/submitting-patches.html=
+#sign-your-work-the-developer-s-certificate-of-origin
+
+Regards,
+Pin-yen
