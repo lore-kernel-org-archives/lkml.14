@@ -1,105 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350981EB2B;
-	Thu,  7 Mar 2024 15:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B0812D754;
+	Thu,  7 Mar 2024 15:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709823674; cv=none; b=GM2F+R0OJYdNcxUd3pkL64m1I/EgQ2Y/7V6Ht2I2L0QgeQ+54+1gnzpYfHIywuNS67BJL5gW6a7fH9Zits6+CgU6iJE5HbWc2pZPua0Pk3SzKBLuHKG2kT/AEZ0USP9k2FB0JEN5wy8jZSd8WkzUDNA1M7w3cxUApCm3JAHK7yE=
+	t=1709823703; cv=none; b=hhlWKob9Q8MvR4/qKBnQdgJ5P80Bd/3ZCPdA5mL1q8lc9KvpDKWX7f3FayhIZkov0GCdsDIG5zTwKdIIpTp48SsmzV5CDL25TiSxTP57wk8ZVLY6XnOUvOEUXwsqidycCvmnd8Qz/9KHj7XYXRsPcTVHo5z6Jte17XgytLlr44M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709823674; c=relaxed/simple;
-	bh=pQOSBvGr2PdFDDcAF4v1xGbCwkIdtH4hpyIk5PVZU7g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TSy/C+wEpqHPhx7ZRFm0jErwRzcHhZU3+/JNERRX5lTAnw2Uro2vnY3886h+GnsVAu2qaLZxkAdOZNsCg2wGHfBFzXTwoUuAVH/B9owMAh5TLTb93qrdHOvhvGMnpZWQIplW7M4XPyMtz3n2Ih60jcT64qZx9FpzSAQGwLBGmlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUxYiWnE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709823703; c=relaxed/simple;
+	bh=eNFxKcWlEdHQbJlCDhgLyCDMNEl0/5OPCQ3E9Gp/e7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iv9ejwsSUEuf8kA2qEnAXyLi+AspATzqIOSge5lBeXn+dGie6F6+TQ4D19KZ53SovueVR33IobJcnw59ETEvHutCRKz8Acst8jHXLDB0Q/4L4Jrc9vdaBmUCEDtCn54d7EoN4kGABTx2rx6/K2yE8sBJVIA9zVJ3rcIYEWWXBLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iKjuyOrZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUxYiWnE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00BC8C433F1;
-	Thu,  7 Mar 2024 15:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709823673;
-	bh=pQOSBvGr2PdFDDcAF4v1xGbCwkIdtH4hpyIk5PVZU7g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=uUxYiWnEqKVWLcW0IYvhhO3XJxsl7pxYgIiOF+omyTeO5SHAB42GvaEVHrOoaYYid
-	 +wfamRpY9Mr6uApWQtRsatDqM5l8+PXB9JJ1/ZKpSXYHrWOdoTS2OSM8+QmIAJ9xVL
-	 UkCVhYw9I45iHVOLFJ25RS/tfKw1XfxhftVbDPe7lm+IF8PO8tDl1xhid5GFtZlYKA
-	 sLm91iv2OEkV6ZOGRv4wxmUAwy96yueck46fIhF0DmGkKs2HmHJ6BQ4DC4bX6WvdOH
-	 MHCGvJmkaCJXuyVkVS296MbkWwqSwxmf8pMecOByqUTI53At6eW0lTr0/unP3HXKrx
-	 76GZYQ84e70jQ==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
- <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, Saravana Kannan <saravanak@google.com>, Marc
- Zyngier <maz@kernel.org>, Anup Patel <anup@brainfault.org>,
- linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Andrew Jones <ajones@ventanamicro.com>
-Subject: Re: [PATCH v15 08/10] irqchip/riscv-aplic: Add support for MSI-mode
-In-Reply-To: <CAK9=C2Ud+CJzWfY0Lp97OMt9QvJBFX=hHJidn_90XY5cEB9LHw@mail.gmail.com>
-References: <20240226040746.1396416-1-apatel@ventanamicro.com>
- <20240226040746.1396416-9-apatel@ventanamicro.com>
- <87y1avbboj.fsf@all.your.base.are.belong.to.us>
- <CAK9=C2Ud+CJzWfY0Lp97OMt9QvJBFX=hHJidn_90XY5cEB9LHw@mail.gmail.com>
-Date: Thu, 07 Mar 2024 16:01:09 +0100
-Message-ID: <871q8mdr2i.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iKjuyOrZ"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 427EhKq9004082;
+	Thu, 7 Mar 2024 15:01:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=INNS7wXY+uyGYWsmpIcvwWMcJdOC94K2KLNkCD8oXrw=;
+ b=iKjuyOrZKMPHy2SF+lj9F/lmlcc6wGtxI0ycOrUXbPhxvo2QviUOEh6nO2wFQc0TYwX8
+ JXqnzuIsAaN9wqvUYnN7ADJzYDwlPejigzgf+xNXFzBqa1kJxkdQATBrho3gZhQe7A9f
+ oa+K7yu94VYC7tzzqmENMzwN0S8Mbjsqs592UnH3AOhJ6zcM1Gixpv/9j5BzX8OOwvY8
+ ugdB9lJvPqOWylDPoaVl/nphLBYg300PchNfUiY3JdbEU4ZUF5W+HdAVoViFpBmt877b
+ c33MDOx//7i/9j3QJVEAMzK2Y4tlaCDGTQdCRqQwv9NECNfZamwM+c0eWRPvd1umlABx Nw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqfdkhmw2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 15:01:20 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 427EX8eu019521;
+	Thu, 7 Mar 2024 15:01:16 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqfdkhm9b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 15:01:15 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 427CLCic006046;
+	Thu, 7 Mar 2024 15:00:58 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmeetegms-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 15:00:58 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 427F0s7017498850
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 7 Mar 2024 15:00:56 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4F36058064;
+	Thu,  7 Mar 2024 15:00:54 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C712C5806F;
+	Thu,  7 Mar 2024 15:00:53 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  7 Mar 2024 15:00:53 +0000 (GMT)
+Message-ID: <90a14b5f-6976-4941-a623-ae31dfa33899@linux.ibm.com>
+Date: Thu, 7 Mar 2024 10:00:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Anup Patel <apatel@ventanamicro.com> writes:
-
-> On Wed, Mar 6, 2024 at 9:22=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kerne=
-l.org> wrote:
->>
->> Anup Patel <apatel@ventanamicro.com> writes:
->>
->> > diff --git a/drivers/irqchip/irq-riscv-aplic-msi.c b/drivers/irqchip/i=
-rq-riscv-aplic-msi.c
->> > new file mode 100644
->> > index 000000000000..b2a25e011bb2
->> > --- /dev/null
->> > +++ b/drivers/irqchip/irq-riscv-aplic-msi.c
->> > +static void aplic_msi_write_msg(struct irq_data *d, struct msi_msg *m=
-sg)
->> > +{
->> > +     unsigned int group_index, hart_index, guest_index, val;
->> > +     struct aplic_priv *priv =3D irq_data_get_irq_chip_data(d);
->> > +     struct aplic_msicfg *mc =3D &priv->msicfg;
->> > +     phys_addr_t tppn, tbppn, msg_addr;
->> > +     void __iomem *target;
->> > +
->> > +     /* For zeroed MSI, simply write zero into the target register */
->> > +     if (!msg->address_hi && !msg->address_lo && !msg->data) {
->> > +             target =3D priv->regs + APLIC_TARGET_BASE;
->> > +             target +=3D (d->hwirq - 1) * sizeof(u32);
->> > +             writel(0, target);
->>
->> Is the fence needed here (writel_relaxed())...
->
-> The pci_write_msg_msix() (called via pci_msi_domain_write_msg())
-> uses writel() hence taking inspiration from that we use writel() over here
-> as well.
->
-> If that's wrong then pci_write_msg_msix() must be fixed as well.
-
-Huh? The writel()s in pci_write_msg_msix() are because there's an
-ordering constraint, and code would be broken w/o it. My question was
-"what are the ordering constraints for this piece of code", because it
-looks like this is a single I/O write without any ordering constraints.
-
-I'm not a fan of sprinkling fences around "to be safe", but I don't want
-to delay the v16 because of it. It can be fixed later, if it's not
-needed.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] tpm: of: If available Use linux,sml-log to get the
+ log and its size
+Content-Language: en-US
+To: Michael Ellerman <mpe@ellerman.id.au>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, jarkko@kernel.org, rnsastry@linux.ibm.com,
+        peterhuewe@gmx.de, viparash@in.ibm.com
+References: <20240306155511.974517-1-stefanb@linux.ibm.com>
+ <20240306155511.974517-3-stefanb@linux.ibm.com> <87h6hinwzw.fsf@mail.lhotse>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <87h6hinwzw.fsf@mail.lhotse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Gv38LkoCS3PkLxRFplGlkVvN24IeWssB
+X-Proofpoint-ORIG-GUID: GqBNiazuMisAY30rZktBh8dnkqQY6ci-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=917 suspectscore=0 spamscore=0
+ malwarescore=0 mlxscore=0 bulkscore=0 adultscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2403070087
 
 
-Cheers, and thanks for your hard work!
-Bj=C3=B6rn
+
+On 3/7/24 05:42, Michael Ellerman wrote:
+> Stefan Berger <stefanb@linux.ibm.com> writes:
+>> If linux,sml-log is available use it to get the TPM log rather than the
+>> pointer found in linux,sml-base. This resolves an issue on PowerVM and KVM
+>> on Power where after a kexec the memory pointed to by linux,sml-base may
+>> have been corrupted. Also, linux,sml-log has replaced linux,sml-base and
+>> linux,sml-size on these two platforms.
+> 
+> It would be good to mention that powernv platforms (sometimes called
+> Open Power or bare metal) still use linux,sml-base/size, via skiboot.
+
+Will do in v2.
