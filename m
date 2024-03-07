@@ -1,116 +1,105 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FE331BC56;
-	Thu,  7 Mar 2024 04:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6562A25767;
+	Thu,  7 Mar 2024 04:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709785211; cv=none; b=WSsO9IhlQu4xtvRZHd1Qr5dMtv384ivr03f4prJRFTjzAQiByxWh7Pj4cd0I5D3hFbq8Az73l+2Af58rd7uhtZvc7OoDlt3SmVx8H0Lv8JIcpjhZ7/jtEtm473AOtDZZqgUC/qEDRG+lz2/FJ8bG7xBGHEzUn3MhenzUhtqZCCI=
+	t=1709785229; cv=none; b=eXr1YBg/6CaXUr7BIrhgh00q9YOJp2pJUz889yMNTyXZxIJYIpZMLZ9BYMdEdMvEAasa0fCG9AI1sCkRX4ln29igYd/+QbLQLHxzwZV//w1n99yNfcC5BgAw0mVyBuqjTRaYCBpw4t4pjiw6ryEw0gMo5RMPpSD6+xys+DjvFro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709785211; c=relaxed/simple;
-	bh=RVzCBWZL3Fs2lKVuMO+8HdbnbBEx+N+Ja88D9+iMXLI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E+uveaUxDTgpOPCEIIb5dl9ZWKTBvF+GbQNIVAcX7AEEjGylm6mQWaAsMQYhKuZN6rczkCQ1ccLItUTBqcnmRxPVg8jJo8L7HBD0HSfrnj454jjyw+QT8iWjhFDNSdmLoKbgkfpqYFacjd0pgaWRjdrIiDF1UvSO6K733GeUS/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=bdXFwwC+; arc=none smtp.client-ip=117.135.210.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="bdXFwwC+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=VJTS0
-	wA0DvHHRitPTm1NT41xy31OCjf26nYLakxJP8U=; b=bdXFwwC+lx4GDms/G4slc
-	jAf0VBcp4OU0LAv6ytfWLXUNBjv23ZyGXndPK+aOhtCO5sY0bZoWUM9KJRgizZGC
-	LExB2L0VK7w5tS8v75AU/nVt6w9ecYDluGqR0TiYFpQ/2quKpF5z02SPlx3RNQ06
-	+fGEp2YrFDbjSA5IYraB0Y=
-Received: from localhost.localdomain (unknown [116.128.244.171])
-	by gzga-smtp-mta-g1-1 (Coremail) with SMTP id _____wBXrmdmP+llh0IFAA--.11885S11;
-	Thu, 07 Mar 2024 12:19:18 +0800 (CST)
-From: Genjian <zhanggenjian@126.com>
-To: stable@vger.kernel.org
-Cc: axboe@kernel.dk,
-	stable@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhanggenjian123@gmail.com,
-	Siddh Raman Pant <code@siddh.me>,
-	syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com,
-	Matthew Wilcox <willy@infradead.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Genjian Zhang <zhanggenjian@kylinos.cn>
-Subject: [PATCH linux-5.4.y 7/8] loop: Check for overflow while configuring loop
-Date: Thu,  7 Mar 2024 12:14:10 +0800
-Message-Id: <20240307041411.3792061-8-zhanggenjian@126.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240307041411.3792061-1-zhanggenjian@126.com>
-References: <20240307041411.3792061-1-zhanggenjian@126.com>
+	s=arc-20240116; t=1709785229; c=relaxed/simple;
+	bh=53JxyFKU3XAtE0lZPMuBF9A7iLQtuV0Q4p9eES+00j0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gvMTcyOjV8aWIidHIIvM+XzuiI9e3aFGhVp9b+0qhCtFQprQzIvUtXfLeyXfxmYaFOQSFDEqZWkj3c7xqv43TuD0xcCgWIax9yQmBXVbsBbF6mtWymzdUgbYdat+OIzCPP/9meLKLYbOcCCaJeMqcick0HhQX5dJ5VghngL0eMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-299dba8fd24so258772a91.2;
+        Wed, 06 Mar 2024 20:20:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709785227; x=1710390027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J+lcNCz0f80j0accvsGVgfR5v7RKJSfcCBpAdb7j5m0=;
+        b=EbJMVmC20/3fqzFy5NtcjvZKQCUtoAJ6sHekLFIOSxr5MlVg3DoTHpgolA6pyMybk1
+         s1UFJ/BEkeZ6jsSZ3f6LYPXx1YHvMsSeS/ryQNzdsreAZ0RWbZvkn6jrGc50JAL+0uh6
+         iJIdPmImF0pTe41NUgbfW10WiH8kjy0F20cRlFoh6+njhPOp7Bt7rHfXSGHPxvUGBLFe
+         4MJeG8i3Q62HnLKIA3BUt8YuESFrCjmlND77MR5Te60DiheUYeh9A4goe8UX2tFg1HAL
+         hMaErqBuIFXVF5xQ089bzapjTUYZ9HAsun1xeM5iArNtjE07EzKL/wdRZVazcJfYEa7e
+         HmGw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/YyaASI3TRCVf1PRIqbCsWY2la6AEwc0huSJ9EfI74Gy76JBF5fbAtRknjdux7hEYfViZmfZXIRV5EvDDyaqWD/TZcH7oGm86+4OIwmJ+kKTV+63IJTkn70twFJClUEuEFLyxXoAjxMIeuzNgDg==
+X-Gm-Message-State: AOJu0YxnhL/7iIC7eDzWXDRE8fF0KkU5pOgiJDManE++Q/3oH3mCOKk6
+	ocl51Joo9pgNzr0wRU2TleCU5L9HT53CmTAfKBivmoljS7IBCg9994gYE8tiLeNQ/IeW+k6OFJF
+	cSsW3g6Rw7unsf5ZUN3YAlBmrM24=
+X-Google-Smtp-Source: AGHT+IEJg/55esdoBBZ22UKlhPO5qyU5+AYFJ3a8FNzE2CU7mhAqtk9JrvYiIHJKnmMOglrVSM9M17uRpV+9QzJcIPQ=
+X-Received: by 2002:a17:90a:53e2:b0:29b:7244:c4eb with SMTP id
+ y89-20020a17090a53e200b0029b7244c4ebmr4288131pjh.42.1709785227553; Wed, 06
+ Mar 2024 20:20:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBXrmdmP+llh0IFAA--.11885S11
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr1xur4Utw4DAF45AFW5Wrg_yoW8Kw18pF
-	43WryUZ3yrKF4UCFsrt34kXry5WanrGFy3G39Fk345u390vrnavry7Cr93urykJry5ZFWS
-	gFn3try8Z3WUZrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jtR67UUUUU=
-X-CM-SenderInfo: x2kd0wxjhqyxldq6ij2wof0z/1tbiyBqafmWWf4vf8AAAse
+References: <20240304230815.1440583-1-namhyung@kernel.org> <ZejshUg8XiQz5YGa@x1>
+In-Reply-To: <ZejshUg8XiQz5YGa@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 6 Mar 2024 20:20:15 -0800
+Message-ID: <CAM9d7cjfH7e5wiM9Zwfn_oCqL1tUvy1=c3RUuO=zvgTJVrU6oQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf annotate: Improve memory usage for symbol histogram
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Siddh Raman Pant <code@siddh.me>
+On Wed, Mar 6, 2024 at 2:22=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Mon, Mar 04, 2024 at 03:08:11PM -0800, Namhyung Kim wrote:
+> > Hello,
+> >
+> > This is another series of memory optimization in perf annotate.
+> >
+> > v2 changes:
+> >  * fix a bug when offset is bigger than 16 bits
+> >
+> >
+> > When perf annotate (or perf report/top with TUI) processes samples, it
+> > needs to save the sample period (overhead) at instruction level.  For
+> > now, it allocates an array to do that for the whole symbol when it
+> > hits any new symbol.  This comes with a lot of waste since samples can
+> > be very few and instructions span to multiple bytes.
+> >
+> > For example, when a sample hits symbol 'foo' that has size of 100 and
+> > that's the only sample falls into the symbol.  Then it needs to
+> > allocate a symbol histogram (sym_hist) and the its size would be
+> >
+> >   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) =3D 1616
+> >
+> > But actually it just needs 32 (header + sym_hist_entry) bytes.  Things
+> > get worse if the symbol size is bigger (and it doesn't have many
+> > samples in different places).  Also note that it needs a separate
+> > histogram for each event.
+> >
+> > Let's split the sym_hist_entry and have it in a hash table so that it
+> > can allocate only necessary entries.
+> >
+> > No functional change intended.
+> >
+> > Thanks,
+> > Namhyung
+>
+> No difference before/after on that 'perf annotate --stdio2' for all
+> binaries in a perf record of building perf using the default binutils
+> objdump disassembler, etc.
+>
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit c490a0b5a4f36da3918181a8acdc6991d967c5f3 ]
+Great, thanks for testing.
 
-The userspace can configure a loop using an ioctl call, wherein
-a configuration of type loop_config is passed (see lo_ioctl()'s
-case on line 1550 of drivers/block/loop.c). This proceeds to call
-loop_configure() which in turn calls loop_set_status_from_info()
-(see line 1050 of loop.c), passing &config->info which is of type
-loop_info64*. This function then sets the appropriate values, like
-the offset.
-
-loop_device has lo_offset of type loff_t (see line 52 of loop.c),
-which is typdef-chained to long long, whereas loop_info64 has
-lo_offset of type __u64 (see line 56 of include/uapi/linux/loop.h).
-
-The function directly copies offset from info to the device as
-follows (See line 980 of loop.c):
-	lo->lo_offset = info->lo_offset;
-
-This results in an overflow, which triggers a warning in iomap_iter()
-due to a call to iomap_iter_done() which has:
-	WARN_ON_ONCE(iter->iomap.offset > iter->pos);
-
-Thus, check for negative value during loop_set_status_from_info().
-
-Bug report: https://syzkaller.appspot.com/bug?id=c620fe14aac810396d3c3edc9ad73848bf69a29e
-
-Reported-and-tested-by: syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Siddh Raman Pant <code@siddh.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20220823160810.181275-1-code@siddh.me
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
----
- drivers/block/loop.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index eadb189be0cc..c999eef4e345 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1298,6 +1298,11 @@ loop_set_status_from_info(struct loop_device *lo,
- 
- 	lo->lo_offset = info->lo_offset;
- 	lo->lo_sizelimit = info->lo_sizelimit;
-+
-+	/* loff_t vars have been assigned __u64 */
-+	if (lo->lo_offset < 0 || lo->lo_sizelimit < 0)
-+		return -EOVERFLOW;
-+
- 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
- 	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
- 	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
--- 
-2.25.1
-
+Namhyung
