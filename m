@@ -1,114 +1,95 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD7412F36F;
-	Thu,  7 Mar 2024 15:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D43312D765;
+	Thu,  7 Mar 2024 15:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709826038; cv=none; b=psFORPL5/8bZNN4k/juwmBwJ5KFmf+4+PZt7Bm3TxZbmENDMdEMZCBLGwBpG18u5jZX/4PDAYKo2FdvhxVDVYAQ4BwSLhMzP2t+ds0K5NKGy798KM1AwhKyXjlWf03BOVfNsCMNhqxZCigVNK0Tzn9TjksJuoFDcrOwkwtYpUXU=
+	t=1709826317; cv=none; b=KcRuxuLLSs9UDNWQX762bZv77ebRUY426og8Vb1oXx4Fuj0JRSd0rfRLxvHuFtaNNkE3f/vib5okiylPJ4V9X1h9HC1KCiRmjfshG0SxkPHvzMZAIvRryKy/ziCIx9hP4Jdq1yYUEM/7Q+3/bT+hy8HY+VMijVQZ1CV0upS1Sx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709826038; c=relaxed/simple;
-	bh=fh0n5w9BpVHFCfMA3Um/TOAMScuRvA2TPQcLoKcwmuc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MGZcsoYwcQxFs2EUUTRK2Oedq4rs04MSZsabwoFfiHj9rG7STN4/YXlkgjC6vXbI0yFeqvC/s7ehqG27DoDhAtiQ9bzQzhW25QeqPSO02wkG3eU1ffezqA5YbLP3bDZLAjy7YxLtbRaN5VHdtYceIeea+ozedA7sKVnA2GK9W7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RiMQ0OlE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709826317; c=relaxed/simple;
+	bh=daUuIo7r71bWeft67R/wa5LvoARKP4ulf/SmFvlJLKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NHWHTrIdKHIKRAATgJ1ZPHAJZT73Qek2Ue0KfeskK4X9gou8fxRoBMdXd9d9LHqW7XD8SoSR45Y6XtiMP9CTZ4swGEevywTI5pFCjr1wRlc6BCoXdt6e5O1QQTEO/hdjQsaSjhQT1rU0TqY4yiQJIUEMdsadRcM1jwVr/CLLciU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RfM4SzXY; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RiMQ0OlE"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 427EBpmu019389;
-	Thu, 7 Mar 2024 15:40:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:reply-to:references
-	:mime-version:content-type:in-reply-to; s=qcppdkim1; bh=x9mSKt+D
-	jroHiBhsJgaO1YAzStTlyxwFwrm/zxwZK+Q=; b=RiMQ0OlEAfMlt4L0tlo0fRjU
-	SO6T952gb2ZEJjPH4sJXhfyw2VRkAndG0pmT06UrNnWB84wwz8iW7RFH5jNfXEak
-	wNmK0pASi31rHtFvh9RIochTlHkIQdo0XaeIx0ZY6dEyUSRsqrjJoSh3ZLPkYF+9
-	yDYR+sIz50H2PKf0AmJD8DQMvx+Gw1oQcMU3daHY/o4rsPstsfIe+jtNvvSFmjBd
-	JC53IvSnKM+sxPyZtGCvg5Rx74qxgxlz5pCTUFM6PgTOMzWc6OkgUlUMYvMRXxeC
-	k8nosLzj0auisXPMWIMfdKGJGjcwtp1+LqgutxxyZ/3C6C7SkYXgNhs+ddxWrA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wqf4r0ekv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 15:40:03 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 427Fe1GE010812
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 7 Mar 2024 15:40:01 GMT
-Received: from quicinc.com (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 7 Mar
- 2024 07:39:54 -0800
-Date: Thu, 7 Mar 2024 21:09:50 +0530
-From: Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>
-To: Elliot Berman <quic_eberman@quicinc.com>
-CC: Alex Elder <elder@linaro.org>,
-        Srinivas Kandagatla
-	<srinivas.kandagatla@linaro.org>,
-        Murali Nalajal <quic_mnalajal@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        Carl van Schaik
-	<quic_cvanscha@quicinc.com>,
-        Philip Derrin <quic_pderrin@quicinc.com>,
-        Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
-        Jonathan Corbet
-	<corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "Fuad
- Tabba" <tabba@google.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Andrew
- Morton" <akpm@linux-foundation.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH v17 09/35] gunyah: rsc_mgr: Add VM lifecycle RPC
-Message-ID: <20240307153950.GB1696249@quicinc.com>
-Reply-To: Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>
-References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
- <20240222-gunyah-v17-9-1e9da6763d38@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RfM4SzXY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709826315; x=1741362315;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=daUuIo7r71bWeft67R/wa5LvoARKP4ulf/SmFvlJLKU=;
+  b=RfM4SzXYQqoxOblRqaGXq8rSnJPQocyT0igTU9PnwywfUIh2cM0h4xmV
+   DswDpXTvh8drpcLslvlYF0fMHTQLOMldSPFk8+UqM2cF5c5n8oVyzBby1
+   7MaSAPltTdzodOWeKtvWDd/h3TIEpZq+LLPfpxa8sDHdgBERoGuMMkWdW
+   nl7GBDCkg+px40gQTXUZrpW34VBJ4/Xfc48MIWOHBOIf/8YfxfKdNKV3D
+   5RvXw5pURZ1f3q0qhQHyjodRc+LkT664bw6V1k2Q4BYjX1LkjGcle5Z2Q
+   tfEpg8IMUq2MCS544TCIdFpmiODif712PK2KUwaifaMEQFa64RIpORIhQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="15221955"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="15221955"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 07:45:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="937046333"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="937046333"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2024 07:45:12 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D5764193; Thu,  7 Mar 2024 17:45:11 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>,
+	Michal Simek <michal.simek@amd.com>
+Subject: [PATCH v1 1/3] spi: xilinx: Fix kernel documentation in the xilinx_spi.h
+Date: Thu,  7 Mar 2024 17:43:57 +0200
+Message-ID: <20240307154510.3795380-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240307154510.3795380-1-andriy.shevchenko@linux.intel.com>
+References: <20240307154510.3795380-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-In-Reply-To: <20240222-gunyah-v17-9-1e9da6763d38@quicinc.com>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _uZlOP-jl2koKQHOhQe9grwGA8_vX3Ph
-X-Proofpoint-ORIG-GUID: _uZlOP-jl2koKQHOhQe9grwGA8_vX3Ph
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_07,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- malwarescore=0 phishscore=0 spamscore=0 mlxlogscore=508 suspectscore=0
- impostorscore=0 bulkscore=0 lowpriorityscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2403070086
+Content-Transfer-Encoding: 8bit
 
-* Elliot Berman <quic_eberman@quicinc.com> [2024-02-22 15:16:32]:
+While updating the data structure layout the kernel documentation
+became outdated. Synchronize kernel documentation with the actual
+data structure layout.
 
-> Add Gunyah Resource Manager RPC interfaces to launch an unauthenticated
-> virtual machine.
-> 
-> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+Fixes: 1dd46599f83a ("spi: xilinx: add force_irq for QSPI mode")
+Fixes: 082339bc63cc ("spi: spi-xilinx: Add run run-time endian detection")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/spi/xilinx_spi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-LGTM
+diff --git a/include/linux/spi/xilinx_spi.h b/include/linux/spi/xilinx_spi.h
+index 3934ce789d87..fd6add419e94 100644
+--- a/include/linux/spi/xilinx_spi.h
++++ b/include/linux/spi/xilinx_spi.h
+@@ -5,10 +5,10 @@
+ /**
+  * struct xspi_platform_data - Platform data of the Xilinx SPI driver
+  * @num_chipselect:	Number of chip select by the IP.
+- * @little_endian:	If registers should be accessed little endian or not.
+  * @bits_per_word:	Number of bits per word.
+  * @devices:		Devices to add when the driver is probed.
+  * @num_devices:	Number of devices in the devices array.
++ * @force_irq:		If set, forces QSPI transaction requirements.
+  */
+ struct xspi_platform_data {
+ 	u16 num_chipselect;
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-Reviewed-by: Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>
-
-- vatsa
