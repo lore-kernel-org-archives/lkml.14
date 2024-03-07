@@ -1,96 +1,88 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F561F5FF;
-	Thu,  7 Mar 2024 22:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F62A139597
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 22:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709849277; cv=none; b=md4hTmcXZcj6pmTkb0+5Vob9UqZR72CsO+rGnpsS/21ZdNYVndqlyvQSgJI6J0FH2FSs24sQ7fvz3jG1kePyaKU8HSFTBkhkVBxs8IFimQT9McOqN8rFUlKC49mH6zKbcKepDJgBK3g33DQkv7gjOJDPou9wELht5ImBI+vAig4=
+	t=1709849311; cv=none; b=XX9RwxJkmHdABdjzWh9qzXf71NN5ZYysfHfcgknprceybpdrLXFU1e79NxZRUsMMTehUhvcmhWH1eibQTXGfTWMViXxkZhSWO8kq303KNPd6E230Kq3I8w7XmII5N0TN0Nlkgmw7B4yp817CsWWk/JISWqvc0mwQlwrrTE4kSNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709849277; c=relaxed/simple;
-	bh=2cOFINydz+QUDPwlqrR24hyoqQ9ZryhE3141ZGd4Bis=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ayv5iI66252QVbMtB5DaAsC+jEAFBshtWSmidEosrP1zmlmAnp/Bk3a5kpXTSjZTGXEa6N0cIkVHzlOpbTfyKDnSYHZhboCw21kguKn4VY5h/DOp3tvbVcOaT+aBfYpAYlFaz0O4I+ML7CYw3aA0ntObRA+gAt5J6L4aaQPy3cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=HSh9V+Xu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KtaWx8hJ; arc=none smtp.client-ip=64.147.123.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709849311; c=relaxed/simple;
+	bh=rtNR3Kl4BKEEG0W7kNlGz0E5gqmBtrXYCOUWYhzI/rs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GSZnq8aTwPfuS0JWNLB5HANArMH9U0SpS2BTeFlZGCc/8iTcrJVhjIXk+m36SpOiekqvXV4DqaJtPAc3bvHaXauRhJwztTSVFNRWfb8CPwBg98wf7o2g9s604DnyeZKntmJwnEs7NgAs9jsKjonU/WGRXRUgRd/09eTYJaJ30zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Omh5KtsS; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="HSh9V+Xu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KtaWx8hJ"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 3B5F21800097;
-	Thu,  7 Mar 2024 17:07:54 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 07 Mar 2024 17:07:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709849273; x=1709935673; bh=2cOFINydz+
-	QUDPwlqrR24hyoqQ9ZryhE3141ZGd4Bis=; b=HSh9V+XuWVqQ3fPUQHmblYRNug
-	Zpck01QwI8tDvFyHocbqbvh+22IXUVXe6tM9w0Bmm4Qlofcu44lcpsuilCDenXwd
-	ImYwc5BjoxtUruOkVe2nFBxTMFJLMv5eonVlV8cAOWx/g9bQ5U9SbSjVzmRzw6X2
-	Fxq2zyQT5v7MtXcC1m1VJ1S5UIr7xE/a4Zmp/PiX3z2NP5uHOPx1m1+vPoIESPZV
-	+aKL4/JS+KOCDw92iXMPvvIPnGDIb0VSTWfuZhBownI3nAdlQKWLyYzIY9Au8HA5
-	xqVbwQFCXmYcjZssx3MJFGLL3jH7JDJzu8NCUMaspOOqL/5v2qCVnmTvAGeQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709849273; x=1709935673; bh=2cOFINydz+QUDPwlqrR24hyoqQ9Z
-	ryhE3141ZGd4Bis=; b=KtaWx8hJaJNWRZ/IHGEa3WJTIcWKBwRwWAWNAgcN54nf
-	3ZH3Ft3OJsaOZhUu8Fc1mFPatulkxA3jaVu9mci+GHul/3J30x5kvxCD5+v/6xz4
-	2Couhz/GXoxitq7Dkc2dzfYKk1ylkjQ3IWbCXTudSfHAPlQMWusPIyBFPcWK7Vme
-	/kVSIUMMc+TuHYPYA/kB/blGoMVM1+snK4GBqJgM29+T+VLe/KbSZ+YOpPWESZVS
-	vdpwQvu7iVwrz0yQ1q+KnH/3T18GnLK60Sa8tKAWkE2Hvz7RC2dI50YzJCk/W/0Y
-	smNx1J+D5Tl6qeEa1WpFBEBVa3F2+TD2lOAnNJhrPA==
-X-ME-Sender: <xms:uTrqZeg4dTqwwCiBeYm3Bbbw9QwByP32wIx4WJhrpEiLHp0ZreggSg>
-    <xme:uTrqZfDG3yJofICA-m0_pUn9nfc16E-As0clH0F-eW-4WlVsNEfwCMhr4C4zYa8vH
-    Ggg-zsZyFzRU1TYo7o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdduheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:uTrqZWGso2ImHs83L91blDf4wHroy3frY3rCAc3iR1qPH_VAwCZe3g>
-    <xmx:uTrqZXT33liuXoOgtMhMzPSkyu_U15dzjS0Xl_8QoHDr5171K0n6Lg>
-    <xmx:uTrqZbxYdRza_qxMg6-hzIG5HK1LL5ZpgTZtq1PnPtlhxp1yRh6XlA>
-    <xmx:uTrqZSlvigYW7RFpRIn9lkNc5dDVvk0kBFE63LLp1pQ_E5yX3stGfEPRuUk>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 4D78BB6008D; Thu,  7 Mar 2024 17:07:53 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Omh5KtsS"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcbc6a6808fso1554215276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 14:08:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709849309; x=1710454109; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1PUH/PGVq+mmDqUvMpUQ1WEtnhkQe+DNBNHfPK6gnis=;
+        b=Omh5KtsSICECbhS0YeU7+p0y8aQO+0/0xH31irGbbdfuGQmkgXaibmwGTnHtqKhi+E
+         OgTlnkz0hOLzLSO9hTiSh3pHDtlz88TpEKxSXDCCgTlwohAeEqmLweB1Ks5qmPVbUuhq
+         aFO6vEQkfhiSIeHjUaUN27ocfavybfu0QvPJPvdXtoB/cxkA1kbWlmO7xKY3Xz44iiQT
+         4URSEDmdpAKqy51Ebg0EwW/YmkbLqFNPcxyNRu2XEJpZeSXaucqACqpcBE0urEDDFZen
+         Zf3GPoRh/aM4ueEh64XR88EFdYrx6niS2BphPkouhQL5YAPxWiglsMzslS/0Ve30IAY2
+         3Jxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709849309; x=1710454109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1PUH/PGVq+mmDqUvMpUQ1WEtnhkQe+DNBNHfPK6gnis=;
+        b=dDKaIWwJJrtmfeIknkVGJHKiuuaBeWSggw7k+P9V9NPeI4I1k3aoPrVlpvO09nfXQa
+         JRMD4EGIGcNknW7o4+iSG0MvrSPYYTzDtpR7kOBKZWBVSODeRRYYG1q3vkBBYlIPG6Ry
+         d1rIrjExNdyE4Oiphoial3V7AjVuHXnVEtpSYjV3SoELIbQumhAHsoXNWAnWzcM5svVg
+         3DIufOx3Cp0NOl5PXcPVcQqhQN/VcjRVlvHAxIH9IvAxKMQoHz+Kr2zcKEzh6hyJsfcU
+         JBFV1AIB2FEo0BwXVrja5oBiIklIhwLAmEg5EVIxecTJ3c45eXvV/ZaekDM207XfpyN3
+         bgmg==
+X-Gm-Message-State: AOJu0YwbY/GdZAfxmdbSWGVnzKWFkVHmXdhcTfe2p3Xed6RmlRWZJpoy
+	gTW1FMnrO/EnurmaskNqaU26gRGCMT8f30HRjOU1x0tjTlagtnJmWu/TGsuJrVfUvdGIrU5m8vl
+	qr1DB8kG4fIoWFEY2CN0b1IrTIqo8j0JnDsUxVyix+TXym++Z
+X-Google-Smtp-Source: AGHT+IEN0rSzP52l7NWiioBCC0gXpR6uj2GlvcT3TFGi0fSnPSWOqqVKLL3E819yGzNIL0KHUEn9baN/EfSz8tuiXfY=
+X-Received: by 2002:a25:aa63:0:b0:dc6:7247:5d94 with SMTP id
+ s90-20020a25aa63000000b00dc672475d94mr13465419ybi.55.1709849309083; Thu, 07
+ Mar 2024 14:08:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <2381bd91-d514-4cce-acb1-fda862f64105@app.fastmail.com>
-In-Reply-To: <20240307195056.4059864-2-andriy.shevchenko@linux.intel.com>
-References: <20240307195056.4059864-1-andriy.shevchenko@linux.intel.com>
- <20240307195056.4059864-2-andriy.shevchenko@linux.intel.com>
-Date: Thu, 07 Mar 2024 23:07:32 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: "Mark Brown" <broonie@kernel.org>, "Daniel Mack" <daniel@zonque.org>,
- "Haojian Zhuang" <haojian.zhuang@gmail.com>,
- "Robert Jarzmik" <robert.jarzmik@free.fr>,
- "Russell King" <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 1/3] spi: pxa2xx: Kill pxa2xx_set_spi_info()
-Content-Type: text/plain
+References: <20240308082039.600be106@canb.auug.org.au>
+In-Reply-To: <20240308082039.600be106@canb.auug.org.au>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 7 Mar 2024 23:08:17 +0100
+Message-ID: <CACRpkdY7RXZvWq8Vji5TCYd-947R0NDChrnLsA2wwaXm0RNRLA@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the pinctrl tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 7, 2024, at 20:47, Andy Shevchenko wrote:
-> There is the only one user of the pxa2xx_set_spi_info(). Unexport it
-> and inline to the actual user.
+On Thu, Mar 7, 2024 at 10:20=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+
+>   Fixes: a4f15a8d4c82 ("pinctrl: Add driver for Awinic AW9523/B I2C GPIO =
+Expander")
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+> has these problem(s):
+>
+>   - Target SHA1 does not exist
+>
+> Maybe you meant
+>
+> Fixes: 576623d70661 ("pinctrl: Add driver for Awinic AW9523/B I2C GPIO Ex=
+pander")
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Fixed it up, thanks Stephen!
+
+Yours,
+Linus Walleij
