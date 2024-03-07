@@ -1,130 +1,159 @@
-Received: from outgoing4.flk.host-h.net (outgoing4.flk.host-h.net [188.40.0.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9776135A66;
-	Thu,  7 Mar 2024 19:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.0.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C4084A2B
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 19:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709838328; cv=none; b=J0EJkirvVTDnj0Li6NKs4iOg4Lsbu0+DAQRSVH8FvdAUCM6qV/gjvwiBfRzSdMmrDwymby60mpeOd6xIizDCk8V86GgnByeZRYP+yC+7ilnqXXjSGgdg02WRwtiwQzV6ZNptFzboi5agSjs4Vwqd7qDrT3JA8kyS3L1TrGa/QBk=
+	t=1709838355; cv=none; b=X+3S0BPyuKI5CSmrIp0K20rT4D/k3VJl38JG6cepAnBWscgnRJfYCBYqK/eiWwfHZhneqHTkht8OMcMtRrGbZBEYpw60DADu1nyQB9An8qQHbQsRCkRJVpz7Nlo/0AhX2EcMJFycE5S+VXqrZJO+VWr4UYCWKQ4j/VCz7BKSGCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709838328; c=relaxed/simple;
-	bh=8aOsQ9dXU/uHaHhbDZiHLR63A2lxD1hCAqIW2LWrACY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NMfQB0t+ApD0q1lCmTm3fs/VeimMuS3dK4eIm+rPNjHI8oEDyp4bCRDZw8DF01IS5A5/d/dDDKXaIRLWmnk/mB3s8owblv8DGvqiTe6QTewt5XOWH9e1ZKHqTiI68WIKhzqo2A+y6s8uGXlmjdKIxQfMyXSyNWSbBhTVRxP12uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za; spf=pass smtp.mailfrom=risingedge.co.za; dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b=YKse3Jvb; arc=none smtp.client-ip=188.40.0.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=risingedge.co.za
+	s=arc-20240116; t=1709838355; c=relaxed/simple;
+	bh=0lxp9fgkMSqXRqet6QDcLrjZVWsznGOp1aCABxqMD9Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ePp1Ztqmyb7uynhhJusIOKPLxxx//6GTGAjAZKO4v4qUf3Lw8AFoZhSdK6XDl4rscAIt61uGQBUfgbg4omr9znIxvrqZXWYIzR6Bz4jK8rFwIESPv+YUfEwKWdciZCPW/tmQ+AIAcGqFaK2mHQysQbJam1N7MIxWqXm65hgS6to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aw6Zzbmb; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b="YKse3Jvb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=risingedge.co.za; s=xneelo; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:reply-to:sender:bcc
-	:content-type; bh=CkkEezkguIbm3o6UtY6xuUlSDLGF/rVfjuM8OlCCJgg=; b=YKse3JvbwQm
-	WFYEl2Gp46CYEfT0nDRnpymPHQziwWe8L/S1NFx2geFLedziV9VS+BXfASiOn8tC7f1Hbxh8KzF8W
-	f2YZfHfU8R/kBaXpHrODTDT3hELwqCcMwLQqSh0F6wH5pxGSAWqze2gFqXpyPGhLDEr2NEDnV+gxr
-	ugnY9zn27M6VhXp2/5sV1U8MTKEdTOEI+bvt1dvlqJMhEebvLQhqL/s04JBpP9/1K+5mlMXh+0fLs
-	T7To7LsazWri9C8o3ieKEulPAdrd4vKz7vG4MwlDcIceVUv2KRzKCNbGL0kBQZZSUgmPCzZflkYZU
-	u/gZ7UUD0f2scyYu5osCs+w==;
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-	by antispam1-flk1.host-h.net with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <justin.swartz@risingedge.co.za>)
-	id 1riJ3I-00HIFu-VJ; Thu, 07 Mar 2024 21:05:15 +0200
-Received: from [41.144.0.96] (helo=localhost.localdomain)
-	by www31.flk1.host-h.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <justin.swartz@risingedge.co.za>)
-	id 1riJ3E-0007Za-5h; Thu, 07 Mar 2024 21:05:08 +0200
-From: Justin Swartz <justin.swartz@risingedge.co.za>
-To: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Justin Swartz <justin.swartz@risingedge.co.za>,
-	linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 2/3] mips: dts: ralink: mt7621: reorder serial0 properties
-Date: Thu,  7 Mar 2024 21:04:06 +0200
-Message-Id: <20240307190408.23443-2-justin.swartz@risingedge.co.za>
-In-Reply-To: <20240307190408.23443-1-justin.swartz@risingedge.co.za>
-References: <CAMhs-H_eUKm7C40oCzuKwwEMZAcOJ-g4MghAfkGAmxRM0AXPUw@mail.gmail.com>
- <20240307190408.23443-1-justin.swartz@risingedge.co.za>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aw6Zzbmb"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dca3951ad9so10108235ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 11:05:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709838353; x=1710443153; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjtJhyRDCpI19Ewh14cBKwZVOZbV4kYbTUkGrdqq6Zk=;
+        b=aw6ZzbmbRWCKxlit4GmKrPJKorpkEaA4aEPfKlsxTS3Al1H7rPZcN0uWKYdPFH1QCr
+         RW+T2F6IuhGgVbE/ih1qrdaVVv7IdXwBa1HACFtzr0R+L3F7RoYU5RsHNIByMCCpH3NO
+         A5DElP+rqq6dIHI632tkfLWh2eJqvteXjYGrLJ3zjhAWIY1EEB6IDWWqByHJ4i/TwVoj
+         uDd/25//QcjzHaTdkgraoM9YY5w+4Y4KaTgbMMrm7R4raOmf7KrBTdKCwV3u/hSrWd9o
+         czowbPGHspKt9hHKrsSylrKm1OkbM5rp5HMMwexe27UTm3fQPtSlY/BXO9R1xufMgfGr
+         gryQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709838353; x=1710443153;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CjtJhyRDCpI19Ewh14cBKwZVOZbV4kYbTUkGrdqq6Zk=;
+        b=AKWUxQTEbSdsLAq2XRXsgdgUW7Mc8FSdnVH8+gh4WeAxJHLG7pyxkMxDZWhFHCTrL/
+         TZn22O8QyqRsWDM5PFe7176w0JEaR6NAuProR1zHkGfOBP0Fc2Gl/bKzAw77fqjwHFG8
+         ailkNE8/EuyJ5b2u3VZyIXZbtqJy6igKSQsliEY0078wLvsa04E1+nWquSgQq1Avh9e+
+         Re1z/8JtmAjkRmTOFrah99soMzv/aVO1uCbxYU/HIc5smIHPts9tyT+ARLHM0f5zM+7S
+         8dmADL20NDXLKJgkG7Z5QELCvTqYw5mB3NzpkAe6eCJYKKu05ju+oTaOV9UjLdXcBgPy
+         pgIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXbYNLP8tTaaJy2fFByr1xrkaCHTnzHnYNH8BC37aCupaT78GKji3Ugl9n+8Tg0FX10oYhx4NYvAQGB5PTiyv5eOh8/hNv83E4L7T/E
+X-Gm-Message-State: AOJu0YwsQjf6EaI5mE+GPxVW92WyFu5oE2hyiiVLO5qBG9Sb5rtI4swj
+	BX912h/EoMZuZxmPBJf3NzJOWQRvfgMZzYCVVYQdOYxBz2udfh/6HOAUDB3pmB4=
+X-Google-Smtp-Source: AGHT+IE5B0hugsWDTp99p7N7xEvh7wJEMxFLgTSlvpzLfPeOAcoxplC7fkr6cxVl+tPmkAbvsbASVw==
+X-Received: by 2002:a17:903:41d0:b0:1dc:a837:7e1b with SMTP id u16-20020a17090341d000b001dca8377e1bmr10394525ple.63.1709838352986;
+        Thu, 07 Mar 2024 11:05:52 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id h3-20020a170902680300b001dd526af36csm1747338plk.295.2024.03.07.11.05.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 11:05:52 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v8 0/4] riscv: Use Kconfig to set unaligned access speed
+Date: Thu, 07 Mar 2024 11:05:44 -0800
+Message-Id: <20240307-disable_misaligned_probe_config-v8-0-55d696cb398b@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.01)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+EJWyemKZyVEbbV54WwyIJPUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5wCPRB8bAzJcv2cv+UqiTTc2+CpNcmBnO4XM3Sck4bwNogU
- WCl1nkLBzZX0KuJ9bXiS85Z42w/+2OBolTNFbPomXFWCX8oNdggW7HE9XDTdSejrkEpbuUvwMvHx
- 3T+KSG//gbuP7hnUK8NQdLwsVWKIFDZRrTGv3rxiw9tFrqFSCFNiLZt/QXQnOBRD+jq1HsKsDh/6
- Srgk2K3gr1VBfJbChkYH6fbrypLNrde+UooQVNLReLErukdelEOHUIpaBbp5GdnsN8+UvimwMinK
- 0+Txhz2u9qvrL2PODYgMZQApJXOjDLkqunZ9NcY2bHZn7CfFscMZZf3sCkN20I5vMh4akiObI7Kj
- vK7X04QEin24qbfMFd8eGjnYW8aSH5qj4ujh/13psIvqSqJFa1CcANErDW/w69saM9prk3jNnHtn
- nuEt/J9wDZeQfiNOYsLDFBdwYt2XtlLzy7G7T4kla0JNnAWQx3FS11bhwUa9HCIwKB+TroNcRY33
- oNmH4nRQzHQazgY7lmveanvOdQzf6IMJ3345q/s6ySNrGnXycmhg3MW3Cu62CB3+QcEeXee7EsSr
- AP5R/Cae/ZemygD++WnmLtBcNrQxKZYuPe8bdCyw79zlPbqLQkZr26Lcxdvj8cqI+CogZdOhX7v3
- ClXzrmMENhJLl6MBfhzHVBR0wHQZxzIUka7Uq615Mik1qzcz308HFwsY4DWIzjhTYXUG8GBZhle6
- F/kpBdN+oWjoATjEFDwcaiz0R34rhTN+GTbl4uS+pZovX9cex7Ac4fawcerGI7TrGXpM/B/M0BZd
- PfIU1BX7pZc1sE3vsz58auH/srM2fgZ9JmgLbj7sqoEiwv7LCxIiAE5ODMnmwjvj2589zjbyZCiM
- WpBpW8YvoIIqmZcWhL/r/eFjMjJnMHeiAPOVAT1rE1/vP68Bb4z3v3h3gCdXrv2+9GnNX30LKqXb
- fwFKgm/rnYBl+Mj5KqOl6Jzub/f3QhLRbOgisvi5VU9eNBtgo6zjiatjNO/pnMCjuIvXs/AyV/Ns
- URB/R+FlEHyAzksgfaRvdgw0WK34QWnzHHMcN6qoXPjenLhIOF1oeRYbjF1Hp647mOWoQlc3hL3c
- ZMexQ8VxpTDmnfa+pzT1vSQKfAk/SzcWdtcr5u4DiPd4u/m4iBmYb1/LCV4/EuVHup06w3Vwxf9C
- F7D6LKKRTfdjzQ6YC7Heg3Xf7O1TOd6RcY/MXB8eEq3bCN2QohZvyS03iBmgsz450Kmjd3fGV8nM
- bkxHyXWCxCogb2beJIaKQwoPjGI9+ZGz2GEpaMILIbtf63VNbf0lrvssY+k7AHGi1NevGWTo2+h8
- Lhk4HCeZR7ymlGVRtthBJ2y8A5arx6JItKpFaUNPGMMlvbMX0nyK1NiAJ0y2Qvvn6ds6mor35w4f
- SfHzQbABJfgy21HclcZkPRq7NhoxyMwqi8Q23Rgadfh5T5n5D4OHHpbEIgsllZKWnzc5M5WlNtVJ
- qo05MS+4ayUpOtEhdxekWDmK9g==
-X-Report-Abuse-To: spam@antispamquarantine.host-h.net
+X-B4-Tracking: v=1; b=H4sIAAkQ6mUC/43Qy2rDMBAF0F8JWtdF70dW/Y9SjB4jR5BYQSqmJ
+ fjfK2cTUwz2arizOJeZB6pQElR0Pj1QgSnVlMcW9NsJ+YsdB+hSaBlRTDkmjHQhVeuu0N/avKZ
+ hhNDfS3bQ+zzGNHSYMwuWKRENQ025F4jp59nw+dXyJdXvXH6fhRNZtsftiXS4MzoQIcD4YPVHS
+ VOuafTvPt/Qwk/0RVJ8gKSNVMozqR0E5egGydYk3SdZIz3n0ZCImXNyg+Qrksh9kjcyeExAaOK
+ x9RukWJFU7ZOikU5qwTSXQJXdIOWLZEd+KRspCQUXpImc4Q1SrckDh6uF9AZzYkBZ8/+X8zz/A
+ XP2u9vDAgAA
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Jisheng Zhang <jszhang@kernel.org>, Evan Green <evan@rivosinc.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Eric Biggers <ebiggers@kernel.org>, 
+ Elliot Berman <quic_eberman@quicinc.com>, Charles Lohr <lohr85@gmail.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709838351; l=3215;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=0lxp9fgkMSqXRqet6QDcLrjZVWsznGOp1aCABxqMD9Y=;
+ b=ljet3jnYOUaIeYRX4kKRcuKAcFbCR+qmASHc8JBY/3sVQhg+/D60OJTG4tT8zR6/GM3X2ycqJ
+ cpnoVXVWNDaCOX8QArrIwQCTUsSTsixQc0rdIuiAJgBeuLDO3pIBxMR
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-Reorder serial0 properties according to the guidelines laid
-out in Documentation/devicetree/bindings/dts-coding-style.rst
+If the hardware unaligned access speed is known at compile time, it is
+possible to avoid running the unaligned access speed probe to speedup
+boot-time.
 
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- arch/mips/boot/dts/ralink/mt7621.dtsi | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Changes in v8:
+- Minor commit message changes (Conor)
+- Clean up hwprobe_misaligned() (Conor)
+- Link to v7: https://lore.kernel.org/r/20240306-disable_misaligned_probe_config-v7-0-6c90419e7a96@rivosinc.com
 
-diff --git a/arch/mips/boot/dts/ralink/mt7621.dtsi b/arch/mips/boot/dts/ralink/mt7621.dtsi
-index dca415fdd..3ad4e2343 100644
---- a/arch/mips/boot/dts/ralink/mt7621.dtsi
-+++ b/arch/mips/boot/dts/ralink/mt7621.dtsi
-@@ -114,16 +114,12 @@ memc: memory-controller@5000 {
- 		serial0: serial@c00 {
- 			compatible = "ns16550a";
- 			reg = <0xc00 0x100>;
--
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
- 			clocks = <&sysc MT7621_CLK_UART1>;
--
- 			interrupt-parent = <&gic>;
- 			interrupts = <GIC_SHARED 26 IRQ_TYPE_LEVEL_HIGH>;
--
--			reg-shift = <2>;
--			reg-io-width = <4>;
- 			no-loopback-test;
--
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart1_pins>;
- 		};
+Changes in v7:
+- Fix check_unaligned_access_emulated_all_cpus to return false when any
+  cpu has emulated accesses
+- Fix wording in Kconfig (Conor)
+- Link to v6: https://lore.kernel.org/r/20240301-disable_misaligned_probe_config-v6-0-612ebd69f430@rivosinc.com
+
+Changes in v6:
+- Consolidate Kconfig into 4 options (probe, emulated, slow,
+  efficient)
+- Change the behavior of "emulated" to allow hwprobe to return "slow" if
+  unaligned accesses are not emulated by the kernel
+- With this consolidation, check_unaligned_access_emulated is able to be
+  moved back into the original file (traps_misaligned.c)
+- Link to v5: https://lore.kernel.org/r/20240227-disable_misaligned_probe_config-v5-0-b6853846e27a@rivosinc.com
+
+Changes in v5:
+- Clarify Kconfig options from Conor's feedback
+- Use "unaligned" instead of "misaligned" in introduced file/function.
+  This is a bit hard to standardize because the riscv manual says
+  "misaligned" but the existing Linux configs say "unaligned".
+- Link to v4: https://lore.kernel.org/r/20240216-disable_misaligned_probe_config-v4-0-dc01e581c0ac@rivosinc.com
+
+Changes in v4:
+- Add additional Kconfig options for the other unaligned access speeds
+- Link to v3: https://lore.kernel.org/r/20240202-disable_misaligned_probe_config-v3-0-c44f91f03bb6@rivosinc.com
+
+Changes in v3:
+- Revert change to csum (Eric)
+- Change ifndefs for ifdefs (Eric)
+- Change config in Makefile (Elliot/Eric)
+- Link to v2: https://lore.kernel.org/r/20240201-disable_misaligned_probe_config-v2-0-77c368bed7b2@rivosinc.com
+
+Changes in v2:
+- Move around definitions to reduce ifdefs (Clément)
+- Make RISCV_MISALIGNED depend on !HAVE_EFFICIENT_UNALIGNED_ACCESS
+  (Clément)
+- Link to v1: https://lore.kernel.org/r/20240131-disable_misaligned_probe_config-v1-0-98d155e9cda8@rivosinc.com
+
+---
+Charlie Jenkins (4):
+      riscv: lib: Introduce has_fast_unaligned_access()
+      riscv: Only check online cpus for emulated accesses
+      riscv: Decouple emulated unaligned accesses from access speed
+      riscv: Set unaligned access speed at compile time
+
+ arch/riscv/Kconfig                         |  60 ++++--
+ arch/riscv/include/asm/cpufeature.h        |  31 ++--
+ arch/riscv/kernel/Makefile                 |   4 +-
+ arch/riscv/kernel/cpufeature.c             | 255 --------------------------
+ arch/riscv/kernel/sys_hwprobe.c            |  13 ++
+ arch/riscv/kernel/traps_misaligned.c       |  17 +-
+ arch/riscv/kernel/unaligned_access_speed.c | 282 +++++++++++++++++++++++++++++
+ arch/riscv/lib/csum.c                      |   7 +-
+ 8 files changed, 376 insertions(+), 293 deletions(-)
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240131-disable_misaligned_probe_config-043aea375f93
 -- 
+- Charlie
 
