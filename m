@@ -1,122 +1,87 @@
-Received: from wfhigh3-smtp.messagingengine.com (wfhigh3-smtp.messagingengine.com [64.147.123.154])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9D284FBA
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 18:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E357130E3B;
+	Thu,  7 Mar 2024 18:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709835630; cv=none; b=XiIUaOWnxJ7iXMQDtd8QwqJShgU3RNnqmzsmXEAWkFWevNsUZkTzZSg9MEqwFmrGnjO+yyFqMNwU8h4KVEHatGIa2N7TXiIQD3QdyJQceXj/oL+vXv2W59X9tHavrEv7RvyWPr6h2oYivZ2hm4Jq9S9SV0x/8KjYARORqQxL5DY=
+	t=1709835633; cv=none; b=i913RrES1Kep9x01JDbF5arfvEXdDu4AC41vDcMWWS/LLFvVO1zH6fHDeHjGJL2U4FGy3WA14nFamJKxHoMOnFjU6BlGFgnkHbOUTsJt1iKg+YW835F0Z4vqf1+JP0ZEZuNaYXxvq4Ysof75rLL/is7M6YrzLqvp3vnp6/w/DU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709835630; c=relaxed/simple;
-	bh=vx9f52epNWEzONOHjyN4alR7l5mAAB50BSvc+yNmx9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P3JNeg+dm0ObNsOnD7M2Id22O75POY6kafySPYjrl4RTcROGNrOPpL3vTJGhUKeUoU1HwCw+Adpc3yAAbjH+eePFBrGSOE8AgH2WqD5uqYkr2qETSx7Q7ZA6R2yB1/iRq60JemaLsWD4+76NZFkumOi+6Fk1tTYcgZnbiVTJh1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=DvgTWnpE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HhyYVyOK; arc=none smtp.client-ip=64.147.123.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
+	s=arc-20240116; t=1709835633; c=relaxed/simple;
+	bh=MQ07orCZLuAVz2SXJ+Q340+1S+7a9Vt0FAvrlO4XyU4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KxZ9LdSqFXn0MHqZvdncJykP8AtH5AQ1/G6Z0IPlADqGtywVIa/koGCQIaPf9989XNGdptvFu9I/qYoubWdSUG5FNMV9a+jn5Ym2Dd2IPqsAJfvsE2wPrHAbLRVuWr0C7XviS5x7Pb1By8Y9ISLk5ljgD/w6CIIwMrTB2js6bHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=e6EJ1O7h; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="DvgTWnpE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HhyYVyOK"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfhigh.west.internal (Postfix) with ESMTP id A0CBA18000CA;
-	Thu,  7 Mar 2024 13:20:26 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 07 Mar 2024 13:20:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:reply-to:subject:subject:to:to; s=fm1; t=1709835626; x=
-	1709922026; bh=arK+NBGKdHWZ6efyHQWXlXfgQ1L/CzF1zSO+BWgFZXQ=; b=D
-	vgTWnpExQF81NowzJzUTgnd9lYg2Yxvqc1NFwSGjL4AdA/ycBpKzffa/5eluXgj7
-	eGl2AI8DFJLCb9n+kKOPGQs6CmonlhWsXWHJG82SQSoCtPIz5oWbhopO04OPw2La
-	AEq39UGxN4q/bkS6UPbKCu3C/EPrGyiBC9rlJ6iT3JL+7K63cyKYElGPm61RNxRy
-	RqBkKANLzyKDZU+OsOC64aYA4tmbSo9UaNa8uqpA0mLHaFATy9e/OgdAhHtRvXJ2
-	k7AJ5Bn8uVgKQmdr2tFqIIfnDEW0eIK2XN/SGjnlVoJVDf/My0t6V8FEYV1yDaZf
-	3UDt9B5WFLG1KcxFYSV9w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:reply-to
-	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1709835626; x=1709922026; bh=a
-	rK+NBGKdHWZ6efyHQWXlXfgQ1L/CzF1zSO+BWgFZXQ=; b=HhyYVyOKsumEySrPt
-	Hqr9GLVr2KX7esjQZZTMMsuPDt9AmLAKtHvXNIhBjS9nMlkq/kyRKIlRGAJUnhnE
-	vQ54uiRxjCnMD4jfYENEPLSYRJvNB0R1OWDkG3Sjzz71vEXDIFCcifM6v1v2ETBI
-	6fYgQ1AriMBHhHAnL4Z/VgPKf0AVTKtp/3XBjdM5ZP7FC8ODc8QDXnhQ42qF/xx/
-	1DbTftHtGOiZzALLeRcWP9TbKN4/to4sJdG0QK38MCxUTZJa/ypoG+D8qGKGFRow
-	Wp0K01SALTlNQ8fZixzm/s12GIzH6MkpKfGgn0OqHh/n19WkwnWWFk7huL4ZogEB
-	yFQgg==
-X-ME-Sender: <xms:aQXqZXGuExPNCniHl5kfn_KjXtGLHugyvcPy00GfzBFPOe_WmiNOzg>
-    <xme:aQXqZUXoPOQCf7CnInCBXKm-r7_wNUkJKPeipZL1jpP3_DrMGph_F0SqbJZn7izZu
-    k-ciznnAjLbvFzQpg>
-X-ME-Received: <xmr:aQXqZZI7mdP5O25FdpKhrC8I4DJFaf6-cBYTgZUvKw8pmQ4MGLvLGqSYtgSWILvdEUVpyTghfpGU7-s2hV0x9duKGZdX2VQce0aksRrnZxVYSU5bENDE2FEV>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdduudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofhrgggtgfesthekredtredtjeenucfhrhhomhepkghiucgj
-    rghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepteduve
-    ehteehheeiteeihfejveejledtgfdvieeuiedutefftdevtdfhteevtdffnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
-X-ME-Proxy: <xmx:aQXqZVH1Po-ZVPjmXUyaAltBne1JUQ37u76ixDMo241RW53yUtr0Tw>
-    <xmx:aQXqZdX9JC9mN4KycfynT1lxjCI0wi8Tc7oFbh8B5BeSGWhaFtNOuQ>
-    <xmx:aQXqZQMOEIY8ZgFVD384TcfJE1QupNax4AvM4htM8RTyyxGwqQq51Q>
-    <xmx:agXqZWuIYnQSQqCArdU3C9LzoaNwbUzAWxtBkcXzUTH1AktLz0s02OaaKZs>
-Feedback-ID: iccd040f4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 7 Mar 2024 13:20:25 -0500 (EST)
-From: Zi Yan <zi.yan@sent.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org
-Cc: Zi Yan <ziy@nvidia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yang Shi <shy828301@gmail.com>,
-	Yu Zhao <yuzhao@google.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] mm/huge_memory: check new folio order when split a folio
-Date: Thu,  7 Mar 2024 13:18:53 -0500
-Message-ID: <20240307181854.138928-1-zi.yan@sent.com>
-X-Mailer: git-send-email 2.43.0
-Reply-To: Zi Yan <ziy@nvidia.com>
+	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="e6EJ1O7h"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4TrHfM3GKMz6833;
+	Thu,  7 Mar 2024 19:20:27 +0100 (CET)
+Received: from [10.10.15.20] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4TrHf91SvTz6851;
+	Thu,  7 Mar 2024 19:20:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=unoeuro; t=1709835627;
+	bh=PuM/TBOUHyQ36cC1eReWyFL59PuLO2Dm+PS5yf10Cfw=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=e6EJ1O7hOg8LDh16/jsCKqsHOVVzDxr/sdUeM9Z6/9bz1GzwlT1YxdsgTRLa8QWjs
+	 p4a4eVPE+4DNPJetW3tPReXVNU+DnHrhJ6zSHxlFV5I+k/j7T8nP/91OHRcuOjLkS0
+	 9TGGnyCdn2+lKwy6d6DAJkFCjrz7ATM3wp6AnU3k=
+Message-ID: <c5654b69-209e-4406-ac70-9a4547adfc36@gaisler.com>
+Date: Thu, 7 Mar 2024 19:20:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/7] sparc32: Fix section mismatch in leon_pci_grpci
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+To: sam@ravnborg.org, "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ sparclinux@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+ linux-parport@lists.infradead.org, "David S. Miller" <davem@davemloft.net>,
+ Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+ Arvind Yadav <arvind.yadav.cs@gmail.com>
+References: <20240224-sam-fix-sparc32-all-builds-v2-0-1f186603c5c4@ravnborg.org>
+ <20240224-sam-fix-sparc32-all-builds-v2-7-1f186603c5c4@ravnborg.org>
+ <b62d0ae6-c2cb-4f2c-b792-2dba52a44e35@gaisler.com>
+In-Reply-To: <b62d0ae6-c2cb-4f2c-b792-2dba52a44e35@gaisler.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Zi Yan <ziy@nvidia.com>
+On 2024-03-05 16:06, Andreas Larsson wrote:
+> On 2024-02-24 18:42, Sam Ravnborg via B4 Relay wrote:
+>> From: Sam Ravnborg <sam@ravnborg.org>
+>>
+>> Passing a datastructre marked _initconst to platform_driver_register()
+>> is wrong. Drop the __initconst notation.
+>>
+>> This fixes the following warnings:
+>>
+>> WARNING: modpost: vmlinux: section mismatch in reference: grpci1_of_driver+0x30 (section: .data) -> grpci1_of_match (section: .init.rodata)
+>> WARNING: modpost: vmlinux: section mismatch in reference: grpci2_of_driver+0x30 (section: .data) -> grpci2_of_match (section: .init.rodata)
+>>
+>> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+>> Cc: "David S. Miller" <davem@davemloft.net>
+>> Cc: Andreas Larsson <andreas@gaisler.com>
+> 
+> Could you also add
+> 
+> Fixes: 4154bb821f0b ("sparc: leon: grpci1: constify of_device_id")
+> Fixes: 03949b1cb9f1 ("sparc: leon: grpci2: constify of_device_id")
+> 
+> for these fixes in your v3 of the series as well as CCing stable?
 
-A folio can only be split into lower orders. Check new_order to make sure
-it is smaller than input folio order.
+I'll pick up the whole series apart for the ZONE_DMA removal, so there
+is no other need for a v3. I can add the Fixes lines to this one, if it
+is ok with you Sam, or take it as is.
 
-Link: https://lore.kernel.org/linux-mm/7dda9283-b437-4cf8-ab0d-83c330deb9c0@moroto.mountain/
-Fixes: c010d47f107f ("mm: thp: split huge page to any lower order pages")
-Signed-off-by: Zi Yan <ziy@nvidia.com>
----
- mm/huge_memory.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index a81a09236c16..57fca7bffd20 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -3052,6 +3052,9 @@ int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
- 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
- 	VM_BUG_ON_FOLIO(!folio_test_large(folio), folio);
- 
-+	if (new_order >= folio_order(folio))
-+		return -EINVAL;
-+
- 	/* Cannot split anonymous THP to order-1 */
- 	if (new_order == 1 && folio_test_anon(folio)) {
- 		VM_WARN_ONCE(1, "Cannot split to order-1 folio");
--- 
-2.43.0
-
+Thanks,
+Andreas
