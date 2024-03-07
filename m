@@ -1,109 +1,113 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B0812D754;
-	Thu,  7 Mar 2024 15:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BA012DDB2
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 15:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709823703; cv=none; b=hhlWKob9Q8MvR4/qKBnQdgJ5P80Bd/3ZCPdA5mL1q8lc9KvpDKWX7f3FayhIZkov0GCdsDIG5zTwKdIIpTp48SsmzV5CDL25TiSxTP57wk8ZVLY6XnOUvOEUXwsqidycCvmnd8Qz/9KHj7XYXRsPcTVHo5z6Jte17XgytLlr44M=
+	t=1709823704; cv=none; b=HqUKMIEI0hRdHTtu/sau6OPxgZMPd0o99n0vxI4VTYQ8/TXoLYC74sO2JvvT7Hlx6Ka26e0YP+sxv9oZJfYb+GSlDeBQk935oom4l0JXjzAq3sMwjpzat5xWDDaQgGm1orAUdopE7Ba2EBFZ1haym6UQ6ADH9AU8a5U+S0UYgV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709823703; c=relaxed/simple;
-	bh=eNFxKcWlEdHQbJlCDhgLyCDMNEl0/5OPCQ3E9Gp/e7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iv9ejwsSUEuf8kA2qEnAXyLi+AspATzqIOSge5lBeXn+dGie6F6+TQ4D19KZ53SovueVR33IobJcnw59ETEvHutCRKz8Acst8jHXLDB0Q/4L4Jrc9vdaBmUCEDtCn54d7EoN4kGABTx2rx6/K2yE8sBJVIA9zVJ3rcIYEWWXBLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iKjuyOrZ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709823704; c=relaxed/simple;
+	bh=ipDoqaGJry8XFBbFQETVEMjCjvVX2Nh/sKemer023uI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J1dH+Xy1D2EixRbSXLFn4xojVznNohfMk49nxLhmSQwsuh99CYByowg9Ck338vByFeXHPjkxzfGyP+RSEqGJgPhhiR/yCqKjBUjamlOMJHmK1FriaDGWgLPsZGgGU4/pVrSfLK+GWZpRflnsf+Z8fjavq6Jxelbxc8bCdpVAajE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oVfDVpD2; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iKjuyOrZ"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 427EhKq9004082;
-	Thu, 7 Mar 2024 15:01:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=INNS7wXY+uyGYWsmpIcvwWMcJdOC94K2KLNkCD8oXrw=;
- b=iKjuyOrZKMPHy2SF+lj9F/lmlcc6wGtxI0ycOrUXbPhxvo2QviUOEh6nO2wFQc0TYwX8
- JXqnzuIsAaN9wqvUYnN7ADJzYDwlPejigzgf+xNXFzBqa1kJxkdQATBrho3gZhQe7A9f
- oa+K7yu94VYC7tzzqmENMzwN0S8Mbjsqs592UnH3AOhJ6zcM1Gixpv/9j5BzX8OOwvY8
- ugdB9lJvPqOWylDPoaVl/nphLBYg300PchNfUiY3JdbEU4ZUF5W+HdAVoViFpBmt877b
- c33MDOx//7i/9j3QJVEAMzK2Y4tlaCDGTQdCRqQwv9NECNfZamwM+c0eWRPvd1umlABx Nw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqfdkhmw2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 15:01:20 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 427EX8eu019521;
-	Thu, 7 Mar 2024 15:01:16 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqfdkhm9b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 15:01:15 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 427CLCic006046;
-	Thu, 7 Mar 2024 15:00:58 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmeetegms-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 15:00:58 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 427F0s7017498850
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Mar 2024 15:00:56 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4F36058064;
-	Thu,  7 Mar 2024 15:00:54 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C712C5806F;
-	Thu,  7 Mar 2024 15:00:53 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  7 Mar 2024 15:00:53 +0000 (GMT)
-Message-ID: <90a14b5f-6976-4941-a623-ae31dfa33899@linux.ibm.com>
-Date: Thu, 7 Mar 2024 10:00:53 -0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oVfDVpD2"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33e6d364b7aso276535f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 07:01:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709823701; x=1710428501; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BOmqNU1lRIv+DURE4y+VSSKM4JviZ9Mjbtz+cTDb3pQ=;
+        b=oVfDVpD2rEQcNN+t1VExQRRMXde6sCLxfdQiGKZcaNkRFCwS+mUYEOiuHxEf89vQwN
+         0rnqYvoDVqIDtQ9rIeVSw164hEIkTEgvpy6TMNIuJGKvbMZnHx+4XFcizLvCkomh7/LQ
+         KKzcZiNzu8V1VbiEwt+s4iSLKBftUzIGw5JSHxBdRAybgAPwDrxnJTN7cfytX5aXEnmc
+         IjX2tm0rAUz2dBp3MGg75khgVoo7iN7lAiq/4FS8mx06XBPW3hehhCxuzZv0+JOaWtwG
+         SjXQOuXMnZL6PQuzpTaIrJjUdZwcCISmRxrkgY62RrGCEt1BzagDq3DAFC2RI+jBBHZL
+         peoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709823701; x=1710428501;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BOmqNU1lRIv+DURE4y+VSSKM4JviZ9Mjbtz+cTDb3pQ=;
+        b=suO0ZC0MbN1wUyGcKK8VGsEwYuHjZPi8JTLe4DgJYrSaVuyrVpzHAgf0mT8c5d4Q8l
+         OG2qPb3Um+Y6bt4i0+LoTL57OXA/uY0am8wGyJgZLWu2S9h3rM2EUSFbYSegH5kInY9b
+         mnRwh2XY5lkLdLANFCYkQnldmRE/X0zYD0uq9mPmuvMeD92/ie80j/Y95FWAK/5bip3g
+         LlI37SdbnTpnn+gV0gusXNczDnPBun7BNDHysfX5qUnwObFhDw/Zx2OJ7SKPaLXZwQe+
+         UAv9UMdUIc5O/SHpns9T2kKEiV9zw8q8j5ykAwdTHWJGtTkHXNiB4WBHTPbEUQa0vGby
+         8FfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvWhiiXlWQYVDMiWcLfGfdEXUHVrEyEoIzacIU9XJjxaAN0G3Hi8SuONtrEzbEDz47MtXTQ1HY7Wc9Webfgt4xC5Qw8Km3qBSwrFsS
+X-Gm-Message-State: AOJu0YygySYnJ/AZw3hRQKMEWMHSMArGP+LQzEGRUmPbetpYwfYiO6fa
+	+FVkflzbJjAjsq5y/gZBagqPrcPCsqfIw+y6F7zewUkUw8Knlpf/gQ05j5wJxGZaYUJenwJSLIw
+	l
+X-Google-Smtp-Source: AGHT+IFXXvFEdnuCc608hqNnc23woWbYxgaTjHYOVLDkcJ3Xj6RdzH1iq7gCWqRkt07ORdYnLKUfuw==
+X-Received: by 2002:a05:6000:11ce:b0:33d:a011:ae42 with SMTP id i14-20020a05600011ce00b0033da011ae42mr13601493wrx.38.1709823700652;
+        Thu, 07 Mar 2024 07:01:40 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id cl5-20020a5d5f05000000b0033ce727e728sm8175322wrb.94.2024.03.07.07.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 07:01:40 -0800 (PST)
+Date: Thu, 7 Mar 2024 18:01:36 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Yang Xiwen <forbidden405@outlook.com>, kernel@collabora.com,
+	kernel-janitors@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jaehoon Chung <jh80.chung@samsung.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: dw_mmc: remove unneeded assignment
+Message-ID: <e34b5334-48c3-4ebd-9a1a-7ea26899d304@moroto.mountain>
+References: <20240307122129.2359553-1-usama.anjum@collabora.com>
+ <SEZPR06MB69597EEFAB2F77049E9B257296202@SEZPR06MB6959.apcprd06.prod.outlook.com>
+ <8cf4333a-b500-4fb7-8176-734fdc892da4@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] tpm: of: If available Use linux,sml-log to get the
- log and its size
-Content-Language: en-US
-To: Michael Ellerman <mpe@ellerman.id.au>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, jarkko@kernel.org, rnsastry@linux.ibm.com,
-        peterhuewe@gmx.de, viparash@in.ibm.com
-References: <20240306155511.974517-1-stefanb@linux.ibm.com>
- <20240306155511.974517-3-stefanb@linux.ibm.com> <87h6hinwzw.fsf@mail.lhotse>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <87h6hinwzw.fsf@mail.lhotse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Gv38LkoCS3PkLxRFplGlkVvN24IeWssB
-X-Proofpoint-ORIG-GUID: GqBNiazuMisAY30rZktBh8dnkqQY6ci-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=917 suspectscore=0 spamscore=0
- malwarescore=0 mlxscore=0 bulkscore=0 adultscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403070087
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8cf4333a-b500-4fb7-8176-734fdc892da4@collabora.com>
 
-
-
-On 3/7/24 05:42, Michael Ellerman wrote:
-> Stefan Berger <stefanb@linux.ibm.com> writes:
->> If linux,sml-log is available use it to get the TPM log rather than the
->> pointer found in linux,sml-base. This resolves an issue on PowerVM and KVM
->> on Power where after a kexec the memory pointed to by linux,sml-base may
->> have been corrupted. Also, linux,sml-log has replaced linux,sml-base and
->> linux,sml-size on these two platforms.
+On Thu, Mar 07, 2024 at 07:51:37PM +0500, Muhammad Usama Anjum wrote:
+> On 3/7/24 5:22 PM, Yang Xiwen wrote:
+> > On 3/7/2024 8:21 PM, Muhammad Usama Anjum wrote:
+> >> The err is being set to 0 and replaced every time after this
+> >> assignment. Remove this assignment as it is extraneous.
+> >>
+> >> Fixes: 25d043841db1 ("mmc: dw_mmc: add support for hi3798mv200")
+> >> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> >> ---
+> >>   drivers/mmc/host/dw_mmc-hi3798mv200.c | 1 -
+> >>   1 file changed, 1 deletion(-)
+> >>
+> >> diff --git a/drivers/mmc/host/dw_mmc-hi3798mv200.c
+> >> b/drivers/mmc/host/dw_mmc-hi3798mv200.c
+> >> index 989ae8dda7228..96af693e3e37c 100644
+> >> --- a/drivers/mmc/host/dw_mmc-hi3798mv200.c
+> >> +++ b/drivers/mmc/host/dw_mmc-hi3798mv200.c
+> >> @@ -133,7 +133,6 @@ static int
+> >> dw_mci_hi3798mv200_execute_tuning_mix_mode(struct dw_mci_slot *slot,
+> >>               goto tuning_out;
+> >>             prev_err = err;
+> >> -        err = 0;
+> > 
+> > 
+> > Same for dw_mmc-hi3798cv200.c, maybe fix it as well?
+> Sent separately as different Fixes tag is required for that:
+> https://lore.kernel.org/all/20240307145013.2721326-1-usama.anjum@collabora.com
 > 
-> It would be good to mention that powernv platforms (sometimes called
-> Open Power or bare metal) still use linux,sml-base/size, via skiboot.
 
-Will do in v2.
+The subjects are identical though.
+
+regards,
+dan carpenter
+
