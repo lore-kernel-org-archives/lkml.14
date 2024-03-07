@@ -1,115 +1,155 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEA912DDBE
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 16:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C45130AE5;
+	Thu,  7 Mar 2024 16:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709830328; cv=none; b=M1YQdJ60gIpj/RkW+eT4jZVPWjJI+ZcMT1TFTqjZevguevrLYYx75gBqnVGvh+xZ4GpW5QpqNPS3PN0CVis37UYqEtmeJOYJ+ChjJMgTcl6bKlCrK6tKksbDP4J0vEti40ATLgdSevBDukHp+WrwP0STQVn6O2bJ7hFRN465DgA=
+	t=1709830332; cv=none; b=ZtpmMMtsNiu8BJJ0NX+1d52Xz67fhbFuf3aqeEnAeJ5RvyqUbIbirlNvkPjN9bt54hLYTv3oxHy69yGlo9R1sB3xbT6FbJqRUCPnvbQE9qQMAzKKahyCbTB+IGMekrI3wFziNiszRoBTLy5tnju5r7QWwOCh3o1NXIHWie2Xx6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709830328; c=relaxed/simple;
-	bh=i9CCT9j7BCqV2bE+0gCx3jMpwRqeW581xksody4aj88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NhtLLHcHOkXIQ5If2aPzn8HNYuo/EElvFgmE+6bpqFkrURynjVxuHfILtU6g+FcIR8w8qqoJfoEdU2/kOYVG2JfnFBZSLFPxDXKKmL8s2O7VuLROBqRBuUDQ50nBarm1s01eJQgoNIJGnNkr5gh2wMi2g5dgQhf8ircyQ49hJlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1riGyO-00019r-AR; Thu, 07 Mar 2024 17:52:00 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1riGyN-004yht-Qw; Thu, 07 Mar 2024 17:51:59 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1riGyN-001PCL-2O;
-	Thu, 07 Mar 2024 17:51:59 +0100
-Date: Thu, 7 Mar 2024 17:51:59 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] usb: gadget: net2272: remove redundant variable
- irqflags
-Message-ID: <mywsgq453muhggv5y7pfrsg7zrodtuebcpo5rbc4kus5h2ameo@fhnpemjuntaz>
-References: <20240307105135.1981060-1-colin.i.king@gmail.com>
+	s=arc-20240116; t=1709830332; c=relaxed/simple;
+	bh=DQkQJhtingocNwVi1Bo8Gbq2Hjddpjam6rTP4YiVNpE=;
+	h=From:To:Cc:Date:Message-Id:In-Reply-To:References:MIME-Version:
+	 Subject; b=IIMAIND6JJskVfF+tAOxX4Z4+fgsWIPQ+OENL5Y3aebJbKxujxpkkrPe2pJUh44n3KGl5rZf0ugdMENTuZkpLZe+5v44MiaabFdcqLi35uwY4NVjDdtEnNxyY9/1h+iYkYF4LOR96xR5/MAwf7/xhLialHw8aqSYpiBuIwwqweU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=wxFcQLbr; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="wxFcQLbr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
+	:From:subject:date:message-id:reply-to;
+	bh=0mTV3TdU0MeF7BMA2wM7GD/HpaqYwMxjJxgJPe7WpAo=; b=wxFcQLbrcJAqdBwINE8ydQOva3
+	VA56Mkrlv9Oj4oUsdjk32Q6jQVAe4Igfqt9Ve40lJcPfu3bYuYGLf3wlbEO66th28CzqMUjdgJ9IV
+	BdsrwSgtlwm1SOtnK7hGNC+eQuthV0FZQlfLaYMAsNiBLkgUo9InjQLGwskmgzfx+z1M=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:57020 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1riGS8-0005lI-Jt; Thu, 07 Mar 2024 11:18:41 -0500
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	hugo@hugovil.com,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Date: Thu,  7 Mar 2024 11:18:27 -0500
+Message-Id: <20240307161828.118495-4-hugo@hugovil.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240307161828.118495-1-hugo@hugovil.com>
+References: <20240307161828.118495-1-hugo@hugovil.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gewgcxuilb6kaoqd"
-Content-Disposition: inline
-In-Reply-To: <20240307105135.1981060-1-colin.i.king@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+Subject: [PATCH v2 3/4] serial: sc16is7xx: split into core and I2C/SPI parts (sc16is7xx_lines)
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
---gewgcxuilb6kaoqd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Before, sc16is7xx_lines was checked for a free (zero) bit first, and then
+later it was set only if UART port registration succeeded.
 
-On Thu, Mar 07, 2024 at 10:51:35AM +0000, Colin Ian King wrote:
-> The variable irqflags is being initialized and being bit-or'd with
-> values but it is never read afterwards. The variable is redundant
-> and can be removed.
->=20
-> Cleans up clang scan build warning:
-> drivers/usb/gadget/udc/net2272.c:2610:15: warning: variable 'irqflags'
-> set but not used [-Wunused-but-set-variable]
->=20
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Now that sc16is7xx_lines is shared for the I2C and SPI drivers, make sure
+it is reserved and modified atomically, and use a new variable to hold the
+status of UART port regisration.
 
-this "problem" exists since the driver was introduced in commit
-ceb80363b2ec ("USB: net2272: driver for PLX NET2272 USB device
-controller"). Might be worth a Fixes: line.
+Remove need to check for previous port registration in sc16is7xx_remove(),
+because if sc16is7xx_probe() succeeded, we are guaranteed to have
+successfully registered both ports.
 
-I wonder if the better fix would be:
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+---
+ drivers/tty/serial/sc16is7xx.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2=
-272.c
-index 12e76bb62c20..19bbc38f3d35 100644
---- a/drivers/usb/gadget/udc/net2272.c
-+++ b/drivers/usb/gadget/udc/net2272.c
-@@ -2650,7 +2650,7 @@ net2272_plat_probe(struct platform_device *pdev)
- 		goto err_req;
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 5b53c88b7133..d81aad1b201d 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -343,6 +343,8 @@ struct sc16is7xx_port {
+ 
+ static DECLARE_BITMAP(sc16is7xx_lines, SC16IS7XX_MAX_DEVS);
+ 
++static DEFINE_MUTEX(sc16is7xx_lines_lock); /* For probe atomic line reservation. */
++
+ static struct uart_driver sc16is7xx_uart = {
+ 	.owner		= THIS_MODULE,
+ 	.driver_name    = SC16IS7XX_NAME,
+@@ -1468,6 +1470,7 @@ int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+ 	u32 uartclk = 0;
+ 	int i, ret;
+ 	struct sc16is7xx_port *s;
++	bool port_registered[SC16IS7XX_MAX_PORTS];
+ 
+ 	for (i = 0; i < devtype->nr_uart; i++)
+ 		if (IS_ERR(regmaps[i]))
+@@ -1532,14 +1535,21 @@ int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+ 	regmap_write(regmaps[0], SC16IS7XX_IOCONTROL_REG,
+ 		     SC16IS7XX_IOCONTROL_SRESET_BIT);
+ 
++	memset(port_registered, 0, sizeof(port_registered));
++
+ 	for (i = 0; i < devtype->nr_uart; ++i) {
++		mutex_lock(&sc16is7xx_lines_lock);
+ 		s->p[i].port.line = find_first_zero_bit(sc16is7xx_lines,
+ 							SC16IS7XX_MAX_DEVS);
+ 		if (s->p[i].port.line >= SC16IS7XX_MAX_DEVS) {
+ 			ret = -ERANGE;
++			mutex_unlock(&sc16is7xx_lines_lock);
+ 			goto out_ports;
+ 		}
+ 
++		set_bit(s->p[i].port.line, sc16is7xx_lines);
++		mutex_unlock(&sc16is7xx_lines_lock);
++
+ 		/* Initialize port data */
+ 		s->p[i].port.dev	= dev;
+ 		s->p[i].port.irq	= irq;
+@@ -1584,7 +1594,7 @@ int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+ 		if (ret)
+ 			goto out_ports;
+ 
+-		set_bit(s->p[i].port.line, sc16is7xx_lines);
++		port_registered[i] = true;
+ 
+ 		/* Enable EFR */
+ 		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_LCR_REG,
+@@ -1642,9 +1652,11 @@ int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+ #endif
+ 
+ out_ports:
+-	for (i = 0; i < devtype->nr_uart; i++)
+-		if (test_and_clear_bit(s->p[i].port.line, sc16is7xx_lines))
++	for (i = 0; i < devtype->nr_uart; i++) {
++		clear_bit(s->p[i].port.line, sc16is7xx_lines);
++		if (port_registered[i])
+ 			uart_remove_one_port(&sc16is7xx_uart, &s->p[i].port);
++	}
+ 
+ 	kthread_stop(s->kworker_task);
+ 
+@@ -1667,8 +1679,8 @@ void sc16is7xx_remove(struct device *dev)
+ 
+ 	for (i = 0; i < s->devtype->nr_uart; i++) {
+ 		kthread_cancel_delayed_work_sync(&s->p[i].ms_work);
+-		if (test_and_clear_bit(s->p[i].port.line, sc16is7xx_lines))
+-			uart_remove_one_port(&sc16is7xx_uart, &s->p[i].port);
++		clear_bit(s->p[i].port.line, sc16is7xx_lines);
++		uart_remove_one_port(&sc16is7xx_uart, &s->p[i].port);
+ 		sc16is7xx_power(&s->p[i].port, 0);
  	}
-=20
--	ret =3D net2272_probe_fin(dev, IRQF_TRIGGER_LOW);
-+	ret =3D net2272_probe_fin(dev, irqflags);
- 	if (ret)
- 		goto err_io;
-=20
+ 
+-- 
+2.39.2
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---gewgcxuilb6kaoqd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXp8K4ACgkQj4D7WH0S
-/k726wgApuSl5j8yqZxfz0r/ljO+iYK/Mkfds9vddxUBRxPq16H/WB7iqdlAAj6L
-Z3+ZTxiXgsExqYh+ZEeU4lKwHa8DYotgoQZOxkANsqjJBIK+JQoDj73w+UvraCEv
-sGi0Uv606kD8zV1Nb8pYq5O9n8G24XWwH9f1y96zKlt+IAnwLnDrq0D8d6SfIfd4
-VJFvrVTl2oNsWky9RS74vRfGEkc2H9R3UrwRRyD1Sv2PpZOpyKJKru621qHw1kv/
-+aPOIxHEty7nTu87lQJZ1RwRX7rmwYwqlPChOoL6hLD4KM1fkcsihbGqSr/3pMqz
-EKbgDXH/dFyvvnrWghAoTkEkjujmmQ==
-=8zp0
------END PGP SIGNATURE-----
-
---gewgcxuilb6kaoqd--
