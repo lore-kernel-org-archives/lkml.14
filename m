@@ -1,186 +1,135 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA291C2A3;
-	Thu,  7 Mar 2024 08:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA891C2A3;
+	Thu,  7 Mar 2024 09:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709801986; cv=none; b=kHojo4cI7fw/FC3KXzVp1aj0zskeLAkdd/YPzimwun7X6CyIjzBkB9OGCT7lYtccLwqhkLBh/w4cSBbR+lOO7fgwHNFLES3lPOSZJoX59FfEsJXxwF2rwuHo7nlKfoBl+Z20h81W5qXvZh3X7U4cEPjKOtrRQM/gkyMIgtIMIWs=
+	t=1709802034; cv=none; b=i/o+oAilu9nGYMSpKASCyURGKtW7p69k9ZdTt0CR41FB/xaFiWElgSI8FJpWOYpCWTeoYxx0SFHuxCNN6IZaz+yxlXdZRfatzwrwgkldVGQPvbvsOAYG+Za6wpaSqoVTf9o/4glgvbNxQ917Pabg7G0FWGYBOs+ktWjM4cKnF5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709801986; c=relaxed/simple;
-	bh=ZDsYXwiTTgifrM7aKCBBIntVddtFklS2hnxDsSUEIx8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cRHC8I1Sv/2tzyN7ShlSIyYJ5XzJmAPBlF0AYIbUTkjnaGbyP3owQLj27gva2URckwCAPYtADJ+6x/XEM3eAyyU3c+Ys9uIqsbch9R3HJD/1W/YpJYQ/kTQNOrcvzEp//4rKOsbnko2zqXTAohl8+bexozrnAq7zlKbYeibtgok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VvQogetT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qmb0ocOp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VvQogetT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qmb0ocOp; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709802034; c=relaxed/simple;
+	bh=D+XnBoUlNb13Suw1Ih1OgTg0q9gGXzYmZySZbHByTx0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kFFBhFpObAg3VcRUFV0R8hjEo+DPJTdd9Mc92qTgE95SvKaLcY9EZmYJlVHTW04znPmk8W9rb3vbsT4SfatN+CIyEhUo5NarLeDT+2HBbv5SFeu7SPA9sF3TTpaQrzUV2zEjuAsyBKJEOnfnHS6EkYcK8BtseUA/hDTHcIZB128=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=mA6RNssZ; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VvQogetT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qmb0ocOp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VvQogetT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qmb0ocOp"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5E8EC38949;
-	Thu,  7 Mar 2024 08:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709801982; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Zr1vglmdaTVF4Y5C+JCtluV3UMYKqQ7gx5fxIkqkoVw=;
-	b=VvQogetTf/95bbo74xOfRkUqpGRuCqV9YNka3pz/Zykuze2ZUAaUNpq0zEYSmeg0X5fjZc
-	8lXmLoHrJxzonV1kp7l4kApYKMYwIL1XhKjZxtSY7iAqhsQ0j2pC2j474z3eoWNWziX+xF
-	2ySMB7eNyX6wdrVLiFrW0U47LyomLeQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709801982;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Zr1vglmdaTVF4Y5C+JCtluV3UMYKqQ7gx5fxIkqkoVw=;
-	b=qmb0ocOpIGTIw5ApzfJWBCPw7A+4Qx5qBRNg+/IikDhX+q3h6wUBU/NyGbwRQje2tgWsu4
-	OZngehUOQKu3GPBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709801982; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Zr1vglmdaTVF4Y5C+JCtluV3UMYKqQ7gx5fxIkqkoVw=;
-	b=VvQogetTf/95bbo74xOfRkUqpGRuCqV9YNka3pz/Zykuze2ZUAaUNpq0zEYSmeg0X5fjZc
-	8lXmLoHrJxzonV1kp7l4kApYKMYwIL1XhKjZxtSY7iAqhsQ0j2pC2j474z3eoWNWziX+xF
-	2ySMB7eNyX6wdrVLiFrW0U47LyomLeQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709801982;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Zr1vglmdaTVF4Y5C+JCtluV3UMYKqQ7gx5fxIkqkoVw=;
-	b=qmb0ocOpIGTIw5ApzfJWBCPw7A+4Qx5qBRNg+/IikDhX+q3h6wUBU/NyGbwRQje2tgWsu4
-	OZngehUOQKu3GPBA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id F209813997;
-	Thu,  7 Mar 2024 08:59:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id EV+QOf2B6WW7FAAAn2gu4w
-	(envelope-from <tzimmermann@suse.de>); Thu, 07 Mar 2024 08:59:41 +0000
-Message-ID: <2c8ef49b-f20b-47f7-ad4e-2adcfd370024@suse.de>
-Date: Thu, 7 Mar 2024 09:59:41 +0100
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mA6RNssZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709802033; x=1741338033;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=D+XnBoUlNb13Suw1Ih1OgTg0q9gGXzYmZySZbHByTx0=;
+  b=mA6RNssZ4WJ4j2tb0jwdiLPYifUrWUyxeJzJ2ORf9eQZ4tfsVtf9QhoW
+   yKNVuK655QxhME9CHXYE1eh7q6FOwRYoGk1exjpSk7fGGUImCGLVcv8gp
+   3reA1Hlyc1Zp4e0eVaszwbTZJlfx3b2t9I4XqShM+QuPKdLWqmBqGFwnQ
+   abFPuPb5Z0nLYo1Ej5/CgfxccFNfhKPLz5aqafCAK/Ax1L2jcP2Xf4jh8
+   pvKuE8Hp6sK7XCN2gjN8DxCtECc2mpWZkdiezimm3Y8z7+Kf0tbtudbCX
+   ZJvAjFnKKyRLDGLz4Whi3hvNGy4NHtnVr5/c0N+FjPYVBGcr6SvdKr7fB
+   w==;
+X-CSE-ConnectionGUID: horeqPc5Q2+8sq6TPMg6+Q==
+X-CSE-MsgGUID: MAW95ikoRainf7EPVGLaSw==
+X-IronPort-AV: E=Sophos;i="6.06,211,1705388400"; 
+   d="scan'208";a="248099943"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Mar 2024 02:00:25 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 7 Mar 2024 02:00:21 -0700
+Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 7 Mar 2024 02:00:18 -0700
+From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+To: <netdev@vger.kernel.org>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>, <linux-kernel@vger.kernel.org>,
+	<bryan.whitehead@microchip.com>, <UNGLinuxDriver@microchip.com>
+Subject: [PATCH net] net: lan743x: Add set RFE read fifo threshold for PCI1x1x chips
+Date: Thu, 7 Mar 2024 14:28:23 +0530
+Message-ID: <20240307085823.403831-1-Raju.Lakkaraju@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] arch/powerpc: Resolve backlight include
- dependencies
-Content-Language: en-US
-To: mpe@ellerman.id.au, jani.nikula@intel.com, naresh.kamboju@linaro.org,
- deller@gmx.de, npiggin@gmail.com, christophe.leroy@csgroup.eu,
- aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- lkft-triage@lists.linaro.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org
-References: <20240306122935.10626-1-tzimmermann@suse.de>
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20240306122935.10626-1-tzimmermann@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-3.09 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_DN_NONE(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 FREEMAIL_TO(0.00)[ellerman.id.au,intel.com,linaro.org,gmx.de,gmail.com,csgroup.eu,kernel.org,linux.ibm.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Score: -3.09
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-If there are no further comments, I'm going to merge this patchset in 
-time for today's PR of drm-misc-next-fixes.
+The RFE (Receive Filtering Engine) read fifo threshold hardware default should
+be overwritten to 3 for PCI1x1x Rev B0 devices to prevent lockup during some
+stress tests using frames that include VLAN tags.
+Rev C0 and later hardware already defaults to 3.
 
-Am 06.03.24 um 13:28 schrieb Thomas Zimmermann:
-> After cleaning up <linux/fb.h> in commit 11b4eedfc87d ("fbdev: Do
-> not include <linux/backlight.h> in header"), building with
-> CONFIG_PMAC_BACKLIGHT=y returns errors about missing declarations.
-> Patches 1 and 2 resolve the errors. Patch 1 has been reviewed at [1].
-> Patch 3 removes another dependency between backlight and fbdev code.
->
-> Compile tested with ppc6xx_defconfig.
->
-> v3:
-> 	* add Fixes tag and fix typos in patch 3
-> v2:
-> 	* via-pmu-backlight: fix build errors
-> 	* powerpc: resolve dependency between fbdev and backlight
->
-> [1] https://patchwork.freedesktop.org/series/130661/
->
-> Thomas Zimmermann (3):
->    fbdev/chipsfb: Include <linux/backlight.h>
->    macintosh/via-pmu-backlight: Include <linux/backlight.h>
->    arch/powerpc: Remove <linux/fb.h> from backlight code
->
->   arch/powerpc/include/asm/backlight.h        |  5 ++--
->   arch/powerpc/platforms/powermac/backlight.c | 26 ---------------------
->   drivers/macintosh/via-pmu-backlight.c       |  1 +
->   drivers/video/fbdev/chipsfb.c               |  1 +
->   4 files changed, 4 insertions(+), 29 deletions(-)
->
+Fixes: bb4f6bffe33c ("net: lan743x: Add PCI11010 / PCI11414 device IDs")
+Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+---
+ drivers/net/ethernet/microchip/lan743x_main.c | 17 +++++++++++++++++
+ drivers/net/ethernet/microchip/lan743x_main.h |  5 +++++
+ 2 files changed, 22 insertions(+)
 
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
+index 45e209a7d083..aec2d100ab87 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -3272,6 +3272,22 @@ static void lan743x_full_cleanup(struct lan743x_adapter *adapter)
+ 	lan743x_pci_cleanup(adapter);
+ }
+ 
++static int pci11x1x_set_rfe_rd_fifo_threshold(struct lan743x_adapter *adapter)
++{
++	u16 rev = adapter->csr.id_rev & ID_REV_CHIP_REV_MASK_;
++
++	if (rev == ID_REV_CHIP_REV_PCI11X1X_B0_) {
++		int misc_ctl;
++
++		misc_ctl = lan743x_csr_read(adapter, MISC_CTL_0);
++		misc_ctl &= ~MISC_CTL_0_RFE_READ_FIFO_MASK_;
++		misc_ctl |= (0x3 << MISC_CTL_0_RFE_READ_FIFO_SHIFT_);
++		lan743x_csr_write(adapter, MISC_CTL_0, misc_ctl);
++	}
++
++	return 0;
++}
++
+ static int lan743x_hardware_init(struct lan743x_adapter *adapter,
+ 				 struct pci_dev *pdev)
+ {
+@@ -3287,6 +3303,7 @@ static int lan743x_hardware_init(struct lan743x_adapter *adapter,
+ 		pci11x1x_strap_get_status(adapter);
+ 		spin_lock_init(&adapter->eth_syslock_spinlock);
+ 		mutex_init(&adapter->sgmii_rw_lock);
++		pci11x1x_set_rfe_rd_fifo_threshold(adapter);
+ 	} else {
+ 		adapter->max_tx_channels = LAN743X_MAX_TX_CHANNELS;
+ 		adapter->used_tx_channels = LAN743X_USED_TX_CHANNELS;
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
+index be79cb0ae5af..be0fe52e2ae1 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.h
++++ b/drivers/net/ethernet/microchip/lan743x_main.h
+@@ -26,6 +26,7 @@
+ #define ID_REV_CHIP_REV_MASK_		(0x0000FFFF)
+ #define ID_REV_CHIP_REV_A0_		(0x00000000)
+ #define ID_REV_CHIP_REV_B0_		(0x00000010)
++#define ID_REV_CHIP_REV_PCI11X1X_B0_	(0x000000B0)
+ 
+ #define FPGA_REV			(0x04)
+ #define FPGA_REV_GET_MINOR_(fpga_rev)	(((fpga_rev) >> 8) & 0x000000FF)
+@@ -311,6 +312,10 @@
+ #define SGMII_CTL_LINK_STATUS_SOURCE_	BIT(8)
+ #define SGMII_CTL_SGMII_POWER_DN_	BIT(1)
+ 
++#define MISC_CTL_0			(0x920)
++#define MISC_CTL_0_RFE_READ_FIFO_MASK_	GENMASK(6, 4)
++#define MISC_CTL_0_RFE_READ_FIFO_SHIFT_	(4)
++
+ /* Vendor Specific SGMII MMD details */
+ #define SR_VSMMD_PCS_ID1		0x0004
+ #define SR_VSMMD_PCS_ID2		0x0005
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.34.1
 
