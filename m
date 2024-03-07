@@ -1,168 +1,108 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D38137C25
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 19:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CA4137C56;
+	Thu,  7 Mar 2024 19:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709841063; cv=none; b=KPbVHMpG3F4P/XlUPAvW7aE1clTfBYq8b6vLUZahQQmzmfT+VaAN2fjr/0azDS22PDtaWcrH8bCb2DN6GJYldo4UHDZv1GTPxJ2E0gniEFIbDFRji8kzNXMlYuaUMZw3wRcK8lS+Kpfx8kopAmoP7ewBxp6S5Ef7+n0/MswUSuI=
+	t=1709841064; cv=none; b=KXCR4uLyvGLiPGxLFS058PSgjNvKfx59foPGhFH/tSRH2aMRmK1i0dB5vSo+eJTWRddcG5T4wtcNCyNcgn278vsMXxLmS9kCSmzm/rBVTJaWB285xQmpqlmPIv9pplvC5MaZotCJ9Q7ucaz5fzemOE1NASfzr+MZ0ui2kIEI54E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709841063; c=relaxed/simple;
-	bh=mXN5wgd3o4fIew4BW8dq44SYd4HTn/EPSiwKP+WUK8M=;
+	s=arc-20240116; t=1709841064; c=relaxed/simple;
+	bh=MvxOQpEMNaOWjzxyVQp/CL/dEEEmFaDsVhleVV905Oo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c42wjdFuwqU7MiWxnsSA0Lp6vAzpzroYO+R2/YrQDhmn1zRDnvypcohsDq0exQYdBQHCPmo+GQX7fXoQDVS+FPcoptbX5BEtieR2Q4pN2N2FJdxY7h/S6hb8+7dnGTcx8ra84UoQZhtSuOluvHch6KazLP7herVArS/g77C77GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=CNEDOW3V; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	 MIME-Version; b=CPcLSr/dOA3kTTgc42mML4NrDSF5JcjfBvVQl2PDqvk+8zrBEya5/8ouKzIM1cIKkteehfY9jxA2h3YtSiPv1vIQKiI0K9i6ga3hO/i+QwErEWx/VSMc95NMGRQyklseoVnSn7m1BanjO/idy1Pf+SdbTeRj3t3wEtbvkMzHVpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B2mNFUWW; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="CNEDOW3V"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3A9EB2C04A9;
-	Fri,  8 Mar 2024 08:50:56 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1709841056;
-	bh=xxBD7nIRpCKC/svvZNqUfTVZv80HTqUWAxM9FrAVvSQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CNEDOW3V8SXBIDlNITxoSq/hyzsBzTYpbmGAd/yPN66zdrAav5c5ranALa004zsC0
-	 Zuk3ywkA5vI5xj6mo/X77UvMcxF3HC0SsIzxmZRYuW7Hs8e9SzBjJ9Zz4ozJ3T9nlI
-	 seARkJlvJMwcWWA+pUwA75D1I7Fn3lVNlTIEetKM0xVMU9ovwk39bgEDdYbeAL7IaT
-	 7NY8dlG4srXSZ+HWI0epAttTOG1URHfnuoeP77BExQVjFNJDwAadYMV/uw5faeCsmS
-	 3lbBupkPKRSUmXpVZ3m9qzCCu+bcNZ3KRQPvYD8he5lCdAKyAefXDl+rIRCmUXlBJJ
-	 wUjYE+DYQQfZA==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B65ea1a9f0003>; Fri, 08 Mar 2024 08:50:55 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id C709613EE85;
-	Fri,  8 Mar 2024 08:50:55 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id BF7542808BA; Fri,  8 Mar 2024 08:50:55 +1300 (NZDT)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: andy@kernel.org,
-	geert@linux-m68k.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	andrew@lunn.ch,
-	gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com,
-	lee@kernel.org
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B2mNFUWW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709841062; x=1741377062;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MvxOQpEMNaOWjzxyVQp/CL/dEEEmFaDsVhleVV905Oo=;
+  b=B2mNFUWW1o1fgvH8lIjkO6xfXvZIh/Y1//sk6L2HDhDAfOegprlFEVPc
+   7siGV7xUqOZqXZ1ufSAtSzPadAenedME+2XuA5+233RA5laeiBqW7lQ6j
+   r4EgaxzUhh5NHRlp0CKZ3ESjNjRoCU84yHUKCyExD7Rq4YPoAQuMeh+c0
+   AH8+BaeZlFZtCGGja9EX2H8LCW53gb1udk2TlLWqIhva/boQf3dq6Fodg
+   q10K6vFNmsPaLW1FIddjNOdJpT/Layc/efvsme0FVZAnfgzoLO/8WqHSu
+   vokQ1yfaaoOqOsXFjkxCPmWudK2TK3eCeLzmWNhITGt6MkzGwhJBkjznK
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4457042"
+X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
+   d="scan'208";a="4457042"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 11:51:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="937046513"
+X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
+   d="scan'208";a="937046513"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2024 11:50:59 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 164B3152; Thu,  7 Mar 2024 21:50:58 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v6 2/3] dt-bindings: auxdisplay: Add bindings for generic 7-segment LED
-Date: Fri,  8 Mar 2024 08:50:52 +1300
-Message-ID: <20240307195053.1320538-3-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240307195053.1320538-1-chris.packham@alliedtelesis.co.nz>
-References: <20240307195053.1320538-1-chris.packham@alliedtelesis.co.nz>
+	linux-arm-kernel@lists.infradead.org
+Cc: Mark Brown <broonie@kernel.org>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v3 2/3] spi: pxa2xx: Make num_chipselect 8-bit in the struct pxa2xx_spi_controller
+Date: Thu,  7 Mar 2024 21:47:46 +0200
+Message-ID: <20240307195056.4059864-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240307195056.4059864-1-andriy.shevchenko@linux.intel.com>
+References: <20240307195056.4059864-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65ea1aa0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=K6JAEmCyrfEA:10 a=tBb2bbeoAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8 a=UL8_YvhhsuCliVb0JXoA:9 a=3ZKOabzyN94A:10 a=Oj-tNtZlA1e06AYgeCfH:22 a=AjGcO6oz07-iQ99wixmX:22 a=sptkURWiP4Gy88Gu7hUp:22
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+Content-Transfer-Encoding: 8bit
 
-Add bindings for a generic 7-segment LED display using GPIOs.
+There is no use for whole 16-bit for the number of chip select pins.
+Drop it to 8 bits.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
+ Documentation/spi/pxa2xx.rst   | 2 +-
+ include/linux/spi/pxa2xx_spi.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Notes:
-    Changes in v6:
-    - Collect R-by from Geert and Rob
-    Changes in v5:
-    - Preserve formatting, maxItems set to 8, group GPIO specifiers
-      as suggested by Geert
-    Changes in v4:
-    - Add ASCII art diagram showing arrangement of segments
-    Changes in v3:
-    - Set maxItems: 7
-    - Expand description of segment-gpios property.
-    - Use compatible =3D "gpio-7-segment" as suggested by Rob
-    Changes in v2:
-    - Use compatible =3D "generic-gpio-7seg" to keep checkpatch.pl happy
-
- .../bindings/auxdisplay/gpio-7-segment.yaml   | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/auxdisplay/gpio-7-s=
-egment.yaml
-
-diff --git a/Documentation/devicetree/bindings/auxdisplay/gpio-7-segment.=
-yaml b/Documentation/devicetree/bindings/auxdisplay/gpio-7-segment.yaml
-new file mode 100644
-index 000000000000..328954893c64
---- /dev/null
-+++ b/Documentation/devicetree/bindings/auxdisplay/gpio-7-segment.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/auxdisplay/gpio-7-segment.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: GPIO based LED segment display
-+
-+maintainers:
-+  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-+
-+properties:
-+  compatible:
-+    const: gpio-7-segment
-+
-+  segment-gpios:
-+    description: |
-+      An array of GPIOs one per segment. The first GPIO corresponds to t=
-he A
-+      segment, the seventh GPIO corresponds to the G segment. Some LED b=
-locks
-+      also have a decimal point which can be specified as an optional ei=
-ghth
-+      segment.
-+
-+               -a-
-+              |   |
-+              f   b
-+              |   |
-+               -g-
-+              |   |
-+              e   c
-+              |   |
-+               -d-  dp
-+
-+    minItems: 7
-+    maxItems: 8
-+
-+required:
-+  - segment-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    led-7seg {
-+        compatible =3D "gpio-7-segment";
-+        segment-gpios =3D <&gpio 0 GPIO_ACTIVE_LOW>,
-+                        <&gpio 1 GPIO_ACTIVE_LOW>,
-+                        <&gpio 2 GPIO_ACTIVE_LOW>,
-+                        <&gpio 3 GPIO_ACTIVE_LOW>,
-+                        <&gpio 4 GPIO_ACTIVE_LOW>,
-+                        <&gpio 5 GPIO_ACTIVE_LOW>,
-+                        <&gpio 6 GPIO_ACTIVE_LOW>;
-+    };
---=20
-2.43.2
+diff --git a/Documentation/spi/pxa2xx.rst b/Documentation/spi/pxa2xx.rst
+index 19479b801826..0997d8eaf190 100644
+--- a/Documentation/spi/pxa2xx.rst
++++ b/Documentation/spi/pxa2xx.rst
+@@ -24,7 +24,7 @@ arch/.../mach-*/board-*.c as a "platform device". The host controller configurat
+ is passed to the driver via a table found in include/linux/spi/pxa2xx_spi.h::
+ 
+   struct pxa2xx_spi_controller {
+-	u16 num_chipselect;
++	u8 num_chipselect;
+ 	u8 enable_dma;
+ 	...
+   };
+diff --git a/include/linux/spi/pxa2xx_spi.h b/include/linux/spi/pxa2xx_spi.h
+index 56aba2f737b1..e5a4a045fb67 100644
+--- a/include/linux/spi/pxa2xx_spi.h
++++ b/include/linux/spi/pxa2xx_spi.h
+@@ -17,7 +17,7 @@ struct dma_chan;
+  * (resides in device.platform_data).
+  */
+ struct pxa2xx_spi_controller {
+-	u16 num_chipselect;
++	u8 num_chipselect;
+ 	u8 enable_dma;
+ 	u8 dma_burst_size;
+ 	bool is_target;
+-- 
+2.43.0.rc1.1.gbec44491f096
 
