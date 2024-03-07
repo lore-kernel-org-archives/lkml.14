@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6205012D754
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:02:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6A112DDB2
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709820165; cv=none; b=uoP3UHDHalmR+XC1wIAczVT6supj4pMQNcTS1ZWUJtUppn3GiDL8kyLKqMgCP+O/wdjQgRayejBqpGCXmVLreGycdIrBBl6rY5FyA45ZHaAGP3nEEi5h0dVu2Bm2Xxo4+tLl4JxkpeSa4nst7UqjGF4iBvmWi+QgxD8kUX6NCaA=
+	t=1709820169; cv=none; b=tY+GgqWihP1nFcQcP8/rqTQASaGSZlzr0DU1dLU7KHT4pWfnv3Ff06hrrpRSIvkvgY/2ENHVaeu42g8/lGXAvYiS7AaljHqiJ6yv3KiWJ4BxTTfsHyChyRYh67uO2NxlJmX/AEJX7p4p9ZGqFwbGH+2oTfnvQFF6vfxciBMhEQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709820165; c=relaxed/simple;
-	bh=ZIhPB/qLdXpK4MZKtW9rnHxM6+5wDqNGfhxfTeZKrO0=;
+	s=arc-20240116; t=1709820169; c=relaxed/simple;
+	bh=ZUHW8LNBIo9M1zxTe50XDGTswAw1iWpf9j5JpMBKdFo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YUEM12OCcag5sivTzSPoUQuDUxORfX3d23uFzo1FbKMFqkkoRGw9DZMvdtQFfnyDT8G+nBuN3NTJGoXCzB0lN3xp7QQXusgCDbRO9lX0nsxFshCiY1jOA9qIcsw8tK4u8oad1AO+1orvbWxMaB/WLin13eY48FudahduxsP4F/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=zdg5y6GR; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=uqe4scVBWRZKNxXgF5SS9PdWkqQb6iQP6QImS615hXdOttavi8KEZViODKmoukeA8jB3jiu/eY907HAqxIOYPjhj9LMo5wX0IgQm7Ted/Bsei5MGSk/aeXn5T047c5gyPZWlT/99HPqv1KFc4fW9oZDSWYSlb60KziXO76vIs+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cO3cwItF; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="zdg5y6GR"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cO3cwItF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709820155;
-	bh=ZIhPB/qLdXpK4MZKtW9rnHxM6+5wDqNGfhxfTeZKrO0=;
+	s=mail; t=1709820164;
+	bh=ZUHW8LNBIo9M1zxTe50XDGTswAw1iWpf9j5JpMBKdFo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=zdg5y6GRQA4Yv2JLzuSfqTDEE1PR3nzF4aJiy4wpylltl0EbyfeJpBsGectXg8vky
-	 DrPOARI+gbZDHAsgoUyxZ204EHuUxt+qX+W0Ad3uOOeb3brbPM0XjUvUS9L85whYIM
-	 tyc+GApxOUeN3XsvhoStzUgsn06ztHgBKp2Y+BKqyqKH5MzkPA3PljScW60fPz4RsZ
-	 M7BYYohhOV8epa0CyFF5pt2UIqAvRx0PrSa+uNpZnRgBUTMqBBUXa3FNO85us6/cBC
-	 uekqJyVj0luROzmJkguMwiE8pt4/6Eslv7RyaPB/3sOj6TZCpL0EZ9+gYcpBMX/tsj
-	 k46Qb5Pg9M1vg==
+	b=cO3cwItFXwD3JnLwdriaccgFGuCV60oGjC2aCgrZwE+P8rqFI3oFSO9l4G1Ueqn8L
+	 V/FeCKUPwm3HHleSLJo7ojz3Q43t7GbbQiBVZg3uEiBCHxRrHfxPeSkk+4SAEqWGTk
+	 dCP/5tB7Spq9/iGNOlsnKF2nUJRrHBEeO0lPbh3WEJYhXHKI3nF7SLwzQ5bPPe76U6
+	 qWyD/eqGAN8ZsWJQSS22QxsFgRe3nlHXWaSe2TelynpDCbFm1VLCmpKkkpaPpKW3Qr
+	 Lj/f5EyBdZZH0j2/lzs9WMTIHgI0vl2jWRCMYwkWXp/ics88XAAskGQRKr8BJxT/39
+	 7LDUwx5FmC8JA==
 Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: koike)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9610E3780624;
-	Thu,  7 Mar 2024 14:02:29 +0000 (UTC)
-Message-ID: <e53fd362-c2c2-4935-b6a3-c73decd23d10@collabora.com>
-Date: Thu, 7 Mar 2024 11:02:27 -0300
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BD3BB37820EE;
+	Thu,  7 Mar 2024 14:02:38 +0000 (UTC)
+Message-ID: <098d2345-df99-4ad2-bc1c-9641662ed9bd@collabora.com>
+Date: Thu, 7 Mar 2024 11:02:38 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/11] drm/ci: mediatek: Refactor existing mediatek
+Subject: Re: [PATCH v4 09/11] drm/ci: rockchip: Refactor existing rockchip
  jobs
 Content-Language: en-US
 To: Vignesh Raman <vignesh.raman@collabora.com>,
@@ -55,222 +55,430 @@ Cc: daniels@collabora.com, airlied@gmail.com, daniel@ffwll.ch,
  linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
  linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20240306030649.60269-1-vignesh.raman@collabora.com>
- <20240306030649.60269-6-vignesh.raman@collabora.com>
+ <20240306030649.60269-10-vignesh.raman@collabora.com>
 From: Helen Koike <helen.koike@collabora.com>
-In-Reply-To: <20240306030649.60269-6-vignesh.raman@collabora.com>
+In-Reply-To: <20240306030649.60269-10-vignesh.raman@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 06/03/2024 00:06, Vignesh Raman wrote:
-> For mediatek mt8173 and mt8183, the display driver is mediatek.
-> Currently, in drm-ci for mediatek, only the display driver is
-> tested. Refactor the existing mediatek jobs so that gpu driver
+> For rockchip rk3288 and rk3399, the display driver is rockchip.
+> Currently, in drm-ci for rockchip, only the display driver is
+> tested. Refactor the existing rockchip jobs so that gpu driver
 > testing jobs can be added later and update xfails accordingly.
-> Since the correct driver name is passed from the job to test gpu
-> and display driver, remove the check to set IGT_FORCE_DRIVER
-> based on driver name.
 > 
 > Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
 > ---
 > 
 > v2:
 >    - Refactor the patch to rename job to indicate display driver testing,
->      rename the existing xfail files, and remove IGT_FORCE_DRIVER from the
->      script since it's now set by the job.
+>      rename the existing xfail files.
 > 
 > v3:
->    - Add the job name in GPU_VERSION and use it for xfail file names instead
->      of using DRIVER_NAME. Also update xfails.
+>    - Add the job name in GPU_VERSION and use it for xfail file names
+>      instead of using DRIVER_NAME. Also update xfails.
 > 
 > v4:
 >    - Remove the display suffix in job and rename xfails accordingly.
 >      Remove the change adding job name in GPU_VERSION.
 > 
 > ---
->   drivers/gpu/drm/ci/igt_runner.sh              | 10 ---------
->   drivers/gpu/drm/ci/test.yml                   | 21 ++++++++++++++-----
->   .../drm/ci/xfails/mediatek-mt8173-fails.txt   | 15 -------------
->   .../drm/ci/xfails/mediatek-mt8173-flakes.txt  | 13 ++++++++++++
->   .../drm/ci/xfails/mediatek-mt8183-fails.txt   | 21 ++++++++++++-------
->   .../drm/ci/xfails/mediatek-mt8183-flakes.txt  |  8 +++++++
->   6 files changed, 50 insertions(+), 38 deletions(-)
->   create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt
+>   drivers/gpu/drm/ci/test.yml                   | 36 ++++++++----
+>   .../drm/ci/xfails/rockchip-rk3288-fails.txt   | 58 ++++++-------------
+>   .../drm/ci/xfails/rockchip-rk3288-flakes.txt  | 20 +++++++
+>   .../drm/ci/xfails/rockchip-rk3288-skips.txt   | 54 ++---------------
+>   .../drm/ci/xfails/rockchip-rk3399-fails.txt   | 38 ++++++------
+>   .../drm/ci/xfails/rockchip-rk3399-flakes.txt  | 28 +++++++--
+>   .../drm/ci/xfails/rockchip-rk3399-skips.txt   |  5 +-
+>   7 files changed, 110 insertions(+), 129 deletions(-)
+>   create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt
 > 
-> diff --git a/drivers/gpu/drm/ci/igt_runner.sh b/drivers/gpu/drm/ci/igt_runner.sh
-> index 77cd81fe6d1a..711f32772e48 100755
-> --- a/drivers/gpu/drm/ci/igt_runner.sh
-> +++ b/drivers/gpu/drm/ci/igt_runner.sh
-> @@ -20,16 +20,6 @@ cat /sys/kernel/debug/dri/*/state
->   set -e
->   
->   case "$DRIVER_NAME" in
-> -    rockchip|meson)
-> -        export IGT_FORCE_DRIVER="panfrost"
-> -        ;;
-> -    mediatek)
-> -        if [ "$GPU_VERSION" = "mt8173" ]; then
-> -            export IGT_FORCE_DRIVER=${DRIVER_NAME}
-> -        elif [ "$GPU_VERSION" = "mt8183" ]; then
-> -            export IGT_FORCE_DRIVER="panfrost"
-> -        fi
-> -        ;;
->       amdgpu)
->           # Cannot use HWCI_KERNEL_MODULES as at that point we don't have the module in /lib
->           mv /install/modules/lib/modules/* /lib/modules/.
 > diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-> index 0857773e5c5f..f8f48523ada3 100644
+> index 6ae6398b3d88..831e580e6dfd 100644
 > --- a/drivers/gpu/drm/ci/test.yml
 > +++ b/drivers/gpu/drm/ci/test.yml
-> @@ -282,29 +282,40 @@ amdgpu:stoney:
->       - .lava-igt:arm64
->     stage: mediatek
+> @@ -153,33 +153,45 @@ msm:sdm845:
+>     script:
+>       - ./install/bare-metal/cros-servo.sh
+>   
+> -rockchip:rk3288:
+> -  extends:
+> -    - .lava-igt:arm32
+> +.rockchip:
+>     stage: rockchip
 >     variables:
-> -    DRIVER_NAME: mediatek
+> -    DRIVER_NAME: rockchip
+
+Looks like it make sense to keep DRIVER_NAME here, no?
+
+> -    DEVICE_TYPE: rk3288-veyron-jaq
 >       DTB: ${DEVICE_TYPE}
 >       BOOT_METHOD: depthcharge
->       KERNEL_IMAGE_TYPE: ""
->   
-> -mediatek:mt8173:
-> +.mt8173:
->     extends:
->       - .mediatek
->     parallel: 4
->     variables:
->       DEVICE_TYPE: mt8173-elm-hana
-> -    GPU_VERSION: mt8173
+> +
+> +.rk3288:
+> +  extends:
+> +    - .lava-igt:arm32
+> +    - .rockchip
 
-Looks like it make sense to keep GPU_VERSION here, no?
-Same comment for .mt8183.
+Maybe, instead of extending .rockchip here, make .rockchip tied to the 
+DRIVER_NAME and .rk3288 tied to the GPU_VERSION, and on rockchip:rk3288 
+you can extend both .rockchip and .rk3288, what do you think?
+So rockchip:rk3399 you can extend .rockchip and .rk3399.
+
+and in the panfrost one you can have a .panfrost (that can extend 
+.rockchip if they are the same definition).
+
+I feel it becomes less confusing, what do you think?
+
+I would even add some prefix or suffix to make it less confusing, like 
+.driver-rockchip and .gpu-rk3288 for instance, making it a bit more 
+intuitive and helping our future selves :)
+
+> +  variables:
+> +    DEVICE_TYPE: rk3288-veyron-jaq
+>       KERNEL_IMAGE_TYPE: "zimage"
+> -    GPU_VERSION: rk3288
+
+Looks like it make sense to keep GPU_VERSION here, no? Same comment for 
+.rk3399.
 
 Regards,
 Helen
 
->       RUNNER_TAG: mesa-ci-x86-64-lava-mt8173-elm-hana
+>       RUNNER_TAG: mesa-ci-x86-64-lava-rk3288-veyron-jaq
 >   
-> -mediatek:mt8183:
-> +.mt8183:
+> -rockchip:rk3399:
+> +.rk3399:
 >     extends:
->       - .mediatek
->     parallel: 3
+>       - .lava-igt:arm64
+> -  stage: rockchip
+> +    - .rockchip
+>     parallel: 2
 >     variables:
->       DEVICE_TYPE: mt8183-kukui-jacuzzi-juniper-sku16
-> -    GPU_VERSION: mt8183
->       RUNNER_TAG: mesa-ci-x86-64-lava-mt8183-kukui-jacuzzi-juniper-sku16
+> -    DRIVER_NAME: rockchip
+>       DEVICE_TYPE: rk3399-gru-kevin
+> -    DTB: ${DEVICE_TYPE}
+> -    BOOT_METHOD: depthcharge
+>       KERNEL_IMAGE_TYPE: ""
+> -    GPU_VERSION: rk3399
+>       RUNNER_TAG: mesa-ci-x86-64-lava-rk3399-gru-kevin
 >   
-> +mediatek:mt8173:
+> +rockchip:rk3288:
 > +  extends:
-> +    - .mt8173
+> +    - .rk3288
 > +  variables:
-> +    GPU_VERSION: mt8173
-> +    DRIVER_NAME: mediatek
+> +    GPU_VERSION: rk3288
+> +    DRIVER_NAME: rockchip
 > +
-> +mediatek:mt8183:
+> +rockchip:rk3399:
 > +  extends:
-> +    - .mt8183
+> +    - .rk3399
 > +  variables:
-> +    GPU_VERSION: mt8183
-> +    DRIVER_NAME: mediatek
+> +    GPU_VERSION: rk3399
+> +    DRIVER_NAME: rockchip
 > +
->   # drm-mtk doesn't even probe yet in mainline for mt8192
->   .mediatek:mt8192:
+>   .i915:
 >     extends:
-> diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8173-fails.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-fails.txt
-> index ef0cb7c3698c..c63abd603b02 100644
-> --- a/drivers/gpu/drm/ci/xfails/mediatek-mt8173-fails.txt
-> +++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-fails.txt
-> @@ -9,28 +9,13 @@ kms_bw@linear-tiling-3-displays-1920x1080p,Fail
->   kms_bw@linear-tiling-3-displays-2560x1440p,Fail
->   kms_bw@linear-tiling-3-displays-3840x2160p,Fail
->   kms_color@invalid-gamma-lut-sizes,Fail
-> -kms_color@pipe-A-invalid-gamma-lut-sizes,Fail
-> -kms_color@pipe-B-invalid-gamma-lut-sizes,Fail
->   kms_cursor_legacy@cursor-vs-flip-atomic,Fail
->   kms_cursor_legacy@cursor-vs-flip-legacy,Fail
->   kms_flip@flip-vs-modeset-vs-hang,Fail
->   kms_flip@flip-vs-panning-vs-hang,Fail
->   kms_flip@flip-vs-suspend,Fail
->   kms_flip@flip-vs-suspend-interruptible,Fail
-> -kms_force_connector_basic@force-edid,Fail
+>       - .lava-igt:x86_64
+> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt
+> index 90c63f519e9e..c16e0a06cc8f 100644
+> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt
+> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt
+> @@ -1,54 +1,30 @@
+> -kms_3d,Crash
+> -kms_bw@linear-tiling-2-displays-1920x1080p,Fail
+>   kms_bw@linear-tiling-2-displays-2560x1440p,Fail
+> -kms_bw@linear-tiling-2-displays-3840x2160p,Fail
+>   kms_bw@linear-tiling-3-displays-1920x1080p,Fail
+> -kms_bw@linear-tiling-3-displays-2560x1440p,Fail
+> -kms_bw@linear-tiling-3-displays-3840x2160p,Fail
+> +kms_cursor_crc@cursor-onscreen-32x10,Crash
+> +kms_cursor_crc@cursor-onscreen-64x21,Crash
+> +kms_cursor_crc@cursor-onscreen-64x64,Crash
+> +kms_cursor_crc@cursor-random-32x10,Crash
+> +kms_cursor_crc@cursor-random-64x21,Crash
+> +kms_cursor_crc@cursor-random-64x64,Crash
+> +kms_cursor_crc@cursor-sliding-32x10,Crash
+> +kms_cursor_crc@cursor-sliding-32x32,Crash
+> +kms_cursor_crc@cursor-sliding-64x64,Crash
+> +kms_cursor_legacy@basic-flip-before-cursor-atomic,Fail
+> +kms_cursor_legacy@basic-flip-before-cursor-legacy,Fail
+> +kms_cursor_legacy@cursor-vs-flip-atomic,Fail
+> +kms_cursor_legacy@cursor-vs-flip-atomic-transitions,Fail
+> +kms_cursor_legacy@cursor-vs-flip-toggle,Fail
+> +kms_cursor_legacy@flip-vs-cursor-crc-atomic,Crash
+> +kms_cursor_legacy@flip-vs-cursor-crc-legacy,Crash
+>   kms_flip@flip-vs-modeset-vs-hang,Crash
+>   kms_flip@flip-vs-panning-vs-hang,Crash
 > -kms_force_connector_basic@force-load-detect,Fail
-> -kms_force_connector_basic@prune-stale-modes,Fail
-> -kms_hdmi_inject@inject-4k,Fail
-> -kms_plane_scaling@planes-upscale-20x20,Fail
-> -kms_plane_scaling@planes-upscale-20x20-downscale-factor-0-25,Fail
-> -kms_plane_scaling@planes-upscale-20x20-downscale-factor-0-5,Fail
-> -kms_plane_scaling@planes-upscale-20x20-downscale-factor-0-75,Fail
+>   kms_invalid_mode@int-max-clock,Crash
+> -kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Crash
+> -kms_pipe_crc_basic@nonblocking-crc-frame-sequence,Crash
+>   kms_pipe_crc_basic@read-crc-frame-sequence,Crash
+>   kms_plane@pixel-format,Crash
+> -kms_plane@pixel-format-source-clamping,Crash
+> -kms_plane@plane-position-hole,Crash
+> -kms_plane@plane-position-hole-dpms,Crash
+>   kms_plane_cursor@overlay,Crash
+> -kms_plane_cursor@pipe-A-overlay-size-128,Fail
+> -kms_plane_cursor@pipe-A-overlay-size-256,Fail
+> -kms_plane_cursor@pipe-A-overlay-size-64,Fail
+> -kms_plane_cursor@pipe-A-primary-size-128,Fail
+> -kms_plane_cursor@pipe-A-primary-size-256,Fail
+> -kms_plane_cursor@pipe-A-primary-size-64,Fail
+> -kms_plane_cursor@pipe-A-viewport-size-128,Fail
+> -kms_plane_cursor@pipe-A-viewport-size-256,Fail
+> -kms_plane_cursor@pipe-A-viewport-size-64,Fail
+> -kms_plane_cursor@pipe-B-overlay-size-128,Fail
+> -kms_plane_cursor@pipe-B-overlay-size-256,Fail
+> -kms_plane_cursor@pipe-B-overlay-size-64,Fail
+> -kms_plane_cursor@pipe-B-primary-size-128,Fail
+> -kms_plane_cursor@pipe-B-primary-size-256,Fail
+> -kms_plane_cursor@pipe-B-primary-size-64,Fail
+> -kms_plane_cursor@pipe-B-viewport-size-128,Fail
+> -kms_plane_cursor@pipe-B-viewport-size-256,Fail
+> -kms_plane_cursor@pipe-B-viewport-size-64,Fail
+>   kms_plane_cursor@primary,Crash
+> -kms_plane_cursor@viewport,Crash
+> -kms_plane_lowres@tiling-none,Fail
+> -kms_plane_scaling@downscale-with-modifier-factor-0-25,Fail
+> -kms_plane_scaling@downscale-with-rotation-factor-0-25,Fail
 > -kms_plane_scaling@upscale-with-modifier-20x20,Fail
+> -kms_plane_scaling@upscale-with-modifier-factor-0-25,Fail
 > -kms_plane_scaling@upscale-with-pixel-format-20x20,Fail
+> -kms_plane_scaling@upscale-with-pixel-format-factor-0-25,Fail
 > -kms_plane_scaling@upscale-with-rotation-20x20,Fail
->   kms_properties@get_properties-sanity-atomic,Fail
->   kms_properties@plane-properties-atomic,Fail
->   kms_properties@plane-properties-legacy,Fail
->   kms_rmfb@close-fd,Fail
-> -kms_selftest@drm_format,Timeout
-> -kms_selftest@drm_format_helper,Timeout
-> diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt
+> -kms_prime@basic-crc,Fail
+> -kms_properties@connector-properties-atomic,Crash
+> +kms_prop_blob@invalid-set-prop,Crash
+>   kms_properties@connector-properties-legacy,Crash
+>   kms_properties@get_properties-sanity-atomic,Crash
+>   kms_properties@get_properties-sanity-non-atomic,Crash
+>   kms_rmfb@close-fd,Crash
+> -kms_setmode@invalid-clone-single-crtc,Crash
+> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt
 > new file mode 100644
-> index 000000000000..64b30c092c85
+> index 000000000000..de13bac3a5bc
 > --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt
-> @@ -0,0 +1,13 @@
-> +# Board Name: mt8173-elm-hana.dtb
-> +# Bug Report: https://lore.kernel.org/dri-devel/931e3f9a-9c5c-fc42-16fc-abaac4e0c0ff@collabora.com/T/#u
+> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt
+> @@ -0,0 +1,20 @@
+> +# Board Name: rk3288-veyron-jaq.dtb
+> +# Bug Report: https://lore.kernel.org/dri-devel/bdb53650-1888-30b8-93ee-2290d020af4a@collabora.com/T/#u
+> +# Failure Rate: 50
+> +# IGT Version: 1.28-gd2af13d9f
+> +# Linux Version: 6.7.0-rc3
+> +
+> +# Reported by deqp-runner
+> +kms_cursor_crc@cursor-offscreen-64x21
+> +kms_cursor_legacy@flip-vs-cursor-legacy
+> +kms_cursor_legacy@flip-vs-cursor-atomic
+> +kms_plane@plane-panning-top-left
+> +kms_cursor_crc@cursor-alpha-opaque
+> +kms_flip@dpms-vs-vblank-race-interruptible
+> +kms_universal_plane@universal-plane-functional
+> +
+> +# The below test shows inconsistency across multiple runs, giving
+> +# results of Pass and Crash alternately.
+> +kms_cursor_crc@cursor-size-change
+> +core_setmaster_vs_auth
+> +kms_flip@modeset-vs-vblank-race
+> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
+> index f20c3574b75a..627bf03f3c78 100644
+> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
+> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
+> @@ -1,52 +1,8 @@
+>   # Suspend to RAM seems to be broken on this machine
+>   .*suspend.*
+>   
+> -# Too unstable, machine ends up hanging after lots of Oopses
+> -kms_cursor_legacy.*
+> -
+> -# Started hanging the machine on Linux 5.19-rc2:
+> -#
+> -# [IGT] kms_plane_lowres: executing
+> -# [IGT] kms_plane_lowres: starting subtest pipe-F-tiling-y
+> -# [IGT] kms_plane_lowres: exiting, ret=77
+> -# Console: switching to colour frame buffer device 170x48
+> -# rockchip-drm display-subsystem: [drm] *ERROR* flip_done timed out
+> -# rockchip-drm display-subsystem: [drm] *ERROR* [CRTC:35:crtc-0] commit wait timed out
+> -# BUG: spinlock bad magic on CPU#3, kms_plane_lowre/482
+> -# 8<--- cut here ---
+> -# Unable to handle kernel paging request at virtual address 7812078e
+> -# [7812078e] *pgd=00000000
+> -# Internal error: Oops: 5 [#1] SMP ARM
+> -# Modules linked in:
+> -# CPU: 3 PID: 482 Comm: kms_plane_lowre Tainted: G        W         5.19.0-rc2-323596-g00535de92171 #1
+> -# Hardware name: Rockchip (Device Tree)
+> -# Process kms_plane_lowre (pid: 482, stack limit = 0x1193ac2b)
+> -#  spin_dump from do_raw_spin_lock+0xa4/0xe8
+> -#  do_raw_spin_lock from wait_for_completion_timeout+0x2c/0x120
+> -#  wait_for_completion_timeout from drm_crtc_commit_wait+0x18/0x7c
+> -#  drm_crtc_commit_wait from drm_atomic_helper_wait_for_dependencies+0x44/0x168
+> -#  drm_atomic_helper_wait_for_dependencies from commit_tail+0x34/0x180
+> -#  commit_tail from drm_atomic_helper_commit+0x164/0x18c
+> -#  drm_atomic_helper_commit from drm_atomic_commit+0xac/0xe4
+> -#  drm_atomic_commit from drm_client_modeset_commit_atomic+0x23c/0x284
+> -#  drm_client_modeset_commit_atomic from drm_client_modeset_commit_locked+0x60/0x1c8
+> -#  drm_client_modeset_commit_locked from drm_client_modeset_commit+0x24/0x40
+> -#  drm_client_modeset_commit from drm_fbdev_client_restore+0x58/0x94
+> -#  drm_fbdev_client_restore from drm_client_dev_restore+0x70/0xbc
+> -#  drm_client_dev_restore from drm_release+0xf4/0x114
+> -#  drm_release from __fput+0x74/0x240
+> -#  __fput from task_work_run+0x84/0xb4
+> -#  task_work_run from do_exit+0x34c/0xa20
+> -#  do_exit from do_group_exit+0x34/0x98
+> -#  do_group_exit from __wake_up_parent+0x0/0x18
+> -# Code: e595c008 12843d19 03e00000 03093168 (15940508)
+> -# ---[ end trace 0000000000000000 ]---
+> -# note: kms_plane_lowre[482] exited with preempt_count 1
+> -# Fixing recursive fault but reboot is needed!
+> -kms_plane_lowres@pipe-F-tiling-y
+> -
+> -# Take too long, we have only two machines, and these are very flaky
+> -kms_cursor_crc.*
+> -
+> -# Machine is hanging in this test, so skip it
+> -kms_pipe_crc_basic@disable-crc-after-crtc
+> \ No newline at end of file
+> +# Machine is hanging in this test with linux kernel version 6.7.0-rc4, so skip it
+> +kms_cursor_crc@cursor-onscreen-32x32
+> +kms_pipe_crc_basic@disable-crc-after-crtc
+> +kms_pipe_crc_basic@pipe-A-eDP-1
+> +kms_bw@linear-tiling-3-displays-2560x1440
+> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-fails.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-fails.txt
+> index d516d9c1d546..ace0d6ed6f2f 100644
+> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-fails.txt
+> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-fails.txt
+> @@ -1,12 +1,13 @@
+> -kms_color@gamma,Fail
+> +kms_atomic_transition@modeset-transition,Fail
+> +kms_atomic_transition@modeset-transition-fencing,Fail
+> +kms_atomic_transition@plane-toggle-modeset-transition,Fail
+>   kms_color@legacy-gamma,Fail
+> -kms_color@pipe-A-legacy-gamma,Fail
+> -kms_color@pipe-B-legacy-gamma,Fail
+>   kms_cursor_crc@cursor-alpha-opaque,Fail
+>   kms_cursor_crc@cursor-alpha-transparent,Fail
+>   kms_cursor_crc@cursor-dpms,Fail
+>   kms_cursor_crc@cursor-offscreen-32x10,Fail
+>   kms_cursor_crc@cursor-offscreen-32x32,Fail
+> +kms_cursor_crc@cursor-offscreen-64x21,Fail
+>   kms_cursor_crc@cursor-offscreen-64x64,Fail
+>   kms_cursor_crc@cursor-onscreen-32x10,Fail
+>   kms_cursor_crc@cursor-onscreen-32x32,Fail
+> @@ -16,6 +17,7 @@ kms_cursor_crc@cursor-random-32x10,Fail
+>   kms_cursor_crc@cursor-random-32x32,Fail
+>   kms_cursor_crc@cursor-random-64x21,Fail
+>   kms_cursor_crc@cursor-random-64x64,Fail
+> +kms_cursor_crc@cursor-rapid-movement-32x10,Fail
+>   kms_cursor_crc@cursor-rapid-movement-32x32,Fail
+>   kms_cursor_crc@cursor-rapid-movement-64x21,Fail
+>   kms_cursor_crc@cursor-rapid-movement-64x64,Fail
+> @@ -24,23 +26,33 @@ kms_cursor_crc@cursor-sliding-32x10,Fail
+>   kms_cursor_crc@cursor-sliding-32x32,Fail
+>   kms_cursor_crc@cursor-sliding-64x21,Fail
+>   kms_cursor_crc@cursor-sliding-64x64,Fail
+> +kms_cursor_legacy@basic-flip-before-cursor-atomic,Fail
+> +kms_cursor_legacy@basic-flip-before-cursor-legacy,Fail
+> +kms_cursor_legacy@cursor-vs-flip-atomic,Fail
+> +kms_cursor_legacy@cursor-vs-flip-legacy,Fail
+> +kms_cursor_legacy@cursor-vs-flip-toggle,Fail
+> +kms_cursor_legacy@flip-vs-cursor-atomic,Fail
+> +kms_cursor_legacy@flip-vs-cursor-crc-atomic,Fail
+> +kms_cursor_legacy@flip-vs-cursor-crc-legacy,Fail
+> +kms_cursor_legacy@flip-vs-cursor-legacy,Fail
+> +kms_cursor_legacy@long-nonblocking-modeset-vs-cursor-atomic,Fail
+>   kms_flip@basic-flip-vs-wf_vblank,Fail
+>   kms_flip@blocking-wf_vblank,Fail
+>   kms_flip@dpms-vs-vblank-race,Fail
+> +kms_flip@dpms-vs-vblank-race-interruptible,Fail
+>   kms_flip@flip-vs-absolute-wf_vblank,Fail
+> -kms_flip@flip-vs-absolute-wf_vblank-interruptible,Fail
+>   kms_flip@flip-vs-blocking-wf-vblank,Fail
+>   kms_flip@flip-vs-modeset-vs-hang,Fail
+>   kms_flip@flip-vs-panning,Fail
+>   kms_flip@flip-vs-panning-interruptible,Fail
+>   kms_flip@flip-vs-panning-vs-hang,Fail
+>   kms_flip@modeset-vs-vblank-race,Fail
+> +kms_flip@modeset-vs-vblank-race-interruptible,Fail
+>   kms_flip@plain-flip-fb-recreate,Fail
+>   kms_flip@plain-flip-fb-recreate-interruptible,Fail
+>   kms_flip@plain-flip-ts-check,Fail
+>   kms_flip@plain-flip-ts-check-interruptible,Fail
+>   kms_flip@wf_vblank-ts-check,Fail
+> -kms_flip@wf_vblank-ts-check-interruptible,Fail
+>   kms_invalid_mode@int-max-clock,Fail
+>   kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Fail
+>   kms_pipe_crc_basic@compare-crc-sanitycheck-xr24,Fail
+> @@ -56,20 +68,6 @@ kms_plane@plane-panning-top-left,Fail
+>   kms_plane@plane-position-covered,Fail
+>   kms_plane@plane-position-hole,Fail
+>   kms_plane@plane-position-hole-dpms,Fail
+> -kms_plane_cursor@overlay,Fail
+> -kms_plane_cursor@pipe-B-overlay-size-128,Fail
+> -kms_plane_cursor@pipe-B-overlay-size-256,Fail
+> -kms_plane_cursor@pipe-B-overlay-size-64,Fail
+> -kms_plane_cursor@pipe-B-primary-size-128,Fail
+> -kms_plane_cursor@pipe-B-primary-size-256,Fail
+> -kms_plane_cursor@pipe-B-primary-size-64,Fail
+> -kms_plane_cursor@pipe-B-viewport-size-128,Fail
+> -kms_plane_cursor@pipe-B-viewport-size-256,Fail
+> -kms_plane_cursor@pipe-B-viewport-size-64,Fail
+> -kms_plane_cursor@primary,Fail
+> -kms_plane_cursor@viewport,Fail
+> -kms_plane_multiple@atomic-pipe-B-tiling-none,Fail
+>   kms_plane_multiple@tiling-none,Fail
+> -kms_prime@basic-crc,Fail
+>   kms_rmfb@close-fd,Fail
+> -kms_universal_plane@universal-plane-pipe-B-functional,Fail
+> +kms_universal_plane@universal-plane-functional,Fail
+> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt
+> index c9fdc623ab91..5126a849bf4a 100644
+> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt
+> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt
+> @@ -1,7 +1,25 @@
+> -kms_bw@linear-tiling-2-displays-1920x1080p
+> -kms_cursor_crc@cursor-offscreen-64x21
+> +# Board Name: rk3399-gru-kevin.dtb
+> +# Bug Report: https://lore.kernel.org/dri-devel/bdb53650-1888-30b8-93ee-2290d020af4a@collabora.com/T/#u
 > +# IGT Version: 1.28-gd2af13d9f
 > +# Failure Rate: 50
 > +# Linux Version: 6.7.0-rc3
 > +
 > +# Reported by deqp-runner
-> +kms_cursor_legacy@cursor-vs-flip-atomic-transitions
+> +kms_bw@linear-tiling-1-displays-1920x1080p
+> +kms_color@gamma
+> +kms_cursor_legacy@cursorA-vs-flipA-toggle
+> +kms_cursor_legacy@nonblocking-modeset-vs-cursor-atomic
+> +kms_flip@dpms-vs-vblank-race
+>   kms_flip@dpms-vs-vblank-race-interruptible
+> +kms_flip@flip-vs-absolute-wf_vblank-interruptible
+>   kms_flip@flip-vs-wf_vblank-interruptible
+> -kms_plane_cursor@overlay
+> -kms_plane_cursor@primary
+> -kms_plane_cursor@viewport
+> +kms_flip@modeset-vs-vblank-race-interruptible
+> +kms_pipe_crc_basic@compare-crc-sanitycheck-xr24
+> +kms_setmode@basic
 > +
-> +# Below test shows inconsistency across multiple runs,
-> +# giving results of Pass and Timeout/Fail alternately
-> +kms_prop_blob@invalid-set-prop
-> +kms_prop_blob@invalid-set-prop-any
-> diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt
-> index 67d690fc4037..28c825c9cd60 100644
-> --- a/drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt
-> +++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt
-> @@ -1,13 +1,18 @@
-> -kms_addfb_basic@addfb25-bad-modifier,Fail
-> +core_setmaster_vs_auth,Fail
-> +kms_bw@linear-tiling-1-displays-1920x1080p,Fail
->   kms_bw@linear-tiling-1-displays-2560x1440p,Fail
-> +kms_bw@linear-tiling-1-displays-3840x2160p,Fail
->   kms_bw@linear-tiling-2-displays-1920x1080p,Fail
->   kms_bw@linear-tiling-2-displays-2560x1440p,Fail
->   kms_bw@linear-tiling-2-displays-3840x2160p,Fail
-> -kms_bw@linear-tiling-3-displays-2560x1440p,Fail
-> -kms_bw@linear-tiling-3-displays-3840x2160p,Fail
-> -kms_color@pipe-A-invalid-gamma-lut-sizes,Fail
-> -kms_plane_cursor@overlay,Fail
-> -kms_plane_cursor@primary,Fail
-> -kms_plane_cursor@viewport,Fail
-> -kms_plane_scaling@upscale-with-rotation-20x20,Fail
-> +kms_color@invalid-gamma-lut-sizes,Fail
-> +kms_cursor_legacy@cursor-vs-flip-atomic,Fail
-> +kms_cursor_legacy@cursor-vs-flip-legacy,Fail
-> +kms_flip@flip-vs-modeset-vs-hang,Fail
-> +kms_flip@flip-vs-panning-vs-hang,Fail
-> +kms_flip@flip-vs-suspend,Fail
-> +kms_prop_blob@invalid-set-prop-any,Fail
-> +kms_properties@get_properties-sanity-atomic,Fail
-> +kms_properties@plane-properties-atomic,Fail
-> +kms_properties@plane-properties-legacy,Fail
->   kms_rmfb@close-fd,Fail
-> diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt
-> new file mode 100644
-> index 000000000000..5885a950fa72
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt
-> @@ -0,0 +1,8 @@
-> +# Board Name: mt8183-kukui-jacuzzi-juniper-sku16.dtb
-> +# Bug Report: https://lore.kernel.org/dri-devel/931e3f9a-9c5c-fc42-16fc-abaac4e0c0ff@collabora.com/T/#u
-> +# IGT Version: 1.28-gd2af13d9f
-> +# Failure Rate: 100
-> +# Linux Version: 6.7.0-rc3
-> +
-> +# Reported by deqp-runner
-> +kms_cursor_legacy@cursor-vs-flip-atomic-transitions
+> +# The below test shows inconsistency across multiple runs, giving
+> +# results of Pass and Crash alternately.
+> +kms_bw@linear-tiling-2-displays-1920x1080p
+> +kms_bw@linear-tiling-3-displays-2560x1440p
+> +kms_cursor_crc@cursor-rapid-movement-32x10
+> +kms_flip@wf_vblank-ts-check-interruptible
+> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
+> index 10c3d81a919a..cf5577b7720c 100644
+> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
+> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
+> @@ -1,5 +1,6 @@
+>   # Suspend to RAM seems to be broken on this machine
+>   .*suspend.*
+>   
+> -# Too unstable, machine ends up hanging after lots of Oopses
+> -kms_cursor_legacy.*
+> +# Machine ends up hanging after lots of Oopses with linux version 6.7.0-rc4
+> +# rockchip-dp ff970000.dp: AUX CH error happened: 0x2
+> +kms_plane_multiple.*
