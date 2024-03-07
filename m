@@ -1,201 +1,215 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82225129A7F;
-	Thu,  7 Mar 2024 12:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709815995; cv=fail; b=TiATq1WLnsqQKh5ulxCJXTcdwIy8tgosZZ1TSqvBkk/QIY5/D5dwffg2dHZf6Ks3/qmCHnjc0/6DqEn0kb6M9fTJPa8vJiROYFVLyTb+Y3RfdngpvrzEMsGuefESL+jtz/xGEoa4vUtDn6/y5LeZnTKmT/0SoeApcwl1QU3HILc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709815995; c=relaxed/simple;
-	bh=r6kweQUYl9koMyNbhni3AEYTB+uofJF3LblgeZuvdeA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JHStMEFY0IXgVeIkaB17lRMEKYOE/n3sjlW7ogbUlEgZiTusRsYetQpQT11QWK34yx9yAVtGd87zCX3452R3DGU6Wjf7+YPAZzlewAC0dBwN1A/xlNUP2kV8Dxok006wNKdvdgKb4+YUKlAhENuFrPHsiQensrKwX0uWB06GaQ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xQC44U3I; arc=fail smtp.client-ip=40.107.237.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4980C63419;
+	Thu,  7 Mar 2024 12:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709816237; cv=none; b=Ng0CpjIqjnTm7ynWiRNzNll2uDRp2Ny92AzdeeEOA7wxNBrcFdiUxOq2kW6UHfLUXvFnzHp75+SvfIl7+p3mT29RhQJgQHUcE6CTe0rnUYZJtiPPu5mq0Gnw6+7c7M9LY0shhjCEhIIsLIEMtPyvOOFNYq9Gi/gQbgPkS55aBN4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709816237; c=relaxed/simple;
+	bh=BL5YusCjv6EJjz9ovyfEC1+bwrVuRiLGFjpVsJwOSKM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uq2eycFwxOCHAVpGMVSRBpjSJnRnON65DHq8AqNJPloAzIXma0FSIdmqGPzm/xqWRqu2LGLj7B7x0znqcfxwVIUAD1FTsO1c94KkMxVnqCZMyBxc84GyOoWH9MMMYU9mAFqZeJld8vQWGGqCraoJMjqUTu8dbPIUAHtB4p0Mpng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=adnpG8Iw; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xQC44U3I"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z4lix+P/QdvPxWRG6mTEtgqVHo5qMfYGOPOUP/92WuQiOqC3wNARKrOvHFlHIhA78WFE1E0ozTyBJ2U4UqoPqeIZnwmUgbWYjm+0tevOB3Zxr6f+qplCVSbT6+uq60AR/DP6lGVWUji7reslzxPrbHvzpDFi9W96lgQqLvrNQwSs1rNOM7XiL33E19Y95eHDOQbR/A3sNqlYU/Dd+WRWEVMWXCA9EcJs4B8IvTlu93idGESPWp+xqRX6cRUZP8usN1K3TEyQpgdQx8aFXRm3eJ8q2rbnirSxDGkp1QI9ZrOvWHq9mTutMCGL0iwUF5fKFCMW3ukrr4lTfmzeozG5Pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vOPRDslB/ZO9a2Xenxhj+7YQt6ptu/dlGWNxmaImykk=;
- b=V54qSwIgAk90iaaPQBRJ3qNCRjFwSTDVvaPyGNAEQFlab4uPN5eKyQMf5jckcWkP23xuWAx+ThmemGras6Q85fCEhHSBRft49uWa4UX5i7p/4I/5nyjS76ilIrFWTfkgWFleA/K7j/DYZ2RGR3zEqlyIIlBK9VHkQCGdZhD2/ggrCiDZbJS9+n1quZ0vqTO26W6sbnKiSQUZ6tcdhTltOU4OCQBhTPQYeEl5QmfuorBYycuGMwkegr3ukSJ6kl3X11rWlrlX+6tgDIQMrWHOxIs9cSH2RqGSAVtUxe7Ui13CnJYL4YMlHl41CQQ1ImCDaZIN/oP0qf2mXZ2bkaaC+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vOPRDslB/ZO9a2Xenxhj+7YQt6ptu/dlGWNxmaImykk=;
- b=xQC44U3ID0BvRiFleCBPxah8azvT1Zs7Py6Lele3DFSJJOicTh+KFTsrYwbBVd4K4BIWhU78PHp4hsJSQHfdjdx5zy6ktVNxciju8H8QjJCdVRTIox/WUhMk6jeX4c3kHSup0E4Sm7hxKG55GHgyb5MVKnX+HdoC6igPHqAhefM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB2810.namprd12.prod.outlook.com (2603:10b6:5:41::21) by
- MW3PR12MB4377.namprd12.prod.outlook.com (2603:10b6:303:55::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7362.27; Thu, 7 Mar 2024 12:53:10 +0000
-Received: from DM6PR12MB2810.namprd12.prod.outlook.com
- ([fe80::2385:dab8:fddf:bcba]) by DM6PR12MB2810.namprd12.prod.outlook.com
- ([fe80::2385:dab8:fddf:bcba%6]) with mapi id 15.20.7362.024; Thu, 7 Mar 2024
- 12:53:10 +0000
-Message-ID: <2441bd2a-a0b1-5184-bac8-28c94b151c93@amd.com>
-Date: Thu, 7 Mar 2024 13:52:55 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 01/16] KVM: x86/mmu: Exit to userspace with -EFAULT if
- private fault hits emulation
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yan Zhao <yan.y.zhao@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>,
- Michael Roth <michael.roth@amd.com>, Yu Zhang <yu.c.zhang@linux.intel.com>,
- Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>,
- David Matlack <dmatlack@google.com>
-References: <20240228024147.41573-1-seanjc@google.com>
- <20240228024147.41573-2-seanjc@google.com>
-From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
-In-Reply-To: <20240228024147.41573-2-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZRAP278CA0017.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:10::27) To SN6PR12MB2815.namprd12.prod.outlook.com
- (2603:10b6:805:78::24)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adnpG8Iw"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-51331634948so1963901e87.0;
+        Thu, 07 Mar 2024 04:57:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709816233; x=1710421033; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nbhgHt1YDa6CQCjpWTsRGO+07dj49MgrOul+Xxkk278=;
+        b=adnpG8Iwbq/6N1do+KRYwbMa6hEZMN2xXduxXQi4TrsgUGMiUhHGYshHnpD596hv7O
+         Kh/jMZwwuNTL/QGaa94rHpy78GfHtKqJGhi7OD39LzymcSeStOwe2w6/MYQVHfYgsgE+
+         4rqGuMwwyPzyqN7WQeP9nxrXWXgGua7syjYJ6KzJgJVADUiMtthDFWqwxrGGKwqPUP0M
+         aDeoEbggP41ThvGzvZzwhtiGHupKHFonUoghygGNBlsDD1wPs38SZ2C9i0FbAQ/Thvai
+         uaGGGEBL4R8yNZ5YHIPf/9UcoExyvGo/FxdKL6aX/YX22aivyPXAjUUZVaDC3WWtTywt
+         0kaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709816233; x=1710421033;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nbhgHt1YDa6CQCjpWTsRGO+07dj49MgrOul+Xxkk278=;
+        b=W+h4HUvA8bok8l9JTHm/58PjmjW8E24noHNIKdY41OWZfq4Se/ZNoaaHT9ZDRzBtGp
+         ES1zIIyYdXHfZn1IyWwEa/dBFjvR2uqGktfFoIwjJWTcIlmzTo777HcbGzrtEldW10t8
+         7QUlwhGFCNrsIFYhCv9nfg1cO5++cRCg3ZCVrladtXsFspeFMiMIAjXj531bVDI3T+2d
+         OXfE61QNebH9NRqo6fK5oUEjAQiBVptYLkMd6d8vKZfMuA9C4f3YAWqKHVcU9CpsysQh
+         6JMOX/ywf2gU7VaJj2iDGXYK0ZuPDkpf2X4DRI7vpZ8QY9YPykYG4J+IESbU6ltFBROG
+         8Qfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSUuWXsvZiScZ3lLMDYWFxwv5X+1sMIaYZEr1Tc3zfh0TJrMwSdfvOqX7sxwew/8SRU+vA5bsKrEnAO2dVuaU1rcMAmtvsfJcUOEYKj7aoEkQZfmR4v8mirOpLzp7Tl+Oe
+X-Gm-Message-State: AOJu0YwToVW9Zp2rl4/qDAmOFNuvj7yA7Yns0mIjjrg9qTcqbglde9ms
+	BotuSL4y1rPdDR7qYJ9kynIWjnd8EMWTRTFOoTrJkhcT4IXTRykV
+X-Google-Smtp-Source: AGHT+IG1jaKEh1cKWqqTKOiamczUiL1VewCCnBHV/ctt+HrT68l48m6jipD3JeBpMYF3dfTfRMPYOw==
+X-Received: by 2002:a05:6512:535:b0:513:1a46:36d7 with SMTP id o21-20020a056512053500b005131a4636d7mr63817lfc.2.1709816232833;
+        Thu, 07 Mar 2024 04:57:12 -0800 (PST)
+Received: from pc636 (host-90-235-19-15.mobileonline.telia.com. [90.235.19.15])
+        by smtp.gmail.com with ESMTPSA id y26-20020a19641a000000b005133d07d926sm2336078lfb.45.2024.03.07.04.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 04:57:12 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 7 Mar 2024 13:57:10 +0100
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH 1/2] rcu: Do not release a wait-head from a GP kthread
+Message-ID: <Zem5pkNiAy-EZdo9@pc636>
+References: <20240305195720.42687-1-urezki@gmail.com>
+ <a1faf101-c689-4530-a9a5-c7f95b8825d6@joelfernandes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2810:EE_|MW3PR12MB4377:EE_
-X-MS-Office365-Filtering-Correlation-Id: beff5df0-a958-4e53-8e00-08dc3ea58aaa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Szg0kNXGSqOSPII3R3JBowNjli6L982H+tKFvQJOcVDyTtPXxRgOZao/+JRcg5EQ76+ciik2r7biqHO2z4IsrhnJlYDE7iRV2VxEhKJRKKSBusr5yaN93PKt9rxTR3+9/htZs0BqgGSjxaMU4CR2BmpJTGfjZmLfJQZIOCDq2ei67W0Xj4hFZc9VNgQNylAFP0zbTSY13Kn64O6TiXyKqAxTvjyRkrRWAfxtNAHFpQnqiVAqnEhWtBeDdjKgqxLZOm0trz53WgmEDO7Uq6KxeId7cM4wOjZT8kSDbMPoeTnk2zWGLgKM4TcdzijjMscv6zwFFlKeZ58+OvGH5z8muoMX1qFL3mMz1aZQcxZYwEeTV5jZaDGJxbO6rHvHTR8ICycoUlxNUScIGnYqu/nAdmygTI8HhWHhYMiLstvev+7Iao+3zg1cFonLypYdoAm8Yw2lLJaRHF2O9VfxJ/VJE3ueqgOnQ3M6WVzb1onRMFdAb3+iPHaQZDCnkkb01ittflsKCT4KhUUf6YiBAnrZOF63UBz0iRn300okPJMGGh3VPBjvIQ554BzIdHYOZ7AShlir95Dgw//nVoexOsQAsuelHto6zQp6mjj0a4oJssAb4q2+RP/LZv2EVQWQHKAcCYYxtWX7nWlH1lI5pb7Lo30vI0DsGKEkGs149Gb23kI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2810.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eGl5Q3RvOXZnUjJMSHVyMUlNVUlqVDRuSHA2VEo1RW40ejUxSnlIbCtrYnRL?=
- =?utf-8?B?ZjYzOVF0UEpTdzRkanZyT3lmcHp4bCtMKy80NTNyZEVOY2FXUHM0SkMxRC95?=
- =?utf-8?B?UXQ3TEJkSkxkTi9hdGRFUXdQR2lIekZmL0dsSDNqM2xsZmE3OEE5M0FUaFd2?=
- =?utf-8?B?R1A2TW45Y3Vrc2dUSlo5WDlFZG13U1BtK3k0QzZRZ0V0VjBWQ0l1dDZWODk3?=
- =?utf-8?B?MFhXVmFXc0JzVjhBYjBMZ1JrYkdZTlJma2VUSnpMR3gyN2NtbjJmWERtbDAv?=
- =?utf-8?B?ajR3em1RWkJYZDhTRHNzcnlSejllRTFPYi92Q3FtSFdmREpyaS9YT3U3T1lY?=
- =?utf-8?B?WkthdUFza3NScUNYR0g1NG5Fc2prZmlqRGdocUtlYllyTk4rMWlnaWF1Y2U2?=
- =?utf-8?B?K1pnNWV4aHJHeVZCQjlaUG5VazF4UysyZkJSTWF0ek9VRkkrZGZwOTYwd0ZW?=
- =?utf-8?B?MkUvTEFKOTJhLy9uK0VmOGpKWDFqMW1qbFhuNmJ5emI5S1ZGdnN0b3ZTeXR1?=
- =?utf-8?B?WGM3Q0lCcnpxRGFKT3JjbnVEUzJqNWkwUXNFaXVWbnRDK1VLRXZiYXZ4UnJF?=
- =?utf-8?B?WEIrUmxlSmR2N2luUWhGa3NJUjJGbjZQRXJUWTRRZUN4VVAzRzRRMDZEZE9x?=
- =?utf-8?B?YVFkZFhYeTB1dFQ2ZlhRZllJR1d1Ty9IQlprek1NM2c5V1dJYnppN25nWEpp?=
- =?utf-8?B?TEhzSWcrSnhmMHBBNFYxT0xnS05USEFZMHozSjZYUU5XOFQvYmZLYmEwR3lT?=
- =?utf-8?B?T2ZUd0lwUmFrTmlnRGZKRTAzeEJxUE5Pdll2NjFzOWlJb1ZPN0NtM1pyVTRV?=
- =?utf-8?B?WXkvdDBHNDZMakpJMmxNTXZWWHJZUWJPOEtacmJNUnMydWlqeVNMZi9FMmtl?=
- =?utf-8?B?R1U4bFY3VXZydWpGcG03Vzg0OTlmdjZqWTRuVHQ0dWtFL25vSjNMSjc2K1dL?=
- =?utf-8?B?MERDQ0Z0Z012UDlZT2YwSm5iWVp6Y1V6THUvWnZQMW9xcmZIZHhxWFJJRGVz?=
- =?utf-8?B?NVU3dDY1cVdwOUF5WmdQeXhva0gwOEZyMURIbmF5K1JFdVlTdUZETjJpdVpS?=
- =?utf-8?B?YzNKUVd1cXd1YytLTDJlNFkwNmI5aHArdjFSeG5acTMzWmI4ZCthbjJWVWxx?=
- =?utf-8?B?aEJkbGkvSldTc0loSitXbGx3VElxRE5iTk0rSlhibmpjdnZWbGY1TGJQazdn?=
- =?utf-8?B?b3lUYzdRaUl3Zkp6QXdBM2xwYzM4aFFlNmYwMEkyWjhsNitwVFNodGJpZEdk?=
- =?utf-8?B?MDlUWldOVEdjQW0xVThNdXN6ZHA5NEM4MmZYNUt6MENkdWJta256U0xVSG1W?=
- =?utf-8?B?QmZZMG1yaXl3aXpwWEd2WWRnZXU1b0NySVdHeHZsYWJCWDRYNjdXUTVFalBx?=
- =?utf-8?B?eDFrRE9ybFl0YU5rVzNQYTNhMDl2c1V6SUgyM1dvYXYxMUJRYVBNcXNnZ1o1?=
- =?utf-8?B?LzBZNllOL3ZCS2RKS1ZTUzcrVkdsOFFoMnBueitEczQ2TUZpMHd3bEJUb1I1?=
- =?utf-8?B?dHl1VEJzRmVDeGI2QWJaamlWbGZaa0JUZXB4VnU4YkVJRWxPYjA3cDdkb2hy?=
- =?utf-8?B?SFZHakN6cG5aTWpnSnA0cEdsMkVXamlEbmhLWUlFNjhEK1E5MTA2R0tUd3B4?=
- =?utf-8?B?aXJtOUxvYy9NN3RhMHlCOXp1dXN0WXdTYlhpY1VENzF5eG9VbU81YklzTFU5?=
- =?utf-8?B?eEFHNENtYmVlNVh6QXhZcmduQy92TThNN3dSY0dYK0UvQk1HeXJkeDV0M3Nq?=
- =?utf-8?B?ejFGOEY0L1kyU0xacGM5VG45dlZnSysrODRZaGx6aEFTR3dCclU3ZnFvZnZY?=
- =?utf-8?B?RTduY2hpeFZOWDVuaGJ1WlZ2UkhIeDdkeDNqaWRwZ3BUdVczNVFSWithdzJP?=
- =?utf-8?B?UDljV0l6UlpPRDRwL2wyUTVGWWYwajN0OE53Z2NBUHpXSlhEcC9NODFPK3NZ?=
- =?utf-8?B?M1VxdnVlejlPdWpQTGN6Rkw4VWlJWVN2bVZnbDRScGZDNHVVOGVQZkVwaVFx?=
- =?utf-8?B?eU1hcGQyanBEcGFaRk1mRHpkaWZyOWVTSy9kNkZtcFhzY3pReittWVZrbGJV?=
- =?utf-8?B?a0J0UUFLem5MZ1VySk5MOU9KM2RsVVMwaTlHMXFleldLQXprdjVkRXhNZExz?=
- =?utf-8?Q?KPMIjA1RHRQ1iSX+XNNAHCIOZ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: beff5df0-a958-4e53-8e00-08dc3ea58aaa
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2815.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 12:53:10.5558
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZvpLmwSVrhsTqM0bmz2r4V2covoAK1W+M9wG5pT7xxhrzQTmMTbl8bAeU8QZsb10rkPIykmwQrOWWSPV0jc/JQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4377
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1faf101-c689-4530-a9a5-c7f95b8825d6@joelfernandes.org>
 
-> Exit to userspace with -EFAULT / KVM_EXIT_MEMORY_FAULT if a private fault
-> triggers emulation of any kind, as KVM doesn't currently support emulating
-> access to guest private memory.  Practically speaking, private faults and
-> emulation are already mutually exclusive, but there are edge cases upon
-> edge cases where KVM can return RET_PF_EMULATE, and adding one last check
-
-edge cases upon edge cases?
-
-Just curious about the details of the edge cases scenarios?
-
-> to harden against weird, unexpected combinations is inexpensive.
+On Wed, Mar 06, 2024 at 05:31:31PM -0500, Joel Fernandes wrote:
 > 
-> Suggested-by: Yan Zhao <yan.y.zhao@intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/mmu/mmu.c          |  8 --------
->   arch/x86/kvm/mmu/mmu_internal.h | 13 +++++++++++++
->   2 files changed, 13 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index e4cc7f764980..e2fd74e06ff8 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4309,14 +4309,6 @@ static inline u8 kvm_max_level_for_order(int order)
->   	return PG_LEVEL_4K;
->   }
->   
-> -static void kvm_mmu_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
-> -					      struct kvm_page_fault *fault)
-> -{
-> -	kvm_prepare_memory_fault_exit(vcpu, fault->gfn << PAGE_SHIFT,
-> -				      PAGE_SIZE, fault->write, fault->exec,
-> -				      fault->is_private);
-> -}
-> -
->   static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
->   				   struct kvm_page_fault *fault)
->   {
-> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-> index 0669a8a668ca..0eea6c5a824d 100644
-> --- a/arch/x86/kvm/mmu/mmu_internal.h
-> +++ b/arch/x86/kvm/mmu/mmu_internal.h
-> @@ -279,6 +279,14 @@ enum {
->   	RET_PF_SPURIOUS,
->   };
->   
-> +static inline void kvm_mmu_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
-> +						     struct kvm_page_fault *fault)
-> +{
-> +	kvm_prepare_memory_fault_exit(vcpu, fault->gfn << PAGE_SHIFT,
-> +				      PAGE_SIZE, fault->write, fault->exec,
-> +				      fault->is_private);
-> +}
-> +
->   static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->   					u32 err, bool prefetch, int *emulation_type)
->   {
-> @@ -320,6 +328,11 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->   	else
->   		r = vcpu->arch.mmu->page_fault(vcpu, &fault);
->   
-> +	if (r == RET_PF_EMULATE && fault.is_private) {
-> +		kvm_mmu_prepare_memory_fault_exit(vcpu, &fault);
-> +		return -EFAULT;
-> +	}
-> +
->   	if (fault.write_fault_to_shadow_pgtable && emulation_type)
->   		*emulation_type |= EMULTYPE_WRITE_PF_TO_SP;
->   
+> On 3/5/2024 2:57 PM, Uladzislau Rezki (Sony) wrote:
+> > Fix a below race by not releasing a wait-head from the
+> > GP-kthread as it can lead for reusing it whereas a worker
+> > can still access it thus execute newly added callbacks too
+> > early.
+> > 
+> > CPU 0                              CPU 1
+> > -----                              -----
+> > 
+> > // wait_tail == HEAD1
+> > rcu_sr_normal_gp_cleanup() {
+> >     // has passed SR_MAX_USERS_WAKE_FROM_GP
+> >     wait_tail->next = next;
+> >     // done_tail = HEAD1
+> >     smp_store_release(&rcu_state.srs_done_tail, wait_tail);
+> >     queue_work() {
+> >         test_and_set_bit(WORK_STRUCT_PENDING_BIT, work_data_bits(work)
+> >         __queue_work()
+> >     }
+> > }
+> > 
+> >                                set_work_pool_and_clear_pending()
+> >                                rcu_sr_normal_gp_cleanup_work() {
+> > // new GP, wait_tail == HEAD2
+> > rcu_sr_normal_gp_cleanup() {
+> >     // executes all completion, but stop at HEAD1
+> >     wait_tail->next = HEAD1;
+> >     // done_tail = HEAD2
+> >     smp_store_release(&rcu_state.srs_done_tail, wait_tail);
+> >     queue_work() {
+> >         test_and_set_bit(WORK_STRUCT_PENDING_BIT, work_data_bits(work)
+> >         __queue_work()
+> >     }
+> > }
+> >                                  // done = HEAD2
+> >                                  done = smp_load_acquire(&rcu_state.srs_done_tail);
+> >                                  // head = HEAD1
+> >                                  head = done->next;
+> >                                  done->next = NULL;
+> >                                  llist_for_each_safe() {
+> >                                  // completes all callbacks, release HEAD1
+> >                                  }
+> >                                }
+> >                                // Process second queue
+> >                                set_work_pool_and_clear_pending()
+> >                                rcu_sr_normal_gp_cleanup_work() {
+> >                                // done = HEAD2
+> >                                done = smp_load_acquire(&rcu_state.srs_done_tail);
+> > 
+> > // new GP, wait_tail == HEAD3
+> > rcu_sr_normal_gp_cleanup() {
+> >     // Finds HEAD2 with ->next == NULL at the end
+> >     rcu_sr_put_wait_head(HEAD2)
+> >     ...
+> > 
+> > // A few more GPs later
+> > rcu_sr_normal_gp_init() {
+> >      HEAD2 = rcu_sr_get_wait_head();
+> >      llist_add(HEAD2, &rcu_state.srs_next);
+> >                                // head == rcu_state.srs_next
+> >                                head = done->next;
+> >                                done->next = NULL;
+> >                                llist_for_each_safe() {
+> >                                 // EXECUTE CALLBACKS TOO EARLY!!!
+> >                                 }
+> >                                }
+> > 
+> > Reported-by: Frederic Weisbecker <frederic@kernel.org>
+> > Fixes: 05a10b921000 ("rcu: Support direct wake-up of synchronize_rcu() users")
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  kernel/rcu/tree.c | 22 ++++++++--------------
+> >  1 file changed, 8 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 31f3a61f9c38..475647620b12 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -1656,21 +1656,11 @@ static void rcu_sr_normal_gp_cleanup(void)
+> >  	WARN_ON_ONCE(!rcu_sr_is_wait_head(wait_tail));
+> >  
+> >  	/*
+> > -	 * Process (a) and (d) cases. See an illustration. Apart of
+> > -	 * that it handles the scenario when all clients are done,
+> > -	 * wait-head is released if last. The worker is not kicked.
+> > +	 * Process (a) and (d) cases. See an illustration.
+> >  	 */
+> >  	llist_for_each_safe(rcu, next, wait_tail->next) {
+> > -		if (rcu_sr_is_wait_head(rcu)) {
+> > -			if (!rcu->next) {
+> > -				rcu_sr_put_wait_head(rcu);
+> > -				wait_tail->next = NULL;
+> > -			} else {
+> > -				wait_tail->next = rcu;
+> > -			}
+> > -
+> > +		if (rcu_sr_is_wait_head(rcu))
+> >  			break;
+> > -		}
+> >  
+> >  		rcu_sr_normal_complete(rcu);
+> >  		// It can be last, update a next on this step.
+> > @@ -1684,8 +1674,12 @@ static void rcu_sr_normal_gp_cleanup(void)
+> >  	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
+> >  	ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_done_tail);
+> >  
+> > -	if (wait_tail->next)
+> > -		queue_work(system_highpri_wq, &rcu_state.srs_cleanup_work);
+> > +	/*
+> > +	 * We schedule a work in order to perform a final processing
+> > +	 * of outstanding users(if still left) and releasing wait-heads
+> > +	 * added by rcu_sr_normal_gp_init() call.
+> > +	 */
+> > +	queue_work(system_highpri_wq, &rcu_state.srs_cleanup_work);
+> >  }
+> 
+> Ah, nice. So instead of allocating/freeing in GP thread and freeing in worker,
+> you allocate heads only in GP thread and free them only in worker, thus
+> essentially fixing the UAF that Frederick found.
+> 
+> AFAICS, this fixes the issue.
+> 
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> 
+Thank you for the review-by!
 
+> There might a way to prevent queuing new work as fast-path optimization, incase
+> the CBs per GP will always be < SR_MAX_USERS_WAKE_FROM_GP but I could not find a
+> workqueue API that helps there, and work_busy() has comments saying not to use that.
+> 
+This is not really critical but yes, we can think of it.
+
+--
+Uladzislau Rezki
