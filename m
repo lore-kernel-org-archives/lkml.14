@@ -1,165 +1,94 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE8C12FF73;
-	Thu,  7 Mar 2024 16:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586EB1DA37;
+	Thu,  7 Mar 2024 16:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709830340; cv=none; b=LUUC7J4cM5SEbdVICZ7sTbR2wQMyNaFk5Z4xpIrR58Nx91DfoVMvEmpwdq56cAS6C4K2RAeAviVOziuC1X3q1PHUiHCCp6LL2K2N66616DOknrpvBFjnowTT6VVjXtNHQPOMSEX86G3gXFyX9Yjymaof1mnuZQbFzbSSfMoXIwc=
+	t=1709830431; cv=none; b=DGGt52K6DegA6efqdRIAifeVQ0Kxqyf9hjZYUBLkWm+1Q7ws0tBJk23HNwU7RCijBblHqrTCn05NY4HkskNJRggkJQEoGvxERpuDl+sK776USlu7hJzHKDqFAxPO8fV6CWQuBnQzFsfVq2acJqItgN2cGqIEfzRRSA0cLYDsUUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709830340; c=relaxed/simple;
-	bh=R6NU5z2jJTdV72MHKTvtAKxeZUKMk7jOVZ76+hkTleo=;
-	h=From:To:Cc:Date:Message-Id:In-Reply-To:References:MIME-Version:
-	 Subject; b=gQoXUeF7yhMvVwj5VeR7VB3WfXIJf0kIlYtbCp9z74WhSQqdn3ApgOZD52iAtnZCxGsZzBdyZXyqzq1UhK1p7z1vsVBfWODwx4XOAX/lz2+CuxqVxcoC6jRpHXnaQJkaQej6D9LAHucpkhgg7etWKgKVPXWInvBTskiZNGDCof0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=wqJQ12C/; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1709830431; c=relaxed/simple;
+	bh=oganuwlF5WZy6Fd8LiJnjle4bvTjEaVC7hfAlFeYgto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bt95EjeJQbXodiLxXJxLhqE3xBgcRb8a28doF+/7UggSIbocVppr0Jmp7Shuxh4+FUyeIaHAbNFuRi5k+sdI/ROHx/JPSBNPJvw2xyemU8EvVWUAfUGqczeWg9EDxGvj7jU6r9njwj3JtvUjxdbA2IYGbDfYBhVdiF0roICHK8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F653QqMN; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="wqJQ12C/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
-	:From:subject:date:message-id:reply-to;
-	bh=t7yQqIcXT1YLqv8w2qP0GLt+rglmPrzHvPzxcgJ1okY=; b=wqJQ12C/2a/rfuipsogvPB5ZHu
-	S9/yYim4NHFcHMCFrV1CQUWbOA7p87JnYOz+JKKj2X5HIUIROoqBjRx2ha1TKolDP5IZhMigVIlV/
-	Dnkqzx0xayS6TRaKsjNun9uDNLrM8IYjrKqt5S5YGmYqojiWb/O2ExuwiDkxBJeyA76I=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:57020 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1riGS9-0005lI-T0; Thu, 07 Mar 2024 11:18:42 -0500
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	hugo@hugovil.com,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Date: Thu,  7 Mar 2024 11:18:28 -0500
-Message-Id: <20240307161828.118495-5-hugo@hugovil.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240307161828.118495-1-hugo@hugovil.com>
-References: <20240307161828.118495-1-hugo@hugovil.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F653QqMN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709830430; x=1741366430;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oganuwlF5WZy6Fd8LiJnjle4bvTjEaVC7hfAlFeYgto=;
+  b=F653QqMNZBfKLbKKVOpjSUxZ8/DhiallF52NZbBbisW6IuSA38S/M8Aq
+   RkCuN3F63AyxJgT3Zk3R1U7aWmbzbH5/G80D5MSUz+3gtUvbaeQe4iNjj
+   n+zhIwmDELBqxrriPVC7I+T32IPBvXGD2k4A+4WeXwKMALeSrMfiJpSjt
+   hF9wws9IcIhuz1L+XBOcMeaqiB7mw6qOAH9786BNqo0COQpSfhASLUTpw
+   ii7SfyLAufWc6KQpvckaSYrGAi7C3Omn6Htk7XAxuROlGwEWkvvBTL6gI
+   OXWGa8dnYoaN5ymVIzkr6eXeX56c6HJJtXL4RDdU8EUsyL5xMxMlTpq9y
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="15233984"
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="15233984"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 08:53:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="914219411"
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="914219411"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 08:53:47 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1riH04-0000000AcTa-1zLu;
+	Thu, 07 Mar 2024 18:53:44 +0200
+Date: Thu, 7 Mar 2024 18:53:44 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Russell King <linux@armlinux.org.uk>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v1 2/2] spi: pxa2xx: Make num_chipselect 8-bit in the
+ struct pxa2xx_spi_controller
+Message-ID: <ZenxGMHYcCFlpUd4@smile.fi.intel.com>
+References: <20240307160823.3800932-1-andriy.shevchenko@linux.intel.com>
+ <20240307160823.3800932-3-andriy.shevchenko@linux.intel.com>
+ <64cde1d1-1d4f-484a-940f-536c1279287e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-Subject: [PATCH v2 4/4] serial: sc16is7xx: split into core and I2C/SPI parts (sc16is7xx_regcfg)
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64cde1d1-1d4f-484a-940f-536c1279287e@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Thu, Mar 07, 2024 at 05:37:17PM +0100, Arnd Bergmann wrote:
+> On Thu, Mar 7, 2024, at 17:07, Andy Shevchenko wrote:
 
-Since each I2C/SPI probe function can modify sc16is7xx_regcfg at the same
-time, change structure to be constant and do the required modifications on
-a local copy.
+...
 
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
----
- drivers/tty/serial/sc16is7xx.c     |  2 +-
- drivers/tty/serial/sc16is7xx.h     |  2 +-
- drivers/tty/serial/sc16is7xx_i2c.c | 11 +++++++----
- drivers/tty/serial/sc16is7xx_spi.c | 11 +++++++----
- 4 files changed, 16 insertions(+), 10 deletions(-)
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index d81aad1b201d..2cde4d6abac0 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1703,7 +1703,7 @@ const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
- EXPORT_SYMBOL_GPL(sc16is7xx_dt_ids);
- MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
- 
--struct regmap_config sc16is7xx_regcfg = {
-+const struct regmap_config sc16is7xx_regcfg = {
- 	.reg_bits = 5,
- 	.pad_bits = 3,
- 	.val_bits = 8,
-diff --git a/drivers/tty/serial/sc16is7xx.h b/drivers/tty/serial/sc16is7xx.h
-index 410f34b1005c..8d03357e35c7 100644
---- a/drivers/tty/serial/sc16is7xx.h
-+++ b/drivers/tty/serial/sc16is7xx.h
-@@ -19,7 +19,7 @@ struct sc16is7xx_devtype {
- 	int	nr_uart;
- };
- 
--extern struct regmap_config sc16is7xx_regcfg;
-+extern const struct regmap_config sc16is7xx_regcfg;
- 
- extern const struct of_device_id __maybe_unused sc16is7xx_dt_ids[];
- 
-diff --git a/drivers/tty/serial/sc16is7xx_i2c.c b/drivers/tty/serial/sc16is7xx_i2c.c
-index 70f0c329cc13..5667c56cf2aa 100644
---- a/drivers/tty/serial/sc16is7xx_i2c.c
-+++ b/drivers/tty/serial/sc16is7xx_i2c.c
-@@ -12,17 +12,20 @@ static int sc16is7xx_i2c_probe(struct i2c_client *i2c)
- {
- 	const struct sc16is7xx_devtype *devtype;
- 	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
-+	struct regmap_config regcfg;
- 	unsigned int i;
- 
- 	devtype = i2c_get_match_data(i2c);
- 	if (!devtype)
- 		return dev_err_probe(&i2c->dev, -ENODEV, "Failed to match device\n");
- 
-+	memcpy(&regcfg, &sc16is7xx_regcfg, sizeof(struct regmap_config));
-+
- 	for (i = 0; i < devtype->nr_uart; i++) {
--		sc16is7xx_regcfg.name = sc16is7xx_regmap_name(i);
--		sc16is7xx_regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i);
--		sc16is7xx_regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
--		regmaps[i] = devm_regmap_init_i2c(i2c, &sc16is7xx_regcfg);
-+		regcfg.name = sc16is7xx_regmap_name(i);
-+		regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		regmaps[i] = devm_regmap_init_i2c(i2c, &regcfg);
- 	}
- 
- 	return sc16is7xx_probe(&i2c->dev, devtype, regmaps, i2c->irq);
-diff --git a/drivers/tty/serial/sc16is7xx_spi.c b/drivers/tty/serial/sc16is7xx_spi.c
-index 3942fc1b7455..55c1d4ad83f5 100644
---- a/drivers/tty/serial/sc16is7xx_spi.c
-+++ b/drivers/tty/serial/sc16is7xx_spi.c
-@@ -16,6 +16,7 @@ static int sc16is7xx_spi_probe(struct spi_device *spi)
- {
- 	const struct sc16is7xx_devtype *devtype;
- 	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
-+	struct regmap_config regcfg;
- 	unsigned int i;
- 	int ret;
- 
-@@ -35,17 +36,19 @@ static int sc16is7xx_spi_probe(struct spi_device *spi)
- 	if (!devtype)
- 		return dev_err_probe(&spi->dev, -ENODEV, "Failed to match device\n");
- 
-+	memcpy(&regcfg, &sc16is7xx_regcfg, sizeof(struct regmap_config));
-+
- 	for (i = 0; i < devtype->nr_uart; i++) {
--		sc16is7xx_regcfg.name = sc16is7xx_regmap_name(i);
-+		regcfg.name = sc16is7xx_regmap_name(i);
- 		/*
- 		 * If read_flag_mask is 0, the regmap code sets it to a default
- 		 * of 0x80. Since we specify our own mask, we must add the READ
- 		 * bit ourselves:
- 		 */
--		sc16is7xx_regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i) |
-+		regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i) |
- 			SC16IS7XX_SPI_READ_BIT;
--		sc16is7xx_regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
--		regmaps[i] = devm_regmap_init_spi(spi, &sc16is7xx_regcfg);
-+		regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		regmaps[i] = devm_regmap_init_spi(spi, &regcfg);
- 	}
- 
- 	return sc16is7xx_probe(&spi->dev, devtype, regmaps, spi->irq);
+Thanks!
+
+...
+
+> I wonder if we could just move the entire header to drivers/spi/.
+> The spitz board only fills the num_chipselect field anyway,
+> and that could be derived from the GPIO lookups instead.
+
+It seems to be used by drivers/soc/pxa/ssp.c.
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
