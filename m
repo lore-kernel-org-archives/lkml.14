@@ -1,80 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921AF136675;
-	Thu,  7 Mar 2024 19:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4BC136675;
+	Thu,  7 Mar 2024 19:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709838390; cv=none; b=XaMB+x2QD21bXoJ/5qH69oABF4HNfT+Opy21nTdmVlzB453AVyz325O/vN0LSOq7DTS1ep6Cv9SndERgSVleabqev4VXs0kngdS0nkVyehVjOZW45uxHjbgnrkxcUrCz891/lKKruRhmyFn/a6sB7bRb8Guryt6xSpGANgmNz1g=
+	t=1709838399; cv=none; b=AOpnAFdKt6oO5xyWnXXulCflS/m67RApz0Xq/XXzPaVDRu4M1MCcMH0FVyt50/HqMvYv4jHgNxqy8On+SzZWFvtBVtphLxecB9XzOyRYp5Qi5wFV5bOL1ZascmQKLSrwrscmsrx9YvjSCC/sQM2g0aWQEjqgbUya4dRqpwFFUcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709838390; c=relaxed/simple;
-	bh=/aVycPzQGuUIJyeAnfbKezN/GZbL5wsOs/DnCoWd/cQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BV4Nujf2MzFzicz3mzItniqk+n/syhB7XfVN+i1n2qDAThdauOpwmGTFulvho8qtKOHvbW3ccpSr0vHf7vtxgJRM++0kJNUR23DNfAOWZCwBRxCa+3qNHji7PnEqx3PaoY41ebFc9PsW91CUbUB+rRu0UBzCr4H1Fd7ceYSwPGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70ED0C433F1;
-	Thu,  7 Mar 2024 19:06:27 +0000 (UTC)
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Will Deacon <will@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <shuah@kernel.org>,
-	Mark Brown <broonie@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Dave Martin <Dave.Martin@arm.com>,
-	kvmarm@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 0/9] arm64: Support for 2023 DPISA extensions
-Date: Thu,  7 Mar 2024 19:06:25 +0000
-Message-Id: <170983837968.1825324.3417487578888141721.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240306-arm64-2023-dpisa-v5-0-c568edc8ed7f@kernel.org>
-References: <20240306-arm64-2023-dpisa-v5-0-c568edc8ed7f@kernel.org>
+	s=arc-20240116; t=1709838399; c=relaxed/simple;
+	bh=jF6iduJGIE+O3Bkq9YrSC7eRZxghqOnr34T4ybioEe4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=m7zxx9YX6JagZPfZ12XHdp4sXt82iFQ0vpRKNwgtm0NJaj7NFZnrGJN13f4kOR4RNFrAOVsBczZ7Jun/VzD49Pc2yVdb/+hNGFcteb6Ia0DRs3qrR2raJORJ99ywi8fXSGYJG4cFkKC/HgdKTbONeIFfqrtCLl9Jq4svxRA5H3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=qWS5xXLl; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="qWS5xXLl"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 31C0E100003;
+	Thu,  7 Mar 2024 22:06:15 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1709838375; bh=CAvOEPtPFq6+eIgzAFJWMtkJyr4bIU2xSPDi8uBAnuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=qWS5xXLl/V8vg8BJGHCJyaCIZChoxxuFF7FxrzEvzeFH7qBluOf1TpBh2p61QagHe
+	 QFgXChfsedVWvDwmgLQh5zYwXjbeaQ09meG5lx0yPk/8DYTdMtk1U2hQ+4Oclpcux7
+	 vxf8Grtn+KaP5xBq2DQiTw9txrm1YZrrKGYZr63Vay/oaSvok+yMN4e1w9qkCqbzRe
+	 we4SS4Yu2ZmKCb1uEOndz5xevCCdxCMdemI4O/1qlE21Nxe+5CAP1pcB1+G+zAnLgX
+	 JeVf411fPOff5qZVTzQq+DT/95W4N2qV0GSIU8kAPYDTH/g1Y/p5WjAso/yitCXX5k
+	 lFlLRjjnHU0iQ==
+Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Thu,  7 Mar 2024 22:05:33 +0300 (MSK)
+Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 7 Mar 2024
+ 22:05:13 +0300
+Message-ID: <98dea36b-41dc-4d2e-aec6-56c849e1d58b@t-argos.ru>
+Date: Thu, 7 Mar 2024 22:02:56 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mmc: dw_mmc: Fix potential null pointer risk
+To: Ulf Hansson <ulf.hansson@linaro.org>
+CC: Jaehoon Chung <jh80.chung@samsung.com>, Wen Zhiwei <wenzhiwei@kylinos.cn>,
+	<linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+References: <20240307085135.16245-1-amishin@t-argos.ru>
+ <CAPDyKFoYRT=P+4L+5ciNPxEHcS7hoXPef__NQoodxkSy=39Teg@mail.gmail.com>
+Content-Language: ru
+From: Aleksandr Mishin <amishin@t-argos.ru>
+In-Reply-To: <CAPDyKFoYRT=P+4L+5ciNPxEHcS7hoXPef__NQoodxkSy=39Teg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184049 [Mar 07 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 9 0.3.9 e923e63e431b6489f12901471775b2d1b59df0ba, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/03/07 17:51:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/03/07 17:21:00 #24036814
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Wed, 06 Mar 2024 23:14:45 +0000, Mark Brown wrote:
-> This series enables support for the data processing extensions in the
-> newly released 2023 architecture, this is mainly support for 8 bit
-> floating point formats.  Most of the extensions only introduce new
-> instructions and therefore only require hwcaps but there is a new EL0
-> visible control register FPMR used to control the 8 bit floating point
-> formats, we need to manage traps for this and context switch it.
+
+
+07.03.2024 13:57, Ulf Hansson wrote:
+> On Thu, 7 Mar 2024 at 09:53, Aleksandr Mishin <amishin@t-argos.ru> wrote:
+>>
+>> In dw_mci_runtime_resume() 'host->slot' could be null, but check is not cover all corresponding code.
+>> Fix this bug by changing check place.
 > 
-> [...]
+> In fact host->slot can never be NULL in dw_mci_runtime_resume() or in
+> dw_mci_runtime_suspend().
+> 
+> A better fix would thus be to remove the redundant checks.
+> 
+> Kind regards
+> Uffe
+> 
+>>
+>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>>
+>> Fixes: 4a835afd808a (mmc: dw_mmc: Fix potential null pointer risk)
+>> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+>> ---
+>>   drivers/mmc/host/dw_mmc.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 829af2c98a44..a4f124452abc 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -3570,8 +3570,10 @@ int dw_mci_runtime_resume(struct device *dev)
+>>                     DW_MCI_ERROR_FLAGS);
+>>          mci_writel(host, CTRL, SDMMC_CTRL_INT_ENABLE);
+>>
+>> +       if (!host->slot)
+>> +               goto err;
+>>
+>> -       if (host->slot && host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER)
+>> +       if (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER)
+>>                  dw_mci_set_ios(host->slot->mmc, &host->slot->mmc->ios);
+>>
+>>          /* Force setup bus to guarantee available clock output */
+>> --
+>> 2.30.2
+>>
+>>
+> 
 
-Applied to arm64 (for-next/dpisa), thanks!
-
-[1/9] arm64/cpufeature: Hook new identification registers up to cpufeature
-      https://git.kernel.org/arm64/c/cc9f69a3dad3
-[2/9] arm64/fpsimd: Enable host kernel access to FPMR
-      https://git.kernel.org/arm64/c/b6c0b424cb91
-[3/9] arm64/fpsimd: Support FEAT_FPMR
-      https://git.kernel.org/arm64/c/203f2b95a882
-[4/9] arm64/signal: Add FPMR signal handling
-      https://git.kernel.org/arm64/c/8c46def44409
-[5/9] arm64/ptrace: Expose FPMR via ptrace
-      https://git.kernel.org/arm64/c/4035c22ef7d4
-[6/9] arm64/hwcap: Define hwcaps for 2023 DPISA features
-      https://git.kernel.org/arm64/c/c1932cac7902
-[7/9] kselftest/arm64: Handle FPMR context in generic signal frame parser
-      https://git.kernel.org/arm64/c/f4dcccdda586
-[8/9] kselftest/arm64: Add basic FPMR test
-      https://git.kernel.org/arm64/c/7bcebadda045
-[9/9] kselftest/arm64: Add 2023 DPISA hwcap test coverage
-      https://git.kernel.org/arm64/c/44d10c27bd75
+At the same time there are few checks such as "if (host->slot)" in 
+dw_mci_runtime_resume() and commit 
+4a835afd808a3dbbac44bb399a902b822dc7445c message contains: "we 
+previously assumed 'host->slot' could be null, null pointer judgment 
+should be added" and replaces "if (host->slot->mmc->pm_flags & 
+MMC_PM_KEEP_POWER)" with "if (host->slot && host->slot->mmc->pm_flags & 
+MMC_PM_KEEP_POWER)"
+So where is the truth?
 
 -- 
-Catalin
-
+Kind regadrds
+Aleksandr
