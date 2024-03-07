@@ -1,29 +1,28 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD7E5258;
-	Thu,  7 Mar 2024 01:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10134E554;
+	Thu,  7 Mar 2024 01:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709773584; cv=none; b=gQFp3wcRy64MtERk51wrAcNGrWlDF49GCeg+OduM8/ciTdESW9RfV3TZrtWdxKaszDyRD+4XS7x3wGhw3c7zyr97yprwN2ktgrg6+JwnUPsg8WbIw3NZf9+vVVi++igRhN5sMreikTYOPuuFq8gzjGqVI+0QTCEfWzMOa95p6DU=
+	t=1709773584; cv=none; b=qY1T7gx6NlOvfqncx/0KkXblokHw3Px6AGjCOj1NIMEH3E8JRQzYKnpvkByqjPJV/8cwURmkF0C5x65YmrRF5wEb64wfp6KDlZmoANn7vmbiBSq66U2UVBFB16B234tkzJFO3d+Vn03HO8VM3QBFK+nJiFAe30P7Tckp7iS0MJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709773584; c=relaxed/simple;
-	bh=jg47xUC4qfdnzivhOSDZybY3tzts7FZLlUwY6SzHCZk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p/MaSDh/YGgAgWs5UUBE93l5bjDxZx4Lj/LD6Po/inxU8sjpzYuwkGAmDydEYyZAa4lT7PwqYM6ds93mMP/o3k5u2KxxCZJaJk11xHlwr6N4sZs9zuttliQjC+illL/NCLX2ZmSD1oiS/A5zW2fB8U67TE78VfQJZJVJvXmyyHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	bh=nlN01KDBSH4+Pka9XVMq7JUSeBb/MIozDu4QRGEyP1Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GWPviuffmdq/xfgzuMZFJxTz5XAMc5iLld3s1k7ZGgsTF9t26bkt6NUaS2CSmeKblqm+DMEI6JJwB0zZotsV+YGhV7waXjvz1rjvZ50N/NZGU3p8KVHGh0WjUkxDM0HPqpvWblOqDnQt4GFLps1yhoT1to+OFEG60y6c7Ny6wqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TqrgD0L1Rz1xqL7;
-	Thu,  7 Mar 2024 09:04:40 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TqrfK0Rtzz1h1Gw;
+	Thu,  7 Mar 2024 09:03:53 +0800 (CST)
 Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 644F01A016C;
-	Thu,  7 Mar 2024 09:06:18 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 831691402E0;
+	Thu,  7 Mar 2024 09:06:14 +0800 (CST)
 Received: from localhost.localdomain (10.67.165.2) by
  kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 09:06:17 +0800
+ 15.1.2507.35; Thu, 7 Mar 2024 09:06:13 +0800
 From: Jijie Shao <shaojijie@huawei.com>
 To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
 	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
@@ -31,12 +30,10 @@ To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
 CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
 	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH net 7/8] net: hns3: fix port duplex configure error in IMP reset
-Date: Thu, 7 Mar 2024 09:01:14 +0800
-Message-ID: <20240307010115.3054770-8-shaojijie@huawei.com>
+Subject: [PATCH net 0/8] There are some bugfix for the HNS3 ethernet driver
+Date: Thu, 7 Mar 2024 09:01:07 +0800
+Message-ID: <20240307010115.3054770-1-shaojijie@huawei.com>
 X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240307010115.3054770-1-shaojijie@huawei.com>
-References: <20240307010115.3054770-1-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,38 +45,43 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600007.china.huawei.com (7.193.23.208)
 
-From: Jie Wang <wangjie125@huawei.com>
+There are some bugfix for the HNS3 ethernet driver
 
-Currently, the mac port is fixed to configured as full dplex mode in
-hclge_mac_init() when driver initialization or reset restore. Users may
-change the mode to half duplex with ethtool,  so it may cause the user
-configuration dropped after reset.
+Hao Lan (2):
+  net: hns3: add new 200G link modes for hisilicon device
+  net: hns3: Disable SerDes serial loopback for HiLink H60
 
-To fix it, don't change the duplex mode when resetting.
+Jian Shen (1):
+  net: hns3: add checking for vf id of mailbox
 
-Fixes: 2d03eacc0b7e ("net: hns3: Only update mac configuation when necessary")
-Signed-off-by: Jie Wang <wangjie125@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Jie Wang (1):
+  net: hns3: fix port duplex configure error in IMP reset
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 349e4a1946ab..b4afb66efe5c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2903,7 +2903,10 @@ static int hclge_mac_init(struct hclge_dev *hdev)
- 	int ret;
- 
- 	hdev->support_sfp_query = true;
--	hdev->hw.mac.duplex = HCLGE_MAC_FULL;
-+
-+	if (!test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
-+		hdev->hw.mac.duplex = HCLGE_MAC_FULL;
-+
- 	ret = hclge_cfg_mac_speed_dup_hw(hdev, hdev->hw.mac.speed,
- 					 hdev->hw.mac.duplex, hdev->hw.mac.lane_num);
- 	if (ret)
+Jijie Shao (2):
+  net: hns3: fix wrong judgment condition issue
+  net: hns3: fix delete tc fail issue
+
+Peiyang Wang (1):
+  net: hns3: fix reset timeout under full functions and queues
+
+Yonglong Liu (1):
+  net: hns3: fix kernel crash when 1588 is received on HIP08 devices
+
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h   |  2 +
+ .../hns3/hns3_common/hclge_comm_cmd.c         |  2 +-
+ .../hns3/hns3_common/hclge_comm_cmd.h         |  2 +-
+ .../net/ethernet/hisilicon/hns3/hns3_dcbnl.c  |  2 +-
+ .../ethernet/hisilicon/hns3/hns3_debugfs.c    |  2 +
+ .../hisilicon/hns3/hns3pf/hclge_cmd.h         |  3 +-
+ .../hisilicon/hns3/hns3pf/hclge_dcb.c         |  2 +
+ .../hisilicon/hns3/hns3pf/hclge_main.c        | 44 +++++++++++++------
+ .../hisilicon/hns3/hns3pf/hclge_main.h        | 11 ++++-
+ .../hisilicon/hns3/hns3pf/hclge_mbx.c         |  7 +--
+ .../hisilicon/hns3/hns3pf/hclge_ptp.c         |  2 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 16 +++++++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_tm.h |  1 +
+ 13 files changed, 74 insertions(+), 22 deletions(-)
+
 -- 
 2.30.0
 
