@@ -1,127 +1,100 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8F956447
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A696E63108
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709799943; cv=none; b=BOmbAWV/boFXOXbDfnDfGqRWIE69Pzp+N7WRff4rJhO80BwbyOtJcDeXGRbC2hWM+P4yT+e2Nw6AOGZ1DY8tinRWn8ajYCx3SzoOGjqhR/0TYJc5abGS4yAQt46yKVzE6TScjUxte9vzkmGeZzCAsuez/JhS35TkuLQ2RpBGPmc=
+	t=1709799971; cv=none; b=PFG46InwiLMx7EU8JVF8V0mf0GPZbGXMrmxF/7HYjv69X+D2phIFy7GxfOm7dxHi+Li/fjgQgUfh15R4DzNyXwso2wnfj9F5AWjjWXZsyhZEE9zxhHD69rfsqps9gIq2qqyVcYibrBVfqNH0EITbGbYV2bKoV53Sx1TX7+MqxbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709799943; c=relaxed/simple;
-	bh=enCse7dbdQXNzTOxJ1nbIU4FpLfhxhz5LWnaFVXaicE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=khHQ4bBJDXLqtWbjkVm+RqacFCuM+YzEjY28/4uu89fvlN8SvF+ZvuU4b5k7n5ggH9XzDQHw6vHDEa+92Zb4wtkxWVU3nfQxByedSE73yXpQfWDy9ac1WMdxiJjKp8AKX4UBbwuhJXiFD7T9MgJR58crHJq7774J2wkddMdJ9CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Ni1iXQ5g; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1709799971; c=relaxed/simple;
+	bh=PBrebkdCpvbZ4ZAMRT2TxIwYjjN/Xr9LjZ96/P/xG7A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G+D5qbXdhm6hapyYgafBUBlLx/7/0hoN4Nawb3FWimC/ZLnGGAasnk5Esv42CCDlWwoNasDlNH1xaNLxilwqJEfQjMDQVQwXPkOkTIpIrWPRSJiLfoMzbRCyeqYaxKie1xp+PKrWoN/PwwZuO+o91YtqMmhsbD/M+Rmu1RFrLxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TOv7QaC4; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ni1iXQ5g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709799941; x=1741335941;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=enCse7dbdQXNzTOxJ1nbIU4FpLfhxhz5LWnaFVXaicE=;
-  b=Ni1iXQ5guegWf+m/xnRo98cHaT1chKVhLq/QxCpM55G5mc3329b3E5uw
-   QKYKX2Q/kFozDXsmxTKZgK0tp3U4hFvGYlFt91iPCZm3VlQ2ZcJoYb+/6
-   SCHCX7Cp+1ZWXISfuD2kiczYigJ/SGsz1k3fIsSnjQZlCxhwRnQUiqH7R
-   FAR+QbEbh5ZuXuDDYE1Eh5SgijIZaKYP2roJForlbujIqaSUVDXBYmsPA
-   r7ExOxgBxvNlbyhYqBngsMagB7SOTD+hQmEh+9MOWGXjijz4TXRXyPzja
-   lx9+NW6v+mnUd95YjxuIyZOeMnUULxG9cg7yymM2guqTs7GTnYe9bIiNP
-   g==;
-X-CSE-ConnectionGUID: kAZEeyzJTe2x8LD+/3TGaw==
-X-CSE-MsgGUID: sdgDN0UeSoumQpAx3OOG4Q==
-X-IronPort-AV: E=Sophos;i="6.06,210,1705388400"; 
-   d="asc'?scan'208";a="18986441"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Mar 2024 01:25:40 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 01:25:23 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 7 Mar 2024 01:25:21 -0700
-Date: Thu, 7 Mar 2024 08:24:37 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang
-	<jszhang@kernel.org>, Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Eric Biggers
-	<ebiggers@kernel.org>, Elliot Berman <quic_eberman@quicinc.com>, Charles Lohr
-	<lohr85@gmail.com>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 4/4] riscv: Set unaligned access speed at compile time
-Message-ID: <20240307-defraud-antonym-407fc29261d1@wendy>
-References: <20240306-disable_misaligned_probe_config-v7-0-6c90419e7a96@rivosinc.com>
- <20240306-disable_misaligned_probe_config-v7-4-6c90419e7a96@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TOv7QaC4"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcc84ae94c1so563017276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 00:26:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709799967; x=1710404767; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6DcLOdltzgyu5CHIfol09n+T7xDDM7p3Zl6EDPmpyrY=;
+        b=TOv7QaC4rJJ5yU9DOEzIn8E9ux7bx42y8xWkuxpz3aCcuOLu/aYo5Abpa9kVV0Qn9r
+         wuaSPyP13ZFcDRkxZi1F+VKs5ppsHNk4C5I096E7bbSVbCoWJAGx4KWnGPiNQA576QjG
+         CwDTfTsW4QxBMiIyq8RJmoOd/k1ARC/RzhTz++RbFLwynHJuG/7BcufPCDJflPoJCR2b
+         yUMCCQX4HPQn7Bq5ddslmW/TDUfcOR0ix3CxP86k1sxRZ8583WR4XRX0s0tsdnU6eB2s
+         IeUCAJG24n5ZC9mueDIaolAUKxWpUVnTDH390p+sNQkQoKlOiCllT6Ldu5xMT+IED0oM
+         KffQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709799967; x=1710404767;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6DcLOdltzgyu5CHIfol09n+T7xDDM7p3Zl6EDPmpyrY=;
+        b=sd+niA5v/qLMSCOyvOX+UpcKhu+oRRrL8sEHfiiIZpH+1Wl9CrlbMEWZcCS8Ll+IWi
+         8VxEQtWDl1j1EB2aGKrOecVNpzYz1Z51TE+LpUCXZKKAd0kMudTDFGrSrL0xOc7sxsUL
+         gbxBK+YycgfcdPKj7XrHFnL9t8c+FzMmQr0YUe3HvNKbuAgJnF2SJVahyN/H3cH1T63q
+         RDmvYZL/Hh4ZgWIC5ujeCQ4UTpIKE4fsLBrS2cRjoy5RrXlvpzz0FDg1Diye3LqiHZdd
+         SxtP7xlPJfrr6JVRX4BmuzK6JT7gZ+LrseuQZE5dQrwuftqNz/WCF4ciLdadVLVhTQvq
+         joaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkbifCvhZwnrAtoQD7VxV0xjHJSWuSLTz/TFULWV1FH6EvbNuzTZA8ybrIAzE4zJ3431HyQ+L4XtZIkzB44d9CWXWQ1x1Gf4cC0g9v
+X-Gm-Message-State: AOJu0YxEWEZH2q1Mds1wA2wLrJ+lfGWeX+Cjds+9VnW0vMQTVtP8L01b
+	nTYn6e/NVsxrCPAHDVaBz306lAlCFX8R5tEOH7gqAMpPlLRQz2rTtqikTv3IrDPkVZS0U6oRWW7
+	1TkxzZphPuVCPKZkFIxb7rNIQvwO2wiMouFojNw==
+X-Google-Smtp-Source: AGHT+IGHsOCpTCeuA1MgZHwchJtg+1eD6vRYmvHQnpMoHVvzORgTKaoNedGZXQv0+HzxqBuShcp/yC3fC0jYLU57JeA=
+X-Received: by 2002:a25:9745:0:b0:dcd:3663:b5e5 with SMTP id
+ h5-20020a259745000000b00dcd3663b5e5mr13333447ybo.25.1709799967726; Thu, 07
+ Mar 2024 00:26:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iUWIDEsf5AaiYg6s"
-Content-Disposition: inline
-In-Reply-To: <20240306-disable_misaligned_probe_config-v7-4-6c90419e7a96@rivosinc.com>
+References: <20240215103929.19357-1-quic_riteshk@quicinc.com> <20240215103929.19357-3-quic_riteshk@quicinc.com>
+In-Reply-To: <20240215103929.19357-3-quic_riteshk@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 7 Mar 2024 10:25:56 +0200
+Message-ID: <CAA8EJpoYi3qSrukuFouGeLNrH5fB6MXcKJ33h=g_OQ2k8SV-ig@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: qcm6490-idp: add display and panel
+To: Ritesh Kumar <quic_riteshk@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	catalin.marinas@arm.com, will@kernel.org, quic_bjorande@quicinc.com, 
+	geert+renesas@glider.be, arnd@arndb.de, neil.armstrong@linaro.org, 
+	nfraprado@collabora.com, m.szyprowski@samsung.com, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	quic_abhinavk@quicinc.com, quic_rajeevny@quicinc.com, 
+	quic_vproddut@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
---iUWIDEsf5AaiYg6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, 15 Feb 2024 at 12:39, Ritesh Kumar <quic_riteshk@quicinc.com> wrote:
+>
+> Enable Display Subsystem with Novatek NT36672E Panel
+> on qcm6490 idp platform.
+>
+> Signed-off-by: Ritesh Kumar <quic_riteshk@quicinc.com>
+>
+> ---
+> v2: Fixed review comments from Dmitry and Konrad
+>       - moved pinctrl-names after pinctrl-0 property.
+>       - removed gpu disablement change after validating gpu.
+>     Rebased the patch
+>       - rebased the patch to resolve conflicts.
+> v3: Fixed review comments from Dmitry
+>       - renamed panel supply to regulator-lcd-disp-bias.
+>       - moved backlight as per sort order.
+> ---
+>  arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 92 ++++++++++++++++++++++++
+>  1 file changed, 92 insertions(+)
 
-On Wed, Mar 06, 2024 at 12:00:04PM -0800, Charlie Jenkins wrote:
-> +static u64 hwprobe_misaligned(const struct cpumask *cpus)
-> +{
-> +	if (IS_ENABLED(CONFIG_RISCV_EMULATED_UNALIGNED_ACCESS))
-> +		if (unaligned_ctl_available())
-> +			return RISCV_HWPROBE_MISALIGNED_EMULATED;
-> +		else
-> +			return RISCV_HWPROBE_MISALIGNED_SLOW;
-> +	else if (IS_ENABLED(CONFIG_RISCV_SLOW_UNALIGNED_ACCESS))
-> +		return RISCV_HWPROBE_MISALIGNED_SLOW;
-> +	else if (IS_ENABLED(CONFIG_RISCV_EFFICIENT_UNALIGNED_ACCESS))
-> +		return RISCV_HWPROBE_MISALIGNED_FAST;
-> +}
-> +#endif
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Isn't this just
-static u64 hwprobe_misaligned(const struct cpumask *cpus)
-{
-	if (IS_ENABLED(CONFIG_RISCV_EFFICIENT_UNALIGNED_ACCESS))
-		return RISCV_HWPROBE_MISALIGNED_FAST;
-
-	if (IS_ENABLED(CONFIG_RISCV_EMULATED_UNALIGNED_ACCESS) && unaligned_ctl_available())
-		return RISCV_HWPROBE_MISALIGNED_EMULATED;
-
-	return RISCV_HWPROBE_MISALIGNED_SLOW;
-
-}
-?
-Otherwise,
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-The kconfig stuff looks ~good to me, I wanted to make one comment about
-the wording of a sentence I wrote being pretty meh, but I think it's
-time to let go there...
-
-
-Cheers,
-Conor.
-
---iUWIDEsf5AaiYg6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZel5xQAKCRB4tDGHoIJi
-0pPlAPwKe8nxyNXBCUxArQriqoMFYmNKeb0YDkPKt4MH66EXlAD7BfOP6iDRPpa/
-qDkpTdHvENUdrS09wUiH9vE93smHeww=
-=xXdV
------END PGP SIGNATURE-----
-
---iUWIDEsf5AaiYg6s--
+-- 
+With best wishes
+Dmitry
