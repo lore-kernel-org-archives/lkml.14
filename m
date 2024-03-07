@@ -1,118 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D534863D0
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 03:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507B01109;
+	Thu,  7 Mar 2024 03:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709780489; cv=none; b=plHsRnFz2fG4FQ31KDHYWB8Zj5NWnb865pkS83RudeU8w/62HiIqyrWOFptgw6mxvNOz1lKBe04yjSTt4dvTRU4VlUx3FnXeKxEszIVglh7EGJhFDVoWodX1YYg362M5ARF/Za+kxEF7L+pjpVVhPEt2nQJlsPUOH0GtxpazfEg=
+	t=1709780561; cv=none; b=kjhbxevD5gehq2QOXBxT5YGEb/4tlfVBk8HSuthGXs76TndXrXakZYqT8zufQtvbWZDw+jBzy7U4DJREQdz0dmjN1O0o69H62JHsNSrHqyJAY2WDLvwlAmqML8TEz3Z+NPqdoWc4sC4/i3uGRQa/CDfIzwGKoikaBlxGple3GxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709780489; c=relaxed/simple;
-	bh=jiLpUS83X9bqo/l0qgvT+USU1pSdPuVxOBLFS+X6ePA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qhk5wDz0qVhmDlI9/pOghLRRZEzeBfNBF4EvQnz1VoQR7cq1shRLERn+2jvnidAGiHu7twQRLsROm/gCFlafFbmoJuVBgWtkQlF8CnW9y244hLIJUlhgfQtbojmGdzB/ZBcNd3bcj4OEAOjtI8EJZyGyDnpdrMYro3mLlCuyCTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fCDOyvXl; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fCDOyvXl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709780487; x=1741316487;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jiLpUS83X9bqo/l0qgvT+USU1pSdPuVxOBLFS+X6ePA=;
-  b=fCDOyvXlL/WGROeKSVZU+zfwvTjMPQj20a+QQxuRXE0mhSE8c/NKJcFA
-   mzecJSERir0nLYNoSwnCvALgfxO2uVkzIm6o41s2p0w9aIpjWDSFYSMp0
-   81oVg6YOIdT7xI8EcwVIBIvddf7uABK3HHeN3iJkw82Zx0uJ8ClZCu8E3
-   Zv2gnXTMwTVCqtSGjl2tYjk/qnOUYin11VEAeePS/OxxR90CxtK7LMdpG
-   QjoLCGfGWLbhWA5IL3Z7xfspxdnhf/DXnaPQfCbhT2Uq7j87/OX1FFN+L
-   oQJKPdmtYYEE+sTL85QV6HJvWhO86U2rPE8GRYk7/MRznLmV2P/0lziRi
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4289142"
-X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="4289142"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 19:01:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="14457352"
-Received: from rulin.ccr.corp.intel.com (HELO [10.238.4.104]) ([10.238.4.104])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 19:01:13 -0800
-Message-ID: <140860ab-59f2-4633-8a55-fb6cfa854250@intel.com>
-Date: Thu, 7 Mar 2024 11:01:11 +0800
+	s=arc-20240116; t=1709780561; c=relaxed/simple;
+	bh=HWjnA8HRBancgbepAZDpEdJiP7zrzkbNCdz1Sy6cZus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=COqa0TCr57zKydhHetZ2+TSaz0niE+Wf7t+gQ1Ouhd1WCRpgorOObwwVBwnFroDV1LWc0DPIQTzKOY0uRgh93gKJuUW+k6+VYydmAyyQmtuSr91fpExO4Gik6PPnyCUrvSobRWTqYBvD/l/C2Bkbfw6sdE3N1/Hn9DzoikWLBVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TqvH63xtPz1FM0D;
+	Thu,  7 Mar 2024 11:02:26 +0800 (CST)
+Received: from kwepemm600004.china.huawei.com (unknown [7.193.23.242])
+	by mail.maildlp.com (Postfix) with ESMTPS id 62C151A0172;
+	Thu,  7 Mar 2024 11:02:35 +0800 (CST)
+Received: from [10.67.121.59] (10.67.121.59) by kwepemm600004.china.huawei.com
+ (7.193.23.242) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 7 Mar
+ 2024 11:02:34 +0800
+Message-ID: <e3403070-2566-fa88-2d4d-84bae8205567@huawei.com>
+Date: Thu, 7 Mar 2024 11:02:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/2] mm/vmalloc: Moved macros with no functional change
- happened
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>
-Cc: akpm@linux-foundation.org, colin.king@intel.com, hch@infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, lstoakes@gmail.com,
- tianyou.li@intel.com, tim.c.chen@intel.com, wangyang.guo@intel.com,
- zhiguo.zhou@intel.com
-References: <20240301155417.1852290-1-rulin.huang@intel.com>
- <20240301155417.1852290-2-rulin.huang@intel.com> <Zei9n-VMxtzG8z4Y@pc636>
- <ZekW/nGXfTqOlvPZ@MiWiFi-R3L-srv>
-From: "Huang, Rulin" <rulin.huang@intel.com>
-In-Reply-To: <ZekW/nGXfTqOlvPZ@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v1 1/3] arm64: topology: Add arch_freq_get_on_cpu()
+ support
+To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>, Beata Michalska
+	<beata.michalska@arm.com>
+CC: Ionela Voinescu <ionela.voinescu@arm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<rafael@kernel.org>, <sumitg@nvidia.com>, <zengheng4@huawei.com>,
+	<yang@os.amperecomputing.com>, <will@kernel.org>, <sudeep.holla@arm.com>,
+	<liuyonglong@huawei.com>, <zhanjie9@hisilicon.com>,
+	<linux-acpi@vger.kernel.org>
+References: <20240229162520.970986-1-vanshikonda@os.amperecomputing.com>
+ <20240229162520.970986-2-vanshikonda@os.amperecomputing.com>
+From: "lihuisong (C)" <lihuisong@huawei.com>
+In-Reply-To: <20240229162520.970986-2-vanshikonda@os.amperecomputing.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600004.china.huawei.com (7.193.23.242)
 
-We have made changes based on your latest suggestions.
-1.Removed bugs_on.
-2.Removed adjustion of macros.
+Hi Vanshidhar,
 
-We submitted patch v8 based on this. Thanks to Baoquan for the
-discussion, and could you please help to review and confirm if there are
-any problems on the latest version?
+在 2024/3/1 0:25, Vanshidhar Konda 写道:
+> AMU counters are used by the Frequency Invariance Engine (FIE) to
+> estimate the CPU utilization during each tick. The delta of the AMU
+> counters between two ticks can also be used to estimate the average CPU
+> frequency of each core over the tick duration. Measure the AMU counters
+> during tick, compute the delta and store it. When the frequency of the
+> core is queried, use the stored delta to determine the frequency.
+>
+> arch_freq_get_on_cpu() is used on x86 systems to estimate the frequency
+> of each CPU. It can be wired up on arm64 for the same functionality.
+>
+> Signed-off-by: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
+> ---
+>   arch/arm64/kernel/topology.c | 114 +++++++++++++++++++++++++++++------
+>   1 file changed, 96 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> index 1a2c72f3e7f8..db8d14525cf4 100644
+> --- a/arch/arm64/kernel/topology.c
+> +++ b/arch/arm64/kernel/topology.c
+> @@ -17,6 +17,8 @@
+>   #include <linux/cpufreq.h>
+>   #include <linux/init.h>
+>   #include <linux/percpu.h>
+> +#include <linux/sched/isolation.h>
+> +#include <linux/seqlock_types.h>
+>   
+>   #include <asm/cpu.h>
+>   #include <asm/cputype.h>
+> @@ -82,20 +84,54 @@ int __init parse_acpi_topology(void)
+>   #undef pr_fmt
+>   #define pr_fmt(fmt) "AMU: " fmt
+>   
+> +struct amu_counters {
+> +	seqcount_t	seq;
+> +	unsigned long	last_update;
+> +	u64		core_cnt;
+> +	u64		const_cnt;
+> +	u64		delta_core_cnt;
+> +	u64		delta_const_cnt;
+> +};
+> +
+>   /*
+>    * Ensure that amu_scale_freq_tick() will return SCHED_CAPACITY_SCALE until
+>    * the CPU capacity and its associated frequency have been correctly
+>    * initialized.
+>    */
+> -static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =  1UL << (2 * SCHED_CAPACITY_SHIFT);
+> -static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
+> -static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
+> +static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =
+> +	1UL << (2 * SCHED_CAPACITY_SHIFT);
+> +static DEFINE_PER_CPU_SHARED_ALIGNED(struct amu_counters, cpu_samples) = {
+> +	.seq = SEQCNT_ZERO(cpu_samples.seq)
+> +};
+>   static cpumask_var_t amu_fie_cpus;
+>   
+>   void update_freq_counters_refs(void)
+>   {
+> -	this_cpu_write(arch_core_cycles_prev, read_corecnt());
+> -	this_cpu_write(arch_const_cycles_prev, read_constcnt());
+> +	struct amu_counters *cpu_sample = this_cpu_ptr(&cpu_samples);
+> +	u64 core_cnt, const_cnt, delta_core_cnt, delta_const_cnt;
+> +
+> +	const_cnt = read_constcnt();
+> +	core_cnt = read_corecnt();
+> +
+> +	if (unlikely(core_cnt < cpu_sample->core_cnt) ||
+> +	    unlikely(const_cnt < cpu_sample->const_cnt)) {
 
-On 2024/3/7 9:23, Baoquan He wrote:
-> On 03/06/24 at 08:01pm, Uladzislau Rezki wrote:
->> On Fri, Mar 01, 2024 at 10:54:16AM -0500, rulinhuang wrote:
-> ......
->>
->> Sorry for the late answer, i also just noticed this email. It was not in
->> my inbox...
->>
->> OK, now you move part of the per-cpu allocator on the top and leave
->> another part down making it split. This is just for the:
->>
->> BUG_ON(va_flags & VMAP_RAM);
->>
->> VMAP_RAM macro. Do we really need this BUG_ON()?
-> 
-> Sorry, I suggested that when reviewing v5:
-> https://lore.kernel.org/all/ZdiltpK5fUvwVWtD@MiWiFi-R3L-srv/T/#u
-> 
-> About part of per-cpu kva allocator moving and the split making, I would
-> argue that we will have vmap_nodes defintion and basic helper functions
-> like addr_to_node_id() etc at top, and leave other part like
-> size_to_va_pool(), node_pool_add_va() etc down. These are similar.
-> 
-> While about whether we should add 'BUG_ON(va_flags & VMAP_RAM);', I am
-> not sure about it. When I suggested that, I am also hesitant. From the
-> current code, alloc_vmap_area() is called in below three functions, only
-> __get_vm_area_node() will pass the non-NULL vm. 
->  new_vmap_block()     -|
->  vm_map_ram()         ----> alloc_vmap_area()
->  __get_vm_area_node() -|
-> 
-> It could be wrongly passed in the future? Only checking if vm is
-> non-NULL makes me feel a little unsafe. While I am fine if removing the
-> BUG_ON, because there's no worry in the current code. We can wait and
-> see in the future.
-> 
->        if (vm) {
->                BUG_ON(va_flags & VMAP_RAM);
->                setup_vmalloc_vm(vm, va, flags, caller);
->        }
-> 
-> Thanks
-> Baoquan
-> 
+The two counter register might be wrap around. So here is not fully 
+true, right?
+
+If we don't consider this case, below warning should be removed.
+
+> +		WARN(1, "AMU counter values should be monotonic.\n");
+> +		cpu_sample->delta_const_cnt = 0;
+> +		cpu_sample->delta_core_cnt = 0;
+> +		return;
+> +	}
+> +
+> +	delta_core_cnt = core_cnt - cpu_sample->core_cnt;
+> +	delta_const_cnt = const_cnt - cpu_sample->const_cnt;
+> +
+> +	cpu_sample->core_cnt = core_cnt;
+> +	cpu_sample->const_cnt = const_cnt;
+> +
+> +	raw_write_seqcount_begin(&cpu_sample->seq);
+> +	cpu_sample->last_update = jiffies;
+> +	cpu_sample->delta_const_cnt = delta_const_cnt;
+> +	cpu_sample->delta_core_cnt = delta_core_cnt;
+> +	raw_write_seqcount_end(&cpu_sample->seq);
+>   }
+<...>
