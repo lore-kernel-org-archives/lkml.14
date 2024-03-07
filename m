@@ -1,122 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E43912C801;
-	Thu,  7 Mar 2024 13:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EB9128806;
+	Thu,  7 Mar 2024 13:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709818717; cv=none; b=tLyhsHtY3GwxI9icn6bzBL64dUFLf7+azPkkeltZtqCOqDjpBUEZmPn6RFj3Oy4Rs+nnTXeSyISvV5N+Y0gboFvhULKHr3/HAQrKPYHnuZs0aSyhPNSFA6tIrhk2ghNgfrAWv0HDYEJZrQMT+RJ5sIvCir+X95Z4z/zEonxDiD0=
+	t=1709818733; cv=none; b=sRx+8GPwSVXFZ8l2aEfpIm0e2qs3UEO/rFTbNHkms6hANP406xWuURNy6IFvWjwfP0kPShHmb+M207Swpe70Mf06DsPeY9BGkercOoCIvxG2Jr8m2MW+3I39Xky39wwQgBHcJLxa8MfhZMipEiVYtyFFkDtg8gFahqePQ6pKKZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709818717; c=relaxed/simple;
-	bh=pIgMBBvdlFq4jsZGTTvCeN0WxNn+N/qtdB4CfQxf4sk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iRPpcAUzNjMgtP/Oj3ubwbZo+CP9Qx3J8d8XX12szQ4yMRlKhqGiu+/EsLHcub6cw9qPGHvPdTVO3/qWNBMiSrFEZKkoqotuI6aNjO9vEake5nHLdlrsof3/wu07NjPEcYZvglktTQ7F70WmxB4QbhwKm0QOqdbtY1zM7uN25AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u9H8kAPv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5o+fsxtp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1709818733; c=relaxed/simple;
+	bh=jdziFFhymjkKWVH2L66KHJLIKy2BknU2Y6GQbKeQUN0=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=eTvBP5V6APsXRDmkuImSFMEjbN1vnJzQyApF/fYIyqjfdSwVddiwef/m7AF5p3mHHwgEbM6iJVP/T2WuPoGWTyAYy7zqbc3d4Q3nMiky8pwbnNVtZO1oeFYxxPbS2DPC+o1S8RtogCKwKFNsVeMZI8Rz9A2Se/MMnYHfnfu8bX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZURRjwF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u9H8kAPv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5o+fsxtp"
-From: Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709818714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SB4kuCbnB1I2QFSjwFkPG9Zmio3lay0lzfUcc31gg7Q=;
-	b=u9H8kAPvhSJvJGtXtKSYHK4bcix7rnKNSjfap1gntl+bLs40s5fFCi6l4pmv5C4bQJXO83
-	TjSwSWlmO7kJ8xenqcUBW72vGyjmDzliF3kyWmtTWlac2mgILjH/1QcN4QOeMJTgnTu/tp
-	pNQPI2W1jXfPRS6WODxh8LcUw3N+0vl93CWfnJHNmK0s+bmPRfDRmogYXYDL29/d/NNxLc
-	dwFCOOll1/37QUIc9+IEAMCVQEnPPiEBUiTrRoI+YegqKoYrJKnWshzkRYZ6PofQ73VoyT
-	VoQwfEJE5fBn7ABUlNvih+ye2H/P6KweH8zmftvgStzsucgHeOsM5GZbpn6UKg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709818714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SB4kuCbnB1I2QFSjwFkPG9Zmio3lay0lzfUcc31gg7Q=;
-	b=5o+fsxtpkLCbJ0Ppn+2MGX95fwrdlBx5VYy77iOoFE5udU4LXZmCdpcc70zBfbDyEAyuP9
-	rhnGCkZZMP/lQ+Cg==
-To: Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Song Yoong Siang
- <yoong.siang.song@intel.com>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Richard Cochran
- <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev
- <sdf@google.com>, Vinicius Costa Gomes <vinicius.gomes@intel.com>, Florian
- Bezdeka <florian.bezdeka@siemens.com>, Andrii Nakryiko
- <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko
- <mykolal@fb.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh
- <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- xdp-hints@xdp-project.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [xdp-hints] Re: [Intel-wired-lan] [PATCH iwl-next, v3 2/2] igc:
- Add Tx hardware timestamp request for AF_XDP zero-copy packet
-In-Reply-To: <Zein8XvWkqj8VrHs@boxer>
-References: <20240303083225.1184165-1-yoong.siang.song@intel.com>
- <20240303083225.1184165-3-yoong.siang.song@intel.com>
- <Zein8XvWkqj8VrHs@boxer>
-Date: Thu, 07 Mar 2024 14:38:32 +0100
-Message-ID: <87a5nago13.fsf@kurt.kurt.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZURRjwF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A13C433C7;
+	Thu,  7 Mar 2024 13:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709818733;
+	bh=jdziFFhymjkKWVH2L66KHJLIKy2BknU2Y6GQbKeQUN0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=EZURRjwFB6Gt7MazyGetYAEDZL/lr9tOV8UGUjY3V/0VSV11g+uGlqg+v7EiLtZV/
+	 BtjbRK0Iwoqh58ZgA3CdcQX84x2D6BX+RnLJ05UX63NrG/KOZzSbhfSzhPDd6Mi4Be
+	 FakJCatHxob98B+VZRFUls/7L1xD69bs07V+zYQR5bRlVwbsuCI3iVzd1+2ZtpPDG2
+	 eib4cAZTIz9b2oGNI1tpvWBW/mH/5gsTchrX16H2JhihpXGPU0i55WbQF8sdPb+Ig2
+	 XwBfFY+d1IWdJiUy4exyAQpwoHlBRI8wziWhbPzN43d11PHd/bCyou8/D+g/s0bAjD
+	 yTECBlR97r0Bw==
+Date: Thu, 07 Mar 2024 07:38:51 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+From: Rob Herring <robh@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-arm-kernel@lists.infradead.org, shane.chien@mediatek.com, 
+ nicolas.ferre@microchip.com, perex@perex.cz, allen-kh.cheng@mediatek.com, 
+ linux-sound@vger.kernel.org, dianders@chromium.org, 
+ krzysztof.kozlowski+dt@linaro.org, kernel@collabora.com, 
+ matthias.bgg@gmail.com, alpernebiyasak@gmail.com, conor+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, tiwai@suse.com, eugen.hristev@collabora.com, 
+ nfraprado@collabora.com, arnd@arndb.de, linux-mediatek@lists.infradead.org, 
+ amergnat@baylibre.com, claudiu.beznea@tuxon.dev, frank.li@vivo.com, 
+ zhourui@huaqin.corp-partner.google.com, wenst@chromium.org, 
+ kuninori.morimoto.gx@renesas.com, 
+ xiazhengqiao@huaqin.corp-partner.google.com, trevor.wu@mediatek.com, 
+ devicetree@vger.kernel.org, jarkko.nikula@bitmer.com, 
+ ckeepax@opensource.cirrus.com, lgirdwood@gmail.com, shraash@google.com, 
+ alsa-devel@alsa-project.org, u.kleine-koenig@pengutronix.de, 
+ jiaxin.yu@mediatek.com, broonie@kernel.org, maso.huang@mediatek.com
+In-Reply-To: <20240307114445.196981-20-angelogioacchino.delregno@collabora.com>
+References: <20240307114445.196981-1-angelogioacchino.delregno@collabora.com>
+ <20240307114445.196981-20-angelogioacchino.delregno@collabora.com>
+Message-Id: <170981873007.2495472.10889414408252370603.robh@kernel.org>
+Subject: Re: [PATCH v2 19/22] ASoC: dt-bindings: mt8192: Document
+ audio-routing and dai-link subnode
 
---=-=-=
-Content-Type: text/plain
 
-Hi Maciej,
+On Thu, 07 Mar 2024 12:44:42 +0100, AngeloGioacchino Del Regno wrote:
+> Document the dai-link subnodes and the audio-routing property, allowing
+> to describe machine specific audio hardware and links in device tree.
+> 
+> While at it, also deprecate the old properties which were previously
+> used with the driver's partially hardcoded configuration.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>  .../sound/mt8192-mt6359-rt1015-rt5682.yaml    | 124 ++++++++++++++++--
+>  1 file changed, 115 insertions(+), 9 deletions(-)
+> 
 
-On Wed Mar 06 2024, Maciej Fijalkowski wrote:
-> On Sun, Mar 03, 2024 at 04:32:25PM +0800, Song Yoong Siang wrote:
->> -	tstamp->skb = NULL;
->> +	/* Copy the tx hardware timestamp into xdp metadata or skb */
->> +	if (tstamp->buffer_type == IGC_TX_BUFFER_TYPE_XSK)
->
-> I believe this should also be protected with xp_tx_metadata_enabled()
-> check. We recently had following bugfix, PTAL:
->
-> https://lore.kernel.org/bpf/20240222-stmmac_xdp-v2-1-4beee3a037e4@linutronix.de/
->
-> I'll take a deeper look at patch tomorrow, might be the case that you've
-> addressed that or you were aware of this issue but anyways wanted to bring
-> it up. Just check that you don't break standard XDP/AF_XDP traffic :)
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-This one doesn't crash standard AF_XDP traffic. Don't know why, but it
-seems to work.
+yamllint warnings/errors:
 
-Thanks,
-Kurt
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.example.dtb: mt8192-sound: 'model' does not match any of the regexes: '.*-dai-link$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/sound/mt8192-mt6359-rt1015-rt5682.yaml#
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+doc reference errors (make refcheckdocs):
 
------BEGIN PGP SIGNATURE-----
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240307114445.196981-20-angelogioacchino.delregno@collabora.com
 
-iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmXpw1gTHGt1cnRAbGlu
-dXRyb25peC5kZQAKCRDBk9HyqkZzgl4bD/9QHm43zCKRDfGU+Xr7XPWXNlbFxEIr
-2rXt5ujhN1t6VfmaiOY3QyCuU7C+9lI/LR8J8IIzSw3quIIALtrgzjukPYgw8ICh
-JoS0P18HMJbpIAWKCLOTZ5jry4Vhg7nB1ONwWCyZeJnxcUdmKgXhc7hyEBDcr7Is
-VMqjvME3qsOb1WgoYVxUZO1/jjGQURn98O5nee29HuXzMSnUWB0l0OkldTgT7gt5
-jT7yAyh66lei+9D+n6kEs23R2Gx6BmKw6SXLqj7Iq3t6Fe5B836Yc2oiustThPJ4
-Mannvof2SnRdzsGEouBwumk95f24ssI3JXc8zKXAaGo+h9NdgJKtc+muz5ctgnLz
-Z8mEAJHmaGcFi9XBC2LZsmNozox9rZMR/KRO6xTtZv+sKodNecZoYfriF0pZ+bu0
-ky36jP84qoO58SBWtrBkSJYpPtmRZ78gR6Chn6idT9BxO/RcCNSxntGaS7xDwlb9
-5DvxYJ5Saq4EEZFYl+YTDxwqohSwBFDjYhcw2qhWxMY85H8H9xjgVp//bxCSVexh
-kPt9RBERHc5GGMBc3h9l2iodmfaEPJdKJ03gqOwoRYd1by7RtO6WcSDUpxhSIthq
-Wi5XZqKBB+IoM0N8zTZD/B1veZH/FWco6rEqhVr1DPfMsgP7l/8zbabERu28L3VP
-V0gtgB9MKcXqGw==
-=5vqC
------END PGP SIGNATURE-----
---=-=-=--
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
