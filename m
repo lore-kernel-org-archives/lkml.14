@@ -1,93 +1,69 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2063.outbound.protection.outlook.com [40.107.101.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5036D129A7F;
-	Thu,  7 Mar 2024 12:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358BB12BF25
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 12:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709815401; cv=fail; b=l23KVXvqStGa2kWGtiXXfUCkGXk8ng5AY2lRzAZgaWXSKQfDTiaVE4uFzJwBSaZh/yBjAfsSG0PD3fXA8U2TYBtgHJHxDmbzyagsRZiKToqeIIQGmL4s7ZcrD6FkAilvCl/edjuCBAY97Dk8XMRvHELEjF0KQYWB0jWQFMa6E+I=
+	t=1709815403; cv=fail; b=aEAzG1UsuTOgDMDfdo+LcN9iwJkpCEXWRWCv9S9xP1HR+CYuPpFLgCF3K/VdqcbQuZ4/cQdQF1AowtPiKkuoZ69m+OFoqRfZlbo65PCgQpa7vtCLYO2zvn3HoBa389fh/F5Oc85FRRuI5K3bPHSB4iUa9tk6V5A2Eyft58Rvzew=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709815401; c=relaxed/simple;
-	bh=yuANhGeEVkmmcjHlSpXhS3evrMhdZNvjKkcX/yIW9Rg=;
+	s=arc-20240116; t=1709815403; c=relaxed/simple;
+	bh=53VNrKhd3IjG80+ciN53+Ja68c99efAnX33Bw0AF0rE=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=d0xW5tndewRkzuAgvAtyWQufyg7GXZTDJd6w0/UgHmTrBpnd5CuWuy9sB5PQJm2JJEEU/bdXyrIyimVuapqgorOWZyxIpOdzP1k5Y8XwVIR4uf1VJFjQtCbHCvOsmYFHuc87+3W2XegtMWKPyBMqW4V8jIswqfJ49DCuSByS7Mk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VF34zE3f; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=m6SxWlDV; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	 Content-Type:MIME-Version; b=UU14phGV2tVUsTFcN7Rfwro6sJVyviIoFrKJPoRe7Dcb8mU+U7dlHyv7C6q7N3hl0+AxEdxIK7L/3xm3YqFf47Sd4tzn/0gGmjSRnpc3WcRPf9uhpPg80HRD/du0Y1Cnq8ejwnDGuPL1WqwAEnfcLZgPK1iPV7pc15Mfv5j82e0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3MPza5Lg; arc=fail smtp.client-ip=40.107.101.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VF34zE3f";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="m6SxWlDV"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4279nU0Z019341;
-	Thu, 7 Mar 2024 12:43:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=MJaTBJNOYg3wnoi14K+fcdfCN4QghyzFd5Bhu2alYlc=;
- b=VF34zE3fwiuRfHnz11XFWw2ngX5Ma3alyyX84c86KG+WfK48cPF+SoA91RUHUW1QsxLs
- ur8bdbAOWYJ0DgsCpF1oPuA9kpCbR4/80yHkRXeMhrSf19QP/9k8k+c+2B9gAj7bJHL9
- n4sQMHDeCdEEhHNEFR1PlAl+y9OE2q23MnorGtsPloIYhTbkV46lDjtRKL0NGLwZZ0ps
- tWtuGp/XLWbjkcGN6jOAYCuGQdDld22potUFGiYzErXH5Ac2yS7x3EWyb8oJ1+xyHO1s
- F7U7EV1upjubt6LCuBpye0EaaG2zHFMhn6W8I1STWUXXrltXmwm4MMzV5YbZtrnSPToP 3g== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wkv5dm0rr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 07 Mar 2024 12:43:06 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 427AZWno004904;
-	Thu, 7 Mar 2024 12:43:06 GMT
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wp7ntqueb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 07 Mar 2024 12:43:06 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3MPza5Lg"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ICEv8In9z4qUf8/CExXWLcgHrc04x5x/2N/MeIc3HsJ3vA+Av5Jwz4ivYBgjSERYIoI19ILaaTRIh6tt2DFU9WvFMaO4pXv26q4V42y66EPRdk75q2F4rai04redo942NPdV7PsADarpU+LKL4JZ63Rt49dpiVJe1v2/T7QWzPbyyq6EoAZ/Z9/NBKrLTC5bgIpi9Xvd3NlmOCztM+wVtfcXehOhvgXZvGJgH6pqg5IBTIBoBH9CuuDSBbHM369beIxbA7dUm0nWncL3EM9Fel+yNBB9hf/DZK3m2KBewkVgz1hdyxhy8EH7eiCt/OfCMHEdD14VVPWysjVnswmcgQ==
+ b=KxFtIxIycDYzKB6dKKzm+PATRfzTetR0E2M5kPV7Id8cGhUtJgR41vRwg4CN8Vv/BscK5TCMVOBaPdQMIk2ZmcrNEL7Q7CYnFZ9EGR+cohyF2TIHE/xEbiyzlU6VVMeediYCLKRDIDy/hfs1VvRLEBGnxnOomOKgaXKDv54YNXRFJj/R4HQCUrgQYV+PtHhzskLICGgSsnv3kyR/6p03dZEyknLjZYiGjnSMfkEi4SzbV/BsM4FXm1f5o72PpwS+lv+O/DZL9jeI7KJbEPOaUDDQwrhZSnfzq/q0reONn9DGNBuRMi7JtCQqiprxx49+MhQo4c9Z3eQu8/Uonknlfw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MJaTBJNOYg3wnoi14K+fcdfCN4QghyzFd5Bhu2alYlc=;
- b=Cz5SEki7eTZUVRWhGqIOwtl59MINVar/hMG0FEfDO02vtpBwjDwgSlzLDHHtVglHMJG0i+9ccO0YTSzJq8pUER1Rhyoh6Ghvgl/Z3FClQOV4sKTHBqzaak7H+K1tfaY2xAIZk8LUYIpQe/Szbe7mIoVlXHklt2MNcJ3N/uo47jjOVfEM7++gHXIenE7bnEWb1BzrSLJGh0n7tXLw11ki+MAPbUzG8VyR5rUCSi0eJcjyaRsF0I0UdbfoR38h6jcSIDQ6KTPwlik19QRZEW9/jDX6XxzPfIxxEXHah49bPoFRntDnxFdMXB1LPLn9KCLvZ6vJanw29U+sG/uyXMPMzQ==
+ bh=QwkyCC2IS4NAVWNpbpK0rh2Eb920REVMuZPQ9JlnIyU=;
+ b=m2nKshv1WORsMDcjB7dnUVkbsaP3Ly6cQOSCJg/skcOAyyCz6QyX1HSCohrn+nFH6yqRYNYT2xvgOUpS9yeTxE9MG7LGwHY0MIDdO5XZ7s8+g3L8I07GFJo1yQiZgsabcHbiTtOfWOg43JWq3Zv1s2JrUvUvCUFCjjNxnalT3Rujef+mMW/AyQrONX3i0vGD3uOXvxEnTgSmMKO+MuTQ2vDRuIBtJTm+Bmz0CasDzQQQYBEWFZi7WXFghf/sKvePUkyynmu3w7CyBXuLcatdVrH4VglWjGx6kQUR5O0YONVq8oovDGM4sljPX5y+Gjg5k2zeJeOfriLpg3CeayYa2g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MJaTBJNOYg3wnoi14K+fcdfCN4QghyzFd5Bhu2alYlc=;
- b=m6SxWlDV9ckeV4sHPf/Y+sqAQ7/hA+Gybw3oAyufaBvX3tUYKZvNWgNjL8QAeYBqKOrFtRp1Ec/WNPs2SQ1CJFROLgMsWGwgTfjNDJxhh/lGl9RHXqNozuxXJsBGugyms/RvtGC7Ylf1YZEomyuh67t2ZsfeDS9hBOHQi1sDSBg=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by IA1PR10MB5995.namprd10.prod.outlook.com (2603:10b6:208:3ed::17) with
+ bh=QwkyCC2IS4NAVWNpbpK0rh2Eb920REVMuZPQ9JlnIyU=;
+ b=3MPza5LgvUkSTXJghJdMcj3uByi49mofsZRXZKH9Dt/lvsUCAh9xknLToBQTB1emry8E7terbQspLeIxdr2WMCbtLMFONDH6A906CRjB8MOOFEkpW+jtK0LWRDsHQ4Awi23t2aF6udbga9AmnhfkTviUoNYpDoO+Zf3+o5+WaJ4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5596.namprd12.prod.outlook.com (2603:10b6:510:136::13)
+ by CYXPR12MB9443.namprd12.prod.outlook.com (2603:10b6:930:db::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26; Thu, 7 Mar
- 2024 12:43:03 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ae68:7d51:133f:324]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ae68:7d51:133f:324%4]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
- 12:43:03 +0000
-Message-ID: <6dbb5eac-1e3a-4d2d-8e74-38f6aac1b06b@oracle.com>
-Date: Thu, 7 Mar 2024 12:42:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Thu, 7 Mar
+ 2024 12:43:18 +0000
+Received: from PH7PR12MB5596.namprd12.prod.outlook.com
+ ([fe80::6f48:e3f1:6ff9:75bd]) by PH7PR12MB5596.namprd12.prod.outlook.com
+ ([fe80::6f48:e3f1:6ff9:75bd%4]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
+ 12:43:18 +0000
+Message-ID: <3ff55fef-efd7-4de6-b81f-a5a57021e4bb@amd.com>
+Date: Thu, 7 Mar 2024 18:13:10 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 11/14] fs: xfs: Support FS_XFLAG_ATOMICWRITES for
- forcealign
+Subject: Re: [PATCH] drm/amdgpu: add vm fault information to devcoredump
 Content-Language: en-US
-To: Dave Chinner <david@fromorbit.com>
-Cc: djwong@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org,
-        jack@suse.cz, chandan.babu@oracle.com, axboe@kernel.dk,
-        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com,
-        ritesh.list@gmail.com, linux-block@vger.kernel.org
-References: <20240304130428.13026-1-john.g.garry@oracle.com>
- <20240304130428.13026-12-john.g.garry@oracle.com>
- <ZejjjaTFPi+qEDgS@dread.disaster.area>
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <ZejjjaTFPi+qEDgS@dread.disaster.area>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Sunil Khatri <sunil.khatri@amd.com>, Alex Deucher
+ <alexander.deucher@amd.com>, Shashank Sharma <shashank.sharma@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Mukul Joshi <mukul.joshi@amd.com>,
+ Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>
+References: <20240306181937.3551648-1-sunil.khatri@amd.com>
+ <20240306181937.3551648-2-sunil.khatri@amd.com>
+ <f61edcbe-938f-4c48-920e-64c8352e87f4@amd.com>
+ <bd6a70dc-d710-498e-b4ed-35c6106cd898@amd.com>
+ <f3b6d600-e8f2-48cf-b19b-ddb28e9bcbee@amd.com>
+From: "Khatri, Sunil" <sukhatri@amd.com>
+In-Reply-To: <f3b6d600-e8f2-48cf-b19b-ddb28e9bcbee@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO6P123CA0005.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:338::10) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0167.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:de::11) To PH7PR12MB5596.namprd12.prod.outlook.com
+ (2603:10b6:510:136::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,200 +71,176 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|IA1PR10MB5995:EE_
-X-MS-Office365-Filtering-Correlation-Id: d09bde67-c90f-4b83-6d73-08dc3ea42153
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5596:EE_|CYXPR12MB9443:EE_
+X-MS-Office365-Filtering-Correlation-Id: e29ed19e-edd7-4786-aeef-08dc3ea42a18
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	8RU4MPNKEoFyB8s6Zmod6a51RpxvfrS3bG4cuEqbzuWkypf2MQmhFcSDzwz7wIHunYUVuhD3+Lw430B3ax7Ba6kKzs+Wm7K0gFqCPZdOyPuDdqo/hLwJsaOlmKdq7LZxjI26V4Ngh8rWG/D0+cV4OOe/ymbk0hBtsQw2A0DNpq8eXykQrNnZH/3B7BeDQVMufJnUv5n0oEKigCA5hwmUu8QqiDzqyb+VtXLGEwvj7OqUCocVCc3723YHIRfetqxx6tNEQj8NGNhj+Q3cLA3dHMbvW2ye3MNhG8zAm3V7wnY0uTsMvNDn1zGpveLvXYa8EvRy6hW0/xLqxz90ORya9O3GB9ALK8RJFfnKWoc6l2e/vy39bMvKGWAISmWHugZ5xHwzeuDCIJocKBB1dGIDWDS6uv0gZrmnZtM2mRsSk5UxvQFztwXBT4DIS2WMAoleh3xgI+I4rX3WmoICckqt50yjzA+thAr+R82QXh8+FeRl80pZb57H+ibJscKcuRpSk4tkSv7NvUpOt6FRXFdham451yRiRvlheQnjBOZktiKS21yI44nWc8uG9emq3e2De//REt6e7osLZq2gn6oDG2AIdDfwuUiJWtldY8qi5uZdfdsR/+987iloFRtmCE6a8ylPUp25hUzC2NRyyCyFDWbqpYacvzeti4BuF6LSMkE=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info:
+	0ToiykIUWuLf/47xb/F1b8ZxOEZAnUY9RycxUQkNQXAu4zXai3pUuyQmecJVy8iiRTzvvcpJC48vsm46KfxZh1QS+4kQNklFxUmmV+vJqsh0z1Ol+bNzdGAZRVHGqO4KssFPEAGcgpOKHMJjrE/Mi5iGFngtfy1JezuaXHKr39+iq63SNyYEFGsQ8gPgM+inq53eutU6zXq6efqt5YY5Qgn8VGbho6xw/+TllARQOOSUTnXyY2tVYY8n9W03SeczaFewTfSWfTZPlgn1L6/P1lPt5Afp4AnM1Z/nukS+imSPgNpkzg41fafyblkrDfCUJpUpPqPF3fG4bej0cl4EM4G7EAKUMnYpWG0/hZ2sQE9xoyFyYIYf/P2TkVtyyOXpKx21utnUAY6uZOSfmKaP26NtKdQEkduZqMP5dZMvrwKqz+l60QQmVETSaWJP5X6/JkRXkfG1AtTPq01LxIATD63zTMzaE2AXff2+wkh3v9hdHKROnKjsn/ABittBFBOn7Wk+Bzvwap9TJ0tcLiWhYtUwTAYxXZxP6cXwYkdYtlc+pH1epI8xc1npA/1t6MpDi7MYC2nclNp1Y8uTWahm/+VxLWsX35sGS4yqnwCNDWmoNeVO10Bynh0jKdmVUTtXbvLdNVkfhmOGRHnHb3OJDI1K2Ec2aeEYrF5lIGeITkY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5596.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?dkNHT2t4eWdNdXJSMFdkVnc0bTNPRXJnVGNoM255eGsvSmVBNkUwdkVTdHA2?=
- =?utf-8?B?cVkyc0d0QzdPWGpCbEQzeDBkR2U5b2txVFZITFZxTTcyVHJldlVnR1kyNFNl?=
- =?utf-8?B?UzY4bFg3SWZESXdFUjVVZC82czFMUE50M2tRNjZESlJBY1dEWGN3Z2RNVHk0?=
- =?utf-8?B?OWJTcG5zS1YwelcwZWVzQmt2Y2VpMkRrRVBrbk5Tem92ajZ5Z3Yweks4U2Vq?=
- =?utf-8?B?czFQS3RIeWd6ZTAwZVJ0d2R1Q3ZEN1pIbWlDNkZzcDBSQlNsNFJBamFGT24w?=
- =?utf-8?B?dEFnWjlYUWxXR0R3Qi9CT2kzSXhnNUVQb05Bc3JlUFp5d25JVERTUjZSZU13?=
- =?utf-8?B?WHZwa01kZ2hKSWpVWTVEQWFraFBBcEtZbDdITFF1QVVYbUgxMXQyaEVBOWVa?=
- =?utf-8?B?MnIzdm9lUUo5R01yQ1I0aUg3OXVuQlJZZG1JWS8rdEFZOTBnaHJCRWYvZ3Jy?=
- =?utf-8?B?ZGh4N2JmblIrbGFJUVZKb05lb2lvQm1WN0JUZlpFb3h6UlR4bXhNaU9BdnEv?=
- =?utf-8?B?eWgzL2NqMFFaYVk1Z3RsODBPeDg4SFpacmM0cnIzbTdkdDJnbXhGTjRlZSsy?=
- =?utf-8?B?bjllZFJweXU2NTZxNmROcFo4TlNrM3V0ZGFsYUJBTlpFbVZmZWtqNU1DS3VW?=
- =?utf-8?B?UDVMZ1F0UlA1bUtNUmRzM0M5T1ZZT3BBaUNFTXlra2hUdnBiQkppdDhrRTRs?=
- =?utf-8?B?cG9ibGg2V2xlMy9rUXdmR0R0QTBOeHpOczB6NXIzMVBzTDlSS0tnRHBWaG1R?=
- =?utf-8?B?ZXJ1YzB2dndJemlESkNjbHVpSndTK3FDSFdneHlqTkhzb1MwcDZwL1kxZTds?=
- =?utf-8?B?TWtSaThRU2ZOWHM2bTg3bDJRZ0VaaTFkcXJvNW1ySEpqTlUrUHV4WE1ENmdC?=
- =?utf-8?B?UW1HQXQ0RGVHZi9zVjBJUU1YOTRENlJSSUF1Y3hmelo5TGsxbDBwV09RSHhj?=
- =?utf-8?B?blVVTC9uWklwNGVxZ1VDRVFpd2FLV3A2d1RTVmZ0elBYTXJEbmNpYXlqQ0th?=
- =?utf-8?B?dkpJaFVCL0F4YUNESDFJS0VmSDJWeEhSVU9rR1NFbHBiYXZtRTVGRUFKT3Ji?=
- =?utf-8?B?ZU1DeGpVRmxXTDg3bUJla2J3Z1BvODVCWnhPL2VyKytuVHg4NjBLUFN4Rm1m?=
- =?utf-8?B?VlhESDE0UzUyVDZUeHdEeDdnRHc3T0dwZjNRWUhVdURLTVBSUjZ0aGNVaTFl?=
- =?utf-8?B?ekZIVEN3MVViem54dXR2b3RkRmJna1R1Wm9hazA1ZldyY0VwZks3VjVYRmF2?=
- =?utf-8?B?VWsyczJua0NycjRPNGFxa0VBTS9PUWswWWZiTmxTelp1d2NCcVU3aVI3ZWwr?=
- =?utf-8?B?N0F2RG9IQXl3VGFFRi9IL2hiTmoxMUxqMEEwUWNrMndpVS9tUlRuZXFvQUtM?=
- =?utf-8?B?aExMR0NSTlBwVEUrUGtqRDhYeXFBMGZtZmNSQU91WHNvRGR5R1FVbDlLZEJS?=
- =?utf-8?B?MWVuaVFmZ0Z5YkFxay9iTEtUTEc0QlprSVJVWkpGajdsZEgxbHh6RXl0d2xE?=
- =?utf-8?B?U3dsekxVTDczcUFwL1l0TDRlNnFMdUZZN3JXUFpvNnQ3d3BDWEdieEd1ZndU?=
- =?utf-8?B?ZDlpY0t6bDJ0c1NoK25GZHlIajRWcFhDb0krQm1TMDc0dlIxcmkzMmUwL3VY?=
- =?utf-8?B?Yld2clNKS0svNHpBYUJia0NmemVEYmRVdm82akxZREx3RFNlTlpBZVZQNHRo?=
- =?utf-8?B?Y2ZLMnBoSUNnOWh4c2NweVNUU1A4NmdDcEZtNUtGaFlyaWVMQzk2M0FseWhG?=
- =?utf-8?B?cVFoclM0elY0MFJmcDhxUGpEM2MwdHhOYUZmSHY5SjVOQkIxV3dTbmtwNDg0?=
- =?utf-8?B?MTNubDNLcFhuVUplVnZsTWVwNFJqQ01BSnVJUlFDMGdoV0t4NmY1bFBLbUVM?=
- =?utf-8?B?YjQ1TmNOSktNMXlXaVlabEcvcGp2VTVPRHVzLzZpcTRtSXpkdmFqWTZTWEo3?=
- =?utf-8?B?bWlBeDZ6ZmRUZnJ3ZzRJUm1LY3N4ZTl2K25iQnk2T0x1NCtvSFVxTkpSOXMx?=
- =?utf-8?B?Mm1YMzF2aEtxSUZuV2xsRGJBWXpwSC9qZ3kzbUptdlVuQkVxUHdYS0FBQjVC?=
- =?utf-8?B?akNlaWFIUWpiUnRTd2NPQ0xySHFQS0l4eHVZWlZaS2xJSE9Kb3g4aHpuQVBv?=
- =?utf-8?Q?hTL43mkn5MBm8D7dAWQln1APn?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	IlUaL2AAH733bt3Avcn0h6SB7nxRnEVyIsDUmt7r/U6Lhbpt3AS762OYxw4ipdquqaJP4c1RMBpZU6mKL3zc1rPncvQVand8sXvjnLHNioR/rPX9ZoppZAiyZyNk61CvX73uqXj9zqX63qP3MZUYhjIMY/ZRPeqP9Cxshshxbd8BizfngTpaJW/cP9kuXlx335CqgEw461rk+q0/8Sc8BzJLOECcafyZHZxMVSeR6LNAs4+53/V6XVQfJPgM+t1wa1Lkg+BadhxVrkK6LKFZZ717wWyfYTw0D2oTvxYZvNC/1pJS0dqAOsvompeXxT7TL79Roe1EfEtLV8eWLucR+PgShXBHUSJ9ae0lSR5YbkXAW1HS8CdUrZI6Jrf1mg8qLrMtvaMjOa7RhvmGWsL/Lc5hPe2fz6WTpWI2EgQ3BQPw6/mcaym/S+akP5DhkHJTg1q3LRe5mJfRqMX197KS1eGWZg2Oopbho9rCWG0BCk3EHp9DfKxUWExlfFgzLNQC9l/oovRJaYsWQvVr+zEImCi5dY6EbrZg3o1M6UoByCONdXpwUECgMQ4nB1VmByHr5uX/1nwhR8YCtYuZrpmNip8m2yoiJ7zoHaOVt3Cz4IM=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d09bde67-c90f-4b83-6d73-08dc3ea42153
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VnllejZkUGNDRmJRR2hsSk5RMDcvZHgweHdldjJaNnJwYkE5S3pJWTJnUGFS?=
+ =?utf-8?B?ZU1mMXpta3IyQnIwT1hlcWVva1JqYTdwUDNpQjF1R2hEdWppcmF6U0l2UEdv?=
+ =?utf-8?B?bjhYVVMrcEF4bk1xY01KSjE1NUNMZmpBMGhGMHBUcnlwemZFcVRFVktYVWFM?=
+ =?utf-8?B?NHorWEdKc2dod0NGbk41S2E0aTZWbS8zeXI3NHBwWEZ3Wk5wMjdubC9xOVp6?=
+ =?utf-8?B?dlpwU1AxNHQ5MXRncjFwWC8wMERpUE1nNTQyS0JGTmtYbGtuODhYZVY2bVhM?=
+ =?utf-8?B?eHZMblkwbWR4OFp2cU0xazVtZVd1bFFjNktucjVYQ0VoZHY3UWV3VzVaMTlL?=
+ =?utf-8?B?b2tjbUFsbkRkR3JNZTZuWmJXNzhvQUtNUXVhMFVIdEEzaUdnNmo4dE5PQy9U?=
+ =?utf-8?B?RnhkMVJDOTVOTitleUYyRGN5VGJDZmc3ZWdVOHg5dW91UHl1clVDemxvQVNk?=
+ =?utf-8?B?aHpzallHaDEwcmc5K2RnVW1VZG15a2g5MjdXdUp0UExxUzFnOGJGUC9uZjla?=
+ =?utf-8?B?MHU1OFZXNmZ4TFpCa1NPUC9wL0dtRm5GQklvY09XYXRMb1AyK2hicU53Tmxo?=
+ =?utf-8?B?M3lNQzZkekxTUWtOTVN0WHdKa1RuSk54ekhZU0I3L1lkQXJiQ3I5RThLNWZ6?=
+ =?utf-8?B?K0tRK3hvYW5ydk1zdGhxSnhpb05aWE0weVhJRlhkTkxkMjF3SHo5Y1JGRW5W?=
+ =?utf-8?B?c2VNRVNYaTVuRlp1OGdtSmVtbU1HWjVoVzFUL2dRN2pTdHhYTmpsMU5jUGtp?=
+ =?utf-8?B?WWlCSzluajhaT292bXA5WDZIZU1OS1NPRGZvRkV5eDhmL1N0VGtoTFNFRFlj?=
+ =?utf-8?B?SlUyWTJvTkpIS0RYajFnTEtWY0FqNHUvOWZJeWM3Q0RaRlhCSFlBaEZDNUhk?=
+ =?utf-8?B?KzdMd0U0RDNCTjMzQ2Y1Mk1ZNWVaVHVYTXdWSUlnMzQva1RWTHRnaTlEcUY1?=
+ =?utf-8?B?bnREeEdqNzhyOFc2dHVRTGJLU215R1Y3YTJkWVdxUFlyWEFCVXVxTTg3eDJ5?=
+ =?utf-8?B?Y0VIWXZxQ1RlSUVReWZJVGhKK2VTeU1yTnVJamdvRjd4SGk5UnA1eEFzUHdH?=
+ =?utf-8?B?NmxVMWVzditqY29ySUdHZkVkM3lBc1FsSDNQR1k4b1lWTTMzNHllME9CMWp2?=
+ =?utf-8?B?SjdzR1p4b3VPRGU3Ym56cWsvU2pTQ3BCUlQ4ZXFUQ3JONkFIT2hFdm5Zakc3?=
+ =?utf-8?B?UlZhaFZoRjlMUUFNenlzYXd4SzNFOWF2R2JtS2VxUElYVTkvVUZhQTZ4UDlI?=
+ =?utf-8?B?OTVsNjFBaWMrdm9LeXhtRmFhT2xFVHpuQmErRi9yZlRwMlNWVnI0bEY0UEg5?=
+ =?utf-8?B?b0twclBQL3BXc1dmMGUwejgrK2ovVG40RC9PNm0zeXc3aUd5ajA0V1Ivbm1W?=
+ =?utf-8?B?cXZYVVFsZHhERGljZ213OFQxdlVJbVk5aE5hQ3kzNlUyVjVHNmRwVVR3dWN3?=
+ =?utf-8?B?R1JqbjhNemNINWpUM1g2N0c4ejB0YU1QUjJWeXpCZUNBZTFYcVQ5L1ZhOEpl?=
+ =?utf-8?B?RWNCOVlXS2lnTVcxTEZ3bGlhMkRUNVhSa2ZPT0RoYUQ1ck1yVWQ0amJLbGdu?=
+ =?utf-8?B?dnFjdUdIU3NncUNGV1NMUmlobWtnRDVwb2UzaXlEdWJ2SEh4M2xTYnU3TW15?=
+ =?utf-8?B?WVdpb1QxL0xLN0YwVFA2MS9sZmFtM0Fqb1Btc1lzcGtZQXBVZnVmV3JpNGg5?=
+ =?utf-8?B?OENRUXJrV3VvOVRBaDRwTHdKNGEzb0Nvby9ldzFXNXJTSW55Vk9IOU9tQjl4?=
+ =?utf-8?B?Qk8zTU5LUE9ya2MwTlRzSEo5UjdmenZVZTlOdU5NUEZzVFBRazJURTFUL29B?=
+ =?utf-8?B?SHVyMStSOWFxdzZoMnZTZkoySHJUdWZsM0pCdDlmNHZnYWNMejljKzBpNjZ0?=
+ =?utf-8?B?MjhmN3ZBYmFvVDBiQlhTOEltNnlzcDBKMWNkTHU4LzF0czRDdE1IMFNUbkpi?=
+ =?utf-8?B?SUdlakZiSVNqS094RSsyWXh6ZVYxbTdQaFJVRUJ1NFVtUzBHcEJFYVo1NFdK?=
+ =?utf-8?B?NkVZQ1JIQ0UxMi9WQlBoK25oQnFlVVhLaXJlR2wvS2ZnMzRGa3pIS2Vtdkh0?=
+ =?utf-8?B?NUJQSElMSHhNeDhDQ0FFc0d1RzNKNU1URkJZR016L3RLRDJxZEVPYXBSMEtZ?=
+ =?utf-8?Q?poMW/H8x5YhQc1GgYgVnQ4I2k?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e29ed19e-edd7-4786-aeef-08dc3ea42a18
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5596.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 12:43:03.6302
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 12:43:18.4895
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 79H7r1t+qajILkBgWTLmH3CqElF/QRi+/xeU32Dupy/0yePS8BRBHH/BZEIaKlYOtEkNEcS7YKePQ44vBZKhyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB5995
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 malwarescore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403070087
-X-Proofpoint-GUID: F7K6I1vSzNd7SLnXbgCZ0MqhSJcboqxz
-X-Proofpoint-ORIG-GUID: F7K6I1vSzNd7SLnXbgCZ0MqhSJcboqxz
+X-MS-Exchange-CrossTenant-UserPrincipalName: kQFssrT10jR2UVE8BpLt5gr4/s/VmZc64dRqQbyK3IPR+6Jh2H+XGqGG5xQxe9oWuR1PydTgQSXK2TQB6TCj5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9443
 
 
->>   #define XFS_SB_FEAT_RO_COMPAT_ALL \
->>   		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
->>   		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
->>   		 XFS_SB_FEAT_RO_COMPAT_REFLINK| \
->> -		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT | \
->> -		 XFS_SB_FEAT_RO_COMPAT_FORCEALIGN)
->> +		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT| \
->> +		 XFS_SB_FEAT_RO_COMPAT_FORCEALIGN| \
-> 
-> Please leave a spave between the feature name and the '| \'.
-> 
+On 3/7/2024 6:10 PM, Christian König wrote:
+> Am 07.03.24 um 09:37 schrieb Khatri, Sunil:
+>>
+>> On 3/7/2024 1:47 PM, Christian König wrote:
+>>> Am 06.03.24 um 19:19 schrieb Sunil Khatri:
+>>>> Add page fault information to the devcoredump.
+>>>>
+>>>> Output of devcoredump:
+>>>> **** AMDGPU Device Coredump ****
+>>>> version: 1
+>>>> kernel: 6.7.0-amd-staging-drm-next
+>>>> module: amdgpu
+>>>> time: 29.725011811
+>>>> process_name: soft_recovery_p PID: 1720
+>>>>
+>>>> Ring timed out details
+>>>> IP Type: 0 Ring Name: gfx_0.0.0
+>>>>
+>>>> [gfxhub] Page fault observed for GPU family:143
+>>>> Faulty page starting at address 0x0000000000000000
+>>>> Protection fault status register:0x301031
+>>>>
+>>>> VRAM is lost due to GPU reset!
+>>>>
+>>>> Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
+>>>> ---
+>>>>   drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c | 15 ++++++++++++++-
+>>>>   drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h |  1 +
+>>>>   2 files changed, 15 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c 
+>>>> b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
+>>>> index 147100c27c2d..d7fea6cdf2f9 100644
+>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
+>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
+>>>> @@ -203,8 +203,20 @@ amdgpu_devcoredump_read(char *buffer, loff_t 
+>>>> offset, size_t count,
+>>>>                  coredump->ring->name);
+>>>>       }
+>>>>   +    if (coredump->fault_info.status) {
+>>>> +        struct amdgpu_vm_fault_info *fault_info = 
+>>>> &coredump->fault_info;
+>>>> +
+>>>> +        drm_printf(&p, "\n[%s] Page fault observed for GPU 
+>>>> family:%d\n",
+>>>> +               fault_info->vmhub ? "mmhub" : "gfxhub",
+>>>> +               coredump->adev->family);
+>>>> +        drm_printf(&p, "Faulty page starting at address 0x%016llx\n",
+>>>> +               fault_info->addr);
+>>>> +        drm_printf(&p, "Protection fault status register:0x%x\n",
+>>>> +               fault_info->status);
+>>>> +    }
+>>>> +
+>>>>       if (coredump->reset_vram_lost)
+>>>> -        drm_printf(&p, "VRAM is lost due to GPU reset!\n");
+>>>> +        drm_printf(&p, "\nVRAM is lost due to GPU reset!\n");
+>>>>       if (coredump->adev->reset_info.num_regs) {
+>>>>           drm_printf(&p, "AMDGPU register dumps:\nOffset:     
+>>>> Value:\n");
+>>>>   @@ -253,6 +265,7 @@ void amdgpu_coredump(struct amdgpu_device 
+>>>> *adev, bool vram_lost,
+>>>>       if (job) {
+>>>>           s_job = &job->base;
+>>>>           coredump->ring = to_amdgpu_ring(s_job->sched);
+>>>> +        coredump->fault_info = job->vm->fault_info;
+>>>
+>>> That's illegal. The VM pointer might already be stale at this point.
+>>>
+>>> I think you need to add the fault info of the last fault globally in 
+>>> the VRAM manager or move this to the process info Shashank is 
+>>> working on.
+>>> Are you saying that during the reset or otherwise a vm which is part 
+>>> of this job could have been freed  and we might have a NULL 
+>>> dereference or invalid reference? Till now based on the resets and 
+>>> pagefaults that i have created till now using the same app which we 
+>>> are using for IH overflow i am able to get the valid vm only.
+>>>
+>>> Assuming  amdgpu_vm is freed for this job or stale, are you 
+>>> suggesting to update this information in adev-> vm_manager along 
+>>> with existing per vm fault_info or only in vm_manager ?
+>
+> Good question. having it both in the VM as well as the VM manager 
+> sounds like the simplest option for now.
 
-ok
+Let me update the patch then with information in VM manager.
 
->> +		 XFS_SB_FEAT_RO_COMPAT_ATOMICWRITES)
->> +
+Regards
+Sunil
 
-...
-
->>   }
->>   
->> +static inline bool xfs_inode_atomicwrites(struct xfs_inode *ip)
->> +{
->> +	return ip->i_diflags2 & XFS_DIFLAG2_ATOMICWRITES;
->> +}
-> 
-> I'd really like this to be more readable:
-> xfs_inode_has_atomic_writes().
-> 
-> Same for the force align check, now that I notice it:
-> xfs_inode_has_force_align().
-
-ok, will change
-
-> 
->> +
->>   /*
->>    * Return the buftarg used for data allocations on a given inode.
->>    */
->> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
->> index 867d8d51a3d0..f118a1ae39b5 100644
->> --- a/fs/xfs/xfs_ioctl.c
->> +++ b/fs/xfs/xfs_ioctl.c
->> @@ -1112,6 +1112,8 @@ xfs_flags2diflags2(
->>   		di_flags2 |= XFS_DIFLAG2_COWEXTSIZE;
->>   	if (xflags & FS_XFLAG_FORCEALIGN)
->>   		di_flags2 |= XFS_DIFLAG2_FORCEALIGN;
->> +	if (xflags & FS_XFLAG_ATOMICWRITES)
->> +		di_flags2 |= XFS_DIFLAG2_ATOMICWRITES;
->>   
->>   	return di_flags2;
->>   }
->> @@ -1124,10 +1126,12 @@ xfs_ioctl_setattr_xflags(
->>   {
->>   	struct xfs_mount	*mp = ip->i_mount;
->>   	bool			rtflag = (fa->fsx_xflags & FS_XFLAG_REALTIME);
->> +	bool			atomic_writes = fa->fsx_xflags & FS_XFLAG_ATOMICWRITES;
->>   	uint64_t		i_flags2;
->>   
->> -	if (rtflag != XFS_IS_REALTIME_INODE(ip)) {
->> -		/* Can't change realtime flag if any extents are allocated. */
->> +	/* Can't change RT or atomic flags if any extents are allocated. */
->> +	if (rtflag != XFS_IS_REALTIME_INODE(ip) ||
->> +	    atomic_writes != xfs_inode_atomicwrites(ip)) {
->>   		if (ip->i_df.if_nextents || ip->i_delayed_blks)
->>   			return -EINVAL;
->>   	}
->> @@ -1164,6 +1168,13 @@ xfs_ioctl_setattr_xflags(
->>   			return -EINVAL;
->>   	}
->>   
->> +	if (atomic_writes) {
->> +		if (!xfs_has_atomicwrites(mp))
->> +			return -EINVAL;
-> 
-> That looks wrong - if we are trying to turn on atomic writes, then
-> shouldn't this be returning an error if atomic writes are already
-> configured?
-
-I think that you are talking about a xfs_inode_atomicwrites() check.
-
-
-> 
->> +		if (!(fa->fsx_xflags & FS_XFLAG_FORCEALIGN))
->> +			return -EINVAL;
-
-> 
-> Where's the check for xfs_has_atomicwrites(mp) here? 
-
-please see above
-
-> We can't allow
-> this inode flag to be set if the superblock does not have the
-> feature bit that says it's a known feature bit set.
-> 
-> Which reminds me: both the forcealign and the atomicwrite inode flag
-> need explicit checking in the inode verifier. i.e. checking that if
-> the inode flag bit is set, the relevant superblock feature bit is
-> set.
-
-We do have that in the xfs_has_atomicwrites() and xfs_has_forcealign() 
-checks - is that ok?
-
-> 
-> ....
->> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
->> index 74dcafddf6a9..efe4b4234b2e 100644
->> --- a/fs/xfs/xfs_super.c
->> +++ b/fs/xfs/xfs_super.c
->> @@ -1712,6 +1712,10 @@ xfs_fs_fill_super(
->>   		xfs_warn(mp,
->>   "EXPERIMENTAL forced data extent alignment feature in use. Use at your own risk!");
->>   
->> +	if (xfs_has_atomicwrites(mp))
->> +		xfs_warn(mp,
->> +"EXPERIMENTAL atomicwrites feature in use. Use at your own risk!");
-> 
-> "EXPERIMENTAL atomic write IO feature is in use. Use at your own risk!");
-> 
-
-ok
-
-Thanks,
-John
-
+>
+> Regards,
+> Christian.
+>
+>>>
+>>> Regards,
+>>> Christian.
+>>>
+>>>>       }
+>>>>         coredump->adev = adev;
+>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h 
+>>>> b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h
+>>>> index 60522963aaca..3197955264f9 100644
+>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h
+>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.h
+>>>> @@ -98,6 +98,7 @@ struct amdgpu_coredump_info {
+>>>>       struct timespec64               reset_time;
+>>>>       bool                            reset_vram_lost;
+>>>>       struct amdgpu_ring            *ring;
+>>>> +    struct amdgpu_vm_fault_info    fault_info;
+>>>>   };
+>>>>   #endif
+>>>
+>
