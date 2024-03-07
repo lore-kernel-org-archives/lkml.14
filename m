@@ -1,154 +1,186 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A53B657D5
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA291C2A3;
+	Thu,  7 Mar 2024 08:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709801986; cv=none; b=ZyAwPwlbn8nVbQ73b6boaWDdWtchcN3LYhtaCZaaaYik3kkjHQ8vkkocs1CiH4DeMXguYBjoc9UOi4VSWUbapwnJK3uU1D9fITxyvfzd2LfRZ4U/DhPb2p4PEcIfkKd4mr9Pp+wAC0YFL5ow3oZf9gDNNgXzjopdLTAztupVXEg=
+	t=1709801986; cv=none; b=kHojo4cI7fw/FC3KXzVp1aj0zskeLAkdd/YPzimwun7X6CyIjzBkB9OGCT7lYtccLwqhkLBh/w4cSBbR+lOO7fgwHNFLES3lPOSZJoX59FfEsJXxwF2rwuHo7nlKfoBl+Z20h81W5qXvZh3X7U4cEPjKOtrRQM/gkyMIgtIMIWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709801986; c=relaxed/simple;
-	bh=in9euD7RnynsreKIHDYStuw2jxb4WZnJBqhQrmN9KkY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LbUu4gfXq892bH1WljE5VJ9L7xvd0hT2X7M1Et+EMljzeepdvC68rkZkdKB16hfoBI4ZK7hBmROdpQ9+2XZM/xbKO12O9JxENIivKaQd3J7fcSZHJDObH7hOE35a9+4K1ZyvTYmtw1yiwU2lA+gEGBQAp/lvUKvxujAmLiEMjFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LRRyTt9T; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	bh=ZDsYXwiTTgifrM7aKCBBIntVddtFklS2hnxDsSUEIx8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cRHC8I1Sv/2tzyN7ShlSIyYJ5XzJmAPBlF0AYIbUTkjnaGbyP3owQLj27gva2URckwCAPYtADJ+6x/XEM3eAyyU3c+Ys9uIqsbch9R3HJD/1W/YpJYQ/kTQNOrcvzEp//4rKOsbnko2zqXTAohl8+bexozrnAq7zlKbYeibtgok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VvQogetT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qmb0ocOp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VvQogetT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qmb0ocOp; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LRRyTt9T"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4278WoTP008751;
-	Thu, 7 Mar 2024 08:59:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=zCBrT592VUSeAOXLJHm5G5Zx0UY+JL/SwULyKBYSlGs=;
- b=LRRyTt9Tak2g8wAeZhWfrDV//wJt/6peV10UTj1J+FrfpuSz6ICLT169i0MWly48Ni+B
- 5RpPY+ElSddSMoL11QNUvxzwvyUaFQNoIp8vPFaY3YsrwQMjiLt7gS+XKEDj8U4AZIug
- aZ+6wDNrJQ9roMkhQyRhXzUtmgwkOY9EfjQIN4CQ/+dssZKhugfn1RyJu+offFvNGNvy
- NSqqtIz7pg/nrlRslyao+7dtgWqmxp4fcbqSTtdSsDJFOQPQ6aWMNBd6QR7ffUnxVjVh
- P6dUkh5rmmlFSeIUAqQ+jUEOj8Mr2eoayO35T6K9S52b37LGXHyZlqoBpWG2pZCIMKP8 iQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5jrdex-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 08:59:33 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4278WrlK008939;
-	Thu, 7 Mar 2024 08:59:32 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5jrd5c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 08:59:32 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4277Tc69026212;
-	Thu, 7 Mar 2024 08:57:39 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmfep4f5x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 08:57:39 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4278vXbp13107684
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Mar 2024 08:57:35 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1CBA02004D;
-	Thu,  7 Mar 2024 08:57:33 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 900B92004E;
-	Thu,  7 Mar 2024 08:57:30 +0000 (GMT)
-Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.in.ibm.com (unknown [9.109.201.126])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  7 Mar 2024 08:57:30 +0000 (GMT)
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
-Cc: sshegde@linux.ibm.com, yu.c.chen@intel.com, dietmar.eggemann@arm.com,
-        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
-        aboorvad@linux.ibm.com, srikar@linux.ibm.com, vschneid@redhat.com,
-        pierre.gondois@arm.com, qyousef@layalina.io
-Subject: [PATCH v6 0/3] sched/fair: Limit access to overutilized
-Date: Thu,  7 Mar 2024 14:27:22 +0530
-Message-Id: <20240307085725.444486-1-sshegde@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 7hG9tuQGJi8A-MAh8fLTr0DfolaqRqpW
-X-Proofpoint-ORIG-GUID: RsuuUOsf0BR_w62_vx4WVXMimh_uYxgz
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VvQogetT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qmb0ocOp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VvQogetT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qmb0ocOp"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5E8EC38949;
+	Thu,  7 Mar 2024 08:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709801982; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Zr1vglmdaTVF4Y5C+JCtluV3UMYKqQ7gx5fxIkqkoVw=;
+	b=VvQogetTf/95bbo74xOfRkUqpGRuCqV9YNka3pz/Zykuze2ZUAaUNpq0zEYSmeg0X5fjZc
+	8lXmLoHrJxzonV1kp7l4kApYKMYwIL1XhKjZxtSY7iAqhsQ0j2pC2j474z3eoWNWziX+xF
+	2ySMB7eNyX6wdrVLiFrW0U47LyomLeQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709801982;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Zr1vglmdaTVF4Y5C+JCtluV3UMYKqQ7gx5fxIkqkoVw=;
+	b=qmb0ocOpIGTIw5ApzfJWBCPw7A+4Qx5qBRNg+/IikDhX+q3h6wUBU/NyGbwRQje2tgWsu4
+	OZngehUOQKu3GPBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709801982; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Zr1vglmdaTVF4Y5C+JCtluV3UMYKqQ7gx5fxIkqkoVw=;
+	b=VvQogetTf/95bbo74xOfRkUqpGRuCqV9YNka3pz/Zykuze2ZUAaUNpq0zEYSmeg0X5fjZc
+	8lXmLoHrJxzonV1kp7l4kApYKMYwIL1XhKjZxtSY7iAqhsQ0j2pC2j474z3eoWNWziX+xF
+	2ySMB7eNyX6wdrVLiFrW0U47LyomLeQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709801982;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Zr1vglmdaTVF4Y5C+JCtluV3UMYKqQ7gx5fxIkqkoVw=;
+	b=qmb0ocOpIGTIw5ApzfJWBCPw7A+4Qx5qBRNg+/IikDhX+q3h6wUBU/NyGbwRQje2tgWsu4
+	OZngehUOQKu3GPBA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id F209813997;
+	Thu,  7 Mar 2024 08:59:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id EV+QOf2B6WW7FAAAn2gu4w
+	(envelope-from <tzimmermann@suse.de>); Thu, 07 Mar 2024 08:59:41 +0000
+Message-ID: <2c8ef49b-f20b-47f7-ad4e-2adcfd370024@suse.de>
+Date: Thu, 7 Mar 2024 09:59:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_05,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 phishscore=0 bulkscore=0 spamscore=0 adultscore=0
- mlxscore=0 clxscore=1015 impostorscore=0 malwarescore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403070064
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] arch/powerpc: Resolve backlight include
+ dependencies
+Content-Language: en-US
+To: mpe@ellerman.id.au, jani.nikula@intel.com, naresh.kamboju@linaro.org,
+ deller@gmx.de, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com
+Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ lkft-triage@lists.linaro.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org
+References: <20240306122935.10626-1-tzimmermann@suse.de>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20240306122935.10626-1-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-3.09 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_DN_NONE(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 FREEMAIL_TO(0.00)[ellerman.id.au,intel.com,linaro.org,gmx.de,gmail.com,csgroup.eu,kernel.org,linux.ibm.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Score: -3.09
+X-Spam-Flag: NO
 
-When running an ISV workload on a large system (240 Cores, SMT8), it was
-observed from perf profile that newidle_balance and enqueue_task_fair
-were consuming more cycles. Perf annotate showed that most of the time
-was spent on accessing overutilized field of root domain. Similar perf profile
-was simulated by making some changes to stress-ng --wait. Both
-newidle_balance and enqueue_task_fair consume close to 5-7%.
+If there are no further comments, I'm going to merge this patchset in 
+time for today's PR of drm-misc-next-fixes.
 
-Overutilized was added for EAS(Energy aware scheduler) to decide whether
-to do load balance or not. Simultaneous access to overutilized by
-multiple CPUs lead cache invalidations due to true sharing. Updating
-overutilized is not required for non-EAS platforms. Since overutilized and
-overload are part of the same cacheline, there is false sharing as well.
+Am 06.03.24 um 13:28 schrieb Thomas Zimmermann:
+> After cleaning up <linux/fb.h> in commit 11b4eedfc87d ("fbdev: Do
+> not include <linux/backlight.h> in header"), building with
+> CONFIG_PMAC_BACKLIGHT=y returns errors about missing declarations.
+> Patches 1 and 2 resolve the errors. Patch 1 has been reviewed at [1].
+> Patch 3 removes another dependency between backlight and fbdev code.
+>
+> Compile tested with ppc6xx_defconfig.
+>
+> v3:
+> 	* add Fixes tag and fix typos in patch 3
+> v2:
+> 	* via-pmu-backlight: fix build errors
+> 	* powerpc: resolve dependency between fbdev and backlight
+>
+> [1] https://patchwork.freedesktop.org/series/130661/
+>
+> Thomas Zimmermann (3):
+>    fbdev/chipsfb: Include <linux/backlight.h>
+>    macintosh/via-pmu-backlight: Include <linux/backlight.h>
+>    arch/powerpc: Remove <linux/fb.h> from backlight code
+>
+>   arch/powerpc/include/asm/backlight.h        |  5 ++--
+>   arch/powerpc/platforms/powermac/backlight.c | 26 ---------------------
+>   drivers/macintosh/via-pmu-backlight.c       |  1 +
+>   drivers/video/fbdev/chipsfb.c               |  1 +
+>   4 files changed, 4 insertions(+), 29 deletions(-)
+>
 
-Patch 1/3 - Main patch. It helps in reducing the above said issue.
-Both the functions don't show up in the profile. With patch comparison is in
-changelog. With the patch stated problem in the ISV workload also got
-solved and throughput has improved.
-Patch 2/3 - Code refactoring to use the helper function instead of
-direct access of the field. Keeping this patch so patch 3/3 becomes
-easier to understand. Depends on 1/3.
-Patch 3/3 - Refactoring the code since most of the patterns are observed
-are eas && !overutilzed. Changed the helper function accordingly.
-Depends on 2/3.
-
-More details can be found in cover letter of v1.
-
-v5 -> v6:
-- Mades minor changes for !CONFIG_SMP cases as pointed out by Vincent.
-v4 -> v5:
-- Added EAS check inside helper functions instead of sprinkling it
-around. EAS check is static branch at best. So that keeps the code
-simpler.
-- added EAS check inside cpu_overutilized as suggested by Qais.
-- Added patch 3 since most of the code does eas && !overutilized
-pattern as suggested by Vincent.
-v3 -> v4:
-- corrected a mistake where EAS check was missed.
-v2 -> v3:
-- Pierre and Dietmar suggested we could add one more EAS check before
-calling cpu_overutilized. That makes sense since that value is not used
-anyway in Non-EAS case.
-- Refactored the code as dietmar suggested to avoid additional call to
-sched_energy_enabled().
-- Minor edits to change log.
-v1 -> v2:
-Chen Yu pointed out minor issue in code. Corrected that code and updated
-the changelog.
-
-v1: https://lore.kernel.org/lkml/20240223150707.410417-1-sshegde@linux.ibm.com/
-v2: https://lore.kernel.org/lkml/20240228071621.602596-1-sshegde@linux.ibm.com/
-v3: https://lore.kernel.org/lkml/20240229104010.747411-1-sshegde@linux.ibm.com/
-v4: https://lore.kernel.org/lkml/20240301151725.874604-1-sshegde@linux.ibm.com/
-v5: https://lore.kernel.org/lkml/20240306102454.341014-1-sshegde@linux.ibm.com/
-
-Shrikanth Hegde (3):
-  sched/fair: Add EAS checks before updating overutilized
-  sched/fair: Use helper function to access rd->overutilized
-  sched/fair: Combine EAS check with overutilized access
-
- kernel/sched/fair.c | 72 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 45 insertions(+), 27 deletions(-)
-
+-- 
 --
-2.39.3
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
