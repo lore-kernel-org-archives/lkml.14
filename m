@@ -1,113 +1,510 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1687C13175E
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 13:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D551332AB;
+	Thu,  7 Mar 2024 13:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709818766; cv=none; b=rdcS8JgA6ERNJ3oji7LdUlBEKZ1Kfvf5Xl0FSVpkcVxMpcEM+6uSiW9Q19rxAbJZJLXU5mGcyTlNar5T0jrbsdUJfEgQwoNgMphzSSeAb8HPvqqQr8scsO5YBg/BnGuFrEp+nfv36fe/jdkW7tiS/MhFGn4Wb901d1Xv+KxHGPo=
+	t=1709818767; cv=none; b=J02sqnSVS3KBsDADEjlSKAzDnnsL0cW+lBuf60SnPXB/nbks5Kr88yXOV8IiHcT/027NQEHU7rvRxGL5v2+exyLVYIukJ7skNAYbE+saCcOY+mUM5Ibmo4k12ko0ZLslcWKlSkfVGhIyLgTWsvpe4rQ4R34zhGjaeoIHoRRZTUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709818766; c=relaxed/simple;
-	bh=YVBxuTgiADuyn/Y7BPbabvtI98g/BjA69xCsPubJDqY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Y+CgIlFgIf3kQCHLn0/rTa9AU3Vmouv6u4n1XncMjOpU+1pbRwLYEpvwRnJQ7HU8Cg2Qc6e4RyDyTvLuehUQJR1B63/d+6w7mmHWR9ph7Aac9lmshjZ3p0a45xDVD2gYrE4dqUhUmqHhgYO4YaafXELo54YTx9wW4cY64d3weSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nEruMG4m; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+	s=arc-20240116; t=1709818767; c=relaxed/simple;
+	bh=AJWMQQprKI9AVsyHzaWy3ccyTqi2QWdIgugpDFBkI3I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=liCQE/ASU9xG9pEI48IPJKrNdHcsR15WXsTwDjySr2zFzFSmoAa5Gg7nDsmI4EGFst7zOQ9ICK6ZQMbgIV/HSCXNjF8oONmCzMqMrVetoIBMnh0N/RAJshfkhDt4FQ+tJULkdh+LbsZELx/V3GSG6bg+arvefgIQAv8XcHfaNus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nf+Rsltp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nEruMG4m"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc693399655so1648058276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 05:39:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709818764; x=1710423564; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+p7lwWPK4A+HxnQYYFVMxpxfoiERHBbI1OMhXMl4tc=;
-        b=nEruMG4mrvpMv4WFky5jVGfRhjXotxVhvYkH5HSjyVmStujpFpWI9u1U2DEuaLv9Ft
-         TYutsK2oe0Vna7UOzOiB5xYHlU69JhOpag0cH9Fbu2VmzFRXOFf5qPKGCY5oZ3cc0T5X
-         cG+TyruUh3y2xsTir1b/QqiQX/d/q8Cwm36wkkM4MMXfQqvaJaDJDU+XsQVd/myyyvgQ
-         JxDqLt79dzefANxvtAQ171r3LKrusVBqzsbFYiZHf+qmkrb2vzfCbnkQ9M+E8DKI3XYi
-         HNN2jjTM/+LprABkHa0GEWSh8N/y9lCnC8KY77ciq90DU7L2btdoA3pnW0ym6K3POQlt
-         Wskw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709818764; x=1710423564;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+p7lwWPK4A+HxnQYYFVMxpxfoiERHBbI1OMhXMl4tc=;
-        b=OCleXjvJ8Odp0uJ83ERlxbpYoU/Hpikk3WHETVbpYMvTKxI3m0lJT/WgttNm2bQJdR
-         zbYF6vGY9VQ6gb8I5pfISrcULrhtWS1jUlnbsubNC+rUt77Grj7hCv42ZGt5TDjKohRN
-         ZLv2Lu0XLAsCeyA5AytnAz7ZGlgoPp/gCaz9lLxJfNy7mUxa+pQrQzKKLnpgx6AiX3DL
-         a4CGQxpi5ebPvKBIwp0QRajIo/t61jhQVT5kCfz7Mk3/c2DywnVkoSnUGkeYOsH+HBFx
-         lJnFbBEEkQCQzG3SpIxfc8nJ/gnF58LmZfrwKvsucktIZGY0TykiBPIjWcHIEL8NtKsl
-         dKkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQf0se8kCyt1MuT+BRVtML+mxO1cyDrbj7xZIbCiYohIKKKN5nlt4NIHWh2ZH509V+7h1oD3IFxqwWPFrz//LDzC8Y7NBe0N2GwpTc
-X-Gm-Message-State: AOJu0YzUU9JprP18bY0oMwOQLfedAYYM+obGJt4zcyM9k+vNPS+Valgd
-	/x3Dsiu3Uf7DZ8Nhpu4PAFlDf506dMkF6ulTisEcOu+3tns7LjVjresIcg7/IfCNafwfoBKL4C8
-	5aw6vTR38hFmF2qfFQw==
-X-Google-Smtp-Source: AGHT+IERxGCOOgtmKs7Ul3o8yNM4OeKiruullY93iXEMk4G4tg4OgAxxdrUv6OMg9noyhQpJciR8PQuPntNjh18q
-X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
- (user=yosryahmed job=sendgmr) by 2002:a05:6902:1243:b0:dcf:b5b8:f825 with
- SMTP id t3-20020a056902124300b00dcfb5b8f825mr4599717ybu.0.1709818764114; Thu,
- 07 Mar 2024 05:39:24 -0800 (PST)
-Date: Thu,  7 Mar 2024 13:39:16 +0000
-In-Reply-To: <20240307133916.3782068-1-yosryahmed@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nf+Rsltp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9048C433A6;
+	Thu,  7 Mar 2024 13:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709818767;
+	bh=AJWMQQprKI9AVsyHzaWy3ccyTqi2QWdIgugpDFBkI3I=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=nf+RsltpF3QduvUBgHDn3OI6RDyIEs6yxk8LtM9pIxzO8dC+/8gj6gKcsm+fkXvIf
+	 6O5yh94f+EGPIhgiSSADPn0gRxOiil/vKWC9e5geiRjOL1S90+Bob4iXJio+6rCYtS
+	 Smt8yWueTGSP3tGlSFOk0HeyoUsyyINp3vrIR69ou6E/onGERjE1euIY9n+aqScpRn
+	 EZPok+XYeQEpFoZwAfJ2EflA/OCk6SD7KXL2fl8A1VVgpm5x8dz8yp+U2wPgOHqOiW
+	 fmG+GaWdgFg8sEQVqyof3zcP/S4VDAdfyuhjxqcbOMBlSPC3C2eGJDQ110RBmkITGJ
+	 uNmWMQSdel62w==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 07 Mar 2024 14:38:38 +0100
+Subject: [PATCH v8 11/27] drm/tests: Add TDMS character rate connector
+ state tests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240307133916.3782068-1-yosryahmed@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <20240307133916.3782068-4-yosryahmed@google.com>
-Subject: [RFC PATCH 3/3] x86/mm: cleanup prctl_enable_tagged_addr() nr_bits
- error checking
-From: Yosry Ahmed <yosryahmed@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andy Lutomirski <luto@kernel.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, x86@kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Yosry Ahmed <yosryahmed@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240307-kms-hdmi-connector-state-v8-11-ef6a6f31964b@kernel.org>
+References: <20240307-kms-hdmi-connector-state-v8-0-ef6a6f31964b@kernel.org>
+In-Reply-To: <20240307-kms-hdmi-connector-state-v8-0-ef6a6f31964b@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=17939; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=AJWMQQprKI9AVsyHzaWy3ccyTqi2QWdIgugpDFBkI3I=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKkvDycdOPnCQdzzs0kWyxvZnXt7e+5VrJgkqP7i0K4n6
+ 95c6Y2U6ChhYRDjYpAVU2SJETZfEndq1utONr55MHNYmUCGMHBxCsBEJsxl+M1++gFnKXOSR/1q
+ wT8XFLhr7wtnLqk6I1H+b+q2hu9nglsZvmnyTrrSzmEa2rahssaWq4QrSPRKV5zc7tnJp3yuv1z
+ GDwA=
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-In prctl_enable_tagged_addr(), we check that nr_bits is in the correct
-range, but we do so in a twisted if/else block where the correct case is
-sandwiched between two error cases doing exactly the same thing.
+The previous patch stores in the connector state the expected TMDS
+character rate matching the configuration of the HDMI connector. Let's
+add a few tests to make sure it works as expected.
 
-Simplify the if condition and pull the correct case outside with the
-rest of the success code path.
-
-Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- arch/x86/kernel/process_64.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ .../gpu/drm/tests/drm_atomic_state_helper_test.c   | 166 ++++++++++++++++
+ drivers/gpu/drm/tests/drm_kunit_edid.h             | 216 +++++++++++++++++++++
+ 2 files changed, 382 insertions(+)
 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 33b268747bb7b..3f381906bbe1d 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -771,17 +771,13 @@ static int prctl_enable_tagged_addr(struct mm_struct *mm, unsigned long nr_bits)
- 		return -EBUSY;
- 	}
+diff --git a/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c b/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
+index f2acbd4c216c..dfed45b250a5 100644
+--- a/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
++++ b/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
+@@ -345,13 +345,156 @@ static void drm_test_check_output_bpc_crtc_mode_not_changed(struct kunit *test)
+ 	crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_state);
+ 	KUNIT_EXPECT_FALSE(test, crtc_state->mode_changed);
+ }
  
--	if (!nr_bits) {
--		mmap_write_unlock(mm);
--		return -EINVAL;
--	} else if (nr_bits <= LAM_U57_BITS) {
--		mm->context.lam_cr3_mask = X86_CR3_LAM_U57;
--		mm->context.untag_mask =  ~GENMASK(62, 57);
--	} else {
-+	if (!nr_bits || nr_bits > LAM_U57_BITS) {
- 		mmap_write_unlock(mm);
- 		return -EINVAL;
- 	}
++/*
++ * Test that when doing a commit which would use RGB 8bpc, the TMDS
++ * clock rate stored in the connector state is equal to the mode clock
++ */
++static void drm_test_check_tmds_char_rate_rgb_8bpc(struct kunit *test)
++{
++	struct drm_atomic_helper_connector_hdmi_priv *priv;
++	struct drm_modeset_acquire_ctx *ctx;
++	struct drm_connector_state *conn_state;
++	struct drm_display_mode *preferred;
++	struct drm_connector *conn;
++	struct drm_device *drm;
++	struct drm_crtc *crtc;
++	int ret;
++
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB),
++						     8);
++	KUNIT_ASSERT_NOT_NULL(test, priv);
++
++	conn = &priv->connector;
++	ret = set_connector_edid(test, conn,
++				 test_edid_hdmi_1080p_rgb_max_200mhz,
++				 ARRAY_SIZE(test_edid_hdmi_1080p_rgb_max_200mhz));
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	ctx = drm_kunit_helper_acquire_ctx_alloc(test);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
++
++	preferred = find_preferred_mode(conn);
++	KUNIT_ASSERT_NOT_NULL(test, preferred);
++	KUNIT_ASSERT_FALSE(test, preferred->flags & DRM_MODE_FLAG_DBLCLK);
++
++	drm = &priv->drm;
++	crtc = priv->crtc;
++	ret = light_up_connector(test, drm, crtc, conn, preferred, ctx);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	conn_state = conn->state;
++	KUNIT_ASSERT_NOT_NULL(test, conn_state);
++
++	KUNIT_ASSERT_EQ(test, conn_state->hdmi.output_bpc, 8);
++	KUNIT_ASSERT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_RGB);
++	KUNIT_EXPECT_EQ(test, conn_state->hdmi.tmds_char_rate, preferred->clock * 1000);
++}
++
++/*
++ * Test that when doing a commit which would use RGB 10bpc, the TMDS
++ * clock rate stored in the connector state is equal to 1.25 times the
++ * mode pixel clock
++ */
++static void drm_test_check_tmds_char_rate_rgb_10bpc(struct kunit *test)
++{
++	struct drm_atomic_helper_connector_hdmi_priv *priv;
++	struct drm_modeset_acquire_ctx *ctx;
++	struct drm_connector_state *conn_state;
++	struct drm_display_mode *preferred;
++	struct drm_connector *conn;
++	struct drm_device *drm;
++	struct drm_crtc *crtc;
++	int ret;
++
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB),
++						     10);
++	KUNIT_ASSERT_NOT_NULL(test, priv);
++
++	conn = &priv->connector;
++	ret = set_connector_edid(test, conn,
++				 test_edid_hdmi_1080p_rgb_yuv_dc_max_340mhz,
++				 ARRAY_SIZE(test_edid_hdmi_1080p_rgb_yuv_dc_max_340mhz));
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	ctx = drm_kunit_helper_acquire_ctx_alloc(test);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
++
++	preferred = find_preferred_mode(conn);
++	KUNIT_ASSERT_NOT_NULL(test, preferred);
++	KUNIT_ASSERT_FALSE(test, preferred->flags & DRM_MODE_FLAG_DBLCLK);
++
++	drm = &priv->drm;
++	crtc = priv->crtc;
++	ret = light_up_connector(test, drm, crtc, conn, preferred, ctx);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	conn_state = conn->state;
++	KUNIT_ASSERT_NOT_NULL(test, conn_state);
++
++	KUNIT_ASSERT_EQ(test, conn_state->hdmi.output_bpc, 10);
++	KUNIT_ASSERT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_RGB);
++	KUNIT_EXPECT_EQ(test, conn_state->hdmi.tmds_char_rate, preferred->clock * 1250);
++}
++
++/*
++ * Test that when doing a commit which would use RGB 12bpc, the TMDS
++ * clock rate stored in the connector state is equal to 1.5 times the
++ * mode pixel clock
++ */
++static void drm_test_check_tmds_char_rate_rgb_12bpc(struct kunit *test)
++{
++	struct drm_atomic_helper_connector_hdmi_priv *priv;
++	struct drm_modeset_acquire_ctx *ctx;
++	struct drm_connector_state *conn_state;
++	struct drm_display_mode *preferred;
++	struct drm_connector *conn;
++	struct drm_device *drm;
++	struct drm_crtc *crtc;
++	int ret;
++
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB),
++						     12);
++	KUNIT_ASSERT_NOT_NULL(test, priv);
++
++	conn = &priv->connector;
++	ret = set_connector_edid(test, conn,
++				 test_edid_hdmi_1080p_rgb_yuv_dc_max_340mhz,
++				 ARRAY_SIZE(test_edid_hdmi_1080p_rgb_yuv_dc_max_340mhz));
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	ctx = drm_kunit_helper_acquire_ctx_alloc(test);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
++
++	preferred = find_preferred_mode(conn);
++	KUNIT_ASSERT_NOT_NULL(test, preferred);
++	KUNIT_ASSERT_FALSE(test, preferred->flags & DRM_MODE_FLAG_DBLCLK);
++
++	drm = &priv->drm;
++	crtc = priv->crtc;
++	ret = light_up_connector(test, drm, crtc, conn, preferred, ctx);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	conn_state = conn->state;
++	KUNIT_ASSERT_NOT_NULL(test, conn_state);
++
++	KUNIT_ASSERT_EQ(test, conn_state->hdmi.output_bpc, 12);
++	KUNIT_ASSERT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_RGB);
++	KUNIT_EXPECT_EQ(test, conn_state->hdmi.tmds_char_rate, preferred->clock * 1500);
++}
++
+ static struct kunit_case drm_atomic_helper_connector_hdmi_check_tests[] = {
+ 	KUNIT_CASE(drm_test_check_output_bpc_crtc_mode_changed),
+ 	KUNIT_CASE(drm_test_check_output_bpc_crtc_mode_not_changed),
++	KUNIT_CASE(drm_test_check_tmds_char_rate_rgb_8bpc),
++	KUNIT_CASE(drm_test_check_tmds_char_rate_rgb_10bpc),
++	KUNIT_CASE(drm_test_check_tmds_char_rate_rgb_12bpc),
+ 	/*
+ 	 * TODO: We should have tests to check that a change in the
+ 	 * format triggers a CRTC mode change just like we do for the
+ 	 * RGB Quantization and BPC.
+ 	 *
+@@ -459,15 +602,38 @@ static void drm_test_check_format_value(struct kunit *test)
+ 	conn = &priv->connector;
+ 	conn_state = conn->state;
+ 	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_RGB);
+ }
  
-+	mm->context.lam_cr3_mask = X86_CR3_LAM_U57;
-+	mm->context.untag_mask =  ~GENMASK(62, 57);
- 	write_cr3(__read_cr3() | mm->context.lam_cr3_mask);
- 	set_tlbstate_lam_mode(mm);
- 	set_bit(MM_CONTEXT_LOCK_LAM, &mm->context.flags);
++/*
++ * Test that the value of the output format property out of reset is set
++ * to 0, and will be computed at atomic_check time.
++ */
++static void drm_test_check_tmds_char_value(struct kunit *test)
++{
++	struct drm_atomic_helper_connector_hdmi_priv *priv;
++	struct drm_connector_state *conn_state;
++	struct drm_connector *conn;
++
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB) |
++						     BIT(HDMI_COLORSPACE_YUV422) |
++						     BIT(HDMI_COLORSPACE_YUV444),
++						     12);
++	KUNIT_ASSERT_NOT_NULL(test, priv);
++
++	conn = &priv->connector;
++	conn_state = conn->state;
++	KUNIT_EXPECT_EQ(test, conn_state->hdmi.tmds_char_rate, 0);
++}
++
+ static struct kunit_case drm_atomic_helper_connector_hdmi_reset_tests[] = {
+ 	KUNIT_CASE(drm_test_check_bpc_8_value),
+ 	KUNIT_CASE(drm_test_check_bpc_10_value),
+ 	KUNIT_CASE(drm_test_check_bpc_12_value),
+ 	KUNIT_CASE(drm_test_check_format_value),
++	KUNIT_CASE(drm_test_check_tmds_char_value),
+ 	{ }
+ };
+ 
+ static struct kunit_suite drm_atomic_helper_connector_hdmi_reset_test_suite = {
+ 	.name		= "drm_atomic_helper_connector_hdmi_reset",
+diff --git a/drivers/gpu/drm/tests/drm_kunit_edid.h b/drivers/gpu/drm/tests/drm_kunit_edid.h
+index 2bba316de064..24f3377ef0f0 100644
+--- a/drivers/gpu/drm/tests/drm_kunit_edid.h
++++ b/drivers/gpu/drm/tests/drm_kunit_edid.h
+@@ -101,6 +101,222 @@ const unsigned char test_edid_hdmi_1080p_rgb_max_200mhz[] = {
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0xd0
+ };
+ 
++/*
++ * edid-decode (hex):
++ *
++ * 00 ff ff ff ff ff ff 00 31 d8 2a 00 00 00 00 00
++ * 00 21 01 03 81 a0 5a 78 1a 00 00 00 00 00 00 00
++ * 00 00 00 20 00 00 01 01 01 01 01 01 01 01 01 01
++ * 01 01 01 01 01 01 02 3a 80 18 71 38 2d 40 58 2c
++ * 45 00 40 84 63 00 00 1e 00 00 00 fc 00 54 65 73
++ * 74 20 45 44 49 44 0a 20 20 20 00 00 00 fd 00 32
++ * 46 1e 46 0f 00 0a 20 20 20 20 20 20 00 00 00 10
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 7a
++ *
++ * 02 03 1b b1 e3 05 00 20 41 10 e2 00 ca 6d 03 0c
++ * 00 12 34 78 28 20 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 a8
++ *
++ * ----------------
++ *
++ * Block 0, Base EDID:
++ *   EDID Structure Version & Revision: 1.3
++ *   Vendor & Product Identification:
++ *     Manufacturer: LNX
++ *     Model: 42
++ *     Made in: 2023
++ *   Basic Display Parameters & Features:
++ *     Digital display
++ *     DFP 1.x compatible TMDS
++ *     Maximum image size: 160 cm x 90 cm
++ *     Gamma: 2.20
++ *     Undefined display color type
++ *     First detailed timing is the preferred timing
++ *   Color Characteristics:
++ *     Red  : 0.0000, 0.0000
++ *     Green: 0.0000, 0.0000
++ *     Blue : 0.0000, 0.0000
++ *     White: 0.0000, 0.0000
++ *   Established Timings I & II:
++ *     DMT 0x04:   640x480    59.940476 Hz   4:3     31.469 kHz     25.175000 MHz
++ *   Standard Timings: none
++ *   Detailed Timing Descriptors:
++ *     DTD 1:  1920x1080   60.000000 Hz  16:9     67.500 kHz    148.500000 MHz (1600 mm x 900 mm)
++ *                  Hfront   88 Hsync  44 Hback  148 Hpol P
++ *                  Vfront    4 Vsync   5 Vback   36 Vpol P
++ *     Display Product Name: 'Test EDID'
++ *     Display Range Limits:
++ *       Monitor ranges (GTF): 50-70 Hz V, 30-70 kHz H, max dotclock 150 MHz
++ *     Dummy Descriptor:
++ *   Extension blocks: 1
++ * Checksum: 0x7a
++ *
++ * ----------------
++ *
++ * Block 1, CTA-861 Extension Block:
++ *   Revision: 3
++ *   Underscans IT Video Formats by default
++ *   Supports YCbCr 4:4:4
++ *   Supports YCbCr 4:2:2
++ *   Native detailed modes: 1
++ *   Colorimetry Data Block:
++ *     sRGB
++ *   Video Data Block:
++ *     VIC  16:  1920x1080   60.000000 Hz  16:9     67.500 kHz    148.500000 MHz
++ *   Video Capability Data Block:
++ *     YCbCr quantization: Selectable (via AVI YQ)
++ *     RGB quantization: Selectable (via AVI Q)
++ *     PT scan behavior: No Data
++ *     IT scan behavior: Always Underscanned
++ *     CE scan behavior: Always Underscanned
++ *   Vendor-Specific Data Block (HDMI), OUI 00-0C-03:
++ *     Source physical address: 1.2.3.4
++ *     DC_48bit
++ *     DC_36bit
++ *     DC_30bit
++ *     DC_Y444
++ *     Maximum TMDS clock: 200 MHz
++ *     Extended HDMI video details:
++ * Checksum: 0xa8  Unused space in Extension Block: 100 bytes
++ */
++const unsigned char test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz[] = {
++  0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x31, 0xd8, 0x2a, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x21, 0x01, 0x03, 0x81, 0xa0, 0x5a, 0x78,
++  0x1a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20,
++  0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
++  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x3a, 0x80, 0x18, 0x71, 0x38,
++  0x2d, 0x40, 0x58, 0x2c, 0x45, 0x00, 0x40, 0x84, 0x63, 0x00, 0x00, 0x1e,
++  0x00, 0x00, 0x00, 0xfc, 0x00, 0x54, 0x65, 0x73, 0x74, 0x20, 0x45, 0x44,
++  0x49, 0x44, 0x0a, 0x20, 0x20, 0x20, 0x00, 0x00, 0x00, 0xfd, 0x00, 0x32,
++  0x46, 0x1e, 0x46, 0x0f, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
++  0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x7a, 0x02, 0x03, 0x1b, 0xb1,
++  0xe3, 0x05, 0x00, 0x20, 0x41, 0x10, 0xe2, 0x00, 0xca, 0x6d, 0x03, 0x0c,
++  0x00, 0x12, 0x34, 0x78, 0x28, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0xa8
++};
++
++/*
++ * edid-decode (hex):
++ *
++ * 00 ff ff ff ff ff ff 00 31 d8 2a 00 00 00 00 00
++ * 00 21 01 03 81 a0 5a 78 0a 00 00 00 00 00 00 00
++ * 00 00 00 20 00 00 01 01 01 01 01 01 01 01 01 01
++ * 01 01 01 01 01 01 02 3a 80 18 71 38 2d 40 58 2c
++ * 45 00 40 84 63 00 00 1e 00 00 00 fc 00 54 65 73
++ * 74 20 45 44 49 44 0a 20 20 20 00 00 00 fd 00 32
++ * 46 1e 46 0f 00 0a 20 20 20 20 20 20 00 00 00 10
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 8a
++ *
++ * 02 03 1b b1 e3 05 00 20 41 10 e2 00 ca 6d 03 0c
++ * 00 12 34 78 44 20 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 8c
++ *
++ * ----------------
++ *
++ * Block 0, Base EDID:
++ *   EDID Structure Version & Revision: 1.3
++ *   Vendor & Product Identification:
++ *     Manufacturer: LNX
++ *     Model: 42
++ *     Made in: 2023
++ *   Basic Display Parameters & Features:
++ *     Digital display
++ *     DFP 1.x compatible TMDS
++ *     Maximum image size: 160 cm x 90 cm
++ *     Gamma: 2.20
++ *     RGB color display
++ *     First detailed timing is the preferred timing
++ *   Color Characteristics:
++ *     Red  : 0.0000, 0.0000
++ *     Green: 0.0000, 0.0000
++ *     Blue : 0.0000, 0.0000
++ *     White: 0.0000, 0.0000
++ *   Established Timings I & II:
++ *     DMT 0x04:   640x480    59.940476 Hz   4:3     31.469 kHz     25.175000 MHz
++ *   Standard Timings: none
++ *   Detailed Timing Descriptors:
++ *     DTD 1:  1920x1080   60.000000 Hz  16:9     67.500 kHz    148.500000 MHz (1600 mm x 900 mm)
++ *                  Hfront   88 Hsync  44 Hback  148 Hpol P
++ *                  Vfront    4 Vsync   5 Vback   36 Vpol P
++ *     Display Product Name: 'Test EDID'
++ *     Display Range Limits:
++ *       Monitor ranges (GTF): 50-70 Hz V, 30-70 kHz H, max dotclock 150 MHz
++ *     Dummy Descriptor:
++ *   Extension blocks: 1
++ * Checksum: 0x8a
++ *
++ * ----------------
++ *
++ * Block 1, CTA-861 Extension Block:
++ *   Revision: 3
++ *   Underscans IT Video Formats by default
++ *   Supports YCbCr 4:4:4
++ *   Supports YCbCr 4:2:2
++ *   Native detailed modes: 1
++ *   Colorimetry Data Block:
++ *     sRGB
++ *   Video Data Block:
++ *     VIC  16:  1920x1080   60.000000 Hz  16:9     67.500 kHz    148.500000 MHz
++ *   Video Capability Data Block:
++ *     YCbCr quantization: Selectable (via AVI YQ)
++ *     RGB quantization: Selectable (via AVI Q)
++ *     PT scan behavior: No Data
++ *     IT scan behavior: Always Underscanned
++ *     CE scan behavior: Always Underscanned
++ *   Vendor-Specific Data Block (HDMI), OUI 00-0C-03:
++ *     Source physical address: 1.2.3.4
++ *     DC_48bit
++ *     DC_36bit
++ *     DC_30bit
++ *     DC_Y444
++ *     Maximum TMDS clock: 340 MHz
++ *     Extended HDMI video details:
++ * Checksum: 0x8c  Unused space in Extension Block: 100 bytes
++ */
++const unsigned char test_edid_hdmi_1080p_rgb_yuv_dc_max_340mhz[] = {
++  0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x31, 0xd8, 0x2a, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x21, 0x01, 0x03, 0x81, 0xa0, 0x5a, 0x78,
++  0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20,
++  0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
++  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x3a, 0x80, 0x18, 0x71, 0x38,
++  0x2d, 0x40, 0x58, 0x2c, 0x45, 0x00, 0x40, 0x84, 0x63, 0x00, 0x00, 0x1e,
++  0x00, 0x00, 0x00, 0xfc, 0x00, 0x54, 0x65, 0x73, 0x74, 0x20, 0x45, 0x44,
++  0x49, 0x44, 0x0a, 0x20, 0x20, 0x20, 0x00, 0x00, 0x00, 0xfd, 0x00, 0x32,
++  0x46, 0x1e, 0x46, 0x0f, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
++  0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x8a, 0x02, 0x03, 0x1b, 0xb1,
++  0xe3, 0x05, 0x00, 0x20, 0x41, 0x10, 0xe2, 0x00, 0xca, 0x6d, 0x03, 0x0c,
++  0x00, 0x12, 0x34, 0x78, 0x44, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++  0x00, 0x00, 0x00, 0x8c
++};
++
+ #endif // DRM_KUNIT_EDID_H_
+
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.43.2
 
