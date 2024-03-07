@@ -1,164 +1,302 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDB4136989;
-	Thu,  7 Mar 2024 19:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B7C91CABF;
+	Thu,  7 Mar 2024 19:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709840856; cv=none; b=tmImzljWWREsS5epNfkNf3PfmSmYe95NQitv+THRRN/MQ4NbDX/z/F1SA2jdto+a+iimdWESkNY2b2lKabCkg1eO/6j/i+d+7vukbZnHoSH5yPAFsLerMylI1dKGmO78omlTDpiAmBdWjwX9TMVZsVcxOjLbRSo+xNc3t4VUEX8=
+	t=1709840925; cv=none; b=O7ZHR7uI3vxUPOOeh30JAFN8z+aq1Q6dDzFdse5DlycBXwO4ehTn/ws3t/86F2H05ML+dRBNt+ho37tybHMIdKJKpVB8aTCWs/iI4R/+V33Xpv7P8WHKFdX/s7Jzx9Tin/pq7fV16h23YtIxy5bR4r0c+zblQM9nKgslXZq1yxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709840856; c=relaxed/simple;
-	bh=OHMHjrmXLAl+M5prZnWsXYc3CPrx3uhUlRe0pX2R6CM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jSutElqdKNdF3aH1Mc2qO+VLHkhW8T1JSxe/OhJ17g2ulbHph/jhvWDYSEx9CJEj0v8H7FUwhXPaYLQrGYeVyw+9K3GAJEXFVtAHBI0Xn3eQlvdaTugOlgGZ5SdDMjEdRRp/4EC1ZTCUNpT2XwU2Ifj+vHBCBEPQLXqSOpmm8u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TrQCKxgt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709840925; c=relaxed/simple;
+	bh=WKpE3QWNLfAE8yAu4U59TjMXNMBmXmOW1c/7VEF0eG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bkP/0fA4pGVouavxXYHIa9SXKSyNGMRgmGtpUI/gQvwfWU4n7grvrWUneWP/NBzWT+/bP2Hd+AIUTzyF6mKSwQoOOAL11lLnaCP6508hMGofR65x4y41xIx0oTzs+GXYsoDAdUQqyDFk8cVaZtq+lMlL7mKAR2R5ovNMJDjl7GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Tcz47/e2; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TrQCKxgt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D894FC433C7;
-	Thu,  7 Mar 2024 19:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709840855;
-	bh=OHMHjrmXLAl+M5prZnWsXYc3CPrx3uhUlRe0pX2R6CM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=TrQCKxgt61A6b11OT+EDHqfSLuUFzmlZq9xGRsenob5TEn7/IstinO10wOl6paOnv
-	 GY2tT4Usoc6RQq4Dy8ZPnUDb97YEJuQTClOTvMYvo8KJ/fr4ojm4Pvk4QTMoIa4mgY
-	 SaoWufgDt5RgKinvMUAIKQqTjvec7oVGmT95SdCMYb3RS6RU8tjehGcY+yVt/oUzWp
-	 O0UbBuMkEAI1X97PhfWKWmUr97cmzOl5RtovIJ8sNEVR18wvBwdWRCWa+jRH+MKVLW
-	 G2cbyy3VcX6vnxd2Oat/J5RI/czw0AC/Nn15j4BeLsypo8ULPaUHncmbogr1ah3GWo
-	 Oer+72wTykJFw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 62B50CE0716; Thu,  7 Mar 2024 11:47:35 -0800 (PST)
-Date: Thu, 7 Mar 2024 11:47:35 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linke li <lilinke99@qq.com>,
-	joel@joelfernandes.org, boqun.feng@gmail.com, dave@stgolabs.net,
-	frederic@kernel.org, jiangshanlai@gmail.com, josh@joshtriplett.org,
-	linux-kernel@vger.kernel.org, qiang.zhang1211@gmail.com,
-	quic_neeraju@quicinc.com, rcu@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Fix
- rcu_torture_pipe_update_one()/rcu_torture_writer() data race and concurrency
- bug
-Message-ID: <c1bb35c4-29af-4a84-8ba7-81ba30639a69@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <CAHk-=wgG6Dmt1JTXDbrbXh_6s2yLjL=9pHo7uv0==LHFD+aBtg@mail.gmail.com>
- <20240306135504.2b3872ef@gandalf.local.home>
- <CAHk-=wjbDgMKLgxbV+yK4LKZ+2Qj6zVL_sHeb+L9KDia980Q8Q@mail.gmail.com>
- <20240306142738.7b66a716@rorschach.local.home>
- <CAHk-=wgPAZ4KnCQergqAOUypwinYh=gZ0q4EQbwvuUcJ_8UK+Q@mail.gmail.com>
- <83b47424-e5e0-46de-aa63-d413a5aa6cec@paulmck-laptop>
- <CAHk-=wiX_zF5Mpt8kUm_LFQpYY-mshrXJPOe+wKNwiVhEUcU9g@mail.gmail.com>
- <851dc594-d2ea-4050-b7c6-e33a1cddf3a1@efficios.com>
- <72b14322-78c1-4479-9c4e-b0e11c1f0d53@paulmck-laptop>
- <bebbed4a-ced1-42c5-865c-dc9dc7857b6c@efficios.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Tcz47/e2"
+Received: from [10.0.0.114] (c-24-16-32-44.hsd1.wa.comcast.net [24.16.32.44])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9FE2C20B74C0;
+	Thu,  7 Mar 2024 11:48:42 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9FE2C20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1709840922;
+	bh=swZt0WDY7vnvvvY3C7GAziiKELVpLhpEriSn+90f/+0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Tcz47/e2qRv206ftSQG5rX+c/6bXhw62rZM+vjABMiNjE02sSAoY3jsRRSyqCc2HY
+	 VdrSqT5NvxLK/cBg9uBw/gmXBrv1ZUwdOB0K3IcHhrMR9yyOyQDvtnC8b67myniFkB
+	 Majy/MmluxeyhSAm4nJ/1WhEWf07nvyBWhjTc694=
+Message-ID: <83cf8fa7-c8c7-4d3c-9f6f-6a596644b974@linux.microsoft.com>
+Date: Thu, 7 Mar 2024 11:48:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bebbed4a-ced1-42c5-865c-dc9dc7857b6c@efficios.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mshyperv: Introduce hv_get_hypervisor_version function
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "mhkelley58@gmail.com" <mhkelley58@gmail.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "arnd@arndb.de" <arnd@arndb.de>
+References: <1709772454-861-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157D470D0E46FA9B2ACD8EBD4202@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-CA
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157D470D0E46FA9B2ACD8EBD4202@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 07, 2024 at 08:53:05AM -0500, Mathieu Desnoyers wrote:
-> On 2024-03-06 22:37, Paul E. McKenney wrote:
-> > On Wed, Mar 06, 2024 at 10:06:21PM -0500, Mathieu Desnoyers wrote:
-> [...]
-> > 
-> > > As far as the WRITE_ONCE(x, READ_ONCE(x) + 1) pattern
-> > > is concerned, the only valid use-case I can think of is
-> > > split counters or RCU implementations where there is a
-> > > single updater doing the increment, and one or more
-> > > concurrent reader threads that need to snapshot a
-> > > consistent value with READ_ONCE().
-> > 
-> [...]
-> > 
-> > So what would you use that pattern for?
-> > 
-> > One possibility is a per-CPU statistical counter in userspace on a
-> > fastpath, in cases where losing the occasional count is OK.  Then learning
-> > your CPU (and possibly being immediately migrated to some other CPU),
-> > READ_ONCE() of the count, increment, and WRITE_ONCE() might (or might not)
-> > make sense.
-> > 
-> > I suppose the same in the kernel if there was a fastpath so extreme you
-> > could not afford to disable preemption.
-> > 
-> > At best, very niche.
-> > 
-> > Or am I suffering a failure of imagination yet again?  ;-)
+On 3/7/2024 11:22 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, March 6, 2024 4:48 PM
+>>
+>> Introduce x86_64 and arm64 functions for getting the hypervisor version
+>> information and storing it in a structure for simpler parsing.
+>>
+>> Use the new function to get and parse the version at boot time. While at
+>> it, print the version in the same format for each architecture, and move
+>> the printing code to hv_common_init() so it is not duplicated.
 > 
-> The (niche) use-cases I have in mind are split-counters and RCU
-> grace period tracking, where precise counters totals are needed
-> (no lost count).
+> Isn't the format already the same for x86 and ARM64?   A couple of
+> years ago they didn't match.  But that was fixed in commit eeda29db98f4.
 > 
-> In the kernel, this could be:
 
-Thank you for looking into this!
+You're correct - I will amend the commit message. Thanks!
 
-> - A per-cpu counter, each counter incremented from thread context with
->   preemption disabled (single updater per counter), read concurrently by
->   other threads. WRITE_ONCE/READ_ONCE is useful to make sure there
->   is no store/load tearing there. Atomics on the update would be stronger
->   than necessary on the increment fast-path.
-
-But if preemption is disabled, the updater can read the value without
-READ_ONCE() without risk of concurrent update.  Or are you concerned about
-interrupt handlers?  This would have to be a read from the interrupt
-handler, given that an updated from the interrupt handler could result
-in a lost count.
-
-> - A per-thread counter (e.g. within task_struct), only incremented by the
->   single thread, read by various threads concurrently.
-
-Ditto.
-
-> - A counter which increment happens to be already protected by a lock, read
->   by various threads without taking the lock. (technically doable, but
->   I'm not sure I see a relevant use-case for it)
-
-In that case, the lock would exclude concurrent updates, so the lock
-holder would not need READ_ONCE(), correct?
-
-> In user-space:
+>>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> Acked-by: Wei Liu <wei.liu@kernel.org>
+>> ---
+>>  arch/arm64/hyperv/mshyperv.c      | 19 ++++++++---------
+>>  arch/x86/kernel/cpu/mshyperv.c    | 35 ++++++++++++++-----------------
+>>  drivers/hv/hv_common.c            |  9 ++++++++
+>>  include/asm-generic/hyperv-tlfs.h | 23 ++++++++++++++++++++
+>>  include/asm-generic/mshyperv.h    |  2 ++
+>>  5 files changed, 59 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/arch/arm64/hyperv/mshyperv.c
+>> b/arch/arm64/hyperv/mshyperv.c
+>> index f1b8a04ee9f2..55dc224d466d 100644
+>> --- a/arch/arm64/hyperv/mshyperv.c
+>> +++ b/arch/arm64/hyperv/mshyperv.c
+>> @@ -19,10 +19,18 @@
+>>
+>>  static bool hyperv_initialized;
+>>
+>> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
+>> +{
+>> +	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION,
+>> +			 (struct hv_get_vp_registers_output *)info);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
 > 
-> - The "per-cpu" counter would have to use rseq for increments to prevent
->   inopportune migrations, which needs to be implemented in assembler anyway.
->   The counter reads would have to use READ_ONCE().
-
-Fair enough!
-
-> - The per-thread counter (Thread-Local Storage) incremented by a single
->   thread, read by various threads concurrently, is a good target
->   for WRITE_ONCE()/READ_ONCE() pairing. This is actually what we do in
->   various liburcu implementations which track read-side critical sections
->   per-thread.
-
-Agreed, but do any of these use WRITE_ONCE(x, READ_ONCE(x) + 1) or
-similar?
-
-> - Same as for the kernel, a counter increment protected by a lock which
->   needs to be read from various threads concurrently without taking
->   the lock could be a valid use-case, though I fail to see how it is
->   useful due to lack of imagination on my part. ;-)
-
-In RCU, we have "WRITE_ONCE(*sp, *sp + 1)" for this use case, though
-here we have the WRITE_ONCE() but not the READ_ONCE() because we hold
-the lock excluding any other updates.
-
-> I'm possibly missing other use-cases, but those come to mind as not
-> involving racy counter increments.
+> I don't think this need to be exported, at least not for the usage in
+> this patch.  The caller in hv_common.c is never part of a module -- it's
+> always built-in. But maybe you are anticipating future use cases
+> from a module?
 > 
-> I agree that use-cases are so niche that we probably do _not_ want to
-> introduce ADD_SHARED() for that purpose in a common header file,
-> because I suspect that it would then become misused in plenty of
-> scenarios where the updates are actually racy and would be better
-> served by atomics or local-atomics.
 
-I agree that unless or until we have a reasonable number of use cases, we
-should open-code it.  With a big fat comment explaining how it works.  ;-)
+Yes, it will be used in a module eventually. Do you think I should remove
+this and the below export until they are actually needed?
 
-							Thanx, Paul
+>> +
+>>  static int __init hyperv_init(void)
+>>  {
+>>  	struct hv_get_vp_registers_output	result;
+>> -	u32	a, b, c, d;
+>>  	u64	guest_id;
+>>  	int	ret;
+>>
+>> @@ -54,15 +62,6 @@ static int __init hyperv_init(void)
+>>  		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
+>>  		ms_hyperv.misc_features);
+>>
+>> -	/* Get information about the Hyper-V host version */
+>> -	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION, &result);
+>> -	a = result.as32.a;
+>> -	b = result.as32.b;
+>> -	c = result.as32.c;
+>> -	d = result.as32.d;
+>> -	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
+>> -		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
+>> -
+>>  	ret = hv_common_init();
+>>  	if (ret)
+>>  		return ret;
+>> diff --git a/arch/x86/kernel/cpu/mshyperv.c
+>> b/arch/x86/kernel/cpu/mshyperv.c
+>> index d306f6184cee..03a3445faf7a 100644
+>> --- a/arch/x86/kernel/cpu/mshyperv.c
+>> +++ b/arch/x86/kernel/cpu/mshyperv.c
+>> @@ -350,13 +350,25 @@ static void __init reduced_hw_init(void)
+>>  	x86_init.irqs.pre_vector_init	= x86_init_noop;
+>>  }
+>>
+>> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
+>> +{
+>> +	unsigned int hv_max_functions;
+>> +
+>> +	hv_max_functions = cpuid_eax(HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS);
+>> +	if (hv_max_functions < HYPERV_CPUID_VERSION) {
+>> +		pr_err("%s: Could not detect Hyper-V version\n", __func__);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	cpuid(HYPERV_CPUID_VERSION, &info->eax, &info->ebx, &info->ecx, &info->edx);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
+> 
+> Same for this EXPORT.
+>>> +
+>>  static void __init ms_hyperv_init_platform(void)
+>>  {
+>>  	int hv_max_functions_eax;
+>> -	int hv_host_info_eax;
+>> -	int hv_host_info_ebx;
+>> -	int hv_host_info_ecx;
+>> -	int hv_host_info_edx;
+>>
+>>  #ifdef CONFIG_PARAVIRT
+>>  	pv_info.name = "Hyper-V";
+>> @@ -407,21 +419,6 @@ static void __init ms_hyperv_init_platform(void)
+>>  		pr_info("Hyper-V: running on a nested hypervisor\n");
+>>  	}
+>>
+>> -	/*
+>> -	 * Extract host information.
+>> -	 */
+>> -	if (hv_max_functions_eax >= HYPERV_CPUID_VERSION) {
+>> -		hv_host_info_eax = cpuid_eax(HYPERV_CPUID_VERSION);
+>> -		hv_host_info_ebx = cpuid_ebx(HYPERV_CPUID_VERSION);
+>> -		hv_host_info_ecx = cpuid_ecx(HYPERV_CPUID_VERSION);
+>> -		hv_host_info_edx = cpuid_edx(HYPERV_CPUID_VERSION);
+>> -
+>> -		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
+>> -			hv_host_info_ebx >> 16, hv_host_info_ebx & 0xFFFF,
+>> -			hv_host_info_eax, hv_host_info_edx & 0xFFFFFF,
+>> -			hv_host_info_ecx, hv_host_info_edx >> 24);
+>> -	}
+>> -
+>>  	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
+>>  	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
+>>  		x86_platform.calibrate_tsc = hv_get_tsc_khz;
+>> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+>> index 2f1dd4b07f9a..4d72c528af68 100644
+>> --- a/drivers/hv/hv_common.c
+>> +++ b/drivers/hv/hv_common.c
+>> @@ -278,6 +278,15 @@ static void hv_kmsg_dump_register(void)
+>>  int __init hv_common_init(void)
+>>  {
+>>  	int i;
+>> +	union hv_hypervisor_version_info version;
+>> +
+>> +	/* Get information about the Hyper-V host version */
+>> +	if (hv_get_hypervisor_version(&version) == 0) {
+> 
+> The usual idiom would be:
+> 
+> 	if (!hv_get_hypervisor_version(&version)) {
+>
+Thanks, I'll change it.
+ 
+>> +		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
+>> +			version.major_version, version.minor_version,
+>> +			version.build_number, version.service_number,
+>> +			version.service_pack, version.service_branch);
+>> +	}
+>>
+>>  	if (hv_is_isolation_supported())
+>>  		sysctl_record_panic_msg = 0;
+>> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+>> index 3d1b31f90ed6..32514a870b98 100644
+>> --- a/include/asm-generic/hyperv-tlfs.h
+>> +++ b/include/asm-generic/hyperv-tlfs.h
+>> @@ -817,6 +817,29 @@ struct hv_input_unmap_device_interrupt {
+>>  #define HV_SOURCE_SHADOW_NONE               0x0
+>>  #define HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE   0x1
+>>
+>> +/*
+>> + * Version info reported by hypervisor
+>> + */
+>> +union hv_hypervisor_version_info {
+>> +	struct {
+>> +		u32 build_number;
+>> +
+>> +		u32 minor_version : 16;
+>> +		u32 major_version : 16;
+>> +
+>> +		u32 service_pack;
+>> +
+>> +		u32 service_number : 24;
+>> +		u32 service_branch : 8;
+>> +	};
+>> +	struct {
+>> +		u32 eax;
+>> +		u32 ebx;
+>> +		u32 ecx;
+>> +		u32 edx;
+> 
+> Nit:  These names are x86-isms appearing in the generic portion
+> of hyperv-tlfs.h.  On the ARM64 side I had called the four parts
+> "a", "b", "c", and "d" to be slightly more generic.  But if want to
+> keep the x86 register names, I won't object.
+> > Michael
+> 
+
+Good point. It's worth noting that these are now only used on the x86
+side as arguments to cpuid(), so I might just leave them as-is.
+Another option would be to add an x86-only union for this purpose:
+
+union hv_x86_hypervisor_version_info {
+	struct hv_hypervisor_version_info info;
+	struct {
+		u32 eax;
+		u32 ebx;
+		u32 ecx;
+		u32 edx;
+	};
+};
+
+But that is probably overkill...
+
+Thanks for the comments!
+
+Nuno
+
+>> +	};
+>> +};
+>> +
+>>  /*
+>>   * The whole argument should fit in a page to be able to pass to the hypervisor
+>>   * in one hypercall.
+>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-
+>> generic/mshyperv.h
+>> index 04424a446bb7..452b7c089b71 100644
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -161,6 +161,8 @@ static inline void vmbus_signal_eom(struct
+>> hv_message *msg, u32 old_msg_type)
+>>  	}
+>>  }
+>>
+>> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
+>> +
+>>  void hv_setup_vmbus_handler(void (*handler)(void));
+>>  void hv_remove_vmbus_handler(void);
+>>  void hv_setup_stimer0_handler(void (*handler)(void));
+>> --
+>> 2.25.1
+>>
+
