@@ -1,71 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC951E865;
-	Thu,  7 Mar 2024 14:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003CC5B1FD;
+	Thu,  7 Mar 2024 14:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709823014; cv=none; b=AIbctfHstqM6s6SlejE/ivSxq004q0kWoDQQg7rDy50NgoWqpo11GV44mQ24x8xrTrRorl5EQfhvg0Zqw/XdikqFj+uh88ikuXFzXTLCU7h15BS1gY0v0NfZZzN9mLEzbzs+k/dVKEEDs5b0a4lZAmsKHe/CNCGPqtmYtb25mP8=
+	t=1709823026; cv=none; b=APvAgHFjlWyDNCU4ib8UEj2j9D4ysFBTxG/ed3OWRZIfGSNlJExM9cW7c17pnqGzJzvhfJ77Vi4RhXOCFamSqjPJW/6JwJoz1fC/6uyni30fbKAgsV2PDt5EEWDKb/L5V2XK6Ew3BNzHr/Qw6hAhvprDR8s4I2DjmjelguZnFik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709823014; c=relaxed/simple;
-	bh=C/qCrjhoIs3jvOYBesJnb1uSBPlCckrGFa/pt10VT+w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UxrW17U1pJYfE9LqtM5uFa8bhVU1u11nyoy+Pd4ptm0AQEGujl13bC5/9MOYgVSqh+PnftUV8wKIof/vWQtODJpgNzZaCBKm06DzafKhxutktFOqvFEGKnsuvOlObAV/ffpY5pCXWGad0EqbRn+HQSjnZhiOWx6TGnsR/6524Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB558C433C7;
-	Thu,  7 Mar 2024 14:50:11 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch KVM changes for v6.9
-Date: Thu,  7 Mar 2024 22:49:30 +0800
-Message-ID: <20240307144930.3919566-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1709823026; c=relaxed/simple;
+	bh=bMgcq8RI+0U/9suH2RY7GnPRGcioM+SwL8B1CFmqRKI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=WAVBL5r1Gf4hcMiZr/94v0v9dzBqN/WRox3NW0z7TYY84D3yQ7tp0yWNUnn1wEN7wyjlFFY0SqkUdQqskJhHBG0CwCmgF4K86fkbu1pLIJgtO9CLHsLOXQWiR0++fPs0SuHTY6SCpj3oVq7gSDO9GE1o1aorqb02pNHHyYhZLLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=i8djEudV; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="i8djEudV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 80720E000E;
+	Thu,  7 Mar 2024 14:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709823022;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Np8Esugsr9ZGR7h4Wh+XY5vmJlU7fOGNOduAjb30l0=;
+	b=i8djEudVbUI2ZCGYHvGBtxY00fhEPP/loSQiIlYzcojCGeisT56oYNXXRffq8XtzR/cMoB
+	fPzYUv64iAnrQyLRhVWIpHHVq9nlmg/ubisuFkgTzmnbCm+xuRjPwrb+5Lnl+gV7gIP9Ne
+	E7w7p0jqTFsxRna6XOm6NG0khpDFjY7ehRu7VgHIIy4CleCY652a0Z8n8GOouf7rfU0yKF
+	uRfSaxBxrQKTnZfldzs3GTZM3jLFFC4mPXBgH970EYSifusoqpWTgiAZbI7aRlWhVTtx3o
+	QCQZX0aCv7cCE3iv/Kq362a9icYAN1tIEXJAE+CVOfDwnZg0RYWDtkbsoknnRA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 07 Mar 2024 15:50:21 +0100
+Message-Id: <CZNLOCAIE6P7.1BJ23DWJPCSHS@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v4 2/9] dt-bindings: usb: ti,j721e-usb: add ti,j7200-usb
+ compatible
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Roger Quadros" <rogerq@kernel.org>, "Peter Chen" <peter.chen@kernel.org>,
+ "Pawel Laszczak" <pawell@cadence.com>, "Nishanth Menon" <nm@ti.com>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Kevin
+ Hilman" <khilman@kernel.org>, "Alan Stern" <stern@rowland.harvard.edu>,
+ <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+To: "Rob Herring" <robh@kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240307-j7200-usb-suspend-v4-0-5ec7615431f3@bootlin.com>
+ <20240307-j7200-usb-suspend-v4-2-5ec7615431f3@bootlin.com>
+ <20240307142159.GA2542409-robh@kernel.org>
+In-Reply-To: <20240307142159.GA2542409-robh@kernel.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-The following changes since commit 90d35da658da8cff0d4ecbb5113f5fac9d00eb72:
+Hello Rob,
 
-  Linux 6.8-rc7 (2024-03-03 13:02:52 -0800)
+On Thu Mar 7, 2024 at 3:21 PM CET, Rob Herring wrote:
+> On Thu, Mar 07, 2024 at 10:55:03AM +0100, Th=C3=A9o Lebrun wrote:
+> > On J7200, the controller & its wrapper are reset on resume. It has the
+> > same behavior as ti,j721e-usb with a different SoC integration.
+> >=20
+> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml b/=
+Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+> > index 653a89586f4e..e8f7e7511483 100644
+> > --- a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+> > +++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+> > @@ -16,6 +16,9 @@ properties:
+> >        - items:
+> >            - const: ti,am64-usb
+> >            - const: ti,j721e-usb
+> > +      - items:
+> > +          - const: ti,j7200-usb
+> > +          - const: ti,j721e-usb
+>
+> Combine this with the previous entry:
+>
+> items:
+>   - enum:
+>       - ti,am64-usb
+>       - ti,j7200-usb
+>   - const: ti,j721e-usb
 
-are available in the Git repository at:
+Makes sense, will do. Full block will become:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.9
+	properties:
+	  compatible:
+	    oneOf:
+	      - const: ti,j721e-usb
+	      - items:
+	          - enum:
+	              - const: ti,am64-usb
+	              - const: ti,j7200-usb
+	          - const: ti,j721e-usb
 
-for you to fetch changes up to b99f783106ea5b2f8c9d74f4d3b1e2f77af9ec6e:
+Thanks,
 
-  LoongArch: KVM: Remove unnecessary CSR register saving during enter guest (2024-03-06 09:12:13 +0800)
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-----------------------------------------------------------------
-LoongArch KVM changes for v6.9
-
-1. Set reserved bits as zero in CPUCFG.
-2. Start SW timer only when vcpu is blocking.
-3. Do not restart SW timer when it is expired.
-4. Remove unnecessary CSR register saving during enter guest.
-
-KVM PV features are unfortunately missing in v6.9 for some
-implementation controversies, sigh.
-----------------------------------------------------------------
-Bibo Mao (4):
-      LoongArch: KVM: Set reserved bits as zero in CPUCFG
-      LoongArch: KVM: Start SW timer only when vcpu is blocking
-      LoongArch: KVM: Do not restart SW timer when it is expired
-      LoongArch: KVM: Remove unnecessary CSR register saving during enter guest
-
- arch/loongarch/kvm/switch.S |  6 ------
- arch/loongarch/kvm/timer.c  | 43 ++++++++++---------------------------------
- arch/loongarch/kvm/vcpu.c   | 33 ++++++++++++++++++++++++++-------
- 3 files changed, 36 insertions(+), 46 deletions(-)
