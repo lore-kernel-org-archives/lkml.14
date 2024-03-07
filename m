@@ -1,82 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE33130E59;
-	Thu,  7 Mar 2024 18:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA8412FB3E;
+	Thu,  7 Mar 2024 18:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709835363; cv=none; b=B6PsTcj9/V58vUifRuBV2bx2KiEbC/cb/V2at/CgwWuterQ9gcn+TvykssTiEyqdl4q4ERsS+k14roxNorDK59Q2H2PcxH0Tru189L2Z6X/qVvxvfHwj8fV5bJee9Y7MLqydJ1dG8kHxEdvbjPInj26cV/S8/fpYE0i48n0tpXc=
+	t=1709835425; cv=none; b=u2+tibIpPEbxa8LPVEzTksX+mutFIT/N+jmaK8Chcht5femmwrSbX77N/uYPdK6OFJRhRlIvZ0vb70a48nJxioaNHb4wCVfZItfIJkNOl1+Trw2EPsdMPGRIG4s1FHu8VSB05OWA3U8vJ8/kbG96pfYxGbqLQaKKb0a5JrPnaDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709835363; c=relaxed/simple;
-	bh=dPTPHjpCRLgFm/lxnmSiKFph90OqA6fCyXoBFtp7HgI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mq4+bnPFBaSiOyol9RqsnHg2N3DUiqbfrXgrhWy92lS9Anv+FBboc4LmxYSGuEvwM7PPxY06l2cz+kTygzWvDTnJvWR4F0fQ4Ew5/ZH/fAKakuPMXnH9ArZnEtqU6+nTwsGMer/hSjoSlfAXluUIQtRbVtFH6S0veZhJ74YuZb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbZ6kMNF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709835425; c=relaxed/simple;
+	bh=wPNhnbjYtr8nNf0xfcvCWhf/R2zeOK/14UW2AOf6LHA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O+sqotT21QBRuHeDKtmaU1C1c+IfOSvJDl5Id14qZp04R5DTj0dsPQPHHCiKAZir8ber56QUK4tsaky+6RiaU/fEnEeFQ6+GCm0yNJwD1IRO4JxLbHAQNDFi54UajD/DucLYcw/RIGJltR4h5yTkQETqIotckUU1pgGuEsny2JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=C/djWXY9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mbzQuoAW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=C/djWXY9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mbzQuoAW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbZ6kMNF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F6AC43390;
-	Thu,  7 Mar 2024 18:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709835363;
-	bh=dPTPHjpCRLgFm/lxnmSiKFph90OqA6fCyXoBFtp7HgI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cbZ6kMNFOkqi+7zE5sc/Pm/lwZqYTLfDaqQhaj5pW8MtTwucVP5YmR1AI7k6Ne9K9
-	 JF1MEO8ho44ojQvrGTotYT+v8JVtyxY5cIdkxj+PafS1ucT4/mopGa/TP+bOkkCos5
-	 WUK263hl8RH7XSBatFCN9LEX7M0QkziThw8SWmjM7t4ZnjXUAM6KYOE3a3dERknIz5
-	 5cS43qeFOkK+pFb23/H5NKciBwgsqwjM2PBQV7yPnRW6WmafhGkkTe+eaw0Td0ZJFm
-	 f9N2a2PxwIuS+SSQKqIg5/pFdUCeaFNgxP/2mpA23OYbdFUc9f8it6c+IbudqBIT3G
-	 /d1f0QizmEvOQ==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d2505352e6so17840721fa.3;
-        Thu, 07 Mar 2024 10:16:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUTo+MKwE+G1DLEQes7AdcPl8HqrtoAN4e6lWG7jYgJOz8hB9BjK1m6N6jO0pk6zm9RTbfgErmnnWT/DkWk5QChUbzSBKcUrbSXVxCWOIbQzDP+rE5AYpffW7xouHopXoQQoKy1dvkX+g==
-X-Gm-Message-State: AOJu0Yz/MHdFDfUmKnX6I54WsdJVjeOu/sd+hiqeJaXo/JK88aO4KL7P
-	OJkna2IuPKVkZxmAl9HrEKp3JfopnrvZR5i9eGmFgmiRe8EpysV/F0rpuHTON7TDCpp3ueUAJgt
-	/IVGaHMfgd8ETEv0UcX5i6fo+fQ==
-X-Google-Smtp-Source: AGHT+IHSczJ87wbSLjyRnbI+ltnna+Ea2X/Todom8MfI6gfwI0NKJYZDpNsic5AtpHJXDE7KYe9zt3aMQkOjFiGtHhs=
-X-Received: by 2002:a2e:3317:0:b0:2d2:4637:63f with SMTP id
- d23-20020a2e3317000000b002d24637063fmr1814686ljc.45.1709835361141; Thu, 07
- Mar 2024 10:16:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="C/djWXY9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mbzQuoAW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="C/djWXY9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mbzQuoAW"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 841905D00A;
+	Thu,  7 Mar 2024 16:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709827353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cMNJbshkkARiLJa25Qz/aZkoMSzYIEZDxAvRw1s71Sw=;
+	b=C/djWXY94UZf8tSS//GXm9k2HLaDnognY2Th4qwfzL+5lFOZ6eDg/lfRfFZk/YXK0bYbV8
+	1w4Wh6i9nB18Fp0P/vcAdYDwmqUYaFFtr0LI4PTcwUDwLY2sAaMHvDtrxuKLLZ1eYW1Qoc
+	XSvF+dXuaD4HDIkyAfW3DDbhxJsAEaY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709827353;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cMNJbshkkARiLJa25Qz/aZkoMSzYIEZDxAvRw1s71Sw=;
+	b=mbzQuoAWb39WAt4VKnGIq4DtAR+T2dNJTMMBXhhSrBhsc1zDOqHWQ45M69a8STV4keZxsZ
+	68KFqYUFkZHd6XAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709827353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cMNJbshkkARiLJa25Qz/aZkoMSzYIEZDxAvRw1s71Sw=;
+	b=C/djWXY94UZf8tSS//GXm9k2HLaDnognY2Th4qwfzL+5lFOZ6eDg/lfRfFZk/YXK0bYbV8
+	1w4Wh6i9nB18Fp0P/vcAdYDwmqUYaFFtr0LI4PTcwUDwLY2sAaMHvDtrxuKLLZ1eYW1Qoc
+	XSvF+dXuaD4HDIkyAfW3DDbhxJsAEaY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709827353;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cMNJbshkkARiLJa25Qz/aZkoMSzYIEZDxAvRw1s71Sw=;
+	b=mbzQuoAWb39WAt4VKnGIq4DtAR+T2dNJTMMBXhhSrBhsc1zDOqHWQ45M69a8STV4keZxsZ
+	68KFqYUFkZHd6XAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AB8DB12FC5;
+	Thu,  7 Mar 2024 16:02:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id eOCUJhjl6WXtcwAAD6G6ig
+	(envelope-from <lhenriques@suse.de>); Thu, 07 Mar 2024 16:02:32 +0000
+Received: from localhost (brahms.olymp [local])
+	by brahms.olymp (OpenSMTPD) with ESMTPA id f65e79f4;
+	Thu, 7 Mar 2024 16:02:29 +0000 (UTC)
+From: Luis Henriques <lhenriques@suse.de>
+To: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>
+Cc: linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luis Henriques <lhenriques@suse.de>
+Subject: [PATCH v2 3/3] ovl: fix the parsing of empty string mount parameters
+Date: Thu,  7 Mar 2024 16:02:25 +0000
+Message-ID: <20240307160225.23841-4-lhenriques@suse.de>
+In-Reply-To: <20240307160225.23841-1-lhenriques@suse.de>
+References: <20240307160225.23841-1-lhenriques@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20220929122901.614315-1-angelogioacchino.delregno@collabora.com> <20220929122901.614315-3-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220929122901.614315-3-angelogioacchino.delregno@collabora.com>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Thu, 7 Mar 2024 12:15:48 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKrad8JndQhxHAYjFXPkj7eaJ0GXqkSJy=xrfa=EHvOwA@mail.gmail.com>
-Message-ID: <CAL_JsqKrad8JndQhxHAYjFXPkj7eaJ0GXqkSJy=xrfa=EHvOwA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: timer: mediatek: Convert to json-schema
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: daniel.lezcano@linaro.org, tglx@linutronix.de, 
-	krzysztof.kozlowski+dt@linaro.org, matthias.bgg@gmail.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -0.30
+X-Spamd-Result: default: False [-0.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 R_MISSING_CHARSET(2.50)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 REPLY(-4.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[4];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FREEMAIL_TO(0.00)[mit.edu,dilger.ca,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_LAST(0.00)[];
+	 BAYES_HAM(-0.00)[44.69%]
+X-Spam-Flag: NO
 
-On Thu, Sep 29, 2022 at 7:29=E2=80=AFAM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Convert the MediaTek SoC timer txt binding to json-schema.
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> ---
->  .../bindings/timer/mediatek,mtk-timer.txt     | 47 ----------
->  .../bindings/timer/mediatek,timer.yaml        | 86 +++++++++++++++++++
->  2 files changed, 86 insertions(+), 47 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-=
-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/mediatek,time=
-r.yaml
+This patch fixes the usage of mount parameters that are defined as strings
+but which can be empty.  Currently, only 'lowerdir' parameter is in this
+situation for overlayfs.  But since userspace can pass it in as 'flag'
+type (when it doesn't have a value), the parsing will fail because a
+'string' type is assumed.
 
-Looks like this never got applied. I've applied it now and added 8365
-which got added to the .txt binding in the mean time. I'm not sure
-it's right though. The txt binding says it was CPUX timer, but the dts
-says otherwise. The 6795 dts looks wrong. It says the timer is CPUX
-and GPT timer. That warning remains.
+This issue is fixed by using the new helper fsparam_string_or_flag() and by
+also taking the parameter type into account.
 
-Rob
+While there, also remove the now unused fsparam_string_empty() macro.
+
+Suggested-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.de>
+---
+ fs/overlayfs/params.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/fs/overlayfs/params.c b/fs/overlayfs/params.c
+index 112b4b12f825..6eb163ca4b92 100644
+--- a/fs/overlayfs/params.c
++++ b/fs/overlayfs/params.c
+@@ -139,12 +139,8 @@ static int ovl_verity_mode_def(void)
+ 	return OVL_VERITY_OFF;
+ }
+ 
+-#define fsparam_string_empty(NAME, OPT) \
+-	__fsparam(fs_param_is_string, NAME, OPT, fs_param_can_be_empty, NULL)
+-
+-
+ const struct fs_parameter_spec ovl_parameter_spec[] = {
+-	fsparam_string_empty("lowerdir",    Opt_lowerdir),
++	fsparam_string_or_flag("lowerdir",    Opt_lowerdir),
+ 	fsparam_string("lowerdir+",         Opt_lowerdir_add),
+ 	fsparam_string("datadir+",          Opt_datadir_add),
+ 	fsparam_string("upperdir",          Opt_upperdir),
+@@ -424,12 +420,13 @@ static void ovl_reset_lowerdirs(struct ovl_fs_context *ctx)
+  *     "/data1" and "/data2" as data lower layers. Any existing lower
+  *     layers are replaced.
+  */
+-static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
++static int ovl_parse_param_lowerdir(struct fs_context *fc, struct fs_parameter *param)
+ {
+ 	int err;
+ 	struct ovl_fs_context *ctx = fc->fs_private;
+ 	struct ovl_fs_context_layer *l;
+ 	char *dup = NULL, *iter;
++	const char *name = param->string;
+ 	ssize_t nr_lower, nr;
+ 	bool data_layer = false;
+ 
+@@ -441,7 +438,7 @@ static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
+ 	/* drop all existing lower layers */
+ 	ovl_reset_lowerdirs(ctx);
+ 
+-	if (!*name)
++	if ((param->type == fs_value_is_flag) || (!*name))
+ 		return 0;
+ 
+ 	if (*name == ':') {
+@@ -572,7 +569,7 @@ static int ovl_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 
+ 	switch (opt) {
+ 	case Opt_lowerdir:
+-		err = ovl_parse_param_lowerdir(param->string, fc);
++		err = ovl_parse_param_lowerdir(fc, param);
+ 		break;
+ 	case Opt_lowerdir_add:
+ 	case Opt_datadir_add:
