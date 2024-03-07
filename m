@@ -1,105 +1,93 @@
-Received: from out203-205-251-82.mail.qq.com (out203-205-251-82.mail.qq.com [203.205.251.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5231C2D
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 00:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE00E1859
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 00:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709772712; cv=none; b=ntOTjkNC/0GcIDtGerWSagpXOeYJLEo8wAjCqtATTWqSwmfWRDuLr7aYEnlFa9uxJ1nb45CvS0SawJ3kkFZmsKJ/EPOvdIGuIPj45XJfkAftFb6RnzdB5Wup9yq1rBV7BL993/AYKHZEVyqGb1/gC3cPsPs7MK/pTFitktKg7jM=
+	t=1709772828; cv=none; b=oBP7ewrGT2vf+q4mN8Yvp/RhxSUaqecSLr2kaW1DmSC5JmA1DZH8gb9/ESHqAUXXCNa7HedJjAn60d37OJ6vNH+D4mqRQMVNhbtncNlAg36imAttCWsjYcAPh16UZWe0gDuJNt9ziCZdLzvqb03P1LNeki25MIgN6IrI9sv/ocI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709772712; c=relaxed/simple;
-	bh=98Yqbd2Wkh4I4wi98kaFvAWL9EqEsWOXtRJLenp0Yfw=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QLEzd+G2RID0DxUMANJU3Bg8Dww3mV9cAnGdZFAv+k/PIF4LlUSWZx6LdSZUNqgFawtEctg0YFYGUy83+boCkUGucCdL1obX96J5kquYldsPf2pgRjiHmxd8m2ct0lqetvWiY3j4hEISamwAGisdDThKVVVdOJ9WRlIm+ZnT1qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=IyY8G5K9; arc=none smtp.client-ip=203.205.251.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1709772828; c=relaxed/simple;
+	bh=5a/K4Sl1FUS7oq60ekNERF2iXFSv3DJI7QNsBj3/nFc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=i10j2DsoFQsiGebxOjfVtm70pq6AdvCS35NGbNzA756SLIxJi+CYEQlLTShoDDeCun65IfDoDoLleAdgcZEEJTrXhZoGkCjf/CYfaYADhNz6cRBE9sMtA9WVIJO2uWiM13A+ZMYCSi3GQn0PDHgmvObUgm/QdXGF0Fp96dkWZSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qYL/uWqR; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="IyY8G5K9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1709772400;
-	bh=uRsiBh41eR5/aRW2EM611Fer1G2Jrc6sG+c+CAIrrDo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IyY8G5K9ewWfXTINyYLOONbeXUan9uwexYwk2F66tvzheJC8W6S2QMo6BDsX6VCVb
-	 9tsmcCNR9BALMGR8+PAOI/UWaRz0YCz11n+gT/yafPMVhUeYdJKcZzBK8fhuZnjZSx
-	 WXdebWNjK1yfrvWtJLx9Km/9cRiJvIMe4xpq/RdM=
-Received: from localhost ([2409:895a:da03:3c6e:2868:6191:8e02:86e5])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id BA622026; Thu, 07 Mar 2024 08:46:38 +0800
-X-QQ-mid: xmsmtpt1709772398tvx0jauuw
-Message-ID: <tencent_D464912F65C02D326F594D667FDDC234EB06@qq.com>
-X-QQ-XMAILINFO: NDgMZBR9sMmaLSbUu2PkHB1cleGyXUBndN7HqWcwDHwRCtrR3bjcEkMpHS3tsb
-	 e7LpuThtPwtuH5Ndw2Jkj7Z147BgMAZ0NJ9MlHgSMeaPJOn5a6hbi8w1PhTSPouK0Q3I+xYee7Hp
-	 dI4N8KJqYqHJeIridWclluNar42fQda1Ko+kCjp33MXHAreM6QUs/PMRkCCiqk9RM+6mNzXYqDaQ
-	 6mYpycTjPO0e0ZVbLs9iuLYLDA9DbyYIl1911e1kP1fFxR895e+DxqE1g1FcLNeVOa77ZxyphPe0
-	 qJafQ29hecX55aHyLlZHXjjr/GUm1JEWMMU6RqjynIVk2W5YMJv7Dg8UB2tamTak1quX0kdbLn/m
-	 NWjkWN7MQyX08YM+EEmYFw95/Lco3PwCcZZDZtQmBpSGAJx1Y9HN+rj5XuMtvnsDKiHlqBKn+J4I
-	 27Yzj5pCPPZxzItRZ9EL8cz/SM0+i5JVmnP1Luwjc8QWFyl6OXwMVmLam6ncitkUipaOqwA8GUfe
-	 6yLtQMUqYbwb662vTRPuLXNNvMHYulMJVWKWpMob1d55/Tq3sK9Cx16SfVtd3kAmCd9ftkUgL6s2
-	 +5qZCAbGDlvaG+TXupv8SNVCFBu9Fchu4iS2/Y2rN9ghOsA0t5Nn7SIeEw0jPgf0y23OuCp/MqDB
-	 i/zfRLGEGo046pq1bVDQVtIEkSGHVWjx61peOONFvzku3E0y6XdXmfO3KXHrKjTCQcdUC0B3jEDb
-	 wA3Snq12KgpyGH1x5sHjitFjCQk51nLnACrpjN3r8eG2ndHu1ueD1paBnSde6JGnl7X/A/+KL4jW
-	 4x2AF3gErj3+1jKKBRafr1fkPIm84xoXgzyNRQ9C0WPo+cJ7QBupWzJsi7zFfVRIUd1HrOqrzH6Q
-	 GP4ACDPr5uQS702M8DARHG9H+ZqlmQIAHJoekfu4Ard6b87VKz9raJmJ2wXhMeUIdkIbu+8ZF6jy
-	 apdIyKB/em9Jm9d9RGXQ==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-Sender: kenneth-lee-2012@foxmail.com
-Date: Thu, 7 Mar 2024 08:45:32 +0800
-From: Kenneth-Lee-2012@foxmail.com
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org
-Subject: Re: Question about PB rule of LKMM
-X-OQ-MSGID: <20240307004532.pvatpxz4zjg6fyja@kllt01>
-References: <tencent_C5266B7D6F024A916BCA7833FDEA94A74309@qq.com>
- <Zedd18wiAkK68Lzr@andrea>
- <tencent_744E0AF832049C200F96FD6582D5114D7F0A@qq.com>
- <ZeipiSVLR01jmM6b@andrea>
- <e05fa6a9-c810-46cb-b033-b91ae7a5c382@rowland.harvard.edu>
- <ZejC+lutRuwXQrMz@andrea>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qYL/uWqR"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5dc90074016so284125a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 16:53:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709772826; x=1710377626; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=13JM4dn5oLawZvcGqOUh0FKLknmM5OO13+s6TUK67SM=;
+        b=qYL/uWqRYfRXAJCaIezmM3j9JaQzznvy1x4cB/7jYWaQM/h/yWFYb8rs31WNLR2ctW
+         QHl0RR/XxPo8It0EGAZwBUlzkrZNW3nJD4A/2ffQyz1496f1UPjP5cloclVw37uEh8tW
+         e/rTbTn4ngCckwNj/h99lw4qKAkZbjmGmqiXDMUrh60ScTeD5E+7Ndow1dxzuje7J9ob
+         WDBTWnwdVlpXYmw2vTQEI2GN22lEV1X7yyibD0CiwvubtAF/LdCW5cRswK/DhR9A2hjR
+         +65vy4E3ZM32hNQaeN8riR57P4M/0K5lfrhZbN/jqTUjaX77mba+CtCfHJWewMR9ov5T
+         SzDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709772826; x=1710377626;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=13JM4dn5oLawZvcGqOUh0FKLknmM5OO13+s6TUK67SM=;
+        b=mWTkhUZ19zqPwqWoyxfGO8NamarkgYwIwP6rxFz+JT4lec5M+FpUgK//nb7baiw8Dx
+         Q6UiIvoI0f/auufDj++5xeQkn0vIOw/r/zTh60/04oJiPya9ftXk2pOK82D+zJabytIt
+         rL6sS69yt1V/wCeToMpGhmoRXxvE5iub+wBXqzDTtAuru1q9eFFIHg4uu9bDFYlu0LLb
+         I2CbErBP2BjVgFOTYMHNv3/sn5tLRo72nIhOkx0HETkyuT6DUKyEvo9ip6i9PwDSQc8D
+         8nPq3Tuw7nWqkhuFE+HctDwIpFrnLQvAlgabJgkJOIGJem4RIqUlbtnIoV5lLQmNcmaC
+         D0Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3gbo2LFMtjyGItxZjKqJJA8oxrW5vkS3y7O9SirFrIKNvF3J/H/oCGND0zOBku6AWyKVRsKoS8MhliXkQQvhVFLGuWcWNCpArQJy7
+X-Gm-Message-State: AOJu0YyX2xp58sPv4pMZd8iJBocD+8FjEHGjhbUi2+fgUes3vTH6rbjf
+	oWfZVlxT/+pAomnDjOPD0a7SnUewK+0Bze/PWglcTj3wxEHbE77vianOxxv+ncjbOja0H2jqox6
+	g4Q==
+X-Google-Smtp-Source: AGHT+IEOis2Z/A2Rk3zVzgay5WAqcSG5X9JevTM43hdYFp0yDzRzI+2V1NgOIQ2StNbL0Xtfu4AKG73nMbc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a02:b8b:b0:5e4:5fba:17e with SMTP id
+ dh11-20020a056a020b8b00b005e45fba017emr42501pgb.4.1709772825909; Wed, 06 Mar
+ 2024 16:53:45 -0800 (PST)
+Date: Wed, 6 Mar 2024 16:53:43 -0800
+In-Reply-To: <d325e811-c80d-49ba-85cf-06893cec659a@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZejC+lutRuwXQrMz@andrea>
+Mime-Version: 1.0
+References: <20240228024147.41573-1-seanjc@google.com> <20240228024147.41573-14-seanjc@google.com>
+ <d325e811-c80d-49ba-85cf-06893cec659a@intel.com>
+Message-ID: <ZekQF9MlVzlgleq7@google.com>
+Subject: Re: [PATCH 13/16] KVM: x86/mmu: Handle no-slot faults at the
+ beginning of kvm_faultin_pfn()
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yan Zhao <yan.y.zhao@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	Michael Roth <michael.roth@amd.com>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Mar 06, 2024 at 08:24:42PM +0100, Andrea Parri wrote:
-> Date: Wed, 6 Mar 2024 20:24:42 +0100
-> From: Andrea Parri <parri.andrea@gmail.com>
-> To: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Kenneth-Lee-2012@foxmail.com, linux-kernel@vger.kernel.org,
->  paulmck@kernel.org
-> Subject: Re: Question about PB rule of LKMM
+On Thu, Mar 07, 2024, Kai Huang wrote:
 > 
-> > Later on, the file includes this paragraph, which answers the question 
-> > you were asking:
-> > 
-> > ---------------------------------------------------------------------
-> > The existence of a pb link from E to F implies that E must execute
-> > before F.  To see why, suppose that F executed first.  Then W would
-> > have propagated to E's CPU before E executed.  If E was a store, the
-> > memory subsystem would then be forced to make E come after W in the
-> > coherence order, contradicting the fact that E ->coe W.  If E was a
-> > load, the memory subsystem would then be forced to satisfy E's read
-> > request with the value stored by W or an even later store,
-> > contradicting the fact that E ->fre W.
-> > ---------------------------------------------------------------------
 > 
-> TBF, that just explains (not F ->xb E), or I guess that was the origin
-> of the question.
-
-Yes. I thought a link was just an unconditional pattern for the
-programmer to match the actual code so the other categories (of links in
-the same acyclic rule) cannot route back. But now I understand the ->xx*
-relation in the begining or end of the link can also add xx to the rule.
-
+> On 28/02/2024 3:41 pm, Sean Christopherson wrote:
+> > --- a/arch/x86/kvm/mmu/mmu_internal.h
+> > +++ b/arch/x86/kvm/mmu/mmu_internal.h
+> > @@ -235,7 +235,7 @@ struct kvm_page_fault {
+> >   	/* The memslot containing gfn. May be NULL. */
+> >   	struct kvm_memory_slot *slot;
+> > -	/* Outputs of kvm_faultin_pfn.  */
+> > +	/* Outputs of kvm_faultin_pfn. */
+> >   	unsigned long mmu_seq;
+> >   	kvm_pfn_t pfn;
+> >   	hva_t hva;
 > 
->   Andrea
+> ... how about get rid of this non-related fix?
 
--- 
-			-Kenneth Lee
-
+Eww, yeah, I'll drop it.  I originally had code that made the outputs valid if
+and only if @slot was non-null, and had updated the comment accordingly, but
+ended up going a different route and cleaned up the comment a little too well :-)
