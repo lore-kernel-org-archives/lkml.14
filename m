@@ -1,39 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BEB82880;
-	Thu,  7 Mar 2024 09:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8DB84FD2;
+	Thu,  7 Mar 2024 09:55:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709805320; cv=none; b=mcq9CJ9o+ch9+C5VbMyHv2KJ1VhmdfpYNoyCAQT8xjpa1atHzyIF0ehFiPmDZBBK6zaNEGgrePTUvIhUn1abURmyJH0wHvuYXhgkwxslZNjq8eLydL7e3D3IAEWmeQgcS2FmvFwERPWpiZPZ70SvPZMA+LcNlbgnYsX40Nm/vWw=
+	t=1709805320; cv=none; b=gcPWTH4cfEtnfRO11iuRaxM6MrsCjlHtWKMAYyojNihLT9XlcP0FobdfcqetWQg3Cd2Y0rhB1St2s3iob63HTxM7yix7AfOAfaURWNRqMgbWYSxy3mtJN8Qt2Ps1OizPLO4851fz/snv0DMmBnTk+ZjVRC/ylYlPYkN5PrJV4K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709805320; c=relaxed/simple;
-	bh=1wxo3NL9cihA8oLsXh0fu4ANYi/oi24/gNs9zqxECF0=;
+	bh=3vDQZq4bBTHIKrUEtadqb5Tze2IMHI6WZ9emMoHzC5U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oUhrmTDLwk5Lka5BYVNxK1+T16ApnuZgZfOaeZiEjMLEDF9sXYE4KwVbdyslVd/2C+QTEUF8l6zgZoO1bP2FZa/2FnInhB4yMKkMbf9GdfOQjANPZg3JvWOQHGhykatIOx7g0vCqps/IJzxsT34Y08RLm7auenFUuEJqvVyupbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=edEuJ4f6; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=FzqXgrXmdmDaJglOAUelJjYsZqg02nygbcudEd1rJZcPNRmQ/0ukyFFpOcoJ70Q9kEtP/YNIPS915hJhvWjjIgo5oDTHoUWiM2gyqMlkzcZTuyA/qHCk2hcuzF/2J3nG12Luf6yp+idFI+O5spsJ6OSjj/DWLBHrqCPdP0rVVO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZZywsdz/; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="edEuJ4f6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CDD991C0018;
-	Thu,  7 Mar 2024 09:55:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZZywsdz/"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 23F351C0009;
+	Thu,  7 Mar 2024 09:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709805316;
+	t=1709805309;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+kC1PY9mz+tc5NmqAdWmmc1QQ0klaL3U6KF0CqTuul0=;
-	b=edEuJ4f6KZAELqYxzDFFGoSw6ohghuznupCRzUhofziUyE3O0A3TYAdnJBvGpDtvzfEiul
-	q5GXMWMjotgNJD3VYCd1FKawt8VuW/+7sFx4nBOlLUzlQXrnS0ifhhomOWyWQrIbi3N7Q+
-	AfeQoDXRHQSsuSIYXE6vkHK/srAa2cOf/4UjiCqEJbE9nFhWseDFDWrbKxblJACxvkdZTc
-	puHm97vbSfEf/eKMnQHGlo6VZhlHkQGWjq6dipQTZku6+p18PkqTTYbIA0cOEgVf1W7Aur
-	wz0mx1PYUZNYH2lPSpU2JFeCpwN6nFXWS/4ZB7FJOuQo+SgYD03V9a+n6WBKeQ==
+	bh=RRn8ycTUfkJDoPr5o1S7rMU5q43x9RS8jtz5zW234a8=;
+	b=ZZywsdz/p1+lSsuNoJE7ZwP0r54L3buzp7ZaBwS6Ztgd3phy7M5FV/wNtfU7sd7arxFS40
+	TA4gbgo/PmlsOUYXYY7BK21ywt74DO3VY+3ZNnCsnCT3UN2zeir74cNiGQlVA7pXNvc8aT
+	r1bwfV2Zk8/+IKzPTXueqDnlbZOhFN2yiU//X65Wzw32wBsA/NRuZ4fAuqzW0cJK0vDq3b
+	dPnqb1g2+FkUrfWZ0dETU/yVnQkqfSVdQnMpmV2zhOZDGs+p13Dq4yhSZy4iQJd2LBBjkR
+	XAwqsCKZVFAf7/ufAoz81NI12tWvFELNMWC7wV3y3lu8H7a7rEsltB/DA3cAgQ==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Thu, 07 Mar 2024 10:55:10 +0100
-Subject: [PATCH v4 9/9] arm64: dts: ti: k3-am64: add USB fallback
- compatible to J721E
+Date: Thu, 07 Mar 2024 10:55:02 +0100
+Subject: [PATCH v4 1/9] dt-bindings: usb: ti,j721e-usb: fix compatible list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240307-j7200-usb-suspend-v4-9-5ec7615431f3@bootlin.com>
+Message-Id: <20240307-j7200-usb-suspend-v4-1-5ec7615431f3@bootlin.com>
 References: <20240307-j7200-usb-suspend-v4-0-5ec7615431f3@bootlin.com>
 In-Reply-To: <20240307-j7200-usb-suspend-v4-0-5ec7615431f3@bootlin.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -61,28 +60,30 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-USB on AM64 is the same peripheral as on J721E. It has a specific
-compatible for potential integration details. Express this
-relationship, matching what the dt-bindings indicate.
+Compatible can be A or B+A, not A or B or A+B. B got added afterwards,
+we want B+A not A+B. A=ti,j721e-usb and B=ti,am64-usb.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-index e348114f42e0..de04f4350a9e 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-@@ -749,7 +749,7 @@ timesync_router: pinctrl@a40000 {
- 	};
+diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+index 95ff9791baea..653a89586f4e 100644
+--- a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
++++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+@@ -13,10 +13,9 @@ properties:
+   compatible:
+     oneOf:
+       - const: ti,j721e-usb
+-      - const: ti,am64-usb
+       - items:
+-          - const: ti,j721e-usb
+           - const: ti,am64-usb
++          - const: ti,j721e-usb
  
- 	usbss0: cdns-usb@f900000 {
--		compatible = "ti,am64-usb";
-+		compatible = "ti,am64-usb", "ti,j721e-usb";
- 		reg = <0x00 0xf900000 0x00 0x100>;
- 		power-domains = <&k3_pds 161 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 161 9>, <&k3_clks 161 1>;
+   reg:
+     maxItems: 1
 
 -- 
 2.44.0
