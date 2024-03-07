@@ -1,214 +1,192 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1513611B;
-	Thu,  7 Mar 2024 08:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6925074262;
+	Thu,  7 Mar 2024 08:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709800417; cv=none; b=nGZJOJI1r5YKxYSzJCh/lO01cCya/672nkGaRJg+1zjQp9kLfGgtRjCpfAZNrNrp48iUXK/PefsxLys0h2t7xriyi0DHa+xfNtl6/+AXi7aC2C1PI7im+H1rbJEPPw/ZkJqRGaJFZaDfJ7asy5n6jo33N/nF1j4qm3YU/jOyxOs=
+	t=1709800470; cv=none; b=g4ibSAvVrLdCjc7XBkVBwiYNSisduH7UFDwDtINrVmH26TK3YLfNjyal7LqgT3pHmsJdhTRjCiCMNNeIPn5oaRlyDZyEUjkGro60fX+7B2aO4RbY76C8zI74eENBLRXHn12KFu/iFX0vdWE87EVhqrtxIblzuTS+SaEZuJgG6v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709800417; c=relaxed/simple;
-	bh=lLg7JIU1Vi+awB9HeY60TEEw6wU3YSZhO/DqWX24Jno=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Zwxh+oeS+XyNqnNDb9iM1eibomd3peF2OKfzRzYbQ3WGAOmwB6SXo5KlHplmy8vIXBrmiwzKhrWBY/PjxTxxIPE3CnrqlATAd+L54GxfImY/W2ZEvAjZmOZkgCZs1feKfk7m9T3n+E+Xno5lvSQOf95Qe6aDHfO6XNYAtucy/7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tr2XY5T89z6K980;
-	Thu,  7 Mar 2024 16:29:33 +0800 (CST)
-Received: from lhrpeml100003.china.huawei.com (unknown [7.191.160.210])
-	by mail.maildlp.com (Postfix) with ESMTPS id D030F14058E;
-	Thu,  7 Mar 2024 16:33:31 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- lhrpeml100003.china.huawei.com (7.191.160.210) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 08:33:31 +0000
-Received: from lhrpeml500005.china.huawei.com ([7.191.163.240]) by
- lhrpeml500005.china.huawei.com ([7.191.163.240]) with mapi id 15.01.2507.035;
- Thu, 7 Mar 2024 08:33:31 +0000
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To: liulongfang <liulongfang@huawei.com>, "alex.williamson@redhat.com"
-	<alex.williamson@redhat.com>, "jgg@nvidia.com" <jgg@nvidia.com>, "Jonathan
- Cameron" <jonathan.cameron@huawei.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Subject: RE: [PATCH v3 2/4] hisi_acc_vfio_pci: Create subfunction for data
- reading
-Thread-Topic: [PATCH v3 2/4] hisi_acc_vfio_pci: Create subfunction for data
- reading
-Thread-Index: AQHacFYBNSLENy+FB0aT6yRD2YInZLEr8Mmg
-Date: Thu, 7 Mar 2024 08:33:31 +0000
-Message-ID: <63cc4710dbb94b049bc1576f743b1729@huawei.com>
-References: <20240307060353.16095-1-liulongfang@huawei.com>
- <20240307060353.16095-3-liulongfang@huawei.com>
-In-Reply-To: <20240307060353.16095-3-liulongfang@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1709800470; c=relaxed/simple;
+	bh=xxeOUPpVmvNkXIEHbrtGfOjB9ivL0JFCLXLAfH8o+c4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JMBFQhDSokTAStJ4oP6jHZZNfvjhxyIRrO0eG3GzPVZjeqX9oF9naquLgBT0inSAOiQN9PGjJJEfoL7CYg9nbWqttWE/rmnZg8FQqclBJs5b7c5Is2V1/ZBaT63EmKUDMdP4dpg+tpCLri4x4yxdI365+ax+EUdbwnz2YJGprX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m/shuUL/; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m/shuUL/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709800468; x=1741336468;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xxeOUPpVmvNkXIEHbrtGfOjB9ivL0JFCLXLAfH8o+c4=;
+  b=m/shuUL/Tw1OkGP496tfpiF5EkzXaoKBu53H89R835rtG1HpBA2UzAv0
+   mG3MRhGsX9/GlEJTWSG3h9EYPtfDrPswKu8Z+eBeT36fgONH9x0HXWa8K
+   +EqI+GgyQBrJ3xhCCXcn8bkWkMrpks/+TGbkay2sHRHdXG7r1hvOSLB3L
+   O29lmE0E4E/LJubnc4GjxYupmcryDa4TtSje7xE1KGlePHxD8xEe+00b/
+   Q3nBRlXnB2J4Uc3UJPou6bAILWuPs7nYUy0hBp5LvZERqDf5h+uQDdkYX
+   uZ9akC8sIQgDyQU1VFSVbu22PdFygAE8jUhaxGS78OE2nssIkO280y7jN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4600264"
+X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
+   d="scan'208";a="4600264"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 00:34:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
+   d="scan'208";a="14699530"
+Received: from haibo-optiplex-7090.sh.intel.com ([10.239.159.132])
+  by orviesa004.jf.intel.com with ESMTP; 07 Mar 2024 00:34:17 -0800
+From: Haibo Xu <haibo1.xu@intel.com>
+To: 
+Cc: xiaobo55x@gmail.com,
+	ajones@ventanamicro.com,
+	sunilvl@ventanamicro.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Guo Ren <guoren@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	Baoquan He <bhe@redhat.com>,
+	Evan Green <evan@rivosinc.com>,
+	Zong Li <zong.li@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	James Morse <james.morse@arm.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: [PATCH v2 0/6] Add ACPI NUMA support for RISC-V
+Date: Thu,  7 Mar 2024 16:47:52 +0800
+Message-Id: <cover.1709780590.git.haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+This patch series enable RISC-V ACPI NUMA support which was based on
+the recently approved ACPI ECR[1].
 
+Patch 1/6 is generated from the acpica PR[2] and should be merged through
+the acpica project. Due to this dependency, other 5 patches can only be
+merged after the corresponding ACPICA patch was pulled into linux.
 
-> -----Original Message-----
-> From: liulongfang <liulongfang@huawei.com>
-> Sent: Thursday, March 7, 2024 6:04 AM
-> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
-> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>
-> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
-> Subject: [PATCH v3 2/4] hisi_acc_vfio_pci: Create subfunction for data
-> reading
->=20
-> During the live migration process. It needs to obtain various status
-> data of drivers and devices. In order to facilitate calling it in the
-> debugfs function. For all operations that read data from device registers=
-,
-> the driver creates a subfunction.
-> Also fixed the location of address data.
->=20
-> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
-> ---
->  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 55 ++++++++++---------
->  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  3 +
->  2 files changed, 33 insertions(+), 25 deletions(-)
->=20
-> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> index 45351be8e270..1881f3fa9266 100644
-> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> @@ -486,42 +486,22 @@ static int vf_qm_load_data(struct
-> hisi_acc_vf_core_device *hisi_acc_vdev,
->  	return 0;
->  }
->=20
-> -static int vf_qm_state_save(struct hisi_acc_vf_core_device *hisi_acc_vde=
-v,
-> -			    struct hisi_acc_vf_migration_file *migf)
-> +static int vf_qm_read_data(struct hisi_qm *vf_qm, struct acc_vf_data
-> *vf_data)
->  {
-> -	struct acc_vf_data *vf_data =3D &migf->vf_data;
-> -	struct hisi_qm *vf_qm =3D &hisi_acc_vdev->vf_qm;
->  	struct device *dev =3D &vf_qm->pdev->dev;
->  	int ret;
->=20
-> -	if (unlikely(qm_wait_dev_not_ready(vf_qm))) {
-> -		/* Update state and return with match data */
-> -		vf_data->vf_qm_state =3D QM_NOT_READY;
-> -		hisi_acc_vdev->vf_qm_state =3D vf_data->vf_qm_state;
-> -		migf->total_length =3D QM_MATCH_SIZE;
-> -		return 0;
-> -	}
-> -
-> -	vf_data->vf_qm_state =3D QM_READY;
-> -	hisi_acc_vdev->vf_qm_state =3D vf_data->vf_qm_state;
-> -
-> -	ret =3D vf_qm_cache_wb(vf_qm);
-> -	if (ret) {
-> -		dev_err(dev, "failed to writeback QM Cache!\n");
-> -		return ret;
-> -	}
-> -
->  	ret =3D qm_get_regs(vf_qm, vf_data);
+Patch 2/6 add RISC-V specific acpi_numa.c file to parse NUMA information
+from SRAT and SLIT ACPI tables.
+Patch 3/6 add the common SRAT RINTC affinity structure handler.
+Patch 4/6 remove the '#if defined(CONFIG_ARCH)' condition to make some NUMA
+related parse functions common for all current architectures that support
+ACPI_NUMA
+Patch 5/6 remove ARCH depends option in ACPI_NUMA Kconfig which was no
+longer needed since all the current architectures that support ACPI would
+select ACPI_NUMA by default.
+Patch 6/6 add corresponding ACPI_NUMA config for RISC-V Kconfig.
 
+Based-on: https://github.com/linux-riscv/linux-riscv/tree/for-next
 
-So this doesn't need the qm_wait_dev_not_ready(vf_qm) check above for the
-debugfs ? What happens if you read when device is not ready?
+[1] https://drive.google.com/file/d/1YTdDx2IPm5IeZjAW932EYU-tUtgS08tX/view?usp=sharing
+[2] https://github.com/acpica/acpica/pull/926
 
->  	if (ret)
->  		return -EINVAL;
->=20
->  	/* Every reg is 32 bit, the dma address is 64 bit. */
-> -	vf_data->eqe_dma =3D vf_data->qm_eqc_dw[1];
-> +	vf_data->eqe_dma =3D vf_data->qm_eqc_dw[QM_XQC_ADDR_HIGH];
+Testing:
+Since the ACPI AIA/PLIC support patch set is still under upstream review,
+hence it is tested using the poll based HVC SBI console and RAM disk.
+1) Build latest Qemu with the following patch backported
+   https://lore.kernel.org/all/20240129094200.3581037-1-haibo1.xu@intel.com/
+   https://github.com/vlsunil/qemu/commit/42bd4eeefd5d4410a68f02d54fee406d8a1269b0
 
-Also since there is no serialization with core migration now, what will be =
-the data
-returned in debugfs when there is a vf_qm_load_data() is in progress?
+2) Build latest EDK-II
+   https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
 
-So I guess the intention or assumption here is that the debugfs data is onl=
-y
-valid when the user knows that devices not under migration process.
+3) Build Linux with the following configs enabled
+   CONFIG_RISCV_SBI_V01=y
+   CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+   CONFIG_HVC_RISCV_SBI=y
+   CONFIG_NUMA=y
+   CONFIG_ACPI_NUMA=y
 
-Is that right?
+4) Build buildroot rootfs.cpio
 
-Thanks,
-Shameer
+5) Launch the Qemu machine
+   qemu-system-riscv64 -nographic \
+   -machine virt,pflash0=pflash0,pflash1=pflash1 -smp 4 -m 8G \
+   -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
+   -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
+   -object memory-backend-ram,size=4G,id=m0 \
+   -object memory-backend-ram,size=4G,id=m1 \
+   -numa node,memdev=m0,cpus=0-1,nodeid=0 \
+   -numa node,memdev=m1,cpus=2-3,nodeid=1 \
+   -numa dist,src=0,dst=1,val=30 \
+   -kernel linux/arch/riscv/boot/Image \
+   -initrd buildroot/output/images/rootfs.cpio \
+   -append "root=/dev/ram ro console=hvc0 earlycon=sbi"
 
->  	vf_data->eqe_dma <<=3D QM_XQC_ADDR_OFFSET;
-> -	vf_data->eqe_dma |=3D vf_data->qm_eqc_dw[0];
-> -	vf_data->aeqe_dma =3D vf_data->qm_aeqc_dw[1];
-> +	vf_data->eqe_dma |=3D vf_data->qm_eqc_dw[QM_XQC_ADDR_LOW];
-> +	vf_data->aeqe_dma =3D vf_data-
-> >qm_aeqc_dw[QM_XQC_ADDR_HIGH];
->  	vf_data->aeqe_dma <<=3D QM_XQC_ADDR_OFFSET;
-> -	vf_data->aeqe_dma |=3D vf_data->qm_aeqc_dw[0];
-> +	vf_data->aeqe_dma |=3D vf_data-
-> >qm_aeqc_dw[QM_XQC_ADDR_LOW];
->=20
->  	/* Through SQC_BT/CQC_BT to get sqc and cqc address */
->  	ret =3D qm_get_sqc(vf_qm, &vf_data->sqc_dma);
-> @@ -536,6 +516,31 @@ static int vf_qm_state_save(struct
-> hisi_acc_vf_core_device *hisi_acc_vdev,
->  		return -EINVAL;
->  	}
->=20
-> +	return 0;
-> +}
-> +
-> +static int vf_qm_state_save(struct hisi_acc_vf_core_device *hisi_acc_vde=
-v,
-> +			    struct hisi_acc_vf_migration_file *migf)
-> +{
-> +	struct acc_vf_data *vf_data =3D &migf->vf_data;
-> +	struct hisi_qm *vf_qm =3D &hisi_acc_vdev->vf_qm;
-> +	int ret;
-> +
-> +	if (unlikely(qm_wait_dev_not_ready(vf_qm))) {
-> +		/* Update state and return with match data */
-> +		vf_data->vf_qm_state =3D QM_NOT_READY;
-> +		hisi_acc_vdev->vf_qm_state =3D vf_data->vf_qm_state;
-> +		migf->total_length =3D QM_MATCH_SIZE;
-> +		return 0;
-> +	}
-> +
-> +	vf_data->vf_qm_state =3D QM_READY;
-> +	hisi_acc_vdev->vf_qm_state =3D vf_data->vf_qm_state;
-> +
-> +	ret =3D vf_qm_read_data(vf_qm, vf_data);
-> +	if (ret)
-> +		return -EINVAL;
-> +
->  	migf->total_length =3D sizeof(struct acc_vf_data);
->  	return 0;
->  }
-> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
-> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
-> index 5bab46602fad..7a9dc87627cd 100644
-> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
-> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
-> @@ -38,6 +38,9 @@
->  #define QM_REG_ADDR_OFFSET	0x0004
->=20
->  #define QM_XQC_ADDR_OFFSET	32U
-> +#define QM_XQC_ADDR_LOW		0x1
-> +#define QM_XQC_ADDR_HIGH	0x2
-> +
->  #define QM_VF_AEQ_INT_MASK	0x0004
->  #define QM_VF_EQ_INT_MASK	0x000c
->  #define QM_IFC_INT_SOURCE_V	0x0020
-> --
-> 2.24.0
+[    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x80000000-0x17fffffff]
+[    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0x180000000-0x27fffffff]
+[    0.000000] NUMA: NODE_DATA [mem 0x17fe3bc40-0x17fe3cfff]
+[    0.000000] NUMA: NODE_DATA [mem 0x27fff4c40-0x27fff5fff]
+...
+[    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x0 -> Node 0
+[    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x1 -> Node 0
+[    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x2 -> Node 1
+[    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x3 -> Node 1
+
+---
+Changes since v1
+  - Switch the order of patch 2/4 and 3/4 - Per Sunil's suggestion
+  - Add a new patch 4/6 to make some NUMA related parse functions common
+    for all the architectures that support ACPI NUMA - Per Sunil's suggestion
+  - Add a new patch 5/6 to remove ARCH depends option in ACPI_NUMA
+    Kconfig since all the current architectures that support ACPI
+    would select ACPI_NUMA by default - Per Arnd and Sunil's suggestion
+  - Other minor fix for code format - Per Sunil's comments
+
+Haibo Xu (6):
+  ACPICA: SRAT: Add RISC-V RINTC affinity structure
+  ACPI: RISCV: Add NUMA support based on SRAT and SLIT
+  ACPI: NUMA: Add handler for SRAT RINTC affinity structure
+  ACPI: NUMA: Make some NUMA related parse functions common
+  ACPI: NUMA: Remove ARCH depends option in ACPI_NUMA Kconfig
+  ACPI: RISCV: Enable ACPI based NUMA
+
+ arch/riscv/Kconfig            |   1 +
+ arch/riscv/include/asm/acpi.h |  15 +++-
+ arch/riscv/kernel/Makefile    |   1 +
+ arch/riscv/kernel/acpi.c      |   5 --
+ arch/riscv/kernel/acpi_numa.c | 131 ++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/setup.c     |   4 +-
+ arch/riscv/kernel/smpboot.c   |   2 -
+ drivers/acpi/numa/Kconfig     |   1 -
+ drivers/acpi/numa/srat.c      |  40 ++++++++---
+ include/acpi/actbl3.h         |  18 ++++-
+ include/linux/acpi.h          |   6 ++
+ 11 files changed, 203 insertions(+), 21 deletions(-)
+ create mode 100644 arch/riscv/kernel/acpi_numa.c
+
+-- 
+2.34.1
 
