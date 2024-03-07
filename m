@@ -1,181 +1,223 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAA9130E46
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 17:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1EA130E23;
+	Thu,  7 Mar 2024 17:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709833853; cv=none; b=sNeRB6DDMfc+cDIXTByLwVKIQ5TSxcgmmcqemRkeI5OcXKP67KfmXeOx3GKbt77110qS1ENnm9xdCviGYLVLq9luEshOPp3wI+nuu3Padlx0bH/GJEUmb7CpeEt1avFYN83YZ4J4th0eDHJuxINb0lS2ygCW/jwWXvZYyH2syxU=
+	t=1709833866; cv=none; b=XHpslKcu+3+b4kyLLeYHZl7Py3DikNHvdQIoIqOrNVHRDgU2So3CJwvgeXNRBIZf4QkOpKqYvsubQSxT8mihq9seclMFHaWAgxbT3bKVf7jc3q/AzILlFQFDL28utSaQHBjBPj8nezHqL5hS186ji+oJlfz+okTIHUzvkMjhl1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709833853; c=relaxed/simple;
-	bh=yVR9gOO591PhdWNViVKaVO3Dc6HRM0Gnaf6jh1DBhVk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HC4jP5b+ARAvzU6EBEAXB/1oOMc1AVfHwSKXsSvS8Nvm6zVSjNAj2qDA0GYtAOoTsIAi8EzXaW/5/fOuB0iyJtWwX4GXK5CEGPnujcYYCtSr9w4JqsYAlb/Qc6FyeYxzaL6+wNsVm4N/jEKHMvGryIJ9H/lo+2UYaL+AzASL/NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSwh0OUa; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1709833866; c=relaxed/simple;
+	bh=LrT0NGCNxkZ932L/HfzGFxMUYmyWozRwxheB5aYJdCY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o15maJymv9odab9+gk5iTZIwhIVV2UNqI02CyxXb+TJrn46f6RuKIyKnNc7tun5iXWr+K9oBl+0sutRSzql6TkluilBj+AjoOyV1hnJaA33tkqDPNiguIizVu7meP0hFxwaZIcM0boQ7X1TleamIsXyMMFOYnJckVVyWuQxuz+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSwh0OUa"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5d4a1e66750so747023a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 09:50:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709833851; x=1710438651; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nud+ektoz1i5+ZtYiRnd5giJ9AEuUsNnJvPUlZgCtfQ=;
-        b=QSwh0OUaz3F/caLmBiRHZEM2n/J5MKBeWfED7pHvKDqbyxoAdrgFM2oRUvP56pdcKZ
-         MWjSIHRrmZTYUKSQSt7xu53TptDfjwYo3LQjS/vQ7rreTaH6+ZCCi8gL2vKElAFvsISw
-         dxqxGSrmxx7ekU2xgvk4mteFICIXpNM1KE7bPg7IAWcDlmhbr2QR/G5HA6ZvFZSeM/+u
-         mX3p0t7UWrbPQm0QlB9xYSvF0TBXYmga//A7S4C76iHs6JyuZUsTWN8wE0pXIgFEQ06S
-         SLapaeRXwONnb6YPcxf+WyI3ZbLU6avAWEmM6REcBvEbIQYEUBsTrIOBX8j8Cv94B/5F
-         qQbQ==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-564372fb762so1486313a12.0;
+        Thu, 07 Mar 2024 09:51:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709833851; x=1710438651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nud+ektoz1i5+ZtYiRnd5giJ9AEuUsNnJvPUlZgCtfQ=;
-        b=alZD/nrRW3MO61MTlNLiaXIlZScL1bYZqxV0Um1M44RYuVvA4k/4DxFUlXcfBAQpUR
-         oYilVPAJ9Fpj2Y7SmsDwMqF3z4m8Gjaq9qdVZGK5xQTmhnz7rsZIabX+NYjWzTx+p1yg
-         oUwh/Eal1IIQjv5g7UkGfoCvN6DJpwn3AyPUNy/sV+PWWo0OKXMIn3IngbkNIJsK9YgS
-         tIMQEgXJ8CEV8KRdDmEaImL3PVSiaSZ+HDj0XtVAgujLrDHPwb07X4pZKeuJrWf0Qa2J
-         zeYWwpY6I57b5l6WQavM20G7T+xTfApXYq3IvVo7y2N24YNPVypTuNHE3PL42/Zjqlzh
-         NWtw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8Y3K95ByYQct9bGS0fx7Rfy2SgJSvjOnbHi4agTMzVelwBapu2MMrzuYzYMi79cmzlcWzaB8+w18P4BHs0A7eVe8anvU4ejfH/ePM
-X-Gm-Message-State: AOJu0YyA2lRAmd74CtYBvwlcDQD7NHnYYyY0F1suMY5NF6amVPYM+bOh
-	V4EvyO2XP2bIrX68SDMvH4zqpPgUAxZF0VEPfdnzJ1eE/DUUiw+GolP5r/egR+XIt7HaYLvQjTg
-	R97327sDbCr0PqkXiJy/iTAdymHY=
-X-Google-Smtp-Source: AGHT+IF0ZQ7HwQ4D2qXgjsxk5AzG+wH4I16G7HlIBJ4RSrb5zXyfkpc/TeQ2+/kJOtwWh242uLtu1diULqr1GHqH9UM=
-X-Received: by 2002:a17:90a:d58a:b0:29a:2860:28b9 with SMTP id
- v10-20020a17090ad58a00b0029a286028b9mr15805875pju.48.1709833851221; Thu, 07
- Mar 2024 09:50:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709833863; x=1710438663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G3MIfGO3k7f6zIfDg/I6OeKxvIxDh2bPbWHKtpIBemM=;
+        b=TSSaT7Osyqy6syYf1g/Aq4HF6sA21gCcvytFHapndtZ6Y+v03AW/QKliVmFDzv/kBv
+         JQqSaRDBDX78FKJMlsOAXF77nubzRd3+SJ+YWN3iZIWuAL5qNPOTVkzCyKzr153lAjVg
+         okRtyMOYvXkYh9JW9j+PLm+sr4D3UocT4ZFIo/L9+g6kLQ9Jvg0HQ4uo9Pk562DrGdyH
+         11cSsP+1ZllMU8IAWnn1fVfsEej+YBt7fLJZ71aqn8Qvh/hHxu+1aOy+FldHIbbur/OO
+         wyxJNyxxULZHMqAIzayknj0CT2s2lyfohJw5yRFo2E508o0eUHNl0Eq97sThmV0aJ5Nf
+         GWKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNu4temoYKwY67DR12KcPcCJl5cMOnKnZJOqU7M5S90Ib2k3MWUxxWGa1ANfdopMu0WblAkLXSBXQc2hHLd6GnKwQmnJ+Bcezd6PnA
+X-Gm-Message-State: AOJu0Yww/QXZF+DL0KcJ5Drb3gXMNrbhNZUFAfGCwZBtR5+z2fNxk7fj
+	jcfvgGvn8KCuztB1BPxG8wprW5go374leucs1SPyBpWdRFWE5uDFFH6JUKk5
+X-Google-Smtp-Source: AGHT+IGE7COA8LXHVdLL1oQMQdLJNzQLRVSrWgARCGiG2GDbuK/vK1S4PhIbtrctYJhuaa4usFoVsg==
+X-Received: by 2002:a50:8e56:0:b0:568:2149:329a with SMTP id 22-20020a508e56000000b005682149329amr355169edx.19.1709833862825;
+        Thu, 07 Mar 2024 09:51:02 -0800 (PST)
+Received: from localhost (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
+        by smtp.gmail.com with ESMTPSA id d8-20020a50fe88000000b005673e29cc0fsm5116984edt.54.2024.03.07.09.51.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 09:51:02 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: linux-wireless@vger.kernel.org,
+	johannes.berg@intel.com,
+	gregory.greenman@intel.com,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>
+Cc: kuba@kernel.org,
+	keescook@chromium.org,
+	Alon Giladi <alon.giladi@intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
+	Avraham Stern <avraham.stern@intel.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] wifi: iwlwifi: pcie: allocate dummy net_device dynamically
+Date: Thu,  7 Mar 2024 09:48:31 -0800
+Message-ID: <20240307174843.1719130-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2024030645-CVE-2023-52592-4693@gregkh> <ZemPuxhM_ZZ-khTh@tiehlicka>
- <2024030706-unscathed-wilt-e310@gregkh>
-In-Reply-To: <2024030706-unscathed-wilt-e310@gregkh>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 7 Mar 2024 09:50:38 -0800
-Message-ID: <CAEf4BzbvmwmAmZMvzo9gxyUwy9SQvC_2gFQ1wO-Zvw=9BT=J2g@mail.gmail.com>
-Subject: Re: CVE-2023-52592: libbpf: Fix NULL pointer dereference in bpf_object__collect_prog_relos
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michal Hocko <mhocko@suse.com>, cve@kernel.org, linux-kernel@vger.kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 7, 2024 at 5:16=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Mar 07, 2024 at 10:58:19AM +0100, Michal Hocko wrote:
-> > On Wed 06-03-24 06:45:50, Greg KH wrote:
-> > > Description
-> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > > In the Linux kernel, the following vulnerability has been resolved:
-> > >
-> > > libbpf: Fix NULL pointer dereference in bpf_object__collect_prog_relo=
-s
-> > >
-> > > An issue occurred while reading an ELF file in libbpf.c during fuzzin=
-g:
-> > >
-> > >     Program received signal SIGSEGV, Segmentation fault.
-> > >     0x0000000000958e97 in bpf_object.collect_prog_relos () at libbpf.=
-c:4206
-> > >     4206 in libbpf.c
-> > >     (gdb) bt
-> > >     #0 0x0000000000958e97 in bpf_object.collect_prog_relos () at libb=
-pf.c:4206
-> > >     #1 0x000000000094f9d6 in bpf_object.collect_relos () at libbpf.c:=
-6706
-> > >     #2 0x000000000092bef3 in bpf_object_open () at libbpf.c:7437
-> > >     #3 0x000000000092c046 in bpf_object.open_mem () at libbpf.c:7497
-> > >     #4 0x0000000000924afa in LLVMFuzzerTestOneInput () at fuzz/bpf-ob=
-ject-fuzzer.c:16
-> > >     #5 0x000000000060be11 in testblitz_engine::fuzzer::Fuzzer::run_on=
-e ()
-> > >     #6 0x000000000087ad92 in tracing::span::Span::in_scope ()
-> > >     #7 0x00000000006078aa in testblitz_engine::fuzzer::util::walkdir =
-()
-> > >     #8 0x00000000005f3217 in testblitz_engine::entrypoint::main::{{cl=
-osure}} ()
-> > >     #9 0x00000000005f2601 in main ()
-> > >     (gdb)
-> > >
-> > > scn_data was null at this code(tools/lib/bpf/src/libbpf.c):
-> > >
-> > >     if (rel->r_offset % BPF_INSN_SZ || rel->r_offset >=3D scn_data->d=
-_size) {
-> > >
-> > > The scn_data is derived from the code above:
-> > >
-> > >     scn =3D elf_sec_by_idx(obj, sec_idx);
-> > >     scn_data =3D elf_sec_data(obj, scn);
-> > >
-> > >     relo_sec_name =3D elf_sec_str(obj, shdr->sh_name);
-> > >     sec_name =3D elf_sec_name(obj, scn);
-> > >     if (!relo_sec_name || !sec_name)// don't check whether scn_data i=
-s NULL
-> > >             return -EINVAL;
-> > >
-> > > In certain special scenarios, such as reading a malformed ELF file,
-> > > it is possible that scn_data may be a null pointer
-> > >
-> > > The Linux kernel CVE team has assigned CVE-2023-52592 to this issue.
-> >
-> > OK, so this one is quite interesting. This is a userspace tooling
-> > gaining a kernel CVE. Is this just an omission or is this really
-> > expected.
->
-> "omission"?  I don't understand the question.
->
-> We are responsible for assigning CVEs to stuff that is in the "Linux
-> kernel source tree" (some have tried to get us to assign CVEs to
-> programs like git that are just hosted on kernel.org), so for now, yes,
-> this includes libbpf as well as stuff like perf.
->
-> > Also what is the security threat model here? If a malformed ELF file is
-> > loaded then the process gets SEGV which is perfectly reasonable thing t=
-o
-> > do.
->
-> Again, we do not do "threat modeling", we do "does this fix a weakness",
-> and I think this does as causing SEGV might not be a good thing, right?
->
-> But we'll defer to the libbpf maintainers on this, if they feel this is
-> just a "normal bugfix" then we can revoke this (added them to the cc:
-> here.)
+struct net_device shouldn't be embedded into any structure, instead,
+the owner should use the priv space to embed their state into net_device.
 
-Libbpf isn't meant to be fed untrusted ELF files, as it's normally
-used under root to perform BPF operations. So we generally treat these
-issues of malformed ELF crashing libbpf as just normal bugs, not as a
-security vulnerability. We even had issues where libelf crashed before
-libbpf could do anything at all. But this happens only for
-fuzzer-generated artificial test cases. In practice compilers produce
-valid ELFs and that's what real world applications are ever going to
-use.
+Embedding net_device into structures prohibits the usage of flexible
+arrays in the net_device structure. For more details, see the discussion
+at [1].
 
-Also note, in-kernel libbpf sources are only used for kernel
-build-time tooling (resolve_btfids) and for running BPF selftests. In
-both cases incoming ELF files are valid and created in a controlled
-environment. All the out-of-kernel users are supposed to use Github
-mirror of libbpf ([0]), which is used for packing libbpf in distros.
+Un-embed the net_device from struct iwl_trans_pcie by converting it
+into a pointer. Then use the leverage alloc_netdev() to allocate the
+net_device object at iwl_trans_pcie_alloc.
 
-tl;dr: I wouldn't assign CVE for such issues, thanks.
+The private data of net_device becomes a pointer for the struct
+iwl_trans_pcie, so, it is easy to get back to the iwl_trans_pcie parent
+given the net_device object.
 
-  [0] https://github.com/libbpf/libbpf
+[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
 
->
-> thanks,
->
-> greg k-h
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ .../wireless/intel/iwlwifi/pcie/internal.h    |  2 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c  | 11 +++++--
+ .../net/wireless/intel/iwlwifi/pcie/trans.c   | 29 +++++++++++++------
+ 3 files changed, 29 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+index 7805a42948af..a7eebe400b5b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+@@ -386,7 +386,7 @@ struct iwl_trans_pcie {
+ 	dma_addr_t iml_dma_addr;
+ 	struct iwl_trans *trans;
+ 
+-	struct net_device napi_dev;
++	struct net_device *napi_dev;
+ 
+ 	/* INT ICT Table */
+ 	__le32 *ict_tbl;
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index 9c2461ba13c5..984d7bcd381f 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1000,6 +1000,11 @@ void iwl_pcie_rx_init_rxb_lists(struct iwl_rxq *rxq)
+ 
+ static int iwl_pcie_rx_handle(struct iwl_trans *trans, int queue, int budget);
+ 
++static inline struct iwl_trans_pcie *iwl_netdev_to_trans_pcie(struct net_device *dev)
++{
++	return *(struct iwl_trans_pcie **)netdev_priv(dev);
++}
++
+ static int iwl_pcie_napi_poll(struct napi_struct *napi, int budget)
+ {
+ 	struct iwl_rxq *rxq = container_of(napi, struct iwl_rxq, napi);
+@@ -1007,7 +1012,7 @@ static int iwl_pcie_napi_poll(struct napi_struct *napi, int budget)
+ 	struct iwl_trans *trans;
+ 	int ret;
+ 
+-	trans_pcie = container_of(napi->dev, struct iwl_trans_pcie, napi_dev);
++	trans_pcie = iwl_netdev_to_trans_pcie(napi->dev);
+ 	trans = trans_pcie->trans;
+ 
+ 	ret = iwl_pcie_rx_handle(trans, rxq->id, budget);
+@@ -1034,7 +1039,7 @@ static int iwl_pcie_napi_poll_msix(struct napi_struct *napi, int budget)
+ 	struct iwl_trans *trans;
+ 	int ret;
+ 
+-	trans_pcie = container_of(napi->dev, struct iwl_trans_pcie, napi_dev);
++	trans_pcie = iwl_netdev_to_trans_pcie(napi->dev);
+ 	trans = trans_pcie->trans;
+ 
+ 	ret = iwl_pcie_rx_handle(trans, rxq->id, budget);
+@@ -1131,7 +1136,7 @@ static int _iwl_pcie_rx_init(struct iwl_trans *trans)
+ 			if (trans_pcie->msix_enabled)
+ 				poll = iwl_pcie_napi_poll_msix;
+ 
+-			netif_napi_add(&trans_pcie->napi_dev, &rxq->napi,
++			netif_napi_add(trans_pcie->napi_dev, &rxq->napi,
+ 				       poll);
+ 			napi_enable(&rxq->napi);
+ 		}
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index 6c76b2dd6878..e5af3d7dfbb1 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -1986,13 +1986,6 @@ static void iwl_trans_pcie_configure(struct iwl_trans *trans,
+ 	trans->command_groups = trans_cfg->command_groups;
+ 	trans->command_groups_size = trans_cfg->command_groups_size;
+ 
+-	/* Initialize NAPI here - it should be before registering to mac80211
+-	 * in the opmode but after the HW struct is allocated.
+-	 * As this function may be called again in some corner cases don't
+-	 * do anything if NAPI was already initialized.
+-	 */
+-	if (trans_pcie->napi_dev.reg_state != NETREG_DUMMY)
+-		init_dummy_netdev(&trans_pcie->napi_dev);
+ 
+ 	trans_pcie->fw_reset_handshake = trans_cfg->fw_reset_handshake;
+ }
+@@ -2057,6 +2050,8 @@ void iwl_trans_pcie_free(struct iwl_trans *trans)
+ 		iwl_pcie_tx_free(trans);
+ 	iwl_pcie_rx_free(trans);
+ 
++	free_netdev(trans_pcie->napi_dev);
++
+ 	if (trans_pcie->rba.alloc_wq) {
+ 		destroy_workqueue(trans_pcie->rba.alloc_wq);
+ 		trans_pcie->rba.alloc_wq = NULL;
+@@ -3594,7 +3589,7 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 			       const struct pci_device_id *ent,
+ 			       const struct iwl_cfg_trans_params *cfg_trans)
+ {
+-	struct iwl_trans_pcie *trans_pcie;
++	struct iwl_trans_pcie *trans_pcie, **priv;
+ 	struct iwl_trans *trans;
+ 	int ret, addr_size;
+ 	const struct iwl_trans_ops *ops = &trans_ops_pcie_gen2;
+@@ -3623,6 +3618,20 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 
+ 	trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 
++	/* Initialize NAPI here - it should be before registering to mac80211
++	 * in the opmode but after the HW struct is allocated.
++	 */
++	trans_pcie->napi_dev = alloc_netdev(sizeof(struct iwl_trans_pcie *),
++					    "dummy", NET_NAME_UNKNOWN,
++					    init_dummy_netdev);
++	if (!trans_pcie->napi_dev) {
++		ret = -ENOMEM;
++		goto out_free_trans;
++	}
++	/* The private struct in netdev is a pointer to struct iwl_trans_pcie */
++	priv = netdev_priv(trans_pcie->napi_dev);
++	*priv = trans_pcie;
++
+ 	trans_pcie->trans = trans;
+ 	trans_pcie->opmode_down = true;
+ 	spin_lock_init(&trans_pcie->irq_lock);
+@@ -3637,7 +3646,7 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 						   WQ_HIGHPRI | WQ_UNBOUND, 0);
+ 	if (!trans_pcie->rba.alloc_wq) {
+ 		ret = -ENOMEM;
+-		goto out_free_trans;
++		goto out_free_ndev;
+ 	}
+ 	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
+ 
+@@ -3757,6 +3766,8 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 	iwl_pcie_free_ict(trans);
+ out_no_pci:
+ 	destroy_workqueue(trans_pcie->rba.alloc_wq);
++out_free_ndev:
++	free_netdev(trans_pcie->napi_dev);
+ out_free_trans:
+ 	iwl_trans_free(trans);
+ 	return ERR_PTR(ret);
+-- 
+2.43.0
+
