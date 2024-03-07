@@ -1,69 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73423335C7;
-	Thu,  7 Mar 2024 23:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFF02E648
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 23:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709852665; cv=none; b=At4Fv/gSby+sT25P1jlIpDwBEv7EBItZHnHu6fz773XMCOCPxL2QeDulZMOkNXRiB3XnZFhAGwvBj9kUoIWJir6QZiOG2NORIe2/cIFjeaI2y6YL5l1bLB5fRYoR+7lI6sHVstzZpIp223YEF2BpVMo+kRWo8DxtLkquIOszTwg=
+	t=1709852819; cv=none; b=jqWGW+/qdEn8LKO6fNTiEM/xqklMQW8hUOyvE7X3uDZOGJJQrTeM6PwW6xXLt6g7ciAe7UABA4Atfjq9Kkapz08w2r43R3FZ9CEpzPkcXoNA1JLE41MbNV4HJu0QpHkZh16AxxpPmnD0NY9gIgpR2WY7A4wYK5yuPnSHhiDZ9KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709852665; c=relaxed/simple;
-	bh=DbczkzaJ/zVwOH/cmYk5kfCegYn64EBBaWeS225JXyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RqMEom6h20wE1TQZLtUoik3ne74NYlciZToTamG3OdDd/1ifZ00F1h8nl3aTaCoiCbPDKa62L/UsfmpXOdoicuykg2ARhyFp8YBcNSH/F29e5OC2n38AHgVIQN/wK9y6ge4IyU1VxGKIWaOpN3lb6UyoVW9AJ6kSKRwCptBIiXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpEsJGHq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709852819; c=relaxed/simple;
+	bh=k0SS8SAKBWSm6ZjaeUI808O7pfDqgFVG9Q0f0R2Yypo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g08Sm6ikNMWoylQaB3BDUeAqK1GpM80VDGyaQjIgXaiYUn2IMJ+rvTnHw2Q1Y6IcB+serja3dtti30ziqmG8XLMktPh7pAIdkwddPtW9qVjcPCM1Ats3uwRRJqQgNmjDs9wNX3YM2iNNvwrQv1b1/GHX7TmY3fM8vuLK9v4Qnlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=c2RSerpp; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpEsJGHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38828C433C7;
-	Thu,  7 Mar 2024 23:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709852665;
-	bh=DbczkzaJ/zVwOH/cmYk5kfCegYn64EBBaWeS225JXyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QpEsJGHqAnxaZYLi2aIxnNiD/GovnhqIBT4sBgW3fjYxnD1poGQHNV8tyfilWxkys
-	 momRdp2cmFgTmMsEeDXVlGcbSFmRIawDyouF9mMm/uZZIPU15QCWlvHFYu+858FNyE
-	 31LLmPXgSYMnvCTRo3q86qAxCC1NP+BbjNZJC/0GbHdOuHZAlhSfEATlHjMxMnv9rH
-	 5rocXxA4u6nRiji+n0yqVRC/goIdrtEllmsU33HXt0dOj9xTrAZIZF82684iRd/43K
-	 lECfPybYr1KT6SZjNmxdgYBvip85ZReI87Fh9Dm3z/YVK+Nd+Yjmju6L5bFkpy3MnG
-	 xMdRaAHRL9z7Q==
-Date: Fri, 8 Mar 2024 00:04:21 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
-	Gregory Clement <gregory.clement@bootlin.com>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Subject: Re: [PATCH v3 04/11] i2c: nomadik: use bitops helpers
-Message-ID: <jzevi2wh4v4c3qbkth55oa25h3taa4vgzvbokxp4wfaf577vw5@zrf47mxdqihp>
-References: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
- <20240306-mbly-i2c-v3-4-605f866aa4ec@bootlin.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c2RSerpp"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dc09556599so13276885ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 15:06:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709852817; x=1710457617; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7iHe5Q0jS1HzmXGXJsFnZi6ylveqC0jY0B2sEgUj6Vc=;
+        b=c2RSerpp0v8RV9LP11fTVkqzzm+zOhjJYdFiIlbkgO1caXQ7dTnBdAo54cpkRYxlnq
+         aJbqYi4bMec+LVerWe8lXiwWDS7wuNU9T9JQc+JwNuIL4aemBz/sqz1RxHlG6BFW1EFA
+         PkGiKkmMlziYccNHHicV4oJBzWoQT7/LCVQ7c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709852817; x=1710457617;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7iHe5Q0jS1HzmXGXJsFnZi6ylveqC0jY0B2sEgUj6Vc=;
+        b=eS890yosn6CAyJs3izhx3eywix3Lyjhqwh20RvYZ0o8y4lRXtX8V5DkmNu6R+RaKWV
+         1WVEVR0kGRQGOJenYyxcGil9/NKWfzFnT1aFztlDkrdUQ0ZZtOV2CiV7esH5H22Xmyn7
+         I8x9VDVOVyR8qkLl2EiyeVM9UKrjp70XzzGv0ida7jfXydvGPQkKuNakTcbDJYRAa3ba
+         OzU+PeRVxwc7C/z7WErrokNsdW6hx5UWll1B/AxvzaIe8T/d1CODtehDodvSQS/ntv0Q
+         Zaj+ZSQbXHyqyvaeC31FoFXQM4H0VREGzbC+1SKnIpJd6TUeCJn6wAlQunIHHvZcz/nJ
+         cMVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVUL94NXZpRlUjoxR+bQj/gXSb+4YClE30JZ/8bvfq/TmXS/+zxaeYaISdAxIWtPKkMeCosBuANy62eXgTNEGFh6wCgXmQN3mZOmKYf
+X-Gm-Message-State: AOJu0Ywqwkn3vYfhkllzEh/37b6fCPOFz4fF43oJz9t7roA7oxo17bnu
+	uG06ypHYJtYIukZAqP9cVezE0jZBEIAIySuuG7X7ssMEdsCNG8XroOSPnC+pnA==
+X-Google-Smtp-Source: AGHT+IGDyEFraCKG0HdJyNaPA3O24bCFqx7qZGkZjD64OyRYiu2ACBiTCOFte2RAn/zwJXOBBrJa4A==
+X-Received: by 2002:a17:902:e74d:b0:1dc:26a1:d1da with SMTP id p13-20020a170902e74d00b001dc26a1d1damr13203385plf.13.1709852817467;
+        Thu, 07 Mar 2024 15:06:57 -0800 (PST)
+Received: from hsinyi.sjc.corp.google.com ([2620:15c:9d:2:bf8f:10d4:f877:bee3])
+        by smtp.gmail.com with ESMTPSA id h19-20020a170902f2d300b001db63cfe07dsm15196654plc.283.2024.03.07.15.06.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 15:06:57 -0800 (PST)
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Douglas Anderson <dianders@chromium.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/5] Match panel with identity
+Date: Thu,  7 Mar 2024 14:57:40 -0800
+Message-ID: <20240307230653.1807557-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240306-mbly-i2c-v3-4-605f866aa4ec@bootlin.com>
 
-Hi Theo,
+This series is a follow up for 1a5e81de180e ("Revert "drm/panel-edp: Add
+auo_b116xa3_mode""). It's found that 2 different AUO panels use the same
+product id. One of them requires an overridden mode, while the other should
+use the mode directly from edid.
 
-On Wed, Mar 06, 2024 at 06:59:24PM +0100, Théo Lebrun wrote:
-> Constant register bit fields are declared using hardcoded hex values;
-> replace them by calls to BIT() and GENMASK(). Replace custom GEN_MASK()
-> macro by the generic FIELD_PREP(). Replace manual bit manipulations by
-> the generic FIELD_GET() macro.
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+Match the panel for identity (id and name). If not found, fallback to match
+id.
 
-Thanks!
+v1: https://lore.kernel.org/lkml/20240223223958.3887423-1-hsinyi@chromium.org
+v2: https://lore.kernel.org/lkml/20240228011133.1238439-1-hsinyi@chromium.org
+v3: https://lore.kernel.org/lkml/20240304195214.14563-1-hsinyi@chromium.org
+v4: https://lore.kernel.org/lkml/20240306004347.974304-1-hsinyi@chromium.org/
+v5: https://lore.kernel.org/lkml/20240306200353.1436198-1-hsinyi@chromium.org/
 
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+Hsin-Yi Wang (5):
+  drm_edid: Add a function to get EDID base block
+  drm/edid: Add a function to match EDID with identity
+  drm/edid: Match edid quirks with identity
+  drm/panel-edp: Match edp_panels with panel identity
+  drm/panel-edp: Fix AUO 0x405c panel naming and add a variant
 
-Andi
+ drivers/gpu/drm/drm_edid.c        | 147 +++++++++++++++++++++++-------
+ drivers/gpu/drm/panel/panel-edp.c |  73 ++++++++++-----
+ include/drm/drm_edid.h            |  12 ++-
+ 3 files changed, 177 insertions(+), 55 deletions(-)
+
+-- 
+2.44.0.278.ge034bb2e1d-goog
+
