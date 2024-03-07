@@ -1,44 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986BD13F45B;
-	Thu,  7 Mar 2024 22:25:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DFB130AD0;
+	Thu,  7 Mar 2024 22:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709850349; cv=none; b=pIptcz49oyCwLMXNMyxEvYeGIm/Xfyp+it1AUycOcmQKbZh0iaMIrhqVoj6ApXaSZmNtatlzEJZu7xQKt5zZocOnDjSpE9xush3A/v/jMPqq+nxADzqpGti3OBU553rUV1VkNGbxMWB18MD/jJcyvlEyLzxRNR8OynEL/HULMl0=
+	t=1709850475; cv=none; b=knvre2Bo6j+f7plpTTVeDG8hNlYnb9ee+XwOuiBAGNb9enfQKvw+6Cr84qDw7v185BaS8vdAUnn3BclDjG8q5LwXdVWFYt+FT+sIVcp4TpRHr6H5irqhQ258MsllWbRjHInWOT68JN2Y0BC/DUGu2Hw8KvJF8wcz+vtvE1Sh6h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709850349; c=relaxed/simple;
-	bh=dSgHDY1mQRS5iEB2K6FDPBYRM8N29qnYSxvjweoJFBU=;
+	s=arc-20240116; t=1709850475; c=relaxed/simple;
+	bh=TCHmyo/bk6a8X8eBuNw2MkbEMUjei5hv7GdhoF+s4Ak=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iRMUd0BEt3wbjJcq01C06HM6zFJ5U/8YaYu2JjfeO+WVhiv35FaLxw4/s8dCoqp+eXeywk9+hQ50kJ/i//96n4gozeXe9J1DZpnkocJ3nAEIqVE2nXQbB82C5or2+ycZ9IOVrDaj4z8xeqwKMqVnBD2kx0UXJtAA3zNS0lSBhnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqQ3acLK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=p1x+B6SJUBWIrcEJyJ74U2ew6v+GL7g+mE6mMPOZdjRfN7cnd6Sn7Mc+Z2neFBpzMCrEqEL4KJ68hbRhpL6hFDzaAoyMmnkM+rGTtPuu7Pzjsjw7+es6ZuwAf5o4X4a4YISHnpeQ5wmwlvrLUeRY1VLq4e5sFjrppBtLriSiiN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eSNxfRjk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqQ3acLK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2F3C43609;
-	Thu,  7 Mar 2024 22:25:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSNxfRjk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08D0C433C7;
+	Thu,  7 Mar 2024 22:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709850349;
-	bh=dSgHDY1mQRS5iEB2K6FDPBYRM8N29qnYSxvjweoJFBU=;
+	s=k20201202; t=1709850475;
+	bh=TCHmyo/bk6a8X8eBuNw2MkbEMUjei5hv7GdhoF+s4Ak=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GqQ3acLKuuwV178JSKE3yoTRLPdKoHN2k3b5kvkOGrfDazt4FhNSCglNUv+9X8cyM
-	 bP77qFySsA+Wrf/dgDSjoEeo8nCafiABMPGPbCO+3/7uHdCHhTfVqdovNeXZi7Q4ok
-	 Sr5GU71NNQd4AxPvndP204IVEDqrO/X/k9ukuWsUn5n8Cj+HczQLR/NR30G5A1wGns
-	 IH6S9/3kXyUgttrd/utZFVTXKJ9raNQ36at2E2j2UKBR9H8pTSAC+znvhyh05JJKt/
-	 4PwFMFCSnhDUnUkgxISEF0vmd/vBwr/HuNqyM49NZxumETrM+mnqONzdjs6esb57cO
-	 2j8g8Ue2I8Gag==
-Date: Thu, 7 Mar 2024 16:25:41 -0600
+	b=eSNxfRjk8zBKEAvcfJaE0wFM/gYfJ7t0t63TLcheiCC6X8Nn2qCU59Y8A/gpKbJs4
+	 oWuBNb+HW12wRvjIg14QG9ZpgQU44iZemrTR6x3rsAWZSM5sQzQG4srV9gXHaLFm7q
+	 jo5vANtwdZMiyXVSk6+FWQnGyLF+x6ti3hadlzuQMjIgqAkMTyGbPY7ucY/kpF0gzo
+	 sq2bqAKY2QpMXR9Ew7ASlVmTwpN5R4Iipu0CkhsAHgzNwjazd5PZQ2/SzgOrFgSNy7
+	 2kVJXOjpCqtcneSXXPv57Kl46Apm7q4YqkScdIJHaT72fIY0ayrPwvDCKa1L7evfpQ
+	 QD3OM65lQdynw==
+Date: Thu, 7 Mar 2024 16:27:51 -0600
 From: Rob Herring <robh@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+To: Umang Jain <umang.jain@ideasonboard.com>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>, willl will <will@willwhang.com>,
+	linux-media@vger.kernel.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: nvmem: Add compatible for SC8280XP
-Message-ID: <20240307222541.GA3268932-robh@kernel.org>
-References: <20240307-topic-8280_nodes-v1-0-4eba20e08902@linaro.org>
- <20240307-topic-8280_nodes-v1-1-4eba20e08902@linaro.org>
+	NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Fabio Estevam <festevam@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	devicetree@vger.kernel.org,
+	Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: media: Add bindings for IMX283
+Message-ID: <170985047110.3271777.11909782717247378150.robh@kernel.org>
+References: <20240307214048.858318-1-umang.jain@ideasonboard.com>
+ <20240307214048.858318-2-umang.jain@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,14 +57,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240307-topic-8280_nodes-v1-1-4eba20e08902@linaro.org>
+In-Reply-To: <20240307214048.858318-2-umang.jain@ideasonboard.com>
 
-On Thu, Mar 07, 2024 at 09:25:54PM +0100, Konrad Dybcio wrote:
-> Document the QFPROM block found on SC8280XP.
+
+On Fri, 08 Mar 2024 03:10:42 +0530, Umang Jain wrote:
+> - Add dt-bindings documentation for Sony IMX283 sensor driver
+> - Add MAINTAINERS entry for Sony IMX283 binding documentation
 > 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
 > ---
->  Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/media/i2c/sony,imx283.yaml       | 107 ++++++++++++++++++
+>  MAINTAINERS                                   |   8 ++
+>  2 files changed, 115 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx283.yaml
+> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
