@@ -1,119 +1,278 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6A220B38
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 22:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A1B13B795
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 22:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709849721; cv=none; b=SYazOWX9dJRPtvLjB+bqKwS6RRkzS1dtuiLH4HBnH+HIXv7gQTMh7lt62VNb5y8eL91+CTDGTi6Sbf8ipGZf88qFM23ltgUGAgT5YDIrCyA9tE/bwvf57qHbbV4oa81f0EI8TPDxVn4iJVfB56r7+UZd4Kwe7ru/n1l9yLxxQr8=
+	t=1709849780; cv=none; b=HT9kC+X1pcEKQwp6hgtYycIH5gPfIKcreOUE2/ykRepQnTwvGPM3KVXgE8mTEbycB61yr5RY8kROqjZUME+iEhSVKiz9+DibevO1m2FODjj/Rt5TjZXxsqP2myOCA5OZvtsSLA/Cb2rnFeiCD6LrKxsDGThCduVVTNq9daWZR9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709849721; c=relaxed/simple;
-	bh=xVjIxnXRza5ADO9nsi2doRpx+VjRsnIoZFjRiWHbyv0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lYyJi00LTOh/Q8RfBfKHWMlaCce2PknRvTT1exFJnCpnhUBXRUYww8mRxdxi3HAyEZRHV5ES6TQz5yVyi6wCkpeQ8raz+OKaL/TBYTEUXh4nR598+HCdFSwJLDswAXRNjbo7RkU0urS99Y4P2vYPgy7AK5K2yJI8iqicelqHi7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UwMom9Lq; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
+	s=arc-20240116; t=1709849780; c=relaxed/simple;
+	bh=5RMQ85kjFU0IqJOMgQrTPKjXrUrRj7z8bEoR0DwT4c4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=poYaMYBBSmuVqJ/ZFTzaKZtrkXdptY72JYgDMsxNXORjbSTp0xN9UmVsE3RevwAntwIAlGNcAqsKHvKKP4Uk3xfaChrAl2q/j8VatvwOKwX6IhfSf5CbFLccrjetPpRB+DwKEOhS08IVTOWtuyu1c9HnQ95cuPPwhJoJfam3BfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=h2H3442F; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UwMom9Lq"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc0bcf9256so443626276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 14:15:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="h2H3442F"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7882d75e766so78053885a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 14:16:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709849719; x=1710454519; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7rzXLo7Z+/Q65u61DPW0fyUPb4sISQSDV3DIjd2co7U=;
-        b=UwMom9Lq1cqR3pgDPmodAv2Rc7VGpxHs+TSyzNqc4ROfUo6qLZJkf62U31VkQofGes
-         nBXSh8DpP9kTllBOGdc/qNLfkzZfUDURKLM3W1PAx3w9nesvfObZul8ZnA8vH5ZqRNgG
-         SBwxb0xb4U9EB8Q+WuzOvkyAWQ1ZCSbfxJQHDFl5HlJFtp0XuHfqfQ2u/jnwbr8w+R6u
-         GAPLk4xkkhlCK2PjKvkyUIN59ri7H0c/vSe3LIsl7TTB0sIXS9Fc65ylV75C4NaC4nRj
-         lpSBVOw2nDyL+bK1fucDKv/GqbjKIj4iJQJy0RmnDcBLx024qFzfxE+G/BWnrB6WCK5J
-         f1kA==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1709849776; x=1710454576; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2zp3v54goojmEVAqqcqwPv6cH3vUgepVgSAhLnj7GBU=;
+        b=h2H3442F5rZ9cSrc0zGU37nYb4I+eySsDpVSQJSGH8rpvunqXDWqdysM/wa+dyCnjL
+         LYLc6JCW8p5797JbWc9oYrDIa4HQFyqUMJvdsToKNEaemNWp4ZNTGnLtznR23Zco/bg/
+         WhC8EN4vhidHV9BOZ+HoGGjyaqYtmUsWQ8L97FZkOnx1FVjWBdmiCCa1h1WxOwiL77P7
+         Lhu23kiZ6TDjvP2tuym1rY04n9WDitoa4eII5W6GAPOHBJUWWFVGXO4G57aFQuNv4iii
+         rwPMyaGHB9WdxR7j85unn8JYk+O28AOEIoVot4bZEe5Zd0nRQwGbAoYUvc6FhA64N7k3
+         565A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709849719; x=1710454519;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7rzXLo7Z+/Q65u61DPW0fyUPb4sISQSDV3DIjd2co7U=;
-        b=ralGhA4l9PUXBggHVuz60+24kFIzwEoxB85Pp3B3Xy+gMQJsHc7m7FHwlchrAJ0BCs
-         ZLtWa+e1LAIK9REAzgeHeyjnHZAXgi81HySJjxPKvT+qIt2OIrxSRCMhRlxKrjxsdT1o
-         UDtCeHQsN5GvHgQMvPG4dQhS+mzkZSO+lut5vnTZkzdvqF94Hab/oaG3dzhk45e3qPwv
-         nmJNctl1qSDrbZKGizfhKJcnv/83xGaquOmCOAu9Ni8K63spgPh1hDYRmkcLms3cREGg
-         SjKgUqjtQYk8ahKMXyYfLOgFs9BYPOscOAbIlLvn4Vbi+BKsvexAoPv7wEmQwvQnqTc3
-         9t3A==
-X-Gm-Message-State: AOJu0YzuYvSI6FmVzzH0aTXhhdF0RBIjJUaR62qUUfsYHDtR/lD6/fW9
-	BL53yTxP2/kEDvNwKcSNR84F0g14RC1KzVGjsRBiYRb7yq1Sehufmxjn7nXt2qRPSsV5MqIeOZE
-	AQ4kQSHeZxA==
-X-Google-Smtp-Source: AGHT+IFkodcTmH2WhRKL5Guisq0dPblEAN2TuWVozqfDHwHkLazh4no4AcU34X9Cih1C+kj0HL3o1UyNSDUdjA==
-X-Received: from xllamas.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5070])
- (user=cmllamas job=sendgmr) by 2002:a05:6902:1201:b0:dbe:30cd:8fcb with SMTP
- id s1-20020a056902120100b00dbe30cd8fcbmr663708ybu.0.1709849718793; Thu, 07
- Mar 2024 14:15:18 -0800 (PST)
-Date: Thu,  7 Mar 2024 22:15:05 +0000
-In-Reply-To: <2024030733-granny-octagon-7cfc@gregkh>
+        d=1e100.net; s=20230601; t=1709849776; x=1710454576;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2zp3v54goojmEVAqqcqwPv6cH3vUgepVgSAhLnj7GBU=;
+        b=aK3gTCcd/LD6VCoVLS1HDacgqh3sU0V03hN/i1KAI2Uzo2xoQapNNB4DHD+LMaqcw/
+         vizeYT1Bn/vx9zMz/POYpPN5Opttyrr/pBFrK5GQEINqfzCwjCCxSa3hr+klMwQZIuP/
+         42o5Xry+TMLxMMCj3funpAAcmWGzrjvOJY0IF9Z0IXzers842kYrl5Ukt2JPAjeIDuPp
+         Gk7uN7C9cfrpT4kqyp+5ej41ltVWH3BL0Go+PDC0mDVPBKQeD1csDf7A6Zr/SxMyUkmg
+         DxewOCoX/pR5hQqOVCEeblmM8VNXhq3okGBjBGTmhCVO8PE22bwm5cnFE/KWGSxR/JD+
+         gjmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWuqqxQJYXnV8N0YmdnhUfNln4xttECKgPKGWu3CQkuBvr2FuxsV3lAOlwSjbfhQudkQFncfqJkHbzfsK0XsgU3RY/Dcj+0YX+jq74W
+X-Gm-Message-State: AOJu0YxSKS4fmVbBmBohmBa+uXthC4MMyjyBEC8FdpGwBT/f9m70fqmw
+	dew0z4BDGUM7ZGYcTLSHkIyBiDuEY69j6wMSspdvT/3Op5X0dsT1xCZap/YHLrw=
+X-Google-Smtp-Source: AGHT+IFkuf7HU47twIpvKZWFZeZI65WwFJHBcwQNWMYK70wy0RsqZDzkLqFS92cL0KO6OyA+B+oJNQ==
+X-Received: by 2002:a05:620a:5361:b0:788:1a1c:dcb6 with SMTP id op33-20020a05620a536100b007881a1cdcb6mr10975285qkn.5.1709849775724;
+        Thu, 07 Mar 2024 14:16:15 -0800 (PST)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id bp9-20020a05620a458900b0078812f8a042sm6498316qkb.90.2024.03.07.14.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 14:16:14 -0800 (PST)
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Alex Deucher <alexander.deucher@amd.com>
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amdgpu: fix deadlock while reading mqd from debugfs
+Date: Thu,  7 Mar 2024 17:07:37 -0500
+Message-ID: <20240307221609.7651-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <2024030733-granny-octagon-7cfc@gregkh>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <20240307221505.101431-1-cmllamas@google.com>
-Subject: [PATCH v3] binder: remove redundant variable page_addr
-From: Carlos Llamas <cmllamas@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Colin Ian King <colin.i.king@intel.com>, kernel test robot <lkp@intel.com>, 
-	Carlos Llamas <cmllamas@google.com>, 
-	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Colin Ian King <colin.i.king@intel.com>
+An errant disk backup on my desktop got into debugfs and triggered the
+following deadlock scenario in the amdgpu debugfs files. The machine
+also hard-resets immediately after those lines are printed (although I
+wasn't able to reproduce that part when reading by hand):
 
-Variable page_addr is being assigned a value that is never read. The
-variable is redundant and can be removed.
+[ 1318.016074][ T1082] ======================================================
+[ 1318.016607][ T1082] WARNING: possible circular locking dependency detected
+[ 1318.017107][ T1082] 6.8.0-rc7-00015-ge0c8221b72c0 #17 Not tainted
+[ 1318.017598][ T1082] ------------------------------------------------------
+[ 1318.018096][ T1082] tar/1082 is trying to acquire lock:
+[ 1318.018585][ T1082] ffff98c44175d6a0 (&mm->mmap_lock){++++}-{3:3}, at: __might_fault+0x40/0x80
+[ 1318.019084][ T1082]
+[ 1318.019084][ T1082] but task is already holding lock:
+[ 1318.020052][ T1082] ffff98c4c13f55f8 (reservation_ww_class_mutex){+.+.}-{3:3}, at: amdgpu_debugfs_mqd_read+0x6a/0x250 [amdgpu]
+[ 1318.020607][ T1082]
+[ 1318.020607][ T1082] which lock already depends on the new lock.
+[ 1318.020607][ T1082]
+[ 1318.022081][ T1082]
+[ 1318.022081][ T1082] the existing dependency chain (in reverse order) is:
+[ 1318.023083][ T1082]
+[ 1318.023083][ T1082] -> #2 (reservation_ww_class_mutex){+.+.}-{3:3}:
+[ 1318.024114][ T1082]        __ww_mutex_lock.constprop.0+0xe0/0x12f0
+[ 1318.024639][ T1082]        ww_mutex_lock+0x32/0x90
+[ 1318.025161][ T1082]        dma_resv_lockdep+0x18a/0x330
+[ 1318.025683][ T1082]        do_one_initcall+0x6a/0x350
+[ 1318.026210][ T1082]        kernel_init_freeable+0x1a3/0x310
+[ 1318.026728][ T1082]        kernel_init+0x15/0x1a0
+[ 1318.027242][ T1082]        ret_from_fork+0x2c/0x40
+[ 1318.027759][ T1082]        ret_from_fork_asm+0x11/0x20
+[ 1318.028281][ T1082]
+[ 1318.028281][ T1082] -> #1 (reservation_ww_class_acquire){+.+.}-{0:0}:
+[ 1318.029297][ T1082]        dma_resv_lockdep+0x16c/0x330
+[ 1318.029790][ T1082]        do_one_initcall+0x6a/0x350
+[ 1318.030263][ T1082]        kernel_init_freeable+0x1a3/0x310
+[ 1318.030722][ T1082]        kernel_init+0x15/0x1a0
+[ 1318.031168][ T1082]        ret_from_fork+0x2c/0x40
+[ 1318.031598][ T1082]        ret_from_fork_asm+0x11/0x20
+[ 1318.032011][ T1082]
+[ 1318.032011][ T1082] -> #0 (&mm->mmap_lock){++++}-{3:3}:
+[ 1318.032778][ T1082]        __lock_acquire+0x14bf/0x2680
+[ 1318.033141][ T1082]        lock_acquire+0xcd/0x2c0
+[ 1318.033487][ T1082]        __might_fault+0x58/0x80
+[ 1318.033814][ T1082]        amdgpu_debugfs_mqd_read+0x103/0x250 [amdgpu]
+[ 1318.034181][ T1082]        full_proxy_read+0x55/0x80
+[ 1318.034487][ T1082]        vfs_read+0xa7/0x360
+[ 1318.034788][ T1082]        ksys_read+0x70/0xf0
+[ 1318.035085][ T1082]        do_syscall_64+0x94/0x180
+[ 1318.035375][ T1082]        entry_SYSCALL_64_after_hwframe+0x46/0x4e
+[ 1318.035664][ T1082]
+[ 1318.035664][ T1082] other info that might help us debug this:
+[ 1318.035664][ T1082]
+[ 1318.036487][ T1082] Chain exists of:
+[ 1318.036487][ T1082]   &mm->mmap_lock --> reservation_ww_class_acquire --> reservation_ww_class_mutex
+[ 1318.036487][ T1082]
+[ 1318.037310][ T1082]  Possible unsafe locking scenario:
+[ 1318.037310][ T1082]
+[ 1318.037838][ T1082]        CPU0                    CPU1
+[ 1318.038101][ T1082]        ----                    ----
+[ 1318.038350][ T1082]   lock(reservation_ww_class_mutex);
+[ 1318.038590][ T1082]                                lock(reservation_ww_class_acquire);
+[ 1318.038839][ T1082]                                lock(reservation_ww_class_mutex);
+[ 1318.039083][ T1082]   rlock(&mm->mmap_lock);
+[ 1318.039328][ T1082]
+[ 1318.039328][ T1082]  *** DEADLOCK ***
+[ 1318.039328][ T1082]
+[ 1318.040029][ T1082] 1 lock held by tar/1082:
+[ 1318.040259][ T1082]  #0: ffff98c4c13f55f8 (reservation_ww_class_mutex){+.+.}-{3:3}, at: amdgpu_debugfs_mqd_read+0x6a/0x250 [amdgpu]
+[ 1318.040560][ T1082]
+[ 1318.040560][ T1082] stack backtrace:
+[ 1318.041053][ T1082] CPU: 22 PID: 1082 Comm: tar Not tainted 6.8.0-rc7-00015-ge0c8221b72c0 #17 3316c85d50e282c5643b075d1f01a4f6365e39c2
+[ 1318.041329][ T1082] Hardware name: Gigabyte Technology Co., Ltd. B650 AORUS PRO AX/B650 AORUS PRO AX, BIOS F20 12/14/2023
+[ 1318.041614][ T1082] Call Trace:
+[ 1318.041895][ T1082]  <TASK>
+[ 1318.042175][ T1082]  dump_stack_lvl+0x4a/0x80
+[ 1318.042460][ T1082]  check_noncircular+0x145/0x160
+[ 1318.042743][ T1082]  __lock_acquire+0x14bf/0x2680
+[ 1318.043022][ T1082]  lock_acquire+0xcd/0x2c0
+[ 1318.043301][ T1082]  ? __might_fault+0x40/0x80
+[ 1318.043580][ T1082]  ? __might_fault+0x40/0x80
+[ 1318.043856][ T1082]  __might_fault+0x58/0x80
+[ 1318.044131][ T1082]  ? __might_fault+0x40/0x80
+[ 1318.044408][ T1082]  amdgpu_debugfs_mqd_read+0x103/0x250 [amdgpu 8fe2afaa910cbd7654c8cab23563a94d6caebaab]
+[ 1318.044749][ T1082]  full_proxy_read+0x55/0x80
+[ 1318.045042][ T1082]  vfs_read+0xa7/0x360
+[ 1318.045333][ T1082]  ksys_read+0x70/0xf0
+[ 1318.045623][ T1082]  do_syscall_64+0x94/0x180
+[ 1318.045913][ T1082]  ? do_syscall_64+0xa0/0x180
+[ 1318.046201][ T1082]  ? lockdep_hardirqs_on+0x7d/0x100
+[ 1318.046487][ T1082]  ? do_syscall_64+0xa0/0x180
+[ 1318.046773][ T1082]  ? do_syscall_64+0xa0/0x180
+[ 1318.047057][ T1082]  ? do_syscall_64+0xa0/0x180
+[ 1318.047337][ T1082]  ? do_syscall_64+0xa0/0x180
+[ 1318.047611][ T1082]  entry_SYSCALL_64_after_hwframe+0x46/0x4e
+[ 1318.047887][ T1082] RIP: 0033:0x7f480b70a39d
+[ 1318.048162][ T1082] Code: 91 ba 0d 00 f7 d8 64 89 02 b8 ff ff ff ff eb b2 e8 18 a3 01 00 0f 1f 84 00 00 00 00 00 80 3d a9 3c 0e 00 00 74 17 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 5b c3 66 2e 0f 1f 84 00 00 00 00 00 53 48 83
+[ 1318.048769][ T1082] RSP: 002b:00007ffde77f5c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[ 1318.049083][ T1082] RAX: ffffffffffffffda RBX: 0000000000000800 RCX: 00007f480b70a39d
+[ 1318.049392][ T1082] RDX: 0000000000000800 RSI: 000055c9f2120c00 RDI: 0000000000000008
+[ 1318.049703][ T1082] RBP: 0000000000000800 R08: 000055c9f2120a94 R09: 0000000000000007
+[ 1318.050011][ T1082] R10: 0000000000000000 R11: 0000000000000246 R12: 000055c9f2120c00
+[ 1318.050324][ T1082] R13: 0000000000000008 R14: 0000000000000008 R15: 0000000000000800
+[ 1318.050638][ T1082]  </TASK>
 
-Cleans up clang scan build warning:
-warning: Value stored to 'page_addr' is never read [deadcode.DeadStores]
+amdgpu_debugfs_mqd_read() holds a reservation when it calls
+put_user(), which may fault and acquire the mmap_sem. This violates
+the established locking order.
 
-Signed-off-by: Colin Ian King <colin.i.king@intel.com>
-Fixes: 162c79731448 ("binder: avoid user addresses in debug logs")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202312060851.cudv98wG-lkp@intel.com/
-Acked-by: Carlos Llamas <cmllamas@google.com>
+Bounce the mqd data through a kernel buffer to get put_user() out of
+the illegal section.
+
+Fixes: 445d85e3c1df ("drm/amdgpu: add debugfs interface for reading MQDs")
+Cc: stable@vger.kernel.org		[v6.5+]
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c | 46 +++++++++++++++---------
+ 1 file changed, 29 insertions(+), 17 deletions(-)
 
-Notes:
-    v2: added tags, used char-misc-next as base
-    v3: rebased, fixed conflicts with 0a97c01cd20b
+This fixes the lockdep splat for me, and the hexdump of the output
+looks sane after the patch. However, I'm not at all familiar with this
+code to say for sure that this is the right solution. The mqd seems
+small enough that the kmalloc won't get crazy. I'm also assuming that
+ring->mqd_size is safe to access before the reserve & kmap. Lastly I
+went with an open loop instead of a memcpy() as I wasn't sure if that
+memory is safe to address a byte at at time.
 
- drivers/android/binder_alloc.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
-index e0e4dc38b692..2e1f261ec5c8 100644
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -925,7 +925,6 @@ void binder_alloc_deferred_release(struct binder_alloc *alloc)
- 		int i;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
+index 5505d646f43a..06f0a6534a94 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
+@@ -524,46 +524,58 @@ static ssize_t amdgpu_debugfs_mqd_read(struct file *f, char __user *buf,
+ {
+ 	struct amdgpu_ring *ring = file_inode(f)->i_private;
+ 	volatile u32 *mqd;
+-	int r;
++	u32 *kbuf;
++	int r, i;
+ 	uint32_t value, result;
  
- 		for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
--			unsigned long page_addr;
- 			bool on_lru;
+ 	if (*pos & 3 || size & 3)
+ 		return -EINVAL;
  
- 			if (!alloc->pages[i].page_ptr)
-@@ -933,7 +932,6 @@ void binder_alloc_deferred_release(struct binder_alloc *alloc)
+-	result = 0;
++	kbuf = kmalloc(ring->mqd_size, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
  
- 			on_lru = list_lru_del_obj(&binder_freelist,
- 						  &alloc->pages[i].lru);
--			page_addr = alloc->buffer + i * PAGE_SIZE;
- 			binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
- 				     "%s: %d: page %d %s\n",
- 				     __func__, alloc->pid, i,
+ 	r = amdgpu_bo_reserve(ring->mqd_obj, false);
+ 	if (unlikely(r != 0))
+-		return r;
++		goto err_free;
+ 
+ 	r = amdgpu_bo_kmap(ring->mqd_obj, (void **)&mqd);
+-	if (r) {
+-		amdgpu_bo_unreserve(ring->mqd_obj);
+-		return r;
+-	}
++	if (r)
++		goto err_unreserve;
+ 
++	/*
++	 * Copy to local buffer to avoid put_user(), which might fault
++	 * and acquire mmap_sem, under reservation_ww_class_mutex.
++	 */
++	for (i = 0; i < ring->mqd_size/sizeof(u32); i++)
++		kbuf[i] = mqd[i];
++
++	amdgpu_bo_kunmap(ring->mqd_obj);
++	amdgpu_bo_unreserve(ring->mqd_obj);
++
++	result = 0;
+ 	while (size) {
+ 		if (*pos >= ring->mqd_size)
+-			goto done;
++			break;
+ 
+-		value = mqd[*pos/4];
++		value = kbuf[*pos/4];
+ 		r = put_user(value, (uint32_t *)buf);
+ 		if (r)
+-			goto done;
++			goto err_free;
+ 		buf += 4;
+ 		result += 4;
+ 		size -= 4;
+ 		*pos += 4;
+ 	}
+ 
+-done:
+-	amdgpu_bo_kunmap(ring->mqd_obj);
+-	mqd = NULL;
+-	amdgpu_bo_unreserve(ring->mqd_obj);
+-	if (r)
+-		return r;
+-
++	kfree(kbuf);
+ 	return result;
++
++err_unreserve:
++	amdgpu_bo_unreserve(ring->mqd_obj);
++err_free:
++	kfree(kbuf);
++	return r;
+ }
+ 
+ static const struct file_operations amdgpu_debugfs_mqd_fops = {
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.44.0
 
