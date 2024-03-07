@@ -1,102 +1,125 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2041.outbound.protection.outlook.com [40.107.7.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70B95FDD5
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709811005; cv=none; b=GYBaYEW07T/A4gENA6KjNUomxxXGEOvPqy2UXF0qHKzt6d2Dj68c/gxltr1KxrM21ypjdNsjT4VPvPrtZYMCzns2dn7xSOFG52GgQH0Cm2X23IZ7Ycnhlr/h/4qwoMXrdgkYcEUITaNdbwgU7mm/KGp+hKqX+JQyZMQInI/ADeo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709811005; c=relaxed/simple;
-	bh=tYbrPzwPHLtCbPmmzOI5EEE0z7+hi9V/Z6XXn7U1AlI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hdQK9sx1FpBen32/UOXVhOoManNFnMil5OPoVeCVx+EIMKdpqnUcetZGHFZL8o1+hwh0BylNaFrLXrgOrl7VQ6unxMYgAX21laNwKAcYMYIkLZwWiCiZKT0AZVQ+ERqpm1vRXxWHl26qu6z/7tiXbTblSbzjt+9b469bVVsEg0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33dcc82ecc1so185511f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:30:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709811002; x=1710415802;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ApptroHB6/NmBRK02Xfs7tuTGYgteOdPDSgkfdE6Ajw=;
-        b=JR5KWlUMYmlUyWLI8/ojg0TyeMXOYh8v+RkMM/JOHS8x25nDl2G8gyH+XdTYe/6UOW
-         7NAftCTaBokNeW7036mIZwTdzHREvqUNJXDeLdnM13h5D4HsR/KZqJKpnDSFYUkVSfTg
-         CGuXYr43v2w3v+y/Vezbn9UT0gz/i1P0koxKfYWYaX6qHhu3LN2Sa6s7dogIovUU9vXs
-         +H40Kdh2BAmut/hL65HKVssDeLmvs5IBqvCNdH5uMWHt169NJR3Xqbg7L2QgmaXFJ9+e
-         m5EsVPD94z900PB2pzyr/0uQQumqzKtmXzTTVvoq+no8zzrOTs1Bz4ZT4JDTl66zon9T
-         EDlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOweVjcZwkQZerM1kKf3KPGk4b805s2/5IsNAU1FtIrUx/6SrWRFECaHEbgfzMPbvOLWfWRevpOhTCm23lG8ISh3s8PSep7HxBLRkj
-X-Gm-Message-State: AOJu0YyKjsF9x/KfbZVdrIR9m8jhicsEGkyLJ4FglX0Xnukfx1cJYuVl
-	JEKE0kW+zbRAaTF2EQZvPcfxBZKCLhGHKvLY/I0CxpjjR/NnVBEf
-X-Google-Smtp-Source: AGHT+IFNm9w8o7TxExzzs96NaUE2Q1A6pBh5XH6Al+ROud3wF0x/jdcnGm4etOlec9sJlkqBayUa4A==
-X-Received: by 2002:a5d:5447:0:b0:33d:568f:8986 with SMTP id w7-20020a5d5447000000b0033d568f8986mr1097620wrv.2.1709811001971;
-        Thu, 07 Mar 2024 03:30:01 -0800 (PST)
-Received: from [10.100.102.74] (46-117-80-176.bb.netvision.net.il. [46.117.80.176])
-        by smtp.gmail.com with ESMTPSA id u2-20020adfeb42000000b0033b483d1abcsm19934771wrn.53.2024.03.07.03.30.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Mar 2024 03:30:01 -0800 (PST)
-Message-ID: <432a39d5-6d08-4d38-a357-7c8d9123189a@grimberg.me>
-Date: Thu, 7 Mar 2024 13:30:00 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF26DDC9
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709811126; cv=fail; b=UvfCRfzWDKrL2E/NJaiGmPP5NnU562+7XjLct6M6zEPF1h6s5Q6GkYP3TfaBOgRjYXnxFjUANRHhabE/ZWMXzZ0nSmx2EdfB4SHwrqZZU+SPzJOGoU1Xf1JfYfwk/jrPBb4J7YB5IenhqjWb2xuQM0387XETcbQAWt24kbSiF7I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709811126; c=relaxed/simple;
+	bh=xR+FIRH7ZnGEZQelDPt9vSsQgzkpmU9wO6mWxK0tzNI=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Q5dZBu1hS5cWqqXI9TNl0BiT5pAVKBt69wOxbdryuhPz8vqDQ7LCR8a/R+6w2uUJwFErKhSbVt/ETiWpgiVNCP1RBO2MDas4LtmYINX1txEgeFRSfflz//+p3xm/fhdZ2CouPKaiXRAgbO/bajjLgfClRGAdoRi1EA0/yOJrWEE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=Wj/lTS9n; arc=fail smtp.client-ip=40.107.7.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="Wj/lTS9n"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c+oUZm9r2cycUcneMBKCPmFhGOEpRIdzid9xfldOWTth+9bxqN0qYOw3xL9dSBiYd0c2dS8a5D784WQv2TXauSsu7ABBUvCLjl1JUDTm4oeapRmPWBUZQ2qVt1QvlJcIRI5mG04wZG8qL5uo54v6ui7wkErqDpqFBH9RvQ3uEk0Won9p1BWzl/OwKVMZZ+zholGMG/xIuXEJrvF4BLfNWo2IWVhORJfSGNBBVIdkdyvTWAMu73bRX70wC9jPEEJkJgQBypyKgu6cpw12eZgtWFaNzEWTkmks0JxTwYY/3talrz0tOrceX+tJn5FjfTcyX4darDNZolzhqcjabHBRpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=51Q7mjXPIbS7CrfTJb1g1h0l6RM5WCmhQNItF0b7b0s=;
+ b=G5BuawLMsuY7tyiPFLmMnrQ3pJcxLJi5F8lBZiGCEGxvyEFAq8FxLugGr3jM28gcxCWeD0TRaSg4QaWtd+jf8mgPRhtvokZKj/FX5qZp1qU+4oouuPTOMfewtzFew8h/FIRCvKERlfNzK3KlkEwb7HJZfofDqVWPofiCvuD7sxJAElRciRqjM+8Vpb0jVIhwMUASt8+X8b2IFvB5tw7ELSNY6/11AHDpE+GmgXPQz98QpkIzZMZGnrGTmdFY75nFVGCOL+9nCKn80zymP5ETGRREaAlIe2f8GmQ5QK5ra1uqADxtZ2DmFRxaNOtNtKHw1KCShnswOlrZ2oveW1jaSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=axis.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=51Q7mjXPIbS7CrfTJb1g1h0l6RM5WCmhQNItF0b7b0s=;
+ b=Wj/lTS9nK0cGn2+2KykkH+XWJrY+6HROfoZhHD1Wia836TQO5mjZ1BL+WmEMqqf7+3QrsFVnVkhDtuKJkkOKktvofQE8Kxy0FcB/oK/9pcok2d6JHgBdZyqOqfjs47B+r/H+3h/ISzkyYDikw4Koi2x924AGnrpD6vbfiAiEaSs=
+Received: from DB8PR03CA0019.eurprd03.prod.outlook.com (2603:10a6:10:be::32)
+ by DB9PR02MB7066.eurprd02.prod.outlook.com (2603:10a6:10:226::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26; Thu, 7 Mar
+ 2024 11:31:59 +0000
+Received: from DU2PEPF0001E9C4.eurprd03.prod.outlook.com
+ (2603:10a6:10:be:cafe::b0) by DB8PR03CA0019.outlook.office365.com
+ (2603:10a6:10:be::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24 via Frontend
+ Transport; Thu, 7 Mar 2024 11:31:59 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=axis.com;
+Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
+ designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com;
+Received: from mail.axis.com (195.60.68.100) by
+ DU2PEPF0001E9C4.mail.protection.outlook.com (10.167.8.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7362.11 via Frontend Transport; Thu, 7 Mar 2024 11:31:59 +0000
+Received: from pc52311-2249 (10.0.5.60) by se-mail01w.axis.com (10.20.40.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 7 Mar
+ 2024 12:31:58 +0100
+From: Waqar Hameed <waqar.hameed@axis.com>
+To: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+CC: Johannes Berg <johannes@sipsolutions.net>, Ingo Molnar <mingo@kernel.org>,
+	<oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<kernel@axis.com>, Richard Weinberger <richard@nod.at>,
+	<linux-um@lists.infradead.org>
+Subject: Re: pcap-dbus.o:undefined reference to `dbus_message_demarshal'
+In-Reply-To: <4ee83195-99f5-4823-b4d0-339ef4127013@cambridgegreys.com> (Anton
+	Ivanov's message of "Thu, 7 Mar 2024 10:49:56 +0000")
+References: <202403052336.y6DkUd8a-lkp@intel.com> <pndzfvbibgm.fsf@axis.com>
+	<87cfca1e-3f53-4935-a274-0920bce86373@cambridgegreys.com>
+	<463be980baf66b967031e3294c3b9745b07aa058.camel@sipsolutions.net>
+	<2cc222b7-618c-46a9-b78b-eb099d0f4be7@cambridgegreys.com>
+	<a485fbdea26e19afe00f603bd65c83e2be20abe6.camel@sipsolutions.net>
+	<4ee83195-99f5-4823-b4d0-339ef4127013@cambridgegreys.com>
+User-Agent: a.out
+Date: Thu, 7 Mar 2024 12:31:58 +0100
+Message-ID: <pndle6ui8gh.fsf@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] nvme-fabrics: short-circuit connect retries
-Content-Language: he-IL, en-US
-To: Hannes Reinecke <hare@suse.de>, Daniel Wagner <dwagner@suse.de>,
- James Smart <james.smart@broadcom.com>
-Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240305080005.3638-1-dwagner@suse.de>
- <22b01fb4-b543-43b2-949c-1873105dc343@grimberg.me>
- <72c1d3a8-14ad-43e8-a68a-25be903698c4@suse.de>
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <72c1d3a8-14ad-43e8-a68a-25be903698c4@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PEPF0001E9C4:EE_|DB9PR02MB7066:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c8557b3-5c13-47d9-085d-08dc3e9a33e1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	kRTDbF+EWg3KE8OcxR01eeXnKP/Hla8LeXkzoM+dmtCfYqrFanCu4yfpH+zdJ7d0WMW2L7uZEN2WEzlmfaw/7DN9+WCJqou/IE4OlCIQYblSD/JeDoj3sKt+dW32j9LMnk3Rc9zgPz0i8T4NlwiRz38MJb/hSX8xoq/M2gPERQodUq4qBZA7vzYSK5BvoNh1lqwCXDXfKLECoB1xfnInLB3tJWaArgciXM1kWeTxciXIE3v6UfbLlYVo8DRnXZwME8wufIuI5cZqA590Y9tJ1tgdz5zpPzUkdhDQe0vTTYtHWtKv6q3qEzx52YBnbV14nC3Y3KGX6T68MRTA3frFWyLrwaf8LhC1dLFPSIklEQiOw7cVJYcu7oFP4lNFP5cP28ibTNenINVGUzBfr0ln6L4d56dnLHw2tLfGmCegHbM0eYw9yrCAAa+x2Pnn0E+4rcfUT7AyGjBctz4m4rHvpEMJiPPpHGArHWelTnBVbA5RAXFokYjDalM/Xw8/iC6aC6DrBVKyHAVNtAzcPB4zh2B6PSDzm/I/ILBXOljFXxylCjXzjW+OHJc43Ll/lf8Vsvsd2KRwNMpDsjZ7MpFaxTQcvAhtb2YbDyUWPJxIliUB6vUpCuK0koYgsFXWfrqJt4oRhtHmJ6zHxoaOThOOZeqKhDd7L2RQzkhzUCRfUI5NmofkRQ6LJvctLT6LKnHXzBGfsTTdKqInqSFPsMgcHOyvmCEg8IIJoFPeU0NK1SGc1LgDoWLVnvsn/HoWoYDO
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 11:31:59.5258
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c8557b3-5c13-47d9-085d-08dc3e9a33e1
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF0001E9C4.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB7066
 
+On Thu, Mar 07, 2024 at 10:49 +0000 Anton Ivanov <anton.ivanov@cambridgegreys.com> wrote:
 
+> On 07/03/2024 10:29, Johannes Berg wrote:
 
-On 07/03/2024 12:37, Hannes Reinecke wrote:
-> On 3/7/24 09:00, Sagi Grimberg wrote:
->>
->> On 05/03/2024 10:00, Daniel Wagner wrote:
->>> I've picked up Hannes' DNR patches. In short the make the transports 
->>> behave the same way when the DNR bit set on a re-connect attempt. We
->>> had a discussion this
->>> topic in the past and if I got this right we all agreed is that the 
->>> host should honor the DNR bit on a connect attempt [1]
->> Umm, I don't recall this being conclusive though. The spec ought to 
->> be clearer here I think.
+[...]
+
+>> Yeah, that makes sense, this is all kind of special configuration
+>> anyway, and given that it's been broken forever ...
+>> I actually doubt anyone would scream if we just removed it, so maybe
+>> just remove it and if they do scream, point to the above, including said
+>> 3-liner in the response?
 >
-> I've asked the NVMexpress fmds group, and the response was pretty 
-> unanimous that the DNR bit on connect should be evaluated.
+> Let's make it so.
 
-OK.
+I'm guessing Johannes (or Anton) will create the patch for removing it
+and no further action is needed from my side.
 
->
->>>
->>> The nvme/045 test case (authentication tests) in blktests is a good 
->>> test case for this after extending it slightly. TCP and RDMA try to
->>> reconnect with an
->>> invalid key over and over again, while loop and FC stop after the 
->>> first fail.
->>
->> Who says that invalid key is a permanent failure though?
->>
-> See the response to the other patchset.
-> 'Invalid key' in this context means that the _client_ evaluated the 
-> key as invalid, ie the key is unusable for the client.
-> As the key is passed in via the commandline there is no way the client
-> can ever change the value here, and no amount of retry will change 
-> things here. That's what we try to fix.
-
-Where is this retried today, I don't see where connect failure is 
-retried, outside of a periodic reconnect.
-Maybe I'm missing where what is the actual failure here.
+Thank you for your swift responses! 
