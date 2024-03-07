@@ -1,126 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936DF633EB;
-	Thu,  7 Mar 2024 20:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7834E1C3
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 20:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709843483; cv=none; b=mDsZG34JUvftC//7TTbyewgqeR4Kbc9Fuv2ps+9qXORPqixqRTg9+8udhBROwFHf7EwauW3Iqlkq+vjG4g9HizN4hEa0tvXAWh8Qa5zvMCjSnDxf+IppdEICYxX5+ZEE138ZmshplK2zlA3EoX4Ulb1WRPt4YKlG9tRmTbYBBSI=
+	t=1709843511; cv=none; b=A3PZrSRIM226Zz6y1eqxvmpsjGROhK2alck0nQhdOxOFPgc4toh9PhKG3G7VcbAiTGHuar1QWtvaaSPAnPJz/+oJeRmvi3tekwgxzZohDSzADckzNBRiJ7fmrAjpqtVjlgHIcjTh/jFPDAXR8QpAX/E9rBtsNfW51Nsp1fTuIIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709843483; c=relaxed/simple;
-	bh=SpBFTgDYCZL5HMSP744NvFE2koQBVmNM5L2jWkZki7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oiFAQp6FQ4Y/ujplG3Glb7YwiXmjzef5Dm62T8uhQF8Q6q4xrw2A0Cq+wcmvHkt6Wq1Co0qKYs/x6Jl/ohQPXJlIWfjBhnabCjk9YRGWJENSO6wEIb7s0p37qKocNBK8QT1MZwlh43p27DSS6uazkLxDSBQ0K9K+KunooeL65Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dq1Ij5cb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709843511; c=relaxed/simple;
+	bh=B6jTRt15Ay+YE96kV68Fuqz0cpG6G9QiBhLFa45Ajbk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oB0W1UwlkU7cFrOSKFn9ZhG7TbFr/BOJCm5v73n63F3HqiRit6H7Dd6xV0MvEF/q3iexEtTcxbm7NmcbJ2DEusRquD+RVs1U4TVUA3xyJkROZkFxiTNRQUkgv6eCBFMsQLN6nNHJwxIQPhiAt7rEgdHWQlKGBzo0gqsYv+358wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lGAsX7yy; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dq1Ij5cb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF1DC433F1;
-	Thu,  7 Mar 2024 20:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709843483;
-	bh=SpBFTgDYCZL5HMSP744NvFE2koQBVmNM5L2jWkZki7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dq1Ij5cbXC/azz2ARqvH18GU6nblsiWGJekKh8qOtyucIW4GqCRnXVbQlQjtTDrOw
-	 /QkuiKcsiHgteS5KrBFnY8QBf7g5BlAInJ5lA75KzFf02hYqh+iJTlYBkAhbD8wmcN
-	 MlcgMIrkMt5PPDeFFLmBWkrNhXZOwrWOTp3JIHIa1DcLWTyDHzHrbHVGosjmEtufOK
-	 o0H+MQGjAzJWkFcK+6eKhq8Yamb1XolFCnSNIjPhVH+lM9CvmbuF3VOGSHWZyqJXCW
-	 Oxl2l5XBcGLAfAFnlpjupMrL2nAN7mCz8/RL4c9k3rUaviU69PmCBCh0FHzrbA6NLs
-	 tlWLEc5gqsSpA==
-Date: Thu, 7 Mar 2024 21:31:12 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@axis.com, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v9 04/10] PCI: dwc: ep: Fix DBI access failure for
- drivers requiring refclk from host
-Message-ID: <ZeokEJstpRSUPDTL@ryzen>
-References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-4-29d433d99cda@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lGAsX7yy"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60802b0afd2so12653567b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 12:31:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709843509; x=1710448309; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bl6KQ7zqxCRRy7mV9HLzLwrJU3k8ZyxTlFOkk6jrrGQ=;
+        b=lGAsX7yyzp8GG46dHNbIoSl1UQJaMPStyehKmcIMhjeiFWZNqxXAu7QxTKXfXd0aRs
+         D8VE+CKwxw4YlTPQDPsH8odw5m23/wqXZJHo7CsltotDZ8vgxoqcDRdjQWH2c6ijV+dk
+         /G9MkKYeHCwgfOply9CR5GsMmNBJeC5A9UM8zCkPmbwdBBGZpaKyaoD8F0wQEj6OojZD
+         FdRqFQI5Glz7yTGjKVWuUAzUyjBc3eqjvMQMha6SgCc3mNsDrH9hpsHqc+j2IvDRueE1
+         mW02UcKmZd2DStffYEGZ91wGx94mDpnWrflx5UP8kiVJcd3hxeVA4h4Pg+i2rpnMcDkv
+         7Ypg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709843509; x=1710448309;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bl6KQ7zqxCRRy7mV9HLzLwrJU3k8ZyxTlFOkk6jrrGQ=;
+        b=U6d/zPdNPJpbgjy7gtT6hfs03tFPxAV+SufhmEHiXA6svZvEuz5Iq9cpCyZElxzWzs
+         zJ6ysWjRbIxF8fM2rbqsPLEOgSAtPH2FxSKJfN1uHwqZhR+yWsrG3ZSPEJGFgzo54XpM
+         7peIDDyxNS4BhPG7jaVPX7MTj9uKeAzX+tiyWH8U37ppcwdX+qlDWrlSh9+nW5i6IOoD
+         rKoixajV2uIDfcQUlRFftnPMuSZrfLt/vnX97Uu5haIMVWKh1pN+ggHZ3x7S1DkkqQ/y
+         KWdDQPvttIQb2brT8dvcinoirW6VUwP9hMEohMt8tRgVbwCRUHaI7FoXWbxnlJIrrDrQ
+         RVxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqazw+gETiPl2iYSV9+85aKUIp7FeOAPHFqRnH3+qhP7k301RJwHu+0MF9TAMly502rAWN7oIQxnltNMFKq0ebXamalsvqZ6pPYHRU
+X-Gm-Message-State: AOJu0YxziZ44HmKgZlT0Jzvkj0RvChszYtCyzBNSSdh0Hy1+DSWQ1UbX
+	oXvYN/CBdatiMIvQrJCAKUjSaYLtJLE7xoX665JsdBqMi9kT58JV8aGcXRWImyCd9g8qDpmRWRP
+	1s+x3ZXUG/EIZeVcY+g==
+X-Google-Smtp-Source: AGHT+IGHuymlA+pETPYDpM827l6AntNqqm0ilI/Ekq0Va7MaZBSZ/dPUBtoF7j7vk4QZnMUlAPO+AStYZ4MjiftR
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a0d:df0f:0:b0:607:8f65:5433 with SMTP
+ id i15-20020a0ddf0f000000b006078f655433mr545462ywe.4.1709843508926; Thu, 07
+ Mar 2024 12:31:48 -0800 (PST)
+Date: Thu, 7 Mar 2024 20:31:46 +0000
+In-Reply-To: <updn6j7jcqdru73vwt3fvxlx4t73rjrlk7h6i6js3lizeueoov@tz7fyrd3a4yi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240304-pci-dbi-rework-v9-4-29d433d99cda@linaro.org>
+Mime-Version: 1.0
+References: <20240307133916.3782068-1-yosryahmed@google.com>
+ <20240307133916.3782068-2-yosryahmed@google.com> <updn6j7jcqdru73vwt3fvxlx4t73rjrlk7h6i6js3lizeueoov@tz7fyrd3a4yi>
+Message-ID: <ZeokMhiB2MhTlIXP@google.com>
+Subject: Re: [RFC PATCH 1/3] x86/mm: fix LAM cr3 mask inconsistency during
+ context switch
+From: Yosry Ahmed <yosryahmed@google.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, x86@kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Mar 04, 2024 at 02:52:16PM +0530, Manivannan Sadhasivam wrote:
-> The DWC glue drivers requiring an active reference clock from the PCIe host
-> for initializing their PCIe EP core, set a flag called 'core_init_notifier'
-> to let DWC driver know that these drivers need a special attention during
-> initialization. In these drivers, access to the hw registers (like DBI)
-> before receiving the active refclk from host will result in access failure
-> and also could cause a whole system hang.
+On Thu, Mar 07, 2024 at 07:22:36PM +0200, Kirill A. Shutemov wrote:
+> On Thu, Mar 07, 2024 at 01:39:14PM +0000, Yosry Ahmed wrote:
+> > In switch_mm_irqs_off(), we read the 'mm->context.lam_cr3_mask' into
+> > 'new_lam', which is later passed to load_new_mm_cr3(). However, there is
+> > a call to set_tlbstate_lam_mode() in between which will read
+> > 'mm->context.lam_cr3_mask' again and set 'cpu_tlbstate.lam' accordingly.
+> > If we race with another thread updating 'mm->context.lam_cr3_mask', the
+> > value in 'cpu_tlbstate.lam' could end up being different from CR3.
 > 
-> But the current DWC EP driver doesn't honor the requirements of the drivers
-> setting 'core_init_notifier' flag and tries to access the DBI registers
-> during dw_pcie_ep_init(). This causes the system hang for glue drivers such
-> as Tegra194 and Qcom EP as they depend on refclk from host and have set the
-> above mentioned flag.
+> What other thread? LAM can only be enabled when the process has single
+> thread. And cannot be disabled. See MM_CONTEXT_LOCK_LAM.
+
+Right, but a kthread may run with that single-threaded process's mm
+IIUC. I think this can happen via kthread_use_mm() or if we context
+switch directly from the user process to the kthread (context_switch()
+doesn't seem to update the mm in this case).
+
 > 
-> To workaround this issue, users of the affected platforms have to maintain
-> the dependency with the PCIe host by booting the PCIe EP after host boot.
-> But this won't provide a good user experience, since PCIe EP is _one_ of
-> the features of those platforms and it doesn't make sense to delay the
-> whole platform booting due to PCIe requiring active refclk.
+> > While we are at it, remove the misguiding comment that states that
+> > 'new_lam' may not match tlbstate_lam_cr3_mask() if a race occurs.
 > 
-> So to fix this issue, let's move all the DBI access from
-> dw_pcie_ep_init() in the DWC EP driver to the dw_pcie_ep_init_complete()
-> API. This API will only be called by the drivers setting
-> 'core_init_notifier' flag once refclk is received from host. For the rest
-> of the drivers that gets the refclk locally, this API will be called
-> within dw_pcie_ep_init().
-> 
-> Fixes: e966f7390da9 ("PCI: dwc: Refactor core initialization code for EP mode")
-> Co-developed-by: Vidya Sagar <vidyas@nvidia.com>
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-
-I'm not sure if the Fixes tag is stictly correct, since there is
-nothing wrong with the commit that the Fixes-tag is referencing.
-
-What this patch addresses is an additional use-case/feature,
-which allows you to start the EP-side before the RC-side.
-
-However, I'm guessing that you kept the Fixes-tag such that this
-patch will get backported. However, this patch is number 4/10 in
-the patch series. If this is a strict fix that you want backported,
-and it does not depend on any of the previous patches (it doesn't
-seem that way), then I think that you should have put it as patch
-1/10 in the series.
-
-Patch ordering aside:
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> The comment is indeed misguiding, but for different reason. It is leftover
+> from the earlier version of LAM patchset.
