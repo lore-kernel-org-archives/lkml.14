@@ -1,247 +1,148 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2135D12C80A;
-	Thu,  7 Mar 2024 14:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618992B9A5
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709823135; cv=none; b=f7ttwL4OOSOYBTukfoT4ZT/m+TnVOqoqilGWdb51+2Sd+E5KdZ1KPZmnKRymhseC1fGIBHPnPpAzEvjeYnjJyY9wph0ImbxoyiepNV/n82qZdLRz6tG3S5DSKP2R2shG7CbT+j6tuWSHqwftoiv914FLtuEB5l9FKEXhWzVbEII=
+	t=1709823211; cv=none; b=A75ksOrqBuPprBeS8GOJYWCIatkCTWAvzXWpK88rWvDqkv9ecoH1L1bzjmkyhL6T/TCw1V2A7qkZkrXCQEPeyUvbULsjRVEL6ZdDgmmETxX/lH6/JbNGiaMIMuIejajPS00yBkc25bb7N5NjjEYJ8sWGjmBatvkkjJuVO27mZeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709823135; c=relaxed/simple;
-	bh=SVl7ghUZZvLmqoxnJx1TfVNS1aFO+cS/rPtTkMU4lFo=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Bh9Rqhnzulkw8xEqf96zhLbvei7DZhey1IFF60+5YcBfvTC8hLq1LHzpwr8IZqps00BjKsKfvV1lnIy+zY1hLG+zPflg3aRSWg7pfDumwodB1OKczv7ntOwptrFhn0idoHYM9lqSf44ZPWhJWlcJPt4p+kVayphvXyRjs8TWdtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GoX4+C50; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1709823211; c=relaxed/simple;
+	bh=GNSxQPg6Y6Kc97whzJ98RTS1q0QGeuTcWWwXCEa7ZCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nq5nV3hcUgog8YCGNdwgClrdzZ6lGV8biwZ8H6hWPkoclzmXFJ6Ii5kpcA2hYEdo6Y9TbaGlBRE7qbLZ3mEyZG8OCVeQ+0CMhtThDMw2MmRw3Vd6hQeQcoGWCut+yOMCBdpw4btNZXGrqNF/5TGUhFt0x60Q+4kw2i47UU9Vayw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ttccUmx1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pqxNk3pz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ttccUmx1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pqxNk3pz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GoX4+C50"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 8480E20B74C0; Thu,  7 Mar 2024 06:52:13 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8480E20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1709823133;
-	bh=DQrX++fk8abFgdjKuqnBcAVgOubzkQFol/TFp+HA04s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GoX4+C50fDnqEqTDLUQhX0jEvb2nweO7wCtxXMQfyCEtiaV1gxyaO5Rap/o7qic9e
-	 eSjxHeK0NdFqJQmUANMTP0aRr6atuBQktgzhNaWQ9arYXkyfks1vS7OL/jvY3BNDeU
-	 Fu/oiiRVCDjsDR+0hLQxeYSHfjLYGp/3JLuk+i7w=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH] net :mana : Add per-cpu stats for MANA device
-Date: Thu,  7 Mar 2024 06:52:12 -0800
-Message-Id: <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ttccUmx1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pqxNk3pz";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ttccUmx1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pqxNk3pz"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 906A925B68;
+	Thu,  7 Mar 2024 12:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709815415; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xFSrhPAhdeU+042oYvavyOjg/sVd7TdbAFR+fQA1Bpc=;
+	b=ttccUmx1QeU+BppR9JgrXCg9E9b7S7d/IVMycDyD0IYMF/srVgCssFrEyZKN+rEwkpmD2O
+	CYugHIodpUJYPr4jQGjf+0kGfvaQxs+FQEQGLumK0g5A9Xt9cKAp+IQH4UonxuVZfYDmuN
+	ms8BGU6kmjBl8D17nVD8TP5D9YZYPNM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709815415;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xFSrhPAhdeU+042oYvavyOjg/sVd7TdbAFR+fQA1Bpc=;
+	b=pqxNk3pzkXGBijZ0OTzkrXQGf/dILR6pSr8Q0sAfGmWzSN/YtK399b/p1hksivbcSMtFHo
+	8pzU8CtDYHZ9eVDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709815415; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xFSrhPAhdeU+042oYvavyOjg/sVd7TdbAFR+fQA1Bpc=;
+	b=ttccUmx1QeU+BppR9JgrXCg9E9b7S7d/IVMycDyD0IYMF/srVgCssFrEyZKN+rEwkpmD2O
+	CYugHIodpUJYPr4jQGjf+0kGfvaQxs+FQEQGLumK0g5A9Xt9cKAp+IQH4UonxuVZfYDmuN
+	ms8BGU6kmjBl8D17nVD8TP5D9YZYPNM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709815415;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xFSrhPAhdeU+042oYvavyOjg/sVd7TdbAFR+fQA1Bpc=;
+	b=pqxNk3pzkXGBijZ0OTzkrXQGf/dILR6pSr8Q0sAfGmWzSN/YtK399b/p1hksivbcSMtFHo
+	8pzU8CtDYHZ9eVDA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 7E86B13997;
+	Thu,  7 Mar 2024 12:43:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id i7HVHXa26WXGRwAAn2gu4w
+	(envelope-from <dwagner@suse.de>); Thu, 07 Mar 2024 12:43:34 +0000
+Date: Thu, 7 Mar 2024 13:43:33 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Hannes Reinecke <hare@suse.de>, James Smart <james.smart@broadcom.com>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] nvme-fc: do not retry when auth fails or
+ connection is refused
+Message-ID: <qbzzr6waj23q6rxrueevwoteg5i4ogr7hr45ckseu7ekdcc7sb@xgyvtkp27w5i>
+References: <20240221132404.6311-1-dwagner@suse.de>
+ <20240221132404.6311-3-dwagner@suse.de>
+ <d5b3d5b2-ec27-4057-aa76-63fe17066cfc@suse.de>
+ <sqmla42yoidail73xukhxb6uoyayo66pxpdlrhns3v533wm7wy@ppyr7t5gk3u3>
+ <609e0031-e97c-466b-8cbd-47755374b117@suse.de>
+ <3xhhdconprn3vvkky4yj4iazku4eiqxl6l6rw6z5tivvdjwaby@ts7satqbih7w>
+ <hxr2hztb64dank3jvbnrlciaebo4k2qkkrg3brhrppizeyelpo@ewupxurl7iqm>
+ <5d67a55e-e979-4c3c-8dcc-597cb13c7c9d@suse.de>
+ <83bca01f-fc34-405b-9f2e-8079130400ce@grimberg.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83bca01f-fc34-405b-9f2e-8079130400ce@grimberg.me>
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ttccUmx1;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=pqxNk3pz
+X-Spamd-Result: default: False [-4.42 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 URIBL_BLOCKED(0.00)[suse.de:dkim];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_HI(-3.50)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-1.11)[88.35%];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
+X-Spam-Score: -4.42
+X-Rspamd-Queue-Id: 906A925B68
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-Extend 'ethtool -S' output for mana devices to include per-CPU packet
-stats
+On Thu, Mar 07, 2024 at 12:25:16PM +0200, Sagi Grimberg wrote:
+ > > Is this what you had in mind?
+> > 
+> > Which, incidentally, is basically the patch I just posted.
+> 
+> Reading this, the patchset from Hannes now is clearer.
+> Isn't the main issue is that nvme-fc tries to periodicly reconnect
+> when failing the first connect? This is exactly what the test expects
+> it to do right?
 
-Built-on: Ubuntu22
-Tested-on: Ubuntu22
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 22 ++++++++++
- .../ethernet/microsoft/mana/mana_ethtool.c    | 40 ++++++++++++++++++-
- include/net/mana/mana.h                       | 12 ++++++
- 3 files changed, 72 insertions(+), 2 deletions(-)
+Yes, the test expects that the initial connect attempt fails. nvme-fc is
+using one connect path and doesn't distinguish between the initial
+connect attempt and a reconnect.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 59287c6e6cee..b27ee6684936 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -224,6 +224,7 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	int gso_hs = 0; /* zero for non-GSO pkts */
- 	u16 txq_idx = skb_get_queue_mapping(skb);
- 	struct gdma_dev *gd = apc->ac->gdma_dev;
-+	struct mana_pcpu_stats *pcpu_stats;
- 	bool ipv4 = false, ipv6 = false;
- 	struct mana_tx_package pkg = {};
- 	struct netdev_queue *net_txq;
-@@ -234,6 +235,8 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	struct mana_cq *cq;
- 	int err, len;
- 
-+	pcpu_stats = this_cpu_ptr(apc->pcpu_stats);
-+
- 	if (unlikely(!apc->port_is_up))
- 		goto tx_drop;
- 
-@@ -412,6 +415,12 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	tx_stats->bytes += len;
- 	u64_stats_update_end(&tx_stats->syncp);
- 
-+	/* Also update the per-CPU stats */
-+	u64_stats_update_begin(&pcpu_stats->syncp);
-+	pcpu_stats->tx_packets++;
-+	pcpu_stats->tx_bytes += len;
-+	u64_stats_update_end(&pcpu_stats->syncp);
-+
- tx_busy:
- 	if (netif_tx_queue_stopped(net_txq) && mana_can_tx(gdma_sq)) {
- 		netif_tx_wake_queue(net_txq);
-@@ -425,6 +434,9 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	kfree(pkg.sgl_ptr);
- tx_drop_count:
- 	ndev->stats.tx_dropped++;
-+	u64_stats_update_begin(&pcpu_stats->syncp);
-+	pcpu_stats->tx_dropped++;
-+	u64_stats_update_end(&pcpu_stats->syncp);
- tx_drop:
- 	dev_kfree_skb_any(skb);
- 	return NETDEV_TX_OK;
-@@ -1505,6 +1517,8 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
- 	struct mana_stats_rx *rx_stats = &rxq->stats;
- 	struct net_device *ndev = rxq->ndev;
- 	uint pkt_len = cqe->ppi[0].pkt_len;
-+	struct mana_pcpu_stats *pcpu_stats;
-+	struct mana_port_context *apc;
- 	u16 rxq_idx = rxq->rxq_idx;
- 	struct napi_struct *napi;
- 	struct xdp_buff xdp = {};
-@@ -1512,6 +1526,9 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
- 	u32 hash_value;
- 	u32 act;
- 
-+	apc = netdev_priv(ndev);
-+	pcpu_stats = this_cpu_ptr(apc->pcpu_stats);
-+
- 	rxq->rx_cq.work_done++;
- 	napi = &rxq->rx_cq.napi;
- 
-@@ -1570,6 +1587,11 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
- 		rx_stats->xdp_tx++;
- 	u64_stats_update_end(&rx_stats->syncp);
- 
-+	u64_stats_update_begin(&pcpu_stats->syncp);
-+	pcpu_stats->rx_packets++;
-+	pcpu_stats->rx_bytes += pkt_len;
-+	u64_stats_update_end(&pcpu_stats->syncp);
-+
- 	if (act == XDP_TX) {
- 		skb_set_queue_mapping(skb, rxq_idx);
- 		mana_xdp_tx(skb, ndev);
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index ab2413d71f6c..e3aa47ead601 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -83,8 +83,9 @@ static int mana_get_sset_count(struct net_device *ndev, int stringset)
- 	if (stringset != ETH_SS_STATS)
- 		return -EINVAL;
- 
--	return ARRAY_SIZE(mana_eth_stats) + num_queues *
--				(MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
-+	return ARRAY_SIZE(mana_eth_stats) +
-+	       (num_queues * (MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT)) +
-+	       (num_present_cpus() * (MANA_STATS_RX_PCPU + MANA_STATS_TX_PCPU));
- }
- 
- static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
-@@ -139,6 +140,19 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- 		sprintf(p, "tx_%d_mana_map_err", i);
- 		p += ETH_GSTRING_LEN;
- 	}
-+
-+	for (i = 0; i < num_present_cpus(); i++) {
-+		sprintf(p, "cpu%d_rx_packets", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "cpu%d_rx_bytes", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "cpu%d_tx_packets", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "cpu%d_tx_bytes", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "cpu%d_tx_dropped", i);
-+		p += ETH_GSTRING_LEN;
-+	}
- }
- 
- static void mana_get_ethtool_stats(struct net_device *ndev,
-@@ -222,6 +236,28 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 		data[i++] = csum_partial;
- 		data[i++] = mana_map_err;
- 	}
-+
-+	for_each_possible_cpu(q) {
-+		const struct mana_pcpu_stats *pcpu_stats =
-+				per_cpu_ptr(apc->pcpu_stats, q);
-+		u64 rx_packets, rx_bytes, tx_packets, tx_bytes, tx_dropped;
-+		unsigned int start;
-+
-+		do {
-+			start = u64_stats_fetch_begin(&pcpu_stats->syncp);
-+			rx_packets = pcpu_stats->rx_packets;
-+			tx_packets = pcpu_stats->tx_packets;
-+			rx_bytes = pcpu_stats->rx_bytes;
-+			tx_bytes = pcpu_stats->tx_bytes;
-+			tx_dropped = pcpu_stats->tx_dropped;
-+		} while (u64_stats_fetch_retry(&pcpu_stats->syncp, start));
-+
-+		data[i++] = rx_packets;
-+		data[i++] = rx_bytes;
-+		data[i++] = tx_packets;
-+		data[i++] = tx_bytes;
-+		data[i++] = tx_dropped;
-+	}
- }
- 
- static int mana_get_rxnfc(struct net_device *ndev, struct ethtool_rxnfc *cmd,
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 76147feb0d10..9a2414ee7f02 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -51,6 +51,8 @@ enum TRI_STATE {
- /* Update this count whenever the respective structures are changed */
- #define MANA_STATS_RX_COUNT 5
- #define MANA_STATS_TX_COUNT 11
-+#define MANA_STATS_RX_PCPU 2
-+#define MANA_STATS_TX_PCPU 3
- 
- struct mana_stats_rx {
- 	u64 packets;
-@@ -386,6 +388,15 @@ struct mana_ethtool_stats {
- 	u64 rx_cqe_unknown_type;
- };
- 
-+struct mana_pcpu_stats {
-+	u64 rx_packets;
-+	u64 rx_bytes;
-+	u64 tx_packets;
-+	u64 tx_bytes;
-+	u64 tx_dropped;
-+	struct u64_stats_sync syncp;
-+};
-+
- struct mana_context {
- 	struct gdma_dev *gdma_dev;
- 
-@@ -449,6 +460,7 @@ struct mana_port_context {
- 	bool port_st_save; /* Saved port state */
- 
- 	struct mana_ethtool_stats eth_stats;
-+	struct mana_pcpu_stats __percpu *pcpu_stats;
- };
- 
- netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev);
--- 
-2.34.1
-
+All fabric transport share the same problem when the connection has been
+established and later one a connection drop happens and a reconnnect is
+executed. The blktest nvme/048 case extension I've posted tests the
+reconnect attempt after the controller key has changed. In this
+scenario, nvme-tcp, nvme-rdma will also do a reconnect attempt although
+DNR is set.
