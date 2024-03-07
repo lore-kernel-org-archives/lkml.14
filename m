@@ -1,225 +1,154 @@
-Received: from wfout5-smtp.messagingengine.com (wfout5-smtp.messagingengine.com [64.147.123.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8093F12839B;
-	Thu,  7 Mar 2024 11:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE241292C0
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709809861; cv=none; b=MqfoPZEAALml+dG26jIsn1LaewMBKq+Toi8+zlhMBTW+Kv1OtpyFE3lIvKQs1tXQ91jF5fi5qtjzpqCZsRjGu8/2EoS5Q+NzfUa1QuYG7+yD0QnUNBrTfAFcMr67ITgXMW14CQWKZNJg5ssIMtz5CPq/wnD8UfHxf6hj/zcUIy0=
+	t=1709809886; cv=none; b=TLcmApUV2Cy+l+a758nNdx66Fhg993rcAE/wY9W/qqBDpNw1og210CQwplkz9iMRe88yBQgngIRrGZCXsp2w/cLhem6a/lolfqxgEIoSrWSPEItWr82Jl/Os/MzlCh7m4Ptwz4Phc9py3oc/SNqb2dFVnV/ZbMbkeATfXvYK5As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709809861; c=relaxed/simple;
-	bh=MoREPiTv1yKmu90Q/9l2I/LfYL/ZqPWpLVhh62qRurU=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=mQlG1rD2y59RJEgWDjIYDd8CkWUdkxt26V1ME70cvGEWgUwfkFP7azBfgtEavTQTyFpSHLqyWYsmew16DL7vzU6MmlhBcMBrCFGjHFvHY49iWpvdWOa5WQhtldUMgH3S9otuZEFieU7kCCYvh/V8GlT7ZmBPbuXwcpkJH+g2cMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=OSFmEkZC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qshz4UXt; arc=none smtp.client-ip=64.147.123.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709809886; c=relaxed/simple;
+	bh=RaFxg+VMDKY8p5la2igQKbXDARffGvjf3CSB6hBiqq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IBf7xfWFUq9WIM0K/uTmLWzM72yVeMZM0ZJZ9iKlH8IAIMn1H/XZqhfaN/E7kk7X0sGoGMHhte1M+Ln0KhvSmcBxBV/2VvLzW70s08P5cWuqcZhIMtEf4XVqebW+7C4DGRgyuDDciP9q7++NQK38Fo9yX9GLu/Wbff0SNasE08Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1PNcKul5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HRUK/dSw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1PNcKul5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HRUK/dSw; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="OSFmEkZC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qshz4UXt"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 24A451C0005B;
-	Thu,  7 Mar 2024 06:10:57 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 07 Mar 2024 06:10:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709809856; x=1709896256; bh=AtFaL5EGzw
-	xRRbAOMHdeBVoU44eLeNyTo8XPDMkPqiY=; b=OSFmEkZCJGBrbqz9g7e/8w0teR
-	WUo9kKzYjoJcjENBEYmlZQeaK0jgDetatmG9hNKwGA9qnPnHZHZDXEsmNN+QkrC2
-	196R/0u28NUhfZsyMfIg2JYb/s3iyAxEKSlcz9Yjmx6YHZg94MyiNfsn8i0zfQIb
-	F8/MAz5MtvAW7YNNH7vBzrTlGFhZIxu+xOZes60pE+9e5SfZzOOJHwiWJKAL34iS
-	VbVXVLUtOCLrQW4b9AOkqgj2KMKecdtTiIj6dQxvo36y4fAXj3MNmNyUtT2NEA1i
-	XEnSCHmBarAS/cwh/V+/FMLCDBU0/0ZrgAWX9NIl8akvZaaUULbgc1ci7kyw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709809856; x=1709896256; bh=AtFaL5EGzwxRRbAOMHdeBVoU44eL
-	eNyTo8XPDMkPqiY=; b=Qshz4UXtsyv+fARPcD2AY8botM+ZWZ7PLLmEbnJ9FVO9
-	zXFSu3Rdj8hP8AGJA002XJNMaof07GnXoJfmFZMWnCKpllzf5a0nc6DUulLomLIw
-	pZdkBE2n83iX61owqb4NdXmWtfIWwHOjR4LnLbtCkx3YYBSkoKW4oh6zCiFrm77T
-	NiGwBIJeaQYqQ3vk2kOzFr+AgammZ7xGyIEzdaOEAexEPQ68otmthKCxFJH7qdiO
-	KObgA+t9WCYvsOYxfAkn2z4/wGcjOtdpYVJl27OUCuxBZoyaHwRlX116uTryO2AD
-	k0kzTfWkPTX6PrBNFZcSoQRmCXw8LwOF3zUBFRy5vg==
-X-ME-Sender: <xms:v6DpZWxZn2gmfg3zfwbwBetZrfg2q-s45SteM7B6_KV0_p9QeYfk6w>
-    <xme:v6DpZSQ3thUXdU6UXkQ2MVGo4G_POWI1FzDdH9aYaIw6F2y0eXJKNBNqvgpsXPceF
-    Md8f9p-omy0orGw0Ec>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgddvhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:wKDpZYUqsPi8GYTBhsWQGUJF3xhXOIbHba0Yk2U_qVYgQU95NSOznw>
-    <xmx:wKDpZcgEtfYJ-omZO4hDdlIv7OUXgcMbdNpMldWJVhD3TsOlzf8RdQ>
-    <xmx:wKDpZYB9AsLe0UdXoghnkKgj90L953t-KvsbF45LWpEx56cTO99anw>
-    <xmx:wKDpZWTKTTOoYeaASoQMqYL2lAbT2LToqOmJeySJ0hxAjCBCTQE3hiOxTUM>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D9D49B6008D; Thu,  7 Mar 2024 06:10:55 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1PNcKul5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HRUK/dSw";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1PNcKul5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HRUK/dSw"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4FAEA8C697;
+	Thu,  7 Mar 2024 10:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709807829; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U1HXfrC2xy0RBFUQxcEQNC0CB7CZr+Cp8pvfKVmy5k=;
+	b=1PNcKul5pYqaLADNEX7AzDdtYPvuKZjN7bfPn0t8vcwv0YCGYCALhebIjgPoY9/HjsdUCd
+	s3uYpkl1rrrnkSDR+d6qZJwsswO5GSqv8MDW95dt6MKM+MPhZwBLD0yad9DkENaFXHSEzU
+	8s1cGSJvNrpbgTJHG+Fp4Oo7lxfVZOA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709807829;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U1HXfrC2xy0RBFUQxcEQNC0CB7CZr+Cp8pvfKVmy5k=;
+	b=HRUK/dSwa271duD6NAMCoOoIjSh2k/RNqOf0VFq2STc1x41C6DNlW8dcHe9PDbcvAgLpiS
+	AAM2OE3T93YwEfCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709807829; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U1HXfrC2xy0RBFUQxcEQNC0CB7CZr+Cp8pvfKVmy5k=;
+	b=1PNcKul5pYqaLADNEX7AzDdtYPvuKZjN7bfPn0t8vcwv0YCGYCALhebIjgPoY9/HjsdUCd
+	s3uYpkl1rrrnkSDR+d6qZJwsswO5GSqv8MDW95dt6MKM+MPhZwBLD0yad9DkENaFXHSEzU
+	8s1cGSJvNrpbgTJHG+Fp4Oo7lxfVZOA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709807829;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U1HXfrC2xy0RBFUQxcEQNC0CB7CZr+Cp8pvfKVmy5k=;
+	b=HRUK/dSwa271duD6NAMCoOoIjSh2k/RNqOf0VFq2STc1x41C6DNlW8dcHe9PDbcvAgLpiS
+	AAM2OE3T93YwEfCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 32678136BA;
+	Thu,  7 Mar 2024 10:37:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id pHnZC9WY6WUGKwAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 07 Mar 2024 10:37:09 +0000
+Message-ID: <72c1d3a8-14ad-43e8-a68a-25be903698c4@suse.de>
+Date: Thu, 7 Mar 2024 11:37:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
-In-Reply-To: <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
-References: <20240305221824.3300322-1-jeremy.linton@arm.com>
- <20240305221824.3300322-2-jeremy.linton@arm.com>
- <202403051526.0BE26F99E@keescook>
- <34351804-ad1d-498f-932a-c1844b78589f@app.fastmail.com>
- <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
-Date: Thu, 07 Mar 2024 12:10:34 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jeremy Linton" <jeremy.linton@arm.com>,
- "Kees Cook" <keescook@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Jason A . Donenfeld" <Jason@zx2c4.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Mark Brown" <broonie@kernel.org>,
- "Guo Hui" <guohui@uniontech.com>, Manoj.Iyer@arm.com,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- "James Yang" <james.yang@arm.com>, "Shiyou Huang" <shiyou.huang@arm.com>
-Subject: Re: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] nvme-fabrics: short-circuit connect retries
+Content-Language: en-US
+To: Sagi Grimberg <sagi@grimberg.me>, Daniel Wagner <dwagner@suse.de>,
+ James Smart <james.smart@broadcom.com>
+Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240305080005.3638-1-dwagner@suse.de>
+ <22b01fb4-b543-43b2-949c-1873105dc343@grimberg.me>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <22b01fb4-b543-43b2-949c-1873105dc343@grimberg.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-1.26 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-1.17)[88.85%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Score: -1.26
+X-Spam-Flag: NO
 
-On Wed, Mar 6, 2024, at 22:54, Jeremy Linton wrote:
-> On 3/6/24 14:46, Arnd Bergmann wrote:
->> On Wed, Mar 6, 2024, at 00:33, Kees Cook wrote:
->>> On Tue, Mar 05, 2024 at 04:18:24PM -0600, Jeremy Linton wrote:
->>>> The existing arm64 stack randomization uses the kernel rng to acquire
->>>> 5 bits of address space randomization. This is problematic because it
->>>> creates non determinism in the syscall path when the rng needs to be
->>>> generated or reseeded. This shows up as large tail latencies in some
->>>> benchmarks and directly affects the minimum RT latencies as seen by
->>>> cyclictest.
->>>>
->>>> Other architectures are using timers/cycle counters for this function,
->>>> which is sketchy from a randomization perspective because it should be
->>>> possible to estimate this value from knowledge of the syscall return
->>>> time, and from reading the current value of the timer/counters.
->> 
->> As I commented on the previous version, I don't want to see
->> a change that only addresses one architecture like this. If you
->> are convinced that using a cycle counter is a mistake, then we
->> should do the same thing on the other architectures as well
->> that currently use a cycle counter.
->
-> I personally tend to agree as long as we aren't creating a similar set 
-> of problems for those architectures as we are seeing on arm. Currently 
-> the kstack rng on/off choice is basically zero overhead for them.
+On 3/7/24 09:00, Sagi Grimberg wrote:
+> 
+> On 05/03/2024 10:00, Daniel Wagner wrote:
+>> I've picked up Hannes' DNR patches. In short the make the transports 
+>> behave the same way when the DNR bit set on a re-connect attempt. We
+>> had a discussion this
+>> topic in the past and if I got this right we all agreed is that the 
+>> host should honor the DNR bit on a connect attempt [1]
+> Umm, I don't recall this being conclusive though. The spec ought to be 
+> clearer here I think.
 
-I think we have two separate problems to solve here: how
-strong a kernel stack randomization should be on a given system,
-and who gets to make the decision.
+I've asked the NVMexpress fmds group, and the response was pretty 
+unanimous that the DNR bit on connect should be evaluated.
 
-For the strength, we have at least four options:
+>>
+>> The nvme/045 test case (authentication tests) in blktests is a good 
+>> test case for this after extending it slightly. TCP and RDMA try to
+>> reconnect with an
+>> invalid key over and over again, while loop and FC stop after the 
+>> first fail.
+> 
+> Who says that invalid key is a permanent failure though?
+> 
+See the response to the other patchset.
+'Invalid key' in this context means that the _client_ evaluated the key 
+as invalid, ie the key is unusable for the client.
+As the key is passed in via the commandline there is no way the client
+can ever change the value here, and no amount of retry will change 
+things here. That's what we try to fix.
 
-- strong rng, most expensive
-- your new prng, less strong but somewhat cheaper and/or more
-  predictable overhead
-- cycle counter, cheap but probably even less strong,
-  needs architecture code.
-- no rng, no overhead and no protection.
+The controller surely can return an invalid key, but that's part of
+the authenticaion protocol and will be evaluated differently.
 
-On architectures that have a cheap hardware rng instruction, you
-can count that one as well.
+Cheers,
 
-For picking between the options, we have
+Hannes
 
-- architecture maintainer
-- defconfig (CONFIG_RANDOMIZE_KSTACK_OFFSET)
-- boot time (randomize_kstack_offset=on)
-
-For both of these lists, I would like to see as few options
-as possible, and in particular I think the architecture
-maintainer should not make that decision for the users.
-
-If we want to improve this, I would start by changing
-the binary CONFIG_RANDOMIZE_KSTACK_OFFSET option into
-a three-way choice between cycle counter (where available),
-strong rng and off, possibly adding the cycle counter
-option to the two architectures that currently don't use
-it, while moving the strong rng into common code.
-
-After that, we can debate adding a fourth option, or
-replacing one of the existing two that is too slow or
-not random enough.
-
->> Won't that defeat the purpose of the patch that was intended
->> to make the syscall latency more predictable? At least the
->> simpler approaches of reseeding from the kstack_rng()
->> function itself would have this problem, deferring it to
->> another context comes with a separate set of problems.
->
-> And that describes why I've not come up with an inline reseeding 
-> solution. Which of course isn't a problem on !arm if one just pushes a 
-> few bits of a cycle counter into the rnd_state every few dozen syscalls, 
-> or whatever. Mark R, mentioned offline the idea of just picking a few 
-> bits off CNTVCT as a seed, but its so slow it basically has to be used 
-> to fuzz a bit or two of rnd_state on some fairly long interval. Long 
-> enough that if someone has a solution for extracting rnd_state it might 
-> not add any additional security. Or that is my take, since i'm not a big 
-> fan of any independent counter/clock based RNG seeding (AFAIK, entropy 
-> from clocks requires multiple _independent_ sources).
-
-I'm not sure I understand the logic. Do you mean that accessing
-CNTVCT itself is slow, or that reseeding based on CNTVCT is slow
-because of the overhead of reseeding?
-
-On powerpc/s390/x86, the low bits of the respective cycle counter
-is simply used without any kind of bit shuffling, and we already
-rely on the cycle counter to be fast to access since it's used
-for timekeeping anywhere.
-
-There is not even any attempt to use the most random bits of
-the cycle counter, as both the high 22 to 24 bits get masked
-out (to keep the wasted stack space small) and the low 3 or 4
-bits get ignored because of stack alignment. If there was
-any desire to make it more random, a trivial improvement
-would be:
-
-+++ b/include/linux/randomize_kstack.h
-@@ -80,7 +80,7 @@ DECLARE_PER_CPU(u32, kstack_offset);
-        if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
-                                &randomize_kstack_offset)) {            \
-                u32 offset = raw_cpu_read(kstack_offset);               \
--               offset ^= (rand);                                       \
-+               offset = ror32(offset, 5) & (rand);                     \
-                raw_cpu_write(kstack_offset, offset);                   \
-        }                                                               \
- } while (0)
-
-My impression is that is is already bordering on becoming
-a "bespoke rng" implementation that Jason was objecting to,
-so the current version is intentionally left weak in order
-to not even give the appearance of being a security relevant
-feature.
-
-> This is a bit out of my wheelhouse, so I defer to anyone with a better 
-> feel or some actual data.
->
-> The best plan I have at the moment is just some deferred work to call 
-> kstack_rng_setup on some call or time based interval, which AFAIK isn't 
-> ideal for RT workloads which expect ~100% CPU isolation. Plus, that 
-> solution assumes we have some handle on how fast an attacker can extract 
-> kstackrng sufficiently to make predictions.
-
-I think you fundamentally can't have both. If you rely on the
-reseeding to happen for a particular number of syscalls, you
-eventually end up blocking on it, regardless of the context
-it runs in. Deferring it to another process means blocking
-for longer, and deferring it to a low-priority task would mean
-that real-time tasks get less randomness.
-
-       Arnd
