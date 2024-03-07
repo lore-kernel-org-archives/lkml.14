@@ -1,73 +1,73 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3CD219EB
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A1A82D73
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709801879; cv=none; b=Ksw3FsFgR/A3NaEsvf82MV6YCgHTUNEcspnevCYGIrWcHAeNPvX9FzW6Ns8uDOne3j1yTXHiEBmyNeQdxuQFvK11wQai1EcFiYWQy6/NZEduZHRK3wNgy/Db2Yc5tsDTDEONfXI7JIniMxGpwu6UT0ORQVo28BM8PCEbLfv8LL0=
+	t=1709801899; cv=none; b=S6Vs7ttOU4NHTZo8VUMJkXuL1nNhZxhlaqxuPwC4RbWOS5+zx/xYawDjPViKqQobp1erY5n842aX/gWdCw2lTtS7J7E802S1WuumQoNEsJE+5PELTxwFdJniXKKxsL//BdPgewuuP7H89osh8WK8QnxahcS3AtyefdahiWeiJ40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709801879; c=relaxed/simple;
-	bh=g8TY4WK2/nVFDY6j8r5pcfDtl8O/RiF29QBXJkyFq48=;
+	s=arc-20240116; t=1709801899; c=relaxed/simple;
+	bh=Oq0WmmSAbHNYJsE6eKHeXKHCOi9xt3NB/PHSOD/ncTE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SSGRU4ovrZomGNDOr1MXFr5ZH/dNi+NtxxIOsGXfS8Ft08+4MapHV/eJVQqLeXCcwtgdiVe+fEHVjc3tQxTP46Ld5JpbJCF+Jmxt8394fZ4podhZv3zgbeeq/GSG32sKHrkS29jg4t+ikN4cWVeUaad+Uvd2NlEXlj9LARKOT8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C+BTMEMe; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=pB1ym9n/x7xTOVGffY7Sx2NjsyXFjKQfLT96VKM+O34FtKd70okctx8ykxNBlLnEN8SprWXX1/xhZDauJ7luTSg44u6pidJndISGsVMoO6oiRcZypp+UoEncUvzJgUo2Vw6N/RkzJu0+nUVvysJCsWInZTNiEDyGZTMmJgLXWCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G+wusVe6; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C+BTMEMe"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G+wusVe6"
 Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4278WDea020667;
-	Thu, 7 Mar 2024 08:57:47 GMT
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4278WDBZ020674;
+	Thu, 7 Mar 2024 08:57:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=xRQVYuAhYc71xNZhj7RwrVnUw7md5kuJJTPmlEvoIKo=;
- b=C+BTMEMefmAcGFe7e/OK4utJshkxN5Vjphw3J+BGcYAFgOUr7V7DEp6OhkJOp2jm83qg
- FTqjS7/m6MeUFZa8K28TGFMZSYL3jKus0rgqE69ytnInNUHrG63YAlE02EbBDCu1FKgJ
- 4nbDV+F3a1R/WvNe1mcf3biJpT+3ZWX9/NTzKO8FFAampsmmKQ3X0Pa1X73YNqX9/3xd
- q3eF0If88nMiET2phcKF33Rg4z6H2PCRziPDRUX1LUts9nBJBRPUYTmJvSObIV8AEv5v
- m7H7pjuOxlUcXUNZhHBpcPfCiT4AXhfHf9Y98KAbJjFXpFwtxfUoO5/waHWliyv3Cznv Zg== 
+ bh=hxxfSt/V2kIxU74jTxTo63XdTt0LQWBgQ0OZjGD0LUg=;
+ b=G+wusVe6KmlwvUaCqmZ1GL5TXSWPnu6wOMRJYcL9pNyteoJsefhI1QcUqSZvXz/2lFcS
+ amRLelaD4/UFXJRn2XTB+gmwRH4QMixr3Vplx0AG4OZrA1AG1mRmS4L5ERks4ibWrO2D
+ Kpopqpn5wmA9esjuEP53rn7LbaRAwWnnUh40Tc7RLLJPN70a3ezyh1Nn3ca5tQsMSq8V
+ RNzWryI7A7JZUoaDe3Ba0VzJCNFmen22cwt3hK6fNif1WcvjSkH/TEVy6CwiyKKfY0Et
+ SYmnq5EXb7+VM1OkNZ59kgp/fPARIQaib7eSeAG9o6lQa5MYNAgRa2Rqgax2dv4Q/5r/ 1A== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5bgffp-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5bgfys-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 08:57:46 +0000
+	Thu, 07 Mar 2024 08:57:55 +0000
 Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4278gEGh010375;
-	Thu, 7 Mar 2024 08:57:46 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5bgfcx-1
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4278uY9g032138;
+	Thu, 7 Mar 2024 08:57:55 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5bgfva-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 08:57:45 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42789YLZ026251;
-	Thu, 7 Mar 2024 08:57:44 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmfep4f64-1
+	Thu, 07 Mar 2024 08:57:54 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4275wg6C010877;
+	Thu, 7 Mar 2024 08:57:52 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmh52m1ak-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 08:57:44 +0000
+	Thu, 07 Mar 2024 08:57:52 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4278vcPx27984432
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4278vlwA9306402
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Mar 2024 08:57:40 GMT
+	Thu, 7 Mar 2024 08:57:49 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 27B622004D;
-	Thu,  7 Mar 2024 08:57:38 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8A99B20040;
+	Thu,  7 Mar 2024 08:57:47 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 95D872004E;
-	Thu,  7 Mar 2024 08:57:35 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id E3C6B2004B;
+	Thu,  7 Mar 2024 08:57:44 +0000 (GMT)
 Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.in.ibm.com (unknown [9.109.201.126])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  7 Mar 2024 08:57:35 +0000 (GMT)
+	Thu,  7 Mar 2024 08:57:44 +0000 (GMT)
 From: Shrikanth Hegde <sshegde@linux.ibm.com>
 To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
 Cc: sshegde@linux.ibm.com, yu.c.chen@intel.com, dietmar.eggemann@arm.com,
         linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
         aboorvad@linux.ibm.com, srikar@linux.ibm.com, vschneid@redhat.com,
         pierre.gondois@arm.com, qyousef@layalina.io
-Subject: [PATCH v6 1/3] sched/fair: Add EAS checks before updating overutilized
-Date: Thu,  7 Mar 2024 14:27:23 +0530
-Message-Id: <20240307085725.444486-2-sshegde@linux.ibm.com>
+Subject: [PATCH v6 3/3] sched/fair: Combine EAS check with overutilized access
+Date: Thu,  7 Mar 2024 14:27:25 +0530
+Message-Id: <20240307085725.444486-4-sshegde@linux.ibm.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240307085725.444486-1-sshegde@linux.ibm.com>
 References: <20240307085725.444486-1-sshegde@linux.ibm.com>
@@ -79,8 +79,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ZFsSwxT_9q4jjcCsDrrX5xvMMoDoeUCA
-X-Proofpoint-ORIG-GUID: D2bMZVLn4QUjRopM98yD9jY_0yc6VYhC
+X-Proofpoint-GUID: pdgD9pN-oaGrw84VU4hJ9SINOtnkmMDA
+X-Proofpoint-ORIG-GUID: LstN7FprOKdg5cQOk6nzUPeIOu7BX0iO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-07_05,2024-03-06_01,2023-05-22_02
@@ -90,137 +90,90 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowprio
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311290000 definitions=main-2403070064
 
-Overutilized field of root domain is only used for EAS(energy aware scheduler)
-to decide whether to do load balance or not. It is not used if EAS
-not possible.
+Access to overutilized is always used with sched_energy_enabled in
+the pattern:
 
-Currently enqueue_task_fair and task_tick_fair accesses, sometime updates
-this field. In update_sd_lb_stats it is updated often. This causes cache
-contention due to true sharing and burns a lot of cycles. overload and
-overutilized are part of the same cacheline. Updating it often invalidates
-the cacheline. That causes access  to overload to slow down due to
-false sharing. Hence add EAS check before accessing/updating this field.
-EAS check is optimized at compile time or it is a static branch.
-Hence it shouldn't cost much.
+if (sched_energy_enabled && !overutilized)
+       do something
 
-With the patch, both enqueue_task_fair and newidle_balance don't show
-up as hot routines in perf profile.
+So modify the helper function to return this pattern. This is more
+readable code as it would say, do something when root domain is not
+overutilized.
 
-6.8-rc4:
-7.18%  swapper          [kernel.vmlinux]              [k] enqueue_task_fair
-6.78%  s                [kernel.vmlinux]              [k] newidle_balance
-+patch:
-0.14%  swapper          [kernel.vmlinux]              [k] enqueue_task_fair
-0.00%  swapper          [kernel.vmlinux]              [k] newidle_balance
+No change in functionality intended.
 
-Minor change: trace_sched_overutilized_tp expect that second argument to
-be bool. So do a int to bool conversion for that.
-
-Fixes: 2802bf3cd936 ("sched/fair: Add over-utilization/tipping point indicator")
-Reviewed-by: Qais Yousef <qyousef@layalina.io>
-Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
+Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
 ---
- kernel/sched/fair.c | 53 +++++++++++++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 19 deletions(-)
+ kernel/sched/fair.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 6a16129f9a5c..5aa6e918598c 100644
+index 87e08a252f94..bcda18a2ccfe 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -6663,22 +6663,42 @@ static inline void hrtick_update(struct rq *rq)
- #ifdef CONFIG_SMP
- static inline bool cpu_overutilized(int cpu)
- {
--	unsigned long rq_util_min = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MIN);
--	unsigned long rq_util_max = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MAX);
-+	unsigned long  rq_util_min, rq_util_max;
-+
-+	if (!sched_energy_enabled())
-+		return false;
-+
-+	rq_util_min = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MIN);
-+	rq_util_max = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MAX);
-
- 	/* Return true only if the utilization doesn't fit CPU's capacity */
- 	return !util_fits_cpu(cpu_util_cfs(cpu), rq_util_min, rq_util_max, cpu);
+@@ -6676,12 +6676,11 @@ static inline bool cpu_overutilized(int cpu)
  }
 
--static inline void update_overutilized_status(struct rq *rq)
-+static inline void set_rd_overutilized_status(struct root_domain *rd,
-+					      unsigned int status)
+ /*
+- * Ensure that caller can do EAS. overutilized value
+- * make sense only if EAS is enabled
++ * overutilized value make sense only if EAS is enabled
+  */
+-static inline int is_rd_overutilized(struct root_domain *rd)
++static inline int is_rd_not_overutilized(struct root_domain *rd)
  {
--	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
--		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
--		trace_sched_overutilized_tp(rq->rd, SG_OVERUTILIZED);
--	}
-+	if (!sched_energy_enabled())
-+		return;
-+
-+	WRITE_ONCE(rd->overutilized, status);
-+	trace_sched_overutilized_tp(rd, !!status);
-+}
-+
-+static inline void check_update_overutilized_status(struct rq *rq)
-+{
-+	/*
-+	 * overutilized field is used for load balancing decisions only
-+	 * if energy aware scheduler is being used
-+	 */
-+	if (!sched_energy_enabled())
-+		return;
-+
-+	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
-+		set_rd_overutilized_status(rq->rd, SG_OVERUTILIZED);
+-	return READ_ONCE(rd->overutilized);
++	return sched_energy_enabled() && !READ_ONCE(rd->overutilized);
+ }
+
+ static inline void set_rd_overutilized_status(struct root_domain *rd,
+@@ -6700,10 +6699,8 @@ static inline void check_update_overutilized_status(struct rq *rq)
+ 	 * overutilized field is used for load balancing decisions only
+ 	 * if energy aware scheduler is being used
+ 	 */
+-	if (!sched_energy_enabled())
+-		return;
+
+-	if (!is_rd_overutilized(rq->rd) && cpu_overutilized(rq->cpu))
++	if (is_rd_not_overutilized(rq->rd) && cpu_overutilized(rq->cpu))
+ 		set_rd_overutilized_status(rq->rd, SG_OVERUTILIZED);
  }
  #else
--static inline void update_overutilized_status(struct rq *rq) { }
-+static inline void check_update_overutilized_status(struct rq *rq) { }
- #endif
+@@ -7989,7 +7986,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 
- /* Runqueue only has SCHED_IDLE tasks enqueued */
-@@ -6779,7 +6799,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	 * and the following generally works well enough in practice.
- 	 */
- 	if (!task_new)
--		update_overutilized_status(rq);
-+		check_update_overutilized_status(rq);
+ 	rcu_read_lock();
+ 	pd = rcu_dereference(rd->pd);
+-	if (!pd || is_rd_overutilized(rd))
++	if (!pd)
+ 		goto unlock;
 
- enqueue_throttle:
- 	assert_list_leaf_cfs_rq(rq);
-@@ -10596,19 +10616,14 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
- 		env->fbq_type = fbq_classify_group(&sds->busiest_stat);
+ 	/*
+@@ -8192,7 +8189,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+ 		    cpumask_test_cpu(cpu, p->cpus_ptr))
+ 			return cpu;
 
- 	if (!env->sd->parent) {
+-		if (sched_energy_enabled()) {
++		if (is_rd_not_overutilized(this_rq()->rd)) {
+ 			new_cpu = find_energy_efficient_cpu(p, prev_cpu);
+ 			if (new_cpu >= 0)
+ 				return new_cpu;
+@@ -10869,12 +10866,9 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
+ 	if (busiest->group_type == group_misfit_task)
+ 		goto force_balance;
+
+-	if (sched_energy_enabled()) {
 -		struct root_domain *rd = env->dst_rq->rd;
 -
- 		/* update overload indicator if we are at root domain */
--		WRITE_ONCE(rd->overload, sg_status & SG_OVERLOAD);
-+		WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
+-		if (rcu_dereference(rd->pd) && !is_rd_overutilized(rd))
+-			goto out_balanced;
+-	}
++	if (is_rd_not_overutilized(env->dst_rq->rd) &&
++	    rcu_dereference(env->dst_rq->rd->pd))
++		goto out_balanced;
 
- 		/* Update over-utilization (tipping point, U >= 0) indicator */
--		WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
--		trace_sched_overutilized_tp(rd, sg_status & SG_OVERUTILIZED);
-+		set_rd_overutilized_status(env->dst_rq->rd,
-+					   sg_status & SG_OVERUTILIZED);
- 	} else if (sg_status & SG_OVERUTILIZED) {
--		struct root_domain *rd = env->dst_rq->rd;
--
--		WRITE_ONCE(rd->overutilized, SG_OVERUTILIZED);
--		trace_sched_overutilized_tp(rd, SG_OVERUTILIZED);
-+		set_rd_overutilized_status(env->dst_rq->rd, SG_OVERUTILIZED);
- 	}
-
- 	update_idle_cpu_scan(env, sum_util);
-@@ -12609,7 +12624,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
- 		task_tick_numa(rq, curr);
-
- 	update_misfit_status(curr, rq);
--	update_overutilized_status(task_rq(curr));
-+	check_update_overutilized_status(task_rq(curr));
-
- 	task_tick_core(rq, curr);
- }
+ 	/* ASYM feature bypasses nice load balance check */
+ 	if (busiest->group_type == group_asym_packing)
 --
 2.39.3
 
