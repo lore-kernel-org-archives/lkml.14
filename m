@@ -1,132 +1,310 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F5412D768
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 16:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 780B912D1F9
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 16:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709828895; cv=none; b=u1YLSaLStM00egi/Is8M3EGiEIedraZR+hv9//uRPPFzdcbx3iQalMMtpfPl2BKTHqpK5w9mwU5ywOAHqSPvsi0pydPYBr3cAJ+cnwUXBCwOnwgQJEqrz357JkY4CbTlsc+P7xByzwvY3l+FfOBD8IRRa8FWab4QL07RLIHHNKA=
+	t=1709829108; cv=none; b=DBgPcU526AWEVj6hbc1nBjVgMpvZ+1d1tfxw3fUXum/E0mrhveU+IxOo+ovRINxZLEuCSnfYGg8lCm3Qkon+AVbiYDFwsX8k2oIqd7UQzOZRS5qFYe2jbdcWmUOAWkRwVw9Cer0tBoHVZ+aI3odrQ2u34qEDclkAhZGDjp6QpL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709828895; c=relaxed/simple;
-	bh=KRwq1mlARD/+seRfzKYnP8T/xyA/FArSAfNxjEpCoE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HMmkyNTyoWo6M4SIMrOGtOm/ftnU8RiFKhwJki9krqvBup6h2xNTjG/RXuoz8S1El0tBp/qq+f9LlAxEbptQ16fkO0eLcHu7hC3nOIiG3s9BKP0G9UMTi+3x3xVds1TxaUwXhZriodXYWxlsSkzNMqcdOVMUY4GkvxTBrGf8/EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fCwsGxoH; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fCwsGxoH"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9739340E0174;
-	Thu,  7 Mar 2024 16:28:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id sZAntyjfiiMV; Thu,  7 Mar 2024 16:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709828885; bh=CHqAVMcOULQTqhMFiebhSZstkTF+z6uINA9dq9fvWKY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fCwsGxoH5gZt6jo7/G7GuaUmzjSBf848guaSe9nZ+elwFmeDe9KGaK2B2cdsTdBUu
-	 UhfpUVaYThJqd2kfY0STVUmTaJrt0wkb3FCLHCUnZ7yqLAXiADRlbsinc1cT3qUDfP
-	 3+CXd6R1xs8lBk9Rh7rXiwHL7hVM2DIgdlLjIM9b3cCXt9trBX0dvXTHguf1hHLwfx
-	 JSgsNSpwUP7orArZU4m9Ahjtm28ih4k5EZuzH8tqtJxs8LeP+KN2p2GakM5Jha1jcb
-	 S1rN9qJauUqCGH21XJgZ55i8YeTn4/rttGvkMDLNxRVbdzjhmF+UcRtt7DidVTqquQ
-	 JCEiGCwZ4N/S4/4NFV+EAPgQiIbxKo2BaON/YxuNEPZdmdSkCEBQML0Iqu+Nlsy0mH
-	 XoZOk2bnSlQ9hx0cOYu1GMblWhB/4OFv+eamdJ2zUwNW5Qwf69I16za+m02O/yorTP
-	 dNnqZ9Z0wgo+dKR/V+BXE+WB8Ep+d4OxGLHPAHsHx/0k016G5+GyxlNCjjMDFaNKWs
-	 Ut0Oi9kWN8aVxVN+gJv6bhnIQ1ILhCdW6TrrN3isN6pxuRcvfh/SQoMPWGUEGleGV4
-	 yNFzcuMDwrbrF1L5KEtGkFCEsSem95zRgWNIiqBE0TO71QB9KAhSvOs9oK6dUrNJ4n
-	 2ZOzC+4fTPrI4aQZAB0MsFC0=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CEFE440E0173;
-	Thu,  7 Mar 2024 16:27:57 +0000 (UTC)
-Date: Thu, 7 Mar 2024 17:27:52 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-	pbonzini@redhat.com, tglx@linutronix.de, x86@kernel.org,
-	jgross@suse.com
-Subject: Re: [RFC][PATCH 01/34] x86/xen: Explain why calling get_cpu_cap() so
- early is a hack
-Message-ID: <20240307162752.GAZenrCDqs0lMTjmu1@fat_crate.local>
-References: <20240222183926.517AFCD2@davehans-spike.ostc.intel.com>
- <20240222183928.0D8942B2@davehans-spike.ostc.intel.com>
+	s=arc-20240116; t=1709829108; c=relaxed/simple;
+	bh=NFvs4zXiWf5E2UpTB4nAoOYaKxaS4DdJ4C/P1YO4Jxc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=soO3NQBCu4wLp0/BAlR1jTFP+SLRdpgzApQfsZK5uifeiCipL2Bo98ui7pR/KUCxZnTC2QVQuiVN0uX90eZP+VST2FWsXpddYfzFjgudgbq3/cbAvxH1/fJo7NHB3RnpXjom/IotESjw1CP0XQS68r9lZi5yP7x0iOLHnJQ93hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB9B11FB;
+	Thu,  7 Mar 2024 08:32:22 -0800 (PST)
+Received: from [10.1.25.184] (XHFQ2J9959.cambridge.arm.com [10.1.25.184])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 180403F738;
+	Thu,  7 Mar 2024 08:31:42 -0800 (PST)
+Message-ID: <f3b1cb43-cb33-4db4-a3dd-0c787e30b113@arm.com>
+Date: Thu, 7 Mar 2024 16:31:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240222183928.0D8942B2@davehans-spike.ostc.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] mm/madvise: enhance lazyfreeing with mTHP in
+ madvise_free
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, David Hildenbrand <david@redhat.com>
+Cc: Lance Yang <ioworker0@gmail.com>, Vishal Moola <vishal.moola@gmail.com>,
+ akpm@linux-foundation.org, zokeefe@google.com, shy828301@gmail.com,
+ mhocko@suse.com, fengwei.yin@intel.com, xiehuan09@gmail.com,
+ wangkefeng.wang@huawei.com, songmuchun@bytedance.com, peterx@redhat.com,
+ minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240307061425.21013-1-ioworker0@gmail.com>
+ <CAGsJ_4xcRvZGdpPh1qcFTnTnDUbwz6WreQ=L_UO+oU2iFm9EPg@mail.gmail.com>
+ <CAK1f24k2G_DSEjuqqqPyY0f7+btpYbjfoyMH7btLfP8nkasCTQ@mail.gmail.com>
+ <CAGsJ_4xREM-P1mFqeM-s3-cJ9czb6PXwizb-3hOhwaF6+QM5QA@mail.gmail.com>
+ <03458c20-5544-411b-9b8d-b4600a9b802f@arm.com>
+ <CAGsJ_4zp1MXTjG=4gBO+J3owg7sHDgDJ8Ut51i1RBSnKnK0BfQ@mail.gmail.com>
+ <501c9f77-1459-467a-8619-78e86b46d300@arm.com>
+ <8f84c7d6-982a-4933-a7a7-3f640df64991@redhat.com>
+ <e6bc142e-113d-4034-b92c-746b951a27ed@redhat.com>
+ <d24f8553-33f2-4ae7-a06d-badaf9462d84@arm.com>
+ <CAGsJ_4za-2xpg21phWi2WWLF1iPXhoc1xM__FDTwYYBBKsTPgw@mail.gmail.com>
+ <a07deb2c-49e1-4324-8e70-e897605faa9d@redhat.com>
+ <b1bf4b62-8e9b-470f-a300-d13c24177688@arm.com>
+ <b174d4e1-e1ef-4766-91bc-de822eee30fb@redhat.com>
+ <CAGsJ_4xXS0MsxRVTbf74DY_boQVUE2oP=AP6JmdXZSqsAOZzRQ@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAGsJ_4xXS0MsxRVTbf74DY_boQVUE2oP=AP6JmdXZSqsAOZzRQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 22, 2024 at 10:39:28AM -0800, Dave Hansen wrote:
+On 07/03/2024 12:01, Barry Song wrote:
+> On Thu, Mar 7, 2024 at 7:45 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 07.03.24 12:42, Ryan Roberts wrote:
+>>> On 07/03/2024 11:31, David Hildenbrand wrote:
+>>>> On 07.03.24 12:26, Barry Song wrote:
+>>>>> On Thu, Mar 7, 2024 at 7:13 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>
+>>>>>> On 07/03/2024 10:54, David Hildenbrand wrote:
+>>>>>>> On 07.03.24 11:54, David Hildenbrand wrote:
+>>>>>>>> On 07.03.24 11:50, Ryan Roberts wrote:
+>>>>>>>>> On 07/03/2024 09:33, Barry Song wrote:
+>>>>>>>>>> On Thu, Mar 7, 2024 at 10:07 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> On 07/03/2024 08:10, Barry Song wrote:
+>>>>>>>>>>>> On Thu, Mar 7, 2024 at 9:00 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Hey Barry,
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Thanks for taking time to review!
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On Thu, Mar 7, 2024 at 3:00 PM Barry Song <21cnbao@gmail.com> wrote:
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On Thu, Mar 7, 2024 at 7:15 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>> [...]
+>>>>>>>>>>>>>>> +static inline bool can_mark_large_folio_lazyfree(unsigned long addr,
+>>>>>>>>>>>>>>> +                                                struct folio *folio,
+>>>>>>>>>>>>>>> pte_t *start_pte)
+>>>>>>>>>>>>>>> +{
+>>>>>>>>>>>>>>> +       int nr_pages = folio_nr_pages(folio);
+>>>>>>>>>>>>>>> +       fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>> +       for (int i = 0; i < nr_pages; i++)
+>>>>>>>>>>>>>>> +               if (page_mapcount(folio_page(folio, i)) != 1)
+>>>>>>>>>>>>>>> +                       return false;
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> we have moved to folio_estimated_sharers though it is not precise, so
+>>>>>>>>>>>>>> we don't do
+>>>>>>>>>>>>>> this check with lots of loops and depending on the subpage's mapcount.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> If we don't check the subpage’s mapcount, and there is a cow folio
+>>>>>>>>>>>>> associated
+>>>>>>>>>>>>> with this folio and the cow folio has smaller size than this folio,
+>>>>>>>>>>>>> should we still
+>>>>>>>>>>>>> mark this folio as lazyfree?
+>>>>>>>>>>>>
+>>>>>>>>>>>> I agree, this is true. However, we've somehow accepted the fact that
+>>>>>>>>>>>> folio_likely_mapped_shared
+>>>>>>>>>>>> can result in false negatives or false positives to balance the
+>>>>>>>>>>>> overhead.  So I really don't know :-)
+>>>>>>>>>>>>
+>>>>>>>>>>>> Maybe David and Vishal can give some comments here.
+>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>> BTW, do we need to rebase our work against David's changes[1]?
+>>>>>>>>>>>>>> [1]
+>>>>>>>>>>>>>> https://lore.kernel.org/linux-mm/20240227201548.857831-1-david@redhat.com/
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Yes, we should rebase our work against David’s changes.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>> +       return nr_pages == folio_pte_batch(folio, addr, start_pte,
+>>>>>>>>>>>>>>> +                                        ptep_get(start_pte), nr_pages,
+>>>>>>>>>>>>>>> flags, NULL);
+>>>>>>>>>>>>>>> +}
+>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>      static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+>>>>>>>>>>>>>>>                                     unsigned long end, struct mm_walk
+>>>>>>>>>>>>>>> *walk)
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> @@ -676,11 +690,45 @@ static int madvise_free_pte_range(pmd_t *pmd,
+>>>>>>>>>>>>>>> unsigned long addr,
+>>>>>>>>>>>>>>>                      */
+>>>>>>>>>>>>>>>                     if (folio_test_large(folio)) {
+>>>>>>>>>>>>>>>                             int err;
+>>>>>>>>>>>>>>> +                       unsigned long next_addr, align;
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> -                       if (folio_estimated_sharers(folio) != 1)
+>>>>>>>>>>>>>>> -                               break;
+>>>>>>>>>>>>>>> -                       if (!folio_trylock(folio))
+>>>>>>>>>>>>>>> -                               break;
+>>>>>>>>>>>>>>> +                       if (folio_estimated_sharers(folio) != 1 ||
+>>>>>>>>>>>>>>> +                           !folio_trylock(folio))
+>>>>>>>>>>>>>>> +                               goto skip_large_folio;
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> I don't think we can skip all the PTEs for nr_pages, as some of them
+>>>>>>>>>>>>>> might be
+>>>>>>>>>>>>>> pointing to other folios.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> for example, for a large folio with 16PTEs, you do MADV_DONTNEED(15-16),
+>>>>>>>>>>>>>> and write the memory of PTE15 and PTE16, you get page faults, thus PTE15
+>>>>>>>>>>>>>> and PTE16 will point to two different small folios. We can only skip
+>>>>>>>>>>>>>> when we
+>>>>>>>>>>>>>> are sure nr_pages == folio_pte_batch() is sure.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Agreed. Thanks for pointing that out.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>> +                       align = folio_nr_pages(folio) * PAGE_SIZE;
+>>>>>>>>>>>>>>> +                       next_addr = ALIGN_DOWN(addr + align, align);
+>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>> +                       /*
+>>>>>>>>>>>>>>> +                        * If we mark only the subpages as lazyfree, or
+>>>>>>>>>>>>>>> +                        * cannot mark the entire large folio as
+>>>>>>>>>>>>>>> lazyfree,
+>>>>>>>>>>>>>>> +                        * then just split it.
+>>>>>>>>>>>>>>> +                        */
+>>>>>>>>>>>>>>> +                       if (next_addr > end || next_addr - addr !=
+>>>>>>>>>>>>>>> align ||
+>>>>>>>>>>>>>>> +                           !can_mark_large_folio_lazyfree(addr, folio,
+>>>>>>>>>>>>>>> pte))
+>>>>>>>>>>>>>>> +                               goto split_large_folio;
+>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>> +                       /*
+>>>>>>>>>>>>>>> +                        * Avoid unnecessary folio splitting if the
+>>>>>>>>>>>>>>> large
+>>>>>>>>>>>>>>> +                        * folio is entirely within the given range.
+>>>>>>>>>>>>>>> +                        */
+>>>>>>>>>>>>>>> +                       folio_clear_dirty(folio);
+>>>>>>>>>>>>>>> +                       folio_unlock(folio);
+>>>>>>>>>>>>>>> +                       for (; addr != next_addr; pte++, addr +=
+>>>>>>>>>>>>>>> PAGE_SIZE) {
+>>>>>>>>>>>>>>> +                               ptent = ptep_get(pte);
+>>>>>>>>>>>>>>> +                               if (pte_young(ptent) ||
+>>>>>>>>>>>>>>> pte_dirty(ptent)) {
+>>>>>>>>>>>>>>> +                                       ptent =
+>>>>>>>>>>>>>>> ptep_get_and_clear_full(
+>>>>>>>>>>>>>>> +                                               mm, addr, pte,
+>>>>>>>>>>>>>>> tlb->fullmm);
+>>>>>>>>>>>>>>> +                                       ptent = pte_mkold(ptent);
+>>>>>>>>>>>>>>> +                                       ptent = pte_mkclean(ptent);
+>>>>>>>>>>>>>>> +                                       set_pte_at(mm, addr, pte,
+>>>>>>>>>>>>>>> ptent);
+>>>>>>>>>>>>>>> +                                       tlb_remove_tlb_entry(tlb, pte,
+>>>>>>>>>>>>>>> addr);
+>>>>>>>>>>>>>>> +                               }
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Can we do this in batches? for a CONT-PTE mapped large folio, you are
+>>>>>>>>>>>>>> unfolding
+>>>>>>>>>>>>>> and folding again. It seems quite expensive.
+>>>>>>>>>>>
+>>>>>>>>>>> I'm not convinced we should be doing this in batches. We want the initial
+>>>>>>>>>>> folio_pte_batch() to be as loose as possible regarding permissions so
+>>>>>>>>>>> that we
+>>>>>>>>>>> reduce our chances of splitting folios to the min. (e.g. ignore SW bits
+>>>>>>>>>>> like
+>>>>>>>>>>> soft dirty, etc). I think it might be possible that some PTEs are RO and
+>>>>>>>>>>> other
+>>>>>>>>>>> RW too (e.g. due to cow - although with the current cow impl, probably not.
+>>>>>>>>>>> But
+>>>>>>>>>>> its fragile to assume that). Anyway, if we do an initial batch that ignores
+>>>>>>>>>>> all
+>>>>>>>>>>
+>>>>>>>>>> You are correct. I believe this scenario could indeed occur. For instance,
+>>>>>>>>>> if process A forks process B and then unmaps itself, leaving B as the
+>>>>>>>>>> sole process owning the large folio.  The current wp_page_reuse() function
+>>>>>>>>>> will reuse PTE one by one while the specific subpage is written.
+>>>>>>>>>
+>>>>>>>>> Hmm - I thought it would only reuse if the total mapcount for the folio
+>>>>>>>>> was 1.
+>>>>>>>>> And since it is a large folio with each page mapped once in proc B, I thought
+>>>>>>>>> every subpage write would cause a copy except the last one? I haven't
+>>>>>>>>> looked at
+>>>>>>>>> the code for a while. But I had it in my head that this is an area we need to
+>>>>>>>>> improve for mTHP.
+>>>>>
+>>>>> So sad I am wrong again 😢
+>>>>>
+>>>>>>>>
+>>>>>>>> wp_page_reuse() will currently reuse a PTE part of a large folio only if
+>>>>>>>> a single PTE remains mapped (refcount == 0).
+>>>>>>>
+>>>>>>> ^ == 1
+>>>>>
+>>>>> seems this needs improvement. it is a waste the last subpage can
+>>>>
+>>>> My take that is WIP:
+>>>>
+>>>> https://lore.kernel.org/all/20231124132626.235350-1-david@redhat.com/T/#u
+>>>>
+>>>>> reuse the whole large folio. i was doing it in a quite different way,
+>>>>> if the large folio had only one subpage left, i would do copy and
+>>>>> released the large folio[1]. and if i could reuse the whole large folio
+>>>>> with CONT-PTE, i would reuse the whole large folio[2]. in mainline,
+>>>>> we don't have this cont-pte luxury exposed to mm, so i guess we can
+>>>>> not do [2] easily, but [1] seems to be an optimization.
+>>>>
+>>>> Yeah, I had essentially the same idea: just free up the large folio if most of
+>>>> the stuff is unmapped. But that's rather a corner-case optimization, so I did
+>>>> not proceed with that.
+>>>>
+>>>
+>>> I'm not sure it's a corner case, really? - process forks, then both parent and
+>>> child and write to all pages in what was previously a fully & contiguously
+>>> mapped large folio?
+>>
+>> Well, with 2 MiB my assumption was that while it can happen, it's rather
+>> rare. With smaller THP it might get more likely, agreed.
+>>
+>>>
+>>> Reggardless, why is it an optimization to do the copy for the last subpage and
+>>> syncrhonously free the large folio? It's already partially mapped so is on the
+>>> deferred split list and can be split if memory is tight.
 > 
-> From: Dave Hansen <dave.hansen@linux.intel.com>
+> we don't want reclamation overhead later. and we want memories immediately
+> available to others.
+
+But by that logic, you also don't want to leave the large folio partially mapped
+all the way until the last subpage is CoWed. Surely you would want to reclaim it
+when you reach partial map status?
+
+> reclamation will always cause latency and affect User
+> experience. split_folio is not cheap :-) 
+
+But neither is memcpy(4K) I'd imagine. But I get your point.
+
+> if the number of this kind of
+> large folios
+> is huge, the waste can be huge for some while.
 > 
-> xen_start_kernel() some of the first C code run "Xen PV" systems.
-
-That sentence reads weird.
-
-> It precedes normally very early things like setup_arch() or the
-> processor initialization code.
+> it is not a corner case for large folio swap-in. while someone writes
+> one subpage, I swap-in a large folio, wp_reuse will immediately
+> be called. This can cause waste quite often. One outcome of this
+> discussion is that I realize I should investigate this issue immediately
+> in the swap-in series as my off-tree code has optimized reuse but
+> mainline hasn't.
 > 
-> That means that 'boot_cpu_data' is garbage.  It has not even
-
-s/is/contains/
-
-> established the utter basics like if the CPU supports the CPUID
-> instruction.  Unfortunately get_cpu_cap() requires this exact
-> information.
+>>
+>> At least for 2 MiB THP, it might make sense to make that large folio
+>> available immediately again, even without memory pressure. Even
+>> compaction would not compact it.
 > 
-> Nevertheless xen_start_kernel() calls get_cpu_cap().  But it
-> works out in practice because it's looking for the NX bit which
-> comes from an extended CPUID leaf that doesn't depend on
-> c->cpuid_level being set.  This also implicitly assumes that
-> Xen PV guests support CPUID.
+> It is also true for 64KiB. as we want other processes to allocate
+> 64KiB successfully as much as possible, and reduce the rate of
+> falling back to small folios. by releasing 64KiB directly to buddy
+> rather than splitting and returning 15*4KiB in shrinker, we reduce
+> buddy fragmentation too.
 > 
-> Leave the hack in place, but at least explain some of what is
-> going on.
+>>
+>> --
+>> Cheers,
+>>
+>> David / dhildenb
+>>
 > 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> ---
-> 
->  b/arch/x86/xen/enlighten_pv.c |    6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff -puN arch/x86/xen/enlighten_pv.c~xen-explain1 arch/x86/xen/enlighten_pv.c
-> --- a/arch/x86/xen/enlighten_pv.c~xen-explain1	2024-02-22 10:08:48.404451146 -0800
-> +++ b/arch/x86/xen/enlighten_pv.c	2024-02-22 10:08:48.404451146 -0800
-> @@ -1372,7 +1372,11 @@ asmlinkage __visible void __init xen_sta
->  	/* Get mfn list */
->  	xen_build_dynamic_phys_to_machine();
->  
-> -	/* Work out if we support NX */
-> +	/*
-> +	 * This is a hack.  'boot_cpu_data' is not filled out enough
-> +	 * for get_cpu_cap() to function fully.  But it _can_ fill out
-> +	 * the leaves where NX is.  Gross, but it works.
-> +	 */
->  	get_cpu_cap(&boot_cpu_data);
->  	x86_configure_nx();
+> Thanks
+> Barry
 
-If all it needs is to figure out whether it supports NX, just do that by
-foot here and get rid of the get_cpu_cap(&boot_cpu_data) call
-completely.
-
-It won't be a hack anymore.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
