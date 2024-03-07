@@ -1,60 +1,59 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F32633E7
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 07:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7434D6311B
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 07:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709798037; cv=none; b=kURnGq319C2jELTZEKBXwUtqPgjfrfQFLJDgFIv6ZObh4OXStXB0cy3JSayZV5kHO6IHgDzTSTxtvwa1cV5KJNZzhMCOVF2MCNApk/zQFDdxCshIn4YFxIekvlDtkG2Kcb10pvTOOxL0GYuw53kQLFpzvxN0vYHDRUnRWAn7WaI=
+	t=1709798083; cv=none; b=lQjGaXxzxgJlHrLpCA0aLfHDR1yfABDfqcj+EyJ90C9IIDL5FcDFoL1+VeE9lRVeaX8mC0G6MtoXoKAM4Q5qa1uBH2vnOoi86wcQMNa90yL/7jlqq0DZszoeKW5uSiowqhY2e22Hc5gsJ5jh6T884tZhey7FQ4ot1QguUv05ES4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709798037; c=relaxed/simple;
-	bh=J3tfXEyQgDuDYGDYMkJtF7DSa5D0nP5cqXmdWRtGFmc=;
+	s=arc-20240116; t=1709798083; c=relaxed/simple;
+	bh=WVvKgTLfvQMB6s8QTW/ib7vjwYL2GH5Jgp+ZD0KntvY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=emoCYB0sLH3D1BzQ4djBPGbfDwO0klxrLmrQcg9aRPUbBugmluXnhp/ktmmXvI49Yzw0rzI4IT5fvjgKJ9S+cocanDgsIIvzurwdtSITGvoa2B2LsbqRnZfXbCKMlt8vbJhdV8ez4Z+yhW8W0z1yAXw+yOIUrUHhXDn4Wm1FpK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EBaLRokM; arc=none smtp.client-ip=209.85.208.54
+	 In-Reply-To:Content-Type; b=jRrnvcvKTVJqs3b+eAdBRFv+ez204ayaZiyaOcR2kt4zHY4yabamjIdrYwjyT1FlaRxNyxeywGPdH2/F1FKjIriCmDpyjY7FX+cOKARuek8zd5+XQ6X1bAsyetfOV+SPjqPWZEs5P6Vmr8WLiD+Y0ST/BEkYtnxn8IzlCkMQAPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HBIAHMwx; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBaLRokM"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-565d1656c12so1037083a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 23:53:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HBIAHMwx"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d3b93e992aso6656131fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2024 23:54:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709798034; x=1710402834; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709798079; x=1710402879; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HT80H3ZZpOg4fbvSpnNPKvBnPvi5pL+TPSamat71PBY=;
-        b=EBaLRokMwgKROy1Wm648hicO/LVCsTfuDydP46WxlGmlA40uzuQZjy3/sHS6TMfg7R
-         D0cSTQswvHMmk/KmktCiguDkKHq9cLPWgOo3U1ElZ21MLb3LDHyV+Xl9DnnD3T8A07Nt
-         JALFuJoCrNxTJWlylkJv7QoOcLpd3xguTCZeOIQjaMUGUVGYJW5yA7PjJiefFdbJGaS5
-         04CqEROf6nL1+ZOkfn5sEqbRvRmCLlJTEqZA0XrQIPaBhtc7bh081lXCNmwIFWUKLZoZ
-         TfBO5kRbuUK7RA66n98qdDO/KjVYHZFKP29ehjscSCwh4dyRRDWav1cxH+XCBkOu/uk8
-         PjnA==
+        bh=QZVyaPXyxnHBzkGori0wDj7gYVC/KSQjx0nG8XqxD4E=;
+        b=HBIAHMwxZT5IlpI6fNzTBHJJBuskQrLfMpfY/r1jMkEsnVdhByIPyojiJ/hqndxs8v
+         OHHfKeUqb0yc8rfpklNKSNMUHu3daW3pYQF4ekDfGnX2i2Xbk2Eqfk/8R/L1QkY0lg8n
+         LxdIr/JTlYlsNHaQRTZ55Ft23aQrkNbvsICMJJ4XKrGljfFtUkDwmMZ2yvA8zgITrP3K
+         XCASA3jrOiknWoy6daW3UxkuISMcyiu/zmJ+E0XYbJGBGdLDmtdYriODL09NAAh5lmF8
+         LK2JnBKfgFxSyKIiQBXvrYvjDiZLjdhxpEBHrZttjQjLypUakcVFebhwnqBJvdri0gko
+         g4Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709798034; x=1710402834;
+        d=1e100.net; s=20230601; t=1709798079; x=1710402879;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HT80H3ZZpOg4fbvSpnNPKvBnPvi5pL+TPSamat71PBY=;
-        b=Ehdwil/ajwXTLtOeTmFbNAByVX+RR/L4kjtgOqZroa2/e6nir8y8vI1Fg2pKf73PjQ
-         S+PzUkRhyOheEOlvNFTBLowvodU/y/v0ScdQh7MoLwoR9Wr8AnpMly/3iRkcIH4QFk3A
-         TB6qgaZHTi5p4kbBAW/7AuLqSfY6+MAf4bnKO+eDYCBNJRrPUXSaGpOTyI8Uw5ljpGgI
-         Xe1LXO3sWc6y1mF+MppImMt9uwtJX8d90FcyLHorb/6s1avMM+Ry9Fk93JeqPffVZ1f7
-         mGeotrnvUgy624dAgjslTNVYP2xLIMconfkiZPbvzxP7/TBWMEIt169ZT1qGFVu3K6Js
-         1kDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeJMgfDwYqYUmRhsmTIZAiIFj/bKFmRq55wvVLHJV5xsOknlqOW8pDB99fsOPaGSUPc88oCuEfQz6zRo5Xu8fXwMZT4gekEWNR4tME
-X-Gm-Message-State: AOJu0YyYG5P1zP4CBFKglQkPB71chRn5/DVJUxLfdOxu2D3hfG7unxMP
-	QPzpletReUYdLNr6RyFRA35EZ+EtgUEs5m/EJf/O1ne0WeEqjw6mNxGuBa6+s/ijSLo+l7yLJLM
-	R
-X-Google-Smtp-Source: AGHT+IH8ZyyUIHLKYdomaJtC1UdB9gLerL27AEW00yFVNkwQaZEnk+B+lKFSSfObTlrMwlSRoDWoeg==
-X-Received: by 2002:a50:ccc2:0:b0:567:e0e:dda5 with SMTP id b2-20020a50ccc2000000b005670e0edda5mr612110edj.17.1709798034412;
-        Wed, 06 Mar 2024 23:53:54 -0800 (PST)
+        bh=QZVyaPXyxnHBzkGori0wDj7gYVC/KSQjx0nG8XqxD4E=;
+        b=ehskkAjNQz2PsTIG42A5td/D6WPTEMqZJdKhoGACrM2cyPZ8FisKWg7Blzr8QSDA97
+         SEJX4Ac3AAWsyHJ8PUjr2LsD0wVMYHKu2CILPMIY5KNsM3zKOZkuvKLKN1DmDa2jLLTo
+         5tos76t/8gH70/upOqilMnzU3xjkgjYBl49Kw0KA0PK7gvJvDKmmOk666Pqhq1n0FssX
+         yAF5HjTHyGAPINrApsHOcHCL3673/VSBJwaOBlnkvZUKR1tY4H/XD7CuzQOgrCiwIpf9
+         xawZ5+ssLIlKMCMKy2J6QkZwwDrAXcn0yRl0SAt5tu5IVepfenLfaicEM8yxvj6Uf4Fn
+         bIWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVA64nuzWVzBZN5Zy24lY2GrUB2P8p2n/GyZeanZKqbulf55um95tVe7frmrcVaTrv/xomI+pO7rm8rs2UQeKtf9TfX9tIa9pmo/Rt1
+X-Gm-Message-State: AOJu0YyIdoA4G35PUG6OEg6Nt9ZimZB9r8OnWEwqsHoF5XlgWWarY5uN
+	5xFOZS95PDC8xcszKcSNxoWtA7j/ZpKnAEnWl4RxPB+6eN8rmS4KbWG4nmqVS3I=
+X-Google-Smtp-Source: AGHT+IFYAtHoH3EvWp9UvtGiuO64dinos9YEOO4NqcHFCHvNVnn0L16EUzIG8BcdVZlYCa5w9RYoGg==
+X-Received: by 2002:a05:651c:a05:b0:2d3:f4f1:ad7f with SMTP id k5-20020a05651c0a0500b002d3f4f1ad7fmr1145761ljq.33.1709798079657;
+        Wed, 06 Mar 2024 23:54:39 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id ew5-20020a056402538500b005667a11b951sm7746135edb.86.2024.03.06.23.53.53
+        by smtp.gmail.com with ESMTPSA id ew5-20020a056402538500b005667a11b951sm7746135edb.86.2024.03.06.23.54.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Mar 2024 23:53:53 -0800 (PST)
-Message-ID: <342320a5-ddcb-44aa-b153-aa2a1ac2c657@linaro.org>
-Date: Thu, 7 Mar 2024 08:53:53 +0100
+        Wed, 06 Mar 2024 23:54:39 -0800 (PST)
+Message-ID: <298784cc-819c-4372-94a8-bb7a2978ab16@linaro.org>
+Date: Thu, 7 Mar 2024 08:54:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,7 +64,8 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] arm64: dts: qcom: sm8150: add reset name for ethernet
  node
 Content-Language: en-US
-To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
 Cc: Sumit Garg <sumit.garg@linaro.org>, Bjorn Andersson
  <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
  Rob Herring <robh+dt@kernel.org>,
@@ -75,6 +75,7 @@ Cc: Sumit Garg <sumit.garg@linaro.org>, Bjorn Andersson
  "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 References: <20240306200910.2732835-1-volodymyr_babchuk@epam.com>
+ <CAA8EJppNopEF0DmgjCAJyxe8HRebD26Q8heKKLKbPstdfBOv6A@mail.gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -120,36 +121,38 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240306200910.2732835-1-volodymyr_babchuk@epam.com>
+In-Reply-To: <CAA8EJppNopEF0DmgjCAJyxe8HRebD26Q8heKKLKbPstdfBOv6A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/03/2024 21:09, Volodymyr Babchuk wrote:
-> Add reset-names property to the ethernet@20000 node. This patch does
-> not change behavior on Linux, but it is needed for U-Boot, as it tries
-> to find the reset by name, not by index.
+On 07/03/2024 08:10, Dmitry Baryshkov wrote:
+> On Thu, 7 Mar 2024 at 00:22, Volodymyr Babchuk
+> <Volodymyr_Babchuk@epam.com> wrote:
+>>
+>> Add reset-names property to the ethernet@20000 node. This patch does
+>> not change behavior on Linux, but it is needed for U-Boot, as it tries
+>> to find the reset by name, not by index.
+>>
+>> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> index 761a6757dc26f..c2e65d6a2ac62 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> @@ -951,6 +951,7 @@ ethernet: ethernet@20000 {
+>>
+>>                         power-domains = <&gcc EMAC_GDSC>;
+>>                         resets = <&gcc GCC_EMAC_BCR>;
+>> +                       resets-names = "emac";
 > 
-> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-> ---
->  arch/arm64/boot/dts/qcom/sm8150.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> index 761a6757dc26f..c2e65d6a2ac62 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -951,6 +951,7 @@ ethernet: ethernet@20000 {
->  
->  			power-domains = <&gcc EMAC_GDSC>;
->  			resets = <&gcc GCC_EMAC_BCR>;
-> +			resets-names = "emac";
+> According to the snps,dwmac.yaml schema the "emac" is invalid here.
+> Only "stmmaceth" and / or "ahb" are permitted here.
 
-It does not look like you tested the DTS against bindings. Please run
-`make dtbs_check W=1` (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
-
+If only there was a tool which can tell this, without the need to
+involve reviewers...
 
 Best regards,
 Krzysztof
