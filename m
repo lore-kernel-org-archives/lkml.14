@@ -1,184 +1,147 @@
-Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F297D8289C
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 10:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4455B82D83
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 10:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709806940; cv=none; b=VyDH3Q/Yi08GI1Se0hS62nuv+pucRRUHxBcXJT17U2C0ZnqBWgC94Z3E4ZHd4vo4DnOeGeZaxEkIx5v5ugwjD7NXXJg2m5edFCwxV2ATN012qgG1tKxS4IRs16jL7m/POltZHiiln8TecfXBdk7la49XvQRaAUZkh6sY8s2nRsA=
+	t=1709807122; cv=none; b=Mim4uqxnVP0S3HNJzMmK1dE5w1m2zOt7KtAyEghXQXStYSEjWEHu+/tYk3dHjYHkzLtU46ihutLsrDlCO9z5veqpeKA3ApO/9Za4mqi6IregRXfTezkeAC4ntS8Y1aW2hr6T6rji5Rr/38kpt0LJXYqJJwzv1HEVG3Ry8TgtSAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709806940; c=relaxed/simple;
-	bh=3wfPwwhLAgLaMHVJF2tSLdLHhhmhu0GsZ2XZGA/5oOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jX9GZIJLBDOLQ7NoUvdruSxuwd+h4eaPBdHtjaGEq1tN6cthRgtLucIIsiM/xnCTRLDuYrnmFP0P2u/duBbDF33X9t2XNKph0M0qkrWs/v2oNy3ZoSVI8Vpy4MJ82KFb7sEmVyW0I/q7RhYgtCCDrn1VUtyelLR8GQUDeW8FtPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=YzJRhUBi; arc=none smtp.client-ip=45.157.188.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="YzJRhUBi"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Tr52S3kpTzMqbGB;
-	Thu,  7 Mar 2024 11:22:08 +0100 (CET)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Tr52R5XlPzQVF;
-	Thu,  7 Mar 2024 11:22:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1709806928;
-	bh=3wfPwwhLAgLaMHVJF2tSLdLHhhmhu0GsZ2XZGA/5oOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YzJRhUBimplUlxe27u0ZbbJbY4lpfXMY1nQe/nGbp3tgjFOR5655B0YKGa7vOT0Wc
-	 gyA5oSBrGE6GXO3unN2umndpix5LMhBR6qM9azMdzivkq3+JRDPBCXZ/WjYEOxbosR
-	 2r3kTFP7LpReBITwCp5p+x6KAnaEEnSB/b5Jmums=
-Date: Thu, 7 Mar 2024 11:21:57 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Alejandro Colomar <alx@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>, 
-	"Serge E . Hallyn" <serge@hallyn.com>, Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, 
-	Shervin Oloumi <enlightened@chromium.org>, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
-Message-ID: <20240307.oxQuab5tho0u@digikod.net>
-References: <20240227110550.3702236-1-mic@digikod.net>
- <Zd4OlL1G3t1D3TgC@google.com>
+	s=arc-20240116; t=1709807122; c=relaxed/simple;
+	bh=LMPDBjPzV/03FWcMVBmr1R3CkjP83OSAXDFLuj0Xg6A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fOw55r7P77zSOQv9MKXB06X+ad6E6cLRslXflrenE53ln+5NSOR8UFCIVouw9Ohk7jg9/+rXhuLCtKMXq/1SH2ouLI0wsaUN1NRHJHQLgSzksbY/XSSgCGRydqhRGo0rz+nqTeWV8vme15JSVn5P+O9kPFvsRjJ7lQxpMO8gkuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33db19538d0so169988f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 02:25:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709807118; x=1710411918;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LX71Wf074V1/LsC8TNu4ogtheEle/1fxXGYHlIyeoVo=;
+        b=rapGnbgEEXlntUAxDLEe67kcFcFtcwYrRt2GabA6XenAipDthf79ETlSpDJVT/q2dO
+         QeUZdCHjH9nmdPbqBIcfMXIfoR5zs4kFGcilKw5R0/rLABIbQQD6pamDECCXN/5986f3
+         p+xCAdbkmKMQNGAsGSAzV2N83t224zcoEBParntDKAbkkPvuGFcvHdZw+GxFM0cT0Q1i
+         jGHNdXS2FOkMOKhEZd4NFYS20Mw8bw2GwH/YfqCq3j/0wE8hGerFkMQw/cGkzpExiclB
+         6d7iDEw+RIS435aoEfltXyYUOjXDgCxCPtqwyyeNXKDwLHPvQAMEvL053hMrwpV9yRkW
+         wtYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/SlasBJljvz2mibTZclg8RrDpCrDnoZ7JJsKVKOLzbt9Ac3nzwmYAHg4cf3ECg0czlbn7UPwnun7ZMbhCesNdyDb4g8mTZbLnKCLI
+X-Gm-Message-State: AOJu0YwKLvorqMi2+az6sbOCRDbLPww4ZVHDYWo5j+qfhkutYcywrUh+
+	4Xj79hXPyuQ03vmLQs0dtQFuAsQDH+eu2vkyjZASNZQJKzuXjQbK
+X-Google-Smtp-Source: AGHT+IGrxxiU6KmuJ1vc+U5CzL+knJ39wPcNZ/oyZhgYKvZD0scHVdJSNfxfSv1d7eLKlT5APcZ6zw==
+X-Received: by 2002:adf:fe4f:0:b0:33e:55e8:5319 with SMTP id m15-20020adffe4f000000b0033e55e85319mr1200107wrs.2.1709807118353;
+        Thu, 07 Mar 2024 02:25:18 -0800 (PST)
+Received: from [10.100.102.74] (46-117-80-176.bb.netvision.net.il. [46.117.80.176])
+        by smtp.gmail.com with ESMTPSA id r12-20020adfe68c000000b0033df5710fabsm19854052wrm.44.2024.03.07.02.25.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 02:25:18 -0800 (PST)
+Message-ID: <83bca01f-fc34-405b-9f2e-8079130400ce@grimberg.me>
+Date: Thu, 7 Mar 2024 12:25:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] nvme-fc: do not retry when auth fails or
+ connection is refused
+Content-Language: en-US
+To: Hannes Reinecke <hare@suse.de>, Daniel Wagner <dwagner@suse.de>
+Cc: James Smart <james.smart@broadcom.com>, Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240221132404.6311-1-dwagner@suse.de>
+ <20240221132404.6311-3-dwagner@suse.de>
+ <d5b3d5b2-ec27-4057-aa76-63fe17066cfc@suse.de>
+ <sqmla42yoidail73xukhxb6uoyayo66pxpdlrhns3v533wm7wy@ppyr7t5gk3u3>
+ <609e0031-e97c-466b-8cbd-47755374b117@suse.de>
+ <3xhhdconprn3vvkky4yj4iazku4eiqxl6l6rw6z5tivvdjwaby@ts7satqbih7w>
+ <hxr2hztb64dank3jvbnrlciaebo4k2qkkrg3brhrppizeyelpo@ewupxurl7iqm>
+ <5d67a55e-e979-4c3c-8dcc-597cb13c7c9d@suse.de>
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <5d67a55e-e979-4c3c-8dcc-597cb13c7c9d@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zd4OlL1G3t1D3TgC@google.com>
-X-Infomaniak-Routing: alpha
 
-CCing Alejandro
 
-On Tue, Feb 27, 2024 at 05:32:20PM +0100, Günther Noack wrote:
-> On Tue, Feb 27, 2024 at 12:05:49PM +0100, Mickaël Salaün wrote:
-> > Extend the kernel support section with one subsection for build time
-> > configuration and another for boot time configuration.
-> > 
-> > Extend the boot time subsection with a concrete example.
-> > 
-> > Update the journalctl command to include the boot option.
-> > 
-> > Cc: Günther Noack <gnoack@google.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> > ---
-> > 
-> > Changes since v1:
-> > * New patch, suggested by Kees Cook.
-> > ---
-> >  Documentation/userspace-api/landlock.rst | 57 +++++++++++++++++++++---
-> >  1 file changed, 51 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/Documentation/userspace-api/landlock.rst b/Documentation/userspace-api/landlock.rst
-> > index 2e3822677061..838cc27db232 100644
-> > --- a/Documentation/userspace-api/landlock.rst
-> > +++ b/Documentation/userspace-api/landlock.rst
-> > +Boot time configuration
-> > +-----------------------
-> > +
-> >  If the running kernel does not have ``landlock`` in ``CONFIG_LSM``, then we can
-> > -still enable it by adding ``lsm=landlock,[...]`` to
-> > +enable Landlock by adding ``lsm=landlock,[...]`` to
-> >  Documentation/admin-guide/kernel-parameters.rst thanks to the bootloader
-> >  configuration.
-> 
-> I would suggest: s/thanks to/in/
 
-OK
+On 23/02/2024 13:58, Hannes Reinecke wrote:
+> On 2/22/24 18:02, Daniel Wagner wrote:
+>> On Thu, Feb 22, 2024 at 08:45:04AM +0100, Daniel Wagner wrote:
+>>> On Thu, Feb 22, 2024 at 07:46:12AM +0100, Hannes Reinecke wrote:
+>>>> On 2/21/24 17:37, Daniel Wagner wrote:
+>>>>> On Wed, Feb 21, 2024 at 04:53:44PM +0100, Hannes Reinecke wrote:
+>>>>> In this case yes, I've tested on top of this patch. This breaks 
+>>>>> the loop
+>>>>> where the provided key is invalid or is missing. The loop would happy
+>>>>> retry until reaching max of retries.
+>>>>
+>>>> But that's to be expected, no?
+>>>
+>>> Why? If the key is wrong/missing it will be likely wrong/missing the
+>>> next retry again. So what's the point in retrying?
+>>>
+>>>> After all, that's _precisely_ what
+>>>> NVME_SC_DNR is for;
+>>>> if you shouldn't retry, that bit is set.
+>>>> If it's not set, you should.
+>>>
+>>> Okay, in this case there is a bug in the auth code somewhere.
+>>
+>> With the change below nvme/041 also passes:
+>>
+>> modified   drivers/nvme/host/fabrics.c
+>> @@ -467,7 +467,7 @@ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
+>>           if (result & NVME_CONNECT_AUTHREQ_ASCR) {
+>>               dev_warn(ctrl->device,
+>>                    "qid 0: secure concatenation is not supported\n");
+>> -            ret = NVME_SC_AUTH_REQUIRED;
+>> +            ret = NVME_SC_AUTH_REQUIRED | NVME_SC_DNR;
+>>               goto out_free_data;
+>>           }
+>>           /* Authentication required */
+>> @@ -475,7 +475,7 @@ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
+>>           if (ret) {
+>>               dev_warn(ctrl->device,
+>>                    "qid 0: authentication setup failed\n");
+>> -            ret = NVME_SC_AUTH_REQUIRED;
+>> +            ret = NVME_SC_AUTH_REQUIRED | NVME_SC_DNR;
+>>               goto out_free_data;
+>>           }
+>>           ret = nvme_auth_wait(ctrl, 0);
+>> @@ -540,8 +540,9 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, 
+>> u16 qid)
+>>           /* Secure concatenation is not implemented */
+>>           if (result & NVME_CONNECT_AUTHREQ_ASCR) {
+>>               dev_warn(ctrl->device,
+>> -                 "qid 0: secure concatenation is not supported\n");
+>> -            ret = NVME_SC_AUTH_REQUIRED;
+>> +                 "qid %d: secure concatenation is not supported\n",
+>> +                 qid);
+>> +            ret = NVME_SC_AUTH_REQUIRED | NVME_SC_DNR;
+>>               goto out_free_data;
+>>           }
+>>           /* Authentication required */
+>> @@ -549,7 +550,7 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, 
+>> u16 qid)
+>>           if (ret) {
+>>               dev_warn(ctrl->device,
+>>                    "qid %d: authentication setup failed\n", qid);
+>> -            ret = NVME_SC_AUTH_REQUIRED;
+>> +            ret = NVME_SC_AUTH_REQUIRED | NVME_SC_DNR;
+>>           } else {
+>>               ret = nvme_auth_wait(ctrl, qid);
+>>               if (ret)
+>>
+>> Is this what you had in mind?
+>
+> Which, incidentally, is basically the patch I just posted.
 
-> 
-> > +For example, if the current built-in configuration is:
-> > +
-> > +.. code-block:: console
-> > +
-> > +    $ zgrep -h "^CONFIG_LSM=" "/boot/config-$(uname -r)" /proc/config.gz 2>/dev/null
-> > +    CONFIG_LSM="lockdown,yama,integrity,apparmor"
-> > +
-> > +...and if the cmdline doesn't contain ``landlock`` either:
-> > +
-> > +.. code-block:: console
-> > +
-> > +    $ sed -n 's/.*\(\<lsm=\S\+\).*/\1/p' /proc/cmdline
-> > +    lsm=lockdown,yama,integrity,apparmor
-> > +
-> > +...we should configure the bootloader to set a cmdline extending the ``lsm``
-> > +list with the ``landlock,`` prefix::
-> 
-> Nit: Is the double colon at the end of this line accidental?
-> (It does not appear before the previous code block.)
-
-The "::" creates an implicit text block with the following text.  For the
-other block I used an explicit code-block, which then doesn't require
-this "::".
-
-> 
-> > +
-> > +  lsm=landlock,lockdown,yama,integrity,apparmor
-> > +
-> > +After a reboot, we can check that Landlock is up and running by looking at
-> > +kernel logs:
-> > +
-> > +.. code-block:: console
-> > +
-> > +    # dmesg | grep landlock || journalctl -kb -g landlock
-> > +    [    0.000000] Command line: [...] lsm=landlock,lockdown,yama,integrity,apparmor
-> > +    [    0.000000] Kernel command line: [...] lsm=landlock,lockdown,yama,integrity,apparmor
-> > +    [    0.000000] LSM: initializing lsm=lockdown,capability,landlock,yama,integrity,apparmor
-> > +    [    0.000000] landlock: Up and running.
-> > +
-> > +Note that according to the built time kernel configuration,
-> 
-> s/built time/build time/
->                  ^
-
-OK
-
-> 
-> It feels like the phrase "according to" could be slightly more specific here.
-> 
-> To paraphrase Alejandro Colomar, "Note that" is usually redundant.
-> https://lore.kernel.org/all/0aafcdd6-4ac7-8501-c607-9a24a98597d7@gmail.com/
-> 
-> I'd suggest:
-> 
->   The kernel may be configured at build time to always load the ``lockdown`` and
->   ``capability`` LSMs.  In that case, these LSMs will appear at the beginning of
->   the ``LSM: initializing`` log line as well, even if they are not configured in
->   the boot loader.
-
-OK, I integrated your suggestion.  I guess `capability` is not really
-considered an LSM but it would be too confusing and out of scope for an
-user documentation to explain that.
-
-> 
-> > +``lockdown,capability,`` may always stay at the beginning of the ``LSM:
-> > +initializing lsm=`` list even if they are not configured with the bootloader,
-> 
-> Nit: The man pages spell this in two words as "boot loader".
-
-OK, I'll use "boot loader" too.
-
-> 
-> 
-> > +which is OK.
-> > +
-> > +Network support
-> > +---------------
-> > +
-> >  To be able to explicitly allow TCP operations (e.g., adding a network rule with
-> >  ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
-> >  (``CONFIG_INET=y``).  Otherwise, sys_landlock_add_rule() returns an
-> > 
-> > base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
-> > -- 
-> > 2.44.0
-> > 
-> 
-> Reviewed-by: Günther Noack <gnoack@google.com>
-
-Thanks!
+Reading this, the patchset from Hannes now is clearer.
+Isn't the main issue is that nvme-fc tries to periodicly reconnect
+when failing the first connect? This is exactly what the test expects
+it to do right?
