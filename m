@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EB9128806;
-	Thu,  7 Mar 2024 13:38:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A1E12D216;
+	Thu,  7 Mar 2024 13:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709818733; cv=none; b=sRx+8GPwSVXFZ8l2aEfpIm0e2qs3UEO/rFTbNHkms6hANP406xWuURNy6IFvWjwfP0kPShHmb+M207Swpe70Mf06DsPeY9BGkercOoCIvxG2Jr8m2MW+3I39Xky39wwQgBHcJLxa8MfhZMipEiVYtyFFkDtg8gFahqePQ6pKKZ8=
+	t=1709818736; cv=none; b=THqa9H8zwI6CnSL0SAPgGku53MceDoRanHMYE7YQES/acmT+h9Te6tY25QQE37or1iQEVEfIJ/SxM91ezloqjbMs44A4FYDb6Kdlrsb2PRcGJ2bslMTUHtnOdipyrkbbvAcee4Bat6KuDp3bGT1wsDSVsIWdZem7gNATyF1URlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709818733; c=relaxed/simple;
-	bh=jdziFFhymjkKWVH2L66KHJLIKy2BknU2Y6GQbKeQUN0=;
+	s=arc-20240116; t=1709818736; c=relaxed/simple;
+	bh=QOIq153Hh97YArqMO6ndMKTIDS/Bu4Z0Gow+bUdmicI=;
 	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=eTvBP5V6APsXRDmkuImSFMEjbN1vnJzQyApF/fYIyqjfdSwVddiwef/m7AF5p3mHHwgEbM6iJVP/T2WuPoGWTyAYy7zqbc3d4Q3nMiky8pwbnNVtZO1oeFYxxPbS2DPC+o1S8RtogCKwKFNsVeMZI8Rz9A2Se/MMnYHfnfu8bX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZURRjwF; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=Ai682nHZEQAe8XUqoL1mrcG/cQaRg4ToqyYRRA6u7KjyEhCvVF6CMU+sXiFtbCZ/q1N0jCVtcqR7azfkzmAQxY0wVe7phZGg0c1HL9CNoiZlOPTChyA6Wmapvtq3cxiAGSt+/+4jW8L8XxTsqwRCKnBMPRJrILettP8aWf5xTXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYe5b9I6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZURRjwF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A13C433C7;
-	Thu,  7 Mar 2024 13:38:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYe5b9I6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51378C433F1;
+	Thu,  7 Mar 2024 13:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709818733;
-	bh=jdziFFhymjkKWVH2L66KHJLIKy2BknU2Y6GQbKeQUN0=;
+	s=k20201202; t=1709818735;
+	bh=QOIq153Hh97YArqMO6ndMKTIDS/Bu4Z0Gow+bUdmicI=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=EZURRjwFB6Gt7MazyGetYAEDZL/lr9tOV8UGUjY3V/0VSV11g+uGlqg+v7EiLtZV/
-	 BtjbRK0Iwoqh58ZgA3CdcQX84x2D6BX+RnLJ05UX63NrG/KOZzSbhfSzhPDd6Mi4Be
-	 FakJCatHxob98B+VZRFUls/7L1xD69bs07V+zYQR5bRlVwbsuCI3iVzd1+2ZtpPDG2
-	 eib4cAZTIz9b2oGNI1tpvWBW/mH/5gsTchrX16H2JhihpXGPU0i55WbQF8sdPb+Ig2
-	 XwBfFY+d1IWdJiUy4exyAQpwoHlBRI8wziWhbPzN43d11PHd/bCyou8/D+g/s0bAjD
-	 yTECBlR97r0Bw==
-Date: Thu, 07 Mar 2024 07:38:51 -0600
+	b=QYe5b9I6O512SuBx+pMc36xCatZ7plD9jkJUTPdM4VE2w1M5NU5HSNzEqZaTjYzNz
+	 e77JAePu4bGHeX3o00+lpqMwKsETLSKjothuTlX8EYemEkd4s+Pi7OTGwUU43XxaBv
+	 I4PYhg2Ppz++WdTcqIofwVVpk0SU4aH32+ogjWV9suVuXfpHnCxGhoufySCTk2asG8
+	 3cQFB7M06hoBzi/85bLoyh+TkHQPbfWIj9m2ZN/ESAZ9VRBF7JagoNwr+JKst21m5H
+	 CrTr/cJtN3qzS9hMsWEF7hLz4ovLJM3lxu6bn/uE2oZBffBRy/wPBwy3W8JyxubY6r
+	 QMsif1rAmhqgQ==
+Date: Thu, 07 Mar 2024 07:38:54 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -37,30 +37,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Rob Herring <robh@kernel.org>
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-arm-kernel@lists.infradead.org, shane.chien@mediatek.com, 
- nicolas.ferre@microchip.com, perex@perex.cz, allen-kh.cheng@mediatek.com, 
- linux-sound@vger.kernel.org, dianders@chromium.org, 
- krzysztof.kozlowski+dt@linaro.org, kernel@collabora.com, 
- matthias.bgg@gmail.com, alpernebiyasak@gmail.com, conor+dt@kernel.org, 
- linux-kernel@vger.kernel.org, tiwai@suse.com, eugen.hristev@collabora.com, 
- nfraprado@collabora.com, arnd@arndb.de, linux-mediatek@lists.infradead.org, 
- amergnat@baylibre.com, claudiu.beznea@tuxon.dev, frank.li@vivo.com, 
- zhourui@huaqin.corp-partner.google.com, wenst@chromium.org, 
+Cc: matthias.bgg@gmail.com, eugen.hristev@collabora.com, 
+ devicetree@vger.kernel.org, nfraprado@collabora.com, 
+ claudiu.beznea@tuxon.dev, zhourui@huaqin.corp-partner.google.com, 
+ broonie@kernel.org, wenst@chromium.org, dianders@chromium.org, 
+ shane.chien@mediatek.com, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, 
+ allen-kh.cheng@mediatek.com, shraash@google.com, frank.li@vivo.com, 
+ maso.huang@mediatek.com, perex@perex.cz, jiaxin.yu@mediatek.com, 
+ linux-mediatek@lists.infradead.org, u.kleine-koenig@pengutronix.de, 
+ alsa-devel@alsa-project.org, trevor.wu@mediatek.com, 
+ nicolas.ferre@microchip.com, linux-sound@vger.kernel.org, 
+ amergnat@baylibre.com, kernel@collabora.com, tiwai@suse.com, 
+ jarkko.nikula@bitmer.com, linux-arm-kernel@lists.infradead.org, 
  kuninori.morimoto.gx@renesas.com, 
- xiazhengqiao@huaqin.corp-partner.google.com, trevor.wu@mediatek.com, 
- devicetree@vger.kernel.org, jarkko.nikula@bitmer.com, 
- ckeepax@opensource.cirrus.com, lgirdwood@gmail.com, shraash@google.com, 
- alsa-devel@alsa-project.org, u.kleine-koenig@pengutronix.de, 
- jiaxin.yu@mediatek.com, broonie@kernel.org, maso.huang@mediatek.com
-In-Reply-To: <20240307114445.196981-20-angelogioacchino.delregno@collabora.com>
+ xiazhengqiao@huaqin.corp-partner.google.com, ckeepax@opensource.cirrus.com, 
+ alpernebiyasak@gmail.com, arnd@arndb.de, krzysztof.kozlowski+dt@linaro.org, 
+ conor+dt@kernel.org
+In-Reply-To: <20240307114445.196981-21-angelogioacchino.delregno@collabora.com>
 References: <20240307114445.196981-1-angelogioacchino.delregno@collabora.com>
- <20240307114445.196981-20-angelogioacchino.delregno@collabora.com>
-Message-Id: <170981873007.2495472.10889414408252370603.robh@kernel.org>
-Subject: Re: [PATCH v2 19/22] ASoC: dt-bindings: mt8192: Document
+ <20240307114445.196981-21-angelogioacchino.delregno@collabora.com>
+Message-Id: <170981873072.2495513.10220063572625307394.robh@kernel.org>
+Subject: Re: [PATCH v2 20/22] ASoC: dt-bindings: mt8186: Document
  audio-routing and dai-link subnode
 
 
-On Thu, 07 Mar 2024 12:44:42 +0100, AngeloGioacchino Del Regno wrote:
+On Thu, 07 Mar 2024 12:44:43 +0100, AngeloGioacchino Del Regno wrote:
 > Document the dai-link subnodes and the audio-routing property, allowing
 > to describe machine specific audio hardware and links in device tree.
 > 
@@ -69,8 +70,9 @@ On Thu, 07 Mar 2024 12:44:42 +0100, AngeloGioacchino Del Regno wrote:
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->  .../sound/mt8192-mt6359-rt1015-rt5682.yaml    | 124 ++++++++++++++++--
->  1 file changed, 115 insertions(+), 9 deletions(-)
+>  .../sound/mt8186-mt6366-da7219-max98357.yaml  | 112 ++++++++++++++++--
+>  .../sound/mt8186-mt6366-rt1019-rt5682s.yaml   | 102 ++++++++++++++--
+>  2 files changed, 199 insertions(+), 15 deletions(-)
 > 
 
 My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
@@ -79,12 +81,12 @@ on your patch (DT_CHECKER_FLAGS is new in v5.13):
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.example.dtb: mt8192-sound: 'model' does not match any of the regexes: '.*-dai-link$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/sound/mt8192-mt6359-rt1015-rt5682.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/mt8186-mt6366-rt1019-rt5682s.example.dtb: mt8186-sound: 'model' does not match any of the regexes: '.*-dai-link$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/sound/mt8186-mt6366-rt1019-rt5682s.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240307114445.196981-20-angelogioacchino.delregno@collabora.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240307114445.196981-21-angelogioacchino.delregno@collabora.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
