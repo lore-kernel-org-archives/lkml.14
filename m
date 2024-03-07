@@ -1,93 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572DB139587;
-	Thu,  7 Mar 2024 19:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0763137C36
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 19:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709841068; cv=none; b=im8va4Rp5v4IIYX6plS87GTV7HTInEq7Gvwm4OquhLOk4nVd41b2KVP6stHcsTNAYVodsMCIVAu+sbaRCTQ+G5sD49T9t+SMFNmNedHLXpzGtEIGsxsy938YCgbgekNc2gUZtPz1y/Ftb/bgkQjEalMFV5VkSbMixcKEqt2ZA98=
+	t=1709841082; cv=none; b=NZK2uru6/HXy2IXv3WOrV4YTiY4TB2+qISuaCFwjgfLOuvwA/olC9TeTqQ0prefVI0OPSYuxAK7m1zn+2WVZPZU5IRoNbN2xBDms7ip0YT1sNnJULm+EeKuN4vu135BfYwWpS33w7dVQQqG6gCyRug/SBCjABpHMUPwGWVlYnG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709841068; c=relaxed/simple;
-	bh=k2iqYWkJ/g6zSAYNGIBSWfD8NyYp6rFQOmMuXPYLaRg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q4/tk9O55Nlw/MrHXMWITo3s8L/Flk+e2g6ZoeIGBLbtu5vTiW1za+M/b+/iSpWv9S7QZAxdCwKNM78I0s/2jdRAGqCpgN6iABE62hmpqLqW6xBo4Y6sCU/VP0xpaHAbECmUEULKVKqkxBX0sGC96GHdRgLA+uB0O4VzfCNGtv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnX7J8sl; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709841082; c=relaxed/simple;
+	bh=97urD+vBImmdNRQsyW72trebuT9te7c4DAnEjaMVfSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XCQ5cipNExpHnk9xzTeOdqbUg6WjlR/8E+jV79wtXkCO0ojvaDVEnBDUNwyzXX0Xg6U3LsYu6+lrjgmfEi0oRAGAvHC5LNoTEGdhyqUooBgH+i1E8Hu95XovF/VVIDKHTN1zpfSr20wCCcyTHmIHWiuJ3rNVL6EBVcLUIbJBRVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kapLg7TB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnX7J8sl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709841066; x=1741377066;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=k2iqYWkJ/g6zSAYNGIBSWfD8NyYp6rFQOmMuXPYLaRg=;
-  b=TnX7J8slgxK0ULboGSoY8V/WGxT4iKqDTq0MCwpWXSNQWqfpKj2isMIi
-   Ywo6zJxkRabpvYoH7zhRf7qOnyedvqsNE/NNy3WF/f2l17jA8S1fFT+PO
-   IcIY3lP8hzkHbG9j0rY4pOpykzFGRkoxwe2YZKLTVy+dEjXadNb5wrebg
-   S8p+un4aUd/cSz0p40khXn2jDo2cRks/wiES63x2TG/6DTt9XQKe5Vwce
-   UIZ8sGf1093qBApPdI0f7R1rT3zgRqMoIkQhcHBJua7so2BGovefnQeby
-   tgsUHcdzlSZurwWY4Cy6V4ugZTV+WRVhevXzvClS6Jhla6H7V/CBYqCO4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4457058"
-X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
-   d="scan'208";a="4457058"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 11:51:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="937046514"
-X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
-   d="scan'208";a="937046514"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2024 11:50:59 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 22889169; Thu,  7 Mar 2024 21:50:58 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Mark Brown <broonie@kernel.org>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v3 3/3] spi: pxa2xx: Use proper SSP header in soc/pxa/ssp.c
-Date: Thu,  7 Mar 2024 21:47:47 +0200
-Message-ID: <20240307195056.4059864-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240307195056.4059864-1-andriy.shevchenko@linux.intel.com>
-References: <20240307195056.4059864-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kapLg7TB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACEBC43390;
+	Thu,  7 Mar 2024 19:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709841082;
+	bh=97urD+vBImmdNRQsyW72trebuT9te7c4DAnEjaMVfSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kapLg7TBtniwoZ0MnEPUDezQYDL9b5LaIdoEn6UhIeM8/TaFTXRYAKl9AN1SBA3LU
+	 etRw0xnEHXOJWqIU+ozysEaGbAHjg+VvQhv0POE/clZFMIjT+6ppNfneS//YL0t/th
+	 LSJMkZvhiFxUb7rSCfJZIUftSWNhzrCBeU2oVK8Q75vfi7VQBG7R/XyhAcc7fxVg6S
+	 fcDM6fp8UN+dKvsBi6/2vySAM8+MfzJBNGTkLu+TdrIpMbk6PyFsM7TuFEzx4YduVV
+	 yhuo5Tkj6w9wPmW+YB4vdCrUCfBZlRJwIS+Rwb5AnajLjNMGg+BIzSobbPVEdKxnO+
+	 IAoiAa4f5R3Nw==
+Date: Thu, 7 Mar 2024 12:51:19 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Len Brown <lenb@kernel.org>
+Cc: linux-nvme@lists.infradead.org, maxg@mellanox.com, axboe@kernel.dk,
+	hch@lst.de, sagi@grimberg.me, linux-kernel@vger.kernel.org,
+	Len Brown <len.brown@intel.com>
+Subject: Re: [PATCH] nvme: Re-word D3 Entry Latency message
+Message-ID: <Zeoat2z25BXxA7qA@kbusch-mbp>
+References: <63ff4f9aedcb73ec5d8cc7f3e77ec4c72d72b4ae.1709839023.git.len.brown@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63ff4f9aedcb73ec5d8cc7f3e77ec4c72d72b4ae.1709839023.git.len.brown@intel.com>
 
-There is nothing from pxa2xx_spi.h used by soc/pxa/ssp.c.
-Replace it with pxa2xx_ssp.h.
+On Thu, Mar 07, 2024 at 02:17:34PM -0500, Len Brown wrote:
+> From: Len Brown <len.brown@intel.com>
+> 
+> Some words are alarming in routine kernel messages.
+> "timeout" is one of them, so avoid using it.
+> 
+> Fixes: 1a3838d732ea ("nvme: modify the debug level for setting shutdown timeout")
+> 
+> Suggested-by: Keith Busch <kbusch@kernel.org>
+> Signed-off-by: Len Brown <len.brown@intel.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/soc/pxa/ssp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Our messages must have crossed:
 
-diff --git a/drivers/soc/pxa/ssp.c b/drivers/soc/pxa/ssp.c
-index 7af04e8b8163..854d32e04558 100644
---- a/drivers/soc/pxa/ssp.c
-+++ b/drivers/soc/pxa/ssp.c
-@@ -25,7 +25,7 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/platform_device.h>
--#include <linux/spi/pxa2xx_spi.h>
-+#include <linux/pxa2xx_ssp.h>
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
--- 
-2.43.0.rc1.1.gbec44491f096
+  https://lore.kernel.org/linux-nvme/20240307165933.3718589-1-kbusch@meta.com/T/#u
 
+I haven't been receiving random messages from the list lately either. Or
+maybe I cc'ed the wrong email.
+
+Anyway, we just sent the nvme-6.9 pull request today, so I'll wait a few
+more days before starting the next batch.
