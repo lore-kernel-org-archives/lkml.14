@@ -1,103 +1,106 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5FC1EB41
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 17:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E4D1BDDB
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 17:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709834353; cv=none; b=SPaw0GdX1QcLLbixPer7l8I+zjwgkDy1V3F9PBCUkzWoDWidf33c0rvGiLPwtpzywuMwdIIgymNcZeB2CdsBzGV43QWz6VOdchwisQKAlH/xIJODJfvxmxqq+Y8v9tvom5GfY+5825nmJ/y4WTHyykhy4QVPX7uOupn5oC+RJPU=
+	t=1709834358; cv=none; b=lwnxqHRbwdBWUGGJfCAbEjertfOoMgImWm7TeSIH2KjMI8WAy9B6iOCMwzteJTpSXY344JdS2w0OUR9hTRUkYjF6pN6mIV4UgJoMJTd0wMGpx16y7DeCRu6xWFoDaljQdxW52zc+rgwbVohcJwdNBQjAZul3jJqs07ptGV0sWG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709834353; c=relaxed/simple;
-	bh=/F3L6EUgDhWCdLmZZ9eUNAUZH3WBSnnyUUVDdWplyBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mSKruFQ6xPf3ly8uEgJdakKWxmebDm/xvQz+sDrbSJ698ZM7TL/gHc7JErvMNRVkhhXwG242hcA00YlP1jqYv8YsnrRHxHxm2ENgOsXpfEw/tvpjoWOZSTxnSkpWwBDXWKmYMZvbkfHrc34yOg71Kf5FXC0MTeFoDqX1aK5fwZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1riI1K-0001YB-T9; Thu, 07 Mar 2024 18:59:06 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1riI1K-004zCE-DM; Thu, 07 Mar 2024 18:59:06 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1riI1K-001SWj-13;
-	Thu, 07 Mar 2024 18:59:06 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Johannes Thumshirn <morbidrsa@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH] mcb: lpc: Convert to platform remove callback returning void
-Date: Thu,  7 Mar 2024 18:59:03 +0100
-Message-ID: <20240307175903.189283-2-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1709834358; c=relaxed/simple;
+	bh=O2hdfjlzZlZ0CPCqJt23wbPJbF7Ae0mInAc+itOKRtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7wYnShx2XVUaBfD8Cu0G852I82xdFN325F30Kg7Fz9qty7qZ9Da3ZQ8aektr8Q6KQWVlbPrD1epiH95txrWqKPPaKbqRk85BUCzzto5C1jF53kTjmi/RNKFftPHUPNCuSqpPuimaR9hfP0sVdjG4eLen5f7DAOGgKV3TErZatQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lvsqJQXD; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lvsqJQXD"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6d9f94b9186so1187270b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 09:59:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709834356; x=1710439156; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VEqlp2HgRH1JvED8C1eQ8Jd7JtBfD5vT+Rfxt4u7aG4=;
+        b=lvsqJQXDodKjSvzCkHGyvGIv590mgf5/x5L8bNeJIkKlUuhyrGYEXKSyBKohU4K58c
+         8FK2Z//BCr7b8m1Egf1qWTEoL146hwp8ibyRWEvnAgg13VrTXobJJa13emiBnrAi1sgP
+         Hj8OxNmc8Be94QSabBeN6nbcM8WDbqE2K10Uk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709834356; x=1710439156;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VEqlp2HgRH1JvED8C1eQ8Jd7JtBfD5vT+Rfxt4u7aG4=;
+        b=Hb6LMCIbyD+oRNVwKZ4OUu1WsJjDHE1ZR37RiLW227e24Hh9jmxPcqK22bnpNBLg9C
+         NrqpOGK0hYnVtBCHXbmoJjAMi6jMQrj0OSjAWMqaf88VQj1dZyFq/LupFNfjwUpdi3HE
+         GLhxFx5cQR1Z3ODxALtPiwHApslxBtLCJDDUlVF7tOba58p56ajLLvHmCjX+Xfo+cDvk
+         U2wV+ChVQYzYfptMvm1MbsEe8bwPzHCRK3ocqF3Plc9oiWZk2m9bgQmRgWFXI+qVVUwf
+         JdtyB+Pw8FI6LMzbAF3c4fVTnnwxfkpguOyKTnRBX0B4pdlN43CqQLgeWFXZH27ldpkV
+         B8jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXI6KM9YKQGEFB7GSxmRMJTsjgM9IkJLErkOdp+ga+kw7E5g1nTW8gmR5Sw5OdRnACK0nuMiHhZZp2s7godDADUWwRg7xQMf3kVRy40
+X-Gm-Message-State: AOJu0Yyd5ArtLax5vxBNngjZXdByRTuTZbGzVuR76tL8Vge2Av3cxR1o
+	sMVUTljACNVVEu/bvqy+ajxnLrnDhbIViIThqX8WWEUfvXiv4zjs7w0q5ZQ/pQ==
+X-Google-Smtp-Source: AGHT+IEOvEuUqre/6sdNhgEG9LkJsdT6YuHjsXW6DtfCKNmHlmt7CPFD+bSq/JO0jH9mi0j5BLd1wQ==
+X-Received: by 2002:a05:6a20:da87:b0:1a1:4cd2:441f with SMTP id iy7-20020a056a20da8700b001a14cd2441fmr9864304pzb.6.1709834355997;
+        Thu, 07 Mar 2024 09:59:15 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q4-20020a63e944000000b005dc1edf7371sm13198387pgj.9.2024.03.07.09.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 09:59:15 -0800 (PST)
+Date: Thu, 7 Mar 2024 09:59:14 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: linux-wireless@vger.kernel.org, johannes.berg@intel.com,
+	gregory.greenman@intel.com,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>, kuba@kernel.org,
+	Alon Giladi <alon.giladi@intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
+	Avraham Stern <avraham.stern@intel.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] wifi: iwlwifi: pcie: allocate dummy net_device
+ dynamically
+Message-ID: <202403070958.BE50CCDC@keescook>
+References: <20240307174843.1719130-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1699; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=/F3L6EUgDhWCdLmZZ9eUNAUZH3WBSnnyUUVDdWplyBA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl6gBnjAEgCQKRcr5RVHr0e9nxoys9ODmHFov4v bekggazU0SJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZeoAZwAKCRCPgPtYfRL+ Tso9CACabXtyn6SYLDvA+46dFn/oO/9a3GI7jDyyMv/0JFR8yFhAJ5GDYo80DQRtMDVgDNzZ2BJ rKSauWtrvpR0Q3QBOpCDKmX//uooygJSvuiEBxe0nYdBzy4ZrhX62AcwxVif471y0iz8Tik86Nk GWc4HVpTo171zOCQEjm36WI301/bX86PC/xNuB9NtVDlv8FCg9jOxyw/UJDwf0NnB8jml3UZxX7 8vUnkmBPuwxU3KxEWg2xiYTwpuQWCjJ5acMcGzqujkprtxWSqkLiHMlcqMkBPWIKhYcmfvx/PcG PoaaMzrokc5s8nxryJqoogWz79pR6DefBHF+giSmSpN18ytF
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240307174843.1719130-1-leitao@debian.org>
 
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is ignored (apart
-from emitting a warning) and this typically results in resource leaks.
+On Thu, Mar 07, 2024 at 09:48:31AM -0800, Breno Leitao wrote:
+> struct net_device shouldn't be embedded into any structure, instead,
+> the owner should use the priv space to embed their state into net_device.
+> 
+> Embedding net_device into structures prohibits the usage of flexible
+> arrays in the net_device structure. For more details, see the discussion
+> at [1].
+> 
+> Un-embed the net_device from struct iwl_trans_pcie by converting it
+> into a pointer. Then use the leverage alloc_netdev() to allocate the
+> net_device object at iwl_trans_pcie_alloc.
+> 
+> The private data of net_device becomes a pointer for the struct
+> iwl_trans_pcie, so, it is easy to get back to the iwl_trans_pcie parent
+> given the net_device object.
+> 
+> [1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-To improve here there is a quest to make the remove callback return
-void. In the first step of this quest all drivers are converted to
-.remove_new(), which already returns void. Eventually after all drivers
-are converted, .remove_new() will be renamed to .remove().
+Ah, nice! Thanks for doing this.
 
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
+I had to double-check the pointer-to-pointer stuff, but it makes sense
+to me now. :)
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/mcb/mcb-lpc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/drivers/mcb/mcb-lpc.c b/drivers/mcb/mcb-lpc.c
-index a851e0236464..2bec2086ee17 100644
---- a/drivers/mcb/mcb-lpc.c
-+++ b/drivers/mcb/mcb-lpc.c
-@@ -97,13 +97,11 @@ static int mcb_lpc_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int mcb_lpc_remove(struct platform_device *pdev)
-+static void mcb_lpc_remove(struct platform_device *pdev)
- {
- 	struct priv *priv = platform_get_drvdata(pdev);
- 
- 	mcb_release_bus(priv->bus);
--
--	return 0;
- }
- 
- static struct platform_device *mcb_lpc_pdev;
-@@ -140,7 +138,7 @@ static struct platform_driver mcb_lpc_driver = {
- 		.name = "mcb-lpc",
- 	},
- 	.probe		= mcb_lpc_probe,
--	.remove		= mcb_lpc_remove,
-+	.remove_new	= mcb_lpc_remove,
- };
- 
- static const struct dmi_system_id mcb_lpc_dmi_table[] = {
-
-base-commit: 11afac187274a6177a7ac82997f8691c0f469e41
 -- 
-2.43.0
-
+Kees Cook
