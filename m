@@ -1,168 +1,201 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D969D82D79;
-	Thu,  7 Mar 2024 08:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709801911; cv=fail; b=PhwDGGwqaxrTG57l/RpLOnEbfr/rSvvc8ooCgENOK7P+xjdSuchYMscj/i4+EurPiJExGzeA3q3oImnvNeL8XpFPMXy+aV/MVaWNY28lCuLm8+6MhBctoP1tVSeKM+U+q7DjODdXZct5hbUDIT+J5R3UkOE8xBDK+tk2FHR9PoU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709801911; c=relaxed/simple;
-	bh=CSCP2R7pKfOd9HzLLeQeuLUdzjwXyonVd+7la9/luYQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ev4OGYLOVwWKsSBec0VgPp+mmOg/CMDhdKtWY1c7VRc1SzAhvxUfw2bzNUeAWG702yef5DKus5GywA03lbOGJKDCSKMiQJ7I2dNVPEV2fMv/fj039RBGZ9XYy3TdBdwuBywrcgzY+POpGIA06FGH/4SFV0JvFbmSJ9Rq8DIAOCM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZbcXjC9; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZbcXjC9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709801910; x=1741337910;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=CSCP2R7pKfOd9HzLLeQeuLUdzjwXyonVd+7la9/luYQ=;
-  b=AZbcXjC98qcnNl5S6+Q53UraESC08I/GqVKRHt+xPMHoVGTefbWWhUVp
-   FIS2LRg+AM2e8Mr2zoBYrVO3X1R/IMRIP3YHE4S6MLUszQ1YG0SrW7lBz
-   iicLqvxFj5sZXfVy2BK8U6Ti1e219yPHmsS7JhfKr3QRVMIQiK9Qjl7Fb
-   zk79jG261fn0kLL62aSZxAmEmS2a1Qc3TrSghtSolgzeouc0sG+mppa+s
-   t3w0ozIwgRrg9YEIaGorzDXar7HZ96ImWT32UPDioq4ETBkAZUxx/KGp3
-   q1zQ0VLCfvarO7FO3H8u3tjGIoE3uDoE/ssKZoUlCCXTavzZNo0vBYoDs
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="21909594"
-X-IronPort-AV: E=Sophos;i="6.06,211,1705392000"; 
-   d="scan'208";a="21909594"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 00:58:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,211,1705392000"; 
-   d="scan'208";a="10203967"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Mar 2024 00:58:29 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 00:58:28 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 00:58:28 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 7 Mar 2024 00:58:28 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 00:58:28 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O1+XeZkjNcPvcqlDPs5M3t/fzQoXjSfxI/2upYgKLiFz+ffS6DEhXsydG92/VN237LGwmDhTE696GQiIN6d9WHDlumOKfCuhEtyw6CZY6wzfxnFVZqkDcFxF0GsXGYah+w/dnBJh88NBjWK6soBXosFvWARp0qijcSxZBc7Yne38H4wDdlP7Ul/uNppBROWwZbm5qpDOOEA+7VhesknxoRrjHtqEDCkuVq6DbA2WpHsfOZX7eScXFpqQLLKR3ZgNY6RTsD2BzUdBy4uYhyVGVaqoKKYVLe+C6knjEcUDbOnj0pAbRnXsrGckRUgIUMdfE51KDEmaU3E/15NbUXi/gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bsfben6k1ZpUhLDGcgs1DdQ8RNd96WRrcGsaW437/Vk=;
- b=lI0RTSc+j9GY1fg7paSMgny/MLZS0uuSRugvF+fYHq9onHZFSUW8kX90Y7zfAyjfB9lcDEHez7CqPG8nQhsSsSa7qiJWpfHlkQTeclg5cDUfCTUGbZLg5lN9auxgiU3eA2hWSaBJZjIoFbm4QQjxJzJrFDsvGGKmwSAGFLvg32bKXCDVo3MXuqSpsk8As8hixJoTlC3ThIfFwkFICCiy2/tmpk7VSWOPnLh4oHFfqRFmyRzYgFGT/YdeJpRFAi1km+WNzW2uFk9+nM9j63KcisJ63yQ1L15t8y2Hafo2aPrJ+9qpqpkCZRGwb0ujqiv4DNqzdExOZPnUOTziZO22Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5271.namprd11.prod.outlook.com (2603:10b6:208:31a::21)
- by DM4PR11MB6189.namprd11.prod.outlook.com (2603:10b6:8:ae::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26; Thu, 7 Mar
- 2024 08:58:26 +0000
-Received: from BL1PR11MB5271.namprd11.prod.outlook.com
- ([fe80::ca67:e14d:c39b:5c01]) by BL1PR11MB5271.namprd11.prod.outlook.com
- ([fe80::ca67:e14d:c39b:5c01%4]) with mapi id 15.20.7386.006; Thu, 7 Mar 2024
- 08:58:25 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "eric.auger@redhat.com"
-	<eric.auger@redhat.com>, "clg@redhat.com" <clg@redhat.com>, "Chatre,
- Reinette" <reinette.chatre@intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 3/7] vfio: Introduce interface to flush virqfd inject
- workqueue
-Thread-Topic: [PATCH 3/7] vfio: Introduce interface to flush virqfd inject
- workqueue
-Thread-Index: AQHacAtgWadzXuU4iEWS5e6dDSVtWbEr+w0A
-Date: Thu, 7 Mar 2024 08:58:25 +0000
-Message-ID: <BL1PR11MB5271D127336AFCE2F79F64AC8C202@BL1PR11MB5271.namprd11.prod.outlook.com>
-References: <20240306211445.1856768-1-alex.williamson@redhat.com>
- <20240306211445.1856768-4-alex.williamson@redhat.com>
-In-Reply-To: <20240306211445.1856768-4-alex.williamson@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5271:EE_|DM4PR11MB6189:EE_
-x-ms-office365-filtering-correlation-id: ef417eec-04d0-4416-ae83-08dc3e84c003
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PAY/ognY+0SU1uXdfNoLt7omduvkTCwaRuLd3b4Gwn70/ukxHfEs1vmuhxulMM/GRxl6Rv87aBAjRGDbvZxNFm+tuwhHutdkn2wRdYKo5fJaaMKR20bE3Ed+28taxTw3PMA7YC3/+Z1VDL7ueYqsX1/Ez0mzb8329rmoFDWX78FrhUfmh68t4OB8iqb+Ov9BZE4p3h313SWyiE6RWJ6WrM8NtXoe7q4eehaGCe6lEtvzGTaNL+TCTDsBHEn+j2CvqFpBuKkcOFv4EYNGM2n4WrsHcKgF+ARc3hgIuhvAgEjQuXBYVq76407taDj6HYXvAuWU/vYoXRMgGNSspr8joB1Tq1Gmsd3GE6dvcsKSjv5Jyq5Z2AZp8uOMxaacCRRR7FFNK4Ic/iuh/KB1hJ9tf19uTNITDONywxUOZxy4nCM/ViWcQzpLTiBRb+dqAtPTyUDQQghWuUg82b6SYP8SZk1yPFEEIACYxGlqQ/zfdQa8dqaO/YEgZy4GUZefJ7CjBd9+AL+tEN9WgsSXQ1Qab1T78AYVr7dq8kT17TwBypNZsnFk5SohS6XtAe1aAavStQDkyOwQtrjXi9sVG4iKzxX7eq4M10VTOrKjD6fcCeAxaTirLos1i6ZMY2eq5CCYQjxvdjnJ4kT44JJAd2hPZ5yl4lddNFocccXBzglEg3OeaScbI4rwuOlFs7Bqz2GB0gFj/qwpMltJQrfZeDlT8107dAu3BhF4FeSvfgX26bE=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5271.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xLUVw6B9zy0962LObLBd1Lg80mRCZegAvHTVrQmCPiVJML2Vg7OEinPGIhXX?=
- =?us-ascii?Q?W76Xn+oijnRZJkc5AqLyHllCx1N4+sUkoLkqfBMeuD+G3dWovEfy7CsalS25?=
- =?us-ascii?Q?UFnjUCHgG86lclkwDUDYmZmFbDNSUewOEXSsVdmgJpEXShh4O8F45D2OqGx5?=
- =?us-ascii?Q?fqa/XnE8/ru4ZrSI7bgPqJS1/S0KnFbTjs3D00PrjEh/OxVCl43aQDjzk99S?=
- =?us-ascii?Q?Cn7hg2wELX634C4ugnlFgTxXGAEkgD1aqJOvTgQ2mEyd6spMNAutPsSG392q?=
- =?us-ascii?Q?py2/Vf0laQ9x7MfMak1jXuO23EdcCtGYwxMjbsGptiJfF2f9pVP7JilxB9n+?=
- =?us-ascii?Q?+N/P/mVIhJVulyFFGOs5vpipRgDreXUPdSd/4Y38KJ1XfFHmlkOODVRoa8hV?=
- =?us-ascii?Q?zLacO3fGhwHnpeheQibK9gGb92Htn/K4eNXT5MdyWZsYhMu/4gkUaahq0IJg?=
- =?us-ascii?Q?4vFCv2u2IfREcmheuGUKynrvNKtCtca9cgDiYyhG9XtnoPKJ7PkRGwWdyjdk?=
- =?us-ascii?Q?M1BvKsBmQC/P9ywTfcsQkwgI0ed+bvEWm01wRehKXeyb3OTLjDMI0m0H2sDL?=
- =?us-ascii?Q?U8KhVhB8BgfuOO2YF8aJLeYNV7y/RO+S9iFISYDj72KrRlsT9yDNpy8RZgAH?=
- =?us-ascii?Q?eVi5C7qAMTile3Gt5NPP6siqjlC75OrmwgK6igyfP4G9W6HlFh7qNIDXyInH?=
- =?us-ascii?Q?efQo35o2808RHn16s4flLe+mplLrEZ/MYZFavbdYhPVvkpEMfjnqPg4kgAgn?=
- =?us-ascii?Q?9nNoCoPV0NJNrbbJnt6CtlsW0xmqT45wlrXKY4UZMjcRlAdjHDYmPpsjt6O+?=
- =?us-ascii?Q?2YfolUZHXoNhPhgJDJyVvi9eV90wIZuUy9KOrU3qgoWCRxkZW4mN3rZQBW9p?=
- =?us-ascii?Q?MONb0TqXo1lFsHAe0o6HWRxCLAe/kXpFQr0s8xm9eFpzlvga4hqhVxP/gZnA?=
- =?us-ascii?Q?Rjh3tlf4a2BNT7uBgqn5uvNzzipyo6M7YPASQ6aYJADzxZKHVijOKAPRGyu0?=
- =?us-ascii?Q?heIBud69LB7v7GvsxVHVJXJ+D4iWUUKsDwWti+jYDZr7FiXNzzZTlbZywWDY?=
- =?us-ascii?Q?AS33SWkAJDbaNqRCT0l9+7NsHixWYZgPqyPxwiFKY0pvItjGBzz3tarmbtCa?=
- =?us-ascii?Q?921QggANR2nSJUsAeGBBRAhoPNsuRPRSAT+tlLOyqDQV5abK1yIeHMRrRWjY?=
- =?us-ascii?Q?MErAuIhoIfJUvtSW2zxI52iCWiR5ps2kMotLz6s6vwlc7bq4/0SAfsg7nN9Y?=
- =?us-ascii?Q?MsDKoL5bEpRIvwVJNDstYlnjXAzHbIgqGl4x6FGfYRnWSOG8QoYE1/mOsw0R?=
- =?us-ascii?Q?0CWV71SW4uZ+y80OvFLeIFUvzBXJlgpsOauS7PyhLEpm1ImXKbfAI99gqt9f?=
- =?us-ascii?Q?nrN0uxPiJ2mXZ+wNB7m6ByY+Qd9GhELkH9etoCFveB12HKlrmUs1+rmVSBcd?=
- =?us-ascii?Q?nfVslP6ZFa/UWoxp8kU49UjUsATG8FxKU54PtV/oQjO3dwRvCOGnljQjvcXl?=
- =?us-ascii?Q?Y6GyOFdlr7BI2iX9IO3CubZeMV7rA8wx9a4m3GFwXhAeddBqgiN/A3XSAr28?=
- =?us-ascii?Q?q/6HvnyB2DJXoeqZhtgx4QQEWtRSAQjpGyu5Y/on?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F0482D7A;
+	Thu,  7 Mar 2024 08:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709801917; cv=none; b=DcJj2MoT0Gauz0wrHq2FYry/GEBVO2AAmCP8jpwHF0JGcKGKOpJJXLaohv8fzI0oimbv5Y+k4sAf22nZ9GvRBwyiuZx6wn4xBMCG3sXghaaPgUN2AQTXhsKvnp1ijBMrNMryZtkSObdmWN6dO0n8X9VVE21+l6nHK2AENcbimXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709801917; c=relaxed/simple;
+	bh=+oiVEdG9b2XuStWqMFk9KRco76DNKJfWP/ntPUBoLOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sM6FrrkH4yuGlTDM9x51nGY7/fyllhb+cifko+LeYUuNxd93TGv2mSFAqk3eu4UHEU3Bjxrih78I5859BvGQXicrn3Psz6XcYKxOxUzgAuf+G6rcwioUaFlxJzFUaYE9azNTvjD6YEZ+LHmTLpReTCmh70q/YWc02FU0KFvM4YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6098ba9959aso7090867b3.2;
+        Thu, 07 Mar 2024 00:58:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709801913; x=1710406713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jn5dxvQybAgLdJsYDY294tghTuyvSzt1guRy78x0Iu4=;
+        b=GRWN5jDUxW7BdbQfel+krA1hpTHw9ph0QYhSlGLCuWVRq/oNiFQNbRG5GeW0WrX8nF
+         yYUUIWsI+kY/CGimKLvZKsDKwJEZVrNf5YTGn8dANYHMZgUJ2WFFpJqMTzT/UL2/MOfr
+         fcQUZ76af8we8PE2qQD0g3OZU6ixX0XTyLea5YBEOO12rYE4bjIGbIzhyK3p9BYwvgQ0
+         G0zqe3MuFZYHeLTCVjgM/yW84hqRvB7s8eAnQrj+jefvPDwtoyYzOw0uBZtFcUgjbEe2
+         XB0Gjbpi81+n2n+hVwa/9Jcu+YHE/4sxT78WNfbUK5jyXPyGE7XqNInL6rYS5ssL2O1D
+         2aCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWe4y+Lpc4mnJqjoSiMJk9uv1C1hP4E7AkomR+estWnAk43a0yeRm3xPjG3dCfX8Eq26JcbsUYsaACeWHTqy8UvE+l7IkjnY6HEn4gL4u4wJTw40QeBVOjFkuFOEe9dWQm3PG5pj88QAG4iRLh2/84FPSKVb2WgpDKaF4waJ0xJizKYxWC9vECcdpqvnRDrKMOh/frug/Zk9GvR7HElxSDTknajLce8ZIlL
+X-Gm-Message-State: AOJu0YyWfsEmkR5IyDU0jmDBqP3mqZHOYhRSqw4Y5rB5mApZZzWeahjs
+	Twp3rtHpbSz6r1dzwjpVnuH2PcdGuB1z61WPYLk8GP3DLY07/yD5whsr99Ssssk=
+X-Google-Smtp-Source: AGHT+IFzuo4h7857zle3kZbOxTq9bdIy+FRpvbRqlQGkH55w8OCprhGIPZPjt0z4R8AA9K+MZGmwrA==
+X-Received: by 2002:a0d:efc3:0:b0:608:8a6b:b213 with SMTP id y186-20020a0defc3000000b006088a6bb213mr17831923ywe.33.1709801913598;
+        Thu, 07 Mar 2024 00:58:33 -0800 (PST)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id r79-20020a819a52000000b006049c16b843sm4088542ywg.145.2024.03.07.00.58.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 00:58:33 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-609f060cbafso4614657b3.0;
+        Thu, 07 Mar 2024 00:58:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX5fEMiGF5L+bZpytGdMeJpN8OjhpVP28JE903Xut49PccBB8AuWAqe6sMHOkOn0OeMUplMrasIhytdch6XgczFA2+FuHT7+t/TNvjXbLsixf9Jy8kceORKyOmFmPKbBEjrLu0p6jBbgYpS6KPjpHOO0+5iC1MafdtzeMJVJReFI3faZfr9987HqHt/F+c11NM6Vmg1tk4OkEHrW66j0hMGiWsULgraZGu1
+X-Received: by 2002:a05:690c:398:b0:609:3c37:a624 with SMTP id
+ bh24-20020a05690c039800b006093c37a624mr20123653ywb.35.1709801912626; Thu, 07
+ Mar 2024 00:58:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5271.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef417eec-04d0-4416-ae83-08dc3e84c003
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2024 08:58:25.7699
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7O4IK55mDfR8WVk7DirG+0XEYiAPWg/6l6/5U+YnBvlGboxqqlHWArl56Kf3O4zrO3D4+XTPMPj81e8HEEJw1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6189
-X-OriginatorOrg: intel.com
+References: <20240306231007.13622-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240306231007.13622-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240306231007.13622-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 7 Mar 2024 09:58:21 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVQcyrwTCTukhLFiaawDgbKwZWcWCO7bc1FfFS-t=kcqg@mail.gmail.com>
+Message-ID: <CAMuHMdVQcyrwTCTukhLFiaawDgbKwZWcWCO7bc1FfFS-t=kcqg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: serial: renesas,scif: Validate
+ 'interrupts' and 'interrupt-names'
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Thursday, March 7, 2024 5:15 AM
->=20
-> In order to synchronize changes that can affect the thread callback,
-> introduce an interface to force a flush of the inject workqueue.  The
-> irqfd pointer is only valid under spinlock, but the workqueue cannot
-> be flushed under spinlock.  Therefore the flush work for the irqfd is
-> queued under spinlock.  The vfio_irqfd_cleanup_wq workqueue is re-used
-> for queuing this work such that flushing the workqueue is also ordered
-> relative to shutdown.
->=20
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Hi Prabhakar,
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+On Thu, Mar 7, 2024 at 12:11=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This commit adds support to validate the 'interrupts' and 'interrupt-name=
+s'
+> properties for every supported SoC. This ensures proper handling and
+> configuration of interrupt-related properties across supported platforms.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> @@ -82,38 +82,6 @@ properties:
+>    reg:
+>      maxItems: 1
+>
+> -  interrupts:
+> -    oneOf:
+> -      - items:
+> -          - description: A combined interrupt
+> -      - items:
+> -          - description: Error interrupt
+> -          - description: Receive buffer full interrupt
+> -          - description: Transmit buffer empty interrupt
+> -          - description: Break interrupt
+> -      - items:
+> -          - description: Error interrupt
+> -          - description: Receive buffer full interrupt
+> -          - description: Transmit buffer empty interrupt
+> -          - description: Break interrupt
+> -          - description: Data Ready interrupt
+> -          - description: Transmit End interrupt
+
+As the above three groups are increasing supersets, you can just use
+a single "items" listing all 6 interrupts, and describe the first one
+as "Error interrupt or single combined interrupt".  After that, the
+SoC-specific logic at the end just needs to specify the appropriate
+minItems/maxItems.
+
+> -
+> -  interrupt-names:
+> -    oneOf:
+> -      - items:
+> -          - const: eri
+> -          - const: rxi
+> -          - const: txi
+> -          - const: bri
+> -      - items:
+> -          - const: eri
+> -          - const: rxi
+> -          - const: txi
+> -          - const: bri
+> -          - const: dri
+> -          - const: tei
+
+Likewise, with "interrupt-names: false" below for the ones that don't
+need it.
+
+> -
+>    clocks:
+>      minItems: 1
+>      maxItems: 4
+> @@ -173,6 +141,91 @@ allOf:
+>        required:
+>          - resets
+>
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - renesas,scif-r8a7742
+> +              - renesas,scif-r8a7743
+> +              - renesas,scif-r8a7744
+> +              - renesas,scif-r8a7745
+> +              - renesas,scif-r8a77470
+> +              - renesas,scif-r8a774a1
+> +              - renesas,scif-r8a774b1
+> +              - renesas,scif-r8a774c0
+> +              - renesas,scif-r8a774e1
+> +              - renesas,scif-r8a7778
+> +              - renesas,scif-r8a7779
+> +              - renesas,scif-r8a7790
+> +              - renesas,scif-r8a7791
+> +              - renesas,scif-r8a7792
+> +              - renesas,scif-r8a7793
+> +              - renesas,scif-r8a7794
+> +              - renesas,scif-r8a7795
+> +              - renesas,scif-r8a7796
+> +              - renesas,scif-r8a77961
+> +              - renesas,scif-r8a77965
+> +              - renesas,scif-r8a77970
+> +              - renesas,scif-r8a77980
+> +              - renesas,scif-r8a77990
+> +              - renesas,scif-r8a77995
+> +              - renesas,scif-r8a779a0
+> +              - renesas,scif-r8a779f0
+> +              - renesas,scif-r8a779g0
+
+Please simplify using family-specific names:
+  - renesas,rcar-gen1-scif
+  - renesas,rcar-gen2-scif
+  - renesas,rcar-gen3-scif
+  - renesas,rcar-gen4-scif
+
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          items:
+> +            - description: A combined interrupt
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
