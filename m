@@ -1,164 +1,206 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2069.outbound.protection.outlook.com [40.107.247.69])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE590651AC;
-	Thu,  7 Mar 2024 08:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709800222; cv=fail; b=Ln1lZbSyCbpV4yiLv+tq5Bt1RSoSjvFWHAZtgHwd/JgSW9N7tNHR6OA0wQ+7ca8o1iaeo4bOV0c7+3XsqcJI06ULf4xtT7RYPQALnwvrEMgm0Mb0UD7OgxP0lZ2IIUJ1MWTXnZGRrTgPROyJ41QAJRLt/kc12+6otR44hJUh2Jc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709800222; c=relaxed/simple;
-	bh=V4racZ1pY5wspDEeP0GAkxXVje0HNsvILBhGcC+0+dc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J53ckHu+YnxCy3RASsBLNn+wFg3qa47KZImLfMmVaRvrSxP9QUN/gahbNFzthpyfUxNwArapXPV+s5inxfH/YRrs1uZGK1aTHEUYDYkRMiqSSbFHyZ8RRCuu176MLAR/zqlbUfFH2e6MKwA3gqa2ZeqtL1xmOyDMqPd/fhIJ8m0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=P7HlYMsT; arc=fail smtp.client-ip=40.107.247.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5E280C17
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709800344; cv=none; b=POdhzIO5ih1FrhevJRCXYs+Z3nH270Y50kShsTNMdnaiNBB5F/gvUoArP+AnQrLrddmJex5uC5EvFVa4NljhbTd5PSB3h7dThswtph4PlzKQ7dJuYvijMhRbSIkNCguHUD9uZFZlB2BHzsL4CGu110KgTwDnHDlgT7VSA0pQMv0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709800344; c=relaxed/simple;
+	bh=p/ilcvrnwxNax+96bwrJypXLvlKGbHwkCZdG1/0HcRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A31iO1o/UmO5jNdaA5MUqAVGHOXhvYZN4rY8kdBK1FViB4F8hQKPX4g6k+R0VxoYroyFF7uenICiHrcvvSSFmC9k4JUA4y8aBuK+LxDnnhGbul6ph58KgL25MLeUI6xf46gR4nC5vi3RW/deAGHUDEdbZp04XpnevIZ0Eez1x6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zsjdw1i0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="P7HlYMsT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hV3WobzcB9GNwcX/bN9aRKOFJrva89Cj52DYNnqN8rgqvq6TpoWlJUuMi2GdGxZNaZ+sX5TGwlc91XVudHariD10ddtY0Ep12kpCviELXypBm/7QwnD7DGAs+bgIBe8lxflDEv5xoPJlHiUUVzuJSjQupgwayV5pDwGzfDyz7S9TFkQKyK3uHORTh+s4lsLZYpX2OvWTkIlBEXb0sUVMhTr/3f6AC29+1MC53wPcRpTAs79McpFJ24VcCnxbkg3qB44EEGiAcRPsWU6OS7XTQiB7jXP79CTPy5TT3CIg9/2VjxuEYWLKo3jBSLs4gVKVZPzy7FjAJr61s9CjEkS38A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V4racZ1pY5wspDEeP0GAkxXVje0HNsvILBhGcC+0+dc=;
- b=lrj6YIOBD2bBt5TuPqzoJT19xDS0rufGvnxoM1e/XAv8fI4quAbeDnZ8b7UQ/Dye3C3F8NJANBICDGiPNJUuVJGNqtTAm7TmyW+TfEBFh4ABY+/YpPDrkLVQvyv/k7u4fsJce2J1KYyt/nktG7iIDQeg5q8efZJ9v/qsUpcPzpWEIGmf/BeGYqf10rUx641HZz9nyzB/KPBAhXEf6SHSRGBp4pa5JdWOJDb5IkisWdBv+BHSBlcBQA5dKco/8lFiAK1jWw5HJFAQijTq3ptNOstIO/zrhJ2nSSguj1bZO3w/V71rsE3IF0ATqcdgUDOQDceIfWm7jR65mtEGVN0jmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=leica-geosystems.com; dmarc=pass action=none
- header.from=leica-geosystems.com; dkim=pass header.d=leica-geosystems.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V4racZ1pY5wspDEeP0GAkxXVje0HNsvILBhGcC+0+dc=;
- b=P7HlYMsTIwKy13TS3+eiZly42zv05vCDVyjEf19I04HOKaDSIEIDPCmhEl//TleyYX9WHNIYQ8gOs6lG5tGiCpD2sfNO1g7H53T3nx/BdLT4+fTmZGeGohyBqO1ku6DV6rmqqike/rael+zSx0YLSPgqda657m30OK/KnCzjgFE=
-Received: from VE1PR06MB6911.eurprd06.prod.outlook.com (2603:10a6:800:1a4::13)
- by AM9PR06MB7203.eurprd06.prod.outlook.com (2603:10a6:20b:2cb::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Thu, 7 Mar
- 2024 08:30:18 +0000
-Received: from VE1PR06MB6911.eurprd06.prod.outlook.com
- ([fe80::9256:56bc:4cd2:d41]) by VE1PR06MB6911.eurprd06.prod.outlook.com
- ([fe80::9256:56bc:4cd2:d41%2]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
- 08:30:17 +0000
-From: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "linux@armlinux.org.uk"
-	<linux@armlinux.org.uk>, "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
-	"m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
-Subject: Re: [PATCH net-next] net: phy: dp8382x: keep WOL setting across
- suspends
-Thread-Topic: [PATCH net-next] net: phy: dp8382x: keep WOL setting across
- suspends
-Thread-Index: AQHab+nNNjxI3+NV+Uir0lLTLIYJU7ErVY4AgACd/IA=
-Date: Thu, 7 Mar 2024 08:30:17 +0000
-Message-ID: <b53818a7-66a4-4c7a-b687-efaea6cb9e4e@leica-geosystems.com>
-References: <20240306171446.859750-1-catalin.popescu@leica-geosystems.com>
- <8de1d4e3-6d80-45a5-a638-48451d9b5c15@lunn.ch>
-In-Reply-To: <8de1d4e3-6d80-45a5-a638-48451d9b5c15@lunn.ch>
-Accept-Language: en-CH, en-US
-Content-Language: aa
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=leica-geosystems.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VE1PR06MB6911:EE_|AM9PR06MB7203:EE_
-x-ms-office365-filtering-correlation-id: ac9b8f14-5c9d-48b8-e177-08dc3e80d1e0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 6PCatqbQhp0tL/CucdI/ye4tWANqT6ouixeK3dxY9gOdlJy3H0VOMW4JpAA0CeoVq8HjverKunavegDhMIJ5ZP/quhdGLl+PijEe47UHMG0/P0gZLy3HEYLI/NV1b1ByZY1FKugzk/Qr1YuUBeHYQeSvwAfz+rKRsxpcR+z6E25g0+xgtYDZww6kwevC4nRq1WZK7NC22WqCEjIfr/mrTsYIGarGSB5/UVW6r+yH7Jc4NA7YzvAiyCynusWiNekK4XPrK520YpwwM+WaUlMAgKjlX5RPG6pXfyipGWZXIXeAHjXiOZqXH466S8RlmiY7K8XQhYM7CHLGVbp7JXCtywynUdUZldigHbUtcvgVh7YIc+YiwBO0Ug6b3gtgy7mcNojGoVC66Cmlsq2OCi/sRxfMDc0vP8UuEQN+4Ro2FqvXcKFTAckhEgwTgJon0Ni0TP+jMEyJ+H2GGQpbAWzFrxt4qngc5N3MedEwFLLGFDJQqRbeGuyBpQVA3h2gOPDTfTuQLvSe63Wd4HTSAVY52FHGM/8cboH1iX0Sne+IQW4ObaPFLda5sHhqGuvUZcdn0PjSKKu60SXOmZ+cNgAhDcXDJpf/Rmzo+346NX0/q3/kwJ1apM/1Sm+bA6o6oQSjmQ3rXDqHoTr5ol8g3fOyvnYRylvh8rO/Zy0UphsyKgVbuyrj/14LW+3NnI8JxMEcMC/YOVU1Izj/72pQ0LKirg==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR06MB6911.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?M1ViNVhINGZmN0xyYSs1bFdEOUF4WVNrczI2NmZ1NUxmdkJVOVhzVjdhQXJo?=
- =?utf-8?B?SHN5UjQ3eEVTQTlYakFLY0ZlNERHa3F6Q214dEMvQ3MvMXJyWHcyWkVIMUxI?=
- =?utf-8?B?M00rbFhjZXdBbHkzRU5HdU5abHl2WDJoRTFyT3lETmhpQUxyZzUyRXlkUTVu?=
- =?utf-8?B?YlhRNzZHMklGY2dCREYzTWJEOGYxWVNnZ0FIUmJyTmN3Ujd2Vm1wRHRJcGEr?=
- =?utf-8?B?TWFUWU53aFVlcC9BWFlqTkZFTE12dTNtZ1Yxcm4wNlpVMVhFOHlMb0FyT2tj?=
- =?utf-8?B?TVpEUTNiQUp4Tm1wRUVzRW9XVFBvNUFGK1dnMzdQdDJ5Sy9VK291SjBhUjFT?=
- =?utf-8?B?d0o2bWNoN3NGazhLZHpMRjd2NXdQN3dxbjZOazdUbWsrakgrZDN4L3J1Yjd1?=
- =?utf-8?B?blliQ2lPdkpBMTlYM0RMN3BXN2VaK0xIVEFRMUpOZnZMV2Z3WlFEU2lrbHdZ?=
- =?utf-8?B?ZTV5Y1JNSEN0Slp1Q24xc2lmd1MzTVNVMVNIY0c0U0lsdy9qTHVJOGJ0L1FI?=
- =?utf-8?B?b1I1OWtqdENDeHhCRzNwb0VtRVYrdCtFMDFtODd4VFIrdzMzdEhjakNETzdx?=
- =?utf-8?B?VkI3REJ1SUVyeE5MS1VtaEM4SVExR1JoSERqQnlBSElRdlo1UHlldjJBQVU0?=
- =?utf-8?B?T2FodlBYR3pZbGNzRDY1Y29LcllBL2RJbmpjS1gxYzE3dDFwNm1UdXp6Zmt6?=
- =?utf-8?B?aUhxazg4QnYzODFXZUkxQTkyWFpROUxKcUFpUzlOZ1B1S2hqN0x0VDRvOXls?=
- =?utf-8?B?NC9lR0xGVktidDB5b2F5VmhJQmswc2IvVTFoeXlXeGZMdEtyRlh1VWpKWUhh?=
- =?utf-8?B?elNxM21XaSs0YnVwcG0wY29VZzdhSkRVaWQvc0JHck80V0NHNTJ4T2F1b1Az?=
- =?utf-8?B?ejQySzUwNy9kejRqTVNFMS9SczVHNEdtUjhxREFNWEtSc1R1MU12b2hGYkFq?=
- =?utf-8?B?bnpxOHpZZVZjYXFKNnNlbVdUY0tOMXd3TnhUVllENFNYWkJLcm5maW1CTXoz?=
- =?utf-8?B?WjdyWGVJbnlhc0VBc3FmeFBQTit0bkx1UFVleFNHTmE1SFVXRURHVE8wR3Uy?=
- =?utf-8?B?WXorb2pFZ3RiVUVYc1UzMXRzY2dDeE43UkM4YXhrUnZhWk4ySThNT1hzcjEy?=
- =?utf-8?B?MFArbXVqVTBsUzBCUmJDUW84WmV4cjZBaUhYeHRlU0E1cjYrdFdxVlNXRHk0?=
- =?utf-8?B?QlFvWkVKVU5samZmVzl4WXE2R0JOY0ZoMzdkVTRiNnMwMkFYSEF2ZHROTXoy?=
- =?utf-8?B?T1BzQThNVTZhVFppcnJDRWJ0aUhMcVRPTjgzZG1sSS9SM2oweVRyM0hndmJH?=
- =?utf-8?B?a2JBNmZrOTd6ZlovT2hlMkFLbUlMUW1PT205blNxeGRVVkpmQzlwZjIrOWhv?=
- =?utf-8?B?SDhUZkFYUnZRRWdUVlkwVzVSK01GWlFqTlkxdWpyNXd6b25EZjlhVm9CZ0hr?=
- =?utf-8?B?eDF6ang3aUFvVHNwVWtkV3ZpUGRTM0RodTVTeWNWZ0ROa1JlckhvNXJ6TE5X?=
- =?utf-8?B?VkVhK0V1UkR3WnhFcVc1a3M1MW5kNlY1TUZhQkY3KytwZTNPL3Yya3U4UWtL?=
- =?utf-8?B?aUdvelRsdm85OWZnVmpYcVp3cHB4M09raDZZc01qUlVrRExVeGZsVXlMQjNn?=
- =?utf-8?B?RmxzZHByV3dvb1A3QlRWNFRVSW5YTTVIbHJqQUN2VWx6NWEycUdpOEo1SnJS?=
- =?utf-8?B?VEhXeTQzTlFBSFVsdXUzc01GZzhvallUM2Zqc0lDOS9RbmY5WHhrT2orYm03?=
- =?utf-8?B?NnBaWmRWaHBVK2VOWnFlQURDZ1RIYkQ5T2dzMUFRbTJEUW82VExKNzk3Tzds?=
- =?utf-8?B?THFzQ3VoRUdqYjhuUmlLL1FrYkNzUnlWVGxPT3FBVWJPTkhGYkpEanJ1Mjhz?=
- =?utf-8?B?UnJmY2J6a09sMlB3TUErb01KNitkMUt2N05wS0l6eDNDZm41QWNsSzFwbk5B?=
- =?utf-8?B?VDdWYUpPUnBkM1hLTjB0U1dXb3JtNm0wbUt4Z1hSNkZ3U3lSVHlJVXl1UTM3?=
- =?utf-8?B?MUJQSzB5QUVzWmthUTNrZHVYOHZrVDMxeEQwcW5nUGVRb04zYmlvN3g3RFli?=
- =?utf-8?B?dlN3WEN2d2UyNy9BMFFHUVhCYmQ0ZzE4UHMxZnM4d1pXZ3djRG1VNGQvQmtt?=
- =?utf-8?B?SnFaY3g2Tld4RjR3cStKMDYraXUwd3VuWHp6UVkzOVV6L2h3dktYaEtVRWEv?=
- =?utf-8?B?VEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <834F263360178C4299CC08F0E4D5ED2B@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zsjdw1i0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709800341;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=zAHn8LOx1lP7JKwUZINZyWvLPYZR5f8B3ar1vFmQjwU=;
+	b=Zsjdw1i0LpjV/KtxZxz3132NoHDgvjrz4xpV99CHKE3R1bhSm1wJgQ5Q/4IazBf7rJjjkK
+	BCwUn0nizaBTLHDhT2uKbPxmscMD632xrfzc+gnlVmOcHDhRVUH1WfnRKix1Y2rK7/6DeF
+	AtfpzouBDllTUpDM4cLqTLt/bd1qjqM=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-582-MB5H4xzjOyysDcaE-7bLVA-1; Thu, 07 Mar 2024 03:32:16 -0500
+X-MC-Unique: MB5H4xzjOyysDcaE-7bLVA-1
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-609a1063919so12170027b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 00:32:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709800336; x=1710405136;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zAHn8LOx1lP7JKwUZINZyWvLPYZR5f8B3ar1vFmQjwU=;
+        b=vzK1IpwrF2t8aq4aC3CFKAIu8tNohVLR+8ov/0CUSovA2DSgzULLUV2eEZXx8Xev0x
+         1H1yEl6MV8k4WHSPdkvgnv70xnpk1W+4VeoFYsW6PIwKiwXQ1sVDsNNtaE2UF7kxUr5q
+         A/gabeKp1FV8xX0kHJwQxeMIJKBq0ab9k6sx9TerRMJL26tbuTK+qw8sPeKTPQrYCOss
+         1nS0zqy7FQyVX8leVs+rsAW4Ravbz0GQu81UFm+OqoLmGOtqE3H0EeoOJ3AOumPSVywi
+         vTesGlNSF6bdOOgRpWvBsGz7i6BFLRfDIoZwY7vWOYnYj7WYbSPwM62Y67g7W0GAWej0
+         O2jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbjlj3qcwOvfvBhur+cQjel06mg87dTJ3//8K8iwJ/PClVhhJvngmt1q9qQY4LzTYuIUCzfPGXA9/tn7L8z+MW2g2+FS1q425SXoyT
+X-Gm-Message-State: AOJu0Yytj/owjQ7M7QWufH2gkcpZhze7RSBh4YR5IxTv6kueSqMtHL1Y
+	A3IywwnbTKN3UHAiNNJUXkIBjmqbyocPPJ688htOLGnfxNjx+TIu25ti9tmOFB3YDU0A0qyGLRH
+	ElLAkaXUmdD9+GZOYmwWMRFQEnamDWiXaC1fg0hspfdjcRET0nTd2XPYutWATig==
+X-Received: by 2002:a81:4ec2:0:b0:609:f49f:5949 with SMTP id c185-20020a814ec2000000b00609f49f5949mr608719ywb.21.1709800336281;
+        Thu, 07 Mar 2024 00:32:16 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHm/KflH3weBClUJUanqSqMvy2sb1vEIhS4wRzH9yk4QowkTMli4quk1DwpgpmNFA7QVESgug==
+X-Received: by 2002:a81:4ec2:0:b0:609:f49f:5949 with SMTP id c185-20020a814ec2000000b00609f49f5949mr608698ywb.21.1709800335891;
+        Thu, 07 Mar 2024 00:32:15 -0800 (PST)
+Received: from ?IPV6:2003:cb:c74d:6400:4867:4ed0:9726:a0c9? (p200300cbc74d640048674ed09726a0c9.dip0.t-ipconnect.de. [2003:cb:c74d:6400:4867:4ed0:9726:a0c9])
+        by smtp.gmail.com with ESMTPSA id v4-20020a81b704000000b00609f060cecbsm201111ywh.129.2024.03.07.00.32.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 00:32:15 -0800 (PST)
+Message-ID: <5cc05529-eb80-410e-bc26-233b0ba0b21f@redhat.com>
+Date: Thu, 7 Mar 2024 09:32:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: leica-geosystems.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR06MB6911.eurprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac9b8f14-5c9d-48b8-e177-08dc3e80d1e0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2024 08:30:17.7325
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5vllOtkNl4aqJJTNqvR/xJLxLzLaQc3lVLUI03e+GU2PuraAltL85lNjyKU+NlN2mG4ORwyrsy+1fcDhH/ELBxIMf9Pt7YWCOc98lQi23vT5cSzVkevlBij0g8p0jR84
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR06MB7203
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] mm/madvise: enhance lazyfreeing with mTHP in
+ madvise_free
+To: Barry Song <21cnbao@gmail.com>, Lance Yang <ioworker0@gmail.com>,
+ Vishal Moola <vishal.moola@gmail.com>
+Cc: akpm@linux-foundation.org, zokeefe@google.com, ryan.roberts@arm.com,
+ shy828301@gmail.com, mhocko@suse.com, fengwei.yin@intel.com,
+ xiehuan09@gmail.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com,
+ peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240307061425.21013-1-ioworker0@gmail.com>
+ <CAGsJ_4xcRvZGdpPh1qcFTnTnDUbwz6WreQ=L_UO+oU2iFm9EPg@mail.gmail.com>
+ <CAK1f24k2G_DSEjuqqqPyY0f7+btpYbjfoyMH7btLfP8nkasCTQ@mail.gmail.com>
+ <CAGsJ_4xREM-P1mFqeM-s3-cJ9czb6PXwizb-3hOhwaF6+QM5QA@mail.gmail.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAGsJ_4xREM-P1mFqeM-s3-cJ9czb6PXwizb-3hOhwaF6+QM5QA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-T24gMDcuMDMuMjQgMDA6MDQsIEFuZHJldyBMdW5uIHdyb3RlOg0KPiBUaGlzIGVtYWlsIGlzIG5v
-dCBmcm9tIEhleGFnb27igJlzIE9mZmljZSAzNjUgaW5zdGFuY2UuIFBsZWFzZSBiZSBjYXJlZnVs
-IHdoaWxlIGNsaWNraW5nIGxpbmtzLCBvcGVuaW5nIGF0dGFjaG1lbnRzLCBvciByZXBseWluZyB0
-byB0aGlzIGVtYWlsLg0KPg0KPg0KPiBPbiBXZWQsIE1hciAwNiwgMjAyNCBhdCAwNjoxNDo0NlBN
-ICswMTAwLCBDYXRhbGluIFBvcGVzY3Ugd3JvdGU6DQo+PiBVbmxpa2Ugb3RoZXIgZXRoZXJuZXQg
-UEhZcyBmcm9tIFRJLCBQSFkgZHA4MzgyMnggaGFzIFdPTCBlbmFibGVkDQo+PiBhdCByZXNldC4N
-Cj4gVGhpcyBpcyByYXRoZXIgb2RkIGJlaGF2aW91ci4gSXMgdGhpcyBzdGF0ZWQgaW4gdGhlIGRh
-dGFzaGVldD8NClllcy4gSSd2ZSBjaGVja2VkIGFsbCBUSSBldGhlcm5ldCBQSFlzIGRhdGFzaGVl
-dHMgdGhhdCBhcmUgc3VwcG9ydGVkIGJ5IA0KbGludXggYW5kIHRoZXkgYWxsLCBidXQgZHA4Mzgy
-eCwgaGF2ZSBXT0wgZGlzYWJsZWQgYnkgZGVmYXVsdC4gSGVuY2UsIA0KZHA4MzgyMi5jIGlzIHRo
-ZSBvbmx5IGRyaXZlciB0aGF0IGZvcmNlZnVsbHkgZGlzYWJsZSBXT0wgYXQgaW5pdC4NCj4NCj4+
-IEBAIC01NzIsMTEgKzU4NCwxNyBAQCBzdGF0aWMgaW50IGRwODM4MjZfY29uZmlnX2luaXQoc3Ry
-dWN0IHBoeV9kZXZpY2UgKnBoeWRldikNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJu
-IHJldDsNCj4+ICAgICAgICB9DQo+Pg0KPj4gKyAgICAgaWYgKGRwODM4MjItPndvbF9lbmFibGVk
-KQ0KPj4gKyAgICAgICAgICAgICByZXR1cm4gMDsNCj4+ICAgICAgICByZXR1cm4gZHA4MzgyeF9k
-aXNhYmxlX3dvbChwaHlkZXYpOw0KPj4gICB9DQo+Pg0KPj4gICBzdGF0aWMgaW50IGRwODM4Mnhf
-Y29uZmlnX2luaXQoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldikNCj4+ICAgew0KPj4gKyAgICAg
-c3RydWN0IGRwODM4MjJfcHJpdmF0ZSAqZHA4MzgyMiA9IHBoeWRldi0+cHJpdjsNCj4+ICsNCj4+
-ICsgICAgIGlmIChkcDgzODIyLT53b2xfZW5hYmxlZCkNCj4+ICsgICAgICAgICAgICAgcmV0dXJu
-IDA7DQo+PiAgICAgICAgcmV0dXJuIGRwODM4MnhfZGlzYWJsZV93b2wocGh5ZGV2KTsNCj4gU2lu
-Y2UgaXQgaXMgcmF0aGVyIG9kZCBiZWhhdmlvdXIsIHRoZXJlIG1pZ2h0IGJlIHNvbWUgQklPU2Vz
-IHdoaWNoDQo+IGRpc2FibGUgV29MLiBTbyBpIHdvdWxkIG5vdCByZWx5IG9uIGl0IGJlaW5nIGVu
-YWJsZWQgYnkNCj4gZGVmYXVsdC4gRXhwbGljaXRseSBlbmFibGUgaXQuDQpJIHNlZSwgSSdsbCBt
-YWtlIHRoZSBjaGFuZ2UuDQo+DQo+ICAgICAgQW5kcmV3DQo+DQo+IC0tLQ0KPiBwdy1ib3Q6IGNy
-DQoNCg0K
+On 07.03.24 09:10, Barry Song wrote:
+> On Thu, Mar 7, 2024 at 9:00 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>
+>> Hey Barry,
+>>
+>> Thanks for taking time to review!
+>>
+>> On Thu, Mar 7, 2024 at 3:00 PM Barry Song <21cnbao@gmail.com> wrote:
+>>>
+>>> On Thu, Mar 7, 2024 at 7:15 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>>
+>> [...]
+>>>> +static inline bool can_mark_large_folio_lazyfree(unsigned long addr,
+>>>> +                                                struct folio *folio, pte_t *start_pte)
+>>>> +{
+>>>> +       int nr_pages = folio_nr_pages(folio);
+>>>> +       fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>>> +
+>>>> +       for (int i = 0; i < nr_pages; i++)
+>>>> +               if (page_mapcount(folio_page(folio, i)) != 1)
+
+No new direct subpage mapcount users please if avoidable. Also, without 
+holding the page lock this might be racy (did not stare at the bigger code).
+
+>>>> +                       return false;
+>>>
+>>> we have moved to folio_estimated_sharers though it is not precise, so
+>>> we don't do
+>>> this check with lots of loops and depending on the subpage's mapcount.
+>>
+>> If we don't check the subpage’s mapcount, and there is a cow folio associated
+>> with this folio and the cow folio has smaller size than this folio,
+>> should we still
+>> mark this folio as lazyfree?
+> 
+> I agree, this is true. However, we've somehow accepted the fact that
+> folio_likely_mapped_shared
+> can result in false negatives or false positives to balance the
+> overhead.  So I really don't know :-)
+> 
+> Maybe David and Vishal can give some comments here.
+
+Well, I did not accept the fact yet that folio_likely_mapped_shared() 
+can give false negatives :)
+
+So I've been working on a replacement [1], also in the context of 
+removing the subpage mapcounts. But there is still a lot to resolve 
+around that, first step being to introduce the total mapcount.
+
+But independent of that, MADV_FREE is special (compared to 
+MADV_DONTNEED), because we really have to make sure all page table 
+mappings that map the folio will be covered here.
+
+What could work for large folios is making sure that #ptes that map the 
+folio here correspond to the folio_mapcount(). And folio_mapcount() 
+should be called under folio lock, to avoid racing with swapout/migration.
+
+So instead of checking each page_mapcount(), see how many PTEs you could 
+batch, try taking the folio lock, and compare the number of batched PTEs 
+against folio_mapcount(). If they match, we're good. if not, there is 
+some other folio mapping somewhere else (other process, mremap).
+
+folio_likely_mapped_shared() should still be used as an early exit point.
+
+[1] 
+https://lore.kernel.org/all/20231124132626.235350-1-david@redhat.com/T/#u
+
+-- 
+Cheers,
+
+David / dhildenb
+
