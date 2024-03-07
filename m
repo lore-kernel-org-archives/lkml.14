@@ -1,127 +1,223 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4206846AF;
-	Thu,  7 Mar 2024 02:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AB046AF
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 02:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709777435; cv=none; b=S5eGhOBXUqkIMpEbFb+0Ryur2qTcgemCJn6MlYAjdo0nhbrJJiEaVkd3HVUOnI5yGigrwHJMla+uMWGz17x2vtjmc4rE8AKhLy38GgymE3YtCnFYuv/4Od7jBoOQ/P2j65JMwAfIXP+LJfep+4Wye/wXYY3P7sTJ71TxBzN6D0M=
+	t=1709777496; cv=none; b=PkCC7t6cE+U9jNhaBugffowfuQxpRQCw56S8yTGwnX9LxuIDBPesJUa3ifbhSd//hDKLr3zbrRIkRWu4upItnPZul+zrk/ckcAdwlC4P46r1EyOh+/feyHWJwx0s7pMQtdkfTHDmpvbsesrOYcwVyTBQrcD1zf0Es0anmo0H5hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709777435; c=relaxed/simple;
-	bh=MojI5XOENWoQXlhGpmQMRKuFP/opvVsRYgCk9gXhyB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=it48lqeW3hZZHA9mFcPs6oDgC9kOfQbM2mdTtjhLJhqjgOy8jCTXwWzrzqAiGc8wBsWCdZnCDTL0SOA0WC1W3l1P7ELo4aBQRV0QSlqsWHS616xuxiTsgxuSENG9wNR7ZA0e3ecmOsrWfub7A81Rnze7JbUWoqr1DXLCR+zX3qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ltpJub++; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1709777496; c=relaxed/simple;
+	bh=rSVzpqAtaP7VsIqGvDvnM7VnZ7HA9GL+hoNyerON4vw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lQuvexJn1iXL748dag1DMbM/hoRSTs+K/TQZVCxU8R6avDyfd9Bhp67rvAK6XG0ypmM0uCYpdBOUbEbRWNFbI+mdwlgxb2sYuOj7/n+VK9ylrR5Vo3U/PZBeiqCZFxEVW0Jj3NTldP6k9eNZyweFY99L5CujZyk3pSrXh4x5lfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AqykEe/i; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ltpJub++"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1709777429;
-	bh=aBC5lNlYQfzlwFaWA0idshYy9P2JYbt9Zw+CpC/ldcE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ltpJub++viAVgQpYOh1ttxr8ZbOLpl+tcVJqlwLV7b+RW312Eyc36mFq/hAfD9Qp7
-	 7qSfXlLiBBGK8mvu09QBy10AjXytMpyV0gyrvOHcL8zVTa9Q856YOxVTUQPKw5oRkU
-	 qXuuic/xlKBXO6bRL6oKsDZdt4wByjuYdylp9PO7n+0KhvyF/HFDfIv7RJ+nf67d4H
-	 ZP1CdadB+0E0/hY/u27nwSsUBXoB6TOE4Ovyu7qOpAnHXZ0wZLkhxJ3kCkB41AN9VS
-	 R2w8xQ1PmvcZi/xmVHVOSJf2MQu69yd31LCoGq99iAtJ+LY+Rfpq/nJgCqc+iRfqIL
-	 p6SfX33zU9aMQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tqt780clSz4wcC;
-	Thu,  7 Mar 2024 13:10:28 +1100 (AEDT)
-Date: Thu, 7 Mar 2024 13:10:27 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Dave Airlie <airlied@redhat.com>, Daniel Vetter
- <daniel.vetter@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas
- Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
- <rodrigo.vivi@intel.com>
-Cc: Intel Graphics <intel-gfx@lists.freedesktop.org>, DRI
- <dri-devel@lists.freedesktop.org>, Animesh Manna <animesh.manna@intel.com>,
- Imre Deak <imre.deak@intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the drm tree with the drm-intel-fixes
- tree
-Message-ID: <20240307131027.66be2266@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AqykEe/i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709777494; x=1741313494;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rSVzpqAtaP7VsIqGvDvnM7VnZ7HA9GL+hoNyerON4vw=;
+  b=AqykEe/iPYhB8PFnj1dpGbAt/D+WWQ+wH2GTC/25MF5xXg0RktWt2n5g
+   2g8CYXm/OX8cqz0Yh8PA2vnzmyf494Y4awL2WDR7KAqVg+mx6++p4UDM1
+   JxINoDeLhxSQj5sqZXWbZFRpT7uYWjavLQpjCd2z/xv+D0FkIDw0WkQ4H
+   5SRPk9kshwvcKWWaXrQ1QCFNtx/Wa+bKpN/peoB7AF6qYU1EFgy+Url+g
+   3OoUCTJMHVXkKVG206N+YykNEgdtyQCK2yq0JWyPl+zG2nvysVa0B7v/Z
+   vKDN0I6UeTOqFsQGIsGoJzLknclh+JyVYz15fz9XqA4yeEM0KwLIGaNq+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4594949"
+X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
+   d="scan'208";a="4594949"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 18:11:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
+   d="scan'208";a="9852876"
+Received: from linux-pnp-server-09.sh.intel.com ([10.239.176.190])
+  by fmviesa007.fm.intel.com with ESMTP; 06 Mar 2024 18:11:30 -0800
+From: rulinhuang <rulin.huang@intel.com>
+To: urezki@gmail.com,
+	bhe@redhat.com
+Cc: akpm@linux-foundation.org,
+	colin.king@intel.com,
+	hch@infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lstoakes@gmail.com,
+	rulin.huang@intel.com,
+	tianyou.li@intel.com,
+	tim.c.chen@intel.com,
+	wangyang.guo@intel.com,
+	zhiguo.zhou@intel.com
+Subject: [PATCH v8] mm/vmalloc: Eliminated the lock contention from twice to once
+Date: Wed,  6 Mar 2024 21:14:40 -0500
+Message-ID: <20240307021440.64967-1-rulin.huang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/gBe8YFdyBRsQQ7vG967EwEz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/gBe8YFdyBRsQQ7vG967EwEz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When allocating a new memory area where the mapping address range is
+known, it is observed that the vmap_node->busy.lock is acquired twice.
 
-Hi all,
+The first acquisition occurs in the alloc_vmap_area() function when
+inserting the vm area into the vm mapping red-black tree. The second
+acquisition occurs in the setup_vmalloc_vm() function when updating the
+properties of the vm, such as flags and address, etc.
 
-Today's linux-next merge of the drm tree got a conflict in:
+Combine these two operations together in alloc_vmap_area(), which
+improves scalability when the vmap_node->busy.lock is contended.
+By doing so, the need to acquire the lock twice can also be eliminated
+to once.
 
-  drivers/gpu/drm/i915/display/intel_dp.c
+With the above change, tested on intel sapphire rapids
+platform(224 vcpu), a 4% performance improvement is
+gained on stress-ng/pthread(https://github.com/ColinIanKing/stress-ng),
+which is the stress test of thread creations.
 
-between commit:
+Co-developed-by: "Chen, Tim C" <tim.c.chen@intel.com>
+Signed-off-by: "Chen, Tim C" <tim.c.chen@intel.com>
+Co-developed-by: "King, Colin" <colin.king@intel.com>
+Signed-off-by: "King, Colin" <colin.king@intel.com>
+Signed-off-by: rulinhuang <rulin.huang@intel.com>
+---
+V1 -> V2: Avoided the partial initialization issue of vm and
+separated insert_vmap_area() from alloc_vmap_area()
+V2 -> V3: Rebased on 6.8-rc5
+V3 -> V4: Rebased on mm-unstable branch
+V4 -> V5: Canceled the split of alloc_vmap_area()
+and keep insert_vmap_area()
+V5 -> V6: Added bug_on
+V6 -> V7: Adjusted the macros
+V7 -> V8: Removed bugs_on and adjustion of macros
+---
+ mm/vmalloc.c | 50 ++++++++++++++++++++++----------------------------
+ 1 file changed, 22 insertions(+), 28 deletions(-)
 
-  984318aaf7b6 ("drm/i915/panelreplay: Move out psr_init_dpcd() from init_c=
-onnector()")
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 25a8df497255..f933a62fef50 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1841,15 +1841,26 @@ node_alloc(unsigned long size, unsigned long align,
+ 	return va;
+ }
+ 
++static inline void setup_vmalloc_vm(struct vm_struct *vm,
++	struct vmap_area *va, unsigned long flags, const void *caller)
++{
++	vm->flags = flags;
++	vm->addr = (void *)va->va_start;
++	vm->size = va->va_end - va->va_start;
++	vm->caller = caller;
++	va->vm = vm;
++}
++
+ /*
+  * Allocate a region of KVA of the specified size and alignment, within the
+- * vstart and vend.
++ * vstart and vend. If vm is passed in, the two will also be bound.
+  */
+ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 				unsigned long align,
+ 				unsigned long vstart, unsigned long vend,
+ 				int node, gfp_t gfp_mask,
+-				unsigned long va_flags)
++				unsigned long va_flags, struct vm_struct *vm,
++				unsigned long flags, const void *caller)
+ {
+ 	struct vmap_node *vn;
+ 	struct vmap_area *va;
+@@ -1912,6 +1923,9 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	va->vm = NULL;
+ 	va->flags = (va_flags | vn_id);
+ 
++	if (vm)
++		setup_vmalloc_vm(vm, va, flags, caller);
++
+ 	vn = addr_to_node(va->va_start);
+ 
+ 	spin_lock(&vn->busy.lock);
+@@ -2486,7 +2500,8 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
+ 	va = alloc_vmap_area(VMAP_BLOCK_SIZE, VMAP_BLOCK_SIZE,
+ 					VMALLOC_START, VMALLOC_END,
+ 					node, gfp_mask,
+-					VMAP_RAM|VMAP_BLOCK);
++					VMAP_RAM|VMAP_BLOCK, NULL,
++					0, NULL);
+ 	if (IS_ERR(va)) {
+ 		kfree(vb);
+ 		return ERR_CAST(va);
+@@ -2843,7 +2858,8 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node)
+ 		struct vmap_area *va;
+ 		va = alloc_vmap_area(size, PAGE_SIZE,
+ 				VMALLOC_START, VMALLOC_END,
+-				node, GFP_KERNEL, VMAP_RAM);
++				node, GFP_KERNEL, VMAP_RAM,
++				NULL, 0, NULL);
+ 		if (IS_ERR(va))
+ 			return NULL;
+ 
+@@ -2946,26 +2962,6 @@ void __init vm_area_register_early(struct vm_struct *vm, size_t align)
+ 	kasan_populate_early_vm_area_shadow(vm->addr, vm->size);
+ }
+ 
+-static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
+-	struct vmap_area *va, unsigned long flags, const void *caller)
+-{
+-	vm->flags = flags;
+-	vm->addr = (void *)va->va_start;
+-	vm->size = va->va_end - va->va_start;
+-	vm->caller = caller;
+-	va->vm = vm;
+-}
+-
+-static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
+-			      unsigned long flags, const void *caller)
+-{
+-	struct vmap_node *vn = addr_to_node(va->va_start);
+-
+-	spin_lock(&vn->busy.lock);
+-	setup_vmalloc_vm_locked(vm, va, flags, caller);
+-	spin_unlock(&vn->busy.lock);
+-}
+-
+ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+ {
+ 	/*
+@@ -3002,14 +2998,12 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
+ 	if (!(flags & VM_NO_GUARD))
+ 		size += PAGE_SIZE;
+ 
+-	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0);
++	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0, area, flags, caller);
+ 	if (IS_ERR(va)) {
+ 		kfree(area);
+ 		return NULL;
+ 	}
+ 
+-	setup_vmalloc_vm(area, va, flags, caller);
+-
+ 	/*
+ 	 * Mark pages for non-VM_ALLOC mappings as accessible. Do it now as a
+ 	 * best-effort approach, as they can be mapped outside of vmalloc code.
+@@ -4584,7 +4578,7 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
+ 
+ 		spin_lock(&vn->busy.lock);
+ 		insert_vmap_area(vas[area], &vn->busy.root, &vn->busy.head);
+-		setup_vmalloc_vm_locked(vms[area], vas[area], VM_ALLOC,
++		setup_vmalloc_vm(vms[area], vas[area], VM_ALLOC,
+ 				 pcpu_get_vm_areas);
+ 		spin_unlock(&vn->busy.lock);
+ 	}
 
-from the drm-intel-fixes tree and commit:
+base-commit: f4239a5d7acc1b5ff9bac4d5471000b952279ef0
+-- 
+2.43.0
 
-  e60cff453b82 ("drm/i915/dp: Enable DP tunnel BW allocation mode")
-
-from the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/display/intel_dp.c
-index 94d2a15d8444,6ece2c563c7a..000000000000
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@@ -5699,9 -5702,13 +5702,16 @@@ intel_dp_detect(struct drm_connector *c
-  		goto out;
-  	}
- =20
-+ 	ret =3D intel_dp_tunnel_detect(intel_dp, ctx);
-+ 	if (ret =3D=3D -EDEADLK)
-+ 		return ret;
-+=20
-+ 	if (ret =3D=3D 1)
-+ 		intel_connector->base.epoch_counter++;
-+=20
- +	if (!intel_dp_is_edp(intel_dp))
- +		intel_psr_init_dpcd(intel_dp);
- +
-  	intel_dp_detect_dsc_caps(intel_dp, intel_connector);
- =20
-  	intel_dp_configure_mst(intel_dp);
-
---Sig_/gBe8YFdyBRsQQ7vG967EwEz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXpIhMACgkQAVBC80lX
-0GxBvQf7BmI0o7dg07Jqo6rgMQ9Ay2p8WMp/6yyo8Jwhyb5JmFYD87E2QNv9HHfT
-HgoVX1Mb+jk665Q/obBnEcW1Hcp/sZuli4SU0FVufMV0DGCz/va+z8k2DhRTxgvq
-oDwInGOeOksje6o31zYGtvcbkZ4CA9/GAaOIN+h/U+eNqALRgMS5p6GAMfZUCOl/
-XipVMUDj8oqzgkeKY5rSop1lj0hF+Oi4NJSP4Z4W00+M/zB3QbyT4WzYRbLcloWH
-UWBFoyOUzo/ShztOMcR/cBOIDSiwWc/VQum4259wUwPJvIXqaipIXhTrNMgBMTx3
-m2UTeFGeAXW8d7sKGANRay06i4PH+Q==
-=14RR
------END PGP SIGNATURE-----
-
---Sig_/gBe8YFdyBRsQQ7vG967EwEz--
