@@ -1,62 +1,56 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E79137C30;
-	Thu,  7 Mar 2024 19:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E02137C5D
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 19:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709838362; cv=none; b=rN0mW5TZzLnU1umtNOrYzRLptBKVyzyUsrOmddog0YVGuQS0kFPnjzv++20XgWNf/BbdGEZ2FTHcl1D8wYC3yaZoOUcVBd2bVj1Zmd34dK6yUC3bjFZk3UeiTZ78kjbVb3mvvGhqqd7gCU799+WE1x6dgbKQDolYO0EeppajIig=
+	t=1709838363; cv=none; b=Nctkv3aAG8OuFxvXDNqgToTxyxPx8WLiYEWyePTkR9a/3jQIvD36k7T1y89Wm+mDv0BvT0XncXP8jfBfajjXrFP+BYL9XINFXCDBH4qD2QTIzT82XkkEtgHVQs8pO+WEybwfLBCaCeX8IzZsgRKDmBX9c3PJqy7uDUn/7mCtElY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709838362; c=relaxed/simple;
-	bh=433s858Ofhq5QpJwmBw+pFYMu3RV2E0h9F/0wjaadU8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q0KY+LZHcjxEI2pf4XE7cXsKL+XQFJjXpFLyBZzxunmpnvqptwEFPYe7xF3dQIhQqc0eTS6PH5d1AKk1anJ62ktzEXvcb22VlfbatwHenN0h3MDBe5mdbcZso4aKDxDVbHThX52lYsXtqbDXnHUV//qTBSNcAA1YPrLxFejxOCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=O8zMarDO; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709838363; c=relaxed/simple;
+	bh=g6DAKDR36tOItH/bhG0Z9srSph8oii5Fydx/RihO+aE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZJjgGdDgHWx/9YmwSa7In7XGyeERYVIJzMKE0+DrVt5NsaqXfgIesvcfGUKV2J3s/22KL+bmZ0PhV+sXRFAt+xMMhj2Wcl8vytUignsBeiNLk6zU/sqcMkCnTeJgGgci2Ps0u4jdqdtPHuk2DcIAZ7K1smjSdrxpcKD650dzc7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=en0C+U7e; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="O8zMarDO"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 427FxUWW016711;
-	Thu, 7 Mar 2024 19:05:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=NYo5bTbP9SVkLOmtSkvA5WYl0Q0ujSV7BQbMNNZl+QQ=; b=O8
-	zMarDOuaVv+g1rs/1d9z+dm9NDM/aJdyX+8zu9l26LM6mcMmAKWfMfY9c7MX62Zy
-	g+suHKzzHDRwB0EqsU5BiF78fuZGsaeuBTgKmfryh9PEQKRt8wXDZVNwh9JFbOiW
-	YOic17/ZpUqcmJ2D7f+LU734MTD7EgBlxAudXXXqQUYtU+9CQFVCwDWh5PewDMTa
-	+d1l8v+rFXHsibd33svQLgcSbeIO7Tdj8vxc/AM7uKJvsDfcMW1ySpfSCDJCcqBu
-	swMYH3jNAWZDzwWcUMg082CLn3NZubZuFchO/Tb+WbvSzT9So6tV+eXimXhYTAd2
-	3Ky4GoPJNRv36A1P9L4A==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wq588hrw7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 19:05:46 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 427J5jJF004563
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 7 Mar 2024 19:05:45 GMT
-Received: from hu-c-gdjako-lv.qualcomm.com (10.49.16.6) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 7 Mar 2024 11:05:44 -0800
-From: Georgi Djakov <quic_c_gdjako@quicinc.com>
-To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <joro@8bytes.org>, <iommu@lists.linux.dev>
-CC: <devicetree@vger.kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robdclark@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_cgoldswo@quicinc.com>,
-        <quic_sukadev@quicinc.com>, <quic_pdaly@quicinc.com>,
-        <quic_sudaraja@quicinc.com>, <djakov@kernel.org>
-Subject: [PATCH v6 3/7] iommu/arm-smmu: Allow using a threaded handler for context interrupts
-Date: Thu, 7 Mar 2024 11:05:21 -0800
-Message-ID: <20240307190525.395291-4-quic_c_gdjako@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240307190525.395291-1-quic_c_gdjako@quicinc.com>
-References: <20240307190525.395291-1-quic_c_gdjako@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="en0C+U7e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709838360;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X7P8UeQpeEQEOjxcmff4v9+LPAL41neHMZQcXXo7jRE=;
+	b=en0C+U7ekiy25FS4EAfpk0bnDLqgDV6eTcMfJPBXW6YKwtJENfWUXgdUbWTXnZ6quKlU38
+	Y3eDIuOuCC7mKNIgnDZ8DBQUs+K6DkArC0R7H5gC5cZ24JpTJaMLF7jirq0/ANC/YCis/a
+	kmHLum6uEH0KTyFRXOjJTtIw9JUYTqQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-341-Xf1BggqGN1iqaD3Ogzjweg-1; Thu,
+ 07 Mar 2024 14:05:56 -0500
+X-MC-Unique: Xf1BggqGN1iqaD3Ogzjweg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD95B1C00B8B;
+	Thu,  7 Mar 2024 19:05:55 +0000 (UTC)
+Received: from llong.com (unknown [10.22.17.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2CF7C2166AF0;
+	Thu,  7 Mar 2024 19:05:55 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH 1/2] mm/kmemleak: Compact kmemleak_object further
+Date: Thu,  7 Mar 2024 14:05:47 -0500
+Message-Id: <20240307190548.963626-2-longman@redhat.com>
+In-Reply-To: <20240307190548.963626-1-longman@redhat.com>
+References: <20240307190548.963626-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,67 +58,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: gycJQua4o1j_CWYTeG-F4KfQseZWOJep
-X-Proofpoint-ORIG-GUID: gycJQua4o1j_CWYTeG-F4KfQseZWOJep
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_14,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 spamscore=0 impostorscore=0 bulkscore=0 mlxscore=0
- clxscore=1015 priorityscore=1501 suspectscore=0 lowpriorityscore=0
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403070133
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Threaded IRQ handlers run in a less critical context compared to normal
-IRQs, so they can perform more complex and time-consuming operations
-without causing significant delays in other parts of the kernel.
-During a context fault, it might be needed to do more processing and
-gather debug information from TBUs in the handler. These operations may
-sleep, so add an option to use a threaded IRQ handler in these cases.
+With commit 56a61617dd22 ("mm: use stack_depot for recording kmemleak's
+backtrace"), the size of kmemleak_object has been reduced by 128 bytes
+for 64-bit arches. The replacement "depot_stack_handle_t trace_handle"
+is actually just 4 bytes long leaving a hole of 4 bytes. By moving up
+trace_handle to another existing 4-byte hold, we can save 8 more bytes
+from kmemleak_object reducing its overall size from 248 to 240 bytes.
 
-Signed-off-by: Georgi Djakov <quic_c_gdjako@quicinc.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- drivers/iommu/arm/arm-smmu/arm-smmu.c | 12 ++++++++++--
- drivers/iommu/arm/arm-smmu/arm-smmu.h |  1 +
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ mm/kmemleak.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index c572d877b0e1..dcf0479363c3 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -806,8 +806,16 @@ static int arm_smmu_init_domain_context(struct arm_smmu_domain *smmu_domain,
- 	else
- 		context_fault = arm_smmu_context_fault;
- 
--	ret = devm_request_irq(smmu->dev, irq, context_fault, IRQF_SHARED,
--			       "arm-smmu-context-fault", smmu_domain);
-+	if (smmu->impl && smmu->impl->context_fault_needs_threaded_irq)
-+		ret = devm_request_threaded_irq(smmu->dev, irq, NULL,
-+						context_fault,
-+						IRQF_ONESHOT | IRQF_SHARED,
-+						"arm-smmu-context-fault",
-+						smmu_domain);
-+	else
-+		ret = devm_request_irq(smmu->dev, irq, context_fault, IRQF_SHARED,
-+				       "arm-smmu-context-fault", smmu_domain);
-+
- 	if (ret < 0) {
- 		dev_err(smmu->dev, "failed to request context IRQ %d (%u)\n",
- 			cfg->irptndx, irq);
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-index 1670e95c4637..4765c6945c34 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-@@ -438,6 +438,7 @@ struct arm_smmu_impl {
- 	int (*def_domain_type)(struct device *dev);
- 	irqreturn_t (*global_fault)(int irq, void *dev);
- 	irqreturn_t (*context_fault)(int irq, void *dev);
-+	bool context_fault_needs_threaded_irq;
- 	int (*alloc_context_bank)(struct arm_smmu_domain *smmu_domain,
- 				  struct arm_smmu_device *smmu,
- 				  struct device *dev, int start);
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index 4f58f6170cdf..0114a694e520 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -158,9 +158,9 @@ struct kmemleak_object {
+ 	int count;
+ 	/* checksum for detecting modified objects */
+ 	u32 checksum;
++	depot_stack_handle_t trace_handle;
+ 	/* memory ranges to be scanned inside an object (empty for all) */
+ 	struct hlist_head area_list;
+-	depot_stack_handle_t trace_handle;
+ 	unsigned long jiffies;		/* creation timestamp */
+ 	pid_t pid;			/* pid of the current task */
+ 	char comm[TASK_COMM_LEN];	/* executable name */
+-- 
+2.39.3
+
