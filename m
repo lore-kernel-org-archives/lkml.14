@@ -1,126 +1,142 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72E941C65;
-	Thu,  7 Mar 2024 14:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566091C68F
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709822205; cv=none; b=g7B2k/su1VDiRVUmy1+yzIa55goG7MeKx7TmEB8iFYpcmSrwdw2BKG85w3IV9vgxO+WXysoM9wPa2n9vegO1WNhNtzc1FrojK3t2is0PZNVXpWVrL+RSZNIsMEX7uGb1P0dmGguogzCsYmnvS3AnBlpNptBmDrQAm2xUkvdJyTA=
+	t=1709822211; cv=none; b=t2+bYx59mAd6PMyCdjwiftddJURSMXdIMCFClI+lRS8ajnF9xDtzlSBZSOwbi2rVBPT7DgoMFLguGHCKE7KsAt0fmIRsL7q/ZC2HkwiF975zvdz9U5U3MLJHOS3epEuLP55V1JytzY+mwdKihAD5f1DbnHoh7nzITE2FOA2TuEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709822205; c=relaxed/simple;
-	bh=fBgd/xX7Uh3OPchqwmFNdogp9X5rg4dHxjtoKMkjoqU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ehuXXjYUDTO6ExlxOwqnoxybXWhfB9uOBzfQogqlM8jreWd+CT1NA+3avsyHyv7r0k+pZY1hGdbcLCwzmvPahqpk25N8I7R8pIHrDKBV5KAdO6TdoPsW33yBBkRG7p5/DhqW8tutZkv1Vfmoc30o9s8q4a1HdZaAObGwnPqV9y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4TrBFK1KkJz9xFrK;
-	Thu,  7 Mar 2024 22:16:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 9CC6B14061B;
-	Thu,  7 Mar 2024 22:36:29 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwDHvhfi0OllmZnkAw--.17428S2;
-	Thu, 07 Mar 2024 15:36:29 +0100 (CET)
-Message-ID: <5a08af42118541c87ce0b173d03217c3623adce2.camel@huaweicloud.com>
-Subject: Re: [PATCH] evm: Change vfs_getxattr() with __vfs_getxattr() in
- evm_calc_hmac_or_hash()
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Seth Forshee <sforshee@kernel.org>
-Cc: zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
- eric.snowberg@oracle.com,  paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com,  linux-integrity@vger.kernel.org,
- linux-security-module@vger.kernel.org,  linux-kernel@vger.kernel.org,
- Roberto Sassu <roberto.sassu@huawei.com>,  stable@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Date: Thu, 07 Mar 2024 15:36:14 +0100
-In-Reply-To: <ZenPtCfh6CyD2xz5@do-x1extreme>
-References: <20240307122240.3560688-1-roberto.sassu@huaweicloud.com>
-	 <ZenPtCfh6CyD2xz5@do-x1extreme>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1709822211; c=relaxed/simple;
+	bh=5S2VXHGhxOzxNWvUFy88OLCLWKC5Vjs6OqaCwuy/fjo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ej/4zTuHFCZShPF8ZzMv5nhm6a8V8zJuF/QLfyPFEZWuyGIDrYBGSgzOKLxmt7txBIkCO1q/GHWRzbDMfqhZ2mr5carYAxaNMNAIymMErCXj1DiTo6cLCpqSkYrj137VLVl6QCci5ZQrWl5l5evMjqchAQl1NQyjpElo6f+aaXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KTkmu1YY; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KTkmu1YY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709822209; x=1741358209;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5S2VXHGhxOzxNWvUFy88OLCLWKC5Vjs6OqaCwuy/fjo=;
+  b=KTkmu1YYNfj4Y7p5AwRTp8y1l2j/mAVmQztHCH5l/DyPUOSgDj4QSK/G
+   grppEdPjY9BgjWNZnSUKp1qU0JBHYaj0nlUWgaa6gSDp9UYNPx5BFZOZ7
+   7nrYFuoI9t3fzPJtdWqWUmvoKun+1R53B/FRXNuFN8V2WR/G3IuqP9JG6
+   nn8MExaVonmJ+fSqiyimp1XJ8dIMRKVJ0411ZVqUxTp+c3K35qvcQC48+
+   batLbMo3MLVaRnYJRvgCLH8T+Xis9nVw2tjNqXD/9MHPtfnL98BlgVGpr
+   G8oek9dfZCmCtrjtIlad883YKpic6Pxu2Aw1BDAWeBmholVV9Kish2X4k
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4348207"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="4348207"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 06:36:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="937046239"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="937046239"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2024 06:36:47 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id EC2333C0; Thu,  7 Mar 2024 16:36:45 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/5] w1: gpio: Make use of device properties
+Date: Thu,  7 Mar 2024 16:35:47 +0200
+Message-ID: <20240307143644.3787260-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240307143644.3787260-1-andriy.shevchenko@linux.intel.com>
+References: <20240307143644.3787260-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwDHvhfi0OllmZnkAw--.17428S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KrWkZFyrZryUuw43ZFy3twb_yoW8tr1fpF
-	WYkanrKrn5Jry5Cas5GF4DAayF93y5Xr4jkrsFv340v3ZrXrn7Zr93Wr13uryF9r1xtwn5
-	tw4qqFyYywnxA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-	AIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAPBF1jj5cYAAAAs3
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2024-03-07 at 08:31 -0600, Seth Forshee wrote:
-> On Thu, Mar 07, 2024 at 01:22:39PM +0100, Roberto Sassu wrote:
-> > From: Roberto Sassu <roberto.sassu@huawei.com>
-> >=20
-> > Use __vfs_getxattr() instead of vfs_getxattr(), in preparation for
-> > deprecating using the vfs_ interfaces for retrieving fscaps.
-> >=20
-> > __vfs_getxattr() is only used for debugging purposes, to check if kerne=
-l
-> > space and user space see the same xattr value.
->=20
-> __vfs_getxattr() won't give you the value as seen by userspace though.
-> Userspace goes through vfs_getxattr() -> xattr_getsecurity() ->
-> cap_inode_getsecurity(), which does the conversion to the value
-> userspace sees. __vfs_getxattr() just gives the raw disk data.
->=20
-> I'm also currently working on changes to my fscaps series that will make
-> it so that __vfs_getxattr() also cannot be used to read fscaps xattrs.
-> I'll fix this and other code in EVM which will be broken by that change
-> as part of the next version too.
+Convert the module to be property provider agnostic and allow
+it to be used on non-OF platforms.
 
-You are right, thank you!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/w1/masters/w1-gpio.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-Roberto
-
-> >=20
-> > Cc: stable@vger.kernel.org # 5.14.x
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Cc: Christian Brauner <brauner@kernel.org>
-> > Cc: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
-> > Fixes: 907a399de7b0 ("evm: Check xattr size discrepancy between kernel =
-and user")
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > ---
-> >  security/integrity/evm/evm_crypto.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/e=
-vm/evm_crypto.c
-> > index b1ffd4cc0b44..168d98c63513 100644
-> > --- a/security/integrity/evm/evm_crypto.c
-> > +++ b/security/integrity/evm/evm_crypto.c
-> > @@ -278,8 +278,8 @@ static int evm_calc_hmac_or_hash(struct dentry *den=
-try,
-> >  		if (size < 0)
-> >  			continue;
-> > =20
-> > -		user_space_size =3D vfs_getxattr(&nop_mnt_idmap, dentry,
-> > -					       xattr->name, NULL, 0);
-> > +		user_space_size =3D __vfs_getxattr(dentry, inode, xattr->name,
-> > +						 NULL, 0);
-> >  		if (user_space_size !=3D size)
-> >  			pr_debug("file %s: xattr %s size mismatch (kernel: %d, user: %d)\n"=
-,
-> >  				 dentry->d_name.name, xattr->name, size,
-> > --=20
-> > 2.34.1
-> >=20
+diff --git a/drivers/w1/masters/w1-gpio.c b/drivers/w1/masters/w1-gpio.c
+index 34128e6bbbfa..8ea53c757c99 100644
+--- a/drivers/w1/masters/w1-gpio.c
++++ b/drivers/w1/masters/w1-gpio.c
+@@ -6,13 +6,13 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/slab.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/of_platform.h>
+ #include <linux/err.h>
+-#include <linux/of.h>
+ #include <linux/delay.h>
+ 
+ #include <linux/w1.h>
+@@ -63,20 +63,11 @@ static u8 w1_gpio_read_bit(void *data)
+ 	return gpiod_get_value(ddata->gpiod) ? 1 : 0;
+ }
+ 
+-#if defined(CONFIG_OF)
+-static const struct of_device_id w1_gpio_dt_ids[] = {
+-	{ .compatible = "w1-gpio" },
+-	{}
+-};
+-MODULE_DEVICE_TABLE(of, w1_gpio_dt_ids);
+-#endif
+-
+ static int w1_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct w1_bus_master *master;
+ 	struct w1_gpio_ddata *ddata;
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
+ 	/* Enforce open drain mode by default */
+ 	enum gpiod_flags gflags = GPIOD_OUT_LOW_OPEN_DRAIN;
+ 	int err;
+@@ -91,7 +82,7 @@ static int w1_gpio_probe(struct platform_device *pdev)
+ 	 * driver it high/low like we are in full control of the line and
+ 	 * open drain will happen transparently.
+ 	 */
+-	if (of_property_present(np, "linux,open-drain"))
++	if (device_property_present(dev, "linux,open-drain"))
+ 		gflags = GPIOD_OUT_LOW;
+ 
+ 	master = devm_kzalloc(dev, sizeof(struct w1_bus_master),
+@@ -152,10 +143,16 @@ static void w1_gpio_remove(struct platform_device *pdev)
+ 	w1_remove_master_device(master);
+ }
+ 
++static const struct of_device_id w1_gpio_dt_ids[] = {
++	{ .compatible = "w1-gpio" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, w1_gpio_dt_ids);
++
+ static struct platform_driver w1_gpio_driver = {
+ 	.driver = {
+ 		.name	= "w1-gpio",
+-		.of_match_table = of_match_ptr(w1_gpio_dt_ids),
++		.of_match_table = w1_gpio_dt_ids,
+ 	},
+ 	.probe = w1_gpio_probe,
+ 	.remove_new = w1_gpio_remove,
+-- 
+2.43.0.rc1.1.gbec44491f096
 
