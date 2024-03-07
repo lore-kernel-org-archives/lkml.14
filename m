@@ -1,204 +1,148 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FEF83CAE;
-	Thu,  7 Mar 2024 10:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8743483CAE;
+	Thu,  7 Mar 2024 10:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709805864; cv=none; b=folEbozIwFh7MWp2Te/nf19gULQU75J+roR0YNgkP3pmzYPLLQO1tHGCFdDj8yVnfi+jG3udigKVVY8f1frgx4h7HWN/V3fJ7oboOsglwiFh7nr4/1aLQm8zORL3LMwwpLcCauRSZf6+XOi1Pllpbmfx8vtN17AnC1r00F0/ZDY=
+	t=1709805886; cv=none; b=i9GxfsQoUxq0SYKF8QuREdkiHkZlkYAz7xR2+xhi13SG0vjjM8lFRFXtiBRUzeBBR26QrfqA41aI7Ec5OIXa5JMosapu82D5d0MIwEbw/qS2ybrat+bNd2hD98ZHhfI2OuA2g+soha0UC2kFxB0wgPKGUofPApBZ4I1+u3C8qqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709805864; c=relaxed/simple;
-	bh=iCkldeipvQOIgZslWygbPiAdWKmL3QMKJVqnBUCaJgg=;
+	s=arc-20240116; t=1709805886; c=relaxed/simple;
+	bh=WFjNa3nUa2rzuGy55gpq6ZUiWUDbWKyxNSUl2tjShI0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NZB/g/qrkP6TMW6dX2PeCDlPzIHvzzTs4Ru3i2Iibp2VVga1I+ixG2QKxYBFeLU8EIBuSgysS7WF9QAuDLtHK/WHkyJFdk0Q9FqWLjAcmQQ5kNCqB0y5lkDUZmkuA8sb6uxnOOqYJs9PZnL02/wwQocSqW7hI+ansSL4IDrd/OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAMxW1zg; arc=none smtp.client-ip=209.85.221.182
+	 To:Cc:Content-Type; b=N5yKbwTiPA15fTEmc8tz+IzXDofp6CRS5QQcf91LK1sebkY6chunjVXJ9/WC6HFpz1VnyXe5OvX5DHjaUmGmqKAt8DwSwPxadsArnSKEyfQGdscwA5T3YgNeMaya0QYwYeO4BMt8Ktaki3998fKvrIBlEF2jv54CxKnh9Rp9Y90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X5OjH+qj; arc=none smtp.client-ip=209.85.210.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAMxW1zg"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4d332d0db9cso72773e0c.3;
-        Thu, 07 Mar 2024 02:04:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5OjH+qj"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e4f7c0e723so287083a34.3;
+        Thu, 07 Mar 2024 02:04:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709805862; x=1710410662; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1709805883; x=1710410683; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DWung4S3LQUYquWoqIN1pFg5TBe+xxRcnHe+DZPUK4I=;
-        b=PAMxW1zgOHLGfoEd15KExzFr1xIKXWHxon5Z5mR9Gh+HlRgLf+KbglDst8jFRGSRm1
-         UypTg81gdGY+Jvj/rI6OUeo0A1p6vzP6edgb47RENcDzeWJfJaQoM9WKtkJXCcMS6T5Q
-         +Ewko7ZfQaaMlbQOLcjWDXBj9lDcqdw7JxwwNcJBRQ/c50LVSO5NF4VkUfDdASzYt2Xv
-         xXSVjx53R9T7SQkaRqjtjG8oRs4o+oHKYW/Hl/iIiSTw6+w0cjFD2xk3I8wDdonvZM30
-         bX2AZutKivzBQ46BiLiFGmFHzlnLX7lqxUa5fWBXbPJ0L54ejZ19r/sDkY0hvT0JxEGH
-         AQUQ==
+        bh=xx95w56RGEnqgt7Xz0ZlhIHC5BxWGFuvJi0FDnmldPs=;
+        b=X5OjH+qj48KqrUjGuJGbc/nPmvb54TweHsuY1oRqkGHjsYkcoQ+jAsViqRFs6Fi1EK
+         HzpruZbBBvxegeDvg9+2rBbV+9MgdQ5NRnb7Ix50TPOUPSS9T8Q9kZbdeY7F434dYBta
+         V0Pp6gwQ1PPvju82ZEuCY9bpXfUHzNCoIAfG9Bv5Gr0IDt8MQ7TD3i2oUsi57MSjqi5q
+         bBaW3/NrFHAdHlzMawHYs7H14bJq/lBrEWC/5waIabuETTWqzgXmrvx7+yDw9/AYXpSz
+         NYIZGHkC1czwuGUB8Uaoo/3mg6LNwfekey+eJfPjTaN4N7q46N4B9yY2feTDGRaZmC8k
+         qwaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709805862; x=1710410662;
+        d=1e100.net; s=20230601; t=1709805883; x=1710410683;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DWung4S3LQUYquWoqIN1pFg5TBe+xxRcnHe+DZPUK4I=;
-        b=sFdMeVs/D4AWbRdoQrsFm8P3Qi7O6SHOdpklDEgyOT8VCv6jyUjabQjxubtj9TmKeM
-         zHcHnmkCCv2WndN69Sp/kLxmy4v2GspQEI/in214XiQMBRPrnIdx5AMV9kaGSwUow8Si
-         l5iFa2dlUqVMa91tjJ2Xu57x/2V+eoRA259f+ypKSF4Dnmfif1Om4dEPQmpm+6SsOZhr
-         iWyw7djzmP+3mnqeEEKoq9OwTsZQqZFF1paNtT7b5ge6DwwP5U/c55Id3dXbvh6D35RK
-         5kn771ewJmmW0zJhw3lRvlkWdR9iMBrALYPnTjrMRoYd7KQaaFB70+ZeOhN40KDCxVrw
-         PiXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0viitFfH0Bmadl/oiifUIabUgia+eQ+SiRyUJTUBOWnq6KuqTWaG/MB5E/UmztvzPxwkQ79LXqWorAtkRGzpSV9H3rIHM0PTtae4xlLibADSgcLv/ToGKWrZ6HiZjbr0pHeGJAvWQ1XMdE84fKJBydP78Dw/lXYFBph2Q0EiharUCzSnf8izPOZjec/xKuJ3LdNqLSQ1THep91R+WXDJltQ8etmy4MtCF
-X-Gm-Message-State: AOJu0YwYtcPjuY5MRiz16L1blMs4+2dMgLS01kiY3HXrvr3CYuNBL0Tc
-	zvp9vOnVRcJZcuKmRpB3ZiBblDBgrfG7F4SsMBPgqw6Ss0TvA3fh6PIfrB4oZo3D4LgBD053BR5
-	lh5XK5hlEYyZ+588Cv1X4v2sjRlk=
-X-Google-Smtp-Source: AGHT+IHvRc3VC+D3ufvw9SI/LIPn3a2nBCWlUPuQ15pdNjsolhLr8jKUha05lO9Ya8FnROJ/wt2FBciPR617sF04dCU=
-X-Received: by 2002:a05:6122:2018:b0:4cd:b718:4b08 with SMTP id
- l24-20020a056122201800b004cdb7184b08mr8157351vkd.11.1709805861784; Thu, 07
- Mar 2024 02:04:21 -0800 (PST)
+        bh=xx95w56RGEnqgt7Xz0ZlhIHC5BxWGFuvJi0FDnmldPs=;
+        b=PN8oalcxHhHlX/SPBDS1ZLCrpcCpy8lETGQXtsfS+N1YxYDGOJT0bHuBfX4+2uKoXQ
+         JgPXPohrMROkhbuwzvRwj/XPz82F/BdoTnpD9eAPzT3VSgIyCPb4Pgou6FujaOOw7ZAi
+         WgIv2WxmiyLMiPlpBCOxAGzz5d6zCu/ig6h38FklJSEA+9M0PSvncFPPZ72aBxbAKJvb
+         9Frfav0kUi4s3VeCJpFlqe0BWiyXJa+RMnP9QOjiJpuB9uovR379i8Ild9Bs9sELqMP3
+         nqrC0uoGdaobZIROgoYblC4i9NzN/Howi2tDPnv5+wuCU2U0fsyp5oM8jYpoVoBJrLv3
+         5WIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjTNE2MFk/OW6h7PTu0PDSe+lib4bSCRZ5K/PYbeRHqlPJzQCwYlFBE04dNwxieGGn2rjskXifu6nOgQQuSemDgGbglronm0b2S+J5U28cjrictwg2Myrvw05P9IF0u+EW/pR/AMYE8pjinGOadtqOg/UZRgwYS6E2JrpKzrB8xZmIRN8=
+X-Gm-Message-State: AOJu0Yw9v8zuJyz/BslNMc8R2Ru9F18gV9OGEAdsPrQX9Z5MpyaBBYzO
+	Hum/iBOUjU5d9TdGC06PYyqimr33bdIGQMdD1irDYhP8BCh4KXAli21EPx7hW5FhVNnKT892dRR
+	yzczFTNyyOeW5w25KoD3LIIab1tU=
+X-Google-Smtp-Source: AGHT+IGVD3wzaX3Yt+FvOko++C+SVpoj1sdjPBxPgVYX2N06XjupwxcD0RKYjgL/jX1N4ZEi5q0aWnVeEtCsn4tGWZY=
+X-Received: by 2002:a05:6870:1c7:b0:220:cf76:a9b7 with SMTP id
+ n7-20020a05687001c700b00220cf76a9b7mr8692531oad.44.1709805883490; Thu, 07 Mar
+ 2024 02:04:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306231007.13622-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240306231007.13622-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVQcyrwTCTukhLFiaawDgbKwZWcWCO7bc1FfFS-t=kcqg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVQcyrwTCTukhLFiaawDgbKwZWcWCO7bc1FfFS-t=kcqg@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 7 Mar 2024 10:03:15 +0000
-Message-ID: <CA+V-a8v=zMW4oW+fH1nX70fEXP=f9BhWDYgxMy_LpuXvVG5wow@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: serial: renesas,scif: Validate
- 'interrupts' and 'interrupt-names'
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+References: <20240306201045.1475-1-justin.swartz@risingedge.co.za> <20240306201045.1475-2-justin.swartz@risingedge.co.za>
+In-Reply-To: <20240306201045.1475-2-justin.swartz@risingedge.co.za>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Thu, 7 Mar 2024 11:04:31 +0100
+Message-ID: <CAMhs-H9WyQZsvEvCfUcZ0_eU8--EzxEmaxR50wdRFDGP3E64ZQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mips: dts: ralink: mt7621: add serial1 and serial2 nodes
+To: Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>, 
 	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-mips@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+Hi Justin,
 
-Thank you for the review.
+On Wed, Mar 6, 2024 at 9:11=E2=80=AFPM Justin Swartz
+<justin.swartz@risingedge.co.za> wrote:
+>
+> Add serial1 and serial2 nodes to define the existence of
+> UART1 and UART2.
+>
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> ---
+>  arch/mips/boot/dts/ralink/mt7621.dtsi | 38 +++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/arch/mips/boot/dts/ralink/mt7621.dtsi b/arch/mips/boot/dts/r=
+alink/mt7621.dtsi
+> index dca415fdd..2069249c8 100644
+> --- a/arch/mips/boot/dts/ralink/mt7621.dtsi
+> +++ b/arch/mips/boot/dts/ralink/mt7621.dtsi
+> @@ -128,6 +128,44 @@ serial0: serial@c00 {
+>                         pinctrl-0 =3D <&uart1_pins>;
+>                 };
+>
+> +               serial1: serial@d00 {
+> +                       status =3D "disabled";
+> +
+> +                       compatible =3D "ns16550a";
+> +                       reg =3D <0xd00 0x100>;
+> +
+> +                       clocks =3D <&sysc MT7621_CLK_UART2>;
+> +
+> +                       interrupt-parent =3D <&gic>;
+> +                       interrupts =3D <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH=
+>;
+> +
+> +                       reg-shift =3D <2>;
+> +                       reg-io-width =3D <4>;
+> +                       no-loopback-test;
+> +
+> +                       pinctrl-names =3D "default";
+> +                       pinctrl-0 =3D <&uart2_pins>;
+> +               };
+> +
+> +               serial2: serial@e00 {
+> +                       status =3D "disabled";
+> +
+> +                       compatible =3D "ns16550a";
+> +                       reg =3D <0xe00 0x100>;
+> +
+> +                       clocks =3D <&sysc MT7621_CLK_UART3>;
+> +
+> +                       interrupt-parent =3D <&gic>;
+> +                       interrupts =3D <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH=
+>;
+> +
+> +                       reg-shift =3D <2>;
+> +                       reg-io-width =3D <4>;
+> +                       no-loopback-test;
+> +
+> +                       pinctrl-names =3D "default";
+> +                       pinctrl-0 =3D <&uart3_pins>;
+> +               };
+> +
 
-On Thu, Mar 7, 2024 at 8:58=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, Mar 7, 2024 at 12:11=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > This commit adds support to validate the 'interrupts' and 'interrupt-na=
-mes'
-> > properties for every supported SoC. This ensures proper handling and
-> > configuration of interrupt-related properties across supported platform=
-s.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> > @@ -82,38 +82,6 @@ properties:
-> >    reg:
-> >      maxItems: 1
-> >
-> > -  interrupts:
-> > -    oneOf:
-> > -      - items:
-> > -          - description: A combined interrupt
-> > -      - items:
-> > -          - description: Error interrupt
-> > -          - description: Receive buffer full interrupt
-> > -          - description: Transmit buffer empty interrupt
-> > -          - description: Break interrupt
-> > -      - items:
-> > -          - description: Error interrupt
-> > -          - description: Receive buffer full interrupt
-> > -          - description: Transmit buffer empty interrupt
-> > -          - description: Break interrupt
-> > -          - description: Data Ready interrupt
-> > -          - description: Transmit End interrupt
->
-> As the above three groups are increasing supersets, you can just use
-> a single "items" listing all 6 interrupts, and describe the first one
-> as "Error interrupt or single combined interrupt".  After that, the
-> SoC-specific logic at the end just needs to specify the appropriate
-> minItems/maxItems.
->
-Agreed, I will do that.
+Please follow the preferred order for properties described in dts
+coding style [0]. I know that there is some mess around the properties
+order in some nodes with the current dtsi file but we did not have
+coding style before and now we have it, so I think we should follow it
+at least for new additions.
 
-> > -
-> > -  interrupt-names:
-> > -    oneOf:
-> > -      - items:
-> > -          - const: eri
-> > -          - const: rxi
-> > -          - const: txi
-> > -          - const: bri
-> > -      - items:
-> > -          - const: eri
-> > -          - const: rxi
-> > -          - const: txi
-> > -          - const: bri
-> > -          - const: dri
-> > -          - const: tei
->
-> Likewise, with "interrupt-names: false" below for the ones that don't
-> need it.
->
-Agreed.
+Best regards,
+    Sergio Paracuellos
 
-> > -
-> >    clocks:
-> >      minItems: 1
-> >      maxItems: 4
-> > @@ -173,6 +141,91 @@ allOf:
-> >        required:
-> >          - resets
-> >
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - renesas,scif-r8a7742
-> > +              - renesas,scif-r8a7743
-> > +              - renesas,scif-r8a7744
-> > +              - renesas,scif-r8a7745
-> > +              - renesas,scif-r8a77470
-> > +              - renesas,scif-r8a774a1
-> > +              - renesas,scif-r8a774b1
-> > +              - renesas,scif-r8a774c0
-> > +              - renesas,scif-r8a774e1
-> > +              - renesas,scif-r8a7778
-> > +              - renesas,scif-r8a7779
-> > +              - renesas,scif-r8a7790
-> > +              - renesas,scif-r8a7791
-> > +              - renesas,scif-r8a7792
-> > +              - renesas,scif-r8a7793
-> > +              - renesas,scif-r8a7794
-> > +              - renesas,scif-r8a7795
-> > +              - renesas,scif-r8a7796
-> > +              - renesas,scif-r8a77961
-> > +              - renesas,scif-r8a77965
-> > +              - renesas,scif-r8a77970
-> > +              - renesas,scif-r8a77980
-> > +              - renesas,scif-r8a77990
-> > +              - renesas,scif-r8a77995
-> > +              - renesas,scif-r8a779a0
-> > +              - renesas,scif-r8a779f0
-> > +              - renesas,scif-r8a779g0
->
-> Please simplify using family-specific names:
->   - renesas,rcar-gen1-scif
->   - renesas,rcar-gen2-scif
->   - renesas,rcar-gen3-scif
->   - renesas,rcar-gen4-scif
->
-Yep, that makes sense.
-
-Cheers,
-Prabhakar
+[0]: https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
