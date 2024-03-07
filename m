@@ -1,101 +1,78 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9BE200DB
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 07:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679F21FDD
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 07:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709795884; cv=none; b=eTAxNoO39e7JUyGjyNMkb4p+PAiwfz/5Z5bU5VoHuxR7Yz0sSKE6/5Aet6ULP0QBGdVEitMHhuZ2G8jPBb6mgQOU+DMlkNmC/4KxkbK5p7FuFSlav0wKgg2vS86+/hzGkhqY398s6eL9tZSpw+i96hV4puGtTN4SIprx2F/sLTA=
+	t=1709796105; cv=none; b=DqZhU/yPvPCsc0miWFOJoaVNMKAxQditxJeEKR0f61Na2mVyPzg/DKzZKQIixiAc1crXKB7gxUU/s+EL1YWae06oHcbTpU0LLf1ayl2YafVD8sf+Cip7dypBlTx5Ho3ZMuVVTnR69a7MJ9ZgwRcD8j5PXHyphqTN0GqksofzvOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709795884; c=relaxed/simple;
-	bh=HIo01TJSTbErOtfFpggP4HNn4QWtzF0ZBECJeNpS3JQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UMXqU3415Op58ZizomU2qUvee49nA8INnjE3evKUX4LR1niF57jzqrjkW9Ik+5QxvRXurPAr5/NkrKVp79LCOIbwp/+GPcozQRghyRU26iCeOST1zF77m8XDkALS6XfigbtBHWRkip0+trbIOsc41PeU3k21OYaMaQRDfVdfxpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (78.37.41.175) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Thu, 7 Mar
- 2024 10:17:51 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Andrew Morton <akpm@linux-foundation.org>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Karina Yankevich <k.yankevich@omp.ru>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH] assoc_array: fix the return value in assoc_array_insert_mid_shortcut()
-Date: Thu, 7 Mar 2024 10:17:17 +0300
-Message-ID: <20240307071717.5318-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709796105; c=relaxed/simple;
+	bh=MqVBXUoVntZHD125v6N35fVG05A3BHyjL4XSvBEiedY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IG/rRSMO3XgoQ68XxGH9qsvp+Pc8zGMhQrk1inOVBZ4dgl5WxpOHKxuNASVY0AP1q/G0DwWQg3RiNhIZIdFfqyhudnu47Zg9j1eGmOE4UWgkBQuj+TNq0mKlXa0uq7BlU9t5+3mq9DXAOmd9iMH6RugkLlYRrrOUZteqDYoHFnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=I3u7exF8; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="I3u7exF8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8w8rejYB9PBmKB0DYtImdRxvM7rQ/tJG4QSkTuHYLXw=; b=I3u7exF8LYo6EnYsylcAmUSP+Z
+	R0i7G9s8p9OgKJN6jlZEfFTBNB+jIFnUR2Lfe+LMXnV1DiqReY6K+WzE/3TFxRtOWELmj2CYfDslt
+	2gyw22XfQUJ+JtsoAg63qUO7FmSMcl6Hp+1CuLtV1n5KaUrc+IPZKYeSMBrnW1ra+nuJY8k1VSx4Z
+	lDGuSBayME4GraArPrhR2obfaG+oUcwaJU4FKq0Rl2Q8b68HSjbdBfK3y267PwUK24ePKDf0osb9T
+	LVY5we2/bTF4Tp3weeVUVNxuH3EGW+4c7PmAi/fC0hYmQrR11bKHhVw1fb/O0IRUGsioIkaRPhQzt
+	Z+CFRwkA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1ri841-003FW0-06;
+	Thu, 07 Mar 2024 07:21:13 +0000
+Date: Thu, 7 Mar 2024 07:21:12 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-erofs@lists.ozlabs.org, xiang@kernel.org, chao@kernel.org,
+	huyue2@coolpad.com, jefflexu@linux.alibaba.com,
+	linux-kernel@vger.kernel.org, yangerkun@huawei.com,
+	houtao1@huawei.com, yukuai3@huawei.com, chengzhihao1@huawei.com
+Subject: Re: [PATCH] erofs: fix lockdep false positives on initializing
+ erofs_pseudo_mnt
+Message-ID: <20240307072112.GC538574@ZenIV>
+References: <20240307024459.883044-1-libaokun1@huawei.com>
+ <20240307050717.GB538574@ZenIV>
+ <7e9746db-033e-64d0-a3d5-9d341c66cec7@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/07/2024 06:56:30
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 184019 [Mar 07 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 9 0.3.9 e923e63e431b6489f12901471775b2d1b59df0ba
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 78.37.41.175 in (user) dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;78.37.41.175:7.4.1,7.7.3;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: {cloud_iprep_silent}
-X-KSE-AntiSpam-Info: ApMailHostAddress: 78.37.41.175
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/07/2024 07:02:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/7/2024 2:51:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e9746db-033e-64d0-a3d5-9d341c66cec7@huawei.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Returning the edit variable is redundant because it is
-dereferenced right before it is returned. It would be better
-to return true.
+On Thu, Mar 07, 2024 at 03:06:49PM +0800, Baokun Li wrote:
+> > > +int erofs_anon_register_fs(void)
+> > > +{
+> > > +	return register_filesystem(&erofs_anon_fs_type);
+> > > +}
+> > What for?  The only thing it gives you is an ability to look it up by
+> > name.  Which is completely pointless, IMO,
+> The helper function here is to avoid extern erofs_anon_fs_type(), because
+> we define it in fscache.c, but also use it in super.c. Moreover, we don't
+> need
+> to register it when CONFIG_EROFS_FS_ONDEMAND is not enabled, so we
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
+You don't need to register it at all.
 
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
----
- lib/assoc_array.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The one and only effect of register_filesystem() is making file_system_type
+instance visible to get_fs_type() (and making it show up in /proc/filesystems).
 
-diff --git a/lib/assoc_array.c b/lib/assoc_array.c
-index ca0b4f360c1a..388e656ac974 100644
---- a/lib/assoc_array.c
-+++ b/lib/assoc_array.c
-@@ -938,7 +938,7 @@ static bool assoc_array_insert_mid_shortcut(struct assoc_array_edit *edit,
- 		edit->leaf_p = &new_n0->slots[0];
- 
- 	pr_devel("<--%s() = ok [split shortcut]\n", __func__);
--	return edit;
-+	return true;
- }
- 
- /**
--- 
-2.34.1
+That's it.  If you want to have it looked up by name (e.g. for userland
+mounts), you need to register.  If not, you do not need to do that.
 
+Note that kern_mount() take a pointer to struct file_system_type,
+not its (string) name.  So all you get from registration is an extra line
+in /proc/filesystems.  What's the point?
