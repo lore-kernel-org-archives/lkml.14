@@ -1,129 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing1.flk.host-h.net (outgoing1.flk.host-h.net [188.40.0.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F98135A46
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 19:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAEC84A2B;
+	Thu,  7 Mar 2024 19:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.0.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709838063; cv=none; b=srrsKKVk0GARgtUFbJ1+3zXEq/gTVjufsgs9R6fimhkR5R5D3s5/BXfzFtazz7Fa59MkdOB551XduEFgHTOh19b6b3OkOfLt0yWqD57RYl9vGLshVAEoiZv2n6GRk6OFLAUw+HUyO5ZeL/UNGwCjPclIM8WDueXGpaZMRsjbhiA=
+	t=1709838318; cv=none; b=G3XQx/O3oSuXQCQFFuYEffOCV+jC4vg6nxsE8rHIXMVZlxi1q+xlJuo3/ozWldRHMnAKnhmgwPVvMHfNQNcADhIOAoiJg6ZJSUT9DpuEIXx5P3IhS1Vu0t7Qz6ouSMFxhGaVTWlBntLGeZfm4Th6H0Pswhw9kk8UQxIbEsTOLYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709838063; c=relaxed/simple;
-	bh=xqdCq5jKU4ORzMILrNtu9YOfneH1J2iFlj3zsYmWy4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TTQul22TnDXbPEKVQ1gZ4rH9NUdwX5Pl607XVCRwsFPRJD/6jtXQX3lIYI+/60cbccrLga1gpDGEGXgXfyXBNoQVJZA2WjRGSQO+njJchNzVjLRw9K3D+EGTx0IaSanKX5GXCtqg/pH//hDroNxa2S8V8IO2HD7Pe2OqjbCoZtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYqyygud; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709838318; c=relaxed/simple;
+	bh=o/INtSf7uMcj8vPennDZ0N+2MzVAu0gQN1w02VcOF4c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HsZ6b3Uwq+iOV6ALxP+ndci9LA6KImYWJRxyiUid6m0SP0k+igKbRwA+KeAY0m4hME+1hYWTLK9fQsz9WzhcMROLJs8I7EXiP9N3MKy8721Zlv82llmI0FdL6Ce9hq++ibymoNKIw7jKfvjGb50wIRjGV6NGkiv7jZEsV2DYvf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za; spf=pass smtp.mailfrom=risingedge.co.za; dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b=RUnSDqyl; arc=none smtp.client-ip=188.40.0.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=risingedge.co.za
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYqyygud"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA86BC433C7;
-	Thu,  7 Mar 2024 19:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709838062;
-	bh=xqdCq5jKU4ORzMILrNtu9YOfneH1J2iFlj3zsYmWy4U=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=YYqyygudPMviN+nhtYpCH71pOTredcthSYaA3x3x4YyvKbXYJHfcEt3QZXk9UcalH
-	 sqsWcBFmCMTgjUFIZQXgGSytO7ASU1oV/+BM2kLnKrgk3XIlrBdfl6TITIlDZMst2r
-	 SIWA1xLPygIlDoZ5uXgtsb7p/Z9Z0baVYkeEQ38qvIEuXbWHfBYdfmPxOwZpP08VLD
-	 plLbiRQReVXvWsWqt2hAg9tef0Tduk39i+bo88SUGpq74KFd7BUfBRGX0CkNtyNgEq
-	 /7S/WybN823vswsIqxKIlqzDj9zOPEF4TTjPnpyWPzr7rmMa3rdWRf6A9QMunA8D3p
-	 nXtYbzmVDylxQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 5E7B3CE0716; Thu,  7 Mar 2024 11:01:02 -0800 (PST)
-Date: Thu, 7 Mar 2024 11:01:02 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joel@joelfernandes.org>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, peterz@infradead.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
-	jpoimboe@kernel.org, mark.rutland@arm.com, jgross@suse.com,
-	andrew.cooper3@citrix.com, bristot@kernel.org,
-	mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
-	glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
-	mattst88@gmail.com, krypton@ulrich-teichert.org,
-	rostedt@goodmis.org, David.Laight@aculab.com, richard@nod.at,
-	mjguzik@gmail.com, jon.grimm@amd.com, bharata@amd.com,
-	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com
-Subject: Re: [PATCH 26/30] sched: handle preempt=voluntary under PREEMPT_AUTO
-Message-ID: <63380f0a-329c-43df-8e6c-4818de5eb371@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
- <20240213055554.1802415-27-ankur.a.arora@oracle.com>
- <65e3cd87.050a0220.bc052.7a29@mx.google.com>
- <87frx514jz.fsf@oracle.com>
- <12a20651-5429-43df-88d7-9d01ff6212c6@joelfernandes.org>
+	dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b="RUnSDqyl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=risingedge.co.za; s=xneelo; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:reply-to:sender:bcc
+	:content-type; bh=uNgnMVsULIy7vFE3ILTyIURmP3dMNjG/ZGbjuQtikzw=; b=RUnSDqyl7+r
+	qakUnibDug6JA7EsMfSwcvkkpgmHhWUHr9yNIdu987R1ReBgjLL4tdzpuJkdGUGo1pfaWyex2A4yr
+	j7SC/uUXVyEWA+U3OSCw2g5Br69PWQy7IhE2XGmaJtxIhENJy/C71PeMUXUtr5YWgY2JYDbLwm1+z
+	a5GGpyPLH6GKrXtS95c37/KrwWlsiFOP3vSqoOaMpu0cf4gXzjAQvYuRefq9ed1duoInA7DMlnW2F
+	9RJNOm8AJoYVo/Zm/3E2v7Un8fWXrQzX31vHA8WhsxTkJgNC3kcEjfYlFkrFIxe7IwrVbaprAxRhI
+	pjpg4VuHeeFR8EAYQGmqtiQ==;
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+	by antispam3-flk1.host-h.net with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <justin.swartz@risingedge.co.za>)
+	id 1riJ37-00Cs1y-CW; Thu, 07 Mar 2024 21:05:06 +0200
+Received: from [41.144.0.96] (helo=localhost.localdomain)
+	by www31.flk1.host-h.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <justin.swartz@risingedge.co.za>)
+	id 1riJ35-0007Za-Ju; Thu, 07 Mar 2024 21:05:00 +0200
+From: Justin Swartz <justin.swartz@risingedge.co.za>
+To: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Justin Swartz <justin.swartz@risingedge.co.za>,
+	linux-mips@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v2 1/3] mips: dts: ralink: mt7621: associate uart1_pins with serial0
+Date: Thu,  7 Mar 2024 21:04:05 +0200
+Message-Id: <20240307190408.23443-1-justin.swartz@risingedge.co.za>
+In-Reply-To: <CAMhs-H_eUKm7C40oCzuKwwEMZAcOJ-g4MghAfkGAmxRM0AXPUw@mail.gmail.com>
+References: <CAMhs-H_eUKm7C40oCzuKwwEMZAcOJ-g4MghAfkGAmxRM0AXPUw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12a20651-5429-43df-88d7-9d01ff6212c6@joelfernandes.org>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.02)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+2dkIiVgdeIwrfJZUlzfSoPUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5wCPRB8bAzJcv2cv+UqiTTc2+CpNcmBnO4XM3Sck4bwNogU
+ WCl1nkLBzZX0KuJ9bXiS85Z42w/+2OBolTNFbPomXFWCX8oNdggW7HE9XDTdSejrkEpbuUvwMvHx
+ 3T+KSG//gbuP7hnUK8NQdLwsVWKIFDZRrTGv3rxiw9tFrqFSCFNiLZt/QXQnOBRD+jq1HsKsDh/6
+ Srgk2K3gr1VBfJbChkYH6fbrypLNrde+UooQVNLReLErukdelEOHUIpaBbp5GdnsN8+UvimwMinK
+ 0+Txhz2u9qvrL2PODYgMZQApJXOjDLkqunZ9NcY2bHZn7CfFscMZZf3sCkN20I5vMh4akiObI7Kj
+ vK7X04QEin24qbfMFd8eGjnYW8aSH5qj4ujh/13psIvqSqJFa1CcANErDW/w69saM9prk3jNnHtn
+ nuEt/J9wDZeQfiNOYsLDFBdwYt2XtlLzy7G7T4kla0JNnAWQx3FS11bhwUa9HCIwKB+TroNcRY33
+ oNmH4nRQzHQazgY7lmveanvOdQzf6IMJ3345q/s6ySNrGnXycmhg3DrczAD1WVolgcSeHb4aFR6o
+ naNQbqJUPRwZtKOTN8gOLtBcNrQxKZYuPe8bdCyw79zlPbqLQkZr26Lcxdvj8cqI+CogZdOhX7v3
+ ClXzrmMENhJLl6MBfhzHVBR0wHQZxzIUka7Uq615Mik1qzcz30+tdk6yIuh9K7v+Nq0Cm3JVhle6
+ F/kpBdN+oWjoATjEFDwcaiz0R34rhTN+GTbl4uS+pZovX9cex7Ac4fawcerGI7TrGXpM/B/M0BZd
+ PfIU1BX7pZc1sE3vsz58auH/srM2fgZ9JmgLbj7sqoEiwv7LCxIiAE5ODMnmwjvj2589zjbyZCiM
+ WpBpW8YvoIIqmZcWhL/r/eFjMjJnMHeiAPOVAT1rE1/vP68Bb4z3v3h3gCdXrv2+9GnNX30LKqXb
+ fwFKgm/rnYBl+Mj5KqOl6Jzub/f3QhLRbOgisvi5VU9eNBtgo6zjiatjNO/pnMCjuIvXs/AyV/Ns
+ URB/R+FlEHyAzksgfaRvdgw0WK34QWnzHHMcN6qoXPjenLhIOF1oeRYbjF1Hp647mOWoQlc3hL3c
+ dBMSQgQtiTUcJp5roVy0aUu4QpSck7G+GMKyAf/5Ohx4u/m4iBmYb1/LCV4/EuVHup06w3Vwxf9C
+ F7D6LKKRTfdjzQ6YC7Heg3Xf7O1TOd6RcY/MXB8eEq3bCN2QohZvyS03iBmgsz450Kmjd3fGV1W8
+ G8QuHm3zVXLA16qJoSUoBquXd20U5QRJeq08E+NlIbtf63VNbf0lrvssY+k7AHGi1NevGWTo2+h8
+ Lhk4HCeZR7ymlGVRtthBJ2y8A5arx6JItKpFaUNPGMMlvbMX0nyK1NiAJ0y2Qvvn6ds6mor35w4f
+ SfHzQbABJfgy21HclcZkPRq7NhoxyMwqi8Q23Rgadfh5T5n5D4OHHpbEIgsllZKWnzc5M5WlNtVJ
+ qo05MS+4ayUpOtEhdxekWDmK9g==
+X-Report-Abuse-To: spam@antispamquarantine.host-h.net
 
-On Wed, Mar 06, 2024 at 03:42:10PM -0500, Joel Fernandes wrote:
-> Hi Ankur,
-> 
-> On 3/5/2024 3:11 AM, Ankur Arora wrote:
-> > 
-> > Joel Fernandes <joel@joelfernandes.org> writes:
-> > 
-> [..]
-> >> IMO, just kill 'voluntary' if PREEMPT_AUTO is enabled. There is no
-> >> 'voluntary' business because
-> >> 1. The behavior vs =none is to allow higher scheduling class to preempt, it
-> >> is not about the old voluntary.
-> > 
-> > What do you think about folding the higher scheduling class preemption logic
-> > into preempt=none? As Juri pointed out, prioritization of at least the leftmost
-> > deadline task needs to be done for correctness.
-> > 
-> > (That'll get rid of the current preempt=voluntary model, at least until
-> > there's a separate use for it.)
-> 
-> Yes I am all in support for that. Its less confusing for the user as well, and
-> scheduling higher priority class at the next tick for preempt=none sounds good
-> to me. That is still an improvement for folks using SCHED_DEADLINE for whatever
-> reason, with a vanilla CONFIG_PREEMPT_NONE=y kernel. :-P. If we want a new mode
-> that is more aggressive, it could be added in the future.
+Add missing pinctrl-name and pinctrl-0 properties to declare
+that the uart1_pins group is associated with serial0.
 
-This would be something that happens only after removing cond_resched()
-might_sleep() functionality from might_sleep(), correct?
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ arch/mips/boot/dts/ralink/mt7621.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-							Thanx, Paul
+diff --git a/arch/mips/boot/dts/ralink/mt7621.dtsi b/arch/mips/boot/dts/ralink/mt7621.dtsi
+index 35a10258f..dca415fdd 100644
+--- a/arch/mips/boot/dts/ralink/mt7621.dtsi
++++ b/arch/mips/boot/dts/ralink/mt7621.dtsi
+@@ -123,6 +123,9 @@ serial0: serial@c00 {
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+ 			no-loopback-test;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart1_pins>;
+ 		};
+ 
+ 		spi0: spi@b00 {
+-- 
 
-> >> 2. you are also planning to remove cond_resched()s via this series and leave
-> >> it to the scheduler right?
-> > 
-> > Yeah, under PREEMPT_AUTO, cond_resched() will /almost/ be not there. Gets
-> > defined to:
-> > 
-> > static inline int _cond_resched(void)
-> > {
-> >         klp_sched_try_switch();
-> >         return 0;
-> > }
-> > 
-> > Right now, we need cond_resched() to make timely forward progress while
-> > doing live-patching.
-> 
-> Cool, got it!
-> 
-> >> Or call it preempt=higher, or something? No one is going to understand the
-> >> meaning of voluntary the way it is implied here IMHO.
-> > 
-> > I don't think there's enough to make it worth adding a new model. For
-> > now I'm tending towards moving the correctness parts to preempt=none and
-> > making preempt=voluntary identical to preempt=none.
-> 
-> Got it, sounds good.
-> 
-> > Thanks for the review.
-> 
-> Sure! Thanks for this work. Looking forward to the next series,
-> 
->  - Joel
-> 
