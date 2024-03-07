@@ -1,152 +1,100 @@
-Received: from smtp238.sjtu.edu.cn (smtp238.sjtu.edu.cn [202.120.2.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DD2EAD5;
-	Thu,  7 Mar 2024 02:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BB415EA6;
+	Thu,  7 Mar 2024 02:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709777680; cv=none; b=gwz0iyN0tRo6LuclYx3Y+N9xMZl92MqwWv1qJ//87TBqRiDtXvPmGXAOsOdURUillxsIkJkZeNG9vWZvLiXxDWSzSB2/KGa+CY5jYMGmxf1OTRp+nrfC4VRDYffbXsoJ0ybC0qeW5Hz5dJKcmBJQA4fIEAyHzlk+bNn8IAoTszE=
+	t=1709777762; cv=none; b=nLsIkrYbZHkrdlbFfW9jaqZD2KNuEmkYRz94OPiQsSVPFxKKSOoi9ufOUfCzwyXey/radYFcfr86dcER1+JtXupXaEQKC5lWPyl+cp9uw0+bskbOhzADs3DolB5uQ2uwenl9xfPYwK46yAYpUP3E8PiMgdYPVx0rHThD2TGlCZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709777680; c=relaxed/simple;
-	bh=zgC/d6cds9XJiQqU/dEwldAPOIfK/79YXy+0W9vHRtE=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=Dop6LWPTE5XQpfHjWwYkmCkZCuDHKN+8w42hxhWa3pluvOpqQr3dR9qWrowcY9pG400sYRgdiNEMMsPLOzXM6i5tuki2Q0X5wtubN2DWjy7UiEU0AO8Zg+ZufKR3Qzw1L/Vfjx8/C1Spdm0Ol6fQZu+aNTyuTzHUisErJ92QCjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; arc=none smtp.client-ip=202.120.2.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
-Received: from mta91.sjtu.edu.cn (unknown [10.118.0.91])
-	by smtp238.sjtu.edu.cn (Postfix) with ESMTPS id C5445274D;
-	Thu,  7 Mar 2024 10:14:27 +0800 (CST)
-Received: from mstore135.sjtu.edu.cn (unknown [10.118.0.135])
-	by mta91.sjtu.edu.cn (Postfix) with ESMTP id 7F0C337C8F4;
-	Thu,  7 Mar 2024 10:14:27 +0800 (CST)
-Date: Thu, 7 Mar 2024 10:14:26 +0800 (CST)
-From: Zheyun Shen <szy0127@sjtu.edu.cn>
-To: Sean Christopherson <seanjc@google.com>, 
-	thomas lendacky <thomas.lendacky@amd.com>, 
-	pbonzini <pbonzini@redhat.com>, tglx <tglx@linutronix.de>
-Cc: kvm <kvm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <980607740.5109383.1709777666996.JavaMail.zimbra@sjtu.edu.cn>
-Subject: [PATCH v2] KVM:SVM: Flush cache only on CPUs running SEV guest
+	s=arc-20240116; t=1709777762; c=relaxed/simple;
+	bh=Cw89We1aTAVBbcBRos65D+qMVJWNLUVeKILK2DWf540=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T9jx8jzZ3kv1NM891tfP4ujUR+0oxkAKbi0rB577DSa3HnPKRGjmfKmqTrfQI0qyg9cFYMfQqDwCOCza2eUgtEllnJb8Wb7aHwO2oAJVM/a5Xus03Uuexn7X1LkFZC0IvHZABmnYVKFOJJdEX5NLORd/cgBpcoviKhhWubLNzbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2haLrco; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2haLrco"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59B1BC43390;
+	Thu,  7 Mar 2024 02:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709777761;
+	bh=Cw89We1aTAVBbcBRos65D+qMVJWNLUVeKILK2DWf540=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e2haLrcoYyKOlH2ZZ7Rf2CK7O15Lo2E4Oo5/0FMZRY1/4m0vAJc7leeijC1NOZL/Q
+	 VFqcSJcgHOooJ/oa6qlbuQ4Ae6kYuqlId0zP2V4BKXfRz7qldYKowGfkO0SC0LHa9b
+	 rCUh6zs2WQYuNhvgy05KaFAW3UzmQfdupjgIo4nyNIT6iwWozWi6D0gmspUrvORIPF
+	 4Ka4+bjiQR8ADhwLoCSpt3VlxbFfeRlynSh1LA1Ye/sA/O9fu1GmVl63FgJTgZ+6R6
+	 gmAm5XzUS7RlaaZi7B16Yg8ARBnUcqZcbvfJC1sTgYhXR4TwttR4QEgZjm8R1Vh/VA
+	 O20Ji8xeC+9Kw==
+Date: Wed, 6 Mar 2024 18:16:00 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Liang Chen <liangchen.linux@gmail.com>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Dragos Tatulea <dtatulea@nvidia.com>,
+ "davem@davemloft.net" <davem@davemloft.net>, "herbert@gondor.apana.org.au"
+ <herbert@gondor.apana.org.au>, Gal Pressman <gal@nvidia.com>,
+ "dsahern@kernel.org" <dsahern@kernel.org>, "steffen.klassert@secunet.com"
+ <steffen.klassert@secunet.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+ Leon Romanovsky <leonro@nvidia.com>, "edumazet@google.com"
+ <edumazet@google.com>, "ian.kumlien@gmail.com" <ian.kumlien@gmail.com>,
+ "Anatoli.Chechelnickiy@m.interpipe.biz"
+ <Anatoli.Chechelnickiy@m.interpipe.biz>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>
+Subject: Re: [RFC] net: esp: fix bad handling of pages from page_pool
+Message-ID: <20240306181600.5af8ef5f@kernel.org>
+In-Reply-To: <CAHS8izOoO-EovwMwAm9tLYetwikNPxC0FKyVGu1TPJWSz4bGoA@mail.gmail.com>
+References: <20240304094950.761233-1-dtatulea@nvidia.com>
+	<20240305190427.757b92b8@kernel.org>
+	<7fc334b847dc4d90af796f84a8663de9f43ede5d.camel@nvidia.com>
+	<20240306072225.4a61e57c@kernel.org>
+	<320ef2399e48ba0a8a11a3b258b7ad88384f42fb.camel@nvidia.com>
+	<20240306080931.2e24101b@kernel.org>
+	<CAHS8izMw_hxdoNDoCZs8T7c5kmX=0Lwqw_dboSj7z1LqtS-WKA@mail.gmail.com>
+	<9a78b37abdf40daafd9936299ea2c08f936ad3d5.camel@nvidia.com>
+	<20240306094133.7075c39f@kernel.org>
+	<CAHS8izN436pn3SndrzsCyhmqvJHLyxgCeDpWXA4r1ANt3RCDLQ@mail.gmail.com>
+	<CAHS8izOoO-EovwMwAm9tLYetwikNPxC0FKyVGu1TPJWSz4bGoA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=GB2312
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 10.0.6_GA_4585 (ZimbraWebClient - GC122 (Win)/10.0.6_GA_4585)
-Thread-Index: E3LcEnfndLKXNi/4RoxZJ7buiDAZDw==
-Thread-Topic: Flush cache only on CPUs running SEV guest
 
-On AMD CPUs without ensuring cache consistency, each memory page 
-reclamation in an SEV guest triggers a call to wbinvd_on_all_cpus(), 
-thereby affecting the performance of other programs on the host.
+On Wed, 6 Mar 2024 10:46:45 -0800 Mina Almasry wrote:
+> Gah, nevermind, skb_pp_frag_ref() actually returns -EINVAL if
+> !skb->pp_recycle, and in the call site we do a skb_frag_ref() on this
+> error, so all in all we end up doing a get_page/put_page pair. Sorry
+> for the noise.
+> 
+> So we're supposed to:
+> - !skb->pp_recycle && is_pp_page()
+> ref via get_page
+> unref via put_page
+> 
+> Very subtle stuff (for me at least). I'll try to propose some cleanup
+> to make this a bit simpler using helpers that handle all these subtle
+> details internally so that the call sites don't have to do this
+> special handling.
 
-Typically, an AMD server may have 128 cores or more, while the SEV guest 
-might only utilize 8 of these cores. Meanwhile, host can use qemu-affinity 
-to bind these 8 vCPUs to specific physical CPUs.
+Sure, although complexity is complexity, we can only do so much to hide
+it.
 
-Therefore, keeping a record of the physical core numbers each time a vCPU 
-runs can help avoid flushing the cache for all CPUs every time.
+For pp_recycle - the problem is when we added page pool pages, hardly
+anything in the upper layers of the stack was made pp aware. So we can
+end up with someone doing
 
-Since the usage of sev_flush_asids() isn't tied to a single VM, we just 
-replace all wbinvd_on_all_cpus() with sev_do_wbinvd() except for that 
-in sev_flush_asids().
+	get_page(page);
+	skb_fill_page_desc(skb, page);
 
-Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
----
- arch/x86/kvm/svm/sev.c | 27 +++++++++++++++++++++++----
- arch/x86/kvm/svm/svm.h |  3 +++
- 2 files changed, 26 insertions(+), 4 deletions(-)
+on a PP page.
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index f760106c3..743931e33 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -215,6 +215,24 @@ static void sev_asid_free(struct kvm_sev_info *sev)
- 	sev->misc_cg = NULL;
- }
- 
-+static struct cpumask *sev_get_wbinvd_dirty_mask(struct kvm *kvm)
-+{
-+	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-+
-+	return &sev->wbinvd_dirty_mask;
-+}
-+
-+static void sev_do_wbinvd(struct kvm *kvm)
-+{
-+	int cpu;
-+	struct cpumask *dirty_mask = sev_get_wbinvd_dirty_mask(kvm);
-+
-+	for_each_possible_cpu(cpu) {
-+		if (cpumask_test_and_clear_cpu(cpu, dirty_mask))
-+			wbinvd_on_cpu(cpu);
-+	}
-+}
-+
- static void sev_decommission(unsigned int handle)
- {
- 	struct sev_data_decommission decommission;
-@@ -2048,7 +2066,7 @@ int sev_mem_enc_unregister_region(struct kvm *kvm,
- 	 * releasing the pages back to the system for use. CLFLUSH will
- 	 * not do this, so issue a WBINVD.
- 	 */
--	wbinvd_on_all_cpus();
-+	sev_do_wbinvd(kvm);
- 
- 	__unregister_enc_region_locked(kvm, region);
- 
-@@ -2152,7 +2170,7 @@ void sev_vm_destroy(struct kvm *kvm)
- 	 * releasing the pages back to the system for use. CLFLUSH will
- 	 * not do this, so issue a WBINVD.
- 	 */
--	wbinvd_on_all_cpus();
-+	sev_do_wbinvd(kvm);
- 
- 	/*
- 	 * if userspace was terminated before unregistering the memory regions
-@@ -2343,7 +2361,7 @@ static void sev_flush_encrypted_page(struct kvm_vcpu *vcpu, void *va)
- 	return;
- 
- do_wbinvd:
--	wbinvd_on_all_cpus();
-+	sev_do_wbinvd(vcpu->kvm);
- }
- 
- void sev_guest_memory_reclaimed(struct kvm *kvm)
-@@ -2351,7 +2369,7 @@ void sev_guest_memory_reclaimed(struct kvm *kvm)
- 	if (!sev_guest(kvm))
- 		return;
- 
--	wbinvd_on_all_cpus();
-+	sev_do_wbinvd(kvm);
- }
- 
- void sev_free_vcpu(struct kvm_vcpu *vcpu)
-@@ -2648,6 +2666,7 @@ void pre_sev_run(struct vcpu_svm *svm, int cpu)
- 	sd->sev_vmcbs[asid] = svm->vmcb;
- 	svm->vmcb->control.tlb_ctl = TLB_CONTROL_FLUSH_ASID;
- 	vmcb_mark_dirty(svm->vmcb, VMCB_ASID);
-+	cpumask_set_cpu(get_cpu(), sev_get_wbinvd_dirty_mask(svm->vcpu.kvm));
- }
- 
- #define GHCB_SCRATCH_AREA_LIMIT		(16ULL * PAGE_SIZE)
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 8ef95139c..de240a9e9 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -90,6 +90,9 @@ struct kvm_sev_info {
- 	struct list_head mirror_entry; /* Use as a list entry of mirrors */
- 	struct misc_cg *misc_cg; /* For misc cgroup accounting */
- 	atomic_t migration_in_progress;
-+
-+	/* CPUs invoked VMRUN should do wbinvd after guest memory is reclaimed */
-+	struct cpumask wbinvd_dirty_mask;
- };
- 
- struct kvm_svm {
--- 
-2.34.1
+You probably inspected a lot of those cases for the ZC work, and they
+can be fixed up to do a "pp-aware get()", but until then we need
+skb->pp_recycle. pp_recycle kinda denotes whether whoever constructed
+the skb was PP aware.
 
+So, yes, definitely a good long term goal, but not in a fix :)
