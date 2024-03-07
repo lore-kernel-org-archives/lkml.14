@@ -1,81 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E809125D5;
-	Thu,  7 Mar 2024 04:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851FD15EA6;
+	Thu,  7 Mar 2024 04:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709787028; cv=none; b=G5by6/2F05LUo9nPW6ECZNTQJA9wGcGDb0OYyM57SzYWoHpv0ndLAeo5cruAZQ5Yvii5wueeku6gPttnL+rofnIair2UxwdaY8l6DHt6qiz/bYazvu6AUWf/zzDLLCJmRImyxEVivgmTBC8VJBVUTHzzgSeclXtOlvOLovFSdq0=
+	t=1709787106; cv=none; b=YtqGN/XMjVBh4MfbLSs6aXL2Ln+ablBW0aMx9Ldhd1B5EbbNSaxDuezg7A524iFxI8ZYPHW/UfDCQFg7/kvrC3hkKuGvKsmdfeRCBcSZZHCx7nIXQdoR8AfBGpbYayGvMjOFjZP+MjY6rBekNd48VmAdqNFIbyh3n5TIpdHW1IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709787028; c=relaxed/simple;
-	bh=728qXOa0GYyTnUAIWAElvi6CSw0RIuoe8mh+TMh/UCY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=qvKjs3/Qk0NjK27wY9C+nDbE3YMrUJ9JN5El8VQwOxUHSJZjHO6iVe24Vv+zuZTs6XgIZ7RWrHAjqbh5R8h58RTszLyZIWCIP5Zy7frq0jFIiyHqCPvq04GbEvU7THzTqOQM/tqkmj99MlAHJ4ta+y87oWvs3GXOZccjXBO9ldA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNDPk3CN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709787106; c=relaxed/simple;
+	bh=Bq0DLXrbmUR2V5d/aU4hu9+nI65kDN8R3dpW9WLNnSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=H8AvzVVFfCIWHmjLizElqrtVNaD8Ufci577s204/+XFDy0Ks9AOjtpc2JIfHm6C4ga77XUMH5uWeAoqWHxdNfpcr+pJvrvJ5qNCPMlVDdW//IOoYg9dtaAWkyOB6+LnJ5lznhqhPQViNJPZu9uQstDlhYy3Ol7HwR0b6H55KZks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=TDlFGypx; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNDPk3CN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F22E2C43394;
-	Thu,  7 Mar 2024 04:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709787028;
-	bh=728qXOa0GYyTnUAIWAElvi6CSw0RIuoe8mh+TMh/UCY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=lNDPk3CN8ykpil4lCxbnCkeYZGmkpL3zNads34pSOAmSDCJZWATS+itZ5m6f3Qtij
-	 dhX6oRBQORW/moFW9eXldoZFhPB3t/I+j3dsa4h0vPbNkIq7etATkD1AVuB81Xvh9H
-	 VP9Ypy/a82gi/Fdfwkn4+u2d/jfpEv+LH2J/F6DMz+eCKvfRWvhT/y2KAUu4XGO1cT
-	 euRlSRGh+TbaLWwdWuqPC+APXV2tSYJcksOc9AKCS0Aq4Yhn/JjqyNqwXKmUTFs3u6
-	 B0rCJ9u/iqQzuVrrBZcf29t9HWnvFZltMftLU6is/3Sm/bg0+ROMoEN5ACXAeFu/ab
-	 lLVdzRHc9tXWg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D352DD9A4B5;
-	Thu,  7 Mar 2024 04:50:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TDlFGypx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1709787100;
+	bh=ZoNXxsmgq9stJfTSAYeDU7v9vK31/9ULNKvtA5uDRDE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TDlFGypxkzf+q23JhdE/YAr9c4BmHTdfH+UU0rW0DVMeckZwym0puNdSQYUlKfk1N
+	 FhJSmlBCZesl7vxAuTjaeAoz9P6t3WBIkOijjNo/S9prRHiyKiyt74SjNh6pkZXf/v
+	 sQ6HM3CECtJnFXuGaRq/Ah7pGRrCn/S08aB4oTD7/YkyaQNceW2wssYd5HmasvaKng
+	 zIZ2cq97WCGOZqm+TdnHc8ZiKmQHEIrgKNe6oLyFg4PPZ3754spj4e5pp/GogglgAa
+	 0a6f6aesmyTdPA0rpgEG43EILVPzTss1gCg35hU3FQQsf4fjf2U40H9uS4Vj7ZzrSh
+	 m5exIzETZnwaw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tqxj826ZSz4wb0;
+	Thu,  7 Mar 2024 15:51:39 +1100 (AEDT)
+Date: Thu, 7 Mar 2024 15:51:37 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the siox tree
+Message-ID: <20240307155137.19a2a2cb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3] net: phy: qca807x: fix compilation when
- CONFIG_GPIOLIB is not set
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170978702785.12804.17752027810406406175.git-patchwork-notify@kernel.org>
-Date: Thu, 07 Mar 2024 04:50:27 +0000
-References: <20240305142113.795005-1-robimarko@gmail.com>
-In-Reply-To: <20240305142113.795005-1-robimarko@gmail.com>
-To: Robert Marko <robimarko@gmail.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, andrew@lunn.ch,
- hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- ansuelsmth@gmail.com, linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, lkp@intel.com
+Content-Type: multipart/signed; boundary="Sig_/A4KTHfWokm22WTSqP9DIjn7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello:
+--Sig_/A4KTHfWokm22WTSqP9DIjn7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Hi all,
 
-On Tue,  5 Mar 2024 15:20:33 +0100 you wrote:
-> Kernel bot has discovered that if CONFIG_GPIOLIB is not set compilation
-> will fail.
-> 
-> Upon investigation the issue is that qca807x_gpio() is guarded by a
-> preprocessor check but then it is called under
-> if (IS_ENABLED(CONFIG_GPIOLIB)) in the probe call so the compiler will
-> error out since qca807x_gpio() has not been declared if CONFIG_GPIOLIB has
-> not been set.
-> 
-> [...]
+After merging the siox tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Here is the summary with links:
-  - [net-next,v3] net: phy: qca807x: fix compilation when CONFIG_GPIOLIB is not set
-    https://git.kernel.org/netdev/net-next/c/1677293ed891
+ERROR: modpost: "devm_siox_master_alloc" [drivers/siox/siox-bus-gpio.ko] un=
+defined!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Caused by commit
 
+  5c941dc7bb21 ("siox: bus-gpio: Simplify using devm_siox_* functions")
 
+I have dropped the siox tree for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/A4KTHfWokm22WTSqP9DIjn7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXpR9kACgkQAVBC80lX
+0Gx8pQgAn7Dobee2IhrYr8jZaTiMjrr4XvdL6auGusPe9PqiEtSKweRdwexjM6QE
+2i9o1WitOiiu/U2xGzBbbZkNp+DWSDxaHrgkhcblQOVbu0cmllxK77ndX04uTfb0
+wlnuKEdeWoe/xcakd6LuD6X8Kj9Iq7alwCKatuyi1Mg40Ug2mqs5EoBpgysOcLXz
+YjRruLbpZRVYGRXOHrs1jbREAmQoGjJAqSnvLcucVY/pgksWIsBiFD4x5E4DVvPX
+riMPnC8hT156cDo3fCQa4hIQyPXm5QMDPrjaND0veGoDpCHuhIt35+/yrU3vB4Rl
+J6y0MWIfFDPgFp80Z9CRU2R3UMLKOg==
+=Vgjw
+-----END PGP SIGNATURE-----
+
+--Sig_/A4KTHfWokm22WTSqP9DIjn7--
