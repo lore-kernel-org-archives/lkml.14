@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D56212BE96
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 13:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C697D12C550
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 13:04:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709816678; cv=none; b=jE0U3wUb1uhNuyK63o0BfbcgQuFHa9EpVUv4/i4jfvRK2MqUQ/QttcAH9eKOCdPJyhYi6FyOFmGflFVpnSNv1eyoUs4BYtzz62momy8oudU4KMSlJFaK5CDbSEeVN1bOmih9zwNYCxeX2yMAp8pHSp1LG0RoJzQzwmiMXApa0SU=
+	t=1709816683; cv=none; b=JbPWxjqqHahaLSVDhiYqtX8aW5WQr66fgQ+AsF2ys2bQy5GnYUDVvhTbcUco0ebFyl+IpR0thgZxxJdxFjK7dHYEBZDav2vgdo35jY2lA7fZMZbX88SAuPuAmRCZCXyN+Ybkgy6qbynTJ4J50vl26FQTZJqJ26NqQWvnY9KUN2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709816678; c=relaxed/simple;
-	bh=ydcV8KjuRh1M2V0fUWpxwuVFVEPey+xI15J/nZoDhU4=;
+	s=arc-20240116; t=1709816683; c=relaxed/simple;
+	bh=jCANyFRHGluvmBv/j72/Poax8EPScfUXe9zU4k1OyiA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e13NuUrtJGzVVhPqgiMTC+Or7Plma5EOgAleTzPhRMKKcKnphGYwcGk0SAJKoIa7+jnns0XfOwEhpDDw1J6tG9XdaruNWCF9mmHJBnQeZKUaFeMnUrRQMfjTVYnsKLAQYFG3sCudGvLgJ2uWRGyW6/bardnG6G9HdYexVitjBRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ql8Xfspm; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version; b=U/8mlzEzVFzyp/tcVpuhTf8xe93CZoJGPGzS4Wi1rA0WCmrUdWw118peOC2uQAVRoWBaWJbF1eWhYzKfY8mqiw1BxkOquC0X9bQ+6dSPF6cMQI+UcUprGud0c/LPoO2TeNzJBWRur4YznlCHVgCnG9wXUzBdR8t1Umao/4bfX0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=laSys69l; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ql8Xfspm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="laSys69l"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709816677; x=1741352677;
+  t=1709816682; x=1741352682;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ydcV8KjuRh1M2V0fUWpxwuVFVEPey+xI15J/nZoDhU4=;
-  b=Ql8XfspmRPHxBCYDITQZpQ5U9c+vclPgnmX7vLRyAig6tPyhfD8amuaU
-   ZIH8TZPR88r6I1OlW0+sUOk0E+AnBrOCFEfO6fhp8KLM6VpqxiAp7X+pC
-   uft3odEealzp4JOixSg8d7sqlnUpEG4hYPFsjGrBLcSEBhCqYWjM6aFWd
-   M8Exz/nosJkSI74eky6Pd66akP4PdsMpJZXR+7AhadzxfVLzICEP8GJba
-   K6JfHG36C7vQ7PwBh2aZpcrY8EzbgNgKSJnxMi1dd0OxImoPbTnompOea
-   NZXtknmq6lGdCQP4KIAMZnGZ2AM74y3TgTLg8ENovB8ZZRGbe3/LZHVGT
+  bh=jCANyFRHGluvmBv/j72/Poax8EPScfUXe9zU4k1OyiA=;
+  b=laSys69l0QePaweQvmvydvDQaPMy4gxK7ac6UVsYOl4rP7zubh1ayP5R
+   6s563sJCNPrMD6put69izfp3vopxKwM3s554Et33YyPt+/aO4zgw6GNpM
+   qR9qzNzBSd5wqUkbzGV6MZjss2R6zPY1TQ3CM1dyCGllwaGOayVkaxJhE
+   hg+teVVaf/8ONJoz4MK7cColuDqfrOuaipXp5UMpWNbybOKPuWnn13ylt
+   r0BwBroEdoxTbL6RvK3LsTaMNZQVdcBh/+jWd8XYMxcx5ApZeQyEfumx3
+   NPnKMNqrxLsgYHzK+miKFs5pKClvsLBkvd2LK0VZQJHvP8MG8gPuYb1sL
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="5068060"
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="5068069"
 X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="5068060"
+   d="scan'208";a="5068069"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 05:04:37 -0800
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 05:04:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="14592316"
+   d="scan'208";a="14592328"
 Received: from unknown (HELO localhost) ([10.237.72.159])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 05:04:35 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 05:04:39 -0800
 From: Aapo Vienamo <aapo.vienamo@linux.intel.com>
 To: Michael Walle <michael@walle.cc>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -48,9 +48,9 @@ To: Michael Walle <michael@walle.cc>,
 	linux-kernel@vger.kernel.org
 Cc: Aapo Vienamo <aapo.vienamo@linux.intel.com>,
 	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 1/2] mtd: core: Report error if first mtd_otp_size() call fails in mtd_otp_nvmem_add()
-Date: Thu,  7 Mar 2024 15:04:17 +0200
-Message-ID: <20240307130418.3131898-2-aapo.vienamo@linux.intel.com>
+Subject: [PATCH 2/2] mtd: core: Don't fail mtd_device_parse_register() if OTP is unsupported
+Date: Thu,  7 Mar 2024 15:04:18 +0200
+Message-ID: <20240307130418.3131898-3-aapo.vienamo@linux.intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20240307130418.3131898-1-aapo.vienamo@linux.intel.com>
 References: <20240307130418.3131898-1-aapo.vienamo@linux.intel.com>
@@ -62,33 +62,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Jump to the error reporting code in mtd_otp_nvmem_add() if the
-mtd_otp_size() call fails. Without this fix, the error is not logged.
+Handle the case where -EOPNOTSUPP is returned from OTP driver.
+
+This addresses an issue that occurs with the Intel SPI flash controller,
+which has a limited supported opcode set. Whilst the OTP functionality
+is not available due to this restriction, other parts of the MTD
+functionality of the device are intact. This change allows the driver
+to gracefully handle the restriction by allowing the supported
+functionality to remain available instead of failing the probe
+altogether.
 
 Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
 Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Fixes: 4b361cfa8624 ("mtd: core: add OTP nvmem provider support")
 ---
- drivers/mtd/mtdcore.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/mtd/mtdcore.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 5887feb347a4..c365c97e7232 100644
+index c365c97e7232..1cfc8bb5187d 100644
 --- a/drivers/mtd/mtdcore.c
 +++ b/drivers/mtd/mtdcore.c
-@@ -956,8 +956,10 @@ static int mtd_otp_nvmem_add(struct mtd_info *mtd)
+@@ -1054,8 +1054,14 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
  
- 	if (mtd->_get_user_prot_info && mtd->_read_user_prot_reg) {
- 		size = mtd_otp_size(mtd, true);
--		if (size < 0)
--			return size;
-+		if (size < 0) {
-+			err = size;
-+			goto err;
-+		}
+ 	mtd_set_dev_defaults(mtd);
  
- 		if (size > 0) {
- 			nvmem = mtd_otp_nvmem_register(mtd, "user-otp", size,
++	/*
++	 * Don't abort MTD init if OTP functionality is unsupported. The
++	 * cleanup of the OTP init is contained within mtd_otp_nvmem_add().
++	 * Omitting goto out here is safe since the cleanup code there
++	 * should be no-ops.
++	 */
+ 	ret = mtd_otp_nvmem_add(mtd);
+-	if (ret)
++	if (ret && ret != -EOPNOTSUPP)
+ 		goto out;
+ 
+ 	if (IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER)) {
 -- 
 2.41.0
 
