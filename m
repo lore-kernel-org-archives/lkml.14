@@ -1,195 +1,212 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD670130AE6
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55AE12C7EA
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709820484; cv=none; b=RWr5W+bm/1lqtu6d5cqo3zWJnZtcR6xJ912kWQwV9qqLaZr+d2iSPMUTqkAFfR1eZ5OioXGCn51xlE4NlwiEvivkeeaLB/iFYxg3/SheSzi/27C0k5lYysLJAfPjWEi5A9T45FxH/3UCfN95VFo3IFXWv9978GtnUp7nw6pmasA=
+	t=1709820556; cv=none; b=oeYyuhnrKPSn9dDwoe1bOVi4sJkigG2WvSSomM0yt04vG6DyGw2kiB/5Ked3xTVtDt3zjKw27BzuwVyxg6AvPHNn/O/NaybL3RECNzFsmoQsPVedYoNeVPA/pglwlk1keXAm27qQeznoLUA2y7W7lBbtRLG3k6ptB74F74FE5AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709820484; c=relaxed/simple;
-	bh=PEMKuouqVKmmpKoVkq3vAFTw0XHIm6pIPcKox0E3AAI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I9AWww6CsyS2QXI2QBfhxu/wFM/czKxeb1vSm2Hh9fpTr+xXeXApcRYTE14M9OD2y2L3HiyDdlZGDU33XqteY4nLdjzMoZLZAVcb9vJpE7rRSulE89jOZIyrbo4QBmpQmdf2kxlZyss1F1VcHf6W8KRsWIJORkhwGxs+Fhf9wXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=AGZkRS19; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1709820556; c=relaxed/simple;
+	bh=aMmHWuaGRqxU5/1X5Y6gGUwm6ESR75LQ1vvzoD4R0qQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pEeyhSyukinc/29vttH4BXmXSk0M6Rw5dFhDBSpgJiuw18Y/i/sErKk8VW/1dSp8ERoh1S7JXJ8sdR83Dj7JtwSVwWL/uDGbluissFsh6m6rG56RkR30nnwnptxCXs4y6AaWe8Nu70WKtjeByUhfidMmH8xTQKtAfmH21C9TpCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PKX94h8/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Q7rlOwPG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PKX94h8/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Q7rlOwPG; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="AGZkRS19"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5658082d2c4so1245068a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 06:08:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1709820481; x=1710425281; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kpzyVLIzoJjoH1dmsrwx7exqYjIDge6ltNcGIu8yesY=;
-        b=AGZkRS1994Q9dicDpXIxvRfNSOM0EKaWJbMEXvWxd2YuiZD8wCeUlBp7khSlEzJvBT
-         LT8yQ/1in+Uyh4+2XesXpgmT2bwjVsXEEBUdPn0DU1YCPzOUU/ofUKiL7CyHBJQS4R8+
-         ur/dZi6BDG3ne5LMjkNn4T/a7lhTGhmHFBwMlr+OWE+/RfYXSsi5/Us4bxMPGbWwbTBW
-         +fxRyGrO/IFuwyh2XwCTVRVRsd72IqwbW9pobSQIyWZjkImgYtP9m+5UmwUN5gqpoW5i
-         ub6AfwNsefprL1vcbzAUiXicnH+7rNXNAvefYt0hXPqL7eqIZpikR93TkJK+KBzs6Ege
-         Og4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709820481; x=1710425281;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kpzyVLIzoJjoH1dmsrwx7exqYjIDge6ltNcGIu8yesY=;
-        b=i1YBDvoE43XV80D9UuQcSZ+TlYyFUkhr8tOmWjK2IXJ7XXQwu5Vrwsilpnt5axP0l7
-         ski/DRIlcv3SjntPZBmd/fb/fjN+rHCsDbHZy51Cf1BY25I1WTj7A1b9xgDe+6DqIM5l
-         uhAU2VM/LejLGfmvF4VsaeAkdhFhkv5H15HSj841vI7SS5/yqeN7sg/JhXlZX26bOs83
-         0d8b+2fZ2gLPg0TMeKsI9w696Zzp9CY05NZT7aOh4ibw4tZB542agxQUnQcuZsVhl/oB
-         ChHoXvaVtW5yzkSSDaS5Z/8RBkfR+9+7hbf6KXyYZnmm+cG+f6qr00XsVSgtcP9wO5Fa
-         Mx2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWmisrvmBXndr6ELaq1UMCvawz1DDGmptYz79WGaZSwpgVQ5Z0fFSZdhNaRgcz2kHC4blNtUQLTA+xrRiSIQzv9OatNpH3hBWhlMSfk
-X-Gm-Message-State: AOJu0Yye4yIASUHfKMAIKG2yzPARHN+5FuqaQxvxMgTVxZK1/zl3MRMR
-	1/0JOPa9GuIAZ8TBHoidqouU1gVgwccJtUk4WHekuBo0hHCDaJ3J3/LnxzDBG5o=
-X-Google-Smtp-Source: AGHT+IH383qSNmyroOVk8Z2J3JB8DfKL5t+7aDSA7RmXDdNZsBGBQvrJfyji96J2AnloEHn/Ij+c3Q==
-X-Received: by 2002:a17:907:100a:b0:a44:4e9a:8cc2 with SMTP id ox10-20020a170907100a00b00a444e9a8cc2mr12771230ejb.58.1709820481472;
-        Thu, 07 Mar 2024 06:08:01 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.38])
-        by smtp.gmail.com with ESMTPSA id v23-20020a1709067d9700b00a42ee62b634sm8200648ejo.106.2024.03.07.06.07.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 06:08:00 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	magnus.damm@gmail.com
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v2 10/10] arm64: dts: renesas: r9a08g045: Update #power-domain-cells = <1>
-Date: Thu,  7 Mar 2024 16:07:28 +0200
-Message-Id: <20240307140728.190184-11-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240307140728.190184-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20240307140728.190184-1-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PKX94h8/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Q7rlOwPG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PKX94h8/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Q7rlOwPG"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 613F925777;
+	Thu,  7 Mar 2024 12:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709815947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FVsqeuZCf7wP7oVic4Vlb7w78aI5HGS6viBQbHD00pw=;
+	b=PKX94h8/ylHaLrooR/zNzCol34chrap/nqQjlVaJ5M3Je5EkJjm2a4WySqV9Nf+wgatZPr
+	f+W4mW8FYAj+pdXQF9apCuKqqWGeoVk8xyq4LcAnEfzneMaUtVIBIPLTPuhtH+eUVkmTOs
+	M+BhBdFDCsHfnzOo5/GtKh4jKdPGG2g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709815947;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FVsqeuZCf7wP7oVic4Vlb7w78aI5HGS6viBQbHD00pw=;
+	b=Q7rlOwPGwpmbTUitNvR2Iu2rgVU2wW6L51zpGaoecFPJRY6jVrPrfxSCyWH1utl5bnrLMA
+	quzrAe1fChUtXVCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709815947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FVsqeuZCf7wP7oVic4Vlb7w78aI5HGS6viBQbHD00pw=;
+	b=PKX94h8/ylHaLrooR/zNzCol34chrap/nqQjlVaJ5M3Je5EkJjm2a4WySqV9Nf+wgatZPr
+	f+W4mW8FYAj+pdXQF9apCuKqqWGeoVk8xyq4LcAnEfzneMaUtVIBIPLTPuhtH+eUVkmTOs
+	M+BhBdFDCsHfnzOo5/GtKh4jKdPGG2g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709815947;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FVsqeuZCf7wP7oVic4Vlb7w78aI5HGS6viBQbHD00pw=;
+	b=Q7rlOwPGwpmbTUitNvR2Iu2rgVU2wW6L51zpGaoecFPJRY6jVrPrfxSCyWH1utl5bnrLMA
+	quzrAe1fChUtXVCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3FC40136BA;
+	Thu,  7 Mar 2024 12:52:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dhkXD4q46WUlTQAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 07 Mar 2024 12:52:26 +0000
+Message-ID: <b23a5c7c-a877-4cde-acd4-50c21c3ef1fc@suse.de>
+Date: Thu, 7 Mar 2024 13:52:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] nvme-fabrics: short-circuit connect retries
+Content-Language: en-US
+To: Sagi Grimberg <sagi@grimberg.me>, Daniel Wagner <dwagner@suse.de>,
+ James Smart <james.smart@broadcom.com>
+Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240305080005.3638-1-dwagner@suse.de>
+ <22b01fb4-b543-43b2-949c-1873105dc343@grimberg.me>
+ <72c1d3a8-14ad-43e8-a68a-25be903698c4@suse.de>
+ <432a39d5-6d08-4d38-a357-7c8d9123189a@grimberg.me>
+ <08f3d804-f94b-4a2f-897b-7fee3411e6fc@suse.de>
+ <b02588cb-6fbc-4116-86d6-173c115f50c5@grimberg.me>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <b02588cb-6fbc-4116-86d6-173c115f50c5@grimberg.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -4.28
+X-Spamd-Result: default: False [-4.28 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.19)[-0.929];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Flag: NO
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On 3/7/24 13:14, Sagi Grimberg wrote:
+> 
+> 
+> On 07/03/2024 13:45, Hannes Reinecke wrote:
+>> On 3/7/24 12:30, Sagi Grimberg wrote:
+>>>
+[ .. ]
+>>>
+>>> Where is this retried today, I don't see where connect failure is 
+>>> retried, outside of a periodic reconnect.
+>>> Maybe I'm missing where what is the actual failure here.
+>>
+>> static void nvme_tcp_reconnect_ctrl_work(struct work_struct *work)
+>> {
+>>         struct nvme_tcp_ctrl *tcp_ctrl =
+>>                         container_of(to_delayed_work(work),
+>>                         struct nvme_tcp_ctrl, connect_work);
+>>         struct nvme_ctrl *ctrl = &tcp_ctrl->ctrl;
+>>
+>>         ++ctrl->nr_reconnects;
+>>
+>>         if (nvme_tcp_setup_ctrl(ctrl, false))
+>>                 goto requeue;
+>>
+>>         dev_info(ctrl->device, "Successfully reconnected (%d attempt)\n",
+>>                         ctrl->nr_reconnects);
+>>
+>>         ctrl->nr_reconnects = 0;
+>>
+>>         return;
+>>
+>> requeue:
+>>         dev_info(ctrl->device, "Failed reconnect attempt %d\n",
+>>
+>> and nvme_tcp_setup_ctrl() returns either a negative errno or an NVMe 
+>> status code (which might include the DNR bit).
+> 
+> I thought this is about the initialization. yes today we ignore the 
+> status in re-connection assuming that whatever
+> happened, may (or may not) resolve itself. The basis for this assumption 
+> is that if we managed to connect the first
+> time there is no reason to assume that connecting again should fail 
+> persistently.
+> 
+And that is another issue where I'm not really comfortable with.
+While it would make sense to have the connect functionality to be
+one-shot, and let userspace retry if needed, the problem is that we
+don't have a means of transporting that information to userspace.
+The only thing which we can transport is an error number, which
+could be anything and mean anything.
+If we had a defined way stating: 'This is a retryable, retry with the 
+same options.' vs 'This is retryable error, retry with modified 
+options.' vs 'This a non-retryable error, don't bother.' I'd be
+fine with delegating retries to userspace.
+But currently we don't.
 
-Update CPG #power-domain-cells = <1> and move all the IPs to be part of the
-IP specific power domain as the driver has been modified to support
-multiple power domains.
+> If there is a consensus that we should not assume it, its a valid 
+> argument. I didn't see where this happens with respect
+> to authentication though.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
+nvmf_connect_admin_queue():
 
-Changes in v2:
-- used proper domain ID for IA55 interrupt controller
+             /* Authentication required */
+             ret = nvme_auth_negotiate(ctrl, 0);
+             if (ret) {
+                     dev_warn(ctrl->device,
+                              "qid 0: authentication setup failed\n");
+                     ret = NVME_SC_AUTH_REQUIRED;
+                     goto out_free_data;
+             }
+             ret = nvme_auth_wait(ctrl, 0);
+             if (ret)
+                     dev_warn(ctrl->device,
+                              "qid 0: authentication failed\n");
+             else
+                     dev_info(ctrl->device,
+                              "qid 0: authenticated\n");
 
- arch/arm64/boot/dts/renesas/r9a08g045.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+The first call to 'nvme_auth_negotiate()' is just for setting up
+the negotiation context and start the protocol. So if we get
+an error here it's pretty much non-retryable as it's completely
+controlled by the fabrics options.
+nvme_auth_wait(), OTOH, contains the actual result from the negotiation,
+so there we might or might not retry, depending on the value of 'ret'.
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-index 19bbcae01d80..f7a45fca5406 100644
---- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-@@ -67,7 +67,7 @@ scif0: serial@1004b800 {
- 					  "bri", "dri", "tei";
- 			clocks = <&cpg CPG_MOD R9A08G045_SCIF0_CLK_PCK>;
- 			clock-names = "fck";
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_SCIF0>;
- 			resets = <&cpg R9A08G045_SCIF0_RST_SYSTEM_N>;
- 			status = "disabled";
- 		};
-@@ -79,7 +79,7 @@ cpg: clock-controller@11010000 {
- 			clock-names = "extal";
- 			#clock-cells = <2>;
- 			#reset-cells = <1>;
--			#power-domain-cells = <0>;
-+			#power-domain-cells = <1>;
- 		};
- 
- 		sysc: system-controller@11020000 {
-@@ -104,7 +104,7 @@ pinctrl: pinctrl@11030000 {
- 			interrupt-parent = <&irqc>;
- 			gpio-ranges = <&pinctrl 0 0 152>;
- 			clocks = <&cpg CPG_MOD R9A08G045_GPIO_HCLK>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_ALWAYS_ON>;
- 			resets = <&cpg R9A08G045_GPIO_RSTN>,
- 				 <&cpg R9A08G045_GPIO_PORT_RESETN>,
- 				 <&cpg R9A08G045_GPIO_SPARE_RESETN>;
-@@ -173,7 +173,7 @@ irqc: interrupt-controller@11050000 {
- 			clocks = <&cpg CPG_MOD R9A08G045_IA55_CLK>,
- 				 <&cpg CPG_MOD R9A08G045_IA55_PCLK>;
- 			clock-names = "clk", "pclk";
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_IA55>;
- 			resets = <&cpg R9A08G045_IA55_RESETN>;
- 		};
- 
-@@ -188,7 +188,7 @@ sdhi0: mmc@11c00000  {
- 				 <&cpg CPG_MOD R9A08G045_SDHI0_ACLK>;
- 			clock-names = "core", "clkh", "cd", "aclk";
- 			resets = <&cpg R9A08G045_SDHI0_IXRST>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_SDHI0>;
- 			status = "disabled";
- 		};
- 
-@@ -203,7 +203,7 @@ sdhi1: mmc@11c10000 {
- 				 <&cpg CPG_MOD R9A08G045_SDHI1_ACLK>;
- 			clock-names = "core", "clkh", "cd", "aclk";
- 			resets = <&cpg R9A08G045_SDHI1_IXRST>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_SDHI1>;
- 			status = "disabled";
- 		};
- 
-@@ -218,7 +218,7 @@ sdhi2: mmc@11c20000 {
- 				 <&cpg CPG_MOD R9A08G045_SDHI2_ACLK>;
- 			clock-names = "core", "clkh", "cd", "aclk";
- 			resets = <&cpg R9A08G045_SDHI2_IXRST>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_SDHI2>;
- 			status = "disabled";
- 		};
- 
-@@ -235,7 +235,7 @@ eth0: ethernet@11c30000 {
- 				 <&cpg CPG_MOD R9A08G045_ETH0_REFCLK>;
- 			clock-names = "axi", "chi", "refclk";
- 			resets = <&cpg R9A08G045_ETH0_RST_HW_N>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_ETHER0>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-@@ -254,7 +254,7 @@ eth1: ethernet@11c40000 {
- 				 <&cpg CPG_MOD R9A08G045_ETH1_REFCLK>;
- 			clock-names = "axi", "chi", "refclk";
- 			resets = <&cpg R9A08G045_ETH1_RST_HW_N>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_ETHER1>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-@@ -280,7 +280,7 @@ wdt0: watchdog@12800800 {
- 				     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "wdt", "perrout";
- 			resets = <&cpg R9A08G045_WDT0_PRESETN>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A08G045_PD_WDT0>;
- 			status = "disabled";
- 		};
- 	};
--- 
-2.39.2
+Cheers,
+
+Hannes
 
