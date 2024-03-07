@@ -1,143 +1,332 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B6D12F36F;
-	Thu,  7 Mar 2024 14:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7306D12C80A;
+	Thu,  7 Mar 2024 14:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709821508; cv=none; b=qu8Yt2DeJaITztO6evQPh4bw4PYgcCFUOJ8UlSGqhbqO7ad6mjB3gGj3EGHoQ1Ms7ngQiGuAuulK0eI8Uqiw8AiB9s/4eu3k6z0no/AQCi0um/dXOSQwNY6gG7qIhrwi0N8iI8QCD7iOhv+VAYqUYPh8UWHnhMI01eKHpuPKG6w=
+	t=1709821579; cv=none; b=DzPOFdiQ6fQFq5DMWhfGDhp09co1fh3NNUAgXJG2YEGClaxOBV8ilh4qwVpZfBu+JSbn2i+zh4vPTSR1EVN0jIlz+p+GcIaSHMv6fYiDQnLwsiCuk1k3pdA++iyVhj0cPYSW42P999V3iTMNSI62dLvDU1WZVFKy8TjWbkyGrls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709821508; c=relaxed/simple;
-	bh=s3fat3rCD43RsuIuLpGtydaSQZZ20Jgs6Z/8t/y2LoU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P+/kZyuclBycih0mKOFC7wcL040xtTXsUKZt2uGeC7ch5OtZMNAnbXhq88/enF5bbMe6IICyd7m7SeAhEEaM6fT8fcemRNlHqefqZ3ywYWAGEMYjAu+8dyrNnKRKZ6+orlDG/Q5oRFfPybXME2mb43lspd9P6vYSkJr2Dgk1IbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=aBX6yySh; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=rTGOQtpC reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1709821579; c=relaxed/simple;
+	bh=zuG49lDm461OS0LXDvrKEdM3DKMWByyShdxfkM/iKeo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LAYGpCNC7ajXY3FSq4mNCL7v4UtdWwWo7gB9Q+3+ENaG5Lb/4r+HjAiqtw5ObJGWBYTYPOrNnAvaFHgWVm9qoipjbdhWU1+YhCl1qIOK7716cSSeMGSainDNp7q22TrxWvsBMJcNGQrxR8ceLNABxI6VFtIC/CuLJVbZ8oodcn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PIS1IorO; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="aBX6yySh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="rTGOQtpC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1709821505; x=1741357505;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WhASmGAxo/32YXdlY314I+/8f90iYMLkteylf+FTynU=;
-  b=aBX6yyShHSjJGu0MvxzDbTzFJaW0qqDecdLFEjPGcZdZV/oJzCHfcE9x
-   IqfuJDNfcExqlPQgyEMVLVoUiEDpQIwVOzHSsxEvSw9DG5Ih3VNrJ97qS
-   1RvGzNea9UmBEdyeV9PxFNJqnWkh13OVPz95D8ezFnavS+Q89j+iHVQ0P
-   inZoRA3zpaIpSigsPJIi3IDA8/N/W5PKwuIIvSdRfHCaHFw4ECyzkoXX6
-   cvQ9x7JcipIOl3RwC/Xmwt2G7ZSKOmd7NL0bFwGseLUq7//c60xT31NL7
-   vjBe4z/cDJA4mRU7Vvd9wZaECplxRFb0f9INVCr6iGdD1cwV+y1Kk3/Qy
-   w==;
-X-IronPort-AV: E=Sophos;i="6.07,211,1708383600"; 
-   d="scan'208";a="35791097"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 07 Mar 2024 15:25:00 +0100
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5835C16F436;
-	Thu,  7 Mar 2024 15:24:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1709821496; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=WhASmGAxo/32YXdlY314I+/8f90iYMLkteylf+FTynU=;
-	b=rTGOQtpCiyfZF8XFayT10F8dvDItFfWYxvPcs8dwmLcVfKv/Y19/eAQzOtDqrqc+iFHTFk
-	i52QWBE1tm90Chg6C5n+m3UjLx8+nHYSFzl/YE4lz8eBozoHsgfHz08iddoOTJbXGxYgux
-	ha1S3gnT9OQwPNbav9DtgBXt4OVMWw9kdHOYOyp3/b7y5UP0cx7aqC6yinP5FtBjn2NSq2
-	UdFwHYcKzEFOs0ksxwkehwoVVJEvUNgvXzrp0vWAs03X5xWncCJuhcNa4WIasjBI3TOlyq
-	6eBG+CzYmkAZgu/OPGEPS63P6imAi5742OveIhoJ53DZHHXbFVmf47+EwDOguQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] media: v4l: async: Fix notifier list entry init
-Date: Thu,  7 Mar 2024 15:24:51 +0100
-Message-Id: <20240307142452.3685103-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PIS1IorO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709821575;
+	bh=zuG49lDm461OS0LXDvrKEdM3DKMWByyShdxfkM/iKeo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PIS1IorOJ8seJQ91WxX7LitzHeOqiTMMCX1i0SX8RuBJWIekJxJvBaBfnO8RztfdA
+	 V1O7QLfYDnyKqa5TPQL+wS7iztNrFyb4hN3IHcySPVz5uFMUJ0c6IvWBFuKR6jZKoH
+	 vdMhYqsgP8jbQEaM0TmcFNmW7ehXXRVqfrH0ezl3oBIqu3Z8DgKXNbKRcg7xv5y2aQ
+	 qN2Ec3YXAkLBLbzsQMSqvQZuZjXnmUjBPmMFIPwTIKiofbaxUx+ZUFyGaoFg90BqWl
+	 afU31KaOJLE2qMKfbyRS+KXR1uxr0EFjbr/bOvGdFj/sfCyR66P2wxk3KHbMT1cRGP
+	 RB0q8/JebPvWg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0DDB837809D0;
+	Thu,  7 Mar 2024 14:26:13 +0000 (UTC)
+Message-ID: <7fa3cd50-4603-4983-8396-ec8c90fd43fa@collabora.com>
+Date: Thu, 7 Mar 2024 15:26:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 19/22] ASoC: dt-bindings: mt8192: Document audio-routing
+ and dai-link subnode
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: broonie@kernel.org, wenst@chromium.org, lgirdwood@gmail.com,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.com,
+ trevor.wu@mediatek.com, maso.huang@mediatek.com,
+ xiazhengqiao@huaqin.corp-partner.google.com, arnd@arndb.de,
+ kuninori.morimoto.gx@renesas.com, shraash@google.com, amergnat@baylibre.com,
+ nicolas.ferre@microchip.com, u.kleine-koenig@pengutronix.de,
+ dianders@chromium.org, frank.li@vivo.com, allen-kh.cheng@mediatek.com,
+ eugen.hristev@collabora.com, claudiu.beznea@tuxon.dev,
+ jarkko.nikula@bitmer.com, jiaxin.yu@mediatek.com, alpernebiyasak@gmail.com,
+ ckeepax@opensource.cirrus.com, zhourui@huaqin.corp-partner.google.com,
+ nfraprado@collabora.com, alsa-devel@alsa-project.org,
+ shane.chien@mediatek.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20240227120939.290143-1-angelogioacchino.delregno@collabora.com>
+ <20240227120939.290143-20-angelogioacchino.delregno@collabora.com>
+ <20240304142341.GA156846-robh@kernel.org>
+ <0aa3dc07-67c8-40a4-9e83-f702979765c5@collabora.com>
+ <CAL_JsqLNsS_Rx5z5F1vrYbr2g+5-wGYOq6mhtfUd7Db11F0W+Q@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <CAL_JsqLNsS_Rx5z5F1vrYbr2g+5-wGYOq6mhtfUd7Db11F0W+Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-struct v4l2_async_notifier has several list_head members, but only
-waiting_list and done_list are initialized. notifier_entry was kept
-'zeroed' leading to an uninitialized list_head.
-This results in a NULL-pointer dereference if csi2_async_register() fails,
-e.g. node for remote endpoint is disabled, and returns -ENOTCONN.
-The following calls to v4l2_async_nf_unregister() results in a NULL
-pointer dereference.
-Add the missing list head initializer.
+Il 07/03/24 15:03, Rob Herring ha scritto:
+> On Tue, Mar 5, 2024 at 5:20 AM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+>>
+>> Il 04/03/24 15:23, Rob Herring ha scritto:
+>>> On Tue, Feb 27, 2024 at 01:09:36PM +0100, AngeloGioacchino Del Regno wrote:
+>>>> Document the dai-link subnodes and the audio-routing property, allowing
+>>>> to describe machine specific audio hardware and links in device tree.
+>>>>
+>>>> While at it, also deprecate the old properties which were previously
+>>>> used with the driver's partially hardcoded configuration.
+>>>>
+>>>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>>>> ---
+>>>>    .../sound/mt8192-mt6359-rt1015-rt5682.yaml    | 129 ++++++++++++++++--
+>>>>    1 file changed, 121 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml b/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
+>>>> index 7e50f5d65c8f..78e221003750 100644
+>>>> --- a/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
+>>>> +++ b/Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml
+>>>> @@ -20,6 +20,15 @@ properties:
+>>>>          - mediatek,mt8192_mt6359_rt1015p_rt5682
+>>>>          - mediatek,mt8192_mt6359_rt1015p_rt5682s
+>>>>
+>>>> +  audio-routing:
+>>>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+>>>
+>>> Already defined in sound-card-common.yaml. Add a $ref.
+>>>
+>>
+>> Right. Done for v2.
+>>
+>>>> +    description:
+>>>> +      A list of the connections between audio components. Each entry is a
+>>>> +      pair of strings, the first being the connection's sink, the second
+>>>> +      being the connection's source.
+>>>> +      Valid names could be the input or output widgets of audio components,
+>>>> +      power supplies, MicBias of codec and the software switch.
+>>>
+>>> Generally the names are defined here.
+>>>
+>>
+>> ...but those drivers want to support multiple codecs and multiple boards, so
+>> for each board we would maybe have to add (software defined) names in here
+>> which don't always correspond to a HW pin name (but that's not really a problem).
+>>
+>> Sure a subset of the names can't change but, on the other hand, some others
+>> can (as in, may be added).
+>>
+>> Hence the question:
+>>
+>> Is it mandatory to define the names in an enum here, or can that be avoided?
+>> If it is, I can add them no problem.
+> 
+> Does the OS depend on what the names are? As-in if a name was "bar"
+> and it changed to "baz" in either the DT or the kernel, would that
+> break things? If yes, then yes, you need them defined here.
+> 
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-Due to all the renames over time, it's hard to find a proper
-Fixes tag. If I see it correctly it was missing from the initial commit
-e9e310491bdbc ("[media] V4L2: support asynchronous subdevice registration").
+Yes, I need them defined here, definitely.
 
-The backtrace is left outside of commit message due to size.
-Note: Needs CONFIG_DEBUG_LIST to be enabled.
+>>
+>>>> +
+>>>>      mediatek,platform:
+>>>>        $ref: /schemas/types.yaml#/definitions/phandle
+>>>>        description: The phandle of MT8192 ASoC platform.
+>>>> @@ -27,10 +36,12 @@ properties:
+>>>>      mediatek,hdmi-codec:
+>>>>        $ref: /schemas/types.yaml#/definitions/phandle
+>>>>        description: The phandle of HDMI codec.
+>>>> +    deprecated: true
+>>>>
+>>>>      headset-codec:
+>>>>        type: object
+>>>>        additionalProperties: false
+>>>> +    deprecated: true
+>>>>
+>>>>        properties:
+>>>>          sound-dai:
+>>>> @@ -41,6 +52,7 @@ properties:
+>>>>      speaker-codecs:
+>>>>        type: object
+>>>>        additionalProperties: false
+>>>> +    deprecated: true
+>>>>
+>>>>        properties:
+>>>>          sound-dai:
+>>>> @@ -51,13 +63,83 @@ properties:
+>>>>        required:
+>>>>          - sound-dai
+>>>>
+>>>> +patternProperties:
+>>>> +  ".*-dai-link$":
+>>>> +    type: object
+>>>> +    description:
+>>>> +      Container for dai-link level properties and CODEC sub-nodes.
+>>>> +
+>>>> +    properties:
+>>>> +      link-name:
+>>>> +        description: Indicates dai-link name and PCM stream name
+>>>> +        items:
+>>>> +          enum:
+>>>> +            - I2S0
+>>>> +            - I2S1
+>>>> +            - I2S2
+>>>> +            - I2S3
+>>>> +            - I2S4
+>>>> +            - I2S5
+>>>> +            - I2S6
+>>>> +            - I2S7
+>>>> +            - I2S8
+>>>> +            - I2S9
+>>>> +            - TDM
+>>>> +
+>>>> +      codec:
+>>>> +        description: Holds subnode which indicates codec dai.
+>>>> +        type: object
+>>>> +        additionalProperties: false
+>>>> +        properties:
+>>>> +          sound-dai:
+>>>> +            minItems: 1
+>>>> +            maxItems: 2
+>>>> +        required:
+>>>> +          - sound-dai
+>>>> +
+>>>> +      dai-format:
+>>>> +        description: audio format
+>>>> +        items:
+>>>> +          enum:
+>>>> +            - i2s
+>>>> +            - right_j
+>>>> +            - left_j
+>>>> +            - dsp_a
+>>>> +            - dsp_b
+>>>> +
+>>>> +      mediatek,clk-provider:
+>>>> +        $ref: /schemas/types.yaml#/definitions/string
+>>>> +        description: Indicates dai-link clock master.
+>>>> +        items:
+>>>> +          enum:
+>>>> +            - cpu
+>>>> +            - codec
+>>>> +
+>>>> +    additionalProperties: false
+>>>
+>>> Move this before properties.
+>>>
+>>
+>> Done for v2.
+>>
+>>>> +
+>>>> +    required:
+>>>> +      - link-name
+>>>> +
+>>>>    additionalProperties: false
+>>>>
+>>>>    required:
+>>>>      - compatible
+>>>>      - mediatek,platform
+>>>> -  - headset-codec
+>>>> -  - speaker-codecs
+>>>> +
+>>>> +allOf:
+>>>> +  # Disallow dai-link-xxx nodes if the legacy properties are specified
+>>>
+>>> xxx-dai-link?
+>>>
+>>
+>> Oh! Yes, thanks for catching this.
+>>
+>> That's what I initially wanted to do, but then I opted for xxx-dai-link and
+>> forgot to update this comment.
+>>
+>> Fixed for v2.
+>>
+>>>> +  - if:
+>>>> +      patternProperties:
+>>>> +        ".*-dai-link$": false
+>>>> +    then:
+>>>> +      required:
+>>>> +        - headset-codec
+>>>> +        - speaker-codecs
+>>>> +    else:
+>>>> +      properties:
+>>>> +        headset-codec: false
+>>>> +        speaker-codecs: false
+>>>> +        mediatek,hdmi-codec: false
+>>>
+>>> Allowing both would preserve compatibility. That's not needed? If so,
+>>> say why in the commit msg.
+>>>
+>>
+>> I'm thinking of writing:
+>>
+>> "Since describing machine specific audio hardware and links replaces the
+>> now deprecated old logic doing the same in a driver hardcoded fashion,
+>> it is not allowed to have both the old and new properties together."
+> 
+> What happened to that. Instead you just sent a new version with
+> nothing about this.
+> 
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 133 at lib/list_debug.c:52 __list_del_entry_valid_or_report+0x7c/0x148
-list_del corruption, c33b9558->next is NULL
-Modules linked in: imx6_mipi_csi2(C+) v4l2_fwnode snd_soc_imx_audmux snd_soc_tlv320aic32x4_i2c ci_hdrc_imx(+) coda_vpu snd_soc_tlv320aic32x4 imx6_media(C) ci_hdrc snd_soc_fsl_ssi snd_soc_fsl_asrc imx_pcm_dma v4l2_jpeg imx_media_common(C) videobuf2_vmalloc udc_core snd_soc_core videobuf2_dma_contig roles dw_hdmi_imx imx_vdoa videobuf2_memops dw_hdmi caam usbmisc_imx v4l2_mem2mem imx_sdma drm_display_helper error videobuf2_v4l2 snd_pcm_dmaengine virt_dma video_mux imxdrm videobuf2_common snd_pcm v4l2_async mux_mmio drm_dma_helper mux_core videodev drm_kms_helper snd_timer snd etnaviv mc soundcore imx_ipu_v3 gpu_sched gpio_keys gpio_beeper drm drm_panel_orientation_quirks configfs
-CPU: 1 PID: 133 Comm: systemd-udevd Tainted: G        WC         6.8.0-rc7-next-20240307+ #438
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Call trace: 
- unwind_backtrace from show_stack+0x10/0x14
- show_stack from dump_stack_lvl+0x50/0x64
- dump_stack_lvl from __warn+0x98/0xc4
- __warn from warn_slowpath_fmt+0x11c/0x1b4
- warn_slowpath_fmt from __list_del_entry_valid_or_report+0x7c/0x148
- __list_del_entry_valid_or_report from __v4l2_async_nf_unregister.part.0+0x38/0x78 [v4l2_async]
- __v4l2_async_nf_unregister.part.0 [v4l2_async] from v4l2_async_nf_unregister+0x44/0x4c [v4l2_async]
- v4l2_async_nf_unregister [v4l2_async] from csi2_probe+0x20c/0x2b4 [imx6_mipi_csi2]
- csi2_probe [imx6_mipi_csi2] from platform_probe+0x5c/0xb0
- platform_probe from really_probe+0xd0/0x3cc
- really_probe from __driver_probe_device+0x8c/0x120
- __driver_probe_device from driver_probe_device+0x30/0xc0
- driver_probe_device from __driver_attach+0xd8/0x1b0
- __driver_attach from bus_for_each_dev+0x70/0xc0
- bus_for_each_dev from bus_add_driver+0xf0/0x1f4
- bus_add_driver from driver_register+0x7c/0x118
- driver_register from do_one_initcall+0x44/0x174
- do_one_initcall from do_init_module+0xa4/0x2a8
- do_init_module from init_module_from_file+0x94/0x134
- init_module_from_file from idempotent_init_module+0xec/0x240
- idempotent_init_module from sys_finit_module+0x64/0xc4
- sys_finit_module from ret_fast_syscall+0x0/0x1c
-Exception stack(0xf0d45fa8 to 0xf0d45ff0)
-5fa0:                   00000000 00000000 0000000f b6cfb624 00000000 00020000
-5fc0: 00000000 00000000 00000000 0000017b 00000000 b6eaff5b 00000000 0239e688
-5fe0: bea33658 bea33648 b6cf65ab b6c2b112
----[ end trace 0000000000000000 ]---
+The same thing that happened to that card "model" error that shouldn't have
+been there because I catched it before sending and fixed, then...
 
- drivers/media/v4l2-core/v4l2-async.c | 2 ++
- 1 file changed, 2 insertions(+)
+...I have ultimately sent the wrong changeset. My bad.
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 3ec323bd528b1..6a7dcf43d7125 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -563,6 +563,7 @@ void v4l2_async_nf_init(struct v4l2_async_notifier *notifier,
- {
- 	INIT_LIST_HEAD(&notifier->waiting_list);
- 	INIT_LIST_HEAD(&notifier->done_list);
-+	INIT_LIST_HEAD(&notifier->notifier_entry);
- 	notifier->v4l2_dev = v4l2_dev;
- }
- EXPORT_SYMBOL(v4l2_async_nf_init);
-@@ -572,6 +573,7 @@ void v4l2_async_subdev_nf_init(struct v4l2_async_notifier *notifier,
- {
- 	INIT_LIST_HEAD(&notifier->waiting_list);
- 	INIT_LIST_HEAD(&notifier->done_list);
-+	INIT_LIST_HEAD(&notifier->notifier_entry);
- 	notifier->sd = sd;
- }
- EXPORT_SYMBOL_GPL(v4l2_async_subdev_nf_init);
--- 
-2.34.1
+Anyway - since that's a bigger series, I'll wait for a few days and will
+send the v3 with the names added to the audio-routing and this mentioned
+in the commit description (so, that's happening next week).
+
+>> ...but in short - both the old and the new can do exactly the same, but
+>> imo it doesn't make any sense to actually rely on both as:
+>>    1. It's redundant (and one set of them makes the other useless);
+>>    2. I want to avoid confusion (as the other set won't be parsed);
+>>    3. I'm trying to *enforce* consistency as MTK cards have different
+>>       bindings for .. really, no good reason;
+>>    4. I want to see custom stuff disappear completely (and/or as much as
+>>       possible anyway) and use something that is (at least somewhat) common
+>>       between all MTK and non-MTK or anyway as a start at least consistent
+>>       between MTK cards.
+>>
+>> In theory, though, speaking of the driver side, there's nothing preventing
+>> you from specifying both audio-routing xxx-dai-link and mediatek,hdmi-codec,
+>> as the drivers' action will be, in short
+>>      if (new_bindings)
+>>        forget_about_old_bindings_use_the_new_ones();
+>>      else
+>>        use_old_hardcoded_stuff(); /* and be sad */
+> 
+> That works for newer kernels with this change, but existing kernels
+> will only have:
+> 
+> use_old_hardcoded_stuff(); /* and not know it's sad */
+> 
+> If you want to support a new DT and old kernel, you need to populate
+> both properties.
+> 
+>> For that, I really don't want to allow both sets of properties - please, please,
+>> tell me that I don't *have to* remove this block :-)
+> 
+> Ultimately it is your decision as Mediatek maintainer, not mine. My
+> only requirement is the commit message explain why the above
+> combination is not important for these platforms.
+> 
+> You could leave it, but keep both in the dts files for some time
+> period. That will cause warnings, but what's a few more. The ABI
+> doesn't have to be a forever thing. Things evolve and there will be
+> other reasons to upgrade.
+> 
+
+Thanks for explaining.
+
+Cheers,
+Angelo
+
 
