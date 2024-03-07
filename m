@@ -1,278 +1,374 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A1B13B795
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 22:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9069B13E7FB;
+	Thu,  7 Mar 2024 22:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709849780; cv=none; b=HT9kC+X1pcEKQwp6hgtYycIH5gPfIKcreOUE2/ykRepQnTwvGPM3KVXgE8mTEbycB61yr5RY8kROqjZUME+iEhSVKiz9+DibevO1m2FODjj/Rt5TjZXxsqP2myOCA5OZvtsSLA/Cb2rnFeiCD6LrKxsDGThCduVVTNq9daWZR9Q=
+	t=1709849784; cv=none; b=MctJyxaBQCp+FILVlEXM/8l4ezBJvPtuyb3bnPJeAkKtcPtsiSjm7+nA32WnVEshAjOC0qa7FZQEcybFXrrdyOfin2qmrAuaveucvh73EEzH3HerXTLwJIx7/6PfdTB6JJRoHfV2NWmYBl62NqznhEaKAsB4IsfVWLJNrRtY7o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709849780; c=relaxed/simple;
-	bh=5RMQ85kjFU0IqJOMgQrTPKjXrUrRj7z8bEoR0DwT4c4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=poYaMYBBSmuVqJ/ZFTzaKZtrkXdptY72JYgDMsxNXORjbSTp0xN9UmVsE3RevwAntwIAlGNcAqsKHvKKP4Uk3xfaChrAl2q/j8VatvwOKwX6IhfSf5CbFLccrjetPpRB+DwKEOhS08IVTOWtuyu1c9HnQ95cuPPwhJoJfam3BfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=h2H3442F; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1709849784; c=relaxed/simple;
+	bh=DpKv8+zh40mMKv9HsdZy62wSyncuoMvp0XHEDRkG/pM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OD1T9zMWnh8Cs7q9Lk4LIdd5LwYVY+SBZSBvB2sPJAc01/2HNuGGfRkQMK37ecO2UT/VUaME1eG1Se/bzIasoVDKM3lpOanfSF87E3c/11cO0Tmr7DFVy9vLzI3UPgeymqPIwuXDvnO3DeYGO7DFW8Zbqt9AKo+oznVvJmUaMF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1ipGdxx9; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="h2H3442F"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7882d75e766so78053885a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 14:16:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1709849776; x=1710454576; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2zp3v54goojmEVAqqcqwPv6cH3vUgepVgSAhLnj7GBU=;
-        b=h2H3442F5rZ9cSrc0zGU37nYb4I+eySsDpVSQJSGH8rpvunqXDWqdysM/wa+dyCnjL
-         LYLc6JCW8p5797JbWc9oYrDIa4HQFyqUMJvdsToKNEaemNWp4ZNTGnLtznR23Zco/bg/
-         WhC8EN4vhidHV9BOZ+HoGGjyaqYtmUsWQ8L97FZkOnx1FVjWBdmiCCa1h1WxOwiL77P7
-         Lhu23kiZ6TDjvP2tuym1rY04n9WDitoa4eII5W6GAPOHBJUWWFVGXO4G57aFQuNv4iii
-         rwPMyaGHB9WdxR7j85unn8JYk+O28AOEIoVot4bZEe5Zd0nRQwGbAoYUvc6FhA64N7k3
-         565A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709849776; x=1710454576;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2zp3v54goojmEVAqqcqwPv6cH3vUgepVgSAhLnj7GBU=;
-        b=aK3gTCcd/LD6VCoVLS1HDacgqh3sU0V03hN/i1KAI2Uzo2xoQapNNB4DHD+LMaqcw/
-         vizeYT1Bn/vx9zMz/POYpPN5Opttyrr/pBFrK5GQEINqfzCwjCCxSa3hr+klMwQZIuP/
-         42o5Xry+TMLxMMCj3funpAAcmWGzrjvOJY0IF9Z0IXzers842kYrl5Ukt2JPAjeIDuPp
-         Gk7uN7C9cfrpT4kqyp+5ej41ltVWH3BL0Go+PDC0mDVPBKQeD1csDf7A6Zr/SxMyUkmg
-         DxewOCoX/pR5hQqOVCEeblmM8VNXhq3okGBjBGTmhCVO8PE22bwm5cnFE/KWGSxR/JD+
-         gjmg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuqqxQJYXnV8N0YmdnhUfNln4xttECKgPKGWu3CQkuBvr2FuxsV3lAOlwSjbfhQudkQFncfqJkHbzfsK0XsgU3RY/Dcj+0YX+jq74W
-X-Gm-Message-State: AOJu0YxSKS4fmVbBmBohmBa+uXthC4MMyjyBEC8FdpGwBT/f9m70fqmw
-	dew0z4BDGUM7ZGYcTLSHkIyBiDuEY69j6wMSspdvT/3Op5X0dsT1xCZap/YHLrw=
-X-Google-Smtp-Source: AGHT+IFkuf7HU47twIpvKZWFZeZI65WwFJHBcwQNWMYK70wy0RsqZDzkLqFS92cL0KO6OyA+B+oJNQ==
-X-Received: by 2002:a05:620a:5361:b0:788:1a1c:dcb6 with SMTP id op33-20020a05620a536100b007881a1cdcb6mr10975285qkn.5.1709849775724;
-        Thu, 07 Mar 2024 14:16:15 -0800 (PST)
-Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id bp9-20020a05620a458900b0078812f8a042sm6498316qkb.90.2024.03.07.14.16.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 14:16:14 -0800 (PST)
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Alex Deucher <alexander.deucher@amd.com>
-Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amdgpu: fix deadlock while reading mqd from debugfs
-Date: Thu,  7 Mar 2024 17:07:37 -0500
-Message-ID: <20240307221609.7651-1-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1ipGdxx9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709849780;
+	bh=DpKv8+zh40mMKv9HsdZy62wSyncuoMvp0XHEDRkG/pM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1ipGdxx9R/KM1YayByjAX69n3EZZ1SnPcRSpmdHGoZRBd/jWll+/OsRrlM5PnT1zp
+	 mYTGZchDIicAK5C1x17U+GFVBbuICU67P0FoLOIpTgtnubby/VI4PXbtHPk9Z/IGD9
+	 /VK4XiPDraxP2G5m2dMXs1LD5KyY0P1QvJvDKNXhhNmEuYLEApYh5D+T0RCnjTKV0R
+	 Qc5VByAGW0efIk3fQ21yEw0t7oIzkxbSa4qnxoKWJM8SDiNs7RmOYZ9FDxnP8RypdL
+	 fG4rdDNAhHny3oBBY1lxmv6F+BPh+Kp6eLnkgYnjQiF/fkr4Mwbq+kE8FrnFBzbpUR
+	 REBFpRtmf1tLA==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9822037804B2;
+	Thu,  7 Mar 2024 22:16:20 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id 1B1BD1060B10; Thu,  7 Mar 2024 23:16:20 +0100 (CET)
+Date: Thu, 7 Mar 2024 23:16:20 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Dragan Simic <dsimic@manjaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Chen-Yu Tsai <wens@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] RK3588 and Rock 5B dts additions: thermal, OPP
+ and fan
+Message-ID: <pkyne4g2cln27dcdu3jm7bqdqpmd2kwkbguiolmozntjuiajrb@gvq4nupzna4o>
+References: <20240229-rk-dts-additions-v3-0-6afe8473a631@gmail.com>
+ <j3krazypdc7gsvnp4kcocaftxsbjrfhj6nr2kf2cieo4bjxbv7@bqdfbirk5tei>
+ <CABjd4Yxs9b0XDXYfdnmT08BQnsJLonRy4X-g73J67yeGw3xL+w@mail.gmail.com>
+ <CABjd4YzTL=5S7cS8ACNAYVa730WA3iGd5L_wP1Vn9=f83RCORA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gfp7br4h7lphbhvl"
+Content-Disposition: inline
+In-Reply-To: <CABjd4YzTL=5S7cS8ACNAYVa730WA3iGd5L_wP1Vn9=f83RCORA@mail.gmail.com>
 
-An errant disk backup on my desktop got into debugfs and triggered the
-following deadlock scenario in the amdgpu debugfs files. The machine
-also hard-resets immediately after those lines are printed (although I
-wasn't able to reproduce that part when reading by hand):
 
-[ 1318.016074][ T1082] ======================================================
-[ 1318.016607][ T1082] WARNING: possible circular locking dependency detected
-[ 1318.017107][ T1082] 6.8.0-rc7-00015-ge0c8221b72c0 #17 Not tainted
-[ 1318.017598][ T1082] ------------------------------------------------------
-[ 1318.018096][ T1082] tar/1082 is trying to acquire lock:
-[ 1318.018585][ T1082] ffff98c44175d6a0 (&mm->mmap_lock){++++}-{3:3}, at: __might_fault+0x40/0x80
-[ 1318.019084][ T1082]
-[ 1318.019084][ T1082] but task is already holding lock:
-[ 1318.020052][ T1082] ffff98c4c13f55f8 (reservation_ww_class_mutex){+.+.}-{3:3}, at: amdgpu_debugfs_mqd_read+0x6a/0x250 [amdgpu]
-[ 1318.020607][ T1082]
-[ 1318.020607][ T1082] which lock already depends on the new lock.
-[ 1318.020607][ T1082]
-[ 1318.022081][ T1082]
-[ 1318.022081][ T1082] the existing dependency chain (in reverse order) is:
-[ 1318.023083][ T1082]
-[ 1318.023083][ T1082] -> #2 (reservation_ww_class_mutex){+.+.}-{3:3}:
-[ 1318.024114][ T1082]        __ww_mutex_lock.constprop.0+0xe0/0x12f0
-[ 1318.024639][ T1082]        ww_mutex_lock+0x32/0x90
-[ 1318.025161][ T1082]        dma_resv_lockdep+0x18a/0x330
-[ 1318.025683][ T1082]        do_one_initcall+0x6a/0x350
-[ 1318.026210][ T1082]        kernel_init_freeable+0x1a3/0x310
-[ 1318.026728][ T1082]        kernel_init+0x15/0x1a0
-[ 1318.027242][ T1082]        ret_from_fork+0x2c/0x40
-[ 1318.027759][ T1082]        ret_from_fork_asm+0x11/0x20
-[ 1318.028281][ T1082]
-[ 1318.028281][ T1082] -> #1 (reservation_ww_class_acquire){+.+.}-{0:0}:
-[ 1318.029297][ T1082]        dma_resv_lockdep+0x16c/0x330
-[ 1318.029790][ T1082]        do_one_initcall+0x6a/0x350
-[ 1318.030263][ T1082]        kernel_init_freeable+0x1a3/0x310
-[ 1318.030722][ T1082]        kernel_init+0x15/0x1a0
-[ 1318.031168][ T1082]        ret_from_fork+0x2c/0x40
-[ 1318.031598][ T1082]        ret_from_fork_asm+0x11/0x20
-[ 1318.032011][ T1082]
-[ 1318.032011][ T1082] -> #0 (&mm->mmap_lock){++++}-{3:3}:
-[ 1318.032778][ T1082]        __lock_acquire+0x14bf/0x2680
-[ 1318.033141][ T1082]        lock_acquire+0xcd/0x2c0
-[ 1318.033487][ T1082]        __might_fault+0x58/0x80
-[ 1318.033814][ T1082]        amdgpu_debugfs_mqd_read+0x103/0x250 [amdgpu]
-[ 1318.034181][ T1082]        full_proxy_read+0x55/0x80
-[ 1318.034487][ T1082]        vfs_read+0xa7/0x360
-[ 1318.034788][ T1082]        ksys_read+0x70/0xf0
-[ 1318.035085][ T1082]        do_syscall_64+0x94/0x180
-[ 1318.035375][ T1082]        entry_SYSCALL_64_after_hwframe+0x46/0x4e
-[ 1318.035664][ T1082]
-[ 1318.035664][ T1082] other info that might help us debug this:
-[ 1318.035664][ T1082]
-[ 1318.036487][ T1082] Chain exists of:
-[ 1318.036487][ T1082]   &mm->mmap_lock --> reservation_ww_class_acquire --> reservation_ww_class_mutex
-[ 1318.036487][ T1082]
-[ 1318.037310][ T1082]  Possible unsafe locking scenario:
-[ 1318.037310][ T1082]
-[ 1318.037838][ T1082]        CPU0                    CPU1
-[ 1318.038101][ T1082]        ----                    ----
-[ 1318.038350][ T1082]   lock(reservation_ww_class_mutex);
-[ 1318.038590][ T1082]                                lock(reservation_ww_class_acquire);
-[ 1318.038839][ T1082]                                lock(reservation_ww_class_mutex);
-[ 1318.039083][ T1082]   rlock(&mm->mmap_lock);
-[ 1318.039328][ T1082]
-[ 1318.039328][ T1082]  *** DEADLOCK ***
-[ 1318.039328][ T1082]
-[ 1318.040029][ T1082] 1 lock held by tar/1082:
-[ 1318.040259][ T1082]  #0: ffff98c4c13f55f8 (reservation_ww_class_mutex){+.+.}-{3:3}, at: amdgpu_debugfs_mqd_read+0x6a/0x250 [amdgpu]
-[ 1318.040560][ T1082]
-[ 1318.040560][ T1082] stack backtrace:
-[ 1318.041053][ T1082] CPU: 22 PID: 1082 Comm: tar Not tainted 6.8.0-rc7-00015-ge0c8221b72c0 #17 3316c85d50e282c5643b075d1f01a4f6365e39c2
-[ 1318.041329][ T1082] Hardware name: Gigabyte Technology Co., Ltd. B650 AORUS PRO AX/B650 AORUS PRO AX, BIOS F20 12/14/2023
-[ 1318.041614][ T1082] Call Trace:
-[ 1318.041895][ T1082]  <TASK>
-[ 1318.042175][ T1082]  dump_stack_lvl+0x4a/0x80
-[ 1318.042460][ T1082]  check_noncircular+0x145/0x160
-[ 1318.042743][ T1082]  __lock_acquire+0x14bf/0x2680
-[ 1318.043022][ T1082]  lock_acquire+0xcd/0x2c0
-[ 1318.043301][ T1082]  ? __might_fault+0x40/0x80
-[ 1318.043580][ T1082]  ? __might_fault+0x40/0x80
-[ 1318.043856][ T1082]  __might_fault+0x58/0x80
-[ 1318.044131][ T1082]  ? __might_fault+0x40/0x80
-[ 1318.044408][ T1082]  amdgpu_debugfs_mqd_read+0x103/0x250 [amdgpu 8fe2afaa910cbd7654c8cab23563a94d6caebaab]
-[ 1318.044749][ T1082]  full_proxy_read+0x55/0x80
-[ 1318.045042][ T1082]  vfs_read+0xa7/0x360
-[ 1318.045333][ T1082]  ksys_read+0x70/0xf0
-[ 1318.045623][ T1082]  do_syscall_64+0x94/0x180
-[ 1318.045913][ T1082]  ? do_syscall_64+0xa0/0x180
-[ 1318.046201][ T1082]  ? lockdep_hardirqs_on+0x7d/0x100
-[ 1318.046487][ T1082]  ? do_syscall_64+0xa0/0x180
-[ 1318.046773][ T1082]  ? do_syscall_64+0xa0/0x180
-[ 1318.047057][ T1082]  ? do_syscall_64+0xa0/0x180
-[ 1318.047337][ T1082]  ? do_syscall_64+0xa0/0x180
-[ 1318.047611][ T1082]  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-[ 1318.047887][ T1082] RIP: 0033:0x7f480b70a39d
-[ 1318.048162][ T1082] Code: 91 ba 0d 00 f7 d8 64 89 02 b8 ff ff ff ff eb b2 e8 18 a3 01 00 0f 1f 84 00 00 00 00 00 80 3d a9 3c 0e 00 00 74 17 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 5b c3 66 2e 0f 1f 84 00 00 00 00 00 53 48 83
-[ 1318.048769][ T1082] RSP: 002b:00007ffde77f5c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[ 1318.049083][ T1082] RAX: ffffffffffffffda RBX: 0000000000000800 RCX: 00007f480b70a39d
-[ 1318.049392][ T1082] RDX: 0000000000000800 RSI: 000055c9f2120c00 RDI: 0000000000000008
-[ 1318.049703][ T1082] RBP: 0000000000000800 R08: 000055c9f2120a94 R09: 0000000000000007
-[ 1318.050011][ T1082] R10: 0000000000000000 R11: 0000000000000246 R12: 000055c9f2120c00
-[ 1318.050324][ T1082] R13: 0000000000000008 R14: 0000000000000008 R15: 0000000000000800
-[ 1318.050638][ T1082]  </TASK>
+--gfp7br4h7lphbhvl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-amdgpu_debugfs_mqd_read() holds a reservation when it calls
-put_user(), which may fault and acquire the mmap_sem. This violates
-the established locking order.
+Hi,
 
-Bounce the mqd data through a kernel buffer to get put_user() out of
-the illegal section.
+On Thu, Mar 07, 2024 at 04:38:24PM +0400, Alexey Charkov wrote:
+> On Tue, Mar 5, 2024 at 12:06=E2=80=AFPM Alexey Charkov <alchark@gmail.com=
+> wrote:
+> > On Mon, Mar 4, 2024 at 9:51=E2=80=AFPM Sebastian Reichel
+> > <sebastian.reichel@collabora.com> wrote:
+> > > On Thu, Feb 29, 2024 at 11:26:31PM +0400, Alexey Charkov wrote:
+> > > > This enables thermal monitoring and CPU DVFS on RK3588(s), as well =
+as
+> > > > active cooling on Radxa Rock 5B via the provided PWM fan.
+> > > >
+> > > > Some RK3588 boards use separate regulators to supply CPUs and their
+> > > > respective memory interfaces, so this is handled by coupling those
+> > > > regulators in affected boards' device trees to ensure that their
+> > > > voltage is adjusted in step.
+> > > >
+> > > > In this revision of the series I chose to enable TSADC for all boar=
+ds
+> > > > at .dtsi level, because:
+> > > >  - The defaults already in .dtsi should work for all users, given t=
+hat
+> > > >    the CRU based resets don't need any out-of-chip components, and
+> > > >    the CRU vs. PMIC reset is pretty much the only thing a board mig=
+ht
+> > > >    have to configure / override there
+> > > >  - The boards that have TSADC_SHUT signal wired to the PMIC reset l=
+ine
+> > > >    can still choose to override the reset logic in their .dts. Or s=
+tay
+> > > >    with CRU based resets, as downstream kernels do anyway
+> > > >  - The on-by-default approach helps ensure thermal protections are =
+in
+> > > >    place (emergency reset and throttling) for any board even with a
+> > > >    rudimentary .dts, and thus lets us introduce CPU DVFS with better
+> > > >    peace of mind
+> > > >
+> > > > Fan control on Rock 5B has been split into two intervals: let it sp=
+in
+> > > > at the minimum cooling state between 55C and 65C, and then accelera=
+te
+> > > > if the system crosses the 65C mark - thanks to Dragan for suggestin=
+g.
+> > > > This lets some cooling setups with beefier heatsinks and/or larger
+> > > > fan fins to stay in the quietest non-zero fan state while still
+> > > > gaining potential benefits from the airflow it generates, and
+> > > > possibly avoiding noisy speeds altogether for some workloads.
+> > > >
+> > > > OPPs help actually scale CPU frequencies up and down for both cooli=
+ng
+> > > > and performance - tested on Rock 5B under varied loads. I've split
+> > > > the patch into two parts: the first containing those OPPs that seem
+> > > > to be no-regret with general consensus during v1 review [2], while
+> > > > the second contains OPPs that cause frequency reductions without
+> > > > accompanying decrease in CPU voltage. There seems to be a slight
+> > > > performance gain in some workload scenarios when using these, but
+> > > > previous discussion was inconclusive as to whether they should be
+> > > > included or not. Having them as separate patches enables easier
+> > > > comparison and partial reversion if people want to test it under
+> > > > their workloads, and also enables the first 'no-regret' part to be
+> > > > merged to -next while the jury is still out on the second one.
+> > > >
+> > > > [1] https://lore.kernel.org/linux-rockchip/1824717.EqSB1tO5pr@bagen=
+d/T/#ma2ab949da2235a8e759eab22155fb2bc397d8aea
+> > > > [2] https://lore.kernel.org/linux-rockchip/CABjd4YxqarUCbZ-a2XLe3TW=
+J-qjphGkyq=3DwDnctnEhdoSdPPpw@mail.gmail.com/T/#m49d2b94e773f5b532a0bb5d3d7=
+664799ff28cc2c
+> > > >
+> > > > Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> > > > ---
+> > > > Changes in v3:
+> > > > - Added regulator coupling for EVB1 and QuartzPro64
+> > > > - Enabled the TSADC for all boards in .dtsi, not just Rock 5B (than=
+ks ChenYu)
+> > > > - Added comments regarding two passive cooling trips in each zone (=
+thanks Dragan)
+> > > > - Fixed active cooling map numbering for Radxa Rock 5B (thanks Drag=
+an)
+> > > > - Dropped Daniel's Acked-by tag from the Rock 5B fan patch, as ther=
+e's been quite some
+> > > >   churn there since the version he acknowledged
+> > > > - Link to v2: https://lore.kernel.org/r/20240130-rk-dts-additions-v=
+2-0-c6222c4c78df@gmail.com
+> > > >
+> > > > Changes in v2:
+> > > > - Dropped the rfkill patch which Heiko has already applied
+> > > > - Set higher 'polling-delay-passive' (100 instead of 20)
+> > > > - Name all cooling maps starting from map0 in each respective zone
+> > > > - Drop 'contribution' properties from passive cooling maps
+> > > > - Link to v1: https://lore.kernel.org/r/20240125-rk-dts-additions-v=
+1-0-5879275db36f@gmail.com
+> > > >
+> > > > ---
+> > > > Alexey Charkov (5):
+> > > >       arm64: dts: rockchip: enable built-in thermal monitoring on R=
+K3588
+> > > >       arm64: dts: rockchip: enable automatic active cooling on Rock=
+ 5B
+> > > >       arm64: dts: rockchip: Add CPU/memory regulator coupling for R=
+K3588
+> > > >       arm64: dts: rockchip: Add OPP data for CPU cores on RK3588
+> > > >       arm64: dts: rockchip: Add further granularity in RK3588 CPU O=
+PPs
+> > > >
+> > > >  arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts   |  12 +
+> > > >  .../arm64/boot/dts/rockchip/rk3588-quartzpro64.dts |  12 +
+> > > >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |  30 +-
+> > > >  arch/arm64/boot/dts/rockchip/rk3588s.dtsi          | 385 +++++++++=
++++++++++++-
+> > > >  4 files changed, 437 insertions(+), 2 deletions(-)
+> > >
+> > > I'm too busy to have a detailed review of this series right now, but
+> > > I pushed it to our CI and it results in a board reset at boot time:
+> > >
+> > > https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/=
+-/jobs/300950
+> > >
+> > > I also pushed just the first three patches (i.e. without OPP /
+> > > cpufreq) and that boots fine:
+> > >
+> > > https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/=
+-/jobs/300953
+> >
+> > Thank you for testing these! I've noticed in the boot log that the CI
+> > machine uses some u-boot 2023.07 - is that a downstream one? Any
+> > chance to compare it to 2023.11 or 2024.01 from your (Collabora)
+> > integration tree?
+> >
+> > I use 2023.11 from your integration tree, with a binary bl31, and I'm
+> > not getting those resets even under prolonged heavy load (I rebuild
+> > Chromium with 8 concurrent compilation jobs as the stress test -
+> > that's 14 hours of heavy CPU, memory and IO use). Would be interesting
+> > to understand if it's just a 'lucky' SoC specimen on my side, or if
+> > there is some dark magic happening differently on my machine vs. your
+> > CI machine.
+> >
+> > Thinking that maybe if your CI machine uses a downstream u-boot it
+> > might be leaving some extra hardware running (PVTM?) which might do
+> > weird stuff when TSADC/clocks/voltages get readjusted by the generic
+> > cpufreq driver?..
+> >
+> > > Note, that OPP / cpufreq works on the same boards in the CI when
+> > > using the ugly-and-not-for-upstream cpufreq driver:
+> > >
+> > > https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/=
+-/commit/9c90c5032743a0419bf3fd2f914a24fd53101acd
+> > >
+> > > My best guess right now is, that this is related to the generic
+> > > driver obviously not updating the GRF read margin registers.
+> >
+> > If it was about memory read margins I believe I would have been
+> > unlikely to get my machine to work reliably under heavy load with the
+> > default ones, but who knows...
+>=20
+> Sebastian's report led me to investigate further how all those things
+> are organized in the downstream code and in hardware, and what could
+> be a pragmatic way forward with upstream enablement. It turned out to
+> be quite a rabbit hole frankly, with multiple layers of abstraction
+> and intertwined code in different places.
+>=20
+> Here's a quick summary for future reference:
+>  - CPU clocks on RK3588 are ultimately managed by the ATF firmware,
+> which provides an SCMI service to expose them to the kernel
+>  - ATF itself doesn't directly set any clock frequencies. Instead, it
+> accepts a target frequency via SCMI and converts it into an oscillator
+> ring length setting for the PVPLL hardware block (via a fixed table
+> lookup). At least that's how it's done in the recently released TF-A
+> bl31 code [1] - perhaps the binary bl31 does something similar
+>  - U-boot doesn't seem to mess with CPU clocks, PVTM or PVPLL
+>  - PVPLL produces a reference clock to feed to the CPUs, which depends
+> on the configured oscillator ring length but also on the supply
+> voltage, silicon quality and perhaps temperature too. ATF doesn't know
+> anything about voltages or temperatures, so it doesn't guarantee that
+> the requested frequency is matched by the hardware
+>  - PVPLL frequency generation is bypassed for lower-frequency OPPs, in
+> which case the target frequency is directly fed by the ATF to the CRU.
+> This happens for both big-core and little-core frequencies below 816
+> MHz
+>  - Given that requesting a particular frequency via SCMI doesn't
+> guarantee that it will be what the CPUs end up running at, the vendor
+> kernel also does a runtime voltage calibration for the supply
+> regulators, by adjusting the supply voltage in minimum regulator steps
+> until the frequency reported by PVPLL gets close to the requested one
+> [2]. It then overwrites OPP provided voltage values with the
+> calibrated ones
+>  - There's also some trickery with preselecting OPP voltage sets using
+> the "-Lx" suffix based on silicon quality, as measured by a "leakage"
+> value stored in an NVMEM cell and/or the PVTM frequency generated at a
+> reference "midpoint" OPP [3]. Better performing silicon gets to run at
+> lower default supply voltages, thus saving power
+>  - Once the OPPs are selected and calibrated, the only remaining
+> trickery is the two supply regulators per each CPU cluster (one for
+> the CPUs and the other for the memory interface)
+>  - Another catch, as Sebastian points out, is that memory read margins
+> must be adjusted whenever the memory interface supply voltage crosses
+> certain thresholds [4]. This has little to do with CPUs or
+> frequencies, and is only tangentially related to them due to the
+> dependency chain between the target CPU frequency -> required CPU
+> supply voltage -> matching memory interface supply voltage -> required
+> read margins
+>  - At reset the ATF switches all clocks to the lowest 408 MHz [6], so
+> setting it to anything in kernel code (as the downstream driver does)
+> seems redundant
+>=20
+> All in all, it does indeed sound like Collabora's CI machine boot-time
+> resets are most likely caused by the missing memory read margin
+> settings in my patch series. Voltage values in the OPPs I used are the
+> most conservative defaults of what the downstream DT has, and PVPLL
+> should be able to generate reasonable clock speeds with those (albeit
+> likely suboptimal, due to them not being tuned to the particular
+> silicon specimen). And there is little else to differ frankly.
+>=20
+> As for the way forward, it would be great to know the opinions from
+> the list. My thinking is as follows:
+>  - I can introduce memory read margin updates as the first priority,
+> leaving voltage calibration and/or OPP preselection for later (as
+> those should not affect system stability at current default values,
+> perhaps only power efficiency to a certain extent)
+>  - CPUfreq doesn't sound like the right place for those, given that
+> they have little to do with either CPU or freq :)
+>  - I suggest a custom regulator config helper to plug into the OPP
+> layer, as is done for TI OMAP5 [6]. At first, it might be only used
+> for looking up and setting the correct memory read margin value
+> whenever the cluster supply voltage changes, and later the same code
+> can be extended to do voltage calibration. In fact, OMAP code is there
+> for a very similar purpose, but in their case optimized voltages are
+> pre-programmed in efuses and don't require runtime recalibration
+>  - Given that all OPPs in the downstream kernel list identical
+> voltages for the memory supply as for the CPU supply, I don't think it
+> makes much sense to customize the cpufreq driver per se.
+> Single-regulator approach with the generic cpufreq-dt and regulator
+> coupling sounds much less invasive and thus lower-maintenance
 
-Fixes: 445d85e3c1df ("drm/amdgpu: add debugfs interface for reading MQDs")
-Cc: stable@vger.kernel.org		[v6.5+]
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c | 46 +++++++++++++++---------
- 1 file changed, 29 insertions(+), 17 deletions(-)
+Sorry for my late response.
 
-This fixes the lockdep splat for me, and the hexdump of the output
-looks sane after the patch. However, I'm not at all familiar with this
-code to say for sure that this is the right solution. The mqd seems
-small enough that the kmalloc won't get crazy. I'm also assuming that
-ring->mqd_size is safe to access before the reserve & kmap. Lastly I
-went with an open loop instead of a memcpy() as I wasn't sure if that
-memory is safe to address a byte at at time.
+When doing some more tests I noticed, that the CI never build the
+custom driver and thus never did any CPU frequency scaling at all.
+I only used it for my own tests (on RK3588 EVB1). When enabling the
+custom driver, the CI has the same issues as your series. So my
+message was completely wrong, sorry about that.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
-index 5505d646f43a..06f0a6534a94 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
-@@ -524,46 +524,58 @@ static ssize_t amdgpu_debugfs_mqd_read(struct file *f, char __user *buf,
- {
- 	struct amdgpu_ring *ring = file_inode(f)->i_private;
- 	volatile u32 *mqd;
--	int r;
-+	u32 *kbuf;
-+	int r, i;
- 	uint32_t value, result;
- 
- 	if (*pos & 3 || size & 3)
- 		return -EINVAL;
- 
--	result = 0;
-+	kbuf = kmalloc(ring->mqd_size, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
- 
- 	r = amdgpu_bo_reserve(ring->mqd_obj, false);
- 	if (unlikely(r != 0))
--		return r;
-+		goto err_free;
- 
- 	r = amdgpu_bo_kmap(ring->mqd_obj, (void **)&mqd);
--	if (r) {
--		amdgpu_bo_unreserve(ring->mqd_obj);
--		return r;
--	}
-+	if (r)
-+		goto err_unreserve;
- 
-+	/*
-+	 * Copy to local buffer to avoid put_user(), which might fault
-+	 * and acquire mmap_sem, under reservation_ww_class_mutex.
-+	 */
-+	for (i = 0; i < ring->mqd_size/sizeof(u32); i++)
-+		kbuf[i] = mqd[i];
-+
-+	amdgpu_bo_kunmap(ring->mqd_obj);
-+	amdgpu_bo_unreserve(ring->mqd_obj);
-+
-+	result = 0;
- 	while (size) {
- 		if (*pos >= ring->mqd_size)
--			goto done;
-+			break;
- 
--		value = mqd[*pos/4];
-+		value = kbuf[*pos/4];
- 		r = put_user(value, (uint32_t *)buf);
- 		if (r)
--			goto done;
-+			goto err_free;
- 		buf += 4;
- 		result += 4;
- 		size -= 4;
- 		*pos += 4;
- 	}
- 
--done:
--	amdgpu_bo_kunmap(ring->mqd_obj);
--	mqd = NULL;
--	amdgpu_bo_unreserve(ring->mqd_obj);
--	if (r)
--		return r;
--
-+	kfree(kbuf);
- 	return result;
-+
-+err_unreserve:
-+	amdgpu_bo_unreserve(ring->mqd_obj);
-+err_free:
-+	kfree(kbuf);
-+	return r;
- }
- 
- static const struct file_operations amdgpu_debugfs_mqd_fops = {
--- 
-2.44.0
+Regarding U-Boot: The CI uses "U-Boot SPL 2023.07-rc4-g46349e27";
+the last part is the git hash. This is the exact U-Boot source tree
+being used:
 
+https://gitlab.collabora.com/hardware-enablement/rockchip-3588/u-boot/-/com=
+mits/46349e27/
+
+This was one of the first U-Boot trees with Rock 5B Ethernet support
+and is currently flashed to the SPI flash memory of the CI boards.
+The vendor U-Boot tree is a lot older. Also it is still using the
+Rockchip binary BL31. We have plans to also CI boot test U-Boot,
+but currently nobody has time to work on this. I don't think there should
+be any relevant changes between upstream 2023.07 and 2023.11 that could
+explain this. But it's the best lead now, so I will try to find some time
+for doing further tests related to this in the next days.
+
+Regarding the voltage calibration - One option would be to do this
+calibration at boot time (i.e. in U-Boot) and update the voltages
+in DT accordingly.
+
+Greetings,
+
+-- Sebastian
+
+> Best regards,
+> Alexey
+>=20
+> [1] https://gitlab.collabora.com/hardware-enablement/rockchip-3588/truste=
+d-firmware-a/-/blob/rk3588/plat/rockchip/rk3588/drivers/scmi/rk3588_clk.c?r=
+ef_type=3Dheads#L303
+> [2] https://github.com/radxa/kernel/blob/c428536281d69aeb2b3480f65b2b2272=
+10b61535/drivers/soc/rockchip/rockchip_opp_select.c#L804
+> [3] https://github.com/radxa/kernel/blob/c428536281d69aeb2b3480f65b2b2272=
+10b61535/drivers/soc/rockchip/rockchip_opp_select.c#L1575
+> [4] https://github.com/radxa/kernel/blob/c428536281d69aeb2b3480f65b2b2272=
+10b61535/drivers/cpufreq/rockchip-cpufreq.c#L405
+> [5] https://gitlab.collabora.com/hardware-enablement/rockchip-3588/truste=
+d-firmware-a/-/blob/rk3588/plat/rockchip/rk3588/drivers/scmi/rk3588_clk.c?r=
+ef_type=3Dheads#L2419
+> [6] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/drivers/opp/ti-opp-supply.c#n275
+
+--gfp7br4h7lphbhvl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmXqPKwACgkQ2O7X88g7
++prZCw//ZaXCSSy30wflJefeTznZBivyMTnS5Rzh060piQw2tDGpV6F0cqW2hhth
+8x29EdKOZhhZSmwI8A6H58eXdikmWYKJj94e2NlrHfSXYLm/3smN1z4LsT9HQaEy
+xmouXQ8M73oG4n9qmaJP3dM1JZKkLfAENiSXI/HKnpyMgKR89JBp9wDU9u1MAwpw
+ziY+iAf8vY9ejaybG9rSOYH/Tp7lyi9bj5vGcBsc/W1Wd0OkYYB4Fp7YrAe+sS09
+zH6NI5DWznth6Z/k1YUGbT4yECZmhXWwOnSWrBlXbVXVe2e9zt1Cu3q8kGiB0McV
+ffOoMn6DE6JWOdGkSIkIdZzgzbsxdmn+zZkHYhl0kP61RUzWa6+dLPGzLHjHbuUj
+AjQkMIvqEp8HH6qbYXKxxOMJhcobAPcBRaGiD76EmqspI1Cop1M6CmmftjmKloX6
+aDWQJg1Z8OlP99XW28LPbh7m0UagwE/LwcWbCmHLbrjnove0qYfYAcNlI6KUJC54
+FWEn7ddZM5go/Hk1dBgIQZzv+WvTrQ2m6esc47uOhwNJxm4SRqt0na6BvOCE5oCN
+BkraDXBMs98RKxlIwXHCVVQcMXvTtDtaUiFqSY4qR845+N1ASiIQGSbxjWMd3d5I
+YmfxHRYvkdTVPvBaETdkBz1sVmmNXKSsiPDLQpoTzQXSSMv1ZQQ=
+=/5Kc
+-----END PGP SIGNATURE-----
+
+--gfp7br4h7lphbhvl--
