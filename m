@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2EF129A93;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FD0129A66;
 	Thu,  7 Mar 2024 11:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709811290; cv=none; b=fUYm1rdqx6ABGTuozo/80UEjlgSqgNF4zpbn+5Q+otoA6EF0oKKEg3zI0+LcA1H/dBVqD3zPOc5F8jW/28P1urJxCLNtQED5h/ipm030vYwrD7w3GkYZy1tOB36L8YK4o0bkSgDP9M5OWSEiVXs8GMDo6YgIaJiDT11MDUCOqA4=
+	t=1709811290; cv=none; b=sT1ijt6/4myVLZyKx1se8sVHSOF+WEPBKGOMdzvM6cD6adfqMI9P3pXZr2wZFkHLM6J9hq91a1B2E1y5hMT4BV5+EPtRmzRwue63eyakzP3gZi7wyFEvTtlAIU0y+X8eUFTIAfbB26BkiSaCzyjgAIPQQlCZOXLrQUA8kRy5aHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709811290; c=relaxed/simple;
-	bh=QDh37/hypKzqzSrGrTAeVEghHDvc7ycpYvDwVjDq178=;
+	bh=B0C5pNXKXvOavXw/bCS49aMctGs7Fg8+eH4NhCckLqs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sRIcr7IkXXgHgRYKMCvRLiR7M72sytgihES2Em4W6wzLOVHPjsPNfA2odJ2SdTNd5dwx/FewjTV9/GlGX0vr5RrEyzPmv10pslZNY/y3Y+ykZ/Rzo34DDb8T8QT2KxERXKmh+gXg07+itNsvQPCjbgBjBzCQyuPljNE9CBtjtSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bz37Yb7a; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=JRVJEL3Q54egK3PY6EM3ne/Xk8K4dhSV0soeVDwJ8Sr93de0Grj2x1Jz5q+t18AtESmksiZ0cNGySSzHS3M5SpULJmYrCAoNT907MZ3njVGMTt5+M6SzHjq1+5ulaDTL+FWHerCiDYQFg9yXHSCuwkZZHmpYRXadOMocYt+dmrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHoekiVR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bz37Yb7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A2562C32782;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHoekiVR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7F69BC4166A;
 	Thu,  7 Mar 2024 11:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709811289;
-	bh=QDh37/hypKzqzSrGrTAeVEghHDvc7ycpYvDwVjDq178=;
+	bh=B0C5pNXKXvOavXw/bCS49aMctGs7Fg8+eH4NhCckLqs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Bz37Yb7ad1lzCD0WwQtOoGJGdVvWdrOWZfy7AhVxIep3+gdZ5TdRf+DKLXoR5YudK
-	 FA+5llLm4HUtaWbVNZDjDcm1Bbsw1OCl12sKRozzfs/e+y7+gOew5s15hs2Pa+fFXE
-	 Io6RzZlZS0/nfHH3L6V8k6Ns5JrK4Wdq3by1mM9dtse9qUXBf6o40Nw9j9FgMrkH4T
-	 m8dXN8eQUNKL32x9T1V1Yi5h19FlWfLwC6FnYMUUhokUGcp+QNinH+8gOTdhnBApB3
-	 5BFOqR0WAlrsLRJ3emC5yoQhXJDNqu0yhP6kPhmq988L7yKaHoGO0rGvIZv6ezN03N
-	 oOIbp6zsHJQiA==
+	b=nHoekiVRZ4LQ0UR+l9YEo8O68A/Ym2y9D+3cQAMPDlboJjJrvtnhVbqLf1dcoshKA
+	 /FEJZNTd/3+/On5WG49RiwLooAaw5rhlycwYy5a8jk72II8gp0LqJPEmUBfxZ84vce
+	 kRURLSOcr/xdh3eUMGArMrCSFvcH28PkZI9m+DDuXNMH+ZkuiHWtx7z+OrXt3E4iyS
+	 j0iTa7nJ51R0y6saExjSbPxdNA3j/CDeI6A/rvOM/1ryrOEVvARjL9jtZFqPEdaVvh
+	 dg8UatMTpr/xgSbpaQwsu2iROzx522C/Owi/7sKQwoQXZ2SSLVnqMCs7Q4EJY8G0kH
+	 fW9lFV10tAODA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED02C54E5C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8F8C54E5E;
 	Thu,  7 Mar 2024 11:34:49 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Thu, 07 Mar 2024 19:34:55 +0800
-Subject: [PATCH net-next v9 9/9] net: hisi_femac: remove unneeded
- MODULE_ALIAS()
+Date: Thu, 07 Mar 2024 19:34:52 +0800
+Subject: [PATCH net-next v9 6/9] dt-bindings: net: hisi-femac: add binding
+ for Hi3798MV200 FEMAC core
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240307-net-v9-9-6e0cf3e6584d@outlook.com>
+Message-Id: <20240307-net-v9-6-6e0cf3e6584d@outlook.com>
 References: <20240307-net-v9-0-6e0cf3e6584d@outlook.com>
 In-Reply-To: <20240307-net-v9-0-6e0cf3e6584d@outlook.com>
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
@@ -56,11 +56,11 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709811287; l=761;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709811287; l=834;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=dDYro7mR0AilpKVwze2YXBVItXvJMbJiAARD8z9wFaE=;
- b=ZsFqnBAGeG9f/aryzU52MMSSSlpZY8ZJ+hotrM3dwtl098m7Q1xxZZFHugXHBEntBKAg8fEG5
- OFrDoOG8OtXBliMT1F20zdydJMoPMedsRt2KXRpdbSwHH7IKyrSkQmT
+ bh=5BWYBEwUYlHXBQkC5dFDbigUBgjxRE1IxBueme4TLEM=;
+ b=O7e98hdy3R+731XT9ZPwOAQuxiBXV4WY8pe3OHfvOCGqHGRoOfdNunvoz8YVLFIYZuHYaJYVW
+ HlRCy8ZUgYwBO8oLM3xwKsbnJVp+JtfzsFr4shlniFRc/SAHppWe4yR
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -70,23 +70,29 @@ Reply-To: <forbidden405@outlook.com>
 
 From: Yang Xiwen <forbidden405@outlook.com>
 
-We already have MODULE_DEVICE_TABLE() that creates the correct alias.
-Remove unneeded MODULE_ALIAS().
+HiSilicon FEMAC core is also found on Hi3798MV200 SoC. Document it in
+binding.
 
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
----
- drivers/net/ethernet/hisilicon/hisi_femac.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
-index a4f856710d96..ea8f60f292c1 100644
---- a/drivers/net/ethernet/hisilicon/hisi_femac.c
-+++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
-@@ -1015,4 +1015,3 @@ module_platform_driver(hisi_femac_driver);
- MODULE_DESCRIPTION("Hisilicon Fast Ethernet MAC driver");
- MODULE_AUTHOR("Dongpo Li <lidongpo@hisilicon.com>");
- MODULE_LICENSE("GPL v2");
--MODULE_ALIAS("platform:hisi-femac");
+# Conflicts:
+#	Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+---
+ Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+index 5cd2331668bc..4f8a07864eb4 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
++++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+@@ -16,6 +16,7 @@ properties:
+   compatible:
+     enum:
+       - hisilicon,hi3516cv300-femac
++      - hisilicon,hi3798mv200-femac
+ 
+   reg:
+     items:
 
 -- 
 2.43.0
