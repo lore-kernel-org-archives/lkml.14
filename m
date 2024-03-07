@@ -1,135 +1,111 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA891C2A3;
-	Thu,  7 Mar 2024 09:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AF563134
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 09:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709802034; cv=none; b=i/o+oAilu9nGYMSpKASCyURGKtW7p69k9ZdTt0CR41FB/xaFiWElgSI8FJpWOYpCWTeoYxx0SFHuxCNN6IZaz+yxlXdZRfatzwrwgkldVGQPvbvsOAYG+Za6wpaSqoVTf9o/4glgvbNxQ917Pabg7G0FWGYBOs+ktWjM4cKnF5A=
+	t=1709802199; cv=none; b=VSpYG4zjCIHdt0yVfoLPoJCclp9z/Z+hhkkYYohB46GQO4H3oh9Eei8LdwbksV078zUx8j5oeNVWIYpmGw2fZtlkMgCfF+EVcblBzJ6f8zqPcLiGx2KjSJgFc8jskGz5fUh48cM59S84ELcpi0bSxpCtrQynJBu0R8oT2afe1jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709802034; c=relaxed/simple;
-	bh=D+XnBoUlNb13Suw1Ih1OgTg0q9gGXzYmZySZbHByTx0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kFFBhFpObAg3VcRUFV0R8hjEo+DPJTdd9Mc92qTgE95SvKaLcY9EZmYJlVHTW04znPmk8W9rb3vbsT4SfatN+CIyEhUo5NarLeDT+2HBbv5SFeu7SPA9sF3TTpaQrzUV2zEjuAsyBKJEOnfnHS6EkYcK8BtseUA/hDTHcIZB128=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=mA6RNssZ; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mA6RNssZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709802033; x=1741338033;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=D+XnBoUlNb13Suw1Ih1OgTg0q9gGXzYmZySZbHByTx0=;
-  b=mA6RNssZ4WJ4j2tb0jwdiLPYifUrWUyxeJzJ2ORf9eQZ4tfsVtf9QhoW
-   yKNVuK655QxhME9CHXYE1eh7q6FOwRYoGk1exjpSk7fGGUImCGLVcv8gp
-   3reA1Hlyc1Zp4e0eVaszwbTZJlfx3b2t9I4XqShM+QuPKdLWqmBqGFwnQ
-   abFPuPb5Z0nLYo1Ej5/CgfxccFNfhKPLz5aqafCAK/Ax1L2jcP2Xf4jh8
-   pvKuE8Hp6sK7XCN2gjN8DxCtECc2mpWZkdiezimm3Y8z7+Kf0tbtudbCX
-   ZJvAjFnKKyRLDGLz4Whi3hvNGy4NHtnVr5/c0N+FjPYVBGcr6SvdKr7fB
-   w==;
-X-CSE-ConnectionGUID: horeqPc5Q2+8sq6TPMg6+Q==
-X-CSE-MsgGUID: MAW95ikoRainf7EPVGLaSw==
-X-IronPort-AV: E=Sophos;i="6.06,211,1705388400"; 
-   d="scan'208";a="248099943"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Mar 2024 02:00:25 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 02:00:21 -0700
-Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 7 Mar 2024 02:00:18 -0700
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, <linux-kernel@vger.kernel.org>,
-	<bryan.whitehead@microchip.com>, <UNGLinuxDriver@microchip.com>
-Subject: [PATCH net] net: lan743x: Add set RFE read fifo threshold for PCI1x1x chips
-Date: Thu, 7 Mar 2024 14:28:23 +0530
-Message-ID: <20240307085823.403831-1-Raju.Lakkaraju@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709802199; c=relaxed/simple;
+	bh=19Sxx4QzVGp0LXla15vrSDZwzTBNjcGW13SPUGGzonc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oZGu5bDkfTQfTuYIb0D8pLrJU7kZCZRO2izEadPElR7O2jLvXh+Jj4P2PrDSBve5S/Fg22PVlJCPAw2l/WbFDF1AHPCiOi6ikb0ZeQaM+QcwpDhx9I9dhMOKxDn8uIpIqfkAYaeH3vYBzB5iG4PItyhVGJNIy/OB8l1caY7Fp1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ri9ed-0005F4-Ve; Thu, 07 Mar 2024 10:03:07 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ri9ec-004uGZ-B3; Thu, 07 Mar 2024 10:03:06 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ri9ec-006Lo8-0m;
+	Thu, 07 Mar 2024 10:03:06 +0100
+Date: Thu, 7 Mar 2024 10:03:06 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Arun.Ramadoss@microchip.com
+Cc: kuba@kernel.org, andrew@lunn.ch, kernel@pengutronix.de,
+	olteanv@gmail.com, davem@davemloft.net, Woojung.Huh@microchip.com,
+	linux-kernel@vger.kernel.org, pabeni@redhat.com,
+	f.fainelli@gmail.com, edumazet@google.com, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net v2 1/1] net: dsa: microchip: make sure drive strength
+ configuration is not lost by soft reset
+Message-ID: <ZemCysWKkG2BjYiV@pengutronix.de>
+References: <20240305064802.2478971-1-o.rempel@pengutronix.de>
+ <20240305191457.37419bd4@kernel.org>
+ <935b7bd6fe116291ff5f1f5a7a52cdad89e4607a.camel@microchip.com>
+ <ZegHO_PqO-3qwFMQ@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZegHO_PqO-3qwFMQ@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The RFE (Receive Filtering Engine) read fifo threshold hardware default should
-be overwritten to 3 for PCI1x1x Rev B0 devices to prevent lockup during some
-stress tests using frames that include VLAN tags.
-Rev C0 and later hardware already defaults to 3.
+Hi Jakub,
 
-Fixes: bb4f6bffe33c ("net: lan743x: Add PCI11010 / PCI11414 device IDs")
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
----
- drivers/net/ethernet/microchip/lan743x_main.c | 17 +++++++++++++++++
- drivers/net/ethernet/microchip/lan743x_main.h |  5 +++++
- 2 files changed, 22 insertions(+)
+On Wed, Mar 06, 2024 at 07:03:39AM +0100, Oleksij Rempel wrote:
+> On Wed, Mar 06, 2024 at 03:29:32AM +0000, Arun.Ramadoss@microchip.com wrote:
+> > Hi Jakub,
+> > 
+> > On Tue, 2024-03-05 at 19:14 -0800, Jakub Kicinski wrote:
+> > > EXTERNAL EMAIL: Do not click links or open attachments unless you
+> > > know the content is safe
+> > > 
+> > > On Tue,  5 Mar 2024 07:48:02 +0100 Oleksij Rempel wrote:
+> > > > This driver has two separate reset sequence in different places:
+> > > > - gpio/HW reset on start of ksz_switch_register()
+> > > > - SW reset on start of ksz_setup()
+> > > > 
+> > > > The second one will overwrite drive strength configuration made in
+> > > > the
+> > > > ksz_switch_register().
+> > > > 
+> > > > To fix it, move ksz_parse_drive_strength() from
+> > > > ksz_switch_register() to
+> > > > ksz_setup().
+> > > > 
+> > > > Fixes: d67d7247f641 ("net: dsa: microchip: Add drive strength
+> > > > configuration")
+> > > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > 
+> > > Hm, this is much larger than I anticipated, and also doesn't apply,
+> > > so there will be conflict with -next. Andrew, should we go back to
+> > > the v1?
+> > 
+> > Suggestion: Instead of moving ksz_parse_drive_strength() from end of
+> > file to above, can we move ksz_setup() & ksz_teardown() down. So that
+> > the changes will be minimal. Will that work?
+> 
+> This will make it hard portable to stable too. As alternative I can
+> offer to use v1 patch for stable and send bigger patch for next after
+> in the next net-next window.
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index 45e209a7d083..aec2d100ab87 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -3272,6 +3272,22 @@ static void lan743x_full_cleanup(struct lan743x_adapter *adapter)
- 	lan743x_pci_cleanup(adapter);
- }
- 
-+static int pci11x1x_set_rfe_rd_fifo_threshold(struct lan743x_adapter *adapter)
-+{
-+	u16 rev = adapter->csr.id_rev & ID_REV_CHIP_REV_MASK_;
-+
-+	if (rev == ID_REV_CHIP_REV_PCI11X1X_B0_) {
-+		int misc_ctl;
-+
-+		misc_ctl = lan743x_csr_read(adapter, MISC_CTL_0);
-+		misc_ctl &= ~MISC_CTL_0_RFE_READ_FIFO_MASK_;
-+		misc_ctl |= (0x3 << MISC_CTL_0_RFE_READ_FIFO_SHIFT_);
-+		lan743x_csr_write(adapter, MISC_CTL_0, misc_ctl);
-+	}
-+
-+	return 0;
-+}
-+
- static int lan743x_hardware_init(struct lan743x_adapter *adapter,
- 				 struct pci_dev *pdev)
- {
-@@ -3287,6 +3303,7 @@ static int lan743x_hardware_init(struct lan743x_adapter *adapter,
- 		pci11x1x_strap_get_status(adapter);
- 		spin_lock_init(&adapter->eth_syslock_spinlock);
- 		mutex_init(&adapter->sgmii_rw_lock);
-+		pci11x1x_set_rfe_rd_fifo_threshold(adapter);
- 	} else {
- 		adapter->max_tx_channels = LAN743X_MAX_TX_CHANNELS;
- 		adapter->used_tx_channels = LAN743X_USED_TX_CHANNELS;
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index be79cb0ae5af..be0fe52e2ae1 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -26,6 +26,7 @@
- #define ID_REV_CHIP_REV_MASK_		(0x0000FFFF)
- #define ID_REV_CHIP_REV_A0_		(0x00000000)
- #define ID_REV_CHIP_REV_B0_		(0x00000010)
-+#define ID_REV_CHIP_REV_PCI11X1X_B0_	(0x000000B0)
- 
- #define FPGA_REV			(0x04)
- #define FPGA_REV_GET_MINOR_(fpga_rev)	(((fpga_rev) >> 8) & 0x000000FF)
-@@ -311,6 +312,10 @@
- #define SGMII_CTL_LINK_STATUS_SOURCE_	BIT(8)
- #define SGMII_CTL_SGMII_POWER_DN_	BIT(1)
- 
-+#define MISC_CTL_0			(0x920)
-+#define MISC_CTL_0_RFE_READ_FIFO_MASK_	GENMASK(6, 4)
-+#define MISC_CTL_0_RFE_READ_FIFO_SHIFT_	(4)
-+
- /* Vendor Specific SGMII MMD details */
- #define SR_VSMMD_PCS_ID1		0x0004
- #define SR_VSMMD_PCS_ID2		0x0005
+Are any changes on my side required?
+
+Regards,
+Oleksij
 -- 
-2.34.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
