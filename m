@@ -1,197 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E6663409;
-	Thu,  7 Mar 2024 09:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709803561; cv=fail; b=J3mnWl3OPXiBQ1jSiN2veRhZdcgRb+5IyqKyenV+UMHFIurD6AT56I5L8d0EYeFEPoFlhNO789Fpc0ME1todYBSh2XLCp5escf2jfyOggwhuIITakeVNakbQrvbKzimmAcBDuuBwzuvI+sHfI42ZMQD1wcsw9UkWbPkXwr/hUw4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709803561; c=relaxed/simple;
-	bh=0V02cCzJ/ruMawYm2M5Hto+C9nbP8EPz2ERKyaUol0g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=A7f1ZpRtAUeIGGDsiEzNbsC1cglzHxynLbSastazEWJWVER0z5Cxg17KdARkCVcA8lUVLTOFCYq1pL5zei/6vzLj1EiPtAPf3vzK++y7fqZ14cVZ2UYZZYgliFOgK7bQUT2LiHhwd/a7CzVUPHQdpxB7jDRItOdGN371m7I9Ma4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c87OaK/i; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530AA1CD29;
+	Thu,  7 Mar 2024 09:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709803619; cv=none; b=I8ihgzJMjJ+lpL2oVQSqYY1CZWcCMBGo220psWmbOvC+SauFF4p9wDZQVJSxOX2Fl+NmYK4U0mHANyEk9huN4ZHbXcHU5KuIt6RqE9k55+FEA7A/Gyd6ol0z6GdpoHqLfz4FpU2ZiTNQtrKASGnNVeRE2LiP20JCvIabT3C8esE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709803619; c=relaxed/simple;
+	bh=fSVUIcKgmY6DvtXx3zD+ih7OZ3jvAza2NIYm6Zb4Enk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZBENRBTDCryGKO+JnSaHm1BBU6cSHCduEW0155+dl9kGSjVZ2kMtj5eyzfWHwY2RFhRXi6JUxFpZiFxmSqbVKgiJFDdblOfxstik7SM9g3jJvX/QRJoMAyMVXeeyS+rxhQam25l78nAiG8ntUYAms6CJ0kMtNzi3ymT2Hv8iMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Zryh4i7G; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bjSGKP6w; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c87OaK/i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709803559; x=1741339559;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=0V02cCzJ/ruMawYm2M5Hto+C9nbP8EPz2ERKyaUol0g=;
-  b=c87OaK/iaBoeh2ejY55akIXrzk+81DvcIUGLu2zzZsid3LhtAv2H7Vcq
-   uoYZmp7onRYMuyVGH5vlvybStv9A/pOfJcUxUyfvx4/K4LrzSsy4e5YSJ
-   IVjLevCLu7Ma0MN3mZiTiGipEM9L7BrkIP0GhY0BuDS4oChhbBZWh/Zgr
-   oS/CywQasVYhkdEEH34bNGIeuaOQwMqCubdzeKixF4gnC68aAMO+6logL
-   NsnoT5LIezTHqjfIHiPaoXzKPrfLki72xcz5OgaFrjce5XFc3ziPJ4KsS
-   fjxkoXSMpTqyhsD7B5chCFGyUv+CO9k4jFZfQcubtM8U7kcmdLT9Kd/RM
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15184423"
-X-IronPort-AV: E=Sophos;i="6.06,211,1705392000"; 
-   d="scan'208";a="15184423"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 01:25:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,211,1705392000"; 
-   d="scan'208";a="10493779"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Mar 2024 01:25:58 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 01:25:57 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 01:25:57 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 7 Mar 2024 01:25:57 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 01:25:57 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hNmKa2UPL7QuoKGTHsgPSlrIy3QaiMNMOmNUaiZHm0rYywKjSVoJbtyg7rLc+AZW9IWVohvBB193LsNUaonmf6RTe5Y/hTVS9AjbYrP2chaq0Tu9khgj4w9rj4wE304tlv/KpKFwhF7MPU1ch6ScgAMYJO94R0MVSYSXAbrJQYa7o2FHDsckLy9wfD9qUIO3/RNcisuNSa7DS/Ng+G6sZGpXSLiEA3haklv2FfOMbCGqlAma9M4GDRy86qP0co1EmI4A4sXWRJmcgdFTKbp6uTlPF8JWvhEYnmEgWnolW3C+ZMxYyv7Rj+7yMNovvDi5lHw28wxqMMsw54Xv1BLX3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4xmSdBEBEoJqGr9KTe7QxH+1tQkOc1LPuMOAjbG/eYg=;
- b=hOGlJZygfryw1JDDaupRD1nCbq/WXRtYfzzIkuzN3k+EUpFs0+UjjDBmDZTls3M7o8ikiwQ7sPwcNdiMxTUpKeMx1jTuunSUH0sGAbzN0u+EMu3KkqajG+UL34bV2Rt9hk3zXa0hTrjdM0WI8acAZcdUUO9zQODKyFu96KoCemJzXtqn7O1875YCCgmEFUmlEAh4RcChyaVoyM1O9bY+yjBmepm+59n6MTiVZCynIXBtBvLK5aBshqxSaJtCou2imhspaE5KVRxqmdYyjwNPoQIll+5YEjTaJX7jC/C6vuiry4x6kKByEW3yW+GTxP8eh122b1AMZm3YBapjHc3uPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
- by CY8PR11MB6842.namprd11.prod.outlook.com (2603:10b6:930:61::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Thu, 7 Mar
- 2024 09:25:55 +0000
-Received: from MN0PR11MB6231.namprd11.prod.outlook.com
- ([fe80::6440:4b82:c32c:9eb7]) by MN0PR11MB6231.namprd11.prod.outlook.com
- ([fe80::6440:4b82:c32c:9eb7%5]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
- 09:25:54 +0000
-Date: Thu, 7 Mar 2024 10:25:45 +0100
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: "Luck, Tony" <tony.luck@intel.com>
-CC: "Yu, Fenghua" <fenghua.yu@intel.com>, "Chatre, Reinette"
-	<reinette.chatre@intel.com>, Shuah Khan <shuah@kernel.org>,
-	"james.morse@arm.com" <james.morse@arm.com>, "ilpo.jarvinen@linux.intel.com"
-	<ilpo.jarvinen@linux.intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 4/4] selftests/resctrl: Adjust SNC support messages
-Message-ID: <o6va7b7rc3q46olsbscav7pla4hxot2g6xhctflhmf64pj5hpx@56vtbg3yyquy>
-References: <cover.1709721159.git.maciej.wieczor-retman@intel.com>
- <8a158ada92f06b97a4679721e84e787e94b94647.1709721159.git.maciej.wieczor-retman@intel.com>
- <SJ1PR11MB608310C72D7189C139EA6302FC212@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SJ1PR11MB608310C72D7189C139EA6302FC212@SJ1PR11MB6083.namprd11.prod.outlook.com>
-X-ClientProxiedBy: WA0P291CA0017.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1::16) To MN0PR11MB6231.namprd11.prod.outlook.com
- (2603:10b6:208:3c4::15)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Zryh4i7G";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bjSGKP6w"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A92A13EB89;
+	Thu,  7 Mar 2024 09:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709803588; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=49eI9FsfEc0os9WuNfnd5K+4CQXJgYzosIDjRsUtlwQ=;
+	b=Zryh4i7GQWJaae+0LvHwuuEXcojnHFGrRwQ6bIjfVfe/yjuT7YrMDQ5Jd1mlZaXID9jD79
+	b6KRE0KDDhqJyUrrmKvGqwgDJfPNTmTQ3EIOYZEE/ZolmQ4Kxo8qqDOVNfxR8mf0reFFcy
+	etSQf4Ci4ZkKrvcx6ReBFrgt08EDF6M=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709803587; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=49eI9FsfEc0os9WuNfnd5K+4CQXJgYzosIDjRsUtlwQ=;
+	b=bjSGKP6wJyNQzALLKtdz6JeZvDQ4XpOaszh2ul11+k2G2wP9pWsgTI4dKY7izI9m06Ge0t
+	9MGtZkCCYsPDw0Kk9/A+8kU6jUUrkYgMNoK4ldUAbUcQkcR+qNMKxs1+qSENqy1QYs+rAg
+	o7yxPV6C8R/smpbn56Vx6J78+jCcEtU=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 81CFC12FC5;
+	Thu,  7 Mar 2024 09:26:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id S+uwHEOI6WXgGQAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Thu, 07 Mar 2024 09:26:27 +0000
+Date: Thu, 7 Mar 2024 10:26:18 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Bixuan Cui <cuibixuan@vivo.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, akpm@linux-foundation.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, opensource.kernel@vivo.com
+Subject: Re: [PATCH -next v6 0/2] Make memory reclamation measurable
+Message-ID: <ZemIOtbIoMYqcf-V@tiehlicka>
+References: <20240105013607.2868-1-cuibixuan@vivo.com>
+ <fac8d079-100e-4b8d-9a35-db8219b28b51@vivo.com>
+ <20240220212202.59ddc123@gandalf.local.home>
+ <3d4f44ee-f533-446f-a9e6-7f58afc78d65@vivo.com>
+ <ZdWpyN_8Z6dvDQ48@tiehlicka>
+ <a32030f0-b6f6-4bd6-8284-bb762ccf9205@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|CY8PR11MB6842:EE_
-X-MS-Office365-Filtering-Correlation-Id: fa0f0e61-dbfa-49de-9da2-08dc3e8896c8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9JFNfHWOuH1feTGzyUMQms2z0paVjUrzRTJGRhgmiSJN297tNK9CpgNEmMlV1FxP2h108aQgQEXbZMZ19fjY0GPpjbf/uJ3zIph5fFIUW5HXEG99Lw4KcfnPhPKUbwfPb/EG2Ru7xstCGyLvuvc1MdXLUmDjMNrsuZx0+oRSQ9gosWVuiojdhYetOZiX8FTIDmuA0SaECxuzhEcdAcA7gpd3KnfMO6/LE42phsfYjp4H2sH/5XIzjXrLZsB9ddr7Le1D0HUNh17PWe1mrvnp35yEkDkB3P03BafG06Hk9IrcHw3lcqYuPAP0GuHLcSgCcVSeD73U9WZ9unpN1o4lt81DW904K/uS4D5RgYO9tD5KrjtDbLr2qR5/MHADpthUYQzcovtECbdMYgpZD3ujCxTZxXnxbmgNbhoJofh4aiFJq4ACL8WfoKpcN9pnh7FD0GzC6UHfvmlEv1+iGD/NV/PGe16XECirlmzijA/EN2SqKcLfxd/UuWFu1j9h2Q+MnDzDUnXqILFbmAfygaqCop+nf2jajU5QdO4RmoWrTfKyqu4lWRqZAOErzjuyGi+eX7l4a66GP55RvT4hzWMiUSWip5gDwX3Gw6iIa0325B0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?pg2Oz/fQ6zEmu17A8snpTzgw+ja+Sfl/RWT/H6R8sX5fyjUfdbwhhSQH3X?=
- =?iso-8859-1?Q?fkMbO7NUHz3O/AGLIu8/PQFt68c+DO1680hZuRdp0qVohBKmf9grt3PEjB?=
- =?iso-8859-1?Q?0h6n7+irmrQTeT2g//PJIUi2qis/1hIMa3cuddzed+BHHE1eOFE217by30?=
- =?iso-8859-1?Q?Pi5vfe9opTLeCTaG3SWnk8Oe2JN1GnwSVc8785geMS1f5N692PZwsN2xE6?=
- =?iso-8859-1?Q?6HSZCu80A1H343vpC2Pja8gv2LSHy/bLPV5bHw/l2MKUdbtMRtBYYJiIZ6?=
- =?iso-8859-1?Q?IJm+U8Xdug8uz2Ty2tE9WgXQJntrf3t9WEdbpMxU6w/2fCil0Qncia+PLc?=
- =?iso-8859-1?Q?vip6p3y1q4hNIRbNbBEmEFYkv5oMOZsfleuF2l0UlclzPgEfjUIvokPWG4?=
- =?iso-8859-1?Q?PwlGwQHcgQ2RYlyqSJmKPI8oaLtJoMPTCXaWiD5bF0XGIBsVkhrJ2cZaqE?=
- =?iso-8859-1?Q?ODraAPB1krIUQPSOnlliLd2B9HfNsvCKFU0R5QtsNRDbNziE8LyzPhCZjR?=
- =?iso-8859-1?Q?HVzlRAqpeyfd1EnrlNswdPAQdL4lbR7AX8SVYyrCqEls1lNW+qiBX9LvGf?=
- =?iso-8859-1?Q?BSqgSeb6uFT8iNjVCfFYTY1n4EUP1VaMle6uegJV0ceQOif1vhnK3giEq8?=
- =?iso-8859-1?Q?hs34oC3pd7hoigMuDrtyI958E91KDVyupu9dBPfIcgID/gMibxIyfCmDyQ?=
- =?iso-8859-1?Q?+pRGVXLLOyUKGPhtxR7brOnPZEsFzuEDVOiDzdGyIN/vlryTPgUd8HPVRA?=
- =?iso-8859-1?Q?/PGoLjtU5X9XUZcm7rp+DjSELZzATn7veMDB+c06ZM1z7x7xGTrudvD482?=
- =?iso-8859-1?Q?w/fiNiATMdTBmfy6QWvYhIZNFHcYjy34t0ytHA565WatEvz0SmH4gGIDBG?=
- =?iso-8859-1?Q?2mCkMkd0VJnybDaigMqIUbNXhy9k5KjtkpazDpkRX5Z6neuLyGtB5DPH1E?=
- =?iso-8859-1?Q?R90GyzD7CP4Vkn28WQld+794KAeTEGe2QKQaVbaUsrJgxS2ebl+ciJgvcv?=
- =?iso-8859-1?Q?oK0AQKMz3QTfyE4u5jtaluqFJG+Ya747kv1yoPvrzusLTWS+LSgTGXQ421?=
- =?iso-8859-1?Q?X40lRv1oScAwJED1Hy+4vp4SfLEKKI5WFSLMmjfNsMXzI3e9VcyhMx4cJX?=
- =?iso-8859-1?Q?yMHU1k5JaKvU90/FSliIWAanOK1FLkQqq1CFdHzWAtXRd6d9dyUnIoemIo?=
- =?iso-8859-1?Q?esAllQ4QFaeuWIgL/hUd0wsbgW48U+nn+0Nx6DaqXEXk6mE8Jodh144J6R?=
- =?iso-8859-1?Q?ZWIjigTydm/JUreGF/S6Z6cNnrehqqJbZ4idEQKqm8vPDRzike215R4kyV?=
- =?iso-8859-1?Q?2Y7NhtUeOVToVpaACuMhTvxg5tHq8QIFkAirzJjLbi4RFQysXYqBXh1dST?=
- =?iso-8859-1?Q?JzAwxSmhDQsA6tUUt+6eXCKbNGjSbdjlgLFThgRRdSoWbyZB1gyhZYT0ca?=
- =?iso-8859-1?Q?lMZhIdZNtQx0HTKdevVU86lzU7ARlaF0wAjuZz5XHIyfnfrDkADkGTFjyD?=
- =?iso-8859-1?Q?9K1oiifKzhy4Ol9/MTVAJ5l4lPJmJ6TSuCfWksUe29s2WQWDY9amM0gA19?=
- =?iso-8859-1?Q?bTqO3PW1cc7lh7kCUE5qptW8FWDTyE8zy8qF4uSl7QBw5WugXzyVMiJTsy?=
- =?iso-8859-1?Q?vO6ZzeNti5VELC4fDDIve9lS6rSrmgFjFtucil91+ByVTeP0ai9bjii0Lq?=
- =?iso-8859-1?Q?VG39672gEj8+Re0e3l8=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa0f0e61-dbfa-49de-9da2-08dc3e8896c8
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 09:25:54.8062
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CQLVdra18MPK+V7GW9LT8jBvxXihA86YInTOyC1KjNClXkpW2zeAzsTGS8LAHfNOOZ+yOmSaXWvdjFIk6Wkixsw8YTZIjhWtuz1rvq01V9c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB6842
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a32030f0-b6f6-4bd6-8284-bb762ccf9205@vivo.com>
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=bjSGKP6w
+X-Spamd-Result: default: False [-1.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[38.88%]
+X-Spam-Score: -1.81
+X-Rspamd-Queue-Id: A92A13EB89
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-On 2024-03-06 at 21:54:02 +0000, Luck, Tony wrote:
->> Figuring out if SNC is enabled is only one part of the problem, the
->> other being whether the kernel supports it. As there is no easy
->> interface that simply states SNC support in the kernel one can find that
->> information by comparing L3 cache sizes from different sources. Cache
->> size reported by /sys/devices/system/node/node0/cpu0/cache/index3/size
->> will always show the full cache size even if it's split by enabled SNC.
->> On the other hand /sys/fs/resctrl/size has information about L3 size,
->> that with kernel support is adjusted for enabled SNC.
->
->Early versions of the kernel SNC patch series added an info/l3_MON/snc_ways
->file to provide this information. I was talked out of it then:
->
->https://lore.kernel.org/all/f0841866-315b-4727-0a6c-ec60d22ca29c@arm.com/
->
->But that discussion didn't consider the question you discuss here: "Does this
->instance of the kernel support SNC?"
->
->So you have a clever solution. But it seems like a roundabout way for
->an application to discover whether the kernel has configured resctrl for
->SNC mode.
->
->Should the kernel provide an info/ file listing the SNC configuration?
+On Thu 07-03-24 15:40:29, Bixuan Cui wrote:
+[...]
+> Currently, with the help of kernel trace events or tools like Perfetto, we
+> can only see that kswapd is competing for CPU and the frequency of memory
+> reclamation triggers, but we do not have detailed information or metrics
+> about memory reclamation, such as the duration and amount of each
+> reclamation, or who is releasing memory (super_cache, f2fs, ext4), etc. This
+> makes it impossible to locate the above problems.
 
-I suppose it would be a benefit for other numa aware applications to have an
-easy access to this kernel support information.
+I am not sure I agree with you here. We do provide insight into LRU and
+shrinkers reclaim. Why isn't that enough. In general I would advise you
+to focus more on describing why the existing infrastructure is
+insuficient (having examples would be really appreciated).
 
->
->If so, what should it be named? "snc_ways" as a kernel variable was
->later replaced by "snc_nodes_per_l3_cache". Is that a good filename?
+> Currently this patch helps us solve 2 actual performance problems (kswapd
+> preempts the CPU causing game delay)
+> 1. The increased memory allocation in the game (across different versions)
+> has led to the degradation of kswapd.
+>     This is found by calculating the total amount of Reclaim(page) during
+> the game startup phase.
+> 
+> 2. The adoption of a different file system in the new system version has
+> resulted in a slower reclamation rate.
+>     This is discovered through the OBJ_NAME change. For example, OBJ_NAME
+> changes from super_cache_scan to ext4_es_scan.
+> 
+> Subsequently, it is also possible to calculate the memory reclamation rate
+> to evaluate the memory performance of different versions.
 
-"snc_nodes_per_l3_cache" seems okay to me.
+Why cannot you achive this with existing tracing or /proc/vmstat
+infrastructure?
 
-And I understand that the file content would show SNC mode and the presence or
-absence of this file would tell if kernel supports SNC?
+> The main reasons for adding static tracepoints are:
+> 1. To subdivide the time spent in the shrinker->count_objects() and
+> shrinker->scan_objects() functions within the do_shrink_slab function. Using
+> BPF kprobe, we can only track the time spent in the do_shrink_slab function.
+> 2. When tracing frequently called functions, static tracepoints (BPF
+> tp/tracepoint) have lower performance impact compared to dynamic tracepoints
+> (BPF kprobe).
 
->
->-Tony
-
+You can track the time process has been preempted by other means, no? We
+have context switching tracepoints in place. Have you considered that
+option?
 -- 
-Kind regards
-Maciej Wieczór-Retman
+Michal Hocko
+SUSE Labs
