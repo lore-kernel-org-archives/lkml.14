@@ -1,116 +1,90 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0ED112D765
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 13:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2A0B12B154;
+	Thu,  7 Mar 2024 13:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709819584; cv=none; b=V/T6HdTXXrLV0ZAv5jRZM0KO0foqRHgaxIkn5h6Hpx6KxGGl8sesoR5a3RPK9CRySzZwgtCYtRW/hIpjV5QxpUVjrkok8dCEScYxrz4UphgEj9YGR+aV5a0xP6U42VFTUQKoaZXmY1aFggmIjCGKSKPkEkxTSMcnhX7AOCf03Os=
+	t=1709819652; cv=none; b=Ij8o8yLOcjqtyjUPqDJrePcWFrDMV0w+xn2IZcPMe3s8x7yA/4K3Lv+K76yNY8d/tFE46HZK2xaqn8rQbHLX7a1noQlyOnD95FX42IraJnPoUsSwlCC2AXxK7C0mqEV9zof6SebWQ4IcrJxCCCDLyMmr26syWQC7fsgNF/6Gpg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709819584; c=relaxed/simple;
-	bh=iS/ZnjaK6TRmcPu9aNMP+C8wqkwmDYhlm+2dQy+Pr3c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RIj/P13DvzvPAcquCHenacDNqqXmvZUlLbScmaL/5yKn03w2X7FBe0UNtXO3yob84TSwXM1m7GpDbaSk5hEiKf8kcgoBChv8XDBICIpG9xkottfR3GVzNv9foIFftqI/rubaO+jQbtsYGnvv/IKNQHB4Gq4Xgl3Evy14ecgi8LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ib5cTV4W; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ib5cTV4W"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-412e96284b9so7450995e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 05:53:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709819581; x=1710424381; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OFRg8xB5AgYKtJRkOv35muuJJ49OzwPBSX7Kgc4LZhI=;
-        b=Ib5cTV4W/J578+YD7JHYv5shZo+gtyE2wHZyMkZDShl1l9YINlBY/kzWgUHTNR1a1h
-         OrZ7tDS3PsWct1gaWTDbPLmY2Hgv3gxaNb+FON3gyPj5dIBfUZUY+9UOH/YTw8vxHjMt
-         leyFHypkkw11gE8T0fJ+aev65nWg/nn03Yk73r3jEUsVjYXq4UuAleIgLylnZ16M0EeU
-         nTTrOXQn4VA/orTFVXLYHfqLjGvQH7roL/RvoXxRdbKcuDb/di62zOfqq64YW9lwokIs
-         VK5hyZJ32cdUDE7A6fmfPJAUNpILn5uEon+ny8lT4NoGWYFUADFeTpN1OT1e6X+fEKdb
-         2F3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709819581; x=1710424381;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OFRg8xB5AgYKtJRkOv35muuJJ49OzwPBSX7Kgc4LZhI=;
-        b=c4xwvtvKaW8AnoUfWQ6eUpHRhBLQQ7NZdOGGdT9vMnqrJ1H5MuHqv8PCQC9k2b7oDU
-         c0m1LJ8csY3QmXJpx7RLaxeHWdXBaxf4hkTPRMj3altbvV9fZseFQYqGhSEOLFcAea0O
-         6kXYowIwxrwk9w1bxFRqmVASopD01Tk37ngP4ldXO175dO1CWtUEr8Uby1g5syFjAKtE
-         y5Upou+3he6JU5Bmkv2TksBzCgO94q3cQldD3f0GhqvKIYfElpmlH9S5eY6v+gHC6EuG
-         kdbe2IHA82CDI4WC+xpBVvk2sIc7X1TTRhwFLnZ0BgGQhGYLo2Jd+YpFwUNKBSe0akjy
-         gJiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOmw28Xwowb+ofExt26XbBf0Rgj7+z/4iqJdfjud92qpa50X36m6kNQkpyWp6S/Zvkt+Wca0GpNbwiFoSKHdEIX1FAP3BR38H6SEfd
-X-Gm-Message-State: AOJu0YwBh9WjYrofm9TjbgIWP99nFFGlVhrsxBtv3sXZEw3h448kquU4
-	OCe0he4HhV3wmbvN+MOe/GIO+H5JXLT5Ez40eJZvcUI/UUSYiGkAraIWuPBMygI=
-X-Google-Smtp-Source: AGHT+IF61AYutPgwA+UreNymAxWtde+Fu4g6cP5ZGMQQlNDE95ba8fYYdanfVRTO7jXImAkq32LYRA==
-X-Received: by 2002:a05:600c:3596:b0:411:a94a:1ee with SMTP id p22-20020a05600c359600b00411a94a01eemr15040054wmq.21.1709819581260;
-        Thu, 07 Mar 2024 05:53:01 -0800 (PST)
-Received: from ta2.c.googlers.com.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
-        by smtp.gmail.com with ESMTPSA id l8-20020a05600c4f0800b0041312cf472fsm1112390wmq.25.2024.03.07.05.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 05:53:00 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: peter.griffin@linaro.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Cc: alim.akhtar@samsung.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	andre.draszik@linaro.org,
-	willmcvicker@google.com,
-	kernel-team@android.com,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH] arm64: dts: exynos: gs101: move serial_0 pinctrl-0/names to dtsi
-Date: Thu,  7 Mar 2024 13:52:48 +0000
-Message-ID: <20240307135248.162752-1-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+	s=arc-20240116; t=1709819652; c=relaxed/simple;
+	bh=1rXdRG/mrYNFZsk4vvEvOgen0D6usXjQoOIkIJ9EU8A=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=CrFhvfS1URDBkuGrxyxIz5+1KNgQKu18JEZEGzNIggr6zcw4K1OzY2up3uZP4GKgHMwn2OsVtiytkit+oZlLTDgjAlFCxAaH7RdmUhK+cxzBf0clvD8YBPuc4SlLBJh+lwpIsQ5781jNp+IrA6hQcaeIgn/aAWqalU29Jewr9GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from ubuntu.localdomain (unknown [106.117.76.127])
+	by mail-app4 (Coremail) with SMTP id cS_KCgCHHcPfxulloikAAA--.553S2;
+	Thu, 07 Mar 2024 21:53:44 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org,
+	oss-drivers@corigine.com,
+	christophe.jaillet@wanadoo.fr,
+	horms@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	louis.peens@corigine.com,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH] nfp: flower: handle acti_netdevs allocation failure
+Date: Thu,  7 Mar 2024 21:53:35 +0800
+Message-Id: <20240307135335.19306-1-duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:cS_KCgCHHcPfxulloikAAA--.553S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFy7Zw4DWr15tr4fCw1kuFg_yoW8GrWxpF
+	WDGFyUZa1kJw13ta1UJw4IgFyF9a4vqFyjgF1fAws5uF9Yq3ZrKrs5KFWUG3WYyrWrG3Wf
+	ZFWYva47WF1kG3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9a14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+	W8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
+	McIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7
+	v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF
+	7I0E8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026x
+	CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+	JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+	1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+	Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+	UvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwINAWXou1MR+gA3s0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The pinctrl nodes are coming from the shared gs101-pinctrl.dtsi,
-thus the pinctrl-0/names shall stay in dtsi. Move them.
+The kmalloc_array() in nfp_fl_lag_do_work() will return null, if
+the physical memory has run out. As a result, if we dereference
+the acti_netdevs, the null pointer dereference bugs will happen.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+This patch adds a check to judge whether allocation failure occurs.
+If it happens, the delayed work will be rescheduled and try again.
+
+Fixes: bb9a8d031140 ("nfp: flower: monitor and offload LAG groups")
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
 ---
- arch/arm64/boot/dts/exynos/google/gs101-oriole.dts | 2 --
- arch/arm64/boot/dts/exynos/google/gs101.dtsi       | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/netronome/nfp/flower/lag_conf.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
-index 6ccade2c8cb4..9dc0f47ef646 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
-+++ b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
-@@ -103,8 +103,6 @@ key_power: key-power-pins {
- };
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
+index 361d7c495e2..07759296c71 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
+@@ -337,6 +337,13 @@ static void nfp_fl_lag_do_work(struct work_struct *work)
  
- &serial_0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_bus>;
- 	status = "okay";
- };
+ 		acti_netdevs = kmalloc_array(entry->slave_cnt,
+ 					     sizeof(*acti_netdevs), GFP_KERNEL);
++		if (!acti_netdevs) {
++			nfp_flower_cmsg_warn(priv->app,
++					     "memory allocate failed\n");
++			schedule_delayed_work(&lag->work,
++					      NFP_FL_LAG_DELAY);
++			continue;
++		}
  
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-index 55e6bcb3689e..ee65ed9d2cfc 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-+++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-@@ -421,6 +421,8 @@ serial_0: serial@10a00000 {
- 				reg = <0x10a00000 0xc0>;
- 				interrupts = <GIC_SPI 634
- 					      IRQ_TYPE_LEVEL_HIGH 0>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&uart0_bus>;
- 				clocks = <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP1_PCLK_0>,
- 					 <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP1_IPCLK_0>;
- 				clock-names = "uart", "clk_uart_baud0";
+ 		/* Include sanity check in the loop. It may be that a bond has
+ 		 * changed between processing the last notification and the
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.17.1
 
